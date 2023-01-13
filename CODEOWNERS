@@ -1,0 +1,31 @@
+# CODEOWNERS Docs
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners#example-of-a-codeowners-file
+
+# Order is important; the last matching pattern takes the most precedence.
+
+# These owners will be the default owners for everything in
+# the repo. They will be requested for review whenever someone
+# opens a PR, unless a later match takes precedence.
+* @adamdehaven @ValeryG @jillztom
+
+# Workspaces:
+# These teams will be the default owners for everything in their workspace
+# unless a later match takes precedence.
+# =========================================================================
+/packages/core @Kong/team-core-ui
+/packages/portal @Kong/team-devx
+
+# Packages:
+# These owners will be the default owners for everything in the workspace
+# unless a later match takes precedence.
+# =========================================================================
+
+# CLI
+/packages/core/cli @adamdehaven
+
+# =========================================================================
+# Renovate Bot approvals
+# These rules MUST remain at the bottom as the last entry
+pnpm-lock.yaml @kongponents-bot @adamdehaven @ValeryG @jillztom
+package.json @kongponents-bot @adamdehaven @ValeryG @jillztom
+/packages/*/*/package.json @kongponents-bot @adamdehaven @ValeryG @jillztom
