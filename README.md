@@ -187,7 +187,7 @@ In some cases HMR (hot module reloading) is not working out of the box in this c
 
     _Please do not commit these changes_
 
-    And finally, when you done working with local (linked copy) of youe ui-shared package, unlink it:
+    And finally, when you done working with local (linked copy) of your `public-ui-components` package, unlink it:
 
 1. In the folder `public-ui-components/packages/{workspace}/forms` run
 

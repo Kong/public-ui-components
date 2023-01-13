@@ -96,7 +96,7 @@ Include loosely bounded (SemVer-wise) peer deps, i.e. `vue` or `vue-router`
 
 ### `devDependencies`
 
-Common or shared `devDependencies` should be added within the monorepo root `package.json` file. `devDependencies` within your package's `package.json` should only include dependencies that only apply to your specific package.
+Common or shared `devDependencies` should be added within the monorepo root `package.json` file. `devDependencies` added within your specific package's `package.json` should only include `devDependencies` that only apply to your specific package.
 
 To add common or shared `devDependencies`:
 
