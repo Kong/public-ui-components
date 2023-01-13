@@ -72,7 +72,7 @@ export const kebabCase = (str: string): string => {
  * @return {string} Path to the new package source files
  */
 export const packagePath = (workspace: string, name: string): string => {
-  return url.fileURLToPath(new URL(`../../../${workspace}/${kebabCase(name)}`, import.meta.url))
+  return url.fileURLToPath(new URL(`../../../../${workspace}/${kebabCase(name)}`, import.meta.url))
 }
 
 /**
@@ -80,5 +80,5 @@ export const packagePath = (workspace: string, name: string): string => {
  * @return {string} Path to the cli/src/__template__ directory
  */
 export const packageTemplatePath = (): string => {
-  return url.fileURLToPath(new URL('../../../cli/src/__template__', import.meta.url))
+  return url.fileURLToPath(new URL('../../../../core/cli/src/__template__', import.meta.url))
 }

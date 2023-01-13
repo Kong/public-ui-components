@@ -63,13 +63,17 @@ export const kebabCase = (str) => {
  * @return {string} Path to the new package source files
  */
 export const packagePath = (workspace, name) => {
-    return url.fileURLToPath(new URL(`../../../${workspace}/${kebabCase(name)}`, import.meta.url));
+    const path = url.fileURLToPath(new URL(`../../../../${workspace}/${kebabCase(name)}`, import.meta.url));
+    console.log(1, path);
+    return path;
 };
 /**
  * @description Get the path (from root) to the cli/src/__template__ directory
  * @return {string} Path to the cli/src/__template__ directory
  */
 export const packageTemplatePath = () => {
-    return url.fileURLToPath(new URL('../../../cli/src/__template__', import.meta.url));
+    const path = url.fileURLToPath(new URL('../../../../core/cli/src/__template__', import.meta.url));
+    console.log(2, path);
+    return path;
 };
 //# sourceMappingURL=strings.js.map
