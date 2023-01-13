@@ -85,7 +85,7 @@ Add the dependency to your `package.json` file by package name using the _latest
 }
 ```
 
-where `1.6.2` is the version that's currently listed in the `package.json` file of `@kong-ui/core-demo-component` within the `ui-shared-components` repo.
+where `1.6.2` is the version that's currently listed in the `package.json` file of `@kong-ui/core-demo-component` within the `shared-ui-components` repo.
 
 During local development, the local version of `@kong-ui/core-demo-component` will be symlinked and used within `@kong-ui/core-new-component`.
 During our release automation, Lerna will ensure that the version of `@kong-ui/core-demo-component` required in the `package.json` of `@kong-ui/core-new-component` is kept up-to-date. That is, when a new version of `@kong-ui/core-demo-component` is released the `package.json` file of `@kong-ui/core-new-component` is also updated and thus a new version of `@kong-ui/core-new-component` is released.

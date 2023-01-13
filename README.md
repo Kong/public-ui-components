@@ -24,7 +24,7 @@ Monorepo for Kong open-source UI components and associated packages.
 
 Here are some criteria to help figure out if your code belongs to this mono-repository. If all of the following are true, you are welcome to create a new package:
 
-- Your code is open-source and/or at a minimum available to the public, and UI-related. If you are writing the code to be used privately at Kong, then [ui-shared-components](https://github.com/Kong/ui-shared-components) is the better choice.
+- Your code is open-source and/or at a minimum available to the public, and UI-related. If you are writing the code to be used privately at Kong, then [shared-ui-components](https://github.com/Kong/shared-ui-components) is the better choice.
 
 ## Creating a package
 
