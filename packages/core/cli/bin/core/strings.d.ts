@@ -27,7 +27,7 @@ export declare const isPascalCase: (str: string) => boolean;
  */
 export declare const kebabCase: (str: string) => string;
 /**
- * @description Get the path (from root) to the new package in the /packages/ directory
+ * @description Get the path (from root) to the new package in the /packages/${workspace}/ directory
  * @param {string} workspace workspace name
  * @param {string} name kebab-case package name
  * @return {string} Path to the new package source files

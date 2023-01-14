@@ -57,23 +57,19 @@ export const kebabCase = (str) => {
     return str.trim().replace(/ /g, '-').replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? '-' : '') + $.toLowerCase()).replace(/--+/g, '-').replace(/-+$/g, '');
 };
 /**
- * @description Get the path (from root) to the new package in the /packages/ directory
+ * @description Get the path (from root) to the new package in the /packages/${workspace}/ directory
  * @param {string} workspace workspace name
  * @param {string} name kebab-case package name
  * @return {string} Path to the new package source files
  */
 export const packagePath = (workspace, name) => {
-    const path = url.fileURLToPath(new URL(`../../../../${workspace}/${kebabCase(name)}`, import.meta.url));
-    console.log(1, path);
-    return path;
+    return url.fileURLToPath(new URL(`../../../../${workspace}/${kebabCase(name)}`, import.meta.url));
 };
 /**
  * @description Get the path (from root) to the cli/src/__template__ directory
  * @return {string} Path to the cli/src/__template__ directory
  */
 export const packageTemplatePath = () => {
-    const path = url.fileURLToPath(new URL('../../../../core/cli/src/__template__', import.meta.url));
-    console.log(2, path);
-    return path;
+    return url.fileURLToPath(new URL('../../../../core/cli/src/__template__', import.meta.url));
 };
 //# sourceMappingURL=strings.js.map

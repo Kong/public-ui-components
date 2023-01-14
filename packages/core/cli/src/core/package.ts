@@ -50,7 +50,7 @@ const createPackageFiles = async (workspace: string, packageName: string): Promi
     const stats = fs.statSync(filename)
     const filenamePath = filename.split('__template__/')
     const relativePath = filenamePath[1]
-    const newFilePath = `${workspace}/${packagePath(workspace, packageName)}/${relativePath.replace(/Template/g, componentName)}`
+    const newFilePath = `${packagePath(workspace, packageName)}/${relativePath.replace(/Template/g, componentName)}`
 
     // If template files exist
     if (stats.isFile()) {
