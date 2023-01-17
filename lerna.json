@@ -17,7 +17,7 @@
   "command": {
     "version": {
       "message": "chore(release): publish [skip ci]",
-      "allowBranch": "chore/KHCP-5795_ci",
+      "allowBranch": "main",
       "conventionalCommits": true,
       "changelogPreset": "metahub"
     }
