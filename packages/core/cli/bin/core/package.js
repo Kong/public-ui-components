@@ -40,7 +40,6 @@ const createPackageFiles = async (workspace, packageName) => {
         const filenamePath = filename.split('__template__/');
         const relativePath = filenamePath[1];
         const newFilePath = `${packagePath(workspace, packageName)}/${relativePath.replace(/Template/g, componentName)}`;
-        console.log('newFilePath', newFilePath);
         // If template files exist
         if (stats.isFile()) {
             // Check if directory exists; if not, create it
@@ -130,6 +129,7 @@ export const createPackage = async () => {
         const { confirmName } = await inquirer.prompt([confirmPackageName]);
         if (!confirmName) {
             // The user did NOT confirm the package name, so inform them that we're starting over
+            console.clear();
             console.log('  Ok, let\'s start over...');
             console.log('');
             // Start over

@@ -95,7 +95,7 @@ const createPackageFiles = async (workspace: string, packageName: string): Promi
   spinner.success({ text: 'Verified the package structure.' })
 
   spinner.success({
-    text: `Created the new '${pc.cyan(packageName)}' package and its related files:
+    text: `Created the new '${pc.cyan(`${workspace}-${packageName}`)}' package and its related files:
     ${fileStructure}`,
   })
 
@@ -163,6 +163,7 @@ export const createPackage = async (): Promise<void> => {
 
     if (!confirmName) {
       // The user did NOT confirm the package name, so inform them that we're starting over
+      console.clear()
       console.log('  Ok, let\'s start over...')
       console.log('')
 

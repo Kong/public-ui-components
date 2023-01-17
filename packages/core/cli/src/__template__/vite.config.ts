@@ -3,7 +3,7 @@ import { resolve } from 'path'
 import { defineConfig, mergeConfig } from 'vite'
 
 // Package name MUST always match the kebab-case package name inside the component's package.json file and the name of your `/packages/{package-name}` directory
-const packageName = '{%%PACKAGE_NAME%%}'
+const packageName = '{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}'
 
 // Merge the shared Vite config with the local one defined below
 const config = mergeConfig(sharedViteConfig, defineConfig({
