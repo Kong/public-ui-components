@@ -64,7 +64,7 @@ jobs:
             fi
           done
           # remove trailing '|' from pnpm filter
-          filter=$(echo "${filter}" | sed 's/|$//')
+          filter="{"$(echo "${filter}" | sed 's/|$//')"}"
           echo "filter=${filter}"
 
           # remove trailing ',' from cypress spec
@@ -80,7 +80,7 @@ jobs:
     name: Build And Test
     needs: install-dependencies
     # do not do anything unless changed package is detected
-    if: ${{ needs.install-dependencies.outputs.filter != '' }}
+    if: ${{ needs.install-dependencies.outputs.filter != '{}' }}
     runs-on: ubuntu-latest
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -92,17 +92,17 @@ jobs:
         uses: ./.github/actions/setup-pnpm-with-dependencies/
 
       - name: Stylelint Packages
-        run: pnpm --stream --filter "{${{needs.install-dependencies.outputs.filter}}}" run stylelint
+        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" run stylelint
 
       - name: Lint Packages
-        run: pnpm --stream --filter "{${{needs.install-dependencies.outputs.filter}}}" run lint
+        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" run lint
 
       - name: Build Packages
         # The `...` syntax tells pnpm to include dependent packages
-        run: pnpm --stream --filter "...{${{needs.install-dependencies.outputs.filter}}}..." run build
+        run: pnpm --stream --filter "...${{needs.install-dependencies.outputs.filter}}..." run build
 
       - name: Run Unit Tests
-        run: pnpm --stream --filter "{${{needs.install-dependencies.outputs.filter}}}" run test:unit
+        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" run test:unit
 
       - name: Prepare Cypress
         if: ${{ needs.install-dependencies.outputs.spec != '' }}
@@ -156,7 +156,7 @@ jobs:
           lerna version --conventional-commits --create-release github --yes
 
       - name: Publish packages to NPM
-        run: pnpm --stream --filter "{${{needs.install-dependencies.outputs.filter}}}" publish  --no-git-checks --access restricted
+        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" publish  --no-git-checks --access restricted
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
