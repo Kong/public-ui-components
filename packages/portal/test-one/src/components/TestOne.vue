@@ -11,6 +11,6 @@
 
 <style lang="scss" scoped>
 .kong-ui-portal-test-one {
-
+  display: block
 }
 </style>
