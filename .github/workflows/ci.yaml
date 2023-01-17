@@ -121,7 +121,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: package-dist-artifacts
-          path: packages/*/dist
+          path: packages/*/*/dist
 
   publish:
 #    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
