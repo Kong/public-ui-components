@@ -106,7 +106,6 @@ jobs:
         if: ${{ needs.install-dependencies.outputs.spec != '' }}
         run: pnpm cypress install
 
-
       - name: Run Component Tests
         if: ${{ needs.install-dependencies.outputs.spec != '' }}
         uses: cypress-io/github-action@v4
