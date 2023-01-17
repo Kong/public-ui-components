@@ -2,11 +2,11 @@
 
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import Portaltestone from './Portaltestone.vue'
+import TestOne from './TestOne.vue'
 
-describe('<Portaltestone />', () => {
+describe('<TestOne />', () => {
   it('renders', () => {
-    const wrapper = mount(Portaltestone)
+    const wrapper = mount(TestOne)
 
     expect(wrapper.isVisible()).toBe(true)
   })

@@ -45,39 +45,42 @@ jobs:
 
           echo "lernaCommand: ${lernaCommand}"
 
-          filter="{packages/("
+          filter=""
           specPackages=""
-          packageIndex=0
-          for pkg in $(lerna ${lernaCommand})
+
+          # get the list of changed packages, grab the location
+          for pkgFolder in $(lerna ${lernaCommand} --l --json|jq -r '.[].location')
           do
-            filter=${filter}$(echo "${pkg}" | sed 's/@kong-ui\///g')"|"
+            # remove current folder from the location path
+            pkgFolder="${pkgFolder/$(pwd)\//}"
 
-            cPkg=$(echo "${pkg}" | sed 's/@kong-ui/packages/g')
-            findRes=$(find "${cPkg}" -name "*.cy.ts" || true)
+            # add package path to pnpm filter
+            filter="${filter}${pkgFolder}|"
+
+            # if there is cypress tests in the package, add package path to cypress spec
+            findRes=$(find "${pkgFolder}" -name "*.cy.ts" || true)
             if [[ -n "${findRes}" ]]; then
-              if [[ "$packageIndex" -eq 0 ]]; then
-                specPackages="${cPkg}"
-              else
-                specPackages="${specPackages},${cPkg}"
-              fi
+                specPackages="${specPackages}${pkgFolder},"
             fi
-            packageIndex=$((packageIndex + 1))
           done
+          # remove trailing '|' from pnpm filter
+          filter=$(echo "${filter}" | sed 's/|$//')
+          echo "filter=${filter}"
 
-          filter=$(echo "${filter}" | sed 's/|$//')")}"
+          # remove trailing ',' from cypress spec
+          specPackages=$(echo "${specPackages}" | sed 's/,$//')
+          echo "specPackages=${specPackages}"
+
+          # set github output
           echo "filter=${filter}" >> $GITHUB_OUTPUT
-
-          if [[ -n "$specPackages" ]]; then
-            specPackages="--spec '${specPackages}'"
-          fi
-
           echo "spec=${specPackages}" >> $GITHUB_OUTPUT
+
 
   build:
     name: Build And Test
     needs: install-dependencies
     # do not do anything unless changed package is detected
-    if: ${{ needs.install-dependencies.outputs.filter != '{packages/()}' }}
+    if: ${{ needs.install-dependencies.outputs.filter != '' }}
     runs-on: ubuntu-latest
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -89,17 +92,17 @@ jobs:
         uses: ./.github/actions/setup-pnpm-with-dependencies/
 
       - name: Stylelint Packages
-        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" run stylelint
+        run: pnpm --stream --filter "{${{needs.install-dependencies.outputs.filter}}}" run stylelint
 
       - name: Lint Packages
-        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" run lint
+        run: pnpm --stream --filter "{${{needs.install-dependencies.outputs.filter}}}" run lint
 
       - name: Build Packages
         # The `...` syntax tells pnpm to include dependent packages
-        run: pnpm --stream --filter "...${{needs.install-dependencies.outputs.filter}}..." run build
+        run: pnpm --stream --filter "...{${{needs.install-dependencies.outputs.filter}}}..." run build
 
       - name: Run Unit Tests
-        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" run test:unit
+        run: pnpm --stream --filter "{${{needs.install-dependencies.outputs.filter}}}" run test:unit
 
       - name: Prepare Cypress
         if: ${{ needs.install-dependencies.outputs.spec != '' }}
@@ -153,7 +156,7 @@ jobs:
           lerna version --conventional-commits --create-release github --yes
 
       - name: Publish packages to NPM
-        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" publish  --no-git-checks --access restricted
+        run: pnpm --stream --filter "{${{needs.install-dependencies.outputs.filter}}}" publish  --no-git-checks --access restricted
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

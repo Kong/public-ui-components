@@ -1,17 +1,17 @@
 {
-  "name": "@kong-ui/portal-portaltestone",
+  "name": "@kong-ui/portal-test-one",
   "version": "0.0.0",
   "type": "module",
-  "main": "./dist/portal-portaltestone.umd.js",
-  "module": "./dist/portal-portaltestone.es.js",
+  "main": "./dist/portal-test-one.umd.js",
+  "module": "./dist/portal-test-one.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/portal-portaltestone.es.js",
-      "require": "./dist/portal-portaltestone.umd.js"
+      "import": "./dist/portal-test-one.es.js",
+      "require": "./dist/portal-test-one.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -36,7 +36,7 @@
     "test:unit": "cross-env FORCE_COLOR=1 vitest run",
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
-  "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/portal/portaltestone",
+  "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/portal/test-one",
   "author": "Kong, Inc.",
   "license": "UNLICENSED",
   "volta": {

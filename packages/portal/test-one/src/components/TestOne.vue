@@ -1,8 +1,8 @@
 <template>
   <!-- The <div> tag here is just a placeholder for your component content. -->
   <!-- We recommend wrapping your component with a unique class when possible, as shown below. -->
-  <div class="kong-ui-portal-portaltestone">
-    <p>This is the <b>Portaltestone</b> content.</p>
+  <div class="kong-ui-portal-test-one">
+    <p>This is the <b>TestOne</b> content.</p>
   </div>
 </template>
 
@@ -10,7 +10,7 @@
 </script>
 
 <style lang="scss" scoped>
-.kong-ui-portal-portaltestone {
+.kong-ui-portal-test-one {
 
 }
 </style>

@@ -1,4 +1,4 @@
-# @kong-ui/portal-portaltestone
+# @kong-ui/portal-test-one
 
 {A description of this package}
 
