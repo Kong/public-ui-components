@@ -11,6 +11,6 @@
 
 <style lang="scss" scoped>
 .kong-ui-core-test-two {
-  display: block
+  display: flex;
 }
 </style>
