@@ -153,11 +153,11 @@ jobs:
           lerna version --conventional-commits --create-release github --yes
 
       - name: Publish packages to NPM
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
         run: |
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
           pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" publish  --no-git-checks --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
   notify-slack:
     name: Slack Notification
