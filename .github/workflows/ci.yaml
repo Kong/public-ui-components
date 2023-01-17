@@ -157,7 +157,6 @@ jobs:
           lerna version --conventional-commits --create-release github --yes
 
       - name: Publish packages to NPM
-            - name: Publish packages to NPM
         run: |
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
           pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" publish  --no-git-checks --access public
