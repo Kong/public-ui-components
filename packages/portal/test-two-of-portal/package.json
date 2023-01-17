@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui/portal-test-two-of-portal",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "main": "./dist/portal-test-two-of-portal.umd.js",
   "module": "./dist/portal-test-two-of-portal.es.js",

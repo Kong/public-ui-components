@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui/core-test-two",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "main": "./dist/core-test-two.umd.js",
   "module": "./dist/core-test-two.es.js",
