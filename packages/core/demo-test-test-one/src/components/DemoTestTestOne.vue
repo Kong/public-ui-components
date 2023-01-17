@@ -11,6 +11,6 @@
 
 <style lang="scss" scoped>
 .kong-ui-core-demo-test-test-one {
-  display: block
+  // Add component styles as needed
 }
 </style>
