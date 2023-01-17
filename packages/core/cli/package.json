@@ -1,0 +1,21 @@
+{
+  "name": "@kong-ui/core-public-cli",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./bin/index.js",
+  "scripts": {
+    "create-package": "node --experimental-specifier-resolution=node ./bin/index.js",
+    "build:cli": "rimraf ./bin && tsc --project './tsconfig.json' && chmod u+x ./bin/index.js",
+    "prepare": "pnpm run build:cli",
+    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
+    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore' --fix"
+  },
+  "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/core/cli",
+  "author": "Kong, Inc.",
+  "license": "Apache-2.0",
+  "volta": {
+    "extends": "../../../package.json"
+  }
+}

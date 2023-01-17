@@ -1,0 +1,44 @@
+name: Setup PNPM with Yarn Dependencies
+description: Reusable composition of setup-node, cache, and pnpm install actions
+inputs:
+  nodejs-version:
+    description: 'Version of NodeJS to use (ex: 18.12.1)'
+    default: '18.12.1'
+  force-install:
+    description: When 'true', pnpm install will be executed regardless of a cache hit
+    required: false
+    default: 'false'
+  frozen-lockfile:
+    description: When false, pnpm install will use the --no-frozen-lockfile flag
+    required: false
+    default: 'true'
+outputs:
+  cache-hit:
+    description: Whether or not there was a cache hit
+    value: ${{ steps.dependency-cache.outputs.cache-hit }}
+runs:
+  using: composite
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.nodejs-version }}
+
+    - name: Install PNPM
+      shell: bash
+      run: |
+        npm i -g pnpm@^7.0.0
+        pnpm --version
+
+
+    - name: Dependency Cache
+      id: dependency-cache
+      uses: actions/cache@v3
+      with:
+        path: '**/node_modules'
+        key: pnpm-${{ inputs.nodejs-version }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+    - name: Install Dependencies
+      if: ${{ inputs.force-install == 'true' || steps.dependency-cache.outputs.cache-hit != 'true' }}
+      shell: bash
+      run: pnpm i${{ inputs.frozen-lockfile == 'false' && ' --no-frozen-lockfile' || '' }}

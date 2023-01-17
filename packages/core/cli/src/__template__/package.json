@@ -1,0 +1,48 @@
+{
+  "name": "@kong-ui/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}.umd.js",
+  "module": "./dist/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}.es.js",
+      "require": "./dist/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}.umd.js"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "cross-env USE_SANDBOX=true vite",
+    "build": "run-s typecheck build:package build:types",
+    "build:package": "vite build",
+    "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
+    "preview:package": "vite preview --port 4173",
+    "preview": "cross-env USE_SANDBOX=true PREVIEW_SANDBOX=true run-s build:package preview:package",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
+    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore' --fix",
+    "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
+    "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
+    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
+    "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
+    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
+    "test:unit": "cross-env FORCE_COLOR=1 vitest run",
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+  },
+  "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/{%%WORKSPACE%%}/{%%PACKAGE_NAME%%}",
+  "author": "Kong, Inc.",
+  "license": "UNLICENSED",
+  "volta": {
+    "extends": "../../../package.json"
+  },
+  "peerDependencies": {
+    "vue": "^3.2.38"
+  }
+}

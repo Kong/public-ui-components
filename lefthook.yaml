@@ -1,0 +1,14 @@
+# Reference:
+# https://github.com/evilmartians/lefthook/blob/master/docs/full_guide.md
+
+pre-push:
+  commands:
+    stylelint:
+      run: pnpm run stylelint
+    eslint:
+      run: pnpm run lint
+
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm commitlint --edit

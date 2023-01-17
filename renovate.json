@@ -1,0 +1,26 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":semanticCommits",
+    ":automergeRequireAllStatusChecks",
+    ":automergePatch",
+    ":automergeMinor"
+  ],
+  "rangeStrategy": "bump",
+  "platformAutomerge": true,
+  "ignorePaths": [
+    "packages/core/cli/src/__template__/package.json"
+  ],
+  "labels": [
+    "dependencies",
+    "renovate-bot"
+  ],
+  "schedule": [
+    "every weekday"
+  ],
+  "timezone": "America/New_York",
+  "automergeSchedule": [
+    "every weekday"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "lib": [
+      "dom"
+    ],
+    "types": [
+      "cypress",
+      "./support",
+      "node"
+    ]
+  },
+  "include": [
+    "**/*.ts"
+  ]
+}
