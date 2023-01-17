@@ -4,9 +4,10 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+      - chore/KHCP-5795_ci
+  # pull_request:
+  #   branches:
+  #     - main
 
 jobs:
 
@@ -82,8 +83,6 @@ jobs:
     # do not do anything unless changed package is detected
     if: ${{ needs.install-dependencies.outputs.filter != '{}' }}
     runs-on: ubuntu-latest
-    env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v3
@@ -131,8 +130,8 @@ jobs:
       - build
     runs-on: ubuntu-latest
     env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       GH_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
+
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v3
@@ -158,7 +157,7 @@ jobs:
       - name: Publish packages to NPM
         run: pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" publish  --no-git-checks --access restricted
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
   notify-slack:
     name: Slack Notification
