@@ -65,7 +65,7 @@ jobs:
             fi
           done
           # remove trailing '|' from pnpm filter
-          filter="{"$(echo "${filter}" | sed 's/|$//')"}"
+          filter="{("$(echo "${filter}" | sed 's/|$//')")}"
           echo "filter=${filter}"
 
           # remove trailing ',' from cypress spec
@@ -81,7 +81,7 @@ jobs:
     name: Build And Test
     needs: install-dependencies
     # do not do anything unless changed package is detected
-    if: ${{ needs.install-dependencies.outputs.filter != '{}' }}
+    if: ${{ needs.install-dependencies.outputs.filter != '{()}' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source Code
