@@ -107,7 +107,7 @@ To add common or shared `devDependencies`:
 To add package-specific `devDependencies`:
 
 ```bash
- pnpm --fiter="@kong-ui/core-demo-component" add -D @types/foo
+ pnpm --filter="@kong-ui/core-demo-component" add -D @types/foo
 ```
 
 ### `scripts`
