@@ -4,8 +4,8 @@
       <p>{{ i18n.t('global.ok') }}</p>
 
       <i18n-t
-        tag="h1"
         keypath="global.named"
+        tag="h1"
       >
         <template #greeting>
           <b>Morning</b>
