@@ -9,7 +9,7 @@ importers:
       '@commitlint/config-conventional': ^17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': ^7.5.1
       '@evilmartians/lefthook': ^1.2.7
-      '@kong/kongponents': ^8.18.2
+      '@kong/kongponents': ^8.18.3
       '@rushstack/eslint-patch': ^1.2.0
       '@types/flat': ^5.0.2
       '@types/inquirer': ^9.0.3
@@ -71,7 +71,7 @@ importers:
       '@commitlint/config-conventional': 17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': 7.5.1
       '@evilmartians/lefthook': 1.2.7
-      '@kong/kongponents': 8.18.2_vue@3.2.45
+      '@kong/kongponents': 8.18.3_vue@3.2.45
       '@rushstack/eslint-patch': 1.2.0
       '@types/flat': 5.0.2
       '@types/inquirer': 9.0.3
@@ -710,8 +710,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@kong/kongponents/8.18.2_vue@3.2.45:
-    resolution: {integrity: sha512-dEp4pJyXjHP9MXPWsDDiMb/mNSaM9vAANWuNdpc+wmeHxXXSTpwqmc9D0e+GRhLNqn6g+OXxFnvPeoKG/HAINw==}
+  /@kong/kongponents/8.18.3_vue@3.2.45:
+    resolution: {integrity: sha512-OTOdVRRM+vSmhGP89doisu5h9QVd9lZcQoJRp6BXFoJoYXvRDPjDr70+nd7HZdRaHN29pQmGtS87OWDBWBsRLA==}
     engines: {node: '>=18.12.1 < 19'}
     peerDependencies:
       vue: '>= 3.2.37'
