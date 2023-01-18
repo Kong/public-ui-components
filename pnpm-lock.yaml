@@ -49,7 +49,7 @@ importers:
       postcss: ^8.4.21
       postcss-custom-properties: ^12.1.11
       postcss-html: ^1.5.0
-      rimraf: ^4.0.7
+      rimraf: ^4.1.1
       sass: ^1.57.1
       stylelint: ^14.16.1
       stylelint-config-html: ^1.1.0
@@ -111,7 +111,7 @@ importers:
       postcss: 8.4.21
       postcss-custom-properties: 12.1.11_postcss@8.4.21
       postcss-html: 1.5.0
-      rimraf: 4.1.0
+      rimraf: 4.1.1
       sass: 1.57.1
       stylelint: 14.16.1
       stylelint-config-html: 1.1.0_kbto3rg3njmczth2rrsgfnlsqa
@@ -7485,8 +7485,8 @@ packages:
       glob: 7.2.3
     dev: true
 
-  /rimraf/4.1.0:
-    resolution: {integrity: sha512-ZJdkUR5/dRrRJHdcSKJLrpRn6tVjl9ALxd4yrTCxFsMpjQNzwHF6GLqMsuEzEYIXxHlFPDSk21Vr8VPuFBEz0g==}
+  /rimraf/4.1.1:
+    resolution: {integrity: sha512-Z4Y81w8atcvaJuJuBB88VpADRH66okZAuEm+Jtaufa+s7rZmIz+Hik2G53kGaNytE7lsfXyWktTmfVz0H9xuDg==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
