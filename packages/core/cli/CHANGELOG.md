@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-public-cli@0.1.0...@kong-ui/core-public-cli@0.1.1) (2023-01-19)
+
+
+### ♻️ Chores
+
+* **cli:** update dependencies ([1215993](https://github.com/Kong/public-ui-components/commit/121599338891861dc6f0d55430646a1b836d0290))
+
+
+
+
+
 # 0.1.0 (2023-01-19)
 
 
