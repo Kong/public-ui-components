@@ -43,7 +43,7 @@
     "extends": "../../../package.json"
   },
   "peerDependencies": {
-    "vue": "^3.2.38"
+    "vue": "^3.2.45"
   },
   "dependencies": {
     "@formatjs/intl": "^2.6.3",
