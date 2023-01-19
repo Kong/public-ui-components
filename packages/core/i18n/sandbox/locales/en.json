@@ -1,0 +1,6 @@
+{
+  "global": {
+    "ok": "O-k-key",
+    "named": "{greeting}, my name is {name}. And I am {occupation}. I want {amount}"
+  }
+}

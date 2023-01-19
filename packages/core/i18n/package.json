@@ -1,17 +1,17 @@
 {
-  "name": "@kong-ui/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}",
+  "name": "@kong-ui/core-i18n",
   "version": "0.0.0",
   "type": "module",
-  "main": "./dist/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}.umd.js",
-  "module": "./dist/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}.es.js",
+  "main": "./dist/core-i18n.umd.js",
+  "module": "./dist/core-i18n.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}.es.js",
-      "require": "./dist/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}.umd.js"
+      "import": "./dist/core-i18n.es.js",
+      "require": "./dist/core-i18n.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -36,7 +36,7 @@
     "test:unit": "cross-env FORCE_COLOR=1 vitest run",
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
-  "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/{%%WORKSPACE%%}/{%%PACKAGE_NAME%%}",
+  "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/core/i18n",
   "author": "Kong, Inc.",
   "license": "Apache-2.0",
   "volta": {
@@ -44,5 +44,10 @@
   },
   "peerDependencies": {
     "vue": "^3.2.38"
+  },
+  "dependencies": {
+    "@formatjs/intl": "^2.6.3",
+    "flat": "^5.0.2",
+    "intl-messageformat": "^10.2.5"
   }
 }
