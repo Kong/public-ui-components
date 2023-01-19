@@ -38,7 +38,7 @@
   },
   "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/{%%WORKSPACE%%}/{%%PACKAGE_NAME%%}",
   "author": "Kong, Inc.",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "volta": {
     "extends": "../../../package.json"
   },
