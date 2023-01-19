@@ -147,8 +147,6 @@ jobs:
           path: packages/
 
       - name: Update package versions
-        env:
-          GH_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
