@@ -23,6 +23,9 @@
 # CLI
 /packages/core/cli @adamdehaven
 
+# Other packages
+/packages/core/i18n @adamdehaven @ValeryG
+
 # =========================================================================
 # Renovate Bot approvals
 # These rules MUST remain at the bottom as the last entry

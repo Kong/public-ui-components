@@ -3,17 +3,18 @@ import { resolve } from 'path'
 import { defineConfig, mergeConfig } from 'vite'
 
 // Package name MUST always match the kebab-case package name inside the component's package.json file and the name of your `/packages/{package-name}` directory
-const packageName = 'core-i18n'
+const workspace = 'core'
+const packageName = 'i18n'
 
 // Merge the shared Vite config with the local one defined below
 const config = mergeConfig(sharedViteConfig, defineConfig({
   build: {
     lib: {
-      // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-{package-name}`
+      // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-{workspace}-{package-name}`
       // Example: name: 'kong-ui-demo-component'
-      name: `kong-ui-${packageName}`,
+      name: `kong-ui-${workspace}-${packageName}`,
       entry: resolve(__dirname, './src/index.ts'),
-      fileName: (format) => `${packageName}.${format}.js`,
+      fileName: (format) => `${workspace}-${packageName}.${format}.js`,
     },
   },
 }))
