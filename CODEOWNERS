@@ -12,8 +12,8 @@
 # These teams will be the default owners for everything in their workspace
 # unless a later match takes precedence.
 # =========================================================================
-/packages/core @Kong/team-core-ui
-/packages/portal @Kong/team-devx
+/packages/core/ @Kong/team-core-ui
+/packages/portal/ @Kong/team-devx
 
 # Packages:
 # These owners will be the default owners for everything in the workspace
@@ -21,14 +21,15 @@
 # =========================================================================
 
 # CLI
-/packages/core/cli @adamdehaven
+/packages/core/cli/ @adamdehaven
 
 # Other packages
-/packages/core/i18n @adamdehaven @ValeryG
+/packages/core/i18n/ @adamdehaven @ValeryG
 
 # =========================================================================
 # Renovate Bot approvals
 # These rules MUST remain at the bottom as the last entry
 pnpm-lock.yaml @kongponents-bot @adamdehaven @ValeryG @jillztom
 package.json @kongponents-bot @adamdehaven @ValeryG @jillztom
-/packages/*/*/package.json @kongponents-bot @adamdehaven @ValeryG @jillztom
+/packages/core/*/package.json @kongponents-bot @adamdehaven @ValeryG @jillztom
+/packages/portal/*/package.json @kongponents-bot @adamdehaven @ValeryG @jillztom
