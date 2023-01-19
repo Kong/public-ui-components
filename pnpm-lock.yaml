@@ -12,11 +12,9 @@ importers:
       '@kong/kongponents': ^8.18.3
       '@rushstack/eslint-patch': ^1.2.0
       '@types/flat': ^5.0.2
-      '@types/inquirer': ^9.0.3
       '@types/js-yaml': ^4.0.5
       '@types/jsdom': ^20.0.1
       '@types/node': ^18.11.18
-      '@types/node-emoji': ^1.8.2
       '@typescript-eslint/eslint-plugin': ^5.48.2
       '@typescript-eslint/parser': ^5.48.2
       '@vitejs/plugin-vue': ^4.0.0
@@ -25,7 +23,6 @@ importers:
       '@vue/eslint-config-typescript': ^11.0.2
       '@vue/test-utils': ^2.2.7
       '@vue/tsconfig': ^0.1.3
-      boxen: ^7.0.1
       c8: ^7.12.0
       commitizen: ^4.2.6
       conventional-changelog-metahub: ^4.0.1
@@ -38,14 +35,10 @@ importers:
       eslint-plugin-node: ^11.1.0
       eslint-plugin-promise: ^6.1.1
       eslint-plugin-vue: ^9.9.0
-      inquirer: ^9.1.4
       js-yaml: ^4.1.0
       jsdom: ^20.0.3
       lerna: ^6.4.1
-      nanospinner: ^1.1.0
-      node-emoji: ^1.11.0
       npm-run-all: ^4.1.5
-      picocolors: ^1.0.0
       postcss: ^8.4.21
       postcss-custom-properties: ^12.1.11
       postcss-html: ^1.5.0
@@ -74,11 +67,9 @@ importers:
       '@kong/kongponents': 8.18.3_vue@3.2.45
       '@rushstack/eslint-patch': 1.2.0
       '@types/flat': 5.0.2
-      '@types/inquirer': 9.0.3
       '@types/js-yaml': 4.0.5
       '@types/jsdom': 20.0.1
       '@types/node': 18.11.18
-      '@types/node-emoji': 1.8.2
       '@typescript-eslint/eslint-plugin': 5.48.2_caon6io6stgpr7lz2rtbhekxqy
       '@typescript-eslint/parser': 5.48.2_7uibuqfxkfaozanbtbziikiqje
       '@vitejs/plugin-vue': 4.0.0_vite@4.0.4+vue@3.2.45
@@ -87,7 +78,6 @@ importers:
       '@vue/eslint-config-typescript': 11.0.2_5gm7ezxcdo2zu65gboxarjsumy
       '@vue/test-utils': 2.2.7_vue@3.2.45
       '@vue/tsconfig': 0.1.3_@types+node@18.11.18
-      boxen: 7.0.1
       c8: 7.12.0
       commitizen: 4.2.6
       conventional-changelog-metahub: 4.0.1
@@ -100,14 +90,10 @@ importers:
       eslint-plugin-node: 11.1.0_eslint@8.32.0
       eslint-plugin-promise: 6.1.1_eslint@8.32.0
       eslint-plugin-vue: 9.9.0_eslint@8.32.0
-      inquirer: 9.1.4
       js-yaml: 4.1.0
       jsdom: 20.0.3
       lerna: 6.4.1
-      nanospinner: 1.1.0
-      node-emoji: 1.11.0
       npm-run-all: 4.1.5
-      picocolors: 1.0.0
       postcss: 8.4.21
       postcss-custom-properties: 12.1.11_postcss@8.4.21
       postcss-html: 1.5.0
@@ -129,7 +115,22 @@ importers:
       vue-tsc: 1.0.24_typescript@4.9.4
 
   packages/core/cli:
-    specifiers: {}
+    specifiers:
+      '@types/inquirer': ^9.0.3
+      '@types/node-emoji': ^1.8.2
+      boxen: ^7.0.1
+      inquirer: ^9.1.4
+      nanospinner: ^1.1.0
+      node-emoji: ^1.11.0
+      picocolors: ^1.0.0
+    devDependencies:
+      '@types/inquirer': 9.0.3
+      '@types/node-emoji': 1.8.2
+      boxen: 7.0.1
+      inquirer: 9.1.4
+      nanospinner: 1.1.0
+      node-emoji: 1.11.0
+      picocolors: 1.0.0
 
   packages/core/i18n:
     specifiers:
