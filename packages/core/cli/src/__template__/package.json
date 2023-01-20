@@ -41,8 +41,5 @@
   "license": "Apache-2.0",
   "volta": {
     "extends": "../../../package.json"
-  },
-  "peerDependencies": {
-    "vue": "^3.2.38"
   }
 }
