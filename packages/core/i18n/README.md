@@ -11,7 +11,6 @@
   - [te](#te)
   - [tm](#tm)
 
-
 ## Purpose
 
 This is a wrapper around [FormatJS](https://formatjs.io/docs/intl) that allows consuming application and components to have access to i18n functionality such as:
