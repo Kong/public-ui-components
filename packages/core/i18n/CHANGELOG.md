@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-i18n@0.1.3...@kong-ui/core-i18n@0.1.4) (2023-01-20)
+
+
+### 📚 Documentation
+
+* **i18n:** add table of contents ([dee4b8f](https://github.com/Kong/public-ui-components/commit/dee4b8f6aaa06ec3980cd48e1bcf06778456ef9d))
+
+
+### ♻️ Chores
+
+* remove extra space ([b4a8f52](https://github.com/Kong/public-ui-components/commit/b4a8f52ab46729b55d23c43676bb77d63cfa165e))
+
+
+
+
+
 ## [0.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-i18n@0.1.2...@kong-ui/core-i18n@0.1.3) (2023-01-20)
 
 **Note:** Version bump only for package @kong-ui/core-i18n

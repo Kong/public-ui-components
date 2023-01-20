@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui/core-i18n",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "type": "module",
   "main": "./dist/core-i18n.umd.js",
   "module": "./dist/core-i18n.es.js",
