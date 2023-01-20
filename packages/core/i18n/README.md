@@ -1,5 +1,17 @@
 # @kong-ui/core-i18n
 
+- [Purpose](#purpose)
+- [Use in application](#use-in-application)
+- [Use in shared component](#use-in-shared-component)
+- [Formatting messages](#formatting-messages)
+  - [Where is my helpText?](#where-is-my-helptext)
+  - [HTML safe formatting with `<i18n-t>`](#html-safe-formatting-with-i18n-t)
+- [Formatting numbers, dates and times](#formatting-numbers-dates-and-times)
+- [Additional service functions.](#additional-service-functions)
+  - [te](#te)
+  - [tm](#tm)
+
+
 ## Purpose
 
 This is a wrapper around [FormatJS](https://formatjs.io/docs/intl) that allows consuming application and components to have access to i18n functionality such as:
@@ -148,7 +160,7 @@ const helpText = i18n.source.components.docUploadCard
 
 _Please, do not use this method in any new code. This prevents using parameters/pluralization and other formatting features. use exposed methods instead._
 
-### HTML safe formatting
+### HTML safe formatting with `<i18n-t>`
 
 Sometimes it is needed to render translated message with HTML as part of the parameters. For this Provided component can be used.
 
