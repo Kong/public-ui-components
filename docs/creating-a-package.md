@@ -4,6 +4,7 @@
 
 - [Required: Use the provided CLI to scaffold your new package](#required-use-the-provided-cli-to-scaffold-your-new-package)
 - [Package Structure](#package-structure)
+- [Include a `vite.config.ts` file](#include-a-viteconfigts-file)
 - [Include a `package.json` file](#include-a-packagejson-file)
   - [`dependencies`](#dependencies)
   - [`peerDependencies`](#peerdependencies)
@@ -59,11 +60,25 @@ This monorepo comes pre-configured with config files and other settings that :sp
 - A `package.json` file in the package root. The package `name` must follow the pattern `@kong-ui/{workspace}-{package-name}` where `{workspace}` is the same as the child directory of `packages/` and `{package-name}` is the same as the directory name itself.
 - A `tsconfig.json` that extends the root `tsconfig.json`
 - A `tsconfig.build.json` that extends the local package `tsconfig.json`
-- A `vite.config.ts` that extends (via `mergeConfig`) the root `vite.config.shared.ts`
+- A [`vite.config.ts`](#include-a-viteconfigts-file) that extends (via `mergeConfig`) the root `vite.config.shared.ts`
 - All code **must** be contained within the `{package-name}/src` directory
 - A file at `src/index.ts` that exports all of the package exports.
 - If utilizing **any** text strings, your package **must** utilize a `src/locales/{lang}.json` file for the text strings and incorporate the `useI18n` helper from `@kong-ui/core`
 - All packages are initialized with their own fully-functional Vue sandbox.
+
+## Include a `vite.config.ts` file
+
+The CLI will generate a `vite.config.ts` file for you where you can customize additional settings beyond the defaults in the root `vite.config.shared.ts`.
+
+If your package has imports that you **do not** want to be bundled with the package (e.g. `axios`), you should pass the dependency name in an array to the `build.rollupOptions.external` setting in your package's `vite.config.ts` file.
+
+**The root `vite.config.shared.ts` already externalizes the following dependencies**:
+
+- `vue`
+- `vue-router`
+- `@kong/kongponents`
+
+Any `build.rollupOptions.external` setting at the package level will automatically be merged with the array from the root config.
 
 ## Include a `package.json` file
 
@@ -120,8 +135,9 @@ The following scripts should be defined within your package so that it's properl
 
 - `dev` to run the local sandbox of your component utilizing the files within the local `/sandbox/*` directory.
 - `build` to compile/transpile your package into a `dist/` artifact
-  - `build:package` (see existing examples)
-  - `build:types` (see existing examples)
+  - `build:package` to build the package for production
+  - `build:types` to generate the types
+  - `build:visualize` to build the package for production and produce a `/packages/{packageName}/bundle-analyzer/stats-treemap.html` file via `rollup-bundle-analyzer` that shows the stats and metrics for your lib.
 - `preview` to build your sandbox and build as if it was an app being built for production
   - `preview:package` (see existing examples)
 - `lint` to validate your code style/formatting via ESLint
