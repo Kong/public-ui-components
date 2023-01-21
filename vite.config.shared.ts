@@ -6,11 +6,22 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import dns from 'dns'
-import { join } from 'path'
+import path, { join } from 'path'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 // You can set dns.setDefaultResultOrder('verbatim') to disable the reordering behavior. Vite will then print the address as localhost
 // https://vitejs.dev/config/server-options.html#server-host
 dns.setDefaultResultOrder('verbatim')
+
+// Include the rollup-plugin-visualizer if the BUILD_VISUALIZER env var is set to "true"
+const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
+  ? visualizer({
+    filename: path.resolve(__dirname, `packages/${process.env.BUILD_VISUALIZER}/bundle-analyzer/stats-treemap.html`),
+    template: 'treemap', // sunburst|treemap|network
+    sourcemap: true,
+    gzipSize: true,
+  })
+  : undefined
 
 export default defineConfig({
   plugins: [
@@ -26,8 +37,9 @@ export default defineConfig({
     minify: true,
     sourcemap: true,
     rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled into your library
-      external: ['vue'],
+      // Make sure to externalize deps that shouldn't be bundled into your library
+      // If config.build.rollupOptions.external is also set at the package level, the arrays will be merged
+      external: ['vue', 'vue-router', '@kong/kongponents'],
       output: {
         // Provide global variables to use in the UMD build for externalized deps
         globals: {
@@ -35,6 +47,10 @@ export default defineConfig({
         },
         exports: 'named',
       },
+      plugins: [
+        // visualizer must remain last in the list of plugins
+        buildVisualizerPlugin,
+      ],
     },
   },
   optimizeDeps: {

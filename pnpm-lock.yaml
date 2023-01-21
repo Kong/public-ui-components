@@ -9,7 +9,7 @@ importers:
       '@commitlint/config-conventional': ^17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': ^7.5.1
       '@evilmartians/lefthook': ^1.2.7
-      '@kong/kongponents': ^8.18.5
+      '@kong/kongponents': ^8.18.6
       '@rushstack/eslint-patch': ^1.2.0
       '@types/flat': ^5.0.2
       '@types/js-yaml': ^4.0.5
@@ -43,6 +43,7 @@ importers:
       postcss-custom-properties: ^12.1.11
       postcss-html: ^1.5.0
       rimraf: ^4.1.1
+      rollup-plugin-visualizer: ^5.9.0
       sass: ^1.57.1
       stylelint: ^14.16.1
       stylelint-config-html: ^1.1.0
@@ -64,7 +65,7 @@ importers:
       '@commitlint/config-conventional': 17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': 7.5.1
       '@evilmartians/lefthook': 1.2.7
-      '@kong/kongponents': 8.18.5_vue@3.2.45
+      '@kong/kongponents': 8.18.6_vue@3.2.45
       '@rushstack/eslint-patch': 1.2.0
       '@types/flat': 5.0.2
       '@types/js-yaml': 4.0.5
@@ -98,6 +99,7 @@ importers:
       postcss-custom-properties: 12.1.11_postcss@8.4.21
       postcss-html: 1.5.0
       rimraf: 4.1.1
+      rollup-plugin-visualizer: 5.9.0
       sass: 1.57.1
       stylelint: 14.16.1
       stylelint-config-html: 1.1.0_kbto3rg3njmczth2rrsgfnlsqa
@@ -788,8 +790,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@kong/kongponents/8.18.5_vue@3.2.45:
-    resolution: {integrity: sha512-zqnEJX82Qjr5uRkVh4oNcaFtLiA4Tpf47Vm/uUnTuK8OP4vEPSzFpL5gLAN6ClPcZ/b7oEKil1+r3R6ewh0APw==}
+  /@kong/kongponents/8.18.6_vue@3.2.45:
+    resolution: {integrity: sha512-o4BgndkDJJ2I/lZhGIvDeZXFvMRDl3gstqSArf4NiC65dnifi8/HO+bDpY27qOeIHSgAZ108FVA+CCHAAZqjMQ==}
     engines: {node: '>=18.12.1 < 19'}
     peerDependencies:
       vue: '>= 3.2.37'
@@ -7552,6 +7554,22 @@ packages:
     hasBin: true
     dev: true
 
+  /rollup-plugin-visualizer/5.9.0:
+    resolution: {integrity: sha512-bbDOv47+Bw4C/cgs0czZqfm8L82xOZssk4ayZjG40y9zbXclNk7YikrZTDao6p7+HDiGxrN0b65SgZiVm9k1Cg==}
+    engines: {node: '>=14'}
+    hasBin: true
+    peerDependencies:
+      rollup: 2.x || 3.x
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      open: 8.4.0
+      picomatch: 2.3.1
+      source-map: 0.7.4
+      yargs: 17.6.2
+    dev: true
+
   /rollup/3.10.0:
     resolution: {integrity: sha512-JmRYz44NjC1MjVF2VKxc0M1a97vn+cDxeqWmnwyAF4FvpjK8YFdHpaqvQB+3IxCvX05vJxKZkoMDU8TShhmJVA==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
@@ -7784,6 +7802,11 @@ packages:
   /source-map/0.6.1:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
+    dev: true
+
+  /source-map/0.7.4:
+    resolution: {integrity: sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==}
+    engines: {node: '>= 8'}
     dev: true
 
   /sourcemap-codec/1.4.8:
