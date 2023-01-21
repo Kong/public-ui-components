@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-i18n@0.1.4...@kong-ui/core-i18n@0.1.5) (2023-01-21)
+
+
+### 🐛 Bug Fixes
+
+* externalize dependencies and add rollup-plugin-visualizer [KHCP-5862] ([#22](https://github.com/Kong/public-ui-components/issues/22)) ([091fd7e](https://github.com/Kong/public-ui-components/commit/091fd7e53e9fc404cdbc0db2a05e87317076035f))
+
+
+
+
+
 ## [0.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-i18n@0.1.3...@kong-ui/core-i18n@0.1.4) (2023-01-20)
 
 
