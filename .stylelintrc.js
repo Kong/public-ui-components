@@ -10,7 +10,7 @@ module.exports = {
   overrides: [
     {
       files: [
-        'packages/*/src/**/*.{css,scss,sass,less,styl,vue}',
+        'packages/**/src/**/*.{css,scss,sass,less,styl,vue}',
       ],
       rules: {
         // Disallow relative font units

@@ -23,8 +23,11 @@
 # CLI
 /packages/core/cli/ @adamdehaven
 
-# Other packages
-/packages/core/i18n/ @adamdehaven @ValeryG
+# Core packages
+/packages/core/i18n/ @adamdehaven @ValeryG @jillztom
+/packages/core/app-layout/ @adamdehaven @jillztom
+
+# Portal packages
 
 # =========================================================================
 # Renovate Bot approvals
