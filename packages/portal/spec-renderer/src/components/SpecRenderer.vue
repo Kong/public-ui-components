@@ -5,7 +5,6 @@
       :essentials-only="essentialsOnly"
       :has-sidebar="hasSidebar"
       :relative-sidebar="relativeSidebar"
-      :slim-mode="slimMode"
       :spec="document"
       :url="url"
     />
@@ -41,10 +40,6 @@ const props = defineProps({
     default: false,
   },
   essentialsOnly: {
-    type: Boolean,
-    default: false,
-  },
-  slimMode: {
     type: Boolean,
     default: false,
   },
