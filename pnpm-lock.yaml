@@ -173,7 +173,7 @@ importers:
 
   packages/portal/spec-renderer:
     specifiers:
-      '@kong/swagger-ui-web-component': ^1.0.16
+      '@kong/swagger-ui-web-component': ^1.0.17
       '@modyfi/vite-plugin-yaml': ^1.0.4
       vue: ^3.2.45
     dependencies:
