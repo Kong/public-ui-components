@@ -2,14 +2,13 @@
   <div class="kong-portal-vue-spec-renderer">
     <kong-swagger-ui
       v-if="hasRequiredProps"
-      :url="url"
-      :spec="document"
+      :essentials-only="essentialsOnly"
       :has-sidebar="hasSidebar"
       :relative-sidebar="relativeSidebar"
-      :essentials-only="essentialsOnly"
       :slim-mode="slimMode"
-    >
-    </kong-swagger-ui>
+      :spec="document"
+      :url="url"
+    />
     <div
       v-else
       data-testid="kong-portal-vue-spec-renderer-error"
@@ -24,31 +23,31 @@ import '@kong/swagger-ui-web-component'
 import { PropType, computed } from 'vue'
 import { Document } from '../types'
 
-const props  = defineProps({
+const props = defineProps({
   document: {
     type: Object as PropType<Document>,
-    default: null
+    default: null,
   },
   url: {
     type: String,
-    default: ''
+    default: '',
   },
   hasSidebar: {
     type: Boolean,
-    default: true
+    default: true,
   },
   relativeSidebar: {
     type: Boolean,
-    default: false
+    default: false,
   },
   essentialsOnly: {
     type: Boolean,
-    default: false
+    default: false,
   },
   slimMode: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 const hasRequiredProps = computed((): boolean => {
