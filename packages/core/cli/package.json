@@ -22,6 +22,9 @@
     "picocolors": "^1.0.0"
   },
   "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/core/cli",
+  "bugs": {
+    "url": "https://github.com/Kong/public-ui-components/issues"
+  },
   "author": "Kong, Inc.",
   "license": "Apache-2.0",
   "volta": {

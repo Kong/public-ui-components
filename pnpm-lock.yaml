@@ -144,6 +144,12 @@ importers:
       flat: 5.0.2
       intl-messageformat: 10.2.5
 
+  packages/portal/document-viewer:
+    specifiers:
+      vue: ^3.2.45
+    devDependencies:
+      vue: 3.2.45
+
 packages:
 
   /@babel/code-frame/7.18.6:

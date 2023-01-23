@@ -1,17 +1,17 @@
 {
-  "name": "@kong-ui/core-i18n",
-  "version": "0.1.5",
+  "name": "@kong-ui/portal-document-viewer",
+  "version": "0.0.2",
   "type": "module",
-  "main": "./dist/core-i18n.umd.js",
-  "module": "./dist/core-i18n.es.js",
+  "main": "./dist/portal-document-viewer.umd.js",
+  "module": "./dist/portal-document-viewer.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/core-i18n.es.js",
-      "require": "./dist/core-i18n.umd.js"
+      "import": "./dist/portal-document-viewer.es.js",
+      "require": "./dist/portal-document-viewer.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -24,7 +24,7 @@
     "build": "run-s typecheck build:package build:types",
     "build:package": "vite build",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
-    "build:visualize": "BUILD_VISUALIZER='core/i18n' vite build -m production",
+    "build:visualize": "BUILD_VISUALIZER='portal/document-viewer' vite build -m production",
     "preview:package": "vite preview --port 4173",
     "preview": "cross-env USE_SANDBOX=true PREVIEW_SANDBOX=true run-s build:package preview:package",
     "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
@@ -37,7 +37,13 @@
     "test:unit": "cross-env FORCE_COLOR=1 vitest run",
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
-  "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/core/i18n",
+  "peerDependencies": {
+    "vue": "^3.2.45"
+  },
+  "devDependencies": {
+    "vue": "^3.2.45"
+  },
+  "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/portal/document-viewer",
   "bugs": {
     "url": "https://github.com/Kong/public-ui-components/issues"
   },
@@ -45,13 +51,5 @@
   "license": "Apache-2.0",
   "volta": {
     "extends": "../../../package.json"
-  },
-  "peerDependencies": {
-    "vue": "^3.2.45"
-  },
-  "dependencies": {
-    "@formatjs/intl": "^2.6.3",
-    "flat": "^5.0.2",
-    "intl-messageformat": "^10.2.5"
   }
 }
