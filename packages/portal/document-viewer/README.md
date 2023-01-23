@@ -1,4 +1,4 @@
-# @kong/portal-document-viewer
+# @kong-ui/portal-document-viewer
 
 A Kong UI component for rendering markdown documents
 
@@ -26,7 +26,7 @@ A Kong UI component for rendering markdown documents
 Install the component in your host application
 
 ```sh
-yarn add @kong/portal-document-viewer
+yarn add @kong-ui/portal-document-viewer
 ```
 
 ### Register
@@ -36,8 +36,8 @@ You can register `portal-document-viewer` globally or locally.
 ```typescript
 // Global registration
 import { createApp } from 'vue'
-import DocumentViewer from '@kong/portal-document-viewer'
-import '@kong/portal-document-viewer/dist/style.css'
+import DocumentViewer from '@kong-ui/portal-document-viewer'
+import '@kong-ui/portal-document-viewer/dist/style.css'
 
 const app = createApp(App)
 
@@ -52,8 +52,8 @@ app.use(DocumentViewer)
 </template>
 
 <script setup lang="ts">
-import DocumentViewer from '@kong/portal-document-viewer'
-import '@kong/portal-document-viewer/dist/style.css'
+import DocumentViewer from '@kong-ui/portal-document-viewer'
+import '@kong-ui/portal-document-viewer/dist/style.css'
 </script>
 ```
 
