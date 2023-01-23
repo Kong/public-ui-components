@@ -13,7 +13,6 @@ A Kong UI component for displaying API specs
   - [`hasSidebar`](#hassidebar)
   - [`relativeSidebar`](#relativesidebar)
   - [`essentialsOnly`](#essentialsonly)
-  - [`slimMode`](#slimmode)
 
 ## Features
 
@@ -103,13 +102,4 @@ Both `hasSidebar` and `essentialsOnly` must be `true` for the positioning to be 
 - required: `false`
 - default: `false`
 
-If enabled, only display the spec `paths` section; general information, schemes, models, etc. are hidden.
-
-### `slimMode`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-If enabled, will apply styles to conserve space. Hides path descriptions, decreases font-size of headings.
-
+If enabled, only display the spec `paths` section; general information, schemes, models, actions (Authorize & Try it out), etc. are hidden.

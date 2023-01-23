@@ -22,19 +22,12 @@
               type="checkbox"
             > essentialsOnly
           </label>
-          <label class="ml-3">
-            <input
-              v-model="slimMode"
-              type="checkbox"
-            > slimMode
-          </label>
         </div>
         <SpecRenderer
           :key="key"
           :document="defaultDocument"
           :essentials-only="essentialsOnly"
           :has-sidebar="hasSidebar"
-          :slim-mode="slimMode"
         />
       </div>
     </main>
@@ -52,10 +45,9 @@ const defaultDocument = yamlContent
 // checkboxes for toggling options
 const hasSidebar = ref(true)
 const essentialsOnly = ref(false)
-const slimMode = ref(false)
 
 const key = ref(0)
-watch(() => [hasSidebar.value, essentialsOnly.value, slimMode.value], () => {
+watch(() => [hasSidebar.value, essentialsOnly.value], () => {
   key.value++
 }, { deep: true, immediate: true })
 </script>
