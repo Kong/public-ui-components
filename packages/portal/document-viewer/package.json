@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui/portal-document-viewer",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/portal-document-viewer.umd.js",
   "module": "./dist/portal-document-viewer.es.js",
