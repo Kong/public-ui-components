@@ -168,7 +168,7 @@ importers:
       '@kong/kongponents': ^8.18.7
       vue: ^3.2.45
     devDependencies:
-      '@kong/kongponents': 8.18.7_vue@3.2.45
+      '@kong/kongponents': 8.18.8_vue@3.2.45
       vue: 3.2.45
 
 packages:
