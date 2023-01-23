@@ -41,6 +41,9 @@
   "dependencies": {},
   "devDependencies": {},
   "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/{%%WORKSPACE%%}/{%%PACKAGE_NAME%%}",
+  "bugs": {
+    "url": "https://github.com/Kong/public-ui-components/issues"
+  },
   "author": "Kong, Inc.",
   "license": "Apache-2.0",
   "volta": {
