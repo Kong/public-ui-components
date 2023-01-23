@@ -29,8 +29,8 @@
 
 # Portal packages
 /packages/portal/document-viewer/ @kaiarrowood @mptap
-/packages/portal/vue-mini-spec-renderer/ @kaiarrowood @mptap
-/packages/portal/vue-spec-renderer/ @kaiarrowood @mptap
+/packages/portal/mini-spec-renderer/ @kaiarrowood @mptap
+/packages/portal/spec-renderer/ @kaiarrowood @mptap
 
 # =========================================================================
 # Renovate Bot approvals

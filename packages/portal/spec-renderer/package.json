@@ -1,17 +1,17 @@
 {
-  "name": "@kong-ui/portal-vue-spec-renderer",
+  "name": "@kong-ui/portal-spec-renderer",
   "version": "0.0.2",
   "type": "module",
-  "main": "./dist/portal-vue-spec-renderer.umd.js",
-  "module": "./dist/portal-vue-spec-renderer.es.js",
+  "main": "./dist/portal-spec-renderer.umd.js",
+  "module": "./dist/portal-spec-renderer.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/portal-vue-spec-renderer.es.js",
-      "require": "./dist/portal-vue-spec-renderer.umd.js"
+      "import": "./dist/portal-spec-renderer.es.js",
+      "require": "./dist/portal-spec-renderer.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -24,7 +24,7 @@
     "build": "run-s typecheck build:package build:types",
     "build:package": "vite build",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
-    "build:visualize": "BUILD_VISUALIZER='portal/vue-spec-renderer' vite build -m production",
+    "build:visualize": "BUILD_VISUALIZER='portal/spec-renderer' vite build -m production",
     "preview:package": "vite preview --port 4173",
     "preview": "cross-env USE_SANDBOX=true PREVIEW_SANDBOX=true run-s build:package preview:package",
     "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
@@ -42,7 +42,7 @@
     "@modyfi/vite-plugin-yaml": "^1.0.4",
     "vue": "^3.2.45"
   },
-  "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/portal/vue-spec-renderer",
+  "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/portal/spec-renderer",
   "bugs": {
     "url": "https://github.com/Kong/public-ui-components/issues"
   },

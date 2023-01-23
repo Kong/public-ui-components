@@ -1,5 +1,5 @@
 <template>
-  <div class="kong-portal-vue-spec-renderer">
+  <div class="kong-portal-spec-renderer">
     <kong-swagger-ui
       v-if="hasRequiredProps"
       :essentials-only="essentialsOnly"
@@ -11,7 +11,7 @@
     />
     <div
       v-else
-      data-testid="kong-portal-vue-spec-renderer-error"
+      data-testid="kong-portal-spec-renderer-error"
     >
       Error: No document spec provided
     </div>
@@ -56,9 +56,9 @@ const hasRequiredProps = computed((): boolean => {
 </script>
 
 <style lang="scss" scoped>
-.kong-portal-vue-spec-renderer {
-  font-family: var(--kong-portal-vue-spec-renderer-font-family-default, Roboto, Helvetica, sans-serif);
-  font-size: var(--kong-portal-vue-spec-renderer-font-size, 16px);
-  color: var(--kong-portal-vue-spec-renderer-text-color, #000);
+.kong-portal-spec-renderer {
+  font-family: var(--kong-portal-spec-renderer-font-family-default, Roboto, Helvetica, sans-serif);
+  font-size: var(--kong-portal-spec-renderer-font-size, 16px);
+  color: var(--kong-portal-spec-renderer-text-color, #000);
 }
 </style>

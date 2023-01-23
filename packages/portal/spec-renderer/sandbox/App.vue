@@ -1,8 +1,8 @@
 <template>
-  <div class="vue-spec-renderer-sandbox sandbox-container">
+  <div class="spec-renderer-sandbox sandbox-container">
     <main>
       <div>
-        <h1>✨✨ Awesome VueSpecRenderer ✨✨</h1>
+        <h1>✨✨ Awesome SpecRenderer ✨✨</h1>
         <div
           class="spec-controls"
           :class="{
@@ -29,7 +29,7 @@
             > slimMode
           </label>
         </div>
-        <VueSpecRenderer
+        <SpecRenderer
           :key="key"
           :document="defaultDocument"
           :essentials-only="essentialsOnly"
@@ -45,7 +45,7 @@
 import { ref, watch } from 'vue'
 // @ts-ignore
 import yamlContent from './test.yaml'
-import VueSpecRenderer from '../src'
+import SpecRenderer from '../src'
 
 const defaultDocument = yamlContent
 
@@ -61,7 +61,7 @@ watch(() => [hasSidebar.value, essentialsOnly.value, slimMode.value], () => {
 </script>
 
 <style lang="scss" scoped>
-.vue-spec-renderer-sandbox {
+.spec-renderer-sandbox {
   --sidebar-width: 250px;
 
   h1 {

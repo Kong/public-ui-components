@@ -1,4 +1,4 @@
-# @kong-ui/portal-vue-spec-renderer
+# @kong-ui/portal-spec-renderer
 
 A Kong UI component for displaying API specs
 
@@ -31,34 +31,34 @@ A Kong UI component for displaying API specs
 Install the component in your host application
 
 ```sh
-yarn add @kong-ui/portal-vue-spec-renderer
+yarn add @kong-ui/portal-spec-renderer
 ```
 
 ### Register
 
-You can register `portal-vue-spec-renderer` globally or locally.
+You can register `portal-spec-renderer` globally or locally.
 
 ```typescript
 // Global registration
 import { createApp } from 'vue'
-import VueSpecRenderer from '@kong-ui/portal-vue-spec-renderer'
-import '@kong-ui/portal-vue-spec-renderer/dist/style.css'
+import SpecRenderer from '@kong-ui/portal-spec-renderer'
+import '@kong-ui/portal-spec-renderer/dist/style.css'
 
 const app = createApp(App)
 
-app.use(VueSpecRenderer)
+app.use(SpecRenderer)
 
 ```
 
 ```html
 <!-- Local registration -->
 <template>
-  <VueSpecRenderer />
+  <SpecRenderer />
 </template>
 
 <script setup lang="ts">
-import VueSpecRenderer from '@kong-ui/portal-vue-spec-renderer'
-import '@kong-ui/portal-vue-spec-renderer/dist/style.css'
+import SpecRenderer from '@kong-ui/portal-spec-renderer'
+import '@kong-ui/portal-spec-renderer/dist/style.css'
 </script>
 ```
 
