@@ -146,11 +146,11 @@ importers:
 
   packages/portal/vue-spec-renderer:
     specifiers:
-      '@kong/swagger-ui-web-component': ^1.0.15
+      '@kong/swagger-ui-web-component': ^1.0.16
       '@modyfi/vite-plugin-yaml': ^1.0.4
       vue: ^3.2.45
     dependencies:
-      '@kong/swagger-ui-web-component': 1.0.15
+      '@kong/swagger-ui-web-component': 1.0.16
     devDependencies:
       '@modyfi/vite-plugin-yaml': 1.0.4
       vue: 3.2.45
@@ -847,8 +847,8 @@ packages:
       - debug
     dev: true
 
-  /@kong/swagger-ui-web-component/1.0.15:
-    resolution: {integrity: sha512-nB0GX+OxT9gVm67duh93b1X6ArvxfLWeTY9R8UbDVp+3QnbxZ/mt8/IeRgm0B+NBuoVszpoKIDJ71rW60amzSQ==}
+  /@kong/swagger-ui-web-component/1.0.16:
+    resolution: {integrity: sha512-MYf9X60dXLwBZIb4L7iPZZ/57xRuYXbI1+m8MbgStODW1+zJMeyZMOaXT+mmi4tbHpwiq1aObVm57OGd6d2y6g==}
     dependencies:
       '@kong/swagger-ui-kong-theme': github.com/kong/swagger-ui-kong-theme/b82e307dd3c07801b9375d8cdd3879d8a661b645_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
