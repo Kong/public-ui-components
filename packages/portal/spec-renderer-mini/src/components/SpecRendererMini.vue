@@ -1,6 +1,6 @@
 <template>
   <div
-    class="kong-portal-vue-mini-spec-renderer"
+    class="kong-portal-spec-renderer-mini"
     :style="widthStyle"
   >
     <div
@@ -49,7 +49,7 @@
       <!-- Empty State -->
       <div
         v-else
-        data-testid="kong-portal-vue-mini-spec-renderer-empty"
+        data-testid="kong-portal-spec-renderer-mini-empty"
       >
         <slot name="empty-state">
           <div class="center">
@@ -61,7 +61,7 @@
     <!-- Error State -->
     <div
       v-else
-      data-testid="kong-portal-vue-mini-spec-renderer-error"
+      data-testid="kong-portal-spec-renderer-mini-error"
     >
       <slot name="error-state">
         Error: No document spec provided
@@ -166,10 +166,10 @@ const hasRequiredProps = (items: SpecItemType[]): boolean => {
 </script>
 
 <style lang="scss" scoped>
-.kong-portal-vue-mini-spec-renderer {
-  font-family: var(--kong-portal-vue-mini-spec-renderer-font-family-default, Roboto, Helvetica, sans-serif);
-  font-size: var(--kong-portal-vue-mini-spec-renderer-font-size, 16px);
-  color: var(--kong-portal-vue-mini-spec-renderer-text-color, #000);
+.kong-portal-spec-renderer-mini {
+  font-family: var(--kong-portal-spec-renderer-mini-font-family-default, Roboto, Helvetica, sans-serif);
+  font-size: var(--kong-portal-spec-renderer-mini-font-size, 16px);
+  color: var(--kong-portal-spec-renderer-mini-text-color, #000);
 
   .center {
     text-align: center;
@@ -193,7 +193,7 @@ const hasRequiredProps = (items: SpecItemType[]): boolean => {
 </style>
 
 <style lang="scss">
-.kong-portal-vue-mini-spec-renderer {
+.kong-portal-spec-renderer-mini {
   // all but the first have top margin
   .k-collapse + .k-collapse {
     margin-top: var(--spacing-md);

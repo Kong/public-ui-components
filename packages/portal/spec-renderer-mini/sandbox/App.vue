@@ -1,9 +1,9 @@
 <template>
-  <div class="vue-mini-spec-renderer-sandbox sandbox-container">
+  <div class="spec-renderer-mini-sandbox sandbox-container">
     <main>
       <div>
         <h1 class="center">
-          ✨✨ Awesome VueMiniSpecRenderer ✨✨
+          ✨✨ Awesome SpecRendererMini ✨✨
         </h1>
         <div class="spec-controls center">
           <h3>Try it Out:</h3>
@@ -35,7 +35,7 @@
         <br><br>
 
         <div class="d-flex pa-3">
-          <VueMiniSpecRenderer
+          <SpecRendererMini
             :key="key"
             :is-summary="isSummary"
             :spec="spec"
@@ -66,7 +66,7 @@
 import { onMounted, ref, watch } from 'vue'
 import { SpecItemType } from '../src/types'
 import { KButton, KLabel } from '@kong/kongponents'
-import VueMiniSpecRenderer from '../src'
+import SpecRendererMini from '../src'
 
 const defaultDocument = ref<SpecItemType[]>([
   {
@@ -192,7 +192,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.vue-mini-spec-renderer-sandbox {
+.spec-renderer-mini-sandbox {
   --KInputLabelSize: var(--type-lg);
 
   .center {
