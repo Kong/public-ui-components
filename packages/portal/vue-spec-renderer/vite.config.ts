@@ -1,4 +1,6 @@
 import sharedViteConfig from '../../../vite.config.shared'
+import vue from '@vitejs/plugin-vue'
+import ViteYaml from '@modyfi/vite-plugin-yaml'
 import { resolve } from 'path'
 import { defineConfig, mergeConfig } from 'vite'
 
@@ -18,6 +20,22 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     },
   },
 }))
+
+// We need to override the provided `vue` plugin with a custom config that includes `isCustomElement`
+// If additional plugins are added to the root `vite.config.shared.ts`, you'll need to include them here as well
+const customPlugins = [
+  vue({
+    template: {
+      compilerOptions: {
+        isCustomElement: tag => tag.startsWith('kong-'), // ['kong-swagger-ui'].includes(tag)
+      },
+    },
+  }),
+  ViteYaml(), // you may configure the plugin by passing in an object with the options listed below
+]
+
+// Replace the existing plugins array with our custom array
+config.plugins = customPlugins
 
 // If we are trying to preview a build of the local `package/vue-spec-renderer/sandbox` directory,
 // unset the external and lib properties
