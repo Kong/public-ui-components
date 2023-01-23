@@ -1,17 +1,17 @@
 {
-  "name": "@kong-ui/portal-document-viewer",
-  "version": "0.1.0",
+  "name": "@kong-ui/portal-spec-renderer-mini",
+  "version": "0.0.0",
   "type": "module",
-  "main": "./dist/portal-document-viewer.umd.js",
-  "module": "./dist/portal-document-viewer.es.js",
+  "main": "./dist/portal-spec-renderer-mini.umd.js",
+  "module": "./dist/portal-spec-renderer-mini.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/portal-document-viewer.es.js",
-      "require": "./dist/portal-document-viewer.umd.js"
+      "import": "./dist/portal-spec-renderer-mini.es.js",
+      "require": "./dist/portal-spec-renderer-mini.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -24,7 +24,7 @@
     "build": "run-s typecheck build:package build:types",
     "build:package": "vite build",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
-    "build:visualize": "BUILD_VISUALIZER='portal/document-viewer' vite build -m production",
+    "build:visualize": "BUILD_VISUALIZER='portal/spec-renderer-mini' vite build -m production",
     "preview:package": "vite preview --port 4173",
     "preview": "cross-env USE_SANDBOX=true PREVIEW_SANDBOX=true run-s build:package preview:package",
     "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
@@ -36,13 +36,14 @@
     "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'"
   },
   "peerDependencies": {
+    "@kong/kongponents": "^8.18.7",
     "vue": "^3.2.45"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue-jsx": "^3.0.0",
+    "@kong/kongponents": "^8.18.7",
     "vue": "^3.2.45"
   },
-  "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/portal/document-viewer",
+  "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/portal/spec-renderer-mini",
   "bugs": {
     "url": "https://github.com/Kong/public-ui-components/issues"
   },
