@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui/core-app-layout",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "type": "module",
   "main": "./dist/core-app-layout.umd.js",
   "module": "./dist/core-app-layout.es.js",
