@@ -11,6 +11,7 @@
 
 <script setup lang="ts">
 import DocumentViewer from '../src'
+
 const defaultDocument = {
   type: 'document',
   version: 1,

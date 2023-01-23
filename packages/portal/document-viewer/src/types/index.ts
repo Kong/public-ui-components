@@ -4,6 +4,7 @@ export interface BaseNode<Type extends string = string> {
   children?: Array<BaseNode>
 }
 
+// TODO: Reach out to DevX for a proper interface
 export interface Document extends BaseNode<'document'> {
   children: Array<BaseNode>
   version: number

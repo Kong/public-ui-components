@@ -6,12 +6,10 @@
 
 <script setup lang="ts">
 import renderChildren from './renderChildren'
-import { PropType } from 'vue'
-import { Document } from '../types'
 
 const props = defineProps({
   document: {
-    type: Object as PropType<Document>,
+    type: Object,
     required: true,
   },
 })

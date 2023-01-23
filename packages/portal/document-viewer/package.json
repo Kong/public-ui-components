@@ -39,6 +39,7 @@
     "vue": "^3.2.45"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue-jsx": "^3.0.0",
     "vue": "^3.2.45"
   },
   "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/portal/document-viewer",
