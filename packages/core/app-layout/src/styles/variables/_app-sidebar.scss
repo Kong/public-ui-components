@@ -1,0 +1,56 @@
+$sidebar-width: 240px;
+$sidebar-background-gradient-start: #003694;
+$sidebar-background-gradient-end: #0f203f;
+$sidebar-background: linear-gradient(
+  180deg,
+  $sidebar-background-gradient-start 54.17%,
+  $sidebar-background-gradient-end 100%
+);
+$sidebar-header-spacing: 16px;
+$sidebar-item-font-size: 14px;
+$sidebar-item-profile-height: 70px;
+$sidebar-item-border-radius: 4px;
+$profile-name-max-width: 170px;
+
+// Scrollbar
+$scrollbar-width: 8px;
+$scrollbar-foreground-color: var(--steel-400, #7d91b3);
+$scrollbar-background-color: transparent;
+
+@mixin scrollbarBase($size: $scrollbar-width) {
+  // For Chrome & Safari
+  &::-webkit-scrollbar {
+    width: $size;
+    height: $size;
+    opacity: 1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: transparent; // Hide the scrollbar until hovered
+    border-radius: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent; // Hide the scrollbar until hovered
+  }
+
+  // Standard version (Firefox only for now) - always include
+  scrollbar-color: transparent transparent;
+  scrollbar-gutter: stable both-edges;
+  scrollbar-width: thin;
+}
+
+@mixin scrollbarVisible(
+  $foreground-color: $scrollbar-foreground-color,
+  $background-color: $scrollbar-background-color
+) {
+  &::-webkit-scrollbar-thumb {
+    background: $foreground-color; // update the color to be visible
+  }
+  &::-webkit-scrollbar-track {
+    background: $background-color; // update the color to be visible
+  }
+
+  // Standard version (Firefox only for now) - always include
+  scrollbar-color: $foreground-color $background-color;
+  scrollbar-gutter: stable both-edges;
+  scrollbar-width: thin;
+}

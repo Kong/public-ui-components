@@ -107,6 +107,8 @@ During our release automation, Lerna will ensure that the version of `@kong-ui/c
 
 ### `peerDependencies`
 
+> **Important**: If you are packaging a Vue component, you **must** include `vue` in the `peerDependencies`. If your component utilizes `@kong/kongponents`, they too should be added as a `peerDependency` and **NOT** a `dependency`.
+
 Include loosely bounded (SemVer-wise) peer deps, i.e. `vue` or `vue-router`
 
 ```sh
