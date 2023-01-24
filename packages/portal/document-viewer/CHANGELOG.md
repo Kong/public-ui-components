@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.2.0 (2023-01-24)
+
+
+### ✨ Features
+
+* **portal-document-viewer:** create package ([#26](https://github.com/Kong/public-ui-components/issues/26)) ([6d42fdc](https://github.com/Kong/public-ui-components/commit/6d42fdc3e385f5cc67a5ff5bd9160ab62ddb0b49))
+
+
+### ♻️ Chores
+
+* change npm scope to [@kong-ui-public](https://github.com/kong-ui-public) ([#40](https://github.com/Kong/public-ui-components/issues/40)) ([c8c3c4f](https://github.com/Kong/public-ui-components/commit/c8c3c4f165fdd36269e1dd5bb31f47f73f7e9f4a))
+* **release:** publish [skip ci] ([25f272c](https://github.com/Kong/public-ui-components/commit/25f272c2065be7241213aa15f2079ca473a8581c))
+
+
+
+
+
 # 0.1.0 (2023-01-23)
 
 
