@@ -57,6 +57,6 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong/swagger-ui-web-component": "^1.0.17"
+    "@kong/swagger-ui-web-component": "^1.0.18"
   }
 }
