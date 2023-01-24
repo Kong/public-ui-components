@@ -1,11 +1,11 @@
 <template>
   <div
-    class="vue-mini-spec-item px-4 py-3"
+    class="mini-spec-item px-4 py-3"
     :class="{
       'selected': item.selected,
       'is-summary': isSummary
     }"
-    :data-testid="`vue-mini-spec-item-${item.path}`"
+    :data-testid="`mini-spec-item-${item.path}`"
     @click="handleClick"
   >
     <div
@@ -36,7 +36,6 @@
           :background-color="backgroundColor"
           class="spec-item-badge mr-2"
           :color="textColor"
-          is-bordered
         >
           {{ method ? method.toUpperCase() : '' }}
         </KBadge>
@@ -137,7 +136,7 @@ const handleClick = (): void => {
 </script>
 
 <style lang="scss" scoped>
-.vue-mini-spec-item {
+.mini-spec-item {
   $chicklet-size: 12px;
 
   .spec-item-chicklet {
@@ -148,11 +147,15 @@ const handleClick = (): void => {
   }
 
   .spec-item-label {
+    font-size: 14px;
     font-weight: 400;
   }
 
   &.is-summary {
+    border: 1px solid var(--grey-200);
+
     .spec-item-label {
+      font-size: 13px;
       font-weight: 700;
       color: var(--black-500);
     }
