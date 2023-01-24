@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui/portal-spec-renderer-mini",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "main": "./dist/portal-spec-renderer-mini.umd.js",
   "module": "./dist/portal-spec-renderer-mini.es.js",
