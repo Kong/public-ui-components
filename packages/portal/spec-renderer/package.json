@@ -57,6 +57,6 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong/swagger-ui-web-component": "^1.0.17"
+    "@kong-ui-public/swagger-ui-web-component": "workspace:^0.0.0"
   }
 }
