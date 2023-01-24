@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.0...@kong-ui-public/document-viewer@0.2.1) (2023-01-24)
+
+
+### ♻️ Chores
+
+* update package.json repo ([afd1cb5](https://github.com/Kong/public-ui-components/commit/afd1cb579df4cf962a2920185086620cc32a91e1))
+
+
+
+
+
 # 0.2.0 (2023-01-24)
 
 
