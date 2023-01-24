@@ -37,7 +37,11 @@
     "test:unit": "cross-env FORCE_COLOR=1 vitest run",
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
-  "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/core/i18n",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kong/public-ui-components.git",
+    "directory": "packages/core/i18n"
+  },
   "bugs": {
     "url": "https://github.com/Kong/public-ui-components/issues"
   },

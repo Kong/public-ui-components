@@ -40,7 +40,11 @@
   "peerDependencies": {},
   "dependencies": {},
   "devDependencies": {},
-  "repository": "https://github.com/Kong/public-ui-components/tree/main/packages/{%%WORKSPACE%%}/{%%PACKAGE_NAME%%}",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kong/public-ui-components.git",
+    "directory": "packages/{%%WORKSPACE%%}/{%%PACKAGE_NAME%%}"
+  },
   "bugs": {
     "url": "https://github.com/Kong/public-ui-components/issues"
   },
