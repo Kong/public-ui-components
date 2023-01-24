@@ -1,5 +1,5 @@
 {
-  "name": "@kong-ui/i18n",
+  "name": "@kong-ui-public/i18n",
   "version": "0.1.6",
   "type": "module",
   "main": "./dist/i18n.umd.js",

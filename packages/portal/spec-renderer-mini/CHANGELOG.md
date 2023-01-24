@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui/portal-spec-renderer-mini@0.1.0...@kong-ui/portal-spec-renderer-mini@0.1.1) (2023-01-24)
+## [0.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/portal-spec-renderer-mini@0.1.0...@kong-ui-public/portal-spec-renderer-mini@0.1.1) (2023-01-24)
 
 
 ### ♻️ Chores

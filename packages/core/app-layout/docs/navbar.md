@@ -25,7 +25,7 @@ A Kong UI dynamic navbar component.
 
 ## Install
 
-[See instructions for installing the `@kong-ui/app-layout` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/app-layout` package.](../README.md#install)
 
 ## CSS Variables
 
@@ -45,4 +45,4 @@ Variable | Description | Default
 
 ---
 
-[← Back to `@kong-ui/app-layout` docs](../README.md)
+[← Back to `@kong-ui-public/app-layout` docs](../README.md)
