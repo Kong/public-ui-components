@@ -192,7 +192,7 @@ importers:
 
   packages/portal/swagger-ui-web-component:
     specifiers:
-      '@kong/swagger-ui-kong-theme': github:kong/swagger-ui-kong-theme#universal
+      '@kong/swagger-ui-kong-theme': https://github.com/kong/swagger-ui-kong-theme#universal
       css-loader: ^6.7.2
       raw-loader: ^4.0.2
       react: 17.0.2

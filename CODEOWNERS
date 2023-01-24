@@ -31,6 +31,7 @@
 /packages/portal/document-viewer/ @Kong/team-core-ui
 /packages/portal/mini-spec-renderer/ @Kong/team-core-ui
 /packages/portal/spec-renderer/ @Kong/team-core-ui
+/packages/portal/swagger-ui-web-component/ @adamdehaven @davidma415 @kaiarrowwood
 
 # =========================================================================
 # Renovate Bot approvals
