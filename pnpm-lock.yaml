@@ -192,7 +192,7 @@ importers:
 
   packages/portal/swagger-ui-web-component:
     specifiers:
-      '@kong/swagger-ui-kong-theme': https://github.com/kong/swagger-ui-kong-theme#universal
+      '@kong/swagger-ui-kong-theme-universal': ^4.0.0
       css-loader: ^6.7.2
       raw-loader: ^4.0.2
       react: 17.0.2
@@ -205,7 +205,7 @@ importers:
       webpack-cli: ^5.0.0
       webpack-dev-server: ^4.11.1
     dependencies:
-      '@kong/swagger-ui-kong-theme': github.com/kong/swagger-ui-kong-theme/f74b20a5ee121744ce1600dd5231141d2b14c50d_sfoxds7t5ydpegc3knd667wn6m
+      '@kong/swagger-ui-kong-theme-universal': 4.0.0_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       swagger-ui: 4.15.5
@@ -1205,6 +1205,35 @@ packages:
     transitivePeerDependencies:
       - debug
     dev: true
+
+  /@kong/swagger-ui-kong-theme-universal/4.0.0_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-uqM3LZcu3wXNRCsbRM/YCwQoH/f+OmZst9lau6nPSLJ8tqFlaQULVzY1KRlBEW0EPcThFcHaSYkqb6VV4frr6Q==}
+    peerDependencies:
+      react: 17.0.2
+    dependencies:
+      '@braintree/sanitize-url': 2.1.0
+      '@kongponents/styles': 7.2.2
+      '@kyleshockey/xml': 1.0.2
+      classnames: 2.3.2
+      curl-to-har: 1.0.1
+      focus-trap-react: 10.0.2_sfoxds7t5ydpegc3knd667wn6m
+      immutable: 3.8.2
+      js-file-download: 0.4.12
+      memoizee: 0.4.15
+      react: 17.0.2
+      react-apiembed: 0.1.9
+      react-debounce-input: 3.3.0_react@17.0.2
+      swagger2har: 1.0.3
+      tachyons-sass: 4.9.5
+      util: 0.12.5
+    transitivePeerDependencies:
+      - '@babel/core'
+      - mkdirp
+      - prop-types
+      - react-dom
+      - rollup
+      - supports-color
+    dev: false
 
   /@kongponents/styles/7.2.2:
     resolution: {integrity: sha512-0x2DMmz8fx/cam7LlKNe/JNAl3Ttt71QuAH1C00zvEGWhxm/ECsCjdgQ+5SnVSHE9B+oS348E6WocJZY0JizwA==}
@@ -12222,36 +12251,4 @@ packages:
 
   /zenscroll/4.0.2:
     resolution: {integrity: sha512-jEA1znR7b4C/NnaycInCU6h/d15ZzCd1jmsruqOKnZP6WXQSMH3W2GL+OXbkruslU4h+Tzuos0HdswzRUk/Vgg==}
-    dev: false
-
-  github.com/kong/swagger-ui-kong-theme/f74b20a5ee121744ce1600dd5231141d2b14c50d_sfoxds7t5ydpegc3knd667wn6m:
-    resolution: {tarball: https://codeload.github.com/kong/swagger-ui-kong-theme/tar.gz/f74b20a5ee121744ce1600dd5231141d2b14c50d}
-    id: github.com/kong/swagger-ui-kong-theme/f74b20a5ee121744ce1600dd5231141d2b14c50d
-    name: '@kong/swagger-ui-kong-theme'
-    version: 4.0.0
-    peerDependencies:
-      react: 17.0.2
-    dependencies:
-      '@braintree/sanitize-url': 2.1.0
-      '@kongponents/styles': 7.2.2
-      '@kyleshockey/xml': 1.0.2
-      classnames: 2.3.2
-      curl-to-har: 1.0.1
-      focus-trap-react: 10.0.2_sfoxds7t5ydpegc3knd667wn6m
-      immutable: 3.8.2
-      js-file-download: 0.4.12
-      memoizee: 0.4.15
-      react: 17.0.2
-      react-apiembed: 0.1.9
-      react-debounce-input: 3.3.0_react@17.0.2
-      swagger2har: 1.0.3
-      tachyons-sass: 4.9.5
-      util: 0.12.5
-    transitivePeerDependencies:
-      - '@babel/core'
-      - mkdirp
-      - prop-types
-      - react-dom
-      - rollup
-      - supports-color
     dev: false

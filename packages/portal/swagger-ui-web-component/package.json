@@ -31,7 +31,7 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "dependencies": {
-    "@kong/swagger-ui-kong-theme": "https://github.com/kong/swagger-ui-kong-theme#universal",
+    "@kong/swagger-ui-kong-theme-universal": "^4.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "swagger-ui": "^4.15.5"
