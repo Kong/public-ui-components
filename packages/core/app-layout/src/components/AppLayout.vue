@@ -279,7 +279,6 @@ onBeforeUnmount(() => {
     margin-top: v-bind('layoutMainMarginTop');
     background-color: var(--grey-100, #f8f8fa);
     // border-top-left-radius: 16px; // TODO: Enable when Neon layout is enabled
-    overflow: auto;
 
     @media (min-width: $viewport-md) {
       width: calc(100% - #{$sidebar-width});

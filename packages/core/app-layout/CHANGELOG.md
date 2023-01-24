@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.11.3...@kong-ui-public/app-layout@0.11.4) (2023-01-24)
+
+
+### 🐛 Bug Fixes
+
+* **app-layout:** adjust body styles ([0a4883b](https://github.com/Kong/public-ui-components/commit/0a4883bd53eb7d8d3a5118459fb774e466346e3c))
+
+
+
+
+
 ## [0.11.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.11.2...@kong-ui-public/app-layout@0.11.3) (2023-01-24)
 
 
