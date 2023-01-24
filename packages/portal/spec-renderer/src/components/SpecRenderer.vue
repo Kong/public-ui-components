@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import '@kong/swagger-ui-web-component'
+import '@kong-ui-public/swagger-ui-web-component'
 import { PropType, computed } from 'vue'
 import { Document } from '../types'
 

@@ -1,1 +1,1 @@
-declare module '@kong/swagger-ui-web-component'
+declare module '@kong-ui-public/swagger-ui-web-component'
