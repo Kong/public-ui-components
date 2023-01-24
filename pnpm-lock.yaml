@@ -9,7 +9,7 @@ importers:
       '@commitlint/config-conventional': ^17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': ^7.5.1
       '@evilmartians/lefthook': ^1.2.8
-      '@kong/kongponents': ^8.18.8
+      '@kong/kongponents': ^8.19.0
       '@rushstack/eslint-patch': ^1.2.0
       '@types/flat': ^5.0.2
       '@types/js-yaml': ^4.0.5
@@ -65,7 +65,7 @@ importers:
       '@commitlint/config-conventional': 17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': 7.5.1
       '@evilmartians/lefthook': 1.2.8
-      '@kong/kongponents': 8.18.8_vue@3.2.45
+      '@kong/kongponents': 8.19.0_vue@3.2.45
       '@rushstack/eslint-patch': 1.2.0
       '@types/flat': 5.0.2
       '@types/js-yaml': 4.0.5
@@ -118,7 +118,7 @@ importers:
 
   packages/core/app-layout:
     specifiers:
-      '@kong/kongponents': ^8.18.8
+      '@kong/kongponents': ^8.19.0
       '@types/lodash.clonedeep': ^4.5.7
       focus-trap: ^7.2.0
       focus-trap-vue: ^4.0.1
@@ -130,7 +130,7 @@ importers:
       focus-trap-vue: 4.0.1_nn2zg2o47bujavotzgw5cgkzcu
       lodash.clonedeep: 4.5.0
     devDependencies:
-      '@kong/kongponents': 8.18.8_vue@3.2.45
+      '@kong/kongponents': 8.19.0_vue@3.2.45
       '@types/lodash.clonedeep': 4.5.7
       vue: 3.2.45
       vue-router: 4.1.6_vue@3.2.45
@@ -184,10 +184,10 @@ importers:
 
   packages/portal/spec-renderer-mini:
     specifiers:
-      '@kong/kongponents': ^8.18.7
+      '@kong/kongponents': ^8.19.0
       vue: ^3.2.45
     devDependencies:
-      '@kong/kongponents': 8.18.8_vue@3.2.45
+      '@kong/kongponents': 8.19.0_vue@3.2.45
       vue: 3.2.45
 
 packages:
@@ -1144,8 +1144,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@kong/kongponents/8.18.8_vue@3.2.45:
-    resolution: {integrity: sha512-NbW1mfvqUuJv97Pl5uAidYtZwBODXQ27Xlsu8eLPl5j99rgfbZNbm1x2JkmewgPK72vpjYkAF688gD0ke/lLQQ==}
+  /@kong/kongponents/8.19.0_vue@3.2.45:
+    resolution: {integrity: sha512-xbmlb+jn21ezWCIYptzhJ/5oIfzxEZiTB0Ik2njKmfrgEAVtOo6qCN0JhVAJwBBmEoH3FfnrSGlrLGDTF8TWIw==}
     engines: {node: '>=16.19.0'}
     peerDependencies:
       vue: '>= 3.2.37'
@@ -1169,7 +1169,7 @@ packages:
   /@kong/swagger-ui-web-component/1.0.17:
     resolution: {integrity: sha512-1vOOeHAY1xSGmwx1EOUNQTYxhh3sbGGpsdVKMgbZZ3gUL3UEksNogXDHMJgcVMpSjEhArf1olAUs41njpU14Ug==}
     dependencies:
-      '@kong/swagger-ui-kong-theme': github.com/kong/swagger-ui-kong-theme/b82e307dd3c07801b9375d8cdd3879d8a661b645_sfoxds7t5ydpegc3knd667wn6m
+      '@kong/swagger-ui-kong-theme': github.com/kong/swagger-ui-kong-theme/e61c3eea2b38b21fda4998d2a2150aeaea90d98e_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       swagger-ui: 4.15.5
@@ -3225,7 +3225,6 @@ packages:
   /available-typed-arrays/1.0.5:
     resolution: {integrity: sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==}
     engines: {node: '>= 0.4'}
-    dev: true
 
   /aws-sign2/0.7.0:
     resolution: {integrity: sha512-08kcGqnYf/YmjoRhfxyu+CLxBjUtHLXLXX/vUfx9l2LYzG3c1m61nrpyFUZI6zeS+Li/wWMMidD9KgrqtGq3mA==}
@@ -5494,7 +5493,6 @@ packages:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
     dependencies:
       is-callable: 1.2.7
-    dev: true
 
   /foreground-child/2.0.0:
     resolution: {integrity: sha512-dCIq9FpEcyQyXKCkyzmlPTFNgrCzPudOe+mhvJU5zAtlBnGVy2yKxtfsxK2tQBThwq225jcvBjpw1Gr40uzZCA==}
@@ -5913,7 +5911,6 @@ packages:
     resolution: {integrity: sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==}
     dependencies:
       get-intrinsic: 1.1.3
-    dev: true
 
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
@@ -5994,7 +5991,6 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       has-symbols: 1.0.3
-    dev: true
 
   /has-unicode/2.0.1:
     resolution: {integrity: sha512-8Rf9Y83NBReMnx0gFzA8JImQACstCYWUplepDa9xprwwtmgEZUF0h/i5xSA625zB/I37EtrswSST6OXxwaaIJQ==}
@@ -6347,6 +6343,14 @@ packages:
       is-decimal: 1.0.4
     dev: false
 
+  /is-arguments/1.1.1:
+    resolution: {integrity: sha512-8Q7EARjzEnKpt/PCD7e1cgUS0a6X8u5tdSiMqXhojOdoV9TsMsiO+9VLC5vAmO8N7/GmXn7yjR8qnA6bVAEzfA==}
+    engines: {node: '>= 0.4'}
+    dependencies:
+      call-bind: 1.0.2
+      has-tostringtag: 1.0.0
+    dev: false
+
   /is-array-buffer/3.0.1:
     resolution: {integrity: sha512-ASfLknmY8Xa2XtB4wmbz13Wu202baeA18cJBCeCy0wXUHZF0IPyVEXqKEcd+t2fNSLLL1vC6k7lxZEojNbISXQ==}
     dependencies:
@@ -6383,7 +6387,6 @@ packages:
   /is-callable/1.2.7:
     resolution: {integrity: sha512-1BC0BVFhS/p0qtw6enp8e+8OD0UrK0oFLztSjNzhcKA3WDuJxxAPXzPuPtKkjEY9UUoEWlX/8fgKeu2S8i9JTA==}
     engines: {node: '>= 0.4'}
-    dev: true
 
   /is-ci/2.0.0:
     resolution: {integrity: sha512-YfJT7rkpQB0updsdHLGWrvhBJfcfzNNawYDNIyQXJz0IViGf75O8EBPKSdvw2rF+LGCsX4FZ8tcr3b19LcZq4w==}
@@ -6434,6 +6437,13 @@ packages:
     resolution: {integrity: sha512-O4L094N2/dZ7xqVdrXhh9r1KODPJpFms8B5sGdJLPy664AgvXsreZUyCQQNItZRDlYug4xStLjNp/sz3HvBowQ==}
     engines: {node: '>=12'}
     dev: true
+
+  /is-generator-function/1.0.10:
+    resolution: {integrity: sha512-jsEjy9l3yiXEQ+PsXdmBwEPcOxaXWLspKdplFUVI9vq1iZgIekeC0L167qeu86czQaxed3q/Uzuw0swL0irL8A==}
+    engines: {node: '>= 0.4'}
+    dependencies:
+      has-tostringtag: 1.0.0
+    dev: false
 
   /is-glob/4.0.3:
     resolution: {integrity: sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==}
@@ -6588,7 +6598,6 @@ packages:
       for-each: 0.3.3
       gopd: 1.0.1
       has-tostringtag: 1.0.0
-    dev: true
 
   /is-typedarray/1.0.0:
     resolution: {integrity: sha512-cyA56iCMHAh5CdzjJIa4aohJyeO1YbwLi3Jc35MmRU6poroFjIGZzUzupGiRPOjgHg9TLu43xbpwXk523fMxKA==}
@@ -10224,6 +10233,16 @@ packages:
   /util-deprecate/1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
+  /util/0.12.5:
+    resolution: {integrity: sha512-kZf/K6hEIrWHI6XqOFUiiMa+79wE/D8Q+NCNAWclkyg3b4d2k7s0QGepNjiABc+aR3N1PAyHL7p6UcLY6LmrnA==}
+    dependencies:
+      inherits: 2.0.4
+      is-arguments: 1.1.1
+      is-generator-function: 1.0.10
+      is-typed-array: 1.1.10
+      which-typed-array: 1.1.9
+    dev: false
+
   /uuid/8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
@@ -10555,7 +10574,6 @@ packages:
       gopd: 1.0.1
       has-tostringtag: 1.0.0
       is-typed-array: 1.1.10
-    dev: true
 
   /which/1.3.1:
     resolution: {integrity: sha512-HxJdYWq1MTIQbJ3nw0cqssHoTNU267KlrDuGZ1WYlxDStUtKUhOaJmh112/TZmHxxUfuJqPXSOm7tDyas0OSIQ==}
@@ -10828,9 +10846,9 @@ packages:
       - babel-core
     dev: false
 
-  github.com/kong/swagger-ui-kong-theme/b82e307dd3c07801b9375d8cdd3879d8a661b645_sfoxds7t5ydpegc3knd667wn6m:
-    resolution: {tarball: https://codeload.github.com/kong/swagger-ui-kong-theme/tar.gz/b82e307dd3c07801b9375d8cdd3879d8a661b645}
-    id: github.com/kong/swagger-ui-kong-theme/b82e307dd3c07801b9375d8cdd3879d8a661b645
+  github.com/kong/swagger-ui-kong-theme/e61c3eea2b38b21fda4998d2a2150aeaea90d98e_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {tarball: https://codeload.github.com/kong/swagger-ui-kong-theme/tar.gz/e61c3eea2b38b21fda4998d2a2150aeaea90d98e}
+    id: github.com/kong/swagger-ui-kong-theme/e61c3eea2b38b21fda4998d2a2150aeaea90d98e
     name: '@kong/swagger-ui-kong-theme'
     version: 4.0.0
     peerDependencies:
@@ -10850,6 +10868,7 @@ packages:
       react-debounce-input: 3.3.0_react@17.0.2
       swagger2har: github.com/Kong/swagger2har/8409def1fd72311f44b1d34e669af76226cb4f59
       tachyons-sass: 4.9.5
+      util: 0.12.5
     transitivePeerDependencies:
       - babel-core
       - mkdirp
