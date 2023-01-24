@@ -22,9 +22,10 @@ body.kong-ui-app-layout-body {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%;
-  height: 100vh;
-  overflow: hidden;
+  // height: 100%; // Reenable these rules to move the scrollbar under the AppNavbar
+  // height: 100vh; // Reenable these rules to move the scrollbar under the AppNavbar
+  // overflow: hidden; // Reenable these rules to move the scrollbar under the AppNavbar
+  overscroll-behavior-y: none; // Disable elastic overflow scrolling in Chrome and Safari
 }
 
 body.kong-ui-app-layout-body {
