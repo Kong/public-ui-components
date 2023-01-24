@@ -1,8 +1,8 @@
 import SwaggerUI from 'swagger-ui'
-import { SwaggerUIKongTheme } from '@kong/swagger-ui-kong-theme'
+import { SwaggerUIKongTheme } from '@kong/swagger-ui-kong-theme-universal'
 import { attributeValueToBoolean } from './utils'
 
-const kongThemeStyles = require('!!raw-loader!@kong/swagger-ui-kong-theme/dist/main.css')
+const kongThemeStyles = require('!!raw-loader!@kong/swagger-ui-kong-theme-universal/dist/main.css')
 const essentialsOnlyStyles = `
 /* hide non-essential sections & features */
 .info-augment-wrapper,
