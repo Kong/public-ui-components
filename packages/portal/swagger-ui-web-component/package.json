@@ -33,7 +33,7 @@
     "extends": "../../../package.json"
   },
   "devDependencies": {
-    "css-loader": "^6.7.2",
+    "css-loader": "^6.7.3",
     "raw-loader": "^4.0.2",
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "^5.3.6",
