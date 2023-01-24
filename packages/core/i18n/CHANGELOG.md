@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.1.6](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-i18n@0.1.5...@kong-ui/core-i18n@0.1.6) (2023-01-23)
+## [0.1.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.1.5...@kong-ui-public/i18n@0.1.6) (2023-01-23)
 
 
 ### ♻️ Chores
@@ -14,7 +14,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-i18n@0.1.4...@kong-ui/core-i18n@0.1.5) (2023-01-21)
+## [0.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.1.4...@kong-ui-public/i18n@0.1.5) (2023-01-21)
 
 
 ### 🐛 Bug Fixes
@@ -25,7 +25,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-i18n@0.1.3...@kong-ui/core-i18n@0.1.4) (2023-01-20)
+## [0.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.1.3...@kong-ui-public/i18n@0.1.4) (2023-01-20)
 
 
 ### 📚 Documentation
@@ -41,23 +41,23 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-i18n@0.1.2...@kong-ui/core-i18n@0.1.3) (2023-01-20)
+## [0.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.1.2...@kong-ui-public/i18n@0.1.3) (2023-01-20)
 
-**Note:** Version bump only for package @kong-ui/core-i18n
-
-
-
-
-
-## [0.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-i18n@0.1.1...@kong-ui/core-i18n@0.1.2) (2023-01-20)
-
-**Note:** Version bump only for package @kong-ui/core-i18n
+**Note:** Version bump only for package @kong-ui-public/i18n
 
 
 
 
 
-## [0.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-i18n@0.1.0...@kong-ui/core-i18n@0.1.1) (2023-01-19)
+## [0.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.1.1...@kong-ui-public/i18n@0.1.2) (2023-01-20)
+
+**Note:** Version bump only for package @kong-ui-public/i18n
+
+
+
+
+
+## [0.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.1.0...@kong-ui-public/i18n@0.1.1) (2023-01-19)
 
 
 ### 🐛 Bug Fixes

@@ -95,7 +95,7 @@ const createPackageFiles = async (workspace: string, packageName: string): Promi
   spinner.success({ text: 'Verified the package structure.' })
 
   spinner.success({
-    text: `Created the new '${pc.cyan(`${workspace}-${packageName}`)}' package and its related files:
+    text: `Created the new '${pc.cyan(`${packageName}`)}' package and its related files:
     ${fileStructure}`,
   })
 
@@ -112,13 +112,13 @@ Configure the component imports and usage inside the
 /packages/${workspace}/${packageName}/sandbox/ directory.
 
 # Run commands for your package from the root
-$ ${pc.cyan(`pnpm --filter "@kong-ui/${workspace}-${packageName}" {your command}`)}
+$ ${pc.cyan(`pnpm --filter "@kong-ui-public/${packageName}" {your command}`)}
 
 # Start the sandbox dev server
-$ ${pc.cyan(`pnpm --filter "@kong-ui/${workspace}-${packageName}" run dev`)}
+$ ${pc.cyan(`pnpm --filter "@kong-ui-public/${packageName}" run dev`)}
 `,
     {
-      title: `@kong-ui/${workspace}-${packageName}`,
+      title: `@kong-ui-public/${packageName}`,
       titleAlignment: 'center',
       textAlignment: 'left',
       padding: 1,
@@ -130,7 +130,7 @@ $ ${pc.cyan(`pnpm --filter "@kong-ui/${workspace}-${packageName}" run dev`)}
 export const createPackage = async (): Promise<void> => {
   console.clear()
   console.log(boxen(pc.cyan(pc.bold(`${emoji.get('sparkles')} Create a new package ${emoji.get('sparkles')}`)), {
-    title: '@kong-ui',
+    title: '@kong-ui-public',
     titleAlignment: 'center',
     textAlignment: 'center',
     padding: 1,
@@ -156,7 +156,7 @@ export const createPackage = async (): Promise<void> => {
     const { name } = await inquirer.prompt([packageName(workspace)])
 
     // Output a message confirming their package name
-    console.log('  Package name: ' + pc.cyan(`@kong-ui/${workspace}-${name}`))
+    console.log('  Package name: ' + pc.cyan(`@kong-ui-public/${name}`))
 
     // Ask the user to confirm the package name
     const { confirmName } = await inquirer.prompt([confirmPackageName])

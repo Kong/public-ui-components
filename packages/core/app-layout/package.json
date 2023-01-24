@@ -1,17 +1,17 @@
 {
-  "name": "@kong-ui/core-app-layout",
+  "name": "@kong-ui-public/app-layout",
   "version": "0.10.1",
   "type": "module",
-  "main": "./dist/core-app-layout.umd.js",
-  "module": "./dist/core-app-layout.es.js",
+  "main": "./dist/app-layout.umd.js",
+  "module": "./dist/app-layout.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/core-app-layout.es.js",
-      "require": "./dist/core-app-layout.umd.js"
+      "import": "./dist/app-layout.es.js",
+      "require": "./dist/app-layout.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

@@ -1,17 +1,17 @@
 {
-  "name": "@kong-ui/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}",
+  "name": "@kong-ui-public/{%%PACKAGE_NAME%%}",
   "version": "0.0.0",
   "type": "module",
-  "main": "./dist/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}.umd.js",
-  "module": "./dist/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}.es.js",
+  "main": "./dist/{%%PACKAGE_NAME%%}.umd.js",
+  "module": "./dist/{%%PACKAGE_NAME%%}.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}.es.js",
-      "require": "./dist/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}.umd.js"
+      "import": "./dist/{%%PACKAGE_NAME%%}.es.js",
+      "require": "./dist/{%%PACKAGE_NAME%%}.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

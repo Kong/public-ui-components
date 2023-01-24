@@ -1,17 +1,17 @@
 {
-  "name": "@kong-ui/portal-document-viewer",
+  "name": "@kong-ui-public/document-viewer",
   "version": "0.1.0",
   "type": "module",
-  "main": "./dist/portal-document-viewer.umd.js",
-  "module": "./dist/portal-document-viewer.es.js",
+  "main": "./dist/document-viewer.umd.js",
+  "module": "./dist/document-viewer.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/portal-document-viewer.es.js",
-      "require": "./dist/portal-document-viewer.umd.js"
+      "import": "./dist/document-viewer.es.js",
+      "require": "./dist/document-viewer.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

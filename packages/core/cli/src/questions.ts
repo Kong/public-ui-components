@@ -22,7 +22,7 @@ export default {
     message: 'What is the kebab-case name of the new package?',
     filter: async (input: string): Promise<string> => kebabCase(input).replace(/[^a-z0-9-]/gi, ''),
     transformer: (input: string): string => {
-      return `@kong-ui/${workspace}-${pc.cyan(pc.bold(input))}`
+      return `@kong-ui-public/${pc.cyan(pc.bold(input))}`
     },
     validate: async (input: string) => {
       if (!input.trim()) {

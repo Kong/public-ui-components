@@ -49,7 +49,7 @@ Configure the component import and usage inside the
 /packages/{workspace}/demo-component/sandbox/ directory.
 
 # Start the dev server
-$ pnpm --filter "@kong-ui/core-demo-component" run dev
+$ pnpm --filter "@kong-ui-public/demo-component" run dev
 ```
 
 ## Package Structure
@@ -57,13 +57,13 @@ $ pnpm --filter "@kong-ui/core-demo-component" run dev
 This monorepo comes pre-configured with config files and other settings that :sparkles: automatically  work :sparkles: for all packages when [created via the CLI](#required-use-the-provided-cli-to-scaffold-your-new-package). In order to take advantage of this shared setup, each project must be structured correctly, including:
 
 - A `README.md` at the package root that explains the purpose of the package, usage instructions, etc. You can create additional `.md` files as needed for documentation, but please link to them from the package root `README.md`
-- A `package.json` file in the package root. The package `name` must follow the pattern `@kong-ui/{workspace}-{package-name}` where `{workspace}` is the same as the child directory of `packages/` and `{package-name}` is the same as the directory name itself.
+- A `package.json` file in the package root. The package `name` must follow the pattern `@kong-ui-public/{package-name}` where `{package-name}` is the same as the directory name itself.
 - A `tsconfig.json` that extends the root `tsconfig.json`
 - A `tsconfig.build.json` that extends the local package `tsconfig.json`
 - A [`vite.config.ts`](#include-a-viteconfigts-file) that extends (via `mergeConfig`) the root `vite.config.shared.ts`
 - All code **must** be contained within the `{package-name}/src` directory
 - A file at `src/index.ts` that exports all of the package exports.
-- If utilizing **any** text strings, your package **must** utilize a `src/locales/{lang}.json` file for the text strings and incorporate the `useI18n` helper from `@kong-ui/core`
+- If utilizing **any** text strings, your package **must** utilize a `src/locales/{lang}.json` file for the text strings and incorporate the `useI18n` helper from `@kong-ui-public/core`
 - All packages are initialized with their own fully-functional Vue sandbox.
 
 ## Include a `vite.config.ts` file
@@ -92,18 +92,18 @@ Make sure to include all explicitly versioned runtime dependencies within this s
 
 #### Depedencies on packages also managed within this monorepo
 
-Add the dependency to your `package.json` file by package name using the _latest_ package version (as defined in its own `package.json` file). For example, if you are developing `@kong-ui/core-new-component` and `@kong-ui/core-demo-component` already exists as a package within `public-ui-components`, add the following to the `package.json` file of `@kong-ui/core-new-component`:
+Add the dependency to your `package.json` file by package name using the _latest_ package version (as defined in its own `package.json` file). For example, if you are developing `@kong-ui-public/new-component` and `@kong-ui-public/demo-component` already exists as a package within `public-ui-components`, add the following to the `package.json` file of `@kong-ui-public/new-component`:
 
 ```json
 "dependencies": {
-  "@kong-ui/core-demo-component": "^1.6.2"
+  "@kong-ui-public/demo-component": "^1.6.2"
 }
 ```
 
-where `1.6.2` is the version that's currently listed in the `package.json` file of `@kong-ui/core-demo-component` within the `public-ui-components` repo.
+where `1.6.2` is the version that's currently listed in the `package.json` file of `@kong-ui-public/demo-component` within the `public-ui-components` repo.
 
-During local development, the local version of `@kong-ui/core-demo-component` will be symlinked and used within `@kong-ui/core-new-component`.
-During our release automation, Lerna will ensure that the version of `@kong-ui/core-demo-component` required in the `package.json` of `@kong-ui/core-new-component` is kept up-to-date. That is, when a new version of `@kong-ui/core-demo-component` is released the `package.json` file of `@kong-ui/core-new-component` is also updated and thus a new version of `@kong-ui/core-new-component` is released.
+During local development, the local version of `@kong-ui-public/demo-component` will be symlinked and used within `@kong-ui-public/new-component`.
+During our release automation, Lerna will ensure that the version of `@kong-ui-public/demo-component` required in the `package.json` of `@kong-ui-public/new-component` is kept up-to-date. That is, when a new version of `@kong-ui-public/demo-component` is released the `package.json` file of `@kong-ui-public/new-component` is also updated and thus a new version of `@kong-ui-public/new-component` is released.
 
 ### `peerDependencies`
 
@@ -112,7 +112,7 @@ During our release automation, Lerna will ensure that the version of `@kong-ui/c
 Include loosely bounded (SemVer-wise) peer deps, i.e. `vue` or `vue-router`
 
 ```sh
-pnpm --filter="@kong-ui/core-demo-component" add --save-peer vue@latest
+pnpm --filter="@kong-ui-public/demo-component" add --save-peer vue@latest
 ```
 
 ### `devDependencies`
@@ -128,7 +128,7 @@ pnpm add -wD @types/foo
 To add package-specific `devDependencies`:
 
 ```bash
-pnpm --filter="@kong-ui/core-demo-component" add -D @types/foo
+pnpm --filter="@kong-ui-public/demo-component" add -D @types/foo
 ```
 
 ### `scripts`
@@ -152,15 +152,15 @@ Your `scripts` section may also contain as many additional scripts as you'd like
 
 > All `scripts` MUST be executed from the root context of the monorepo
 
-So, if you wanted to run lint the code in your package defined as the `lint` script command for a package named `@kong-ui/foo` you would run:
+So, if you wanted to run lint the code in your package defined as the `lint` script command for a package named `@kong-ui-public/foo` you would run:
 
 ```sh
-pnpm --filter "@kong-ui/core-demo-component" run lint
+pnpm --filter "@kong-ui-public/demo-component" run lint
 ```
 
 ### `publishConfig`
 
-The `publishConfig` field is important as it marks the package as public for the given organization scope (i.e. `@kong-ui/`) and leverages pnpm features to rewrite the `main` and `typings` fields at time of publish. It should look something like:
+The `publishConfig` field is important as it marks the package as public for the given organization scope (i.e. `@kong-ui-public/`) and leverages pnpm features to rewrite the `main` and `typings` fields at time of publish. It should look something like:
 
 ```json
 "publishConfig": {
@@ -234,13 +234,13 @@ In order to prevent component styles from leaking out into the consuming applica
 
 2. All component styles must be wrapped in a unique wrapper class so that styles do not leak out into the consuming application.
 
-    The class name should follow the syntax `.kong-ui-{workspace}-{package-name}`
+    The class name should follow the syntax `.kong-ui-{package-name}`
 
    This is a good practice even if you go with option one outlined above.
 
     ```html
     <style lang="scss">
-    .kong-ui-core-demo-component {
+    .kong-ui-public-demo-component {
       /* All other styles must go inside the wrapper */
     }
     </style>
@@ -254,12 +254,12 @@ We cannot control the `html` base font size and therefore these relative units a
 
 #### CSS Variables
 
-If your component exposes any CSS variables, they **must** be prefixed with your package name `--kong-ui-{workspace}-{package-name}`
+If your component exposes any CSS variables, they **must** be prefixed with your package name `--kong-ui-{package-name}`
 
-For example, the `@kong-ui/core-app-layout` package exposes the following CSS variables:
+For example, the `@kong-ui-public/app-layout` package exposes the following CSS variables:
 
 ```css
---kong-ui-core-app-sidebar-mobile-icon-color
+--kong-ui-app-sidebar-mobile-icon-color
 ```
 
 ## Testing

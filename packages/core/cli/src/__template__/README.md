@@ -1,4 +1,4 @@
-# @kong-ui/{%%WORKSPACE%%}-{%%PACKAGE_NAME%%}
+# @kong-ui-public/{%%PACKAGE_NAME%%}
 
 {A description of this package}
 
