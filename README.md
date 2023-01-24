@@ -55,7 +55,7 @@ You can also run `pnpm install-completion` to integrate `pnpm` autocompletion in
 Run the dev server in your `packages/{workspace}/{package-name}/sandbox/` directory with hot-module reload
 
 ```sh
-pnpm --filter "@kong-ui/{workspace}-{package-name}" run dev
+pnpm --filter "@kong-ui-public/{package-name}" run dev
 ```
 
 ### ESLint
@@ -64,10 +64,10 @@ Lint package files
 
 ```sh
 # Lint only
-pnpm --filter "@kong-ui/{workspace}-{package-name}" run lint
+pnpm --filter "@kong-ui-public/{package-name}" run lint
 
 # Lint and fix
-pnpm --filter "@kong-ui/{workspace}-{package-name}" run lint:fix
+pnpm --filter "@kong-ui-public/{package-name}" run lint:fix
 ```
 
 ### Type Checking
@@ -75,7 +75,7 @@ pnpm --filter "@kong-ui/{workspace}-{package-name}" run lint:fix
 Type check your package
 
 ```sh
-pnpm --filter "@kong-ui/{workspace}-{package-name}" run typecheck
+pnpm --filter "@kong-ui-public/{package-name}" run typecheck
 ```
 
 ### Testing
@@ -84,16 +84,16 @@ Run Component or Unit tests
 
 ```sh
 # Component tests
-pnpm --filter "@kong-ui/{workspace}-{package-name}" run test:component
+pnpm --filter "@kong-ui-public/{package-name}" run test:component
 
 # Component tests (with UI)
-pnpm --filter "@kong-ui/{workspace}-{package-name}" run test:open
+pnpm --filter "@kong-ui-public/{package-name}" run test:open
 
 # Unit tests
-pnpm --filter "@kong-ui/{workspace}-{package-name}" run test:unit
+pnpm --filter "@kong-ui-public/{package-name}" run test:unit
 
 # Unit tests (with UI)
-pnpm --filter "@kong-ui/{workspace}-{package-name}" run test:unit:open
+pnpm --filter "@kong-ui-public/{package-name}" run test:unit:open
 ```
 
 ### Preview sandbox build
@@ -101,13 +101,13 @@ pnpm --filter "@kong-ui/{workspace}-{package-name}" run test:unit:open
 Build your `packages/{package-name}/sandbox/` directory for production and serve locally
 
 ```sh
-pnpm --filter "@kong-ui/{workspace}-{package-name}" run preview
+pnpm --filter "@kong-ui-public/{package-name}" run preview
 ```
 
 ### Build for production
 
 ```sh
-pnpm --filter "@kong-ui/{workspace}-{package-name}" run build
+pnpm --filter "@kong-ui-public/{package-name}" run build
 ```
 
 ### Requirements
@@ -140,7 +140,7 @@ Additionally, CI will use `commitlint` to validate the commits associated with a
 
 ## Running consuming application with local copy of the package
 
-You are developing shared component (let's say `@kong-ui/forms`) and you need to run consuming application with the current version of the code you have locally in your `public-ui-components/packages/{workspace}/forms` branch. Here is how to do it:
+You are developing shared component (let's say `@kong-ui-public/forms`) and you need to run consuming application with the current version of the code you have locally in your `public-ui-components/packages/{workspace}/forms` branch. Here is how to do it:
 
 1. in the folder `public-ui-components/packages/{workspace}/forms` run
 
@@ -157,7 +157,7 @@ You are developing shared component (let's say `@kong-ui/forms`) and you need to
 3. In the root folder of the host application/package run:
 
     ```sh
-    yarn link "@kong-ui/forms"
+    yarn link "@kong-ui-public/forms"
     ```
 
 4. Run your consuming application as usual and enjoy your forms code changes visible in your local env immediately.
@@ -173,7 +173,7 @@ In some cases HMR (hot module reloading) is not working out of the box in this c
     ```ts
       server: {
           watch: {
-            ignored: ['!**/node_modules/@kong-ui/forms/**']
+            ignored: ['!**/node_modules/@kong-ui-public/forms/**']
           },
     ```
 
@@ -181,7 +181,7 @@ In some cases HMR (hot module reloading) is not working out of the box in this c
 
     ```ts
         optimizeDeps: {
-          exclude: ['@kong-ui/forms']
+          exclude: ['@kong-ui-public/forms']
         },
     ```
 
@@ -198,7 +198,7 @@ In some cases HMR (hot module reloading) is not working out of the box in this c
 1. In the root folder of the host application/package run:
 
     ```sh
-    yarn unlink "@kong-ui/forms"
+    yarn unlink "@kong-ui-public/forms"
     yarn install --force --frozen-lockfile
     ```
 

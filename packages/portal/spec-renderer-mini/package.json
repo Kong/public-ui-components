@@ -1,17 +1,17 @@
 {
-  "name": "@kong-ui/portal-spec-renderer-mini",
+  "name": "@kong-ui-public/spec-renderer-mini",
   "version": "0.1.1",
   "type": "module",
-  "main": "./dist/portal-spec-renderer-mini.umd.js",
-  "module": "./dist/portal-spec-renderer-mini.es.js",
+  "main": "./dist/spec-renderer-mini.umd.js",
+  "module": "./dist/spec-renderer-mini.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/portal-spec-renderer-mini.es.js",
-      "require": "./dist/portal-spec-renderer-mini.umd.js"
+      "import": "./dist/spec-renderer-mini.es.js",
+      "require": "./dist/spec-renderer-mini.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

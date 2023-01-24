@@ -71,7 +71,7 @@ A Kong UI dynamic sidebar component.
 
 ### Install
 
-[See instructions for installing the `@kong-ui/app-layout` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/app-layout` package.](../README.md#install)
 
 ## `AppSidebar.vue`
 
@@ -295,11 +295,11 @@ watch(() => route.path, (newPath, oldPath) => {
 <script setup lang="ts">
 import { watch, onBeforeMount } from 'vue'
 // AppSidebar Component and types
-import { AppSidebar, SidebarPrimaryItem, SidebarSecondaryItem, SidebarProfileItem } from '@kong-ui/app-layout'
+import { AppSidebar, SidebarPrimaryItem, SidebarSecondaryItem, SidebarProfileItem } from '@kong-ui-public/app-layout'
 import { RouteRecordRedirectOption, useRoute, useRouter } from 'vue-router'
 import useSidebar from '../composables/useSidebar'
 // Component styles
-import '@kong-ui/app-layout/dist/style.css'
+import '@kong-ui-public/app-layout/dist/style.css'
 
 const { updateMenu, topItems, bottomItems, profileItems } = composables.useSidebar()
 const router = useRouter()
@@ -358,7 +358,7 @@ onBeforeMount(() => {
 
 ```ts
 import { ref } from 'vue'
-import { SidebarPrimaryItem, SidebarProfileItem } from '@kong-ui/app-layout'
+import { SidebarPrimaryItem, SidebarProfileItem } from '@kong-ui-public/app-layout'
 import { RouteLocationNormalizedLoaded } from 'vue-router'
 
 export const useSidebar = () => {
@@ -524,9 +524,9 @@ Variable | Description | Default
 TypeScript interfaces [are available here](https://github.com/Kong/shared-ui-components/blob/main/packages/sidebar/src/types/index.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
-import type { SidebarPrimaryItem, SidebarSecondaryItem, SidebarProfileItem } from '@kong-ui/app-layout'
+import type { SidebarPrimaryItem, SidebarSecondaryItem, SidebarProfileItem } from '@kong-ui-public/app-layout'
 ```
 
 ---
 
-[← Back to `@kong-ui/app-layout` docs](../README.md)
+[← Back to `@kong-ui-public/app-layout` docs](../README.md)

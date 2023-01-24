@@ -1,4 +1,4 @@
-# @kong-ui/portal-spec-renderer-mini
+# @kong-ui-public/spec-renderer-mini
 
 A Kong UI mini component for displaying API specs
 
@@ -33,7 +33,7 @@ A Kong UI mini component for displaying API specs
 Install the component in your host application
 
 ```sh
-yarn add @kong-ui/portal-spec-renderer-mini
+yarn add @kong-ui-public/spec-renderer-mini
 ```
 
 ### Register
@@ -43,8 +43,8 @@ You can register `portal-spec-renderer-mini` globally or locally.
 ```typescript
 // Global registration
 import { createApp } from 'vue'
-import SpecRendererMini from '@kong-ui/portal-spec-renderer-mini'
-import '@kong-ui/portal-spec-renderer-mini/dist/style.css'
+import SpecRendererMini from '@kong-ui-public/spec-renderer-mini'
+import '@kong-ui-public/spec-renderer-mini/dist/style.css'
 
 const app = createApp(App)
 
@@ -59,8 +59,8 @@ app.use(SpecRendererMini)
 </template>
 
 <script setup lang="ts">
-import SpecRendererMini from '@kong-ui/portal-spec-renderer-mini'
-import '@kong-ui/portal-spec-renderer-mini/dist/style.css'
+import SpecRendererMini from '@kong-ui-public/spec-renderer-mini'
+import '@kong-ui-public/spec-renderer-mini/dist/style.css'
 </script>
 ```
 

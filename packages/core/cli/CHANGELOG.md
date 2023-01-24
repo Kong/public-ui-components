@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-public-cli@0.1.7...@kong-ui/core-public-cli@0.2.0) (2023-01-23)
+# [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.1.7...@kong-ui-public/cli@0.2.0) (2023-01-23)
 
 
 ### ✨ Features
@@ -19,7 +19,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-public-cli@0.1.6...@kong-ui/core-public-cli@0.1.7) (2023-01-23)
+## [0.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.1.6...@kong-ui-public/cli@0.1.7) (2023-01-23)
 
 
 ### ♻️ Chores
@@ -30,7 +30,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.1.6](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-public-cli@0.1.5...@kong-ui/core-public-cli@0.1.6) (2023-01-21)
+## [0.1.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.1.5...@kong-ui-public/cli@0.1.6) (2023-01-21)
 
 
 ### 🐛 Bug Fixes
@@ -41,7 +41,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-public-cli@0.1.4...@kong-ui/core-public-cli@0.1.5) (2023-01-20)
+## [0.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.1.4...@kong-ui-public/cli@0.1.5) (2023-01-20)
 
 
 ### ♻️ Chores
@@ -52,23 +52,23 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-public-cli@0.1.3...@kong-ui/core-public-cli@0.1.4) (2023-01-20)
+## [0.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.1.3...@kong-ui-public/cli@0.1.4) (2023-01-20)
 
-**Note:** Version bump only for package @kong-ui/core-public-cli
-
-
-
-
-
-## [0.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-public-cli@0.1.2...@kong-ui/core-public-cli@0.1.3) (2023-01-20)
-
-**Note:** Version bump only for package @kong-ui/core-public-cli
+**Note:** Version bump only for package @kong-ui-public/cli
 
 
 
 
 
-## [0.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-public-cli@0.1.1...@kong-ui/core-public-cli@0.1.2) (2023-01-19)
+## [0.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.1.2...@kong-ui-public/cli@0.1.3) (2023-01-20)
+
+**Note:** Version bump only for package @kong-ui-public/cli
+
+
+
+
+
+## [0.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.1.1...@kong-ui-public/cli@0.1.2) (2023-01-19)
 
 
 ### 🐛 Bug Fixes
@@ -79,7 +79,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui/core-public-cli@0.1.0...@kong-ui/core-public-cli@0.1.1) (2023-01-19)
+## [0.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.1.0...@kong-ui-public/cli@0.1.1) (2023-01-19)
 
 
 ### ♻️ Chores

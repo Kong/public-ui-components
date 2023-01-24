@@ -1,4 +1,4 @@
-# @kong-ui/core-i18n
+# @kong-ui-public/i18n
 
 - [Purpose](#purpose)
 - [Use in application](#use-in-application)
@@ -26,7 +26,7 @@ When used in application we only need to instantiate `Intl` object once, during 
 in `main.ts` (application hydration code):
 
 ```ts
-import { createI18n } from '@kong-ui/core-i18n'
+import { createI18n } from '@kong-ui-public/i18n'
 import english from './locales/en.json'
 
 ...
@@ -43,7 +43,7 @@ And then, anywhere in application code where `i18n` is needed:
 </template>
 
 <script setup lang="ts">
-import { useI18n } from '@kong-ui/core-i18n'
+import { useI18n } from '@kong-ui-public/i18n'
 const i18n = useI18n()
 </script>
 ```
@@ -61,7 +61,7 @@ When used in [shared component](https://github.com/Kong/shared-ui-components/pul
 
 // assuming component is receiving locale code as a property
 <script setup lang="ts">
-import { createI18n } from '@kong-ui/core-i18n'
+import { createI18n } from '@kong-ui-public/i18n'
 import english from '../locales/en.json'
 
 // this will instantiate `Intl` local to this component, using component's english messages.
@@ -102,7 +102,7 @@ const i18n = createI18n(props.locale || 'en-us', english)
 
 
 <script setup lang="ts">
-import { useI18n } from '@kong-ui/core-i18n'
+import { useI18n } from '@kong-ui-public/i18n'
 const i18n = useI18n()
 </script>
 ```
@@ -150,7 +150,7 @@ In `khcp-ui` there are many places where instead of using Intl function we are a
 
 
 <script setup lang="ts">
-import { useI18n } from '@kong-ui/core-i18n'
+import { useI18n } from '@kong-ui-public/i18n'
 
 const i18n = useI18n()
 const helpText = i18n.source.components.docUploadCard
@@ -177,7 +177,7 @@ Sometimes it is needed to render translated message with HTML as part of the par
 `main.ts` (registing component)
 
 ```ts
-import { createI18n, Translation } from '@kong-ui/core-i18n'
+import { createI18n, Translation } from '@kong-ui-public/i18n'
 import english from './locales/en.json'
 
 ...

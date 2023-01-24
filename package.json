@@ -1,5 +1,5 @@
 {
-  "name": "@kong-ui/public-ui-components",
+  "name": "@kong-ui-public/public-ui-components",
   "version": "0.0.0-development",
   "private": true,
   "scripts": {
@@ -16,7 +16,7 @@
     "test:unit": "cross-env FORCE_COLOR=1 pnpm -r run test:unit",
     "test:unit:open": "cross-env FORCE_COLOR=1 pnpm -r run test:unit:open",
     "commit": "cz",
-    "create-package": "pnpm --filter \"@kong-ui/core-public-cli\" run create-package"
+    "create-package": "pnpm --filter \"@kong-ui-public/cli\" run create-package"
   },
   "devDependencies": {
     "@babel/types": "^7.20.7",

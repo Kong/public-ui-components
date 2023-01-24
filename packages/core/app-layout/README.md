@@ -1,4 +1,4 @@
-# @kong-ui/core-app-layout
+# @kong-ui-public/app-layout
 
 A Kong UI application layout component that provides a responsive navbar, sidebar, and main content area.
 
@@ -48,7 +48,7 @@ Reference the [individual component docs](#individual-component-documentation) f
 Install the component in your host application
 
 ```sh
-yarn add @kong-ui/core-app-layout
+yarn add @kong-ui-public/app-layout
 ```
 
 ### Vue Plugin
@@ -58,7 +58,7 @@ Initialize the component as a plugin within your application's entry file (e.g. 
 ```ts
 import { createApp } from 'vue'
 import App from './App.vue'
-import AppLayout from '@kong-ui/core-app-layout'
+import AppLayout from '@kong-ui-public/app-layout'
 
 const app = createApp(App)
 
@@ -71,12 +71,12 @@ app.mount('#app')
 Alternatively, import the component within your application's root component.
 
 ```ts
-import { AppLayout } from '@kong-ui/core-app-layout'
+import { AppLayout } from '@kong-ui-public/app-layout'
 ```
 
 ## Usage
 
-> **Note**: TODO - for now, you can reference the sandbox app `pnpm --filter "@kong-ui/core-app-layout" run dev`
+> **Note**: TODO - for now, you can reference the sandbox app `pnpm --filter "@kong-ui-public/app-layout" run dev`
 
 ### Props
 

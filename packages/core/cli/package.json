@@ -1,5 +1,5 @@
 {
-  "name": "@kong-ui/core-public-cli",
+  "name": "@kong-ui-public/cli",
   "version": "0.2.0",
   "private": true,
   "type": "module",

@@ -1,17 +1,17 @@
 {
-  "name": "@kong-ui/core-i18n",
+  "name": "@kong-ui-public/i18n",
   "version": "0.1.6",
   "type": "module",
-  "main": "./dist/core-i18n.umd.js",
-  "module": "./dist/core-i18n.es.js",
+  "main": "./dist/i18n.umd.js",
+  "module": "./dist/i18n.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/core-i18n.es.js",
-      "require": "./dist/core-i18n.umd.js"
+      "import": "./dist/i18n.es.js",
+      "require": "./dist/i18n.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
