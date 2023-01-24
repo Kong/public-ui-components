@@ -45,6 +45,7 @@
     "url": "https://github.com/Kong/public-ui-components.git",
     "directory": "packages/{%%WORKSPACE%%}/{%%PACKAGE_NAME%%}"
   },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/{%%WORKSPACE%%}/{%%PACKAGE_NAME%%}",
   "bugs": {
     "url": "https://github.com/Kong/public-ui-components/issues"
   },

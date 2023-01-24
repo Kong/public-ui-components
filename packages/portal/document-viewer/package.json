@@ -47,6 +47,7 @@
     "url": "https://github.com/Kong/public-ui-components.git",
     "directory": "packages/portal/document-viewer"
   },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/portal/document-viewer",
   "bugs": {
     "url": "https://github.com/Kong/public-ui-components/issues"
   },

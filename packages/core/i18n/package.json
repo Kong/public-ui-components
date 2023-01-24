@@ -42,6 +42,7 @@
     "url": "https://github.com/Kong/public-ui-components.git",
     "directory": "packages/core/i18n"
   },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/core/i18n",
   "bugs": {
     "url": "https://github.com/Kong/public-ui-components/issues"
   },
