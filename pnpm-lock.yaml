@@ -40,7 +40,7 @@ importers:
       lerna: ^6.4.1
       npm-run-all: ^4.1.5
       postcss: ^8.4.21
-      postcss-custom-properties: ^12.1.11
+      postcss-custom-properties: ^13.1.0
       postcss-html: ^1.5.0
       rimraf: ^4.1.2
       rollup-plugin-visualizer: ^5.9.0
@@ -96,7 +96,7 @@ importers:
       lerna: 6.4.1
       npm-run-all: 4.1.5
       postcss: 8.4.21
-      postcss-custom-properties: 12.1.11_postcss@8.4.21
+      postcss-custom-properties: 13.1.0_postcss@8.4.21
       postcss-html: 1.5.0
       rimraf: 4.1.2
       rollup-plugin-visualizer: 5.9.0
@@ -733,6 +733,31 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
+    dev: true
+
+  /@csstools/cascade-layer-name-parser/1.0.0_jhntdqzgrqlkpxki6fy253alji:
+    resolution: {integrity: sha512-JxdLxJMDximX1vxCFJdwC7MD4aXNSFbOxBZuYKg2FEz4MLR0UFVmamPtzthzqzxAcU0K6ShvEFfMBrEEb16U+A==}
+    engines: {node: ^14 || ^16 || >=18}
+    peerDependencies:
+      '@csstools/css-parser-algorithms': ^2.0.0
+      '@csstools/css-tokenizer': ^2.0.0
+    dependencies:
+      '@csstools/css-parser-algorithms': 2.0.0_wcbxa2wg3evugsqpd27xwuyb6a
+      '@csstools/css-tokenizer': 2.0.0
+    dev: true
+
+  /@csstools/css-parser-algorithms/2.0.0_wcbxa2wg3evugsqpd27xwuyb6a:
+    resolution: {integrity: sha512-RbukP8OjQvuH85veuzOq8abPjsvqvleZaQC6W0GJFGpwLUh8XmFMQjvtuIM9bQ589YFx4lwwAcSwN4nfcvxIEw==}
+    engines: {node: ^14 || ^16 || >=18}
+    peerDependencies:
+      '@csstools/css-tokenizer': ^2.0.0
+    dependencies:
+      '@csstools/css-tokenizer': 2.0.0
+    dev: true
+
+  /@csstools/css-tokenizer/2.0.0:
+    resolution: {integrity: sha512-IB6EFP0Hc/YEz1sJVD47oFqJP6TXMB+OW1jXSYnOk5g+6wpk2/zkuBa0gm5edIMM9nVUZ3hF0xCBnyFbK5OIyg==}
+    engines: {node: ^14 || ^16 || >=18}
     dev: true
 
   /@csstools/selector-specificity/2.0.2_wajs5nedgkikc5pcuwett7legi:
@@ -9146,12 +9171,15 @@ packages:
     deprecated: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
     dev: true
 
-  /postcss-custom-properties/12.1.11_postcss@8.4.21:
-    resolution: {integrity: sha512-0IDJYhgU8xDv1KY6+VgUwuQkVtmYzRwu+dMjnmdMafXYv86SWqfxkc7qdDvWS38vsjaEtv8e0vGOUQrAiMBLpQ==}
-    engines: {node: ^12 || ^14 || >=16}
+  /postcss-custom-properties/13.1.0_postcss@8.4.21:
+    resolution: {integrity: sha512-O0Lg0CuHwADctEMBgGtaeams7eFES8pXo/9zBClTbRVdU3LFAkFluw1l9eYnJ3rtidp80EGbAIuiisEIu1Z+uA==}
+    engines: {node: ^14 || ^16 || >=18}
     peerDependencies:
-      postcss: ^8.2
+      postcss: ^8.4
     dependencies:
+      '@csstools/cascade-layer-name-parser': 1.0.0_jhntdqzgrqlkpxki6fy253alji
+      '@csstools/css-parser-algorithms': 2.0.0_wcbxa2wg3evugsqpd27xwuyb6a
+      '@csstools/css-tokenizer': 2.0.0
       postcss: 8.4.21
       postcss-value-parser: 4.2.0
     dev: true
