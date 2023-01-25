@@ -13,6 +13,8 @@ A Kong UI application layout component that provides a responsive navbar, sideba
   - [Slots](#slots)
   - [Teleport Containers](#teleport-containers)
   - [Usage Example](#usage-example)
+- [CSS Variables](#css-variables)
+  - [CSS variable example](#css-variable-example)
 - [TypeScript interfaces](#typescript-interfaces)
 - [Individual component documentation](#individual-component-documentation)
 
@@ -93,6 +95,22 @@ import { AppLayout } from '@kong-ui-public/app-layout'
 ### Usage Example
 
 > **Note**: TODO
+
+## CSS Variables
+
+You can customize some of the `AppLayout.vue` CSS by adding CSS variables to your app. In most use-cases, this shouldn't be necessary.
+
+Variable | Description | Default
+---------|----------|---------
+`--kong-ui-app-layout-content-padding` | The padding of the `.kong-ui-app-layout-content` main content container | `16px`
+
+### CSS variable example
+
+```scss
+.your-app-container-class {
+  --kong-ui-app-sidebar-mobile-icon-color: #008080;
+}
+```
 
 ## TypeScript interfaces
 
