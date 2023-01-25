@@ -96,7 +96,7 @@ const defaultDocument = ref<SpecItemType[]>([
   },
   {
     path: '/pet/{petId}',
-    method: 'post',
+    method: 'put',
     operationId: 'updatePetWithForm',
     tags: ['pet'],
     summary: 'Updates a pet in the store with form data',
@@ -114,7 +114,7 @@ const defaultDocument = ref<SpecItemType[]>([
     path: '/pet/{petId}',
     method: 'patch',
     operationId: 'updatePet',
-    tags: ['pet'],
+    tags: undefined,
     summary: 'Update an existing pet',
     deprecated: false,
   },

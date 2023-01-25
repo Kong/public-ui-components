@@ -255,7 +255,7 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
 </style>
 
 <style lang="scss">
-.kong-portal-spec-renderer-mini {
+.kong-spec-renderer-mini {
   // all but the first have top margin
   .k-collapse + .k-collapse {
     margin-top: var(--spacing-md);
