@@ -33,7 +33,7 @@
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
     "@vitejs/plugin-vue": "^4.0.0",
-    "@vitest/ui": "^0.28.1",
+    "@vitest/ui": "^0.28.2",
     "@vue/eslint-config-standard": "^8.0.1",
     "@vue/eslint-config-typescript": "^11.0.2",
     "@vue/test-utils": "^2.2.7",
