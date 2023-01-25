@@ -292,7 +292,7 @@ onBeforeUnmount(() => {
     .kong-ui-app-layout-content {
       position: relative;
       width: 100%;
-      padding: 16px;
+      padding: var(--kong-ui-app-layout-content-padding, 16px);
     }
   }
 
