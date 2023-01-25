@@ -7,7 +7,7 @@ importers:
       '@babel/types': ^7.20.7
       '@commitlint/cli': ^17.4.2
       '@commitlint/config-conventional': ^17.4.2
-      '@digitalroute/cz-conventional-changelog-for-jira': ^7.5.1
+      '@digitalroute/cz-conventional-changelog-for-jira': ^8.0.0
       '@evilmartians/lefthook': ^1.2.8
       '@kong/kongponents': ^8.19.1
       '@rushstack/eslint-patch': ^1.2.0
@@ -63,7 +63,7 @@ importers:
       '@babel/types': 7.20.7
       '@commitlint/cli': 17.4.2
       '@commitlint/config-conventional': 17.4.2
-      '@digitalroute/cz-conventional-changelog-for-jira': 7.5.1
+      '@digitalroute/cz-conventional-changelog-for-jira': 8.0.0
       '@evilmartians/lefthook': 1.2.8
       '@kong/kongponents': 8.19.1_vue@3.2.45
       '@rushstack/eslint-patch': 1.2.0
@@ -779,14 +779,14 @@ packages:
       - supports-color
     dev: true
 
-  /@digitalroute/cz-conventional-changelog-for-jira/7.5.1:
-    resolution: {integrity: sha512-LB/cglMCftFbNCaVcXE4CgZp7qD3ZgOzXkia6535Yb55BHpaxbREslTFRz+fJFSU2fPBfVseaUvdaOCTCp0WQQ==}
+  /@digitalroute/cz-conventional-changelog-for-jira/8.0.0:
+    resolution: {integrity: sha512-oK2UE9QhKl/8Tn1d9r184XQRwsCxkFu5zh572LT1pBYEyK1G5IY1mDj5wgP6Wm/EesGCgJ09loW9dFdNeaB3yA==}
     engines: {node: '>= 10'}
     dependencies:
-      '@ryansonshine/commitizen': 4.2.8
-      '@ryansonshine/cz-conventional-changelog': 3.3.4
       boxen: 5.1.2
       chalk: 2.4.2
+      commitizen: 4.3.0
+      cz-conventional-changelog: 3.3.0
       inquirer: 8.2.5
       lodash.map: 4.6.0
       longest: 2.0.1
@@ -2352,47 +2352,6 @@ packages:
 
   /@rushstack/eslint-patch/1.2.0:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
-    dev: true
-
-  /@ryansonshine/commitizen/4.2.8:
-    resolution: {integrity: sha512-umjePm6tYbki25Mp34ijQSGqMBqj5R1e4BTwTGD2zaZA5k3k0lx4MQJhh0g7QyIhzvkuoZvD0f4MG0gj8ABjBg==}
-    engines: {node: '>= 12'}
-    hasBin: true
-    dependencies:
-      '@ryansonshine/cz-conventional-changelog': 3.3.4
-      cachedir: 2.3.0
-      dedent: 0.7.0
-      detect-indent: 6.1.0
-      find-node-modules: 2.1.3
-      find-root: 1.1.0
-      fs-extra: 9.1.0
-      glob: 7.2.3
-      inquirer: 8.2.5
-      is-utf8: 0.2.1
-      lodash: 4.17.21
-      minimist: 1.2.7
-      strip-bom: 4.0.0
-      strip-json-comments: 3.1.1
-    transitivePeerDependencies:
-      - '@swc/core'
-      - '@swc/wasm'
-    dev: true
-
-  /@ryansonshine/cz-conventional-changelog/3.3.4:
-    resolution: {integrity: sha512-t9DRpWeUXPs4YpQt0Yu50qlvOLax/OKBQwpygr00hjIXPG7HAiGS9BYc+V8W7riri3cIE5D4bmt7V9Drk1jp8Q==}
-    engines: {node: '>= 10'}
-    dependencies:
-      '@ryansonshine/commitizen': 4.2.8
-      chalk: 2.4.2
-      conventional-commit-types: 3.0.0
-      lodash.map: 4.6.0
-      longest: 2.0.1
-      word-wrap: 1.2.3
-    optionalDependencies:
-      '@commitlint/load': 17.4.2
-    transitivePeerDependencies:
-      - '@swc/core'
-      - '@swc/wasm'
     dev: true
 
   /@tootallnate/once/2.0.0:
