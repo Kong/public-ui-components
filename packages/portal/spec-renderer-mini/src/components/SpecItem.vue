@@ -138,6 +138,7 @@ const handleClick = (): void => {
 <style lang="scss" scoped>
 .mini-spec-item {
   $chicklet-size: 12px;
+  cursor: pointer;
 
   .spec-item-chicklet {
     height: $chicklet-size;
@@ -149,6 +150,19 @@ const handleClick = (): void => {
   .spec-item-label {
     font-size: 14px;
     font-weight: 400;
+  }
+
+  &.selected {
+    background-color: var(--grey-200);
+    color: var(--blue-500);
+
+    .spec-item-label {
+      font-weight: 700;
+    }
+  }
+
+  &:hover {
+    background-color: var(--grey-200);
   }
 
   &.is-summary {
@@ -166,22 +180,14 @@ const handleClick = (): void => {
       font-family: monospace;
       align-self: center;
     }
-  }
-
-  &.selected {
-    background-color: var(--grey-200);
-    color: var(--blue-500);
-
-    .spec-item-label {
-      font-weight: 700;
-    }
-  }
-
-  &:not(.is-summary) {
-    cursor: pointer;
 
     &:hover {
-      background-color: var(--grey-200);
+      background-color: var(--blue-100);
+    }
+
+    &.selected {
+      background-color: var(--blue-100);
+      border-left: 4px solid var(--blue-500);
     }
   }
 }
