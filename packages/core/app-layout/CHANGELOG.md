@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.11.4...@kong-ui-public/app-layout@0.11.5) (2023-01-25)
+
+
+### 🐛 Bug Fixes
+
+* **app-layout:** add padding css variable ([4d70b5c](https://github.com/Kong/public-ui-components/commit/4d70b5cf9f209445fe48beab59c0116979e31b65))
+
+
+
+
+
 ## [0.11.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.11.3...@kong-ui-public/app-layout@0.11.4) (2023-01-24)
 
 
