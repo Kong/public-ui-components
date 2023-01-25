@@ -63,6 +63,7 @@
           <SpecItem
             v-for="item in untaggedItems"
             :key="item.key"
+            class="mini-spec-renderer-untagged"
             :is-summary="isSummary"
             :item="item"
             @click="handleSelection"
@@ -230,6 +231,10 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
     }
   }
 
+  .mini-spec-renderer-untagged {
+    margin-left: -12px;
+  }
+
   .is-summary {
     .mini-spec-renderer-section {
       border: 1px solid var(--grey-200);
@@ -249,6 +254,11 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
         font-family: monospace;
         max-width: 65%;
       }
+    }
+
+    .mini-spec-renderer-untagged {
+      margin-top: 12px;
+      margin-left: unset;
     }
   }
 }
