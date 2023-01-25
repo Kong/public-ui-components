@@ -204,7 +204,7 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
 
   items.forEach((item: object) => {
     requiredProps.forEach((requiredProp: string) => {
-      if (!item[String(requiredProp)]) {
+      if (!item[requiredProp as keyof typeof item]) {
         isValid = false
       }
     })
