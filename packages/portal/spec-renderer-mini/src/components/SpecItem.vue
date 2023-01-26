@@ -1,11 +1,11 @@
 <template>
   <div
-    class="vue-mini-spec-item px-4 py-3"
+    class="mini-spec-item px-4 py-3"
     :class="{
       'selected': item.selected,
       'is-summary': isSummary
     }"
-    :data-testid="`vue-mini-spec-item-${item.path}`"
+    :data-testid="`mini-spec-item-${item.path}`"
     @click="handleClick"
   >
     <div
@@ -36,7 +36,6 @@
           :background-color="backgroundColor"
           class="spec-item-badge mr-2"
           :color="textColor"
-          is-bordered
         >
           {{ method ? method.toUpperCase() : '' }}
         </KBadge>
@@ -137,8 +136,9 @@ const handleClick = (): void => {
 </script>
 
 <style lang="scss" scoped>
-.vue-mini-spec-item {
+.mini-spec-item {
   $chicklet-size: 12px;
+  cursor: pointer;
 
   .spec-item-chicklet {
     height: $chicklet-size;
@@ -148,21 +148,8 @@ const handleClick = (): void => {
   }
 
   .spec-item-label {
+    font-size: 14px;
     font-weight: 400;
-  }
-
-  &.is-summary {
-    .spec-item-label {
-      font-weight: 700;
-      color: var(--black-500);
-    }
-
-    .spec-path {
-      font-size: 13px;
-      color: var(--grey-600);
-      font-family: monospace;
-      align-self: center;
-    }
   }
 
   &.selected {
@@ -174,11 +161,33 @@ const handleClick = (): void => {
     }
   }
 
-  &:not(.is-summary) {
-    cursor: pointer;
+  &:hover {
+    background-color: var(--grey-200);
+  }
+
+  &.is-summary {
+    border: 1px solid var(--grey-200);
+
+    .spec-item-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--black-500);
+    }
+
+    .spec-path {
+      font-size: 13px;
+      color: var(--grey-600);
+      font-family: monospace;
+      align-self: center;
+    }
 
     &:hover {
-      background-color: var(--grey-200);
+      background-color: var(--blue-100);
+    }
+
+    &.selected {
+      background-color: var(--blue-100);
+      border-left: 4px solid var(--blue-500);
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="kong-portal-spec-renderer-mini"
+    class="kong-spec-renderer-mini"
     :style="widthStyle"
   >
     <div
@@ -19,20 +19,32 @@
               class="mini-spec-renderer-section d-flex"
               @click="toggle()"
             >
-              <div class="mini-spec-renderer-section-label">
-                {{ section }}
-              </div>
-              <div class="mini-spec-renderer-section-toggle ml-auto">
+              <div class="mini-spec-renderer-section-toggle mr-2">
                 <KIcon
                   v-if="isCollapsed"
-                  color="var(--grey-500)"
-                  icon="chevronLeft"
+                  color="var(--grey-400)"
+                  icon="chevronUp"
+                  size="18"
                 />
                 <KIcon
                   v-else
-                  color="var(--grey-500)"
+                  color="var(--grey-600)"
                   icon="chevronDown"
+                  size="18"
                 />
+              </div>
+              <div
+                class="mini-spec-renderer-section-label"
+                :class="{ 'mr-2': isSummary }"
+              >
+                {{ section }}
+              </div>
+              <div
+                v-if="isSummary && getSectionDescription(section)"
+                class="mini-spec-renderer-section-description ml-auto truncate"
+                :title="getSectionDescription(section)"
+              >
+                {{ getSectionDescription(section) }}
               </div>
             </div>
           </template>
@@ -45,6 +57,18 @@
             @click="handleSelection"
           />
         </KCollapse>
+
+        <!-- Items without any tags -->
+        <div class="mt-2">
+          <SpecItem
+            v-for="item in untaggedItems"
+            :key="item.key"
+            class="mini-spec-renderer-untagged"
+            :is-summary="isSummary"
+            :item="item"
+            @click="handleSelection"
+          />
+        </div>
       </div>
       <!-- Empty State -->
       <div
@@ -72,7 +96,7 @@
 
 <script setup lang="ts">
 import { PropType, onMounted, computed, ref } from 'vue'
-import type { SpecItemType } from '../types'
+import type { SpecItemType, SpecTag } from '../types'
 import { KCollapse, KIcon } from '@kong/kongponents'
 import SpecItem from './SpecItem.vue'
 
@@ -80,7 +104,12 @@ const props = defineProps({
   spec: {
     type: Array as PropType<SpecItemType[]>,
     required: true,
-    validator: (items: SpecItemType[]): boolean => !items.length || hasRequiredProps(items),
+    validator: (items: SpecItemType[]): boolean => !items.length || hasRequiredProps(items, ['method', 'path']),
+  },
+  tags: {
+    type: Array as PropType<SpecTag[]>,
+    default: () => [],
+    validator: (items: SpecTag[]): boolean => !items.length || hasRequiredProps(items, ['name']),
   },
   isSummary: {
     type: Boolean,
@@ -95,23 +124,6 @@ const props = defineProps({
 const emit = defineEmits(['selected'])
 
 const itemArray = ref<SpecItemType[]>([])
-const sectionHeadings = computed(() => {
-  const headings:string[] = []
-
-  itemArray.value.forEach((item: SpecItemType) => {
-    item.tags.forEach((tag: string) => {
-      if (tag && !headings.includes(tag)) {
-        headings.push(tag)
-      }
-    })
-  })
-
-  return headings
-})
-
-const hasData = computed((): boolean => {
-  return !!props.spec?.length
-})
 
 const getSizeFromString = (sizeStr: string): string => {
   return sizeStr === 'auto' || sizeStr.endsWith('%') || sizeStr.endsWith('vw') || sizeStr.endsWith('vh') || sizeStr.endsWith('px') ? sizeStr : sizeStr + 'px'
@@ -123,8 +135,34 @@ const widthStyle = computed(() => {
   }
 })
 
+const hasData = computed((): boolean => {
+  return !!props.spec?.length
+})
+
+const sectionHeadings = computed(() => {
+  const headings:string[] = []
+
+  itemArray.value.forEach((item: SpecItemType) => {
+    item.tags?.forEach((tag: string) => {
+      if (tag && !headings.includes(tag)) {
+        headings.push(tag)
+      }
+    })
+  })
+
+  return headings
+})
+
+const untaggedItems = computed((): SpecItemType[] => {
+  return itemArray.value.filter((item: SpecItemType) => !item.tags?.length)
+})
+
+const getSectionDescription = (section: string): string => {
+  return props.tags.filter((item: SpecTag) => item.name === section)?.[0].description || ''
+}
+
 const getSectionItems = (section: string): SpecItemType[] => {
-  return itemArray.value.filter((item: SpecItemType) => item.tags.includes(section))
+  return itemArray.value.filter((item: SpecItemType) => item.tags?.includes(section))
 }
 
 const handleSelection = (selectedItem: SpecItemType) => {
@@ -154,22 +192,33 @@ onMounted(() => {
 </script>
 
 <script lang="ts">
-const hasRequiredProps = (items: SpecItemType[]): boolean => {
-  items.forEach((item: SpecItemType) => {
-    if (item.method === undefined || item.summary === undefined || item.path === undefined) {
-      return false
-    }
+/**
+ * Check if all of the provided items have a non-falsey value for all of the provided required props
+ *
+ * @param items The items to validate the prop exists for
+ * @param requiredProps An array of all the required prop names
+ * @returns Boolean whether or not the items have all the required props
+ */
+const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => {
+  let isValid = true
+
+  items.forEach((item: object) => {
+    requiredProps.forEach((requiredProp: string) => {
+      if (!item[requiredProp as keyof typeof item]) {
+        isValid = false
+      }
+    })
   })
 
-  return true
+  return isValid
 }
 </script>
 
 <style lang="scss" scoped>
-.kong-portal-spec-renderer-mini {
-  font-family: var(--kong-portal-spec-renderer-mini-font-family-default, Roboto, Helvetica, sans-serif);
-  font-size: var(--kong-portal-spec-renderer-mini-font-size, 16px);
-  color: var(--kong-portal-spec-renderer-mini-text-color, #000);
+.kong-spec-renderer-mini {
+  font-family: var(--kong-spec-renderer-mini-font-family-default, Roboto, Helvetica, sans-serif);
+  font-size: var(--kong-spec-renderer-mini-font-size, 16px);
+  color: var(--kong-spec-renderer-mini-text-color, #000);
 
   .center {
     text-align: center;
@@ -182,21 +231,54 @@ const hasRequiredProps = (items: SpecItemType[]): boolean => {
     }
   }
 
+  .mini-spec-renderer-untagged {
+    margin-left: -12px;
+  }
+
   .is-summary {
     .mini-spec-renderer-section {
+      border: 1px solid var(--grey-200);
+      border-radius: 4px 4px 0 0;
+      padding: 10px 8px 10px 12px;
+
+      .mini-spec-renderer-section-toggle {
+        height: 18px;
+        align-self: end;
+      }
+
       .mini-spec-renderer-section-label {
         font-size: var(--type-lg);
       }
+
+      .mini-spec-renderer-section-description {
+        font-family: monospace;
+        max-width: 65%;
+      }
+    }
+
+    .mini-spec-renderer-untagged {
+      margin-top: 12px;
+      margin-left: unset;
     }
   }
 }
 </style>
 
 <style lang="scss">
-.kong-portal-spec-renderer-mini {
+.kong-spec-renderer-mini {
   // all but the first have top margin
   .k-collapse + .k-collapse {
     margin-top: var(--spacing-md);
+  }
+
+  .k-collapse .k-collapse-heading {
+    margin: 0 !important;
+  }
+
+  .k-collapse-hidden-content {
+    .mini-spec-item:last-of-type {
+      border-radius: 0 0 4px 4px;
+    }
   }
 }
 </style>

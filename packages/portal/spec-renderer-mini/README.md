@@ -9,6 +9,7 @@ A Kong UI mini component for displaying API specs
   - [Register](#register)
 - [Props](#props)
   - [`spec`](#spec)
+  - [`tags`](#tags)
   - [`isSummary`](#issummary)
   - [`width`](#width)
 - [Slots](#slots)
@@ -84,6 +85,22 @@ The objects should conform to the following interface.
   deprecated: boolean
   selected?: boolean
   key?: string
+}
+```
+
+### `tags`
+
+- type: `Object[]`
+- required: `false`
+- default: `[]`
+
+Object array for tags. You can use this to specify tag information such as `description` and `externalDocs`.
+
+```typescript
+{
+  name: string
+  description?: string
+  externalDocs?: Object[]
 }
 ```
 

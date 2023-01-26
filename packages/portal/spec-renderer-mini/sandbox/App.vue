@@ -39,6 +39,7 @@
             :key="key"
             :is-summary="isSummary"
             :spec="spec"
+            :tags="tags"
             :width="isSummary ? '550' : '350'"
             @selected="handleSelected"
           />
@@ -64,7 +65,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import { SpecItemType } from '../src/types'
+import { SpecItemType, SpecTag } from '../src/types'
 import { KButton, KLabel } from '@kong/kongponents'
 import SpecRendererMini from '../src'
 
@@ -95,7 +96,7 @@ const defaultDocument = ref<SpecItemType[]>([
   },
   {
     path: '/pet/{petId}',
-    method: 'post',
+    method: 'put',
     operationId: 'updatePetWithForm',
     tags: ['pet'],
     summary: 'Updates a pet in the store with form data',
@@ -113,7 +114,7 @@ const defaultDocument = ref<SpecItemType[]>([
     path: '/pet/{petId}',
     method: 'patch',
     operationId: 'updatePet',
-    tags: ['pet'],
+    tags: undefined,
     summary: 'Update an existing pet',
     deprecated: false,
   },
@@ -121,7 +122,7 @@ const defaultDocument = ref<SpecItemType[]>([
     path: '/pet',
     method: 'options',
     operationId: 'petOptions',
-    tags: ['pet', 'other'],
+    tags: undefined,
     summary: 'Get pet options',
     deprecated: false,
   },
@@ -129,7 +130,7 @@ const defaultDocument = ref<SpecItemType[]>([
     path: '/pet',
     method: 'head',
     operationId: 'petHead',
-    tags: ['pet', 'other'],
+    tags: ['pet', 'dog-go'],
     summary: 'Get pet head',
     deprecated: false,
   },
@@ -137,7 +138,7 @@ const defaultDocument = ref<SpecItemType[]>([
     path: '/pet',
     method: 'connect',
     operationId: 'petConnect',
-    tags: ['pet', 'other'],
+    tags: ['pet', 'dog-go'],
     summary: 'Get pet connect',
     deprecated: false,
   },
@@ -148,6 +149,20 @@ const defaultDocument = ref<SpecItemType[]>([
     tags: ['pet', 'other'],
     summary: 'Get pet trace',
     deprecated: false,
+  },
+])
+const tags = ref<SpecTag[]>([
+  {
+    name: 'pet',
+    description: 'Everything about your Pets',
+  },
+  {
+    name: 'dog-go',
+    description: 'This is an example of a very very ridiculously long description',
+  },
+  {
+    name: 'other',
+    description: 'Everything else',
   },
 ])
 const spec = ref<SpecItemType[]>([])

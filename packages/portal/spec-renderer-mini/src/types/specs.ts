@@ -10,3 +10,14 @@ export interface SpecItemType {
   selected?: boolean
   key?: string
 }
+
+interface SpecExternalDoc {
+  description: string
+  url: string
+}
+
+export interface SpecTag {
+  name: string
+  description?: string
+  externalDocs?: SpecExternalDoc[]
+}
