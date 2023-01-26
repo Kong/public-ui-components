@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer-mini@0.3.0...@kong-ui-public/spec-renderer-mini@0.3.1) (2023-01-26)
+
+
+### 🐛 Bug Fixes
+
+* **mini-spec-renderer:** handling tags correctly ([#51](https://github.com/Kong/public-ui-components/issues/51)) ([c57c27d](https://github.com/Kong/public-ui-components/commit/c57c27d1762c3fbb7b0ada08969b15111d76a913))
+
+
+
+
+
 # [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer-mini@0.2.4...@kong-ui-public/spec-renderer-mini@0.3.0) (2023-01-26)
 
 
