@@ -4,9 +4,9 @@ export interface SpecItemType {
   path: string
   method: MethodString
   operationId: string | null
-  tags: string[]
   summary: string | null
   deprecated: boolean
+  tags?: string[]
   selected?: boolean
   key?: string
 }
