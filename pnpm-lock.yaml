@@ -155,13 +155,13 @@ importers:
 
   packages/core/i18n:
     specifiers:
-      '@formatjs/intl': ^2.6.3
+      '@formatjs/intl': ^2.6.4
       flat: ^5.0.2
-      intl-messageformat: ^10.2.5
+      intl-messageformat: ^10.2.6
     dependencies:
-      '@formatjs/intl': 2.6.3
+      '@formatjs/intl': 2.6.4
       flat: 5.0.2
-      intl-messageformat: 10.2.5
+      intl-messageformat: 10.2.6
 
   packages/portal/document-viewer:
     specifiers:
@@ -1059,8 +1059,8 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@formatjs/fast-memoize/1.2.7:
-    resolution: {integrity: sha512-hPeM5LXUUjtCKPybWOUAWpv8lpja8Xz+uKprFPJcg5F2Rd+/bf1E0UUsLRpaAgOReAf5HMRtoIgv/UcyPICrTQ==}
+  /@formatjs/fast-memoize/1.2.8:
+    resolution: {integrity: sha512-PemNUObyoIZcqdQ1ixTPugzAzhEj7j6AHIyrq/qR6x5BFTvOQeXHYsVZUqBEFduAIscUaDfou+U+xTqOiunJ3Q==}
     dependencies:
       tslib: 2.4.1
     dev: false
@@ -1080,8 +1080,8 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@formatjs/intl-displaynames/6.2.3:
-    resolution: {integrity: sha512-teB0L68MDGM8jEKQg55w7nvFjzeLHE6e3eK/04s+iuEVYYmvjjiHJKHrthKENzcJ0F6mHf/AwXrbX+1mKxT6AQ==}
+  /@formatjs/intl-displaynames/6.2.4:
+    resolution: {integrity: sha512-CmTbSjnmAZHNGuA9vBkWoDHvrcrRauDb0OWc6nk2dAPtesQdadr49Q9N18fr8IV7n3rblgKiYaFVjg68UkRxNg==}
     dependencies:
       '@formatjs/ecma402-abstract': 1.14.3
       '@formatjs/intl-localematcher': 0.2.32
@@ -1102,8 +1102,8 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@formatjs/intl/2.6.3:
-    resolution: {integrity: sha512-JaVZk14U/GypVfCZPevQ0KdruFkq16FXx7g398/Dm+YEx/W7sRiftbZeDy4wQ7WGryb45e763XycxD9o/vm9BA==}
+  /@formatjs/intl/2.6.4:
+    resolution: {integrity: sha512-xUuVxcJpyUxRjIaaaaFes3acTRS9T6vkL7onXBmfVT5+HTakVDGeRA7DYQD9u8ZUdzlqxe/4AuIuC+E9zBTngQ==}
     peerDependencies:
       typescript: ^4.7
     peerDependenciesMeta:
@@ -1111,11 +1111,11 @@ packages:
         optional: true
     dependencies:
       '@formatjs/ecma402-abstract': 1.14.3
-      '@formatjs/fast-memoize': 1.2.7
+      '@formatjs/fast-memoize': 1.2.8
       '@formatjs/icu-messageformat-parser': 2.1.14
-      '@formatjs/intl-displaynames': 6.2.3
+      '@formatjs/intl-displaynames': 6.2.4
       '@formatjs/intl-listformat': 7.1.7
-      intl-messageformat: 10.2.5
+      intl-messageformat: 10.2.6
       tslib: 2.4.1
     dev: false
 
@@ -7044,11 +7044,11 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
-  /intl-messageformat/10.2.5:
-    resolution: {integrity: sha512-AievYMN6WLLHwBeCTv4aRKG+w3ZNyZtkObwgsKk3Q7GNTq8zDRvDbJSBQkb2OPeVCcAKcIXvak9FF/bRNavoww==}
+  /intl-messageformat/10.2.6:
+    resolution: {integrity: sha512-qaTfGjXhdgDup5h3O8406GlQjEj0ky3q0cWWu/lL+H6vJA+sY2/8e4l4XrRPbi9vp38Pop0gO5dsrMO0DdEEBw==}
     dependencies:
       '@formatjs/ecma402-abstract': 1.14.3
-      '@formatjs/fast-memoize': 1.2.7
+      '@formatjs/fast-memoize': 1.2.8
       '@formatjs/icu-messageformat-parser': 2.1.14
       tslib: 2.4.1
     dev: false
