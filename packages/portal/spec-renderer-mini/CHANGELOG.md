@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer-mini@0.2.4...@kong-ui-public/spec-renderer-mini@0.3.0) (2023-01-26)
+
+
+### ✨ Features
+
+* **spec-renderer-mini:** fit & finish [khcp-5769] ([#49](https://github.com/Kong/public-ui-components/issues/49)) ([3490aeb](https://github.com/Kong/public-ui-components/commit/3490aebf521dd1f231f813ac91c27e297821173f))
+
+
+
+
+
 ## [0.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer-mini@0.2.3...@kong-ui-public/spec-renderer-mini@0.2.4) (2023-01-25)
 
 
