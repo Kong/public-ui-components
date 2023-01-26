@@ -13,7 +13,7 @@
 # unless a later match takes precedence.
 # =========================================================================
 /packages/core/ @Kong/team-core-ui
-# /packages/portal/ @Kong/team-devx # Re-enable once repo is not in flux
+/packages/portal/ @Kong/team-core-ui @Kong/team-devx
 
 # Packages:
 # These owners will be the default owners for everything in the workspace
