@@ -158,7 +158,13 @@ const untaggedItems = computed((): SpecItemType[] => {
 })
 
 const getSectionDescription = (section: string): string => {
-  return props.tags.filter((item: SpecTag) => item.name === section)?.[0].description || ''
+  const tagData = props.tags.filter((item: SpecTag) => item.name === section)
+
+  if (tagData.length) {
+    return tagData[0].description || ''
+  }
+
+  return ''
 }
 
 const getSectionItems = (section: string): SpecItemType[] => {

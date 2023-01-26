@@ -162,7 +162,6 @@ const tags = ref<SpecTag[]>([
   },
   {
     name: 'other',
-    description: 'Everything else',
   },
 ])
 const spec = ref<SpecItemType[]>([])
