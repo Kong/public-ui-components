@@ -24,8 +24,6 @@ module.exports = {
       }
     }
   ],
-  plugins: [
-		'stylelint-order'
-  ],
+  plugins: [ 'stylelint-order' ],
   rules: { 'order/properties-alphabetical-order': true }
 }
