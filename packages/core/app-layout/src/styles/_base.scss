@@ -20,22 +20,22 @@ html.kong-ui-app-layout-html {
 html.kong-ui-app-layout-html,
 body.kong-ui-app-layout-body {
   margin: 0;
-  padding: 0;
-  width: 100%;
   // height: 100%; // Reenable these rules to move the scrollbar under the AppNavbar
   // height: 100vh; // Reenable these rules to move the scrollbar under the AppNavbar
   // overflow: hidden; // Reenable these rules to move the scrollbar under the AppNavbar
   overscroll-behavior-y: none; // Disable elastic overflow scrolling in Chrome and Safari
+  padding: 0;
+  width: 100%;
 }
 
 body.kong-ui-app-layout-body {
   background-color: var(--grey-100, #f8f8fa);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color: var(--black-500, #0b172d);
   font-family: $font-family-base;
   font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
-  color: var(--black-500, #0b172d);
   line-height: 1.5;
 }
 

@@ -134,7 +134,7 @@ For more information on different components that compose our commit messages, p
 [Lefthook](https://github.com/evilmartians/lefthook) is used to manage Git Hooks within the repo.
 
 - A `commit-msg` hook is automatically setup that enforces commit message stands with `commitlint`, see [`lefthook.yml`](./lefthook.yaml)
-- A `pre-push` hook is used that runs `eslint` before allowing you to push your changes to the repository
+- A `pre-push` hook is used that runs `stylelint` and `eslint` before allowing you to push your changes to the repository
 
 Additionally, CI will use `commitlint` to validate the commits associated with a PR in the `Lint and Validate` job.
 

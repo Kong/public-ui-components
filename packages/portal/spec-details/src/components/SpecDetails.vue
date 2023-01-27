@@ -52,8 +52,8 @@ const hasRequiredProps = computed((): boolean => {
 
 <style lang="scss" scoped>
 .kong-portal-spec-details {
+  color: var(--kong-portal-spec-details-text-color, #000);
   font-family: var(--kong-portal-spec-details-font-family-default, Roboto, Helvetica, sans-serif);
   font-size: var(--kong-portal-spec-details-font-size, 16px);
-  color: var(--kong-portal-spec-details-text-color, #000);
 }
 </style>

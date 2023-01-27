@@ -155,15 +155,15 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     }
 
     a.sidebar-item-link {
-      display: flex;
       align-items: center;
+      color: var(--steel-300, #A3B6D9);
+      cursor: pointer;
+      display: flex;
+      font-size: $sidebar-item-font-size;
+      font-weight: 500;
       justify-content: space-between;
       min-height: 48px;
       text-decoration: none;
-      font-size: $sidebar-item-font-size;
-      font-weight: 500;
-      color: var(--steel-300, #A3B6D9);
-      cursor: pointer;
       transition: color .2s ease-out;
 
       // SVG color transition (initial values)
@@ -188,8 +188,8 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
       }
 
       .sidebar-item-tooltip {
-        display: flex;
         align-items: center;
+        display: flex;
         height: 100%;
       }
     }
@@ -206,8 +206,8 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     }
 
     ul.level-secondary {
-      padding: 4px 0 12px;
       border-top: 1px solid var(--black-10, rgba(#000, 0.1));
+      padding: 4px 0 12px;
     }
   }
 }
@@ -231,8 +231,8 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     > .sidebar-item-display {
 
       &.has-label {
-        padding-top: 12px;
         padding-bottom: 12px;
+        padding-top: 12px;
       }
     }
   }
@@ -247,12 +247,12 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   }
 
   a {
-    color: var(--steel-200, #DAE3F2) !important;
-    min-height: 36px !important;
-    font-size: $sidebar-item-font-size;
+    background-color: transparent;
     // Add a left border by default so the item doesn't "shift" to the right when active
     border-left: 4px solid transparent;
-    background-color: transparent;
+    color: var(--steel-200, #DAE3F2) !important;
+    font-size: $sidebar-item-font-size;
+    min-height: 36px !important;
     transition: all .1s ease-in-out !important;
 
     &:hover,
@@ -272,19 +272,19 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   }
 
   &.active > a {
-    color: var(--white, #fff) !important;
     background-color: rgba(#fff, 0.2);
     border-left: 4px solid var(--green-500, #07A88D);
+    color: var(--white, #fff) !important;
     font-weight: 600 !important;
   }
 }
 
 .sidebar-item-display {
-  display: flex;
   align-items: center;
-  width: 100%;
+  display: flex;
   height: 100%;
   padding: 0 16px;
+  width: 100%;
 
   .sidebar-item-name-container {
     line-height: 1.3;
@@ -292,8 +292,8 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     user-select: none;
 
     .truncate-text {
-      overflow: hidden;
       height: 100%;
+      overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
 
@@ -311,31 +311,31 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     }
 
     .sidebar-item-name {
-      display: flex;
       align-items: center;
+      display: flex;
 
       &.has-tooltip {
         height: 100%;
 
         span {
-          min-width: 0; // Important: must be present to truncate the text
           height: auto;
+          min-width: 0; // Important: must be present to truncate the text
         }
       }
     }
   }
 
   .sidebar-item-label {
-    margin-top: 4px;
     color: var(--steel-300, #A3B6D9);
     font-size: 12px;
+    margin-top: 4px;
   }
 
   .sidebar-item-icon {
-    display: flex;
     align-items: center;
-    padding-right: 14px;
+    display: flex;
     line-height: 0; // to align icon with the text baseline
+    padding-right: 14px;
   }
 }
 </style>

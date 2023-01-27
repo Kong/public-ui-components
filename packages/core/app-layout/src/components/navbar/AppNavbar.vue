@@ -39,12 +39,12 @@ const headerStyles = computed(() => ({
 @import "../../styles/variables";
 
 .kong-ui-app-navbar {
-  position: fixed;
-  top: v-bind('headerStyles.top');
-  left: 0;
-  right: 0;
   background-color: var(--kong-ui-app-navbar-background-color, #fff);
   border-bottom: $navbar-border;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: v-bind('headerStyles.top');
   z-index: v-bind('headerStyles.zIndex');
 
   @media (min-width: $viewport-md) {
@@ -52,11 +52,11 @@ const headerStyles = computed(() => ({
   }
 
   .header-content {
-    display: flex;
     align-items: center;
-    justify-content: space-between;
+    display: flex;
     gap: $header-item-gap;
     height: $navbar-height;
+    justify-content: space-between;
     padding: 0 16px;
   }
 
