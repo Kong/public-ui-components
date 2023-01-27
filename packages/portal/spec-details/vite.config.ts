@@ -5,7 +5,7 @@ import { resolve } from 'path'
 import { defineConfig, mergeConfig } from 'vite'
 
 // Package name MUST always match the kebab-case package name inside the component's package.json file and the name of your `/packages/{package-name}` directory
-const packageName = 'spec-renderer'
+const packageName = 'spec-details'
 
 // Merge the shared Vite config with the local one defined below
 const config = mergeConfig(sharedViteConfig, defineConfig({
@@ -36,7 +36,7 @@ const customPlugins = [
 // Replace the existing plugins array with our custom array
 config.plugins = customPlugins
 
-// If we are trying to preview a build of the local `package/spec-renderer/sandbox` directory,
+// If we are trying to preview a build of the local `package/spec-details/sandbox` directory,
 // unset the external and lib properties
 if (process.env.PREVIEW_SANDBOX) {
   config.build.rollupOptions.external = undefined
