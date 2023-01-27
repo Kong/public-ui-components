@@ -32,18 +32,18 @@ const alertCount = computed((): string => {
 
 <style lang="scss" scoped>
 .item-badge {
-  color: var(--white, #fff);
   background-color: var(--red-500, #D44324);
-  padding: 2px 6px;
   border-radius: 16px;
+  color: var(--white, #fff);
   font-size: 12px;
   font-weight: 400;
   line-height: 1.1;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
   max-width: 36px;
+  overflow: hidden;
+  padding: 2px 6px;
+  text-overflow: ellipsis;
   -webkit-user-select: none;
   user-select: none;
+  white-space: nowrap;
 }
 </style>

@@ -47,16 +47,16 @@ defineProps({
 
 <style lang="scss" scoped>
 .external-link {
-  display: flex;
   align-items: center;
+  display: flex;
   text-decoration: none;
 
   .kong-icon-externalLink svg {
     margin-left: 8px;
   }
   .ml-mb-auto {
-    margin-left: auto;
     margin-bottom: auto;
+    margin-left: auto;
   }
 }
 </style>

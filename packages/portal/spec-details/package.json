@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/spec-details",
-  "version": "0.3.4",
+  "version": "0.3.6",
   "type": "module",
   "main": "./dist/spec-details.umd.js",
   "module": "./dist/spec-details.es.js",
@@ -57,6 +57,6 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong-ui-public/swagger-ui-web-component": "workspace:^0.1.4"
+    "@kong-ui-public/swagger-ui-web-component": "workspace:^0.1.5"
   }
 }

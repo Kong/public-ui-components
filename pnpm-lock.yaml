@@ -49,6 +49,7 @@ importers:
       stylelint-config-html: ^1.1.0
       stylelint-config-recommended-scss: ^8.0.0
       stylelint-config-recommended-vue: ^1.4.0
+      stylelint-order: ^6.0.1
       ts-node: ^10.9.1
       tsc-alias: ^1.8.2
       tslib: ^2.5.0
@@ -105,6 +106,7 @@ importers:
       stylelint-config-html: 1.1.0_kbto3rg3njmczth2rrsgfnlsqa
       stylelint-config-recommended-scss: 8.0.0_w5gtdy6oq4ictd5o4eu6befejy
       stylelint-config-recommended-vue: 1.4.0_kbto3rg3njmczth2rrsgfnlsqa
+      stylelint-order: 6.0.1_stylelint@14.16.1
       ts-node: 10.9.1_awa2wsr5thmg3i7jqycphctjfq
       tsc-alias: 1.8.2
       tslib: 2.5.0
@@ -173,7 +175,7 @@ importers:
 
   packages/portal/spec-details:
     specifiers:
-      '@kong-ui-public/swagger-ui-web-component': workspace:^0.1.4
+      '@kong-ui-public/swagger-ui-web-component': workspace:^0.1.5
       '@modyfi/vite-plugin-yaml': ^1.0.4
       vue: ^3.2.45
     dependencies:
@@ -9299,6 +9301,14 @@ packages:
       util-deprecate: 1.0.2
     dev: true
 
+  /postcss-sorting/8.0.1_postcss@8.4.21:
+    resolution: {integrity: sha512-go9Zoxx7KQH+uLrJ9xa5wRErFeXu01ydA6O8m7koPXkmAN7Ts//eRcIqjo0stBR4+Nir2gMYDOWAOx7O5EPUZA==}
+    peerDependencies:
+      postcss: ^8.4.20
+    dependencies:
+      postcss: 8.4.21
+    dev: true
+
   /postcss-value-parser/4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
     dev: true
@@ -10717,6 +10727,16 @@ packages:
     peerDependencies:
       stylelint: ^14.10.0
     dependencies:
+      stylelint: 14.16.1
+    dev: true
+
+  /stylelint-order/6.0.1_stylelint@14.16.1:
+    resolution: {integrity: sha512-C9gJDZArRBZvn+4MPgggwYTp7dK49WPnYa5+6tBEkZnW/YWj4xBVNJdQjIik14w5orlF9RqFpYDHN0FPWIFOSQ==}
+    peerDependencies:
+      stylelint: ^14.0.0
+    dependencies:
+      postcss: 8.4.21
+      postcss-sorting: 8.0.1_postcss@8.4.21
       stylelint: 14.16.1
     dev: true
 
