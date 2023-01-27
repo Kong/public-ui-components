@@ -2,6 +2,7 @@ import SwaggerUI from 'swagger-ui'
 import { SwaggerUIKongTheme } from '@kong/swagger-ui-kong-theme-universal'
 import { attributeValueToBoolean } from './utils'
 
+// eslint-disable-next-line import/no-webpack-loader-syntax
 const kongThemeStyles = require('!!raw-loader!@kong/swagger-ui-kong-theme-universal/dist/main.css')
 const essentialsOnlyStyles = `
 /* hide non-essential sections & features */
@@ -9,6 +10,7 @@ const essentialsOnlyStyles = `
 .swagger-ui section,
 .swagger-ui .opblock-tag .info__externaldocs,
 .swagger-ui .auth-wrapper,
+.swagger-ui .schemes,
 .swagger-ui .try-out,
 .opblock-body .right-side-wrapper .code-snippet {
   display: none !important;
@@ -129,7 +131,7 @@ export class SwaggerUIElement extends HTMLElement {
       throw new Error('either `spec` or `url` has to be set to initialize SwaggerUI')
     }
 
-    if (this.relativeSidebar && !this.#hasSidebar || this.#relativeSidebar && !this.#essentialsOnly) {
+    if ((this.relativeSidebar && !this.#hasSidebar) || (this.#relativeSidebar && !this.#essentialsOnly)) {
       console.warn('For correct positioning, you must enable the sidebar with `has-sidebar="true"` and should only display essentials with `essentials-only="true"`')
     }
 
@@ -163,16 +165,16 @@ export class SwaggerUIElement extends HTMLElement {
       filter: true,
       presets: [
         SwaggerUI.presets.apis,
-        SwaggerUI.SwaggerUIStandalonePreset
+        SwaggerUI.SwaggerUIStandalonePreset,
       ],
       plugins: [
         SwaggerUI.plugins.DownloadUrl,
-        SwaggerUIKongTheme
+        SwaggerUIKongTheme,
       ],
       layout: 'KongLayout',
       theme: {
-        hasSidebar: this.#hasSidebar
-      }
+        hasSidebar: this.#hasSidebar,
+      },
     })
   }
 
@@ -214,7 +216,7 @@ export class SwaggerUIElement extends HTMLElement {
 
   set spec(spec) {
     if (!spec) {
-      throw new Error("Spec cannot be empty")
+      throw new Error('Spec cannot be empty')
     }
 
     let parsedSpec
