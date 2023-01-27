@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer-mini@0.3.4...@kong-ui-public/spec-renderer-mini@0.3.5) (2023-01-27)
+
+
+### ♻️ Chores
+
+* **stylelint:** add stylelint-order ([#61](https://github.com/Kong/public-ui-components/issues/61)) ([d28a9c4](https://github.com/Kong/public-ui-components/commit/d28a9c42819aa4e19cb294165c6458b973b33e83))
+
+
+
+
+
 ## [0.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer-mini@0.3.3...@kong-ui-public/spec-renderer-mini@0.3.4) (2023-01-27)
 
 
