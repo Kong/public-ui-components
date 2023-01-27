@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.1.2...@kong-ui-public/swagger-ui-web-component@0.1.3) (2023-01-27)
+
+
+### ♻️ Chores
+
+* bump swagger-ui-kong-theme-universal, rename spec-renderer to spec-details ([#58](https://github.com/Kong/public-ui-components/issues/58)) ([5d9c2af](https://github.com/Kong/public-ui-components/commit/5d9c2af5f8184d7f353f5e5f2437fdaabe99a673))
+
+
+
+
+
 ## [0.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.1.1...@kong-ui-public/swagger-ui-web-component@0.1.2) (2023-01-24)
 
 
