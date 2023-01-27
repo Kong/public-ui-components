@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/spec-renderer-mini",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "type": "module",
   "main": "./dist/spec-renderer-mini.umd.js",
   "module": "./dist/spec-renderer-mini.es.js",

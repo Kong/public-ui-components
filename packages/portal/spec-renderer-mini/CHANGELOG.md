@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer-mini@0.3.2...@kong-ui-public/spec-renderer-mini@0.3.3) (2023-01-27)
+
+
+### ♻️ Chores
+
+* **types:** add global types ([c87684a](https://github.com/Kong/public-ui-components/commit/c87684a41b342d856788ad55882a6973806efb4f))
+
+
+
+
+
 ## [0.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer-mini@0.3.1...@kong-ui-public/spec-renderer-mini@0.3.2) (2023-01-27)
 
 

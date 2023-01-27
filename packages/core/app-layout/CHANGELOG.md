@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.11.8...@kong-ui-public/app-layout@0.11.9) (2023-01-27)
+
+
+### ♻️ Chores
+
+* **types:** add global types ([c87684a](https://github.com/Kong/public-ui-components/commit/c87684a41b342d856788ad55882a6973806efb4f))
+
+
+
+
+
 ## [0.11.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.11.7...@kong-ui-public/app-layout@0.11.8) (2023-01-27)
 
 
