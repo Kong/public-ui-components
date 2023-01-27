@@ -3,6 +3,13 @@
     class="kong-spec-renderer-mini"
     :style="widthStyle"
   >
+    <KInput
+      v-if="isFilterable"
+      v-model="filterQuery"
+      class="filter-input"
+      placeholder="Filter by tag"
+      type="search"
+    />
     <div
       v-if="spec"
       :class="{ 'is-summary': isSummary }"
@@ -95,10 +102,12 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, onMounted, computed, ref } from 'vue'
-import type { SpecItemType, SpecTag } from '../types'
-import { KCollapse, KIcon } from '@kong/kongponents'
+import { PropType, onMounted, computed, ref, watch } from 'vue'
+import type { SpecFilterFunction, SpecItemType, SpecTag } from '../types'
+import { KCollapse, KIcon, KInput } from '@kong/kongponents'
 import SpecItem from './SpecItem.vue'
+
+const filterQuery = ref<string>('')
 
 const props = defineProps({
   spec: {
@@ -111,6 +120,10 @@ const props = defineProps({
     default: () => [],
     validator: (items: SpecTag[]): boolean => !items.length || hasRequiredProps(items, ['name']),
   },
+  isFilterable: {
+    type: Boolean,
+    default: true,
+  },
   isSummary: {
     type: Boolean,
     default: false,
@@ -119,11 +132,51 @@ const props = defineProps({
     type: String,
     default: '210',
   },
+  filterFunc: {
+    type: Function as PropType<SpecFilterFunction>,
+    default: (({ items, query }) => {
+      query = query.toLowerCase()
+
+      return items.filter((item) => item.tags?.some((tag) => tag.toLowerCase().includes(query)))
+    }) as SpecFilterFunction,
+    validator: (maybeFunc) => !!maybeFunc && typeof maybeFunc === 'function',
+  },
 })
 
 const emit = defineEmits(['selected'])
 
-const itemArray = ref<SpecItemType[]>([])
+const filteredItems = ref<SpecItemType[]>([])
+
+function filterItems() {
+  if (!props.isFilterable) {
+    filteredItems.value = itemArray.value
+    return
+  }
+
+  if (!props.filterFunc || typeof props.filterFunc !== 'function') {
+    throw new Error(`filterFunc property must be a function, got ${typeof props.filterFunc}`)
+  }
+
+  filteredItems.value = props.filterFunc({ items: itemArray.value, query: filterQuery.value })
+}
+
+watch(() => props.spec, () => {
+  filterItems()
+})
+
+watch(filterQuery, () => {
+  filterItems()
+})
+
+const itemArray = ref<SpecItemType[]>(props.spec.map((item, idx) => {
+  return {
+    ...item,
+    selected: false,
+    key: `${item.path}-${item.method}-${idx}`,
+  }
+}))
+
+filterItems()
 
 const getSizeFromString = (sizeStr: string): string => {
   return sizeStr === 'auto' || sizeStr.endsWith('%') || sizeStr.endsWith('vw') || sizeStr.endsWith('vh') || sizeStr.endsWith('px') ? sizeStr : sizeStr + 'px'
@@ -136,13 +189,13 @@ const widthStyle = computed(() => {
 })
 
 const hasData = computed((): boolean => {
-  return !!props.spec?.length
+  return !!filteredItems.value?.length
 })
 
 const sectionHeadings = computed(() => {
   const headings:string[] = []
 
-  itemArray.value.forEach((item: SpecItemType) => {
+  filteredItems.value.forEach((item: SpecItemType) => {
     item.tags?.forEach((tag: string) => {
       if (tag && !headings.includes(tag)) {
         headings.push(tag)
@@ -154,7 +207,7 @@ const sectionHeadings = computed(() => {
 })
 
 const untaggedItems = computed((): SpecItemType[] => {
-  return itemArray.value.filter((item: SpecItemType) => !item.tags?.length)
+  return filteredItems.value.filter((item: SpecItemType) => !item.tags?.length)
 })
 
 const getSectionDescription = (section: string): string => {
@@ -164,7 +217,7 @@ const getSectionDescription = (section: string): string => {
 }
 
 const getSectionItems = (section: string): SpecItemType[] => {
-  return itemArray.value.filter((item: SpecItemType) => item.tags?.includes(section))
+  return filteredItems.value.filter((item: SpecItemType) => item.tags?.includes(section))
 }
 
 const handleSelection = (selectedItem: SpecItemType) => {
@@ -263,6 +316,11 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
       margin-top: 12px;
     }
   }
+}
+
+.filter-input {
+  width: 100%;
+  margin-bottom: 8px;
 }
 </style>
 

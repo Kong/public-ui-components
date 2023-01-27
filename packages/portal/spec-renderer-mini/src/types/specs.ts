@@ -21,3 +21,10 @@ export interface SpecTag {
   description?: string
   externalDocs?: SpecExternalDoc[]
 }
+
+export interface SpecFilterFunctionParams {
+  items: SpecItemType[]
+  query: string
+}
+
+export type SpecFilterFunction = (params: SpecFilterFunctionParams) => SpecItemType[]
