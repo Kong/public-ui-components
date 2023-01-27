@@ -66,6 +66,11 @@ watch(() => [hasSidebar.value, essentialsOnly.value], () => {
     &.has-sidebar {
       left: calc(var(--sidebar-width) + 50px);
     }
+
+    label {
+      position: relative;
+      z-index: 1;
+    }
   }
 
   .ml-3 {
