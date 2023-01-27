@@ -3,7 +3,7 @@
 .kong-ui-app-sidebar,
 .kong-ui-app-navbar {
   --font-family-sans: #{$font-family-base};
-  --font-family-mono: #{$font-family-mono};
+  --font-family-mono: #{$font-family-monospace};
   --font-weight-normal: 400;
   --KInputLabelWeight: 600;
   --KongAuthFontFamily: #{$font-family-base};
