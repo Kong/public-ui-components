@@ -82,6 +82,11 @@ export default defineConfig({
       registerNodeLoader: true, // Ensure modules are imported properly
     },
     include: ['**/src/**/*.spec.ts'],
-    exclude: ['**/__template__/**/*.spec.ts'],
+    exclude: [
+      '**/dist/**',
+      '**/__template__/**',
+      '**/node_modules/**',
+      'packages/core/cli/**',
+    ],
   },
 })
