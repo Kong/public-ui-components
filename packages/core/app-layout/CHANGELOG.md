@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.11.6...@kong-ui-public/app-layout@0.11.7) (2023-01-27)
+
+
+### 🐛 Bug Fixes
+
+* **app-layout:** fix font family ([f114c6e](https://github.com/Kong/public-ui-components/commit/f114c6e25558b8c745a499d06724ec2a3036ec68))
+* font variable ([e2e046f](https://github.com/Kong/public-ui-components/commit/e2e046f98e73e437c3f73a305184124d87a1e59f))
+
+
+
+
+
 ## [0.11.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.11.5...@kong-ui-public/app-layout@0.11.6) (2023-01-25)
 
 
