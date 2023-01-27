@@ -107,9 +107,9 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
 
   .spec-renderer-details {
     position: relative;
-    width: 100%;
     /* Counteract default top: -20px of swagger-ui component */
     top: 20px;
+    width: 100%;
   }
 }
 </style>
