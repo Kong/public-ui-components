@@ -20,9 +20,9 @@ $scrollbar-background-color: transparent;
 @mixin scrollbarBase($size: $scrollbar-width) {
   // For Chrome & Safari
   &::-webkit-scrollbar {
-    width: $size;
     height: $size;
     opacity: 1;
+    width: $size;
   }
   &::-webkit-scrollbar-thumb {
     background: transparent; // Hide the scrollbar until hovered

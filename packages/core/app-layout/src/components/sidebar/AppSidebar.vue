@@ -350,27 +350,27 @@ onBeforeUnmount(() => {
 @import "../../styles/variables";
 
 .kong-ui-app-sidebar {
-  position: fixed;
-  top: v-bind('sidebarContainerStyles.mobileTop');
+  background: $sidebar-background;
   display: flex;
   flex-direction: column;
-  width: 100%;
   height: v-bind('sidebarContainerStyles.mobileHeight');
-  background: $sidebar-background;
   left: -100%;
-  z-index: v-bind(zIndex);
+  position: fixed;
+  top: v-bind('sidebarContainerStyles.mobileTop');
   transition: left 0.2s ease-in-out;
+  width: 100%;
+  z-index: v-bind(zIndex);
 
   // Restrict the sidebar from going full-width on larger screens
   @media (min-width: $viewport-sm) {
-    width: $sidebar-width;
     max-width: $sidebar-width;
+    width: $sidebar-width;
   }
 
   @media (min-width: $viewport-md) {
     height: v-bind('sidebarContainerStyles.height');
-    top: v-bind('sidebarContainerStyles.top');
     left: 0;
+    top: v-bind('sidebarContainerStyles.top');
   }
 
   &.sidebar-open,
@@ -393,10 +393,10 @@ onBeforeUnmount(() => {
     flex-direction: column;
     height: 100%;
     margin-top: v-bind('sidebarNavStyles.marginTop');
-    padding-top: $sidebar-header-spacing;
     overflow-x: hidden;
     // Must use `scroll` so that the scrollbar width is always accounted for. Cannot use `overlay` here as it breaks in Firefox.
     overflow-y: scroll;
+    padding-top: $sidebar-header-spacing;
     // Only some browsers support `overflow: overlay`, it's deprecated
     @supports(overflow: overlay) {
       overflow-y: overlay;
@@ -424,27 +424,27 @@ onBeforeUnmount(() => {
 }
 
 .sidebar-level-divider {
-  width: calc(100% - 32px);
-  height: 1px;
-  min-height: 1px; // required for when scrollbar is present
-  margin: 24px auto;
   background-color: rgba(#fff, 0.5);
+  height: 1px;
+  margin: 24px auto;
+  min-height: 1px; // required for when scrollbar is present
+  width: calc(100% - 32px);
 }
 
 .sidebar-header {
-  position: absolute;
-  display: v-bind('headerContainerStyles.display');
-  min-height: v-bind('headerContainerStyles.minHeight');
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
   align-items: center;
-  padding: 0 20px;
-  color: #fff;
   background: linear-gradient(180deg, #003694 70.83%, rgba(0, 54, 148, 0) 100%);
+  color: #fff;
+  display: v-bind('headerContainerStyles.display');
+  left: 0;
+  min-height: v-bind('headerContainerStyles.minHeight');
+  padding: 0 20px;
+  position: absolute;
+  right: 0;
+  top: 0;
   -webkit-user-select: none;
   user-select: none;
+  z-index: 1;
 
   @media (min-width: $viewport-md) {
     display: flex;
@@ -460,32 +460,32 @@ onBeforeUnmount(() => {
       text-decoration: none;
 
       &:focus-visible {
-        outline: 1px solid var(--steel-300, #A3B6D9);
-        border-radius: $sidebar-item-border-radius
+        border-radius: $sidebar-item-border-radius;
+        outline: 1px solid var(--steel-300, #A3B6D9)
       }
     }
   }
 
   &:after{
+    background-image: linear-gradient(#003496, #78785400);
+    bottom: 0;
     content: '';
     display: block;
-    background-image: linear-gradient(#003496, #78785400);
     height: $sidebar-header-spacing;
+    left: 0;
     margin-bottom: -$sidebar-header-spacing;
     position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index: 1;
     width: 100%;
+    z-index: 1;
   }
 }
 
 .sidebar-top {
-  display: flex;
   align-items: center;
+  color: #fff;
+  display: flex;
   margin: 0 0 16px;
   padding: 0 8px;
-  color: #fff;
   user-select: none;
 }
 
@@ -501,10 +501,10 @@ onBeforeUnmount(() => {
 }
 
 .sidebar-item-external-link {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
+  display: flex;
   font-size: 14px;
+  justify-content: space-between;
   line-height: 1.3;
   text-decoration: none;
 
@@ -523,12 +523,12 @@ onBeforeUnmount(() => {
 }
 
 .kong-ui-app-sidebar-overlay {
-  position: fixed;
-  top: v-bind('sidebarOverlayStyles.top');
+  background-color: rgba(11, 23, 45, .6); // Same as KModal backdrop color
   bottom: 0;
   left: 0;
+  position: fixed;
   right: 0;
-  background-color: rgba(11, 23, 45, .6); // Same as KModal backdrop color
+  top: v-bind('sidebarOverlayStyles.top');
   z-index: v-bind('sidebarOverlayStyles.zIndex');
 
   @media (min-width: $viewport-md) {
@@ -545,9 +545,9 @@ onBeforeUnmount(() => {
   // Shared styles for the primary and secondary elements
   .level-primary,
   .level-secondary {
+    list-style: none;
     margin: 0;
     padding: 0;
-    list-style: none;
   }
 
   .level-primary {

@@ -65,63 +65,63 @@ const hasProfileItems = computed((): boolean => props.itemCount > 0)
 
 .sidebar-item-icon {
   display: flex;
-  padding-right: 14px;
   line-height: 0; // to align icon with the text baseline
+  padding-right: 14px;
 }
 
 .sidebar-profile-link {
-  display: flex;
   align-items: center;
+  background-color: var(--blue-700, #0A2B66);
+  color: var(--steel-300, #A3B6D9);
+  display: flex;
   height: $sidebar-item-profile-height !important;
   padding-left: 14px;
-  color: var(--steel-300, #A3B6D9);
-  background-color: var(--blue-700, #0A2B66);
   text-decoration: none;
   white-space: nowrap;
 }
 
 .sidebar-profile-item-container,
 .sidebar-profile-dropdown-container {
-  display: flex;
   align-items: center;
-  width: 100%;
+  display: flex;
   height: 100%;
+  width: 100%;
 }
 
 .sidebar-profile-dropdown-container {
-  width: 100%;
   padding-right: 16px;
+  width: 100%;
 
   :deep(.k-dropdown) {
-    width: 100%;
     height: 100%;
+    width: 100%;
 
     > * {
-      width: 100%;
       height: 100%;
+      width: 100%;
 
       .k-dropdown-trigger {
-        display: flex;
         align-items: center;
-        width: 100%;
-        height: 100%;
+        display: flex;
         font-size: $sidebar-item-font-size;
+        height: 100%;
+        width: 100%;
       }
     }
   }
 }
 
 .profile-dropdown-trigger {
-  display: flex;
   align-items: center;
-  width: 100%;
-  height: 100%;
   color: var(--steel-300, #A3B6D9);
-  font-weight: 500;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color .2s ease-out;
   cursor: pointer;
+  display: flex;
+  font-weight: 500;
+  height: 100%;
+  text-decoration: none;
+  transition: color .2s ease-out;
+  white-space: nowrap;
+  width: 100%;
 
   &:hover,
   &:focus-visible {
@@ -139,8 +139,8 @@ const hasProfileItems = computed((): boolean => props.itemCount > 0)
 .sidebar-profile-name {
   line-height: 1.3;
   max-width: $profile-name-max-width;
-  padding-right: 1ch;
   overflow: hidden;
+  padding-right: 1ch;
   text-overflow: ellipsis;
   -webkit-user-select: none;
   user-select: none;
@@ -149,8 +149,8 @@ const hasProfileItems = computed((): boolean => props.itemCount > 0)
 :deep(.sidebar-profile-menu-popover.k-popover) {
   --KPopPaddingX: 0 !important;
   --KPopPaddingY: 0 !important;
-  margin-top: 0 !important;
   left: -2px !important;
+  margin-top: 0 !important;
 
   // Prevent animation classes from being applied by container app
   &.fade-enter-active,
@@ -167,8 +167,8 @@ const hasProfileItems = computed((): boolean => props.itemCount > 0)
 
   .k-dropdown-item-trigger {
     &:focus {
-      outline: none;
       box-shadow: none;
+      outline: none;
     }
     &:focus-visible {
       outline: 1px solid var(--steel-300, #A3B6D9);

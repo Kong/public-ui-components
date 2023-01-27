@@ -218,9 +218,9 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
 
 <style lang="scss" scoped>
 .kong-spec-renderer-mini {
+  color: var(--kong-spec-renderer-mini-text-color, #000);
   font-family: var(--kong-spec-renderer-mini-font-family-default, Roboto, Helvetica, sans-serif);
   font-size: var(--kong-spec-renderer-mini-font-size, 16px);
-  color: var(--kong-spec-renderer-mini-text-color, #000);
 
   .center {
     text-align: center;
@@ -228,8 +228,8 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
 
   .mini-spec-renderer-section {
     .mini-spec-renderer-section-label {
-      font-weight: 600;
       color: var(--grey-600);
+      font-weight: 600;
     }
   }
 
@@ -244,8 +244,8 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
       padding: 10px 8px 10px 12px;
 
       .mini-spec-renderer-section-toggle {
-        height: 18px;
         align-self: end;
+        height: 18px;
       }
 
       .mini-spec-renderer-section-label {
@@ -259,8 +259,8 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
     }
 
     .mini-spec-renderer-untagged {
-      margin-top: 12px;
       margin-left: unset;
+      margin-top: 12px;
     }
   }
 }

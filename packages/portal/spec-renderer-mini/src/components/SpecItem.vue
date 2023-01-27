@@ -141,10 +141,10 @@ const handleClick = (): void => {
   cursor: pointer;
 
   .spec-item-chicklet {
-    height: $chicklet-size;
-    width: $chicklet-size;
-    min-width: $chicklet-size;
     align-self: center;
+    height: $chicklet-size;
+    min-width: $chicklet-size;
+    width: $chicklet-size;
   }
 
   .spec-item-label {
@@ -169,16 +169,16 @@ const handleClick = (): void => {
     border: 1px solid var(--grey-200);
 
     .spec-item-label {
+      color: var(--black-500);
       font-size: 13px;
       font-weight: 700;
-      color: var(--black-500);
     }
 
     .spec-path {
-      font-size: 13px;
+      align-self: center;
       color: var(--grey-600);
       font-family: monospace;
-      align-self: center;
+      font-size: 13px;
     }
 
     &:hover {

@@ -241,27 +241,27 @@ onBeforeUnmount(() => {
 @import "../styles/variables";
 
 .kong-ui-app-layout {
+  background-color: $sidebar-background-gradient-start;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
-  position: relative;
   font-family: $font-family-base;
-  background-color: $sidebar-background-gradient-start;
+  height: 100%;
   overflow: hidden;
+  position: relative;
+  width: 100%;
 
   :deep(.kong-ui-app-navbar) {
     .mobile-logo {
-      display: flex;
       align-items: center;
+      display: flex;
 
       @media (min-width: $viewport-md) {
         display: none;
       }
 
       > * {
-        display: flex;
         align-items: center;
+        display: flex;
       }
 
       a {
@@ -271,18 +271,18 @@ onBeforeUnmount(() => {
   }
 
   .kong-ui-app-layout-main {
-    display: flex;
     align-items: flex-start;
+    background-color: var(--grey-100, #f8f8fa);
+    display: flex;
     flex-grow: 1;
-    width: 100%;
     height: 100%;
     margin-top: v-bind('layoutMainMarginTop');
-    background-color: var(--grey-100, #f8f8fa);
+    width: 100%;
     // border-top-left-radius: 16px; // TODO: Enable when Neon layout is enabled
 
     @media (min-width: $viewport-md) {
-      width: calc(100% - #{$sidebar-width});
       margin-left: $sidebar-width;
+      width: calc(100% - #{$sidebar-width});
     }
 
     &.full-width {
@@ -290,9 +290,9 @@ onBeforeUnmount(() => {
     }
 
     .kong-ui-app-layout-content {
+      padding: var(--kong-ui-app-layout-content-padding, 16px);
       position: relative;
       width: 100%;
-      padding: var(--kong-ui-app-layout-content-padding, 16px);
     }
   }
 
@@ -306,17 +306,17 @@ onBeforeUnmount(() => {
   // Style overrides if AppSidebar is hidden
   &.sidebar-hidden {
     .kong-ui-app-layout-main {
-      width: 100%;
       margin-left: 0;
+      width: 100%;
     }
   }
 
   // Must keep this as an `id` because we are utilizing as a <Teleport /> container
   #kong-ui-app-layout-notification {
-    position: fixed;
-    top: 0;
     left: 0;
+    position: fixed;
     right: 0;
+    top: 0;
     z-index: 1;
 
     // Modify KAlert styles

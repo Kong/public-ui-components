@@ -40,9 +40,9 @@ watch(() => props.active, (active) => {
 @import "../../styles/variables";
 
 .sidebar-menu-toggle {
-  position: relative;
-  padding: 0 4px;
   border-radius: 3px;
+  padding: 0 4px;
+  position: relative;
   transition: all 0.3s ease-in-out;
 
   &:focus-visible {
@@ -54,13 +54,13 @@ watch(() => props.active, (active) => {
   }
 
   .line {
-    display: block;
-    width: 24px;
-    height: 2px;
-    border-radius: $sidebar-item-border-radius;
     background-color: var(--kong-ui-app-sidebar-mobile-icon-color, var(--blue-500, #1155cb));
+    border-radius: $sidebar-item-border-radius;
+    display: block;
+    height: 2px;
     margin: 6px auto;
     transition: all 0.3s ease-in-out;
+    width: 24px;
   }
 
   &.active {
