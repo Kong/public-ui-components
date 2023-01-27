@@ -9,10 +9,10 @@
           <h3>Try it Out:</h3>
           <label>
             <input
-              v-model="isSummary"
+              v-model="isFilterable"
               name="view"
               type="checkbox"
-            > isSummary
+            > isFilterable
           </label>
 
           <br><br>
@@ -37,10 +37,10 @@
         <div class="d-flex pa-3">
           <SpecRendererMini
             :key="key"
-            :is-summary="isSummary"
+            :is-filterable="isFilterable"
             :spec="spec"
             :tags="tags"
-            :width="isSummary ? '550' : '350'"
+            width="550"
             @selected="handleSelected"
           />
 
@@ -168,7 +168,7 @@ const spec = ref<SpecItemType[]>([])
 const selectedItem = ref<SpecItemType>()
 
 // checkboxes for toggling options
-const isSummary = ref(false)
+const isFilterable = ref(true)
 
 const handleClear = (): void => {
   spec.value = []
@@ -192,7 +192,7 @@ const cloneDeep = (obj: any) => {
 }
 
 const key = ref(0)
-watch(() => [isSummary.value, spec.value],
+watch(() => [isFilterable.value, spec.value],
   () => {
     key.value++
     selectedItem.value = undefined
