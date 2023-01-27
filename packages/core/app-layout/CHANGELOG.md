@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.11.9...@kong-ui-public/app-layout@0.11.10) (2023-01-27)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.21.2 ([#59](https://github.com/Kong/public-ui-components/issues/59)) ([f8d1ad2](https://github.com/Kong/public-ui-components/commit/f8d1ad23a991de65031bac81334618bcf268a73f))
+
+
+
+
+
 ## [0.11.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.11.8...@kong-ui-public/app-layout@0.11.9) (2023-01-27)
 
 
