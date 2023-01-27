@@ -128,11 +128,10 @@ const tags = ref<SpecTag[]>([
 ])
 
 // checkboxes for toggling options
-const hasSidebar = ref(true)
 const essentialsOnly = ref(false)
 
 const key = ref(0)
-watch(() => [hasSidebar.value, essentialsOnly.value], () => {
+watch(() => [essentialsOnly.value], () => {
   key.value++
 }, { deep: true, immediate: true })
 </script>

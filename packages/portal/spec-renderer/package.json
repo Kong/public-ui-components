@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@kong-ui-public/spec-details": "^0.3.4",
-    "@kong-ui-public/spec-renderer-mini": "^0.3.4"
+    "@kong-ui-public/spec-renderer-mini": "^0.3.5"
   },
   "repository": {
     "type": "git",
