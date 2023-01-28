@@ -38,7 +38,7 @@
           <SpecRendererMini
             :key="key"
             :is-filterable="isFilterable"
-            :spec="spec"
+            :operations="operations"
             :tags="tags"
             width="550"
             @selected="handleSelected"
@@ -46,16 +46,12 @@
 
           <div class="ml-3">
             <KLabel>Spec Object:</KLabel>
-            <pre class="json pa-3">
-              {{ defaultDocument }}
-            </pre>
+            <pre class="json pa-3">{{ defaultDocument }}</pre>
           </div>
 
           <div class="ml-3">
             <KLabel>Selected Object:</KLabel>
-            <pre class="json pa-3">
-              {{ selectedItem }}
-            </pre>
+            <pre class="json pa-3">{{ selectedItem }}</pre>
           </div>
         </div>
       </div>
@@ -164,18 +160,18 @@ const tags = ref<SpecTag[]>([
     name: 'other',
   },
 ])
-const spec = ref<SpecItemType[]>([])
+const operations = ref<SpecItemType[]>([])
 const selectedItem = ref<SpecItemType>()
 
 // checkboxes for toggling options
 const isFilterable = ref(true)
 
 const handleClear = (): void => {
-  spec.value = []
+  operations.value = []
 }
 
 const handleReset = (): void => {
-  spec.value = cloneDeep(defaultDocument.value)
+  operations.value = cloneDeep(defaultDocument.value)
 }
 
 const handleSelected = (item: SpecItemType): void => {
@@ -192,7 +188,7 @@ const cloneDeep = (obj: any) => {
 }
 
 const key = ref(0)
-watch(() => [isFilterable.value, spec.value],
+watch(() => [isFilterable.value, operations.value],
   () => {
     key.value++
     selectedItem.value = undefined
@@ -201,7 +197,7 @@ watch(() => [isFilterable.value, spec.value],
 )
 
 onMounted(() => {
-  spec.value = cloneDeep(defaultDocument.value)
+  operations.value = cloneDeep(defaultDocument.value)
 })
 </script>
 
