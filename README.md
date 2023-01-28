@@ -11,6 +11,7 @@ Monorepo for Kong open-source UI components and associated packages.
 - [Development](#development)
   - [Setup](#setup)
   - [Dev Server](#dev-server)
+  - [Stylelint](#stylelint)
   - [ESLint](#eslint)
   - [Type Checking](#type-checking)
   - [Testing](#testing)
@@ -34,6 +35,8 @@ Here are some criteria to help figure out if your code belongs to this mono-repo
 
 All packages must be created utilizing the `pnpm run create-package` CLI. [See here for more details.](./docs/creating-a-package.md#required-use-the-provided-cli-to-scaffold-your-new-package)
 
+Be sure to familiarize yourself with the [Component Requirements](./docs/creating-a-package.md#component-requirements), including style rules.
+
 ### Setup
 
 To get started, install dependencies
@@ -56,6 +59,18 @@ Run the dev server in your `packages/{workspace}/{package-name}/sandbox/` direct
 
 ```sh
 pnpm --filter "@kong-ui-public/{package-name}" run dev
+```
+
+### Stylelint
+
+Stylelint package files
+
+```sh
+# Lint only
+pnpm --filter "@kong-ui-public/{package-name}" run stylelint
+
+# Lint and fix
+pnpm --filter "@kong-ui-public/{package-name}" run stylelint:fix
 ```
 
 ### ESLint

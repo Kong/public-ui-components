@@ -210,9 +210,11 @@ All Vue and Typescript source code for your package should live within the `src/
 
 #### Do not utilize Kongponents styles
 
-Whenever possible, please **do not** utilize the "helper" classes provided by the Kongponents component library (e.g. `d-flex`, `w-100`, etc.). Components in this repository should truley be standalone as much as possible, and this requires writing in-component styles rather than depending on globally available styles.
+You **must not** utilize the "helper" classes provided by the Kongponents component library (e.g. `d-flex`, `w-100`, `mr-2`, etc.).
 
-The only exception is in utilizing CSS Variables for colors (e.g. `color: var(--blue-500, #1155cb));`); however, it is **required** to provide the native value as a fallback.
+Components in this repository should truley be standalone, meaning they should not depend on classes and utility functions being globally available in the host app (other than actual Kongponent components themselves). This requires writing in-component styles rather than depending on globally available styles.
+
+The only exception is in utilizing CSS Variables for colors (e.g. `color: var(--blue-500, #1155cb));`); however, it is **required** to provide a native value as a fallback.
 
 #### Styles must be scoped
 
