@@ -42,8 +42,8 @@
 
             <div :id="getSectionContentId(section)">
               <template
-                v-for="(item, id) in getSectionItems(section)"
-                :key="`${item.path}-${item.method}-${id}`"
+                v-for="item in getSectionItems(section)"
+                :key="`${item.path}-${item.method}`"
               >
                 <slot
                   :item="item"
@@ -66,8 +66,8 @@
         <!-- Items without any tags -->
         <div class="section">
           <template
-            v-for="(item, id) in untaggedItems"
-            :key="`${item.path}-${item.method}-${id}`"
+            v-for="item in untaggedItems"
+            :key="`${item.path}-${item.method}`"
           >
             <slot
               :item="item"

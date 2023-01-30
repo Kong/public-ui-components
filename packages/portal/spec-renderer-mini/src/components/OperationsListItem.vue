@@ -8,7 +8,7 @@
   >
     <h2
       class="summary truncate"
-      :title="item.summary"
+      :title="item.summary ?? ''"
     >
       {{ item.summary }}
     </h2>
