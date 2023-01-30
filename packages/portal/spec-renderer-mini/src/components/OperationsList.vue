@@ -5,13 +5,20 @@
     role="navigation"
     :style="widthStyle"
   >
-    <KInput
-      v-if="isFilterable"
-      v-model="filterQuery"
-      class="filter-input"
-      placeholder="Filter by tag"
-      type="search"
-    />
+    <div class="filter-wrapper">
+      <KInput
+        v-if="isFilterable"
+        v-model="filterQuery"
+        class="filter-input"
+        placeholder="Filter by tag"
+      />
+      <KIcon
+        aria-hidden="true"
+        class="filter-icon"
+        color="var(--kong-ui-spec-renderer-operations-list-filter-icon-color, #1C1B1F)"
+        icon="filter"
+      />
+    </div>
     <div v-if="operations">
       <div v-if="filteredItems.length">
         <div
@@ -103,7 +110,7 @@
 <script setup lang="ts">
 import { PropType, computed, ref, watch } from 'vue'
 import type { OperationListFilterFunction, Operation, Tag } from '../types'
-import { KCollapse, KInput } from '@kong/kongponents'
+import { KCollapse, KInput, KIcon } from '@kong/kongponents'
 import OperationsListItem from './OperationsListItem.vue'
 import OperationsListSectionHeader from './OperationsListSectionHeader.vue'
 
@@ -253,9 +260,23 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
   color: var(--kong-ui-kong-spec-renderer-operations-list-text-color, var(--kong-ui-spec-renderer-text-color, var(--black-500, #0B172D)));
 }
 
+.filter-wrapper {
+  margin-bottom: 8px;
+  position: relative;
+}
+
 .filter-input {
   width: 100%;
-  margin-bottom: 8px;
+
+  &:deep(.k-input) {
+    padding-left: 32px;
+  }
+}
+
+.filter-icon {
+  position: absolute;
+  top: calc(50% - 8px);
+  left: 9px; // 8px + border width
 }
 
 .section-wrapper {
