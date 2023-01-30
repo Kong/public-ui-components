@@ -55,7 +55,7 @@ importers:
       tslib: ^2.5.0
       typescript: ~4.9.4
       vite: ^4.0.4
-      vite-plugin-externals: ^0.5.1
+      vite-plugin-externals: ^0.5.2
       vitest: ^0.28.3
       vue: ^3.2.45
       vue-router: ^4.1.6
@@ -112,7 +112,7 @@ importers:
       tslib: 2.5.0
       typescript: 4.9.4
       vite: 4.0.4_ovmyjmuuyckt3r3gpaexj2onji
-      vite-plugin-externals: 0.5.1_vite@4.0.4
+      vite-plugin-externals: 0.5.2_vite@4.0.4
       vitest: 0.28.3_sj73jgvxan2xo3h5sifmbmv7ua
       vue: 3.2.45
       vue-router: 4.1.6_vue@3.2.45
@@ -11581,8 +11581,9 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-externals/0.5.1_vite@4.0.4:
-    resolution: {integrity: sha512-HvRFG5y9wXoJUG9FSbSp9ikOiJRh7EzN6tJC5oIOcEj+19GUw9Z1NNCPFtAmX75Ajcr10FdELKNmuXS3lExkcg==}
+  /vite-plugin-externals/0.5.2_vite@4.0.4:
+    resolution: {integrity: sha512-qWmMmDR4tUoROdNqMwKZXZoWREXtLxlgDdIeCJV3wcRZ4vc4FphTUzy3pN5A1+fOLyI9Vxc7Yl/94QjreYFHuQ==}
+    engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       vite: '>=2.0.0'
     dependencies:
