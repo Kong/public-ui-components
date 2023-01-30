@@ -188,7 +188,7 @@ const cloneDeep = (obj: any) => {
 }
 
 const key = ref(0)
-watch(() => [isFilterable.value, operations.value],
+watch([isFilterable, operations],
   () => {
     key.value++
     selectedItem.value = undefined
