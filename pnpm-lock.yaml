@@ -9,7 +9,7 @@ importers:
       '@commitlint/config-conventional': ^17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': ^8.0.0
       '@evilmartians/lefthook': ^1.2.8
-      '@kong/kongponents': ^8.21.2
+      '@kong/kongponents': ^8.21.3
       '@rushstack/eslint-patch': ^1.2.0
       '@types/flat': ^5.0.2
       '@types/js-yaml': ^4.0.5
@@ -66,7 +66,7 @@ importers:
       '@commitlint/config-conventional': 17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': 8.0.0
       '@evilmartians/lefthook': 1.2.8
-      '@kong/kongponents': 8.21.2_vue@3.2.45
+      '@kong/kongponents': 8.21.3_vue@3.2.45
       '@rushstack/eslint-patch': 1.2.0
       '@types/flat': 5.0.2
       '@types/js-yaml': 4.0.5
@@ -120,7 +120,7 @@ importers:
 
   packages/core/app-layout:
     specifiers:
-      '@kong/kongponents': ^8.21.2
+      '@kong/kongponents': ^8.21.3
       '@types/lodash.clonedeep': ^4.5.7
       focus-trap: ^7.2.0
       focus-trap-vue: ^4.0.1
@@ -132,7 +132,7 @@ importers:
       focus-trap-vue: 4.0.1_nn2zg2o47bujavotzgw5cgkzcu
       lodash.clonedeep: 4.5.0
     devDependencies:
-      '@kong/kongponents': 8.21.2_vue@3.2.45
+      '@kong/kongponents': 8.21.3_vue@3.2.45
       '@types/lodash.clonedeep': 4.5.7
       vue: 3.2.45
       vue-router: 4.1.6_vue@3.2.45
@@ -186,10 +186,10 @@ importers:
 
   packages/portal/spec-renderer-mini:
     specifiers:
-      '@kong/kongponents': ^8.21.2
+      '@kong/kongponents': ^8.21.3
       vue: ^3.2.45
     devDependencies:
-      '@kong/kongponents': 8.21.2_vue@3.2.45
+      '@kong/kongponents': 8.21.3_vue@3.2.45
       vue: 3.2.45
 
   packages/portal/swagger-ui-web-component:
@@ -1211,8 +1211,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@kong/kongponents/8.21.2_vue@3.2.45:
-    resolution: {integrity: sha512-HsoCJoR6KAkx7uZtoJ78kTHhL/TYzrVNvCSR0ZgApli2zjVDsLRle2weedf4StYvps5QxBf5Q7aZdKPeLKQreA==}
+  /@kong/kongponents/8.21.3_vue@3.2.45:
+    resolution: {integrity: sha512-lKtS1UqLpDCswtgLOevgzbMcoDjQ17/PFGLD+FesJEEyQeyrSkjEnBVwDSw2EtcUuQ8bYPcZCwBQhbXrL9rbeg==}
     engines: {node: '>=16.19.0'}
     peerDependencies:
       vue: '>= 3.2.37'
