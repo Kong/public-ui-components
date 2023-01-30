@@ -7,8 +7,9 @@
     @click="emit('click', item)"
   >
     <h2
+      v-if="item.summary"
       class="summary truncate"
-      :title="item.summary ?? ''"
+      :title="item.summary"
     >
       {{ item.summary }}
     </h2>
@@ -144,12 +145,11 @@ const emit = defineEmits(['click'])
   color: var(--black-500);
   font-size: 13px;
   font-weight: 700;
-  margin: 0;
+  margin: 0 0 4px;
 }
 
 .details {
   display: flex;
-  margin-top: 4px;
 }
 
 .truncate {

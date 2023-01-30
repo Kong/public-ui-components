@@ -5,7 +5,7 @@
     :aria-label="isCollapsed ? `Expand section &quot;${name}&quot;` : `Collapse section &quot;${name}&quot;`"
     class="header"
     type="button"
-    @click="emits('toggle')"
+    @click="emit('toggle')"
   >
     <div
       aria-hidden="true"

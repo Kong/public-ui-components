@@ -49,7 +49,7 @@
                   :item="item"
                   name="item"
                   :section="section"
-                  @click="handleSelection"
+                  :select="() => handleSelection(item)"
                 >
                   <OperationsListItem
                     :is-selected="isSelected(item)"
@@ -72,7 +72,7 @@
             <slot
               :item="item"
               name="item"
-              @click="handleSelection"
+              :select="() => handleSelection(item)"
             >
               <OperationsListItem
                 :is-selected="isSelected(item)"
@@ -133,7 +133,7 @@ const props = defineProps({
     type: String,
     default: '210',
   },
-  filterFunc: {
+  filterFunction: {
     type: Function as PropType<OperationListFilterFunction>,
     default: (({ items, query }) => {
       query = query.toLowerCase()
@@ -161,11 +161,11 @@ const filterItems = () => {
     return
   }
 
-  if (!props.filterFunc || typeof props.filterFunc !== 'function') {
-    throw new Error(`filterFunc property must be a function, got ${typeof props.filterFunc}`)
+  if (!props.filterFunction || typeof props.filterFunction !== 'function') {
+    throw new Error(`filterFunction property must be a function, got ${typeof props.filterFunction}`)
   }
 
-  filteredItems.value = props.filterFunc({ items: allItems, query: filterQuery.value })
+  filteredItems.value = props.filterFunction({ items: allItems, query: filterQuery.value })
 }
 
 watch([props.operations, filterQuery], () => filterItems())
@@ -183,13 +183,13 @@ const getSizeFromString = (sizeStr: string): string => (
     : sizeStr + 'px'
 )
 
-const widthStyle = computed(() => {
+const widthStyle = computed<Partial<CSSStyleDeclaration>>(() => {
   return {
     width: getSizeFromString(props.width),
   }
 })
 
-const sectionHeadings = computed(() => {
+const sectionHeadings = computed<string[]>(() => {
   const headings: string[] = []
 
   filteredItems.value.forEach((item) => {
