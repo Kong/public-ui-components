@@ -40,7 +40,7 @@ importers:
       lerna: ^6.4.1
       npm-run-all: ^4.1.5
       postcss: ^8.4.21
-      postcss-custom-properties: ^13.1.0
+      postcss-custom-properties: ^13.1.1
       postcss-html: ^1.5.0
       rimraf: ^4.1.2
       rollup-plugin-visualizer: ^5.9.0
@@ -97,7 +97,7 @@ importers:
       lerna: 6.4.1
       npm-run-all: 4.1.5
       postcss: 8.4.21
-      postcss-custom-properties: 13.1.0_postcss@8.4.21
+      postcss-custom-properties: 13.1.1_postcss@8.4.21
       postcss-html: 1.5.0
       rimraf: 4.1.2
       rollup-plugin-visualizer: 5.9.0
@@ -9203,8 +9203,8 @@ packages:
     deprecated: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
     dev: true
 
-  /postcss-custom-properties/13.1.0_postcss@8.4.21:
-    resolution: {integrity: sha512-O0Lg0CuHwADctEMBgGtaeams7eFES8pXo/9zBClTbRVdU3LFAkFluw1l9eYnJ3rtidp80EGbAIuiisEIu1Z+uA==}
+  /postcss-custom-properties/13.1.1_postcss@8.4.21:
+    resolution: {integrity: sha512-FK4dBiHdzWOosLu3kEAHaYpfcrnMfVV4nP6PT6EFIfWXrtHH9LY8idfTYnEDpq/vgE33mr8ykhs7BjlgcT9agg==}
     engines: {node: ^14 || ^16 || >=18}
     peerDependencies:
       postcss: ^8.4
