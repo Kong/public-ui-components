@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.2.4...@kong-ui-public/i18n@0.2.5) (2023-01-30)
+
+
+### 🐛 Bug Fixes
+
+* **deps:** update dependency intl-messageformat to ^10.3.0 ([#72](https://github.com/Kong/public-ui-components/issues/72)) ([3d01618](https://github.com/Kong/public-ui-components/commit/3d0161895c9738d4f9b3a0d7bf0c96da127a1b1c))
+
+
+
+
+
 ## [0.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.2.3...@kong-ui-public/i18n@0.2.4) (2023-01-30)
 
 
