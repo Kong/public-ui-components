@@ -143,7 +143,7 @@ Object array for tags. You can use this to specify tag information such as `desc
 - required: `false`
 - default: `true`
 
-If enabled, will display Filter input and enable filtering operations by tag names using case-insensitive partial matching.
+If enabled, will display filter input and enable filtering operations by tag names using case-insensitive partial matching.
 
 ### `width`
 
