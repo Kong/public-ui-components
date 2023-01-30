@@ -247,7 +247,11 @@ onBeforeUnmount(() => {
   font-family: $font-family-base;
   height: 100%;
   overflow: hidden;
-  position: relative;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
   width: 100%;
 
   :deep(.kong-ui-app-navbar) {
@@ -279,6 +283,7 @@ onBeforeUnmount(() => {
     margin-top: v-bind('layoutMainMarginTop');
     width: 100%;
     // border-top-left-radius: 16px; // TODO: Enable when Neon layout is enabled
+    overflow: auto;
 
     @media (min-width: $viewport-md) {
       margin-left: $sidebar-width;
