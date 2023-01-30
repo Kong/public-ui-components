@@ -6,7 +6,7 @@ export interface Operation {
   operationId: string | null
   summary: string | null
   deprecated: boolean
-  tags?: string[]
+  tags: string[]
 }
 
 interface ExternalDocumentation {

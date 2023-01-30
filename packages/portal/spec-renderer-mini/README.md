@@ -10,9 +10,11 @@ A Kong UI mini component for displaying API specs
 - [Props](#props)
   - [`spec`](#spec)
   - [`tags`](#tags)
-  - [`isSummary`](#issummary)
+  - [`isFilterable`](#isfilterable)
   - [`width`](#width)
+  - [`filterFunc`](#filterfunc)
 - [Slots](#slots)
+  - [`item`](#item)
   - [`empty-state`](#empty-state)
   - [`error-state`](#error-state)
 - [Emits](#emits)
@@ -53,7 +55,7 @@ app.use(SpecRendererMini)
 
 ```
 
-```html
+```vue
 <!-- Local registration -->
 <template>
   <SpecRendererMini />
@@ -67,24 +69,41 @@ import '@kong-ui-public/spec-renderer-mini/dist/style.css'
 
 ## Props
 
-### `spec`
+### `operations`
 
 - type: `Object[]`
 - required: `true`
 
-Specification object array. Required.
+Operation object array. Required.
 The objects should conform to the following interface.
 
 ```typescript
 {
+  /**
+   * Relative operation path with optional path templating.
+   * See https://swagger.io/specification/#paths-object
+   */
   path: string
+  /**
+   * HTTP Method
+   */
   method: string
+  /**
+   * Optional operationId
+   */
   operationId: string | null
+  /**
+   * List of tag names for the operation used to group operations into sections
+   */
   tags: string[]
+  /**
+   * Short summary of the operation
+   */
   summary: string | null
+  /**
+   * Is the operation deprecated?
+   */
   deprecated: boolean
-  selected?: boolean
-  key?: string
 }
 ```
 
@@ -98,19 +117,33 @@ Object array for tags. You can use this to specify tag information such as `desc
 
 ```typescript
 {
+  /**
+   * Tag name
+   * See {@link Operation.tags} for usage details
+   */
   name: string
+  /**
+   * Optional description.
+   * CommonMark formatting is not supported at the moment.
+   */
   description?: string
-  externalDocs?: Object[]
+  /**
+   * Optional link to external docs of the tag
+   */
+  externalDocs?: {
+    description?: string
+    url: string
+  }
 }
 ```
 
-### `isSummary`
+### `isFilterable`
 
 - type: `Boolean`
 - required: `false`
-- default: `false`
+- default: `true`
 
-If enabled, will display list summary view with a few more details instead of table of contents style.
+If enabled, will display Filter input and enable filtering operations by tag names using case-insensitive partial matching.
 
 ### `width`
 
@@ -120,7 +153,43 @@ If enabled, will display list summary view with a few more details instead of ta
 
 Controls the width of the rendered spec. Currently supports numbers (will be converted to px), auto, `vw`, `vh`, and percentages for width.
 
+### `filterFunc`
+
+- type: `Function`
+- required: `false`
+
+Overrides the default filter function. Provided function must return a list of Operation objects.
+
+#### Example
+
+```typescript
+const operationSummaryFilterFunc: OperationListFilterFunction = ({ items, query }) => {
+  return items.filter((item) => item.summary.includes(query))
+}
+```
+
+
 ## Slots
+
+### `item`
+
+Controls the content of a single operation.
+
+#### Slot props
+
+##### `item`
+
+- type: `Object`
+- required: `true`
+
+Operation object of the item to display.
+
+##### `section`
+
+- type: `String`
+- required: `false`
+
+Section (tag) name or `undefined` if operation is untagged.
 
 ### `empty-state`
 
@@ -136,7 +205,7 @@ Controls the content when `spec` is not provided.
 
 - returns: `Object` - the last clicked item data
 
-```json
+```typescript
 {
   path: string
   method: string
@@ -144,9 +213,7 @@ Controls the content when `spec` is not provided.
   tags: string[]
   summary: string | null
   deprecated: boolean
-  selected?: boolean
-  key?: string
 }
 ```
 
-This is emitted whenever an item in the spec is clicked. Clicking an item will deselect any previously selected items.
+This is emitted whenever an item in the spec is clicked.

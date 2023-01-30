@@ -61,11 +61,11 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import { SpecItemType, SpecTag } from '../src/types'
+import { Operation, Tag } from '../src/types'
 import { KButton, KLabel } from '@kong/kongponents'
 import SpecRendererMini from '../src'
 
-const defaultDocument = ref<SpecItemType[]>([
+const defaultDocument = ref<Operation[]>([
   {
     path: '/pet',
     method: 'put',
@@ -110,7 +110,7 @@ const defaultDocument = ref<SpecItemType[]>([
     path: '/pet/{petId}',
     method: 'patch',
     operationId: 'updatePet',
-    tags: undefined,
+    tags: [],
     summary: 'Update an existing pet',
     deprecated: false,
   },
@@ -118,7 +118,7 @@ const defaultDocument = ref<SpecItemType[]>([
     path: '/pet',
     method: 'options',
     operationId: 'petOptions',
-    tags: undefined,
+    tags: [],
     summary: 'Get pet options',
     deprecated: false,
   },
@@ -147,7 +147,7 @@ const defaultDocument = ref<SpecItemType[]>([
     deprecated: false,
   },
 ])
-const tags = ref<SpecTag[]>([
+const tags = ref<Tag[]>([
   {
     name: 'pet',
     description: 'Everything about your Pets',
@@ -160,8 +160,8 @@ const tags = ref<SpecTag[]>([
     name: 'other',
   },
 ])
-const operations = ref<SpecItemType[]>([])
-const selectedItem = ref<SpecItemType>()
+const operations = ref<Operation[]>([])
+const selectedItem = ref<Operation>()
 
 // checkboxes for toggling options
 const isFilterable = ref(true)
@@ -174,7 +174,7 @@ const handleReset = (): void => {
   operations.value = cloneDeep(defaultDocument.value)
 }
 
-const handleSelected = (item: SpecItemType): void => {
+const handleSelected = (item: Operation): void => {
   selectedItem.value = item
 }
 
