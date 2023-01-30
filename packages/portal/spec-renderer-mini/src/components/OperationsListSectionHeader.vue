@@ -66,21 +66,21 @@ const emits = defineEmits(['toggle'])
 
 <style scoped lang="scss">
 .header {
+  align-items: center;
   appearance: none;
-  cursor: pointer;
   background: var(--kong-ui-spec-renderer-operations-list-section-background, transparent);
   border: 1px solid var(--kong-ui-spec-renderer-operations-list-section-border-color, var(--grey-200, #f1f1f5));
   border-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px 4px 0 0);
-  padding: var(--kong-ui-spec-renderer-operations-list-section-padding, 10px 8px 10px 12px);
+  cursor: pointer;
   display: flex;
-  align-items: center;
+  padding: var(--kong-ui-spec-renderer-operations-list-section-padding, 10px 8px 10px 12px);
   width: 100%;
 }
 
 .label {
-  margin: 0 8px 0 0;
-  font-weight: 600;
   font-size: var(--kong-ui-spec-renderer-operations-list-section-label-font-size, 18px);
+  font-weight: 600;
+  margin: 0 8px 0 0;
 
   &:first-letter {
     text-transform: capitalize;
@@ -88,17 +88,17 @@ const emits = defineEmits(['toggle'])
 }
 
 .description {
-  margin-left: auto;
   font-family: var(--kong-ui-spec-renderer-operations-list-section-description-font-family, var(--kong-ui-spec-renderer-font-monospace, monospace));
+  margin-left: auto;
   max-width: 65%;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .icon-wrapper {
-  height: 18px;
   align-self: end;
+  height: 18px;
   margin-right: 8px;
 }
 </style>

@@ -63,13 +63,13 @@ const emit = defineEmits(['click'])
 .item {
   appearance: none;
   background: transparent;
-  text-align: left;
-  width: 100%;
-  display: block;
-  cursor: pointer;
   border: 1px solid var(--kong-ui-spec-renderer-operations-list-item-border-color, var(--grey-200, #f1f1f5));
+  cursor: pointer;
+  display: block;
   padding: var(--kong-ui-spec-renderer-operations-list-item-padding, 12px 16px);
   position: relative;
+  text-align: left;
+  width: 100%;
 
   &:hover {
     background: var(--kong-ui-spec-renderer-operations-list-item-background-hover, var(--blue-100, #f2f6fe));
@@ -84,14 +84,14 @@ const emit = defineEmits(['click'])
   background: var(--kong-ui-spec-renderer-operations-list-item-background-selected, var(--blue-100, #f2f6fe));
 
   &::before {
+    background: var(--kong-ui-spec-renderer-operations-list-item-selected-bar-background, var(--blue-500, #1155cb));
+    bottom: 0;
     content: '';
     display: block;
+    left: 0;
     position: absolute;
     top: 0;
-    left: 0;
-    bottom: 0;
     width: var(--kong-ui-spec-renderer-operations-list-item-selected-bar-width, 4px);
-    background: var(--kong-ui-spec-renderer-operations-list-item-selected-bar-background, var(--blue-500, #1155cb));
   }
 }
 
@@ -141,21 +141,21 @@ const emit = defineEmits(['click'])
 }
 
 .summary {
-  margin: 0;
+  color: var(--black-500);
   font-size: 13px;
   font-weight: 700;
-  color: var(--black-500);
+  margin: 0;
 }
 
 .details {
-  margin-top: 4px;
   display: flex;
+  margin-top: 4px;
 }
 
 .truncate {
-  white-space: nowrap;
-  text-overflow: ellipsis;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .method-badge {
@@ -163,9 +163,9 @@ const emit = defineEmits(['click'])
 }
 
 .path {
-  font-size: 13px;
+  align-self: center;
   color: var(--grey-600);
   font-family: var(--kong-ui-spec-renderer-operations-list-item-path-font-family, var(--kong-ui-spec-renderer-font-family-monospace, monospace));
-  align-self: center;
+  font-size: 13px;
 }
 </style>

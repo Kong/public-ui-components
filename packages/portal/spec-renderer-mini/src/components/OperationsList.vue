@@ -255,9 +255,9 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
 
 <style lang="scss" scoped>
 .operations-list {
+  color: var(--kong-ui-kong-spec-renderer-operations-list-text-color, var(--kong-ui-spec-renderer-text-color, var(--black-500, #0B172D)));
   font-family: var(--kong-ui-spec-renderer-operations-list-font-family, var(--kong-ui-spec-renderer-font-family, Roboto, Helvetica, sans-serif));
   font-size: var(--kong-ui-spec-renderer-operations-list-font-size, var(--kong-ui-spec-renderer-font-size, 16px));
-  color: var(--kong-ui-kong-spec-renderer-operations-list-text-color, var(--kong-ui-spec-renderer-text-color, var(--black-500, #0B172D)));
 }
 
 .filter-wrapper {
@@ -274,9 +274,9 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
 }
 
 .filter-icon {
+  left: 9px; // 8px + border width
   position: absolute;
   top: calc(50% - 8px);
-  left: 9px; // 8px + border width
 }
 
 .section-wrapper {
