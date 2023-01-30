@@ -1,5 +1,5 @@
-import SpecRendererMini from './components/SpecRendererMini.vue'
+import OperationsList from './components/OperationsList.vue'
 
-export default SpecRendererMini
+export default OperationsList
 
 export * from './types'
