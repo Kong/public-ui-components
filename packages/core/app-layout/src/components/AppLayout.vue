@@ -242,16 +242,16 @@ onBeforeUnmount(() => {
 
 .kong-ui-app-layout {
   background-color: $sidebar-background-gradient-start;
+  bottom: 0;
   display: flex;
   flex-direction: column;
   font-family: $font-family-base;
   height: 100%;
+  left: 0;
   overflow: hidden;
   position: fixed;
-  top: 0;
   right: 0;
-  left: 0;
-  bottom: 0;
+  top: 0;
   width: 100%;
 
   :deep(.kong-ui-app-navbar) {
@@ -281,9 +281,9 @@ onBeforeUnmount(() => {
     flex-grow: 1;
     height: 100%;
     margin-top: v-bind('layoutMainMarginTop');
-    width: 100%;
     // border-top-left-radius: 16px; // TODO: Enable when Neon layout is enabled
     overflow: auto;
+    width: 100%;
 
     @media (min-width: $viewport-md) {
       margin-left: $sidebar-width;
