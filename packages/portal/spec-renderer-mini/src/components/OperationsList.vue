@@ -147,7 +147,7 @@ const props = defineProps({
 const emit = defineEmits(['selected'])
 
 // Generate unique identifier of this instance for safe HTML element id generation
-const uid = ref([...Array(8)].map(() => Math.random().toString(36)[2]).join(''))
+const uid = computed<string>(() => [...Array(8)].map(() => Math.random().toString(36)[2]).join(''))
 
 const filterQuery = ref<string>('')
 const selectedItem = ref<Operation | null>(null)
