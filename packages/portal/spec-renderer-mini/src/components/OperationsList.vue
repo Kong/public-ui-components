@@ -3,7 +3,7 @@
     aria-label="List of operations"
     class="operations-list"
     role="navigation"
-    :style="widthStyle"
+    :style="{ width: widthStyle }"
   >
     <div class="filter-wrapper">
       <KInput
@@ -183,11 +183,7 @@ const getSizeFromString = (sizeStr: string): string => (
     : sizeStr + 'px'
 )
 
-const widthStyle = computed<Partial<CSSStyleDeclaration>>(() => {
-  return {
-    width: getSizeFromString(props.width),
-  }
-})
+const widthStyle = computed<string>(() => getSizeFromString(props.width))
 
 const sectionHeadings = computed<string[]>(() => {
   const headings: string[] = []
