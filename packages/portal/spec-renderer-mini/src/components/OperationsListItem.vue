@@ -16,9 +16,9 @@
       <KBadge
         appearance="custom"
         :aria-label="`Method: ${item.method?.toUpperCase()}`"
-        background-color="var(--spec-renderer-operations-list-item-method-background)"
+        background-color="var(--kong-ui-spec-renderer-operations-list-item-method-background)"
         class="method-badge"
-        color="var(--spec-renderer-operations-list-item-method-color)"
+        color="var(--kong-ui-spec-renderer-operations-list-item-method-color)"
         tabindex="-1"
       >
         {{ item.method?.toUpperCase() }}
@@ -38,7 +38,6 @@
 import { PropType } from 'vue'
 import type { Operation } from '../types'
 import { KBadge } from '@kong/kongponents'
-import '@kong/kongponents/dist/style.css'
 
 defineProps({
   item: {
@@ -68,12 +67,12 @@ const emit = defineEmits(['click'])
   width: 100%;
   display: block;
   cursor: pointer;
-  border: 1px solid var(--spec-renderer-operations-list-item-border-color, var(--grey-200, #f1f1f5));
-  padding: var(--spec-renderer-operations-list-item-padding, 12px 16px);
+  border: 1px solid var(--kong-ui-spec-renderer-operations-list-item-border-color, var(--grey-200, #f1f1f5));
+  padding: var(--kong-ui-spec-renderer-operations-list-item-padding, 12px 16px);
   position: relative;
 
   &:hover {
-    background: var(--spec-renderer-operations-list-item-background-hover, var(--blue-100, #f2f6fe));
+    background: var(--kong-ui-spec-renderer-operations-list-item-background-hover, var(--blue-100, #f2f6fe));
   }
 
   &:last-of-type {
@@ -82,7 +81,7 @@ const emit = defineEmits(['click'])
 }
 
 .item--selected {
-  background: var(--spec-renderer-operations-list-item-background-selected, var(--blue-100, #f2f6fe));
+  background: var(--kong-ui-spec-renderer-operations-list-item-background-selected, var(--blue-100, #f2f6fe));
 
   &::before {
     content: '';
@@ -91,54 +90,54 @@ const emit = defineEmits(['click'])
     top: 0;
     left: 0;
     bottom: 0;
-    width: var(--spec-renderer-operations-list-item-selected-bar-width, 4px);
-    background: var(--spec-renderer-operations-list-item-selected-bar-background, var(--blue-500, #1155cb));
+    width: var(--kong-ui-spec-renderer-operations-list-item-selected-bar-width, 4px);
+    background: var(--kong-ui-spec-renderer-operations-list-item-selected-bar-background, var(--blue-500, #1155cb));
   }
 }
 
 .item--method-get {
-  --spec-renderer-operations-list-item-method-color: var(--spec-renderer-method-color-get, var(--blue-500, #1155cb));
-  --spec-renderer-operations-list-item-method-background: var(--spec-renderer-method-background-get, var(--blue-100, #f2f6fe));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-get, var(--blue-500, #1155cb));
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-get, var(--blue-100, #f2f6fe));
 }
 
 .item--method-post {
-  --spec-renderer-operations-list-item-method-color: var(--spec-renderer-method-color-post, var(--green-700, #13755e));
-  --spec-renderer-operations-list-item-method-background: var(--spec-renderer-method-background-post, var(--green-100, #e8f8f5));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-post, var(--green-700, #13755e));
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-post, var(--green-100, #e8f8f5));
 }
 
 .item--method-put {
-  --spec-renderer-operations-list-item-method-color: var(--spec-renderer-method-color-put, var(--yellow-600, #a05604));
-  --spec-renderer-operations-list-item-method-background: var(--spec-renderer-method-background-put, var(--yellow-100, #fff3d8));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-put, var(--yellow-600, #a05604));
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-put, var(--yellow-100, #fff3d8));
 }
 
 .item--method-patch {
-  --spec-renderer-operations-list-item-method-color: var(--spec-renderer-method-color-patch, var(--teal-500, #006e9d));
-  --spec-renderer-operations-list-item-method-background: var(--spec-renderer-method-background-patch, var(--teal-100, #cdf1fe));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-patch, var(--teal-500, #006e9d));
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-patch, var(--teal-100, #cdf1fe));
 }
 
 .item--method-delete {
-  --spec-renderer-operations-list-item-method-color: var(--spec-renderer-method-color-delete, var(--red-700, #922021));
-  --spec-renderer-operations-list-item-method-background: var(--spec-renderer-method-background-delete, var(--red-100, #ffdede));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-delete, var(--red-700, #922021));
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-delete, var(--red-100, #ffdede));
 }
 
 .item--method-options {
-  --spec-renderer-operations-list-item-method-color: var(--spec-renderer-method-color-options, var(--steel-700, #273c61));
-  --spec-renderer-operations-list-item-method-background: var(--spec-renderer-method-background-options, var(--steel-100, #f0f4fa));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-options, var(--steel-700, #273c61));
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-options, var(--steel-100, #f0f4fa));
 }
 
 .item--method-head {
-  --spec-renderer-operations-list-item-method-color: var(--spec-renderer-method-color-head, var(--yellow-600, #a05604));
-  --spec-renderer-operations-list-item-method-background: var(--spec-renderer-method-background-head, var(--yellow-100, #fff3d8));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-head, var(--yellow-600, #a05604));
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-head, var(--yellow-100, #fff3d8));
 }
 
 .item--method-connect {
-  --spec-renderer-operations-list-item-method-color: var(--spec-renderer-method-color-connect, var(--purple-400, #473cfb));
-  --spec-renderer-operations-list-item-method-background: var(--spec-renderer-method-background-connect, var(--purple-100, #eaf4fb));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-connect, var(--purple-400, #473cfb));
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-connect, var(--purple-100, #eaf4fb));
 }
 
 .item--method-trace {
-  --spec-renderer-operations-list-item-method-color: var(--spec-renderer-method-color-trace, var(--steel-500, #5c7299));
-  --spec-renderer-operations-list-item-method-background: var(--spec-renderer-method-background-trace, var(--steel-100, #f0f4fa));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-trace, var(--steel-500, #5c7299));
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-trace, var(--steel-100, #f0f4fa));
 }
 
 .summary {
@@ -166,7 +165,7 @@ const emit = defineEmits(['click'])
 .path {
   font-size: 13px;
   color: var(--grey-600);
-  font-family: var(--spec-renderer-operations-list-item-path-font-family, var(--spec-renderer-font-monospace, monospace));
+  font-family: var(--kong-ui-spec-renderer-operations-list-item-path-font-family, var(--kong-ui-spec-renderer-font-family-monospace, monospace));
   align-self: center;
 }
 </style>

@@ -13,13 +13,13 @@
     >
       <KIcon
         v-if="isCollapsed"
-        color="var(--spec-renderer-operations-list-section-icon-color-collapsed, var(--grey-400, #b6b6bd))"
+        color="var(--kong-ui-spec-renderer-operations-list-section-icon-color-collapsed, var(--grey-400, #b6b6bd))"
         icon="chevronRight"
         size="18"
       />
       <KIcon
         v-else
-        color="var(--spec-renderer-operations-list-section-icon-color-expanded, var(--grey-600, #3c4557))"
+        color="var(--kong-ui-spec-renderer-operations-list-section-icon-color-expanded, var(--grey-600, #3c4557))"
         icon="chevronDown"
         size="18"
       />
@@ -68,10 +68,10 @@ const emits = defineEmits(['toggle'])
 .header {
   appearance: none;
   cursor: pointer;
-  background: var(--spec-renderer-operations-list-section-background, transparent);
-  border: 1px solid var(--spec-renderer-operations-list-section-border-color, var(--grey-200, #f1f1f5));
-  border-radius: var(--spec-renderer-operations-list-section-border-radius, 4px 4px 0 0);
-  padding: var(--spec-renderer-operations-list-section-padding, 10px 8px 10px 12px);
+  background: var(--kong-ui-spec-renderer-operations-list-section-background, transparent);
+  border: 1px solid var(--kong-ui-spec-renderer-operations-list-section-border-color, var(--grey-200, #f1f1f5));
+  border-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px 4px 0 0);
+  padding: var(--kong-ui-spec-renderer-operations-list-section-padding, 10px 8px 10px 12px);
   display: flex;
   align-items: center;
   width: 100%;
@@ -80,7 +80,7 @@ const emits = defineEmits(['toggle'])
 .label {
   margin: 0 8px 0 0;
   font-weight: 600;
-  font-size: var(--spec-renderer-operations-list-section-label-font-size, 18px);
+  font-size: var(--kong-ui-spec-renderer-operations-list-section-label-font-size, 18px);
 
   &:first-letter {
     text-transform: capitalize;
@@ -89,7 +89,7 @@ const emits = defineEmits(['toggle'])
 
 .description {
   margin-left: auto;
-  font-family: var(--spec-renderer-operations-list-section-description-font-family, var(--spec-renderer-font-monospace, monospace));
+  font-family: var(--kong-ui-spec-renderer-operations-list-section-description-font-family, var(--kong-ui-spec-renderer-font-monospace, monospace));
   max-width: 65%;
   white-space: nowrap;
   text-overflow: ellipsis;

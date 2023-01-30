@@ -248,9 +248,9 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
 
 <style lang="scss" scoped>
 .operations-list {
-  font-family: var(--spec-renderer-operations-list-font-family, var(--spec-renderer-font-family, Roboto, Helvetica, sans-serif));
-  font-size: var(--spec-renderer-operations-list-font-size, var(--spec-renderer-font-size, 16px));
-  color: var(--kong-spec-renderer-mini-text-color, #000);
+  font-family: var(--kong-ui-spec-renderer-operations-list-font-family, var(--kong-ui-spec-renderer-font-family, Roboto, Helvetica, sans-serif));
+  font-size: var(--kong-ui-spec-renderer-operations-list-font-size, var(--kong-ui-spec-renderer-font-size, 16px));
+  color: var(--kong-ui-kong-spec-renderer-operations-list-text-color, var(--kong-ui-spec-renderer-text-color, var(--black-500, #0B172D)));
 }
 
 .filter-input {
@@ -264,6 +264,10 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
   &:last-of-type {
     margin-bottom: 0;
   }
+}
+
+.center {
+  text-align: center;
 }
 
 // KCollapse overrides
