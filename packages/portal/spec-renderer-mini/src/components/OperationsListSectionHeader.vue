@@ -61,7 +61,7 @@ defineProps({
   },
 })
 
-const emits = defineEmits(['toggle'])
+const emit = defineEmits(['toggle'])
 </script>
 
 <style scoped lang="scss">
