@@ -2,7 +2,7 @@
 
 > **Note**: Docs are a work in-progress
 
-Monorepo for Kong open-source UI components and associated packages.
+Monorepo for **open-source** Kong UI components and utilities.
 
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 

@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer-mini@0.4.0...@kong-ui-public/spec-renderer-mini@0.4.1) (2023-01-31)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.21.4 ([#82](https://github.com/Kong/public-ui-components/issues/82)) ([313e2e9](https://github.com/Kong/public-ui-components/commit/313e2e929799590de968c824f023eb1403154542))
+
+
+
+
+
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer-mini@0.3.6...@kong-ui-public/spec-renderer-mini@0.4.0) (2023-01-30)
+
+
+### ✨ Features
+
+* **spec-renderer-mini:** add filtering by tag and prepare to integrate into spec-renderer package [TDX-2777] ([#73](https://github.com/Kong/public-ui-components/issues/73)) ([13ed4b8](https://github.com/Kong/public-ui-components/commit/13ed4b8e073e4084e6a71a8e2376e89562991884))
+
+
+
+
+
 ## [0.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer-mini@0.3.5...@kong-ui-public/spec-renderer-mini@0.3.6) (2023-01-30)
 
 

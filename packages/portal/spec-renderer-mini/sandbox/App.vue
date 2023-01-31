@@ -9,10 +9,10 @@
           <h3>Try it Out:</h3>
           <label>
             <input
-              v-model="isSummary"
+              v-model="isFilterable"
               name="view"
               type="checkbox"
-            > isSummary
+            > isFilterable
           </label>
 
           <br><br>
@@ -37,25 +37,21 @@
         <div class="d-flex pa-3">
           <SpecRendererMini
             :key="key"
-            :is-summary="isSummary"
-            :spec="spec"
+            :is-filterable="isFilterable"
+            :operations="operations"
             :tags="tags"
-            :width="isSummary ? '550' : '350'"
+            width="550"
             @selected="handleSelected"
           />
 
           <div class="ml-3">
             <KLabel>Spec Object:</KLabel>
-            <pre class="json pa-3">
-              {{ defaultDocument }}
-            </pre>
+            <pre class="json pa-3">{{ defaultDocument }}</pre>
           </div>
 
           <div class="ml-3">
             <KLabel>Selected Object:</KLabel>
-            <pre class="json pa-3">
-              {{ selectedItem }}
-            </pre>
+            <pre class="json pa-3">{{ selectedItem }}</pre>
           </div>
         </div>
       </div>
@@ -65,11 +61,11 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import { SpecItemType, SpecTag } from '../src/types'
+import { Operation, Tag } from '../src/types'
 import { KButton, KLabel } from '@kong/kongponents'
 import SpecRendererMini from '../src'
 
-const defaultDocument = ref<SpecItemType[]>([
+const defaultDocument = ref<Operation[]>([
   {
     path: '/pet',
     method: 'put',
@@ -114,7 +110,7 @@ const defaultDocument = ref<SpecItemType[]>([
     path: '/pet/{petId}',
     method: 'patch',
     operationId: 'updatePet',
-    tags: undefined,
+    tags: [],
     summary: 'Update an existing pet',
     deprecated: false,
   },
@@ -122,7 +118,7 @@ const defaultDocument = ref<SpecItemType[]>([
     path: '/pet',
     method: 'options',
     operationId: 'petOptions',
-    tags: undefined,
+    tags: [],
     summary: 'Get pet options',
     deprecated: false,
   },
@@ -151,7 +147,7 @@ const defaultDocument = ref<SpecItemType[]>([
     deprecated: false,
   },
 ])
-const tags = ref<SpecTag[]>([
+const tags = ref<Tag[]>([
   {
     name: 'pet',
     description: 'Everything about your Pets',
@@ -164,21 +160,21 @@ const tags = ref<SpecTag[]>([
     name: 'other',
   },
 ])
-const spec = ref<SpecItemType[]>([])
-const selectedItem = ref<SpecItemType>()
+const operations = ref<Operation[]>([])
+const selectedItem = ref<Operation>()
 
 // checkboxes for toggling options
-const isSummary = ref(false)
+const isFilterable = ref(true)
 
 const handleClear = (): void => {
-  spec.value = []
+  operations.value = []
 }
 
 const handleReset = (): void => {
-  spec.value = cloneDeep(defaultDocument.value)
+  operations.value = cloneDeep(defaultDocument.value)
 }
 
-const handleSelected = (item: SpecItemType): void => {
+const handleSelected = (item: Operation): void => {
   selectedItem.value = item
 }
 
@@ -192,7 +188,7 @@ const cloneDeep = (obj: any) => {
 }
 
 const key = ref(0)
-watch(() => [isSummary.value, spec.value],
+watch([isFilterable, operations],
   () => {
     key.value++
     selectedItem.value = undefined
@@ -201,7 +197,7 @@ watch(() => [isSummary.value, spec.value],
 )
 
 onMounted(() => {
-  spec.value = cloneDeep(defaultDocument.value)
+  operations.value = cloneDeep(defaultDocument.value)
 })
 </script>
 
