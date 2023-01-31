@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.12.1...@kong-ui-public/app-layout@0.12.2) (2023-01-31)
+
+
+### 📦 Code Refactoring
+
+* **app-layout:** remove ExternalLink component [KHCP-5927] ([#76](https://github.com/Kong/public-ui-components/issues/76)) ([1c51e4a](https://github.com/Kong/public-ui-components/commit/1c51e4aea8c3a2abc409b254347e3873823a1f68))
+
+
+
+
+
 ## [0.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.12.0...@kong-ui-public/app-layout@0.12.1) (2023-01-31)
 
 

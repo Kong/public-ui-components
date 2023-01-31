@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer-mini@0.4.1...@kong-ui-public/spec-renderer-mini@0.5.0) (2023-01-31)
+
+
+### ✨ Features
+
+* **spec-renderer-mini:** update styles to match design more closely [TDX-2777] ([#85](https://github.com/Kong/public-ui-components/issues/85)) ([bbdf98e](https://github.com/Kong/public-ui-components/commit/bbdf98eef766c7f4682055c4e9e3f172ec0b31d3))
+
+
+
+
+
 ## [0.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer-mini@0.4.0...@kong-ui-public/spec-renderer-mini@0.4.1) (2023-01-31)
 
 
