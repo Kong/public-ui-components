@@ -38,7 +38,6 @@ import SpecDetails from '@kong-ui-public/spec-details'
 import OperationsList from '@kong-ui-public/spec-renderer-mini'
 import '@kong-ui-public/spec-details/dist/style.css'
 import '@kong-ui-public/spec-renderer-mini/dist/style.css'
-import '@kong/kongponents/dist/style.css'
 
 const props = defineProps({
   spec: {

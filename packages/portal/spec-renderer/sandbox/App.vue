@@ -29,6 +29,8 @@ import type { Operation, Tag } from '@kong-ui-public/spec-renderer-mini'
 // @ts-ignore
 import yamlContent from './test.yaml'
 import { SpecRenderer } from '../src'
+// only imported in Sandbox! Parent app should do this
+import '@kong/kongponents/dist/style.css'
 
 const defaultDocument = yamlContent
 const opsList = ref<Operation[]>([
