@@ -11,6 +11,6 @@ code {
   color: var(--document-viewer-code-color, inherit);
   font-family: var(--document-viewer-code-font-family, var(--document-viewer-font-family-monospace));
   font-size: var(--document-viewer-code-font-size, 14px);
-  padding: 12px;
+  padding: 4px 6px;
 }
 </style>
