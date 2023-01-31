@@ -1263,28 +1263,6 @@ packages:
       - debug
     dev: true
 
-  /@kong/kongponents/8.21.4_vue@3.2.45:
-    resolution: {integrity: sha512-gU0oeSyGu7mMhtA8hl1rzchixUTxE2d3F0tof2CLOg7HMQkormz01n1V3am9+yCkET7GveEFprJCtu6MjGOK6A==}
-    engines: {node: '>=16.19.0'}
-    peerDependencies:
-      vue: '>= 3.2.37'
-    dependencies:
-      axios: 0.27.2
-      date-fns: 2.29.3
-      date-fns-tz: 1.3.7_date-fns@2.29.3
-      focus-trap: 7.2.0
-      focus-trap-vue: 3.4.0_nn2zg2o47bujavotzgw5cgkzcu
-      popper.js: 1.16.1
-      sortablejs: 1.15.0
-      swrv: 1.0.3_vue@3.2.45
-      uuid: 8.3.2
-      v-calendar: 3.0.0-alpha.8_vue@3.2.45
-      vue: 3.2.45
-      vue-draggable-next: 2.1.1_vyu2vwb5kgntc5eommqv3uyn34
-    transitivePeerDependencies:
-      - debug
-    dev: true
-
   /@kong/swagger-ui-kong-theme-universal/4.0.4_sfoxds7t5ydpegc3knd667wn6m:
     resolution: {integrity: sha512-MM+WNeTsSiU8Xw2iDVrBnqUKU2aG2erX8zpBVfLpgi1Lrt5tIxbPNL8zpGYjAS7FspZZUP2yyt+F1/9PBVLD+g==}
     peerDependencies:
