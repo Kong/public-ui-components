@@ -2,7 +2,7 @@
   <div class="kong-portal-spec-details">
     <kong-swagger-ui
       v-if="hasRequiredProps"
-      ref="swaggerRef"
+      :application-registration-enabled="applicationRegistrationEnabled"
       :essentials-only="essentialsOnly"
       :has-sidebar="hasSidebar"
       :relative-sidebar="relativeSidebar"
@@ -48,6 +48,10 @@ const props = defineProps({
   activeOperation: {
     type: Object as PropType<Operation>,
     default: null,
+  },
+  applicationRegistrationEnabled: {
+    type: Boolean,
+    default: false,
   },
 })
 

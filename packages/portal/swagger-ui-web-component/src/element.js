@@ -58,6 +58,13 @@ export class SwaggerUIElement extends HTMLElement {
    */
   #instance = null
 
+  /**
+   * True if application registration available for service version
+   * @type {boolean}
+   */
+  #applicationRegistrationEnabled = false
+
+
   constructor() {
     super()
 
@@ -91,6 +98,9 @@ export class SwaggerUIElement extends HTMLElement {
         break
       case 'essentials-only':
         this.essentialsOnly = newValue
+        break
+      case 'application-registration-enabled':
+        this.applicationRegistrationEnabled = newValue
         break
     }
   }
@@ -164,6 +174,9 @@ export class SwaggerUIElement extends HTMLElement {
       layout: 'KongLayout',
       theme: {
         hasSidebar: this.#hasSidebar,
+        onViewSpecClick: this.onViewSpecClick,
+        onRegisterClick: this.onRegisterClick,
+        applicationRegistrationEnabled: this.#applicationRegistrationEnabled
       },
     })
   }
@@ -273,7 +286,23 @@ export class SwaggerUIElement extends HTMLElement {
     this.#url = url
   }
 
+  get applicationRegistrationEnabled() {
+    return this.#applicationRegistrationEnabled
+  }
+
+  set applicationRegistrationEnabled(applicationRegistrationEnabled) {
+    this.#applicationRegistrationEnabled = attributeValueToBoolean(applicationRegistrationEnabled)
+  }
+
   static get observedAttributes() {
     return ['url', 'spec', 'auto-init', 'has-sidebar', 'relative-sidebar', 'essentials-only']
+  }
+
+  onViewSpecClick() {
+    this.dispatchEvent(new CustomEvent("clickedViewSpec"));
+  }
+
+  onRegisterClick() {
+    this.dispatchEvent(new CustomEvent("clickedRegister"));
   }
 }
