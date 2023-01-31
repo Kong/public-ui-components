@@ -265,12 +265,12 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
   width: 100%;
 
   &:deep(.k-input) {
-    padding-left: 32px;
+    padding-left: 34px;
   }
 }
 
 .filter-icon {
-  left: 9px; // 8px + border width
+  left: 10px;
   position: absolute;
   top: calc(50% - 8px);
 }
