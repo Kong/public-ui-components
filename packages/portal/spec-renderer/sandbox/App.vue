@@ -25,13 +25,13 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import type { SpecItemType, SpecTag } from '@kong-ui-public/spec-renderer-mini'
+import type { Operation, Tag } from '@kong-ui-public/spec-renderer-mini'
 // @ts-ignore
 import yamlContent from './test.yaml'
 import { SpecRenderer } from '../src'
 
 const defaultDocument = yamlContent
-const opsList = ref<SpecItemType[]>([
+const opsList = ref<Operation[]>([
   {
     path: '/pet',
     method: 'put',
@@ -113,7 +113,7 @@ const opsList = ref<SpecItemType[]>([
     deprecated: false,
   },
 ])
-const tags = ref<SpecTag[]>([
+const tags = ref<Tag[]>([
   {
     name: 'pet',
     description: 'Everything about your Pets',

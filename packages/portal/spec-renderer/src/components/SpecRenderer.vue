@@ -4,9 +4,8 @@
       v-if="hasRequiredSpecData"
       class="spec-container"
     >
-      <SpecRendererMini
-        :is-summary="true"
-        :spec="operationsList"
+      <OperationsList
+        :operations="operationsList"
         :tags="tags"
         :width="navWidth"
         @selected="handleSelected"
@@ -34,11 +33,12 @@
 <script setup lang="ts">
 import { PropType, ref, computed } from 'vue'
 import type { Document } from '@kong-ui-public/spec-details'
-import type { SpecItemType, SpecTag } from '@kong-ui-public/spec-renderer-mini'
+import type { Operation, Tag } from '@kong-ui-public/spec-renderer-mini'
 import SpecDetails from '@kong-ui-public/spec-details'
-import SpecRendererMini from '@kong-ui-public/spec-renderer-mini'
+import OperationsList from '@kong-ui-public/spec-renderer-mini'
 import '@kong-ui-public/spec-details/dist/style.css'
 import '@kong-ui-public/spec-renderer-mini/dist/style.css'
+import '@kong/kongponents/dist/style.css'
 
 const props = defineProps({
   spec: {
@@ -50,14 +50,14 @@ const props = defineProps({
     default: false,
   },
   operationsList: {
-    type: Array as PropType<SpecItemType[]>,
+    type: Array as PropType<Operation[]>,
     required: true,
-    validator: (items: SpecItemType[]): boolean => !items.length || hasRequiredProps(items, ['method', 'path']),
+    validator: (items: Operation[]): boolean => !items.length || hasRequiredProps(items, ['method', 'path']),
   },
   tags: {
-    type: Array as PropType<SpecTag[]>,
+    type: Array as PropType<Tag[]>,
     default: () => [],
-    validator: (items: SpecTag[]): boolean => !items.length || hasRequiredProps(items, ['name']),
+    validator: (items: Tag[]): boolean => !items.length || hasRequiredProps(items, ['name']),
   },
   navWidth: {
     type: String,
@@ -69,9 +69,9 @@ const hasRequiredSpecData = computed((): boolean => {
   return !!(props.spec && props.operationsList)
 })
 
-const selectedOperation = ref<SpecItemType>()
+const selectedOperation = ref<Operation>()
 
-const handleSelected = (item: SpecItemType): void => {
+const handleSelected = (item: Operation): void => {
   selectedOperation.value = item
 }
 </script>
@@ -107,8 +107,6 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
 
   .spec-renderer-details {
     position: relative;
-    /* Counteract default top: -20px of swagger-ui component */
-    top: 20px;
     width: 100%;
   }
 }
