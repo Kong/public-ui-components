@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.12.2...@kong-ui-public/app-layout@0.12.3) (2023-01-31)
+
+
+### 🐛 Bug Fixes
+
+* **app-layout:** body overflow ([#77](https://github.com/Kong/public-ui-components/issues/77)) ([35448bf](https://github.com/Kong/public-ui-components/commit/35448bfeeb715eee620facde0fa909b53b06b051))
+
+
+
+
+
 ## [0.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.12.1...@kong-ui-public/app-layout@0.12.2) (2023-01-31)
 
 
