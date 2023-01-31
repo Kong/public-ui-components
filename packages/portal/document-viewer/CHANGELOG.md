@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.4...@kong-ui-public/document-viewer@0.2.5) (2023-01-31)
+
+
+### ♻️ Chores
+
+* fix spacing issues for code, render for textblock ([#87](https://github.com/Kong/public-ui-components/issues/87)) ([b0b6e2d](https://github.com/Kong/public-ui-components/commit/b0b6e2d36eca76a373edae68090e5c627e316547))
+
+
+
+
+
 ## [0.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.3...@kong-ui-public/document-viewer@0.2.4) (2023-01-31)
 
 
