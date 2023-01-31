@@ -5,9 +5,11 @@
     role="navigation"
     :style="{ width: widthStyle }"
   >
-    <div class="filter-wrapper">
+    <div
+      v-if="isFilterable"
+      class="filter-wrapper"
+    >
       <KInput
-        v-if="isFilterable"
         v-model="filterQuery"
         class="filter-input"
         placeholder="Filter by tag"
