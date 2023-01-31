@@ -23,7 +23,7 @@
       v-else
       data-testid="kong-ui-public-spec-renderer-error"
     >
-      <slot name="error">
+      <slot name="error-state">
         Error: Spec information missing
       </slot>
     </div>
