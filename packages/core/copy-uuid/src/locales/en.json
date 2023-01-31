@@ -1,0 +1,10 @@
+{
+  "message": {
+    "fail": "Failed to copy id to clipboard",
+    "success": {
+      "prefix": "Successfully",
+      "content": " copied to clipboard"
+    }
+  },
+  "iconTitle": "Copy to clipboard"
+}
