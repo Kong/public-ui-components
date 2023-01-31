@@ -3,6 +3,7 @@
 > Note: Docs are a work in-progress
 
 - [Required: Use the provided CLI to scaffold your new package](#required-use-the-provided-cli-to-scaffold-your-new-package)
+- [Package Rules](#package-rules)
 - [Package Structure](#package-structure)
 - [Include a `vite.config.ts` file](#include-a-viteconfigts-file)
 - [Include a `package.json` file](#include-a-packagejson-file)
@@ -51,6 +52,15 @@ Configure the component import and usage inside the
 # Start the dev server
 $ pnpm --filter "@kong-ui-public/demo-component" run dev
 ```
+
+## Package Rules
+
+In addition to the rules defined below, the following rules apply to **all** packages within this monorepository:
+
+1. Packages **must not** import files that are contained outside of their package root other than for extending the base-level configuration files.
+   1. If you need to utilize shared test fixtures, they should be placed in a subdirectory within `/cypress/fixtures/` at the project root and imported accordingly.
+   1. This also includes shared imports in your package's `/{package-name}/sandbox/` directory; if you need shared sandbox data, you should simply duplicate the files across sandboxes. **DO NOT** import/export for use in other packages.
+1. Adhere to the [Component Requirements](#component-requirements)
 
 ## Package Structure
 
