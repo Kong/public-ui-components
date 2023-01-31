@@ -1,0 +1,47 @@
+{
+  "general": {
+    "packageName": "forms"
+  },
+  "post-function": {
+    "tags": {
+      "hint": "e.g. tag1, tag2, tag3"
+    },
+    "config-certificate": {
+      "help": "Array of stringified Lua code to be cached and run in sequence during the certificate phase.",
+      "newElementButtonLabel": "+ Add"
+    },
+    "config-access": {
+      "help": "Array of stringified Lua code to be cached and run in sequence during the access phase.",
+      "newElementButtonLabel": "+ Add"
+    },
+    "config-body_filter": {
+      "help": "Array of stringified Lua code to be cached and run in sequence during the body_filter phase.",
+      "newElementButtonLabel": "+ Add"
+    },
+    "config-header_filter": {
+      "help": "Array of stringified Lua code to be cached and run in sequence during the header_filter phase.",
+      "newElementButtonLabel": "+ Add"
+    },
+    "config-functions": {
+      "newElementButtonLabel": "+ Add"
+    },
+    "config-log": {
+      "newElementButtonLabel": "+ Add"
+    },
+    "config-rewrite": {
+      "newElementButtonLabel": "+ Add"
+    },
+    "config-ws_client_frame": {
+      "newElementButtonLabel": "+ Add"
+    },
+    "config-ws_close": {
+      "newElementButtonLabel": "+ Add"
+    },
+    "config-ws_handshake": {
+      "newElementButtonLabel": "+ Add"
+    },
+    "config-ws_upstream_frame": {
+      "newElementButtonLabel": "+ Add"
+    }
+  }
+}
