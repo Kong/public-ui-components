@@ -8,6 +8,7 @@ Monorepo for **open-source** Kong UI components and utilities.
 
 - [What goes here](#what-goes-here)
 - [Creating a package](#creating-a-package)
+- [Package Publishing](#package-publishing)
 - [Development](#development)
   - [Setup](#setup)
   - [Dev Server](#dev-server)
@@ -30,6 +31,10 @@ Here are some criteria to help figure out if your code belongs to this mono-repo
 ## Creating a package
 
 [View the guide on creating a new package within the monorepo here](./docs/creating-a-package.md)
+
+## Package Publishing
+
+[View the reference on how packages are versioned and published independently within the monorepo here](./docs/package-publishing.md)
 
 ## Development
 
