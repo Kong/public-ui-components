@@ -157,7 +157,7 @@ importers:
 
   packages/core/copy-uuid:
     specifiers:
-      '@kong-ui-public/i18n': workspace:^0.2.3
+      '@kong-ui-public/i18n': workspace:^0.2.5
       '@kong/kongponents': ^8.21.4
       vue: ^3.2.45
     dependencies:
