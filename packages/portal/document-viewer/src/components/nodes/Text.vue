@@ -1,6 +1,5 @@
 <template>
-  {{ text }}
-  <br v-if="hardBreak">
+  {{ text }}<br v-if="hardBreak">
 </template>
 
 <script lang="ts">

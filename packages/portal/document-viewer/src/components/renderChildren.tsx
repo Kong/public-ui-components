@@ -57,7 +57,7 @@ export default function renderChildren<ChildTypes extends BaseNode>(children: Ar
     const component = nodeTypeToComponentMap[child.type]
 
     if (!component) {
-      notifyUnknownNodeType(child.type)
+      notifyUnknownNodeType(type)
       return null
     }
 
