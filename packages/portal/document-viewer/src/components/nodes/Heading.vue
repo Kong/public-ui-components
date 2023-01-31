@@ -27,7 +27,7 @@ const tag = `h${props.level}`
 <style scoped>
 h1, h2, h3, h4, h5, h6 {
   color: var(--document-viewer-color, var(--text_colors-headings, #0b172d));
-  font-family: var(--document-viewer-font-family-default, var(--font-family-sans));
+  font-family: var(--document-viewer-font-family-headings, var(--document-viewer-font-family-default));
   font-weight: var(--document-viewer-heading-font-weight, 500);
   margin-top: 0;
 }
