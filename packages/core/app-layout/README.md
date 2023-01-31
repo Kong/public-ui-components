@@ -114,7 +114,7 @@ Variable | Description | Default
 
 ## TypeScript interfaces
 
-TypeScript interfaces [are available here](https://github.com/Kong/shared-ui-components/blob/main/packages/app-layout/src/types/) and can be directly imported into your host application.
+TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/core/app-layout/src/types/) and can be directly imported into your host application.
 
 ## Individual component documentation
 
