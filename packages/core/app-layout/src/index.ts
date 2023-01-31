@@ -6,7 +6,6 @@ import NavbarDropdownMenu from './components/navbar/NavbarDropdownMenu.vue'
 import AppSidebar from './components/sidebar/AppSidebar.vue'
 import SidebarToggle from './components/sidebar/SidebarToggle.vue'
 import AppError from './components/errors/AppError.vue'
-import ExternalLink from './components/ExternalLink.vue'
 
 // Export Vue plugin as the default
 export default {
@@ -25,7 +24,6 @@ export {
   AppSidebar,
   SidebarToggle,
   AppError,
-  ExternalLink,
   NavbarDropdownMenu,
 }
 
