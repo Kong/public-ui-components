@@ -163,7 +163,7 @@ importers:
     dependencies:
       '@kong-ui-public/i18n': link:../i18n
     devDependencies:
-      '@kong/kongponents': 8.21.2_vue@3.2.45
+      '@kong/kongponents': 8.21.3_vue@3.2.45
       vue: 3.2.45
 
   packages/core/i18n:
