@@ -244,7 +244,7 @@ const defaultDocument = {
     },
     {
       type: 'list',
-      is_ordered: false,
+      isOrdered: false,
       children: [
         {
           type: 'list_item',
@@ -278,7 +278,7 @@ const defaultDocument = {
     },
     {
       type: 'list',
-      is_ordered: true,
+      isOrdered: true,
       children: [
         {
           type: 'list_item',
@@ -312,7 +312,7 @@ const defaultDocument = {
     },
     {
       type: 'list',
-      is_ordered: true,
+      isOrdered: true,
       children: [
         {
           type: 'list_item',
@@ -342,10 +342,10 @@ const defaultDocument = {
             },
             {
               type: 'list',
-              is_ordered: false,
+              isOrdered: false,
               children: [
                 {
-                  type: 'paragraph',
+                  type: 'list_item',
                   children: [
                     {
                       type: 'text',

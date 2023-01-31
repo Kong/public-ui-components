@@ -17,7 +17,17 @@ const tag = props.isOrdered ? 'ol' : 'ul'
 
 <style scoped>
 ul, ol {
-  margin: var(--document-viewer-list-margin, 24px 0);
-  padding: var(--document-viewer-list-padding, 0 0 0 20px);
+  font-size: 14px;
+  margin-left: 16px;
+  padding: 0;
+  margin-bottom: var(--spacing-sm, 12px);
+}
+
+ol {
+  list-style: decimal;
+}
+
+ul {
+  list-style: disc;
 }
 </style>

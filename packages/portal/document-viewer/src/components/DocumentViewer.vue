@@ -25,8 +25,8 @@ const Children = () => props.document?.children ? renderChildren(props.document.
 </style>
 <style scoped>
 .document-viewer {
-  color: var(--document-viewer-color, #000);
-  font-family: var(--document-viewer-font-family-default);
+  color: var(--document-viewer-color, var(--text_colors-primary, #0b172d));
+  font-family: var(--font-family-sans, var(--document-viewer-font-family-default));
   font-size: var(--document-viewer-font-size, 16px);
 }
 </style>
