@@ -4,6 +4,7 @@
     :aria-expanded="isCollapsed ? 'false' : 'true'"
     :aria-label="isCollapsed ? `Expand section &quot;${name}&quot;` : `Collapse section &quot;${name}&quot;`"
     class="header"
+    :class="{ 'header--collapsed': isCollapsed }"
     type="button"
     @click="emit('toggle')"
   >
@@ -26,12 +27,12 @@
     </div>
     <h1
       aria-hidden="true"
-      class="label"
+      class="label truncate"
     >
       {{ name }}
     </h1>
     <div
-      class="description"
+      class="description truncate"
       :title="description"
     >
       {{ description }}
@@ -70,16 +71,26 @@ const emit = defineEmits(['toggle'])
   appearance: none;
   background: var(--kong-ui-spec-renderer-operations-list-section-background, transparent);
   border: 1px solid var(--kong-ui-spec-renderer-operations-list-section-border-color, var(--grey-200, #f1f1f5));
-  border-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px 4px 0 0);
+  border-top-left-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px);
+  border-top-right-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px);
+  color: currentColor;
   cursor: pointer;
   display: flex;
-  padding: var(--kong-ui-spec-renderer-operations-list-section-padding, 10px 8px 10px 12px);
+  padding: var(--kong-ui-spec-renderer-operations-list-section-padding, 8px);
   width: 100%;
 }
 
+.header--collapsed {
+  border-bottom-left-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px);
+  border-bottom-right-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px);
+}
+
 .label {
-  font-size: var(--kong-ui-spec-renderer-operations-list-section-label-font-size, 18px);
+  color: var(--kong-ui-spec-renderer-operations-list-section-label-text-color, currentColor);
+  font-family: inherit;
+  font-size: var(--kong-ui-spec-renderer-operations-list-section-label-font-size, 15px);
   font-weight: 600;
+  line-height: 1;
   margin: 0 8px 0 0;
 
   &:first-letter {
@@ -87,18 +98,25 @@ const emit = defineEmits(['toggle'])
   }
 }
 
+.header--collapsed .label {
+  color: var(--kong-ui-spec-renderer-operations-list-section-label-text-color-collapsed, var(--black-400, #3C4557));
+}
+
 .description {
   font-family: var(--kong-ui-spec-renderer-operations-list-section-description-font-family, var(--kong-ui-spec-renderer-font-monospace, monospace));
+  line-height: 1;
   margin-left: auto;
   max-width: 65%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .icon-wrapper {
-  align-self: end;
   height: 18px;
   margin-right: 8px;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

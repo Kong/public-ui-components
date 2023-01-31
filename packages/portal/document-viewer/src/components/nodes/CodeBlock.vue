@@ -9,5 +9,6 @@ pre {
   color: var(--document-viewer-code-block-color, inherit);
   font-family: var(--document-viewer-code-block-font-family, var(--document-viewer-font-family-monospace));
   font-size: var(--document-viewer-code-block-font-size, 14px);
+  padding: 12px;
 }
 </style>

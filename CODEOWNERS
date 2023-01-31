@@ -26,6 +26,7 @@
 # Core packages
 /packages/core/i18n/ @adamdehaven @ValeryG @jillztom
 /packages/core/app-layout/ @adamdehaven @jillztom
+/packages/core/copy-uuid/ @Leopoldthecoder
 
 # Portal packages
 /packages/portal/document-viewer/ @Kong/team-core-ui

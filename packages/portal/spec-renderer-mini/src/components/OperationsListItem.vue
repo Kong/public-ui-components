@@ -67,7 +67,7 @@ const emit = defineEmits(['click'])
   border: 1px solid var(--kong-ui-spec-renderer-operations-list-item-border-color, var(--grey-200, #f1f1f5));
   cursor: pointer;
   display: block;
-  padding: var(--kong-ui-spec-renderer-operations-list-item-padding, 12px 16px);
+  padding: var(--kong-ui-spec-renderer-operations-list-item-padding, 8px 16px);
   position: relative;
   text-align: left;
   width: 100%;
@@ -77,7 +77,8 @@ const emit = defineEmits(['click'])
   }
 
   &:last-of-type {
-    border-radius: 0 0 4px 4px;
+    border-bottom-left-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px);
+    border-bottom-right-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px);
   }
 }
 
@@ -142,10 +143,15 @@ const emit = defineEmits(['click'])
 }
 
 .summary {
-  color: var(--black-500);
+  color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color, var(--black-400, #3C4557));
+  font-family: inherit;
   font-size: 13px;
   font-weight: 700;
   margin: 0 0 4px;
+}
+
+.item--selected .summary {
+  color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color-selected, var(--black-500, #0B172D));
 }
 
 .details {
@@ -159,6 +165,7 @@ const emit = defineEmits(['click'])
 }
 
 .method-badge {
+  font-size: 11px;
   margin-right: 8px;
 }
 
