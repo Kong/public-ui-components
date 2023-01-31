@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.3...@kong-ui-public/document-viewer@0.2.4) (2023-01-31)
+
+
+### 💎 Styles
+
+* update styling and color for document viewer (TDX-2774) ([#79](https://github.com/Kong/public-ui-components/issues/79)) ([1e15772](https://github.com/Kong/public-ui-components/commit/1e1577251cefd0f8da79ae49a550cd39a0fb4e82))
+
+
+
+
+
 ## [0.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.2...@kong-ui-public/document-viewer@0.2.3) (2023-01-27)
 
 
