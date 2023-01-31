@@ -26,16 +26,16 @@ const tag = `h${props.level}`
 
 <style scoped>
 h1, h2, h3, h4, h5, h6 {
-  margin-top: 0;
   color: var(--document-viewer-color, var(--text_colors-headings, #0b172d));
+  margin-top: 0;
   font-family: var(--font-family-sans, var(--document-viewer-font-family));
   font-weight: var(--document-viewer-heading-font-weight, 500);
 }
 
 h1 {
   font-size: 32px;
-  line-height: 38px;
   font-weight: 500;
+  line-height: 38px;
   margin-bottom: var(--spacing-xxl, 48px);
 }
 

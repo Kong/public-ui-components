@@ -7,8 +7,8 @@ pre {
   background: var(--document-viewer-code-block-background, #f1f1f1);
   border-radius: var(--document-viewer-code-block-border-radius, 3px);
   color: var(--document-viewer-code-block-color, inherit);
-  padding: 12px;
   font-family: var(--document-viewer-code-block-font-family, var(--document-viewer-font-family-monospace));
   font-size: var(--document-viewer-code-block-font-size, 14px);
+  padding: 12px;
 }
 </style>
