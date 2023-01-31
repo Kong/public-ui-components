@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/{%%PACKAGE_NAME%%}",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "main": "./dist/{%%PACKAGE_NAME%%}.umd.js",
   "module": "./dist/{%%PACKAGE_NAME%%}.es.js",
