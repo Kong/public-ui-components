@@ -3,27 +3,26 @@
     <main>
       <div>
         <h1>✨✨ Awesome SpecDetails ✨✨</h1>
-        <div
-          class="spec-controls"
-          :class="{
-            'has-sidebar': hasSidebar
-          }"
-        >
+        <div class="spec-controls">
           <h3>Try it Out:</h3>
-          <div class="props">
-            <label>
-              <input
-                v-model="hasSidebar"
-                type="checkbox"
-              > hasSidebar
-            </label>
-            <label class="ml-3">
-              <input
-                v-model="essentialsOnly"
-                type="checkbox"
-              > essentialsOnly
-            </label>
-            <div class="prop">
+          <div class="component-props">
+            <div class="component-prop">
+              <label>
+                <input
+                  v-model="hasSidebar"
+                  type="checkbox"
+                > hasSidebar
+              </label>
+            </div>
+            <div class="component-prop">
+              <label>
+                <input
+                  v-model="essentialsOnly"
+                  type="checkbox"
+                > essentialsOnly
+              </label>
+            </div>
+            <div class="component-prop">
               <label for="activeOperationInput">Active Operation Object</label>
               <textarea
                 id="activeOperationInput"
@@ -103,34 +102,22 @@ watch(() => [hasSidebar.value, essentialsOnly.value], () => {
 </script>
 
 <style lang="scss" scoped>
-.spec-details-sandbox {
-  --sidebar-width: 250px;
-
-  h1 {
-    text-align: center;
-  }
-
-  .spec-controls {
-    position: relative;
-    border-bottom: 1px solid #ddd;
-
-    label {
-      position: relative;
-      z-index: 1;
-    }
-  }
-
-  .ml-3 {
-    margin-left: 16px;
-  }
+h1 {
+  text-align: center;
 }
 
-.props {
+.spec-controls {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  position: relative;
+}
+
+.component-props {
   display: flex;
   align-items: center;
 }
 
-.prop {
+.component-prop {
   display: flex;
   flex-direction: column;
   align-items: flex-start;

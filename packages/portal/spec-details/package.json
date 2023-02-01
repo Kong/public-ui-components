@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@modyfi/vite-plugin-yaml": "^1.0.4",
+    "openapi-types": "^12.1.0",
     "vue": "^3.2.45"
   },
   "repository": {
@@ -57,7 +58,6 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong-ui-public/swagger-ui-web-component": "workspace:^0.1.6",
-    "openapi-types": "^12.1.0"
+    "@kong-ui-public/swagger-ui-web-component": "workspace:^0.1.6"
   }
 }
