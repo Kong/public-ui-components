@@ -207,13 +207,13 @@ importers:
 
   packages/portal/spec-renderer:
     specifiers:
-      '@kong-ui-public/spec-details': ^0.5.0
-      '@kong-ui-public/spec-operations-list': ^0.6.0
+      '@kong-ui-public/spec-details': workspace:^0.5.0
+      '@kong-ui-public/spec-operations-list': ^0.6.1
       '@modyfi/vite-plugin-yaml': ^1.0.4
       vue: ^3.2.45
     dependencies:
-      '@kong-ui-public/spec-details': 0.5.0_vue@3.2.45
-      '@kong-ui-public/spec-operations-list': 0.6.0_vue@3.2.45
+      '@kong-ui-public/spec-details': link:../spec-details
+      '@kong-ui-public/spec-operations-list': 0.6.1_vue@3.2.45
     devDependencies:
       '@modyfi/vite-plugin-yaml': 1.0.4
       vue: 3.2.45
