@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/spec-operations-list",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "type": "module",
   "main": "./dist/spec-operations-list.umd.js",
   "module": "./dist/spec-operations-list.es.js",

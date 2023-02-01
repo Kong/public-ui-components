@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-details@0.4.0...@kong-ui-public/spec-details@0.5.0) (2023-02-01)
+
+
+### ✨ Features
+
+* **swagger-ui:** add fire event on button presses TDX-2778 ([#81](https://github.com/Kong/public-ui-components/issues/81)) ([dab3101](https://github.com/Kong/public-ui-components/commit/dab3101001c9713f7e35860942a8c9f455dfcb6f))
+
+
+
+
+
 # [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-details@0.3.7...@kong-ui-public/spec-details@0.4.0) (2023-02-01)
 
 

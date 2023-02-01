@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.6.0 (2023-02-01)
+
+
+### ✨ Features
+
+* **spec-renderer-mini:** rename component ([#93](https://github.com/Kong/public-ui-components/issues/93)) ([9bd02f3](https://github.com/Kong/public-ui-components/commit/9bd02f38ddacbd5bba3c90654256266fcafb768a))
+
+
+
+
+
 ## [0.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer-mini@0.5.0...@kong-ui-public/spec-renderer-mini@0.5.1) (2023-01-31)
 
 
