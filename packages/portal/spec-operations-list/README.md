@@ -1,6 +1,6 @@
-# @kong-ui-public/spec-renderer-mini
+# @kong-ui-public/spec-operations-list
 
-A Kong UI mini component for displaying API specs
+A Kong UI component for displaying a filterable list of spec operations
 
 - [Features](#features)
 - [Requirements](#requirements)
@@ -8,11 +8,11 @@ A Kong UI mini component for displaying API specs
   - [Install](#install)
   - [Register](#register)
 - [Props](#props)
-  - [`spec`](#spec)
+  - [`operations`](#operations)
   - [`tags`](#tags)
   - [`isFilterable`](#isfilterable)
   - [`width`](#width)
-  - [`filterFunc`](#filterfunction)
+  - [`filterFunction`](#filterfunction)
 - [Slots](#slots)
   - [`item`](#item)
   - [`empty-state`](#empty-state)
@@ -23,8 +23,8 @@ A Kong UI mini component for displaying API specs
 
 ## Features
 
-- Render spec styled object arrays
-- Support both table of contents and list summary views
+- Render spec operations
+- Support the abillity filter and select items from the list
 
 ## Requirements
 
@@ -37,34 +37,34 @@ A Kong UI mini component for displaying API specs
 Install the component in your host application
 
 ```sh
-yarn add @kong-ui-public/spec-renderer-mini
+yarn add @kong-ui-public/spec-operations-list
 ```
 
 ### Register
 
-You can register `portal-spec-renderer-mini` globally or locally.
+You can register `portal-spec-operations-list` globally or locally.
 
 ```typescript
 // Global registration
 import { createApp } from 'vue'
-import SpecRendererMini from '@kong-ui-public/spec-renderer-mini'
-import '@kong-ui-public/spec-renderer-mini/dist/style.css'
+import SpecOperationsList from '@kong-ui-public/spec-operations-list'
+import '@kong-ui-public/spec-operations-list/dist/style.css'
 
 const app = createApp(App)
 
-app.use(SpecRendererMini)
+app.use(SpecOperationsList)
 
 ```
 
 ```html
 <!-- Local registration -->
 <template>
-  <SpecRendererMini />
+  <SpecOperationsList />
 </template>
 
 <script setup lang="ts">
-import SpecRendererMini from '@kong-ui-public/spec-renderer-mini'
-import '@kong-ui-public/spec-renderer-mini/dist/style.css'
+import SpecOperationsList from '@kong-ui-public/spec-operations-list'
+import '@kong-ui-public/spec-operations-list/dist/style.css'
 </script>
 ```
 

@@ -1,17 +1,17 @@
 {
-  "name": "@kong-ui-public/spec-renderer-mini",
+  "name": "@kong-ui-public/spec-operations-list",
   "version": "0.5.1",
   "type": "module",
-  "main": "./dist/spec-renderer-mini.umd.js",
-  "module": "./dist/spec-renderer-mini.es.js",
+  "main": "./dist/spec-operations-list.umd.js",
+  "module": "./dist/spec-operations-list.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/spec-renderer-mini.es.js",
-      "require": "./dist/spec-renderer-mini.umd.js"
+      "import": "./dist/spec-operations-list.es.js",
+      "require": "./dist/spec-operations-list.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -24,7 +24,7 @@
     "build": "run-s typecheck build:package build:types",
     "build:package": "vite build",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
-    "build:visualize": "BUILD_VISUALIZER='portal/spec-renderer-mini' vite build -m production",
+    "build:visualize": "BUILD_VISUALIZER='portal/spec-operations-list' vite build -m production",
     "preview:package": "vite preview --port 4173",
     "preview": "cross-env USE_SANDBOX=true PREVIEW_SANDBOX=true run-s build:package preview:package",
     "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
@@ -46,9 +46,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Kong/public-ui-components.git",
-    "directory": "packages/portal/spec-renderer-mini"
+    "directory": "packages/portal/spec-operations-list"
   },
-  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/portal/spec-renderer-mini",
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/portal/spec-operations-list",
   "bugs": {
     "url": "https://github.com/Kong/public-ui-components/issues"
   },
