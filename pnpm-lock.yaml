@@ -9,7 +9,7 @@ importers:
       '@commitlint/config-conventional': ^17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': ^8.0.0
       '@evilmartians/lefthook': ^1.2.8
-      '@kong/kongponents': ^8.21.5
+      '@kong/kongponents': ^8.22.0
       '@rushstack/eslint-patch': ^1.2.0
       '@types/flat': ^5.0.2
       '@types/js-yaml': ^4.0.5
@@ -66,7 +66,7 @@ importers:
       '@commitlint/config-conventional': 17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': 8.0.0
       '@evilmartians/lefthook': 1.2.8
-      '@kong/kongponents': 8.21.5_vue@3.2.45
+      '@kong/kongponents': 8.22.0_vue@3.2.45
       '@rushstack/eslint-patch': 1.2.0
       '@types/flat': 5.0.2
       '@types/js-yaml': 4.0.5
@@ -120,7 +120,7 @@ importers:
 
   packages/core/app-layout:
     specifiers:
-      '@kong/kongponents': ^8.21.5
+      '@kong/kongponents': ^8.22.0
       '@types/lodash.clonedeep': ^4.5.7
       focus-trap: ^7.2.0
       focus-trap-vue: ^4.0.1
@@ -132,7 +132,7 @@ importers:
       focus-trap-vue: 4.0.1_nn2zg2o47bujavotzgw5cgkzcu
       lodash.clonedeep: 4.5.0
     devDependencies:
-      '@kong/kongponents': 8.21.5_vue@3.2.45
+      '@kong/kongponents': 8.22.0_vue@3.2.45
       '@types/lodash.clonedeep': 4.5.7
       vue: 3.2.45
       vue-router: 4.1.6_vue@3.2.45
@@ -158,18 +158,18 @@ importers:
   packages/core/copy-uuid:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.2.5
-      '@kong/kongponents': ^8.21.5
+      '@kong/kongponents': ^8.22.0
       vue: ^3.2.45
     dependencies:
       '@kong-ui-public/i18n': link:../i18n
     devDependencies:
-      '@kong/kongponents': 8.21.5_vue@3.2.45
+      '@kong/kongponents': 8.22.0_vue@3.2.45
       vue: 3.2.45
 
   packages/core/forms:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.2.5
-      '@kong/kongponents': ^8.21.5
+      '@kong/kongponents': ^8.22.0
       '@types/lodash': ^4.14.191
       fecha: ^4.2.3
       lodash: ^4.17.21
@@ -180,7 +180,7 @@ importers:
       fecha: 4.2.3
       lodash: 4.17.21
     devDependencies:
-      '@kong/kongponents': 8.21.5_vue@3.2.45
+      '@kong/kongponents': 8.22.0_vue@3.2.45
       '@types/lodash': 4.14.191
       pug: 3.0.2
       vue: 3.2.45
@@ -218,10 +218,10 @@ importers:
 
   packages/portal/spec-operations-list:
     specifiers:
-      '@kong/kongponents': ^8.21.5
+      '@kong/kongponents': ^8.22.0
       vue: ^3.2.45
     devDependencies:
-      '@kong/kongponents': 8.21.5_vue@3.2.45
+      '@kong/kongponents': 8.22.0_vue@3.2.45
       vue: 3.2.45
 
   packages/portal/swagger-ui-web-component:
@@ -1245,8 +1245,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@kong/kongponents/8.21.5_vue@3.2.45:
-    resolution: {integrity: sha512-XYhvt4Vd6JmsI2BbFPC//OLUPz/zCAs3wKL1Q2e7ZzNyi9XTihXASXWz6u4WaksSOGmJIypOKi3jNssPOkUmxA==}
+  /@kong/kongponents/8.22.0_vue@3.2.45:
+    resolution: {integrity: sha512-RBwMyOkB0ftWfNos06rQzTQERyFObaN8HD2a50W8l/NFslG/DlkCxoysD/PSLa9IWup/vqNWWETD4hoAzy0Fjg==}
     engines: {node: '>=16.19.0'}
     peerDependencies:
       vue: '>= 3.2.37'
