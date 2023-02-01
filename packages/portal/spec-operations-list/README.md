@@ -24,7 +24,7 @@ A Kong UI component for displaying a filterable list of spec operations
 ## Features
 
 - Render spec operations
-- Support the abillity filter and select items from the list
+- Support the ability filter and select items from the list
 
 ## Requirements
 
