@@ -27,7 +27,7 @@ importers:
       commitizen: ^4.3.0
       conventional-changelog-metahub: ^4.0.1
       cross-env: ^7.0.3
-      cypress: ^12.4.1
+      cypress: ^12.5.0
       cz-conventional-changelog: ^3.3.0
       eslint: ^8.33.0
       eslint-plugin-cypress: ^2.12.1
@@ -84,7 +84,7 @@ importers:
       commitizen: 4.3.0
       conventional-changelog-metahub: 4.0.1
       cross-env: 7.0.3
-      cypress: 12.4.1
+      cypress: 12.5.0
       cz-conventional-changelog: 3.3.0
       eslint: 8.33.0
       eslint-plugin-cypress: 2.12.1_eslint@8.33.0
@@ -4713,8 +4713,8 @@ packages:
       underscore.string: 3.3.6
     dev: false
 
-  /cypress/12.4.1:
-    resolution: {integrity: sha512-IFMPzc1RJ22Fac+YbdqywtpcuqZXqQJh+JqZDXn+A15zG/dw99njfv8f0bTvD+WAHhP118+xWG/VwilkFg1rnA==}
+  /cypress/12.5.0:
+    resolution: {integrity: sha512-CRo1DIr0LoCE3SNb/kJ0TZM9dIdiy7fNlRp/YoPfAv+XOKZV27LQ7zZUi4lMmHIEo3K0dAN5+tJ/8eZc/Jmbyg==}
     engines: {node: ^14.0.0 || ^16.0.0 || >=18.0.0}
     hasBin: true
     requiresBuild: true
