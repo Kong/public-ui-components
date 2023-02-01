@@ -10,21 +10,35 @@
           }"
         >
           <h3>Try it Out:</h3>
-          <label>
-            <input
-              v-model="hasSidebar"
-              type="checkbox"
-            > hasSidebar
-          </label>
-          <label class="ml-3">
-            <input
-              v-model="essentialsOnly"
-              type="checkbox"
-            > essentialsOnly
-          </label>
+          <div class="props">
+            <label>
+              <input
+                v-model="hasSidebar"
+                type="checkbox"
+              > hasSidebar
+            </label>
+            <label class="ml-3">
+              <input
+                v-model="essentialsOnly"
+                type="checkbox"
+              > essentialsOnly
+            </label>
+            <div class="prop">
+              <label for="activeOperationInput">Active Operation Object</label>
+              <textarea
+                id="activeOperationInput"
+                v-model="tempActiveOperation"
+              />
+              <div>
+                <button @click="updateActiveOperation">Update</button>
+                <button @click="insertExampleActiveOperation">Insert example</button>
+              </div>
+            </div>
+          </div>
         </div>
         <SpecDetails
           :key="key"
+          :active-operation="activeOperation"
           :document="defaultDocument"
           :essentials-only="essentialsOnly"
           :has-sidebar="hasSidebar"
@@ -38,13 +52,45 @@
 import { ref, watch } from 'vue'
 // @ts-ignore
 import yamlContent from './test.yaml'
-import SpecDetails from '../src'
+import SpecDetails, { Operation } from '../src'
 
 const defaultDocument = yamlContent
 
 // checkboxes for toggling options
-const hasSidebar = ref(true)
-const essentialsOnly = ref(false)
+const hasSidebar = ref<boolean>(true)
+const essentialsOnly = ref<boolean>(false)
+const activeOperation = ref<Operation | null>(null)
+const tempActiveOperation = ref<string>('')
+
+function updateActiveOperation() {
+  try {
+    const operation = JSON.parse(tempActiveOperation.value)
+
+    if (!Object.hasOwn(operation, 'path') || !Object.hasOwn(operation, 'method')) {
+      alert('Operation object requires "path" and "method" properties')
+    }
+
+    activeOperation.value = {
+      operationId: operation.operationId ?? null,
+      deprecated: operation.deprecated ?? false,
+      method: operation.method,
+      path: operation.path,
+      tag: operation.tag ?? null,
+      summary: operation.summary ?? null,
+    } as Operation
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+function insertExampleActiveOperation() {
+  tempActiveOperation.value = JSON.stringify({
+    operationId: 'updatePet',
+    path: '/pet',
+    method: 'post',
+    tag: 'pet',
+  })
+}
 
 const key = ref(0)
 watch(() => [hasSidebar.value, essentialsOnly.value], () => {
@@ -62,10 +108,7 @@ watch(() => [hasSidebar.value, essentialsOnly.value], () => {
 
   .spec-controls {
     position: relative;
-
-    &.has-sidebar {
-      left: calc(var(--sidebar-width) + 50px);
-    }
+    border-bottom: 1px solid #ddd;
 
     label {
       position: relative;
@@ -76,5 +119,21 @@ watch(() => [hasSidebar.value, essentialsOnly.value], () => {
   .ml-3 {
     margin-left: 16px;
   }
+}
+
+.props {
+  display: flex;
+  align-items: center;
+}
+
+.prop {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 10px;
+}
+
+textarea {
+  min-height: 80px;
 }
 </style>
