@@ -58,6 +58,18 @@ export class SwaggerUIElement extends HTMLElement {
    */
   #instance = null
 
+  /**
+   * True if application registration available for service version
+   * @type {boolean}
+   */
+  #applicationRegistrationEnabled = false
+
+  /**
+   * name for selected version
+   * @type {string}
+   */
+  #currentVersion
+
   constructor() {
     super()
 
@@ -91,6 +103,12 @@ export class SwaggerUIElement extends HTMLElement {
         break
       case 'essentials-only':
         this.essentialsOnly = newValue
+        break
+      case 'application-registration-enabled':
+        this.applicationRegistrationEnabled = newValue
+        break
+      case 'current-version':
+        this.currentVersion = newValue
         break
     }
   }
@@ -147,6 +165,14 @@ export class SwaggerUIElement extends HTMLElement {
       essentialsOnlyStyles.use({ target: this.shadowRoot, testId: 'hide-essentials-styles' })
     }
 
+    const onViewSpecClick = () => {
+      this.dispatchEvent(new CustomEvent('clicked-view-spec', { bubbles: true }))
+    }
+
+    const onRegisterClick = () => {
+      this.dispatchEvent(new CustomEvent('clicked-register', { bubbles: true }))
+    }
+
     this.#instance = SwaggerUI({
       url: this.#url,
       spec: this.#spec,
@@ -164,6 +190,10 @@ export class SwaggerUIElement extends HTMLElement {
       layout: 'KongLayout',
       theme: {
         hasSidebar: this.#hasSidebar,
+        applicationRegistrationEnabled: this.#applicationRegistrationEnabled,
+        currentVersion: { version: this.#currentVersion },
+        onViewSpecClick,
+        onRegisterClick,
       },
     })
   }
@@ -273,7 +303,23 @@ export class SwaggerUIElement extends HTMLElement {
     this.#url = url
   }
 
+  get applicationRegistrationEnabled() {
+    return this.#applicationRegistrationEnabled
+  }
+
+  set applicationRegistrationEnabled(applicationRegistrationEnabled) {
+    this.#applicationRegistrationEnabled = attributeValueToBoolean(applicationRegistrationEnabled)
+  }
+
+  get currentVersion() {
+    return this.#currentVersion
+  }
+
+  set currentVersion(currentVersion) {
+    this.#currentVersion = currentVersion
+  }
+
   static get observedAttributes() {
-    return ['url', 'spec', 'auto-init', 'has-sidebar', 'relative-sidebar', 'essentials-only']
+    return ['url', 'spec', 'auto-init', 'has-sidebar', 'relative-sidebar', 'essentials-only', 'application-registration-enabled', 'current-version']
   }
 }
