@@ -129,8 +129,6 @@ export class SwaggerUIElement extends HTMLElement {
   }
 
   init() {
-
-    alert('linked! 4')
     if (this.#instance) {
       throw new Error('SwaggerUI is already initialized')
     }
