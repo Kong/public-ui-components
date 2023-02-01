@@ -1,6 +1,6 @@
 import SwaggerUI from 'swagger-ui'
 import { SwaggerUIKongTheme } from '@kong/swagger-ui-kong-theme-universal'
-import { attributeValueToBoolean } from './utils'
+import { attributeValueToBoolean, operationToSwaggerThingArray, operationToSwaggerThingId } from './utils'
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
 const kongThemeStyles = require('!!raw-loader!@kong/swagger-ui-kong-theme-universal/dist/main.css')
@@ -35,6 +35,8 @@ div#sidebar {
 `
 
 export class SwaggerUIElement extends HTMLElement {
+  static name = 'kong-swagger-ui'
+
   /**
    * Should SwaggerUI be automatically initialized after connecting?
    * @type {boolean}
@@ -80,6 +82,7 @@ export class SwaggerUIElement extends HTMLElement {
     super()
 
     this.rootElement = document.createElement('div')
+    this.rootElement.style.contain = 'content'
 
     this.attachShadow({ mode: 'open' })
     this.shadowRoot.appendChild(this.rootElement)
@@ -176,6 +179,47 @@ export class SwaggerUIElement extends HTMLElement {
         hasSidebar: this.#hasSidebar,
       },
     })
+  }
+
+  showOperation(operation) {
+    if (!this.#instance) {
+      return false
+    }
+
+    const thingArray = operationToSwaggerThingArray(operation)
+    this.#instance.layoutActions.show(thingArray, true)
+    return true
+  }
+
+  hideOperation(operation) {
+    if (!this.#instance) {
+      return false
+    }
+
+    const thingArray = operationToSwaggerThingArray(operation)
+    this.#instance.layoutActions.show(thingArray, false)
+    return true
+  }
+
+  scrollToOperation(operation) {
+    if (!this.#instance) {
+      return false
+    }
+
+    const operationElementId = operationToSwaggerThingId(operation)
+    const element = this.shadowRoot.getElementById(operationElementId)
+    if (!element) {
+      return false
+    }
+
+    // respect reduced motion settings
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: no-preference)')
+    let behavior
+    if (mediaQuery && mediaQuery.matches) {
+      behavior = 'smooth'
+    }
+
+    element.scrollIntoView({ behavior })
   }
 
   get autoInit() {
