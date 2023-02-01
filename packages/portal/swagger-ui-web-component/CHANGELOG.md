@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.1.6...@kong-ui-public/swagger-ui-web-component@0.2.0) (2023-02-01)
+
+
+### ✨ Features
+
+* **spec-details:** add activeOperation property ([#92](https://github.com/Kong/public-ui-components/issues/92)) ([0350ee9](https://github.com/Kong/public-ui-components/commit/0350ee96b5bacf9f5728f267142c0b1958185f10))
+
+
+
+
+
 ## [0.1.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.1.5...@kong-ui-public/swagger-ui-web-component@0.1.6) (2023-01-27)
 
 
