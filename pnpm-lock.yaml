@@ -207,11 +207,13 @@ importers:
     specifiers:
       '@kong-ui-public/swagger-ui-web-component': workspace:^0.1.6
       '@modyfi/vite-plugin-yaml': ^1.0.4
+      openapi-types: ^12.1.0
       vue: ^3.2.45
     dependencies:
       '@kong-ui-public/swagger-ui-web-component': link:../swagger-ui-web-component
     devDependencies:
       '@modyfi/vite-plugin-yaml': 1.0.4
+      openapi-types: 12.1.0
       vue: 3.2.45
 
   packages/portal/spec-renderer-mini:
@@ -230,6 +232,7 @@ importers:
       react: 17.0.2
       react-dom: 17.0.2
       style-loader: ^3.3.1
+      swagger-client: ^3.18.5
       swagger-ui: ^4.15.5
       terser-webpack-plugin: ^5.3.6
       webpack: ^5.75.0
@@ -240,6 +243,7 @@ importers:
       '@kong/swagger-ui-kong-theme-universal': 4.0.4_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
+      swagger-client: 3.18.5
       swagger-ui: 4.15.5
     devDependencies:
       css-loader: 6.7.3_webpack@5.75.0
@@ -8842,6 +8846,10 @@ packages:
       define-lazy-prop: 2.0.0
       is-docker: 2.2.1
       is-wsl: 2.2.0
+    dev: true
+
+  /openapi-types/12.1.0:
+    resolution: {integrity: sha512-XpeCy01X6L5EpP+6Hc3jWN7rMZJ+/k1lwki/kTmWzbVhdPie3jd5O2ZtedEx8Yp58icJ0osVldLMrTB/zslQXA==}
     dev: true
 
   /opener/1.5.2:

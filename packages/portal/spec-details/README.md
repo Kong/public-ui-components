@@ -13,6 +13,7 @@ A Kong UI component for displaying API specs
   - [`hasSidebar`](#hassidebar)
   - [`relativeSidebar`](#relativesidebar)
   - [`essentialsOnly`](#essentialsonly)
+  - [`activeOperation`](#activeoperation)
 
 ## Features
 
@@ -103,3 +104,11 @@ Both `hasSidebar` and `essentialsOnly` must be `true` for the positioning to be 
 - default: `false`
 
 If enabled, only display the spec `paths` section; general information, schemes, models, actions (Authorize & Try it out), etc. are hidden.
+
+### `activeOperation`
+
+- type: `Object`
+- required: `false`
+- default: `null`
+
+Allows to expand specification operation details section for given operation and scroll the viewport to it.

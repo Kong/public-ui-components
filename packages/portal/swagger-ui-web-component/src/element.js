@@ -1,29 +1,9 @@
 import SwaggerUI from 'swagger-ui'
 import { SwaggerUIKongTheme } from '@kong/swagger-ui-kong-theme-universal'
-import { attributeValueToBoolean } from './utils'
-
-// eslint-disable-next-line import/no-webpack-loader-syntax
-const kongThemeStyles = require('!!raw-loader!@kong/swagger-ui-kong-theme-universal/dist/main.css')
-const essentialsOnlyStyles = `
-/* hide non-essential sections & features */
-.info-augment-wrapper,
-.swagger-ui section,
-.swagger-ui .opblock-tag .info__externaldocs,
-.swagger-ui .auth-wrapper,
-.swagger-ui .schemes,
-.swagger-ui .try-out,
-.opblock-body .right-side-wrapper .code-snippet {
-  display: none !important;
-}
-/* fix copy button width */
-.swagger-ui .opblock .opblock-summary:hover .view-line-link.copy-to-clipboard {
-  width: 24px;
-}
-.swagger-ui .copy-to-clipboard {
-  margin-left: 8px !important;
-  right: unset !important;
-}
-`
+import kongThemeStyles from '@kong/swagger-ui-kong-theme-universal/dist/main.css'
+import { attributeValueToBoolean, operationToSwaggerThingArray, operationToSwaggerThingId } from './utils'
+import overridesStyles from './styles/overrides.css'
+import essentialsOnlyStyles from './styles/essentialsOnly.css'
 
 const relativeSidebarStyles = `
 /* relative sidebar styles */
@@ -35,6 +15,8 @@ div#sidebar {
 `
 
 export class SwaggerUIElement extends HTMLElement {
+  static name = 'kong-swagger-ui'
+
   /**
    * Should SwaggerUI be automatically initialized after connecting?
    * @type {boolean}
@@ -80,6 +62,7 @@ export class SwaggerUIElement extends HTMLElement {
     super()
 
     this.rootElement = document.createElement('div')
+    this.rootElement.style.contain = 'content'
 
     this.attachShadow({ mode: 'open' })
     this.shadowRoot.appendChild(this.rootElement)
@@ -118,6 +101,15 @@ export class SwaggerUIElement extends HTMLElement {
     }
   }
 
+  disconnectedCallback() {
+    kongThemeStyles.unuse()
+    overridesStyles.unuse()
+
+    if (this.#essentialsOnly) {
+      essentialsOnlyStyles.unuse()
+    }
+  }
+
   init() {
     if (this.#instance) {
       throw new Error('SwaggerUI is already initialized')
@@ -136,11 +128,12 @@ export class SwaggerUIElement extends HTMLElement {
     }
 
     // load base styles
-    const styleTag = document.createElement('style')
-    styleTag.innerHTML = kongThemeStyles.default
-    styleTag.setAttribute('data-testid', 'default-styles')
-    this.shadowRoot.appendChild(styleTag)
+    kongThemeStyles.use({ target: this.shadowRoot, testId: 'default-styles' })
 
+    // load style overrides
+    overridesStyles.use({ target: this.shadowRoot, testId: 'overrides-styles' })
+
+    // TODO: Remove sidebar support
     // relatively position the sidebar if essentials only
     if (this.#hasSidebar && this.#essentialsOnly && this.#relativeSidebar) {
       const styleTag = document.createElement('style')
@@ -151,10 +144,7 @@ export class SwaggerUIElement extends HTMLElement {
 
     // hide non-essential sections
     if (this.#essentialsOnly) {
-      const styleTag = document.createElement('style')
-      styleTag.innerHTML = essentialsOnlyStyles
-      styleTag.setAttribute('data-testid', 'hide-essentials-styles')
-      this.shadowRoot.appendChild(styleTag)
+      essentialsOnlyStyles.use({ target: this.shadowRoot, testId: 'hide-essentials-styles' })
     }
 
     this.#instance = SwaggerUI({
@@ -176,6 +166,47 @@ export class SwaggerUIElement extends HTMLElement {
         hasSidebar: this.#hasSidebar,
       },
     })
+  }
+
+  showOperation(operation) {
+    if (!this.#instance) {
+      return false
+    }
+
+    const thingArray = operationToSwaggerThingArray(operation)
+    this.#instance.layoutActions.show(thingArray, true)
+    return true
+  }
+
+  hideOperation(operation) {
+    if (!this.#instance) {
+      return false
+    }
+
+    const thingArray = operationToSwaggerThingArray(operation)
+    this.#instance.layoutActions.show(thingArray, false)
+    return true
+  }
+
+  scrollToOperation(operation) {
+    if (!this.#instance) {
+      return false
+    }
+
+    const operationElementId = operationToSwaggerThingId(operation)
+    const element = this.shadowRoot.getElementById(operationElementId)
+    if (!element) {
+      return false
+    }
+
+    // respect reduced motion settings
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: no-preference)')
+    let behavior
+    if (mediaQuery && mediaQuery.matches) {
+      behavior = 'smooth'
+    }
+
+    element.scrollIntoView({ behavior })
   }
 
   get autoInit() {
