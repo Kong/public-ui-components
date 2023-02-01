@@ -1,9 +1,9 @@
 <template>
-  <div class="spec-renderer-mini-sandbox sandbox-container">
+  <div class="spec-operations-list-sandbox sandbox-container">
     <main>
       <div>
         <h1 class="center">
-          ✨✨ Awesome SpecRendererMini ✨✨
+          ✨✨ Awesome SpecOperationsList ✨✨
         </h1>
         <div class="spec-controls center">
           <h3>Try it Out:</h3>
@@ -35,7 +35,7 @@
         <br><br>
 
         <div class="d-flex pa-3">
-          <SpecRendererMini
+          <SpecOperationsList
             :key="key"
             :is-filterable="isFilterable"
             :operations="operations"
@@ -63,7 +63,7 @@
 import { onMounted, ref, watch } from 'vue'
 import { Operation, Tag } from '../src/types'
 import { KButton, KLabel } from '@kong/kongponents'
-import SpecRendererMini from '../src'
+import SpecOperationsList from '../src'
 
 const defaultDocument = ref<Operation[]>([
   {
@@ -202,7 +202,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.spec-renderer-mini-sandbox {
+.spec-operations-list-sandbox {
   --KInputLabelSize: var(--type-lg);
 
   .center {

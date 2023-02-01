@@ -1,7 +1,7 @@
 <template>
   <section
     aria-label="List of operations"
-    class="operations-list"
+    class="kong-ui-public-operations-list"
     role="navigation"
     :style="{ width: widthStyle }"
   >
@@ -88,7 +88,7 @@
       <!-- Empty State -->
       <div
         v-else
-        data-testid="kong-portal-spec-renderer-mini-empty"
+        data-testid="kong-ui-public-spec-operations-list-empty"
       >
         <slot name="empty-state">
           <div class="center">
@@ -100,7 +100,7 @@
     <!-- Error State -->
     <div
       v-else
-      data-testid="kong-portal-spec-renderer-mini-error"
+      data-testid="kong-ui-public-spec-operations-list-error"
     >
       <slot name="error-state">
         Error: No document spec provided
@@ -252,45 +252,45 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
 </script>
 
 <style lang="scss" scoped>
-.operations-list {
+.kong-ui-public-operations-list {
   color: var(--kong-ui-kong-spec-renderer-operations-list-text-color, var(--kong-ui-spec-renderer-text-color, var(--black-500, #0B172D)));
   font-family: var(--kong-ui-spec-renderer-operations-list-font-family, var(--kong-ui-spec-renderer-font-family, Roboto, Helvetica, sans-serif));
   font-size: var(--kong-ui-spec-renderer-operations-list-font-size, var(--kong-ui-spec-renderer-font-size, 16px));
-}
 
-.filter-wrapper {
-  margin-bottom: 8px;
-  position: relative;
-}
-
-.filter-input {
-  width: 100%;
-
-  &:deep(.k-input) {
-    padding-left: 34px;
+  .filter-wrapper {
+    margin-bottom: 8px;
+    position: relative;
   }
-}
 
-.filter-icon {
-  left: 10px;
-  position: absolute;
-  top: calc(50% - 8px);
-}
+  .filter-input {
+    width: 100%;
 
-.section-wrapper {
-  margin-bottom: 8px;
-
-  &:last-of-type {
-    margin-bottom: 0;
+    &:deep(.k-input) {
+      padding-left: 34px;
+    }
   }
-}
 
-.center {
-  text-align: center;
-}
+  .filter-icon {
+    left: 10px;
+    position: absolute;
+    top: calc(50% - 8px);
+  }
 
-// KCollapse overrides
-.operations-list :deep(.k-collapse .k-collapse-heading) {
-  margin: 0 !important;
+  .section-wrapper {
+    margin-bottom: 8px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  // KCollapse overrides
+  :deep(.k-collapse .k-collapse-heading) {
+    margin: 0 !important;
+  }
 }
 </style>

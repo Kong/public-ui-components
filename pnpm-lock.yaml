@@ -216,7 +216,7 @@ importers:
       openapi-types: 12.1.0
       vue: 3.2.45
 
-  packages/portal/spec-renderer-mini:
+  packages/portal/spec-operations-list:
     specifiers:
       '@kong/kongponents': ^8.21.5
       vue: ^3.2.45
