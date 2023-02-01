@@ -45,8 +45,8 @@
     "vue": "^3.2.45"
   },
   "dependencies": {
-    "@kong-ui-public/spec-details": "workspace:^0.3.7",
-    "@kong-ui-public/spec-renderer-mini": "workspace:^0.4.1"
+    "@kong-ui-public/spec-details": "workspace:^0.4.0",
+    "@kong-ui-public/spec-renderer-mini": "workspace:^0.5.1"
   },
   "repository": {
     "type": "git",

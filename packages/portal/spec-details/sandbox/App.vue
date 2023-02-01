@@ -108,7 +108,7 @@ h1 {
 
 .spec-controls {
   border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
+  margin-bottom: 20px;
   position: relative;
 }
 
