@@ -55,7 +55,8 @@
 import { ref, watch } from 'vue'
 // @ts-ignore
 import yamlContent from './test.yaml'
-import SpecDetails, { Operation } from '../src'
+import type { Operation } from '../src'
+import SpecDetails from '../src'
 
 const defaultDocument = yamlContent
 

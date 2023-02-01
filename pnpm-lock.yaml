@@ -205,6 +205,19 @@ importers:
       '@kong/kongponents': 8.22.2_vue@3.2.47
       vue: 3.2.47
 
+  packages/portal/spec-renderer:
+    specifiers:
+      '@kong-ui-public/spec-details': ^0.5.0
+      '@kong-ui-public/spec-operations-list': ^0.6.0
+      '@modyfi/vite-plugin-yaml': ^1.0.4
+      vue: ^3.2.45
+    dependencies:
+      '@kong-ui-public/spec-details': 0.5.0_vue@3.2.45
+      '@kong-ui-public/spec-operations-list': 0.6.0_vue@3.2.45
+    devDependencies:
+      '@modyfi/vite-plugin-yaml': 1.0.4
+      vue: 3.2.45
+
   packages/portal/swagger-ui-web-component:
     specifiers:
       '@kong/swagger-ui-kong-theme-universal': ^4.0.4

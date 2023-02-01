@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import type { Operation, Tag } from '@kong-ui-public/spec-renderer-mini'
+import type { Operation, Tag } from '@kong-ui-public/spec-operations-list'
 // @ts-ignore
 import yamlContent from './test.yaml'
 import { SpecRenderer } from '../src'

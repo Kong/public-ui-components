@@ -33,11 +33,11 @@
 <script setup lang="ts">
 import { PropType, ref, computed } from 'vue'
 import type { SpecDocument } from '@kong-ui-public/spec-details'
-import type { Operation, Tag } from '@kong-ui-public/spec-renderer-mini'
+import type { Operation, Tag } from '@kong-ui-public/spec-operations-list'
 import SpecDetails from '@kong-ui-public/spec-details'
-import OperationsList from '@kong-ui-public/spec-renderer-mini'
+import OperationsList from '@kong-ui-public/spec-operations-list'
 import '@kong-ui-public/spec-details/dist/style.css'
-import '@kong-ui-public/spec-renderer-mini/dist/style.css'
+import '@kong-ui-public/spec-operations-list/dist/style.css'
 
 const props = defineProps({
   spec: {
