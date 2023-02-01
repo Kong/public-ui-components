@@ -12,3 +12,5 @@ export default {
 }
 
 export { {%%COMPONENT_NAME%%} }
+
+export * from './types'
