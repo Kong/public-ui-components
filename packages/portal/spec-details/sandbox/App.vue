@@ -30,8 +30,12 @@
                 v-model="tempActiveOperation"
               />
               <div>
-                <button @click="updateActiveOperation">Update</button>
-                <button @click="insertExampleActiveOperation">Insert example</button>
+                <button @click="updateActiveOperation">
+                  Update
+                </button>
+                <button @click="insertExampleActiveOperation">
+                  Insert example
+                </button>
               </div>
             </div>
           </div>
