@@ -1,8 +1,10 @@
 <template>
   <div class="kong-portal-spec-details">
+    <h1>LINKED</h1>
     <kong-swagger-ui
       v-if="hasRequiredProps"
       :application-registration-enabled="applicationRegistrationEnabled"
+      :current-version="currentVersion"
       :essentials-only="essentialsOnly"
       :has-sidebar="hasSidebar"
       :relative-sidebar="relativeSidebar"
@@ -52,6 +54,10 @@ const props = defineProps({
   applicationRegistrationEnabled: {
     type: Boolean,
     default: false,
+  },
+  currentVersion: {
+    type: String,
+    default: () => undefined,
   },
 })
 

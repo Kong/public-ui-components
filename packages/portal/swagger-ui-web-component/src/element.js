@@ -64,6 +64,11 @@ export class SwaggerUIElement extends HTMLElement {
    */
   #applicationRegistrationEnabled = false
 
+  /**
+   * name for selected version
+   * @type {string}
+   */
+  #currentVersion
 
   constructor() {
     super()
@@ -102,6 +107,9 @@ export class SwaggerUIElement extends HTMLElement {
       case 'application-registration-enabled':
         this.applicationRegistrationEnabled = newValue
         break
+      case 'current-version':
+        this.currentVersion = newValue
+        break
     }
   }
 
@@ -121,6 +129,8 @@ export class SwaggerUIElement extends HTMLElement {
   }
 
   init() {
+
+    alert('linked! 4')
     if (this.#instance) {
       throw new Error('SwaggerUI is already initialized')
     }
@@ -157,6 +167,16 @@ export class SwaggerUIElement extends HTMLElement {
       essentialsOnlyStyles.use({ target: this.shadowRoot, testId: 'hide-essentials-styles' })
     }
 
+    const onViewSpecClick = () => {
+      this.dispatchEvent(new CustomEvent('clicked-view-spec', { bubbles: true }))
+    }
+
+    const onRegisterClick = () => {
+      this.dispatchEvent(new CustomEvent('clicked-register', { bubbles: true }))
+    }
+
+    console.log('appreg status', this.#applicationRegistrationEnabled)
+
     this.#instance = SwaggerUI({
       url: this.#url,
       spec: this.#spec,
@@ -174,9 +194,10 @@ export class SwaggerUIElement extends HTMLElement {
       layout: 'KongLayout',
       theme: {
         hasSidebar: this.#hasSidebar,
-        onViewSpecClick: this.onViewSpecClick,
-        onRegisterClick: this.onRegisterClick,
-        applicationRegistrationEnabled: this.#applicationRegistrationEnabled
+        applicationRegistrationEnabled: this.#applicationRegistrationEnabled,
+        currentVersion: { version: this.#currentVersion },
+        onViewSpecClick,
+        onRegisterClick,
       },
     })
   }
@@ -294,15 +315,15 @@ export class SwaggerUIElement extends HTMLElement {
     this.#applicationRegistrationEnabled = attributeValueToBoolean(applicationRegistrationEnabled)
   }
 
+  get currentVersion() {
+    return this.#currentVersion
+  }
+
+  set currentVersion(currentVersion) {
+    this.#currentVersion = currentVersion
+  }
+
   static get observedAttributes() {
-    return ['url', 'spec', 'auto-init', 'has-sidebar', 'relative-sidebar', 'essentials-only']
-  }
-
-  onViewSpecClick() {
-    this.dispatchEvent(new CustomEvent("clickedViewSpec"));
-  }
-
-  onRegisterClick() {
-    this.dispatchEvent(new CustomEvent("clickedRegister"));
+    return ['url', 'spec', 'auto-init', 'has-sidebar', 'relative-sidebar', 'essentials-only', 'application-registration-enabled', 'current-version']
   }
 }
