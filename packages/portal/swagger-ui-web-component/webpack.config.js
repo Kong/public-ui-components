@@ -20,6 +20,9 @@ module.exports = (env, { mode, analyze = false }) => {
                 injectType: 'lazyStyleTag',
                 // custom insert function that accepts a target element to append <style> tag into
                 insert: function insertIntoTarget(element, options) {
+                  if (options.testId) {
+                    element.setAttribute('data-testid', options.testId)
+                  }
                   const parent = options.target || document.head
                   parent.appendChild(element)
                 },

@@ -211,9 +211,9 @@ importers:
       vue: ^3.2.45
     dependencies:
       '@kong-ui-public/swagger-ui-web-component': link:../swagger-ui-web-component
-      openapi-types: 12.1.0
     devDependencies:
       '@modyfi/vite-plugin-yaml': 1.0.4
+      openapi-types: 12.1.0
       vue: 3.2.45
 
   packages/portal/spec-renderer-mini:
@@ -8850,7 +8850,7 @@ packages:
 
   /openapi-types/12.1.0:
     resolution: {integrity: sha512-XpeCy01X6L5EpP+6Hc3jWN7rMZJ+/k1lwki/kTmWzbVhdPie3jd5O2ZtedEx8Yp58icJ0osVldLMrTB/zslQXA==}
-    dev: false
+    dev: true
 
   /opener/1.5.2:
     resolution: {integrity: sha512-ur5UIdyw5Y7yEj9wLzhqXiy6GZ3Mwx0yGI+5sMn2r0N0v3cKJvUmFH5yPP+WXh9e0xfyzyJX95D8l088DNFj7A==}
