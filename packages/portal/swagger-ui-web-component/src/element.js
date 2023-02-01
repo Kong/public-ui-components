@@ -173,8 +173,6 @@ export class SwaggerUIElement extends HTMLElement {
       this.dispatchEvent(new CustomEvent('clicked-register', { bubbles: true }))
     }
 
-    console.log('appreg status', this.#applicationRegistrationEnabled)
-
     this.#instance = SwaggerUI({
       url: this.#url,
       spec: this.#spec,
