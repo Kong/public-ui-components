@@ -23,7 +23,13 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
 // We need to override the provided `vue` plugin with a custom config that includes `isCustomElement`
 // If additional plugins are added to the root `vite.config.shared.ts`, you'll need to include them here as well
 const customPlugins = [
-  vue(),
+  vue({
+    template: {
+      compilerOptions: {
+        isCustomElement: tag => tag.startsWith('kong-'), // ['kong-swagger-ui'].includes(tag)
+      },
+    },
+  }),
   ViteYaml(), // you may configure the plugin by passing in an object with the options listed below
 ]
 

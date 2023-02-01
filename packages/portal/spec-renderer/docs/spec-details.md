@@ -1,4 +1,4 @@
-# @kong-ui-public/spec-details
+# spec-details
 
 A Kong UI component for displaying API specs
 

@@ -3,3 +3,4 @@
 
 // Example:
 // export * from './component-types'
+export * from './spec-renderer'
