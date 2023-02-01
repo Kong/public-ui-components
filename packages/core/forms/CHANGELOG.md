@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@0.1.0...@kong-ui-public/forms@0.1.1) (2023-02-01)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.22.0 ([#94](https://github.com/Kong/public-ui-components/issues/94)) ([e32086c](https://github.com/Kong/public-ui-components/commit/e32086c30d479a6808f1fce424263bec6a95ded6))
+
+
+
+
+
 # 0.1.0 (2023-02-01)
 
 
