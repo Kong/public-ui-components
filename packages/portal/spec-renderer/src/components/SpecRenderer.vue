@@ -35,8 +35,7 @@ import { PropType, ref, computed } from 'vue'
 import type { SpecDocument } from '../types'
 import type { Operation, Tag } from '@kong-ui-public/spec-operations-list'
 import SpecDetails from './SpecDetails.vue'
-import OperationsList from '@kong-ui-public/spec-operations-list'
-import '@kong-ui-public/spec-operations-list/dist/style.css'
+import OperationsList from './OperationsList.vue'
 
 const props = defineProps({
   spec: {

@@ -37,8 +37,7 @@
 
 <script setup lang="ts">
 import { PropType } from 'vue'
-import type { Operation } from '../types'
-import { KBadge } from '@kong/kongponents'
+import type { Operation } from '../../types'
 
 defineProps({
   item: {

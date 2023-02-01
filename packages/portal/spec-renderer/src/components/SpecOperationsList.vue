@@ -1,7 +1,7 @@
 <template>
   <section
     aria-label="List of operations"
-    class="kong-ui-public-operations-list"
+    class="kong-ui-public-spec-operations-list"
     role="navigation"
     :style="{ width: widthStyle }"
   >
@@ -112,9 +112,8 @@
 <script setup lang="ts">
 import { PropType, computed, ref, watch } from 'vue'
 import type { OperationListFilterFunction, Operation, Tag } from '../types'
-import { KCollapse, KInput, KIcon } from '@kong/kongponents'
-import OperationsListItem from './OperationsListItem.vue'
-import OperationsListSectionHeader from './OperationsListSectionHeader.vue'
+import OperationsListItem from './operations-list/OperationsListItem.vue'
+import OperationsListSectionHeader from './operations-list/OperationsListSectionHeader.vue'
 
 const props = defineProps({
   operations: {
@@ -252,7 +251,7 @@ const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => 
 </script>
 
 <style lang="scss" scoped>
-.kong-ui-public-operations-list {
+.kong-ui-public-spec-operations-list {
   color: var(--kong-ui-kong-spec-renderer-operations-list-text-color, var(--kong-ui-spec-renderer-text-color, var(--black-500, #0B172D)));
   font-family: var(--kong-ui-spec-renderer-operations-list-font-family, var(--kong-ui-spec-renderer-font-family, Roboto, Helvetica, sans-serif));
   font-size: var(--kong-ui-spec-renderer-operations-list-font-size, var(--kong-ui-spec-renderer-font-size, 16px));

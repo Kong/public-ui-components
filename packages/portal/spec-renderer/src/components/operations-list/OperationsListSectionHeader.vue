@@ -41,8 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import { KIcon } from '@kong/kongponents'
-
 defineProps({
   isCollapsed: {
     type: Boolean,
