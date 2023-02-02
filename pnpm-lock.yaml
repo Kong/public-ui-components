@@ -21,7 +21,7 @@ importers:
       '@vitest/ui': ^0.28.3
       '@vue/eslint-config-standard': ^8.0.1
       '@vue/eslint-config-typescript': ^11.0.2
-      '@vue/test-utils': ^2.2.8
+      '@vue/test-utils': ^2.2.9
       '@vue/tsconfig': ^0.1.3
       c8: ^7.12.0
       commitizen: ^4.3.0
@@ -78,7 +78,7 @@ importers:
       '@vitest/ui': 0.28.3
       '@vue/eslint-config-standard': 8.0.1_n3dg4rdahp6fvr2wrwvlzqxeua
       '@vue/eslint-config-typescript': 11.0.2_tf6rgb5i7kw5m4rbu3ajzgw7l4
-      '@vue/test-utils': 2.2.8_vue@3.2.45
+      '@vue/test-utils': 2.2.9_vue@3.2.45
       '@vue/tsconfig': 0.1.3_@types+node@18.11.18
       c8: 7.12.0
       commitizen: 4.3.0
@@ -3080,14 +3080,15 @@ packages:
   /@vue/shared/3.2.45:
     resolution: {integrity: sha512-Ewzq5Yhimg7pSztDV+RH1UDKBzmtqieXQlpTVm2AwraoRL/Rks96mvd8Vgi7Lj+h+TH8dv7mXD3FRZR3TUvbSg==}
 
-  /@vue/test-utils/2.2.8_vue@3.2.45:
-    resolution: {integrity: sha512-/R8DKzp41Ip/RqTt1jvOVi5gxby3EwNWiYHNYsG9FAjEvt0gzDvYN55lCKzX7IdnI5zVIOo5tHtts0SLT+JrWw==}
+  /@vue/test-utils/2.2.9_vue@3.2.45:
+    resolution: {integrity: sha512-WP2gmUX9hucNGCE+FMqdTwisRQcPkY+f9oaZOcUP/xdJbIbTwdCGeOpQzXe8h+W218SC7RPzfTFc6r8T3tkggg==}
     peerDependencies:
-      '@vue/compiler-dom': ^3.0.1
       vue: ^3.0.1
     dependencies:
       js-beautify: 1.14.6
       vue: 3.2.45
+    optionalDependencies:
+      '@vue/compiler-dom': 3.2.45
     dev: true
 
   /@vue/tsconfig/0.1.3_@types+node@18.11.18:
