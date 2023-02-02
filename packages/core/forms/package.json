@@ -39,13 +39,13 @@
   },
   "peerDependencies": {
     "@kong/kongponents": "^8.22.0",
-    "vue": "^3.2.45"
+    "vue": "^3.2.46"
   },
   "devDependencies": {
     "@kong/kongponents": "^8.22.0",
     "@types/lodash": "^4.14.191",
     "pug": "^3.0.2",
-    "vue": "^3.2.45"
+    "vue": "^3.2.46"
   },
   "dependencies": {
     "@kong-ui-public/i18n": "workspace:^0.2.5",
