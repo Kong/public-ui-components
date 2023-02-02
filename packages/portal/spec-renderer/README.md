@@ -73,11 +73,11 @@ The `SpecRenderer` component is a combination of two subcompoents, `SpecOperatio
 
 ### `SpecOperationsList`
 
-See the component [documentation](docs/#spec-operations-list).
+See the component [documentation](docs/spec-operations-list).
 
 ### `SpecDetails`
 
-See the component [documentation](docs/#spec-details).
+See the component [documentation](docs/spec-details).
 
 ## Props
 
