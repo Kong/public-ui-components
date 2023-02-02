@@ -114,4 +114,3 @@ Controls the width of the side nav. Currently supports numbers (will be converte
 ### `error-state`
 
 Controls the content when `spec` is not provided.
-

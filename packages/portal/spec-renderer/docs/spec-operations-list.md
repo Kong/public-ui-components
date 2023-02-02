@@ -10,7 +10,7 @@ A Kong UI component for displaying a filterable list of spec operations
   - [`width`](#width)
   - [`filterFunction`](#filterfunction)
 - [Slots](#slots)
-  - [`item`](#item)
+  - [`item` slot](#item-slot)
   - [`empty-state`](#empty-state)
   - [`error-state`](#error-state)
 - [Emits](#emits)
@@ -123,10 +123,9 @@ const operationSummaryFilterFunc: OperationListFilterFunction = ({ items, query 
 }
 ```
 
-
 ## Slots
 
-### `item`
+### `item` slot
 
 Controls the content of a single operation.
 
