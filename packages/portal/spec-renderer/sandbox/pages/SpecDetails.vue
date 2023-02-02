@@ -41,7 +41,7 @@
         </div>
         <SpecDetails
           :key="key"
-          :active-operation="activeOperation"
+          :active-operation="activeOperation ?? undefined"
           :document="defaultDocument"
           :essentials-only="essentialsOnly"
           :has-sidebar="hasSidebar"
@@ -55,7 +55,7 @@
 import { ref, watch } from 'vue'
 // @ts-ignore
 import yamlContent from '../test.yaml'
-import type { Operation, OperationListItem } from '../../src/types'
+import type { OperationListItem } from '../../src/types'
 import { SpecDetails } from '../../src'
 
 const defaultDocument = yamlContent
@@ -81,7 +81,7 @@ function updateActiveOperation() {
       path: operation.path,
       tag: operation.tag ?? null,
       summary: operation.summary ?? null,
-    } as Operation
+    } as OperationListItem
   } catch (err) {
     console.error(err)
   }
