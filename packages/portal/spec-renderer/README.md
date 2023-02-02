@@ -1,6 +1,6 @@
 # @kong-ui-public/spec-renderer
 
-TODO: link to all thei individual component docs
+TODO: link to all the individual component docs
 
 A Kong UI component for displaying and filtering API specs
 

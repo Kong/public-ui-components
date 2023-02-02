@@ -1,4 +1,4 @@
-# spec-details
+# `SpecDetails.vue`
 
 A Kong UI component for displaying API specs
 

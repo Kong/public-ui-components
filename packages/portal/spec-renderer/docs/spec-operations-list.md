@@ -1,4 +1,4 @@
-# spec-operations-list
+# `SpecOperationsList.vue`
 
 A Kong UI component for displaying a filterable list of spec operations
 
