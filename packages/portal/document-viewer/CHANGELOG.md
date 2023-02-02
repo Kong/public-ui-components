@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.5...@kong-ui-public/document-viewer@0.2.6) (2023-02-02)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency vue to ^3.2.46 ([#96](https://github.com/Kong/public-ui-components/issues/96)) ([cc1d5f1](https://github.com/Kong/public-ui-components/commit/cc1d5f16228d5ea6b81222c67aca8e7d33db9d4c))
+
+
+
+
+
 ## [0.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.4...@kong-ui-public/document-viewer@0.2.5) (2023-01-31)
 
 

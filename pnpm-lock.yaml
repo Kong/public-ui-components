@@ -157,7 +157,7 @@ importers:
 
   packages/core/copy-uuid:
     specifiers:
-      '@kong-ui-public/i18n': workspace:^0.2.5
+      '@kong-ui-public/i18n': workspace:^0.2.6
       '@kong/kongponents': ^8.22.0
       vue: ^3.2.46
     dependencies:
@@ -168,7 +168,7 @@ importers:
 
   packages/core/forms:
     specifiers:
-      '@kong-ui-public/i18n': workspace:^0.2.5
+      '@kong-ui-public/i18n': workspace:^0.2.6
       '@kong/kongponents': ^8.22.0
       '@types/lodash': ^4.14.191
       fecha: ^4.2.3
@@ -2962,16 +2962,6 @@ packages:
       - supports-color
     dev: true
 
-  /@vue/compiler-core/3.2.45:
-    resolution: {integrity: sha512-rcMj7H+PYe5wBV3iYeUgbCglC+pbpN8hBLTJvRiK2eKQiWqu+fG9F+8sW99JdL4LQi7Re178UOxn09puSXvn4A==}
-    dependencies:
-      '@babel/parser': 7.20.13
-      '@vue/shared': 3.2.45
-      estree-walker: 2.0.2
-      source-map: 0.6.1
-    dev: true
-    optional: true
-
   /@vue/compiler-core/3.2.46:
     resolution: {integrity: sha512-p1+nevQkB23f0QrocANWsZ2C52FcbS6gBL5frsClVzYiXsNPtvPRplLwlhSsqeyxii31T1ObzD5ztc68KOSAvQ==}
     dependencies:
@@ -2980,17 +2970,9 @@ packages:
       estree-walker: 2.0.2
       source-map: 0.6.1
 
-  /@vue/compiler-dom/3.2.45:
-    resolution: {integrity: sha512-tyYeUEuKqqZO137WrZkpwfPCdiiIeXYCcJ8L4gWz9vqaxzIQRccTSwSWZ/Axx5YR2z+LvpUbmPNXxuBU45lyRw==}
-    requiresBuild: true
-    dependencies:
-      '@vue/compiler-core': 3.2.45
-      '@vue/shared': 3.2.45
-    dev: true
-    optional: true
-
   /@vue/compiler-dom/3.2.46:
     resolution: {integrity: sha512-q4GNqlYG8RsBcLTcK7dTKovZcmUh8oB3tFY5S8dGDe03yxfyeimzQGQRxm6qBldVI/5azN3WYi830galNPTnbg==}
+    requiresBuild: true
     dependencies:
       '@vue/compiler-core': 3.2.46
       '@vue/shared': 3.2.46
@@ -3118,7 +3100,7 @@ packages:
       js-beautify: 1.14.6
       vue: 3.2.46
     optionalDependencies:
-      '@vue/compiler-dom': 3.2.45
+      '@vue/compiler-dom': 3.2.46
     dev: true
 
   /@vue/tsconfig/0.1.3_@types+node@18.11.18:
