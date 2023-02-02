@@ -156,7 +156,7 @@ const uid = computed<string>(() => [...Array(8)].map(() => Math.random().toStrin
 
 const filterQuery = ref<string>('')
 const taggedItems = ref<OperationListItem[]>([])
-const selectedItem = ref<OperationListItem | null>(null)
+const selectedItem = ref<OperationListItem>()
 const filteredItems = ref<OperationListItem[]>([])
 
 const filterItems = () => {
