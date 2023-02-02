@@ -31,18 +31,18 @@ A Kong UI component for displaying API specs
 Install the component in your host application
 
 ```sh
-yarn add @kong-ui-public/spec-details
+yarn add @kong-ui-public/spec-renderer
 ```
 
 ### Register
 
-You can register `portal-spec-details` globally or locally.
+You can register `spec-details` globally or locally.
 
 ```typescript
 // Global registration
 import { createApp } from 'vue'
-import SpecDetails from '@kong-ui-public/spec-details'
-import '@kong-ui-public/spec-details/dist/style.css'
+import { SpecDetails } from '@kong-ui-public/spec-renderer'
+import '@kong-ui-public/spec-renderer/dist/style.css'
 
 const app = createApp(App)
 
@@ -57,8 +57,8 @@ app.use(SpecDetails)
 </template>
 
 <script setup lang="ts">
-import SpecDetails from '@kong-ui-public/spec-details'
-import '@kong-ui-public/spec-details/dist/style.css'
+import { SpecDetails } from '@kong-ui-public/spec-renderer'
+import '@kong-ui-public/spec-renderer/dist/style.css'
 </script>
 ```
 

@@ -1,4 +1,4 @@
-# @kong-ui-public/spec-operations-list
+# spec-operations-list
 
 A Kong UI component for displaying a filterable list of spec operations
 
@@ -37,18 +37,18 @@ A Kong UI component for displaying a filterable list of spec operations
 Install the component in your host application
 
 ```sh
-yarn add @kong-ui-public/spec-operations-list
+yarn add @kong-ui-public/spec-renderer
 ```
 
 ### Register
 
-You can register `portal-spec-operations-list` globally or locally.
+You can register `spec-operations-list` globally or locally.
 
 ```typescript
 // Global registration
 import { createApp } from 'vue'
-import SpecOperationsList from '@kong-ui-public/spec-operations-list'
-import '@kong-ui-public/spec-operations-list/dist/style.css'
+import { SpecOperationsList } from '@kong-ui-public/spec-renderer'
+import '@kong-ui-public/spec-renderer/dist/style.css'
 
 const app = createApp(App)
 
@@ -63,8 +63,8 @@ app.use(SpecOperationsList)
 </template>
 
 <script setup lang="ts">
-import SpecOperationsList from '@kong-ui-public/spec-operations-list'
-import '@kong-ui-public/spec-operations-list/dist/style.css'
+import { SpecOperationsList } from '@kong-ui-public/spec-renderer'
+import '@kong-ui-public/spec-renderer/dist/style.css'
 </script>
 ```
 

@@ -9,6 +9,9 @@ A Kong UI component for displaying and filtering API specs
 - [Usage](#usage)
   - [Install](#install)
   - [Register](#register)
+- [Subcomponents](#subcomponents)
+  - [`SpecOperationsList`](#specoperationslist)
+  - [`SpecDetails`](#specdetails)
 - [Props](#props)
   - [`spec`](#spec)
   - [`essentialsOnly`](#essentialsonly)
@@ -38,17 +41,17 @@ yarn add @kong-ui-public/spec-renderer
 
 ### Register
 
-You can register `portal-spec-renderer` globally or locally.
+You can register `spec-renderer` globally or locally.
 
 ```typescript
 // Global registration
 import { createApp } from 'vue'
-import SpecRenderer from '@kong-ui-public/spec-renderer'
+import { SpecRenderer } from '@kong-ui-public/spec-renderer'
 import '@kong-ui-public/spec-renderer/dist/style.css'
 
 const app = createApp(App)
 
-app.use(SpecRendererMini)
+app.use(SpecRenderer)
 
 ```
 
@@ -59,10 +62,22 @@ app.use(SpecRendererMini)
 </template>
 
 <script setup lang="ts">
-import SpecRenderer from '@kong-ui-public/spec-renderer'
+import { SpecRenderer } from '@kong-ui-public/spec-renderer'
 import '@kong-ui-public/spec-renderer/dist/style.css'
 </script>
 ```
+
+## Subcomponents
+
+The `SpecRenderer` component is a combination of two subcompoents, `SpecOperationsList` and `SpecDetails` which are exported for individual use if desired.
+
+### `SpecOperationsList`
+
+See the component [documentation](docs/#spec-operations-list).
+
+### `SpecDetails`
+
+See the component [documentation](docs/#spec-details).
 
 ## Props
 
