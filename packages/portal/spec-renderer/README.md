@@ -1,7 +1,5 @@
 # @kong-ui-public/spec-renderer
 
-TODO: link to all the individual component docs
-
 A Kong UI component for displaying and filtering API specs
 
 - [Features](#features)
@@ -10,24 +8,22 @@ A Kong UI component for displaying and filtering API specs
   - [Install](#install)
   - [Register](#register)
 - [Subcomponents](#subcomponents)
+  - [`SpecRenderer`](#specrenderer)
   - [`SpecOperationsList`](#specoperationslist)
   - [`SpecDetails`](#specdetails)
-- [Props](#props)
-  - [`spec`](#spec)
-  - [`essentialsOnly`](#essentialsonly)
-  - [`operationsList`](#operationslist)
-  - [`tags`](#tags)
-  - [`navWidth`](#navwidth)
-- [Slots](#slots)
-  - [`error-state`](#error-state)
 
 ## Features
 
-- Render spec with side nav and filtering
+- Render spec with optional side nav and filtering
 
 ## Requirements
 
 - `vue` must be initialized in the host application
+- `@kong/kongponents` must be available as a `dependency` in the host application, along with the package's style imports. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents). Specifically, the following Kongponents must be available:
+  - `KBadge`
+  - `KCollapse`
+  - `KIcon`
+  - `KInput`
 
 ## Usage
 
@@ -41,28 +37,20 @@ yarn add @kong-ui-public/spec-renderer
 
 ### Register
 
-You can register `spec-renderer` globally or locally.
-
-```typescript
-// Global registration
-import { createApp } from 'vue'
-import { SpecRenderer } from '@kong-ui-public/spec-renderer'
-import '@kong-ui-public/spec-renderer/dist/style.css'
-
-const app = createApp(App)
-
-app.use(SpecRenderer)
-
-```
+You can register `spec-renderer` locally. In order to support proper tree-shaking in the host application, please only import and register the components in the page/component where they are being utilized.
 
 ```html
 <!-- Local registration -->
 <template>
   <SpecRenderer />
+  <SpecOperationsList />
+  <SpecDetails />
 </template>
 
 <script setup lang="ts">
-import { SpecRenderer } from '@kong-ui-public/spec-renderer'
+// Only import the components you need
+import { SpecRenderer, SpecOperationsList, SpecDetails } from '@kong-ui-public/spec-renderer'
+// CSS import required for ANY of the components
 import '@kong-ui-public/spec-renderer/dist/style.css'
 </script>
 ```
@@ -71,6 +59,10 @@ import '@kong-ui-public/spec-renderer/dist/style.css'
 
 The `SpecRenderer` component is a combination of two subcompoents, `SpecOperationsList` and `SpecDetails` which are exported for individual use if desired.
 
+### `SpecRenderer`
+
+See the component [documentation](docs/spec-renderer).
+
 ### `SpecOperationsList`
 
 See the component [documentation](docs/spec-operations-list).
@@ -78,102 +70,3 @@ See the component [documentation](docs/spec-operations-list).
 ### `SpecDetails`
 
 See the component [documentation](docs/spec-details).
-
-## Props
-
-### `spec`
-
-- type: `Object`
-- required: `true`
-
-Specification object or string.
-
-### `essentialsOnly`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-If enabled, only display the spec `paths` section; general information, schemes, models, actions (Authorize & Try it out), etc. are hidden.
-
-### `operationsList`
-
-- type: `Object[]`
-- required: `true`
-
-Operation object array. Required.
-The objects should conform to the following interface.
-
-```typescript
-{
-  /**
-   * Relative operation path with optional path templating.
-   * See https://swagger.io/specification/#paths-object
-   */
-  path: string
-  /**
-   * HTTP Method
-   */
-  method: string
-  /**
-   * Optional operationId
-   */
-  operationId: string | null
-  /**
-   * List of tag names for the operation used to group operations into sections
-   */
-  tags: string[]
-  /**
-   * Short summary of the operation
-   */
-  summary: string | null
-  /**
-   * Is the operation deprecated?
-   */
-  deprecated: boolean
-}
-```
-
-### `tags`
-
-- type: `Object[]`
-- required: `false`
-- default: `[]`
-
-Object array for tags. You can use this to specify tag information such as `description` and `externalDocs`.
-
-```typescript
-{
-  /**
-   * Tag name
-   * See {@link Operation.tags} for usage details
-   */
-  name: string
-  /**
-   * Optional description.
-   * CommonMark formatting is not supported at the moment.
-   */
-  description?: string
-  /**
-   * Optional link to external docs of the tag
-   */
-  externalDocs?: {
-    description?: string
-    url: string
-  }
-}
-```
-
-### `navWidth`
-
-- type: `String`
-- required: `false`
-- default: `310`
-
-Controls the width of the side nav. Currently supports numbers (will be converted to px), auto, `vw`, `vh`, and percentages for width.
-
-## Slots
-
-### `error-state`
-
-Controls the content when `spec` is not provided.

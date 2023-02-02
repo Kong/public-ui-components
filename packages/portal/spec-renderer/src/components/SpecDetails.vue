@@ -68,12 +68,9 @@ const hasRequiredProps = computed((): boolean => {
 })
 
 function showAndScrollToOperation() {
-  console.log('in the function', props.activeOperation)
   if (!swaggerRef.value) {
-    console.log('no ref')
     return
   }
-  console.log('we have ref')
 
   swaggerRef.value.showOperation(props.activeOperation)
   swaggerRef.value.scrollToOperation(props.activeOperation)

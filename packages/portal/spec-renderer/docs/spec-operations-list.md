@@ -3,10 +3,6 @@
 A Kong UI component for displaying a filterable list of spec operations
 
 - [Features](#features)
-- [Requirements](#requirements)
-- [Usage](#usage)
-  - [Install](#install)
-  - [Register](#register)
 - [Props](#props)
   - [`operations`](#operations)
   - [`tags`](#tags)
@@ -25,48 +21,6 @@ A Kong UI component for displaying a filterable list of spec operations
 
 - Render spec operations
 - Support the ability filter and select items from the list
-
-## Requirements
-
-- `vue` must be initialized in the host application
-
-## Usage
-
-### Install
-
-Install the component in your host application
-
-```sh
-yarn add @kong-ui-public/spec-renderer
-```
-
-### Register
-
-You can register `spec-operations-list` globally or locally.
-
-```typescript
-// Global registration
-import { createApp } from 'vue'
-import { SpecOperationsList } from '@kong-ui-public/spec-renderer'
-import '@kong-ui-public/spec-renderer/dist/style.css'
-
-const app = createApp(App)
-
-app.use(SpecOperationsList)
-
-```
-
-```html
-<!-- Local registration -->
-<template>
-  <SpecOperationsList />
-</template>
-
-<script setup lang="ts">
-import { SpecOperationsList } from '@kong-ui-public/spec-renderer'
-import '@kong-ui-public/spec-renderer/dist/style.css'
-</script>
-```
 
 ## Props
 
