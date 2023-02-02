@@ -37,11 +37,11 @@
   },
   "peerDependencies": {
     "@kong/kongponents": "^8.22.0",
-    "vue": "^3.2.46"
+    "vue": "^3.2.47"
   },
   "devDependencies": {
     "@kong/kongponents": "^8.22.0",
-    "vue": "^3.2.46"
+    "vue": "^3.2.47"
   },
   "repository": {
     "type": "git",
