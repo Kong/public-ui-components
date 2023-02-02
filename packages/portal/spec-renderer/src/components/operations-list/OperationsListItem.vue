@@ -37,11 +37,11 @@
 
 <script setup lang="ts">
 import { PropType } from 'vue'
-import type { Operation } from '../../types'
+import type { OperationListItem } from '../../types'
 
 defineProps({
   item: {
-    type: Object as PropType<Operation>,
+    type: Object as PropType<OperationListItem>,
     required: true,
     // Items must have a method, summary, and path
     validator: (item: Record<string, unknown>): boolean => (

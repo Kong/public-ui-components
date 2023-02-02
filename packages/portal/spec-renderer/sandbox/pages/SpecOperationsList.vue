@@ -61,9 +61,9 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import { Operation, Tag } from '../src/types'
+import { Operation, Tag } from '../../src/types'
 import { KButton, KLabel } from '@kong/kongponents'
-import SpecOperationsList from '../src'
+import { SpecOperationsList } from '../../src'
 
 const defaultDocument = ref<Operation[]>([
   {

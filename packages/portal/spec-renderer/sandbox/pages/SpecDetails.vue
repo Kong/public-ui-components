@@ -54,16 +54,16 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 // @ts-ignore
-import yamlContent from './test.yaml'
-import type { Operation } from '../src'
-import SpecDetails from '../src'
+import yamlContent from '../test.yaml'
+import type { Operation, OperationListItem } from '../../src/types'
+import { SpecDetails } from '../../src'
 
 const defaultDocument = yamlContent
 
 // checkboxes for toggling options
 const hasSidebar = ref<boolean>(true)
 const essentialsOnly = ref<boolean>(false)
-const activeOperation = ref<Operation | null>(null)
+const activeOperation = ref<OperationListItem | null>(null)
 const tempActiveOperation = ref<string>('')
 
 function updateActiveOperation() {

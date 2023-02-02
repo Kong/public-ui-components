@@ -4,7 +4,7 @@
       v-if="hasRequiredSpecData"
       class="spec-container"
     >
-      <OperationsList
+      <SpecOperationsList
         :operations="operationsList"
         :tags="tags"
         :width="navWidth"
@@ -32,10 +32,9 @@
 
 <script setup lang="ts">
 import { PropType, ref, computed } from 'vue'
-import type { SpecDocument } from '../types'
-import type { Operation, Tag } from '@kong-ui-public/spec-operations-list'
+import type { SpecDocument, Operation, OperationListItem, Tag } from '../types'
 import SpecDetails from './SpecDetails.vue'
-import OperationsList from './OperationsList.vue'
+import SpecOperationsList from './SpecOperationsList.vue'
 
 const props = defineProps({
   spec: {
@@ -66,9 +65,9 @@ const hasRequiredSpecData = computed((): boolean => {
   return !!(props.spec && props.operationsList)
 })
 
-const selectedOperation = ref<Operation>()
+const selectedOperation = ref<OperationListItem>()
 
-const handleSelected = (item: Operation): void => {
+const handleSelected = (item: OperationListItem): void => {
   selectedOperation.value = item
 }
 </script>

@@ -44,11 +44,13 @@
   "devDependencies": {
     "@kong/kongponents": "^8.22.0",
     "@modyfi/vite-plugin-yaml": "^1.0.4",
+    "@types/lodash.clonedeep": "^4.5.7",
     "openapi-types": "^12.1.0",
     "vue": "^3.2.45"
   },
   "dependencies": {
-    "@kong-ui-public/swagger-ui-web-component": "workspace:^0.3.0"
+    "@kong-ui-public/swagger-ui-web-component": "workspace:^0.3.0",
+    "lodash.clonedeep": "^4.5.0"
   },
   "repository": {
     "type": "git",

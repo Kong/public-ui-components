@@ -16,7 +16,7 @@ export interface Operation {
   operationId: string | null
   summary: string | null
   deprecated: boolean
-  tags: string[]
+  tags?: string[]
 }
 
 /**
@@ -38,8 +38,8 @@ export interface Tag {
 }
 
 export interface OperationListFilterFunctionParams {
-  items: Operation[]
+  items: OperationListItem[]
   query: string
 }
 
-export type OperationListFilterFunction = (params: OperationListFilterFunctionParams) => Operation[]
+export type OperationListFilterFunction = (params: OperationListFilterFunctionParams) => OperationListItem[]

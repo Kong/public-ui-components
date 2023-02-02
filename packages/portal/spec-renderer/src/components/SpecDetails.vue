@@ -23,7 +23,7 @@
 import '@kong-ui-public/swagger-ui-web-component'
 import type { SwaggerUIElement } from '@kong-ui-public/swagger-ui-web-component'
 import { PropType, computed, ref, watch, onMounted } from 'vue'
-import { SpecDocument, Operation } from '../types'
+import { SpecDocument, OperationListItem } from '../types'
 
 const props = defineProps({
   document: {
@@ -47,7 +47,7 @@ const props = defineProps({
     default: false,
   },
   activeOperation: {
-    type: Object as PropType<Operation>,
+    type: Object as PropType<OperationListItem>,
     default: null,
   },
   applicationRegistrationEnabled: {

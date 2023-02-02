@@ -184,39 +184,22 @@ importers:
       '@vitejs/plugin-vue-jsx': 3.0.0_vue@3.2.47
       vue: 3.2.47
 
-  packages/portal/spec-details:
-    specifiers:
-      '@kong-ui-public/swagger-ui-web-component': workspace:^0.3.0
-      '@modyfi/vite-plugin-yaml': ^1.0.4
-      openapi-types: ^12.1.0
-      vue: ^3.2.47
-    dependencies:
-      '@kong-ui-public/swagger-ui-web-component': link:../swagger-ui-web-component
-    devDependencies:
-      '@modyfi/vite-plugin-yaml': 1.0.4
-      openapi-types: 12.1.0
-      vue: 3.2.47
-
-  packages/portal/spec-operations-list:
-    specifiers:
-      '@kong/kongponents': ^8.22.2
-      vue: ^3.2.47
-    devDependencies:
-      '@kong/kongponents': 8.22.2_vue@3.2.47
-      vue: 3.2.47
-
   packages/portal/spec-renderer:
     specifiers:
       '@kong-ui-public/swagger-ui-web-component': workspace:^0.3.0
       '@kong/kongponents': ^8.22.0
       '@modyfi/vite-plugin-yaml': ^1.0.4
+      '@types/lodash.clonedeep': ^4.5.7
+      lodash.clonedeep: ^4.5.0
       openapi-types: ^12.1.0
       vue: ^3.2.45
     dependencies:
       '@kong-ui-public/swagger-ui-web-component': link:../swagger-ui-web-component
+      lodash.clonedeep: 4.5.0
     devDependencies:
       '@kong/kongponents': 8.22.0_vue@3.2.45
       '@modyfi/vite-plugin-yaml': 1.0.4
+      '@types/lodash.clonedeep': 4.5.7
       openapi-types: 12.1.0
       vue: 3.2.45
 

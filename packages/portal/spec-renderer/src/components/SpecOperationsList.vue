@@ -66,7 +66,10 @@
         </div>
 
         <!-- Items without any tags -->
-        <div class="section">
+        <div
+          v-if="!isFilterable || !filterQuery"
+          class="section"
+        >
           <template
             v-for="item in untaggedItems"
             :key="`${item.path}-${item.method}`"
@@ -110,8 +113,9 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed, ref, watch } from 'vue'
-import type { OperationListFilterFunction, Operation, Tag } from '../types'
+import { PropType, computed, ref, watch, onMounted } from 'vue'
+import type { OperationListFilterFunction, Operation, OperationListItem, Tag } from '../types'
+import clonedeep from 'lodash.clonedeep'
 import OperationsListItem from './operations-list/OperationsListItem.vue'
 import OperationsListSectionHeader from './operations-list/OperationsListSectionHeader.vue'
 
@@ -139,7 +143,7 @@ const props = defineProps({
     default: (({ items, query }) => {
       query = query.toLowerCase()
 
-      return items.filter((item) => item.tags?.some((tag) => tag.toLowerCase().includes(query)))
+      return items.filter((item) => item.tag && item.tag.toLowerCase().includes(query))
     }) as OperationListFilterFunction,
     validator: (maybeFunc) => !!maybeFunc && typeof maybeFunc === 'function',
   },
@@ -151,11 +155,12 @@ const emit = defineEmits(['selected'])
 const uid = computed<string>(() => [...Array(8)].map(() => Math.random().toString(36)[2]).join(''))
 
 const filterQuery = ref<string>('')
-const selectedItem = ref<Operation | null>(null)
-const filteredItems = ref<Operation[]>([])
+const taggedItems = ref<OperationListItem[]>([])
+const selectedItem = ref<OperationListItem | null>(null)
+const filteredItems = ref<OperationListItem[]>([])
 
 const filterItems = () => {
-  const allItems = props.operations
+  const allItems = taggedItems.value
 
   if (!props.isFilterable) {
     filteredItems.value = allItems
@@ -168,11 +173,6 @@ const filterItems = () => {
 
   filteredItems.value = props.filterFunction({ items: allItems, query: filterQuery.value })
 }
-
-watch([props.operations, filterQuery], () => filterItems())
-
-// Initial filtering to populate filteredItems
-filterItems()
 
 const getSizeFromString = (sizeStr: string): string => (
   sizeStr === 'auto' ||
@@ -189,19 +189,17 @@ const widthStyle = computed<string>(() => getSizeFromString(props.width))
 const sectionHeadings = computed<string[]>(() => {
   const headings: string[] = []
 
-  filteredItems.value.forEach((item) => {
-    item.tags?.forEach((tag: string) => {
-      if (tag && !headings.includes(tag)) {
-        headings.push(tag)
-      }
-    })
+  filteredItems.value.forEach((item: OperationListItem) => {
+    if (item.tag && !headings.includes(item.tag)) {
+      headings.push(item.tag)
+    }
   })
 
   return headings
 })
 
-const untaggedItems = computed((): Operation[] => {
-  return filteredItems.value.filter((item) => !item.tags?.length)
+const untaggedItems = computed((): OperationListItem[] => {
+  return taggedItems.value.filter((item) => !item.tag)
 })
 
 const getSectionDescription = (section: string): string => {
@@ -210,21 +208,51 @@ const getSectionDescription = (section: string): string => {
   return tagData?.description || ''
 }
 
-const getSectionItems = (section: string): Operation[] => {
-  return filteredItems.value.filter((item) => item.tags?.includes(section))
+const getSectionItems = (section: string): OperationListItem[] => {
+  return filteredItems.value.filter((item) => item.tag === section)
 }
 
-const isSelected = (item: Operation): boolean => {
+const isSelected = (item: OperationListItem): boolean => {
   const s = selectedItem.value
-  return !!s && s.path === item.path && s.method === item.method && s.operationId === item.operationId
+
+  return !!s && s.path === item.path && s.method === item.method && s.operationId === item.operationId && s.tag === item.tag
 }
 
 const getSectionContentId = (section: string) => `${uid.value}-section-${section.toLowerCase()}`
 
-const handleSelection = (item: Operation) => {
+const handleSelection = (item: OperationListItem) => {
   selectedItem.value = item
   emit('selected', item)
 }
+
+const generateTaggedItems = (): void => {
+  props.operations.forEach((item: Operation) => {
+    const modifiedItem:any = clonedeep(item)
+
+    if (item.tags?.length) {
+      item.tags.forEach((tag: string) => {
+        delete modifiedItem.tags
+        modifiedItem.tag = tag
+        taggedItems.value.push(clonedeep(modifiedItem as OperationListItem))
+      })
+    } else {
+      delete modifiedItem.tags
+      modifiedItem.tag = null
+      taggedItems.value.push(clonedeep(modifiedItem as OperationListItem))
+    }
+  })
+
+  // Initial filtering to populate filteredItems
+  filterItems()
+}
+
+watch(() => props.operations, () => generateTaggedItems())
+
+watch(filterQuery, () => filterItems())
+
+onMounted(() => {
+  generateTaggedItems()
+})
 </script>
 
 <script lang="ts">
