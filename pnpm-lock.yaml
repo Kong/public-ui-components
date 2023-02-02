@@ -197,11 +197,11 @@ importers:
       '@kong-ui-public/swagger-ui-web-component': link:../swagger-ui-web-component
       lodash.clonedeep: 4.5.0
     devDependencies:
-      '@kong/kongponents': 8.22.0_vue@3.2.45
+      '@kong/kongponents': 8.22.0_vue@3.2.47
       '@modyfi/vite-plugin-yaml': 1.0.4
       '@types/lodash.clonedeep': 4.5.7
       openapi-types: 12.1.0
-      vue: 3.2.45
+      vue: 3.2.47
 
   packages/portal/swagger-ui-web-component:
     specifiers:
