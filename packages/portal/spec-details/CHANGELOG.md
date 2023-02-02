@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-details@0.5.1...@kong-ui-public/spec-details@0.5.2) (2023-02-02)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency vue to ^3.2.47 ([#98](https://github.com/Kong/public-ui-components/issues/98)) ([eb28034](https://github.com/Kong/public-ui-components/commit/eb28034b5707b1000762038e7218c305b53c831c))
+
+
+
+
+
 ## [0.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-details@0.5.0...@kong-ui-public/spec-details@0.5.1) (2023-02-02)
 
 

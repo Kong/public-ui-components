@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/spec-details",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "type": "module",
   "main": "./dist/spec-details.umd.js",
   "module": "./dist/spec-details.es.js",
