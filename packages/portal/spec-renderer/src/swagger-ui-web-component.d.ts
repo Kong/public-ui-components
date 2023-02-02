@@ -1,6 +1,6 @@
 declare module '@kong-ui-public/swagger-ui-web-component' {
-  // Operation has to exist here until swagger-ui-web-component is typed
-  export interface Operation {
+  // OperationListItem has to exist here until swagger-ui-web-component is typed
+  export interface OperationListItem {
     path: string
     method: 'get' | 'put' | 'post' | 'delete' | 'patch' | 'options' | 'head' | 'connect' | 'trace'
     operationId: string | null
@@ -10,8 +10,8 @@ declare module '@kong-ui-public/swagger-ui-web-component' {
   }
 
   export class SwaggerUIElement extends HTMLElement {
-    showOperation(operation: Operation): boolean
-    hideOperation(operation: Operation): boolean
-    scrollToOperation(operation: Operation): boolean
+    showOperation(operation: OperationListItem): boolean
+    hideOperation(operation: OperationListItem): boolean
+    scrollToOperation(operation: OperationListItem): boolean
   }
 }
