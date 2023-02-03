@@ -41,8 +41,7 @@
 <script setup lang="ts">
 import { PropType, computed } from 'vue'
 import type { OperationListItem } from '../../types'
-import { createI18n } from '@kong-ui-public/i18n'
-import english from '../../locales/en.json'
+import composables from '../../composables'
 
 const props = defineProps({
   item: {
@@ -63,7 +62,7 @@ const props = defineProps({
 
 const emit = defineEmits(['click'])
 
-const { t } = createI18n('en-us', english)
+const { i18n: { t } } = composables.useI18n()
 
 const methodName = computed((): string => {
   return props.item.method || ''

@@ -42,8 +42,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { createI18n } from '@kong-ui-public/i18n'
-import english from '../../locales/en.json'
+import composables from '../../composables'
 
 const props = defineProps({
   isCollapsed: {
@@ -66,7 +65,7 @@ const props = defineProps({
 
 const emit = defineEmits(['toggle'])
 
-const { t } = createI18n('en-us', english)
+const { i18n: { t } } = composables.useI18n()
 
 const collapseAriaLabel = computed((): string => {
   return props.isCollapsed ? t('specOperationsList.section.expandAriaLabel', { section: `"${props.name}"` }) : t('specOperationsList.section.collapseAriaLabel', { section: `"${props.name}"` })
