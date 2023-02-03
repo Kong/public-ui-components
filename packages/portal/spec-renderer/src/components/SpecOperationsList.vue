@@ -226,6 +226,8 @@ const handleSelection = (item: OperationListItem) => {
 }
 
 const generateTaggedItems = (): void => {
+  taggedItems.value = []
+
   props.operations.forEach((item: Operation) => {
     const modifiedItem:any = clonedeep(item)
 
