@@ -1,0 +1,69 @@
+{
+  "name": "@kong-ui-public/spec-renderer",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/spec-renderer.umd.js",
+  "module": "./dist/spec-renderer.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/spec-renderer.es.js",
+      "require": "./dist/spec-renderer.umd.js"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "cross-env USE_SANDBOX=true vite",
+    "build": "run-s typecheck build:package build:types",
+    "build:package": "vite build",
+    "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
+    "build:visualize": "BUILD_VISUALIZER='portal/spec-renderer' vite build -m production",
+    "preview:package": "vite preview --port 4173",
+    "preview": "cross-env USE_SANDBOX=true PREVIEW_SANDBOX=true run-s build:package preview:package",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
+    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore' --fix",
+    "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
+    "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
+    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
+    "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
+    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
+    "test:unit": "cross-env FORCE_COLOR=1 vitest run",
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+  },
+  "peerDependencies": {
+    "@kong/kongponents": "^8.22.0",
+    "vue": "^3.2.45"
+  },
+  "devDependencies": {
+    "@kong/kongponents": "^8.22.0",
+    "@modyfi/vite-plugin-yaml": "^1.0.4",
+    "@types/lodash.clonedeep": "^4.5.7",
+    "openapi-types": "^12.1.0",
+    "vue": "^3.2.45"
+  },
+  "dependencies": {
+    "@kong-ui-public/swagger-ui-web-component": "workspace:^0.3.0",
+    "lodash.clonedeep": "^4.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kong/public-ui-components.git",
+    "directory": "packages/portal/spec-renderer"
+  },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/portal/spec-renderer",
+  "bugs": {
+    "url": "https://github.com/Kong/public-ui-components/issues"
+  },
+  "author": "Kong, Inc.",
+  "license": "Apache-2.0",
+  "volta": {
+    "extends": "../../../package.json"
+  }
+}
