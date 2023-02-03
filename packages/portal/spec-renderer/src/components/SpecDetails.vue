@@ -15,7 +15,7 @@
       v-else
       data-testid="kong-portal-spec-details-error"
     >
-      Error: No document spec provided
+      {{ t('specDetails.error') }}
     </div>
   </div>
 </template>
@@ -25,6 +25,8 @@ import '@kong-ui-public/swagger-ui-web-component'
 import type { SwaggerUIElement } from '@kong-ui-public/swagger-ui-web-component'
 import { PropType, computed, ref, watch, onMounted } from 'vue'
 import { SpecDocument, OperationListItem } from '../types'
+import { createI18n } from '@kong-ui-public/i18n'
+import english from '../locales/en.json'
 
 const props = defineProps({
   document: {
@@ -60,6 +62,8 @@ const props = defineProps({
     default: () => undefined,
   },
 })
+
+const { t } = createI18n('en-us', english)
 
 const swaggerRef = ref<SwaggerUIElement | null>(null)
 

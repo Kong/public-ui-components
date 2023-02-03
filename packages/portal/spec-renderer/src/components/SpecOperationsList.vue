@@ -12,7 +12,7 @@
       <KInput
         v-model="filterQuery"
         class="filter-input"
-        placeholder="Filter by tag"
+        :placeholder="t('specOperationsList.filterPlaceholder')"
       />
       <KIcon
         aria-hidden="true"
@@ -95,7 +95,7 @@
       >
         <slot name="empty-state">
           <div class="center">
-            No results
+            {{ t('specOperationsList.noResults') }}
           </div>
         </slot>
       </div>
@@ -106,7 +106,7 @@
       data-testid="kong-ui-public-spec-operations-list-error"
     >
       <slot name="error-state">
-        Error: No document spec provided
+        {{ t('specOperationsList.error') }}
       </slot>
     </div>
   </section>
@@ -115,9 +115,13 @@
 <script setup lang="ts">
 import { PropType, computed, ref, watch, onMounted } from 'vue'
 import type { OperationListFilterFunction, Operation, OperationListItem, Tag } from '../types'
+import { v1 as uuidv1 } from 'uuid'
+import { createI18n } from '@kong-ui-public/i18n'
+import english from '../locales/en.json'
 import clonedeep from 'lodash.clonedeep'
-import OperationsListItem from './operations-list/OperationsListItem.vue'
+import useUtilities from '../composables/useUtilities'
 import OperationsListSectionHeader from './operations-list/OperationsListSectionHeader.vue'
+import OperationsListItem from './operations-list/OperationsListItem.vue'
 
 const props = defineProps({
   operations: {
@@ -147,12 +151,19 @@ const props = defineProps({
     }) as OperationListFilterFunction,
     validator: (maybeFunc) => !!maybeFunc && typeof maybeFunc === 'function',
   },
+
+  testMode: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['selected'])
 
+const { t } = createI18n('en-us', english)
+
 // Generate unique identifier of this instance for safe HTML element id generation
-const uid = computed<string>(() => [...Array(8)].map(() => Math.random().toString(36)[2]).join(''))
+const uid = computed<string>(() => props.testMode ? 'test-spec-ops-list-1234' : uuidv1())
 
 const filterQuery = ref<string>('')
 const taggedItems = ref<OperationListItem[]>([])
@@ -173,16 +184,6 @@ const filterItems = () => {
 
   filteredItems.value = props.filterFunction({ items: allItems, query: filterQuery.value })
 }
-
-const getSizeFromString = (sizeStr: string): string => (
-  sizeStr === 'auto' ||
-  sizeStr.endsWith('%') ||
-  sizeStr.endsWith('vw') ||
-  sizeStr.endsWith('vh') ||
-  sizeStr.endsWith('px')
-    ? sizeStr
-    : sizeStr + 'px'
-)
 
 const widthStyle = computed<string>(() => getSizeFromString(props.width))
 
@@ -258,26 +259,8 @@ onMounted(() => {
 </script>
 
 <script lang="ts">
-/**
- * Check if all of the provided items have a non-falsey value for all of the provided required props
- *
- * @param items The items to validate the prop exists for
- * @param requiredProps An array of all the required prop names
- * @returns Boolean whether or not the items have all the required props
- */
-const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => {
-  let isValid = true
-
-  items.forEach((item: object) => {
-    requiredProps.forEach((requiredProp: string) => {
-      if (!item[requiredProp as keyof typeof item]) {
-        isValid = false
-      }
-    })
-  })
-
-  return isValid
-}
+// Must import in a separate script block so `hasRequiredProps` can be used in prop validator
+const { getSizeFromString, hasRequiredProps } = useUtilities()
 </script>
 
 <style lang="scss" scoped>

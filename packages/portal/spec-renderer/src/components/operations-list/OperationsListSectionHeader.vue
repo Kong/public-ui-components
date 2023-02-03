@@ -2,7 +2,7 @@
   <button
     :aria-controls="contentElementId"
     :aria-expanded="isCollapsed ? 'false' : 'true'"
-    :aria-label="isCollapsed ? `Expand section &quot;${name}&quot;` : `Collapse section &quot;${name}&quot;`"
+    :aria-label="collapseAriaLabel"
     class="header"
     :class="{ 'header--collapsed': isCollapsed }"
     type="button"
@@ -41,7 +41,11 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
+import { computed } from 'vue'
+import { createI18n } from '@kong-ui-public/i18n'
+import english from '../../locales/en.json'
+
+const props = defineProps({
   isCollapsed: {
     type: Boolean,
     required: true,
@@ -61,6 +65,12 @@ defineProps({
 })
 
 const emit = defineEmits(['toggle'])
+
+const { t } = createI18n('en-us', english)
+
+const collapseAriaLabel = computed((): string => {
+  return props.isCollapsed ? t('specOperationsList.section.expandAriaLabel', { section: `"${props.name}"` }) : t('specOperationsList.section.collapseAriaLabel', { section: `"${props.name}"` })
+})
 </script>
 
 <style scoped lang="scss">

@@ -1,8 +1,11 @@
 <template>
   <button
     class="item"
-    :class="{ 'item--selected': isSelected, [`item--method-${item.method}`]: true }"
-    :data-testid="`mini-spec-item-${item.path}`"
+    :class="{
+      'item--selected': isSelected,
+      [`item--method-${item.method}`]: true
+    }"
+    :data-testid="`spec-operations-list-item-${item.path}`"
     type="button"
     @click="emit('click', item)"
   >
@@ -16,16 +19,16 @@
     <div class="details">
       <KBadge
         appearance="custom"
-        :aria-label="`Method: ${item.method?.toUpperCase()}`"
+        :aria-label="t('specOperationsList.item.methodAriaLabel', { method: methodName.toUpperCase() })"
         background-color="var(--kong-ui-spec-renderer-operations-list-item-method-background)"
         class="method-badge"
         color="var(--kong-ui-spec-renderer-operations-list-item-method-color)"
         tabindex="-1"
       >
-        {{ item.method?.toUpperCase() }}
+        {{ methodName.toUpperCase() }}
       </KBadge>
       <span
-        :aria-label="`Path: ${item.path}`"
+        :aria-label="t('specOperationsList.item.pathAriaLabel', { path: item.path })"
         class="path truncate"
         :title="item.path"
       >
@@ -36,10 +39,12 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
+import { PropType, computed } from 'vue'
 import type { OperationListItem } from '../../types'
+import { createI18n } from '@kong-ui-public/i18n'
+import english from '../../locales/en.json'
 
-defineProps({
+const props = defineProps({
   item: {
     type: Object as PropType<OperationListItem>,
     required: true,
@@ -57,6 +62,12 @@ defineProps({
 })
 
 const emit = defineEmits(['click'])
+
+const { t } = createI18n('en-us', english)
+
+const methodName = computed((): string => {
+  return props.item.method || ''
+})
 </script>
 
 <style lang="scss" scoped>
