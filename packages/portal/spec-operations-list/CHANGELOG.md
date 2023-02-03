@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-operations-list@0.6.3...@kong-ui-public/spec-operations-list@0.6.4) (2023-02-03)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.22.2 ([#102](https://github.com/Kong/public-ui-components/issues/102)) ([4559a2c](https://github.com/Kong/public-ui-components/commit/4559a2c0b9210cc79e7e5774e6abfd487d46319f))
+
+
+
+
+
 ## [0.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-operations-list@0.6.2...@kong-ui-public/spec-operations-list@0.6.3) (2023-02-02)
 
 
