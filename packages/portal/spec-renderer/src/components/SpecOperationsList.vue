@@ -12,7 +12,7 @@
       <KInput
         v-model="filterQuery"
         class="filter-input"
-        :placeholder="t('specOperationsList.filterPlaceholder')"
+        :placeholder="i18n.t('specOperationsList.filterPlaceholder')"
       />
       <KIcon
         aria-hidden="true"
@@ -54,6 +54,7 @@
                   :select="() => handleSelection(item)"
                 >
                   <OperationsListItem
+                    :disable-selection="disableSelection"
                     :is-selected="isSelected(item)"
                     :item="item"
                     :section="section"
@@ -95,7 +96,7 @@
       >
         <slot name="empty-state">
           <div class="center">
-            {{ t('specOperationsList.noResults') }}
+            {{ i18n.t('specOperationsList.noResults') }}
           </div>
         </slot>
       </div>
@@ -106,7 +107,7 @@
       data-testid="kong-ui-public-spec-operations-list-error"
     >
       <slot name="error-state">
-        {{ t('specOperationsList.error') }}
+        {{ i18n.t('specOperationsList.error') }}
       </slot>
     </div>
   </section>
@@ -136,10 +137,6 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  width: {
-    type: String,
-    default: '210',
-  },
   filterFunction: {
     type: Function as PropType<OperationListFilterFunction>,
     default: (({ items, query }) => {
@@ -148,6 +145,14 @@ const props = defineProps({
       return items.filter((item) => item.tag && item.tag.toLowerCase().includes(query))
     }) as OperationListFilterFunction,
     validator: (maybeFunc) => !!maybeFunc && typeof maybeFunc === 'function',
+  },
+  disableSelection: {
+    type: Boolean,
+    default: false,
+  },
+  width: {
+    type: String,
+    default: '210',
   },
 
   testMode: {
@@ -158,7 +163,7 @@ const props = defineProps({
 
 const emit = defineEmits(['selected'])
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n } = composables.useI18n()
 
 // Generate unique identifier of this instance for safe HTML element id generation
 const uid = computed<string>(() => props.testMode ? 'test-spec-ops-list-1234' : uuidv1())
@@ -220,8 +225,10 @@ const isSelected = (item: OperationListItem): boolean => {
 const getSectionContentId = (section: string) => `${uid.value}-section-${section.toLowerCase()}`
 
 const handleSelection = (item: OperationListItem) => {
-  selectedItem.value = item
-  emit('selected', item)
+  if (!props.disableSelection) {
+    selectedItem.value = item
+    emit('selected', item)
+  }
 }
 
 const generateTaggedItems = (): void => {

@@ -10,9 +10,14 @@
           <label>
             <input
               v-model="isFilterable"
-              name="view"
               type="checkbox"
             > isFilterable
+          </label>
+          <label class="ml-3">
+            <input
+              v-model="disableSelection"
+              type="checkbox"
+            > disableSelection
           </label>
 
           <br><br>
@@ -37,6 +42,7 @@
         <div class="d-flex pa-3">
           <SpecOperationsList
             :key="key"
+            :disable-selection="disableSelection"
             :is-filterable="isFilterable"
             :operations="operations"
             :tags="tags"
@@ -62,6 +68,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { Operation, Tag } from '../../src/types'
+import clonedeep from 'lodash.clonedeep'
 import { KButton, KLabel } from '@kong/kongponents'
 import { SpecOperationsList } from '../../src'
 
@@ -164,6 +171,7 @@ const operations = ref<Operation[]>([])
 const selectedItem = ref<Operation>()
 
 // checkboxes for toggling options
+const disableSelection = ref(false)
 const isFilterable = ref(true)
 
 const handleClear = (): void => {
@@ -171,24 +179,16 @@ const handleClear = (): void => {
 }
 
 const handleReset = (): void => {
-  operations.value = cloneDeep(defaultDocument.value)
+  operations.value = clonedeep(defaultDocument.value)
 }
 
 const handleSelected = (item: Operation): void => {
   selectedItem.value = item
 }
 
-// TODO: import from shared?
-const cloneDeep = (obj: any) => {
-  if (!obj) {
-    return
-  }
-
-  return JSON.parse(JSON.stringify(obj))
-}
-
 const key = ref(0)
-watch([isFilterable, operations],
+watch(
+  () => [isFilterable, operations, disableSelection],
   () => {
     key.value++
     selectedItem.value = undefined
@@ -197,7 +197,7 @@ watch([isFilterable, operations],
 )
 
 onMounted(() => {
-  operations.value = cloneDeep(defaultDocument.value)
+  operations.value = clonedeep(defaultDocument.value)
 })
 </script>
 
@@ -211,6 +211,10 @@ onMounted(() => {
 
   .spec-controls {
     position: relative;
+  }
+
+  .ml-3 {
+    margin-left: 12px;
   }
 
   pre.json {

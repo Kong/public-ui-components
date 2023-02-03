@@ -15,7 +15,7 @@
       v-else
       data-testid="kong-portal-spec-details-error"
     >
-      {{ t('specDetails.error') }}
+      {{ i18n.t('specDetails.error') }}
     </div>
   </div>
 </template>
@@ -62,7 +62,7 @@ const props = defineProps({
   },
 })
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n } = composables.useI18n()
 
 const swaggerRef = ref<SwaggerUIElement | null>(null)
 

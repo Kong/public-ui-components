@@ -6,7 +6,7 @@
     class="header"
     :class="{ 'header--collapsed': isCollapsed }"
     type="button"
-    @click="emit('toggle')"
+    @click="$emit('toggle')"
   >
     <div
       aria-hidden="true"
@@ -63,12 +63,12 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['toggle'])
+defineEmits(['toggle'])
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n } = composables.useI18n()
 
 const collapseAriaLabel = computed((): string => {
-  return props.isCollapsed ? t('specOperationsList.section.expandAriaLabel', { section: `"${props.name}"` }) : t('specOperationsList.section.collapseAriaLabel', { section: `"${props.name}"` })
+  return props.isCollapsed ? i18n.t('specOperationsList.section.expandAriaLabel', { section: `"${props.name}"` }) : i18n.t('specOperationsList.section.collapseAriaLabel', { section: `"${props.name}"` })
 })
 </script>
 

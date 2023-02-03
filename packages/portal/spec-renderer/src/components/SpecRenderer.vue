@@ -23,7 +23,7 @@
       data-testid="kong-ui-public-spec-renderer-error"
     >
       <slot name="error-state">
-        {{ t('specRenderer.error') }}
+        {{ i18n.t('specRenderer.error') }}
       </slot>
     </div>
   </div>
@@ -61,7 +61,7 @@ const props = defineProps({
   },
 })
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n } = composables.useI18n()
 
 const hasRequiredSpecData = computed((): boolean => {
   return !!(props.spec && props.operationsList)
