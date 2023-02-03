@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.4.2...@kong-ui-public/spec-renderer@0.4.3) (2023-02-03)
+
+
+### 🐛 Bug Fixes
+
+* **spec-renderer:** i18n + code hygiene ([#108](https://github.com/Kong/public-ui-components/issues/108)) ([689c726](https://github.com/Kong/public-ui-components/commit/689c726560dbd98a829d477251e5ebbd987a82b9))
+
+
+
+
+
 ## [0.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.4.1...@kong-ui-public/spec-renderer@0.4.2) (2023-02-03)
 
 

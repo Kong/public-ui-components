@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.3.6...@kong-ui-public/cli@0.3.7) (2023-02-03)
+
+
+### 🐛 Bug Fixes
+
+* **cli:** install dependencies ([6eb7ffc](https://github.com/Kong/public-ui-components/commit/6eb7ffc88088a1988a312524a336f0983025a379))
+
+
+### ♻️ Chores
+
+* **cli:** update messaging ([115e323](https://github.com/Kong/public-ui-components/commit/115e323e5f02aaa2f73c400f60d4c9fc13cdaee3))
+
+
+
+
+
 ## [0.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.3.5...@kong-ui-public/cli@0.3.6) (2023-02-03)
 
 
