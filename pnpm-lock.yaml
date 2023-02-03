@@ -9,7 +9,7 @@ importers:
       '@commitlint/config-conventional': ^17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': ^8.0.0
       '@evilmartians/lefthook': ^1.2.8
-      '@kong/kongponents': ^8.22.2
+      '@kong/kongponents': ^8.22.3
       '@rushstack/eslint-patch': ^1.2.0
       '@types/flat': ^5.0.2
       '@types/js-yaml': ^4.0.5
@@ -66,7 +66,7 @@ importers:
       '@commitlint/config-conventional': 17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': 8.0.0
       '@evilmartians/lefthook': 1.2.8
-      '@kong/kongponents': 8.22.2_vue@3.2.47
+      '@kong/kongponents': 8.22.3_vue@3.2.47
       '@rushstack/eslint-patch': 1.2.0
       '@types/flat': 5.0.2
       '@types/js-yaml': 4.0.5
@@ -120,7 +120,7 @@ importers:
 
   packages/core/app-layout:
     specifiers:
-      '@kong/kongponents': ^8.22.2
+      '@kong/kongponents': ^8.22.3
       '@types/lodash.clonedeep': ^4.5.7
       focus-trap: ^7.2.0
       focus-trap-vue: ^4.0.1
@@ -132,7 +132,7 @@ importers:
       focus-trap-vue: 4.0.1_sc5smigrnndzyzpmn4n4e4xcs4
       lodash.clonedeep: 4.5.0
     devDependencies:
-      '@kong/kongponents': 8.22.2_vue@3.2.47
+      '@kong/kongponents': 8.22.3_vue@3.2.47
       '@types/lodash.clonedeep': 4.5.7
       vue: 3.2.47
       vue-router: 4.1.6_vue@3.2.47
@@ -158,12 +158,12 @@ importers:
   packages/core/copy-uuid:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.2.7
-      '@kong/kongponents': ^8.22.2
+      '@kong/kongponents': ^8.22.3
       vue: ^3.2.47
     dependencies:
       '@kong-ui-public/i18n': link:../i18n
     devDependencies:
-      '@kong/kongponents': 8.22.2_vue@3.2.47
+      '@kong/kongponents': 8.22.3_vue@3.2.47
       vue: 3.2.47
 
   packages/core/i18n:
@@ -187,7 +187,7 @@ importers:
   packages/portal/spec-renderer:
     specifiers:
       '@kong-ui-public/swagger-ui-web-component': workspace:^0.3.0
-      '@kong/kongponents': ^8.22.0
+      '@kong/kongponents': ^8.22.3
       '@modyfi/vite-plugin-yaml': ^1.0.4
       '@types/lodash.clonedeep': ^4.5.7
       lodash.clonedeep: ^4.5.0
@@ -197,7 +197,7 @@ importers:
       '@kong-ui-public/swagger-ui-web-component': link:../swagger-ui-web-component
       lodash.clonedeep: 4.5.0
     devDependencies:
-      '@kong/kongponents': 8.22.2_vue@3.2.47
+      '@kong/kongponents': 8.22.3_vue@3.2.47
       '@modyfi/vite-plugin-yaml': 1.0.4
       '@types/lodash.clonedeep': 4.5.7
       openapi-types: 12.1.0
@@ -1225,8 +1225,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@kong/kongponents/8.22.2_vue@3.2.47:
-    resolution: {integrity: sha512-de6MkGfmhzYpVW0Ki7fuKNP8gTC8LVQUNERdlf/fN9pU6htqYxENolJjQ/H5p90ULMvUu7AHip16GoFv7N9W9Q==}
+  /@kong/kongponents/8.22.3_vue@3.2.47:
+    resolution: {integrity: sha512-8CSgWhXo3TaC7Udr7MlkGGzSLOoEi1kk/Uv1uJx/IBZhyT3ENnhRiq6PkotD560EYXR//C78+Jws7HDD71F2SQ==}
     engines: {node: '>=16.19.0'}
     peerDependencies:
       vue: '>= 3.2.37'
