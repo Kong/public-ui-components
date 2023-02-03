@@ -10,6 +10,7 @@ export default {
     message: 'Select the workspace for your new package:',
     choices: [
       'core',
+      'analytics',
       'portal',
       new inquirer.Separator(),
       'other',
