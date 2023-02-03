@@ -37,7 +37,7 @@
 # =========================================================================
 # Renovate Bot approvals
 # These rules MUST remain at the bottom as the last entry
-pnpm-lock.yaml @kongponents-bot @Kong/team-core-ui @adamdehaven @ValeryG @jillztom
+/pnpm-lock.yaml @kongponents-bot @Kong/team-core-ui
 /package.json @kongponents-bot @Kong/team-core-ui @adamdehaven @ValeryG @jillztom
 /packages/core/*/package.json @kongponents-bot @Kong/team-core-ui @adamdehaven @ValeryG @jillztom
 /packages/portal/*/package.json @kongponents-bot @adamdehaven @ValeryG @jillztom
