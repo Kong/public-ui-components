@@ -116,10 +116,8 @@
 import { PropType, computed, ref, watch, onMounted } from 'vue'
 import type { OperationListFilterFunction, Operation, OperationListItem, Tag } from '../types'
 import { v1 as uuidv1 } from 'uuid'
-import { createI18n } from '@kong-ui-public/i18n'
-import english from '../locales/en.json'
 import clonedeep from 'lodash.clonedeep'
-import useUtilities from '../composables/useUtilities'
+import composables from '../composables'
 import OperationsListSectionHeader from './operations-list/OperationsListSectionHeader.vue'
 import OperationsListItem from './operations-list/OperationsListItem.vue'
 
@@ -160,7 +158,7 @@ const props = defineProps({
 
 const emit = defineEmits(['selected'])
 
-const { t } = createI18n('en-us', english)
+const { i18n: { t } } = composables.useI18n()
 
 // Generate unique identifier of this instance for safe HTML element id generation
 const uid = computed<string>(() => props.testMode ? 'test-spec-ops-list-1234' : uuidv1())
@@ -260,7 +258,7 @@ onMounted(() => {
 
 <script lang="ts">
 // Must import in a separate script block so `hasRequiredProps` can be used in prop validator
-const { getSizeFromString, hasRequiredProps } = useUtilities()
+const { getSizeFromString, hasRequiredProps } = composables.useUtilities()
 </script>
 
 <style lang="scss" scoped>
