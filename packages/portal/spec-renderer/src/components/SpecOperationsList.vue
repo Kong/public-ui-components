@@ -12,7 +12,7 @@
       <KInput
         v-model="filterQuery"
         class="filter-input"
-        placeholder="Filter by tag"
+        :placeholder="i18n.t('specOperationsList.filterPlaceholder')"
       />
       <KIcon
         aria-hidden="true"
@@ -54,6 +54,7 @@
                   :select="() => handleSelection(item)"
                 >
                   <OperationsListItem
+                    :disable-selection="disableSelection"
                     :is-selected="isSelected(item)"
                     :item="item"
                     :section="section"
@@ -95,7 +96,7 @@
       >
         <slot name="empty-state">
           <div class="center">
-            No results
+            {{ i18n.t('specOperationsList.noResults') }}
           </div>
         </slot>
       </div>
@@ -106,7 +107,7 @@
       data-testid="kong-ui-public-spec-operations-list-error"
     >
       <slot name="error-state">
-        Error: No document spec provided
+        {{ i18n.t('specOperationsList.error') }}
       </slot>
     </div>
   </section>
@@ -115,9 +116,11 @@
 <script setup lang="ts">
 import { PropType, computed, ref, watch, onMounted } from 'vue'
 import type { OperationListFilterFunction, Operation, OperationListItem, Tag } from '../types'
+import { v1 as uuidv1 } from 'uuid'
 import clonedeep from 'lodash.clonedeep'
-import OperationsListItem from './operations-list/OperationsListItem.vue'
+import composables from '../composables'
 import OperationsListSectionHeader from './operations-list/OperationsListSectionHeader.vue'
+import OperationsListItem from './operations-list/OperationsListItem.vue'
 
 const props = defineProps({
   operations: {
@@ -134,10 +137,6 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  width: {
-    type: String,
-    default: '210',
-  },
   filterFunction: {
     type: Function as PropType<OperationListFilterFunction>,
     default: (({ items, query }) => {
@@ -147,12 +146,27 @@ const props = defineProps({
     }) as OperationListFilterFunction,
     validator: (maybeFunc) => !!maybeFunc && typeof maybeFunc === 'function',
   },
+  disableSelection: {
+    type: Boolean,
+    default: false,
+  },
+  width: {
+    type: String,
+    default: '210',
+  },
+
+  testMode: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['selected'])
 
+const { i18n } = composables.useI18n()
+
 // Generate unique identifier of this instance for safe HTML element id generation
-const uid = computed<string>(() => [...Array(8)].map(() => Math.random().toString(36)[2]).join(''))
+const uid = computed<string>(() => props.testMode ? 'test-spec-ops-list-1234' : uuidv1())
 
 const filterQuery = ref<string>('')
 const taggedItems = ref<OperationListItem[]>([])
@@ -173,16 +187,6 @@ const filterItems = () => {
 
   filteredItems.value = props.filterFunction({ items: allItems, query: filterQuery.value })
 }
-
-const getSizeFromString = (sizeStr: string): string => (
-  sizeStr === 'auto' ||
-  sizeStr.endsWith('%') ||
-  sizeStr.endsWith('vw') ||
-  sizeStr.endsWith('vh') ||
-  sizeStr.endsWith('px')
-    ? sizeStr
-    : sizeStr + 'px'
-)
 
 const widthStyle = computed<string>(() => getSizeFromString(props.width))
 
@@ -221,8 +225,10 @@ const isSelected = (item: OperationListItem): boolean => {
 const getSectionContentId = (section: string) => `${uid.value}-section-${section.toLowerCase()}`
 
 const handleSelection = (item: OperationListItem) => {
-  selectedItem.value = item
-  emit('selected', item)
+  if (!props.disableSelection) {
+    selectedItem.value = item
+    emit('selected', item)
+  }
 }
 
 const generateTaggedItems = (): void => {
@@ -258,26 +264,8 @@ onMounted(() => {
 </script>
 
 <script lang="ts">
-/**
- * Check if all of the provided items have a non-falsey value for all of the provided required props
- *
- * @param items The items to validate the prop exists for
- * @param requiredProps An array of all the required prop names
- * @returns Boolean whether or not the items have all the required props
- */
-const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => {
-  let isValid = true
-
-  items.forEach((item: object) => {
-    requiredProps.forEach((requiredProp: string) => {
-      if (!item[requiredProp as keyof typeof item]) {
-        isValid = false
-      }
-    })
-  })
-
-  return isValid
-}
+// Must import in a separate script block so `hasRequiredProps` can be used in prop validator
+const { getSizeFromString, hasRequiredProps } = composables.useUtilities()
 </script>
 
 <style lang="scss" scoped>

@@ -186,20 +186,26 @@ importers:
 
   packages/portal/spec-renderer:
     specifiers:
+      '@kong-ui-public/i18n': workspace:^0.2.7
       '@kong-ui-public/swagger-ui-web-component': workspace:^0.3.0
       '@kong/kongponents': ^8.22.3
       '@modyfi/vite-plugin-yaml': ^1.0.4
       '@types/lodash.clonedeep': ^4.5.7
+      '@types/uuid': ^9.0.0
       lodash.clonedeep: ^4.5.0
       openapi-types: ^12.1.0
+      uuid: ^9.0.0
       vue: ^3.2.45
     dependencies:
+      '@kong-ui-public/i18n': link:../../core/i18n
       '@kong-ui-public/swagger-ui-web-component': link:../swagger-ui-web-component
       lodash.clonedeep: 4.5.0
+      uuid: 9.0.0
     devDependencies:
       '@kong/kongponents': 8.22.3_vue@3.2.47
       '@modyfi/vite-plugin-yaml': 1.0.4
       '@types/lodash.clonedeep': 4.5.7
+      '@types/uuid': 9.0.0
       openapi-types: 12.1.0
       vue: 3.2.47
 
@@ -2668,6 +2674,10 @@ packages:
   /@types/unist/2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
     dev: false
+
+  /@types/uuid/9.0.0:
+    resolution: {integrity: sha512-kr90f+ERiQtKWMz5rP32ltJ/BtULDI5RVO0uavn1HQUOwjx0R1h0rnDYNL0CepF1zL5bSY6FISAfd9tOdDhU5Q==}
+    dev: true
 
   /@types/ws/8.5.4:
     resolution: {integrity: sha512-zdQDHKUgcX/zBc4GrwsE/7dVdAD8JR4EuiAXiiUhhfyIJXXb2+PrGshFyeXWQPMmmZ2XxgaqclgpIC7eTXc1mg==}
@@ -11520,6 +11530,11 @@ packages:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
     dev: true
+
+  /uuid/9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
+    dev: false
 
   /v-calendar/3.0.0-alpha.8_vue@3.2.47:
     resolution: {integrity: sha512-T23H5UbK0EomrwArlF/jrT2LFbV/lu+Bp9JroZ1paN6rPoaMyvE+HrLxvAmUgi+pODrdTURDMzM3+WPgeFKEBQ==}

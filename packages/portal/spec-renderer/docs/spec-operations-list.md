@@ -7,8 +7,9 @@ A Kong UI component for displaying a filterable list of spec operations
   - [`operations`](#operations)
   - [`tags`](#tags)
   - [`isFilterable`](#isfilterable)
-  - [`width`](#width)
   - [`filterFunction`](#filterfunction)
+  - [`disableSelection`](#disableselection)
+  - [`width`](#width)
 - [Slots](#slots)
   - [`item` slot](#item-slot)
   - [`empty-state`](#empty-state)
@@ -100,14 +101,6 @@ Object array for tags. You can use this to specify tag information such as `desc
 
 If enabled, will display filter input and enable filtering operations by tag names using case-insensitive partial matching.
 
-### `width`
-
-- type: `String`
-- required: `false`
-- default: `210`
-
-Controls the width of the rendered spec. Currently supports numbers (will be converted to px), auto, `vw`, `vh`, and percentages for width.
-
 ### `filterFunction`
 
 - type: `Function`
@@ -122,6 +115,22 @@ const operationSummaryFilterFunc: OperationListFilterFunction = ({ items, query 
   return items.filter((item) => item.summary.includes(query))
 }
 ```
+
+### `disableSelection`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Use this prop to disable the ability to `select` items.
+
+### `width`
+
+- type: `String`
+- required: `false`
+- default: `210`
+
+Controls the width of the rendered spec. Currently supports numbers (will be converted to px), auto, `vw`, `vh`, and percentages for width.
 
 ## Slots
 

@@ -1,7 +1,21 @@
 {
-  "error": "Error: Spec information missing",
-  "header": {
-    "title": "Title of the header",
-    "content": "Content of the header"
+  "specRenderer": {
+    "error": "Error: Spec information missing"
+  },
+  "specOperationsList": {
+    "error": "Error: Spec information missing",
+    "noResults": "No results",
+    "filterPlaceholder": "Filter by tag",
+    "section": {
+      "expandAriaLabel": "Expand section {section}",
+      "collapseAriaLabel": "Collapse section {section}"
+    },
+    "item": {
+      "pathAriaLabel": "Path: {path}",
+      "methodAriaLabel": "Method: {method}"
+    }
+  },
+  "specDetails": {
+    "error": "Error: Spec information missing"
   }
 }

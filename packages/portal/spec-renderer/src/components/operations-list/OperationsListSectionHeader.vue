@@ -2,11 +2,11 @@
   <button
     :aria-controls="contentElementId"
     :aria-expanded="isCollapsed ? 'false' : 'true'"
-    :aria-label="isCollapsed ? `Expand section &quot;${name}&quot;` : `Collapse section &quot;${name}&quot;`"
+    :aria-label="collapseAriaLabel"
     class="header"
     :class="{ 'header--collapsed': isCollapsed }"
     type="button"
-    @click="emit('toggle')"
+    @click="$emit('toggle')"
   >
     <div
       aria-hidden="true"
@@ -41,7 +41,10 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
+import { computed } from 'vue'
+import composables from '../../composables'
+
+const props = defineProps({
   isCollapsed: {
     type: Boolean,
     required: true,
@@ -60,7 +63,13 @@ defineProps({
   },
 })
 
-const emit = defineEmits(['toggle'])
+defineEmits(['toggle'])
+
+const { i18n } = composables.useI18n()
+
+const collapseAriaLabel = computed((): string => {
+  return props.isCollapsed ? i18n.t('specOperationsList.section.expandAriaLabel', { section: `"${props.name}"` }) : i18n.t('specOperationsList.section.collapseAriaLabel', { section: `"${props.name}"` })
+})
 </script>
 
 <style scoped lang="scss">

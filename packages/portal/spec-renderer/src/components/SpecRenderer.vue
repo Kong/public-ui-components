@@ -18,13 +18,12 @@
         :has-sidebar="false"
       />
     </div>
-    <!-- TODO: i18n -->
     <div
       v-else
       data-testid="kong-ui-public-spec-renderer-error"
     >
       <slot name="error-state">
-        Error: Spec information missing
+        {{ i18n.t('specRenderer.error') }}
       </slot>
     </div>
   </div>
@@ -33,6 +32,7 @@
 <script setup lang="ts">
 import { PropType, ref, computed } from 'vue'
 import type { SpecDocument, Operation, OperationListItem, Tag } from '../types'
+import composables from '../composables'
 import SpecDetails from './SpecDetails.vue'
 import SpecOperationsList from './SpecOperationsList.vue'
 
@@ -61,6 +61,8 @@ const props = defineProps({
   },
 })
 
+const { i18n } = composables.useI18n()
+
 const hasRequiredSpecData = computed((): boolean => {
   return !!(props.spec && props.operationsList)
 })
@@ -73,26 +75,8 @@ const handleSelected = (item: OperationListItem): void => {
 </script>
 
 <script lang="ts">
-/**
- * Check if all of the provided items have a non-falsey value for all of the provided required props
- *
- * @param items The items to validate the prop exists for
- * @param requiredProps An array of all the required prop names
- * @returns Boolean whether or not the items have all the required props
- */
-const hasRequiredProps = (items: object[], requiredProps: string[]): boolean => {
-  let isValid = true
-
-  items.forEach((item: object) => {
-    requiredProps.forEach((requiredProp: string) => {
-      if (!item[requiredProp as keyof typeof item]) {
-        isValid = false
-      }
-    })
-  })
-
-  return isValid
-}
+// Must import in a separate script block so `hasRequiredProps` can be used in prop validator
+const { hasRequiredProps } = composables.useUtilities()
 </script>
 
 <style lang="scss" scoped>
