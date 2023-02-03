@@ -14,6 +14,7 @@
 # =========================================================================
 /packages/core/ @Kong/team-core-ui
 /packages/portal/ @Kong/team-core-ui # TODO: add @Kong/team-devx 
+/packages/analytics/ @Kong/team-core-ui # TODO: add @Kong/team-data
 
 # Packages:
 # These owners will be the default owners for everything in the workspace
@@ -41,6 +42,7 @@
 # Workspaces
 /packages/core/*/package.json @kongponents-bot @Kong/team-core-ui
 /packages/portal/*/package.json @kongponents-bot @Kong/team-core-ui # TODO: add @Kong/team-devx 
+/packages/analytics/*/package.json @kongponents-bot @Kong/team-core-ui # TODO: add @Kong/team-data
 
 # Root
 /pnpm-lock.yaml @kongponents-bot @Kong/team-core-ui
