@@ -161,8 +161,10 @@ export const createPackage = async (): Promise<void> => {
     if (workspace === 'other') {
       // The user wants to choose a workspace that doesn't exist
       console.log('')
-      console.log('  New workspaces must be added and configured manually.')
-      console.log(`  Tag ${pc.cyan('@Kong/team-core-ui')} for help.`)
+      console.log(pc.red(`  New workspaces must be added and configured by ${pc.bold('@Kong/team-core-ui')}.`))
+      console.log('')
+      console.log(`  Reach out on Slack in ${pc.cyan('#team-konnect-core-ui')}`)
+      console.log(`  or tag ${pc.cyan('@Kong/team-core-ui')} on GitHub for help.`)
       console.log('')
 
       // Exit
