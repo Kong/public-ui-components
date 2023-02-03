@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
-import { sleep, packagePath, pascalCase, packageTemplatePath, getTemplateFileList } from '.'
+import { execSync } from 'child_process'
+import { sleep, packagePath, pascalCase, packageTemplatePath, getTemplateFileList, peerDependencies } from '.'
 import { createSpinner, Spinner } from 'nanospinner'
 import pc from 'picocolors'
 import boxen from 'boxen'
@@ -12,6 +13,7 @@ const { workspaceName, packageName, confirmPackageName } = questions
 
 /**
  * @description Create new files for package
+ * @param {string} workspace Workspace name
  * @param {string} packageName Package name
  * @return {*}
  */
@@ -65,8 +67,6 @@ const createPackageFiles = async (workspace: string, packageName: string): Promi
         .replace(/{%%COMPONENT_NAME%%}/g, componentName)
         .replace(/{%%WORKSPACE%%}/g, workspace)
 
-      // TODO: Replace Vue peerDependency version in the __template__/package.json file
-
       fs.writeFileSync(newFilePath, fileContent, 'utf8')
     }
   }
@@ -94,8 +94,25 @@ const createPackageFiles = async (workspace: string, packageName: string): Promi
 
   spinner.success({ text: 'Verified the package structure.' })
 
+  spinner.start({ text: 'Adding package peerDependencies...' })
+  await sleep()
+
+  // Install peerDependencies
+  for (const dep of peerDependencies) {
+    await execSync(`pnpm --filter="@kong-ui-public/${packageName}" add --save-peer "${dep}@latest"`, { stdio: 'inherit' })
+  }
+
+  spinner.success({ text: 'Added package peerDependencies.' })
+
+  spinner.start({ text: 'Initializing repository dependencies...' })
+  await sleep()
+
+  await execSync('pnpm install', { stdio: 'inherit' })
+
+  spinner.success({ text: 'Initialized repository dependencies.' })
+
   spinner.success({
-    text: `Created the new '${pc.cyan(`${packageName}`)}' package and its related files:
+    text: `Created the new '${pc.cyan(packageName)}' package and its related files:
     ${fileStructure}`,
   })
 
