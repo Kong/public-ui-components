@@ -7,7 +7,7 @@ A Kong UI component for displaying and filtering API specs
 - [Usage](#usage)
   - [Install](#install)
   - [Register](#register)
-- [Subcomponents](#subcomponents)
+- [Included Components](#included-components)
   - [`SpecRenderer`](#specrenderer)
   - [`SpecOperationsList`](#specoperationslist)
   - [`SpecDetails`](#specdetails)
@@ -55,7 +55,7 @@ import '@kong-ui-public/spec-renderer/dist/style.css'
 </script>
 ```
 
-## Subcomponents
+## Included Components
 
 The `SpecRenderer` component is a combination of two subcompoents, `SpecOperationsList` and `SpecDetails` which are exported for individual use if desired.
 
