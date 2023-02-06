@@ -16,7 +16,7 @@ jobs:
     outputs:
       filter: ${{steps.changed_packages.outputs.filter}}
       spec: ${{steps.changed_packages.outputs.spec}}
-      utFilter: ${{steps.changed_packages.outputs.utFilter}}
+      unitTestFilter: ${{steps.changed_packages.outputs.unitTestFilter}}
 
     steps:
       - name: Checkout Source Code
@@ -48,7 +48,7 @@ jobs:
 
           filter=""
           specPackages=""
-          utFilter=""
+          unitTestFilter=""
 
           # get the list of changed packages, grab the location
           for pkgFolder in $(lerna ${lernaCommand} --l --json|jq -r '.[].location')
@@ -67,7 +67,7 @@ jobs:
 
             findRes=$(find "${pkgFolder}" -name "*.spec.ts" || true)
             if [[ -n "${findRes}" ]]; then
-                utFilter="${utFilter}${pkgFolder}|"
+                unitTestFilter="${unitTestFilter}${pkgFolder}|"
             fi
           done
 
@@ -75,8 +75,8 @@ jobs:
           filter="{("$(echo "${filter}" | sed 's/|$//')")}"
           echo "filter=${filter}"
 
-          utFilter="{("$(echo "${utFilter}" | sed 's/|$//')")}"
-          echo "utFilter=${utFilter}"
+          unitTestFilter="{("$(echo "${unitTestFilter}" | sed 's/|$//')")}"
+          echo "unitTestFilter=${unitTestFilter}"
 
           # remove trailing ',' from cypress spec
           specPackages=$(echo "${specPackages}" | sed 's/,$//')
@@ -85,7 +85,7 @@ jobs:
           # set github output
           echo "filter=${filter}" >> $GITHUB_OUTPUT
           echo "spec=${specPackages}" >> $GITHUB_OUTPUT
-          echo "utFilter=${utFilter}" >> $GITHUB_OUTPUT
+          echo "unitTestFilter=${unitTestFilter}" >> $GITHUB_OUTPUT
 
   build:
     name: Build And Test
@@ -111,7 +111,7 @@ jobs:
         run: pnpm --stream --filter "...${{needs.install-dependencies.outputs.filter}}..." run build
 
       - name: Run Unit Tests
-        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.utFilter}}" run test:unit
+        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.unitTestFilter}}" run test:unit
 
       - name: Prepare Cypress
         if: ${{ needs.install-dependencies.outputs.spec != '' }}
