@@ -64,5 +64,13 @@ module.exports = {
         'plugin:cypress/recommended',
       ],
     },
+    {
+      files: [
+        'packages/portal/document-viewer/src/components/**/*.vue',
+      ],
+      rules: {
+        'vue/multi-word-component-names': ['off'],
+      },
+    },
   ],
 }
