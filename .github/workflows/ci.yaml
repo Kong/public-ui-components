@@ -16,6 +16,7 @@ jobs:
     outputs:
       filter: ${{steps.changed_packages.outputs.filter}}
       spec: ${{steps.changed_packages.outputs.spec}}
+      utFilter: ${{steps.changed_packages.outputs.utFilter}}
 
     steps:
       - name: Checkout Source Code
@@ -47,6 +48,7 @@ jobs:
 
           filter=""
           specPackages=""
+          utFilter=""
 
           # get the list of changed packages, grab the location
           for pkgFolder in $(lerna ${lernaCommand} --l --json|jq -r '.[].location')
@@ -62,10 +64,19 @@ jobs:
             if [[ -n "${findRes}" ]]; then
                 specPackages="${specPackages}${pkgFolder},"
             fi
+
+            findRes=$(find "${pkgFolder}" -name "*.spec.ts" || true)
+            if [[ -n "${findRes}" ]]; then
+                utFilter="${utFilter}${pkgFolder}|"
+            fi
           done
+
           # remove trailing '|' from pnpm filter
           filter="{("$(echo "${filter}" | sed 's/|$//')")}"
           echo "filter=${filter}"
+
+          utFilter="{("$(echo "${utFilter}" | sed 's/|$//')")}"
+          echo "utFilter=${utFilter}"
 
           # remove trailing ',' from cypress spec
           specPackages=$(echo "${specPackages}" | sed 's/,$//')
@@ -74,7 +85,7 @@ jobs:
           # set github output
           echo "filter=${filter}" >> $GITHUB_OUTPUT
           echo "spec=${specPackages}" >> $GITHUB_OUTPUT
-
+          echo "utFilter=${utFilter}" >> $GITHUB_OUTPUT
 
   build:
     name: Build And Test
@@ -100,7 +111,7 @@ jobs:
         run: pnpm --stream --filter "...${{needs.install-dependencies.outputs.filter}}..." run build
 
       - name: Run Unit Tests
-        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" run test:unit
+        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.utFilter}}" run test:unit
 
       - name: Prepare Cypress
         if: ${{ needs.install-dependencies.outputs.spec != '' }}
