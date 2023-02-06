@@ -43,6 +43,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import composables from '../../composables'
+import { KIcon } from '@kong/kongponents'
 
 const props = defineProps({
   isCollapsed: {

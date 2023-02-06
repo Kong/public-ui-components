@@ -1,12 +1,12 @@
 <template>
   <button
-    class="item"
+    class="spec-operations-list-item"
     :class="{
       'item--selected': isSelected,
       [`item--method-${item.method}`]: true,
       'disabled': disableSelection
     }"
-    :data-testid="`spec-operations-list-item-${item.path}`"
+    :data-testid="`spec-operations-list-item-${item.method.toLowerCase()}${item.path.replaceAll('/', '-')}-${item.tag || '-'}`"
     type="button"
     @click="$emit('click', item)"
   >
@@ -43,6 +43,7 @@
 import { PropType, computed } from 'vue'
 import type { OperationListItem } from '../../types'
 import composables from '../../composables'
+import { KBadge } from '@kong/kongponents'
 
 const props = defineProps({
   item: {
@@ -75,7 +76,7 @@ const methodName = computed((): string => {
 </script>
 
 <style lang="scss" scoped>
-.item {
+.spec-operations-list-item {
   appearance: none;
   background: transparent;
   border: 1px solid var(--kong-ui-spec-renderer-operations-list-item-border-color, var(--grey-200, #f1f1f5));

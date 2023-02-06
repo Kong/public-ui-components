@@ -6,6 +6,7 @@
     "error": "Error: Spec information missing",
     "noResults": "No results",
     "filterPlaceholder": "Filter by tag",
+    "ariaLabel": "List of operations",
     "section": {
       "expandAriaLabel": "Expand section {section}",
       "collapseAriaLabel": "Collapse section {section}"

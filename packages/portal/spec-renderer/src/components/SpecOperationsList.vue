@@ -1,32 +1,38 @@
 <template>
   <section
-    aria-label="List of operations"
+    :aria-label="i18n.t('specOperationsList.ariaLabel')"
     class="kong-ui-public-spec-operations-list"
+    data-testid="kong-ui-public-spec-operations-list"
     role="navigation"
     :style="{ width: widthStyle }"
   >
-    <div
-      v-if="isFilterable"
-      class="filter-wrapper"
-    >
-      <KInput
-        v-model="filterQuery"
-        class="filter-input"
-        :placeholder="i18n.t('specOperationsList.filterPlaceholder')"
-      />
-      <KIcon
-        aria-hidden="true"
-        class="filter-icon"
-        color="var(--kong-ui-spec-renderer-operations-list-filter-icon-color, #1C1B1F)"
-        icon="filter"
-      />
-    </div>
     <div v-if="operations">
+      <!-- filter -->
+      <div
+        v-if="isFilterable"
+        class="filter-wrapper"
+      >
+        <KInput
+          v-model="filterQuery"
+          class="filter-input"
+          data-testid="spec-operations-list-filter"
+          :placeholder="i18n.t('specOperationsList.filterPlaceholder')"
+        />
+        <KIcon
+          aria-hidden="true"
+          class="filter-icon"
+          color="var(--kong-ui-spec-renderer-operations-list-filter-icon-color, #1C1B1F)"
+          icon="filter"
+        />
+      </div>
+
+      <!-- render operations list -->
       <div v-if="filteredItems.length">
         <div
           v-for="section in sectionHeadings"
           :key="section"
           class="section-wrapper"
+          :data-testid="`spec-operations-list-section-${section.toLowerCase().replaceAll(' ', '-')}`"
         >
           <KCollapse
             :model-value="false"
@@ -35,6 +41,7 @@
             <template #trigger="{ isCollapsed, toggle }">
               <OperationsListSectionHeader
                 :content-element-id="getSectionContentId(section)"
+                :data-testid="`spec-operations-list-section-${section.toLowerCase().replaceAll(' ', '-')}-collapse-trigger`"
                 :description="getSectionDescription(section)"
                 :is-collapsed="isCollapsed"
                 :name="section"
@@ -70,6 +77,7 @@
         <div
           v-if="!isFilterable || !filterQuery"
           class="section"
+          data-testid="spec-operations-list-untagged-items"
         >
           <template
             v-for="item in untaggedItems"
@@ -81,6 +89,7 @@
               :select="() => handleSelection(item)"
             >
               <OperationsListItem
+                :disable-selection="disableSelection"
                 :is-selected="isSelected(item)"
                 :item="item"
                 @click="handleSelection"
@@ -89,6 +98,7 @@
           </template>
         </div>
       </div>
+
       <!-- Empty State -->
       <div
         v-else
@@ -101,6 +111,7 @@
         </slot>
       </div>
     </div>
+
     <!-- Error State -->
     <div
       v-else
@@ -119,6 +130,7 @@ import type { OperationListFilterFunction, Operation, OperationListItem, Tag } f
 import { v1 as uuidv1 } from 'uuid'
 import clonedeep from 'lodash.clonedeep'
 import composables from '../composables'
+import { KInput, KIcon, KCollapse } from '@kong/kongponents'
 import OperationsListSectionHeader from './operations-list/OperationsListSectionHeader.vue'
 import OperationsListItem from './operations-list/OperationsListItem.vue'
 
@@ -154,7 +166,9 @@ const props = defineProps({
     type: String,
     default: '210',
   },
-
+  /**
+   * Used for component testing
+   */
   testMode: {
     type: Boolean,
     default: false,
@@ -233,6 +247,10 @@ const handleSelection = (item: OperationListItem) => {
 
 const generateTaggedItems = (): void => {
   taggedItems.value = []
+
+  if (!props.operations) {
+    return
+  }
 
   props.operations.forEach((item: Operation) => {
     const modifiedItem:any = clonedeep(item)
