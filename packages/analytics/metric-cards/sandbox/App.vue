@@ -1,0 +1,63 @@
+<template>
+  <div class="sandbox-container">
+    <main>
+      <MetricCardContainer
+        v-bind="metricCardOptions"
+        hide-title
+      />
+    </main>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { MetricCardContainer } from '../src'
+
+const metricCardOptions = {
+  cards: [
+    {
+      currentValue: 192895156,
+      previousValue: 236609609,
+      title: 'Traffic',
+      subtitle: 'Number of Requests',
+      increaseIsBad: false,
+      cardSize: 'lg',
+    },
+    {
+      currentValue: 31.076361502825918,
+      previousValue: 30.59477013885772,
+      title: 'Errors',
+      subtitle: 'Average Error Rate',
+      increaseIsBad: true,
+      cardSize: 'lg',
+    },
+    {
+      currentValue: 335,
+      previousValue: 511,
+      title: 'Latency',
+      subtitle: 'P99 Latency',
+      increaseIsBad: true,
+      cardSize: 'lg',
+    },
+  ],
+  loading: false,
+  hasTrendAccess: true,
+  fallbackDisplayText: 'Not available',
+}
+</script>
+
+<style lang="scss">
+html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #f1f1f5;
+  min-height: 100%;
+}
+
+main {
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
+</style>

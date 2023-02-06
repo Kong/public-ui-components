@@ -1,0 +1,12 @@
+@mixin pointer-events-none {
+  pointer-events: none;
+}
+
+@mixin pointer-events-all {
+  pointer-events: all;
+}
+
+@mixin flex-gap ($amount: var(--spacing-md, 16px)) {
+  column-gap: $amount;
+  row-gap: $amount;
+}
