@@ -1,10 +1,11 @@
 <template>
-  <div class="kong-portal-spec-details">
+  <div class="kong-public-ui-spec-details">
     <kong-swagger-ui
       v-if="hasRequiredProps"
       ref="swaggerRef"
       :application-registration-enabled="applicationRegistrationEnabled"
       :current-version="currentVersion"
+      data-testid="kong-public-ui-spec-details-swagger"
       :essentials-only="essentialsOnly"
       :has-sidebar="hasSidebar"
       :relative-sidebar="relativeSidebar"
@@ -13,7 +14,7 @@
     />
     <div
       v-else
-      data-testid="kong-portal-spec-details-error"
+      data-testid="kong-public-ui-spec-details-error"
     >
       {{ i18n.t('specDetails.error') }}
     </div>
@@ -38,7 +39,7 @@ const props = defineProps({
   },
   hasSidebar: {
     type: Boolean,
-    default: true,
+    default: false,
   },
   relativeSidebar: {
     type: Boolean,
@@ -62,6 +63,8 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['active-operation'])
+
 const { i18n } = composables.useI18n()
 
 const swaggerRef = ref<SwaggerUIElement | null>(null)
@@ -77,6 +80,8 @@ function showAndScrollToOperation() {
 
   swaggerRef.value.showOperation(props.activeOperation)
   swaggerRef.value.scrollToOperation(props.activeOperation)
+  // required for component testing
+  emit('active-operation')
 }
 
 onMounted(() => {
@@ -93,7 +98,7 @@ watch(() => props.activeOperation, () => {
 </script>
 
 <style lang="scss" scoped>
-.kong-portal-spec-details {
+.kong-public-ui-spec-details {
   color: var(--kong-portal-spec-details-text-color, #000);
   font-family: var(--kong-portal-spec-details-font-family-default, Roboto, Helvetica, sans-serif);
   font-size: var(--kong-portal-spec-details-font-size, 16px);

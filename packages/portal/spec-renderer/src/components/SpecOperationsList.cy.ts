@@ -74,7 +74,7 @@ describe('<SpecOperationsList />', () => {
     // all items are disabled
     cy.get('.spec-operations-list-item.disabled').should('have.length', 6)
     // clicking an item shouldn't do anything
-    cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags[0]}`).click()
+    cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags?.[0]}`).click()
     // no items selected
     cy.get('.item--selected').should('not.exist')
   })
@@ -91,10 +91,10 @@ describe('<SpecOperationsList />', () => {
     // no items selected
     cy.get('.item--selected').should('not.exist')
     // select an item
-    cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags[0]}`).click()
+    cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags?.[0]}`).click()
     cy.get('.item--selected').should('have.length', 1)
     // only highlights one item when clicked
-    cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags[1]}`).click()
+    cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags?.[1]}`).click()
     cy.get('.item--selected').should('have.length', 1)
   })
 
@@ -157,7 +157,7 @@ describe('<SpecOperationsList />', () => {
       },
     })
 
-    cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags[0]}`).click().then(() => {
+    cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags?.[0]}`).click().then(() => {
       // Check for emitted event
       cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'selected')
       cy.get('.item--selected').should('have.length', 1)
