@@ -10,6 +10,7 @@ A Kong UI component for displaying and filtering API specs
   - [`tags`](#tags)
   - [`navWidth`](#navwidth)
 - [Slots](#slots)
+  - [`ops-list-empty-state`](#ops-list-empty-state)
   - [`error-state`](#error-state)
 
 ## Features
@@ -110,6 +111,10 @@ Object array for tags. You can use this to specify tag information such as `desc
 Controls the width of the side nav. Currently supports numbers (will be converted to px), auto, `vw`, `vh`, and percentages for width.
 
 ## Slots
+
+### `ops-list-empty-state`
+
+Controls the content displayed in the operations-list when filtering returns no results.
 
 ### `error-state`
 

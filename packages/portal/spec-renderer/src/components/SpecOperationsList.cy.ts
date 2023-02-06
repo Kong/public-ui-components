@@ -29,7 +29,7 @@ describe('<SpecOperationsList />', () => {
 
     // renders collapsible sections of operations with correct count of operations
     cy.getTestId('spec-operations-list-section-pet').should('be.visible')
-    cy.get('[data-testid="spec-operations-list-section-pet"] .spec-operations-list-item').should('have.length', 2)
+    cy.get('[data-testid="spec-operations-list-section-pet"] .spec-operations-list-item').should('have.length', 3)
     cy.getTestId('spec-operations-list-section-dog-go').should('be.visible')
     cy.get('[data-testid="spec-operations-list-section-dog-go"] .spec-operations-list-item').should('have.length', 2)
     cy.getTestId('spec-operations-list-section-other').should('be.visible')
@@ -39,7 +39,7 @@ describe('<SpecOperationsList />', () => {
     cy.getTestId('spec-operations-list-section-pet-collapse-trigger').click()
     cy.get('[data-testid="spec-operations-list-section-pet"] .spec-operations-list-item').should('not.be.visible')
     cy.getTestId('spec-operations-list-section-pet-collapse-trigger').click()
-    cy.get('[data-testid="spec-operations-list-section-pet"] .spec-operations-list-item').should('have.length', 2)
+    cy.get('[data-testid="spec-operations-list-section-pet"] .spec-operations-list-item').should('have.length', 3)
 
     // renders untagged items
     cy.getTestId('spec-operations-list-untagged-items').should('be.visible')
@@ -70,9 +70,9 @@ describe('<SpecOperationsList />', () => {
       },
     })
 
-    cy.get('.spec-operations-list-item').should('have.length', 6)
+    cy.get('.spec-operations-list-item').should('have.length', 7)
     // all items are disabled
-    cy.get('.spec-operations-list-item.disabled').should('have.length', 6)
+    cy.get('.spec-operations-list-item.disabled').should('have.length', 7)
     // clicking an item shouldn't do anything
     cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags?.[0]}`).click()
     // no items selected

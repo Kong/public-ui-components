@@ -20,7 +20,7 @@ export const specOp = {
   path: '/pet',
   method: 'delete',
   operationId: 'deletePet',
-  tags: ['dog-go', 'other'],
+  tags: ['dog-go', 'pet', 'other'],
   summary: 'Deletes a pet',
   deprecated: false,
 } as Operation
