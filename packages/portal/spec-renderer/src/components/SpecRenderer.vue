@@ -27,7 +27,6 @@
         :document="spec"
         :essentials-only="essentialsOnly"
         :has-sidebar="false"
-        @active-operations="$emit('active-operation')"
       />
     </div>
     <div
@@ -72,9 +71,6 @@ const props = defineProps({
     default: '310',
   },
 })
-
-// used for component testing
-defineEmits(['active-operation'])
 
 const { i18n } = composables.useI18n()
 

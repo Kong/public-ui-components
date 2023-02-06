@@ -9,7 +9,6 @@ describe('<SpecDetails />', () => {
   it('renders correctly with props', () => {
     mount(SpecDetails, {
       props: {
-        testMode: true,
         document: jsonSpec as any,
       },
     })
@@ -21,7 +20,6 @@ describe('<SpecDetails />', () => {
   it('renders custom styles for swagger-ui for props: hasSidebar', () => {
     mount(SpecDetails, {
       props: {
-        testMode: true,
         document: jsonSpec as any,
         hasSidebar: true,
       },
@@ -35,7 +33,6 @@ describe('<SpecDetails />', () => {
   it('renders custom styles for swagger-ui for props: essentialsOnly', () => {
     mount(SpecDetails, {
       props: {
-        testMode: true,
         document: jsonSpec as any,
         essentialsOnly: true,
       },
@@ -49,7 +46,6 @@ describe('<SpecDetails />', () => {
   it('renders custom styles for swagger-ui for props: relativeSidebar', () => {
     mount(SpecDetails, {
       props: {
-        testMode: true,
         document: jsonSpec as any,
         hasSidebar: true,
         essentialsOnly: true,
@@ -69,7 +65,6 @@ describe('<SpecDetails />', () => {
 
     mount(SpecDetails, {
       props: {
-        testMode: true,
         document: jsonSpec as any,
         activeOperation: activeOp,
       },
@@ -86,11 +81,7 @@ describe('<SpecDetails />', () => {
 
   it('renders error state when missing required props', () => {
     // @ts-ignore - because we are purposely testing the handling of invalid prop values
-    mount(SpecDetails, {
-      props: {
-        testMode: true,
-      },
-    })
+    mount(SpecDetails)
 
     cy.getTestId('kong-public-ui-spec-details-error').should('be.visible')
   })

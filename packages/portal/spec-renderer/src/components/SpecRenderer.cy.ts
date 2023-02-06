@@ -9,7 +9,6 @@ describe('<SpecRenderer />', () => {
   it('renders props when passed', () => {
     mount(SpecRenderer, {
       props: {
-        testMode: true,
         spec: jsonSpec as any,
         operationsList,
         tags,
@@ -31,7 +30,6 @@ describe('<SpecRenderer />', () => {
 
     mount(SpecRenderer, {
       props: {
-        testMode: true,
         navWidth: width + '',
         spec: jsonSpec as any,
         operationsList,
@@ -45,7 +43,6 @@ describe('<SpecRenderer />', () => {
   it('renders custom styles for swagger-ui for props: essentialsOnly', () => {
     mount(SpecRenderer, {
       props: {
-        testMode: true,
         essentialsOnly: true,
         spec: jsonSpec as any,
         operationsList,
@@ -62,7 +59,6 @@ describe('<SpecRenderer />', () => {
   it('handles "active-operation" event', () => {
     mount(SpecRenderer, {
       props: {
-        testMode: true,
         spec: jsonSpec as any,
         operationsList,
         tags,
@@ -92,7 +88,6 @@ describe('<SpecRenderer />', () => {
 
     mount(SpecRenderer, {
       props: {
-        testMode: true,
         spec: jsonSpec as any,
         operationsList,
         tags,
@@ -113,11 +108,7 @@ describe('<SpecRenderer />', () => {
 
   it('renders error state when missing required props', () => {
     // @ts-ignore - because we are purposely testing the handling of invalid prop values
-    mount(SpecRenderer, {
-      props: {
-        testMode: true,
-      },
-    })
+    mount(SpecRenderer)
 
     cy.getTestId('kong-ui-public-spec-renderer-error').should('be.visible')
   })
@@ -126,9 +117,7 @@ describe('<SpecRenderer />', () => {
     const errorSlotContent = 'Something went wrong :('
     // @ts-ignore - because we are purposely testing the handling of invalid prop values
     mount(SpecRenderer, {
-      props: {
-        testMode: true,
-      },
+      props: {},
       slots: {
         'error-state': h('span', {}, errorSlotContent),
       },
