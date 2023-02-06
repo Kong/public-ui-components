@@ -43,7 +43,6 @@
 import { PropType, computed } from 'vue'
 import type { OperationListItem } from '../../types'
 import composables from '../../composables'
-import { KBadge } from '@kong/kongponents'
 
 const props = defineProps({
   item: {

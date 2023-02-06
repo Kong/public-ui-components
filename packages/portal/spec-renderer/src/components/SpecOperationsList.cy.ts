@@ -1,6 +1,5 @@
 // Cypress component test spec file
 
-import { mount } from 'cypress/vue'
 import { h } from 'vue'
 import { operationsList, tags, specOp } from '../../fixtures/spec-data'
 import SpecOperationsList from './SpecOperationsList.vue'
@@ -15,7 +14,7 @@ import SpecOperationsList from './SpecOperationsList.vue'
  */
 describe('<SpecOperationsList />', () => {
   it('renders props when passed', () => {
-    mount(SpecOperationsList, {
+    cy.mount(SpecOperationsList, {
       props: {
         testMode: true,
         isFilterable: true,
@@ -48,7 +47,7 @@ describe('<SpecOperationsList />', () => {
   it('renders with correct px width', () => {
     const width = 350
 
-    mount(SpecOperationsList, {
+    cy.mount(SpecOperationsList, {
       props: {
         testMode: true,
         width: width + '',
@@ -61,7 +60,7 @@ describe('<SpecOperationsList />', () => {
   })
 
   it('allows disabling selection', () => {
-    mount(SpecOperationsList, {
+    cy.mount(SpecOperationsList, {
       props: {
         testMode: true,
         disableSelection: true,
@@ -80,7 +79,7 @@ describe('<SpecOperationsList />', () => {
   })
 
   it('allows selecting an item', () => {
-    mount(SpecOperationsList, {
+    cy.mount(SpecOperationsList, {
       props: {
         testMode: true,
         operations: operationsList,
@@ -99,7 +98,7 @@ describe('<SpecOperationsList />', () => {
   })
 
   it('correctly filters by tag', () => {
-    mount(SpecOperationsList, {
+    cy.mount(SpecOperationsList, {
       props: {
         testMode: true,
         operations: operationsList,
@@ -116,7 +115,7 @@ describe('<SpecOperationsList />', () => {
   })
 
   it('renders empty state when filter matches no items', () => {
-    mount(SpecOperationsList, {
+    cy.mount(SpecOperationsList, {
       props: {
         testMode: true,
         operations: operationsList,
@@ -132,7 +131,7 @@ describe('<SpecOperationsList />', () => {
   it('allows slotting empty state content', () => {
     const emptyStateContent = 'Not found. Go Fish!'
 
-    mount(SpecOperationsList, {
+    cy.mount(SpecOperationsList, {
       props: {
         testMode: true,
         operations: operationsList,
@@ -149,7 +148,7 @@ describe('<SpecOperationsList />', () => {
   })
 
   it('emits "selected" event on item click', () => {
-    mount(SpecOperationsList, {
+    cy.mount(SpecOperationsList, {
       props: {
         testMode: true,
         operations: operationsList,
@@ -159,6 +158,7 @@ describe('<SpecOperationsList />', () => {
 
     cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags?.[0]}`).click().then(() => {
       // Check for emitted event
+      // @ts-ignore - vueWrapper DOES exist
       cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'selected')
       cy.get('.item--selected').should('have.length', 1)
     })
@@ -166,7 +166,7 @@ describe('<SpecOperationsList />', () => {
 
   it('renders error state when missing required props', () => {
     // @ts-ignore - because we are purposely testing the handling of invalid prop values
-    mount(SpecOperationsList, {
+    cy.mount(SpecOperationsList, {
       props: {
         testMode: true,
       },
@@ -178,7 +178,7 @@ describe('<SpecOperationsList />', () => {
   it('allows slotting error state content', () => {
     const errorSlotContent = 'Something went wrong :('
     // @ts-ignore - because we are purposely testing the handling of invalid prop values
-    mount(SpecOperationsList, {
+    cy.mount(SpecOperationsList, {
       props: {
         testMode: true,
       },

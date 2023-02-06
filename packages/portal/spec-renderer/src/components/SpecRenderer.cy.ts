@@ -1,13 +1,12 @@
 // Cypress component test spec file
 
-import { mount } from 'cypress/vue'
 import { h } from 'vue'
 import { operationsList, tags, jsonSpec, specOp } from '../../fixtures/spec-data'
 import SpecRenderer from './SpecRenderer.vue'
 
 describe('<SpecRenderer />', () => {
   it('renders props when passed', () => {
-    mount(SpecRenderer, {
+    cy.mount(SpecRenderer, {
       props: {
         spec: jsonSpec as any,
         operationsList,
@@ -28,7 +27,7 @@ describe('<SpecRenderer />', () => {
   it('renders operationsList with correct px width via navWidth prop', () => {
     const width = 350
 
-    mount(SpecRenderer, {
+    cy.mount(SpecRenderer, {
       props: {
         navWidth: width + '',
         spec: jsonSpec as any,
@@ -41,7 +40,7 @@ describe('<SpecRenderer />', () => {
   })
 
   it('renders custom styles for swagger-ui for props: essentialsOnly', () => {
-    mount(SpecRenderer, {
+    cy.mount(SpecRenderer, {
       props: {
         essentialsOnly: true,
         spec: jsonSpec as any,
@@ -57,7 +56,7 @@ describe('<SpecRenderer />', () => {
   })
 
   it('handles "active-operation" event', () => {
-    mount(SpecRenderer, {
+    cy.mount(SpecRenderer, {
       props: {
         spec: jsonSpec as any,
         operationsList,
@@ -86,7 +85,7 @@ describe('<SpecRenderer />', () => {
   it('allows slotting operations list empty state content', () => {
     const emptySlotContent = 'No results. Go fish!'
 
-    mount(SpecRenderer, {
+    cy.mount(SpecRenderer, {
       props: {
         spec: jsonSpec as any,
         operationsList,
@@ -108,7 +107,7 @@ describe('<SpecRenderer />', () => {
 
   it('renders error state when missing required props', () => {
     // @ts-ignore - because we are purposely testing the handling of invalid prop values
-    mount(SpecRenderer)
+    cy.mount(SpecRenderer)
 
     cy.getTestId('kong-ui-public-spec-renderer-error').should('be.visible')
   })
@@ -116,7 +115,7 @@ describe('<SpecRenderer />', () => {
   it('allows slotting error state content', () => {
     const errorSlotContent = 'Something went wrong :('
     // @ts-ignore - because we are purposely testing the handling of invalid prop values
-    mount(SpecRenderer, {
+    cy.mount(SpecRenderer, {
       props: {},
       slots: {
         'error-state': h('span', {}, errorSlotContent),

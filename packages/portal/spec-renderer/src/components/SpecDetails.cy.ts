@@ -1,13 +1,12 @@
 // Cypress component test spec file
 
-import { mount } from 'cypress/vue'
 import { OperationListItem } from '../types'
 import { jsonSpec, specOpItem } from '../../fixtures/spec-data'
 import SpecDetails from './SpecDetails.vue'
 
 describe('<SpecDetails />', () => {
   it('renders correctly with props', () => {
-    mount(SpecDetails, {
+    cy.mount(SpecDetails, {
       props: {
         document: jsonSpec as any,
       },
@@ -18,7 +17,7 @@ describe('<SpecDetails />', () => {
   })
 
   it('renders custom styles for swagger-ui for props: hasSidebar', () => {
-    mount(SpecDetails, {
+    cy.mount(SpecDetails, {
       props: {
         document: jsonSpec as any,
         hasSidebar: true,
@@ -31,7 +30,7 @@ describe('<SpecDetails />', () => {
   })
 
   it('renders custom styles for swagger-ui for props: essentialsOnly', () => {
-    mount(SpecDetails, {
+    cy.mount(SpecDetails, {
       props: {
         document: jsonSpec as any,
         essentialsOnly: true,
@@ -44,7 +43,7 @@ describe('<SpecDetails />', () => {
   })
 
   it('renders custom styles for swagger-ui for props: relativeSidebar', () => {
-    mount(SpecDetails, {
+    cy.mount(SpecDetails, {
       props: {
         document: jsonSpec as any,
         hasSidebar: true,
@@ -63,7 +62,7 @@ describe('<SpecDetails />', () => {
   it('emits "active-operation" event', () => {
     const activeOp:OperationListItem = specOpItem
 
-    mount(SpecDetails, {
+    cy.mount(SpecDetails, {
       props: {
         document: jsonSpec as any,
         activeOperation: activeOp,
@@ -75,13 +74,14 @@ describe('<SpecDetails />', () => {
 
     cy.getTestId('kong-public-ui-spec-details-swagger').then(() => {
       // Check for emitted event
+      // @ts-ignore - vueWrapper DOES exist
       cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'active-operation')
     })
   })
 
   it('renders error state when missing required props', () => {
     // @ts-ignore - because we are purposely testing the handling of invalid prop values
-    mount(SpecDetails)
+    cy.mount(SpecDetails)
 
     cy.getTestId('kong-public-ui-spec-details-error').should('be.visible')
   })
