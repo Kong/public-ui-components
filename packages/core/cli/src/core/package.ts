@@ -99,7 +99,7 @@ const createPackageFiles = async (workspace: string, packageName: string): Promi
 
   // Install peerDependencies
   for (const dep of peerDependencies) {
-    await execSync(`pnpm --filter="@kong-ui-public/${packageName}" add --save-peer "${dep}@latest"`, { stdio: 'inherit' })
+    await execSync(`pnpm --filter="@kong-ui-public/${packageName}" add --save-peer "${dep}"`, { stdio: 'inherit' })
   }
 
   spinner.success({ text: 'Added package peerDependencies.' })

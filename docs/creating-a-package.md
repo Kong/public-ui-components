@@ -122,7 +122,7 @@ During our release automation, Lerna will ensure that the version of `@kong-ui-p
 Include loosely bounded (SemVer-wise) peer deps, i.e. `vue` or `vue-router`
 
 ```sh
-pnpm --filter="@kong-ui-public/demo-component" add --save-peer vue@latest
+pnpm --filter="@kong-ui-public/demo-component" add --save-peer vue
 ```
 
 ### `devDependencies`
