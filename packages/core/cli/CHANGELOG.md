@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.3.8...@kong-ui-public/cli@0.3.9) (2023-02-06)
+
+
+### ♻️ Chores
+
+* add kongponents as peer ([803743f](https://github.com/Kong/public-ui-components/commit/803743f7370475ad1172559cb86872a221052a8e))
+
+
+
+
+
 ## [0.3.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.3.7...@kong-ui-public/cli@0.3.8) (2023-02-06)
 
 
