@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.8...@kong-ui-public/document-viewer@0.2.9) (2023-02-07)
+
+
+### ♻️ Chores
+
+* **types:** add cypress/vue ([7a5c61c](https://github.com/Kong/public-ui-components/commit/7a5c61c01b50ec1b5aa42b6954b6656f2d5b7496))
+
+
+
+
+
 ## [0.2.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.7...@kong-ui-public/document-viewer@0.2.8) (2023-02-06)
 
 
