@@ -1,12 +1,12 @@
 export interface MetricsCardDef {
   currentValue: number
-  previousValue: number,
-  increaseIsBad: boolean,
-  formatValueFn?: (rawValue: number) => string,
-  formatChangeFn?: (rawValue: number) => string,
-  title?: string,
-  subtitle?: string,
-  errorMessage?: string,
+  previousValue: number
+  increaseIsBad: boolean
+  formatValueFn?: (rawValue: number) => string
+  formatChangeFn?: (rawValue: number) => string
+  title?: string
+  subtitle?: string
+  errorMessage?: string
   cardSize?: string
 }
 
