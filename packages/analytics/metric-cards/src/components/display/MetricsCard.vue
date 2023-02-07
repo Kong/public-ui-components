@@ -163,12 +163,13 @@ const metricFontSize = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardS
 
 .metrics-card {
   display: flex;
-  flex: 0 0 30%;
   flex-direction: column;
   max-width: 320px;
+  width: 15vw;
+
   @media (max-width: $viewport-sm) {
-    flex: 1 1 100%;
     max-width: none;
+    width: auto;
   }
 
   &:hover {

@@ -2,11 +2,11 @@
 
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import MetricCards from './MetricCards.vue'
+import MetricCardContainer from './MetricCardContainer.vue'
 
-describe('<MetricCards />', () => {
+describe('<MetricCardContainer />', () => {
   it('renders', () => {
-    const wrapper = mount(MetricCards)
+    const wrapper = mount(MetricCardContainer)
 
     expect(wrapper.isVisible()).toBe(true)
   })
