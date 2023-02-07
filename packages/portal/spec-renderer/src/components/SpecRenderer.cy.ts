@@ -29,7 +29,7 @@ describe('<SpecRenderer />', () => {
 
     cy.mount(SpecRenderer, {
       props: {
-        navWidth: width + '',
+        navWidth: String(width),
         spec: jsonSpec as any,
         operationsList,
         tags,
