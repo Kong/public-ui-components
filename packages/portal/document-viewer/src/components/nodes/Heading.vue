@@ -1,5 +1,8 @@
 <template>
-  <component :is="tag">
+  <component
+    :is="tag"
+    :id="slug"
+  >
     <slot />
   </component>
 </template>
@@ -19,8 +22,13 @@ const props = defineProps({
     },
     default: 1,
   },
+  slug: {
+    type: String,
+    default: '',
+  },
 })
 
+const slug = `${props.slug}`
 const tag = `h${props.level}`
 </script>
 
