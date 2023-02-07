@@ -59,7 +59,7 @@ describe('<SpecDetails />', () => {
     cy.getTestId('relative-sidebar-styles').should('exist')
   })
 
-  it('emits "active-operation" event', () => {
+  it('handle "active-operation" onMount', () => {
     const activeOp:OperationListItem = specOpItem
 
     cy.mount(SpecDetails, {
@@ -72,10 +72,7 @@ describe('<SpecDetails />', () => {
     cy.getTestId('kong-public-ui-spec-details-swagger').should('be.visible')
     cy.getTestId('default-styles').should('exist')
 
-    cy.getTestId('kong-public-ui-spec-details-swagger').then(() => {
-      // Check for emitted event
-      cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'active-operation')
-    })
+    cy.get('.kong-public-ui-spec-details.active-op-focused').should('exist')
   })
 
   it('renders error state when missing required props', () => {

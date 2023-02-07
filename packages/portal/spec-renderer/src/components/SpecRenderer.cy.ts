@@ -72,9 +72,13 @@ describe('<SpecRenderer />', () => {
     cy.getTestId('spec-renderer-details-content').should('be.visible')
     cy.getTestId('kong-public-ui-spec-details-swagger').should('be.visible')
     cy.getTestId('default-styles').should('exist')
+    cy.get('.kong-public-ui-spec-details.active-op-focused').should('not.exist')
 
     // click SpecOperationsList item
     cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags?.[1]}`).click()
+
+    // active operation class
+    cy.get('.kong-public-ui-spec-details.active-op-focused').should('exist')
 
     // track URL change to scroll to tag
     cy.on('url:changed', (newUrl) => {

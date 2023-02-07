@@ -6,7 +6,7 @@
       [`item--method-${item.method}`]: true,
       'disabled': disableSelection
     }"
-    :data-testid="`spec-operations-list-item-${item.method.toLowerCase()}${item.path.replaceAll('/', '-')}-${item.tag || '-'}`"
+    :data-testid="testId"
     type="button"
     @click="$emit('click', item)"
   >
@@ -68,6 +68,8 @@ const props = defineProps({
 defineEmits(['click'])
 
 const { i18n } = composables.useI18n()
+
+const testId = computed((): string => `spec-operations-list-item-${props.item.method?.toLowerCase()}${props.item.path?.replaceAll('/', '-')}-${props.item.tag || '-'}`)
 
 const methodName = computed((): string => {
   return props.item.method || ''

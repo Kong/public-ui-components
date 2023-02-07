@@ -1,5 +1,9 @@
 <template>
-  <div class="kong-public-ui-spec-details">
+  <div
+    class="kong-public-ui-spec-details"
+    :class="{ 'active-op-focused': activeOperationFocused }"
+  >
+    <h1>{{ activeOperationFocused }}</h1>
     <kong-swagger-ui
       v-if="hasRequiredProps"
       ref="swaggerRef"
@@ -63,8 +67,6 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['active-operation'])
-
 const { i18n } = composables.useI18n()
 
 const swaggerRef = ref<SwaggerUIElement | null>(null)
@@ -73,15 +75,16 @@ const hasRequiredProps = computed((): boolean => {
   return !!(props.document || props.url)
 })
 
-function showAndScrollToOperation() {
+const activeOperationFocused = ref(false)
+const showAndScrollToOperation = (): void => {
   if (!swaggerRef.value) {
     return
   }
 
   swaggerRef.value.showOperation(props.activeOperation)
   swaggerRef.value.scrollToOperation(props.activeOperation)
-  // required for component testing
-  emit('active-operation')
+
+  activeOperationFocused.value = true
 }
 
 onMounted(() => {
