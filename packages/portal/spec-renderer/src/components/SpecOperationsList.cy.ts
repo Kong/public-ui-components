@@ -4,19 +4,10 @@ import { h } from 'vue'
 import { operationsList, tags, specOp } from '../../fixtures/spec-data'
 import SpecOperationsList from './SpecOperationsList.vue'
 
-/**
- * ALL TESTS MUST USE testMode: true
- * We generate unique IDs for reference by aria properties. Test mode strips these out
- * allowing for successful snapshot verification.
- * props: {
- *   testMode: true
- * }
- */
 describe('<SpecOperationsList />', () => {
   it('renders props when passed', () => {
     cy.mount(SpecOperationsList, {
       props: {
-        testMode: true,
         isFilterable: true,
         operations: operationsList,
         tags,
@@ -49,7 +40,6 @@ describe('<SpecOperationsList />', () => {
 
     cy.mount(SpecOperationsList, {
       props: {
-        testMode: true,
         width: width + '',
         operations: operationsList,
         tags,
@@ -62,7 +52,6 @@ describe('<SpecOperationsList />', () => {
   it('allows disabling selection', () => {
     cy.mount(SpecOperationsList, {
       props: {
-        testMode: true,
         disableSelection: true,
         operations: operationsList,
         tags,
@@ -81,7 +70,6 @@ describe('<SpecOperationsList />', () => {
   it('allows selecting an item', () => {
     cy.mount(SpecOperationsList, {
       props: {
-        testMode: true,
         operations: operationsList,
         tags,
       },
@@ -100,7 +88,6 @@ describe('<SpecOperationsList />', () => {
   it('correctly filters by tag', () => {
     cy.mount(SpecOperationsList, {
       props: {
-        testMode: true,
         operations: operationsList,
         tags,
       },
@@ -117,7 +104,6 @@ describe('<SpecOperationsList />', () => {
   it('renders empty state when filter matches no items', () => {
     cy.mount(SpecOperationsList, {
       props: {
-        testMode: true,
         operations: operationsList,
         tags,
       },
@@ -133,7 +119,6 @@ describe('<SpecOperationsList />', () => {
 
     cy.mount(SpecOperationsList, {
       props: {
-        testMode: true,
         operations: operationsList,
         tags,
       },
@@ -150,7 +135,6 @@ describe('<SpecOperationsList />', () => {
   it('emits "selected" event on item click', () => {
     cy.mount(SpecOperationsList, {
       props: {
-        testMode: true,
         operations: operationsList,
         tags,
       },
@@ -165,11 +149,7 @@ describe('<SpecOperationsList />', () => {
 
   it('renders error state when missing required props', () => {
     // @ts-ignore - because we are purposely testing the handling of invalid prop values
-    cy.mount(SpecOperationsList, {
-      props: {
-        testMode: true,
-      },
-    })
+    cy.mount(SpecOperationsList)
 
     cy.getTestId('kong-ui-public-spec-operations-list-error').should('be.visible')
   })
@@ -178,9 +158,7 @@ describe('<SpecOperationsList />', () => {
     const errorSlotContent = 'Something went wrong :('
     // @ts-ignore - because we are purposely testing the handling of invalid prop values
     cy.mount(SpecOperationsList, {
-      props: {
-        testMode: true,
-      },
+      props: {},
       slots: {
         'error-state': h('span', {}, errorSlotContent),
       },
