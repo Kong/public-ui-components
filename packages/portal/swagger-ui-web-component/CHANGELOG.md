@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.3.0...@kong-ui-public/swagger-ui-web-component@0.4.0) (2023-02-07)
+
+
+### ✨ Features
+
+* **swagger-ui-web-comp:** remove css contains [TDX-2278] ([#117](https://github.com/Kong/public-ui-components/issues/117)) ([deb5498](https://github.com/Kong/public-ui-components/commit/deb5498020fee25218919de9b0e687434c5bfed5))
+
+
+
+
+
 # [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.2.0...@kong-ui-public/swagger-ui-web-component@0.3.0) (2023-02-01)
 
 
