@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.3.9...@kong-ui-public/cli@0.3.10) (2023-02-07)
+
+
+### 🚨 Tests
+
+* update cypress test command ([4d198eb](https://github.com/Kong/public-ui-components/commit/4d198ebba3b85a4e000380743e5e957c8fdda5bb))
+
+
+### ♻️ Chores
+
+* **types:** add cypress/vue ([7a5c61c](https://github.com/Kong/public-ui-components/commit/7a5c61c01b50ec1b5aa42b6954b6656f2d5b7496))
+
+
+
+
+
 ## [0.3.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.3.8...@kong-ui-public/cli@0.3.9) (2023-02-06)
 
 
