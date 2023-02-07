@@ -74,7 +74,6 @@ export class SwaggerUIElement extends HTMLElement {
     super()
 
     this.rootElement = document.createElement('div')
-    this.rootElement.style.contain = 'content'
 
     this.attachShadow({ mode: 'open' })
     this.shadowRoot.appendChild(this.rootElement)
