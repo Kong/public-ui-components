@@ -5,14 +5,25 @@
       class="spec-container"
     >
       <SpecOperationsList
+        data-testid="spec-renderer-ops-list-content"
         :operations="operationsList"
         :tags="tags"
         :width="navWidth"
         @selected="handleSelected"
-      />
+      >
+        <template #empty-state>
+          <div
+            class="spec-renderer-ops-list-empty-state"
+            data-testid="spec-renderer-ops-list-empty-state"
+          >
+            <slot name="ops-list-empty-state" />
+          </div>
+        </template>
+      </SpecOperationsList>
       <SpecDetails
         :active-operation="selectedOperation"
         class="spec-renderer-details"
+        data-testid="spec-renderer-details-content"
         :document="spec"
         :essentials-only="essentialsOnly"
         :has-sidebar="false"
