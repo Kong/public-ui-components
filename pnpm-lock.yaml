@@ -1241,8 +1241,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@kong/kongponents/8.23.0_vue@3.2.47:
-    resolution: {integrity: sha512-YmFvqiBFAAxxceboPeSHkcPX8iCfW5BVJsOOgPuNgxlEUF9idyPWkSqV1OkM/VTHQoAeKtPomAVNPc2xl3ZVGw==}
+  /@kong/kongponents/8.22.4_vue@3.2.47:
+    resolution: {integrity: sha512-rldxrOsdKD7Be/PN+zJykIHv1n3NGEKt41py++j1R5keBFMOIQz7sFjk499tzgzzesSi9gRocTpd5YH19iVzBg==}
     engines: {node: '>=16.19.0'}
     peerDependencies:
       vue: '>= 3.2.37'
@@ -1263,8 +1263,8 @@ packages:
       - debug
     dev: true
 
-  /@kong/kongponents/8.22.4_vue@3.2.47:
-    resolution: {integrity: sha512-rldxrOsdKD7Be/PN+zJykIHv1n3NGEKt41py++j1R5keBFMOIQz7sFjk499tzgzzesSi9gRocTpd5YH19iVzBg==}
+  /@kong/kongponents/8.23.0_vue@3.2.47:
+    resolution: {integrity: sha512-YmFvqiBFAAxxceboPeSHkcPX8iCfW5BVJsOOgPuNgxlEUF9idyPWkSqV1OkM/VTHQoAeKtPomAVNPc2xl3ZVGw==}
     engines: {node: '>=16.19.0'}
     peerDependencies:
       vue: '>= 3.2.37'

@@ -3,14 +3,15 @@
   <!-- We recommend wrapping your component with a unique class when possible, as shown below. -->
   <div class="kong-ui-public-metric-cards">
     <template
-      v-for="(card, i) in cards"
-      :key="i"
+      v-for="(card, index) in cards"
     >
       <MetricCardLoadingSkeleton
         v-if="loading"
+        :key="`skeleton-${index}`"
       />
       <MetricsCard
         v-else
+        :key="index"
         v-bind="formatCardValues(card)"
         :card-size="cardSize"
         :has-error="error"
