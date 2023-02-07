@@ -155,7 +155,7 @@ jobs:
           lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend
 
           npm_instructions=""
-          for pkg in $(pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" publish  --no-git-checks --access restricted --report-summary --tag "${tag}" | grep "+ "| sed 's/+ //')
+          for pkg in $(pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" publish  --no-git-checks --access public --report-summary --tag "${tag}" | grep "+ "| sed 's/+ //')
           do
             pkg="@$(echo ${pkg}|cut -d'@' -f2)@${tag}"
             if [ "${npm_instructions}" != "" ]; then
