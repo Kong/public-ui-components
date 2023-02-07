@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.4.6...@kong-ui-public/spec-renderer@0.4.7) (2023-02-07)
+
+
+### 🚨 Tests
+
+* **spec-renderer:** component tests [khcp-5839] ([#113](https://github.com/Kong/public-ui-components/issues/113)) ([ab07a7c](https://github.com/Kong/public-ui-components/commit/ab07a7c6cfaaea43270a63b5142bf8c6ac752989))
+
+
+
+
+
 ## [0.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.4.5...@kong-ui-public/spec-renderer@0.4.6) (2023-02-07)
 
 
