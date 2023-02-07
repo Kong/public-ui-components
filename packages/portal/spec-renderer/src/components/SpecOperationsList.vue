@@ -165,13 +165,6 @@ const props = defineProps({
     type: String,
     default: '210',
   },
-  /**
-   * Used for component testing
-   */
-  testMode: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const emit = defineEmits(['selected'])
@@ -179,7 +172,7 @@ const emit = defineEmits(['selected'])
 const { i18n } = composables.useI18n()
 
 // Generate unique identifier of this instance for safe HTML element id generation
-const uid = computed<string>(() => props.testMode ? 'test-spec-ops-list-1234' : uuidv1())
+const uid = computed<string>(() => uuidv1())
 
 const filterQuery = ref<string>('')
 const taggedItems = ref<OperationListItem[]>([])

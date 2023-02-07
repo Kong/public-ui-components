@@ -74,7 +74,6 @@ describe('<SpecDetails />', () => {
 
     cy.getTestId('kong-public-ui-spec-details-swagger').then(() => {
       // Check for emitted event
-      // @ts-ignore - vueWrapper DOES exist
       cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'active-operation')
     })
   })

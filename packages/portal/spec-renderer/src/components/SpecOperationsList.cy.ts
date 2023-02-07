@@ -158,7 +158,6 @@ describe('<SpecOperationsList />', () => {
 
     cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags?.[0]}`).click().then(() => {
       // Check for emitted event
-      // @ts-ignore - vueWrapper DOES exist
       cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'selected')
       cy.get('.item--selected').should('have.length', 1)
     })
