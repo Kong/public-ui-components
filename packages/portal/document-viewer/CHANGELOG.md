@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.9...@kong-ui-public/document-viewer@0.2.10) (2023-02-08)
+
+
+### 🐛 Bug Fixes
+
+* **document-viewer:** add spaces between nested text in paragraphs ([#126](https://github.com/Kong/public-ui-components/issues/126)) ([8563178](https://github.com/Kong/public-ui-components/commit/85631782fc1dfbc3218139893549f5e6d88ed378))
+
+
+
+
+
 ## [0.2.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.8...@kong-ui-public/document-viewer@0.2.9) (2023-02-07)
 
 
