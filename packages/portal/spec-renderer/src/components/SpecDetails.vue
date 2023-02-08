@@ -3,7 +3,6 @@
     class="kong-public-ui-spec-details"
     :class="{ 'active-op-focused': activeOperationFocused }"
   >
-    <h1>{{ activeOperationFocused }}</h1>
     <kong-swagger-ui
       v-if="hasRequiredProps"
       ref="swaggerRef"
