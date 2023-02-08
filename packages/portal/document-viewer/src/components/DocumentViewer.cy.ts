@@ -14,4 +14,11 @@ describe('<DocumentViewer />', () => {
     cy.getTestId('document-viewer').should('be.visible')
     cy.getTestId('default-styles').should('exist')
   })
+
+  it('renders error state when missing required props', () => {
+    // @ts-ignore - because we are purposely testing the handling of invalid prop values
+    cy.mount(DocumentViewer)
+
+    cy.getTestId('document-viewer-error').should('be.visible')
+  })
 })
