@@ -5,6 +5,7 @@
  */
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import dns from 'dns'
 import path, { join } from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -26,6 +27,7 @@ const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
 export default defineConfig({
   plugins: [
     vue(),
+    vueJsx(),
   ],
   resolve: {
     // Use this option to force Vite to always resolve listed dependencies to the same copy (from project root)
