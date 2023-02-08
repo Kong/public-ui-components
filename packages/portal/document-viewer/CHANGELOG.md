@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.10...@kong-ui-public/document-viewer@0.2.11) (2023-02-08)
+
+
+### 🚨 Tests
+
+* **document-viewer:** component tests for document-viewer [KHCP-5829] ([#128](https://github.com/Kong/public-ui-components/issues/128)) ([fab70fc](https://github.com/Kong/public-ui-components/commit/fab70fc76cbde6af244d2bd4f33bb1849bcbbbe1))
+
+
+
+
+
 ## [0.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.9...@kong-ui-public/document-viewer@0.2.10) (2023-02-08)
 
 

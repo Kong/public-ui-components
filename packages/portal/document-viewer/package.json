@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/document-viewer",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "type": "module",
   "main": "./dist/document-viewer.umd.js",
   "module": "./dist/document-viewer.es.js",
