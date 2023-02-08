@@ -37,6 +37,10 @@ export interface TextNode extends BaseNode<'text'> {
   appendSpace?: boolean
 }
 
+export function isTextNode(o: any): o is TextNode {
+  return o.type === 'text'
+}
+
 export interface HeadingNode extends BaseNode<'heading'> {
   level: number
 }

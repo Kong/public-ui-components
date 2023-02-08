@@ -1,5 +1,5 @@
 import { Component } from 'vue'
-import { BaseNode } from '../types'
+import { BaseNode, isTextNode } from '../types'
 import Blockquote from './nodes/Blockquote.vue'
 import Code from './nodes/Code.vue'
 import CodeBlock from './nodes/CodeBlock.vue'
@@ -63,12 +63,12 @@ export default function renderChildren<ChildTypes extends BaseNode>(children: Ar
 
     // This is to fix an issue with text blocks that are beside another element
     // not having a space between them
-    if (child?.type === 'paragraph' && child.children) {
+    if (child?.type === 'paragraph' && child?.children) {
       const paragraphChildren = child.children
       const lastItemIndex = paragraphChildren.length - 1
 
       paragraphChildren.forEach((paragraphChild, index) => {
-        if (paragraphChild.type === 'text' && !paragraphChild.text?.endsWith(' ') && index !== lastItemIndex) {
+        if (isTextNode(paragraphChild) && !paragraphChild.text?.endsWith(' ') && index !== lastItemIndex) {
           paragraphChild.appendSpace = true
         }
       })
