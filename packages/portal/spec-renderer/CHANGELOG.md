@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.4.10...@kong-ui-public/spec-renderer@0.4.11) (2023-02-08)
+
+
+### ♻️ Chores
+
+* remove leftover h1 in spec details ([#123](https://github.com/Kong/public-ui-components/issues/123)) ([18104a1](https://github.com/Kong/public-ui-components/commit/18104a12f0f6e822a07dce9acdfd1c453be7f7a8))
+
+
+
+
+
 ## [0.4.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.4.9...@kong-ui-public/spec-renderer@0.4.10) (2023-02-08)
 
 
