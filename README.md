@@ -176,7 +176,7 @@ In consuming application project install preview versions of shared packages gen
 
 ```
 
-install the preview version of the package in consuming application, let that PR be deployed, and see PR preview of consuming application utilizing `@kong-ui/forms` code from your shared-ui-components PR branch.
+Install the preview version of the package in consuming application, let that PR be deployed, and see PR preview of consuming application utilizing `@kong-ui-public/i18n` code from your shared-ui-components PR branch.
 
 _Never merge consuming application code that uses preview version of the package. PR versions will be deprecated and unpublished when your PR is closed._
 
