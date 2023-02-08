@@ -6,7 +6,7 @@
     >
       {{ title }}
     </h5>
-    <div class="type-sm color-grey-500 d-flex">
+    <div class="type-sm color-grey-500">
       {{ subtitle }}
       <KTooltip
         v-if="tooltip"
