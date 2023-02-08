@@ -9,7 +9,7 @@ jobs:
     name: Unpublish or Deprecate NPM previews for PR
     runs-on: ubuntu-latest
     env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v3
@@ -17,9 +17,15 @@ jobs:
       - name: Unpublish
         run: |
           toUnpublish=()
+
+          echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_PUBLISH_TOKEN}}" > .npmrc
+
+          prNumber="${{github.event.number}}"
+
           for pkgName in $(lerna ls --l --json|jq -r '.[].name')
           do
-            prNumber="${{github.event.number}}"
+            npm dist-tag rm "${pkgName}" "pr-${prNumber}" || true
+
             for pkgVersion in $(npm view ${pkgName} --json|jq -r .versions|grep "\-pr.${prNumber}."|sed 's/,//'| sed 's/\"//g')
             do
               toUnpublish+=("${pkgName}@${pkgVersion}")
