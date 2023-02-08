@@ -61,6 +61,19 @@ export default function renderChildren<ChildTypes extends BaseNode>(children: Ar
       return null
     }
 
+    // This is to fix an issue with text blocks that are beside another element
+    // not having a space between them
+    if (child?.type === 'paragraph' && child.children) {
+      const paragraphChildren = child.children
+      const lastItemIndex = paragraphChildren.length - 1
+
+      paragraphChildren.forEach((paragraphChild, index) => {
+        if (paragraphChild.type === 'text' && !paragraphChild.text?.endsWith(' ') && index !== lastItemIndex) {
+          paragraphChild.appendSpace = true
+        }
+      })
+    }
+
     return (
       <component {...restProps} parent={parent}>
         {() => children && renderChildren(children, child)}

@@ -34,7 +34,7 @@ export interface TableRowNode extends BaseNode<'table_row'> {
 export interface TextNode extends BaseNode<'text'> {
   text: string
   children: undefined
-  hardBreak?: boolean
+  appendSpace?: boolean
 }
 
 export interface HeadingNode extends BaseNode<'heading'> {

@@ -1,5 +1,5 @@
 <template>
-  {{ text }}<br v-if="hardBreak">
+  {{ text }}<span v-if="appendSpace">&nbsp;</span>
 </template>
 
 <script lang="ts">
@@ -13,7 +13,7 @@ defineProps({
     type: String,
     required: true,
   },
-  hardBreak: {
+  appendSpace: {
     type: Boolean,
     default: false,
   },
