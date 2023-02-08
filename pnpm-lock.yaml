@@ -178,8 +178,11 @@ importers:
 
   packages/portal/document-viewer:
     specifiers:
+      '@kong-ui-public/i18n': workspace:^0.2.8
       '@vitejs/plugin-vue-jsx': ^3.0.0
       vue: ^3.2.47
+    dependencies:
+      '@kong-ui-public/i18n': link:../../core/i18n
     devDependencies:
       '@vitejs/plugin-vue-jsx': 3.0.0_vue@3.2.47
       vue: 3.2.47
