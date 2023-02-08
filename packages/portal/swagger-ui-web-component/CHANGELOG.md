@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.4.0...@kong-ui-public/swagger-ui-web-component@0.4.1) (2023-02-08)
+
+
+### ♻️ Chores
+
+* bump swagger-ui-kong-theme-universal ([#121](https://github.com/Kong/public-ui-components/issues/121)) ([04ae21f](https://github.com/Kong/public-ui-components/commit/04ae21fffac9dac6891f93aa81149afffc136fc0))
+
+
+
+
+
 # [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.3.0...@kong-ui-public/swagger-ui-web-component@0.4.0) (2023-02-07)
 
 
