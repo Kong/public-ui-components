@@ -91,7 +91,7 @@ function formatCardValues(card: MetricsCardDef) {
   background-color: #fff;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 100%;
   @include flex-gap();
 

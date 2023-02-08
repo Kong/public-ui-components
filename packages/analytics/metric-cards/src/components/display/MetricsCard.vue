@@ -165,7 +165,7 @@ const metricFontSize = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardS
   display: flex;
   flex-direction: column;
   max-width: 320px;
-  width: 15vw;
+  min-width: 20vw;
 
   @media (max-width: $viewport-sm) {
     max-width: none;
