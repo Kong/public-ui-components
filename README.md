@@ -164,7 +164,7 @@ Additionally, CI will use `commitlint` to validate the commits associated with a
 
 You are working on the PR and changing component project. Let's say `@kong-ui/forms`. You want to try to deploy consuming application (`khcp-ui` for example) that uses your changed code without merging your changes to main and publishing new version of @kong-ui/forms. Here are the steps:
 
-1. Look at your PR where your changes for @kong-ui/forms. Every time PR is getting built, NPM  preview of package is getting deployed, and there is an updated PR comment created:
+1. Look at your PR where your changes for `@kong-ui-public/i18n`. Every time PR is getting built, NPM  preview of package is getting deployed, and there is an updated PR comment created:
 
 ```text
 Preview components from this PR in consuming application
