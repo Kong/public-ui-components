@@ -16,7 +16,7 @@
         :card-size="cardSize"
         :has-error="error"
         :subtitle="card.subtitle"
-        :title="hideTitle? '' : card.title"
+        :title="card.title"
       />
     </template>
   </div>
@@ -54,11 +54,6 @@ const props = defineProps({
     required: false,
     default: true,
   },
-  hideTitle: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
   cardSize: {
     type: String as PropType<MetricCardSize>,
     required: false,
@@ -88,12 +83,12 @@ function formatCardValues(card: MetricsCardDef) {
 @import "../styles/base";
 
 .kong-ui-public-metric-cards {
-  background-color: #fff;
+  background-color: transparent;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  @include flex-gap();
+  @include flex-gap(24px, 16px);
 
   @media (max-width: $viewport-sm) {
     flex-direction: column;

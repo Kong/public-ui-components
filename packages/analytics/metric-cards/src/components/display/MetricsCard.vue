@@ -1,11 +1,11 @@
 <template>
   <div class="metrics-card">
-    <h5
+    <div
       v-if="(title && cardDisplayFull)"
-      class="color-grey-600"
+      class="metrics-card-title color-grey-600"
     >
       {{ title }}
-    </h5>
+    </div>
     <div class="type-sm color-grey-500">
       {{ subtitle }}
       <KTooltip
@@ -138,6 +138,9 @@ const textColorClass = (polarity: number): string => {
 
 const cardDisplayFull = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardSize.ExtraLarge].includes(props.cardSize)
 
+console.log(' >>title', props)
+console.log(cardDisplayFull)
+
 const metricFontSize = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardSize.ExtraLarge].includes(props.cardSize)
   ? 'type-xl'
   : 'type-md'
@@ -165,7 +168,7 @@ const metricFontSize = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardS
   display: flex;
   flex-direction: column;
   max-width: 320px;
-  min-width: 20vw;
+  width: 100%;
 
   @media (max-width: $viewport-sm) {
     max-width: none;
@@ -178,8 +181,10 @@ const metricFontSize = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardS
   }
 
   &-title {
-    color: var(--grey-500, '#6f7787');
-    font-size: 12px;
+    color: var(--grey-500, #3c4557);
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
   }
 
   &-tooltip {
@@ -197,7 +202,7 @@ const metricFontSize = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardS
     flex-direction: row;
     font-weight: 500;
     justify-content: space-between;
-    margin: 12px 0 0 0;
+    margin: 10px 0 0 0;
 
     .trend {
       display: flex;

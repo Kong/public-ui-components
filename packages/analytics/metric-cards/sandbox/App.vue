@@ -1,10 +1,12 @@
 <template>
   <div class="sandbox-container">
     <main>
-      <MetricCardContainer
-        v-bind="metricCardOptions"
-        hide-title
-      />
+      <div class="generic-card">
+        <MetricCardContainer
+          v-bind="metricCardOptions"
+          hide-title
+        />
+      </div>
     </main>
   </div>
 </template>
@@ -38,6 +40,14 @@ const metricCardOptions = {
       increaseIsBad: true,
       cardSize: 'lg',
     },
+    {
+      currentValue: 4,
+      previousValue: 4,
+      title: 'Runtimes',
+      subtitle: 'Runtime Groups',
+      increaseIsBad: true,
+      cardSize: 'lg',
+    },
   ],
   loading: false,
   hasTrendAccess: true,
@@ -57,5 +67,12 @@ html {
 
 main {
   display: flex;
+
+  .generic-card {
+    background-color: white;
+    display: flex;
+    padding: 1rem;
+    width: 100%;
+  }
 }
 </style>
