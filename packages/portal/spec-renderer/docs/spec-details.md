@@ -38,7 +38,7 @@ URL of the specification file. Required if `document` property is not set.
 
 - type: `Boolean`
 - required: `false`
-- default: `true`
+- default: `false`
 
 Whether or not the SwaggerUI navigation sidebar is enabled.
 

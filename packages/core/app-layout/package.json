@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/app-layout",
-  "version": "0.12.12",
+  "version": "0.12.14",
   "type": "module",
   "main": "./dist/app-layout.umd.js",
   "module": "./dist/app-layout.es.js",
@@ -38,7 +38,7 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^8.23.0",
+    "@kong/kongponents": "^8.24.0",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },
@@ -48,7 +48,7 @@
     "lodash.clonedeep": "^4.5.0"
   },
   "devDependencies": {
-    "@kong/kongponents": "^8.23.0",
+    "@kong/kongponents": "^8.24.0",
     "@types/lodash.clonedeep": "^4.5.7",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"

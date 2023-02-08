@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.4.1...@kong-ui-public/swagger-ui-web-component@0.4.2) (2023-02-08)
+
+
+### 🐛 Bug Fixes
+
+* **deps:** update dependency [@kong](https://github.com/kong)/swagger-ui-kong-theme-universal to ^4.0.7 ([#125](https://github.com/Kong/public-ui-components/issues/125)) ([3e65266](https://github.com/Kong/public-ui-components/commit/3e6526612abd89ef10f290e2c43edb764782e9b9))
+
+
+
+
+
+## [0.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.4.0...@kong-ui-public/swagger-ui-web-component@0.4.1) (2023-02-08)
+
+
+### ♻️ Chores
+
+* bump swagger-ui-kong-theme-universal ([#121](https://github.com/Kong/public-ui-components/issues/121)) ([04ae21f](https://github.com/Kong/public-ui-components/commit/04ae21fffac9dac6891f93aa81149afffc136fc0))
+
+
+
+
+
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.3.0...@kong-ui-public/swagger-ui-web-component@0.4.0) (2023-02-07)
+
+
+### ✨ Features
+
+* **swagger-ui-web-comp:** remove css contains [TDX-2278] ([#117](https://github.com/Kong/public-ui-components/issues/117)) ([deb5498](https://github.com/Kong/public-ui-components/commit/deb5498020fee25218919de9b0e687434c5bfed5))
+
+
+
+
+
 # [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.2.0...@kong-ui-public/swagger-ui-web-component@0.3.0) (2023-02-01)
 
 

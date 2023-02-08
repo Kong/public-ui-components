@@ -1,12 +1,12 @@
 <template>
   <button
-    class="item"
+    class="spec-operations-list-item"
     :class="{
       'item--selected': isSelected,
       [`item--method-${item.method}`]: true,
       'disabled': disableSelection
     }"
-    :data-testid="`spec-operations-list-item-${item.path}`"
+    :data-testid="testId"
     type="button"
     @click="$emit('click', item)"
   >
@@ -69,13 +69,15 @@ defineEmits(['click'])
 
 const { i18n } = composables.useI18n()
 
+const testId = computed((): string => `spec-operations-list-item-${props.item.method?.toLowerCase()}${props.item.path?.replaceAll('/', '-')}-${props.item.tag || '-'}`)
+
 const methodName = computed((): string => {
   return props.item.method || ''
 })
 </script>
 
 <style lang="scss" scoped>
-.item {
+.spec-operations-list-item {
   appearance: none;
   background: transparent;
   border: 1px solid var(--kong-ui-spec-renderer-operations-list-item-border-color, var(--grey-200, #f1f1f5));
