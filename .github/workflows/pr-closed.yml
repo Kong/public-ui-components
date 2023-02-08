@@ -3,7 +3,9 @@ on:
   pull_request_target:
     types:
       - closed
-
+  push:
+    branches:
+      - chore/npm-publish-demo
 jobs:
   unpublish:
     name: Unpublish or Deprecate NPM previews for PR
@@ -20,7 +22,8 @@ jobs:
 
           echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_PUBLISH_TOKEN}}" > .npmrc
 
-          prNumber="${{github.event.number}}"
+          #prNumber="${{github.event.number}}"
+          prNumber="120"
 
           for pkgName in $(lerna ls --l --json|jq -r '.[].name')
           do
