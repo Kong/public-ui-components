@@ -2830,7 +2830,7 @@ packages:
       '@babel/core': 7.20.12
       '@babel/plugin-transform-typescript': 7.20.13_@babel+core@7.20.12
       '@vue/babel-plugin-jsx': 1.1.1_@babel+core@7.20.12
-      vite: 4.1.1_w4o4wsgkler5i3zieyqxrswv2u
+      vite: 4.1.1_gyrp4zacqcjjrmgvdzgac5epyy
       vue: 3.2.47
     transitivePeerDependencies:
       - supports-color
