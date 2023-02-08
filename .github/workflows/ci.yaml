@@ -168,7 +168,7 @@ jobs:
           echo -e "$npm_instructions" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
       - name: Provide preview link info
         uses: marocchino/sticky-pull-request-comment@v2
