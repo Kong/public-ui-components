@@ -1,5 +1,8 @@
 <template>
-  <div class="document-viewer">
+  <div
+    class="document-viewer"
+    data-testid="document-viewer"
+  >
     <Children v-if="hasRequiredProps" />
     <div
       v-else
