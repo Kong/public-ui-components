@@ -62,7 +62,7 @@ const props = defineProps({
   cardSize: {
     type: String as PropType<MetricCardSize>,
     required: false,
-    default: () => 'lg',
+    default: () => MetricCardSize.Large,
   },
 })
 

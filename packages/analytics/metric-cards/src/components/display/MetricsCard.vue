@@ -35,7 +35,7 @@
       class="metrics-card-value"
       :class="metricFontSize"
     >
-      <div class="mr-7">
+      <div>
         {{ metricValue }}
       </div>
       <div
