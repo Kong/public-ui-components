@@ -22,5 +22,16 @@
   "timezone": "America/New_York",
   "automergeSchedule": [
     "every weekday"
+  ],
+  "stabilityDays": 14,
+  "packageRules": [
+    {
+      "matchPackagePatterns": [
+        "^@kong\/",
+        "^@kong-ui\/",
+        "^@kong-ui-public\/"
+      ],
+      "stabilityDays": 0
+    }
   ]
 }
