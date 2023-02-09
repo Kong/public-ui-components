@@ -34,7 +34,11 @@ export interface TableRowNode extends BaseNode<'table_row'> {
 export interface TextNode extends BaseNode<'text'> {
   text: string
   children: undefined
-  hardBreak?: boolean
+  appendSpace?: boolean
+}
+
+export function isTextNode(o: any): o is TextNode {
+  return o.type === 'text'
 }
 
 export interface HeadingNode extends BaseNode<'heading'> {

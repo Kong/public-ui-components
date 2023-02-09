@@ -24,15 +24,16 @@
     "@commitlint/config-conventional": "^17.4.2",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.0",
     "@evilmartians/lefthook": "^1.2.8",
-    "@kong/kongponents": "^8.24.0",
+    "@kong/kongponents": "^8.24.1",
     "@rushstack/eslint-patch": "^1.2.0",
     "@types/flat": "^5.0.2",
     "@types/js-yaml": "^4.0.5",
     "@types/jsdom": "^20.0.1",
-    "@types/node": "^18.11.19",
+    "@types/node": "^18.13.0",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "@vitejs/plugin-vue": "^4.0.0",
+    "@vitejs/plugin-vue-jsx": "^3.0.0",
     "@vitest/ui": "^0.28.4",
     "@vue/eslint-config-standard": "^8.0.1",
     "@vue/eslint-config-typescript": "^11.0.2",
@@ -95,9 +96,9 @@
     }
   },
   "engines": {
-    "node": ">=v18.13.0"
+    "node": ">=v18.14.0"
   },
   "volta": {
-    "node": "18.13.0"
+    "node": "18.14.0"
   }
 }

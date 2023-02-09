@@ -1,11 +1,23 @@
 <template>
-  <div class="document-viewer">
-    <Children />
+  <div
+    class="document-viewer"
+    data-testid="document-viewer"
+  >
+    <Children v-if="hasRequiredProps" />
+    <div
+      v-else
+      data-testid="document-viewer-error"
+    >
+      {{ i18n.t('docViewer.error') }}
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import renderChildren from './renderChildren'
+import { computed } from 'vue'
+import composables from '../composables'
+import { addUniqueHeadingSlugs } from '../utils/addUniqueHeadingSlugs'
 
 const props = defineProps({
   document: {
@@ -14,7 +26,14 @@ const props = defineProps({
   },
 })
 
-const Children = () => props.document?.children ? renderChildren(props.document.children) : null
+const { i18n } = composables.useI18n()
+
+const hasRequiredProps = computed((): boolean => {
+  return !!props.document
+})
+
+const children = addUniqueHeadingSlugs(props.document?.children)
+const Children = () => props.document?.children ? renderChildren(children) : null
 </script>
 
 <style>
