@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.11...@kong-ui-public/document-viewer@0.3.0) (2023-02-09)
+
+
+### ✨ Features
+
+* **portal:** add id to headings [TDX-2849] ([#119](https://github.com/Kong/public-ui-components/issues/119)) ([9b49b51](https://github.com/Kong/public-ui-components/commit/9b49b51752f0f3e83379752856e6d7c549944266))
+
+
+
+
+
 ## [0.2.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.10...@kong-ui-public/document-viewer@0.2.11) (2023-02-08)
 
 
