@@ -273,8 +273,6 @@ watch(() => props.deselect, () => {
     selectedItem.value = undefined
   }
 })
-
-
 watch(() => props.operations, () => generateTaggedItems())
 
 watch(filterQuery, () => filterItems())
