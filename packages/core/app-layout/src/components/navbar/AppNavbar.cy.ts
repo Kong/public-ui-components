@@ -35,7 +35,7 @@ describe('<AppNavbar />', () => {
             props: {
               topOffset,
               leftOffset,
-              zIndex
+              zIndex,
             },
           })
 
@@ -50,11 +50,11 @@ describe('<AppNavbar />', () => {
           cy.mount(AppNavbar, {
             slots: {
               default: [
-                '<span data-testid="navbar-default-slot-content">Content</span>'
+                '<span data-testid="navbar-default-slot-content">Content</span>',
               ],
             },
           })
-          
+
           cy.get('[data-testid="navbar-default-slot-content"]').should('be.visible')
         })
       })
@@ -70,11 +70,11 @@ describe('<AppNavbar />', () => {
       cy.mount(AppNavbar, {
         slots: {
           'mobile-logo': [
-            '<span data-testid="navbar-mobile-logo-slot-content">Mobile logo</span>'
+            '<span data-testid="navbar-mobile-logo-slot-content">Mobile logo</span>',
           ],
         },
       })
-          
+
       cy.get('[data-testid="navbar-mobile-logo-slot-content"]').should('be.visible')
 
       // Resize (downsize) the window viewport
@@ -87,11 +87,11 @@ describe('<AppNavbar />', () => {
       cy.mount(AppNavbar, {
         slots: {
           'mobile-sidebar-toggle': [
-            '<span data-testid="navbar-mobile-sidebar-toggle-slot-content">Toggle</span>'
+            '<span data-testid="navbar-mobile-sidebar-toggle-slot-content">Toggle</span>',
           ],
         },
       })
-          
+
       cy.get('[data-testid="navbar-mobile-sidebar-toggle-slot-content"]').should('be.visible')
 
       // Resize (downsize) the window viewport
