@@ -3,3 +3,5 @@
 
 // Example:
 // export * from './component-types'
+
+export {}
