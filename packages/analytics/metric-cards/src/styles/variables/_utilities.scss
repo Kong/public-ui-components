@@ -1,32 +1,12 @@
 // Typography
-.type-xl {
-  font-size: 22px;
-}
-.type-lg {
-  font-size: 18px;
-}
-
-.type-md {
-  font-size: 16px;
-}
-
-.type-sm {
-  font-size: 14px
-}
-
-.type-xs {
-  font-size: 12px;
-}
+$font-size-xl: 22px;
+$font-size-lg: 18px;
+$font-size-md: 16px;
+$font-size-sm: 14px;
+$font-size-xs: 12px;
 
 // Colors
-.color-green-500 {
-  color: var(--green-500, #07a88d);
-}
-
-.color-red-500 {
-  color: var(--red-500, #d44324);
-}
-
-.color-grey-500 {
-  color: var(--grey-500, #6f7787);
-}
+$metric-color-grey: var(--grey-500, #6f7787);
+$metric-color-grey-dark: var(--grey-600, #3c4557);
+$metric-color-green: var(--green-500, #07a88d);
+$metric-color-red: var(--red-500, #d44324);

@@ -13,6 +13,7 @@
 
 <script setup lang="ts">
 import { MetricCardContainer } from '../src'
+import { DECIMAL_DISPLAY } from '../src/utilities'
 
 const metricCardOptions = {
   cards: [
@@ -27,6 +28,7 @@ const metricCardOptions = {
     {
       currentValue: 31.076361502825918,
       previousValue: 30.59477013885772,
+      formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
       title: 'Errors',
       subtitle: 'Average Error Rate',
       increaseIsBad: true,
@@ -35,6 +37,7 @@ const metricCardOptions = {
     {
       currentValue: 335,
       previousValue: 511,
+      formatValueFn: val => `${val}ms`,
       title: 'Latency',
       subtitle: 'P99 Latency',
       increaseIsBad: true,

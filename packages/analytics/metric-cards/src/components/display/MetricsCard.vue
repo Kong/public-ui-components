@@ -2,11 +2,11 @@
   <div class="metrics-card">
     <div
       v-if="(title && cardDisplayFull)"
-      class="metrics-card-title color-grey-600"
+      class="metrics-card-title"
     >
       {{ title }}
     </div>
-    <div class="type-sm color-grey-500">
+    <div class="metrics-card-subtitle">
       {{ subtitle }}
       <KTooltip
         v-if="tooltip"
@@ -33,15 +33,14 @@
     <div
       v-else
       class="metrics-card-value"
-      :class="metricFontSize"
     >
-      <div>
+      <div :style="`font-size:${metricFontSize}`">
         {{ metricValue }}
       </div>
       <div
         v-if="cardDisplayFull"
-        class="trend type-sm"
-        :class="textColorClass(changePolarity)"
+        class="trend"
+        :style="`color: ${textColor(changePolarity)}`"
       >
         <KIcon
           v-if="changePolarity !== 0"
@@ -128,30 +127,23 @@ const colorAttribute = (polarity: number): string => {
       : trendColor.grey
 }
 
-const textColorClass = (polarity: number): string => {
+const textColor = (polarity: number): string => {
   return polarity > 0
-    ? 'color-green-500'
+    ? trendColor.green
     : polarity < 0
-      ? 'color-red-500'
-      : 'color-grey-600'
+      ? trendColor.red
+      : trendColor.grey
 }
 
 const cardDisplayFull = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardSize.ExtraLarge].includes(props.cardSize)
-
-console.log(' >>title', props)
-console.log(cardDisplayFull)
-
-const metricFontSize = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardSize.ExtraLarge].includes(props.cardSize)
-  ? 'type-xl'
-  : 'type-md'
+const metricFontSize = cardDisplayFull ? '22px' : '16px'
 
 </script>
 
 <style lang="scss">
 @import "../../styles/base";
 
-// If card is used inside a TabPanel, only the currently active tab
-// should trigger tooltip hover
+// If card is used inside a TabPanel, only the active tab should trigger tooltip hover
 .traffic-card {
   &.active {
     .metrics-card-tooltip {
@@ -181,10 +173,15 @@ const metricFontSize = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardS
   }
 
   &-title {
-    color: var(--grey-500, #3c4557);
-    font-size: 20px;
-    font-weight: 600;
+    color: $metric-color-grey-dark;
+    font-size: $font-size-lg;
+    font-weight: 500;
     margin-bottom: 10px;
+  }
+
+  &-subtitle {
+    font-size: $font-size-sm;
+    color: $metric-color-grey;
   }
 
   &-tooltip {
@@ -198,6 +195,7 @@ const metricFontSize = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardS
   }
 
   &-value {
+    align-items: end;
     display: flex;
     flex-direction: row;
     font-weight: 500;
@@ -207,18 +205,9 @@ const metricFontSize = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardS
     .trend {
       display: flex;
       flex-direction: row;
-      margin: 6px 0 0 48px;
+      font-size: $font-size-sm;
+      margin: 2px 0 0 24px;
     }
-  }
-
-  &-change {
-    height: 24px;
-    line-height: 24px;
-  }
-
-  .metrics-card-subvalue {
-    color: var(--grey-500);
-    font-size: var(--type-xs);
   }
 }
 </style>

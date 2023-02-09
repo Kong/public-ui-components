@@ -26,7 +26,7 @@
 import { PropType } from 'vue'
 import approxNum from 'approximate-number'
 import { MetricCardSize, MetricsCardDef } from '../types'
-import { changePolarity, metricChange, defineIcon } from './cardUtils'
+import { changePolarity, metricChange, defineIcon } from '../utilities'
 import MetricsCard from './display/MetricsCard.vue'
 import MetricCardLoadingSkeleton from './display/MetricCardLoadingSkeleton.vue'
 
@@ -65,7 +65,7 @@ const calculateDelta = (curr: number, prev: number) => {
   return curr / prev - 1
 }
 
-function formatCardValues(card: MetricsCardDef) {
+const formatCardValues = (card: MetricsCardDef) => {
   const change = calculateDelta(card.currentValue, card.previousValue) || 0
   const polarity = changePolarity(change, props.hasTrendAccess, card.increaseIsBad)
 

@@ -1,7 +1,7 @@
 // Cypress component test spec file
 
 import MetricCardContainer from './MetricCardContainer.vue'
-// import { mount } from 'cypress/vue'
+import { DECIMAL_DISPLAY } from '../utilities'
 
 const cards = [
   {
@@ -15,6 +15,7 @@ const cards = [
   {
     currentValue: 31.076361502825918,
     previousValue: 30.59477013885772,
+    formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
     title: 'Errors',
     subtitle: 'Average Error Rate',
     increaseIsBad: true,
@@ -23,6 +24,7 @@ const cards = [
   {
     currentValue: 335,
     previousValue: 511,
+    formatValueFn: val => `${val}ms`,
     title: 'Latency',
     subtitle: 'P99 Latency',
     increaseIsBad: true,

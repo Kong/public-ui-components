@@ -1,4 +1,4 @@
-const DECIMAL_DISPLAY = 2
+export const DECIMAL_DISPLAY = 2
 
 /**
  * Beneficial increase (eg: Traffic) is considered good.
