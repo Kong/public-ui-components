@@ -270,8 +270,13 @@ const generateTaggedItems = (): void => {
 
 watch(() => props.deselect, () => {
   if (props.deselect) {
+    console.log('deselect changed, setting undefined')
     selectedItem.value = undefined
   }
+})
+
+watch(() => selectedItem.value, () => {
+  console.log('selectedItem changed, new state: ', JSON.stringify(selectedItem.value))
 })
 
 watch(() => props.operations, () => generateTaggedItems())

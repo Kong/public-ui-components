@@ -67,6 +67,31 @@ describe('<SpecOperationsList />', () => {
     cy.get('.item--selected').should('not.exist')
   })
 
+  // this test should behave the same as the one above
+  // because we cannot change props after mounting
+  it('resets selection when passed deselect property', () => {
+    cy.mount(SpecOperationsList, {
+      props: {
+        operations: operationsList,
+        tags,
+        deselect: false,
+      },
+    }).then(({ wrapper }) => {
+      // select an item
+      cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags?.[0]}`).click()
+      cy.get('.item--selected').should('have.length', 1).then(() => {
+        // deselect
+        wrapper.setProps({ deselect: true, operations: operationsList, tags }).then(() => {
+          // verify no items selected
+          cy.get('.item--selected').should('not.exist')
+        })
+
+      })
+
+    })
+
+  })
+
   it('allows selecting an item', () => {
     cy.mount(SpecOperationsList, {
       props: {
