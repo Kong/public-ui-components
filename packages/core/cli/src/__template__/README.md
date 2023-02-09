@@ -6,6 +6,7 @@
 - [Requirements](#requirements)
 - [Usage](#usage)
   - [Install](#install)
+  - [Props](#props)
 
 ## Features
 
@@ -20,3 +21,11 @@
 ### Install
 
 {Installation instructions}
+
+### Props
+
+#### `example`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`

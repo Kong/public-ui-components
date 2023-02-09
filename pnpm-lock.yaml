@@ -178,6 +178,14 @@ importers:
       flat: 5.0.2
       intl-messageformat: 10.3.0
 
+  packages/core/misc-widgets:
+    specifiers:
+      '@kong/kongponents': ^8.24.1
+      vue: ^3.2.47
+    devDependencies:
+      '@kong/kongponents': 8.24.1_vue@3.2.47
+      vue: 3.2.47
+
   packages/portal/document-viewer:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.2.8
