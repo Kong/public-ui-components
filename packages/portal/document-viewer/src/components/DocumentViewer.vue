@@ -17,6 +17,7 @@
 import renderChildren from './renderChildren'
 import { computed } from 'vue'
 import composables from '../composables'
+import { addUniqueHeadingSlugs } from '../utils/addUniqueHeadingSlugs'
 
 const props = defineProps({
   document: {
@@ -31,7 +32,8 @@ const hasRequiredProps = computed((): boolean => {
   return !!props.document
 })
 
-const Children = () => props.document?.children ? renderChildren(props.document.children) : null
+const children = addUniqueHeadingSlugs(props.document?.children)
+const Children = () => props.document?.children ? renderChildren(children) : null
 </script>
 
 <style>
