@@ -14,8 +14,8 @@
         :key="index"
         v-bind="formatCardValues(card)"
         :card-size="cardSize"
-        :has-error="error"
-        :subtitle="card.subtitle"
+        :error-message="card.errorMessage"
+        :has-error="card.hasError"
         :title="card.title"
       />
     </template>
@@ -38,11 +38,6 @@ const props = defineProps({
   cards: {
     type: Array as PropType<MetricsCardDef[]>,
     required: true,
-  },
-  error: {
-    type: Boolean,
-    required: false,
-    default: false,
   },
   loading: {
     type: Boolean,

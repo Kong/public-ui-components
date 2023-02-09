@@ -5,14 +5,13 @@ export interface MetricsCardDef {
   formatValueFn?: (rawValue: number) => string
   formatChangeFn?: (rawValue: number) => string
   title?: string
-  subtitle?: string
+  hasError?: boolean
   errorMessage?: string
   cardSize?: string
 }
 
 export interface Metrics {
   title: string
-  subtitle: string
   tooltip: string
   timeframe: string
   metricValue: string

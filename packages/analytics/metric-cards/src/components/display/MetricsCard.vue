@@ -1,13 +1,7 @@
 <template>
   <div class="metrics-card">
-    <div
-      v-if="(title && cardDisplayFull)"
-      class="metrics-card-title"
-    >
+    <div class="metrics-card-title">
       {{ title }}
-    </div>
-    <div class="metrics-card-subtitle">
-      {{ subtitle }}
       <KTooltip
         v-if="tooltip"
         class="metrics-card-tooltip"
@@ -64,11 +58,6 @@ import { MetricCardSize } from '../../types'
 const props = defineProps({
   title: {
     type: String,
-    required: false,
-    default: undefined,
-  },
-  subtitle: {
-    type: String,
     default: '0%',
     required: true,
   },
@@ -112,7 +101,11 @@ const props = defineProps({
     default: () => 'lg',
   },
 })
+console.log('----------------')
 
+console.log(props.hasError)
+console.log(props.errorMessage)
+console.log('..................')
 const trendColor = {
   red: '#d44324',
   green: '#07a88d',
@@ -143,10 +136,16 @@ const metricFontSize = cardDisplayFull ? '22px' : '16px'
 <style lang="scss">
 @import "../../styles/base";
 
+.metrics-card-tooltip {
+  border: 2px solid red !important;
+  @include pointer-events-all;
+}
+
 // If card is used inside a TabPanel, only the active tab should trigger tooltip hover
 .traffic-card {
   &.active {
     .metrics-card-tooltip {
+      border: 2px solid red;
       @include pointer-events-all;
     }
   }
@@ -173,13 +172,6 @@ const metricFontSize = cardDisplayFull ? '22px' : '16px'
   }
 
   &-title {
-    color: $metric-color-grey-dark;
-    font-size: $font-size-lg;
-    font-weight: 500;
-    margin-bottom: 10px;
-  }
-
-  &-subtitle {
     color: $metric-color-grey;
     font-size: $font-size-sm;
   }
