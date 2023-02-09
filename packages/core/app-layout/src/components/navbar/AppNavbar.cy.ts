@@ -62,8 +62,6 @@ describe('<AppNavbar />', () => {
   })
 
   describe('small screen only', {
-    // Enforce the viewport size
-    // @ts-ignore
     viewportHeight: viewports.tablet.height, viewportWidth: viewports.tablet.width,
   }, () => {
     it('should render content passed in through the mobile-logo slot', () => {
