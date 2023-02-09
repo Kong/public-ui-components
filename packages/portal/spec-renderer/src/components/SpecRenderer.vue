@@ -6,6 +6,7 @@
     >
       <SpecOperationsList
         data-testid="spec-renderer-ops-list-content"
+        :deselect="deselect"
         :operations="operationsList"
         :tags="tags"
         :width="navWidth"
@@ -69,6 +70,10 @@ const props = defineProps({
   navWidth: {
     type: String,
     default: '310',
+  },
+  deselect: {
+    type: Boolean,
+    default: false,
   },
 })
 

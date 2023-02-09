@@ -157,6 +157,10 @@ const props = defineProps({
     }) as OperationListFilterFunction,
     validator: (maybeFunc) => !!maybeFunc && typeof maybeFunc === 'function',
   },
+  deselect: {
+    type: Boolean,
+    default: false,
+  },
   disableSelection: {
     type: Boolean,
     default: false,
@@ -263,6 +267,12 @@ const generateTaggedItems = (): void => {
   // Initial filtering to populate filteredItems
   filterItems()
 }
+
+watch(() => props.deselect, () => {
+  if (props.deselect) {
+    selectedItem.value = undefined
+  }
+})
 
 watch(() => props.operations, () => generateTaggedItems())
 
