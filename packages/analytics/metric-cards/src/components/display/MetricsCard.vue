@@ -180,8 +180,8 @@ const metricFontSize = cardDisplayFull ? '22px' : '16px'
   }
 
   &-subtitle {
-    font-size: $font-size-sm;
     color: $metric-color-grey;
+    font-size: $font-size-sm;
   }
 
   &-tooltip {
