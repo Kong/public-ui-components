@@ -24,7 +24,7 @@
     "@commitlint/config-conventional": "^17.4.2",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.0",
     "@evilmartians/lefthook": "^1.2.8",
-    "@kong/kongponents": "^8.24.0",
+    "@kong/kongponents": "^8.24.1",
     "@rushstack/eslint-patch": "^1.2.0",
     "@types/flat": "^5.0.2",
     "@types/js-yaml": "^4.0.5",
