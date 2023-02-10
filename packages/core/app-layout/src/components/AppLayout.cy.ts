@@ -81,7 +81,7 @@ describe('<AppLayout />', () => {
             cy.mount(AppLayout, {
               slots: {
                 notification: [
-                  '<span data-testid="app-layout-notification-slot-content">Notification</span>',
+                  '<KAlert data-testid="app-layout-notification-slot-content" appearance="danger" alert-message="Notification"></KAlert>',
                 ],
               },
             })
