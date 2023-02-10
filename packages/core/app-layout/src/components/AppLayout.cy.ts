@@ -212,4 +212,25 @@ describe('<AppLayout />', () => {
       })
     })
   })
+
+  describe('window resize', {
+    viewportHeight: viewports.tablet.height, viewportWidth: viewports.tablet.width,
+  }, () => {
+    it('should automatically close the sidebar on window resize', () => {
+      cy.mount(AppLayout)
+
+      cy.get('.kong-ui-app-navbar').should('be.visible')
+      cy.get('.kong-ui-app-sidebar').should('not.be.visible')
+
+      // Open the sidebar
+      cy.get('.sidebar-menu-toggle').should('be.visible').click()
+      cy.get('.kong-ui-app-sidebar').should('be.visible')
+
+      // Resize (downsize) the window viewport width
+      cy.viewport(viewports.tablet.width - 20, viewports.tablet.height)
+
+      cy.get('.kong-ui-app-navbar').should('be.visible')
+      cy.get('.kong-ui-app-sidebar').should('not.be.visible')
+    })
+  })
 })
