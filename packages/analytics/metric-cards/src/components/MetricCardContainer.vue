@@ -85,7 +85,10 @@ const formatCardValues = (card: MetricsCardDef) => {
   width: 100%;
   @include flex-gap(24px, 16px);
 
-  @media (max-width: $viewport-sm) {
+  @media (max-width: $viewport-lg) {
+    @include flex-gap(12px, 16px);
+  }
+  @media (max-width: $viewport-md) {
     flex-direction: column;
   }
 }

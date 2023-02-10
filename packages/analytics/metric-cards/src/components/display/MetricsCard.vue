@@ -1,10 +1,10 @@
 <template>
-  <div class="metrics-card">
-    <div class="metrics-card-title">
+  <div class="metricscard">
+    <div class="metricscard-title">
       {{ title }}
       <KTooltip
         v-if="tooltip"
-        class="metrics-card-tooltip"
+        class="metricscard-tooltip"
         :label="tooltip"
         placement="right"
       >
@@ -26,14 +26,14 @@
     </KTooltip>
     <div
       v-else
-      class="metrics-card-value"
+      class="metricscard-value"
     >
       <div :style="`font-size:${metricFontSize}`">
         {{ metricValue }}
       </div>
       <div
         v-if="cardDisplayFull"
-        class="trend"
+        class="metricscard-value-trend"
         :style="`color: ${textColor(changePolarity)}`"
       >
         <KIcon
@@ -42,7 +42,7 @@
           :icon="icon"
           size="18"
         />
-        <div class="change">
+        <div>
           {{ metricChange }}
         </div>
       </div>
@@ -101,11 +101,7 @@ const props = defineProps({
     default: () => 'lg',
   },
 })
-console.log('----------------')
 
-console.log(props.hasError)
-console.log(props.errorMessage)
-console.log('..................')
 const trendColor = {
   red: '#d44324',
   green: '#07a88d',
@@ -136,16 +132,14 @@ const metricFontSize = cardDisplayFull ? '22px' : '16px'
 <style lang="scss">
 @import "../../styles/base";
 
-.metrics-card-tooltip {
-  border: 2px solid red !important;
+.metricscard-tooltip {
   @include pointer-events-all;
 }
 
 // If card is used inside a TabPanel, only the active tab should trigger tooltip hover
-.traffic-card {
+.trafficcard {
   &.active {
-    .metrics-card-tooltip {
-      border: 2px solid red;
+    .metricscard-tooltip {
       @include pointer-events-all;
     }
   }
@@ -155,13 +149,13 @@ const metricFontSize = cardDisplayFull ? '22px' : '16px'
 <style lang="scss" scoped>
 @import "../../styles/base";
 
-.metrics-card {
+.metricscard {
   display: flex;
   flex-direction: column;
   max-width: 320px;
   width: 100%;
 
-  @media (max-width: $viewport-sm) {
+  @media (max-width: $viewport-md) {
     max-width: none;
     width: auto;
   }
@@ -181,24 +175,25 @@ const metricFontSize = cardDisplayFull ? '22px' : '16px'
   }
   // Only currently active tab should trigger tooltip hover
   &.active {
-    .metrics-card-tooltip {
+    .metricscard-tooltip {
       @include pointer-events-all;
     }
   }
 
   &-value {
-    align-items: end;
     display: flex;
     flex-direction: row;
     font-weight: 500;
     justify-content: space-between;
-    margin: 10px 0 0 0;
+    margin: 8px 0 0 0;
 
-    .trend {
+    &-trend {
       display: flex;
       flex-direction: row;
       font-size: $font-size-sm;
-      margin: 2px 0 0 24px;
+      margin-bottom: 0;
+      margin-left: 0px 0 0 12px;
+      margin-top: auto;
     }
   }
 }
