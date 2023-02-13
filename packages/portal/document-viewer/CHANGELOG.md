@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.4.0...@kong-ui-public/document-viewer@0.4.1) (2023-02-13)
+
+
+### 🐛 Bug Fixes
+
+* **document-viewer:** use default text for slug if there is no text ([#141](https://github.com/Kong/public-ui-components/issues/141)) ([8a0466c](https://github.com/Kong/public-ui-components/commit/8a0466c3bd727f4df194fb649fbeb2dd6fc2b700))
+
+
+
+
+
 # [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.3.0...@kong-ui-public/document-viewer@0.4.0) (2023-02-13)
 
 
