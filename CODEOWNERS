@@ -13,7 +13,7 @@
 # unless a later match takes precedence.
 # =========================================================================
 /packages/core/ @Kong/team-core-ui
-/packages/portal/ @Kong/team-core-ui # TODO: add @Kong/team-devx 
+/packages/portal/ @Kong/team-devx
 /packages/analytics/ @Kong/team-core-ui # TODO: add @Kong/team-data
 
 # Packages:
@@ -27,12 +27,12 @@
 # Core packages
 /packages/core/i18n/ @adamdehaven @ValeryG @jillztom
 /packages/core/app-layout/ @adamdehaven @jillztom
-/packages/core/copy-uuid/ @Leopoldthecoder
+/packages/core/copy-uuid/ @Kong/team-km
 
 # Portal packages
-/packages/portal/document-viewer/ @Kong/team-core-ui
-/packages/portal/mini-spec-renderer/ @Kong/team-core-ui
-/packages/portal/spec-details/ @Kong/team-core-ui
+/packages/portal/document-viewer/ @Kong/team-devx
+/packages/portal/mini-spec-renderer/ @Kong/team-devx
+/packages/portal/spec-details/ @Kong/team-devx
 /packages/portal/swagger-ui-web-component/ @adamdehaven @davidma415 @kaiarrowood
 
 # =========================================================================
