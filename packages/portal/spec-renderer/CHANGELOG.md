@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.4.15...@kong-ui-public/spec-renderer@0.5.0) (2023-02-13)
+
+
+### ✨ Features
+
+* **portal:** update spec renderer to listen for "deselect" ([#131](https://github.com/Kong/public-ui-components/issues/131)) ([db962e5](https://github.com/Kong/public-ui-components/commit/db962e5d20c595cbb2b684337484a245c42c47c8))
+
+
+
+
+
 ## [0.4.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.4.14...@kong-ui-public/spec-renderer@0.4.15) (2023-02-11)
 
 
