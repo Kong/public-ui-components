@@ -16,7 +16,7 @@ export function addUniqueHeadingSlugs<T = any>(children: Array<T>): Array<T> {
 }
 
 export function addSlug(child: any, slugMap: Map<string, number>, prefix = 'doc-heading-') {
-  const text = child.children[0].text
+  const text = child.children[0].text || 'heading'
   const slugCount = slugMap.get(text)
   slugMap.set(text, (slugCount || 0) + 1)
   const duplicateSuffix = slugCount && slugCount > 1 ? `-${slugCount}` : ''
