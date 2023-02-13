@@ -41,6 +41,16 @@ const props = defineProps({
 
 const isProcessing = ref(false)
 
+const supportedPrismLanguages = Object.keys(components.languages)
+  // @ts-ignore
+  .reduce((arr, lang) => {
+    const alias = components.languages[lang].alias || []
+
+    return [...arr, lang, ...(Array.isArray(alias) ? alias : [alias])]
+  }, [])
+  // @ts-ignore
+  .sort()
+
 /**
  * Applies PrismJS syntax highlighting.
  *
@@ -89,21 +99,11 @@ const stringifiedCode = computed(() => {
 })
 
 watch(() => props.lang, async (language: string) => {
-  const supported = Object.keys(components.languages)
-  // @ts-ignore
-    .reduce((arr, lang) => {
-      const alias = components.languages[lang].alias || []
-
-      return [...arr, lang, ...(Array.isArray(alias) ? alias : [alias])]
-    }, [])
-    // @ts-ignore
-    .sort()
-
-  if (supported.includes(language)) {
+  if (supportedPrismLanguages.includes(language)) {
     try {
       await import(/* @vite-ignore */`../../../node_modules/prismjs/components/prism-${language}.min.js`)
     } catch (e) {
-      console.warn(`Prism does not have a file for ${language}`)
+      console.warn(`Prism does not have a language file for '${language}'`)
     }
   }
   Prism.highlightAll()
