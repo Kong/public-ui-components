@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.3.0...@kong-ui-public/document-viewer@0.4.0) (2023-02-13)
+
+
+### ✨ Features
+
+* **document-viewer:** add syntax highlighting for code block (TDX-2862) ([#138](https://github.com/Kong/public-ui-components/issues/138)) ([39a9049](https://github.com/Kong/public-ui-components/commit/39a9049db78b843cfaf8175727018b5b7486c3c8))
+
+
+
+
+
 # [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.11...@kong-ui-public/document-viewer@0.3.0) (2023-02-09)
 
 
