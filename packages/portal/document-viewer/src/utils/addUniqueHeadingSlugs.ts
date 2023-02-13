@@ -1,4 +1,4 @@
-import { HeadingNode, isHeadingNode, isTextNode } from 'src/types'
+import { HeadingNode, isHeadingNode, isTextNode } from '../types'
 import { toSlug } from './toSlug'
 export function addUniqueHeadingSlugs<T = any>(children: Array<T>): Array<T> {
 
