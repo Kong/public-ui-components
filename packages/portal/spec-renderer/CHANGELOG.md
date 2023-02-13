@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.4.14...@kong-ui-public/spec-renderer@0.4.15) (2023-02-11)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.24.2 ([#139](https://github.com/Kong/public-ui-components/issues/139)) ([b7d6587](https://github.com/Kong/public-ui-components/commit/b7d6587852a5892cf1f35bb8783be8e644c51a2e))
+
+
+
+
+
 ## [0.4.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.4.13...@kong-ui-public/spec-renderer@0.4.14) (2023-02-09)
 
 
