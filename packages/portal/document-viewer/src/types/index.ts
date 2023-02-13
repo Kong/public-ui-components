@@ -45,6 +45,10 @@ export interface HeadingNode extends BaseNode<'heading'> {
   level: number
 }
 
+export function isHeadingNode(o: any): o is HeadingNode {
+  return !!(o?.type === 'heading')
+}
+
 export interface ListItemNode extends BaseNode<'list_item'> {}
 
 export interface ListNode extends BaseNode<'list'> {
