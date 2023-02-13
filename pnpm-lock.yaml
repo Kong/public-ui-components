@@ -188,11 +188,11 @@ importers:
       vue: ^3.2.47
     dependencies:
       '@kong-ui-public/i18n': link:../../core/i18n
+      '@types/prismjs': 1.26.0
+      prismjs: 1.29.0
     devDependencies:
       '@kong/kongponents': 8.24.2_vue@3.2.47
-      '@types/prismjs': 1.26.0
       '@vitejs/plugin-vue-jsx': 3.0.0_vue@3.2.47
-      prismjs: 1.29.0
       vue: 3.2.47
 
   packages/portal/spec-renderer:
@@ -2598,7 +2598,7 @@ packages:
 
   /@types/prismjs/1.26.0:
     resolution: {integrity: sha512-ZTaqn/qSqUuAq1YwvOFQfVW1AR/oQJlLSZVustdjwI+GZ8kr0MSHBj0tsXPW1EqHubx50gtBEjbPGsdZwQwCjQ==}
-    dev: true
+    dev: false
 
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
@@ -9417,6 +9417,7 @@ packages:
   /prismjs/1.29.0:
     resolution: {integrity: sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==}
     engines: {node: '>=6'}
+    dev: false
 
   /proc-log/2.0.1:
     resolution: {integrity: sha512-Kcmo2FhfDTXdcbfDH76N7uBYHINxc/8GW7UAVuVP9I+Va3uHSerrnKV6dLooga/gh7GlgzuCCr/eoldnL1muGw==}
