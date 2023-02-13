@@ -41,12 +41,12 @@
   },
   "devDependencies": {
     "@kong/kongponents": "^8.24.2",
+    "@types/prismjs": "^1.26.0",
     "@vitejs/plugin-vue-jsx": "^3.0.0",
     "vue": "^3.2.47"
   },
   "dependencies": {
     "@kong-ui-public/i18n": "workspace:^0.2.8",
-    "@types/prismjs": "^1.26.0",
     "prismjs": "^1.29.0"
   },
   "repository": {
