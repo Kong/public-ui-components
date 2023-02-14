@@ -183,7 +183,7 @@ importers:
       '@kong/kongponents': ^8.24.1
       vue: ^3.2.47
     devDependencies:
-      '@kong/kongponents': 8.24.1_vue@3.2.47
+      '@kong/kongponents': 8.24.2_vue@3.2.47
       vue: 3.2.47
 
   packages/portal/document-viewer:
