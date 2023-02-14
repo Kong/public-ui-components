@@ -1,12 +1,14 @@
 <template>
   <div class="sandbox-container">
     <main>
-      <p>This is the component sandbox.</p>
-      <MiscWidgets />
+      <div>
+        <h3>Default</h3>
+        <GithubStar :url="url" />
+      </div>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { MiscWidgets } from '../src'
+const url = 'https://github.com/kong/kong'
 </script>

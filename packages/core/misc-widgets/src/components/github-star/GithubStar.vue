@@ -1,12 +1,33 @@
 <template>
-  <!-- The <div> tag here is just a placeholder for your component content. -->
-  <!-- We recommend wrapping your component with a unique class when possible, as shown below. -->
   <div class="kong-ui-public-misc-widgets-github-star">
-    <p>This is the <b>Github Star</b> content.</p>
+    <a
+      aria-label="Star buttons/github-buttons on GitHub"
+      class="github-button"
+      data-color-scheme="no-preference: light; light: light; dark: light;"
+      data-show-count="true"
+      :href="url"
+    >Star</a>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted } from 'vue'
+
+const props = defineProps({
+  url: {
+    type: String,
+    required: false,
+    default: '',
+  },
+})
+
+const url = computed(() => props.url)
+
+onMounted(async () => {
+  const githubStarScript = document.createElement('script')
+  githubStarScript.setAttribute('src', 'https://buttons.github.io/buttons.js')
+  document.head.appendChild(githubStarScript)
+})
 </script>
 
 <style lang="scss" scoped>
