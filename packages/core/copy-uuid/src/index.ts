@@ -1,6 +1,6 @@
 import type { App } from 'vue'
 import CopyUuid from './components/CopyUuid.vue'
-import { COPY_UUID_NOTIFY_KEY } from './const'
+import { COPY_UUID_NOTIFY_KEY } from './constants'
 import type { CopyUuidInstallOptions } from './types'
 
 // Export Vue plugin as the default
@@ -18,5 +18,5 @@ export default {
 
 export { CopyUuid }
 
-export * from './const'
+export * from './constants'
 export * from './types'

@@ -149,7 +149,7 @@ import type { OperationListFilterFunction, Operation, OperationListItem, Tag } f
 import { v1 as uuidv1 } from 'uuid'
 import clonedeep from 'lodash.clonedeep'
 import composables from '../composables'
-import { DEFAULT_UNTAGGED_SECTION_NAME } from '../const'
+import { DEFAULT_UNTAGGED_SECTION_NAME } from '../constants'
 import OperationsListSectionHeader from './operations-list/OperationsListSectionHeader.vue'
 import OperationsListItem from './operations-list/OperationsListItem.vue'
 
