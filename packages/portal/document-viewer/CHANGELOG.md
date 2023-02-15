@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.4.1...@kong-ui-public/document-viewer@0.4.2) (2023-02-15)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.24.3 ([#145](https://github.com/Kong/public-ui-components/issues/145)) ([fdc3ef7](https://github.com/Kong/public-ui-components/commit/fdc3ef7dcffaa0e3f651d3fa3c8609cde7b4e12e))
+
+
+
+
+
 ## [0.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.4.0...@kong-ui-public/document-viewer@0.4.1) (2023-02-13)
 
 
