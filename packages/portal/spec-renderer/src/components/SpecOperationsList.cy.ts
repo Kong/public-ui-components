@@ -33,6 +33,10 @@ describe('<SpecOperationsList />', () => {
 
     // renders untagged items
     cy.getTestId('spec-operations-list-untagged-items').should('be.visible')
+    cy.getTestId('spec-operations-list-section-untagged-collapse-trigger').click()
+    cy.get('[data-testid="spec-operations-list-untagged-items"] .spec-operations-list-item').should('not.be.visible')
+    cy.getTestId('spec-operations-list-section-untagged-collapse-trigger').click()
+    cy.get('[data-testid="spec-operations-list-untagged-items"] .spec-operations-list-item').should('have.length', 1)
   })
 
   it('renders with correct px width', () => {

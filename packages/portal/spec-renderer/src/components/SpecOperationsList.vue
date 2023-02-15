@@ -79,23 +79,42 @@
           class="section"
           data-testid="spec-operations-list-untagged-items"
         >
-          <template
-            v-for="item in untaggedItems"
-            :key="`${item.path}-${item.method}`"
+          <KCollapse
+            :model-value="false"
+            trigger-alignment="leading"
           >
-            <slot
-              :item="item"
-              name="item"
-              :select="() => handleSelection(item)"
-            >
-              <OperationsListItem
-                :disable-selection="disableSelection"
-                :is-selected="isSelected(item)"
-                :item="item"
-                @click="handleSelection"
+            <template #trigger="{ isCollapsed, toggle }">
+              <OperationsListSectionHeader
+                :content-element-id="getSectionContentId(untaggedItemsSectionName)"
+                :data-testid="`spec-operations-list-section-untagged-collapse-trigger`"
+                :description="getSectionDescription(untaggedItemsSectionName)"
+                :is-collapsed="isCollapsed"
+                :name="untaggedItemsSectionName"
+                @toggle="toggle"
               />
-            </slot>
-          </template>
+            </template>
+
+            <div :id="getSectionContentId(untaggedItemsSectionName)">
+              <template
+                v-for="item in untaggedItems"
+                :key="`${item.path}-${item.method}`"
+              >
+                <slot
+                  :item="item"
+                  name="untagged-item"
+                  :section="untaggedItemsSectionName"
+                  :select="() => handleSelection(item)"
+                >
+                  <OperationsListItem
+                    :disable-selection="disableSelection"
+                    :is-selected="isSelected(item)"
+                    :item="item"
+                    @click="handleSelection"
+                  />
+                </slot>
+              </template>
+            </div>
+          </KCollapse>
         </div>
       </div>
 
@@ -180,6 +199,7 @@ const uid = computed<string>(() => uuidv1())
 
 const filterQuery = ref<string>('')
 const taggedItems = ref<OperationListItem[]>([])
+const untaggedItemsSectionName = ref('default')
 const selectedItem = ref<OperationListItem>()
 const filteredItems = ref<OperationListItem[]>([])
 
