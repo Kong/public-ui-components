@@ -2,7 +2,7 @@
   <div class="sandbox-container">
     <main>
       <div>
-        <h3>Default</h3>
+        <h3>Awesome GitHub Star ⭐</h3>
         <GithubStar :url="url" />
       </div>
     </main>
