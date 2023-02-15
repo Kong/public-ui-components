@@ -509,6 +509,8 @@ You can customize some of the sidebar CSS by adding CSS variables to your app. I
 
 Variable | Description | Default
 ---------|----------|---------
+`--kong-ui-app-sidebar-background` | The CSS `background` of the sidebar | `transparent`
+`--kong-ui-app-sidebar-header-background` | The CSS `background` of the `.sidebar-header` | `transparent`
 `--kong-ui-app-sidebar-mobile-icon-color` | The color of the "lines" of the mobile menu icon | `#1155cb`
 
 ### CSS variable example

@@ -245,7 +245,7 @@ onBeforeUnmount(() => {
 @import "../styles/variables";
 
 .kong-ui-app-layout {
-  background-color: $sidebar-background-gradient-start;
+  background: var(--kong-ui-app-layout-background, linear-gradient(180deg, #001740 0%, #073382 100%));
   bottom: 0;
   display: flex;
   flex-direction: column;

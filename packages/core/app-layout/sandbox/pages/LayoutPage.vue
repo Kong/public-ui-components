@@ -7,15 +7,7 @@
     :sidebar-top-items="sidebarItemsTop"
     @sidebar-click="sidebarItemClick"
   >
-    <template #notification>
-      <KAlert
-        alert-message="I'm an alert from the host app"
-        appearance="warning"
-        dismiss-type="icon"
-        :is-showing="showAlert"
-        @closed="handleCloseAlert"
-      />
-    </template>
+    <template #notification />
     <template #navbar>
       <NavLinks />
       <KButton

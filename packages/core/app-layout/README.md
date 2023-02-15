@@ -102,6 +102,7 @@ You can customize some of the `AppLayout.vue` CSS by adding CSS variables to you
 
 Variable | Description | Default
 ---------|----------|---------
+`--kong-ui-app-layout-background` | The background of the `.kong-ui-app-layout` main container | `linear-gradient(180deg, #001740 0%, #073382 100%)`
 `--kong-ui-app-layout-content-padding` | The padding of the `.kong-ui-app-layout-content` main content container | `16px`
 
 ### CSS variable example

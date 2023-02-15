@@ -350,7 +350,7 @@ onBeforeUnmount(() => {
 @import "../../styles/variables";
 
 .kong-ui-app-sidebar {
-  background: $sidebar-background;
+  background: var(--kong-ui-app-sidebar-background, transparent);
   display: flex;
   flex-direction: column;
   height: v-bind('sidebarContainerStyles.mobileHeight');
@@ -433,7 +433,7 @@ onBeforeUnmount(() => {
 
 .sidebar-header {
   align-items: center;
-  background: linear-gradient(180deg, #003694 70.83%, rgba(0, 54, 148, 0) 100%);
+  background: var(--kong-ui-app-sidebar-header-background, transparent);
   color: #fff;
   display: v-bind('headerContainerStyles.display');
   left: 0;

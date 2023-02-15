@@ -39,7 +39,7 @@ const headerStyles = computed(() => ({
 @import "../../styles/variables";
 
 .kong-ui-app-navbar {
-  background-color: var(--kong-ui-app-navbar-background-color, #fff);
+  background: var(--kong-ui-app-navbar-background, transparent);
   border-bottom: $navbar-border;
   left: 0;
   position: fixed;

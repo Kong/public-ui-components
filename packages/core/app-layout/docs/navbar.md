@@ -33,13 +33,13 @@ You can customize some of the navbar CSS by adding CSS variables to your app. In
 
 Variable | Description | Default
 ---------|----------|---------
-`--kong-ui-app-navbar-background-color` | The `background-color` of the navbar | `#fff`
+`--kong-ui-app-navbar-background` | The CSS `background` of the navbar | `transparent`
 
 ### CSS variable example
 
 ```scss
 .your-custom-navbar-class {
-  --kong-ui-app-navbar-background-color: var(--blue-500, #1155cb);
+  --kong-ui-app-navbar-background: var(--blue-500, #1155cb);
 }
 ```
 
