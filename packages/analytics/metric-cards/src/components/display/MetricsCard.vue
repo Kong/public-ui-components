@@ -175,8 +175,8 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
 
   &-tooltip {
     display: inline-flex;
-    vertical-align: middle;
     margin: auto 0 auto 5px;
+    vertical-align: middle;
   }
 
   // Only currently active tab should trigger tooltip hover
