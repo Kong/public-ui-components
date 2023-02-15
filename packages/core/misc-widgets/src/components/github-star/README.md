@@ -1,6 +1,6 @@
 # Github Star
 
-{A description of this component}
+A Github Star component for displaying number of stars received by the repo on Github
 
 - [Features](#features)
 - [Usage](#usage)
@@ -8,14 +8,17 @@
 
 ## Features
 
-- List of package features
+- Render number of stars received by the repo on Github
+- Customize the repo url that opens in a new tab upon clicking this component
 
 ## Usage
 
 ### Props
 
-#### `example`
+#### `url`
 
-- type: `Boolean`
+- type: `String`
 - required: `false`
-- default: `false`
+- default: `''`
+
+Repo url string.

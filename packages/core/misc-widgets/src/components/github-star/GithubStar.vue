@@ -1,5 +1,8 @@
 <template>
-  <div class="kong-ui-public-misc-widgets-github-star">
+  <div
+    class="kong-ui-public-misc-widgets-github-star"
+    data-testid="github-star"
+  >
     <a
       aria-label="Star buttons/github-buttons on GitHub"
       class="github-button"
@@ -16,7 +19,7 @@ import { computed, onMounted } from 'vue'
 const props = defineProps({
   url: {
     type: String,
-    required: false,
+    required: true,
     default: '',
   },
 })
