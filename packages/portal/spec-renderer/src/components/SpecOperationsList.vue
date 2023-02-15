@@ -103,7 +103,7 @@
                   :item="item"
                   name="untagged-item"
                   :section="DEFAULT_UNTAGGED_SECTION_NAME"
-                  :select="handleSelection(item)"
+                  :select="() => handleSelection(item)"
                 >
                   <OperationsListItem
                     :disable-selection="disableSelection"
