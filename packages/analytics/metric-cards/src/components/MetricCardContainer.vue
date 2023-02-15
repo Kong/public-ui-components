@@ -17,6 +17,7 @@
         :error-message="card.errorMessage"
         :has-error="card.hasError"
         :title="card.title"
+        :tooltip="card.tooltip"
       />
     </template>
   </div>
@@ -86,9 +87,10 @@ const formatCardValues = (card: MetricsCardDef) => {
   @include flex-gap(24px, 16px);
 
   @media (max-width: $viewport-lg) {
-    @include flex-gap(12px, 16px);
+    @include flex-gap(24px, 16px);
   }
   @media (max-width: $viewport-md) {
+    @include flex-gap(16px, 16px);
     flex-direction: column;
   }
 }

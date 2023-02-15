@@ -13,10 +13,18 @@
 </template>
 <script setup lang="ts">
 import { KSkeletonBox } from '@kong/kongponents'
+import '@kong/kongponents/dist/style.css'
 </script>
 <style lang="scss" scoped>
+@import "../../styles/base";
 .loading-tabs {
-  min-width: 240px;
+  display: flex;
+  flex-direction: column;
   padding: 16px;
+  row-gap: 12px;
+  width: 240px;
+  @media (max-width: $viewport-md) {
+    width: auto;
+  }
 }
 </style>

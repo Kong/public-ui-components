@@ -124,8 +124,11 @@ const textColor = (polarity: number): string => {
       : trendColor.grey
 }
 
-const cardDisplayFull = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardSize.ExtraLarge].includes(props.cardSize)
-const metricFontSize = cardDisplayFull ? '22px' : '16px'
+const cardDisplayFull = [MetricCardSize.Medium, MetricCardSize.Large].includes(props.cardSize)
+
+const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
+  ? '48px'
+  : [MetricCardSize.Medium, MetricCardSize.Large].includes(props.cardSize) ? '22px' : '16px'
 
 </script>
 
@@ -152,7 +155,7 @@ const metricFontSize = cardDisplayFull ? '22px' : '16px'
 .metricscard {
   display: flex;
   flex-direction: column;
-  max-width: 320px;
+  max-width: 240px;
   width: 100%;
 
   @media (max-width: $viewport-md) {
@@ -166,8 +169,14 @@ const metricFontSize = cardDisplayFull ? '22px' : '16px'
   }
 
   &-title {
+    align-items: center;
     color: $metric-color-grey;
+    display: flex;
     font-size: $font-size-sm;
+
+    .kong-icon-info {
+      display: flex;
+    }
   }
 
   &-tooltip {
@@ -192,7 +201,6 @@ const metricFontSize = cardDisplayFull ? '22px' : '16px'
       flex-direction: row;
       font-size: $font-size-sm;
       margin-bottom: 0;
-      margin-left: 0px 0 0 12px;
       margin-top: auto;
     }
   }

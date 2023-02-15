@@ -8,14 +8,5 @@ export interface MetricsCardDef {
   hasError?: boolean
   errorMessage?: string
   cardSize?: string
-}
-
-export interface Metrics {
-  title: string
-  tooltip: string
-  timeframe: string
-  metricValue: string
-  metricChange: string
-  changePolarity: string
-  icon: string
+  tooltip?: string
 }

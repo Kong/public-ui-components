@@ -1,9 +1,50 @@
 <template>
   <div class="sandbox-container">
     <main>
+      <h3>Small</h3>
       <div class="generic-card">
         <MetricCardContainer
-          v-bind="metricCardOptions"
+          v-bind="cardsSmall"
+          hide-title
+        />
+      </div>
+
+      <h3>Large (default)</h3>
+      <div class="generic-card">
+        <MetricCardContainer
+          v-bind="cardsRegular"
+          hide-title
+        />
+      </div>
+
+      <h3>Extra Large</h3>
+      <div class="generic-card">
+        <MetricCardContainer
+          v-bind="cardsXL"
+          hide-title
+        />
+      </div>
+
+      <h3>Loading</h3>
+      <div class="generic-card">
+        <MetricCardContainer
+          v-bind="cardsLoading"
+          hide-title
+        />
+      </div>
+
+      <h3>Not Available</h3>
+      <div class="generic-card">
+        <MetricCardContainer
+          v-bind="cardsNotAvailable"
+          hide-title
+        />
+      </div>
+
+      <h3>Error</h3>
+      <div class="generic-card">
+        <MetricCardContainer
+          v-bind="cardsErrors"
           hide-title
         />
       </div>
@@ -15,47 +56,121 @@
 import { MetricCardContainer } from '../src'
 import { DECIMAL_DISPLAY } from '../src/utilities'
 
-const metricCardOptions = {
-  cards: [
-    {
-      currentValue: 192895156,
-      previousValue: 236609609,
-      title: 'Number of Requests',
-      increaseIsBad: false,
-      cardSize: 'lg',
-    },
-    {
-      currentValue: 31.076361502825918,
-      previousValue: 30.59477013885772,
-      formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
-      title: 'Average Error Rate',
-      increaseIsBad: true,
-      cardSize: 'lg',
-    },
-    {
-      currentValue: 335,
-      previousValue: 511,
-      formatValueFn: val => `${val}ms`,
-      title: 'P99 Latency',
-      increaseIsBad: true,
-      cardSize: 'lg',
-    },
-    {
-      currentValue: 5,
-      previousValue: 4,
-      title: 'Active Runtimes',
-      increaseIsBad: true,
-      cardSize: 'lg',
-    },
-  ],
+const cards = [
+  {
+    currentValue: 192895156,
+    previousValue: 236609609,
+    title: 'Number of Requests',
+    tooltip: 'This is a tooltip',
+    increaseIsBad: false,
+  },
+  {
+    currentValue: 31.076361502825918,
+    previousValue: 30.59477013885772,
+    formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
+    title: 'Average Error Rate',
+    increaseIsBad: true,
+  },
+  {
+    currentValue: 335,
+    previousValue: 511,
+    formatValueFn: val => `${val}ms`,
+    title: 'P99 Latency',
+    increaseIsBad: true,
+  },
+  {
+    currentValue: 5,
+    previousValue: 4,
+    title: 'Active Runtimes',
+    increaseIsBad: true,
+  },
+  {
+    currentValue: 67.323232,
+    previousValue: 23.2121,
+    formatValueFn: val => `${val.toFixed(0)}%`,
+    title: 'Saturation',
+    tooltip: 'A secondary tooltip',
+    increaseIsBad: true,
+  },
+]
+
+const cardsWithErrors = [
+  {
+    currentValue: 0,
+    previousValue: 0,
+    title: 'Number of Requests',
+    increaseIsBad: false,
+    hasError: true,
+  },
+  {
+    currentValue: 0,
+    previousValue: 0,
+    title: 'Average Error Rate',
+    hasError: true,
+  },
+  {
+    currentValue: 0,
+    previousValue: 0,
+    title: 'P99 Latency',
+    increaseIsBad: true,
+  },
+  {
+    currentValue: 0,
+    previousValue: 0,
+    title: 'Active Runtime Groups',
+    increaseIsBad: true,
+  },
+]
+
+const cardsSmall = {
+  cards,
   loading: false,
   hasTrendAccess: true,
+  fallbackDisplayText: 'Not available',
+  cardSize: 'sm',
+}
+
+const cardsRegular = {
+  cards: [...cards].slice(0, 3),
+  loading: false,
+  hasTrendAccess: true,
+  fallbackDisplayText: 'Not available',
+  cardSize: 'lg',
+}
+
+const cardsXL = {
+  cards: [...cards].slice(0, 3),
+  loading: false,
+  hasTrendAccess: true,
+  fallbackDisplayText: 'Not available',
+  cardSize: 'xl',
+}
+
+const cardsLoading = {
+  cards: [...cards].slice(0, 3),
+  loading: true,
+  hasTrendAccess: true,
+}
+
+const cardsNotAvailable = {
+  cards: [...cards].slice(0, 3),
+  loading: false,
+  hasTrendAccess: false,
+  fallbackDisplayText: 'Not available',
+  cardSize: 'lg',
+}
+
+const cardsErrors = {
+  cards: [...cardsWithErrors].slice(0, 3),
+  loading: false,
+  hasTrendAccess: false,
   fallbackDisplayText: 'Not available',
 }
 </script>
 
 <style lang="scss">
-html {
+html,
+body {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -65,13 +180,22 @@ html {
 }
 
 main {
+  width: auto;
+  height: 100%;
   display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 32px;
+
+  h3 {
+    color: #b6b6b6;
+  }
 
   .generic-card {
     background-color: white;
     display: flex;
-    padding: 1rem;
-    width: 100%;
+    margin-bottom: 16px;
+    padding: 8px;
   }
 }
 </style>
