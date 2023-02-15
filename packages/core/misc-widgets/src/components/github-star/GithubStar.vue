@@ -10,6 +10,7 @@
       data-color-scheme="no-preference: light; light: light; dark: light;"
       data-show-count="true"
       :href="url"
+      target="_blank"
     >{{ i18n.t('githubStar.title') }}</a>
   </div>
 </template>
