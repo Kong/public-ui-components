@@ -282,11 +282,11 @@ onBeforeUnmount(() => {
     flex-grow: 1;
     height: 100%;
     margin-top: v-bind('layoutMainMarginTop');
-    border-top-left-radius: v-bind('layoutMainTopLeftBorderRadius');
     overflow: auto;
     width: 100%;
 
     @media (min-width: $viewport-md) {
+      border-top-left-radius: v-bind('layoutMainTopLeftBorderRadius');
       margin-left: $sidebar-width;
       width: calc(100% - #{$sidebar-width});
     }
