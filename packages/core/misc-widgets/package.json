@@ -45,6 +45,9 @@
     "@kong/kongponents": "^8.24.1",
     "vue": "^3.2.47"
   },
+  "dependencies": {
+    "@kong-ui-public/i18n": "workspace:^0.2.8"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Kong/public-ui-components.git",
@@ -57,6 +60,7 @@
   "author": "Kong, Inc.",
   "license": "Apache-2.0",
   "volta": {
-    "extends": "../../../package.json"
+    "extends": "../../../package.json",
+    "yarn": "1.22.19"
   }
 }

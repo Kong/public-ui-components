@@ -1,28 +1,31 @@
 <template>
   <div
+    v-if="url"
     class="kong-ui-public-misc-widgets-github-star"
     data-testid="github-star"
   >
     <a
-      aria-label="Star buttons/github-buttons on GitHub"
+      aria-label="i18n.t('githubStar.ariaLabel')"
       class="github-button"
       data-color-scheme="no-preference: light; light: light; dark: light;"
       data-show-count="true"
       :href="url"
-    >Star</a>
+    >{{ i18n.t('githubStar.title') }}</a>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
+import composables from '../../composables'
 
 const props = defineProps({
   url: {
     type: String,
     required: true,
-    default: '',
   },
 })
+
+const { i18n } = composables.useI18n()
 
 const url = computed(() => props.url)
 

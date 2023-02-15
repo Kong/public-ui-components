@@ -21,4 +21,4 @@ A Github Star component for displaying number of stars received by the repo on G
 - required: `false`
 - default: `''`
 
-Repo url string.
+Full URL to the GitHub repository.
