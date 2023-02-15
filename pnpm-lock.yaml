@@ -186,7 +186,7 @@ importers:
     dependencies:
       '@kong-ui-public/i18n': link:../i18n
     devDependencies:
-      '@kong/kongponents': 8.24.2_vue@3.2.47
+      '@kong/kongponents': 8.25.0_vue@3.2.47
       vue: 3.2.47
 
   packages/portal/document-viewer:
