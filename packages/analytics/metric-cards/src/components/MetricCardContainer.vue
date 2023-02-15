@@ -1,6 +1,4 @@
 <template>
-  <!-- The <div> tag here is just a placeholder for your component content. -->
-  <!-- We recommend wrapping your component with a unique class when possible, as shown below. -->
   <div class="kong-ui-public-metric-cards">
     <template
       v-for="(card, index) in cards"
@@ -86,7 +84,7 @@ const formatCardValues = (card: MetricsCardDef) => {
   width: 100%;
   @include flex-gap(24px, 16px);
 
-  @media (max-width: $viewport-md) {
+  @media (max-width: ($viewport-md - 1px)) {
     @include flex-gap(16px, 16px);
     flex-direction: column;
   }
