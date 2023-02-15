@@ -79,23 +79,42 @@
           class="section"
           data-testid="spec-operations-list-untagged-items"
         >
-          <template
-            v-for="item in untaggedItems"
-            :key="`${item.path}-${item.method}`"
+          <KCollapse
+            :model-value="false"
+            trigger-alignment="leading"
           >
-            <slot
-              :item="item"
-              name="item"
-              :select="() => handleSelection(item)"
-            >
-              <OperationsListItem
-                :disable-selection="disableSelection"
-                :is-selected="isSelected(item)"
-                :item="item"
-                @click="handleSelection"
+            <template #trigger="{ isCollapsed, toggle }">
+              <OperationsListSectionHeader
+                :content-element-id="getSectionContentId(DEFAULT_UNTAGGED_SECTION_NAME)"
+                :data-testid="`spec-operations-list-section-untagged-collapse-trigger`"
+                :description="getSectionDescription(DEFAULT_UNTAGGED_SECTION_NAME)"
+                :is-collapsed="isCollapsed"
+                :name="DEFAULT_UNTAGGED_SECTION_NAME"
+                @toggle="toggle"
               />
-            </slot>
-          </template>
+            </template>
+
+            <div :id="getSectionContentId(DEFAULT_UNTAGGED_SECTION_NAME)">
+              <template
+                v-for="item in untaggedItems"
+                :key="`${item.path}-${item.method}`"
+              >
+                <slot
+                  :item="item"
+                  name="untagged-item"
+                  :section="DEFAULT_UNTAGGED_SECTION_NAME"
+                  :select="() => handleSelection(item)"
+                >
+                  <OperationsListItem
+                    :disable-selection="disableSelection"
+                    :is-selected="isSelected(item)"
+                    :item="item"
+                    @click="handleSelection"
+                  />
+                </slot>
+              </template>
+            </div>
+          </KCollapse>
         </div>
       </div>
 
@@ -130,6 +149,7 @@ import type { OperationListFilterFunction, Operation, OperationListItem, Tag } f
 import { v1 as uuidv1 } from 'uuid'
 import clonedeep from 'lodash.clonedeep'
 import composables from '../composables'
+import { DEFAULT_UNTAGGED_SECTION_NAME } from '../constants'
 import OperationsListSectionHeader from './operations-list/OperationsListSectionHeader.vue'
 import OperationsListItem from './operations-list/OperationsListItem.vue'
 
