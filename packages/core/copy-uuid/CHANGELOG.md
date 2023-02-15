@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@0.1.17...@kong-ui-public/copy-uuid@0.1.18) (2023-02-15)
+
+
+### 🐛 Bug Fixes
+
+* **spec-renderer:** untagged items [khcp-6150] ([#144](https://github.com/Kong/public-ui-components/issues/144)) ([9491728](https://github.com/Kong/public-ui-components/commit/9491728cb5c9bad0563510bb732c4fb4c75de5ea))
+
+
+
+
+
+## [0.1.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@0.1.16...@kong-ui-public/copy-uuid@0.1.17) (2023-02-15)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.25.0 ([#146](https://github.com/Kong/public-ui-components/issues/146)) ([7efe5de](https://github.com/Kong/public-ui-components/commit/7efe5dec93992108bc7dbc4c59003d514eae6913))
+
+
+
+
+
+## [0.1.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@0.1.15...@kong-ui-public/copy-uuid@0.1.16) (2023-02-15)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.24.3 ([#145](https://github.com/Kong/public-ui-components/issues/145)) ([fdc3ef7](https://github.com/Kong/public-ui-components/commit/fdc3ef7dcffaa0e3f651d3fa3c8609cde7b4e12e))
+
+
+
+
+
+## [0.1.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@0.1.14...@kong-ui-public/copy-uuid@0.1.15) (2023-02-11)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.24.2 ([#139](https://github.com/Kong/public-ui-components/issues/139)) ([b7d6587](https://github.com/Kong/public-ui-components/commit/b7d6587852a5892cf1f35bb8783be8e644c51a2e))
+
+
+
+
+
 ## [0.1.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@0.1.13...@kong-ui-public/copy-uuid@0.1.14) (2023-02-09)
 
 

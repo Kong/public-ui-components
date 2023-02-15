@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.5.4...@kong-ui-public/spec-renderer@0.5.5) (2023-02-15)
+
+
+### 🐛 Bug Fixes
+
+* **spec-renderer:** untagged items [khcp-6150] ([#144](https://github.com/Kong/public-ui-components/issues/144)) ([9491728](https://github.com/Kong/public-ui-components/commit/9491728cb5c9bad0563510bb732c4fb4c75de5ea))
+
+
+
+
+
+## [0.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.5.3...@kong-ui-public/spec-renderer@0.5.4) (2023-02-15)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.25.0 ([#146](https://github.com/Kong/public-ui-components/issues/146)) ([7efe5de](https://github.com/Kong/public-ui-components/commit/7efe5dec93992108bc7dbc4c59003d514eae6913))
+
+
+
+
+
+## [0.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.5.2...@kong-ui-public/spec-renderer@0.5.3) (2023-02-15)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.24.3 ([#145](https://github.com/Kong/public-ui-components/issues/145)) ([fdc3ef7](https://github.com/Kong/public-ui-components/commit/fdc3ef7dcffaa0e3f651d3fa3c8609cde7b4e12e))
+
+
+
+
+
+## [0.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.5.1...@kong-ui-public/spec-renderer@0.5.2) (2023-02-14)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.5.0...@kong-ui-public/spec-renderer@0.5.1) (2023-02-14)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.4.15...@kong-ui-public/spec-renderer@0.5.0) (2023-02-13)
+
+
+### ✨ Features
+
+* **portal:** update spec renderer to listen for "deselect" ([#131](https://github.com/Kong/public-ui-components/issues/131)) ([db962e5](https://github.com/Kong/public-ui-components/commit/db962e5d20c595cbb2b684337484a245c42c47c8))
+
+
+
+
+
+## [0.4.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.4.14...@kong-ui-public/spec-renderer@0.4.15) (2023-02-11)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.24.2 ([#139](https://github.com/Kong/public-ui-components/issues/139)) ([b7d6587](https://github.com/Kong/public-ui-components/commit/b7d6587852a5892cf1f35bb8783be8e644c51a2e))
+
+
+
+
+
 ## [0.4.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.4.13...@kong-ui-public/spec-renderer@0.4.14) (2023-02-09)
 
 

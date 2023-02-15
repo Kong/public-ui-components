@@ -9,7 +9,7 @@ importers:
       '@commitlint/config-conventional': ^17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': ^8.0.0
       '@evilmartians/lefthook': ^1.2.8
-      '@kong/kongponents': ^8.24.1
+      '@kong/kongponents': ^8.25.0
       '@rushstack/eslint-patch': ^1.2.0
       '@types/flat': ^5.0.2
       '@types/js-yaml': ^4.0.5
@@ -67,7 +67,7 @@ importers:
       '@commitlint/config-conventional': 17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': 8.0.0
       '@evilmartians/lefthook': 1.2.8
-      '@kong/kongponents': 8.24.1_vue@3.2.47
+      '@kong/kongponents': 8.25.0_vue@3.2.47
       '@rushstack/eslint-patch': 1.2.0
       '@types/flat': 5.0.2
       '@types/js-yaml': 4.0.5
@@ -132,7 +132,7 @@ importers:
 
   packages/core/app-layout:
     specifiers:
-      '@kong/kongponents': ^8.24.1
+      '@kong/kongponents': ^8.25.0
       '@types/lodash.clonedeep': ^4.5.7
       focus-trap: ^7.2.0
       focus-trap-vue: ^4.0.1
@@ -144,7 +144,7 @@ importers:
       focus-trap-vue: 4.0.1_sc5smigrnndzyzpmn4n4e4xcs4
       lodash.clonedeep: 4.5.0
     devDependencies:
-      '@kong/kongponents': 8.24.1_vue@3.2.47
+      '@kong/kongponents': 8.25.0_vue@3.2.47
       '@types/lodash.clonedeep': 4.5.7
       vue: 3.2.47
       vue-router: 4.1.6_vue@3.2.47
@@ -170,12 +170,12 @@ importers:
   packages/core/copy-uuid:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.2.8
-      '@kong/kongponents': ^8.24.1
+      '@kong/kongponents': ^8.25.0
       vue: ^3.2.47
     dependencies:
       '@kong-ui-public/i18n': link:../i18n
     devDependencies:
-      '@kong/kongponents': 8.24.1_vue@3.2.47
+      '@kong/kongponents': 8.25.0_vue@3.2.47
       vue: 3.2.47
 
   packages/core/i18n:
@@ -188,22 +188,39 @@ importers:
       flat: 5.0.2
       intl-messageformat: 10.3.0
 
+  packages/core/misc-widgets:
+    specifiers:
+      '@kong-ui-public/i18n': workspace:^0.2.8
+      '@kong/kongponents': ^8.24.1
+      vue: ^3.2.47
+    dependencies:
+      '@kong-ui-public/i18n': link:../i18n
+    devDependencies:
+      '@kong/kongponents': 8.25.0_vue@3.2.47
+      vue: 3.2.47
+
   packages/portal/document-viewer:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.2.8
+      '@kong/kongponents': ^8.25.0
+      '@types/prismjs': ^1.26.0
       '@vitejs/plugin-vue-jsx': ^3.0.0
+      prismjs: ^1.29.0
       vue: ^3.2.47
     dependencies:
       '@kong-ui-public/i18n': link:../../core/i18n
+      prismjs: 1.29.0
     devDependencies:
+      '@kong/kongponents': 8.25.0_vue@3.2.47
+      '@types/prismjs': 1.26.0
       '@vitejs/plugin-vue-jsx': 3.0.0_vue@3.2.47
       vue: 3.2.47
 
   packages/portal/spec-renderer:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.2.8
-      '@kong-ui-public/swagger-ui-web-component': workspace:^0.4.2
-      '@kong/kongponents': ^8.24.1
+      '@kong-ui-public/swagger-ui-web-component': workspace:^0.4.5
+      '@kong/kongponents': ^8.25.0
       '@modyfi/vite-plugin-yaml': ^1.0.4
       '@types/lodash.clonedeep': ^4.5.7
       '@types/uuid': ^9.0.0
@@ -217,7 +234,7 @@ importers:
       lodash.clonedeep: 4.5.0
       uuid: 9.0.0
     devDependencies:
-      '@kong/kongponents': 8.24.1_vue@3.2.47
+      '@kong/kongponents': 8.25.0_vue@3.2.47
       '@modyfi/vite-plugin-yaml': 1.0.4
       '@types/lodash.clonedeep': 4.5.7
       '@types/uuid': 9.0.0
@@ -226,7 +243,7 @@ importers:
 
   packages/portal/swagger-ui-web-component:
     specifiers:
-      '@kong/swagger-ui-kong-theme-universal': ^4.0.7
+      '@kong/swagger-ui-kong-theme-universal': ^4.1.0
       css-loader: ^6.7.3
       raw-loader: ^4.0.2
       react: 17.0.2
@@ -240,7 +257,7 @@ importers:
       webpack-cli: ^5.0.1
       webpack-dev-server: ^4.11.1
     dependencies:
-      '@kong/swagger-ui-kong-theme-universal': 4.0.7_sfoxds7t5ydpegc3knd667wn6m
+      '@kong/swagger-ui-kong-theme-universal': 4.1.0_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       swagger-client: 3.18.5
@@ -1260,8 +1277,8 @@ packages:
       - debug
     dev: true
 
-  /@kong/kongponents/8.24.1_vue@3.2.47:
-    resolution: {integrity: sha512-S/OdFTzkaqcCUOBYxHTymt0tvXbyaj523lFollIJ35lFH4Gz4lr8ElvP5aYFvOGFLQeqV7pT3n2bsVeLosQ6yw==}
+  /@kong/kongponents/8.25.0_vue@3.2.47:
+    resolution: {integrity: sha512-6jpLHsqj9WFBMvIBAx7jgolKLUoYTnK6QZHe/MS96J3IUlQzBylV2PBrE9cjz2fX34a5oqgElFgYV/+mPvY8Fg==}
     engines: {node: '>=16.19.0'}
     peerDependencies:
       vue: '>= 3.2.37'
@@ -1282,8 +1299,8 @@ packages:
       - debug
     dev: true
 
-  /@kong/swagger-ui-kong-theme-universal/4.0.7_sfoxds7t5ydpegc3knd667wn6m:
-    resolution: {integrity: sha512-hSWTgoueVXb1hD3Gkro7JCVZ3LRTEd1r1c9UCe7uaDxGFb2mZY3eDlIpdgdTK7HbYzXFdXi77gDqs+taLc3v6w==}
+  /@kong/swagger-ui-kong-theme-universal/4.1.0_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-teYkhCDkIdyW/F5BfXSt8rYdRw+XmxqzjfF1Htecm0tgoJOR9I4BbhjEj+113BcKepi15/lF6cxDqoMIHusCvw==}
     peerDependencies:
       react: 17.0.2
     dependencies:
@@ -2622,6 +2639,10 @@ packages:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
     dev: true
 
+  /@types/prismjs/1.26.0:
+    resolution: {integrity: sha512-ZTaqn/qSqUuAq1YwvOFQfVW1AR/oQJlLSZVustdjwI+GZ8kr0MSHBj0tsXPW1EqHubx50gtBEjbPGsdZwQwCjQ==}
+    dev: true
+
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
     dev: false
@@ -2962,7 +2983,7 @@ packages:
       '@volar/source-map': 1.0.24
       '@vue/compiler-dom': 3.2.47
       '@vue/compiler-sfc': 3.2.47
-      '@vue/reactivity': 3.2.45
+      '@vue/reactivity': 3.2.47
       '@vue/shared': 3.2.47
       minimatch: 5.1.2
       vue-template-compiler: 2.7.14
@@ -3086,12 +3107,6 @@ packages:
       estree-walker: 2.0.2
       magic-string: 0.25.9
 
-  /@vue/reactivity/3.2.45:
-    resolution: {integrity: sha512-PRvhCcQcyEVohW0P8iQ7HDcIOXRjZfAsOds3N99X/Dzewy8TVhTCT4uXpAHfoKjVTJRA0O0K+6QNkDIZAxNi3A==}
-    dependencies:
-      '@vue/shared': 3.2.45
-    dev: true
-
   /@vue/reactivity/3.2.47:
     resolution: {integrity: sha512-7khqQ/75oyyg+N/e+iwV6lpy1f5wq759NdlS1fpAhFXa8VeAIKGgk2E/C4VF59lx5b+Ezs5fpp/5WsRYXQiKxQ==}
     dependencies:
@@ -3118,10 +3133,6 @@ packages:
       '@vue/compiler-ssr': 3.2.47
       '@vue/shared': 3.2.47
       vue: 3.2.47
-
-  /@vue/shared/3.2.45:
-    resolution: {integrity: sha512-Ewzq5Yhimg7pSztDV+RH1UDKBzmtqieXQlpTVm2AwraoRL/Rks96mvd8Vgi7Lj+h+TH8dv7mXD3FRZR3TUvbSg==}
-    dev: true
 
   /@vue/shared/3.2.47:
     resolution: {integrity: sha512-BHGyyGN3Q97EZx0taMQ+OLNuZcW3d37ZEVmEAyeoA9ERdGvm9Irc/0Fua8SNyOtV1w6BS4q25wbMzJujO9HIfQ==}

@@ -1,3 +1,4 @@
+import { HeadingNode, isHeadingNode, isTextNode } from '../types'
 import { toSlug } from './toSlug'
 export function addUniqueHeadingSlugs<T = any>(children: Array<T>): Array<T> {
 
@@ -7,7 +8,7 @@ export function addUniqueHeadingSlugs<T = any>(children: Array<T>): Array<T> {
   // loop through the children
   // if the child is a heading, add a slug property based on the text
   return children.map((child: any) => {
-    if (child.type === 'heading') {
+    if (isHeadingNode(child)) {
       return addSlug(child, slugMap)
     } else {
       return child
@@ -15,8 +16,12 @@ export function addUniqueHeadingSlugs<T = any>(children: Array<T>): Array<T> {
   })
 }
 
-export function addSlug(child: any, slugMap: Map<string, number>, prefix = 'doc-heading-') {
-  const text = child.children[0].text
+export function addSlug(child: HeadingNode, slugMap: Map<string, number>, prefix = 'doc-heading-') {
+  const firstChild = child.children?.[0]
+  const defaultText = `level-${child.level}`
+  const text = isTextNode(firstChild)
+    ? firstChild.text || defaultText
+    : defaultText
   const slugCount = slugMap.get(text)
   slugMap.set(text, (slugCount || 0) + 1)
   const duplicateSuffix = slugCount && slugCount > 1 ? `-${slugCount}` : ''

@@ -33,6 +33,10 @@ describe('<SpecOperationsList />', () => {
 
     // renders untagged items
     cy.getTestId('spec-operations-list-untagged-items').should('be.visible')
+    cy.getTestId('spec-operations-list-section-untagged-collapse-trigger').click()
+    cy.get('[data-testid="spec-operations-list-untagged-items"] .spec-operations-list-item').should('not.be.visible')
+    cy.getTestId('spec-operations-list-section-untagged-collapse-trigger').click()
+    cy.get('[data-testid="spec-operations-list-untagged-items"] .spec-operations-list-item').should('have.length', 1)
   })
 
   it('renders with correct px width', () => {
@@ -65,6 +69,31 @@ describe('<SpecOperationsList />', () => {
     cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags?.[0]}`).click()
     // no items selected
     cy.get('.item--selected').should('not.exist')
+  })
+
+  // this test should behave the same as the one above
+  // because we cannot change props after mounting
+  it('resets selection when passed deselect property', () => {
+    cy.mount(SpecOperationsList, {
+      props: {
+        operations: operationsList,
+        tags,
+        deselect: false,
+      },
+    }).then(({ wrapper }) => {
+      // select an item
+      cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags?.[0]}`).click()
+      cy.get('.item--selected').should('have.length', 1).then(() => {
+        // deselect
+        wrapper.setProps({ deselect: true, operations: operationsList, tags }).then(() => {
+          // verify no items selected
+          cy.get('.item--selected').should('not.exist')
+        })
+
+      })
+
+    })
+
   })
 
   it('allows selecting an item', () => {

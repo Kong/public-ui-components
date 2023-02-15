@@ -48,7 +48,7 @@ function notifyUnknownNodeType(type: string) {
 }
 
 export default function renderChildren<ChildTypes extends BaseNode>(children: Array<ChildTypes>, parent?: BaseNode): Component {
-  return children.map((child) => {
+  return children.map((child, index) => {
     if (!child) {
       return null
     }
@@ -72,6 +72,17 @@ export default function renderChildren<ChildTypes extends BaseNode>(children: Ar
           paragraphChild.appendSpace = true
         }
       })
+    }
+
+    if (child?.type === 'code_block') {
+      return (
+        <component
+          {...restProps}
+          lines={children}
+          isSingleLine={children?.length && children.length === 1}
+          codeBlockIndex={index}
+        />
+      )
     }
 
     return (

@@ -38,11 +38,15 @@ export interface TextNode extends BaseNode<'text'> {
 }
 
 export function isTextNode(o: any): o is TextNode {
-  return o.type === 'text'
+  return !!(o?.type === 'text')
 }
 
 export interface HeadingNode extends BaseNode<'heading'> {
   level: number
+}
+
+export function isHeadingNode(o: any): o is HeadingNode {
+  return !!(o?.type === 'heading')
 }
 
 export interface ListItemNode extends BaseNode<'list_item'> {}

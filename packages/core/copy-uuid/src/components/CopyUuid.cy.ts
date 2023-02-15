@@ -2,7 +2,7 @@
 
 /* eslint-disable cypress/no-unnecessary-waiting */
 import CopyUuid from './CopyUuid.vue'
-import { COPY_UUID_NOTIFY_KEY } from '../const'
+import { COPY_UUID_NOTIFY_KEY } from '../constants'
 import type { CopyUuidNotifyParam } from '../types'
 
 const uuid = '1234567890ABCDEFG'

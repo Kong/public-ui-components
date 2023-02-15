@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.4.2...@kong-ui-public/document-viewer@0.4.3) (2023-02-15)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.25.0 ([#146](https://github.com/Kong/public-ui-components/issues/146)) ([7efe5de](https://github.com/Kong/public-ui-components/commit/7efe5dec93992108bc7dbc4c59003d514eae6913))
+
+
+
+
+
+## [0.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.4.1...@kong-ui-public/document-viewer@0.4.2) (2023-02-15)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.24.3 ([#145](https://github.com/Kong/public-ui-components/issues/145)) ([fdc3ef7](https://github.com/Kong/public-ui-components/commit/fdc3ef7dcffaa0e3f651d3fa3c8609cde7b4e12e))
+
+
+
+
+
+## [0.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.4.0...@kong-ui-public/document-viewer@0.4.1) (2023-02-13)
+
+
+### 🐛 Bug Fixes
+
+* **document-viewer:** use default text for slug if there is no text ([#141](https://github.com/Kong/public-ui-components/issues/141)) ([8a0466c](https://github.com/Kong/public-ui-components/commit/8a0466c3bd727f4df194fb649fbeb2dd6fc2b700))
+
+
+
+
+
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.3.0...@kong-ui-public/document-viewer@0.4.0) (2023-02-13)
+
+
+### ✨ Features
+
+* **document-viewer:** add syntax highlighting for code block (TDX-2862) ([#138](https://github.com/Kong/public-ui-components/issues/138)) ([39a9049](https://github.com/Kong/public-ui-components/commit/39a9049db78b843cfaf8175727018b5b7486c3c8))
+
+
+
+
+
 # [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.2.11...@kong-ui-public/document-viewer@0.3.0) (2023-02-09)
 
 
