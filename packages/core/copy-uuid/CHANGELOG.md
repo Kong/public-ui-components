@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@0.1.17...@kong-ui-public/copy-uuid@0.1.18) (2023-02-15)
+
+
+### 🐛 Bug Fixes
+
+* **spec-renderer:** untagged items [khcp-6150] ([#144](https://github.com/Kong/public-ui-components/issues/144)) ([9491728](https://github.com/Kong/public-ui-components/commit/9491728cb5c9bad0563510bb732c4fb4c75de5ea))
+
+
+
+
+
 ## [0.1.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@0.1.16...@kong-ui-public/copy-uuid@0.1.17) (2023-02-15)
 
 
