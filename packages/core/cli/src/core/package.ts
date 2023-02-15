@@ -66,6 +66,7 @@ const createPackageFiles = async (workspace: string, packageName: string): Promi
         .replace(/{%%PACKAGE_NAME%%}/g, packageName)
         .replace(/{%%COMPONENT_NAME%%}/g, componentName)
         .replace(/{%%WORKSPACE%%}/g, workspace)
+        .replace(/{%%CURRENT_YEAR%%}/g, String(new Date().getFullYear()))
 
       fs.writeFileSync(newFilePath, fileContent, 'utf8')
     }
