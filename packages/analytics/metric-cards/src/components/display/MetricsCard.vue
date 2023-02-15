@@ -1,7 +1,7 @@
 <template>
   <div class="metricscard">
     <div class="metricscard-title">
-      {{ title }}
+      <span>{{ title }}</span>
       <KTooltip
         v-if="tooltip"
         class="metricscard-tooltip"
@@ -169,19 +169,16 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
   }
 
   &-title {
-    align-items: center;
     color: $metric-color-grey;
-    display: flex;
     font-size: $font-size-sm;
-
-    .kong-icon-info {
-      display: flex;
-    }
   }
 
   &-tooltip {
-    margin-left: 5px;
+    display: inline-flex;
+    vertical-align: middle;
+    margin: auto 0 auto 5px;
   }
+
   // Only currently active tab should trigger tooltip hover
   &.active {
     .metricscard-tooltip {
