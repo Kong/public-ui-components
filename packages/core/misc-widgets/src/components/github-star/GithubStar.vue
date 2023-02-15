@@ -16,10 +16,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import composables from '../../composables'
 
-const props = defineProps({
+defineProps({
   url: {
     type: String,
     required: true,
@@ -27,8 +27,6 @@ const props = defineProps({
 })
 
 const { i18n } = composables.useI18n()
-
-const url = computed(() => props.url)
 
 onMounted(async () => {
   const githubStarScript = document.createElement('script')
