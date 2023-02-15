@@ -2,6 +2,7 @@
 # https://github.com/evilmartians/lefthook/blob/master/docs/full_guide.md
 
 pre-push:
+  parallel: true
   commands:
     stylelint:
       skip:
@@ -15,6 +16,7 @@ pre-push:
       run: pnpm run lint
 
 commit-msg:
+  parallel: true
   commands:
     commitlint:
       skip:
