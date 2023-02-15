@@ -85,16 +85,16 @@
           >
             <template #trigger="{ isCollapsed, toggle }">
               <OperationsListSectionHeader
-                :content-element-id="getSectionContentId(untaggedItemsSectionName)"
+                :content-element-id="getSectionContentId(DEFAULT_UNTAGGED_SECTION_NAME)"
                 :data-testid="`spec-operations-list-section-untagged-collapse-trigger`"
-                :description="getSectionDescription(untaggedItemsSectionName)"
+                :description="getSectionDescription(DEFAULT_UNTAGGED_SECTION_NAME)"
                 :is-collapsed="isCollapsed"
-                :name="untaggedItemsSectionName"
+                :name="DEFAULT_UNTAGGED_SECTION_NAME"
                 @toggle="toggle"
               />
             </template>
 
-            <div :id="getSectionContentId(untaggedItemsSectionName)">
+            <div :id="getSectionContentId(DEFAULT_UNTAGGED_SECTION_NAME)">
               <template
                 v-for="item in untaggedItems"
                 :key="`${item.path}-${item.method}`"
@@ -102,7 +102,7 @@
                 <slot
                   :item="item"
                   name="untagged-item"
-                  :section="untaggedItemsSectionName"
+                  :section="DEFAULT_UNTAGGED_SECTION_NAME"
                   :select="() => handleSelection(item)"
                 >
                   <OperationsListItem
@@ -149,6 +149,7 @@ import type { OperationListFilterFunction, Operation, OperationListItem, Tag } f
 import { v1 as uuidv1 } from 'uuid'
 import clonedeep from 'lodash.clonedeep'
 import composables from '../composables'
+import { DEFAULT_UNTAGGED_SECTION_NAME } from '../const'
 import OperationsListSectionHeader from './operations-list/OperationsListSectionHeader.vue'
 import OperationsListItem from './operations-list/OperationsListItem.vue'
 
@@ -199,7 +200,6 @@ const uid = computed<string>(() => uuidv1())
 
 const filterQuery = ref<string>('')
 const taggedItems = ref<OperationListItem[]>([])
-const untaggedItemsSectionName = ref('default')
 const selectedItem = ref<OperationListItem>()
 const filteredItems = ref<OperationListItem[]>([])
 
