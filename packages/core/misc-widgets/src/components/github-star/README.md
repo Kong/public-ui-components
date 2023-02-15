@@ -18,7 +18,6 @@ A Github Star component for displaying number of stars received by the repo on G
 #### `url`
 
 - type: `String`
-- required: `false`
-- default: `''`
+- required: `true`
 
 Full URL to the GitHub repository.
