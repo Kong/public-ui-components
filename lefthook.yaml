@@ -4,11 +4,20 @@
 pre-push:
   commands:
     stylelint:
+      skip:
+        - merge
+        - rebase
       run: pnpm run stylelint
     eslint:
+      skip:
+        - merge
+        - rebase
       run: pnpm run lint
 
 commit-msg:
   commands:
     commitlint:
+      skip:
+        - merge
+        - rebase
       run: pnpm commitlint --edit
