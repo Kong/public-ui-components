@@ -94,33 +94,10 @@ const cards = [
   },
 ]
 
-const cardsWithErrors = [
-  {
-    currentValue: 0,
-    previousValue: 0,
-    title: 'Number of Requests',
-    increaseIsBad: false,
-    hasError: true,
-  },
-  {
-    currentValue: 0,
-    previousValue: 0,
-    title: 'Average Error Rate',
-    hasError: true,
-  },
-  {
-    currentValue: 0,
-    previousValue: 0,
-    title: 'P99 Latency',
-    increaseIsBad: true,
-  },
-  {
-    currentValue: 0,
-    previousValue: 0,
-    title: 'Active Runtime Groups',
-    increaseIsBad: true,
-  },
-]
+const cardsWithErrors = JSON.parse(JSON.stringify(cards))
+cardsWithErrors[0].hasError = true
+cardsWithErrors[1].hasError = true
+cardsWithErrors[2].hasError = true
 
 const cardsSmall = {
   cards,
