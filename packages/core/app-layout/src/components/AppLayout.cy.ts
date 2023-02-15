@@ -136,6 +136,12 @@ describe('<AppLayout />', () => {
 
         cy.get('[data-testid="app-layout-navbar-mobile-logo-slot-content"]').should('be.visible')
       })
+
+      it('should not have a top-left border-radius on the main content container', () => {
+        cy.mount(AppLayout)
+
+        cy.get('[data-testid="kong-ui-app-layout-main"]').should('have.css', 'border-top-left-radius').and('eq', '0px')
+      })
     })
 
     describe('desktop only', {
@@ -163,6 +169,12 @@ describe('<AppLayout />', () => {
         })
 
         cy.get('[data-testid="app-layout-sidebar-top-slot-content"]').should('be.visible')
+      })
+
+      it('should have a top-left border-radius on the main content container', () => {
+        cy.mount(AppLayout)
+
+        cy.get('[data-testid="kong-ui-app-layout-main"]').should('have.css', 'border-top-left-radius').and('eq', '16px')
       })
     })
   })

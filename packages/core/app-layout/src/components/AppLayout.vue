@@ -61,7 +61,10 @@
       </template>
     </AppSidebar>
 
-    <main class="kong-ui-app-layout-main">
+    <main
+      class="kong-ui-app-layout-main"
+      data-testid="kong-ui-app-layout-main"
+    >
       <div class="kong-ui-app-layout-content">
         <div id="kong-ui-app-layout-teleport-default-slot" />
         <slot name="app-error" />
