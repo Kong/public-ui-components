@@ -467,7 +467,7 @@ onBeforeUnmount(() => {
   }
 
   &:after{
-    background-image: linear-gradient(#003496, #78785400);
+    background-image: linear-gradient(#001740, #78785400);
     bottom: 0;
     content: '';
     display: block;
