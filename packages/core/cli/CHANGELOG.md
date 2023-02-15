@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.3.11...@kong-ui-public/cli@0.3.12) (2023-02-15)
+
+
+### ♻️ Chores
+
+* **cli:** inject current year ([6804d0a](https://github.com/Kong/public-ui-components/commit/6804d0ad333ca9a2041392eb9026794464a112a9))
+
+
+
+
+
 ## [0.3.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.3.10...@kong-ui-public/cli@0.3.11) (2023-02-11)
 
 
