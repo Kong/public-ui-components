@@ -39,7 +39,9 @@
       </div>
     </template>
     <template #sidebar-top>
-      Top Content
+      <div class="sidebar-top-slot-content">
+        <div>Top Slot Content</div>
+      </div>
     </template>
 
     <!-- Default slot content -->
@@ -298,3 +300,12 @@ const handleCloseAlert = (): void => {
   showAlert.value = false
 }
 </script>
+
+<style lang="scss" scoped>
+.sidebar-top-slot-content {
+  align-content: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+</style>

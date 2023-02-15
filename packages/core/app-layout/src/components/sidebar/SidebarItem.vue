@@ -175,11 +175,11 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
       &:hover,
       &:focus-visible {
-        color: var(--white, #fff);
+        color: var(--green-300, #84E5AE);
 
         // SVG fill color on hover
         svg:not(.profile-icon) path {
-          fill: var(--white, #fff);
+          fill: var(--green-300, #84E5AE);
         }
       }
 
@@ -198,7 +198,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     &.active > div > a,
     &.expanded > a,
     &.expanded > div > a {
-      color: var(--white, #fff);
+      color: var(--green-300, #84E5AE);
 
       .sidebar-item-name {
         font-weight: 600 !important;
@@ -218,9 +218,12 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
 // Primary-level nav item
 .sidebar-item-primary {
+  border: 1px solid transparent;
+
   &.active,
   &.expanded {
     background-color: rgba(#fff, .1);
+    border-color: rgba(#fff, .1);
     border-radius: $sidebar-item-border-radius;
   }
 
@@ -252,7 +255,8 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     border-left: 4px solid transparent;
     color: var(--steel-200, #DAE3F2) !important;
     font-size: $sidebar-item-font-size;
-    min-height: 36px !important;
+    // Override the min-height for the secondary items
+    min-height: 40px !important;
     transition: all .1s ease-in-out !important;
 
     &:hover,
@@ -273,7 +277,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
   &.active > a {
     background-color: rgba(#fff, 0.2);
-    border-left: 4px solid var(--green-500, #07A88D);
+    border-left: 4px solid var(--green-300, #84E5AE);
     color: var(--white, #fff) !important;
     font-weight: 600 !important;
   }
