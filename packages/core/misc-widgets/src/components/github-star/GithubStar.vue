@@ -39,6 +39,8 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .kong-ui-public-misc-widgets-github-star {
-  // Add component styles as needed
+  .github-button {
+    font-style: normal;
+  }
 }
 </style>
