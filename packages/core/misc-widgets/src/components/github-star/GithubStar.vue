@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="url"
+    v-if="url && scriptLoaded"
     class="kong-ui-public-misc-widgets-github-star"
     data-testid="github-star"
   >
@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import composables from '../../composables'
 
 defineProps({
@@ -28,8 +28,15 @@ defineProps({
 
 const { i18n } = composables.useI18n()
 
+const scriptLoaded = ref<boolean>(false)
+
 onMounted(async () => {
   const githubStarScript = document.createElement('script')
+
+  githubStarScript.addEventListener('load', () => {
+    scriptLoaded.value = true
+  })
+
   githubStarScript.setAttribute('src', 'https://buttons.github.io/buttons.js')
   document.head.appendChild(githubStarScript)
 })
