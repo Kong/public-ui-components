@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n, createI18n, createI18nTComponent } from '../src'
+import { useI18n, createI18n, i18nTComponent } from '../src'
 import english from './locales/en.json'
 
 // this is grabbing i18n from global
@@ -49,6 +49,6 @@ const i18n = useI18n()
 
 // this creates local i18n and component
 const i18nLocal = createI18n('en-us', english)
-const i18nNoPlugin = createI18nTComponent(i18nLocal)
+const i18nNoPlugin = i18nTComponent(i18nLocal)
 
 </script>

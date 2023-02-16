@@ -2,7 +2,7 @@ import { defineComponent, h } from 'vue'
 import type { VNodeChild, App, PropType } from 'vue'
 import type { IntlShapeEx } from './types'
 
-export const createI18nTComponent = (i18n: IntlShapeEx | null = null) => defineComponent({
+export const i18nTComponent = (i18n: IntlShapeEx | null = null) => defineComponent({
   name: 'I18nT',
   props: {
     i18n: {
@@ -68,6 +68,6 @@ export const createI18nTComponent = (i18n: IntlShapeEx | null = null) => defineC
 export default {
   install(app: App, options: { i18n: IntlShapeEx }) {
     const { i18n } = options
-    app.component('I18nT', createI18nTComponent(i18n))
+    app.component('I18nT', i18nTComponent(i18n))
   },
 }

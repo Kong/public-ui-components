@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { Translation, createI18nTComponent } from './index'
+import { Translation, i18nTComponent } from './index'
 import useI18n, { createI18n } from './i18n'
 
 const english = {
@@ -16,7 +16,7 @@ const i18n = createI18n('en-us', english, true)
 describe('TranslationComponent', () => {
   it('should render', () => {
     const wrapper = mount({
-      components: { I18nT: createI18nTComponent(i18n) },
+      components: { I18nT: i18nTComponent(i18n) },
 
       setup: () => {
         return {
