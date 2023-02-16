@@ -170,6 +170,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
       svg:not(.profile-icon) path {
         color: currentColor;
         fill: currentColor;
+        stroke: currentColor;
         transition: all .2s ease-out;
       }
 
@@ -180,6 +181,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
         // SVG fill color on hover
         svg:not(.profile-icon) path {
           fill: var(--green-300, #84E5AE);
+          stroke: var(--green-300, #84E5AE);
         }
       }
 
