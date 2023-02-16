@@ -72,7 +72,7 @@ describe('<SpecDetails />', () => {
     cy.getTestId('kong-public-ui-spec-details-swagger').should('be.visible')
     cy.getTestId('default-styles').should('exist')
 
-    cy.get('.kong-public-ui-spec-details.active-op-focused').should('not.exist')
+    cy.get('.kong-public-ui-spec-details.active-op-focused').should('exist')
   })
 
   it('renders error state when missing required props', () => {
