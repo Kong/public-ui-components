@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import Translation from './Translation'
+import { Translation, createI18nTComponent } from './index'
 import useI18n, { createI18n } from './i18n'
 
 const english = {
@@ -12,6 +12,28 @@ const english = {
 }
 
 const i18n = createI18n('en-us', english, true)
+
+describe('TranslationComponent', () => {
+  it('should render', () => {
+    const wrapper = mount({
+      components: { I18nT: createI18nTComponent(i18n) },
+
+      setup: () => {
+        return {
+          i18n,
+        }
+      },
+      template: `
+        <i18n-t
+          keypath="global.default"
+        >
+          <a href="https://google.com">Google</a>
+        </i18n-t>
+      `,
+    })
+    expect(wrapper.html()).toEqual('<span keypath="global.default" tag="span">See the news at <a href="https://google.com">Google</a>. There is a lot there.</span>')
+  })
+})
 
 describe('Translation', () => {
   it('should render default slot', () => {

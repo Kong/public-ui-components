@@ -161,6 +161,8 @@ _Please, do not use this method in any new code. This prevents using parameters/
 
 ### HTML safe formatting with `<i18n-t>`
 
+#### With registered i18nPlugin
+
 Sometimes it is needed to render translated message with HTML as part of the parameters. For this Provided component can be used.
 
 `en.json:`
@@ -241,6 +243,31 @@ And then, anywhere in application code where `i18n` is needed
 
 ```html
 <h1><b>Morning</b>, my name is <i>Val</i>. And I am <i>Money Asker</i>. I want <div class="red">$1,000.00</div></h1>
+```
+
+#### With direct use of i18nT component
+
+In some cases we do not have access to vue `app`  and cannot relay on registered i18nT plugin. Working on stadalone components in `public-ui-components` is of those cases. And for this your component will look like:
+
+
+```html
+<template>
+  <i18n-t
+    tag="h1"
+    keypath="global.default">
+      <a href="https://google.com">Google</a>
+  </i18n-t>
+</template>
+
+<script setup lang="ts">
+  import { createI18n, Translation } from '@kong-ui-public/i18n'
+  import english from './locales/en.json'
+
+  const i18n = createI18n('en-us', english)
+  const i18nT = createI18nTComponent(i18n)
+
+</script>
+
 ```
 
 ## Formatting numbers, dates and times
