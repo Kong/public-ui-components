@@ -115,12 +115,17 @@ const headerStyles = computed(() => ({
       border-bottom: 4px solid transparent;
       color: var(--white, #fff);
       display: flex;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 500;
-
-      padding: 0 16px;
+      padding: 0 8px;
       text-decoration: none;
       transition: all .2s ease-in-out;
+      white-space: nowrap;
+
+      @media (min-width: $viewport-md) {
+        font-size: 16px;
+        padding: 0 16px;
+      }
 
       &.router-link-active,
       &.active {
