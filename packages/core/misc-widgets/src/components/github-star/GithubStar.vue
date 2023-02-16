@@ -4,7 +4,7 @@
     class="kong-ui-public-misc-widgets-github-star"
     data-testid="github-star"
   >
-    <KTooltip :label="tooltipText">
+    <KTooltip :label="tooltipLabel">
       <span>
         <a
           :aria-label="i18n.t('githubStar.ariaLabel')"
@@ -22,13 +22,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import composables from '../../composables'
 import { KTooltip } from '@kong/kongponents'
 
 const { i18n } = composables.useI18n()
 
-defineProps({
+const props = defineProps({
   url: {
     type: String,
     required: true,
@@ -36,9 +36,11 @@ defineProps({
   tooltipText: {
     type: String,
     required: false,
-    default: 'Star this repository on Github',
+    default: '',
   },
 })
+
+const tooltipLabel = computed((): string => props.tooltipText || i18n.t('githubStar.tooltipLabel'))
 
 const scriptLoaded = ref<boolean>(false)
 
