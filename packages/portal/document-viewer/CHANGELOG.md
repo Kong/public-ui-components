@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.4.4...@kong-ui-public/document-viewer@0.4.5) (2023-02-16)
+
+
+### 🐛 Bug Fixes
+
+* **document-viewer:** properly check if empty object is passed ([#151](https://github.com/Kong/public-ui-components/issues/151)) ([746c706](https://github.com/Kong/public-ui-components/commit/746c706efc521a48e6a1b552bc9f5f78b945b807))
+
+
+
+
+
 ## [0.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.4.3...@kong-ui-public/document-viewer@0.4.4) (2023-02-16)
 
 
