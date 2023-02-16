@@ -417,7 +417,7 @@ When the mobile sidebar is toggled open, a class of `kong-ui-app-sidebar-open` i
 body.kong-ui-app-sidebar-open {
   overflow: hidden;
 
-  @media (min-width: $viewport-md) { // 768px - this breakpoint is *required* is is not configurable
+  @media (min-width: $viewport-lg) { // 1024px - this breakpoint is *required* is is not configurable
     overflow: auto;
   }
 }

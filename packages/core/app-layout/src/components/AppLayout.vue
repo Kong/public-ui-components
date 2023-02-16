@@ -276,7 +276,7 @@ onBeforeUnmount(() => {
       align-items: center;
       display: flex;
 
-      @media (min-width: $viewport-md) {
+      @media (min-width: $viewport-lg) {
         display: none;
       }
 
@@ -301,7 +301,7 @@ onBeforeUnmount(() => {
     overflow: auto;
     width: 100%;
 
-    @media (min-width: $viewport-md) {
+    @media (min-width: $viewport-lg) {
       border-top-left-radius: v-bind('layoutMainTopLeftBorderRadius');
       margin-left: $sidebar-width;
       width: calc(100% - #{$sidebar-width});

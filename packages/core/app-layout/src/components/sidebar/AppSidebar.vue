@@ -367,7 +367,7 @@ onBeforeUnmount(() => {
     width: $sidebar-width;
   }
 
-  @media (min-width: $viewport-md) {
+  @media (min-width: $viewport-lg) {
     background: var(--kong-ui-app-sidebar-background, transparent);
     height: v-bind('sidebarContainerStyles.height');
     left: 0;
@@ -419,7 +419,7 @@ onBeforeUnmount(() => {
 // Remove the top margin if `props.mobileHeaderVisible` is false, or if no header slot is present
 .mobile-header-hidden .sidebar-content-container,
 .no-sidebar-header .sidebar-content-container {
-  @media (max-width: ($viewport-md - 1px)) {
+  @media (max-width: ($viewport-lg - 1px)) {
     margin-top: 0 !important;
   }
 }
@@ -447,7 +447,7 @@ onBeforeUnmount(() => {
   user-select: none;
   z-index: 1;
 
-  @media (min-width: $viewport-md) {
+  @media (min-width: $viewport-lg) {
     display: flex;
   }
 
@@ -533,7 +533,7 @@ onBeforeUnmount(() => {
   top: v-bind('sidebarOverlayStyles.top');
   z-index: v-bind('sidebarOverlayStyles.zIndex');
 
-  @media (min-width: $viewport-md) {
+  @media (min-width: $viewport-lg) {
     display: none !important;
   }
 }
@@ -566,7 +566,7 @@ onBeforeUnmount(() => {
 body.kong-ui-app-sidebar-open {
   overflow: hidden;
 
-  @media (min-width: $viewport-md) {
+  @media (min-width: $viewport-lg) {
     overflow: auto;
   }
 }

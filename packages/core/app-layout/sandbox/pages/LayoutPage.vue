@@ -17,17 +17,15 @@
       />
     </template> -->
     <template #navbar-logo>
-      <div class="kong-logo d-flex w-100">
-        <router-link
-          class="d-flex align-items-center w-100"
-          to="/"
-        >
-          <AppGruceLogo />
-          <div class="d-flex pl-4 konnect-header-title">
-            <AppLogo theme="dark" />
-          </div>
-        </router-link>
-      </div>
+      <router-link
+        class="navbar-logo-link"
+        to="/"
+      >
+        <AppGruceLogo />
+        <div class="logo-title">
+          <AppLogo theme="dark" />
+        </div>
+      </router-link>
     </template>
     <template #navbar>
       <NavLinks />
@@ -320,5 +318,19 @@ const sidebarItemsProfile = computed((): SidebarProfileItem[] => {
   display: flex;
   justify-content: center;
   width: 100%;
+}
+
+.navbar-logo-link {
+  display: flex;
+  align-items: center;
+}
+
+.logo-title {
+  display: none;
+  padding-left: 16px;
+
+  @media (min-width: 640px) { // $viewport-sm
+    display: flex;
+  }
 }
 </style>

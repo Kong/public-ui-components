@@ -49,7 +49,7 @@ watch(() => props.active, (active) => {
     outline: 1px solid var(--kong-ui-app-sidebar-mobile-icon-color, var(--blue-500, #1155cb));
   }
 
-  @media (min-width: $viewport-md) {
+  @media (min-width: $viewport-lg) {
     display: none;
   }
 
