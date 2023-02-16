@@ -1,13 +1,13 @@
 <template>
   <div class="app-navbar-links">
     <router-link to="/">
-      <span>AppLayout.vue</span>
+      AppLayout.vue
     </router-link>
     <router-link to="/navbar">
-      <span>AppNavbar.vue</span>
+      AppNavbar.vue
     </router-link>
     <router-link to="/sidebar">
-      <span>AppSidebar.vue</span>
+      AppSidebar.vue
     </router-link>
   </div>
 </template>
