@@ -294,11 +294,13 @@ onBeforeUnmount(() => {
   .kong-ui-app-layout-main {
     align-items: flex-start;
     background-color: var(--grey-100, #f8f8fa);
+    box-shadow: $app-layout-main-box-shadow;
     display: flex;
     flex-grow: 1;
     height: 100%;
     margin-top: v-bind('layoutMainMarginTop');
     overflow: auto;
+    position: relative;
     width: 100%;
 
     @media (min-width: $viewport-lg) {
