@@ -5,16 +5,18 @@
     data-testid="github-star"
   >
     <KTooltip :label="tooltipText">
-      <a
-        aria-label="i18n.t('githubStar.ariaLabel')"
-        class="github-button"
-        data-color-scheme="no-preference: light; light: light; dark: light;"
-        data-show-count="true"
-        :href="url"
-        target="_blank"
-      >
-        {{ i18n.t('githubStar.title') }}
-      </a>
+      <span>
+        <a
+          :aria-label="i18n.t('githubStar.ariaLabel')"
+          class="github-button"
+          data-color-scheme="no-preference: light; light: light; dark: light;"
+          data-show-count="true"
+          :href="url"
+          target="_blank"
+        >
+          {{ i18n.t('githubStar.title') }}
+        </a>
+      </span>
     </KTooltip>
   </div>
 </template>
