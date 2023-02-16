@@ -26,9 +26,9 @@
         </template>
       </i18n-t>
 
-      <p />
+      <p>
       This is direct use of i18n-t (no plugin registration ):
-      <p />
+      </p>
       <i18n-no-plugin
         keypath="global.default"
       >
