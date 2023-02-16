@@ -14,6 +14,7 @@ A Kong UI component for displaying and filtering API specs
 
 ## Features
 
+
 - Render spec with optional side nav and filtering
 
 ## Requirements
