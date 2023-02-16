@@ -1,6 +1,7 @@
 {
   "githubStar": {
     "title": "Star",
-    "ariaLabel": "Star buttons/github-buttons on GitHub"
+    "ariaLabel": "Star buttons/github-buttons on GitHub",
+    "tooltipLabel": "Star this repository on Github"
   }
 }
