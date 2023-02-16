@@ -472,10 +472,11 @@ onBeforeUnmount(() => {
     content: '';
     display: block;
     height: $sidebar-header-spacing;
-    left: 0;
+    left: 50%;
     margin-bottom: -$sidebar-header-spacing;
     position: absolute;
-    width: 100%;
+    transform: translateX(-50%); // center
+    width: calc(100% - 16px);
     z-index: 1;
   }
 }
