@@ -438,7 +438,7 @@ onBeforeUnmount(() => {
   display: v-bind('headerContainerStyles.display');
   left: 0;
   min-height: v-bind('headerContainerStyles.minHeight');
-  padding: 0 20px;
+  padding: 0 16px; // should match the padding of `.header-content` in the navbar
   position: absolute;
   right: 0;
   top: 0;

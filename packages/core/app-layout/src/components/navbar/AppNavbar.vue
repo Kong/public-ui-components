@@ -40,7 +40,6 @@ const headerStyles = computed(() => ({
 
 .kong-ui-app-navbar {
   background: var(--kong-ui-app-navbar-background, transparent);
-  border-bottom: $navbar-border;
   left: 0;
   position: fixed;
   right: 0;
@@ -57,7 +56,7 @@ const headerStyles = computed(() => ({
     gap: $header-item-gap;
     height: $navbar-height;
     justify-content: space-between;
-    padding: 0 16px;
+    padding: 0 16px; // should match the padding of `.sidebar-header` in the sidebar
   }
 
   .mobile-header-left {

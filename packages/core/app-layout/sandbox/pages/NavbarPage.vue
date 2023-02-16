@@ -1,5 +1,16 @@
 <template>
   <AppNavbar :left-offset="0">
+    <div class="kong-logo d-flex w-100">
+      <router-link
+        class="d-flex align-items-center w-100"
+        to="/"
+      >
+        <AppGruceLogo />
+        <div class="d-flex pl-4 konnect-header-title">
+          <AppLogo theme="light" />
+        </div>
+      </router-link>
+    </div>
     <template #mobile-logo>
       <a
         class="navbar-logo-link"
