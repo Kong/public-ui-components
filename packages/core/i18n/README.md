@@ -267,7 +267,36 @@ In some cases we do not have access to the Vue `app` and cannot relay on registe
   const i18nT = i18nTComponent(i18n)
 
 </script>
+```
 
+Or in old `defineComponent` way
+
+```html
+
+<template>
+  <i18n-t
+    :i18n="i18n"
+    tag="h1"
+    keypath="global.default">
+      <a href="https://google.com">Google</a>
+  </i18n-t>
+</template>
+
+
+<script lang="ts">
+  import { defineComponent } from 'vue'
+  import { createI18n, i18nTComponent } from '../src'
+  import english from './locales/en.json'
+
+  export default defineComponent({
+    components: { i18nT: i18nTComponent() },
+    setup() {
+      return {
+        i18n: createI18n('en-us', english)
+      }
+    }
+  })
+</script>
 ```
 
 ## Formatting numbers, dates and times
