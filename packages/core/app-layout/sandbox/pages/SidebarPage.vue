@@ -1,14 +1,24 @@
 <template>
-  <header class="navbar">
-    <nav>
+  <AppNavbar>
+    <template #mobile-sidebar-toggle>
       <SidebarToggle
         :active="mobileSidebarOpen"
         @toggle="sidebarToggled"
       />
-      <div>Dummy navbar</div>
-      <NavLinks />
-    </nav>
-  </header>
+    </template>
+    <template #mobile-logo>
+      <a
+        class="navbar-logo-link"
+        href="/"
+      >
+        <AppGruceLogo />
+        <div class="logo-title">
+          <AppLogo theme="dark" />
+        </div>
+      </a>
+    </template>
+    <NavLinks />
+  </AppNavbar>
   <div class="sandbox-container">
     <AppSidebar
       :bottom-items="sidebarItemsBottom"
@@ -25,7 +35,7 @@
       @toggle="sidebarToggled"
     >
       <template #header>
-        <div class="kong-logo d-flex w-100">
+        <div class="kong-logo d-flex">
           <router-link
             class="d-flex align-items-center w-100"
             to="/"
@@ -50,7 +60,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { AppSidebar, SidebarToggle, SidebarPrimaryItem, SidebarProfileItem, SidebarSecondaryItem } from '../../src'
+import { AppSidebar, AppNavbar, SidebarToggle, SidebarPrimaryItem, SidebarProfileItem, SidebarSecondaryItem } from '../../src'
 import { AppLogo, AppGruceLogo } from '../components/icons'
 import '@kong/kongponents/dist/style.css'
 // Sandbox only
@@ -364,6 +374,14 @@ main {
 
 .k-button {
   float: right;
+}
+
+.desktop-logo {
+  display: none;
+
+  @media (min-width: 768px) { // $viewport-md
+    display: flex;
+  }
 }
 </style>
 

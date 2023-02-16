@@ -11,6 +11,7 @@
     </div>
     <AppNavbar
       v-if="!navbar.hidden"
+      :key="String(sidebar.hidden)"
       :left-offset="sidebar.hidden ? 0 : undefined"
       :top-offset="notificationHeight"
     >
@@ -27,6 +28,17 @@
       >
         <div class="mobile-logo">
           <slot name="navbar-mobile-logo" />
+        </div>
+      </template>
+      <template
+        v-if="slotContent.navbarLogo"
+        #logo
+      >
+        <div
+          v-if="sidebar.hidden"
+          class="navbar-logo"
+        >
+          <slot name="navbar-logo" />
         </div>
       </template>
       <slot name="navbar" />
@@ -135,6 +147,7 @@ const emit = defineEmits(['sidebar-click'])
 
 const slots = useSlots()
 const slotContent = reactive({
+  navbarLogo: computed((): boolean => !!slots['navbar-logo']),
   navbarMobileLogo: computed((): boolean => !!slots['navbar-mobile-logo']),
   sidebarHeader: computed((): boolean => !!slots['sidebar-header']),
   sidebarTop: computed((): boolean => !!slots['sidebar-top']),
@@ -245,7 +258,7 @@ onBeforeUnmount(() => {
 @import "../styles/variables";
 
 .kong-ui-app-layout {
-  background: var(--kong-ui-app-layout-background, linear-gradient(180deg, #001740 0%, #073382 100%));
+  background: $app-layout-background;
   bottom: 0;
   display: flex;
   flex-direction: column;

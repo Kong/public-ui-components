@@ -1,6 +1,12 @@
 <template>
   <header class="kong-ui-app-navbar">
     <div class="header-content">
+      <div
+        v-if="hasLogo"
+        class="app-navbar-logo"
+      >
+        <slot name="logo" />
+      </div>
       <div class="mobile-header-left">
         <slot name="mobile-sidebar-toggle" />
         <slot name="mobile-logo" />
@@ -11,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, reactive, useSlots, onMounted } from 'vue'
 
 const props = defineProps({
   topOffset: {
@@ -26,6 +32,24 @@ const props = defineProps({
     type: Number,
     default: 3,
   },
+})
+
+const slots = useSlots()
+const hasLogo = computed(() => !!slots.logo)
+const appLogoStyles = reactive({
+  marginRight: '0',
+  width: '0',
+})
+
+onMounted(() => {
+  // If the sidebar width or sidebar-header widths change, this logic will need to be updated
+  if (document?.querySelector('.kong-ui-app-navbar .app-navbar-logo')?.children?.length) {
+    appLogoStyles.marginRight = '32px'
+    appLogoStyles.width = 'calc(240px - 32px)'
+  } else {
+    appLogoStyles.marginRight = '0'
+    appLogoStyles.width = '0'
+  }
 })
 
 const headerStyles = computed(() => ({
@@ -59,12 +83,50 @@ const headerStyles = computed(() => ({
     padding: 0 16px; // should match the padding of `.sidebar-header` in the sidebar
   }
 
+  .app-navbar-logo {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    margin-right: v-bind('appLogoStyles.marginRight');
+    width: v-bind('appLogoStyles.width');
+  }
+
   .mobile-header-left {
     display: inline-flex;
     gap: $header-item-gap;
 
     @media (min-width: $viewport-md) {
       display: none;
+    }
+  }
+
+  .app-navbar-links,
+  :deep(.app-navbar-links),
+  :slotted(.app-navbar-links) {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin-right: auto;
+
+    a {
+      color: var(--white, #fff);
+      border-bottom: 4px solid transparent;
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+
+      padding: 0 16px;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all .2s ease-in-out;
+
+      &.router-link-active,
+      &.active {
+        font-weight: 600 !important;
+        border-color: var(--green-300, #84E5AE);
+      }
     }
   }
 }

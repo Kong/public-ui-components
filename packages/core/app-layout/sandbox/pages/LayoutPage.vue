@@ -7,7 +7,7 @@
     :sidebar-top-items="sidebarItemsTop"
     @sidebar-click="sidebarItemClick"
   >
-    <template #notification>
+    <!-- <template #notification>
       <KAlert
         alert-message="I'm an alert from the host app"
         appearance="warning"
@@ -15,6 +15,19 @@
         :is-showing="showAlert"
         @closed="handleCloseAlert"
       />
+    </template> -->
+    <template #navbar-logo>
+      <div class="kong-logo d-flex w-100">
+        <router-link
+          class="d-flex align-items-center w-100"
+          to="/"
+        >
+          <AppGruceLogo />
+          <div class="d-flex pl-4 konnect-header-title">
+            <AppLogo theme="dark" />
+          </div>
+        </router-link>
+      </div>
     </template>
     <template #navbar>
       <NavLinks />
@@ -295,10 +308,10 @@ const sidebarItemsProfile = computed((): SidebarProfileItem[] => {
   ]
 })
 
-const showAlert = ref(true)
-const handleCloseAlert = (): void => {
-  showAlert.value = false
-}
+// const showAlert = ref(true)
+// const handleCloseAlert = (): void => {
+//   showAlert.value = false
+// }
 </script>
 
 <style lang="scss" scoped>

@@ -54,7 +54,7 @@ watch(() => props.active, (active) => {
   }
 
   .line {
-    background-color: var(--kong-ui-app-sidebar-mobile-icon-color, var(--blue-500, #1155cb));
+    background-color: var(--kong-ui-app-sidebar-mobile-icon-color, var(--white, #fff));
     border-radius: $sidebar-item-border-radius;
     display: block;
     height: 2px;

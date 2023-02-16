@@ -350,7 +350,7 @@ onBeforeUnmount(() => {
 @import "../../styles/variables";
 
 .kong-ui-app-sidebar {
-  background: var(--kong-ui-app-sidebar-background, transparent);
+  background: $app-layout-background;
   display: flex;
   flex-direction: column;
   height: v-bind('sidebarContainerStyles.mobileHeight');
@@ -368,6 +368,7 @@ onBeforeUnmount(() => {
   }
 
   @media (min-width: $viewport-md) {
+    background: var(--kong-ui-app-sidebar-background, transparent);
     height: v-bind('sidebarContainerStyles.height');
     left: 0;
     top: v-bind('sidebarContainerStyles.top');

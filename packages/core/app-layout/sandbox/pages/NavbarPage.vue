@@ -1,17 +1,19 @@
 <template>
   <div class="navbar-page">
     <AppNavbar :left-offset="0">
-      <div class="kong-logo d-flex w-100">
-        <router-link
-          class="d-flex align-items-center w-100"
-          to="/"
-        >
-          <AppGruceLogo />
-          <div class="d-flex pl-4 konnect-header-title">
-            <AppLogo theme="dark" />
-          </div>
-        </router-link>
-      </div>
+      <template #logo>
+        <div>
+          <router-link
+            class="d-flex align-items-center w-100"
+            to="/"
+          >
+            <AppGruceLogo />
+            <div class="d-flex pl-4 konnect-header-title">
+              <AppLogo theme="dark" />
+            </div>
+          </router-link>
+        </div>
+      </template>
       <template #mobile-logo>
         <a
           class="navbar-logo-link"
@@ -47,6 +49,7 @@ main {
   min-height: 2000px; // fake a height so the container scrolls
   margin: 60px 0 0; // $navbar-height
   padding: 16px;
+  border-top-left-radius: 0;
 }
 
 .navbar-logo-link {
