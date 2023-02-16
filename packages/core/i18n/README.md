@@ -260,7 +260,7 @@ In some cases we do not have access to the Vue `app` and cannot relay on registe
 </template>
 
 <script setup lang="ts">
-  import { createI18n, Translation, i18nTComponent} from '@kong-ui-public/i18n'
+  import { createI18n, i18nTComponent } from '@kong-ui-public/i18n'
   import english from './locales/en.json'
 
   const i18n = createI18n('en-us', english)
