@@ -23,4 +23,14 @@ describe('<GithubStar />', () => {
     cy.getTestId('github-star').find('a').should('be.visible')
     cy.getTestId('github-star').find('.github-button').should('be.visible')
   })
+
+  it('renders default tooltip text on focus', () => {
+    cy.mount(GithubStar, {
+      props: {
+        url: 'http://github.com/kong/kong',
+      },
+    })
+    cy.getTestId('github-star').trigger('focus')
+    cy.get('.k-popover').should('exist')
+  })
 })
