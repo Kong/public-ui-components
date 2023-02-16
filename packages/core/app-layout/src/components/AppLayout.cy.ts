@@ -4,7 +4,7 @@ import AppLayout from './AppLayout.vue'
 
 const viewports = {
   desktop: {
-    width: 768, // Desktop is 768px and higher
+    width: 1024, // Desktop is 1024px and higher
     height: 750,
   },
   tablet: {
