@@ -28,8 +28,11 @@ const props = defineProps({
 
 const { i18n } = composables.useI18n()
 
+const objectIsEmpty = (obj: any): boolean => (!obj || (Object.keys(obj).length === 0 && obj.constructor === Object))
+
 const hasRequiredProps = computed((): boolean => {
-  return !!props.document
+  // Ensure the document object that is passed in is not empty
+  return !objectIsEmpty(props.document)
 })
 
 const children = addUniqueHeadingSlugs(props.document?.children)
