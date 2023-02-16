@@ -69,6 +69,7 @@ describe('<SpecDetails />', () => {
       },
     })
 
+
     cy.getTestId('kong-public-ui-spec-details-swagger').should('be.visible')
     cy.getTestId('default-styles').should('exist')
 
