@@ -161,7 +161,7 @@ _Please, do not use this method in any new code. This prevents using parameters/
 
 ### HTML safe formatting with `<i18n-t>`
 
-#### With registered i18nPlugin
+#### When registered as Vue Plugin
 
 Sometimes it is needed to render translated message with HTML as part of the parameters. For this Provided component can be used.
 
