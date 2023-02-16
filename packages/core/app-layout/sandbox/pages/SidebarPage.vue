@@ -327,7 +327,6 @@ main {
   display: flex;
   width: 100%;
   height: $navbar-height;
-  background: #eee;
 
   @media (min-width: 768px) {
     width: calc(100% - 240px);
@@ -358,10 +357,19 @@ main {
 
 <style lang="scss">
 main {
+  background: #fff;
   width: 100%;
+  border-top-left-radius: 16px;
 }
 
 .k-button {
   float: right;
+}
+</style>
+
+<style lang="scss">
+body {
+  background: var(--kong-ui-app-layout-background, linear-gradient(180deg, #001740 0%, #073382 100%));
+  margin: 0 !important;
 }
 </style>
