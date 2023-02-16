@@ -84,9 +84,9 @@ const headerStyles = computed(() => ({
   }
 
   .app-navbar-logo {
+    align-items: center;
     display: flex;
     height: 100%;
-    align-items: center;
     justify-content: flex-start;
     margin-right: v-bind('appLogoStyles.marginRight');
     width: v-bind('appLogoStyles.width');
@@ -104,28 +104,28 @@ const headerStyles = computed(() => ({
   .app-navbar-links,
   :deep(.app-navbar-links),
   :slotted(.app-navbar-links) {
-    display: flex;
     align-items: center;
+    display: flex;
     height: 100%;
     margin-right: auto;
 
     a {
-      color: var(--white, #fff);
-      border-bottom: 4px solid transparent;
-      display: flex;
       align-items: center;
       align-self: stretch;
+      border-bottom: 4px solid transparent;
+      color: var(--white, #fff);
+      display: flex;
+      font-size: 16px;
+      font-weight: 500;
 
       padding: 0 16px;
       text-decoration: none;
-      font-size: 16px;
-      font-weight: 500;
       transition: all .2s ease-in-out;
 
       &.router-link-active,
       &.active {
-        font-weight: 600 !important;
         border-color: var(--green-300, #84E5AE);
+        font-weight: 600 !important;
       }
     }
   }
