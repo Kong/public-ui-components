@@ -321,7 +321,7 @@ main {
   margin-top: $navbar-height;
   padding: 16px 24px;
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     margin-left: 240px; // $sidebar-width
   }
 }
@@ -330,37 +330,21 @@ main {
   height: calc(100vh - #{$navbar-height});
 }
 
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
+.navbar-logo-link {
   display: flex;
-  width: 100%;
-  height: $navbar-height;
+  align-items: center;
 
-  @media (min-width: 768px) {
-    width: calc(100% - 240px);
-    left: 240px;
+  @media (min-width: 1024px) { // $viewport-lg
+    display: none;
   }
+}
 
-  nav {
+.logo-title {
+  display: none;
+  padding-left: 16px;
+
+  @media (min-width: 640px) { // $viewport-sm
     display: flex;
-    align-items: center;
-    gap: 16px;
-    color: var(--blue-500);
-    width: 100%;
-    max-width: 100%;
-    padding: 0 24px;
-    color: var(--black-500);
-  }
-
-  .mobile-logo {
-    display: flex;
-    align-items: center;
-
-    @media (min-width: 768px) {
-      display: none;
-    }
   }
 }
 </style>
@@ -369,7 +353,10 @@ main {
 main {
   background: #fff;
   width: 100%;
-  border-top-left-radius: 16px;
+
+  @media (min-width: 1024px) { // $viewport-lg
+    border-top-left-radius: 16px;
+  }
 }
 
 .k-button {
@@ -379,7 +366,7 @@ main {
 .desktop-logo {
   display: none;
 
-  @media (min-width: 768px) { // $viewport-md
+  @media (min-width: 1024px) { // $viewport-lg
     display: flex;
   }
 }

@@ -1,15 +1,15 @@
 <template>
   <header class="kong-ui-app-navbar">
     <div class="header-content">
+      <div class="mobile-header-left">
+        <slot name="mobile-sidebar-toggle" />
+        <slot name="mobile-logo" />
+      </div>
       <div
         v-if="hasLogo"
         class="app-navbar-logo"
       >
         <slot name="logo" />
-      </div>
-      <div class="mobile-header-left">
-        <slot name="mobile-sidebar-toggle" />
-        <slot name="mobile-logo" />
       </div>
       <slot name="default" />
     </div>
@@ -70,7 +70,7 @@ const headerStyles = computed(() => ({
   top: v-bind('headerStyles.top');
   z-index: v-bind('headerStyles.zIndex');
 
-  @media (min-width: $viewport-md) {
+  @media (min-width: $viewport-lg) {
     left: v-bind('headerStyles.left');
   }
 
@@ -96,7 +96,7 @@ const headerStyles = computed(() => ({
     display: inline-flex;
     gap: $header-item-gap;
 
-    @media (min-width: $viewport-md) {
+    @media (min-width: $viewport-lg) {
       display: none;
     }
   }

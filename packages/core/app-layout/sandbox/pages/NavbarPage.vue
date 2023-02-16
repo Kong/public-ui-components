@@ -2,17 +2,15 @@
   <div class="navbar-page">
     <AppNavbar :left-offset="0">
       <template #logo>
-        <div>
-          <router-link
-            class="d-flex align-items-center w-100"
-            to="/"
-          >
-            <AppGruceLogo />
-            <div class="d-flex pl-4 konnect-header-title">
-              <AppLogo theme="dark" />
-            </div>
-          </router-link>
-        </div>
+        <router-link
+          class="desktop-logo"
+          to="/"
+        >
+          <AppGruceLogo />
+          <div class="d-flex pl-4 konnect-header-title">
+            <AppLogo theme="dark" />
+          </div>
+        </router-link>
       </template>
       <template #mobile-logo>
         <a
@@ -21,7 +19,7 @@
         >
           <AppGruceLogo />
           <div class="logo-title">
-            <AppLogo theme="light" />
+            <AppLogo theme="dark" />
           </div>
         </a>
       </template>
@@ -63,6 +61,15 @@ main {
 
   @media (min-width: 640px) { // $viewport-sm
     display: flex;
+  }
+}
+
+.desktop-logo {
+  display: none;
+
+  @media (min-width: 1024px) { // $viewport-lg
+    display: flex;
+    align-items: center;
   }
 }
 </style>

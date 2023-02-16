@@ -16,6 +16,17 @@
         @closed="handleCloseAlert"
       />
     </template> -->
+    <template #navbar-mobile-logo>
+      <router-link
+        class="navbar-logo-link"
+        to="/"
+      >
+        <AppGruceLogo />
+        <div class="logo-title">
+          <AppLogo theme="dark" />
+        </div>
+      </router-link>
+    </template>
     <template #navbar-logo>
       <router-link
         class="navbar-logo-link"
