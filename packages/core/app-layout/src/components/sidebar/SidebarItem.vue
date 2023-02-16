@@ -201,7 +201,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
       color: var(--green-300, #84E5AE);
 
       .sidebar-item-name {
-        font-weight: 600 !important;
+        font-weight: 700 !important;
       }
     }
 
@@ -276,7 +276,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   }
 
   &.active > a {
-    background-color: rgba(#fff, 0.2);
+    background-color: rgba(#fff, 0.1);
     border-left: 4px solid var(--green-300, #84E5AE);
     color: var(--white, #fff) !important;
     font-weight: 600 !important;
