@@ -133,6 +133,16 @@ jobs:
           install: false
           command: pnpm run test:component:ci --spec ${{ needs.install-dependencies.outputs.spec }}
 
+      - name: Upload Component Test Results
+        uses: actions/upload-artifact@v3
+        continue-on-error: true
+        if: failure()
+        with:
+          name: component-test-failures
+          path: |
+            cypress/videos/
+            cypress/screenshots/
+
       - name: Save Build Artifacts
         if: ${{ github.event_name == 'push' }}
         uses: actions/upload-artifact@v3
