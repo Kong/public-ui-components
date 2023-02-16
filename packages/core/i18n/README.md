@@ -247,7 +247,7 @@ And then, anywhere in application code where `i18n` is needed
 
 #### With direct use of i18nT component
 
-In some cases we do not have access to vue `app`  and cannot relay on registered i18nT plugin. Working on stadalone components in `public-ui-components` is of those cases. And for this your component will look like:
+In some cases we do not have access to the Vue `app` and cannot relay on registered i18nT plugin. Working on standalone components in `public-ui-components` is of those cases. And for this your component will look like:
 
 
 ```html
