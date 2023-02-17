@@ -359,15 +359,6 @@ onBeforeUnmount(() => {
     }
   }
 
-  // Style overrides only if AppSidebar is NOT hidden
-  // &:not(.sidebar-hidden) {
-  //   :deep(.kong-ui-app-navbar) {
-  //     .header-content {
-  //       padding-left: 0;
-  //     }
-  //   }
-  // }
-
   // Must keep this as an `id` because we are utilizing as a <Teleport /> container
   #kong-ui-app-layout-notification {
     left: 0;
