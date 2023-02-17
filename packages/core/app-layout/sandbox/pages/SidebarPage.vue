@@ -1,5 +1,11 @@
 <template>
   <AppNavbar :left-offset="0">
+    <template #mobile-sidebar-toggle>
+      <SidebarToggle
+        :active="mobileSidebarOpen"
+        @toggle="sidebarToggled"
+      />
+    </template>
     <template #logo>
       <router-link
         class="desktop-logo"
