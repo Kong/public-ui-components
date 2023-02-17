@@ -317,6 +317,10 @@ onBeforeUnmount(() => {
       padding: var(--kong-ui-app-layout-content-padding, 16px);
       position: relative;
       width: 100%;
+
+      @media (min-width: $viewport-lg) {
+        padding: var(--kong-ui-app-layout-content-padding, 32px);
+      }
     }
   }
 
