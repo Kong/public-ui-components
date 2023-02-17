@@ -41,7 +41,24 @@
           <slot name="navbar-logo" />
         </div>
       </template>
-      <slot name="navbar" />
+      <template
+        v-if="slotContent.navbarLeft"
+        #left
+      >
+        <slot name="navbar-left" />
+      </template>
+      <template
+        v-if="slotContent.navbarCenter"
+        #default
+      >
+        <slot name="navbar-center" />
+      </template>
+      <template
+        v-if="slotContent.navbarRight"
+        #right
+      >
+        <slot name="navbar-right" />
+      </template>
     </AppNavbar>
 
     <AppSidebar
@@ -147,6 +164,9 @@ const emit = defineEmits(['sidebar-click'])
 
 const slots = useSlots()
 const slotContent = reactive({
+  navbarLeft: computed((): boolean => !!slots['navbar-left']),
+  navbarCenter: computed((): boolean => !!slots['navbar-center']),
+  navbarRight: computed((): boolean => !!slots['navbar-right']),
   navbarLogo: computed((): boolean => !!slots['navbar-logo']),
   navbarMobileLogo: computed((): boolean => !!slots['navbar-mobile-logo']),
   sidebarHeader: computed((): boolean => !!slots['sidebar-header']),
@@ -338,6 +358,15 @@ onBeforeUnmount(() => {
       width: 100%;
     }
   }
+
+  // Style overrides only if AppSidebar is NOT hidden
+  // &:not(.sidebar-hidden) {
+  //   :deep(.kong-ui-app-navbar) {
+  //     .header-content {
+  //       padding-left: 0;
+  //     }
+  //   }
+  // }
 
   // Must keep this as an `id` because we are utilizing as a <Teleport /> container
   #kong-ui-app-layout-notification {

@@ -1,21 +1,10 @@
 <template>
-  <AppNavbar :left-offset="0">
+  <AppNavbar>
     <template #mobile-sidebar-toggle>
       <SidebarToggle
         :active="mobileSidebarOpen"
         @toggle="sidebarToggled"
       />
-    </template>
-    <template #logo>
-      <router-link
-        class="desktop-logo"
-        to="/"
-      >
-        <AppGruceLogo />
-        <div class="d-flex pl-4 konnect-header-title">
-          <AppLogo theme="dark" />
-        </div>
-      </router-link>
     </template>
     <template #mobile-logo>
       <a
@@ -28,7 +17,9 @@
         </div>
       </a>
     </template>
-    <NavLinks />
+    <template #left>
+      <NavLinks />
+    </template>
   </AppNavbar>
   <div class="sandbox-container">
     <AppSidebar
@@ -372,6 +363,7 @@ main {
 <style lang="scss">
 main {
   background: #fff;
+  box-shadow: var(--kong-ui-app-layout-main-box-shadow, -30px 174px 250px #0023db);
   width: 100%;
 
   @media (min-width: 1024px) { // $viewport-lg
