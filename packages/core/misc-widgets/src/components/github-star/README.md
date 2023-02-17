@@ -21,3 +21,11 @@ A Github Star component for displaying number of stars received by the repo on G
 - required: `true`
 
 Full URL to the GitHub repository.
+
+#### `tooltipText`
+
+- type: `String`
+- required: `false`
+- default: `Star this repository on Github`
+
+String to display a tooltip when hovered.

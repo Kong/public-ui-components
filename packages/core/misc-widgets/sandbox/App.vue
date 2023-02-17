@@ -3,7 +3,9 @@
     <main>
       <div>
         <h3>Awesome GitHub Star ⭐</h3>
-        <GithubStar :url="url" />
+        <GithubStar
+          :url="url"
+        />
       </div>
     </main>
   </div>

@@ -4,29 +4,43 @@
     class="kong-ui-public-misc-widgets-github-star"
     data-testid="github-star"
   >
-    <a
-      aria-label="i18n.t('githubStar.ariaLabel')"
-      class="github-button"
-      data-color-scheme="no-preference: light; light: light; dark: light;"
-      data-show-count="true"
-      :href="url"
-      target="_blank"
-    >{{ i18n.t('githubStar.title') }}</a>
+    <KTooltip :label="tooltipLabel">
+      <span>
+        <a
+          :aria-label="i18n.t('githubStar.ariaLabel')"
+          class="github-button"
+          data-color-scheme="no-preference: light; light: light; dark: light;"
+          data-show-count="true"
+          :href="url"
+          target="_blank"
+        >
+          {{ i18n.t('githubStar.title') }}
+        </a>
+      </span>
+    </KTooltip>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import composables from '../../composables'
+import { KTooltip } from '@kong/kongponents'
 
-defineProps({
+const { i18n } = composables.useI18n()
+
+const props = defineProps({
   url: {
     type: String,
     required: true,
   },
+  tooltipText: {
+    type: String,
+    required: false,
+    default: '',
+  },
 })
 
-const { i18n } = composables.useI18n()
+const tooltipLabel = computed((): string => props.tooltipText || i18n.t('githubStar.tooltipLabel'))
 
 const scriptLoaded = ref<boolean>(false)
 
