@@ -558,7 +558,7 @@ onBeforeUnmount(() => {
     padding: 0 8px; // if changed, ensure you test in ALL browsers
 
     &:last-of-type {
-      margin-bottom: $sidebar-header-spacing * 2;
+      margin-bottom: $sidebar-header-spacing * 4;
     }
   }
 }
