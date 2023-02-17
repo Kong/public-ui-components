@@ -4,7 +4,7 @@ import AppNavbar from './AppNavbar.vue'
 
 const viewports = {
   desktop: {
-    width: 768, // Desktop is 768px and higher
+    width: 1024, // Desktop is 1024px and higher
     height: 750,
   },
   tablet: {
@@ -18,6 +18,11 @@ const viewports = {
 }
 
 describe('<AppNavbar />', () => {
+  before(() => {
+    // Add background color
+    document.documentElement.style.setProperty('--kong-ui-app-navbar-background', 'linear-gradient(180deg, #001740 0%, #073382 100%)')
+  })
+
   describe('test all viewports', () => {
     Object.keys(viewports).forEach((viewportName: string) => {
       describe(`${viewportName} viewport`, {

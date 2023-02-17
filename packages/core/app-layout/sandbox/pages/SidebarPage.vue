@@ -1,14 +1,24 @@
 <template>
-  <header class="navbar">
-    <nav>
+  <AppNavbar>
+    <template #mobile-sidebar-toggle>
       <SidebarToggle
         :active="mobileSidebarOpen"
         @toggle="sidebarToggled"
       />
-      <div>Dummy navbar</div>
-      <NavLinks />
-    </nav>
-  </header>
+    </template>
+    <template #mobile-logo>
+      <a
+        class="navbar-logo-link"
+        href="/"
+      >
+        <AppGruceLogo />
+        <div class="logo-title">
+          <AppLogo theme="dark" />
+        </div>
+      </a>
+    </template>
+    <NavLinks />
+  </AppNavbar>
   <div class="sandbox-container">
     <AppSidebar
       :bottom-items="sidebarItemsBottom"
@@ -25,7 +35,7 @@
       @toggle="sidebarToggled"
     >
       <template #header>
-        <div class="kong-logo d-flex w-100">
+        <div class="kong-logo d-flex">
           <router-link
             class="d-flex align-items-center w-100"
             to="/"
@@ -50,7 +60,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { AppSidebar, SidebarToggle, SidebarPrimaryItem, SidebarProfileItem, SidebarSecondaryItem } from '../../src'
+import { AppSidebar, AppNavbar, SidebarToggle, SidebarPrimaryItem, SidebarProfileItem, SidebarSecondaryItem } from '../../src'
 import { AppLogo, AppGruceLogo } from '../components/icons'
 import '@kong/kongponents/dist/style.css'
 // Sandbox only
@@ -311,7 +321,7 @@ main {
   margin-top: $navbar-height;
   padding: 16px 24px;
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     margin-left: 240px; // $sidebar-width
   }
 }
@@ -320,48 +330,51 @@ main {
   height: calc(100vh - #{$navbar-height});
 }
 
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
+.navbar-logo-link {
   display: flex;
-  width: 100%;
-  height: $navbar-height;
-  background: #eee;
+  align-items: center;
 
-  @media (min-width: 768px) {
-    width: calc(100% - 240px);
-    left: 240px;
+  @media (min-width: 1024px) { // $viewport-lg
+    display: none;
   }
+}
 
-  nav {
+.logo-title {
+  display: none;
+  padding-left: 16px;
+
+  @media (min-width: 640px) { // $viewport-sm
     display: flex;
-    align-items: center;
-    gap: 16px;
-    color: var(--blue-500);
-    width: 100%;
-    max-width: 100%;
-    padding: 0 24px;
-    color: var(--black-500);
-  }
-
-  .mobile-logo {
-    display: flex;
-    align-items: center;
-
-    @media (min-width: 768px) {
-      display: none;
-    }
   }
 }
 </style>
 
 <style lang="scss">
 main {
+  background: #fff;
   width: 100%;
+
+  @media (min-width: 1024px) { // $viewport-lg
+    border-top-left-radius: 16px;
+  }
 }
 
 .k-button {
   float: right;
+}
+
+.desktop-logo {
+  display: none;
+
+  @media (min-width: 1024px) { // $viewport-lg
+    display: flex;
+  }
+}
+</style>
+
+<style lang="scss">
+body {
+  background: var(--kong-ui-app-layout-background, linear-gradient(180deg, #001740 0%, #073382 100%));
+  margin: 0 !important;
 }
 </style>

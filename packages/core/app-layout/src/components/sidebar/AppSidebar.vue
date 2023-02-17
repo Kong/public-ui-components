@@ -350,7 +350,7 @@ onBeforeUnmount(() => {
 @import "../../styles/variables";
 
 .kong-ui-app-sidebar {
-  background: $sidebar-background;
+  background: $app-layout-background;
   display: flex;
   flex-direction: column;
   height: v-bind('sidebarContainerStyles.mobileHeight');
@@ -367,7 +367,8 @@ onBeforeUnmount(() => {
     width: $sidebar-width;
   }
 
-  @media (min-width: $viewport-md) {
+  @media (min-width: $viewport-lg) {
+    background: var(--kong-ui-app-sidebar-background, transparent);
     height: v-bind('sidebarContainerStyles.height');
     left: 0;
     top: v-bind('sidebarContainerStyles.top');
@@ -418,7 +419,7 @@ onBeforeUnmount(() => {
 // Remove the top margin if `props.mobileHeaderVisible` is false, or if no header slot is present
 .mobile-header-hidden .sidebar-content-container,
 .no-sidebar-header .sidebar-content-container {
-  @media (max-width: ($viewport-md - 1px)) {
+  @media (max-width: ($viewport-lg - 1px)) {
     margin-top: 0 !important;
   }
 }
@@ -433,12 +434,12 @@ onBeforeUnmount(() => {
 
 .sidebar-header {
   align-items: center;
-  background: linear-gradient(180deg, #003694 70.83%, rgba(0, 54, 148, 0) 100%);
+  background: var(--kong-ui-app-sidebar-header-background, transparent);
   color: #fff;
   display: v-bind('headerContainerStyles.display');
   left: 0;
   min-height: v-bind('headerContainerStyles.minHeight');
-  padding: 0 20px;
+  padding: 0 16px; // should match the padding of `.header-content` in the navbar
   position: absolute;
   right: 0;
   top: 0;
@@ -446,7 +447,7 @@ onBeforeUnmount(() => {
   user-select: none;
   z-index: 1;
 
-  @media (min-width: $viewport-md) {
+  @media (min-width: $viewport-lg) {
     display: flex;
   }
 
@@ -467,15 +468,16 @@ onBeforeUnmount(() => {
   }
 
   &:after{
-    background-image: linear-gradient(#003496, #78785400);
+    background-image: linear-gradient(#001740, #78785400);
     bottom: 0;
     content: '';
     display: block;
     height: $sidebar-header-spacing;
-    left: 0;
+    left: 50%;
     margin-bottom: -$sidebar-header-spacing;
     position: absolute;
-    width: 100%;
+    transform: translateX(-50%); // center
+    width: calc(100% - 16px);
     z-index: 1;
   }
 }
@@ -531,7 +533,7 @@ onBeforeUnmount(() => {
   top: v-bind('sidebarOverlayStyles.top');
   z-index: v-bind('sidebarOverlayStyles.zIndex');
 
-  @media (min-width: $viewport-md) {
+  @media (min-width: $viewport-lg) {
     display: none !important;
   }
 }
@@ -564,7 +566,7 @@ onBeforeUnmount(() => {
 body.kong-ui-app-sidebar-open {
   overflow: hidden;
 
-  @media (min-width: $viewport-md) {
+  @media (min-width: $viewport-lg) {
     overflow: auto;
   }
 }
