@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@0.1.3...@kong-ui-public/misc-widgets@0.2.0) (2023-02-17)
+
+
+### ✨ Features
+
+* **githubStar:** add tooltipText prop to GitHub Star component [KHCP-6183] ([#154](https://github.com/Kong/public-ui-components/issues/154)) ([8f983f9](https://github.com/Kong/public-ui-components/commit/8f983f954a30dc93b7b4fe516b78d2f39fc0b3e9))
+
+
+
+
+
 ## [0.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@0.1.2...@kong-ui-public/misc-widgets@0.1.3) (2023-02-16)
 
 
