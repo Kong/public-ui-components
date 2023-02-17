@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@0.1.21...@kong-ui-public/copy-uuid@0.2.0) (2023-02-17)
+
+
+### ✨ Features
+
+* **app-layout:** unification ux updates [KHCP-5798] ([#147](https://github.com/Kong/public-ui-components/issues/147)) ([220e89e](https://github.com/Kong/public-ui-components/commit/220e89e8215fc4bdc9da5b39e589b03aa92ee4fa))
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.26.2 ([#157](https://github.com/Kong/public-ui-components/issues/157)) ([4fbcaac](https://github.com/Kong/public-ui-components/commit/4fbcaac2da85de3803ea70aa9640b8ab56d4e37b))
+
+
+
+
+
 ## [0.1.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@0.1.20...@kong-ui-public/copy-uuid@0.1.21) (2023-02-16)
 
 
