@@ -49,7 +49,7 @@
       </template>
       <template
         v-if="slotContent.navbarCenter"
-        #default
+        #center
       >
         <slot name="navbar-center" />
       </template>

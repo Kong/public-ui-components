@@ -16,7 +16,7 @@
           <slot name="left" />
         </div>
         <div class="navbar-content-center">
-          <slot name="default" />
+          <slot name="center" />
         </div>
         <div class="navbar-content-right">
           <slot name="right" />
