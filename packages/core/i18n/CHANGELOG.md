@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.2.8...@kong-ui-public/i18n@0.3.0) (2023-02-16)
+
+
+### ✨ Features
+
+* [KHCP_6176] Expose i18n Translation component for import without Vue plugin ([#150](https://github.com/Kong/public-ui-components/issues/150)) ([14d6a99](https://github.com/Kong/public-ui-components/commit/14d6a995af4f32b66305274c27276bf5aaa19fb6))
+
+
+
+
+
 ## [0.2.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.2.7...@kong-ui-public/i18n@0.2.8) (2023-02-07)
 
 

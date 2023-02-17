@@ -1,17 +1,17 @@
 {
-  "name": "@kong-ui-public/document-viewer",
-  "version": "0.4.7",
+  "name": "@kong-ui-public/misc-widgets",
+  "version": "0.2.0",
   "type": "module",
-  "main": "./dist/document-viewer.umd.js",
-  "module": "./dist/document-viewer.es.js",
+  "main": "./dist/misc-widgets.umd.js",
+  "module": "./dist/misc-widgets.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/document-viewer.es.js",
-      "require": "./dist/document-viewer.umd.js"
+      "import": "./dist/misc-widgets.es.js",
+      "require": "./dist/misc-widgets.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -24,7 +24,7 @@
     "build": "run-s typecheck build:package build:types",
     "build:package": "vite build",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
-    "build:visualize": "BUILD_VISUALIZER='portal/document-viewer' vite build -m production",
+    "build:visualize": "BUILD_VISUALIZER='core/misc-widgets' vite build -m production",
     "preview:package": "vite preview --port 4173",
     "preview": "cross-env USE_SANDBOX=true PREVIEW_SANDBOX=true run-s build:package preview:package",
     "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
@@ -33,34 +33,34 @@
     "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
     "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
     "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
-    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'"
+    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
+    "test:unit": "cross-env FORCE_COLOR=1 vitest run",
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^8.26.1",
+    "@kong/kongponents": "^8.26.0",
     "vue": "^3.2.47"
   },
   "devDependencies": {
-    "@kong/kongponents": "^8.26.1",
-    "@types/prismjs": "^1.26.0",
-    "@vitejs/plugin-vue-jsx": "^3.0.0",
+    "@kong/kongponents": "^8.26.0",
     "vue": "^3.2.47"
   },
   "dependencies": {
-    "@kong-ui-public/i18n": "workspace:^0.3.0",
-    "prismjs": "^1.29.0"
+    "@kong-ui-public/i18n": "workspace:^0.3.0"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/Kong/public-ui-components.git",
-    "directory": "packages/portal/document-viewer"
+    "directory": "packages/core/misc-widgets"
   },
-  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/portal/document-viewer",
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/core/misc-widgets",
   "bugs": {
     "url": "https://github.com/Kong/public-ui-components/issues"
   },
   "author": "Kong, Inc.",
   "license": "Apache-2.0",
   "volta": {
-    "extends": "../../../package.json"
+    "extends": "../../../package.json",
+    "yarn": "1.22.19"
   }
 }

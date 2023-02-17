@@ -1,10 +1,14 @@
 import { defineComponent, h } from 'vue'
-import type { VNodeChild, App } from 'vue'
+import type { VNodeChild, App, PropType } from 'vue'
 import type { IntlShapeEx } from './types'
 
-const TranslationComponent = (i18n: IntlShapeEx) => defineComponent({
+export const i18nTComponent = (i18n: IntlShapeEx | null = null) => defineComponent({
   name: 'I18nT',
   props: {
+    i18n: {
+      type: Object as PropType<IntlShapeEx>,
+      default: null,
+    },
     keypath: {
       type: String,
       required: true,
@@ -35,7 +39,7 @@ const TranslationComponent = (i18n: IntlShapeEx) => defineComponent({
 
     return (): VNodeChild => {
       const keys = Object.keys(slots).filter(key => key !== '_')
-      const sourceString = i18n.messages[props.keypath].toString()
+      const sourceString = (i18n || props.i18n).messages[props.keypath].toString()
 
       let hArray: Array<any> = deconstructString(sourceString)
 
@@ -64,6 +68,6 @@ const TranslationComponent = (i18n: IntlShapeEx) => defineComponent({
 export default {
   install(app: App, options: { i18n: IntlShapeEx }) {
     const { i18n } = options
-    app.component('I18nT', TranslationComponent(i18n))
+    app.component('I18nT', i18nTComponent(i18n))
   },
 }
