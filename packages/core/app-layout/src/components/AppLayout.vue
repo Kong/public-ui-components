@@ -193,7 +193,7 @@ const sidebarMobileTopOffset = computed((): number => {
   return navbarHeight.value + notificationHeight.value
 })
 const layoutMainMarginTop = computed((): string => `${sidebarMobileTopOffset.value}px`)
-const layoutMainTopLeftBorderRadius = computed((): string => sidebar.hidden ? '0' : '16px')
+const layoutMainTopLeftBorderRadius = computed((): string => sidebar.hidden || navbar.hidden ? '0' : '16px')
 
 const { debounce } = useDebounce()
 const debouncedSetNotificationHeight = debounce((force = false): void => {
