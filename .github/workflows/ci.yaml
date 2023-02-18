@@ -161,7 +161,8 @@ jobs:
           echo "preid=${preid}"
 
           git checkout ${{ github.head_ref }}
-
+          pnpm list lerna
+          lerna --version
           lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend
 
           npm_instructions=""
