@@ -161,9 +161,8 @@ jobs:
           echo "preid=${preid}"
 
           git checkout ${{ github.head_ref }}
-          pnpm list lerna
-          lerna --version
-          lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend
+
+          lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend --no-git-tag-version --no-changelog
 
           npm_instructions=""
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
