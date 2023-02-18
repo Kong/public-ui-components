@@ -176,6 +176,7 @@ Sometimes it is needed to render translated message with HTML as part of the par
 }
 ```
 
+
 `main.ts` (registing component)
 
 ```ts
