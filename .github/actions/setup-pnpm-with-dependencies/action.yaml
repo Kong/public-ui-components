@@ -29,7 +29,6 @@ runs:
       run: |
         npm i -g pnpm@^7.0.0
         pnpm --version
-        lerna --version
 
 
     - name: Dependency Cache
