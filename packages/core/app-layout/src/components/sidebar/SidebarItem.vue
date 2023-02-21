@@ -175,6 +175,13 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
         }
       }
 
+      // specific SVG stroke color on hover
+      .kong-icon {
+        &.kong-icon-brain svg path[stroke-width="2"] {
+          stroke: currentColor;
+        }
+      }
+
       &:hover,
       &:focus-visible {
         color: var(--green-300, #84E5AE);
