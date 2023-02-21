@@ -189,6 +189,14 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       ],
     },
     {
+      name: 'Mesh Manager',
+      to: '/?mesh-manager',
+      key: 'mesh-manager',
+      icon: 'brain',
+      // TODO: using this item as a default when `activeItem` is undefined
+      active: (activeItem.value as SidebarPrimaryItem)?.key === 'mesh-manager',
+    },
+    {
       name: 'Dev Portal',
       key: 'dev-portal',
       to: '/?dev-portal',
