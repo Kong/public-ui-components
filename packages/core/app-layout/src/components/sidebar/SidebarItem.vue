@@ -167,21 +167,27 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
       transition: color .2s ease-out;
 
       // SVG color transition (initial values)
-      svg:not(.profile-icon) path {
-        color: currentColor;
-        fill: currentColor;
-        stroke: currentColor;
-        transition: all .2s ease-out;
+      svg {
+        &:not(.profile-icon) path {
+          color: currentColor;
+          fill: currentColor;
+          transition: all .2s ease-out;
+        }
       }
 
       &:hover,
       &:focus-visible {
         color: var(--green-300, #84E5AE);
 
-        // SVG fill color on hover
-        svg:not(.profile-icon) path {
-          fill: var(--green-300, #84E5AE);
-          stroke: var(--green-300, #84E5AE);
+        svg {
+          color: var(--green-300, #84E5AE);
+        }
+
+        // specific SVG stroke color on hover
+        .kong-icon {
+          &.kong-icon-brain svg path[stroke-width="2"] {
+            stroke: var(--green-300, #84E5AE);
+          }
         }
       }
 
