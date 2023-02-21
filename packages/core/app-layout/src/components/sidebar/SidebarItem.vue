@@ -171,7 +171,6 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
         &:not(.profile-icon) path {
           color: currentColor;
           fill: currentColor;
-          // stroke: currentColor;
           transition: all .2s ease-out;
         }
       }
