@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.13.3...@kong-ui-public/app-layout@0.13.4) (2023-02-21)
+
+
+### Bug Fixes
+
+* **icons:** update stroke rule ([#163](https://github.com/Kong/public-ui-components/issues/163)) ([84a4505](https://github.com/Kong/public-ui-components/commit/84a45058b638aeedd0f17eea0fa0b4191f11060b))
+
+
+
+
+
 ## [0.13.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.13.2...@kong-ui-public/app-layout@0.13.3) (2023-02-21)
 
 
