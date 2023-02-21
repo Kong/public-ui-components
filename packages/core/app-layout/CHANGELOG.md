@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.13.4...@kong-ui-public/app-layout@0.13.5) (2023-02-21)
+
+
+### Bug Fixes
+
+* **app-layout:** sidebar icon styles ([d8b858f](https://github.com/Kong/public-ui-components/commit/d8b858f7950f1a55c682b20d08a29788241c6eb7))
+
+
+
+
+
 ## [0.13.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.13.3...@kong-ui-public/app-layout@0.13.4) (2023-02-21)
 
 
