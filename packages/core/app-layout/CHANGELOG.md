@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.13.2...@kong-ui-public/app-layout@0.13.3) (2023-02-21)
+
+
+### Bug Fixes
+
+* **app-layout:** tweaks ([#159](https://github.com/Kong/public-ui-components/issues/159)) ([fe0d420](https://github.com/Kong/public-ui-components/commit/fe0d4201bdce3b0a56635ba21cb5a2c39ad4b9c4))
+
+
+
+
+
+## [0.13.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.13.1...@kong-ui-public/app-layout@0.13.2) (2023-02-21)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [0.13.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.13.0...@kong-ui-public/app-layout@0.13.1) (2023-02-17)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.27.0 ([#158](https://github.com/Kong/public-ui-components/issues/158)) ([bfca559](https://github.com/Kong/public-ui-components/commit/bfca5595b42dffb2cdc7de7cedacb90f2027cea8))
+
+
+
+
+
+# [0.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.12.20...@kong-ui-public/app-layout@0.13.0) (2023-02-17)
+
+
+### ✨ Features
+
+* **app-layout:** unification ux updates [KHCP-5798] ([#147](https://github.com/Kong/public-ui-components/issues/147)) ([220e89e](https://github.com/Kong/public-ui-components/commit/220e89e8215fc4bdc9da5b39e589b03aa92ee4fa))
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.26.2 ([#157](https://github.com/Kong/public-ui-components/issues/157)) ([4fbcaac](https://github.com/Kong/public-ui-components/commit/4fbcaac2da85de3803ea70aa9640b8ab56d4e37b))
+
+
+
+
+
 ## [0.12.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.12.19...@kong-ui-public/app-layout@0.12.20) (2023-02-16)
 
 

@@ -4,7 +4,7 @@ import AppLayout from './AppLayout.vue'
 
 const viewports = {
   desktop: {
-    width: 768, // Desktop is 768px and higher
+    width: 1024, // Desktop is 1024px and higher
     height: 750,
   },
   tablet: {
@@ -89,16 +89,40 @@ describe('<AppLayout />', () => {
             cy.get('[data-testid="app-layout-notification-slot-content"]').should('be.visible')
           })
 
-          it('should render content passed in through navbar slot', () => {
+          it('should render content passed in through navbar left slot', () => {
             cy.mount(AppLayout, {
               slots: {
-                navbar: [
-                  '<span data-testid="app-layout-navbar-slot-content">Navbar</span>',
+                'navbar-left': [
+                  '<span data-testid="app-layout-navbar-left-slot-content">Navbar</span>',
                 ],
               },
             })
 
-            cy.get('[data-testid="app-layout-navbar-slot-content"]').should('be.visible')
+            cy.get('[data-testid="app-layout-navbar-left-slot-content"]').should('be.visible')
+          })
+
+          it('should render content passed in through navbar center slot', () => {
+            cy.mount(AppLayout, {
+              slots: {
+                'navbar-center': [
+                  '<span data-testid="app-layout-navbar-center-slot-content">Navbar</span>',
+                ],
+              },
+            })
+
+            cy.get('[data-testid="app-layout-navbar-center-slot-content"]').should('be.visible')
+          })
+
+          it('should render content passed in through navbar right slot', () => {
+            cy.mount(AppLayout, {
+              slots: {
+                'navbar-right': [
+                  '<span data-testid="app-layout-navbar-right-slot-content">Navbar</span>',
+                ],
+              },
+            })
+
+            cy.get('[data-testid="app-layout-navbar-right-slot-content"]').should('be.visible')
           })
 
           it('should render content passed in through app-error slot', () => {
@@ -136,6 +160,12 @@ describe('<AppLayout />', () => {
 
         cy.get('[data-testid="app-layout-navbar-mobile-logo-slot-content"]').should('be.visible')
       })
+
+      it('should not have a top-left border-radius on the main content container', () => {
+        cy.mount(AppLayout)
+
+        cy.get('[data-testid="kong-ui-app-layout-main"]').should('have.css', 'border-top-left-radius').and('eq', '0px')
+      })
     })
 
     describe('desktop only', {
@@ -163,6 +193,12 @@ describe('<AppLayout />', () => {
         })
 
         cy.get('[data-testid="app-layout-sidebar-top-slot-content"]').should('be.visible')
+      })
+
+      it('should have a top-left border-radius on the main content container', () => {
+        cy.mount(AppLayout)
+
+        cy.get('[data-testid="kong-ui-app-layout-main"]').should('have.css', 'border-top-left-radius').and('eq', '16px')
       })
     })
   })
