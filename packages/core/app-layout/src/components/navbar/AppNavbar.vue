@@ -11,7 +11,17 @@
       >
         <slot name="logo" />
       </div>
-      <slot name="default" />
+      <div class="navbar-content">
+        <div class="navbar-content-left">
+          <slot name="left" />
+        </div>
+        <div class="navbar-content-center">
+          <slot name="center" />
+        </div>
+        <div class="navbar-content-right">
+          <slot name="right" />
+        </div>
+      </div>
     </div>
   </header>
 </template>
@@ -77,7 +87,6 @@ const headerStyles = computed(() => ({
   .header-content {
     align-items: center;
     display: flex;
-    gap: $header-item-gap;
     height: $navbar-height;
     justify-content: space-between;
     padding: 0 16px; // should match the padding of `.sidebar-header` in the sidebar
@@ -89,7 +98,8 @@ const headerStyles = computed(() => ({
     height: 100%;
     justify-content: flex-start;
     margin-right: v-bind('appLogoStyles.marginRight');
-    width: v-bind('appLogoStyles.width');
+    max-width: v-bind('appLogoStyles.width');
+    min-width: v-bind('appLogoStyles.width');
   }
 
   .mobile-header-left {
@@ -107,7 +117,6 @@ const headerStyles = computed(() => ({
     align-items: center;
     display: flex;
     height: 100%;
-    margin-right: auto;
 
     a {
       align-items: center;
@@ -132,6 +141,37 @@ const headerStyles = computed(() => ({
         border-color: var(--green-300, #84E5AE);
         font-weight: 600 !important;
       }
+    }
+  }
+
+  .navbar-content {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    justify-content: space-between;
+    width: 100%;
+
+    &-left,
+    &-center,
+    &-right {
+      align-items: center;
+      display: flex;
+      flex: 1;
+      gap: $header-item-gap;
+      height: 100%;
+    }
+
+    &-left {
+      justify-content: flex-start;
+    }
+
+    &-center {
+      justify-content: center;
+    }
+
+    &-right {
+      justify-content: flex-end;
     }
   }
 }

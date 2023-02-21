@@ -38,10 +38,13 @@
         </div>
       </router-link>
     </template>
-    <template #navbar>
+    <template #navbar-left>
       <NavLinks />
+    </template>
+    <template #navbar-right>
       <KButton
         href="#"
+        size="small"
         @click="toggleSidebar"
       >
         {{ sidebarIsHidden ? 'Show' : 'Hide' }} sidebar

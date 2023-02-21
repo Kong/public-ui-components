@@ -11,6 +11,7 @@ A Kong UI dynamic navbar component.
 - [Usage](#usage)
   - [Install](#install)
   - [App Navbar Links](#app-navbar-links)
+  - [Slots](#slots)
 - [CSS Variables](#css-variables)
   - [CSS variable example](#css-variable-example)
 
@@ -44,6 +45,28 @@ You can also add a class of `.active` or `.router-link-active` to the `<a>` or `
   <router-link to="/portal">Dev Portal</router-link>
 </div>
 ```
+
+### Slots
+
+#### `center`
+
+The main slot to use for navbar content if you don't need a left/center/right navbar layout.
+
+#### `left` and `right`
+
+The left and right slots to use for a left/center/right navbar layout.
+
+#### `logo`
+
+The non-mobile logo.
+
+#### `mobile-logo`
+
+The mobile logo.
+
+#### `mobile-sidebar-toggle`
+
+To be used with the `SidebarToggle.vue` component.
 
 ## CSS Variables
 

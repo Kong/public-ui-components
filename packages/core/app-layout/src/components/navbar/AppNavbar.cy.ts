@@ -51,16 +51,40 @@ describe('<AppNavbar />', () => {
           }
         })
 
-        it('should render content passed in through the default slot', () => {
+        it('should render content passed in through the left slot', () => {
           cy.mount(AppNavbar, {
             slots: {
-              default: [
-                '<span data-testid="navbar-default-slot-content">Content</span>',
+              left: [
+                '<span data-testid="navbar-left-slot-content">Content</span>',
               ],
             },
           })
 
-          cy.get('[data-testid="navbar-default-slot-content"]').should('be.visible')
+          cy.get('[data-testid="navbar-left-slot-content"]').should('be.visible')
+        })
+
+        it('should render content passed in through the center slot', () => {
+          cy.mount(AppNavbar, {
+            slots: {
+              center: [
+                '<span data-testid="navbar-center-slot-content">Content</span>',
+              ],
+            },
+          })
+
+          cy.get('[data-testid="navbar-center-slot-content"]').should('be.visible')
+        })
+
+        it('should render content passed in through the right slot', () => {
+          cy.mount(AppNavbar, {
+            slots: {
+              center: [
+                '<span data-testid="navbar-right-slot-content">Content</span>',
+              ],
+            },
+          })
+
+          cy.get('[data-testid="navbar-right-slot-content"]').should('be.visible')
         })
       })
     })

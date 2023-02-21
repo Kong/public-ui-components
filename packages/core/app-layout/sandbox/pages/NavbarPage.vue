@@ -23,7 +23,9 @@
           </div>
         </a>
       </template>
-      <NavLinks />
+      <template #left>
+        <NavLinks />
+      </template>
     </AppNavbar>
     <div class="sandbox-container">
       <main>
@@ -44,6 +46,7 @@ import NavLinks from '../components/NavLinks.vue'
 main {
   width: 100%;
   background: #fff;
+  box-shadow: var(--kong-ui-app-layout-main-box-shadow, -30px 174px 250px #0023db);
   min-height: 2000px; // fake a height so the container scrolls
   margin: 60px 0 0; // $navbar-height
   padding: 16px;

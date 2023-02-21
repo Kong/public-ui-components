@@ -89,16 +89,40 @@ describe('<AppLayout />', () => {
             cy.get('[data-testid="app-layout-notification-slot-content"]').should('be.visible')
           })
 
-          it('should render content passed in through navbar slot', () => {
+          it('should render content passed in through navbar left slot', () => {
             cy.mount(AppLayout, {
               slots: {
-                navbar: [
-                  '<span data-testid="app-layout-navbar-slot-content">Navbar</span>',
+                'navbar-left': [
+                  '<span data-testid="app-layout-navbar-left-slot-content">Navbar</span>',
                 ],
               },
             })
 
-            cy.get('[data-testid="app-layout-navbar-slot-content"]').should('be.visible')
+            cy.get('[data-testid="app-layout-navbar-left-slot-content"]').should('be.visible')
+          })
+
+          it('should render content passed in through navbar center slot', () => {
+            cy.mount(AppLayout, {
+              slots: {
+                'navbar-center': [
+                  '<span data-testid="app-layout-navbar-center-slot-content">Navbar</span>',
+                ],
+              },
+            })
+
+            cy.get('[data-testid="app-layout-navbar-center-slot-content"]').should('be.visible')
+          })
+
+          it('should render content passed in through navbar right slot', () => {
+            cy.mount(AppLayout, {
+              slots: {
+                'navbar-right': [
+                  '<span data-testid="app-layout-navbar-right-slot-content">Navbar</span>',
+                ],
+              },
+            })
+
+            cy.get('[data-testid="app-layout-navbar-right-slot-content"]').should('be.visible')
           })
 
           it('should render content passed in through app-error slot', () => {

@@ -17,7 +17,9 @@
         </div>
       </a>
     </template>
-    <NavLinks />
+    <template #left>
+      <NavLinks />
+    </template>
   </AppNavbar>
   <div class="sandbox-container">
     <AppSidebar
@@ -347,11 +349,21 @@ main {
     display: flex;
   }
 }
+
+.desktop-logo {
+  display: none;
+  align-items: center;
+
+  @media (min-width: 1024px) { // $viewport-lg
+    display: none;
+  }
+}
 </style>
 
 <style lang="scss">
 main {
   background: #fff;
+  box-shadow: var(--kong-ui-app-layout-main-box-shadow, -30px 174px 250px #0023db);
   width: 100%;
 
   @media (min-width: 1024px) { // $viewport-lg
@@ -370,9 +382,7 @@ main {
     display: flex;
   }
 }
-</style>
 
-<style lang="scss">
 body {
   background: var(--kong-ui-app-layout-background, linear-gradient(180deg, #001740 0%, #073382 100%));
   margin: 0 !important;
