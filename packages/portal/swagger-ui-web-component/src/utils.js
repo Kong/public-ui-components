@@ -10,6 +10,7 @@ export const escapeSwaggerThing = (str) => {
 }
 
 export const operationToSwaggerThingArray = (operation) => {
+  console.log(operation, operation.operationId)
   return [
     'operations',
     operation.tag ? operation.tag : 'default',
