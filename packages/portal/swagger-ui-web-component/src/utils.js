@@ -1,3 +1,5 @@
+import { helpers } from 'swagger-client'
+
 export const attributeValueToBoolean = (value) => {
   return value && value.toLowerCase() === 'true'
 }
@@ -11,7 +13,7 @@ export const operationToSwaggerThingArray = (operation) => {
   return [
     'operations',
     operation.tag ? operation.tag : 'default',
-    operation.operationId,
+    operation.operationId ? operation.operationId : helpers.opId(operation, operation.path, operation.method),
   ]
 }
 
