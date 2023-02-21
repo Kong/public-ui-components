@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.3.0...@kong-ui-public/i18n@0.3.1) (2023-02-21)
+
+
+### Bug Fixes
+
+* **app-layout:** tweaks ([#159](https://github.com/Kong/public-ui-components/issues/159)) ([fe0d420](https://github.com/Kong/public-ui-components/commit/fe0d4201bdce3b0a56635ba21cb5a2c39ad4b9c4))
+
+
+
+
+
 # [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.2.8...@kong-ui-public/i18n@0.3.0) (2023-02-16)
 
 
