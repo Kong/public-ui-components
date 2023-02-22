@@ -51,6 +51,22 @@ const opsList = ref<Operation[]>([
     deprecated: false,
   },
   {
+    path: '/pet',
+    method: 'post',
+    operationId: 'addPet',
+    tags: ['pet too'],
+    summary: 'Add a new pet to the store',
+    deprecated: false,
+  },
+  {
+    path: '/pet',
+    method: 'get',
+    operationId: 'add_a-Pet_now',
+    tags: ['pet too'],
+    summary: 'Add a new pet to the store with some characters in operation id',
+    deprecated: false,
+  },
+  {
     path: '/pet/{petId}',
     method: 'get',
     operationId: 'getPetById',
@@ -119,6 +135,10 @@ const tags = ref<Tag[]>([
   {
     name: 'pet',
     description: 'Everything about your Pets',
+  },
+  {
+    name: 'pet too',
+    description: 'Everything about your Pets but with spaces',
   },
   {
     name: 'dog-go',

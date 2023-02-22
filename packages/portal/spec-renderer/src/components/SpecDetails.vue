@@ -80,8 +80,15 @@ const showAndScrollToOperation = (): void => {
     return
   }
 
-  swaggerRef.value.showOperation(props.activeOperation)
-  swaggerRef.value.scrollToOperation(props.activeOperation)
+  const activeOperation = { ...props.activeOperation }
+
+  if (activeOperation && activeOperation.tag) {
+    const newStr: string = decodeURIComponent(activeOperation.tag.trim().replaceAll(/\s/g, '%20'))
+    activeOperation.tag = newStr
+  }
+
+  swaggerRef.value.showOperation(activeOperation)
+  swaggerRef.value.scrollToOperation(activeOperation)
 
   activeOperationFocused.value = true
 }
