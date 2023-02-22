@@ -41,10 +41,18 @@
         />
       </div>
 
-      <h3>Error</h3>
+      <h3>Errors (partial)</h3>
       <div class="generic-card">
         <MetricCardContainer
           v-bind="cardsErrors"
+          hide-title
+        />
+      </div>
+
+      <h3>Errors (across all cards)</h3>
+      <div class="generic-card">
+        <MetricCardContainer
+          v-bind="cardsErrorsAll"
           hide-title
         />
       </div>
@@ -95,9 +103,8 @@ const cards = [
 ]
 
 const cardsWithErrors = JSON.parse(JSON.stringify(cards))
-cardsWithErrors[0].hasError = true
-cardsWithErrors[1].hasError = true
 cardsWithErrors[2].hasError = true
+cardsWithErrors[2].errorMessage = 'Data cannot be displayed'
 
 const cardsSmall = {
   cards,
@@ -133,14 +140,22 @@ const cardsNotAvailable = {
   cards: [...cards].slice(0, 3),
   loading: false,
   hasTrendAccess: false,
-  fallbackDisplayText: 'Not available',
+  fallbackDisplayText: '-.--%',
   cardSize: 'lg',
 }
 
 const cardsErrors = {
   cards: [...cardsWithErrors].slice(0, 3),
   loading: false,
+  hasTrendAccess: true,
+}
+
+const cardsErrorsAll = {
+  cards: [...cardsWithErrors].slice(0, 3),
+  loading: false,
   hasTrendAccess: false,
+  containerError: 'An error occurred',
+  containerErrorMessage: 'Data cannot be displayed due to an error.',
   fallbackDisplayText: 'Not available',
 }
 </script>
@@ -172,7 +187,7 @@ main {
     background-color: white;
     display: flex;
     margin-bottom: 16px;
-    padding: 8px;
+    padding: 16px;
   }
 }
 </style>

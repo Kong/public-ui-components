@@ -16,13 +16,14 @@
     </div>
     <KTooltip
       v-if="hasError"
-      class="mt-2"
+      class="metricscard-error mt-2"
       :label="errorMessage"
     >
       <KIcon
         icon="warning"
         size="20"
       />
+      <div>{{ errorMessage }}</div>
     </KTooltip>
     <div
       v-else
@@ -169,7 +170,7 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
   }
 
   &-title {
-    color: $metric-color-grey;
+    color: $color-grey;
     font-size: $font-size-sm;
   }
 
@@ -177,6 +178,18 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
     display: inline-flex;
     margin: auto 0 auto 5px;
     vertical-align: middle;
+  }
+
+  &-error {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    color: $color-grey-dark;
+    font-size: $font-size-xs;
+
+    .kong-icon-warning {
+      margin-right: 12px;
+    }
   }
 
   // Only currently active tab should trigger tooltip hover
