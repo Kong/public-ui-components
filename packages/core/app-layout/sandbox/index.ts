@@ -23,6 +23,11 @@ const router = createRouter({
       name: 'sidebar',
       component: () => import('./pages/SidebarPage.vue'),
     },
+    {
+      path: '/kong-manager-example',
+      name: 'kong-manager-example',
+      component: () => import('./pages/KongManagerLayoutExample.vue'),
+    },
   ],
 })
 
