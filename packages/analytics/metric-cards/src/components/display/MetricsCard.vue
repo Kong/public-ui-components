@@ -182,9 +182,9 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
 
   &-error {
     align-items: center;
+    color: $color-grey-dark;
     display: flex;
     flex-direction: row;
-    color: $color-grey-dark;
     font-size: $font-size-xs;
 
     .kong-icon-warning {
