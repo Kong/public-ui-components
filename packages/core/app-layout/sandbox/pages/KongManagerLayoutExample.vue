@@ -71,9 +71,10 @@
         button-appearance="btn-link"
         class="admin-menu"
         :items="[
-          { label: 'Item One', to: '/kong-manager-example' },
-          { label: 'Item Two', to: '/kong-manager-example' },
-          { label: 'Item Three', to: '/kong-manager-example' },
+          { label: 'AppLayout', to: '/' },
+          { label: 'AppNavbar', to: '/navbar' },
+          { label: 'AppSidebar', to: '/sidebar' },
+          { label: 'KM Example', to: '/kong-manager-example' },
         ]"
         label="super-admin"
         show-caret
