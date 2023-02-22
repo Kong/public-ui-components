@@ -7,7 +7,7 @@
     :sidebar-top-items="sidebarItemsTop"
     @sidebar-click="sidebarItemClick"
   >
-    <template #notification>
+    <!-- <template #notification>
       <KAlert
         alert-message="I'm an alert from the host app"
         appearance="warning"
@@ -15,11 +15,36 @@
         :is-showing="showAlert"
         @closed="handleCloseAlert"
       />
+    </template> -->
+    <template #navbar-mobile-logo>
+      <router-link
+        class="navbar-logo-link"
+        to="/"
+      >
+        <AppGruceLogo />
+        <div class="logo-title">
+          <AppLogo theme="dark" />
+        </div>
+      </router-link>
     </template>
-    <template #navbar>
+    <template #navbar-logo>
+      <router-link
+        class="navbar-logo-link"
+        to="/"
+      >
+        <AppGruceLogo />
+        <div class="logo-title">
+          <AppLogo theme="dark" />
+        </div>
+      </router-link>
+    </template>
+    <template #navbar-left>
       <NavLinks />
+    </template>
+    <template #navbar-right>
       <KButton
         href="#"
+        size="small"
         @click="toggleSidebar"
       >
         {{ sidebarIsHidden ? 'Show' : 'Hide' }} sidebar
@@ -39,7 +64,9 @@
       </div>
     </template>
     <template #sidebar-top>
-      Top Content
+      <div class="sidebar-top-slot-content">
+        <div>Top Slot Content</div>
+      </div>
     </template>
 
     <!-- Default slot content -->
@@ -160,6 +187,14 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
           active: activeItem.value?.name === 'Versions',
         },
       ],
+    },
+    {
+      name: 'Mesh Manager',
+      to: '/?mesh-manager',
+      key: 'mesh-manager',
+      icon: 'brain',
+      // TODO: using this item as a default when `activeItem` is undefined
+      active: (activeItem.value as SidebarPrimaryItem)?.key === 'mesh-manager',
     },
     {
       name: 'Dev Portal',
@@ -293,8 +328,31 @@ const sidebarItemsProfile = computed((): SidebarProfileItem[] => {
   ]
 })
 
-const showAlert = ref(true)
-const handleCloseAlert = (): void => {
-  showAlert.value = false
-}
+// const showAlert = ref(true)
+// const handleCloseAlert = (): void => {
+//   showAlert.value = false
+// }
 </script>
+
+<style lang="scss" scoped>
+.sidebar-top-slot-content {
+  align-content: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.navbar-logo-link {
+  display: flex;
+  align-items: center;
+}
+
+.logo-title {
+  display: none;
+  padding-left: 16px;
+
+  @media (min-width: 640px) { // $viewport-sm
+    display: flex;
+  }
+}
+</style>

@@ -11,6 +11,7 @@
     </div>
     <AppNavbar
       v-if="!navbar.hidden"
+      :key="String(sidebar.hidden)"
       :left-offset="sidebar.hidden ? 0 : undefined"
       :top-offset="notificationHeight"
     >
@@ -29,7 +30,35 @@
           <slot name="navbar-mobile-logo" />
         </div>
       </template>
-      <slot name="navbar" />
+      <template
+        v-if="slotContent.navbarLogo"
+        #logo
+      >
+        <div
+          v-if="sidebar.hidden"
+          class="navbar-logo"
+        >
+          <slot name="navbar-logo" />
+        </div>
+      </template>
+      <template
+        v-if="slotContent.navbarLeft"
+        #left
+      >
+        <slot name="navbar-left" />
+      </template>
+      <template
+        v-if="slotContent.navbarCenter"
+        #center
+      >
+        <slot name="navbar-center" />
+      </template>
+      <template
+        v-if="slotContent.navbarRight"
+        #right
+      >
+        <slot name="navbar-right" />
+      </template>
     </AppNavbar>
 
     <AppSidebar
@@ -61,7 +90,10 @@
       </template>
     </AppSidebar>
 
-    <main class="kong-ui-app-layout-main">
+    <main
+      class="kong-ui-app-layout-main"
+      data-testid="kong-ui-app-layout-main"
+    >
       <div class="kong-ui-app-layout-content">
         <div id="kong-ui-app-layout-teleport-default-slot" />
         <slot name="app-error" />
@@ -132,6 +164,10 @@ const emit = defineEmits(['sidebar-click'])
 
 const slots = useSlots()
 const slotContent = reactive({
+  navbarLeft: computed((): boolean => !!slots['navbar-left']),
+  navbarCenter: computed((): boolean => !!slots['navbar-center']),
+  navbarRight: computed((): boolean => !!slots['navbar-right']),
+  navbarLogo: computed((): boolean => !!slots['navbar-logo']),
   navbarMobileLogo: computed((): boolean => !!slots['navbar-mobile-logo']),
   sidebarHeader: computed((): boolean => !!slots['sidebar-header']),
   sidebarTop: computed((): boolean => !!slots['sidebar-top']),
@@ -177,6 +213,7 @@ const sidebarMobileTopOffset = computed((): number => {
   return navbarHeight.value + notificationHeight.value
 })
 const layoutMainMarginTop = computed((): string => `${sidebarMobileTopOffset.value}px`)
+const layoutMainTopLeftBorderRadius = computed((): string => sidebar.hidden || navbar.hidden ? '0' : '16px')
 
 const { debounce } = useDebounce()
 const debouncedSetNotificationHeight = debounce((force = false): void => {
@@ -241,7 +278,7 @@ onBeforeUnmount(() => {
 @import "../styles/variables";
 
 .kong-ui-app-layout {
-  background-color: $sidebar-background-gradient-start;
+  background: $app-layout-background;
   bottom: 0;
   display: flex;
   flex-direction: column;
@@ -259,7 +296,7 @@ onBeforeUnmount(() => {
       align-items: center;
       display: flex;
 
-      @media (min-width: $viewport-md) {
+      @media (min-width: $viewport-lg) {
         display: none;
       }
 
@@ -277,15 +314,17 @@ onBeforeUnmount(() => {
   .kong-ui-app-layout-main {
     align-items: flex-start;
     background-color: var(--grey-100, #f8f8fa);
+    box-shadow: $app-layout-main-box-shadow;
     display: flex;
     flex-grow: 1;
     height: 100%;
     margin-top: v-bind('layoutMainMarginTop');
-    // border-top-left-radius: 16px; // TODO: Enable when Neon layout is enabled
     overflow: auto;
+    position: relative;
     width: 100%;
 
-    @media (min-width: $viewport-md) {
+    @media (min-width: $viewport-lg) {
+      border-top-left-radius: v-bind('layoutMainTopLeftBorderRadius');
       margin-left: $sidebar-width;
       width: calc(100% - #{$sidebar-width});
     }
@@ -298,6 +337,10 @@ onBeforeUnmount(() => {
       padding: var(--kong-ui-app-layout-content-padding, 16px);
       position: relative;
       width: 100%;
+
+      @media (min-width: $viewport-lg) {
+        padding: var(--kong-ui-app-layout-content-padding, 32px);
+      }
     }
   }
 

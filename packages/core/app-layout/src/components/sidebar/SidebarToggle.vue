@@ -49,12 +49,12 @@ watch(() => props.active, (active) => {
     outline: 1px solid var(--kong-ui-app-sidebar-mobile-icon-color, var(--blue-500, #1155cb));
   }
 
-  @media (min-width: $viewport-md) {
+  @media (min-width: $viewport-lg) {
     display: none;
   }
 
   .line {
-    background-color: var(--kong-ui-app-sidebar-mobile-icon-color, var(--blue-500, #1155cb));
+    background-color: var(--kong-ui-app-sidebar-mobile-icon-color, var(--white, #fff));
     border-radius: $sidebar-item-border-radius;
     display: block;
     height: 2px;

@@ -4,7 +4,7 @@ import AppNavbar from './AppNavbar.vue'
 
 const viewports = {
   desktop: {
-    width: 768, // Desktop is 768px and higher
+    width: 1024, // Desktop is 1024px and higher
     height: 750,
   },
   tablet: {
@@ -18,6 +18,11 @@ const viewports = {
 }
 
 describe('<AppNavbar />', () => {
+  before(() => {
+    // Add background color
+    document.documentElement.style.setProperty('--kong-ui-app-navbar-background', 'linear-gradient(180deg, #001740 0%, #073382 100%)')
+  })
+
   describe('test all viewports', () => {
     Object.keys(viewports).forEach((viewportName: string) => {
       describe(`${viewportName} viewport`, {
@@ -46,16 +51,40 @@ describe('<AppNavbar />', () => {
           }
         })
 
-        it('should render content passed in through the default slot', () => {
+        it('should render content passed in through the left slot', () => {
           cy.mount(AppNavbar, {
             slots: {
-              default: [
-                '<span data-testid="navbar-default-slot-content">Content</span>',
+              left: [
+                '<span data-testid="navbar-left-slot-content">Content</span>',
               ],
             },
           })
 
-          cy.get('[data-testid="navbar-default-slot-content"]').should('be.visible')
+          cy.get('[data-testid="navbar-left-slot-content"]').should('be.visible')
+        })
+
+        it('should render content passed in through the center slot', () => {
+          cy.mount(AppNavbar, {
+            slots: {
+              center: [
+                '<span data-testid="navbar-center-slot-content">Content</span>',
+              ],
+            },
+          })
+
+          cy.get('[data-testid="navbar-center-slot-content"]').should('be.visible')
+        })
+
+        it('should render content passed in through the right slot', () => {
+          cy.mount(AppNavbar, {
+            slots: {
+              center: [
+                '<span data-testid="navbar-right-slot-content">Content</span>',
+              ],
+            },
+          })
+
+          cy.get('[data-testid="navbar-right-slot-content"]').should('be.visible')
         })
       })
     })

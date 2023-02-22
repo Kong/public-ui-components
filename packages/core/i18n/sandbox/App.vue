@@ -25,11 +25,30 @@
           </div>
         </template>
       </i18n-t>
+
+      <p>
+        This is direct use of i18n-t (no plugin registration ):
+      </p>
+      <i18n-no-plugin
+        keypath="global.default"
+      >
+        <b>
+          <a href="https://google.com">Google</a>
+        </b>
+      </i18n-no-plugin>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useI18n } from '../src'
+import { useI18n, createI18n, i18nTComponent } from '../src'
+import english from './locales/en.json'
+
+// this is grabbing i18n from global
 const i18n = useI18n()
+
+// this creates local i18n and component
+const i18nLocal = createI18n('en-us', english)
+const i18nNoPlugin = i18nTComponent(i18nLocal)
+
 </script>

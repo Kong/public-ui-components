@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.5.2...@kong-ui-public/document-viewer@0.5.3) (2023-02-21)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [0.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.5.1...@kong-ui-public/document-viewer@0.5.2) (2023-02-21)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [0.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.5.0...@kong-ui-public/document-viewer@0.5.1) (2023-02-17)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.27.0 ([#158](https://github.com/Kong/public-ui-components/issues/158)) ([bfca559](https://github.com/Kong/public-ui-components/commit/bfca5595b42dffb2cdc7de7cedacb90f2027cea8))
+
+
+
+
+
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.4.7...@kong-ui-public/document-viewer@0.5.0) (2023-02-17)
+
+
+### ✨ Features
+
+* **app-layout:** unification ux updates [KHCP-5798] ([#147](https://github.com/Kong/public-ui-components/issues/147)) ([220e89e](https://github.com/Kong/public-ui-components/commit/220e89e8215fc4bdc9da5b39e589b03aa92ee4fa))
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.26.2 ([#157](https://github.com/Kong/public-ui-components/issues/157)) ([4fbcaac](https://github.com/Kong/public-ui-components/commit/4fbcaac2da85de3803ea70aa9640b8ab56d4e37b))
+
+
+
+
+
+## [0.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.4.6...@kong-ui-public/document-viewer@0.4.7) (2023-02-16)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.26.0 ([#152](https://github.com/Kong/public-ui-components/issues/152)) ([be5e9ec](https://github.com/Kong/public-ui-components/commit/be5e9ec638b6151f08219ec817e3a7adf6f1aed0))
+
+
+
+
+
+## [0.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.4.5...@kong-ui-public/document-viewer@0.4.6) (2023-02-16)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [0.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.4.4...@kong-ui-public/document-viewer@0.4.5) (2023-02-16)
+
+
+### 🐛 Bug Fixes
+
+* **document-viewer:** properly check if empty object is passed ([#151](https://github.com/Kong/public-ui-components/issues/151)) ([746c706](https://github.com/Kong/public-ui-components/commit/746c706efc521a48e6a1b552bc9f5f78b945b807))
+
+
+
+
+
+## [0.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.4.3...@kong-ui-public/document-viewer@0.4.4) (2023-02-16)
+
+
+### ♻️ Chores
+
+* **deps:** update dependency [@kong](https://github.com/kong)/kongponents to ^8.25.1 ([#148](https://github.com/Kong/public-ui-components/issues/148)) ([f1eb158](https://github.com/Kong/public-ui-components/commit/f1eb15846c99be6da60906221a7c3c2b41bda3ed))
+
+
+
+
+
 ## [0.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.4.2...@kong-ui-public/document-viewer@0.4.3) (2023-02-15)
 
 
