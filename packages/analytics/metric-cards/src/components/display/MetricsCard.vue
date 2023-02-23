@@ -38,6 +38,7 @@
       >
         <KIcon
           v-if="changePolarity !== 0"
+          :color="colorAttribute(changePolarity)"
           :icon="icon"
           size="18"
         />
