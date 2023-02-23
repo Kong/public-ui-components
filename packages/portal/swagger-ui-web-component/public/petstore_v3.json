@@ -19,7 +19,7 @@
   },
   "servers": [
     {
-      "url": "https://localhost:9000/api/v3"
+      "url": "https://localhost:5173/api/v3"
     }
   ],
   "tags": [

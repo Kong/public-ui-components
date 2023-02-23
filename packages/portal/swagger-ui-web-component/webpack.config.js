@@ -51,7 +51,7 @@ module.exports = (env, { mode, analyze = false }) => {
       maxEntrypointSize: 2 * 1024 * 1024, // 2 MiB
     },
     devServer: {
-      port: 9000,
+      port: 5173,
       static: {
         directory: path.join(__dirname, 'public'),
       },
