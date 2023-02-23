@@ -9,11 +9,18 @@
         />
       </div>
 
-      <h3>Large (default)</h3>
+      <h3>Large</h3>
       <div class="generic-card">
         <MetricCardContainer
           v-bind="cardsRegular"
           hide-title
+        />
+      </div>
+
+      <h3>Large w/ custom theme</h3>
+      <div class="generic-card dev-portal">
+        <MetricCardContainer
+          v-bind="cardsRegular"
         />
       </div>
 
@@ -63,6 +70,7 @@
 <script setup lang="ts">
 import { MetricCardContainer } from '../src'
 import { DECIMAL_DISPLAY } from '../src/utilities'
+import { MetricCardSize } from '../src/types'
 
 const cards = [
   {
@@ -112,7 +120,7 @@ const cardsSmall = {
   loading: false,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
-  cardSize: 'sm',
+  cardSize: MetricCardSize.Small,
 }
 
 const cardsRegular = {
@@ -120,7 +128,7 @@ const cardsRegular = {
   loading: false,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
-  cardSize: 'lg',
+  cardSize: MetricCardSize.Large,
 }
 
 const cardsXL = {
@@ -128,7 +136,7 @@ const cardsXL = {
   loading: false,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
-  cardSize: 'xl',
+  cardSize: MetricCardSize.ExtraLarge,
 }
 
 const cardsLoading = {
@@ -143,7 +151,7 @@ const cardsNotAvailable = {
   loading: false,
   hasTrendAccess: false,
   fallbackDisplayText: '-.--%',
-  cardSize: 'lg',
+  cardSize: MetricCardSize.Large,
 }
 
 const cardsErrors = {
@@ -193,6 +201,18 @@ main {
     display: flex;
     margin-bottom: 16px;
     padding: 16px;
+
+    &.dev-portal {
+      background-color: #777;
+
+      // Customizable theme
+      --kong-ui-public-metric-cards-background: ;
+      --kong-ui-public-metric-cards-title: #ccc;
+      --kong-ui-public-metric-cards-value: white;
+
+      --kong-ui-public-metric-cards-trend-negative: #FC98CB;
+      --kong-ui-public-metric-cards-trend-positive: #A1EDF0;
+    }
   }
 }
 </style>

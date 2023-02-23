@@ -33,12 +33,11 @@
       </div>
       <div
         v-if="cardDisplayFull"
-        class="metricscard-value-trend"
-        :style="`color: ${textColor(changePolarity)}`"
+        class="metricscard-value-trend "
+        :class="textColor(changePolarity)"
       >
         <KIcon
           v-if="changePolarity !== 0"
-          :color="colorAttribute(changePolarity)"
           :icon="icon"
           size="18"
         />
@@ -118,10 +117,10 @@ const colorAttribute = (polarity: number): string => {
 
 const textColor = (polarity: number): string => {
   return polarity > 0
-    ? trendColor.green
+    ? 'positive'
     : polarity < 0
-      ? trendColor.red
-      : trendColor.grey
+      ? 'negative'
+      : 'neutral'
 }
 
 const cardDisplayFull = [MetricCardSize.Medium, MetricCardSize.Large].includes(props.cardSize)
@@ -169,8 +168,35 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
   }
 
   &-title {
-    color: $color-grey;
+    color: var(--kong-ui-public-metric-cards-title, $color-grey);
     font-size: $font-size-sm;
+  }
+
+  &-value {
+    color: var(--kong-ui-public-metric-cards-value, $color-grey-dark);
+    display: flex;
+    flex-direction: row;
+    font-weight: 500;
+    justify-content: space-between;
+    margin: 8px 0 0 0;
+
+    &-trend {
+      &.positive {
+        color: var(--kong-ui-public-metric-cards-trend-positive, $color-green);
+      }
+      &.negative {
+        color: var(--kong-ui-public-metric-cards-trend-negative, $color-red);
+      }
+      &.neutral {
+        color: var(--kong-ui-public-metric-cards-trend-neutral, $color-grey);
+      }
+
+      display: flex;
+      flex-direction: row;
+      font-size: $font-size-sm;
+      margin-bottom: 0;
+      margin-top: auto;
+    }
   }
 
   &-tooltip {
@@ -196,22 +222,6 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
   &.active {
     .metricscard-tooltip {
       @include pointer-events-all;
-    }
-  }
-
-  &-value {
-    display: flex;
-    flex-direction: row;
-    font-weight: 500;
-    justify-content: space-between;
-    margin: 8px 0 0 0;
-
-    &-trend {
-      display: flex;
-      flex-direction: row;
-      font-size: $font-size-sm;
-      margin-bottom: 0;
-      margin-top: auto;
     }
   }
 }

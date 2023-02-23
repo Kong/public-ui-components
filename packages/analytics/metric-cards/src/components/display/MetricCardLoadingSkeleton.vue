@@ -22,9 +22,22 @@ import '@kong/kongponents/dist/style.css'
 .loading-tabs {
   display: flex;
   flex-direction: column;
-  padding: 16px;
-  row-gap: 12px;
-  width: 240px;
+
+  &-large {
+    padding: 6px;
+    row-gap: 12px;
+    width: 240px;
+  }
+
+  &-small {
+    padding: 4px;
+    row-gap: 6px;
+    width: 120px;
+
+    .box {
+      height: 8px;
+    }
+  }
 
   @media (max-width: ($viewport-md - 1px)) {
     width: auto;

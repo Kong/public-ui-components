@@ -28,6 +28,7 @@
       <MetricCardLoadingSkeleton
         v-if="loading"
         :key="`skeleton-${index}`"
+        :class="cardSize === MetricCardSize.Large ? 'loading-tabs-large' : 'loading-tabs-small'"
       />
       <MetricsCard
         v-else
@@ -112,7 +113,7 @@ const formatCardValues = (card: MetricsCardDef) => {
 @import "../styles/base";
 
 .kong-ui-public-metric-cards {
-  background-color: transparent;
+  background-color: var(--kong-ui-public-metric-cards-background, transparent);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
