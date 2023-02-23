@@ -14,17 +14,16 @@
         />
       </KTooltip>
     </div>
-    <KTooltip
+    <div
       v-if="hasError"
-      class="metricscard-error mt-2"
-      :label="errorMessage"
+      class="metricscard-error"
     >
       <KIcon
         icon="warning"
         size="20"
       />
       <div>{{ errorMessage }}</div>
-    </KTooltip>
+    </div>
     <div
       v-else
       class="metricscard-value"
@@ -186,9 +185,10 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
     display: flex;
     flex-direction: row;
     font-size: $font-size-xs;
+    margin-top: 8px;
 
     .kong-icon-warning {
-      margin-right: 12px;
+      margin-right: 10px;
     }
   }
 

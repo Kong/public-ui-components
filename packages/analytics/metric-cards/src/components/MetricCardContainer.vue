@@ -1,7 +1,7 @@
 <template>
   <div class="kong-ui-public-metric-cards">
     <div
-      v-if="containerError"
+      v-if="allCardsHaveErrors && errorTitle"
       class="error"
     >
       <KIcon
@@ -11,13 +11,13 @@
       />
       <div class="error-display">
         <div class="error-display-title">
-          {{ containerError }}
+          {{ errorTitle }}
         </div>
         <div
-          v-if="containerErrorMessage"
+          v-if="errorMessage"
           class="error-display-message"
         >
-          {{ containerErrorMessage }}
+          {{ errorMessage }}
         </div>
       </div>
     </div>
@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
+import { computed, PropType } from 'vue'
 import approxNum from 'approximate-number'
 import { MetricCardSize, MetricsCardDef } from '../types'
 import { changePolarity, metricChange, defineIcon } from '../utilities'
@@ -61,12 +61,12 @@ const props = defineProps({
     type: Array as PropType<MetricsCardDef[]>,
     required: true,
   },
-  containerError: {
+  errorTitle: {
     type: String,
     required: false,
     default: '',
   },
-  containerErrorMessage: {
+  errorMessage: {
     type: String,
     required: false,
     default: '',
@@ -87,6 +87,8 @@ const props = defineProps({
     default: () => MetricCardSize.Large,
   },
 })
+
+const allCardsHaveErrors = computed((): boolean => props.cards.every(val => val?.hasError === true))
 
 const calculateDelta = (curr: number, prev: number) => {
   return curr / prev - 1

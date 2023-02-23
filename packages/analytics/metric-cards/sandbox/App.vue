@@ -103,8 +103,9 @@ const cards = [
 ]
 
 const cardsWithErrors = JSON.parse(JSON.stringify(cards))
+cardsWithErrors[0].hasError = true
+cardsWithErrors[1].hasError = true
 cardsWithErrors[2].hasError = true
-cardsWithErrors[2].errorMessage = 'Data cannot be displayed'
 
 const cardsSmall = {
   cards,
@@ -134,6 +135,7 @@ const cardsLoading = {
   cards: [...cards].slice(0, 3),
   loading: true,
   hasTrendAccess: true,
+  fallbackDisplayText: 'Not available',
 }
 
 const cardsNotAvailable = {
@@ -145,17 +147,20 @@ const cardsNotAvailable = {
 }
 
 const cardsErrors = {
-  cards: [...cardsWithErrors].slice(0, 3),
+  cards: [...cardsWithErrors].slice(0, 4),
   loading: false,
   hasTrendAccess: true,
+  errorTitle: 'An error occurred',
+  errorMessage: 'Data cannot be displayed due to an error.',
+  fallbackDisplayText: 'Not available',
 }
 
 const cardsErrorsAll = {
   cards: [...cardsWithErrors].slice(0, 3),
   loading: false,
   hasTrendAccess: false,
-  containerError: 'An error occurred',
-  containerErrorMessage: 'Data cannot be displayed due to an error.',
+  errorTitle: 'An error occurred',
+  errorMessage: 'Data cannot be displayed due to an error.',
   fallbackDisplayText: 'Not available',
 }
 </script>
