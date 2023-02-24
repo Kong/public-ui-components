@@ -4,9 +4,6 @@
       width="100"
     />
     <KSkeletonBox
-      width="100"
-    />
-    <KSkeletonBox
       width="75"
     />
   </div>
@@ -25,17 +22,17 @@ import '@kong/kongponents/dist/style.css'
 
   &-large {
     padding: 4px;
-    row-gap: 8px;
+    row-gap: 12px;
     width: 240px;
   }
 
   &-small {
     padding: 2px;
-    row-gap: 6px;
+    row-gap: 8px;
     width: 120px;
 
     .box {
-      height: 8px;
+      height: 12px;
     }
   }
 
