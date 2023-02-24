@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.5.5...@kong-ui-public/document-viewer@0.5.6) (2023-02-24)
+
+
+### Bug Fixes
+
+* **document-viewer:** add unique ids to nested headings ([#170](https://github.com/Kong/public-ui-components/issues/170)) ([d29acd7](https://github.com/Kong/public-ui-components/commit/d29acd7eac8065b5568546f8f8ffc4f2a9bc02f8))
+
+
+
+
+
 ## [0.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.5.4...@kong-ui-public/document-viewer@0.5.5) (2023-02-24)
 
 **Note:** Version bump only for package @kong-ui-public/document-viewer
