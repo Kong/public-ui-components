@@ -28,7 +28,7 @@
       <MetricCardLoadingSkeleton
         v-if="loading"
         :key="`skeleton-${index}`"
-        :class="cardSize === MetricCardSize.Large ? 'loading-tabs-large' : 'loading-tabs-small'"
+        :class="cardSize === MetricCardSize.Small ? 'loading-tabs-small' : 'loading-tabs-large'"
       />
       <MetricsCard
         v-else

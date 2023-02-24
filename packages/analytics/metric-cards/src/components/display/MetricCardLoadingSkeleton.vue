@@ -24,13 +24,13 @@ import '@kong/kongponents/dist/style.css'
   flex-direction: column;
 
   &-large {
-    padding: 6px;
-    row-gap: 12px;
+    padding: 4px;
+    row-gap: 8px;
     width: 240px;
   }
 
   &-small {
-    padding: 4px;
+    padding: 2px;
     row-gap: 6px;
     width: 120px;
 
