@@ -9,11 +9,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { KSkeletonBox } from '@kong/kongponents'
-import '@kong/kongponents/dist/style.css'
-</script>
-
 <style lang="scss" scoped>
 @import "../../styles/base";
 .loading-tabs {

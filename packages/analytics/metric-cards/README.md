@@ -20,10 +20,9 @@ A Kong UI component for display Traffic, Error Rate, and P99 Latency insights in
 
 - `vue` must be initialized in the host application
 - `@kong/kongponents` must be available as a `dependency` in the host application, along with the package's style imports. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents). Specifically, the following Kongponents must be available:
-  - `KAlert`
-  - `KTooltip`
   - `KIcon`
   - `KSkeletonBox`
+  - `KTooltip`
 
 ## Usage
 
