@@ -70,7 +70,7 @@
 <script setup lang="ts">
 import { MetricCardContainer } from '../src'
 import { DECIMAL_DISPLAY } from '../src/utilities'
-import { MetricCardSize } from '../src/types'
+import { MetricCardSize } from '../src/constants'
 
 const cards = [
   {
@@ -158,8 +158,7 @@ const cardsErrors = {
   cards: [...cardsWithErrors].slice(0, 4),
   loading: false,
   hasTrendAccess: true,
-  errorTitle: 'An error occurred',
-  errorMessage: 'Data cannot be displayed due to an error.',
+  errorMessage: 'An error occurred',
   fallbackDisplayText: 'Not available',
 }
 
@@ -167,8 +166,7 @@ const cardsErrorsAll = {
   cards: [...cardsWithErrors].slice(0, 3),
   loading: false,
   hasTrendAccess: false,
-  errorTitle: 'An error occurred',
-  errorMessage: 'Data cannot be displayed due to an error.',
+  errorMessage: 'Analytics cannot be displayed due to an error.',
   fallbackDisplayText: 'Not available',
 }
 </script>

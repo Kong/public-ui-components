@@ -10,3 +10,11 @@ export interface MetricsCardDef {
   cardSize?: string
   tooltip?: string
 }
+
+export interface MetricsCardDisplayValue {
+  metricValue: string
+  metricChange: string
+  changePolarity: number
+  icon?: string
+  cardSize?: string
+}

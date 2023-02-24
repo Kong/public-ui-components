@@ -37,7 +37,7 @@ export const metricChange = (delta: number, hasTrendAccess: boolean, fallback: s
 /**
  * Determines whether to display an upward or downward trend, or no change
  */
-export const defineIcon = (polarity: number, thisIsBad: boolean = false) => {
+export const defineIcon = (polarity: number, thisIsBad: boolean = false): string => {
   if (thisIsBad) {
     polarity *= -1
   }

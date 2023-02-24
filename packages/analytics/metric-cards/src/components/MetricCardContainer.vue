@@ -1,24 +1,19 @@
 <template>
-  <div class="kong-ui-public-metric-cards">
+  <div class="kong-ui-public-metric-card-container">
     <div
-      v-if="allCardsHaveErrors && errorTitle"
-      class="error"
+      v-if="allCardsHaveErrors"
+      class="error-display"
     >
       <KIcon
-        class="error-icon"
+        class="error-display-icon"
         icon="warning"
-        size="32"
+        size="24"
       />
-      <div class="error-display">
-        <div class="error-display-title">
-          {{ errorTitle }}
-        </div>
-        <div
-          v-if="errorMessage"
-          class="error-display-message"
-        >
-          {{ errorMessage }}
-        </div>
+      <div
+        v-if="errorMessage"
+        class="error-display-message"
+      >
+        {{ errorMessage }}
       </div>
     </div>
     <template
@@ -47,7 +42,8 @@
 <script setup lang="ts">
 import { computed, PropType } from 'vue'
 import approxNum from 'approximate-number'
-import { MetricCardSize, MetricsCardDef } from '../types'
+import { MetricCardSize } from '../constants'
+import { MetricsCardDef, MetricsCardDisplayValue } from '../types'
 import { changePolarity, metricChange, defineIcon } from '../utilities'
 import { KIcon } from '@kong/kongponents'
 import MetricsCard from './display/MetricsCard.vue'
@@ -61,11 +57,6 @@ const props = defineProps({
   cards: {
     type: Array as PropType<MetricsCardDef[]>,
     required: true,
-  },
-  errorTitle: {
-    type: String,
-    required: false,
-    default: '',
   },
   errorMessage: {
     type: String,
@@ -91,11 +82,11 @@ const props = defineProps({
 
 const allCardsHaveErrors = computed((): boolean => props.cards.every(val => val?.hasError === true))
 
-const calculateDelta = (curr: number, prev: number) => {
+const calculateDelta = (curr: number, prev: number): number => {
   return curr / prev - 1
 }
 
-const formatCardValues = (card: MetricsCardDef) => {
+const formatCardValues = (card: MetricsCardDef): MetricsCardDisplayValue => {
   const change = calculateDelta(card.currentValue, card.previousValue) || 0
   const polarity = changePolarity(change, props.hasTrendAccess, card.increaseIsBad)
 
@@ -112,7 +103,7 @@ const formatCardValues = (card: MetricsCardDef) => {
 <style lang="scss" scoped>
 @import "../styles/base";
 
-.kong-ui-public-metric-cards {
+.kong-ui-public-metric-card-container {
   background-color: var(--kong-ui-public-metric-cards-background, transparent);
   display: flex;
   flex-direction: row;
@@ -125,10 +116,9 @@ const formatCardValues = (card: MetricsCardDef) => {
     flex-direction: column;
   }
 
-  .error {
+  .error-display {
     align-items: center;
     display: flex;
-    flex-direction: row;
     justify-content: center;
     margin: auto;
 
@@ -136,26 +126,11 @@ const formatCardValues = (card: MetricsCardDef) => {
       display: flex;
     }
 
-    &-display {
-      display: flex;
-      flex-direction: column;
-      margin-left: 32px;
-
-      &-title {
-        font-size: $font-size-xl;
-        font-weight: 600;
-        line-height: 24px;
-        margin-bottom: 10px;
-      }
-
-      &-message {
-        color: $color-grey-dark;
-        font-size: $font-size-sm;
-        font-weight: normal;
-        line-height: 20px;
-      }
+    &-message {
+      color: $color-grey;
+      font-size: $font-size-sm;
+      margin-left: 10px;
     }
-
   }
 }
 </style>

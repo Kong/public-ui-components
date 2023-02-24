@@ -5,4 +5,3 @@
 // export * from './component-types'
 
 export * from './metric-card'
-export { MetricCardSize } from './metric-card-size.enum'
