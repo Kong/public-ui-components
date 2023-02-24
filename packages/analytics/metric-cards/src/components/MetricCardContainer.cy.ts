@@ -32,7 +32,7 @@ const cards = [
   },
 ]
 
-const container = '.kong-ui-public-metric-cards'
+const container = '.kong-ui-public-metric-card-container'
 
 describe('<MetricCardContainer />', () => {
   it('layout updates on desktop vs mobile ', () => {

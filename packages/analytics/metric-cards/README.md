@@ -27,12 +27,12 @@ A Kong UI component for display Traffic, Error Rate, and P99 Latency insights in
 ### CSS Variables
 Variable | Description | Default
 ---------|----------|---------
-`--kong-ui-metric-cards-background` | The background of the `.kong-ui-public-metric-cards` main container | `transparent`
-`--kong-ui-metric-cards-title` | Metric card title font color | `#`
-`--kong-ui-metric-cards-value` | Metric value font color | `#`
-`--kong-ui-metric-cards-trend-negative` | Negative trend font color | `#d44324`
-`--kong-ui-metric-cards-trend-positive` | Positive trend font color | `#07a88d`
-`--kong-ui-metric-cards-trend-neutral` | Neutral trend font color | `#6f7787`
+`--kong-ui-metric-card-background` | The background of the `.kong-ui-public-metric-card-container` main container | `transparent`
+`--kong-ui-metric-card-title` | Metric card title font color | `#`
+`--kong-ui-metric-card-value` | Metric value font color | `#`
+`--kong-ui-metric-card-trend-negative` | Negative trend font color | `#d44324`
+`--kong-ui-metric-card-trend-positive` | Positive trend font color | `#07a88d`
+`--kong-ui-metric-card-trend-neutral` | Neutral trend font color | `#6f7787`
 
 ### Install
 

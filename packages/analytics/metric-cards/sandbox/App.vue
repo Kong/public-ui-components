@@ -204,11 +204,11 @@ main {
       background-color: #555;
 
       // Customizable theme
-      --kong-ui-public-metric-cards-background: #555;
-      --kong-ui-public-metric-cards-title: #ccc;
-      --kong-ui-public-metric-cards-value: white;
-      --kong-ui-public-metric-cards-trend-negative: #c59fff;
-      --kong-ui-public-metric-cards-trend-positive: #cfff56;
+      --kong-ui-metric-card-background: #555;
+      --kong-ui-metric-card-title: #ccc;
+      --kong-ui-metric-card-value: white;
+      --kong-ui-metric-card-trend-negative: #c59fff;
+      --kong-ui-metric-card-trend-positive: #cfff56;
     }
   }
 }

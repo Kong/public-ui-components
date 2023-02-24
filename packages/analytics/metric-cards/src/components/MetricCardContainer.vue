@@ -103,7 +103,7 @@ const formatCardValues = (card: MetricsCardDef): MetricsCardDisplayValue => {
 @import "../styles/base";
 
 .kong-ui-public-metric-card-container {
-  background-color: var(--kong-ui-public-metric-cards-background, transparent);
+  background-color: var(--kong-ui-metric-card-background, transparent);
   display: flex;
   flex-direction: row;
   justify-content: space-between;

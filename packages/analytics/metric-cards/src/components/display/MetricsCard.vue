@@ -103,9 +103,9 @@ const props = defineProps({
 
 const colorAttribute = (polarity: number): string => {
   const trendColor = {
-    red: "var(--kong-ui-public-metric-cards-trend-negative, var(--red-500, '#d44324'))",
-    green: "var(--kong-ui-public-metric-cards-trend-positive, var(--green-500, '#07a88d'))",
-    grey: "var(--kong-ui-public-metric-cards-trend-neutral, var(--grey-500, '#6f7787'))",
+    red: "var(--kong-ui-metric-card-trend-negative, var(--red-500, '#d44324'))",
+    green: "var(--kong-ui-metric-card-trend-positive, var(--green-500, '#07a88d'))",
+    grey: "var(--kong-ui-metric-card-trend-neutral, var(--grey-500, '#6f7787'))",
   }
 
   return polarity > 0
@@ -167,12 +167,12 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
   }
 
   &-title {
-    color: var(--kong-ui-public-metric-cards-title, $color-grey);
+    color: var(--kong-ui-metric-card-title, $color-grey);
     font-size: $font-size-sm;
   }
 
   &-value {
-    color: var(--kong-ui-public-metric-cards-value, $color-grey-dark);
+    color: var(--kong-ui-metric-card-value, $color-grey-dark);
     display: flex;
     flex-direction: row;
     font-weight: 500;
@@ -191,13 +191,13 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
         display: flex;
       }
       &.positive {
-        color: var(--kong-ui-public-metric-cards-trend-positive, $color-green);
+        color: var(--kong-ui-metric-card-trend-positive, $color-green);
       }
       &.negative {
-        color: var(--kong-ui-public-metric-cards-trend-negative, $color-red);
+        color: var(--kong-ui-metric-card-trend-negative, $color-red);
       }
       &.neutral {
-        color: var(--kong-ui-public-metric-cards-trend-neutral, $color-grey);
+        color: var(--kong-ui-metric-card-trend-neutral, $color-grey);
       }
     }
   }
