@@ -155,7 +155,6 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
 .metricscard {
   display: flex;
   flex-direction: column;
-  max-width: 240px;
   width: 100%;
 
   @media (max-width: ($viewport-md - 1px)) {
