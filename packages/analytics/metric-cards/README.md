@@ -3,24 +3,22 @@
 A Kong UI component for display Traffic, Error Rate, and P99 Latency insights in a card-like format
 
 - [@kong-ui-public/metric-cards](#kong-ui-publicmetric-cards)
-      - [Features](#features)
+  - [Features](#features)
   - [Requirements](#requirements)
   - [Usage](#usage)
+    - [CSS Variables](#css-variables)
     - [Install](#install)
   - [Included Components](#included-components)
-    - [`MetricCardsContainer`](#metriccardscontainer)
   
 
 ## Features
 
-- List of package feature
-- TODO
+- Displays a summary panel containing various metrics
+- Supports custom color themes via [CSS variables](#css-variables)
 
 ## Requirements
 
-- List of package requirements (e.g. "`vue` and must be initialized in the host application")
-- 
-TODO
+- `vue` must be initialized in the host application
 
 ## Usage
 
@@ -48,22 +46,25 @@ const metricCardOptions = {
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
 }
-
-import { SpecRenderer, SpecOperationsList, SpecDetails } from '@kong-ui-public/spec-renderer'
-// CSS import required for ANY of the components
-import '@kong-ui-public/spec-renderer/dist/style.css'
 </script>
 ```
 
+### CSS Variables
+Variable | Description | Default
+---------|----------|---------
+`--kong-ui-metric-cards-background` | The background of the `.kong-ui-public-metric-cards` main container | `transparent`
+`--kong-ui-metric-cards-title` | Metric card title font color | `#`
+`--kong-ui-metric-cards-value` | Metric value font color | `#`
+`--kong-ui-metric-cards-trend-negative` | Negative trend font color | `#d44324`
+`--kong-ui-metric-cards-trend-positive` | Positive trend font color | `#07a88d`
+`--kong-ui-metric-cards-trend-neutral` | Neutral trend font color | `#6f7787`
+
 ### Install
 
-{Installation instructions}
+`yarn add @kong-ui-public/metric-cards`
 
 ## Included Components
 
-The `MetricCardsContainer` component containers a one (1) or more `MetricCard`s as subcomponents.
+The `MetricCardsContainer` is a parent component which contains one or more instances of `MetricCard`.
 
-Only the `MetricCardContainer` is exported for use.
-### `MetricCardsContainer`
-
-See the component [documentation](docs/metric-cards).
+Only `MetricCardContainer` is exported for use.

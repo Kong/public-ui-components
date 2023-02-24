@@ -203,15 +203,14 @@ main {
     padding: 16px;
 
     &.dev-portal {
-      background-color: #777;
+      background-color: #555;
 
       // Customizable theme
-      --kong-ui-public-metric-cards-background: ;
+      --kong-ui-public-metric-cards-background: #555;
       --kong-ui-public-metric-cards-title: #ccc;
       --kong-ui-public-metric-cards-value: white;
-
-      --kong-ui-public-metric-cards-trend-negative: #FC98CB;
-      --kong-ui-public-metric-cards-trend-positive: #A1EDF0;
+      --kong-ui-public-metric-cards-trend-negative: #c59fff;
+      --kong-ui-public-metric-cards-trend-positive: #cfff56;
     }
   }
 }

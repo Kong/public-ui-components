@@ -102,13 +102,13 @@ const props = defineProps({
   },
 })
 
-const trendColor = {
-  red: '#d44324',
-  green: '#07a88d',
-  grey: '#6f7787',
-}
-
 const colorAttribute = (polarity: number): string => {
+  const trendColor = {
+    red: "var(--kong-ui-public-metric-cards-trend-negative, '#d44324')",
+    green: "var(--kong-ui-public-metric-cards-trend-positive, '#07a88d')",
+    grey: "var(--kong-ui-public-metric-cards-trend-neutral, '#6f7787')",
+  }
+
   return polarity > 0
     ? trendColor.green
     : polarity < 0
