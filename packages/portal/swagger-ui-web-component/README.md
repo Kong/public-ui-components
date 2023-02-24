@@ -12,4 +12,4 @@ Note: This package currently requires linking the [swagger-ui-kong-theme](https:
 2. Run `yarn && yarn build && yarn link`
 3. Go to your local clone directory of this repository and run `yarn link "@kong/swagger-ui-kong-theme"`
 4. Run `yarn && yarn start`
-5. Local development server should be running on http://localhost:9000
+5. Local development server should be running on http://localhost:5173

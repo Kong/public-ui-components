@@ -17,6 +17,8 @@ tags:
     externalDocs:
       description: Find out more
       url: 'http://swagger.io'
+  - name: pet too
+    description: Access to Petstore orders
   - name: store
     description: Access to Petstore orders
   - name: user
@@ -28,6 +30,85 @@ schemes:
   - https
   - http
 paths:
+  /pets:
+    post:
+      tags:
+        - pet too
+      summary: Add a new pet to the store with a space in the tag 
+      description: ''
+      operationId: addPet
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Pet object that needs to be added to the store
+          required: true
+          schema:
+            $ref: '#/definitions/Pet'
+      responses:
+        '405':
+          description: Invalid input
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+    get:
+      tags:
+        - pet too
+      summary: Add a new pet to the store with a space in the tag and some characters
+      description: ''
+      operationId: add_a-Pet_now
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Pet object that needs to be added to the store
+          required: true
+          schema:
+            $ref: '#/definitions/Pet'
+      responses:
+        '405':
+          description: Invalid input
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+    put:
+      tags:
+        - dog-go
+      summary: Dog-go example
+      description: ''
+      operationId: petHead
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Pet object that needs to be added to the store
+          required: true
+          schema:
+            $ref: '#/definitions/Pet'
+      responses:
+        '405':
+          description: Invalid input
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
   /pet:
     post:
       tags:

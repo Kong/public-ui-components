@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.13.7...@kong-ui-public/app-layout@0.13.8) (2023-02-24)
+
+
+### Bug Fixes
+
+* **app-layout:** navbar-content gap ([de5cef2](https://github.com/Kong/public-ui-components/commit/de5cef21471b4ecbbe625ce83ed14a4ebf8b5edc))
+
+
+
+
+
+## [0.13.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.13.6...@kong-ui-public/app-layout@0.13.7) (2023-02-22)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [0.13.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.13.5...@kong-ui-public/app-layout@0.13.6) (2023-02-22)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
 ## [0.13.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.13.4...@kong-ui-public/app-layout@0.13.5) (2023-02-21)
 
 

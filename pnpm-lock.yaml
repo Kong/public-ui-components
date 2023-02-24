@@ -9,7 +9,7 @@ importers:
       '@commitlint/config-conventional': ^17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': ^8.0.0
       '@evilmartians/lefthook': ^1.2.8
-      '@kong/kongponents': ^8.28.0
+      '@kong/kongponents': ^8.29.0
       '@rushstack/eslint-patch': ^1.2.0
       '@types/flat': ^5.0.2
       '@types/js-yaml': ^4.0.5
@@ -49,7 +49,7 @@ importers:
       stylelint-config-html: ^1.1.0
       stylelint-config-recommended-scss: ^8.0.0
       stylelint-config-recommended-vue: ^1.4.0
-      stylelint-order: ^6.0.1
+      stylelint-order: ^6.0.2
       ts-node: ^10.9.1
       tsc-alias: ^1.8.2
       tslib: ^2.5.0
@@ -66,7 +66,7 @@ importers:
       '@commitlint/config-conventional': 17.4.2
       '@digitalroute/cz-conventional-changelog-for-jira': 8.0.0
       '@evilmartians/lefthook': 1.2.8
-      '@kong/kongponents': 8.28.0_vue@3.2.47
+      '@kong/kongponents': 8.29.0_vue@3.2.47
       '@rushstack/eslint-patch': 1.2.0
       '@types/flat': 5.0.2
       '@types/js-yaml': 4.0.5
@@ -106,7 +106,7 @@ importers:
       stylelint-config-html: 1.1.0_kbto3rg3njmczth2rrsgfnlsqa
       stylelint-config-recommended-scss: 8.0.0_w5gtdy6oq4ictd5o4eu6befejy
       stylelint-config-recommended-vue: 1.4.0_kbto3rg3njmczth2rrsgfnlsqa
-      stylelint-order: 6.0.1_stylelint@14.16.1
+      stylelint-order: 6.0.2_stylelint@14.16.1
       ts-node: 10.9.1_4bewfcp2iebiwuold25d6rgcsy
       tsc-alias: 1.8.2
       tslib: 2.5.0
@@ -130,7 +130,7 @@ importers:
 
   packages/core/app-layout:
     specifiers:
-      '@kong/kongponents': ^8.28.0
+      '@kong/kongponents': ^8.29.0
       '@types/lodash.clonedeep': ^4.5.7
       focus-trap: ^7.2.0
       focus-trap-vue: ^4.0.1
@@ -142,7 +142,7 @@ importers:
       focus-trap-vue: 4.0.1_sc5smigrnndzyzpmn4n4e4xcs4
       lodash.clonedeep: 4.5.0
     devDependencies:
-      '@kong/kongponents': 8.28.0_vue@3.2.47
+      '@kong/kongponents': 8.29.0_vue@3.2.47
       '@types/lodash.clonedeep': 4.5.7
       vue: 3.2.47
       vue-router: 4.1.6_vue@3.2.47
@@ -168,12 +168,12 @@ importers:
   packages/core/copy-uuid:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.3.1
-      '@kong/kongponents': ^8.28.0
+      '@kong/kongponents': ^8.29.0
       vue: ^3.2.47
     dependencies:
       '@kong-ui-public/i18n': link:../i18n
     devDependencies:
-      '@kong/kongponents': 8.28.0_vue@3.2.47
+      '@kong/kongponents': 8.29.0_vue@3.2.47
       vue: 3.2.47
 
   packages/core/i18n:
@@ -189,18 +189,18 @@ importers:
   packages/core/misc-widgets:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.3.1
-      '@kong/kongponents': ^8.28.0
+      '@kong/kongponents': ^8.29.0
       vue: ^3.2.47
     dependencies:
       '@kong-ui-public/i18n': link:../i18n
     devDependencies:
-      '@kong/kongponents': 8.28.0_vue@3.2.47
+      '@kong/kongponents': 8.29.0_vue@3.2.47
       vue: 3.2.47
 
   packages/portal/document-viewer:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.3.1
-      '@kong/kongponents': ^8.28.0
+      '@kong/kongponents': ^8.29.0
       '@types/prismjs': ^1.26.0
       '@vitejs/plugin-vue-jsx': ^3.0.0
       prismjs: ^1.29.0
@@ -209,7 +209,7 @@ importers:
       '@kong-ui-public/i18n': link:../../core/i18n
       prismjs: 1.29.0
     devDependencies:
-      '@kong/kongponents': 8.28.0_vue@3.2.47
+      '@kong/kongponents': 8.29.0_vue@3.2.47
       '@types/prismjs': 1.26.0
       '@vitejs/plugin-vue-jsx': 3.0.0_vue@3.2.47
       vue: 3.2.47
@@ -217,8 +217,8 @@ importers:
   packages/portal/spec-renderer:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.3.1
-      '@kong-ui-public/swagger-ui-web-component': workspace:^0.4.5
-      '@kong/kongponents': ^8.28.0
+      '@kong-ui-public/swagger-ui-web-component': workspace:^0.4.8
+      '@kong/kongponents': ^8.29.0
       '@modyfi/vite-plugin-yaml': ^1.0.4
       '@types/lodash.clonedeep': ^4.5.7
       '@types/uuid': ^9.0.0
@@ -232,7 +232,7 @@ importers:
       lodash.clonedeep: 4.5.0
       uuid: 9.0.0
     devDependencies:
-      '@kong/kongponents': 8.28.0_vue@3.2.47
+      '@kong/kongponents': 8.29.0_vue@3.2.47
       '@modyfi/vite-plugin-yaml': 1.0.4
       '@types/lodash.clonedeep': 4.5.7
       '@types/uuid': 9.0.0
@@ -241,7 +241,7 @@ importers:
 
   packages/portal/swagger-ui-web-component:
     specifiers:
-      '@kong/swagger-ui-kong-theme-universal': ^4.1.0
+      '@kong/swagger-ui-kong-theme-universal': ^4.1.1
       css-loader: ^6.7.3
       raw-loader: ^4.0.2
       react: 17.0.2
@@ -255,7 +255,7 @@ importers:
       webpack-cli: ^5.0.1
       webpack-dev-server: ^4.11.1
     dependencies:
-      '@kong/swagger-ui-kong-theme-universal': 4.1.0_sfoxds7t5ydpegc3knd667wn6m
+      '@kong/swagger-ui-kong-theme-universal': 4.1.1_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       swagger-client: 3.18.5
@@ -1275,8 +1275,8 @@ packages:
       - debug
     dev: true
 
-  /@kong/kongponents/8.28.0_vue@3.2.47:
-    resolution: {integrity: sha512-9POz7vINs2rJ6W4zSCXWNY2hBvGLlITlGorE7nb6npcysJGU9r5iJFwbGN7y8yooVNKWXsNHttCqTdDYgOwCuw==}
+  /@kong/kongponents/8.29.0_vue@3.2.47:
+    resolution: {integrity: sha512-G3qbCVwdAq1LUvNGZtnsQWt6oJJ5neRzKFMTMqpJHkdydoNz5Ap8Oj0datMO1rOHV15c8XaEQNgIhoJPOx9vIw==}
     engines: {node: '>=16.19.0'}
     peerDependencies:
       vue: '>= 3.2.37'
@@ -1297,8 +1297,8 @@ packages:
       - debug
     dev: true
 
-  /@kong/swagger-ui-kong-theme-universal/4.1.0_sfoxds7t5ydpegc3knd667wn6m:
-    resolution: {integrity: sha512-teYkhCDkIdyW/F5BfXSt8rYdRw+XmxqzjfF1Htecm0tgoJOR9I4BbhjEj+113BcKepi15/lF6cxDqoMIHusCvw==}
+  /@kong/swagger-ui-kong-theme-universal/4.1.1_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-GxijX9GXlhxjvI1ZGy3bGnFEwhrXg66WMt9/piG3CusRCbhZrfMRL/hE7OgbZuzxN9Snt0ebte6G7tOmhayE9w==}
     peerDependencies:
       react: 17.0.2
     dependencies:
@@ -10821,10 +10821,10 @@ packages:
       stylelint: 14.16.1
     dev: true
 
-  /stylelint-order/6.0.1_stylelint@14.16.1:
-    resolution: {integrity: sha512-C9gJDZArRBZvn+4MPgggwYTp7dK49WPnYa5+6tBEkZnW/YWj4xBVNJdQjIik14w5orlF9RqFpYDHN0FPWIFOSQ==}
+  /stylelint-order/6.0.2_stylelint@14.16.1:
+    resolution: {integrity: sha512-yuac0BE6toHd27wUPvYVVQicAJthKFIv1HPQFH3Q0dExiO3Z6Uam7geoO0tUd5Z9ddsATYK++1qWNDX4RxMH5Q==}
     peerDependencies:
-      stylelint: ^14.0.0
+      stylelint: ^14.0.0 || ^15.0.0
     dependencies:
       postcss: 8.4.21
       postcss-sorting: 8.0.1_postcss@8.4.21

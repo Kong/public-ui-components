@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.4.7...@kong-ui-public/swagger-ui-web-component@0.4.8) (2023-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/swagger-ui-web-component
+
+
+
+
+
+## [0.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.4.6...@kong-ui-public/swagger-ui-web-component@0.4.7) (2023-02-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/swagger-ui-kong-theme-universal to ^4.1.1 ([#168](https://github.com/Kong/public-ui-components/issues/168)) ([fd332b1](https://github.com/Kong/public-ui-components/commit/fd332b1d63107a1fa3db6a93f6ccdec497a87f7d))
+
+
+
+
+
+## [0.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.4.5...@kong-ui-public/swagger-ui-web-component@0.4.6) (2023-02-22)
+
+
+### Bug Fixes
+
+* **spec-renderer:** correct path for the id to fix scrolling (TDX-2877) ([#156](https://github.com/Kong/public-ui-components/issues/156)) ([e44ece1](https://github.com/Kong/public-ui-components/commit/e44ece1859215522da7ca626e35269714dad2540))
+
+
+
+
+
 ## [0.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.4.4...@kong-ui-public/swagger-ui-web-component@0.4.5) (2023-02-14)
 
 

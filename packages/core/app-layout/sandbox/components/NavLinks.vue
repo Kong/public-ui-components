@@ -1,13 +1,16 @@
 <template>
   <div class="app-navbar-links">
     <router-link to="/">
-      AppLayout.vue
+      AppLayout
     </router-link>
     <router-link to="/navbar">
-      AppNavbar.vue
+      AppNavbar
     </router-link>
     <router-link to="/sidebar">
-      AppSidebar.vue
+      AppSidebar
+    </router-link>
+    <router-link to="/kong-manager-example">
+      KM Example
     </router-link>
   </div>
 </template>
