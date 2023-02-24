@@ -20,6 +20,7 @@
 - [Include a `README.md` file](#include-a-readmemd-file)
 - [Implement your package within a `src/` directory](#implement-your-package-within-a-src-directory)
 - [Component Requirements](#component-requirements)
+  - [Kongponents usage](#kongponents-usage)
   - [Styles](#styles)
 - [Testing](#testing)
   - [Unit Tests](#unit-tests)
@@ -215,6 +216,12 @@ The one exception is the `Development` section of the README. It is acceptable t
 All Vue and Typescript source code for your package should live within the `src/` directory of your package.
 
 ## Component Requirements
+
+### Kongponents usage
+
+If your component utilizes any components from the [Kongponents](https://kongponents.konghq.com) library, you should **not** import the components or style file in your components.
+
+Instead, edit your package's `README.md` to specify that Kongponents must be globally available in the host application as a Vue plugin.
 
 ### Styles
 

@@ -24,7 +24,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import composables from '../../composables'
-import { KTooltip } from '@kong/kongponents'
 
 const { i18n } = composables.useI18n()
 
