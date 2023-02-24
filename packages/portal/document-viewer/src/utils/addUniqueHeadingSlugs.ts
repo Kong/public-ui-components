@@ -3,7 +3,7 @@ import { toSlug } from './toSlug'
 export function addUniqueHeadingSlugs<T = any>(children: Array<T>, slugMap = new Map<string, number>()): Array<T> {
   if (!children) return children
 
-  const slugs = slugMap ?? new Map<string, number>()
+  const slugs = slugMap || new Map<string, number>()
   // loop through the children
   // if the child is a heading, add a slug property based on the text
   return children.map((child: any) => {
