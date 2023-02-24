@@ -182,6 +182,16 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
     margin: 8px 0 0 0;
 
     &-trend {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      font-size: $font-size-sm;
+      margin-bottom: 0;
+      margin-top: auto;
+
+      .kong-icon {
+        display: flex;
+      }
       &.positive {
         color: var(--kong-ui-public-metric-cards-trend-positive, $color-green);
       }
@@ -191,12 +201,6 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
       &.neutral {
         color: var(--kong-ui-public-metric-cards-trend-neutral, $color-grey);
       }
-
-      display: flex;
-      flex-direction: row;
-      font-size: $font-size-sm;
-      margin-bottom: 0;
-      margin-top: auto;
     }
   }
 
