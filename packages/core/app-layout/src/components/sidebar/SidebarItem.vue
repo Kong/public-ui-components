@@ -89,7 +89,6 @@
 import { PropType, computed } from 'vue'
 import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../../types'
 import ItemBadge from './ItemBadge.vue'
-import { KIcon, KTooltip } from '@kong/kongponents'
 
 const emit = defineEmits(['click'])
 

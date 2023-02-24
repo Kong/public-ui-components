@@ -43,7 +43,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import ProfileIcon from './ProfileIcon.vue'
-import { KDropdownMenu } from '@kong/kongponents'
 
 const props = defineProps({
   name: {

@@ -108,7 +108,6 @@ import { ref, computed, watch, useSlots, PropType, onMounted, onBeforeUnmount, n
 import type { SidebarPrimaryItem, SidebarProfileItem } from '../../types'
 import SidebarItem from '../sidebar/SidebarItem.vue'
 import SidebarFooter from './SidebarFooter.vue'
-import { KDropdownItem, KIcon } from '@kong/kongponents'
 import { FocusTrap } from 'focus-trap-vue'
 import { useDebounce } from '../../composables'
 import clonedeep from 'lodash.clonedeep'

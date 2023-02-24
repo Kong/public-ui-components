@@ -69,7 +69,6 @@
 import { onMounted, ref, watch } from 'vue'
 import { Operation, Tag } from '../../src/types'
 import clonedeep from 'lodash.clonedeep'
-import { KButton, KLabel } from '@kong/kongponents'
 import { SpecOperationsList } from '../../src'
 
 const defaultDocument = ref<Operation[]>([
