@@ -5,10 +5,10 @@ A Kong UI component for display Traffic, Error Rate, and P99 Latency insights in
 - [@kong-ui-public/metric-cards](#kong-ui-publicmetric-cards)
   - [Features](#features)
   - [Requirements](#requirements)
-  - [Usage](#usage)
     - [CSS Variables](#css-variables)
     - [Install](#install)
   - [Included Components](#included-components)
+  - [Usage](#usage)
   
 
 ## Features
@@ -23,35 +23,6 @@ A Kong UI component for display Traffic, Error Rate, and P99 Latency insights in
   - `KIcon`
   - `KSkeletonBox`
   - `KTooltip`
-
-## Usage
-
-```html
-<template>
-  <MetricCardContainer
-    v-bind="metricCardOptions"
-  />
-</template>
-<script setup lang="ts">
-import { MetricCardContainer } from '../src'
-import '@kong-ui-public/metric-cards/dist/style.css'
-
-const metricCardOptions = {
-  cards: [
-    {
-      currentValue: 192895156,
-      previousValue: 236609609,
-      title: 'Number of Requests',
-      increaseIsBad: false,
-      cardSize: 'lg',
-    },
-  ],
-  loading: false,
-  hasTrendAccess: true,
-  fallbackDisplayText: 'Not available',
-}
-</script>
-```
 
 ### CSS Variables
 Variable | Description | Default
@@ -72,3 +43,32 @@ Variable | Description | Default
 The `MetricCardContainer` is a parent component which contains one or more instances of `MetricCard`.
 
 Only `MetricCardContainer` is exported for use.
+
+## Usage
+
+```html
+<template>
+  <MetricCardContainer
+    v-bind="metricCardOptions"
+  />
+</template>
+<script setup lang="ts">
+import { MetricCardContainer } from '@kong-ui-public/metric-cards'
+import '@kong-ui-public/metric-cards/dist/style.css'
+
+const metricCardOptions = {
+  cards: [
+    {
+      currentValue: 192895156,
+      previousValue: 236609609,
+      title: 'Number of Requests',
+      increaseIsBad: false,
+      cardSize: 'lg',
+    },
+  ],
+  loading: false,
+  hasTrendAccess: true,
+  fallbackDisplayText: 'Not available',
+}
+</script>
+```
