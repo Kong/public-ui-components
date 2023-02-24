@@ -148,9 +148,14 @@ const headerStyles = computed(() => ({
     align-items: center;
     display: flex;
     flex-direction: row;
+    gap: 8px;
     height: 100%;
     justify-content: space-between;
     width: 100%;
+
+    @media (min-width: $viewport-md) {
+      gap: 16px;
+    }
 
     &-left,
     &-center,
