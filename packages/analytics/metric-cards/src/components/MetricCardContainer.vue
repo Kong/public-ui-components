@@ -45,7 +45,6 @@ import approxNum from 'approximate-number'
 import { MetricCardSize } from '../constants'
 import { MetricsCardDef, MetricsCardDisplayValue } from '../types'
 import { changePolarity, metricChange, defineIcon } from '../utilities'
-import { KIcon } from '@kong/kongponents'
 import MetricsCard from './display/MetricsCard.vue'
 import MetricCardLoadingSkeleton from './display/MetricCardLoadingSkeleton.vue'
 

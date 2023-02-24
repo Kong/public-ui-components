@@ -52,7 +52,6 @@
 
 <script setup lang="ts">
 import { PropType } from 'vue'
-import { KIcon, KTooltip } from '@kong/kongponents'
 import { MetricCardSize } from '../../constants'
 
 const props = defineProps({
