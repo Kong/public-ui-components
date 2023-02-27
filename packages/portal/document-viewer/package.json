@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/document-viewer",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "type": "module",
   "main": "./dist/document-viewer.umd.js",
   "module": "./dist/document-viewer.es.js",
@@ -36,11 +36,11 @@
     "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^8.29.1",
+    "@kong/kongponents": "^8.29.2",
     "vue": "^3.2.47"
   },
   "devDependencies": {
-    "@kong/kongponents": "^8.29.1",
+    "@kong/kongponents": "^8.29.2",
     "@types/prismjs": "^1.26.0",
     "@vitejs/plugin-vue-jsx": "^3.0.0",
     "vue": "^3.2.47"
