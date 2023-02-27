@@ -123,9 +123,10 @@ importers:
       '@kong/kongponents': ^8.22.4
       approximate-number: ^2.1.0
       vue: ^3.2.47
+    dependencies:
+      approximate-number: 2.1.0
     devDependencies:
       '@kong/kongponents': 8.22.4_vue@3.2.47
-      approximate-number: 2.1.0
       vue: 3.2.47
 
   packages/core/app-layout:
@@ -3545,7 +3546,7 @@ packages:
 
   /approximate-number/2.1.0:
     resolution: {integrity: sha512-EioK6nto/hEnwaJ7d/TG1WOZ9o0zTyIFVP4Lk7zzR/3I4O7ivkBNo7EvLC2Xh2j2HD/cb9sUqXHdexfGXCXYDA==}
-    dev: true
+    dev: false
 
   /aproba/2.0.0:
     resolution: {integrity: sha512-lYe4Gx7QT+MKGbDsA+Z+he/Wtef0BiwDOlK/XkBrdfsh9J/jPPXbX0tE9x9cl27Tmu5gg3QUbUrQYa/y+KOHPQ==}

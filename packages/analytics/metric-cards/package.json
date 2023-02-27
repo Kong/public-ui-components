@@ -43,8 +43,10 @@
   },
   "devDependencies": {
     "@kong/kongponents": "^8.22.4",
-    "approximate-number": "^2.1.0",
     "vue": "^3.2.47"
+  },
+  "dependencies": {
+    "approximate-number": "^2.1.0"
   },
   "repository": {
     "type": "git",
