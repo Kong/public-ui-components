@@ -14,7 +14,7 @@
 # =========================================================================
 /packages/core/ @Kong/team-core-ui
 /packages/portal/ @Kong/team-devx
-/packages/analytics/ @Kong/team-core-ui # TODO: add @Kong/team-data
+/packages/analytics/ @Kong/team-data
 
 # Packages:
 # These owners will be the default owners for everything in the workspace
@@ -34,6 +34,9 @@
 /packages/portal/mini-spec-renderer/ @Kong/team-devx
 /packages/portal/spec-details/ @Kong/team-devx
 /packages/portal/swagger-ui-web-component/ @adamdehaven @davidma415 @kaiarrowood
+
+# Analytics packages
+/packages/analytics/metric-cards @Kong/team-data
 
 # =========================================================================
 # Renovate Bot approvals
