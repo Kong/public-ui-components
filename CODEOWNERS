@@ -13,8 +13,8 @@
 # unless a later match takes precedence.
 # =========================================================================
 /packages/core/ @Kong/team-core-ui
-/packages/portal/ @Kong/team-devx
-/packages/analytics/ @Kong/team-data
+/packages/portal/ @Kong/team-devx 
+/packages/analytics/ @Kong/team-data @Kong/team-core-ui
 
 # Packages:
 # These owners will be the default owners for everything in the workspace
