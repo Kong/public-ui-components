@@ -20,8 +20,8 @@
   },
   "devDependencies": {
     "@babel/types": "^7.20.7",
-    "@commitlint/cli": "^17.4.2",
-    "@commitlint/config-conventional": "^17.4.2",
+    "@commitlint/cli": "^17.4.3",
+    "@commitlint/config-conventional": "^17.4.3",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.0",
     "@evilmartians/lefthook": "^1.2.8",
     "@kong/kongponents": "^8.29.2",
