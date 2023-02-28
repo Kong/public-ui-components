@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.1.3...@kong-ui-public/metric-cards@0.1.4) (2023-02-28)
+
+
+### Bug Fixes
+
+* **metric-cards:** add metriccardsize export [MA-1446] ([#184](https://github.com/Kong/public-ui-components/issues/184)) ([a207719](https://github.com/Kong/public-ui-components/commit/a207719b341056ce955f8c6039bb5f3944e7513a))
+
+
+
+
+
 ## [0.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.1.2...@kong-ui-public/metric-cards@0.1.3) (2023-02-28)
 
 **Note:** Version bump only for package @kong-ui-public/metric-cards
