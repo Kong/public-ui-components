@@ -1,4 +1,4 @@
-export interface MetricsCardDef {
+export interface MetricCardDef {
   currentValue: number
   previousValue: number
   increaseIsBad: boolean
@@ -11,7 +11,7 @@ export interface MetricsCardDef {
   tooltip?: string
 }
 
-export interface MetricsCardDisplayValue {
+export interface MetricCardDisplayValue {
   metricValue: string
   metricChange: string
   changePolarity: number
@@ -20,10 +20,10 @@ export interface MetricsCardDisplayValue {
 }
 
 export interface MetricCardContainerOptions {
+  cards: Array<MetricCardDef>
   fallbackDisplayText: string
-  cards: Array<MetricsCardDef>
-  loading: boolean
   hasTrendAccess: boolean
+  loading: boolean
   cardSize?: string
   errorMessage?: string
 }

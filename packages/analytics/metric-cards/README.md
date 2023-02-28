@@ -48,8 +48,9 @@ Only `MetricCardContainer` is exported for use.
 
 ### Types
 
-- MetricsCardDef
-- MetricsCardDisplayValue
+- MetricCardDef
+- MetricCardDisplayValue
+- MetricCardContainerOptions
 
 ### Enums
 
