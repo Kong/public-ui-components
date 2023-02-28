@@ -44,6 +44,17 @@ The `MetricCardContainer` is a parent component which contains one or more insta
 
 Only `MetricCardContainer` is exported for use.
 
+## Exports
+
+### Types
+
+- MetricsCardDef
+- MetricsCardDisplayValue
+
+### Enums
+
+- MetricCardSize
+
 ## Usage
 
 ```html
