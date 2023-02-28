@@ -18,3 +18,12 @@ export interface MetricsCardDisplayValue {
   icon?: string
   cardSize?: string
 }
+
+export interface MetricCardContainerOptions {
+  fallbackDisplayText: string
+  cards: Array<MetricsCardDef>
+  loading: boolean
+  hasTrendAccess: boolean
+  cardSize?: string
+  errorMessage?: string
+}
