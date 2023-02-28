@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/copy-uuid",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "type": "module",
   "main": "./dist/copy-uuid.umd.js",
   "module": "./dist/copy-uuid.es.js",
@@ -36,11 +36,11 @@
     "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^8.30.0",
+    "@kong/kongponents": "^8.30.2",
     "vue": "^3.2.47"
   },
   "devDependencies": {
-    "@kong/kongponents": "^8.30.0",
+    "@kong/kongponents": "^8.30.2",
     "vue": "^3.2.47"
   },
   "dependencies": {
