@@ -19,9 +19,7 @@
 
       <h3>Large w/ custom theme</h3>
       <div class="generic-card dev-portal">
-        <MetricCardContainer
-          v-bind="cardsRegular"
-        />
+        <MetricCardContainer v-bind="cardsRegular" />
       </div>
 
       <h3>Extra Large</h3>
@@ -70,13 +68,14 @@
 <script setup lang="ts">
 import { MetricCardContainer } from '../src'
 import { DECIMAL_DISPLAY } from '../src/utilities'
+import { MetricCardContainerOptions } from '../src/types'
 import { MetricCardSize } from '../src/constants'
 
 const cards = [
   {
     currentValue: 192895156,
     previousValue: 236609609,
-    title: 'Number of Requests',
+    title: 'Requests',
     tooltip: 'This is a tooltip',
     increaseIsBad: false,
   },
@@ -84,7 +83,7 @@ const cards = [
     currentValue: 31.076361502825918,
     previousValue: 30.59477013885772,
     formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
-    title: 'Average Error Rate',
+    title: 'Error Rate',
     increaseIsBad: true,
   },
   {
@@ -115,7 +114,7 @@ cardsWithErrors[0].hasError = true
 cardsWithErrors[1].hasError = true
 cardsWithErrors[2].hasError = true
 
-const cardsSmall = {
+const cardsSmall: MetricCardContainerOptions = {
   cards,
   loading: false,
   hasTrendAccess: true,
@@ -123,38 +122,42 @@ const cardsSmall = {
   cardSize: MetricCardSize.Small,
 }
 
-const cardsRegular = {
-  cards: [...cards].slice(0, 3),
+const cardsLg = JSON.parse(JSON.stringify(cards))
+cardsLg[0].title = 'Number of Requests'
+cardsLg[1].title = 'Average Error Rate'
+
+const cardsRegular: MetricCardContainerOptions = {
+  cards: [...cardsLg].slice(0, 3),
   loading: false,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
   cardSize: MetricCardSize.Large,
 }
 
-const cardsXL = {
-  cards: [...cards].slice(0, 3),
+const cardsXL: MetricCardContainerOptions = {
+  cards: [...cardsLg].slice(0, 3),
   loading: false,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
   cardSize: MetricCardSize.ExtraLarge,
 }
 
-const cardsLoading = {
-  cards: [...cards].slice(0, 3),
+const cardsLoading: MetricCardContainerOptions = {
+  cards: [...cardsLg].slice(0, 3),
   loading: true,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
 }
 
-const cardsNotAvailable = {
-  cards: [...cards].slice(0, 3),
+const cardsNotAvailable: MetricCardContainerOptions = {
+  cards: [...cardsLg].slice(0, 3),
   loading: false,
   hasTrendAccess: false,
   fallbackDisplayText: '-.--%',
   cardSize: MetricCardSize.Large,
 }
 
-const cardsErrors = {
+const cardsErrors: MetricCardContainerOptions = {
   cards: [...cardsWithErrors].slice(0, 4),
   loading: false,
   hasTrendAccess: true,
@@ -162,7 +165,7 @@ const cardsErrors = {
   fallbackDisplayText: 'Not available',
 }
 
-const cardsErrorsAll = {
+const cardsErrorsAll: MetricCardContainerOptions = {
   cards: [...cardsWithErrors].slice(0, 3),
   loading: false,
   hasTrendAccess: false,

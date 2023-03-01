@@ -1,6 +1,9 @@
 <template>
   <div class="metricscard">
-    <div class="metricscard-title">
+    <div
+      class="metricscard-title"
+      :class="cardSize"
+    >
       <span>{{ title }}</span>
       <KTooltip
         v-if="tooltip"
@@ -169,6 +172,10 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
   &-title {
     color: var(--kong-ui-metric-card-title, $color-grey);
     font-size: $font-size-sm;
+
+    &.sm {
+      font-size: $font-size-xs;
+    }
   }
 
   &-value {

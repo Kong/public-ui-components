@@ -1,3 +1,4 @@
+import { MetricCardSize } from '../constants'
 export interface MetricCardDef {
   currentValue: number
   previousValue: number
@@ -6,8 +7,6 @@ export interface MetricCardDef {
   formatChangeFn?: (rawValue: number) => string
   title?: string
   hasError?: boolean
-  errorMessage?: string
-  cardSize?: string
   tooltip?: string
 }
 
@@ -24,6 +23,6 @@ export interface MetricCardContainerOptions {
   fallbackDisplayText: string
   hasTrendAccess: boolean
   loading: boolean
-  cardSize?: string
+  cardSize?: MetricCardSize
   errorMessage?: string
 }
