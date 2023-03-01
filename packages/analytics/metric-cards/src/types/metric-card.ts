@@ -7,8 +7,6 @@ export interface MetricCardDef {
   formatChangeFn?: (rawValue: number) => string
   title?: string
   hasError?: boolean
-  errorMessage?: string
-  cardSize?: string
   tooltip?: string
 }
 

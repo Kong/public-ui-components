@@ -30,7 +30,7 @@
         :key="index"
         v-bind="formatCardValues(card)"
         :card-size="cardSize"
-        :error-message="card.errorMessage"
+        :error-message="errorMessage"
         :has-error="card.hasError"
         :title="card.title"
         :tooltip="card.tooltip"
