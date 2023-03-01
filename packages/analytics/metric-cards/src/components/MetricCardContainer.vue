@@ -1,5 +1,8 @@
 <template>
-  <div class="kong-ui-public-metric-card-container">
+  <div
+    class="kong-ui-public-metric-card-container"
+    :class="cardSize"
+  >
     <div
       v-if="allCardsHaveErrors"
       class="error-display"
@@ -113,6 +116,11 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
   @media (max-width: ($viewport-md - 1px)) {
     @include flex-gap(16px, 16px);
     flex-direction: column;
+  }
+
+  // Ensure tightest possible spacing
+  &.sm {
+    @include flex-gap(0, 0);
   }
 
   .error-display {
