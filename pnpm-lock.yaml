@@ -133,14 +133,14 @@ importers:
     specifiers:
       '@kong/kongponents': ^8.31.0
       '@types/lodash.clonedeep': ^4.5.7
-      focus-trap: ^7.2.0
+      focus-trap: ^7.3.0
       focus-trap-vue: ^4.0.1
       lodash.clonedeep: ^4.5.0
       vue: ^3.2.47
       vue-router: ^4.1.6
     dependencies:
-      focus-trap: 7.2.0
-      focus-trap-vue: 4.0.1_sc5smigrnndzyzpmn4n4e4xcs4
+      focus-trap: 7.3.1
+      focus-trap-vue: 4.0.1_oggptlzwchqpaguemspe4ract4
       lodash.clonedeep: 4.5.0
     devDependencies:
       '@kong/kongponents': 8.31.0_vue@3.2.47
@@ -5593,10 +5593,10 @@ packages:
       react: '>=16.3.0'
       react-dom: '>=16.3.0'
     dependencies:
-      focus-trap: 7.2.0
+      focus-trap: 7.3.1
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
-      tabbable: 6.0.1
+      tabbable: 6.1.1
     dev: false
 
   /focus-trap-vue/3.4.0_sc5smigrnndzyzpmn4n4e4xcs4:
@@ -5609,20 +5609,27 @@ packages:
       vue: 3.2.47
     dev: true
 
-  /focus-trap-vue/4.0.1_sc5smigrnndzyzpmn4n4e4xcs4:
+  /focus-trap-vue/4.0.1_oggptlzwchqpaguemspe4ract4:
     resolution: {integrity: sha512-2iqOeoSvgq7Um6aL+255a/wXPskj6waLq2oKCa4gOnMORPo15JX7wN6J5bl1SMhMlTlkHXGSrQ9uJPJLPZDl5w==}
     peerDependencies:
       focus-trap: ^7.0.0
       vue: ^3.0.0
     dependencies:
-      focus-trap: 7.2.0
+      focus-trap: 7.3.1
       vue: 3.2.47
     dev: false
 
   /focus-trap/7.2.0:
     resolution: {integrity: sha512-v4wY6HDDYvzkBy4735kW5BUEuw6Yz9ABqMYLuTNbzAFPcBOGiGHwwcNVMvUz4G0kgSYh13wa/7TG3XwTeT4O/A==}
     dependencies:
-      tabbable: 6.0.1
+      tabbable: 6.1.1
+    dev: true
+
+  /focus-trap/7.3.1:
+    resolution: {integrity: sha512-bX/u4FJ+F0Pp6b/8Q9W8Br/JaLJ7rrhOJAzai9JU8bh4BPdOjEATy4pxHcbBBxFjPN4d1oHy7/KqknEdOetm9w==}
+    dependencies:
+      tabbable: 6.1.1
+    dev: false
 
   /follow-redirects/1.15.2:
     resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
@@ -10590,8 +10597,8 @@ packages:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
     dev: true
 
-  /tabbable/6.0.1:
-    resolution: {integrity: sha512-SYJSIgeyXW7EuX1ytdneO5e8jip42oHWg9xl/o3oTYhmXusZVgiA+VlPvjIN+kHii9v90AmzTZEBcsEvuAY+TA==}
+  /tabbable/6.1.1:
+    resolution: {integrity: sha512-4kl5w+nCB44EVRdO0g/UGoOp3vlwgycUVtkk/7DPyeLZUCuNFFKCFG6/t/DgHLrUPHjrZg6s5tNm+56Q2B0xyg==}
 
   /table/6.8.1:
     resolution: {integrity: sha512-Y4X9zqrCftUhMeH2EptSSERdVKt/nEdijTOacGD/97EKjhQ/Qs8RTlEGABSJNNN8lac9kheH+af7yAkEWlgneA==}
