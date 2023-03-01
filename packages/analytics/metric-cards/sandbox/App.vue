@@ -75,7 +75,7 @@ const cards = [
   {
     currentValue: 192895156,
     previousValue: 236609609,
-    title: 'Number of Requests',
+    title: 'Requests',
     tooltip: 'This is a tooltip',
     increaseIsBad: false,
   },
@@ -83,7 +83,7 @@ const cards = [
     currentValue: 31.076361502825918,
     previousValue: 30.59477013885772,
     formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
-    title: 'Average Error Rate',
+    title: 'Error Rate',
     increaseIsBad: true,
   },
   {
@@ -122,8 +122,12 @@ const cardsSmall: MetricCardContainerOptions = {
   cardSize: MetricCardSize.Small,
 }
 
+const cardsLg = JSON.parse(JSON.stringify(cards))
+cardsLg[0].title = 'Number of Requests'
+cardsLg[1].title = 'Average Error Rate'
+
 const cardsRegular: MetricCardContainerOptions = {
-  cards: [...cards].slice(0, 3),
+  cards: [...cardsLg].slice(0, 3),
   loading: false,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
@@ -131,7 +135,7 @@ const cardsRegular: MetricCardContainerOptions = {
 }
 
 const cardsXL: MetricCardContainerOptions = {
-  cards: [...cards].slice(0, 3),
+  cards: [...cardsLg].slice(0, 3),
   loading: false,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
@@ -139,14 +143,14 @@ const cardsXL: MetricCardContainerOptions = {
 }
 
 const cardsLoading: MetricCardContainerOptions = {
-  cards: [...cards].slice(0, 3),
+  cards: [...cardsLg].slice(0, 3),
   loading: true,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
 }
 
 const cardsNotAvailable: MetricCardContainerOptions = {
-  cards: [...cards].slice(0, 3),
+  cards: [...cardsLg].slice(0, 3),
   loading: false,
   hasTrendAccess: false,
   fallbackDisplayText: '-.--%',
