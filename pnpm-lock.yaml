@@ -133,7 +133,7 @@ importers:
     specifiers:
       '@kong/kongponents': ^8.31.0
       '@types/lodash.clonedeep': ^4.5.7
-      focus-trap: ^7.3.0
+      focus-trap: ^7.3.1
       focus-trap-vue: ^4.0.1
       lodash.clonedeep: ^4.5.0
       vue: ^3.2.47
