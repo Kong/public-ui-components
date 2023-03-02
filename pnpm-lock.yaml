@@ -9,7 +9,7 @@ importers:
       '@commitlint/config-conventional': ^17.4.3
       '@digitalroute/cz-conventional-changelog-for-jira': ^8.0.0
       '@evilmartians/lefthook': ^1.2.9
-      '@kong/kongponents': ^8.31.0
+      '@kong/kongponents': ^8.32.0
       '@rushstack/eslint-patch': ^1.2.0
       '@types/flat': ^5.0.2
       '@types/js-yaml': ^4.0.5
@@ -66,7 +66,7 @@ importers:
       '@commitlint/config-conventional': 17.4.4
       '@digitalroute/cz-conventional-changelog-for-jira': 8.0.0
       '@evilmartians/lefthook': 1.3.2
-      '@kong/kongponents': 8.31.0_vue@3.2.47
+      '@kong/kongponents': 8.32.0_vue@3.2.47
       '@rushstack/eslint-patch': 1.2.0
       '@types/flat': 5.0.2
       '@types/js-yaml': 4.0.5
@@ -120,18 +120,18 @@ importers:
 
   packages/analytics/metric-cards:
     specifiers:
-      '@kong/kongponents': ^8.31.0
+      '@kong/kongponents': ^8.32.0
       approximate-number: ^2.1.0
       vue: ^3.2.47
     dependencies:
       approximate-number: 2.1.0
     devDependencies:
-      '@kong/kongponents': 8.31.0_vue@3.2.47
+      '@kong/kongponents': 8.32.0_vue@3.2.47
       vue: 3.2.47
 
   packages/core/app-layout:
     specifiers:
-      '@kong/kongponents': ^8.31.0
+      '@kong/kongponents': ^8.32.0
       '@types/lodash.clonedeep': ^4.5.7
       focus-trap: ^7.3.1
       focus-trap-vue: ^4.0.1
@@ -143,7 +143,7 @@ importers:
       focus-trap-vue: 4.0.1_oggptlzwchqpaguemspe4ract4
       lodash.clonedeep: 4.5.0
     devDependencies:
-      '@kong/kongponents': 8.31.0_vue@3.2.47
+      '@kong/kongponents': 8.32.0_vue@3.2.47
       '@types/lodash.clonedeep': 4.5.7
       vue: 3.2.47
       vue-router: 4.1.6_vue@3.2.47
@@ -169,12 +169,12 @@ importers:
   packages/core/copy-uuid:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.3.1
-      '@kong/kongponents': ^8.31.0
+      '@kong/kongponents': ^8.32.0
       vue: ^3.2.47
     dependencies:
       '@kong-ui-public/i18n': link:../i18n
     devDependencies:
-      '@kong/kongponents': 8.31.0_vue@3.2.47
+      '@kong/kongponents': 8.32.0_vue@3.2.47
       vue: 3.2.47
 
   packages/core/i18n:
@@ -190,18 +190,18 @@ importers:
   packages/core/misc-widgets:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.3.1
-      '@kong/kongponents': ^8.31.0
+      '@kong/kongponents': ^8.32.0
       vue: ^3.2.47
     dependencies:
       '@kong-ui-public/i18n': link:../i18n
     devDependencies:
-      '@kong/kongponents': 8.31.0_vue@3.2.47
+      '@kong/kongponents': 8.32.0_vue@3.2.47
       vue: 3.2.47
 
   packages/portal/document-viewer:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.3.1
-      '@kong/kongponents': ^8.31.0
+      '@kong/kongponents': ^8.32.0
       '@types/prismjs': ^1.26.0
       '@vitejs/plugin-vue-jsx': ^3.0.0
       prismjs: ^1.29.0
@@ -210,7 +210,7 @@ importers:
       '@kong-ui-public/i18n': link:../../core/i18n
       prismjs: 1.29.0
     devDependencies:
-      '@kong/kongponents': 8.31.0_vue@3.2.47
+      '@kong/kongponents': 8.32.0_vue@3.2.47
       '@types/prismjs': 1.26.0
       '@vitejs/plugin-vue-jsx': 3.0.0_vue@3.2.47
       vue: 3.2.47
@@ -219,7 +219,7 @@ importers:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.3.1
       '@kong-ui-public/swagger-ui-web-component': workspace:^0.4.9
-      '@kong/kongponents': ^8.31.0
+      '@kong/kongponents': ^8.32.0
       '@modyfi/vite-plugin-yaml': ^1.0.4
       '@types/lodash.clonedeep': ^4.5.7
       '@types/uuid': ^9.0.0
@@ -233,7 +233,7 @@ importers:
       lodash.clonedeep: 4.5.0
       uuid: 9.0.0
     devDependencies:
-      '@kong/kongponents': 8.31.0_vue@3.2.47
+      '@kong/kongponents': 8.32.0_vue@3.2.47
       '@modyfi/vite-plugin-yaml': 1.0.4
       '@types/lodash.clonedeep': 4.5.7
       '@types/uuid': 9.0.0
@@ -1255,8 +1255,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@kong/kongponents/8.31.0_vue@3.2.47:
-    resolution: {integrity: sha512-t3dObUoMVnPldd12RJwkl3hATclCTlCoXDxHDxD8TWY+4sII48r7nbMrtOYnpnrJA3gkFq+2Jk/+7aUBo+QmUQ==}
+  /@kong/kongponents/8.32.0_vue@3.2.47:
+    resolution: {integrity: sha512-Ed+mJ8hEt02Kc6rwqoH8XGjb9/gUqIl3e7JJ97FrEcBPbaf/2VIsA156PQE0HXxOlzw4LEfQQ2iGoOOy/HB+Og==}
     engines: {node: '>=16.19.0'}
     peerDependencies:
       vue: '>= 3.2.37'
@@ -1264,8 +1264,8 @@ packages:
       axios: 0.27.2
       date-fns: 2.29.3
       date-fns-tz: 1.3.8_date-fns@2.29.3
-      focus-trap: 7.2.0
-      focus-trap-vue: 3.4.0_sc5smigrnndzyzpmn4n4e4xcs4
+      focus-trap: 7.3.1
+      focus-trap-vue: 3.4.0_oggptlzwchqpaguemspe4ract4
       popper.js: 1.16.1
       sortablejs: 1.15.0
       swrv: 1.0.3_vue@3.2.47
@@ -5599,13 +5599,13 @@ packages:
       tabbable: 6.1.1
     dev: false
 
-  /focus-trap-vue/3.4.0_sc5smigrnndzyzpmn4n4e4xcs4:
+  /focus-trap-vue/3.4.0_oggptlzwchqpaguemspe4ract4:
     resolution: {integrity: sha512-VAI4gJgsjC8KcjDH+h4j2SxFY2XrXmm47a1EXti8gx311abybzqVhkS32Um7i+00J8RQD7hqL1Kfc26WpsMx0w==}
     peerDependencies:
       focus-trap: ^6.7.0
       vue: ^3.0.0-rc.13
     dependencies:
-      focus-trap: 7.2.0
+      focus-trap: 7.3.1
       vue: 3.2.47
     dev: true
 
@@ -5619,17 +5619,10 @@ packages:
       vue: 3.2.47
     dev: false
 
-  /focus-trap/7.2.0:
-    resolution: {integrity: sha512-v4wY6HDDYvzkBy4735kW5BUEuw6Yz9ABqMYLuTNbzAFPcBOGiGHwwcNVMvUz4G0kgSYh13wa/7TG3XwTeT4O/A==}
-    dependencies:
-      tabbable: 6.1.1
-    dev: true
-
   /focus-trap/7.3.1:
     resolution: {integrity: sha512-bX/u4FJ+F0Pp6b/8Q9W8Br/JaLJ7rrhOJAzai9JU8bh4BPdOjEATy4pxHcbBBxFjPN4d1oHy7/KqknEdOetm9w==}
     dependencies:
       tabbable: 6.1.1
-    dev: false
 
   /follow-redirects/1.15.2:
     resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
