@@ -71,7 +71,7 @@ function highlight(obj: any) {
   }
 
   // Ensures Prism operates on the raw code and not on an already highlighted DOM fragment.
-  obj.codeElement.innerHTML = obj.language === 'html' ? escapeUnsafeCharacters(obj.code) : obj.code
+  obj.codeElement.innerHTML = escapeUnsafeCharacters(obj.code)
 
   Prism.highlightElement(obj.codeElement)
 
@@ -79,7 +79,7 @@ function highlight(obj: any) {
 }
 
 const escapeUnsafeCharacters = (unescapedCodeString: string): string => {
-  return unescapedCodeString.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;')
+  return unescapedCodeString.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;')
 }
 
 // Should be used in the case there's multiple code blocks

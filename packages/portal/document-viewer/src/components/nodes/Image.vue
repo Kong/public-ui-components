@@ -1,14 +1,9 @@
 <template>
-  <figure>
-    <img
-      :alt="alt"
-      :src="url"
-      :title="title"
-    >
-    <figcaption>
-      <slot />
-    </figcaption>
-  </figure>
+  <img
+    :alt="alt"
+    :src="url"
+    :title="title"
+  >
 </template>
 
 <script setup lang="ts">

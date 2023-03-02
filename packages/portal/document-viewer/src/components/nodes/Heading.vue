@@ -44,12 +44,12 @@ h1 {
   font-size: 32px;
   font-weight: 500;
   line-height: 38px;
-  margin-bottom: var(--spacing-xxl, 48px);
+  margin-bottom: var(--spacing-xl, 32px);
 }
 
 h2 {
   font-size: 24px;
-  line-height: 20px;
+  line-height: 26px;
   margin-bottom: var(--spacing-lg, 24px);
 }
 

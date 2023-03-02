@@ -33,7 +33,7 @@ describe('<DocumentViewer />', () => {
     cy.get('.document-viewer').find('ul').should('be.visible')
     cy.get('.document-viewer').find('pre').should('be.visible')
     cy.get('.document-viewer').find('table').should('be.visible')
-    cy.get('.document-viewer').find('figure').should('be.visible')
+    cy.get('.document-viewer').find('img').should('be.visible')
   })
 
   it('renders error state when missing required props', () => {
