@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.5.11...@kong-ui-public/document-viewer@0.5.12) (2023-03-02)
+
+
+### Bug Fixes
+
+* **document-viewer:** allow codeblocks to render xml and fix image tags (TDX-2917) (TDX-2920) ([#193](https://github.com/Kong/public-ui-components/issues/193)) ([932dede](https://github.com/Kong/public-ui-components/commit/932dede27ac1b4a198913d786587cf4bca98b89b))
+
+
+
+
+
 ## [0.5.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.5.10...@kong-ui-public/document-viewer@0.5.11) (2023-03-02)
 
 **Note:** Version bump only for package @kong-ui-public/document-viewer
