@@ -5,7 +5,7 @@
 </template>
 
 <style scoped>
-li:not(:first-of-type) {
+li {
   margin-top: 8px;
 }
 </style>

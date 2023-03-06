@@ -12,7 +12,7 @@ import { PropType } from 'vue'
 import { TableCellAlign, TableRowNode, TableRowSection } from '../../types'
 
 const props = defineProps({
-  align: {
+  alignment: {
     type: String as PropType<TableCellAlign>,
     default: TableCellAlign.left,
   },
@@ -25,16 +25,22 @@ const props = defineProps({
 const tag = props.parent?.section === TableRowSection.header ? 'th' : 'td'
 
 let className: string
-if (props.align === TableCellAlign.center) {
+if (props.alignment === TableCellAlign.center) {
   className = 'align-center'
-} else if (props.align === TableCellAlign.right) {
+} else if (props.alignment === TableCellAlign.right) {
   className = 'align-right'
 }
 </script>
 
 <style scoped>
 th, td {
+  padding: 8px;
+  vertical-align: top;
   text-align: left;
+}
+
+th:not(:last-of-type), td:not(:last-of-type) {
+  border-right: 1px solid var(--document-viewer-color, var(--text_colors-primary, #0b172d));
 }
 
 .align-center {

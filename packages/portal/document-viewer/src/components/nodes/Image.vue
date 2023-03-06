@@ -22,3 +22,9 @@ defineProps({
   },
 })
 </script>
+
+<style scoped>
+img {
+  display: inline !important;
+}
+</style>

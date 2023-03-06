@@ -1,6 +1,8 @@
 <template>
   <component :is="tag">
-    <slot />
+    <tr>
+      <slot />
+    </tr>
   </component>
 </template>
 
@@ -24,3 +26,22 @@ if (props.section === TableRowSection.header) {
   tag = 'tfoot'
 }
 </script>
+
+<style scoped>
+th,
+td {
+  text-align: left;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.align-right {
+  text-align: right;
+}
+
+tr {
+  border-top: 1px solid var(--document-viewer-color, var(--text_colors-primary, #0b172d));
+}
+</style>

@@ -31,6 +31,15 @@ export interface TableRowNode extends BaseNode<'table_row'> {
   children: Array<TableCellNode>
 }
 
+export interface TableHeaderNode extends BaseNode<'table_header'> {
+  section?: TableRowSection
+  children: Array<TableCellNode>
+}
+
+export function isTableHeaderNode(o: any): o is TableHeaderNode {
+  return !!(o?.type === 'table_header')
+}
+
 export interface TextNode extends BaseNode<'text'> {
   text: string
   children: undefined
