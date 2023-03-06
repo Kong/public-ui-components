@@ -5,8 +5,8 @@ importers:
   .:
     specifiers:
       '@babel/types': ^7.20.7
-      '@commitlint/cli': ^17.4.3
-      '@commitlint/config-conventional': ^17.4.3
+      '@commitlint/cli': ^17.4.4
+      '@commitlint/config-conventional': ^17.4.4
       '@digitalroute/cz-conventional-changelog-for-jira': ^8.0.0
       '@evilmartians/lefthook': ^1.2.9
       '@kong/kongponents': ^8.32.0
