@@ -35,8 +35,8 @@ if (props.alignment === TableCellAlign.center) {
 <style scoped>
 th, td {
   padding: 8px;
-  vertical-align: top;
   text-align: left;
+  vertical-align: top;
 }
 
 th:not(:last-of-type), td:not(:last-of-type) {
