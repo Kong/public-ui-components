@@ -3,8 +3,7 @@
     v-if="url && scriptLoaded"
     class="kong-ui-public-misc-widgets-github-star"
     data-testid="github-star"
-    data-tracking-id="github-star-pkg-div"
-    @click="clickHandler"
+    data-tracking-id="github-star"
   >
     <KTooltip :label="tooltipLabel">
       <span>
@@ -13,7 +12,6 @@
           class="github-button"
           data-color-scheme="no-preference: light; light: light; dark: light;"
           data-show-count="true"
-          data-tracking-id="github-star-pkg-a"
           :href="url"
           target="_blank"
         >
@@ -46,9 +44,6 @@ const tooltipLabel = computed((): string => props.tooltipText || i18n.t('githubS
 
 const scriptLoaded = ref<boolean>(false)
 
-const clickHandler = () => {
-  console.log('clickHandler')
-}
 onMounted(async () => {
   const githubStarScript = document.createElement('script')
 
