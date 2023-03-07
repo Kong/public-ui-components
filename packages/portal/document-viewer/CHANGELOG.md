@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.5.13...@kong-ui-public/document-viewer@0.5.14) (2023-03-07)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
 ## [0.5.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.5.12...@kong-ui-public/document-viewer@0.5.13) (2023-03-06)
 
 **Note:** Version bump only for package @kong-ui-public/document-viewer
