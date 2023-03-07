@@ -1,5 +1,5 @@
 import { Component } from 'vue'
-import { BaseNode, isTextNode, isTableHeaderNode, TableRowSection } from '../types'
+import { BaseNode, isTableHeaderNode, TableRowSection } from '../types'
 import Blockquote from './nodes/Blockquote.vue'
 import Code from './nodes/Code.vue'
 import CodeBlock from './nodes/CodeBlock.vue'
@@ -67,19 +67,6 @@ export default function renderChildren<ChildTypes extends BaseNode>(children: Ar
     if (isTableHeaderNode(child)) {
       // Need to tell the section that this is a header tag
       child.section = TableRowSection.header
-    }
-
-    // This is to fix an issue with text blocks that are beside another element
-    // not having a space between them
-    if (child?.type === 'paragraph' && child?.children) {
-      const paragraphChildren = child.children
-      const lastItemIndex = paragraphChildren.length - 1
-
-      paragraphChildren.forEach((paragraphChild, index) => {
-        if (isTextNode(paragraphChild) && !paragraphChild.text?.endsWith(' ') && index !== lastItemIndex) {
-          paragraphChild.appendSpace = true
-        }
-      })
     }
 
     if (child?.type === 'code_block') {
