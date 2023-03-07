@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/i18n",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "type": "module",
   "main": "./dist/i18n.umd.js",
   "module": "./dist/i18n.es.js",
@@ -55,7 +55,7 @@
     "vue": "^3.2.47"
   },
   "dependencies": {
-    "@formatjs/intl": "^2.6.6",
+    "@formatjs/intl": "^2.6.7",
     "flat": "^5.0.2",
     "intl-messageformat": "^10.3.1"
   }
