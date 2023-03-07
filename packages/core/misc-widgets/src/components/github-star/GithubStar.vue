@@ -3,7 +3,7 @@
     v-if="url && scriptLoaded"
     class="kong-ui-public-misc-widgets-github-star"
     data-testid="github-star"
-    data-tracking-id="github-star"
+    data-tracking-id="github-star-pkg-div"
     @click="clickHandler"
   >
     <KTooltip :label="tooltipLabel">
@@ -13,6 +13,7 @@
           class="github-button"
           data-color-scheme="no-preference: light; light: light; dark: light;"
           data-show-count="true"
+          data-tracking-id="github-star-pkg-a"
           :href="url"
           target="_blank"
         >
