@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.3.2...@kong-ui-public/i18n@0.3.3) (2023-03-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @formatjs/intl to ^2.6.7 ([#209](https://github.com/Kong/public-ui-components/issues/209)) ([67c7734](https://github.com/Kong/public-ui-components/commit/67c77345188b262234888da607f2cbcd47c2a17f))
+
+
+
+
+
 ## [0.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.3.1...@kong-ui-public/i18n@0.3.2) (2023-03-06)
 
 
