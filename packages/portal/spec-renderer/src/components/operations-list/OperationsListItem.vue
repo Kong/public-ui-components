@@ -94,6 +94,10 @@ const methodName = computed((): string => {
 
   &:hover {
     background: var(--kong-ui-spec-renderer-operations-list-item-background-hover, var(--blue-100, #f2f6fe));
+
+    .summary, .path {
+      color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color-hover, var(--black-500, #0B172D));
+    }
   }
 
   &:last-of-type {
@@ -114,6 +118,14 @@ const methodName = computed((): string => {
     position: absolute;
     top: 0;
     width: var(--kong-ui-spec-renderer-operations-list-item-selected-bar-width, 4px);
+  }
+
+  .summary {
+    color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color-selected, var(--black-500, #0B172D));
+  }
+
+  .path {
+    color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color-selected, var(--black-500, #0B172D));
   }
 }
 
@@ -170,10 +182,6 @@ const methodName = computed((): string => {
   margin: 0 0 4px;
 }
 
-.item--selected .summary {
-  color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color-selected, var(--black-500, #0B172D));
-}
-
 .details {
   display: flex;
 }
@@ -191,7 +199,7 @@ const methodName = computed((): string => {
 
 .path {
   align-self: center;
-  color: var(--grey-600);
+  color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color, var(--grey-600, #3c4557));
   font-family: var(--kong-ui-spec-renderer-operations-list-item-path-font-family, var(--kong-ui-spec-renderer-font-family-monospace, monospace));
   font-size: 13px;
 }

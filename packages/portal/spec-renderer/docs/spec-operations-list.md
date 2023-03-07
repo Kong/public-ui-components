@@ -203,8 +203,9 @@ This is emitted whenever an item in the spec is clicked.
 | `--kong-ui-spec-renderer-operations-list-item-selected-bar-width`            | Operations list selected item highlight bar width      | `4px`                           |
 | `--kong-ui-spec-renderer-operations-list-item-selected-bar-background`       | Operations list selected item highlight bar background | `#1155cb`                       |
 | `--kong-ui-spec-renderer-operations-list-item-path-font-family`              | Operations list item resource path font family         | `monospace`                     |
-| `--kong-ui-spec-renderer-operations-list-item-summary-text-color`            | Operations list selected item summary text color       | `#0B172D`                       |
-| `--kong-ui-spec-renderer-operations-list-item-summary-text-color-selected`   | Operations list item summary text color                | `#3C4557`                       |
+| `--kong-ui-spec-renderer-operations-list-item-summary-text-color`            | Operations list item summary text color                | `#0B172D`                       |
+| `--kong-ui-spec-renderer-operations-list-item-summary-text-color-hover`      | Operations list item hover summary text color          | `#3C4557`                       |
+| `--kong-ui-spec-renderer-operations-list-item-summary-text-color-selected`   | Operations list selected item summary text color       | `#3C4557`                       |
 | `--kong-ui-spec-renderer-method-color-get`                                   | Operations list item GET method badge color            | `#1155cb`                       |
 | `--kong-ui-spec-renderer-method-background-get`                              | Operations list item GET method badge background       | `#f2f6fe`                       |
 | `--kong-ui-spec-renderer-method-color-post`                                  | Operations list item POST method badge color           | `#13755e`                       |
