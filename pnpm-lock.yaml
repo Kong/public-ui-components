@@ -218,7 +218,7 @@ importers:
   packages/portal/spec-renderer:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.3.3
-      '@kong-ui-public/swagger-ui-web-component': workspace:^0.4.9
+      '@kong-ui-public/swagger-ui-web-component': workspace:^0.4.10
       '@kong/kongponents': ^8.32.1
       '@modyfi/vite-plugin-yaml': ^1.0.4
       '@types/lodash.clonedeep': ^4.5.7
