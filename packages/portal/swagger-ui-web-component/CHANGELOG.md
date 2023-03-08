@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.4.10...@kong-ui-public/swagger-ui-web-component@0.4.11) (2023-03-08)
+
+
+### Bug Fixes
+
+* bump package of swagger-ui-kong-theme for dark theme (TDX-2928) ([#223](https://github.com/Kong/public-ui-components/issues/223)) ([895b3b7](https://github.com/Kong/public-ui-components/commit/895b3b73b140073b50b84c8524aeecf1f96f640f))
+
+
+
+
+
 ## [0.4.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.4.9...@kong-ui-public/swagger-ui-web-component@0.4.10) (2023-03-07)
 
 
