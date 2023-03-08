@@ -222,7 +222,7 @@ importers:
       '@kong/kongponents': ^8.33.1
       '@modyfi/vite-plugin-yaml': ^1.0.4
       '@types/lodash.clonedeep': ^4.5.7
-      '@types/uuid': ^9.0.0
+      '@types/uuid': ^9.0.1
       lodash.clonedeep: ^4.5.0
       openapi-types: ^12.1.0
       uuid: ^9.0.0
@@ -236,7 +236,7 @@ importers:
       '@kong/kongponents': 8.33.1_vue@3.2.47
       '@modyfi/vite-plugin-yaml': 1.0.4
       '@types/lodash.clonedeep': 4.5.7
-      '@types/uuid': 9.0.0
+      '@types/uuid': 9.0.1
       openapi-types: 12.1.0
       vue: 3.2.47
 
@@ -2131,8 +2131,8 @@ packages:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
     dev: false
 
-  /@types/uuid/9.0.0:
-    resolution: {integrity: sha512-kr90f+ERiQtKWMz5rP32ltJ/BtULDI5RVO0uavn1HQUOwjx0R1h0rnDYNL0CepF1zL5bSY6FISAfd9tOdDhU5Q==}
+  /@types/uuid/9.0.1:
+    resolution: {integrity: sha512-rFT3ak0/2trgvp4yYZo5iKFEPsET7vKydKF+VRCxlQ9bpheehyAJH89dAkaLEq/j/RZXJIqcgsmPJKUP1Z28HA==}
     dev: true
 
   /@types/ws/8.5.4:
