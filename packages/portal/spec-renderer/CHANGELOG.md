@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.6.20...@kong-ui-public/spec-renderer@0.7.0) (2023-03-08)
+
+
+### Features
+
+* **operations-list:** add more css variables to support dark mode (TDX-2928) ([#217](https://github.com/Kong/public-ui-components/issues/217)) ([2f00f4c](https://github.com/Kong/public-ui-components/commit/2f00f4cdc781627eda16a61ca98a0eb340105aa2))
+
+
+
+
+
 ## [0.6.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.6.19...@kong-ui-public/spec-renderer@0.6.20) (2023-03-07)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer
