@@ -1,5 +1,5 @@
 import { Component } from 'vue'
-import { BaseNode, isTextNode } from '../types'
+import { BaseNode, isTableHeaderNode, TableRowSection } from '../types'
 import Blockquote from './nodes/Blockquote.vue'
 import Code from './nodes/Code.vue'
 import CodeBlock from './nodes/CodeBlock.vue'
@@ -7,6 +7,7 @@ import Emphasis from './nodes/Emphasis.vue'
 import Heading from './nodes/Heading.vue'
 import Image from './nodes/Image.vue'
 import LineBreak from './nodes/LineBreak.vue'
+import Strikethrough from './nodes/Strikethrough.vue'
 import Table from './nodes/Table.vue'
 import TableRow from './nodes/TableRow.vue'
 import TableCell from './nodes/TableCell.vue'
@@ -25,12 +26,14 @@ const nodeTypeToComponentMap: Record<string, Component> = {
   emphasis: Emphasis,
   heading: Heading,
   image: Image,
-  line_break: LineBreak,
+  break: LineBreak,
   link: Link,
   list: List,
   list_item: ListItem,
   paragraph: Paragraph,
+  strikethrough: Strikethrough,
   table: Table,
+  table_header: TableRow,
   table_row: TableRow,
   table_cell: TableCell,
   text: Text,
@@ -61,17 +64,9 @@ export default function renderChildren<ChildTypes extends BaseNode>(children: Ar
       return null
     }
 
-    // This is to fix an issue with text blocks that are beside another element
-    // not having a space between them
-    if (child?.type === 'paragraph' && child?.children) {
-      const paragraphChildren = child.children
-      const lastItemIndex = paragraphChildren.length - 1
-
-      paragraphChildren.forEach((paragraphChild, index) => {
-        if (isTextNode(paragraphChild) && !paragraphChild.text?.endsWith(' ') && index !== lastItemIndex) {
-          paragraphChild.appendSpace = true
-        }
-      })
+    if (isTableHeaderNode(child)) {
+      // Need to tell the section that this is a header tag
+      child.section = TableRowSection.header
     }
 
     if (child?.type === 'code_block') {
