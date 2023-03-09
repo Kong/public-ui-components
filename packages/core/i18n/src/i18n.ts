@@ -10,7 +10,7 @@ const intlCache = createIntlCache()
 // this is global var to hold global (application) instance of Intl
 let globIntl: IntlShapeEx
 
-export const createI18n = <T>(locale: SupportedLocales, messages: T, isGlobal: boolean = false): IntlShapeEx<T> => {
+export const createI18n = <MessageSource>(locale: SupportedLocales, messages: MessageSource, isGlobal: boolean = false): IntlShapeEx<MessageSource> => {
   const intl = createIntl(
     {
       locale,
@@ -39,8 +39,10 @@ export const createI18n = <T>(locale: SupportedLocales, messages: T, isGlobal: b
     te,
     tm,
     ...intl,
+    $t: t, // override the default $t with our function
     source: messages,
   }
+
   if (isGlobal) {
     globIntl = localIntl
   }
@@ -49,6 +51,6 @@ export const createI18n = <T>(locale: SupportedLocales, messages: T, isGlobal: b
 }
 
 // this returns global (application of Intl)
-export default function useI18n(): IntlShapeEx {
+export default function useI18n<MessageSource>(): IntlShapeEx<MessageSource> {
   return globIntl
 }
