@@ -1,8 +1,11 @@
 import { defineComponent, h } from 'vue'
 import type { VNodeChild, App, PropType } from 'vue'
-import type { IntlShapeEx } from './types'
+import type {
+  IntlShapeEx,
+  // PathToDotNotation, // Enable import to debug `keypath` interface
+} from './types'
 
-export const i18nTComponent = <MessageSource = any>(i18n: IntlShapeEx<MessageSource>) => defineComponent({
+export const i18nTComponent = <MessageSource = any>(i18n: IntlShapeEx<MessageSource> | null = null) => defineComponent({
   name: 'I18nT',
   props: {
     i18n: {
@@ -11,6 +14,7 @@ export const i18nTComponent = <MessageSource = any>(i18n: IntlShapeEx<MessageSou
     },
     keypath: {
       type: String,
+      // type: String as unknown as PropType<PathToDotNotation<MessageSource, string>>, // This breaks the type interface
       required: true,
     },
     tag: {
@@ -39,7 +43,7 @@ export const i18nTComponent = <MessageSource = any>(i18n: IntlShapeEx<MessageSou
 
     return (): VNodeChild => {
       const keys = Object.keys(slots).filter(key => key !== '_')
-      const sourceString = (i18n || props.i18n).messages[props.keypath].toString()
+      const sourceString = (i18n || props.i18n).messages[(props.keypath as string)].toString()
 
       let hArray: Array<any> = deconstructString(sourceString)
 
@@ -68,6 +72,6 @@ export const i18nTComponent = <MessageSource = any>(i18n: IntlShapeEx<MessageSou
 export default {
   install<MessageSource = any>(app: App, options: { i18n: IntlShapeEx<MessageSource> }) {
     const { i18n } = options
-    app.component('I18nT', i18nTComponent(i18n))
+    app.component('I18nT', i18nTComponent<MessageSource>(i18n))
   },
 }

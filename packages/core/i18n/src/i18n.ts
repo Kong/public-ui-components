@@ -56,6 +56,6 @@ export const createI18n = <MessageSource = any>(locale: SupportedLocales, messag
 }
 
 // this returns global (application of Intl)
-export default function useI18n<MessageSource>(): IntlShapeEx<MessageSource> {
+export default function useI18n<MessageSource = any>(): IntlShapeEx<MessageSource> {
   return globIntl
 }
