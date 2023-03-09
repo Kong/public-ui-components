@@ -4,7 +4,7 @@ importers:
 
   .:
     specifiers:
-      '@babel/types': ^7.21.0
+      '@babel/types': ^7.21.2
       '@commitlint/cli': ^17.4.4
       '@commitlint/config-conventional': ^17.4.4
       '@digitalroute/cz-conventional-changelog-for-jira': ^8.0.0
