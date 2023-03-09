@@ -48,6 +48,16 @@ const i18n = useI18n()
 </script>
 ```
 
+If you want translation key suggestions on the global instance, update your import as shown here, passing the JSON file type to the function:
+
+```html
+<script setup lang="ts">
+import { useI18n } from '@kong-ui-public/i18n'
+import english from './locales/en.json'
+
+const i18n = useI18n<typeof english>()
+</script>
+```
 
 ## Use in shared component
 

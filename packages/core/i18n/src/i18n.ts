@@ -8,10 +8,11 @@ import type { IntlShapeEx, SupportedLocales, MessageFormatPrimitiveValue } from 
 const intlCache = createIntlCache()
 
 // this is global var to hold global (application) instance of Intl
-let globIntl: IntlShapeEx
+// typed as any since we don't have access to MessageSource here
+let globIntl: any
 
-export const createI18n = <MessageSource>(locale: SupportedLocales, messages: MessageSource, isGlobal: boolean = false): IntlShapeEx<MessageSource> => {
-  const intl = createIntl(
+export const createI18n = <MessageSource = any>(locale: SupportedLocales, messages: MessageSource, isGlobal: boolean = false): IntlShapeEx<MessageSource> => {
+  const intlOriginal = createIntl(
     {
       locale,
       messages: flatten(messages, {
@@ -21,25 +22,29 @@ export const createI18n = <MessageSource>(locale: SupportedLocales, messages: Me
     intlCache,
   )
 
+  // Remove the native $t function from intlOriginal
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { $t, ...otherProps } = intlOriginal
+  const intl = otherProps
+
   const t = (translationKey: string, values?: Record<string, MessageFormatPrimitiveValue> | undefined, opts?: IntlMessageFormatOptions): string => {
     return intl.formatMessage(<MessageDescriptor>{ id: translationKey }, values, opts)
   }
 
-  const te = (key: string): boolean => {
-    return !!intl.messages[key]
+  const te = (translationKey: string): boolean => {
+    return !!intl.messages[translationKey]
   }
 
-  const tm = (key: string): Array<string> => {
+  const tm = (translationKey: string): Array<string> => {
     // @ts-ignore
-    return intl.messages[key] || []
+    return intl.messages[translationKey] || []
   }
 
-  const localIntl = {
+  const localIntl: IntlShapeEx<MessageSource> = {
     t,
     te,
     tm,
     ...intl,
-    $t: t, // override the default $t with our function
     source: messages,
   }
 

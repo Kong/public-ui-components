@@ -2,11 +2,11 @@ import { defineComponent, h } from 'vue'
 import type { VNodeChild, App, PropType } from 'vue'
 import type { IntlShapeEx } from './types'
 
-export const i18nTComponent = (i18n: IntlShapeEx | null = null) => defineComponent({
+export const i18nTComponent = <MessageSource = any>(i18n: IntlShapeEx<MessageSource>) => defineComponent({
   name: 'I18nT',
   props: {
     i18n: {
-      type: Object as PropType<IntlShapeEx>,
+      type: Object as PropType<IntlShapeEx<MessageSource>>,
       default: null,
     },
     keypath: {
@@ -66,7 +66,7 @@ export const i18nTComponent = (i18n: IntlShapeEx | null = null) => defineCompone
 
 // Export Vue plugin
 export default {
-  install(app: App, options: { i18n: IntlShapeEx }) {
+  install<MessageSource = any>(app: App, options: { i18n: IntlShapeEx<MessageSource> }) {
     const { i18n } = options
     app.component('I18nT', i18nTComponent(i18n))
   },

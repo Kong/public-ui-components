@@ -7,7 +7,11 @@
   "custom_dogs": {
     "breeds": {
       "husky": "Husky",
-      "beagle": "Beagle"
+      "beagle": "Beagle",
+      "breeds": {
+        "husky": "Husky",
+        "beagle": "Beagle"
+      }
     }
   }
 }

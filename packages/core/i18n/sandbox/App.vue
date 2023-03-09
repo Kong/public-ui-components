@@ -45,9 +45,9 @@ import { useI18n, createI18n, i18nTComponent } from '../src'
 import english from './locales/en.json'
 
 // this is grabbing i18n from global
-const i18n = useI18n()
+const i18n = useI18n<typeof english>()
 
 // this creates local i18n and component
-const i18nLocal = createI18n<typeof english>('en-us', english)
-const i18nNoPlugin = i18nTComponent(i18nLocal)
+const i18nLocal = createI18n('en-us', english)
+const i18nNoPlugin = i18nTComponent<typeof english>(i18nLocal)
 </script>
