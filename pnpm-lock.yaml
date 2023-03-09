@@ -168,7 +168,7 @@ importers:
 
   packages/core/copy-uuid:
     specifiers:
-      '@kong-ui-public/i18n': workspace:^0.3.3
+      '@kong-ui-public/i18n': workspace:^0.3.4
       '@kong/kongponents': ^8.33.4
       vue: ^3.2.47
     dependencies:
@@ -189,7 +189,7 @@ importers:
 
   packages/core/misc-widgets:
     specifiers:
-      '@kong-ui-public/i18n': workspace:^0.3.3
+      '@kong-ui-public/i18n': workspace:^0.3.4
       '@kong/kongponents': ^8.33.4
       vue: ^3.2.47
     dependencies:
@@ -200,7 +200,7 @@ importers:
 
   packages/portal/document-viewer:
     specifiers:
-      '@kong-ui-public/i18n': workspace:^0.3.3
+      '@kong-ui-public/i18n': workspace:^0.3.4
       '@kong/kongponents': ^8.33.4
       '@types/prismjs': ^1.26.0
       '@vitejs/plugin-vue-jsx': ^3.0.0
@@ -217,7 +217,7 @@ importers:
 
   packages/portal/spec-renderer:
     specifiers:
-      '@kong-ui-public/i18n': workspace:^0.3.3
+      '@kong-ui-public/i18n': workspace:^0.3.4
       '@kong-ui-public/swagger-ui-web-component': workspace:^0.4.12
       '@kong/kongponents': ^8.33.4
       '@modyfi/vite-plugin-yaml': ^1.0.4
