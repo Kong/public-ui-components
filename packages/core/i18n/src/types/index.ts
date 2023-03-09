@@ -5,8 +5,7 @@ export type MessageFormatPrimitiveValue = string | number | boolean | null | und
 
 export type SupportedLocales = 'en-us'
 
-type Dot<T extends string, U extends string> =
-  '' extends U ? T : `${T}.${U}`
+type Dot<T extends string, U extends string> = '' extends U ? T : `${T}.${U}`
 
 export type PathToDotNotation<MessageSource, V> = MessageSource extends V ? '' : {
   [K in Extract<keyof MessageSource, string>]: Dot<K, PathToDotNotation<MessageSource[K], V>>
