@@ -130,8 +130,8 @@ const methodName = computed((): string => {
 }
 
 .item--method-get {
-  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-get, var(--blue-500, #1155cb));
-  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-get, var(--blue-100, #f2f6fe));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-get, var(--petrol-200, #0364ac));
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-get, var(--petrol-100, #eaf4fb));
 }
 
 .item--method-post {
@@ -156,12 +156,12 @@ const methodName = computed((): string => {
 
 .item--method-options {
   --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-options, var(--steel-700, #273c61));
-  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-options, var(--steel-100, #f0f4fa));
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-options, var(--steel-200, #dae3f2));
 }
 
 .item--method-head {
   --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-head, var(--yellow-600, #a05604));
-  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-head, var(--yellow-100, #fff3d8));
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-head, var(--yellow-200, #ffe6ba));
 }
 
 .item--method-connect {
@@ -170,8 +170,8 @@ const methodName = computed((): string => {
 }
 
 .item--method-trace {
-  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-trace, var(--steel-500, #5c7299));
-  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-trace, var(--steel-100, #f0f4fa));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-trace, var(--white, #fff));
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-trace, var(--steel-500, #5c7299));
 }
 
 .summary {

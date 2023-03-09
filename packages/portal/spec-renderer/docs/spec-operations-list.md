@@ -206,8 +206,8 @@ This is emitted whenever an item in the spec is clicked.
 | `--kong-ui-spec-renderer-operations-list-item-summary-text-color`            | Operations list item summary text color                | `#0B172D`                       |
 | `--kong-ui-spec-renderer-operations-list-item-summary-text-color-hover`      | Operations list item hover summary text color          | `#3C4557`                       |
 | `--kong-ui-spec-renderer-operations-list-item-summary-text-color-selected`   | Operations list selected item summary text color       | `#3C4557`                       |
-| `--kong-ui-spec-renderer-method-color-get`                                   | Operations list item GET method badge color            | `#1155cb`                       |
-| `--kong-ui-spec-renderer-method-background-get`                              | Operations list item GET method badge background       | `#f2f6fe`                       |
+| `--kong-ui-spec-renderer-method-color-get`                                   | Operations list item GET method badge color            | `#0364ac`                       |
+| `--kong-ui-spec-renderer-method-background-get`                              | Operations list item GET method badge background       | `#eaf4fb`                       |
 | `--kong-ui-spec-renderer-method-color-post`                                  | Operations list item POST method badge color           | `#13755e`                       |
 | `--kong-ui-spec-renderer-method-background-post`                             | Operations list item POST method badge background      | `#e8f8f5`                       |
 | `--kong-ui-spec-renderer-method-color-put`                                   | Operations list item PUT method badge color            | `#a05604`                       |
@@ -217,13 +217,13 @@ This is emitted whenever an item in the spec is clicked.
 | `--kong-ui-spec-renderer-method-color-delete`                                | Operations list item DELETE method badge color         | `#922021`                       |
 | `--kong-ui-spec-renderer-method-background-delete`                           | Operations list item DELETE method badge background    | `#ffdede`                       |
 | `--kong-ui-spec-renderer-method-color-options`                               | Operations list item OPTIONS method badge color        | `#273c61`                       |
-| `--kong-ui-spec-renderer-method-background-options`                          | Operations list item OPTIONS method badge background   | `#f0f4fa`                       |
+| `--kong-ui-spec-renderer-method-background-options`                          | Operations list item OPTIONS method badge background   | `#dae3f2`                       |
 | `--kong-ui-spec-renderer-method-color-head`                                  | Operations list item HEAD method badge color           | `#a05604`                       |
-| `--kong-ui-spec-renderer-method-background-head`                             | Operations list item HEAD method badge background      | `#fff3d8`                       |
+| `--kong-ui-spec-renderer-method-background-head`                             | Operations list item HEAD method badge background      | `#ffe6ba`                       |
 | `--kong-ui-spec-renderer-method-color-connect`                               | Operations list item CONNECT method badge color        | `#473cfb`                       |
 | `--kong-ui-spec-renderer-method-background-connect`                          | Operations list item CONNECT method badge background   | `#eaf4fb`                       |
-| `--kong-ui-spec-renderer-method-color-trace`                                 | Operations list item TRACE method badge color          | `#5c7299`                       |
-| `--kong-ui-spec-renderer-method-background-trace`                            | Operations list item TRACE method badge background     | `#f0f4fa`                       |
+| `--kong-ui-spec-renderer-method-color-trace`                                 | Operations list item TRACE method badge color          | `#fff`                       |
+| `--kong-ui-spec-renderer-method-background-trace`                            | Operations list item TRACE method badge background     | `#5c7299`                       |
 | `--kong-ui-spec-renderer-operations-list-section-background`                 | Operations list section background                     | `transparent`                   |
 | `--kong-ui-spec-renderer-operations-list-section-border-color`               | Operations list section border color                   | `#f1f1f5`                       |
 | `--kong-ui-spec-renderer-operations-list-section-border-radius`              | Operations list section border radius                  | `4px`                           |
