@@ -48,7 +48,6 @@ import english from './locales/en.json'
 const i18n = useI18n()
 
 // this creates local i18n and component
-const i18nLocal = createI18n('en-us', english)
+const i18nLocal = createI18n<typeof english>('en-us', english)
 const i18nNoPlugin = i18nTComponent(i18nLocal)
-
 </script>
