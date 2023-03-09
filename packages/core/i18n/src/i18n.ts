@@ -11,7 +11,7 @@ const intlCache = createIntlCache()
 // typed as any since we don't have access to MessageSource here
 let globIntl: any
 
-export const createI18n = <MessageSource = any>(locale: SupportedLocales, messages: MessageSource, isGlobal: boolean = false): IntlShapeEx<MessageSource> => {
+export const createI18n = <MessageSource = Record<string, any>>(locale: SupportedLocales, messages: MessageSource, isGlobal: boolean = false): IntlShapeEx<MessageSource> => {
   const intlOriginal = createIntl(
     {
       locale,
@@ -56,6 +56,6 @@ export const createI18n = <MessageSource = any>(locale: SupportedLocales, messag
 }
 
 // this returns global (application of Intl)
-export default function useI18n<MessageSource = any>(): IntlShapeEx<MessageSource> {
+export default function useI18n<MessageSource = Record<string, any>>(): IntlShapeEx<MessageSource> {
   return globIntl
 }

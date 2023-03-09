@@ -5,7 +5,7 @@ import type {
   // PathToDotNotation, // Enable import to debug `keypath` interface
 } from './types'
 
-export const i18nTComponent = <MessageSource = any>(i18n: IntlShapeEx<MessageSource> | null = null) => defineComponent({
+export const i18nTComponent = <MessageSource = Record<string, any>>(i18n: IntlShapeEx<MessageSource> | null = null) => defineComponent({
   name: 'I18nT',
   props: {
     i18n: {
@@ -70,7 +70,7 @@ export const i18nTComponent = <MessageSource = any>(i18n: IntlShapeEx<MessageSou
 
 // Export Vue plugin
 export default {
-  install<MessageSource = any>(app: App, options: { i18n: IntlShapeEx<MessageSource> }) {
+  install<MessageSource = Record<string, any>>(app: App, options: { i18n: IntlShapeEx<MessageSource> }) {
     const { i18n } = options
     app.component('I18nT', i18nTComponent<MessageSource>(i18n))
   },
