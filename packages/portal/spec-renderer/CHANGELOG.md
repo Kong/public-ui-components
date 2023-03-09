@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.7.9...@kong-ui-public/spec-renderer@0.7.10) (2023-03-09)
+
+
+### Bug Fixes
+
+* **spec-operations:** update badge colors [khcp-5779] ([#232](https://github.com/Kong/public-ui-components/issues/232)) ([4e11769](https://github.com/Kong/public-ui-components/commit/4e11769357bb8697bafa13fd82ee6eede41917a5))
+
+
+
+
+
 ## [0.7.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.7.8...@kong-ui-public/spec-renderer@0.7.9) (2023-03-09)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer
