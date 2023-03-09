@@ -10,7 +10,7 @@ const intlCache = createIntlCache()
 // this is global var to hold global (application) instance of Intl
 let globIntl: IntlShapeEx
 
-export const createI18n = (locale: SupportedLocales, messages: Record<string, any>, isGlobal: boolean = false): IntlShapeEx => {
+export const createI18n = <T>(locale: SupportedLocales, messages: T, isGlobal: boolean = false): IntlShapeEx<T> => {
   const intl = createIntl(
     {
       locale,
