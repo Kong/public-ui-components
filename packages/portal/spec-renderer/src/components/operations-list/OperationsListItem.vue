@@ -170,7 +170,7 @@ const methodName = computed((): string => {
 }
 
 .item--method-trace {
-  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-trace, var(--white, #fff);
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-trace, var(--white, #fff));
   --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-trace, var(--steel-500, #5c7299));
 }
 
