@@ -14,7 +14,7 @@ export const i18nTComponent = <MessageSource = any>(i18n: IntlShapeEx<MessageSou
     },
     keypath: {
       type: String,
-      // type: String as unknown as PropType<PathToDotNotation<MessageSource, string>>, // This breaks the type interface
+      // type: String as unknown as PropType<PathToDotNotation<MessageSource, string>>, // This breaks the type interface, enable to debug
       required: true,
     },
     tag: {
