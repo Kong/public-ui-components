@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@0.2.23...@kong-ui-public/misc-widgets@0.2.24) (2023-03-10)
+
+**Note:** Version bump only for package @kong-ui-public/misc-widgets
+
+
+
+
+
 ## [0.2.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@0.2.22...@kong-ui-public/misc-widgets@0.2.23) (2023-03-09)
 
 **Note:** Version bump only for package @kong-ui-public/misc-widgets
