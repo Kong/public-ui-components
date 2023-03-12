@@ -8,7 +8,7 @@ export type SupportedLocales = 'en-us'
 type Dot<T extends string, U extends string> = '' extends U ? T : `${T}.${U}`
 
 export type PathToDotNotation<MessageSource, V> = MessageSource extends V ? '' : {
-  [K in Extract<keyof MessageSource, string>]: Dot<K, PathToDotNotation<MessageSource[K], V>>
+  [K in Extract<keyof MessageSource, string>]: Dot<K, PathToDotNotation<MessageSource[K], V>> | K // Allow ending on an incomplete/partial path
 }[Extract<keyof MessageSource, string>]
 
 type TFunction<M> = (translationKey: PathToDotNotation<M, string>, values?: Record<string, MessageFormatPrimitiveValue> | undefined, opts?: IntlMessageFormatOptions) => string
