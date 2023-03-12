@@ -2,7 +2,7 @@
 import { Options as IntlMessageFormatOptions } from 'intl-messageformat'
 import { createIntl, createIntlCache, MessageDescriptor } from '@formatjs/intl'
 import { flatten } from 'flat'
-import type { IntlShapeEx, SupportedLocales, MessageFormatPrimitiveValue } from './types'
+import type { IntlShapeEx, PathToDotNotation, SupportedLocales, MessageFormatPrimitiveValue } from './types'
 
 // this is internal formatJS function that caches instance of Intl and prevent memory leaks
 const intlCache = createIntlCache()
@@ -27,15 +27,15 @@ export const createI18n = <MessageSource = Record<string, any>>(locale: Supporte
   const { $t, ...otherProps } = intlOriginal
   const intl = otherProps
 
-  const t = (translationKey: string, values?: Record<string, MessageFormatPrimitiveValue> | undefined, opts?: IntlMessageFormatOptions): string => {
+  const t = (translationKey: PathToDotNotation<MessageSource, string>, values?: Record<string, MessageFormatPrimitiveValue> | undefined, opts?: IntlMessageFormatOptions): string => {
     return intl.formatMessage(<MessageDescriptor>{ id: translationKey }, values, opts)
   }
 
-  const te = (translationKey: string): boolean => {
+  const te = (translationKey: PathToDotNotation<MessageSource, string>): boolean => {
     return !!intl.messages[translationKey]
   }
 
-  const tm = (translationKey: string): Array<string> => {
+  const tm = (translationKey: PathToDotNotation<MessageSource, string>): Array<string> => {
     // @ts-ignore
     return intl.messages[translationKey] || []
   }
