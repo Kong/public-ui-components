@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/app-layout",
-  "version": "0.13.28",
+  "version": "0.13.29",
   "type": "module",
   "main": "./dist/app-layout.umd.js",
   "module": "./dist/app-layout.es.js",
@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "focus-trap": "^7.3.1",
-    "focus-trap-vue": "^4.0.1",
+    "focus-trap-vue": "^4.0.2",
     "lodash.clonedeep": "^4.5.0"
   },
   "devDependencies": {
