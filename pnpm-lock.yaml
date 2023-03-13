@@ -134,13 +134,13 @@ importers:
       '@kong/kongponents': ^8.37.0
       '@types/lodash.clonedeep': ^4.5.7
       focus-trap: ^7.3.1
-      focus-trap-vue: ^4.0.1
+      focus-trap-vue: ^4.0.2
       lodash.clonedeep: ^4.5.0
       vue: ^3.2.47
       vue-router: ^4.1.6
     dependencies:
       focus-trap: 7.3.1
-      focus-trap-vue: 4.0.1_oggptlzwchqpaguemspe4ract4
+      focus-trap-vue: 4.0.2_oggptlzwchqpaguemspe4ract4
       lodash.clonedeep: 4.5.0
     devDependencies:
       '@kong/kongponents': 8.37.0_vue@3.2.47
@@ -5970,8 +5970,8 @@ packages:
       vue: 3.2.47
     dev: true
 
-  /focus-trap-vue/4.0.1_oggptlzwchqpaguemspe4ract4:
-    resolution: {integrity: sha512-2iqOeoSvgq7Um6aL+255a/wXPskj6waLq2oKCa4gOnMORPo15JX7wN6J5bl1SMhMlTlkHXGSrQ9uJPJLPZDl5w==}
+  /focus-trap-vue/4.0.2_oggptlzwchqpaguemspe4ract4:
+    resolution: {integrity: sha512-2iQN2xKCSCzyhcD90VpueQcTIAhaCRxxo67fkz7RSqLmEd16QKjfGslCr3KxvBx0LfpVN9j0IAyKKuJKw3Intg==}
     peerDependencies:
       focus-trap: ^7.0.0
       vue: ^3.0.0

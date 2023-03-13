@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "focus-trap": "^7.3.1",
-    "focus-trap-vue": "^4.0.1",
+    "focus-trap-vue": "^4.0.2",
     "lodash.clonedeep": "^4.5.0"
   },
   "devDependencies": {
