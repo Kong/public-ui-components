@@ -26,7 +26,7 @@ This is a wrapper around [FormatJS](https://formatjs.io/docs/intl) that allows c
 
 In order to provide full autocompletion for the translation keys, you need to pass the type of the `messages` object to the various init functions, as shown here:
 
-> **Note**: type checking and autocompletion are still a work-in-progress when utilizing the `i18n-t` component.
+> **Note**: For the `i18n-t` component (`Translation.ts`), the type checking and auto-completion for the `keypath` prop are still a work-in-progress due to [the issue described here](https://github.com/Kong/public-ui-components/pull/231).
 >
 
 ### Global Registration
@@ -40,14 +40,12 @@ const i18n = createI18n<typeof english>('en-us', english, true)
 app.use(Translation, { i18n })
 
 // composables/index.ts
-import { useI18n as useI18nComposable } from '@kong-ui-public/i18n'
+import { useI18n } from '@kong-ui-public/i18n'
 import english from './locales/en.json'
 
-
-const useI18n = useI18nComposable<typeof english>
-
 export default {
-  useI18n,
+  // Be sure to provide the interface when exporting
+  useI18n: useI18n<typeof english>,
 }
 
 // Component.vue
@@ -93,7 +91,8 @@ And then, anywhere in application code where `i18n` is needed:
 
 <script setup lang="ts">
 import { useI18n } from '@kong-ui-public/i18n'
-const i18n = useI18n()
+import english from './locales/en.json'
+const i18n = useI18n<typeof english>()
 </script>
 ```
 
@@ -151,7 +150,8 @@ const i18n = createI18n<typeof english>(props.locale || 'en-us', english)
 
 <script setup lang="ts">
 import { useI18n } from '@kong-ui-public/i18n'
-const i18n = useI18n()
+import english from './locales/en.json'
+const i18n = useI18n<typeof english>()
 </script>
 ```
 
@@ -199,8 +199,9 @@ In `khcp-ui` there are many places where instead of using Intl function we are a
 
 <script setup lang="ts">
 import { useI18n } from '@kong-ui-public/i18n'
+import english from './locales/en.json'
 
-const i18n = useI18n()
+const i18n = useI18n<typeof english>()
 const helpText = i18n.source.components.docUploadCard
 </script>
 ```
