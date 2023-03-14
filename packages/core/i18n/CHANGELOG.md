@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.4.0...@kong-ui-public/i18n@0.4.1) (2023-03-14)
+
+
+### Bug Fixes
+
+* **i18n:** plugin usage ([#250](https://github.com/Kong/public-ui-components/issues/250)) ([2b98442](https://github.com/Kong/public-ui-components/commit/2b98442b469e2c23053f227ea9cb043fe0194136))
+
+
+
+
+
 # [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.3.4...@kong-ui-public/i18n@0.4.0) (2023-03-14)
 
 
