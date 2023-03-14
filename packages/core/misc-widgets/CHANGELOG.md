@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@0.2.27...@kong-ui-public/misc-widgets@0.3.0) (2023-03-14)
+
+
+### Features
+
+* **i18n:** translation key autocomplete ([#231](https://github.com/Kong/public-ui-components/issues/231)) ([bdc237d](https://github.com/Kong/public-ui-components/commit/bdc237de9cc64a3284d9612e1e4bceb3d0280e0a)), closes [#232](https://github.com/Kong/public-ui-components/issues/232) [#233](https://github.com/Kong/public-ui-components/issues/233) [#234](https://github.com/Kong/public-ui-components/issues/234) [#235](https://github.com/Kong/public-ui-components/issues/235) [#236](https://github.com/Kong/public-ui-components/issues/236) [#237](https://github.com/Kong/public-ui-components/issues/237) [#238](https://github.com/Kong/public-ui-components/issues/238) [#239](https://github.com/Kong/public-ui-components/issues/239) [#240](https://github.com/Kong/public-ui-components/issues/240)
+
+
+
+
+
 ## [0.2.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@0.2.26...@kong-ui-public/misc-widgets@0.2.27) (2023-03-11)
 
 **Note:** Version bump only for package @kong-ui-public/misc-widgets

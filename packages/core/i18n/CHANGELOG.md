@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.3.4...@kong-ui-public/i18n@0.4.0) (2023-03-14)
+
+
+### Bug Fixes
+
+* **i18n:** trigger release ([#248](https://github.com/Kong/public-ui-components/issues/248)) ([90ca1f8](https://github.com/Kong/public-ui-components/commit/90ca1f8171f66c5e574553958d1273afd20b59f8))
+
+
+### Features
+
+* **i18n:** translation key autocomplete ([#231](https://github.com/Kong/public-ui-components/issues/231)) ([bdc237d](https://github.com/Kong/public-ui-components/commit/bdc237de9cc64a3284d9612e1e4bceb3d0280e0a)), closes [#232](https://github.com/Kong/public-ui-components/issues/232) [#233](https://github.com/Kong/public-ui-components/issues/233) [#234](https://github.com/Kong/public-ui-components/issues/234) [#235](https://github.com/Kong/public-ui-components/issues/235) [#236](https://github.com/Kong/public-ui-components/issues/236) [#237](https://github.com/Kong/public-ui-components/issues/237) [#238](https://github.com/Kong/public-ui-components/issues/238) [#239](https://github.com/Kong/public-ui-components/issues/239) [#240](https://github.com/Kong/public-ui-components/issues/240)
+
+
+
+
+
 ## [0.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.3.3...@kong-ui-public/i18n@0.3.4) (2023-03-09)
 
 
