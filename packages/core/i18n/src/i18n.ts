@@ -55,7 +55,7 @@ export const createI18n = <MessageSource extends Record<string, any>>(locale: Su
   return localIntl
 }
 
-// this returns global (application of Intl)
+// Returns global (application of Intl)
 export default function useI18n<MessageSource extends Record<string, any>>(): IntlShapeEx<MessageSource> {
   return globIntl
 }
