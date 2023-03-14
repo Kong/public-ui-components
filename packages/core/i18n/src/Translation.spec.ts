@@ -11,12 +11,12 @@ const english = {
   },
 }
 
-const i18n = createI18n('en-us', english, true)
+const i18n = createI18n<typeof english>('en-us', english, true)
 
 describe('TranslationComponent', () => {
   it('should render', () => {
     const wrapper = mount({
-      components: { I18nT: i18nTComponent(i18n) },
+      components: { I18nT: i18nTComponent<typeof english>(i18n) },
 
       setup: () => {
         return {

@@ -8,7 +8,7 @@
       v-else
       data-testid="document-viewer-error"
     >
-      {{ i18n.t('docViewer.error') }}
+      {{ i18n.t('documentViewer.error') }}
     </div>
   </div>
 </template>
