@@ -37,7 +37,7 @@ import { createI18n, Translation } from '@kong-ui-public/i18n'
 import english from './locales/en.json'
 
 const i18n = createI18n<typeof english>('en-us', english, true)
-app.use(Translation, { i18n })
+app.use(Translation.install<typeof english>, { i18n })
 
 // composables/index.ts
 import { useI18n } from '@kong-ui-public/i18n'
@@ -61,7 +61,7 @@ import english from './locales/en.json'
 
 const i18n = createI18n<typeof english>('en-us', english, true)
 const app = createApp(App)
-app.use(Translation, { i18n })
+app.use(Translation.install<typeof english>, { i18n })
 
 app.mount('#app')
 ```
@@ -236,7 +236,7 @@ import english from './locales/en.json'
 //this will create Application instance of Intl object
 const i18n = createI18n<typeof english>('en-us', english, true)
 // this will register <i18n-t> component
-app.use(Translation, { i18n })
+app.use(Translation.install<typeof english>, { i18n })
 ```
 
 And then, anywhere in application code where `i18n` is needed
