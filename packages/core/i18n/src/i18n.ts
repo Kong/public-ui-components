@@ -2,16 +2,17 @@
 import { Options as IntlMessageFormatOptions } from 'intl-messageformat'
 import { createIntl, createIntlCache, MessageDescriptor } from '@formatjs/intl'
 import { flatten } from 'flat'
-import type { IntlShapeEx, SupportedLocales, MessageFormatPrimitiveValue } from './types'
+import type { IntlShapeEx, PathToDotNotation, SupportedLocales, MessageFormatPrimitiveValue } from './types'
 
 // this is internal formatJS function that caches instance of Intl and prevent memory leaks
 const intlCache = createIntlCache()
 
 // this is global var to hold global (application) instance of Intl
-let globIntl: IntlShapeEx
+// typed as any since we don't have access to MessageSource here
+let globIntl: any
 
-export const createI18n = <T>(locale: SupportedLocales, messages: T, isGlobal: boolean = false): IntlShapeEx<T> => {
-  const intl = createIntl(
+export const createI18n = <MessageSource extends Record<string, any>>(locale: SupportedLocales, messages: MessageSource, isGlobal: boolean = false): IntlShapeEx<MessageSource> => {
+  const intlOriginal = createIntl(
     {
       locale,
       messages: flatten(messages, {
@@ -21,26 +22,32 @@ export const createI18n = <T>(locale: SupportedLocales, messages: T, isGlobal: b
     intlCache,
   )
 
-  const t = (translationKey: string, values?: Record<string, MessageFormatPrimitiveValue> | undefined, opts?: IntlMessageFormatOptions): string => {
+  // Remove the native $t function from intlOriginal
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { $t, ...otherProps } = intlOriginal
+  const intl = otherProps
+
+  const t = (translationKey: PathToDotNotation<MessageSource, string>, values?: Record<string, MessageFormatPrimitiveValue> | undefined, opts?: IntlMessageFormatOptions): string => {
     return intl.formatMessage(<MessageDescriptor>{ id: translationKey }, values, opts)
   }
 
-  const te = (key: string): boolean => {
-    return !!intl.messages[key]
+  const te = (translationKey: PathToDotNotation<MessageSource, string>): boolean => {
+    return !!intl.messages[translationKey]
   }
 
-  const tm = (key: string): Array<string> => {
+  const tm = (translationKey: PathToDotNotation<MessageSource, string>): Array<string> => {
     // @ts-ignore
-    return intl.messages[key] || []
+    return intl.messages[translationKey] || []
   }
 
-  const localIntl = {
+  const localIntl: IntlShapeEx<MessageSource> = {
     t,
     te,
     tm,
     ...intl,
     source: messages,
   }
+
   if (isGlobal) {
     globIntl = localIntl
   }
@@ -49,6 +56,6 @@ export const createI18n = <T>(locale: SupportedLocales, messages: T, isGlobal: b
 }
 
 // this returns global (application of Intl)
-export default function useI18n(): IntlShapeEx {
+export default function useI18n<MessageSource extends Record<string, any>>(): IntlShapeEx<MessageSource> {
   return globIntl
 }

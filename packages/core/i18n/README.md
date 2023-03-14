@@ -1,6 +1,9 @@
 # @kong-ui-public/i18n
 
 - [Purpose](#purpose)
+- [TypeScript Support](#typescript-support)
+  - [Global Registration](#global-registration)
+  - [Vue Plugin](#vue-plugin)
 - [Use in application](#use-in-application)
 - [Use in shared component](#use-in-shared-component)
 - [Formatting messages](#formatting-messages)
@@ -19,6 +22,50 @@ This is a wrapper around [FormatJS](https://formatjs.io/docs/intl) that allows c
 - format numbers
 - format dates
 
+## TypeScript Support
+
+In order to provide full autocompletion for the translation keys, you need to pass the type of the `messages` object to the various init functions, as shown here:
+
+> **Note**: For the `i18n-t` component (`Translation.ts`), the type checking and auto-completion for the `keypath` prop are still a work-in-progress due to [the issue described here](https://github.com/Kong/public-ui-components/pull/231).
+>
+
+### Global Registration
+
+```ts
+// main.ts
+import { createI18n, Translation } from '@kong-ui-public/i18n'
+import english from './locales/en.json'
+
+const i18n = createI18n<typeof english>('en-us', english, true)
+app.use(Translation, { i18n })
+
+// composables/index.ts
+import { useI18n } from '@kong-ui-public/i18n'
+import english from './locales/en.json'
+
+export default {
+  // Be sure to provide the interface when exporting
+  useI18n: useI18n<typeof english>,
+}
+
+// Component.vue
+import composables from './composables'
+const i18n = composables.useI18n()
+```
+
+### Vue Plugin
+
+```ts
+import { Translation, createI18n } from '@kong-ui-public/i18n'
+import english from './locales/en.json'
+
+const i18n = createI18n<typeof english>('en-us', english, true)
+const app = createApp(App)
+app.use(Translation, { i18n })
+
+app.mount('#app')
+```
+
 ## Use in application
 
 When used in application we only need to instantiate `Intl` object once, during application hydration, and then we can use it anywhere in the app via `useI18n` composable.
@@ -32,7 +79,7 @@ import english from './locales/en.json'
 ...
 
 // this will create Application instance of Intl object
-createI18n('en-us', english, true)
+createI18n<typeof english>('en-us', english, true)
 ```
 
 And then, anywhere in application code where `i18n` is needed:
@@ -44,10 +91,10 @@ And then, anywhere in application code where `i18n` is needed:
 
 <script setup lang="ts">
 import { useI18n } from '@kong-ui-public/i18n'
-const i18n = useI18n()
+import english from './locales/en.json'
+const i18n = useI18n<typeof english>()
 </script>
 ```
-
 
 ## Use in shared component
 
@@ -66,7 +113,7 @@ import english from '../locales/en.json'
 
 // this will instantiate `Intl` local to this component, using component's english messages.
 // TODO: load and pass messages based on language passed from consuming application
-const i18n = createI18n(props.locale || 'en-us', english)
+const i18n = createI18n<typeof english>(props.locale || 'en-us', english)
 </script>
 ```
 
@@ -103,7 +150,8 @@ const i18n = createI18n(props.locale || 'en-us', english)
 
 <script setup lang="ts">
 import { useI18n } from '@kong-ui-public/i18n'
-const i18n = useI18n()
+import english from './locales/en.json'
+const i18n = useI18n<typeof english>()
 </script>
 ```
 
@@ -151,8 +199,9 @@ In `khcp-ui` there are many places where instead of using Intl function we are a
 
 <script setup lang="ts">
 import { useI18n } from '@kong-ui-public/i18n'
+import english from './locales/en.json'
 
-const i18n = useI18n()
+const i18n = useI18n<typeof english>()
 const helpText = i18n.source.components.docUploadCard
 </script>
 ```
@@ -185,7 +234,7 @@ import english from './locales/en.json'
 ...
 
 //this will create Application instance of Intl object
-const i18n = createI18n('en-us', english, true)
+const i18n = createI18n<typeof english>('en-us', english, true)
 // this will register <i18n-t> component
 app.use(Translation, { i18n })
 ```
@@ -249,7 +298,6 @@ And then, anywhere in application code where `i18n` is needed
 
 In some cases we do not have access to the Vue `app` and cannot relay on registered i18nT plugin. Working on standalone components in `public-ui-components` is of those cases. And for this your component will look like:
 
-
 ```html
 <template>
   <i18n-t
@@ -263,8 +311,8 @@ In some cases we do not have access to the Vue `app` and cannot relay on registe
   import { createI18n, i18nTComponent } from '@kong-ui-public/i18n'
   import english from './locales/en.json'
 
-  const i18n = createI18n('en-us', english)
-  const i18nT = i18nTComponent(i18n)
+  const i18n = createI18n<typeof english>('en-us', english)
+  const i18nT = i18nTComponent<typeof english>(i18n)
 
 </script>
 ```
@@ -289,10 +337,10 @@ Or in old `defineComponent` way
   import english from './locales/en.json'
 
   export default defineComponent({
-    components: { i18nT: i18nTComponent() },
+    components: { i18nT: i18nTComponent<typeof english>() },
     setup() {
       return {
-        i18n: createI18n('en-us', english)
+        i18n: createI18n<typeof english>('en-us', english)
       }
     }
   })
