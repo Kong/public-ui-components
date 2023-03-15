@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "build": "cross-env FORCE_COLOR=1 pnpm -r run build",
-    "build:visualize": "cross-env FORCE_COLOR=1 pnpm -r run build:visualize",
     "lint": "cross-env FORCE_COLOR=1 pnpm -r run lint",
     "lint:fix": "cross-env FORCE_COLOR=1 pnpm -r run lint:fix",
     "stylelint": "cross-env FORCE_COLOR=1 pnpm -r run stylelint",
