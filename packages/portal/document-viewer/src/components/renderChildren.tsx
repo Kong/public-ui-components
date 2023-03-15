@@ -1,5 +1,5 @@
 import { Component } from 'vue'
-import { BaseNode, isTableHeaderNode, TableRowSection } from '../types'
+import { BaseNode, isTableHeaderNode, isListNode, TableRowSection } from '../types'
 import Blockquote from './nodes/Blockquote.vue'
 import Code from './nodes/Code.vue'
 import CodeBlock from './nodes/CodeBlock.vue'
@@ -11,6 +11,7 @@ import Strikethrough from './nodes/Strikethrough.vue'
 import Table from './nodes/Table.vue'
 import TableRow from './nodes/TableRow.vue'
 import TableCell from './nodes/TableCell.vue'
+import TaskCheckbox from './nodes/TaskCheckbox.vue'
 import Text from './nodes/Text.vue'
 import TextBlock from './nodes/TextBlock.vue'
 import Paragraph from './nodes/Paragraph.vue'
@@ -36,6 +37,7 @@ const nodeTypeToComponentMap: Record<string, Component> = {
   table_header: TableRow,
   table_row: TableRow,
   table_cell: TableCell,
+  task_checkbox: TaskCheckbox,
   text: Text,
   text_block: TextBlock,
 }
@@ -67,6 +69,21 @@ export default function renderChildren<ChildTypes extends BaseNode>(children: Ar
     if (isTableHeaderNode(child)) {
       // Need to tell the section that this is a header tag
       child.section = TableRowSection.header
+    }
+
+    if (isListNode(child)) {
+      // Check if list items contain a task list item
+      const containsTaskListItems = child.children?.some((listItem) => {
+        return listItem.children?.some((itemContent) => {
+          return itemContent.children?.some((content) => content.type === 'task_checkbox')
+        })
+      })
+
+      return (
+        <component hasTaskItems={containsTaskListItems} {...restProps} parent={parent}>
+          {() => children && renderChildren(children, child)}
+        </component>
+      )
     }
 
     if (child?.type === 'code_block') {
