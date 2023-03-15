@@ -148,7 +148,7 @@ The following scripts should be defined within your package so that it's properl
 
 - `dev` to run the local sandbox of your component utilizing the files within the local `/sandbox/*` directory.
 - `build` to compile/transpile your package into a `dist/` artifact
-  - `build:package` to build the package for production (will also produce a `/packages/{packageName}/bundle-analyzer/stats-treemap.html` file via `rollup-bundle-analyzer` that shows the stats and metrics for your package dependencies; see existing packages)
+  - `build:package` to build the package for production (will also produce a `/packages/{workspace}/{packageName}/bundle-analyzer/stats-treemap.html` file via `rollup-bundle-analyzer` that shows the stats and metrics for your package dependencies; see existing packages)
   - `build:types` to generate the types
 - `preview` to build your sandbox and build as if it was an app being built for production
   - `preview:package` (see existing examples)
