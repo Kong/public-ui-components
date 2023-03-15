@@ -10,8 +10,8 @@ li {
 
   :deep(>) {
     ul, ol {
-      margin-left: 16px !important;
       margin-bottom: unset;
+      margin-left: 16px !important;
     }
 
     p, span {
