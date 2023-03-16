@@ -68,37 +68,41 @@
         </nav>
       </div>
 
-      <SidebarFooter
-        v-if="profileName || profileItems.length"
-        class="sidebar-profile-menu"
-        :item-count="profileItems.length"
-        :name="profileName"
-      >
-        <KDropdownItem
-          v-for="item in profileItems"
-          :key="item.name"
-          :class="[{ 'has-divider': item.hasDivider },{ 'external-profile-dropdown-link': (item.external || item.newWindow) && typeof item.to === 'string' }]"
-          :has-divider="item.hasDivider"
-          :item="(item.external || item.newWindow) && typeof item.to === 'string' ? undefined : { label: item.name, to: item.to }"
-          @click="itemClick(item)"
-        >
-          <a
-            v-if="(item.external || item.newWindow) && typeof item.to === 'string'"
-            class="sidebar-item-external-link"
-            :href="item.to"
-            :target="item.newWindow ? '_blank' : undefined"
+      <div class="sidebar-footer">
+        <slot name="footer">
+          <SidebarFooter
+            v-if="profileName || profileItems.length"
+            class="sidebar-profile-menu"
+            :item-count="profileItems.length"
+            :name="profileName"
           >
-            {{ item.name }}
-            <KIcon
-              v-if="item.newWindow"
-              color="var(--black-70, rgba(0,0,0,0.7))"
-              icon="externalLink"
-              size="20"
-              viewBox="0 0 20 20"
-            />
-          </a>
-        </KDropdownItem>
-      </SidebarFooter>
+            <KDropdownItem
+              v-for="item in profileItems"
+              :key="item.name"
+              :class="[{ 'has-divider': item.hasDivider },{ 'external-profile-dropdown-link': (item.external || item.newWindow) && typeof item.to === 'string' }]"
+              :has-divider="item.hasDivider"
+              :item="(item.external || item.newWindow) && typeof item.to === 'string' ? undefined : { label: item.name, to: item.to }"
+              @click="itemClick(item)"
+            >
+              <a
+                v-if="(item.external || item.newWindow) && typeof item.to === 'string'"
+                class="sidebar-item-external-link"
+                :href="item.to"
+                :target="item.newWindow ? '_blank' : undefined"
+              >
+                {{ item.name }}
+                <KIcon
+                  v-if="item.newWindow"
+                  color="var(--black-70, rgba(0,0,0,0.7))"
+                  icon="externalLink"
+                  size="20"
+                  viewBox="0 0 20 20"
+                />
+              </a>
+            </KDropdownItem>
+          </SidebarFooter>
+        </slot>
+      </div>
     </aside>
   </FocusTrap>
 </template>
@@ -407,6 +411,14 @@ onBeforeUnmount(() => {
     &:hover {
       @include scrollbarVisible;
     }
+  }
+
+  .sidebar-footer {
+    align-items: center;
+    color: var(--steel-300, #A3B6D9);
+    display: flex;
+    font-weight: 500;
+    width: 100%;
   }
 
   :deep(.k-dropdown-item) {

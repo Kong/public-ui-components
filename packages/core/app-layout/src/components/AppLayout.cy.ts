@@ -195,6 +195,18 @@ describe('<AppLayout />', () => {
         cy.get('[data-testid="app-layout-sidebar-top-slot-content"]').should('be.visible')
       })
 
+      it('should render content passed in through sidebar-footer slot', () => {
+        cy.mount(AppLayout, {
+          slots: {
+            'sidebar-footer': [
+              '<span data-testid="app-layout-sidebar-footer-slot-content">Sidebar footer</span>',
+            ],
+          },
+        })
+
+        cy.get('[data-testid="app-layout-sidebar-footer-slot-content"]').should('be.visible')
+      })
+
       it('should have a top-left border-radius on the main content container', () => {
         cy.mount(AppLayout)
 

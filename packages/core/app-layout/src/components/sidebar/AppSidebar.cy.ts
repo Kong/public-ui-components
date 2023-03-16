@@ -244,7 +244,7 @@ describe('<AppSidebar />', () => {
 
         // Profile items
         describe('profile items', () => {
-          it('does not render the profile item if no profileItems or profileName are passed', () => {
+          it('does not render the profile items if no profileItems or profileName are passed', () => {
             cy.mount(AppSidebar, {
               props: {
                 open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
@@ -254,7 +254,29 @@ describe('<AppSidebar />', () => {
               },
             })
 
-            cy.get('.kong-ui-app-sidebar').find('.sidebar-footer').should('not.exist')
+            cy.get('.kong-ui-app-sidebar').find('.sidebar-footer-nav').should('not.exist')
+          })
+
+          it('does not render the profile items if footer slot content is provided', () => {
+            const name = 'Marty McFly'
+            const footerSlotContent = 'We don\'t have enough road to get up to 88.'
+
+            cy.mount(AppSidebar, {
+              props: {
+                open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
+                mobileEnabled: true,
+                topItems,
+                bottomItems,
+                profileItems,
+                profileName: name,
+              },
+              slots: {
+                footer: () => h('div', {}, footerSlotContent),
+              },
+            })
+
+            cy.get('.kong-ui-app-sidebar').find('.sidebar-footer-nav').should('not.exist')
+            cy.get('.kong-ui-app-sidebar').find('.sidebar-footer').should('contain.text', footerSlotContent)
           })
 
           it('renders just the profileName if no nav items are passed', () => {
@@ -560,7 +582,7 @@ describe('<AppSidebar />', () => {
 
         // Slots
         describe('slots', () => {
-          // Header slot
+          // header slot
           describe('header', () => {
             it('renders header slot content', () => {
               const headerSlotText = 'This is my logo'
@@ -598,6 +620,7 @@ describe('<AppSidebar />', () => {
             })
           })
 
+          // top slot
           describe('top', () => {
             it('renders top slot content', () => {
               const headerSlotText = 'This is my logo'
@@ -618,6 +641,27 @@ describe('<AppSidebar />', () => {
 
               cy.get('.sidebar-header').should('contain.text', headerSlotText)
               cy.get('.sidebar-top').should('contain.text', topSlotText)
+            })
+          })
+
+          // footer slot
+          describe('footer', () => {
+            it('renders footer slot content', () => {
+              const footerSlotText = 'This is my footer text'
+
+              cy.mount(AppSidebar, {
+                props: {
+                  open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
+                  mobileEnabled: true,
+                  mobileHeaderVisible: ['mobile', 'tablet'].includes(viewportName), // force mobile header to be visible
+                  headerHeight: 100,
+                },
+                slots: {
+                  footer: () => h('div', {}, footerSlotText),
+                },
+              })
+
+              cy.get('.sidebar-footer').should('contain.text', footerSlotText)
             })
           })
         })

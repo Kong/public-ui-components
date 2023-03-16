@@ -105,6 +105,8 @@ An array of `SidebarPrimaryItem` objects to display in the bottom navigation lis
 
 An array of `SidebarProfileItem` objects to display in the sidebar footer profile popup menu.
 
+This prop is ignored if [`footer` slot content](#footer) is provided.
+
 #### `profileName`
 
 - type: `string`
@@ -112,6 +114,8 @@ An array of `SidebarProfileItem` objects to display in the sidebar footer profil
 - default: `''`
 
 A string to display in the sidebar footer profile area.
+
+This prop is ignored if [`footer` slot content](#footer) is provided.
 
 #### `headerHeight`
 
@@ -222,6 +226,12 @@ Utilize the `header` slot to inject your application's logo into the top of the 
 #### `top`
 
 Utilize the `top` slot to inject additional UI into the top of the sidebar, below the `header` slot, above the `topItems`.
+
+#### `footer`
+
+Utilize the `footer` slot to inject content into the fixed area at the bottom of the sidebar, below the `bottomItems`.
+
+If `footer` slot content is provided, it will override the `profileItems` and `profileName`, preventing the sidebar bottom profile menu and popup menu from appearing.
 
 ### Events
 
