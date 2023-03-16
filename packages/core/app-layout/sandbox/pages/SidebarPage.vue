@@ -49,11 +49,6 @@
           </router-link>
         </div>
       </template>
-      <!-- <template #footer>
-        <div class="example-footer">
-          <p>This is example footer <a href="#">with a link</a></p>
-        </div>
-      </template> -->
     </AppSidebar>
     <main>
       <p>This is the SIDEBAR page.</p>

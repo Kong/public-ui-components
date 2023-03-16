@@ -414,9 +414,10 @@ onBeforeUnmount(() => {
   }
 
   .sidebar-footer {
+    align-items: center;
     color: var(--steel-300, #A3B6D9);
     display: flex;
-    align-items: center;
+    font-weight: 500;
     width: 100%;
   }
 

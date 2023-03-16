@@ -88,6 +88,12 @@
       >
         <slot name="sidebar-top" />
       </template>
+      <template
+        v-if="slotContent.sidebarFooter"
+        #footer
+      >
+        <slot name="sidebar-footer" />
+      </template>
     </AppSidebar>
 
     <main
@@ -171,6 +177,7 @@ const slotContent = reactive({
   navbarMobileLogo: computed((): boolean => !!slots['navbar-mobile-logo']),
   sidebarHeader: computed((): boolean => !!slots['sidebar-header']),
   sidebarTop: computed((): boolean => !!slots['sidebar-top']),
+  sidebarFooter: computed((): boolean => !!slots['sidebar-footer']),
 })
 
 // Evaluate variables from injected symbols; fallback to prop values.

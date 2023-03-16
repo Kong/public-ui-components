@@ -68,6 +68,11 @@
         <div>Top Slot Content</div>
       </div>
     </template>
+    <template #sidebar-footer>
+      <div class="sidebar-footer-slot-content">
+        <div>Footer Slot Content</div>
+      </div>
+    </template>
 
     <!-- Default slot content -->
 
