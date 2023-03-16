@@ -2,7 +2,7 @@
   <nav
     aria-haspopup="true"
     aria-label="Profile Menu"
-    class="sidebar-footer"
+    class="sidebar-footer-nav"
   >
     <div class="sidebar-profile-link">
       <div class="sidebar-item-icon">
@@ -18,7 +18,7 @@
           </div>
           <KDropdownMenu
             v-else
-            :kpop-attributes="{ placement: 'right', popoverClasses: 'ml-5 sidebar-profile-menu-popover', target: '.sidebar-footer' }"
+            :kpop-attributes="{ placement: 'right', popoverClasses: 'ml-5 sidebar-profile-menu-popover', target: '.sidebar-footer-nav' }"
             width="240"
           >
             <a
@@ -61,6 +61,10 @@ const hasProfileItems = computed((): boolean => props.itemCount > 0)
 
 <style lang="scss" scoped>
 @import "../../styles/variables";
+
+.sidebar-footer-nav {
+  width: 100%;
+}
 
 .sidebar-item-icon {
   display: flex;
