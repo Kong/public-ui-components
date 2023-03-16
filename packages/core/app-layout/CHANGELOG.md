@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.13.30...@kong-ui-public/app-layout@0.14.0) (2023-03-16)
+
+
+### Features
+
+* **app-layout:** add sidebar footer slot [KHCP-6623] ([#255](https://github.com/Kong/public-ui-components/issues/255)) ([0b53c0f](https://github.com/Kong/public-ui-components/commit/0b53c0f833b45188dbe413be6ea152092055b9fd))
+
+
+
+
+
 ## [0.13.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.13.29...@kong-ui-public/app-layout@0.13.30) (2023-03-15)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
