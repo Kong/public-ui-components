@@ -39,6 +39,7 @@ A Kong UI application layout component that provides a responsive navbar, sideba
 - `AppLayout.vue`
 - `AppNavbar.vue`
 - `NavbarDropdownMenu.vue`
+- `AccountDropdown.vue`
 - `AppSidebar.vue`
 - `SidebarToggle.vue`
 - `AppError.vue`

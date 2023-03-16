@@ -2,6 +2,7 @@ import type { App } from 'vue'
 import AppLayout from './components/AppLayout.vue'
 import AppNavbar from './components/navbar/AppNavbar.vue'
 import NavbarDropdownMenu from './components/navbar/NavbarDropdownMenu.vue'
+import AccountDropdown from './components/navbar/AccountDropdown.vue'
 
 import AppSidebar from './components/sidebar/AppSidebar.vue'
 import SidebarToggle from './components/sidebar/SidebarToggle.vue'
@@ -25,6 +26,7 @@ export {
   SidebarToggle,
   AppError,
   NavbarDropdownMenu,
+  AccountDropdown,
 }
 
 export * from './types'
