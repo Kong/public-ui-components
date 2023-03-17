@@ -2,7 +2,7 @@
   <KDropdownMenu
     appearance="selectionMenu"
     class="top-bar-dropdown-menu"
-    :kpop-attributes="{ placement: 'bottomStart', disabled: disabled }"
+    :kpop-attributes="{ placement: 'bottomStart' }"
     :label="userInitials"
     :width="width"
     @change="(selection: any) => optionSelected(selection)"
