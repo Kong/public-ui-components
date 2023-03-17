@@ -171,9 +171,8 @@ importers:
       '@kong-ui-public/i18n': workspace:^0.4.2
       '@kong/kongponents': ^8.40.4
       vue: ^3.2.47
-    dependencies:
-      '@kong-ui-public/i18n': link:../i18n
     devDependencies:
+      '@kong-ui-public/i18n': link:../i18n
       '@kong/kongponents': 8.40.4_vue@3.2.47
       vue: 3.2.47
 
@@ -192,9 +191,8 @@ importers:
       '@kong-ui-public/i18n': workspace:^0.4.2
       '@kong/kongponents': ^8.40.4
       vue: ^3.2.47
-    dependencies:
-      '@kong-ui-public/i18n': link:../i18n
     devDependencies:
+      '@kong-ui-public/i18n': link:../i18n
       '@kong/kongponents': 8.40.4_vue@3.2.47
       vue: 3.2.47
 
