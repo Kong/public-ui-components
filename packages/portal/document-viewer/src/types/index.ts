@@ -65,6 +65,10 @@ export interface ListNode extends BaseNode<'list'> {
   children: Array<ListItemNode>
 }
 
+export function isListNode(o: any): o is ListNode {
+  return !!(o?.type === 'list')
+}
+
 export interface LinkNode extends BaseNode<'link'> {
   href: string
 }

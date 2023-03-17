@@ -1,5 +1,8 @@
 <template>
-  <component :is="tag">
+  <component
+    :is="tag"
+    :class="{ 'has-task-items': hasTaskItems}"
+  >
     <slot />
   </component>
 </template>
@@ -10,12 +13,16 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hasTaskItems: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const tag = props.isOrdered ? 'ol' : 'ul'
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 ul, ol {
   font-size: 14px;
   margin-bottom: var(--spacing-sm, 12px);
@@ -29,5 +36,13 @@ ol {
 
 ul {
   list-style: disc;
+}
+
+.has-task-items {
+  margin-left: unset;
+
+  :deep(li) {
+    list-style: none;
+  }
 }
 </style>

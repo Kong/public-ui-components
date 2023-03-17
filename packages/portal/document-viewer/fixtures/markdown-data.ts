@@ -346,6 +346,108 @@ export const defaultDocument = {
       ],
     },
     {
+      children: [
+        {
+          children: [
+            {
+              children: [
+                {
+                  checked: true,
+                  type: 'task_checkbox',
+                },
+                {
+                  text: 'I am an checked task_checkbox',
+                  type: 'text',
+                },
+              ],
+              type: 'paragraph',
+            },
+          ],
+          type: 'list_item',
+        },
+        {
+          children: [
+            {
+              children: [
+                {
+                  checked: true,
+                  type: 'task_checkbox',
+                },
+                {
+                  text: 'I am a root-level checked task_checkbox',
+                  type: 'text',
+                },
+              ],
+              type: 'paragraph',
+            },
+            {
+              children: [
+                {
+                  children: [
+                    {
+                      children: [
+                        {
+                          checked: false,
+                          type: 'task_checkbox',
+                        },
+                        {
+                          text: 'I am a nested unchecked task_checkbox',
+                          type: 'text',
+                        },
+                      ],
+                      type: 'text_block',
+                    },
+                  ],
+                  type: 'list_item',
+                },
+                {
+                  children: [
+                    {
+                      children: [
+                        {
+                          checked: true,
+                          type: 'task_checkbox',
+                        },
+                        {
+                          text: 'I am a nested checked task_checkbox',
+                          type: 'text',
+                        },
+                      ],
+                      type: 'text_block',
+                    },
+                  ],
+                  type: 'list_item',
+                },
+              ],
+              isOrdered: false,
+              type: 'list',
+            },
+          ],
+          type: 'list_item',
+        },
+        {
+          children: [
+            {
+              children: [
+                {
+                  checked: false,
+                  type: 'task_checkbox',
+                },
+                {
+                  text: 'I am an unnested unchecked task_checkbox',
+                  type: 'text',
+                },
+              ],
+              type: 'paragraph',
+            },
+          ],
+          type: 'list_item',
+        },
+      ],
+      isOrdered: false,
+      type: 'list',
+    },
+    {
       type: 'heading',
       level: 2,
       children: [
