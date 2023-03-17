@@ -152,7 +152,7 @@ importers:
     specifiers:
       '@types/inquirer': ^9.0.3
       '@types/node-emoji': ^1.8.2
-      boxen: ^7.0.1
+      boxen: ^7.0.2
       inquirer: ^9.1.4
       nanospinner: ^1.1.0
       node-emoji: ^1.11.0
@@ -160,7 +160,7 @@ importers:
     devDependencies:
       '@types/inquirer': 9.0.3
       '@types/node-emoji': 1.8.2
-      boxen: 7.0.1
+      boxen: 7.0.2
       inquirer: 9.1.4
       nanospinner: 1.1.0
       node-emoji: 1.11.0
@@ -3663,8 +3663,8 @@ packages:
       wrap-ansi: 7.0.0
     dev: true
 
-  /boxen/7.0.1:
-    resolution: {integrity: sha512-8k2eH6SRAK00NDl1iX5q17RJ8rfl53TajdYxE3ssMLehbg487dEVgsad4pIsZb/QqBgYWIl6JOauMTLGX2Kpkw==}
+  /boxen/7.0.2:
+    resolution: {integrity: sha512-1Z4UJabXUP1/R9rLpoU3O2lEMnG3pPLAs/ZD2lF3t2q7qD5lM8rqbtnvtvm4N0wEyNlE+9yZVTVAGmd1V5jabg==}
     engines: {node: '>=14.16'}
     dependencies:
       ansi-align: 3.0.1
