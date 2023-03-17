@@ -64,5 +64,9 @@ const optionSelected = (option: DropdownItem) => {
     justify-content: center;
     width: 48px;
   }
+
+  :deep(.k-dropdown-popover) {
+    width: 242px !important;
+  }
 }
 </style>
