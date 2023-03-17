@@ -68,5 +68,11 @@ const optionSelected = (option: DropdownItem) => {
   height: 48px;
   justify-content: center;
   width: 48px;
+
+  &:hover,
+  &:focus {
+    background: #9396FC; /* Purple/300 */
+  }
+
 }
 </style>
