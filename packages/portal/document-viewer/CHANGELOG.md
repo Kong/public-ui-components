@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.6.3...@kong-ui-public/document-viewer@0.7.0) (2023-03-17)
+
+
+### Features
+
+* **document-viewer:** support task lists (TDX-2943) ([#252](https://github.com/Kong/public-ui-components/issues/252)) ([8d2a732](https://github.com/Kong/public-ui-components/commit/8d2a7326a9a8f0dd83069de14c5cd80263e77653))
+
+
+
+
+
 ## [0.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.6.2...@kong-ui-public/document-viewer@0.6.3) (2023-03-17)
 
 **Note:** Version bump only for package @kong-ui-public/document-viewer
