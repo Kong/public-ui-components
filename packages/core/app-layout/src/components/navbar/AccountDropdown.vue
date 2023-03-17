@@ -58,21 +58,11 @@ const optionSelected = (option: DropdownItem) => {
 .account-dropdown {
   display: flex;
   margin-right: 4px;
-}
-.k-dropdown::v-deep .k-button.primary {
-  align-items: center;
-  background: #9396FC; /* Purple/300 */
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  height: 48px;
-  justify-content: center;
-  width: 48px;
-
-  &:hover,
-  &:focus {
+  :deep(.k-button.primary), :deep(.k-button.primary:hover:not(:disabled)) {
     background: #9396FC; /* Purple/300 */
+    height: 48px;
+    justify-content: center;
+    width: 48px;
   }
-
 }
 </style>
