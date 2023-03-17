@@ -49,6 +49,15 @@
       >
         {{ sidebarIsHidden ? 'Show' : 'Hide' }} sidebar
       </KButton>
+      <AccountDropdown
+        :options="[
+          { label: 'Jackie Jiang', to: '/' },
+          { label: 'My Account', to: '/' },
+          { label: 'Personal Account Tokens', to: '/' },
+          { label: 'Log Out', to: '/' },
+        ]"
+        user-initials="AB"
+      />
     </template>
     <template #sidebar-header>
       <div class="kong-logo d-flex w-100">
@@ -92,7 +101,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 // Sandbox only
-import { SidebarPrimaryItem, SidebarProfileItem, SidebarSecondaryItem } from '../../src'
+import { AccountDropdown, SidebarPrimaryItem, SidebarProfileItem, SidebarSecondaryItem } from '../../src'
 import NavLinks from '../components/NavLinks.vue'
 import AppGruceLogo from '../components/icons/AppGruceLogo.vue'
 import AppLogo from '../components/icons/AppLogo.vue'

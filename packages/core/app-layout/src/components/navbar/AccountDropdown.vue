@@ -1,9 +1,9 @@
 <template>
   <KDropdownMenu
-    appearance="selectionMenu"
-    class="top-bar-dropdown-menu"
+    class="account-dropdown"
     :kpop-attributes="{ placement: 'bottomStart' }"
     :label="userInitials"
+    size="small"
     :width="width"
     @change="(selection: any) => optionSelected(selection)"
   >
@@ -55,8 +55,18 @@ const optionSelected = (option: DropdownItem) => {
 </script>
 
 <style lang="scss" scoped>
-.top-bar-dropdown-menu {
+.account-dropdown {
   display: flex;
   margin-right: 4px;
+}
+.k-dropdown::v-deep .k-button.primary {
+  align-items: center;
+  background: #9396FC; /* Purple/300 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 48px;
+  justify-content: center;
+  width: 48px;
 }
 </style>
