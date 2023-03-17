@@ -18,6 +18,7 @@ This package is a good home for random, one-off components that aren't complex a
 
 - `vue` must be initialized in the host application
 - `@kong/kongponents` must be available as a `dependency` in the host application, along with the package's style imports. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents).
+- `@kong-ui-public/i18n` must be available as a `dependency` in the host application.
 
 ## Usage
 

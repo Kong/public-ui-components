@@ -31,6 +31,7 @@ A Kong UI component for displaying uuid and copying it to clipboard.
 - `@kong/kongponents` must be available as a `dependency` in the host application, along with the package's style imports. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents). Specifically, the following Kongponents must be available:
   - `KClipboardProvider`
   - `KIcon`
+- `@kong-ui-public/i18n` must be available as a `dependency` in the host application.
 
 ## Usage
 
