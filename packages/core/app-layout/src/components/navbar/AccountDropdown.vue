@@ -2,10 +2,8 @@
   <KDropdownMenu
     appearance="selectionMenu"
     class="top-bar-dropdown-menu"
-    :disabled="disabled"
-    :disabled-tooltip="tooltip"
     :kpop-attributes="{ placement: 'bottomStart', disabled: disabled }"
-    :label="string"
+    :label="userInitials"
     :width="width"
     @change="(selection: any) => optionSelected(selection)"
   >
@@ -29,35 +27,27 @@
 
 <script setup lang="ts">
 import { ref, Ref, PropType } from 'vue'
-import type { NavbarDropdownMenuItem } from '../../types'
+import type { DropdownItem } from '@kong/kongponents'
 
 const props = defineProps({
   options: {
-    type: Array as PropType<NavbarDropdownMenuItem[]>,
-    default: () => ([]),
-  },
-  tooltip: {
-    type: String,
-    default: '',
+    type: Array as PropType<DropdownItem[]>,
+    required: true,
   },
   width: {
     type: String,
     default: '175',
   },
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
-  string: {
+  userInitials: {
     type: String,
     required: true,
   },
 })
 const emit = defineEmits(['change'])
 
-const selectedOption: Ref<NavbarDropdownMenuItem> = ref(props.options?.filter((option: NavbarDropdownMenuItem) => !!option.selected)[0] || props.options[0])
+const selectedOption: Ref<DropdownItem> = ref(props.options?.filter((option: DropdownItem) => !!option.selected)[0] || props.options[0])
 
-const optionSelected = (option: NavbarDropdownMenuItem) => {
+const optionSelected = (option: DropdownItem) => {
   selectedOption.value = option
   emit('change', selectedOption.value)
 }

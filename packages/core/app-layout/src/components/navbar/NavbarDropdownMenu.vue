@@ -29,11 +29,11 @@
 
 <script setup lang="ts">
 import { ref, Ref, PropType } from 'vue'
-import type { NavbarDropdownMenuItem } from '../../types'
+import type { DropdownItem } from '@kong/kongponents'
 
 const props = defineProps({
   options: {
-    type: Array as PropType<NavbarDropdownMenuItem[]>,
+    type: Array as PropType<DropdownItem[]>,
     default: () => ([]),
   },
   tooltip: {
@@ -51,9 +51,9 @@ const props = defineProps({
 })
 const emit = defineEmits(['change'])
 
-const selectedOption: Ref<NavbarDropdownMenuItem> = ref(props.options?.filter((option: NavbarDropdownMenuItem) => !!option.selected)[0] || props.options[0])
+const selectedOption: Ref<DropdownItem> = ref(props.options?.filter((option: DropdownItem) => !!option.selected)[0] || props.options[0])
 
-const optionSelected = (option: NavbarDropdownMenuItem) => {
+const optionSelected = (option: DropdownItem) => {
   selectedOption.value = option
   emit('change', selectedOption.value)
 }
