@@ -52,9 +52,10 @@
       <AccountDropdown
         :options="[
           { label: 'Jackie Jiang', to: '/' },
-          { label: 'My Account', to: '/' },
+          { label: 'jackie.jiang@konghq.com', to: '/' },
+          { label: 'My Account', to: '/', hasDivider: true },
           { label: 'Personal Account Tokens', to: '/' },
-          { label: 'Log Out', to: '/' },
+          { label: 'Log Out', to: '/', hasDivider: true },
         ]"
         user-initials="AB"
       />

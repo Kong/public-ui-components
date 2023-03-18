@@ -12,7 +12,9 @@
         <KDropdownItem
           v-for="option in options"
           :key="option.value"
+          :class="{ 'has-divider': option.hasDivider }"
           :data-testid="'select-' + option.value"
+          :has-divider="option.hasDivider"
           :selected="selectedOption.value === option.value"
           @click="handleSelection(option)"
         >
