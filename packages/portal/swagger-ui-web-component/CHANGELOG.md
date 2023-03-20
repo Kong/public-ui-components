@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.4.17...@kong-ui-public/swagger-ui-web-component@0.4.18) (2023-03-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency swagger-client to ^3.19.0 ([#262](https://github.com/Kong/public-ui-components/issues/262)) ([cefe4d5](https://github.com/Kong/public-ui-components/commit/cefe4d59d9a88f4cbb9e6f7c21efe5ece5186627))
+
+
+
+
+
 ## [0.4.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.4.16...@kong-ui-public/swagger-ui-web-component@0.4.17) (2023-03-15)
 
 
