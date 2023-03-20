@@ -120,13 +120,13 @@ importers:
 
   packages/analytics/metric-cards:
     specifiers:
-      '@kong/kongponents': ^8.40.5
+      '@kong/kongponents': ^8.40.4
       approximate-number: ^2.1.0
       vue: ^3.2.47
     dependencies:
       approximate-number: 2.1.0
     devDependencies:
-      '@kong/kongponents': 8.40.5_vue@3.2.47
+      '@kong/kongponents': 8.40.4_vue@3.2.47
       vue: 3.2.47
 
   packages/core/app-layout:
@@ -169,11 +169,11 @@ importers:
   packages/core/copy-uuid:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.4.2
-      '@kong/kongponents': ^8.40.5
+      '@kong/kongponents': ^8.40.4
       vue: ^3.2.47
     devDependencies:
       '@kong-ui-public/i18n': link:../i18n
-      '@kong/kongponents': 8.40.5_vue@3.2.47
+      '@kong/kongponents': 8.40.4_vue@3.2.47
       vue: 3.2.47
 
   packages/core/i18n:
@@ -189,17 +189,17 @@ importers:
   packages/core/misc-widgets:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.4.2
-      '@kong/kongponents': ^8.40.5
+      '@kong/kongponents': ^8.40.4
       vue: ^3.2.47
     devDependencies:
       '@kong-ui-public/i18n': link:../i18n
-      '@kong/kongponents': 8.40.5_vue@3.2.47
+      '@kong/kongponents': 8.40.4_vue@3.2.47
       vue: 3.2.47
 
   packages/portal/document-viewer:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.4.2
-      '@kong/kongponents': ^8.40.5
+      '@kong/kongponents': ^8.40.4
       '@types/prismjs': ^1.26.0
       '@vitejs/plugin-vue-jsx': ^3.0.0
       prismjs: ^1.29.0
@@ -208,7 +208,7 @@ importers:
       '@kong-ui-public/i18n': link:../../core/i18n
       prismjs: 1.29.0
     devDependencies:
-      '@kong/kongponents': 8.40.5_vue@3.2.47
+      '@kong/kongponents': 8.40.4_vue@3.2.47
       '@types/prismjs': 1.26.0
       '@vitejs/plugin-vue-jsx': 3.0.0_vue@3.2.47
       vue: 3.2.47
@@ -231,7 +231,7 @@ importers:
       lodash.clonedeep: 4.5.0
       uuid: 9.0.0
     devDependencies:
-      '@kong/kongponents': 8.40.5_vue@3.2.47
+      '@kong/kongponents': 8.40.4_vue@3.2.47
       '@modyfi/vite-plugin-yaml': 1.0.4
       '@types/lodash.clonedeep': 4.5.7
       '@types/uuid': 9.0.1
@@ -257,7 +257,7 @@ importers:
       '@kong/swagger-ui-kong-theme-universal': 4.1.6_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
-      swagger-client: 3.19.1
+      swagger-client: 3.18.5
       swagger-ui: 4.18.1
     devDependencies:
       css-loader: 6.7.3_webpack@5.75.0
@@ -1273,8 +1273,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@kong/kongponents/8.40.5:
-    resolution: {integrity: sha512-MkytcZpMm0bc5WKtMvF3+aEVAypz9L4OEGqbFyIZcSxAAbSFfiZo+skZS3JCfM5J8tJZK/ydQuVxUFV6KfPVyw==}
+  /@kong/kongponents/8.40.4:
+    resolution: {integrity: sha512-ips7MJNKPYQlKwwqT60Pn4rWNUt52FVWRgbrjrS2z/a63EtNtuai+xKv5O1nGBir1S6h7eKKgLXa1MNu278bhQ==}
     engines: {node: '>=16.19.0'}
     peerDependencies:
       vue: '>= 3.2.37'
@@ -1294,8 +1294,8 @@ packages:
       - debug
     dev: false
 
-  /@kong/kongponents/8.40.5_vue@3.2.47:
-    resolution: {integrity: sha512-MkytcZpMm0bc5WKtMvF3+aEVAypz9L4OEGqbFyIZcSxAAbSFfiZo+skZS3JCfM5J8tJZK/ydQuVxUFV6KfPVyw==}
+  /@kong/kongponents/8.40.4_vue@3.2.47:
+    resolution: {integrity: sha512-ips7MJNKPYQlKwwqT60Pn4rWNUt52FVWRgbrjrS2z/a63EtNtuai+xKv5O1nGBir1S6h7eKKgLXa1MNu278bhQ==}
     engines: {node: '>=16.19.0'}
     peerDependencies:
       vue: '>= 3.2.37'
@@ -1344,7 +1344,7 @@ packages:
       react: 17.0.2
     dependencies:
       '@braintree/sanitize-url': 2.1.0
-      '@kong/kongponents': 8.40.5
+      '@kong/kongponents': 8.40.4
       '@kyleshockey/xml': 1.0.2
       classnames: 2.3.2
       curl-to-har: 1.0.1
@@ -4800,6 +4800,11 @@ packages:
   /deep-is/0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
     dev: true
+
+  /deepmerge/4.2.2:
+    resolution: {integrity: sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==}
+    engines: {node: '>=0.10.0'}
+    dev: false
 
   /deepmerge/4.3.0:
     resolution: {integrity: sha512-z2wJZXrmeHdvYJp/Ux55wIjqo81G5Bp4c+oELTW+7ar6SogWHajt5a9gO3s3IDaGSAXjDk0vlQKN3rms8ab3og==}
@@ -11083,6 +11088,26 @@ packages:
   /svg-tags/1.0.0:
     resolution: {integrity: sha512-ovssysQTa+luh7A5Weu3Rta6FJlFBBbInjOh722LIt6klpU2/HtdUbszju/G4devcvk8PGt7FCLv5wftu3THUA==}
     dev: true
+
+  /swagger-client/3.18.5:
+    resolution: {integrity: sha512-c0txGDtfQTJnaIBaEKCwtRNcUaaAfj+RXI4QVV9p3WW+AUCQqp4naCjaDNNsOfMkE4ySyhnblbL+jGqAVC7snw==}
+    dependencies:
+      '@babel/runtime-corejs3': 7.20.13
+      cookie: 0.5.0
+      cross-fetch: 3.1.5
+      deepmerge: 4.2.2
+      fast-json-patch: 3.1.1
+      form-data-encoder: 1.7.2
+      formdata-node: 4.4.1
+      is-plain-object: 5.0.0
+      js-yaml: 4.1.0
+      lodash: 4.17.21
+      qs: 6.11.0
+      traverse: 0.6.7
+      url: 0.11.0
+    transitivePeerDependencies:
+      - encoding
+    dev: false
 
   /swagger-client/3.19.1:
     resolution: {integrity: sha512-PO+ttw+PGA8umvyli4ljSlmN7Jkzao74TPvrbXoRAGW3UChb3w18fmJKebLGeo2DDebYyrQ8ycPobyNP40b7BQ==}
