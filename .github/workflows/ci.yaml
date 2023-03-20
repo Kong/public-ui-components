@@ -119,6 +119,12 @@ jobs:
         # The `...` syntax tells pnpm to include dependent packages
         run: pnpm --stream --filter "...${{needs.install-dependencies.outputs.filter}}..." run build
 
+      - name: Upload bundle-analyzer results
+        uses: actions/upload-artifact@v3
+        with:
+          name: rollup-plugin-visualizer
+          path: packages/*/*/bundle-analyzer/stats-treemap.html
+
       - name: Run Unit Tests
         run: pnpm --stream --filter "${{needs.install-dependencies.outputs.unitTestFilter}}" run test:unit
 
