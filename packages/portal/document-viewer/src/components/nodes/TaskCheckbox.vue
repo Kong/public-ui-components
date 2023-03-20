@@ -1,5 +1,6 @@
 <template>
   <input
+    aria-label="Display-only checkbox for task"
     :checked="checked"
     type="checkbox"
   >
