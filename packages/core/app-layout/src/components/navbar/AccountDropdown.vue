@@ -38,7 +38,7 @@ const props = defineProps({
   },
   width: {
     type: String,
-    default: '175',
+    default: '240',
   },
   userInitials: {
     type: String,
@@ -61,14 +61,41 @@ const optionSelected = (option: DropdownItem) => {
   display: flex;
   margin-right: 4px;
   :deep(.k-button.primary), :deep(.k-button.primary:hover:not(:disabled)) {
-    background: #9396FC; /* Purple/300 */
-    height: 48px;
+    background-color: var(--kong-ui-account-dropdown-background, var(--purple-300, #9396FC));
+    color: var(--kong-ui-account-dropdown-color, var(--white, #fff));
+    height: 32px;
     justify-content: center;
-    width: 48px;
+    padding: 0;
+    width: 32px;
+  }
+  // Align the dropdown to the bottom of the navbar
+  :deep(.k-dropdown-popover) {
+    top: 10px !important;
   }
 
-  :deep(.k-dropdown-popover) {
-    width: 242px !important;
+  :deep(.k-dropdown-item:first-child) {
+    > button {
+      color: var(--grey-600, #3C4557);
+      font-weight:600 !important;
+      padding-bottom: 0px;
+    }
+  }
+  :deep(.k-dropdown-item:nth-child(2)) {
+    > button {
+      color: var(--grey-500, #6F7787);
+      font-size:14px;
+      padding-top: 4px;
+    }
+  }
+
+  :deep(.k-dropdown-item.has-divider:before) {
+    background-color: var(--grey-300, #E7E7EC);
+  }
+
+  :deep(.k-dropdown-item:nth-child()) {
+    > button {
+      color: var(--grey-600, #3C4557);
+    }
   }
 }
 </style>

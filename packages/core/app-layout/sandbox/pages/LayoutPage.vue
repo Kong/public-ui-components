@@ -57,7 +57,7 @@
           { label: 'Personal Account Tokens', to: '/' },
           { label: 'Log Out', to: '/', hasDivider: true },
         ]"
-        user-initials="AB"
+        user-initials="JJ"
       />
     </template>
     <template #sidebar-header>
