@@ -71,8 +71,13 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits<{
+  (e: 'success', val: string): void,
+  (e: 'error', val: string): void,
+}>()
+
 const notifyTrimLength = 15
-const notify = props.notify || inject(COPY_UUID_NOTIFY_KEY)
+const notify = props.notify || inject(COPY_UUID_NOTIFY_KEY, () => {})
 
 const copyIdToClipboard = (executeCopy: (prop: string) => boolean) => {
   if (!executeCopy(props.uuid)) {
@@ -82,6 +87,7 @@ const copyIdToClipboard = (executeCopy: (prop: string) => boolean) => {
         message: t('message.fail'),
       })
     }
+    emit('error', props.uuid)
     return
   }
 
@@ -95,6 +101,7 @@ const copyIdToClipboard = (executeCopy: (prop: string) => boolean) => {
       message: `${messagePrefix}${t('message.success.content')}`,
     })
   }
+  emit('success', props.uuid)
 }
 
 </script>
