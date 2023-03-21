@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.14.3...@kong-ui-public/app-layout@0.15.0) (2023-03-21)
+
+
+### Features
+
+* **accountDropdown:** create reusable AccountDropdown component [KHCP-6613] ([#257](https://github.com/Kong/public-ui-components/issues/257)) ([638f451](https://github.com/Kong/public-ui-components/commit/638f45164fc23dadf8b2c67fa8dcc1a70768c36f))
+
+
+
+
+
 ## [0.14.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.14.2...@kong-ui-public/app-layout@0.14.3) (2023-03-21)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
