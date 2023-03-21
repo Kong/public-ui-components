@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@0.2.31...@kong-ui-public/copy-uuid@0.3.0) (2023-03-21)
+
+
+### Features
+
+* **copy-uuid:** add events ([#266](https://github.com/Kong/public-ui-components/issues/266)) ([2999860](https://github.com/Kong/public-ui-components/commit/299986046fc6032d88d5cc0c10b14cc1b0493964))
+
+
+
+
+
 ## [0.2.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@0.2.30...@kong-ui-public/copy-uuid@0.2.31) (2023-03-18)
 
 **Note:** Version bump only for package @kong-ui-public/copy-uuid
