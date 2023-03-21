@@ -41,6 +41,8 @@ defineProps({
   userInitials: {
     type: String,
     required: true,
+    // Important: default to a string with a single empty space to force the dropdown to always be visible
+    default: ' ',
   },
 })
 

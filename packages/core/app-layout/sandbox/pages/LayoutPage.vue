@@ -51,7 +51,7 @@
       </KButton>
       <AccountDropdown
         :options="[
-          { label: 'Jackie Jiang', to: '/' },
+          { label: userNameAndEmail, to: '/' },
           { label: 'My Account', to: '/', hasDivider: true },
           { label: 'Personal Account Tokens', to: '/' },
           { label: 'Log Out', to: '/', hasDivider: true },
@@ -105,6 +105,8 @@ import { AccountDropdown, SidebarPrimaryItem, SidebarProfileItem, SidebarSeconda
 import NavLinks from '../components/NavLinks.vue'
 import AppGruceLogo from '../components/icons/AppGruceLogo.vue'
 import AppLogo from '../components/icons/AppLogo.vue'
+
+const userNameAndEmail = ref<string>('Jackie Jiang\njackie.jiang@konghq.com')
 
 const sidebarIsHidden = ref<boolean>(false)
 const toggleSidebar = (): void => {
