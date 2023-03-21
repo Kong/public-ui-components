@@ -5,7 +5,6 @@
     :label="userInitials"
     size="small"
     :width="width"
-    @change="(selection: any) => optionSelected(selection)"
   >
     <template #items="{ handleSelection }">
       <slot>
@@ -15,7 +14,6 @@
           :class="{ 'has-divider': option.hasDivider }"
           :data-testid="'select-' + option.value"
           :has-divider="option.hasDivider"
-          :selected="selectedOption.value === option.value"
           @click="handleSelection(option)"
         >
           <slot :option="option">
@@ -28,10 +26,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, PropType } from 'vue'
+import { PropType } from 'vue'
 import type { DropdownItem } from '@kong/kongponents'
 
-const props = defineProps({
+defineProps({
   options: {
     type: Array as PropType<DropdownItem[]>,
     required: true,
@@ -45,14 +43,6 @@ const props = defineProps({
     required: true,
   },
 })
-const emit = defineEmits(['change'])
-
-const selectedOption: Ref<DropdownItem> = ref(props.options?.filter((option: DropdownItem) => !!option.selected)[0] || props.options[0])
-
-const optionSelected = (option: DropdownItem) => {
-  selectedOption.value = option
-  emit('change', selectedOption.value)
-}
 
 </script>
 
@@ -67,6 +57,9 @@ const optionSelected = (option: DropdownItem) => {
     justify-content: center;
     padding: 0;
     width: 32px;
+    &:active {
+      background-color: var(--kong-ui-account-dropdown-background, var(--purple-300, #9396FC));
+    }
   }
   // Align the dropdown to the bottom of the navbar
   :deep(.k-dropdown-popover) {
