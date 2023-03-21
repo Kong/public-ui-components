@@ -175,4 +175,19 @@ describe('<CopyUuid />', () => {
     cy.get(container).find('.uuid-icon path')
       .should('have.attr', 'fill', 'var(--purple-400, #473cfb)')
   })
+
+  it('emits event', () => {
+    cy.mount(CopyUuid, {
+      props: {
+        uuid,
+      },
+    })
+
+    cy.get('[data-testid="copy-to-clipboard"]').click().then(() => {
+      cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'success').then((evt) => {
+        // Verify emit payload
+        cy.wrap(evt[0][0]).should('be.equal', uuid)
+      })
+    })
+  })
 })

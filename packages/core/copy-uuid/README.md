@@ -16,6 +16,9 @@ A Kong UI component for displaying uuid and copying it to clipboard.
   - [`isHidden`](#ishidden)
   - [`notify`](#notify)
   - [`iconColor`](#iconcolor)
+- [Events](#events)
+  - [`success`](#success)
+  - [`error`](#error)
 
 ## Features
 
@@ -178,3 +181,13 @@ A function that will be called when the copy button is clicked. The function wil
 - default: `'var(--black-45, rgba(0, 0, 0, 0.45))'`
 
 The color of the `copy` icon.
+
+## Events
+
+### `success`
+
+A `success` event is emitted when the UUID is successfully copied to clipboard. The event payload is the UUID.
+
+### `error`
+
+An `error` event is emitted when an error occurs when trying to copy the UUID. The event payload is the UUID.
