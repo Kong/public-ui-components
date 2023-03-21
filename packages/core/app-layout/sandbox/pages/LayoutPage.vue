@@ -49,6 +49,15 @@
       >
         {{ sidebarIsHidden ? 'Show' : 'Hide' }} sidebar
       </KButton>
+      <AccountDropdown
+        :options="[
+          { label: userNameAndEmail, to: '/' },
+          { label: 'My Account', to: '/', hasDivider: true },
+          { label: 'Personal Account Tokens', to: '/' },
+          { label: 'Log Out', to: '/', hasDivider: true },
+        ]"
+        user-initials="JJ"
+      />
     </template>
     <template #sidebar-header>
       <div class="kong-logo d-flex w-100">
@@ -92,10 +101,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 // Sandbox only
-import { SidebarPrimaryItem, SidebarProfileItem, SidebarSecondaryItem } from '../../src'
+import { AccountDropdown, SidebarPrimaryItem, SidebarProfileItem, SidebarSecondaryItem } from '../../src'
 import NavLinks from '../components/NavLinks.vue'
 import AppGruceLogo from '../components/icons/AppGruceLogo.vue'
 import AppLogo from '../components/icons/AppLogo.vue'
+
+const userNameAndEmail = ref<string>('Jackie Jiang\njackie.jiang@konghq.com')
 
 const sidebarIsHidden = ref<boolean>(false)
 const toggleSidebar = (): void => {
