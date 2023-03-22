@@ -1,4 +1,5 @@
 export const DECIMAL_DISPLAY = 2
+export const DECIMAL_ROUNDING_PRECISION = 4
 
 /**
  * Beneficial increase (eg: Traffic) is considered good.
@@ -8,9 +9,9 @@ export const DECIMAL_DISPLAY = 2
  * @returns {string}
  */
 export const changePolarity = (delta: number, hasTrendAccess: boolean, thisIsBad:boolean = false): number => {
-  let polarity = (!hasTrendAccess || Number(delta.toFixed(DECIMAL_DISPLAY)) === 0)
+  let polarity = (!hasTrendAccess || Number(delta.toFixed(DECIMAL_ROUNDING_PRECISION)) === 0)
     ? 0
-    : Number(delta.toFixed(DECIMAL_DISPLAY)) > 0
+    : Number(delta.toFixed(DECIMAL_ROUNDING_PRECISION)) > 0
       ? 1
       : -1
 
