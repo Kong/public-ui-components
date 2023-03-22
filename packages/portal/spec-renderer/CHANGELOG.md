@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.8.12...@kong-ui-public/spec-renderer@0.8.13) (2023-03-22)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
 ## [0.8.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.8.11...@kong-ui-public/spec-renderer@0.8.12) (2023-03-22)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer
