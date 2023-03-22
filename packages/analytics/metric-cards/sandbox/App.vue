@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
 import { MetricCardContainer } from '../src'
-import { DECIMAL_DISPLAY } from '../src/utilities'
+import { DECIMAL_DISPLAY, metricChange } from '../src/utilities'
 import { MetricCardContainerOptions } from '../src/types'
 import { MetricCardSize } from '../src/constants'
 
@@ -80,8 +80,8 @@ const cards = [
     increaseIsBad: false,
   },
   {
-    currentValue: 31.076361502825918,
-    previousValue: 30.59477013885772,
+    currentValue: 30.1448979685401,
+    previousValue: 30.1891166494617,
     formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
     title: 'Error Rate',
     increaseIsBad: true,
@@ -122,12 +122,8 @@ const cardsSmall: MetricCardContainerOptions = {
   cardSize: MetricCardSize.Small,
 }
 
-const cardsLg = JSON.parse(JSON.stringify(cards))
-cardsLg[0].title = 'Number of Requests'
-cardsLg[1].title = 'Average Error Rate'
-
 const cardsRegular: MetricCardContainerOptions = {
-  cards: [...cardsLg].slice(0, 3),
+  cards: [...cards].slice(0, 3),
   loading: false,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
@@ -135,7 +131,7 @@ const cardsRegular: MetricCardContainerOptions = {
 }
 
 const cardsXL: MetricCardContainerOptions = {
-  cards: [...cardsLg].slice(0, 3),
+  cards: [...cards].slice(0, 3),
   loading: false,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
@@ -143,14 +139,14 @@ const cardsXL: MetricCardContainerOptions = {
 }
 
 const cardsLoading: MetricCardContainerOptions = {
-  cards: [...cardsLg].slice(0, 3),
+  cards: [...cards].slice(0, 3),
   loading: true,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
 }
 
 const cardsNotAvailable: MetricCardContainerOptions = {
-  cards: [...cardsLg].slice(0, 3),
+  cards: [...cards].slice(0, 3),
   loading: false,
   hasTrendAccess: false,
   fallbackDisplayText: '-.--%',

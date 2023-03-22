@@ -11,8 +11,8 @@ const cards = [
     increaseIsBad: false,
   },
   {
-    currentValue: 31.076361502825918,
-    previousValue: 30.59477013885772,
+    currentValue: 0.3014489796854011,
+    previousValue: 0.29789116649461733,
     formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
     title: 'Average Error Rate',
     increaseIsBad: true,
