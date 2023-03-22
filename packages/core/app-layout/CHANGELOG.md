@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.15.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.2...@kong-ui-public/app-layout@0.15.3) (2023-03-22)
+
+
+### Bug Fixes
+
+* **accountDropdown:** adjust accountDropdown icon size and font-size per team discussion [KHCP-6613] ([#277](https://github.com/Kong/public-ui-components/issues/277)) ([9631530](https://github.com/Kong/public-ui-components/commit/9631530088c0acf833db3033383c28fdb12057bf))
+
+
+
+
+
 ## [0.15.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.1...@kong-ui-public/app-layout@0.15.2) (2023-03-22)
 
 
