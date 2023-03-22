@@ -240,7 +240,7 @@ importers:
 
   packages/portal/swagger-ui-web-component:
     specifiers:
-      '@kong/swagger-ui-kong-theme-universal': ^4.1.6
+      '@kong/swagger-ui-kong-theme-universal': ^4.1.7
       css-loader: ^6.7.3
       raw-loader: ^4.0.2
       react: 17.0.2
@@ -254,7 +254,7 @@ importers:
       webpack-cli: ^5.0.1
       webpack-dev-server: ^4.11.1
     dependencies:
-      '@kong/swagger-ui-kong-theme-universal': 4.1.6_sfoxds7t5ydpegc3knd667wn6m
+      '@kong/swagger-ui-kong-theme-universal': 4.1.7_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       swagger-client: 3.19.1
@@ -1316,8 +1316,8 @@ packages:
       - debug
     dev: true
 
-  /@kong/swagger-ui-kong-theme-universal/4.1.6_sfoxds7t5ydpegc3knd667wn6m:
-    resolution: {integrity: sha512-04VAj431zQDPQ/HLwpDdxSuIpkWRd/AVyCKD+a4baIK5nyzH5glCzs/Ny7Drwup2nu6xVL1lBWiC8Nqv0TOPsA==}
+  /@kong/swagger-ui-kong-theme-universal/4.1.7_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-WFc1Fgn8H8gv5qBip1xGrRZBq5KQnC/hma7PRmLkwvOaU+/XxFvQFGBQAIMHmnw5DsHsKMTDg6C02ux7hYeoOA==}
     peerDependencies:
       react: 17.0.2
     dependencies:
