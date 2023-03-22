@@ -133,14 +133,14 @@ importers:
     specifiers:
       '@kong/kongponents': ^8.41.1
       '@types/lodash.clonedeep': ^4.5.7
-      focus-trap: ^7.3.1
+      focus-trap: ^7.4.0
       focus-trap-vue: ^4.0.2
       lodash.clonedeep: ^4.5.0
       vue: ^3.2.47
       vue-router: ^4.1.6
     dependencies:
-      focus-trap: 7.3.1
-      focus-trap-vue: 4.0.2_oggptlzwchqpaguemspe4ract4
+      focus-trap: 7.4.0
+      focus-trap-vue: 4.0.2_osh5ahu7pjjwyp4t7mhvrqdjey
       lodash.clonedeep: 4.5.0
     devDependencies:
       '@kong/kongponents': 8.41.1_vue@3.2.47
@@ -5975,7 +5975,7 @@ packages:
       react: '>=16.3.0'
       react-dom: '>=16.3.0'
     dependencies:
-      focus-trap: 7.3.1
+      focus-trap: 7.4.0
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       tabbable: 6.1.1
@@ -6000,13 +6000,13 @@ packages:
       vue: 3.2.47
     dev: true
 
-  /focus-trap-vue/4.0.2_oggptlzwchqpaguemspe4ract4:
+  /focus-trap-vue/4.0.2_osh5ahu7pjjwyp4t7mhvrqdjey:
     resolution: {integrity: sha512-2iQN2xKCSCzyhcD90VpueQcTIAhaCRxxo67fkz7RSqLmEd16QKjfGslCr3KxvBx0LfpVN9j0IAyKKuJKw3Intg==}
     peerDependencies:
       focus-trap: ^7.0.0
       vue: ^3.0.0
     dependencies:
-      focus-trap: 7.3.1
+      focus-trap: 7.4.0
       vue: 3.2.47
     dev: false
 
@@ -6014,6 +6014,12 @@ packages:
     resolution: {integrity: sha512-bX/u4FJ+F0Pp6b/8Q9W8Br/JaLJ7rrhOJAzai9JU8bh4BPdOjEATy4pxHcbBBxFjPN4d1oHy7/KqknEdOetm9w==}
     dependencies:
       tabbable: 6.1.1
+
+  /focus-trap/7.4.0:
+    resolution: {integrity: sha512-yI7FwUqU4TVb+7t6PaQ3spT/42r/KLEi8mtdGoQo2li/kFzmu9URmalTvw7xCCJtSOyhBxscvEAmvjeN9iHARg==}
+    dependencies:
+      tabbable: 6.1.1
+    dev: false
 
   /follow-redirects/1.15.2:
     resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
