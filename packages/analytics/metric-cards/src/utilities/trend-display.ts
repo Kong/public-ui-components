@@ -1,5 +1,5 @@
 export const DECIMAL_DISPLAY = 2
-export const DECIMAL_ROUNDING_PRECISION = DECIMAL_DISPLAY + 0
+export const DECIMAL_ROUNDING_PRECISION = DECIMAL_DISPLAY + 1
 
 /**
  * Beneficial increase (eg: Traffic) is considered good.
