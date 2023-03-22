@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/swagger-ui-web-component",
-  "version": "0.4.20",
+  "version": "0.4.21",
   "main": "dist/main.js",
   "files": [
     "dist"
