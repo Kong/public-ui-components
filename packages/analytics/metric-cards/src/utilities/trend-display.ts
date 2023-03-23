@@ -1,7 +1,7 @@
 // Used to render a percentage display (eg: 30.97%)
 export const DECIMAL_DISPLAY = 2
 
-// Rounding precision for raw values (eg: 0.003097)
+// Rounding precision for raw values (eg: 0.3097)
 export const DECIMAL_ROUNDING_PRECISION = DECIMAL_DISPLAY + 2
 
 /**
