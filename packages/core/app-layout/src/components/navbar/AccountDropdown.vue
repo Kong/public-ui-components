@@ -61,6 +61,8 @@ defineProps({
     height: 24px;
     justify-content: center;
     padding: 0;
+    // Prevent text selection
+    user-select: none;
     width: 24px;
 
     &:active {
