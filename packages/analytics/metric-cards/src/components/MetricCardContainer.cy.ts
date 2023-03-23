@@ -88,8 +88,8 @@ describe('<MetricCardContainer />', () => {
       props: {
         cards: [
           {
-            currentValue: 0.3014,
-            previousValue: 0.3017,
+            currentValue: 0.3012,
+            previousValue: 0.3013,
             formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
             formatChangeFn: val => `${metricChange(val * 100, true, 'N/A')}`,
             title: 'Average Error Rate',
