@@ -3,6 +3,59 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.15.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.5...@kong-ui-public/app-layout@0.15.6) (2023-03-23)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [0.15.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.4...@kong-ui-public/app-layout@0.15.5) (2023-03-23)
+
+
+### Bug Fixes
+
+* **app-layout:** prevent user selection ([0b4ccaf](https://github.com/Kong/public-ui-components/commit/0b4ccafb9491a202caa710d7e327fa9e888df968))
+
+
+
+
+
+## [0.15.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.3...@kong-ui-public/app-layout@0.15.4) (2023-03-22)
+
+
+### Bug Fixes
+
+* **deps:** update dependency focus-trap to ^7.4.0 ([#281](https://github.com/Kong/public-ui-components/issues/281)) ([e257795](https://github.com/Kong/public-ui-components/commit/e257795ed2d9324a794db1ee0314f8a61910cf21))
+
+
+
+
+
+## [0.15.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.2...@kong-ui-public/app-layout@0.15.3) (2023-03-22)
+
+
+### Bug Fixes
+
+* **accountDropdown:** adjust accountDropdown icon size and font-size per team discussion [KHCP-6613] ([#277](https://github.com/Kong/public-ui-components/issues/277)) ([9631530](https://github.com/Kong/public-ui-components/commit/9631530088c0acf833db3033383c28fdb12057bf))
+
+
+
+
+
+## [0.15.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.1...@kong-ui-public/app-layout@0.15.2) (2023-03-22)
+
+
+### Bug Fixes
+
+* **account-dropdown:** font size ([a1c1f41](https://github.com/Kong/public-ui-components/commit/a1c1f4195b503a581d5e1523a960ec0001c9cfbd))
+* stylelint ([240c4f7](https://github.com/Kong/public-ui-components/commit/240c4f7b975fdf01a503b6c4c40021251b44f363))
+
+
+
+
+
 ## [0.15.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.0...@kong-ui-public/app-layout@0.15.1) (2023-03-22)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout

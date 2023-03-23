@@ -52,17 +52,24 @@ defineProps({
 .account-dropdown {
   display: flex;
   margin-right: 4px;
-  :deep(.k-button.primary), :deep(.k-button.primary:hover:not(:disabled)) {
+
+  :deep(.k-button.primary),
+  :deep(.k-button.primary:hover:not(:disabled)) {
     background-color: var(--kong-ui-account-dropdown-background, var(--purple-300, #9396FC));
     color: var(--kong-ui-account-dropdown-color, var(--white, #fff));
-    height: 32px;
+    font-size: 11px;
+    height: 24px;
     justify-content: center;
     padding: 0;
-    width: 32px;
+    // Prevent text selection
+    user-select: none;
+    width: 24px;
+
     &:active {
       background-color: var(--kong-ui-account-dropdown-background, var(--purple-300, #9396FC));
     }
   }
+
   // Align the dropdown to the bottom of the navbar
   :deep(.k-dropdown-popover) {
     top: 10px !important;

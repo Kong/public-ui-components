@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/metric-cards",
-  "version": "0.1.23",
+  "version": "0.1.25",
   "type": "module",
   "main": "./dist/metric-cards.umd.js",
   "module": "./dist/metric-cards.es.js",
@@ -37,11 +37,11 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^8.40.7",
+    "@kong/kongponents": "^8.41.2",
     "vue": "^3.2.47"
   },
   "devDependencies": {
-    "@kong/kongponents": "^8.40.7",
+    "@kong/kongponents": "^8.41.2",
     "vue": "^3.2.47"
   },
   "dependencies": {
