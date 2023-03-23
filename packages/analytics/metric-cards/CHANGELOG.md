@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.1.25...@kong-ui-public/metric-cards@0.1.26) (2023-03-23)
+
+
+### Bug Fixes
+
+* **metric-cards:** increase rounding factor for trend [MA-1404] ([#273](https://github.com/Kong/public-ui-components/issues/273)) ([51621e9](https://github.com/Kong/public-ui-components/commit/51621e97fe7bac6554874d54dd63896cb5b36fcf))
+
+
+
+
+
 ## [0.1.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.1.24...@kong-ui-public/metric-cards@0.1.25) (2023-03-23)
 
 **Note:** Version bump only for package @kong-ui-public/metric-cards
