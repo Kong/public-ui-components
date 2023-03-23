@@ -1,7 +1,8 @@
 // Cypress component test spec file
 
 import MetricCardContainer from './MetricCardContainer.vue'
-import { DECIMAL_DISPLAY } from '../utilities'
+import { DECIMAL_DISPLAY, metricChange } from '../utilities'
+import { MetricCardSize } from '../constants'
 
 const cards = [
   {
@@ -11,8 +12,8 @@ const cards = [
     increaseIsBad: false,
   },
   {
-    currentValue: 31.076361502825918,
-    previousValue: 30.59477013885772,
+    currentValue: 0.3014489796854011,
+    previousValue: 0.29789116649461733,
     formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
     title: 'Average Error Rate',
     increaseIsBad: true,
@@ -39,7 +40,7 @@ describe('<MetricCardContainer />', () => {
     cy.mount(MetricCardContainer, {
       props: {
         cards,
-        cardSize: 'lg',
+        cardSize: MetricCardSize.Large,
         fallbackDisplayText: 'Not available',
         hasTrendAccess: true,
         loading: false,
@@ -67,7 +68,7 @@ describe('<MetricCardContainer />', () => {
     cy.mount(MetricCardContainer, {
       props: {
         cards,
-        cardSize: 'ms',
+        cardSize: MetricCardSize.Small,
         hasTrendAccess: true,
         loading: false,
       },
@@ -79,5 +80,67 @@ describe('<MetricCardContainer />', () => {
     cy.viewport(1280, 400)
     cy.get(container).should('be.visible')
 
+  })
+
+  // Should display up arrow icon, and green trend value text
+  it('Upward trend displayed for diff above threshold', () => {
+    cy.mount(MetricCardContainer, {
+      props: {
+        cards: [
+          {
+            currentValue: 0.3012,
+            previousValue: 0.3013,
+            formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
+            formatChangeFn: val => `${metricChange(val * 100, true, 'N/A')}`,
+            title: 'Average Error Rate',
+            increaseIsBad: true,
+          },
+        ],
+        cardSize: MetricCardSize.Large,
+        hasTrendAccess: true,
+        loading: false,
+      },
+    })
+
+    cy.get(container).should('be.visible')
+
+    // Desktop (horiztonal layout)
+    cy.viewport(1280, 400)
+    cy.get(container).should('be.visible')
+
+    // Check for upward trend, non-zero value
+    cy.get('.metricscard-value-trend').should('have.class', 'positive')
+    cy.get('.metricscard-value-trend').should('not.contain', '0.00%')
+  })
+
+  // Should display no icon, and gray trend value text
+  it('Neutral trend displayed for diff below threshold', () => {
+    cy.mount(MetricCardContainer, {
+      props: {
+        cards: [
+          {
+            currentValue: 0.3017,
+            previousValue: 0.3017,
+            formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
+            formatChangeFn: val => `${metricChange(val * 100, true, 'N/A')}`,
+            title: 'Average Error Rate',
+            increaseIsBad: true,
+          },
+        ],
+        cardSize: MetricCardSize.Large,
+        hasTrendAccess: true,
+        loading: false,
+      },
+    })
+
+    cy.get(container).should('be.visible')
+
+    // Desktop (horiztonal layout)
+    cy.viewport(1280, 400)
+    cy.get(container).should('be.visible')
+
+    // Check for neutral trend, zero value
+    cy.get('.metricscard-value-trend').should('have.class', 'neutral')
+    cy.get('.metricscard-value-trend').should('contain', '0.00%')
   })
 })
