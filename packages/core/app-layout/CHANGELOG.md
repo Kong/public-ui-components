@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.15.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.4...@kong-ui-public/app-layout@0.15.5) (2023-03-23)
+
+
+### Bug Fixes
+
+* **app-layout:** prevent user selection ([0b4ccaf](https://github.com/Kong/public-ui-components/commit/0b4ccafb9491a202caa710d7e327fa9e888df968))
+
+
+
+
+
 ## [0.15.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.3...@kong-ui-public/app-layout@0.15.4) (2023-03-22)
 
 
