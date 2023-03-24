@@ -299,6 +299,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
 .sidebar-item-display {
   align-items: center;
+  cursor: pointer;
   display: flex;
   height: 100%;
   padding: 0 16px;
