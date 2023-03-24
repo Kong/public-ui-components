@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.15.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.6...@kong-ui-public/app-layout@0.15.7) (2023-03-24)
+
+
+### Bug Fixes
+
+* **app-layout:** cursor for sidebar items ([61c43dc](https://github.com/Kong/public-ui-components/commit/61c43dcdddbf2f4f4afa3ade400f0be577fc14d7))
+* **app-layout:** cursor for sidebar items ([65ff242](https://github.com/Kong/public-ui-components/commit/65ff2428ee12f7c24e2c51d9e004cf74b05229b0))
+
+
+
+
+
 ## [0.15.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.5...@kong-ui-public/app-layout@0.15.6) (2023-03-23)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
