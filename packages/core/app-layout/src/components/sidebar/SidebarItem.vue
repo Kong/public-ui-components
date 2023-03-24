@@ -144,6 +144,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   // Shared styles for the primary and secondary elements
   .sidebar-item-primary,
   .sidebar-item-secondary {
+    cursor: pointer;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -299,7 +300,6 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
 .sidebar-item-display {
   align-items: center;
-  cursor: pointer;
   display: flex;
   height: 100%;
   padding: 0 16px;
