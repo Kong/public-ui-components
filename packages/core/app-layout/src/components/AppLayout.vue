@@ -101,6 +101,7 @@
       data-testid="kong-ui-app-layout-main"
     >
       <div class="kong-ui-app-layout-content">
+        <!-- Default host app teleport container -->
         <div id="kong-ui-app-layout-teleport-default-slot" />
         <slot name="app-error" />
         <slot
