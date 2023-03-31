@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.1.27...@kong-ui-public/metric-cards@0.1.28) (2023-03-31)
+
+
+### Bug Fixes
+
+* **metric-cards:** round approximate numbers by default ([#298](https://github.com/Kong/public-ui-components/issues/298)) ([e6a706e](https://github.com/Kong/public-ui-components/commit/e6a706ef962fdf03e99d28a35ec92eaa2dbe0b34))
+
+
+
+
+
 ## [0.1.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.1.26...@kong-ui-public/metric-cards@0.1.27) (2023-03-25)
 
 **Note:** Version bump only for package @kong-ui-public/metric-cards
