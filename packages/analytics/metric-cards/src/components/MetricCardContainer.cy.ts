@@ -143,4 +143,36 @@ describe('<MetricCardContainer />', () => {
     cy.get('.metricscard-value-trend').should('have.class', 'neutral')
     cy.get('.metricscard-value-trend').should('contain', '0.00%')
   })
+
+  // Should use rounded approximate numbers by default.
+  it('Values are approximate and rounded by default', () => {
+    cy.mount(MetricCardContainer, {
+      props: {
+        cards: [
+          {
+            currentValue: 1198904,
+            previousValue: 1198904,
+            title: 'Traffic',
+            increaseIsBad: false,
+          },
+        ],
+        cardSize: MetricCardSize.Large,
+        hasTrendAccess: true,
+        loading: false,
+      },
+    })
+
+    cy.get(container).should('be.visible')
+
+    // Desktop (horiztonal layout)
+    cy.viewport(1280, 400)
+    cy.get(container).should('be.visible')
+
+    // Check for neutral trend, zero value
+    cy.get('.metricscard-value-trend').should('have.class', 'neutral')
+    cy.get('.metricscard-value-trend').should('contain', '0.00%')
+
+    // Check for approximate numbers.
+    cy.get('.metricscard-value').should('contain', '1.2M')
+  })
 })

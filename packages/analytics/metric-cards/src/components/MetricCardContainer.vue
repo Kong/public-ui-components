@@ -93,7 +93,7 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
   const polarity = changePolarity(change, props.hasTrendAccess, card.increaseIsBad)
 
   return {
-    metricValue: card.formatValueFn ? card.formatValueFn(card.currentValue) : approxNum(card.currentValue, { capital: true }) || '0',
+    metricValue: card.formatValueFn ? card.formatValueFn(card.currentValue) : approxNum(card.currentValue, { capital: true, round: true }) || '0',
     metricChange: card.formatChangeFn ? card.formatChangeFn(change) : metricChange(change, props.hasTrendAccess, props.fallbackDisplayText),
     changePolarity: polarity,
     icon: defineIcon(polarity, card.increaseIsBad),
