@@ -47,7 +47,7 @@ import { computed, PropType } from 'vue'
 import approxNum from 'approximate-number'
 import { MetricCardSize } from '../constants'
 import { MetricCardDef, MetricCardDisplayValue } from '../types'
-import { changePolarity, metricChange, defineIcon } from '../utilities'
+import { changePolarity, metricChange, defineIcon, calculateChange } from '../utilities'
 import MetricsCard from './display/MetricsCard.vue'
 import MetricCardLoadingSkeleton from './display/MetricCardLoadingSkeleton.vue'
 
@@ -84,12 +84,8 @@ const props = defineProps({
 
 const allCardsHaveErrors = computed((): boolean => props.cards.every(val => val?.hasError === true))
 
-const calculateDelta = (curr: number, prev: number): number => {
-  return curr / prev - 1
-}
-
 const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
-  const change = calculateDelta(card.currentValue, card.previousValue) || 0
+  const change = calculateChange(card.currentValue, card.previousValue) || 0
   const polarity = changePolarity(change, props.hasTrendAccess, card.increaseIsBad)
 
   return {
