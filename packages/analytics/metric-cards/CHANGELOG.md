@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.1.28...@kong-ui-public/metric-cards@0.1.29) (2023-04-03)
+
+
+### Bug Fixes
+
+* **metric-cards:** avoid showing Infinity in metrics cards ([#299](https://github.com/Kong/public-ui-components/issues/299)) ([e1b0564](https://github.com/Kong/public-ui-components/commit/e1b05643161a352b90f1a1154da3c8703c33fca0))
+
+
+
+
+
 ## [0.1.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.1.27...@kong-ui-public/metric-cards@0.1.28) (2023-03-31)
 
 
