@@ -38,6 +38,16 @@ export const metricChange = (delta: number, hasTrendAccess: boolean, fallback: s
     : fallback
 }
 
+// Determine the percent change between `curr` and `prev`; avoid dividing by 0.
+export const calculateChange = (curr: number, prev: number) => {
+  if (prev === 0) {
+    // If we would calculate a +Infinity change, instead just say 0% to avoid ugliness.
+    return 0
+  } else {
+    return curr / prev - 1
+  }
+}
+
 /**
  * Determines whether to display an upward or downward trend, or no change
  */

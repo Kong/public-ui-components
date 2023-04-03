@@ -79,7 +79,6 @@ describe('<MetricCardContainer />', () => {
     // Desktop (horiztonal layout)
     cy.viewport(1280, 400)
     cy.get(container).should('be.visible')
-
   })
 
   // Should display up arrow icon, and green trend value text
@@ -174,5 +173,33 @@ describe('<MetricCardContainer />', () => {
 
     // Check for approximate numbers.
     cy.get('.metricscard-value').should('contain', '1.2M')
+  })
+
+  it('Avoid divide-by-zero', () => {
+    cy.mount(MetricCardContainer, {
+      props: {
+        cards: [
+          {
+            currentValue: 1198904,
+            previousValue: 0,
+            title: 'Traffic',
+            increaseIsBad: false,
+          },
+        ],
+        cardSize: MetricCardSize.Large,
+        hasTrendAccess: true,
+        loading: false,
+      },
+    })
+
+    cy.get(container).should('be.visible')
+
+    // Desktop (horiztonal layout)
+    cy.viewport(1280, 400)
+    cy.get(container).should('be.visible')
+
+    // Check for neutral trend, zero value
+    cy.get('.metricscard-value-trend').should('have.class', 'neutral')
+    cy.get('.metricscard-value-trend').should('contain', '0.00%')
   })
 })
