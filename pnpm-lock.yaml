@@ -9,7 +9,7 @@ importers:
       '@commitlint/config-conventional': ^17.4.4
       '@digitalroute/cz-conventional-changelog-for-jira': ^8.0.0
       '@evilmartians/lefthook': ^1.3.3
-      '@kong/kongponents': ^8.41.3
+      '@kong/kongponents': ^8.47.0
       '@rushstack/eslint-patch': ^1.2.0
       '@types/flat': ^5.0.2
       '@types/js-yaml': ^4.0.5
@@ -66,7 +66,7 @@ importers:
       '@commitlint/config-conventional': 17.4.4
       '@digitalroute/cz-conventional-changelog-for-jira': 8.0.0
       '@evilmartians/lefthook': 1.3.3
-      '@kong/kongponents': 8.41.3_vue@3.2.47
+      '@kong/kongponents': 8.47.0_vue@3.2.47
       '@rushstack/eslint-patch': 1.2.0
       '@types/flat': 5.0.2
       '@types/js-yaml': 4.0.5
@@ -120,18 +120,18 @@ importers:
 
   packages/analytics/metric-cards:
     specifiers:
-      '@kong/kongponents': ^8.41.3
+      '@kong/kongponents': ^8.47.0
       approximate-number: ^2.1.0
       vue: ^3.2.47
     dependencies:
       approximate-number: 2.1.0
     devDependencies:
-      '@kong/kongponents': 8.41.3_vue@3.2.47
+      '@kong/kongponents': 8.47.0_vue@3.2.47
       vue: 3.2.47
 
   packages/core/app-layout:
     specifiers:
-      '@kong/kongponents': ^8.41.3
+      '@kong/kongponents': ^8.47.0
       '@types/lodash.clonedeep': ^4.5.7
       focus-trap: ^7.4.0
       focus-trap-vue: ^4.0.2
@@ -143,7 +143,7 @@ importers:
       focus-trap-vue: 4.0.2_osh5ahu7pjjwyp4t7mhvrqdjey
       lodash.clonedeep: 4.5.0
     devDependencies:
-      '@kong/kongponents': 8.41.3_vue@3.2.47
+      '@kong/kongponents': 8.47.0_vue@3.2.47
       '@types/lodash.clonedeep': 4.5.7
       vue: 3.2.47
       vue-router: 4.1.6_vue@3.2.47
@@ -169,11 +169,11 @@ importers:
   packages/core/copy-uuid:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.4.2
-      '@kong/kongponents': ^8.41.3
+      '@kong/kongponents': ^8.47.0
       vue: ^3.2.47
     devDependencies:
       '@kong-ui-public/i18n': link:../i18n
-      '@kong/kongponents': 8.41.3_vue@3.2.47
+      '@kong/kongponents': 8.47.0_vue@3.2.47
       vue: 3.2.47
 
   packages/core/i18n:
@@ -189,17 +189,17 @@ importers:
   packages/core/misc-widgets:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.4.2
-      '@kong/kongponents': ^8.41.3
+      '@kong/kongponents': ^8.47.0
       vue: ^3.2.47
     devDependencies:
       '@kong-ui-public/i18n': link:../i18n
-      '@kong/kongponents': 8.41.3_vue@3.2.47
+      '@kong/kongponents': 8.47.0_vue@3.2.47
       vue: 3.2.47
 
   packages/portal/document-viewer:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.4.2
-      '@kong/kongponents': ^8.41.3
+      '@kong/kongponents': ^8.47.0
       '@types/prismjs': ^1.26.0
       '@vitejs/plugin-vue-jsx': ^3.0.0
       prismjs: ^1.29.0
@@ -208,7 +208,7 @@ importers:
       '@kong-ui-public/i18n': link:../../core/i18n
       prismjs: 1.29.0
     devDependencies:
-      '@kong/kongponents': 8.41.3_vue@3.2.47
+      '@kong/kongponents': 8.47.0_vue@3.2.47
       '@types/prismjs': 1.26.0
       '@vitejs/plugin-vue-jsx': 3.0.0_vue@3.2.47
       vue: 3.2.47
@@ -217,7 +217,7 @@ importers:
     specifiers:
       '@kong-ui-public/i18n': workspace:^0.4.2
       '@kong-ui-public/swagger-ui-web-component': workspace:^0.4.29
-      '@kong/kongponents': ^8.41.3
+      '@kong/kongponents': ^8.47.0
       '@modyfi/vite-plugin-yaml': ^1.0.4
       '@types/lodash.clonedeep': ^4.5.7
       '@types/uuid': ^9.0.1
@@ -231,7 +231,7 @@ importers:
       lodash.clonedeep: 4.5.0
       uuid: 9.0.0
     devDependencies:
-      '@kong/kongponents': 8.41.3_vue@3.2.47
+      '@kong/kongponents': 8.47.0_vue@3.2.47
       '@modyfi/vite-plugin-yaml': 1.0.4
       '@types/lodash.clonedeep': 4.5.7
       '@types/uuid': 9.0.1
@@ -1294,8 +1294,8 @@ packages:
       - debug
     dev: false
 
-  /@kong/kongponents/8.41.3_vue@3.2.47:
-    resolution: {integrity: sha512-KB/XmZQSatac9ZLH/kyNG+TNYiXOSd3oiFUc/U5QAny1UI8Hqv2kaCmTRhQTj/savqS05Bn2ERfIHe848kR+sw==}
+  /@kong/kongponents/8.47.0_vue@3.2.47:
+    resolution: {integrity: sha512-0c1kHbGrX8CFdm2/0y3TqLSixRPH6dZ7+58ANiZ9S3fp1sv2vJ6W/5xprD4V7xoBBOA++EKL9hlaT6pFTeFcNA==}
     engines: {node: '>=16.19.0'}
     peerDependencies:
       vue: '>= 3.2.37'
