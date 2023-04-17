@@ -10,6 +10,7 @@ Monorepo for **open-source** Kong UI components and utilities.
 - [Creating a package](#creating-a-package)
 - [Package Publishing](#package-publishing)
 - [Development](#development)
+  - [Requirements](#requirements)
   - [Setup](#setup)
   - [Dev Server](#dev-server)
   - [Stylelint](#stylelint)
@@ -18,7 +19,6 @@ Monorepo for **open-source** Kong UI components and utilities.
   - [Testing](#testing)
   - [Preview sandbox build](#preview-sandbox-build)
   - [Build for production](#build-for-production)
-  - [Requirements](#requirements)
   - [Committing Changes](#committing-changes)
 - [Preview components](#preview-components)
 - [Running consuming application with local copy of the package](#running-consuming-application-with-local-copy-of-the-package)
@@ -42,6 +42,13 @@ Here are some criteria to help figure out if your code belongs to this mono-repo
 All packages must be created utilizing the `pnpm run create-package` CLI. [See here for more details.](./docs/creating-a-package.md#required-use-the-provided-cli-to-scaffold-your-new-package)
 
 Be sure to familiarize yourself with the [Component Requirements](./docs/creating-a-package.md#component-requirements), including style rules.
+
+### Requirements
+
+- [NodeJS >= 18.x](https://nodejs.org/en/download/)
+- [pnpm 7.x](https://pnpm.io/installation) ([_Why pnpm?_](./docs/why-pnpm.md))
+
+It is recommended to also _globally_ install [`lerna`](https://lerna.js.org/) with `pnpm` (though not absolutely required)
 
 ### Setup
 
@@ -130,13 +137,6 @@ pnpm --filter "@kong-ui-public/{package-name}" run preview
 ```sh
 pnpm --filter "@kong-ui-public/{package-name}" run build
 ```
-
-### Requirements
-
-- [NodeJS >= 18.x](https://nodejs.org/en/download/)
-- [pnpm 7.x](https://pnpm.io/installation) ([_Why pnpm?_](./docs/why-pnpm.md))
-
-It is recommended to also _globally_ install [`lerna`](https://lerna.js.org/) with `pnpm` (though not absolutely required)
 
 ### Committing Changes
 
