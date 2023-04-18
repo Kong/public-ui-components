@@ -18,7 +18,7 @@ importers:
       '@typescript-eslint/eslint-plugin': ^5.55.0
       '@typescript-eslint/parser': ^5.55.0
       '@vitejs/plugin-vue': ^4.0.0
-      '@vitejs/plugin-vue-jsx': ^3.0.0
+      '@vitejs/plugin-vue-jsx': ^3.0.1
       '@vitest/ui': ^0.29.2
       '@vue/eslint-config-standard': ^8.0.1
       '@vue/eslint-config-typescript': ^11.0.2
@@ -75,7 +75,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.56.0_iskin7c6dxqunwflhstekcjqmq
       '@typescript-eslint/parser': 5.56.0_vgl77cfdswitgr47lm5swmv43m
       '@vitejs/plugin-vue': 4.0.0_vite@4.1.4+vue@3.2.47
-      '@vitejs/plugin-vue-jsx': 3.0.0_vite@4.1.4+vue@3.2.47
+      '@vitejs/plugin-vue-jsx': 3.0.1_vite@4.1.4+vue@3.2.47
       '@vitest/ui': 0.29.2
       '@vue/eslint-config-standard': 8.0.1_5ib34e43ky3kkjw3g5g675pzsi
       '@vue/eslint-config-typescript': 11.0.2_75cttubc7yphoaabg6k3yrjnke
@@ -201,7 +201,7 @@ importers:
       '@kong-ui-public/i18n': workspace:^0.4.2
       '@kong/kongponents': ^8.47.0
       '@types/prismjs': ^1.26.0
-      '@vitejs/plugin-vue-jsx': ^3.0.0
+      '@vitejs/plugin-vue-jsx': ^3.0.1
       prismjs: ^1.29.0
       vue: ^3.2.47
     dependencies:
@@ -210,7 +210,7 @@ importers:
     devDependencies:
       '@kong/kongponents': 8.47.0_vue@3.2.47
       '@types/prismjs': 1.26.0
-      '@vitejs/plugin-vue-jsx': 3.0.0_vue@3.2.47
+      '@vitejs/plugin-vue-jsx': 3.0.1_vue@3.2.47
       vue: 3.2.47
 
   packages/portal/spec-renderer:
@@ -2594,8 +2594,8 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@vitejs/plugin-vue-jsx/3.0.0_vite@4.1.4+vue@3.2.47:
-    resolution: {integrity: sha512-vurkuzgac5SYuxd2HUZqAFAWGTF10diKBwJNbCvnWijNZfXd+7jMtqjPFbGt7idOJUn584fP1Ar9j/GN2jQ3Ew==}
+  /@vitejs/plugin-vue-jsx/3.0.1_vite@4.1.4+vue@3.2.47:
+    resolution: {integrity: sha512-+Jb7ggL48FSPS1uhPnJbJwWa9Sr90vQ+d0InW+AhBM22n+cfuYqJZDckBc+W3QSHe1WDvewMZfa4wZOtk5pRgw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       vite: ^4.0.0
@@ -2610,8 +2610,8 @@ packages:
       - supports-color
     dev: true
 
-  /@vitejs/plugin-vue-jsx/3.0.0_vue@3.2.47:
-    resolution: {integrity: sha512-vurkuzgac5SYuxd2HUZqAFAWGTF10diKBwJNbCvnWijNZfXd+7jMtqjPFbGt7idOJUn584fP1Ar9j/GN2jQ3Ew==}
+  /@vitejs/plugin-vue-jsx/3.0.1_vue@3.2.47:
+    resolution: {integrity: sha512-+Jb7ggL48FSPS1uhPnJbJwWa9Sr90vQ+d0InW+AhBM22n+cfuYqJZDckBc+W3QSHe1WDvewMZfa4wZOtk5pRgw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       vite: ^4.0.0
