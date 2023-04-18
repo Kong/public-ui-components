@@ -108,7 +108,12 @@ pnpm --filter "@kong-ui-public/{package-name}" run typecheck
 
 ### Testing
 
-Run Component or Unit tests
+Run Component or Unit tests.
+
+#### File naming convensions
+
+- Unit test files should be named `*.spec.ts` and will be run with Vitest
+- Component test files should be named `*.cy.ts` and will be run with Cypress component test runner.
 
 ```sh
 # Component tests
