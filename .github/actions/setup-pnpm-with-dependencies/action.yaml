@@ -27,7 +27,7 @@ runs:
     - name: Install PNPM
       shell: bash
       run: |
-        npm i -g pnpm@^7.0.0
+        npm i -g pnpm@^7.32.0
         pnpm --version
 
 
