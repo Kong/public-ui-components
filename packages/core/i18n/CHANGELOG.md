@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.4.2...@kong-ui-public/i18n@0.4.3) (2023-04-19)
+
+
+### Bug Fixes
+
+* **deps:** update formatjs monorepo ([#312](https://github.com/Kong/public-ui-components/issues/312)) ([db4d4b5](https://github.com/Kong/public-ui-components/commit/db4d4b568b01fa06bbee5bf4d12bdbb465e19d1c))
+
+
+
+
+
 ## [0.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.4.1...@kong-ui-public/i18n@0.4.2) (2023-03-15)
 
 **Note:** Version bump only for package @kong-ui-public/i18n
