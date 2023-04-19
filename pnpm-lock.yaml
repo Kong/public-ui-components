@@ -42,7 +42,7 @@ importers:
       postcss: ^8.4.21
       postcss-custom-properties: ^13.1.4
       postcss-html: ^1.5.0
-      rimraf: ^4.4.0
+      rimraf: ^4.4.1
       rollup-plugin-visualizer: ^5.9.0
       sass: ^1.59.3
       stylelint: ^14.16.1
