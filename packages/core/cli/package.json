@@ -16,7 +16,7 @@
     "@types/inquirer": "^9.0.3",
     "@types/node-emoji": "^1.8.2",
     "boxen": "^7.0.2",
-    "inquirer": "^9.1.4",
+    "inquirer": "^9.1.5",
     "nanospinner": "^1.1.0",
     "node-emoji": "^1.11.0",
     "picocolors": "^1.0.0"
