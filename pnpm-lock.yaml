@@ -247,7 +247,7 @@ importers:
       react-dom: 17.0.2
       style-loader: ^3.3.2
       swagger-client: ^3.19.6
-      swagger-ui: ^4.18.1
+      swagger-ui: ^4.18.2
       terser-webpack-plugin: ^5.3.7
       webpack: ^5.76.3
       webpack-bundle-analyzer: ^4.8.0
@@ -258,7 +258,7 @@ importers:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       swagger-client: 3.19.6
-      swagger-ui: 4.18.1
+      swagger-ui: 4.18.2
     devDependencies:
       css-loader: 6.7.3_webpack@5.76.3
       raw-loader: 4.0.2_webpack@5.76.3
@@ -4934,8 +4934,8 @@ packages:
       domelementtype: 2.3.0
     dev: true
 
-  /dompurify/2.3.10:
-    resolution: {integrity: sha512-o7Fg/AgC7p/XpKjf/+RC3Ok6k4St5F7Q6q6+Nnm3p2zGWioAY6dh0CbbuwOhH2UcSzKsdniE/YnE2/92JcsA+g==}
+  /dompurify/3.0.1:
+    resolution: {integrity: sha512-60tsgvPKwItxZZdfLmamp0MTcecCta3avOhsLgPZ0qcWt96OasFfhkeIRbJ6br5i0fQawT1/RBGB5L58/Jpwuw==}
     dev: false
 
   /domutils/3.0.1:
@@ -11114,8 +11114,8 @@ packages:
       - encoding
     dev: false
 
-  /swagger-ui/4.18.1:
-    resolution: {integrity: sha512-KMG/Mg+b7oPtBOlpx9abbmU6Rm86kiVUvvpR3EkplBz0CSnseuQZN2XdDZKD7QsvM78NkUhn53y5EZCb+4rd1g==}
+  /swagger-ui/4.18.2:
+    resolution: {integrity: sha512-0IFzqYLBZ2BQYOW5lbDzF9BZl2o2/IDXYhErsazUXHWIXLkMDCxsgd+ocdj4AGtUO3gdGk4QZgHkJwZb/OGbgg==}
     requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.20.13
@@ -11124,7 +11124,7 @@ packages:
       classnames: 2.3.2
       css.escape: 1.5.1
       deep-extend: 0.6.0
-      dompurify: 2.3.10
+      dompurify: 3.0.1
       ieee754: 1.2.1
       immutable: 3.8.2
       js-file-download: 0.4.12
