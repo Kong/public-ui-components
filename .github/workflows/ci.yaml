@@ -181,6 +181,11 @@ jobs:
             npm_instructions="${npm_instructions}${pkg}"
           done
 
+          if [[ -z "${npm_instructions}" ]]; then
+            echo "Error publishing packages"
+            exit -1
+          fi
+
           echo "npm_instructions<<EOF" >> $GITHUB_ENV
           echo -e "$npm_instructions" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
