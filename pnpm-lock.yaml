@@ -118,6 +118,9 @@ importers:
       vue-router: 4.1.6_vue@3.2.47
       vue-tsc: 1.2.0_typescript@4.9.5
 
+  packages/analytics/analytics-utilities:
+    specifiers: {}
+
   packages/analytics/metric-cards:
     specifiers:
       '@kong/kongponents': ^8.52.0
