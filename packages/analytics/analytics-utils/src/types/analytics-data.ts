@@ -1,18 +1,18 @@
-interface RecordEvent {
-  [field: string]: string | number;
+export interface RecordEvent {
+  [field: string]: string | number
 }
 
-interface Record {
+export interface AnalyticsExploreRecord {
   version: string
   timestamp: string
   event: RecordEvent
 }
 
-interface DimensionMap {
+export interface DimensionMap {
   [dimension: string]: string[]
 }
 
-interface MetricUnit {
+export interface MetricUnit {
   [metricName: string]: string
 }
 
@@ -78,7 +78,7 @@ export interface AnalyticsExploreResult {
   /**
    * Array of records
    */
-  records: Record[]
+  records: AnalyticsExploreRecord[]
   /**
    * Additional metadata about the query
    */
