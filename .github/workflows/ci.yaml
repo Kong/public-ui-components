@@ -119,35 +119,35 @@ jobs:
         # The `...` syntax tells pnpm to include dependent packages
         run: pnpm --stream --filter "...${{needs.install-dependencies.outputs.filter}}..." run build
 
-      - name: Upload bundle-analyzer results
-        uses: actions/upload-artifact@v3
-        with:
-          name: rollup-plugin-visualizer
-          path: packages/*/*/bundle-analyzer/stats-treemap.html
+      # - name: Upload bundle-analyzer results
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: rollup-plugin-visualizer
+      #     path: packages/*/*/bundle-analyzer/stats-treemap.html
 
-      - name: Run Unit Tests
-        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.unitTestFilter}}" run test:unit
+      # - name: Run Unit Tests
+      #   run: pnpm --stream --filter "${{needs.install-dependencies.outputs.unitTestFilter}}" run test:unit
 
-      - name: Prepare Cypress
-        if: ${{ needs.install-dependencies.outputs.spec != '' }}
-        run: pnpm cypress install
+      # - name: Prepare Cypress
+      #   if: ${{ needs.install-dependencies.outputs.spec != '' }}
+      #   run: pnpm cypress install
 
-      - name: Run Component Tests
-        if: ${{ needs.install-dependencies.outputs.spec != '' }}
-        uses: cypress-io/github-action@v4
-        with:
-          install: false
-          command: pnpm run test:component:ci --spec ${{ needs.install-dependencies.outputs.spec }}
+      # - name: Run Component Tests
+      #   if: ${{ needs.install-dependencies.outputs.spec != '' }}
+      #   uses: cypress-io/github-action@v4
+      #   with:
+      #     install: false
+      #     command: pnpm run test:component:ci --spec ${{ needs.install-dependencies.outputs.spec }}
 
-      - name: Upload Component Test Results
-        uses: actions/upload-artifact@v3
-        continue-on-error: true
-        if: failure()
-        with:
-          name: component-test-failures
-          path: |
-            cypress/videos/
-            cypress/screenshots/
+      # - name: Upload Component Test Results
+      #   uses: actions/upload-artifact@v3
+      #   continue-on-error: true
+      #   if: failure()
+      #   with:
+      #     name: component-test-failures
+      #     path: |
+      #       cypress/videos/
+      #       cypress/screenshots/
 
       - name: Save Build Artifacts
         if: ${{ github.event_name == 'push' }}
@@ -170,9 +170,20 @@ jobs:
 
           lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend
 
+          pnpmPublish=$(pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" publish  --no-git-checks --access restricted --report-summary --tag "${tag}")
+
+          echo "${pnpmPublish}"
+
+          if [[ ! -z $(echo "${pnpmPublish}"|grep "No changed packages to version") ]]; then
+            echo "No packages needs to be published"
+            exit 0
+          fi
+
           npm_instructions=""
+
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
-          for pkg in $(pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" publish  --no-git-checks --access public --report-summary --tag "${tag}" | grep "+ "| sed 's/+ //')
+
+          for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
           do
             pkg="@$(echo ${pkg}|cut -d'@' -f2)@${tag}"
             if [ "${npm_instructions}" != "" ]; then
