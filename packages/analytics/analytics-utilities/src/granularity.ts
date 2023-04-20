@@ -1,32 +1,33 @@
 import { DruidGranularity, GranularityKeys } from './types'
 
 // Units are milliseconds, which are what Druid expects.
+// @ts-ignore
 export const Granularities: { [key in GranularityKeys]: number } = {
   [GranularityKeys.MINUTELY]: 60 * 1000,
   [GranularityKeys.HOURLY]: 60 * 60 * 1000,
   [GranularityKeys.DAILY]: 60 * 60 * 24 * 1000,
-  [GranularityKeys.WEEKLY]: 60 * 60 * 24 * 7 * 1000
+  [GranularityKeys.WEEKLY]: 60 * 60 * 24 * 7 * 1000,
 }
 
 export function granularitiesToOptions(
   values: GranularityKeys[],
-  i18n: { t: (v: string) => string }
+  i18n: { t: (v: string) => string },
 ) {
   return values.map((v) => ({
     value: v,
-    label: i18n.t(`configuration.vitals.reports.granularity.${v}`)
+    label: i18n.t(`configuration.vitals.reports.granularity.${v}`),
   }))
 }
 
 export function granularityMsToQuery(
   granularity: number | null,
-  origin?: string
+  origin?: string,
 ): DruidGranularity | null {
   if (granularity) {
     return {
       duration: granularity,
       type: 'duration',
-      origin
+      origin,
     }
   }
 
@@ -47,7 +48,7 @@ export function msToGranularity(ms?: number): GranularityKeys | null {
 function toNearestTimeGrain(
   op: (x: number) => number,
   date: Date,
-  granularity: GranularityKeys
+  granularity: GranularityKeys,
 ): Date {
   // Days and weeks need special handling because naively trying to `ceil` or `floor` them results in a date ending
   // in midnight UTC, whereas as of now we want dates ending in midnight local time.

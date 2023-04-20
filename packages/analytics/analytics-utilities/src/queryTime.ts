@@ -4,7 +4,7 @@ import {
   ceilToNearestTimeGrain,
   floorToNearestTimeGrain,
   Granularities,
-  granularityMsToQuery
+  granularityMsToQuery,
 } from './granularity'
 import { DruidGranularity, GranularityKeys, QueryTime } from './types'
 import { Timeframe } from './timeframes'
@@ -41,7 +41,7 @@ abstract class BaseQueryTime implements QueryTime {
 
       return floorToNearestTimeGrain(
         new Date(this.timeframe.rawStart().getTime() - periodOffset),
-        granularity
+        granularity,
       )
     }
   }

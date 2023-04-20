@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export enum TimeframeKeys {
   FIFTEEN_MIN = '15m',
   ONE_HOUR = '1h',

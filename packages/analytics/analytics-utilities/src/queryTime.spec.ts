@@ -1,4 +1,4 @@
-import { vi } from 'vitest'
+import { expect, vi } from 'vitest'
 import { add, setDate, startOfDay, startOfMonth, startOfWeek, subMilliseconds } from 'date-fns'
 
 import { GranularityKeys, TimeframeKeys } from './types'
@@ -31,7 +31,7 @@ describe('granularity enforcement', () => {
   it('enforces allowed granularity for timeseries queries', () => {
     const tsQuery = new TimeseriesQueryTime(
       getTimePeriod(TimeframeKeys.THIRTY_DAY),
-      GranularityKeys.MINUTELY
+      GranularityKeys.MINUTELY,
     )
 
     expect(tsQuery.granularitySeconds()).toBe(24 * 60 * 60)
@@ -63,39 +63,17 @@ describe('timeframe start/end times', () => {
 
   it('rounds end correctly', () => {
     // Minutely periods: `endDate` should be "now" ceil'd to the next minute.
-    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.FIFTEEN_MIN)).endDate()).toEqual(
-      endMinutely
-    )
-    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_HOUR)).endDate()).toEqual(
-      endMinutely
-    )
-    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SIX_HOUR)).endDate()).toEqual(
-      endHourly
-    )
-    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.TWELVE_HOUR)).endDate()).toEqual(
-      endHourly
-    )
-    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_DAY)).endDate()).toEqual(
-      endHourly
-    )
-    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY)).endDate()).toEqual(
-      endDaily
-    )
-    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.THIRTY_DAY)).endDate()).toEqual(
-      endDaily
-    )
-    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK)).endDate()).toEqual(
-      endDaily
-    )
-    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_MONTH)).endDate()).toEqual(
-      endDaily
-    )
-    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK)).endDate()).toEqual(
-      startOfWeek(endDaily, { weekStartsOn: 1 })
-    )
-    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH)).endDate()).toEqual(
-      startOfMonth(new Date())
-    )
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.FIFTEEN_MIN)).endDate()).toEqual(endMinutely)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_HOUR)).endDate()).toEqual(endMinutely)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SIX_HOUR)).endDate()).toEqual(endHourly)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.TWELVE_HOUR)).endDate()).toEqual(endHourly)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_DAY)).endDate()).toEqual(endHourly)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY)).endDate()).toEqual(endDaily)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.THIRTY_DAY)).endDate()).toEqual(endDaily)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK)).endDate()).toEqual(endDaily)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_MONTH)).endDate()).toEqual(endDaily)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK)).endDate()).toEqual(startOfWeek(endDaily, { weekStartsOn: 1 }))
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH)).endDate()).toEqual(startOfMonth(new Date()))
   })
 
   it('spot-check start times', () => {
@@ -177,103 +155,47 @@ describe('timeframe start/end times', () => {
       subMilliseconds(
         new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK)).endDate(),
         getTimePeriod(TimeframeKeys.PREVIOUS_WEEK).timeframeLengthMs()
-      )
-    )
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH)).startDate()
-    ).toEqual(
+      ))
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH)).startDate()).toEqual(
       subMilliseconds(
         new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH)).endDate(),
         getTimePeriod(TimeframeKeys.PREVIOUS_MONTH).timeframeLengthMs()
-      )
-    )
+      ))
   })
 
   it('minutely timeframes start rounded', () => {
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.FIFTEEN_MIN)).startDate().getSeconds()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_HOUR)).startDate().getSeconds()
-    ).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.FIFTEEN_MIN)).startDate().getSeconds()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_HOUR)).startDate().getSeconds()).toEqual(0)
   })
 
   it('hourly timeframes start rounded', () => {
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SIX_HOUR)).startDate().getSeconds()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SIX_HOUR)).startDate().getMinutes()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.TWELVE_HOUR)).startDate().getSeconds()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.TWELVE_HOUR)).startDate().getMinutes()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_DAY)).startDate().getSeconds()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_DAY)).startDate().getMinutes()
-    ).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SIX_HOUR)).startDate().getSeconds()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SIX_HOUR)).startDate().getMinutes()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.TWELVE_HOUR)).startDate().getSeconds()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.TWELVE_HOUR)).startDate().getMinutes()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_DAY)).startDate().getSeconds()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_DAY)).startDate().getMinutes()).toEqual(0)
   })
 
   it('daily timeframes start rounded', () => {
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY)).startDate().getSeconds()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY)).startDate().getMinutes()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY)).startDate().getHours()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.THIRTY_DAY)).startDate().getSeconds()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.THIRTY_DAY)).startDate().getMinutes()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.THIRTY_DAY)).startDate().getHours()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK)).startDate().getSeconds()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK)).startDate().getMinutes()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK)).startDate().getHours()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_MONTH)).startDate().getSeconds()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_MONTH)).startDate().getMinutes()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_MONTH)).startDate().getHours()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK)).startDate().getSeconds()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK)).startDate().getMinutes()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK)).startDate().getHours()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH)).startDate().getSeconds()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH)).startDate().getMinutes()
-    ).toEqual(0)
-    expect(
-      new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH)).startDate().getHours()
-    ).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY)).startDate().getSeconds()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY)).startDate().getMinutes()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY)).startDate().getHours()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.THIRTY_DAY)).startDate().getSeconds()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.THIRTY_DAY)).startDate().getMinutes()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.THIRTY_DAY)).startDate().getHours()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK)).startDate().getSeconds()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK)).startDate().getMinutes()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK)).startDate().getHours()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_MONTH)).startDate().getSeconds()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_MONTH)).startDate().getMinutes()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_MONTH)).startDate().getHours()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK)).startDate().getSeconds()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK)).startDate().getMinutes()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK)).startDate().getHours()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH)).startDate().getSeconds()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH)).startDate().getMinutes()).toEqual(0)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH)).startDate().getHours()).toEqual(0)
   })
 
   it('custom timeframe daily', () => {
@@ -283,7 +205,7 @@ describe('timeframe start/end times', () => {
     const timeframe = datePickerSelectionToTimeframe({
       end,
       start,
-      timePeriodsKey: 'custom'
+      timePeriodsKey: 'custom',
     })
 
     const queryTime = new TimeseriesQueryTime(timeframe)
@@ -373,7 +295,7 @@ describe('queries with mocked dates', () => {
   it('calculates start, end, and granularity for hourly timeseries queries', () => {
     const tsQuery = new TimeseriesQueryTime(
       getTimePeriod(TimeframeKeys.SEVEN_DAY),
-      GranularityKeys.HOURLY
+      GranularityKeys.HOURLY,
     )
 
     const expectedStart = new Date('2022-07-01T12:00:00Z')
@@ -394,7 +316,7 @@ describe('queries with mocked dates', () => {
   it('calculates start, end, and granularity for daily timeseries queries', () => {
     const tsQuery = new TimeseriesQueryTime(
       getTimePeriod(TimeframeKeys.SEVEN_DAY),
-      GranularityKeys.DAILY
+      GranularityKeys.DAILY,
     )
 
     // Note this is later than the hourly query start date; relative daily queries round start and end up.
@@ -437,9 +359,8 @@ describe('non-timeseries queries with custom timeframes', () => {
       datePickerSelectionToTimeframe({
         start: new Date('2022-10-05T12:00:00Z'),
         end: new Date('2022-10-06T12:00:00Z'),
-        timePeriodsKey: 'custom'
-      })
-    )
+        timePeriodsKey: 'custom',
+      }))
 
     // Data granularity is forced to be daily for custom timeframes, so we expect to round to the start of the day.
     expect(unaryQuery.startDate()).toEqual(startOfDay(new Date('2022-10-05T12:00:00Z')))
@@ -457,9 +378,8 @@ describe('non-timeseries queries with custom timeframes', () => {
       datePickerSelectionToTimeframe({
         start: new Date('2022-10-05T12:00:00Z'),
         end: new Date('2022-10-05T12:00:00Z'),
-        timePeriodsKey: 'custom'
-      })
-    )
+        timePeriodsKey: 'custom',
+      }))
 
     // Data granularity is forced to be daily for custom timeframes, so we expect to round to the start of the day.
     // This is a delta query, so the calculated start date should be 24 hours before the given start date.
@@ -478,9 +398,8 @@ describe('non-timeseries queries with custom timeframes', () => {
       datePickerSelectionToTimeframe({
         start: new Date('2022-09-01T12:00:00Z'),
         end: new Date('2022-09-30T12:00:00Z'),
-        timePeriodsKey: 'custom'
-      })
-    )
+        timePeriodsKey: 'custom',
+      }))
 
     // Data granularity is forced to be daily, so we expect to round to the start of the day.
     expect(deltaQuery.startDate()).toEqual(startOfDay(new Date('2022-08-02T12:00:00Z')))
@@ -525,12 +444,8 @@ runDstTest('daylight savings time: spring', () => {
     expect(deltaQuery.endDate()).toEqual(startOfDay(new Date('2023-04-01T12:00:00.000Z')))
 
     // We lose an hour in the spring, meaning the start date is an hour earlier than we expect it to be.
-    expect(unaryQuery.startDate()).toEqual(
-      add(startOfDay(new Date('2023-03-02T12:00:00.000Z')), { hours: -1 })
-    )
-    expect(deltaQuery.startDate()).toEqual(
-      add(startOfDay(new Date('2023-01-31T12:00:00.000Z')), { hours: -1 })
-    )
+    expect(unaryQuery.startDate()).toEqual(add(startOfDay(new Date('2023-03-02T12:00:00.000Z')), { hours: -1 }))
+    expect(deltaQuery.startDate()).toEqual(add(startOfDay(new Date('2023-01-31T12:00:00.000Z')), { hours: -1 }))
 
     expect(unaryQuery.endSeconds() - unaryQuery.startSeconds()).toBe(60 * 60 * 24 * 30)
     expect(deltaQuery.endSeconds() - deltaQuery.startSeconds()).toBe(60 * 60 * 24 * 30 * 2)
@@ -558,12 +473,8 @@ runDstTest('daylight savings time: fall', () => {
     expect(deltaQuery.endDate()).toEqual(startOfDay(new Date('2023-11-11T12:00:00.000Z')))
 
     // We gain an hour in the fall, meaning the start date is an hour later than we expect it to be.
-    expect(unaryQuery.startDate()).toEqual(
-      add(startOfDay(new Date('2023-11-04T12:00:00.000Z')), { hours: 1 })
-    )
-    expect(deltaQuery.startDate()).toEqual(
-      add(startOfDay(new Date('2023-10-28T12:00:00.000Z')), { hours: 1 })
-    )
+    expect(unaryQuery.startDate()).toEqual(add(startOfDay(new Date('2023-11-04T12:00:00.000Z')), { hours: 1 }))
+    expect(deltaQuery.startDate()).toEqual(add(startOfDay(new Date('2023-10-28T12:00:00.000Z')), { hours: 1 }))
     expect(unaryQuery.endSeconds() - unaryQuery.startSeconds()).toBe(60 * 60 * 24 * 7)
     expect(deltaQuery.endSeconds() - deltaQuery.startSeconds()).toBe(60 * 60 * 24 * 7 * 2)
     expect(deltaQuery.granularitySeconds()).toBe(unaryQuery.granularitySeconds())

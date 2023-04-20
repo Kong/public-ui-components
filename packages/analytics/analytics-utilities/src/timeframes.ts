@@ -6,7 +6,7 @@ import {
   startOfDay,
   startOfMonth,
   startOfWeek,
-  subMonths
+  subMonths,
 } from 'date-fns'
 
 import {
@@ -14,7 +14,7 @@ import {
   GranularityKeys,
   TimeframeKeys,
   TimeframeOptions,
-  TimePeriod
+  TimePeriod,
 } from './types'
 
 export class Timeframe {
@@ -143,7 +143,7 @@ class PreviousWeek extends Timeframe {
 
   rawStart(): Date {
     const lastMonday = startOfWeek(new Date().setDate(new Date().getDate() - 7), {
-      weekStartsOn: 1
+      weekStartsOn: 1,
     })
 
     return lastMonday
@@ -181,8 +181,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: GranularityKeys.MINUTELY,
       dataGranularity: GranularityKeys.MINUTELY,
       isRelative: true,
-      allowedTiers: ['free', 'trial', 'plus', 'enterprise']
-    })
+      allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
+    }),
   ],
   [
     TimeframeKeys.ONE_HOUR,
@@ -194,8 +194,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: GranularityKeys.MINUTELY,
       dataGranularity: GranularityKeys.MINUTELY,
       isRelative: true,
-      allowedTiers: ['free', 'trial', 'plus', 'enterprise']
-    })
+      allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
+    }),
   ],
   [
     TimeframeKeys.SIX_HOUR,
@@ -207,8 +207,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: GranularityKeys.HOURLY,
       dataGranularity: GranularityKeys.HOURLY,
       isRelative: true,
-      allowedTiers: ['free', 'trial', 'plus', 'enterprise']
-    })
+      allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
+    }),
   ],
   [
     TimeframeKeys.TWELVE_HOUR,
@@ -220,8 +220,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: GranularityKeys.HOURLY,
       dataGranularity: GranularityKeys.HOURLY,
       isRelative: true,
-      allowedTiers: ['free', 'trial', 'plus', 'enterprise']
-    })
+      allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
+    }),
   ],
   [
     TimeframeKeys.ONE_DAY,
@@ -233,8 +233,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: GranularityKeys.HOURLY,
       dataGranularity: GranularityKeys.HOURLY,
       isRelative: true,
-      allowedTiers: ['free', 'trial', 'plus', 'enterprise']
-    })
+      allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
+    }),
   ],
   [
     TimeframeKeys.SEVEN_DAY,
@@ -246,8 +246,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: GranularityKeys.DAILY,
       dataGranularity: GranularityKeys.DAILY,
       isRelative: true,
-      allowedTiers: ['trial', 'plus', 'enterprise']
-    })
+      allowedTiers: ['trial', 'plus', 'enterprise'],
+    }),
   ],
   [
     TimeframeKeys.THIRTY_DAY,
@@ -259,8 +259,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: GranularityKeys.DAILY,
       dataGranularity: GranularityKeys.DAILY,
       isRelative: true,
-      allowedTiers: ['trial', 'plus', 'enterprise']
-    })
+      allowedTiers: ['trial', 'plus', 'enterprise'],
+    }),
   ],
   [
     TimeframeKeys.CURRENT_WEEK,
@@ -278,8 +278,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: GranularityKeys.DAILY,
       dataGranularity: GranularityKeys.DAILY,
       isRelative: false,
-      allowedTiers: ['plus', 'enterprise']
-    })
+      allowedTiers: ['plus', 'enterprise'],
+    }),
   ],
   [
     TimeframeKeys.CURRENT_MONTH,
@@ -297,8 +297,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: GranularityKeys.DAILY,
       dataGranularity: GranularityKeys.DAILY,
       isRelative: false,
-      allowedTiers: ['plus', 'enterprise']
-    })
+      allowedTiers: ['plus', 'enterprise'],
+    }),
   ],
   [
     TimeframeKeys.PREVIOUS_WEEK,
@@ -310,8 +310,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: GranularityKeys.DAILY,
       dataGranularity: GranularityKeys.DAILY,
       isRelative: false,
-      allowedTiers: ['plus', 'enterprise']
-    })
+      allowedTiers: ['plus', 'enterprise'],
+    }),
   ],
   [
     TimeframeKeys.PREVIOUS_MONTH,
@@ -331,21 +331,18 @@ export const TimePeriods = new Map<string, Timeframe>([
         // Current month may be observing DST while previous is not
         // take this into account when calculating the timeframe length for previous month
         return (
-          60 * 60 * 24 * getDaysInMonth(new Date().setMonth(new Date().getMonth() - 1)) +
-          hoursToSeconds(offset)
+          60 * 60 * 24 * getDaysInMonth(new Date().setMonth(new Date().getMonth() - 1)) + hoursToSeconds(offset)
         )
       },
       defaultResponseGranularity: GranularityKeys.DAILY,
       dataGranularity: GranularityKeys.DAILY,
       isRelative: false,
-      allowedTiers: ['plus', 'enterprise']
-    })
-  ]
+      allowedTiers: ['plus', 'enterprise'],
+    }),
+  ],
 ])
 
-export function datePickerSelectionToTimeframe(
-  datePickerSelection: DatePickerSelection
-): Timeframe {
+export function datePickerSelectionToTimeframe(datePickerSelection: DatePickerSelection): Timeframe {
   const start = new Date(datePickerSelection.start)
   const end = new Date(datePickerSelection.end)
   const timeframeLength = (end.getTime() - start.getTime()) / 1000
@@ -368,7 +365,7 @@ export function datePickerSelectionToTimeframe(
       defaultResponseGranularity: GranularityKeys.DAILY,
       dataGranularity: GranularityKeys.DAILY,
       isRelative: false,
-      allowedTiers: ['free', 'plus', 'enterprise']
+      allowedTiers: ['free', 'plus', 'enterprise'],
     })
   )
 }
@@ -379,7 +376,7 @@ export function timeframeToDatepickerSelection(timeframe: Timeframe): DatePicker
   return {
     ...(timeframe.key !== 'custom' && { timePeriodsKey: timeframe.key }),
     start: timeframe.rawStart(),
-    end: timeframe.rawEnd()
+    end: timeframe.rawEnd(),
   }
 }
 
@@ -391,7 +388,7 @@ export function timeframeToDatepickerTimeperiod(timeframe: Timeframe): TimePerio
     timeframeText: timeframe.timeframeText,
     timeframeLength: () => timeframe.key, // Used to generate test IDs for the Kongponent.
     start: () => timeframe.rawStart(),
-    end: () => timeframe.rawEnd()
+    end: () => timeframe.rawEnd(),
   }
 }
 
