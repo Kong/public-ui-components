@@ -1,17 +1,17 @@
 {
-  "name": "@kong-ui-public/analytics-utils",
+  "name": "@kong-ui-public/analytics-utilities",
   "version": "0.0.1",
   "type": "module",
-  "main": "./dist/analytics-utils.umd.js",
-  "module": "./dist/analytics-utils.es.js",
+  "main": "./dist/analytics-utilities.umd.js",
+  "module": "./dist/analytics-utilities.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/analytics-utils.es.js",
-      "require": "./dist/analytics-utils.umd.js"
+      "import": "./dist/analytics-utilities.es.js",
+      "require": "./dist/analytics-utilities.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -22,7 +22,7 @@
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
     "build": "run-s typecheck build:package build:types",
-    "build:package": "BUILD_VISUALIZER='analytics/analytics-utils' vite build -m production",
+    "build:package": "BUILD_VISUALIZER='analytics/analytics-utilities' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "preview:package": "vite preview --port 4173",
     "preview": "cross-env USE_SANDBOX=true PREVIEW_SANDBOX=true run-s build:package preview:package",
@@ -37,9 +37,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Kong/public-ui-components.git",
-    "directory": "packages/analytics/analytics-utils"
+    "directory": "packages/analytics/analytics-utilities"
   },
-  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/analytics/analytics-utils",
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/analytics/analytics-utilities",
   "bugs": {
     "url": "https://github.com/Kong/public-ui-components/issues"
   },
