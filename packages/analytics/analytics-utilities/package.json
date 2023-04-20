@@ -31,7 +31,7 @@
     "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
     "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
     "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
-    "test:unit": "cross-env FORCE_COLOR=1 vitest run",
+    "test:unit": "cross-env FORCE_COLOR=1 TZ='US/Eastern' vitest run && TZ='UTC' vitest run",
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "repository": {
@@ -47,5 +47,8 @@
   "license": "Apache-2.0",
   "volta": {
     "extends": "../../../package.json"
+  },
+  "dependencies": {
+    "date-fns": "^2.29.3"
   }
 }
