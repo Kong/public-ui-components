@@ -170,9 +170,17 @@ jobs:
 
           lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend
 
-          npm_instructions=""
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
-          for pkg in $(pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" publish  --no-git-checks --access public --report-summary --tag "${tag}" | grep "+ "| sed 's/+ //')
+
+          pnpmPublish=$(pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" publish  --no-git-checks --access restricted --report-summary --tag "${tag}")
+
+          if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
+            echo "There are no new packages that should be published"
+            exit 0
+          fi
+
+          npm_instructions=""
+          for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
           do
             pkg="@$(echo ${pkg}|cut -d'@' -f2)@${tag}"
             if [ "${npm_instructions}" != "" ]; then
@@ -180,6 +188,11 @@ jobs:
             fi
             npm_instructions="${npm_instructions}${pkg}"
           done
+
+          if [[ -z "${npm_instructions}" ]]; then
+            echo "Error creating preview instructions"
+            exit -1
+          fi
 
           echo "npm_instructions<<EOF" >> $GITHUB_ENV
           echo -e "$npm_instructions" >> $GITHUB_ENV
