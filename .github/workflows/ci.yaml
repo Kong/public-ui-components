@@ -172,7 +172,7 @@ jobs:
 
           pnpmPublish=$(pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" publish  --no-git-checks --access restricted --report-summary --tag "${tag}")
 
-          echo "${pnpmPublish}"
+          echo "pnpmPublish:|${pnpmPublish}|"
 
           if [[ ! -z $(echo "${pnpmPublish}"|grep "No changed packages to version") ]]; then
             echo "No packages needs to be published"
