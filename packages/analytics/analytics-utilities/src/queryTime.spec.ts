@@ -100,67 +100,57 @@ describe('timeframe start/end times', () => {
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.FIFTEEN_MIN)).startDate()).toEqual(
       subMilliseconds(
         new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.FIFTEEN_MIN)).endDate(),
-        getTimePeriod(TimeframeKeys.FIFTEEN_MIN).timeframeLengthMs()
-      )
-    )
+        getTimePeriod(TimeframeKeys.FIFTEEN_MIN).timeframeLengthMs()))
+
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_HOUR)).startDate()).toEqual(
       subMilliseconds(
         new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_HOUR)).endDate(),
-        getTimePeriod(TimeframeKeys.ONE_HOUR).timeframeLengthMs()
-      )
-    )
+        getTimePeriod(TimeframeKeys.ONE_HOUR).timeframeLengthMs()))
+
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SIX_HOUR)).startDate()).toEqual(
       subMilliseconds(
         new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SIX_HOUR)).endDate(),
-        getTimePeriod(TimeframeKeys.SIX_HOUR).timeframeLengthMs()
-      )
-    )
+        getTimePeriod(TimeframeKeys.SIX_HOUR).timeframeLengthMs()))
+
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.TWELVE_HOUR)).startDate()).toEqual(
       subMilliseconds(
         new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.TWELVE_HOUR)).endDate(),
-        getTimePeriod(TimeframeKeys.TWELVE_HOUR).timeframeLengthMs()
-      )
-    )
+        getTimePeriod(TimeframeKeys.TWELVE_HOUR).timeframeLengthMs()))
+
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_DAY)).startDate()).toEqual(
       subMilliseconds(
         new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_DAY)).endDate(),
-        getTimePeriod(TimeframeKeys.ONE_DAY).timeframeLengthMs()
-      )
-    )
+        getTimePeriod(TimeframeKeys.ONE_DAY).timeframeLengthMs()))
+
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY)).startDate()).toEqual(
       subMilliseconds(
         new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY)).endDate(),
-        getTimePeriod(TimeframeKeys.SEVEN_DAY).timeframeLengthMs()
-      )
-    )
+        getTimePeriod(TimeframeKeys.SEVEN_DAY).timeframeLengthMs()))
+
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.THIRTY_DAY)).startDate()).toEqual(
       subMilliseconds(
         new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.THIRTY_DAY)).endDate(),
-        getTimePeriod(TimeframeKeys.THIRTY_DAY).timeframeLengthMs()
-      )
-    )
+        getTimePeriod(TimeframeKeys.THIRTY_DAY).timeframeLengthMs()))
+
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK)).startDate()).toEqual(
       subMilliseconds(
         new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK)).endDate(),
-        getTimePeriod(TimeframeKeys.CURRENT_WEEK).timeframeLengthMs()
-      )
-    )
+        getTimePeriod(TimeframeKeys.CURRENT_WEEK).timeframeLengthMs()))
+
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_MONTH)).startDate()).toEqual(
       subMilliseconds(
         new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_MONTH)).endDate(),
-        getTimePeriod(TimeframeKeys.CURRENT_MONTH).timeframeLengthMs()
-      )
-    )
+        getTimePeriod(TimeframeKeys.CURRENT_MONTH).timeframeLengthMs()))
+
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK)).startDate()).toEqual(
       subMilliseconds(
         new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK)).endDate(),
-        getTimePeriod(TimeframeKeys.PREVIOUS_WEEK).timeframeLengthMs()
-      ))
+        getTimePeriod(TimeframeKeys.PREVIOUS_WEEK).timeframeLengthMs()))
+
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH)).startDate()).toEqual(
       subMilliseconds(
         new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH)).endDate(),
-        getTimePeriod(TimeframeKeys.PREVIOUS_MONTH).timeframeLengthMs()
-      ))
+        getTimePeriod(TimeframeKeys.PREVIOUS_MONTH).timeframeLengthMs()))
   })
 
   it('minutely timeframes start rounded', () => {

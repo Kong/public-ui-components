@@ -1,8 +1,7 @@
 import { DruidGranularity, GranularityKeys } from './types'
 
 // Units are milliseconds, which are what Druid expects.
-// @ts-ignore
-export const Granularities: { [key in GranularityKeys]: number } = {
+export const Granularities = {
   [GranularityKeys.MINUTELY]: 60 * 1000,
   [GranularityKeys.HOURLY]: 60 * 60 * 1000,
   [GranularityKeys.DAILY]: 60 * 60 * 24 * 1000,
