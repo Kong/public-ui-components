@@ -51,6 +51,8 @@ jobs:
             lernaCommand="ls"
           fi
 
+          lernaCommand="ls"
+
           echo "lernaCommand: ${lernaCommand}"
 
           filter=""
