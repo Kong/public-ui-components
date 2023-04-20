@@ -172,6 +172,8 @@ jobs:
 
           lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend
 
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+
           pnpmPublish=$(pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" publish  --no-git-checks --access restricted --report-summary --tag "${tag}")
 
           echo "pnpmPublish:|${pnpmPublish}|"
@@ -182,9 +184,6 @@ jobs:
           fi
 
           npm_instructions=""
-
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
-
           for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
           do
             pkg="@$(echo ${pkg}|cut -d'@' -f2)@${tag}"
