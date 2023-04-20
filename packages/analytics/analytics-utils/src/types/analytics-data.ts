@@ -60,7 +60,7 @@ export interface AnalyticsExploreMeta {
   /**
    * Granularity of this dataset in milliseconds
    */
-  granularity?: number
+  granularity?: number | GranularityFullObj
   /**
    * True if results are truncated
    */
