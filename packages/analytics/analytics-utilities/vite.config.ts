@@ -18,7 +18,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
   },
   test: {
     // Include regular `*.spec.ts` files as well as timezone-specific unit test files `*.spec.tz.ts`
-    include: ['**/src/**/*.spec(\.tz)?.ts']
+    include: ['**/src/**/*.spec(.tz)?.ts'],
   },
 }))
 
