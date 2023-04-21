@@ -31,8 +31,11 @@
     "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
     "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
     "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
-    "test:unit": "cross-env FORCE_COLOR=1 TZ='US/Eastern' vitest run && TZ='UTC' vitest run",
-    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+    "test:unit": "cross-env FORCE_COLOR=1 run-s test:unit:default test:unit:utc test:unit:est",
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui",
+    "test:unit:default": "vitest run spec.ts",
+    "test:unit:utc": "TZ='US/Eastern' vitest run spec.tz.ts",
+    "test:unit:est": "TZ='UTC' vitest run spec.tz.ts"
   },
   "repository": {
     "type": "git",
