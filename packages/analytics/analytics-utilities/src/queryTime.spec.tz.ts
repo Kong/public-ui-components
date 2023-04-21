@@ -1,4 +1,4 @@
-import { expect, vi } from 'vitest'
+import { afterEach, describe, expect, beforeEach, it, vi } from 'vitest'
 import { add, setDate, startOfDay, startOfMonth, startOfWeek, subMilliseconds } from 'date-fns'
 
 import { GranularityKeys, TimeframeKeys } from './types'
@@ -407,7 +407,11 @@ describe('non-timeseries queries with custom timeframes', () => {
 // US Eastern chosen in order to make the dates work.
 const supportsDst = process.env.TZ === 'US/Eastern'
 
-;(supportsDst ? describe : describe.skip)('daylight savings time: spring', () => {
+// runIf (certain_condition) is not supported in Jest; use this pattern instead:
+// https://github.com/facebook/jest/issues/3652#issuecomment-385262455
+const runDstTest = supportsDst ? describe : describe.skip
+
+runDstTest('daylight savings time: spring', () => {
   beforeEach(() => {
     vi.useFakeTimers()
 
@@ -439,7 +443,7 @@ const supportsDst = process.env.TZ === 'US/Eastern'
   })
 })
 
-;(supportsDst ? describe : describe.skip)('daylight savings time: fall', () => {
+runDstTest('daylight savings time: fall', () => {
   beforeEach(() => {
     vi.useFakeTimers()
     const fakeNow = new Date('2023-11-10T12:00:00Z')
