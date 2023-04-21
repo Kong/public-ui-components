@@ -407,12 +407,7 @@ describe('non-timeseries queries with custom timeframes', () => {
 // US Eastern chosen in order to make the dates work.
 const supportsDst = process.env.TZ === 'US/Eastern'
 
-// runIf (certain_condition) is not supported in Jest; use this pattern instead:
-// https://github.com/facebook/jest/issues/3652#issuecomment-385262455
-
-const runDstTest = supportsDst ? describe : describe.skip
-
-runDstTest('daylight savings time: spring', () => {
+;(supportsDst ? describe : describe.skip)('daylight savings time: spring', () => {
   beforeEach(() => {
     vi.useFakeTimers()
 
@@ -444,7 +439,7 @@ runDstTest('daylight savings time: spring', () => {
   })
 })
 
-runDstTest('daylight savings time: fall', () => {
+;(supportsDst ? describe : describe.skip)('daylight savings time: fall', () => {
   beforeEach(() => {
     vi.useFakeTimers()
     const fakeNow = new Date('2023-11-10T12:00:00Z')
