@@ -5,7 +5,6 @@ Commonly used types, interfaces and utils used with Kong analytics.
 - [Features](#features)
 - [Usage](#usage)
   - [Install](#install)
-  - [Unit Test naming conventions](#unit-test-naming-conventions)
   - [TypeScript interfaces](#typescript-interfaces)
 
 ## Features
@@ -21,13 +20,6 @@ Commonly used types, interfaces and utils used with Kong analytics.
 ```sh
   yarn add @kong-ui-public/analytics-utilities
 ```
-
-### Unit Test naming conventions
-
-All unit tests are ran with Vitest.
-
-- For normal unit tests, please use the `*.spec.ts` format
-- For unit tests that need to run once per timezone, use the format `*.spec.tz.ts` (refer to the package's `package.json -> scripts -> test:unit:{timezone}` section)
 
 ### TypeScript interfaces
 
