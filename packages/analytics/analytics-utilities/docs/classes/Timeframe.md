@@ -1,6 +1,6 @@
-[@kong/analytics-time-utils](../API.md) / Timeframe
-
 # Class: Timeframe
+
+↩ [@kong-ui-public/analytics-utilities](../classes.md) / Timeframe
 
 ## Table of contents
 
@@ -39,7 +39,7 @@
 
 | Name | Type |
 | :------ | :------ |
-| `opts` | [`TimeframeOptions`](../interfaces/TimeframeOptions.md) |
+| `opts` | [`TimeframeOptions`](../types/TimeframeOptions.md) |
 
 #### Defined in
 

@@ -1,6 +1,6 @@
-[@kong/analytics-time-utils](../API.md) / UnaryQueryTime
-
 # Class: UnaryQueryTime
+
+↩ [@kong-ui-public/analytics-utilities](../classes.md) / UnaryQueryTime
 
 ## Hierarchy
 
@@ -48,10 +48,6 @@
 
 BaseQueryTime.constructor
 
-#### Defined in
-
-[queryTime.ts:15](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L15)
-
 ## Properties
 
 ### timeframe
@@ -61,10 +57,6 @@ BaseQueryTime.constructor
 #### Inherited from
 
 BaseQueryTime.timeframe
-
-#### Defined in
-
-[queryTime.ts:13](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L13)
 
 ## Methods
 
@@ -88,10 +80,6 @@ BaseQueryTime.timeframe
 
 BaseQueryTime.calculateStartDate
 
-#### Defined in
-
-[queryTime.ts:30](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L30)
-
 ___
 
 ### endDate
@@ -105,10 +93,6 @@ ___
 #### Overrides
 
 BaseQueryTime.endDate
-
-#### Defined in
-
-[queryTime.ts:106](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L106)
 
 ___
 
@@ -124,27 +108,19 @@ ___
 
 BaseQueryTime.endSeconds
 
-#### Defined in
-
-[queryTime.ts:63](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L63)
-
 ___
 
 ### granularityDruid
 
-▸ **granularityDruid**(): ``null`` \| [`DruidGranularity`](../interfaces/DruidGranularity.md)
+▸ **granularityDruid**(): ``null`` \| [`DruidGranularity`](../types/DruidGranularity.md)
 
 #### Returns
 
-``null`` \| [`DruidGranularity`](../interfaces/DruidGranularity.md)
+``null`` \| [`DruidGranularity`](../types/DruidGranularity.md)
 
 #### Inherited from
 
 BaseQueryTime.granularityDruid
-
-#### Defined in
-
-[queryTime.ts:53](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L53)
 
 ___
 
@@ -160,10 +136,6 @@ ___
 
 BaseQueryTime.granularityMs
 
-#### Defined in
-
-[queryTime.ts:110](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L110)
-
 ___
 
 ### granularitySeconds
@@ -177,10 +149,6 @@ ___
 #### Inherited from
 
 BaseQueryTime.granularitySeconds
-
-#### Defined in
-
-[queryTime.ts:49](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L49)
 
 ___
 
@@ -196,10 +164,6 @@ ___
 
 BaseQueryTime.startDate
 
-#### Defined in
-
-[queryTime.ts:102](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L102)
-
 ___
 
 ### startSeconds
@@ -214,10 +178,6 @@ ___
 
 BaseQueryTime.startSeconds
 
-#### Defined in
-
-[queryTime.ts:58](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L58)
-
 ___
 
 ### withinFreeTier
@@ -231,7 +191,3 @@ ___
 #### Inherited from
 
 BaseQueryTime.withinFreeTier
-
-#### Defined in
-
-[queryTime.ts:68](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L68)

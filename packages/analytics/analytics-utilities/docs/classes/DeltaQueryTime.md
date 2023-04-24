@@ -1,6 +1,6 @@
-[@kong/analytics-time-utils](../API.md) / DeltaQueryTime
-
 # Class: DeltaQueryTime
+
+↩ [@kong-ui-public/analytics-utilities](../classes.md) / DeltaQueryTime
 
 ## Hierarchy
 
@@ -46,10 +46,6 @@
 
 [UnaryQueryTime](UnaryQueryTime.md).[constructor](UnaryQueryTime.md#constructor)
 
-#### Defined in
-
-[queryTime.ts:15](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L15)
-
 ## Properties
 
 ### timeframe
@@ -59,10 +55,6 @@
 #### Inherited from
 
 [UnaryQueryTime](UnaryQueryTime.md).[timeframe](UnaryQueryTime.md#timeframe)
-
-#### Defined in
-
-[queryTime.ts:13](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L13)
 
 ## Methods
 
@@ -86,10 +78,6 @@
 
 [UnaryQueryTime](UnaryQueryTime.md).[calculateStartDate](UnaryQueryTime.md#calculatestartdate)
 
-#### Defined in
-
-[queryTime.ts:30](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L30)
-
 ___
 
 ### endDate
@@ -103,10 +91,6 @@ ___
 #### Inherited from
 
 [UnaryQueryTime](UnaryQueryTime.md).[endDate](UnaryQueryTime.md#enddate)
-
-#### Defined in
-
-[queryTime.ts:106](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L106)
 
 ___
 
@@ -122,27 +106,19 @@ ___
 
 [UnaryQueryTime](UnaryQueryTime.md).[endSeconds](UnaryQueryTime.md#endseconds)
 
-#### Defined in
-
-[queryTime.ts:63](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L63)
-
 ___
 
 ### granularityDruid
 
-▸ **granularityDruid**(): ``null`` \| [`DruidGranularity`](../interfaces/DruidGranularity.md)
+▸ **granularityDruid**(): ``null`` \| [`DruidGranularity`](../types/DruidGranularity.md)
 
 #### Returns
 
-``null`` \| [`DruidGranularity`](../interfaces/DruidGranularity.md)
+``null`` \| [`DruidGranularity`](../types/DruidGranularity.md)
 
 #### Inherited from
 
 [UnaryQueryTime](UnaryQueryTime.md).[granularityDruid](UnaryQueryTime.md#granularitydruid)
-
-#### Defined in
-
-[queryTime.ts:53](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L53)
 
 ___
 
@@ -158,10 +134,6 @@ ___
 
 [UnaryQueryTime](UnaryQueryTime.md).[granularityMs](UnaryQueryTime.md#granularityms)
 
-#### Defined in
-
-[queryTime.ts:123](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L123)
-
 ___
 
 ### granularitySeconds
@@ -175,10 +147,6 @@ ___
 #### Inherited from
 
 [UnaryQueryTime](UnaryQueryTime.md).[granularitySeconds](UnaryQueryTime.md#granularityseconds)
-
-#### Defined in
-
-[queryTime.ts:49](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L49)
 
 ___
 
@@ -194,10 +162,6 @@ ___
 
 [UnaryQueryTime](UnaryQueryTime.md).[startDate](UnaryQueryTime.md#startdate)
 
-#### Defined in
-
-[queryTime.ts:119](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L119)
-
 ___
 
 ### startSeconds
@@ -212,10 +176,6 @@ ___
 
 [UnaryQueryTime](UnaryQueryTime.md).[startSeconds](UnaryQueryTime.md#startseconds)
 
-#### Defined in
-
-[queryTime.ts:58](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L58)
-
 ___
 
 ### withinFreeTier
@@ -229,7 +189,3 @@ ___
 #### Inherited from
 
 [UnaryQueryTime](UnaryQueryTime.md).[withinFreeTier](UnaryQueryTime.md#withinfreetier)
-
-#### Defined in
-
-[queryTime.ts:68](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/queryTime.ts#L68)
