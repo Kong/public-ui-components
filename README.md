@@ -174,15 +174,14 @@ Additionally, CI will use `commitlint` to validate the commits associated with a
 
 However, if your package generates **types**, then add a `build:docs` script to your `package.json` file similar to the one in [@kong-ui-public/analytics-utilities](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilties/package.json#L12)
 
-Then append `build:docs` to the existing `build` script in your package's `package.json`.  
-
 ```json
 "scripts": {
-  "build": "run-s typecheck build:package build:types build:docs",
   ... other scripts
   "build:docs": "{your command for generating docs}"
 }
 ```
+
+Please run the `build:docs` command manually to generate the docs and then commit them to your PR.
 
 ## Preview components
 
