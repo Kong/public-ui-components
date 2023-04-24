@@ -23,7 +23,7 @@ Monorepo for **open-source** Kong UI components and utilities.
     - [Build for production](#build-for-production)
     - [Committing Changes](#committing-changes)
       - [Enforcing Commit Format](#enforcing-commit-format)
-    - [Adding Documentation for TypeScript packages](#adding-documentation-for-typescript-packages)
+    - [Generating type interface documentation](#generating-type-interface-documentation)
   - [Preview components](#preview-components)
   - [Running consuming application with local copy of the package](#running-consuming-application-with-local-copy-of-the-package)
 
@@ -168,7 +168,9 @@ For more information on different components that compose our commit messages, p
 
 Additionally, CI will use `commitlint` to validate the commits associated with a PR in the `Lint and Validate` job.
 
-### Adding Documentation for TypeScript packages
+### Generating type interface documentation
+
+**This only applies to TypeScript-only packages**
 
 If your package generates **types**, then add a `build:docs` script to your `package.json` file similar to the one in [@kong-ui-public/analytics-utilities](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilties/package.json#L12)
 
