@@ -6,22 +6,26 @@ Monorepo for **open-source** Kong UI components and utilities.
 
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-- [What goes here](#what-goes-here)
-- [Creating a package](#creating-a-package)
-- [Package Publishing](#package-publishing)
-- [Development](#development)
-  - [Requirements](#requirements)
-  - [Setup](#setup)
-  - [Dev Server](#dev-server)
-  - [Stylelint](#stylelint)
-  - [ESLint](#eslint)
-  - [Type Checking](#type-checking)
-  - [Testing](#testing)
-  - [Preview sandbox build](#preview-sandbox-build)
-  - [Build for production](#build-for-production)
-  - [Committing Changes](#committing-changes)
-- [Preview components](#preview-components)
-- [Running consuming application with local copy of the package](#running-consuming-application-with-local-copy-of-the-package)
+- [public-ui-components](#public-ui-components)
+  - [What goes here](#what-goes-here)
+  - [Creating a package](#creating-a-package)
+  - [Package Publishing](#package-publishing)
+  - [Development](#development)
+    - [Requirements](#requirements)
+    - [Setup](#setup)
+    - [Dev Server](#dev-server)
+    - [Stylelint](#stylelint)
+    - [ESLint](#eslint)
+    - [Type Checking](#type-checking)
+    - [Testing](#testing)
+      - [File naming convensions](#file-naming-convensions)
+    - [Preview sandbox build](#preview-sandbox-build)
+    - [Build for production](#build-for-production)
+    - [Committing Changes](#committing-changes)
+      - [Enforcing Commit Format](#enforcing-commit-format)
+    - [Adding Documentation](#adding-documentation)
+  - [Preview components](#preview-components)
+  - [Running consuming application with local copy of the package](#running-consuming-application-with-local-copy-of-the-package)
 
 ## What goes here
 
@@ -164,6 +168,21 @@ For more information on different components that compose our commit messages, p
 
 Additionally, CI will use `commitlint` to validate the commits associated with a PR in the `Lint and Validate` job.
 
+### Adding Documentation
+
+*This does not apply to visual component packages.*
+
+However, if your package generates **types**, then add a `build:docs` script to your `package.json` file similar to the one in [@kong-ui-public/analytics-utilities](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilties/package.json#L12)
+
+Then append `build:docs` to the existing `build` script in your package's `package.json`.  
+
+```json
+"scripts": {
+  "build": "run-s typecheck build:package build:types build:docs",
+  ... other scripts
+  "build:docs": "{your command for generating docs}"
+}
+```
 
 ## Preview components
 
