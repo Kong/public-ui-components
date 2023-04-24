@@ -1,6 +1,6 @@
-# Class: Timeframe
+[@kong-ui-public/analytics-utilities](../analytics-utils.md) / Timeframe
 
-↩ [@kong-ui-public/analytics-utilities](../classes.md) / Timeframe
+# Class: Timeframe
 
 ## Table of contents
 
@@ -39,11 +39,11 @@
 
 | Name | Type |
 | :------ | :------ |
-| `opts` | [`TimeframeOptions`](../types/TimeframeOptions.md) |
+| `opts` | [`TimeframeOptions`](../interfaces/TimeframeOptions.md) |
 
 #### Defined in
 
-[timeframes.ts:51](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L51)
+[timeframes.ts:51](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L51)
 
 ## Properties
 
@@ -53,7 +53,7 @@
 
 #### Defined in
 
-[timeframes.ts:49](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L49)
+[timeframes.ts:49](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L49)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:47](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L47)
+[timeframes.ts:47](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L47)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:29](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L29)
+[timeframes.ts:29](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L29)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:38](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L38)
+[timeframes.ts:38](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L38)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:33](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L33)
+[timeframes.ts:33](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L33)
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:25](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L25)
+[timeframes.ts:25](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L25)
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:45](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L45)
+[timeframes.ts:45](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L45)
 
 ___
 
@@ -123,7 +123,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:23](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L23)
+[timeframes.ts:23](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L23)
 
 ___
 
@@ -141,7 +141,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:27](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L27)
+[timeframes.ts:27](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L27)
 
 ___
 
@@ -151,7 +151,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:21](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L21)
+[timeframes.ts:21](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L21)
 
 ## Methods
 
@@ -165,7 +165,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:85](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L85)
+[timeframes.ts:85](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L85)
 
 ___
 
@@ -179,7 +179,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:80](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L80)
+[timeframes.ts:80](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L80)
 
 ___
 
@@ -193,7 +193,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:66](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L66)
+[timeframes.ts:66](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L66)
 
 ___
 
@@ -207,7 +207,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:72](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L72)
+[timeframes.ts:72](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L72)
 
 ___
 
@@ -221,4 +221,4 @@ ___
 
 #### Defined in
 
-[timeframes.ts:76](https://github.com/Kong/shared-js/blob/main/packages/analytics-time-utils/src/timeframes.ts#L76)
+[timeframes.ts:76](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L76)

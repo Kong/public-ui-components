@@ -1,6 +1,6 @@
-# Enumeration: TimeframeKeys
+[@kong-ui-public/analytics-utilities](../analytics-utils.md) / TimeframeKeys
 
-↩ [@kong-ui-public/analytics-utilities](../enums-and-variables.md) / TimeframeKeys
+# Enumeration: TimeframeKeys
 
 ## Table of contents
 
@@ -26,11 +26,19 @@
 
 • **CURRENT\_MONTH** = ``"current_month"``
 
+#### Defined in
+
+[types/timeframe-keys.ts:11](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/timeframe-keys.ts#L11)
+
 ___
 
 ### CURRENT\_QUARTER
 
 • **CURRENT\_QUARTER** = ``"current_quarter"``
+
+#### Defined in
+
+[types/timeframe-keys.ts:12](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/timeframe-keys.ts#L12)
 
 ___
 
@@ -38,11 +46,19 @@ ___
 
 • **CURRENT\_WEEK** = ``"current_week"``
 
+#### Defined in
+
+[types/timeframe-keys.ts:10](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/timeframe-keys.ts#L10)
+
 ___
 
 ### FIFTEEN\_MIN
 
 • **FIFTEEN\_MIN** = ``"15m"``
+
+#### Defined in
+
+[types/timeframe-keys.ts:3](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/timeframe-keys.ts#L3)
 
 ___
 
@@ -50,11 +66,19 @@ ___
 
 • **ONE\_DAY** = ``"24h"``
 
+#### Defined in
+
+[types/timeframe-keys.ts:7](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/timeframe-keys.ts#L7)
+
 ___
 
 ### ONE\_HOUR
 
 • **ONE\_HOUR** = ``"1h"``
+
+#### Defined in
+
+[types/timeframe-keys.ts:4](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/timeframe-keys.ts#L4)
 
 ___
 
@@ -62,11 +86,19 @@ ___
 
 • **PREVIOUS\_MONTH** = ``"previous_month"``
 
+#### Defined in
+
+[types/timeframe-keys.ts:14](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/timeframe-keys.ts#L14)
+
 ___
 
 ### PREVIOUS\_QUARTER
 
 • **PREVIOUS\_QUARTER** = ``"previous_quarter"``
+
+#### Defined in
+
+[types/timeframe-keys.ts:15](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/timeframe-keys.ts#L15)
 
 ___
 
@@ -74,11 +106,19 @@ ___
 
 • **PREVIOUS\_WEEK** = ``"previous_week"``
 
+#### Defined in
+
+[types/timeframe-keys.ts:13](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/timeframe-keys.ts#L13)
+
 ___
 
 ### SEVEN\_DAY
 
 • **SEVEN\_DAY** = ``"7d"``
+
+#### Defined in
+
+[types/timeframe-keys.ts:8](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/timeframe-keys.ts#L8)
 
 ___
 
@@ -86,14 +126,26 @@ ___
 
 • **SIX\_HOUR** = ``"6h"``
 
+#### Defined in
+
+[types/timeframe-keys.ts:5](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/timeframe-keys.ts#L5)
+
 ___
 
 ### THIRTY\_DAY
 
 • **THIRTY\_DAY** = ``"30d"``
 
+#### Defined in
+
+[types/timeframe-keys.ts:9](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/timeframe-keys.ts#L9)
+
 ___
 
 ### TWELVE\_HOUR
 
 • **TWELVE\_HOUR** = ``"12h"``
+
+#### Defined in
+
+[types/timeframe-keys.ts:6](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/timeframe-keys.ts#L6)
