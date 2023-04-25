@@ -16,6 +16,10 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       fileName: (format) => `${packageName}.${format}.js`,
     },
   },
+  test: {
+    // Include regular `*.spec.ts` files as well as timezone-specific unit test files `*.spec.tz.ts`
+    include: ['**/src/**/*.spec(.tz)?.ts'],
+  },
 }))
 
 // If we are trying to preview a build of the local `package/analytics-utilities/sandbox` directory,

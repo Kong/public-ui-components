@@ -22,6 +22,7 @@
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
     "build": "run-s typecheck build:package build:types",
+    "build:docs": "typedoc --plugin typedoc-plugin-markdown --out docs src/index.ts --entryDocument analytics-utils.md --gitRevision main --githubPages false --readme none --tsconfig ./tsconfig.build.json",
     "build:package": "BUILD_VISUALIZER='analytics/analytics-utilities' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "preview:package": "vite preview --port 4173",
@@ -31,8 +32,11 @@
     "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
     "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
     "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
-    "test:unit": "cross-env FORCE_COLOR=1 vitest run",
-    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+    "test:unit": "cross-env FORCE_COLOR=1 run-s test:unit:default test:unit:utc test:unit:est",
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui",
+    "test:unit:default": "vitest run spec.ts",
+    "test:unit:utc": "TZ='US/Eastern' vitest run spec.tz.ts",
+    "test:unit:est": "TZ='UTC' vitest run spec.tz.ts"
   },
   "repository": {
     "type": "git",
@@ -47,5 +51,8 @@
   "license": "Apache-2.0",
   "volta": {
     "extends": "../../../package.json"
+  },
+  "dependencies": {
+    "date-fns": "^2.29.3"
   }
 }
