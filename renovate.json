@@ -12,6 +12,9 @@
   "ignorePaths": [
     "packages/core/cli/src/__template__/package.json"
   ],
+  "ignoreDeps": [
+    "vue-tsc"
+  ],
   "labels": [
     "dependencies",
     "renovate-bot"
