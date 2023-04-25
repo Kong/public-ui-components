@@ -58,6 +58,8 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .kong-ui-public-misc-widgets-github-star {
+  max-height: 20px; // Restrict the height for proper vertical alignment
+
   .github-button {
     font-style: normal;
   }
