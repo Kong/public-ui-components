@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@0.3.18...@kong-ui-public/misc-widgets@0.3.19) (2023-04-25)
+
+
+### Bug Fixes
+
+* **github-star:** fixed height ([#347](https://github.com/Kong/public-ui-components/issues/347)) ([002cc7a](https://github.com/Kong/public-ui-components/commit/002cc7a03dd2d2ff1f9548488b576956e2cb1a70))
+
+
+
+
+
 ## [0.3.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@0.3.17...@kong-ui-public/misc-widgets@0.3.18) (2023-04-25)
 
 **Note:** Version bump only for package @kong-ui-public/misc-widgets
