@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.15.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.16...@kong-ui-public/app-layout@0.15.17) (2023-04-25)
+
+
+### Bug Fixes
+
+* downgrade vue-tsc for type errors ([#348](https://github.com/Kong/public-ui-components/issues/348)) ([b3bf351](https://github.com/Kong/public-ui-components/commit/b3bf351cb0940a564423f92bbe7863c10412281f))
+
+
+
+
+
 ## [0.15.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.15...@kong-ui-public/app-layout@0.15.16) (2023-04-25)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
