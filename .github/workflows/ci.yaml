@@ -244,11 +244,13 @@ jobs:
       # --yes - so CI doesn't wait for the confirmation keyboard import
       # --create-release - so that release is created in github when version is changed
       # --conventional-commits - so that package's version changed following semantic releases
+      #
+      # we shall ignore lerna version error as pnpm publish will fail or not publish in case of such error
       - name: Update package versions
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
-          lerna version --conventional-commits --create-release github --yes --force-git-tag
+          lerna version --conventional-commits --create-release github --yes --force-git-tag || true
 
       - name: Publish packages to NPM
         env:
