@@ -239,11 +239,16 @@ jobs:
           name: package-dist-artifacts
           path: packages/
 
+      # for lerna version we use:
+      # --force-git-tag - if tag was already created it will be recreated instead of command failing and entire CI failing
+      # --yes - so CI doesn't wait for the confirmation keyboard import
+      # --create-release - so that release is created in github when version is changed
+      # --conventional-commits - so that package's version changed following semantic releases
       - name: Update package versions
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
-          lerna version --conventional-commits --create-release github --yes
+          lerna version --conventional-commits --create-release github --yes --force-git-tag
 
       - name: Publish packages to NPM
         env:
