@@ -8,8 +8,11 @@ on:
     branches:
       - main
 
-jobs:
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
 
+jobs:
   install-dependencies:
     name: Install Dependencies
     runs-on: ubuntu-latest
