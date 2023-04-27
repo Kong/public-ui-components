@@ -5,8 +5,8 @@ importers:
   .:
     specifiers:
       '@babel/types': ^7.21.4
-      '@commitlint/cli': ^17.5.1
-      '@commitlint/config-conventional': ^17.4.4
+      '@commitlint/cli': ^17.6.0
+      '@commitlint/config-conventional': ^17.6.0
       '@digitalroute/cz-conventional-changelog-for-jira': ^8.0.0
       '@evilmartians/lefthook': ^1.3.9
       '@kong/kongponents': ^8.56.1
@@ -65,7 +65,7 @@ importers:
     devDependencies:
       '@babel/types': 7.21.4
       '@commitlint/cli': 17.6.1
-      '@commitlint/config-conventional': 17.4.4
+      '@commitlint/config-conventional': 17.6.1
       '@digitalroute/cz-conventional-changelog-for-jira': 8.0.0
       '@evilmartians/lefthook': 1.3.10
       '@kong/kongponents': 8.56.1_lavcef455lp3wtm2mcdrwhgymm
@@ -633,8 +633,8 @@ packages:
       - '@swc/wasm'
     dev: true
 
-  /@commitlint/config-conventional/17.4.4:
-    resolution: {integrity: sha512-u6ztvxqzi6NuhrcEDR7a+z0yrh11elY66nRrQIpqsqW6sZmpxYkDLtpRH8jRML+mmxYQ8s4qqF06Q/IQx5aJeQ==}
+  /@commitlint/config-conventional/17.6.1:
+    resolution: {integrity: sha512-ng/ybaSLuTCH9F+7uavSOnEQ9EFMl7lHEjfAEgRh1hwmEe8SpLKpQeMo2aT1IWvHaGMuTb+gjfbzoRf2IR23NQ==}
     engines: {node: '>=v14'}
     dependencies:
       conventional-changelog-conventionalcommits: 5.0.0
