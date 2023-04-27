@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.20...@kong-ui-public/app-layout@0.16.0) (2023-04-27)
+
+
+### Features
+
+* **app-layout:** remove navbar dropdown menu ([#359](https://github.com/Kong/public-ui-components/issues/359)) ([bb650bb](https://github.com/Kong/public-ui-components/commit/bb650bbd79e2089e28af2bf29ecafc658bc5e6bf))
+
+
+
+
+
 ## [0.15.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.15.19...@kong-ui-public/app-layout@0.15.20) (2023-04-27)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
