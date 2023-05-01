@@ -11,10 +11,6 @@ import questions from '../questions'
 
 const { workspaceName, packageName, confirmPackageName } = questions
 
-// Replace any variation of string 'Analytics' in assets and chunks. These are in order to preserve capitalization.
-// (Some adblock filter lists deny requests for files starting with "assets/analytics".  See MA-926 for more context.)
-const sanitizedPackageName = String(packageName || '').replace(/Analytics/g, 'Vitals').replace(/analytics/gi, 'vitals')
-
 /**
  * @description Create new files for package
  * @param {string} workspace Workspace name
@@ -57,6 +53,9 @@ const createPackageFiles = async (workspace: string, packageName: string): Promi
     const filenamePath = filename.split('__template__/')
     const relativePath = filenamePath[1]
     const newFilePath = `${packagePath(workspace, packageName)}/${relativePath.replace(/Template/g, componentName)}`
+    // Replace any variation of string 'Analytics' in assets and chunks. These are in order to preserve capitalization.
+    // (Some adblock filter lists deny requests for files starting with "assets/analytics".  See MA-926 for more context.)
+    const sanitizedPackageName = packageName.replace(/Analytics/g, 'Vitals').replace(/analytics/gi, 'vitals')
 
     // If template files exist
     if (stats.isFile()) {
