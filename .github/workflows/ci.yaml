@@ -1,4 +1,4 @@
-name: CI
+2name: CI
 
 on:
   push:
@@ -208,7 +208,7 @@ jobs:
     needs:
       - build
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && steps.build.outputs.filter != '{()}'}}
+    if: ${{ github.event_name == 'push' && needs.build.outputs.filter != '{()}'}}
     env:
       GH_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
