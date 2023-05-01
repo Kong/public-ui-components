@@ -12,6 +12,22 @@ import questions from '../questions'
 const { workspaceName, packageName, confirmPackageName } = questions
 
 /**
+ * Sanitize package/filename to exclude undesired strings
+ * IMPORANT: If this function is changed, you **must** change the function in `/vite.config.shared.ts` as well.
+ * @param {string} packageName The string to sanitize
+ * @returns {string} The sanitized package/filename string
+ */
+export const sanitizePackageName = (packageName: string): string => {
+  // Add additional replace rules as needed
+
+  // Replace any variation of string 'Analytics' in assets and chunks. These are in order to preserve capitalization.
+  // (Some adblock filter lists deny requests for files starting with "assets/analytics".  See MA-926 for more context.)
+  const sanitizedName = (packageName || '').replace(/Analytics/g, 'Vitals').replace(/analytics/gi, 'vitals')
+
+  return sanitizedName
+}
+
+/**
  * @description Create new files for package
  * @param {string} workspace Workspace name
  * @param {string} packageName Package name
@@ -54,8 +70,8 @@ const createPackageFiles = async (workspace: string, packageName: string): Promi
     const relativePath = filenamePath[1]
     const newFilePath = `${packagePath(workspace, packageName)}/${relativePath.replace(/Template/g, componentName)}`
     // Replace any variation of string 'Analytics' in assets and chunks. These are in order to preserve capitalization.
-    // (Some adblock filter lists deny requests for files starting with "assets/analytics".  See MA-926 for more context.)
-    const sanitizedPackageName = packageName.replace(/Analytics/g, 'Vitals').replace(/analytics/gi, 'vitals')
+    // (Some adblock filter lists deny requests for files starting with "assets/analytics". See MA-926 for more context.)
+    const sanitizedPackageName = sanitizePackageName(packageName)
 
     // If template files exist
     if (stats.isFile()) {

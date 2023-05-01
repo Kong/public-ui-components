@@ -26,6 +26,7 @@ const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
 
 /**
  * Sanitize package/filename to exclude undesired strings
+ * IMPORANT: If this function is changed, you **must** change the function in `/packages/core/cli/src/core/package.ts` as well.
  * @param {string} packageName The string to sanitize
  * @returns {string} The sanitized package/filename string
  */
