@@ -11,6 +11,10 @@ import questions from '../questions'
 
 const { workspaceName, packageName, confirmPackageName } = questions
 
+// Replace any variation of string 'Analytics' in assets and chunks. These are in order to preserve capitalization.
+// (Some adblock filter lists deny requests for files starting with "assets/analytics".  See MA-926 for more context.)
+const sanitizedPackageName = String(packageName || '').replace(/Analytics/g, 'Vitals').replace(/analytics/gi, 'vitals')
+
 /**
  * @description Create new files for package
  * @param {string} workspace Workspace name
@@ -64,6 +68,8 @@ const createPackageFiles = async (workspace: string, packageName: string): Promi
       // Replace template strings
       const fileContent = fs.readFileSync(filename, 'utf8')
         .replace(/{%%PACKAGE_NAME%%}/g, packageName)
+        // The SANITIZED_PACKAGE_NAME replaces `analytics` with `vitals`
+        .replace(/{%%SANITIZED_PACKAGE_NAME%%}/g, sanitizedPackageName)
         .replace(/{%%COMPONENT_NAME%%}/g, componentName)
         .replace(/{%%WORKSPACE%%}/g, workspace)
         .replace(/{%%CURRENT_YEAR%%}/g, String(new Date().getFullYear()))
