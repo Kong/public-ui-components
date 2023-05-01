@@ -94,6 +94,19 @@ jobs:
           echo "spec=${specPackages}" >> $GITHUB_OUTPUT
           echo "unitTestFilter=${unitTestFilter}" >> $GITHUB_OUTPUT
 
+      - name: Check if PR Up to Date
+        id: 'up-to-date'
+        if: ${{github.event_name == 'push'}}
+        uses: Kong/shared-actions/pr-previews/up-to-date@feat/KHCP-7173_compare-main-to-pr
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Need to run tests
+        id: 'run-tests'
+        run: |
+          echo "run-tests=${{ (github.event_name == 'push' && steps.up-to-date.outputs.status == 'true') && 'false' || 'true' }}"
+          echo "run-tests=${{ (github.event_name == 'push' && steps.up-to-date.outputs.status == 'true') && 'false' || 'true' }}" >> $GITHUB_OUTPUT
+
       - name: Stylelint Packages
         if: ${{steps.changed_packages.outputs.filter != '{()}'}}
         run: pnpm --stream --filter "${{steps.changed_packages.outputs.filter}}" run stylelint
