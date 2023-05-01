@@ -280,7 +280,7 @@ import { defineConfig } from 'vite'
 
 // Replace any variation of string 'Analytics' in assets and chunks. Replacements are in order to preserve capitalization.
 // The third replacement is a catch-all in case a string like `ANALYTICS` is present
-const replaceAnalytics = (str: string) => str.replace(/analytics/g, 'vitals').replace(/Analytics/g, 'Vitals').replace(/analytics/gi, 'vitals')
+const replaceAnalytics = (str: string) => str.replace(/Analytics/g, 'Vitals').replace(/analytics/gi, 'vitals')
 
 export default defineConfig({
   // ...
