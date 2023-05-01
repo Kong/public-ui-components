@@ -33,11 +33,8 @@ export const sanitizePackageName = (packageName: string): string => {
   // Add additional replace rules as needed
 
   // Replace any variation of string 'Analytics' in assets and chunks. These are in order to preserve capitalization.
-  // The third replacement is a catch-all in case a string like `ANALYTICS` is present
   // (Some adblock filter lists deny requests for files starting with "assets/analytics".  See MA-926 for more context.)
-  const sanitizedName = (packageName || '').replace(/analytics/g, 'vitals')
-    .replace(/Analytics/g, 'Vitals')
-    .replace(/analytics/gi, 'vitals')
+  const sanitizedName = (packageName || '').replace(/Analytics/g, 'Vitals').replace(/analytics/gi, 'vitals')
 
   return sanitizedName
 }
