@@ -9,16 +9,16 @@ Commonly used types, interfaces and utils used with Kong analytics.
 
 ## Features
 
-- Common types, interfaces and utils for Kong analytics
+- Common types, interfaces and utilities for Kong analytics
 
 ## Usage
 
-- Install and import/use types and utils as needed
+- Install and import/use types and utilities as needed
 
 ### Install
 
 ```sh
-  yarn add @kong-ui-public/analytics-utilities
+yarn add @kong-ui-public/analytics-utilities
 ```
 
 ### TypeScript interfaces

@@ -1,4 +1,4 @@
-import sharedViteConfig from '../../../vite.config.shared'
+import sharedViteConfig, { sanitizePackageName } from '../../../vite.config.shared'
 import vue from '@vitejs/plugin-vue'
 import ViteYaml from '@modyfi/vite-plugin-yaml'
 import { resolve } from 'path'
@@ -6,6 +6,7 @@ import { defineConfig, mergeConfig } from 'vite'
 
 // Package name MUST always match the kebab-case package name inside the component's package.json file and the name of your `/packages/{package-name}` directory
 const packageName = 'spec-renderer'
+const sanitizedPackageName = sanitizePackageName(packageName)
 
 // Merge the shared Vite config with the local one defined below
 const config = mergeConfig(sharedViteConfig, defineConfig({
@@ -13,9 +14,9 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     lib: {
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
       // Example: name: 'kong-ui-public-demo-component'
-      name: `kong-ui-public-${packageName}`,
+      name: `kong-ui-public-${sanitizedPackageName}`,
       entry: resolve(__dirname, './src/index.ts'),
-      fileName: (format) => `${packageName}.${format}.js`,
+      fileName: (format) => `${sanitizedPackageName}.${format}.js`,
     },
   },
 }))

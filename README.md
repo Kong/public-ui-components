@@ -17,14 +17,14 @@ Monorepo for **open-source** Kong UI components and utilities.
   - [ESLint](#eslint)
   - [Type Checking](#type-checking)
   - [Testing](#testing)
-    - [File naming convensions](#file-naming-convensions)
   - [Preview sandbox build](#preview-sandbox-build)
   - [Build for production](#build-for-production)
   - [Committing Changes](#committing-changes)
-    - [Enforcing Commit Format](#enforcing-commit-format)
   - [Generating type interface documentation](#generating-type-interface-documentation)
-- [Preview components](#preview-components)
-- [Running consuming application with local copy of the package](#running-consuming-application-with-local-copy-of-the-package)
+  - [Preview components](#preview-components)
+  - [Running consuming application with local copy of the package](#running-consuming-application-with-local-copy-of-the-package)
+- [Host App Troubleshooting](#host-app-troubleshooting)
+  - [Analytics Packages are blocked by some ad-blockers](#analytics-packages-are-blocked-by-some-ad-blockers)
 
 ## What goes here
 
@@ -182,7 +182,7 @@ If your package generates **types**, then add a `build:docs` script to your `pac
 
 Please run the `build:docs` command manually to generate the docs and then commit them to your PR.
 
-## Preview components
+### Preview components
 
 You are working on the PR and changing component project. Let's say `@kong-ui-public/i18n`. You want to try to deploy consuming application (`khcp-ui` for example) that uses your changed code without merging your changes to main and publishing new version of `@kong-ui-public/i18n`. Here are the steps:
 
@@ -202,7 +202,7 @@ Install the preview version of the package in consuming application, let that PR
 
 _Never merge consuming application code that uses preview version of the package. PR versions will be deprecated and unpublished when your PR is closed._
 
-## Running consuming application with local copy of the package
+### Running consuming application with local copy of the package
 
 You are developing shared component (let's say `@kong-ui-public/forms`) and you need to run consuming application with the current version of the code you have locally in your `public-ui-components/packages/{workspace}/forms` branch. Here is how to do it:
 
@@ -266,3 +266,40 @@ In some cases HMR (hot module reloading) is not working out of the box in this c
     yarn install --force --frozen-lockfile
     ```
 
+## Host App Troubleshooting
+
+### Analytics Packages are blocked by some ad-blockers
+
+Some ad blockers inadvertently block build files with the string `analytics` in the name. As a proactive measure, the `vite.config.ts` files in our packages utilize a `sanitizePackageName` utility that replaces instances of the string `analytics` with `vitals` in generated filenames and global variables.
+
+If your host application _still_ has issues with ad blockers, you can try adding `build` rules to your host application's `vite.config.js` (or similar) to replace instances of the strings in components and packages:
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite'
+
+// Replace any variation of string 'Analytics' in assets and chunks. Replacements are in order to preserve capitalization.
+// The third replacement is a catch-all in case a string like `ANALYTICS` is present
+const replaceAnalytics = (str: string) => str.replace(/analytics/g, 'vitals').replace(/Analytics/g, 'Vitals').replace(/analytics/gi, 'vitals')
+
+export default defineConfig({
+  // ...
+  build: {
+    rollupOptions: {
+      output: {
+        chunkFileNames: (chunkInfo) => {
+          const name = replaceAnalytics(chunkInfo.name || '')
+
+          return `${name}.[hash].js`
+        },
+        assetFileNames: (assetInfo) => {
+          // Replace any instances of `analytics` in the external package name
+          const filename = replaceAnalytics(assetInfo.name || '').split('.')[0]
+
+          return `assets/${filename}.[hash].[ext]`
+        },
+      },
+    },
+  },
+})
+```
