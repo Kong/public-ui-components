@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.4.4...@kong-ui-public/cli@0.4.5) (2023-05-01)
+
+
+### Bug Fixes
+
+* **analytics:** sanitize filenames [MA-1651] ([#366](https://github.com/Kong/public-ui-components/issues/366)) ([8990dba](https://github.com/Kong/public-ui-components/commit/8990dba7ea9d6a982e4ce74b6115849c6f81e4de))
+
+
+
+
+
 ## [0.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.4.3...@kong-ui-public/cli@0.4.4) (2023-04-25)
 
 **Note:** Version bump only for package @kong-ui-public/cli
