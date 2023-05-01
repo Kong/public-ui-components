@@ -10,8 +10,8 @@ on:
 
 jobs:
 
-  install-dependencies:
-    name: Install Dependencies
+  build:
+    name: Build And Test
     runs-on: ubuntu-latest
     outputs:
       filter: ${{steps.changed_packages.outputs.filter}}
@@ -34,7 +34,7 @@ jobs:
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
         with:
-          force-install: 'true'
+          force-install: ${{ github.event_name != 'pull_request' }}
 
       - name: Check for pnpm-lock change
         id: lock-changed
@@ -94,50 +94,40 @@ jobs:
           echo "spec=${specPackages}" >> $GITHUB_OUTPUT
           echo "unitTestFilter=${unitTestFilter}" >> $GITHUB_OUTPUT
 
-  build:
-    name: Build And Test
-    needs: install-dependencies
-    # do not do anything unless changed package is detected
-    if: ${{ needs.install-dependencies.outputs.filter != '{()}' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v3
-        with:
-         fetch-depth: 0
-
-      - name: Setup PNPM with Dependencies
-        uses: ./.github/actions/setup-pnpm-with-dependencies/
-
       - name: Stylelint Packages
-        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" run stylelint
+        if: ${{steps.changed_packages.outputs.filter != '{()}'}}
+        run: pnpm --stream --filter "${{steps.changed_packages.outputs.filter}}" run stylelint
 
       - name: Lint Packages
-        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" run lint
+        if: ${{steps.changed_packages.outputs.filter != '{()}'}}
+        run: pnpm --stream --filter "${{steps.changed_packages.outputs.filter}}" run lint
 
       - name: Build Packages
+        if: ${{steps.changed_packages.outputs.filter != '{()}'}}
         # The `...` syntax tells pnpm to include dependent packages
-        run: pnpm --stream --filter "...${{needs.install-dependencies.outputs.filter}}..." run build
+        run: pnpm --stream --filter "...${{steps.changed_packages.outputs.filter}}..." run build
 
       - name: Upload bundle-analyzer results
+        if: ${{steps.changed_packages.outputs.filter != '{()}'}}
         uses: actions/upload-artifact@v3
         with:
           name: rollup-plugin-visualizer
           path: packages/*/*/bundle-analyzer/stats-treemap.html
 
       - name: Run Unit Tests
-        run: pnpm --stream --filter "${{needs.install-dependencies.outputs.unitTestFilter}}" run test:unit
+        if: ${{ steps.changed_packages.outputs.filter != '{()}' && steps.run-tests.outputs.run-tests == 'true' }}
+        run: pnpm --stream --filter "${{steps.changed_packages.outputs.unitTestFilter}}" run test:unit
 
       - name: Prepare Cypress
-        if: ${{ needs.install-dependencies.outputs.spec != '' }}
+        if: ${{ steps.changed_packages.outputs.spec != '' && steps.run-tests.outputs.run-tests == 'true' }}
         run: pnpm cypress install
 
       - name: Run Component Tests
-        if: ${{ needs.install-dependencies.outputs.spec != '' }}
+        if: ${{ steps.changed_packages.outputs.spec != '' && steps.run-tests.outputs.run-tests == 'true' }}
         uses: cypress-io/github-action@v4
         with:
           install: false
-          command: pnpm run test:component:ci --spec ${{ needs.install-dependencies.outputs.spec }}
+          command: pnpm run test:component:ci --spec ${{ steps.changed_packages.outputs.spec }}
 
       - name: Upload Component Test Results
         uses: actions/upload-artifact@v3
@@ -150,14 +140,14 @@ jobs:
             cypress/screenshots/
 
       - name: Save Build Artifacts
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' && steps.changed_packages.outputs.filter != '{()}' }}
         uses: actions/upload-artifact@v3
         with:
           name: package-dist-artifacts
           path: packages/*/*/dist
 
       - name: Publish Previews
-        if: github.event_name == 'pull_request'
+        if: ${{github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '{()}'}}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
@@ -172,7 +162,7 @@ jobs:
 
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
 
-          pnpmPublish=$(pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" publish  --no-git-checks --access restricted --report-summary --tag "${tag}")
+          pnpmPublish=$(pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access restricted --report-summary --tag "${tag}")
 
           if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
             echo "There are no new packages that should be published"
@@ -214,12 +204,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
   publish:
-    if: ${{ github.event_name == 'push' }}
     name: Publish
     needs:
-      - install-dependencies
       - build
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && steps.build.outputs.filter != '{()}'}}
     env:
       GH_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
@@ -257,7 +246,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
         run: |
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
-          pnpm --stream --filter "${{needs.install-dependencies.outputs.filter}}" publish  --no-git-checks --access public
+          pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access public
 
   notify-slack:
     name: Slack Notification
