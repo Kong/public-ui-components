@@ -262,7 +262,7 @@ importers:
       webpack: ^5.79.0
       webpack-bundle-analyzer: ^4.8.0
       webpack-cli: ^5.0.1
-      webpack-dev-server: ^4.13.2
+      webpack-dev-server: ^4.13.3
     dependencies:
       '@kong/swagger-ui-kong-theme-universal': 4.1.9_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
