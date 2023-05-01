@@ -2,16 +2,16 @@
   "name": "@kong-ui-public/{%%PACKAGE_NAME%%}",
   "version": "0.0.1",
   "type": "module",
-  "main": "./dist/{%%PACKAGE_NAME%%}.umd.js",
-  "module": "./dist/{%%PACKAGE_NAME%%}.es.js",
+  "main": "./dist/{%%SANITIZED_PACKAGE_NAME%%}.umd.js",
+  "module": "./dist/{%%SANITIZED_PACKAGE_NAME%%}.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/{%%PACKAGE_NAME%%}.es.js",
-      "require": "./dist/{%%PACKAGE_NAME%%}.umd.js"
+      "import": "./dist/{%%SANITIZED_PACKAGE_NAME%%}.es.js",
+      "require": "./dist/{%%SANITIZED_PACKAGE_NAME%%}.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

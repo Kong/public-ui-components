@@ -24,6 +24,22 @@ const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
   })
   : undefined
 
+/**
+ * Sanitize package/filename to exclude undesired strings
+ * IMPORANT: If this function is changed, you **must** change the function in `/packages/core/cli/src/core/package.ts` as well.
+ * @param {string} packageName The string to sanitize
+ * @returns {string} The sanitized package/filename string
+ */
+export const sanitizePackageName = (packageName: string): string => {
+  // Add additional replace rules as needed
+
+  // Replace any variation of string 'Analytics' in assets and chunks. These are in order to preserve capitalization.
+  // (Some adblock filter lists deny requests for files starting with "assets/analytics".  See MA-926 for more context.)
+  const sanitizedName = (packageName || '').replace(/Analytics/g, 'Vitals').replace(/analytics/gi, 'vitals')
+
+  return sanitizedName
+}
+
 export default defineConfig({
   plugins: [
     vue(),
