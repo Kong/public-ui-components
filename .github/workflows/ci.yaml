@@ -175,10 +175,12 @@ jobs:
           git checkout ${{ github.head_ref }}
 
           lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend
-
+          echo "lerna version done"
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+          echo "npmrc created"
 
           pnpmPublish=$(pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access restricted --report-summary --tag "${tag}")
+          echo "pnpm publish executed"
 
           if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
             echo "There are no new packages that should be published"
