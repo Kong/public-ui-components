@@ -34,7 +34,7 @@ jobs:
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
         with:
-          force-install: ${{ github.event_name != 'pull_request' }}
+          force-install: true
 
       - name: Check for pnpm-lock change
         id: lock-changed
