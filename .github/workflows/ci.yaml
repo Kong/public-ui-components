@@ -46,48 +46,52 @@ jobs:
       - name: Getting changed packages
         id: changed_packages
         run: |
-          lernaCommand="changed"
-          if [[ "${{ steps.lock-changed.outputs.any_changed }}" == "true" ]]; then
-            lernaCommand="ls"
-          fi
+          # lernaCommand="changed"
+          # if [[ "${{ steps.lock-changed.outputs.any_changed }}" == "true" ]]; then
+          #   lernaCommand="ls"
+          # fi
 
-          echo "lernaCommand: ${lernaCommand}"
+          # echo "lernaCommand: ${lernaCommand}"
 
-          filter=""
-          specPackages=""
-          unitTestFilter=""
+          # filter=""
+          # specPackages=""
+          # unitTestFilter=""
 
-          # get the list of changed packages, grab the location
-          for pkgFolder in $(lerna ${lernaCommand} --l --json|jq -r '.[].location')
-          do
-            # remove current folder from the location path
-            pkgFolder="${pkgFolder/$(pwd)\//}"
+          # # get the list of changed packages, grab the location
+          # for pkgFolder in $(lerna ${lernaCommand} --l --json|jq -r '.[].location')
+          # do
+          #   # remove current folder from the location path
+          #   pkgFolder="${pkgFolder/$(pwd)\//}"
 
-            # add package path to pnpm filter
-            filter="${filter}${pkgFolder}|"
+          #   # add package path to pnpm filter
+          #   filter="${filter}${pkgFolder}|"
 
-            # if there is cypress tests in the package, add package path to cypress spec
-            findRes=$(find "${pkgFolder}" -name "*.cy.ts" || true)
-            if [[ -n "${findRes}" ]]; then
-                specPackages="${specPackages}${pkgFolder},"
-            fi
+          #   # if there is cypress tests in the package, add package path to cypress spec
+          #   findRes=$(find "${pkgFolder}" -name "*.cy.ts" || true)
+          #   if [[ -n "${findRes}" ]]; then
+          #       specPackages="${specPackages}${pkgFolder},"
+          #   fi
 
-            findRes=$(find "${pkgFolder}" -name "*.spec.ts" || true)
-            if [[ -n "${findRes}" ]]; then
-                unitTestFilter="${unitTestFilter}${pkgFolder}|"
-            fi
-          done
+          #   findRes=$(find "${pkgFolder}" -name "*.spec.ts" || true)
+          #   if [[ -n "${findRes}" ]]; then
+          #       unitTestFilter="${unitTestFilter}${pkgFolder}|"
+          #   fi
+          # done
 
-          # remove trailing '|' from pnpm filter
-          filter="{("$(echo "${filter}" | sed 's/|$//')")}"
-          echo "filter=${filter}"
+          # # remove trailing '|' from pnpm filter
+          # filter="{("$(echo "${filter}" | sed 's/|$//')")}"
+          # echo "filter=${filter}"
 
-          unitTestFilter="{("$(echo "${unitTestFilter}" | sed 's/|$//')")}"
-          echo "unitTestFilter=${unitTestFilter}"
+          # unitTestFilter="{("$(echo "${unitTestFilter}" | sed 's/|$//')")}"
+          # echo "unitTestFilter=${unitTestFilter}"
 
-          # remove trailing ',' from cypress spec
-          specPackages=$(echo "${specPackages}" | sed 's/,$//')
-          echo "specPackages=${specPackages}"
+          # # remove trailing ',' from cypress spec
+          # specPackages=$(echo "${specPackages}" | sed 's/,$//')
+          # echo "specPackages=${specPackages}"
+
+          filter="{(packages/analytics/analytics-utilities)}"
+          unitTestFilter="{(packages/analytics/analytics-utilities)}"
+          specPackages="packages/analytics/metric-cards"
 
           # set github output
           echo "filter=${filter}" >> $GITHUB_OUTPUT
