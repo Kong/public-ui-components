@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.16.4...@kong-ui-public/app-layout@0.17.0) (2023-05-02)
+
+
+### Features
+
+* **app-layout:** update main content background color ([#373](https://github.com/Kong/public-ui-components/issues/373)) ([1784040](https://github.com/Kong/public-ui-components/commit/17840405787129e17a5ef68187967637c759fba0))
+
+
+
+
+
 ## [0.16.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.16.3...@kong-ui-public/app-layout@0.16.4) (2023-05-02)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
