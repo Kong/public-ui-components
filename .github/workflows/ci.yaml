@@ -176,7 +176,7 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
           echo "npmrc created"
 
-          pnpmPublish=$(pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access public --report-summary --tag "${tag}")
+          pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access public --report-summary --tag "${tag}"
           echo "pnpm publish executed"
 
           if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
