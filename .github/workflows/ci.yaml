@@ -34,12 +34,12 @@ jobs:
         with:
           force-install: true
 
-      - name: Check for pnpm-lock change
-        id: lock-changed
-        uses: tj-actions/changed-files@v34
-        with:
-          files: |
-            pnpm-lock.yaml
+      # - name: Check for pnpm-lock change
+      #   id: lock-changed
+      #   uses: tj-actions/changed-files@v34
+      #   with:
+      #     files: |
+      #       pnpm-lock.yaml
 
       - name: Getting changed packages
         id: changed_packages
@@ -92,19 +92,18 @@ jobs:
           echo "spec=${specPackages}" >> $GITHUB_OUTPUT
           echo "unitTestFilter=${unitTestFilter}" >> $GITHUB_OUTPUT
 
-      - name: Check if PR Up to Date
-        id: 'up-to-date'
-        if: ${{github.event_name == 'push'}}
-        uses: ./.github/actions/up-to-date/
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Check if PR Up to Date
+      #   id: 'up-to-date'
+      #   if: ${{github.event_name == 'push'}}
+      #   uses: ./.github/actions/up-to-date/
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Need to run tests
         id: 'run-tests'
         run: |
           echo "run-tests=${{ (github.event_name == 'push' && steps.up-to-date.outputs.status == 'true') && 'false' || 'true' }}"
           echo "run-tests=${{ (github.event_name == 'push' && steps.up-to-date.outputs.status == 'true') && 'false' || 'true' }}" >> $GITHUB_OUTPUT
-          git reset --hard HEAD
 
       - name: Stylelint Packages
         if: ${{steps.changed_packages.outputs.filter != '{()}'}}
