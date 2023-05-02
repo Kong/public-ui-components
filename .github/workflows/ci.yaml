@@ -28,8 +28,6 @@ jobs:
 
       - name: Checkout Source Code
         uses: actions/checkout@v3
-        # with:
-        #   fetch-depth: 0
 
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
@@ -106,6 +104,10 @@ jobs:
         run: |
           echo "run-tests=${{ (github.event_name == 'push' && steps.up-to-date.outputs.status == 'true') && 'false' || 'true' }}"
           echo "run-tests=${{ (github.event_name == 'push' && steps.up-to-date.outputs.status == 'true') && 'false' || 'true' }}" >> $GITHUB_OUTPUT
+
+      # doing fresh checkout
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
 
       - name: Stylelint Packages
         if: ${{steps.changed_packages.outputs.filter != '{()}'}}
