@@ -89,11 +89,10 @@ jobs:
           # specPackages=$(echo "${specPackages}" | sed 's/,$//')
           # echo "specPackages=${specPackages}"
 
-          filter="{(packages/analytics/analytics-utilities)}"
-          unitTestFilter="{(packages/analytics/analytics-utilities)}"
-          specPackages="packages/analytics/metric-cards"
-
           # set github output
+          filter="{(packages/analytics/analytics-utilities|packages/analytics/metric-cards|packages/core/app-layout|packages/core/copy-uuid|packages/core/i18n|packages/core/misc-widgets|packages/portal/document-viewer|packages/portal/spec-renderer|packages/portal/swagger-ui-web-component)}"
+          unitTestFilter="{(packages/analytics/analytics-utilities|packages/core/i18n|packages/portal/spec-renderer)}"
+          specPackages="packages/analytics/metric-cards,packages/core/app-layout,packages/core/copy-uuid,packages/core/misc-widgets,packages/portal/document-viewer,packages/portal/spec-renderer"
           echo "filter=${filter}" >> $GITHUB_OUTPUT
           echo "spec=${specPackages}" >> $GITHUB_OUTPUT
           echo "unitTestFilter=${unitTestFilter}" >> $GITHUB_OUTPUT
