@@ -123,4 +123,3 @@ TypeScript interfaces [are available here](https://github.com/Kong/public-ui-com
 - [`<AppNavbar.vue />`](docs/navbar.md)
 - [`<AppSidebar.vue />`](docs/sidebar.md)
 - [`<AppError.vue />`](docs/error.md)
-

@@ -31,6 +31,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check if PR Up to Date
+        id: 'up-to-date'
+        #if: ${{github.event_name == 'push'}}
+        uses: ./.github/actions/up-to-date/
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
         with:
@@ -93,13 +100,6 @@ jobs:
           echo "filter=${filter}" >> $GITHUB_OUTPUT
           echo "spec=${specPackages}" >> $GITHUB_OUTPUT
           echo "unitTestFilter=${unitTestFilter}" >> $GITHUB_OUTPUT
-
-      - name: Check if PR Up to Date
-        id: 'up-to-date'
-        if: ${{github.event_name == 'push'}}
-        uses: ./.github/actions/up-to-date/
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Need to run tests
         id: 'run-tests'
