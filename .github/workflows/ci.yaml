@@ -97,7 +97,7 @@ jobs:
       - name: Check if PR Up to Date
         id: 'up-to-date'
         if: ${{github.event_name == 'push'}}
-        uses: Kong/shared-actions/pr-previews/up-to-date@feat/KHCP-7173_compare-main-to-pr
+        uses: ./.github/actions/up-to-date/
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
