@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.17.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.17.0...@kong-ui-public/app-layout@0.17.1) (2023-05-02)
+
+
+### Reverts
+
+* Revert "feat(app-layout): update main content background color (#373)" (#374) ([2e3d6be](https://github.com/Kong/public-ui-components/commit/2e3d6beae0b739fbb5bbbe56b56b9ec46bf31197)), closes [#373](https://github.com/Kong/public-ui-components/issues/373) [#374](https://github.com/Kong/public-ui-components/issues/374)
+
+
+
+
+
 # [0.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.16.4...@kong-ui-public/app-layout@0.17.0) (2023-05-02)
 
 
