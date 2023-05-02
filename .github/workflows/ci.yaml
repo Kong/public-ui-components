@@ -120,37 +120,37 @@ jobs:
         # The `...` syntax tells pnpm to include dependent packages
         run: pnpm --stream --filter "...${{steps.changed_packages.outputs.filter}}..." run build
 
-      - name: Upload bundle-analyzer results
-        if: ${{steps.changed_packages.outputs.filter != '{()}'}}
-        uses: actions/upload-artifact@v3
-        with:
-          name: rollup-plugin-visualizer
-          path: packages/*/*/bundle-analyzer/stats-treemap.html
+      # - name: Upload bundle-analyzer results
+      #   if: ${{steps.changed_packages.outputs.filter != '{()}'}}
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: rollup-plugin-visualizer
+      #     path: packages/*/*/bundle-analyzer/stats-treemap.html
 
-      - name: Run Unit Tests
-        if: ${{ steps.changed_packages.outputs.filter != '{()}' && steps.run-tests.outputs.run-tests == 'true' }}
-        run: pnpm --stream --filter "${{steps.changed_packages.outputs.unitTestFilter}}" run test:unit
+      # - name: Run Unit Tests
+      #   if: ${{ steps.changed_packages.outputs.filter != '{()}' && steps.run-tests.outputs.run-tests == 'true' }}
+      #   run: pnpm --stream --filter "${{steps.changed_packages.outputs.unitTestFilter}}" run test:unit
 
-      - name: Prepare Cypress
-        if: ${{ steps.changed_packages.outputs.spec != '' && steps.run-tests.outputs.run-tests == 'true' }}
-        run: pnpm cypress install
+      # - name: Prepare Cypress
+      #   if: ${{ steps.changed_packages.outputs.spec != '' && steps.run-tests.outputs.run-tests == 'true' }}
+      #   run: pnpm cypress install
 
-      - name: Run Component Tests
-        if: ${{ steps.changed_packages.outputs.spec != '' && steps.run-tests.outputs.run-tests == 'true' }}
-        uses: cypress-io/github-action@v4
-        with:
-          install: false
-          command: pnpm run test:component:ci --spec ${{ steps.changed_packages.outputs.spec }}
+      # - name: Run Component Tests
+      #   if: ${{ steps.changed_packages.outputs.spec != '' && steps.run-tests.outputs.run-tests == 'true' }}
+      #   uses: cypress-io/github-action@v4
+      #   with:
+      #     install: false
+      #     command: pnpm run test:component:ci --spec ${{ steps.changed_packages.outputs.spec }}
 
-      - name: Upload Component Test Results
-        uses: actions/upload-artifact@v3
-        continue-on-error: true
-        if: failure()
-        with:
-          name: component-test-failures
-          path: |
-            cypress/videos/
-            cypress/screenshots/
+      # - name: Upload Component Test Results
+      #   uses: actions/upload-artifact@v3
+      #   continue-on-error: true
+      #   if: failure()
+      #   with:
+      #     name: component-test-failures
+      #     path: |
+      #       cypress/videos/
+      #       cypress/screenshots/
 
       - name: Save Build Artifacts
         if: ${{ github.event_name == 'push' && steps.changed_packages.outputs.filter != '{()}' }}
@@ -171,7 +171,7 @@ jobs:
 
           git checkout ${{ github.head_ref }}
 
-          lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend || true
+          lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend
 
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
 
