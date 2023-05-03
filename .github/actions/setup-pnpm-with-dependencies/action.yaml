@@ -19,10 +19,21 @@ outputs:
 runs:
   using: composite
   steps:
+
+    - name: get Node version
+      id: node-version
+      shell: bash
+      run: |
+        voltaNodeVersion=$(cat package.json|jq -r ".volta.node")
+        if [[ $voltaNodeVersion == null ]]; then
+          voltaNodeVersion="${{ inputs.nodejs-version }}"
+        fi
+        echo "node-version=${voltaNodeVersion}">> $GITHUB_OUTPUT
+
     - name: Setup Node
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ inputs.nodejs-version }}
+        node-version: ${{ steps.node-version.outputs.node-version }}
 
     - name: Install PNPM
       shell: bash
