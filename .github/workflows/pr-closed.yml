@@ -25,7 +25,8 @@ jobs:
         run: |
           toUnpublish=()
 
-          echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN_PUBLIC_PUBLISH}}" > .npmrc
+          # Reference the env variable NPM_TOKEN here, not the secret
+          echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}" > .npmrc
 
           prNumber="${{github.event.number}}"
 
