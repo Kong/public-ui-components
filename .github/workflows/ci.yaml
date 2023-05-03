@@ -19,6 +19,8 @@ jobs:
       unitTestFilter: ${{steps.changed_packages.outputs.unitTestFilter}}
 
     steps:
+      # if previous run did create comment with the reference to PR preview package
+      # this comment is removed in this step
       - name: Remove preview consumption comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
@@ -31,6 +33,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      # When running on push, we compare the state of PR and main branches. If they are
+      # identical - we will skip test execution as those were already executued on same code in PR branch
+      # see 'run-test' step and variable bellow
       - name: Check if PR Up to Date
         id: 'up-to-date'
         if: ${{github.event_name == 'push'}}
@@ -43,6 +48,8 @@ jobs:
         with:
           force-install: true
 
+      # if we detect the change in pnpm-lock.yaml - we need to build every package
+      # see 'changed_packages' bellow
       - name: Check for pnpm-lock change
         id: lock-changed
         uses: tj-actions/changed-files@v34
@@ -53,7 +60,10 @@ jobs:
       - name: Getting changed packages
         id: changed_packages
         run: |
+          # we execute lerna changed to grab all the packages changed
           lernaCommand="changed"
+
+          # if lock-changed detects the change of pnpm-lock.yaml file - we will grap all the packages
           if [[ "${{ steps.lock-changed.outputs.any_changed }}" == "true" ]]; then
             lernaCommand="ls"
           fi
@@ -78,7 +88,8 @@ jobs:
             if [[ -n "${findRes}" ]]; then
                 specPackages="${specPackages}${pkgFolder},"
             fi
-
+            # we will keep the list of packages that do require unit tests based on the fact that we
+            # detecting UT files
             findRes=$(find "${pkgFolder}" -name "*.spec.ts" || true)
             if [[ -n "${findRes}" ]]; then
                 unitTestFilter="${unitTestFilter}${pkgFolder}|"
@@ -96,11 +107,12 @@ jobs:
           specPackages=$(echo "${specPackages}" | sed 's/,$//')
           echo "specPackages=${specPackages}"
 
-          # set github output
+          # set github output, format is different for different needs / commands bellow
           echo "filter=${filter}" >> $GITHUB_OUTPUT
           echo "spec=${specPackages}" >> $GITHUB_OUTPUT
           echo "unitTestFilter=${unitTestFilter}" >> $GITHUB_OUTPUT
 
+      # see the comment for `up-to-date` action
       - name: Need to run tests
         id: 'run-tests'
         run: |
@@ -158,6 +170,7 @@ jobs:
           name: package-dist-artifacts
           path: packages/*/*/dist
 
+      # this will publish PR preview packages
       - name: Publish Previews
         if: ${{github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '{()}'}}
         run: |
