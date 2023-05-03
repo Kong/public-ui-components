@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.1.2...@kong-ui-public/analytics-utilities@0.1.3) (2023-05-03)
+
+
+### Bug Fixes
+
+* **explore-v2-meta:** Adding explore-v2 meta blob. start->startMs, end->endMs ([#383](https://github.com/Kong/public-ui-components/issues/383)) ([d7ad35d](https://github.com/Kong/public-ui-components/commit/d7ad35d2352705a986f8ea5af49981c5c077f02c))
+
+
+
+
+
 ## [0.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.1.1...@kong-ui-public/analytics-utilities@0.1.2) (2023-05-01)
 
 
