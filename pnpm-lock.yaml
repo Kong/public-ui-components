@@ -188,7 +188,7 @@ importers:
 
   packages/core/i18n:
     specifiers:
-      '@formatjs/intl': ^2.7.0
+      '@formatjs/intl': ^2.7.1
       flat: ^5.0.2
       intl-messageformat: ^10.3.4
     dependencies:
