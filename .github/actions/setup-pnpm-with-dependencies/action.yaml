@@ -47,7 +47,7 @@ runs:
       uses: actions/cache@v3
       with:
         path: '**/node_modules'
-        key: pnpm-${{ inputs.nodejs-version }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+        key: pnpm-${{ steps.node-version.outputs.node-version }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
     - name: Install Dependencies
       if: ${{ inputs.force-install == 'true' || steps.dependency-cache.outputs.cache-hit != 'true' }}
