@@ -33,7 +33,7 @@ jobs:
 
       - name: Check if PR Up to Date
         id: 'up-to-date'
-        #if: ${{github.event_name == 'push'}}
+        if: ${{github.event_name == 'push'}}
         uses: ./.github/actions/up-to-date/
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
