@@ -54,7 +54,7 @@
     "vue": "^3.2.47"
   },
   "dependencies": {
-    "@formatjs/intl": "^2.7.0",
+    "@formatjs/intl": "^2.7.1",
     "flat": "^5.0.2",
     "intl-messageformat": "^10.3.4"
   }
