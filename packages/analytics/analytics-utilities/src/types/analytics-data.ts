@@ -27,18 +27,7 @@ export interface GranularityFullObj {
   origin?: string | number
 }
 
-/**
- * Metadata about the explore result
- */
-export interface AnalyticsExploreMeta {
-  /**
-   * Millisecond timestamp representing the start of this dataset
-   */
-  start: number
-  /**
-   * Millisecond timestamp representing the end of this dataset
-   */
-  end: number
+export interface BaseExploreMeta {
   /**
    * Optional query id to be used to trace the original query from which this data resulted
    */
@@ -69,6 +58,34 @@ export interface AnalyticsExploreMeta {
    * Limit applied to the original query
    */
   limit?: number
+}
+
+/**
+ * Metadata about the explore result
+ */
+export interface AnalyticsExploreMeta extends BaseExploreMeta {
+  /**
+   * Second timestamp representing the start of this dataset
+   */
+  start: number
+  /**
+   * Second timestamp representing the end of this dataset
+   */
+  end: number
+}
+
+/**
+ * Metadata about the exploreV2 result
+ */
+export interface AnalyticsExploreV2Meta extends BaseExploreMeta {
+  /**
+   * Millisecond timestamp representing the start of this dataset
+   */
+  startMs: number
+  /**
+   * Millisecond timestamp representing the end of this dataset
+   */
+  endMs: number
 }
 
 /**
