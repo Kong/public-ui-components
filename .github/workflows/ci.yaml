@@ -1,5 +1,4 @@
 name: CI
-
 on:
   push:
     branches:
@@ -11,12 +10,14 @@ on:
 jobs:
 
   build:
-    name: Build And Test
+    name: Build And Unit Test
     runs-on: ubuntu-latest
     outputs:
       filter: ${{steps.changed_packages.outputs.filter}}
-      spec: ${{steps.changed_packages.outputs.spec}}
       unitTestFilter: ${{steps.changed_packages.outputs.unitTestFilter}}
+      unitTestMatrix: ${{steps.changed_packages.outputs.unitTestMatrix}}
+      componentTestFilter: ${{steps.changed_packages.outputs.componentTestFilter}}
+      componentTestMatrix: ${{steps.changed_packages.outputs.componentTestMatrix}}
 
     steps:
       # if previous run did create comment with the reference to PR preview package
@@ -34,7 +35,7 @@ jobs:
           fetch-depth: 0
 
       # When running on push, we compare the state of PR and main branches. If they are
-      # identical - we will skip test execution as those were already executued on same code in PR branch
+      # identical - we will skip test execution as those were already executed on same code in PR branch
       # see 'run-test' step and variable bellow
       - name: Check if PR Up to Date
         id: 'up-to-date'
@@ -48,14 +49,21 @@ jobs:
         with:
           force-install: true
 
+      # see the comment for `up-to-date` action
+      - name: Need to run tests
+        id: 'run-tests'
+        run: |
+          echo "run-tests=${{ (github.event_name == 'push' && steps.up-to-date.outputs.status == 'true') && 'false' || 'true' }}"
+          echo "run-tests=${{ (github.event_name == 'push' && steps.up-to-date.outputs.status == 'true') && 'false' || 'true' }}" >> $GITHUB_OUTPUT
+
+
       # if we detect the change in pnpm-lock.yaml - we need to build every package
       # see 'changed_packages' bellow
       - name: Check for pnpm-lock change
         id: lock-changed
-        uses: tj-actions/changed-files@v34
+        uses: ahmadnassri/action-changed-files@v1
         with:
-          files: |
-            pnpm-lock.yaml
+          pathspec: pnpm-lock.yaml
 
       - name: Getting changed packages
         id: changed_packages
@@ -64,15 +72,17 @@ jobs:
           lernaCommand="changed"
 
           # if lock-changed detects the change of pnpm-lock.yaml file - we will grap all the packages
-          if [[ "${{ steps.lock-changed.outputs.any_changed }}" == "true" ]]; then
+          if [[ "${{ steps.lock-changed.outputs.changed }}" == "true" ]]; then
             lernaCommand="ls"
           fi
 
           echo "lernaCommand: ${lernaCommand}"
 
           filter=""
-          specPackages=""
           unitTestFilter=""
+          unitTestMatrix=""
+          componentTestFilter=""
+          componentTestMatrix=""
 
           # get the list of changed packages, grab the location
           for pkgFolder in $(lerna ${lernaCommand} --l --json|jq -r '.[].location')
@@ -86,8 +96,10 @@ jobs:
             # if there is cypress tests in the package, add package path to cypress spec
             findRes=$(find "${pkgFolder}" -name "*.cy.ts" || true)
             if [[ -n "${findRes}" ]]; then
-                specPackages="${specPackages}${pkgFolder},"
+                componentTestFilter="${componentTestFilter}${pkgFolder},"
+                componentTestMatrix="${componentTestMatrix}\"${pkgFolder}\","
             fi
+
             # we will keep the list of packages that do require unit tests based on the fact that we
             # detecting UT files
             findRes=$(find "${pkgFolder}" -name "*.spec.ts" || true)
@@ -98,81 +110,67 @@ jobs:
 
           # remove trailing '|' from pnpm filter
           filter="{("$(echo "${filter}" | sed 's/|$//')")}"
+
+          if [[ "${filter}" == "{()}" ]]; then
+            filter=""
+          fi
           echo "filter=${filter}"
 
           unitTestFilter="{("$(echo "${unitTestFilter}" | sed 's/|$//')")}"
+          if [[ "${{steps.run-tests.outputs.run-tests}}" != "true" || "${unitTestFilter}" == "{()}" ]]; then
+            unitTestFilter=""
+          fi
           echo "unitTestFilter=${unitTestFilter}"
 
-          # remove trailing ',' from cypress spec
-          specPackages=$(echo "${specPackages}" | sed 's/,$//')
-          echo "specPackages=${specPackages}"
+          unitTestMatrix=$(echo "${unitTestFilter}"| sed 's/{(/\[\"/'| sed 's/)}/\"\]'/|sed 's/|/\"\,\"/g'| sed 's/packages\///g')
+          echo "unitTestMatrix=${unitTestMatrix}"
 
-          # set github output, format is different for different needs / commands bellow
+
+          # remove trailing ',' from cypress spec filter
+          componentTestFilter=$(echo "${componentTestFilter}" | sed 's/,$//')
+          if [[ "${{steps.run-tests.outputs.run-tests}}" != "true" ]]; then
+            componentTestFilter=""
+          fi
+          echo "componentTestFilter=${componentTestFilter}"
+
+          # remove trailing ',' from cypress spec matrix
+          componentTestMatrix="[$(echo "${componentTestMatrix}" | sed 's/,$//')]"
+          if [[ "${{steps.run-tests.outputs.run-tests}}" != "true" || "${componentTestFilter}" == "" ]]; then
+            componentTestMatrix=""
+          fi
+          echo "componentTestMatrix=${componentTestMatrix}"
+
+
+          # this is to pass to `pnpm --filter` to run pnpm command on all changed packages
           echo "filter=${filter}" >> $GITHUB_OUTPUT
-          echo "spec=${specPackages}" >> $GITHUB_OUTPUT
+
+          # this is changed packages that do have unit tests - to be passed to `pnpm test:unit`
           echo "unitTestFilter=${unitTestFilter}" >> $GITHUB_OUTPUT
 
-      # see the comment for `up-to-date` action
-      - name: Need to run tests
-        id: 'run-tests'
-        run: |
-          echo "run-tests=${{ (github.event_name == 'push' && steps.up-to-date.outputs.status == 'true') && 'false' || 'true' }}" >> $GITHUB_OUTPUT
+          # this is unit tests in the format json.parse understands
+          echo "unitTestMatrix=${unitTestMatrix}" >> $GITHUB_OUTPUT
+
+          # this is changed packages that do have component tests - to be passed to `pnpm test:component`
+          echo "unitTestFilter=${unitTestFilter}" >> $GITHUB_OUTPUT
+
+          # this is component tests in the format json.parse understands
+          echo "componentTestMatrix=${componentTestMatrix}" >> $GITHUB_OUTPUT
 
       - name: Stylelint Packages
-        if: ${{steps.changed_packages.outputs.filter != '{()}'}}
-        run: pnpm --stream --filter "${{steps.changed_packages.outputs.filter}}" run stylelint
+        if: ${{ steps.changed_packages.outputs.filter != '' }}
+        run: pnpm --parallel --stream --filter "${{steps.changed_packages.outputs.filter}}" run stylelint
 
       - name: Lint Packages
-        if: ${{steps.changed_packages.outputs.filter != '{()}'}}
-        run: pnpm --stream --filter "${{steps.changed_packages.outputs.filter}}" run lint
+        if: ${{ steps.changed_packages.outputs.filter != '' }}
+        run: pnpm --parallel --stream --filter "${{steps.changed_packages.outputs.filter}}" run lint
 
       - name: Build Packages
-        if: ${{steps.changed_packages.outputs.filter != '{()}'}}
+        if: ${{ steps.changed_packages.outputs.filter != '' }}
         # The `...` syntax tells pnpm to include dependent packages
         run: pnpm --stream --filter "...${{steps.changed_packages.outputs.filter}}..." run build
 
-      - name: Upload bundle-analyzer results
-        if: ${{steps.changed_packages.outputs.filter != '{()}'}}
-        uses: actions/upload-artifact@v3
-        with:
-          name: rollup-plugin-visualizer
-          path: packages/*/*/bundle-analyzer/stats-treemap.html
-
-      - name: Run Unit Tests
-        if: ${{ steps.changed_packages.outputs.filter != '{()}' && steps.run-tests.outputs.run-tests == 'true' }}
-        run: pnpm --stream --filter "${{steps.changed_packages.outputs.unitTestFilter}}" run test:unit
-
-      - name: Prepare Cypress
-        if: ${{ steps.changed_packages.outputs.spec != '' && steps.run-tests.outputs.run-tests == 'true' }}
-        run: pnpm cypress install
-
-      - name: Run Component Tests
-        if: ${{ steps.changed_packages.outputs.spec != '' && steps.run-tests.outputs.run-tests == 'true' }}
-        uses: cypress-io/github-action@v4
-        with:
-          install: false
-          command: pnpm run test:component:ci --spec ${{ steps.changed_packages.outputs.spec }}
-
-      - name: Upload Component Test Results
-        uses: actions/upload-artifact@v3
-        continue-on-error: true
-        if: failure()
-        with:
-          name: component-test-failures
-          path: |
-            cypress/videos/
-            cypress/screenshots/
-
-      - name: Save Build Artifacts
-        if: ${{ github.event_name == 'push' && steps.changed_packages.outputs.filter != '{()}' }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: package-dist-artifacts
-          path: packages/*/*/dist
-
-      # this will publish PR preview packages
       - name: Publish Previews
-        if: ${{github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '{()}'}}
+        if: ${{github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != ''}}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
@@ -228,30 +226,104 @@ jobs:
              ```
           GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
-  publish:
-    name: Publish
-    needs:
-      - build
+      - name: Upload bundle-analyzer results
+        if: ${{ steps.changed_packages.outputs.filter != '' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: rollup-plugin-visualizer
+          path:  packages/*/*/bundle-analyzer/stats-treemap.html
+
+      - name: Run Unit Tests
+        if: ${{ steps.changed_packages.outputs.unitTestFilter != '' }}
+        run: pnpm --parallel --stream --filter "${{steps.changed_packages.outputs.unitTestFilter}}" run test:unit --coverage
+
+      - name: Save Build Artifacts
+        if: ${{ steps.changed_packages.outputs.filter != '' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: package-dist-artifacts
+          path: packages/*/*/dist
+
+  component-tests:
+    name: Component tests
+    needs: [build]
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && needs.build.outputs.filter != '{()}'}}
-    env:
-      GH_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
+    if: ${{ needs.build.outputs.componentTestMatrix != ''}}
+    continue-on-error: false
+    strategy:
+      fail-fast: false
+      matrix:
+        container: ${{ fromJSON(needs.build.outputs.componentTestMatrix) }}
 
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
+
+      - name: Prepare Cypress
+        run: pnpm cypress install
 
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
           name: package-dist-artifacts
           path: packages/
+
+      - name: Run Component Tests
+        uses: cypress-io/github-action@v4
+        with:
+          install: false
+          command: pnpm run test:component:ci --spec ${{ matrix.container }}
+
+      - name: Upload Component Test Results
+        uses: actions/upload-artifact@v3
+        continue-on-error: true
+        if: failure()
+        with:
+          name: component-test-failures-${{ matrix.container }}
+          path: |
+            cypress/videos/
+            cypress/screenshots/
+
+
+  finish-test-and-publish:
+    name: Collect Test Results And Publish
+    needs: [build, component-tests]
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    if: ${{ always() && needs.build.outputs.filter != '' }}
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      GH_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
+
+    steps:
+      - name: Successful tests
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
+      - name: Failing tests
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
+
+      - name: Checkout Source Code
+        if: ${{ github.event_name == 'push' }}
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.KONGPONENTS_BOT_PAT }}
+
+      - name: Setup PNPM with Dependencies
+        if: ${{ github.event_name == 'push' }}
+        uses: ./.github/actions/setup-pnpm-with-dependencies/
+
+      - name: Download build artifacts
+        if: ${{ github.event_name == 'push' }}
+        uses: actions/download-artifact@v3
+        with:
+          name: package-dist-artifacts
+          path: packages/
+
 
       # for lerna version we use:
       # --force-git-tag - if tag was already created it will be recreated instead of command failing and entire CI failing
@@ -261,24 +333,26 @@ jobs:
       #
       # we shall ignore lerna version error as pnpm publish will fail or not publish in case of such error
       - name: Update package versions
+        if: ${{ github.event_name == 'push' }}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
           lerna version --conventional-commits --create-release github --yes --force-git-tag || true
 
       - name: Publish packages to NPM
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
+        if: ${{ github.event_name == 'push' }}
         run: |
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
           pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
 
   notify-slack:
     name: Slack Notification
     if: ${{ always() && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     needs:
-      - publish
+      - finish-test-and-publish
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v3
