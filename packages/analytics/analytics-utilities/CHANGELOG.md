@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.1.3...@kong-ui-public/analytics-utilities@0.2.0) (2023-05-04)
+
+
+### Features
+
+* **query-time:** add `startMs` and `endMs` helpers to QueryTime ([#388](https://github.com/Kong/public-ui-components/issues/388)) ([86f0a40](https://github.com/Kong/public-ui-components/commit/86f0a409fa6ecb56a44b5dc4baa965acf6189fe0))
+
+
+
+
+
 ## [0.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.1.2...@kong-ui-public/analytics-utilities@0.1.3) (2023-05-03)
 
 
