@@ -52,7 +52,7 @@ jobs:
       # see 'changed_packages' bellow
       - name: Check for pnpm-lock change
         id: lock-changed
-        uses: tj-actions/changed-files@v34
+        uses: tj-actions/changed-files@v35
         with:
           files: |
             pnpm-lock.yaml
