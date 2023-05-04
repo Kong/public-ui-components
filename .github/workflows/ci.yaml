@@ -10,7 +10,7 @@ on:
 jobs:
 
   build:
-    name: Build And Unit Test
+    name: Build And Test
     runs-on: ubuntu-latest
     outputs:
       filter: ${{steps.changed_packages.outputs.filter}}
