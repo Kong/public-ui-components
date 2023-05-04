@@ -1,4 +1,4 @@
-import { getUnixTime, sub } from 'date-fns'
+import { getTime, getUnixTime, sub } from 'date-fns'
 
 import {
   ceilToNearestTimeGrain,
@@ -62,6 +62,16 @@ abstract class BaseQueryTime implements QueryTime {
   // Return a UNIX timestamp suitable for use in the `end` query param.
   endSeconds(): number {
     return getUnixTime(this.endDate())
+  }
+
+  // Return epoch time in milliseconds, suitable for use in the `startMs` query param.
+  startMs(): number {
+    return getTime(this.startDate())
+  }
+
+  // Return epoch time in milliseconds, suitable for use in the `endMs` query param.
+  endMs(): number {
+    return getTime(this.endDate())
   }
 
   // Return whether the timeframe's bounds are within the allotment for a free tier user.
