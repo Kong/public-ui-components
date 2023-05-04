@@ -235,7 +235,7 @@ jobs:
 
       - name: Run Unit Tests
         if: ${{ steps.changed_packages.outputs.unitTestFilter != '' }}
-        run: pnpm --parallel --stream --filter "${{steps.changed_packages.outputs.unitTestFilter}}" run test:unit --coverage
+        run: pnpm --parallel --stream --filter "${{steps.changed_packages.outputs.unitTestFilter}}" run test:unit
 
       - name: Save Build Artifacts
         if: ${{ steps.changed_packages.outputs.filter != '' }}
