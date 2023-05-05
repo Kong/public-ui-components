@@ -2,7 +2,7 @@
 
 import AppSidebar from './AppSidebar.vue'
 import { h } from 'vue'
-import { topItems, bottomItems, profileItems } from '../../../fixtures/sidebar-items'
+import { topItems, bottomItems } from '../../../fixtures/sidebar-items'
 
 const viewports = {
   desktop: {
@@ -38,15 +38,13 @@ describe('<AppSidebar />', () => {
         // @ts-ignore
         viewportHeight: viewports[viewportName].height, viewportWidth: viewports[viewportName].width,
       }, () => {
-        it('renders a sidebar with top, bottom, and profile nav', () => {
+        it('renders a sidebar with top and bottom nav', () => {
           cy.mount(AppSidebar, {
             props: {
               open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
               mobileEnabled: true,
               topItems,
               bottomItems,
-              profileItems,
-              profileName: 'Marty McFly',
               headerHeight: 0,
             },
           })
@@ -57,9 +55,6 @@ describe('<AppSidebar />', () => {
           cy.get('.kong-ui-app-sidebar').find('ul.top-items').find('li a').should('be.visible')
           cy.get('.kong-ui-app-sidebar').find('ul.bottom-items').should('be.visible')
           cy.get('.kong-ui-app-sidebar').find('ul.bottom-items').find('li a').should('be.visible')
-
-          cy.get('.sidebar-profile-menu').should('be.visible')
-          cy.get('.profile-dropdown-trigger').should('be.visible')
         })
 
         it('renders a router-link if item.to is an object', () => {
@@ -239,94 +234,6 @@ describe('<AppSidebar />', () => {
 
             cy.get('.kong-ui-app-sidebar').find('ul.bottom-items').should('be.visible')
             cy.get('.kong-ui-app-sidebar').find('ul.bottom-items').find('li').should('be.visible')
-          })
-        })
-
-        // Profile items
-        describe('profile items', () => {
-          it('does not render the profile items if no profileItems or profileName are passed', () => {
-            cy.mount(AppSidebar, {
-              props: {
-                open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
-                mobileEnabled: true,
-                topItems,
-                bottomItems,
-              },
-            })
-
-            cy.get('.kong-ui-app-sidebar').find('.sidebar-footer-nav').should('not.exist')
-          })
-
-          it('does not render the profile items if footer slot content is provided', () => {
-            const name = 'Marty McFly'
-            const footerSlotContent = 'We don\'t have enough road to get up to 88.'
-
-            cy.mount(AppSidebar, {
-              props: {
-                open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
-                mobileEnabled: true,
-                topItems,
-                bottomItems,
-                profileItems,
-                profileName: name,
-              },
-              slots: {
-                footer: () => h('div', {}, footerSlotContent),
-              },
-            })
-
-            cy.get('.kong-ui-app-sidebar').find('.sidebar-footer-nav').should('not.exist')
-            cy.get('.kong-ui-app-sidebar').find('.sidebar-footer').should('contain.text', footerSlotContent)
-          })
-
-          it('renders just the profileName if no nav items are passed', () => {
-            const name = 'Marty McFly'
-
-            cy.mount(AppSidebar, {
-              props: {
-                open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
-                mobileEnabled: true,
-                profileName: name,
-              },
-            })
-
-            cy.get('.kong-ui-app-sidebar').find('.sidebar-profile-name').should('contain.text', name)
-            cy.get('.profile-dropdown-trigger').should('not.exist')
-            cy.get('.sidebar-profile-menu-popover').should('not.exist')
-          })
-
-          it('displays the profile menu popup when clicked', () => {
-            const name = 'Marty McFly'
-
-            cy.mount(AppSidebar, {
-              props: {
-                open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
-                mobileEnabled: true,
-                profileItems,
-                profileName: name,
-              },
-            })
-
-            cy.get('.profile-dropdown-trigger').click()
-            cy.get('.sidebar-profile-menu-popover').should('be.visible')
-          })
-
-          it('renders profile nav items in popover', () => {
-            cy.mount(AppSidebar, {
-              props: {
-                open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
-                mobileEnabled: true,
-                profileItems,
-              },
-            })
-
-            cy.get('.sidebar-profile-menu').should('be.visible')
-            cy.get('.profile-dropdown-trigger').should('be.visible')
-
-            cy.get('.profile-dropdown-trigger').click()
-
-            cy.get('.sidebar-profile-menu-popover').should('be.visible')
-            cy.get('.sidebar-profile-menu-popover').find('.k-dropdown-item').should('have.length', 2)
           })
         })
 
@@ -752,7 +659,6 @@ describe('<AppSidebar />', () => {
             headerHeight: 100,
             topItems,
             bottomItems,
-            profileItems,
           },
           slots: {
             header: () => h('div', {}, headerSlotText),

@@ -69,8 +69,6 @@
       :mobile-header-visible="false"
       :mobile-top-offset="sidebarMobileTopOffset"
       :open="mobileSidebarOpen"
-      :profile-items="sidebar.profileItems"
-      :profile-name="sidebar.profileName"
       :top-items="sidebar.topItems"
       :top-offset="notificationHeight"
       @click="sidebarItemClicked"
@@ -118,14 +116,12 @@ import { ref, reactive, computed, watchEffect, onMounted, onBeforeUnmount, PropT
 import AppNavbar from './navbar/AppNavbar.vue'
 import AppSidebar from './sidebar/AppSidebar.vue'
 import SidebarToggle from './sidebar/SidebarToggle.vue'
-import type { SidebarPrimaryItem, SidebarProfileItem, SidebarSecondaryItem } from '../types'
+import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../types'
 import { useDebounce } from '../composables'
 
 interface AppSidebarProperties {
   topItems?: SidebarPrimaryItem[]
   bottomItems?: SidebarPrimaryItem[]
-  profileItems?: SidebarProfileItem[]
-  profileName?: string
   open?: boolean
   hidden?: boolean
 }
@@ -157,14 +153,6 @@ const props = defineProps({
     type: Array as PropType<SidebarPrimaryItem[]>,
     default: () => ([]),
   },
-  sidebarProfileItems: {
-    type: Array as PropType<SidebarProfileItem[]>,
-    default: () => ([]),
-  },
-  sidebarProfileName: {
-    type: String,
-    default: '',
-  },
 })
 
 const emit = defineEmits(['sidebar-click'])
@@ -190,13 +178,11 @@ const navbar = reactive({
 const sidebar: AppSidebarProperties = reactive({
   topItems: computed(() => props.sidebarTopItems),
   bottomItems: computed(() => props.sidebarBottomItems),
-  profileItems: computed(() => props.sidebarProfileItems),
-  profileName: computed(() => props.sidebarProfileName),
   open: computed(() => props.sidebarOpen),
   hidden: computed(() => props.sidebarHidden),
 })
 
-const sidebarItemClicked = (item: SidebarPrimaryItem | SidebarSecondaryItem | SidebarProfileItem) => {
+const sidebarItemClicked = (item: SidebarPrimaryItem | SidebarSecondaryItem) => {
   emit('sidebar-click', item)
 }
 

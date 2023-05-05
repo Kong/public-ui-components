@@ -29,8 +29,3 @@ export interface SidebarPrimaryItem extends Omit<SidebarSecondaryItem, 'parentKe
   /** Nested sidebar items (children) without icons */
   items?: SidebarSecondaryItem[]
 }
-
-export interface SidebarProfileItem extends Omit<SidebarPrimaryItem, 'key' | 'label' | 'expanded' | 'active' | 'icon' | 'items'> {
-  /** Should a divider display above this profile item */
-  hasDivider?: boolean
-}

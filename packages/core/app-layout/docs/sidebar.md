@@ -28,7 +28,6 @@ A Kong UI dynamic sidebar component.
 
 - Reactive updates based on `prop` value changes :rocket:
 - Completely customizable L1 and L2 navigation items
-- Built-in support for user Profile (in the sidebar footer) and profile dropdown items
 - Navigate via `<router-link>` in your host application, or provide regular URLs :link:
 - Slottable `header` area for displaying the host application logo
 - Included `SidebarToggle.vue` component utilized separately in the Navbar to toggle the sidebar's visibility on mobile :sparkles:
@@ -96,26 +95,6 @@ An array of `SidebarPrimaryItem` objects to display in the top navigation list (
 - default: `[]`
 
 An array of `SidebarPrimaryItem` objects to display in the bottom navigation list (below the divider).
-
-#### `profileItems`
-
-- type: `Array as PropType<SidebarProfileItem[]>`
-- required: `false`
-- default: `[]`
-
-An array of `SidebarProfileItem` objects to display in the sidebar footer profile popup menu.
-
-This prop is ignored if [`footer` slot content](#footer) is provided.
-
-#### `profileName`
-
-- type: `string`
-- required: `false`
-- default: `''`
-
-A string to display in the sidebar footer profile area.
-
-This prop is ignored if [`footer` slot content](#footer) is provided.
 
 #### `headerHeight`
 
@@ -231,8 +210,6 @@ Utilize the `top` slot to inject additional UI into the top of the sidebar, belo
 
 Utilize the `footer` slot to inject content into the fixed area at the bottom of the sidebar, below the `bottomItems`.
 
-If `footer` slot content is provided, it will override the `profileItems` and `profileName`, preventing the sidebar bottom profile menu and popup menu from appearing.
-
 ### Events
 
 #### `click`
@@ -287,9 +264,7 @@ watch(() => route.path, (newPath, oldPath) => {
     :header-height="60"
     :top-items="topItems"
     :bottom-items="bottomItems"
-    :profile-items="profileItems"
     :header-height="60"
-    profile-name="Marty McFly"
     @click="activateSidebarItem"
   >
     <template #header>
@@ -305,13 +280,13 @@ watch(() => route.path, (newPath, oldPath) => {
 <script setup lang="ts">
 import { watch, onBeforeMount } from 'vue'
 // AppSidebar Component and types
-import { AppSidebar, SidebarPrimaryItem, SidebarSecondaryItem, SidebarProfileItem } from '@kong-ui-public/app-layout'
+import { AppSidebar, SidebarPrimaryItem, SidebarSecondaryItem } from '@kong-ui-public/app-layout'
 import { RouteRecordRedirectOption, useRoute, useRouter } from 'vue-router'
 import useSidebar from '../composables/useSidebar'
 // Component styles
 import '@kong-ui-public/app-layout/dist/style.css'
 
-const { updateMenu, topItems, bottomItems, profileItems } = composables.useSidebar()
+const { updateMenu, topItems, bottomItems } = composables.useSidebar()
 const router = useRouter()
 const route = useRoute()
 
@@ -327,7 +302,7 @@ watch(
   },
 )
 
-const activateSidebarItem = (item: SidebarPrimaryItem | SidebarSecondaryItem | SidebarProfileItem) => {
+const activateSidebarItem = (item: SidebarPrimaryItem | SidebarSecondaryItem) => {
   if (typeof item?.to === 'object') {
     try {
       // Try to resolve the route based on the `item.to` property.
@@ -368,13 +343,12 @@ onBeforeMount(() => {
 
 ```ts
 import { ref } from 'vue'
-import { SidebarPrimaryItem, SidebarProfileItem } from '@kong-ui-public/app-layout'
+import { SidebarPrimaryItem } from '@kong-ui-public/app-layout'
 import { RouteLocationNormalizedLoaded } from 'vue-router'
 
 export const useSidebar = () => {
   const topItems = ref<SidebarPrimaryItem[]>([])
   const bottomItems = ref<SidebarPrimaryItem[]>([])
-  const profileItems = ref<SidebarProfileItem[]>([])
 
   const updateMenu = (currentRoute?: RouteLocationNormalizedLoaded) => {
     // Determine if the sidebar item is active if any matched route.name evaluates to the `routeName` string passed
@@ -403,14 +377,12 @@ export const useSidebar = () => {
         icon: 'workspaces',
       },
     ]
-    // In the future, update the bottomItems and profileItems here as needed
   }
 
   return {
     updateMenu,
     topItems,
     bottomItems,
-    profileItems,
   }
 }
 ```
@@ -536,7 +508,7 @@ Variable | Description | Default
 TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/core/app-layout/src/types/sidebar.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
-import type { SidebarPrimaryItem, SidebarSecondaryItem, SidebarProfileItem } from '@kong-ui-public/app-layout'
+import type { SidebarPrimaryItem, SidebarSecondaryItem } from '@kong-ui-public/app-layout'
 ```
 
 ---
