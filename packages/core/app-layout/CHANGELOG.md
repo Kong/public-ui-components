@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.17.2...@kong-ui-public/app-layout@0.18.0) (2023-05-05)
+
+
+### Features
+
+* **app-layout:** remove profile menu [KHCP-6654] ([#392](https://github.com/Kong/public-ui-components/issues/392)) ([a08e63d](https://github.com/Kong/public-ui-components/commit/a08e63d6288fa95e410b7fe334129eb59a00c806))
+
+
+
+
+
 ## [0.17.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.17.1...@kong-ui-public/app-layout@0.17.2) (2023-05-03)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
