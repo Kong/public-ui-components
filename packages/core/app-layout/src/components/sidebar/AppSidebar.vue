@@ -69,39 +69,7 @@
       </div>
 
       <div class="sidebar-footer">
-        <slot name="footer">
-          <SidebarFooter
-            v-if="profileName || profileItems.length"
-            class="sidebar-profile-menu"
-            :item-count="profileItems.length"
-            :name="profileName"
-          >
-            <KDropdownItem
-              v-for="item in profileItems"
-              :key="item.name"
-              :class="[{ 'has-divider': item.hasDivider },{ 'external-profile-dropdown-link': (item.external || item.newWindow) && typeof item.to === 'string' }]"
-              :has-divider="item.hasDivider"
-              :item="(item.external || item.newWindow) && typeof item.to === 'string' ? undefined : { label: item.name, to: item.to }"
-              @click="itemClick(item)"
-            >
-              <a
-                v-if="(item.external || item.newWindow) && typeof item.to === 'string'"
-                class="sidebar-item-external-link"
-                :href="item.to"
-                :target="item.newWindow ? '_blank' : undefined"
-              >
-                {{ item.name }}
-                <KIcon
-                  v-if="item.newWindow"
-                  color="var(--black-70, rgba(0,0,0,0.7))"
-                  icon="externalLink"
-                  size="20"
-                  viewBox="0 0 20 20"
-                />
-              </a>
-            </KDropdownItem>
-          </SidebarFooter>
-        </slot>
+        <slot name="footer" />
       </div>
     </aside>
   </FocusTrap>
@@ -109,9 +77,8 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, useSlots, PropType, onMounted, onBeforeUnmount, nextTick } from 'vue'
-import type { SidebarPrimaryItem, SidebarProfileItem } from '../../types'
+import type { SidebarPrimaryItem } from '../../types'
 import SidebarItem from '../sidebar/SidebarItem.vue'
-import SidebarFooter from './SidebarFooter.vue'
 import { FocusTrap } from 'focus-trap-vue'
 import { useDebounce } from '../../composables'
 import clonedeep from 'lodash.clonedeep'
@@ -126,14 +93,6 @@ const props = defineProps({
   bottomItems: {
     type: Array as PropType<SidebarPrimaryItem[]>,
     default: () => ([]),
-  },
-  profileItems: {
-    type: Array as PropType<SidebarProfileItem[]>,
-    default: () => ([]),
-  },
-  profileName: {
-    type: String,
-    default: '',
   },
   headerHeight: {
     type: Number,
@@ -266,7 +225,7 @@ const closeSidebarFromOverlay = (): void => {
 // Store a boolean to indicate if a sidebar toggle has already been requested
 const sidebarTogglePending = ref<boolean>(false)
 
-const itemClick = (item: SidebarPrimaryItem | SidebarProfileItem): void => {
+const itemClick = (item: SidebarPrimaryItem): void => {
   // Set the pending toggle value to true so that the `route.path` watcher does not auto-close
   sidebarTogglePending.value = true
 
@@ -502,17 +461,6 @@ onBeforeUnmount(() => {
   user-select: none;
 }
 
-.external-profile-dropdown-link {
-  // Override padding on `button` element to apply to `.sidebar-item-external-link` instead
-  :deep(button.k-dropdown-item-trigger) {
-    padding: 0 !important;
-
-    &:focus-visible {
-      outline: none;
-    }
-  }
-}
-
 .sidebar-item-external-link {
   align-items: center;
   display: flex;
@@ -523,10 +471,6 @@ onBeforeUnmount(() => {
 
   &:focus-visible {
     outline: 1px solid var(--steel-300, #A3B6D9) !important;
-  }
-
-  .external-profile-dropdown-link & {
-    padding: var(--spacing-md) var(--spacing-lg);
   }
 
   :deep(.kong-icon) {

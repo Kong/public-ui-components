@@ -126,7 +126,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 // Sandbox only
-import { SidebarPrimaryItem, SidebarProfileItem, SidebarSecondaryItem } from '../../src'
+import { SidebarPrimaryItem, SidebarSecondaryItem } from '../../src'
 import AppGruceLogo from '../components/icons/AppGruceLogo.vue'
 import AppLogo from '../components/icons/AppLogo.vue'
 
@@ -151,9 +151,9 @@ const workspaceItems = [
   },
 ]
 
-const activeItem = ref<SidebarPrimaryItem | SidebarSecondaryItem | SidebarProfileItem>()
+const activeItem = ref<SidebarPrimaryItem | SidebarSecondaryItem>()
 
-const sidebarItemClick = (item: SidebarPrimaryItem | SidebarSecondaryItem | SidebarProfileItem): void => {
+const sidebarItemClick = (item: SidebarPrimaryItem | SidebarSecondaryItem): void => {
   activeItem.value = item
   console.log('activeItem: %o', activeItem.value)
 }

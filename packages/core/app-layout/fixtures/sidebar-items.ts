@@ -54,14 +54,3 @@ export const bottomItems = [
     ],
   },
 ]
-
-export const profileItems = [
-  {
-    name: 'Personal access tokens',
-    to: { name: 'personal-access-tokens' },
-  },
-  {
-    name: 'Logout',
-    to: { name: 'logout' },
-  },
-]

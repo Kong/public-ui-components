@@ -2,8 +2,6 @@
   <AppLayout
     :sidebar-bottom-items="sidebarItemsBottom"
     :sidebar-hidden="sidebarIsHidden"
-    :sidebar-profile-items="sidebarItemsProfile"
-    sidebar-profile-name="Adam"
     :sidebar-top-items="sidebarItemsTop"
     @sidebar-click="sidebarItemClick"
   >
@@ -101,7 +99,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 // Sandbox only
-import { AccountDropdown, SidebarPrimaryItem, SidebarProfileItem, SidebarSecondaryItem } from '../../src'
+import { AccountDropdown, SidebarPrimaryItem, SidebarSecondaryItem } from '../../src'
 import NavLinks from '../components/NavLinks.vue'
 import AppGruceLogo from '../components/icons/AppGruceLogo.vue'
 import AppLogo from '../components/icons/AppLogo.vue'
@@ -113,9 +111,9 @@ const toggleSidebar = (): void => {
   sidebarIsHidden.value = !sidebarIsHidden.value
 }
 
-const activeItem = ref<SidebarPrimaryItem | SidebarSecondaryItem | SidebarProfileItem>()
+const activeItem = ref<SidebarPrimaryItem | SidebarSecondaryItem>()
 
-const sidebarItemClick = (item: SidebarPrimaryItem | SidebarSecondaryItem | SidebarProfileItem): void => {
+const sidebarItemClick = (item: SidebarPrimaryItem | SidebarSecondaryItem): void => {
   activeItem.value = item
   console.log('activeItem: %o', activeItem.value)
 }
@@ -321,25 +319,6 @@ const sidebarItemsBottom = computed((): SidebarPrimaryItem[] => {
           active: activeItem.value?.name === 'Auth Settings',
         },
       ],
-    },
-  ]
-})
-
-const sidebarItemsProfile = computed((): SidebarProfileItem[] => {
-  return [
-    {
-      name: 'Personal access tokens',
-      to: '/?personal-access-tokens',
-    },
-    {
-      name: 'External',
-      to: 'https://google.com/',
-      newWindow: true,
-    },
-    {
-      name: 'Logout',
-      to: '/?logout',
-      hasDivider: true,
     },
   ]
 })

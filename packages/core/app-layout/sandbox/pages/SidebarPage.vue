@@ -29,8 +29,6 @@
       :mobile-header-visible="false"
       :mobile-top-offset="60"
       :open="mobileSidebarOpen"
-      :profile-items="sidebarItemsProfile"
-      profile-name="Marty McFly"
       :top-items="sidebarItemsTop"
       :z-index="6"
       @click="sidebarItemClick"
@@ -62,15 +60,15 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { AppSidebar, AppNavbar, SidebarToggle, SidebarPrimaryItem, SidebarProfileItem, SidebarSecondaryItem } from '../../src'
+import { AppSidebar, AppNavbar, SidebarToggle, SidebarPrimaryItem, SidebarSecondaryItem } from '../../src'
 import { AppLogo, AppGruceLogo } from '../components/icons'
 import '@kong/kongponents/dist/style.css'
 // Sandbox only
 import NavLinks from '../components/NavLinks.vue'
 
-const activeItem = ref<SidebarPrimaryItem | SidebarSecondaryItem | SidebarProfileItem>()
+const activeItem = ref<SidebarPrimaryItem | SidebarSecondaryItem>()
 
-const sidebarItemClick = (item: SidebarPrimaryItem | SidebarSecondaryItem | SidebarProfileItem): void => {
+const sidebarItemClick = (item: SidebarPrimaryItem | SidebarSecondaryItem): void => {
   activeItem.value = item
   console.log('activeItem: %o', activeItem.value)
 }
@@ -270,25 +268,6 @@ const sidebarItemsBottom = computed((): SidebarPrimaryItem[] => {
           active: activeItem.value?.name === 'Auth Settings',
         },
       ],
-    },
-  ]
-})
-
-const sidebarItemsProfile = computed((): SidebarProfileItem[] => {
-  return [
-    {
-      name: 'Personal access tokens',
-      to: '/sidebar/?personal-access-tokens',
-    },
-    {
-      name: 'External',
-      to: 'https://google.com/',
-      newWindow: true,
-    },
-    {
-      name: 'Logout',
-      to: '/sidebar/?logout',
-      hasDivider: true,
     },
   ]
 })

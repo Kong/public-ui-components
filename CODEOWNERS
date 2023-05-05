@@ -22,20 +22,21 @@
 # =========================================================================
 
 # CLI
-/packages/core/cli/ @adamdehaven
+/packages/core/cli/ @adamdehaven @jillztom
 
 # Core packages
-/packages/core/i18n/ @adamdehaven @ValeryG @jillztom
 /packages/core/app-layout/ @adamdehaven @jillztom
-/packages/core/copy-uuid/ @Kong/team-km
+/packages/core/copy-uuid/ @Kong/team-km @Kong/team-core-ui
+/packages/core/i18n/ @adamdehaven @ValeryG @jillztom
+/packages/core/misc-widgets/ @Kong/team-core-ui
 
 # Portal packages
 /packages/portal/document-viewer/ @Kong/team-devx
-/packages/portal/mini-spec-renderer/ @Kong/team-devx
-/packages/portal/spec-details/ @Kong/team-devx
+/packages/portal/spec-renderer/ @Kong/team-devx
 /packages/portal/swagger-ui-web-component/ @adamdehaven @davidma415 @kaiarrowood
 
 # Analytics packages
+/packages/analytics/analytics-utilities @Kong/team-data
 /packages/analytics/metric-cards @Kong/team-data
 
 # =========================================================================
@@ -44,7 +45,7 @@
 
 # Workspaces
 /packages/core/*/package.json @kongponents-bot @Kong/team-core-ui
-/packages/portal/*/package.json @kongponents-bot @Kong/team-core-ui # TODO: add @Kong/team-devx 
+/packages/portal/*/package.json @kongponents-bot @Kong/team-core-ui # TODO: add @Kong/team-devx
 /packages/analytics/*/package.json @kongponents-bot @Kong/team-core-ui # TODO: add @Kong/team-data
 
 # Root
