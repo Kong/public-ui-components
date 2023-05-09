@@ -35,7 +35,7 @@
     "@vitejs/plugin-vue-jsx": "^3.0.1",
     "@vitest/ui": "^0.30.1",
     "@vue/eslint-config-standard": "^8.0.1",
-    "@vue/eslint-config-typescript": "^11.0.2",
+    "@vue/eslint-config-typescript": "^11.0.3",
     "@vue/test-utils": "^2.3.2",
     "@vue/tsconfig": "^0.3.2",
     "c8": "^7.13.0",
