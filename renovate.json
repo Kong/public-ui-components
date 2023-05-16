@@ -35,6 +35,6 @@
     }
   ],
   "constraints": {
-    "pnpm": "7.32"
+    "pnpm": "8"
   }
 }
