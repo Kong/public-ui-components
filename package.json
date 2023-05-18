@@ -18,7 +18,7 @@
     "create-package": "pnpm --filter \"@kong-ui-public/cli\" run create-package"
   },
   "devDependencies": {
-    "@babel/types": "^7.21.4",
+    "@babel/types": "^7.21.5",
     "@commitlint/cli": "^17.6.3",
     "@commitlint/config-conventional": "^17.6.3",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.0",
