@@ -38,12 +38,12 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^0.4.2",
-    "@kong/kongponents": "^8.60.1",
+    "@kong/kongponents": "^8.60.2",
     "vue": "^3.2.47"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^0.4.6",
-    "@kong/kongponents": "^8.60.1",
+    "@kong/kongponents": "^8.60.2",
     "vue": "^3.2.47"
   },
   "repository": {
