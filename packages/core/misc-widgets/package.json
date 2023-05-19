@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/misc-widgets",
-  "version": "0.3.33",
+  "version": "0.3.34",
   "type": "module",
   "main": "./dist/misc-widgets.umd.js",
   "module": "./dist/misc-widgets.es.js",
@@ -42,7 +42,7 @@
     "vue": "^3.2.47"
   },
   "devDependencies": {
-    "@kong-ui-public/i18n": "workspace:^0.4.6",
+    "@kong-ui-public/i18n": "workspace:^0.4.7",
     "@kong/kongponents": "^8.60.2",
     "vue": "^3.2.47"
   },
