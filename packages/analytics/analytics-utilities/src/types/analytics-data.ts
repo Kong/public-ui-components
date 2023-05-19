@@ -99,5 +99,19 @@ export interface AnalyticsExploreResult {
   /**
    * Additional metadata about the query
    */
-  meta: AnalyticsExploreMeta | AnalyticsExploreV2Meta
+  meta: AnalyticsExploreMeta
+}
+
+/**
+ * Analytics exploreV2 query data object
+ */
+export interface AnalyticsExploreV2Result {
+  /**
+   * Array of records
+   */
+  records: AnalyticsExploreRecord[]
+  /**
+   * Additional metadata about the query
+   */
+  meta: AnalyticsExploreV2Meta
 }
