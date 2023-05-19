@@ -28,7 +28,7 @@
     "@types/flat": "^5.0.2",
     "@types/js-yaml": "^4.0.5",
     "@types/jsdom": "^20.0.1",
-    "@types/node": "^18.16.4",
+    "@types/node": "^18.16.5",
     "@typescript-eslint/eslint-plugin": "^5.59.6",
     "@typescript-eslint/parser": "^5.59.6",
     "@vitejs/plugin-vue": "^4.2.1",
