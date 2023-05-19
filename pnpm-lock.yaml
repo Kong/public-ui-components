@@ -51,7 +51,7 @@ importers:
       stylelint-config-recommended-vue: ^1.4.0
       stylelint-order: ^6.0.3
       ts-node: ^10.9.1
-      tsc-alias: ^1.8.5
+      tsc-alias: ^1.8.6
       tslib: ^2.5.0
       typedoc: ^0.24.6
       typedoc-plugin-markdown: ^3.15.2
@@ -110,7 +110,7 @@ importers:
       stylelint-config-recommended-vue: 1.4.0_kbto3rg3njmczth2rrsgfnlsqa
       stylelint-order: 6.0.3_stylelint@14.16.1
       ts-node: 10.9.1_jrb7r3esypdtrca3xosfxy6qfy
-      tsc-alias: 1.8.5
+      tsc-alias: 1.8.6
       tslib: 2.5.0
       typedoc: 0.24.6_typescript@4.9.5
       typedoc-plugin-markdown: 3.15.2_typedoc@0.24.6
@@ -12047,8 +12047,8 @@ packages:
     resolution: {integrity: sha512-FZIXf1ksVyLcfr7M317jbB67XFJhOO1YqdTcuGaq9q5jLUoTikukZ+98TPjKiP2jC5CgmYdWWYs0s2nLSU0/1A==}
     dev: false
 
-  /tsc-alias/1.8.5:
-    resolution: {integrity: sha512-Y3ka0olwSRdbHPyX5kXhYY2aoBKuT53DFdeY+PpQUR4hg5M/b8eIRmC8dL4FBdd0wT366iWc6iDUUGe6QwI7mg==}
+  /tsc-alias/1.8.6:
+    resolution: {integrity: sha512-vq+i6VpE83IeMsSJVcFN03ZBofADhr8/gIJXjxpbnTRfN/MFXy0+SBaKG2o7p95QqXBGkeG98HYz3IkOOveFbg==}
     hasBin: true
     dependencies:
       chokidar: 3.5.3
