@@ -99,5 +99,5 @@ export interface AnalyticsExploreResult {
   /**
    * Additional metadata about the query
    */
-  meta: AnalyticsExploreMeta
+  meta: AnalyticsExploreMeta | AnalyticsExploreV2Meta
 }
