@@ -111,7 +111,7 @@ export interface AnalyticsExploreV2Result {
    */
   records: AnalyticsExploreRecord[]
   /**
-   * Additional metadata about the query
+   * Additional exploreV2 metadata about the query
    */
   meta: AnalyticsExploreV2Meta
 }
