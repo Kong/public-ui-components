@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.44](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.4.43...@kong-ui-public/swagger-ui-web-component@0.4.44) (2023-05-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/swagger-ui-kong-theme-universal to ^4.2.1 ([#443](https://github.com/Kong/public-ui-components/issues/443)) ([327e47c](https://github.com/Kong/public-ui-components/commit/327e47c2fe1a0ea8538267f6178cc8a69725b08f))
+
+
+
+
+
 ## [0.4.43](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.4.42...@kong-ui-public/swagger-ui-web-component@0.4.43) (2023-05-19)
 
 
