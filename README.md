@@ -49,7 +49,7 @@ Be sure to familiarize yourself with the [Component Requirements](./docs/creatin
 ### Requirements
 
 - [NodeJS >= 18.x](https://nodejs.org/en/download/)
-- [pnpm 7.x](https://pnpm.io/installation) ([_Why pnpm?_](./docs/why-pnpm.md))
+- [pnpm 8.x](https://pnpm.io/installation) ([_Why pnpm?_](./docs/why-pnpm.md)). We recommend installing via the command shown here, substituting `8.5.1` with the latest `8.x` version: `curl -fsSL https://get.pnpm.io/install.sh | env PNPM_VERSION=8.5.1 sh -`
 
 It is recommended to also _globally_ install [`lerna`](https://lerna.js.org/) with `pnpm` (though not absolutely required)
 
