@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.52](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.1.51...@kong-ui-public/metric-cards@0.1.52) (2023-05-22)
+
+
+### Bug Fixes
+
+* **metric-cards:** Fix default change format function ([#451](https://github.com/Kong/public-ui-components/issues/451)) ([54621f2](https://github.com/Kong/public-ui-components/commit/54621f2875d49c30079a68ac7cb190114cfd8d5e))
+
+
+
+
+
 ## [0.1.51](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.1.50...@kong-ui-public/metric-cards@0.1.51) (2023-05-20)
 
 **Note:** Version bump only for package @kong-ui-public/metric-cards
