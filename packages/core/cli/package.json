@@ -15,7 +15,7 @@
   "devDependencies": {
     "@types/inquirer": "^9.0.3",
     "@types/node-emoji": "^1.8.2",
-    "boxen": "^7.0.2",
+    "boxen": "^7.1.0",
     "inquirer": "^9.2.4",
     "nanospinner": "^1.1.0",
     "node-emoji": "^1.11.0",
