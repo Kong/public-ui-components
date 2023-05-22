@@ -28,13 +28,13 @@ export const changePolarity = (delta: number, hasTrendAccess: boolean, thisIsBad
 
 /**
  * Determines the trend value to be displayed by the metric card
- * @param {number} delta The change amount during the given time period
+ * @param {number} delta The change amount during the given time period.  Assumed to be a percentage; e.g., delta = 0.1 will be rendered as '10.00%'.
  * @param {Boolean} hasTrendAccess Whether the user's Tier allows it
  * @returns {string}
  */
 export const metricChange = (delta: number, hasTrendAccess: boolean, fallback: string): string => {
   return hasTrendAccess
-    ? `${Math.abs(delta).toFixed(DECIMAL_DISPLAY)}%`
+    ? `${Math.abs(delta * 100).toFixed(DECIMAL_DISPLAY)}%`
     : fallback
 }
 

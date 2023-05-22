@@ -101,3 +101,17 @@ export interface AnalyticsExploreResult {
    */
   meta: AnalyticsExploreMeta
 }
+
+/**
+ * Analytics exploreV2 query data object
+ */
+export interface AnalyticsExploreV2Result {
+  /**
+   * Array of records
+   */
+  records: AnalyticsExploreRecord[]
+  /**
+   * Additional exploreV2 metadata about the query
+   */
+  meta: AnalyticsExploreV2Meta
+}

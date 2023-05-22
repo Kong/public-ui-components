@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-utilities",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "main": "./dist/vitals-utilities.umd.js",
   "module": "./dist/vitals-utilities.es.js",
@@ -53,6 +53,6 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "date-fns": "^2.29.3"
+    "date-fns": "^2.30.0"
   }
 }

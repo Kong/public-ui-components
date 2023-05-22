@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.2.1...@kong-ui-public/analytics-utilities@0.3.0) (2023-05-19)
+
+
+### Features
+
+* also allow v2 meta in explore result [MA-1675] ([#440](https://github.com/Kong/public-ui-components/issues/440)) ([3f7aeca](https://github.com/Kong/public-ui-components/commit/3f7aeca07410601256ac97515d82cf96182b070c))
+
+
+
+
+
+## [0.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.2.0...@kong-ui-public/analytics-utilities@0.2.1) (2023-05-19)
+
+
+### Bug Fixes
+
+* **deps:** update dependency date-fns to ^2.30.0 ([#438](https://github.com/Kong/public-ui-components/issues/438)) ([46f9e89](https://github.com/Kong/public-ui-components/commit/46f9e893df07c46d6846719a17c4a495a0310bb9))
+
+
+
+
+
 # [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.1.3...@kong-ui-public/analytics-utilities@0.2.0) (2023-05-04)
 
 
