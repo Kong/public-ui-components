@@ -176,8 +176,8 @@ importers:
         specifier: ^4.1.6
         version: 4.1.6(vue@3.2.47)
       vue-tsc:
-        specifier: ^1.5.3
-        version: 1.5.3(typescript@4.9.5)
+        specifier: ^1.5.4
+        version: 1.5.4(typescript@4.9.5)
 
   packages/analytics/analytics-utilities:
     dependencies:
@@ -1479,7 +1479,7 @@ packages:
       p-reduce: 2.1.0
       pacote: 15.1.1
       pify: 5.0.0
-      semver: 7.3.8
+      semver: 7.5.0
       slash: 3.0.0
       validate-npm-package-license: 3.0.4
       validate-npm-package-name: 4.0.0
@@ -1631,7 +1631,7 @@ packages:
       promise-all-reject-late: 1.0.1
       promise-call-limit: 1.0.1
       read-package-json-fast: 3.0.2
-      semver: 7.3.8
+      semver: 7.5.0
       ssri: 10.0.3
       treeverse: 3.0.0
       walk-up-path: 1.0.0
@@ -2785,7 +2785,7 @@ packages:
       debug: 4.3.4(supports-color@8.1.1)
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.3.8
+      semver: 7.5.0
       tsutils: 3.21.0(typescript@4.9.5)
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -2806,7 +2806,7 @@ packages:
       '@typescript-eslint/typescript-estree': 5.59.6(typescript@4.9.5)
       eslint: 8.40.0
       eslint-scope: 5.1.1
-      semver: 7.3.8
+      semver: 7.5.0
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -2922,8 +2922,8 @@ packages:
       typescript: 4.9.5
     dev: true
 
-  /@volar/vue-language-core@1.5.3:
-    resolution: {integrity: sha512-cuNaqGbXaQ3fHkabL4D1V3eNyfJ5sGJR+JdB82TEw2bEiOi3M8BIEqBAL7UV4vXagS4p1J+rF+aew38jLwsnIA==}
+  /@volar/vue-language-core@1.5.4:
+    resolution: {integrity: sha512-lTTGwqGDXbj8bFxHatII8sOu4rCUXf8ptcF4MUeMd+Yf40h0yq1BCRrQOVJpqlsJEvNQXNEsSGODrfeNFoJImg==}
     dependencies:
       '@volar/language-core': 1.4.1
       '@volar/source-map': 1.4.1
@@ -2936,13 +2936,13 @@ packages:
       vue-template-compiler: 2.7.14
     dev: true
 
-  /@volar/vue-typescript@1.5.3(typescript@4.9.5):
-    resolution: {integrity: sha512-7bdrcK6HuEZcXX/kuFvhfpqmImIy0isQZKgJNKXA7rrmw+erWA0EOQXM83q1jUgud6B3jSKBHvllH/kj6+cc6Q==}
+  /@volar/vue-typescript@1.5.4(typescript@4.9.5):
+    resolution: {integrity: sha512-frT7Pjxr5BvTe8qRGxo+6+f6eJd3e5JJ6GeRgEf37Jce2egUCnzHOYF60LdjaZpmv+L9IVBj83ubCH/fzf3sgA==}
     peerDependencies:
       typescript: '*'
     dependencies:
       '@volar/typescript': 1.4.1(typescript@4.9.5)
-      '@volar/vue-language-core': 1.5.3
+      '@volar/vue-language-core': 1.5.4
       typescript: 4.9.5
     dev: true
 
@@ -3967,7 +3967,7 @@ packages:
   /builtins@5.0.1:
     resolution: {integrity: sha512-qwVpFEHNfhYJIzNRBvd2C1kyo6jz3ZSMPyyuR47OPdiKWlbYnZNyDWuyR175qDnAJLiCo5fBBqPb3RiXgWlkOQ==}
     dependencies:
-      semver: 7.3.8
+      semver: 7.5.0
     dev: true
 
   /byte-size@7.0.0:
@@ -4490,7 +4490,7 @@ packages:
       js-string-escape: 1.0.1
       lodash: 4.17.21
       md5-hex: 3.0.1
-      semver: 7.3.8
+      semver: 7.5.0
       well-known-symbols: 2.0.0
     dev: true
 
@@ -5645,7 +5645,7 @@ packages:
       is-core-module: 2.11.0
       minimatch: 3.1.2
       resolve: 1.22.1
-      semver: 7.3.8
+      semver: 7.5.0
     dev: true
 
   /eslint-plugin-node@11.1.0(eslint@8.40.0):
@@ -7228,7 +7228,7 @@ packages:
       promzard: 0.3.0
       read: 1.0.7
       read-package-json: 5.0.2
-      semver: 7.3.8
+      semver: 7.5.0
       validate-npm-package-license: 3.0.4
       validate-npm-package-name: 4.0.0
     dev: true
@@ -8056,7 +8056,7 @@ packages:
       npm-package-arg: 10.1.0
       npm-registry-fetch: 14.0.4
       proc-log: 3.0.0
-      semver: 7.3.8
+      semver: 7.5.0
       sigstore: 1.5.2
       ssri: 10.0.3
     transitivePeerDependencies:
@@ -9024,7 +9024,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       hosted-git-info: 3.0.8
-      semver: 7.3.8
+      semver: 7.5.0
       validate-npm-package-name: 3.0.0
     dev: true
 
@@ -12629,7 +12629,7 @@ packages:
       espree: 9.5.2
       esquery: 1.5.0
       lodash: 4.17.21
-      semver: 7.3.8
+      semver: 7.5.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -12649,15 +12649,15 @@ packages:
       he: 1.2.0
     dev: true
 
-  /vue-tsc@1.5.3(typescript@4.9.5):
-    resolution: {integrity: sha512-W5V2HNs3g8EP7JR1w+kuAgp7SOnXfHUxCjA3j+9Jf0FnaghaukTJTO+RQ5bMpkb/9wuGJrKnn80Qzkz3Cfpl9w==}
+  /vue-tsc@1.5.4(typescript@4.9.5):
+    resolution: {integrity: sha512-QILho5NkbzQFixaFlYRXZaYaFutSY8Kd2nyNz1/B4Acrm0qlp2QkQmdHGZw9iU/HW16mDS6ncznSCORjS6Pbjw==}
     hasBin: true
     peerDependencies:
       typescript: '*'
     dependencies:
-      '@volar/vue-language-core': 1.5.3
-      '@volar/vue-typescript': 1.5.3(typescript@4.9.5)
-      semver: 7.3.8
+      '@volar/vue-language-core': 1.5.4
+      '@volar/vue-typescript': 1.5.4(typescript@4.9.5)
+      semver: 7.5.0
       typescript: 4.9.5
     dev: true
 
