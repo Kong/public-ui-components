@@ -33,8 +33,5 @@
       ],
       "stabilityDays": 0
     }
-  ],
-  "constraints": {
-    "pnpm": "8.5"
-  }
+  ]
 }
