@@ -53,7 +53,7 @@ importers:
       ts-node: ^10.9.1
       tsc-alias: ^1.8.6
       tslib: ^2.5.0
-      typedoc: ^0.24.6
+      typedoc: ^0.24.7
       typedoc-plugin-markdown: ^3.15.3
       typescript: ~4.9.5
       vite: ^4.3.5
@@ -112,8 +112,8 @@ importers:
       ts-node: 10.9.1_jrb7r3esypdtrca3xosfxy6qfy
       tsc-alias: 1.8.6
       tslib: 2.5.0
-      typedoc: 0.24.6_typescript@4.9.5
-      typedoc-plugin-markdown: 3.15.3_typedoc@0.24.6
+      typedoc: 0.24.7_typescript@4.9.5
+      typedoc-plugin-markdown: 3.15.3_typedoc@0.24.7
       typescript: 4.9.5
       vite: 4.3.5_rvv4my4wgi5s7fbqml7bnljuk4
       vite-plugin-externals: 0.6.2_vite@4.3.5
@@ -12181,17 +12181,17 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: true
 
-  /typedoc-plugin-markdown/3.15.3_typedoc@0.24.6:
+  /typedoc-plugin-markdown/3.15.3_typedoc@0.24.7:
     resolution: {integrity: sha512-idntFYu3vfaY3eaD+w9DeRd0PmNGqGuNLKihPU9poxFGnATJYGn9dPtEhn2QrTdishFMg7jPXAhos+2T6YCWRQ==}
     peerDependencies:
       typedoc: '>=0.24.0'
     dependencies:
       handlebars: 4.7.7
-      typedoc: 0.24.6_typescript@4.9.5
+      typedoc: 0.24.7_typescript@4.9.5
     dev: true
 
-  /typedoc/0.24.6_typescript@4.9.5:
-    resolution: {integrity: sha512-c3y3h45xJv3qYwKDAwU6Cl+26CjT0ZvblHzfHJ+SjQDM4p1mZxtgHky4lhmG0+nNarRht8kADfZlbspJWdZarQ==}
+  /typedoc/0.24.7_typescript@4.9.5:
+    resolution: {integrity: sha512-zzfKDFIZADA+XRIp2rMzLe9xZ6pt12yQOhCr7cD7/PBTjhPmMyMvGrkZ2lPNJitg3Hj1SeiYFNzCsSDrlpxpKw==}
     engines: {node: '>= 14.14'}
     hasBin: true
     peerDependencies:
