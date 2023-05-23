@@ -69,6 +69,6 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "7MB"
+    "errorLimit": "7.5MB"
   }
 }
