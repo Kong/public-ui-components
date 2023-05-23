@@ -172,6 +172,9 @@ jobs:
         # The `...` syntax tells pnpm to include dependent packages
         run: pnpm --stream --filter "...${{steps.changed_packages.outputs.filter}}..." run build
 
+      - name: Check dist max-limit
+        uses: Kong/github-action-dist-size-checker@feat/initial
+
       - name: Publish Previews
         if: ${{github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != ''}}
         run: |
