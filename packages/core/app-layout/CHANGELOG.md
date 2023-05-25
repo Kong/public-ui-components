@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.18.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.18.12...@kong-ui-public/app-layout@0.18.13) (2023-05-25)
+
+
+### Bug Fixes
+
+* **app-layout:** update layout content height ([#468](https://github.com/Kong/public-ui-components/issues/468)) ([a9525d1](https://github.com/Kong/public-ui-components/commit/a9525d113ac6f09256697847c3b093a2ed9c96b0))
+
+
+
+
+
 ## [0.18.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.18.11...@kong-ui-public/app-layout@0.18.12) (2023-05-25)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
