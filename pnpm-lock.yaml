@@ -17,8 +17,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       '@evilmartians/lefthook':
-        specifier: ^1.3.12
-        version: 1.3.12
+        specifier: ^1.3.13
+        version: 1.3.13
       '@kong/kongponents':
         specifier: ^8.67.2
         version: 8.67.2(vue-router@4.1.6)(vue@3.2.47)
@@ -1220,8 +1220,8 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@evilmartians/lefthook@1.3.12:
-    resolution: {integrity: sha512-rvfGEmUkf2OAeCMDSe1RWarhEGpKeJYiIF7cbMwyXYgfxjqCJVdcGiNqTsi3oqVm3SLtFQTxupBoxA15tNQskg==}
+  /@evilmartians/lefthook@1.3.13:
+    resolution: {integrity: sha512-+rtlCtx/1LseNGnBZFtebDPKVl8gBnxR1cgfRB/70Gc1IR/DjzfFnN06Qwex77aytlf6/p4+7zKrXslOJJA0Bw==}
     cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
