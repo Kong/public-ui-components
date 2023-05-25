@@ -39,7 +39,7 @@
   "peerDependencies": {
     "@kong/kongponents": "^8.67.2",
     "vue": "^3.2.47",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.2.0"
   },
   "dependencies": {
     "focus-trap": "^7.4.1",
@@ -50,7 +50,7 @@
     "@kong/kongponents": "^8.67.2",
     "@types/lodash.clonedeep": "^4.5.7",
     "vue": "^3.2.47",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.2.0"
   },
   "repository": {
     "type": "git",
