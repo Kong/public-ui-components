@@ -99,13 +99,15 @@
       data-testid="kong-ui-app-layout-main"
     >
       <div class="kong-ui-app-layout-content">
-        <!-- Default host app teleport container -->
-        <div id="kong-ui-app-layout-teleport-default-slot" />
-        <slot name="app-error" />
-        <slot
-          v-if="!defaultSlotIsHidden"
-          name="default"
-        />
+        <div class="kong-ui-app-layout-content-inner">
+          <!-- Default host app teleport container -->
+          <div id="kong-ui-app-layout-teleport-default-slot" />
+          <slot name="app-error" />
+          <slot
+            v-if="!defaultSlotIsHidden"
+            name="default"
+          />
+        </div>
       </div>
     </main>
   </div>
@@ -213,6 +215,7 @@ const { debounce } = useDebounce()
 const debouncedSetNotificationHeight = debounce((force = false): void => {
   // Only update the notificationHeight if the windowWidth changes
   if (force || (windowWidth.value !== window?.innerWidth || 0)) {
+    windowWidth.value = window?.innerWidth
     const notificationContainer: HTMLElement | null = document?.querySelector('.kong-ui-app-layout #kong-ui-app-layout-notification')
     if (notificationContainer) {
       notificationHeight.value = notificationContainer.offsetHeight
@@ -224,6 +227,7 @@ const debouncedSetNotificationHeight = debounce((force = false): void => {
 const resizeObserver = ref<ResizeObserver>()
 
 onMounted(() => {
+  console.log('local app layout')
   // Add classes to the `html` and `body` elements to scope styles
   document?.body?.classList.add('kong-ui-app-layout-body')
   document?.documentElement?.classList.add('kong-ui-app-layout-html')
@@ -306,7 +310,8 @@ onBeforeUnmount(() => {
   }
 
   .kong-ui-app-layout-main {
-    align-items: flex-start;
+    // align-items: flex-start;
+    align-items: stretch;
     background-color: var(--grey-100, #f8f8fa);
     box-shadow: $app-layout-main-box-shadow;
     display: flex;
@@ -328,12 +333,16 @@ onBeforeUnmount(() => {
     }
 
     .kong-ui-app-layout-content {
-      padding: var(--kong-ui-app-layout-content-padding, 16px);
       position: relative;
       width: 100%;
 
-      @media (min-width: $viewport-lg) {
-        padding: var(--kong-ui-app-layout-content-padding, 32px);
+      // Apply the padding to the inner element
+      &-inner {
+        padding: var(--kong-ui-app-layout-content-padding, 16px);
+
+        @media (min-width: $viewport-lg) {
+          padding: var(--kong-ui-app-layout-content-padding, 32px);
+        }
       }
     }
   }
