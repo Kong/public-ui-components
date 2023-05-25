@@ -5,7 +5,7 @@
     :sidebar-top-items="sidebarItemsTop"
     @sidebar-click="sidebarItemClick"
   >
-    <!-- <template #notification>
+    <template #notification>
       <KAlert
         alert-message="I'm an alert from the host app"
         appearance="warning"
@@ -13,7 +13,7 @@
         :is-showing="showAlert"
         @closed="handleCloseAlert"
       />
-    </template> -->
+    </template>
     <template #navbar-mobile-logo>
       <router-link
         class="navbar-logo-link"
@@ -86,10 +86,10 @@
     <p>This is the top.</p>
 
     <p
-      v-for="index in 10"
+      v-for="index in 9"
       :key="index"
     >
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae. Repellat quam voluptas vitae, maxime consequuntur praesentium suscipit. Numquam aliquid nulla vel esse accusantium reiciendis error?
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae. Repellat quam voluptas vitae, maxime consequuntur praesentium et suscipit. Numquam aliquid nulla vel esse accusantium reiciendis error?
     </p>
 
     <p>This is the bottom.</p>
@@ -323,10 +323,10 @@ const sidebarItemsBottom = computed((): SidebarPrimaryItem[] => {
   ]
 })
 
-// const showAlert = ref(true)
-// const handleCloseAlert = (): void => {
-//   showAlert.value = false
-// }
+const showAlert = ref(true)
+const handleCloseAlert = (): void => {
+  showAlert.value = false
+}
 </script>
 
 <style lang="scss" scoped>
