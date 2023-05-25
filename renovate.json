@@ -33,5 +33,9 @@
       ],
       "stabilityDays": 0
     }
-  ]
+  ],
+  "npmrcMerge": true,
+  "constraints": {
+    "pnpm": "8.5.1"
+  }
 }
