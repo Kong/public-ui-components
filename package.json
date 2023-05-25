@@ -74,7 +74,7 @@
     "vite-plugin-externals": "^0.6.2",
     "vitest": "^0.31.0",
     "vue": "^3.2.47",
-    "vue-router": "^4.1.6",
+    "vue-router": "^4.2.0",
     "vue-tsc": "^1.5.4"
   },
   "workspaces": [
