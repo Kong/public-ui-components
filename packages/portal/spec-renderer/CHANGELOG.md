@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.8.67...@kong-ui-public/spec-renderer@0.9.0) (2023-05-26)
+
+
+### Features
+
+* define and check dist size limit [KHCP-7179] ([#455](https://github.com/Kong/public-ui-components/issues/455)) ([02e4d0a](https://github.com/Kong/public-ui-components/commit/02e4d0ae354b7d30a63856110e58b10e335d8134))
+
+
+
+
+
 ## [0.8.67](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.8.66...@kong-ui-public/spec-renderer@0.8.67) (2023-05-25)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer

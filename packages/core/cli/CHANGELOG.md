@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.4.8...@kong-ui-public/cli@0.5.0) (2023-05-26)
+
+
+### Features
+
+* define and check dist size limit [KHCP-7179] ([#455](https://github.com/Kong/public-ui-components/issues/455)) ([02e4d0a](https://github.com/Kong/public-ui-components/commit/02e4d0ae354b7d30a63856110e58b10e335d8134))
+
+
+
+
+
 ## [0.4.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.4.7...@kong-ui-public/cli@0.4.8) (2023-05-22)
 
 **Note:** Version bump only for package @kong-ui-public/cli
