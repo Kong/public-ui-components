@@ -5,6 +5,8 @@ export interface QueryTime {
   granularityDruid(): DruidGranularity | null
   startSeconds(): number
   endSeconds(): number
+  startMs(): number
+  endMs(): number
   startDate(): Date
   endDate(): Date
   granularityMs(): number
