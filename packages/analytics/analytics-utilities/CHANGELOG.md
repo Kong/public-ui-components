@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.3.0...@kong-ui-public/analytics-utilities@0.3.1) (2023-05-26)
+
+
+### Bug Fixes
+
+* **analytics-utilities:** Add `startMs` and `endMs` to interface ([#473](https://github.com/Kong/public-ui-components/issues/473)) ([27102d1](https://github.com/Kong/public-ui-components/commit/27102d18d04eaf2e8df149d2250f84a8382bd771))
+
+
+
+
+
 # [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.2.1...@kong-ui-public/analytics-utilities@0.3.0) (2023-05-19)
 
 
