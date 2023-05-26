@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - feat/KHCP-7461_unpublish-pr-pkgs
-  schedule:
-    - cron: '20 */3 * * *'
+  # schedule:
+  #   - cron: '20 */3 * * *'
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
