@@ -52,6 +52,9 @@
   "volta": {
     "extends": "../../../package.json"
   },
+  "distSizeChecker": {
+    "errorLimit": "500KB"
+  },
   "dependencies": {
     "date-fns": "^2.30.0"
   }

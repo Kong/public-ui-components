@@ -33,6 +33,9 @@
   "volta": {
     "extends": "../../../package.json"
   },
+  "distSizeChecker": {
+    "errorLimit": "3MB"
+  },
   "devDependencies": {
     "css-loader": "^6.7.3",
     "raw-loader": "^4.0.2",
