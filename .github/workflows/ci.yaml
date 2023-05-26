@@ -232,13 +232,6 @@ jobs:
              ```
           GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
-      - name: Upload bundle-analyzer results
-        if: ${{ steps.changed_packages.outputs.filter != '' }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: rollup-plugin-visualizer
-          path:  packages/*/*/bundle-analyzer/stats-treemap.html
-
       - name: Run Unit Tests
         if: ${{ steps.changed_packages.outputs.unitTestFilter != '' }}
         run: pnpm --parallel --stream --filter "${{steps.changed_packages.outputs.unitTestFilter}}" run test:unit
