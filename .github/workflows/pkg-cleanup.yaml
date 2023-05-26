@@ -10,7 +10,7 @@ on:
 jobs:
   cleanup:
     name: Cleanup PR preview packages
-    runs-on: ${{ vars.RUNS_ON }}
+    runs-on: ubuntu-latest
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
       GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
