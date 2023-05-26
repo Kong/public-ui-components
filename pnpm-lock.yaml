@@ -20,8 +20,8 @@ importers:
         specifier: ^1.3.13
         version: 1.3.13
       '@kong/kongponents':
-        specifier: ^8.69.0
-        version: 8.69.0(vue-router@4.2.0)(vue@3.2.47)
+        specifier: ^8.70.0
+        version: 8.70.0(vue-router@4.2.0)(vue@3.2.47)
       '@rushstack/eslint-patch':
         specifier: ^1.2.0
         version: 1.2.0
@@ -192,8 +192,8 @@ importers:
         version: 2.1.0
     devDependencies:
       '@kong/kongponents':
-        specifier: ^8.69.0
-        version: 8.69.0(vue-router@4.2.0)(vue@3.2.47)
+        specifier: ^8.70.0
+        version: 8.70.0(vue-router@4.2.0)(vue@3.2.47)
       vue:
         specifier: ^3.2.47
         version: 3.2.47
@@ -211,8 +211,8 @@ importers:
         version: 4.5.0
     devDependencies:
       '@kong/kongponents':
-        specifier: ^8.69.0
-        version: 8.69.0(vue-router@4.2.0)(vue@3.2.47)
+        specifier: ^8.70.0
+        version: 8.70.0(vue-router@4.2.0)(vue@3.2.47)
       '@types/lodash.clonedeep':
         specifier: ^4.5.7
         version: 4.5.7
@@ -253,8 +253,8 @@ importers:
         specifier: workspace:^0.5.0
         version: link:../i18n
       '@kong/kongponents':
-        specifier: ^8.69.0
-        version: 8.69.0(vue-router@4.2.0)(vue@3.2.47)
+        specifier: ^8.70.0
+        version: 8.70.0(vue-router@4.2.0)(vue@3.2.47)
       vue:
         specifier: ^3.2.47
         version: 3.2.47
@@ -277,8 +277,8 @@ importers:
         specifier: workspace:^0.5.0
         version: link:../i18n
       '@kong/kongponents':
-        specifier: ^8.69.0
-        version: 8.69.0(vue-router@4.2.0)(vue@3.2.47)
+        specifier: ^8.70.0
+        version: 8.70.0(vue-router@4.2.0)(vue@3.2.47)
       vue:
         specifier: ^3.2.47
         version: 3.2.47
@@ -293,8 +293,8 @@ importers:
         version: 1.29.0
     devDependencies:
       '@kong/kongponents':
-        specifier: ^8.69.0
-        version: 8.69.0(vue-router@4.2.0)(vue@3.2.47)
+        specifier: ^8.70.0
+        version: 8.70.0(vue-router@4.2.0)(vue@3.2.47)
       '@types/prismjs':
         specifier: ^1.26.0
         version: 1.26.0
@@ -321,8 +321,8 @@ importers:
         version: 9.0.0
     devDependencies:
       '@kong/kongponents':
-        specifier: ^8.69.0
-        version: 8.69.0(vue-router@4.2.0)(vue@3.2.47)
+        specifier: ^8.70.0
+        version: 8.70.0(vue-router@4.2.0)(vue@3.2.47)
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.0.4
         version: 1.0.4(vite@4.3.5)
@@ -1393,8 +1393,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@kong/kongponents@8.69.0(vue-router@4.2.0)(vue@3.2.47):
-    resolution: {integrity: sha512-MZ5TUGrtv0Uc+W1S5/XR9y0XY65WiLgconR93+i8yXNj0SrJHVWNGGQL7xCmBPB1E0HKLRdqeFhnsPbCZlF9KQ==}
+  /@kong/kongponents@8.70.0(vue-router@4.2.0)(vue@3.2.47):
+    resolution: {integrity: sha512-d9L8pZ2ykPqANnBYed+4AUWNEt2cITeRS6N1up5KAMyW9PIpZIaJRQki/WE6XoWa5iSLutqSqsyDkGZ4IVzPwA==}
     engines: {node: '>=16.19.0'}
     peerDependencies:
       vue: '>= 3.2.37'
@@ -1422,7 +1422,7 @@ packages:
       react: 17.0.2
     dependencies:
       '@braintree/sanitize-url': 2.1.0
-      '@kong/kongponents': 8.69.0(vue-router@4.2.0)(vue@3.2.47)
+      '@kong/kongponents': 8.70.0(vue-router@4.2.0)(vue@3.2.47)
       '@kyleshockey/xml': 1.0.2
       classnames: 2.3.2
       curl-to-har: 1.0.1
