@@ -1,0 +1,23 @@
+name: Cleanup PR preview packages
+on:
+  push:
+    branches:
+      - feat/KHCP-7461_unpublish-pr-pkgs
+  schedule:
+    - cron: '20 */3 * * *'
+
+
+jobs:
+  cleanup:
+    name: Cleanup PR preview packages
+    runs-on: ${{ vars.RUNS_ON }}
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
+      GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+
+      - name: Deprecate and Unpubish
+        uses: Kong/public-shared-actions/pr-previews/cleanup@feat/KHCP-7461_unpublish-pr-pkgs
