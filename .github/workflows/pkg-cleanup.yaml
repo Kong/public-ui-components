@@ -22,5 +22,9 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v3
 
+      - name: prepare
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+
       - name: Deprecate and Unpubish
         uses: Kong/public-shared-actions/pr-previews/cleanup@feat/KHCP-7461_unpublish-pr-pkgs
