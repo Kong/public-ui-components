@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-export enum ChartTypes {
+export const enum ChartTypes {
   DOUGHNUT = 'Doughnut',
   HORIZONTAL_BAR = 'HorizontalBar',
   VERTICAL_BAR = 'VerticalBar',
