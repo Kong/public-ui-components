@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.4.1...@kong-ui-public/analytics-utilities@0.4.2) (2023-06-01)
+
+
+### Bug Fixes
+
+* **analytics-utilities:** support commonjs ([#486](https://github.com/Kong/public-ui-components/issues/486)) ([196454b](https://github.com/Kong/public-ui-components/commit/196454be4b17fbe11be61192c7bf279b050cb124))
+
+
+
+
+
 ## [0.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.4.0...@kong-ui-public/analytics-utilities@0.4.1) (2023-05-31)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
