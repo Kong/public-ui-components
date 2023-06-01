@@ -11,7 +11,7 @@
   "exports": {
     ".": {
       "import": "./dist/vitals-utilities.es.js",
-      "require": "./dist/vitals-utilities.umd.js"
+      "require": "./dist/vitals-utilities.cjs"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
