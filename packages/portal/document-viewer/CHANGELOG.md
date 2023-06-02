@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.8.3...@kong-ui-public/document-viewer@0.8.4) (2023-06-02)
+
+
+### Bug Fixes
+
+* **document-viewer:** link display within a list ([#487](https://github.com/Kong/public-ui-components/issues/487)) ([2b2a156](https://github.com/Kong/public-ui-components/commit/2b2a156b32a215831526bce5929935e0acc41ed7))
+
+
+
+
+
 ## [0.8.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.8.2...@kong-ui-public/document-viewer@0.8.3) (2023-05-26)
 
 **Note:** Version bump only for package @kong-ui-public/document-viewer
