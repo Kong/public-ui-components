@@ -17,6 +17,10 @@ li {
     p, span {
       display: inline-flex;
       margin-bottom: 0;
+      
+      span {
+        display: inline;
+      }
 
       > input[type="checkbox"] {
         margin: 0 4px 0 0;
