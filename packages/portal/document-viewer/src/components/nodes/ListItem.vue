@@ -14,13 +14,17 @@ li {
       margin-left: 16px !important;
     }
 
-    p, span {
+    p {
       display: inline-flex;
-      margin-bottom: 0;
+    }
 
-      span {
-        display: inline;
-      }
+    span {
+      display: inline;
+    }
+
+    p,
+    span {
+      margin-bottom: 0;
 
       > input[type="checkbox"] {
         margin: 0 4px 0 0;
