@@ -17,7 +17,7 @@ li {
     p, span {
       display: inline-flex;
       margin-bottom: 0;
-      
+
       span {
         display: inline;
       }
