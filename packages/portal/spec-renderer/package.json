@@ -46,7 +46,7 @@
     "@modyfi/vite-plugin-yaml": "^1.0.4",
     "@types/lodash.clonedeep": "^4.5.7",
     "@types/uuid": "^9.0.1",
-    "openapi-types": "^12.1.0",
+    "openapi-types": "^12.1.1",
     "vue": "^3.2.45"
   },
   "dependencies": {
