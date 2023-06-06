@@ -235,8 +235,8 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0
       inquirer:
-        specifier: ^9.2.4
-        version: 9.2.4
+        specifier: ^9.2.6
+        version: 9.2.6
       nanospinner:
         specifier: ^1.1.0
         version: 1.1.0
@@ -7275,8 +7275,8 @@ packages:
       wrap-ansi: 7.0.0
     dev: true
 
-  /inquirer@9.2.4:
-    resolution: {integrity: sha512-Q2KnguYUxC/GqkAWJBTWpXH1E3Qqh5VZaCqxK5HYYnQmaePKGLgscVfb3L3/32oF6NRW5VpGqUr75uDjtHHqRw==}
+  /inquirer@9.2.6:
+    resolution: {integrity: sha512-y71l237eJJKS4rl7sQcEUiMhrR0pB/ZnRMMTxLpjJhWL4hdWCT03a6jJnC1w6qIPSRZWEozuieGt3v7XaEJYFw==}
     engines: {node: '>=14.18.0'}
     dependencies:
       ansi-escapes: 4.3.2
