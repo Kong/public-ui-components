@@ -201,11 +201,11 @@ importers:
   packages/core/app-layout:
     dependencies:
       focus-trap:
-        specifier: ^7.4.1
-        version: 7.4.1
+        specifier: ^7.4.3
+        version: 7.4.3
       focus-trap-vue:
         specifier: ^4.0.2
-        version: 4.0.2(focus-trap@7.4.1)(vue@3.2.47)
+        version: 4.0.2(focus-trap@7.4.3)(vue@3.2.47)
       lodash.clonedeep:
         specifier: ^4.5.0
         version: 4.5.0
@@ -6222,7 +6222,7 @@ packages:
       react: '>=16.3.0'
       react-dom: '>=16.3.0'
     dependencies:
-      focus-trap: 7.4.1
+      focus-trap: 7.4.3
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
       tabbable: 6.1.2
@@ -6237,13 +6237,13 @@ packages:
       focus-trap: 7.4.1
       vue: 3.2.47
 
-  /focus-trap-vue@4.0.2(focus-trap@7.4.1)(vue@3.2.47):
+  /focus-trap-vue@4.0.2(focus-trap@7.4.3)(vue@3.2.47):
     resolution: {integrity: sha512-2iQN2xKCSCzyhcD90VpueQcTIAhaCRxxo67fkz7RSqLmEd16QKjfGslCr3KxvBx0LfpVN9j0IAyKKuJKw3Intg==}
     peerDependencies:
       focus-trap: ^7.0.0
       vue: ^3.0.0
     dependencies:
-      focus-trap: 7.4.1
+      focus-trap: 7.4.3
       vue: 3.2.47
     dev: false
 
@@ -6251,6 +6251,12 @@ packages:
     resolution: {integrity: sha512-rnXP5ERIjlo1gEZp7hQb4ekYqUxRuSDQeyWvxhahH3/GkWtd8h8g1C8Eu/KGpuvbUWNVeogK0kuzzrM4u2Z9jA==}
     dependencies:
       tabbable: 6.1.2
+
+  /focus-trap@7.4.3:
+    resolution: {integrity: sha512-BgSSbK4GPnS2VbtZ50VtOv1Sti6DIkj3+LkVjiWMNjLeAp1SH1UlLx3ULu/DCu4vq5R4/uvTm+zrvsMsuYmGLg==}
+    dependencies:
+      tabbable: 6.1.2
+    dev: false
 
   /follow-redirects@1.15.2:
     resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
