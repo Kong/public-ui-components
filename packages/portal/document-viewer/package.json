@@ -37,13 +37,13 @@
   },
   "peerDependencies": {
     "@kong/kongponents": "^8.76.0",
-    "vue": "^3.2.47"
+    "vue": "^3.3.4"
   },
   "devDependencies": {
     "@kong/kongponents": "^8.76.0",
     "@types/prismjs": "^1.26.0",
     "@vitejs/plugin-vue-jsx": "^3.0.1",
-    "vue": "^3.2.47"
+    "vue": "^3.3.4"
   },
   "dependencies": {
     "@kong-ui-public/i18n": "workspace:^0.5.0",
