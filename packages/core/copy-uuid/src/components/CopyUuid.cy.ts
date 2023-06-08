@@ -231,6 +231,7 @@ describe('<CopyUuid />', () => {
       cy.mount(CopyUuid, {
         props: {
           uuid,
+          tooltip: 'Click to copy',
           successTooltip: 'Copied!',
         },
       })
