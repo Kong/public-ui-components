@@ -16,6 +16,8 @@ A Kong UI component for displaying uuid and copying it to clipboard.
   - [`isHidden`](#ishidden)
   - [`notify`](#notify)
   - [`iconColor`](#iconcolor)
+  - [`tooltip`](#tooltip)
+  - [`successTooltip`](#successtooltip)
 - [Events](#events)
   - [`success`](#success)
   - [`error`](#error)
@@ -77,6 +79,7 @@ import { CopyUuid } from '@kong-ui/copy-uuid'
 You can set up an optional global `notify` method, and every `copy-uuid` component instance will use this method as a default.
 
 If you're using `copy-uuid` as a vue plugin:
+
 ```typescript
 // app entry file
 import { createApp } from 'vue'
@@ -93,6 +96,7 @@ app.use(CopyUuid, {
 ```
 
 If you prefer using `copy-uuid` as a component:
+
 ```typescript
 // app entry file
 import { createApp } from 'vue'
@@ -106,6 +110,7 @@ app.provide(COPY_UUID_NOTIFY_KEY, (props: CopyUuidNotifyParam) => {
 ```
 
 You could also set up a `notify` method for each `copy-uuid` component instance through its `prop`. If the `notify` prop is defined, it'll take precedence over the global `notify` method:
+
 ```html
 <template>
   <copy-uuid
@@ -171,6 +176,7 @@ An indicator of whether the UUID string is replaced with asterisks.
 - default: `undefined`
 
 A function that will be called when the copy button is clicked. The function will receive a `CopyUuidNotifyParam` object as its only argument. The `CopyUuidNotifyParam` object has the following properties:
+
 - `type`: `success` | `error`, indicating whether the copy operation is successful
 - `message`: `string`, the message to be displayed to the end user
 
@@ -182,7 +188,26 @@ A function that will be called when the copy button is clicked. The function wil
 
 The color of the `copy` icon.
 
+### `tooltip`
+
+- type: `String`
+- required: `false`
+- default: `''`
+
+Tooltip text to display on hovering over the copy icon. This field is required if `successTooltip` has a value.
+
+### `successTooltip`
+
+- type: `String`
+- required: `false`
+- default: `''`
+
+Note: The `tooltip` prop is required to have a value in order to use this prop. When using this prop the `@success` and `@error` events will not be fired, as the tooltip text will be updated instead.
+Tooltip text to display on successful copy.
+
 ## Events
+
+Success and error events are only emitted if NOT using the `successTooltip` prop.
 
 ### `success`
 
