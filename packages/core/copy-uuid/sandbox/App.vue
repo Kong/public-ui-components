@@ -33,6 +33,22 @@
           :uuid="uuid"
         />
       </div>
+      <div>
+        <h3>tooltip</h3>
+        <CopyUuid
+          tooltip="Click to copy"
+          :uuid="uuid"
+        />
+      </div>
+      <div>
+        <h3>tooltip + success tooltip</h3>
+        <CopyUuid
+          :notify="() => {}"
+          success-tooltip="Copied!"
+          tooltip="Click to copy"
+          :uuid="uuid"
+        />
+      </div>
     </main>
   </div>
 </template>
