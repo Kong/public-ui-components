@@ -53,7 +53,7 @@ export default defineConfig({
     outDir: './dist',
     cssCodeSplit: false,
     minify: true,
-    sourcemap: true,
+    sourcemap: !!process.env.BUILD_VISUALIZER,
     rollupOptions: {
       // Make sure to externalize deps that shouldn't be bundled into your library
       // If config.build.rollupOptions.external is also set at the package level, the arrays will be merged
