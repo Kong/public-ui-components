@@ -2,7 +2,7 @@
 import { Options as IntlMessageFormatOptions } from 'intl-messageformat'
 import { createIntl, createIntlCache, MessageDescriptor } from '@formatjs/intl'
 import { flatten } from 'flat'
-import type { IntlShapeEx, PathToDotNotation, SupportedLocales, MessageFormatPrimitiveValue } from './types'
+import type { IntlShapeEx, PathToDotNotation, SupportedLocales, MessageFormatPrimitiveValue, IntlConfigEx } from './types'
 
 // this is internal formatJS function that caches instance of Intl and prevent memory leaks
 const intlCache = createIntlCache()
@@ -11,11 +11,12 @@ const intlCache = createIntlCache()
 // typed as any since we don't have access to MessageSource here
 let globIntl: any
 
-export const createI18n = <MessageSource extends Record<string, any>>(locale: SupportedLocales, messages: MessageSource, isGlobal: boolean = false): IntlShapeEx<MessageSource> => {
+export const createI18nEx = <MessageSource extends Record<string, any>>(config: IntlConfigEx<MessageSource>, isGlobal: boolean = false): IntlShapeEx<MessageSource> => {
+
   const intlOriginal = createIntl(
     {
-      locale,
-      messages: flatten(messages, {
+      ...config,
+      messages: flatten(config.messages, {
         safe: true, // Preserve arrays
       }),
     },
@@ -45,7 +46,7 @@ export const createI18n = <MessageSource extends Record<string, any>>(locale: Su
     te,
     tm,
     ...intl,
-    source: messages,
+    source: <MessageSource>config.messages,
   }
 
   if (isGlobal) {
@@ -53,6 +54,15 @@ export const createI18n = <MessageSource extends Record<string, any>>(locale: Su
   }
 
   return localIntl
+
+}
+
+export const createI18n = <MessageSource extends Record<string, any>>(locale: SupportedLocales, messages: MessageSource, isGlobal: boolean = false): IntlShapeEx<MessageSource> => {
+  return createI18nEx({
+    locale,
+    messages
+  },
+  isGlobal)
 }
 
 // Returns global (application of Intl)

@@ -1,4 +1,6 @@
 import type { IntlShape } from '@formatjs/intl'
+import { IntlConfig } from '@formatjs/intl'
+
 import type { Options as IntlMessageFormatOptions } from 'intl-messageformat'
 
 export type MessageFormatPrimitiveValue = string | number | boolean | null | undefined
@@ -17,4 +19,8 @@ export type IntlShapeEx<MessageSource extends Record<string, any>> = Omit<IntlSh
   te: (translationKey: PathToDotNotation<MessageSource, string>) => boolean
   tm: (translationKey: PathToDotNotation<MessageSource, string>) => Array<string>
   source: MessageSource
+}
+
+export type IntlConfigEx<MessageSource extends Record<string, any>> = Omit<IntlConfig, 'messages'> & {
+  messages: MessageSource
 }

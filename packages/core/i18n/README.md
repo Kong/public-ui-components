@@ -5,6 +5,7 @@
   - [Global Registration](#global-registration)
   - [Vue Plugin](#vue-plugin)
 - [Use in application](#use-in-application)
+  - [Override config while create instance](#override-config-while-create-instance)
 - [Use in shared component](#use-in-shared-component)
 - [Formatting messages](#formatting-messages)
   - [Where is my helpText?](#where-is-my-helptext)
@@ -82,6 +83,7 @@ import english from './locales/en.json'
 createI18n<typeof english>('en-us', english, true)
 ```
 
+
 And then, anywhere in application code where `i18n` is needed:
 
 ```html
@@ -95,6 +97,32 @@ import english from './locales/en.json'
 const i18n = useI18n<typeof english>()
 </script>
 ```
+
+### Override config while create instance
+
+For some applications there is a need to create Intl instance with config settings overridden. ONe example of this is when application needs to define error/warning handlers. In this case use `createI18nEx` function.
+
+Example:
+
+in `main.ts` (application hydration code):
+
+```ts
+import { createI18nEx } from '@kong-ui-public/i18n'
+import english from './locales/en.json'
+
+...
+
+// this will create Application instance of Intl object
+createI18nEx<typeof english>({
+    locale'en-us',
+    messages: english,
+    onError: (err) {
+      console.error(`this is my own i18n errorhandler ${err}`)
+    }
+  }, true)
+```
+
+and then use i18n as described above.
 
 ## Use in shared component
 
