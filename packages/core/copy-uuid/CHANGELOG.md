@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@0.5.0...@kong-ui-public/copy-uuid@0.5.1) (2023-06-12)
+
+
+### Bug Fixes
+
+* **copy-uuid:** externalize i18n ([#522](https://github.com/Kong/public-ui-components/issues/522)) ([f0d45c2](https://github.com/Kong/public-ui-components/commit/f0d45c25d8891032fa304d1d684b8bed8ce6c2bf))
+
+
+
+
+
 # [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@0.4.4...@kong-ui-public/copy-uuid@0.5.0) (2023-06-08)
 
 
