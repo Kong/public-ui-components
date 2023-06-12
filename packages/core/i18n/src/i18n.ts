@@ -63,6 +63,12 @@ export const createI18nEx = <MessageSource extends Record<string, any>>(config: 
 
 }
 
+/**
+ * {Description of this function}
+ * @param {SupportedLocales} local {Description of local param}
+ * @param {boolean} isGlobal {Description of isGlobal param)
+ *
+*/
 export const createI18n = <MessageSource extends Record<string, any>>(locale: SupportedLocales, messages: MessageSource, isGlobal: boolean = false): IntlShapeEx<MessageSource> => {
   return createI18nEx({
     locale,
