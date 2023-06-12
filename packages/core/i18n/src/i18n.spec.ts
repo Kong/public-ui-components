@@ -139,11 +139,16 @@ describe('i18n', () => {
   })
 
   describe('createI18nEx', () => {
-    it ('should call custom errorhandler', () => {
+    it('should call custom errorhandler', () => {
       let counter = 0
-      const { t } = createI18nEx<typeof english>({locale: 'en-us', messages: english, onError: (err) => {
-        counter++
-      }}, true)
+      const { t } = createI18nEx<typeof english>({
+        locale: 'en-us',
+        messages: english,
+        onError: (err) => {
+          console.error(err)
+          counter++
+        },
+      }, true)
       // @ts-ignore
       t('unknown-key')
       expect(counter).toEqual(1)

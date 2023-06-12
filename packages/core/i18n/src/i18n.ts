@@ -60,7 +60,7 @@ export const createI18nEx = <MessageSource extends Record<string, any>>(config: 
 export const createI18n = <MessageSource extends Record<string, any>>(locale: SupportedLocales, messages: MessageSource, isGlobal: boolean = false): IntlShapeEx<MessageSource> => {
   return createI18nEx({
     locale,
-    messages
+    messages,
   },
   isGlobal)
 }

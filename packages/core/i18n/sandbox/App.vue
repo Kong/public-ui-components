@@ -55,9 +55,11 @@ const i18nNoPlugin = i18nTComponent<typeof english>(i18nLocal)
 
 // this creates local with re-defined error handler
 const i18nEx = createI18nEx({
-  locale: 'en-us', messages: english, onError: err => {
+  locale: 'en-us',
+  messages: english,
+  onError: err => {
     console.log('!!!!, This is errorHandler', err, '!!!')
-  }
+  },
 })
 
 </script>
