@@ -114,7 +114,7 @@ import english from './locales/en.json'
 
 // this will create Application instance of Intl object
 createI18nEx<typeof english>({
-    locale'en-us',
+    locale: 'en-us',
     messages: english,
     onError: (err) {
       console.error(`this is my own i18n errorhandler ${err}`)
