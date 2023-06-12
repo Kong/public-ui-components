@@ -100,7 +100,7 @@ const i18n = useI18n<typeof english>()
 
 ### Override config while create instance
 
-For some applications there is a need to create Intl instance with config settings overridden. ONe example of this is when application needs to define error/warning handlers. In this case use `createI18nEx` function.
+For some applications there is a need to create Intl instance with config settings overridden. One example of this is when application needs to define error/warning handlers. In this case use `createI18nEx` function.
 
 Example:
 
