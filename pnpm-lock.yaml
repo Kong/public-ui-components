@@ -358,8 +358,8 @@ importers:
         version: 4.19.0
     devDependencies:
       css-loader:
-        specifier: ^6.7.4
-        version: 6.7.4(webpack@5.84.1)
+        specifier: ^6.8.1
+        version: 6.8.1(webpack@5.84.1)
       raw-loader:
         specifier: ^4.0.2
         version: 4.0.2(webpack@5.84.1)
@@ -4779,8 +4779,8 @@ packages:
     engines: {node: '>=12.22'}
     dev: true
 
-  /css-loader@6.7.4(webpack@5.84.1):
-    resolution: {integrity: sha512-0Y5uHtK5BswfaGJ+jrO+4pPg1msFBc0pwPIE1VqfpmVn6YbDfYfXMj8rfd7nt+4goAhJueO+H/I40VWJfcP1mQ==}
+  /css-loader@6.8.1(webpack@5.84.1):
+    resolution: {integrity: sha512-xDAXtEVGlD0gJ07iclwWVkLoZOpEvAWaSyf6W18S2pOC//K8+qUDIx8IIT3D+HjnmkJPQeesOPv5aiUaJsCM2g==}
     engines: {node: '>= 12.13.0'}
     peerDependencies:
       webpack: ^5.0.0
