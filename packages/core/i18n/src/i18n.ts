@@ -11,6 +11,12 @@ const intlCache = createIntlCache()
 // typed as any since we don't have access to MessageSource here
 let globIntl: any
 
+/**
+ * {Description of this function}
+ * @param {IntlConfigEx<MessageSource>} config {Description of config param}
+ * @param {boolean} isGlobal {Description of isGlobal param)
+ *
+*/
 export const createI18nEx = <MessageSource extends Record<string, any>>(config: IntlConfigEx<MessageSource>, isGlobal: boolean = false): IntlShapeEx<MessageSource> => {
 
   const intlOriginal = createIntl(
