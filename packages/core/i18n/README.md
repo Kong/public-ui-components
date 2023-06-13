@@ -116,7 +116,7 @@ import english from './locales/en.json'
 
 // this will create Application instance of Intl object
 createI18n<typeof english>(
-    en-us',
+    'en-us',
     english,
     {
       onError: (err) {
