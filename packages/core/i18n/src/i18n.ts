@@ -59,10 +59,7 @@ export const createI18n = <MessageSource extends Record<string, any>>
   }
 
   if ((typeof (config) === 'boolean' && config === true) || (typeof (config) !== 'boolean' && config.isGlobal === true)) {
-    console.log('!!!!!!!!!!! global')
     globIntl = localIntl
-  } else {
-    console.log('!!!!!!!!!!! local')
   }
 
   return localIntl
