@@ -30,7 +30,7 @@ jobs:
 
           prNumber="${{github.event.number}}"
 
-          for pkgName in $(pnpm lerna ls --l --json|jq -r '.[].name')
+          for pkgName in $(pnpm --silent lerna ls --l --json|jq -r '.[].name')
           do
             npm dist-tag rm "${pkgName}" "pr-${prNumber}" || true
 
