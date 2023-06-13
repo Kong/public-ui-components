@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n, createI18n, createI18nEx, i18nTComponent } from '../src'
+import { useI18n, createI18n, i18nTComponent } from '../src'
 import english from './locales/en.json'
 
 // this is grabbing i18n from global
@@ -54,12 +54,15 @@ const i18nLocal = createI18n('en-us', english)
 const i18nNoPlugin = i18nTComponent<typeof english>(i18nLocal)
 
 // this creates local with re-defined error handler
-const i18nEx = createI18nEx({
-  locale: 'en-us',
-  messages: english,
-  onError: err => {
-    console.log('!!!!, This is errorHandler', err, '!!!')
+const i18nEx = createI18n(
+  'en-us',
+  english,
+  {
+    onError: err => {
+      console.log('!!!!, This is errorHandler', err, '!!!')
+    },
+    isGlobal: true,
   },
-})
+)
 
 </script>

@@ -2,7 +2,7 @@
 import { Options as IntlMessageFormatOptions } from 'intl-messageformat'
 import { createIntl, createIntlCache, MessageDescriptor } from '@formatjs/intl'
 import { flatten } from 'flat'
-import type { IntlShapeEx, PathToDotNotation, SupportedLocales, MessageFormatPrimitiveValue, IntlConfigEx } from './types'
+import type { IntlShapeEx, PathToDotNotation, SupportedLocales, MessageFormatPrimitiveValue, IntlConfigCore } from './types'
 
 // this is internal formatJS function that caches instance of Intl and prevent memory leaks
 const intlCache = createIntlCache()
@@ -12,17 +12,20 @@ const intlCache = createIntlCache()
 let globIntl: any
 
 /**
- * {Description of this function}
- * @param {IntlConfigEx<MessageSource>} config {Description of config param}
- * @param {boolean} isGlobal {Description of isGlobal param)
+ * Creates and returns global or local instance of Intl
+ * @param {SupportedLocales} locale one of the locales supported
+ * @param {MessageSource} messages object with locale strings
+ * @param {boolean|IntlConfigCore} config to pass additional Intl config parameters or boolean for isGlobal (later is for backwards compatibility)
  *
 */
-export const createI18nEx = <MessageSource extends Record<string, any>>(config: IntlConfigEx<MessageSource>, isGlobal: boolean = false): IntlShapeEx<MessageSource> => {
+export const createI18n = <MessageSource extends Record<string, any>>
+(locale: SupportedLocales, messages: MessageSource, config: boolean|IntlConfigCore = false): IntlShapeEx<MessageSource> => {
 
   const intlOriginal = createIntl(
     {
-      ...config,
-      messages: flatten(config.messages, {
+      ...(typeof (config) === 'boolean' ? null : config),
+      locale,
+      messages: flatten(messages, {
         safe: true, // Preserve arrays
       }),
     },
@@ -52,29 +55,17 @@ export const createI18nEx = <MessageSource extends Record<string, any>>(config: 
     te,
     tm,
     ...intl,
-    source: <MessageSource>config.messages,
+    source: messages,
   }
 
-  if (isGlobal) {
+  if ((typeof (config) === 'boolean' && config === true) || (typeof (config) !== 'boolean' && config.isGlobal === true)) {
+    console.log('!!!!!!!!!!! global')
     globIntl = localIntl
+  } else {
+    console.log('!!!!!!!!!!! local')
   }
 
   return localIntl
-
-}
-
-/**
- * {Description of this function}
- * @param {SupportedLocales} local {Description of local param}
- * @param {boolean} isGlobal {Description of isGlobal param)
- *
-*/
-export const createI18n = <MessageSource extends Record<string, any>>(locale: SupportedLocales, messages: MessageSource, isGlobal: boolean = false): IntlShapeEx<MessageSource> => {
-  return createI18nEx({
-    locale,
-    messages,
-  },
-  isGlobal)
 }
 
 // Returns global (application of Intl)

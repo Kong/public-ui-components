@@ -21,6 +21,7 @@ export type IntlShapeEx<MessageSource extends Record<string, any>> = Omit<IntlSh
   source: MessageSource
 }
 
-export type IntlConfigEx<MessageSource extends Record<string, any>> = Omit<IntlConfig, 'messages'> & {
-  messages: MessageSource
+// ommit locale and messages as we are passing those in separate parameters into createI18n fn
+export interface IntlConfigCore extends Omit<IntlConfig, 'messages' | 'locale' > {
+  isGlobal: boolean
 }

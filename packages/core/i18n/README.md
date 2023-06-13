@@ -37,7 +37,7 @@ In order to provide full autocompletion for the translation keys, you need to pa
 import { createI18n, Translation } from '@kong-ui-public/i18n'
 import english from './locales/en.json'
 
-const i18n = createI18n<typeof english>('en-us', english, true)
+const i18n = createI18n<typeof english>('en-us', english, {isGlobal: true})
 app.use(Translation.install<typeof english>, { i18n })
 
 // composables/index.ts
@@ -60,7 +60,7 @@ const i18n = composables.useI18n()
 import { Translation, createI18n } from '@kong-ui-public/i18n'
 import english from './locales/en.json'
 
-const i18n = createI18n<typeof english>('en-us', english, true)
+const i18n = createI18n<typeof english>('en-us', english, {isGlobal: true})
 const app = createApp(App)
 app.use(Translation.install<typeof english>, { i18n })
 
@@ -80,7 +80,7 @@ import english from './locales/en.json'
 ...
 
 // this will create Application instance of Intl object
-createI18n<typeof english>('en-us', english, true)
+createI18n<typeof english>('en-us', english, {isGlobal: true})
 ```
 
 
@@ -100,29 +100,35 @@ const i18n = useI18n<typeof english>()
 
 ### Override config while create instance
 
-For some applications there is a need to create Intl instance with config settings overridden. One example of this is when application needs to define error/warning handlers. In this case use `createI18nEx` function.
+For some applications there is a need to create Intl instance with config settings overridden. One example of this is when application needs to define error/warning handlers.
 
 Example:
 
 in `main.ts` (application hydration code):
 
 ```ts
-import { createI18nEx } from '@kong-ui-public/i18n'
+import { createI18n } from '@kong-ui-public/i18n'
+import type { IntlConfigCore } from '@kong-ui-public/i18n'
+
 import english from './locales/en.json'
 
 ...
 
 // this will create Application instance of Intl object
-createI18nEx<typeof english>({
-    locale: 'en-us',
-    messages: english,
-    onError: (err) {
-      console.error(`this is my own i18n errorhandler ${err}`)
-    }
-  }, true)
+createI18n<typeof english>(
+    en-us',
+    english,
+    {
+      onError: (err) {
+        console.error(`this is my own i18n errorhandler ${err}`)
+      },
+      isGlobal: true
+    })
 ```
 
 and then use i18n as described above.
+
+Third parameter to `createI18n` could be simple boolean (for backwards compatibility), or [IntlConfig object without locale and messages](https://formatjs.io/docs/intl/#intlshape)
 
 ## Use in shared component
 
