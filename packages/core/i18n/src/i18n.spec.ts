@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest'
-import useI18n, { createI18n, createI18nEx } from './i18n'
+import useI18n, { createI18n } from './i18n'
 
 const english = {
   global: {
@@ -141,14 +141,16 @@ describe('i18n', () => {
   describe('createI18nEx', () => {
     it('should call custom errorhandler', () => {
       let counter = 0
-      const { t } = createI18nEx<typeof english>({
-        locale: 'en-us',
-        messages: english,
-        onError: (err) => {
-          console.error(err)
-          counter++
-        },
-      }, true)
+      const { t } = createI18n<typeof english>(
+        'en-us',
+        english,
+        {
+          onError: (err: any) => {
+            console.error(err)
+            counter++
+          },
+          isGlobal: true,
+        })
       // @ts-ignore
       t('unknown-key')
       expect(counter).toEqual(1)
