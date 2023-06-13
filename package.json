@@ -14,8 +14,9 @@
     "test:component:ci": "BABEL_ENV=cypress cypress run --component -b chrome",
     "test:unit": "cross-env FORCE_COLOR=1 pnpm -r run test:unit",
     "test:unit:open": "cross-env FORCE_COLOR=1 pnpm -r run test:unit:open",
+    "create-package": "pnpm --filter \"@kong-ui-public/cli\" run create-package",
     "commit": "cz",
-    "create-package": "pnpm --filter \"@kong-ui-public/cli\" run create-package"
+    "lerna": "lerna"
   },
   "devDependencies": {
     "@babel/types": "^7.22.4",

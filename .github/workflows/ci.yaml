@@ -88,7 +88,7 @@ jobs:
           componentTestMatrix=""
 
           # get the list of changed packages, grab the location
-          for pkgFolder in $(lerna ${lernaCommand} --l --json|jq -r '.[].location')
+          for pkgFolder in $(pnpm lerna ${lernaCommand} --l --json|jq -r '.[].location')
           do
             # remove current folder from the location path
             pkgFolder="${pkgFolder/$(pwd)\//}"
@@ -187,7 +187,7 @@ jobs:
 
           git checkout ${{ github.head_ref }}
 
-          lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend || true
+          pnpm lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend || true
 
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
 
@@ -336,7 +336,7 @@ jobs:
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
-          lerna version --conventional-commits --create-release github --yes --force-git-tag || true
+          pnpm lerna version --conventional-commits --create-release github --yes --force-git-tag || true
 
       - name: Publish packages to NPM
         if: ${{ github.event_name == 'push' }}
