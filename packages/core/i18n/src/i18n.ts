@@ -2,7 +2,7 @@
 import { Options as IntlMessageFormatOptions } from 'intl-messageformat'
 import { createIntl, createIntlCache, MessageDescriptor } from '@formatjs/intl'
 import { flatten } from 'flat'
-import type { IntlShapeEx, PathToDotNotation, SupportedLocales, MessageFormatPrimitiveValue } from './types'
+import type { IntlShapeEx, PathToDotNotation, SupportedLocales, MessageFormatPrimitiveValue, IntlConfigCore } from './types'
 
 // this is internal formatJS function that caches instance of Intl and prevent memory leaks
 const intlCache = createIntlCache()
@@ -11,9 +11,19 @@ const intlCache = createIntlCache()
 // typed as any since we don't have access to MessageSource here
 let globIntl: any
 
-export const createI18n = <MessageSource extends Record<string, any>>(locale: SupportedLocales, messages: MessageSource, isGlobal: boolean = false): IntlShapeEx<MessageSource> => {
+/**
+ * Creates and returns global or local instance of Intl
+ * @param {SupportedLocales} locale one of the locales supported
+ * @param {MessageSource} messages object with locale strings
+ * @param {boolean|IntlConfigCore} config to pass additional Intl config parameters or boolean for isGlobal (later is for backwards compatibility)
+ *
+*/
+export const createI18n = <MessageSource extends Record<string, any>>
+(locale: SupportedLocales, messages: MessageSource, config: boolean|IntlConfigCore = false): IntlShapeEx<MessageSource> => {
+
   const intlOriginal = createIntl(
     {
+      ...(typeof (config) === 'boolean' ? null : config),
       locale,
       messages: flatten(messages, {
         safe: true, // Preserve arrays
@@ -48,7 +58,7 @@ export const createI18n = <MessageSource extends Record<string, any>>(locale: Su
     source: messages,
   }
 
-  if (isGlobal) {
+  if ((typeof (config) === 'boolean' && config === true) || (typeof (config) !== 'boolean' && config.isGlobal === true)) {
     globIntl = localIntl
   }
 

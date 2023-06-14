@@ -21,7 +21,7 @@
 
         <template #amount>
           <div class="red">
-            {{ i18n.formatNumber(1000, { style: 'currency', currency: 'USD' }) }}
+            {{ i18nLocal.formatNumber(1000, { style: 'currency', currency: 'USD' }) }}
           </div>
         </template>
       </i18n-t>
@@ -36,6 +36,8 @@
           <a href="https://google.com">Google</a>
         </b>
       </i18n-no-plugin>
+
+      {{ i18nEx.t("unknown-key") }}
     </main>
   </div>
 </template>
@@ -50,4 +52,17 @@ const i18n = useI18n<typeof english>()
 // this creates local i18n and component
 const i18nLocal = createI18n('en-us', english)
 const i18nNoPlugin = i18nTComponent<typeof english>(i18nLocal)
+
+// this creates local with re-defined error handler
+const i18nEx = createI18n(
+  'en-us',
+  english,
+  {
+    onError: err => {
+      console.log('!!!!, This is errorHandler', err, '!!!')
+    },
+    isGlobal: true,
+  },
+)
+
 </script>
