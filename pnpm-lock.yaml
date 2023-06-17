@@ -83,8 +83,8 @@ importers:
         specifier: ^8.42.0
         version: 8.42.0
       eslint-plugin-cypress:
-        specifier: ^2.12.1
-        version: 2.12.1(eslint@8.42.0)
+        specifier: ^2.13.3
+        version: 2.13.3(eslint@8.42.0)
       eslint-plugin-import:
         specifier: ^2.27.5
         version: 2.27.5(@typescript-eslint/parser@5.59.8)(eslint@8.42.0)
@@ -5683,8 +5683,8 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-cypress@2.12.1(eslint@8.42.0):
-    resolution: {integrity: sha512-c2W/uPADl5kospNDihgiLc7n87t5XhUbFDoTl6CfVkmG+kDAb5Ux10V9PoLPu9N+r7znpc+iQlcmAqT1A/89HA==}
+  /eslint-plugin-cypress@2.13.3(eslint@8.42.0):
+    resolution: {integrity: sha512-nAPjZE5WopCsgJwl3vHm5iafpV+ZRO76Z9hMyRygWhmg5ODXDPd+9MaPl7kdJ2azj+sO87H3P1PRnggIrz848g==}
     peerDependencies:
       eslint: '>= 3.2.1'
     dependencies:
