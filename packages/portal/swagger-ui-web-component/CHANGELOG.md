@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.5.11...@kong-ui-public/swagger-ui-web-component@0.5.12) (2023-06-19)
+
+**Note:** Version bump only for package @kong-ui-public/swagger-ui-web-component
+
+
+
+
+
 ## [0.5.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.5.10...@kong-ui-public/swagger-ui-web-component@0.5.11) (2023-06-19)
 
 **Note:** Version bump only for package @kong-ui-public/swagger-ui-web-component
