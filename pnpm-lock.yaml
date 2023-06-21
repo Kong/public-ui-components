@@ -342,8 +342,8 @@ importers:
   packages/portal/swagger-ui-web-component:
     dependencies:
       '@kong/swagger-ui-kong-theme-universal':
-        specifier: ^4.2.1
-        version: 4.2.1(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.2)(vue@3.2.47)
+        specifier: ^4.2.3
+        version: 4.2.3(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.2)(vue@3.2.47)
       react:
         specifier: 17.0.2
         version: 17.0.2
@@ -612,7 +612,7 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:
-      '@babel/types': 7.22.4
+      '@babel/types': 7.22.5
 
   /@babel/plugin-syntax-jsx@7.22.5(@babel/core@7.22.5):
     resolution: {integrity: sha512-gvyP4hZrgrs/wWMaocvxZ44Hw0b3W8Pe+cMxc8V1ULQ07oh8VNbIRaoD1LRZVTvD+0nieDKjfgKg89sD7rrKrg==}
@@ -697,6 +697,7 @@ packages:
       '@babel/helper-string-parser': 7.22.5
       '@babel/helper-validator-identifier': 7.22.5
       to-fast-properties: 2.0.0
+    dev: true
 
   /@babel/types@7.22.5:
     resolution: {integrity: sha512-zo3MIHGOkPOfoRXitsgHLjEXmlDaD/5KU1Uzuc9GNiZPhSqVxVRtxuPaSBZDsYZ9qV88AjtMtWW7ww98loJ9KA==}
@@ -1438,8 +1439,8 @@ packages:
       - '@popperjs/core'
       - debug
 
-  /@kong/swagger-ui-kong-theme-universal@4.2.1(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.2)(vue@3.2.47):
-    resolution: {integrity: sha512-kSqpwA83E5p+tpZiXB7wpKOtC+Lg/rFQcmHFAKcZxknAscB+m+P8NhLK7SpF4dR9pZu+OtLAg50kGQl6vVcCbg==}
+  /@kong/swagger-ui-kong-theme-universal@4.2.3(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.2)(vue@3.2.47):
+    resolution: {integrity: sha512-5+RV4+P1ekDulpUUpdcvjyfqVPgyA+Ced1/FRsVHIqSdOb8HGG3IynbE22Lr/g01l5ButKiBYXLAot+NUqtVLw==}
     peerDependencies:
       react: 17.0.2
     dependencies:
