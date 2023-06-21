@@ -1,0 +1,67 @@
+name: Cleanup PR preview packages
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        # when not specified will cleanup all the packages
+        description: Package to cleanup PR preview versions
+
+  schedule:
+    - cron: '0/20 * * * 6,0'
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  prepare:
+    name: Prepare Cleanup
+    runs-on: ubuntu-latest-kong
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
+      GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
+    outputs:
+      packages: ${{ steps.data.outputs.packages }}
+      openPRs: ${{ steps.data.outputs.openPRs }}
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+
+      - name: Setup PNPM with Dependencies
+        uses: ./.github/actions/setup-pnpm-with-dependencies/
+
+      - name: Prepare package matrix
+        id: data
+        run: |
+          if [[ -z "${{inputs.package}}" ]]; then
+            echo "packages=$(pnpm --silent lerna ls --l --json|jq -cMr '[.[].name]')" >> $GITHUB_OUTPUT
+          else
+            echo "packages=[\"${{inputs.package}}\"]" >> $GITHUB_OUTPUT
+          fi
+          echo "openPRs=$(gh pr list --state open --json number|jq  -cM 'map(.number|tostring)')" >> $GITHUB_OUTPUT
+
+  cleanup:
+    name: Cleanup PR Previews
+    needs: prepare
+    runs-on: ubuntu-latest-kong
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJSON(needs.prepare.outputs.packages) }}
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN_PRIVATE_PUBLISH }}
+      GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+
+      - name: Setup PNPM with Dependencies
+        uses: ./.github/actions/setup-pnpm-with-dependencies/
+
+      - name: Cleanup PR preview
+        uses: Kong/public-shared-actions/pr-previews/cleanup@main
+        with:
+          package: ${{matrix.package}}
+          openPRs: ${{ needs.prepare.outputs.openPRs }}
