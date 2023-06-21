@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.5.12...@kong-ui-public/swagger-ui-web-component@0.5.13) (2023-06-21)
+
+
+### Bug Fixes
+
+* **spec-renderer:** update package to fix servers container styling ([#553](https://github.com/Kong/public-ui-components/issues/553)) ([c22a6df](https://github.com/Kong/public-ui-components/commit/c22a6dfa71f3b8a28c7a3f7809b3964e67fc7091))
+
+
+
+
+
 ## [0.5.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.5.11...@kong-ui-public/swagger-ui-web-component@0.5.12) (2023-06-19)
 
 **Note:** Version bump only for package @kong-ui-public/swagger-ui-web-component
