@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/app-layout",
-  "version": "0.18.14",
+  "version": "0.19.11",
   "type": "module",
   "main": "./dist/app-layout.umd.js",
   "module": "./dist/app-layout.es.js",
@@ -22,7 +22,8 @@
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
     "build": "run-s typecheck build:package build:types",
-    "build:package": "BUILD_VISUALIZER='core/app-layout' vite build -m production",
+    "build:package": "vite build -m production",
+    "build:analyzer": "BUILD_VISUALIZER='core/app-layout' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "preview:package": "vite preview --port 4173",
     "preview": "cross-env USE_SANDBOX=true PREVIEW_SANDBOX=true run-s build:package preview:package",
@@ -37,20 +38,20 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^8.67.3",
+    "@kong/kongponents": "^8.82.2",
     "vue": "^3.2.47",
-    "vue-router": "^4.2.0"
+    "vue-router": "^4.2.2"
   },
   "dependencies": {
-    "focus-trap": "^7.4.1",
+    "focus-trap": "^7.4.3",
     "focus-trap-vue": "^4.0.2",
     "lodash.clonedeep": "^4.5.0"
   },
   "devDependencies": {
-    "@kong/kongponents": "^8.67.3",
+    "@kong/kongponents": "^8.82.2",
     "@types/lodash.clonedeep": "^4.5.7",
     "vue": "^3.2.47",
-    "vue-router": "^4.2.0"
+    "vue-router": "^4.2.2"
   },
   "repository": {
     "type": "git",
@@ -65,5 +66,8 @@
   "license": "Apache-2.0",
   "volta": {
     "extends": "../../../package.json"
+  },
+  "distSizeChecker": {
+    "errorLimit": "500KB"
   }
 }

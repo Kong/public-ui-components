@@ -3,6 +3,193 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.21...@kong-ui-public/spec-renderer@0.9.22) (2023-06-19)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.20...@kong-ui-public/spec-renderer@0.9.21) (2023-06-19)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.19...@kong-ui-public/spec-renderer@0.9.20) (2023-06-15)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.18...@kong-ui-public/spec-renderer@0.9.19) (2023-06-14)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.17...@kong-ui-public/spec-renderer@0.9.18) (2023-06-14)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.16...@kong-ui-public/spec-renderer@0.9.17) (2023-06-14)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.15...@kong-ui-public/spec-renderer@0.9.16) (2023-06-14)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.14...@kong-ui-public/spec-renderer@0.9.15) (2023-06-13)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.13...@kong-ui-public/spec-renderer@0.9.14) (2023-06-12)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.12...@kong-ui-public/spec-renderer@0.9.13) (2023-06-09)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.11...@kong-ui-public/spec-renderer@0.9.12) (2023-06-08)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.10...@kong-ui-public/spec-renderer@0.9.11) (2023-06-07)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.9...@kong-ui-public/spec-renderer@0.9.10) (2023-06-07)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.8...@kong-ui-public/spec-renderer@0.9.9) (2023-06-07)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.7...@kong-ui-public/spec-renderer@0.9.8) (2023-06-07)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.6...@kong-ui-public/spec-renderer@0.9.7) (2023-06-06)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.5...@kong-ui-public/spec-renderer@0.9.6) (2023-06-06)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.4...@kong-ui-public/spec-renderer@0.9.5) (2023-06-06)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.3...@kong-ui-public/spec-renderer@0.9.4) (2023-06-06)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.2...@kong-ui-public/spec-renderer@0.9.3) (2023-05-26)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.1...@kong-ui-public/spec-renderer@0.9.2) (2023-05-26)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.0...@kong-ui-public/spec-renderer@0.9.1) (2023-05-26)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+# [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.8.67...@kong-ui-public/spec-renderer@0.9.0) (2023-05-26)
+
+
+### Features
+
+* define and check dist size limit [KHCP-7179] ([#455](https://github.com/Kong/public-ui-components/issues/455)) ([02e4d0a](https://github.com/Kong/public-ui-components/commit/02e4d0ae354b7d30a63856110e58b10e335d8134))
+
+
+
+
+
 ## [0.8.67](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.8.66...@kong-ui-public/spec-renderer@0.8.67) (2023-05-25)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer

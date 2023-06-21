@@ -53,16 +53,18 @@ export default defineConfig({
     outDir: './dist',
     cssCodeSplit: false,
     minify: true,
-    sourcemap: true,
+    sourcemap: !!process.env.BUILD_VISUALIZER,
     rollupOptions: {
       // Make sure to externalize deps that shouldn't be bundled into your library
       // If config.build.rollupOptions.external is also set at the package level, the arrays will be merged
-      external: ['vue', 'vue-router', '@kong/kongponents'],
+      external: ['vue', 'vue-router', '@kong/kongponents', 'axios'],
       output: {
         // Provide global variables to use in the UMD build for externalized deps
         globals: {
           vue: 'Vue',
+          'vue-router': 'VueRouter',
           '@kong/kongponents': 'Kongponents',
+          axios: 'axios',
         },
         exports: 'named',
       },

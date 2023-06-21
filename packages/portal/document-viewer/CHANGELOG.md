@@ -3,6 +3,100 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.8.9...@kong-ui-public/document-viewer@0.8.10) (2023-06-15)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [0.8.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.8.8...@kong-ui-public/document-viewer@0.8.9) (2023-06-14)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [0.8.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.8.7...@kong-ui-public/document-viewer@0.8.8) (2023-06-14)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [0.8.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.8.6...@kong-ui-public/document-viewer@0.8.7) (2023-06-14)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [0.8.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.8.5...@kong-ui-public/document-viewer@0.8.6) (2023-06-12)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [0.8.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.8.4...@kong-ui-public/document-viewer@0.8.5) (2023-06-07)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [0.8.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.8.3...@kong-ui-public/document-viewer@0.8.4) (2023-06-02)
+
+
+### Bug Fixes
+
+* **document-viewer:** link display within a list ([#487](https://github.com/Kong/public-ui-components/issues/487)) ([2b2a156](https://github.com/Kong/public-ui-components/commit/2b2a156b32a215831526bce5929935e0acc41ed7))
+
+
+
+
+
+## [0.8.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.8.2...@kong-ui-public/document-viewer@0.8.3) (2023-05-26)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [0.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.8.1...@kong-ui-public/document-viewer@0.8.2) (2023-05-26)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [0.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.8.0...@kong-ui-public/document-viewer@0.8.1) (2023-05-26)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+# [0.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.7.36...@kong-ui-public/document-viewer@0.8.0) (2023-05-26)
+
+
+### Features
+
+* define and check dist size limit [KHCP-7179] ([#455](https://github.com/Kong/public-ui-components/issues/455)) ([02e4d0a](https://github.com/Kong/public-ui-components/commit/02e4d0ae354b7d30a63856110e58b10e335d8134))
+
+
+
+
+
 ## [0.7.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.7.35...@kong-ui-public/document-viewer@0.7.36) (2023-05-25)
 
 **Note:** Version bump only for package @kong-ui-public/document-viewer

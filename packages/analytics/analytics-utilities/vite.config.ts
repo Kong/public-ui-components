@@ -14,7 +14,8 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       // Example: name: 'kong-ui-public-demo-component'
       name: `kong-ui-public-${sanitizedPackageName}`,
       entry: resolve(__dirname, './src/index.ts'),
-      fileName: (format) => `${sanitizedPackageName}.${format}.js`,
+      fileName: (format) => format === 'cjs' ? `${sanitizedPackageName}.${format}` : `${sanitizedPackageName}.${format}.js`,
+      formats: ['es', 'umd', 'cjs'],
     },
   },
   test: {

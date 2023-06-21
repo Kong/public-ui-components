@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/document-viewer",
-  "version": "0.7.36",
+  "version": "0.8.10",
   "type": "module",
   "main": "./dist/document-viewer.umd.js",
   "module": "./dist/document-viewer.es.js",
@@ -22,7 +22,8 @@
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
     "build": "run-s typecheck build:package build:types",
-    "build:package": "BUILD_VISUALIZER='portal/document-viewer' vite build -m production",
+    "build:package": "vite build -m production",
+    "build:analyzer": "BUILD_VISUALIZER='portal/document-viewer' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "preview:package": "vite preview --port 4173",
     "preview": "cross-env USE_SANDBOX=true PREVIEW_SANDBOX=true run-s build:package preview:package",
@@ -35,17 +36,17 @@
     "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^8.67.3",
+    "@kong/kongponents": "^8.82.2",
     "vue": "^3.2.47"
   },
   "devDependencies": {
-    "@kong/kongponents": "^8.67.3",
+    "@kong/kongponents": "^8.82.2",
     "@types/prismjs": "^1.26.0",
     "@vitejs/plugin-vue-jsx": "^3.0.1",
     "vue": "^3.2.47"
   },
   "dependencies": {
-    "@kong-ui-public/i18n": "workspace:^0.4.7",
+    "@kong-ui-public/i18n": "workspace:^0.6.0",
     "prismjs": "^1.29.0"
   },
   "repository": {
@@ -61,5 +62,8 @@
   "license": "Apache-2.0",
   "volta": {
     "extends": "../../../package.json"
+  },
+  "distSizeChecker": {
+    "errorLimit": "3MB"
   }
 }

@@ -14,7 +14,11 @@
         {{ isHidden ? '**********' : uuid }}
       </div>
     </div>
-    <div class="uuid-icon-wrapper">
+    <component
+      :is="!!tooltip ? 'KTooltip' : 'div'"
+      v-bind="wrapperProps"
+      class="uuid-icon-wrapper"
+    >
       <KClipboardProvider v-slot="{ copyToClipboard }">
         <span
           data-testid="copy-to-clipboard"
@@ -25,18 +29,19 @@
           <KIcon
             class="uuid-icon"
             :color="iconColor"
+            :hide-title="!!tooltip || undefined"
             icon="copy"
             size="16"
             :title="t('iconTitle')"
           />
         </span>
       </KClipboardProvider>
-    </div>
+    </component>
   </div>
 </template>
 
 <script setup lang="ts">
-import { inject, PropType } from 'vue'
+import { computed, ref, inject, PropType } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../locales/en.json'
 import { COPY_UUID_NOTIFY_KEY } from '../constants'
@@ -69,6 +74,14 @@ const props = defineProps({
     type: String,
     default: 'var(--black-45, rgba(0, 0, 0, 0.45))',
   },
+  tooltip: {
+    type: String,
+    default: '',
+  },
+  successTooltip: {
+    type: String,
+    default: '',
+  },
 })
 
 const emit = defineEmits<{
@@ -77,7 +90,26 @@ const emit = defineEmits<{
 }>()
 
 const notifyTrimLength = 15
-const notify = props.notify || inject(COPY_UUID_NOTIFY_KEY, () => {})
+const notify = props.notify || inject(COPY_UUID_NOTIFY_KEY, () => { })
+const hasSuccessTooltip = computed((): boolean => !!(props.tooltip && props.successTooltip))
+const tooltipText = ref(props.tooltip)
+const wrapperProps = computed(() => {
+  return props.tooltip
+    ? {
+      label: tooltipText.value,
+      positionFixed: true,
+      maxWidth: '500px',
+      placement: 'bottomStart',
+    }
+    : {}
+})
+
+const updateTooltipText = (msg: string): void => {
+  tooltipText.value = msg
+  setTimeout(() => {
+    tooltipText.value = props.tooltip
+  }, 1800)
+}
 
 const copyIdToClipboard = (executeCopy: (prop: string) => boolean) => {
   if (!executeCopy(props.uuid)) {
@@ -87,7 +119,13 @@ const copyIdToClipboard = (executeCopy: (prop: string) => boolean) => {
         message: t('message.fail'),
       })
     }
-    emit('error', props.uuid)
+
+    if (hasSuccessTooltip.value) {
+      updateTooltipText(t('message.fail'))
+    } else {
+      emit('error', props.uuid)
+    }
+
     return
   }
 
@@ -101,9 +139,13 @@ const copyIdToClipboard = (executeCopy: (prop: string) => boolean) => {
       message: `${messagePrefix}${t('message.success.content')}`,
     })
   }
-  emit('success', props.uuid)
-}
 
+  if (hasSuccessTooltip.value) {
+    updateTooltipText(props.successTooltip)
+  } else {
+    emit('success', props.uuid)
+  }
+}
 </script>
 
 <style lang="scss" scoped>

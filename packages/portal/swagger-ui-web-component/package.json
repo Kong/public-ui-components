@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/swagger-ui-web-component",
-  "version": "0.4.49",
+  "version": "0.5.12",
   "main": "dist/main.js",
   "files": [
     "dist"
@@ -16,8 +16,8 @@
     "@kong/swagger-ui-kong-theme-universal": "^4.2.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "swagger-client": "^3.19.7",
-    "swagger-ui": "^4.18.3"
+    "swagger-client": "^3.19.8",
+    "swagger-ui": "^4.19.0"
   },
   "repository": {
     "type": "git",
@@ -33,14 +33,17 @@
   "volta": {
     "extends": "../../../package.json"
   },
+  "distSizeChecker": {
+    "errorLimit": "3MB"
+  },
   "devDependencies": {
-    "css-loader": "^6.7.3",
+    "css-loader": "^6.8.1",
     "raw-loader": "^4.0.2",
-    "style-loader": "^3.3.2",
-    "terser-webpack-plugin": "^5.3.8",
-    "webpack": "^5.82.1",
-    "webpack-bundle-analyzer": "^4.8.0",
-    "webpack-cli": "^5.1.1",
+    "style-loader": "^3.3.3",
+    "terser-webpack-plugin": "^5.3.9",
+    "webpack": "^5.85.1",
+    "webpack-bundle-analyzer": "^4.9.0",
+    "webpack-cli": "^5.1.3",
     "webpack-dev-server": "^4.15.0"
   }
 }

@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.2.7...@kong-ui-public/metric-cards@0.2.8) (2023-06-15)
+
+**Note:** Version bump only for package @kong-ui-public/metric-cards
+
+
+
+
+
+## [0.2.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.2.6...@kong-ui-public/metric-cards@0.2.7) (2023-06-14)
+
+**Note:** Version bump only for package @kong-ui-public/metric-cards
+
+
+
+
+
+## [0.2.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.2.5...@kong-ui-public/metric-cards@0.2.6) (2023-06-14)
+
+**Note:** Version bump only for package @kong-ui-public/metric-cards
+
+
+
+
+
+## [0.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.2.4...@kong-ui-public/metric-cards@0.2.5) (2023-06-12)
+
+**Note:** Version bump only for package @kong-ui-public/metric-cards
+
+
+
+
+
+## [0.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.2.3...@kong-ui-public/metric-cards@0.2.4) (2023-06-07)
+
+**Note:** Version bump only for package @kong-ui-public/metric-cards
+
+
+
+
+
+## [0.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.2.2...@kong-ui-public/metric-cards@0.2.3) (2023-05-26)
+
+**Note:** Version bump only for package @kong-ui-public/metric-cards
+
+
+
+
+
+## [0.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.2.1...@kong-ui-public/metric-cards@0.2.2) (2023-05-26)
+
+**Note:** Version bump only for package @kong-ui-public/metric-cards
+
+
+
+
+
+## [0.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.2.0...@kong-ui-public/metric-cards@0.2.1) (2023-05-26)
+
+**Note:** Version bump only for package @kong-ui-public/metric-cards
+
+
+
+
+
+# [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.1.55...@kong-ui-public/metric-cards@0.2.0) (2023-05-26)
+
+
+### Features
+
+* define and check dist size limit [KHCP-7179] ([#455](https://github.com/Kong/public-ui-components/issues/455)) ([02e4d0a](https://github.com/Kong/public-ui-components/commit/02e4d0ae354b7d30a63856110e58b10e335d8134))
+
+
+
+
+
 ## [0.1.55](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.1.54...@kong-ui-public/metric-cards@0.1.55) (2023-05-25)
 
 **Note:** Version bump only for package @kong-ui-public/metric-cards

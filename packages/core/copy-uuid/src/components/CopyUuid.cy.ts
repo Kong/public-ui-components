@@ -87,76 +87,78 @@ describe('<CopyUuid />', () => {
     cy.get(container).find('.uuid-icon').should('be.visible')
   })
 
-  it('notify as a global provide', () => {
-    const spy = cy.spy(window, 'alert')
-    cy.mount(CopyUuid, {
-      props: {
-        uuid: '123',
-      },
-      global: {
-        provide: {
-          [COPY_UUID_NOTIFY_KEY]: (props: CopyUuidNotifyParam) => {
+  describe('notify', () => {
+    it('notify as a global provide', () => {
+      const spy = cy.spy(window, 'alert')
+      cy.mount(CopyUuid, {
+        props: {
+          uuid: '123',
+        },
+        global: {
+          provide: {
+            [COPY_UUID_NOTIFY_KEY]: (props: CopyUuidNotifyParam) => {
+              window.alert(props.message)
+            },
+          },
+        },
+      })
+
+      cy.get('[data-testid="copy-to-clipboard"]').click()
+      cy.wait(100).then(() => {
+        expect(spy).to.be.calledWith('"123" copied to clipboard')
+      })
+    })
+
+    it('notify as a prop', () => {
+      const spy = cy.spy(window, 'alert')
+      cy.mount(CopyUuid, {
+        props: {
+          uuid: '123',
+          notify: (props: CopyUuidNotifyParam) => {
             window.alert(props.message)
           },
         },
-      },
+      })
+
+      cy.get('[data-testid="copy-to-clipboard"]').click()
+      cy.wait(100).then(() => {
+        expect(spy).to.be.calledWith('"123" copied to clipboard')
+      })
     })
 
-    cy.get('[data-testid="copy-to-clipboard"]').click()
-    cy.wait(100).then(() => {
-      expect(spy).to.be.calledWith('"123" copied to clipboard')
-    })
-  })
-
-  it('notify as a prop', () => {
-    const spy = cy.spy(window, 'alert')
-    cy.mount(CopyUuid, {
-      props: {
-        uuid: '123',
-        notify: (props: CopyUuidNotifyParam) => {
-          window.alert(props.message)
+    it('notify with isHidden', () => {
+      const spy = cy.spy(window, 'alert')
+      cy.mount(CopyUuid, {
+        props: {
+          uuid,
+          isHidden: true,
+          notify: (props: CopyUuidNotifyParam) => {
+            window.alert(props.message)
+          },
         },
-      },
+      })
+
+      cy.get('[data-testid="copy-to-clipboard"]').click()
+      cy.wait(100).then(() => {
+        expect(spy).to.be.calledWith('Successfully copied to clipboard')
+      })
     })
 
-    cy.get('[data-testid="copy-to-clipboard"]').click()
-    cy.wait(100).then(() => {
-      expect(spy).to.be.calledWith('"123" copied to clipboard')
-    })
-  })
-
-  it('notify with isHidden', () => {
-    const spy = cy.spy(window, 'alert')
-    cy.mount(CopyUuid, {
-      props: {
-        uuid,
-        isHidden: true,
-        notify: (props: CopyUuidNotifyParam) => {
-          window.alert(props.message)
+    it('notify with long uuid', () => {
+      const spy = cy.spy(window, 'alert')
+      cy.mount(CopyUuid, {
+        props: {
+          uuid,
+          notify: (props: CopyUuidNotifyParam) => {
+            window.alert(props.message)
+          },
         },
-      },
-    })
+      })
 
-    cy.get('[data-testid="copy-to-clipboard"]').click()
-    cy.wait(100).then(() => {
-      expect(spy).to.be.calledWith('Successfully copied to clipboard')
-    })
-  })
-
-  it('notify with long uuid', () => {
-    const spy = cy.spy(window, 'alert')
-    cy.mount(CopyUuid, {
-      props: {
-        uuid,
-        notify: (props: CopyUuidNotifyParam) => {
-          window.alert(props.message)
-        },
-      },
-    })
-
-    cy.get('[data-testid="copy-to-clipboard"]').click()
-    cy.wait(100).then(() => {
-      expect(spy).to.be.calledWith(`"${uuid.substring(0, 15)}..." copied to clipboard`)
+      cy.get('[data-testid="copy-to-clipboard"]').click()
+      cy.wait(100).then(() => {
+        expect(spy).to.be.calledWith(`"${uuid.substring(0, 15)}..." copied to clipboard`)
+      })
     })
   })
 
@@ -174,6 +176,72 @@ describe('<CopyUuid />', () => {
 
     cy.get(container).find('.uuid-icon path')
       .should('have.attr', 'fill', 'var(--purple-400, #473cfb)')
+  })
+
+  describe('tooltips', () => {
+    it('renders with `tooltip` prop set', () => {
+      const tooltipText = 'Click to copy'
+
+      cy.mount(CopyUuid, {
+        props: {
+          uuid,
+          tooltip: tooltipText,
+        },
+      })
+
+      cy.get(container).should('be.visible')
+      cy.get(container).find('.k-tooltip').should('exist')
+      cy.get(container).find('.k-tooltip .k-popover-content').should('contain.text', tooltipText)
+    })
+
+    it('renders `successTooltip` with `tooltip` prop set', () => {
+      const tooltipText = 'Click to copy'
+      const successText = 'Copied!'
+
+      cy.mount(CopyUuid, {
+        props: {
+          uuid,
+          tooltip: tooltipText,
+          successTooltip: successText,
+        },
+      })
+
+      cy.get(container).should('be.visible')
+      cy.get(container).find('.k-tooltip').should('exist')
+      cy.get(container).find('.k-tooltip .k-popover-content').should('contain.text', tooltipText)
+      cy.get('[data-testid="copy-to-clipboard"]').click()
+      cy.get(container).find('.k-tooltip .k-popover-content').should('contain.text', successText)
+    })
+
+    it('does not render `successTooltip` without `tooltip` prop set', () => {
+      const successText = 'Copied!'
+
+      cy.mount(CopyUuid, {
+        props: {
+          uuid,
+          successTooltip: successText,
+        },
+      })
+
+      cy.get(container).should('be.visible')
+      cy.get(container).find('.k-tooltip').should('not.exist')
+    })
+
+    it('does not emit events when `successTooltip` prop is set', () => {
+      cy.mount(CopyUuid, {
+        props: {
+          uuid,
+          tooltip: 'Click to copy',
+          successTooltip: 'Copied!',
+        },
+      })
+
+      cy.get(container).should('be.visible')
+      cy.get(container).find('.k-tooltip').should('exist')
+      cy.get('[data-testid="copy-to-clipboard"]').click().then(() => {
+        cy.wrap(Cypress.vueWrapper.emitted()).should('not.have.property', 'success')
+      })
+    })
   })
 
   it('emits event', () => {

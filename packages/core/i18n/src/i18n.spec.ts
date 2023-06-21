@@ -137,4 +137,23 @@ describe('i18n', () => {
       expect(formattedDate).toEqual('December 12, 2012')
     })
   })
+
+  describe('createI18nEx', () => {
+    it('should call custom errorhandler', () => {
+      let counter = 0
+      const { t } = createI18n<typeof english>(
+        'en-us',
+        english,
+        {
+          onError: (err: any) => {
+            console.error(err)
+            counter++
+          },
+          isGlobal: true,
+        })
+      // @ts-ignore
+      t('unknown-key')
+      expect(counter).toEqual(1)
+    })
+  })
 })

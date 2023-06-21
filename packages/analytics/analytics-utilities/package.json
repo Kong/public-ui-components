@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-utilities",
-  "version": "0.3.1",
+  "version": "0.4.2",
   "type": "module",
   "main": "./dist/vitals-utilities.umd.js",
   "module": "./dist/vitals-utilities.es.js",
@@ -11,7 +11,7 @@
   "exports": {
     ".": {
       "import": "./dist/vitals-utilities.es.js",
-      "require": "./dist/vitals-utilities.umd.js"
+      "require": "./dist/vitals-utilities.cjs"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -51,6 +51,9 @@
   "license": "Apache-2.0",
   "volta": {
     "extends": "../../../package.json"
+  },
+  "distSizeChecker": {
+    "errorLimit": "500KB"
   },
   "dependencies": {
     "date-fns": "^2.30.0"

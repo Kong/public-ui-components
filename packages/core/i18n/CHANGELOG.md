@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.5.0...@kong-ui-public/i18n@0.6.0) (2023-06-14)
+
+
+### Features
+
+* ability to init i18n with IntlConfig params overridden [KHCP-7670] ([#518](https://github.com/Kong/public-ui-components/issues/518)) ([2c5486f](https://github.com/Kong/public-ui-components/commit/2c5486f5976f26404365eb196892d59b13f567b3))
+
+
+
+
+
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.4.7...@kong-ui-public/i18n@0.5.0) (2023-05-26)
+
+
+### Features
+
+* define and check dist size limit [KHCP-7179] ([#455](https://github.com/Kong/public-ui-components/issues/455)) ([02e4d0a](https://github.com/Kong/public-ui-components/commit/02e4d0ae354b7d30a63856110e58b10e335d8134))
+
+
+
+
+
 ## [0.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.4.6...@kong-ui-public/i18n@0.4.7) (2023-05-19)
 
 

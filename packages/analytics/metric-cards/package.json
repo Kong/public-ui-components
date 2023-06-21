@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/metric-cards",
-  "version": "0.1.55",
+  "version": "0.2.8",
   "type": "module",
   "main": "./dist/metric-cards.umd.js",
   "module": "./dist/metric-cards.es.js",
@@ -22,7 +22,8 @@
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
     "build": "run-s typecheck build:package build:types",
-    "build:package": "BUILD_VISUALIZER='analytics/metric-cards' vite build -m production",
+    "build:package": "vite build -m production",
+    "build:analyzer": "BUILD_VISUALIZER='analytics/metric-cards' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "preview:package": "vite preview --port 4173",
     "preview": "cross-env USE_SANDBOX=true PREVIEW_SANDBOX=true run-s build:package preview:package",
@@ -37,11 +38,11 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^8.67.3",
+    "@kong/kongponents": "^8.82.2",
     "vue": "^3.2.47"
   },
   "devDependencies": {
-    "@kong/kongponents": "^8.67.3",
+    "@kong/kongponents": "^8.82.2",
     "vue": "^3.2.47"
   },
   "dependencies": {
@@ -60,5 +61,8 @@
   "license": "Apache-2.0",
   "volta": {
     "extends": "../../../package.json"
+  },
+  "distSizeChecker": {
+    "errorLimit": "500KB"
   }
 }

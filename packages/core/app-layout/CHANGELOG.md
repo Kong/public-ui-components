@@ -3,6 +3,108 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.19.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.10...@kong-ui-public/app-layout@0.19.11) (2023-06-15)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [0.19.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.9...@kong-ui-public/app-layout@0.19.10) (2023-06-14)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [0.19.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.8...@kong-ui-public/app-layout@0.19.9) (2023-06-14)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [0.19.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.7...@kong-ui-public/app-layout@0.19.8) (2023-06-12)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [0.19.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.6...@kong-ui-public/app-layout@0.19.7) (2023-06-12)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [0.19.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.5...@kong-ui-public/app-layout@0.19.6) (2023-06-07)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [0.19.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.4...@kong-ui-public/app-layout@0.19.5) (2023-06-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency focus-trap to ^7.4.3 ([#500](https://github.com/Kong/public-ui-components/issues/500)) ([0574621](https://github.com/Kong/public-ui-components/commit/05746216d4a9684024f8e183923dce9932e6cbbf))
+
+
+
+
+
+## [0.19.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.3...@kong-ui-public/app-layout@0.19.4) (2023-06-06)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [0.19.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.2...@kong-ui-public/app-layout@0.19.3) (2023-05-26)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [0.19.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.1...@kong-ui-public/app-layout@0.19.2) (2023-05-26)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [0.19.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.0...@kong-ui-public/app-layout@0.19.1) (2023-05-26)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+# [0.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.18.14...@kong-ui-public/app-layout@0.19.0) (2023-05-26)
+
+
+### Features
+
+* define and check dist size limit [KHCP-7179] ([#455](https://github.com/Kong/public-ui-components/issues/455)) ([02e4d0a](https://github.com/Kong/public-ui-components/commit/02e4d0ae354b7d30a63856110e58b10e335d8134))
+
+
+
+
+
 ## [0.18.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.18.13...@kong-ui-public/app-layout@0.18.14) (2023-05-25)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout

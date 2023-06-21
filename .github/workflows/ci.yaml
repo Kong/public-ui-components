@@ -88,7 +88,7 @@ jobs:
           componentTestMatrix=""
 
           # get the list of changed packages, grab the location
-          for pkgFolder in $(lerna ${lernaCommand} --l --json|jq -r '.[].location')
+          for pkgFolder in $(pnpm --silent lerna ${lernaCommand} --l --json|jq -r '.[].location')
           do
             # remove current folder from the location path
             pkgFolder="${pkgFolder/$(pwd)\//}"
@@ -172,6 +172,9 @@ jobs:
         # The `...` syntax tells pnpm to include dependent packages
         run: pnpm --stream --filter "...${{steps.changed_packages.outputs.filter}}..." run build
 
+      - name: Check dist bundle size against max-limit
+        uses: Kong/github-action-dist-size-checker@main
+
       - name: Publish Previews
         if: ${{github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != ''}}
         run: |
@@ -184,7 +187,7 @@ jobs:
 
           git checkout ${{ github.head_ref }}
 
-          lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend || true
+          pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend || true
 
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
 
@@ -228,13 +231,6 @@ jobs:
              ${{env.npm_instructions}}
              ```
           GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
-
-      - name: Upload bundle-analyzer results
-        if: ${{ steps.changed_packages.outputs.filter != '' }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: rollup-plugin-visualizer
-          path:  packages/*/*/bundle-analyzer/stats-treemap.html
 
       - name: Run Unit Tests
         if: ${{ steps.changed_packages.outputs.unitTestFilter != '' }}
@@ -340,7 +336,7 @@ jobs:
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
-          lerna version --conventional-commits --create-release github --yes --force-git-tag || true
+          pnpm --silent lerna version --conventional-commits --create-release github --yes --force-git-tag || true
 
       - name: Publish packages to NPM
         if: ${{ github.event_name == 'push' }}
