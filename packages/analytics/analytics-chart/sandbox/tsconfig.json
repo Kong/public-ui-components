@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "allowJs": true
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.vue",
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+}

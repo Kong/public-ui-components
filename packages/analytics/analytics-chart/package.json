@@ -1,0 +1,77 @@
+{
+  "name": "@kong-ui-public/analytics-chart",
+  "version": "0.8.6",
+  "type": "module",
+  "main": "./dist/vitals-chart.umd.js",
+  "module": "./dist/vitals-chart.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/vitals-chart.es.js",
+      "require": "./dist/vitals-chart.umd.js"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "peerDependencies": {
+    "@kong-ui-public/i18n": "workspace:^0.4.2",
+    "@kong/kongponents": "^8.82.4",
+    "vue": "^3.2.47"
+  },
+  "devDependencies": {
+    "@kong-ui-public/i18n": "workspace:^0.6.0",
+    "@kong/kongponents": "^8.82.4",
+    "@types/uuid": "^9.0.1",
+    "vue": "^3.2.47"
+  },
+  "scripts": {
+    "dev": "cross-env USE_SANDBOX=true vite",
+    "build": "run-s typecheck build:package build:types",
+    "build:package": "vite build -m production",
+    "build:analyzer": "BUILD_VISUALIZER='analytics/analytics-chart' vite build -m production",
+    "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
+    "preview:package": "vite preview --port 4173",
+    "preview": "cross-env USE_SANDBOX=true PREVIEW_SANDBOX=true run-s build:package preview:package",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
+    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore' --fix",
+    "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
+    "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
+    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
+    "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
+    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
+    "test:unit": "cross-env FORCE_COLOR=1 vitest run",
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kong/public-ui-components.git",
+    "directory": "packages/analytics/analytics-chart"
+  },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/analytics/analytics-chart",
+  "author": "Kong, Inc.",
+  "license": "UNLICENSED",
+  "volta": {
+    "extends": "../../../package.json"
+  },
+  "dependencies": {
+    "@kong-ui-public/analytics-utilities": "workspace:^0.4.2",
+    "approximate-number": "^2.1.0",
+    "chart.js": "^4.3.0",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "chartjs-plugin-annotation": "^2.2.1",
+    "date-fns": "^2.30.0",
+    "date-fns-tz": "^2.0.0",
+    "pretty-bytes": "^6.1.0",
+    "uuid": "^9.0.0",
+    "vue-chartjs": "^5.2.0"
+  },
+  "distSizeChecker": {
+    "errorLimit": "1.3MB"
+  }
+}

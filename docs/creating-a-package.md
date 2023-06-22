@@ -220,7 +220,7 @@ All Vue and Typescript source code for your package should live within the `src/
 
 If your component utilizes any components from the [Kongponents](https://kongponents.konghq.com) library, you **must not** import the components or style file in your package or any of your components (importing into your package's `sandbox/index.ts` file is fine.).
 
-Instead, add the Kongponents package in the `peerDependencies` of your `package.json` file via `pnpm --filter "@kong-ui/demo-component" add --save-peer @kong/kongponents` and edit your package's `README.md` to specify that Kongponents must be globally available in the host application as a Vue plugin.
+Instead, add the Kongponents package in the `peerDependencies` of your `package.json` file via `pnpm --filter "@kong-ui-public/demo-component" add --save-peer @kong/kongponents` and edit your package's `README.md` to specify that Kongponents must be globally available in the host application as a Vue plugin.
 
 ### Styles
 

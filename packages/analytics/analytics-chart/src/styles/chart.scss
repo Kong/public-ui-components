@@ -1,0 +1,39 @@
+.chart-parent {
+  align-items: center;
+  display: flex;
+  position: relative;
+
+  &.column {
+    flex-direction: column;
+
+    .chart-container {
+      width: 100%;
+    }
+  }
+
+  &.legend-row {
+    flex-direction: row;
+
+    .chart-container {
+      width: 90% !important;
+    }
+  }
+
+  // Always stack legend below chart below mobile breakpoint
+  @media (max-width: 768px) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .chart-container {
+    margin-bottom: var(--spacing-sm, 14px);
+    // Per ChartJS docs, the chart container needs to be position: relative and _only_ contain the chart canvas.
+    // https://www.chartjs.org/docs/latest/configuration/responsive.html
+    position: relative;
+
+    // Allow chart to expand full width on mobile
+    @media (max-width: 768px) {
+      width: 100% !important;
+    }
+  }
+}

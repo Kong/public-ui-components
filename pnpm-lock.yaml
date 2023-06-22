@@ -179,6 +179,52 @@ importers:
         specifier: ^1.5.4
         version: 1.5.4(typescript@4.9.5)
 
+  packages/analytics/analytics-chart:
+    dependencies:
+      '@kong-ui-public/analytics-utilities':
+        specifier: workspace:^0.4.2
+        version: link:../analytics-utilities
+      approximate-number:
+        specifier: ^2.1.0
+        version: 2.1.0
+      chart.js:
+        specifier: ^4.3.0
+        version: 4.3.0
+      chartjs-adapter-date-fns:
+        specifier: ^3.0.0
+        version: 3.0.0(chart.js@4.3.0)(date-fns@2.30.0)
+      chartjs-plugin-annotation:
+        specifier: ^2.2.1
+        version: 2.2.1(chart.js@4.3.0)
+      date-fns:
+        specifier: ^2.30.0
+        version: 2.30.0
+      date-fns-tz:
+        specifier: ^2.0.0
+        version: 2.0.0(date-fns@2.30.0)
+      pretty-bytes:
+        specifier: ^6.1.0
+        version: 6.1.0
+      uuid:
+        specifier: ^9.0.0
+        version: 9.0.0
+      vue-chartjs:
+        specifier: ^5.2.0
+        version: 5.2.0(chart.js@4.3.0)(vue@3.2.47)
+    devDependencies:
+      '@kong-ui-public/i18n':
+        specifier: workspace:^0.6.0
+        version: link:../../core/i18n
+      '@kong/kongponents':
+        specifier: ^8.82.4
+        version: 8.82.4(vue-router@4.2.2)(vue@3.2.47)
+      '@types/uuid':
+        specifier: ^9.0.1
+        version: 9.0.1
+      vue:
+        specifier: ^3.2.47
+        version: 3.2.47
+
   packages/analytics/analytics-utilities:
     dependencies:
       date-fns:
@@ -1470,6 +1516,10 @@ packages:
       - supports-color
       - vue
       - vue-router
+    dev: false
+
+  /@kurkle/color@0.3.2:
+    resolution: {integrity: sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==}
     dev: false
 
   /@kyleshockey/xml@1.0.2:
@@ -4288,6 +4338,31 @@ packages:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
     dev: true
 
+  /chart.js@4.3.0:
+    resolution: {integrity: sha512-ynG0E79xGfMaV2xAHdbhwiPLczxnNNnasrmPEXriXsPJGjmhOBYzFVEsB65w2qMDz+CaBJJuJD0inE/ab/h36g==}
+    engines: {pnpm: '>=7'}
+    dependencies:
+      '@kurkle/color': 0.3.2
+    dev: false
+
+  /chartjs-adapter-date-fns@3.0.0(chart.js@4.3.0)(date-fns@2.30.0):
+    resolution: {integrity: sha512-Rs3iEB3Q5pJ973J93OBTpnP7qoGwvq3nUnoMdtxO+9aoJof7UFcRbWcIDteXuYd1fgAvct/32T9qaLyLuZVwCg==}
+    peerDependencies:
+      chart.js: '>=2.8.0'
+      date-fns: '>=2.0.0'
+    dependencies:
+      chart.js: 4.3.0
+      date-fns: 2.30.0
+    dev: false
+
+  /chartjs-plugin-annotation@2.2.1(chart.js@4.3.0):
+    resolution: {integrity: sha512-RL9UtrFr2SXd7C47zD0MZqn6ZLgrcRt3ySC6cYal2amBdANcYB1QcwFXcpKWAYnO4SGJYRok7P5rKDDNgJMA/w==}
+    peerDependencies:
+      chart.js: '>=3.7.0'
+    dependencies:
+      chart.js: 4.3.0
+    dev: false
+
   /check-error@1.0.2:
     resolution: {integrity: sha512-BrgHpW9NURQgzoNyjfq0Wu6VFO6D7IZEmJNdtgNqpzGG8RuNFHt2jQxWlAs4HMe119chBnv+34syEZtc6IhLtA==}
     dev: true
@@ -5031,6 +5106,14 @@ packages:
       date-fns: '>=2.0.0'
     dependencies:
       date-fns: 2.30.0
+
+  /date-fns-tz@2.0.0(date-fns@2.30.0):
+    resolution: {integrity: sha512-OAtcLdB9vxSXTWHdT8b398ARImVwQMyjfYGkKD2zaGpHseG2UPHbHjXELReErZFxWdSLph3c2zOaaTyHfOhERQ==}
+    peerDependencies:
+      date-fns: '>=2.0.0'
+    dependencies:
+      date-fns: 2.30.0
+    dev: false
 
   /date-fns@2.30.0:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
@@ -10034,6 +10117,11 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /pretty-bytes@6.1.0:
+    resolution: {integrity: sha512-Rk753HI8f4uivXi4ZCIYdhmG1V+WKzvRMg/X+M42a6t7D07RcmopXJMDNk6N++7Bl75URRGsb40ruvg7Hcp2wQ==}
+    engines: {node: ^14.13.1 || >=16.0.0}
+    dev: false
+
   /pretty-format@27.5.1:
     resolution: {integrity: sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
@@ -12709,6 +12797,16 @@ packages:
   /vscode-textmate@8.0.0:
     resolution: {integrity: sha512-AFbieoL7a5LMqcnOF04ji+rpXadgOXnZsxQr//r83kLPr7biP7am3g9zbaZIaBGwBRWeSvoMD4mgPdX3e4NWBg==}
     dev: true
+
+  /vue-chartjs@5.2.0(chart.js@4.3.0)(vue@3.2.47):
+    resolution: {integrity: sha512-d3zpKmGZr2OWHQ1xmxBcAn5ShTG917+/UCLaSpaCDDqT0U7DBsvFzTs69ZnHCgKoXT55GZDW8YEj9Av+dlONLA==}
+    peerDependencies:
+      chart.js: ^4.1.1
+      vue: ^3.0.0-0 || ^2.7.0
+    dependencies:
+      chart.js: 4.3.0
+      vue: 3.2.47
+    dev: false
 
   /vue-draggable-next@2.2.0(sortablejs@1.15.0)(vue@3.2.47):
     resolution: {integrity: sha512-JQ7Ac4knnpsA47/acUhRR7negDHNZDLdpbXRR+n89f516rJDt+eHh48tfqTe80q2UfnLymQ46zi81gCMKFU4DQ==}

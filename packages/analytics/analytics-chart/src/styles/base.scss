@@ -1,0 +1,28 @@
+@import './breakpoints';
+@import './colors';
+@import './spacing';
+
+.font-normal {
+  font-weight: 400;
+}
+
+.font-light {
+  font-weight: 300;
+}
+
+.font-semibold {
+  font-weight: 500;
+}
+
+.font-bold {
+  font-weight: 600;
+}
+
+.chart-title {
+  font-size: $font-size-lg;
+}
+
+.chart-header {
+  display: flex;
+  padding: $spacing-md 0;
+}
