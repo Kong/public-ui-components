@@ -15,6 +15,7 @@ jobs:
   build:
     name: Build And Test
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     outputs:
       filter: ${{steps.changed_packages.outputs.filter}}
       unitTestFilter: ${{steps.changed_packages.outputs.unitTestFilter}}
@@ -176,7 +177,7 @@ jobs:
         uses: Kong/github-action-dist-size-checker@main
 
       - name: Publish Previews
-        if: ${{github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != ''}}
+        if: ${{github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && github.actor != 'renovate[bot]'}}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
@@ -248,6 +249,7 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     if: ${{ needs.build.outputs.componentTestMatrix != ''}}
+    timeout-minutes: 20
     continue-on-error: false
     strategy:
       fail-fast: false
@@ -292,6 +294,7 @@ jobs:
     needs: [build, component-tests]
     runs-on: ubuntu-latest
     continue-on-error: true
+    timeout-minutes: 20
     if: ${{ always() && needs.build.outputs.filter != '' }}
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -350,6 +353,7 @@ jobs:
     name: Slack Notification
     if: ${{ always() && github.event_name == 'push' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs:
       - finish-test-and-publish
     steps:
