@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.6.2...@kong-ui-public/swagger-ui-web-component@0.7.0) (2023-06-22)
+
+
+### Features
+
+* **spec-renderer:** update theme to fix spacing between elements ([#563](https://github.com/Kong/public-ui-components/issues/563)) ([81f247e](https://github.com/Kong/public-ui-components/commit/81f247edddae2ffa09ac755ab5a42133e48cf0e0))
+
+
+
+
+
 ## [0.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.6.1...@kong-ui-public/swagger-ui-web-component@0.6.2) (2023-06-22)
 
 **Note:** Version bump only for package @kong-ui-public/swagger-ui-web-component
