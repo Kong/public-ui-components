@@ -38,6 +38,7 @@
 # Analytics packages
 /packages/analytics/analytics-utilities @Kong/team-data
 /packages/analytics/metric-cards @Kong/team-data
+/packages/analytics/analytics-chart @Kong/team-data
 
 # =========================================================================
 # Renovate Bot approvals
