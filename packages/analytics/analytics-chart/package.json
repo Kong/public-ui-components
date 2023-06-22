@@ -17,7 +17,7 @@
     "./dist/*": "./dist/*"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^0.4.2",
@@ -55,7 +55,7 @@
   },
   "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/analytics/analytics-chart",
   "author": "Kong, Inc.",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "volta": {
     "extends": "../../../package.json"
   },
