@@ -1,0 +1,23 @@
+name: On PR close
+on:
+  pull_request_target:
+    types:
+      - closed
+
+jobs:
+  unpublish:
+    name: Unpublish or Deprecate NPM previews for PR
+    runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+
+      - name: Remove preview consumption comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: pr_preview_consumption
+          delete: true
+          GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
+

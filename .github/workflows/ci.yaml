@@ -43,7 +43,7 @@ jobs:
       - name: Check if PR Up to Date
         id: 'up-to-date'
         if: ${{github.event_name == 'push'}}
-        uses: ./.github/actions/up-to-date/
+        uses: Kong/public-shared-actions/pr-previews/up-to-date@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
