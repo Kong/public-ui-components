@@ -16,7 +16,7 @@ concurrency:
 jobs:
   prepare:
     name: Prepare Cleanup
-    runs-on: ubuntu-latest-kong
+    runs-on: ubuntu-latest
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
       GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
@@ -44,7 +44,7 @@ jobs:
   cleanup:
     name: Cleanup PR Previews
     needs: prepare
-    runs-on: ubuntu-latest-kong
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
