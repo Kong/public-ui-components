@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.5.13...@kong-ui-public/swagger-ui-web-component@0.6.0) (2023-06-22)
+
+
+### Features
+
+* **swagger-ui-web-component:** update swagger ui kong theme pkg ([#555](https://github.com/Kong/public-ui-components/issues/555)) ([c99a299](https://github.com/Kong/public-ui-components/commit/c99a299f7cd81607908cee64b980759170e49344))
+
+
+
+
+
 ## [0.5.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.5.12...@kong-ui-public/swagger-ui-web-component@0.5.13) (2023-06-21)
 
 
