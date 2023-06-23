@@ -37,19 +37,19 @@
           :options="(options as any)"
           :plugins="plugins"
         />
-        <ToolTip
-          ref="tooltipElement"
-          :context="formatTimestamp(tooltipData.tooltipContext as number)"
-          data-testid="tooltip"
-          :left="tooltipData.left"
-          :series="tooltipData.tooltipSeries"
-          :show-tooltip="tooltipData.showTooltip"
-          :tooltip-title="tooltipTitle"
-          :top="tooltipData.top"
-          :unit="metricUnit"
-          @dimensions="tooltipDimensions"
-        />
       </div>
+      <ToolTip
+        ref="tooltipElement"
+        :context="formatTimestamp(tooltipData.tooltipContext as number)"
+        data-testid="tooltip"
+        :left="tooltipData.left"
+        :series="tooltipData.tooltipSeries"
+        :show-tooltip="tooltipData.showTooltip"
+        :tooltip-title="tooltipTitle"
+        :top="tooltipData.top"
+        :unit="metricUnit"
+        @dimensions="tooltipDimensions"
+      />
       <ChartLegend
         :id="legendID"
         :chart-instance="chartInstance"
