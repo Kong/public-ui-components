@@ -72,19 +72,27 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
     const chartCenterX = chartRect.width / 2
     const chartCenterY = chartRect.height / 2
 
-    // Move the tooltip to the right or left by an amount proportional to the tooltip width
-    // based on the position of the cursor relative to the center of the chart.
-    // Need to move the tooltip less to the right and more to the left, to take into account
-    // the original position of the tooltip, which is scewed towards the top left of the tooltip.
-    // This is done to take into acount for changes in the tooltip width based on the
-    // content inside of the tooltip.
-    // If we move the tooltip to the right or left by a static amunt, the tooltip will either move
-    // "to little" or "to mucch" depending on the width of the tooltip.
+    // We are manipulating an initial positioning logic that appears to be quite arbitrary.
+    // ChartJS offers limited documentation on this. The logic that follows has been tested across multiple scenarios
+    // and provides the most consistent visual output.
+    // The goal is to shift the tooltip to either the left or right in proportion to the tooltip's width,
+    // depending on the cursor's location relative to the chart's center.
+    // Additionally, we need to scale by the ratio of the tooltip width to chart width in order to
+    // adjust for any changes in the tooltip width.
+    // The original tooltip position tends to lean towards the center of the tooltip — this is one of the arbitrary aspects we are dealing with.
+    // It appears that the default position.x and position.y values don't consistently align with the tooltip.
+    // It's likely that these initial position.x and position.y values refer to the position of ChartJS' default tooltip,
+    // which is not visible as we're using a custom tooltip.
+    const widthRatio = tooltipWidth / chartRect.width
     const rightScalingFactor = 0.15
-    const leftScalingFactor = 0.8
+    const leftScalingFactor = 1.15
     const x = position.x < chartCenterX
       ? position.x + (tooltipWidth * rightScalingFactor)
-      : position.x - (tooltipWidth * leftScalingFactor)
+      // Another arbitrary aspect we are dealing with is that the amount the tooltip moves to the right seems to be
+      // relatively consistent as the tooltip grows, while the amount it moves to the left increases significantly as
+      // the tooltip width increases. To get around this we need to also apply an addtional scaling factor that represents
+      // the ratio of the tooltip width to the chart width, to prevent it from moving too far to the left as the tooltip grows.
+      : position.x - (tooltipWidth * leftScalingFactor * (1 - widthRatio))
 
     // Same thing here but moving the tooltip up or down by an amount proportional to the tooltip height.
     const aboveScalingFactor = 0.15
@@ -93,13 +101,12 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
       ? position.y + (tooltipHeight * aboveScalingFactor)
       : position.y - (tooltipHeight * belowScalingFactor)
 
-    const xAlign: TooltipXAlignment = position.x < chartCenterX ? 'left' : 'right'
-    let yAlign: TooltipYAlignment = position.y < chartCenterY ? 'top' : 'bottom'
+    const yAlign: TooltipYAlignment = position.y < chartCenterY ? 'top' : 'bottom'
+    const xAlign: TooltipXAlignment = position.x < chartCenterX ? 'left' : 'center'
 
-    // Adjust vertical position if tooltip height exceeds chart height
+    // Set a constant vertical position for the tooltip once it reaches the same height as the chart.
     if (tooltipHeight > chartRect.height) {
       y = 0
-      yAlign = 'center'
     }
 
     return {

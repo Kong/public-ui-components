@@ -269,9 +269,9 @@ const metricAxesTitle = computed<string | undefined>(() => {
   const metricName = chartDataRef.value.meta.metricNames[0]
   const metricUnit = chartDataRef.value.meta.metricUnits[metricName]
   // @ts-ignore - dynamic i18n key
-  return chartOptionsRef.value?.metricAxesTitle || (i18n.te(`chartLabels.${metricName}`) && i18n.te(`chartUnits.${metricUnit}`) &&
+  return chartOptionsRef.value?.metricAxesTitle || (i18n.te(`metricAxisTitles.${metricName}`) && i18n.te(`chartUnits.${metricUnit}`) &&
     // @ts-ignore - dynamic i18n key
-    i18n.t(`chartLabels.${metricName}`, { unit: i18n.t(`chartUnits.${metricUnit}`) })) || undefined
+    i18n.t(`metricAxisTitles.${metricName}`, { unit: i18n.t(`chartUnits.${metricUnit}`) })) || undefined
 })
 
 const dimensionAxesTitle = computed<string | undefined>(() => {
