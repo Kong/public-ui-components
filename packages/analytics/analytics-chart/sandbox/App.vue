@@ -261,7 +261,7 @@ const metricItems = [{
   unit: 'bytes',
 }]
 const statusCodeDimensionValues = ref(new Set([
-  '200', '300', '400', '500',
+  '200', '300', '400', '500', 'This is a really long chart label to test long labels',
 ]))
 const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',

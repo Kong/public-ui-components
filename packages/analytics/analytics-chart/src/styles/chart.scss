@@ -15,7 +15,8 @@
     flex-direction: row;
 
     .chart-container {
-      width: 90% !important;
+      flex-grow: 1;
+      width: 85% !important;
     }
   }
 

@@ -1,7 +1,7 @@
 import { BarChartOptions, ExternalTooltipContext } from '../types'
 import { Tooltip, TooltipPositionerFunction, ChartType, CategoryScale, TooltipItem, TooltipXAlignment } from 'chart.js'
 import { isNullOrUndef } from 'chart.js/helpers'
-import { MAX_LABEL_LENGTH, tooltipBehavior } from '../utils'
+import { MAX_LABEL_LENGTH, horizontalTooltipPositioning, tooltipBehavior } from '../utils'
 import { computed } from 'vue'
 
 export default function useBarChartOptions(chartOptions: BarChartOptions) {
@@ -30,16 +30,10 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
 
     const chartCenterX = chartRect.width / 2
 
-    // Move tooltip right or left by an amount proportional to the tooltip width
-    // based on the position of the cursor relative to the center of the chart.
-    // Need to move the tooltip less to the right and more to the left, to take into account
-    // the original position of the tooltip, which is scewed towards the top left of the tooltip.
-    const x = position.x < chartCenterX
-      ? position.x + (tooltipWidth * 0.1)
-      : position.x - (tooltipWidth * 0.6)
+    const x = horizontalTooltipPositioning(position, tooltipWidth, chartCenterX)
     const y = position.y
 
-    const xAlign: TooltipXAlignment = position.x < chartCenterX ? 'left' : 'right'
+    const xAlign: TooltipXAlignment = position.x < chartCenterX ? 'left' : 'center'
 
     return {
       x: x - chartOptions.tooltipState.offset,

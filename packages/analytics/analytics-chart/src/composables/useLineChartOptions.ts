@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import { Tooltip, TooltipPositionerFunction, ChartType, TooltipYAlignment, TooltipXAlignment } from 'chart.js'
-import { tooltipBehavior } from '../utils'
+import { horizontalTooltipPositioning, tooltipBehavior, verticalTooltipPositioning } from '../utils'
 import { secondsToHours } from 'date-fns'
 import { isNullOrUndef } from 'chart.js/helpers'
 import { ExternalTooltipContext, LineChartOptions } from '../types'
@@ -72,34 +72,15 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
     const chartCenterX = chartRect.width / 2
     const chartCenterY = chartRect.height / 2
 
-    // Move the tooltip to the right or left by an amount proportional to the tooltip width
-    // based on the position of the cursor relative to the center of the chart.
-    // Need to move the tooltip less to the right and more to the left, to take into account
-    // the original position of the tooltip, which is scewed towards the top left of the tooltip.
-    // This is done to take into acount for changes in the tooltip width based on the
-    // content inside of the tooltip.
-    // If we move the tooltip to the right or left by a static amunt, the tooltip will either move
-    // "to little" or "to mucch" depending on the width of the tooltip.
-    const rightScalingFactor = 0.15
-    const leftScalingFactor = 0.8
-    const x = position.x < chartCenterX
-      ? position.x + (tooltipWidth * rightScalingFactor)
-      : position.x - (tooltipWidth * leftScalingFactor)
+    const x = horizontalTooltipPositioning(position, tooltipWidth, chartCenterX)
+    let y = verticalTooltipPositioning(position, tooltipHeight, chartCenterY)
 
-    // Same thing here but moving the tooltip up or down by an amount proportional to the tooltip height.
-    const aboveScalingFactor = 0.15
-    const belowScalingFactor = 0.5
-    let y = position.y < chartCenterY
-      ? position.y + (tooltipHeight * aboveScalingFactor)
-      : position.y - (tooltipHeight * belowScalingFactor)
+    const yAlign: TooltipYAlignment = position.y < chartCenterY ? 'top' : 'bottom'
+    const xAlign: TooltipXAlignment = position.x < chartCenterX ? 'left' : 'center'
 
-    const xAlign: TooltipXAlignment = position.x < chartCenterX ? 'left' : 'right'
-    let yAlign: TooltipYAlignment = position.y < chartCenterY ? 'top' : 'bottom'
-
-    // Adjust vertical position if tooltip height exceeds chart height
+    // Set a constant vertical position for the tooltip once it reaches the same height as the chart.
     if (tooltipHeight > chartRect.height) {
       y = 0
-      yAlign = 'center'
     }
 
     return {

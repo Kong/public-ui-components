@@ -7,7 +7,7 @@ import {
   TooltipPositionerFunction,
   ChartType,
 } from 'chart.js'
-import { tooltipBehavior } from '../utils'
+import { horizontalTooltipPositioning, tooltipBehavior } from '../utils'
 
 export default function useDoughnutChartOptions(chartOptions: DoughnutChartOptions) {
   const tooltipOptions = {
@@ -34,19 +34,13 @@ export default function useDoughnutChartOptions(chartOptions: DoughnutChartOptio
 
     const chartCenterX = chartRect.width / 2
 
-    // Move tooltip right or left by an amount proportional to the tooltip width
-    // based on the position of the cursor relative to the center of the chart
-    // Need to move the tooltip less to the right and more to the left, to take into account
-    // the original position of the tooltip, which is scewed towards the top left of the tooltip.
-    const x = position.x < chartCenterX
-      ? position.x + tooltipWidth * 0.1
-      : position.x - tooltipWidth * 0.6
+    const x = horizontalTooltipPositioning(position, tooltipWidth, chartCenterX)
     const y = position.y
 
-    const xAlign: TooltipXAlignment = position.x < chartCenterX ? 'left' : 'right'
+    const xAlign: TooltipXAlignment = position.x < chartCenterX ? 'left' : 'center'
 
     return {
-      x,
+      x: x - chartOptions.tooltipState.offset,
       y,
       xAlign,
     }
