@@ -5,8 +5,8 @@ importers:
   .:
     devDependencies:
       '@babel/types':
-        specifier: ^7.22.4
-        version: 7.22.4
+        specifier: ^7.22.5
+        version: 7.22.5
       '@commitlint/cli':
         specifier: ^17.6.5
         version: 17.6.5
@@ -734,15 +734,6 @@ packages:
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /@babel/types@7.22.4:
-    resolution: {integrity: sha512-Tx9x3UBHTTsMSW85WB2kphxYQVvrZ/t1FxD88IpSgIjiUJlCm9z+xWIDwyo1vffTwSqteqyznB8ZE9vYYk16zA==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      '@babel/helper-string-parser': 7.22.5
-      '@babel/helper-validator-identifier': 7.22.5
-      to-fast-properties: 2.0.0
     dev: true
 
   /@babel/types@7.22.5:
