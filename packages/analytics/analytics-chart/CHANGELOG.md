@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.1.3...@kong-ui-public/analytics-chart@0.1.4) (2023-06-23)
+
+
+### Bug Fixes
+
+* handle ms timerange [MA-1725] ([#573](https://github.com/Kong/public-ui-components/issues/573)) ([7b6b075](https://github.com/Kong/public-ui-components/commit/7b6b075cc4daedfb715248eb81315099665267ba))
+
+
+
+
+
 ## [0.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.1.2...@kong-ui-public/analytics-chart@0.1.3) (2023-06-23)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
