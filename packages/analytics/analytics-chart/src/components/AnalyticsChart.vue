@@ -7,10 +7,7 @@
       icon-size="170"
     >
       <template #title>
-        {{ emptyMessage.title }}
-      </template>
-      <template #message>
-        <span>{{ emptyMessage.description }}</span>
+        {{ emptyMessage }}
       </template>
     </KEmptyState>
   </div>
@@ -161,6 +158,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  chartEmptyMessage: {
+    type: String,
+    required: true,
+  },
   chartTitle: {
     type: String,
     required: true,
@@ -307,7 +308,7 @@ const timestampAxisTitle = computed(() => {
   return i18n.t('chartlabels.Time')
 })
 
-const emptyMessage = computed(() => ({ title: i18n.t('noDataAvailable'), description: '' }))
+const emptyMessage = computed(() => props.chartEmptyMessage || i18n.t('noDataAvailable'))
 const hasValidChartData = computed(() => {
   return chartDataRef.value && chartDataRef.value.meta && chartDataRef.value.records
 })
