@@ -211,7 +211,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { AnalyticsChart, ChartLegendPosition, ChartTypes } from '../src'
-import type { AnalyticsExploreResult, AnalyticsExploreRecord, AnalyticsExploreMeta } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, AnalyticsExploreV2Meta, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions } from '../src/types'
 import { SeededRandom } from './SeedRandom'
 import { rand } from './utils'
@@ -266,7 +266,7 @@ const statusCodeDimensionValues = ref(new Set([
 const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',
 ]))
-const exploreResult = computed<AnalyticsExploreResult>(() => {
+const exploreResult = computed<AnalyticsExploreV2Result>(() => {
 
   const statusCodeDimensionType = 'StatusCode'
   const serviceDimensionType = 'Service'
@@ -276,7 +276,7 @@ const exploreResult = computed<AnalyticsExploreResult>(() => {
   const end = Date.now()
 
   const records: AnalyticsExploreRecord[] = []
-  let meta: AnalyticsExploreMeta
+  let meta: AnalyticsExploreV2Meta
   let totalRequests = 0
   if (isTimeSeriesChart.value) {
     for (let i = start; i <= end; i += 60 * 60 * 1000) { // 1 hour apart
@@ -311,8 +311,8 @@ const exploreResult = computed<AnalyticsExploreResult>(() => {
     }
 
     meta = {
-      start: start / 1000,
-      end: end / 1000,
+      startMs: start,
+      endMs: end,
       queryId: '12345',
       dimensions: {
         [statusCodeDimensionType]: [...statusCodeDimensionValues.value],
@@ -360,8 +360,8 @@ const exploreResult = computed<AnalyticsExploreResult>(() => {
     })
 
     meta = {
-      start: start / 1000,
-      end: end / 1000,
+      startMs: start,
+      endMs: end,
       granularity: 86400000,
       queryId: '',
       metricNames: [selectedMetric.value.name],

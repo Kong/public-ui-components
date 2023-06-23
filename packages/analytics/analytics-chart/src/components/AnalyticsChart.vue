@@ -32,7 +32,8 @@
       :metric-unit="computedMetricUnit"
       :stacked="chartOptions.stacked"
       :synthetics-data-key="syntheticsDataKey"
-      :time-range="timeRange"
+      :time-range-ms="timeRangeMs"
+      :time-range-sec="timeRangeSec"
       :tooltip-title="tooltipTitle"
       :type="(chartOptions.type as (ChartTypes.TIMESERIES_LINE | ChartTypes.TIMESERIES_BAR))"
       :width="width"
@@ -107,7 +108,6 @@
       :legend-values="legendValues"
       :metric-unit="computedMetricUnit"
       :synthetics-data-key="syntheticsDataKey"
-      :time-range="timeRange"
       :tooltip-title="tooltipTitle"
       :width="width"
     >
@@ -227,12 +227,20 @@ const computedChartData = computed(() => {
     ).value
 })
 
-const timeRange = computed<number>(() => {
+const timeRangeSec = computed<number | undefined>(() => {
+  if (!chartDataRef?.value?.meta) { return 0 }
+
+  return ('start' in chartDataRef.value.meta)
+    ? chartDataRef.value.meta.end - chartDataRef.value.meta.start
+    : undefined
+})
+
+const timeRangeMs = computed<number | undefined>(() => {
   if (!chartDataRef?.value?.meta) { return 0 }
 
   return ('startMs' in chartDataRef.value.meta)
     ? chartDataRef.value.meta.endMs - chartDataRef.value.meta.startMs
-    : chartDataRef.value.meta.end - chartDataRef.value.meta.start
+    : undefined
 })
 
 const computedMetricUnit = computed<string>(() => {
