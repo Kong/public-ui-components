@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { Tooltip, TooltipPositionerFunction, ChartType, TooltipYAlignment, TooltipXAlignment } from 'chart.js'
 import { horizontalTooltipPositioning, tooltipBehavior, verticalTooltipPositioning } from '../utils'
-import { secondsToHours } from 'date-fns'
+import { millisecondsToHours, secondsToHours } from 'date-fns'
 import { isNullOrUndef } from 'chart.js/helpers'
 import { ExternalTooltipContext, LineChartOptions } from '../types'
 import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
@@ -105,7 +105,11 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
   })
 
   const hourDisplayFormat = computed(() => {
-    return secondsToHours(chartOptions.timeRange.value) >= 24 ? 'yyyy-MM-dd h:mm' : 'h:mm'
+    if (chartOptions.timeRangeMs) {
+      return millisecondsToHours(Number(chartOptions.timeRangeMs.value)) >= 24 ? 'yyyy-MM-dd h:mm' : 'h:mm'
+    } else {
+      return secondsToHours(Number(chartOptions.timeRangeSec.value)) >= 24 ? 'yyyy-MM-dd h:mm' : 'h:mm'
+    }
   })
 
   const dayDisplayFormat = computed(() => {

@@ -28,7 +28,8 @@ export interface BarChartOptions extends BaseChartOptions {
 }
 
 export interface LineChartOptions extends BaseChartOptions {
-  timeRange: Ref<number>, // time range in seconds
+  timeRangeSec: Ref<number | undefined>, // time range in seconds
+  timeRangeMs: Ref<number | undefined>, // time range in seconds
   granularity: Ref<`${GranularityKeys}`>,
 }
 
