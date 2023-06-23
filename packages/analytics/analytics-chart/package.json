@@ -27,7 +27,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^0.6.0",
     "@kong/kongponents": "^8.82.4",
-    "@types/uuid": "^9.0.1",
+    "@types/uuid": "^9.0.2",
     "vue": "^3.2.47"
   },
   "scripts": {
