@@ -50,7 +50,6 @@ jobs:
       matrix:
         package: ${{ fromJSON(needs.prepare.outputs.packages) }}
     env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
       GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
     steps:
