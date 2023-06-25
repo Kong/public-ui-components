@@ -50,7 +50,6 @@ jobs:
       matrix:
         package: ${{ fromJSON(needs.prepare.outputs.packages) }}
     env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
       GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
     steps:
@@ -59,6 +58,10 @@ jobs:
 
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
+
+      - name: Prepare cleanup
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}" > .npmrc
 
       - name: Cleanup PR preview
         uses: Kong/public-shared-actions/pr-previews/cleanup@main
