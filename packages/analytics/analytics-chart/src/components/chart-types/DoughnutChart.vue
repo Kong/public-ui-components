@@ -136,7 +136,6 @@ const { i18n } = composables.useI18n()
 const legendID = ref(uuidv4())
 const chartID = ref(uuidv4())
 const legendItems = ref([])
-const chartDataRef = toRef(props, 'chartData')
 
 const unitsRef = toRef(props, 'metricUnit')
 const translatedUnits = computed(() => {

@@ -436,8 +436,6 @@ onUnmounted(() => {
   Chart.unregister(annotationPlugin)
 })
 
-const emptyMessage = computed(() => ({ title: 'No data to display', description: '' }))
-
 /**
  * When in Preview mode, Chart and Legend are vertically stacked, and the
  * Legend list items are allowed to spread horizontally.
