@@ -1,6 +1,7 @@
 <template>
   <div v-if="!hasValidChartData">
     <KEmptyState
+      class="chart-empty-state"
       :cta-is-hidden="true"
       data-testid="no-data-in-report"
       icon="stateNoData"
@@ -361,12 +362,18 @@ provide('legendPosition', legendPositionRef)
   flex-direction: row;
 }
 
-.analytics-chart-parent{
+.analytics-chart-parent {
   margin: $spacing-lg;
   &.chart-border {
     border: 1px solid var(--grey-300,  #E7E7EC);
     border-radius: 3px;
     padding: $spacing-md;
   }
+}
+
+.chart-empty-state {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>
