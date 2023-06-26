@@ -374,6 +374,7 @@ provide('legendPosition', legendPositionRef)
 .chart-empty-state {
   display: flex;
   flex-direction: column;
+  height: 100%;
   justify-content: center;
 }
 </style>
