@@ -3,6 +3,7 @@ import { ChartTypes } from '../enums/chart-types.enum'
 import AnalyticsChart from './AnalyticsChart.vue'
 import ChartTooltip from './chart-plugins/ChartTooltip.vue'
 import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
+import composables from '../composables'
 
 const emptyExploreResult = {
   records: [],
@@ -669,4 +670,40 @@ describe('<AnalyticsChart />', () => {
     cy.get('.label').eq(3).should('include.text', '500')
     cy.get('.sub-label').eq(3).should('include.text', '413 requests')
   })
+
+  it('renders an empty state with default title and description text', () => {
+    const { i18n } = composables.useI18n()
+
+    cy.mount(AnalyticsChart, {
+      props: {
+        chartData: {},
+        chartOptions: {
+          type: ChartTypes.DOUGHNUT,
+        },
+      },
+    })
+
+    cy.get('[data-testid="no-data-in-report"] .k-empty-state-title-header').should('contain.text', i18n.t('noDataAvailableTitle'))
+    cy.get('[data-testid="no-data-in-report"] .k-empty-state-message').should('contain.text', i18n.t('noDataAvailableDescription'))
+  })
+
+  it('renders an empty state with default title and description text', () => {
+    const emptyStateTitle = 'No Data'
+    const emptyStateDescription = 'Please contact your system administrator'
+
+    cy.mount(AnalyticsChart, {
+      props: {
+        chartData: {},
+        chartOptions: {
+          type: ChartTypes.DOUGHNUT,
+        },
+        emptyStateTitle,
+        emptyStateDescription,
+      },
+    })
+
+    cy.get('[data-testid="no-data-in-report"] .k-empty-state-title-header').should('contain.text', emptyStateTitle)
+    cy.get('[data-testid="no-data-in-report"] .k-empty-state-message').should('contain.text', emptyStateDescription)
+  })
+
 })
