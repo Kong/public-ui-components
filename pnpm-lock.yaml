@@ -400,8 +400,8 @@ importers:
         specifier: ^3.19.8
         version: 3.19.8
       swagger-ui:
-        specifier: ^4.19.0
-        version: 4.19.0
+        specifier: ^4.19.1
+        version: 4.19.1
     devDependencies:
       css-loader:
         specifier: ^6.8.1
@@ -11815,8 +11815,8 @@ packages:
       - encoding
     dev: false
 
-  /swagger-ui@4.19.0:
-    resolution: {integrity: sha512-ymWivWhb2FXrz/idK1GBUcsTOsODRnupsk2Hfg0iB8A7TekiWOUTh6E2YdQuwoc8IgaiNoRqkMs6Da1ABAZkug==}
+  /swagger-ui@4.19.1:
+    resolution: {integrity: sha512-Q2ye6x0+NV5HW7ZWz91OcklHgktegrNK5azNXaQVUdp0/6LnC7pmEnlo0mvqyUCGfwYE52uZKMy/e4nlpGRcdQ==}
     requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.5
