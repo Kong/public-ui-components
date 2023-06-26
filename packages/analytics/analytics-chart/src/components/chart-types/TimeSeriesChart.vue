@@ -10,7 +10,6 @@
       <slot name="header-message" />
     </div>
     <div
-      v-if="hasValidChartData"
       class="chart-parent"
       :class="chartFlexClass(legendPosition)"
       data-testid="line-chart-parent"
@@ -57,21 +56,6 @@
         :items="legendItems"
       />
     </div>
-    <div v-else>
-      <KEmptyState
-        :cta-is-hidden="true"
-        data-testid="no-data-in-report"
-        icon="stateNoData"
-        icon-size="170"
-      >
-        <template #title>
-          {{ emptyMessage.title }}
-        </template>
-        <template #message>
-          <span>{{ emptyMessage.description }}</span>
-        </template>
-      </KEmptyState>
-    </div>
   </div>
 </template>
 
@@ -84,9 +68,6 @@ import { verticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
 import {
-  hasTwoOrMoreDataPoints,
-  hasTimeseriesData,
-  hasMillisecondTimestamps,
   formatTime,
   datavisPalette,
   darkenColor,
@@ -256,20 +237,6 @@ const mutableData = computed(() => {
       return e
     }),
   }
-})
-
-const hasValidChartData = computed(() => {
-  return hasMillisecondTimestamps(props.chartData)
-})
-
-const emptyMessage = computed(() => {
-  if (!hasTwoOrMoreDataPoints(props.chartData)) { return { title: 'No data to display', description: 'Once your service sees traffic it will display here' } }
-
-  if (!hasTimeseriesData(props.chartData)) { return { title: 'Something went wrong', description: 'Incompatible chart data' } }
-
-  if (!hasMillisecondTimestamps(props.chartData)) { return { title: 'Something went wrong', description: 'Incompatible chart data' } }
-
-  return { title: 'Something went wrong' }
 })
 
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))

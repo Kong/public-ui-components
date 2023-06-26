@@ -7,7 +7,10 @@
       icon-size="170"
     >
       <template #title>
-        {{ emptyMessage }}
+        {{ emptyStateTitle }}
+      </template>
+      <template #message>
+        {{ emptyStateDescription }}
       </template>
     </KEmptyState>
   </div>
@@ -142,7 +145,7 @@ import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
 import { computed, PropType, provide, toRef } from 'vue'
 import { AnalyticsExploreResult, AnalyticsExploreV2Result, GranularityFullObj, GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
-import { datavisPalette } from '../utils'
+import { datavisPalette, hasMillisecondTimestamps } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 
 const props = defineProps({
@@ -158,9 +161,15 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  chartEmptyMessage: {
+  emptyStateTitle: {
     type: String,
-    required: true,
+    required: false,
+    default: '',
+  },
+  emptyStateDescription: {
+    type: String,
+    required: false,
+    default: '',
   },
   chartTitle: {
     type: String,
@@ -308,8 +317,13 @@ const timestampAxisTitle = computed(() => {
   return i18n.t('chartlabels.Time')
 })
 
-const emptyMessage = computed(() => props.chartEmptyMessage || i18n.t('noDataAvailable'))
+const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAvailableTitle'))
+const emptyStateDescription = computed(() => props.emptyStateDescription || i18n.t('noDataAvailableDescription'))
 const hasValidChartData = computed(() => {
+  if (isTimeSeriesChart.value) {
+    return hasMillisecondTimestamps(computedChartData.value)
+  }
+
   return chartDataRef.value && chartDataRef.value.meta && chartDataRef.value.records
 })
 

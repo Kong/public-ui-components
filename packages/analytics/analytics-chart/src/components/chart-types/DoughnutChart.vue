@@ -10,7 +10,6 @@
       <slot name="header-message" />
     </div>
     <div
-      v-if="hasValidChartData"
       class="chart-parent"
       :class="chartFlexClass(legendPosition)"
       data-testid="doughnut-chart-parent"
@@ -42,21 +41,6 @@
         :items="legendItems"
         :position="legendPosition"
       />
-    </div>
-    <div v-else>
-      <KEmptyState
-        :cta-is-hidden="true"
-        data-testid="no-data-in-report"
-        icon="stateNoData"
-        icon-size="170"
-      >
-        <template #title>
-          {{ emptyMessage.title }}
-        </template>
-        <template #message>
-          <span>{{ emptyMessage.description }}</span>
-        </template>
-      </KEmptyState>
     </div>
   </div>
 </template>
@@ -209,9 +193,6 @@ const mutableData = computed(() => {
     datasets: formattedDataset.value,
   }
 })
-
-const hasValidChartData = computed(() => chartDataRef.value.datasets?.length > 0)
-const emptyMessage = computed(() => ({ title: i18n.t('noDataAvailable'), description: '' }))
 
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))
 

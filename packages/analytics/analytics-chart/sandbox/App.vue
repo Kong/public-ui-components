@@ -105,7 +105,6 @@
     </div>
     <AnalyticsChart
       :chart-data="exploreResult"
-      chart-empty-message="No data found in current timeframe"
       :chart-options="analyticsChartOptions"
       chart-title="chart title"
       :legend-position="legendPosition"
