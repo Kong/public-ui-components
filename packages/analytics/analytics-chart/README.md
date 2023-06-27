@@ -70,6 +70,16 @@ yarn add @kong-ui-public/analytics-chart
 - type: `string`
 - required: `true`
 
+#### `emptyStateTitle`
+
+- type: `string`
+- required: `false`
+
+#### `emptyStateDescription`
+
+- type: `string`
+- required: `false`
+
 #### `tooltipTitle`
 
 - type: `string`

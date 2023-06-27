@@ -1,5 +1,6 @@
 {
-  "noDataAvailable": "No data to display",
+  "noDataAvailableTitle": "No data in the current time frame",
+  "noDataAvailableDescription": "Once there is traffic, it will display here",
   "limitedResultsShown": "Not all data is shown in the below report. Reports are currently limited to a maximum of {maxReturned} entities.",
   "entityNoName": "no-name",
   "chartUnits": {

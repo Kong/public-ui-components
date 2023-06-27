@@ -1,16 +1,17 @@
 <template>
   <div v-if="!hasValidChartData">
     <KEmptyState
+      class="chart-empty-state"
       :cta-is-hidden="true"
       data-testid="no-data-in-report"
       icon="stateNoData"
       icon-size="170"
     >
       <template #title>
-        {{ emptyMessage.title }}
+        {{ emptyStateTitle }}
       </template>
       <template #message>
-        <span>{{ emptyMessage.description }}</span>
+        {{ emptyStateDescription }}
       </template>
     </KEmptyState>
   </div>
@@ -145,7 +146,7 @@ import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
 import { computed, PropType, provide, toRef } from 'vue'
 import { AnalyticsExploreResult, AnalyticsExploreV2Result, GranularityFullObj, GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
-import { datavisPalette } from '../utils'
+import { datavisPalette, hasMillisecondTimestamps } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 
 const props = defineProps({
@@ -160,6 +161,16 @@ const props = defineProps({
   tooltipTitle: {
     type: String,
     required: true,
+  },
+  emptyStateTitle: {
+    type: String,
+    required: false,
+    default: '',
+  },
+  emptyStateDescription: {
+    type: String,
+    required: false,
+    default: '',
   },
   chartTitle: {
     type: String,
@@ -307,8 +318,13 @@ const timestampAxisTitle = computed(() => {
   return i18n.t('chartlabels.Time')
 })
 
-const emptyMessage = computed(() => ({ title: i18n.t('noDataAvailable'), description: '' }))
+const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAvailableTitle'))
+const emptyStateDescription = computed(() => props.emptyStateDescription || i18n.t('noDataAvailableDescription'))
 const hasValidChartData = computed(() => {
+  if (isTimeSeriesChart.value) {
+    return hasMillisecondTimestamps(computedChartData.value)
+  }
+
   return chartDataRef.value && chartDataRef.value.meta && chartDataRef.value.records
 })
 
@@ -346,12 +362,19 @@ provide('legendPosition', legendPositionRef)
   flex-direction: row;
 }
 
-.analytics-chart-parent{
+.analytics-chart-parent {
   margin: $spacing-lg;
   &.chart-border {
     border: 1px solid var(--grey-300,  #E7E7EC);
     border-radius: 3px;
     padding: $spacing-md;
   }
+}
+
+.chart-empty-state {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
 }
 </style>

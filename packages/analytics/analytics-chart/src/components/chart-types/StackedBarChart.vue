@@ -9,68 +9,52 @@
       </div>
       <slot name="header-message" />
     </div>
-    <div v-if="hasValidChartData">
-      <div
-        class="chart-parent"
-        :class="chartFlexClass[legendPosition]"
-      >
-        <canvas
-          ref="axis"
-          class="axis"
-        />
-        <div
-          class="chart-container"
-          :style="{
-            'overflow-x': numLabels > MAX_BARS_VERTICAL ? 'auto' : 'hidden'
-          }"
-          @:scroll="onScrolling"
-        >
-          <div
-            class="chart-body"
-            :style="{
-              width: chartWidth,
-              height: chartHeight
-            }"
-          >
-            <canvas ref="canvas" />
-          </div>
-        </div>
-        <div
-          v-if="axesTooltip.show"
-          class="axis-tooltip"
-          :style="{ top: axesTooltip.top, left: axesTooltip.left}"
-        >
-          {{ axesTooltip.text }}
-        </div>
-        <ToolTip
-          :left="tooltipData.left"
-          :series="tooltipData.tooltipSeries"
-          :show-tooltip="tooltipData.showTooltip"
-          :tooltip-title="tooltipTitle"
-          :top="tooltipData.top"
-          @dimensions="tooltipDimensions"
-        />
-        <ChartLegend
-          :id="legendID"
-          :chart-instance="chartInstance"
-          :items="legendItems"
-        />
-      </div>
-    </div>
-    <KEmptyState
-      v-else
-      :cta-is-hidden="true"
-      data-testid="no-data-in-report"
-      icon="stateNoData"
-      icon-size="170"
+    <div
+      class="chart-parent"
+      :class="chartFlexClass[legendPosition]"
     >
-      <template #title>
-        {{ emptyMessage.title }}
-      </template>
-      <template #message>
-        <span>{{ emptyMessage.description }}</span>
-      </template>
-    </KEmptyState>
+      <canvas
+        ref="axis"
+        class="axis"
+      />
+      <div
+        class="chart-container"
+        :style="{
+          'overflow-x': numLabels > MAX_BARS_VERTICAL ? 'auto' : 'hidden'
+        }"
+        @:scroll="onScrolling"
+      >
+        <div
+          class="chart-body"
+          :style="{
+            width: chartWidth,
+            height: chartHeight
+          }"
+        >
+          <canvas ref="canvas" />
+        </div>
+      </div>
+      <div
+        v-if="axesTooltip.show"
+        class="axis-tooltip"
+        :style="{ top: axesTooltip.top, left: axesTooltip.left}"
+      >
+        {{ axesTooltip.text }}
+      </div>
+      <ToolTip
+        :left="tooltipData.left"
+        :series="tooltipData.tooltipSeries"
+        :show-tooltip="tooltipData.showTooltip"
+        :tooltip-title="tooltipTitle"
+        :top="tooltipData.top"
+        @dimensions="tooltipDimensions"
+      />
+      <ChartLegend
+        :id="legendID"
+        :chart-instance="chartInstance"
+        :items="legendItems"
+      />
+    </div>
   </div>
 </template>
 
@@ -250,7 +234,6 @@ const tooltipData: TooltipState = reactive({
   chartType: isHorizontal.value ? ChartTypes.HORIZONTAL_BAR : ChartTypes.VERTICAL_BAR,
 })
 const dependsOnChartUpdate = ref(0)
-const hasValidChartData = computed(() => chartDataRef.value.datasets?.length > 0)
 
 const configureAnnotations = () => props.annotations && chartDataRef.value.labels?.reduce((acc, label) =>
   Object.assign(acc, makeAnnotations(chartDataRef.value as BarChartData, label, unitsRef.value, props.orientation)),
@@ -452,8 +435,6 @@ const maxOverflow = computed(() => {
 onUnmounted(() => {
   Chart.unregister(annotationPlugin)
 })
-
-const emptyMessage = computed(() => ({ title: 'No data to display', description: '' }))
 
 /**
  * When in Preview mode, Chart and Legend are vertically stacked, and the
