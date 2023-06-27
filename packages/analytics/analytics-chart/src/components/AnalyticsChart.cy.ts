@@ -676,7 +676,7 @@ describe('<AnalyticsChart />', () => {
 
     cy.mount(AnalyticsChart, {
       props: {
-        chartData: {},
+        chartData: emptyExploreResult,
         chartOptions: {
           type: ChartTypes.DOUGHNUT,
         },
@@ -693,7 +693,7 @@ describe('<AnalyticsChart />', () => {
 
     cy.mount(AnalyticsChart, {
       props: {
-        chartData: {},
+        chartData: emptyExploreResult,
         chartOptions: {
           type: ChartTypes.DOUGHNUT,
         },
