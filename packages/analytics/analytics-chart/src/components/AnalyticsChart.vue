@@ -325,7 +325,7 @@ const hasValidChartData = computed(() => {
     return hasMillisecondTimestamps(computedChartData.value)
   }
 
-  return chartDataRef.value && chartDataRef.value.meta && chartDataRef.value.records
+  return chartDataRef.value && chartDataRef.value.meta && chartDataRef.value.records.length
 })
 
 const timeSeriesGranularity = computed<GranularityKeys>(() => {
