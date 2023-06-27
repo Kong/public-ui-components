@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.1.8...@kong-ui-public/analytics-chart@0.2.0) (2023-06-27)
+
+
+### Features
+
+* fix(charts): empty state check [MA-1726] ([#586](https://github.com/Kong/public-ui-components/issues/586)) ([ca6102b](https://github.com/Kong/public-ui-components/commit/ca6102bf90d59904149ace613d0cb56643662586))
+
+
+
+
+
 ## [0.1.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.1.7...@kong-ui-public/analytics-chart@0.1.8) (2023-06-27)
 
 
