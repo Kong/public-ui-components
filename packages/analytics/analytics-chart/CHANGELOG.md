@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.1.7...@kong-ui-public/analytics-chart@0.1.8) (2023-06-27)
+
+
+### Bug Fixes
+
+* allow customization of empty state message [MA-1726] ([#574](https://github.com/Kong/public-ui-components/issues/574)) ([9c954ba](https://github.com/Kong/public-ui-components/commit/9c954bafa5095d05ea4197926c924e0f14cc9647))
+
+
+
+
+
 ## [0.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.1.6...@kong-ui-public/analytics-chart@0.1.7) (2023-06-26)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
