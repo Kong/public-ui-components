@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-chart",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "type": "module",
   "main": "./dist/vitals-chart.umd.js",
   "module": "./dist/vitals-chart.es.js",
@@ -60,7 +60,7 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong-ui-public/analytics-utilities": "workspace:^0.4.2",
+    "@kong-ui-public/analytics-utilities": "workspace:^0.4.3",
     "approximate-number": "^2.1.0",
     "chart.js": "^4.3.0",
     "chartjs-adapter-date-fns": "^3.0.0",

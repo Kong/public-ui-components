@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.4.2...@kong-ui-public/analytics-utilities@0.4.3) (2023-06-29)
+
+
+### Bug Fixes
+
+* **version-optional:** AnalyticsRecord versions are optional ([#591](https://github.com/Kong/public-ui-components/issues/591)) ([dc943c9](https://github.com/Kong/public-ui-components/commit/dc943c9c7c970ca9796714a06107e3e453b156a3))
+
+
+
+
+
 ## [0.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.4.1...@kong-ui-public/analytics-utilities@0.4.2) (2023-06-01)
 
 

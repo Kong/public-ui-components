@@ -182,7 +182,7 @@ importers:
   packages/analytics/analytics-chart:
     dependencies:
       '@kong-ui-public/analytics-utilities':
-        specifier: workspace:^0.4.2
+        specifier: workspace:^0.4.3
         version: link:../analytics-utilities
       approximate-number:
         specifier: ^2.1.0
