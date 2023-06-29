@@ -3,7 +3,7 @@ export interface RecordEvent {
 }
 
 export interface AnalyticsExploreRecord {
-  version: string
+  version?: string
   timestamp: string
   event: RecordEvent
 }
