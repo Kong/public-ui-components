@@ -372,8 +372,11 @@ provide('legendPosition', legendPositionRef)
 .analytics-chart-shell {
   border: 1px solid var(--grey-300,  #E7E7EC);
   border-radius: 3px;
-  margin: $spacing-lg;
+  display: flex;
+  flex-direction: column;
   padding: $spacing-md;
+  margin: $spacing-md;
+
   .chart-title {
     font-size: $font-size-lg;
   }
@@ -382,12 +385,13 @@ provide('legendPosition', legendPositionRef)
     display: flex;
     padding-bottom: $spacing-md;
   }
+
+  .chart-empty-state {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+  }
 }
 
-.chart-empty-state {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  justify-content: center;
-}
 </style>
