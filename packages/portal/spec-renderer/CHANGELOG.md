@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.39...@kong-ui-public/spec-renderer@0.9.40) (2023-06-30)
+
+
+### Bug Fixes
+
+* **spec-renderer:** fix if value is empty [KHCP-7933] ([#596](https://github.com/Kong/public-ui-components/issues/596)) ([b8b606f](https://github.com/Kong/public-ui-components/commit/b8b606f15aec0fddf818f484f08718018c77e91e))
+
+
+
+
+
 ## [0.9.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.38...@kong-ui-public/spec-renderer@0.9.39) (2023-06-29)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer
