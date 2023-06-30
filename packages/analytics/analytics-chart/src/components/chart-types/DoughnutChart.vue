@@ -1,47 +1,36 @@
 <template>
-  <div>
-    <div class="chart-header">
-      <div
-        v-if="chartTitle"
-        class="font-bold chart-title"
-      >
-        {{ chartTitle }}
-      </div>
-      <slot name="header-message" />
-    </div>
+  <div
+    class="chart-parent"
+    :class="chartFlexClass(legendPosition)"
+    data-testid="doughnut-chart-parent"
+  >
     <div
-      class="chart-parent"
-      :class="chartFlexClass(legendPosition)"
-      data-testid="doughnut-chart-parent"
+      class="chart-container"
+      :style="{height, width}"
     >
-      <div
-        class="chart-container"
-        :style="{height, width}"
-      >
-        <Doughnut
-          ref="chartInstance"
-          :chart-id="chartID"
-          :data="(mutableData as any)"
-          :options="(options as any)"
-          :plugins="[htmlLegendPlugin]"
-        />
-        <ToolTip
-          :left="tooltipData.left"
-          :series="tooltipData.tooltipSeries"
-          :show-tooltip="tooltipData.showTooltip"
-          :tooltip-title="tooltipTitle"
-          :top="tooltipData.top"
-          :unit="metricUnit"
-          @dimensions="tooltipDimensions"
-        />
-      </div>
-      <HtmlLegend
-        :id="legendID"
-        :chart-instance="chartInstance"
-        :items="legendItems"
-        :position="legendPosition"
+      <Doughnut
+        ref="chartInstance"
+        :chart-id="chartID"
+        :data="(mutableData as any)"
+        :options="(options as any)"
+        :plugins="[htmlLegendPlugin]"
+      />
+      <ToolTip
+        :left="tooltipData.left"
+        :series="tooltipData.tooltipSeries"
+        :show-tooltip="tooltipData.showTooltip"
+        :tooltip-title="tooltipTitle"
+        :top="tooltipData.top"
+        :unit="metricUnit"
+        @dimensions="tooltipDimensions"
       />
     </div>
+    <HtmlLegend
+      :id="legendID"
+      :chart-instance="chartInstance"
+      :items="legendItems"
+      :position="legendPosition"
+    />
   </div>
 </template>
 
@@ -68,11 +57,6 @@ const props = defineProps({
     type: Object as PropType<KChartData>,
     required: false,
     default: null,
-  },
-  chartTitle: {
-    type: String,
-    required: false,
-    default: '',
   },
   fill: {
     type: Boolean,

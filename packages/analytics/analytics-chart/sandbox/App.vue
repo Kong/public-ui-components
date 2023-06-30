@@ -106,7 +106,7 @@
     <AnalyticsChart
       :chart-data="exploreResult"
       :chart-options="analyticsChartOptions"
-      chart-title="chart title"
+      chart-title="Request count by Status Code"
       :legend-position="legendPosition"
       :show-annotations="showAnnotationsToggle"
       :show-legend-values="showLegendValuesToggle"
@@ -165,6 +165,12 @@
         <KInputSwitch
           v-model="limitToggle"
           :label="limitToggle ? 'Has Limit' : 'No Limit'"
+        />
+      </div>
+      <div>
+        <KInputSwitch
+          v-model="showEmptyStateToggle"
+          :label="showEmptyStateToggle ? 'No Data' : 'Chart Has Data'"
         />
       </div>
     </div>
@@ -239,6 +245,7 @@ const limitToggle = ref(false)
 const multiDimensionToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
+const showEmptyStateToggle = ref(false)
 const chartType = ref(ChartTypes.DOUGHNUT)
 const legendPosition = ref(ChartLegendPosition.Right)
 const selectedMetric = ref< MetricSelection>({
@@ -266,7 +273,10 @@ const statusCodeDimensionValues = ref(new Set([
 const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',
 ]))
-const exploreResult = computed<AnalyticsExploreV2Result>(() => {
+const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
+  if (showEmptyStateToggle.value) {
+    return null
+  }
 
   const statusCodeDimensionType = 'StatusCode'
   const serviceDimensionType = 'Service'

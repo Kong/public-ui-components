@@ -1,6 +1,37 @@
 <template>
-  <div v-if="!hasValidChartData">
+  <div class="analytics-chart-shell">
+    <div class="chart-header">
+      <div
+        v-if="chartTitle"
+        class="font-bold chart-title"
+      >
+        {{ chartTitle }}
+      </div>
+      <div id="result-truncated">
+        <KTooltip
+          v-if="hasValidChartData && resultSetTruncated && maxEntitiesShown"
+          class="tooltip"
+          max-width="500"
+          placement="bottom"
+        >
+          <div class="limit-icon-wrapper">
+            <KIcon
+              class="warning-icon"
+              color="var(--white, #ffffff)"
+              hide-title
+              icon="warning"
+              secondary-color="var(--yellow-400, #fabe5f)"
+              size="18"
+            />
+          </div>
+          <template #content>
+            {{ notAllDataShownTooltipContent }}
+          </template>
+        </KTooltip>
+      </div>
+    </div>
     <KEmptyState
+      v-if="!hasValidChartData"
       class="chart-empty-state"
       :cta-is-hidden="true"
       data-testid="no-data-in-report"
@@ -14,127 +45,55 @@
         {{ emptyStateDescription }}
       </template>
     </KEmptyState>
-  </div>
-  <div
-    v-else
-    class="analytics-chart-parent chart-border"
-  >
-    <TimeSeriesChart
-      v-if="isTimeSeriesChart"
-      :chart-data="computedChartData"
-      :chart-title="chartTitle"
-      :dataset-colors="chartOptions.chartDatasetColors"
-      :dimension-axes-title="timestampAxisTitle"
-      :fill="chartOptions.fill"
-      :granularity="timeSeriesGranularity"
-      :height="height"
-      :legend-values="legendValues"
-      :metric-axes-title="metricAxesTitle"
-      :metric-unit="computedMetricUnit"
-      :stacked="chartOptions.stacked"
-      :synthetics-data-key="syntheticsDataKey"
-      :time-range-ms="timeRangeMs"
-      :time-range-sec="timeRangeSec"
-      :tooltip-title="tooltipTitle"
-      :type="(chartOptions.type as (ChartTypes.TIMESERIES_LINE | ChartTypes.TIMESERIES_BAR))"
-      :width="width"
+    <div
+      v-else
+      class="analytics-chart-parent"
     >
-      <template #header-message>
-        <KTooltip
-          v-if="resultSetTruncated && maxEntitiesShown"
-          class="tooltip"
-          max-width="500"
-          placement="bottom"
-        >
-          <div class="limit-icon-wrapper">
-            <KIcon
-              class="warning-icon"
-              color="var(--white, #ffffff)"
-              hide-title
-              icon="warning"
-              secondary-color="var(--yellow-400, #fabe5f)"
-              size="18"
-            />
-          </div>
-          <template #content>
-            {{ notAllDataShownTooltipContent }}
-          </template>
-        </KTooltip>
-      </template>
-    </TimeSeriesChart>
-    <StackedBarChart
-      v-else-if="isBarChart"
-      :annotations="showAnnotations"
-      :chart-data="computedChartData"
-      :chart-title="chartTitle"
-      data-testid="bar-chart-container"
-      :dimension-axes-title="dimensionAxesTitle"
-      :legend-values="legendValues"
-      :metric-axes-title="metricAxesTitle"
-      :metric-unit="computedMetricUnit"
-      :orientation="barChartOrientation"
-      :synthetics-data-key="syntheticsDataKey"
-      :tooltip-title="tooltipTitle"
-    >
-      <template #header-message>
-        <KTooltip
-          v-if="resultSetTruncated && maxEntitiesShown"
-          class="tooltip"
-          max-width="500"
-          placement="bottom"
-        >
-          <div class="limit-icon-wrapper">
-            <KIcon
-              class="warning-icon"
-              color="var(--white, #ffffff)"
-              hide-title
-              icon="warning"
-              secondary-color="var(--yellow-400, #fabe5f)"
-              size="18"
-            />
-          </div>
-          <template #content>
-            {{ notAllDataShownTooltipContent }}
-          </template>
-        </KTooltip>
-      </template>
-    </StackedBarChart>
-    <DoughnutChart
-      v-else-if="isDoughnutChart"
-      :chart-data="computedChartData"
-      :chart-title="chartTitle"
-      :dataset-colors="chartOptions.chartDatasetColors"
-      :fill="chartOptions.fill"
-      :legend-position="legendPosition"
-      :legend-values="legendValues"
-      :metric-unit="computedMetricUnit"
-      :synthetics-data-key="syntheticsDataKey"
-      :tooltip-title="tooltipTitle"
-      :width="width"
-    >
-      <template #header-message>
-        <KTooltip
-          v-if="resultSetTruncated && maxEntitiesShown"
-          class="tooltip"
-          max-width="500"
-          placement="bottom"
-        >
-          <div class="limit-icon-wrapper">
-            <KIcon
-              class="warning-icon"
-              color="var(--white, #fff)"
-              hide-title
-              icon="warning"
-              secondary-color="var(--yellow-400, #fabe5f)"
-              size="18"
-            />
-          </div>
-          <template #content>
-            {{ notAllDataShownTooltipContent }}
-          </template>
-        </KTooltip>
-      </template>
-    </DoughnutChart>
+      <TimeSeriesChart
+        v-if="isTimeSeriesChart"
+        :chart-data="computedChartData"
+        :dataset-colors="chartOptions.chartDatasetColors"
+        :dimension-axes-title="timestampAxisTitle"
+        :fill="chartOptions.fill"
+        :granularity="timeSeriesGranularity"
+        :height="height"
+        :legend-values="legendValues"
+        :metric-axes-title="metricAxesTitle"
+        :metric-unit="computedMetricUnit"
+        :stacked="chartOptions.stacked"
+        :synthetics-data-key="syntheticsDataKey"
+        :time-range-ms="timeRangeMs"
+        :time-range-sec="timeRangeSec"
+        :tooltip-title="tooltipTitle"
+        :type="(chartOptions.type as (ChartTypes.TIMESERIES_LINE | ChartTypes.TIMESERIES_BAR))"
+        :width="width"
+      />
+      <StackedBarChart
+        v-else-if="isBarChart"
+        :annotations="showAnnotations"
+        :chart-data="computedChartData"
+        data-testid="bar-chart-container"
+        :dimension-axes-title="dimensionAxesTitle"
+        :legend-values="legendValues"
+        :metric-axes-title="metricAxesTitle"
+        :metric-unit="computedMetricUnit"
+        :orientation="barChartOrientation"
+        :synthetics-data-key="syntheticsDataKey"
+        :tooltip-title="tooltipTitle"
+      />
+      <DoughnutChart
+        v-else-if="isDoughnutChart"
+        :chart-data="computedChartData"
+        :dataset-colors="chartOptions.chartDatasetColors"
+        :fill="chartOptions.fill"
+        :legend-position="legendPosition"
+        :legend-values="legendValues"
+        :metric-unit="computedMetricUnit"
+        :synthetics-data-key="syntheticsDataKey"
+        :tooltip-title="tooltipTitle"
+        :width="width"
+      />
+    </div>
   </div>
 </template>
 
@@ -362,19 +321,30 @@ provide('legendPosition', legendPositionRef)
   flex-direction: row;
 }
 
-.analytics-chart-parent {
-  margin: $spacing-lg;
-  &.chart-border {
-    border: 1px solid var(--grey-300,  #E7E7EC);
-    border-radius: 3px;
-    padding: $spacing-md;
+.analytics-chart-shell {
+  border: 1px solid var(--grey-300,  #E7E7EC);
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  margin: $spacing-md;
+  padding: $spacing-md;
+
+  .chart-title {
+    font-size: $font-size-lg;
+  }
+
+  .chart-header {
+    display: flex;
+    padding-bottom: $spacing-md;
+  }
+
+  .chart-empty-state {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    padding: $spacing-lg 0 $spacing-md 0;
   }
 }
 
-.chart-empty-state {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  justify-content: center;
-}
 </style>
