@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.2.3...@kong-ui-public/analytics-chart@0.3.0) (2023-06-30)
+
+
+### Features
+
+* move chart title to outer shell [MA-1849] ([#597](https://github.com/Kong/public-ui-components/issues/597)) ([50c29cc](https://github.com/Kong/public-ui-components/commit/50c29cc7ea9c43eeca1934213938231205800742))
+
+
+
+
+
 ## [0.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.2.2...@kong-ui-public/analytics-chart@0.2.3) (2023-06-29)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
