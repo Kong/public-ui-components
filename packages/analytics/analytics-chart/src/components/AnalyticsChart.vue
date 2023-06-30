@@ -374,8 +374,8 @@ provide('legendPosition', legendPositionRef)
   border-radius: 3px;
   display: flex;
   flex-direction: column;
-  padding: $spacing-md;
   margin: $spacing-md;
+  padding: $spacing-md;
 
   .chart-title {
     font-size: $font-size-lg;
