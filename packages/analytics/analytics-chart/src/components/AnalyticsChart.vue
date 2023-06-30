@@ -7,7 +7,28 @@
       >
         {{ chartTitle }}
       </div>
-      <slot name="header-message" />
+      <div id="result-truncated">
+        <KTooltip
+          v-if="hasValidChartData && resultSetTruncated && maxEntitiesShown"
+          class="tooltip"
+          max-width="500"
+          placement="bottom"
+        >
+          <div class="limit-icon-wrapper">
+            <KIcon
+              class="warning-icon"
+              color="var(--white, #ffffff)"
+              hide-title
+              icon="warning"
+              secondary-color="var(--yellow-400, #fabe5f)"
+              size="18"
+            />
+          </div>
+          <template #content>
+            {{ notAllDataShownTooltipContent }}
+          </template>
+        </KTooltip>
+      </div>
     </div>
     <KEmptyState
       v-if="!hasValidChartData"
@@ -46,30 +67,7 @@
         :tooltip-title="tooltipTitle"
         :type="(chartOptions.type as (ChartTypes.TIMESERIES_LINE | ChartTypes.TIMESERIES_BAR))"
         :width="width"
-      >
-        <template #header-message>
-          <KTooltip
-            v-if="resultSetTruncated && maxEntitiesShown"
-            class="tooltip"
-            max-width="500"
-            placement="bottom"
-          >
-            <div class="limit-icon-wrapper">
-              <KIcon
-                class="warning-icon"
-                color="var(--white, #ffffff)"
-                hide-title
-                icon="warning"
-                secondary-color="var(--yellow-400, #fabe5f)"
-                size="18"
-              />
-            </div>
-            <template #content>
-              {{ notAllDataShownTooltipContent }}
-            </template>
-          </KTooltip>
-        </template>
-      </TimeSeriesChart>
+      />
       <StackedBarChart
         v-else-if="isBarChart"
         :annotations="showAnnotations"
@@ -82,30 +80,7 @@
         :orientation="barChartOrientation"
         :synthetics-data-key="syntheticsDataKey"
         :tooltip-title="tooltipTitle"
-      >
-        <template #header-message>
-          <KTooltip
-            v-if="resultSetTruncated && maxEntitiesShown"
-            class="tooltip"
-            max-width="500"
-            placement="bottom"
-          >
-            <div class="limit-icon-wrapper">
-              <KIcon
-                class="warning-icon"
-                color="var(--white, #ffffff)"
-                hide-title
-                icon="warning"
-                secondary-color="var(--yellow-400, #fabe5f)"
-                size="18"
-              />
-            </div>
-            <template #content>
-              {{ notAllDataShownTooltipContent }}
-            </template>
-          </KTooltip>
-        </template>
-      </StackedBarChart>
+      />
       <DoughnutChart
         v-else-if="isDoughnutChart"
         :chart-data="computedChartData"
@@ -117,30 +92,7 @@
         :synthetics-data-key="syntheticsDataKey"
         :tooltip-title="tooltipTitle"
         :width="width"
-      >
-        <template #header-message>
-          <KTooltip
-            v-if="resultSetTruncated && maxEntitiesShown"
-            class="tooltip"
-            max-width="500"
-            placement="bottom"
-          >
-            <div class="limit-icon-wrapper">
-              <KIcon
-                class="warning-icon"
-                color="var(--white, #fff)"
-                hide-title
-                icon="warning"
-                secondary-color="var(--yellow-400, #fabe5f)"
-                size="18"
-              />
-            </div>
-            <template #content>
-              {{ notAllDataShownTooltipContent }}
-            </template>
-          </KTooltip>
-        </template>
-      </DoughnutChart>
+      />
     </div>
   </div>
 </template>
@@ -391,6 +343,7 @@ provide('legendPosition', legendPositionRef)
     flex-direction: column;
     height: 100%;
     justify-content: center;
+    padding: $spacing-lg 0 $spacing-md 0;
   }
 }
 
