@@ -1,60 +1,49 @@
 <template>
-  <div>
-    <div class="chart-header">
+  <div
+    class="chart-parent"
+    :class="chartFlexClass[legendPosition]"
+  >
+    <canvas
+      ref="axis"
+      class="axis"
+    />
+    <div
+      class="chart-container"
+      :style="{
+        'overflow-x': numLabels > MAX_BARS_VERTICAL ? 'auto' : 'hidden'
+      }"
+      @:scroll="onScrolling"
+    >
       <div
-        v-if="chartTitle"
-        class="font-bold chart-title"
+        class="chart-body"
+        :style="{
+          width: chartWidth,
+          height: chartHeight
+        }"
       >
-        {{ chartTitle }}
+        <canvas ref="canvas" />
       </div>
-      <slot name="header-message" />
     </div>
     <div
-      class="chart-parent"
-      :class="chartFlexClass[legendPosition]"
+      v-if="axesTooltip.show"
+      class="axis-tooltip"
+      :style="{ top: axesTooltip.top, left: axesTooltip.left}"
     >
-      <canvas
-        ref="axis"
-        class="axis"
-      />
-      <div
-        class="chart-container"
-        :style="{
-          'overflow-x': numLabels > MAX_BARS_VERTICAL ? 'auto' : 'hidden'
-        }"
-        @:scroll="onScrolling"
-      >
-        <div
-          class="chart-body"
-          :style="{
-            width: chartWidth,
-            height: chartHeight
-          }"
-        >
-          <canvas ref="canvas" />
-        </div>
-      </div>
-      <div
-        v-if="axesTooltip.show"
-        class="axis-tooltip"
-        :style="{ top: axesTooltip.top, left: axesTooltip.left}"
-      >
-        {{ axesTooltip.text }}
-      </div>
-      <ToolTip
-        :left="tooltipData.left"
-        :series="tooltipData.tooltipSeries"
-        :show-tooltip="tooltipData.showTooltip"
-        :tooltip-title="tooltipTitle"
-        :top="tooltipData.top"
-        @dimensions="tooltipDimensions"
-      />
-      <ChartLegend
-        :id="legendID"
-        :chart-instance="chartInstance"
-        :items="legendItems"
-      />
+      {{ axesTooltip.text }}
     </div>
+    <ToolTip
+      :left="tooltipData.left"
+      :series="tooltipData.tooltipSeries"
+      :show-tooltip="tooltipData.showTooltip"
+      :tooltip-title="tooltipTitle"
+      :top="tooltipData.top"
+      @dimensions="tooltipDimensions"
+    />
+    <ChartLegend
+      :id="legendID"
+      :chart-instance="chartInstance"
+      :items="legendItems"
+    />
   </div>
 </template>
 
@@ -75,11 +64,6 @@ const props = defineProps({
     type: Object as PropType<KChartData>,
     required: false,
     default: () => ({ labels: [], datasets: [] }),
-  },
-  chartTitle: {
-    type: String,
-    required: false,
-    default: '',
   },
   tooltipTitle: {
     type: String,

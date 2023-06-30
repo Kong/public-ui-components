@@ -1,61 +1,50 @@
 <template>
-  <div>
-    <div class="chart-header">
-      <div
-        v-if="chartTitle"
-        class="font-bold chart-title"
-      >
-        {{ chartTitle }}
-      </div>
-      <slot name="header-message" />
-    </div>
+  <div
+    class="chart-parent"
+    :class="chartFlexClass(legendPosition)"
+    data-testid="line-chart-parent"
+  >
     <div
-      class="chart-parent"
-      :class="chartFlexClass(legendPosition)"
-      data-testid="line-chart-parent"
+      class="chart-container"
+      :style="{height, width}"
     >
-      <div
-        class="chart-container"
-        :style="{height, width}"
-      >
-        <Line
-          v-if="type === ChartTypes.TIMESERIES_LINE"
-          ref="chartInstance"
-          :chart-id="chartID"
-          :data="(mutableData as any)"
-          data-testid="time-series-line-chart"
-          :options="(options as any)"
-          :plugins="plugins"
-        />
-        <Bar
-          v-else-if="type === ChartTypes.TIMESERIES_BAR"
-          ref="chartInstance"
-          :chart-id="chartID"
-          :data="(mutableData as any)"
-          data-testid="time-series-bar-chart"
-          :options="(options as any)"
-          :plugins="plugins"
-        />
-      </div>
-      <ToolTip
-        ref="tooltipElement"
-        :context="formatTimestamp(tooltipData.tooltipContext as number)"
-        data-testid="tooltip"
-        :left="tooltipData.left"
-        :series="tooltipData.tooltipSeries"
-        :show-tooltip="tooltipData.showTooltip"
-        :tooltip-title="tooltipTitle"
-        :top="tooltipData.top"
-        :unit="metricUnit"
-        @dimensions="tooltipDimensions"
+      <Line
+        v-if="type === ChartTypes.TIMESERIES_LINE"
+        ref="chartInstance"
+        :chart-id="chartID"
+        :data="(mutableData as any)"
+        data-testid="time-series-line-chart"
+        :options="(options as any)"
+        :plugins="plugins"
       />
-      <ChartLegend
-        :id="legendID"
-        :chart-instance="chartInstance"
-        data-testid="legend"
-        :items="legendItems"
+      <Bar
+        v-else-if="type === ChartTypes.TIMESERIES_BAR"
+        ref="chartInstance"
+        :chart-id="chartID"
+        :data="(mutableData as any)"
+        data-testid="time-series-bar-chart"
+        :options="(options as any)"
+        :plugins="plugins"
       />
     </div>
+    <ToolTip
+      ref="tooltipElement"
+      :context="formatTimestamp(tooltipData.tooltipContext as number)"
+      data-testid="tooltip"
+      :left="tooltipData.left"
+      :series="tooltipData.tooltipSeries"
+      :show-tooltip="tooltipData.showTooltip"
+      :tooltip-title="tooltipTitle"
+      :top="tooltipData.top"
+      :unit="metricUnit"
+      @dimensions="tooltipDimensions"
+    />
+    <ChartLegend
+      :id="legendID"
+      :chart-instance="chartInstance"
+      data-testid="legend"
+      :items="legendItems"
+    />
   </div>
 </template>
 
@@ -85,11 +74,6 @@ const props = defineProps({
     type: Object as PropType<KChartData>,
     required: false,
     default: null,
-  },
-  chartTitle: {
-    type: String,
-    required: false,
-    default: '',
   },
   type: {
     type: String as PropType<ChartTypes.TIMESERIES_BAR | ChartTypes.TIMESERIES_LINE>,
