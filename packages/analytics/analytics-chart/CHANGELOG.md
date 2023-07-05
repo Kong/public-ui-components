@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.3.0...@kong-ui-public/analytics-chart@0.3.1) (2023-07-05)
+
+
+### Bug Fixes
+
+* use relative path for enums [MA-1788] ([#598](https://github.com/Kong/public-ui-components/issues/598)) ([46630ab](https://github.com/Kong/public-ui-components/commit/46630ab8f9c46036e6ef5091875efbcaefffb3a7))
+
+
+
+
+
 # [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.2.3...@kong-ui-public/analytics-chart@0.3.0) (2023-06-30)
 
 
