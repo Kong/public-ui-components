@@ -88,6 +88,15 @@ const createPackageFiles = async (workspace: string, packageName: string): Promi
         .replace(/{%%COMPONENT_NAME%%}/g, componentName)
         .replace(/{%%WORKSPACE%%}/g, workspace)
         .replace(/{%%CURRENT_YEAR%%}/g, String(new Date().getFullYear()))
+        // Conditionally modify the {packageName}/sandbox/tsconfig.json
+        .replace(/{%%SANDBOX_TSCONFIG_PATHS%%}/g, workspace !== 'entities'
+          ? ''
+          : `,
+    "paths": {
+      "@entities-shared-sandbox/*": [
+        "../../entities-shared/sandbox/shared/*"
+      ]
+    }`)
 
       fs.writeFileSync(newFilePath, fileContent, 'utf8')
     }

@@ -48,6 +48,9 @@ export default defineConfig({
   resolve: {
     // Use this option to force Vite to always resolve listed dependencies to the same copy (from project root)
     dedupe: ['vue', 'vue-router', '@kong/kongponents'],
+    alias: {
+      '@entities-shared-sandbox': path.resolve(__dirname, 'packages/entities/entities-shared/sandbox/shared'),
+    },
   },
   build: {
     outDir: './dist',
