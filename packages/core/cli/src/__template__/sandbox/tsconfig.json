@@ -1,8 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "."{%%SANDBOX_TSCONFIG_PATHS%%
-    }
+    "baseUrl": "."{%%SANDBOX_TSCONFIG_PATHS%%}
   },
   "include": [
     "**/*.ts",
