@@ -42,6 +42,7 @@ The currently available workspaces include:
 
 - `analytics`
 - `core`
+- `entities`
 - `portal`
 
 New workspaces **must** be added and configured by `@Kong/team-core-ui` following the [Creating a new workspace instructions below](#creating-a-new-workspace).
