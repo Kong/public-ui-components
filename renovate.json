@@ -7,6 +7,7 @@
     ":automergePatch",
     ":automergeMinor"
   ],
+  "dependencyDashboard": true,
   "rangeStrategy": "bump",
   "platformAutomerge": true,
   "ignorePaths": [
@@ -32,6 +33,20 @@
         "^@kong-ui-public\/"
       ],
       "stabilityDays": 0
+    },
+    {
+      "automerge": true,
+      "groupName": "all non-major dependencies with stable version",
+      "groupSlug": "all-minor-patch",
+      "matchCurrentVersion": "!/^0/",
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "stabilityDays": 10
     }
   ],
   "npmrcMerge": true,
