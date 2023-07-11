@@ -173,6 +173,12 @@
           :label="showEmptyStateToggle ? 'No Data' : 'Chart Has Data'"
         />
       </div>
+      <div v-if="chartType.includes('Doughnut')">
+        <KInputSwitch
+          v-model="showTotalToggle"
+          :label="showTotalToggle ? 'Hide Totals' : 'Show Totals'"
+        />
+      </div>
     </div>
     <div class="config-container d-flex">
       <div class="flex-row">
@@ -246,6 +252,7 @@ const multiDimensionToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const showEmptyStateToggle = ref(false)
+const showTotalToggle = ref(false)
 const chartType = ref(ChartTypes.DOUGHNUT)
 const legendPosition = ref(ChartLegendPosition.Right)
 const selectedMetric = ref< MetricSelection>({
@@ -388,7 +395,7 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
   }
 
   return {
-    records,
+    records: showTotalToggle.value ? records.slice(0, 2) : records,
     meta,
   }
 })
@@ -404,6 +411,7 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => ({
   stacked: stackToggle.value,
   fill: fillToggle.value,
   chartDatasetColors: colorPalette.value,
+  showTotal: showTotalToggle.value,
 }))
 
 const randomizeData = () => {

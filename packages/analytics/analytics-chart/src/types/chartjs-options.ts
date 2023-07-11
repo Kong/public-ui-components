@@ -37,6 +37,7 @@ export interface DoughnutChartOptions {
   tooltipState: TooltipState,
   legendID: string,
   timeRange: Ref<number>, // time range in seconds
+  showTotal: Ref<boolean>
 }
 
 export interface AxesTooltipState {

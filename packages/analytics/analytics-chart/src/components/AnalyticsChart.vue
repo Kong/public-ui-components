@@ -2,7 +2,7 @@
   <div class="analytics-chart-shell">
     <div class="chart-header">
       <div
-        v-if="chartTitle"
+        v-if="chartTitle && !chartOptionsRef?.showTotal"
         class="font-bold chart-title"
       >
         {{ chartTitle }}
@@ -89,6 +89,7 @@
         :legend-position="legendPosition"
         :legend-values="legendValues"
         :metric-unit="computedMetricUnit"
+        :show-total="chartOptions.showTotal"
         :synthetics-data-key="syntheticsDataKey"
         :tooltip-title="tooltipTitle"
         :width="width"

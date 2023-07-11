@@ -60,7 +60,11 @@ export interface AnalyticsChartOptions {
   /**
    * Chart dataset color palette
    */
-  chartDatasetColors?: AnalyticsChartColors | string[]
+  chartDatasetColors?: AnalyticsChartColors | string[],
+  /**
+   * Determines if a simplified version of the chart should be displayed
+   */
+  showTotal?: boolean,
 }
 
 export interface LegendValueEntry {

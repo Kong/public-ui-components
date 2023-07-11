@@ -63,7 +63,7 @@ yarn add @kong-ui-public/analytics-chart
           '400': '#00bbf9',
         }
       ```
-
+- `showTotal` is an optional mode; a boolean that determines whether to show a simplified version of the given chart type. Currently only supported by Doughnut charts.
 
 #### `chartTitle`
 

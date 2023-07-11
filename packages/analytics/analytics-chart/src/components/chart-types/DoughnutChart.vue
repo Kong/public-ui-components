@@ -5,6 +5,19 @@
     data-testid="doughnut-chart-parent"
   >
     <div
+      v-if="showTotal"
+      class="chart-totals"
+    >
+      <div class="chart-totals-flex">
+        <h2 :style="metricHighlightColor">
+          {{ metricHighlight }}
+        </h2>
+        <h4 :style="metricTotalColor">
+          {{ metricTotal }}
+        </h4>
+      </div>
+    </div>
+    <div
       class="chart-container"
       :style="{height, width}"
     >
@@ -26,6 +39,7 @@
       />
     </div>
     <HtmlLegend
+      v-if="!showTotal"
       :id="legendID"
       :chart-instance="chartInstance"
       :items="legendItems"
@@ -58,6 +72,11 @@ const props = defineProps({
     required: false,
     default: null,
   },
+  chartTitle: {
+    type: String,
+    required: false,
+    default: null,
+  },
   fill: {
     type: Boolean,
     required: false,
@@ -86,6 +105,11 @@ const props = defineProps({
     type: Object,
     required: false,
     default: null,
+  },
+  showTotal: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
   syntheticsDataKey: {
     type: String,
@@ -156,7 +180,8 @@ const htmlLegendPlugin = {
 }
 
 // Flatten the datasets into a single element array, since we only want to
-// display a single dataset containing dimension totals in our Doughnut chart
+// display a single dataset containing dimension totals in our Doughnut chart.
+// If a simplified `showTotal` Donut Metric chart, we expect a dataset of size = 2.
 const formattedDataset = computed<DoughnutChartData[]>(() => {
   const formatted = props.chartData.datasets.reduce((acc: any, current: ChartDataset) => {
     acc.labels.push(current.label)
@@ -183,6 +208,7 @@ const { options } = composables.useDoughnutChartOptions({
   tooltipState: tooltipData,
   timeRange: toRef(props, 'timeRange'),
   legendID: legendID.value,
+  showTotal: toRef(props, 'showTotal'),
 })
 
 const chartInstance = ref<Chart>()
@@ -203,9 +229,32 @@ const tooltipDimensions = ({ width, height }: { width: number, height: number })
   tooltipData.width = width
   tooltipData.height = height
 }
+
+// When displaying a simple chart, we only expect two values in the dataset
+const metricHighlight = computed(() => formattedDataset?.value[0]?.data[0])
+const metricTotal = computed(() => formattedDataset?.value[0]?.data[0] + formattedDataset?.value[0]?.data[1])
+const metricHighlightColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[0]}`)
+const metricTotalColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[1]}`)
 </script>
 
 <style lang="scss" scoped>
 @import '../../styles/base';
 @import '../../styles/chart';
+
+.chart-totals {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+
+  .chart-totals-flex {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+  }
+}
 </style>
