@@ -49,7 +49,7 @@ export default function useDoughnutChartOptions(chartOptions: DoughnutChartOptio
   const options = computed(() => {
     return {
       // If showing a simple total, allow for more space in the center
-      cutout: chartOptions.showTotal.value ? '80%' : '50%',
+      cutout: chartOptions.showTotal.value ? '78%' : '50%',
       responsive: true,
       maintainAspectRatio: false,
       plugins: {

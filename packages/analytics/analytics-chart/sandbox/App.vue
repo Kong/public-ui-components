@@ -402,6 +402,11 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
 
 const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {}))
 
+const twoColorPalette = ref<AnalyticsChartColors>({
+  200: '#9edca6',
+  300: '#bbb',
+})
+
 const updateSelectedColor = (event: Event, label: string) => {
   colorPalette.value[label] = (event.target as HTMLInputElement).value
 }
@@ -410,7 +415,7 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => ({
   type: chartType.value,
   stacked: stackToggle.value,
   fill: fillToggle.value,
-  chartDatasetColors: colorPalette.value,
+  chartDatasetColors: showTotalToggle.value ? twoColorPalette.value : colorPalette.value,
   showTotal: showTotalToggle.value,
 }))
 

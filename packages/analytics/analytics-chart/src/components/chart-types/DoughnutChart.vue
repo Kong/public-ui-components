@@ -1,7 +1,7 @@
 <template>
   <div
     class="chart-parent"
-    :class="chartFlexClass(legendPosition)"
+    :class="chartFlexClass(legendPosition) && (showTotal ? 'show-total' : null)"
     data-testid="doughnut-chart-parent"
   >
     <div
@@ -9,12 +9,18 @@
       class="chart-totals"
     >
       <div class="chart-totals-flex">
-        <h2 :style="metricHighlightColor">
+        <div
+          class="metric-large"
+          :style="metricHighlightColor"
+        >
           {{ metricHighlight }}
-        </h2>
-        <h4 :style="metricTotalColor">
+        </div>
+        <div
+          class="metric-small"
+          :style="metricTotalColor"
+        >
           {{ metricTotal }}
-        </h4>
+        </div>
       </div>
     </div>
     <div
@@ -52,6 +58,8 @@
 import { computed, PropType, reactive, ref, toRef } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
+// @ts-ignore - approximate-number no exported module
+import approxNum from 'approximate-number'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import HtmlLegend from '../chart-plugins/ChartLegend.vue'
 import {
@@ -185,8 +193,13 @@ const htmlLegendPlugin = {
 const formattedDataset = computed<DoughnutChartData[]>(() => {
   const formatted = props.chartData.datasets.reduce((acc: any, current: ChartDataset) => {
     acc.labels.push(current.label)
+
+    // Simplified "big number" doughnut has no segment border
+    props.showTotal
+      ? acc.borderColor.push(current.backgroundColor)
+      : acc.borderColor.push(darkenColor((current.backgroundColor as string), 50))
+
     acc.backgroundColor.push(current.backgroundColor)
-    acc.borderColor.push(darkenColor((current.backgroundColor as string), 50))
     acc.data.push(current.data.reduce((a, b) => (a as number) + (b as number), 0))
 
     return acc
@@ -231,8 +244,8 @@ const tooltipDimensions = ({ width, height }: { width: number, height: number })
 }
 
 // When displaying a simple chart, we only expect two values in the dataset
-const metricHighlight = computed(() => formattedDataset?.value[0]?.data[0])
-const metricTotal = computed(() => formattedDataset?.value[0]?.data[0] + formattedDataset?.value[0]?.data[1])
+const metricHighlight = computed(() => approxNum(formattedDataset?.value[0]?.data[0], { capital: true }))
+const metricTotal = computed(() => approxNum(formattedDataset?.value[0]?.data[0] + formattedDataset?.value[0]?.data[1], { capital: true }))
 const metricHighlightColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[0]}`)
 const metricTotalColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[1]}`)
 </script>
@@ -241,20 +254,44 @@ const metricTotalColor = computed(() => `color: ${formattedDataset?.value[0]?.ba
 @import '../../styles/base';
 @import '../../styles/chart';
 
-.chart-totals {
-  align-items: center;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  position: absolute;
-  width: 100%;
-  z-index: 1;
+.chart-parent {
+  // MA-1850 Custom styling for "big number" metric
+  &.show-total {
+    max-width: 100px;
+    max-height: 100px;
+    padding: 0;
+    margin: 0;
 
-  .chart-totals-flex {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    z-index: 2;
+    .chart-container {
+      padding: 0;
+      margin: 0;
+    }
+
+    .chart-totals {
+      align-items: center;
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      position: absolute;
+      width: 100%;
+      z-index: 1;
+
+      .chart-totals-flex {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        z-index: 2;
+
+        .metric-large {
+          font-size: $font-size-xxl;
+          font-weight: 500;
+        }
+        .metric-small {
+          font-size: $font-size-sm;
+          font-weight: 400;
+        }
+      }
+    }
   }
 }
 </style>
