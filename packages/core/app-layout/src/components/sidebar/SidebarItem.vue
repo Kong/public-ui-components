@@ -57,7 +57,7 @@
             </KTooltip>
             <div
               v-if="(item as SidebarPrimaryItem).label && (item as SidebarPrimaryItem).expanded"
-              class="sidebar-item-label truncate-text truncate-19"
+              class="sidebar-item-label truncate-text truncate-18"
             >
               {{ (item as SidebarPrimaryItem).label }}
             </div>
