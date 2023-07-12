@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.19.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.17...@kong-ui-public/app-layout@0.19.18) (2023-07-12)
+
+
+### Bug Fixes
+
+* **app-layout:** tweak sidebar item truncation ([#604](https://github.com/Kong/public-ui-components/issues/604)) ([bd171a2](https://github.com/Kong/public-ui-components/commit/bd171a2635b7d7b7582da879d76bfb217fc210a1))
+
+
+
+
+
 ## [0.19.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.16...@kong-ui-public/app-layout@0.19.17) (2023-06-29)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout

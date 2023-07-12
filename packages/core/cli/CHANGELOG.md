@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.5.2...@kong-ui-public/cli@0.6.0) (2023-07-12)
+
+
+### Features
+
+* **cli:** add entities workspace [KHCP-7981] ([#599](https://github.com/Kong/public-ui-components/issues/599)) ([9156b6e](https://github.com/Kong/public-ui-components/commit/9156b6e0203c3c9069566ffafd49e8f6cb69cb25))
+
+
+
+
+
 ## [0.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.5.1...@kong-ui-public/cli@0.5.2) (2023-06-19)
 
 **Note:** Version bump only for package @kong-ui-public/cli

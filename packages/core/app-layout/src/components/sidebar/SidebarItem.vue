@@ -51,13 +51,13 @@
               <div class="sidebar-item-name has-tooltip">
                 <span
                   class="truncate-text"
-                  :class="[subnavItem ? 'truncate-20' : 'truncate-17', { 'has-badge-max-width': itemHasBadge }]"
+                  :class="[subnavItem ? 'truncate-18' : 'truncate-17', { 'has-badge-max-width': itemHasBadge }]"
                 >{{ item.name }}</span>
               </div>
             </KTooltip>
             <div
               v-if="(item as SidebarPrimaryItem).label && (item as SidebarPrimaryItem).expanded"
-              class="sidebar-item-label truncate-text truncate-20"
+              class="sidebar-item-label truncate-text truncate-18"
             >
               {{ (item as SidebarPrimaryItem).label }}
             </div>
@@ -320,8 +320,8 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
         &-17 {
           max-width: 17ch;
         }
-        &-20 {
-          max-width: 20ch;
+        &-18 {
+          max-width: 18ch;
         }
         &-24 {
           max-width: 24ch;
