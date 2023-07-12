@@ -258,15 +258,14 @@ const metricTotalColor = computed(() => `color: ${formattedDataset?.value[0]?.ba
   // MA-1850 Custom styling for "big number" metric
   &.show-total {
     height: 100px;
-    width: 100px;
-    padding: 0;
     margin: 0;
-
+    padding: 0;
+    width: 100px;
     .chart-container {
-      max-width: 100px;
-      max-height: 100px;
-      padding: 0;
       margin: 0;
+      max-height: 100px;
+      max-width: 100px;
+      padding: 0;
     }
 
     .chart-totals {
