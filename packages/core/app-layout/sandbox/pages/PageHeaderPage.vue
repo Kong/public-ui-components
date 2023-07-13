@@ -1,6 +1,6 @@
 <template>
   <div class="sandbox-container">
-    <PageHeader
+    <AppPageHeader
       :breadcrumbs="breadcrumbs"
       title="Cats are Cool"
     >
@@ -39,13 +39,13 @@
           Cats are a key part of a balanced day (except when walking down stairs)
         </div>
       </template>
-    </PageHeader>
+    </AppPageHeader>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { PageHeader } from '../../src'
+import { AppPageHeader } from '../../src'
 
 const breadcrumbs = computed(() => {
   return [

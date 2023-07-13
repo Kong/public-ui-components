@@ -4,8 +4,8 @@ import AccountDropdown from './components/navbar/AccountDropdown.vue'
 import AppError from './components/errors/AppError.vue'
 import AppLayout from './components/AppLayout.vue'
 import AppNavbar from './components/navbar/AppNavbar.vue'
+import AppPageHeader from './components/pageHeader/AppPageHeader.vue'
 import AppSidebar from './components/sidebar/AppSidebar.vue'
-import PageHeader from './components/pageHeader/PageHeader.vue'
 import SidebarToggle from './components/sidebar/SidebarToggle.vue'
 
 // Export Vue plugin as the default
@@ -23,8 +23,8 @@ export {
   AppError,
   AppLayout,
   AppNavbar,
+  AppPageHeader,
   AppSidebar,
-  PageHeader,
   SidebarToggle,
 }
 
