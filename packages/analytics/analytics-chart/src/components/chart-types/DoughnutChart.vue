@@ -1,7 +1,7 @@
 <template>
   <div
     class="chart-parent"
-    :class="chartFlexClass(legendPosition) && (showTotal ? 'show-total' : null)"
+    :class="[ chartFlexClass, { 'show-total': showTotal } ]"
     data-testid="doughnut-chart-parent"
   >
     <div
@@ -10,12 +10,14 @@
     >
       <div class="chart-totals-flex">
         <div
+          v-if="showMetricLarge"
           class="metric-large"
           :style="metricHighlightColor"
         >
           {{ metricHighlight }}
         </div>
         <div
+          v-if="showMetricSmall"
           class="metric-small"
           :style="metricTotalColor"
         >
@@ -45,7 +47,6 @@
       />
     </div>
     <HtmlLegend
-      v-if="!showTotal"
       :id="legendID"
       :chart-instance="chartInstance"
       :items="legendItems"
@@ -71,7 +72,7 @@ import { Doughnut } from 'vue-chartjs'
 import composables from '../../composables'
 import { AnalyticsChartColors, KChartData, TooltipState } from '../../types'
 import { Chart, ChartDataset } from 'chart.js'
-import { ChartLegendPosition, ChartTypes } from '../../enums'
+import { ChartLegendPosition, ChartMetricDisplay, ChartTypes } from '../../enums'
 import { DoughnutChartData } from '../../types/chart-data'
 
 const props = defineProps({
@@ -113,6 +114,11 @@ const props = defineProps({
     type: Object,
     required: false,
     default: null,
+  },
+  metricDisplay: {
+    type: String as PropType<ChartMetricDisplay>,
+    required: false,
+    default: ChartMetricDisplay.Hidden,
   },
   showTotal: {
     type: Boolean,
@@ -158,6 +164,7 @@ const translatedUnits = computed(() => {
   // @ts-ignore - dynamic i18n key
   return unitsRef.value && i18n.t(`chartUnits.${unitsRef.value}`)
 })
+const metricDisplayRef = toRef(props, 'metricDisplay')
 
 const tooltipData: TooltipState = reactive({
   showTooltip: false,
@@ -230,13 +237,13 @@ const chartInstance = ref<Chart>()
  * When in Preview mode, Chart and Legend are vertically stacked, and the
  * Legend list items are allowed to spread horizontally.
  */
-const chartFlexClass = (position: `${ChartLegendPosition}`) => {
+const chartFlexClass = computed<string>(() => {
   return {
     [ChartLegendPosition.Right]: 'legend-row',
     [ChartLegendPosition.Bottom]: 'column',
     [ChartLegendPosition.Hidden]: 'hidden',
-  }[position]
-}
+  }[props.legendPosition]
+})
 
 const tooltipDimensions = ({ width, height }: { width: number, height: number }) => {
   tooltipData.width = width
@@ -246,8 +253,13 @@ const tooltipDimensions = ({ width, height }: { width: number, height: number })
 // When displaying a simple chart, we only expect two values in the dataset
 const metricHighlight = computed(() => approxNum(formattedDataset?.value[0]?.data[0], { capital: true }))
 const metricTotal = computed(() => approxNum(formattedDataset?.value[0]?.data[0] + formattedDataset?.value[0]?.data[1], { capital: true }))
+
 const metricHighlightColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[0]}`)
 const metricTotalColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[1]}`)
+
+// Conditionally show large or small metric value, or neither
+const showMetricLarge = computed(() => [ChartMetricDisplay.Full, ChartMetricDisplay.Single].includes(metricDisplayRef.value))
+const showMetricSmall = computed(() => metricDisplayRef.value === ChartMetricDisplay.Full)
 </script>
 
 <style lang="scss" scoped>
@@ -257,10 +269,12 @@ const metricTotalColor = computed(() => `color: ${formattedDataset?.value[0]?.ba
 .chart-parent {
   // MA-1850 Custom styling for "big number" metric
   &.show-total {
-    height: 100px;
+    border: 1px solid #bababa;
+    height: auto;
     margin: 0;
     padding: 0;
-    width: 100px;
+    width: auto;
+
     .chart-container {
       margin: 0;
       max-height: 100px;
@@ -271,10 +285,10 @@ const metricTotalColor = computed(() => `color: ${formattedDataset?.value[0]?.ba
     .chart-totals {
       align-items: center;
       display: flex;
-      height: 100%;
+      height: 100px;
       justify-content: center;
       position: absolute;
-      width: 100%;
+      width: 100px;
       z-index: 1;
 
       .chart-totals-flex {
@@ -284,7 +298,7 @@ const metricTotalColor = computed(() => `color: ${formattedDataset?.value[0]?.ba
         z-index: 2;
 
         .metric-large {
-          font-size: $font-size-xxl;
+          font-size: $font-size-xl;
           font-weight: 500;
         }
         .metric-small {

@@ -1,5 +1,5 @@
 import { ChartData, ChartDataset } from 'chart.js'
-import { ChartTypes } from '../enums'
+import { ChartTypes, ChartMetricDisplay } from '../enums'
 
 // Chart.js extendend interfaces
 export type Dataset = ChartDataset & { rawDimension: string, rawMetric?: string, total?: number, lineTension?: number, fill?: boolean }
@@ -61,6 +61,10 @@ export interface AnalyticsChartOptions {
    * Chart dataset color palette
    */
   chartDatasetColors?: AnalyticsChartColors | string[],
+  /**
+   *
+   */
+  metricDisplay?: ChartMetricDisplay,
   /**
    * Determines if a simplified version of the chart should be displayed
    */

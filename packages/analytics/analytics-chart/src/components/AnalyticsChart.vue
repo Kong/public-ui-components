@@ -88,6 +88,7 @@
         :fill="chartOptions.fill"
         :legend-position="legendPosition"
         :legend-values="legendValues"
+        :metric-display="chartOptions.metricDisplay"
         :metric-unit="computedMetricUnit"
         :show-total="chartOptions.showTotal"
         :synthetics-data-key="syntheticsDataKey"

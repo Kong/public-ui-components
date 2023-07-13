@@ -2,6 +2,7 @@
   <div class="sandbox-container">
     <h1> Analytics Charts</h1>
     <div class="flex-row-parent">
+      <!-- Chart type selector -->
       <div class="flex-vertical">
         <KLabel>
           Chart Type
@@ -59,6 +60,50 @@
           </div>
         </div>
       </div>
+
+      <!-- Metric display options (Doughnut chart specific at the moment) -->
+      <div
+        v-if="isDoughnutChart && showTotalToggle"
+        class="flex-vertical"
+      >
+        <KLabel>
+          Metric display
+        </KLabel>
+        <div class="chart-radio-group">
+          <div>
+            <KRadio
+              v-model="metricDisplay"
+              data-testid="service-radio-btn"
+              name="metricDisplay"
+              :selected-value="ChartMetricDisplay.Single"
+            >
+              {{ ChartMetricDisplay.Single }}
+            </KRadio>
+          </div>
+          <div>
+            <KRadio
+              v-model="metricDisplay"
+              data-testid="application-radio-btn"
+              name="metricDisplay"
+              :selected-value="ChartMetricDisplay.Full"
+            >
+              {{ ChartMetricDisplay.Full }}
+            </KRadio>
+          </div>
+          <div>
+            <KRadio
+              v-model="metricDisplay"
+              data-testid="route-radio-btn"
+              name="metricDisplay"
+              :selected-value="ChartMetricDisplay.Hidden"
+            >
+              {{ ChartMetricDisplay.Hidden }}
+            </KRadio>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legend position -->
       <div class="flex-vertical">
         <KLabel>
           Legend position
@@ -96,6 +141,7 @@
           </div>
         </div>
       </div>
+      <!-- Metric item selection -->
       <KSelect
         :items="metricItems"
         label="Metric"
@@ -137,6 +183,12 @@
           :label="multiDimensionToggle ? 'Multi Dimension' : 'Single Dimension'"
         />
       </div>
+      <div v-if="isDoughnutChart">
+        <KInputSwitch
+          v-model="showTotalToggle"
+          :label="showTotalToggle ? 'Show Totals' : 'Hide Totals'"
+        />
+      </div>
       <div v-if="chartType.includes('Line')">
         <KInputSwitch
           v-model="fillToggle"
@@ -149,7 +201,7 @@
           :label="stackToggle ? 'Stacked' : 'Not Stacked'"
         />
       </div>
-      <div v-if="!isTimeSeriesChart">
+      <div v-if="!isTimeSeriesChart && !isDoughnutChart">
         <KInputSwitch
           v-model="showAnnotationsToggle"
           :label="showAnnotationsToggle ? 'Show Annotations' : 'No Annotations'"
@@ -171,12 +223,6 @@
         <KInputSwitch
           v-model="showEmptyStateToggle"
           :label="showEmptyStateToggle ? 'No Data' : 'Chart Has Data'"
-        />
-      </div>
-      <div v-if="chartType.includes('Doughnut')">
-        <KInputSwitch
-          v-model="showTotalToggle"
-          :label="showTotalToggle ? 'Hide Totals' : 'Show Totals'"
         />
       </div>
     </div>
@@ -222,7 +268,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { AnalyticsChart, ChartLegendPosition, ChartTypes } from '../src'
+import { AnalyticsChart, ChartMetricDisplay, ChartLegendPosition, ChartTypes } from '../src'
 import type { AnalyticsExploreRecord, AnalyticsExploreV2Meta, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions } from '../src/types'
 import { SeededRandom } from './SeedRandom'
@@ -255,6 +301,7 @@ const showEmptyStateToggle = ref(false)
 const showTotalToggle = ref(false)
 const chartType = ref(ChartTypes.DOUGHNUT)
 const legendPosition = ref(ChartLegendPosition.Right)
+const metricDisplay = ref(ChartMetricDisplay.Single)
 const selectedMetric = ref< MetricSelection>({
   name: Metrics.TotalRequests,
   unit: 'count',
@@ -417,6 +464,7 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => ({
   fill: fillToggle.value,
   chartDatasetColors: showTotalToggle.value ? twoColorPalette.value : colorPalette.value,
   showTotal: showTotalToggle.value,
+  metricDisplay: metricDisplay.value,
 }))
 
 const randomizeData = () => {
@@ -444,6 +492,10 @@ watch(multiDimensionToggle, () => {
 
 const isTimeSeriesChart = computed<boolean>(() => {
   return [ChartTypes.TIMESERIES_BAR, ChartTypes.TIMESERIES_LINE].some(e => e === chartType.value)
+})
+
+const isDoughnutChart = computed<boolean>(() => {
+  return (ChartTypes.DOUGHNUT === chartType.value)
 })
 
 const onMetricSelected = (item: any) => {
