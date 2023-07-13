@@ -12,5 +12,8 @@
     <router-link to="/kong-manager-example">
       KM Example
     </router-link>
+    <router-link to="/page-header">
+      PageHeader
+    </router-link>
   </div>
 </template>

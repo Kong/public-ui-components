@@ -28,6 +28,11 @@ const router = createRouter({
       name: 'kong-manager-example',
       component: () => import('./pages/KongManagerLayoutExample.vue'),
     },
+    {
+      path: '/page-header',
+      name: 'page-header',
+      component: () => import('./pages/PageHeader.vue'),
+    },
   ],
 })
 
