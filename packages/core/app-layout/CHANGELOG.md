@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.19.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.18...@kong-ui-public/app-layout@0.19.19) (2023-07-13)
+
+
+### Bug Fixes
+
+* **app-layout:** add fix for ResizeObserver [KHCP-7734] ([#606](https://github.com/Kong/public-ui-components/issues/606)) ([16d8c2c](https://github.com/Kong/public-ui-components/commit/16d8c2ce012a5ab47023d770b2478a5ce6e9d34b))
+
+
+
+
+
 ## [0.19.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.17...@kong-ui-public/app-layout@0.19.18) (2023-07-12)
 
 
