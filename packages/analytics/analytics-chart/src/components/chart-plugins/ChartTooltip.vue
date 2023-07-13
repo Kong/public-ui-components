@@ -230,6 +230,10 @@ ul.tooltip {
     border-bottom: 1px solid $color-black-10;
   }
 
+  li:last-child {
+    padding-bottom: $spacing-xxs;
+  }
+
   .drag-icon {
     margin-top: $spacing-xxs;
     position: absolute;
