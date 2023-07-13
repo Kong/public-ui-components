@@ -256,12 +256,9 @@ const handleChartClick = () => {
   tooltipData.locked = !tooltipData.locked
 
   if (chartInstance.value) {
-    if (tooltipData.locked) {
-      verticalLinePlugin.clickedSegment = chartInstance.value.chart.tooltip?.dataPoints[0]
-    } else {
-      verticalLinePlugin.clickedSegment = undefined
-    }
-
+    verticalLinePlugin.clickedSegment = tooltipData.locked
+      ? chartInstance.value.chart.tooltip?.dataPoints[0]
+      : undefined
   }
 }
 

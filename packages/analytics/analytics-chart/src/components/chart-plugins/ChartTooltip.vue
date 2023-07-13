@@ -189,7 +189,7 @@ function handleMouseUp() {
   z-index: 999;
 
   &::-webkit-scrollbar-track {
-    background-color: var(--white);
+    background-color: var(--white, #FFFFFF);
     border-radius: 10px;
   }
 
