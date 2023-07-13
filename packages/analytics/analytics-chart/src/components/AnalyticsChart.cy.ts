@@ -1,5 +1,5 @@
 // Cypress component test spec file
-import { ChartTypes } from '../enums/chart-types.enum'
+import { ChartTypes, ChartMetricDisplay, ChartLegendPosition } from '../enums/'
 import AnalyticsChart from './AnalyticsChart.vue'
 import ChartTooltip from './chart-plugins/ChartTooltip.vue'
 import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
@@ -257,6 +257,42 @@ const exploreResult = {
     queryId: '12345',
     dimensions: {
       StatusCode: ['200', '300', '400', '500'],
+    },
+    metricNames: ['TotalRequests'],
+    metricUnits: {
+      TotalRequests: 'requests',
+    },
+    granularity: 3600000,
+    truncated: false,
+    limit: 10,
+  },
+}
+
+const exploreResultTruncated = {
+  records: [
+    {
+      version: '1.0',
+      timestamp: '2023-05-30T13:09:00.987Z',
+      event: {
+        StatusCode: '200',
+        TotalRequests: 255.49999999999997,
+      },
+    },
+    {
+      version: '1.0',
+      timestamp: '2023-05-30T13:09:00.987Z',
+      event: {
+        StatusCode: '300',
+        TotalRequests: 182.5,
+      },
+    },
+  ],
+  meta: {
+    start: 1685452140.987,
+    end: 1685473740.987,
+    queryId: '12346',
+    dimensions: {
+      StatusCode: ['200', '300'],
     },
     metricNames: ['TotalRequests'],
     metricUnits: {
@@ -706,4 +742,62 @@ describe('<AnalyticsChart />', () => {
     cy.get('[data-testid="no-data-in-report"] .k-empty-state-message').should('contain.text', emptyStateDescription)
   })
 
+  it('renders a Doughnut Metric chart with both values', () => {
+    cy.mount(AnalyticsChart, {
+      props: {
+        chartData: exploreResultTruncated,
+        chartOptions: {
+          type: ChartTypes.DOUGHNUT,
+          showTotal: true,
+          metricDisplay: ChartMetricDisplay.Full,
+        },
+        ctooltipTitle: 'Tooltip Title',
+        legendPosition: ChartLegendPosition.Right,
+      },
+    })
+
+    cy.get('[data-testid="doughnut-chart-metric"]').should('be.visible')
+    cy.get('[data-testid="doughnut-chart-total"]').should('be.visible')
+
+  })
+
+  it('renders a Doughnut Metric chart with only the large metric value', () => {
+    cy.mount(AnalyticsChart, {
+      props: {
+        chartData: exploreResultTruncated,
+        chartOptions: {
+          type: ChartTypes.DOUGHNUT,
+          showTotal: true,
+          metricDisplay: ChartMetricDisplay.Single,
+        },
+        chartTitle: 'Doughnut chart',
+        tooltipTitle: 'Tooltip Title',
+        showLegendValues: false,
+        legendPosition: ChartLegendPosition.Hidden,
+      },
+    })
+
+    cy.get('[data-testid="doughnut-chart-metric"]').should('be.visible')
+    cy.get('[data-testid="doughnut-chart-total"]').should('not.exist')
+  })
+
+  it('renders a Doughnut Metric chart with no centered text', () => {
+    cy.mount(AnalyticsChart, {
+      props: {
+        chartData: exploreResultTruncated,
+        chartOptions: {
+          type: ChartTypes.DOUGHNUT,
+          showTotal: true,
+          metricDisplay: ChartMetricDisplay.Hidden,
+        },
+        chartTitle: 'Doughnut chart',
+        tooltipTitle: 'Tooltip Title',
+        showLegendValues: false,
+        legendPosition: ChartLegendPosition.Hidden,
+      },
+    })
+
+    cy.get('[data-testid="doughnut-chart-metric"]').should('not.exist')
+    cy.get('[data-testid="doughnut-chart-total"]').should('not.exist')
+  })
 })

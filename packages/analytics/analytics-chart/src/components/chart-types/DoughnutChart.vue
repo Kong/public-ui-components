@@ -12,6 +12,7 @@
         <div
           v-if="showMetricLarge"
           class="metric-large"
+          data-testid="doughnut-chart-metric"
           :style="metricHighlightColor"
         >
           {{ metricHighlight }}
@@ -19,6 +20,7 @@
         <div
           v-if="showMetricSmall"
           class="metric-small"
+          data-testid="doughnut-chart-total"
         >
           {{ i18n.t('total') }}: {{ metricTotal }}
         </div>
