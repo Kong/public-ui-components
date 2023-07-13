@@ -60,7 +60,7 @@
     "rimraf": "^5.0.1",
     "rollup-plugin-visualizer": "^5.9.2",
     "sass": "^1.63.4",
-    "stylelint": "^14.16.1",
+    "stylelint": "^15.9.0",
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-recommended-scss": "^8.0.0",
     "stylelint-config-recommended-vue": "^1.4.0",
