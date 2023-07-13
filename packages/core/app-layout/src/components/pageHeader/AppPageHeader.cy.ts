@@ -50,8 +50,8 @@ describe('<AppPageHeader />', () => {
     cy.getTestId('page-header-title-badge').should('contain.text', badgeText)
     cy.getTestId('page-header-actions').should('be.visible')
     cy.getTestId('page-header-actions').should('contain.text', actionsText)
-    cy.getTestId('page-header-below-section').should('be.visible')
-    cy.getTestId('page-header-below-section').should('contain.text', belowText)
+    cy.getTestId('page-header-section-below').should('be.visible')
+    cy.getTestId('page-header-section-below').should('contain.text', belowText)
   })
 
   it('should not render empty props/slots', () => {
@@ -68,6 +68,6 @@ describe('<AppPageHeader />', () => {
     cy.getTestId('page-header-title-icon').should('not.exist')
     cy.getTestId('page-header-title-badge').should('not.exist')
     cy.getTestId('page-header-actions').should('not.exist')
-    cy.getTestId('page-header-below-section').should('not.exist')
+    cy.getTestId('page-header-section-below').should('not.exist')
   })
 })
