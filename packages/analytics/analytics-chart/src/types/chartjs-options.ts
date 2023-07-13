@@ -12,7 +12,8 @@ export interface TooltipState {
   offset: number,
   width: number,
   height: number
-  chartType: ChartTypes
+  chartType: ChartTypes,
+  locked?: boolean,
 }
 
 interface BaseChartOptions {

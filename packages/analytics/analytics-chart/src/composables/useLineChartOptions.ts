@@ -60,7 +60,7 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
 
   Tooltip.positioners.lineChartTooltipPosition = function(elements, position) {
     // Happens when nothing is found
-    if (!elements.length) {
+    if (!elements.length || chartOptions.tooltipState.locked) {
       return false
     }
 
