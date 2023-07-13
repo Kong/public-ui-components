@@ -241,12 +241,19 @@ onMounted(() => {
   const notificationContainer = document?.querySelector('.kong-ui-app-layout #kong-ui-app-layout-notification')
   if (notificationContainer) {
     resizeObserver.value = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const height = entry.contentRect.height
-        if (notificationHeight.value !== height) {
-          notificationHeight.value = height
+      // Wrapper 'window.requestAnimationFrame' is needed for disabling "ResizeObserver loop limit exceeded" error in DD
+      window.requestAnimationFrame(() => {
+        if (!Array.isArray(entries) || !entries.length) {
+          return
         }
-      }
+        // Actual code
+        for (const entry of entries) {
+          const height = entry.contentRect.height
+          if (notificationHeight.value !== height) {
+            notificationHeight.value = height
+          }
+        }
+      })
     })
     resizeObserver.value.observe(notificationContainer)
   }

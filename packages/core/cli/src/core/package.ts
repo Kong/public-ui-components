@@ -5,7 +5,7 @@ import { sleep, packagePath, pascalCase, packageTemplatePath, getTemplateFileLis
 import { createSpinner, Spinner } from 'nanospinner'
 import pc from 'picocolors'
 import boxen from 'boxen'
-import emoji from 'node-emoji'
+import * as emoji from 'node-emoji'
 import inquirer, { Answers } from 'inquirer'
 import questions from '../questions'
 

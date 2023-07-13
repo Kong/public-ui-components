@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.7.3...@kong-ui-public/swagger-ui-web-component@0.8.0) (2023-07-12)
+
+
+### Features
+
+* **spec-renderer:** update package to have style fixes for responses ([#605](https://github.com/Kong/public-ui-components/issues/605)) ([eccc7b5](https://github.com/Kong/public-ui-components/commit/eccc7b527b5b97fb544e699dec8c0a3e13d9772a))
+
+
+
+
+
 ## [0.7.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.7.2...@kong-ui-public/swagger-ui-web-component@0.7.3) (2023-06-29)
 
 **Note:** Version bump only for package @kong-ui-public/swagger-ui-web-component
