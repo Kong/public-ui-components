@@ -302,7 +302,7 @@ const showTotalToggle = ref(false)
 const chartType = ref(ChartTypes.DOUGHNUT)
 const legendPosition = ref(ChartLegendPosition.Right)
 const metricDisplay = ref(ChartMetricDisplay.Single)
-const selectedMetric = ref< MetricSelection>({
+const selectedMetric = ref<MetricSelection>({
   name: Metrics.TotalRequests,
   unit: 'count',
 })
@@ -321,9 +321,12 @@ const metricItems = [{
   value: Metrics.ResponseSizeP99,
   unit: 'bytes',
 }]
-const statusCodeDimensionValues = ref(new Set([
+
+const statusCodeLabels = [
   '200', '300', '400', '500', 'This is a really long chart label to test long labels',
-]))
+]
+const statusCodeDimensionValues = ref(new Set(statusCodeLabels))
+
 const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',
 ]))
@@ -442,7 +445,11 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
   }
 
   return {
-    records: showTotalToggle.value ? records.slice(0, 2) : records,
+    // Doughnut Metric chart type is denoted by showTotalToggle, and
+    records: !showTotalToggle.value
+      ? records
+      // @ts-ignore - merely sorting the array for display purposes
+      : records.slice(0, 2).sort((a, b) => (a[selectedMetric.value.name] < b[selectedMetric.value.name])),
     meta,
   }
 })
@@ -450,8 +457,8 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
 const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {}))
 
 const twoColorPalette = ref<AnalyticsChartColors>({
-  200: '#9edca6',
-  300: '#bbb',
+  200: '#008871',
+  300: '#9edca6',
 })
 
 const updateSelectedColor = (event: Event, label: string) => {
@@ -488,6 +495,13 @@ watch(multiDimensionToggle, () => {
   statusCodeDimensionValues.value = new Set(Array(5).fill(0).map(() => `${rand(100, 599)}`))
 
   colorPalette.value = [...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {})
+})
+
+watch(showTotalToggle, () => {
+  // Truncate labels if Doughnut Metric chart type
+  if (showTotalToggle.value) {
+    statusCodeDimensionValues.value = new Set(statusCodeLabels.slice(0, 2))
+  }
 })
 
 const isTimeSeriesChart = computed<boolean>(() => {

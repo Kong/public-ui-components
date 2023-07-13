@@ -19,9 +19,8 @@
         <div
           v-if="showMetricSmall"
           class="metric-small"
-          :style="metricTotalColor"
         >
-          {{ metricTotal }}
+          {{ i18n.t('total') }}: {{ metricTotal }}
         </div>
       </div>
     </div>
@@ -201,7 +200,7 @@ const formattedDataset = computed<DoughnutChartData[]>(() => {
   const formatted = props.chartData.datasets.reduce((acc: any, current: ChartDataset) => {
     acc.labels.push(current.label)
 
-    // Simplified "big number" doughnut has no segment border
+    // Doughnut Metric chart should have no segment border
     props.showTotal
       ? acc.borderColor.push(current.backgroundColor)
       : acc.borderColor.push(darkenColor((current.backgroundColor as string), 50))
@@ -255,7 +254,6 @@ const metricHighlight = computed(() => approxNum(formattedDataset?.value[0]?.dat
 const metricTotal = computed(() => approxNum(formattedDataset?.value[0]?.data[0] + formattedDataset?.value[0]?.data[1], { capital: true }))
 
 const metricHighlightColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[0]}`)
-const metricTotalColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[1]}`)
 
 // Conditionally show large or small metric value, or neither
 const showMetricLarge = computed(() => [ChartMetricDisplay.Full, ChartMetricDisplay.Single].includes(metricDisplayRef.value))
@@ -298,11 +296,12 @@ const showMetricSmall = computed(() => metricDisplayRef.value === ChartMetricDis
         z-index: 2;
 
         .metric-large {
-          font-size: $font-size-xl;
+          font-size: 23px;
           font-weight: 500;
         }
         .metric-small {
-          font-size: $font-size-sm;
+          color: var(--grey-500, #6F7787);
+          font-size: 9px;
           font-weight: 400;
         }
       }
