@@ -3,6 +3,7 @@
     v-if="showTooltip"
     ref="tooltipEl"
     class="tooltip-container"
+    :class="{ 'locked': locked }"
     :style="{ left: locked ? dragPosition.left : left, top: locked ? dragPosition.top : top, pointerEvents: locked ? 'all' : 'none' }"
     @mousedown="handleMouseDown"
   >
@@ -176,10 +177,14 @@ function handleMouseUp() {
 
 <style lang="scss" scoped>
 @import '../../styles/base';
+
+.locked {
+  cursor: pointer;
+}
 .tooltip-container {
   background-color: $color-white;
   border-radius: 3px;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.12), 0 1px 5px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.24);
   max-width: 425px;
   min-width: 250px;
   overflow-y: scroll;
