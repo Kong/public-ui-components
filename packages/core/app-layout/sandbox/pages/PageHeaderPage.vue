@@ -4,14 +4,14 @@
       :breadcrumbs="breadcrumbs"
       title="Cats are Cool"
     >
-      <template #title-icon>
+      <template #icon>
         <KIcon
           color="#169fcc"
           icon="graduationHat"
           size="20"
         />
       </template>
-      <template #title-badge>
+      <template #badge>
         <KBadge appearance="info">
           TRUTH
         </KBadge>
@@ -31,6 +31,12 @@
           >
             Do Things
           </KButton>
+        </div>
+      </template>
+
+      <template #below>
+        <div>
+          Cats are a key part of a balanced day (except when walking down stairs)
         </div>
       </template>
     </PageHeader>

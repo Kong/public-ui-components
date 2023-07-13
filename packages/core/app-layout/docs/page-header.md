@@ -1,4 +1,4 @@
-# PageHeader.vue
+# AppPageHeader.vue
 
 A Kong UI dynamic page header component.
 
@@ -31,16 +31,36 @@ A Kong UI dynamic page header component.
 #### `title`
 
 - type: `String`
-- required: `false`
+- required: `true`
 - default: `''`
 
 The title text of the page.
 
+#### `breadcrumbs`
+
+- type: Array as PropType<BreadcrumbItem[]>
+- required: `false`
+- default: `[]`
+
+Breadcrumb object to be passed into `KBreadcrumb`.
+
 ### Slots
 
-#### `center`
+#### `icon`
 
-The main slot to use for navbar content if you don't need a left/center/right navbar layout.
+Content displayed right before the title text, typically an icon.
+
+#### `badge`
+
+Content displayed right after the title text, typically a badge.
+
+#### `actions`
+
+Content displayed opposite the title, typically an action menu.
+
+#### `below`
+
+Content displayed directly below the title.
 
 ---
 
