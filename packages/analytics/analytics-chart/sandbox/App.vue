@@ -458,7 +458,6 @@ body {
   min-height: 100%;
 }
 .sandbox-container {
-  min-height: 540px;
   margin: $spacing-md;
   padding: $spacing-md;
 

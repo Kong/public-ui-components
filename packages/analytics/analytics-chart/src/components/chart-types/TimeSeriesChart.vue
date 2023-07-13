@@ -58,6 +58,7 @@ import { reactive, ref, computed, toRef, PropType, inject } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import { verticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
+import { highlightPlugin } from '../chart-plugins/HighlightPlugin'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
 import {
@@ -198,7 +199,7 @@ const htmlLegendPlugin = {
   },
 }
 
-const plugins = computed(() => [htmlLegendPlugin, ...(props.type === ChartTypes.TIMESERIES_LINE ? [verticalLinePlugin] : [])])
+const plugins = computed(() => [htmlLegendPlugin, highlightPlugin, ...(props.type === ChartTypes.TIMESERIES_LINE ? [verticalLinePlugin] : [])])
 
 const { options } = composables.useLinechartOptions({
   tooltipState: tooltipData,
