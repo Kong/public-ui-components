@@ -1,5 +1,4 @@
 import { Chart, ChartEvent, InteractionItem, Plugin } from 'chart.js'
-import { darkenColor, enhanceColor } from '../../utils'
 
 interface HighlightPlugin extends Plugin {
   clickedElements?: InteractionItem[]

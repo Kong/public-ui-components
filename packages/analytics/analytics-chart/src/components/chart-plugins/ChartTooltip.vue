@@ -12,6 +12,11 @@
     >
       <li class="tooltip-title">
         <span class="title font-bold">{{ tooltipTitle }}</span>
+        <KIcon
+          v-if="locked"
+          class="drag-icon"
+          icon="drag"
+        />
         <span
           v-if="context"
           class="subtitle"
@@ -179,7 +184,7 @@ function handleMouseUp() {
 @import '../../styles/base';
 
 .locked {
-  cursor: pointer;
+  cursor: move;
 }
 .tooltip-container {
   background-color: $color-white;
@@ -223,6 +228,13 @@ ul.tooltip {
 
   li:first-child {
     border-bottom: 1px solid $color-black-10;
+  }
+
+  .drag-icon {
+    margin-top: $spacing-xxs;
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 
   .tooltip-title {
