@@ -78,6 +78,7 @@ const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs.length)
 <style lang="scss" scoped>
 .kong-ui-app-page-header {
   .page-header-title-section {
+    align-items: center;
     display: flex;
     justify-content: space-between;
 
@@ -86,7 +87,7 @@ const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs.length)
       display: flex;
 
       .page-header-title-icon {
-        margin-right: $kui-space-20;
+        margin-right: $kui-space-40;
       }
 
       .page-header-title-badge {
@@ -95,9 +96,12 @@ const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs.length)
       }
 
       .page-header-title {
-        color: #0B172D;  /** black-500 */
+        color: $kui-color-text;
         font-size: $kui-font-size-70;
-        margin: $kui-space-60 $kui-space-0;
+        font-weight: $kui-font-weight-bold;
+        letter-spacing: -0.48px;
+        line-height: $kui-line-height-60;
+        margin: $kui-space-0;
         /** truncation */
         overflow: hidden;
         text-overflow: ellipsis;
@@ -108,6 +112,10 @@ const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs.length)
 
   .page-header-section-below {
     width: 100%;
+  }
+
+  :deep(.k-breadcrumbs) {
+    margin-bottom: $kui-space-0;
   }
 }
 </style>
