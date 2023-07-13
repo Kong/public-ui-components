@@ -18,7 +18,7 @@
     "boxen": "^7.1.0",
     "inquirer": "^9.2.7",
     "nanospinner": "^1.1.0",
-    "node-emoji": "^1.11.0",
+    "node-emoji": "^2.1.0",
     "picocolors": "^1.0.0"
   },
   "repository": {
