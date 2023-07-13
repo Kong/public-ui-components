@@ -84,8 +84,8 @@ const dataTestId = computed((): string => props.title ? `page-title-${props.titl
     justify-content: space-between;
 
     .page-title-wrapper {
-      display: flex;
       align-items: baseline;
+      display: flex;
 
       .page-title-icon {
         margin-right: var(--spacing-xs, 4px);
