@@ -246,7 +246,7 @@ const multiDimensionToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const showEmptyStateToggle = ref(false)
-const chartType = ref(ChartTypes.DOUGHNUT)
+const chartType = ref(ChartTypes.TIMESERIES_LINE)
 const legendPosition = ref(ChartLegendPosition.Right)
 const selectedMetric = ref< MetricSelection>({
   name: Metrics.TotalRequests,
@@ -458,7 +458,6 @@ body {
   min-height: 100%;
 }
 .sandbox-container {
-  min-height: 540px;
   margin: $spacing-md;
   padding: $spacing-md;
 
