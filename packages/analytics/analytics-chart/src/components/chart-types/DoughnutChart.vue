@@ -299,11 +299,13 @@ const showMetricSmall = computed(() => metricDisplayRef.value === ChartMetricDis
         .metric-large {
           font-size: 23px;
           font-weight: 500;
+          line-height: 23px;
         }
         .metric-small {
           color: var(--grey-500, #6F7787);
           font-size: 9px;
           font-weight: 400;
+          line-height: 9px;
         }
       }
     }
