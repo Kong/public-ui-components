@@ -87,11 +87,11 @@ const escapeUnsafeCharacters = (unescapedCodeString: string): string => {
 const codeBlockKey = computed(() => `document-code-block-${props.codeBlockIndex}`)
 
 const stringifiedCode = computed(() => {
-  const code = props.lines.flatMap(line => line.text).join('')
+  const code = props.lines?.flatMap(line => line.text).join('')
 
   // To remove an extra line at the end, in the case that
   // someone leaves that in their markdown.
-  if (code.endsWith('\n') && !props.isSingleLine) {
+  if (code && code.endsWith('\n') && !props.isSingleLine) {
     return code.slice(0, -1)
   }
 
