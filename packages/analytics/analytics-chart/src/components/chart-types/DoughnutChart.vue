@@ -269,7 +269,6 @@ const showMetricSmall = computed(() => metricDisplayRef.value === ChartMetricDis
 .chart-parent {
   // MA-1850 Custom styling for "big number" metric
   &.show-total {
-    border: 1px solid #bababa;
     height: auto;
     margin: 0;
     padding: 0;
