@@ -2,7 +2,7 @@
   <div class="sandbox-container">
     <h1> Analytics Charts</h1>
     <div class="flex-row-parent">
-      <!-- Chart type selector -->
+      <!-- AnalyticsChart / SimpleChart type selector -->
       <div class="flex-vertical">
         <KLabel>
           Chart Type
@@ -58,12 +58,22 @@
               Doughnut
             </KRadio>
           </div>
+          <div>
+            <KRadio
+              v-model="chartType"
+              data-testid="application-radio-btn"
+              name="chartType"
+              :selected-value="ChartTypesSimple.GAUGE"
+            >
+              Gauge
+            </KRadio>
+          </div>
         </div>
       </div>
 
       <!-- Metric display options (Doughnut chart specific at the moment) -->
       <div
-        v-if="isDoughnutChart && showTotalToggle"
+        v-if="isGaugeChart"
         class="flex-vertical"
       >
         <KLabel>
@@ -149,7 +159,10 @@
         @selected="onMetricSelected"
       />
     </div>
+
+    <!-- Determine if a full blown chart is to be displayed, or a simplified one -->
     <AnalyticsChart
+      v-if="!isSimpleChart"
       :chart-data="exploreResult"
       :chart-options="analyticsChartOptions"
       chart-title="Request count by Status Code"
@@ -158,6 +171,14 @@
       :show-legend-values="showLegendValuesToggle"
       tooltip-title="tooltip title"
     />
+    <SimpleChart
+      v-else
+      :chart-data="exploreResult"
+      :chart-options="analyticsChartOptions"
+      :legend-position="legendPosition"
+    />
+
+    <!-- Dataset options -->
     <div class="d-flex flex-row">
       <KButton
         appearance="outline"
@@ -173,20 +194,20 @@
         Add dataset
       </KButton>
     </div>
+
     <div class="option-toggles">
       <KLabel>
         Option toggles
       </KLabel>
+      <div>
+        <pre>
+          chartType=[{{ chartType }}]
+        </pre>
+      </div>
       <div v-if="!chartType.includes('TimeSeries')">
         <KInputSwitch
           v-model="multiDimensionToggle"
           :label="multiDimensionToggle ? 'Multi Dimension' : 'Single Dimension'"
-        />
-      </div>
-      <div v-if="isDoughnutChart">
-        <KInputSwitch
-          v-model="showTotalToggle"
-          :label="showTotalToggle ? 'Show Totals' : 'Hide Totals'"
         />
       </div>
       <div v-if="chartType.includes('Line')">
@@ -201,7 +222,7 @@
           :label="stackToggle ? 'Stacked' : 'Not Stacked'"
         />
       </div>
-      <div v-if="!isTimeSeriesChart && !isDoughnutChart">
+      <div v-if="!isTimeSeriesChart && !isSimpleChart">
         <KInputSwitch
           v-model="showAnnotationsToggle"
           :label="showAnnotationsToggle ? 'Show Annotations' : 'No Annotations'"
@@ -268,7 +289,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { AnalyticsChart, ChartMetricDisplay, ChartLegendPosition, ChartTypes } from '../src'
+import { AnalyticsChart, ChartMetricDisplay, ChartLegendPosition, ChartTypes, ChartTypesSimple, SimpleChart } from '../src'
 import type { AnalyticsExploreRecord, AnalyticsExploreV2Meta, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions } from '../src/types'
 import { SeededRandom } from './SeedRandom'
@@ -298,8 +319,7 @@ const multiDimensionToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const showEmptyStateToggle = ref(false)
-const showTotalToggle = ref(false)
-const chartType = ref(ChartTypes.DOUGHNUT)
+const chartType = ref(ChartTypesSimple.GAUGE)
 const legendPosition = ref(ChartLegendPosition.Right)
 const metricDisplay = ref(ChartMetricDisplay.Single)
 const selectedMetric = ref<MetricSelection>({
@@ -445,8 +465,8 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
   }
 
   return {
-    // Doughnut Metric chart type is denoted by showTotalToggle, and
-    records: !showTotalToggle.value
+    // Gauge doughnut chart type should only receive 2 data points
+    records: !isGaugeChart.value
       ? records
       // @ts-ignore - merely sorting the array for display purposes
       : records.slice(0, 2).sort((a, b) => (a[selectedMetric.value.name] < b[selectedMetric.value.name])),
@@ -469,8 +489,8 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => ({
   type: chartType.value,
   stacked: stackToggle.value,
   fill: fillToggle.value,
-  chartDatasetColors: showTotalToggle.value ? twoColorPalette.value : colorPalette.value,
-  showTotal: showTotalToggle.value,
+  chartDatasetColors: isGaugeChart.value ? twoColorPalette.value : colorPalette.value,
+  isSimple: isSimpleChart.value,
   metricDisplay: metricDisplay.value,
 }))
 
@@ -490,26 +510,16 @@ const addDataset = () => {
 const dataCode = computed(() => JSON.stringify(exploreResult.value, null, 2))
 const optionsCode = computed(() => JSON.stringify(analyticsChartOptions.value, null, 2))
 
-watch(multiDimensionToggle, () => {
-  serviceDimensionValues.value = new Set(Array(5).fill(0).map(() => `Service${rand(1, 100)}`))
-  statusCodeDimensionValues.value = new Set(Array(5).fill(0).map(() => `${rand(100, 599)}`))
-
-  colorPalette.value = [...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {})
-})
-
-watch(showTotalToggle, () => {
-  // Truncate labels if Doughnut Metric chart type
-  if (showTotalToggle.value) {
-    statusCodeDimensionValues.value = new Set(statusCodeLabels.slice(0, 2))
-  }
-})
-
 const isTimeSeriesChart = computed<boolean>(() => {
   return [ChartTypes.TIMESERIES_BAR, ChartTypes.TIMESERIES_LINE].some(e => e === chartType.value)
 })
 
-const isDoughnutChart = computed<boolean>(() => {
-  return (ChartTypes.DOUGHNUT === chartType.value)
+const isSimpleChart = computed<boolean>(() => {
+  return [ChartTypesSimple.GAUGE].some(e => e === chartType.value)
+})
+
+const isGaugeChart = computed<boolean>(() => {
+  return (ChartTypesSimple.GAUGE === chartType.value)
 })
 
 const onMetricSelected = (item: any) => {
@@ -522,6 +532,20 @@ const onMetricSelected = (item: any) => {
     unit: item.unit,
   }
 }
+
+watch(multiDimensionToggle, () => {
+  serviceDimensionValues.value = new Set(Array(5).fill(0).map(() => `Service${rand(1, 100)}`))
+  statusCodeDimensionValues.value = new Set(Array(5).fill(0).map(() => `${rand(100, 599)}`))
+
+  colorPalette.value = [...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {})
+})
+
+watch(isGaugeChart, () => {
+  // Truncate labels if Gauge (simplified doughnut) chart type
+  if (isGaugeChart.value) {
+    statusCodeDimensionValues.value = new Set(statusCodeLabels.slice(0, 2))
+  }
+})
 
 </script>
 
@@ -537,9 +561,12 @@ body {
   min-height: 100%;
 }
 .sandbox-container {
-  margin: $spacing-md;
+  margin: 0;
   padding: $spacing-md;
 
+  h1 {
+    margin-top: 0;
+  }
   @media (max-width: 767px) {
     min-height: 300px;
     width: 100%;
@@ -556,7 +583,7 @@ body {
   .flex-row-parent {
     display: flex;
     flex-direction: row;
-    gap: 16px;
+    gap: 24px;
   }
 
   .config-container {

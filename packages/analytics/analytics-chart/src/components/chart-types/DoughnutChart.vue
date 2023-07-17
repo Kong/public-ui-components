@@ -1,11 +1,11 @@
 <template>
   <div
     class="chart-parent"
-    :class="[ chartFlexClass, { 'show-total': showTotal } ]"
+    :class="[ chartFlexClass, { 'show-total': isSimple } ]"
     data-testid="doughnut-chart-parent"
   >
     <div
-      v-if="showTotal"
+      v-if="isSimple"
       class="chart-totals"
     >
       <div class="chart-totals-flex">
@@ -92,9 +92,15 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  isSimple: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
   tooltipTitle: {
     type: String,
-    required: true,
+    required: false,
+    default: null,
   },
   metricUnit: {
     type: String,
@@ -120,11 +126,6 @@ const props = defineProps({
     type: String as PropType<ChartMetricDisplay>,
     required: false,
     default: ChartMetricDisplay.Hidden,
-  },
-  showTotal: {
-    type: Boolean,
-    required: false,
-    default: false,
   },
   syntheticsDataKey: {
     type: String,
@@ -197,13 +198,12 @@ const htmlLegendPlugin = {
 
 // Flatten the datasets into a single element array, since we only want to
 // display a single dataset containing dimension totals in our Doughnut chart.
-// If a simplified `showTotal` Donut Metric chart, we expect a dataset of size = 2.
 const formattedDataset = computed<DoughnutChartData[]>(() => {
   const formatted = props.chartData.datasets.reduce((acc: any, current: ChartDataset) => {
     acc.labels.push(current.label)
 
     // Doughnut Metric chart should have no segment border
-    props.showTotal
+    props.isSimple
       ? acc.borderColor.push(current.backgroundColor)
       : acc.borderColor.push(darkenColor((current.backgroundColor as string), 50))
 
@@ -229,7 +229,7 @@ const { options } = composables.useDoughnutChartOptions({
   tooltipState: tooltipData,
   timeRange: toRef(props, 'timeRange'),
   legendID: legendID.value,
-  showTotal: toRef(props, 'showTotal'),
+  isSimple: toRef(props, 'isSimple'),
 })
 
 const chartInstance = ref<Chart>()
@@ -267,7 +267,7 @@ const showMetricSmall = computed(() => metricDisplayRef.value === ChartMetricDis
 @import '../../styles/chart';
 
 .chart-parent {
-  // MA-1850 Custom styling for "big number" metric
+  // MA-1850 Custom styling for Gauge chart
   &.show-total {
     height: auto;
     margin: 0;
@@ -286,6 +286,7 @@ const showMetricSmall = computed(() => metricDisplayRef.value === ChartMetricDis
       display: flex;
       height: 100px;
       justify-content: center;
+      padding: 25px 0 0;
       position: absolute;
       width: 100px;
       z-index: 1;

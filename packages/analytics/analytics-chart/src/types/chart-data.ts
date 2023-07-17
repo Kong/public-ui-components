@@ -1,5 +1,5 @@
 import { ChartData, ChartDataset } from 'chart.js'
-import { ChartTypes, ChartMetricDisplay } from '../enums'
+import { ChartTypes, ChartMetricDisplay, ChartTypesSimple } from '../enums'
 
 // Chart.js extendend interfaces
 export type Dataset = ChartDataset & { rawDimension: string, rawMetric?: string, total?: number, lineTension?: number, fill?: boolean }
@@ -34,7 +34,7 @@ export interface AnalyticsChartOptions {
   /**
    * Chart type
    */
-  type: ChartTypes
+  type: ChartTypes | ChartTypesSimple
   /**
    * Are the datasets stacked or not.
    * If stacked, the datasets are stacked on top of each other
@@ -68,7 +68,7 @@ export interface AnalyticsChartOptions {
   /**
    * Determines if a simplified version of the chart should be displayed
    */
-  showTotal?: boolean,
+  isSimple?: boolean,
 }
 
 export interface LegendValueEntry {
