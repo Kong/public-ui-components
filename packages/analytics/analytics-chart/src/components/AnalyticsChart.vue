@@ -310,6 +310,7 @@ provide('legendPosition', legendPositionRef)
 
 <style lang="scss" scoped>
 @import '../styles/base';
+@import '../styles/chart-shell';
 
 .tooltip {
   display: flex;
@@ -320,32 +321,6 @@ provide('legendPosition', legendPositionRef)
 .limit-icon-wrapper {
   display: flex;
   flex-direction: row;
-}
-
-.analytics-chart-shell {
-  border: 1px solid var(--grey-300,  #E7E7EC);
-  border-radius: 3px;
-  display: flex;
-  flex-direction: column;
-  margin: $spacing-md;
-  padding: $spacing-md;
-
-  .chart-title {
-    font-size: $font-size-lg;
-  }
-
-  .chart-header {
-    display: flex;
-    padding-bottom: $spacing-md;
-  }
-
-  .chart-empty-state {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: center;
-    padding: $spacing-lg 0 $spacing-md 0;
-  }
 }
 
 </style>
