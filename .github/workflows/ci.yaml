@@ -69,6 +69,40 @@ jobs:
         with:
           pathspec: pnpm-lock.yaml
 
+      - name: Verify no packages are in the wrong scope and have the correct publishConfig.access
+        run: |
+          # Verify no packages are in the wrong scope and have the correct publishConfig.access
+
+          # Utilize the lerna command to determine the packages that were added/updated
+          # we execute lerna changed to grab all the packages changed
+          lernaCommand="changed"
+
+          # if lock-changed detects the change of pnpm-lock.yaml file - we will grap all the packages
+          if [[ "${{ steps.lock-changed.outputs.changed }}" == "true" ]]; then
+            lernaCommand="ls"
+          fi
+
+          echo "lernaCommand: ${lernaCommand}"
+
+          # Verify no packages exist from the `@kong-ui` scope; if yes, then exit with error
+          for packageLocation in $(pnpm --silent lerna ${lernaCommand} --l --json | jq -r '.[].location')
+          do
+            packageName=$(jq -r '.name' "$packageLocation"/package.json)
+            publishConfigAccess=$(jq -r '.publishConfig.access' "$packageLocation"/package.json)
+
+            # Check if package.json name contains the wrong scope
+            if [[ "$packageName" == *"@kong-ui/"* ]]; then
+              echo "::error::The '""$packageName""' package.json contains an incorrect npm scope '""@kong-ui""'. This repository requires packages to have the npm scope of '""@kong-ui-public""'."
+              exit 1
+            fi
+
+            # Check if the package.json publishConfig.access is incorrect for this repo
+            if [[ "$publishConfigAccess" != "public" ]]; then
+              echo "::error::The '""$packageName""' package.json contains the publishConfig.access of '""$publishConfigAccess""'. This repository requires packages to have a publishConfig.access of '""public""'."
+              exit 1
+            fi
+          done
+
       - name: Getting changed packages
         id: changed_packages
         run: |
