@@ -71,7 +71,7 @@
         </div>
       </div>
 
-      <!-- Metric display options (Doughnut chart specific at the moment) -->
+      <!-- Metric display options (Gauge chart-specific) -->
       <div
         v-if="isGaugeChart"
         class="flex-vertical"
