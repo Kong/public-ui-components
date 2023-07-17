@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.6.0...@kong-ui-public/cli@0.6.1) (2023-07-14)
+
+
+### Bug Fixes
+
+* **cli:** update node-emoji usage ([0ceb47f](https://github.com/Kong/public-ui-components/commit/0ceb47fae4e5bf26acca5c532f5002f0018b8df5))
+
+
+
+
+
 # [0.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@0.5.2...@kong-ui-public/cli@0.6.0) (2023-07-12)
 
 

@@ -3,13 +3,20 @@
     v-if="showTooltip"
     ref="tooltipEl"
     class="tooltip-container"
-    :style="{ left, top }"
+    :class="{ 'locked': locked }"
+    :style="{ left: locked ? dragPosition.left : left, top: locked ? dragPosition.top : top, pointerEvents: locked ? 'all' : 'none' }"
+    @mousedown="handleMouseDown"
   >
     <ul
       class="tooltip"
     >
       <li class="tooltip-title">
         <span class="title font-bold">{{ tooltipTitle }}</span>
+        <KIcon
+          v-if="locked"
+          class="drag-icon"
+          icon="drag"
+        />
         <span
           v-if="context"
           class="subtitle"
@@ -35,9 +42,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
-const emit = defineEmits(['dimensions'])
+const emit = defineEmits(['dimensions', 'top', 'left'])
 
-defineProps({
+const props = defineProps({
   showTooltip: {
     type: Boolean,
     required: true,
@@ -84,9 +91,21 @@ defineProps({
     required: true,
     default: () => [],
   },
+  /**
+   * Is the tooltip locked
+   */
+  locked: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 
 const tooltipEl = ref<HTMLElement | null>(null)
+const dragging = ref(false)
+const dragStartPosition = ref({ x: 0, y: 0 })
+const dragMouseStartPosition = ref({ x: 0, y: 0 })
+const dragPosition = ref({ left: props.left, top: props.top })
 
 watch(tooltipEl, value => {
   if (value) {
@@ -95,25 +114,109 @@ watch(tooltipEl, value => {
     emit('dimensions', { width, height })
   }
 })
+
+watch(() => props.locked, value => {
+  if (value) {
+    dragPosition.value.left = props.left
+    dragPosition.value.top = props.top
+  } else if (value === false) {
+    emit('top', dragPosition.value.top)
+    emit('left', dragPosition.value.left)
+  }
+})
+
+function handleMouseDown(e: MouseEvent) {
+  if (tooltipEl.value) {
+    dragging.value = true
+    dragStartPosition.value = { x: tooltipEl.value.offsetLeft, y: tooltipEl.value.offsetTop }
+    dragMouseStartPosition.value = { x: e.clientX, y: e.clientY }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mouseup', handleMouseUp)
+  }
+}
+
+let animationFrameId: number | null = null
+
+/**
+ * Mousemove events fire at a high rate which cause performance issues with Vue.js reactivity system,
+ * leading to slow/choppy animation when dragging.
+ *
+ * In order to ensure that the tooltip position is updated only once per frame, use the requestAnimationFrame method
+ * to schedule the update. The requestAnimationFrame method tells the browser to perform an animation
+ * and requests that the browser call a specified function to update an animation before the next repaint.
+ *
+ * If the function is called multiple times before the next repaint (which could happen with mousemove events),
+ * the previous frame is cancelled and the latest frame is requested.
+ */
+function handleMouseMove(e: MouseEvent) {
+  e.preventDefault()
+  e.stopPropagation()
+  if (dragging.value) {
+
+    if (animationFrameId !== null) {
+      window.cancelAnimationFrame(animationFrameId)
+    }
+
+    animationFrameId = window.requestAnimationFrame(() => {
+      const dx = e.clientX - dragMouseStartPosition.value.x
+      const dy = e.clientY - dragMouseStartPosition.value.y
+
+      dragPosition.value.left = `${dragStartPosition.value.x + dx}px`
+      dragPosition.value.top = `${dragStartPosition.value.y + dy}px`
+    })
+  }
+}
+
+function handleMouseUp() {
+  dragging.value = false
+  if (animationFrameId !== null) {
+    window.cancelAnimationFrame(animationFrameId)
+  }
+
+  window.removeEventListener('mousemove', handleMouseMove)
+  window.removeEventListener('mouseup', handleMouseUp)
+}
+
 </script>
 
 <style lang="scss" scoped>
 @import '../../styles/base';
+
+.locked {
+  cursor: move;
+}
 .tooltip-container {
   background-color: $color-white;
   border-radius: 3px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.24);
   max-width: 425px;
   min-width: 250px;
-  pointer-events: none;
+  overflow-y: scroll;
   position: absolute;
+  scrollbar-width: thin;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 999;
+
+  &::-webkit-scrollbar-track {
+    background-color: var(--white, #FFFFFF);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--grey-300, #E7E7EC);
+    border-radius: 10px;
+  }
 }
 
 ul.tooltip {
   list-style: none;
   margin: 0px;
+  max-height: 300px;
   min-width: 250px;
   padding-left: 0px;
 
@@ -125,6 +228,17 @@ ul.tooltip {
 
   li:first-child {
     border-bottom: 1px solid $color-black-10;
+  }
+
+  li:last-child {
+    padding-bottom: $spacing-xxs;
+  }
+
+  .drag-icon {
+    margin-top: $spacing-xxs;
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 
   .tooltip-title {

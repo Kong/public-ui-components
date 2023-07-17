@@ -1,21 +1,34 @@
-import { Chart } from 'chart.js'
+import { Chart, ChartType, Plugin, TooltipItem } from 'chart.js'
 
-export const verticalLinePlugin = {
+interface VerticalLinePlugin extends Plugin {
+  clickedSegment?: TooltipItem<ChartType>
+}
+
+const drawLine = (ctx: CanvasRenderingContext2D, x: number, top: number, bottom: number) => {
+
+  ctx.save()
+  ctx.beginPath()
+  ctx.moveTo(x, top)
+  ctx.lineTo(x, bottom)
+  ctx.lineWidth = 1
+  ctx.strokeStyle = '#0275d8'
+  ctx.stroke()
+  ctx.restore()
+}
+
+export const verticalLinePlugin: VerticalLinePlugin = {
   id: 'linePlugin',
   afterDatasetsDraw: function(chartInstance: Chart) {
-    if (chartInstance.tooltip && chartInstance.tooltip.getActiveElements() && chartInstance.tooltip.getActiveElements().length) {
+    if (chartInstance.tooltip && chartInstance.tooltip.getActiveElements() && chartInstance.tooltip.getActiveElements().length && !this.clickedSegment) {
       const { x } = chartInstance.tooltip.dataPoints[0].element
-
       const ctx = chartInstance.ctx
+      drawLine(ctx, x, chartInstance.scales.y.top, chartInstance.scales.y.bottom)
+    }
 
-      ctx.save()
-      ctx.beginPath()
-      ctx.moveTo(x, chartInstance.scales.y.top)
-      ctx.lineTo(x, chartInstance.scales.y.bottom)
-      ctx.lineWidth = 1
-      ctx.strokeStyle = '#0275d8'
-      ctx.stroke()
-      ctx.restore()
+    if (this.clickedSegment) {
+      const { x } = (this.clickedSegment as TooltipItem<ChartType>).element
+      const ctx = chartInstance.ctx
+      drawLine(ctx, x, chartInstance.scales.y.top, chartInstance.scales.y.bottom)
     }
   },
 }

@@ -7,13 +7,13 @@ import { ChartTypes } from '../enums'
 
 export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTooltipContext) : void => {
   const { tooltip } = context
-  if (tooltip.opacity === 0) {
+  if (tooltip.opacity === 0 && !tooltipData.locked) {
     tooltipData.showTooltip = false
 
     return
   }
 
-  if (tooltip.body) {
+  if (tooltip.body && !tooltipData.locked) {
     const colors = tooltip.labelColors
     const valueAxis = context.chart.config?.options?.indexAxis === 'y' ? 'x' : 'y'
 

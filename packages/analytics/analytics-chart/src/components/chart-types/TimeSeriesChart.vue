@@ -7,6 +7,7 @@
     <div
       class="chart-container"
       :style="{height, width}"
+      @click="handleChartClick()"
     >
       <Line
         v-if="type === ChartTypes.TIMESERIES_LINE"
@@ -32,12 +33,15 @@
       :context="formatTimestamp(tooltipData.tooltipContext as number)"
       data-testid="tooltip"
       :left="tooltipData.left"
+      :locked="tooltipData.locked"
       :series="tooltipData.tooltipSeries"
       :show-tooltip="tooltipData.showTooltip"
       :tooltip-title="tooltipTitle"
       :top="tooltipData.top"
       :unit="metricUnit"
       @dimensions="tooltipDimensions"
+      @left="(left) => tooltipData.left = left"
+      @top="(top) => tooltipData.top = top"
     />
     <ChartLegend
       :id="legendID"
@@ -54,6 +58,7 @@ import { reactive, ref, computed, toRef, PropType, inject } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import { verticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
+import { highlightPlugin } from '../chart-plugins/HighlightPlugin'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
 import {
@@ -158,7 +163,7 @@ const props = defineProps({
 })
 
 const { i18n } = composables.useI18n()
-const chartInstance = ref<Chart>()
+const chartInstance = ref<{chart: Chart}>()
 const legendID = ref(uuidv4())
 const chartID = ref(uuidv4())
 const legendItems = ref([])
@@ -181,6 +186,7 @@ const tooltipData: TooltipState = reactive({
   width: 0,
   height: 0,
   chartType: props.type,
+  locked: false,
 })
 
 const htmlLegendPlugin = {
@@ -193,7 +199,7 @@ const htmlLegendPlugin = {
   },
 }
 
-const plugins = computed(() => [htmlLegendPlugin, ...(props.type === ChartTypes.TIMESERIES_LINE ? [verticalLinePlugin] : [])])
+const plugins = computed(() => [htmlLegendPlugin, highlightPlugin, ...(props.type === ChartTypes.TIMESERIES_LINE ? [verticalLinePlugin] : [])])
 
 const { options } = composables.useLinechartOptions({
   tooltipState: tooltipData,
@@ -245,6 +251,16 @@ const chartFlexClass = (position: `${ChartLegendPosition}`) => {
 const tooltipDimensions = ({ width, height }) => {
   tooltipData.width = width
   tooltipData.height = height
+}
+
+const handleChartClick = () => {
+  tooltipData.locked = !tooltipData.locked
+
+  if (chartInstance.value) {
+    verticalLinePlugin.clickedSegment = tooltipData.locked
+      ? chartInstance.value.chart.tooltip?.dataPoints[0]
+      : undefined
+  }
 }
 
 </script>

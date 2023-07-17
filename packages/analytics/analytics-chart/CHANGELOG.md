@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.3.1...@kong-ui-public/analytics-chart@0.4.0) (2023-07-14)
+
+
+### Features
+
+* **analytics-chart:** lock tooltip on click + max height [MA-1729] ([#609](https://github.com/Kong/public-ui-components/issues/609)) ([fd2d0b5](https://github.com/Kong/public-ui-components/commit/fd2d0b5f7edb39e073e21ef6ae669dd3f9a93eb3))
+
+
+
+
+
 ## [0.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.3.0...@kong-ui-public/analytics-chart@0.3.1) (2023-07-05)
 
 
