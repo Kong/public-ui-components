@@ -4,7 +4,6 @@
 
 - [useDebounce](#usedebounce)
 - [usePackage](#usepackage)
-- [useSwrvRequest](#useswrvrequest)
 - [useSwrvState](#useswrvstate)
 - [useTablePreferences](#usetablepreferences)
 - [useWindow](#usewindow)
@@ -16,10 +15,6 @@
 ## usePackage
 
 [usePackage docs](./src/usePackage/README.md)
-
-## useSwrvRequest
-
-[useSwrvRequest docs](./src/useSwrvRequest/README.md)
 
 ## useSwrvState
 

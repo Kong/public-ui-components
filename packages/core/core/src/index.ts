@@ -1,7 +1,6 @@
 export { default as useDate } from './useDate'
 export { default as useDebounce } from './useDebounce'
 export { default as usePackage } from './usePackage'
-export { default as useSwrvRequest } from './useSwrvRequest'
 export { default as useSwrvState } from './useSwrvState'
 export { default as useTablePreferences } from './useTablePreferences'
 export { default as useWindow } from './useWindow'
