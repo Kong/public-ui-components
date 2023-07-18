@@ -23,7 +23,6 @@
         v-if="isGaugeChart"
         :chart-data="computedChartData"
         :dataset-colors="chartOptions.chartDatasetColors"
-        :fill="chartOptions.fill"
         is-simple
         :legend-position="legendPosition"
         :legend-values="legendValues"
@@ -106,7 +105,6 @@ const legendPositionRef = toRef(props, 'legendPosition')
 const computedChartData = computed(() => {
   return composables.useExploreResultToDatasets(
     {
-      fill: props.chartOptions.fill,
       colorPalette: props.chartOptions.chartDatasetColors || datavisPalette,
     },
     chartDataRef,
