@@ -235,6 +235,27 @@ importers:
         specifier: ^3.3.4
         version: 3.3.4
 
+  packages/analytics/analytics-metric-provider:
+    dependencies:
+      '@kong-ui-public/analytics-utilities':
+        specifier: ^0.4.3
+        version: 0.4.3
+      '@kong-ui-public/core':
+        specifier: 1.1.0
+        version: 1.1.0(axios@1.4.0)(swrv@1.0.4)(vue@3.3.4)
+      '@kong-ui-public/i18n':
+        specifier: ^0.6.1
+        version: 0.6.1(typescript@4.9.5)(vue@3.3.4)
+      '@kong-ui-public/metric-cards':
+        specifier: 0.2.14
+        version: 0.2.14(@kong/kongponents@8.101.0)(vue@3.3.4)
+      axios:
+        specifier: ^1.4.0
+        version: 1.4.0
+      swrv:
+        specifier: ^1.0.4
+        version: 1.0.4(vue@3.3.4)
+
   packages/analytics/analytics-utilities:
     dependencies:
       date-fns:
@@ -1508,6 +1529,49 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
+
+  /@kong-ui-public/analytics-utilities@0.4.3:
+    resolution: {integrity: sha512-2mlYatUIRRFq5m6cVhALv34BExF6/TpC9X9Y3uPdiYZso8HoKagB+MnSwTbkUIdxU0oUHgfxoIPBa8OwttzKxg==}
+    dependencies:
+      date-fns: 2.30.0
+    dev: false
+
+  /@kong-ui-public/core@1.1.0(axios@1.4.0)(swrv@1.0.4)(vue@3.3.4):
+    resolution: {integrity: sha512-j1kK07/zDyxwePi1EX1rZ+3iL955VdhZiodzeT5ift7iVQTiPt9VNUFu9+IXJ/AxHfuYu/gaL+gily9TsJTX3w==}
+    peerDependencies:
+      axios: ^1.4.0
+      swrv: ^1.0.4
+      vue: ^3.2.47
+    dependencies:
+      axios: 1.4.0
+      date-fns: 2.30.0
+      swrv: 1.0.4(vue@3.3.4)
+      vue: 3.3.4
+    dev: false
+
+  /@kong-ui-public/i18n@0.6.1(typescript@4.9.5)(vue@3.3.4):
+    resolution: {integrity: sha512-2SkOFU4zYNtPA0GP9+J51orkyXNN4xAvalJguSjrmraM3UdJMrJkeRxbVRsv5JVXezQ/yOQPGly+wg6anc5vuQ==}
+    peerDependencies:
+      vue: ^3.2.47
+    dependencies:
+      '@formatjs/intl': 2.9.0(typescript@4.9.5)
+      flat: 5.0.2
+      intl-messageformat: 10.5.0
+      vue: 3.3.4
+    transitivePeerDependencies:
+      - typescript
+    dev: false
+
+  /@kong-ui-public/metric-cards@0.2.14(@kong/kongponents@8.101.0)(vue@3.3.4):
+    resolution: {integrity: sha512-3z7aKeRox1VgxjQG6a0g1W+ME8u+62n+VvIb1HUH00rdacIBIKXGPBJTdIAFbodNtDa+s9oeV/OdjEUS5j+YbQ==}
+    peerDependencies:
+      '@kong/kongponents': ^8.83.5
+      vue: ^3.2.47
+    dependencies:
+      '@kong/kongponents': 8.101.0(vue-router@4.2.4)(vue@3.3.4)
+      approximate-number: 2.1.0
+      vue: 3.3.4
+    dev: false
 
   /@kong/design-tokens@1.7.1:
     resolution: {integrity: sha512-gKM0WuduLHotY3zbqiRYqLtyj+Qth0bEN2yKi8hjYTGDW/ri2fr5OAbXbwDzi7E6fpE4SOm0qTuIhuWXoEc5KA==}

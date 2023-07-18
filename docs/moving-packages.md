@@ -90,6 +90,14 @@ Some of the scripts utilized in your package's `package.json` file are likely se
 
 Please ensure this path is still correct in the new repository, especially if your package was moved to a different workspace name.
 
+### `vite.config.ts` > `build.lib.name`
+
+In public-ui-components, the name starts with `kong-ui-public-`.  In `shared-ui-components`, it starts with `kong-ui-`.
+
+### `CODEOWNERS`
+
+If needed, update `CODEOWNERS`.
+
 ### Repository paths
 
 There are references to the repository URL in the `package.json` file of your package and possibly in your package's documentation.

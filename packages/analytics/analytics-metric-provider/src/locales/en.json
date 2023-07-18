@@ -1,0 +1,17 @@
+{
+  "general": {
+    "notAvailable": "N/A"
+  },
+  "metricCard": {
+    "short": {
+      "traffic": "Requests",
+      "errorRate": "Error Rate",
+      "latency": "P99 Latency"
+    },
+    "long": {
+      "traffic": "Number of Requests",
+      "errorRate": "Average Error Rate",
+      "latency": "P99 Latency"
+    }
+  }
+}
