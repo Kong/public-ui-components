@@ -9,6 +9,7 @@ This process can be followed regardless of which repository is the source or des
   - [`package.json` \> `name`](#packagejson--name)
   - [`package.json` \> `version`](#packagejson--version)
   - [`package.json` \> `publishConfig`](#packagejson--publishconfig)
+  - [`package.json` \> `license`](#packagejson--license)
   - [`package.json` \> script environment variables](#packagejson--script-environment-variables)
   - [Repository paths](#repository-paths)
   - [Update local package references](#update-local-package-references)
@@ -44,6 +45,8 @@ For example, if your package is moving from the private repo to the public repo:
 @kong-ui-public/analytics-utilities
 ```
 
+**Once you update the package name, search the new repository for any instances of the _old_ package name and replace accordingly.**
+
 ### `package.json` > `version`
 
 The `version` of your package, now that it will be published under a new NPM scope, can remain the same, or you can choose to increment or reset the version.
@@ -75,6 +78,12 @@ For example, if your package is moving from the private repo to the public repo:
 }
 ```
 
+### `package.json` > `license`
+
+If moving into the public repository, you **must** add an Apache-2.0 license to the root of your package ([here's an example](https://github.com/Kong/public-ui-components/blob/main/LICENSE)), as well as update the `license` entry in your package's `package.json` file to `"license": "Apache-2.0"`.
+
+If you are moving into the private repository, make sure to _remove_ the LICENSE file and update the `license` entry in your package's `package.json` file to `"license": "UNLICENSED"`.
+
 ### `package.json` > script environment variables
 
 Some of the scripts utilized in your package's `package.json` file are likely set to the workspace path, e.g. `BUILD_VISUALIZER`.
@@ -95,17 +104,17 @@ Your package may have been dependent on other packages in its old host repositor
 
 Since your package has been moved out of the same repository as the dependency, you will need to update the value for the package version.
 
-As an example, maybe your package depends on `@kong-ui/core` package:
+As an example, maybe your package depends on `@kong-ui-public/core` package:
 
 ```jsonc
-"@kong-ui/core": "workspace:^0.17.0",
+"@kong-ui-public/core": "workspace:^0.17.0",
 ```
 
 In the new repository, since this package is no longer locally available, you will need to update to the actual published version:
 
 ```jsonc
 // Assuming that 1.2.3 is the latest version
-"@kong-ui/core": "^1.2.3",
+"@kong-ui-public/core": "^1.2.3",
 ```
 
 The same logic applies for packages that were **not** previously available in the repository workspace, but now **are** available.
@@ -123,7 +132,7 @@ pnpm --filter "{your package name}" add {dependency package name}
 For example:
 
 ```sh
-pnpm --filter "@kong-ui/entities-shared" add @kong-ui/core@latest
+pnpm --filter "@kong-ui/entities-shared" add @kong-ui-public/core@latest
 ```
 
 ### Install package dependencies
@@ -143,7 +152,7 @@ If your package depends on other **local** packages in the same repository, you 
 For example:
 
 ```sh
-pnpm --filter "@kong-ui/core" run build
+pnpm --filter "@kong-ui-public/core" run build
 ```
 
 ### Update dependent packages
