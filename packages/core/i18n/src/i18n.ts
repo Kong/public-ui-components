@@ -32,6 +32,43 @@ export const createI18n = <MessageSource extends Record<string, any>>
     intlCache,
   )
 
+  /**
+   * Formats a unix timestamp into a formatted date string
+   * @param {Number} timestamp a unix timestamp in seconds
+   * @returns a date string formatted like 'Apr 6, 2022 10:50'
+   */
+  const formatUnixTimeStamp = (timestamp: number): string => {
+    const invalidDate = 'Invalid Date'
+    if (!timestamp) {
+      return invalidDate
+    }
+
+    try {
+      const date = new Date(timestamp * 1000)
+
+      return intl.formatDate(date, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+      })
+    } catch (err) {
+      return invalidDate
+    }
+  }
+
+  /**
+   * Format an ISO fomatted date
+   * @param {String} isoDate ISO formatted date string
+   * @returns {String} date formatted like 'Apr 6, 2022 10:50'
+   */
+  const formatIsoDate = (isoDate: string): string => {
+    const date = Date.parse(isoDate) / 1000
+
+    return formatUnixTimeStamp(date)
+  }
+
   // Remove the native $t function from intlOriginal
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { $t, ...otherProps } = intlOriginal
@@ -51,6 +88,8 @@ export const createI18n = <MessageSource extends Record<string, any>>
   }
 
   const localIntl: IntlShapeEx<MessageSource> = {
+    formatUnixTimeStamp,
+    formatIsoDate,
     t,
     te,
     tm,
