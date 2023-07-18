@@ -21,6 +21,7 @@ Monorepo for **open-source** Kong UI components and utilities.
   - [Generating type interface documentation](#generating-type-interface-documentation)
   - [Preview components](#preview-components)
   - [Running consuming application with local copy of the package](#running-consuming-application-with-local-copy-of-the-package)
+- [Moving packages to the public/private repo](#moving-packages-to-the-publicprivate-repo)
 - [Host App Troubleshooting](#host-app-troubleshooting)
   - [Analytics Packages are blocked by some ad-blockers](#analytics-packages-are-blocked-by-some-ad-blockers)
 
@@ -263,6 +264,12 @@ In some cases HMR (hot module reloading) is not working out of the box in this c
     yarn unlink "@kong-ui-public/forms"
     yarn install --force --frozen-lockfile
     ```
+
+## Moving packages to the public/private repo
+
+Sometimes packages are initially created in [`Kong/shared-ui-components`](https://github.com/Kong/shared-ui-components) where they are **privately** published, but need to be moved into the **public** [`Kong/public-ui-components`](https://github.com/Kong/public-ui-components) OSS repository so that the source code and npm package can be consumed by anyone.
+
+[View the docs on how to move packages between the private/public repositories here](./docs/moving-packages.md)
 
 ## Host App Troubleshooting
 
