@@ -59,7 +59,7 @@ export const createI18n = <MessageSource extends Record<string, any>>
   }
 
   /**
-   * Format an ISO fomatted date
+   * Format an ISO formatted date
    * @param {String} isoDate ISO formatted date string
    * @returns {String} date formatted like 'Apr 6, 2022 10:50'
    */
