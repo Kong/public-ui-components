@@ -85,9 +85,9 @@
               v-model="metricDisplay"
               data-testid="service-radio-btn"
               name="metricDisplay"
-              :selected-value="ChartMetricDisplay.Single"
+              :selected-value="ChartMetricDisplay.SingleMetric"
             >
-              {{ ChartMetricDisplay.Single }}
+              {{ ChartMetricDisplay.SingleMetric }}
             </KRadio>
           </div>
           <div>
@@ -321,7 +321,7 @@ const showLegendValuesToggle = ref(true)
 const showEmptyStateToggle = ref(false)
 const chartType = ref(ChartTypes.DOUGHNUT)
 const legendPosition = ref(ChartLegendPosition.Right)
-const metricDisplay = ref(ChartMetricDisplay.Single)
+const metricDisplay = ref(ChartMetricDisplay.SingleMetric)
 const selectedMetric = ref<MetricSelection>({
   name: Metrics.TotalRequests,
   unit: 'count',

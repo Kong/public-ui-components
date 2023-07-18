@@ -63,12 +63,12 @@ yarn add @kong-ui-public/analytics-chart
           '400': '#00bbf9',
         }
       ```
-- `showTotal` is an optional mode; a boolean that determines whether to show a simplified version of the given chart type. Currently only supported by Doughnut charts.
+- `isSimple` is an optional mode; a boolean that determines whether to show a simplified version of the given chart type. Currently only supported by Doughnut charts.
 
 - `metricDisplay` is an optional value which can be any one of the following:
   - `Hidden`: will only show the outer doughnut chart
-  - `Single`: displays only the large metric value
-  - `Full`: displays both the large metric and small metric value
+  - `MetricOnly`: displays only the large metric value
+  - `Gauge`: displays both the large metric and small metric value
 
 #### `chartTitle`
 

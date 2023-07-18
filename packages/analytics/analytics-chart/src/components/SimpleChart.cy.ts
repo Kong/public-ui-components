@@ -1,6 +1,6 @@
 // Cypress component test spec file
 import { ChartMetricDisplay, ChartLegendPosition, ChartTypesSimple } from '../enums/'
-import AnalyticsChart from './AnalyticsChart.vue'
+import SimpleChart from './SimpleChart.vue'
 
 const emptyExploreResult = {
   records: [],
@@ -59,7 +59,7 @@ const exploreResultTruncated = {
 
 describe('<SimpleChart />', () => {
   it('shows the empty state with no data', () => {
-    cy.mount(AnalyticsChart, {
+    cy.mount(SimpleChart, {
       props: {
         chartData: emptyExploreResult,
         chartOptions: {
@@ -73,14 +73,32 @@ describe('<SimpleChart />', () => {
     cy.get('[data-testid="no-data-in-report"]').should('be.visible')
   })
 
-  it('renders a Gauge with only the large metric value', () => {
-    cy.mount(AnalyticsChart, {
+  it('renders a Gauge with both metric value and total text below', () => {
+    cy.mount(SimpleChart, {
       props: {
         chartData: exploreResultTruncated,
         chartOptions: {
           type: ChartTypesSimple.GAUGE,
           isSimple: true,
-          metricDisplay: ChartMetricDisplay.Single,
+          metricDisplay: ChartMetricDisplay.Full,
+        },
+        showLegendValues: false,
+        legendPosition: ChartLegendPosition.Hidden,
+      },
+    })
+
+    cy.get('[data-testid="doughnut-chart-metric"]').should('be.visible')
+    cy.get('[data-testid="doughnut-chart-total"]').should('be.visible')
+  })
+
+  it('renders a Gauge with only the large metric value', () => {
+    cy.mount(SimpleChart, {
+      props: {
+        chartData: exploreResultTruncated,
+        chartOptions: {
+          type: ChartTypesSimple.GAUGE,
+          isSimple: true,
+          metricDisplay: ChartMetricDisplay.SingleMetric,
         },
         showLegendValues: false,
         legendPosition: ChartLegendPosition.Hidden,
@@ -91,8 +109,8 @@ describe('<SimpleChart />', () => {
     cy.get('[data-testid="doughnut-chart-total"]').should('not.exist')
   })
 
-  it('renders a Gauge with no centered text', () => {
-    cy.mount(AnalyticsChart, {
+  it('renders a Gauge with no text', () => {
+    cy.mount(SimpleChart, {
       props: {
         chartData: exploreResultTruncated,
         chartOptions: {

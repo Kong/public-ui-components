@@ -258,7 +258,7 @@ const metricTotal = computed(() => approxNum(formattedDataset?.value[0]?.data[0]
 const metricHighlightColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[0]}`)
 
 // Conditionally show large or small metric value, or neither
-const showMetricLarge = computed(() => [ChartMetricDisplay.Full, ChartMetricDisplay.Single].includes(metricDisplayRef.value))
+const showMetricLarge = computed(() => [ChartMetricDisplay.Full, ChartMetricDisplay.SingleMetric].includes(metricDisplayRef.value))
 const showMetricSmall = computed(() => metricDisplayRef.value === ChartMetricDisplay.Full)
 </script>
 

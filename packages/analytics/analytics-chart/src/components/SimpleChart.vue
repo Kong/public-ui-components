@@ -64,10 +64,6 @@ const props = defineProps({
     required: false,
     default: '',
   },
-  // chartTitle: {
-  //   type: String,
-  //   required: true,
-  // },
   legendPosition: {
     type: String as PropType<`${ChartLegendPosition}`>,
     required: false,
