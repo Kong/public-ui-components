@@ -12,8 +12,8 @@
   - [HTML safe formatting with `<i18n-t>`](#html-safe-formatting-with-i18n-t)
 - [Formatting numbers, dates and times](#formatting-numbers-dates-and-times)
 - [Additional service functions.](#additional-service-functions)
-  - [format-unix-time-stamp](#format-unix-time-stamp)
-  - [format-iso-date](#format-iso-date)
+  - [formatUnixTimeStamp](#formatunixtimestamp)
+  - [formatIsoDate](#formatisodate)
   - [te](#te)
   - [tm](#tm)
 
@@ -397,7 +397,7 @@ Every single method listed in [FormatJS](https://formatjs.io/docs/intl) is expos
 
 (as previously exposed by vue18n-n)
 
-### format-unix-time-stamp
+### formatUnixTimeStamp
 
 Formats a unix timestamp into a formatted date string
 
@@ -415,7 +415,7 @@ console.log()
 May 16, 2019, 11:42 AM
 ```
 
-### format-iso-date
+### formatIsoDate
 
 Format an ISO formatted date
 
