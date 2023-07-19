@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.42...@kong-ui-public/spec-renderer@0.10.0) (2023-07-19)
+
+
+### Features
+
+* upgrade to vue 3.3.x [KHCP-7567] ([#618](https://github.com/Kong/public-ui-components/issues/618)) ([6fc9e17](https://github.com/Kong/public-ui-components/commit/6fc9e177aaf61602f1a0877519eb47c9fe68f0d0))
+
+
+
+
+
 ## [0.9.42](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.9.41...@kong-ui-public/spec-renderer@0.9.42) (2023-07-19)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer

@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import { ref } from 'vue'
 
 type TaskCheckboxProps = {
   checked: boolean;
