@@ -202,12 +202,12 @@ const showMetricSmall = computed(() => metricDisplayRef.value === ChartMetricDis
   .chart-totals-flex {
     align-items: center;
     display: flex;
+    flex-direction: column;
     height: 100px;
     justify-content: center;
     padding: 25px 0 0;
     position: absolute;
     width: 100px;
-    flex-direction: column;
     z-index: 2;
 
     .metric-large {
