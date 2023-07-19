@@ -46,47 +46,12 @@ import { Doughnut } from 'vue-chartjs'
 import composables from '../../composables'
 import { AnalyticsChartColors, KChartData } from '../../types'
 import { Chart, ChartDataset } from 'chart.js'
-import { ChartLegendPosition, ChartMetricDisplay } from '../../enums'
+import { ChartMetricDisplay } from '../../enums'
 import { DoughnutChartData } from '../../types/chart-data'
 
 const props = defineProps({
   chartData: {
     type: Object as PropType<KChartData>,
-    required: false,
-    default: null,
-  },
-  chartTitle: {
-    type: String,
-    required: false,
-    default: null,
-  },
-  fill: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-  tooltipTitle: {
-    type: String,
-    required: false,
-    default: null,
-  },
-  metricUnit: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  timeRange: {
-    type: Number,
-    required: false,
-    default: 0,
-  },
-  legendPosition: {
-    type: String as PropType<`${ChartLegendPosition}`>,
-    required: false,
-    default: ChartLegendPosition.Right,
-  },
-  legendValues: {
-    type: Object,
     required: false,
     default: null,
   },
