@@ -107,6 +107,54 @@ describe('i18n', () => {
     })
   })
 
+  describe('formatUnixTimeStamp()', () => {
+    beforeAll(() => {
+      createI18n<typeof english>('en-us', english, true)
+    })
+
+    it('should return a properly formatted date', () => {
+      const { formatUnixTimeStamp } = useI18n<typeof english>()
+      const formattedDateAM = formatUnixTimeStamp(1558006979)
+      const formattedDatePM = formatUnixTimeStamp(1558057179)
+      const january = formatUnixTimeStamp(1547506800)
+      const october = formatUnixTimeStamp(1570111995)
+      const november = formatUnixTimeStamp(1573772400)
+      const decimalTimestamp = formatUnixTimeStamp(1570111995.652561)
+      const integerTimestamp = formatUnixTimeStamp(1570111995)
+
+      expect(formattedDateAM).toBe('May 16, 2019, 11:42 AM')
+      expect(formattedDatePM).toBe('May 17, 2019, 1:39 AM')
+      expect(january.substring(0, 7)).toBe('Jan 14,')
+      expect(october.substring(0, 7)).toBe('Oct 3, ')
+      expect(november.substring(0, 7)).toBe('Nov 14,')
+      expect(decimalTimestamp).toEqual(integerTimestamp)
+    })
+  })
+
+  describe('formatIsoDate()', () => {
+    beforeAll(() => {
+      createI18n<typeof english>('en-us', english, true)
+    })
+
+    it('should return a properly formatted date', () => {
+      const { formatIsoDate } = useI18n<typeof english>()
+      const formattedDateAM = formatIsoDate('2019-05-16T11:42:59.000Z')
+      const formattedDatePM = formatIsoDate('2019-05-17T01:39:39.000Z')
+      const january = formatIsoDate('2019-01-14T23:00:00.000Z')
+      const october = formatIsoDate('2019-10-03T14:13:15.000Z')
+      const november = formatIsoDate('2019-11-14T23:00:00.000Z')
+      const decimalTimestamp = formatIsoDate('2019-10-03T14:13:15.000Z')
+      const integerTimestamp = formatIsoDate('2019-10-03T14:13:15.000Z')
+
+      expect(formattedDateAM).toBe('May 16, 2019, 11:42 AM')
+      expect(formattedDatePM).toBe('May 17, 2019, 1:39 AM')
+      expect(january.substring(0, 7)).toBe('Jan 14,')
+      expect(october.substring(0, 7)).toBe('Oct 3, ')
+      expect(november.substring(0, 7)).toBe('Nov 14,')
+      expect(decimalTimestamp).toEqual(integerTimestamp)
+    })
+  })
+
   // the cases bellow are for reference only. See https://formatjs.io/docs/intl/ for more details and usage
 
   describe('formatNumber', () => {
