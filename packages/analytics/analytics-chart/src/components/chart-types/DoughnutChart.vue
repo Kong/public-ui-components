@@ -1,12 +1,12 @@
 <template>
   <div
     class="chart-parent"
-    :class="[ chartFlexClass ]"
+    :class="chartFlexClass(legendPosition)"
     data-testid="doughnut-chart-parent"
   >
     <div
       class="chart-container"
-      :style="{height, width}"
+      :style="{ height, width }"
     >
       <Doughnut
         ref="chartInstance"
@@ -65,18 +65,12 @@ const props = defineProps({
   },
   tooltipTitle: {
     type: String,
-    required: false,
-    default: null,
+    required: true,
   },
   metricUnit: {
     type: String,
     required: false,
     default: '',
-  },
-  timeRange: {
-    type: Number,
-    required: false,
-    default: 0,
   },
   legendPosition: {
     type: String as PropType<`${ChartLegendPosition}`>,
@@ -157,12 +151,12 @@ const htmlLegendPlugin = {
 }
 
 // Flatten the datasets into a single element array, since we only want to
-// display a single dataset containing dimension totals in our Doughnut chart.
+// display a single dataset containing dimension totals in our Doughnut chart
 const formattedDataset = computed<DoughnutChartData[]>(() => {
   const formatted = props.chartData.datasets.reduce((acc: any, current: ChartDataset) => {
     acc.labels.push(current.label)
-    acc.borderColor.push(darkenColor((current.backgroundColor as string), 50))
     acc.backgroundColor.push(current.backgroundColor)
+    acc.borderColor.push(darkenColor((current.backgroundColor as string), 50))
     acc.data.push(current.data.reduce((a, b) => (a as number) + (b as number), 0))
 
     return acc
@@ -191,13 +185,13 @@ const chartInstance = ref<Chart>()
  * When in Preview mode, Chart and Legend are vertically stacked, and the
  * Legend list items are allowed to spread horizontally.
  */
-const chartFlexClass = computed<string>(() => {
+const chartFlexClass = (position: `${ChartLegendPosition}`) => {
   return {
     [ChartLegendPosition.Right]: 'legend-row',
     [ChartLegendPosition.Bottom]: 'column',
     [ChartLegendPosition.Hidden]: 'hidden',
-  }[props.legendPosition]
-})
+  }[position]
+}
 
 const tooltipDimensions = ({ width, height }: { width: number, height: number }) => {
   tooltipData.width = width
@@ -208,51 +202,4 @@ const tooltipDimensions = ({ width, height }: { width: number, height: number })
 <style lang="scss" scoped>
 @import '../../styles/base';
 @import '../../styles/chart';
-
-.chart-parent {
-  // MA-1850 Custom styling for Gauge chart
-  &.show-total {
-    height: auto;
-    margin: 0;
-    padding: 0;
-    width: auto;
-
-    .chart-container {
-      margin: 0;
-      max-height: 100px;
-      max-width: 100px;
-      padding: 0;
-    }
-
-    .chart-totals {
-      align-items: center;
-      display: flex;
-      height: 100px;
-      justify-content: center;
-      padding: 25px 0 0;
-      position: absolute;
-      width: 100px;
-      z-index: 1;
-
-      .chart-totals-flex {
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        z-index: 2;
-
-        .metric-large {
-          font-size: 23px;
-          font-weight: 500;
-          line-height: 23px;
-        }
-        .metric-small {
-          color: var(--grey-500, #6F7787);
-          font-size: 9px;
-          font-weight: 400;
-          line-height: 9px;
-        }
-      }
-    }
-  }
-}
 </style>
