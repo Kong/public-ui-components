@@ -203,9 +203,6 @@ export default defineComponent({
 - type: [SimpleChartOptions](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-chart/src/types/chart-data.ts)
 - required: `true`
   - `stacked` option only apply to time series charts
-  - `fill` only applies to time series line chart
-  - `chartTypes` defined [here](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/chart-types.ts)
-  - `chartDatasetColors` are optional, same as AnalyticsChart above
 
 #### `emptyStateTitle`
 
@@ -235,13 +232,13 @@ Contains the same chart-data
 <script>
 import { SimpleChart } from '@kong-ui-public/analytics-chart'
 import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
-import type { AnalyticsChartOptions } from '@kong-ui-public/analytics-chart'
+import type { SimpleChartOptions } from '@kong-ui-public/analytics-chart'
 
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   components: {
-    AnalyticsChart,
+    SimpleChart,
   },
   setup() {
     const chartData = ref<AnalyticsExploreResult>({
@@ -277,11 +274,11 @@ export default defineComponent({
       },
     })
 
-    const chartOptions = ref<AnalyticsChartOptions>({
-      type: 'Gauge',
-      stacked: true,
-      fill: false
+    const chartOptions = ref<SimpleChartOptions>({
+      type: ChartTypes.GAUGE,
+      metricDisplay: ChartMetricDisplay.Full
     })
+
     return {
       chartData,
       chartOptions,
