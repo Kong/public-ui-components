@@ -48,10 +48,6 @@ export default function useDoughnutChartOptions(chartOptions: DoughnutChartOptio
 
   const options = computed(() => {
     return {
-      // If showing a simple total, allow for more space in the center
-      cutout: chartOptions.isSimple.value ? '78%' : '50%',
-      circumference: chartOptions.isSimple.value ? '200' : '360',
-      rotation: chartOptions.isSimple.value ? '260' : '0',
       responsive: true,
       maintainAspectRatio: false,
       plugins: {

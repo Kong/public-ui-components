@@ -5,28 +5,6 @@
     data-testid="doughnut-chart-parent"
   >
     <div
-      v-if="isSimple"
-      class="chart-totals"
-    >
-      <div class="chart-totals-flex">
-        <div
-          v-if="showMetricLarge"
-          class="metric-large"
-          data-testid="doughnut-chart-metric"
-          :style="metricHighlightColor"
-        >
-          {{ metricHighlight }}
-        </div>
-        <div
-          v-if="showMetricSmall"
-          class="metric-small"
-          data-testid="doughnut-chart-total"
-        >
-          {{ i18n.t('total') }}: {{ metricTotal }}
-        </div>
-      </div>
-    </div>
-    <div
       class="chart-container"
       :style="{height, width}"
     >
@@ -61,7 +39,6 @@ import { computed, PropType, reactive, ref, toRef } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 // @ts-ignore - approximate-number no exported module
-import approxNum from 'approximate-number'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import HtmlLegend from '../chart-plugins/ChartLegend.vue'
 import {
@@ -73,7 +50,7 @@ import { Doughnut } from 'vue-chartjs'
 import composables from '../../composables'
 import { AnalyticsChartColors, KChartData, TooltipState } from '../../types'
 import { Chart, ChartDataset } from 'chart.js'
-import { ChartLegendPosition, ChartMetricDisplay, ChartTypes } from '../../enums'
+import { ChartLegendPosition, ChartTypes } from '../../enums'
 import { DoughnutChartData } from '../../types/chart-data'
 
 const props = defineProps({
@@ -122,11 +99,6 @@ const props = defineProps({
     required: false,
     default: null,
   },
-  metricDisplay: {
-    type: String as PropType<ChartMetricDisplay>,
-    required: false,
-    default: ChartMetricDisplay.Hidden,
-  },
   syntheticsDataKey: {
     type: String,
     required: false,
@@ -166,7 +138,6 @@ const translatedUnits = computed(() => {
   // @ts-ignore - dynamic i18n key
   return unitsRef.value && i18n.t(`chartUnits.${unitsRef.value}`)
 })
-const metricDisplayRef = toRef(props, 'metricDisplay')
 
 const tooltipData: TooltipState = reactive({
   showTooltip: false,
@@ -201,12 +172,7 @@ const htmlLegendPlugin = {
 const formattedDataset = computed<DoughnutChartData[]>(() => {
   const formatted = props.chartData.datasets.reduce((acc: any, current: ChartDataset) => {
     acc.labels.push(current.label)
-
-    // Doughnut Metric chart should have no segment border
-    props.isSimple
-      ? acc.borderColor.push(current.backgroundColor)
-      : acc.borderColor.push(darkenColor((current.backgroundColor as string), 50))
-
+    acc.borderColor.push(darkenColor((current.backgroundColor as string), 50))
     acc.backgroundColor.push(current.backgroundColor)
     acc.data.push(current.data.reduce((a, b) => (a as number) + (b as number), 0))
 
@@ -227,9 +193,7 @@ composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(pro
 
 const { options } = composables.useDoughnutChartOptions({
   tooltipState: tooltipData,
-  timeRange: toRef(props, 'timeRange'),
   legendID: legendID.value,
-  isSimple: toRef(props, 'isSimple'),
 })
 
 const chartInstance = ref<Chart>()
@@ -250,16 +214,6 @@ const tooltipDimensions = ({ width, height }: { width: number, height: number })
   tooltipData.width = width
   tooltipData.height = height
 }
-
-// When displaying a simple chart, we only expect two values in the dataset
-const metricHighlight = computed(() => approxNum(formattedDataset?.value[0]?.data[0], { capital: true }))
-const metricTotal = computed(() => approxNum(formattedDataset?.value[0]?.data[0] + formattedDataset?.value[0]?.data[1], { capital: true }))
-
-const metricHighlightColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[0]}`)
-
-// Conditionally show large or small metric value, or neither
-const showMetricLarge = computed(() => [ChartMetricDisplay.Full, ChartMetricDisplay.SingleMetric].includes(metricDisplayRef.value))
-const showMetricSmall = computed(() => metricDisplayRef.value === ChartMetricDisplay.Full)
 </script>
 
 <style lang="scss" scoped>

@@ -319,7 +319,7 @@ provide('legendPosition', legendPositionRef)
   .chart-empty-state {
     padding: $spacing-lg 0 $spacing-md 0;
   }
-   .chart-header {
+  .chart-header {
     display: flex;
     padding-bottom: $spacing-md;
   }

@@ -11,21 +11,16 @@
       <template #title>
         {{ emptyStateTitle }}
       </template>
-      <template #message>
-        {{ emptyStateDescription }}
-      </template>
     </KEmptyState>
     <div
       v-else
       class="analytics-chart-parent"
     >
-      <DoughnutChart
+      <GaugeChart
         v-if="isGaugeChart"
         :chart-data="computedChartData"
         :dataset-colors="chartOptions.chartDatasetColors"
         is-simple
-        :legend-position="legendPosition"
-        :legend-values="legendValues"
         :metric-display="chartOptions.metricDisplay"
         :metric-unit="computedMetricUnit"
         :synthetics-data-key="syntheticsDataKey"
@@ -39,7 +34,7 @@
 import composables from '../composables'
 import { SimpleChartOptions } from '../types'
 import { ChartTypesSimple, ChartLegendPosition } from '../enums'
-import DoughnutChart from './chart-types/DoughnutChart.vue'
+import GaugeChart from './chart-types/GaugeChart.vue'
 import { computed, PropType, provide, toRef } from 'vue'
 import { AnalyticsExploreResult, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette } from '../utils'
@@ -114,12 +109,9 @@ const computedMetricUnit = computed<string>(() => {
   return Object.values(chartDataRef.value.meta.metricUnits)[0]
 })
 
-const { legendValues } = composables.useChartLegendValues(computedChartData, props.chartOptions.type, computedMetricUnit)
-
 const isGaugeChart = computed<boolean>(() => chartOptionsRef.value.type === ChartTypesSimple.GAUGE)
 
 const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAvailableTitle'))
-const emptyStateDescription = computed(() => props.emptyStateDescription || i18n.t('noDataAvailableDescription'))
 const hasValidChartData = computed(() => {
   return chartDataRef.value && chartDataRef.value.meta && chartDataRef.value.records.length
 })
@@ -132,7 +124,22 @@ provide('legendPosition', legendPositionRef)
 @import '../styles/base';
 @import '../styles/chart-shell';
 
-.analytics-chart-shell .simple-chart {
+.simple-chart-shell {
+  margin: 0;
+  padding: 0;
 
+  .chart-empty-state {
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+    justify-content: center;
+    width: 100px;
+
+    &:deep(.k-empty-state-title-header) {
+      font-size: 11px;
+      line-height: 11px;
+      margin: 0;
+    }
+  }
 }
 </style>

@@ -114,7 +114,10 @@
       </div>
 
       <!-- Legend position -->
-      <div class="flex-vertical">
+      <div
+        v-if="!isSimpleChart"
+        class="flex-vertical"
+      >
         <KLabel>
           Legend position
         </KLabel>
