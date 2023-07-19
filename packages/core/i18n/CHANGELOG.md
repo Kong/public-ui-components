@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.6.1...@kong-ui-public/i18n@0.7.0) (2023-07-19)
+
+
+### Features
+
+* **i18n:** add formatUnixTimeStamp and formatIsoDate to i18n [KHCP-7929] ([#616](https://github.com/Kong/public-ui-components/issues/616)) ([7f97762](https://github.com/Kong/public-ui-components/commit/7f97762d8c829c1d768b36a266f696b4871826d3))
+
+
+
+
+
 ## [0.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@0.6.0...@kong-ui-public/i18n@0.6.1) (2023-06-26)
 
 
