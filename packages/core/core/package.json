@@ -52,7 +52,7 @@
   "peerDependencies": {
     "axios": "^1.4.0",
     "swrv": "^1.0.4",
-    "vue": "^3.2.47"
+    "vue": "^3.3.4"
   },
   "dependencies": {
     "date-fns": "^2.30.0"
