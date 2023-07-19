@@ -1,12 +1,12 @@
 <template>
-  <div class="analytics-chart-shell">
+  <div class="simple-chart-shell">
     <KEmptyState
       v-if="!hasValidChartData"
       class="chart-empty-state"
       :cta-is-hidden="true"
       data-testid="no-data-in-report"
       icon="stateNoData"
-      icon-size="170"
+      icon-size="80"
     >
       <template #title>
         {{ emptyStateTitle }}
@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import composables from '../composables'
-import { AnalyticsChartOptions } from '../types'
+import { SimpleChartOptions } from '../types'
 import { ChartTypesSimple, ChartLegendPosition } from '../enums'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
 import { computed, PropType, provide, toRef } from 'vue'
@@ -50,7 +50,7 @@ const props = defineProps({
     required: true,
   },
   chartOptions: {
-    type: Object as PropType<AnalyticsChartOptions>,
+    type: Object as PropType<SimpleChartOptions>,
     required: true,
   },
   emptyStateTitle: {
@@ -89,11 +89,6 @@ const props = defineProps({
       return /(\d *)(px|%)/.test(value)
     },
   },
-  showLegendValues: {
-    type: Boolean,
-    required: false,
-    default: true,
-  },
 })
 
 const { i18n } = composables.useI18n()
@@ -119,8 +114,6 @@ const computedMetricUnit = computed<string>(() => {
   return Object.values(chartDataRef.value.meta.metricUnits)[0]
 })
 
-const showLegendValuesRef = computed(() => props.showLegendValues && props.legendPosition !== ChartLegendPosition.Bottom)
-
 const { legendValues } = composables.useChartLegendValues(computedChartData, props.chartOptions.type, computedMetricUnit)
 
 const isGaugeChart = computed<boolean>(() => chartOptionsRef.value.type === ChartTypesSimple.GAUGE)
@@ -131,7 +124,6 @@ const hasValidChartData = computed(() => {
   return chartDataRef.value && chartDataRef.value.meta && chartDataRef.value.records.length
 })
 
-provide('showLegendValues', showLegendValuesRef)
 provide('legendPosition', legendPositionRef)
 
 </script>
@@ -139,4 +131,8 @@ provide('legendPosition', legendPositionRef)
 <style lang="scss" scoped>
 @import '../styles/base';
 @import '../styles/chart-shell';
+
+.analytics-chart-shell .simple-chart {
+
+}
 </style>

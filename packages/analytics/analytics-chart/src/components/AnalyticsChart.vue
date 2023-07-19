@@ -88,7 +88,6 @@
         :fill="chartOptions.fill"
         :legend-position="legendPosition"
         :legend-values="legendValues"
-        :metric-display="chartOptions.metricDisplay"
         :metric-unit="computedMetricUnit"
         :synthetics-data-key="syntheticsDataKey"
         :tooltip-title="tooltipTitle"
@@ -312,15 +311,34 @@ provide('legendPosition', legendPositionRef)
 @import '../styles/base';
 @import '../styles/chart-shell';
 
-.tooltip {
-  display: flex;
-  margin-left: $spacing-sm;
-  margin-top: 2px;
-}
+.analytics-chart-shell {
+  border: 1px solid var(--grey-300,  #E7E7EC);
+  margin: $spacing-md;
+  padding: $spacing-md;
 
-.limit-icon-wrapper {
-  display: flex;
-  flex-direction: row;
+  .chart-empty-state {
+    padding: $spacing-lg 0 $spacing-md 0;
+  }
+   .chart-header {
+    display: flex;
+    padding-bottom: $spacing-md;
+  }
+
+  .chart-title {
+    font-size: $font-size-lg;
+  }
+
+  .tooltip {
+    display: flex;
+    margin-left: $spacing-sm;
+    margin-top: 2px;
+  }
+
+  .limit-icon-wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+
 }
 
 </style>

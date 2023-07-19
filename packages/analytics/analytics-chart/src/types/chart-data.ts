@@ -28,13 +28,13 @@ export interface AnalyticsChartColors {
 }
 
 /**
- * Chart options
+ * Analytics Chart options
  */
 export interface AnalyticsChartOptions {
   /**
    * Chart type
    */
-  type: ChartTypes | ChartTypesSimple
+  type: ChartTypes
   /**
    * Are the datasets stacked or not.
    * If stacked, the datasets are stacked on top of each other
@@ -61,14 +61,24 @@ export interface AnalyticsChartOptions {
    * Chart dataset color palette
    */
   chartDatasetColors?: AnalyticsChartColors | string[],
+}
+
+/**
+ * Simple Chart options
+ */
+export interface SimpleChartOptions {
   /**
-   *
+   * Chart type
+   */
+  type: ChartTypesSimple
+  /**
+   * Chart dataset color palette
+   */
+  chartDatasetColors?: AnalyticsChartColors | string[],
+  /**
+   * Determines metric text to be shown in the center
    */
   metricDisplay?: ChartMetricDisplay,
-  /**
-   * Determines if a simplified version of the chart should be displayed
-   */
-  isSimple?: boolean,
 }
 
 export interface LegendValueEntry {

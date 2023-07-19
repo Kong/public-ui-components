@@ -199,12 +199,7 @@
       <KLabel>
         Option toggles
       </KLabel>
-      <div>
-        <pre>
-          chartType=[{{ chartType }}]
-        </pre>
-      </div>
-      <div v-if="!chartType.includes('TimeSeries')">
+      <div v-if="!chartType.includes('TimeSeries') && !isSimpleChart">
         <KInputSwitch
           v-model="multiDimensionToggle"
           :label="multiDimensionToggle ? 'Multi Dimension' : 'Single Dimension'"
@@ -228,13 +223,13 @@
           :label="showAnnotationsToggle ? 'Show Annotations' : 'No Annotations'"
         />
       </div>
-      <div>
+      <div v-if="!isSimpleChart">
         <KInputSwitch
           v-model="showLegendValuesToggle"
           :label="showLegendValuesToggle ? 'Show Legend Values' : 'No Legend Values'"
         />
       </div>
-      <div>
+      <div v-if="!isSimpleChart">
         <KInputSwitch
           v-model="limitToggle"
           :label="limitToggle ? 'Has Limit' : 'No Limit'"

@@ -82,7 +82,6 @@ describe('<SimpleChart />', () => {
           isSimple: true,
           metricDisplay: ChartMetricDisplay.Full,
         },
-        showLegendValues: false,
         legendPosition: ChartLegendPosition.Hidden,
       },
     })
@@ -100,7 +99,6 @@ describe('<SimpleChart />', () => {
           isSimple: true,
           metricDisplay: ChartMetricDisplay.SingleMetric,
         },
-        showLegendValues: false,
         legendPosition: ChartLegendPosition.Hidden,
       },
     })
@@ -118,7 +116,6 @@ describe('<SimpleChart />', () => {
           isSimple: true,
           metricDisplay: ChartMetricDisplay.Hidden,
         },
-        showLegendValues: false,
         legendPosition: ChartLegendPosition.Hidden,
       },
     })
