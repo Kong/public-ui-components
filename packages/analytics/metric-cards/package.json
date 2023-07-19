@@ -39,11 +39,11 @@
   },
   "peerDependencies": {
     "@kong/kongponents": "^8.83.5",
-    "vue": "^3.2.47"
+    "vue": "^3.3.4"
   },
   "devDependencies": {
     "@kong/kongponents": "^8.83.5",
-    "vue": "^3.2.47"
+    "vue": "^3.3.4"
   },
   "dependencies": {
     "approximate-number": "^2.1.0"
