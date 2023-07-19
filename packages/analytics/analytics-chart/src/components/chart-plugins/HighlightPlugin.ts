@@ -9,6 +9,7 @@ interface HighlightPlugin extends Plugin {
 const drawHighlight = (chart: Chart, clickedElements: InteractionItem[]) => {
   const ctx = chart.ctx
   const yScale = chart.scales.y
+  const xScale = chart.scales.x
 
   // When mode is "index" the last element is the top one.
   // We need the top one to get the correct "y" value for the highlight.
@@ -19,8 +20,13 @@ const drawHighlight = (chart: Chart, clickedElements: InteractionItem[]) => {
   ctx.strokeStyle = 'rgba(100, 100, 100, 1)'
   ctx.lineWidth = 3
 
-  // @ts-ignore element is not typed correctly by ChartJS, it most definitely has "width"
-  ctx.strokeRect(clickedElement.x - (clickedElement.width / 2), clickedElement.y, clickedElement.width, yScale.bottom - clickedElement.y)
+  if (chart.options.indexAxis === 'x') {
+    // @ts-ignore element is not typed correctly by ChartJS, it most definitely has "width"
+    ctx.strokeRect(clickedElement.x - (clickedElement.width / 2), clickedElement.y, clickedElement.width, yScale.bottom - clickedElement.y)
+  } else {
+    // @ts-ignore element is not typed correctly by ChartJS, it most definitely has "height"
+    ctx.strokeRect(xScale.left, clickedElement.y - (clickedElement.height / 2), clickedElement.x - xScale.left, clickedElement.height)
+  }
 
   ctx.restore()
 }
@@ -40,7 +46,7 @@ export const highlightPlugin: HighlightPlugin = {
 
     this.clicked = !this.clicked
 
-    const elementsAtEvent = chart.getElementsAtEventForMode(event.native, 'index', { intersect: false }, true)
+    const elementsAtEvent = chart.getElementsAtEventForMode(event.native, chart.options.interaction?.mode as string, { intersect: false }, true)
 
     if (elementsAtEvent.length && this.clicked) {
       // When mode is "index" the last element is the top one.
@@ -54,7 +60,8 @@ export const highlightPlugin: HighlightPlugin = {
       chart.options.hover = { mode: null }
     } else {
       delete this.clickedElements
-      chart.options.hover = this.previousHoverOption
+      chart.options.hover = this.previousHoverOption || chart.options.hover
+      this.clicked = false
     }
   },
 }

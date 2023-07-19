@@ -53,8 +53,6 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
 
   const tooltipOptions = {
     enabled: false,
-    mode: 'index',
-    intersect: false,
     position: 'lineChartTooltipPosition',
   }
 
@@ -174,6 +172,10 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
             tooltipBehavior(chartOptions.tooltipState, context)
           },
         },
+      },
+      interaction: {
+        mode: 'index',
+        intersect: false,
       },
     }
   })

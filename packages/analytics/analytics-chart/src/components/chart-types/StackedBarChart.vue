@@ -13,6 +13,7 @@
         'overflow-x': numLabels > MAX_BARS_VERTICAL ? 'auto' : 'hidden'
       }"
       @:scroll="onScrolling"
+      @click="handleChartClick()"
     >
       <div
         class="chart-body"
@@ -33,6 +34,7 @@
     </div>
     <ToolTip
       :left="tooltipData.left"
+      :locked="tooltipData.locked"
       :series="tooltipData.tooltipSeries"
       :show-tooltip="tooltipData.showTooltip"
       :tooltip-title="tooltipTitle"
@@ -58,6 +60,8 @@ import composables from '../../composables'
 import { v4 as uuidv4 } from 'uuid'
 import { ChartLegendPosition, ChartTypes } from '../../enums'
 import { AxesTooltipState, KChartData, LegendValues, TooltipState } from '../../types'
+import { verticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
+import { highlightPlugin } from '../chart-plugins/HighlightPlugin'
 
 const props = defineProps({
   chartData: {
@@ -215,6 +219,7 @@ const tooltipData: TooltipState = reactive({
   offset: 0,
   width: 0,
   height: 0,
+  locked: false,
   chartType: isHorizontal.value ? ChartTypes.HORIZONTAL_BAR : ChartTypes.VERTICAL_BAR,
 })
 const dependsOnChartUpdate = ref(0)
@@ -300,6 +305,7 @@ const plugins = [
   htmlLegendPlugin,
   axesTooltipPlugin,
   maxOverflowPlugin,
+  highlightPlugin,
   ...(props.annotations ? [reactiveAnnotationsPlugin] : []),
 ]
 
@@ -521,6 +527,18 @@ watch(showAnnotations, (value: boolean) => {
     }
   }
 })
+
+const handleChartClick = () => {
+  if (tooltipData.showTooltip) {
+    tooltipData.locked = !tooltipData.locked
+
+    if (chartInstance.value) {
+      verticalLinePlugin.clickedSegment = tooltipData.locked
+        ? chartInstance.value.tooltip?.dataPoints[0]
+        : undefined
+    }
+  }
+}
 
 </script>
 
