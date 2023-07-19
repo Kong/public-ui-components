@@ -46,7 +46,9 @@ export const highlightPlugin: HighlightPlugin = {
 
     this.clicked = !this.clicked
 
-    const elementsAtEvent = chart.getElementsAtEventForMode(event.native, chart.options.interaction?.mode as string, { intersect: false }, true)
+    const interactionMode = chart.options.interaction?.mode || 'index'
+
+    const elementsAtEvent = chart.getElementsAtEventForMode(event.native, interactionMode, { intersect: false }, true)
 
     if (elementsAtEvent.length && this.clicked) {
       // When mode is "index" the last element is the top one.
