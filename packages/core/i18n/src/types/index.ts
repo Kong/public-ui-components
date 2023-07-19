@@ -15,6 +15,8 @@ export type PathToDotNotation<MessageSource, V> = MessageSource extends V ? '' :
 
 // Omit the native $t function
 export type IntlShapeEx<MessageSource extends Record<string, any>> = Omit<IntlShape, '$t'> & {
+  formatUnixTimeStamp: (timestamp: number) => string
+  formatIsoDate: (isoDate: string) => string
   t: (translationKey: PathToDotNotation<MessageSource, string>, values?: Record<string, MessageFormatPrimitiveValue> | undefined, opts?: IntlMessageFormatOptions) => string
   te: (translationKey: PathToDotNotation<MessageSource, string>) => boolean
   tm: (translationKey: PathToDotNotation<MessageSource, string>) => Array<string>
