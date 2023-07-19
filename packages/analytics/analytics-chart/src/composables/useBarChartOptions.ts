@@ -1,6 +1,6 @@
 import { BarChartOptions, ExternalTooltipContext } from '../types'
-import { Tooltip, TooltipPositionerFunction, ChartType, CategoryScale, TooltipItem, TooltipXAlignment } from 'chart.js'
-import { isNullOrUndef } from 'chart.js/helpers'
+import { Tooltip, TooltipPositionerFunction, ChartType, CategoryScale, TooltipItem, TooltipXAlignment, Interaction, InteractionModeFunction, InteractionItem } from 'chart.js'
+import { isNullOrUndef, getRelativePosition } from 'chart.js/helpers'
 import { MAX_LABEL_LENGTH, horizontalTooltipPositioning, tooltipBehavior } from '../utils'
 import { computed } from 'vue'
 
@@ -40,6 +40,28 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
       y,
       xAlign,
     }
+  }
+
+  /**
+  * Custom interaction mode
+  * @function Interaction.modes.customInteractionMode
+  * @param {Chart} chart - the chart we are returning items from
+  * @param {Event} e - the event we are find things at
+  * @return {InteractionItem[]} - items that are found
+  */
+  Interaction.modes.customInteractionMode = function(chart, e) {
+    // @ts-ignore - Chart.js bad typting
+    const position = getRelativePosition(e, chart)
+    const items: InteractionItem[] = []
+    Interaction.evaluateInteractionItems(chart, chart.options.indexAxis || 'x', position, (element, datasetIndex, index) => {
+      if (chart.options.indexAxis === 'y' && element.inYRange(position.y, true) && chart.data.datasets[datasetIndex].data[index]) {
+        items.push({ element, datasetIndex, index })
+      }
+      if (chart.options.indexAxis === 'x' && element.inXRange(position.x, true) && chart.data.datasets[datasetIndex].data[index]) {
+        items.push({ element, datasetIndex, index })
+      }
+    })
+    return items
   }
 
   const options = computed(() => {
@@ -141,8 +163,8 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
           },
         },
       },
-      onHover: {
-        mode: 'nearest',
+      interaction: {
+        mode: 'customInteractionMode',
         intersect: true,
       },
       maxBarThickness: 60,
@@ -156,5 +178,8 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
 declare module 'chart.js' {
   interface TooltipPositionerMap {
     barChartTooltipPosition: TooltipPositionerFunction<ChartType>;
+  }
+  interface InteractionModeMap {
+    customInteractionMode: InteractionModeFunction;
   }
 }

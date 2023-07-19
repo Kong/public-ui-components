@@ -1,9 +1,8 @@
-import { KChartData, LegendValues } from '../types'
+import { AnalyticsDataPoint, KChartData, LegendValues } from '../types'
 import { ChartTypes } from '../enums'
 import { computed, Ref } from 'vue'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
-import { DoughnutDataPoint, ScatterDataPoint } from 'chart.js'
 import prettyBytes from 'pretty-bytes'
 import composables from '../composables'
 
@@ -13,13 +12,9 @@ export default function useChartLegendValues(chartData: Ref<KChartData>, chartTy
     return chartData.value.datasets.reduce((a, v) => {
       const raw = v.total
         ? v.total
-        : [ChartTypes.TIMESERIES_BAR, ChartTypes.TIMESERIES_LINE].some(e => e === chartType)
-          ? (v.data as ScatterDataPoint[]).reduce((acc: number, { y }: ScatterDataPoint) => {
-            return acc + (Number(y) || 0)
-          }, 0) as number
-          : (v.data as DoughnutDataPoint[]).reduce((acc: number, e: number) => {
-            return acc + Number(e)
-          }, 0) as number
+        : (v.data as Array<number | AnalyticsDataPoint>).reduce((acc: number, e: number | AnalyticsDataPoint) => {
+          return acc + (typeof e === 'number' ? Number(e) || 0 : Number(e.y) || 0)
+        }, 0) as number
 
       let formatted: string
 
