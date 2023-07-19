@@ -33,9 +33,9 @@
 <script setup lang="ts">
 import composables from '../composables'
 import { SimpleChartOptions } from '../types'
-import { ChartTypesSimple, ChartLegendPosition } from '../enums'
+import { ChartTypesSimple } from '../enums'
 import GaugeChart from './chart-types/GaugeChart.vue'
-import { computed, PropType, provide, toRef } from 'vue'
+import { computed, PropType, toRef } from 'vue'
 import { AnalyticsExploreResult, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette } from '../utils'
 
@@ -52,16 +52,6 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
-  },
-  emptyStateDescription: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  legendPosition: {
-    type: String as PropType<`${ChartLegendPosition}`>,
-    required: false,
-    default: ChartLegendPosition.Right,
   },
   syntheticsDataKey: {
     type: String,
@@ -90,7 +80,6 @@ const { i18n } = composables.useI18n()
 
 const chartDataRef = toRef(props, 'chartData')
 const chartOptionsRef = toRef(props, 'chartOptions')
-const legendPositionRef = toRef(props, 'legendPosition')
 
 const computedChartData = computed(() => {
   return composables.useExploreResultToDatasets(
@@ -115,9 +104,6 @@ const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAv
 const hasValidChartData = computed(() => {
   return chartDataRef.value && chartDataRef.value.meta && chartDataRef.value.records.length
 })
-
-provide('legendPosition', legendPositionRef)
-
 </script>
 
 <style lang="scss" scoped>

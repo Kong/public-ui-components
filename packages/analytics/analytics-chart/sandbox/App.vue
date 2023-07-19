@@ -177,7 +177,7 @@
     <SimpleChart
       v-else
       :chart-data="exploreResult"
-      :chart-options="analyticsChartOptions"
+      :chart-options="simpleChartOptions"
       :legend-position="legendPosition"
     />
 
@@ -289,7 +289,7 @@
 import { computed, ref, watch } from 'vue'
 import { AnalyticsChart, ChartMetricDisplay, ChartLegendPosition, ChartTypes, ChartTypesSimple, SimpleChart } from '../src'
 import type { AnalyticsExploreRecord, AnalyticsExploreV2Meta, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
-import type { AnalyticsChartColors, AnalyticsChartOptions } from '../src/types'
+import type { AnalyticsChartColors, AnalyticsChartOptions, SimpleChartOptions } from '../src/types'
 import { SeededRandom } from './SeedRandom'
 import { rand } from './utils'
 import { lookupDatavisColor } from '../src/utils'
@@ -317,7 +317,7 @@ const multiDimensionToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const showEmptyStateToggle = ref(false)
-const chartType = ref(ChartTypes.DOUGHNUT)
+const chartType = ref<ChartTypes | ChartTypesSimple>(ChartTypes.DOUGHNUT)
 const legendPosition = ref(ChartLegendPosition.Right)
 const metricDisplay = ref(ChartMetricDisplay.SingleMetric)
 const selectedMetric = ref<MetricSelection>({
@@ -487,8 +487,13 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => ({
   type: chartType.value,
   stacked: stackToggle.value,
   fill: fillToggle.value,
-  chartDatasetColors: isGaugeChart.value ? twoColorPalette.value : colorPalette.value,
+  chartDatasetColors: colorPalette.value,
   isSimple: isSimpleChart.value,
+}))
+
+const simpleChartOptions = computed<SimpleChartOptions>(() => ({
+  type: chartType.value,
+  chartDatasetColors: twoColorPalette.value,
   metricDisplay: metricDisplay.value,
 }))
 
