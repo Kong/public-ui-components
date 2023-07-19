@@ -1,7 +1,7 @@
 <template>
   <div
     class="chart-parent"
-    :class="[ chartFlexClass, { 'show-total': isSimple } ]"
+    :class="[ chartFlexClass ]"
     data-testid="doughnut-chart-parent"
   >
     <div
@@ -38,7 +38,6 @@
 import { computed, PropType, reactive, ref, toRef } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
-// @ts-ignore - approximate-number no exported module
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import HtmlLegend from '../chart-plugins/ChartLegend.vue'
 import {
@@ -59,17 +58,7 @@ const props = defineProps({
     required: false,
     default: null,
   },
-  chartTitle: {
-    type: String,
-    required: false,
-    default: null,
-  },
   fill: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-  isSimple: {
     type: Boolean,
     required: false,
     default: false,
