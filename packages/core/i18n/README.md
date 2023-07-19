@@ -406,7 +406,6 @@ Formats a unix timestamp into a formatted date string
 ```ts
 const { formatUnixTimeStamp } = useI18n()
 console.log(formatUnixTimeStamp('1558006979'))
-console.log()
 ```
 
 `result:`
@@ -424,7 +423,6 @@ Format an ISO formatted date
 ```ts
 const { formatIsoDate } = useI18n()
 console.log(formatIsoDate('2019-05-16T11:42:59.000Z'))
-console.log()
 ```
 
 `result:`
@@ -450,7 +448,6 @@ check if translation message exists
 ```ts
 const { te } = useI18n()
 console.log({p: te('global.ok'), n: te('global.not.ok')})
-console.log()
 ```
 
 `result:`

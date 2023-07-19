@@ -32,6 +32,11 @@ export const createI18n = <MessageSource extends Record<string, any>>
     intlCache,
   )
 
+  // Remove the native $t function from intlOriginal
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { $t, ...otherProps } = intlOriginal
+  const intl = otherProps
+
   /**
    * Formats a unix timestamp into a formatted date string
    * @param {Number} timestamp a unix timestamp in seconds
@@ -68,11 +73,6 @@ export const createI18n = <MessageSource extends Record<string, any>>
 
     return formatUnixTimeStamp(date)
   }
-
-  // Remove the native $t function from intlOriginal
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { $t, ...otherProps } = intlOriginal
-  const intl = otherProps
 
   const t = (translationKey: PathToDotNotation<MessageSource, string>, values?: Record<string, MessageFormatPrimitiveValue> | undefined, opts?: IntlMessageFormatOptions): string => {
     return intl.formatMessage(<MessageDescriptor>{ id: translationKey }, values, opts)
