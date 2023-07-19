@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.4.1...@kong-ui-public/analytics-chart@0.5.0) (2023-07-19)
+
+
+### Features
+
+* **analytics-chart:** per bar show all datapoints in tooltip [MA-1728] ([#617](https://github.com/Kong/public-ui-components/issues/617)) ([c76bf37](https://github.com/Kong/public-ui-components/commit/c76bf37168234cdf0a85254d9fe75d526b709bc3))
+
+
+
+
+
 ## [0.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.4.0...@kong-ui-public/analytics-chart@0.4.1) (2023-07-19)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
