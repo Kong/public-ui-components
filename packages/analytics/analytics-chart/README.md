@@ -202,7 +202,6 @@ export default defineComponent({
 #### `chartOptions`
 - type: [SimpleChartOptions](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-chart/src/types/chart-data.ts)
 - required: `true`
-  - `stacked` option only apply to time series charts
 
 #### `emptyStateTitle`
 
