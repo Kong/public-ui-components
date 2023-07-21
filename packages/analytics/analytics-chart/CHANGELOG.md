@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.6.0...@kong-ui-public/analytics-chart@0.7.0) (2023-07-21)
+
+
+### Features
+
+* doughnut metric chart support [MA-1850] ([#603](https://github.com/Kong/public-ui-components/issues/603)) ([60ab18a](https://github.com/Kong/public-ui-components/commit/60ab18acfe335798aedc3d2d4c847d4100575ca2))
+
+
+
+
+
 # [0.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.5.0...@kong-ui-public/analytics-chart@0.6.0) (2023-07-19)
 
 
