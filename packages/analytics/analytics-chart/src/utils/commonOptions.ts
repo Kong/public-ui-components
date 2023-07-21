@@ -3,7 +3,7 @@ import { ExternalTooltipContext, KChartData, TooltipState } from '../types'
 import { DECIMAL_DISPLAY, numberFormatter } from '../utils'
 import { isValid } from 'date-fns'
 import { Point, ScatterDataPoint } from 'chart.js'
-import { ChartTypes } from '../enums'
+import { ChartTypes, ChartTypesSimple } from '../enums'
 
 export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTooltipContext) : void => {
   const { tooltip } = context
@@ -18,8 +18,7 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
     const valueAxis = context.chart.config?.options?.indexAxis === 'y' ? 'x' : 'y'
 
     const isBarChart = [ChartTypes.HORIZONTAL_BAR, ChartTypes.VERTICAL_BAR].includes(tooltipData.chartType)
-    const isDoughnutChart = tooltipData.chartType === ChartTypes.DOUGHNUT
-
+    const isDoughnutChart = [ChartTypesSimple.GAUGE, ChartTypes.DOUGHNUT].includes(tooltipData.chartType)
     tooltipData.tooltipContext = tooltip.dataPoints[0].parsed.x
 
     tooltipData.tooltipSeries = tooltip.dataPoints.map((p, i) => {

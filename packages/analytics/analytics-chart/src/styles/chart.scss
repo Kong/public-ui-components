@@ -20,11 +20,14 @@
     }
   }
 
-  // Always stack legend below chart below mobile breakpoint
-  @media (max-width: 768px) {
-    display: flex;
-    flex-wrap: wrap;
+  &:not(.show-total) {
+    // Always stack legend below chart below mobile breakpoint
+    @media(max-width: 768px) {
+      display: flex;
+      flex-wrap: wrap;
+    }
   }
+  
 
   .chart-container {
     margin-bottom: var(--spacing-sm, 14px);

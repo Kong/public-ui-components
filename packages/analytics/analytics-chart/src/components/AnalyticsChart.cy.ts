@@ -1,5 +1,5 @@
 // Cypress component test spec file
-import { ChartTypes } from '../enums/chart-types.enum'
+import { ChartTypes } from '../enums/'
 import AnalyticsChart from './AnalyticsChart.vue'
 import ChartTooltip from './chart-plugins/ChartTooltip.vue'
 import { GranularityKeys } from '@kong-ui-public/analytics-utilities'

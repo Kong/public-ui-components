@@ -28,7 +28,7 @@ Install the component in your host application
 yarn add @kong-ui-public/analytics-chart
 ```
 
-### Props
+### Props - AnalyticsChart
 
 #### `chartData`
 
@@ -63,7 +63,6 @@ yarn add @kong-ui-public/analytics-chart
           '400': '#00bbf9',
         }
       ```
-
 
 #### `chartTitle`
 
@@ -104,12 +103,14 @@ yarn add @kong-ui-public/analytics-chart
 - required: `false`
 - default: `'100%'`
 - set the chart width using css width values (px, %, etc...)
+
 #### `showLegendValues`
 
 - type: `boolean`
 - required: `false`
 - default: `true`
 - Show the sum of each dataset in the legend
+
 ### Usage Example
 
 ```html
@@ -185,6 +186,101 @@ export default defineComponent({
       chartData,
       chartOptions,
       legendPosition
+    }
+  },
+})
+</script>
+```
+
+### Props - SimpleChart
+
+#### `chartData`
+
+- type: [AnalyticsExploreResult](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L77)
+- required: `true`
+
+#### `chartOptions`
+- type: [SimpleChartOptions](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-chart/src/types/chart-data.ts)
+- required: `true`
+
+#### `emptyStateTitle`
+
+- type: `string`
+- required: `false`
+
+#### `metricDisplay`
+
+Optional value which can be any one of the following:
+
+- `Hidden`: will only show the outer doughnut chart
+- `SingleMetric`: displays only the large metric value
+- `Full`: displays both the large metric and subtext
+
+#### SimpleChart
+
+Contains the same chart-data 
+
+```html
+<template>
+  <SimpleChart
+    :chart-data="exploreResult"
+    :chart-options="simpleChartOptions"
+  />
+</template>
+
+<script>
+import { SimpleChart } from '@kong-ui-public/analytics-chart'
+import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
+import type { SimpleChartOptions } from '@kong-ui-public/analytics-chart'
+
+import { defineComponent, ref } from 'vue'
+
+export default defineComponent({
+  components: {
+    SimpleChart,
+  },
+  setup() {
+    const chartData = ref<AnalyticsExploreResult>({
+      records: [
+        {
+          version: '1.0',
+          timestamp: '2023-04-24T10:27:22.798Z',
+          event: {
+            Service: 'Service A',
+            TotalRequests: 849,
+          },
+        },
+        {
+          version: '1.0',
+          timestamp: '2023-04-24T10:27:22.798Z',
+          event: {
+            Service: 'Service B',
+            TotalRequests: 5434,
+          },
+        },
+      ],
+      meta: {
+        start: 1682332042798,
+        end: 1682353642798,
+        queryId: '12345',
+        dimensions: {
+          Service: ['Service A', 'Service B'],
+        },
+        metricNames: ['TotalRequests'],
+        metricUnits: {
+          TotalRequests: 'requests',
+        },
+      },
+    })
+
+    const chartOptions = ref<SimpleChartOptions>({
+      type: ChartTypes.GAUGE,
+      metricDisplay: ChartMetricDisplay.Full
+    })
+
+    return {
+      chartData,
+      chartOptions,
     }
   },
 })

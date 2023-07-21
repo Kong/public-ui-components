@@ -1,0 +1,14 @@
+// Styles common to both AnalticsChart and SimpleChart
+.analytics-chart-shell,
+.simple-chart-shell {
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+
+  .chart-empty-state {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+  }
+}

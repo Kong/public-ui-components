@@ -1,12 +1,12 @@
 import { AnalyticsDataPoint, KChartData, LegendValues } from '../types'
-import { ChartTypes } from '../enums'
+import { ChartTypes, ChartTypesSimple } from '../enums'
 import { computed, Ref } from 'vue'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
 import prettyBytes from 'pretty-bytes'
 import composables from '../composables'
 
-export default function useChartLegendValues(chartData: Ref<KChartData>, chartType: ChartTypes, metricUnit: Ref<string>) {
+export default function useChartLegendValues(chartData: Ref<KChartData>, chartType: ChartTypes | ChartTypesSimple, metricUnit: Ref<string>) {
   const { i18n } = composables.useI18n()
   const legendValues = computed<LegendValues>(() => {
     return chartData.value.datasets.reduce((a, v) => {

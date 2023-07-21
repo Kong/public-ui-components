@@ -2,6 +2,7 @@
   <div class="sandbox-container">
     <h1> Analytics Charts</h1>
     <div class="flex-row-parent">
+      <!-- AnalyticsChart / SimpleChart type selector -->
       <div class="flex-vertical">
         <KLabel>
           Chart Type
@@ -57,9 +58,66 @@
               Doughnut
             </KRadio>
           </div>
+          <div>
+            <KRadio
+              v-model="chartType"
+              data-testid="application-radio-btn"
+              name="chartType"
+              :selected-value="ChartTypesSimple.GAUGE"
+            >
+              Gauge
+            </KRadio>
+          </div>
         </div>
       </div>
-      <div class="flex-vertical">
+
+      <!-- Metric display options (Gauge chart-specific) -->
+      <div
+        v-if="isGaugeChart"
+        class="flex-vertical"
+      >
+        <KLabel>
+          Metric display
+        </KLabel>
+        <div class="chart-radio-group">
+          <div>
+            <KRadio
+              v-model="metricDisplay"
+              data-testid="service-radio-btn"
+              name="metricDisplay"
+              :selected-value="ChartMetricDisplay.SingleMetric"
+            >
+              {{ ChartMetricDisplay.SingleMetric }}
+            </KRadio>
+          </div>
+          <div>
+            <KRadio
+              v-model="metricDisplay"
+              data-testid="application-radio-btn"
+              name="metricDisplay"
+              :selected-value="ChartMetricDisplay.Full"
+            >
+              {{ ChartMetricDisplay.Full }}
+            </KRadio>
+          </div>
+          <div>
+            <KRadio
+              v-model="metricDisplay"
+              data-testid="route-radio-btn"
+              name="metricDisplay"
+              :selected-value="ChartMetricDisplay.Hidden"
+            >
+              {{ ChartMetricDisplay.Hidden }}
+            </KRadio>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legend position -->
+      <div
+        v-if="!isSimpleChart"
+        class="flex-vertical"
+      >
         <KLabel>
           Legend position
         </KLabel>
@@ -96,6 +154,7 @@
           </div>
         </div>
       </div>
+      <!-- Metric item selection -->
       <KSelect
         :items="metricItems"
         label="Metric"
@@ -103,7 +162,10 @@
         @selected="onMetricSelected"
       />
     </div>
+
+    <!-- Determine if a full blown chart is to be displayed, or a simplified one -->
     <AnalyticsChart
+      v-if="!isSimpleChart"
       :chart-data="exploreResult"
       :chart-options="analyticsChartOptions"
       chart-title="Request count by Status Code"
@@ -112,6 +174,14 @@
       :show-legend-values="showLegendValuesToggle"
       tooltip-title="tooltip title"
     />
+    <SimpleChart
+      v-else
+      :chart-data="exploreResult"
+      :chart-options="simpleChartOptions"
+      :legend-position="legendPosition"
+    />
+
+    <!-- Dataset options -->
     <div class="d-flex flex-row">
       <KButton
         appearance="outline"
@@ -127,11 +197,12 @@
         Add dataset
       </KButton>
     </div>
+
     <div class="option-toggles">
       <KLabel>
         Option toggles
       </KLabel>
-      <div v-if="!chartType.includes('TimeSeries')">
+      <div v-if="!chartType.includes('TimeSeries') && !isSimpleChart">
         <KInputSwitch
           v-model="multiDimensionToggle"
           :label="multiDimensionToggle ? 'Multi Dimension' : 'Single Dimension'"
@@ -149,19 +220,19 @@
           :label="stackToggle ? 'Stacked' : 'Not Stacked'"
         />
       </div>
-      <div v-if="!isTimeSeriesChart">
+      <div v-if="!isTimeSeriesChart && !isSimpleChart">
         <KInputSwitch
           v-model="showAnnotationsToggle"
           :label="showAnnotationsToggle ? 'Show Annotations' : 'No Annotations'"
         />
       </div>
-      <div>
+      <div v-if="!isSimpleChart">
         <KInputSwitch
           v-model="showLegendValuesToggle"
           :label="showLegendValuesToggle ? 'Show Legend Values' : 'No Legend Values'"
         />
       </div>
-      <div>
+      <div v-if="!isSimpleChart">
         <KInputSwitch
           v-model="limitToggle"
           :label="limitToggle ? 'Has Limit' : 'No Limit'"
@@ -216,9 +287,9 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { AnalyticsChart, ChartLegendPosition, ChartTypes } from '../src'
+import { AnalyticsChart, ChartMetricDisplay, ChartLegendPosition, ChartTypes, ChartTypesSimple, SimpleChart } from '../src'
 import type { AnalyticsExploreRecord, AnalyticsExploreV2Meta, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
-import type { AnalyticsChartColors, AnalyticsChartOptions } from '../src/types'
+import type { AnalyticsChartColors, AnalyticsChartOptions, SimpleChartOptions } from '../src/types'
 import { SeededRandom } from './SeedRandom'
 import { rand } from './utils'
 import { lookupDatavisColor } from '../src/utils'
@@ -246,9 +317,10 @@ const multiDimensionToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const showEmptyStateToggle = ref(false)
-const chartType = ref(ChartTypes.TIMESERIES_LINE)
+const chartType = ref<ChartTypes | ChartTypesSimple>(ChartTypes.DOUGHNUT)
 const legendPosition = ref(ChartLegendPosition.Right)
-const selectedMetric = ref< MetricSelection>({
+const metricDisplay = ref(ChartMetricDisplay.SingleMetric)
+const selectedMetric = ref<MetricSelection>({
   name: Metrics.TotalRequests,
   unit: 'count',
 })
@@ -267,9 +339,12 @@ const metricItems = [{
   value: Metrics.ResponseSizeP99,
   unit: 'bytes',
 }]
-const statusCodeDimensionValues = ref(new Set([
+
+const statusCodeLabels = [
   '200', '300', '400', '500', 'This is a really long chart label to test long labels',
-]))
+]
+const statusCodeDimensionValues = ref(new Set(statusCodeLabels))
+
 const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',
 ]))
@@ -388,12 +463,21 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
   }
 
   return {
-    records,
+    // Gauge doughnut chart type should only receive 2 data points
+    records: !isGaugeChart.value
+      ? records
+      // @ts-ignore - merely sorting the array for display purposes
+      : records.slice(0, 2).sort((a, b) => (a[selectedMetric.value.name] < b[selectedMetric.value.name])),
     meta,
   }
 })
 
 const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {}))
+
+const twoColorPalette = ref<AnalyticsChartColors>({
+  200: '#008871',
+  300: '#9edca6',
+})
 
 const updateSelectedColor = (event: Event, label: string) => {
   colorPalette.value[label] = (event.target as HTMLInputElement).value
@@ -404,6 +488,13 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => ({
   stacked: stackToggle.value,
   fill: fillToggle.value,
   chartDatasetColors: colorPalette.value,
+  isSimple: isSimpleChart.value,
+}))
+
+const simpleChartOptions = computed<SimpleChartOptions>(() => ({
+  type: chartType.value,
+  chartDatasetColors: twoColorPalette.value,
+  metricDisplay: metricDisplay.value,
 }))
 
 const randomizeData = () => {
@@ -422,15 +513,16 @@ const addDataset = () => {
 const dataCode = computed(() => JSON.stringify(exploreResult.value, null, 2))
 const optionsCode = computed(() => JSON.stringify(analyticsChartOptions.value, null, 2))
 
-watch(multiDimensionToggle, () => {
-  serviceDimensionValues.value = new Set(Array(5).fill(0).map(() => `Service${rand(1, 100)}`))
-  statusCodeDimensionValues.value = new Set(Array(5).fill(0).map(() => `${rand(100, 599)}`))
-
-  colorPalette.value = [...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {})
-})
-
 const isTimeSeriesChart = computed<boolean>(() => {
   return [ChartTypes.TIMESERIES_BAR, ChartTypes.TIMESERIES_LINE].some(e => e === chartType.value)
+})
+
+const isSimpleChart = computed<boolean>(() => {
+  return [ChartTypesSimple.GAUGE].some(e => e === chartType.value)
+})
+
+const isGaugeChart = computed<boolean>(() => {
+  return (ChartTypesSimple.GAUGE === chartType.value)
 })
 
 const onMetricSelected = (item: any) => {
@@ -443,6 +535,20 @@ const onMetricSelected = (item: any) => {
     unit: item.unit,
   }
 }
+
+watch(multiDimensionToggle, () => {
+  serviceDimensionValues.value = new Set(Array(5).fill(0).map(() => `Service${rand(1, 100)}`))
+  statusCodeDimensionValues.value = new Set(Array(5).fill(0).map(() => `${rand(100, 599)}`))
+
+  colorPalette.value = [...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {})
+})
+
+watch(isGaugeChart, () => {
+  // Truncate labels if Gauge (simplified doughnut) chart type
+  if (isGaugeChart.value) {
+    statusCodeDimensionValues.value = new Set(statusCodeLabels.slice(0, 2))
+  }
+})
 
 </script>
 
@@ -458,9 +564,12 @@ body {
   min-height: 100%;
 }
 .sandbox-container {
-  margin: $spacing-md;
+  margin: 0;
   padding: $spacing-md;
 
+  h1 {
+    margin-top: 0;
+  }
   @media (max-width: 767px) {
     min-height: 300px;
     width: 100%;
@@ -477,7 +586,7 @@ body {
   .flex-row-parent {
     display: flex;
     flex-direction: row;
-    gap: 16px;
+    gap: 24px;
   }
 
   .config-container {

@@ -37,7 +37,6 @@ export interface LineChartOptions extends BaseChartOptions {
 export interface DoughnutChartOptions {
   tooltipState: TooltipState,
   legendID: string,
-  timeRange: Ref<number>, // time range in seconds
 }
 
 export interface AxesTooltipState {

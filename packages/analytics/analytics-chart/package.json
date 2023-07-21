@@ -72,6 +72,7 @@
     "vue-chartjs": "^5.2.0"
   },
   "distSizeChecker": {
+    "warningLimit": "1.2MB",
     "errorLimit": "1.3MB"
   }
 }

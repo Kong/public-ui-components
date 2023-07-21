@@ -1,5 +1,5 @@
 import { ChartData, ChartDataset } from 'chart.js'
-import { ChartTypes } from '../enums'
+import { ChartTypes, ChartMetricDisplay, ChartTypesSimple } from '../enums'
 
 // Chart.js extendend interfaces
 export type Dataset = ChartDataset & { rawDimension: string, rawMetric?: string, total?: number, lineTension?: number, fill?: boolean }
@@ -28,7 +28,7 @@ export interface AnalyticsChartColors {
 }
 
 /**
- * Chart options
+ * Analytics Chart options
  */
 export interface AnalyticsChartOptions {
   /**
@@ -60,7 +60,25 @@ export interface AnalyticsChartOptions {
   /**
    * Chart dataset color palette
    */
-  chartDatasetColors?: AnalyticsChartColors | string[]
+  chartDatasetColors?: AnalyticsChartColors | string[],
+}
+
+/**
+ * Simple Chart options
+ */
+export interface SimpleChartOptions {
+  /**
+   * Chart type
+   */
+  type: ChartTypesSimple
+  /**
+   * Chart dataset color palette
+   */
+  chartDatasetColors?: AnalyticsChartColors | string[],
+  /**
+   * Determines metric text to be shown in the center
+   */
+  metricDisplay?: ChartMetricDisplay,
 }
 
 export interface LegendValueEntry {

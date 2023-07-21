@@ -6,7 +6,7 @@
   >
     <div
       class="chart-container"
-      :style="{height, width}"
+      :style="{ height, width }"
     >
       <Doughnut
         ref="chartInstance"
@@ -71,11 +71,6 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
-  },
-  timeRange: {
-    type: Number,
-    required: false,
-    default: 0,
   },
   legendPosition: {
     type: String as PropType<`${ChartLegendPosition}`>,
@@ -181,7 +176,6 @@ composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(pro
 
 const { options } = composables.useDoughnutChartOptions({
   tooltipState: tooltipData,
-  timeRange: toRef(props, 'timeRange'),
   legendID: legendID.value,
 })
 
