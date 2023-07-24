@@ -99,7 +99,6 @@ const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs.length)
         color: $kui-color-text;
         font-size: $kui-font-size-70;
         font-weight: $kui-font-weight-bold;
-        letter-spacing: -0.48px;
         line-height: $kui-line-height-60;
         margin: $kui-space-0;
         /** truncation */
