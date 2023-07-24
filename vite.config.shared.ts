@@ -52,6 +52,14 @@ export default defineConfig({
       '@entities-shared-sandbox': path.resolve(__dirname, 'packages/entities/entities-shared/sandbox/shared'),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // Inject the @kong/design-tokens SCSS variables to make them available for all components.
+        additionalData: '@import "@kong/design-tokens/tokens/scss/variables";',
+      },
+    },
+  },
   build: {
     outDir: './dist',
     cssCodeSplit: false,
