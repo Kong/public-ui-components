@@ -31,7 +31,7 @@
     }
   }
 
-  @media (max-width: ($viewport-md - 1px)) {
+  @media (max-width: ($kui-breakpoint-phablet - 1px)) {
     width: auto;
   }
 }

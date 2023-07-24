@@ -153,7 +153,7 @@ const copyIdToClipboard = (executeCopy: (prop: string) => boolean) => {
   display: flex;
 
   .uuid-container {
-    margin-right: 12px;
+    margin-right: $kui-space-50;
     white-space: nowrap;
   }
 

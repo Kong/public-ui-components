@@ -159,7 +159,7 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
   flex-direction: column;
   width: 100%;
 
-  @media (max-width: ($viewport-md - 1px)) {
+  @media (max-width: ($kui-breakpoint-phablet - 1px)) {
     max-width: none;
     width: auto;
   }

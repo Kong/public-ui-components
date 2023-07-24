@@ -324,7 +324,7 @@ onBeforeUnmount(() => {
   z-index: v-bind(zIndex);
 
   // Restrict the sidebar from going full-width on larger screens
-  @media (min-width: $viewport-sm) {
+  @media (min-width: $kui-breakpoint-mobile) {
     max-width: $sidebar-width;
     width: $sidebar-width;
   }

@@ -324,7 +324,7 @@ main {
   display: none;
   padding-left: 16px;
 
-  @media (min-width: 640px) { // $viewport-sm
+  @media (min-width: 640px) { // $kui-breakpoint-mobile
     display: flex;
   }
 }

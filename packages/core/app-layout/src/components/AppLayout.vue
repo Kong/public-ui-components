@@ -287,7 +287,7 @@ onBeforeUnmount(() => {
   bottom: 0;
   display: flex;
   flex-direction: column;
-  font-family: $font-family-base;
+  font-family: $kui-font-family-text;
   height: 100%;
   left: 0;
   overflow: hidden;

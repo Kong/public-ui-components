@@ -109,7 +109,7 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
   width: 100%;
   @include flex-gap(24px, 16px);
 
-  @media (max-width: ($viewport-md - 1px)) {
+  @media (max-width: ($kui-breakpoint-phablet - 1px)) {
     @include flex-gap(16px, 16px);
     flex-direction: column;
   }
