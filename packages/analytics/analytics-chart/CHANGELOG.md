@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.7.2...@kong-ui-public/analytics-chart@0.7.3) (2023-07-24)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [0.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.7.1...@kong-ui-public/analytics-chart@0.7.2) (2023-07-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency chartjs-plugin-annotation to v3 ([#572](https://github.com/Kong/public-ui-components/issues/572)) ([1a41b2f](https://github.com/Kong/public-ui-components/commit/1a41b2f764747b47fb6f2ffd81a07009cd43094d))
+
+
+
+
+
 ## [0.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.7.0...@kong-ui-public/analytics-chart@0.7.1) (2023-07-24)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

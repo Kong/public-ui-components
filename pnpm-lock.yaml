@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -19,11 +23,8 @@ importers:
       '@evilmartians/lefthook':
         specifier: ^1.4.5
         version: 1.4.7
-      '@kong/design-tokens':
-        specifier: ^1.7.1
-        version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.91.0
+        specifier: ^8.91.1
         version: 8.101.0(vue-router@4.2.4)(vue@3.3.4)
       '@rushstack/eslint-patch':
         specifier: ^1.3.2
@@ -197,8 +198,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(chart.js@4.3.0)(date-fns@2.30.0)
       chartjs-plugin-annotation:
-        specifier: ^2.2.1
-        version: 2.2.1(chart.js@4.3.0)
+        specifier: ^3.0.1
+        version: 3.0.1(chart.js@4.3.0)
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
@@ -218,12 +219,9 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^0.8.0
         version: link:../../core/i18n
-      '@kong/design-tokens':
-        specifier: ^1.7.1
-        version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.91.0
-        version: 8.101.0(vue@3.3.4)
+        specifier: ^8.91.1
+        version: 8.101.0(vue-router@4.2.4)(vue@3.3.4)
       '@types/uuid':
         specifier: ^9.0.2
         version: 9.0.2
@@ -244,7 +242,7 @@ importers:
         version: 2.1.0
     devDependencies:
       '@kong/kongponents':
-        specifier: ^8.91.0
+        specifier: ^8.91.1
         version: 8.101.0(vue-router@4.2.4)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
@@ -262,11 +260,8 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0
     devDependencies:
-      '@kong/design-tokens':
-        specifier: ^1.7.1
-        version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.91.0
+        specifier: ^8.91.1
         version: 8.101.0(vue-router@4.2.4)(vue@3.3.4)
       '@types/lodash.clonedeep':
         specifier: ^4.5.7
@@ -304,12 +299,9 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^0.8.0
         version: link:../i18n
-      '@kong/design-tokens':
-        specifier: ^1.7.1
-        version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.91.0
-        version: 8.101.0(vue@3.3.4)
+        specifier: ^8.91.1
+        version: 8.101.0(vue-router@4.2.4)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
         version: 3.3.4
@@ -345,7 +337,7 @@ importers:
         specifier: workspace:^0.8.0
         version: link:../i18n
       '@kong/kongponents':
-        specifier: ^8.91.0
+        specifier: ^8.91.1
         version: 8.101.0(vue-router@4.2.4)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
@@ -360,18 +352,15 @@ importers:
         specifier: ^1.29.0
         version: 1.29.0
     devDependencies:
-      '@kong/design-tokens':
-        specifier: ^1.7.1
-        version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.91.0
-        version: 8.101.0(vue@3.3.4)
+        specifier: ^8.91.1
+        version: 8.101.0(vue-router@4.2.4)(vue@3.3.4)
       '@types/prismjs':
         specifier: ^1.26.0
         version: 1.26.0
       '@vitejs/plugin-vue-jsx':
         specifier: ^3.0.1
-        version: 3.0.1(vue@3.3.4)
+        version: 3.0.1(vite@4.4.7)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
         version: 3.3.4
@@ -391,15 +380,12 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
     devDependencies:
-      '@kong/design-tokens':
-        specifier: ^1.7.1
-        version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.91.0
-        version: 8.101.0(vue@3.3.4)
+        specifier: ^8.91.1
+        version: 8.101.0(vue-router@4.2.4)(vue@3.3.4)
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.0.4
-        version: 1.0.4
+        version: 1.0.4(vite@4.4.7)
       '@types/lodash.clonedeep':
         specifier: ^4.5.7
         version: 4.5.7
@@ -498,7 +484,7 @@ packages:
       '@babel/traverse': 7.22.5
       '@babel/types': 7.22.5
       convert-source-map: 1.9.0
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.0
@@ -763,7 +749,7 @@ packages:
       '@babel/helper-split-export-declaration': 7.22.5
       '@babel/parser': 7.22.5
       '@babel/types': 7.22.5
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -1293,7 +1279,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       espree: 9.6.1
       globals: 13.20.0
       ignore: 5.2.4
@@ -1395,7 +1381,7 @@ packages:
     engines: {node: '>=10.10.0'}
     dependencies:
       '@humanwhocodes/object-schema': 1.2.1
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -1495,10 +1481,6 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@kong/design-tokens@1.7.1:
-    resolution: {integrity: sha512-gKM0WuduLHotY3zbqiRYqLtyj+Qth0bEN2yKi8hjYTGDW/ri2fr5OAbXbwDzi7E6fpE4SOm0qTuIhuWXoEc5KA==}
-    dev: true
-
   /@kong/kongponents@8.101.0(vue-router@4.2.4)(vue@3.3.4):
     resolution: {integrity: sha512-5FXnDv0Rj5DYWYVkxXGDF/MSeVq7fdZjuWMlWFudIO/frVqhqgTNRJ1Zek4HG9nUPn2NqhylrDUtJcadYUnSFQ==}
     engines: {node: '>=16.19.0'}
@@ -1522,30 +1504,6 @@ packages:
     transitivePeerDependencies:
       - '@popperjs/core'
       - debug
-
-  /@kong/kongponents@8.101.0(vue@3.3.4):
-    resolution: {integrity: sha512-5FXnDv0Rj5DYWYVkxXGDF/MSeVq7fdZjuWMlWFudIO/frVqhqgTNRJ1Zek4HG9nUPn2NqhylrDUtJcadYUnSFQ==}
-    engines: {node: '>=16.19.0'}
-    peerDependencies:
-      vue: '>= 3.3.0'
-      vue-router: ^4.1.6
-    dependencies:
-      axios: 0.27.2
-      date-fns: 2.30.0
-      date-fns-tz: 1.3.8(date-fns@2.30.0)
-      focus-trap: 7.5.2
-      focus-trap-vue: 3.4.0(focus-trap@7.5.2)(vue@3.3.4)
-      popper.js: 1.16.1
-      sortablejs: 1.15.0
-      swrv: 1.0.4(vue@3.3.4)
-      uuid: 8.3.2
-      v-calendar: 3.0.3(vue@3.3.4)
-      vue: 3.3.4
-      vue-draggable-next: 2.2.0(sortablejs@1.15.0)(vue@3.3.4)
-    transitivePeerDependencies:
-      - '@popperjs/core'
-      - debug
-    dev: true
 
   /@kong/swagger-ui-kong-theme-universal@4.2.6(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.4)(vue@3.3.4):
     resolution: {integrity: sha512-ZZtnsER3yHFnzjy5OO3jYgeY3ZCuhQP6IFqwq2vUj9HntyJUBOBUxvTJ9YJoQHz2wMVuatdUJHadQcUVS/Cktw==}
@@ -1698,7 +1656,7 @@ packages:
       - supports-color
     dev: true
 
-  /@modyfi/vite-plugin-yaml@1.0.4:
+  /@modyfi/vite-plugin-yaml@1.0.4(vite@4.4.7):
     resolution: {integrity: sha512-qkT0KiR3AQQRfUvDzLv4+1rYAzXj+QmGhAbyUd0Ordf9xynK76i758lk5GiEfxuQxbvdqDaJ9oXkH/KacbSjQQ==}
     peerDependencies:
       vite: ^2.6.0 || ^3.0.0 || ^4.0.0
@@ -1706,6 +1664,7 @@ packages:
       '@rollup/pluginutils': 5.0.2
       js-yaml: 4.1.0
       tosource: 2.0.0-alpha.3
+      vite: 4.4.7(@types/node@18.17.0)(sass@1.64.1)
     transitivePeerDependencies:
       - rollup
     dev: true
@@ -2872,7 +2831,7 @@ packages:
       '@typescript-eslint/scope-manager': 5.62.0
       '@typescript-eslint/type-utils': 5.62.0(eslint@8.45.0)(typescript@4.9.5)
       '@typescript-eslint/utils': 5.62.0(eslint@8.45.0)(typescript@4.9.5)
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       eslint: 8.45.0
       graphemer: 1.4.0
       ignore: 5.2.4
@@ -2897,7 +2856,7 @@ packages:
       '@typescript-eslint/scope-manager': 5.62.0
       '@typescript-eslint/types': 5.62.0
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@4.9.5)
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       eslint: 8.45.0
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -2924,7 +2883,7 @@ packages:
     dependencies:
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@4.9.5)
       '@typescript-eslint/utils': 5.62.0(eslint@8.45.0)(typescript@4.9.5)
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       eslint: 8.45.0
       tsutils: 3.21.0(typescript@4.9.5)
       typescript: 4.9.5
@@ -2948,7 +2907,7 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.62.0
       '@typescript-eslint/visitor-keys': 5.62.0
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       globby: 11.1.0
       is-glob: 4.0.3
       semver: 7.5.4
@@ -2997,21 +2956,6 @@ packages:
       '@babel/plugin-transform-typescript': 7.22.5(@babel/core@7.22.5)
       '@vue/babel-plugin-jsx': 1.1.1(@babel/core@7.22.5)
       vite: 4.4.7(@types/node@18.17.0)(sass@1.64.1)
-      vue: 3.3.4
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /@vitejs/plugin-vue-jsx@3.0.1(vue@3.3.4):
-    resolution: {integrity: sha512-+Jb7ggL48FSPS1uhPnJbJwWa9Sr90vQ+d0InW+AhBM22n+cfuYqJZDckBc+W3QSHe1WDvewMZfa4wZOtk5pRgw==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    peerDependencies:
-      vite: ^4.0.0
-      vue: ^3.0.0
-    dependencies:
-      '@babel/core': 7.22.5
-      '@babel/plugin-transform-typescript': 7.22.5(@babel/core@7.22.5)
-      '@vue/babel-plugin-jsx': 1.1.1(@babel/core@7.22.5)
       vue: 3.3.4
     transitivePeerDependencies:
       - supports-color
@@ -3531,7 +3475,7 @@ packages:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -3540,7 +3484,7 @@ packages:
     resolution: {integrity: sha512-7Epl1Blf4Sy37j4v9f9FjICCh4+KAQOyXgHEwlyBiAQLbhKdq/i2QQU3amQalS/wPhdPzDXPL5DMR5bkn+YeWg==}
     engines: {node: '>= 8.0.0'}
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       depd: 2.0.0
       humanize-ms: 1.2.1
     transitivePeerDependencies:
@@ -4373,10 +4317,10 @@ packages:
       date-fns: 2.30.0
     dev: false
 
-  /chartjs-plugin-annotation@2.2.1(chart.js@4.3.0):
-    resolution: {integrity: sha512-RL9UtrFr2SXd7C47zD0MZqn6ZLgrcRt3ySC6cYal2amBdANcYB1QcwFXcpKWAYnO4SGJYRok7P5rKDDNgJMA/w==}
+  /chartjs-plugin-annotation@3.0.1(chart.js@4.3.0):
+    resolution: {integrity: sha512-hlIrXXKqSDgb+ZjVYHefmlZUXK8KbkCPiynSVrTb/HjTMkT62cOInaT1NTQCKtxKKOm9oHp958DY3RTAFKtkHg==}
     peerDependencies:
-      chart.js: '>=3.7.0'
+      chart.js: '>=4.0.0'
     dependencies:
       chart.js: 4.3.0
     dev: false
@@ -5136,17 +5080,6 @@ packages:
     dependencies:
       ms: 2.0.0
 
-  /debug@3.2.7:
-    resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-    dependencies:
-      ms: 2.1.3
-    dev: true
-
   /debug@3.2.7(supports-color@8.1.1):
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
     peerDependencies:
@@ -5157,18 +5090,6 @@ packages:
     dependencies:
       ms: 2.1.3
       supports-color: 8.1.1
-    dev: true
-
-  /debug@4.3.4:
-    resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
-    engines: {node: '>=6.0'}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-    dependencies:
-      ms: 2.1.2
     dev: true
 
   /debug@4.3.4(supports-color@8.1.1):
@@ -5743,7 +5664,7 @@ packages:
   /eslint-import-resolver-node@0.3.7:
     resolution: {integrity: sha512-gozW2blMLJCeFpBwugLTGyvVjNoeo1knonXAcatC6bjPBZitotxdWf7Gimr25N4c0AAOo4eOUfaG82IJPDpqCA==}
     dependencies:
-      debug: 3.2.7
+      debug: 3.2.7(supports-color@8.1.1)
       is-core-module: 2.12.1
       resolve: 1.22.2
     transitivePeerDependencies:
@@ -5772,7 +5693,7 @@ packages:
         optional: true
     dependencies:
       '@typescript-eslint/parser': 5.62.0(eslint@8.45.0)(typescript@4.9.5)
-      debug: 3.2.7
+      debug: 3.2.7(supports-color@8.1.1)
       eslint: 8.45.0
       eslint-import-resolver-node: 0.3.7
     transitivePeerDependencies:
@@ -5824,7 +5745,7 @@ packages:
       array-includes: 3.1.6
       array.prototype.flat: 1.3.1
       array.prototype.flatmap: 1.3.1
-      debug: 3.2.7
+      debug: 3.2.7(supports-color@8.1.1)
       doctrine: 2.1.0
       eslint: 8.45.0
       eslint-import-resolver-node: 0.3.7
@@ -5965,7 +5886,7 @@ packages:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.2.0
@@ -7229,7 +7150,7 @@ packages:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -7278,7 +7199,7 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -11274,7 +11195,7 @@ packages:
     engines: {node: '>= 10'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       socks: 2.7.1
     transitivePeerDependencies:
       - supports-color
@@ -11712,7 +11633,7 @@ packages:
       cosmiconfig: 8.2.0
       css-functions-list: 3.2.0
       css-tree: 2.3.1
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       fast-glob: 3.3.0
       fastest-levenshtein: 1.0.16
       file-entry-cache: 6.0.1
@@ -12279,7 +12200,7 @@ packages:
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
       '@tufjs/models': 1.0.4
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       make-fetch-happen: 11.1.1
     transitivePeerDependencies:
       - supports-color
@@ -12658,7 +12579,7 @@ packages:
     hasBin: true
     dependencies:
       cac: 6.7.14
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       mlly: 1.4.0
       pathe: 1.1.1
       picocolors: 1.0.0
@@ -12768,7 +12689,7 @@ packages:
       acorn-walk: 8.2.0
       cac: 6.7.14
       chai: 4.3.7
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       jsdom: 22.1.0
       local-pkg: 0.4.3
       magic-string: 0.30.1
@@ -12828,7 +12749,7 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       eslint: 8.45.0
       eslint-scope: 7.2.0
       eslint-visitor-keys: 3.4.1
@@ -13438,7 +13359,3 @@ packages:
   /zenscroll@4.0.2:
     resolution: {integrity: sha512-jEA1znR7b4C/NnaycInCU6h/d15ZzCd1jmsruqOKnZP6WXQSMH3W2GL+OXbkruslU4h+Tzuos0HdswzRUk/Vgg==}
     dev: false
-
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false
