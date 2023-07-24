@@ -11,7 +11,7 @@ li {
   :deep(>) {
     ul, ol {
       margin-bottom: unset;
-      margin-left: 16px !important;
+      margin-left: $kui-space-60 !important;
     }
 
     p {
@@ -27,7 +27,7 @@ li {
       margin-bottom: 0;
 
       > input[type="checkbox"] {
-        margin: 0 4px 0 0;
+        margin: $kui-space-0 $kui-space-20 $kui-space-0 $kui-space-0;
       }
     }
   }

@@ -354,15 +354,18 @@ importers:
         specifier: ^1.29.0
         version: 1.29.0
     devDependencies:
+      '@kong/design-tokens':
+        specifier: ^1.7.1
+        version: 1.7.1
       '@kong/kongponents':
         specifier: ^8.91.0
-        version: 8.101.0(vue-router@4.2.4)(vue@3.3.4)
+        version: 8.101.0(vue@3.3.4)
       '@types/prismjs':
         specifier: ^1.26.0
         version: 1.26.0
       '@vitejs/plugin-vue-jsx':
         specifier: ^3.0.1
-        version: 3.0.1(vite@4.4.7)(vue@3.3.4)
+        version: 3.0.1(vue@3.3.4)
       vue:
         specifier: ^3.3.4
         version: 3.3.4
@@ -1510,6 +1513,30 @@ packages:
     transitivePeerDependencies:
       - '@popperjs/core'
       - debug
+
+  /@kong/kongponents@8.101.0(vue@3.3.4):
+    resolution: {integrity: sha512-5FXnDv0Rj5DYWYVkxXGDF/MSeVq7fdZjuWMlWFudIO/frVqhqgTNRJ1Zek4HG9nUPn2NqhylrDUtJcadYUnSFQ==}
+    engines: {node: '>=16.19.0'}
+    peerDependencies:
+      vue: '>= 3.3.0'
+      vue-router: ^4.1.6
+    dependencies:
+      axios: 0.27.2
+      date-fns: 2.30.0
+      date-fns-tz: 1.3.8(date-fns@2.30.0)
+      focus-trap: 7.5.2
+      focus-trap-vue: 3.4.0(focus-trap@7.5.2)(vue@3.3.4)
+      popper.js: 1.16.1
+      sortablejs: 1.15.0
+      swrv: 1.0.4(vue@3.3.4)
+      uuid: 8.3.2
+      v-calendar: 3.0.3(vue@3.3.4)
+      vue: 3.3.4
+      vue-draggable-next: 2.2.0(sortablejs@1.15.0)(vue@3.3.4)
+    transitivePeerDependencies:
+      - '@popperjs/core'
+      - debug
+    dev: true
 
   /@kong/swagger-ui-kong-theme-universal@4.2.6(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.4)(vue@3.3.4):
     resolution: {integrity: sha512-ZZtnsER3yHFnzjy5OO3jYgeY3ZCuhQP6IFqwq2vUj9HntyJUBOBUxvTJ9YJoQHz2wMVuatdUJHadQcUVS/Cktw==}
@@ -2962,6 +2989,21 @@ packages:
       '@babel/plugin-transform-typescript': 7.22.5(@babel/core@7.22.5)
       '@vue/babel-plugin-jsx': 1.1.1(@babel/core@7.22.5)
       vite: 4.4.7(@types/node@18.17.0)(sass@1.64.1)
+      vue: 3.3.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@vitejs/plugin-vue-jsx@3.0.1(vue@3.3.4):
+    resolution: {integrity: sha512-+Jb7ggL48FSPS1uhPnJbJwWa9Sr90vQ+d0InW+AhBM22n+cfuYqJZDckBc+W3QSHe1WDvewMZfa4wZOtk5pRgw==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    peerDependencies:
+      vite: ^4.0.0
+      vue: ^3.0.0
+    dependencies:
+      '@babel/core': 7.22.5
+      '@babel/plugin-transform-typescript': 7.22.5(@babel/core@7.22.5)
+      '@vue/babel-plugin-jsx': 1.1.1(@babel/core@7.22.5)
       vue: 3.3.4
     transitivePeerDependencies:
       - supports-color

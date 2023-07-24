@@ -24,10 +24,10 @@ const tag = props.isOrdered ? 'ol' : 'ul'
 
 <style scoped lang="scss">
 ul, ol {
-  font-size: 14px;
-  margin-bottom: var(--spacing-sm, 12px);
-  margin-left: 16px;
-  padding: 0;
+  font-size: $kui-font-size-30;
+  margin-bottom: $kui-space-50;
+  margin-left: $kui-space-60;
+  padding: $kui-space-0;
 }
 
 ol {

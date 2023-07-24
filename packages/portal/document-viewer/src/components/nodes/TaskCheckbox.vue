@@ -16,5 +16,4 @@ type TaskCheckboxProps = {
 const props = defineProps<TaskCheckboxProps>()
 
 const checked = ref(props.checked)
-
 </script>

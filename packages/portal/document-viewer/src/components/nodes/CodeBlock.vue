@@ -118,6 +118,6 @@ watch(() => props.lang, async (language: string) => {
       box-sizing: border-box;
     }
   }
-  margin-bottom: var(--spacing-sm, 12px);
+  margin-bottom: var(--spacing-sm, $kui-space-50);
 }
 </style>

@@ -32,52 +32,52 @@ const slug = `${props.slug}`
 const tag = `h${props.level}`
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 h1, h2, h3, h4, h5, h6 {
   color: var(--document-viewer-color, var(--text_colors-headings, #0b172d));
-  font-family: var(--document-viewer-font-family-headings, var(--document-viewer-font-family-default));
-  font-weight: var(--document-viewer-heading-font-weight, 500);
-  margin-top: 0;
+  font-family: var(--document-viewer-font-family-headings, var(--document-viewer-font-family-default, $kui-font-family-text));
+  font-weight: var(--document-viewer-heading-font-weight, $kui-font-weight-medium);
+  margin-top: $kui-space-0;
 }
 
 h1 {
-  font-size: 32px;
-  font-weight: 500;
-  line-height: 38px;
-  margin-bottom: var(--spacing-xl, 32px);
+  font-size: $kui-font-size-80;
+  font-weight: $kui-font-weight-medium;
+  line-height: $kui-line-height-80;
+  margin-bottom: $kui-space-90;
 }
 
 h2 {
-  font-size: 24px;
-  line-height: 26px;
-  margin-bottom: var(--spacing-lg, 24px);
+  font-size: $kui-font-size-70;
+  line-height: $kui-line-height-70;
+  margin-bottom: $kui-space-80;
 }
 
 h3 {
-  font-size: 20px;
-  line-height: 20px;
-  margin-bottom: var(--spacing-sm, 12px);
+  font-size: $kui-font-size-60;
+  line-height: $kui-line-height-60;
+  margin-bottom: $kui-space-50;
 }
 
 h4 {
-  font-size: 18px;
-  line-height: 20px;
-  margin-bottom: var(--spacing-sm, 12px);
+  font-size: $kui-font-size-50;
+  line-height: $kui-line-height-50;
+  margin-bottom: $kui-space-50;
 }
 
 h5 {
-  font-size: 16px;
-  line-height: 20px;
-  margin-bottom: var(--spacing-sm, 12px);
+  font-size: $kui-font-size-40;
+  line-height: $kui-line-height-40;
+  margin-bottom: $kui-space-50;
 }
 
 h6 {
-  font-size: 14.5px;
-  line-height: 20px;
-  margin-bottom: var(--spacing-sm, 12px);
+  font-size: $kui-font-size-30;
+  line-height: $kui-line-height-30;
+  margin-bottom: $kui-space-50;
 }
 
 h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, h6:first-child {
-  margin-top: 0;
+  margin-top: $kui-space-0;
 }
 </style>

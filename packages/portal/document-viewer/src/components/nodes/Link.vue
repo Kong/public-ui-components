@@ -21,14 +21,14 @@ defineProps({
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 a {
-  color: var(--document-viewer-link-color, #1155cb);
+  color: var(--document-viewer-link-color, $kui-color-text-primary);
   text-decoration: none;
 }
 
 a:hover {
-  color: var(--document-viewer-link-hover-color, #5e8adc);
+  color: var(--document-viewer-link-hover-color, $kui-color-text-primary-strong);
   text-decoration: underline;
 }
 </style>
