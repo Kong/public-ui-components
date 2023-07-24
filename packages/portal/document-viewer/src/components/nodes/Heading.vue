@@ -34,7 +34,7 @@ const tag = `h${props.level}`
 
 <style lang="scss" scoped>
 h1, h2, h3, h4, h5, h6 {
-  color: var(--document-viewer-color, var(--text_colors-headings, #0b172d));
+  color: var(--document-viewer-color, $kui-color-text);
   font-family: var(--document-viewer-font-family-headings, var(--document-viewer-font-family-default, $kui-font-family-text));
   font-weight: var(--document-viewer-heading-font-weight, $kui-font-weight-medium);
   margin-top: $kui-space-0;

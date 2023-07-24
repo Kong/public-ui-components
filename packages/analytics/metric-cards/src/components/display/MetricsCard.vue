@@ -56,6 +56,7 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import { MetricCardSize } from '../../constants'
+import { KUI_COLOR_BACKGROUND_DANGER_WEAK, KUI_COLOR_BACKGROUND_NEUTRAL, KUI_FONT_SIZE_40 } from '@kong/design-tokens'
 
 const props = defineProps({
   title: {
@@ -106,9 +107,9 @@ const props = defineProps({
 
 const colorAttribute = (polarity: number): string => {
   const trendColor = {
-    red: "var(--kong-ui-metric-card-trend-negative, var(--red-500, '#d44324'))",
-    green: "var(--kong-ui-metric-card-trend-positive, var(--green-500, '#07a88d'))",
-    grey: "var(--kong-ui-metric-card-trend-neutral, var(--grey-500, '#6f7787'))",
+    red: `var(--kong-ui-metric-card-trend-negative, ${KUI_COLOR_BACKGROUND_DANGER_WEAK})`,
+    green: 'var(--kong-ui-metric-card-trend-positive, #07a88d)',
+    grey: `var(--kong-ui-metric-card-trend-neutral, ${KUI_COLOR_BACKGROUND_NEUTRAL})`,
   }
 
   return polarity > 0
@@ -130,7 +131,7 @@ const cardDisplayFull = [MetricCardSize.Medium, MetricCardSize.Large].includes(p
 
 const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
   ? '48px'
-  : [MetricCardSize.Medium, MetricCardSize.Large].includes(props.cardSize) ? '22px' : '16px'
+  : [MetricCardSize.Medium, MetricCardSize.Large].includes(props.cardSize) ? '22px' : KUI_FONT_SIZE_40
 
 </script>
 
@@ -182,7 +183,7 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
     color: var(--kong-ui-metric-card-value, $kui-color-text-neutral-stronger);
     display: flex;
     flex-direction: row;
-    font-weight: 500;
+    font-weight: $kui-font-weight-medium;
     justify-content: space-between;
     margin: $kui-space-40 $kui-space-0 $kui-space-0 $kui-space-0;
 

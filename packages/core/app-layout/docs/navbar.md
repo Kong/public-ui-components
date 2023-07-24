@@ -80,7 +80,7 @@ Variable | Description | Default
 
 ```scss
 .your-custom-navbar-class {
-  --kong-ui-app-navbar-background: var(--blue-500, #1155cb);
+  --kong-ui-app-navbar-background: #1155cb;
 }
 ```
 

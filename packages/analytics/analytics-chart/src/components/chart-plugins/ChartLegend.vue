@@ -152,7 +152,7 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: var(--grey-300, #E7E7EC);
+    background-color: $kui-color-background-disabled;
     border-radius: 10px;
   }
 

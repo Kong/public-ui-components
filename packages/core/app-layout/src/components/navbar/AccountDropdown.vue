@@ -66,7 +66,7 @@ defineProps({
     width: 24px;
 
     &:active {
-      background-color: var(--kong-ui-account-dropdown-background, var(--purple-300, #9396FC));
+      background-color: var(--kong-ui-account-dropdown-background, #9396FC);
     }
   }
 

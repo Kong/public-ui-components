@@ -72,7 +72,7 @@ const props = defineProps({
   },
   iconColor: {
     type: String,
-    default: 'var(--black-45, rgba(0, 0, 0, 0.45))',
+    default: 'rgba(0, 0, 0, 0.45)',
   },
   tooltip: {
     type: String,

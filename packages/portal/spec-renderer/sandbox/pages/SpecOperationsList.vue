@@ -222,7 +222,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .spec-operations-list-sandbox {
-  --KInputLabelSize: var(--type-lg);
+  --KInputLabelSize: #{$kui-font-size-50};
 
   .center {
     text-align: center;
@@ -237,7 +237,7 @@ onMounted(() => {
   }
 
   pre.json {
-    background-color: var(--grey-200);
+    background-color: $kui-color-background-disabled;
     max-height: 500px;
     overflow-y: auto;
   }

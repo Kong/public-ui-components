@@ -7,7 +7,7 @@
 <style lang="scss" scoped>
 blockquote {
   background: var(--document-viewer-blockquote-background, #f1f1f5);
-  border-left: $kui-border-width-20 solid var(--document-viewer-blockquote-border, var(--text_colors-accent, #0b172d));
+  border-left: $kui-border-width-20 solid var(--document-viewer-blockquote-border, #0b172d);
   border-radius: var(--document-viewer-blockquote-border-radius, $kui-border-radius-20);
   font-size: $kui-font-size-30;
   margin: $kui-space-50;
