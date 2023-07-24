@@ -169,6 +169,7 @@ describe('<SpecOperationsList />', () => {
       },
     })
 
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.getTestId(`spec-operations-list-item-${specOp.method}-pet-${specOp.tags?.[0]}`).click().then(() => {
       // Check for emitted event
       cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'selected')

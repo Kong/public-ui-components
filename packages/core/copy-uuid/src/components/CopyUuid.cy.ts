@@ -238,6 +238,7 @@ describe('<CopyUuid />', () => {
 
       cy.get(container).should('be.visible')
       cy.get(container).find('.k-tooltip').should('exist')
+      // eslint-disable-next-line cypress/unsafe-to-chain-command
       cy.get('[data-testid="copy-to-clipboard"]').click().then(() => {
         cy.wrap(Cypress.vueWrapper.emitted()).should('not.have.property', 'success')
       })
@@ -251,6 +252,7 @@ describe('<CopyUuid />', () => {
       },
     })
 
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.get('[data-testid="copy-to-clipboard"]').click().then(() => {
       cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'success').then((evt) => {
         // Verify emit payload
