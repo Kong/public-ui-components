@@ -473,6 +473,7 @@ describe('<AppSidebar />', () => {
               },
             })
 
+            // eslint-disable-next-line cypress/unsafe-to-chain-command
             cy.get('.kong-ui-app-sidebar').find('.sidebar-item-link').eq(1).click().then(() => {
               // Check for emitted event
               cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'click').then((evt) => {
@@ -678,6 +679,7 @@ describe('<AppSidebar />', () => {
           },
         })
 
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.get('.kong-ui-app-sidebar').find('.sidebar-item-link').eq(1).click().then(() => {
           // Check for emitted event when the sidebar is closed
           cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'toggle').then((evt) => {
@@ -707,6 +709,7 @@ describe('<AppSidebar />', () => {
 
         cy.get('.kong-ui-app-sidebar').should('be.visible')
 
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.get('.kong-ui-app-sidebar').find('.sidebar-item-link').eq(1).click().then(() => {
           // Move the clock forward 1 second
           cy.tick(1000)
