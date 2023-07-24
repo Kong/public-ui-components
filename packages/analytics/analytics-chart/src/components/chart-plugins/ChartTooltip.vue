@@ -187,7 +187,7 @@ function handleMouseUp() {
   cursor: move;
 }
 .tooltip-container {
-  background-color: $color-white;
+  background-color: $kui-color-background;
   border-radius: 3px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.24);
   max-width: 425px;
@@ -199,7 +199,7 @@ function handleMouseUp() {
   z-index: 999;
 
   &::-webkit-scrollbar-track {
-    background-color: var(--white, #FFFFFF);
+    background-color: $kui-color-background;
     border-radius: 10px;
   }
 
@@ -222,8 +222,8 @@ ul.tooltip {
 
   li {
     display: flex;
-    font-size: $font-size-sm;
-    margin: $spacing-8;
+    font-size: $kui-font-size-30;
+    margin: $kui-space-40;
   }
 
   li:first-child {
@@ -231,11 +231,11 @@ ul.tooltip {
   }
 
   li:last-child {
-    padding-bottom: $spacing-xxs;
+    padding-bottom: $kui-space-40;
   }
 
   .drag-icon {
-    margin-top: $spacing-xxs;
+    margin-top: $kui-space-40;
     position: absolute;
     right: 0;
     top: 0;
@@ -244,15 +244,15 @@ ul.tooltip {
   .tooltip-title {
     display: flex;
     flex-direction: column;
-    padding-bottom: $spacing-xxs;
+    padding-bottom: $kui-space-40;
 
     .title {
-      font-size: $font-size-md;
-      font-weight: bold;
+      font-size: $kui-font-size-40;
+      font-weight: $kui-font-weight-semibold;
     }
     .subtitle {
-      font-size: $font-size-sm;
-      margin-top: $spacing-8;
+      font-size: $kui-font-size-30;
+      margin-top: $kui-space-40;
     }
   }
 
@@ -264,8 +264,8 @@ ul.tooltip {
   }
 
   .display-value {
-    margin-left: auto;
-    padding-left: $spacing-8;
+    margin-left: $kui-space-auto;
+    padding-left: $kui-space-40;
     white-space: nowrap;
   }
 

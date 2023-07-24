@@ -153,15 +153,15 @@ const showMetricSmall = computed(() => metricDisplayRef.value === ChartMetricDis
 
 .chart-parent {
   height: auto;
-  margin: 0;
-  padding: 0;
+  margin: $kui-space-0;
+  padding: $kui-space-0;
   width: auto;
 
   .chart-container {
-    margin: 0;
+    margin: $kui-space-0;
     max-height: 100px;
     max-width: 100px;
-    padding: 0;
+    padding: $kui-space-0;
   }
 
   .chart-totals-flex {
@@ -170,21 +170,21 @@ const showMetricSmall = computed(() => metricDisplayRef.value === ChartMetricDis
     flex-direction: column;
     height: 100px;
     justify-content: center;
-    padding: 25px 0 0;
+    padding: $kui-space-80 $kui-space-0 $kui-space-0;
     position: absolute;
     width: 100px;
     z-index: 2;
 
     .metric-large {
-      font-size: 23px;
-      font-weight: 500;
-      line-height: 23px;
+      font-size: $kui-font-size-70;
+      font-weight: $kui-font-weight-medium;
+      line-height: $kui-line-height-70;
     }
     .metric-small {
-      color: var(--grey-500, #6F7787);
-      font-size: 9px;
-      font-weight: 400;
-      line-height: 9px;
+      color: $kui-color-text-neutral;
+      font-size: $kui-font-size-10;
+      font-weight: $kui-font-weight-regular;
+      line-height: $kui-line-height-10;
     }
   }
 }

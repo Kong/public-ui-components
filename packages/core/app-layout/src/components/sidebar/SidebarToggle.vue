@@ -46,7 +46,7 @@ watch(() => props.active, (active) => {
   transition: all 0.3s ease-in-out;
 
   &:focus-visible {
-    outline: 1px solid var(--kong-ui-app-sidebar-mobile-icon-color, var(--blue-500, #1155cb));
+    outline: 1px solid var(--kong-ui-app-sidebar-mobile-icon-color, $kui-color-background-primary);
   }
 
   @media (min-width: $kui-breakpoint-tablet) {
@@ -54,7 +54,7 @@ watch(() => props.active, (active) => {
   }
 
   .line {
-    background-color: var(--kong-ui-app-sidebar-mobile-icon-color, var(--white, #fff));
+    background-color: var(--kong-ui-app-sidebar-mobile-icon-color, $kui-color-background);
     border-radius: $sidebar-item-border-radius;
     display: block;
     height: 2px;

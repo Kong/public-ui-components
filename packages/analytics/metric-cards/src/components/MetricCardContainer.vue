@@ -123,16 +123,16 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
     align-items: center;
     display: flex;
     justify-content: center;
-    margin: auto;
+    margin: $kui-space-auto;
 
     &-icon {
       display: flex;
     }
 
     &-message {
-      color: $color-grey;
-      font-size: $font-size-sm;
-      margin-left: 10px;
+      color: $kui-color-background-neutral;
+      font-size: $kui-font-size-30;
+      margin-left: $kui-space-50;
     }
   }
 }

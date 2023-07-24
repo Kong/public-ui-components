@@ -22,21 +22,20 @@
 
   &:not(.show-total) {
     // Always stack legend below chart below mobile breakpoint
-    @media(max-width: 768px) {
+    @media (max-width: ($kui-breakpoint-phablet - 1px)) {
       display: flex;
       flex-wrap: wrap;
     }
   }
-  
 
   .chart-container {
-    margin-bottom: var(--spacing-sm, 14px);
+    margin-bottom: $kui-font-size-30;
     // Per ChartJS docs, the chart container needs to be position: relative and _only_ contain the chart canvas.
     // https://www.chartjs.org/docs/latest/configuration/responsive.html
     position: relative;
 
     // Allow chart to expand full width on mobile
-    @media (max-width: 768px) {
+    @media (max-width: ($kui-breakpoint-phablet - 1px)) {
       width: 100% !important;
     }
   }

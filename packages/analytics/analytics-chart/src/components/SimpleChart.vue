@@ -111,8 +111,8 @@ const hasValidChartData = computed(() => {
 @import '../styles/chart-shell';
 
 .simple-chart-shell {
-  margin: 0;
-  padding: 0;
+  margin: $kui-space-0;
+  padding: $kui-space-0;
 
   .chart-empty-state {
     display: flex;
@@ -122,9 +122,9 @@ const hasValidChartData = computed(() => {
     width: 100px;
 
     &:deep(.k-empty-state-title-header) {
-      font-size: 11px;
-      line-height: 11px;
-      margin: 0;
+      font-size: $kui-font-size-20;
+      line-height: $kui-line-height-20;
+      margin: $kui-space-0;
     }
   }
 }

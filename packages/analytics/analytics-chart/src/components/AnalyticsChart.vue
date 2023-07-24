@@ -3,7 +3,7 @@
     <div class="chart-header">
       <div
         v-if="chartTitle"
-        class="font-bold chart-title"
+        class="chart-title"
       >
         {{ chartTitle }}
       </div>
@@ -17,10 +17,10 @@
           <div class="limit-icon-wrapper">
             <KIcon
               class="warning-icon"
-              color="var(--white, #ffffff)"
+              color="currentColor"
               hide-title
               icon="warning"
-              secondary-color="var(--yellow-400, #fabe5f)"
+              :secondary-color="KUI_COLOR_TEXT_WARNING"
               size="18"
             />
           </div>
@@ -107,6 +107,7 @@ import { computed, PropType, provide, toRef } from 'vue'
 import { AnalyticsExploreResult, AnalyticsExploreV2Result, GranularityFullObj, GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette, hasMillisecondTimestamps } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
+import { KUI_COLOR_TEXT_WARNING } from '@kong/design-tokens'
 
 const props = defineProps({
   chartData: {
@@ -312,29 +313,31 @@ provide('legendPosition', legendPositionRef)
 @import '../styles/chart-shell';
 
 .analytics-chart-shell {
-  border: $kui-border-width-10 solid var(--grey-300,  #E7E7EC);
-  margin: $spacing-md;
-  padding: $spacing-md;
+  border: $kui-border-width-10 solid $kui-color-border;
+  margin: $kui-space-60;
+  padding: $kui-space-60;
 
   .chart-empty-state {
-    padding: $spacing-lg 0 $spacing-md 0;
+    padding: $kui-space-70 $kui-space-0 $kui-space-60 $kui-space-0;
   }
   .chart-header {
     display: flex;
-    padding-bottom: $spacing-md;
+    padding-bottom: $kui-space-60;
   }
 
   .chart-title {
-    font-size: $font-size-lg;
+    font-size: $kui-font-size-50;
+    font-weight: $kui-font-weight-semibold;
   }
 
   .tooltip {
     display: flex;
-    margin-left: $spacing-sm;
-    margin-top: 2px;
+    margin-left: $kui-space-50;
+    margin-top: $kui-space-10;
   }
 
   .limit-icon-wrapper {
+    color: $kui-color-text-inverse;
     display: flex;
     flex-direction: row;
   }

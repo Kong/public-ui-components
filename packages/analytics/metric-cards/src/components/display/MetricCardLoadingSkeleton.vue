@@ -16,14 +16,14 @@
   flex-direction: column;
 
   &-large {
-    padding: 4px;
-    row-gap: 12px;
+    padding: $kui-space-20;
+    row-gap: $kui-space-50;
     width: 240px;
   }
 
   &-small {
-    padding: 2px;
-    row-gap: 8px;
+    padding: $kui-space-10;
+    row-gap: $kui-space-40;
     width: 120px;
 
     .box {
