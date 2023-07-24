@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.20.0...@kong-ui-public/app-layout@0.20.1) (2023-07-24)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
 # [0.20.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.19.19...@kong-ui-public/app-layout@0.20.0) (2023-07-19)
 
 
