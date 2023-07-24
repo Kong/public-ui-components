@@ -44,7 +44,7 @@
     "cross-env": "^7.0.3",
     "cypress": "^12.17.1",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.44.0",
+    "eslint": "^8.45.0",
     "eslint-plugin-cypress": "^2.13.3",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-node": "^11.1.0",
