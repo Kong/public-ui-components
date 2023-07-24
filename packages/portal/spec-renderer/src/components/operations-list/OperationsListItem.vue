@@ -80,7 +80,7 @@ const methodName = computed((): string => {
 .spec-operations-list-item {
   appearance: none;
   background: transparent;
-  border: 1px solid var(--kong-ui-spec-renderer-operations-list-item-border-color, var(--grey-200, #f1f1f5));
+  border: $kui-border-width-10 solid var(--kong-ui-spec-renderer-operations-list-item-border-color, var(--grey-200, #f1f1f5));
   cursor: pointer;
   display: block;
   padding: var(--kong-ui-spec-renderer-operations-list-item-padding, 8px 16px);

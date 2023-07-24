@@ -259,6 +259,9 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0
     devDependencies:
+      '@kong/design-tokens':
+        specifier: ^1.7.1
+        version: 1.7.1
       '@kong/kongponents':
         specifier: ^8.91.0
         version: 8.101.0(vue-router@4.2.4)(vue@3.3.4)

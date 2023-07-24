@@ -40,8 +40,8 @@ watch(() => props.active, (active) => {
 @import "../../styles/variables";
 
 .sidebar-menu-toggle {
-  border-radius: 3px;
-  padding: 0 4px;
+  border-radius: $kui-border-radius-20;
+  padding: $kui-space-0 $kui-space-20;
   position: relative;
   transition: all 0.3s ease-in-out;
 
@@ -49,7 +49,7 @@ watch(() => props.active, (active) => {
     outline: 1px solid var(--kong-ui-app-sidebar-mobile-icon-color, var(--blue-500, #1155cb));
   }
 
-  @media (min-width: $viewport-lg) {
+  @media (min-width: $kui-breakpoint-tablet) {
     display: none;
   }
 
@@ -58,7 +58,7 @@ watch(() => props.active, (active) => {
     border-radius: $sidebar-item-border-radius;
     display: block;
     height: 2px;
-    margin: 6px auto;
+    margin: $kui-space-30 $kui-space-auto;
     transition: all 0.3s ease-in-out;
     width: 24px;
   }

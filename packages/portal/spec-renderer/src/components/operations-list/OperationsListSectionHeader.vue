@@ -77,7 +77,7 @@ const collapseAriaLabel = computed((): string => {
   align-items: center;
   appearance: none;
   background: var(--kong-ui-spec-renderer-operations-list-section-background, transparent);
-  border: 1px solid var(--kong-ui-spec-renderer-operations-list-section-border-color, var(--grey-200, #f1f1f5));
+  border: $kui-border-width-10 solid var(--kong-ui-spec-renderer-operations-list-section-border-color, var(--grey-200, #f1f1f5));
   border-top-left-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px);
   border-top-right-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px);
   color: currentColor;

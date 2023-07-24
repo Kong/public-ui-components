@@ -48,7 +48,7 @@ import BananaSplit from '../icons/BananaSplit.vue'
     opacity: 0;
     padding: $kui-space-0 $kui-space-60;
 
-    @media (min-width: $viewport-md) {
+    @media (min-width: $kui-breakpoint-phablet) {
       padding: $kui-space-0 $kui-space-90;
     }
 

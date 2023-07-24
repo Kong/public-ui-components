@@ -312,7 +312,7 @@ provide('legendPosition', legendPositionRef)
 @import '../styles/chart-shell';
 
 .analytics-chart-shell {
-  border: 1px solid var(--grey-300,  #E7E7EC);
+  border: $kui-border-width-10 solid var(--grey-300,  #E7E7EC);
   margin: $spacing-md;
   padding: $spacing-md;
 

@@ -51,16 +51,16 @@ defineProps({
 <style lang="scss" scoped>
 .account-dropdown {
   display: flex;
-  margin-right: 4px;
+  margin-right: $kui-space-20;
 
   :deep(.k-button.primary),
   :deep(.k-button.primary:hover:not(:disabled)) {
-    background-color: var(--kong-ui-account-dropdown-background, var(--purple-300, #9396FC));
-    color: var(--kong-ui-account-dropdown-color, var(--white, #fff));
-    font-size: 11px;
+    background-color: var(--kong-ui-account-dropdown-background, $kui-color-background-primary);
+    color: var(--kong-ui-account-dropdown-color, $kui-color-background);
+    font-size: $kui-font-size-20;
     height: 24px;
     justify-content: center;
-    padding: 0;
+    padding: $kui-space-0;
     // Prevent text selection
     user-select: none;
     width: 24px;

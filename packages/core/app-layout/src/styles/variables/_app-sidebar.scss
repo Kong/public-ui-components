@@ -1,12 +1,12 @@
 $sidebar-width: 240px;
-$sidebar-header-spacing: 8px;
-$sidebar-item-font-size: 14px;
-$sidebar-item-border-radius: 4px;
+$sidebar-header-spacing: $kui-space-40;
+$sidebar-item-font-size: $kui-font-size-30;
+$sidebar-item-border-radius: $kui-border-radius-20;
 
 // Scrollbar
 $scrollbar-width: 8px;
-$scrollbar-foreground-color: var(--steel-400, #7d91b3);
-$scrollbar-background-color: transparent;
+$scrollbar-foreground-color: $kui-color-background-neutral;
+$scrollbar-background-color: $kui-color-background-transparent;
 
 @mixin scrollbarBase($size: $scrollbar-width) {
   // For Chrome & Safari
@@ -16,15 +16,15 @@ $scrollbar-background-color: transparent;
     width: $size;
   }
   &::-webkit-scrollbar-thumb {
-    background: transparent; // Hide the scrollbar until hovered
-    border-radius: 8px;
+    background: $kui-color-background-transparent; // Hide the scrollbar until hovered
+    border-radius: $kui-border-radius-40;
   }
   &::-webkit-scrollbar-track {
-    background: transparent; // Hide the scrollbar until hovered
+    background: $kui-color-background-transparent; // Hide the scrollbar until hovered
   }
 
   // Standard version (Firefox only for now) - always include
-  scrollbar-color: transparent transparent;
+  scrollbar-color: $kui-color-background-transparent $kui-color-background-transparent;
   scrollbar-gutter: stable both-edges;
   scrollbar-width: thin;
 }

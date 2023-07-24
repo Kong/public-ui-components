@@ -329,7 +329,7 @@ onBeforeUnmount(() => {
     width: $sidebar-width;
   }
 
-  @media (min-width: $viewport-lg) {
+  @media (min-width: $kui-breakpoint-tablet) {
     background: var(--kong-ui-app-sidebar-background, transparent);
     height: v-bind('sidebarContainerStyles.height');
     left: 0;
@@ -374,42 +374,42 @@ onBeforeUnmount(() => {
 
   .sidebar-footer {
     align-items: center;
-    color: var(--steel-300, #A3B6D9);
+    color: $kui-color-text-neutral-weak;
     display: flex;
-    font-weight: 500;
+    font-weight: $kui-font-weight-medium;
     width: 100%;
   }
 
   :deep(.k-dropdown-item) {
     font-size: $sidebar-item-font-size;
-    line-height: 1.3;
+    line-height: $kui-line-height-30;
   }
 }
 
 // Remove the top margin if `props.mobileHeaderVisible` is false, or if no header slot is present
 .mobile-header-hidden .sidebar-content-container,
 .no-sidebar-header .sidebar-content-container {
-  @media (max-width: ($viewport-lg - 1px)) {
-    margin-top: 0 !important;
+  @media (max-width: ($kui-breakpoint-tablet - 1px)) {
+    margin-top: $kui-space-0 !important;
   }
 }
 
 .sidebar-level-divider {
-  background-color: rgba(#fff, 0.5);
+  background-color: rgba($kui-color-background, 0.5);
   height: 1px;
-  margin: 24px auto;
+  margin: $kui-space-80 auto;
   min-height: 1px; // required for when scrollbar is present
   width: calc(100% - 32px);
 }
 
 .sidebar-header {
   align-items: center;
-  background: var(--kong-ui-app-sidebar-header-background, transparent);
-  color: #fff;
+  background: var(--kong-ui-app-sidebar-header-background, $kui-color-background-transparent);
+  color: $kui-color-background;
   display: v-bind('headerContainerStyles.display');
   left: 0;
   min-height: v-bind('headerContainerStyles.minHeight');
-  padding: 0 16px; // should match the padding of `.header-content` in the navbar
+  padding: $kui-space-0 $kui-space-60; // should match the padding of `.header-content` in the navbar
   position: absolute;
   right: 0;
   top: 0;
@@ -417,7 +417,7 @@ onBeforeUnmount(() => {
   user-select: none;
   z-index: 1;
 
-  @media (min-width: $viewport-lg) {
+  @media (min-width: $kui-breakpoint-tablet) {
     display: flex;
   }
 
@@ -432,7 +432,7 @@ onBeforeUnmount(() => {
 
       &:focus-visible {
         border-radius: $sidebar-item-border-radius;
-        outline: 1px solid var(--steel-300, #A3B6D9)
+        outline: 1px solid $kui-color-text-neutral-weak;
       }
     }
   }
@@ -454,23 +454,23 @@ onBeforeUnmount(() => {
 
 .sidebar-top {
   align-items: center;
-  color: #fff;
+  color: $kui-color-background;
   display: flex;
-  margin: 0 0 16px;
-  padding: 0 8px;
+  margin: $kui-space-0 $kui-space-0 $kui-space-60;
+  padding: $kui-space-0 $kui-space-40;
   user-select: none;
 }
 
 .sidebar-item-external-link {
   align-items: center;
   display: flex;
-  font-size: 14px;
+  font-size: $kui-font-size-30;
   justify-content: space-between;
-  line-height: 1.3;
+  line-height: $kui-line-height-30;
   text-decoration: none;
 
   &:focus-visible {
-    outline: 1px solid var(--steel-300, #A3B6D9) !important;
+    outline: 1px solid $kui-color-text-neutral-weak !important;
   }
 
   :deep(.kong-icon) {
@@ -488,7 +488,7 @@ onBeforeUnmount(() => {
   top: v-bind('sidebarOverlayStyles.top');
   z-index: v-bind('sidebarOverlayStyles.zIndex');
 
-  @media (min-width: $viewport-lg) {
+  @media (min-width: $kui-breakpoint-tablet) {
     display: none !important;
   }
 }
@@ -503,14 +503,14 @@ onBeforeUnmount(() => {
   .level-primary,
   .level-secondary {
     list-style: none;
-    margin: 0;
-    padding: 0;
+    margin: $kui-space-0;
+    padding: $kui-space-0;
   }
 
   .level-primary {
     display: flex;
     flex-direction: column;
-    padding: 0 8px; // if changed, ensure you test in ALL browsers
+    padding: $kui-space-0 $kui-space-40; // if changed, ensure you test in ALL browsers
 
     &:last-of-type {
       margin-bottom: $sidebar-header-spacing * 4;
@@ -521,7 +521,7 @@ onBeforeUnmount(() => {
 body.kong-ui-app-sidebar-open {
   overflow: hidden;
 
-  @media (min-width: $viewport-lg) {
+  @media (min-width: $kui-breakpoint-tablet) {
     overflow: auto;
   }
 }
