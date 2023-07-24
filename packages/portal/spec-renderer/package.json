@@ -42,6 +42,7 @@
     "vue": "^3.3.4"
   },
   "devDependencies": {
+    "@kong/design-tokens": "^1.7.1",
     "@kong/kongponents": "^8.91.0",
     "@modyfi/vite-plugin-yaml": "^1.0.4",
     "@types/lodash.clonedeep": "^4.5.7",

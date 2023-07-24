@@ -309,12 +309,12 @@ const { getSizeFromString, hasRequiredProps } = composables.useUtilities()
 
 <style lang="scss" scoped>
 .kong-ui-public-spec-operations-list {
-  color: var(--kong-ui-kong-spec-renderer-operations-list-text-color, var(--kong-ui-spec-renderer-text-color, var(--black-500, #0B172D)));
-  font-family: var(--kong-ui-spec-renderer-operations-list-font-family, var(--kong-ui-spec-renderer-font-family, Roboto, Helvetica, sans-serif));
-  font-size: var(--kong-ui-spec-renderer-operations-list-font-size, var(--kong-ui-spec-renderer-font-size, 16px));
+  color: var(--kong-ui-kong-spec-renderer-operations-list-text-color, var(--kong-ui-spec-renderer-text-color, $kui-color-text));
+  font-family: var(--kong-ui-spec-renderer-operations-list-font-family, var(--kong-ui-spec-renderer-font-family, $kui-font-family-text));
+  font-size: var(--kong-ui-spec-renderer-operations-list-font-size, var(--kong-ui-spec-renderer-font-size, $kui-font-size-40));
 
   .filter-wrapper {
-    margin-bottom: 8px;
+    margin-bottom: $kui-space-40;
     position: relative;
   }
 
@@ -322,7 +322,7 @@ const { getSizeFromString, hasRequiredProps } = composables.useUtilities()
     width: 100%;
 
     &:deep(.k-input) {
-      padding-left: 34px;
+      padding-left: $kui-space-90;
     }
   }
 
@@ -333,7 +333,7 @@ const { getSizeFromString, hasRequiredProps } = composables.useUtilities()
   }
 
   .section-wrapper {
-    margin-bottom: 8px;
+    margin-bottom: $kui-space-40;
 
     &:last-of-type {
       margin-bottom: 0;
@@ -346,7 +346,7 @@ const { getSizeFromString, hasRequiredProps } = composables.useUtilities()
 
   // KCollapse overrides
   :deep(.k-collapse .k-collapse-heading) {
-    margin: 0 !important;
+    margin: $kui-space-0 !important;
   }
 }
 </style>

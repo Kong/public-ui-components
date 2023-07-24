@@ -80,10 +80,10 @@ const methodName = computed((): string => {
 .spec-operations-list-item {
   appearance: none;
   background: transparent;
-  border: $kui-border-width-10 solid var(--kong-ui-spec-renderer-operations-list-item-border-color, var(--grey-200, #f1f1f5));
+  border: $kui-border-width-10 solid var(--kong-ui-spec-renderer-operations-list-item-border-color, $kui-color-border);
   cursor: pointer;
   display: block;
-  padding: var(--kong-ui-spec-renderer-operations-list-item-padding, 8px 16px);
+  padding: var(--kong-ui-spec-renderer-operations-list-item-padding, $kui-space-40 $kui-space-60);
   position: relative;
   text-align: left;
   width: 100%;
@@ -93,24 +93,24 @@ const methodName = computed((): string => {
   }
 
   &:hover {
-    background: var(--kong-ui-spec-renderer-operations-list-item-background-hover, var(--blue-100, #f2f6fe));
+    background: var(--kong-ui-spec-renderer-operations-list-item-background-hover, $kui-color-background-inverse);
 
     .summary, .path {
-      color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color-hover, var(--black-500, #0B172D));
+      color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color-hover, $kui-color-text);
     }
   }
 
   &:last-of-type {
-    border-bottom-left-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px);
-    border-bottom-right-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px);
+    border-bottom-left-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, $kui-border-width-30);
+    border-bottom-right-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, $kui-border-width-30);
   }
 }
 
 .item--selected {
-  background: var(--kong-ui-spec-renderer-operations-list-item-background-selected, var(--blue-100, #f2f6fe));
+  background: var(--kong-ui-spec-renderer-operations-list-item-background-selected, $kui-color-background-inverse);
 
   &::before {
-    background: var(--kong-ui-spec-renderer-operations-list-item-selected-bar-background, var(--blue-500, #1155cb));
+    background: var(--kong-ui-spec-renderer-operations-list-item-selected-bar-background, $kui-color-background-primary);
     bottom: 0;
     content: '';
     display: block;
@@ -121,65 +121,65 @@ const methodName = computed((): string => {
   }
 
   .summary {
-    color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color-selected, var(--black-500, #0B172D));
+    color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color-selected, #0B172D);
   }
 
   .path {
-    color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color-selected, var(--black-500, #0B172D));
+    color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color-selected, #0B172D);
   }
 }
 
 .item--method-get {
-  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-get, var(--petrol-200, #0364ac));
-  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-get, var(--petrol-100, #eaf4fb));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-get, #{$kui-method-color-text-get});
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-get, #{$kui-method-color-background-get});
 }
 
 .item--method-post {
-  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-post, var(--green-700, #13755e));
-  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-post, var(--green-100, #e8f8f5));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-post, #{$kui-method-color-text-post});
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-post, #{$kui-method-color-background-post});
 }
 
 .item--method-put {
-  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-put, var(--yellow-600, #a05604));
-  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-put, var(--yellow-100, #fff3d8));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-put, #{$kui-method-color-text-put});
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-put, #{$kui-method-color-background-put});
 }
 
 .item--method-patch {
-  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-patch, var(--teal-500, #006e9d));
-  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-patch, var(--teal-100, #cdf1fe));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-patch, #{$kui-method-color-text-patch});
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-patch, #{$kui-method-color-background-patch});
 }
 
 .item--method-delete {
-  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-delete, var(--red-700, #922021));
-  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-delete, var(--red-100, #ffdede));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-delete, #{$kui-method-color-text-delete});
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-delete, #{$kui-method-color-background-delete});
 }
 
 .item--method-options {
-  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-options, var(--steel-700, #273c61));
-  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-options, var(--steel-200, #dae3f2));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-options, #{$kui-method-color-text-options});
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-options, #{$kui-method-color-background-options});
 }
 
 .item--method-head {
-  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-head, var(--yellow-600, #a05604));
-  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-head, var(--yellow-200, #ffe6ba));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-head, #{$kui-method-color-text-head});
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-head, #{$kui-method-color-background-head});
 }
 
 .item--method-connect {
-  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-connect, var(--purple-400, #473cfb));
-  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-connect, var(--purple-100, #eaf4fb));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-connect, #{$kui-method-color-text-connect});
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-connect, #{$kui-method-color-background-connect});
 }
 
 .item--method-trace {
-  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-trace, var(--white, #fff));
-  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-trace, var(--steel-500, #5c7299));
+  --kong-ui-spec-renderer-operations-list-item-method-color: var(--kong-ui-spec-renderer-method-color-trace, #{$kui-method-color-text-trace});
+  --kong-ui-spec-renderer-operations-list-item-method-background: var(--kong-ui-spec-renderer-method-background-trace, #{$kui-method-color-background-trace});
 }
 
 .summary {
-  color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color, var(--black-400, #3C4557));
+  color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color, $kui-color-text);
   font-family: inherit;
-  font-size: 13px;
-  font-weight: 700;
-  margin: 0 0 4px;
+  font-size: $kui-font-size-20;
+  font-weight: $kui-font-weight-bold;
+  margin: $kui-space-0 $kui-space-0 $kui-space-20;
 }
 
 .details {
@@ -193,14 +193,14 @@ const methodName = computed((): string => {
 }
 
 .method-badge {
-  font-size: 11px;
-  margin-right: 8px;
+  font-size: $kui-font-size-20;
+  margin-right: $kui-space-40;
 }
 
 .path {
   align-self: center;
-  color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color, var(--grey-600, #3c4557));
-  font-family: var(--kong-ui-spec-renderer-operations-list-item-path-font-family, var(--kong-ui-spec-renderer-font-family-monospace, monospace));
-  font-size: 13px;
+  color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color, $kui-color-text-neutral-stronger);
+  font-family: var(--kong-ui-spec-renderer-operations-list-item-path-font-family, var(--kong-ui-spec-renderer-font-family-monospace, $kui-font-family-code));
+  font-size: $kui-font-size-20;
 }
 </style>

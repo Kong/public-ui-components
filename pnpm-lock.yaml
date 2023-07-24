@@ -218,9 +218,12 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^0.8.0
         version: link:../../core/i18n
+      '@kong/design-tokens':
+        specifier: ^1.7.1
+        version: 1.7.1
       '@kong/kongponents':
         specifier: ^8.91.0
-        version: 8.101.0(vue-router@4.2.4)(vue@3.3.4)
+        version: 8.101.0(vue@3.3.4)
       '@types/uuid':
         specifier: ^9.0.2
         version: 9.0.2
@@ -301,9 +304,12 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^0.8.0
         version: link:../i18n
+      '@kong/design-tokens':
+        specifier: ^1.7.1
+        version: 1.7.1
       '@kong/kongponents':
         specifier: ^8.91.0
-        version: 8.101.0(vue-router@4.2.4)(vue@3.3.4)
+        version: 8.101.0(vue@3.3.4)
       vue:
         specifier: ^3.3.4
         version: 3.3.4
@@ -385,12 +391,15 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
     devDependencies:
+      '@kong/design-tokens':
+        specifier: ^1.7.1
+        version: 1.7.1
       '@kong/kongponents':
         specifier: ^8.91.0
-        version: 8.101.0(vue-router@4.2.4)(vue@3.3.4)
+        version: 8.101.0(vue@3.3.4)
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.0.4
-        version: 1.0.4(vite@4.4.7)
+        version: 1.0.4
       '@types/lodash.clonedeep':
         specifier: ^4.5.7
         version: 4.5.7
@@ -1689,7 +1698,7 @@ packages:
       - supports-color
     dev: true
 
-  /@modyfi/vite-plugin-yaml@1.0.4(vite@4.4.7):
+  /@modyfi/vite-plugin-yaml@1.0.4:
     resolution: {integrity: sha512-qkT0KiR3AQQRfUvDzLv4+1rYAzXj+QmGhAbyUd0Ordf9xynK76i758lk5GiEfxuQxbvdqDaJ9oXkH/KacbSjQQ==}
     peerDependencies:
       vite: ^2.6.0 || ^3.0.0 || ^4.0.0
@@ -1697,7 +1706,6 @@ packages:
       '@rollup/pluginutils': 5.0.2
       js-yaml: 4.1.0
       tosource: 2.0.0-alpha.3
-      vite: 4.4.7(@types/node@18.17.0)(sass@1.64.1)
     transitivePeerDependencies:
       - rollup
     dev: true

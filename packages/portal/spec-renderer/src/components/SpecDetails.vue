@@ -108,8 +108,8 @@ watch(() => props.activeOperation, () => {
 
 <style lang="scss" scoped>
 .kong-public-ui-spec-details {
-  color: var(--kong-portal-spec-details-text-color, #000);
-  font-family: var(--kong-portal-spec-details-font-family-default, Roboto, Helvetica, sans-serif);
-  font-size: var(--kong-portal-spec-details-font-size, 16px);
+  color: var(--kong-portal-spec-details-text-color, $kui-color-text);
+  font-family: var(--kong-portal-spec-details-font-family-default, $kui-font-family-text);
+  font-size: var(--kong-portal-spec-details-font-size, $kui-font-size-40);
 }
 </style>
