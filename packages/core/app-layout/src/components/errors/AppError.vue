@@ -22,34 +22,34 @@ import BananaSplit from '../icons/BananaSplit.vue'
 
 .kong-ui-app-error {
   align-items: center;
-  background-color: #fff;
-  border-top: 3px solid var(--teal-300, #169fcc);
+  background-color: $kui-color-background;
+  border-top: $kui-space-10 solid $kui-color-text-decorative;
   display: flex;
   flex-direction: column;
-  margin: 32px auto 0;
-  padding-bottom: 48px;
+  margin: $kui-space-90 $kui-space-auto $kui-space-0;
+  padding-bottom: $kui-space-110;
   width: 100%;
 
-  @media (min-width: $viewport-sm) {
+  @media (min-width: $kui-breakpoint-mobile) {
     width: 80%;
   }
 
-  @media (min-width: $viewport-lg) {
+  @media (min-width: $kui-breakpoint-tablet) {
     max-width: 840px;
   }
 
   .banana-icon {
     animation-delay: 0.75s;
-    margin: 32px auto 24px;
+    margin: $kui-space-90 $kui-space-auto $kui-space-80;
   }
 
   .kong-ui-app-error-content {
     animation: .75s cubic-bezier(.785, .135, .15, .86) forwards fadeIn;
     opacity: 0;
-    padding: 0 16px;
+    padding: $kui-space-0 $kui-space-60;
 
     @media (min-width: $viewport-md) {
-      padding: 0 36px;
+      padding: $kui-space-0 $kui-space-90;
     }
 
     @media (prefers-reduced-motion) {
@@ -75,16 +75,16 @@ import BananaSplit from '../icons/BananaSplit.vue'
 // Leave unscoped to style error slot content
 .kong-ui-app-error {
   .kong-ui-app-error-content {
-    color: var(--grey-500, #6f7787);
+    color: $kui-color-text-neutral;
     font-size: 16px;
     text-align: center;
 
     h1, h2, h3, h4 {
-      color: var(--black-500, #0b172d);
-      font-size: 32px;
-      font-weight: 600;
-      margin-bottom: 16px;
-      margin-top: 0;
+      color: $kui-color-text;
+      font-size: $kui-font-size-80;
+      font-weight: $kui-font-weight-semibold;
+      margin-bottom: $kui-space-60;
+      margin-top: $kui-space-0;
     }
   }
 }
