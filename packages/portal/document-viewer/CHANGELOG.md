@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.9.2...@kong-ui-public/document-viewer@0.10.0) (2023-07-25)
+
+
+### Features
+
+* add design tokens and remove utility classes [KHCP-8172] ([#624](https://github.com/Kong/public-ui-components/issues/624)) ([dbdc995](https://github.com/Kong/public-ui-components/commit/dbdc995dacdc7ba97f103185dfee71a0372d7207))
+
+
+
+
+
 ## [0.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@0.9.1...@kong-ui-public/document-viewer@0.9.2) (2023-07-24)
 
 **Note:** Version bump only for package @kong-ui-public/document-viewer

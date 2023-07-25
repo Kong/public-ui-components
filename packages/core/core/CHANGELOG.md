@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.2.0...@kong-ui-public/core@1.3.0) (2023-07-25)
+
+
+### Features
+
+* add design tokens and remove utility classes [KHCP-8172] ([#624](https://github.com/Kong/public-ui-components/issues/624)) ([dbdc995](https://github.com/Kong/public-ui-components/commit/dbdc995dacdc7ba97f103185dfee71a0372d7207))
+
+
+
+
+
 # [1.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.1.1...@kong-ui-public/core@1.2.0) (2023-07-19)
 
 
