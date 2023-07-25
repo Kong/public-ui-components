@@ -40,7 +40,7 @@ th, td {
 }
 
 th:not(:last-of-type), td:not(:last-of-type) {
-  border-right: $kui-border-width-10 solid var(--document-viewer-color, $kui-color-text);
+  border-right: $kui-border-width-10 solid var(--kong-ui-document-viewer-color, $kui-color-text);
 }
 
 .align-center {

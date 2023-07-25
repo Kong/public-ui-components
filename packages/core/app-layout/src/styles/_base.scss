@@ -2,11 +2,12 @@
 .kong-ui-app-layout-body,
 .kong-ui-app-sidebar,
 .kong-ui-app-navbar {
-  --font-family-sans: #{$kui-font-family-text};
-  --font-family-mono: #{$kui-font-family-code};
-  --font-weight-normal: #{$kui-font-weight-regular};
+  // Disabling stylelint rule here to allow for deprecated Kongponents theming variables
+  /* stylelint-disable-next-line custom-property-pattern */
   --KInputLabelWeight: #{$kui-font-weight-semibold};
+  /* stylelint-disable-next-line custom-property-pattern */
   --KongAuthFontFamily: #{$kui-font-family-text};
+  /* stylelint-disable-next-line custom-property-pattern */
   --KongAuthFontWeight: #{$kui-font-weight-regular};
 }
 
@@ -45,7 +46,7 @@ body.kong-ui-app-layout-body {
 
 // Kong Auth Elements overrides
 .kong-auth-element {
-  --font-family-sans: #{$kui-font-family-text} !important;
+  font-family: $kui-font-family-text !important;
 
   .kong-auth-login-form {
     .alert.danger .k-alert-msg {
