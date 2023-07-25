@@ -237,7 +237,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   &.active,
   &.expanded {
     background-color: rgba($kui-color-background, .1);
-    border-color: rgba($kui-color-background, .1);
+    border-color: rgba(#fff, .1);
     border-radius: $sidebar-item-border-radius;
   }
 
@@ -292,7 +292,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   &.active > a {
     background-color: rgba($kui-color-background, 0.1);
     border-left: $kui-border-width-30 solid #84E5AE;
-    color: $kui-color-background !important;
+    color: $kui-color-text-inverse !important;
     font-weight: $kui-font-weight-semibold !important;
   }
 }

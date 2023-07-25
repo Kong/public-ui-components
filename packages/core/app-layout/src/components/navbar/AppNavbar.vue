@@ -122,7 +122,7 @@ const headerStyles = computed(() => ({
       align-items: center;
       align-self: stretch;
       border-bottom: 4px solid transparent;
-      color: $kui-color-background;
+      color: $kui-color-text-inverse;
       display: flex;
       font-size: $kui-font-size-30;
       font-weight: $kui-font-weight-medium;

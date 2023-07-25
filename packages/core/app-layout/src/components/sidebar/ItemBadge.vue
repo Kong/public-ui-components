@@ -34,7 +34,7 @@ const alertCount = computed((): string => {
 .item-badge {
   background-color: $kui-color-background-danger;
   border-radius: 16px;
-  color: $kui-color-background;
+  color: $kui-color-text-inverse;
   font-size: $kui-font-size-20;
   font-weight: $kui-font-weight-medium;
   line-height: $kui-line-height-20;

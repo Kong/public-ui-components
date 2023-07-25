@@ -405,7 +405,7 @@ onBeforeUnmount(() => {
 .sidebar-header {
   align-items: center;
   background: var(--kong-ui-app-sidebar-header-background, $kui-color-background-transparent);
-  color: $kui-color-background;
+  color: $kui-color-text-inverse;
   display: v-bind('headerContainerStyles.display');
   left: 0;
   min-height: v-bind('headerContainerStyles.minHeight');
@@ -454,7 +454,7 @@ onBeforeUnmount(() => {
 
 .sidebar-top {
   align-items: center;
-  color: $kui-color-background;
+  color: $kui-color-text-inverse;
   display: flex;
   margin: $kui-space-0 $kui-space-0 $kui-space-60;
   padding: $kui-space-0 $kui-space-40;

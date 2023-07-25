@@ -130,7 +130,7 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
     }
 
     &-message {
-      color: $kui-color-background-neutral;
+      color: $kui-color-text-neutral;
       font-size: $kui-font-size-30;
       margin-left: $kui-space-50;
     }
