@@ -55,7 +55,7 @@ defineProps({
 
   :deep(.k-button.primary),
   :deep(.k-button.primary:hover:not(:disabled)) {
-    background-color: var(--kong-ui-account-dropdown-background, $kui-color-background-primary);
+    background-color: var(--kong-ui-account-dropdown-background, #9396FC);
     color: var(--kong-ui-account-dropdown-color, $kui-color-text-inverse);
     font-size: $kui-font-size-20;
     height: 24px;
