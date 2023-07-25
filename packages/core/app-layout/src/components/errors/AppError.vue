@@ -23,7 +23,7 @@ import BananaSplit from '../icons/BananaSplit.vue'
 .kong-ui-app-error {
   align-items: center;
   background-color: $kui-color-background;
-  border-top: $kui-space-10 solid $kui-color-text-decorative;
+  border-top: $kui-border-width-20 solid #00abd2;
   display: flex;
   flex-direction: column;
   margin: $kui-space-90 $kui-space-auto $kui-space-0;

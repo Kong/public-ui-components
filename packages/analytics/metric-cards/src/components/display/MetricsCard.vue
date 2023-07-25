@@ -171,7 +171,7 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
   }
 
   &-title {
-    color: var(--kong-ui-metric-card-title, $kui-color-background-neutral);
+    color: var(--kong-ui-metric-card-title, $kui-color-text-neutral);
     font-size: $kui-font-size-30;
 
     &.sm {
@@ -205,7 +205,7 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
         color: var(--kong-ui-metric-card-trend-negative, $color-red);
       }
       &.neutral {
-        color: var(--kong-ui-metric-card-trend-neutral, $kui-color-background-neutral);
+        color: var(--kong-ui-metric-card-trend-neutral, $kui-color-text-neutral);
       }
     }
   }

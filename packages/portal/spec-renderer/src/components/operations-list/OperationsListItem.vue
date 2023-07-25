@@ -101,8 +101,8 @@ const methodName = computed((): string => {
   }
 
   &:last-of-type {
-    border-bottom-left-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, $kui-border-width-30);
-    border-bottom-right-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, $kui-border-width-30);
+    border-bottom-left-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, $kui-border-radius-20);
+    border-bottom-right-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, $kui-border-radius-20);
   }
 }
 

@@ -572,7 +572,7 @@ const handleChartClick = () => {
 }
 
 .axis-tooltip {
-  background-color: $kui-color-text-neutral-stronger;
+  background-color: $kui-color-background-neutral-stronger;
   color: $kui-color-text-inverse;
   padding: $kui-space-20 $kui-space-40;
   position: absolute;
