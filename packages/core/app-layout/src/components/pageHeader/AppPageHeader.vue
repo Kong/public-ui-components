@@ -77,13 +77,13 @@ const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs?.length)
 <style lang="scss" scoped>
 .kong-ui-app-page-header {
   .page-header-breadcrumb-divider {
-    color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak);
+    color: $kui-color-text-neutral-weak;
   }
 
   .page-header-title-section {
     align-items: center;
     display: flex;
-    gap: var(--kui-space-40, $kui-space-40);
+    gap: $kui-space-40;
     justify-content: space-between;
 
     .page-header-title-wrapper {
@@ -92,20 +92,20 @@ const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs?.length)
       min-width: 0;
 
       .page-header-title-before {
-        margin-right: var(--kui-space-40, $kui-space-40);
+        margin-right: $kui-space-40;
       }
 
       .page-header-title-after {
         align-self: center;
-        margin-left: var(--kui-space-60, $kui-space-60);
+        margin-left: $kui-space-60;
       }
 
       .page-header-title {
-        color: var(--kui-color-text, $kui-color-text);
-        font-size: var(--kui-font-size-70, $kui-font-size-70);
-        font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
-        line-height: var(--kui-line-height-60, $kui-line-height-60);
-        margin: var(--kui-space-0, $kui-space-0);
+        color: $kui-color-text;
+        font-size: $kui-font-size-70;
+        font-weight: $kui-font-weight-bold;
+        line-height: $kui-line-height-60;
+        margin: $kui-space-0;
         /** truncation */
         overflow: hidden;
         text-overflow: ellipsis;
@@ -119,7 +119,7 @@ const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs?.length)
   }
 
   :deep(.k-breadcrumbs) {
-    margin-bottom: var(--kui-space-0, $kui-space-0);
+    margin-bottom: $kui-space-0;
   }
 }
 </style>
