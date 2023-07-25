@@ -34,7 +34,7 @@ if (props.alignment === TableCellAlign.center) {
 
 <style scoped lang="scss">
 th, td {
-  padding: 8px;
+  padding: $kui-space-40;
   text-align: left;
   vertical-align: top;
 }
