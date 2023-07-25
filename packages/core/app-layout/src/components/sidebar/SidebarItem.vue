@@ -232,7 +232,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
 // Primary-level nav item
 .sidebar-item-primary {
-  border: $kui-border-width-10 solid transparent;
+  border: $kui-border-width-10 solid $kui-color-border-transparent;
 
   &.active,
   &.expanded {
