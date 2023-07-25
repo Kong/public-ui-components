@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { execSync } from 'child_process'
-import { sleep, packagePath, pascalCase, packageTemplatePath, getTemplateFileList, peerDependencies } from '.'
+import { sleep, packagePath, pascalCase, packageTemplatePath, getTemplateFileList, devDependencies, peerDependencies } from '.'
 import { createSpinner, Spinner } from 'nanospinner'
 import pc from 'picocolors'
 import boxen from 'boxen'
@@ -124,6 +124,19 @@ const createPackageFiles = async (workspace: string, packageName: string): Promi
   )
 
   spinner.success({ text: 'Verified the package structure.' })
+
+  spinner.start({ text: 'Installing package dependencies...' })
+  await sleep()
+
+  spinner.start({ text: 'Installing package devDependencies...' })
+  await sleep()
+
+  // Install devDependencies
+  for (const dep of devDependencies) {
+    await execSync(`pnpm --filter="@kong-ui-public/${packageName}" add -D "${dep}"`, { stdio: 'inherit' })
+  }
+
+  spinner.success({ text: 'Installed package devDependencies.' })
 
   spinner.start({ text: 'Adding package peerDependencies...' })
   await sleep()

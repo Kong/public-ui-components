@@ -236,6 +236,10 @@ importers:
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
+    devDependencies:
+      '@kong/design-tokens':
+        specifier: ^1.7.1
+        version: 1.7.1
 
   packages/analytics/metric-cards:
     dependencies:
@@ -243,6 +247,9 @@ importers:
         specifier: ^2.1.0
         version: 2.1.0
     devDependencies:
+      '@kong/design-tokens':
+        specifier: ^1.7.1
+        version: 1.7.1
       '@kong/kongponents':
         specifier: ^8.91.1
         version: 8.101.0(vue@3.3.4)
@@ -320,6 +327,9 @@ importers:
         specifier: ^2.30.0
         version: 2.30.0
     devDependencies:
+      '@kong/design-tokens':
+        specifier: ^1.7.1
+        version: 1.7.1
       axios:
         specifier: ^1.4.0
         version: 1.4.0
