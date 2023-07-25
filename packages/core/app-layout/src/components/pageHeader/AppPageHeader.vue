@@ -63,7 +63,6 @@ import type { BreadcrumbItem } from '@kong/kongponents'
 const props = defineProps({
   title: {
     type: String,
-    default: '',
     required: true,
   },
   breadcrumbs: {
@@ -72,7 +71,7 @@ const props = defineProps({
   },
 })
 
-const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs.length)
+const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs?.length)
 </script>
 
 <style lang="scss" scoped>
