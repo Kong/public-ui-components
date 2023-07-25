@@ -73,14 +73,14 @@ const headerStyles = computed(() => ({
 @import "../../styles/variables";
 
 .kong-ui-app-navbar {
-  background: var(--kong-ui-app-navbar-background, transparent);
+  background: var(--kong-ui-app-navbar-background, $kui-color-background-transparent);
   left: 0;
   position: fixed;
   right: 0;
   top: v-bind('headerStyles.top');
   z-index: v-bind('headerStyles.zIndex');
 
-  @media (min-width: $viewport-lg) {
+  @media (min-width: $kui-breakpoint-tablet) {
     left: v-bind('headerStyles.left');
   }
 
@@ -89,7 +89,7 @@ const headerStyles = computed(() => ({
     display: flex;
     height: $navbar-height;
     justify-content: space-between;
-    padding: 0 16px; // should match the padding of `.sidebar-header` in the sidebar
+    padding: $kui-space-0 $kui-space-60; // should match the padding of `.sidebar-header` in the sidebar
   }
 
   .app-navbar-logo {
@@ -106,7 +106,7 @@ const headerStyles = computed(() => ({
     display: inline-flex;
     gap: $header-item-gap;
 
-    @media (min-width: $viewport-lg) {
+    @media (min-width: $kui-breakpoint-tablet) {
       display: none;
     }
   }
@@ -122,24 +122,24 @@ const headerStyles = computed(() => ({
       align-items: center;
       align-self: stretch;
       border-bottom: 4px solid transparent;
-      color: var(--white, #fff);
+      color: $kui-color-text-inverse;
       display: flex;
-      font-size: 14px;
-      font-weight: 500;
-      padding: 0 8px;
+      font-size: $kui-font-size-30;
+      font-weight: $kui-font-weight-medium;
+      padding: $kui-space-0 $kui-space-40;
       text-decoration: none;
       transition: all .2s ease-in-out;
       white-space: nowrap;
 
-      @media (min-width: $viewport-md) {
-        font-size: 16px;
-        padding: 0 16px;
+      @media (min-width: $kui-breakpoint-phablet) {
+        font-size: $kui-font-size-40;
+        padding: $kui-space-0 $kui-space-60;
       }
 
       &.router-link-active,
       &.active {
-        border-color: var(--green-300, #84E5AE);
-        font-weight: 600 !important;
+        border-color: #84E5AE;
+        font-weight: $kui-font-weight-semibold !important;
       }
     }
   }
@@ -148,13 +148,13 @@ const headerStyles = computed(() => ({
     align-items: center;
     display: flex;
     flex-direction: row;
-    gap: 8px;
+    gap: $kui-space-40;
     height: 100%;
     justify-content: space-between;
     width: 100%;
 
-    @media (min-width: $viewport-md) {
-      gap: 16px;
+    @media (min-width: $kui-breakpoint-phablet) {
+      gap: $kui-space-60;
     }
 
     &-left,

@@ -28,7 +28,6 @@
             class="sidebar-item-icon"
           >
             <KIcon
-              :color="item.active || (item as SidebarPrimaryItem).expanded ? 'var(--white, #fff)' : '#B5BECD'"
               :icon="String((item as SidebarPrimaryItem).icon)"
               size="20"
             />
@@ -151,16 +150,16 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     white-space: nowrap;
 
     &:last-of-type {
-      margin-bottom: 0;
+      margin-bottom: $kui-space-0;
     }
 
     a.sidebar-item-link {
       align-items: center;
-      color: var(--steel-300, #A3B6D9);
+      color: $kui-color-text-neutral-weak;
       cursor: pointer;
       display: flex;
       font-size: $sidebar-item-font-size;
-      font-weight: 500;
+      font-weight: $kui-font-weight-medium;
       justify-content: space-between;
       min-height: 48px;
       text-decoration: none;
@@ -184,22 +183,22 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
       &:hover,
       &:focus-visible {
-        color: var(--green-300, #84E5AE);
+        color: #84E5AE;
 
         svg {
-          color: var(--green-300, #84E5AE);
+          color: #84E5AE;
         }
 
         // specific SVG stroke color on hover
         .kong-icon {
           &.kong-icon-brain svg path[stroke-width="2"] {
-            stroke: var(--green-300, #84E5AE);
+            stroke: #84E5AE;
           }
         }
       }
 
       &:focus-visible {
-        outline: 1px solid var(--steel-300, #A3B6D9);
+        outline: 1px solid #afb7c5;
       }
 
       .sidebar-item-tooltip {
@@ -213,16 +212,16 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     &.active > div > a,
     &.expanded > a,
     &.expanded > div > a {
-      color: var(--green-300, #84E5AE);
+      color: #84E5AE;
 
       .sidebar-item-name {
-        font-weight: 700 !important;
+        font-weight: $kui-font-weight-bold !important;
       }
     }
 
     ul.level-secondary {
-      border-top: 1px solid var(--black-10, rgba(#000, 0.1));
-      padding: 4px 0 12px;
+      border-top: $kui-border-width-10 solid rgba($kui-color-border-neutral-weak, 0.1);
+      padding: $kui-space-20 $kui-space-0 $kui-space-50;
     }
   }
 }
@@ -233,11 +232,11 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
 // Primary-level nav item
 .sidebar-item-primary {
-  border: 1px solid transparent;
+  border: $kui-border-width-10 solid $kui-color-border-transparent;
 
   &.active,
   &.expanded {
-    background-color: rgba(#fff, .1);
+    background-color: rgba($kui-color-background, .1);
     border-color: rgba(#fff, .1);
     border-radius: $sidebar-item-border-radius;
   }
@@ -249,8 +248,8 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     > .sidebar-item-display {
 
       &.has-label {
-        padding-bottom: 12px;
-        padding-top: 12px;
+        padding-bottom: $kui-space-50;
+        padding-top: $kui-space-50;
       }
     }
   }
@@ -258,17 +257,17 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
 // Secondary-level nav item
 .sidebar-item-secondary {
-  margin-bottom: 4px;
+  margin-bottom: $kui-space-20;
 
   &:last-of-type {
-    margin-bottom: 0;
+    margin-bottom: $kui-space-0;
   }
 
   a {
-    background-color: transparent;
+    background-color: $kui-color-background-transparent;
     // Add a left border by default so the item doesn't "shift" to the right when active
-    border-left: 4px solid transparent;
-    color: var(--steel-200, #DAE3F2) !important;
+    border-left: $kui-border-width-30 solid $kui-color-border-transparent;
+    color: $kui-color-text-neutral-weak !important;
     font-size: $sidebar-item-font-size;
     // Override the min-height for the secondary items
     min-height: 40px !important;
@@ -276,7 +275,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
     &:hover,
     &:focus-visible {
-      background-color: rgba(#fff, 0.05);
+      background-color: rgba($kui-color-background, 0.05);
     }
 
     > .sidebar-item-display {
@@ -291,10 +290,10 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   }
 
   &.active > a {
-    background-color: rgba(#fff, 0.1);
-    border-left: 4px solid var(--green-300, #84E5AE);
-    color: var(--white, #fff) !important;
-    font-weight: 600 !important;
+    background-color: rgba($kui-color-background, 0.1);
+    border-left: $kui-border-width-30 solid #84E5AE;
+    color: $kui-color-text-inverse !important;
+    font-weight: $kui-font-weight-semibold !important;
   }
 }
 
@@ -302,11 +301,11 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   align-items: center;
   display: flex;
   height: 100%;
-  padding: 0 16px;
+  padding: $kui-space-0 $kui-space-60;
   width: 100%;
 
   .sidebar-item-name-container {
-    line-height: 1.3;
+    line-height: $kui-line-height-20;
     -webkit-user-select: none;
     user-select: none;
 
@@ -338,23 +337,23 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
         span {
           height: auto;
-          min-width: 0; // Important: must be present to truncate the text
+          min-width: $kui-space-0; // Important: must be present to truncate the text
         }
       }
     }
   }
 
   .sidebar-item-label {
-    color: var(--steel-300, #A3B6D9);
-    font-size: 12px;
-    margin-top: 4px;
+    color: $kui-color-text-neutral-weak;
+    font-size: $kui-font-size-20;
+    margin-top: $kui-space-20;
   }
 
   .sidebar-item-icon {
     align-items: center;
     display: flex;
     line-height: 0; // to align icon with the text baseline
-    padding-right: 14px;
+    padding-right: $kui-space-50;
   }
 }
 </style>

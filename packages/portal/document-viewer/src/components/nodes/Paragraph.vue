@@ -4,10 +4,10 @@
   </p>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 p {
-  font-size: 14px;
-  line-height: 20px;
-  margin: var(--document-viewer-paragraph-margin, 0 0 12px);
+  font-size: $kui-font-size-30;
+  line-height: $kui-line-height-30;
+  margin: var(--kong-ui-document-viewer-paragraph-margin, $kui-space-0 $kui-space-0 $kui-space-50);
 }
 </style>

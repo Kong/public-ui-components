@@ -2,11 +2,11 @@
   <hr>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 hr {
-  background-color: var(--document-viewer-color, var(--text_colors-primary, #0b172d));
+  background-color: var(--kong-ui-document-viewer-color, $kui-color-background-inverse);
   border: none;
   height: 1.5px;
-  margin: var(--spacing-md, 16px) 0;
+  margin: $kui-space-60 $kui-space-0;
 }
 </style>

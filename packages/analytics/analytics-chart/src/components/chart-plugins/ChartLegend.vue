@@ -111,7 +111,7 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
   -ms-overflow-style: thin;
   overflow-x: hidden;
   overflow-y: scroll;
-  padding-left: var(--spacing-sm, 14px);
+  padding-left: $kui-space-50;
   scrollbar-width: thin;
 
   &.vertical {
@@ -120,20 +120,20 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
     max-width: 200px;
 
     // Allow legend to expand horizontally at lower resolutions
-    @media (max-width: 768px) {
+    @media (max-width: ($kui-breakpoint-phablet - 1px)) {
       flex-direction: row;
       max-width: 100%;
-      padding-top: var(--spacing-md, 16px);
+      padding-top: $kui-space-50;
       width: 100%;
     }
   }
 
   &.horizontal {
-    column-gap: var(--spacing-sm, 14px);
+    column-gap: $kui-space-50;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    margin-top: var(--spacing-xs, 12px);
+    margin-top: $kui-space-50;
     max-height: 60px;
     width: 100%;
 
@@ -143,7 +143,7 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
   }
 
   &::-webkit-scrollbar-track {
-    background-color: var(--white);
+    background-color: $kui-color-background;
     border-radius: 10px;
   }
 
@@ -152,7 +152,7 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: var(--grey-300, #E7E7EC);
+    background-color: $kui-color-background-disabled;
     border-radius: 10px;
   }
 
@@ -161,21 +161,21 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
     .legend {
       flex: 0 0 14px;
       height: 3px;
-      margin-right: var(--spacing-xs, 12px);
-      margin-top: var(--spacing-xs, 12px);
+      margin-right: $kui-space-50;
+      margin-top: $kui-space-50;
     }
 
     cursor: pointer;
     display: flex;
     height: fit-content;
-    margin: var(--spacing-xxs, 10px);
+    margin: $kui-space-50;
 
     .label {
-      font-size: var(--type-sm, 14px);
+      font-size: $kui-font-size-30;
     }
 
     .sub-label {
-      font-size: var(--type-xs, 12px);
+      font-size: $kui-font-size-20;
       word-break: none;
     }
 

@@ -15,5 +15,9 @@
     "javascript",
     "javascriptreact",
     "vue"
+  ],
+  "scss.scannerExclude": [
+    "**/.git",
+    "**/bower_components",
   ]
 }

@@ -551,14 +551,14 @@ const handleChartClick = () => {
   scrollbar-width: thin;  /* Firefox */
 
   &::-webkit-scrollbar-track {
-    background-color: var(--white, #ffffff);
+    background-color: $kui-color-background;
     border-radius: 10px;
   }
   &::-webkit-scrollbar {
     width: 10px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: var(--grey-300, #E7E7EC);
+    background-color: $kui-color-background-disabled;
     border-radius: 10px;
   }
 }
@@ -572,9 +572,9 @@ const handleChartClick = () => {
 }
 
 .axis-tooltip {
-  background-color: var(--grey-600, #3c4557);
-  color: var(--white);
-  padding: 5px 10px 5px 10px;
+  background-color: $kui-color-background-neutral-stronger;
+  color: $kui-color-text-inverse;
+  padding: $kui-space-20 $kui-space-40;
   position: absolute;
   width: max-content;
   z-index: 100;
@@ -587,5 +587,4 @@ const handleChartClick = () => {
   top: 0;
   width: 100%;
 }
-
 </style>

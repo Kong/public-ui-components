@@ -283,9 +283,9 @@ $navbar-height: 60px;
 
 html,
 body {
-  padding: 0;
-  margin: 0;
   font-family: "Inter", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 .logo-link {
@@ -298,8 +298,8 @@ body {
 }
 
 main {
-  min-height: 2000px; // fake a height so the container scrolls
   margin-top: $navbar-height;
+  min-height: 2000px; // fake a height so the container scrolls
   padding: 16px 24px;
 
   @media (min-width: 1024px) {
@@ -312,10 +312,10 @@ main {
 }
 
 .navbar-logo-link {
-  display: flex;
   align-items: center;
+  display: flex;
 
-  @media (min-width: 1024px) { // $viewport-lg
+  @media (min-width: 1024px) { // $kui-breakpoint-tablet
     display: none;
   }
 }
@@ -324,16 +324,16 @@ main {
   display: none;
   padding-left: 16px;
 
-  @media (min-width: 640px) { // $viewport-sm
+  @media (min-width: 640px) { // $kui-breakpoint-mobile
     display: flex;
   }
 }
 
 .desktop-logo {
-  display: none;
   align-items: center;
+  display: none;
 
-  @media (min-width: 1024px) { // $viewport-lg
+  @media (min-width: 1024px) { // $kui-breakpoint-tablet
     display: none;
   }
 }
@@ -345,7 +345,7 @@ main {
   box-shadow: var(--kong-ui-app-layout-main-box-shadow, -30px 174px 250px #0023db);
   width: 100%;
 
-  @media (min-width: 1024px) { // $viewport-lg
+  @media (min-width: 1024px) { // $kui-breakpoint-tablet
     border-top-left-radius: 16px;
   }
 }
@@ -357,7 +357,7 @@ main {
 .desktop-logo {
   display: none;
 
-  @media (min-width: 1024px) { // $viewport-lg
+  @media (min-width: 1024px) { // $kui-breakpoint-tablet
     display: flex;
   }
 }

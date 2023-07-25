@@ -287,15 +287,15 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
 }
 
 .navbar-logo-link {
-  display: flex;
   align-items: center;
+  display: flex;
 }
 
 .logo-title {
   display: none;
   padding-left: 16px;
 
-  @media (min-width: 640px) { // $viewport-sm
+  @media (min-width: 640px) { // $kui-breakpoint-mobile
     display: flex;
   }
 }
@@ -307,8 +307,8 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
   // Ensure button is aligned center
   :deep(.k-dropdown-trigger) {
     > div {
-      display: flex;
       align-items: center;
+      display: flex;
     }
   }
 

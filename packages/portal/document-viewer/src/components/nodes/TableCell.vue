@@ -32,15 +32,15 @@ if (props.alignment === TableCellAlign.center) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 th, td {
-  padding: 8px;
+  padding: $kui-space-40;
   text-align: left;
   vertical-align: top;
 }
 
 th:not(:last-of-type), td:not(:last-of-type) {
-  border-right: 1px solid var(--document-viewer-color, var(--text_colors-primary, #0b172d));
+  border-right: $kui-border-width-10 solid var(--kong-ui-document-viewer-color, $kui-color-border);
 }
 
 .align-center {

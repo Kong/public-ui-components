@@ -268,5 +268,4 @@ const handleChartClick = () => {
 <style lang="scss" scoped>
 @import '../../styles/base';
 @import '../../styles/chart';
-
 </style>

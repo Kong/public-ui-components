@@ -556,16 +556,16 @@ watch(isGaugeChart, () => {
 @import '../src/styles/base';
 html,
 body {
-  width: 100%;
+  background-color: #f1f1f5;
   height: 100%;
   margin: 0;
-  padding: 0;
-  background-color: #f1f1f5;
   min-height: 100%;
+  padding: 0;
+  width: 100%;
 }
 .sandbox-container {
   margin: 0;
-  padding: $spacing-md;
+  padding: $kui-space-60;
 
   h1 {
     margin-top: 0;
@@ -592,7 +592,7 @@ body {
   .config-container {
     display: flex;
     gap: 24px;
-    padding: $spacing-md;
+    padding: $kui-space-60;
     --KCodeBlockFontSize: 15px;
     .data-container {
       width: 50%;

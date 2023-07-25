@@ -109,7 +109,7 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
   width: 100%;
   @include flex-gap(24px, 16px);
 
-  @media (max-width: ($viewport-md - 1px)) {
+  @media (max-width: ($kui-breakpoint-phablet - 1px)) {
     @include flex-gap(16px, 16px);
     flex-direction: column;
   }
@@ -123,16 +123,16 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
     align-items: center;
     display: flex;
     justify-content: center;
-    margin: auto;
+    margin: $kui-space-auto;
 
     &-icon {
       display: flex;
     }
 
     &-message {
-      color: $color-grey;
-      font-size: $font-size-sm;
-      margin-left: 10px;
+      color: $kui-color-text-neutral;
+      font-size: $kui-font-size-30;
+      margin-left: $kui-space-50;
     }
   }
 }

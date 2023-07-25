@@ -27,9 +27,9 @@
         />
       </div>
       <div>
-        <h3>icon-color=var(--purple-400, #473cfb)</h3>
+        <h3>icon-color=#473cfb</h3>
         <CopyUuid
-          icon-color="var(--purple-400, #473cfb)"
+          icon-color="#473cfb"
           :uuid="uuid"
         />
       </div>

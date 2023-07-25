@@ -1,4 +1,4 @@
-export const lightGrey = '#e7e7ec' // grey-300
+export const lightGrey = '#e0e4ea' // kui-color-background-disabled
 
 // Note: the first color of each palette is reserved for "out of spec" codes.  The remaining colors
 // are for in-spec codes.  For cases where there are more status codes than colors, the colors restart from

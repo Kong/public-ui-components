@@ -4,11 +4,11 @@
   </table>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 table {
-  border: 1px solid var(--document-viewer-color, var(--text_colors-primary, #0b172d));
+  border: 1px solid var(--kong-ui-document-viewer-color, $kui-color-border);
   border-collapse: collapse;
-  font-size: var(--type-sm, 14px);
-  margin-bottom: var(--spacing-md, 16px);
+  font-size: $kui-font-size-30;
+  margin-bottom: $kui-space-60;
 }
 </style>

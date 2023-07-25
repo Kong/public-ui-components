@@ -184,7 +184,7 @@ A function that will be called when the copy button is clicked. The function wil
 
 - type: `String`
 - required: `false`
-- default: `'var(--black-45, rgba(0, 0, 0, 0.45))'`
+- default: `'rgba(0, 0, 0, 0.45)'`
 
 The color of the `copy` icon.
 

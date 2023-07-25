@@ -57,5 +57,8 @@
   },
   "dependencies": {
     "date-fns": "^2.30.0"
+  },
+  "devDependencies": {
+    "@kong/design-tokens": "^1.7.1"
   }
 }

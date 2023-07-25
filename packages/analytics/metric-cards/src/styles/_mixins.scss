@@ -6,7 +6,7 @@
   pointer-events: all;
 }
 
-@mixin flex-gap ($h_amount: var(--spacing-md, 16px), $v_amount: var(--spacing-md, 16px),) {
+@mixin flex-gap($h_amount: $kui-space-60, $v_amount: $kui-space-60) {
   column-gap: $h_amount;
   row-gap: $v_amount;
 }

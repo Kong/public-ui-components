@@ -14,15 +14,15 @@
     >
       <KIcon
         v-if="isCollapsed"
-        color="var(--kong-ui-spec-renderer-operations-list-section-icon-color-collapsed, var(--grey-400, #b6b6bd))"
+        :color="`var(--kong-ui-spec-renderer-operations-list-section-icon-color-collapsed, ${KUI_COLOR_TEXT_NEUTRAL_WEAK})`"
         icon="chevronRight"
-        size="18"
+        :size="KUI_ICON_SIZE_40"
       />
       <KIcon
         v-else
-        color="var(--kong-ui-spec-renderer-operations-list-section-icon-color-expanded, var(--grey-600, #3c4557))"
+        :color="`var(--kong-ui-spec-renderer-operations-list-section-icon-color-expanded, ${KUI_COLOR_TEXT_NEUTRAL_STRONGER})`"
         icon="chevronDown"
-        size="18"
+        :size="KUI_ICON_SIZE_40"
       />
     </div>
     <h1
@@ -43,6 +43,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import composables from '../../composables'
+import { KUI_COLOR_TEXT_NEUTRAL_WEAK, KUI_COLOR_TEXT_NEUTRAL_STRONGER, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 
 const props = defineProps({
   isCollapsed: {
@@ -77,28 +78,28 @@ const collapseAriaLabel = computed((): string => {
   align-items: center;
   appearance: none;
   background: var(--kong-ui-spec-renderer-operations-list-section-background, transparent);
-  border: 1px solid var(--kong-ui-spec-renderer-operations-list-section-border-color, var(--grey-200, #f1f1f5));
-  border-top-left-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px);
-  border-top-right-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px);
+  border: $kui-border-width-10 solid var(--kong-ui-spec-renderer-operations-list-section-border-color, $kui-color-border-disabled);
+  border-top-left-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, $kui-border-radius-20);
+  border-top-right-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, $kui-border-radius-20);
   color: currentColor;
   cursor: pointer;
   display: flex;
-  padding: var(--kong-ui-spec-renderer-operations-list-section-padding, 8px);
+  padding: var(--kong-ui-spec-renderer-operations-list-section-padding, $kui-space-40);
   width: 100%;
 }
 
 .header--collapsed {
-  border-bottom-left-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px);
-  border-bottom-right-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, 4px);
+  border-bottom-left-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, $kui-border-radius-20);
+  border-bottom-right-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, $kui-border-radius-20);
 }
 
 .label {
   color: var(--kong-ui-spec-renderer-operations-list-section-label-text-color, currentColor);
   font-family: inherit;
-  font-size: var(--kong-ui-spec-renderer-operations-list-section-label-font-size, 15px);
-  font-weight: 600;
-  line-height: 1;
-  margin: 0 8px 0 0;
+  font-size: var(--kong-ui-spec-renderer-operations-list-section-label-font-size, $kui-font-size-40);
+  font-weight: $kui-font-weight-semibold;
+  line-height: $kui-line-height-40;
+  margin: $kui-space-0 $kui-space-40 $kui-space-0 $kui-space-0;
 
   &:first-letter {
     text-transform: capitalize;
@@ -106,19 +107,19 @@ const collapseAriaLabel = computed((): string => {
 }
 
 .header--collapsed .label {
-  color: var(--kong-ui-spec-renderer-operations-list-section-label-text-color-collapsed, var(--black-400, #3C4557));
+  color: var(--kong-ui-spec-renderer-operations-list-section-label-text-color-collapsed, $kui-color-text-neutral-stronger);
 }
 
 .description {
-  font-family: var(--kong-ui-spec-renderer-operations-list-section-description-font-family, var(--kong-ui-spec-renderer-font-monospace, monospace));
+  font-family: var(--kong-ui-spec-renderer-operations-list-section-description-font-family, var(--kong-ui-spec-renderer-font-monospace, $kui-font-family-code));
   line-height: 1;
-  margin-left: auto;
+  margin-left: $kui-space-auto;
   max-width: 65%;
 }
 
 .icon-wrapper {
   height: 18px;
-  margin-right: 8px;
+  margin-right: $kui-space-40;
 }
 
 .truncate {

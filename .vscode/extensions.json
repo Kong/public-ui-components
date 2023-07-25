@@ -4,6 +4,7 @@
     "Vue.vscode-typescript-vue-plugin",
     "dbaeumer.vscode-eslint",
     "stylelint.vscode-stylelint",
-    "yzhang.markdown-all-in-one"
+    "yzhang.markdown-all-in-one",
+    "mrmlnc.vscode-scss"
   ]
 }

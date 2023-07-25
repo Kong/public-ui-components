@@ -39,16 +39,16 @@ const children = addUniqueHeadingSlugs(props.document?.children)
 const Children = () => props.document?.children ? renderChildren(children) : null
 </script>
 
-<style>
+<style lang="scss">
 :root {
-  --document-viewer-font-family-default: Roboto, Helvetica, sans-serif;
-  --document-viewer-font-family-monospace: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  --kong-ui-document-viewer-font-family-default: #{$kui-font-family-text};
+  --kong-ui-document-viewer-font-family-monospace: #{$kui-font-family-code};
 }
 </style>
-<style scoped>
+<style lang="scss" scoped>
 .document-viewer {
-  color: var(--document-viewer-color, var(--text_colors-primary, #0b172d));
-  font-family: var(--document-viewer-font-family-default, var(--font-family-sans));
-  font-size: var(--document-viewer-font-size, 16px);
+  color: var(--kong-ui-document-viewer-color, $kui-color-text);
+  font-family: var(--kong-ui-document-viewer-font-family-default, $kui-font-family-text);
+  font-size: var(--kong-ui-document-viewer-font-size, $kui-font-size-40);
 }
 </style>

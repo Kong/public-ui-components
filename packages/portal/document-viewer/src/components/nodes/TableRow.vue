@@ -27,7 +27,7 @@ if (props.section === TableRowSection.header) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 th,
 td {
   text-align: left;
@@ -42,6 +42,6 @@ td {
 }
 
 tr {
-  border-top: 1px solid var(--document-viewer-color, var(--text_colors-primary, #0b172d));
+  border-top: $kui-border-width-10 solid var(--kong-ui-document-viewer-color, #000933);
 }
 </style>

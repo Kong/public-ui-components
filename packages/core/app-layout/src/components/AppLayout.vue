@@ -120,6 +120,7 @@ import AppSidebar from './sidebar/AppSidebar.vue'
 import SidebarToggle from './sidebar/SidebarToggle.vue'
 import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../types'
 import { useDebounce } from '../composables'
+import { KUI_SPACE_0, KUI_SPACE_60 } from '@kong/design-tokens'
 
 interface AppSidebarProperties {
   topItems?: SidebarPrimaryItem[]
@@ -209,7 +210,7 @@ const sidebarMobileTopOffset = computed((): number => {
   return navbarHeight.value + notificationHeight.value
 })
 const layoutMainMarginTop = computed((): string => `${sidebarMobileTopOffset.value}px`)
-const layoutMainTopLeftBorderRadius = computed((): string => sidebar.hidden || navbar.hidden ? '0' : '16px')
+const layoutMainTopLeftBorderRadius = computed((): string => sidebar.hidden || navbar.hidden ? KUI_SPACE_0 : KUI_SPACE_60)
 
 const { debounce } = useDebounce()
 const debouncedSetNotificationHeight = debounce((force = false): void => {
@@ -286,7 +287,7 @@ onBeforeUnmount(() => {
   bottom: 0;
   display: flex;
   flex-direction: column;
-  font-family: $font-family-base;
+  font-family: $kui-font-family-text;
   height: 100%;
   left: 0;
   overflow: hidden;
@@ -300,7 +301,7 @@ onBeforeUnmount(() => {
       align-items: center;
       display: flex;
 
-      @media (min-width: $viewport-lg) {
+      @media (min-width: $kui-breakpoint-tablet) {
         display: none;
       }
 
@@ -317,7 +318,7 @@ onBeforeUnmount(() => {
 
   .kong-ui-app-layout-main {
     align-items: stretch;
-    background-color: var(--grey-100, #f8f8fa);
+    background-color: $kui-color-background-neutral-weakest;
     box-shadow: $app-layout-main-box-shadow;
     display: flex;
     flex-grow: 1;
@@ -327,14 +328,14 @@ onBeforeUnmount(() => {
     position: relative;
     width: 100%;
 
-    @media (min-width: $viewport-lg) {
+    @media (min-width: $kui-breakpoint-tablet) {
       border-top-left-radius: v-bind('layoutMainTopLeftBorderRadius');
       margin-left: $sidebar-width;
       width: calc(100% - #{$sidebar-width});
     }
 
     &.full-width {
-      margin-left: 0;
+      margin-left: $kui-space-0;
     }
 
     .kong-ui-app-layout-content {
@@ -343,10 +344,10 @@ onBeforeUnmount(() => {
 
       // Apply the padding to the inner element
       &-inner {
-        padding: var(--kong-ui-app-layout-content-padding, 16px);
+        padding: var(--kong-ui-app-layout-content-padding, $kui-space-60);
 
-        @media (min-width: $viewport-lg) {
-          padding: var(--kong-ui-app-layout-content-padding, 32px);
+        @media (min-width: $kui-breakpoint-tablet) {
+          padding: var(--kong-ui-app-layout-content-padding, $kui-space-90);
         }
       }
     }
@@ -355,14 +356,14 @@ onBeforeUnmount(() => {
   // Style overrides if AppNavbar is hidden
   &.navbar-hidden {
     .kong-ui-app-layout-main {
-      margin-top: 0;
+      margin-top: $kui-space-0;
     }
   }
 
   // Style overrides if AppSidebar is hidden
   &.sidebar-hidden {
     .kong-ui-app-layout-main {
-      margin-left: 0;
+      margin-left: $kui-space-0;
       width: 100%;
     }
   }
@@ -377,7 +378,7 @@ onBeforeUnmount(() => {
 
     // Modify KAlert styles
     :deep(.k-alert) {
-      border-radius: 0 !important;
+      border-radius: $kui-border-radius-0 !important;
     }
   }
 }

@@ -72,7 +72,7 @@ const props = defineProps({
   },
   iconColor: {
     type: String,
-    default: 'var(--black-45, rgba(0, 0, 0, 0.45))',
+    default: 'rgba(0, 0, 0, 0.45)',
   },
   tooltip: {
     type: String,
@@ -153,7 +153,7 @@ const copyIdToClipboard = (executeCopy: (prop: string) => boolean) => {
   display: flex;
 
   .uuid-container {
-    margin-right: 12px;
+    margin-right: $kui-space-50;
     white-space: nowrap;
   }
 

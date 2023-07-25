@@ -44,25 +44,25 @@ import NavLinks from '../components/NavLinks.vue'
 
 <style lang="scss" scoped>
 main {
-  width: 100%;
   background: #fff;
-  box-shadow: var(--kong-ui-app-layout-main-box-shadow, -30px 174px 250px #0023db);
-  min-height: 2000px; // fake a height so the container scrolls
-  margin: 60px 0 0; // $navbar-height
-  padding: 16px;
   border-top-left-radius: 0;
+  box-shadow: var(--kong-ui-app-layout-main-box-shadow, -30px 174px 250px #0023db);
+  margin: 60px 0 0; // $navbar-height
+  min-height: 2000px; // fake a height so the container scrolls
+  padding: 16px;
+  width: 100%;
 }
 
 .navbar-logo-link {
-  display: flex;
   align-items: center;
+  display: flex;
 }
 
 .logo-title {
   display: none;
   padding-left: 16px;
 
-  @media (min-width: 640px) { // $viewport-sm
+  @media (min-width: 640px) { // $kui-breakpoint-mobile
     display: flex;
   }
 }
@@ -70,9 +70,9 @@ main {
 .desktop-logo {
   display: none;
 
-  @media (min-width: 1024px) { // $viewport-lg
-    display: flex;
+  @media (min-width: 1024px) { // $kui-breakpoint-tablet
     align-items: center;
+    display: flex;
   }
 }
 </style>

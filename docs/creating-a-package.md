@@ -224,13 +224,53 @@ Instead, add the Kongponents package in the `peerDependencies` of your `package.
 
 ### Styles
 
+#### Kong Design Tokens
+
+Design tokens sourced from the [`@kong/design-tokens`](https://github.com/Kong/design-tokens) package **should** be utilized wherever possible.
+
+The SCSS variables are automatically imported and available for use in all Vue components in this repository. JavaScript variables can be imported as needed.
+
+Here's an example:
+
+```html
+<template>
+  <div class="my-component">
+    <p>My component uses <span :style="{ color: KUI_COLOR_TEXT_PRIMARY }">design tokens</span></p>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { KUI_COLOR_TEXT_PRIMARY } from '@kong/design-tokens'
+</script>
+
+<style lang="scss">
+.my-component {
+  color: $kui-color-text; // #000933
+  margin-bottom: $kui-space-60; // 16px
+  padding: $kui-space-40 $kui-space-0; // 8px 0
+}
+</style>
+```
+
+#### Customization via CSS Custom Properties
+
+If your component needs to allow for style customization, it is **highly recommended** to utilize the `@kong/design-tokens` package along with the CSS custom property values and SCSS variable fallbacks. [See here for customization documentation and examples](https://github.com/Kong/design-tokens#component-example).
+
+If your component needs to provide its own CSS custom properties, the properties **must** have the prefix `--kong-ui-` in order to be valid.
+
+Here's an example of providing customization via a CSS custom property and providing a fallback value sourced from Kong Design Tokens:
+
+```scss
+.my-component-class {
+  color: var(--kong-ui-my-component-color-text, $kui-color-text);
+}
+```
+
 #### Do not utilize Kongponents styles
 
-You **must not** utilize the "helper" classes provided by the Kongponents component library (e.g. `d-flex`, `w-100`, `mr-2`, etc.).
+You **must not** utilize the "helper" classes or CSS custom properties (including colors) provided by the Kongponents component library (e.g. `d-flex`, `w-100`, `mr-2`, `--blue-500`, `--white`, etc.).
 
-Components in this repository should truley be standalone, meaning they should not depend on classes and utility functions being globally available in the host app (other than actual Kongponent components themselves). This requires writing in-component styles rather than depending on globally available styles.
-
-The only exception is in utilizing CSS Variables for colors (e.g. `color: var(--blue-500, #1155cb));`); however, it is **required** to provide a native value as a fallback.
+Components in this repository should truly be standalone, meaning they should not depend on classes and utility functions being globally available in the host app (other than actual Kongponents components themselves). This requires writing in-component styles rather than depending on globally available styles.
 
 #### Styles must be scoped
 

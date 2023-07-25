@@ -338,15 +338,15 @@ const handleCloseAlert = (): void => {
 }
 
 .navbar-logo-link {
-  display: flex;
   align-items: center;
+  display: flex;
 }
 
 .logo-title {
   display: none;
   padding-left: 16px;
 
-  @media (min-width: 640px) { // $viewport-sm
+  @media (min-width: 640px) { // $kui-breakpoint-mobile
     display: flex;
   }
 }
