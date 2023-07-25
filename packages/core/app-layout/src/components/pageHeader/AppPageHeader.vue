@@ -121,5 +121,15 @@ const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs?.length)
   :deep(.k-breadcrumbs) {
     margin-bottom: $kui-space-0;
   }
+
+  @media (max-width: $kui-breakpoint-mobile) {
+    .page-header-title-section {
+      flex-wrap: wrap;
+    }
+
+    .page-header-section-below {
+      margin-top: $kui-space-40;
+    }
+  }
 }
 </style>
