@@ -76,7 +76,7 @@ import BananaSplit from '../icons/BananaSplit.vue'
 .kong-ui-app-error {
   .kong-ui-app-error-content {
     color: $kui-color-text-neutral;
-    font-size: 16px;
+    font-size: $kui-font-size-40;
     text-align: center;
 
     h1, h2, h3, h4 {
