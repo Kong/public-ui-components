@@ -227,7 +227,7 @@ ul.tooltip {
   }
 
   li:first-child {
-    border-bottom: 1px solid $color-black-10;
+    border-bottom: $kui-border-width-10 solid $color-black-10;
   }
 
   li:last-child {
