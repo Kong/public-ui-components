@@ -273,8 +273,8 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.91.1
-        version: 8.101.0(vue-router@4.2.4)(vue@3.3.4)
+        specifier: ^8.106.0
+        version: 8.106.0(vue-router@4.2.4)(vue@3.3.4)
       '@types/lodash.clonedeep':
         specifier: ^4.5.7
         version: 4.5.7
@@ -1532,6 +1532,31 @@ packages:
     transitivePeerDependencies:
       - '@popperjs/core'
       - debug
+    dev: true
+
+  /@kong/kongponents@8.106.0(vue-router@4.2.4)(vue@3.3.4):
+    resolution: {integrity: sha512-rOIFR6Sc+9ggcIB10rolVV7+WpgVvRtVTi16SQhNjxx/lTE9rwiF9WbCANbPh1gDPFFLY/nIs1+as1r7X3+eCA==}
+    engines: {node: '>=16.19.0'}
+    peerDependencies:
+      vue: '>= 3.3.0'
+      vue-router: ^4.1.6
+    dependencies:
+      axios: 0.27.2
+      date-fns: 2.30.0
+      date-fns-tz: 1.3.8(date-fns@2.30.0)
+      focus-trap: 7.5.2
+      focus-trap-vue: 3.4.0(focus-trap@7.5.2)(vue@3.3.4)
+      popper.js: 1.16.1
+      sortablejs: 1.15.0
+      swrv: 1.0.4(vue@3.3.4)
+      uuid: 8.3.2
+      v-calendar: 3.0.3(vue@3.3.4)
+      vue: 3.3.4
+      vue-draggable-next: 2.2.0(sortablejs@1.15.0)(vue@3.3.4)
+      vue-router: 4.2.4(vue@3.3.4)
+    transitivePeerDependencies:
+      - '@popperjs/core'
+      - debug
 
   /@kong/swagger-ui-kong-theme-universal@4.2.6(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.4)(vue@3.3.4):
     resolution: {integrity: sha512-ZZtnsER3yHFnzjy5OO3jYgeY3ZCuhQP6IFqwq2vUj9HntyJUBOBUxvTJ9YJoQHz2wMVuatdUJHadQcUVS/Cktw==}
@@ -1539,7 +1564,7 @@ packages:
       react: 17.0.2
     dependencies:
       '@braintree/sanitize-url': 2.1.0
-      '@kong/kongponents': 8.101.0(vue-router@4.2.4)(vue@3.3.4)
+      '@kong/kongponents': 8.106.0(vue-router@4.2.4)(vue@3.3.4)
       '@kyleshockey/xml': 1.0.2
       classnames: 2.3.2
       curl-to-har: 1.0.1
