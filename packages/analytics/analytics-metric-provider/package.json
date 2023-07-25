@@ -50,12 +50,15 @@
   "dependencies": {
     "@kong-ui-public/analytics-utilities": "^0.4.3",
     "@kong-ui-public/core": "1.1.0",
-    "@kong-ui-public/i18n": "^0.6.1",
     "@kong-ui-public/metric-cards": "0.2.14",
     "axios": "^1.4.0",
     "swrv": "^1.0.4"
   },
   "peerDependencies": {
+    "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^8.85.0"
+  },
+  "devDependencies": {
+    "@kong-ui-public/i18n": "workspace:^"
   }
 }

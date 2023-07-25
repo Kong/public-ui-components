@@ -243,9 +243,6 @@ importers:
       '@kong-ui-public/core':
         specifier: 1.1.0
         version: 1.1.0(axios@1.4.0)(swrv@1.0.4)(vue@3.3.4)
-      '@kong-ui-public/i18n':
-        specifier: ^0.6.1
-        version: 0.6.1(typescript@4.9.5)(vue@3.3.4)
       '@kong-ui-public/metric-cards':
         specifier: 0.2.14
         version: 0.2.14(@kong/kongponents@8.101.0)(vue@3.3.4)
@@ -255,6 +252,10 @@ importers:
       swrv:
         specifier: ^1.0.4
         version: 1.0.4(vue@3.3.4)
+    devDependencies:
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../../core/i18n
 
   packages/analytics/analytics-utilities:
     dependencies:
@@ -1547,19 +1548,6 @@ packages:
       date-fns: 2.30.0
       swrv: 1.0.4(vue@3.3.4)
       vue: 3.3.4
-    dev: false
-
-  /@kong-ui-public/i18n@0.6.1(typescript@4.9.5)(vue@3.3.4):
-    resolution: {integrity: sha512-2SkOFU4zYNtPA0GP9+J51orkyXNN4xAvalJguSjrmraM3UdJMrJkeRxbVRsv5JVXezQ/yOQPGly+wg6anc5vuQ==}
-    peerDependencies:
-      vue: ^3.2.47
-    dependencies:
-      '@formatjs/intl': 2.9.0(typescript@4.9.5)
-      flat: 5.0.2
-      intl-messageformat: 10.5.0
-      vue: 3.3.4
-    transitivePeerDependencies:
-      - typescript
     dev: false
 
   /@kong-ui-public/metric-cards@0.2.14(@kong/kongponents@8.101.0)(vue@3.3.4):
