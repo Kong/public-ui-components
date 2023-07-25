@@ -264,7 +264,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   }
 
   a {
-    background-color: transparent;
+    background-color: $kui-color-background-transparent;
     // Add a left border by default so the item doesn't "shift" to the right when active
     border-left: $kui-border-width-30 solid $kui-color-border-transparent;
     color: $kui-color-text-neutral-weak !important;
