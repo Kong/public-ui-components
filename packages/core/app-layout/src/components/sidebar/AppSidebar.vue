@@ -432,7 +432,7 @@ onBeforeUnmount(() => {
 
       &:focus-visible {
         border-radius: $sidebar-item-border-radius;
-        outline: 1px solid $kui-color-text-neutral-weak;
+        outline: 1px solid #afb7c5;
       }
     }
   }
@@ -470,7 +470,7 @@ onBeforeUnmount(() => {
   text-decoration: none;
 
   &:focus-visible {
-    outline: 1px solid $kui-color-text-neutral-weak !important;
+    outline: 1px solid #afb7c5 !important;
   }
 
   :deep(.kong-icon) {

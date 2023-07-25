@@ -558,7 +558,7 @@ const handleChartClick = () => {
     width: 10px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: $kui-color-background-neutral-weaker;
+    background-color: $kui-color-background-disabled;
     border-radius: 10px;
   }
 }
@@ -574,7 +574,7 @@ const handleChartClick = () => {
 .axis-tooltip {
   background-color: $kui-color-text-neutral-stronger;
   color: $kui-color-text-inverse;
-  padding: 5px 10px 5px 10px;
+  padding: $kui-space-20 $kui-space-40;
   position: absolute;
   width: max-content;
   z-index: 100;

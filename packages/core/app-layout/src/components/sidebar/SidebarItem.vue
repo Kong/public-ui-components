@@ -198,7 +198,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
       }
 
       &:focus-visible {
-        outline: 1px solid $kui-color-text-neutral-weak;
+        outline: 1px solid #afb7c5;
       }
 
       .sidebar-item-tooltip {

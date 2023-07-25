@@ -56,7 +56,7 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import { MetricCardSize } from '../../constants'
-import { KUI_COLOR_BACKGROUND_DANGER_WEAK, KUI_COLOR_BACKGROUND_NEUTRAL, KUI_FONT_SIZE_40 } from '@kong/design-tokens'
+import { KUI_COLOR_BACKGROUND_DANGER_WEAK, KUI_COLOR_BACKGROUND_NEUTRAL, KUI_FONT_SIZE_40, KUI_FONT_SIZE_100 } from '@kong/design-tokens'
 
 const props = defineProps({
   title: {
@@ -130,7 +130,7 @@ const textColor = (polarity: number): string => {
 const cardDisplayFull = [MetricCardSize.Medium, MetricCardSize.Large].includes(props.cardSize)
 
 const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
-  ? '48px'
+  ? KUI_FONT_SIZE_100
   : [MetricCardSize.Medium, MetricCardSize.Large].includes(props.cardSize) ? '22px' : KUI_FONT_SIZE_40
 
 </script>

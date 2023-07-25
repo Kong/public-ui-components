@@ -46,7 +46,7 @@ watch(() => props.active, (active) => {
   transition: all 0.3s ease-in-out;
 
   &:focus-visible {
-    outline: 1px solid var(--kong-ui-app-sidebar-mobile-icon-color, $kui-color-background-primary);
+    outline: 1px solid var(--kong-ui-app-sidebar-mobile-icon-color, #0044f4);
   }
 
   @media (min-width: $kui-breakpoint-tablet) {
