@@ -32,11 +32,11 @@ const alertCount = computed((): string => {
 
 <style lang="scss" scoped>
 .item-badge {
-  background-color: $kui-color-background-danger-weak;
+  background-color: $kui-color-background-danger;
   border-radius: 16px;
   color: $kui-color-background;
   font-size: $kui-font-size-20;
-  font-weight: $kui-font-weight-regular;
+  font-weight: $kui-font-weight-medium;
   line-height: $kui-line-height-20;
   max-width: 36px;
   overflow: hidden;
