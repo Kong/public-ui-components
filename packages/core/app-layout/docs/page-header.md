@@ -13,6 +13,7 @@ A Kong UI dynamic page header component.
 
 - Reactive updates based on `prop` value changes :rocket:
 - Slottable areas for displaying custom content, icons, etc.
+- Built-in support for rendering breadcrumbs (optional)
 
 ## Requirements
 
@@ -45,13 +46,13 @@ Breadcrumb object to be passed into `KBreadcrumb`.
 
 ### Slots
 
-#### `icon`
+#### `title-before`
 
-Content displayed right before the title text, typically an icon.
+Content displayed before the title text, typically an icon.
 
-#### `badge`
+#### `title-after`
 
-Content displayed right after the title text, typically a badge.
+Content displayed after the title text, typically a badge.
 
 #### `actions`
 

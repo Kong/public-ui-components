@@ -4,14 +4,14 @@
       :breadcrumbs="breadcrumbs"
       title="Cats are Cool"
     >
-      <template #icon>
+      <template #title-before>
         <KIcon
           color="#169fcc"
           icon="graduationHat"
           size="20"
         />
       </template>
-      <template #badge>
+      <template #title-after>
         <KBadge appearance="info">
           TRUTH
         </KBadge>

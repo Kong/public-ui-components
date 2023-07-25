@@ -36,18 +36,18 @@ describe('<AppPageHeader />', () => {
     cy.mount(AppPageHeader, {
       slots: {
         title,
-        icon: iconText,
-        badge: badgeText,
+        'title-before': iconText,
+        'title-after': badgeText,
         actions: actionsText,
         below: belowText,
       },
     })
 
     cy.get('.kong-ui-app-page-header').should('exist')
-    cy.getTestId('page-header-title-icon').should('be.visible')
-    cy.getTestId('page-header-title-icon').should('contain.text', iconText)
-    cy.getTestId('page-header-title-badge').should('be.visible')
-    cy.getTestId('page-header-title-badge').should('contain.text', badgeText)
+    cy.getTestId('page-header-title-before').should('be.visible')
+    cy.getTestId('page-header-title-before').should('contain.text', iconText)
+    cy.getTestId('page-header-title-after').should('be.visible')
+    cy.getTestId('page-header-title-after').should('contain.text', badgeText)
     cy.getTestId('page-header-actions').should('be.visible')
     cy.getTestId('page-header-actions').should('contain.text', actionsText)
     cy.getTestId('page-header-section-below').should('be.visible')
@@ -65,8 +65,8 @@ describe('<AppPageHeader />', () => {
 
     cy.get('.kong-ui-app-page-header').should('exist')
     cy.getTestId('page-header-breadcrumbs').should('not.exist')
-    cy.getTestId('page-header-title-icon').should('not.exist')
-    cy.getTestId('page-header-title-badge').should('not.exist')
+    cy.getTestId('page-header-title-before').should('not.exist')
+    cy.getTestId('page-header-title-after').should('not.exist')
     cy.getTestId('page-header-actions').should('not.exist')
     cy.getTestId('page-header-section-below').should('not.exist')
   })

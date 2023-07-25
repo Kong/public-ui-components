@@ -15,11 +15,11 @@
     <div class="page-header-title-section">
       <div class="page-header-title-wrapper">
         <div
-          v-if="$slots.icon"
-          class="page-header-title-icon"
-          data-testid="page-header-title-icon"
+          v-if="$slots['title-before']"
+          class="page-header-title-before"
+          data-testid="page-header-title-before"
         >
-          <slot name="icon" />
+          <slot name="title-before" />
         </div>
         <h1
           class="page-header-title"
@@ -29,11 +29,11 @@
           {{ title }}
         </h1>
         <div
-          v-if="$slots.badge"
-          class="page-header-title-badge"
-          data-testid="page-header-title-badge"
+          v-if="$slots['title-after']"
+          class="page-header-title-after"
+          data-testid="page-header-title-after"
         >
-          <slot name="badge" />
+          <slot name="title-after" />
         </div>
       </div>
 
@@ -89,11 +89,11 @@ const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs?.length)
       align-items: baseline;
       display: flex;
 
-      .page-header-title-icon {
+      .page-header-title-before {
         margin-right: $kui-space-40;
       }
 
-      .page-header-title-badge {
+      .page-header-title-after {
         align-self: center;
         margin-left: $kui-space-40;
       }
