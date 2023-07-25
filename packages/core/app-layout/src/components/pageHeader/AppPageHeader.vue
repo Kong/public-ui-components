@@ -7,7 +7,7 @@
     >
       <KBreadcrumbs :items="breadcrumbs">
         <template #divider>
-          /
+          <span class="page-header-breadcrumb-divider">/</span>
         </template>
       </KBreadcrumbs>
     </div>
@@ -77,6 +77,10 @@ const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs.length)
 
 <style lang="scss" scoped>
 .kong-ui-app-page-header {
+  .page-header-breadcrumb-divider {
+    color: $kui-color-text-neutral-weak;
+  }
+
   .page-header-title-section {
     align-items: center;
     display: flex;

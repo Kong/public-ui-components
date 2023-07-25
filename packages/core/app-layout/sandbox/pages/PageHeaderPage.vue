@@ -61,6 +61,10 @@ const enabled = ref(false)
 </script>
 
 <style lang="scss" scoped>
+.sandbox-container {
+  padding: 16px;
+}
+
 .mr-3 {
   margin-right: 8px;
 }
