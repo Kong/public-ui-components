@@ -84,10 +84,12 @@ const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs?.length)
     align-items: center;
     display: flex;
     justify-content: space-between;
+    gap: $kui-space-40;
 
     .page-header-title-wrapper {
       align-items: baseline;
       display: flex;
+      min-width: 0;
 
       .page-header-title-before {
         margin-right: $kui-space-40;
