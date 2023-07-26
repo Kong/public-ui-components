@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.8.1...@kong-ui-public/analytics-chart@0.8.2) (2023-07-26)
+
+
+### Bug Fixes
+
+* **analytics-chart:** sort legend items by value descending [MA-1819] ([#627](https://github.com/Kong/public-ui-components/issues/627)) ([b1790c2](https://github.com/Kong/public-ui-components/commit/b1790c21222f765c17e244922d5e89ac2370a3b5))
+
+
+
+
+
 ## [0.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.8.0...@kong-ui-public/analytics-chart@0.8.1) (2023-07-26)
 
 
