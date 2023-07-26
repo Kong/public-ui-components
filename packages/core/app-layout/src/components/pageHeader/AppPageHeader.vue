@@ -80,7 +80,7 @@ const props = defineProps({
 const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs?.length)
 const getBreadcrumbKey = (item: BreadcrumbItem, idx: number): string => { return item.key || `breadcrumb-${idx}` }
 const breadcrumbIconSlots = computed((): string[] => {
-  return props.breadcrumbs.map((item, idx) => getBreadcrumbKey(item, idx) + '-icon') || []
+  return props.breadcrumbs.map((item, idx) => `icon-${getBreadcrumbKey(item, idx)}`) || []
 })
 </script>
 
