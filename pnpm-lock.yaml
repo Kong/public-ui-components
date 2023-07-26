@@ -23,8 +23,8 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.91.1
-        version: 8.101.0(vue-router@4.2.4)(vue@3.3.4)
+        specifier: ^8.113.0
+        version: 8.113.0(vue-router@4.2.4)(vue@3.3.4)
       '@rushstack/eslint-patch':
         specifier: ^1.3.2
         version: 1.3.2
