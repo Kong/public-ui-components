@@ -238,6 +238,7 @@ const htmlLegendPlugin = {
     // @ts-ignore - ChartJS types are incomplete
     legendItems.value = chart.options.plugins.legend.labels.generateLabels(chart)
       .map(e => ({ ...e, value: props.legendValues && props.legendValues[e.text] }))
+      .sort((a, b) => a.value && b.value && b.value.raw - a.value.raw)
   },
 }
 
