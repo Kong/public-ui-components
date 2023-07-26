@@ -1,0 +1,64 @@
+{
+  "name": "@kong-ui-public/analytics-metric-provider",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/vitals-metric-provider.umd.js",
+  "module": "./dist/vitals-metric-provider.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/vitals-metric-provider.es.js",
+      "require": "./dist/vitals-metric-provider.umd.js"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "cross-env USE_SANDBOX=true vite",
+    "build": "run-s typecheck build:package build:types",
+    "build:package": "BUILD_VISUALIZER='analytics/analytics-metric-provider' vite build -m production",
+    "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
+    "preview:package": "vite preview --port 4173",
+    "preview": "cross-env USE_SANDBOX=true PREVIEW_SANDBOX=true run-s build:package preview:package",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
+    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore' --fix",
+    "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
+    "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
+    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
+    "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
+    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
+    "test:unit": "cross-env FORCE_COLOR=1 vitest run",
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kong/public-ui-components.git",
+    "directory": "packages/analytics/analytics-metric-provider"
+  },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/analytics/analytics-metric-provider",
+  "author": "Kong, Inc.",
+  "license": "Apache-2.0",
+  "volta": {
+    "extends": "../../../package.json"
+  },
+  "dependencies": {
+    "@kong-ui-public/analytics-utilities": "^0.4.3",
+    "@kong-ui-public/core": "1.1.0",
+    "@kong-ui-public/metric-cards": "0.2.14",
+    "axios": "^1.4.0",
+    "swrv": "^1.0.4"
+  },
+  "peerDependencies": {
+    "@kong-ui-public/i18n": "workspace:^",
+    "@kong/kongponents": "^8.85.0"
+  },
+  "devDependencies": {
+    "@kong-ui-public/i18n": "workspace:^"
+  }
+}
