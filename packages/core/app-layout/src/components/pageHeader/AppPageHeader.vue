@@ -94,7 +94,7 @@ const breadcrumbIconSlots = computed((): string[] => {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
-    gap: $kui-space-40;
+    gap: $kui-space-80;
     justify-content: space-between;
 
     .page-header-title-wrapper {
