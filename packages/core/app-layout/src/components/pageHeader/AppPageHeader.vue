@@ -126,8 +126,8 @@ const breadcrumbIconSlots = computed((): string[] => {
   }
 
   .page-header-section-below {
-    width: 100%;
     margin-top: $kui-space-40;
+    width: 100%;
   }
 
   :deep(.k-breadcrumbs) {
