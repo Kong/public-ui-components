@@ -46,6 +46,10 @@ Breadcrumb object to be passed into `KBreadcrumb`.
 
 ### Slots
 
+#### `${breadcrumb.key}-icon`
+
+We surface `KBreadcrumb`'s [icon slots](https://kongponents.konghq.com/components/breadcrumbs.html#icon-key).
+
 #### `title-before`
 
 Content displayed before the title text, typically an icon.

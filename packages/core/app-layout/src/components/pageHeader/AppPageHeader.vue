@@ -103,10 +103,13 @@ const breadcrumbIconSlots = computed((): string[] => {
       min-width: 0; /** this style is needed for truncation to work correctly with flex */
 
       .page-header-title-before {
+        display: inline-flex;
+        align-self: center;
         margin-right: $kui-space-40;
       }
 
       .page-header-title-after {
+        display: inline-flex;
         align-self: center;
         margin-left: $kui-space-60;
       }

@@ -273,8 +273,8 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.106.0
-        version: 8.106.0(vue-router@4.2.4)(vue@3.3.4)
+        specifier: ^8.113.0
+        version: 8.113.0(vue-router@4.2.4)(vue@3.3.4)
       '@types/lodash.clonedeep':
         specifier: ^4.5.7
         version: 4.5.7
@@ -1534,8 +1534,8 @@ packages:
       - debug
     dev: true
 
-  /@kong/kongponents@8.106.0(vue-router@4.2.4)(vue@3.3.4):
-    resolution: {integrity: sha512-rOIFR6Sc+9ggcIB10rolVV7+WpgVvRtVTi16SQhNjxx/lTE9rwiF9WbCANbPh1gDPFFLY/nIs1+as1r7X3+eCA==}
+  /@kong/kongponents@8.113.0(vue-router@4.2.4)(vue@3.3.4):
+    resolution: {integrity: sha512-6vIk8eANMS8k02DcbBOrveLxmdPVcBa8ZXiRq8reUcOYFWqv/78gaX+7VXj5dFb/pGjvSut4/vTXH5RfwAFdfQ==}
     engines: {node: '>=16.19.0'}
     peerDependencies:
       vue: '>= 3.3.0'
@@ -1564,7 +1564,7 @@ packages:
       react: 17.0.2
     dependencies:
       '@braintree/sanitize-url': 2.1.0
-      '@kong/kongponents': 8.106.0(vue-router@4.2.4)(vue@3.3.4)
+      '@kong/kongponents': 8.113.0(vue-router@4.2.4)(vue@3.3.4)
       '@kyleshockey/xml': 1.0.2
       classnames: 2.3.2
       curl-to-har: 1.0.1

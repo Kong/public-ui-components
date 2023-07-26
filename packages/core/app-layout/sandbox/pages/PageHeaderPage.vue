@@ -4,15 +4,27 @@
       :breadcrumbs="breadcrumbs"
       title="Cats are Cool"
     >
+      <template #icon-home>
+        <KIcon
+          class="home-breadcrumb-icon"
+          color="#169fcc"
+          icon="immunity"
+          size="16"
+        />
+      </template>
       <template #title-before>
         <KIcon
+          class="title-icon"
           color="#169fcc"
           icon="graduationHat"
           size="20"
         />
       </template>
       <template #title-after>
-        <KBadge appearance="info">
+        <KBadge
+          appearance="neutral"
+          shape="rectangular"
+        >
           TRUTH
         </KBadge>
       </template>
@@ -53,7 +65,6 @@ const breadcrumbs = computed(() => {
       key: 'home',
       to: { name: 'home' },
       text: 'Home',
-      icon: 'kong',
     },
   ]
 })
@@ -63,6 +74,16 @@ const enabled = ref(false)
 <style lang="scss" scoped>
 .sandbox-container {
   padding: 16px;
+}
+
+.home-breadcrumb-icon {
+  margin-right: 8px;
+  align-self: center;
+  display: inline-flex;
+}
+
+.title-icon {
+  display: inline-flex;
 }
 
 .mr-3 {

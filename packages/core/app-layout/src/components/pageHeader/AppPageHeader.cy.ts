@@ -28,14 +28,23 @@ describe('<AppPageHeader />', () => {
 
   it('should correctly render content when use slots', () => {
     const title = 'Cats are Cool'
+    const breadcrumbIcon = 'home-breadcrumb-icon'
     const iconText = 'title-icons-are-cool'
     const badgeText = 'title-badges-are-cool'
     const actionsText = 'actions-are-cool'
     const belowText = 'Cats are the key to a happy life.'
 
     cy.mount(AppPageHeader, {
-      slots: {
+      props: {
         title,
+        breadcrumbs: [{
+          key: 'home',
+          to: { name: 'home' },
+          text: 'Home',
+        }],
+      },
+      slots: {
+        'icon-home': breadcrumbIcon,
         'title-before': iconText,
         'title-after': badgeText,
         actions: actionsText,
@@ -44,6 +53,8 @@ describe('<AppPageHeader />', () => {
     })
 
     cy.get('.kong-ui-app-page-header').should('exist')
+    cy.get('.k-breadcrumb-icon-wrapper').should('be.visible')
+    cy.get('.k-breadcrumb-icon-wrapper').should('contain.text', breadcrumbIcon)
     cy.getTestId('page-header-title-before').should('be.visible')
     cy.getTestId('page-header-title-before').should('contain.text', iconText)
     cy.getTestId('page-header-title-after').should('be.visible')
