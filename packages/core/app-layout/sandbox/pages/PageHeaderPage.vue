@@ -77,9 +77,9 @@ const enabled = ref(false)
 }
 
 .home-breadcrumb-icon {
-  margin-right: 8px;
   align-self: center;
   display: inline-flex;
+  margin-right: 8px;
 }
 
 .title-icon {
