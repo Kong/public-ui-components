@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.8.0...@kong-ui-public/analytics-chart@0.8.1) (2023-07-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency pretty-bytes to ^6.1.1 ([#628](https://github.com/Kong/public-ui-components/issues/628)) ([acd6db7](https://github.com/Kong/public-ui-components/commit/acd6db78f4eaa1bca91056416729a69bd98aef73))
+
+
+
+
+
 # [0.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.7.3...@kong-ui-public/analytics-chart@0.8.0) (2023-07-25)
 
 
