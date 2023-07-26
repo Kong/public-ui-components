@@ -9,6 +9,12 @@
         <template #divider>
           <span class="page-header-breadcrumb-divider">/</span>
         </template>
+        <template
+          v-for="slotName in breadcrumbIconSlots"
+          #[slotName]
+        >
+          <slot :name="slotName" />
+        </template>
       </KBreadcrumbs>
     </div>
 
@@ -72,6 +78,10 @@ const props = defineProps({
 })
 
 const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs?.length)
+const getBreadcrumbKey = (item: BreadcrumbItem, idx: number): string => { return item.key || `breadcrumb-${idx}` }
+const breadcrumbIconSlots = computed((): string[] => {
+  return props.breadcrumbs.map((item, idx) => getBreadcrumbKey(item, idx) + '-icon') || []
+})
 </script>
 
 <style lang="scss" scoped>
@@ -83,6 +93,7 @@ const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs?.length)
   .page-header-title-section {
     align-items: center;
     display: flex;
+    flex-wrap: wrap;
     gap: $kui-space-40;
     justify-content: space-between;
 
@@ -116,19 +127,20 @@ const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs?.length)
 
   .page-header-section-below {
     width: 100%;
+    margin-top: $kui-space-40;
   }
 
   :deep(.k-breadcrumbs) {
     margin-bottom: $kui-space-0;
   }
 
-  @media (max-width: $kui-breakpoint-mobile) {
+  @media (min-width: $kui-breakpoint-mobile) {
     .page-header-title-section {
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
     }
 
     .page-header-section-below {
-      margin-top: $kui-space-40;
+      margin-top: unset;
     }
   }
 }
