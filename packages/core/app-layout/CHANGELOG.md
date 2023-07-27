@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.22.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.21.0...@kong-ui-public/app-layout@0.22.0) (2023-07-27)
+
+
+### Features
+
+* **pageheader:** new component [khcp-7898] ([#610](https://github.com/Kong/public-ui-components/issues/610)) ([863891c](https://github.com/Kong/public-ui-components/commit/863891c809c01f5fa1cbd20fa584da7868b4d471))
+
+
+
+
+
 # [0.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.20.2...@kong-ui-public/app-layout@0.21.0) (2023-07-25)
 
 
