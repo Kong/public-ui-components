@@ -222,7 +222,7 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.92.0
+        specifier: ^8.93.0
         version: 8.113.0(vue-router@4.2.4)(vue@3.3.4)
       '@types/uuid':
         specifier: ^9.0.2
@@ -273,7 +273,7 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.92.0
+        specifier: ^8.93.0
         version: 8.113.0(vue-router@4.2.4)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
@@ -337,7 +337,7 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.92.0
+        specifier: ^8.93.0
         version: 8.113.0(vue-router@4.2.4)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
@@ -377,7 +377,7 @@ importers:
         specifier: workspace:^0.8.0
         version: link:../i18n
       '@kong/kongponents':
-        specifier: ^8.92.0
+        specifier: ^8.93.0
         version: 8.113.0(vue-router@4.2.4)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
@@ -396,7 +396,7 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.92.0
+        specifier: ^8.93.0
         version: 8.113.0(vue-router@4.2.4)(vue@3.3.4)
       '@types/prismjs':
         specifier: ^1.26.0
@@ -427,7 +427,7 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.92.0
+        specifier: ^8.93.0
         version: 8.113.0(vue-router@4.2.4)(vue@3.3.4)
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.0.4
