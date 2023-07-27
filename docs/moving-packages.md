@@ -174,6 +174,7 @@ Once you have merged your new package into its new repository, you will want to 
 1. Checkout a new branch in the old repository
 2. Delete the old package directory from its workspace folder (if your old package was the only one in the workspace, **leave the workspace folder in place**)
 3. Check the old repository for root `package.json` dependencies that were **only** utilized by your package. If they are no longer needed, utilize the proper `pnpm` command to remove them (be 100% certain here as this can break other packages)
-4. Run `pnpm install` to remove any dependencies and update the lockfile accordingly
-5. Push up a Pull Request to remove the code
-6. Decide if the old package should be unpublished or deprecated from NPM. **One or the other must be completed as part of this process**
+4. Remove any stale entries from `CODEOWNERS`.
+5. Run `pnpm install` to remove any dependencies and update the lockfile accordingly
+6. Push up a Pull Request to remove the code
+7. Decide if the old package should be unpublished or deprecated from NPM. **One or the other must be completed as part of this process**
