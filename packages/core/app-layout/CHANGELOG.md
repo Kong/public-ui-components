@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.22.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.22.0...@kong-ui-public/app-layout@0.22.1) (2023-07-28)
+
+
+### Bug Fixes
+
+* **app-page-header:** min height style ([#639](https://github.com/Kong/public-ui-components/issues/639)) ([050cb77](https://github.com/Kong/public-ui-components/commit/050cb77a474154ab7286953688da667b99ac607c))
+
+
+
+
+
 # [0.22.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.21.0...@kong-ui-public/app-layout@0.22.0) (2023-07-27)
 
 
