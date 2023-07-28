@@ -96,6 +96,7 @@ const breadcrumbIconSlots = computed((): string[] => {
     flex-wrap: wrap;
     gap: $kui-space-80;
     justify-content: space-between;
+    min-height: 44.5px; /** TODO: remove after new button style supported */
 
     .page-header-title-wrapper {
       align-items: baseline;
