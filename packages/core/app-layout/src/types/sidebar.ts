@@ -15,6 +15,8 @@ export interface SidebarSecondaryItem {
   testId?: string
   /** Auto-generated (do not provide) unique key of the secondary item's top-level navigation parent item */
   parentKey?: string
+  /** Unique key of L2 item. */
+  key?: string
 }
 
 export interface SidebarPrimaryItem extends Omit<SidebarSecondaryItem, 'parentKey' | 'badgeCount'> {
