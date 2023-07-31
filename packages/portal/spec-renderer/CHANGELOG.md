@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.11.6...@kong-ui-public/spec-renderer@0.11.7) (2023-07-31)
+
+
+### Bug Fixes
+
+* disallow kongponents utility classes ([#646](https://github.com/Kong/public-ui-components/issues/646)) ([56f2277](https://github.com/Kong/public-ui-components/commit/56f2277b8c3d11468753b7451f370b41226f196c))
+
+
+
+
+
 ## [0.11.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.11.5...@kong-ui-public/spec-renderer@0.11.6) (2023-07-31)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer
