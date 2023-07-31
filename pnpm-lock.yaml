@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -12,10 +8,10 @@ importers:
         specifier: ^7.22.5
         version: 7.22.5
       '@commitlint/cli':
-        specifier: ^17.6.6
+        specifier: ^17.6.7
         version: 17.6.7
       '@commitlint/config-conventional':
-        specifier: ^17.6.6
+        specifier: ^17.6.7
         version: 17.6.7
       '@digitalroute/cz-conventional-changelog-for-jira':
         specifier: ^8.0.1
@@ -66,7 +62,7 @@ importers:
         specifier: ^11.0.3
         version: 11.0.3(eslint-plugin-vue@9.15.1)(eslint@8.45.0)(typescript@4.9.5)
       '@vue/test-utils':
-        specifier: ^2.4.0
+        specifier: ^2.4.1
         version: 2.4.1(vue@3.3.4)
       '@vue/tsconfig':
         specifier: ^0.4.0
@@ -81,7 +77,7 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       cypress:
-        specifier: ^12.17.1
+        specifier: ^12.17.2
         version: 12.17.2
       cz-conventional-changelog:
         specifier: ^3.3.0
@@ -132,10 +128,10 @@ importers:
         specifier: ^5.9.2
         version: 5.9.2
       sass:
-        specifier: ^1.63.6
+        specifier: ^1.64.0
         version: 1.64.1
       stylelint:
-        specifier: ^15.10.1
+        specifier: ^15.10.2
         version: 15.10.2
       stylelint-config-html:
         specifier: ^1.1.0
@@ -168,7 +164,7 @@ importers:
         specifier: ~4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.4
+        specifier: ^4.4.5
         version: 4.4.7(@types/node@18.17.0)(sass@1.64.1)
       vite-plugin-externals:
         specifier: ^0.6.2
@@ -226,7 +222,7 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.93.1
+        specifier: ^8.93.2
         version: 8.113.0(vue-router@4.2.4)(vue@3.3.4)
       '@types/uuid':
         specifier: ^9.0.2
@@ -277,7 +273,7 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.93.1
+        specifier: ^8.93.2
         version: 8.113.0(vue-router@4.2.4)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
@@ -341,7 +337,7 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.93.1
+        specifier: ^8.93.2
         version: 8.113.0(vue-router@4.2.4)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
@@ -381,7 +377,7 @@ importers:
         specifier: workspace:^0.8.0
         version: link:../i18n
       '@kong/kongponents':
-        specifier: ^8.93.1
+        specifier: ^8.93.2
         version: 8.113.0(vue-router@4.2.4)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
@@ -400,7 +396,7 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.93.1
+        specifier: ^8.93.2
         version: 8.113.0(vue-router@4.2.4)(vue@3.3.4)
       '@types/prismjs':
         specifier: ^1.26.0
@@ -431,7 +427,7 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       '@kong/kongponents':
-        specifier: ^8.93.1
+        specifier: ^8.93.2
         version: 8.113.0(vue-router@4.2.4)(vue@3.3.4)
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.0.4
@@ -13443,3 +13439,7 @@ packages:
   /zenscroll@4.0.2:
     resolution: {integrity: sha512-jEA1znR7b4C/NnaycInCU6h/d15ZzCd1jmsruqOKnZP6WXQSMH3W2GL+OXbkruslU4h+Tzuos0HdswzRUk/Vgg==}
     dev: false
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
