@@ -19,7 +19,7 @@ module.exports = {
         'custom-property-pattern': [
           "^(kui-|kong-ui-).+$",
           {
-            "message": "Expected custom property \"%s\" to have prefix '--kong-ui-' or be sourced from @kong/design-tokens with prefix '--kui-'",
+            message: "Expected custom property \"%s\" to have prefix '--kong-ui-' or be sourced from @kong/design-tokens with prefix '--kui-'",
           }
         ],
         'custom-property-no-missing-var-function': true,
