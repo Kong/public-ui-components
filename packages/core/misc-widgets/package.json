@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^0.8.0",
-    "@kong/kongponents": "^8.93.2",
+    "@kong/kongponents": "^8.97.0",
     "vue": "^3.3.4"
   },
   "repository": {
