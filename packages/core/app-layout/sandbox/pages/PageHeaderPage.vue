@@ -33,7 +33,7 @@
         <div class="actions-wrapper">
           <KInputSwitch
             v-model="enabled"
-            class="mr-3"
+            class="actions-switch"
             :label="enabled ? 'Enabled' : 'Disabled'"
             label-position="left"
           />
@@ -91,7 +91,11 @@ const enabled = ref(false)
 }
 
 .actions-wrapper {
-  display: flex;
   align-items: baseline;
+  display: flex;
+}
+
+.actions-switch {
+  margin-right: 12px;
 }
 </style>

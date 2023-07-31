@@ -4,7 +4,7 @@
       <h1>✨✨ Awesome SpecRenderer ✨✨</h1>
       <div class="spec-controls">
         <h3>Try it Out:</h3>
-        <label class="ml-3">
+        <label>
           <input
             v-model="essentialsOnly"
             type="checkbox"
@@ -166,10 +166,6 @@ watch(() => [essentialsOnly.value], () => {
 
   .spec-controls {
     position: relative;
-  }
-
-  .ml-3 {
-    margin-left: 16px;
   }
 }
 </style>

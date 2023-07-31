@@ -182,10 +182,10 @@
     />
 
     <!-- Dataset options -->
-    <div class="d-flex flex-row">
+    <div class="dataset-options">
       <KButton
         appearance="outline"
-        class="mr-2"
+        class="first-button"
         @click="randomizeData()"
       >
         Randomize data
@@ -245,8 +245,8 @@
         />
       </div>
     </div>
-    <div class="config-container d-flex">
-      <div class="flex-row">
+    <div class="config-container">
+      <div class="config-container-row">
         <KLabel>Colors</KLabel>
         <div
           v-for="([label, color], i) in Object.entries(colorPalette)"
@@ -594,6 +594,11 @@ body {
     gap: 24px;
     padding: $kui-space-60;
     --KCodeBlockFontSize: 15px;
+
+    .config-container-row {
+      flex-direction: row;
+    }
+
     .data-container {
       width: 50%;
     }
@@ -606,6 +611,15 @@ body {
     .options-container {
       width: 50%;
     }
+  }
+}
+
+.dataset-options {
+  display: flex;
+  flex-direction: row;
+
+  .first-button {
+    margin-right: 8px;
   }
 }
 </style>
