@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "^1.7.1",
-    "@kong/kongponents": "^8.98.0",
+    "@kong/kongponents": "^8.99.0",
     "@types/prismjs": "^1.26.0",
     "@vitejs/plugin-vue-jsx": "^3.0.1",
     "vue": "^3.3.4"
