@@ -15,9 +15,6 @@ module.exports = {
       rules: {
         // Disallow relative font units
         'unit-disallowed-list': ['rem', 'em'],
-        // Disable the following rules
-        'custom-property-no-missing-var-function': null,
-        'no-descending-specificity': null,
         // Only allow @kong/design-tokens or `--kong-ui-*` CSS custom properties
         'custom-property-pattern': [
           "^(kui-|kong-ui-).+$",
@@ -25,7 +22,9 @@ module.exports = {
             "message": "Expected custom property \"%s\" to have prefix '--kong-ui-' or be sourced from @kong/design-tokens with prefix '--kui-'",
           }
         ],
-        'custom-property-no-missing-var-function': true
+        'custom-property-no-missing-var-function': true,
+        // Disable the following rules
+        'no-descending-specificity': null,
       }
     }
   ],
