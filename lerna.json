@@ -6,8 +6,6 @@
     "packages/*/*"
   ],
   "ignoreChanges": [
-    "**/*.spec.ts",
-    "**/*.cy.ts",
     "**/__fixtures__",
     "**/__mocks__",
     "**/jest.config*.js",
