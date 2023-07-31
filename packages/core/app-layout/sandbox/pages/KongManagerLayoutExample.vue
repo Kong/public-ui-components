@@ -81,13 +81,13 @@
       />
     </template>
     <template #sidebar-header>
-      <div class="kong-logo d-flex w-100">
+      <div class="kong-logo">
         <router-link
-          class="d-flex align-items-center w-100"
+          class="kong-logo-link"
           to="/"
         >
           <AppGruceLogo />
-          <div class="d-flex pl-4 konnect-header-title">
+          <div class="konnect-header-title">
             <AppLogo theme="dark" />
           </div>
         </router-link>
@@ -298,6 +298,22 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
   @media (min-width: 640px) { // $kui-breakpoint-mobile
     display: flex;
   }
+}
+
+.kong-logo {
+  display: flex;
+  width: 100%;
+
+  .kong-logo-link {
+    align-items: center;
+    display: flex;
+    width: 100%;
+  }
+}
+
+.konnect-header-title {
+  display: flex;
+  padding-left: 16px;
 }
 
 .admin-menu {

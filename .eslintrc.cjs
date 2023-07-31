@@ -1,5 +1,6 @@
 /* eslint-env node */
 require('@rushstack/eslint-patch/modern-module-resolution')
+const kongponentsUtilityClasses = require('./utilities/disallowed-utility-classes')
 
 module.exports = {
   root: true,
@@ -53,6 +54,8 @@ module.exports = {
       ignoreWhenEmpty: true,
       ignores: ['code', 'pre', 'textarea', 'a', 'span', 'router-link'],
     }],
+    // Disallow Kongponents utility classes
+    'vue/no-restricted-class': ['error', ...kongponentsUtilityClasses],
   },
   overrides: [
     {

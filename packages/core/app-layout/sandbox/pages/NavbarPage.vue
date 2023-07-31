@@ -7,7 +7,7 @@
           to="/"
         >
           <AppGruceLogo />
-          <div class="d-flex pl-4 konnect-header-title">
+          <div class="konnect-header-title">
             <AppLogo theme="dark" />
           </div>
         </router-link>
@@ -74,6 +74,11 @@ main {
     align-items: center;
     display: flex;
   }
+}
+
+.konnect-header-title {
+  display: flex;
+  padding-left: 16px;
 }
 </style>
 

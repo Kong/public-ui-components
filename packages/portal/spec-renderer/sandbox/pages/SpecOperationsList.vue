@@ -13,7 +13,7 @@
               type="checkbox"
             > isFilterable
           </label>
-          <label class="ml-3">
+          <label class="has-margin-left">
             <input
               v-model="disableSelection"
               type="checkbox"
@@ -24,7 +24,6 @@
 
           <KButton
             appearance="outline"
-            class="mr-2"
             @click="handleClear"
           >
             Clear
@@ -39,7 +38,10 @@
 
         <br><br>
 
-        <div class="d-flex pa-3">
+        <div
+          class="has-padding"
+          style="display: flex"
+        >
           <SpecOperationsList
             :key="key"
             :disable-selection="disableSelection"
@@ -50,14 +52,14 @@
             @selected="handleSelected"
           />
 
-          <div class="ml-3">
+          <div class="has-margin-left">
             <KLabel>Spec Object:</KLabel>
-            <pre class="json pa-3">{{ defaultDocument }}</pre>
+            <pre class="json has-padding">{{ defaultDocument }}</pre>
           </div>
 
-          <div class="ml-3">
+          <div class="has-margin-left">
             <KLabel>Selected Object:</KLabel>
-            <pre class="json pa-3">{{ selectedItem }}</pre>
+            <pre class="json has-padding">{{ selectedItem }}</pre>
           </div>
         </div>
       </div>
@@ -232,7 +234,7 @@ onMounted(() => {
     position: relative;
   }
 
-  .ml-3 {
+  .has-margin-left {
     margin-left: 12px;
   }
 
@@ -241,5 +243,9 @@ onMounted(() => {
     max-height: 500px;
     overflow-y: auto;
   }
+}
+
+.has-padding {
+  padding: 12px;
 }
 </style>

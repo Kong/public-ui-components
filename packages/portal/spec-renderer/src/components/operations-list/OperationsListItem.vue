@@ -12,7 +12,7 @@
   >
     <h2
       v-if="item.summary"
-      class="summary truncate"
+      class="summary truncated"
       :title="item.summary"
     >
       {{ item.summary }}
@@ -30,7 +30,7 @@
       </KBadge>
       <span
         :aria-label="i18n.t('specOperationsList.item.pathAriaLabel', { path: item.path })"
-        class="path truncate"
+        class="path truncated"
         :title="item.path"
       >
         {{ item.path }}
@@ -186,7 +186,7 @@ const methodName = computed((): string => {
   display: flex;
 }
 
-.truncate {
+.truncated {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

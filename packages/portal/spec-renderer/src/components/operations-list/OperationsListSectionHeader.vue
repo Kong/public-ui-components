@@ -27,12 +27,12 @@
     </div>
     <h1
       aria-hidden="true"
-      class="label truncate"
+      class="label truncated"
     >
       {{ name }}
     </h1>
     <div
-      class="description truncate"
+      class="description truncated"
       :title="description"
     >
       {{ description }}
@@ -122,7 +122,7 @@ const collapseAriaLabel = computed((): string => {
   margin-right: $kui-space-40;
 }
 
-.truncate {
+.truncated {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
