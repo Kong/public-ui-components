@@ -11,7 +11,9 @@
           useMono ? 'mono' : null
         ]"
       >
-        {{ isHidden ? '**********' : uuid }}
+        <span v-if="showUuid">
+          {{ isHidden ? '**********' : uuid }}
+        </span>
       </div>
     </div>
     <component
@@ -81,6 +83,11 @@ const props = defineProps({
   successTooltip: {
     type: String,
     default: '',
+  },
+  showUuid: {
+    type: Boolean,
+    required: false,
+    default: true,
   },
 })
 

@@ -49,6 +49,13 @@
           :uuid="uuid"
         />
       </div>
+      <div>
+        <h3>Don't show uuid</h3>
+        <CopyUuid
+          :show-uuid="false"
+          :uuid="uuid"
+        />
+      </div>
     </main>
   </div>
 </template>

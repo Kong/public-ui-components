@@ -18,6 +18,7 @@ A Kong UI component for displaying uuid and copying it to clipboard.
   - [`iconColor`](#iconcolor)
   - [`tooltip`](#tooltip)
   - [`successTooltip`](#successtooltip)
+  - [`showUuid`](#showuuid)
 - [Events](#events)
   - [`success`](#success)
   - [`error`](#error)
@@ -204,6 +205,14 @@ Tooltip text to display on hovering over the copy icon. This field is required i
 
 Note: The `tooltip` prop is required to have a value in order to use this prop. When using this prop the `@success` and `@error` events will not be fired, as the tooltip text will be updated instead.
 Tooltip text to display on successful copy.
+
+### `showUuid`
+
+- type: `Boolean`
+- required: `false`
+- default: `true`
+
+If false the UUID will not be shown at all. Useful for the case the host app wants to display something that the uuid resolves to, but still be able to copy the uuid behind the scenes.
 
 ## Events
 
