@@ -1,5 +1,8 @@
 <template>
-  <div class="kong-ui-app-page-header">
+  <div
+    v-bind="modifiedAttrs"
+    class="kong-ui-app-page-header"
+  >
     <div
       v-if="hasBreadcrumbs"
       class="page-header-breadcrumbs"
@@ -63,7 +66,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from 'vue'
+import { computed, PropType, useAttrs } from 'vue'
+import { useRoute } from 'vue-router'
 import type { BreadcrumbItem } from '@kong/kongponents'
 
 const props = defineProps({
@@ -75,6 +79,16 @@ const props = defineProps({
     type: Array as PropType<BreadcrumbItem[]>,
     default: () => ([]),
   },
+})
+
+const attrs = useAttrs()
+const $route = useRoute()
+
+const modifiedAttrs = computed(() => {
+  return {
+    ...attrs,
+    'data-testid': `page-header-${String($route.name || '')}`,
+  }
 })
 
 const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs?.length)
