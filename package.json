@@ -72,7 +72,7 @@
     "typedoc": "^0.24.8",
     "typedoc-plugin-markdown": "^3.15.3",
     "typescript": "~5.1.6",
-    "vite": "^4.4.6",
+    "vite": "^4.4.7",
     "vite-plugin-externals": "^0.6.2",
     "vitest": "^0.33.0",
     "vue": "^3.3.4",
