@@ -36,7 +36,7 @@
     "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^8.102.1",
+    "@kong/kongponents": "^8.105.0",
     "vue": "^3.3.4"
   },
   "devDependencies": {
