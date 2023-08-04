@@ -20,9 +20,23 @@
         />
       </div>
       <div>
-        <h3>is-hidden=true</h3>
+        <h3>format=hidden</h3>
         <CopyUuid
-          is-hidden
+          format="hidden"
+          :uuid="uuid"
+        />
+      </div>
+      <div>
+        <h3>format=redacted</h3>
+        <CopyUuid
+          format="redacted"
+          :uuid="uuid"
+        />
+      </div>
+      <div>
+        <h3>format=deleted</h3>
+        <CopyUuid
+          format="deleted"
           :uuid="uuid"
         />
       </div>

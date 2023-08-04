@@ -1,6 +1,7 @@
 <template>
   <div class="kong-ui-copy-uuid">
     <div
+      v-if="format !== 'hidden'"
       data-testid="copy-id"
       :title="uuid"
     >
@@ -11,7 +12,7 @@
           useMono ? 'mono' : null
         ]"
       >
-        {{ isHidden ? '**********' : uuid }}
+        {{ uuidFormat }}
       </div>
     </div>
     <component
@@ -62,10 +63,6 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  isHidden: {
-    type: Boolean,
-    default: false,
-  },
   notify: {
     type: Function as PropType<(param: CopyUuidNotifyParam) => void>,
     default: undefined,
@@ -81,6 +78,12 @@ const props = defineProps({
   successTooltip: {
     type: String,
     default: '',
+  },
+  format: {
+    type: String as PropType<'uuid' | 'hidden' | 'redacted' | 'deleted'>,
+    required: false,
+    default: 'uuid',
+    validator: (val: string) => ['uuid', 'hidden', 'redacted', 'deleted'].includes(val),
   },
 })
 
@@ -102,6 +105,15 @@ const wrapperProps = computed(() => {
       placement: 'bottomStart',
     }
     : {}
+})
+
+const uuidFormat = computed(() => {
+  if (props.format === 'redacted') {
+    return '*****'
+  } else if (props.format === 'deleted') {
+    return `*${props.uuid.substring(0, 5)}`
+  }
+  return props.uuid
 })
 
 const updateTooltipText = (msg: string): void => {
@@ -130,9 +142,8 @@ const copyIdToClipboard = (executeCopy: (prop: string) => boolean) => {
   }
 
   const isTruncated = props.uuid.length > notifyTrimLength
-  const messagePrefix = props.isHidden
-    ? t('message.success.prefix')
-    : `"${props.uuid.substring(0, notifyTrimLength) + (isTruncated ? '...' : '')}"`
+  const messagePrefix = (props.format === 'hidden' || props.format === 'redacted') ? t('message.success.prefix') : `"${props.uuid.substring(0, notifyTrimLength) + (isTruncated ? '...' : '')}"`
+
   if (typeof notify === 'function') {
     notify({
       type: 'success',

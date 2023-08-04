@@ -13,7 +13,7 @@ A Kong UI component for displaying uuid and copying it to clipboard.
   - [`uuid`](#uuid)
   - [`truncated`](#truncated)
   - [`useMono`](#usemono)
-  - [`isHidden`](#ishidden)
+  - [`format`](#format)
   - [`notify`](#notify)
   - [`iconColor`](#iconcolor)
   - [`tooltip`](#tooltip)
@@ -161,13 +161,18 @@ An indicator of whether a long UUID is truncated. When `true`, the UUID will be 
 
 An indicator of whether a `.mono` class is added to the UUID string. Make sure to import the Kongponents style file in your host application for this class to take effect.
 
-### `isHidden`
+### `format`
 
-- type: `Boolean`
+- type: `String as PropType<'uuid' | 'hidden' | 'redacted' | 'deleted'>`
 - required: `false`
-- default: `false`
+- default: `uuid`
 
-An indicator of whether the UUID string is replaced with asterisks.
+Determines the display format of the UUID string. The component can take the following `format` values:
+
+- `uuid`: displays regular uuid
+- `hidden`: displays just a copy button without text
+- `redacted`: displays `*****`
+- `deleted`: displays `*<first-5-chars-of-uuid>`
 
 ### `notify`
 
