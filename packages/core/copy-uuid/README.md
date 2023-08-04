@@ -167,7 +167,12 @@ An indicator of whether a `.mono` class is added to the UUID string. Make sure t
 - required: `false`
 - default: `uuid`
 
-Determines the display format of the UUID string.
+Determines the display format of the UUID string. The component can take following `format` values:
+
+- `uuid`
+- `hidden`
+- `redacted`
+- `deleted`
 
 ### `notify`
 
