@@ -78,6 +78,7 @@ describe('<CopyUuid />', () => {
 
     cy.get(container).should('be.visible')
     cy.get(container).find('[data-testid="copy-to-clipboard"]').should('be.visible')
+    cy.get(container).find('[data-testid="copy-id"]').should('not.exist')
     cy.get(container).find('.uuid-icon').should('be.visible')
   })
 
