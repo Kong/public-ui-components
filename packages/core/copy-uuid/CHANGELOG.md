@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@0.7.12...@kong-ui-public/copy-uuid@1.1.0) (2023-08-04)
+
+
+### Features
+
+* **copy-uuid:** supports new prop - format [KHCP-8505] ([#663](https://github.com/Kong/public-ui-components/issues/663)) ([143c3b8](https://github.com/Kong/public-ui-components/commit/143c3b89c3a724a8e37b7d7a213fcdd08b393342))
+
+
+
+
+
 ## [0.7.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@0.7.11...@kong-ui-public/copy-uuid@0.7.12) (2023-08-04)
 
 **Note:** Version bump only for package @kong-ui-public/copy-uuid
