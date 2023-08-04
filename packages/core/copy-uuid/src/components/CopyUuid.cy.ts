@@ -68,11 +68,49 @@ describe('<CopyUuid />', () => {
     cy.get(container).find('.uuid-icon').should('be.visible')
   })
 
-  it('renders with `isHidden` set to true', () => {
+  it('renders with `format` set to `hidden`', () => {
     cy.mount(CopyUuid, {
       props: {
         uuid,
-        isHidden: true,
+        format: 'hidden',
+      },
+    })
+
+    cy.get(container).should('be.visible')
+
+    cy.get(container).find('.uuid-container')
+      .should('have.class', 'truncated-uuid')
+      .should('have.class', 'mono')
+      .should('contain.text', '**********')
+
+    cy.get(container).find('[data-testid="copy-to-clipboard"]').should('be.visible')
+    cy.get(container).find('.uuid-icon').should('be.visible')
+  })
+
+  it('renders with `format` set to `redacted`', () => {
+    cy.mount(CopyUuid, {
+      props: {
+        uuid,
+        format: 'redacted',
+      },
+    })
+
+    cy.get(container).should('be.visible')
+
+    cy.get(container).find('.uuid-container')
+      .should('have.class', 'truncated-uuid')
+      .should('have.class', 'mono')
+      .should('contain.text', '**********')
+
+    cy.get(container).find('[data-testid="copy-to-clipboard"]').should('be.visible')
+    cy.get(container).find('.uuid-icon').should('be.visible')
+  })
+
+  it('renders with `format` set to `deleted`', () => {
+    cy.mount(CopyUuid, {
+      props: {
+        uuid,
+        format: 'deleted',
       },
     })
 
