@@ -80,7 +80,7 @@ const props = defineProps({
     default: '',
   },
   format: {
-    type: String,
+    type: String as PropType<'uuid' | 'hidden' | 'redacted' | 'deleted'>,
     required: false,
     default: 'uuid',
     validator: (val: string) => ['uuid', 'hidden', 'redacted', 'deleted'].includes(val),
@@ -142,7 +142,7 @@ const copyIdToClipboard = (executeCopy: (prop: string) => boolean) => {
   }
 
   const isTruncated = props.uuid.length > notifyTrimLength
-  const messagePrefix = `"${props.uuid.substring(0, notifyTrimLength) + (isTruncated ? '...' : '')}"`
+  const messagePrefix = (props.format === 'hidden' || props.format === 'redacted') ? t('message.success.prefix') : `"${props.uuid.substring(0, notifyTrimLength) + (isTruncated ? '...' : '')}"`
 
   if (typeof notify === 'function') {
     notify({

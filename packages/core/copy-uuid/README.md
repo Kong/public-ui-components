@@ -163,16 +163,16 @@ An indicator of whether a `.mono` class is added to the UUID string. Make sure t
 
 ### `format`
 
-- type: `String`
+- type: `String as PropType<'uuid' | 'hidden' | 'redacted' | 'deleted'>`
 - required: `false`
 - default: `uuid`
 
-Determines the display format of the UUID string. The component can take following `format` values:
+Determines the display format of the UUID string. The component can take the following `format` values:
 
-- `uuid`
-- `hidden`
-- `redacted`
-- `deleted`
+- `uuid`: displays regular uuid
+- `hidden`: displays just a copy button without text
+- `redacted`: displays `*****`
+- `deleted`: displays `*<first-5-chars-of-uuid>`
 
 ### `notify`
 
