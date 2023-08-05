@@ -43,11 +43,11 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "^1.7.1",
-    "@kong/kongponents": "^8.102.1",
+    "@kong/kongponents": "^8.109.0",
     "vue": "^3.3.4"
   },
   "dependencies": {
-    "approximate-number": "^2.1.0"
+    "approximate-number": "^2.1.1"
   },
   "repository": {
     "type": "git",

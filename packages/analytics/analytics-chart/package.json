@@ -27,7 +27,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^0.8.0",
     "@kong/design-tokens": "^1.7.1",
-    "@kong/kongponents": "^8.102.1",
+    "@kong/kongponents": "^8.109.0",
     "@types/uuid": "^9.0.2",
     "vue": "^3.3.4"
   },
@@ -62,8 +62,8 @@
   },
   "dependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^0.5.0",
-    "approximate-number": "^2.1.0",
-    "chart.js": "^4.3.0",
+    "approximate-number": "^2.1.1",
+    "chart.js": "^4.3.2",
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-plugin-annotation": "^3.0.1",
     "date-fns": "^2.30.0",
