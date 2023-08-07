@@ -15,6 +15,7 @@
 /packages/core/ @Kong/team-core-ui
 /packages/portal/ @Kong/team-devx @Kong/team-core-ui
 /packages/analytics/ @Kong/team-data @Kong/team-core-ui
+/packages/entities/ @Kong/team-km @Kong/team-core-ui
 
 # Packages:
 # These owners will be the default owners for everything in the workspace
