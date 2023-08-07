@@ -3,7 +3,7 @@
 /**
  * Shared Vite config settings for all components
  */
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import dns from 'dns'
@@ -68,12 +68,13 @@ export default defineConfig({
     rollupOptions: {
       // Make sure to externalize deps that shouldn't be bundled into your library
       // If config.build.rollupOptions.external is also set at the package level, the arrays will be merged
-      external: ['vue', 'vue-router', '@kong/kongponents', 'axios'],
+      external: ['vue', 'vue-router', '@kong/kongponents', '@kong-ui-public/i18n', 'axios'],
       output: {
         // Provide global variables to use in the UMD build for externalized deps
         globals: {
           vue: 'Vue',
           'vue-router': 'VueRouter',
+          '@kong-ui-public/i18n': 'kong-ui-public-i18n',
           '@kong/kongponents': 'Kongponents',
           axios: 'axios',
         },
@@ -102,6 +103,9 @@ export default defineConfig({
   // Change the root when utilizing the sandbox via USE_SANDBOX=true to use the `/sandbox/*` files
   // During the build process, the `/sandbox/*` files are not used and we should default to the package root.
   root: process.env.USE_SANDBOX ? './sandbox' : process.cwd(),
+  // Sets the Vite envDir to point to the repository root `.env.*` files.
+  // Please do NOT add other .env files in child directories.
+  envDir: '../../../../',
   test: {
     globals: true,
     environment: 'jsdom',
@@ -121,3 +125,90 @@ export default defineConfig({
     ],
   },
 })
+
+/**
+ * Define the server.proxy rules for various shared APIs
+ * These utilize the `VITE_KONNECT_PAT` Konnect PAT token located in `/.env.development.local`
+ * @param pathToRoot The path to the repository root, from the package directory, where your .env.development.local file is located. Defaults to `../../../.' which works for most packages.
+ * @returns Object of API proxies to pass to the vite `config.server.proxy`
+ */
+export const getApiProxies = (pathToRoot: string = '../../../.') => {
+  // Import env variables from the root
+  // Hard-coded to 'development' since we are only using the env variables in the local dev server
+  const env = loadEnv('development', pathToRoot, '')
+
+  const konnectAuthHeader = env.VITE_KONNECT_PAT
+    ? {
+      authorization: `Bearer ${env.VITE_KONNECT_PAT}`,
+    }
+    : undefined
+
+  const kongManagerAuthHeader = env.VITE_KONG_MANAGER_TOKEN
+    ? {
+      'kong-admin-token': env.VITE_KONG_MANAGER_TOKEN,
+    }
+    : undefined
+
+  return {
+    /**
+     * /kong-ui/config JSON
+     */
+    '^/kong-ui/config': {
+      target: env.VITE_KONNECT_CONFIG,
+      changeOrigin: true,
+    },
+    /**
+     * KONNECT PROXIES
+     * TODO: when KHCP-5497 consume these proxies from the helper function?
+     */
+    '^/us/kong-api/konnect-api': {
+      target: (env.VITE_KONNECT_API ?? '').replace(/\{geo\}/, 'us'),
+      rewrite: (path: string) => path.replace('/us/kong-api', ''),
+      changeOrigin: true,
+      headers: {
+        ...konnectAuthHeader,
+      },
+    },
+
+    '^/eu/kong-api/konnect-api': {
+      target: (env.VITE_KONNECT_API ?? '').replace(/\{geo\}/, 'eu'),
+      rewrite: (path: string) => path.replace('/eu/kong-api', ''),
+      changeOrigin: true,
+      headers: {
+        ...konnectAuthHeader,
+      },
+    },
+
+    // KAuth v1 APIs
+    '^/kauth': {
+      target: env.VITE_KONNECT_KAUTH,
+      changeOrigin: true,
+      headers: {
+        ...konnectAuthHeader,
+      },
+    },
+
+    // Global v2 APIs
+    '^/kong-api/v2': {
+      target: env.VITE_KONNECT_GLOBAL,
+      rewrite: (path: string) => path.replace('/kong-api', ''),
+      changeOrigin: true,
+      headers: {
+        ...konnectAuthHeader,
+      },
+    },
+
+    /**
+     * KONG MANAGER PROXIES
+     */
+    '^/kong-manager': {
+      target: env.VITE_KONG_MANAGER_API,
+      rewrite: (path: string) => path.replace('/kong-manager', ''),
+      changeOrigin: true,
+      headers: {
+        ...kongManagerAuthHeader,
+      },
+    },
+  }
+}
+

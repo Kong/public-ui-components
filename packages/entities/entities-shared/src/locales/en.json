@@ -1,0 +1,89 @@
+{
+  "deleteModal": {
+    "message": "Are you sure you want to delete this {entityType}?",
+    "messageWithName": "Are you sure you want to delete this {entityType} {entityName}?"
+  },
+  "baseForm": {
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "back": "Back"
+    },
+    "errors": {
+      "edit": "The entity could not be edited at this time."
+    }
+  },
+  "baseTable": {
+    "emptyState": {
+      "noSearchResultsTitle": "No results found",
+      "noSearchResultsMessage": "Please adjust the criteria and try again.",
+      "noSearchResultsCtaText": "Clear"
+    }
+  },
+  "baseConfigCard": {
+    "title": "Configuration",
+    "actions": {
+      "copy": "Copy JSON"
+    },
+    "sections": {
+      "advanced": "Advanced",
+      "plugin": "Plugin Specific Configuration"
+    },
+    "commonFields": {
+      "id_label": "ID",
+      "name_label": "Name",
+      "enabled_label": "Enabled",
+      "enabled_tooltip": "Enabled is FTW",
+      "updated_at_label": "Last Updated",
+      "created_at_label": "Created",
+      "tags_label": "Tags",
+      "link": "Link"
+    },
+    "statusBadge": {
+      "enabledLabel": "Enabled",
+      "disabledLabel": "Disabled"
+    },
+    "copy": {
+      "tooltip": "Copy {label}",
+      "success": "Copied!"
+    },
+    "errors": {
+      "load": "The entity configuration data could not be loaded at this time.",
+      "copy": "Failed to copy to clipboard"
+    },
+    "general": {
+      "entryTitle": "Entry {index}"
+    }
+  },
+  "filter": {
+    "filterButtonText": "Filter",
+    "fieldLabel": "Filter by:",
+    "inputPlaceholder": "Enter a value",
+    "selectPlaceholder": "Select an item",
+    "applyButtonText": "Apply",
+    "clearButtonText": "Clear",
+    "clearAllButtonText": "Clear all filters"
+  },
+  "debouncedFilter": {
+    "errors": {
+      "fetch": "Could not fetch available items",
+      "invalid": "Please select a valid value"
+    }
+  },
+  "errors": {
+    "unexpected": "An unexpected error has occurred",
+    "dataKeyUndefined": "The data key \"{dataKey}\" does not exist in the response."
+  },
+  "toggleModal": {
+    "enable": {
+      "title": "Enable {entityType}",
+      "message": "Are you sure you want to enable the {entityType} {entityName}?",
+      "confirmText": "Yes, enable"
+    },
+    "disable": {
+      "title": "Disable {entityType}",
+      "message": "Are you sure you want to disable the {entityType} {entityName}?",
+      "confirmText": "Yes, disable"
+    }
+  }
+}

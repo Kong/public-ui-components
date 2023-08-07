@@ -24,6 +24,7 @@ module.exports = {
     'space-before-function-paren': 'off',
     quotes: ['error', 'single', { avoidEscape: true }],
     'no-multi-spaces': 'error',
+    'no-unused-vars': 'off',
     'no-trailing-spaces': 'error',
     'padded-blocks': 'off',
     'comma-dangle': ['error', 'always-multiline'],

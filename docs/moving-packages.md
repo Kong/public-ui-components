@@ -11,6 +11,8 @@ This process can be followed regardless of which repository is the source or des
   - [`package.json` \> `publishConfig`](#packagejson--publishconfig)
   - [`package.json` \> `license`](#packagejson--license)
   - [`package.json` \> script environment variables](#packagejson--script-environment-variables)
+  - [`vite.config.ts` \> `build.lib.name`](#viteconfigts--buildlibname)
+  - [`CODEOWNERS`](#codeowners)
   - [Repository paths](#repository-paths)
   - [Update local package references](#update-local-package-references)
   - [Install package dependencies](#install-package-dependencies)
