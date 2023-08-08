@@ -423,6 +423,9 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
+      '@kong/design-tokens':
+        specifier: ^1.8.0
+        version: 1.8.0
       '@kong/kongponents':
         specifier: ^8.106.0
         version: 8.116.2(axios@1.4.0)(vue-router@4.2.4)(vue@3.3.4)

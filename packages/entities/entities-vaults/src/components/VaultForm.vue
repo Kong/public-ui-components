@@ -806,13 +806,13 @@ const saveFormData = async (): Promise<void> => {
     }
 
     &-provider-cards-container {
-      column-gap: var(--spacing-sm, 14px);
+      column-gap: $kui-space-50;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      row-gap: var(--spacing-sm, 14px);
+      row-gap: $kui-space-50;
 
       .k-radio-label {
-        margin-top: var(--spacing-sm, 14px);
+        margin-top: $kui-space-50;
       }
 
       :deep(.k-radio label) {
@@ -829,7 +829,7 @@ const saveFormData = async (): Promise<void> => {
     &-config-fields-container {
       > *, div > * {
         &:not(:first-child) {
-          margin-top: var(--spacing-lg, 24px);
+          margin-top: $kui-space-80;
         }
       }
     }
