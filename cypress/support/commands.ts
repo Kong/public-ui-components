@@ -1,6 +1,6 @@
 import { mount } from 'cypress/vue'
 import { ComponentPublicInstance, App } from 'vue'
-import router from '../fixtures/routes'
+import defaultRouter from '../fixtures/routes'
 import RouterLink from '../fixtures/RouterLink.vue'
 import Kongponents from '@kong/kongponents'
 import '@kong/kongponents/dist/style.css'
@@ -35,9 +35,6 @@ Cypress.Commands.add('mount', (component, options = {}) => {
   options.global.components = options.global.components || {}
   options.global.plugins = options.global.plugins || []
 
-  options.router = router
-  options.global.components.RouterLink = RouterLink
-
   // Add plugins
   options.global.plugins.push({
     install(app: App) {
@@ -54,7 +51,12 @@ Cypress.Commands.add('mount', (component, options = {}) => {
        * (This is why this is disabled for now)
        *
        */
-      // app.use(options.router)
+      if (options.router) {
+        app.use(options.router)
+      } else {
+        options.router = defaultRouter
+        options.global.components.RouterLink = RouterLink
+      }
 
       // Kongponents
       app.use(Kongponents)
