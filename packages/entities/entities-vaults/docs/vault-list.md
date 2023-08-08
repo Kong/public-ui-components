@@ -19,7 +19,7 @@ A table component for vaults.
 
 ### Install
 
-[See instructions for installing the `@kong-ui/entities-vaults` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/entities-vaults` package.](../README.md#install)
 
 ### Props
 
@@ -162,12 +162,12 @@ Please refer to the [sandbox](../sandbox/pages/VaultListPage.vue).
 
 ## TypeScript interfaces
 
-TypeScript interfaces [are available here](https://github.com/Kong/shared-ui-components/blob/main/packages/entities/entities-vaults/src/types/index.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/entities/entities-vaults/src/types/index.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
 import type {
   BaseVaultListConfig,
   KonnectVaultListConfig,
   KongManagerVaultListConfig,
-} from '@kong-ui/entities-vaults'
+} from '@kong-ui-public/entities-vaults'
 ```

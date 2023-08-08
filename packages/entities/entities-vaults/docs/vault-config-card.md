@@ -4,10 +4,10 @@ A config card component for Vaults.
 
 - [Requirements](#requirements)
 - [Usage](#usage)
-    - [Install](#install)
-    - [Props](#props)
-    - [Events](#events)
-    - [Usage example](#usage-example)
+  - [Install](#install)
+  - [Props](#props)
+  - [Events](#events)
+  - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
 
 ## Requirements
@@ -21,7 +21,7 @@ A config card component for Vaults.
 
 ### Install
 
-[See instructions for installing the `@kong-ui/entities-vaults` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/entities-vaults` package.](../README.md#install)
 
 ### Props
 
@@ -101,12 +101,12 @@ Please refer to the [sandbox](../sandbox/pages/VaultConfigCardPage.vue). The pag
 
 ## TypeScript interfaces
 
-TypeScript interfaces [are available here](https://github.com/Kong/shared-ui-components/blob/main/packages/entities/entities-vaults/src/types/vault-config.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/entities/entities-vaults/src/types/vault-config.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
 import type {
  VaultConfigurationSchema,
  KonnectVaultEntityConfig,
  KongManagerVaultEntityConfig,
-} from '@kong-ui/entities-vaults'
+} from '@kong-ui-public/entities-vaults'
 ```

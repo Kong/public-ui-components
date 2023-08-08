@@ -21,7 +21,7 @@ A form component for Vaults.
 
 ### Install
 
-[See instructions for installing the `@kong-ui/entities-vaults` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/entities-vaults` package.](../README.md#install)
 
 ### Props
 
@@ -121,5 +121,5 @@ import type {
   VaultPayload,
   VaultStateFields,
   VaultState
-} from '@kong-ui/entities-vaults'
+} from '@kong-ui-public/entities-vaults'
 ```

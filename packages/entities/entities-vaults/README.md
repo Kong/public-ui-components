@@ -1,4 +1,4 @@
-# @kong-ui/entities-vaults
+# @kong-ui-public/entities-vaults
 
 Vault entity components.
 
@@ -31,7 +31,7 @@ Reference the [individual component docs](#individual-component-documentation) f
 Install the component in your host application
 
 ```sh
-yarn add @kong-ui/entities-vaults
+yarn add @kong-ui-public/entities-vaults
 ```
 
 ### Registration
@@ -39,8 +39,8 @@ yarn add @kong-ui/entities-vaults
 Import the component(s) in your host application as well as the package styles
 
 ```ts
-import { VaultList, VaultForm, VaultConfigCard } from '@kong-ui/entities-vaults'
-import '@kong-ui/entities-vaults/dist/style.css'
+import { VaultList, VaultForm, VaultConfigCard } from '@kong-ui-public/entities-vaults'
+import '@kong-ui-public/entities-vaults/dist/style.css'
 ```
 
 ## Individual component documentation
