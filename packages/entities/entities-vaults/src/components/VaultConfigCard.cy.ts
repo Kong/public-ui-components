@@ -2,7 +2,7 @@ import { konnectCardConfig, vault } from '../../fixtures/mockData'
 import VaultConfigCard from './VaultConfigCard.vue'
 import { EntityBaseConfigCard } from '@kong-ui-public/entities-shared'
 
-describe('<UpstreamsConfigCard/>', () => {
+describe('<VaultConfigCard/>', () => {
   describe('Konnect', () => {
     const interceptGetVault = (status = 200): void => {
       cy.intercept(
