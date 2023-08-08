@@ -1,5 +1,5 @@
 import type { RouteLocationRaw } from 'vue-router'
-import { FilterSchema, KongManagerBaseTableConfig, KonnectBaseTableConfig } from '@kong-ui/entities-shared'
+import { FilterSchema, KongManagerBaseTableConfig, KonnectBaseTableConfig } from '@kong-ui-public/entities-shared'
 
 export interface BaseVaultListConfig {
   /** Route for creating a vault */

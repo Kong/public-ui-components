@@ -1,4 +1,4 @@
-import { BaseFormConfig, KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui/entities-shared'
+import { BaseFormConfig, KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import { RouteLocationRaw } from 'vue-router'
 
 export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>{

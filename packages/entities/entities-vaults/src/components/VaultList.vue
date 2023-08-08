@@ -138,7 +138,7 @@ import {
   useAxios,
   useFetcher,
   useDeleteUrlBuilder,
-} from '@kong-ui/entities-shared'
+} from '@kong-ui-public/entities-shared'
 
 import type {
   BaseTableHeaders,
@@ -146,7 +146,7 @@ import type {
   ExactMatchFilterConfig,
   FilterFields,
   FuzzyMatchFilterConfig,
-} from '@kong-ui/entities-shared'
+} from '@kong-ui-public/entities-shared'
 
 import composables from '../composables'
 import endpoints from '../vaults-endpoints'
@@ -158,7 +158,7 @@ import type {
   CopyEventPayload,
 } from '../types'
 
-import '@kong-ui/entities-shared/dist/style.css'
+import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,

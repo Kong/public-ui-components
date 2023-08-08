@@ -1,7 +1,7 @@
 import { KonnectVaultFormConfig, KongManagerVaultFormConfig } from '../types'
 import VaultForm from './VaultForm.vue'
 import { vault } from '../../fixtures/mockData'
-import { EntityBaseForm } from '@kong-ui/entities-shared'
+import { EntityBaseForm } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'vaults-list' }
 

@@ -14,11 +14,11 @@
 </template>
 
 <script setup lang="ts">
-import { EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType } from '@kong-ui/entities-shared'
+import { EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType } from '@kong-ui-public/entities-shared'
 import { AxiosError } from 'axios'
 import { computed, PropType, ref } from 'vue'
 import endpoints from '../vaults-endpoints'
-import '@kong-ui/entities-shared/dist/style.css'
+import '@kong-ui-public/entities-shared/dist/style.css'
 import { KongManagerVaultEntityConfig, KonnectVaultEntityConfig, VaultConfigurationSchema } from '../types'
 import composables from '../composables'
 

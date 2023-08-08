@@ -1,6 +1,6 @@
 // Cypress component test spec file
 import VaultList from './VaultList.vue'
-import type { FetcherResponse } from '@kong-ui/entities-shared'
+import type { FetcherResponse } from '@kong-ui-public/entities-shared'
 import {
   FetcherRawResponse,
   paginate,

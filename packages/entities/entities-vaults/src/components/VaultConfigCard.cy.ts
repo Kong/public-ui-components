@@ -1,6 +1,6 @@
 import { konnectCardConfig, vault } from '../../fixtures/mockData'
 import VaultConfigCard from './VaultConfigCard.vue'
-import { EntityBaseConfigCard } from '@kong-ui/entities-shared'
+import { EntityBaseConfigCard } from '@kong-ui-public/entities-shared'
 
 describe('<UpstreamsConfigCard/>', () => {
   describe('Konnect', () => {
