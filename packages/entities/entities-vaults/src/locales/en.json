@@ -1,0 +1,247 @@
+{
+  "actions": {
+    "create": "New Vault",
+    "copy_id": "Copy ID",
+    "copy_json": "Copy JSON",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View Details"
+  },
+  "delete": {
+    "title": "Delete Vault",
+    "description": "Are you sure you want to delete this vault? This action cannot be reversed."
+  },
+  "errors": {
+    "general": "Vaults could not be retrieved",
+    "delete": "The vault could not be deleted at this time.",
+    "copy": "Failed to copy to clipboard"
+  },
+  "search": {
+    "placeholder": {
+      "konnect": "Filter by exact name or ID"
+    }
+  },
+  "vaults": {
+    "title": "Vaults",
+    "list": {
+      "toolbar_actions": {
+        "new_vault": "New Vault"
+      },
+      "table_headers": {
+        "prefix": "Prefix",
+        "name": "Vault Type",
+        "description": "Description",
+        "tags": "Tags",
+        "id": "ID"
+      },
+      "empty_state": {
+        "title": "Configure a New Vault",
+        "description": "Improve the security of your Kong Gateway deployment with centralized secrets."
+      }
+    }
+  },
+  "copy": {
+    "success": "Copied {val} to clipboard",
+    "success_brief": "Successfully copied to clipboard"
+  },
+  "labels": {
+    "vault_type": "Vault Type"
+  },
+  "form": {
+    "sections": {
+      "general": {
+        "title": "General Information",
+        "description": "General information helps identify and manage this Vault instance."
+      },
+      "config": {
+        "title": "Vault Configuration",
+        "description": "Select a type of Vault and configure properties specific to each type of Vault."
+      }
+    },
+    "fields": {
+      "prefix": {
+        "label": "Prefix",
+        "placeholder": "Enter a unique prefix for this vault",
+        "help": "e.g. my-vault",
+        "tooltip": "The prefix is used to load the right Vault configuration and implementation when referencing secrets with the other entities."
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Enter some description for this vault"
+      },
+      "tags": {
+        "label": "Tags",
+        "placeholder": "Enter a list of tags seperated by comma",
+        "help": "e.g. tag1, tag2, tag3"
+      }
+    },
+    "config": {
+      "kong": {
+        "label": "Environment Variables",
+        "fields": {
+          "prefix": {
+            "label": "Environment Variable Prefix",
+            "placeholder": "Enter your environment variable vault prefix",
+            "tooltip": "Data plane will access all the environment variables starting with this prefix."
+          }
+        }
+      },
+      "aws": {
+        "label": "AWS Secrets Manager",
+        "fields": {
+          "region": {
+            "label": "Region",
+            "placeholder": "Select an AWS region",
+            "tooltip": "The AWS region your vault is located in",
+            "locations": {
+              "us-east-1": {
+                "location": "N. Virginia"
+              },
+              "us-east-2": {
+                "location": "Ohio"
+              },
+              "us-west-1": {
+                "location": "N. California"
+              },
+              "us-west-2": {
+                "location": "Oregon"
+              },
+              "af-south-1": {
+                "location": "Cape Town"
+              },
+              "ap-east-1": {
+                "location": "Hong Kong"
+              },
+              "ap-southeast-3": {
+                "location": "Jakarta"
+              },
+              "ap-south-1": {
+                "location": "Mumbai"
+              },
+              "ap-northeast-1": {
+                "location": "Tokyo"
+              },
+              "ap-northeast-2": {
+                "location": "Seoul"
+              },
+              "ap-northeast-3": {
+                "location": "Osaka"
+              },
+              "ap-southeast-1": {
+                "location": "Singapore"
+              },
+              "ap-southeast-2": {
+                "location": "Sydney"
+              },
+              "ca-central-1": {
+                "location": "Canada"
+              },
+              "eu-central-1": {
+                "location": "Frankfurt"
+              },
+              "eu-west-1": {
+                "location": "Ireland"
+              },
+              "eu-west-2": {
+                "location": "London"
+              },
+              "eu-west-3": {
+                "location": "Paris"
+              },
+              "eu-south-1": {
+                "location": "Milan"
+              },
+              "eu-north-1": {
+                "location": "Stockholm"
+              },
+              "me-south-1": {
+                "location": "Bahrain"
+              },
+              "sa-east-1": {
+                "location": "São Paulo"
+              },
+              "us-gov-east-1": {
+                "location": "US East"
+              },
+              "us-gov-west-1": {
+                "location": "US West"
+              }
+            }
+          }
+        }
+      },
+      "gcp": {
+        "label": "Google Secrets Manager (GCP)",
+        "fields": {
+          "project_id": {
+            "label": "Project ID",
+            "placeholder": "Enter your Google Cloud Project ID",
+            "tooltip": {
+              "text": "Visit your Google API Console and select {italic-text} in the projects list to see your project ID",
+              "italicText": "Manage all projects"
+            }
+          }
+        }
+      },
+      "hcv": {
+        "label": "HashiCorp Vault",
+        "fields": {
+          "protocol": {
+            "label": "Protocol"
+          },
+          "host": {
+            "label": "Host"
+          },
+          "port": {
+            "label": "Port"
+          },
+          "mount": {
+            "label": "Mount"
+          },
+          "kv": {
+            "label": "Kv"
+          },
+          "namespace": {
+            "label": "Namespace"
+          },
+          "auth_method": {
+            "label": "Authentication Method"
+          },
+          "token": {
+            "label": "Token"
+          },
+          "kube_role": {
+            "label": "Kubernetes Role"
+          },
+          "kube_api_token_file": {
+            "label": "Kubernetes API Token File"
+          }
+        }
+      },
+      "azure": {
+        "label": "Azure",
+        "fields": {
+          "location": {
+            "label": "Location"
+          },
+          "vaultUri": {
+            "label": "Vault URI"
+          },
+          "metadataHost": {
+            "label": "Instance Metadata Host"
+          }
+        }
+      },
+      "advancedFields": {
+        "title": "View Advanced Fields",
+        "ttl": "Time-to-Live",
+        "ttlTooltip": "Time-to-live (in seconds) of a secret from a vault when cached by this reference",
+        "negTtl": "Negative Time-to-Live",
+        "negTtlTooltip": "Time-to-live (in seconds) of a vault miss (no secret)",
+        "resurrectTtl": "Time-to-Live Resurrection",
+        "resurrectTtlTooltip": "Time (in seconds) for which stale secrets from the vault are resurrected for when they cannot be refreshed"
+      }
+    },
+    "unavailable": "This vault provider is available on Enterprise."
+  }
+}
