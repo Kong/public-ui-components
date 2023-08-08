@@ -1,20 +1,16 @@
 <template>
   <SandboxPermissionsControl
-    :create-krn="patPermissions.create"
-    :delete-krn="patPermissions.delete"
-    :edit-krn="patPermissions.edit"
-    :retrieve-krn="patPermissions.retrieve"
     @update="handlePermissionsUpdate"
   />
   <h2>Konnect API</h2>
   <VaultList
-    v-if="konnectActions"
+    v-if="permissions"
     :key="key"
     cache-identifier="konnect"
-    :can-create="konnectActions.canCreate"
-    :can-delete="konnectActions.canDelete"
-    :can-edit="konnectActions.canEdit"
-    :can-retrieve="konnectActions.canRetrieve"
+    :can-create="permissions.canCreate"
+    :can-delete="permissions.canDelete"
+    :can-edit="permissions.canEdit"
+    :can-retrieve="permissions.canRetrieve"
     :config="konnectConfig"
     @copy:error="onCopyIdError"
     @copy:success="onCopyIdSuccess"
@@ -24,13 +20,13 @@
 
   <h2>Kong Manager API</h2>
   <VaultList
-    v-if="kmActions"
+    v-if="permissions"
     :key="key"
     cache-identifier="kong-manager"
-    :can-create="kmActions.canCreate"
-    :can-delete="kmActions.canDelete"
-    :can-edit="kmActions.canEdit"
-    :can-retrieve="kmActions.canRetrieve"
+    :can-create="permissions.canCreate"
+    :can-delete="permissions.canDelete"
+    :can-edit="permissions.canEdit"
+    :can-retrieve="permissions.canRetrieve"
     :config="kongManagerConfig"
     @copy:error="onCopyIdError"
     @copy:success="onCopyIdSuccess"
@@ -44,7 +40,7 @@ import { ref } from 'vue'
 import type { AxiosError } from 'axios'
 import { VaultList } from '../../src'
 import type { EntityRow, KongManagerVaultListConfig, KonnectVaultListConfig, CopyEventPayload } from '../../src'
-import SandboxPermissionsControl, { KonnectActions, KMActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import SandboxPermissionsControl, { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
@@ -76,19 +72,11 @@ const kongManagerConfig = ref<KongManagerVaultListConfig>({
   },
 })
 
-const patPermissions = {
-  create: { service: 'konnect', action: '#create', resourcePath: `runtimegroups/${controlPlaneId}/vaults/*` },
-  delete: { service: 'konnect', action: '#delete', resourcePath: `runtimegroups/${controlPlaneId}/vaults/*` },
-  edit: { service: 'konnect', action: '#edit', resourcePath: `runtimegroups/${controlPlaneId}/vaults/*` },
-  retrieve: { service: 'konnect', action: '#retrieve', resourcePath: `runtimegroups/${controlPlaneId}/vaults/*` },
-}
 // Remount the tables in the sandbox when the permission props change; not needed outside of a sandbox
 const key = ref(1)
-const konnectActions = ref<KonnectActions | null>(null)
-const kmActions = ref<KMActions | null>(null)
-const handlePermissionsUpdate = (permissions: { konnect: KonnectActions, kongManager: KMActions }) => {
-  konnectActions.value = permissions.konnect
-  kmActions.value = permissions.kongManager
+const permissions = ref<PermissionsActions | null>(null)
+const handlePermissionsUpdate = (newPermissions: PermissionsActions) => {
+  permissions.value = newPermissions
   key.value++
 }
 
