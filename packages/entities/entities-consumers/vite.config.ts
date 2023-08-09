@@ -12,9 +12,9 @@ const config = mergeConfig(
   defineConfig({
     build: {
       lib: {
-        // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-{package-name}`
-        // Example: name: 'kong-ui-demo-component'
-        name: `kong-ui-${sanitizedPackageName}`,
+        // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
+        // Example: name: 'kong-ui-public-demo-component'
+        name: `kong-ui-public-${sanitizedPackageName}`,
         entry: resolve(__dirname, './src/index.ts'),
         fileName: (format) => `${sanitizedPackageName}.${format}.js`,
       },

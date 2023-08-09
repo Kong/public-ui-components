@@ -1,4 +1,4 @@
-# @kong-ui/entities-consumers
+# @kong-ui-public/entities-consumers
 
 Consumers entity components.
 
@@ -28,7 +28,7 @@ Reference the [individual component docs](#individual-component-documentation) f
 Install the component in your host application
 
 ```sh
-yarn add @kong-ui/entities-consumers
+yarn add @kong-ui-public/entities-consumers
 ```
 
 ### Registration
@@ -36,8 +36,8 @@ yarn add @kong-ui/entities-consumers
 Import the component(s) in your host application as well as the package styles
 
 ```ts
-import { ConsumerList, ConsumerForm, ConsumerConfigCard } from '@kong-ui/entities-consumers'
-import '@kong-ui/entities-consumers/dist/style.css'
+import { ConsumerList, ConsumerForm, ConsumerConfigCard } from '@kong-ui-public/entities-consumers'
+import '@kong-ui-public/entities-consumers/dist/style.css'
 ```
 
 ## Individual component documentation

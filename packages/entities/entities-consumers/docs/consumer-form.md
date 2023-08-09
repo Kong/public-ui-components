@@ -21,7 +21,7 @@ A form component to create/edit Consumer.
 
 ### Install
 
-[See instructions for installing the `@kong-ui/entities-consumers` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/entities-consumers` package.](../README.md#install)
 
 ### Props
 
@@ -89,7 +89,7 @@ Please refer to the [sandbox](../sandbox/pages/ConsumerFormPage.vue). The form i
 
 ## TypeScript interfaces
 
-TypeScript interfaces [are available here](https://github.com/Kong/shared-ui-components/blob/main/packages/entities/entities-consumers/src/types/consumer-form.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/entities/entities-consumers/src/types/consumer-form.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
 import type {
@@ -99,5 +99,5 @@ import type {
  ConsumerStateFields,
  ConsumerPayload,
  ConsumerState,
-} from '@kong-ui/entities-consumers'
+} from '@kong-ui-public/entities-consumers'
 ```

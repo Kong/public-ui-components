@@ -21,7 +21,7 @@ A form component for consumer.
 
 ### Install
 
-[See instructions for installing the `@kong-ui/entities-consumers` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/entities-consumers` package.](../README.md#install)
 
 ### Props
 
@@ -108,5 +108,5 @@ import type {
   ConsumerConfigurationSchema,
   KonnectConsumerEntityConfig,
   KongManagerConsumerEntityConfig,
-} from '@kong-ui/entities-consumers'
+} from '@kong-ui-public/entities-consumers'
 ```
