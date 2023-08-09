@@ -105,7 +105,7 @@ Please refer to the [sandbox](../sandbox/pages/KeyConfigCardPage.vue). The page 
 
 ## TypeScript interfaces
 
-TypeScript interfaces [are available here](https://github.com/Kong/shared-ui-components/blob/main/packages/entities/entities-keys/src/types/key-config-card.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/entities/entities-keys/src/types/key-config-card.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
 import type {

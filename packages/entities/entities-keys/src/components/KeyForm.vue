@@ -457,7 +457,7 @@ onBeforeMount(async () => {
   }
 
   .invalid-key-set-message {
-    color: var(--red-500, #d44324);
+    color: $kui-color-background-danger;
     font-size: 11px;
     font-weight: 500;
     margin-top: 3px !important;
@@ -471,7 +471,7 @@ onBeforeMount(async () => {
 
   :deep(.k-select.k-select-placeholder) {
     .k-select-input .k-input {
-      --KInputColor: var(--black-45, rgba(0, 0, 0, 0.45));
+      color: rgba(0, 0, 0, 0.45);
     }
   }
 }

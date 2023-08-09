@@ -106,7 +106,7 @@ Please refer to the [sandbox](../sandbox/pages/KeyFormPage.vue). The form is acc
 
 ## TypeScript interfaces
 
-TypeScript interfaces [are available here](https://github.com/Kong/shared-ui-components/blob/main/packages/entities/entities-keys/src/types/key-form.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/entities/entities-keys/src/types/key-form.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
 import type {
