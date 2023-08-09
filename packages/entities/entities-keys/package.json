@@ -1,6 +1,6 @@
 {
-  "name": "@kong-ui/entities-keys",
-  "version": "0.15.23",
+  "name": "@kong-ui-public/entities-keys",
+  "version": "1.0.0",
   "type": "module",
   "main": "./dist/entities-keys.umd.js",
   "module": "./dist/entities-keys.es.js",
@@ -17,19 +17,19 @@
     "./dist/*": "./dist/*"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   },
   "peerDependencies": {
-    "@kong-ui-public/copy-uuid": "^1.1.3",
-    "@kong-ui-public/i18n": "^0.8.0",
+    "@kong-ui-public/copy-uuid": "workspace:^",
+    "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^8.106.0",
     "axios": "^1.4.0",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
   },
   "devDependencies": {
-    "@kong-ui-public/copy-uuid": "^1.1.3",
-    "@kong-ui-public/i18n": "^0.8.0",
+    "@kong-ui-public/copy-uuid": "workspace:^",
+    "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^8.106.0",
     "axios": "^1.4.0",
     "vue": "^3.3.4",
@@ -55,12 +55,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Kong/shared-ui-components.git",
+    "url": "https://github.com/Kong/public-ui-components.git",
     "directory": "packages/entities/entities-keys"
   },
-  "homepage": "https://github.com/Kong/shared-ui-components/tree/main/packages/entities/entities-keys",
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/entities/entities-keys",
   "author": "Kong, Inc.",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "volta": {
     "extends": "../../../package.json"
   },
@@ -68,6 +68,6 @@
     "errorLimit": "486KB"
   },
   "dependencies": {
-    "@kong-ui/entities-shared": "workspace:^0.46.1"
+    "@kong-ui-public/entities-shared": "workspace:^"
   }
 }

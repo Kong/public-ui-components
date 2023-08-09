@@ -1,4 +1,4 @@
-# @kong-ui/entities-keys
+# @kong-ui-public/entities-keys
 
 Key entity components.
 
@@ -32,7 +32,7 @@ Reference the [individual component docs](#individual-component-documentation) f
 Install the component in your host application
 
 ```sh
-yarn add @kong-ui/entities-keys
+yarn add @kong-ui-public/entities-keys
 ```
 
 ### Registration
@@ -40,8 +40,8 @@ yarn add @kong-ui/entities-keys
 Import the component(s) in your host application as well as the package styles
 
 ```ts
-import { KeyList, KeyForm, KeyConfigCard } from '@kong-ui/entities-keys'
-import '@kong-ui/entities-keys/dist/style.css'
+import { KeyList, KeyForm, KeyConfigCard } from '@kong-ui-public/entities-keys'
+import '@kong-ui-public/entities-keys/dist/style.css'
 ```
 
 ## Individual component documentation
