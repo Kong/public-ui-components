@@ -21,7 +21,7 @@ A form component for Keys.
 
 ### Install
 
-[See instructions for installing the `@kong-ui/entities-keys` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/entities-keys` package.](../README.md#install)
 
 ### Props
 
@@ -112,5 +112,5 @@ TypeScript interfaces [are available here](https://github.com/Kong/shared-ui-com
 import type {
   KonnectKeyFormConfig,
   KongManagerKeyFormConfig,
-} from '@kong-ui/entities-keys'
+} from '@kong-ui-public/entities-keys'
 ```

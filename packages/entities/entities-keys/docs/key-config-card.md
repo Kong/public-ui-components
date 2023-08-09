@@ -21,7 +21,7 @@ A config card component for Keys.
 
 ### Install
 
-[See instructions for installing the `@kong-ui/entities-keys` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/entities-keys` package.](../README.md#install)
 
 ### Props
 
@@ -112,5 +112,5 @@ import type {
   KeyConfigurationSchema,
   KonnectKeyEntityConfig,
   KongManagerKeyEntityConfig,
-} from '@kong-ui/entities-keys'
+} from '@kong-ui-public/entities-keys'
 ```

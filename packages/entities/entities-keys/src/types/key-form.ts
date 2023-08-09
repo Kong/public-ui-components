@@ -1,5 +1,5 @@
 import type { RouteLocationRaw } from 'vue-router'
-import { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui/entities-shared'
+import { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 
 /** Konnect Key form config */
 export interface KonnectKeyFormConfig extends KonnectBaseFormConfig {

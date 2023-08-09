@@ -169,8 +169,8 @@ import type {
 } from '../types'
 import endpoints from '../keys-endpoints'
 import composables from '../composables'
-import { useAxios, useErrors, useDebouncedFilter, EntityFormSection, EntityBaseForm, EntityBaseFormType } from '@kong-ui/entities-shared'
-import '@kong-ui/entities-shared/dist/style.css'
+import { useAxios, useErrors, useDebouncedFilter, EntityFormSection, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
+import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'update', data: Record<string, any>): void,

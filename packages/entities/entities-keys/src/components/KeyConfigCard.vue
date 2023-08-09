@@ -71,10 +71,10 @@
 import { computed, ref, PropType } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerKeyEntityConfig, KonnectKeyEntityConfig, KeyConfigurationSchema } from '../types'
-import { useAxios, EntityBaseConfigCard, ConfigurationSchemaSection, useStringHelpers, ConfigurationSchemaType, InternalLinkItem, ConfigCardItem } from '@kong-ui/entities-shared'
+import { useAxios, EntityBaseConfigCard, ConfigurationSchemaSection, useStringHelpers, ConfigurationSchemaType, InternalLinkItem, ConfigCardItem } from '@kong-ui-public/entities-shared'
 import endpoints from '../keys-endpoints'
 import composables from '../composables'
-import '@kong-ui/entities-shared/dist/style.css'
+import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void

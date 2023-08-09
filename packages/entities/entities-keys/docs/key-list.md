@@ -22,7 +22,7 @@ A table component for keys.
 
 ### Install
 
-[See instructions for installing the `@kong-ui/entities-keys` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/entities-keys` package.](../README.md#install)
 
 ### Props
 
@@ -164,5 +164,5 @@ import type {
   BaseKeyListConfig,
   KonnectKeyListConfig,
   KongManagerKeyListConfig,
-} from '@kong-ui/entities-keys'
+} from '@kong-ui-public/entities-keys'
 ```
