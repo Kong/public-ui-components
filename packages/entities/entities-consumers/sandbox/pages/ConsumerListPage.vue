@@ -71,7 +71,7 @@ const kongManagerConfig = ref<KongManagerConsumerListConfig>({
   isExactMatch: false,
   createRoute: { name: 'create-consumer' },
   // Uncomment to test Consumer Groups -> Consumers
-  // consumerGroupId: '5ee03f9b-d93f-4c85-be77-144440c14dc8',
+  consumerGroupId: '0de87974-352c-4054-8969-238cdd82a57f',
   // consumerGroupName: 'Group 1',
   getViewRoute: (id: string) => ({ name: 'view-consumer', params: { id } }),
   getEditRoute: (id: string) => ({ name: 'edit-consumer', params: { id } }),

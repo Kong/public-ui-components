@@ -10,7 +10,7 @@
   >
     <template #body-content>
       <div class="add-consumer-form-container">
-        <p class="mt-0">
+        <p class="add-consumer-form-cta">
           {{ t('consumers.consumer_groups.add.ctaText') }}
         </p>
         <KMultiselect
@@ -275,7 +275,7 @@ onBeforeMount(async () => {
 
 <style lang="scss" scoped>
 .kong-ui-entities-add-consumers-modal {
-  .mt-0 {
+  .add-consumer-form-cta {
     margin-top: 0;
   }
 

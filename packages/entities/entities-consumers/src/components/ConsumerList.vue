@@ -141,7 +141,7 @@
     >
       <template #body-content>
         <i18n-t
-          class="message mt-0"
+          class="message"
           :keypath="config.consumerGroupName ? 'consumers.consumer_groups.remove.confirmation' : 'consumers.consumer_groups.remove.confirmationNoCG'"
           tag="p"
         >
@@ -591,7 +591,7 @@ onBeforeMount(async () => {
 .kong-ui-entities-consumers-list {
   width: 100%;
 
-  .mt-0 {
+  .message {
     margin-top: 0;
   }
 
