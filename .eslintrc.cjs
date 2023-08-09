@@ -57,6 +57,8 @@ module.exports = {
     }],
     // Disallow Kongponents utility classes
     'vue/no-restricted-class': ['error', ...kongponentsUtilityClasses],
+    // This rule is too restrictive: https://github.com/vuejs/eslint-plugin-vue/issues/2259
+    'vue/no-setup-props-destructure': 'off',
   },
   overrides: [
     {
