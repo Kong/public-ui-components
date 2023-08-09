@@ -100,9 +100,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useAxios, useErrors, EntityFormSection, EntityBaseForm, EntityBaseFormType } from '@kong-ui/entities-shared'
+import { useAxios, useErrors, EntityFormSection, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
-import '@kong-ui/entities-shared/dist/style.css'
+import '@kong-ui-public/entities-shared/dist/style.css'
 import { computed, PropType, reactive } from 'vue'
 import {
   ConsumerPayload,

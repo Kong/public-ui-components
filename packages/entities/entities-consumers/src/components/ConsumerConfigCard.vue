@@ -39,10 +39,10 @@
 import { computed, ref, PropType } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerConsumerEntityConfig, KonnectConsumerEntityConfig, ConsumerConfigurationSchema } from '../types'
-import { EntityBaseConfigCard, ConfigurationSchemaSection } from '@kong-ui/entities-shared'
+import { EntityBaseConfigCard, ConfigurationSchemaSection } from '@kong-ui-public/entities-shared'
 import endpoints from '../consumers-endpoints'
 import composables from '../composables'
-import '@kong-ui/entities-shared/dist/style.css'
+import '@kong-ui-public/entities-shared/dist/style.css'
 
 defineEmits<{
   (e: 'loading', isLoading: boolean): void

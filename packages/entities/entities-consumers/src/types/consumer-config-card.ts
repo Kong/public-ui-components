@@ -1,4 +1,4 @@
-import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, ConfigurationSchemaItem } from '@kong-ui/entities-shared'
+import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, ConfigurationSchemaItem } from '@kong-ui-public/entities-shared'
 
 /** Konnect Consumer entity config */
 export interface KonnectConsumerEntityConfig extends KonnectBaseEntityConfig {}

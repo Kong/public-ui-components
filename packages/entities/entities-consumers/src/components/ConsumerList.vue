@@ -183,7 +183,7 @@ import {
   useAxios,
   useFetcher,
   useDeleteUrlBuilder,
-} from '@kong-ui/entities-shared'
+} from '@kong-ui-public/entities-shared'
 import type {
   KongManagerConsumerListConfig,
   KonnectConsumerListConfig,
@@ -195,8 +195,8 @@ import type {
   EmptyStateOptions,
   ExactMatchFilterConfig,
   FuzzyMatchFilterConfig,
-} from '@kong-ui/entities-shared'
-import '@kong-ui/entities-shared/dist/style.css'
+} from '@kong-ui-public/entities-shared'
+import '@kong-ui-public/entities-shared/dist/style.css'
 import AddConsumerModal from './AddConsumerModal.vue'
 
 const emit = defineEmits<{

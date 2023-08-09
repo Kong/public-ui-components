@@ -1,5 +1,5 @@
 import ConsumerForm from './ConsumerForm.vue'
-import { EntityBaseForm } from '@kong-ui/entities-shared'
+import { EntityBaseForm } from '@kong-ui-public/entities-shared'
 import {
   ConsumerPayload,
   KongManagerConsumerFormConfig,

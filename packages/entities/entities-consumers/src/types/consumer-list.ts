@@ -3,7 +3,7 @@ import {
   FilterSchema,
   KongManagerBaseTableConfig,
   KonnectBaseTableConfig,
-} from '@kong-ui/entities-shared'
+} from '@kong-ui-public/entities-shared'
 
 export interface BaseConsumerListConfig {
   /** Current consumer group id if the ConsumerList in nested in the consumers tab on a consumer group detail page */

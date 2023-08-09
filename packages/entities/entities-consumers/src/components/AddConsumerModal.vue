@@ -71,7 +71,7 @@ import type {
   KongManagerConsumerListConfig,
   KonnectConsumerListConfig,
 } from '../types'
-import { useDebouncedFilter, useAxios } from '@kong-ui/entities-shared'
+import { useDebouncedFilter, useAxios } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import endpoints from '../consumers-endpoints'
 import { MultiselectItem } from '@kong/kongponents'
