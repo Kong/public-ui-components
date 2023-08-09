@@ -246,29 +246,27 @@ const submitData = async (): Promise<void> => {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../entities-shared/src/styles/variables";
-
 .kong-ui-entities-consumer-form {
   width: 100%;
 
-  @media screen and (min-width: $viewport-xl) {
+  @media screen and (min-width: $kui-breakpoint-laptop) {
     &:deep(.form-section-wrapper) {
-      column-gap: var(--spacing-xxxl, 56px);
+      column-gap: $kui-space-130;
     }
   }
 }
 .fields-group {
   &-title {
-    color: var(--black-500, '#0b172d');
-    font-size: var(--type-md, 16px);
+    color: $kui-color-text-neutral-strongest;
+    font-size: $kui-font-size-40;
     font-weight: 600;
     line-height: 20px;
     margin-bottom: 4px;
     margin-top: 0;
   }
   &-text {
-    color: var(--black-45, rgba(0, 0, 0, 0.45));
-    font-size: var(--type-sm, 14px);
+    color: rgba(0, 0, 0, 0.45);
+    font-size: $kui-font-size-30;
     line-height: 20px;
     margin-bottom: 0;
     margin-top: 0;
