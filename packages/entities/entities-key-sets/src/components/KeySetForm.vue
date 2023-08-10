@@ -48,6 +48,10 @@
 import { computed, PropType, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
+import {
+  useAxios, useErrors, EntityFormSection, EntityBaseForm, EntityBaseFormType,
+} from '@kong-ui-public/entities-shared'
+
 import type {
   KonnectKeySetFormConfig,
   KongManagerKeySetFormConfig,
@@ -56,8 +60,8 @@ import type {
 } from '../types'
 import endpoints from '../key-sets-endpoints'
 import composables from '../composables'
-import { useAxios, useErrors, EntityFormSection, EntityBaseForm, EntityBaseFormType } from '@kong-ui/entities-shared'
-import '@kong-ui/entities-shared/dist/style.css'
+
+import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'update', data: Record<string, any>): void,

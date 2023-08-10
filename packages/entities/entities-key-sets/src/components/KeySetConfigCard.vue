@@ -16,11 +16,15 @@
 <script setup lang="ts">
 import { computed, ref, PropType } from 'vue'
 import type { AxiosError } from 'axios'
-import type { KongManagerKeySetEntityConfig, KonnectKeySetEntityConfig, KeySetConfigurationSchema } from '../types'
-import { EntityBaseConfigCard } from '@kong-ui/entities-shared'
+import { EntityBaseConfigCard } from '@kong-ui-public/entities-shared'
+
+import type {
+  KongManagerKeySetEntityConfig, KonnectKeySetEntityConfig, KeySetConfigurationSchema,
+} from '../types'
 import endpoints from '../key-sets-endpoints'
-import '@kong-ui/entities-shared/dist/style.css'
 import composables from '../composables'
+
+import '@kong-ui-public/entities-shared/dist/style.css'
 
 defineEmits<{
   (e: 'loading', isLoading: boolean): void

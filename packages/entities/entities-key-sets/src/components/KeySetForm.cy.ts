@@ -2,7 +2,7 @@
 import { KongManagerKeySetFormConfig, KonnectKeySetFormConfig } from '../types'
 import { keySet1 } from '../../fixtures/mockData'
 import KeySetForm from './KeySetForm.vue'
-import { EntityBaseForm } from '@kong-ui/entities-shared'
+import { EntityBaseForm } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'keys-list' }
 
