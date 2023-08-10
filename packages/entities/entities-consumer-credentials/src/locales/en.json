@@ -1,0 +1,144 @@
+{
+  "credentials": {
+    "title": "Consumer Credentials",
+    "list": {
+      "toolbar_actions": {
+        "acls": {
+          "new": "New ACL Credential"
+        },
+        "basic-auth": {
+          "new": "New Basic Auth Credential"
+        },
+        "key-auth": {
+          "new": "New Key Auth Credential"
+        },
+        "key-auth-enc": {
+          "new": "New Key Auth Encrypted Credential"
+        },
+        "oauth2": {
+          "new": "New OAuth 2.0 Credential"
+        },
+        "hmac-auth": {
+          "new": "New HMAC Credential"
+        },
+        "jwt": {
+          "new": "New JWT Credential"
+        }
+      },
+      "table_headers": {
+        "acls": {
+          "group": "Group",
+          "created_at": "Created At",
+          "tags": "Tags"
+        },
+        "basic-auth": {
+          "password": "Credential",
+          "username": "Username",
+          "created_at": "Created at",
+          "tags": "Tags"
+        },
+        "key-auth": {
+          "key": "Key",
+          "created_at": "Created at",
+          "tags": "Tags"
+        },
+        "key-auth-enc": {
+          "key": "Key",
+          "created_at": "Created at",
+          "tags": "Tags"
+        },
+        "oauth2": {
+          "name": "Name",
+          "client_id": "Client ID",
+          "client_secret": "Client secret",
+          "created_at": "Created at",
+          "tags": "Tags"
+        },
+        "hmac-auth": {
+          "username": "Username",
+          "secret": "Secret",
+          "created_at": "Created at",
+          "tags": "Tags"
+        },
+        "jwt": {
+          "key": "Key",
+          "algorithm": "Algorithm",
+          "created_at": "Created at",
+          "tags": "Tags"
+        }
+      },
+      "empty_state": {
+        "acls": {
+          "title": "Configure a New ACL Credential",
+          "cta": "New ACL Credential"
+        },
+        "basic-auth": {
+          "title": "Configure a New Basic Auth Credential",
+          "cta": "New Basic Auth Credential"
+        },
+        "key-auth": {
+          "title": "Configure a New Key Auth Credential",
+          "cta": "New Key Auth Credential"
+        },
+        "key-auth-enc": {
+          "title": "Configure a New Key Auth Encrypted Credential",
+          "cta": "New Key Auth Encrypted Credential"
+        },
+        "oauth2": {
+          "title": "Configure a New OAuth 2.0 Credential",
+          "cta": "New OAuth 2.0 Credential"
+        },
+        "hmac-auth": {
+          "title": "Configure a New HMAC Credential",
+          "cta": "New HMAC Credential"
+        },
+        "jwt": {
+          "title": "Configure a New JWT Credential",
+          "cta": "New JWT Credential"
+        }
+      }
+    },
+    "actions": {
+      "copy_id": "Copy ID",
+      "copy_credential": "Copy Credential",
+      "copy_key": "Copy Key",
+      "copy_secret": "Copy Secret",
+      "copy_json": "Copy JSON",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "delete": {
+      "acls": {
+        "title": "Delete an ACL Credential"
+      },
+      "basic-auth": {
+        "title": "Delete a Basic Auth Credential"
+      },
+      "key-auth": {
+        "title": "Delete a Key Auth Credential"
+      },
+      "key-auth-enc": {
+        "title": "Delete a Key Auth Encrypted Credential"
+      },
+      "oauth2": {
+        "title": "Delete an OAuth 2.0 Credential"
+      },
+      "hmac-auth": {
+        "title": "Delete an HMAC Credential"
+      },
+      "jwt": {
+        "title": "Delete a JWT Credential"
+      },
+      "description": "This action cannot be reversed."
+    },
+    "error": {
+      "general": "Credentials could not be retrieved",
+      "delete": "The credential could not be deleted at this time.",
+      "copy": "Failed to copy to clipboard"
+    },
+    "copy": {
+      "success": "Copied {val} to clipboard",
+      "success_brief": "Successfully copied to clipboard"
+    }
+  }
+}
