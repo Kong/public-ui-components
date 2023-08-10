@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -418,6 +414,31 @@ importers:
         specifier: ^4.2.4
         version: 4.2.4(vue@3.3.4)
 
+  packages/entities/entities-key-sets:
+    dependencies:
+      '@kong-ui-public/entities-shared':
+        specifier: workspace:^
+        version: link:../entities-shared
+    devDependencies:
+      '@kong-ui-public/copy-uuid':
+        specifier: workspace:^
+        version: link:../../core/copy-uuid
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../../core/i18n
+      '@kong/kongponents':
+        specifier: ^8.106.0
+        version: 8.116.2(vue-router@4.2.4)(vue@3.3.4)
+      axios:
+        specifier: ^1.4.0
+        version: 1.4.0
+      vue:
+        specifier: ^3.3.4
+        version: 3.3.4
+      vue-router:
+        specifier: ^4.2.4
+        version: 4.2.4(vue@3.3.4)
+
   packages/entities/entities-keys:
     dependencies:
       '@kong-ui-public/entities-shared':
@@ -435,7 +456,7 @@ importers:
         version: 1.8.0
       '@kong/kongponents':
         specifier: ^8.106.0
-        version: 8.116.2(axios@1.4.0)(vue-router@4.2.4)(vue@3.3.4)
+        version: 8.116.2(vue-router@4.2.4)(vue@3.3.4)
       axios:
         specifier: ^1.4.0
         version: 1.4.0
@@ -1721,36 +1742,10 @@ packages:
       - debug
     dev: false
 
-  /@kong/kongponents@8.116.2(axios@1.4.0)(vue-router@4.2.4)(vue@3.3.4):
-    resolution: {integrity: sha512-p+08/xu8PA8P/+eaaXKH+lBVG0irNCFH2BF24gXagyi/VKqNsVy1z+YYUe065MYnalsUgifCFp/xTW2XTLi6Lg==}
-    engines: {node: '>=16.19.0'}
-    peerDependencies:
-      axios: ^0.27.2
-      vue: '>= 3.3.0'
-      vue-router: ^4.1.6
-    dependencies:
-      axios: 1.4.0
-      date-fns: 2.30.0
-      date-fns-tz: 1.3.8(date-fns@2.30.0)
-      focus-trap: 7.5.2
-      focus-trap-vue: 3.4.0(focus-trap@7.5.2)(vue@3.3.4)
-      popper.js: 1.16.1
-      sortablejs: 1.15.0
-      swrv: 1.0.4(vue@3.3.4)
-      uuid: 8.3.2
-      v-calendar: 3.0.3(vue@3.3.4)
-      vue: 3.3.4
-      vue-draggable-next: 2.2.0(sortablejs@1.15.0)(vue@3.3.4)
-      vue-router: 4.2.4(vue@3.3.4)
-    transitivePeerDependencies:
-      - '@popperjs/core'
-    dev: true
-
   /@kong/kongponents@8.116.2(vue-router@4.2.4)(vue@3.3.4):
     resolution: {integrity: sha512-p+08/xu8PA8P/+eaaXKH+lBVG0irNCFH2BF24gXagyi/VKqNsVy1z+YYUe065MYnalsUgifCFp/xTW2XTLi6Lg==}
     engines: {node: '>=16.19.0'}
     peerDependencies:
-      axios: ^0.27.2
       vue: '>= 3.3.0'
       vue-router: ^4.1.6
     dependencies:
@@ -1769,6 +1764,7 @@ packages:
       vue-router: 4.2.4(vue@3.3.4)
     transitivePeerDependencies:
       - '@popperjs/core'
+      - debug
     dev: true
 
   /@kong/kongponents@8.116.2(vue@3.3.4):

@@ -1,0 +1,64 @@
+{
+  "keySets": {
+    "title": "Key Sets",
+    "list": {
+      "toolbar_actions": {
+        "new_key_set": "New Key Set"
+      },
+      "table_headers": {
+        "name": "Name",
+        "id": "ID",
+        "tags": "Tags"
+      },
+      "empty_state": {
+        "title": "Configure a New Key Set",
+        "description": "A Key Set object holds a collection of asymmetric key objects. This entity allows to logically group keys by their purpose."
+      }
+    },
+    "actions": {
+      "create": "New Key Set",
+      "copy_id": "Copy ID",
+      "copy_json": "Copy JSON",
+      "edit": "Edit",
+      "delete": "Delete",
+      "clear": "Clear",
+      "view": "View Details"
+    },
+    "search": {
+      "placeholder": "Filter by exact name or ID"
+    },
+    "delete": {
+      "title": "Delete a Key Set",
+      "description": "Deleting this key set will also delete keys associated. This action cannot be reversed so make sure to check the key set usage before deleting."
+    },
+    "errors": {
+      "general": "Key sets could not be retrieved",
+      "delete": "The key set could not be deleted at this time.",
+      "copy": "Failed to copy to clipboard"
+    },
+    "copy": {
+      "success": "Copied {val} to clipboard",
+      "success_brief": "Successfully copied to clipboard"
+    },
+    "form": {
+      "sections": {
+        "general": {
+          "title": "General Information",
+          "description": "General information will help identify and manage this key set."
+        }
+      },
+      "fields": {
+        "name": {
+          "label": "Name",
+          "placeholder": "Enter a unique name for this key set"
+        },
+        "tags": {
+          "label": "Tags",
+          "placeholder": "Enter a list of tags separated by comma",
+          "help": "e.g. tag1, tag2, tag3",
+          "tooltip": "An optional set of strings for grouping and filtering, separated by commas."
+        }
+      }
+    }
+  }
+}
