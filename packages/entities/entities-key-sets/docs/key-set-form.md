@@ -21,7 +21,7 @@ A form component for Key Sets.
 
 ### Install
 
-[See instructions for installing the `@kong-ui/entities-key-sets` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/entities-key-sets` package.](../README.md#install)
 
 ### Props
 
@@ -97,11 +97,11 @@ Please refer to the [sandbox](../sandbox/pages/KeySetFormPage.vue). The form is 
 
 ## TypeScript interfaces
 
-TypeScript interfaces [are available here](https://github.com/Kong/shared-ui-components/blob/main/packages/entities/entities-key-sets/src/types/key-set-form.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/entities/entities-key-sets/src/types/key-set-form.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
 import type {
   KonnectKeySetFormConfig,
   KongManagerKeySetFormConfig,
-} from '@kong-ui/entities-key-sets'
+} from '@kong-ui-public/entities-key-sets'
 ```

@@ -22,7 +22,7 @@ A table component for key sets.
 
 ### Install
 
-[See instructions for installing the `@kong-ui/entities-key-sets` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/entities-key-sets` package.](../README.md#install)
 
 ### Props
 
@@ -151,12 +151,12 @@ Please refer to the [sandbox](../sandbox/pages/KeyListPage.vue).
 
 ## TypeScript interfaces
 
-TypeScript interfaces [are available here](https://github.com/Kong/shared-ui-components/blob/main/packages/entities/entities-key-sets/src/types/key-set-list.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/entities/entities-key-sets/src/types/key-set-list.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
 import type {
   BaseKeyListConfig,
   KonnectKeySetListConfig,
   KongManagerKeySetListConfig,
-} from '@kong-ui/entities-key-sets'
+} from '@kong-ui-public/entities-key-sets'
 ```

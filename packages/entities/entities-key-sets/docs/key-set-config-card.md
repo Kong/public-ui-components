@@ -21,7 +21,7 @@ A config card component for Key Sets.
 
 ### Install
 
-[See instructions for installing the `@kong-ui/entities-key-sets` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/entities-key-sets` package.](../README.md#install)
 
 ### Props
 
@@ -101,12 +101,12 @@ Please refer to the [sandbox](../sandbox/pages/KeySetConfigCardPage.vue). The pa
 
 ## TypeScript interfaces
 
-TypeScript interfaces [are available here](https://github.com/Kong/shared-ui-components/blob/main/packages/entities/entities-key-sets/src/types/key-set-config-card.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/entities/entities-key-sets/src/types/key-set-config-card.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
 import type {
   KeySetConfigurationSchema,
   KonnectKeySetEntityConfig,
   KongManagerKeySetEntityConfig,
-} from '@kong-ui/entities-key-sets'
+} from '@kong-ui-public/entities-key-sets'
 ```
