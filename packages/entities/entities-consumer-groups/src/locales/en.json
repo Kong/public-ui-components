@@ -1,0 +1,95 @@
+{
+  "consumer_groups": {
+    "list": {
+      "table_headers": {
+        "name": "Name",
+        "consumers_count": "Consumers",
+        "tags": "Tags",
+        "id": "ID"
+      },
+      "empty_state": {
+        "title": "Configure a New Consumer Group",
+        "description": "Use consumer groups to manage custom rate limiting configuration for subsets of consumers.",
+        "title_for_consumer": "Add to a Consumer Group"
+      },
+      "toolbar_actions": {
+        "new_consumer_group": "New Consumer Group"
+      }
+    },
+    "title": "Consumer Groups",
+    "search": {
+      "placeholder": "Filter by exact name or ID"
+    },
+    "actions": {
+      "add_to_group": "Add to Consumer Group",
+      "create": "New Consumer Group",
+      "copy_id": "Copy ID",
+      "copy_json": "Copy JSON",
+      "edit": "Edit",
+      "delete": "Delete",
+      "exit": "Exit",
+      "view": "View Details"
+    },
+    "delete": {
+      "title": "Delete a Consumer Group",
+      "description": "Deleting this group will remove this group from all plugins and its rate limit configuration. This action cannot be reversed."
+    },
+    "consumers": {
+      "add": {
+        "title": "Add To Consumer Groups",
+        "ctaText": "Add this consumer to consumer groups",
+        "consumer_groups_label": "Consumer Groups",
+        "consumer_group_placeholder": "Add to consumer groups",
+        "footer": "Search by exact name or ID to find consumer groups not included in the list"
+      },
+      "exit": {
+        "title": "Exit from a Consumer Group",
+        "confirmation": "Are you sure you want to remove consumer {consumer} from consumer group {consumerGroup}?",
+        "confirmationNoUsername": "Are you sure you want this consumer to exit from consumer group {consumerGroup}?",
+        "description": "Exiting from the group could change the rate limit policy applied to this consumer."
+      }
+    },
+    "errors": {
+      "general": "Consumer Groups could not be retrieved",
+      "delete": "The consumer group could not be deleted at this time.",
+      "copy": "Failed to copy to clipboard",
+      "add": "The consumer could not be added to some groups at this time.",
+      "already_added": "The consumer is already in this consumer group",
+      "add_consumer": "An unexpected error occurred while adding consumers. Please try again.",
+      "remove_consumer": "An unexpected error occurred while removing consumers. Please try again."
+    },
+    "copy": {
+      "success": "Copied {val} to clipboard",
+      "success_brief": "Successfully copied to clipboard"
+    },
+    "form": {
+      "general_info": {
+        "title": "General Information",
+        "description": "General information will help identify and manage this consumer group."
+      },
+      "consumers": {
+        "title": "Consumers",
+        "description": "Add or remove consumers from this group"
+      },
+      "fields": {
+        "name": {
+          "label": "Name",
+          "placeholder": "Enter a unique name for this consumer group "
+        },
+        "tags": {
+          "label": "Tags",
+          "placeholder": "Enter a list of tags seperated by comma",
+          "help": "e.g. tag1, tag2, tag3",
+          "tooltip": "An optional set of strings for grouping and filtering, separated by commas."
+        },
+        "consumers": {
+          "label": "Consumers",
+          "placeholder": "Select one or more consumers"
+        }
+      },
+      "validation_errors": {
+        "name": "The name can be any string containing letters, numbers, or the following characters: ., -, _, or ~. Do not use spaces."
+      }
+    }
+  }
+}
