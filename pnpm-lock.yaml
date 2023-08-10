@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: false
@@ -535,6 +535,31 @@ importers:
       compare-versions:
         specifier: ^6.0.0
         version: 6.0.0
+    devDependencies:
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../../core/i18n
+      '@kong/design-tokens':
+        specifier: ^1.8.0
+        version: 1.8.0
+      '@kong/kongponents':
+        specifier: ^8.116.2
+        version: 8.116.2(axios@1.4.0)(vue-router@4.2.4)(vue@3.3.4)
+      axios:
+        specifier: ^1.4.0
+        version: 1.4.0
+      vue:
+        specifier: ^3.3.4
+        version: 3.3.4
+      vue-router:
+        specifier: ^4.2.4
+        version: 4.2.4(vue@3.3.4)
+
+  packages/entities/entities-upstreams-targets:
+    dependencies:
+      '@kong-ui-public/entities-shared':
+        specifier: workspace:^
+        version: link:../entities-shared
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
