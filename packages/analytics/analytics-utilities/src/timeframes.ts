@@ -158,7 +158,7 @@ class PreviousMonth extends Timeframe {
   }
 
   rawStart(): Date {
-    const lastMonth = startOfMonth(new Date().setMonth(new Date().getMonth() - 1))
+    const lastMonth = startOfMonth(subMonths(new Date(), 1))
 
     return lastMonth
   }

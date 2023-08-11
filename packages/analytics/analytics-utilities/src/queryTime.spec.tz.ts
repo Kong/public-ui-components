@@ -268,6 +268,31 @@ describe('pseudo-absolute periods', () => {
   })
 })
 
+describe('edge cases around pseudo-absolute periods', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+
+    const fakeNow = new Date('2023-03-31T12:00:00Z')
+
+    standardizeTimezone(fakeNow)
+    vi.setSystemTime(fakeNow)
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('handles February in previous month calculations', () => {
+    const timeQuery = new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH))
+
+    const expectedStart = startOfDay(new Date('2023-02-01T12:00:00Z'))
+    const expectedEnd = startOfDay(new Date('2023-03-01T12:00:00Z'))
+
+    expect(timeQuery.startDate()).toEqual(expectedStart)
+    expect(timeQuery.endDate()).toEqual(expectedEnd)
+  })
+})
+
 describe('queries with mocked dates', () => {
   beforeEach(() => {
     vi.useFakeTimers()
