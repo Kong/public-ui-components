@@ -1,4 +1,4 @@
-# @kong-ui/entities-routes
+# @kong-ui-public/entities-routes
 
 Route entity components.
 
@@ -31,7 +31,7 @@ Reference the [individual component docs](#individual-component-documentation) f
 Install the component in your host application
 
 ```sh
-yarn add @kong-ui/entities-routes
+yarn add @kong-ui-public/entities-routes
 ```
 
 ### Registration
@@ -39,8 +39,8 @@ yarn add @kong-ui/entities-routes
 Import the component(s) in your host application as well as the package styles
 
 ```ts
-import { RouteList, RouteForm, RouteConfigCard } from '@kong-ui/entities-routes'
-import '@kong-ui/entities-routes/dist/style.css'
+import { RouteList, RouteForm, RouteConfigCard } from '@kong-ui-public/entities-routes'
+import '@kong-ui-public/entities-routes/dist/style.css'
 ```
 
 ## Individual component documentation

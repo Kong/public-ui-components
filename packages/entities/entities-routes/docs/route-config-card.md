@@ -21,7 +21,7 @@ A config card component for routes.
 
 ### Install
 
-[See instructions for installing the `@kong-ui/entities-routes` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/entities-routes` package.](../README.md#install)
 
 ### Props
 
@@ -113,11 +113,11 @@ Please refer to the [sandbox](../sandbox/pages/RouteConfigCardPage.vue). The pag
 
 ## TypeScript interfaces
 
-TypeScript interfaces [are available here](https://github.com/Kong/shared-ui-components/blob/main/packages/entities/entities-routes/src/types/route-config-card.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/entities/entities-routes/src/types/route-config-card.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
 import type {
   RouteConfigurationSchema,
   KonnectRouteEntityConfig,
   KongManagerRouteEntityConfig,
-} from '@kong-ui/entities-routes'
+} from '@kong-ui-public/entities-routes'

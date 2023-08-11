@@ -22,7 +22,7 @@ A form component for Routes.
 
 ### Install
 
-[See instructions for installing the `@kong-ui/entities-routes` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/entities-routes` package.](../README.md#install)
 
 ### Props
 
@@ -179,5 +179,5 @@ import type {
   Headers,
   RoutePayload,
   SelectItem
-} from '@kong-ui/entities-routes'
+} from '@kong-ui-public/entities-routes'
 ```
