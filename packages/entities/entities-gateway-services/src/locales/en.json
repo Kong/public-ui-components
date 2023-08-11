@@ -1,0 +1,174 @@
+{
+  "actions": {
+    "create": "New Gateway Service",
+    "copy_id": "Copy ID",
+    "copy_json": "Copy JSON",
+    "edit": "Edit",
+    "clear": "Clear",
+    "view": "View Details",
+    "enable": {
+      "enabled_label": "Enabled",
+      "disabled_label": "Disabled"
+    },
+    "delete": {
+      "title": "Delete a Gateway Service",
+      "description": "Deleting this Gateway Service will also remove any associated routes and plugins. This action cannot be reversed.",
+      "menu_label": "Delete"
+    }
+  },
+  "search": {
+    "placeholder": "Filter by exact name or ID"
+  },
+  "gateway_services": {
+    "title": "Gateway Services",
+    "list": {
+      "toolbar_actions": {
+        "new_gateway_service": "New Gateway Service"
+      },
+      "table_headers": {
+        "name": "Name",
+        "protocol": "Protocol",
+        "host": "Host",
+        "port": "Port",
+        "path": "Path",
+        "enabled": "Enabled",
+        "tags": "Tags",
+        "id": "ID"
+      },
+      "empty_state": {
+        "title": "Configure a New Gateway Service",
+        "description": "Gateway services are used to proxy traffic."
+      }
+    },
+    "form": {
+      "sections": {
+        "general": {
+          "title": "General Information",
+          "description": "General information will help identify and manage this Gateway Service."
+        },
+        "keys": {
+          "title": "Service Endpoint",
+          "description": "Define the endpoint for this service by specifying the full URL or by its separate elements.",
+          "checkedGroupLabel": "Choose how and where to send traffic",
+          "urlLabel": "Upstream URL",
+          "checkedGroupAltLabel": "Protocol, Host, Port and Path",
+          "viewAdvancedFields": "View Advanced Fields"
+        }
+      },
+      "fields": {
+        "upstream_url": {
+          "placeholder": "Enter a URL",
+          "tooltip": "This is the URL of the API you will manage in Konnect."
+        },
+        "name": {
+          "label": "Name",
+          "placeholder": "Enter a unique name",
+          "tooltip": "The Service name."
+        },
+        "protocol": {
+          "label": "Protocol",
+          "tooltip": "The protocol used to communicate with the upstream.",
+          "options": {
+            "http": "http",
+            "https": "https",
+            "tcp": "tcp",
+            "tls": "tls",
+            "tls_passthrough": "tls_passthrough",
+            "grpc": "grpc",
+            "grpcs": "grpcs",
+            "ws": "ws",
+            "wss": "wss",
+            "udp": "udp"
+          }
+        },
+        "host": {
+          "label": "Host",
+          "placeholder": "Enter a host",
+          "tooltip": "The host of the upstream server. Note that the host value is case sensitive."
+        },
+        "path": {
+          "label": "Path",
+          "placeholder": "Enter a path",
+          "tooltip": "The path to be used in request to the upstream server."
+        },
+        "port": {
+          "label": "Port",
+          "tooltip": "The upstream server port."
+        },
+        "retries": {
+          "label": "Retries",
+          "tooltip": "The number of retries to execute upon failure to proxy."
+        },
+        "connect_timeout": {
+          "label": "Connection Timeout",
+          "tooltip": "The timeout in milliseconds for establishing a connection to the upstream server."
+        },
+        "write_timeout": {
+          "label": "Write Timeout",
+          "tooltip": "The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server."
+        },
+        "read_timeout": {
+          "label": "Read Timeout",
+          "tooltip": "The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server."
+        },
+        "client_certificate": {
+          "label": "Client Certificate",
+          "placeholder": "Enter a Certificate ID",
+          "tooltip": "Certificate to be used as client certificate while TLS handshaking to the upstream server."
+        },
+        "ca_certificates": {
+          "label": "CA Certificates",
+          "placeholder": "Enter a comma separated list of CA Certificate IDs",
+          "tooltip": "Array of {code1} object UUIDs that are used to build the trust store while verifying upstream server's TLS certificate. If set to {code2} when Nginx default is respected. If default CA list in Nginx are not specified and TLS verification is enabled, then handshake with upstream server will always fail (because no CA are trusted).",
+          "code1": "CA Certificate",
+          "code2": "null"
+        },
+        "tls_verify_enabled": {
+          "label": "TLS Verify",
+          "help": "If unchecked, use default system setting",
+          "tooltip": "Whether to enable verification of upstream server TLS certificate. If set to {code1}, then the Nginx default is respected.",
+          "code1": "null"
+        },
+        "tls_verify_option": {
+          "unset": {
+            "display": "Use default system setting"
+          },
+          "true": {
+            "label": "True",
+            "display": "On"
+          },
+          "false": {
+            "label": "False",
+            "display": "Off"
+          }
+        },
+        "tags": {
+          "label": "Tags",
+          "tooltip": "An optional set of strings associated with the Service for grouping and filtering.",
+          "placeholder": "Enter a list of tags seperated by comma",
+          "help": "e.g. tag1, tag2, tag3"
+        },
+        "enabled": {
+          "label": "Enabled",
+          "tooltip": "Whether the Service is active. If set to {false}, the proxy behavior will be as if any routes attached to it do not exist (404). Default: {true}.",
+          "false": "false",
+          "true": "true"
+        }
+      }
+    }
+  },
+  "errors": {
+    "general": "Gateway Services could not be retrieved",
+    "delete": "The gateway service could not be deleted at this time.",
+    "copy": "Failed to copy to clipboard",
+    "urlErrorMessage": "Error: invalid URL",
+    "validationNameError": "The name can be any string containing letters, numbers, or the following characters: ., -, _, or ~. Do not use spaces."
+  },
+  "copy": {
+    "success": "Copied {val} to clipboard",
+    "success_brief": "Successfully copied to clipboard"
+  },
+  "glossary": {
+    "gateway_services": "gateway services"
+  }
+}
