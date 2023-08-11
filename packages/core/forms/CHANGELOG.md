@@ -1,0 +1,11 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# [1.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@0.1.3...@kong-ui-public/forms@1.1.0) (2023-08-11)
+
+
+### Features
+
+* **core:** add forms ([#694](https://github.com/Kong/public-ui-components/issues/694)) ([0170e81](https://github.com/Kong/public-ui-components/commit/0170e8109cb001eaa5631adc4f789b6ffbfb10b1))
