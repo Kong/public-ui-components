@@ -1,0 +1,79 @@
+{
+  "actions": {
+    "create": "New SNI",
+    "copy_id": "Copy ID",
+    "copy_json": "Copy JSON",
+    "edit": "Edit",
+    "delete": "Delete",
+    "clear": "Clear",
+    "loading": "Loading..."
+  },
+  "search": {
+    "placeholder": "Filter by exact name or ID",
+    "no_results": "No results found"
+  },
+  "snis": {
+    "title": "SNIs",
+    "list": {
+      "toolbar_actions": {
+        "new": "New SNI"
+      },
+      "table_headers": {
+        "name": "Name",
+        "id": "ID",
+        "certificate_id": "SSL Certificate ID",
+        "tags": "Tags"
+      },
+      "empty_state": {
+        "title": "Configure a New SNI",
+        "description": "SNIs are used to map hostnames to a certificate."
+      }
+    }
+  },
+  "form": {
+    "sections": {
+      "general": {
+        "title": "General Information",
+        "description": "General information will help identify and manage this SNI."
+      },
+      "certificate": {
+        "title": "Certificate",
+        "description": "Map an existing Certificate object to hostnames"
+      }
+    },
+    "fields": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter a unique name for this key set"
+      },
+      "tags": {
+        "label": "Tags",
+        "placeholder": "Enter a list of tags separated by comma",
+        "help": "e.g. tag1, tag2, tag3",
+        "tooltip": "An optional set of strings for grouping and filtering, separated by commas."
+      },
+      "certificate_id": {
+        "label": "SSL Certificate ID",
+        "placeholder": "Enter or select a Certificate ID",
+        "footer": "Search by exact ID to find certificates not included in the list"
+      }
+    }
+  },
+  "delete": {
+    "title": "Delete an SNI",
+    "description": "This action cannot be reversed so make sure to check the SNI usage before deleting."
+  },
+  "errors": {
+    "delete": "The SNI could not be deleted at this time.",
+    "general": "SNIs could not be retrieved",
+    "certificates": {
+      "fetch": "Could not fetch available certificates",
+      "invalid": "Please select a valid certificate ID"
+    },
+    "copy": "Failed to copy to clipboard"
+  },
+  "copy": {
+    "success": "Copied {val} to clipboard",
+    "success_brief": "Successfully copied to clipboard"
+  }
+}
