@@ -86,7 +86,7 @@ const breadcrumbIconSlots = computed((): string[] => {
 
 <style lang="scss" scoped>
 .kong-ui-app-page-header {
-  margin-bottom: $kui-space-50;
+  margin-bottom: $kui-space-70;
 
   .page-header-breadcrumb-divider {
     color: $kui-color-text-neutral-weak;
