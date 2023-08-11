@@ -686,7 +686,7 @@ importers:
         specifier: workspace:^0.8.0
         version: link:../../core/i18n
       '@kong-ui-public/swagger-ui-web-component':
-        specifier: workspace:^0.8.3
+        specifier: workspace:^0.8.4
         version: link:../swagger-ui-web-component
       lodash.clonedeep:
         specifier: ^4.5.0
@@ -2663,6 +2663,7 @@ packages:
 
   /@swagger-api/apidom-ns-json-schema-draft-4@0.74.1:
     resolution: {integrity: sha512-zUQvrxoRQpvdYymHko1nxNeVWwqdGDYNYWUFW/EGZbP0sigKmuSZkh6LdseB9Pxt1WQD/6MkW3zN4JMXt/qFUA==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.5
       '@swagger-api/apidom-ast': 0.74.1
