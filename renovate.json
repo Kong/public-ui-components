@@ -51,6 +51,6 @@
   ],
   "npmrcMerge": true,
   "constraints": {
-    "pnpm": "8.5.1"
+    "pnpm": "8.6.11"
   }
 }
