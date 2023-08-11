@@ -1,0 +1,30 @@
+export default {
+  fields: [
+    {
+      help: 'The input must be in JSON format.',
+      type: 'input',
+      valueArrayType: 'record',
+      inputType: 'text',
+      default: undefined,
+      valueType: 'array',
+      model: 'config-client_jwk',
+      label: 'Config.Client Jwk',
+      order: 0,
+      disabled: false,
+      link: 'https://docs.konghq.com/hub/kong-inc/openid-connect/#jwk-record',
+    },
+    {
+      help: 'The input must be in JSON format.',
+      type: 'input',
+      valueArrayType: 'record',
+      inputType: 'text',
+      default: undefined,
+      valueType: 'array',
+      model: 'config-session_redis_cluster_nodes',
+      label: 'Config.Session Redis Cluster Nodes',
+      order: 0,
+      disabled: false,
+      link: 'https://docs.konghq.com/hub/kong-inc/openid-connect/#host-record',
+    },
+  ],
+}
