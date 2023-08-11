@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.22.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.22.5...@kong-ui-public/app-layout@0.22.6) (2023-08-11)
+
+
+### Bug Fixes
+
+* **app-layout:** add default spacing to AppPageLayout ([#696](https://github.com/Kong/public-ui-components/issues/696)) ([e43c544](https://github.com/Kong/public-ui-components/commit/e43c544f7ccf14ea8d3c8338aefad9965f2719b1))
+
+
+
+
+
 ## [0.22.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.22.4...@kong-ui-public/app-layout@0.22.5) (2023-08-11)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
