@@ -1,0 +1,119 @@
+@mixin hr() {
+  border: 0;
+  border-top: 1px solid var(--black-10, rgba(0, 0, 0, 0.1));
+  margin-bottom: var(--spacing-md, 16px);
+}
+
+@mixin routing-rule() {
+  &-container {
+    &:not(:first-of-type) {
+      margin-top: var(--spacing-lg, 24px);
+    }
+
+    hr {
+      @include hr;
+    }
+  }
+
+  &-input {
+    align-items: center;
+    column-gap: var(--spacing-xs, 8px);
+    display: flex;
+
+    .k-input-wrapper {
+      width: 100%;
+    }
+
+    &:not(:first-of-type) {
+      margin-top: var(--spacing-md, 16px);
+    }
+
+    .methods-input {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm, 12px);
+
+      // stylelint-disable-next-line selector-pseudo-class-no-unknown
+      :deep(label.k-switch) {
+        margin: 0 !important;
+      }
+
+      // stylelint-disable-next-line selector-pseudo-class-no-unknown
+      :deep(.k-button) {
+        margin-left: var(--spacing-sm, 12px) !important;
+
+        &.remove-button {
+          svg path {
+            fill: var(--grey-400, #b6b6bd) !important;
+          }
+
+          &:hover {
+            svg path {
+              fill: var(--red-500, #d44324) !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin routing-rules-selector() {
+  &-container {
+    margin-top: var(--spacing-lg, 24px);
+
+    hr {
+      @include hr;
+    }
+  }
+
+  &-options {
+    align-items: center;
+    background-color: var(--blue-100, #f2f6fe);
+    border: 1px solid var(--blue-400, #3972d5);
+    border-radius: 30px;
+    display: flex;
+    padding: 0 6px;
+    width: fit-content;
+
+    ul {
+      display: flex;
+      margin: 0;
+      padding: 0;
+
+      li {
+        display: inline-flex;
+        list-style: none;
+      }
+    }
+
+    .option {
+      border: 1px solid transparent;
+      border-radius: 19px;
+      box-shadow: none;
+      color: var(--blue-500, #1155cb);
+      cursor: pointer;
+      font-size: var(--type-md, 16px);
+      font-weight: 600;
+      margin: 0;
+      margin-right: var(--spacing-xxs, 4px);
+      padding: var(--spacing-xxs, 4px) 10px;
+      transition: box-shadow 0.2s ease;
+
+      &.is-selected {
+        color: var(--blue-200, #bdd3f9);
+        pointer-events: none;
+        text-decoration: line-through;
+      }
+
+      &:hover {
+        box-shadow: 0px 0px 12px -2px rgba(0, 0, 0, 0.3);
+        transition: box-shadow 0.2s ease;
+
+        &.is-selected {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
