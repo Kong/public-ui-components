@@ -318,9 +318,9 @@ import {
   EntityFormSection,
   EntityBaseForm,
   EntityBaseFormType,
-} from '@kong-ui/entities-shared'
+} from '@kong-ui-public/entities-shared'
 import composables from '../composables'
-import '@kong-ui/entities-shared/dist/style.css'
+import '@kong-ui-public/entities-shared/dist/style.css'
 import { computed, nextTick, onBeforeMount, onMounted, PropType, reactive, ref, watch } from 'vue'
 import {
   KonnectRouteFormConfig,

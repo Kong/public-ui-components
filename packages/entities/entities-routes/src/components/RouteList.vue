@@ -187,7 +187,7 @@ import {
   useAxios,
   useFetcher,
   useDeleteUrlBuilder,
-} from '@kong-ui/entities-shared'
+} from '@kong-ui-public/entities-shared'
 import type {
   KongManagerRouteListConfig,
   KonnectRouteListConfig,
@@ -200,8 +200,8 @@ import type {
   ExactMatchFilterConfig,
   FilterFields,
   FuzzyMatchFilterConfig,
-} from '@kong-ui/entities-shared'
-import '@kong-ui/entities-shared/dist/style.css'
+} from '@kong-ui-public/entities-shared'
+import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,

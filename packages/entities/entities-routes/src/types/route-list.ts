@@ -1,5 +1,5 @@
 import type { RouteLocationRaw } from 'vue-router'
-import { FilterSchema, KongManagerBaseTableConfig, KonnectBaseTableConfig } from '@kong-ui/entities-shared'
+import { FilterSchema, KongManagerBaseTableConfig, KonnectBaseTableConfig } from '@kong-ui-public/entities-shared'
 
 export interface BaseRouteListConfig {
   /** Current service id if the RouteList in nested in the routes tab on a service detail page */

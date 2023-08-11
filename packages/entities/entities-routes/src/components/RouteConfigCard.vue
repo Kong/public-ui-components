@@ -150,11 +150,17 @@
 <script setup lang="ts">
 import { computed, ref, PropType } from 'vue'
 import type { AxiosError } from 'axios'
-import type { KongManagerRouteEntityConfig, KonnectRouteEntityConfig, RouteConfigurationSchema } from '../types'
-import { useAxios, EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType, InternalLinkItem } from '@kong-ui/entities-shared'
+import {
+  useAxios, EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType, InternalLinkItem,
+} from '@kong-ui-public/entities-shared'
+
 import endpoints from '../routes-endpoints'
 import composables from '../composables'
-import '@kong-ui/entities-shared/dist/style.css'
+import type {
+  KongManagerRouteEntityConfig, KonnectRouteEntityConfig, RouteConfigurationSchema,
+} from '../types'
+
+import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
