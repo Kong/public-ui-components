@@ -54,7 +54,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^8.116.2",
+    "@kong/kongponents": "^8.119.0",
     "vue": "^3.3.4"
   },
   "devDependencies": {
