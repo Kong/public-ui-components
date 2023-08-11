@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.5.2...@kong-ui-public/analytics-utilities@0.5.3) (2023-08-11)
+
+
+### Bug Fixes
+
+* **timeframes:** fix bug in previous month calculation [MA-1583] ([#698](https://github.com/Kong/public-ui-components/issues/698)) ([8927ad3](https://github.com/Kong/public-ui-components/commit/8927ad3f6ab0b11790416d55040f869b26ede80b))
+
+
+
+
+
 ## [0.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.5.1...@kong-ui-public/analytics-utilities@0.5.2) (2023-08-11)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
