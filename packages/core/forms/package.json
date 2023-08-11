@@ -1,0 +1,70 @@
+{
+  "name": "@kong-ui-public/forms",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/forms.umd.js",
+  "module": "./dist/forms.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/forms.es.js",
+      "require": "./dist/forms.umd.js"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "cross-env USE_SANDBOX=true vite",
+    "build": "run-s typecheck build:package build:types",
+    "build:package": "vite build -m production",
+    "build:analyzer": "BUILD_VISUALIZER='core/forms' vite build -m production",
+    "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
+    "preview:package": "vite preview --port 4173",
+    "preview": "cross-env USE_SANDBOX=true PREVIEW_SANDBOX=true run-s build:package preview:package",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
+    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore' --fix",
+    "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
+    "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
+    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
+    "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
+    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
+    "test:unit": "cross-env FORCE_COLOR=1 vitest run",
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kong/public-ui-components.git",
+    "directory": "packages/core/forms"
+  },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/core/forms",
+  "author": "Kong, Inc.",
+  "license": "Apache-2.0",
+  "volta": {
+    "extends": "../../../package.json"
+  },
+  "dependencies": {
+    "fecha": "^4.2.3",
+    "lodash": "^4.17.21"
+  },
+  "peerDependencies": {
+    "@kong-ui-public/i18n": "workspace:^",
+    "@kong/kongponents": "^8.116.2",
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@kong-ui-public/i18n": "workspace:^",
+    "@kong/design-tokens": "^1.9.0",
+    "@kong/kongponents": "^8.116.2",
+    "@types/lodash": "^4.14.196",
+    "pug": "^3.0.2"
+  },
+  "distSizeChecker": {
+    "errorLimit": "1.2MB"
+  }
+}

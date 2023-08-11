@@ -30,6 +30,7 @@
 /packages/core/copy-uuid/ @Kong/team-km @Kong/team-core-ui
 /packages/core/i18n/ @adamdehaven @ValeryG @jillztom
 /packages/core/misc-widgets/ @Kong/team-core-ui
+/packages/core/forms/ @Kong/team-km @Kong/team-core-ui
 
 # Portal packages
 /packages/portal/document-viewer/ @Kong/team-devx

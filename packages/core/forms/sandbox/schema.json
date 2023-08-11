@@ -1,0 +1,408 @@
+{
+  "fields": [
+    {
+      "label": "Service",
+      "placeholder": "Select A Service",
+      "type": "AutoSuggest",
+      "valueType": "object-expand",
+      "required": true,
+      "entity": "services",
+      "inputValues": {
+        "fields": [
+          "name",
+          "id"
+        ]
+      },
+      "id": "service-id",
+      "model": "service-id",
+      "order": 0,
+      "disabled": false
+    },
+    {
+      "label": "Name",
+      "type": "input",
+      "inputType": "text",
+      "placeholder": "Enter a Route Name",
+      "help": "The name of the Route. Route names must be unique, and they are case sensitive. For example, there can be two different Routes named \"test\" and \"Test\".",
+      "id": "name",
+      "model": "name",
+      "order": 0,
+      "disabled": false
+    },
+    {
+      "label": "Protocols",
+      "name": "protocols",
+      "array": true,
+      "default": [
+        "http",
+        "https"
+      ],
+      "type": "select",
+      "selectOptions": {
+        "hideNoneSelectedText": true
+      },
+      "required": true,
+      "values": [
+        {
+          "name": "grpc",
+          "id": [
+            "grpc"
+          ],
+          "group": "grpc"
+        },
+        {
+          "name": "grpcs",
+          "id": [
+            "grpcs"
+          ],
+          "group": "grpc"
+        },
+        {
+          "name": "grpc, grpcs",
+          "id": [
+            "grpc",
+            "grpcs"
+          ],
+          "group": "grpc"
+        },
+        {
+          "name": "http",
+          "id": [
+            "http"
+          ],
+          "group": "http",
+          "checked": true
+        },
+        {
+          "name": "https",
+          "id": [
+            "https"
+          ],
+          "group": "http"
+        },
+        {
+          "name": "http, https",
+          "id": [
+            "http",
+            "https"
+          ],
+          "group": "http"
+        },
+        {
+          "name": "tcp",
+          "id": [
+            "tcp"
+          ],
+          "group": "tcp"
+        },
+        {
+          "name": "tls",
+          "id": [
+            "tls"
+          ],
+          "group": "tcp"
+        },
+        {
+          "name": "tcp, tls",
+          "id": [
+            "tcp",
+            "tls"
+          ],
+          "group": "tcp"
+        },
+        {
+          "name": "udp",
+          "id": [
+            "udp"
+          ],
+          "group": "udp"
+        },
+        {
+          "name": "ws",
+          "id": [
+            "ws"
+          ],
+          "group": "websocket",
+          "checked": true
+        },
+        {
+          "name": "wss",
+          "id": [
+            "wss"
+          ],
+          "group": "websocket"
+        },
+        {
+          "name": "ws, wss",
+          "id": [
+            "ws",
+            "wss"
+          ],
+          "group": "websocket"
+        }
+      ],
+      "help": "An array of the protocols this Route should allow. See the [Route Object](#route-object) section for a list of accepted protocols. When set to only `\"https\"`, HTTP requests are answered with an upgrade error. When set to only `\"http\"`, HTTPS requests are answered with an error. ",
+      "id": "protocols",
+      "model": "protocols",
+      "order": 0,
+      "disabled": false
+    },
+    {
+      "label": "SNI(s)",
+      "name": "snis",
+      "type": "input",
+      "submitWhenNull": true,
+      "inputType": "text",
+      "valueType": "array",
+      "valueArrayType": "string",
+      "placeholder": "Enter an SNI",
+      "help": "A list of SNIs that match this Route when using stream routing. ",
+      "id": "snis",
+      "model": "snis",
+      "order": 0,
+      "disabled": false
+    },
+    {
+      "label": "Host(s)",
+      "type": "input",
+      "submitWhenNull": true,
+      "inputType": "text",
+      "valueType": "array",
+      "valueArrayType": "string",
+      "placeholder": "Enter a Host",
+      "help": "A list of domain names that match this Route. Note that the hosts value is case sensitive. ",
+      "id": "hosts",
+      "model": "hosts",
+      "order": 0,
+      "disabled": false
+    },
+    {
+      "type": "array",
+      "showRemoveButton": false,
+      "newElementButtonLabelClasses": "k-button btn-link mt-2 p-2",
+      "itemContainerComponent": "FieldArrayCardContainer",
+      "fieldClasses": "array-card-container-wrapper",
+      "submitWhenNull": true,
+      "newElementButtonLabel": "+ Add Source",
+      "label": "Source(s)",
+      "placeholder": "Enter a Source",
+      "help": "A list of IP sources of incoming connections that match this Route when using stream routing. Each entry is an object with fields \"ip\" (optionally in CIDR range notation) and/or \"port\". ",
+      "items": {
+        "type": "object",
+        "schema": {
+          "fields": [
+            {
+              "label": "IP",
+              "model": "ip",
+              "type": "input",
+              "inputType": "text"
+            },
+            {
+              "label": "Port",
+              "model": "port",
+              "type": "input",
+              "inputType": "number"
+            }
+          ]
+        }
+      },
+      "id": "sources",
+      "model": "sources",
+      "order": 0,
+      "disabled": false
+    },
+    {
+      "type": "array",
+      "showRemoveButton": false,
+      "newElementButtonLabelClasses": "k-button btn-link mt-2 p-2",
+      "itemContainerComponent": "FieldArrayCardContainer",
+      "fieldClasses": "array-card-container-wrapper",
+      "submitWhenNull": true,
+      "newElementButtonLabel": "+ Add Destination",
+      "label": "Destination(s)",
+      "help": "A list of IP destinations of incoming connections that match this Route when using stream routing. Each entry is an object with fields \"ip\" (optionally in CIDR range notation) and/or \"port\". ",
+      "items": {
+        "type": "object",
+        "schema": {
+          "fields": [
+            {
+              "label": "IP",
+              "model": "ip",
+              "type": "input",
+              "inputType": "text"
+            },
+            {
+              "label": "Port",
+              "model": "port",
+              "type": "input",
+              "inputType": "number"
+            }
+          ]
+        }
+      },
+      "id": "destinations",
+      "model": "destinations",
+      "order": 0,
+      "disabled": false
+    },
+    {
+      "label": "Method(s)",
+      "type": "input",
+      "submitWhenNull": true,
+      "inputType": "text",
+      "valueType": "array",
+      "valueArrayType": "string",
+      "placeholder": "Enter a Method",
+      "help": "A list of HTTP methods that match this Route. ",
+      "id": "methods",
+      "model": "methods",
+      "order": 0,
+      "disabled": false
+    },
+    {
+      "type": "array",
+      "itemContainerComponent": "FieldArrayItem",
+      "fieldClasses": "w-100",
+      "fieldItemsClasses": "d-flex mt-2 w-50",
+      "newElementButtonLabelClasses": "mt-2 p-2",
+      "inputAttributes": {
+        "class": "k-input",
+        "style": {
+          "minWidth": "200px"
+        },
+        "placeholder": "Enter a Path"
+      },
+      "removeElementButtonLabel": "remove",
+      "styleClasses": "w-100",
+      "inputType": "text",
+      "valueType": "array",
+      "valueArrayType": "string",
+      "label": "Path(s)",
+      "submitWhenNull": true,
+      "newElementButtonLabel": "+ Add Path",
+      "help": "A list of paths that match this Route. ",
+      "id": "paths",
+      "model": "paths",
+      "order": 0,
+      "disabled": false
+    },
+    {
+      "label": "Headers",
+      "type": "object-advanced",
+      "submitWhenNull": true,
+      "placeholder": "Enter header name",
+      "help": "One or more lists of values indexed by header name that will cause this Route to match if present in the request. The `Host` header cannot be used with this attribute: hosts should be specified using the `hosts` attribute. When `headers` contains only one value and that value starts with the special prefix `~*`, the value is interpreted as a regular expression. ",
+      "buttonLabel": "Header Values",
+      "hintText": "e.g. my-header",
+      "fields": [
+        {
+          "schema": {
+            "type": "input",
+            "inputType": "text",
+            "valueType": "array",
+            "placeholder": "Comma separated list of header values",
+            "hint": "e.g. value1, value2, value 3"
+          }
+        }
+      ],
+      "id": "headers",
+      "model": "headers",
+      "order": 0,
+      "disabled": false
+    },
+    {
+      "label": "HTTPS Redirect Status Code",
+      "type": "select",
+      "name": "https_redirect_status_code",
+      "default": 426,
+      "selectOptions": {
+        "hideNoneSelectedText": true
+      },
+      "values": [
+        426,
+        301,
+        302,
+        307,
+        308
+      ],
+      "help": "The status code Kong responds with when all properties of a Route match except the protocol i.e. if the protocol of the request is `HTTP` instead of `HTTPS`. `Location` header is injected by Kong if the field is set to 301, 302, 307 or 308. ",
+      "id": "https_redirect_status_code",
+      "model": "https_redirect_status_code",
+      "order": 0,
+      "disabled": false
+    },
+    {
+      "label": "Tags",
+      "name": "tags",
+      "type": "input",
+      "inputType": "text",
+      "valueType": "array",
+      "valueArrayType": "string",
+      "placeholder": "Enter list of tags",
+      "help": "An optional set of strings associated with the Route for grouping and filtering. ",
+      "hint": "e.g. tag1, tag2, tag3",
+      "id": "tags",
+      "model": "tags",
+      "order": 0,
+      "disabled": false
+    },
+    {
+      "label": "",
+      "type": "advanced",
+      "inputType": "hidden",
+      "styleClasses": "hide-label",
+      "fields": [
+        {
+          "label": "Regex Priority",
+          "model": "regex_priority",
+          "type": "input",
+          "inputType": "number",
+          "default": 0,
+          "placeholder": "Set a Regex Priority",
+          "styleClasses": "optional",
+          "min": 0,
+          "help": "A number used to choose which route resolves a given request when several routes match it using regexes simultaneously. When two routes match the path and have the same `regex_priority`, the older one (lowest `created_at`) is used. Note that the priority for non-regex routes is different (longer non-regex routes are matched before shorter ones). "
+        },
+        {
+          "label": "Path Handling",
+          "model": "path_handling",
+          "type": "select",
+          "selectOptions": {
+            "hideNoneSelectedText": true
+          },
+          "default": "v0",
+          "values": [
+            {
+              "name": "v0",
+              "id": "v0"
+            },
+            {
+              "name": "v1",
+              "id": "v1"
+            }
+          ],
+          "help": "Controls how the Service path, Route path and requested path are combined when sending a request to the upstream. See above for a detailed description of each behavior. "
+        },
+        {
+          "label": "Strip Path",
+          "model": "strip_path",
+          "type": "checkbox",
+          "submitWhenNull": true,
+          "default": true,
+          "help": "When matching a Route via one of the `paths`, strip the matching prefix from the upstream request URL. "
+        },
+        {
+          "label": "Preserve Host",
+          "model": "preserve_host",
+          "type": "checkbox",
+          "default": false,
+          "help": "When matching a Route via one of the `hosts` domain names, use the request `Host` header in the upstream request headers. If set to `false`, the upstream `Host` header will be that of the Service's `host`. "
+        }
+      ],
+      "id": "advanced",
+      "model": "advanced",
+      "order": 0,
+      "disabled": false
+    }
+  ]
+}

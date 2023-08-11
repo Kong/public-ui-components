@@ -1,0 +1,21 @@
+{
+  "service-id": null,
+  "name": null,
+  "protocols": [
+    "http",
+    "https"
+  ],
+  "snis": null,
+  "hosts": null,
+  "sources": null,
+  "destinations": null,
+  "methods": null,
+  "paths": null,
+  "headers": {},
+  "https_redirect_status_code": 426,
+  "tags": null,
+  "regex_priority": 0,
+  "path_handling": "v0",
+  "strip_path": true,
+  "preserve_host": false
+}
