@@ -1010,19 +1010,19 @@ defineExpose({ saveFormData, getPayload })
       justify-content: center;
 
       .protocol-title {
-        font-size: var(--type-md, 16px);
+        font-size: $kui_font_size_40;
 
         &:not(:first-child) {
           &::before {
             content: '/';
-            margin-right: var(--spacing-xs, 8px);
-            padding-left: var(--spacing-xs, 8px);
+            margin-right: $kui_space_40;
+            padding-left: $kui_space_40;
           }
         }
       }
       .routing-rules-title {
-        font-size: var(--type-md, 16px);
-        margin-left: var(--spacing-xs, 8px);
+        font-size: $kui_font_size_40;
+        margin-left: $kui_space_40;
       }
     }
 
@@ -1031,13 +1031,13 @@ defineExpose({ saveFormData, getPayload })
     }
 
     &-advanced-fields-container {
-      margin-top: var(--spacing-lg, 24px);
+      margin-top: $kui_space_80;
     }
 
     &-fields-container {
       > * {
         &:not(:first-child) {
-          margin-top: var(--spacing-lg, 24px);
+          margin-top: $kui_space_80;
         }
       }
     }

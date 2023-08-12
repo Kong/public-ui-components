@@ -1,13 +1,13 @@
 @mixin hr() {
   border: 0;
-  border-top: 1px solid var(--black-10, rgba(0, 0, 0, 0.1));
-  margin-bottom: var(--spacing-md, 16px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: $kui_space_60;
 }
 
 @mixin routing-rule() {
   &-container {
     &:not(:first-of-type) {
-      margin-top: var(--spacing-lg, 24px);
+      margin-top: $kui_space_80;
     }
 
     hr {
@@ -17,7 +17,7 @@
 
   &-input {
     align-items: center;
-    column-gap: var(--spacing-xs, 8px);
+    column-gap: $kui_space_40;
     display: flex;
 
     .k-input-wrapper {
@@ -25,13 +25,13 @@
     }
 
     &:not(:first-of-type) {
-      margin-top: var(--spacing-md, 16px);
+      margin-top: $kui_space_60;
     }
 
     .methods-input {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--spacing-sm, 12px);
+      gap: $kui_space_50;
 
       // stylelint-disable-next-line selector-pseudo-class-no-unknown
       :deep(label.k-switch) {
@@ -40,16 +40,16 @@
 
       // stylelint-disable-next-line selector-pseudo-class-no-unknown
       :deep(.k-button) {
-        margin-left: var(--spacing-sm, 12px) !important;
+        margin-left: $kui_space_50 !important;
 
         &.remove-button {
           svg path {
-            fill: var(--grey-400, #b6b6bd) !important;
+            fill: $kui_color_border_neutral_weak !important;
           }
 
           &:hover {
             svg path {
-              fill: var(--red-500, #d44324) !important;
+              fill: $kui_color_border_danger_weak !important;
             }
           }
         }
@@ -60,7 +60,7 @@
 
 @mixin routing-rules-selector() {
   &-container {
-    margin-top: var(--spacing-lg, 24px);
+    margin-top: $kui_space_80;
 
     hr {
       @include hr;
@@ -69,8 +69,8 @@
 
   &-options {
     align-items: center;
-    background-color: var(--blue-100, #f2f6fe);
-    border: 1px solid var(--blue-400, #3972d5);
+    background-color: $kui_color_background_primary_weakest;
+    border: 1px solid $kui_color_border_primary_weak;
     border-radius: 30px;
     display: flex;
     padding: 0 6px;
@@ -91,17 +91,17 @@
       border: 1px solid transparent;
       border-radius: 19px;
       box-shadow: none;
-      color: var(--blue-500, #1155cb);
+      color: $kui_color_text_primary_strong;
       cursor: pointer;
-      font-size: var(--type-md, 16px);
+      font-size: $kui_font_size_40;
       font-weight: 600;
       margin: 0;
-      margin-right: var(--spacing-xxs, 4px);
-      padding: var(--spacing-xxs, 4px) 10px;
+      margin-right: $kui_space_20;
+      padding: $kui_space_20 10px;
       transition: box-shadow 0.2s ease;
 
       &.is-selected {
-        color: var(--blue-200, #bdd3f9);
+        color: $kui_color_border_primary_weaker;
         pointer-events: none;
         text-decoration: line-through;
       }

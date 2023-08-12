@@ -18,7 +18,7 @@
     >
       <template #icon>
         <KIcon
-          color="var(--blue-500)"
+          :color="KUI_COLOR_TEXT_PRIMARY_STRONG"
           icon="plus"
           size="22"
         />
@@ -28,6 +28,8 @@
 </template>
 
 <script setup lang="ts">
+import { KUI_COLOR_TEXT_PRIMARY_STRONG } from '@kong/design-tokens'
+
 defineProps({
   routingRulesEntity: {
     type: String,
@@ -49,12 +51,12 @@ defineEmits(['remove', 'add'])
   :deep(.k-button) {
     &.remove-button {
       svg path {
-        fill: var(--grey-400, #b6b6bd) !important;
+        fill: $kui_color_border_neutral_weak !important;
       }
 
       &:hover {
         svg path {
-          fill: var(--red-500, #d44324) !important;
+          fill: $kui_color_border_danger_weak !important;
         }
       }
     }
@@ -68,7 +70,7 @@ defineEmits(['remove', 'add'])
     }
 
     &:not(:first-of-type) {
-      margin-left: var(--spacing-sm, 12px) !important;
+      margin-left: $kui_space_50 !important;
     }
   }
 }

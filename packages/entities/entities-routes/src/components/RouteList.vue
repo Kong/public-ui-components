@@ -48,8 +48,8 @@
           <KBadge
             v-for="protocol in rowValue"
             :key="protocol"
-            background-color="var(--grey-200, #f1f1f5)"
-            color="var(--grey-500, #6F7787)"
+            :background-color="KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST"
+            :color="KUI_COLOR_TEXT_NEUTRAL"
             @click.stop
           >
             {{ protocol }}
@@ -61,8 +61,8 @@
           <KBadge
             v-for="host in rowValue"
             :key="host"
-            background-color="var(--grey-200, #f1f1f5)"
-            color="var(--grey-500, #6f7787)"
+            :background-color="KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST"
+            :color="KUI_COLOR_TEXT_NEUTRAL"
             :truncation-tooltip="host"
             @click.stop
           >
@@ -89,8 +89,8 @@
           <KBadge
             v-for="path in rowValue"
             :key="path"
-            background-color="var(--grey-200, #f1f1f5)"
-            color="var(--grey-500, #6f7787)"
+            :background-color="KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST"
+            :color="KUI_COLOR_TEXT_NEUTRAL"
             :truncation-tooltip="path"
             @click.stop
           >
@@ -174,9 +174,11 @@
 import { computed, PropType, ref, watch, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
-import composables from '../composables'
-import endpoints from '../routes-endpoints'
-import { getMethodBadgeColors } from '../utilities'
+
+import {
+  KUI_COLOR_TEXT_NEUTRAL, KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST,
+} from '@kong/design-tokens'
+
 import {
   EntityBaseTable,
   EntityDeleteModal,
@@ -202,6 +204,10 @@ import type {
   FuzzyMatchFilterConfig,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
+
+import composables from '../composables'
+import endpoints from '../routes-endpoints'
+import { getMethodBadgeColors } from '../utilities'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
