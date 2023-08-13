@@ -244,8 +244,8 @@ importers:
   packages/analytics/analytics-metric-provider:
     dependencies:
       '@kong-ui-public/analytics-utilities':
-        specifier: ^0.4.3
-        version: 0.4.3
+        specifier: workspace:^
+        version: link:../analytics-utilities
       '@kong-ui-public/core':
         specifier: 1.1.0
         version: 1.1.0(axios@1.4.0)(swrv@1.0.4)(vue@3.3.4)
@@ -1815,12 +1815,6 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
-
-  /@kong-ui-public/analytics-utilities@0.4.3:
-    resolution: {integrity: sha512-2mlYatUIRRFq5m6cVhALv34BExF6/TpC9X9Y3uPdiYZso8HoKagB+MnSwTbkUIdxU0oUHgfxoIPBa8OwttzKxg==}
-    dependencies:
-      date-fns: 2.30.0
-    dev: false
 
   /@kong-ui-public/core@1.1.0(axios@1.4.0)(swrv@1.0.4)(vue@3.3.4):
     resolution: {integrity: sha512-j1kK07/zDyxwePi1EX1rZ+3iL955VdhZiodzeT5ift7iVQTiPt9VNUFu9+IXJ/AxHfuYu/gaL+gily9TsJTX3w==}
