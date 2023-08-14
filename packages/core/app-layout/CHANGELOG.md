@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.22.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.22.9...@kong-ui-public/app-layout@0.22.10) (2023-08-14)
+
+
+### Bug Fixes
+
+* **app-layout:** hide navbar logo on mobile ([bd9bd48](https://github.com/Kong/public-ui-components/commit/bd9bd4878252ebede713b154bb65eca39a514815))
+
+
+
+
+
 ## [0.22.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.22.8...@kong-ui-public/app-layout@0.22.9) (2023-08-14)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
