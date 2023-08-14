@@ -1,0 +1,119 @@
+@mixin hr() {
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: $kui_space_60;
+}
+
+@mixin routing-rule() {
+  &-container {
+    &:not(:first-of-type) {
+      margin-top: $kui_space_80;
+    }
+
+    hr {
+      @include hr;
+    }
+  }
+
+  &-input {
+    align-items: center;
+    column-gap: $kui_space_40;
+    display: flex;
+
+    .k-input-wrapper {
+      width: 100%;
+    }
+
+    &:not(:first-of-type) {
+      margin-top: $kui_space_60;
+    }
+
+    .methods-input {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $kui_space_50;
+
+      // stylelint-disable-next-line selector-pseudo-class-no-unknown
+      :deep(label.k-switch) {
+        margin: 0 !important;
+      }
+
+      // stylelint-disable-next-line selector-pseudo-class-no-unknown
+      :deep(.k-button) {
+        margin-left: $kui_space_50 !important;
+
+        &.remove-button {
+          svg path {
+            fill: $kui_color_border_neutral_weak !important;
+          }
+
+          &:hover {
+            svg path {
+              fill: $kui_color_border_danger_weak !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin routing-rules-selector() {
+  &-container {
+    margin-top: $kui_space_80;
+
+    hr {
+      @include hr;
+    }
+  }
+
+  &-options {
+    align-items: center;
+    background-color: $kui_color_background_primary_weakest;
+    border: 1px solid $kui_color_border_primary_weak;
+    border-radius: 30px;
+    display: flex;
+    padding: 0 6px;
+    width: fit-content;
+
+    ul {
+      display: flex;
+      margin: 0;
+      padding: 0;
+
+      li {
+        display: inline-flex;
+        list-style: none;
+      }
+    }
+
+    .option {
+      border: 1px solid transparent;
+      border-radius: 19px;
+      box-shadow: none;
+      color: $kui_color_text_primary_strong;
+      cursor: pointer;
+      font-size: $kui_font_size_40;
+      font-weight: 600;
+      margin: 0;
+      margin-right: $kui_space_20;
+      padding: $kui_space_20 10px;
+      transition: box-shadow 0.2s ease;
+
+      &.is-selected {
+        color: $kui_color_border_primary_weaker;
+        pointer-events: none;
+        text-decoration: line-through;
+      }
+
+      &:hover {
+        box-shadow: 0px 0px 12px -2px rgba(0, 0, 0, 0.3);
+        transition: box-shadow 0.2s ease;
+
+        &.is-selected {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}

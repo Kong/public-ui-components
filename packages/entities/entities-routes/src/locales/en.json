@@ -1,0 +1,227 @@
+{
+  "actions": {
+    "create": "New Route",
+    "copy_id": "Copy ID",
+    "copy_json": "Copy JSON",
+    "edit": "Edit",
+    "delete": "Delete",
+    "clear": "Clear",
+    "view": "View Details",
+    "loading": "Loading..."
+  },
+  "search": {
+    "placeholder": "Filter by exact name or ID",
+    "no_results": "No results found"
+  },
+  "routes": {
+    "title": "Routes",
+    "list": {
+      "toolbar_actions": {
+        "new_route": "New Route"
+      },
+      "table_headers": {
+        "name": "Name",
+        "protocols": "Protocols",
+        "hosts": "Hosts",
+        "methods": "Methods",
+        "paths": "Paths",
+        "expression": "Expression",
+        "id": "ID",
+        "tags": "Tags"
+      },
+      "empty_state": {
+        "title": "Configure a New Route",
+        "description": "Routes proxy requests to an associated Service."
+      }
+    }
+  },
+  "delete": {
+    "title": "Delete a Route",
+    "description": "Deleting this route will also remove any associated plugins. This action cannot be reversed."
+  },
+  "errors": {
+    "general": "Routes could not be retrieved",
+    "delete": "The route could not be deleted at this time.",
+    "copy": "Failed to copy to clipboard",
+    "services": {
+      "fetch": "Could not fetch available services"
+    }
+  },
+  "copy": {
+    "success": "Copied {val} to clipboard",
+    "success_brief": "Successfully copied to clipboard"
+  },
+  "form": {
+    "protocols": {
+      "grpc": "GRPC",
+      "grpcs": "GRPCS",
+      "grpc,grpcs": "GRPC, GRPCS",
+      "http": "HTTP",
+      "https": "HTTPS",
+      "http,https": "HTTP, HTTPS",
+      "tls": "TLS",
+      "tcp": "TCP",
+      "udp": "UDP",
+      "tls,udp": "TLS, UDP",
+      "tcp,udp": "TCP, UDP",
+      "tcp,tls": "TCP, TLS",
+      "tcp,tls,udp": "TCP, TLS, UDP",
+      "ws": "WS",
+      "wss": "WSS",
+      "ws,wss": "WS, WSS",
+      "tls_passthrough": "TLS_PASSTHROUGH"
+    },
+    "sections": {
+      "general": {
+        "title": "General Information",
+        "description": "General information will help you identify and manage this route"
+      },
+      "config": {
+        "title": "Route Configuration",
+        "description": "Route configuration determines how this route will handle incoming requests"
+      },
+      "routingRules": {
+        "title": "Routing Rules"
+      }
+    },
+    "fields": {
+      "service_id": {
+        "label": "Service",
+        "placeholder": "Select a service"
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter a unique name",
+        "tooltip": "The name of the Route. Route names must be unique, and they are case sensitive. For example, there can be two different Routes named 'test' and 'Test'."
+      },
+      "service": {
+        "label": "Gateway Service",
+        "tooltip": "The Service this Route is associated to. This is where the Route proxies traffic to."
+      },
+      "tags": {
+        "label": "Tags",
+        "tooltip": "An optional set of strings associated with the Route for grouping and filtering.",
+        "placeholder": "Enter a list of tags separated by commas",
+        "help": "e.g. tag1, tag2, tag3"
+      },
+      "protocols": {
+        "label": "Protocols",
+        "tooltip": "Routes have a protocols property to restrict the client protocol they should listen for.",
+        "tooltipConfig": "An array of the protocols this Route should allow. See the {code1} section for a list of accepted protocols. When set to only {code2}, HTTP requests are answered with an upgrade error. When it is set to only {code3}, this is essentially the same as {code4} in that both HTTP and HTTPS requests are allowed. Default: {code5}.",
+        "code1": "Route Object",
+        "code2": "https",
+        "code3": "http",
+        "code4": "['http', 'https']",
+        "code5": "['http', 'https']"
+      },
+      "path_handling": {
+        "label": "Path Handling",
+        "tooltip": "This treats service.path, route.path and request path as segments of a URL.",
+        "tooltipConfig": "Controls how the Service path, Route path and requested path are combined when sending a request to the upstream. See above for a detailed description of each behavior."
+      },
+      "https_redirect_status_code": {
+        "label": "HTTPS Redirect Status Code",
+        "tooltip": "The status code Kong responds with when all properties of a Route match except the protocol i.e. if the protocol of the request is {code1} instead of {code2}. {code3}  header is injected by Kong if the field is set to 301, 302, 307 or 308. Note: This config applies only if the Route is configured to only accept the {code4} protocol.",
+        "code1": "HTTP",
+        "code2": "HTTPS",
+        "code3": "Location",
+        "code4": "https"
+      },
+      "regex_priority": {
+        "label": "Regex Priority",
+        "tooltip": "A number used to choose which route resolves a given request when several routes match it using regexes simultaneously. When two routes match the path and have the same {code1}, the older one (lowest {code2}) is used. Note that the priority for non-regex routes is different (longer non-regex routes are matched before shorter ones).",
+        "code1": "regex_priority",
+        "code2": "created_at"
+      },
+      "strip_path": {
+        "label": "Strip Path",
+        "tooltip": "When matching a Route via one of the {code1}, strip the matching prefix from the upstream request URL.",
+        "code1": "paths"
+      },
+      "preserve_host": {
+        "label": "Preserve Host",
+        "tooltip": "When matching a Route via one of the {code1} domain names, use the request {code2} header in the upstream request headers. If set to {code3}, the upstream {code4} header will be that of the Service's {code5}.",
+        "code1": "hosts",
+        "code2": "Host",
+        "code3": "false",
+        "code4": "Host",
+        "code5": "host"
+      },
+      "paths": {
+        "label": "Paths",
+        "placeholder": "Enter a path",
+        "tooltip": "AA list of paths that match this Route."
+      },
+      "snis": {
+        "label": "SNIs",
+        "placeholder": "Enter a SNI",
+        "tooltip": "A list of SNIs (Server Name Indications from a TLS ClientHello) that match this Route."
+      },
+      "hosts": {
+        "label": "Hosts",
+        "placeholder": "Enter a host",
+        "tooltip": "A list of domain names that match this Route.",
+        "tooltipConfig": "A list of domain names that match this Route. Note that the hosts value is case sensitive."
+      },
+      "methods": {
+        "label": "Methods",
+        "tooltip": "A list of HTTP methods that match this Route.",
+        "custom": {
+          "label": "Custom",
+          "placeholder": "Enter a custom method",
+          "tooltip": "Custom methods can be used with default selections. Uppercase characters are required."
+        }
+      },
+      "headers": {
+        "label": "Headers",
+        "tooltip": "Header values can be separated by commas (value1, value2, value3).",
+        "name": {
+          "placeholder": "Enter a header name"
+        },
+        "values": {
+          "placeholder": "Enter a header value"
+        },
+        "tooltipConfig": "One or more lists of values indexed by header name that will cause this Route to match if present in the request. The {code1} header cannot be used with this attribute: hosts should be specified using the {code2} attribute. When {code3} contains only one value and that value starts with the special prefix {code4], the value is interpreted as a regular expression.",
+        "code1": "Host",
+        "code2": "hosts",
+        "code3": "headers",
+        "code4": "*"
+      },
+      "sources": {
+        "label": "Sources",
+        "tooltip": "A list of IP sources of incoming connections that match this Route when using stream routing.",
+        "ip": {
+          "placeholder": "Enter a source IP"
+        },
+        "port": {
+          "placeholder": "Enter a source port"
+        }
+      },
+      "destinations": {
+        "label": "Destinations",
+        "tooltip": "A list of IP destinations of incoming connections that match this Route when using stream routing.",
+        "ip": {
+          "placeholder": "Enter a destination IP"
+        },
+        "port": {
+          "placeholder": "Enter a destination port"
+        }
+      },
+      "response_buffering": {
+        "label": "Response buffering",
+        "tooltip": "Whether to enable response body buffering or not. With HTTP 1.1, it may make sense to turn this off on services that send data with chunked transfer encoding."
+      },
+      "request_buffering": {
+        "label": "Request buffering",
+        "tooltip": "Whether to enable request body buffering or not. With HTTP 1.1, it may make sense to turn this off on services that receive data with chunked transfer encoding."
+      }
+    },
+    "viewAdvancedFields": "View Advanced Fields",
+    "addNewRule": "Add New Rule",
+    "warning": {
+      "rulesMessage": "For {protocol}, at least one of {routingRules} must be set.",
+      "singleRule": "{routingRules}",
+      "multipleRules": "{routingRules} or {lastRoutingRule}"
+    }
+  }
+}
