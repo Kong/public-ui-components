@@ -314,6 +314,14 @@ onBeforeUnmount(() => {
         text-decoration: none;
       }
     }
+
+    .navbar-logo {
+      display: none;
+
+      @media (min-width: $kui-breakpoint-tablet) {
+        display: block;
+      }
+    }
   }
 
   .kong-ui-app-layout-main {
