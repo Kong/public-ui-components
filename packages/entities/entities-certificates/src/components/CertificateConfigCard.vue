@@ -1,0 +1,284 @@
+<template>
+  <div class="kong-ui-certificate-entity-config-card">
+    <EntityBaseConfigCard
+      :config="config"
+      :config-schema="(configSchema as any)"
+      :fetch-url="fetchUrl"
+      :hide-title="hideTitle"
+      @copy:success="(entity: any) => $emit('copy:success', entity)"
+      @fetch:error="(err: any) => $emit('fetch:error', err)"
+      @fetch:success="handleFetch"
+      @loading="(val: boolean) => $emit('loading', val)"
+    >
+      <template #cert-label-tooltip>
+        <i18nT
+          keypath="certificates.form.fields.cert.tooltip"
+          scope="global"
+        >
+          <template #emphasis>
+            <i>{{ t('certificates.form.fields.cert.emphasis') }}</i>
+          </template>
+        </i18nT>
+      </template>
+      <template #cert="{ rowValue }">
+        <KCodeBlock
+          :id="`certificate-${config.entityId}-cert-codeblock`"
+          :code="rowValue"
+          is-single-line
+          language="plaintext"
+        />
+      </template>
+      <template #key-label-tooltip>
+        <i18nT
+          keypath="certificates.form.fields.key.tooltip"
+          scope="global"
+        >
+          <template #emphasis>
+            <i>{{ t('certificates.form.fields.key.emphasis') }}</i>
+          </template>
+        </i18nT>
+      </template>
+
+      <!-- Certificate metadata -->
+      <template #metadata="{ rowValue }">
+        <ConfigCardItem
+          v-for="propKey in Object.keys(rowValue)"
+          :key="propKey"
+          :item="{
+            key: propKey,
+            value: getMetadataValue(propKey, rowValue),
+            label: getMetadataLabel(propKey),
+            type: (propKey === 'key_usages' || propKey === 'snis' || propKey === 'dns_names') ? ConfigurationSchemaType.BadgeTag : ConfigurationSchemaType.Text
+          }"
+        />
+      </template>
+      <template
+        v-if="!hasSnis"
+        #snis
+      >
+        &ndash;
+      </template>
+      <template #expiry>
+        {{ expiry || '&ndash;' }}
+      </template>
+      <template #issuer>
+        {{ issuer || '&ndash;' }}
+      </template>
+      <template #san_names>
+        {{ sanNames || '&ndash;' }}
+      </template>
+      <template #subject>
+        {{ subject || '&ndash;' }}
+      </template>
+
+      <!-- Advanced Fields -->
+      <template #cert_alt-label-tooltip>
+        <i18nT
+          keypath="certificates.form.fields.cert_alt.tooltip"
+          scope="global"
+        >
+          <template #emphasis>
+            <i>{{ t('certificates.form.fields.cert_alt.emphasis') }}</i>
+          </template>
+        </i18nT>
+      </template>
+      <template
+        v-if="hasCertAlt"
+        #cert_alt="{ rowValue }"
+      >
+        <KCodeBlock
+          :id="`certificate-${config.entityId}-cert-alt-codeblock`"
+          :code="rowValue"
+          is-single-line
+          language="plaintext"
+        />
+      </template>
+
+      <template #key_alt-label-tooltip>
+        <i18nT
+          keypath="certificates.form.fields.key_alt.tooltip"
+          scope="global"
+        >
+          <template #emphasis>
+            <i>{{ t('certificates.form.fields.key_alt.emphasis') }}</i>
+          </template>
+        </i18nT>
+      </template>
+
+      <template #key_usages>
+        <div v-if="!keyUsages.length">
+          {{ '&ndash;' }}
+        </div>
+        <KBadge
+          v-for="(tag, idx) in keyUsages"
+          :key="`key_usages-badge-tag-${idx}`"
+          class="config-badge"
+          :data-testid="`key_usages-badge-tag-${idx}`"
+          :truncation-tooltip="tag"
+        >
+          {{ tag }}
+        </KBadge>
+      </template>
+    </EntityBaseConfigCard>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, ref, PropType } from 'vue'
+import type { AxiosError } from 'axios'
+import type { KongManagerCertificateEntityConfig, KonnectCertificateEntityConfig, CertificateConfigurationSchema, EntityRow } from '../types'
+import { EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType, ConfigCardItem, useStringHelpers } from '@kong-ui-public/entities-shared'
+import endpoints from '../certificates-endpoints'
+import composables from '../composables'
+import '@kong-ui-public/entities-shared/dist/style.css'
+
+const emit = defineEmits<{
+  (e: 'loading', isLoading: boolean): void
+  (e: 'fetch:error', error: AxiosError): void,
+  (e: 'fetch:success', data: Record<string, any>): void,
+  (e: 'copy:success', data: Record<string, any>): void,
+}>()
+
+// Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
+const props = defineProps({
+  /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+  config: {
+    type: Object as PropType<KonnectCertificateEntityConfig | KongManagerCertificateEntityConfig>,
+    required: true,
+    validator: (config: KonnectCertificateEntityConfig | KongManagerCertificateEntityConfig): boolean => {
+      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (config.app === 'konnect' && !config.controlPlaneId) return false
+      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config.entityId) return false
+      return true
+    },
+  },
+  /**
+   * Control visibility of card title content
+   */
+  hideTitle: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const { i18n: { t, formatUnixTimeStamp }, i18nT } = composables.useI18n()
+const { convertKeyToTitle } = useStringHelpers()
+const { getCertificateData } = composables.useCertificate()
+
+const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
+const record = ref<EntityRow>()
+
+const configSchema = ref<CertificateConfigurationSchema>({
+  // basic fields
+  id: {},
+  cert: {
+    section: ConfigurationSchemaSection.Basic,
+  },
+  key: {
+    section: ConfigurationSchemaSection.Basic,
+    type: ConfigurationSchemaType.Redacted,
+  },
+  metadata: {
+    section: ConfigurationSchemaSection.Basic,
+    type: ConfigurationSchemaType.Json,
+  },
+  snis: {
+    section: ConfigurationSchemaSection.Basic,
+    type: ConfigurationSchemaType.BadgeTag,
+    label: t('certificates.list.table_headers.snis'),
+  },
+  updated_at: {},
+  created_at: {},
+  tags: {
+    tooltip: t('certificates.form.fields.tags.tooltip'),
+  },
+  ...(props.config.app === 'kongManager' && {
+    expiry: {
+      section: ConfigurationSchemaSection.Basic,
+      label: t('certificates.list.table_headers.expiry'),
+      // @ts-ignore TODO: Confirm if this is correct
+      forceShow: true,
+    },
+    issuer: {
+      section: ConfigurationSchemaSection.Basic,
+      label: t('certificates.list.table_headers.issuer'),
+      forceShow: true,
+    },
+    san_names: {
+      section: ConfigurationSchemaSection.Basic,
+      label: t('certificates.list.table_headers.san'),
+      forceShow: true,
+    },
+    subject: {
+      section: ConfigurationSchemaSection.Basic,
+      label: t('certificates.list.table_headers.subject'),
+      forceShow: true,
+    },
+    key_usages: {
+      forceShow: true,
+    },
+  }),
+  // advanced fields
+  cert_alt: {
+    section: ConfigurationSchemaSection.Advanced,
+  },
+  key_alt: {
+    section: ConfigurationSchemaSection.Advanced,
+    type: ConfigurationSchemaType.Redacted,
+  },
+})
+
+// because we need record data to parse cert data, assign it to local ref
+const handleFetch = (entity: Record<string, any>) => {
+  record.value = entity as EntityRow
+  emit('fetch:success', entity)
+}
+
+/**
+ * Parsing Certificate Logic
+ */
+
+const parsedCertData = computed(() => {
+  if (!record.value) {
+    return undefined
+  }
+
+  return getCertificateData(record.value)
+})
+
+const expiry = computed((): string => parsedCertData.value?.schemaExpiry ? formatUnixTimeStamp(parsedCertData.value?.schemaExpiry) : '')
+const issuer = computed((): string => parsedCertData.value?.schemaIssuer || '')
+const sanNames = computed((): string => parsedCertData.value?.schemaSanNames || '')
+const subject = computed((): string => parsedCertData.value?.schemaSubject || '')
+const keyUsages = computed((): string[] => parsedCertData.value?.schemaKeyUsages || [])
+
+const hasSnis = computed((): boolean => {
+  return record?.value?.snis?.length > 0
+})
+
+const hasCertAlt = computed((): boolean => {
+  return !!record?.value?.cert_alt
+})
+
+const getMetadataLabel = (propKey: string) => {
+  if (propKey === 'san_names') {
+    return t('certificates.list.table_headers.san')
+  }
+
+  // @ts-ignore - TODO: Fix type interface
+  return configSchema.value?.[propKey as keyof typeof configSchema.value]?.label || convertKeyToTitle(propKey)
+}
+
+const getMetadataValue = (propKey: string, row: Record<string, any>) => {
+  return propKey === 'expiry' ? expiry.value : propKey === 'key_usages' ? keyUsages.value : propKey === 'san_names' ? sanNames.value : row[propKey]
+}
+</script>
+
+<style lang="scss" scoped>
+.kong-ui-certificate-entity-config-card {
+  :deep(.config-badge) {
+    margin-right: $kui-space-20;
+  }
+}
+</style>
