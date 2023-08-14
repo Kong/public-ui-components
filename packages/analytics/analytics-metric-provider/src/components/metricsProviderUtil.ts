@@ -16,7 +16,7 @@ export const METRICS_PROVIDER_KEY = Symbol('METRICS_PROVIDER_KEY') as InjectionK
 interface FetcherOptions {
   dimension?: EXPLORE_V2_DIMENSIONS
   dimensionFilterValue?: string
-  additionalFilter: Ref<ExploreV2Filter[] | undefined>
+  additionalFilter: ExploreV2Filter[] | undefined
   queryReady: Ref<boolean>
   timeframe: Ref<Timeframe>
   hasTrendAccess: boolean
@@ -54,8 +54,8 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
       })
     }
 
-    if (additionalFilter.value) {
-      retval.push(...additionalFilter.value)
+    if (additionalFilter) {
+      retval.push(...additionalFilter)
     }
 
     return retval

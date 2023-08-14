@@ -64,7 +64,7 @@ const {
 } = defaultFetcherDefs({
   dimension: props.dimension as (EXPLORE_V2_DIMENSIONS | undefined),
   dimensionFilterValue: props.filterValue,
-  additionalFilter: toRef(props, 'additionalFilter'),
+  additionalFilter: props.additionalFilter,
   queryReady: toRef(props, 'queryReady'),
   timeframe,
   hasTrendAccess: props.hasTrendAccess,
