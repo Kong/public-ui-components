@@ -1,0 +1,397 @@
+{
+  "actions": {
+    "create": "New Plugin",
+    "copy_id": "Copy ID",
+    "copy_json": "Copy JSON",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View Details",
+    "configure_dynamic_ordering": "Configure Dynamic Ordering"
+  },
+  "delete": {
+    "title": "Delete Plugin",
+    "description": "Are you sure you want to delete this plugin? This action cannot be reversed."
+  },
+  "copy": {
+    "success": "Copied {val} to clipboard",
+    "success_brief": "Successfully copied to clipboard",
+    "tooltip": "Copy {label}",
+    "success_tooltip": "Copied!"
+  },
+  "errors": {
+    "general": "Plugins could not be retrieved",
+    "delete": "The plugin could not be deleted at this time.",
+    "copy": "Failed to copy to clipboard"
+  },
+  "search": {
+    "placeholder": {
+      "konnect": "Filter by exact instance name or ID"
+    },
+    "filter": {
+      "field": {
+        "enabled": "Enabled"
+      }
+    }
+  },
+  "plugins": {
+    "title": "Plugins",
+    "list": {
+      "toolbar_actions": {
+        "new_plugin": "New Plugin"
+      },
+      "table_headers": {
+        "applied_to": "Applied To",
+        "applied_to_badges": {
+          "consumer": "Consumer",
+          "global": "Global",
+          "route": "Route",
+          "service": "Service"
+        },
+        "id": "ID",
+        "name": "Name",
+        "instance_name": "Instance Name",
+        "ordering": "Ordering",
+        "ordering_badge": {
+          "dynamic": "Dynamic",
+          "static": "Static"
+        },
+        "status": "Status",
+        "status_label": {
+          "enabled": "Enabled",
+          "disabled": "Disabled"
+        },
+        "tags": "Tags"
+      },
+      "empty_state": {
+        "title": "Configure a New Plugin",
+        "description": "Improve the security of your Kong Gateway deployment with centralized secrets."
+      }
+    },
+    "meta": {
+      "basic-auth": {
+        "name": "Basic Authentication",
+        "description": "Add Basic Authentication to your Services"
+      },
+      "hmac-auth": {
+        "name": "HMAC Authentication",
+        "description": "Add HMAC Authentication to your Services"
+      },
+      "jwt-signer": {
+        "name": "JWT Signer",
+        "description": "Verify and (re-)sign one or two tokens in a request"
+      },
+      "jwt": {
+        "name": "JWT",
+        "description": "Verify and authenticate JSON Web Tokens"
+      },
+      "key-auth": {
+        "name": "Key Authentication",
+        "description": "Add key authentication to your Services"
+      },
+      "key-auth-enc": {
+        "name": "Key Authentication Encrypted",
+        "description": "Add key authentication to your Services with an encrypted token"
+      },
+      "ldap-auth-advanced": {
+        "name": "LDAP Authentication Advanced",
+        "description": "Integrate Kong with a LDAP server"
+      },
+      "ldap-auth": {
+        "name": "LDAP Authentication",
+        "description": "Integrate Kong with a LDAP server"
+      },
+      "oauth2-introspection": {
+        "name": "OAuth 2.0 Introspection",
+        "description": "Integrate Kong with a third-party OAuth 2.0 Authorization Server"
+      },
+      "oauth2": {
+        "name": "OAuth 2.0 Authentication",
+        "description": "Add OAuth 2.0 authentication to your Services"
+      },
+      "openid-connect": {
+        "name": "OpenID Connect",
+        "description": "Integrate Kong with a third-party OpenID Connect 1.0 Provider"
+      },
+      "mtls-auth": {
+        "name": "Mutual TLS Authentication",
+        "description": "Secure routes and services with client certificate and mutual TLS authentication"
+      },
+      "vault-auth": {
+        "name": "Vault Authentication",
+        "description": "Secure routes and services with an access token and secret token, stored securely via Vault"
+      },
+      "bot-detection": {
+        "name": "Bot Detection",
+        "description": "Detect and clock bots or custom clients"
+      },
+      "cors": {
+        "name": "CORS",
+        "description": "Allow developers to make requests from the browser"
+      },
+      "ip-restriction": {
+        "name": "IP Restriction",
+        "description": "Whitelist or blacklist IPs that can make requests"
+      },
+      "opa": {
+        "name": "OPA",
+        "description": "Authorize requests against Open Policy Agent"
+      },
+      "kubernetes-sidecar-injector": {
+        "name": "Kubernetes Sidecar Injector",
+        "description": "This plugin will inject Kong dataplane nodes and form a service mesh on top of Kubernetes"
+      },
+      "request-validator": {
+        "name": "Request Validator",
+        "description": "Validate requests before they reach their upstream Service. "
+      },
+      "acl": {
+        "name": "ACL",
+        "description": "Control which consumers can access Services"
+      },
+      "canary": {
+        "name": "Canary Release",
+        "description": "Methodically roll out software changes to a subset of users"
+      },
+      "forward-proxy": {
+        "name": "Forward Proxy",
+        "description": "Allow Kong to connect to intermediary transparent HTTP proxies"
+      },
+      "proxy-cache": {
+        "name": "Proxy Caching",
+        "description": "Cache and serve commonly requested responses in Kong"
+      },
+      "proxy-cache-advanced": {
+        "name": "Proxy Caching Advanced",
+        "description": "Cache and serve commonly requested responses in Kong"
+      },
+      "graphql-proxy-cache-advanced": {
+        "name": "GraphQL Proxy Caching Advanced",
+        "description": "Cache and serve commonly requested responses in Kong"
+      },
+      "rate-limiting-advanced": {
+        "name": "Rate Limiting Advanced",
+        "description": "Rate-limit how many HTTP requests a developer can make"
+      },
+      "rate-limiting": {
+        "name": "Rate Limiting",
+        "description": "Rate-limit how many HTTP requests a developer can make"
+      },
+      "graphql-rate-limiting-advanced": {
+        "name": "GraphQL Rate Limiting Advanced",
+        "description": "Rate-limit how many HTTP requests a developer can make"
+      },
+      "mocking": {
+        "name": "Mocking",
+        "description": "Provide mock endpoints to test your APIs in development against your services"
+      },
+      "request-size-limiting": {
+        "name": "Request Size Limiting",
+        "description": "Block requests with bodies greater than a specific size"
+      },
+      "request-termination": {
+        "name": "Request Termination",
+        "description": "Terminate all requests with a specific response"
+      },
+      "response-ratelimiting": {
+        "name": "Response Rate Limiting",
+        "description": "Rate-Limiting based on a custom response header value"
+      },
+      "route-by-header": {
+        "name": "Route by Header",
+        "description": "Route requests based on request headers"
+      },
+      "aws-lambda": {
+        "name": "AWS Lambda",
+        "description": "Invoke and manage AWS Lambda functions from Kong"
+      },
+      "azure-functions": {
+        "name": "Azure Functions",
+        "description": "Invoke Azure functions"
+      },
+      "openwhisk": {
+        "name": "OpenWhisk",
+        "description": "Invoke and manage OpenWhisk actions from Kong"
+      },
+      "pre-function": {
+        "name": "Kong Functions (Pre-Plugins)",
+        "description": "Add and manage custom lua functions to run before other plugins"
+      },
+      "post-function": {
+        "name": "Kong Functions (Post-Plugins)",
+        "description": "Add and manage custom lua functions to run after other plugins"
+      },
+      "datadog": {
+        "name": "Datadog",
+        "description": "Visualize metrics on Datadog"
+      },
+      "prometheus": {
+        "name": "Prometheus",
+        "description": "Export performance metrics to Prometheus"
+      },
+      "zipkin": {
+        "name": "Zipkin",
+        "description": "Propagate zipkin spans and report spans to a zipkin server"
+      },
+      "collector": {
+        "name": "Collector",
+        "description": "Automate spec-driven development & anomaly detection (Early Access)"
+      },
+      "response-transformer-advanced": {
+        "name": "Response Transformer Advanced",
+        "description": "Transform the response sent by the upstream server on the fly on Kong, before returning the response to the client."
+      },
+      "correlation-id": {
+        "name": "Correlation ID",
+        "description": "Correlate requests and responses using a unique ID"
+      },
+      "request-transformer-advanced": {
+        "name": "Request Transformer Advanced",
+        "description": "Use powerful regular expressions, variables and templates to transform API requests"
+      },
+      "request-transformer": {
+        "name": "Request Transformer",
+        "description": "Modify the request before hitting the upstream server"
+      },
+      "response-transformer": {
+        "name": "Response Transformer",
+        "description": "Modify the upstream response before returning it to the client"
+      },
+      "route-transformer-advanced": {
+        "name": "Route Transformer Advanced",
+        "description": "Transforms the routing on the fly in Kong, changing the upstream server/port/path to hit"
+      },
+      "kafka-upstream": {
+        "name": "Kafka Upstream",
+        "description": "Transform requests into Kafka messages in a topic"
+      },
+      "degraphql": {
+        "name": "DeGraphQL",
+        "description": "Transform a GraphQL upstream into a REST API"
+      },
+      "exit-transformer": {
+        "name": "Exit Transformer",
+        "description": "Customize Kong exit responses sent downstream"
+      },
+      "jq": {
+        "name": "jq",
+        "description": "Transform JSON objects included in API requests or responses using jq programs"
+      },
+      "file-log": {
+        "name": "File Log",
+        "description": "Append request and response data to a log file on disk"
+      },
+      "http-log": {
+        "name": "HTTP Log",
+        "description": "Send request and response logs to an HTTP server"
+      },
+      "loggly": {
+        "name": "Loggly",
+        "description": "Send request and response logs to Loggly"
+      },
+      "statsd-advanced": {
+        "name": "StatsD Advanced",
+        "description": "Send traffic and Kong performance metrics to StatsD"
+      },
+      "statsd": {
+        "name": "StatsD",
+        "description": "Send request and response logs to StatsD"
+      },
+      "syslog": {
+        "name": "Syslog",
+        "description": "Send request and response logs to Syslog"
+      },
+      "tcp-log": {
+        "name": "TCP Log",
+        "description": "Send request and response logs to a TCP server"
+      },
+      "udp-log": {
+        "name": "UDP Log",
+        "description": "Send request and response logs to a UDP server"
+      },
+      "kafka-log": {
+        "name": "Kafka Log",
+        "description": "Publish request and response logs to a Kafka topic"
+      },
+      "session": {
+        "name": "Session",
+        "description": "Sessions for Kong authentication"
+      },
+      "upstream-tls": {
+        "name": "Upstream TLS",
+        "description": "Enable TLS on upstream traffic by providing Kong with a list of trusted certificates."
+      },
+      "application-registration": {
+        "name": "Portal Application Registration",
+        "description": "Allow portal developers to register applications against services"
+      },
+      "konnect-application-auth": {
+        "name": "Konnect Application Auth",
+        "description": "Allow Konnect portal developers to register applications against services"
+      },
+      "acme": {
+        "name": "ACME",
+        "description": "Let's Encrypt and ACMEv2 integration with Kong"
+      },
+      "grpc-gateway": {
+        "name": "gRPC Gateway",
+        "description": "Access gRPC services through HTTP REST"
+      },
+      "grpc-web": {
+        "name": "gRPC Web",
+        "description": "Allow browser clients to call gRPC services"
+      },
+      "upstream-timeout": {
+        "name": "Upstream Timeout",
+        "description": "Configure read, send and connect timeouts to an upstream"
+      },
+      "opentelemetry": {
+        "name": "OpenTelemetry",
+        "description": "Propagate distributed tracing spans and report low-level spans to a OTLP-compatible server"
+      },
+      "websocket-validator": {
+        "name": "WebSocket Validator",
+        "description": "Validate individual WebSocket messages against to a user-specified schema before proxying them"
+      },
+      "websocket-size-limit": {
+        "name": "WebSocket Size Limit",
+        "description": "Allows operators to specify a maximum size for incoming WebSocket messages"
+      },
+      "tls-metadata-headers": {
+        "name": "TLS Metadata Headers",
+        "description": "Detects client certificates in requests, retrieves the TLS metadata, and proxies this metadata via HTTP headers"
+      },
+      "tls-handshake-modifier": {
+        "name": "TLS Handshake Modifier",
+        "description": "Requests the client certificate and if it exists, makes it available to other plugins acting on the request"
+      },
+      "oas-validation": {
+        "name": "OAS Validation",
+        "description": "Validate HTTP requests and responses based on an API Specification."
+      },
+      "jwe-decrypt": {
+        "name": "Kong JWE Decrypt",
+        "description": "The Kong JWE Decrypt plugin makes it possible to decrypt an inbound token(JWE) in a request."
+      },
+      "xml-threat-protection": {
+        "name": "XML Threat Protection",
+        "description": "Reduce the risk of XML attacks by checking the structure of XML payloads."
+      },
+      "saml": {
+        "name": "SAML",
+        "description": "Security Assertion Markup Language (SAML) is an open standard for exchanging authentication and authorization data between an identity provider and a service provider."
+      },
+      "app-dynamics": {
+        "name": "AppDynamics",
+        "description": "This plugin integrates Kong with the AppDynamics APM platform so that proxy requests handled by Kong can be identified and analyzed in AppDynamics."
+      }
+    },
+    "fields": {
+      "service": "Service ID",
+      "route": "Route ID",
+      "consumer": "Consumer ID"
+    }
+  },
+  "glossary": {
+    "plugin": "plugin"
+  }
+}

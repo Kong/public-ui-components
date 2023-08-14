@@ -574,6 +574,43 @@ importers:
         specifier: ^4.2.4
         version: 4.2.4(vue@3.3.4)
 
+  packages/entities/entities-plugins:
+    dependencies:
+      '@kong-ui-public/copy-uuid':
+        specifier: workspace:^
+        version: link:../../core/copy-uuid
+      '@kong-ui-public/entities-consumers':
+        specifier: workspace:^
+        version: link:../entities-consumers
+      '@kong-ui-public/entities-gateway-services':
+        specifier: workspace:^
+        version: link:../entities-gateway-services
+      '@kong-ui-public/entities-routes':
+        specifier: workspace:^
+        version: link:../entities-routes
+      '@kong-ui-public/entities-shared':
+        specifier: workspace:^
+        version: link:../entities-shared
+    devDependencies:
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../../core/i18n
+      '@kong/design-tokens':
+        specifier: ^1.9.0
+        version: 1.9.0
+      '@kong/kongponents':
+        specifier: ^8.119.0
+        version: 8.122.2(axios@1.4.0)(vue-router@4.2.4)(vue@3.3.4)
+      axios:
+        specifier: ^1.4.0
+        version: 1.4.0
+      vue:
+        specifier: ^3.3.4
+        version: 3.3.4
+      vue-router:
+        specifier: ^4.2.4
+        version: 4.2.4(vue@3.3.4)
+
   packages/entities/entities-routes:
     dependencies:
       '@kong-ui-public/entities-shared':
