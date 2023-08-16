@@ -180,6 +180,13 @@
       :chart-options="simpleChartOptions"
       :legend-position="legendPosition"
     />
+    <TopNTable
+      v-if="exploreResult"
+      :data="exploreResult"
+      data-key="StatusCode"
+      description="Last 30-Day Summary"
+      title="Top 5 Status Codes"
+    />
 
     <!-- Dataset options -->
     <div class="dataset-options">
@@ -287,7 +294,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { AnalyticsChart, ChartMetricDisplay, ChartLegendPosition, ChartTypes, ChartTypesSimple, SimpleChart } from '../src'
+import { AnalyticsChart, ChartMetricDisplay, ChartLegendPosition, ChartTypes, ChartTypesSimple, SimpleChart, TopNTable } from '../src'
 import type { AnalyticsExploreRecord, AnalyticsExploreV2Meta, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions, SimpleChartOptions } from '../src/types'
 import { SeededRandom } from './SeedRandom'
@@ -295,8 +302,6 @@ import { rand } from './utils'
 import { lookupDatavisColor } from '../src/utils'
 import { lookupStatusCodeColor } from '../src/utils/customColors'
 
-// why is eslint unused vars broken?? ¯\_(ツ)_/¯
-/* eslint-disable no-unused-vars */
 enum Metrics {
   TotalRequests = 'TotalRequests',
   LatencyP99 = 'LatencyP99',
