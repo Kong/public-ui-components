@@ -107,8 +107,9 @@ const getValue = (record: AnalyticsExploreRecord): string => {
 
 <style lang="scss" scoped>
 .kong-ui-public-top-n-table {
-  --KCardTitleColor: #0B172D;
-  --KCardTitleFontSize: 16px;
+  // TODO: use correct tokens
+  /* --KCardTitleColor: #0B172D;
+  --KCardTitleFontSize: 16px; */
 
   .top-n-card-description {
     color: #6F7787;
@@ -117,15 +118,15 @@ const getValue = (record: AnalyticsExploreRecord): string => {
   }
 
   .top-n-table {
-    width: 100%;
     display: flex;
     flex-direction: column;
+    width: 100%;
 
     .table-row {
-      display: flex;
       border-bottom: 1px solid #E7E7EC;
-      padding: 15px;
+      display: flex;
       justify-content: space-between;
+      padding: 15px;
     }
 
     .column-2 {
