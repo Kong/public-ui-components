@@ -37,13 +37,13 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^0.4.2",
-    "@kong/kongponents": "^8.122.0",
+    "@kong/kongponents": "^8.122.1",
     "vue": "^3.3.4"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^0.8.0",
     "@kong/design-tokens": "^1.9.0",
-    "@kong/kongponents": "^8.122.0",
+    "@kong/kongponents": "^8.122.1",
     "vue": "^3.3.4"
   },
   "repository": {
