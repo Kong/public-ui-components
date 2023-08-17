@@ -312,12 +312,21 @@ jobs:
           install: false
           command: pnpm run test:component:ci --spec ${{ matrix.container }}
 
+      - name: Normalize test results artifact name
+        continue-on-error: true
+        if: failure()
+        id: normalize-name
+        shell: bash
+        run: |
+          packageName=$(echo ${{ matrix.container }} | sed 's/\//-/g')
+          echo "artifactName=component-test-failures-${packageName}" >> $GITHUB_OUTPUT
+
       - name: Upload Component Test Results
         uses: actions/upload-artifact@v3
         continue-on-error: true
         if: failure()
         with:
-          name: component-test-failures-${{ matrix.container }}
+          name: ${{ steps.normalize-name.outputs.artifactName }}
           path: |
             cypress/videos/
             cypress/screenshots/
