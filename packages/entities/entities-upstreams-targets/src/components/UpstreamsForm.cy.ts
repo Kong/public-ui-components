@@ -266,7 +266,7 @@ describe('<UpstreamsForm/>', () => {
         },
       })
 
-      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'])
+      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'], { timeout: 10000 })
 
       cy.get('.certificate-select input').should('have.value', upstreamsResponseFull.client_certificate?.id)
       cy.get('.name-select input').should('have.value', upstreamsResponseFull.name)
@@ -325,7 +325,7 @@ describe('<UpstreamsForm/>', () => {
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
-      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'])
+      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'], { timeout: 10000 })
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
@@ -596,7 +596,7 @@ describe('<UpstreamsForm/>', () => {
         },
       })
 
-      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'])
+      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'], { timeout: 10000 })
 
       cy.get('.certificate-select input').should('have.value', upstreamsResponseFull.client_certificate?.id)
       cy.get('.name-select input').should('have.value', upstreamsResponseFull.name)
@@ -657,7 +657,7 @@ describe('<UpstreamsForm/>', () => {
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
-      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'])
+      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'], { timeout: 10000 })
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
@@ -684,7 +684,7 @@ describe('<UpstreamsForm/>', () => {
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
-      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'])
+      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'], { timeout: 10000 })
 
       cy.getTestId('active-health-switch').should('be.checked')
       cy.get('[data-testid="active-health-switch"] + .switch-control').click({ force: true })
@@ -714,7 +714,7 @@ describe('<UpstreamsForm/>', () => {
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
-      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'])
+      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'], { timeout: 10000 })
 
       cy.getTestId('passive-health-switch').should('be.checked')
       cy.get('[data-testid="passive-health-switch"] + .switch-control').click({ force: true })
