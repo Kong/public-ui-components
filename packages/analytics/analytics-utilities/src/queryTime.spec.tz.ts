@@ -602,12 +602,12 @@ runUtcTest('UTC: timezone handling', () => {
 
   it('calculates relative dates in a local, positive-offset timezone', () => {
     // Sanity check
-    expect(formatInTimeZone(new Date(), 'Africa/Cairo', 'yyyy-MM-dd HH:mm:ssXXX')).toBe('2023-11-09 03:00:00+02:00')
+    expect(formatInTimeZone(new Date(), 'Europe/Sofia', 'yyyy-MM-dd HH:mm:ssXXX')).toBe('2023-11-09 03:00:00+02:00')
 
-    const deltaQuery = new DeltaQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY), 'Africa/Cairo')
-    const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY), 'Africa/Cairo')
+    const deltaQuery = new DeltaQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY), 'Europe/Sofia')
+    const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY), 'Europe/Sofia')
 
-    // Unary and delta end times should be the start of the _next_ day in Cairo time.
+    // Unary and delta end times should be the start of the _next_ day in Bulgarian time.
     expect(unaryQuery.endDate()).toEqual(new Date('2023-11-09T22:00:00.000Z'))
     expect(deltaQuery.endDate()).toEqual(new Date('2023-11-09T22:00:00.000Z'))
 
@@ -620,14 +620,14 @@ runUtcTest('UTC: timezone handling', () => {
   })
 
   it('calculates current week in a local, positive-offset timezone', () => {
-    const deltaQuery = new DeltaQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK), 'Africa/Cairo')
-    const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK), 'Africa/Cairo')
+    const deltaQuery = new DeltaQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK), 'Europe/Sofia')
+    const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK), 'Europe/Sofia')
 
     // Unary and delta end times should be rounded up to the nearest day.
     expect(unaryQuery.endDate()).toEqual(new Date('2023-11-09T22:00:00.000Z'))
     expect(deltaQuery.endDate()).toEqual(new Date('2023-11-09T22:00:00.000Z'))
 
-    // Unary start times should be the start of the first day of the current week in Cairo time.
+    // Unary start times should be the start of the first day of the current week in Bulgarian time.
     expect(unaryQuery.startDate()).toEqual(new Date('2023-11-05T22:00:00.000Z'))
 
     // Delta start times are tricky; the existing behavior is to just match the length of the timeframe rather than
@@ -637,53 +637,58 @@ runUtcTest('UTC: timezone handling', () => {
   })
 
   it('calculates previous week in a local, positive-offset timezone', () => {
-    const deltaQuery = new DeltaQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK), 'Africa/Cairo')
-    const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK), 'Africa/Cairo')
+    const deltaQuery = new DeltaQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK), 'Europe/Sofia')
+    const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK), 'Europe/Sofia')
 
     // Unary and delta end times should be the start of the current week.
     expect(unaryQuery.endDate()).toEqual(new Date('2023-11-05T22:00:00.000Z'))
     expect(deltaQuery.endDate()).toEqual(new Date('2023-11-05T22:00:00.000Z'))
 
-    // Unary start times should be the start of the first day of the previous week in Cairo time.
+    // Unary start times should be the start of the first day of the previous week in Bulgarian time.
     expect(unaryQuery.startDate()).toEqual(new Date('2023-10-29T22:00:00.000Z'))
 
     // Delta start times are tricky; the existing behavior is to just match the length of the timeframe rather than
     // actually comparing to the full previous week.
-    expect(deltaQuery.startDate()).toEqual(new Date('2023-10-22T22:00:00.000Z'))
+    // This is extended to the nearest day, which in this case results in a different hour offset due to DST.
+    expect(deltaQuery.startDate()).toEqual(new Date('2023-10-22T21:00:00.000Z'))
     expect(deltaQuery.granularitySeconds()).toBe(unaryQuery.granularitySeconds())
   })
 
   it('calculates current month in a local, positive-offset timezone', () => {
-    const deltaQuery = new DeltaQueryTime(getTimePeriod(TimeframeKeys.CURRENT_MONTH), 'Africa/Cairo')
-    const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.CURRENT_MONTH), 'Africa/Cairo')
+    const deltaQuery = new DeltaQueryTime(getTimePeriod(TimeframeKeys.CURRENT_MONTH), 'Europe/Sofia')
+    const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.CURRENT_MONTH), 'Europe/Sofia')
 
     // Unary and delta end times should be rounded up to the nearest day.
     expect(unaryQuery.endDate()).toEqual(new Date('2023-11-09T22:00:00.000Z'))
     expect(deltaQuery.endDate()).toEqual(new Date('2023-11-09T22:00:00.000Z'))
 
-    // Unary start times should be the start of the first day of the current month in Cairo time.
+    // Unary start times should be the start of the first day of the current month in Bulgarian time.
     expect(unaryQuery.startDate()).toEqual(new Date('2023-10-31T22:00:00.000Z'))
 
     // Delta start times are tricky; the existing behavior is to just match the length of the timeframe rather than
     // actually comparing to the full previous month.
-    expect(deltaQuery.startDate()).toEqual(new Date('2023-10-22T22:00:00.000Z'))
+    // This is extended to the nearest day, which in this case results in a different hour offset due to DST.
+    expect(deltaQuery.startDate()).toEqual(new Date('2023-10-22T21:00:00.000Z'))
     expect(deltaQuery.granularitySeconds()).toBe(unaryQuery.granularitySeconds())
   })
 
   it('calculates previous month in a local, positive-offset timezone', () => {
-    const deltaQuery = new DeltaQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH), 'Africa/Cairo')
-    const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH), 'Africa/Cairo')
+    const deltaQuery = new DeltaQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH), 'Europe/Sofia')
+    const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH), 'Europe/Sofia')
 
     // Unary and delta end times should be the start of the current month.
     expect(unaryQuery.endDate()).toEqual(new Date('2023-10-31T22:00:00.000Z'))
     expect(deltaQuery.endDate()).toEqual(new Date('2023-10-31T22:00:00.000Z'))
 
-    // Unary start times should be the start of the first day of the previous month in Cairo time.
-    expect(unaryQuery.startDate()).toEqual(new Date('2023-09-30T22:00:00.000Z'))
+    // Unary start times should be the start of the first day of the previous month in Bulgarian time.
+    // Bulgaria has a DST transition on 10/28, so this is now a different hour offset.
+    expect(unaryQuery.startDate()).toEqual(new Date('2023-09-30T21:00:00.000Z'))
 
     // Delta start times are tricky; the existing behavior is to just match the length of the timeframe rather than
     // actually comparing to the full previous month.
-    expect(deltaQuery.startDate()).toEqual(new Date('2023-08-30T22:00:00.000Z'))
+    // DST introduces an odd edge case where the timeframe length is N days + 1 hour.  We basically round the timeframe
+    // up to the nearest day, so we end up with N+1 days.
+    expect(deltaQuery.startDate()).toEqual(new Date('2023-08-29T21:00:00.000Z'))
 
     expect(deltaQuery.granularitySeconds()).toBe(unaryQuery.granularitySeconds())
   })
