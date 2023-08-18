@@ -113,9 +113,10 @@ export default defineConfig({
     coverage: {
       reporter: ['text', 'json', 'html'],
     },
-    deps: {
-      registerNodeLoader: true, // Ensure modules are imported properly
-    },
+    // TODO: The `registerNodeLoader` setting is deprecated. Commenting out for now but if tests start failing we need to utilize the new `deps.optimizer.web.include` instead
+    // deps: {
+    //   registerNodeLoader: true, // Ensure modules are imported properly
+    // },
     include: ['**/src/**/*.spec.ts'],
     exclude: [
       '**/dist/**',
@@ -211,4 +212,3 @@ export const getApiProxies = (pathToRoot: string = '../../../.') => {
     },
   }
 }
-
