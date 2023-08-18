@@ -60,14 +60,19 @@ jobs:
           echo "run-tests=${{ (github.event_name == 'push' && steps.up-to-date.outputs.status == 'true') && 'false' || 'true' }}"
           echo "run-tests=${{ (github.event_name == 'push' && steps.up-to-date.outputs.status == 'true') && 'false' || 'true' }}" >> $GITHUB_OUTPUT
 
-
-      # if we detect the change in pnpm-lock.yaml - we need to build every package
-      # see 'changed_packages' bellow
-      - name: Check for pnpm-lock change
-        id: lock-changed
-        uses: ahmadnassri/action-changed-files@v1
+      # If we detect changes in any of the config files (e.g. lockfile, shared cypress configs, etc.), we need to build every package
+      # See 'changed_packages' below
+      - name: Check for config file changes
+        id: config-files-changed
+        uses: tj-actions/changed-files@v37
         with:
-          pathspec: pnpm-lock.yaml
+          files: |
+            ./vite.config.shared.ts
+            ./cypress.config.ts
+            ./cypress/**
+            ./pnpm-lock.yaml
+            ./eslintrc.cjs
+            ./.stylelintrc.js
 
       - name: Verify no packages are in the wrong scope and have the correct publishConfig.access
         run: |
@@ -77,8 +82,8 @@ jobs:
           # we execute lerna changed to grab all the packages changed
           lernaCommand="changed"
 
-          # if lock-changed detects the change of pnpm-lock.yaml file - we will grap all the packages
-          if [[ "${{ steps.lock-changed.outputs.changed }}" == "true" ]]; then
+          # if config-files-changed detects the change of pnpm-lock.yaml file - we will grab all the packages
+          if [[ "${{ steps.config-files-changed.outputs.any_modified }}" == "true" ]]; then
             lernaCommand="ls"
           fi
 
@@ -109,8 +114,8 @@ jobs:
           # we execute lerna changed to grab all the packages changed
           lernaCommand="changed"
 
-          # if lock-changed detects the change of pnpm-lock.yaml file - we will grap all the packages
-          if [[ "${{ steps.lock-changed.outputs.changed }}" == "true" ]]; then
+          # if config-files-changed detects the change of pnpm-lock.yaml file - we will grab all the packages
+          if [[ "${{ steps.config-files-changed.outputs.any_modified }}" == "true" ]]; then
             lernaCommand="ls"
           fi
 
