@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.2.5...@kong-ui-public/entities-shared@1.2.6) (2023-08-18)
+
+
+### Bug Fixes
+
+* **deps:** update dependency compare-versions to ^6.1.0 ([#717](https://github.com/Kong/public-ui-components/issues/717)) ([e38d5a2](https://github.com/Kong/public-ui-components/commit/e38d5a209b031825661555dea7a93ff0557d8ad1))
+
+
+
+
+
 ## [1.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.2.4...@kong-ui-public/entities-shared@1.2.5) (2023-08-18)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
