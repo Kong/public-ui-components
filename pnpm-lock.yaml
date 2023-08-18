@@ -42,7 +42,7 @@ importers:
         specifier: ^21.1.1
         version: 21.1.1
       '@types/node':
-        specifier: ^18.17.3
+        specifier: ^18.17.4
         version: 18.17.5
       '@types/uuid':
         specifier: ^9.0.2
