@@ -69,13 +69,13 @@ export class Timeframe {
 
   // rawEnd does not consider granularity and should not be used directly in queries.
   // Use `new QueryTime(timeframe, granularity?).queryEndSeconds()` instead.
-  rawEnd(_tz?: string): Date {
+  rawEnd(): Date {
     return this._endCustom || new Date()
   }
 
   // rawStart does not consider granularity and should not be used directly in queries.
   // Use `new QueryTime(timeframe, granularity?).queryStartSeconds()` instead.
-  rawStart(_tz?: string): Date {
+  rawStart(): Date {
     return this._startCustom || new Date(this.rawEnd().getTime() - this.timeframeLengthMs())
   }
 
