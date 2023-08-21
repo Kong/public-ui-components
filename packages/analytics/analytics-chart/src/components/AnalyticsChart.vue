@@ -12,7 +12,7 @@
           v-if="hasValidChartData && resultSetTruncated && maxEntitiesShown"
           class="tooltip"
           max-width="500"
-          placement="bottom"
+          placement="right"
         >
           <div class="limit-icon-wrapper">
             <KIcon
