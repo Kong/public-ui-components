@@ -11,14 +11,16 @@ import { Timeframe } from './timeframes'
 
 abstract class BaseQueryTime implements QueryTime {
   protected readonly timeframe: Timeframe
+  protected readonly tz?: string
 
-  constructor(timeframe: Timeframe) {
-    // This is basically an abstract class.
+  constructor(timeframe: Timeframe, tz?: string) {
+    // This is an abstract class.
     if (this.constructor === BaseQueryTime) {
       throw new Error('BaseQueryTime is not meant to be used directly.')
     }
 
     this.timeframe = timeframe
+    this.tz = tz
   }
 
   abstract startDate(): Date
@@ -35,13 +37,15 @@ abstract class BaseQueryTime implements QueryTime {
       // Custom timeframes need special handling since it's hard to calculate the timeframe length.
       // For example, a custom timeframe that starts on 1/1 and ends on 1/1 has a length of 1 day, not 0.
       const ceilEnd = this.endDate()
-      const floorStart = floorToNearestTimeGrain(this.timeframe.rawStart(), granularity)
+      const rawStart = this.timeframe.rawStart(this.tz)
+      const floorStart = floorToNearestTimeGrain(rawStart, granularity, this.tz)
       const timeframeLengthMs = ceilEnd.getTime() - floorStart.getTime()
       const periodOffset = timeframeLengthMs * (periods - 1)
 
       return floorToNearestTimeGrain(
-        new Date(this.timeframe.rawStart().getTime() - periodOffset),
+        new Date(rawStart.getTime() - periodOffset),
         granularity,
+        this.tz,
       )
     }
   }
@@ -84,8 +88,8 @@ abstract class BaseQueryTime implements QueryTime {
 export class TimeseriesQueryTime extends BaseQueryTime {
   private readonly granularity: GranularityKeys
 
-  constructor(timeframe: Timeframe, granularity?: GranularityKeys) {
-    super(timeframe)
+  constructor(timeframe: Timeframe, granularity?: GranularityKeys, tz?: string) {
+    super(timeframe, tz)
 
     if (granularity && timeframe.allowedGranularities().has(granularity)) {
       this.granularity = granularity
@@ -99,7 +103,7 @@ export class TimeseriesQueryTime extends BaseQueryTime {
   }
 
   endDate(): Date {
-    return ceilToNearestTimeGrain(this.timeframe.rawEnd(), this.granularity)
+    return ceilToNearestTimeGrain(this.timeframe.rawEnd(), this.granularity, this.tz)
   }
 
   granularityMs(): number {
@@ -114,7 +118,7 @@ export class UnaryQueryTime extends BaseQueryTime {
   }
 
   endDate(): Date {
-    return ceilToNearestTimeGrain(this.timeframe.rawEnd(), this.timeframe.dataGranularity)
+    return ceilToNearestTimeGrain(this.timeframe.rawEnd(this.tz), this.timeframe.dataGranularity, this.tz)
   }
 
   granularityMs(): number {

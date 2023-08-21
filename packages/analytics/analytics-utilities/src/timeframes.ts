@@ -16,6 +16,12 @@ import {
   TimeframeOptions,
   TimePeriod,
 } from './types'
+import { getTimezoneOffset, utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz'
+
+const adjustForTz = (d: Date, tz: string) => {
+  // Adjust the given date by the given TZ offset.
+  return new Date(d.getTime() - getTimezoneOffset(tz, d))
+}
 
 export class Timeframe {
   readonly timeframeText: string
@@ -63,13 +69,15 @@ export class Timeframe {
 
   // rawEnd does not consider granularity and should not be used directly in queries.
   // Use `new QueryTime(timeframe, granularity?).queryEndSeconds()` instead.
-  rawEnd(): Date {
+  // eslint-disable-next-line -- `tz` is required because it's used in subclasses.
+  rawEnd(_tz?: string): Date {
     return this._endCustom || new Date()
   }
 
   // rawStart does not consider granularity and should not be used directly in queries.
   // Use `new QueryTime(timeframe, granularity?).queryStartSeconds()` instead.
-  rawStart(): Date {
+  // eslint-disable-next-line -- `tz` is required because it's used in subclasses.
+  rawStart(_tz?: string): Date {
     return this._startCustom || new Date(this.rawEnd().getTime() - this.timeframeLengthMs())
   }
 
@@ -108,11 +116,27 @@ export class Timeframe {
 
     return allowedValues
   }
+
+  protected tzAdjustedDate(tz?: string): Date {
+    if (!tz) {
+      return new Date()
+    }
+
+    // Take `new Date()` and adjust it so that it's within the given TZ
+    // instead of the current environment's TZ.
+    const tzNeutral = zonedTimeToUtc(new Date(), (new Intl.DateTimeFormat()).resolvedOptions().timeZone)
+    return utcToZonedTime(tzNeutral, tz)
+  }
 }
 
 class CurrentWeek extends Timeframe {
-  rawStart(): Date {
-    const thisMonday = startOfWeek(new Date(), { weekStartsOn: 1 })
+  rawStart(tz?: string): Date {
+    // `startOfWeek` isn't aware of timezones, so the resulting "start of month" time is in the local timezone.
+    let thisMonday = startOfWeek(this.tzAdjustedDate(tz), { weekStartsOn: 1 })
+
+    if (tz) {
+      thisMonday = adjustForTz(thisMonday, tz)
+    }
 
     return thisMonday
   }
@@ -123,8 +147,13 @@ class CurrentWeek extends Timeframe {
 }
 
 class CurrentMonth extends Timeframe {
-  rawStart(): Date {
-    const firstOfTheMonth = startOfMonth(new Date())
+  rawStart(tz?: string): Date {
+    // `startOfMonth` isn't aware of timezones, so the resulting "start of month" time is in the local timezone.
+    let firstOfTheMonth = startOfMonth(this.tzAdjustedDate(tz))
+
+    if (tz) {
+      firstOfTheMonth = adjustForTz(firstOfTheMonth, tz)
+    }
 
     return firstOfTheMonth
   }
@@ -135,30 +164,52 @@ class CurrentMonth extends Timeframe {
 }
 
 class PreviousWeek extends Timeframe {
-  rawEnd(): Date {
-    const thisMonday = startOfWeek(new Date(), { weekStartsOn: 1 })
+  rawEnd(tz?: string): Date {
+    // `startOfWeek` isn't aware of timezones, so the resulting "start of month" time is in the local timezone.
+    let thisMonday = startOfWeek(this.tzAdjustedDate(tz), { weekStartsOn: 1 })
+
+    if (tz) {
+      thisMonday = adjustForTz(thisMonday, tz)
+    }
 
     return thisMonday
   }
 
-  rawStart(): Date {
-    const lastMonday = startOfWeek(new Date().setDate(new Date().getDate() - 7), {
+  rawStart(tz?: string): Date {
+    const date = this.tzAdjustedDate(tz)
+
+    // `startOfWeek` isn't aware of timezones, so the resulting "start of month" time is in the local timezone.
+    let lastMonday = startOfWeek(date.setDate(date.getDate() - 7), {
       weekStartsOn: 1,
     })
+
+    if (tz) {
+      lastMonday = adjustForTz(lastMonday, tz)
+    }
 
     return lastMonday
   }
 }
 
 class PreviousMonth extends Timeframe {
-  rawEnd(): Date {
-    const thisMonth = startOfMonth(new Date())
+  rawEnd(tz?: string): Date {
+    // `startOfMonth` isn't aware of timezones, so the resulting "start of month" time is in the local timezone.
+    let thisMonth = startOfMonth(this.tzAdjustedDate(tz))
+
+    if (tz) {
+      thisMonth = adjustForTz(thisMonth, tz)
+    }
 
     return thisMonth
   }
 
-  rawStart(): Date {
-    const lastMonth = startOfMonth(subMonths(new Date(), 1))
+  rawStart(tz?: string): Date {
+    // `startOfMonth` isn't aware of timezones, so the resulting "start of month" time is in the local timezone.
+    let lastMonth = startOfMonth(subMonths(this.tzAdjustedDate(tz), 1))
+
+    if (tz) {
+      lastMonth = adjustForTz(lastMonth, tz)
+    }
 
     return lastMonth
   }
