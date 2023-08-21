@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.5.4...@kong-ui-public/analytics-utilities@0.6.0) (2023-08-21)
+
+
+### Features
+
+* **queryTime:** support doing calculations in a specific TZ [MA-1916] ([#722](https://github.com/Kong/public-ui-components/issues/722)) ([c6c4b0a](https://github.com/Kong/public-ui-components/commit/c6c4b0a6492290cd6071516f8d9985070a49b06e))
+
+
+
+
+
 ## [0.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.5.3...@kong-ui-public/analytics-utilities@0.5.4) (2023-08-18)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
