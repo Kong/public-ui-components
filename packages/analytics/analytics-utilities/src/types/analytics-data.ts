@@ -89,6 +89,16 @@ export interface AnalyticsExploreV2Meta extends BaseExploreMeta {
 }
 
 /**
+ * Metadata about the exploreV3 result
+ */
+export interface AnalyticsExploreV3Meta extends Omit<AnalyticsExploreV2Meta, 'dimensions'> {
+  /*
+   * Structure containing mappings of IDs to display names
+  */
+  display: Record<string, Record<string, string>>
+}
+
+/**
  * Analytics query data object
  */
 export interface AnalyticsExploreResult {
@@ -114,4 +124,18 @@ export interface AnalyticsExploreV2Result {
    * Additional exploreV2 metadata about the query
    */
   meta: AnalyticsExploreV2Meta
+}
+
+/**
+ * Analytics exploreV3 query data object
+ */
+export interface AnalyticsExploreV3Result {
+  /**
+   * Array of records
+   */
+  records: AnalyticsExploreRecord[]
+  /**
+   * Additional exploreV3 metadata about the query
+   */
+  meta: AnalyticsExploreV3Meta
 }
