@@ -24,11 +24,11 @@
       <KEmptyState
         v-if="errorMessage"
         cta-is-hidden
+        data-testid="top-n-error-state"
         is-error
       >
         <template #title>
-          <!-- TODO: translate -->
-          Something went wrong :/
+          {{ i18n.t('topNTable.defaultErrorStateTitle') }}
         </template>
         <template #message>
           {{ errorMessage }}
@@ -43,7 +43,7 @@
         icon-size="80"
       >
         <template #title>
-          {{ emptyStateTitle || 'No data to display' }}
+          {{ emptyStateTitle || i18n.t('topNTable.defaultEmptyStateTitle') }}
         </template>
       </KEmptyState>
 
@@ -54,8 +54,7 @@
         <div class="table-headings">
           <div class="table-row">
             <div class="column-1">
-              <!-- TODO: translate -->
-              Name
+              {{ i18n.t('topNTable.nameLabel') }}
             </div>
             <div class="column-2">
               {{ columnName }}
@@ -156,16 +155,15 @@ const columnName = computed((): string => {
 const errorMessage = computed((): string => {
   if (hasData.value) {
     if (!meta.value) {
-      return 'Error: response must contain `meta`'
+      return i18n.t('topNTable.errors.meta')
     }
 
     if (!displayKey.value) {
-      // TODO: translate
-      return 'Error: `display` response incorrectly formatted (must have at least one key)'
+      return i18n.t('topNTable.errors.display')
     }
 
     if (!columnKey.value) {
-      return 'Error: `metricNames` response incorrectly formatted (must have at least one key)'
+      return i18n.t('topNTable.errors.metricNames')
     }
   }
 

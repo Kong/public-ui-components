@@ -257,7 +257,10 @@
       </div>
     </div>
     <div class="config-container">
-      <div class="config-container-row">
+      <div
+        v-if="!isTopNTable"
+        class="config-container-row"
+      >
         <KLabel>Colors</KLabel>
         <div
           v-for="([label, color], i) in Object.entries(colorPalette)"
