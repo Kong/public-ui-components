@@ -11,7 +11,6 @@
           <div>
             <KRadio
               v-model="chartType"
-              data-testid="service-radio-btn"
               name="chartType"
               :selected-value="ChartTypes.HORIZONTAL_BAR"
             >
@@ -21,7 +20,6 @@
           <div>
             <KRadio
               v-model="chartType"
-              data-testid="route-radio-btn"
               name="chartType"
               :selected-value="ChartTypes.VERTICAL_BAR"
             >
@@ -31,7 +29,6 @@
           <div>
             <KRadio
               v-model="chartType"
-              data-testid="application-radio-btn"
               name="chartType"
               :selected-value="ChartTypes.TIMESERIES_LINE"
             >
@@ -41,7 +38,6 @@
           <div>
             <KRadio
               v-model="chartType"
-              data-testid="application-radio-btn"
               name="chartType"
               :selected-value="ChartTypes.TIMESERIES_BAR"
             >
@@ -51,7 +47,6 @@
           <div>
             <KRadio
               v-model="chartType"
-              data-testid="application-radio-btn"
               name="chartType"
               :selected-value="ChartTypes.DOUGHNUT"
             >
@@ -61,11 +56,19 @@
           <div>
             <KRadio
               v-model="chartType"
-              data-testid="application-radio-btn"
               name="chartType"
               :selected-value="ChartTypesSimple.GAUGE"
             >
               Gauge
+            </KRadio>
+          </div>
+          <div>
+            <KRadio
+              v-model="chartType"
+              name="chartType"
+              :selected-value="ChartTypesSimple.TOPN"
+            >
+              Top N Table
             </KRadio>
           </div>
         </div>
@@ -83,7 +86,6 @@
           <div>
             <KRadio
               v-model="metricDisplay"
-              data-testid="service-radio-btn"
               name="metricDisplay"
               :selected-value="ChartMetricDisplay.SingleMetric"
             >
@@ -93,7 +95,6 @@
           <div>
             <KRadio
               v-model="metricDisplay"
-              data-testid="application-radio-btn"
               name="metricDisplay"
               :selected-value="ChartMetricDisplay.Full"
             >
@@ -103,7 +104,6 @@
           <div>
             <KRadio
               v-model="metricDisplay"
-              data-testid="route-radio-btn"
               name="metricDisplay"
               :selected-value="ChartMetricDisplay.Hidden"
             >
@@ -125,7 +125,6 @@
           <div>
             <KRadio
               v-model="legendPosition"
-              data-testid="service-radio-btn"
               name="legendPosition"
               :selected-value="ChartLegendPosition.Right"
             >
@@ -135,7 +134,6 @@
           <div>
             <KRadio
               v-model="legendPosition"
-              data-testid="route-radio-btn"
               name="legendPosition"
               :selected-value="ChartLegendPosition.Bottom"
             >
@@ -145,7 +143,6 @@
           <div>
             <KRadio
               v-model="legendPosition"
-              data-testid="application-radio-btn"
               name="legendPosition"
               :selected-value="ChartLegendPosition.Hidden"
             >
@@ -175,16 +172,17 @@
       tooltip-title="tooltip title"
     />
     <SimpleChart
-      v-else
+      v-else-if="!isTopNTable"
       :chart-data="exploreResult"
       :chart-options="simpleChartOptions"
       :legend-position="legendPosition"
     />
     <TopNTable
-      v-if="exploreResultV3"
+      v-if="isTopNTable"
+      class="top-n-sandbox"
       :data="exploreResultV3"
       description="Last 30-Day Summary"
-      title="Top 5 Status Codes"
+      title="Top 5 Routes"
     >
       <template #name="{ record }">
         <a href="#">{{ record.name }}</a>
@@ -192,7 +190,10 @@
     </TopNTable>
 
     <!-- Dataset options -->
-    <div class="dataset-options">
+    <div
+      v-if="!isTopNTable"
+      class="dataset-options"
+    >
       <KButton
         appearance="outline"
         class="first-button"
@@ -250,8 +251,8 @@
       </div>
       <div>
         <KInputSwitch
-          v-model="showEmptyStateToggle"
-          :label="showEmptyStateToggle ? 'No Data' : 'Chart Has Data'"
+          v-model="showTableData"
+          :label="!showTableData ? 'Empty State' : 'Chart Has Data'"
         />
       </div>
     </div>
@@ -324,7 +325,7 @@ const limitToggle = ref(false)
 const multiDimensionToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
-const showEmptyStateToggle = ref(false)
+const showTableData = ref(true)
 const chartType = ref<ChartTypes | ChartTypesSimple>(ChartTypes.DOUGHNUT)
 const legendPosition = ref(ChartLegendPosition.Right)
 const metricDisplay = ref(ChartMetricDisplay.SingleMetric)
@@ -357,7 +358,7 @@ const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',
 ]))
 const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
-  if (showEmptyStateToggle.value) {
+  if (showTableData.value) {
     return null
   }
 
@@ -480,6 +481,13 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
   }
 })
 const exploreResultV3 = computed(() => {
+  if (!showTableData.value) {
+    return {
+      meta: {},
+      records: [],
+    }
+  }
+
   return {
     meta: {
       display: {
@@ -590,11 +598,15 @@ const isTimeSeriesChart = computed<boolean>(() => {
 })
 
 const isSimpleChart = computed<boolean>(() => {
-  return [ChartTypesSimple.GAUGE].some(e => e === chartType.value)
+  return [ChartTypesSimple.GAUGE, ChartTypesSimple.TOPN].some(e => e === chartType.value)
 })
 
 const isGaugeChart = computed<boolean>(() => {
   return (ChartTypesSimple.GAUGE === chartType.value)
+})
+
+const isTopNTable = computed<boolean>(() => {
+  return (ChartTypesSimple.TOPN === chartType.value)
 })
 
 const onMetricSelected = (item: any) => {
@@ -638,6 +650,11 @@ body {
 .sandbox-container {
   margin: 0;
   padding: $kui-space-60;
+
+  .top-n-sandbox {
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
 
   h1 {
     margin-top: 0;

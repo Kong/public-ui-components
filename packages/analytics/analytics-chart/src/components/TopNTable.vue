@@ -4,13 +4,18 @@
       v-if="title"
       #title
     >
-      {{ title }}
+      <div data-testid="top-n-card-title">
+        {{ title }}
+      </div>
     </template>
     <template
       v-if="description"
       #actions
     >
-      <div class="top-n-card-description">
+      <div
+        class="top-n-card-description"
+        data-testid="top-n-card-description"
+      >
         {{ description }}
       </div>
     </template>
@@ -22,10 +27,30 @@
         is-error
       >
         <template #title>
+          <!-- TODO: translate -->
+          Something went wrong :/
+        </template>
+        <template #message>
           {{ errorMessage }}
         </template>
       </KEmptyState>
-      <div class="top-n-table">
+
+      <KEmptyState
+        v-else-if="!hasData"
+        cta-is-hidden
+        data-testid="top-n-empty-state"
+        icon="stateNoData"
+        icon-size="80"
+      >
+        <template #title>
+          {{ emptyStateTitle || 'No data to display' }}
+        </template>
+      </KEmptyState>
+
+      <div
+        v-else
+        class="top-n-table"
+      >
         <div class="table-headings">
           <div class="table-row">
             <div class="column-1">
@@ -88,29 +113,38 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  emptyStateTitle: {
+    type: String,
+    default: '',
+  },
 })
 
 const { i18n } = composables.useI18n()
 // TODO: types
 const meta = computed(() => props.data.meta)
 const records = computed(() => props.data.records)
+const hasData = computed((): boolean => !!(records.value?.length))
 const displayKey = computed(() => {
-  const key = Object.keys(meta.value?.display)?.[0]
-
-  if (!key) {
+  if (!meta.value) {
     return
   }
 
-  return key
+  return Object.keys(meta.value.display)?.[0]
 })
 const displayRecords = computed(() => {
   if (!displayKey.value) {
     return
   }
 
-  return meta.value?.display[displayKey.value]
+  return meta.value.display[displayKey.value]
 })
-const columnKey = computed((): string => meta.value?.metricNames?.[0] || '')
+const columnKey = computed((): string => {
+  if (!meta.value?.metricNames) {
+    return ''
+  }
+
+  return meta.value.metricNames[0] || ''
+})
 const columnName = computed((): string => {
   if (columnKey.value) {
     return i18n.t(`chartLabels.${columnKey.value}` as any) || columnKey.value
@@ -118,18 +152,21 @@ const columnName = computed((): string => {
 
   return ''
 })
+
 const errorMessage = computed((): string => {
-  if (!meta.value) {
-    return 'Error: response must contain `meta`'
-  }
+  if (hasData.value) {
+    if (!meta.value) {
+      return 'Error: response must contain `meta`'
+    }
 
-  if (!displayKey.value) {
-    // TODO: translate
-    return 'Error: `display` response incorrectly formatted (must have at least one key)'
-  }
+    if (!displayKey.value) {
+      // TODO: translate
+      return 'Error: `display` response incorrectly formatted (must have at least one key)'
+    }
 
-  if (!columnKey.value) {
-    return 'Error: `metricNames` response incorrectly formatted (must have at least one key)'
+    if (!columnKey.value) {
+      return 'Error: `metricNames` response incorrectly formatted (must have at least one key)'
+    }
   }
 
   return ''
