@@ -181,8 +181,8 @@ const getValue = (record: AnalyticsExploreRecord): string => {
   --kui-font-size-60: 16px;
 
   :deep(.k-card-actions) {
-    display: flex;
     align-self: baseline;
+    display: flex;
     line-height: 22px;
 
     .top-n-card-description {
