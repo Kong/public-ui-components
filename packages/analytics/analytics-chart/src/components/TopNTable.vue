@@ -126,7 +126,7 @@ const meta = computed((): AnalyticsExploreV3Meta => props.data.meta)
 const records = computed((): AnalyticsExploreRecord[] => props.data.records)
 const hasData = computed((): boolean => !!(records.value?.length))
 const displayKey = computed((): string => {
-  if (!meta.value) {
+  if (!meta.value?.display) {
     return ''
   }
 
@@ -160,7 +160,7 @@ const errorMessage = computed((): string => {
       return i18n.t('topNTable.errors.meta')
     }
 
-    if (!Object.keys(displayKey.value).length) {
+    if (!Object.keys(displayRecord.value).length) {
       return i18n.t('topNTable.errors.display')
     }
 
