@@ -50,6 +50,7 @@
       <div
         v-else
         class="top-n-table"
+        data-testid="top-n-table"
       >
         <div class="table-headings">
           <div class="table-row">
@@ -62,11 +63,15 @@
           </div>
         </div>
 
-        <div class="table-body">
+        <div
+          class="table-body"
+          data-testid="top-n-data"
+        >
           <div
             v-for="(entry, idx) in records"
             :key="`entry-${idx}`"
             class="table-row"
+            :data-testid="`row-${getId(entry)}`"
           >
             <div class="column-1">
               <slot
@@ -81,7 +86,7 @@
               </slot>
             </div>
             <div class="column-2">
-              &nbsp;{{ getValue(entry) }}
+              &nbsp; {{ getValue(entry) }}
             </div>
           </div>
         </div>
@@ -91,8 +96,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { AnalyticsExploreRecord, RecordEvent } from '@kong-ui-public/analytics-utilities'
+import { computed, PropType } from 'vue'
+import { AnalyticsExploreV3Result, AnalyticsExploreV3Meta, AnalyticsExploreRecord, RecordEvent } from '@kong-ui-public/analytics-utilities'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
 import composables from '../composables'
@@ -107,9 +112,7 @@ const props = defineProps({
     default: '',
   },
   data: {
-    // TODO: type
-  //  type: Object as PropType<AnalyticsExploreResult | AnalyticsExploreV2Result>,
-    type: Object,
+    type: Object as PropType<AnalyticsExploreV3Result>,
     required: true,
   },
   emptyStateTitle: {
@@ -119,30 +122,29 @@ const props = defineProps({
 })
 
 const { i18n } = composables.useI18n()
-// TODO: types
-const meta = computed(() => props.data.meta)
-const records = computed(() => props.data.records)
+const meta = computed((): AnalyticsExploreV3Meta => props.data.meta)
+const records = computed((): AnalyticsExploreRecord[] => props.data.records)
 const hasData = computed((): boolean => !!(records.value?.length))
-const displayKey = computed(() => {
+const displayKey = computed((): string => {
   if (!meta.value) {
-    return
+    return ''
   }
 
   return Object.keys(meta.value.display)?.[0]
 })
-const displayRecords = computed(() => {
+const displayRecord = computed(() => {
   if (!displayKey.value) {
-    return
+    return {}
   }
 
   return meta.value.display[displayKey.value]
 })
 const columnKey = computed((): string => {
-  if (!meta.value?.metricNames) {
+  if (!meta.value?.metricNames?.length) {
     return ''
   }
 
-  return meta.value.metricNames[0] || ''
+  return meta.value.metricNames[0]
 })
 const columnName = computed((): string => {
   if (columnKey.value) {
@@ -158,7 +160,7 @@ const errorMessage = computed((): string => {
       return i18n.t('topNTable.errors.meta')
     }
 
-    if (!displayKey.value) {
+    if (!Object.keys(displayKey.value).length) {
       return i18n.t('topNTable.errors.display')
     }
 
@@ -170,40 +172,30 @@ const errorMessage = computed((): string => {
   return ''
 })
 
-// TODO: accept only v3, wait for API
-
 const getEvent = (record: AnalyticsExploreRecord): RecordEvent => {
   return record.event
 }
 
 const getId = (record: AnalyticsExploreRecord): string => {
-  if (!displayKey.value) {
-    return '-'
-  }
-
   const event = getEvent(record)
 
-  return String(event[displayKey.value]) || '-'
+  return String(event[displayKey.value])
 }
 const getName = (record: AnalyticsExploreRecord): string => {
-  if (!displayRecords.value) {
-    return '-'
-  }
-
   const id = getId(record)
 
-  return String(displayRecords.value[id]) || '-'
+  return String(displayRecord.value[id]) || '–'
 }
 const getValue = (record: AnalyticsExploreRecord): string => {
   if (!columnKey.value) {
-    return '-'
+    return '–'
   }
 
   const event = getEvent(record)
   const val = event[columnKey.value]
 
   if (!val) {
-    return '-'
+    return '–'
   }
 
   return approxNum(val, { capital: true, round: true })
