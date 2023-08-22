@@ -27,7 +27,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       '@rushstack/eslint-patch':
         specifier: ^1.3.3
@@ -42,7 +42,7 @@ importers:
         specifier: ^21.1.1
         version: 21.1.1
       '@types/node':
-        specifier: ^18.17.4
+        specifier: ^18.17.5
         version: 18.17.5
       '@types/uuid':
         specifier: ^9.0.2
@@ -105,7 +105,7 @@ importers:
         specifier: ^6.1.1
         version: 6.1.1(eslint@8.47.0)
       eslint-plugin-vue:
-        specifier: ^9.16.1
+        specifier: ^9.17.0
         version: 9.17.0(eslint@8.47.0)
       js-yaml:
         specifier: ^4.1.0
@@ -232,8 +232,8 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
-        version: 8.122.2(vue@3.3.4)
+        specifier: ^8.122.2
+        version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       '@types/uuid':
         specifier: ^9.0.2
         version: 9.0.2
@@ -286,7 +286,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
@@ -308,7 +308,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       '@types/lodash.clonedeep':
         specifier: ^4.5.7
@@ -350,7 +350,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
@@ -388,10 +388,10 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       '@types/lodash':
-        specifier: ^4.14.196
+        specifier: ^4.14.197
         version: 4.14.197
       pug:
         specifier: ^3.0.2
@@ -415,7 +415,7 @@ importers:
         specifier: workspace:^0.8.1
         version: link:../i18n
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
@@ -440,7 +440,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       axios:
         specifier: ^1.4.0
@@ -468,7 +468,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       axios:
         specifier: ^1.4.0
@@ -493,7 +493,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       axios:
         specifier: ^1.4.0
@@ -518,7 +518,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       axios:
         specifier: ^1.4.0
@@ -543,7 +543,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       axios:
         specifier: ^1.4.0
@@ -568,7 +568,7 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       axios:
         specifier: ^1.4.0
@@ -596,7 +596,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       axios:
         specifier: ^1.4.0
@@ -633,7 +633,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       axios:
         specifier: ^1.4.0
@@ -658,7 +658,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       axios:
         specifier: ^1.4.0
@@ -689,7 +689,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       axios:
         specifier: ^1.4.0
@@ -717,7 +717,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       axios:
         specifier: ^1.4.0
@@ -742,7 +742,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       axios:
         specifier: ^1.4.0
@@ -767,7 +767,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       axios:
         specifier: ^1.4.0
@@ -792,7 +792,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       '@types/prismjs':
         specifier: ^1.26.0
@@ -823,7 +823,7 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@kong/kongponents':
-        specifier: ^8.122.1
+        specifier: ^8.122.2
         version: 8.122.2(vue-router@4.2.4)(vue@3.3.4)
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.0.4
@@ -926,7 +926,7 @@ packages:
       '@babel/traverse': 7.22.5
       '@babel/types': 7.22.10
       convert-source-map: 1.9.0
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -1191,7 +1191,7 @@ packages:
       '@babel/helper-split-export-declaration': 7.22.5
       '@babel/parser': 7.22.5
       '@babel/types': 7.22.10
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -1739,7 +1739,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       espree: 9.6.1
       globals: 13.20.0
       ignore: 5.2.4
@@ -1841,7 +1841,7 @@ packages:
     engines: {node: '>=10.10.0'}
     dependencies:
       '@humanwhocodes/object-schema': 1.2.1
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -1992,30 +1992,6 @@ packages:
     transitivePeerDependencies:
       - '@popperjs/core'
       - debug
-
-  /@kong/kongponents@8.122.2(vue@3.3.4):
-    resolution: {integrity: sha512-TdjmomMZdBNRvucdYFC2/TVVF5gyggyPukSa35Q0TETpNL7Uq2IhFMM1arrjsbKun4Ri/J1L+pF0ViPudOMPQQ==}
-    engines: {node: '>=16.19.0'}
-    peerDependencies:
-      vue: '>= 3.3.0'
-      vue-router: ^4.1.6
-    dependencies:
-      axios: 0.27.2
-      date-fns: 2.30.0
-      date-fns-tz: 1.3.8(date-fns@2.30.0)
-      focus-trap: 7.5.2
-      focus-trap-vue: 3.4.0(focus-trap@7.5.2)(vue@3.3.4)
-      popper.js: 1.16.1
-      sortablejs: 1.15.0
-      swrv: 1.0.4(vue@3.3.4)
-      uuid: 8.3.2
-      v-calendar: 3.0.3(vue@3.3.4)
-      vue: 3.3.4
-      vue-draggable-next: 2.2.0(sortablejs@1.15.0)(vue@3.3.4)
-    transitivePeerDependencies:
-      - '@popperjs/core'
-      - debug
-    dev: true
 
   /@kong/swagger-ui-kong-theme-universal@4.2.6(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.4)(vue@3.3.4):
     resolution: {integrity: sha512-ZZtnsER3yHFnzjy5OO3jYgeY3ZCuhQP6IFqwq2vUj9HntyJUBOBUxvTJ9YJoQHz2wMVuatdUJHadQcUVS/Cktw==}
@@ -3473,7 +3449,7 @@ packages:
       '@typescript-eslint/scope-manager': 5.62.0
       '@typescript-eslint/type-utils': 5.62.0(eslint@8.47.0)(typescript@5.1.6)
       '@typescript-eslint/utils': 5.62.0(eslint@8.47.0)(typescript@5.1.6)
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       eslint: 8.47.0
       graphemer: 1.4.0
       ignore: 5.2.4
@@ -3502,7 +3478,7 @@ packages:
       '@typescript-eslint/type-utils': 6.3.0(eslint@8.47.0)(typescript@5.1.6)
       '@typescript-eslint/utils': 6.3.0(eslint@8.47.0)(typescript@5.1.6)
       '@typescript-eslint/visitor-keys': 6.3.0
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       eslint: 8.47.0
       graphemer: 1.4.0
       ignore: 5.2.4
@@ -3528,7 +3504,7 @@ packages:
       '@typescript-eslint/scope-manager': 5.62.0
       '@typescript-eslint/types': 5.62.0
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@5.1.6)
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       eslint: 8.47.0
       typescript: 5.1.6
     transitivePeerDependencies:
@@ -3549,7 +3525,7 @@ packages:
       '@typescript-eslint/types': 6.3.0
       '@typescript-eslint/typescript-estree': 6.3.0(typescript@5.1.6)
       '@typescript-eslint/visitor-keys': 6.3.0
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       eslint: 8.47.0
       typescript: 5.1.6
     transitivePeerDependencies:
@@ -3584,7 +3560,7 @@ packages:
     dependencies:
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@5.1.6)
       '@typescript-eslint/utils': 5.62.0(eslint@8.47.0)(typescript@5.1.6)
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       eslint: 8.47.0
       tsutils: 3.21.0(typescript@5.1.6)
       typescript: 5.1.6
@@ -3604,7 +3580,7 @@ packages:
     dependencies:
       '@typescript-eslint/typescript-estree': 6.3.0(typescript@5.1.6)
       '@typescript-eslint/utils': 6.3.0(eslint@8.47.0)(typescript@5.1.6)
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       eslint: 8.47.0
       ts-api-utils: 1.0.1(typescript@5.1.6)
       typescript: 5.1.6
@@ -3633,7 +3609,7 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.62.0
       '@typescript-eslint/visitor-keys': 5.62.0
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       globby: 11.1.0
       is-glob: 4.0.3
       semver: 7.5.4
@@ -3654,7 +3630,7 @@ packages:
     dependencies:
       '@typescript-eslint/types': 6.3.0
       '@typescript-eslint/visitor-keys': 6.3.0
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       globby: 11.1.0
       is-glob: 4.0.3
       semver: 7.5.4
@@ -3708,7 +3684,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       '@typescript-eslint/types': 5.62.0
-      eslint-visitor-keys: 3.4.2
+      eslint-visitor-keys: 3.4.3
     dev: true
 
   /@typescript-eslint/visitor-keys@6.3.0:
@@ -3716,7 +3692,7 @@ packages:
     engines: {node: ^16.0.0 || >=18.0.0}
     dependencies:
       '@typescript-eslint/types': 6.3.0
-      eslint-visitor-keys: 3.4.2
+      eslint-visitor-keys: 3.4.3
     dev: true
 
   /@vitejs/plugin-vue-jsx@3.0.1(vite@4.4.9)(vue@3.3.4):
@@ -4255,7 +4231,7 @@ packages:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -4264,7 +4240,7 @@ packages:
     resolution: {integrity: sha512-7Epl1Blf4Sy37j4v9f9FjICCh4+KAQOyXgHEwlyBiAQLbhKdq/i2QQU3amQalS/wPhdPzDXPL5DMR5bkn+YeWg==}
     engines: {node: '>= 8.0.0'}
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       depd: 2.0.0
       humanize-ms: 1.2.1
     transitivePeerDependencies:
@@ -5923,17 +5899,6 @@ packages:
     dependencies:
       ms: 2.0.0
 
-  /debug@3.2.7:
-    resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-    dependencies:
-      ms: 2.1.3
-    dev: true
-
   /debug@3.2.7(supports-color@8.1.1):
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
     peerDependencies:
@@ -5944,18 +5909,6 @@ packages:
     dependencies:
       ms: 2.1.3
       supports-color: 8.1.1
-    dev: true
-
-  /debug@4.3.4:
-    resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
-    engines: {node: '>=6.0'}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-    dependencies:
-      ms: 2.1.2
     dev: true
 
   /debug@4.3.4(supports-color@8.1.1):
@@ -6537,7 +6490,7 @@ packages:
   /eslint-import-resolver-node@0.3.7:
     resolution: {integrity: sha512-gozW2blMLJCeFpBwugLTGyvVjNoeo1knonXAcatC6bjPBZitotxdWf7Gimr25N4c0AAOo4eOUfaG82IJPDpqCA==}
     dependencies:
-      debug: 3.2.7
+      debug: 3.2.7(supports-color@8.1.1)
       is-core-module: 2.12.1
       resolve: 1.22.4
     transitivePeerDependencies:
@@ -6566,7 +6519,7 @@ packages:
         optional: true
     dependencies:
       '@typescript-eslint/parser': 6.3.0(eslint@8.47.0)(typescript@5.1.6)
-      debug: 3.2.7
+      debug: 3.2.7(supports-color@8.1.1)
       eslint: 8.47.0
       eslint-import-resolver-node: 0.3.7
     transitivePeerDependencies:
@@ -6619,7 +6572,7 @@ packages:
       array.prototype.findlastindex: 1.2.2
       array.prototype.flat: 1.3.1
       array.prototype.flatmap: 1.3.1
-      debug: 3.2.7
+      debug: 3.2.7(supports-color@8.1.1)
       doctrine: 2.1.0
       eslint: 8.47.0
       eslint-import-resolver-node: 0.3.7
@@ -6750,16 +6703,6 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /eslint-visitor-keys@3.4.1:
-    resolution: {integrity: sha512-pZnmmLwYzf+kWaM/Qgrvpen51upAktaaiI01nsJD/Yr3lMOdNtq0cxkrrg16w64VtisN6okbs7Q8AfGqj4c9fA==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    dev: true
-
-  /eslint-visitor-keys@3.4.2:
-    resolution: {integrity: sha512-8drBzUEyZ2llkpCA67iYrgEssKDUu68V8ChqqOfFupIaG/LCVPUT+CoGJpT77zJprs4T/W7p07LP7zAIMuweVw==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    dev: true
-
   /eslint-visitor-keys@3.4.3:
     resolution: {integrity: sha512-wpc+LXeiyiisxPlEkUzU6svyS1frIO3Mgxj1fdy7Pm8Ygzguax2N3Fa/D/ag1WqbOprdI+uY6wMUl8/a2G+iag==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -6780,7 +6723,7 @@ packages:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.2.2
@@ -6817,7 +6760,7 @@ packages:
     dependencies:
       acorn: 8.10.0
       acorn-jsx: 5.3.2(acorn@8.10.0)
-      eslint-visitor-keys: 3.4.2
+      eslint-visitor-keys: 3.4.3
     dev: true
 
   /espree@9.6.1:
@@ -8051,7 +7994,7 @@ packages:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8100,7 +8043,7 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -12260,7 +12203,7 @@ packages:
     engines: {node: '>= 10'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       socks: 2.7.1
     transitivePeerDependencies:
       - supports-color
@@ -12700,7 +12643,7 @@ packages:
       cosmiconfig: 8.2.0
       css-functions-list: 3.2.0
       css-tree: 2.3.1
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       fast-glob: 3.3.0
       fastest-levenshtein: 1.0.16
       file-entry-cache: 6.0.1
@@ -13314,7 +13257,7 @@ packages:
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
       '@tufjs/models': 1.0.4
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       make-fetch-happen: 11.1.1
     transitivePeerDependencies:
       - supports-color
@@ -13698,7 +13641,7 @@ packages:
     hasBin: true
     dependencies:
       cac: 6.7.14
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       mlly: 1.4.0
       pathe: 1.1.1
       picocolors: 1.0.0
@@ -13808,7 +13751,7 @@ packages:
       acorn-walk: 8.2.0
       cac: 6.7.14
       chai: 4.3.7
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       jsdom: 22.1.0
       local-pkg: 0.4.3
       magic-string: 0.30.1
@@ -13873,10 +13816,10 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       eslint: 8.47.0
       eslint-scope: 7.2.0
-      eslint-visitor-keys: 3.4.1
+      eslint-visitor-keys: 3.4.3
       espree: 9.5.2
       esquery: 1.5.0
       lodash: 4.17.21
