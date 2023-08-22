@@ -1,4 +1,4 @@
-import { OpenAPI } from 'openapi-types'
+import type { OpenAPI } from 'openapi-types'
 
 /**
  * OpenAPI specification document supporting OpenAPI v2 and v3 formats

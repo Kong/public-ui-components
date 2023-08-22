@@ -1,5 +1,14 @@
-import { BarChartOptions, ExternalTooltipContext } from '../types'
-import { Tooltip, TooltipPositionerFunction, ChartType, CategoryScale, TooltipItem, TooltipXAlignment, Interaction, InteractionModeFunction, InteractionItem } from 'chart.js'
+import type { BarChartOptions, ExternalTooltipContext } from '../types'
+import { Tooltip, Interaction } from 'chart.js'
+import type {
+  TooltipPositionerFunction,
+  ChartType,
+  TooltipItem,
+  TooltipXAlignment,
+  InteractionModeFunction,
+  InteractionItem,
+  CategoryScale,
+} from 'chart.js'
 import { isNullOrUndef, getRelativePosition } from 'chart.js/helpers'
 import { MAX_LABEL_LENGTH, horizontalTooltipPositioning, tooltipBehavior } from '../utils'
 import { computed } from 'vue'

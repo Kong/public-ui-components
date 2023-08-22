@@ -340,7 +340,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, ref, reactive, watch, onMounted } from 'vue'
+import type { PropType } from 'vue'
+import { computed, ref, reactive, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosResponse } from 'axios'
 import type {

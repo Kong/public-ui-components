@@ -50,16 +50,20 @@
 </template>
 
 <script setup lang="ts">
-import { Chart, ChartDataset, ChartOptions } from 'chart.js'
-import annotationPlugin, { EventContext } from 'chartjs-plugin-annotation'
-import { PropType, Ref, ref, toRef, onMounted, onUnmounted, computed, reactive, watch, inject } from 'vue'
+import type { ChartDataset, ChartOptions } from 'chart.js'
+import { Chart } from 'chart.js'
+import type { EventContext } from 'chartjs-plugin-annotation'
+import annotationPlugin from 'chartjs-plugin-annotation'
+import { ref, toRef, onMounted, onUnmounted, computed, reactive, watch, inject } from 'vue'
+import type { PropType, Ref } from 'vue'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
-import { accessibleGrey, MAX_LABEL_LENGTH, formatNumber, getTextHeight, getTextWidth, drawPercentage, dataTotal, BarChartData, conditionalDataTotal } from '../../utils'
+import type { BarChartData } from '../../utils'
+import { accessibleGrey, MAX_LABEL_LENGTH, formatNumber, getTextHeight, getTextWidth, drawPercentage, dataTotal, conditionalDataTotal } from '../../utils'
 import composables from '../../composables'
 import { v4 as uuidv4 } from 'uuid'
 import { ChartLegendPosition, ChartTypes } from '../../enums'
-import { AxesTooltipState, KChartData, LegendValues, TooltipState } from '../../types'
+import type { AxesTooltipState, KChartData, LegendValues, TooltipState } from '../../types'
 import { verticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
 import { highlightPlugin } from '../chart-plugins/HighlightPlugin'
 

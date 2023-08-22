@@ -1,5 +1,6 @@
 import { h } from 'vue'
-import { KonnectBaseEntityConfig, ConfigurationSchema, PluginConfigurationSchema, ConfigurationSchemaSection } from '../../types'
+import type { KonnectBaseEntityConfig, ConfigurationSchema, PluginConfigurationSchema } from '../../types'
+import { ConfigurationSchemaSection } from '../../types'
 import { gatewayServiceRecord, pluginRecord, emptyKey, keyWithValue } from '../../../fixtures/mockData'
 import composables from '../../composables'
 import EntityBaseConfigCard from './EntityBaseConfigCard.vue'

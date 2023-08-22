@@ -6,9 +6,11 @@
 </template>
 <script setup lang="ts">
 import { computed, provide, toRef } from 'vue'
-import { TimePeriods, Timeframe, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
+import type { Timeframe } from '@kong-ui-public/analytics-utilities'
+import { TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
 import { METRICS_PROVIDER_KEY, defaultFetcherDefs } from './metricsProviderUtil'
-import { DataFetcher, EXPLORE_V2_DIMENSIONS, ExploreV2Filter } from '../types'
+import { EXPLORE_V2_DIMENSIONS } from '../types'
+import type { DataFetcher, ExploreV2Filter } from '../types'
 
 const props = withDefaults(defineProps<{
   maxTimeframe?: TimeframeKeys,

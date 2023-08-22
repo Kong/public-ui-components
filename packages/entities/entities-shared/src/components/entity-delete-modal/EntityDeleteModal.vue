@@ -55,9 +55,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from 'vue'
+import type { PropType } from 'vue'
+import { computed } from 'vue'
 import composables from '../../composables'
-import { EntityTypes } from '../../types'
+import type { EntityTypes } from '../../types'
 
 const { i18nT } = composables.useI18n()
 

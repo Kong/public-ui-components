@@ -63,7 +63,8 @@ import { TargetsList } from '../../src'
 import { ref } from 'vue'
 import type { KonnectTargetsListConfig, KongManagerTargetsListConfig, EntityRow, CopyEventPayload } from '../../src'
 import type { AxiosError } from 'axios'
-import SandboxPermissionsControl, { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 

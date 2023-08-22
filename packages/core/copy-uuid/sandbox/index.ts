@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import CopyUuid, { CopyUuidNotifyParam } from '../src'
+import type { CopyUuidNotifyParam } from '../src'
+import CopyUuid from '../src'
 import { KClipboardProvider, KIcon, KTooltip } from '@kong/kongponents'
 import '@kong/kongponents/dist/style.css'
 

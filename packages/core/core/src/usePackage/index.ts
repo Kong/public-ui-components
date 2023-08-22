@@ -1,4 +1,5 @@
-import { ref, Ref, readonly, computed, ComputedRef, nextTick } from 'vue'
+import { ref, readonly, computed, nextTick } from 'vue'
+import type { ComputedRef, Ref } from 'vue'
 import type { ImportParams } from './types'
 
 export default function usePackage({ script, styles, onReady }: ImportParams): {

@@ -68,7 +68,7 @@
 <script setup lang="ts">
 import { MetricCardContainer } from '../src'
 import { DECIMAL_DISPLAY, metricChange } from '../src/utilities'
-import { MetricCardContainerOptions } from '../src/types'
+import type { MetricCardContainerOptions } from '../src/types'
 import { MetricCardSize } from '../src/constants'
 
 const cards = [

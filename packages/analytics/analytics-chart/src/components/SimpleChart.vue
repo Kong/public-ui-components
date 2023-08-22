@@ -32,11 +32,12 @@
 
 <script setup lang="ts">
 import composables from '../composables'
-import { SimpleChartOptions } from '../types'
+import type { SimpleChartOptions } from '../types'
 import { ChartTypesSimple } from '../enums'
 import GaugeChart from './chart-types/GaugeChart.vue'
-import { computed, PropType, toRef } from 'vue'
-import { AnalyticsExploreResult, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
+import type { PropType } from 'vue'
+import { computed, toRef } from 'vue'
+import type { AnalyticsExploreResult, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette } from '../utils'
 
 const props = defineProps({

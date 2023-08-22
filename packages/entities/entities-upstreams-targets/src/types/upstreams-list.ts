@@ -1,5 +1,5 @@
 import type { RouteLocationRaw } from 'vue-router'
-import { FilterSchema, KongManagerBaseTableConfig, KonnectBaseTableConfig } from '@kong-ui-public/entities-shared'
+import type { FilterSchema, KongManagerBaseTableConfig, KonnectBaseTableConfig } from '@kong-ui-public/entities-shared'
 
 export interface BaseUpstreamsListConfig {
   /** Route for creating an upstream */

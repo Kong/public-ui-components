@@ -1,8 +1,8 @@
 import prettyBytes from 'pretty-bytes'
-import { ExternalTooltipContext, KChartData, TooltipState } from '../types'
+import type { ExternalTooltipContext, KChartData, TooltipState } from '../types'
 import { DECIMAL_DISPLAY, numberFormatter } from '../utils'
 import { isValid } from 'date-fns'
-import { Point, ScatterDataPoint } from 'chart.js'
+import type { Point, ScatterDataPoint } from 'chart.js'
 import { ChartTypes, ChartTypesSimple } from '../enums'
 
 export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTooltipContext) : void => {

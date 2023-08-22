@@ -1,4 +1,4 @@
-import { KonnectConfig, KongManagerConfig } from './index'
+import type { KonnectConfig, KongManagerConfig } from './index'
 
 export interface BaseEntityConfig {
   /** the ID of the entity */
@@ -11,7 +11,7 @@ export interface KonnectBaseEntityConfig extends KonnectConfig, BaseEntityConfig
 /** Kong Manager base form config */
 export interface KongManagerBaseEntityConfig extends KongManagerConfig, BaseEntityConfig {}
 
-export const enum ConfigurationSchemaType {
+export enum ConfigurationSchemaType {
   ID = 'id',
   IdArray = 'id-array',
   Text = 'plain-text', // default
@@ -27,7 +27,7 @@ export const enum ConfigurationSchemaType {
   LinkExternal = 'link-external',
 }
 
-export const enum ConfigurationSchemaSection {
+export enum ConfigurationSchemaSection {
   Basic = 'basic',
   Advanced = 'advanced', // default
   Plugin = 'plugin',

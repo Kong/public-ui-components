@@ -1,6 +1,6 @@
 // Cypress component test spec file
 
-import { OperationListItem } from '../types'
+import type { OperationListItem } from '../types'
 import { jsonSpec, specOpItem } from '../../fixtures/spec-data'
 import SpecDetails from './SpecDetails.vue'
 

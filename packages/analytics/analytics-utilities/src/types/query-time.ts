@@ -1,4 +1,4 @@
-import { DruidGranularity } from '.'
+import type { DruidGranularity } from '.'
 
 export interface QueryTime {
   granularitySeconds(): number

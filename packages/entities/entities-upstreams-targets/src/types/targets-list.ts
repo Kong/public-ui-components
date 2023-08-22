@@ -1,6 +1,6 @@
 import type { RouteLocationRaw } from 'vue-router'
-import { KongManagerBaseTableConfig, KonnectBaseTableConfig } from '@kong-ui-public/entities-shared'
-import { EntityRow } from './index'
+import type { KongManagerBaseTableConfig, KonnectBaseTableConfig } from '@kong-ui-public/entities-shared'
+import type { EntityRow } from './index'
 
 export interface BaseTargetsListConfig {
   /** Route for creating a target */

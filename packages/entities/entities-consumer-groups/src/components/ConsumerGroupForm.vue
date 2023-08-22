@@ -85,8 +85,9 @@ import {
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import composables from '../composables'
-import { computed, onBeforeMount, PropType, reactive } from 'vue'
-import {
+import type { PropType } from 'vue'
+import { computed, onBeforeMount, reactive } from 'vue'
+import type {
   ConsumerGroupActions,
   ConsumerGroupFields,
   ConsumerGroupPayload,
@@ -96,9 +97,9 @@ import {
   KonnectConsumerGroupFormConfig, ConsumerGroupData,
 } from '../types'
 import endpoints from '../consumer-groups-endpoints'
-import { MultiselectItem } from '@kong/kongponents'
+import type { MultiselectItem } from '@kong/kongponents'
 import { useRouter } from 'vue-router'
-import { AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */

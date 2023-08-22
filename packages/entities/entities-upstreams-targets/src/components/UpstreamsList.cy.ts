@@ -4,14 +4,15 @@ import type {
   KonnectUpstreamsListConfig,
   KongManagerUpstreamsListConfig,
 } from '../types'
+import type { FetcherRawResponse } from '../../fixtures/mockData'
 import {
-  FetcherRawResponse,
   paginate,
   upstreams,
   upstreams100,
 } from '../../fixtures/mockData'
 import type { FetcherResponse } from '@kong-ui-public/entities-shared'
-import { createMemoryHistory, createRouter, Router } from 'vue-router'
+import type { Router } from 'vue-router'
+import { createMemoryHistory, createRouter } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
 
 const viewRoute = 'view-upstream'

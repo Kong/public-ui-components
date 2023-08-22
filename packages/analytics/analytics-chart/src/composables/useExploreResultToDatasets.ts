@@ -1,7 +1,8 @@
-import { AnalyticsExploreResult, AnalyticsExploreV2Result, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreResult, AnalyticsExploreV2Result, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
 import { lookupDatavisColor, datavisPalette } from '../utils'
-import { computed, Ref } from 'vue'
-import { Dataset, ExploreToDatasetDeps, KChartData } from '../types'
+import type { Ref } from 'vue'
+import { computed } from 'vue'
+import type { Dataset, ExploreToDatasetDeps, KChartData } from '../types'
 import { isNullOrUndef } from 'chart.js/helpers'
 import composables from '../composables'
 

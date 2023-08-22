@@ -60,7 +60,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { AppSidebar, AppNavbar, SidebarToggle, SidebarPrimaryItem, SidebarSecondaryItem } from '../../src'
+import { AppSidebar, AppNavbar, SidebarToggle } from '../../src'
+import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../../src'
 import { AppLogo, AppGruceLogo } from '../components/icons'
 import '@kong/kongponents/dist/style.css'
 // Sandbox only

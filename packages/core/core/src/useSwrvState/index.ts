@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { ref, Ref, watchEffect } from 'vue'
+import type { Ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 
 enum swrvState {
   VALIDATING = 'VALIDATING',

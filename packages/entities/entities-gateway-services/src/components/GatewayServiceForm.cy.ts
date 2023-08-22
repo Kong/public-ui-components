@@ -1,5 +1,5 @@
 // Cypress component test spec file
-import { KongManagerGatewayServiceFormConfig, KonnectGatewayServiceFormConfig } from '../types'
+import type { KongManagerGatewayServiceFormConfig, KonnectGatewayServiceFormConfig } from '../types'
 import { gatewayService1, gatewayService2 } from '../../fixtures/mockData'
 import GatewayServiceForm from './GatewayServiceForm.vue'
 import { EntityBaseForm } from '@kong-ui-public/entities-shared'

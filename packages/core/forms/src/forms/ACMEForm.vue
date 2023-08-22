@@ -134,7 +134,8 @@
 <script setup lang="ts">
 
 import VueFormGenerator from '../generator/FormGenerator.vue'
-import { computed, onMounted, PropType, ref } from 'vue'
+import type { PropType } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { ACMECommonSchema, ACMELetsEncryptSchema, ACMEZeroSSLSchema } from './schemas/ACMECommon'
 
 const props = defineProps({

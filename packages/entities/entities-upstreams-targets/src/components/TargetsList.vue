@@ -142,7 +142,8 @@ import {
   useAxios,
   EntityTypes,
 } from '@kong-ui-public/entities-shared'
-import { computed, onBeforeMount, PropType, ref, watch } from 'vue'
+import type { PropType } from 'vue'
+import { computed, onBeforeMount, ref, watch } from 'vue'
 import type { AxiosError } from 'axios'
 import type {
   KongManagerTargetsListConfig,

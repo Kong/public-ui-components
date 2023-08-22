@@ -44,7 +44,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { DataFetcher, ExploreV2Filter, EXPLORE_V2_DIMENSIONS } from '../types'
+import { EXPLORE_V2_DIMENSIONS } from '../types'
+import type { DataFetcher, ExploreV2Filter } from '../types'
 import MetricsConsumer from './MetricsConsumer.vue'
 import MetricsProviderInternal from './MetricsProviderInternal.vue'
 import { MetricCardSize } from '@kong-ui-public/metric-cards'

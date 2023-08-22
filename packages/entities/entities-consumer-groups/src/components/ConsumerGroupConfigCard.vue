@@ -15,7 +15,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, PropType } from 'vue'
+import type { PropType } from 'vue'
+import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerConsumerGroupEntityConfig, KonnectConsumerGroupEntityConfig, ConsumerGroupConfigurationSchema } from '../types'
 import { EntityBaseConfigCard } from '@kong-ui-public/entities-shared'

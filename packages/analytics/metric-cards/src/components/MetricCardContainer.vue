@@ -43,10 +43,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from 'vue'
+import type { PropType } from 'vue'
+import { computed } from 'vue'
 import approxNum from 'approximate-number'
 import { MetricCardSize } from '../constants'
-import { MetricCardDef, MetricCardDisplayValue } from '../types'
+import type { MetricCardDef, MetricCardDisplayValue } from '../types'
 import { changePolarity, metricChange, defineIcon, calculateChange } from '../utilities'
 import MetricsCard from './display/MetricsCard.vue'
 import MetricCardLoadingSkeleton from './display/MetricCardLoadingSkeleton.vue'

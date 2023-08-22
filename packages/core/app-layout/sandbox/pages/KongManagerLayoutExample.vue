@@ -126,7 +126,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 // Sandbox only
-import { SidebarPrimaryItem, SidebarSecondaryItem } from '../../src'
+import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../../src'
 import AppGruceLogo from '../components/icons/AppGruceLogo.vue'
 import AppLogo from '../components/icons/AppLogo.vue'
 

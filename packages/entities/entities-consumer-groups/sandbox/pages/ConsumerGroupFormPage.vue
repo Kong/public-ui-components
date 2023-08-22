@@ -24,8 +24,8 @@
 import ConsumerGroupForm from '../../src/components/ConsumerGroupForm.vue'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-import { KongManagerConsumerGroupFormConfig, KonnectConsumerGroupFormConfig } from '../../src'
-import { AxiosError } from 'axios'
+import type { KongManagerConsumerGroupFormConfig, KonnectConsumerGroupFormConfig } from '../../src'
+import type { AxiosError } from 'axios'
 
 const router = useRouter()
 

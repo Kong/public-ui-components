@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.4.22...@kong-ui-public/metric-cards@0.4.23) (2023-08-22)
+
+
+### Bug Fixes
+
+* **tsconfig:** apply `@vue/tsconfig` ([#729](https://github.com/Kong/public-ui-components/issues/729)) ([c8aeca7](https://github.com/Kong/public-ui-components/commit/c8aeca7bed27ad0347183744096a5524d1852568))
+
+
+
+
+
 ## [0.4.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.4.21...@kong-ui-public/metric-cards@0.4.22) (2023-08-18)
 
 **Note:** Version bump only for package @kong-ui-public/metric-cards

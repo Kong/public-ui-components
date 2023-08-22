@@ -1,6 +1,7 @@
-import useSWRV, { IConfig } from 'swrv'
-import { AxiosResponse, AxiosError } from 'axios'
-import { IKey, fetcherFn } from 'swrv/dist/types'
+import type { IConfig } from 'swrv'
+import useSWRV from 'swrv'
+import type { AxiosResponse, AxiosError } from 'axios'
+import type { IKey, fetcherFn } from 'swrv/dist/types'
 import { computed } from 'vue'
 
 export default function useRequest<Data = unknown, Error = { message: string }>(

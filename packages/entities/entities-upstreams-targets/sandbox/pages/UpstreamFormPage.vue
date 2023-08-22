@@ -24,8 +24,8 @@
 import UpstreamsForm from '../../src/components/UpstreamsForm.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
-import { KongManagerUpstreamsFormConfig, KonnectUpstreamsFormConfig } from '../../src'
-import { AxiosError } from 'axios'
+import type { KongManagerUpstreamsFormConfig, KonnectUpstreamsFormConfig } from '../../src'
+import type { AxiosError } from 'axios'
 
 const route = useRoute()
 const router = useRouter()

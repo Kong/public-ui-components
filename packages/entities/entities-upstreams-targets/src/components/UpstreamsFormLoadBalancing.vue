@@ -236,12 +236,13 @@ import {
   EntityFormSection,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
-import { computed, PropType, ref, watch } from 'vue'
-import { AlgorithmSelectItem, HashSelectItem, UpstreamAlgorithm, UpstreamHash } from '../types'
+import type { PropType } from 'vue'
+import { computed, ref, watch } from 'vue'
+import type { AlgorithmSelectItem, HashSelectItem, UpstreamAlgorithm, UpstreamHash } from '../types'
 import useHelpers from '../composables/useHelpers'
 import { SlotsMaxNumber, SlotsMinNumber } from '../constants'
 import links from '../links'
-import { SelectItem } from '@kong/kongponents'
+import type { SelectItem } from '@kong/kongponents'
 const { i18nT, i18n: { t } } = composables.useI18n()
 const { inRange } = useHelpers()
 

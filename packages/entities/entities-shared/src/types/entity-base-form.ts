@@ -1,5 +1,5 @@
 import type { RouteLocationRaw } from 'vue-router'
-import { KonnectConfig, KongManagerConfig } from './index'
+import type { KonnectConfig, KongManagerConfig } from './index'
 
 export interface BaseFormConfig {
   /** Route to return to if canceling create/edit an entity */
@@ -14,7 +14,7 @@ export interface KonnectBaseFormConfig extends KonnectConfig, BaseFormConfig {}
 /** Kong Manager base form config */
 export interface KongManagerBaseFormConfig extends KongManagerConfig, BaseFormConfig {}
 
-export const enum EntityBaseFormType {
+export enum EntityBaseFormType {
   Edit = 'edit',
   Create = 'create',
 }

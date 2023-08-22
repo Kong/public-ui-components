@@ -93,9 +93,10 @@ import {
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import endpoints from '../upstreams-endpoints'
-import { computed, onBeforeMount, PropType, ref } from 'vue'
-import { KongManagerUpstreamsFormConfig, KonnectUpstreamsFormConfig } from '../types'
-import { SelectItem } from '@kong/kongponents'
+import type { PropType } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
+import type { KongManagerUpstreamsFormConfig, KonnectUpstreamsFormConfig } from '../types'
+import type { SelectItem } from '@kong/kongponents'
 
 const { i18nT, i18n: { t } } = composables.useI18n()
 

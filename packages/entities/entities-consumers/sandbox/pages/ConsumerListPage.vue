@@ -44,7 +44,8 @@ import type { AxiosError } from 'axios'
 import { ref } from 'vue'
 import { ConsumerList } from '../../src'
 import type { KonnectConsumerListConfig, KongManagerConsumerListConfig, EntityRow, CopyEventPayload } from '../../src'
-import SandboxPermissionsControl, { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 // Uncomment to test Consumer Groups -> Consumers

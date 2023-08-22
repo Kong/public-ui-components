@@ -124,7 +124,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, ref, watch, onBeforeMount } from 'vue'
+import type { PropType } from 'vue'
+import { computed, ref, watch, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 

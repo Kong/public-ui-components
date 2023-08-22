@@ -148,7 +148,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, PropType } from 'vue'
+import type { PropType } from 'vue'
+import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import {
   useAxios, EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType, InternalLinkItem,

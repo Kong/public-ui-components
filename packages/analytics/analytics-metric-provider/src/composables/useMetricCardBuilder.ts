@@ -1,6 +1,8 @@
-import { MetricCardDef } from '@kong-ui-public/metric-cards'
-import { Ref, computed } from 'vue'
-import { ChronologicalMappedMetrics, DEFAULT_KEY } from './useMetricFetcher'
+import type { MetricCardDef } from '@kong-ui-public/metric-cards'
+import type { Ref } from 'vue'
+import { computed } from 'vue'
+import type { ChronologicalMappedMetrics } from './useMetricFetcher'
+import { DEFAULT_KEY } from './useMetricFetcher'
 
 export interface BuilderOptions {
   title: Ref<string>,

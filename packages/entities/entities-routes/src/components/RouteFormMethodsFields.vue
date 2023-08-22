@@ -60,11 +60,14 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, watch } from 'vue'
-import { RoutingRulesEntities, MethodsFields } from '../types'
+import type { PropType } from 'vue'
+import { ref, watch } from 'vue'
+import type { MethodsFields } from '../types'
+import { RoutingRulesEntities } from '../types'
 import composables from '../composables'
 import RoutingRulesEntitiesControls from './RoutingRulesEntitiesControls.vue'
-import { Method, MethodsArray } from '@kong/kongponents'
+import type { Method } from '@kong/kongponents'
+import { MethodsArray } from '@kong/kongponents'
 
 /** Local types, not exported
  * Same pattern used other fields components

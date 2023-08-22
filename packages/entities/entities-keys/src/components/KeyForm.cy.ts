@@ -1,5 +1,5 @@
 // Cypress component test spec file
-import { KongManagerKeyFormConfig, KonnectKeyFormConfig } from '../types'
+import type { KongManagerKeyFormConfig, KonnectKeyFormConfig } from '../types'
 import { key1, keySets, kid, jwkString } from '../../fixtures/mockData'
 import KeyForm from './KeyForm.vue'
 import { EntityBaseForm } from '@kong-ui-public/entities-shared'

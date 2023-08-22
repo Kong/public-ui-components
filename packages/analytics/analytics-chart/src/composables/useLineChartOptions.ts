@@ -1,9 +1,17 @@
 import { computed } from 'vue'
-import { Tooltip, TooltipPositionerFunction, ChartType, TooltipYAlignment, TooltipXAlignment } from 'chart.js'
+import type {
+  TooltipPositionerFunction,
+  ChartType,
+  TooltipYAlignment,
+  TooltipXAlignment,
+} from 'chart.js'
+import {
+  Tooltip,
+} from 'chart.js'
 import { horizontalTooltipPositioning, tooltipBehavior, verticalTooltipPositioning } from '../utils'
 import { millisecondsToHours, secondsToHours } from 'date-fns'
 import { isNullOrUndef } from 'chart.js/helpers'
-import { ExternalTooltipContext, LineChartOptions } from '../types'
+import type { ExternalTooltipContext, LineChartOptions } from '../types'
 import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
 
 export default function useLinechartOptions(chartOptions: LineChartOptions) {

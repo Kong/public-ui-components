@@ -96,8 +96,9 @@ import UpstreamsFormHealthChecks from './UpstreamsFormHealthChecks.vue'
 import UpstreamsFormActiveHealthCheck from './UpstreamsFormActiveHealthCheck.vue'
 import UpstreamsFormPassiveHealthCheck from './UpstreamsFormPassiveHealthCheck.vue'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import { computed, PropType, reactive } from 'vue'
-import {
+import type { PropType } from 'vue'
+import { computed, reactive } from 'vue'
+import type {
   KongManagerUpstreamsFormConfig,
   KonnectUpstreamsFormConfig, UpstreamFormFields,
   UpstreamFormPayload,
@@ -109,7 +110,7 @@ import {
   SlotsMaxNumber,
   SlotsMinNumber,
 } from '../constants'
-import { AxiosError, AxiosResponse } from 'axios'
+import type { AxiosError, AxiosResponse } from 'axios'
 import { useRouter } from 'vue-router'
 
 const props = defineProps({

@@ -1,7 +1,9 @@
-import { Timeframe } from '@kong-ui-public/analytics-utilities'
+import type { Timeframe } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
-import { DataFetcher, EXPLORE_V2_AGGREGATIONS, EXPLORE_V2_DIMENSIONS, ExploreV2Filter, MetricFetcherOptions, EXPLORE_V2_FILTER_TYPES } from '../types'
-import { Ref, InjectionKey, computed } from 'vue'
+import { EXPLORE_V2_AGGREGATIONS, EXPLORE_V2_DIMENSIONS, EXPLORE_V2_FILTER_TYPES } from '../types'
+import type { DataFetcher, ExploreV2Filter, MetricFetcherOptions } from '../types'
+import { computed } from 'vue'
+import type { InjectionKey, Ref } from 'vue'
 
 interface ProviderData {
   data: {

@@ -19,10 +19,10 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { KongManagerUpstreamsEntityConfig, KonnectUpstreamsEntityConfig } from '../../src'
+import type { KongManagerUpstreamsEntityConfig, KonnectUpstreamsEntityConfig } from '../../src'
 import UpstreamsConfigCard from '../../src/components/UpstreamsConfigCard.vue'
 import { useRoute } from 'vue-router'
-import { AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 
 const route = useRoute()
 const id = computed((): string => route.params.id as string || '')

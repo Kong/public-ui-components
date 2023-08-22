@@ -1,4 +1,4 @@
-import { EntityRow } from '../src/types/plugin-list'
+import type { EntityRow } from '../src/types/plugin-list'
 
 // FetcherRawResponse is the raw format of the endpoint's response
 export interface FetcherRawResponse {

@@ -1,11 +1,11 @@
 // Cypress component test spec file
+import type { ConsumerGroup } from '../../fixtures/mockData'
 import {
-  ConsumerGroup,
   consumerGroups100,
   consumerGroups5,
   paginate,
 } from '../../fixtures/mockData'
-import {
+import type {
   KongManagerConsumerGroupListConfig,
   KonnectConsumerGroupListConfig,
 } from '../types'

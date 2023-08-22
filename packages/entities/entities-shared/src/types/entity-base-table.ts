@@ -1,5 +1,5 @@
-import { RouteLocationRaw } from 'vue-router'
-import { Field, KongManagerConfig, KonnectConfig } from './index'
+import type { RouteLocationRaw } from 'vue-router'
+import type { Field, KongManagerConfig, KonnectConfig } from './index'
 
 export interface KonnectBaseTableConfig extends KonnectConfig {}
 

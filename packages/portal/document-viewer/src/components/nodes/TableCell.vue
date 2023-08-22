@@ -8,8 +8,9 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
-import { TableCellAlign, TableRowNode, TableRowSection } from '../../types'
+import type { PropType } from 'vue'
+import type { TableRowNode } from '../../types'
+import { TableCellAlign, TableRowSection } from '../../types'
 
 const props = defineProps({
   alignment: {

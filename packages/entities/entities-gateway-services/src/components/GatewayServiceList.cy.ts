@@ -1,9 +1,10 @@
 // Cypress component test spec file
 import type { FetcherResponse } from '@kong-ui-public/entities-shared'
-import { createMemoryHistory, createRouter, Router } from 'vue-router'
-import { KongManagerGatewayServiceListConfig, KonnectGatewayServiceListConfig } from '../types'
+import type { Router } from 'vue-router'
+import { createMemoryHistory, createRouter } from 'vue-router'
+import type { KongManagerGatewayServiceListConfig, KonnectGatewayServiceListConfig } from '../types'
+import type { FetcherRawResponse } from '../../fixtures/mockData'
 import {
-  FetcherRawResponse,
   paginate,
   gatewayServices,
   gatewayServices100,

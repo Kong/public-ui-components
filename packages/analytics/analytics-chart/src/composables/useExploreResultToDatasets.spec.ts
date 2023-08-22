@@ -1,6 +1,7 @@
-import { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
 import { describe, it, expect } from 'vitest'
-import { computed, ComputedRef } from 'vue'
+import type { ComputedRef } from 'vue'
+import { computed } from 'vue'
 import useExploreResultToDatasets from './useExploreResultToDatasets'
 
 describe('useVitalsExploreDatasets', () => {

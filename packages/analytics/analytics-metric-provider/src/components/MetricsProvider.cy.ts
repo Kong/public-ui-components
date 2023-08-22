@@ -1,9 +1,11 @@
 import MetricsTestHarness from './MetricsTestHarness.vue'
 import { ref } from 'vue'
-import { DataFetcher, ExploreV2Query, EXPLORE_V2_AGGREGATIONS, EXPLORE_V2_DIMENSIONS, EXPLORE_V2_FILTER_TYPES } from '../types'
-import { QueryTime } from '@kong-ui-public/analytics-utilities'
-import { MockOptions, mockExploreResponse } from '../mockExploreResponse'
-import { AxiosResponse } from 'axios'
+import type { DataFetcher, ExploreV2Query } from '../types'
+import { EXPLORE_V2_AGGREGATIONS, EXPLORE_V2_DIMENSIONS, EXPLORE_V2_FILTER_TYPES } from '../types'
+import type { QueryTime } from '@kong-ui-public/analytics-utilities'
+import type { MockOptions } from '../mockExploreResponse'
+import { mockExploreResponse } from '../mockExploreResponse'
+import type { AxiosResponse } from 'axios'
 
 describe('<AnalyticsMetricProvider />', () => {
 

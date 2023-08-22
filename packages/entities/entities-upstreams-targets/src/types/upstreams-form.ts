@@ -1,6 +1,6 @@
-import { BaseFormConfig, KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
-import { RouteLocationRaw } from 'vue-router'
-import { SelectItem } from '@kong/kongponents'
+import type { BaseFormConfig, KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
+import type { RouteLocationRaw } from 'vue-router'
+import type { SelectItem } from '@kong/kongponents'
 
 export interface BaseUpstreamsFormConfig extends Omit<BaseFormConfig, 'cancelRoute'> {
   cancelRoute: RouteLocationRaw

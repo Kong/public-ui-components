@@ -65,7 +65,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, PropType } from 'vue'
+import type { PropType } from 'vue'
+import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerGatewayServiceEntityConfig, KonnectGatewayServiceEntityConfig, GatewayServiceConfigurationSchema } from '../types'
 import { EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType } from '@kong-ui-public/entities-shared'

@@ -1,4 +1,4 @@
-import { MetricCardSize } from '../constants'
+import type { MetricCardSize } from '../constants'
 export interface MetricCardDef {
   currentValue: number
   previousValue: number

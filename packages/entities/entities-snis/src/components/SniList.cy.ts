@@ -1,13 +1,13 @@
 // Cypress component test spec file
 import SniList from './SniList.vue'
 import type { FetcherResponse } from '@kong-ui-public/entities-shared'
+import type { FetcherRawResponse } from '../../fixtures/mockData'
 import {
-  FetcherRawResponse,
   paginate,
   snis,
   snis100,
 } from '../../fixtures/mockData'
-import { KongManagerSniListConfig, KonnectSniListConfig } from '../types'
+import type { KongManagerSniListConfig, KonnectSniListConfig } from '../types'
 import { v4 as uuidv4 } from 'uuid'
 
 const viewRoute = 'view-sni'

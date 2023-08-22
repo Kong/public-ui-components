@@ -42,7 +42,8 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, computed } from 'vue'
+import type { PropType } from 'vue'
+import { ref, computed } from 'vue'
 import type { SpecDocument, Operation, OperationListItem, Tag } from '../types'
 import composables from '../composables'
 import SpecDetails from './SpecDetails.vue'

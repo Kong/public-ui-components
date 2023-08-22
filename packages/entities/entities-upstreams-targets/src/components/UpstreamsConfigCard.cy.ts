@@ -1,4 +1,4 @@
-import { UpstreamResponse } from '../types'
+import type { UpstreamResponse } from '../types'
 import { konnectCardConfig, upstreamsResponseFull } from '../../fixtures/mockData'
 import UpstreamsConfigCard from './UpstreamsConfigCard.vue'
 import { EntityBaseConfigCard } from '@kong-ui-public/entities-shared'

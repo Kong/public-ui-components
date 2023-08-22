@@ -1,6 +1,7 @@
 import AddToGroupModal from './AddToGroupModal.vue'
-import { KongManagerConsumerGroupListConfig, KonnectConsumerGroupListConfig } from '../types'
-import { ConsumerGroup, consumerGroups5 } from '../../fixtures/mockData'
+import type { KongManagerConsumerGroupListConfig, KonnectConsumerGroupListConfig } from '../types'
+import type { ConsumerGroup } from '../../fixtures/mockData'
+import { consumerGroups5 } from '../../fixtures/mockData'
 import { KPrompt } from '@kong/kongponents'
 
 describe('<AddToGroupModal/>', () => {

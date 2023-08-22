@@ -40,7 +40,8 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed } from 'vue'
+import type { PropType } from 'vue'
+import { computed } from 'vue'
 import type { OperationListItem } from '../../types'
 import composables from '../../composables'
 

@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
+import type { PropType } from 'vue'
 import { TableRowSection } from '../../types'
 
 const props = defineProps({

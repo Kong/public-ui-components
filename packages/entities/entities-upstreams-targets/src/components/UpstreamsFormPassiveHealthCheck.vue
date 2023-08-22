@@ -135,8 +135,9 @@ import {
   EntityFormSection,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
-import { computed, PropType, ref, watch } from 'vue'
-import { HealthCheckType, HealthCheckTypeSelectItem } from '../types'
+import type { PropType } from 'vue'
+import { computed, ref, watch } from 'vue'
+import type { HealthCheckType, HealthCheckTypeSelectItem } from '../types'
 import {
   HTTPStatuses,
   PassiveHealthyHttpStatuses,
@@ -148,7 +149,7 @@ import {
 } from '../constants'
 import useMultiselectCreation from '../composables/useMultiselectCreation'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { MultiselectItem, SelectItem } from '@kong/kongponents'
+import type { MultiselectItem, SelectItem } from '@kong/kongponents'
 import links from '../links'
 
 const { i18n: { t } } = composables.useI18n()

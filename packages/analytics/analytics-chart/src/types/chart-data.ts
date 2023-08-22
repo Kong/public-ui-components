@@ -1,5 +1,5 @@
-import { ChartData, ChartDataset } from 'chart.js'
-import { ChartTypes, ChartMetricDisplay, ChartTypesSimple } from '../enums'
+import type { ChartData, ChartDataset } from 'chart.js'
+import type { ChartTypes, ChartMetricDisplay, ChartTypesSimple } from '../enums'
 
 // Chart.js extendend interfaces
 export type Dataset = ChartDataset & { rawDimension: string, rawMetric?: string, total?: number, lineTension?: number, fill?: boolean }

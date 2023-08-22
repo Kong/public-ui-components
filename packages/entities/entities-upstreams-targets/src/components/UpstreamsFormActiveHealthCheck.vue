@@ -283,8 +283,9 @@ import {
   EntityFormSection,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
-import { computed, PropType, ref, watch } from 'vue'
-import {
+import type { PropType } from 'vue'
+import { computed, ref, watch } from 'vue'
+import type {
   ActiveHealthCheckHeader,
   HealthCheckType,
   HealthCheckTypeSelectItem, KongManagerUpstreamsFormConfig,
@@ -307,7 +308,7 @@ import {
   ConcurrencyMinNumber,
 } from '../constants'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { MultiselectItem, SelectItem } from '@kong/kongponents'
+import type { MultiselectItem, SelectItem } from '@kong/kongponents'
 import useHelpers from '../composables/useHelpers'
 import links from '../links'
 
