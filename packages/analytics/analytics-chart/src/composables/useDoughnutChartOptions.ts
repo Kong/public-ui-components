@@ -1,11 +1,13 @@
 import { computed } from 'vue'
-import { DoughnutChartOptions, ExternalTooltipContext } from '../types'
-import {
-  Tooltip,
+import type { DoughnutChartOptions, ExternalTooltipContext } from '../types'
+import type {
   TooltipItem,
   TooltipXAlignment,
   TooltipPositionerFunction,
   ChartType,
+} from 'chart.js'
+import {
+  Tooltip,
 } from 'chart.js'
 import { horizontalTooltipPositioning, tooltipBehavior } from '../utils'
 

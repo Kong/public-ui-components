@@ -1,6 +1,7 @@
 // Important: do not utilize Vue reactive variables in this composable so that it may be used outside the setup() function
-import { Options as IntlMessageFormatOptions } from 'intl-messageformat'
-import { createIntl, createIntlCache, MessageDescriptor } from '@formatjs/intl'
+import type { Options as IntlMessageFormatOptions } from 'intl-messageformat'
+import type { MessageDescriptor } from '@formatjs/intl'
+import { createIntl, createIntlCache } from '@formatjs/intl'
 import { flatten } from 'flat'
 import type { IntlShapeEx, PathToDotNotation, SupportedLocales, MessageFormatPrimitiveValue, IntlConfigCore } from './types'
 

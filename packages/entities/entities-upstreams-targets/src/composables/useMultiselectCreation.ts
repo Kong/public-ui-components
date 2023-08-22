@@ -1,6 +1,6 @@
-import { MultiselectComposableOptions } from '../types'
+import type { MultiselectComposableOptions } from '../types'
 import { ref } from 'vue'
-import { MultiselectItem } from '@kong/kongponents'
+import type { MultiselectItem } from '@kong/kongponents'
 
 export default function useMultiselectCreation(options: MultiselectComposableOptions) {
   const { replaceId = false } = options

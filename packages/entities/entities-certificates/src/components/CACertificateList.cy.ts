@@ -1,14 +1,15 @@
 // Cypress component test spec file
 import CACertificateList from './CACertificateList.vue'
-import { KonnectCertificateListConfig, KongManagerCertificateListConfig } from '../types'
+import type { KonnectCertificateListConfig, KongManagerCertificateListConfig } from '../types'
+import type { FetcherRawResponse } from '../../fixtures/mockData'
 import {
-  FetcherRawResponse,
   paginate,
   caCertificate,
   caCertificate100,
 } from '../../fixtures/mockData'
 import type { FetcherResponse } from '@kong-ui-public/entities-shared'
-import { createMemoryHistory, createRouter, Router } from 'vue-router'
+import type { Router } from 'vue-router'
+import { createMemoryHistory, createRouter } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
 
 const viewRoute = 'view-ca-certificate'

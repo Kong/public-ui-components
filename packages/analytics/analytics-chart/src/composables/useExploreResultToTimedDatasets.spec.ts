@@ -1,6 +1,8 @@
-import { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
-import { describe, it, expect, vitest, SpyInstance } from 'vitest'
-import { computed, ComputedRef } from 'vue'
+import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
+import type { SpyInstance } from 'vitest'
+import { describe, it, expect, vitest } from 'vitest'
+import type { ComputedRef } from 'vue'
+import { computed } from 'vue'
 import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
 
 const START_FOR_DAILY_QUERY = new Date(1672560000000)

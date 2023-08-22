@@ -1,4 +1,4 @@
-import { ConfigurationSchemaItem, KongManagerBaseEntityConfig, KonnectBaseEntityConfig } from '@kong-ui-public/entities-shared'
+import type { ConfigurationSchemaItem, KongManagerBaseEntityConfig, KonnectBaseEntityConfig } from '@kong-ui-public/entities-shared'
 
 export interface KonnectVaultEntityConfig extends KonnectBaseEntityConfig {}
 

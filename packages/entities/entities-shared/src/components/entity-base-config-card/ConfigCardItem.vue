@@ -119,7 +119,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, useSlots } from 'vue'
+import type { PropType } from 'vue'
+import { computed, useSlots } from 'vue'
 import type { RecordItem, ComponentAttrsData } from '../../types'
 import { ConfigurationSchemaType } from '../../types'
 import composables from '../../composables'

@@ -1,5 +1,5 @@
 import { mount } from 'cypress/vue'
-import { ComponentPublicInstance, App } from 'vue'
+import type { ComponentPublicInstance, App } from 'vue'
 import defaultRouter from '../fixtures/routes'
 import RouterLink from '../fixtures/RouterLink.vue'
 import Kongponents from '@kong/kongponents'

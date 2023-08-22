@@ -1,5 +1,6 @@
-import { Component } from 'vue'
-import { BaseNode, isTableHeaderNode, isListNode, TableRowSection } from '../types'
+import type { Component } from 'vue'
+import type { BaseNode } from '../types'
+import { isTableHeaderNode, isListNode, TableRowSection } from '../types'
 import Blockquote from './nodes/Blockquote.vue'
 import Code from './nodes/Code.vue'
 import CodeBlock from './nodes/CodeBlock.vue'

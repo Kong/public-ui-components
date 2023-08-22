@@ -23,9 +23,9 @@
 <script lang="ts" setup>
 import ConsumerForm from '../../src/components/ConsumerForm.vue'
 import { ref } from 'vue'
-import { KongManagerConsumerFormConfig, KonnectConsumerFormConfig } from '../../src'
+import type { KongManagerConsumerFormConfig, KonnectConsumerFormConfig } from '../../src'
 import { useRouter } from 'vue-router'
-import { AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 
 const router = useRouter()
 

@@ -3,7 +3,8 @@ import { add, setDate, startOfDay, startOfMonth, startOfWeek, subMilliseconds } 
 
 import { GranularityKeys, TimeframeKeys } from './types'
 import { DeltaQueryTime, TimeseriesQueryTime, UnaryQueryTime } from './queryTime'
-import { datePickerSelectionToTimeframe, Timeframe, TimePeriods } from './timeframes'
+import type { Timeframe } from './timeframes'
+import { datePickerSelectionToTimeframe, TimePeriods } from './timeframes'
 import { formatInTimeZone } from 'date-fns-tz'
 
 const standardizeTimezone = (d: Date) => {

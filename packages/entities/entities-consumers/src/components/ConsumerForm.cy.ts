@@ -1,11 +1,11 @@
 import ConsumerForm from './ConsumerForm.vue'
 import { EntityBaseForm } from '@kong-ui-public/entities-shared'
-import {
+import type {
   ConsumerPayload,
   KongManagerConsumerFormConfig,
   KonnectConsumerFormConfig,
 } from '../types'
-import { AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 
 const cancelRoute = { name: 'consumer-list' }
 

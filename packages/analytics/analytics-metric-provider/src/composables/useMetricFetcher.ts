@@ -1,9 +1,12 @@
-import { computed, Ref } from 'vue'
-import { AnalyticsExploreV2Result, DeltaQueryTime, QueryTime, UnaryQueryTime } from '@kong-ui-public/analytics-utilities'
-import { EXPLORE_V2_AGGREGATIONS, EXPLORE_V2_DIMENSIONS, ExploreV2Query, MetricFetcherOptions } from '../types'
+import type { Ref } from 'vue'
+import { computed } from 'vue'
+import { DeltaQueryTime, UnaryQueryTime } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreV2Result, QueryTime } from '@kong-ui-public/analytics-utilities'
+import { EXPLORE_V2_DIMENSIONS } from '../types'
+import type { EXPLORE_V2_AGGREGATIONS, ExploreV2Query, MetricFetcherOptions } from '../types'
 import { MAX_ANALYTICS_REQUEST_RETRIES } from '../constants'
 import composables from '.'
-import { type AxiosResponse } from 'axios'
+import type { AxiosResponse } from 'axios'
 import { useSwrvState } from '@kong-ui-public/core'
 
 export const DEFAULT_KEY = Symbol('default')

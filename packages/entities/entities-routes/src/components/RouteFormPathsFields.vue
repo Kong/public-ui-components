@@ -24,7 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, watch } from 'vue'
+import type { PropType } from 'vue'
+import { ref, watch } from 'vue'
 import { RoutingRulesEntities } from '../types'
 import composables from '../composables'
 import RoutingRulesEntitiesControls from './RoutingRulesEntitiesControls.vue'

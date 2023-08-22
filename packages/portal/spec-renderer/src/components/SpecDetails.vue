@@ -27,8 +27,9 @@
 <script setup lang="ts">
 import '@kong-ui-public/swagger-ui-web-component'
 import type { SwaggerUIElement } from '@kong-ui-public/swagger-ui-web-component'
-import { PropType, computed, ref, watch, onMounted } from 'vue'
-import { SpecDocument, OperationListItem } from '../types'
+import type { PropType } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
+import type { SpecDocument, OperationListItem } from '../types'
 import composables from '../composables'
 
 const props = defineProps({

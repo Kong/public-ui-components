@@ -54,7 +54,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, ref, watch, onBeforeMount } from 'vue'
+import type { PropType } from 'vue'
+import { computed, ref, watch, onBeforeMount } from 'vue'
 import type {
   KongManagerConsumerGroupListConfig,
   KonnectConsumerGroupListConfig,
@@ -62,7 +63,7 @@ import type {
 import { useDebouncedFilter, useAxios } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import endpoints from '../consumer-groups-endpoints'
-import { MultiselectItem } from '@kong/kongponents'
+import type { MultiselectItem } from '@kong/kongponents'
 
 const { i18n: { t } } = composables.useI18n()
 

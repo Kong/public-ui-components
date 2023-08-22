@@ -1,6 +1,6 @@
-import { BaseFormConfig, KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
-import { RouteLocationRaw } from 'vue-router'
-import { Methods, Method } from './method-badge'
+import type { BaseFormConfig, KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
+import type { RouteLocationRaw } from 'vue-router'
+import type { Methods, Method } from './method-badge'
 
 export interface BaseRouteFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>{
   /** Route to return to if canceling create/edit a Route form */

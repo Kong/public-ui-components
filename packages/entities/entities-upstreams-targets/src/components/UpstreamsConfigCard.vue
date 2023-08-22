@@ -197,13 +197,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, ref } from 'vue'
-import { KongManagerUpstreamsEntityConfig, KonnectUpstreamsEntityConfig, UpstreamsConfigurationSchema } from '../types'
+import type { PropType } from 'vue'
+import { computed, ref } from 'vue'
+import type { KongManagerUpstreamsEntityConfig, KonnectUpstreamsEntityConfig, UpstreamsConfigurationSchema } from '../types'
 import { EntityBaseConfigCard, ConfigurationSchemaType, ConfigurationSchemaSection } from '@kong-ui-public/entities-shared'
 import endpoints from '../upstreams-endpoints'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import { AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */

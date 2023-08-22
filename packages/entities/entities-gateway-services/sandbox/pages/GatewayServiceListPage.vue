@@ -42,7 +42,8 @@ import { ref } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KonnectGatewayServiceListConfig, KongManagerGatewayServiceListConfig, EntityRow, CopyEventPayload } from '../../src'
 import { GatewayServiceList } from '../../src'
-import SandboxPermissionsControl, { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 

@@ -1,6 +1,7 @@
 import AddConsumerModal from './AddConsumerModal.vue'
-import { KongManagerConsumerListConfig, KonnectConsumerListConfig } from '../types'
-import { Consumer, consumers5 } from '../../fixtures/mockData'
+import type { KongManagerConsumerListConfig, KonnectConsumerListConfig } from '../types'
+import type { Consumer } from '../../fixtures/mockData'
+import { consumers5 } from '../../fixtures/mockData'
 import { KPrompt } from '@kong/kongponents'
 
 describe('<AddConsumerModal/>', () => {

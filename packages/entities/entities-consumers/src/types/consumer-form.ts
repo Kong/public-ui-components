@@ -1,5 +1,5 @@
-import { BaseFormConfig, KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
-import { RouteLocationRaw } from 'vue-router'
+import type { RouteLocationRaw } from 'vue-router'
+import type { BaseFormConfig, KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 
 export interface BaseConsumerFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>{
   /** Route to return to if canceling create/edit a Consumer form */

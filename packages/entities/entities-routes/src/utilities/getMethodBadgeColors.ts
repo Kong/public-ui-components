@@ -1,4 +1,4 @@
-import { Method, MethodBadgeColors } from '../types'
+import type { Method, MethodBadgeColors } from '../types'
 
 type DefinedMethod = Exclude<Method, 'CUSTOM'>
 

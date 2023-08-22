@@ -1,4 +1,4 @@
-import { AnalyticsChartColors } from './chart-data'
+import type { AnalyticsChartColors } from './chart-data'
 
 /**
  * Interace representing the various options

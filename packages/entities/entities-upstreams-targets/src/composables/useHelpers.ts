@@ -1,4 +1,4 @@
-import { UpstreamFormFields, UpstreamResponse } from '../types'
+import type { UpstreamFormFields, UpstreamResponse } from '../types'
 import {
   ActiveHealthyHttpStatuses,
   ActiveUnhealthyHttpStatuses,

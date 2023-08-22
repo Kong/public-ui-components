@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { TextNode } from '../../types'
+import type { TextNode } from '../../types'
 import * as components from 'prismjs/components'
 import Prism from 'prismjs'
 import 'prismjs/themes/prism.min.css'

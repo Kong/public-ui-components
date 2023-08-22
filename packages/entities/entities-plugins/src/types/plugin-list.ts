@@ -1,5 +1,5 @@
 import type { RouteLocationRaw } from 'vue-router'
-import { FilterSchema, KongManagerBaseTableConfig, KonnectBaseTableConfig } from '@kong-ui-public/entities-shared'
+import type { FilterSchema, KongManagerBaseTableConfig, KonnectBaseTableConfig } from '@kong-ui-public/entities-shared'
 
 import type { EntityRow as ServiceEntity } from '@kong-ui-public/entities-gateway-services'
 import type { EntityRow as ConsumerEntity } from '@kong-ui-public/entities-consumers'

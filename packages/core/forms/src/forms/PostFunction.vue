@@ -9,7 +9,8 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed } from 'vue'
+import type { PropType } from 'vue'
+import { computed } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../locales/en.json'
 import VueFormGenerator from '../generator/FormGenerator.vue'

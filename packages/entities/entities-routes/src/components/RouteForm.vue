@@ -321,14 +321,14 @@ import {
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import { computed, nextTick, onBeforeMount, onMounted, PropType, reactive, ref, watch } from 'vue'
-import {
+import type { PropType } from 'vue'
+import { computed, nextTick, onBeforeMount, onMounted, reactive, ref, watch } from 'vue'
+import type {
   KonnectRouteFormConfig,
   KongManagerRouteFormConfig,
   RouteStateFields,
   RouteState,
   RoutePayload,
-  RoutingRulesEntities,
   RoutingRuleEntity,
   Method,
   HeaderFields,
@@ -338,8 +338,9 @@ import {
   Headers,
   Protocol,
 } from '../types'
+import { RoutingRulesEntities } from '../types'
 import { useRouter } from 'vue-router'
-import { AxiosError, AxiosResponse } from 'axios'
+import type { AxiosError, AxiosResponse } from 'axios'
 import endpoints from '../routes-endpoints'
 import RouteFormPathsFields from './RouteFormPathsFields.vue'
 import RouteFormSnisFields from './RouteFormSnisFields.vue'
@@ -349,7 +350,7 @@ import RouteFormHeadersFields from './RouteFormHeadersFields.vue'
 import RouteFormSourcesFields from './RouteFormSourcesFields.vue'
 import RouteFormDestinationsFields from './RouteFormDestinationsFields.vue'
 import { isRoutePayloadValid } from '../utilities'
-import { SelectItem } from '@kong/kongponents'
+import type { SelectItem } from '@kong/kongponents'
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
 const props = defineProps({

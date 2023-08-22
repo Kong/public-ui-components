@@ -1,5 +1,5 @@
 // Cypress component test spec file
-import { KongManagerSniFormConfig, KonnectSniFormConfig } from '../types'
+import type { KongManagerSniFormConfig, KonnectSniFormConfig } from '../types'
 import { sni1, certificates } from '../../fixtures/mockData'
 import SniForm from './SniForm.vue'
 import { EntityBaseForm } from '@kong-ui-public/entities-shared'

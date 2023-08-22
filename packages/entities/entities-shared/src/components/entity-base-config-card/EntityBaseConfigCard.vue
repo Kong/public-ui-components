@@ -100,7 +100,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, ref, onBeforeMount, watch, useSlots } from 'vue'
+import type { PropType } from 'vue'
+import { computed, ref, onBeforeMount, watch, useSlots } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, ConfigurationSchema, PluginConfigurationSchema, RecordItem, DefaultCommonFieldsConfigurationSchema } from '../../types'
 import { ConfigurationSchemaType, ConfigurationSchemaSection } from '../../types'

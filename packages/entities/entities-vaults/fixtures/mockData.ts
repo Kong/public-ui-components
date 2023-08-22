@@ -1,5 +1,5 @@
 // FetcherRawResponse is the raw format of the endpoint's response
-import { KonnectVaultEntityConfig } from '../src'
+import type { KonnectVaultEntityConfig } from '../src'
 
 export interface FetcherRawResponse {
   data: any[];

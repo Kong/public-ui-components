@@ -42,7 +42,8 @@
 
 <script setup lang="ts">
 import { computed, ref, reactive } from 'vue'
-import { EntityBaseForm, EntityFormSection, KonnectBaseFormConfig } from '../../src'
+import type { KonnectBaseFormConfig } from '../../src'
+import { EntityBaseForm, EntityFormSection } from '../../src'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 

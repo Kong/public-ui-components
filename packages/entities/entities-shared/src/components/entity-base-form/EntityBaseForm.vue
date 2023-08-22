@@ -67,7 +67,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, ref, onBeforeMount, watch } from 'vue'
+import type { PropType } from 'vue'
+import { computed, ref, onBeforeMount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'

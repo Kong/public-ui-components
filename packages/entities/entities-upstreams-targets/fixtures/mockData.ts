@@ -1,5 +1,5 @@
 // FetcherRawResponse is the raw format of the endpoint's response
-import {
+import type {
   KongManagerUpstreamsFormConfig, KonnectUpstreamsEntityConfig,
   KonnectUpstreamsFormConfig,
   UpstreamResponse,

@@ -6,8 +6,8 @@ import {
   upstreamsResponse, upstreamsResponseFull,
 } from '../../fixtures/mockData'
 import { EntityBaseForm } from '@kong-ui-public/entities-shared'
-import { AxiosError } from 'axios'
-import { UpstreamResponse } from '../types'
+import type { AxiosError } from 'axios'
+import type { UpstreamResponse } from '../types'
 
 describe('<UpstreamsForm/>', () => {
   describe('Konnect', () => {

@@ -1,4 +1,4 @@
-import { Field } from './index'
+import type { Field } from './index'
 
 /** Base filter configuration */
 interface BaseFilterConfig {

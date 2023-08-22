@@ -69,7 +69,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { EntityBaseTable, FetcherParams, FetcherResponse } from '../../src'
+import { EntityBaseTable } from '../../src'
+import type { FetcherParams, FetcherResponse } from '../../src'
 import { mockTableHeaders, mockTableData } from '../../fixtures/mockData'
 
 const headers = mockTableHeaders

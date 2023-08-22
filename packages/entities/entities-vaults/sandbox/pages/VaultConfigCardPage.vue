@@ -18,9 +18,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { KongManagerVaultEntityConfig, KonnectVaultEntityConfig } from '../../src'
+import type { KongManagerVaultEntityConfig, KonnectVaultEntityConfig } from '../../src'
 import VaultConfigCard from '../../src/components/VaultConfigCard.vue'
-import { AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 
 const props = defineProps({
   id: {

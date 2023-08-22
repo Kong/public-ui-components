@@ -1,5 +1,5 @@
 // FetcherRawResponse is the raw format of the endpoint's response
-import { Consumer } from '../src'
+import type { Consumer } from '../src'
 
 export type ConsumerGroup = {
   name: string;

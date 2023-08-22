@@ -1,7 +1,7 @@
-import { Ref } from 'vue'
-import { Chart, ChartType, TooltipModel } from 'chart.js'
-import { ChartTypes } from '../enums'
-import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
+import type { Ref } from 'vue'
+import type { Chart, ChartType, TooltipModel } from 'chart.js'
+import type { ChartTypes } from '../enums'
+import type { GranularityKeys } from '@kong-ui-public/analytics-utilities'
 export interface TooltipState {
   showTooltip: boolean,
   tooltipContext: string | number,

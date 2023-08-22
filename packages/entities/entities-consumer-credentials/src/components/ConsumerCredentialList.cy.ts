@@ -3,8 +3,8 @@ import ConsumerCredentialList from './ConsumerCredentialList.vue'
 import { v4 as uuidv4 } from 'uuid'
 import type { FetcherResponse } from '@kong-ui-public/entities-shared'
 
+import type { FetcherRawResponse } from '../../fixtures/mockData'
 import {
-  FetcherRawResponse,
   paginate,
   basicAuthCredentials,
   basicAuthCredentials100,
@@ -14,7 +14,7 @@ import {
   hmacAuthCredentials,
   jwtCredentials,
 } from '../../fixtures/mockData'
-import { KonnectConsumerCredentialListConfig, KongManagerConsumerCredentialListConfig } from '../types'
+import type { KonnectConsumerCredentialListConfig, KongManagerConsumerCredentialListConfig } from '../types'
 
 const editRoute = 'edit-route'
 const createRoute = 'create-route'

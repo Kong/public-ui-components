@@ -44,9 +44,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { AxiosError } from 'axios'
-import { PluginList, ViewRouteType } from '../../src'
-import type { EntityRow, KongManagerPluginListConfig, KonnectPluginListConfig, CopyEventPayload } from '../../src'
-import SandboxPermissionsControl, { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import { PluginList } from '../../src'
+import type { EntityRow, KongManagerPluginListConfig, KonnectPluginListConfig, CopyEventPayload, ViewRouteType } from '../../src'
+import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 

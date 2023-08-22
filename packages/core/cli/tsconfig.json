@@ -1,18 +1,12 @@
 {
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
     "baseUrl": ".",
     "rootDir": "./src",
     "outDir": "./bin",
     "moduleResolution": "node",
-    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
     "types": [
       "@types/inquirer",
       "@types/node"

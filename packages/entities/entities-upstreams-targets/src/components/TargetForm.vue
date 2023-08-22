@@ -74,7 +74,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, reactive, watch } from 'vue'
+import type { PropType } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import type { AxiosError, AxiosResponse } from 'axios'
 import type {
   KonnectTargetFormConfig,

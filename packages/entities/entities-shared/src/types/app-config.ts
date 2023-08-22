@@ -1,4 +1,4 @@
-import { RawAxiosRequestHeaders, AxiosHeaders } from 'axios'
+import type { RawAxiosRequestHeaders, AxiosHeaders } from 'axios'
 
 /** Shared config properties for all app entities */
 interface BaseAppConfig {

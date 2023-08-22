@@ -107,8 +107,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, ref, watch } from 'vue'
-import { ExactMatchFilterConfig, FuzzyMatchFilterConfig } from '../../types'
+import type { PropType } from 'vue'
+import { computed, ref, watch } from 'vue'
+import type { ExactMatchFilterConfig, FuzzyMatchFilterConfig } from '../../types'
 import composables from '../../composables'
 import IconFilter from '../icons/IconFilter.vue'
 

@@ -1,5 +1,5 @@
 import type { RouteLocationRaw } from 'vue-router'
-import {
+import type {
   FilterSchema,
   KongManagerBaseTableConfig,
   KonnectBaseTableConfig,

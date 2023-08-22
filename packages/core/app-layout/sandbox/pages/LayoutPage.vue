@@ -99,7 +99,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 // Sandbox only
-import { AccountDropdown, SidebarPrimaryItem, SidebarSecondaryItem } from '../../src'
+import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../../src'
+import { AccountDropdown } from '../../src'
 import NavLinks from '../components/NavLinks.vue'
 import AppGruceLogo from '../components/icons/AppGruceLogo.vue'
 import AppLogo from '../components/icons/AppLogo.vue'
