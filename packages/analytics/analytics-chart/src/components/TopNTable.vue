@@ -198,17 +198,14 @@ const getValue = (record: AnalyticsExploreRecord): string => {
 
 <style lang="scss" scoped>
 .kong-ui-public-top-n-table {
-  --kui-border-radius-20: 8px;
-  --kui-font-size-60: 16px;
-
   :deep(.k-card-actions) {
     align-self: baseline;
     display: flex;
     line-height: 22px;
 
     .top-n-card-description {
-      color: #6F7787;
-      font-size: 12px;
+      color: $kui-color-text-neutral;
+      font-size: $kui-font-size-20;
       text-align: right;
     }
   }
@@ -219,40 +216,44 @@ const getValue = (record: AnalyticsExploreRecord): string => {
     width: 100%;
 
     .table-headings {
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 24px;
+      font-size: $kui-font-size-30;
+      font-weight: $kui-font-weight-semibold;
+      line-height: $kui-line-height-40;
     }
 
     .table-row {
       align-self: stretch;
-      border-bottom: 1px solid #E7E7EC;
+      border-bottom: $kui-border-width-10 solid $kui-color-border;
       display: flex;
       justify-content: space-between;
+
+      &:last-of-type {
+        border-bottom: none;
+      }
     }
 
     .column-1 {
-      padding: 0 24px 15px 0;
+      padding: 0 $kui-space-80 $kui-space-60 0;
     }
 
     .column-2 {
       flex: 1;
       max-width: 110px;
-      padding: 0 0 15px 0;
+      padding: 0 0 $kui-space-60 0;
     }
 
     .table-body {
       .column-1, .column-2 {
-        padding-top: 15px;
+        padding-top: $kui-space-60;
       }
 
       .column-1 {
-        color: #3C4557;
-        font-size: 13px;
+        color: $kui-color-text-neutral-stronger;
+        font-size: $kui-font-size-30;
 
         :deep(a) {
-          color: #1155CB;
-          font-weight: 700;
+          color: $kui-color-text-primary;
+          font-weight: $kui-font-weight-bold;
           text-decoration: none;
         }
       }
