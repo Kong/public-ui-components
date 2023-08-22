@@ -11,7 +11,6 @@
           <div>
             <KRadio
               v-model="chartType"
-              data-testid="service-radio-btn"
               name="chartType"
               :selected-value="ChartTypes.HORIZONTAL_BAR"
             >
@@ -21,7 +20,6 @@
           <div>
             <KRadio
               v-model="chartType"
-              data-testid="route-radio-btn"
               name="chartType"
               :selected-value="ChartTypes.VERTICAL_BAR"
             >
@@ -31,7 +29,6 @@
           <div>
             <KRadio
               v-model="chartType"
-              data-testid="application-radio-btn"
               name="chartType"
               :selected-value="ChartTypes.TIMESERIES_LINE"
             >
@@ -41,7 +38,6 @@
           <div>
             <KRadio
               v-model="chartType"
-              data-testid="application-radio-btn"
               name="chartType"
               :selected-value="ChartTypes.TIMESERIES_BAR"
             >
@@ -51,7 +47,6 @@
           <div>
             <KRadio
               v-model="chartType"
-              data-testid="application-radio-btn"
               name="chartType"
               :selected-value="ChartTypes.DOUGHNUT"
             >
@@ -61,11 +56,19 @@
           <div>
             <KRadio
               v-model="chartType"
-              data-testid="application-radio-btn"
               name="chartType"
               :selected-value="ChartTypesSimple.GAUGE"
             >
               Gauge
+            </KRadio>
+          </div>
+          <div>
+            <KRadio
+              v-model="chartType"
+              name="chartType"
+              :selected-value="ChartTypesSimple.TOPN"
+            >
+              Top N Table
             </KRadio>
           </div>
         </div>
@@ -83,7 +86,6 @@
           <div>
             <KRadio
               v-model="metricDisplay"
-              data-testid="service-radio-btn"
               name="metricDisplay"
               :selected-value="ChartMetricDisplay.SingleMetric"
             >
@@ -93,7 +95,6 @@
           <div>
             <KRadio
               v-model="metricDisplay"
-              data-testid="application-radio-btn"
               name="metricDisplay"
               :selected-value="ChartMetricDisplay.Full"
             >
@@ -103,7 +104,6 @@
           <div>
             <KRadio
               v-model="metricDisplay"
-              data-testid="route-radio-btn"
               name="metricDisplay"
               :selected-value="ChartMetricDisplay.Hidden"
             >
@@ -125,7 +125,6 @@
           <div>
             <KRadio
               v-model="legendPosition"
-              data-testid="service-radio-btn"
               name="legendPosition"
               :selected-value="ChartLegendPosition.Right"
             >
@@ -135,7 +134,6 @@
           <div>
             <KRadio
               v-model="legendPosition"
-              data-testid="route-radio-btn"
               name="legendPosition"
               :selected-value="ChartLegendPosition.Bottom"
             >
@@ -145,7 +143,6 @@
           <div>
             <KRadio
               v-model="legendPosition"
-              data-testid="application-radio-btn"
               name="legendPosition"
               :selected-value="ChartLegendPosition.Hidden"
             >
@@ -175,14 +172,28 @@
       tooltip-title="tooltip title"
     />
     <SimpleChart
-      v-else
+      v-else-if="!isTopNTable"
       :chart-data="exploreResult"
       :chart-options="simpleChartOptions"
       :legend-position="legendPosition"
     />
+    <TopNTable
+      v-if="isTopNTable"
+      class="top-n-sandbox"
+      :data="exploreResultV3"
+      description="Last 30-Day Summary"
+      title="Top 5 Routes"
+    >
+      <template #name="{ record }">
+        <a href="#">{{ record.name }}</a>
+      </template>
+    </TopNTable>
 
     <!-- Dataset options -->
-    <div class="dataset-options">
+    <div
+      v-if="!isTopNTable"
+      class="dataset-options"
+    >
       <KButton
         appearance="outline"
         class="first-button"
@@ -240,13 +251,16 @@
       </div>
       <div>
         <KInputSwitch
-          v-model="showEmptyStateToggle"
-          :label="showEmptyStateToggle ? 'No Data' : 'Chart Has Data'"
+          v-model="showTableData"
+          :label="!showTableData ? 'Empty State' : 'Chart Has Data'"
         />
       </div>
     </div>
     <div class="config-container">
-      <div class="config-container-row">
+      <div
+        v-if="!isTopNTable"
+        class="config-container-row"
+      >
         <KLabel>Colors</KLabel>
         <div
           v-for="([label, color], i) in Object.entries(colorPalette)"
@@ -287,7 +301,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { AnalyticsChart, ChartMetricDisplay, ChartLegendPosition, ChartTypes, ChartTypesSimple, SimpleChart } from '../src'
+import { AnalyticsChart, ChartMetricDisplay, ChartLegendPosition, ChartTypes, ChartTypesSimple, SimpleChart, TopNTable } from '../src'
 import type { AnalyticsExploreRecord, AnalyticsExploreV2Meta, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions, SimpleChartOptions } from '../src/types'
 import { SeededRandom } from './SeedRandom'
@@ -295,8 +309,6 @@ import { rand } from './utils'
 import { lookupDatavisColor } from '../src/utils'
 import { lookupStatusCodeColor } from '../src/utils/customColors'
 
-// why is eslint unused vars broken?? ¯\_(ツ)_/¯
-/* eslint-disable no-unused-vars */
 enum Metrics {
   TotalRequests = 'TotalRequests',
   LatencyP99 = 'LatencyP99',
@@ -316,7 +328,7 @@ const limitToggle = ref(false)
 const multiDimensionToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
-const showEmptyStateToggle = ref(false)
+const showTableData = ref(true)
 const chartType = ref<ChartTypes | ChartTypesSimple>(ChartTypes.DOUGHNUT)
 const legendPosition = ref(ChartLegendPosition.Right)
 const metricDisplay = ref(ChartMetricDisplay.SingleMetric)
@@ -349,7 +361,7 @@ const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',
 ]))
 const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
-  if (showEmptyStateToggle.value) {
+  if (showTableData.value) {
     return null
   }
 
@@ -471,6 +483,77 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
     meta,
   }
 })
+const exploreResultV3 = computed(() => {
+  if (!showTableData.value) {
+    return {
+      meta: {},
+      records: [],
+    }
+  }
+
+  return {
+    meta: {
+      display: {
+        ROUTE: {
+          'b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6': 'GetMeAKongDefault (secondaryRuntime)',
+          'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:2a3e9d21-804b-4b3b-ab7e-c6f002dadbf4': 'dp-mock-msg-per-sec-us-dev (default)',
+          'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8b1db7eb-5c3c-489c-9344-eb0b272019ca': '8b1db (default)',
+          'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8f3f6808-a723-4793-8444-f2046961226b': 'dp-mock-us-dev (default)',
+          'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:b4cd1c10-d77f-41b0-a84d-31fc0d99f0d9': 'GetMeASongRoute (default)',
+        },
+      },
+      endMs: 1692295253000,
+      granularity: 300000,
+      limit: 50,
+      metricNames: [
+        'REQUEST_COUNT',
+      ],
+      metricUnits: {
+        REQUEST_COUNT: 'count',
+      },
+      queryId: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
+      startMs: 1692294953000,
+      truncated: false,
+    },
+    records: [
+      {
+        event: {
+          REQUEST_COUNT: 9483,
+          ROUTE: 'b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6',
+        },
+        timestamp: '2023-08-17T17:55:53.000Z',
+      },
+      {
+        event: {
+          REQUEST_COUNT: 5587,
+          ROUTE: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:b4cd1c10-d77f-41b0-a84d-31fc0d99f0d9',
+        },
+        timestamp: '2023-08-17T17:55:53.000Z',
+      },
+      {
+        event: {
+          REQUEST_COUNT: 5583,
+          ROUTE: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8b1db7eb-5c3c-489c-9344-eb0b272019ca',
+        },
+        timestamp: '2023-08-17T17:55:53.000Z',
+      },
+      {
+        event: {
+          REQUEST_COUNT: 1485,
+          ROUTE: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8f3f6808-a723-4793-8444-f2046961226b',
+        },
+        timestamp: '2023-08-17T17:55:53.000Z',
+      },
+      {
+        event: {
+          REQUEST_COUNT: 309,
+          ROUTE: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:2a3e9d21-804b-4b3b-ab7e-c6f002dadbf4',
+        },
+        timestamp: '2023-08-17T17:55:53.000Z',
+      },
+    ],
+  }
+})
 
 const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {}))
 
@@ -518,11 +601,15 @@ const isTimeSeriesChart = computed<boolean>(() => {
 })
 
 const isSimpleChart = computed<boolean>(() => {
-  return [ChartTypesSimple.GAUGE].some(e => e === chartType.value)
+  return [ChartTypesSimple.GAUGE, ChartTypesSimple.TOPN].some(e => e === chartType.value)
 })
 
 const isGaugeChart = computed<boolean>(() => {
   return (ChartTypesSimple.GAUGE === chartType.value)
+})
+
+const isTopNTable = computed<boolean>(() => {
+  return (ChartTypesSimple.TOPN === chartType.value)
 })
 
 const onMetricSelected = (item: any) => {
@@ -566,6 +653,11 @@ body {
 .sandbox-container {
   margin: 0;
   padding: $kui-space-60;
+
+  .top-n-sandbox {
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
 
   h1 {
     margin-top: 0;
