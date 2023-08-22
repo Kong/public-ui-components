@@ -134,6 +134,6 @@ describe('<TopNTable />', () => {
     })
 
     cy.get('.kong-ui-public-top-n-table').should('be.visible')
-    cy.getTestId(`row-${ROUTE_ID}`).should('contain', slottedName)
+    cy.get(`[data-testid="row-${ROUTE_ID}"]`).should('contain', slottedName)
   })
 })
