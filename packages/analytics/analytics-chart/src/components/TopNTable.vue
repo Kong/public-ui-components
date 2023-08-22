@@ -96,8 +96,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from 'vue'
-import { AnalyticsExploreV3Result, AnalyticsExploreV3Meta, AnalyticsExploreRecord, RecordEvent } from '@kong-ui-public/analytics-utilities'
+import { computed } from 'vue'
+import type { PropType } from 'vue'
+import type { AnalyticsExploreV3Result, AnalyticsExploreV3Meta, AnalyticsExploreRecord, RecordEvent } from '@kong-ui-public/analytics-utilities'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
 import composables from '../composables'
@@ -147,11 +148,11 @@ const columnKey = computed((): string => {
   return meta.value.metricNames[0]
 })
 const columnName = computed((): string => {
-  if (columnKey.value) {
-    return i18n.t(`chartLabels.${columnKey.value}` as any) || columnKey.value
+  if (!columnKey.value) {
+    return ''
   }
 
-  return ''
+  return i18n.t(`chartLabels.${columnKey.value}` as any) || columnKey.value
 })
 
 const errorMessage = computed((): string => {
