@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.8.30...@kong-ui-public/analytics-chart@0.8.31) (2023-08-22)
+
+
+### Bug Fixes
+
+* analytics packages have conflicting i18n version [MA-1977] ([#730](https://github.com/Kong/public-ui-components/issues/730)) ([6b9a414](https://github.com/Kong/public-ui-components/commit/6b9a41467a613db04ab01f1725e4a561831429ed))
+
+
+
+
+
 ## [0.8.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.8.29...@kong-ui-public/analytics-chart@0.8.30) (2023-08-22)
 
 
