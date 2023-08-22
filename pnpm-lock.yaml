@@ -195,7 +195,7 @@ importers:
   packages/analytics/analytics-chart:
     dependencies:
       '@kong-ui-public/analytics-utilities':
-        specifier: workspace:^0.7.0
+        specifier: workspace:^0.7.1
         version: link:../analytics-utilities
       approximate-number:
         specifier: ^2.1.1
@@ -226,7 +226,7 @@ importers:
         version: 5.2.0(chart.js@4.3.3)(vue@3.3.4)
     devDependencies:
       '@kong-ui-public/i18n':
-        specifier: workspace:^0.8.0
+        specifier: workspace:^0.8.1
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: ^1.9.0
@@ -344,7 +344,7 @@ importers:
   packages/core/copy-uuid:
     devDependencies:
       '@kong-ui-public/i18n':
-        specifier: workspace:^0.8.0
+        specifier: workspace:^0.8.1
         version: link:../i18n
       '@kong/design-tokens':
         specifier: ^1.9.0
@@ -412,7 +412,7 @@ importers:
   packages/core/misc-widgets:
     devDependencies:
       '@kong-ui-public/i18n':
-        specifier: workspace:^0.8.0
+        specifier: workspace:^0.8.1
         version: link:../i18n
       '@kong/kongponents':
         specifier: ^8.122.1
@@ -782,7 +782,7 @@ importers:
   packages/portal/document-viewer:
     dependencies:
       '@kong-ui-public/i18n':
-        specifier: workspace:^0.8.0
+        specifier: workspace:^0.8.1
         version: link:../../core/i18n
       prismjs:
         specifier: ^1.29.0
@@ -807,7 +807,7 @@ importers:
   packages/portal/spec-renderer:
     dependencies:
       '@kong-ui-public/i18n':
-        specifier: workspace:^0.8.0
+        specifier: workspace:^0.8.1
         version: link:../../core/i18n
       '@kong-ui-public/swagger-ui-web-component':
         specifier: workspace:^0.8.4

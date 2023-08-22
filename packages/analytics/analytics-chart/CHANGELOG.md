@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.8.29...@kong-ui-public/analytics-chart@0.8.30) (2023-08-22)
+
+
+### Bug Fixes
+
+* **tsconfig:** apply `@vue/tsconfig` ([#729](https://github.com/Kong/public-ui-components/issues/729)) ([c8aeca7](https://github.com/Kong/public-ui-components/commit/c8aeca7bed27ad0347183744096a5524d1852568))
+
+
+
+
+
 ## [0.8.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.8.28...@kong-ui-public/analytics-chart@0.8.29) (2023-08-21)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
