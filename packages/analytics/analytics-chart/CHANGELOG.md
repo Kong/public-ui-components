@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.8.31...@kong-ui-public/analytics-chart@0.9.0) (2023-08-22)
+
+
+### Features
+
+* **top-n-table:** new component [khcp-8612] ([#711](https://github.com/Kong/public-ui-components/issues/711)) ([ac8ba78](https://github.com/Kong/public-ui-components/commit/ac8ba78bee4f3e13b2fc8e107fe5f2be81d7715d))
+
+
+
+
+
 ## [0.8.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.8.30...@kong-ui-public/analytics-chart@0.8.31) (2023-08-22)
 
 
