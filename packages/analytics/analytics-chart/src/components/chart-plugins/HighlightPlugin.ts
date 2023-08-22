@@ -1,4 +1,4 @@
-import { Chart, ChartEvent, InteractionItem, Plugin } from 'chart.js'
+import type { Chart, ChartEvent, InteractionItem, Plugin } from 'chart.js'
 
 interface HighlightPlugin extends Plugin {
   clickedElements?: InteractionItem[]

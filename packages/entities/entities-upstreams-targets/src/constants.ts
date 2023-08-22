@@ -1,4 +1,4 @@
-import { MultiselectItem } from '@kong/kongponents'
+import type { MultiselectItem } from '@kong/kongponents'
 
 export const HTTPStatuses: MultiselectItem[] = [
   {

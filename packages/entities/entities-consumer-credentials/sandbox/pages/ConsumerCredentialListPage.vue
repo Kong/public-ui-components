@@ -37,9 +37,10 @@
 <script setup lang="ts">
 import type { AxiosError } from 'axios'
 import { computed, ref } from 'vue'
-import { ConsumerCredentialList, CredentialPlugins } from '../../src'
-import type { KonnectConsumerCredentialListConfig, KongManagerConsumerCredentialListConfig, EntityRow, CopyEventPayload } from '../../src'
-import SandboxPermissionsControl, { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import { ConsumerCredentialList } from '../../src'
+import type { KonnectConsumerCredentialListConfig, KongManagerConsumerCredentialListConfig, EntityRow, CopyEventPayload, CredentialPlugins } from '../../src'
+import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const konnectConsumerId = import.meta.env.VITE_KONNECT_CONSUMER_ID || ''

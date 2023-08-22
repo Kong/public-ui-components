@@ -1,14 +1,15 @@
 // Cypress component test spec file
 import KeyList from './KeyList.vue'
 import type { FetcherResponse } from '@kong-ui-public/entities-shared'
+import type { FetcherRawResponse } from '../../fixtures/mockData'
 import {
-  FetcherRawResponse,
   paginate,
   keys,
   keys100,
 } from '../../fixtures/mockData'
-import { KongManagerKeyListConfig, KonnectKeyListConfig } from '../types'
-import { createMemoryHistory, createRouter, Router } from 'vue-router'
+import type { KongManagerKeyListConfig, KonnectKeyListConfig } from '../types'
+import type { Router } from 'vue-router'
+import { createMemoryHistory, createRouter } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
 
 const viewRoute = 'view-key'

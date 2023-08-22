@@ -1,5 +1,5 @@
 // Cypress component test spec file
-import { KongManagerCertificateFormConfig, KonnectCertificateFormConfig } from '../types'
+import type { KongManagerCertificateFormConfig, KonnectCertificateFormConfig } from '../types'
 import { caCertificate1 } from '../../fixtures/mockData'
 import CACertificateForm from './CACertificateForm.vue'
 import { EntityBaseForm } from '@kong-ui-public/entities-shared'

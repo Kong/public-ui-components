@@ -42,7 +42,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, inject, PropType } from 'vue'
+import type { PropType } from 'vue'
+import { computed, ref, inject } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../locales/en.json'
 import { COPY_UUID_NOTIFY_KEY } from '../constants'

@@ -32,8 +32,10 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, watch } from 'vue'
-import { RoutingRulesEntities, HeaderFields } from '../types'
+import type { PropType } from 'vue'
+import { ref, watch } from 'vue'
+import type { HeaderFields } from '../types'
+import { RoutingRulesEntities } from '../types'
 import composables from '../composables'
 import RoutingRulesEntitiesControls from './RoutingRulesEntitiesControls.vue'
 

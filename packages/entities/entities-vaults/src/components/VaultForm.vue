@@ -419,9 +419,9 @@ import {
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import { computed, PropType, reactive, ref } from 'vue'
-import {
-  VaultProviders,
+import type { PropType } from 'vue'
+import { computed, reactive, ref } from 'vue'
+import type {
   KongVaultConfig,
   AWSVaultConfig,
   GCPVaultConfig,
@@ -432,10 +432,13 @@ import {
   KongManagerVaultFormConfig,
   KonnectVaultFormConfig,
   VaultPayload,
+} from '../types'
+import {
+  VaultProviders,
   VaultAuthMethods,
 } from '../types'
 import { useRouter } from 'vue-router'
-import { AxiosError, AxiosResponse } from 'axios'
+import type { AxiosError, AxiosResponse } from 'axios'
 import endpoints from '../vaults-endpoints'
 
 interface ConfigFields {

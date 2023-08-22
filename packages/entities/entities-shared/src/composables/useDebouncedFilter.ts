@@ -1,6 +1,6 @@
 import { ref, unref } from 'vue'
 import { useDebounce } from '@kong-ui-public/core'
-import {
+import type {
   KongManagerBaseTableConfig,
   KongManagerBaseFormConfig,
   KonnectBaseTableConfig,

@@ -6,9 +6,11 @@
   </slot>
 </template>
 <script setup lang="ts">
-import { inject, computed, type Ref } from 'vue'
+import type { Ref } from 'vue'
+import { inject, computed } from 'vue'
 import { METRICS_PROVIDER_KEY } from './metricsProviderUtil'
-import { MetricCardDef, MetricCardSize, DECIMAL_DISPLAY, MetricCardContainer } from '@kong-ui-public/metric-cards'
+import type { MetricCardDef } from '@kong-ui-public/metric-cards'
+import { MetricCardSize, DECIMAL_DISPLAY, MetricCardContainer } from '@kong-ui-public/metric-cards'
 import '@kong-ui-public/metric-cards/dist/style.css'
 import composables from '../composables'
 import { ALL_STATUS_CODE_GROUPS, STATUS_CODES_FAILED } from '../constants'

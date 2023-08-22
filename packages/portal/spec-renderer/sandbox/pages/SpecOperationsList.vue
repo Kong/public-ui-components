@@ -69,7 +69,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import { Operation, Tag } from '../../src/types'
+import type { Operation, Tag } from '../../src/types'
 import clonedeep from 'lodash.clonedeep'
 import { SpecOperationsList } from '../../src'
 

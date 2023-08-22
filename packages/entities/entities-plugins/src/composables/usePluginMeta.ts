@@ -1,4 +1,5 @@
-import { PluginGroup, PluginMetaData, PluginScope } from '../types'
+import type { PluginMetaData } from '../types'
+import { PluginGroup, PluginScope } from '../types'
 
 import useI18n from './useI18n'
 

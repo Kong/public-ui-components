@@ -1,5 +1,5 @@
 import ConsumerGroupForm from './ConsumerGroupForm.vue'
-import { Consumer, KongManagerConsumerGroupFormConfig, KonnectConsumerGroupFormConfig } from '../types'
+import type { Consumer, KongManagerConsumerGroupFormConfig, KonnectConsumerGroupFormConfig } from '../types'
 import {
   consumersList5,
   CreateConsumerGroupKMResponse,
@@ -7,7 +7,7 @@ import {
   konnectGroup,
 } from '../../fixtures/mockData'
 import { EntityBaseForm } from '@kong-ui-public/entities-shared'
-import { AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 
 const cancelRoute = { name: 'consumer-group-list' }
 

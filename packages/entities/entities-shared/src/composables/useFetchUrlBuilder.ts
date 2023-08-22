@@ -1,10 +1,10 @@
 import { computed, ref, unref } from 'vue'
-import {
+import type {
   FetcherParams,
   KongManagerBaseTableConfig,
   KonnectBaseTableConfig,
 } from '../types'
-import { MaybeRef } from '../types/utils'
+import type { MaybeRef } from '../types/utils'
 
 export default function useFetchUrlBuilder(
   config: MaybeRef<KonnectBaseTableConfig | KongManagerBaseTableConfig>,

@@ -1,7 +1,5 @@
-import {
-  ConfigurationSchema,
-  ConfigurationSchemaType,
-} from '@kong-ui-public/entities-shared'
+import type { ConfigurationSchema } from '@kong-ui-public/entities-shared'
+import { ConfigurationSchemaType } from '@kong-ui-public/entities-shared'
 
 export default function useHelpers() {
   const METHOD_KEYS = ['methods', 'logout_methods']

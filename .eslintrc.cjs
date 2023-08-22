@@ -45,6 +45,10 @@ module.exports = {
     }],
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/indent': ['error', 2],
+    '@typescript-eslint/consistent-type-imports': ['error', {
+      prefer: 'type-imports',
+      fixStyle: 'separate-type-imports',
+    }],
     // Ensures ESLint understands that `defineEmits<{ ... }>()` does _not_ fail this rule.
     'func-call-spacing': 'off',
     '@typescript-eslint/func-call-spacing': ['error', 'never'],

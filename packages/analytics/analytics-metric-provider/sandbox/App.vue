@@ -26,12 +26,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import { DataFetcher, EXPLORE_V2_DIMENSIONS, ExploreV2Query, EXPLORE_V2_FILTER_TYPES } from '../src/types'
+import type { DataFetcher, ExploreV2Query } from '../src/types'
+import { EXPLORE_V2_DIMENSIONS, EXPLORE_V2_FILTER_TYPES } from '../src/types'
 import MetricsConsumer from '../src/components/MetricsConsumer.vue'
 import MetricsProviderInternal from '../src/components/MetricsProviderInternal.vue'
-import { MockOptions, mockExploreResponse } from '../src/mockExploreResponse'
-import axios, { AxiosResponse } from 'axios'
-import { DeltaQueryTime, QueryTime, TimePeriods, Timeframe, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
+import type { MockOptions } from '../src/mockExploreResponse'
+import { mockExploreResponse } from '../src/mockExploreResponse'
+import type { AxiosResponse } from 'axios'
+import axios from 'axios'
+import type { QueryTime, Timeframe } from '@kong-ui-public/analytics-utilities'
+import { DeltaQueryTime, TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
 
 const refreshInterval = 60 * 1000
 const hasTrendAccess = true

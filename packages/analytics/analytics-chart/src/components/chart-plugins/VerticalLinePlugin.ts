@@ -1,4 +1,4 @@
-import { Chart, ChartType, Plugin, TooltipItem } from 'chart.js'
+import type { Chart, ChartType, Plugin, TooltipItem } from 'chart.js'
 
 interface VerticalLinePlugin extends Plugin {
   clickedSegment?: TooltipItem<ChartType>

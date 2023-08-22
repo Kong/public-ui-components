@@ -1,5 +1,5 @@
 import { compare, validate } from 'compare-versions'
-import { KongManagerConfig } from '../types/app-config'
+import type { KongManagerConfig } from '../types/app-config'
 
 interface Param {
   gatewayInfo?: KongManagerConfig['gatewayInfo']

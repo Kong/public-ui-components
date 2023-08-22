@@ -35,7 +35,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, reactive, ref, toRef } from 'vue'
+import type { PropType } from 'vue'
+import { computed, reactive, ref, toRef } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
@@ -47,10 +48,10 @@ import {
 import { v4 as uuidv4 } from 'uuid'
 import { Doughnut } from 'vue-chartjs'
 import composables from '../../composables'
-import { AnalyticsChartColors, KChartData, TooltipState } from '../../types'
-import { Chart, ChartDataset } from 'chart.js'
+import type { AnalyticsChartColors, KChartData, TooltipState } from '../../types'
+import type { Chart, ChartDataset } from 'chart.js'
 import { ChartLegendPosition, ChartTypes } from '../../enums'
-import { DoughnutChartData } from '../../types/chart-data'
+import type { DoughnutChartData } from '../../types/chart-data'
 
 const props = defineProps({
   chartData: {

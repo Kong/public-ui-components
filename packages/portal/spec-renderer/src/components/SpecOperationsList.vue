@@ -144,7 +144,8 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed, ref, watch, onMounted } from 'vue'
+import type { PropType } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import type { OperationListFilterFunction, Operation, OperationListItem, Tag } from '../types'
 import { v1 as uuidv1 } from 'uuid'
 import clonedeep from 'lodash.clonedeep'

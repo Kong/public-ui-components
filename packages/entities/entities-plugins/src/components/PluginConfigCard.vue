@@ -87,13 +87,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, PropType, onBeforeMount } from 'vue'
+import type { PropType } from 'vue'
+import { computed, ref, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerPluginEntityConfig, KonnectPluginEntityConfig } from '../types'
-import {
-  EntityBaseConfigCard,
+import type {
   ConfigurationSchema,
   PluginConfigurationSchema,
+} from '@kong-ui-public/entities-shared'
+import {
+  EntityBaseConfigCard,
   ConfigurationSchemaType,
   ConfigurationSchemaSection,
   useAxios,

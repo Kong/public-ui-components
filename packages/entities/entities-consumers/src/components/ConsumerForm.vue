@@ -103,8 +103,9 @@
 import { useAxios, useErrors, EntityFormSection, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import { computed, PropType, reactive } from 'vue'
-import {
+import type { PropType } from 'vue'
+import { computed, reactive } from 'vue'
+import type {
   ConsumerPayload,
   ConsumerState,
   ConsumerStateFields,
@@ -112,7 +113,7 @@ import {
   KonnectConsumerFormConfig,
 } from '../types'
 import { useRouter } from 'vue-router'
-import { AxiosError, AxiosResponse } from 'axios'
+import type { AxiosError, AxiosResponse } from 'axios'
 import endpoints from '../consumers-endpoints'
 
 const props = defineProps({

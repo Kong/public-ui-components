@@ -1,4 +1,5 @@
-import { DruidGranularity, GranularityKeys } from './types'
+import type { DruidGranularity } from './types'
+import { GranularityKeys } from './types'
 import { getTimezoneOffset } from 'date-fns-tz'
 
 // Units are milliseconds, which are what Druid expects.

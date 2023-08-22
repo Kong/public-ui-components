@@ -85,7 +85,8 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed } from 'vue'
+import type { PropType } from 'vue'
+import { computed } from 'vue'
 import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../../types'
 import ItemBadge from './ItemBadge.vue'
 

@@ -1,5 +1,5 @@
 // Cypress component test spec file
-import { KongManagerTargetFormConfig, KonnectTargetFormConfig } from '../types'
+import type { KongManagerTargetFormConfig, KonnectTargetFormConfig } from '../types'
 import TargetForm from './TargetForm.vue'
 import { target } from '../../fixtures/mockData'
 

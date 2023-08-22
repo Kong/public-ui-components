@@ -59,7 +59,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, reactive } from 'vue'
+import type { PropType } from 'vue'
+import { computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
 import type {

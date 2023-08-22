@@ -54,7 +54,8 @@
 
 <script setup lang="ts">
 
-import { reactive, ref, computed, toRef, PropType, inject } from 'vue'
+import type { PropType } from 'vue'
+import { reactive, ref, computed, toRef, inject } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import { verticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
@@ -69,9 +70,9 @@ import {
 import { v4 as uuidv4 } from 'uuid'
 import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
-import { AnalyticsChartColors, KChartData, LegendValues, TooltipState } from '../../types'
+import type { AnalyticsChartColors, KChartData, LegendValues, TooltipState } from '../../types'
 import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
-import { Chart } from 'chart.js'
+import type { Chart } from 'chart.js'
 import { ChartLegendPosition, ChartTypes } from '../../enums'
 
 const props = defineProps({

@@ -1,13 +1,13 @@
 import { ref, unref } from 'vue'
-import {
+import type {
   FetcherParams,
   FetcherResponse,
   FetcherState,
-  FetcherStatus,
   KongManagerBaseTableConfig,
   KonnectBaseTableConfig,
   MaybeRef,
 } from '../types'
+import { FetcherStatus } from '../types'
 import useAxios from './useAxios'
 import useFetchUrlBuilder from './useFetchUrlBuilder'
 

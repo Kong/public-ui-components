@@ -1,4 +1,4 @@
-import { KonnectRouteFormConfig, KongManagerRouteFormConfig } from '../types'
+import type { KonnectRouteFormConfig, KongManagerRouteFormConfig } from '../types'
 import RouteForm from './RouteForm.vue'
 import { route, services } from '../../fixtures/mockData'
 import { EntityBaseForm } from '@kong-ui-public/entities-shared'

@@ -99,12 +99,14 @@
 
 <script setup lang="ts">
 import composables from '../composables'
-import { AnalyticsChartOptions } from '../types'
+import type { AnalyticsChartOptions } from '../types'
 import { ChartTypes, ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
-import { computed, PropType, provide, toRef } from 'vue'
-import { AnalyticsExploreResult, AnalyticsExploreV2Result, GranularityFullObj, GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
+import type { PropType } from 'vue'
+import { computed, provide, toRef } from 'vue'
+import { GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreResult, AnalyticsExploreV2Result, GranularityFullObj } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette, hasMillisecondTimestamps } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING } from '@kong/design-tokens'

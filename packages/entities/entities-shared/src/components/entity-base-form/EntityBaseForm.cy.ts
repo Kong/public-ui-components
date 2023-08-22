@@ -1,6 +1,6 @@
 // Cypress component test spec file
 import { h } from 'vue'
-import { KonnectBaseFormConfig } from '../../types'
+import type { KonnectBaseFormConfig } from '../../types'
 import EntityBaseForm from './EntityBaseForm.vue'
 
 describe('<EntityBaseForm />', () => {

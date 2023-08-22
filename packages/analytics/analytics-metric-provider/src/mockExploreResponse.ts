@@ -1,6 +1,7 @@
-import { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
-import { EXPLORE_V2_DIMENSIONS, ExploreV2Query } from './types'
-import { CyHttpMessages } from 'cypress/types/net-stubbing'
+import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
+import type { ExploreV2Query } from './types'
+import { EXPLORE_V2_DIMENSIONS } from './types'
+import type { CyHttpMessages } from 'cypress/types/net-stubbing'
 import { ALL_STATUS_CODE_GROUPS } from './constants'
 
 // Replicate date-fns `fromUnixTime` here to avoid a dependency.

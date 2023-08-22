@@ -1,4 +1,4 @@
-import { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
+import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 
 export interface BaseTargetFormConfig {
   upstreamId: string

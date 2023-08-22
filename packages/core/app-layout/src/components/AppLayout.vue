@@ -114,7 +114,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watchEffect, onMounted, onBeforeUnmount, PropType, toRef, useSlots } from 'vue'
+import type { PropType } from 'vue'
+import { ref, reactive, computed, watchEffect, onMounted, onBeforeUnmount, toRef, useSlots } from 'vue'
 import AppNavbar from './navbar/AppNavbar.vue'
 import AppSidebar from './sidebar/AppSidebar.vue'
 import SidebarToggle from './sidebar/SidebarToggle.vue'

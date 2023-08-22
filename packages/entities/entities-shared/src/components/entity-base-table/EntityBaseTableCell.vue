@@ -19,7 +19,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, PropType, ref, watch, onUnmounted, onMounted } from 'vue'
+import type { PropType } from 'vue'
+import { computed, ref, watch, onUnmounted, onMounted } from 'vue'
 
 const props = defineProps({
   keyName: {

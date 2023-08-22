@@ -1,4 +1,4 @@
-import { KChartData } from '../types'
+import type { KChartData } from '../types'
 import { ChartTypes } from '../enums'
 import { computed } from 'vue'
 import useChartLegendValues from './useChartLegendValues'

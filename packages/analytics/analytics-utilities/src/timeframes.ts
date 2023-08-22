@@ -10,9 +10,12 @@ import {
 } from 'date-fns'
 
 import {
-  DatePickerSelection,
   GranularityKeys,
   TimeframeKeys,
+} from './types'
+
+import type {
+  DatePickerSelection,
   TimeframeOptions,
   TimePeriod,
 } from './types'

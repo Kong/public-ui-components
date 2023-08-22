@@ -1,5 +1,5 @@
 import { computed, unref } from 'vue'
-import {
+import type {
   KongManagerBaseTableConfig,
   KonnectBaseTableConfig,
   MaybeRef,

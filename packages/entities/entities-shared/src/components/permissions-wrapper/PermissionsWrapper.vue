@@ -8,7 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onBeforeMount, PropType } from 'vue'
+import type { PropType } from 'vue'
+import { ref, computed, onBeforeMount } from 'vue'
 
 const props = defineProps({
   /**

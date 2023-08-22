@@ -1,5 +1,4 @@
-import type { IntlShape } from '@formatjs/intl'
-import { IntlConfig } from '@formatjs/intl'
+import type { IntlShape, IntlConfig } from '@formatjs/intl'
 
 import type { Options as IntlMessageFormatOptions } from 'intl-messageformat'
 

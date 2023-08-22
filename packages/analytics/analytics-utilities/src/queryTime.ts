@@ -6,8 +6,8 @@ import {
   Granularities,
   granularityMsToQuery,
 } from './granularity'
-import { DruidGranularity, GranularityKeys, QueryTime } from './types'
-import { Timeframe } from './timeframes'
+import type { GranularityKeys, DruidGranularity, QueryTime } from './types'
+import type { Timeframe } from './timeframes'
 
 abstract class BaseQueryTime implements QueryTime {
   protected readonly timeframe: Timeframe

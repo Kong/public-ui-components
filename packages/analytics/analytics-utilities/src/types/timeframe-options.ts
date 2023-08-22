@@ -1,4 +1,4 @@
-import { GranularityKeys } from './granularity-keys'
+import type { GranularityKeys } from './granularity-keys'
 
 export interface TimeframeOptions {
   key: string

@@ -37,7 +37,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { EntityFilter, ExactMatchFilterConfig, FuzzyMatchFilterConfig } from '../../src'
+import { EntityFilter } from '../../src'
+import type { ExactMatchFilterConfig, FuzzyMatchFilterConfig } from '../../src'
 import { mockExactMatchFilterConfig, mockFuzzyMatchFilterConfig } from '../../fixtures/mockData'
 
 const exactMatchConfig = mockExactMatchFilterConfig as ExactMatchFilterConfig

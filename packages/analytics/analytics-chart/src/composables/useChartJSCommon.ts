@@ -1,6 +1,7 @@
 import Chart from 'chart.js/auto'
 import type { ChartType, ChartData, Plugin, ChartOptions } from 'chart.js'
-import { onMounted, onUnmounted, Ref, watch, shallowRef } from 'vue'
+import type { Ref } from 'vue'
+import { onMounted, onUnmounted, watch, shallowRef } from 'vue'
 import { isNullOrUndef } from 'chart.js/helpers'
 
 // Based on

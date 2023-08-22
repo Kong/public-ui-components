@@ -1,6 +1,7 @@
-import { AnalyticsDataPoint, KChartData, LegendValues } from '../types'
-import { ChartTypes, ChartTypesSimple } from '../enums'
-import { computed, Ref } from 'vue'
+import type { AnalyticsDataPoint, KChartData, LegendValues } from '../types'
+import type { ChartTypes, ChartTypesSimple } from '../enums'
+import type { Ref } from 'vue'
+import { computed } from 'vue'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
 import prettyBytes from 'pretty-bytes'

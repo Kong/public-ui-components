@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import composables from '..'
-import { ConfigurationSchema, ConfigurationSchemaType } from '@kong-ui-public/entities-shared'
+import type { ConfigurationSchema } from '@kong-ui-public/entities-shared'
+import { ConfigurationSchemaType } from '@kong-ui-public/entities-shared'
 
 const { setFieldType } = composables.usePluginHelpers()
 

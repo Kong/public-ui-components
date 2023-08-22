@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-export const enum EntityTypes {
+export enum EntityTypes {
   GatewayService = 'service',
   Route = 'route',
   Consumer = 'consumer',
