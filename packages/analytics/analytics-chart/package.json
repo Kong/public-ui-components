@@ -20,12 +20,12 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@kong-ui-public/i18n": "workspace:^0.4.2",
+    "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^8.122.1",
     "vue": "^3.3.4"
   },
   "devDependencies": {
-    "@kong-ui-public/i18n": "workspace:^0.8.1",
+    "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "^1.9.0",
     "@kong/kongponents": "^8.122.1",
     "@types/uuid": "^9.0.2",
