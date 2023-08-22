@@ -116,9 +116,9 @@
     "defaultEmptyStateTitle": "No data to display",
     "defaultErrorStateTitle": "Something went wrong",
     "errors": {
-      "meta": "Error: response must contain `meta`",
-      "display": "Error: `display` response incorrectly formatted (must have at least one key)",
-      "metricNames": "Error: `metricNames` response incorrectly formatted (must have at least one key)"
+      "meta": "Error: response must contain 'meta'",
+      "display": "Error: 'display' response incorrectly formatted (must have at least one key)",
+      "metricNames": "Error: 'metricNames' response incorrectly formatted (must have at least one entry)"
     }
   }
 }

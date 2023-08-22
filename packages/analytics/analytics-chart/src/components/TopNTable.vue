@@ -98,7 +98,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { PropType } from 'vue'
-import type { AnalyticsExploreV3Result, AnalyticsExploreV3Meta, AnalyticsExploreRecord, RecordEvent } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreV3Result, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
 import composables from '../composables'
@@ -123,29 +123,28 @@ const props = defineProps({
 })
 
 const { i18n } = composables.useI18n()
-const meta = computed((): AnalyticsExploreV3Meta => props.data.meta)
 const records = computed((): AnalyticsExploreRecord[] => props.data.records)
 const hasData = computed((): boolean => !!(records.value?.length))
 const displayKey = computed((): string => {
-  if (!meta.value?.display) {
+  if (!props.data.meta?.display) {
     return ''
   }
 
-  return Object.keys(meta.value.display)?.[0]
+  return Object.keys(props.data.meta.display)?.[0] || ''
 })
 const displayRecord = computed(() => {
   if (!displayKey.value) {
     return {}
   }
 
-  return meta.value.display[displayKey.value]
+  return props.data.meta.display[displayKey.value]
 })
 const columnKey = computed((): string => {
-  if (!meta.value?.metricNames?.length) {
+  if (!props.data.meta?.metricNames?.length) {
     return ''
   }
 
-  return meta.value.metricNames[0]
+  return props.data.meta.metricNames[0]
 })
 const columnName = computed((): string => {
   if (!columnKey.value) {
@@ -156,29 +155,23 @@ const columnName = computed((): string => {
 })
 
 const errorMessage = computed((): string => {
-  if (hasData.value) {
-    if (!meta.value) {
-      return i18n.t('topNTable.errors.meta')
-    }
+  if (!hasData.value) {
+    return ''
+  }
 
-    if (!Object.keys(displayRecord.value).length) {
-      return i18n.t('topNTable.errors.display')
-    }
-
-    if (!columnKey.value) {
-      return i18n.t('topNTable.errors.metricNames')
-    }
+  if (!props.data.meta) {
+    return i18n.t('topNTable.errors.meta')
+  } else if (!Object.keys(displayRecord.value).length) {
+    return i18n.t('topNTable.errors.display')
+  } else if (!columnKey.value) {
+    return i18n.t('topNTable.errors.metricNames')
   }
 
   return ''
 })
 
-const getEvent = (record: AnalyticsExploreRecord): RecordEvent => {
-  return record.event
-}
-
 const getId = (record: AnalyticsExploreRecord): string => {
-  const event = getEvent(record)
+  const event = record.event
 
   return String(event[displayKey.value])
 }
@@ -192,7 +185,7 @@ const getValue = (record: AnalyticsExploreRecord): string => {
     return '–'
   }
 
-  const event = getEvent(record)
+  const event = record.event
   const val = event[columnKey.value]
 
   if (!val) {
