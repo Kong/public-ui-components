@@ -70,7 +70,8 @@
     "RESPONSE_SIZE_P50": "Response Size (p50)",
     "REQUEST_SIZE_P99": "Request Size (p99)",
     "REQUEST_SIZE_P95": "Request Size (p95)",
-    "REQUEST_SIZE_P50": "Request Size (p50)"
+    "REQUEST_SIZE_P50": "Request Size (p50)",
+    "CONTROL_PLANE": "Control Plane"
   },
   "metricAxisTitles": {
     "REQUEST_COUNT": "Request Count",
