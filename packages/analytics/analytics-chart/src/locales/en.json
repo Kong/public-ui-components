@@ -19,7 +19,7 @@
     "ServiceVersion": "Service Version",
     "Route": "Route",
     "Application": "Application",
-    "RuntimeGroup": "Runtime Group",
+    "RuntimeGroup": "Control Plane",
     "GatewayService": "Gateway Service",
     "StatusCode": "Status Code",
     "CodeClass": "Status Code (grouped)",
