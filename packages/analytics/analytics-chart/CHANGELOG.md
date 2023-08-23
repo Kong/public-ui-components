@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.9.2...@kong-ui-public/analytics-chart@0.9.3) (2023-08-23)
+
+
+### Bug Fixes
+
+* **analytics-chart:** new translation key for control plane ([#735](https://github.com/Kong/public-ui-components/issues/735)) ([c5fb111](https://github.com/Kong/public-ui-components/commit/c5fb111d3785ea35c1f841839476b0c5bfa4aafb))
+
+
+
+
+
 ## [0.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.9.1...@kong-ui-public/analytics-chart@0.9.2) (2023-08-23)
 
 
