@@ -3,8 +3,8 @@ import useMetricFetcher, { buildDeltaMapping, DEFAULT_KEY } from './useMetricFet
 import { ref } from 'vue'
 import type { Timeframe } from '@kong-ui-public/analytics-utilities'
 import { DeltaQueryTime, TimeframeKeys, TimePeriods, UnaryQueryTime } from '@kong-ui-public/analytics-utilities'
-import type { DataFetcher, MetricFetcherOptions } from 'src/types'
-import { EXPLORE_V2_AGGREGATIONS, EXPLORE_V2_DIMENSIONS } from 'src/types'
+import type { DataFetcher, MetricFetcherOptions } from '../types'
+import { EXPLORE_V2_AGGREGATIONS, EXPLORE_V2_DIMENSIONS } from '../types'
 import composables from '.'
 
 // Stub `addDays` from `date-fns` here to avoid a dependency just for unit testing.
