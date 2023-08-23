@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.9.3...@kong-ui-public/analytics-chart@0.9.4) (2023-08-23)
+
+
+### Reverts
+
+* Revert "fix(analytics-chart): runtime group rename to control plane [MA-1955] (#733)" (#734) ([b6f6154](https://github.com/Kong/public-ui-components/commit/b6f6154bbf04c90a40713210a21ec19c2d1368cc)), closes [#733](https://github.com/Kong/public-ui-components/issues/733) [#734](https://github.com/Kong/public-ui-components/issues/734)
+
+
+
+
+
 ## [0.9.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.9.2...@kong-ui-public/analytics-chart@0.9.3) (2023-08-23)
 
 
