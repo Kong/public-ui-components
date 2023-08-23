@@ -223,9 +223,22 @@ export class SwaggerUIElement extends HTMLElement {
     }
 
     const operationElementId = operationToSwaggerThingId(operation)
-    const element = this.shadowRoot.getElementById(operationElementId)
+    let element = this.shadowRoot.getElementById(operationElementId)
     if (!element) {
-      return false
+      // we are going to see if the parent div element exists and then try and find the 
+      // element again
+      const parentDiv = this.shadowRoot.querySelector(`[data-tag='${operation.tag}']`)
+
+      if (parentDiv) {
+        parentDiv.click()
+        element = this.shadowRoot.getElementById(operationElementId)
+
+        if (!element) {
+          return false
+        }
+      } else {
+        return false
+      }
     }
 
     // respect reduced motion settings
