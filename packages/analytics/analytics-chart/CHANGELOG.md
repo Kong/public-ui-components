@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.9.1...@kong-ui-public/analytics-chart@0.9.2) (2023-08-23)
+
+
+### Bug Fixes
+
+* **analytics-chart:** runtime group rename to control plane [MA-1955] ([#733](https://github.com/Kong/public-ui-components/issues/733)) ([2d65348](https://github.com/Kong/public-ui-components/commit/2d65348f60b972b8fb2219468d672db33588f184))
+* right tooltip placement [MA-1959] ([#728](https://github.com/Kong/public-ui-components/issues/728)) ([60544c0](https://github.com/Kong/public-ui-components/commit/60544c0d0a1c156b675c650aee862b00def03011))
+
+
+
+
+
 ## [0.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.9.0...@kong-ui-public/analytics-chart@0.9.1) (2023-08-23)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
