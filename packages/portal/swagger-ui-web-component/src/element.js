@@ -223,17 +223,17 @@ export class SwaggerUIElement extends HTMLElement {
     }
 
     const operationElementId = operationToSwaggerThingId(operation)
-    let element = this.shadowRoot.getElementById(operationElementId)
-    if (!element) {
+    let scrollElement = this.shadowRoot.getElementById(operationElementId)
+    if (!scrollElement) {
       // we are going to see if the parent div element exists and then try and find the 
       // element again
       const parentDiv = this.shadowRoot.querySelector(`[data-tag='${operation.tag}']`)
 
       if (parentDiv) {
         parentDiv.click()
-        element = this.shadowRoot.getElementById(operationElementId)
+        scrollElement = this.shadowRoot.getElementById(operationElementId)
 
-        if (!element) {
+        if (!scrollElement) {
           return false
         }
       } else {
@@ -248,7 +248,7 @@ export class SwaggerUIElement extends HTMLElement {
       behavior = 'smooth'
     }
 
-    element.scrollIntoView({ behavior })
+    scrollElement.scrollIntoView({ behavior })
   }
 
   get autoInit() {
