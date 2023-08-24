@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.8.4...@kong-ui-public/swagger-ui-web-component@0.8.5) (2023-08-24)
+
+
+### Bug Fixes
+
+* **swagger-ui-web-component:** open section if collapsed for side nav (TDX-3313) ([#736](https://github.com/Kong/public-ui-components/issues/736)) ([814bbb2](https://github.com/Kong/public-ui-components/commit/814bbb223c02db274812af7be972d28082abd987))
+
+
+
+
+
 ## [0.8.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.8.3...@kong-ui-public/swagger-ui-web-component@0.8.4) (2023-08-11)
 
 **Note:** Version bump only for package @kong-ui-public/swagger-ui-web-component
