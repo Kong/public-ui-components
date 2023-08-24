@@ -223,9 +223,22 @@ export class SwaggerUIElement extends HTMLElement {
     }
 
     const operationElementId = operationToSwaggerThingId(operation)
-    const element = this.shadowRoot.getElementById(operationElementId)
-    if (!element) {
-      return false
+    let scrollElement = this.shadowRoot.getElementById(operationElementId)
+    if (!scrollElement) {
+      // we are going to see if the parent div element exists and then try and find the 
+      // element again
+      const parentDiv = this.shadowRoot.querySelector(`[data-tag='${operation.tag}']`)
+
+      if (parentDiv) {
+        parentDiv.click()
+        scrollElement = this.shadowRoot.getElementById(operationElementId)
+
+        if (!scrollElement) {
+          return false
+        }
+      } else {
+        return false
+      }
     }
 
     // respect reduced motion settings
@@ -235,7 +248,7 @@ export class SwaggerUIElement extends HTMLElement {
       behavior = 'smooth'
     }
 
-    element.scrollIntoView({ behavior })
+    scrollElement.scrollIntoView({ behavior })
   }
 
   get autoInit() {
