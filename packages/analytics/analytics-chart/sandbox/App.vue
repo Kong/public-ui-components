@@ -252,7 +252,7 @@
       <div>
         <KInputSwitch
           v-model="showTableData"
-          :label="!showTableData ? 'Empty State' : 'Chart Has Data'"
+          :label="showTableData ? 'Empty State' : 'Chart Has Data'"
         />
       </div>
     </div>
@@ -328,8 +328,8 @@ const limitToggle = ref(false)
 const multiDimensionToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
-const showTableData = ref(true)
-const chartType = ref<ChartTypes | ChartTypesSimple>(ChartTypes.DOUGHNUT)
+const showTableData = ref(false)
+const chartType = ref<ChartTypes | ChartTypesSimple>(ChartTypes.VERTICAL_BAR)
 const legendPosition = ref(ChartLegendPosition.Right)
 const metricDisplay = ref(ChartMetricDisplay.SingleMetric)
 const selectedMetric = ref<MetricSelection>({

@@ -54,7 +54,7 @@ import type { ChartDataset, ChartOptions } from 'chart.js'
 import { Chart } from 'chart.js'
 import type { EventContext } from 'chartjs-plugin-annotation'
 import annotationPlugin from 'chartjs-plugin-annotation'
-import { ref, toRef, onMounted, onUnmounted, computed, reactive, watch, inject } from 'vue'
+import { ref, toRef, onMounted, computed, reactive, watch, inject, onBeforeUnmount } from 'vue'
 import type { PropType, Ref } from 'vue'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
@@ -64,7 +64,6 @@ import composables from '../../composables'
 import { v4 as uuidv4 } from 'uuid'
 import { ChartLegendPosition, ChartTypes } from '../../enums'
 import type { AxesTooltipState, KChartData, LegendValues, TooltipState } from '../../types'
-import { verticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
 import { highlightPlugin } from '../chart-plugins/HighlightPlugin'
 
 const props = defineProps({
@@ -281,7 +280,10 @@ const axesTooltipPlugin = {
       }
 
       if (compareByIndexAxis(indexAxis)) {
-        tooltipData.showTooltip = false
+        // Prevent hiding the tooltip if it's locked
+        if (!tooltipData.locked) {
+          tooltipData.showTooltip = false
+        }
         if (text.length > MAX_LABEL_LENGTH) {
           const context = chart.canvas.getContext('2d') as CanvasRenderingContext2D
           const textWidthPixels = context.measureText(text).width
@@ -427,7 +429,7 @@ const maxOverflow = computed(() => {
   return datasetLengths.reduce((x, acc) => Math.max(x, acc), 0) + LABEL_PADDING
 })
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   Chart.unregister(annotationPlugin)
 })
 
@@ -507,6 +509,7 @@ const tooltipDimensions = ({ width, height }: { width: number, height: number}) 
 }
 
 watch(() => props.orientation, () => {
+  // Cleanup chart when changing orientation
   if (axis.value && axisDimensions.value) {
 
     const width = axisDimensions.value.width
@@ -515,6 +518,9 @@ watch(() => props.orientation, () => {
     const targetCtx = axis.value?.getContext('2d') as CanvasRenderingContext2D
     targetCtx.clearRect(0, 0, width, height)
   }
+
+  tooltipData.showTooltip = false
+  tooltipData.locked = false
 })
 
 watch(showAnnotations, (value: boolean) => {
@@ -536,12 +542,6 @@ watch(showAnnotations, (value: boolean) => {
 const handleChartClick = () => {
   if (tooltipData.showTooltip) {
     tooltipData.locked = !tooltipData.locked
-
-    if (chartInstance.value) {
-      verticalLinePlugin.clickedSegment = tooltipData.locked
-        ? chartInstance.value.tooltip?.dataPoints[0]
-        : undefined
-    }
   }
 }
 

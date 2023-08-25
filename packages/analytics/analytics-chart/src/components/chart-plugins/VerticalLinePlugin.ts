@@ -31,4 +31,7 @@ export const verticalLinePlugin: VerticalLinePlugin = {
       drawLine(ctx, x, chartInstance.scales.y.top, chartInstance.scales.y.bottom)
     }
   },
+  beforeDestroy() {
+    delete this.clickedSegment
+  },
 }

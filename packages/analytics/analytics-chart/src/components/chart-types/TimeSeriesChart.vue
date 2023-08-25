@@ -55,7 +55,7 @@
 <script setup lang="ts">
 
 import type { PropType } from 'vue'
-import { reactive, ref, computed, toRef, inject } from 'vue'
+import { reactive, ref, computed, toRef, inject, watch } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import { verticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
@@ -263,6 +263,14 @@ const handleChartClick = () => {
       : undefined
   }
 }
+
+watch(() => props.type, () => {
+  if (chartInstance.value) {
+    chartInstance.value.chart.destroy()
+  }
+  tooltipData.locked = false
+  tooltipData.showTooltip = false
+})
 
 </script>
 
