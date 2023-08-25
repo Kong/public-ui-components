@@ -33,6 +33,7 @@
       {{ axesTooltip.text }}
     </div>
     <ToolTip
+      :context="tooltipData.tooltipContext"
       :left="tooltipData.left"
       :locked="tooltipData.locked"
       :series="tooltipData.tooltipSeries"
@@ -54,7 +55,7 @@ import type { ChartDataset, ChartOptions } from 'chart.js'
 import { Chart } from 'chart.js'
 import type { EventContext } from 'chartjs-plugin-annotation'
 import annotationPlugin from 'chartjs-plugin-annotation'
-import { ref, toRef, onMounted, onUnmounted, computed, reactive, watch, inject } from 'vue'
+import { ref, toRef, onMounted, computed, reactive, watch, inject, onBeforeUnmount } from 'vue'
 import type { PropType, Ref } from 'vue'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
@@ -64,7 +65,6 @@ import composables from '../../composables'
 import { v4 as uuidv4 } from 'uuid'
 import { ChartLegendPosition, ChartTypes } from '../../enums'
 import type { AxesTooltipState, KChartData, LegendValues, TooltipState } from '../../types'
-import { verticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
 import { highlightPlugin } from '../chart-plugins/HighlightPlugin'
 
 const props = defineProps({
@@ -196,7 +196,6 @@ const legendID = ref(uuidv4())
 const reactiveAnnotationsID = uuidv4()
 const maxOverflowPluginID = uuidv4()
 const legendItems = ref([])
-const chartDataRef = toRef(props, 'chartData')
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
 const axesTooltip = ref<AxesTooltipState>({
   show: false,
@@ -228,8 +227,8 @@ const tooltipData: TooltipState = reactive({
 })
 const dependsOnChartUpdate = ref(0)
 
-const configureAnnotations = () => props.annotations && chartDataRef.value.labels?.reduce((acc, label) =>
-  Object.assign(acc, makeAnnotations(chartDataRef.value as BarChartData, label, unitsRef.value, props.orientation)),
+const configureAnnotations = () => props.annotations && props.chartData.labels?.reduce((acc, label) =>
+  Object.assign(acc, makeAnnotations(props.chartData as BarChartData, label, unitsRef.value, props.orientation)),
 {},
 )
 
@@ -250,7 +249,7 @@ const reactiveAnnotationsPlugin = {
   id: reactiveAnnotationsID,
   afterUpdate(chart: Chart) {
     // @ts-ignore - ChartJS types are incomplete
-    chart.options.plugins.annotation.annotations = showAnnotations.value ? configureAnnotations() : {}
+    chart.options.plugins.annotation.annotations = props.annotations ? configureAnnotations() : {}
   },
 }
 
@@ -281,7 +280,10 @@ const axesTooltipPlugin = {
       }
 
       if (compareByIndexAxis(indexAxis)) {
-        tooltipData.showTooltip = false
+        // Prevent hiding the tooltip if it's locked
+        if (!tooltipData.locked) {
+          tooltipData.showTooltip = false
+        }
         if (text.length > MAX_LABEL_LENGTH) {
           const context = chart.canvas.getContext('2d') as CanvasRenderingContext2D
           const textWidthPixels = context.measureText(text).width
@@ -315,7 +317,7 @@ const plugins = [
 ]
 
 const numLabels = computed(() => {
-  return (chartDataRef.value.labels && chartDataRef.value.labels.length) || 0
+  return (props.chartData.labels && props.chartData.labels.length) || 0
 })
 
 const chartWidth = computed(() => {
@@ -324,8 +326,8 @@ const chartWidth = computed(() => {
   if (canvas.value) {
     value = canvas.value.width
 
-    if (canvas.value && chartDataRef.value?.labels && chartDataRef.value?.labels.length > MAX_BARS_VERTICAL && !isHorizontal.value) {
-      const numLabels = chartDataRef.value.labels.length
+    if (canvas.value && props.chartData?.labels && props.chartData?.labels.length > MAX_BARS_VERTICAL && !isHorizontal.value) {
+      const numLabels = props.chartData.labels.length
 
       const baseWidth = canvas.value.offsetWidth
       const preferredChartWidth = baseWidth + ((numLabels - MAX_BARS_VERTICAL) * MIN_BAR_WIDTH)
@@ -337,13 +339,11 @@ const chartWidth = computed(() => {
   return value
 })
 
-const showAnnotations = toRef(props, 'annotations')
-
 const chartHeight = computed(() => {
   let value = MIN_CHART_HEIGHT
 
-  if (chartDataRef.value?.labels && isHorizontal.value) {
-    const numLabels = chartDataRef.value.labels.length
+  if (props.chartData?.labels && isHorizontal.value) {
+    const numLabels = props.chartData.labels.length
 
     // The goal is to keep the bar width greater than or roughly equal to the text width.
     const preferredChartHeight = numLabels * MIN_BAR_HEIGHT
@@ -409,8 +409,8 @@ const maxOverflow = computed(() => {
   dependsOnChartUpdate.value
 
   // ChartJS says that labels are optional, but we always provide them.
-  const labels = chartDataRef.value.labels as string[]
-  const datasets = chartDataRef.value.datasets
+  const labels = props.chartData.labels as string[]
+  const datasets = props.chartData.datasets
 
   // Determine the maximum annotation width.
   const labelTotals: number[] = labels.map((_, i) => datasets.reduce((acc, ds) => isNaN(Number(ds.data[i])) ? acc : acc + Number(ds.data[i]), 0))
@@ -419,15 +419,15 @@ const maxOverflow = computed(() => {
   // This is frustrating, but OK:
   // an initial chart instance doesn't have any hidden datasets, so the calculation will still be correct.
   const fullTotal = chartInstance.value
-    ? conditionalDataTotal(chartInstance.value, chartDataRef.value as BarChartData)
-    : dataTotal(chartDataRef.value as BarChartData)
+    ? conditionalDataTotal(chartInstance.value, props.chartData as BarChartData)
+    : dataTotal(props.chartData as BarChartData)
 
   const datasetLengths = labelTotals.map(labelTotal => getTextWidth(formatNumber(labelTotal, unitsRef.value) + drawPercentage(labelTotal, fullTotal)))
 
   return datasetLengths.reduce((x, acc) => Math.max(x, acc), 0) + LABEL_PADDING
 })
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   Chart.unregister(annotationPlugin)
 })
 
@@ -507,6 +507,7 @@ const tooltipDimensions = ({ width, height }: { width: number, height: number}) 
 }
 
 watch(() => props.orientation, () => {
+  // Cleanup chart when changing orientation
   if (axis.value && axisDimensions.value) {
 
     const width = axisDimensions.value.width
@@ -515,20 +516,19 @@ watch(() => props.orientation, () => {
     const targetCtx = axis.value?.getContext('2d') as CanvasRenderingContext2D
     targetCtx.clearRect(0, 0, width, height)
   }
+
+  tooltipData.showTooltip = false
+  tooltipData.locked = false
 })
 
-watch(showAnnotations, (value: boolean) => {
+watch(() => props.annotations, (value: boolean) => {
   if (chartInstance.value) {
     if (!value) {
       // @ts-ignore - ChartJS types are incomplete
-      chartInstance.value.options.plugins.annotation.annotations = {}
-      Chart.unregister(annotationPlugin)
-      chartInstance.value.update()
+      delete chartInstance.value.options.plugins.annotation.annotations
     } else {
       // @ts-ignore - ChartJS types are incomplete
-      chartInstance.value.options.plugins.annotation.annotations = configureAnnotations(chartDataRef.value as BarChartData)
-      Chart.register(annotationPlugin)
-      chartInstance.value.update()
+      chartInstance.value.options.plugins.annotation.annotations = configureAnnotations(props.chartData as BarChartData)
     }
   }
 })
@@ -536,12 +536,6 @@ watch(showAnnotations, (value: boolean) => {
 const handleChartClick = () => {
   if (tooltipData.showTooltip) {
     tooltipData.locked = !tooltipData.locked
-
-    if (chartInstance.value) {
-      verticalLinePlugin.clickedSegment = tooltipData.locked
-        ? chartInstance.value.tooltip?.dataPoints[0]
-        : undefined
-    }
   }
 }
 

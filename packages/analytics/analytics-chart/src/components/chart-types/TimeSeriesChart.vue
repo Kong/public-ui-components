@@ -55,7 +55,7 @@
 <script setup lang="ts">
 
 import type { PropType } from 'vue'
-import { reactive, ref, computed, toRef, inject } from 'vue'
+import { reactive, ref, computed, toRef, inject, watch } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import { verticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
@@ -168,13 +168,12 @@ const chartInstance = ref<{chart: Chart}>()
 const legendID = ref(uuidv4())
 const chartID = ref(uuidv4())
 const legendItems = ref([])
-const unitsRef = toRef(props, 'metricUnit')
 const tooltipElement = ref()
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
 
 const translatedUnits = computed(() => {
   // @ts-ignore - dynamic i18n key
-  return unitsRef.value && i18n.t(`chartUnits.${unitsRef.value}`)
+  return props.metricUnit && i18n.t(`chartUnits.${props.metricUnit}`)
 })
 const tooltipData: TooltipState = reactive({
   showTooltip: false,
@@ -224,7 +223,7 @@ const mutableData = computed(() => {
         e.backgroundColor = props.datasetColors[e.rawDimension]
         e.borderColor = darkenColor(e.backgroundColor, 50)
       }
-      e.fill = toRef(props, 'fill').value
+      e.fill = props.fill
       return e
     }),
   }
@@ -257,12 +256,18 @@ const tooltipDimensions = ({ width, height }) => {
 const handleChartClick = () => {
   tooltipData.locked = !tooltipData.locked
 
-  if (chartInstance.value) {
+  if (chartInstance.value && chartInstance.value.chart.tooltip?.dataPoints?.length) {
     verticalLinePlugin.clickedSegment = tooltipData.locked
       ? chartInstance.value.chart.tooltip?.dataPoints[0]
       : undefined
   }
 }
+
+watch(() => props.type, () => {
+  tooltipData.locked = false
+  tooltipData.showTooltip = false
+  delete verticalLinePlugin.clickedSegment
+})
 
 </script>
 

@@ -7,21 +7,21 @@
     :style="{ left: locked ? dragPosition.left : left, top: locked ? dragPosition.top : top, pointerEvents: locked ? 'all' : 'none' }"
     @mousedown="handleMouseDown"
   >
+    <div class="tooltip-title">
+      <span class="title font-bold">{{ tooltipTitle }}</span>
+      <KIcon
+        v-if="locked"
+        class="drag-icon"
+        icon="drag"
+      />
+      <span
+        v-if="context"
+        class="subtitle"
+      >{{ context }}</span>
+    </div>
     <ul
       class="tooltip"
     >
-      <li class="tooltip-title">
-        <span class="title font-bold">{{ tooltipTitle }}</span>
-        <KIcon
-          v-if="locked"
-          class="drag-icon"
-          icon="drag"
-        />
-        <span
-          v-if="context"
-          class="subtitle"
-        >{{ context }}</span>
-      </li>
       <template
         v-for="{ backgroundColor, borderColor, label, value } in (series as any)"
         :key="label"
@@ -192,11 +192,46 @@ function handleMouseUp() {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.24);
   max-width: 425px;
   min-width: 250px;
-  overflow-y: scroll;
   position: absolute;
-  scrollbar-width: thin;
+
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 999;
+
+  .tooltip-title {
+    border-bottom: $kui-border-width-10 solid $color-black-10;
+    display: flex;
+    flex-direction: column;
+    margin: $kui-space-40;
+    min-height: $kui-space-80;
+    padding-bottom: $kui-space-40;
+
+    .title {
+      font-size: $kui-font-size-40;
+      font-weight: $kui-font-weight-semibold;
+    }
+    .subtitle {
+      font-size: $kui-font-size-30;
+      margin-top: $kui-space-40;
+    }
+
+    .drag-icon {
+      margin-top: $kui-space-30;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+
+}
+
+ul.tooltip {
+  list-style: none;
+  margin: 0px;
+  max-height: 300px;
+  min-width: 250px;
+  overflow-y: scroll;
+  padding-left: 0px;
+  scrollbar-width: thin;
 
   &::-webkit-scrollbar-track {
     background-color: $kui-color-background;
@@ -211,14 +246,6 @@ function handleMouseUp() {
     background-color: $kui-color-background-disabled;
     border-radius: 10px;
   }
-}
-
-ul.tooltip {
-  list-style: none;
-  margin: 0px;
-  max-height: 300px;
-  min-width: 250px;
-  padding-left: 0px;
 
   li {
     display: flex;
@@ -226,34 +253,8 @@ ul.tooltip {
     margin: $kui-space-40;
   }
 
-  li:first-child {
-    border-bottom: $kui-border-width-10 solid $color-black-10;
-  }
-
   li:last-child {
     padding-bottom: $kui-space-40;
-  }
-
-  .drag-icon {
-    margin-top: $kui-space-40;
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-
-  .tooltip-title {
-    display: flex;
-    flex-direction: column;
-    padding-bottom: $kui-space-40;
-
-    .title {
-      font-size: $kui-font-size-40;
-      font-weight: $kui-font-weight-semibold;
-    }
-    .subtitle {
-      font-size: $kui-font-size-30;
-      margin-top: $kui-space-40;
-    }
   }
 
   .display-label {

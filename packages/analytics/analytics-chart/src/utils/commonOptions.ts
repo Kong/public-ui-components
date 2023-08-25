@@ -5,6 +5,8 @@ import { isValid } from 'date-fns'
 import type { Point, ScatterDataPoint } from 'chart.js'
 import { ChartTypes, ChartTypesSimple } from '../enums'
 
+// TODO: we should implement a separate tooltip behavior for each broad chart type
+// as the "tooltip behaviors" are beggining to diverge more across chart types.
 export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTooltipContext) : void => {
   const { tooltip } = context
   if (tooltip.opacity === 0 && !tooltipData.locked) {
@@ -19,7 +21,10 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
 
     const isBarChart = [ChartTypes.HORIZONTAL_BAR, ChartTypes.VERTICAL_BAR].includes(tooltipData.chartType)
     const isDoughnutChart = [ChartTypesSimple.GAUGE, ChartTypes.DOUGHNUT].includes(tooltipData.chartType)
-    tooltipData.tooltipContext = tooltip.dataPoints[0].parsed.x
+
+    tooltipData.tooltipContext = isBarChart
+      ? tooltip.dataPoints.length > 1 ? tooltip.dataPoints[0].label : ''
+      : tooltip.dataPoints[0].parsed.x
 
     tooltipData.tooltipSeries = tooltip.dataPoints.map((p, i) => {
       const rawValue = isDoughnutChart ? p.parsed : p.parsed[valueAxis]
@@ -32,7 +37,7 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
       }
 
       const tooltipLabel = isBarChart && p.dataset.label !== p.label
-        ? `${p.dataset.label} - ${p.label}`
+        ? p.dataset.label
         : isDoughnutChart
           // @ts-ignore - doughnut chart contains a single dataset, with a `labels` (plural) array
           ? p.dataset.labels[p.dataIndex]

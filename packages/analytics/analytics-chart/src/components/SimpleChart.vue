@@ -79,31 +79,28 @@ const props = defineProps({
 
 const { i18n } = composables.useI18n()
 
-const chartDataRef = toRef(props, 'chartData')
-const chartOptionsRef = toRef(props, 'chartOptions')
-
 const computedChartData = computed(() => {
   return composables.useExploreResultToDatasets(
     {
       colorPalette: props.chartOptions.chartDatasetColors || datavisPalette,
     },
-    chartDataRef,
+    toRef(props, 'chartData'),
   ).value
 })
 
 const computedMetricUnit = computed<string>(() => {
-  if (!chartDataRef.value.meta?.metricUnits) {
+  if (!props.chartData.meta?.metricUnits) {
     return ''
   }
 
-  return Object.values(chartDataRef.value.meta.metricUnits)[0]
+  return Object.values(props.chartData.meta.metricUnits)[0]
 })
 
-const isGaugeChart = computed<boolean>(() => chartOptionsRef.value.type === ChartTypesSimple.GAUGE)
+const isGaugeChart = computed<boolean>(() => props.chartOptions.type === ChartTypesSimple.GAUGE)
 
 const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAvailableTitle'))
 const hasValidChartData = computed(() => {
-  return chartDataRef.value && chartDataRef.value.meta && chartDataRef.value.records.length
+  return props.chartData && props.chartData.meta && props.chartData.records.length
 })
 </script>
 

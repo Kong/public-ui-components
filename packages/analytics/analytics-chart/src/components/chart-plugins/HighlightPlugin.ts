@@ -66,4 +66,9 @@ export const highlightPlugin: HighlightPlugin = {
       this.clicked = false
     }
   },
+  beforeDestroy(chart) {
+    delete this.clickedElements
+    chart.options.hover = this.previousHoverOption || chart.options.hover
+    this.clicked = false
+  },
 }

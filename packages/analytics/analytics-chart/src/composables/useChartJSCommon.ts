@@ -1,7 +1,7 @@
 import Chart from 'chart.js/auto'
 import type { ChartType, ChartData, Plugin, ChartOptions } from 'chart.js'
 import type { Ref } from 'vue'
-import { onMounted, onUnmounted, watch, shallowRef } from 'vue'
+import { onMounted, watch, shallowRef, onBeforeUnmount } from 'vue'
 import { isNullOrUndef } from 'chart.js/helpers'
 
 // Based on
@@ -46,7 +46,7 @@ export default function useChartJSCommon<T extends ChartType, D extends ChartDat
     chartInstance.value = createChart(chartData.value, options.value)
   })
 
-  onUnmounted(() => {
+  onBeforeUnmount(() => {
     if (!isNullOrUndef(chartInstance.value)) {
       chartInstance.value.destroy()
     }
