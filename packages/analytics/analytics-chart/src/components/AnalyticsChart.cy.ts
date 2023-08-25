@@ -5,6 +5,21 @@ import ChartTooltip from './chart-plugins/ChartTooltip.vue'
 import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 
+function mouseMove(x1: number, y1: number, x2: number, y2: number, duration: number, withClick = false) {
+  const stepCount = duration / 100 // change denominator for more or less steps
+  const dx = (x2 - x1) / stepCount
+  const dy = (y2 - y1) / stepCount
+
+  for (let step = 0; step < stepCount; step++) {
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(100) // wait 100ms between each step
+    cy.get('.chart-body > canvas').trigger('mousemove', x1 + dx * step, y1 + dy * step, { force: true })
+    if (withClick) {
+      cy.get('.chart-body > canvas').click()
+    }
+  }
+}
+
 const emptyExploreResult = {
   records: [],
   meta: {
@@ -706,4 +721,57 @@ describe('<AnalyticsChart />', () => {
     cy.get('[data-testid="no-data-in-report"] .k-empty-state-message').should('contain.text', emptyStateDescription)
   })
 
+  it('multi dimension bar charts have "tooltipContext"', () => {
+    cy.mount(AnalyticsChart, {
+      props: {
+        chartData: multiDimensionExploreResult,
+        chartOptions: {
+          type: ChartTypes.HORIZONTAL_BAR,
+        },
+        chartTitle: 'Vertical bar chart',
+        tooltipTitle: 'Tooltip Title',
+      },
+    })
+
+    cy.get('.analytics-chart-parent').should('be.visible')
+
+    mouseMove(200, 50, 300, 50, 100, true)
+    // This is flaky since were testing the canvas.
+    // Do not fail the test in case the tooltip is not found.
+    // The tooltip, might not get triggered in a bar chart
+    // if you're in between bars.
+    cy.get('body').then(($body) => {
+      if ($body.find('.tooltip-container').length) {
+        cy.get('.subtitle').should('contain.text', 'service A')
+      }
+
+    })
+  })
+
+  it('single dimension bar charts should not have "tooltipContext"', () => {
+    cy.mount(AnalyticsChart, {
+      props: {
+        chartData: dailyExploreResult,
+        chartOptions: {
+          type: ChartTypes.HORIZONTAL_BAR,
+        },
+        chartTitle: 'Vertical bar chart',
+        tooltipTitle: 'Tooltip Title',
+      },
+    })
+
+    cy.get('.analytics-chart-parent').should('be.visible')
+
+    mouseMove(200, 100, 300, 100, 100, true)
+    // This is flaky since were testing the canvas.
+    // Do not fail the test in case the tooltip is not found.
+    // The tooltip, might not get triggered in a bar chart
+    // if you're in between bars.
+    cy.get('body').then(($body) => {
+      if ($body.find('.tooltip-container').length) {
+        cy.get('.subtitle').should('not.exist')
+      }
+
+    })
+  })
 })

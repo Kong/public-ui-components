@@ -33,6 +33,7 @@
       {{ axesTooltip.text }}
     </div>
     <ToolTip
+      :context="tooltipData.tooltipContext"
       :left="tooltipData.left"
       :locked="tooltipData.locked"
       :series="tooltipData.tooltipSeries"
