@@ -228,7 +228,7 @@ ul.tooltip {
 
   li:first-child {
     border-bottom: $kui-border-width-10 solid $color-black-10;
-    min-height: $kui-space-70;
+    min-height: $kui-space-80;
   }
 
   li:last-child {
