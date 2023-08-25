@@ -178,10 +178,6 @@ const props = defineProps({
 
 const { i18n } = composables.useI18n()
 
-const chartDataRef = toRef(props, 'chartData')
-const chartOptionsRef = toRef(props, 'chartOptions')
-const legendPositionRef = toRef(props, 'legendPosition')
-
 const computedChartData = computed(() => {
   return isTimeSeriesChart.value
     ? composables.useExploreResultToTimeDataset(
@@ -189,88 +185,88 @@ const computedChartData = computed(() => {
         fill: props.chartOptions.fill,
         colorPalette: props.chartOptions.chartDatasetColors || datavisPalette,
       },
-      chartDataRef,
+      toRef(props, 'chartData'),
     ).value
     : composables.useExploreResultToDatasets(
       {
         fill: props.chartOptions.fill,
         colorPalette: props.chartOptions.chartDatasetColors || datavisPalette,
       },
-      chartDataRef,
+      toRef(props, 'chartData'),
     ).value
 })
 
 const timeRangeSec = computed<number | undefined>(() => {
-  if (!chartDataRef?.value?.meta) { return 0 }
+  if (!props.chartData?.meta) { return 0 }
 
-  return ('start' in chartDataRef.value.meta)
-    ? chartDataRef.value.meta.end - chartDataRef.value.meta.start
+  return ('start' in props.chartData.meta)
+    ? props.chartData.meta.end - props.chartData.meta.start
     : undefined
 })
 
 const timeRangeMs = computed<number | undefined>(() => {
-  if (!chartDataRef?.value?.meta) { return 0 }
+  if (!props.chartData?.meta) { return 0 }
 
-  return ('startMs' in chartDataRef.value.meta)
-    ? chartDataRef.value.meta.endMs - chartDataRef.value.meta.startMs
+  return ('startMs' in props.chartData.meta)
+    ? props.chartData.meta.endMs - props.chartData.meta.startMs
     : undefined
 })
 
 const computedMetricUnit = computed<string>(() => {
-  if (!chartDataRef.value.meta?.metricUnits) {
+  if (!props.chartData.meta?.metricUnits) {
     return ''
   }
 
-  return Object.values(chartDataRef.value.meta.metricUnits)[0]
+  return Object.values(props.chartData.meta.metricUnits)[0]
 })
 
-const showLegendValuesRef = computed(() => props.showLegendValues && props.legendPosition !== ChartLegendPosition.Bottom)
+const showLegendValues = computed(() => props.showLegendValues && props.legendPosition !== ChartLegendPosition.Bottom)
 
 const { legendValues } = composables.useChartLegendValues(computedChartData, props.chartOptions.type, computedMetricUnit)
 
-const maxEntitiesShown = computed(() => chartDataRef.value?.meta?.limit?.toString() || null)
-const resultSetTruncated = computed(() => chartDataRef.value?.meta?.truncated || false)
+const maxEntitiesShown = computed(() => props.chartData?.meta?.limit?.toString() || null)
+const resultSetTruncated = computed(() => props.chartData?.meta?.truncated || false)
 const notAllDataShownTooltipContent = i18n.t('limitedResultsShown', { maxReturned: maxEntitiesShown.value })
 const isBarChart = computed<boolean>(() => [
   ChartTypes.VERTICAL_BAR.toString(),
   ChartTypes.HORIZONTAL_BAR.toString(),
-].includes(chartOptionsRef.value.type))
+].includes(props.chartOptions.type))
 const isTimeSeriesChart = computed<boolean>(() => {
-  return [ChartTypes.TIMESERIES_BAR, ChartTypes.TIMESERIES_LINE].some(e => e === chartOptionsRef.value.type)
+  return [ChartTypes.TIMESERIES_BAR, ChartTypes.TIMESERIES_LINE].some(e => e === props.chartOptions.type)
 })
-const isDoughnutChart = computed<boolean>(() => chartOptionsRef.value.type === ChartTypes.DOUGHNUT)
+const isDoughnutChart = computed<boolean>(() => props.chartOptions.type === ChartTypes.DOUGHNUT)
 
-const barChartOrientation = computed<'horizontal' | 'vertical'>(() => chartOptionsRef.value.type.includes('Vertical') ? 'vertical' : 'horizontal')
+const barChartOrientation = computed<'horizontal' | 'vertical'>(() => props.chartOptions.type.includes('Vertical') ? 'vertical' : 'horizontal')
 
 const metricAxesTitle = computed<string | undefined>(() => {
-  if (!chartDataRef.value?.meta.metricNames || !chartDataRef.value?.meta.metricUnits) {
+  if (!props.chartData?.meta.metricNames || !props.chartData?.meta.metricUnits) {
     return undefined
   }
 
-  const metricName = chartDataRef.value.meta.metricNames[0]
-  const metricUnit = chartDataRef.value.meta.metricUnits[metricName]
+  const metricName = props.chartData.meta.metricNames[0]
+  const metricUnit = props.chartData.meta.metricUnits[metricName]
   // @ts-ignore - dynamic i18n key
-  return chartOptionsRef.value?.metricAxesTitle || (i18n.te(`metricAxisTitles.${metricName}`) && i18n.te(`chartUnits.${metricUnit}`) &&
+  return props.chartOptions?.metricAxesTitle || (i18n.te(`metricAxisTitles.${metricName}`) && i18n.te(`chartUnits.${metricUnit}`) &&
     // @ts-ignore - dynamic i18n key
     i18n.t(`metricAxisTitles.${metricName}`, { unit: i18n.t(`chartUnits.${metricUnit}`) })) || undefined
 })
 
 const dimensionAxesTitle = computed<string | undefined>(() => {
-  const dimension = isTimeSeriesChart.value ? 'Time' : Object.keys(chartDataRef.value.meta.dimensions || chartDataRef.value.meta.metricNames as Object)[0]
+  const dimension = isTimeSeriesChart.value ? 'Time' : Object.keys(props.chartData.meta.dimensions || props.chartData.meta.metricNames as Object)[0]
   // @ts-ignore - dynamic i18n key
-  return chartOptionsRef.value.dimensionAxesTitle || (i18n.te(`chartLabels.${dimension}`) &&
+  return props.chartOptions.dimensionAxesTitle || (i18n.te(`chartLabels.${dimension}`) &&
     // @ts-ignore - dynamic i18n key
     i18n.t(`chartLabels.${dimension}`)) || undefined
 })
 
 const timestampAxisTitle = computed(() => {
-  if (chartDataRef.value.meta.granularity && typeof chartDataRef.value.meta.granularity !== 'number' && 'duration' in (chartDataRef.value.meta.granularity as GranularityFullObj)) {
-    const granularity = msToGranularity((chartDataRef.value.meta.granularity as GranularityFullObj).duration)
+  if (props.chartData.meta.granularity && typeof props.chartData.meta.granularity !== 'number' && 'duration' in (props.chartData.meta.granularity as GranularityFullObj)) {
+    const granularity = msToGranularity((props.chartData.meta.granularity as GranularityFullObj).duration)
 
     // @ts-ignore - dynamic i18n key
     return i18n.t(`granularityAxisTitles.${granularity}`)
-  } else if (chartDataRef.value.meta.granularity && !isNaN(Number(chartDataRef.value.meta.granularity))) {
-    const granularity = msToGranularity(Number(chartDataRef.value.meta.granularity))
+  } else if (props.chartData.meta.granularity && !isNaN(Number(props.chartData.meta.granularity))) {
+    const granularity = msToGranularity(Number(props.chartData.meta.granularity))
 
     // @ts-ignore - dynamic i18n key
     return i18n.t(`granularityAxisTitles.${granularity}`)
@@ -287,26 +283,26 @@ const hasValidChartData = computed(() => {
     return hasMillisecondTimestamps(computedChartData.value)
   }
 
-  return chartDataRef.value && chartDataRef.value.meta && chartDataRef.value.records.length
+  return props.chartData && props.chartData.meta && props.chartData.records.length
 })
 
 const timeSeriesGranularity = computed<GranularityKeys>(() => {
 
-  if (!chartDataRef.value.meta.granularity) {
+  if (!props.chartData.meta.granularity) {
     return msToGranularity(
-      new Date(chartDataRef.value.records[1].timestamp).getTime() - new Date(chartDataRef.value.records[0].timestamp).getTime(),
+      new Date(props.chartData.records[1].timestamp).getTime() - new Date(props.chartData.records[0].timestamp).getTime(),
     ) || GranularityKeys.HOURLY
   }
 
-  if (typeof chartDataRef.value.meta.granularity === 'number') {
-    return msToGranularity(chartDataRef.value.meta.granularity) || GranularityKeys.HOURLY
+  if (typeof props.chartData.meta.granularity === 'number') {
+    return msToGranularity(props.chartData.meta.granularity) || GranularityKeys.HOURLY
   }
 
-  return msToGranularity(chartDataRef.value.meta.granularity.duration) || GranularityKeys.HOURLY
+  return msToGranularity(props.chartData.meta.granularity.duration) || GranularityKeys.HOURLY
 })
 
-provide('showLegendValues', showLegendValuesRef)
-provide('legendPosition', legendPositionRef)
+provide('showLegendValues', showLegendValues)
+provide('legendPosition', toRef(props, 'legendPosition'))
 
 </script>
 

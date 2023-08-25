@@ -117,10 +117,9 @@ const legendID = ref(uuidv4())
 const chartID = ref(uuidv4())
 const legendItems = ref([])
 
-const unitsRef = toRef(props, 'metricUnit')
 const translatedUnits = computed(() => {
   // @ts-ignore - dynamic i18n key
-  return unitsRef.value && i18n.t(`chartUnits.${unitsRef.value}`)
+  return props.metricUnit && i18n.t(`chartUnits.${props.metricUnit}`)
 })
 
 const tooltipData: TooltipState = reactive({

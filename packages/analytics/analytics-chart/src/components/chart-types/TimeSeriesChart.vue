@@ -168,13 +168,12 @@ const chartInstance = ref<{chart: Chart}>()
 const legendID = ref(uuidv4())
 const chartID = ref(uuidv4())
 const legendItems = ref([])
-const unitsRef = toRef(props, 'metricUnit')
 const tooltipElement = ref()
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
 
 const translatedUnits = computed(() => {
   // @ts-ignore - dynamic i18n key
-  return unitsRef.value && i18n.t(`chartUnits.${unitsRef.value}`)
+  return props.metricUnit && i18n.t(`chartUnits.${props.metricUnit}`)
 })
 const tooltipData: TooltipState = reactive({
   showTooltip: false,
@@ -224,7 +223,7 @@ const mutableData = computed(() => {
         e.backgroundColor = props.datasetColors[e.rawDimension]
         e.borderColor = darkenColor(e.backgroundColor, 50)
       }
-      e.fill = toRef(props, 'fill').value
+      e.fill = props.fill
       return e
     }),
   }

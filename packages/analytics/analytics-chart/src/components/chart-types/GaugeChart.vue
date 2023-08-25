@@ -92,7 +92,6 @@ const props = defineProps({
 const { i18n } = composables.useI18n()
 
 const chartID = ref(uuidv4())
-const metricDisplayRef = toRef(props, 'metricDisplay')
 
 // Flatten the datasets into a single element array, since we only want to
 // display a single dataset containing dimension totals in our Doughnut chart.
@@ -144,8 +143,8 @@ const metricTotal = computed(() => approxNum(formattedDataset?.value[0]?.data[0]
 const metricHighlightColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[0]}`)
 
 // Conditionally show large or small metric value, or neither
-const showMetricLarge = computed(() => [ChartMetricDisplay.Full, ChartMetricDisplay.SingleMetric].includes(metricDisplayRef.value))
-const showMetricSmall = computed(() => metricDisplayRef.value === ChartMetricDisplay.Full)
+const showMetricLarge = computed(() => [ChartMetricDisplay.Full, ChartMetricDisplay.SingleMetric].includes(props.metricDisplay))
+const showMetricSmall = computed(() => props.metricDisplay === ChartMetricDisplay.Full)
 </script>
 
 <style lang="scss" scoped>
