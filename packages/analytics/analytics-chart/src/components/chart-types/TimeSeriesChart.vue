@@ -264,11 +264,9 @@ const handleChartClick = () => {
 }
 
 watch(() => props.type, () => {
-  if (chartInstance.value) {
-    chartInstance.value.chart.destroy()
-  }
   tooltipData.locked = false
   tooltipData.showTooltip = false
+  delete verticalLinePlugin.clickedSegment
 })
 
 </script>
