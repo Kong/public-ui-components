@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { ref, computed, onBeforeMount } from 'vue'
+import { ref, computed, onBeforeMount, watch } from 'vue'
 
 const props = defineProps({
   /**
@@ -35,6 +35,10 @@ const isAllowed = ref<boolean | undefined>(undefined)
 const showSlotContent = computed((): boolean => isAllowed.value === true || (isAllowed.value !== undefined && props.forceShow === true))
 
 onBeforeMount(async (): Promise<void> => {
+  isAllowed.value = await props.authFunction()
+})
+
+watch(() => props.authFunction, async () => {
   isAllowed.value = await props.authFunction()
 })
 </script>
