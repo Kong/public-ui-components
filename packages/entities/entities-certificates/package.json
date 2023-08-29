@@ -66,7 +66,7 @@
   "dependencies": {
     "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@peculiar/x509": "^1.9.4"
+    "@peculiar/x509": "^1.9.5"
   },
   "distSizeChecker": {
     "errorLimit": "1.5MB"
