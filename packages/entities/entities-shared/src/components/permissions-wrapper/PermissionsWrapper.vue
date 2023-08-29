@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { ref, computed, onBeforeMount, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 const props = defineProps({
   /**
