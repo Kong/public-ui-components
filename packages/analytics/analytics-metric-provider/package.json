@@ -48,7 +48,7 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong-ui-public/analytics-utilities": "workspace:^",
+    "@kong-ui-public/analytics-utilities": "workspace:^0.7.2",
     "@kong-ui-public/core": "1.1.0",
     "@kong-ui-public/metric-cards": "0.2.14",
     "axios": "^1.4.0",
