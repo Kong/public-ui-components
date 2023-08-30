@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.2.10...@kong-ui-public/entities-shared@1.2.11) (2023-08-30)
+
+
+### Bug Fixes
+
+* **entities-shared:** add missing watcher to permissions-wrapper ([#745](https://github.com/Kong/public-ui-components/issues/745)) ([f4a54e0](https://github.com/Kong/public-ui-components/commit/f4a54e0bedc8d4ed28c6c4c8edf0e9deb35f56ed))
+
+
+
+
+
 ## [1.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.2.9...@kong-ui-public/entities-shared@1.2.10) (2023-08-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
