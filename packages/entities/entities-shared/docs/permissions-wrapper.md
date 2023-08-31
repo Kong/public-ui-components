@@ -23,11 +23,11 @@ A composable that exports a shared Axios instance.
 
 #### `authFunction`
 
-- type: `Function as PropType<() => Promise<boolean>>`
+- type: `Function as PropType<() => boolean | Promise<boolean>>`
 - required: `true`
-- default: `async (): Promise<boolean> => true`
+- default: `async () => true`
 
-An async function that returns a boolean to determine whether the wrapper should hide or show the default slot content.
+A sync or async function that returns a boolean to determine whether the wrapper should hide or show the default slot content.
 
 #### `forceShow`
 

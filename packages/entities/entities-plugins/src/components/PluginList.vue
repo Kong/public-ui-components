@@ -289,45 +289,45 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  /** An asynchronous function, that returns a boolean, that evaluates if the user can create a new entity */
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a new entity */
   canCreate: {
-    type: Function as PropType<() => Promise<boolean>>,
+    type: Function as PropType<() => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
   },
-  /** An asynchronous function, that returns a boolean, that evaluates if the user can delete a given entity */
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can delete a given entity */
   canDelete: {
-    type: Function as PropType<(row: EntityRow) => Promise<boolean>>,
+    type: Function as PropType<(row: EntityRow) => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
   },
-  /** An asynchronous function, that returns a boolean, that evaluates if the user can edit a given entity */
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can edit a given entity */
   canEdit: {
-    type: Function as PropType<(row: EntityRow) => Promise<boolean>>,
+    type: Function as PropType<(row: EntityRow) => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
   },
-  /** An asynchronous function, that returns a boolean, that evaluates if the user can toggle (enable/disable) a given entity */
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can toggle (enable/disable) a given entity */
   canToggle: {
-    type: Function as PropType<(row: EntityRow) => Promise<boolean>>,
+    type: Function as PropType<(row: EntityRow) => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
   },
-  /** An asynchronous function, that returns a boolean, that evaluates if the user can retrieve (view details) a given entity */
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can retrieve (view details) a given entity */
   canRetrieve: {
-    type: Function as PropType<(row: EntityRow) => Promise<boolean>>,
+    type: Function as PropType<(row: EntityRow) => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
   },
-  /** An asynchronous function, that returns a boolean, that evaluates if the user can retrieve (view details) a given scoped entity (e.g. route linked with the plugin) */
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can retrieve (view details) a given scoped entity (e.g. route linked with the plugin) */
   canRetrieveScopedEntity: {
-    type: Function as PropType<(entityType: string, entityId: string) => Promise<boolean>>,
+    type: Function as PropType<(entityType: string, entityId: string) => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
   },
-  /** An asynchronous function, that returns a boolean, that evaluates if the user can configure dynamic ordering for a given entity */
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can configure dynamic ordering for a given entity */
   canConfigureDynamicOrdering: {
-    type: Function as PropType<(row: EntityRow) => Promise<boolean>>,
+    type: Function as PropType<(row: EntityRow) => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
   },

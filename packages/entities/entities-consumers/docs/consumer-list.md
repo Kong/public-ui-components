@@ -122,37 +122,37 @@ Note: the default value is usually sufficient unless the app needs to support mu
 
 #### `canCreate`
 
-- type: `Function as PropType<() => Promise<boolean>>`
+- type: `Function as PropType<() => boolean | Promise<boolean>>`
 - required: `false`
 - default: `async () => true`
 
-An asynchronous function, that returns a boolean, that evaluates if the user can create a new entity.
+A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a new entity.
 Note: When ConsumerList config specifies a `consumerGroupId` the `canCreate` permission is applied to the action of adding a consumer to a consumer group instead of creating a new consumer.
 
 #### `canDelete`
 
-- type: `Function as PropType<(row: object) => Promise<boolean>>`
+- type: `Function as PropType<(row: object) => boolean | Promise<boolean>>`
 - required: `false`
 - default: `async () => true`
 
-An asynchronous function, that returns a boolean, that evaluates if the user can delete a given entity.
+A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can delete a given entity.
 Note: When ConsumerList config specifies a `consumerGroupId` the `canDelete` permission is applied to the action of removing a consumer from a consumer group instead of deleting a consumer.
 
 #### `canEdit`
 
-- type: `Function as PropType<(row: object) => Promise<boolean>>`
+- type: `Function as PropType<(row: object) => boolean | Promise<boolean>>`
 - required: `false`
 - default: `async () => true`
 
-An asynchronous function, that returns a boolean, that evaluates if the user can edit a given entity.
+A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can edit a given entity.
 
 #### `canRetrieve`
 
-- type: `Function as PropType<(row: object) => Promise<boolean>>`
+- type: `Function as PropType<(row: object) => boolean | Promise<boolean>>`
 - required: `false`
 - default: `async () => true`
 
-An asynchronous function, that returns a boolean, that evaluates if the user can retrieve (view details) a given entity.
+A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can retrieve (view details) a given entity.
 
 ### Events
 
