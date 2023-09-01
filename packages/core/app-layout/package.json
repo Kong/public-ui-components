@@ -38,7 +38,7 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^8.122.4",
+    "@kong/kongponents": "^8.122.5",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
   },
@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "^1.9.1",
-    "@kong/kongponents": "^8.122.4",
+    "@kong/kongponents": "^8.122.5",
     "@types/lodash.clonedeep": "^4.5.7",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
