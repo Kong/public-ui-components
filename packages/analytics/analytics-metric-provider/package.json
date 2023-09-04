@@ -56,7 +56,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^8.122.5"
+    "@kong/kongponents": "^8.122.6"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^"
