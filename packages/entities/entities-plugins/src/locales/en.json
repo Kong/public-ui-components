@@ -45,7 +45,8 @@
           "consumer": "Consumer",
           "global": "Global",
           "route": "Route",
-          "service": "Service"
+          "service": "Service",
+          "consumer_group": "Consumer Group"
         },
         "id": "ID",
         "name": "Name",
@@ -388,7 +389,8 @@
     "fields": {
       "service": "Service ID",
       "route": "Route ID",
-      "consumer": "Consumer ID"
+      "consumer": "Consumer ID",
+      "consumer_group": "Consumer Group ID"
     }
   },
   "glossary": {

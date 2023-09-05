@@ -82,6 +82,18 @@
           :uuid="rowValue.id"
         />
       </template>
+      <template #consumer_group="{ rowValue, row }">
+        <span v-if="!rowValue">–</span>
+        <CopyUuid
+          v-else
+          data-testid="consumer-group-copy-uuid"
+          :notify="() => { }"
+          :success-tooltip="t('copy.success_tooltip')"
+          :tooltip="t('copy.tooltip', { label: row.label })"
+          :truncated="false"
+          :uuid="rowValue.id"
+        />
+      </template>
     </EntityBaseConfigCard>
   </div>
 </template>
@@ -194,6 +206,11 @@ const configSchema = computed((): ConfigurationSchema => {
     },
     service: {
       label: t('plugins.fields.service'),
+      section: ConfigurationSchemaSection.Basic,
+      order: 6,
+    },
+    consumer_group: {
+      label: t('plugins.fields.consumer_group'),
       section: ConfigurationSchemaSection.Basic,
       order: 6,
     },

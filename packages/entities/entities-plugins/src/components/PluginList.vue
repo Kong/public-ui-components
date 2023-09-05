@@ -456,6 +456,9 @@ const aggregateAppliedTo = (row: EntityRow): ({ type: ViewRouteType | null, badg
   if (row.consumer?.id) {
     badges.push({ type: 'consumer', badgeText: t('plugins.list.table_headers.applied_to_badges.consumer') })
   }
+  if (row.consumer_group?.id) {
+    badges.push({ type: 'consumer_group', badgeText: t('plugins.list.table_headers.applied_to_badges.consumer_group') })
+  }
   if (badges.length) {
     return badges
   }
@@ -481,6 +484,9 @@ const handleAppliedToClick = (type: ViewRouteType, row: EntityRow) => {
       break
     case 'consumer':
       id = row.consumer?.id
+      break
+    case 'consumer_group':
+      id = row.consumer_group?.id
       break
     default:
       break

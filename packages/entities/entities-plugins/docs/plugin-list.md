@@ -117,13 +117,13 @@ A table component for plugins.
     - type: `string`
     - required: `false`
     - default: `null`
-    - Current entity id if the PluginList is nested in the plugins tab on a consumer, gateway service, or route detail page.
+    - Current entity id if the PluginList is nested in the plugins tab on a consumer, consumer group, gateway service, or route detail page.
 
   - `entityType`:
-    - type: `'consumers' | 'services' | 'routes'`
+    - type: `'consumers' | 'consumer_groups' | 'services' | 'routes'`
     - required: `false`
     - default: `null`
-    - Current entity type if the PluginList is nested in the plugins tab on a consumer, gateway service, or route detail page.
+    - Current entity type if the PluginList is nested in the plugins tab on a consumer, consumer group, gateway service, or route detail page.
 
 The base konnect or kongManger config.
 
@@ -178,7 +178,7 @@ A synchronous or asynchronous function, that returns a boolean, that evaluates i
 
 #### `canRetrieveScopedEntity`
 
-- type: `Function as PropType<(entityType: 'service' | 'route' | 'consumer', entityId: string) => boolean | Promise<boolean>>`
+- type: `Function as PropType<(entityType: 'service' | 'route' | 'consumer' | 'consumer_group', entityId: string) => boolean | Promise<boolean>>`
 - required: `false`
 - default: `async () => true`
 

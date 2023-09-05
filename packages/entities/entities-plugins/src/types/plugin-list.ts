@@ -4,9 +4,10 @@ import type { FilterSchema, KongManagerBaseTableConfig, KonnectBaseTableConfig }
 import type { EntityRow as ServiceEntity } from '@kong-ui-public/entities-gateway-services'
 import type { EntityRow as ConsumerEntity } from '@kong-ui-public/entities-consumers'
 import type { EntityRow as RouteEntity } from '@kong-ui-public/entities-routes'
+import type { EntityRow as ConsumerGroupEntity } from '@kong-ui-public/entities-consumer-groups'
 
-export type ViewRouteType = 'consumer' | 'route' | 'service'
-export type EntityType = 'consumers' | 'routes' | 'services'
+export type ViewRouteType = 'consumer' | 'route' | 'service' | 'consumer_group'
+export type EntityType = 'consumers' | 'routes' | 'services' | 'consumer_groups'
 
 export interface EntityRow extends Record<string, any> {
   config: any
@@ -22,6 +23,7 @@ export interface EntityRow extends Record<string, any> {
   consumer?: Pick<ConsumerEntity, 'id'> | null
   route?: Pick<RouteEntity, 'id'> | null
   service?: Pick<ServiceEntity, 'id'> | null
+  consumer_group?: Pick<ConsumerGroupEntity, 'id'> | null
 }
 
 export interface BasePluginListConfig {
