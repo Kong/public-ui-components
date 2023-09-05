@@ -119,6 +119,10 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
     max-height: 400px;
     max-width: 200px;
 
+    .legend {
+      margin-top: $kui-space-30;
+    }
+
     // Allow legend to expand horizontally at lower resolutions
     @media (max-width: ($kui-breakpoint-phablet - 1px)) {
       flex-direction: row;
@@ -139,6 +143,11 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
 
     .label {
       width: max-content;
+    }
+
+    li {
+      align-items: center;
+      display: flex;
     }
   }
 
@@ -162,7 +171,6 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
       flex: 0 0 14px;
       height: 3px;
       margin-right: $kui-space-50;
-      margin-top: $kui-space-50;
     }
 
     cursor: pointer;
