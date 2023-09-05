@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.9.10...@kong-ui-public/analytics-chart@0.9.11) (2023-09-05)
+
+
+### Bug Fixes
+
+* **analytics-chart:** centering issue with legend item icon [MA-1942] ([#758](https://github.com/Kong/public-ui-components/issues/758)) ([5030b43](https://github.com/Kong/public-ui-components/commit/5030b43309513d18d952418a21704e64271ac50b))
+
+
+
+
+
 ## [0.9.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.9.9...@kong-ui-public/analytics-chart@0.9.10) (2023-09-04)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
