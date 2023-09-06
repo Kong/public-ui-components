@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.1.12...@kong-ui-public/entities-plugins@1.2.0) (2023-09-06)
+
+
+### Features
+
+* **plugins:** support scoping for consumer groups ([#756](https://github.com/Kong/public-ui-components/issues/756)) ([7ec6b56](https://github.com/Kong/public-ui-components/commit/7ec6b5650bbad8f004477437122719fe42500f0c))
+
+
+
+
+
 ## [1.1.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.1.11...@kong-ui-public/entities-plugins@1.1.12) (2023-09-04)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
