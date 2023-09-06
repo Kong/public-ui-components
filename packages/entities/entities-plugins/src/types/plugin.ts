@@ -16,6 +16,7 @@ export enum PluginScope {
   SERVICE = 'service',
   ROUTE = 'route',
   CONSUMER = 'consumer',
+  CONSUMER_GROUP = 'consumer_group',
 }
 
 export type PluginMetaData = {

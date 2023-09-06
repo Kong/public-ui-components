@@ -89,7 +89,7 @@ Set this value to `true` to hide the card title.
 - required: `false`
 - default: `''`
 
-The type of the entity with which the plugin is associated. Can be one of `'services'`, `'routes'` or `'consumers'`.
+The type of the entity with which the plugin is associated. Can be one of `'services'`, `'routes'`, `'consumers'` or `consumer_groups`.
 
 #### `scopedEntityId`
 

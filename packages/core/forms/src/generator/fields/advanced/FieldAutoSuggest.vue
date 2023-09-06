@@ -108,6 +108,7 @@ export default {
   async created() {
     await this.$nextTick()
     let presetEntity
+    let entityData
 
     switch (this.fieldState) {
       case fieldStates.UPDATE_ENTITY:
@@ -115,7 +116,12 @@ export default {
           console.warn('[@kong-ui-public/forms] No API service provided')
           break
         }
-        presetEntity = await this.getItem((await this[FORMS_API_KEY].getOne(this.entity, this.model[this.schema.model])).data)
+
+        // Get entity data from API. In most cases the data is stored in the `data` key of the response directly
+        // but sometimes it is stored in a nested key inside the `data` key, so we allow the user to specify it in the schema
+        // e.g. entity data returned from `consumer_groups/:id` is stored in `data.consumer_group`
+        entityData = (await this[FORMS_API_KEY].getOne(this.entity, this.model[this.schema.model])).data
+        presetEntity = this.getItem(this.schema.entityDataKey ? entityData[this.schema.entityDataKey] : entityData)
         this.idValue = presetEntity.id
         break
       case fieldStates.CREATE_FROM_ENTITY:

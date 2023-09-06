@@ -47,6 +47,11 @@ const init = async () => {
         component: () => import('./pages/FallbackPage.vue'),
       },
       {
+        path: '/consumer_group/:id',
+        name: 'view-consumer_group',
+        component: () => import('./pages/FallbackPage.vue'),
+      },
+      {
         path: '/plugin/:id/configure-dynamic-ordering',
         name: 'configure-dynamic-ordering',
         component: () => import('./pages/FallbackPage.vue'),

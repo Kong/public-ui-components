@@ -19,7 +19,7 @@ export const plugins: FetcherRawResponse = {
       ordering: {},
       instance_name: 'instance-1',
       created_at: 1610617600,
-
+      consumer_group: { id: 'consumer-group-1' },
       consumer: { id: 'consumer-1' },
       route: { id: 'route-1' },
       service: null,
@@ -32,7 +32,6 @@ export const plugins: FetcherRawResponse = {
       protocols: ['http', 'https'],
       tags: ['tag2'],
       created_at: 1610617601,
-
       consumer: null,
       route: null,
       service: null,

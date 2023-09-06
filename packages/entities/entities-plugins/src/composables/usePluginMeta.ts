@@ -193,7 +193,7 @@ export const usePluginMetaData = () => {
       group: PluginGroup.TRAFFIC_CONTROL,
       isEnterprise: true,
       name: t('plugins.meta.rate-limiting-advanced.name'),
-      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     },
     'rate-limiting': {
       description: t('plugins.meta.rate-limiting.description'),
@@ -317,7 +317,7 @@ export const usePluginMetaData = () => {
       group: PluginGroup.TRANSFORMATIONS,
       isEnterprise: false,
       name: t('plugins.meta.response-transformer-advanced.name'),
-      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     },
     'correlation-id': {
       description: t('plugins.meta.correlation-id.description'),
@@ -331,21 +331,21 @@ export const usePluginMetaData = () => {
       group: PluginGroup.TRANSFORMATIONS,
       isEnterprise: true,
       name: t('plugins.meta.request-transformer-advanced.name'),
-      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     },
     'request-transformer': {
       description: t('plugins.meta.request-transformer.description'),
       group: PluginGroup.TRANSFORMATIONS,
       isEnterprise: false,
       name: t('plugins.meta.request-transformer.name'),
-      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     },
     'response-transformer': {
       description: t('plugins.meta.response-transformer.description'),
       group: PluginGroup.TRANSFORMATIONS,
       isEnterprise: false,
       name: t('plugins.meta.response-transformer.name'),
-      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     },
     'route-transformer-advanced': {
       description: t('plugins.meta.route-transformer-advanced.description'),
