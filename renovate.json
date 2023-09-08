@@ -41,6 +41,9 @@
       "minimumReleaseAge": "10 days"
     },
     {
+      "automerge": true,
+      "groupName": "all kong scoped dependencies",
+      "groupSlug": "all-kong-scopes",
       "matchPackagePatterns": [
         "^@kong\/",
         "^@kong-ui\/",
