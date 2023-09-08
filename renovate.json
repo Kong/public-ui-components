@@ -24,16 +24,8 @@
   "automergeSchedule": [
     "every weekday"
   ],
-  "stabilityDays": 14,
+  "minimumReleaseAge": "14 days",
   "packageRules": [
-    {
-      "matchPackagePatterns": [
-        "^@kong\/",
-        "^@kong-ui\/",
-        "^@kong-ui-public\/"
-      ],
-      "stabilityDays": 0
-    },
     {
       "automerge": true,
       "groupName": "all non-major dependencies with stable version",
@@ -46,7 +38,15 @@
         "minor",
         "patch"
       ],
-      "stabilityDays": 10
+      "minimumReleaseAge": "10 days"
+    },
+    {
+      "matchPackagePatterns": [
+        "^@kong\/",
+        "^@kong-ui\/",
+        "^@kong-ui-public\/"
+      ],
+      "minimumReleaseAge": "1 day"
     }
   ],
   "npmrcMerge": true,
