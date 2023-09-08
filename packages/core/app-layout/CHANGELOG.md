@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.22.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.22.18...@kong-ui-public/app-layout@0.22.19) (2023-09-08)
+
+
+### Bug Fixes
+
+* **app-layout:** update default z-index ([#773](https://github.com/Kong/public-ui-components/issues/773)) ([7359d1e](https://github.com/Kong/public-ui-components/commit/7359d1edd755e2e3777892bfc5c95dd20337ac22))
+
+
+
+
+
 ## [0.22.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.22.17...@kong-ui-public/app-layout@0.22.18) (2023-09-08)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
