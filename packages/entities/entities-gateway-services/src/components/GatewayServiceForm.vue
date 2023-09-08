@@ -605,7 +605,7 @@ const showCaCert = computed((): boolean => {
     return true
   }
 
-  const isValidProtocol = ['https', 'tls'].includes(form.fields.protocol)
+  const isValidProtocol = ['https', 'tls', 'grpcs'].includes(form.fields.protocol)
   return checkedGroup.value === 'protocol' && isValidProtocol
 })
 
@@ -615,7 +615,7 @@ const showTlsVerify = computed((): boolean => {
     return true
   }
 
-  const isValidProtocol = ['https', 'wss', 'tls'].includes(form.fields.protocol)
+  const isValidProtocol = ['https', 'wss', 'tls', 'grpcs'].includes(form.fields.protocol)
   return checkedGroup.value === 'protocol' && isValidProtocol
 })
 
@@ -704,7 +704,7 @@ const saveTlsVerify = (gatewayService: Record<string, any>) => {
     protocol = new URL(gatewayService.url).protocol
   }
 
-  if (['https', 'wss', 'tls'].includes(gatewayService.protocol) || ['https', 'wss', 'tls'].includes(protocol)) {
+  if (['https', 'wss', 'tls', 'grpcs'].includes(gatewayService.protocol) || ['https', 'wss', 'tls', 'grpcs'].includes(protocol)) {
     gatewayService.tls_verify = gatewayService.tls_verify_enabled ? gatewayService.tls_verify_value : null
   }
   delete gatewayService.tls_verify_enabled
@@ -734,7 +734,7 @@ const getPayload = (): Record<string, any> => {
     requestBody.client_certificate = { id: form.fields.client_certificate }
   }
 
-  if (form.fields.tls_verify_enabled && ['https', 'wss', 'tls'].includes(form.fields.protocol)) {
+  if (form.fields.tls_verify_enabled && ['https', 'wss', 'tls', 'grpcs'].includes(form.fields.protocol)) {
     requestBody.tls_verify = form.fields.tls_verify_value
   }
 
