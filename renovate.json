@@ -49,7 +49,7 @@
         "^@kong-ui\/",
         "^@kong-ui-public\/"
       ],
-      "minimumReleaseAge": "1 day"
+      "minimumReleaseAge": "2 hours"
     }
   ],
   "npmrcMerge": true,
