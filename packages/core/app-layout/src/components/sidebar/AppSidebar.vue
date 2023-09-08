@@ -105,7 +105,7 @@ const props = defineProps({
   },
   zIndex: {
     type: Number,
-    default: 2,
+    default: 3,
   },
   // Props that only impact mobile
   open: {
