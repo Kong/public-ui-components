@@ -34,7 +34,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
       - name: Checkout Source Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -297,7 +297,7 @@ jobs:
 
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
@@ -358,7 +358,7 @@ jobs:
 
       - name: Checkout Source Code
         if: ${{ github.event_name == 'push' }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.KONGPONENTS_BOT_PAT }}
@@ -406,7 +406,7 @@ jobs:
       - finish-test-and-publish
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get aggregate Workflow status
         uses: technote-space/workflow-conclusion-action@v3
