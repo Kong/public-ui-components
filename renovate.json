@@ -1,6 +1,6 @@
 {
   "extends": [
-    "github>Kong/public-shared-renovate:kong-frontend-config.json"
+    "github>Kong/public-shared-renovate:kong-frontend-config"
   ],
   "ignorePaths": [
     "packages/core/cli/src/__template__/package.json"
