@@ -28,7 +28,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "^1.10.2",
     "@kong/kongponents": "^8.123.3",
-    "@types/uuid": "^9.0.2",
+    "@types/uuid": "^9.0.3",
     "vue": "^3.3.4"
   },
   "scripts": {
