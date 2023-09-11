@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.2.16...@kong-ui-public/entities-shared@1.3.0) (2023-09-11)
+
+
+### Features
+
+* **entities:** add policy to delete modal types ([#777](https://github.com/Kong/public-ui-components/issues/777)) ([7ba6559](https://github.com/Kong/public-ui-components/commit/7ba65597623dbf75e78973a9a7f2eceb01fa7a9e))
+
+
+
+
+
 ## [1.2.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.2.15...@kong-ui-public/entities-shared@1.2.16) (2023-09-09)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
