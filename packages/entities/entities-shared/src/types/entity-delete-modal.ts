@@ -22,4 +22,5 @@ export enum EntityTypes {
   'hmac-auth' = 'HMAC Credential',
   jwt = 'JWT Credential',
   Target = 'target',
+  Policy = 'policy',
 }
