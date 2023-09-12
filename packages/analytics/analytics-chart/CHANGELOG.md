@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.9.15...@kong-ui-public/analytics-chart@0.9.16) (2023-09-12)
+
+
+### Bug Fixes
+
+* **analytics-chart:** arrange legend items in grid when horiz [MA-2011] ([#778](https://github.com/Kong/public-ui-components/issues/778)) ([b56926b](https://github.com/Kong/public-ui-components/commit/b56926bf5173d72e6514ffdb537f5370ef1e529a))
+
+
+
+
+
 ## [0.9.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.9.14...@kong-ui-public/analytics-chart@0.9.15) (2023-09-12)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
