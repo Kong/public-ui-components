@@ -17,7 +17,10 @@
       <div
         :class="{ 'strike-through': !isDatasetVisible(datasetIndex, index) }"
       >
-        <div class="label">
+        <div
+          class="label"
+          :title="position === ChartLegendPosition.Bottom && text"
+        >
           {{ text }}
         </div>
         <div
@@ -133,21 +136,24 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
   }
 
   &.horizontal {
-    column-gap: $kui-space-50;
-    flex-direction: row;
-    flex-wrap: wrap;
+    column-gap: $kui-space-10;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, $kui-space-150);
     justify-content: center;
-    margin-top: $kui-space-50;
-    max-height: 60px;
+    max-height: $kui-space-150;
     width: 100%;
 
     .label {
-      width: max-content;
+      max-width: $kui-space-120;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     li {
       align-items: center;
       display: flex;
+      justify-content: start;
     }
   }
 
