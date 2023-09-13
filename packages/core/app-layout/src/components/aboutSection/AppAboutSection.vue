@@ -158,14 +158,17 @@ const displayModified = computed(() => {
     column-gap: $kui-space-70;
     display: flex;
     font-size: $kui-font-size-30;
+    flex-wrap: wrap;
     line-height: $kui-line-height-30;
     padding: $kui-space-0;
+    row-gap: $kui-space-30;
   }
 
   .about-divider-section {
     color: $kui-color-text-neutral;
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
     font-size: $kui-font-size-30;
     line-height: $kui-line-height-30;
     row-gap: $kui-space-50;

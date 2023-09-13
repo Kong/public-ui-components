@@ -84,6 +84,15 @@
         </KBadge>
       </div>
       <div>
+        <span class="badge-label">Color:</span>
+        <KBadge
+          appearance="neutral"
+          shape="rectangular"
+        >
+          BLACK
+        </KBadge>
+      </div>
+      <div>
         <span class="badge-label">Type:</span>
         <KBadge
           appearance="success"
@@ -91,6 +100,14 @@
         >
           COOL
         </KBadge>
+      </div>
+      <div class="method-badges">
+        <span class="badge-label">Methods:</span>
+        <KMethodBadge
+          v-for="method in ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace', 'connect', 'custom']"
+          :key="method"
+          :method="(method as Method)"
+        />
       </div>
 
       <template #divider-section>
@@ -116,6 +133,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import type { Method } from '@kong/kongponents'
 import { AppAboutSection, AppPageHeader } from '../../src'
 
 const breadcrumbs = computed(() => {
@@ -166,7 +184,14 @@ const enabled = ref(false)
 
 .badge-label {
   font-size: 12px;
-  line-height: 16px;
+  line-height: 20px;
   margin-right: 8px;
+}
+
+.method-badges {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 4px;
+  row-gap: 8px;
 }
 </style>
