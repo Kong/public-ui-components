@@ -114,6 +114,7 @@ defineProps({
   .about-section-header-end {
     display: flex;
     .about-section-timestamps {
+      align-self: center;
       color: $kui-color-text-neutral;
       font-size: $kui-font-size-20;
       line-height: $kui-line-height-20;
