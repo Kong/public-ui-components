@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-chart",
-  "version": "0.9.17",
+  "version": "0.9.18",
   "type": "module",
   "main": "./dist/vitals-chart.umd.js",
   "module": "./dist/vitals-chart.es.js",
