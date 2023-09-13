@@ -4,9 +4,9 @@
       v-if="title"
       #title
     >
-      <div class="about-section-title">
+      <span class="about-section-title">
         {{ title }}
-      </div>
+      </span>
     </template>
 
     <template
@@ -26,11 +26,11 @@
           >{{ createdLabel || 'Created' }}: {{ created }}</span>
           <!-- TODO: use new icon instead of KIcon -->
           <span
-            v-if="created && modified"
+            v-if="created && displayModified"
             class="about-section-timestamps-arrow"
           >-></span>
           <span
-            v-if="modified"
+            v-if="displayModified"
             class="about-section-timestamps-modified"
           >{{ modifiedLabel || 'Modified' }}: {{ modified }}</span>
         </div>
@@ -46,12 +46,12 @@
     </template>
 
     <template #body>
-      <div
+      <p
         v-if="description"
         class="about-section-description"
       >
         {{ description }}
-      </div>
+      </p>
 
       <div
         v-if="$slots.default"
@@ -73,7 +73,9 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   title: {
     type: String,
     default: '',
@@ -99,6 +101,10 @@ defineProps({
     default: '',
   },
 })
+
+const displayModified = computed(() => {
+  return !!props.modified && props.modified !== props.created
+})
 </script>
 
 <style lang="scss" scoped>
@@ -113,11 +119,17 @@ defineProps({
 
   .about-section-header-end {
     display: flex;
+
     .about-section-timestamps {
       align-self: center;
       color: $kui-color-text-neutral;
       font-size: $kui-font-size-20;
       line-height: $kui-line-height-20;
+
+      @media (max-width: $kui-breakpoint-phablet) {
+        flex-direction: column;
+        margin-bottom: $kui-space-50;
+      }
 
       &.has-actions {
         margin-right: $kui-space-60;
@@ -136,6 +148,7 @@ defineProps({
     font-size: $kui-font-size-30;
     line-height: $kui-line-height-30;
     margin-bottom: $kui-space-70;
+    margin-top: $kui-space-0;
   }
 
   .about-section-content {
@@ -182,6 +195,14 @@ defineProps({
   .k-card-header {
     align-items: baseline;
     margin-bottom: $kui-space-0 !important;
+
+    @media (max-width: $kui-breakpoint-phablet) {
+      flex-direction: column;
+
+      .k-card-actions {
+        margin-left: unset;
+      }
+    }
   }
 }
 </style>
