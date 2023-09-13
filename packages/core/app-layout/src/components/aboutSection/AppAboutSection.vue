@@ -57,7 +57,7 @@
         v-if="$slots.default"
         class="about-section-content"
       >
-        <slot />
+        <slot name="default" />
       </div>
 
       <hr v-if="$slots['divider-section']">
