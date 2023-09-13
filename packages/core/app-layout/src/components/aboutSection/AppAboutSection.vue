@@ -107,8 +107,8 @@ defineProps({
     color: $kui-color-text;
     font-size: $kui-font-size-40;
     font-weight: $kui-font-weight-bold;
-    line-height: $kui-line-height-30;
     letter-spacing: $kui-letter-spacing-minus-20;
+    line-height: $kui-line-height-30;
   }
 
   .about-section-header-end {
