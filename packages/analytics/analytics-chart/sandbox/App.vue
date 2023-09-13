@@ -258,8 +258,8 @@
       </div>
       <div>
         <KInputSwitch
-          v-model="showTableData"
-          :label="!showTableData ? 'Empty State' : 'Chart Has Data'"
+          v-model="emptyState"
+          :label="emptyState ? 'Empty State' : 'Chart Has Data'"
         />
       </div>
     </div>
@@ -335,8 +335,8 @@ const limitToggle = ref(false)
 const multiDimensionToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
-const showTableData = ref(false)
 const showLoadingState = ref(false)
+const emptyState = ref(false)
 const chartType = ref<ChartTypes | ChartTypesSimple>(ChartTypes.VERTICAL_BAR)
 const legendPosition = ref(ChartLegendPosition.Right)
 const metricDisplay = ref(ChartMetricDisplay.SingleMetric)
@@ -369,7 +369,7 @@ const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',
 ]))
 const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
-  if (showTableData.value) {
+  if (emptyState.value) {
     return null
   }
 
@@ -492,7 +492,7 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
   }
 })
 const exploreResultV3 = computed(() => {
-  if (!showTableData.value) {
+  if (emptyState.value) {
     return {
       meta: {},
       records: [],
