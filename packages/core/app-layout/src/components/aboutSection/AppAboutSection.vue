@@ -13,7 +13,6 @@
       v-if="$slots.actions || created || modified"
       #actions
     >
-      <!-- TODO: translation -->
       <div class="about-section-header-end">
         <div
           v-if="created || modified"
@@ -23,7 +22,7 @@
           <span
             v-if="created"
             class="about-section-timestamps-created"
-          >{{ createdLabel || 'Created' }}: {{ created }}</span>
+          >{{ createdLabel }}: {{ created }}</span>
           <span
             v-if="created && displayModified"
             class="about-section-timestamps-arrow"
@@ -31,7 +30,7 @@
           <span
             v-if="displayModified"
             class="about-section-timestamps-modified"
-          >{{ modifiedLabel || 'Modified' }}: {{ modified }}</span>
+          >{{ modifiedLabel }}: {{ modified }}</span>
         </div>
 
         <div
@@ -102,7 +101,7 @@ const props = defineProps({
   },
   createdLabel: {
     type: String,
-    default: '',
+    default: 'Created',
   },
   modified: {
     type: String,
@@ -110,7 +109,7 @@ const props = defineProps({
   },
   modifiedLabel: {
     type: String,
-    default: '',
+    default: 'Modified',
   },
   isLoading: {
     type: Boolean,
