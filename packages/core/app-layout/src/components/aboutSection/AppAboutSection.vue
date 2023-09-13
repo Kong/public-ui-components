@@ -157,8 +157,8 @@ const displayModified = computed(() => {
     color: $kui-color-text-neutral;
     column-gap: $kui-space-70;
     display: flex;
-    font-size: $kui-font-size-30;
     flex-wrap: wrap;
+    font-size: $kui-font-size-30;
     line-height: $kui-line-height-30;
     padding: $kui-space-0;
     row-gap: $kui-space-30;
