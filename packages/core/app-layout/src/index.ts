@@ -1,6 +1,7 @@
 import type { App } from 'vue'
 
 import AccountDropdown from './components/navbar/AccountDropdown.vue'
+import AppAboutSection from './components/aboutSection/AppAboutSection.vue'
 import AppError from './components/errors/AppError.vue'
 import AppLayout from './components/AppLayout.vue'
 import AppNavbar from './components/navbar/AppNavbar.vue'
@@ -20,6 +21,7 @@ export default {
 // Export individual Components
 export {
   AccountDropdown,
+  AppAboutSection,
   AppError,
   AppLayout,
   AppNavbar,
