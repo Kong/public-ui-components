@@ -231,12 +231,6 @@ const getValue = (record: AnalyticsExploreRecord): string => {
       line-height: $kui-line-height-40;
     }
 
-    .table-body {
-      .table-row:first-of-type {
-        border-top: $kui-border-width-10 solid $kui-color-border;
-      }
-    }
-
     .table-row {
       align-self: stretch;
       border-bottom: $kui-border-width-10 solid $kui-color-border;
@@ -259,6 +253,10 @@ const getValue = (record: AnalyticsExploreRecord): string => {
     }
 
     .table-body {
+      .table-row:first-of-type {
+        border-top: $kui-border-width-10 solid $kui-color-border;
+      }
+
       .column-1, .column-2 {
         padding-top: $kui-space-50;
       }
