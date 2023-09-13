@@ -24,7 +24,6 @@
             v-if="created"
             class="about-section-timestamps-created"
           >{{ createdLabel || 'Created' }}: {{ created }}</span>
-          <!-- TODO: use new icon instead of KIcon -->
           <span
             v-if="created && displayModified"
             class="about-section-timestamps-arrow"
@@ -46,27 +45,40 @@
     </template>
 
     <template #body>
-      <p
-        v-if="description"
-        class="about-section-description"
-      >
-        {{ description }}
-      </p>
-
-      <div
-        v-if="$slots.default"
-        class="about-section-content"
-      >
-        <slot name="default" />
+      <div v-if="isLoading">
+        <KSkeletonBox
+          height="2"
+          width="100"
+        />
+        <KSkeletonBox
+          height="2"
+          width="100"
+        />
       </div>
 
-      <hr v-if="$slots['divider-section']">
+      <div v-else>
+        <p
+          v-if="description"
+          class="about-section-description"
+        >
+          {{ description }}
+        </p>
 
-      <div
-        v-if="$slots['divider-section']"
-        class="about-divider-section"
-      >
-        <slot name="divider-section" />
+        <div
+          v-if="$slots.default"
+          class="about-section-content"
+        >
+          <slot name="default" />
+        </div>
+
+        <hr v-if="$slots['divider-section']">
+
+        <div
+          v-if="$slots['divider-section']"
+          class="about-divider-section"
+        >
+          <slot name="divider-section" />
+        </div>
       </div>
     </template>
   </KCard>
@@ -99,6 +111,10 @@ const props = defineProps({
   modifiedLabel: {
     type: String,
     default: '',
+  },
+  isLoading: {
+    type: Boolean,
+    default: false,
   },
 })
 

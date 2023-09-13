@@ -75,6 +75,14 @@ Modified timestamp displayed to the left of the `actions` slot.
 
 Label text for the `modified` timestamp, defaults to `Modified`.
 
+#### `isLoading`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Display the loading state or not.
+
 ### Slots
 
 #### `actions`
