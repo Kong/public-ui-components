@@ -182,6 +182,7 @@
       class="top-n-sandbox"
       :data="exploreResultV3"
       description="Last 30-Day Summary"
+      :is-loading="showLoadingState"
       title="Top 5 Routes"
     >
       <template #name="{ record }">
@@ -249,10 +250,16 @@
           :label="limitToggle ? 'Has Limit' : 'No Limit'"
         />
       </div>
+      <div v-if="isTopNTable">
+        <KInputSwitch
+          v-model="showLoadingState"
+          :label="showLoadingState ? 'Is Loading' : 'Data Loaded'"
+        />
+      </div>
       <div>
         <KInputSwitch
           v-model="showTableData"
-          :label="showTableData ? 'Empty State' : 'Chart Has Data'"
+          :label="!showTableData ? 'Empty State' : 'Chart Has Data'"
         />
       </div>
     </div>
@@ -329,6 +336,7 @@ const multiDimensionToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const showTableData = ref(false)
+const showLoadingState = ref(false)
 const chartType = ref<ChartTypes | ChartTypesSimple>(ChartTypes.VERTICAL_BAR)
 const legendPosition = ref(ChartLegendPosition.Right)
 const metricDisplay = ref(ChartMetricDisplay.SingleMetric)

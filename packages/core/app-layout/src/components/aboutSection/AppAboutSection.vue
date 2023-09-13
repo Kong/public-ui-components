@@ -191,6 +191,7 @@ const displayModified = computed(() => {
 </style>
 
 <style lang="scss">
+// TODO: clean up these styles after KCard redesign - KHCP-8971
 .kong-ui-app-about-section.kong-card.border {
   border-radius: $kui-border-radius-20;
   padding: $kui-space-70;
