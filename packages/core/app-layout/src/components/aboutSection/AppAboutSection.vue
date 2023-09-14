@@ -4,7 +4,10 @@
       v-if="title"
       #title
     >
-      <span class="about-section-title">
+      <span
+        class="about-section-title"
+        data-testid="about-section-title"
+      >
         {{ title }}
       </span>
     </template>
@@ -22,6 +25,7 @@
           <span
             v-if="created"
             class="about-section-timestamps-created"
+            data-testid="about-section-timestamps-created"
           >{{ createdLabel }}: {{ created }}</span>
           <span
             v-if="created && displayModified"
@@ -30,6 +34,7 @@
           <span
             v-if="displayModified"
             class="about-section-timestamps-modified"
+            data-testid="about-section-timestamps-modified"
           >{{ modifiedLabel }}: {{ modified }}</span>
         </div>
 
@@ -44,7 +49,10 @@
     </template>
 
     <template #body>
-      <div v-if="isLoading">
+      <div
+        v-if="isLoading"
+        data-testid="about-section-loading-skeleton"
+      >
         <KSkeletonBox
           height="2"
           width="100"
@@ -59,6 +67,7 @@
         <p
           v-if="description"
           class="about-section-description"
+          data-testid="about-section-description"
         >
           {{ description }}
         </p>
@@ -66,15 +75,20 @@
         <div
           v-if="$slots.default"
           class="about-section-content"
+          data-testid="about-section-content"
         >
           <slot name="default" />
         </div>
 
-        <hr v-if="$slots['divider-section']">
+        <hr
+          v-if="$slots['divider-section']"
+          data-testid="about-divider-section-separator"
+        >
 
         <div
           v-if="$slots['divider-section']"
           class="about-divider-section"
+          data-testid="about-divider-section"
         >
           <slot name="divider-section" />
         </div>
