@@ -1,12 +1,13 @@
 <template>
   <ul
     v-if="position !== ChartLegendPosition.Hidden"
+    ref="legendContainerRef"
     class="legend-container"
     :class="positionToClass(position)"
     data-testid="legend"
   >
     <li
-      v-for="{ fillStyle, strokeStyle, text, datasetIndex, index, value } in (itemsRef as any[])"
+      v-for="{ fillStyle, strokeStyle, text, datasetIndex, index, value } in (items as any[])"
       :key="text"
       @click="handleLegendItemClick(datasetIndex, index)"
     >
@@ -19,6 +20,7 @@
       >
         <div
           class="label"
+          :class="{ 'truncate-label' : shouldTruncate }"
           :title="position === ChartLegendPosition.Bottom && text"
         >
           {{ text }}
@@ -35,9 +37,10 @@
 </template>
 
 <script setup lang="ts">
+import { KUI_SPACE_150 } from '@kong/design-tokens'
 import { ChartLegendPosition } from '../../enums'
 import { Chart } from 'chart.js'
-import { inject, ref, toRef } from 'vue'
+import { inject, ref, watch } from 'vue'
 
 const props = defineProps({
   id: {
@@ -54,8 +57,19 @@ const props = defineProps({
     default: () => null,
   },
 })
+const legendContainerRef = ref<HTMLElement>()
+const shouldTruncate = ref(false)
 
-const itemsRef = toRef(props, 'items')
+const checkForWrap = () => {
+  if (legendContainerRef.value) {
+    const scrollHeight = legendContainerRef.value.scrollHeight
+    if (scrollHeight > parseInt(KUI_SPACE_150, 10)) {
+      shouldTruncate.value = true
+    }
+  }
+}
+
+watch(() => props.items, checkForWrap, { immediate: true })
 
 const handleLegendItemClick = (datasetIndex: number = 0, segmentIndex: number): void => {
   if (props.chartInstance === null) {
@@ -138,13 +152,17 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
   &.horizontal {
     column-gap: $kui-space-10;
     display: grid;
-    grid-template-columns: repeat(auto-fit, $kui-space-150);
+    grid-template-columns: repeat(auto-fit, minmax(12ch, max-content));
     justify-content: center;
     max-height: $kui-space-150;
     width: 100%;
 
     .label {
-      max-width: $kui-space-120;
+      width: 14ch;
+    }
+
+    .truncate-label {
+      max-width: 10ch;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
