@@ -4,7 +4,10 @@
       v-if="title"
       #title
     >
-      <div data-testid="top-n-card-title">
+      <div
+        class="top-n-card-title"
+        data-testid="top-n-card-title"
+      >
         {{ title }}
       </div>
     </template>
@@ -197,7 +200,15 @@ const getValue = (record: AnalyticsExploreRecord): string => {
 </script>
 
 <style lang="scss" scoped>
+:deep(.kong-ui-public-top-n-table.kong-card) {
+  border-radius: $kui-border-radius-40;
+}
+
 .kong-ui-public-top-n-table {
+  .top-n-card-title {
+    font-size: $kui-font-size-40;
+  }
+
   :deep(.k-card-actions) {
     align-self: baseline;
     display: flex;
