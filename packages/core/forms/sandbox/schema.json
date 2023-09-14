@@ -266,7 +266,7 @@
       "fieldItemsClasses": "d-flex mt-2 w-50",
       "newElementButtonLabelClasses": "mt-2 p-2",
       "inputAttributes": {
-        "class": "k-input",
+        "class": "form-control",
         "style": {
           "minWidth": "200px"
         },

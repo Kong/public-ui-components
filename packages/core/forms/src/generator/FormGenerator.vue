@@ -258,16 +258,24 @@ export default {
   .form-control {
     background-color: #fff;
     background-image: none;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    color: #555;
-    // Default Bootstrap .form-control style
+    border: none;
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 1px #e7e7ec;
+    box-sizing: border-box;
+    color: $kui-color-text-neutral-strong;
     display: block;
-    font-size: 14px;
-    line-height: 1.42857143;
-    padding: 6px 12px;
-    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    font-size: $kui-font-size-40;
+    line-height: $kui-line-height-40;
+    padding: $kui-space-40 $kui-space-60;
+    transition: color .1s ease, box-shadow .1s ease, border-color ease-in-out 0.15s;
+    width: 100%;
+    &:hover {
+      box-shadow: inset 0 0 0 1px #bdd3f9;
+    }
+    &:focus {
+      box-shadow: inset 0 0 0 1px #3972d5;
+      outline: none;
+    }
     &:not([class*=" col-"]) {
       width: 100%;
     }
@@ -445,6 +453,25 @@ export default {
   font-weight: 500;
 }
 .vue-form-generator .form-group input[type=radio] {
+  align-items: center;
+  appearance: none;
+  border: 2px solid currentColor;
+  border-radius: 100%;
+  color: $kui-color-text-primary;
   display: inline-flex;
+  height: 20px;
+  justify-content: center;
+  width: 20px;
+
+  &:after {
+    border-radius: 100%;
+    content: "";
+    height: 10px;
+    width: 10px;
+  }
+
+  &:checked:after {
+    background-color: currentColor;
+  }
 }
 </style>
