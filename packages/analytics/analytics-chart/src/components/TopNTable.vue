@@ -200,11 +200,9 @@ const getValue = (record: AnalyticsExploreRecord): string => {
 </script>
 
 <style lang="scss" scoped>
-:deep(.kong-ui-public-top-n-table.kong-card) {
-  border-radius: $kui-border-radius-40;
-}
-
 .kong-ui-public-top-n-table {
+  border-radius: $kui-border-radius-40 !important;
+
   .top-n-card-title {
     font-size: $kui-font-size-40;
   }
