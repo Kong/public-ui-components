@@ -55,7 +55,7 @@ describe('<VaultList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/vaults*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/vaults*`,
         },
         {
           statusCode: 200,
@@ -468,7 +468,7 @@ describe('<VaultList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/vaults*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/vaults*`,
         },
         {
           statusCode: 200,
@@ -487,7 +487,7 @@ describe('<VaultList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/vaults*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/vaults*`,
         },
         (req) => {
           const size = req.query.size ? Number(req.query.size) : 30
@@ -545,7 +545,7 @@ describe('<VaultList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/vaults*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/vaults*`,
         },
         {
           statusCode: 500,

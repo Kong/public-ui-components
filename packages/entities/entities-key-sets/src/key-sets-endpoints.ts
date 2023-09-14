@@ -1,12 +1,12 @@
 export default {
   list: {
-    konnect: '/api/runtime_groups/{controlPlaneId}/key-sets',
+    konnect: '/api/control_planes/{controlPlaneId}/key-sets',
     kongManager: '/{workspace}/key-sets',
   },
   form: {
     konnect: {
-      create: '/api/runtime_groups/{controlPlaneId}/key-sets',
-      edit: '/api/runtime_groups/{controlPlaneId}/key-sets/{id}',
+      create: '/api/control_planes/{controlPlaneId}/key-sets',
+      edit: '/api/control_planes/{controlPlaneId}/key-sets/{id}',
     },
     kongManager: {
       create: '/{workspace}/key-sets',

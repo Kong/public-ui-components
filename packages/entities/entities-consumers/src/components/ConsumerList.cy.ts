@@ -672,7 +672,7 @@ describe('<ConsumerList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumers*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/consumers*`,
         },
         {
           statusCode: 200,
@@ -690,7 +690,7 @@ describe('<ConsumerList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${configGroupKonnect.apiBaseUrl}/api/runtime_groups/${configGroupKonnect.controlPlaneId}/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers*`,
+          url: `${configGroupKonnect.apiBaseUrl}/api/control_planes/${configGroupKonnect.controlPlaneId}/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers*`,
         },
         {
           statusCode: 200,
@@ -708,7 +708,7 @@ describe('<ConsumerList />', () => {
       cy.intercept(
         {
           method: 'DELETE',
-          url: `${configGroupKonnect.apiBaseUrl}/api/runtime_groups/${configGroupKonnect.controlPlaneId}/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers/*`,
+          url: `${configGroupKonnect.apiBaseUrl}/api/control_planes/${configGroupKonnect.controlPlaneId}/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers/*`,
         },
         {
           statusCode: params?.status || 200,
@@ -724,7 +724,7 @@ describe('<ConsumerList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumers*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/consumers*`,
         },
         (req) => {
           const size = req.query.size ? Number(req.query.size) : 30
@@ -786,7 +786,7 @@ describe('<ConsumerList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumers*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/consumers*`,
         },
         {
           statusCode: 500,

@@ -59,7 +59,7 @@ describe('<GatewayServiceList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/services*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/services*`,
         },
         {
           statusCode: 200,
@@ -488,7 +488,7 @@ describe('<GatewayServiceList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/services*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/services*`,
         },
         {
           statusCode: 200,
@@ -507,7 +507,7 @@ describe('<GatewayServiceList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/services*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/services*`,
         },
         (req) => {
           const size = req.query.size ? Number(req.query.size) : 30
@@ -565,7 +565,7 @@ describe('<GatewayServiceList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/services*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/services*`,
         },
         {
           statusCode: 500,

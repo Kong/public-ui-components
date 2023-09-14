@@ -1,7 +1,7 @@
 export default {
   list: {
     konnect: {
-      all: '/api/runtime_groups/{controlPlaneId}/snis',
+      all: '/api/control_planes/{controlPlaneId}/snis',
     },
     kongManager: {
       all: '/{workspace}/snis',
@@ -9,10 +9,10 @@ export default {
   },
   form: {
     konnect: {
-      create: '/api/runtime_groups/{controlPlaneId}/snis',
-      edit: '/api/runtime_groups/{controlPlaneId}/snis/{id}',
-      validate: '/api/runtime_groups/{controlPlaneId}/v1/schemas/json/sni/validate',
-      certificates: '/api/runtime_groups/{controlPlaneId}/certificates',
+      create: '/api/control_planes/{controlPlaneId}/snis',
+      edit: '/api/control_planes/{controlPlaneId}/snis/{id}',
+      validate: '/api/control_planes/{controlPlaneId}/v1/schemas/json/sni/validate',
+      certificates: '/api/control_planes/{controlPlaneId}/certificates',
     },
     kongManager: {
       create: '/{workspace}/snis',

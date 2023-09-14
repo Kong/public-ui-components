@@ -511,7 +511,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/routes/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/routes/*`,
         },
         {
           statusCode: 200,
@@ -527,7 +527,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/services*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/services*`,
         },
         {
           statusCode: 200,
@@ -540,7 +540,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.intercept(
         {
           method: 'PUT',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/routes/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/routes/*`,
         },
         {
           statusCode: status,
@@ -825,7 +825,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/routes/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/routes/*`,
         },
         {
           statusCode: 404,
@@ -880,7 +880,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/services*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/services*`,
         },
         {
           statusCode: 500,

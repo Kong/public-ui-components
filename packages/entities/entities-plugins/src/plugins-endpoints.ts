@@ -1,8 +1,8 @@
 export default {
   list: {
     konnect: {
-      all: '/api/runtime_groups/{controlPlaneId}/plugins',
-      forEntity: '/api/runtime_groups/{controlPlaneId}/{entityType}/{entityId}/plugins',
+      all: '/api/control_planes/{controlPlaneId}/plugins',
+      forEntity: '/api/control_planes/{controlPlaneId}/{entityType}/{entityId}/plugins',
     },
     kongManager: {
       all: '/{workspace}/plugins',
@@ -11,8 +11,8 @@ export default {
   },
   form: {
     konnect: {
-      edit: '/api/runtime_groups/{controlPlaneId}/plugins/{id}',
-      pluginSchema: '/api/runtime_groups/{controlPlaneId}/schemas/plugins/{plugin}',
+      edit: '/api/control_planes/{controlPlaneId}/plugins/{id}',
+      pluginSchema: '/api/control_planes/{controlPlaneId}/schemas/plugins/{plugin}',
     },
     kongManager: {
       edit: '/{workspace}/plugins/{id}',
@@ -21,8 +21,8 @@ export default {
   },
   item: {
     konnect: {
-      all: '/api/runtime_groups/{controlPlaneId}/plugins/{id}',
-      forEntity: '/api/runtime_groups/{controlPlaneId}/{entityType}/{entityId}/plugins/{id}',
+      all: '/api/control_planes/{controlPlaneId}/plugins/{id}',
+      forEntity: '/api/control_planes/{controlPlaneId}/{entityType}/{entityId}/plugins/{id}',
     },
     kongManager: {
       all: '/{workspace}/plugins/{id}',

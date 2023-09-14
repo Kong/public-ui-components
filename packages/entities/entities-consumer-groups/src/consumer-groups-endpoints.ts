@@ -1,4 +1,4 @@
-const konnectBaseApiUrl = '/api/runtime_groups/{controlPlaneId}'
+const konnectBaseApiUrl = '/api/control_planes/{controlPlaneId}'
 const KMBaseApiUrl = '/{workspace}'
 
 export default {

@@ -355,7 +355,7 @@ describe('<SniForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/certificates*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/certificates*`,
         },
         {
           statusCode: 200,
@@ -371,7 +371,7 @@ describe('<SniForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/snis/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/snis/*`,
         },
         {
           statusCode: 200,
@@ -384,7 +384,7 @@ describe('<SniForm />', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/v1/schemas/json/sni/validate`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/v1/schemas/json/sni/validate`,
         },
         {
           statusCode: status,
@@ -395,7 +395,7 @@ describe('<SniForm />', () => {
       cy.intercept(
         {
           method: 'PUT',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/snis/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/snis/*`,
         },
         {
           statusCode: status,
@@ -578,7 +578,7 @@ describe('<SniForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/snis/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/snis/*`,
         },
         {
           statusCode: 404,
@@ -608,7 +608,7 @@ describe('<SniForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/certificates*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/certificates*`,
         },
         {
           statusCode: 500,

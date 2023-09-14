@@ -1,8 +1,8 @@
 export default {
   list: {
     konnect: {
-      all: '/api/runtime_groups/{controlPlaneId}/keys',
-      forKeySet: '/api/runtime_groups/{controlPlaneId}/key-sets/{keySetId}/keys',
+      all: '/api/control_planes/{controlPlaneId}/keys',
+      forKeySet: '/api/control_planes/{controlPlaneId}/key-sets/{keySetId}/keys',
     },
     kongManager: {
       all: '/{workspace}/keys',
@@ -11,10 +11,10 @@ export default {
   },
   form: {
     konnect: {
-      create: '/api/runtime_groups/{controlPlaneId}/keys',
-      edit: '/api/runtime_groups/{controlPlaneId}/keys/{id}',
-      keySets: '/api/runtime_groups/{controlPlaneId}/key-sets',
-      getKeySet: '/api/runtime_groups/{controlPlaneId}/key-sets/{keySetId}',
+      create: '/api/control_planes/{controlPlaneId}/keys',
+      edit: '/api/control_planes/{controlPlaneId}/keys/{id}',
+      keySets: '/api/control_planes/{controlPlaneId}/key-sets',
+      getKeySet: '/api/control_planes/{controlPlaneId}/key-sets/{keySetId}',
     },
     kongManager: {
       create: '/{workspace}/keys',

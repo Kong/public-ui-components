@@ -1,13 +1,13 @@
 export default {
   list: {
-    konnect: '/api/runtime_groups/{controlPlaneId}/upstreams/{upstreamId}/targets',
+    konnect: '/api/control_planes/{controlPlaneId}/upstreams/{upstreamId}/targets',
     kongManager: '/{workspace}/upstreams/{upstreamId}/targets',
   },
   form: {
     konnect: {
-      create: '/api/runtime_groups/{controlPlaneId}/upstreams/{upstreamId}/targets',
-      edit: '/api/runtime_groups/{controlPlaneId}/upstreams/{upstreamId}/targets/{id}',
-      validate: '/api/runtime_groups/{controlPlaneId}/v1/schemas/json/target/validate',
+      create: '/api/control_planes/{controlPlaneId}/upstreams/{upstreamId}/targets',
+      edit: '/api/control_planes/{controlPlaneId}/upstreams/{upstreamId}/targets/{id}',
+      validate: '/api/control_planes/{controlPlaneId}/v1/schemas/json/target/validate',
     },
     kongManager: {
       create: '/{workspace}/upstreams/{upstreamId}/targets',

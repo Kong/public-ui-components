@@ -13,7 +13,7 @@ describe('<EntityBaseForm />', () => {
     cancelRoute: { name: '/' },
   }
   const editId = '1234-ideclare-athumb-war'
-  const fetchUrl = `/api/runtime_groups/${config.controlPlaneId}/routes/{id}`
+  const fetchUrl = `/api/control_planes/${config.controlPlaneId}/routes/{id}`
 
   it('disables save button when canSubmit is false', () => {
     cy.mount(EntityBaseForm, {
@@ -64,7 +64,7 @@ describe('<EntityBaseForm />', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: `${config.apiBaseUrl}/api/runtime_groups/${config.controlPlaneId}/routes/${editId}`,
+        url: `${config.apiBaseUrl}/api/control_planes/${config.controlPlaneId}/routes/${editId}`,
       },
       {
         statusCode: 200,
@@ -93,7 +93,7 @@ describe('<EntityBaseForm />', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: `${config.apiBaseUrl}/api/runtime_groups/${config.controlPlaneId}/routes/${editId}`,
+        url: `${config.apiBaseUrl}/api/control_planes/${config.controlPlaneId}/routes/${editId}`,
       },
       {
         statusCode: 500,

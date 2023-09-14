@@ -58,7 +58,7 @@ import composables from '../../src/composables'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 // replace with your own endpoint
-const konnectFetchUrl = ref('/api/runtime_groups/{controlPlaneId}/upstreams/{id}')
+const konnectFetchUrl = ref('/api/control_planes/{controlPlaneId}/upstreams/{id}')
 const kmFetchUrl = ref('/{workspace}/upstreams/{id}')
 // replace with you own ID
 const entityId = 'ce83dd74-6455-40a9-b944-0f393c7ee22c'

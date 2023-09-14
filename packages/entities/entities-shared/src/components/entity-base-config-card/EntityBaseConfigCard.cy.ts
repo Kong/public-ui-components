@@ -16,8 +16,8 @@ const config: KonnectBaseEntityConfig = {
   controlPlaneId,
   entityId,
 }
-const fetchUrl = `/api/runtime_groups/${config.controlPlaneId}/services/{id}`
-const pluginsFetchUrl = `/api/runtime_groups/${config.controlPlaneId}/plugins/{id}`
+const fetchUrl = `/api/control_planes/${config.controlPlaneId}/services/{id}`
+const pluginsFetchUrl = `/api/control_planes/${config.controlPlaneId}/plugins/{id}`
 const pluginConfigKey = 'config'
 
 const customizedKey = 'ca_certificates'
@@ -92,7 +92,7 @@ describe('<EntityBaseConfigCard />', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: `${config.apiBaseUrl}/api/runtime_groups/${config.controlPlaneId}/services/${entityId}`,
+        url: `${config.apiBaseUrl}/api/control_planes/${config.controlPlaneId}/services/${entityId}`,
       },
       {
         statusCode: status,
@@ -105,7 +105,7 @@ describe('<EntityBaseConfigCard />', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: `${config.apiBaseUrl}/api/runtime_groups/${config.controlPlaneId}/plugins/${entityId}`,
+        url: `${config.apiBaseUrl}/api/control_planes/${config.controlPlaneId}/plugins/${entityId}`,
       },
       {
         statusCode: status,
@@ -223,7 +223,7 @@ describe('<EntityBaseConfigCard />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${config.apiBaseUrl}/api/runtime_groups/${config.controlPlaneId}/services/${entityId}`,
+          url: `${config.apiBaseUrl}/api/control_planes/${config.controlPlaneId}/services/${entityId}`,
         },
         {
           statusCode: 200,
@@ -396,7 +396,7 @@ describe('<EntityBaseConfigCard />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${config.apiBaseUrl}/api/runtime_groups/${config.controlPlaneId}/services/${entityId}`,
+          url: `${config.apiBaseUrl}/api/control_planes/${config.controlPlaneId}/services/${entityId}`,
         },
         {
           statusCode: 500,

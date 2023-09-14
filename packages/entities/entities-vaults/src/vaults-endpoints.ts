@@ -1,12 +1,12 @@
 export default {
   list: {
-    konnect: '/api/runtime_groups/{controlPlaneId}/vaults',
+    konnect: '/api/control_planes/{controlPlaneId}/vaults',
     kongManager: '/{workspace}/vaults',
   },
   form: {
     konnect: {
-      create: '/api/runtime_groups/{controlPlaneId}/vaults',
-      edit: '/api/runtime_groups/{controlPlaneId}/vaults/{id}',
+      create: '/api/control_planes/{controlPlaneId}/vaults',
+      edit: '/api/control_planes/{controlPlaneId}/vaults/{id}',
     },
     kongManager: {
       create: '/{workspace}/vaults',

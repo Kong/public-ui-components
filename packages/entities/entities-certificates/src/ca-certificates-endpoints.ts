@@ -1,13 +1,13 @@
 export default {
   list: {
-    konnect: '/api/runtime_groups/{controlPlaneId}/ca_certificates',
+    konnect: '/api/control_planes/{controlPlaneId}/ca_certificates',
     kongManager: '/{workspace}/ca_certificates',
   },
   form: {
     konnect: {
-      create: '/api/runtime_groups/{controlPlaneId}/ca_certificates',
-      edit: '/api/runtime_groups/{controlPlaneId}/ca_certificates/{id}',
-      validate: '/api/runtime_groups/{controlPlaneId}/v1/schemas/json/ca-certificate/validate',
+      create: '/api/control_planes/{controlPlaneId}/ca_certificates',
+      edit: '/api/control_planes/{controlPlaneId}/ca_certificates/{id}',
+      validate: '/api/control_planes/{controlPlaneId}/v1/schemas/json/ca-certificate/validate',
     },
     kongManager: {
       create: '/{workspace}/ca_certificates',

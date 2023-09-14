@@ -9,7 +9,7 @@ describe('<UpstreamsConfigCard/>', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${konnectCardConfig.apiBaseUrl}/api/runtime_groups/${konnectCardConfig.controlPlaneId}/upstreams/*`,
+          url: `${konnectCardConfig.apiBaseUrl}/api/control_planes/${konnectCardConfig.controlPlaneId}/upstreams/*`,
         },
         {
           statusCode: status,

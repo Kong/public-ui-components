@@ -31,7 +31,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/consumers*`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/consumers*`,
         },
         {
           statusCode: status,
@@ -43,7 +43,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/consumer_groups`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/consumer_groups`,
         },
         {
           statusCode: status,
@@ -55,7 +55,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.intercept(
         {
           method: 'PUT',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/consumer_groups/*`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/consumer_groups/*`,
         },
         {
           statusCode: status,
@@ -67,7 +67,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/consumer_groups/*`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/consumer_groups/*`,
         },
         {
           statusCode: status,
@@ -79,7 +79,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/consumer_groups/*/consumers`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/consumer_groups/*/consumers`,
         },
         {
           statusCode: status,
@@ -91,7 +91,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/consumer_groups/*/consumers`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/consumer_groups/*/consumers`,
         },
         {
           statusCode: status,
@@ -103,7 +103,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.intercept(
         {
           method: 'DELETE',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/consumer_groups/*/consumers/*`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/consumer_groups/*/consumers/*`,
         },
         {
           statusCode: status,

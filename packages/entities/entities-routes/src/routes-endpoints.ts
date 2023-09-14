@@ -1,8 +1,8 @@
 export default {
   list: {
     konnect: {
-      all: '/api/runtime_groups/{controlPlaneId}/routes',
-      forGatewayService: '/api/runtime_groups/{controlPlaneId}/services/{serviceId}/routes',
+      all: '/api/control_planes/{controlPlaneId}/routes',
+      forGatewayService: '/api/control_planes/{controlPlaneId}/services/{serviceId}/routes',
     },
     kongManager: {
       all: '/{workspace}/routes',
@@ -11,18 +11,18 @@ export default {
   },
   form: {
     konnect: {
-      services: '/api/runtime_groups/{controlPlaneId}/services',
+      services: '/api/control_planes/{controlPlaneId}/services',
       create: {
-        all: '/api/runtime_groups/{controlPlaneId}/routes',
-        forGatewayService: '/api/runtime_groups/{controlPlaneId}/services/{serviceId}/routes',
+        all: '/api/control_planes/{controlPlaneId}/routes',
+        forGatewayService: '/api/control_planes/{controlPlaneId}/services/{serviceId}/routes',
       },
       fetch: {
-        all: '/api/runtime_groups/{controlPlaneId}/routes/{id}',
-        forGatewayService: '/api/runtime_groups/{controlPlaneId}/services/{serviceId}/routes/{id}',
+        all: '/api/control_planes/{controlPlaneId}/routes/{id}',
+        forGatewayService: '/api/control_planes/{controlPlaneId}/services/{serviceId}/routes/{id}',
       },
       edit: {
-        all: '/api/runtime_groups/{controlPlaneId}/routes/{id}',
-        forGatewayService: '/api/runtime_groups/{controlPlaneId}/services/{serviceId}/routes/{id}',
+        all: '/api/control_planes/{controlPlaneId}/routes/{id}',
+        forGatewayService: '/api/control_planes/{controlPlaneId}/services/{serviceId}/routes/{id}',
       },
     },
     kongManager: {
@@ -43,9 +43,9 @@ export default {
   },
   item: {
     konnect: {
-      getService: '/api/runtime_groups/{controlPlaneId}/services/{serviceId}',
-      all: '/api/runtime_groups/{controlPlaneId}/routes/{id}',
-      forGatewayService: '/api/runtime_groups/{controlPlaneId}/services/{serviceId}/routes/{id}',
+      getService: '/api/control_planes/{controlPlaneId}/services/{serviceId}',
+      all: '/api/control_planes/{controlPlaneId}/routes/{id}',
+      forGatewayService: '/api/control_planes/{controlPlaneId}/services/{serviceId}/routes/{id}',
     },
     kongManager: {
       getService: '/{workspace}/services/{serviceId}',

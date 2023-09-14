@@ -15,7 +15,7 @@ describe('<UpstreamsForm/>', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/services*`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/services*`,
         },
         {
           statusCode: status,
@@ -27,7 +27,7 @@ describe('<UpstreamsForm/>', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/certificates*`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/certificates*`,
         },
         {
           statusCode: status,
@@ -39,7 +39,7 @@ describe('<UpstreamsForm/>', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/upstreams`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/upstreams`,
         },
         {
           statusCode: status,
@@ -51,7 +51,7 @@ describe('<UpstreamsForm/>', () => {
       cy.intercept(
         {
           method: 'PUT',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/upstreams/*`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/upstreams/*`,
         },
         {
           statusCode: status,
@@ -63,7 +63,7 @@ describe('<UpstreamsForm/>', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/upstreams/*`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/upstreams/*`,
         },
         {
           statusCode: status,
@@ -75,7 +75,7 @@ describe('<UpstreamsForm/>', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/v1/schemas/json/upstream/validate`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/v1/schemas/json/upstream/validate`,
         },
         {
           statusCode: status,

@@ -24,7 +24,7 @@ describe('<AddConsumerModal/>', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${configGroupKonnect.apiBaseUrl}/api/runtime_groups/${configGroupKonnect.controlPlaneId}/consumers*`,
+          url: `${configGroupKonnect.apiBaseUrl}/api/control_planes/${configGroupKonnect.controlPlaneId}/consumers*`,
         },
         {
           statusCode: 200,
@@ -40,7 +40,7 @@ describe('<AddConsumerModal/>', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `${configGroupKonnect.apiBaseUrl}/api/runtime_groups/${configGroupKonnect.controlPlaneId}/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers`,
+          url: `${configGroupKonnect.apiBaseUrl}/api/control_planes/${configGroupKonnect.controlPlaneId}/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers`,
         },
         {
           statusCode: status,

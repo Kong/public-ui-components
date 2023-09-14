@@ -107,7 +107,7 @@ const props = defineProps({
    * the endpoints file.
    * Required if `editId` is specified.
    *
-   * ex. `/api/runtime_groups/{controlPlaneId}/snis/{id}`
+   * ex. `/api/control_planes/{controlPlaneId}/snis/{id}`
    */
   fetchUrl: {
     type: String,

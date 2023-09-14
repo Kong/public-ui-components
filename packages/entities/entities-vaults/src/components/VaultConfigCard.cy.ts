@@ -8,7 +8,7 @@ describe('<VaultConfigCard/>', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${konnectCardConfig.apiBaseUrl}/api/runtime_groups/${konnectCardConfig.controlPlaneId}/vaults/*`,
+          url: `${konnectCardConfig.apiBaseUrl}/api/control_planes/${konnectCardConfig.controlPlaneId}/vaults/*`,
         },
         {
           statusCode: status,

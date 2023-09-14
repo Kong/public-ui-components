@@ -85,7 +85,7 @@ The base konnect or kongManger config.
 Fetch url for the entity to display record data for. We will handle the replacement of {controlPlaneId}, {workspace}, and {id}.
 Value should NOT contain config.apiBaseUrl, as we auto include this. Typically this will just an entry from the endpoints file.
 
-ex. `/api/runtime_groups/{controlPlaneId}/services/{id}`
+ex. `/api/control_planes/{controlPlaneId}/services/{id}`
 
 
 #### `dataKey`

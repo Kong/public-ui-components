@@ -1,7 +1,7 @@
 export default {
   list: {
     konnect: {
-      all: '/api/runtime_groups/{controlPlaneId}/services',
+      all: '/api/control_planes/{controlPlaneId}/services',
     },
     kongManager: {
       all: '/{workspace}/services',
@@ -9,9 +9,9 @@ export default {
   },
   form: {
     konnect: {
-      create: '/api/runtime_groups/{controlPlaneId}/services',
-      validate: '/api/runtime_groups/{controlPlaneId}/v1/schemas/json/service/validate',
-      edit: '/api/runtime_groups/{controlPlaneId}/services/{id}',
+      create: '/api/control_planes/{controlPlaneId}/services',
+      validate: '/api/control_planes/{controlPlaneId}/v1/schemas/json/service/validate',
+      edit: '/api/control_planes/{controlPlaneId}/services/{id}',
     },
     kongManager: {
       create: '/{workspace}/services',

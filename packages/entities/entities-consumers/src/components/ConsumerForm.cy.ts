@@ -139,7 +139,7 @@ describe('<ConsumerForm/>', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/v1/schemas/json/consumer/validate`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/v1/schemas/json/consumer/validate`,
         },
         {
           statusCode: status,
@@ -152,7 +152,7 @@ describe('<ConsumerForm/>', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/consumers`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/consumers`,
         },
         {
           statusCode: status,
@@ -165,7 +165,7 @@ describe('<ConsumerForm/>', () => {
       cy.intercept(
         {
           method: 'PUT',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/consumers/*`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/consumers/*`,
         },
         {
           statusCode: status,
@@ -178,7 +178,7 @@ describe('<ConsumerForm/>', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/consumers/*`,
+          url: `${konnectConfig.apiBaseUrl}/api/control_planes/${konnectConfig.controlPlaneId}/consumers/*`,
         },
         {
           statusCode: 200,

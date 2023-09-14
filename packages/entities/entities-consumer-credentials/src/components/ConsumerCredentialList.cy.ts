@@ -49,7 +49,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumers/${baseConfigKonnect.consumerId}/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/consumers/${baseConfigKonnect.consumerId}/*`,
         },
         {
           statusCode: 200,
@@ -543,7 +543,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumers/${baseConfigKonnect.consumerId}/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/consumers/${baseConfigKonnect.consumerId}/*`,
         },
         {
           statusCode: 200,
@@ -562,7 +562,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumers/${baseConfigKonnect.consumerId}/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/consumers/${baseConfigKonnect.consumerId}/*`,
         },
         (req) => {
           const size = req.query.size ? Number(req.query.size) : 30
@@ -618,7 +618,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumers/${baseConfigKonnect.consumerId}/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/consumers/${baseConfigKonnect.consumerId}/*`,
         },
         {
           statusCode: 500,

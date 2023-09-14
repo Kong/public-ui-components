@@ -193,7 +193,7 @@ describe('<TargetForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/upstreams/${upstreamId}/targets/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/upstreams/${upstreamId}/targets/*`,
         },
         {
           statusCode: 200,
@@ -306,7 +306,7 @@ describe('<TargetForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/upstreams/${upstreamId}/targets/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/upstreams/${upstreamId}/targets/*`,
         },
         {
           statusCode: 404,

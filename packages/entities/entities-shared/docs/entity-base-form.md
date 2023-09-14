@@ -88,7 +88,7 @@ Required if `editId` is specified.
 Fetch url for the entity to edit. We will handle the replacement of {controlPlaneId}, {workspace}, and {id}.
 Value should NOT contain config.apiBaseUrl, as we auto include this. Typically this will just an entry from the endpoints file.
 
-ex. `/api/runtime_groups/{controlPlaneId}/snis/{id}`
+ex. `/api/control_planes/{controlPlaneId}/snis/{id}`
 
 #### `isReadonly`
 

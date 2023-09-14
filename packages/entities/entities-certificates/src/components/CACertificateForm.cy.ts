@@ -212,7 +212,7 @@ describe('<CACertificateForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/ca_certificates/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/ca_certificates/*`,
         },
         {
           statusCode: 200,
@@ -225,7 +225,7 @@ describe('<CACertificateForm />', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/v1/schemas/json/ca-certificate/validate`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/v1/schemas/json/ca-certificate/validate`,
         },
         {
           statusCode: status,
@@ -236,7 +236,7 @@ describe('<CACertificateForm />', () => {
       cy.intercept(
         {
           method: 'PUT',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/ca_certificates/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/ca_certificates/*`,
         },
         {
           statusCode: status,
@@ -335,7 +335,7 @@ describe('<CACertificateForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/ca_certificates/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/api/control_planes/${baseConfigKonnect.controlPlaneId}/ca_certificates/*`,
         },
         {
           statusCode: 404,
