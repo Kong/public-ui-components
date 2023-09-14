@@ -54,7 +54,7 @@ const finalSchema = computed((): Object => {
     // @ts-ignore - dynamic i18n key
     f.help = (te(`${stringKey}.help`) && t(`${stringKey}.help`)) || f.help
     // @ts-ignore - dynamic i18n key
-    f.newElementButtonLabel = (t(`${stringKey}.newElementButtonLabel`) || f.newElementButtonLabel)
+    f.newElementButtonLabel = (te(`${stringKey}.newElementButtonLabel`) && t(`${stringKey}.newElementButtonLabel`)) || f.newElementButtonLabel
 
     if (f.model !== 'tags' && (f.valueType === 'array' || f.type === 'array')) {
       f.type = 'array'
