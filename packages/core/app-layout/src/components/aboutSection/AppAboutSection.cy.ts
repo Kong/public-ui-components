@@ -86,7 +86,7 @@ describe('<AppAboutSection />', () => {
       slots: {
         actions: actionsText,
         default: mainContent,
-        'divider-text': dividerText,
+        'divider-section': dividerText,
       },
     })
 
