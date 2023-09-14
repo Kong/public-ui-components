@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@1.2.6...@kong-ui-public/forms@1.2.7) (2023-09-14)
+
+
+### Bug Fixes
+
+* **forms:** remove `k-*` classes ([#787](https://github.com/Kong/public-ui-components/issues/787)) ([84c459c](https://github.com/Kong/public-ui-components/commit/84c459c37c512f974f85b4463f2d94ce39688512))
+
+
+
+
+
 ## [1.2.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@1.2.5...@kong-ui-public/forms@1.2.6) (2023-09-14)
 
 
