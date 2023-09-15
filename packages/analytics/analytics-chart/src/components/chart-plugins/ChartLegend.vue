@@ -196,7 +196,7 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
     }
 
     .label {
-      width: 14ch;
+      width: 12ch;
     }
     .truncate-label {
       max-width: 10ch;
