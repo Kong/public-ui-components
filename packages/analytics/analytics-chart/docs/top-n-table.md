@@ -54,6 +54,14 @@ Text to be displayed opposite the card title.
 
 Text to be displayed on the empty state.
 
+#### `isLoading`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Whether or not to display the loading state.
+
 ### Slots
 
 #### name
