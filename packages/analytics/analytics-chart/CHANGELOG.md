@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.10.0...@kong-ui-public/analytics-chart@0.10.1) (2023-09-15)
+
+
+### Bug Fixes
+
+* **analytics-chart:** better legend label truncation [MA-2048] ([#789](https://github.com/Kong/public-ui-components/issues/789)) ([20b30fd](https://github.com/Kong/public-ui-components/commit/20b30fdd86ab292b2caafa40b59d794f4925f86a))
+
+
+
+
+
 # [0.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.9.20...@kong-ui-public/analytics-chart@0.10.0) (2023-09-15)
 
 
