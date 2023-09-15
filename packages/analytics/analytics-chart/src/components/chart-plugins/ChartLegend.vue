@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { ChartLegendPosition } from '../../enums'
 import { Chart } from 'chart.js'
-import { computed, inject, ref, watch } from 'vue'
+import { inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 const props = defineProps({
   id: {
@@ -63,7 +63,7 @@ const shouldTruncate = ref(false)
 
 // Return the number of rows for a grid layout
 // by cmparing the top position of each item.
-const numberOfRows = computed(() => {
+const numberOfRows = () => {
   const element = legendContainerRef.value
   if (!element || !legendItemsRef.value || element.children.length === 0) {
     return 0
@@ -83,11 +83,11 @@ const numberOfRows = computed(() => {
   }
 
   return numberOfRows
-})
+}
 
 const checkForWrap = () => {
   if (legendContainerRef.value && position.value === ChartLegendPosition.Bottom) {
-    if (numberOfRows.value > 1) {
+    if (numberOfRows() > 1) {
       shouldTruncate.value = true
     } else {
       shouldTruncate.value = false
@@ -96,6 +96,14 @@ const checkForWrap = () => {
 }
 
 watch(() => props.items, checkForWrap, { immediate: true, flush: 'post' })
+
+onMounted(() => {
+  window.addEventListener('resize', checkForWrap)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkForWrap)
+})
 
 const handleLegendItemClick = (datasetIndex: number = 0, segmentIndex: number): void => {
   if (props.chartInstance === null) {
