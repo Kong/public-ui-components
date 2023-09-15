@@ -152,12 +152,14 @@ const displayModified = computed(() => {
     .about-section-timestamps {
       align-self: center;
       color: $kui-color-text-neutral;
+      flex-direction: column;
       font-size: $kui-font-size-20;
       line-height: $kui-line-height-20;
+      margin-bottom: $kui-space-50;
 
-      @media (max-width: $kui-breakpoint-phablet) {
-        flex-direction: column;
-        margin-bottom: $kui-space-50;
+      @media (min-width: $kui-breakpoint-phablet) {
+        flex-direction: row;
+        margin-bottom: $kui-space-0;
       }
 
       &.has-actions {

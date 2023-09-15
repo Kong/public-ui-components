@@ -243,13 +243,13 @@ const getValue = (record: AnalyticsExploreRecord): string => {
     }
 
     .column-1 {
-      padding: 0 $kui-space-80 $kui-space-50 0;
+      padding: $kui-space-0 $kui-space-80 $kui-space-50 $kui-space-0;
     }
 
     .column-2 {
       flex: 1;
       max-width: 110px;
-      padding: 0 0 $kui-space-50 0;
+      padding: $kui-space-0 $kui-space-0 $kui-space-50 $kui-space-0;
     }
 
     .table-body {
