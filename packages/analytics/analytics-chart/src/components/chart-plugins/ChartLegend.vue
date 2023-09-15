@@ -1,13 +1,15 @@
 <template>
   <ul
     v-if="position !== ChartLegendPosition.Hidden"
+    ref="legendContainerRef"
     class="legend-container"
     :class="positionToClass(position)"
     data-testid="legend"
   >
     <li
-      v-for="{ fillStyle, strokeStyle, text, datasetIndex, index, value } in (itemsRef as any[])"
+      v-for="{ fillStyle, strokeStyle, text, datasetIndex, index, value } in (items as any[])"
       :key="text"
+      ref="legendItemsRef"
       @click="handleLegendItemClick(datasetIndex, index)"
     >
       <div
@@ -19,6 +21,7 @@
       >
         <div
           class="label"
+          :class="{ 'truncate-label' : shouldTruncate }"
           :title="position === ChartLegendPosition.Bottom && text"
         >
           {{ text }}
@@ -37,7 +40,7 @@
 <script setup lang="ts">
 import { ChartLegendPosition } from '../../enums'
 import { Chart } from 'chart.js'
-import { inject, ref, toRef } from 'vue'
+import { inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 const props = defineProps({
   id: {
@@ -54,8 +57,53 @@ const props = defineProps({
     default: () => null,
   },
 })
+const legendContainerRef = ref<HTMLElement>()
+const legendItemsRef = ref<HTMLElement[]>([])
+const shouldTruncate = ref(false)
 
-const itemsRef = toRef(props, 'items')
+// Return the number of rows for a grid layout
+// by cmparing the top position of each item.
+const numberOfRows = () => {
+  const element = legendContainerRef.value
+  if (!element || !legendItemsRef.value || element.children.length === 0) {
+    return 0
+  }
+
+  let numberOfRows = 1
+  let previousTop = element.children[0].getBoundingClientRect().top
+  for (const item of legendItemsRef.value) {
+    const currentTop = item.getBoundingClientRect().top
+    // If the top position of the current item is
+    // different from the previous item, that means
+    // there is a new row.
+    if (currentTop !== previousTop) {
+      numberOfRows++
+      previousTop = currentTop
+    }
+  }
+
+  return numberOfRows
+}
+
+const checkForWrap = () => {
+  if (legendContainerRef.value && position.value === ChartLegendPosition.Bottom) {
+    if (numberOfRows() > 1) {
+      shouldTruncate.value = true
+    } else {
+      shouldTruncate.value = false
+    }
+  }
+}
+
+watch(() => props.items, checkForWrap, { immediate: true, flush: 'post' })
+
+onMounted(() => {
+  window.addEventListener('resize', checkForWrap)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkForWrap)
+})
 
 const handleLegendItemClick = (datasetIndex: number = 0, segmentIndex: number): void => {
   if (props.chartInstance === null) {
@@ -138,20 +186,26 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
   &.horizontal {
     column-gap: $kui-space-10;
     display: grid;
-    grid-template-columns: repeat(auto-fit, $kui-space-150);
+    grid-template-columns: repeat(auto-fit, minmax(12ch, max-content));
     justify-content: center;
     max-height: $kui-space-150;
     width: 100%;
 
+    .legend {
+      margin-top: $kui-space-30;
+    }
+
     .label {
-      max-width: $kui-space-120;
+      width: 12ch;
+    }
+    .truncate-label {
+      max-width: 10ch;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
     li {
-      align-items: center;
       display: flex;
       justify-content: start;
     }
