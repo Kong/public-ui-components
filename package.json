@@ -19,11 +19,11 @@
     "lerna": "lerna"
   },
   "devDependencies": {
-    "@babel/types": "^7.22.11",
+    "@babel/types": "^7.22.15",
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
-    "@evilmartians/lefthook": "^1.4.9",
+    "@evilmartians/lefthook": "^1.4.10",
     "@kong/design-tokens": "^1.10.2",
     "@kong/kongponents": "^8.123.7",
     "@rushstack/eslint-patch": "^1.3.3",
