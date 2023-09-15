@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.23.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.22.23...@kong-ui-public/app-layout@0.23.0) (2023-09-15)
+
+
+### Features
+
+* **about-section:** new component [khcp-8589] ([#782](https://github.com/Kong/public-ui-components/issues/782)) ([d975afb](https://github.com/Kong/public-ui-components/commit/d975afb507ae269f5989f8f5551d8e56e4d76183))
+
+
+
+
+
 ## [0.22.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.22.22...@kong-ui-public/app-layout@0.22.23) (2023-09-14)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
