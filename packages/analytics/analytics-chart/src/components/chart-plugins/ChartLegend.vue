@@ -9,6 +9,7 @@
     <li
       v-for="{ fillStyle, strokeStyle, text, datasetIndex, index, value } in (items as any[])"
       :key="text"
+      ref="legendItemsRef"
       @click="handleLegendItemClick(datasetIndex, index)"
     >
       <div
@@ -37,10 +38,9 @@
 </template>
 
 <script setup lang="ts">
-import { KUI_SPACE_150 } from '@kong/design-tokens'
 import { ChartLegendPosition } from '../../enums'
 import { Chart } from 'chart.js'
-import { inject, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 
 const props = defineProps({
   id: {
@@ -58,18 +58,44 @@ const props = defineProps({
   },
 })
 const legendContainerRef = ref<HTMLElement>()
+const legendItemsRef = ref<HTMLElement[]>([])
 const shouldTruncate = ref(false)
 
+// Return the number of rows for a grid layout
+// by cmparing the top position of each item.
+const numberOfRows = computed(() => {
+  const element = legendContainerRef.value
+  if (!element || !legendItemsRef.value || element.children.length === 0) {
+    return 0
+  }
+
+  let numberOfRows = 1
+  let previousTop = element.children[0].getBoundingClientRect().top
+  for (const item of legendItemsRef.value) {
+    const currentTop = item.getBoundingClientRect().top
+    // If the top position of the current item is
+    // different from the previous item, that means
+    // there is a new row.
+    if (currentTop !== previousTop) {
+      numberOfRows++
+      previousTop = currentTop
+    }
+  }
+
+  return numberOfRows
+})
+
 const checkForWrap = () => {
-  if (legendContainerRef.value) {
-    const scrollHeight = legendContainerRef.value.scrollHeight
-    if (scrollHeight > parseInt(KUI_SPACE_150, 10)) {
+  if (legendContainerRef.value && position.value === ChartLegendPosition.Bottom) {
+    if (numberOfRows.value > 1) {
       shouldTruncate.value = true
+    } else {
+      shouldTruncate.value = false
     }
   }
 }
 
-watch(() => props.items, checkForWrap, { immediate: true })
+watch(() => props.items, checkForWrap, { immediate: true, flush: 'post' })
 
 const handleLegendItemClick = (datasetIndex: number = 0, segmentIndex: number): void => {
   if (props.chartInstance === null) {
@@ -157,10 +183,13 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
     max-height: $kui-space-150;
     width: 100%;
 
+    .legend {
+      margin-top: $kui-space-30;
+    }
+
     .label {
       width: 14ch;
     }
-
     .truncate-label {
       max-width: 10ch;
       overflow: hidden;
@@ -169,7 +198,6 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
     }
 
     li {
-      align-items: center;
       display: flex;
       justify-content: start;
     }

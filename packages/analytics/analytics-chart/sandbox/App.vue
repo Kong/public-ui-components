@@ -353,7 +353,7 @@ const metricItems = [{
 }]
 
 const statusCodeLabels = [
-  '200', '300', '400', '500', '501', '502', '503', '404', '401', '202', '201', '203', '204', 'This is a really long chart label to test long labels',
+  '200', '300', '400', '500', 'This is a really long chart label to test long labels',
 ]
 const statusCodeDimensionValues = ref(new Set(statusCodeLabels))
 
