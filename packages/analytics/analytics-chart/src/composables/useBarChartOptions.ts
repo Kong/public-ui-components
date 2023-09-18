@@ -81,7 +81,7 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
           border: {
             display: false,
           },
-          stacked: chartOptions.stacked,
+          stacked: chartOptions.stacked.value,
           grid: {
             display: false,
             drawBorder: false,

@@ -22,6 +22,8 @@ export default function useExploreResultToDatasets(
 
         const dimensionKeys = dimensions && Object.keys(dimensions)
 
+        const isMultiMetric = metricNames && metricNames.length > 1
+
         // TODO: remove "Organization" fallback when we are fully migrated to explore v2
         const hasDimensions = dimensions && dimensionKeys && (
           dimensionKeys.length === 1
@@ -36,16 +38,24 @@ export default function useExploreResultToDatasets(
         const dimensionFieldNames = (hasDimensions && dimensionKeys) || metricNames
         const primaryDimension = dimensionFieldNames[0]
         const secondaryDimension = dimensionFieldNames.length > 1 ? dimensionFieldNames[1] : dimensionFieldNames[0]
-        const metric = metricNames[0]
 
-        const pivotRecords = Object.fromEntries(records.map(e => {
-          const label = hasDimensions
-            ? `${e.event[primaryDimension]},${e.event[secondaryDimension]}`
-            : `${primaryDimension},${secondaryDimension}`
-          const value = e.event[metric]
+        const pivotRecords = isMultiMetric
+          ? Object.fromEntries(records.flatMap(e => {
+            return metricNames.map(metric => {
+              const dimensionValue = e.event[primaryDimension]
+              const label = `${dimensionValue},${metric}`
+              const value = e.event[metric]
+              return [label, value]
+            })
+          }))
+          : Object.fromEntries(records.map(e => {
+            const label = hasDimensions
+              ? `${e.event[primaryDimension]},${e.event[secondaryDimension]}`
+              : `${primaryDimension},${secondaryDimension}`
+            const value = e.event[metricNames[0]]
 
-          return [label, value]
-        }))
+            return [label, value]
+          }))
 
         const rowLabels: string[] = (hasDimensions && dimensions[primaryDimension]) || metricNames
 
@@ -61,32 +71,42 @@ export default function useExploreResultToDatasets(
             ? metricNames.map(name => (i18n && i18n.te(`chartLabels.${name}`) && i18n.t(`chartLabels.${name}`)) || name)
             // @ts-ignore - dynamic i18n key
             : dimensions[primaryDimension].map(name => (i18n && i18n.te(`chartLabels.${name}`) && i18n.t(`chartLabels.${name}`)) || name),
-          datasets: barSegmentLabels && Array.from(barSegmentLabels).flatMap((dimension, i) => {
-            if (!dimension) {
-              return []
-            }
+          datasets: isMultiMetric
+            ? metricNames.map((metric) => {
+              return {
+                label: metric,
+                backgroundColor: lookupDatavisColor(metricNames.indexOf(metric), datavisPalette),
+                data: rowLabels.map(rowPosition => {
+                  return pivotRecords[`${rowPosition},${metric}`] || 0
+                }),
+              } as Dataset
+            })
+            : barSegmentLabels && Array.from(barSegmentLabels).flatMap((dimension, i) => {
+              if (!dimension) {
+                return []
+              }
 
-            let { colorPalette } = deps
-            if (isNullOrUndef(colorPalette)) {
-              colorPalette = datavisPalette
-            }
-            const colorMap: { [label: string]: string } = {}
+              let { colorPalette } = deps
+              if (isNullOrUndef(colorPalette)) {
+                colorPalette = datavisPalette
+              }
+              const colorMap: { [label: string]: string } = {}
 
-            const baseColor = Array.isArray(colorPalette)
-              ? lookupDatavisColor(i, colorPalette)
-              : colorPalette[dimension] || lookupDatavisColor(i) // fallback to default datavis palette if no color found
+              const baseColor = Array.isArray(colorPalette)
+                ? lookupDatavisColor(i, colorPalette)
+                : colorPalette[dimension] || lookupDatavisColor(i) // fallback to default datavis palette if no color found
 
-            colorMap[dimension] = baseColor
+              colorMap[dimension] = baseColor
 
-            return {
+              return {
               // @ts-ignore - dynamic i18n key
-              label: (i18n && i18n.te(`chartLabels.${dimension}`) && i18n.t(`chartLabels.${dimension}`)) || dimension,
-              backgroundColor: baseColor,
-              data: rowLabels.map(rowPosition => {
-                return pivotRecords[`${rowPosition},${dimension}`] || 0
-              }),
-            } as Dataset
-          }),
+                label: (i18n && i18n.te(`chartLabels.${dimension}`) && i18n.t(`chartLabels.${dimension}`)) || dimension,
+                backgroundColor: baseColor,
+                data: rowLabels.map(rowPosition => {
+                  return pivotRecords[`${rowPosition},${dimension}`] || 0
+                }),
+              } as Dataset
+            }),
         }
 
         return data

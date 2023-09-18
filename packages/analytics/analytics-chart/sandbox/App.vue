@@ -214,6 +214,12 @@
       <KLabel>
         Option toggles
       </KLabel>
+      <div v-if="!isSimpleChart">
+        <KInputSwitch
+          v-model="multiMetricToggle"
+          :label="multiMetricToggle ? 'Multi Metric' : 'Single Metric'"
+        />
+      </div>
       <div v-if="!chartType.includes('TimeSeries') && !isSimpleChart">
         <KInputSwitch
           v-model="multiDimensionToggle"
@@ -226,7 +232,7 @@
           :label="fillToggle ? 'Fill' : 'No Fill'"
         />
       </div>
-      <div v-if="isTimeSeriesChart">
+      <div v-if="!isSimpleChart">
         <KInputSwitch
           v-model="stackToggle"
           :label="stackToggle ? 'Stacked' : 'Not Stacked'"
@@ -329,6 +335,7 @@ interface MetricSelection {
 
 const seed = ref(rand(10, 10000))
 
+const multiMetricToggle = ref(false)
 const fillToggle = ref(true)
 const stackToggle = ref(true)
 const limitToggle = ref(false)
@@ -392,29 +399,42 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
   if (isTimeSeriesChart.value) {
     for (let i = start; i <= end; i += 60 * 60 * 1000) { // 1 hour apart
       totalRequests += rng.next(50, 500)
-      for (let j = 0; j < statusCodeDimensionValues.value.size; j++) {
-        const statusCode = [...statusCodeDimensionValues.value][j]
-        const getStatusCount = (statusCode: string) => {
-        // Mostly 2xx then 3xx then 4xx than 5xx
-          if (/^2\d\d$/.test(statusCode)) {
-            return totalRequests * (rand(7, 9) / 10)
-          } else if (/^3\d\d$/.test(statusCode)) {
-            return totalRequests * (rand(4, 6) / 10)
-          } else if (/^4\d\d$/.test(statusCode)) {
-            return totalRequests * (rand(3, 5) / 10)
-          } else if (/^5\d\d$/.test(statusCode)) {
-            return totalRequests * (rand(1, 2) / 10)
-          } else {
-            return Math.floor(totalRequests * 0.02)
+
+      if (!multiMetricToggle.value) {
+        for (let j = 0; j < statusCodeDimensionValues.value.size; j++) {
+          const statusCode = [...statusCodeDimensionValues.value][j]
+          const getStatusCount = (statusCode: string) => {
+            // Mostly 2xx then 3xx then 4xx than 5xx
+            if (/^2\d\d$/.test(statusCode)) {
+              return totalRequests * (rand(7, 9) / 10)
+            } else if (/^3\d\d$/.test(statusCode)) {
+              return totalRequests * (rand(4, 6) / 10)
+            } else if (/^4\d\d$/.test(statusCode)) {
+              return totalRequests * (rand(3, 5) / 10)
+            } else if (/^5\d\d$/.test(statusCode)) {
+              return totalRequests * (rand(1, 2) / 10)
+            } else {
+              return Math.floor(totalRequests * 0.02)
+            }
           }
+          const statusCount = getStatusCount(statusCode)
+          const record = {
+            version: '1.0',
+            timestamp: new Date(i).toISOString(),
+            event: {
+              ...(multiDimensionToggle.value && { [statusCodeDimensionType]: statusCode }),
+              [selectedMetric.value.name]: statusCount,
+            },
+          }
+          records.push(record)
         }
-        const statusCount = getStatusCount(statusCode)
+      } else {
         const record = {
           version: '1.0',
           timestamp: new Date(i).toISOString(),
           event: {
-            [statusCodeDimensionType]: statusCode,
-            [selectedMetric.value.name]: statusCount,
+            [selectedMetric.value.name]: rng.next(100000, 2000000),
+            secondaryMetric: rng.next(100000, 2000000),
           },
         }
         records.push(record)
@@ -426,11 +446,12 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
       endMs: end,
       queryId: '12345',
       dimensions: {
-        [statusCodeDimensionType]: [...statusCodeDimensionValues.value],
+        ...(!multiMetricToggle.value && multiDimensionToggle.value && { [statusCodeDimensionType]: [...statusCodeDimensionValues.value] }),
       },
-      metricNames: [selectedMetric.value.name],
+      metricNames: [selectedMetric.value.name, ...(multiMetricToggle.value ? ['secondaryMetric'] : [])],
       metricUnits: {
         [selectedMetric.value.name]: selectedMetric.value.unit,
+        ...(multiMetricToggle.value && { secondaryMetric: selectedMetric.value.unit }),
       },
       granularity: 60 * 60 * 1000, // 1 hour in ms
       truncated: limitToggle.value,
@@ -450,6 +471,7 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
               [serviceDimensionType]: serviceDimensionValue,
               [statusCodeDimensionType]: statusCodeDimensionValue,
               [selectedMetric.value.name]: statusCount,
+              ...(multiMetricToggle.value && { secondaryMetric: rng.next(100000, 2000000) }),
             },
           }
           records.push(record)
@@ -464,6 +486,7 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
           event: {
             [statusCodeDimensionType]: statusCodeDimensionValue,
             [selectedMetric.value.name]: statusCount,
+            ...(multiMetricToggle.value && { secondaryMetric: rng.next(100000, 2000000) }),
           },
         }
         records.push(record)
@@ -475,11 +498,12 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
       endMs: end,
       granularity: 86400000,
       queryId: '',
-      metricNames: [selectedMetric.value.name],
       truncated: limitToggle.value,
       limit: 50,
+      metricNames: [selectedMetric.value.name, ...(multiMetricToggle.value ? ['secondaryMetric'] : [])],
       metricUnits: {
         [selectedMetric.value.name]: selectedMetric.value.unit,
+        ...(multiMetricToggle.value && { secondaryMetric: selectedMetric.value.unit }),
       },
       dimensions: {
         ...(multiDimensionToggle.value && { [serviceDimensionType]: [...serviceDimensionValues.value] }),
@@ -639,7 +663,7 @@ const onMetricSelected = (item: any) => {
 
 watch(multiDimensionToggle, () => {
   serviceDimensionValues.value = new Set(Array(5).fill(0).map(() => `Service${rand(1, 100)}`))
-  statusCodeDimensionValues.value = new Set(Array(5).fill(0).map(() => `${rand(100, 599)}`))
+  statusCodeDimensionValues.value = new Set(statusCodeLabels)
 
   colorPalette.value = [...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {})
 })

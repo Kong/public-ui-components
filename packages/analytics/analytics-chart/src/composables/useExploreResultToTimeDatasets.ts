@@ -73,12 +73,11 @@ export default function useExploreResultToTimeDataset(
           return { datasets: [] }
         }
         const dimensionFieldNames = (dimensions && Object.keys(dimensions)) || metricNames
-        const metric = metricNames && metricNames[0]
 
         // Time based datasets can only display one "dimension"
         // It will either be the first dimension or if no dimensions
         // are provided, then the metric is the primary dimension
-        const dimension = (dimensionFieldNames && dimensionFieldNames[0]) || metric
+        const dimension = (dimensionFieldNames && dimensionFieldNames[0])
         const datasetLabels = (dimensions && (dimensions as {[label: string]: string[]})[dimension]) || metricNames
 
         // Bail out early if we can't handle the value of `step`.
@@ -105,32 +104,41 @@ export default function useExploreResultToTimeDataset(
             const timestamp: number = new Date(druidRow.timestamp).valueOf()
             const event = druidRow.event as {[label: string]: string | number}
 
-            dimensionPositions.add(metric)
-            if (!(timestamp in acc)) {
-              acc[timestamp] = {}
-            }
-
-            if (!(metric in acc[timestamp])) {
-              acc[timestamp][metric] = {}
-            }
-
-            datasetLabels.forEach((label: string) => {
-              if (event[dimension] === label || dimension === label) {
-                acc[timestamp][metric][label] = Math.round(Number(event[metric]) * 1e3) / 1e3
-              } else if (!dimensionFieldNames.length) { // using metrics as dimensions
-                acc[timestamp][metric][label] = Math.round(Number(event[label]) * 1e3) / 1e3
+            for (const metric of metricNames) {
+              dimensionPositions.add(metric)
+              if (!(timestamp in acc)) {
+                acc[timestamp] = {}
               }
 
-            })
+              if (!(metric in acc[timestamp])) {
+                acc[timestamp][metric] = {}
+              }
+            }
+
+            for (const metric of metricNames) {
+              datasetLabels.forEach((label: string) => {
+                if (event[dimension] === label || metric === label) {
+                  if (!acc[timestamp][metric]) {
+                    acc[timestamp][metric] = {}
+                  }
+                  acc[timestamp][metric][label] = Math.round(Number(event[metric]) * 1e3) / 1e3
+                } else if (!dimensionFieldNames.length) { // using metrics as dimensions
+                  if (!acc[timestamp][metric]) {
+                    acc[timestamp][metric] = {}
+                  }
+                  acc[timestamp][metric][label] = Math.round(Number(event[label]) * 1e3) / 1e3
+                }
+              })
+            }
 
             return acc
           }, {})
 
-        const dimensionsCrossMetrics = [...dimensionPositions].reduce((acc: string[][], position) => {
-          datasetLabels.forEach((label: string) => acc.push([position, label]))
-
-          return acc
-        }, [])
+        const dimensionsCrossMetrics = metricNames.length === 1
+          ? metricNames.flatMap(metric => {
+            return datasetLabels.map(label => [metric, label])
+          })
+          : datasetLabels.map(label => [label, label])
 
         const colorMap: {[label: string]: string} = {}
 
