@@ -360,9 +360,15 @@ const metricItems = [{
   unit: 'bytes',
 }]
 
+// Short labels
 const statusCodeLabels = [
-  '200', '300', '400', '500', 'This is a really long chart label to test long labels',
+  '200', '300', '400', '500',
 ]
+
+// Long labels
+// const statusCodeLabels = [
+//   'getmeakong123', 'getmeakong123123', 'testservice1233', 'testtesttest123123', 'This is a really long chart label to test long labels',
+// ]
 const statusCodeDimensionValues = ref(new Set(statusCodeLabels))
 
 const serviceDimensionValues = ref(new Set([

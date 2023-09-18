@@ -10,19 +10,18 @@
     <div
       class="chart-container"
       :style="{
-        'overflow-x': numLabels > MAX_BARS_VERTICAL ? 'auto' : 'hidden'
+        'overflow-x': numLabels > MAX_BARS_VERTICAL ? 'auto' : 'hidden',
       }"
       @:scroll="onScrolling"
       @click="handleChartClick()"
     >
       <div
         class="chart-body"
-        :style="{
-          width: chartWidth,
-          height: chartHeight
-        }"
+        :style="{ width: chartWidth }"
       >
-        <canvas ref="canvas" />
+        <canvas
+          ref="canvas"
+        />
       </div>
     </div>
     <div
@@ -119,7 +118,18 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  // This component needs to keep track of the height.
+  height: {
+    type: String,
+    required: false,
+    default: '500px',
+    validator: (value: string): boolean => {
+      return /(\d *)(px|%)/.test(value)
+    },
+  },
 })
+
+const emit = defineEmits(['heightUpdate'])
 
 const { i18n } = composables.useI18n()
 
@@ -128,7 +138,6 @@ const LABEL_PADDING = 6
 
 // Parameters for bar sizing.
 const MIN_BAR_HEIGHT = 20
-const MIN_CHART_HEIGHT = 400
 const MIN_CHART_WIDTH = '100%'
 const MAX_BARS_VERTICAL = 30
 const MIN_BAR_WIDTH = 40
@@ -339,19 +348,16 @@ const chartWidth = computed(() => {
   return value
 })
 
-const chartHeight = computed(() => {
-  let value = MIN_CHART_HEIGHT
-
-  if (props.chartData?.labels && isHorizontal.value) {
-    const numLabels = props.chartData.labels.length
+watch(() => props.chartData.labels?.length, (numLabels) => {
+  let chartHeight = parseInt(props.height, 10)
+  if (numLabels && isHorizontal.value) {
 
     // The goal is to keep the bar width greater than or roughly equal to the text width.
     const preferredChartHeight = numLabels * MIN_BAR_HEIGHT
-
-    value = Math.max(preferredChartHeight, value)
+    chartHeight = Math.max(preferredChartHeight, chartHeight)
   }
 
-  return `${value}px`
+  emit('heightUpdate', chartHeight)
 })
 
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))
@@ -547,7 +553,12 @@ const handleChartClick = () => {
 
 .chart-container {
   -ms-overflow-style: thin;  /* IE and Edge */
+  overflow-y: hidden;
   scrollbar-width: thin;  /* Firefox */
+
+  .chart-body {
+    height: 100%;
+  }
 
   &::-webkit-scrollbar-track {
     background-color: $kui-color-background;

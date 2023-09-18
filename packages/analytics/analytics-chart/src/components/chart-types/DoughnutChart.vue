@@ -6,7 +6,6 @@
   >
     <div
       class="chart-container"
-      :style="{ height, width }"
     >
       <Doughnut
         ref="chartInstance"
@@ -92,22 +91,6 @@ const props = defineProps({
     type: Object as PropType<AnalyticsChartColors | string[]>,
     required: false,
     default: datavisPalette,
-  },
-  height: {
-    type: String,
-    required: false,
-    default: '400px',
-    validator: (value: string): boolean => {
-      return /(\d *)(px|%)/.test(value)
-    },
-  },
-  width: {
-    type: String,
-    required: false,
-    default: '100%',
-    validator: (value: string): boolean => {
-      return /(\d *)(px|%)/.test(value)
-    },
   },
 })
 
