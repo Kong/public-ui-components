@@ -319,10 +319,6 @@ provide('legendPosition', toRef(props, 'legendPosition'))
   margin: $kui-space-60;
   padding: $kui-space-60;
 
-  .analytics-chart-parent {
-    overflow: hidden;
-  }
-
   .chart-empty-state {
     padding: $kui-space-70 $kui-space-0 $kui-space-60 $kui-space-0;
   }
