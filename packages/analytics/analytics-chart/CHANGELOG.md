@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.10.5...@kong-ui-public/analytics-chart@0.10.6) (2023-09-20)
+
+
+### Bug Fixes
+
+* **analytics-chart:** tooltip clipping issue ([#800](https://github.com/Kong/public-ui-components/issues/800)) ([0ee43c6](https://github.com/Kong/public-ui-components/commit/0ee43c61092bc94d14676c4c563becb62a1bb4ea))
+
+
+
+
+
 ## [0.10.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.10.4...@kong-ui-public/analytics-chart@0.10.5) (2023-09-20)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
