@@ -1,12 +1,15 @@
 .chart-parent {
   align-items: center;
   display: flex;
+  height: inherit ;
   position: relative;
+  width: inherit;
 
   &.column {
     flex-direction: column;
 
     .chart-container {
+      height: 80%;
       width: 100%;
     }
   }
@@ -16,27 +19,25 @@
 
     .chart-container {
       flex-grow: 1;
-      width: 85% !important;
-    }
-  }
+      height: 100%;
+      width: 85%;
 
-  &:not(.show-total) {
-    // Always stack legend below chart below mobile breakpoint
+      // Allow chart to expand full width on mobile
+      @media (max-width: ($kui-breakpoint-phablet - 1px)) {
+        height: 80% !important;
+        width: 100% !important;
+      }
+    }
     @media (max-width: ($kui-breakpoint-phablet - 1px)) {
       display: flex;
       flex-wrap: wrap;
     }
   }
 
+
   .chart-container {
-    margin-bottom: $kui-space-50;
     // Per ChartJS docs, the chart container needs to be position: relative and _only_ contain the chart canvas.
     // https://www.chartjs.org/docs/latest/configuration/responsive.html
     position: relative;
-
-    // Allow chart to expand full width on mobile
-    @media (max-width: ($kui-breakpoint-phablet - 1px)) {
-      width: 100% !important;
-    }
   }
 }

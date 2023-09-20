@@ -94,7 +94,7 @@ yarn add @kong-ui-public/analytics-chart
 
 - type: `string`
 - required: `false`
-- default: `'400px'`
+- default: `'500px'`
 - set the chart height using css height values (px, %, etc...)
 
 #### `width`
