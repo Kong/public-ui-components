@@ -344,7 +344,7 @@ importers:
   packages/core/copy-uuid:
     devDependencies:
       '@kong-ui-public/i18n':
-        specifier: workspace:^0.8.2
+        specifier: workspace:^0.8.3
         version: link:../i18n
       '@kong/design-tokens':
         specifier: ^1.10.2
@@ -412,7 +412,7 @@ importers:
   packages/core/misc-widgets:
     devDependencies:
       '@kong-ui-public/i18n':
-        specifier: workspace:^0.8.2
+        specifier: workspace:^0.8.3
         version: link:../i18n
       '@kong/kongponents':
         specifier: ^8.123.8
@@ -785,7 +785,7 @@ importers:
   packages/portal/document-viewer:
     dependencies:
       '@kong-ui-public/i18n':
-        specifier: workspace:^0.8.2
+        specifier: workspace:^0.8.3
         version: link:../../core/i18n
       prismjs:
         specifier: ^1.29.0
@@ -810,7 +810,7 @@ importers:
   packages/portal/spec-renderer:
     dependencies:
       '@kong-ui-public/i18n':
-        specifier: workspace:^0.8.2
+        specifier: workspace:^0.8.3
         version: link:../../core/i18n
       '@kong-ui-public/swagger-ui-web-component':
         specifier: workspace:^0.8.8
