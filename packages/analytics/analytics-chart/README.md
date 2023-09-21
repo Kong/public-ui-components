@@ -39,7 +39,7 @@ yarn add @kong-ui-public/analytics-chart
 
 - type: [AnalyticsChartOptions](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-chart/src/types/chart-data.ts)
 - required: `true`
-- `stacked` option only apply to time series charts
+- `stacked` option applies to timeseries charts as well as vertical/horizontal bar charts.
 - `fill` only applies to time series line chart
 - `chartTypes` defined [here](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/chart-types.ts)
 - `chartDatasetColors` are optional
