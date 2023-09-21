@@ -77,7 +77,7 @@ describe('useVitalsExploreDatasets', () => {
         start: 1640998862, // 2022-01-01T01:01:02Z
         end: 1640998870, // 2022-01-01T01:01:10Z
         granularity: 5000, // (5 seconds)
-        dimensions: { dimension: ['dimension'] },
+        dimensions: { dimension: ['label'] },
         metricNames: ['metric'],
         queryId: '',
         metricUnits: { units: 'units' },
@@ -119,7 +119,7 @@ describe('useVitalsExploreDatasets', () => {
         start: 1640998862, // 2022-01-01T01:01:02Z
         end: 1640998872, // 2022-01-01T01:01:10Z
         granularity: 5000,
-        dimensions: { dimension: ['dimension'] },
+        dimensions: { dimension: ['label'] },
         metricNames: ['metric'],
         queryId: '',
         metricUnits: { units: 'units' },
@@ -164,7 +164,7 @@ describe('useVitalsExploreDatasets', () => {
         start: 1640998862,
         end: 1640998870,
         granularity: 5000,
-        dimensions: { dimension: ['dimension'] },
+        dimensions: { dimension: ['label'] },
         metricNames: ['metric'],
         queryId: '',
         metricUnits: { units: 'units' },
@@ -213,7 +213,7 @@ describe('useVitalsExploreDatasets', () => {
         start: Math.trunc(START_FOR_DAILY_QUERY.getTime() / 1000),
         end: Math.trunc(END_FOR_DAILY_QUERY.getTime() / 1000),
         granularity: 86400000,
-        dimensions: { dimension: ['dimension'] },
+        dimensions: { dimension: ['label'] },
         metricNames: ['metric'],
         queryId: '',
         metricUnits: { units: 'units' },
