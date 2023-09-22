@@ -438,3 +438,95 @@ it('handle empty dimension query', () => {
 
   expect(result.value.datasets[0].label).toEqual('metric1')
 })
+
+it('handles multiple metrics', () => {
+  const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
+    records: [
+      {
+        version: 'v1',
+        timestamp: START_FOR_DAILY_QUERY.toISOString(),
+        event: {
+          metric1: 1,
+          metric2: 2,
+        },
+      },
+      {
+        version: 'v1',
+        timestamp: END_FOR_DAILY_QUERY.toISOString(),
+        event: {
+          metric1: 3,
+          metric2: 4,
+        },
+      },
+    ],
+    meta: {
+      start: Math.trunc(START_FOR_DAILY_QUERY.getTime() / 1000),
+      end: Math.trunc(END_FOR_DAILY_QUERY.getTime() / 1000),
+      granularity: 86400000,
+      metricNames: [
+        'metric1',
+        'metric2',
+      ],
+      queryId: '',
+      metricUnits: { metric1: 'units', metric2: 'units' },
+      dimensions: {},
+    },
+  }))
+  const result = useExploreResultToTimeDataset(
+    { fill: false },
+    exploreResult,
+  )
+
+  expect(result.value.datasets).toEqual(
+    [
+      {
+        rawDimension: 'metric1',
+        rawMetric: 'metric1',
+        label: 'metric1',
+        borderColor: '#763aa3',
+        backgroundColor: '#a86cd5',
+        data: [
+          {
+            x: START_FOR_DAILY_QUERY.getTime(),
+            y: 1,
+          },
+          {
+            x: END_FOR_DAILY_QUERY.getTime(),
+            y: 3,
+          },
+        ],
+        total: 4,
+        lineTension: 0.4,
+        borderWidth: 2,
+        pointBorderWidth: 1.2,
+        borderJoinStyle: 'round',
+        fill: false,
+      },
+      {
+        rawDimension: 'metric2',
+        rawMetric: 'metric2',
+        label: 'metric2',
+        borderColor: '#3854a0',
+        backgroundColor: '#6a86d2',
+        data: [
+          {
+            x: START_FOR_DAILY_QUERY.getTime(),
+            y: 2,
+          },
+          {
+            x: END_FOR_DAILY_QUERY.getTime(),
+            y: 4,
+          },
+        ],
+        total: 6,
+        lineTension: 0.4,
+        borderWidth: 2,
+        pointBorderWidth: 1.2,
+        borderJoinStyle: 'round',
+        fill: false,
+      },
+    ],
+  )
+
+  expect(result.value.datasets[0].label).toEqual('metric1')
+})

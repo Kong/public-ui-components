@@ -165,7 +165,7 @@ describe('useVitalsExploreDatasets', () => {
       },
     }))
     const result = useExploreResultToDatasets({ fill: true }, exploreResult)
-    console.log(result.value)
+
     expect(result.value).toEqual(
       {
         labels: ['group-by-1', 'group-by-2'],
@@ -224,7 +224,6 @@ it('handles empty dimension', () => {
         timestamp: '2022-01-01T01:01:02Z',
         event: {
           metric: 1,
-          dimension: 'dimension1',
         },
       },
     ],
@@ -247,6 +246,101 @@ it('handles empty dimension', () => {
       labels: ['metric'],
       datasets: [
         { label: 'metric', backgroundColor: '#a86cd5', data: [1] },
+      ],
+    },
+  )
+})
+
+it('handles multiple metrics with no dimension', () => {
+  const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
+    records: [
+      {
+        version: 'v1',
+        timestamp: '2022-01-01T01:01:02Z',
+        event: {
+          metric1: 1,
+          metric2: 2,
+        },
+      },
+    ],
+    meta: {
+      start: 1640998862,
+      end: 1640998870,
+      granularity: 5000,
+      metricNames: [
+        'metric1',
+        'metric2',
+      ],
+      queryId: '',
+      metricUnits: { metric1: 'units', metric2: 'units' },
+      truncated: false,
+      limit: 15,
+      dimensions: {},
+    },
+  }))
+  const result = useExploreResultToDatasets({ fill: true }, exploreResult)
+
+  expect(result.value).toEqual(
+    {
+      labels: ['metric1', 'metric2'],
+      datasets: [
+        { label: 'metric1', backgroundColor: '#a86cd5', data: [1, 0] },
+        { label: 'metric2', backgroundColor: '#6a86d2', data: [0, 2] },
+      ],
+    },
+  )
+})
+
+it('handles multiple metrics with dimension', () => {
+  const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
+    records: [
+      {
+        version: 'v1',
+        timestamp: '2022-01-01T01:01:02Z',
+        event: {
+          metric1: 1,
+          metric2: 2,
+          Service: 'service1',
+        },
+      },
+      {
+        version: 'v1',
+        timestamp: '2022-01-01T01:01:02Z',
+        event: {
+          metric1: 3,
+          metric2: 4,
+          Service: 'service2',
+        },
+      },
+    ],
+    meta: {
+      start: 1640998862,
+      end: 1640998870,
+      granularity: 5000,
+      metricNames: [
+        'metric1',
+        'metric2',
+      ],
+      queryId: '',
+      metricUnits: { metric1: 'units', metric2: 'units' },
+      truncated: false,
+      limit: 15,
+      dimensions: {
+        Service: [
+          'service1',
+          'service2',
+        ],
+      },
+    },
+  }))
+  const result = useExploreResultToDatasets({ fill: true }, exploreResult)
+
+  expect(result.value).toEqual(
+    {
+      labels: ['service1', 'service2'],
+      datasets: [
+        { label: 'metric1', backgroundColor: '#a86cd5', data: [1, 3] },
+        { label: 'metric2', backgroundColor: '#6a86d2', data: [2, 4] },
       ],
     },
   )
