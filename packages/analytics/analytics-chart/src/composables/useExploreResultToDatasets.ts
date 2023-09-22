@@ -41,9 +41,9 @@ export default function useExploreResultToDatasets(
 
         const pivotRecords = isMultiMetric
           ? Object.fromEntries(records.flatMap(e => {
-            return metricNames.map(metric => {
+            return metricNames.map((metric, i) => {
               const dimensionValue = e.event[primaryDimension]
-              const label = `${dimensionValue},${metric}`
+              const label = hasDimensions ? `${dimensionValue},${metric}` : `${i},${metric}`
               const value = e.event[metric]
               return [label, value]
             })
@@ -76,8 +76,8 @@ export default function useExploreResultToDatasets(
               return {
                 label: metric,
                 backgroundColor: lookupDatavisColor(metricNames.indexOf(metric), datavisPalette),
-                data: rowLabels.map(rowPosition => {
-                  return pivotRecords[`${rowPosition},${metric}`] || 0
+                data: rowLabels.map((rowPosition, i) => {
+                  return hasDimensions ? pivotRecords[`${rowPosition},${metric}`] || 0 : pivotRecords[`${i},${metric}`] || 0
                 }),
               } as Dataset
             })
