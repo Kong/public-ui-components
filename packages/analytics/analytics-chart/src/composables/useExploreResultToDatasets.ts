@@ -74,7 +74,8 @@ export default function useExploreResultToDatasets(
           datasets: isMultiMetric
             ? metricNames.map((metric) => {
               return {
-                label: metric,
+                // @ts-ignore - dynamic i18n key
+                label: (i18n && i18n.te(`chartLabels.${metric}`) && i18n.t(`chartLabels.${metric}`)) || metric,
                 backgroundColor: lookupDatavisColor(metricNames.indexOf(metric), datavisPalette),
                 data: rowLabels.map((rowPosition, i) => {
                   return hasDimensions ? pivotRecords[`${rowPosition},${metric}`] || 0 : pivotRecords[`${i},${metric}`] || 0
