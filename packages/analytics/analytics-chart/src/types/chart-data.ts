@@ -37,8 +37,8 @@ export interface AnalyticsChartOptions {
   type: ChartTypes
   /**
    * Are the datasets stacked or not.
-   * If stacked, the datasets are stacked on top of each other
-   * Only applies to time series line charts.
+   * If stacked, the datasets are stacked on top of each other.
+   * Applies to timeseries charts as well as bar charts.
    */
   stacked?: boolean,
   /**
