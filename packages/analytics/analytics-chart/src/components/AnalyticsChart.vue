@@ -77,6 +77,7 @@
         :metric-axes-title="metricAxesTitle"
         :metric-unit="computedMetricUnit"
         :orientation="barChartOrientation"
+        :stacked="chartOptions.stacked"
         :synthetics-data-key="syntheticsDataKey"
         :tooltip-title="tooltipTitle"
         @height-update="handleHeightUpdate"
