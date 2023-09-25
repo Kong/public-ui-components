@@ -6,6 +6,7 @@ import { DeltaQueryTime, TimeseriesQueryTime, UnaryQueryTime } from './queryTime
 import type { Timeframe } from './timeframes'
 import { datePickerSelectionToTimeframe, TimePeriods } from './timeframes'
 import { formatInTimeZone } from 'date-fns-tz'
+import { runUtcTest } from './specUtils'
 
 const standardizeTimezone = (d: Date) => {
   // Adjust according to the test runner's timezone for consistent results.
@@ -496,10 +497,6 @@ runDstTest('daylight savings time: fall', () => {
     expect(deltaQuery.granularitySeconds()).toBe(unaryQuery.granularitySeconds())
   })
 })
-
-const supportsUtc = Intl.DateTimeFormat().resolvedOptions().timeZone === 'UTC'
-
-const runUtcTest = supportsUtc ? describe : describe.skip
 
 runUtcTest('UTC: timezone handling', () => {
   beforeEach(() => {

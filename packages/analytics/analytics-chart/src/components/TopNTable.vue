@@ -38,6 +38,12 @@
         </template>
       </KEmptyState>
 
+      <KSkeleton
+        v-else-if="isLoading"
+        :table-columns="2"
+        type="table"
+      />
+
       <KEmptyState
         v-else-if="!hasData"
         cta-is-hidden
@@ -122,6 +128,10 @@ const props = defineProps({
   emptyStateTitle: {
     type: String,
     default: '',
+  },
+  isLoading: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -242,18 +252,22 @@ const getValue = (record: AnalyticsExploreRecord): string => {
     }
 
     .column-1 {
-      padding: 0 $kui-space-80 $kui-space-60 0;
+      padding: $kui-space-0 $kui-space-80 $kui-space-50 $kui-space-0;
     }
 
     .column-2 {
       flex: 1;
       max-width: 110px;
-      padding: 0 0 $kui-space-60 0;
+      padding: $kui-space-0 $kui-space-0 $kui-space-50 $kui-space-0;
     }
 
     .table-body {
+      .table-row:first-of-type {
+        border-top: $kui-border-width-10 solid $kui-color-border;
+      }
+
       .column-1, .column-2 {
-        padding-top: $kui-space-60;
+        padding-top: $kui-space-50;
       }
 
       .column-1 {
@@ -265,6 +279,28 @@ const getValue = (record: AnalyticsExploreRecord): string => {
           font-weight: $kui-font-weight-bold;
           text-decoration: none;
         }
+      }
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+// TODO: clean up these styles after KCard redesign - KHCP-8971
+.kong-ui-public-top-n-table.kong-card.border {
+  border-radius: $kui-border-radius-20;
+  padding: $kui-space-70;
+
+  .k-card-header {
+    align-items: baseline;
+    margin-bottom: $kui-space-0 !important;
+
+    .k-card-title {
+      margin-bottom: $kui-space-60;
+
+      h4 {
+        font-size: $kui-font-size-40;
+        font-weight: $kui-font-weight-semibold;
       }
     }
   }

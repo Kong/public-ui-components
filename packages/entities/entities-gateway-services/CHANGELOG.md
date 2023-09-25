@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@1.1.24...@kong-ui-public/entities-gateway-services@1.1.25) (2023-09-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [1.1.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@1.1.23...@kong-ui-public/entities-gateway-services@1.1.24) (2023-09-18)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [1.1.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@1.1.22...@kong-ui-public/entities-gateway-services@1.1.23) (2023-09-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [1.1.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@1.1.21...@kong-ui-public/entities-gateway-services@1.1.22) (2023-09-15)
+
+
+### Bug Fixes
+
+* **entities:** spelling [khcp-8676] ([#792](https://github.com/Kong/public-ui-components/issues/792)) ([26d718d](https://github.com/Kong/public-ui-components/commit/26d718dfadd34b960d574339658099d2b2d57f5b))
+
+
+
+
+
+## [1.1.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@1.1.20...@kong-ui-public/entities-gateway-services@1.1.21) (2023-09-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
 ## [1.1.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@1.1.19...@kong-ui-public/entities-gateway-services@1.1.20) (2023-09-13)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services

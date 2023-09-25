@@ -52,12 +52,89 @@
         </div>
       </template>
     </AppPageHeader>
+
+    <AppAboutSection
+      created="2023-02-17"
+      description="Some cats are cool, some are not. This one is cool."
+      modified="2023-02-17 15:23:34"
+      title="About this Cat"
+    >
+      <template #actions>
+        <KButton
+          appearance="btn-link"
+          class="about-action-button"
+        >
+          <template #icon>
+            <KIcon
+              color="#0044f4"
+              icon="pencil"
+              size="16"
+            />
+          </template>
+        </KButton>
+      </template>
+
+      <div>
+        <span class="badge-label">Name:</span>
+        <KBadge
+          appearance="neutral"
+          shape="rectangular"
+        >
+          TK
+        </KBadge>
+      </div>
+      <div>
+        <span class="badge-label">Color:</span>
+        <KBadge
+          appearance="neutral"
+          shape="rectangular"
+        >
+          BLACK
+        </KBadge>
+      </div>
+      <div>
+        <span class="badge-label">Type:</span>
+        <KBadge
+          appearance="success"
+          shape="rectangular"
+        >
+          COOL
+        </KBadge>
+      </div>
+      <div class="method-badges">
+        <span class="badge-label">Methods:</span>
+        <KMethodBadge
+          v-for="method in ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace', 'connect', 'custom']"
+          :key="method"
+          :method="(method as Method)"
+        />
+      </div>
+
+      <template #divider-section>
+        <div>
+          This cat has a habit of sleeping in uncomfortable looking positions.
+        </div>
+        <div>
+          <KButton appearance="btn-link">
+            <template #icon>
+              🍔
+            </template>
+            I can haz cheezeburger
+          </KButton>
+        </div>
+        <hr>
+        <div>
+          I have a lot to say about cats.
+        </div>
+      </template>
+    </AppAboutSection>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { AppPageHeader } from '../../src'
+import type { Method } from '@kong/kongponents'
+import { AppAboutSection, AppPageHeader } from '../../src'
 
 const breadcrumbs = computed(() => {
   return [
@@ -97,5 +174,24 @@ const enabled = ref(false)
 
 .actions-switch {
   margin-right: 12px;
+}
+
+.about-action-button {
+  display: flex;
+  min-height: unset !important;
+  height: 16px !important;
+}
+
+.badge-label {
+  font-size: 12px;
+  line-height: 20px;
+  margin-right: 8px;
+}
+
+.method-badges {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 4px;
+  row-gap: 8px;
 }
 </style>

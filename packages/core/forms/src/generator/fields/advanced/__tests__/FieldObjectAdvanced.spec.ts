@@ -87,7 +87,7 @@ describe('FieldObjectAdvanced', () => {
                         fieldClasses: 'w-100',
                         fieldItemsClasses: 'd-flex mt-2 w-90',
                         inputAttributes: {
-                          class: 'k-input',
+                          class: 'form-control',
                           style: { minWidth: '200px' },
                           type: 'text',
                           inputMode: 'text',

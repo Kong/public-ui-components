@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/misc-widgets",
-  "version": "0.5.34",
+  "version": "0.5.38",
   "type": "module",
   "main": "./dist/misc-widgets.umd.js",
   "module": "./dist/misc-widgets.es.js",
@@ -39,12 +39,12 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^0.4.2",
-    "@kong/kongponents": "^8.123.6",
+    "@kong/kongponents": "^8.123.8",
     "vue": "^3.3.4"
   },
   "devDependencies": {
-    "@kong-ui-public/i18n": "workspace:^0.8.1",
-    "@kong/kongponents": "^8.123.6",
+    "@kong-ui-public/i18n": "workspace:^0.8.3",
+    "@kong/kongponents": "^8.123.8",
     "vue": "^3.3.4"
   },
   "repository": {

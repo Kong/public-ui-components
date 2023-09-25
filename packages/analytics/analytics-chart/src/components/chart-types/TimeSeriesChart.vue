@@ -6,7 +6,6 @@
   >
     <div
       class="chart-container"
-      :style="{height, width}"
       @click="handleChartClick()"
     >
       <Line
@@ -72,7 +71,7 @@ import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
 import type { AnalyticsChartColors, KChartData, LegendValues, TooltipState } from '../../types'
 import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
-import type { Chart } from 'chart.js'
+import type { Chart, LegendItem } from 'chart.js'
 import { ChartLegendPosition, ChartTypes } from '../../enums'
 
 const props = defineProps({
@@ -145,29 +144,13 @@ const props = defineProps({
     default: datavisPalette,
 
   },
-  height: {
-    type: String,
-    required: false,
-    default: '400px',
-    validator: (value: string): boolean => {
-      return /(\d *)(px|%)/.test(value)
-    },
-  },
-  width: {
-    type: String,
-    required: false,
-    default: '100%',
-    validator: (value: string): boolean => {
-      return /(\d *)(px|%)/.test(value)
-    },
-  },
 })
 
 const { i18n } = composables.useI18n()
 const chartInstance = ref<{chart: Chart}>()
 const legendID = ref(uuidv4())
 const chartID = ref(uuidv4())
-const legendItems = ref([])
+const legendItems = ref<LegendItem[]>([])
 const tooltipElement = ref()
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
 

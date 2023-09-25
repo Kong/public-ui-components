@@ -310,7 +310,6 @@ export const usePluginMetaData = () => {
       isEnterprise: true,
       name: t('plugins.meta.collector.name'),
       scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
-      docsUrlName: '',
     },
     'response-transformer-advanced': {
       description: t('plugins.meta.response-transformer-advanced.description'),
@@ -466,7 +465,6 @@ export const usePluginMetaData = () => {
       group: PluginGroup.AUTHENTICATION,
       isEnterprise: true,
       name: t('plugins.meta.application-registration.name'),
-      docsUrlName: '',
       scope: [PluginScope.GLOBAL, PluginScope.SERVICE],
     },
     'konnect-application-auth': {
@@ -474,7 +472,6 @@ export const usePluginMetaData = () => {
       group: PluginGroup.AUTHENTICATION,
       isEnterprise: false,
       name: t('plugins.meta.konnect-application-auth.name'),
-      docsUrlName: '',
       scope: [PluginScope.GLOBAL, PluginScope.SERVICE],
       imageName: 'application-registration',
     },

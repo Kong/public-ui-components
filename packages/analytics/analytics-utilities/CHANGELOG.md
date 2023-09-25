@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.7.3...@kong-ui-public/analytics-utilities@0.8.0) (2023-09-14)
+
+
+### Features
+
+* **analytics-utilities:** Add date formatting support [MA-1969] ([#785](https://github.com/Kong/public-ui-components/issues/785)) ([31578b4](https://github.com/Kong/public-ui-components/commit/31578b477451bbf7e0dc3783acaad3c5b683a489))
+
+
+
+
+
 ## [0.7.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.7.2...@kong-ui-public/analytics-utilities@0.7.3) (2023-09-09)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities

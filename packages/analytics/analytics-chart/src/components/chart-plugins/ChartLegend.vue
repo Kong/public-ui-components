@@ -1,13 +1,15 @@
 <template>
   <ul
     v-if="position !== ChartLegendPosition.Hidden"
+    ref="legendContainerRef"
     class="legend-container"
     :class="positionToClass(position)"
     data-testid="legend"
   >
     <li
-      v-for="{ fillStyle, strokeStyle, text, datasetIndex, index, value } in (itemsRef as any[])"
+      v-for="{ fillStyle, strokeStyle, text, datasetIndex, index, value } in (items as any[])"
       :key="text"
+      ref="legendItemsRef"
       @click="handleLegendItemClick(datasetIndex, index)"
     >
       <div
@@ -15,10 +17,12 @@
         :style="{ background: fillStyle, 'border-color': strokeStyle }"
       />
       <div
+        class="label-container"
         :class="{ 'strike-through': !isDatasetVisible(datasetIndex, index) }"
       >
         <div
           class="label"
+          :class="{ 'truncate-label' : shouldTruncate }"
           :title="position === ChartLegendPosition.Bottom && text"
         >
           {{ text }}
@@ -36,8 +40,9 @@
 
 <script setup lang="ts">
 import { ChartLegendPosition } from '../../enums'
-import { Chart } from 'chart.js'
-import { inject, ref, toRef } from 'vue'
+import { Chart, type LegendItem } from 'chart.js'
+import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType } from 'vue'
+import { KUI_SPACE_100 } from '@kong/design-tokens'
 
 const props = defineProps({
   id: {
@@ -45,7 +50,7 @@ const props = defineProps({
     required: true,
   },
   items: {
-    type: Array,
+    type: Object as PropType<LegendItem[]>,
     required: true,
   },
   chartInstance: {
@@ -55,7 +60,102 @@ const props = defineProps({
   },
 })
 
-const itemsRef = toRef(props, 'items')
+const legendContainerRef = ref<HTMLElement>()
+const legendItemsRef = ref<HTMLElement[]>([])
+const shouldTruncate = ref(false)
+const showValues = inject('showLegendValues', true)
+const position = inject('legendPosition', ref(ChartLegendPosition.Right))
+const legendItemsTracker = ref<LegendItem[]>([])
+
+// Return the number of rows for a grid layout
+// by cmparing the top position of each item.
+const numberOfRows = () => {
+  const element = legendContainerRef.value
+  if (!element || !legendItemsRef.value || element.children.length === 0) {
+    return 0
+  }
+
+  let numberOfRows = 1
+  let previousTop = element.children[0].getBoundingClientRect().top
+  for (const item of legendItemsRef.value) {
+    const currentTop = item.getBoundingClientRect().top
+    // If the top position of the current item is
+    // different from the previous item, that means
+    // there is a new row.
+    if (currentTop !== previousTop) {
+      numberOfRows++
+      previousTop = currentTop
+    }
+  }
+
+  return numberOfRows
+}
+
+const checkForWrap = () => {
+  if (legendContainerRef.value && position.value === ChartLegendPosition.Bottom) {
+    if (numberOfRows() > 1) {
+      shouldTruncate.value = true
+    } else {
+      shouldTruncate.value = false
+    }
+  }
+}
+
+// Set the grid-template-columns style based on the width of the widest item
+const formatGrid = () => {
+  if (legendContainerRef.value && position.value === ChartLegendPosition.Bottom) {
+    let maxWidth = 0
+
+    legendItemsRef.value.forEach(item => {
+      // Each <li> has two elements: the legend and the label.
+      // Sum the width of each element to get the total width of the item.
+      const width = Array.from(item.children).reduce((total, element) => {
+        return total + (element as HTMLElement).offsetWidth
+      }, 0)
+      if (width > maxWidth) {
+        maxWidth = width
+      }
+    })
+    const padding = parseInt(KUI_SPACE_100, 10)
+    legendContainerRef.value.style.gridTemplateColumns = `repeat(auto-fit, ${maxWidth + padding}px)`
+  }
+}
+
+const legendItemsChanged = () => {
+  if (props.items.length !== legendItemsTracker.value.length) {
+    legendItemsTracker.value = props.items
+    return true
+  }
+
+  for (let i = 0; i < props.items.length; i++) {
+    if (props.items[i].text !== legendItemsTracker.value[i].text) {
+      legendItemsTracker.value = props.items
+      return true
+    }
+  }
+
+  return false
+}
+
+watch(() => props.items, () => {
+  checkForWrap()
+  if (legendItemsChanged()) {
+    formatGrid()
+  }
+}, { immediate: true, flush: 'post' })
+
+watch(() => position.value, () => {
+  formatGrid()
+})
+
+onMounted(() => {
+  legendItemsTracker.value = props.items
+  window.addEventListener('resize', checkForWrap)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkForWrap)
+})
 
 const handleLegendItemClick = (datasetIndex: number = 0, segmentIndex: number): void => {
   if (props.chartInstance === null) {
@@ -101,16 +201,12 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
   }[position]
 }
 
-const showValues = inject('showLegendValues', true)
-const position = inject('legendPosition', ref(ChartLegendPosition.Right))
-
 </script>
 
 <style lang="scss" scoped>
 .legend-container {
   display: flex;
   max-height: inherit;
-  min-width: 10%;
   -ms-overflow-style: thin;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -120,17 +216,14 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
   &.vertical {
     flex-direction: column;
     max-height: 400px;
-    max-width: 200px;
-
-    .legend {
-      margin-top: $kui-space-30;
-    }
+    max-width: 15%;
+    word-break: break-word;
 
     // Allow legend to expand horizontally at lower resolutions
     @media (max-width: ($kui-breakpoint-phablet - 1px)) {
       flex-direction: row;
+      height: 20%;
       max-width: 100%;
-      padding-top: $kui-space-50;
       width: 100%;
     }
   }
@@ -138,22 +231,14 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
   &.horizontal {
     column-gap: $kui-space-10;
     display: grid;
-    grid-template-columns: repeat(auto-fit, $kui-space-150);
     justify-content: center;
-    max-height: $kui-space-150;
+    max-height: 15%;
     width: 100%;
-
-    .label {
-      max-width: $kui-space-120;
+    .truncate-label {
+      max-width: 15ch;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
-
-    li {
-      align-items: center;
-      display: flex;
-      justify-content: start;
     }
   }
 
@@ -173,23 +258,26 @@ const position = inject('legendPosition', ref(ChartLegendPosition.Right))
 
   // Individual legend item
   li {
+    align-items: start;
+    cursor: pointer;
+    display: flex;
+    margin-top: $kui-space-60;
+
     .legend {
       flex: 0 0 14px;
       height: 3px;
       margin-right: $kui-space-50;
+      margin-top: $kui-space-30;
     }
-
-    cursor: pointer;
-    display: flex;
-    height: fit-content;
-    margin: $kui-space-50;
 
     .label {
       font-size: $kui-font-size-30;
+      line-height: $kui-font-size-50;
     }
 
     .sub-label {
       font-size: $kui-font-size-20;
+      line-height: $kui-font-size-30;
       word-break: none;
     }
 

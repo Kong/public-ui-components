@@ -182,6 +182,7 @@
       class="top-n-sandbox"
       :data="exploreResultV3"
       description="Last 30-Day Summary"
+      :is-loading="showLoadingState"
       title="Top 5 Routes"
     >
       <template #name="{ record }">
@@ -247,6 +248,12 @@
         <KInputSwitch
           v-model="limitToggle"
           :label="limitToggle ? 'Has Limit' : 'No Limit'"
+        />
+      </div>
+      <div v-if="isTopNTable">
+        <KInputSwitch
+          v-model="showLoadingState"
+          :label="showLoadingState ? 'Is Loading' : 'Data Loaded'"
         />
       </div>
       <div>
@@ -328,6 +335,7 @@ const limitToggle = ref(false)
 const multiDimensionToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
+const showLoadingState = ref(false)
 const emptyState = ref(false)
 const chartType = ref<ChartTypes | ChartTypesSimple>(ChartTypes.VERTICAL_BAR)
 const legendPosition = ref(ChartLegendPosition.Right)
@@ -352,9 +360,15 @@ const metricItems = [{
   unit: 'bytes',
 }]
 
+// Short labels
 const statusCodeLabels = [
-  '200', '300', '400', '500', 'This is a really long chart label to test long labels',
+  '200', '300', '400', '500',
 ]
+
+// Long labels
+// const statusCodeLabels = [
+//   'getmeakong123', 'getmeakong123123', 'testservice1233', 'testtesttest123123', 'This is a really long chart label to test long labels',
+// ]
 const statusCodeDimensionValues = ref(new Set(statusCodeLabels))
 
 const serviceDimensionValues = ref(new Set([

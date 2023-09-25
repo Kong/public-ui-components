@@ -193,7 +193,6 @@ function handleMouseUp() {
   max-width: 425px;
   min-width: 250px;
   position: absolute;
-
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 999;
 

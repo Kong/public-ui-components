@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/swagger-ui-web-component",
-  "version": "0.8.6",
+  "version": "0.8.8",
   "main": "dist/main.js",
   "files": [
     "dist"
@@ -16,7 +16,7 @@
     "@kong/swagger-ui-kong-theme-universal": "^4.2.6",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "swagger-client": "^3.20.0",
+    "swagger-client": "^3.20.2",
     "swagger-ui": "^4.19.1"
   },
   "repository": {

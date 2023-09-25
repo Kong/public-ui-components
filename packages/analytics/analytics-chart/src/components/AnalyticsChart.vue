@@ -48,6 +48,7 @@
     <div
       v-else
       class="analytics-chart-parent"
+      :style="{ height: heightRef, width }"
     >
       <TimeSeriesChart
         v-if="isTimeSeriesChart"
@@ -56,7 +57,6 @@
         :dimension-axes-title="timestampAxisTitle"
         :fill="chartOptions.fill"
         :granularity="timeSeriesGranularity"
-        :height="height"
         :legend-values="legendValues"
         :metric-axes-title="metricAxesTitle"
         :metric-unit="computedMetricUnit"
@@ -66,7 +66,6 @@
         :time-range-sec="timeRangeSec"
         :tooltip-title="tooltipTitle"
         :type="(chartOptions.type as (ChartTypes.TIMESERIES_LINE | ChartTypes.TIMESERIES_BAR))"
-        :width="width"
       />
       <StackedBarChart
         v-else-if="isBarChart"
@@ -80,6 +79,7 @@
         :orientation="barChartOrientation"
         :synthetics-data-key="syntheticsDataKey"
         :tooltip-title="tooltipTitle"
+        @height-update="handleHeightUpdate"
       />
       <DoughnutChart
         v-else-if="isDoughnutChart"
@@ -91,7 +91,6 @@
         :metric-unit="computedMetricUnit"
         :synthetics-data-key="syntheticsDataKey"
         :tooltip-title="tooltipTitle"
-        :width="width"
       />
     </div>
   </div>
@@ -104,7 +103,7 @@ import { ChartTypes, ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
 import type { PropType } from 'vue'
-import { computed, provide, toRef } from 'vue'
+import { computed, provide, ref, toRef } from 'vue'
 import { GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsExploreResult, AnalyticsExploreV2Result, GranularityFullObj } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette, hasMillisecondTimestamps } from '../utils'
@@ -151,7 +150,7 @@ const props = defineProps({
   height: {
     type: String,
     required: false,
-    default: '400px',
+    default: '500px',
     validator: (value: string): boolean => {
       return /(\d *)(px|%)/.test(value)
     },
@@ -177,6 +176,11 @@ const props = defineProps({
 })
 
 const { i18n } = composables.useI18n()
+const heightRef = ref<string>(props.height)
+
+const handleHeightUpdate = (height: number) => {
+  heightRef.value = `${height}px`
+}
 
 const computedChartData = computed(() => {
   return isTimeSeriesChart.value

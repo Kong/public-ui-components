@@ -86,7 +86,7 @@
       },
       "tags": {
         "label": "Tags",
-        "placeholder": "Enter a list of tags seperated by comma",
+        "placeholder": "Enter a list of tags separated by comma",
         "help": "e.g. tag1, tag2, tag3",
         "tooltip": "An optional set of strings associated with the Consumer for grouping and filtering."
       }

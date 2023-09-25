@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@1.2.9...@kong-ui-public/forms@1.2.10) (2023-09-20)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [1.2.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@1.2.8...@kong-ui-public/forms@1.2.9) (2023-09-18)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#794](https://github.com/Kong/public-ui-components/issues/794)) ([0b7aaae](https://github.com/Kong/public-ui-components/commit/0b7aaae787c607a1dce1427bd64cfbcdf054cc5a))
+
+
+
+
+
+## [1.2.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@1.2.7...@kong-ui-public/forms@1.2.8) (2023-09-16)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [1.2.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@1.2.6...@kong-ui-public/forms@1.2.7) (2023-09-14)
+
+
+### Bug Fixes
+
+* **forms:** remove `k-*` classes ([#787](https://github.com/Kong/public-ui-components/issues/787)) ([84c459c](https://github.com/Kong/public-ui-components/commit/84c459c37c512f974f85b4463f2d94ce39688512))
+
+
+
+
+
+## [1.2.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@1.2.5...@kong-ui-public/forms@1.2.6) (2023-09-14)
+
+
+### Bug Fixes
+
+* **forms:** check if translation exists ([#786](https://github.com/Kong/public-ui-components/issues/786)) ([e87a7a3](https://github.com/Kong/public-ui-components/commit/e87a7a367f034ad39c811e6e5c893d2d57edc4af))
+
+
+
+
+
+## [1.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@1.2.4...@kong-ui-public/forms@1.2.5) (2023-09-14)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [1.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@1.2.3...@kong-ui-public/forms@1.2.4) (2023-09-13)
 
 **Note:** Version bump only for package @kong-ui-public/forms
