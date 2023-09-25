@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.10.8...@kong-ui-public/analytics-chart@0.11.0) (2023-09-25)
+
+
+### Features
+
+* add support for multiple metrics ([#801](https://github.com/Kong/public-ui-components/issues/801)) ([70f9aff](https://github.com/Kong/public-ui-components/commit/70f9aff6d56fb3dc7e85b81f23047e33bb14a464))
+
+
+
+
+
 ## [0.10.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.10.7...@kong-ui-public/analytics-chart@0.10.8) (2023-09-25)
 
 
