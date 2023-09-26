@@ -847,8 +847,8 @@ importers:
   packages/portal/swagger-ui-web-component:
     dependencies:
       '@kong/swagger-ui-kong-theme-universal':
-        specifier: ^4.2.7
-        version: 4.2.7(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.4)(vue@3.3.4)
+        specifier: ^4.2.8
+        version: 4.2.8(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.4)(vue@3.3.4)
       react:
         specifier: 17.0.2
         version: 17.0.2
@@ -2022,8 +2022,8 @@ packages:
     transitivePeerDependencies:
       - debug
 
-  /@kong/swagger-ui-kong-theme-universal@4.2.7(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.4)(vue@3.3.4):
-    resolution: {integrity: sha512-RyW2GgPBVm1aoaWTjfwHFgnc7SYAMYEgJD/8A2sIKGHulwNsDr3MtVKQp4wynKE6BDFBbZYLWb4v9+855eB91Q==}
+  /@kong/swagger-ui-kong-theme-universal@4.2.8(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.4)(vue@3.3.4):
+    resolution: {integrity: sha512-HS2Fjjd/tLWCmcEeRefzsDotsdNcF2d10L5ugzOYOuIMTRbCXq6wB7lTKJZQDCa7uy5syIeDuku1QSNpnmHOyw==}
     peerDependencies:
       react: 17.0.2
     dependencies:
