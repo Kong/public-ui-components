@@ -66,7 +66,6 @@
           disable-character-limit
           :label="t('certificates.form.fields.cert_alt.label')"
           :readonly="form.isReadonly"
-          required
         >
           <template #label-tooltip>
             <i18nT
@@ -87,7 +86,6 @@
           disable-character-limit
           :label="t('certificates.form.fields.key_alt.label')"
           :readonly="form.isReadonly"
-          required
         >
           <template #label-tooltip>
             <i18nT
