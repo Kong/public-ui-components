@@ -48,7 +48,7 @@
     "lodash.clonedeep": "^4.5.0"
   },
   "devDependencies": {
-    "@kong/design-tokens": "^1.10.2",
+    "@kong/design-tokens": "^1.10.3",
     "@kong/kongponents": "^8.123.8",
     "@types/lodash.clonedeep": "^4.5.7",
     "vue": "^3.3.4",
