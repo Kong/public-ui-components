@@ -400,14 +400,14 @@ importers:
   packages/core/i18n:
     dependencies:
       '@formatjs/intl':
-        specifier: ^2.9.2
-        version: 2.9.2(typescript@5.2.2)
+        specifier: ^2.9.3
+        version: 2.9.3(typescript@5.2.2)
       flat:
         specifier: ^5.0.2
         version: 5.0.2
       intl-messageformat:
-        specifier: ^10.5.2
-        version: 10.5.2
+        specifier: ^10.5.3
+        version: 10.5.3
 
   packages/core/misc-widgets:
     devDependencies:
@@ -1844,8 +1844,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@formatjs/intl@2.9.2(typescript@5.2.2):
-    resolution: {integrity: sha512-brettBil92sd8i4dHEc6by8mqp4NbRvR2A94dZK9pQuSghkoqn2TIvwuaetmMNsBXexv7hYsehNQPi1qqkdPig==}
+  /@formatjs/intl@2.9.3(typescript@5.2.2):
+    resolution: {integrity: sha512-hclPdyCF1zk2XmhgdXfl5Sd30QEdRBnIijH7Vc1AWz2K0/saVRrxuL3UYn+m3xEyfOa4yDbTWVbmXDL0XEzlsQ==}
     peerDependencies:
       typescript: ^4.7 || 5
     peerDependenciesMeta:
@@ -1857,7 +1857,7 @@ packages:
       '@formatjs/icu-messageformat-parser': 2.6.2
       '@formatjs/intl-displaynames': 6.5.2
       '@formatjs/intl-listformat': 7.4.2
-      intl-messageformat: 10.5.2
+      intl-messageformat: 10.5.3
       tslib: 2.6.2
       typescript: 5.2.2
     dev: false
@@ -8352,8 +8352,8 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
-  /intl-messageformat@10.5.2:
-    resolution: {integrity: sha512-X4rlUNbgCc8/RdMhmvUEEZ38yNDn5S4r0u8n8yQH2OOdhsR46SmOuQsCKG35nRXmL5u2nxPsNN6qNhHoMm6FMQ==}
+  /intl-messageformat@10.5.3:
+    resolution: {integrity: sha512-TzKn1uhJBMyuKTO4zUX47SU+d66fu1W9tVzIiZrQ6hBqQQeYscBMIzKL/qEXnFbJrH9uU5VV3+T5fWib4SIcKA==}
     dependencies:
       '@formatjs/ecma402-abstract': 1.17.2
       '@formatjs/fast-memoize': 2.2.0
