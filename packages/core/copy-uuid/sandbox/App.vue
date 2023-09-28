@@ -48,6 +48,13 @@
         />
       </div>
       <div>
+        <h3>idTooltip</h3>
+        <CopyUuid
+          :id-tooltip="`The id is ${uuid}`"
+          :uuid="uuid"
+        />
+      </div>
+      <div>
         <h3>tooltip</h3>
         <CopyUuid
           tooltip="Click to copy"
