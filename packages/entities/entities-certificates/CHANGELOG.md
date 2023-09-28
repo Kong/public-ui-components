@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@1.1.25...@kong-ui-public/entities-certificates@1.1.26) (2023-09-28)
+
+
+### Bug Fixes
+
+* **entities-certificates:** use textarea for cert_alt and key_alt [FTI-5250] ([#809](https://github.com/Kong/public-ui-components/issues/809)) ([eebc59a](https://github.com/Kong/public-ui-components/commit/eebc59a6b955635357ff389545c5c10b518ba876))
+
+
+
+
+
 ## [1.1.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@1.1.24...@kong-ui-public/entities-certificates@1.1.25) (2023-09-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-certificates
