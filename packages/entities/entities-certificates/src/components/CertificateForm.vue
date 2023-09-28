@@ -59,23 +59,45 @@
           </template>
         </KTextArea>
 
-        <KInput
+        <KTextArea
           v-model.trim="form.fields.certAlt"
-          autocomplete="off"
+          class="certificate-form-textarea"
           data-testid="certificate-form-cert-alt"
+          disable-character-limit
           :label="t('certificates.form.fields.cert_alt.label')"
           :readonly="form.isReadonly"
-          type="text"
-        />
+        >
+          <template #label-tooltip>
+            <i18nT
+              keypath="certificates.form.fields.cert_alt.tooltip"
+              scope="global"
+            >
+              <template #emphasis>
+                <em>{{ t('certificates.form.fields.cert_alt.emphasis') }}</em>
+              </template>
+            </i18nT>
+          </template>
+        </KTextArea>
 
-        <KInput
+        <KTextArea
           v-model.trim="form.fields.keyAlt"
-          autocomplete="off"
+          class="certificate-form-textarea"
           data-testid="certificate-form-key-alt"
+          disable-character-limit
           :label="t('certificates.form.fields.key_alt.label')"
           :readonly="form.isReadonly"
-          type="text"
-        />
+        >
+          <template #label-tooltip>
+            <i18nT
+              keypath="certificates.form.fields.key_alt.tooltip"
+              scope="global"
+            >
+              <template #emphasis>
+                <em>{{ t('certificates.form.fields.key_alt.emphasis') }}</em>
+              </template>
+            </i18nT>
+          </template>
+        </KTextArea>
       </EntityFormSection>
 
       <EntityFormSection
