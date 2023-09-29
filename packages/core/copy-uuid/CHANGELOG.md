@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@1.1.27...@kong-ui-public/copy-uuid@1.2.0) (2023-09-29)
+
+
+### Features
+
+* **copy-uuid:** display tooltip on id hover ([#813](https://github.com/Kong/public-ui-components/issues/813)) ([db5a09f](https://github.com/Kong/public-ui-components/commit/db5a09f2b69f5ad54134ca60f7d1f373c62891eb))
+
+
+
+
+
 ## [1.1.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@1.1.26...@kong-ui-public/copy-uuid@1.1.27) (2023-09-28)
 
 **Note:** Version bump only for package @kong-ui-public/copy-uuid
