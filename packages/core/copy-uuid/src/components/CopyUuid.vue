@@ -1,9 +1,10 @@
 <template>
   <div class="kong-ui-copy-uuid">
-    <div
+    <component
+      :is="!!idTooltip ? 'KTooltip' : 'div'"
       v-if="format !== 'hidden'"
+      v-bind="idWrapperProps"
       data-testid="copy-id"
-      :title="uuid"
     >
       <div
         :class="[
@@ -14,10 +15,10 @@
       >
         {{ uuidFormat }}
       </div>
-    </div>
+    </component>
     <component
       :is="!!tooltip ? 'KTooltip' : 'div'"
-      v-bind="wrapperProps"
+      v-bind="buttonWrapperProps"
       class="uuid-icon-wrapper"
     >
       <KClipboardProvider v-slot="{ copyToClipboard }">
@@ -55,6 +56,10 @@ const props = defineProps({
   uuid: {
     type: String,
     required: true,
+  },
+  idTooltip: {
+    type: String,
+    default: '',
   },
   truncated: {
     type: Boolean,
@@ -95,9 +100,20 @@ const emit = defineEmits<{
 
 const notifyTrimLength = 15
 const notify = props.notify || inject(COPY_UUID_NOTIFY_KEY, () => { })
+const idWrapperProps = computed(() => {
+  return props.idTooltip
+    ? {
+      label: props.idTooltip,
+      positionFixed: true,
+      placement: 'bottomStart',
+    }
+    : {
+      title: props.uuid,
+    }
+})
 const hasSuccessTooltip = computed((): boolean => !!(props.tooltip && props.successTooltip))
 const tooltipText = ref(props.tooltip)
-const wrapperProps = computed(() => {
+const buttonWrapperProps = computed(() => {
   return props.tooltip
     ? {
       label: tooltipText.value,

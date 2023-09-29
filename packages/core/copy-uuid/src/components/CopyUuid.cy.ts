@@ -263,6 +263,21 @@ describe('<CopyUuid />', () => {
       cy.get(container).find('.k-tooltip .k-popover-content').should('contain.text', tooltipText)
     })
 
+    it('renders with `idTooltip` prop set', () => {
+      const tooltipText = 'Custom tooltip text!'
+
+      cy.mount(CopyUuid, {
+        props: {
+          uuid,
+          idTooltip: tooltipText,
+        },
+      })
+
+      cy.get(container).should('be.visible')
+      cy.get(container).find('.k-tooltip').should('exist')
+      cy.get(container).find('.k-tooltip .k-popover-content').should('contain.text', tooltipText)
+    })
+
     it('renders `successTooltip` with `tooltip` prop set', () => {
       const tooltipText = 'Click to copy'
       const successText = 'Copied!'
