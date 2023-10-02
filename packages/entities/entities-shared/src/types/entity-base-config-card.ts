@@ -6,9 +6,7 @@ export interface BaseEntityConfig {
 }
 
 /** Konnect base form config */
-export interface KonnectBaseEntityConfig extends KonnectConfig, BaseEntityConfig {
-  jsonYamlEnabled?: boolean
-}
+export interface KonnectBaseEntityConfig extends KonnectConfig, BaseEntityConfig {}
 
 /** Kong Manager base form config */
 export interface KongManagerBaseEntityConfig extends KongManagerConfig, BaseEntityConfig {}

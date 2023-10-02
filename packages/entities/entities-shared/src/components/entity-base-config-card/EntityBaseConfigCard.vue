@@ -111,13 +111,6 @@
             {{ pType === 'advanced' ? t('baseConfigCard.sections.advanced') : t('baseConfigCard.sections.plugin') }}
           </div>
 
-          <!-- <ConfigCardDisplay
-            v-for="propertyItem in propertyLists[pType as keyof typeof propertyLists]"
-            :key="propertyItem.key"
-            :item="propertyItem"
-            :p-type="pType"
-          /> -->
-
           <ConfigCardItem
             v-for="propertyItem in propertyLists[pType as keyof typeof propertyLists]"
             :key="propertyItem.key"
