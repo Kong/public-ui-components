@@ -83,7 +83,7 @@
 
       <!-- Properties Content -->
       <div
-        v-if="record && (config.app === 'konnect' && config.jsonYamlEnabled)"
+        v-if="(config.app === 'konnect' && config.jsonYamlEnabled)"
         class="config-card-details-section"
       >
         <ConfigCardDisplay
