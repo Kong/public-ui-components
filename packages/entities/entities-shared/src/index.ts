@@ -1,5 +1,6 @@
 import EntityBaseConfigCard from './components/entity-base-config-card/EntityBaseConfigCard.vue'
 import ConfigCardItem from './components/entity-base-config-card/ConfigCardItem.vue'
+import ConfigCardDisplay from './components/entity-base-config-card/ConfigCardDisplay.vue'
 import InternalLinkItem from './components/entity-base-config-card/InternalLinkItem.vue'
 import EntityBaseForm from './components/entity-base-form/EntityBaseForm.vue'
 import EntityBaseTable from './components/entity-base-table/EntityBaseTable.vue'
@@ -14,7 +15,7 @@ import composables from './composables'
 const { useAxios, useDeleteUrlBuilder, useErrors, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useGatewayFeatureSupported } = composables
 
 // Components
-export { EntityBaseConfigCard, ConfigCardItem, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection }
+export { EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection }
 
 // Composables
 export { useAxios, useDeleteUrlBuilder, useErrors, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useGatewayFeatureSupported }

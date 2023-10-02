@@ -17,7 +17,38 @@
     <template #actions>
       <div class="config-card-actions">
         <slot name="actions" />
-        <KClipboardProvider v-slot="{ copyToClipboard }">
+        <KLabel
+          v-if="config.app === 'konnect' && config.jsonYamlEnabled"
+          class="config-format-select-label"
+          data-testid="config-format-select-label"
+        >
+          {{ label }}
+        </KLabel>
+        <KSelect
+          v-if="config.app === 'konnect' && config.jsonYamlEnabled"
+          appearance="select"
+          :items="configFormatItems"
+          @change="handleChange"
+        />
+
+        <KButton
+          v-if="hasConfigCardDocs && config.app === 'konnect' && config.jsonYamlEnabled"
+          appearance="btn-link"
+          class="book-icon"
+          @click="handleDocumentationClick"
+        >
+          <template #icon>
+            <KIcon
+              color="#0044f4"
+              icon="book"
+            />
+          </template>
+        </KButton>
+
+        <KClipboardProvider
+          v-if="((config.app === 'konnect' && !config.jsonYamlEnabled) || config.app === 'kongManager')"
+          v-slot="{ copyToClipboard }"
+        >
           <KButton
             v-if="!isLoading && !fetchDetailsError"
             appearance="btn-link"
@@ -51,7 +82,22 @@
       </KEmptyState>
 
       <!-- Properties Content -->
-      <div class="config-card-details-section">
+      <div
+        v-if="record && (config.app === 'konnect' && config.jsonYamlEnabled)"
+        class="config-card-details-section"
+      >
+        <ConfigCardDisplay
+          :format="configFormat"
+          :item="propertyLists"
+          :prop-list-types="propListTypes"
+          :record="record"
+        />
+      </div>
+
+      <div
+        v-if="config.app === 'kongManager' || (config.app === 'konnect' && !config.jsonYamlEnabled)"
+        class="config-card-details-section"
+      >
         <div
           v-for="pType in propListTypes"
           :key="`config-card-details-${pType}-props`"
@@ -64,6 +110,13 @@
           >
             {{ pType === 'advanced' ? t('baseConfigCard.sections.advanced') : t('baseConfigCard.sections.plugin') }}
           </div>
+
+          <!-- <ConfigCardDisplay
+            v-for="propertyItem in propertyLists[pType as keyof typeof propertyLists]"
+            :key="propertyItem.key"
+            :item="propertyItem"
+            :p-type="pType"
+          /> -->
 
           <ConfigCardItem
             v-for="propertyItem in propertyLists[pType as keyof typeof propertyLists]"
@@ -107,6 +160,8 @@ import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, Configuratio
 import { ConfigurationSchemaType, ConfigurationSchemaSection } from '../../types'
 import composables from '../../composables'
 import ConfigCardItem from './ConfigCardItem.vue'
+import ConfigCardDisplay from './ConfigCardDisplay.vue'
+import { useRouter } from 'vue-router'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void,
@@ -176,9 +231,30 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * The label text to show for the select Format element
+   */
+  label: {
+    type: String,
+    default: 'Format: ',
+    required: false,
+  },
+  /**
+   * Boolean to determine whether to display the documentation button
+   */
+  hasConfigCardDocs: {
+    type: Boolean,
+    default: false,
+  },
+  configCardDoc: {
+    type: String,
+    default: '',
+    required: false,
+  },
 })
 
 const slots = useSlots()
+const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
 const { convertKeyToTitle } = composables.useStringHelpers()
@@ -186,6 +262,28 @@ const { convertKeyToTitle } = composables.useStringHelpers()
 const { axiosInstance } = composables.useAxios({
   headers: props.config?.requestHeaders,
 })
+
+const configFormatItems = [
+  {
+    label: 'Structured',
+    value: 'structured',
+    selected: true,
+  },
+  {
+    label: 'JSON',
+    value: 'json',
+  },
+  {
+    label: 'YAML',
+    value: 'yaml',
+  },
+]
+
+const configFormat = ref('structured')
+
+const handleChange = (payload: any): void => {
+  configFormat.value = payload?.value
+}
 
 /**
  * default ordering for these common fields:
@@ -387,6 +485,10 @@ const handleClickCopy = (executeCopy: Function): void => {
   }
 }
 
+const handleDocumentationClick = (): void => {
+  router.push(props.configCardDoc)
+}
+
 watch(isLoading, (loading: boolean) => {
   // Emit the loading state for the host app
   emit('loading', loading)
@@ -438,7 +540,13 @@ onBeforeMount(async () => {
   }
 
   .config-card-actions {
+    align-items: center;
     display: flex;
+
+    .config-format-select-label {
+      margin-bottom: $kui-space-0;
+      margin-right: $kui-space-40;
+    }
   }
 
   .config-card-prop-section-title {
@@ -451,6 +559,10 @@ onBeforeMount(async () => {
 
   :deep(.config-card-details-row:last-of-type) {
     border-bottom: none;
+  }
+
+  .book-icon {
+      margin-left: $kui-space-40;
   }
 }
 </style>
