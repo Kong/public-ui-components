@@ -4,6 +4,11 @@ on:
     branches:
       - main
   pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - labeled
     branches:
       - main
 
@@ -216,7 +221,7 @@ jobs:
         uses: Kong/github-action-dist-size-checker@main
 
       - name: Publish Previews
-        if: ${{github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && github.actor != 'renovate[bot]'}}
+        if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) }}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
