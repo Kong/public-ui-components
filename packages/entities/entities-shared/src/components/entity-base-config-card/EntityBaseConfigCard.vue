@@ -18,21 +18,21 @@
       <div class="config-card-actions">
         <slot name="actions" />
         <KLabel
-          v-if="config.app === 'konnect' && config.jsonYamlEnabled"
+          v-if="konnectJsonYamlEnabled"
           class="config-format-select-label"
           data-testid="config-format-select-label"
         >
           {{ label }}
         </KLabel>
         <KSelect
-          v-if="config.app === 'konnect' && config.jsonYamlEnabled"
+          v-if="konnectJsonYamlEnabled"
           appearance="select"
           :items="configFormatItems"
           @change="handleChange"
         />
 
         <KButton
-          v-if="hasConfigCardDocs && config.app === 'konnect' && config.jsonYamlEnabled"
+          v-if="showBookButton"
           appearance="btn-link"
           class="book-icon"
           @click="handleDocumentationClick"
@@ -83,7 +83,7 @@
 
       <!-- Properties Content -->
       <div
-        v-if="(config.app === 'konnect' && config.jsonYamlEnabled)"
+        v-if="konnectJsonYamlEnabled"
         class="config-card-details-section"
       >
         <ConfigCardDisplay
@@ -235,7 +235,7 @@ const props = defineProps({
   /**
    * Boolean to determine whether to display the documentation button
    */
-  hasConfigCardDocs: {
+  hasConfigCardDoc: {
     type: Boolean,
     default: false,
   },
@@ -272,6 +272,8 @@ const configFormatItems = [
   },
 ]
 
+const konnectJsonYamlEnabled = computed(() => props.config.app === 'konnect' && props.config.jsonYamlEnabled)
+const showBookButton = computed(() => props.hasConfigCardDoc && konnectJsonYamlEnabled.value)
 const configFormat = ref('structured')
 
 const handleChange = (payload: any): void => {
