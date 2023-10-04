@@ -2039,13 +2039,23 @@ packages:
 
   /@kong/kongponents@8.123.9(vue-router@4.2.5)(vue@3.3.4):
     resolution: {integrity: sha512-hvUkfUyXq99bdwlxhdNkzcMqSz3rmuPWgaQJGNH22RBk6bsjsanKYgGclYW1HupPXpFVcTBp+trEuazqU+uZmg==}
+  /@kong/icons@1.7.3(vue@3.3.4):
+    resolution: {integrity: sha512-VI/7fpbH4WoNShy095JzOqAQs1SAMvWSFnKfD1MreQyR6b3Usn00ugkgF2j5PVP/CvflZ63U9Ay7RlUtW/Ih/w==}
+    engines: {node: '>=v18.17.1'}
+    peerDependencies:
+      vue: ^3.3.4
+    dependencies:
+      vue: 3.3.4
+    dev: false
+
+  /@kong/kongponents@8.123.8(vue-router@4.2.5)(vue@3.3.4):
+    resolution: {integrity: sha512-NXiIAP4ojBu8JpaeUhnLByA4qTV1BCV5mtUa631BERy03NS00N3qB76xtnZ8JQzWI/IljdMaurvRnVtdEwNN9Q==}
     engines: {node: '>=v16.20.2'}
     peerDependencies:
-      axios: ^0.27.2
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.2.4
     dependencies:
-      axios: 1.4.0
+      axios: 0.27.2
       date-fns: 2.30.0
       date-fns-tz: 2.0.0(date-fns@2.30.0)
       focus-trap: 7.5.2
@@ -2083,7 +2093,7 @@ packages:
       util: 0.12.5
     transitivePeerDependencies:
       - '@babel/core'
-      - axios
+      - debug
       - mkdirp
       - prop-types
       - react-dom
