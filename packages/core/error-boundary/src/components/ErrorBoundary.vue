@@ -8,20 +8,23 @@
     :error="state.error"
     name="fallback"
   >
-    <div class="kong-ui-public-error-boundary">
+    <div
+      class="kong-ui-public-error-boundary"
+      data-testid="kong-ui-public-error-boundary-fallback-content"
+    >
       <p>This is the <b>ErrorBoundary</b> fallback content.</p>
     </div>
   </slot>
 </template>
 
 <script setup lang="ts">
-import { reactive, onErrorCaptured } from 'vue'
+import { provide, inject, reactive, onErrorCaptured } from 'vue'
 import type { ComponentPublicInstance, PropType } from 'vue'
+import { KONG_UI_ERROR_BOUNDARY_TAGS_INJECTION_KEY } from '../constants'
 
 // Inject any parent ErrorBoundary `tags` into the values passed in this instance and combine them
-// const injectionKey = 'error-boundary-injection-key' // Probably cannot be a Symbol
 // const tagSet = new Set()
-// const existingTags = inject(injectionKey, [])
+// const existingTags = inject(KONG_UI_ERROR_BOUNDARY_TAGS_INJECTION_KEY, [])
 
 const props = defineProps({
   tags: {
@@ -54,7 +57,8 @@ onErrorCaptured((error: unknown, instance: ComponentPublicInstance | null, info:
 
   console.log('after error')
 
-  // We **must** swallow the error in order to prevent a page from breaking
+  // We **must** return `false` to swallow the error in order to prevent the
+  // rest of the page from breaking in some scenarios
   return false
 })
 </script>
