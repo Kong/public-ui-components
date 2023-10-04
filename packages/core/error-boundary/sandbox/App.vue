@@ -5,6 +5,18 @@
         <p>This simple buggy component will throw an error in the <code>onMounted</code> hook. Even though the error is unhandled, the app will continue to function even if the error is not captured.</p>
         <ErrorBoundary>
           <BuggyComponent :error="true" />
+          <template
+            #fallback="slotProps"
+          >
+            <div class="fallback-error-container">
+              <p>This component has custom fallback UI</p>
+              <p><code>slotProps.error.message</code>: {{ slotProps.error.message }}</p>
+              <WarningIcon
+                color="red"
+                size="64"
+              />
+            </div>
+          </template>
         </ErrorBoundary>
       </div>
 
@@ -12,13 +24,6 @@
         <p>This app-crashing buggy component will throw an error inside a <code>computed</code> variable. Even though this error is <em>also</em> unhandled, the app will <b>crash</b> if the error is not captured.</p>
         <ErrorBoundary>
           <AppCrashBuggyComponent :error="true" />
-          <template #fallback>
-            <p>This component has custom fallback UI</p>
-            <WarningIcon
-              color="red"
-              size="64"
-            />
-          </template>
         </ErrorBoundary>
       </div>
 
@@ -56,6 +61,12 @@ const count = ref<number>(0)
   padding: $kui-space-70;
 }
 
+.fallback-error-container {
+  border: 1px solid $kui-color-border-danger;
+  border-radius: $kui-border-radius-40;
+  padding: $kui-space-40;
+}
+
 .component-container {
   border: 1px solid $kui-color-border-neutral-weak;
   border-radius: $kui-border-radius-40;
@@ -79,5 +90,15 @@ html,
 body {
   margin: 0;
   padding: 0;
+}
+
+code {
+  border: 1px solid $kui-color-border;
+  border-radius: $kui-border-radius-20;
+  color: $kui-color-text-neutral;
+  font-family: $kui-font-family-code;
+  font-size: $kui-font-size-20;
+  margin: 0 $kui-space-10;
+  padding: $kui-space-20 $kui-space-10;
 }
 </style>
