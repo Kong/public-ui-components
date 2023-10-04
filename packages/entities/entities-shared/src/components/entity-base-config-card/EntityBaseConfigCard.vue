@@ -235,7 +235,7 @@ const props = defineProps({
   /**
    * Boolean to determine whether to display the documentation button
    */
-  hasConfigCardDoc: {
+  hideConfigCardDoc: {
     type: Boolean,
     default: false,
   },
@@ -273,7 +273,7 @@ const configFormatItems = [
 ]
 
 const konnectJsonYamlEnabled = computed(() => props.config.app === 'konnect' && props.config.jsonYamlEnabled)
-const showBookButton = computed(() => props.hasConfigCardDoc && konnectJsonYamlEnabled.value)
+const showBookButton = computed(() => !props.hideConfigCardDoc && konnectJsonYamlEnabled.value)
 const configFormat = ref('structured')
 
 const handleChange = (payload: any): void => {
