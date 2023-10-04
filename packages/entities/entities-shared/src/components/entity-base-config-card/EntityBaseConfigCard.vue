@@ -274,8 +274,7 @@ const configFormatItems = [
 ]
 
 const konnectJsonYamlEnabled = computed(() => props.config.app === 'konnect' && props.config.jsonYamlEnabled)
-const displayDocIcon = computed(() => props.hideConfigCardDoc)
-const showBookButton = computed(() => !displayDocIcon.value && konnectJsonYamlEnabled.value)
+const showBookButton = computed(() => !props.hideConfigCardDoc && konnectJsonYamlEnabled.value)
 const configFormat = ref('structured')
 
 const handleChange = (payload: any): void => {

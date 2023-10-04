@@ -2,8 +2,10 @@
   <div class="kong-ui-entities-route-entity-config-card">
     <EntityBaseConfigCard
       :config="config"
+      :config-card-doc="configCardDoc"
       :config-schema="configSchema"
       :fetch-url="fetchUrl"
+      :hide-config-card-doc="hideConfigCardDoc"
       :hide-title="hideTitle"
       @copy:success="(entity: any) => $emit('copy:success', entity)"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
@@ -197,6 +199,18 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Boolean to determine whether to display the documentation button
+   */
+  hideConfigCardDoc: {
+    type: Boolean,
+    default: false,
+  },
+  configCardDoc: {
+    type: String,
+    default: '',
+    required: false,
   },
 })
 
