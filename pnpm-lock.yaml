@@ -681,6 +681,9 @@ importers:
       '@kong-ui-public/core':
         specifier: workspace:^
         version: link:../../core/core
+      '@kong/icons':
+        specifier: ^1.7.3
+        version: 1.7.3(vue@3.3.4)
       compare-versions:
         specifier: ^6.1.0
         version: 6.1.0
@@ -2038,10 +2041,11 @@ packages:
     resolution: {integrity: sha512-hvUkfUyXq99bdwlxhdNkzcMqSz3rmuPWgaQJGNH22RBk6bsjsanKYgGclYW1HupPXpFVcTBp+trEuazqU+uZmg==}
     engines: {node: '>=v16.20.2'}
     peerDependencies:
+      axios: ^0.27.2
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.2.4
     dependencies:
-      axios: 0.27.2
+      axios: 1.4.0
       date-fns: 2.30.0
       date-fns-tz: 2.0.0(date-fns@2.30.0)
       focus-trap: 7.5.2
@@ -2079,7 +2083,7 @@ packages:
       util: 0.12.5
     transitivePeerDependencies:
       - '@babel/core'
-      - debug
+      - axios
       - mkdirp
       - prop-types
       - react-dom

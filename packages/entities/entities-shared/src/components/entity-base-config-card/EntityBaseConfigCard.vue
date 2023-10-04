@@ -38,9 +38,8 @@
           @click="handleDocumentationClick"
         >
           <template #icon>
-            <KIcon
-              color="#0044f4"
-              icon="book"
+            <BookIcon
+              :size="KUI_ICON_SIZE_40"
             />
           </template>
         </KButton>
@@ -155,6 +154,8 @@ import composables from '../../composables'
 import ConfigCardItem from './ConfigCardItem.vue'
 import ConfigCardDisplay from './ConfigCardDisplay.vue'
 import { useRouter } from 'vue-router'
+import { BookIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void,
@@ -273,7 +274,8 @@ const configFormatItems = [
 ]
 
 const konnectJsonYamlEnabled = computed(() => props.config.app === 'konnect' && props.config.jsonYamlEnabled)
-const showBookButton = computed(() => !props.hideConfigCardDoc && konnectJsonYamlEnabled.value)
+const displayDocIcon = computed(() => props.hideConfigCardDoc)
+const showBookButton = computed(() => !displayDocIcon.value && konnectJsonYamlEnabled.value)
 const configFormat = ref('structured')
 
 const handleChange = (payload: any): void => {

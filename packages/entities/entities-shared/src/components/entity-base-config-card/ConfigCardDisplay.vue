@@ -98,6 +98,7 @@ const props = defineProps({
     type: Array as PropType<String[]>,
     required: false,
     default: () => ([]),
+    validator: (val: string) => ['basic', 'advanced', 'plugin'].includes(val),
   },
   record: {
     type: Object as PropType<Record<string, any>>,
@@ -117,8 +118,7 @@ const yamlContent = ref('')
 watch(() => props.format, () => {
   if (props.format === 'json') {
     jsonContent.value = JSON.stringify(props.record, null, 2)
-  }
-  if (props.format === 'yaml') {
+  } else if (props.format === 'yaml') {
     yamlContent.value = yaml.dump(props.record)
   }
 
@@ -130,7 +130,7 @@ watch(() => props.format, () => {
 .config-card-prop-section-title {
   color: $kui-color-text;
   font-size: $kui-font-size-40;
-  font-weight: 600;
+  font-weight: $kui-font-weight-semibold;
   margin-bottom: $kui-space-60;
   margin-top: $kui-space-110;
 }
