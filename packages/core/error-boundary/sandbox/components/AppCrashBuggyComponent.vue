@@ -1,6 +1,6 @@
 <template>
   <div class="buggy-component">
-    <DangerCircleIcon size="64" />
+    <KongIcon size="64" />
     <p>{{ computedName }}</p>
     <p>This component <b>WILL</b> crash the page with an unhandled error.</p>
   </div>
@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { DangerCircleIcon } from '@kong/icons'
+import { KongIcon } from '@kong/icons'
 
 const props = defineProps({
   error: {

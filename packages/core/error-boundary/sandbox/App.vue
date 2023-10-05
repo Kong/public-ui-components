@@ -3,8 +3,18 @@
     <main>
       <div class="component-container">
         <p>This simple buggy component will throw an error in the <code>onMounted</code> hook. Even though the error is unhandled, the app will continue to function even if the error is not captured.</p>
-        <ErrorBoundary>
-          <BuggyComponent :error="true" />
+        <ErrorBoundary :tags="['parent-error-tag']">
+          <ErrorBoundary
+            :on-error="secondaryErrorCallbackWillNotBeTriggered"
+            :tags="['secondary-error-tag']"
+          >
+            <ErrorBoundary
+              :on-error="primaryErrorCallback"
+              :tags="['tertiary-error-tag']"
+            >
+              <BuggyComponent :error="true" />
+            </ErrorBoundary>
+          </ErrorBoundary>
           <template
             #fallback="slotProps"
           >
@@ -23,7 +33,7 @@
       <div class="component-container">
         <p>This app-crashing buggy component will throw an error inside a <code>computed</code> variable. Even though this error is <em>also</em> unhandled, the app will <b>crash</b> if the error is not captured.</p>
         <ErrorBoundary>
-          <AppCrashBuggyComponent :error="true" />
+          <AppCrashBuggyComponent :error="false" />
         </ErrorBoundary>
       </div>
 
@@ -53,6 +63,14 @@ import AppCrashBuggyComponent from './components/AppCrashBuggyComponent.vue'
 import { WarningIcon } from '@kong/icons'
 
 const count = ref<number>(0)
+
+const primaryErrorCallback = () => {
+  console.log('primary error callback')
+}
+
+const secondaryErrorCallbackWillNotBeTriggered = () => {
+  console.log('this secondary error callback should never be called')
+}
 </script>
 
 <style lang="scss" scoped>
@@ -68,7 +86,7 @@ const count = ref<number>(0)
 }
 
 .component-container {
-  border: 1px solid $kui-color-border-neutral-weak;
+  border: 1px solid $kui-color-border-primary;
   border-radius: $kui-border-radius-40;
   margin-bottom: $kui-space-70;
   padding: $kui-space-70;
