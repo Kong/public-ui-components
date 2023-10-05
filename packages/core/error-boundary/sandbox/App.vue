@@ -12,27 +12,27 @@
               :on-error="primaryErrorCallback"
               :tags="['tertiary-error-tag']"
             >
-              <BuggyComponent :error="true" />
+              <BuggyComponent :error="false" />
+              <template
+                #fallback="{ error }"
+              >
+                <div class="fallback-error-container">
+                  <p>This component has custom fallback UI</p>
+                  <p><code>slotProps.error.message</code>: {{ error.message }}</p>
+                  <WarningIcon
+                    color="red"
+                    size="64"
+                  />
+                </div>
+              </template>
             </ErrorBoundary>
           </ErrorBoundary>
-          <template
-            #fallback="slotProps"
-          >
-            <div class="fallback-error-container">
-              <p>This component has custom fallback UI</p>
-              <p><code>slotProps.error.message</code>: {{ slotProps.error.message }}</p>
-              <WarningIcon
-                color="red"
-                size="64"
-              />
-            </div>
-          </template>
         </ErrorBoundary>
       </div>
 
       <div class="component-container">
         <p>This app-crashing buggy component will throw an error inside a <code>computed</code> variable. Even though this error is <em>also</em> unhandled, the app will <b>crash</b> if the error is not captured.</p>
-        <ErrorBoundary>
+        <ErrorBoundary :tags="['parent-error-tag']">
           <AppCrashBuggyComponent :error="false" />
         </ErrorBoundary>
       </div>
@@ -64,8 +64,8 @@ import { WarningIcon } from '@kong/icons'
 
 const count = ref<number>(0)
 
-const primaryErrorCallback = () => {
-  console.log('primary error callback')
+const primaryErrorCallback = (payload) => {
+  console.log('primary error callback', payload)
 }
 
 const secondaryErrorCallbackWillNotBeTriggered = () => {

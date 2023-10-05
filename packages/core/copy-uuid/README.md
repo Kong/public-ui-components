@@ -45,7 +45,7 @@ A Kong UI component for displaying uuid and copying it to clipboard.
 Install the component in your host application
 
 ```sh
-yarn add @kong-ui/copy-uuid
+yarn add @kong-ui-public/copy-uuid
 ```
 
 ### Register
@@ -55,8 +55,8 @@ You can register `copy-uuid` globally or locally.
 ```typescript
 // Global registration
 import { createApp } from 'vue'
-import CopyUuid, { CopyUuidNotifyParam } from '@kong-ui/copy-uuid'
-import '@kong-ui/copy-uuid/dist/style.css'
+import CopyUuid, { CopyUuidNotifyParam } from '@kong-ui-public/copy-uuid'
+import '@kong-ui-public/copy-uuid/dist/style.css'
 
 const app = createApp(App)
 
@@ -70,7 +70,7 @@ app.use(CopyUuid)
 </template>
 
 <script setup lang="ts">
-import { CopyUuid } from '@kong-ui/copy-uuid'
+import { CopyUuid } from '@kong-ui-public/copy-uuid'
 </script>
 ```
 
@@ -83,8 +83,8 @@ If you're using `copy-uuid` as a vue plugin:
 ```typescript
 // app entry file
 import { createApp } from 'vue'
-import CopyUuid, { CopyUuidNotifyParam } from '@kong-ui/copy-uuid'
-import '@kong-ui/copy-uuid/dist/style.css'
+import CopyUuid, { CopyUuidNotifyParam } from '@kong-ui-public/copy-uuid'
+import '@kong-ui-public/copy-uuid/dist/style.css'
 
 const app = createApp(App)
 
@@ -100,7 +100,7 @@ If you prefer using `copy-uuid` as a component:
 ```typescript
 // app entry file
 import { createApp } from 'vue'
-import { COPY_UUID_NOTIFY_KEY, CopyUuidNotifyParam } from '@kong-ui/copy-uuid'
+import { COPY_UUID_NOTIFY_KEY, CopyUuidNotifyParam } from '@kong-ui-public/copy-uuid'
 
 const app = createApp(App)
 
@@ -120,7 +120,7 @@ You could also set up a `notify` method for each `copy-uuid` component instance 
 </template>
 
 <script setup lang="ts">
-  import { CopyUuidNotifyParam } from '@kong-ui/copy-uuid'
+  import { CopyUuidNotifyParam } from '@kong-ui-public/copy-uuid'
 
   const notify = (param: CopyUuidNotifyParam) => {
     // Notify your end users
@@ -133,7 +133,7 @@ You could also set up a `notify` method for each `copy-uuid` component instance 
 TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/core/copy-uuid/src/types/) and can be directly imported into your host application. The following interfaces are available for import:
 
 ```ts
-import type { CopyUuidNotifyParam, CopyUuidInstallOptions } from '@kong-ui/copy-uuid'
+import type { CopyUuidNotifyParam, CopyUuidInstallOptions } from '@kong-ui-public/copy-uuid'
 ```
 
 ## Props

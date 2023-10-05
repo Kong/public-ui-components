@@ -66,7 +66,7 @@
 
 - The `importPackage` asynchronous function can only be called within Vue's `setup()` function, typically inside one of the `defineAsyncComponent` or `onBeforeMount` hooks.
 - You must provide `libName` that matches the exact build.lib.name value from the component package
-- User should pass script url: `@kong-ui/demo-component@1` and then export the UMD by default, and prefix the URL in the importPackage script so that the user doesn't have to provide it, e.g. `https://packages.konghq.tech/`
+- User should pass script url: `@kong-ui-public/demo-component@1` and then export the UMD by default, and prefix the URL in the importPackage script so that the user doesn't have to provide it, e.g. `https://packages.konghq.tech/`
 
 ```html
 <template>
@@ -91,7 +91,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, onBeforeMount } from 'vue'
-import { usePackage } from '@kong-ui/demo-core'
+import { usePackage } from '@kong-ui-public/demo-core'
 
 // Import 2 button components from the same package
 const { importPackage: importButtons, loadingPackage: loadingButtons } = usePackage({
