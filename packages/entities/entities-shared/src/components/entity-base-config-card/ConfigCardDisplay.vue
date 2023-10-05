@@ -115,10 +115,10 @@ const hasTooltip = (item: RecordItem): boolean => !!(props.item.tooltip || slots
 const jsonContent = ref('')
 const yamlContent = ref('')
 
-watch(() => props.format, () => {
-  if (props.format === 'json') {
+watch(() => props.format, (format: string) => {
+  if (format === 'json') {
     jsonContent.value = JSON.stringify(props.record, null, 2)
-  } else if (props.format === 'yaml') {
+  } else if (format === 'yaml') {
     yamlContent.value = yaml.dump(props.record)
   }
 
