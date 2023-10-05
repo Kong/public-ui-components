@@ -3,6 +3,8 @@ import type { KonnectConfig, KongManagerConfig } from './index'
 export interface BaseEntityConfig {
   /** the ID of the entity */
   entityId: string
+  /** Feature flag value for Config card format: khcp-8778-json-yaml-configurations */
+  jsonYamlEnabled?: boolean
 }
 
 /** Konnect base form config */

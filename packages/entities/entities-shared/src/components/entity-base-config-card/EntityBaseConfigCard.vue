@@ -18,34 +18,39 @@
       <div class="config-card-actions">
         <slot name="actions" />
         <KLabel
-          v-if="konnectJsonYamlEnabled"
+          v-if="config.jsonYamlEnabled"
           class="config-format-select-label"
           data-testid="config-format-select-label"
         >
           {{ label }}
         </KLabel>
         <KSelect
-          v-if="konnectJsonYamlEnabled"
+          v-if="config.jsonYamlEnabled"
           appearance="select"
+          data-testid="select-config-format"
           :items="configFormatItems"
           @change="handleChange"
         />
 
         <KButton
-          v-if="showBookButton"
+          v-if="showBookButton && configCardDoc"
           appearance="btn-link"
           class="book-icon"
-          @click="handleDocumentationClick"
+          data-testid="book-icon"
         >
-          <template #icon>
+          <a
+            :href="configCardDoc"
+            rel="noopener"
+            target="_blank"
+          >
             <BookIcon
               :size="KUI_ICON_SIZE_40"
             />
-          </template>
+          </a>
         </KButton>
 
         <KClipboardProvider
-          v-if="((config.app === 'konnect' && !config.jsonYamlEnabled) || config.app === 'kongManager')"
+          v-if="!config.jsonYamlEnabled"
           v-slot="{ copyToClipboard }"
         >
           <KButton
@@ -82,7 +87,7 @@
 
       <!-- Properties Content -->
       <div
-        v-if="konnectJsonYamlEnabled"
+        v-if="config.jsonYamlEnabled"
         class="config-card-details-section"
       >
         <ConfigCardDisplay
@@ -93,8 +98,9 @@
         />
       </div>
 
+      <!-- TODO: Remove below div once jsonYaml configuration Feature Flag is enabled -->
       <div
-        v-if="config.app === 'kongManager' || (config.app === 'konnect' && !config.jsonYamlEnabled)"
+        v-else
         class="config-card-details-section"
       >
         <div
@@ -153,7 +159,6 @@ import { ConfigurationSchemaType, ConfigurationSchemaSection } from '../../types
 import composables from '../../composables'
 import ConfigCardItem from './ConfigCardItem.vue'
 import ConfigCardDisplay from './ConfigCardDisplay.vue'
-import { useRouter } from 'vue-router'
 import { BookIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 
@@ -239,7 +244,11 @@ const props = defineProps({
   hideConfigCardDoc: {
     type: Boolean,
     default: false,
+    required: false,
   },
+  /**
+   * External link for documentation
+   */
   configCardDoc: {
     type: String,
     default: '',
@@ -248,7 +257,6 @@ const props = defineProps({
 })
 
 const slots = useSlots()
-const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
 const { convertKeyToTitle } = composables.useStringHelpers()
@@ -273,8 +281,7 @@ const configFormatItems = [
   },
 ]
 
-const konnectJsonYamlEnabled = computed(() => props.config.app === 'konnect' && props.config.jsonYamlEnabled)
-const showBookButton = computed(() => !props.hideConfigCardDoc && konnectJsonYamlEnabled.value)
+const showBookButton = computed(() => !props.hideConfigCardDoc && props.config.jsonYamlEnabled)
 const configFormat = ref('structured')
 
 const handleChange = (payload: any): void => {
@@ -479,10 +486,6 @@ const handleClickCopy = (executeCopy: Function): void => {
   } else {
     emit('copy:error')
   }
-}
-
-const handleDocumentationClick = (): void => {
-  router.push(props.configCardDoc)
 }
 
 watch(isLoading, (loading: boolean) => {

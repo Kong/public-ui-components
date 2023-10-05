@@ -207,6 +207,9 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * External link for documentation
+   */
   configCardDoc: {
     type: String,
     default: '',

@@ -16,8 +16,6 @@ export interface KonnectConfig extends BaseAppConfig {
   app: 'konnect'
   /** The control plane id */
   controlPlaneId: string
-  /** Feature flag value for Config card format: khcp-8778-json-yaml-configurations */
-  jsonYamlEnabled?: boolean
 }
 
 /** Base config properties for Kong Manager. All entity configs should extend this interface for the app. */
