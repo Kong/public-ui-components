@@ -98,7 +98,6 @@ const props = defineProps({
     type: Array as PropType<String[]>,
     required: false,
     default: () => ([]),
-    validator: (val: string) => ['basic', 'advanced', 'plugin'].includes(val),
   },
   record: {
     type: Object as PropType<Record<string, any>>,

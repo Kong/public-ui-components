@@ -1,3 +1,4 @@
+<!-- TODO: Remove jsonYamlEnabled reference once Feature Flag `khcp-8778-json-yaml-configurations` is enabled -->
 <template>
   <KCard
     border-variant="noBorder"
@@ -98,7 +99,7 @@
         />
       </div>
 
-      <!-- TODO: Remove below div once jsonYaml configuration Feature Flag is enabled -->
+      <!-- TODO: Remove below div once Feature Flag `khcp-8778-json-yaml-configurations` is enabled -->
       <div
         v-else
         class="config-card-details-section"

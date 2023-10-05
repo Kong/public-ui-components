@@ -87,7 +87,6 @@ Value should NOT contain config.apiBaseUrl, as we auto include this. Typically t
 
 ex. `/api/runtime_groups/{controlPlaneId}/services/{id}`
 
-
 #### `dataKey`
 
 - type: `String`
