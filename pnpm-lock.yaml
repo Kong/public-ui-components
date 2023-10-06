@@ -380,7 +380,7 @@ importers:
     devDependencies:
       '@kong/design-tokens':
         specifier: ^1.11.2
-        version: 1.11.2
+        version: 1.11.3
       vue:
         specifier: ^3.3.4
         version: 3.3.4
@@ -2953,6 +2953,7 @@ packages:
 
   /@swagger-api/apidom-ns-json-schema-draft-4@0.77.0:
     resolution: {integrity: sha512-LLfNNDuoLNgKgN8ddPJxc5QCYgst3G1BnXEU+0lIFyVlFb5xowZiW4utYtfx/eRBy+UxpgTIk04hvvbaYppFZQ==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
       '@swagger-api/apidom-ast': 0.77.0
