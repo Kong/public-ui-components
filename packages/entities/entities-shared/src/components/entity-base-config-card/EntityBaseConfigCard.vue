@@ -100,6 +100,7 @@
           <!-- Pass all the slots from GrandParent to Child components -->
           <template
             v-for="slotKey in Object.keys($slots)"
+            :key="slotKey"
             #[slotKey]="{ row, rowValue }"
           >
             <slot
