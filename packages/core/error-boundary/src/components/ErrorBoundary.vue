@@ -21,11 +21,20 @@ import {
 import type { ErrorBoundaryCallbackParams } from '../types'
 
 const props = defineProps({
+  /**
+   * An optional array of strings to pass along to the context
+   */
   tags: {
     type: Array as PropType<string[]>,
     required: false,
     default: () => [],
+    // Ensure the value is an object, not a string
+    validator: (value: any): boolean => typeof value === 'object',
   },
+  /**
+   * An optional callback function to execute when an error is captured.
+   * This prop will take precedence over a plugin-provided onError callback.
+   */
   onError: {
     type: Function as PropType<(params: ErrorBoundaryCallbackParams) => void>,
     required: false,
