@@ -22,13 +22,13 @@ A wrapper component for flexible display of entity configuration fields.
 
 ### Props
 
-#### `item`
+#### `propertyCollections`
 
-- type: `Object`
+- type: `Object as PropType<PropList>`
 - required: `false`
 - default: `undefined`
 
-The base item configuration when format is structured.
+The base property configuration when format is structured.
 
 #### `format`
 

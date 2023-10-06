@@ -3,8 +3,8 @@
     <h2>Format: Structured</h2>
     <ConfigCardDisplay
       format="structured"
-      :item="item"
       :prop-list-types="propListType"
+      :property-collections="item"
     />
 
     <h2>Format: JSON</h2>
@@ -134,6 +134,6 @@ const propListType = ['basic', 'advanced']
 
 <style lang="scss" scoped>
 .sandbox-container {
-  padding: 40px;
+  padding: $kui-space-100;
 }
 </style>

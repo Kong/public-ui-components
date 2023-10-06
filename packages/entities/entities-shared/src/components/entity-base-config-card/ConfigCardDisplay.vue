@@ -17,7 +17,7 @@
       </div>
 
       <ConfigCardItem
-        v-for="propertyItem in item[pType as keyof typeof item]"
+        v-for="propertyItem in propertyCollections[pType as keyof typeof propertyCollections]"
         :key="propertyItem.key"
         :item="propertyItem"
       >
@@ -82,9 +82,15 @@ import ConfigCardItem from './ConfigCardItem.vue'
 import composables from '../../composables'
 import yaml from 'js-yaml'
 
+export interface PropList {
+  basic?: RecordItem[]
+  advanced?: RecordItem[]
+  plugin?: RecordItem[]
+}
+
 const props = defineProps({
-  item: {
-    type: Object,
+  propertyCollections: {
+    type: Object as PropType<PropList>,
     required: false,
     default: () => null,
   },
@@ -109,7 +115,7 @@ const props = defineProps({
 const slots = useSlots()
 const { i18n: { t } } = composables.useI18n()
 
-const hasTooltip = (item: RecordItem): boolean => !!(props.item.tooltip || slots[`${item.key}-label-tooltip`])
+const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
 
 const jsonContent = ref('')
 const yamlContent = ref('')

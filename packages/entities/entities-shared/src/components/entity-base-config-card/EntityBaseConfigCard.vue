@@ -92,8 +92,8 @@
       >
         <ConfigCardDisplay
           :format="configFormat"
-          :item="propertyLists"
           :prop-list-types="propListTypes"
+          :property-collections="propertyLists"
           :record="record"
         >
           <!-- Pass all the slots from GrandParent to Child components -->
