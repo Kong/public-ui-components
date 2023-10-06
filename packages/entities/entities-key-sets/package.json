@@ -23,7 +23,7 @@
     "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^8.123.8",
-    "axios": "^1.4.0",
+    "axios": "^1.5.0",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5"
   },
@@ -31,7 +31,7 @@
     "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^8.123.8",
-    "axios": "^1.4.0",
+    "axios": "^1.5.0",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5"
   },
