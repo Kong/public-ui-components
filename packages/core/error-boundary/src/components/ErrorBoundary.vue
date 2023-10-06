@@ -5,9 +5,9 @@
   />
   <slot
     v-else
+    :context="capturedErrorContext.context"
     :error="capturedErrorContext.error"
     name="fallback"
-    :context="capturedErrorContext.context"
   />
 </template>
 
@@ -68,7 +68,7 @@ onErrorCaptured((error: unknown, instance: ComponentPublicInstance | null, info:
       info,
       source: 'ErrorBoundary', // The name of this ErrorBoundary component
       tags: allTags.value,
-    }
+    },
   }
 
   // Perform provided callback, if present before exiting

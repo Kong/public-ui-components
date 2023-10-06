@@ -12,5 +12,5 @@ export interface ErrorBoundaryCallbackParams {
 
 export interface ErrorBoundaryPluginOptions {
   name?: string
-  onError?: ({ error, context: { componentName, info, source, tags }}: ErrorBoundaryCallbackParams) => void
+  onError?: ({ error, context: { componentName, info, source, tags } }: ErrorBoundaryCallbackParams) => void
 }
