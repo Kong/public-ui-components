@@ -327,7 +327,7 @@ onBeforeUnmount(() => {
 
   .kong-ui-app-layout-main {
     align-items: stretch;
-    background-color: $kui-color-background-neutral-weakest;
+    background-color: $kui-color-background;
     box-shadow: $app-layout-main-box-shadow;
     display: flex;
     flex-grow: 1;
