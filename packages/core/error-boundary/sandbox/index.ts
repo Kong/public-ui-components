@@ -6,8 +6,8 @@ const app = createApp(App)
 
 app.use(ErrorBoundaryPlugin, {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onError: ({ error, instance, componentName, info, tags }) => {
-    console.log('plugin-options: error', error, 'tags', tags)
+  onError: ({ error, context }) => {
+    console.log('plugin-options: error', error, 'tags', context.tags)
   },
 })
 

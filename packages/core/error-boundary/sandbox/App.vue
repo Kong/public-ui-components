@@ -14,11 +14,11 @@
             >
               <BuggyComponent :error="false" />
               <template
-                #fallback="{ error }"
+                #fallback="{ error, context }"
               >
                 <div class="fallback-error-container">
                   <p>This component has custom fallback UI</p>
-                  <p><code>slotProps.error.message</code>: {{ error.message }}</p>
+                  <p><code>{{ context.componentName }}</code>: {{ error.message }}</p>
                   <WarningIcon
                     color="red"
                     size="64"
@@ -65,7 +65,7 @@ import { WarningIcon } from '@kong/icons'
 const count = ref<number>(0)
 
 const primaryErrorCallback = (payload) => {
-  console.log('primary error callback', payload)
+  console.log('primary error callback %o', payload.context)
 }
 
 const secondaryErrorCallbackWillNotBeTriggered = () => {

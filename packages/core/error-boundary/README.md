@@ -23,7 +23,7 @@ The `ErrorBoundary` component will **always** capture any unhandled errors and p
 
 The `ErrorBoundary` component can be used to wrap a single component or an entire tree of children, tagging any errors that are captured in the DOM tree.
 
-When nesting `ErrorBoundary` components, the [`tags`](#tags) from any parent `ErrorBoundary` component will be passed down to its children and included in their `ErrorCallbackParams`.
+When nesting `ErrorBoundary` components, the [`tags`](#tags) from any parent `ErrorBoundary` component will be passed down to its children and included in their `ErrorBoundaryCallbackParams`.
 
 ```html
 <template>
@@ -39,10 +39,10 @@ When nesting `ErrorBoundary` components, the [`tags`](#tags) from any parent `Er
           <ErrorBoundary :tags="['team-core-ui']">
             <CreditCardComponent />
             <!-- The fallback slot has access to all params -->
-            <template #fallback="{ error, instance, componentName, info, tags }">
+            <template #fallback="{ error, context }">
               <div class="fallback-content">
                 <p>This component has custom fallback UI; most likely just an icon, etc.</p>
-                <p class="error-message">{{ componentName }}: {{ error.message }}</p>
+                <p class="error-message">{{ context.componentName }}: {{ error.message }}</p>
               </div>
             </template>
           </ErrorBoundary>
@@ -93,18 +93,14 @@ import ErrorBoundary from '@kong-ui-public/error-boundary' // No style imports n
 // Datadog package example
 import { datadogRum } from '@datadog/browser-rum'
 
-
 const app = createApp(App)
 
 app.use(ErrorBoundary, {
   // Provide a global, default `onError` callback for all ErrorBoundary instances
-  onError: ({ error, instance, componentName, info, tags }) => {
+  onError({ error, context }) {
     // Example of sending errors to Datadog
     datadogRum.addError(error, {
-      source: 'ErrorBoundary',
-      component: componentName,
-      tags,
-      info,
+      ui: context,
     })
   },
 })
@@ -129,7 +125,7 @@ When registering the component locally, you can provide the `onError` callback a
 import { ErrorBoundary } from '@kong-ui-public/error-boundary' // No style imports needed
 
 const myTags = ['first-tag', 'another-tag']
-const customErrorCallback = ({ error, instance, componentName, info, tags }) => {
+const customErrorCallback = ({ error, context }) => {
   // Do something fancy
 }
 </script>
@@ -145,12 +141,12 @@ The `default` slot should be utilized for your "potentially buggy" Vue component
 
 The `fallback` slot can optionally be used to provide a fallback UI should any child component (not already wrapped with another `ErrorBoundary` component) thrown an unhandled error. **The default fallback behavior is to render nothing in the UI.**
 
-The `fallback` slot has access to all of the `ErrorCallbackParams` as slot props:
+The `fallback` slot has access to all of the `ErrorBoundaryCallbackParams` as slot props:
 
 ```html
 <ErrorBoundary :tags="myTags">
   <BuggyComponent />
-  <template #fallback="{ error, instance, componentName, info, tags }">
+  <template #fallback="{ error, context }">
     <!-- Your fallback UI here -->
   </template>
 </ErrorBoundary>
@@ -170,10 +166,10 @@ For example, if you want to provide custom attributes to errors on Datadog, you 
 
 #### `onError`
 
-- type: `Function as PropType<(payload: ErrorCallbackParams) => void>`
+- type: `Function as PropType<(params: ErrorBoundaryCallbackParams) => void>`
 - required: `false`
 - default: `[]`
 
-A function to be called from the `ErrorBoundary` component when an error in a child component is captured. Receives a payload of [ErrorCallbackParams](src/types/error-boundary.ts).
+A function to be called from the `ErrorBoundary` component when an error in a child component is captured. Receives params of [ErrorBoundaryCallbackParams](src/types/error-boundary.ts).
 
 > **Note**: Providing a callback function via the `onError` prop will take precedence over any callback function defined during global registration. You can also provide an empty function in order to prevent the global callback from being executed.

@@ -1,14 +1,16 @@
-import type { ComponentPublicInstance } from 'vue'
-
-export interface ErrorCallbackParams {
-  error: unknown
-  instance: ComponentPublicInstance | null
-  componentName?: string
+export interface ErrorBoundaryContext {
+  componentName: string
   info: string
+  source: string
   tags: string[]
+}
+
+export interface ErrorBoundaryCallbackParams {
+  error: unknown
+  context: ErrorBoundaryContext
 }
 
 export interface ErrorBoundaryPluginOptions {
   name?: string
-  onError?: ({ error, instance, componentName, info, tags }: ErrorCallbackParams) => void
+  onError?: ({ error, context: { componentName, info, source, tags }}: ErrorBoundaryCallbackParams) => void
 }

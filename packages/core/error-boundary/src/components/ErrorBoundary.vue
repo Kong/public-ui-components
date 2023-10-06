@@ -1,13 +1,13 @@
 <template>
   <slot
-    v-if="!capturedError"
+    v-if="!capturedErrorContext?.error"
     name="default"
   />
   <slot
     v-else
-    :error="capturedError"
+    :error="capturedErrorContext.error"
     name="fallback"
-    :tags="tags"
+    :context="capturedErrorContext.context"
   />
 </template>
 
@@ -18,7 +18,7 @@ import {
   KONG_UI_ERROR_BOUNDARY_ON_ERROR_INJECTION_KEY,
   KONG_UI_ERROR_BOUNDARY_TAGS_INJECTION_KEY,
 } from '../constants'
-import type { ErrorCallbackParams } from '../types'
+import type { ErrorBoundaryCallbackParams } from '../types'
 
 const props = defineProps({
   tags: {
@@ -27,7 +27,7 @@ const props = defineProps({
     default: () => [],
   },
   onError: {
-    type: Function as PropType<(payload: ErrorCallbackParams) => void>,
+    type: Function as PropType<(params: ErrorBoundaryCallbackParams) => void>,
     required: false,
     default: undefined,
   },
@@ -38,8 +38,8 @@ const vuePluginOnErrorCallback = inject(KONG_UI_ERROR_BOUNDARY_ON_ERROR_INJECTIO
 // Attempt to grab any ancestor ErrorBoundary component tags that were injected
 const ancestorErrorBoundaryTags: string[] = inject(KONG_UI_ERROR_BOUNDARY_TAGS_INJECTION_KEY, [])
 
-// A ref to store the captured error object
-const capturedError = ref<any>()
+// A ref to store the captured error object and UI context
+const capturedErrorContext = ref<ErrorBoundaryCallbackParams>()
 
 // Compute all tags
 const allTags = computed((): string[] => {
@@ -59,35 +59,24 @@ const allTags = computed((): string[] => {
 provide(KONG_UI_ERROR_BOUNDARY_TAGS_INJECTION_KEY, allTags)
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-onErrorCaptured((error: Error, instance: ComponentPublicInstance | null, info: string) => {
-  capturedError.value = error
-
-  // TODO: Datadog should go in the host app (KonnectAppShell)
-  // datadogRum.addError(error, {
-  //   ui: {
-  //     source: 'ErrorBoundary',
-  //     component: 'KDropdownMenu',
-  //     tags: ['analytics', 'api-products'],
-  //     info: 'other string',
-  //   },
-  // })
-
-  // TODO: Also update the KonnectAppShell `datadogRum.addError` with the same object structure
-
-  const payload: ErrorCallbackParams = {
-    error: capturedError.value,
-    instance,
-    info,
-    tags: allTags.value,
-    componentName: instance?.$options?.__name,
+onErrorCaptured((error: unknown, instance: ComponentPublicInstance | null, info: string) => {
+  // Store the error and context to the ref
+  capturedErrorContext.value = {
+    error,
+    context: {
+      componentName: instance?.$options?.__name || '',
+      info,
+      source: 'ErrorBoundary', // The name of this ErrorBoundary component
+      tags: allTags.value,
+    }
   }
 
   // Perform provided callback, if present before exiting
   // Note: component `props.onError` will override the global Vue plugin `options.onError`
   if (typeof props.onError === 'function') {
-    props.onError(payload)
+    props.onError(capturedErrorContext.value)
   } else if (typeof vuePluginOnErrorCallback === 'function') {
-    vuePluginOnErrorCallback(payload)
+    vuePluginOnErrorCallback(capturedErrorContext.value)
   }
 
   // We **must** return `false` to swallow the error in order to prevent the
