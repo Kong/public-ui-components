@@ -195,7 +195,7 @@ importers:
   packages/analytics/analytics-chart:
     dependencies:
       '@kong-ui-public/analytics-utilities':
-        specifier: workspace:^0.8.2
+        specifier: workspace:^0.8.3
         version: link:../analytics-utilities
       approximate-number:
         specifier: ^2.1.1
@@ -244,7 +244,7 @@ importers:
   packages/analytics/analytics-metric-provider:
     dependencies:
       '@kong-ui-public/analytics-utilities':
-        specifier: workspace:^0.8.2
+        specifier: workspace:^0.8.3
         version: link:../analytics-utilities
       '@kong-ui-public/core':
         specifier: 1.1.0
