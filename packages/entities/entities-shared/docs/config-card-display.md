@@ -36,7 +36,7 @@ The base item configuration when format is structured.
 - required: `false`
 - default: `'structured'`
 
-Format to be displayed in the Config Card.
+Format to be displayed in the Config Card. Can be `structured`, `json`, or `yaml`.
 
 #### `propListTypes`
 
@@ -60,4 +60,4 @@ Please refer to the [sandbox](../sandbox/pages/ConfigCardDisplayPage.vue).
 
 ## TypeScript interfaces
 
-Currently we don't have any typescript interfaces exported from this component
+Currently, we don't have any typescript interfaces exported from this component.

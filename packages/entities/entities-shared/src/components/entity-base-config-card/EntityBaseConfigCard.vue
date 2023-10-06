@@ -96,7 +96,19 @@
           :item="propertyLists"
           :prop-list-types="propListTypes"
           :record="record"
-        />
+        >
+          <!-- Pass all the slots from GrandParent to Child components -->
+          <template
+            v-for="slotKey in Object.keys($slots)"
+            #[slotKey]="{ row, rowValue }"
+          >
+            <slot
+              :name="slotKey"
+              :row="row"
+              :row-value="rowValue"
+            />
+          </template>
+        </ConfigCardDisplay>
       </div>
 
       <!-- TODO: Remove below div once Feature Flag `khcp-8778-json-yaml-configurations` is enabled -->
