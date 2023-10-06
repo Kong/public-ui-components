@@ -1,7 +1,6 @@
 <!-- TODO: Remove jsonYamlEnabled reference once Feature Flag `khcp-8778-json-yaml-configurations` is enabled -->
 <template>
   <KCard
-    border-variant="noBorder"
     class="kong-ui-entity-base-config-card"
   >
     <template
