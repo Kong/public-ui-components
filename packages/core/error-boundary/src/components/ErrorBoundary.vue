@@ -14,7 +14,10 @@
 <script setup lang="ts">
 import { provide, inject, computed, ref, unref, onErrorCaptured } from 'vue'
 import type { ComponentPublicInstance, PropType } from 'vue'
-import { KONG_UI_ERROR_BOUNDARY_ON_ERROR_INJECTION_KEY, KONG_UI_ERROR_BOUNDARY_TAGS_INJECTION_KEY } from '../constants'
+import {
+  KONG_UI_ERROR_BOUNDARY_ON_ERROR_INJECTION_KEY,
+  KONG_UI_ERROR_BOUNDARY_TAGS_INJECTION_KEY,
+} from '../constants'
 import type { ErrorCallbackParams } from '../types'
 
 const props = defineProps({
@@ -61,13 +64,15 @@ onErrorCaptured((error: Error, instance: ComponentPublicInstance | null, info: s
 
   // TODO: Datadog should go in the host app (KonnectAppShell)
   // datadogRum.addError(error, {
-  //   source: 'ErrorBoundary',
-  //   ui_attributes: {
+  //   ui: {
+  //     source: 'ErrorBoundary',
   //     component: 'KDropdownMenu',
   //     tags: ['analytics', 'api-products'],
   //     info: 'other string',
   //   },
   // })
+
+  // TODO: Also update the KonnectAppShell `datadogRum.addError` with the same object structure
 
   const payload: ErrorCallbackParams = {
     error: capturedError.value,
