@@ -22,7 +22,7 @@
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^8.123.9",
-    "axios": "^1.5.0",
+    "axios": "^1.5.1",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5"
   },
@@ -30,7 +30,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "^1.11.3",
     "@kong/kongponents": "^8.123.9",
-    "axios": "^1.5.0",
+    "axios": "^1.5.1",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5"
   },
