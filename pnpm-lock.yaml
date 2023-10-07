@@ -42,7 +42,7 @@ importers:
         specifier: ^21.1.3
         version: 21.1.3
       '@types/node':
-        specifier: ^18.17.19
+        specifier: ^18.18.0
         version: 18.18.0
       '@types/uuid':
         specifier: ^9.0.4
@@ -129,8 +129,8 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0
       rimraf:
-        specifier: ^5.0.1
-        version: 5.0.1
+        specifier: ^5.0.4
+        version: 5.0.4
       rollup-plugin-visualizer:
         specifier: ^5.9.2
         version: 5.9.2
@@ -189,8 +189,8 @@ importers:
         specifier: ^4.2.5
         version: 4.2.5(vue@3.3.4)
       vue-tsc:
-        specifier: ^1.8.13
-        version: 1.8.13(typescript@5.2.2)
+        specifier: ^1.8.15
+        version: 1.8.15(typescript@5.2.2)
 
   packages/analytics/analytics-chart:
     dependencies:
@@ -253,7 +253,7 @@ importers:
         specifier: 0.2.14
         version: 0.2.14(@kong/kongponents@8.123.9)(vue@3.3.4)
       axios:
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       swrv:
         specifier: ^1.0.4
@@ -295,11 +295,11 @@ importers:
   packages/core/app-layout:
     dependencies:
       focus-trap:
-        specifier: ^7.5.2
-        version: 7.5.2
+        specifier: ^7.5.3
+        version: 7.5.3
       focus-trap-vue:
         specifier: ^4.0.2
-        version: 4.0.2(focus-trap@7.5.2)(vue@3.3.4)
+        version: 4.0.2(focus-trap@7.5.3)(vue@3.3.4)
       lodash.clonedeep:
         specifier: ^4.5.0
         version: 4.5.0
@@ -366,7 +366,7 @@ importers:
         specifier: ^1.11.3
         version: 1.11.3
       axios:
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       swrv:
         specifier: ^1.0.4
@@ -443,7 +443,7 @@ importers:
         specifier: ^8.123.9
         version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
       axios:
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       vue:
         specifier: ^3.3.4
@@ -471,7 +471,7 @@ importers:
         specifier: ^8.123.9
         version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
       axios:
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       vue:
         specifier: ^3.3.4
@@ -496,7 +496,7 @@ importers:
         specifier: ^8.123.9
         version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
       axios:
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       vue:
         specifier: ^3.3.4
@@ -521,7 +521,7 @@ importers:
         specifier: ^8.123.9
         version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
       axios:
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       vue:
         specifier: ^3.3.4
@@ -546,7 +546,7 @@ importers:
         specifier: ^8.123.9
         version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
       axios:
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       vue:
         specifier: ^3.3.4
@@ -571,7 +571,7 @@ importers:
         specifier: ^8.123.9
         version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
       axios:
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       vue:
         specifier: ^3.3.4
@@ -599,7 +599,7 @@ importers:
         specifier: ^8.123.9
         version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
       axios:
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       vue:
         specifier: ^3.3.4
@@ -639,7 +639,7 @@ importers:
         specifier: ^8.123.9
         version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
       axios:
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       vue:
         specifier: ^3.3.4
@@ -664,7 +664,7 @@ importers:
         specifier: ^8.123.9
         version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
       axios:
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       vue:
         specifier: ^3.3.4
@@ -695,7 +695,7 @@ importers:
         specifier: ^8.123.9
         version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
       axios:
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       vue:
         specifier: ^3.3.4
@@ -723,7 +723,7 @@ importers:
         specifier: ^8.123.9
         version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
       axios:
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       vue:
         specifier: ^3.3.4
@@ -748,7 +748,7 @@ importers:
         specifier: ^8.123.9
         version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
       axios:
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       vue:
         specifier: ^3.3.4
@@ -773,7 +773,7 @@ importers:
         specifier: ^8.123.9
         version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
       axios:
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       vue:
         specifier: ^3.3.4
@@ -2931,6 +2931,7 @@ packages:
 
   /@swagger-api/apidom-ns-json-schema-draft-4@0.77.0:
     resolution: {integrity: sha512-LLfNNDuoLNgKgN8ddPJxc5QCYgst3G1BnXEU+0lIFyVlFb5xowZiW4utYtfx/eRBy+UxpgTIk04hvvbaYppFZQ==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
       '@swagger-api/apidom-ast': 0.77.0
@@ -3959,8 +3960,8 @@ packages:
       - supports-color
     dev: true
 
-  /@vue/language-core@1.8.13(typescript@5.2.2):
-    resolution: {integrity: sha512-nata2fYBZAkl4QJrU+IcArJCMTHt1VP8ePL/Z7eUPC2AF+Cm7Qgo9ksNCPBzZRh1LYjCaSaqV7njqNogwpsMVg==}
+  /@vue/language-core@1.8.15(typescript@5.2.2):
+    resolution: {integrity: sha512-zche5Aw8kkvp3YaghuLiOZyVIpoWHjSQ0EfjxGSsqHOPMamdCoa9x3HtbenpR38UMUoKJ88wiWuiOrV3B/Yq+A==}
     peerDependencies:
       typescript: '*'
     peerDependenciesMeta:
@@ -4035,11 +4036,11 @@ packages:
     resolution: {integrity: sha512-CPuIReonid9+zOG/CGTT05FXrPYATEqoDGNrEaqS4hwcw5BUNM2FguC0mOwJD4Jr16UpRVl9N0pY3P+srIbqmg==}
     dev: true
 
-  /@vue/typescript@1.8.13(typescript@5.2.2):
-    resolution: {integrity: sha512-ALJjHFqQ3dgZVCI/ogAS/dZ7JEhIi1N0Em5I7uwabY1p9RDRK3odLsycMHyxZRjm5dLI15c07eeBloHiD2Otlg==}
+  /@vue/typescript@1.8.15(typescript@5.2.2):
+    resolution: {integrity: sha512-qWyanQKXOsK84S8rP7QBrqsvUdQ0nZABZmTjXMpb3ox4Bp5IbkscREA3OPUrkgl64mAxwwCzIWcOc3BPTCPjQw==}
     dependencies:
       '@volar/typescript': 1.10.0
-      '@vue/language-core': 1.8.13(typescript@5.2.2)
+      '@vue/language-core': 1.8.15(typescript@5.2.2)
     transitivePeerDependencies:
       - typescript
     dev: true
@@ -7279,7 +7280,7 @@ packages:
       react: '>=16.3.0'
       react-dom: '>=16.3.0'
     dependencies:
-      focus-trap: 7.5.2
+      focus-trap: 7.5.3
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
       tabbable: 6.2.0
@@ -7294,10 +7295,26 @@ packages:
       focus-trap: 7.5.2
       vue: 3.3.4
 
+  /focus-trap-vue@4.0.2(focus-trap@7.5.3)(vue@3.3.4):
+    resolution: {integrity: sha512-2iQN2xKCSCzyhcD90VpueQcTIAhaCRxxo67fkz7RSqLmEd16QKjfGslCr3KxvBx0LfpVN9j0IAyKKuJKw3Intg==}
+    peerDependencies:
+      focus-trap: ^7.0.0
+      vue: ^3.0.0
+    dependencies:
+      focus-trap: 7.5.3
+      vue: 3.3.4
+    dev: false
+
   /focus-trap@7.5.2:
     resolution: {integrity: sha512-p6vGNNWLDGwJCiEjkSK6oERj/hEyI9ITsSwIUICBoKLlWiTWXJRfQibCwcoi50rTZdbi87qDtUlMCmQwsGSgPw==}
     dependencies:
       tabbable: 6.2.0
+
+  /focus-trap@7.5.3:
+    resolution: {integrity: sha512-7UsT/eSJcTPF0aZp73u7hBRTABz26knRRTJfoTGFCQD5mUImLIIOwWWCrtoQdmWa7dykBi6H+Cp5i3S/kvsMeA==}
+    dependencies:
+      tabbable: 6.2.0
+    dev: false
 
   /follow-redirects@1.15.2:
     resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
@@ -7660,6 +7677,18 @@ packages:
       minimatch: 9.0.3
       minipass: 6.0.2
       path-scurry: 1.9.2
+    dev: true
+
+  /glob@10.3.10:
+    resolution: {integrity: sha512-fa46+tv1Ak0UPK1TOy/pZrIybNNt4HCv7SDzwyfiOZkvZLEbjsZkJBPtDHVshZjbecAoAGSC20MjLDG/qr679g==}
+    engines: {node: '>=16 || 14 >=14.17'}
+    hasBin: true
+    dependencies:
+      foreground-child: 3.1.1
+      jackspeak: 2.3.6
+      minimatch: 9.0.3
+      minipass: 6.0.2
+      path-scurry: 1.10.1
     dev: true
 
   /glob@7.1.4:
@@ -8719,6 +8748,15 @@ packages:
 
   /jackspeak@2.2.1:
     resolution: {integrity: sha512-MXbxovZ/Pm42f6cDIDkl3xpwv1AGwObKwfmjs2nQePiy85tP3fatofl3FC1aBsOtP/6fq5SbtgHwWcMsLP+bDw==}
+    engines: {node: '>=14'}
+    dependencies:
+      '@isaacs/cliui': 8.0.2
+    optionalDependencies:
+      '@pkgjs/parseargs': 0.11.0
+    dev: true
+
+  /jackspeak@2.3.6:
+    resolution: {integrity: sha512-N3yCS/NegsOBokc8GAdM8UcmfsKiSS8cipheD/nivzr700H+nsMOxJjQnvwOcRYVuFkdH0wGUvW2WbXGmrZGbQ==}
     engines: {node: '>=14'}
     dependencies:
       '@isaacs/cliui': 8.0.2
@@ -10704,6 +10742,14 @@ packages:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
     dev: true
 
+  /path-scurry@1.10.1:
+    resolution: {integrity: sha512-MkhCqzzBEpPvxxQ71Md0b1Kk51W01lrYvlMzSUaIzNsODdd7mqhiimSZlr+VegAz5Z6Vzt9Xg2ttE//XBhH3EQ==}
+    engines: {node: '>=16 || 14 >=14.17'}
+    dependencies:
+      lru-cache: 9.1.2
+      minipass: 6.0.2
+    dev: true
+
   /path-scurry@1.9.2:
     resolution: {integrity: sha512-qSDLy2aGFPm8i4rsbHd4MNyTcrzHFsLQykrtbuGRknZZCBBVXSv2tSCDN2Cg6Rt/GFRw8GoW9y9Ecw5rIPG1sg==}
     engines: {node: '>=16 || 14 >=14.17'}
@@ -11856,12 +11902,12 @@ packages:
       glob: 9.3.5
     dev: true
 
-  /rimraf@5.0.1:
-    resolution: {integrity: sha512-OfFZdwtd3lZ+XZzYP/6gTACubwFcHdLRqS9UX3UwpU2dnGQYkPFISRwvM3w9IiB2w7bW5qGo/uAwE4SmXXSKvg==}
+  /rimraf@5.0.4:
+    resolution: {integrity: sha512-rizQI/o/YAMM1us0Zyax0uRfIK39XR52EAjjOi0fzMolpGp0onj6CWzBAXuOx6+6Xi9Rgi0d9tUZojhJerLUmQ==}
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
-      glob: 10.2.7
+      glob: 10.3.10
     dev: true
 
   /rollup-plugin-babel@4.4.0:
@@ -13928,14 +13974,14 @@ packages:
       he: 1.2.0
     dev: true
 
-  /vue-tsc@1.8.13(typescript@5.2.2):
-    resolution: {integrity: sha512-Hl8zUXPVK2KzPtbXeMCN0CSFkwvD96YOtYt9KvJPG9W8QGcNpGk9KHwPuGMxA8blWXSIli7gtsoC+clICEVdVg==}
+  /vue-tsc@1.8.15(typescript@5.2.2):
+    resolution: {integrity: sha512-4DoB3LUj7IToLmggoCxRiFG+QU5lem0nv03m1ocqugXA9rSVoTOEoYYaP8vu8b99Eh+/cCVdYOeIAQ+RsgUYUw==}
     hasBin: true
     peerDependencies:
       typescript: '*'
     dependencies:
-      '@vue/language-core': 1.8.13(typescript@5.2.2)
-      '@vue/typescript': 1.8.13(typescript@5.2.2)
+      '@vue/language-core': 1.8.15(typescript@5.2.2)
+      '@vue/typescript': 1.8.15(typescript@5.2.2)
       semver: 7.5.4
       typescript: 5.2.2
     dev: true

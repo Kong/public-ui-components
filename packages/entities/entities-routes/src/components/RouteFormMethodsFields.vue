@@ -87,7 +87,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'add'): void,
-  (e: 'remove', index: number): void,
+  (e: 'remove'): void,
   (e: 'update:modelValue', value: FieldsValue): void,
   (e: 'update-custom-methods', value: Array<string>): void,
 }>()
