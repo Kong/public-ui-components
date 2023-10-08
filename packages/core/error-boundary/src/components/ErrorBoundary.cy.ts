@@ -157,7 +157,49 @@ describe('<ErrorBoundary />', () => {
         })
       })
 
-      it.skip('injects the tags of a parent `ErrorBoundary` component and combines them with any tags passed as props')
+      it('injects the tags of a parent `ErrorBoundary` component and combines them with any tags passed as props', () => {
+        const fallbackContentId = 'fallback-slot-content'
+        const parentTags = ['first-parent', 'second-parent', 'third-parent']
+        const childTags = ['first-child', 'second-child']
+        const payloadData = ref<ErrorBoundaryCallbackParams>()
+
+        cy.mount(ErrorBoundary, {
+          components: {
+            ErrorBoundary,
+          },
+          props: {
+            tags: parentTags,
+          },
+          slots: {
+            default: () => h(ErrorBoundary, {
+              tags: childTags,
+            },
+            {
+              default: () => h(TestErrorComponent, {
+                error: false, // normal state by default
+              }),
+              fallback: (payload: ErrorBoundaryCallbackParams) => {
+                // Store the error and context data
+                payloadData.value = payload
+
+                return h('p', { 'data-testid': fallbackContentId }, payload.context.tags.join(' '))
+              },
+            }),
+          },
+        }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+        // Trigger an error
+        cy.getTestId('force-error-button').click()
+
+        cy.get('@vueWrapper').then(() => {
+          expect(payloadData.value?.context.tags.length).to.eq([...parentTags, ...childTags].length)
+
+          // Ensure all parent and child tags are present
+          for (const tag of [...parentTags, ...childTags]) {
+            expect(payloadData.value?.context.tags).to.include(tag)
+          }
+        })
+      })
     })
 
     describe('onError', () => {
