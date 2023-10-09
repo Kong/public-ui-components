@@ -185,10 +185,10 @@
           </template>
         </i18nT>
       </template>
-      <template #client_certificate="{rowValue}">
+      <template #client_certificate="slotProps">
         <div>
           <div data-testid="client_certificate-plain-text">
-            <span>{{ rowValue?.id }}</span>
+            <span>{{ getPropValue('rowValue', slotProps)?.id }}</span>
           </div>
         </div>
       </template>
@@ -237,6 +237,10 @@ defineEmits<{
 
 const { i18n: { t }, i18nT } = composables.useI18n()
 const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit)
+
+const getPropValue = (propName: string, slotProps?: Record<string, any>) => {
+  return slotProps?.[propName] || undefined
+}
 
 const configSchema = ref<UpstreamsConfigurationSchema>({
   id: {},
