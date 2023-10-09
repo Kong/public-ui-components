@@ -15,15 +15,15 @@ A Vue error boundary component to capture unhandled errors that allows for provi
 - Renderless (by default) Vue component that **captures** uncaught errors from child components and **prevents the error from propagating further**
 - Allows passing in a list of [tags](#tags) to forward along to the [`onError` callback function](#onerror).
 - Allows providing an error callback function (defined inline or during global Vue plugin initialization)
-- Provides a [`fallback` slot](#fallback) to allow a host app to provide an error UI
-- Allows for **nested** `ErrorBoundary` components in the DOM. Any nested `ErrorBoundary` components will inherit the tags of its ancestors
+- Provides a [`fallback` slot](#fallback) to allow a host app to provide an error UI that also provides access to the error and context (tags, etc.)
+- Allows for **nested** `ErrorBoundary` components in the DOM. Any nested `ErrorBoundary` components will inherit the tags of any parent `ErrorBoundary` component
 - See the package `sandbox` for more examples
 
 The `ErrorBoundary` component will **always** capture any unhandled errors and prevent them from further propagating. This is essentially saying "this error has been handled and should be ignored." It will prevent any additional `ErrorBoundary` components from receiving the error and prevent additional `errorCaptured` hooks or `app.config.errorHandler` from being invoked for this error.
 
-The `ErrorBoundary` component can be used to wrap a single component or an entire tree of children, tagging any errors that are captured in the DOM tree.
+The `ErrorBoundary` component can be used to wrap a single component or an entire tree of children, tagging any errors that are captured in the DOM tree. The closest `ErrorBoundary` to the buggy component will capture the error; therefore the closest `ErrorBoundary` **must** also provide the fallback UI, if desired.
 
-When nesting `ErrorBoundary` components, the [`tags`](#tags) from any parent `ErrorBoundary` component will be passed down to its children and included in their `ErrorBoundaryCallbackParams`.
+When nesting `ErrorBoundary` components, the [`tags`](#tags) from any parent `ErrorBoundary` component will be passed down to its child `ErrorBoundary` components and included in their `ErrorBoundaryCallbackParams`.
 
 ```html
 <template>
@@ -65,6 +65,8 @@ Looking at the numbered examples above:
 - `vue` must be initialized in the host application
 
 ## Usage
+
+> **Note**: if your application utilizes the private `KonnectAppShell` component, this `ErrorBoundary` component is already registered globally within the app along with the preferred `onError` callback function.
 
 ### Install
 
@@ -152,6 +154,8 @@ The `fallback` slot has access to all of the `ErrorBoundaryCallbackParams` as sl
 </ErrorBoundary>
 ```
 
+The closest `ErrorBoundary` to the buggy component will capture the error; therefore, the closest `ErrorBoundary` **must** also provide the fallback UI, if desired.
+
 ### Props
 
 #### `tags`
@@ -162,7 +166,9 @@ The `fallback` slot has access to all of the `ErrorBoundaryCallbackParams` as sl
 
 A list of strings to "tag" the captured error with that are passed along to the `onError` callback.
 
-For example, if you want to provide custom attributes to errors on Datadog, you can pass in an array of strings to add to the logged error's custom attributes.
+You may then utilize these tags to send context along with any function called in the `onError` callback.
+
+For example, if you want to provide custom attributes to error logs on Datadog, you can pass in an array of strings to add to the logged error's custom attributes.
 
 #### `onError`
 
