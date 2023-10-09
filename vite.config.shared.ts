@@ -150,34 +150,32 @@ export const getApiProxies = (pathToRoot: string = '../../../.') => {
     }
     : undefined
 
+  // Add additional regions as they become available
+  const availableRegions = ['au', 'eu', 'us']
+  const regionalProxies = {}
+  // Build the regional API proxies
+  for (const region of availableRegions) {
+    // @ts-ignore
+    regionalProxies[`^/${region}/kong-api/konnect-api`] = {
+      target: (env.VITE_KONNECT_API ?? '').replace(/\{geo\}/, region),
+      rewrite: (path: string) => path.replace(`/${region}/kong-api`, ''),
+      changeOrigin: true,
+      headers: {
+        ...konnectAuthHeader,
+      },
+    }
+  }
+
   return {
+    // Add Konnect API proxies
+    ...regionalProxies,
+
     /**
      * /kong-ui/config JSON
      */
     '^/kong-ui/config': {
       target: env.VITE_KONNECT_CONFIG,
       changeOrigin: true,
-    },
-    /**
-     * KONNECT PROXIES
-     * TODO: when KHCP-5497 consume these proxies from the helper function?
-     */
-    '^/us/kong-api/konnect-api': {
-      target: (env.VITE_KONNECT_API ?? '').replace(/\{geo\}/, 'us'),
-      rewrite: (path: string) => path.replace('/us/kong-api', ''),
-      changeOrigin: true,
-      headers: {
-        ...konnectAuthHeader,
-      },
-    },
-
-    '^/eu/kong-api/konnect-api': {
-      target: (env.VITE_KONNECT_API ?? '').replace(/\{geo\}/, 'eu'),
-      rewrite: (path: string) => path.replace('/eu/kong-api', ''),
-      changeOrigin: true,
-      headers: {
-        ...konnectAuthHeader,
-      },
     },
 
     // KAuth v1 APIs
