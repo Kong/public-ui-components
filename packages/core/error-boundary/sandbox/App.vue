@@ -33,7 +33,7 @@
       <div class="component-container">
         <p>This app-crashing buggy component will throw an error inside a <code>computed</code> variable. Even though this error is <em>also</em> unhandled, the app will <b>crash</b> if the error is not captured.</p>
         <ErrorBoundary :tags="['parent-error-tag']">
-          <AppCrashBuggyComponent :error="false" />
+          <AppCrashBuggyComponent :error="true" />
         </ErrorBoundary>
       </div>
 
