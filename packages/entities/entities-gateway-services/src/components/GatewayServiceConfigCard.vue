@@ -49,16 +49,16 @@
         </i18nT>
       </template>
 
-      <template #tls_verify="{ rowValue }">
+      <template #tls_verify="slotProps">
         {{
-          typeof rowValue === "boolean"
-            ? t(`gateway_services.form.fields.tls_verify_option.${rowValue}.display`)
+          getPropValue('rowValue', slotProps) === true || getPropValue('rowValue', slotProps) === undefined
+            ? getTlsVerifyOption('rowValue', slotProps)
             : t('gateway_services.form.fields.tls_verify_option.unset.display')
         }}
       </template>
 
-      <template #client_certificate="{ rowValue }">
-        {{ rowValue ? rowValue.id : '–' }}
+      <template #client_certificate="slotProps">
+        {{ getPropValue('rowValue', slotProps) ? getPropValue('rowValue', slotProps).id : '–' }}
       </template>
     </EntityBaseConfigCard>
   </div>
@@ -106,6 +106,18 @@ const props = defineProps({
 
 const { i18n: { t }, i18nT } = composables.useI18n()
 const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit)
+
+const getPropValue = (propName: string, slotProps?: Record<string, any>) => {
+  return slotProps?.[propName] || undefined
+}
+
+const getTlsVerifyOption = (propName: string, slotProps?: Record<string, any>) => {
+  if (getPropValue(propName, slotProps) === true) {
+    return t('gateway_services.form.fields.tls_verify_option.true.display')
+  }
+
+  return t('gateway_services.form.fields.tls_verify_option.false.display')
+}
 
 const configSchema = ref<GatewayServiceConfigurationSchema>({
   id: {},

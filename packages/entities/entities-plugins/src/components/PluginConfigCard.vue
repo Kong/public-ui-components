@@ -33,65 +33,66 @@
       @fetch:success="(entity: any) => $emit('fetch:success', entity)"
       @loading="(val: boolean) => $emit('loading', val)"
     >
-      <template #name="{ rowValue }">
+      <template #name="slotProps">
         <div class="name-cell-wrapper">
           <PluginIcon
             class="plugin-icon"
-            :name="rowValue"
+            :name="getPropValue('rowValue', slotProps)"
             :width="24"
           />
           <span class="info-name">
-            {{ pluginMetaData.getDisplayName(rowValue) }}
+            {{ pluginMetaData.getDisplayName(getPropValue('rowValue', slotProps)) }}
           </span>
         </div>
       </template>
 
-      <template #consumer="{ rowValue, row }">
-        <span v-if="!rowValue">–</span>
+      <template #consumer="slotProps">
+        <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <CopyUuid
           v-else
           data-testid="consumer-copy-uuid"
           :notify="() => {}"
           :success-tooltip="t('copy.success_tooltip')"
-          :tooltip="t('copy.tooltip', { label: row.label })"
+          :tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
           :truncated="false"
-          :uuid="rowValue.id"
+          :uuid="getPropValue('rowValue', slotProps).id"
         />
       </template>
-      <template #route="{ rowValue, row }">
-        <span v-if="!rowValue">–</span>
+
+      <template #route="slotProps">
+        <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <CopyUuid
           v-else
           data-testid="route-copy-uuid"
           :notify="() => {}"
           :success-tooltip="t('copy.success_tooltip')"
-          :tooltip="t('copy.tooltip', { label: row.label })"
+          :tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
           :truncated="false"
-          :uuid="rowValue.id"
+          :uuid="getPropValue('rowValue', slotProps).id"
         />
       </template>
-      <template #service="{ rowValue, row }">
-        <span v-if="!rowValue">–</span>
+      <template #service="slotProps">
+        <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <CopyUuid
           v-else
           data-testid="service-copy-uuid"
           :notify="() => {}"
           :success-tooltip="t('copy.success_tooltip')"
-          :tooltip="t('copy.tooltip', { label: row.label })"
+          :tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
           :truncated="false"
-          :uuid="rowValue.id"
+          :uuid="getPropValue('rowValue', slotProps).id"
         />
       </template>
-      <template #consumer_group="{ rowValue, row }">
-        <span v-if="!rowValue">–</span>
+      <template #consumer_group="slotProps">
+        <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <CopyUuid
           v-else
           data-testid="consumer-group-copy-uuid"
           :notify="() => { }"
           :success-tooltip="t('copy.success_tooltip')"
-          :tooltip="t('copy.tooltip', { label: row.label })"
+          :tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
           :truncated="false"
-          :uuid="rowValue.id"
+          :uuid="getPropValue('rowValue', slotProps).id"
         />
       </template>
     </EntityBaseConfigCard>
@@ -175,6 +176,10 @@ const fetchUrl = computed<string>(
     .replace(/{entityType}/gi, props.scopedEntityType)
     .replace(/{entityId}/gi, props.scopedEntityId),
 )
+
+const getPropValue = (propName: string, slotProps?: Record<string, any>) => {
+  return slotProps?.[propName] || undefined
+}
 
 // schema for the basic properties
 const configSchema = computed((): ConfigurationSchema => {
