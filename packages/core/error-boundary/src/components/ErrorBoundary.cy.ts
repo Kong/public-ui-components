@@ -1,6 +1,7 @@
 import ErrorBoundary from './ErrorBoundary.vue'
+import ErrorBoundaryPlugin from '../../src'
 import { h, ref } from 'vue'
-// Import the BuggyComponent here for testing only
+import type { App } from 'vue'
 import TestErrorComponent from '../../cypress/TestErrorComponent.vue'
 import type { ErrorBoundaryCallbackParams } from '../types'
 
@@ -122,7 +123,7 @@ describe('<ErrorBoundary />', () => {
 
   describe('props', () => {
     describe('tags', () => {
-      it('accepts an array of tag strings that should be returned as part of the `context`', () => {
+      it('accepts an array of tags that are returned as part of the `context`', () => {
         const fallbackContentId = 'fallback-slot-content'
         const tags = ['first-tag', 'second-tag', 'third-tag']
         const payloadData = ref<ErrorBoundaryCallbackParams>()
@@ -203,8 +204,158 @@ describe('<ErrorBoundary />', () => {
     })
 
     describe('onError', () => {
-      it.skip('executes the `onError` callback when an error is captured')
-      it.skip('executes the plugin-provided `onError` callback (instead of the prop) when provided and an error is captured')
+      it('executes the `onError` callback and provides the callback params when an error is captured', () => {
+        const payloadData = ref<ErrorBoundaryCallbackParams>()
+        const tags = ['first-tag', 'second-tag', 'third-tag']
+        // Spy on the console for the onError callback
+        cy.spy(console, 'log').as('consoleSpy')
+
+        cy.mount(ErrorBoundary, {
+          components: {
+            TestErrorComponent,
+          },
+          props: {
+            tags,
+            onError: (params: ErrorBoundaryCallbackParams) => {
+              payloadData.value = params
+              console.log(payloadData.value)
+            },
+          },
+          slots: {
+            default: () => h(TestErrorComponent, {
+              error: false, // ensure the component mounts without error
+            }),
+          },
+        }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+        cy.getTestId('error-boundary-child-component').should('be.visible')
+        cy.getTestId('normal-text').should('be.visible')
+
+        // Trigger an error
+        cy.getTestId('force-error-button').click()
+
+        cy.get('@vueWrapper').then(() => {
+          // Ensure the component is removed from the DOM
+          cy.getTestId('error-boundary-child-component').should('not.exist')
+          cy.getTestId('normal-text').should('not.exist')
+          cy.getTestId('force-error-button').should('not.exist')
+
+          cy.get('@consoleSpy').should('be.calledOnceWith', payloadData.value)
+        }).then(() => {
+          expect(payloadData.value?.context.tags.length).to.eq(tags.length)
+          // Ensure all tags are present
+          for (const tag of tags) {
+            expect(payloadData.value?.context.tags).to.include(tag)
+          }
+        })
+      })
+
+      it('executes the Vue plugin `onError` callback when provided', () => {
+        const payloadData = ref<ErrorBoundaryCallbackParams>()
+        const tags = ['first-tag', 'second-tag', 'third-tag']
+        // Spy on the console for the onError callback
+        cy.spy(console, 'log').as('consoleSpy')
+
+        cy.mount(ErrorBoundary, {
+          components: {
+            TestErrorComponent,
+          },
+          props: {
+            tags,
+          },
+          global: {
+            plugins: [
+              {
+                install(app: App) {
+                  app.use(ErrorBoundaryPlugin, {
+                    onError: (params: ErrorBoundaryCallbackParams) => {
+                      payloadData.value = params
+                      console.log(payloadData.value)
+                    },
+                  })
+                },
+              },
+            ],
+          },
+          slots: {
+            default: () => h(TestErrorComponent, {
+              error: false, // ensure the component mounts without error
+            }),
+          },
+        }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+        cy.getTestId('error-boundary-child-component').should('be.visible')
+        cy.getTestId('normal-text').should('be.visible')
+
+        // Trigger an error
+        cy.getTestId('force-error-button').click()
+
+        cy.get('@vueWrapper').then(() => {
+          // Ensure the component is removed from the DOM
+          cy.getTestId('error-boundary-child-component').should('not.exist')
+          cy.getTestId('normal-text').should('not.exist')
+          cy.getTestId('force-error-button').should('not.exist')
+
+          cy.get('@consoleSpy').should('be.calledOnceWith', payloadData.value)
+        }).then(() => {
+          expect(payloadData.value?.context.tags.length).to.eq(tags.length)
+          // Ensure all tags are present
+          for (const tag of tags) {
+            expect(payloadData.value?.context.tags).to.include(tag)
+          }
+        })
+      })
+
+      it('executes the prop `onError` callback when both the Vue plugin and prop callbacks are provided', () => {
+        const pluginCallback = 'plugin'
+        const propCallback = 'prop'
+        // Spy on the console for the onError callback
+        cy.spy(console, 'log').as('consoleSpy')
+
+        cy.mount(ErrorBoundary, {
+          components: {
+            TestErrorComponent,
+          },
+          props: {
+            onError: () => {
+              console.log(propCallback)
+            },
+          },
+          global: {
+            plugins: [
+              {
+                install(app: App) {
+                  app.use(ErrorBoundaryPlugin, {
+                    onError: () => {
+                      console.log(pluginCallback)
+                    },
+                  })
+                },
+              },
+            ],
+          },
+          slots: {
+            default: () => h(TestErrorComponent, {
+              error: false, // ensure the component mounts without error
+            }),
+          },
+        }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+        cy.getTestId('error-boundary-child-component').should('be.visible')
+        cy.getTestId('normal-text').should('be.visible')
+
+        // Trigger an error
+        cy.getTestId('force-error-button').click()
+
+        cy.get('@vueWrapper').then(() => {
+          // Ensure the component is removed from the DOM
+          cy.getTestId('error-boundary-child-component').should('not.exist')
+          cy.getTestId('normal-text').should('not.exist')
+          cy.getTestId('force-error-button').should('not.exist')
+
+          cy.get('@consoleSpy').should('be.calledOnceWith', propCallback)
+        })
+      })
     })
   })
 })
