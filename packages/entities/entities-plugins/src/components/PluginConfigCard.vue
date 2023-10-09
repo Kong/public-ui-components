@@ -114,6 +114,7 @@ import {
   ConfigurationSchemaSection,
   useAxios,
   useErrors,
+  useHelpers,
 } from '@kong-ui-public/entities-shared'
 import { CopyUuid } from '@kong-ui-public/copy-uuid'
 import composables from '../composables'
@@ -170,16 +171,13 @@ const props = defineProps({
 const { i18n: { t } } = composables.useI18n()
 const pluginMetaData = composables.usePluginMetaData()
 const { setFieldType } = composables.usePluginHelpers()
+const { getPropValue } = useHelpers()
 
 const fetchUrl = computed<string>(
   () => endpoints.item[props.config.app]?.[props.scopedEntityType ? 'forEntity' : 'all']
     .replace(/{entityType}/gi, props.scopedEntityType)
     .replace(/{entityId}/gi, props.scopedEntityId),
 )
-
-const getPropValue = (propName: string, slotProps?: Record<string, any>) => {
-  return slotProps?.[propName] || undefined
-}
 
 // schema for the basic properties
 const configSchema = computed((): ConfigurationSchema => {

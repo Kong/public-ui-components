@@ -137,7 +137,7 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerCertificateEntityConfig, KonnectCertificateEntityConfig, CertificateConfigurationSchema, EntityRow } from '../types'
-import { EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType, ConfigCardItem, useStringHelpers } from '@kong-ui-public/entities-shared'
+import { EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType, ConfigCardItem, useStringHelpers, useHelpers } from '@kong-ui-public/entities-shared'
 import endpoints from '../certificates-endpoints'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -174,6 +174,7 @@ const props = defineProps({
 
 const { i18n: { t, formatUnixTimeStamp }, i18nT } = composables.useI18n()
 const { convertKeyToTitle } = useStringHelpers()
+const { getPropValue } = useHelpers()
 const { getCertificateData } = composables.useCertificate()
 
 const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
@@ -243,10 +244,6 @@ const configSchema = ref<CertificateConfigurationSchema>({
 const handleFetch = (entity: Record<string, any>) => {
   record.value = entity as EntityRow
   emit('fetch:success', entity)
-}
-
-const getPropValue = (propName: string, slotProps?: Record<string, any>) => {
-  return slotProps?.[propName] || undefined
 }
 
 const getPropItemValue = (propKey: string, slotProps?: Record<string, any>) => {

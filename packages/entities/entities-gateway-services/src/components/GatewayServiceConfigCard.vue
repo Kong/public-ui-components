@@ -69,7 +69,7 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerGatewayServiceEntityConfig, KonnectGatewayServiceEntityConfig, GatewayServiceConfigurationSchema } from '../types'
-import { EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType } from '@kong-ui-public/entities-shared'
+import { EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType, useHelpers } from '@kong-ui-public/entities-shared'
 import endpoints from '../gateway-services-endpoints'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -106,10 +106,7 @@ const props = defineProps({
 
 const { i18n: { t }, i18nT } = composables.useI18n()
 const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit)
-
-const getPropValue = (propName: string, slotProps?: Record<string, any>) => {
-  return slotProps?.[propName] || undefined
-}
+const { getPropValue } = useHelpers()
 
 const getTlsVerifyOption = (propName: string, slotProps?: Record<string, any>) => {
   if (getPropValue(propName, slotProps) === true) {

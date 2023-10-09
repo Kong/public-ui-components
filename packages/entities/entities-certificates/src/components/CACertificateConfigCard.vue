@@ -67,7 +67,7 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerCertificateEntityConfig, KonnectCertificateEntityConfig, CACertificateConfigurationSchema, EntityRow } from '../types'
-import { EntityBaseConfigCard, ConfigurationSchemaType, ConfigurationSchemaSection, useStringHelpers, ConfigCardItem } from '@kong-ui-public/entities-shared'
+import { EntityBaseConfigCard, ConfigurationSchemaType, ConfigurationSchemaSection, useStringHelpers, useHelpers, ConfigCardItem } from '@kong-ui-public/entities-shared'
 import endpoints from '../ca-certificates-endpoints'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -106,6 +106,7 @@ const props = defineProps({
 
 const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 const { convertKeyToTitle } = useStringHelpers()
+const { getPropValue } = useHelpers()
 const { getCertificateData } = composables.useCertificate()
 
 const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
@@ -120,10 +121,6 @@ const parsedCertData = computed(() => {
 const issuer = computed((): string => parsedCertData.value?.schemaIssuer || '')
 const expiry = computed((): string => parsedCertData.value?.schemaExpiry ? formatUnixTimeStamp(parsedCertData.value?.schemaExpiry) : '')
 const keyUsages = computed((): string[] => parsedCertData.value?.schemaKeyUsages || [])
-
-const getPropValue = (propName: string, slotProps?: Record<string, any>) => {
-  return slotProps?.[propName] || undefined
-}
 
 const getPropItemValue = (propKey: string, slotProps?: Record<string, any>) => {
   const propValue = getPropValue('rowValue', slotProps)

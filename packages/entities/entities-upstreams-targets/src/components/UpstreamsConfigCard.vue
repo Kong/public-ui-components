@@ -200,7 +200,7 @@
 import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { KongManagerUpstreamsEntityConfig, KonnectUpstreamsEntityConfig, UpstreamsConfigurationSchema } from '../types'
-import { EntityBaseConfigCard, ConfigurationSchemaType, ConfigurationSchemaSection } from '@kong-ui-public/entities-shared'
+import { EntityBaseConfigCard, ConfigurationSchemaType, ConfigurationSchemaSection, useHelpers } from '@kong-ui-public/entities-shared'
 import endpoints from '../upstreams-endpoints'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -236,11 +236,8 @@ defineEmits<{
 }>()
 
 const { i18n: { t }, i18nT } = composables.useI18n()
+const { getPropValue } = useHelpers()
 const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit)
-
-const getPropValue = (propName: string, slotProps?: Record<string, any>) => {
-  return slotProps?.[propName] || undefined
-}
 
 const configSchema = ref<UpstreamsConfigurationSchema>({
   id: {},
