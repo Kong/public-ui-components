@@ -169,21 +169,13 @@ interface PluginConfigurationSchemaItem {
 
 Controls the visibility of the card's title and `title` slot. A value of `true` will hide the `title` content (including slot content).
 
-#### `hideConfigCardDoc`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-Controls the visibility of the book icon.
-
 #### `configCardDoc`
 
 - type: `String`
 - required: `false`
 - default: `null`
 
-External link for documentation.
+External link for documentation. Controls the visibility of the documentation button.
 
 ### Sections
 

@@ -33,7 +33,7 @@
         />
 
         <KButton
-          v-if="showDocumentationButton && configCardDoc"
+          v-if="props.config.jsonYamlEnabled && configCardDoc"
           appearance="btn-link"
           class="book-icon"
           data-testid="book-icon"
@@ -252,14 +252,6 @@ const props = defineProps({
     required: false,
   },
   /**
-   * Boolean to determine whether to display the documentation button
-   */
-  hideConfigCardDoc: {
-    type: Boolean,
-    default: false,
-    required: false,
-  },
-  /**
    * External link for documentation
    */
   configCardDoc: {
@@ -294,7 +286,6 @@ const configFormatItems = [
   },
 ]
 
-const showDocumentationButton = computed(() => !props.hideConfigCardDoc && props.config.jsonYamlEnabled)
 const configFormat = ref('structured')
 
 const handleChange = (payload: any): void => {

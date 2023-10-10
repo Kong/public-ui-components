@@ -147,7 +147,7 @@ describe('<EntityBaseConfigCard />', () => {
       cy.getTestId('select-config-format').should('exist')
     })
 
-    it('displays KButton with book icon when `hideConfigCardDoc` prop is set correctly', () => {
+    it('displays KButton with book icon when `configCardDoc` prop is set correctly', () => {
       interceptFetch()
 
       cy.mount(EntityBaseConfigCard, {
@@ -159,7 +159,6 @@ describe('<EntityBaseConfigCard />', () => {
           configSchema,
           fetchUrl,
           configCardDoc: 'www.test.com',
-          hideConfigCardDoc: false,
         },
       })
 
