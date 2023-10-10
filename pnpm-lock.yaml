@@ -372,6 +372,19 @@ importers:
         specifier: ^1.0.4
         version: 1.0.4(vue@3.3.4)
 
+  packages/core/error-boundary:
+    dependencies:
+      '@kong/icons':
+        specifier: ^1.7.3
+        version: 1.7.3(vue@3.3.4)
+    devDependencies:
+      '@kong/design-tokens':
+        specifier: ^1.11.2
+        version: 1.11.3
+      vue:
+        specifier: ^3.3.4
+        version: 3.3.4
+
   packages/core/forms:
     dependencies:
       fecha:
@@ -2009,6 +2022,15 @@ packages:
   /@kong/design-tokens@1.11.3:
     resolution: {integrity: sha512-qBladWjD6m7KwOhdQU4jwF2n3SGvC3h5/BqUfx46KzMnWWV0Mr48kYimzYaUbk8B9SwkqTt6kruwzutSFzPS6Q==}
     dev: true
+
+  /@kong/icons@1.7.3(vue@3.3.4):
+    resolution: {integrity: sha512-VI/7fpbH4WoNShy095JzOqAQs1SAMvWSFnKfD1MreQyR6b3Usn00ugkgF2j5PVP/CvflZ63U9Ay7RlUtW/Ih/w==}
+    engines: {node: '>=v18.17.1'}
+    peerDependencies:
+      vue: ^3.3.4
+    dependencies:
+      vue: 3.3.4
+    dev: false
 
   /@kong/kongponents@8.123.9(vue-router@4.2.5)(vue@3.3.4):
     resolution: {integrity: sha512-hvUkfUyXq99bdwlxhdNkzcMqSz3rmuPWgaQJGNH22RBk6bsjsanKYgGclYW1HupPXpFVcTBp+trEuazqU+uZmg==}
