@@ -2,6 +2,7 @@
   <div class="kong-ui-consumer-group-entity-config-card">
     <EntityBaseConfigCard
       :config="config"
+      :config-card-doc="configCardDoc"
       :config-schema="configSchema"
       data-key="consumer_group"
       :fetch-url="fetchUrl"
@@ -44,6 +45,14 @@ const props = defineProps({
       if (!config.entityId) return false
       return true
     },
+  },
+  /**
+   * External link for documentation that determines visibility of Documentation button
+   */
+  configCardDoc: {
+    type: String,
+    default: '',
+    required: false,
   },
   /**
    * Control visibility of card title content

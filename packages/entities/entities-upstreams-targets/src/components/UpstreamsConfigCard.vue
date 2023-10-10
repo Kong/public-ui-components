@@ -2,6 +2,7 @@
   <div>
     <EntityBaseConfigCard
       :config="config"
+      :config-card-doc="configCardDoc"
       :config-schema="configSchema"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
@@ -218,6 +219,14 @@ const props = defineProps({
       if (!config.entityId) return false
       return true
     },
+  },
+  /**
+   * External link for documentation that determines visibility of Documentation button
+   */
+  configCardDoc: {
+    type: String,
+    default: '',
+    required: false,
   },
   /**
    * Control visibility of card title content
