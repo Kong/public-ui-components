@@ -372,19 +372,6 @@ importers:
         specifier: ^1.0.4
         version: 1.0.4(vue@3.3.4)
 
-  packages/core/error-boundary:
-    dependencies:
-      '@kong/icons':
-        specifier: ^1.7.3
-        version: 1.7.3(vue@3.3.4)
-    devDependencies:
-      '@kong/design-tokens':
-        specifier: ^1.11.2
-        version: 1.11.3
-      vue:
-        specifier: ^3.3.4
-        version: 3.3.4
-
   packages/core/forms:
     dependencies:
       fecha:
@@ -694,6 +681,9 @@ importers:
       '@kong-ui-public/core':
         specifier: workspace:^
         version: link:../../core/core
+      '@kong/icons':
+        specifier: ^1.7.3
+        version: 1.7.3(vue@3.3.4)
       compare-versions:
         specifier: ^6.1.0
         version: 6.1.0
@@ -2032,8 +2022,8 @@ packages:
       vue: 3.3.4
     dev: false
 
-  /@kong/kongponents@8.123.9(vue-router@4.2.5)(vue@3.3.4):
-    resolution: {integrity: sha512-hvUkfUyXq99bdwlxhdNkzcMqSz3rmuPWgaQJGNH22RBk6bsjsanKYgGclYW1HupPXpFVcTBp+trEuazqU+uZmg==}
+  /@kong/kongponents@8.123.8(vue-router@4.2.5)(vue@3.3.4):
+    resolution: {integrity: sha512-NXiIAP4ojBu8JpaeUhnLByA4qTV1BCV5mtUa631BERy03NS00N3qB76xtnZ8JQzWI/IljdMaurvRnVtdEwNN9Q==}
     engines: {node: '>=v16.20.2'}
     peerDependencies:
       vue: '>= 3.3.4 < 4'
@@ -2054,6 +2044,9 @@ packages:
       vue-router: 4.2.5(vue@3.3.4)
     transitivePeerDependencies:
       - debug
+
+  /@kong/kongponents@8.123.9(vue-router@4.2.5)(vue@3.3.4):
+    resolution: {integrity: sha512-hvUkfUyXq99bdwlxhdNkzcMqSz3rmuPWgaQJGNH22RBk6bsjsanKYgGclYW1HupPXpFVcTBp+trEuazqU+uZmg==}
 
   /@kong/swagger-ui-kong-theme-universal@4.2.8(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.5)(vue@3.3.4):
     resolution: {integrity: sha512-HS2Fjjd/tLWCmcEeRefzsDotsdNcF2d10L5ugzOYOuIMTRbCXq6wB7lTKJZQDCa7uy5syIeDuku1QSNpnmHOyw==}

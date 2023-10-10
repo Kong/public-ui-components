@@ -130,6 +130,41 @@ describe('<EntityBaseConfigCard />', () => {
       cy.getTestId('config-card-title').should('not.exist')
     })
 
+    it('displays KSelect to choose Format when Feature Flag is on', () => {
+      interceptFetch()
+
+      cy.mount(EntityBaseConfigCard, {
+        props: {
+          // TODO: Remove config once Feature Flag `khcp-8778-json-yaml-configurations` is enabled
+          config: {
+            jsonYamlEnabled: true,
+          },
+          configSchema,
+          fetchUrl,
+        },
+      })
+
+      cy.getTestId('select-config-format').should('exist')
+    })
+
+    it('displays KButton with book icon when `configCardDoc` prop is set correctly', () => {
+      interceptFetch()
+
+      cy.mount(EntityBaseConfigCard, {
+        props: {
+          // TODO: Remove config once Feature Flag `khcp-8778-json-yaml-configurations` is enabled
+          config: {
+            jsonYamlEnabled: true,
+          },
+          configSchema,
+          fetchUrl,
+          configCardDoc: 'www.test.com',
+        },
+      })
+
+      cy.getTestId('book-icon').should('exist')
+    })
+
     it('correctly displays common fields', () => {
       const commonFields = ['id', 'name', 'enabled', 'updated_at', 'created_at', 'tags']
       const commonLabels = ['ID', 'Name', 'Enabled', 'Last Updated', 'Created', 'Tags']

@@ -4,6 +4,7 @@ import useDeleteUrlBuilder from './useDeleteUrlBuilder'
 import useErrors from './useErrors'
 import useFetcher from './useFetcher'
 import useFetchUrlBuilder from './useFetchUrlBuilder'
+import useHelpers from './useHelpers'
 import useStringHelpers from './useStringHelpers'
 import useI18n from './useI18n'
 import useGatewayFeatureSupported from './useGatewayFeatureSupported'
@@ -16,6 +17,7 @@ export default {
   useErrors,
   useFetcher,
   useFetchUrlBuilder,
+  useHelpers,
   useStringHelpers,
   useI18n,
   useGatewayFeatureSupported,

@@ -10,23 +10,30 @@
       @fetch:success="handleFetch"
       @loading="(val: boolean) => $emit('loading', val)"
     >
-      <template #cert="{ rowValue }">
+      <template #cert="slotProps">
         <KCodeBlock
+          v-if="getPropValue('rowValue', slotProps)"
           :id="`ca-cert-${config.entityId}-cert-codeblock`"
-          :code="rowValue"
+          :code="getPropValue('rowValue', slotProps)"
           is-single-line
           language="plaintext"
         />
       </template>
-      <template #metadata="{ rowValue }">
+      <template #metadata-label>
+        <KLabel class="metadata-label">
+          Metadata
+        </KLabel>
+      </template>
+
+      <template #metadata="slotProps">
         <ConfigCardItem
-          v-for="propKey in Object.keys(rowValue).filter((prop: string) => !HIDDEN_METADATA.includes(prop))"
+          v-for="propKey in Object.keys(getPropValue('rowValue', slotProps)).filter((prop: string) => !HIDDEN_METADATA.includes(prop))"
           :key="propKey"
           :data-testid="`ca-cert-metadata-${propKey}`"
           :item="{
             key: propKey,
             label: convertKeyToTitle(propKey),
-            value: propKey === 'expiry' ? expiry : propKey === 'key_usages' ? keyUsages : rowValue[propKey],
+            value: getPropItemValue(propKey, slotProps),
             type: propKey === 'key_usages' ? ConfigurationSchemaType.BadgeTag : ConfigurationSchemaType.Text
           }"
         />
@@ -60,7 +67,7 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerCertificateEntityConfig, KonnectCertificateEntityConfig, CACertificateConfigurationSchema, EntityRow } from '../types'
-import { EntityBaseConfigCard, ConfigurationSchemaType, ConfigurationSchemaSection, useStringHelpers, ConfigCardItem } from '@kong-ui-public/entities-shared'
+import { EntityBaseConfigCard, ConfigurationSchemaType, ConfigurationSchemaSection, useStringHelpers, useHelpers, ConfigCardItem } from '@kong-ui-public/entities-shared'
 import endpoints from '../ca-certificates-endpoints'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -99,6 +106,7 @@ const props = defineProps({
 
 const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 const { convertKeyToTitle } = useStringHelpers()
+const { getPropValue } = useHelpers()
 const { getCertificateData } = composables.useCertificate()
 
 const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
@@ -113,6 +121,22 @@ const parsedCertData = computed(() => {
 const issuer = computed((): string => parsedCertData.value?.schemaIssuer || '')
 const expiry = computed((): string => parsedCertData.value?.schemaExpiry ? formatUnixTimeStamp(parsedCertData.value?.schemaExpiry) : '')
 const keyUsages = computed((): string[] => parsedCertData.value?.schemaKeyUsages || [])
+
+const getPropItemValue = (propKey: string, slotProps?: Record<string, any>) => {
+  const propValue = getPropValue('rowValue', slotProps)
+
+  if (propKey === 'expiry') {
+    return expiry.value
+  } else if (propKey === 'key_usages') {
+    return keyUsages.value
+  }
+
+  if (propValue) {
+    return propValue[propKey]
+  }
+
+  return undefined
+}
 
 const handleFetch = (entity: Record<string, any>) => {
   record.value = entity as EntityRow
@@ -167,6 +191,10 @@ const configSchema = ref<CACertificateConfigurationSchema>({
 .kong-ui-ca-certificate-entity-config-card {
   :deep(.config-badge) {
     margin-right: $kui-space-20;
+  }
+
+  .metadata-label {
+    font-size: $kui-font-size-40;
   }
 }
 </style>

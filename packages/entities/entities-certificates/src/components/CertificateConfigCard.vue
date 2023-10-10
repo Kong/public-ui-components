@@ -20,10 +20,11 @@
           </template>
         </i18nT>
       </template>
-      <template #cert="{ rowValue }">
+      <template #cert="slotProps">
         <KCodeBlock
+          v-if="getPropValue('rowValue', slotProps)"
           :id="`certificate-${config.entityId}-cert-codeblock`"
-          :code="rowValue"
+          :code="getPropValue('rowValue', slotProps)"
           is-single-line
           language="plaintext"
         />
@@ -39,14 +40,20 @@
         </i18nT>
       </template>
 
+      <template #metadata-label>
+        <KLabel class="metadata-label">
+          Metadata
+        </KLabel>
+      </template>
+
       <!-- Certificate metadata -->
-      <template #metadata="{ rowValue }">
+      <template #metadata="slotProps">
         <ConfigCardItem
-          v-for="propKey in Object.keys(rowValue)"
+          v-for="propKey in Object.keys(getPropValue('rowValue', slotProps))"
           :key="propKey"
           :item="{
             key: propKey,
-            value: getMetadataValue(propKey, rowValue),
+            value: getPropItemValue(propKey, slotProps),
             label: getMetadataLabel(propKey),
             type: (propKey === 'key_usages' || propKey === 'snis' || propKey === 'dns_names') ? ConfigurationSchemaType.BadgeTag : ConfigurationSchemaType.Text
           }"
@@ -84,11 +91,13 @@
       </template>
       <template
         v-if="hasCertAlt"
-        #cert_alt="{ rowValue }"
+        #cert_alt="slotProps"
       >
+        >
         <KCodeBlock
+          v-if="getPropValue('rowValue', slotProps)"
           :id="`certificate-${config.entityId}-cert-alt-codeblock`"
-          :code="rowValue"
+          :code="getPropValue('rowValue', slotProps)"
           is-single-line
           language="plaintext"
         />
@@ -128,7 +137,7 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerCertificateEntityConfig, KonnectCertificateEntityConfig, CertificateConfigurationSchema, EntityRow } from '../types'
-import { EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType, ConfigCardItem, useStringHelpers } from '@kong-ui-public/entities-shared'
+import { EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType, ConfigCardItem, useStringHelpers, useHelpers } from '@kong-ui-public/entities-shared'
 import endpoints from '../certificates-endpoints'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -165,6 +174,7 @@ const props = defineProps({
 
 const { i18n: { t, formatUnixTimeStamp }, i18nT } = composables.useI18n()
 const { convertKeyToTitle } = useStringHelpers()
+const { getPropValue } = useHelpers()
 const { getCertificateData } = composables.useCertificate()
 
 const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
@@ -236,6 +246,24 @@ const handleFetch = (entity: Record<string, any>) => {
   emit('fetch:success', entity)
 }
 
+const getPropItemValue = (propKey: string, slotProps?: Record<string, any>) => {
+  const propValue = getPropValue('rowValue', slotProps)
+
+  if (propKey === 'expiry') {
+    return expiry.value
+  } else if (propKey === 'key_usages') {
+    return keyUsages.value
+  } else if (propKey === 'san_names') {
+    return sanNames.value
+  }
+
+  if (propValue) {
+    return propValue[propKey]
+  }
+
+  return undefined
+}
+
 /**
  * Parsing Certificate Logic
  */
@@ -271,15 +299,16 @@ const getMetadataLabel = (propKey: string) => {
   return configSchema.value?.[propKey as keyof typeof configSchema.value]?.label || convertKeyToTitle(propKey)
 }
 
-const getMetadataValue = (propKey: string, row: Record<string, any>) => {
-  return propKey === 'expiry' ? expiry.value : propKey === 'key_usages' ? keyUsages.value : propKey === 'san_names' ? sanNames.value : row[propKey]
-}
 </script>
 
 <style lang="scss" scoped>
 .kong-ui-certificate-entity-config-card {
   :deep(.config-badge) {
     margin-right: $kui-space-20;
+  }
+
+  .metadata-label {
+    font-size: $kui-font-size-40;
   }
 }
 </style>

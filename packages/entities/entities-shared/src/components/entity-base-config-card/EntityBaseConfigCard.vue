@@ -1,6 +1,6 @@
+<!-- TODO: Remove jsonYamlEnabled reference once Feature Flag `khcp-8778-json-yaml-configurations` is enabled -->
 <template>
   <KCard
-    border-variant="noBorder"
     class="kong-ui-entity-base-config-card"
   >
     <template
@@ -17,7 +17,42 @@
     <template #actions>
       <div class="config-card-actions">
         <slot name="actions" />
-        <KClipboardProvider v-slot="{ copyToClipboard }">
+        <KLabel
+          v-if="config.jsonYamlEnabled"
+          class="config-format-select-label"
+          data-testid="config-format-select-label"
+        >
+          {{ label }}
+        </KLabel>
+        <KSelect
+          v-if="config.jsonYamlEnabled"
+          appearance="select"
+          data-testid="select-config-format"
+          :items="configFormatItems"
+          @change="handleChange"
+        />
+
+        <KButton
+          v-if="props.config.jsonYamlEnabled && configCardDoc"
+          appearance="btn-link"
+          class="book-icon"
+          data-testid="book-icon"
+        >
+          <a
+            :href="configCardDoc"
+            rel="noopener"
+            target="_blank"
+          >
+            <BookIcon
+              :size="KUI_ICON_SIZE_40"
+            />
+          </a>
+        </KButton>
+
+        <KClipboardProvider
+          v-if="!config.jsonYamlEnabled"
+          v-slot="{ copyToClipboard }"
+        >
           <KButton
             v-if="!isLoading && !fetchDetailsError"
             appearance="btn-link"
@@ -51,7 +86,36 @@
       </KEmptyState>
 
       <!-- Properties Content -->
-      <div class="config-card-details-section">
+      <div
+        v-if="config.jsonYamlEnabled"
+        class="config-card-details-section"
+      >
+        <ConfigCardDisplay
+          :format="configFormat"
+          :prop-list-types="propListTypes"
+          :property-collections="propertyLists"
+          :record="record"
+        >
+          <!-- Pass all the slots from GrandParent to Child components -->
+          <template
+            v-for="slotKey in Object.keys($slots)"
+            :key="slotKey"
+            #[slotKey]="{ row, rowValue }"
+          >
+            <slot
+              :name="slotKey"
+              :row="row"
+              :row-value="rowValue"
+            />
+          </template>
+        </ConfigCardDisplay>
+      </div>
+
+      <!-- TODO: Remove below div once Feature Flag `khcp-8778-json-yaml-configurations` is enabled -->
+      <div
+        v-else
+        class="config-card-details-section"
+      >
         <div
           v-for="pType in propListTypes"
           :key="`config-card-details-${pType}-props`"
@@ -107,6 +171,9 @@ import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, Configuratio
 import { ConfigurationSchemaType, ConfigurationSchemaSection } from '../../types'
 import composables from '../../composables'
 import ConfigCardItem from './ConfigCardItem.vue'
+import ConfigCardDisplay from './ConfigCardDisplay.vue'
+import { BookIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void,
@@ -176,6 +243,22 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * The label text to show for the select Format element
+   */
+  label: {
+    type: String,
+    default: 'Format: ',
+    required: false,
+  },
+  /**
+   * External link for documentation
+   */
+  configCardDoc: {
+    type: String,
+    default: '',
+    required: false,
+  },
 })
 
 const slots = useSlots()
@@ -186,6 +269,28 @@ const { convertKeyToTitle } = composables.useStringHelpers()
 const { axiosInstance } = composables.useAxios({
   headers: props.config?.requestHeaders,
 })
+
+const configFormatItems = [
+  {
+    label: t('baseConfigCard.general.structuredFormat'),
+    value: 'structured',
+    selected: true,
+  },
+  {
+    label: 'JSON',
+    value: 'json',
+  },
+  {
+    label: 'YAML',
+    value: 'yaml',
+  },
+]
+
+const configFormat = ref('structured')
+
+const handleChange = (payload: any): void => {
+  configFormat.value = payload?.value
+}
 
 /**
  * default ordering for these common fields:
@@ -438,7 +543,13 @@ onBeforeMount(async () => {
   }
 
   .config-card-actions {
+    align-items: center;
     display: flex;
+
+    .config-format-select-label {
+      margin-bottom: $kui-space-0;
+      margin-right: $kui-space-40;
+    }
   }
 
   .config-card-prop-section-title {
@@ -451,6 +562,10 @@ onBeforeMount(async () => {
 
   :deep(.config-card-details-row:last-of-type) {
     border-bottom: none;
+  }
+
+  .book-icon {
+      margin-left: $kui-space-40;
   }
 }
 </style>

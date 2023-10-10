@@ -24,6 +24,12 @@ export const routes: Array<RouteRecordRaw & { label?: string }> = [
     component: () => import('./pages/ConfigCardItemPage.vue'),
   },
   {
+    path: '/config-card-display',
+    name: 'config-card-display',
+    label: 'ConfigCardDisplay',
+    component: () => import('./pages/ConfigCardDisplayPage.vue'),
+  },
+  {
     path: '/entity-base-form',
     name: 'entity-base-form',
     label: 'EntityBaseForm',

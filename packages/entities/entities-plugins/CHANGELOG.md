@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.2.20...@kong-ui-public/entities-plugins@1.3.0) (2023-10-10)
+
+
+### Features
+
+* **config-card-display:** json-yaml format [khcp-9212] ([#817](https://github.com/Kong/public-ui-components/issues/817)) ([b4030f0](https://github.com/Kong/public-ui-components/commit/b4030f048f64fc4e156e78d9825646999bf22898))
+
+
+
+
+
 ## [1.2.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.2.19...@kong-ui-public/entities-plugins@1.2.20) (2023-10-07)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

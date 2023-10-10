@@ -52,7 +52,8 @@
       "copy": "Failed to copy to clipboard"
     },
     "general": {
-      "entryTitle": "Entry {index}"
+      "entryTitle": "Entry {index}",
+      "structuredFormat": "Structured"
     }
   },
   "filter": {
