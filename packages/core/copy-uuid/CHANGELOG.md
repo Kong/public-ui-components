@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@1.2.2...@kong-ui-public/copy-uuid@1.3.0) (2023-10-10)
+
+
+### Features
+
+* **error-boundary:** create component [KHCP-6068] ([#821](https://github.com/Kong/public-ui-components/issues/821)) ([6c7851f](https://github.com/Kong/public-ui-components/commit/6c7851f0c006973591ea7475c3e75c27eab45f88))
+
+
+
+
+
 ## [1.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@1.2.1...@kong-ui-public/copy-uuid@1.2.2) (2023-10-07)
 
 **Note:** Version bump only for package @kong-ui-public/copy-uuid
