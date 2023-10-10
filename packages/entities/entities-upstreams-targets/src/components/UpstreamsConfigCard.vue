@@ -185,10 +185,10 @@
           </template>
         </i18nT>
       </template>
-      <template #client_certificate="{rowValue}">
+      <template #client_certificate="slotProps">
         <div>
           <div data-testid="client_certificate-plain-text">
-            <span>{{ rowValue?.id }}</span>
+            <span>{{ getPropValue('rowValue', slotProps)?.id }}</span>
           </div>
         </div>
       </template>
@@ -200,7 +200,7 @@
 import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { KongManagerUpstreamsEntityConfig, KonnectUpstreamsEntityConfig, UpstreamsConfigurationSchema } from '../types'
-import { EntityBaseConfigCard, ConfigurationSchemaType, ConfigurationSchemaSection } from '@kong-ui-public/entities-shared'
+import { EntityBaseConfigCard, ConfigurationSchemaType, ConfigurationSchemaSection, useHelpers } from '@kong-ui-public/entities-shared'
 import endpoints from '../upstreams-endpoints'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -236,6 +236,7 @@ defineEmits<{
 }>()
 
 const { i18n: { t }, i18nT } = composables.useI18n()
+const { getPropValue } = useHelpers()
 const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit)
 
 const configSchema = ref<UpstreamsConfigurationSchema>({

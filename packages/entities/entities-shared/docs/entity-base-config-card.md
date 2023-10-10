@@ -87,7 +87,6 @@ Value should NOT contain config.apiBaseUrl, as we auto include this. Typically t
 
 ex. `/api/runtime_groups/{controlPlaneId}/services/{id}`
 
-
 #### `dataKey`
 
 - type: `String`
@@ -169,6 +168,14 @@ interface PluginConfigurationSchemaItem {
 - default: `false`
 
 Controls the visibility of the card's title and `title` slot. A value of `true` will hide the `title` content (including slot content).
+
+#### `configCardDoc`
+
+- type: `String`
+- required: `false`
+- default: `null`
+
+External link for documentation. Controls the visibility of the documentation button.
 
 ### Sections
 

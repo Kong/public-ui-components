@@ -69,6 +69,7 @@
   "dependencies": {
     "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/core": "workspace:^",
+    "@kong/icons": "^1.7.3",
     "compare-versions": "^6.1.0"
   }
 }
