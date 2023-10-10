@@ -33,7 +33,7 @@
         />
 
         <KButton
-          v-if="showBookButton && configCardDoc"
+          v-if="showDocumentationButton && configCardDoc"
           appearance="btn-link"
           class="book-icon"
           data-testid="book-icon"
@@ -280,7 +280,7 @@ const { axiosInstance } = composables.useAxios({
 
 const configFormatItems = [
   {
-    label: 'Structured',
+    label: t('baseConfigCard.general.structuredFormat'),
     value: 'structured',
     selected: true,
   },
@@ -294,7 +294,7 @@ const configFormatItems = [
   },
 ]
 
-const showBookButton = computed(() => !props.hideConfigCardDoc && props.config.jsonYamlEnabled)
+const showDocumentationButton = computed(() => !props.hideConfigCardDoc && props.config.jsonYamlEnabled)
 const configFormat = ref('structured')
 
 const handleChange = (payload: any): void => {
