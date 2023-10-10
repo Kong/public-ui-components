@@ -27,6 +27,7 @@
 
 # Core packages
 /packages/core/app-layout/ @adamdehaven @jillztom
+/packages/core/error-boundary/ @adamdehaven @jillztom @ValeryG
 /packages/core/copy-uuid/ @Kong/team-km @Kong/team-core-ui
 /packages/core/i18n/ @adamdehaven @ValeryG @jillztom
 /packages/core/misc-widgets/ @Kong/team-core-ui
