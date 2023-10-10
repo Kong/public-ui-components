@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@1.1.34...@kong-ui-public/entities-gateway-services@1.2.0) (2023-10-10)
+
+
+### Features
+
+* **config-card-display:** json-yaml format [khcp-9212] ([#817](https://github.com/Kong/public-ui-components/issues/817)) ([b4030f0](https://github.com/Kong/public-ui-components/commit/b4030f048f64fc4e156e78d9825646999bf22898))
+
+
+
+
+
 ## [1.1.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@1.1.33...@kong-ui-public/entities-gateway-services@1.1.34) (2023-10-07)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services

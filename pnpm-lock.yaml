@@ -2013,8 +2013,6 @@ packages:
     resolution: {integrity: sha512-qBladWjD6m7KwOhdQU4jwF2n3SGvC3h5/BqUfx46KzMnWWV0Mr48kYimzYaUbk8B9SwkqTt6kruwzutSFzPS6Q==}
     dev: true
 
-  /@kong/kongponents@8.123.9(vue-router@4.2.5)(vue@3.3.4):
-    resolution: {integrity: sha512-hvUkfUyXq99bdwlxhdNkzcMqSz3rmuPWgaQJGNH22RBk6bsjsanKYgGclYW1HupPXpFVcTBp+trEuazqU+uZmg==}
   /@kong/icons@1.7.3(vue@3.3.4):
     resolution: {integrity: sha512-VI/7fpbH4WoNShy095JzOqAQs1SAMvWSFnKfD1MreQyR6b3Usn00ugkgF2j5PVP/CvflZ63U9Ay7RlUtW/Ih/w==}
     engines: {node: '>=v18.17.1'}
@@ -2046,6 +2044,9 @@ packages:
       vue-router: 4.2.5(vue@3.3.4)
     transitivePeerDependencies:
       - debug
+
+  /@kong/kongponents@8.123.9(vue-router@4.2.5)(vue@3.3.4):
+    resolution: {integrity: sha512-hvUkfUyXq99bdwlxhdNkzcMqSz3rmuPWgaQJGNH22RBk6bsjsanKYgGclYW1HupPXpFVcTBp+trEuazqU+uZmg==}
 
   /@kong/swagger-ui-kong-theme-universal@4.2.8(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.5)(vue@3.3.4):
     resolution: {integrity: sha512-HS2Fjjd/tLWCmcEeRefzsDotsdNcF2d10L5ugzOYOuIMTRbCXq6wB7lTKJZQDCa7uy5syIeDuku1QSNpnmHOyw==}
