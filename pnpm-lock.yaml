@@ -30,7 +30,7 @@ importers:
         specifier: ^8.123.9
         version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
       '@rushstack/eslint-patch':
-        specifier: ^1.5.0
+        specifier: ^1.5.1
         version: 1.5.1
       '@types/flat':
         specifier: ^5.0.3
