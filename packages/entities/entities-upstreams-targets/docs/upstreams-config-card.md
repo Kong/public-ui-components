@@ -31,43 +31,51 @@ A config card component for Upstream.
 - required: `true`
 - default: `undefined`
 - properties:
-    - `app`:
-        - type: `'konnect' | 'kongManager'`
-        - required: `true`
-        - default: `undefined`
-        - App name.
+  - `app`:
+    - type: `'konnect' | 'kongManager'`
+    - required: `true`
+    - default: `undefined`
+    - App name.
 
-    - `apiBaseUrl`:
-        - type: `string`
-        - required: `true`
-        - default: `undefined`
-        - Base URL for API requests.
+  - `apiBaseUrl`:
+    - type: `string`
+    - required: `true`
+    - default: `undefined`
+    - Base URL for API requests.
 
-    - `requestHeaders`:
-        - type: `RawAxiosRequestHeaders | AxiosHeaders`
-        - required: `false`
-        - default: `undefined`
-        - Additional headers to send with all Axios requests.
+  - `requestHeaders`:
+    - type: `RawAxiosRequestHeaders | AxiosHeaders`
+    - required: `false`
+    - default: `undefined`
+    - Additional headers to send with all Axios requests.
 
-    - `workspace`:
-        - type: `string`
-        - required: `true`
-        - default: `undefined`
-        - *Specific to Kong Manager*. Name of the current workspace.
+  - `workspace`:
+    - type: `string`
+    - required: `true`
+    - default: `undefined`
+    - *Specific to Kong Manager*. Name of the current workspace.
 
-    - `controlPlaneId`:
-        - type: `string`
-        - required: `true`
-        - default: `undefined`
-        - *Specific to Konnect*. Name of the current control plane.
+  - `controlPlaneId`:
+    - type: `string`
+    - required: `true`
+    - default: `undefined`
+    - *Specific to Konnect*. Name of the current control plane.
 
-    - `entityId`:
-        - type: `string`
-        - required: `true`
-        - default: `''`
-        - The ID of the Upstream to display the config for
+  - `entityId`:
+    - type: `string`
+    - required: `true`
+    - default: `''`
+    - The ID of the Upstream to display the config for
 
 The base konnect or kongManger config.
+
+#### `configCardDoc`
+
+- type: `String`
+- required: `false`
+- default: `null`
+
+Set this value to display the documentation button.
 
 #### `hideTitle`
 
