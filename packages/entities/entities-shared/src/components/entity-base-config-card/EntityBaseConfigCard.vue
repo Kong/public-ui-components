@@ -566,6 +566,7 @@ onBeforeMount(async () => {
 
   .book-icon {
       margin-left: $kui-space-40;
+      padding: $kui-space-0;
   }
 }
 </style>
