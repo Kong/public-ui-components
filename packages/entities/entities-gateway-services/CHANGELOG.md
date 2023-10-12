@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@1.2.1...@kong-ui-public/entities-gateway-services@1.3.0) (2023-10-12)
+
+
+### Features
+
+* **config-card-display:** adopt in all entities [khcp-9356] ([#831](https://github.com/Kong/public-ui-components/issues/831)) ([37e8b8a](https://github.com/Kong/public-ui-components/commit/37e8b8aa00ba5eea1a113c9052ac596e1cf821fe))
+
+
+
+
+
 ## [1.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@1.2.0...@kong-ui-public/entities-gateway-services@1.2.1) (2023-10-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services
