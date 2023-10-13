@@ -91,7 +91,7 @@ const computedChartData = computed(() => {
     {
       colorPalette: chartOptionsRef.value.chartDatasetColors || datavisPalette,
     },
-    chartDataRef
+    chartDataRef,
   ).value
 })
 
@@ -102,7 +102,7 @@ const computedMetricUnit = computed<string>(() => {
 
   const metricKey = chartOptionsRef.value?.bigNumberKey || 0
 
-  console.log(" >>>>metricKey <<<<", metricKey)
+  console.log(' >>>>metricKey <<<<', metricKey)
 
   return Object.values(props.chartData.meta.metricUnits)[metricKey]
 })
@@ -115,15 +115,13 @@ const hasValidChartData = computed(() => {
 })
 
 watch(props, () => {
-  console.log(" >>> bigNumberKey", props.chartOptions.bigNumberKey)
-
+  console.log(' >>> bigNumberKey', props.chartOptions.bigNumberKey)
 }, {deep: true})
-
 
 watch(props, () => {
   if (chartOptionsRef.value?.reverseDataset) {
     chartDataRef.value.records.reverse()
-    console.log("  chartDataRef order reversed >> showing record:", chartDataRef.value.records[0].event)
+    console.log('  chartDataRef order reversed >> showing record:', chartDataRef.value.records[0].event)
   }
 }, { deep: true })
 </script>

@@ -665,7 +665,7 @@ const simpleChartOptions = computed<SimpleChartOptions>(() => ({
   chartDatasetColors: twoColorPalette.value,
   metricDisplay: metricDisplay.value,
   reverseDataset: reverseDataset.value,
-  bigNumberKey: bigNumberKey.value
+  bigNumberKey: bigNumberKey.value,
 }))
 
 const randomizeData = () => {
