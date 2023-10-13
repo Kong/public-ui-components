@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.5.1...@kong-ui-public/entities-shared@1.6.0) (2023-10-13)
+
+
+### Features
+
+* **app-layout:** body background to white [khcp-8591] ([#820](https://github.com/Kong/public-ui-components/issues/820)) ([a63eb64](https://github.com/Kong/public-ui-components/commit/a63eb6460226dc48466b7c826e81fd24d610a426))
+
+
+
+
+
 ## [1.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.5.0...@kong-ui-public/entities-shared@1.5.1) (2023-10-13)
 
 

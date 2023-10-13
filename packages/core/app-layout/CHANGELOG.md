@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.24.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.23.7...@kong-ui-public/app-layout@0.24.0) (2023-10-13)
+
+
+### Features
+
+* **app-layout:** body background to white [khcp-8591] ([#820](https://github.com/Kong/public-ui-components/issues/820)) ([a63eb64](https://github.com/Kong/public-ui-components/commit/a63eb6460226dc48466b7c826e81fd24d610a426))
+
+
+
+
+
 ## [0.23.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@0.23.6...@kong-ui-public/app-layout@0.23.7) (2023-10-07)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
