@@ -222,7 +222,6 @@ onBeforeMount(async () => {
 
 <style lang="scss" scoped>
 .kong-ui-entity-base-form {
-  border: 1px solid #F1F1F5!important;
   box-sizing: border-box;
   max-width: $kui-breakpoint-desktop;
   width: 100%;

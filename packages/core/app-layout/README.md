@@ -100,11 +100,10 @@ import { AppLayout } from '@kong-ui-public/app-layout'
 
 You can customize some of the `AppLayout.vue` CSS by adding CSS variables to your app. In most use-cases, this shouldn't be necessary.
 
-Variable | Description | Default
----------|----------|---------
-`--kong-ui-app-layout-background` | The background of the `.kong-ui-app-layout` main container | `linear-gradient(180deg, #001740 0%, #073382 100%)`
-`--kong-ui-app-layout-main-box-shadow` | The box-shadow behind the `.kong-ui-app-layout-main` main container | `-30px 174px 250px #0023DB`
-`--kong-ui-app-layout-content-padding` | The padding of the `.kong-ui-app-layout-content` main content container | `16px` below `1024px`, `32px` at `1024px` and above
+| Variable                               | Description                                                             | Default                                             |
+| -------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------- |
+| `--kong-ui-app-layout-main-box-shadow` | The box-shadow behind the `.kong-ui-app-layout-main` main container     | `-30px 174px 250px #0023DB`                         |
+| `--kong-ui-app-layout-content-padding` | The padding of the `.kong-ui-app-layout-content` main content container | `16px` below `1024px`, `32px` at `1024px` and above |
 
 ### CSS variable example
 
