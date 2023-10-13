@@ -116,7 +116,7 @@ const hasValidChartData = computed(() => {
 
 watch(props, () => {
   console.log(' >>> bigNumberKey', props.chartOptions.bigNumberKey)
-}, {deep: true})
+}, { deep: true })
 
 watch(props, () => {
   if (chartOptionsRef.value?.reverseDataset) {
