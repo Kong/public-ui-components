@@ -52,7 +52,7 @@
 
       <template #tls_verify="slotProps">
         {{
-          getPropValue('rowValue', slotProps) === true || getPropValue('rowValue', slotProps) === undefined
+          typeof getPropValue('rowValue', slotProps) === 'boolean'
             ? getTlsVerifyOption('rowValue', slotProps)
             : t('gateway_services.form.fields.tls_verify_option.unset.display')
         }}
