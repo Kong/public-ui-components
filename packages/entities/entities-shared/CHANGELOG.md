@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.5.0...@kong-ui-public/entities-shared@1.5.1) (2023-10-13)
+
+
+### Bug Fixes
+
+* **service:** `tls_verify` value in config card ([#833](https://github.com/Kong/public-ui-components/issues/833)) ([96d824b](https://github.com/Kong/public-ui-components/commit/96d824bb2a29736c17dae53c011024495efa4e09))
+
+
+
+
+
 # [1.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.4.1...@kong-ui-public/entities-shared@1.5.0) (2023-10-12)
 
 
