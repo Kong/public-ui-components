@@ -76,9 +76,17 @@ export interface SimpleChartOptions {
    */
   chartDatasetColors?: AnalyticsChartColors | string[],
   /**
-   * Determines metric text to be shown in the center
+   * Determines how much detail about the metric (eg: value, info text, etc) is to be shown in the center
    */
   metricDisplay?: ChartMetricDisplay,
+  /**
+   * Determines whether the dataset order will be reversed
+   */
+  reverseDataset?: boolean,
+  /**
+   * Determines metric alignment
+   */
+  bigNumberKey?: number,
 }
 
 export interface LegendValueEntry {

@@ -111,6 +111,52 @@
             </KRadio>
           </div>
         </div>
+        <KLabel>
+          Dataset order
+        </KLabel>
+        <div class="chart-radio-group">
+          <div>
+            <KRadio
+              v-model="reverseDataset"
+              name="reverseDataset"
+              :selected-value="false"
+            >
+              Normal
+            </KRadio>
+          </div>
+          <div>
+            <KRadio
+              v-model="reverseDataset"
+              name="reverseDataset"
+              :selected-value="true"
+            >
+              Reversed
+            </KRadio>
+          </div>
+        </div>
+        <KLabel>
+          Big Number Key
+        </KLabel>
+        <div class="chart-radio-group">
+          <div>
+            <KRadio
+              v-model="bigNumberKey"
+              name="bigNumberKey"
+              :selected-value="0"
+            >
+              0
+            </KRadio>
+          </div>
+          <div>
+            <KRadio
+              v-model="bigNumberKey"
+              name="bigNumberKey"
+              :selected-value="1"
+            >
+              1
+            </KRadio>
+          </div>
+        </div>
       </div>
 
       <!-- Legend position -->
@@ -347,6 +393,8 @@ const emptyState = ref(false)
 const chartType = ref<ChartTypes | ChartTypesSimple>(ChartTypes.VERTICAL_BAR)
 const legendPosition = ref(ChartLegendPosition.Right)
 const metricDisplay = ref(ChartMetricDisplay.SingleMetric)
+const reverseDataset = ref(false)
+const bigNumberKey = ref(0)
 const selectedMetric = ref<MetricSelection>({
   name: Metrics.TotalRequests,
   unit: 'count',
@@ -616,6 +664,8 @@ const simpleChartOptions = computed<SimpleChartOptions>(() => ({
   type: chartType.value,
   chartDatasetColors: twoColorPalette.value,
   metricDisplay: metricDisplay.value,
+  reverseDataset: reverseDataset.value,
+  bigNumberKey: bigNumberKey.value
 }))
 
 const randomizeData = () => {
@@ -691,6 +741,14 @@ body {
 .sandbox-container {
   margin: 0;
   padding: $kui-space-60;
+
+  .k-input-label{
+    margin-bottom: 2px;
+
+    &:not(:first-child) {
+      margin-top: 12px;
+    }
+  }
 
   .top-n-sandbox {
     margin-top: 16px;

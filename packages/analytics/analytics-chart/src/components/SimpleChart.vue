@@ -36,7 +36,7 @@ import type { SimpleChartOptions } from '../types'
 import { ChartTypesSimple } from '../enums'
 import GaugeChart from './chart-types/GaugeChart.vue'
 import type { PropType } from 'vue'
-import { computed, toRef } from 'vue'
+import { computed, toRef, watch } from 'vue'
 import type { AnalyticsExploreResult, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette } from '../utils'
 
@@ -79,12 +79,19 @@ const props = defineProps({
 
 const { i18n } = composables.useI18n()
 
+const chartOptionsRef = toRef(props, 'chartOptions')
+const chartDataRef = toRef(props, 'chartData')
+
 const computedChartData = computed(() => {
+  // if (chartOptionsRef.value?.reverseDataset) {
+  //   props.chartData.records.reverse()
+  // }
+
   return composables.useExploreResultToDatasets(
     {
-      colorPalette: props.chartOptions.chartDatasetColors || datavisPalette,
+      colorPalette: chartOptionsRef.value.chartDatasetColors || datavisPalette,
     },
-    toRef(props, 'chartData'),
+    chartDataRef
   ).value
 })
 
@@ -93,7 +100,11 @@ const computedMetricUnit = computed<string>(() => {
     return ''
   }
 
-  return Object.values(props.chartData.meta.metricUnits)[0]
+  const metricKey = chartOptionsRef.value?.bigNumberKey || 0
+
+  console.log(" >>>>metricKey <<<<", metricKey)
+
+  return Object.values(props.chartData.meta.metricUnits)[metricKey]
 })
 
 const isGaugeChart = computed<boolean>(() => props.chartOptions.type === ChartTypesSimple.GAUGE)
@@ -102,6 +113,19 @@ const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAv
 const hasValidChartData = computed(() => {
   return props.chartData && props.chartData.meta && props.chartData.records.length
 })
+
+watch(props, () => {
+  console.log(" >>> bigNumberKey", props.chartOptions.bigNumberKey)
+
+}, {deep: true})
+
+
+watch(props, () => {
+  if (chartOptionsRef.value?.reverseDataset) {
+    chartDataRef.value.records.reverse()
+    console.log("  chartDataRef order reversed >> showing record:", chartDataRef.value.records[0].event)
+  }
+}, { deep: true })
 </script>
 
 <style lang="scss" scoped>
