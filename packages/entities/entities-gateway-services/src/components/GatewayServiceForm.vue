@@ -649,16 +649,16 @@ const initForm = (data: Record<string, any>): void => {
   form.fields.tags = data?.tags?.join(',') || ''
   form.fields.protocol = data?.protocol || 'http'
   form.fields.path = data?.path || ''
-  form.fields.read_timeout = (data?.read_timeout || data?.read_timeout === 0) ?? 60000
-  form.fields.retries = (data?.retries || data?.retries === 0) ?? 5
+  form.fields.read_timeout = (data?.read_timeout || data?.read_timeout === 0) ? data?.read_timeout : 60000
+  form.fields.retries = (data?.retries || data?.retries === 0) ? data?.retries : 5
   form.fields.host = data?.host || ''
-  form.fields.connect_timeout = (data?.connect_timeout || data?.connect_timeout === 0) ?? 60000
+  form.fields.connect_timeout = (data?.connect_timeout || data?.connect_timeout === 0) ? data?.connect_timeout : 60000
   form.fields.tls_verify_enabled = data?.tls_verify !== '' && data?.tls_verify !== null && data?.tls_verify !== undefined
   form.fields.tls_verify_value = data?.tls_verify ? data?.tls_verify : false
   form.fields.ca_certificates = data?.ca_certificates?.join(',') || ''
   form.fields.client_certificate = data?.client_certificate?.id || ''
-  form.fields.write_timeout = (data?.write_timeout || data?.write_timeout === 0) ?? 60000
-  form.fields.port = (data?.port || data?.port === 0) ?? 80
+  form.fields.write_timeout = (data?.write_timeout || data?.write_timeout === 0) ? data?.write_timeout : 60000
+  form.fields.port = (data?.port || data?.port === 0) ? data?.port : 80
   // Set initial state of `formFieldsOriginal` to these values in order to detect changes
   Object.assign(formFieldsOriginal, form.fields)
 }
@@ -794,10 +794,10 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
       form.fields.host = data?.host || ''
       form.fields.path = data?.path || ''
       form.fields.url = data?.url || ''
-      form.fields.retries = (data?.retries || data?.retries === 0) ?? 5
-      form.fields.connect_timeout = (data?.connect_timeout || data?.connect_timeout === 0) ?? 60000
-      form.fields.write_timeout = (data?.write_timeout || data?.write_timeout === 0) ?? 60000
-      form.fields.read_timeout = (data?.read_timeout || data?.read_timeout === 0) ?? 60000
+      form.fields.retries = (data?.retries || data?.retries === 0) ? data?.retries : 5
+      form.fields.connect_timeout = (data?.connect_timeout || data?.connect_timeout === 0) ? data?.connect_timeout : 60000
+      form.fields.write_timeout = (data?.write_timeout || data?.write_timeout === 0) ? data?.write_timeout : 60000
+      form.fields.read_timeout = (data?.read_timeout || data?.read_timeout === 0) ? data?.read_timeout : 60000
       form.fields.client_certificate = data?.client_certificate?.id || ''
       form.fields.ca_certificates = data?.ca_certificates?.length ? data?.ca_certificates.join(',') : ''
       form.fields.tls_verify_enabled = data?.tls_verify !== '' && data?.tls_verify !== null && data?.tls_verify !== undefined
