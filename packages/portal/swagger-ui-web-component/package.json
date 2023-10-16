@@ -16,7 +16,7 @@
     "@kong/swagger-ui-kong-theme-universal": "^4.2.8",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "swagger-client": "^3.22.3",
+    "swagger-client": "^3.23.0",
     "swagger-ui": "^4.19.1"
   },
   "repository": {
