@@ -3,7 +3,7 @@ export default function usePortFromProtocol() {
     const defaultPorts: Array<number> = [80, 443]
     const portValue = Number(port)
 
-    if (portValue && !defaultPorts.includes(portValue)) { return portValue }
+    if ((portValue || portValue === 0) && !defaultPorts.includes(portValue)) { return portValue }
 
     switch (protocol) {
       case 'grpcs':

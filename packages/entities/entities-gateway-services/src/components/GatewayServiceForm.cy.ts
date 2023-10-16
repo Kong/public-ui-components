@@ -297,6 +297,37 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-host-input').should('have.value', gatewayService1.host)
     })
 
+    it('should correctly show zero values', () => {
+      interceptKonnect({
+        mockData: {
+          ...gatewayService1,
+          read_timeout: 0,
+          retries: 0,
+          connect_timeout: 0,
+          write_timeout: 0,
+          port: 0,
+        },
+      })
+
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          gatewayServiceId: gatewayService1.id,
+          isEditing: true,
+        },
+      })
+
+      cy.wait('@getGatewayService')
+      cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
+
+      // form fields
+      cy.getTestId('gateway-service-readTimeout-input').should('have.value', 0)
+      cy.getTestId('gateway-service-retries-input').should('have.value', 0)
+      cy.getTestId('gateway-service-connTimeout-input').should('have.value', 0)
+      cy.getTestId('gateway-service-writeTimeout-input').should('have.value', 0)
+      cy.getTestId('gateway-service-port-input').should('have.value', 0)
+    })
+
     it('update event should be emitted when Gateway Service was edited', () => {
       interceptKonnect()
       interceptUpdate()
@@ -598,6 +629,37 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
         })
       })
       cy.getTestId('gateway-service-host-input').should('have.value', gatewayService1.host)
+    })
+
+    it('should correctly show zero values', () => {
+      interceptKM({
+        mockData: {
+          ...gatewayService1,
+          read_timeout: 0,
+          retries: 0,
+          connect_timeout: 0,
+          write_timeout: 0,
+          port: 0,
+        },
+      })
+
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKM,
+          gatewayServiceId: gatewayService1.id,
+          isEditing: true,
+        },
+      })
+
+      cy.wait('@getGatewayService')
+      cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
+
+      // form fields
+      cy.getTestId('gateway-service-readTimeout-input').should('have.value', 0)
+      cy.getTestId('gateway-service-retries-input').should('have.value', 0)
+      cy.getTestId('gateway-service-connTimeout-input').should('have.value', 0)
+      cy.getTestId('gateway-service-writeTimeout-input').should('have.value', 0)
+      cy.getTestId('gateway-service-port-input').should('have.value', 0)
     })
 
     it('update event should be emitted when Gateway Service was edited', () => {
