@@ -113,10 +113,14 @@ export default defineConfig({
     coverage: {
       reporter: ['text', 'json', 'html'],
     },
-    // TODO: The `registerNodeLoader` setting is deprecated. Commenting out for now but if tests start failing we need to utilize the new `deps.optimizer.web.include` instead
-    // deps: {
-    //   registerNodeLoader: true, // Ensure modules are imported properly
-    // },
+    deps: {
+      optimizer: {
+        web: {
+          // https://github.com/vitest-dev/vitest/issues/4074
+          exclude: ['vue'],
+        },
+      },
+    },
     include: ['**/src/**/*.spec.ts'],
     exclude: [
       '**/dist/**',
