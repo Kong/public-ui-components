@@ -131,6 +131,19 @@ watch(() => props.format, (format: string) => {
 
 </script>
 
+<style lang="scss">
+.config-card-display-json,
+.config-card-display-yaml {
+  #config-card-codeblock {
+    .k-highlighted-code-block {
+      code {
+        background-color: $kui-color-background-neutral-strongest;
+      }
+    }
+  }
+}
+</style>
+
 <style lang="scss" scoped>
 .config-card-prop-section-title {
   color: $kui-color-text;

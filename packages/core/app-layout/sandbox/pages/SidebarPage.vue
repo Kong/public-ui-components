@@ -380,7 +380,7 @@ main {
 }
 
 body {
-  background: var(--kong-ui-app-layout-background, linear-gradient(180deg, #001740 0%, #073382 100%));
+  background: linear-gradient(180deg, #001740 0%, #073382 100%);
   margin: 0 !important;
 }
 </style>

@@ -333,8 +333,6 @@ const handleUpdateTablePreferences = (tablePreferences: UserTablePreferences): v
 
 <style lang="scss" scoped>
 .kong-ui-entity-base-table {
-  border: 1px solid #F1F1F5!important;
-
   .toolbar-container {
     align-items: center;
   }

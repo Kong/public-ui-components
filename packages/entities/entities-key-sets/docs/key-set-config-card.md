@@ -69,6 +69,14 @@ A config card component for Key Sets.
 
 The base konnect or kongManger config.
 
+#### `configCardDoc`
+
+- type: `String`
+- required: `false`
+- default: `null`
+
+Set this value to display the documentation button.
+
 #### `hideTitle`
 
 - type: `Boolean`

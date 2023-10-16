@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.5.1...@kong-ui-public/entities-shared@1.6.0) (2023-10-13)
+
+
+### Features
+
+* **app-layout:** body background to white [khcp-8591] ([#820](https://github.com/Kong/public-ui-components/issues/820)) ([a63eb64](https://github.com/Kong/public-ui-components/commit/a63eb6460226dc48466b7c826e81fd24d610a426))
+
+
+
+
+
+## [1.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.5.0...@kong-ui-public/entities-shared@1.5.1) (2023-10-13)
+
+
+### Bug Fixes
+
+* **service:** `tls_verify` value in config card ([#833](https://github.com/Kong/public-ui-components/issues/833)) ([96d824b](https://github.com/Kong/public-ui-components/commit/96d824bb2a29736c17dae53c011024495efa4e09))
+
+
+
+
+
+# [1.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.4.1...@kong-ui-public/entities-shared@1.5.0) (2023-10-12)
+
+
+### Features
+
+* **config-card-display:** adopt in all entities [khcp-9356] ([#831](https://github.com/Kong/public-ui-components/issues/831)) ([37e8b8a](https://github.com/Kong/public-ui-components/commit/37e8b8aa00ba5eea1a113c9052ac596e1cf821fe))
+
+
+
+
+
 ## [1.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.4.0...@kong-ui-public/entities-shared@1.4.1) (2023-10-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

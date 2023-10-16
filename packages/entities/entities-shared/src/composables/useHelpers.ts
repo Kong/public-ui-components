@@ -7,7 +7,7 @@ export default function useHelpers() {
    * @returns the property value or undefined
    */
   const getPropValue = (propName: string, slotProps?: Record<string, any>) => {
-    return slotProps?.[propName] || undefined
+    return slotProps?.[propName] ?? undefined
   }
 
   return {
