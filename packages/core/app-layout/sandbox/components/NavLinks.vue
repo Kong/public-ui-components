@@ -15,5 +15,8 @@
     <router-link to="/page-header">
       PageHeader
     </router-link>
+    <router-link to="/page-content">
+      PageContent
+    </router-link>
   </div>
 </template>

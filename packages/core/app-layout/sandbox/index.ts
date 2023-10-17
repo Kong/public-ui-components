@@ -33,6 +33,11 @@ const router = createRouter({
       name: 'page-header',
       component: () => import('./pages/PageHeaderPage.vue'),
     },
+    {
+      path: '/page-content',
+      name: 'page-content',
+      component: () => import('./pages/PageContentPage.vue'),
+    },
   ],
 })
 

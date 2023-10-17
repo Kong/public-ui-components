@@ -5,6 +5,7 @@ import AppAboutSection from './components/aboutSection/AppAboutSection.vue'
 import AppError from './components/errors/AppError.vue'
 import AppLayout from './components/AppLayout.vue'
 import AppNavbar from './components/navbar/AppNavbar.vue'
+import AppPageContent from './components/pageContent/AppPageContent.vue'
 import AppPageHeader from './components/pageHeader/AppPageHeader.vue'
 import AppSidebar from './components/sidebar/AppSidebar.vue'
 import SidebarToggle from './components/sidebar/SidebarToggle.vue'
@@ -25,6 +26,7 @@ export {
   AppError,
   AppLayout,
   AppNavbar,
+  AppPageContent,
   AppPageHeader,
   AppSidebar,
   SidebarToggle,
