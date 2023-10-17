@@ -390,10 +390,10 @@ const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const showLoadingState = ref(false)
 const emptyState = ref(false)
-const chartType = ref<ChartTypes | ChartTypesSimple>(ChartTypes.VERTICAL_BAR)
+const chartType = ref<ChartTypes | ChartTypesSimple>(ChartTypesSimple.GAUGE)
 const legendPosition = ref(ChartLegendPosition.Right)
-const metricDisplay = ref(ChartMetricDisplay.SingleMetric)
-const reverseDataset = ref(false)
+const metricDisplay = ref(ChartMetricDisplay.Full)
+const reverseDataset = ref(true)
 const bigNumberKey = ref(0)
 const selectedMetric = ref<MetricSelection>({
   name: Metrics.TotalRequests,
@@ -417,7 +417,7 @@ const metricItems = [{
 
 // Short labels
 const statusCodeLabels = [
-  '200', '300', '400', '500',
+  '200', '300',
 ]
 
 // Long labels
@@ -429,6 +429,7 @@ const statusCodeDimensionValues = ref(new Set(statusCodeLabels))
 const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',
 ]))
+
 const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
   if (emptyState.value) {
     return null
@@ -562,10 +563,9 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
 
   return {
     // Gauge doughnut chart type should only receive 2 data points
-    records: !isGaugeChart.value
+    records: !isSimpleChart.value
       ? records
-      // @ts-ignore - merely sorting the array for display purposes
-      : records.slice(0, 2).sort((a, b) => (a[selectedMetric.value.name] < b[selectedMetric.value.name])),
+      : records.slice(0, 2),
     meta,
   }
 })
@@ -657,7 +657,6 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => ({
   stacked: stackToggle.value,
   fill: fillToggle.value,
   chartDatasetColors: colorPalette.value,
-  isSimple: isSimpleChart.value,
 }))
 
 const simpleChartOptions = computed<SimpleChartOptions>(() => ({
@@ -682,7 +681,7 @@ const addDataset = () => {
 }
 
 const dataCode = computed(() => JSON.stringify(exploreResult.value, null, 2))
-const optionsCode = computed(() => JSON.stringify(analyticsChartOptions.value, null, 2))
+const optionsCode = computed(() => JSON.stringify(isSimpleChart.value ? simpleChartOptions.value : analyticsChartOptions.value, null, 2))
 
 const isTimeSeriesChart = computed<boolean>(() => {
   return [ChartTypes.TIMESERIES_BAR, ChartTypes.TIMESERIES_LINE].some(e => e === chartType.value)
@@ -724,7 +723,6 @@ watch(isGaugeChart, () => {
     statusCodeDimensionValues.value = new Set(statusCodeLabels.slice(0, 2))
   }
 })
-
 </script>
 
 <style lang="scss" scoped>

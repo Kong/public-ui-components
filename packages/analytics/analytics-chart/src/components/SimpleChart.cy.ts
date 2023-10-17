@@ -79,7 +79,6 @@ describe('<SimpleChart />', () => {
         chartData: exploreResultTruncated,
         chartOptions: {
           type: ChartTypesSimple.GAUGE,
-          isSimple: true,
           metricDisplay: ChartMetricDisplay.Full,
         },
         legendPosition: ChartLegendPosition.Hidden,
@@ -96,7 +95,6 @@ describe('<SimpleChart />', () => {
         chartData: exploreResultTruncated,
         chartOptions: {
           type: ChartTypesSimple.GAUGE,
-          isSimple: true,
           metricDisplay: ChartMetricDisplay.SingleMetric,
         },
         legendPosition: ChartLegendPosition.Hidden,
@@ -113,7 +111,6 @@ describe('<SimpleChart />', () => {
         chartData: exploreResultTruncated,
         chartOptions: {
           type: ChartTypesSimple.GAUGE,
-          isSimple: true,
           metricDisplay: ChartMetricDisplay.Hidden,
         },
         legendPosition: ChartLegendPosition.Hidden,

@@ -51,6 +51,11 @@ import { ChartMetricDisplay } from '../../enums'
 import type { DoughnutChartData } from '../../types/chart-data'
 
 const props = defineProps({
+  bigNumberKey: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
   chartData: {
     type: Object as PropType<KChartData>,
     required: false,
@@ -136,8 +141,10 @@ const chartOptions = {
 
 const chartInstance = ref<Chart>()
 
+// The large metric value displayed in the center can be specified; otherwise, default to the first value in the dataset
+const metricHighlight = computed(() => approxNum(formattedDataset?.value[0]?.data[props.bigNumberKey], { capital: true }))
+
 // When displaying a simple chart, we only expect two values in the dataset
-const metricHighlight = computed(() => approxNum(formattedDataset?.value[0]?.data[0], { capital: true }))
 const metricTotal = computed(() => approxNum(formattedDataset?.value[0]?.data[0] + formattedDataset?.value[0]?.data[1], { capital: true }))
 
 const metricHighlightColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[0]}`)

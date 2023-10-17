@@ -18,6 +18,7 @@
     >
       <GaugeChart
         v-if="isGaugeChart"
+        :big-number-key="chartOptions.bigNumberKey"
         :chart-data="computedChartData"
         :dataset-colors="chartOptions.chartDatasetColors"
         is-simple
@@ -79,20 +80,21 @@ const props = defineProps({
 
 const { i18n } = composables.useI18n()
 
-const chartOptionsRef = toRef(props, 'chartOptions')
-const chartDataRef = toRef(props, 'chartData')
-
 const computedChartData = computed(() => {
-  // if (chartOptionsRef.value?.reverseDataset) {
-  //   props.chartData.records.reverse()
-  // }
+  const chartDataRef = toRef(props, 'chartData')
 
-  return composables.useExploreResultToDatasets(
+  const chartData = composables.useExploreResultToDatasets(
     {
-      colorPalette: chartOptionsRef.value.chartDatasetColors || datavisPalette,
+      colorPalette: props.chartOptions.chartDatasetColors || datavisPalette,
     },
     chartDataRef,
   ).value
+
+  if (props.chartOptions?.reverseDataset) {
+    chartData?.datasets.reverse()
+  }
+
+  return chartData
 })
 
 const computedMetricUnit = computed<string>(() => {
@@ -100,11 +102,7 @@ const computedMetricUnit = computed<string>(() => {
     return ''
   }
 
-  const metricKey = chartOptionsRef.value?.bigNumberKey || 0
-
-  console.log(' >>>>metricKey <<<<', metricKey)
-
-  return Object.values(props.chartData.meta.metricUnits)[metricKey]
+  return Object.values(props.chartData.meta.metricUnits)[0]
 })
 
 const isGaugeChart = computed<boolean>(() => props.chartOptions.type === ChartTypesSimple.GAUGE)
@@ -114,16 +112,6 @@ const hasValidChartData = computed(() => {
   return props.chartData && props.chartData.meta && props.chartData.records.length
 })
 
-watch(props, () => {
-  console.log(' >>> bigNumberKey', props.chartOptions.bigNumberKey)
-}, { deep: true })
-
-watch(props, () => {
-  if (chartOptionsRef.value?.reverseDataset) {
-    chartDataRef.value.records.reverse()
-    console.log('  chartDataRef order reversed >> showing record:', chartDataRef.value.records[0].event)
-  }
-}, { deep: true })
 </script>
 
 <style lang="scss" scoped>
