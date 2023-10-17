@@ -44,7 +44,7 @@
     "fields": {
       "name": {
         "label": "Name",
-        "placeholder": "Enter a unique name for this key set"
+        "placeholder": "Enter a unique name for this SNI"
       },
       "tags": {
         "label": "Tags",

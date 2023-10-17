@@ -223,6 +223,11 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  /** default to false, setting to true will suppress the row click event even if "@click:row" is attached */
+  disableRowClick: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -304,9 +309,13 @@ const clearSearchInput = () => {
   emit('clear-search-input')
 }
 
-const handleRowClick = (_: MouseEvent, row: BaseTableHeaders) => {
-  emit('click:row', row)
-}
+const handleRowClick = computed(() => {
+  return props.disableRowClick
+    ? undefined
+    : (_: MouseEvent, row: BaseTableHeaders) => {
+      emit('click:row', row)
+    }
+})
 
 const handleSortChanged = (sortParams: TableSortParams) => {
   emit('sort', sortParams)

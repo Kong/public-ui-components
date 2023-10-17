@@ -8,7 +8,7 @@
     "view": "View Details"
   },
   "delete": {
-    "title": "Delete Vault",
+    "title": "Delete a Vault",
     "description": "Are you sure you want to delete this vault? This action cannot be reversed."
   },
   "errors": {
