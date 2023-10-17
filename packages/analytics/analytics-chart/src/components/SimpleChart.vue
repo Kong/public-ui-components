@@ -37,7 +37,7 @@ import type { SimpleChartOptions } from '../types'
 import { ChartTypesSimple } from '../enums'
 import GaugeChart from './chart-types/GaugeChart.vue'
 import type { PropType } from 'vue'
-import { computed, toRef, watch } from 'vue'
+import { computed, toRef } from 'vue'
 import type { AnalyticsExploreResult, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette } from '../utils'
 
