@@ -345,16 +345,44 @@
               autocomplete="off"
               data-testid="vault-form-config-azure-uri"
               :is-readonly="form.isReadonly"
-              :label="t('form.config.azure.fields.vaultUri.label')"
+              :label="t('form.config.azure.fields.vault_uri.label')"
+              required
               type="text"
             />
             <KInput
-              v-model.trim="configFields[VaultProviders.AZURE].instance_metadata_host"
+              v-model.trim="configFields[VaultProviders.AZURE].credentials_prefix"
               autocomplete="off"
-              data-testid="vault-form-config-azure-host"
+              data-testid="vault-form-config-azure-prefix"
               :is-readonly="form.isReadonly"
-              :label="t('form.config.azure.fields.metadataHost.label')"
+              :label="t('form.config.azure.fields.credential_prefix.label')"
               required
+              type="text"
+            />
+            <KSelect
+              v-model="configFields[VaultProviders.AZURE].type"
+              appearance="select"
+              data-testid="vault-form-config-azure-type"
+              :items="azureTypes"
+              :label="t('form.config.azure.fields.type.label')"
+              :placeholder="t('form.config.azure.fields.type.placeholder')"
+              :readonly="form.isReadonly"
+              required
+              width="100%"
+            />
+            <KInput
+              v-model.trim="configFields[VaultProviders.AZURE].client_id"
+              autocomplete="off"
+              data-testid="vault-form-config-azure-client-id"
+              :is-readonly="form.isReadonly"
+              :label="t('form.config.azure.fields.client_id.label')"
+              type="text"
+            />
+            <KInput
+              v-model.trim="configFields[VaultProviders.AZURE].tenant_id"
+              autocomplete="off"
+              data-testid="vault-form-config-azure-tenant-id"
+              :is-readonly="form.isReadonly"
+              :label="t('form.config.azure.fields.tenant_id.label')"
               type="text"
             />
           </div>
@@ -504,7 +532,7 @@ const vaultProvider = ref<VaultProviders>(VaultProviders.KONG)
 const originalVaultProvider = ref<VaultProviders | null>(null)
 
 const isAvailableTTLConfig = computed(() => {
-  return [VaultProviders.AWS, VaultProviders.GCP, VaultProviders.HCV].includes(vaultProvider.value)
+  return [VaultProviders.AWS, VaultProviders.GCP, VaultProviders.HCV, VaultProviders.AZURE].includes(vaultProvider.value)
 })
 
 const configFields = reactive<ConfigFields>({
@@ -532,7 +560,10 @@ const configFields = reactive<ConfigFields>({
   [VaultProviders.AZURE]: {
     location: '',
     vault_uri: '',
-    instance_metadata_host: '',
+    type: 'secrets',
+    credentials_prefix: 'AZURE',
+    client_id: '',
+    tenant_id: '',
   } as AzureVaultConfig,
 })
 
@@ -561,7 +592,10 @@ const originalConfigFields = reactive<ConfigFields>({
   [VaultProviders.AZURE]: {
     location: '',
     vault_uri: '',
-    instance_metadata_host: '',
+    type: 'secrets',
+    credentials_prefix: 'AZURE',
+    client_id: '',
+    tenant_id: '',
   } as AzureVaultConfig,
 })
 
@@ -591,6 +625,8 @@ const awsRegions = [
   { label: `${t('form.config.aws.fields.region.locations.us-gov-east-1.location')} (us-gov-east-1)`, value: 'us-gov-east-1' },
   { label: `${t('form.config.aws.fields.region.locations.us-gov-west-1.location')} (us-gov-west-1)`, value: 'us-gov-west-1' },
 ]
+
+const azureTypes = [{ label: 'secrets', value: 'secrets' }]
 
 const protocols = [{ label: 'http', value: 'http' }, { label: 'https', value: 'https' }]
 
@@ -671,12 +707,23 @@ const isVaultConfigValid = computed((): boolean => {
     }).length
   }
 
+  // Azure Vault fields logic
+  if (vaultProvider.value === VaultProviders.AZURE) {
+    return !Object.keys(configFields[VaultProviders.AZURE]).filter(key => {
+      // client_id, tenant_id and ttl fields are optional
+      if (['client_id', 'tenant_id', 'ttl', 'neg_ttl', 'resurrect_ttl'].includes(key)) {
+        return false
+      }
+      return !(configFields[vaultProvider.value] as AzureVaultConfig)[key as keyof AzureVaultConfig]
+    }).length
+  }
+
   return !Object.keys(configFields[vaultProvider.value]).filter(key => {
     // ttl fields are optional
     if (['ttl', 'neg_ttl', 'resurrect_ttl'].includes(key)) {
       return false
     }
-    return !(configFields[vaultProvider.value] as KongVaultConfig | AWSVaultConfig | GCPVaultConfig | AzureVaultConfig)[key as keyof (KongVaultConfig | AWSVaultConfig | GCPVaultConfig | AzureVaultConfig)]
+    return !(configFields[vaultProvider.value] as KongVaultConfig | AWSVaultConfig | GCPVaultConfig)[key as keyof (KongVaultConfig | AWSVaultConfig | GCPVaultConfig)]
   }).length
 })
 const isFormValid = computed((): boolean => !!form.fields.prefix && isVaultConfigValid.value)
@@ -722,10 +769,22 @@ const saveFormData = async (): Promise<void> => {
       ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.K8S && { kube_role: configFields[VaultProviders.HCV].kube_role, kube_api_token_file: configFields[VaultProviders.HCV].kube_api_token_file, token: null }),
     }
 
-    const config = vaultProvider.value === VaultProviders.HCV ? hcvConfig : configFields[vaultProvider.value]
+    const azureConfig = {
+      ...configFields[vaultProvider.value],
+      client_id: (configFields[vaultProvider.value] as AzureVaultConfig).client_id || null,
+      tenant_id: (configFields[vaultProvider.value] as AzureVaultConfig).tenant_id || null,
+    }
+
+    let config: VaultPayload['config'] = configFields[vaultProvider.value]
+    if (vaultProvider.value === VaultProviders.HCV) {
+      config = hcvConfig
+    } else if (vaultProvider.value === VaultProviders.AZURE) {
+      config = azureConfig
+    }
+
     let ttlFields = {}
-    if (![VaultProviders.KONG, VaultProviders.AZURE].includes(vaultProvider.value)) {
-      const fields = configFields[vaultProvider.value as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS]
+    if (vaultProvider.value !== VaultProviders.KONG) {
+      const fields = configFields[vaultProvider.value as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS | VaultProviders.AZURE]
       const ttl = fields.ttl
       const negTtl = fields.neg_ttl
       const resurrectTtl = fields.resurrect_ttl

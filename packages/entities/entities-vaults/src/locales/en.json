@@ -224,11 +224,21 @@
           "location": {
             "label": "Location"
           },
-          "vaultUri": {
+          "vault_uri": {
             "label": "Vault URI"
           },
-          "metadataHost": {
-            "label": "Instance Metadata Host"
+          "credential_prefix": {
+            "label": "Credential Prefix"
+          },
+          "type": {
+            "label": "Type",
+            "placeholder": "Select a type"
+          },
+          "client_id": {
+            "label": "Client ID"
+          },
+          "tenant_id": {
+            "label": "Tenant ID"
           }
         }
       },
