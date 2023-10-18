@@ -119,7 +119,6 @@
       v-if="!isTopNTable"
       :chart-data="exploreResult"
       :chart-options="simpleChartOptions"
-      :legend-position="legendPosition"
     />
     <TopNTable
       v-else
