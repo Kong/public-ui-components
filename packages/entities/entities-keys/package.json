@@ -30,7 +30,7 @@
   "devDependencies": {
     "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "^1.11.3",
+    "@kong/design-tokens": "^1.11.4",
     "@kong/kongponents": "^8.123.9",
     "axios": "^1.5.1",
     "vue": "^3.3.4",
