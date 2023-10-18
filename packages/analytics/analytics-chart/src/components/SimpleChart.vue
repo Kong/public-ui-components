@@ -81,13 +81,11 @@ const props = defineProps({
 const { i18n } = composables.useI18n()
 
 const computedChartData = computed(() => {
-  const chartDataRef = toRef(props, 'chartData')
-
   const chartData = composables.useExploreResultToDatasets(
     {
       colorPalette: props.chartOptions.chartDatasetColors || datavisPalette,
     },
-    chartDataRef,
+    toRef(props, 'chartData'),
   ).value
 
   if (props.chartOptions?.reverseDataset) {
@@ -111,7 +109,6 @@ const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAv
 const hasValidChartData = computed(() => {
   return props.chartData && props.chartData.meta && props.chartData.records.length
 })
-
 </script>
 
 <style lang="scss" scoped>

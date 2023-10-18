@@ -1,0 +1,56 @@
+.kong-ui-app-layout-html,
+.kong-ui-app-layout-body,
+.kong-ui-app-sidebar,
+.kong-ui-app-navbar {
+  // Disabling stylelint rule here to allow for deprecated Kongponents theming variables
+  /* stylelint-disable-next-line custom-property-pattern */
+  --KInputLabelWeight: #{$kui-font-weight-semibold};
+  /* stylelint-disable-next-line custom-property-pattern */
+  --KongAuthFontFamily: #{$kui-font-family-text};
+  /* stylelint-disable-next-line custom-property-pattern */
+  --KongAuthFontWeight: #{$kui-font-weight-regular};
+}
+
+html.kong-ui-app-layout-html {
+  font-size: $kui-font-size-10;
+  -ms-overflow-style: scrollbar;
+  // Changes the default tap highlight to be completely transparent in iOS.
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+html.kong-ui-app-layout-html,
+body.kong-ui-app-layout-body {
+  height: 100%; // Reenable these rules to move the scrollbar under the AppNavbar
+  height: 100vh; // Reenable these rules to move the scrollbar under the AppNavbar
+  margin: $kui-space-0;
+  overflow: hidden; // Reenable these rules to move the scrollbar under the AppNavbar
+  overscroll-behavior-y: none; // Disable elastic overflow scrolling in Chrome and Safari
+  padding: $kui-space-0;
+  width: 100%;
+}
+
+body.kong-ui-app-layout-body {
+  background-color: $kui-color-background;
+  color: $kui-color-text;
+  font-family: $kui-font-family-text;
+  font-size: $kui-font-size-40;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: $kui-font-weight-regular;
+  line-height: $kui-line-height-40;
+}
+
+#app {
+  height: 100%;
+}
+
+// Kong Auth Elements overrides
+.kong-auth-element {
+  font-family: $kui-font-family-text !important;
+
+  .kong-auth-login-form {
+    .alert.danger .k-alert-msg {
+      white-space: pre-line;
+    }
+  }
+}
