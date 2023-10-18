@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.11.7...@kong-ui-public/analytics-chart@0.12.0) (2023-10-18)
+
+
+### Features
+
+* **gauge-chart:** display customizations [MA-1894] ([#836](https://github.com/Kong/public-ui-components/issues/836)) ([93e33cf](https://github.com/Kong/public-ui-components/commit/93e33cf8539f5cea2e6fda9cd6bed83b92b728d9))
+
+
+
+
+
 ## [0.11.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.11.6...@kong-ui-public/analytics-chart@0.11.7) (2023-10-18)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
