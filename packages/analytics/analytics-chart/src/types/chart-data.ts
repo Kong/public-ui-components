@@ -84,9 +84,9 @@ export interface SimpleChartOptions {
    */
   reverseDataset?: boolean,
   /**
-   * Determines metric alignment
+   * Determines which dataset value will be display as large text
    */
-  bigNumberKey?: number,
+  numerator?: number,
 }
 
 export interface LegendValueEntry {

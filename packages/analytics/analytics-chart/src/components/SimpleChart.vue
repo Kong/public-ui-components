@@ -18,12 +18,12 @@
     >
       <GaugeChart
         v-if="isGaugeChart"
-        :big-number-key="chartOptions.bigNumberKey"
         :chart-data="computedChartData"
         :dataset-colors="chartOptions.chartDatasetColors"
         is-simple
         :metric-display="chartOptions.metricDisplay"
         :metric-unit="computedMetricUnit"
+        :numerator="chartOptions.numerator"
         :synthetics-data-key="syntheticsDataKey"
         :width="width"
       />

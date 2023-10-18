@@ -90,13 +90,13 @@
           </div>
         </div>
         <KLabel>
-          Big Number Key
+          Numerator
         </KLabel>
         <div class="chart-radio-group">
           <div>
             <KRadio
-              v-model="bigNumberKey"
-              name="bigNumberKey"
+              v-model="gaugeNumerator"
+              name="numerator"
               :selected-value="0"
             >
               0
@@ -104,8 +104,8 @@
           </div>
           <div>
             <KRadio
-              v-model="bigNumberKey"
-              name="bigNumberKey"
+              v-model="gaugeNumerator"
+              name="numerator"
               :selected-value="1"
             >
               1
@@ -248,10 +248,9 @@ const multiDimensionToggle = ref(false)
 const showLoadingState = ref(false)
 const emptyState = ref(false)
 const chartType = ref<ChartTypesSimple>(ChartTypesSimple.GAUGE)
-const legendPosition = ref(ChartLegendPosition.Right)
 const metricDisplay = ref(ChartMetricDisplay.Full)
 const reverseDataset = ref(true)
-const bigNumberKey = ref(0)
+const gaugeNumerator = ref(0)
 const selectedMetric = ref<MetricSelection>({
   name: Metrics.TotalRequests,
   unit: 'count',
@@ -434,7 +433,7 @@ const simpleChartOptions = computed<SimpleChartOptions>(() => ({
   chartDatasetColors: twoColorPalette.value,
   metricDisplay: metricDisplay.value,
   reverseDataset: reverseDataset.value,
-  bigNumberKey: bigNumberKey.value,
+  numerator: gaugeNumerator.value,
 }))
 
 const randomizeData = () => {
