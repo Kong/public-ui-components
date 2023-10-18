@@ -74,6 +74,7 @@ onErrorCaptured((error: unknown, instance: ComponentPublicInstance | null, info:
     error,
     context: {
       componentName: instance?.$options?.__name || '',
+      dataTestid: String(instance?.$attrs?.['data-testid'] || '') || '',
       info, // See here for codes returned in production: https://github.com/vuejs/core/blob/b8fc18c0b23be9a77b05dc41ed452a87a0becf82/packages/runtime-core/src/errorHandling.ts#L27
       source: 'ErrorBoundary', // The name of this ErrorBoundary component
       tags: allTags.value,
