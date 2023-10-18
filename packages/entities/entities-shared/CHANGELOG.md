@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.6.1...@kong-ui-public/entities-shared@1.6.2) (2023-10-18)
+
+
+### Bug Fixes
+
+* **config-card-display:** remove line links ([#844](https://github.com/Kong/public-ui-components/issues/844)) ([d3d5ebd](https://github.com/Kong/public-ui-components/commit/d3d5ebdcc2586a048d9045e68680ab1e5a3488fc))
+
+
+
+
+
 ## [1.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.6.0...@kong-ui-public/entities-shared@1.6.1) (2023-10-18)
 
 
