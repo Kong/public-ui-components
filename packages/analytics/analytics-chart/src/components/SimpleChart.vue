@@ -23,6 +23,7 @@
         is-simple
         :metric-display="chartOptions.metricDisplay"
         :metric-unit="computedMetricUnit"
+        :numerator="chartOptions.numerator"
         :synthetics-data-key="syntheticsDataKey"
         :width="width"
       />
@@ -80,12 +81,18 @@ const props = defineProps({
 const { i18n } = composables.useI18n()
 
 const computedChartData = computed(() => {
-  return composables.useExploreResultToDatasets(
+  const chartData = composables.useExploreResultToDatasets(
     {
       colorPalette: props.chartOptions.chartDatasetColors || datavisPalette,
     },
     toRef(props, 'chartData'),
   ).value
+
+  if (props.chartOptions?.reverseDataset) {
+    chartData?.datasets.reverse()
+  }
+
+  return chartData
 })
 
 const computedMetricUnit = computed<string>(() => {

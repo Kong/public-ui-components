@@ -1,0 +1,85 @@
+html,
+body {
+  background-color: #f1f1f5;
+  height: 100%;
+  margin: 0;
+  min-height: 100%;
+  padding: 0;
+  width: 100%;
+}
+
+.sandbox-container {
+  margin: 0;
+  padding: $kui-space-60;
+
+  .k-input-label {
+    margin-bottom: 2px;
+
+    &:not(:first-child) {
+      margin-top: 12px;
+    }
+  }
+
+  .top-n-sandbox {
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    margin-top: 0;
+  }
+
+  @media (max-width: 767px) {
+    min-height: 300px;
+    width: 100%;
+  }
+
+  .chart-radio-group {
+    .k-radio {
+      margin-top: 4px;
+    }
+  }
+
+  .option-toggles {
+    margin: 24px 12px;
+  }
+
+  .flex-row-parent {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+  }
+
+  .config-container {
+    display: flex;
+    gap: 24px;
+    padding: $kui-space-60;
+    --KCodeBlockFontSize: 15px;
+
+    .config-container-row {
+      flex-direction: row;
+    }
+
+    .data-container {
+      width: 50%;
+    }
+
+    .flex-vertical {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .options-container {
+      width: 50%;
+    }
+  }
+}
+
+.dataset-options {
+  display: flex;
+  flex-direction: row;
+
+  .first-button {
+    margin-right: 8px;
+  }
+}

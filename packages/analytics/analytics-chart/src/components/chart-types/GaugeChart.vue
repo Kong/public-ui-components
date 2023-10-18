@@ -61,6 +61,11 @@ const props = defineProps({
     required: false,
     default: ChartMetricDisplay.Hidden,
   },
+  numerator: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
   syntheticsDataKey: {
     type: String,
     required: false,
@@ -136,11 +141,14 @@ const chartOptions = {
 
 const chartInstance = ref<Chart>()
 
+// The large metric value displayed in the center can be specified; otherwise, default to the first value in the dataset
+const metricHighlight = computed(() => approxNum(formattedDataset?.value[0]?.data[props.numerator], { capital: true }))
+
 // When displaying a simple chart, we only expect two values in the dataset
-const metricHighlight = computed(() => approxNum(formattedDataset?.value[0]?.data[0], { capital: true }))
 const metricTotal = computed(() => approxNum(formattedDataset?.value[0]?.data[0] + formattedDataset?.value[0]?.data[1], { capital: true }))
 
-const metricHighlightColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[0]}`)
+// Large metric color should match filled in gauge color
+const metricHighlightColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[props.numerator]}`)
 
 // Conditionally show large or small metric value, or neither
 const showMetricLarge = computed(() => [ChartMetricDisplay.Full, ChartMetricDisplay.SingleMetric].includes(props.metricDisplay))
@@ -176,9 +184,9 @@ const showMetricSmall = computed(() => props.metricDisplay === ChartMetricDispla
     z-index: 2;
 
     .metric-large {
-      font-size: $kui-font-size-70;
+      font-size: $kui-font-size-60;
       font-weight: $kui-font-weight-medium;
-      line-height: $kui-line-height-70;
+      line-height: $kui-line-height-50;
     }
     .metric-small {
       color: $kui-color-text-neutral;

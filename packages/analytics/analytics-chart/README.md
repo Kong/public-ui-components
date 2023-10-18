@@ -216,6 +216,20 @@ Optional value which can be any one of the following:
 - `SingleMetric`: displays only the large metric value
 - `Full`: displays both the large metric and subtext
 
+#### `reverseDataset`
+
+Optional. Determines the order of the datasets. In the case of a Gauge Chart, it reverses the display order of the two color fills.
+
+- type: `boolean`
+- required: `false`
+
+#### `numerator`
+
+Optional. Array index which specifies the dataset value to be shown in the center of the Gauge.
+
+- type: `number`
+- required: `false`
+
 #### SimpleChart
 
 Contains the same chart-data 
