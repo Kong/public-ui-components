@@ -67,7 +67,6 @@
       id="config-card-codeblock"
       :code="yamlContent"
       language="yaml"
-      :show-line-number-links="true"
       theme="dark"
     />
   </div>
