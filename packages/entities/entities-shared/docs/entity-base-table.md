@@ -125,6 +125,9 @@ Table key to use for user table preferences. If empty, will fallback to use defa
 
 The table is rendered inside a `KCard`. `tttle` text is displayed in the upper left corner of the `KCard` above the table.
 
+#### `disableRowClick`
+Controls whether the table rows are clickable or not. Defaults to `false`. Setting to `true` will suppress the `click:row` event even if a `@click:row` handler is provided.
+
 ### Slots
 
 #### `toolbar-filter`

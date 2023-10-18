@@ -9,7 +9,7 @@
     "configure_dynamic_ordering": "Configure Dynamic Ordering"
   },
   "delete": {
-    "title": "Delete Plugin",
+    "title": "Delete a Plugin",
     "description": "Are you sure you want to delete this plugin? This action cannot be reversed."
   },
   "copy": {

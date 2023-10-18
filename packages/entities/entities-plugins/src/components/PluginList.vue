@@ -207,7 +207,7 @@
     <EntityDeleteModal
       :action-pending="isDeletePending"
       :description="t('delete.description')"
-      :entity-name="pluginToBeDeleted && (pluginToBeDeleted.name || pluginToBeDeleted.id)"
+      :entity-name="pluginToBeDeleted && (pluginToBeDeleted.instance_name || pluginToBeDeleted.name || pluginToBeDeleted.id)"
       :entity-type="EntityTypes.Plugin"
       :error="deleteModalError"
       :title="t('delete.title')"
