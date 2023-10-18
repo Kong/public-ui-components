@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.4.3...@kong-ui-public/entities-plugins@1.4.4) (2023-10-18)
+
+
+### Bug Fixes
+
+* enhance text consistency and SNI table UI ([#841](https://github.com/Kong/public-ui-components/issues/841)) ([3831ea7](https://github.com/Kong/public-ui-components/commit/3831ea77cd9ba90169a7e60f5068805148c7b5b2))
+
+
+
+
+
 ## [1.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.4.2...@kong-ui-public/entities-plugins@1.4.3) (2023-10-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
