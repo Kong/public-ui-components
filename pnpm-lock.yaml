@@ -274,9 +274,6 @@ importers:
 
   packages/analytics/metric-cards:
     dependencies:
-      '@kong/icons':
-        specifier: ^1.7.4
-        version: 1.7.4(vue@3.3.4)
       approximate-number:
         specifier: ^2.1.1
         version: 2.1.1
@@ -284,6 +281,9 @@ importers:
       '@kong/design-tokens':
         specifier: ^1.11.4
         version: 1.11.4
+      '@kong/icons':
+        specifier: ^1.7.4
+        version: 1.7.4(vue@3.3.4)
       '@kong/kongponents':
         specifier: ^8.123.9
         version: 8.123.9(vue@3.3.4)
@@ -2032,7 +2032,6 @@ packages:
       vue: ^3.3.4
     dependencies:
       vue: 3.3.4
-    dev: false
 
   /@kong/kongponents@8.123.9(vue-router@4.2.5)(vue@3.3.4):
     resolution: {integrity: sha512-hvUkfUyXq99bdwlxhdNkzcMqSz3rmuPWgaQJGNH22RBk6bsjsanKYgGclYW1HupPXpFVcTBp+trEuazqU+uZmg==}
