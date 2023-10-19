@@ -375,8 +375,8 @@ importers:
   packages/core/error-boundary:
     dependencies:
       '@kong/icons':
-        specifier: ^1.7.4
-        version: 1.7.4(vue@3.3.4)
+        specifier: ^1.7.6
+        version: 1.7.6(vue@3.3.4)
     devDependencies:
       '@kong/design-tokens':
         specifier: ^1.11.4
@@ -695,8 +695,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/core
       '@kong/icons':
-        specifier: ^1.7.4
-        version: 1.7.4(vue@3.3.4)
+        specifier: ^1.7.6
+        version: 1.7.6(vue@3.3.4)
       compare-versions:
         specifier: ^6.1.0
         version: 6.1.0
@@ -2026,9 +2026,9 @@ packages:
     resolution: {integrity: sha512-ODuBtKZS5uoXB9k2263bb7SsgB4EXplcjXOOFymuekaSvWHeYQr2jAmHZk289LaEb4pr/A72JHZuw9DpJwvRbg==}
     dev: true
 
-  /@kong/icons@1.7.4(vue@3.3.4):
-    resolution: {integrity: sha512-hhF7eIdwOarKEDUsh7w1aMs1ItqlmMPH93jWQSNgpfy84j7GYi+k3mi6mHmwj8HYJ7jKQLZ6MttldueYymuqAw==}
-    engines: {node: '>=18.18.0'}
+  /@kong/icons@1.7.6(vue@3.3.4):
+    resolution: {integrity: sha512-1/hyEJGpfI1j7LIM1HjWBCoUlFyhWoj9fAOZsJKX70C87XkCzEfxutD2eeSvE7KZe688oDnx7jXSiSouyly5BA==}
+    engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: ^3.3.4
     dependencies:
