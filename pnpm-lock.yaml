@@ -278,6 +278,9 @@ importers:
 
   packages/analytics/metric-cards:
     dependencies:
+      '@kong/icons':
+        specifier: ^1.7.6
+        version: 1.7.6(vue@3.3.4)
       approximate-number:
         specifier: ^2.1.1
         version: 2.1.1
