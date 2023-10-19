@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@1.2.4...@kong-ui-public/entities-vaults@1.2.5) (2023-10-19)
+
+
+### Bug Fixes
+
+* **vault:** update form fields for Azure vault ([#842](https://github.com/Kong/public-ui-components/issues/842)) ([5314e8f](https://github.com/Kong/public-ui-components/commit/5314e8f93000b967e0598591ec8a3a6e59cc235b))
+
+
+
+
+
 ## [1.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@1.2.3...@kong-ui-public/entities-vaults@1.2.4) (2023-10-18)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
