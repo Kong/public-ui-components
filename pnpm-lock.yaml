@@ -279,8 +279,8 @@ importers:
   packages/analytics/metric-cards:
     dependencies:
       '@kong/icons':
-        specifier: ^1.7.4
-        version: 1.7.4(vue@3.3.4)
+        specifier: ^1.7.6
+        version: 1.7.6(vue@3.3.4)
       approximate-number:
         specifier: ^2.1.1
         version: 2.1.1
@@ -2032,6 +2032,15 @@ packages:
   /@kong/icons@1.7.4(vue@3.3.4):
     resolution: {integrity: sha512-hhF7eIdwOarKEDUsh7w1aMs1ItqlmMPH93jWQSNgpfy84j7GYi+k3mi6mHmwj8HYJ7jKQLZ6MttldueYymuqAw==}
     engines: {node: '>=18.18.0'}
+    peerDependencies:
+      vue: ^3.3.4
+    dependencies:
+      vue: 3.3.4
+    dev: false
+
+  /@kong/icons@1.7.6(vue@3.3.4):
+    resolution: {integrity: sha512-1/hyEJGpfI1j7LIM1HjWBCoUlFyhWoj9fAOZsJKX70C87XkCzEfxutD2eeSvE7KZe688oDnx7jXSiSouyly5BA==}
+    engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: ^3.3.4
     dependencies:
