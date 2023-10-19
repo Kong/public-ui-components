@@ -103,14 +103,26 @@
               />
             </div>
 
-            <span
-              v-else
-              class="attrs-data-text"
-              :class="{ 'truncated': truncated }"
-              :title="truncated ? item.value : undefined"
-            >
-              {{ componentAttrsData.text }}
-            </span>
+            <div v-else>
+              <KTooltip
+                v-if="truncated && willBeTruncated(item.value)"
+                :label="item.value">
+                <span
+                  class="attrs-data-text truncated"
+                >
+                  {{ componentAttrsData.text }}
+                </span>
+                <template #content>
+                  {{ item.value }}
+                </template>
+              </KTooltip>
+              <span
+                v-else
+                class="attrs-data-text"
+              >
+                {{ componentAttrsData.text }}
+              </span>
+            </div>
           </component>
         </div>
       </slot>
@@ -130,6 +142,9 @@ import JsonCardItem from './JsonCardItem.vue'
 import InternalLinkItem from './InternalLinkItem.vue'
 import StatusBadge from './StatusBadge.vue'
 import '@kong-ui-public/copy-uuid/dist/style.css'
+
+// 20ch + ellipsis(3ch) + 1
+const MAX_LABEL_LENGTH = 24
 
 const props = defineProps({
   item: {
@@ -293,6 +308,11 @@ const componentAttrsData = computed((): ComponentAttrsData => {
       }
   }
 })
+
+const willBeTruncated = (textContent: string) => {
+  return textContent.length > MAX_LABEL_LENGTH
+}
+
 </script>
 
 <script lang="ts">
