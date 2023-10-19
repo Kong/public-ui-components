@@ -1,4 +1,4 @@
-import { EqualIcon, TrendUpIcon, TrendDownIcon } from '@kong/icons'
+import { IndeterminateSmallIcon, TrendUpIcon, TrendDownIcon } from '@kong/icons'
 
 // Used to render a percentage display (eg: 30.97%)
 export const DECIMAL_DISPLAY = 2
@@ -62,5 +62,5 @@ export const defineIcon = (polarity: number, thisIsBad: boolean = false) => {
     ? TrendUpIcon
     : polarity < 0
       ? TrendDownIcon
-      : EqualIcon
+      : IndeterminateSmallIcon
 }

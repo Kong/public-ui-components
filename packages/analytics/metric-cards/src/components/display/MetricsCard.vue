@@ -43,18 +43,28 @@
     </div>
     <div
       v-if="cardDisplayFull"
-      class="metricscard-value-trend "
-      :class="textColor(changePolarity)"
+      class="metricscard-trend"
     >
-      <!-- Trend Icon -->
-      <component
-        :is="trendIcon"
-        v-if="changePolarity !== 0"
-        :color="colorAttribute(changePolarity)"
-        :size="KUI_ICON_SIZE_30"
-      />
-      <div>
-        {{ metricChange }}
+      <div
+        class="metricscard-trend-change"
+        :class="textColor(changePolarity)"
+      >
+        <!-- Trend Icon -->
+        <component
+          :is="trendIcon"
+          v-if="changePolarity !== 0"
+          :color="colorAttribute(changePolarity)"
+          :size="KUI_ICON_SIZE_30"
+        />
+        <!-- No change icon -->
+        <EqualIcon
+          v-else
+          :color="KUI_COLOR_TEXT_NEUTRAL_STRONG"
+          :size="KUI_ICON_SIZE_30"
+        />
+        <div>
+          {{ metricChange }}
+        </div>
       </div>
     </div>
   </div>
@@ -73,7 +83,7 @@ import {
   KUI_COLOR_TEXT_NEUTRAL_STRONG, // Neutral trend
   KUI_COLOR_TEXT_NEUTRAL,
 } from '@kong/design-tokens'
-import { CloudUploadIcon, ResponseIcon, VitalsIcon, WarningOutlineIcon } from '@kong/icons'
+import { CloudUploadIcon, EqualIcon, ResponseIcon, VitalsIcon, WarningOutlineIcon } from '@kong/icons'
 import { MetricCardType } from '../../enums'
 
 const iconMap = new Map<MetricCardType, any>([
@@ -222,31 +232,34 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
     flex-direction: row;
     font-weight: $kui-font-weight-medium;
     justify-content: space-between;
-    // margin: $kui-space-40 $kui-space-0 $kui-space-0 $kui-space-0;
+  }
 
-    &-trend {
-      align-items: center;
-      border-radius: 4px;
-      display: flex;
-      flex-direction: row;
-      font-size: $kui-font-size-30;
-      padding: 4px;
+  &-trend {
+    display: flex;
+  }
 
-      .kong-icon {
-        display: flex;
-      }
-      &.positive {
-        background-color: var(--kong-ui-metric-card-trend-bg-positive, $kui-color-background-success-weakest);
-        color: var(--kong-ui-metric-card-trend-positive, $kui-color-text-success);
-      }
-      &.negative {
-        background-color: var(--kong-ui-metric-card-trend-bg-negative, $kui-color-background-danger-weakest);
-        color: var(--kong-ui-metric-card-trend-negative, $kui-color-border-danger-strong);
-      }
-      &.neutral {
-        background-color: var(--kong-ui-metric-card-trend-bg-neutral, $kui-color-background-neutral-weaker);
-        color: var(--kong-ui-metric-card-trend-neutral, $kui-color-text-neutral-strong);
-      }
+  &-trend-change {
+    align-items: center;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    font-size: $kui-font-size-30;
+    padding: 4px;
+
+    .kui-icon {
+      margin-right: 4px;
+    }
+    &.positive {
+      background-color: var(--kong-ui-metric-card-trend-bg-positive, $kui-color-background-success-weakest);
+      color: var(--kong-ui-metric-card-trend-positive, $kui-color-text-success);
+    }
+    &.negative {
+      background-color: var(--kong-ui-metric-card-trend-bg-negative, $kui-color-background-danger-weakest);
+      color: var(--kong-ui-metric-card-trend-negative, $kui-color-border-danger-strong);
+    }
+    &.neutral {
+      background-color: var(--kong-ui-metric-card-trend-bg-neutral, $kui-color-background-neutral-weaker);
+      color: var(--kong-ui-metric-card-trend-neutral, $kui-color-text-neutral-strong);
     }
   }
 
