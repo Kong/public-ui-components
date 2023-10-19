@@ -1,5 +1,7 @@
 import type { MetricCardSize } from '../constants'
+import type { MetricCardType } from '../enums'
 export interface MetricCardDef {
+  cardType: MetricCardType
   currentValue: number
   previousValue: number
   increaseIsBad: boolean
@@ -14,7 +16,7 @@ export interface MetricCardDisplayValue {
   metricValue: string
   metricChange: string
   changePolarity: number
-  icon?: string
+  trendIcon?: any
   cardSize?: string
 }
 

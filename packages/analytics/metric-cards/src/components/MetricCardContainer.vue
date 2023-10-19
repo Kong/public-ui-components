@@ -33,6 +33,7 @@
         :key="index"
         v-bind="formatCardValues(card)"
         :card-size="cardSize"
+        :card-type="card.cardType"
         :error-message="errorMessage"
         :has-error="card.hasError"
         :title="card.title"
@@ -90,10 +91,11 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
   const polarity = changePolarity(change, props.hasTrendAccess, card.increaseIsBad)
 
   return {
+    // type: card.cardType,
     metricValue: card.formatValueFn ? card.formatValueFn(card.currentValue) : approxNum(card.currentValue, { capital: true, round: true }) || '0',
     metricChange: card.formatChangeFn ? card.formatChangeFn(change) : metricChange(change, props.hasTrendAccess, props.fallbackDisplayText),
     changePolarity: polarity,
-    icon: defineIcon(polarity, card.increaseIsBad),
+    trendIcon: defineIcon(polarity, card.increaseIsBad) as any,
     cardSize: props.cardSize,
   }
 }

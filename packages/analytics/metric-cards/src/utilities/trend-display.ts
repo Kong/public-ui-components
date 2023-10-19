@@ -1,3 +1,5 @@
+import { EqualIcon, TrendUpIcon, TrendDownIcon } from '@kong/icons'
+
 // Used to render a percentage display (eg: 30.97%)
 export const DECIMAL_DISPLAY = 2
 
@@ -51,14 +53,14 @@ export const calculateChange = (curr: number, prev: number) => {
 /**
  * Determines whether to display an upward or downward trend, or no change
  */
-export const defineIcon = (polarity: number, thisIsBad: boolean = false): string => {
+export const defineIcon = (polarity: number, thisIsBad: boolean = false) => {
   if (thisIsBad) {
     polarity *= -1
   }
 
   return (polarity > 0)
-    ? 'arrowUp'
+    ? TrendUpIcon
     : polarity < 0
-      ? 'arrowDown'
-      : 'noData'
+      ? TrendDownIcon
+      : EqualIcon
 }

@@ -4,6 +4,12 @@
       class="metricscard-title"
       :class="cardSize"
     >
+      <component
+        :is="iconMap.get(cardType)"
+        class="metricscard-icon"
+        :color="KUI_COLOR_TEXT_NEUTRAL"
+        :size="KUI_ICON_SIZE_30"
+      />
       <span>{{ title }}</span>
       <KTooltip
         v-if="tooltip"
@@ -34,20 +40,21 @@
       <div :style="`font-size:${metricFontSize}`">
         {{ metricValue }}
       </div>
-      <div
-        v-if="cardDisplayFull"
-        class="metricscard-value-trend "
-        :class="textColor(changePolarity)"
-      >
-        <KIcon
-          v-if="changePolarity !== 0"
-          :color="colorAttribute(changePolarity)"
-          :icon="icon"
-          size="18"
-        />
-        <div>
-          {{ metricChange }}
-        </div>
+    </div>
+    <div
+      v-if="cardDisplayFull"
+      class="metricscard-value-trend "
+      :class="textColor(changePolarity)"
+    >
+      <!-- Trend Icon -->
+      <component
+        :is="trendIcon"
+        v-if="changePolarity !== 0"
+        :color="colorAttribute(changePolarity)"
+        :size="KUI_ICON_SIZE_30"
+      />
+      <div>
+        {{ metricChange }}
       </div>
     </div>
   </div>
@@ -56,9 +63,31 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { MetricCardSize } from '../../constants'
-import { KUI_COLOR_BACKGROUND_DANGER_WEAK, KUI_COLOR_BACKGROUND_NEUTRAL, KUI_FONT_SIZE_40, KUI_FONT_SIZE_100 } from '@kong/design-tokens'
+import {
+  KUI_COLOR_BORDER_DANGER_STRONG,
+  // KUI_COLOR_BACKGROUND_NEUTRAL,
+  KUI_FONT_SIZE_30, // 14px
+  KUI_FONT_SIZE_100, // 48px
+  KUI_ICON_SIZE_30,
+  KUI_COLOR_TEXT_SUCCESS, // Positive trend
+  KUI_COLOR_TEXT_NEUTRAL_STRONG, // Neutral trend
+  KUI_COLOR_TEXT_NEUTRAL,
+} from '@kong/design-tokens'
+import { CloudUploadIcon, ResponseIcon, VitalsIcon, WarningOutlineIcon } from '@kong/icons'
+import { MetricCardType } from '../../enums'
+
+const iconMap = new Map<MetricCardType, any>([
+  [MetricCardType.GENERIC_COUNT, VitalsIcon],
+  [MetricCardType.TRAFFIC, CloudUploadIcon],
+  [MetricCardType.ERROR_RATE, WarningOutlineIcon],
+  [MetricCardType.LATENCY, ResponseIcon],
+])
 
 const props = defineProps({
+  cardType: {
+    type: String as PropType<MetricCardType>,
+    required: true,
+  },
   title: {
     type: String,
     default: '0%',
@@ -86,7 +115,7 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  icon: {
+  trendIcon: {
     type: String,
     default: '',
   },
@@ -107,9 +136,9 @@ const props = defineProps({
 
 const colorAttribute = (polarity: number): string => {
   const trendColor = {
-    red: `var(--kong-ui-metric-card-trend-negative, ${KUI_COLOR_BACKGROUND_DANGER_WEAK})`,
-    green: 'var(--kong-ui-metric-card-trend-positive, #07a88d)',
-    grey: `var(--kong-ui-metric-card-trend-neutral, ${KUI_COLOR_BACKGROUND_NEUTRAL})`,
+    red: `var(--kong-ui-metric-card-trend-negative, ${KUI_COLOR_BORDER_DANGER_STRONG})`,
+    green: `var(--kong-ui-metric-card-trend-positive, ${KUI_COLOR_TEXT_SUCCESS})`,
+    grey: `var(--kong-ui-metric-card-trend-neutral, ${KUI_COLOR_TEXT_NEUTRAL_STRONG})`,
   }
 
   return polarity > 0
@@ -131,7 +160,7 @@ const cardDisplayFull = [MetricCardSize.Medium, MetricCardSize.Large].includes(p
 
 const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
   ? KUI_FONT_SIZE_100
-  : [MetricCardSize.Medium, MetricCardSize.Large].includes(props.cardSize) ? '22px' : KUI_FONT_SIZE_40
+  : [MetricCardSize.Medium, MetricCardSize.Large].includes(props.cardSize) ? '22px' : KUI_FONT_SIZE_30
 
 </script>
 
@@ -158,6 +187,7 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
 .metricscard {
   display: flex;
   flex-direction: column;
+  row-gap: 16px;
   width: 100%;
 
   @media (max-width: ($kui-breakpoint-phablet - 1px)) {
@@ -171,7 +201,10 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
   }
 
   &-title {
-    color: var(--kong-ui-metric-card-title, $kui-color-text-neutral);
+    align-items: center;
+    color: var(--kong-ui-metric-card-title, $kui-color-text);
+    display: flex;
+    flex-direction: row;
     font-size: $kui-font-size-30;
 
     &.sm {
@@ -179,33 +212,40 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
     }
   }
 
+  &-icon {
+    margin-right: 6px;
+  }
+
   &-value {
-    color: var(--kong-ui-metric-card-value, $kui-color-text-neutral-stronger);
+    color: var(--kong-ui-metric-card-value, $kui-color-text);
     display: flex;
     flex-direction: row;
     font-weight: $kui-font-weight-medium;
     justify-content: space-between;
-    margin: $kui-space-40 $kui-space-0 $kui-space-0 $kui-space-0;
+    // margin: $kui-space-40 $kui-space-0 $kui-space-0 $kui-space-0;
 
     &-trend {
       align-items: center;
+      border-radius: 4px;
       display: flex;
       flex-direction: row;
       font-size: $kui-font-size-30;
-      margin-bottom: $kui-space-0;
-      margin-top: $kui-space-auto;
+      padding: 4px;
 
       .kong-icon {
         display: flex;
       }
       &.positive {
-        color: var(--kong-ui-metric-card-trend-positive, $color-green);
+        background-color: var(--kong-ui-metric-card-trend-bg-positive, $kui-color-background-success-weakest);
+        color: var(--kong-ui-metric-card-trend-positive, $kui-color-text-success);
       }
       &.negative {
-        color: var(--kong-ui-metric-card-trend-negative, $color-red);
+        background-color: var(--kong-ui-metric-card-trend-bg-negative, $kui-color-background-danger-weakest);
+        color: var(--kong-ui-metric-card-trend-negative, $kui-color-border-danger-strong);
       }
       &.neutral {
-        color: var(--kong-ui-metric-card-trend-neutral, $kui-color-text-neutral);
+        background-color: var(--kong-ui-metric-card-trend-bg-neutral, $kui-color-background-neutral-weaker);
+        color: var(--kong-ui-metric-card-trend-neutral, $kui-color-text-neutral-strong);
       }
     }
   }

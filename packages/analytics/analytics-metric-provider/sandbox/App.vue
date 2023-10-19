@@ -123,3 +123,9 @@ const multiProviderProps = {
 }
 
 </script>
+<style lang="scss">
+.metricscard {
+  margin: 10px;
+  padding: 10px;
+}
+</style>

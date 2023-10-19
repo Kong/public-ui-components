@@ -17,7 +17,7 @@
         />
       </div>
 
-      <h3>Large w/ custom theme</h3>
+      <h3>Large - custom CSS theme</h3>
       <div class="generic-card dev-portal">
         <MetricCardContainer v-bind="cardsRegular" />
       </div>
@@ -70,9 +70,11 @@ import { MetricCardContainer } from '../src'
 import { DECIMAL_DISPLAY, metricChange } from '../src/utilities'
 import type { MetricCardContainerOptions } from '../src/types'
 import { MetricCardSize } from '../src/constants'
+import { MetricCardType } from '../src/enums'
 
 const cards = [
   {
+    cardType: MetricCardType.TRAFFIC,
     currentValue: 192895156,
     previousValue: 236609609,
     title: 'Requests',
@@ -80,6 +82,7 @@ const cards = [
     increaseIsBad: false,
   },
   {
+    cardType: MetricCardType.ERROR_RATE,
     currentValue: 30.1448979685401,
     previousValue: 30.1891166494617,
     formatChangeFn: val => `${metricChange(val * 100, true, 'N/A')}`,
@@ -88,6 +91,7 @@ const cards = [
     increaseIsBad: true,
   },
   {
+    cardType: MetricCardType.LATENCY,
     currentValue: 335,
     previousValue: 511,
     formatValueFn: val => `${val}ms`,
@@ -95,12 +99,14 @@ const cards = [
     increaseIsBad: true,
   },
   {
+    cardType: MetricCardType.GENERIC_COUNT,
     currentValue: 5,
     previousValue: 4,
     title: 'Active Runtimes',
     increaseIsBad: true,
   },
   {
+    cardType: MetricCardType.GENERIC_COUNT,
     currentValue: 67.323232,
     previousValue: 23.2121,
     formatValueFn: val => `${val.toFixed(0)}%`,
@@ -201,14 +207,14 @@ main {
     padding: 16px;
 
     &.dev-portal {
-      background-color: #555;
+      background-color: #999;
 
       // Customizable theme
-      --kong-ui-metric-card-background: #555;
+      --kong-ui-metric-card-background: #999;
       --kong-ui-metric-card-title: #ccc;
       --kong-ui-metric-card-value: white;
-      --kong-ui-metric-card-trend-negative: #c59fff;
-      --kong-ui-metric-card-trend-positive: #cfff56;
+      --kong-ui-metric-card-trend-negative: #592A71;
+      --kong-ui-metric-card-trend-positive: #AAAA39;
     }
   }
 }
