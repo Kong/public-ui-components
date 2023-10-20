@@ -1,4 +1,4 @@
-import type { MetricCardDef, MetricCardType} from '@kong-ui-public/metric-cards'
+import type { MetricCardDef, MetricCardType } from '@kong-ui-public/metric-cards'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 import type { ChronologicalMappedMetrics } from './useMetricFetcher'
