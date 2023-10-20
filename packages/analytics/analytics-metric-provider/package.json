@@ -50,7 +50,7 @@
   "dependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^0.8.4",
     "@kong-ui-public/core": "1.1.0",
-    "@kong-ui-public/metric-cards": "0.4.40-pr.848.8cc82d36.0",
+    "@kong-ui-public/metric-cards": "0.2.14",
     "axios": "^1.5.1",
     "swrv": "^1.0.4"
   },
