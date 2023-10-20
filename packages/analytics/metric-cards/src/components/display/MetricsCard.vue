@@ -36,10 +36,10 @@
     <div
       v-else
       class="metricscard-value"
+      data-testid="metric-value"
+      :style="`font-size:${metricFontSize}`"
     >
-      <div :style="`font-size:${metricFontSize}`">
-        {{ metricValue }}
-      </div>
+      {{ metricValue }}
     </div>
     <div
       v-if="cardDisplayFull"
@@ -48,6 +48,7 @@
       <div
         class="metricscard-trend-change"
         :class="textColor(changePolarity)"
+        data-testid="metric-trend-parent"
       >
         <!-- Trend Icon -->
         <component
@@ -62,7 +63,7 @@
           :color="KUI_COLOR_TEXT_NEUTRAL_STRONG"
           :size="KUI_ICON_SIZE_30"
         />
-        <div>
+        <div data-testid="metric-trend-change">
           {{ metricChange }}
         </div>
       </div>
