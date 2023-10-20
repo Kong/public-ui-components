@@ -87,9 +87,9 @@ describe('<AnalyticsMetricProvider />', () => {
     // 2001 req each for 1xx, 2xx, 3xx, 4xx, 5xx in the prior period.
     // 10005 total; 4002/10005 = .4 (error rate for 4xx and 5xx).  Expected error rate change is 0.
     // 5005/10005-1 = −0.499750125.  Expected drop in traffic is 49.98%.
-    cy.get('.metricscard-value > .metricscard-value-trend > div').eq(0).should('have.text', '49.98%')
-    cy.get('.metricscard-value > .metricscard-value-trend > div').eq(1).should('have.text', '0.00%')
-    cy.get('.metricscard-value > .metricscard-value-trend > div').eq(2).should('have.text', '49.98%')
+    cy.get('.metricscard-trend-change > div').eq(0).should('have.text', '49.98%')
+    cy.get('.metricscard-trend-change > div').eq(1).should('have.text', '0.00%')
+    cy.get('.metricscard-trend-change > div').eq(2).should('have.text', '49.98%')
   })
 
   it('displays long titles if required', () => {
@@ -131,9 +131,9 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('.metricscard-value > div:first-child').eq(1).should('have.text', '40.00%')
     cy.get('.metricscard-value > div:first-child').eq(2).should('have.text', '1001ms')
 
-    cy.get('.metricscard-value > .metricscard-value-trend > div').eq(0).should('have.text', 'N/A')
-    cy.get('.metricscard-value > .metricscard-value-trend > div').eq(1).should('have.text', 'N/A')
-    cy.get('.metricscard-value > .metricscard-value-trend > div').eq(2).should('have.text', 'N/A')
+    cy.get('.metricscard-trend-change > div').eq(0).should('have.text', 'N/A')
+    cy.get('.metricscard-trend-change > div').eq(1).should('have.text', 'N/A')
+    cy.get('.metricscard-trend-change > div').eq(2).should('have.text', 'N/A')
   })
 
   it('handles queryReady', () => {
@@ -198,9 +198,9 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('.metricscard-value > div:first-child').eq(1).should('have.text', '40.00%')
     cy.get('.metricscard-value > div:first-child').eq(2).should('have.text', '1001ms')
 
-    cy.get('.metricscard-value > .metricscard-value-trend > div').eq(0).should('have.text', '49.98%')
-    cy.get('.metricscard-value > .metricscard-value-trend > div').eq(1).should('have.text', '0.00%')
-    cy.get('.metricscard-value > .metricscard-value-trend > div').eq(2).should('have.text', '49.98%').then(() => {
+    cy.get('.metricscard-trend-change > div').eq(0).should('have.text', '49.98%')
+    cy.get('.metricscard-trend-change > div').eq(1).should('have.text', '0.00%')
+    cy.get('.metricscard-trend-change > div').eq(2).should('have.text', '49.98%').then(() => {
       additionalFilter.value = [{
         dimension: EXPLORE_V2_DIMENSIONS.API_PRODUCT,
         type: EXPLORE_V2_FILTER_TYPES.IN,
@@ -243,11 +243,11 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('.metricscard-value > div:first-child').eq(1).should('have.text', '40.00%')
     cy.get('.metricscard-value > div:first-child').eq(2).should('have.text', '1001ms')
 
-    cy.get('.metricscard-value > .metricscard-value-trend > div').eq(0).should('have.text', '49.98%')
-    cy.get('.metricscard-value > .metricscard-value-trend > div').eq(1).should('have.text', '0.00%')
+    cy.get('.metricscard-trend-change > div').eq(0).should('have.text', '49.98%')
+    cy.get('.metricscard-trend-change > div').eq(1).should('have.text', '0.00%')
 
     // Latency trend: 1001/2001−1 = −0.499750125
-    cy.get('.metricscard-value > .metricscard-value-trend > div').eq(2).should('have.text', '49.98%')
+    cy.get('.metricscard-trend-change > div').eq(2).should('have.text', '49.98%')
   })
 
   it('displays single-entity metrics with no trend', () => {
@@ -269,9 +269,9 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('.metricscard-value > div:first-child').eq(1).should('have.text', '40.00%')
     cy.get('.metricscard-value > div:first-child').eq(2).should('have.text', '1001ms')
 
-    cy.get('.metricscard-value > .metricscard-value-trend > div').eq(0).should('have.text', 'N/A')
-    cy.get('.metricscard-value > .metricscard-value-trend > div').eq(1).should('have.text', 'N/A')
-    cy.get('.metricscard-value > .metricscard-value-trend > div').eq(2).should('have.text', 'N/A')
+    cy.get('.metricscard-trend-change > div').eq(0).should('have.text', 'N/A')
+    cy.get('.metricscard-trend-change > div').eq(1).should('have.text', 'N/A')
+    cy.get('.metricscard-trend-change > div').eq(2).should('have.text', 'N/A')
   })
 
   it('displays multi-entity metrics', () => {
@@ -294,7 +294,7 @@ describe('<AnalyticsMetricProvider />', () => {
       cy.get('.metricscard-value > div:first-child').eq(1).should('have.text', '40.00%')
       cy.get('.metricscard-value > div:first-child').eq(2).should('have.text', '1001ms')
 
-      cy.get('.metricscard-value > .metricscard-value-trend').should('not.exist')
+      cy.get('.metricscard-trend-change').should('not.exist')
     })
 
     cy.get('#route-arrgh').within(() => {
@@ -304,7 +304,7 @@ describe('<AnalyticsMetricProvider />', () => {
       cy.get('.metricscard-value > div:first-child').eq(1).should('have.text', '40.00%')
       cy.get('.metricscard-value > div:first-child').eq(2).should('have.text', '1101ms')
 
-      cy.get('.metricscard-value > .metricscard-value-trend').should('not.exist')
+      cy.get('.metricscard-trend-change').should('not.exist')
     })
   })
 
@@ -327,7 +327,7 @@ describe('<AnalyticsMetricProvider />', () => {
 
     cy.get('.metricscard-value').should('have.length', 1)
     cy.get('.metricscard-value > div:first-child').should('have.text', '1001ms')
-    cy.get('.metricscard-value > .metricscard-value-trend > div').should('have.text', '49.98%')
+    cy.get('.metricscard-trend-change > div').should('have.text', '49.98%')
   })
 
   it('handles errors in all cards', () => {
