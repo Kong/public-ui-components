@@ -250,8 +250,8 @@ importers:
         specifier: 1.1.0
         version: 1.1.0(axios@1.5.1)(swrv@1.0.4)(vue@3.3.4)
       '@kong-ui-public/metric-cards':
-        specifier: 0.2.14
-        version: 0.2.14(@kong/kongponents@8.123.9)(vue@3.3.4)
+        specifier: workspace:*
+        version: link:../metric-cards
       axios:
         specifier: ^1.5.1
         version: 1.5.1
@@ -2011,17 +2011,6 @@ packages:
       axios: 1.5.1
       date-fns: 2.30.0
       swrv: 1.0.4(vue@3.3.4)
-      vue: 3.3.4
-    dev: false
-
-  /@kong-ui-public/metric-cards@0.2.14(@kong/kongponents@8.123.9)(vue@3.3.4):
-    resolution: {integrity: sha512-3z7aKeRox1VgxjQG6a0g1W+ME8u+62n+VvIb1HUH00rdacIBIKXGPBJTdIAFbodNtDa+s9oeV/OdjEUS5j+YbQ==}
-    peerDependencies:
-      '@kong/kongponents': ^8.83.5
-      vue: ^3.2.47
-    dependencies:
-      '@kong/kongponents': 8.123.9(vue-router@4.2.5)(vue@3.3.4)
-      approximate-number: 2.1.1
       vue: 3.3.4
     dev: false
 

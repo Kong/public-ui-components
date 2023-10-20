@@ -1,10 +1,11 @@
-import type { MetricCardDef } from '@kong-ui-public/metric-cards'
+import type { MetricCardDef, MetricCardType} from '@kong-ui-public/metric-cards'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 import type { ChronologicalMappedMetrics } from './useMetricFetcher'
 import { DEFAULT_KEY } from './useMetricFetcher'
 
 export interface BuilderOptions {
+  cardType: MetricCardType,
   title: Ref<string>,
   record: Ref<ChronologicalMappedMetrics>,
   hasError: Ref<boolean>,
@@ -30,6 +31,7 @@ export const sumValues = (recordValue: ChronologicalMappedMetrics, period: 'curr
 
 export default function useMetricCardBuilder(opts: BuilderOptions): Ref<MetricCardDef> {
   const {
+    cardType,
     title,
     record,
     hasError,
@@ -55,6 +57,7 @@ export default function useMetricCardBuilder(opts: BuilderOptions): Ref<MetricCa
     }
 
     return {
+      cardType,
       hasError: hasError.value,
       currentValue,
       previousValue,
