@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/cli",
-  "version": "0.7.4",
+  "version": "0.7.6",
   "private": true,
   "type": "module",
   "main": "./bin/index.js",
@@ -13,7 +13,7 @@
     "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore' --fix"
   },
   "devDependencies": {
-    "@types/inquirer": "^9.0.3",
+    "@types/inquirer": "^9.0.4",
     "boxen": "^7.1.1",
     "inquirer": "^9.2.11",
     "nanospinner": "^1.1.0",

@@ -72,7 +72,13 @@ export interface HCVVaultConfig {
 export interface AzureVaultConfig {
   location: string
   vault_uri: string
-  instance_metadata_host: string
+  credentials_prefix: string
+  type: string
+  client_id?: string
+  tenant_id?: string
+  ttl?: number
+  neg_ttl?: number
+  resurrect_ttl?: number
 }
 
 // allow for nullish values in payload because Kong Admin API treats null as an empty value
@@ -82,12 +88,19 @@ export interface HCVVaultConfigPayload extends Omit<HCVVaultConfig, 'namespace' 
   token?: string | null
 }
 
+// allow for nullish values in payload because Kong Admin API treats null as an empty value
+// in case it's an empty string, it will be treated as a value and must have length > 0
+export interface AzureVaultConfigPayload extends Omit<AzureVaultConfig, 'client_id' | 'tenant_id'> {
+  client_id?: string | null
+  tenant_id?: string | null
+}
+
 export interface VaultPayload {
   name: VaultProviders
   prefix: string
   description: string | null
   tags: string[],
-  config: KongVaultConfig | AWSVaultConfig | GCPVaultConfig | HCVVaultConfigPayload | AzureVaultConfig
+  config: KongVaultConfig | AWSVaultConfig | GCPVaultConfig | HCVVaultConfigPayload | AzureVaultConfigPayload
 }
 
 export interface VaultStateFields {

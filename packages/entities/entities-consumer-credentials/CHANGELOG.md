@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.42](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@1.1.41...@kong-ui-public/entities-consumer-credentials@1.1.42) (2023-10-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [1.1.41](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@1.1.40...@kong-ui-public/entities-consumer-credentials@1.1.41) (2023-10-20)
+
+
+### Bug Fixes
+
+* **entities-consumer-credential:** disable row click for the list ([#853](https://github.com/Kong/public-ui-components/issues/853)) ([ee1e52b](https://github.com/Kong/public-ui-components/commit/ee1e52ba68d963cde38ad8debda47582e920846b))
+
+
+
+
+
+## [1.1.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@1.1.39...@kong-ui-public/entities-consumer-credentials@1.1.40) (2023-10-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
 ## [1.1.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@1.1.38...@kong-ui-public/entities-consumer-credentials@1.1.39) (2023-10-18)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials

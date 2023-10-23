@@ -12,13 +12,17 @@
               :on-error="primaryErrorCallback"
               :tags="['tertiary-error-tag']"
             >
-              <BuggyComponent :error="false" />
+              <BuggyComponent
+                data-testid="adam custom BuggyComponent"
+                :error="true"
+              />
               <template
                 #fallback="{ error, context }"
               >
                 <div class="fallback-error-container">
                   <p>This component has custom fallback UI</p>
                   <p><code>{{ context.componentName }}</code>: {{ error.message }}</p>
+                  <p><code>data-testid</code>: {{ context.dataTestid }}</p>
                   <WarningIcon
                     color="red"
                     size="64"
@@ -33,7 +37,10 @@
       <div class="component-container">
         <p>This app-crashing buggy component will throw an error inside a <code>computed</code> variable. Even though this error is <em>also</em> unhandled, the app will <b>crash</b> if the error is not captured.</p>
         <ErrorBoundary :tags="['parent-error-tag']">
-          <AppCrashBuggyComponent :error="true" />
+          <AppCrashBuggyComponent
+            data-testid="adam custom AppCrashBuggyComponent"
+            :error="true"
+          />
         </ErrorBoundary>
       </div>
 

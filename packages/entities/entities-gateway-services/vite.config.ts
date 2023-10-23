@@ -26,10 +26,11 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
 }))
 
 // If we are trying to preview a build of the local `package/entities-gateway-services/sandbox` directory,
-// unset the external and lib properties
-if (process.env.PREVIEW_SANDBOX) {
-  config.build.rollupOptions.external = undefined
+// unset the lib, rollupOptions.external and rollupOptions.output.globals properties
+if (process.env.USE_SANDBOX) {
   config.build.lib = undefined
+  config.build.rollupOptions.external = undefined
+  config.build.rollupOptions.output.global = undefined
 }
 
 export default config

@@ -48,7 +48,7 @@ Be sure to familiarize yourself with the [Component Requirements](./docs/creatin
 ### Requirements
 
 - [NodeJS >= 18.x](https://nodejs.org/en/download/)
-- [pnpm 8.x](https://pnpm.io/installation) ([_Why pnpm?_](./docs/why-pnpm.md)). We recommend installing via the command shown here, substituting `8.6.12` with the version listed in the [`package.json > volta.pnpm` field](https://github.com/Kong/public-ui-components/blob/main/package.json). For example, for version `8.6.12` you would use the command `curl -fsSL https://get.pnpm.io/install.sh | env PNPM_VERSION=8.6.12 sh -`
+- [pnpm 8.x](https://pnpm.io/installation) ([_Why pnpm?_](./docs/why-pnpm.md)). We recommend installing via the command shown here, substituting `8.6.12` with the version listed in the [`package.json > volta.pnpm` field](https://github.com/Kong/public-ui-components/blob/main/package.json). For example, for version `8.6.12` you would use the command `curl -fsSL https://get.pnpm.io/install.sh | env PNPM_VERSION=8.8.0 sh -`
 
 It is recommended to also _globally_ install [`lerna`](https://lerna.js.org/) with `pnpm` (though not absolutely required)
 
@@ -136,6 +136,8 @@ pnpm --filter "@kong-ui-public/{package-name}" run test:unit:open
 Build your `packages/{package-name}/sandbox/` directory for production and serve locally
 
 ```sh
+pnpm --filter "@kong-ui-public/{package-name}" run build:sandbox
+
 pnpm --filter "@kong-ui-public/{package-name}" run preview
 ```
 
