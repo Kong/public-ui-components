@@ -1,119 +1,182 @@
 <template>
-  <div class="sandbox-container">
-    <h1>Simple Charts</h1>
-    <div class="flex-row-parent">
-      <!-- AnalyticsChart / SimpleChart type selector -->
-      <div class="flex-vertical">
-        <KLabel>
-          Chart Type
-        </KLabel>
-        <div class="chart-radio-group">
-          <div>
-            <KRadio
-              v-model="chartType"
-              name="chartType"
-              :selected-value="ChartTypesSimple.GAUGE"
-            >
-              Gauge
-            </KRadio>
-          </div>
-          <div>
-            <KRadio
-              v-model="chartType"
-              name="chartType"
-              :selected-value="ChartTypesSimple.TOPN"
-            >
-              Top N Table
-            </KRadio>
+  <SandboxLayout
+    :links="appLinks"
+    title="Simple Charts"
+  >
+    <template #controls>
+      <div class="flex-row-parent">
+        <!-- AnalyticsChart / SimpleChart type selector -->
+        <div class="flex-vertical">
+          <KLabel>Chart Type</KLabel>
+          <div class="chart-radio-group">
+            <div>
+              <KRadio
+                v-model="chartType"
+                name="chartType"
+                :selected-value="ChartTypesSimple.GAUGE"
+              >
+                Gauge
+              </KRadio>
+            </div>
+            <div>
+              <KRadio
+                v-model="chartType"
+                name="chartType"
+                :selected-value="ChartTypesSimple.TOPN"
+              >
+                Top N Table
+              </KRadio>
+            </div>
           </div>
         </div>
-      </div>
+        <br>
 
-      <!-- Metric display options (Gauge chart-specific) -->
-      <div
-        v-if="isGaugeChart"
-        class="flex-vertical"
-      >
-        <KLabel>
-          Metric display
-        </KLabel>
-        <div class="chart-radio-group">
-          <div>
-            <KRadio
-              v-model="metricDisplay"
-              name="metricDisplay"
-              :selected-value="ChartMetricDisplay.SingleMetric"
-            >
-              {{ ChartMetricDisplay.SingleMetric }}
-            </KRadio>
+        <!-- Metric display options (Gauge chart-specific) -->
+        <div
+          v-if="isGaugeChart"
+          class="flex-vertical"
+        >
+          <KLabel>Metric display</KLabel>
+          <div class="chart-radio-group">
+            <div>
+              <KRadio
+                v-model="metricDisplay"
+                name="metricDisplay"
+                :selected-value="ChartMetricDisplay.SingleMetric"
+              >
+                {{ ChartMetricDisplay.SingleMetric }}
+              </KRadio>
+            </div>
+            <div>
+              <KRadio
+                v-model="metricDisplay"
+                name="metricDisplay"
+                :selected-value="ChartMetricDisplay.Full"
+              >
+                {{ ChartMetricDisplay.Full }}
+              </KRadio>
+            </div>
+            <div>
+              <KRadio
+                v-model="metricDisplay"
+                name="metricDisplay"
+                :selected-value="ChartMetricDisplay.Hidden"
+              >
+                {{ ChartMetricDisplay.Hidden }}
+              </KRadio>
+            </div>
           </div>
-          <div>
-            <KRadio
-              v-model="metricDisplay"
-              name="metricDisplay"
-              :selected-value="ChartMetricDisplay.Full"
-            >
-              {{ ChartMetricDisplay.Full }}
-            </KRadio>
+          <br>
+
+          <KLabel>Dataset order</KLabel>
+          <div class="chart-radio-group">
+            <div>
+              <KRadio
+                v-model="reverseDataset"
+                name="reverseDataset"
+                :selected-value="false"
+              >
+                Normal
+              </KRadio>
+            </div>
+            <div>
+              <KRadio
+                v-model="reverseDataset"
+                name="reverseDataset"
+                :selected-value="true"
+              >
+                Reversed
+              </KRadio>
+            </div>
           </div>
-          <div>
-            <KRadio
-              v-model="metricDisplay"
-              name="metricDisplay"
-              :selected-value="ChartMetricDisplay.Hidden"
-            >
-              {{ ChartMetricDisplay.Hidden }}
-            </KRadio>
-          </div>
-        </div>
-        <KLabel>
-          Dataset order
-        </KLabel>
-        <div class="chart-radio-group">
-          <div>
-            <KRadio
-              v-model="reverseDataset"
-              name="reverseDataset"
-              :selected-value="false"
-            >
-              Normal
-            </KRadio>
-          </div>
-          <div>
-            <KRadio
-              v-model="reverseDataset"
-              name="reverseDataset"
-              :selected-value="true"
-            >
-              Reversed
-            </KRadio>
-          </div>
-        </div>
-        <KLabel>
-          Numerator
-        </KLabel>
-        <div class="chart-radio-group">
-          <div>
-            <KRadio
-              v-model="gaugeNumerator"
-              name="numerator"
-              :selected-value="0"
-            >
-              0
-            </KRadio>
-          </div>
-          <div>
-            <KRadio
-              v-model="gaugeNumerator"
-              name="numerator"
-              :selected-value="1"
-            >
-              1
-            </KRadio>
+          <br>
+
+          <KLabel>Numerator</KLabel>
+          <div class="chart-radio-group">
+            <div>
+              <KRadio
+                v-model="gaugeNumerator"
+                name="numerator"
+                :selected-value="0"
+              >
+                0
+              </KRadio>
+            </div>
+            <div>
+              <KRadio
+                v-model="gaugeNumerator"
+                name="numerator"
+                :selected-value="1"
+              >
+                1
+              </KRadio>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <br>
+
+      <!-- Dataset options -->
+      <div v-if="!isTopNTable">
+        <KLabel>Dataset options</KLabel>
+        <div class="dataset-options">
+          <KButton
+            appearance="outline"
+            class="first-button"
+            size="small"
+            @click="randomizeData()"
+          >
+            Randomize data
+          </KButton>
+          <KButton
+            appearance="outline"
+            size="small"
+            @click="addDataset()"
+          >
+            Add dataset
+          </KButton>
+        </div>
+      </div>
+      <br>
+
+      <div class="option-toggles">
+        <KLabel>Option toggles</KLabel>
+        <div v-if="isTopNTable">
+          <KInputSwitch
+            v-model="showLoadingState"
+            :label="showLoadingState ? 'Is Loading' : 'Data Loaded'"
+          />
+        </div>
+        <div>
+          <KInputSwitch
+            v-model="emptyState"
+            :label="emptyState ? 'Empty State' : 'Chart Has Data'"
+          />
+        </div>
+      </div>
+      <br>
+
+      <div class="config-container">
+        <div
+          v-if="!isTopNTable"
+          class="config-container-row"
+        >
+          <KLabel>Colors</KLabel>
+          <div
+            v-for="([label, color], i) in Object.entries(colorPalette)"
+            :key="i"
+            class="color-palette-section flex-vertical"
+          >
+            <label>{{ label }}</label>
+            <input
+              type="color"
+              :value="color"
+              @blur="updateSelectedColor($event, label)"
+            >
+          </div>
+        </div>
+      </div>
+    </template>
 
     <SimpleChart
       v-if="!isTopNTable"
@@ -133,88 +196,33 @@
       </template>
     </TopNTable>
 
-    <!-- Dataset options -->
-    <div
-      v-if="!isTopNTable"
-      class="dataset-options"
-    >
-      <KButton
-        appearance="outline"
-        class="first-button"
-        @click="randomizeData()"
-      >
-        Randomize data
-      </KButton>
-      <KButton
-        appearance="outline"
-        @click="addDataset()"
-      >
-        Add dataset
-      </KButton>
+    <div class="data-container">
+      <KLabel>ChartData</KLabel>
+      <KCodeBlock
+        v-if="dataCode"
+        id="data-codeblock"
+        :code="dataCode"
+        is-searchable
+        language="json"
+      />
     </div>
+    <br>
 
-    <div class="option-toggles">
-      <KLabel>
-        Option toggles
-      </KLabel>
-      <div v-if="isTopNTable">
-        <KInputSwitch
-          v-model="showLoadingState"
-          :label="showLoadingState ? 'Is Loading' : 'Data Loaded'"
-        />
-      </div>
-      <div>
-        <KInputSwitch
-          v-model="emptyState"
-          :label="emptyState ? 'Empty State' : 'Chart Has Data'"
-        />
-      </div>
+    <div class="options-container">
+      <KLabel>Chart Options</KLabel>
+      <KCodeBlock
+        v-if="optionsCode"
+        id="options-codeblock"
+        :code="optionsCode"
+        is-searchable
+        language="json"
+      />
     </div>
-    <div class="config-container">
-      <div
-        v-if="!isTopNTable"
-        class="config-container-row"
-      >
-        <KLabel>Colors</KLabel>
-        <div
-          v-for="([label, color], i) in Object.entries(colorPalette)"
-          :key="i"
-          class="color-palette-section flex-vertical"
-        >
-          <label>{{ label }}</label>
-          <input
-            type="color"
-            :value="color"
-            @blur="updateSelectedColor($event, label)"
-          >
-        </div>
-      </div>
-      <div class="data-container">
-        <KLabel>ChartData</KLabel>
-        <KCodeBlock
-          v-if="dataCode"
-          id="data-codeblock"
-          :code="dataCode"
-          is-searchable
-          language="json"
-        />
-      </div>
-      <div class="options-container">
-        <KLabel>Chart Options</KLabel>
-        <KCodeBlock
-          v-if="optionsCode"
-          id="options-codeblock"
-          :code="optionsCode"
-          is-searchable
-          language="json"
-        />
-      </div>
-    </div>
-  </div>
+  </SandboxLayout>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, inject } from 'vue'
 import {
   ChartMetricDisplay,
   ChartLegendPosition,
@@ -228,6 +236,7 @@ import { SeededRandom } from '../SeedRandom'
 import { rand } from '../utils'
 import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'
+import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 
 enum Metrics {
   TotalRequests = 'TotalRequests',
@@ -239,6 +248,9 @@ interface MetricSelection {
   name: Metrics,
   unit: string,
 }
+
+// Inject the app-links from the entry file
+const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const seed = ref(rand(10, 10000))
 

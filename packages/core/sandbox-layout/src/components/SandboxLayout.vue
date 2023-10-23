@@ -1,17 +1,7 @@
 <template>
   <div class="kong-ui-sandbox-layout">
-    <header :class="['header', { 'no-title': !title }]">
+    <header class="header">
       <div class="header-left">
-        <h1 v-if="title">
-          <router-link
-            class="home-link"
-            :to="{ name: 'home'}"
-          >
-            {{ title }}
-          </router-link>
-        </h1>
-      </div>
-      <div class="header-right">
         <div class="mobile-nav-container">
           <KToggle v-slot="{ isToggled: mobileNavIsToggled, toggle: toggleMobileNav }">
             <div>
@@ -24,14 +14,29 @@
                 />
               </div>
               <KSlideout
+                close-button-alignment="end"
                 :is-visible="mobileNavIsToggled.value"
+                title="Main Menu"
                 @close="toggleMobileNav"
               >
                 <SandboxNavigation @router-link-click="toggleMobileNav" />
               </KSlideout>
             </div>
           </KToggle>
+          <h1
+            v-if="title"
+            class="mobile-title"
+          >
+            <router-link
+              class="home-link"
+              :to="{ name: 'home'}"
+            >
+              {{ title }}
+            </router-link>
+          </h1>
         </div>
+      </div>
+      <div class="header-right">
         <div class="mobile-controls-container">
           <KToggle v-slot="{ isToggled: controlsAreToggled, toggle: toggleControls }">
             <div>
@@ -44,7 +49,9 @@
                 />
               </div>
               <KSlideout
+                close-button-alignment="end"
                 :is-visible="controlsAreToggled.value"
+                title="Controls"
                 @close="toggleControls"
               >
                 <slot name="controls" />
@@ -59,6 +66,9 @@
         <SandboxNavigation />
       </div>
       <div class="sandbox-container">
+        <h1 v-if="title">
+          {{ title }}
+        </h1>
         <slot name="default" />
       </div>
       <div class="sandbox-controls">
@@ -70,7 +80,7 @@
 
 <script setup lang="ts">
 import SandboxNavigation from '../components/SandboxNavigation.vue'
-import { provide } from 'vue'
+import { provide, computed } from 'vue'
 import { CogIcon, MenuIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_50 } from '@kong/design-tokens'
 import type { PropType } from 'vue'
@@ -87,9 +97,15 @@ const props = defineProps({
     required: false,
     default: () => [],
   },
+  controlsMinWidth: {
+    type: Number,
+    default: 240,
+  },
 })
 
 provide(KONG_UI_SANDBOX_LAYOUT_LINKS_INJECTION_KEY, props.links)
+
+const controlsWidth = computed((): string => `${props.controlsMinWidth}px`)
 </script>
 
 <style lang="scss" scoped>
@@ -101,17 +117,8 @@ provide(KONG_UI_SANDBOX_LAYOUT_LINKS_INJECTION_KEY, props.links)
     justify-content: space-between;
     width: 100%;
 
-    &.no-title {
-      display: none;
-
-      // Always show the header on mobile layout
-      @media (max-width: ($kui-breakpoint-laptop - 1px)) {
-        display: flex;
-      }
-    }
-
     @media (min-width: $kui-breakpoint-laptop) {
-      border: none;
+      display: none;
     }
 
     .header-left,
@@ -130,6 +137,7 @@ provide(KONG_UI_SANDBOX_LAYOUT_LINKS_INJECTION_KEY, props.links)
     h1 {
       font-size: $kui-font-size-50;
       margin: $kui-space-0;
+      white-space: nowrap;
 
       @media (min-width: $kui-breakpoint-phablet) {
         font-size: $kui-font-size-70;
@@ -143,8 +151,15 @@ provide(KONG_UI_SANDBOX_LAYOUT_LINKS_INJECTION_KEY, props.links)
     padding: $kui-space-70;
   }
 
+  .mobile-nav-container {
+    align-items: center;
+    display: flex;
+    gap: $kui-space-70;
+  }
+
   .mobile-nav-container,
-  .mobile-controls-container {
+  .mobile-controls-container,
+  .mobile-title {
     @media (min-width: $kui-breakpoint-laptop) {
       display: none;
     }
@@ -153,12 +168,19 @@ provide(KONG_UI_SANDBOX_LAYOUT_LINKS_INJECTION_KEY, props.links)
   .sandbox-controls,
   .desktop-nav-container {
     display: none;
-    min-width: 240px;
 
     // Always show nav and controls on desktop
     @media (min-width: $kui-breakpoint-laptop) {
       display: block;
     }
+  }
+
+  .desktop-nav-container {
+    min-width: 240px;
+  }
+
+  .sandbox-controls {
+    min-width: v-bind('controlsWidth');
   }
 
   .sandbox-container {
@@ -167,6 +189,19 @@ provide(KONG_UI_SANDBOX_LAYOUT_LINKS_INJECTION_KEY, props.links)
 
     @media (min-width: $kui-breakpoint-laptop) {
       border: $kui-border-width-10 solid $kui-color-border;
+      border-radius: $kui-border-radius-30;
+      padding: $kui-space-70;
+    }
+
+    h1 {
+      margin: $kui-space-0 $kui-space-0 $kui-space-70
+    }
+  }
+
+  .sandbox-controls {
+    @media (min-width: $kui-breakpoint-laptop) {
+      border: $kui-border-width-10 solid $kui-color-border;
+      border-radius: $kui-border-radius-30;
       padding: $kui-space-70;
     }
   }
@@ -188,6 +223,11 @@ provide(KONG_UI_SANDBOX_LAYOUT_LINKS_INJECTION_KEY, props.links)
     &:hover {
       color: $kui-color-text-primary-strong;
     }
+  }
+
+  :deep(.k-slideout),
+  :deep(.k-card-body) {
+    font-size: $kui-font-size-40;
   }
 }
 </style>
