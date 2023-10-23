@@ -434,6 +434,25 @@ importers:
         specifier: ^3.3.4
         version: 3.3.4
 
+  packages/core/sandbox-layout:
+    dependencies:
+      '@kong/icons':
+        specifier: ^1.7.7
+        version: 1.7.7(vue@3.3.4)
+    devDependencies:
+      '@kong/design-tokens':
+        specifier: ^1.11.4
+        version: 1.11.4
+      '@kong/kongponents':
+        specifier: ^8.123.9
+        version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
+      vue:
+        specifier: ^3.3.4
+        version: 3.3.4
+      vue-router:
+        specifier: ^4.2.5
+        version: 4.2.5(vue@3.3.4)
+
   packages/entities/entities-certificates:
     dependencies:
       '@kong-ui-public/copy-uuid':
@@ -2029,6 +2048,15 @@ packages:
   /@kong/icons@1.7.6(vue@3.3.4):
     resolution: {integrity: sha512-1/hyEJGpfI1j7LIM1HjWBCoUlFyhWoj9fAOZsJKX70C87XkCzEfxutD2eeSvE7KZe688oDnx7jXSiSouyly5BA==}
     engines: {node: '>=18.17.0'}
+    peerDependencies:
+      vue: ^3.3.4
+    dependencies:
+      vue: 3.3.4
+    dev: false
+
+  /@kong/icons@1.7.7(vue@3.3.4):
+    resolution: {integrity: sha512-CQHOXZ/S0SRTjW43ItRKFoA9e+roW/jh8vXE1X0HVHDy0LAymvX9nadoVUmtdjNHQnJvr4XZfGgdyXE+fYh6Fw==}
+    engines: {node: '>=18.18.0'}
     peerDependencies:
       vue: ^3.3.4
     dependencies:
