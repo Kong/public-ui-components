@@ -11,6 +11,9 @@ import { TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
 import { METRICS_PROVIDER_KEY, defaultFetcherDefs } from './metricsProviderUtil'
 import { EXPLORE_V2_DIMENSIONS } from '../types'
 import type { DataFetcher, ExploreV2Filter } from '../types'
+import composables from '../composables'
+
+const { i18n } = composables.useI18n()
 
 const props = withDefaults(defineProps<{
   maxTimeframe?: TimeframeKeys,
@@ -74,6 +77,14 @@ const {
   dataFetcher: props.dataFetcher,
 })
 
+// If one of our Preset timeframes, we display the requested time frame (if user has trend access); otherwise fall back to one day
+// Else, we have a Custom start and end datetime coming from v-calendar, so we display "vs previous X days"
+const trendRangeText = timeframe.value.isRelative
+  ? props.hasTrendAccess
+    ? i18n.t('trend.preset', { timeframe: TimePeriods.get(props.maxTimeframe)?.timeframeText })
+    : i18n.t('trend.preset', { timeframe: TimePeriods.get(TimeframeKeys.ONE_DAY)?.timeframeText })
+  : i18n.t('trend.custom', { numDays: Math.ceil(timeframe.value.timeframeLength() / (1000 * 60 * 24)) })
+
 provide(METRICS_PROVIDER_KEY, {
   data: {
     traffic: trafficData,
@@ -81,6 +92,7 @@ provide(METRICS_PROVIDER_KEY, {
   },
   hasTrendAccess: props.hasTrendAccess,
   longCardTitles: props.longCardTitles,
+  trendRange: trendRangeText,
 })
 
 </script>

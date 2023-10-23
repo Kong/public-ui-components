@@ -13,6 +13,7 @@ export interface BuilderOptions {
   sumGroupedValues?: string[],
   increaseIsBad?: boolean,
   formatValueFn?: (rawValue: number) => string,
+  trendRange?: string,
 }
 
 export const sumValues = (recordValue: ChronologicalMappedMetrics, period: 'current' | 'previous', dimensionLookupKey: string | typeof DEFAULT_KEY = DEFAULT_KEY, sumGroupedValues?: string[]) => {
@@ -37,6 +38,7 @@ export default function useMetricCardBuilder(opts: BuilderOptions): Ref<MetricCa
     hasError,
     increaseIsBad,
     formatValueFn,
+    trendRange,
   } = opts
 
   return computed<MetricCardDef>(() => {
@@ -64,6 +66,7 @@ export default function useMetricCardBuilder(opts: BuilderOptions): Ref<MetricCa
       title: title.value,
       increaseIsBad: !!increaseIsBad, // Coerce undefined to false
       formatValueFn,
+      trendRange,
     }
   })
 }

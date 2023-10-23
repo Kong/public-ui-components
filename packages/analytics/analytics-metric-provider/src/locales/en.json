@@ -13,5 +13,9 @@
       "errorRate": "Average Error Rate",
       "latency": "P99 Latency"
     }
+  },
+  "trend": {
+    "preset": "vs {timeframe}",
+    "custom": "vs previous {numDays} days"
   }
 }
