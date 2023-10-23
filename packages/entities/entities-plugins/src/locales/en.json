@@ -1,9 +1,11 @@
 {
   "actions": {
     "create": "New Plugin",
+    "create_custom": "Create",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
     "edit": "Edit",
+    "enable": "Enable",
     "delete": "Delete",
     "view": "View Details",
     "configure_dynamic_ordering": "Configure Dynamic Ordering"
@@ -21,17 +23,20 @@
   "errors": {
     "general": "Plugins could not be retrieved",
     "delete": "The plugin could not be deleted at this time.",
-    "copy": "Failed to copy to clipboard"
+    "copy": "Failed to copy to clipboard",
+    "load_results": "Error loading available plugins"
   },
   "search": {
     "placeholder": {
-      "konnect": "Filter by exact instance name or ID"
+      "konnect": "Filter by exact instance name or ID",
+      "select": "Filter plugins"
     },
     "filter": {
       "field": {
         "enabled": "Enabled"
       }
-    }
+    },
+    "no_results": "No results found for \"{filter}\""
   },
   "plugins": {
     "title": "Plugins",
@@ -391,6 +396,28 @@
       "route": "Route ID",
       "consumer": "Consumer ID",
       "consumer_group": "Consumer Group ID"
+    },
+    "select": {
+      "custom_badge_text": "Data Plane Node Specific",
+      "unavailable_tooltip": "This plugin is not available",
+      "misc_plugins": "Other Plugins",
+      "tabs": {
+        "kong": {
+          "title": "Kong Plugins",
+          "description": "Kong plugins are bundled by default with Kong Gateway and are available across all control planes.",
+          "app_reg_tooltip": "This plugin is not available because App Registration is enabled for this Service."
+        },
+        "custom": {
+          "title": "Custom Plugins",
+          "description": "Custom plugins will be available in this control plane only.",
+          "empty_title": "No Custom Plugins",
+          "empty_description": "No custom plugins have been added to this Control Plane.",
+          "create": {
+            "name": "Custom Plugin",
+            "description": "Upload schema file to create custom plugin"
+          }
+        }
+      }
     }
   },
   "glossary": {

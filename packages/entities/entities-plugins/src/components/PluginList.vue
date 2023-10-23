@@ -237,6 +237,7 @@ import {
   useDeleteUrlBuilder,
   useGatewayFeatureSupported,
 } from '@kong-ui-public/entities-shared'
+import '@kong-ui-public/entities-shared/dist/style.css'
 
 import type {
   BaseTableHeaders,
@@ -258,8 +259,6 @@ import type {
 } from '../types'
 
 import PluginIcon from './PluginIcon.vue'
-
-import '@kong-ui-public/entities-shared/dist/style.css'
 
 const pluginMetaData = composables.usePluginMetaData()
 
