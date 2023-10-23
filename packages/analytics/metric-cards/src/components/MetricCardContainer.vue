@@ -38,6 +38,7 @@
         :has-error="card.hasError"
         :title="card.title"
         :tooltip="card.tooltip"
+        :trend-range="card.trendRange"
       />
     </template>
   </div>

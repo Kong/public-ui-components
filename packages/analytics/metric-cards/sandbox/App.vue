@@ -17,6 +17,14 @@
         />
       </div>
 
+      <h3>Large - compact</h3>
+      <div class="generic-card">
+        <MetricCardContainer
+          v-bind="cardsRegularCompact"
+          hide-title
+        />
+      </div>
+
       <h3>Large - custom CSS theme</h3>
       <div class="generic-card dev-portal">
         <MetricCardContainer v-bind="cardsRegular" />
@@ -80,6 +88,7 @@ const cards = [
     title: 'Requests',
     tooltip: 'This is a tooltip',
     increaseIsBad: false,
+    trendRange: 'vs last week',
   },
   {
     cardType: MetricCardType.ERROR_RATE,
@@ -89,6 +98,7 @@ const cards = [
     formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
     title: 'Error Rate',
     increaseIsBad: true,
+    trendRange: 'vs last week',
   },
   {
     cardType: MetricCardType.LATENCY,
@@ -97,6 +107,7 @@ const cards = [
     formatValueFn: val => `${val}ms`,
     title: 'P99 Latency',
     increaseIsBad: true,
+    trendRange: 'vs last week',
   },
   {
     cardType: MetricCardType.GENERIC_COUNT,
@@ -104,6 +115,7 @@ const cards = [
     previousValue: 4,
     title: 'Active Runtimes',
     increaseIsBad: true,
+    trendRange: 'vs last week',
   },
   {
     cardType: MetricCardType.GENERIC_COUNT,
@@ -113,6 +125,7 @@ const cards = [
     title: 'Saturation',
     tooltip: 'A secondary tooltip',
     increaseIsBad: true,
+    trendRange: 'vs last week',
   },
 ]
 
@@ -135,6 +148,14 @@ const cardsRegular: MetricCardContainerOptions = {
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
   cardSize: MetricCardSize.Large,
+}
+
+const cardsRegularCompact: MetricCardContainerOptions = {
+  cards: [...cards].slice(0, 3),
+  loading: false,
+  hasTrendAccess: true,
+  fallbackDisplayText: 'Not available',
+  cardSize: MetricCardSize.LargeCompact,
 }
 
 const cardsXL: MetricCardContainerOptions = {

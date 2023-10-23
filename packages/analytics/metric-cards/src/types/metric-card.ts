@@ -10,6 +10,7 @@ export interface MetricCardDef {
   title?: string
   hasError?: boolean
   tooltip?: string
+  trendRange?: string
 }
 
 export interface MetricCardDisplayValue {
