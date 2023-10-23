@@ -104,24 +104,15 @@
             </div>
 
             <div v-else>
-              <KTooltip
-                v-if="truncated && willBeTruncated(item.value)"
-                :label="item.value">
+              <KTooltip :label="isTruncated && item.value">
                 <span
-                  class="attrs-data-text truncated"
+                  ref="textContent"
+                  class="attrs-data-text"
+                  :class="{ 'truncated': truncated }"
                 >
                   {{ componentAttrsData.text }}
                 </span>
-                <template #content>
-                  {{ item.value }}
-                </template>
               </KTooltip>
-              <span
-                v-else
-                class="attrs-data-text"
-              >
-                {{ componentAttrsData.text }}
-              </span>
             </div>
           </component>
         </div>
@@ -132,7 +123,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, useSlots } from 'vue'
+import { computed, ref, useSlots, watch } from 'vue'
 import type { RecordItem, ComponentAttrsData } from '../../types'
 import { ConfigurationSchemaType } from '../../types'
 import composables from '../../composables'
@@ -142,9 +133,6 @@ import JsonCardItem from './JsonCardItem.vue'
 import InternalLinkItem from './InternalLinkItem.vue'
 import StatusBadge from './StatusBadge.vue'
 import '@kong-ui-public/copy-uuid/dist/style.css'
-
-// 20ch + ellipsis(3ch) + 1
-const MAX_LABEL_LENGTH = 24
 
 const props = defineProps({
   item: {
@@ -309,9 +297,22 @@ const componentAttrsData = computed((): ComponentAttrsData => {
   }
 })
 
-const willBeTruncated = (textContent: string) => {
-  return textContent.length > MAX_LABEL_LENGTH
-}
+const textContent = ref(null)
+const textOffsetWidth = ref(0)
+const textScrollWidth = ref(0)
+const truncationCalculated = ref(false)
+
+watch(textContent, () => {
+  if (props.truncated && textContent.value && !truncationCalculated.value) {
+    textOffsetWidth.value = (textContent.value as HTMLElement).offsetWidth
+    textScrollWidth.value = (textContent.value as HTMLElement).scrollWidth
+    truncationCalculated.value = true
+  }
+})
+
+const isTruncated = computed(() => {
+  return props.truncated && textOffsetWidth.value < textScrollWidth.value
+})
 
 </script>
 

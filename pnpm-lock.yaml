@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -708,8 +704,8 @@ importers:
         specifier: ^1.11.4
         version: 1.11.4
       '@kong/kongponents':
-        specifier: ^8.123.9
-        version: 8.123.9(vue-router@4.2.5)(vue@3.3.4)
+        specifier: ^8.124.0
+        version: 8.124.0(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       axios:
         specifier: ^1.5.1
         version: 1.5.1
@@ -2058,13 +2054,35 @@ packages:
     transitivePeerDependencies:
       - debug
 
+  /@kong/kongponents@8.124.0(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4):
+    resolution: {integrity: sha512-rpcGN4NsnECuqhZVm1Tjngp6Xw9HtkALbAW4dQweECMfYkkG08L3707/AIzfq59IGLSkaKejwoYTLIoVuDeXPw==}
+    engines: {node: '>=v16.20.2'}
+    peerDependencies:
+      axios: ^0.27.2
+      vue: '>= 3.3.4 < 4'
+      vue-router: ^4.2.4
+    dependencies:
+      axios: 1.5.1
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.0(date-fns@2.30.0)
+      focus-trap: 7.5.3
+      focus-trap-vue: 4.0.2(focus-trap@7.5.3)(vue@3.3.4)
+      popper.js: 1.16.1
+      sortablejs: 1.15.0
+      swrv: 1.0.4(vue@3.3.4)
+      uuid: 9.0.1
+      v-calendar: 3.0.0-alpha.8(vue@3.3.4)
+      vue: 3.3.4
+      vue-draggable-next: 2.2.1(sortablejs@1.15.0)(vue@3.3.4)
+      vue-router: 4.2.5(vue@3.3.4)
+
   /@kong/swagger-ui-kong-theme-universal@4.2.8(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.5)(vue@3.3.4):
     resolution: {integrity: sha512-HS2Fjjd/tLWCmcEeRefzsDotsdNcF2d10L5ugzOYOuIMTRbCXq6wB7lTKJZQDCa7uy5syIeDuku1QSNpnmHOyw==}
     peerDependencies:
       react: 17.0.2
     dependencies:
       '@braintree/sanitize-url': 2.1.0
-      '@kong/kongponents': 8.123.9(vue-router@4.2.5)(vue@3.3.4)
+      '@kong/kongponents': 8.124.0(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       '@kyleshockey/xml': 1.0.2
       classnames: 2.3.2
       curl-to-har: 1.0.1
@@ -2080,7 +2098,7 @@ packages:
       util: 0.12.5
     transitivePeerDependencies:
       - '@babel/core'
-      - debug
+      - axios
       - mkdirp
       - prop-types
       - react-dom
@@ -14542,3 +14560,7 @@ packages:
   /zenscroll@4.0.2:
     resolution: {integrity: sha512-jEA1znR7b4C/NnaycInCU6h/d15ZzCd1jmsruqOKnZP6WXQSMH3W2GL+OXbkruslU4h+Tzuos0HdswzRUk/Vgg==}
     dev: false
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
