@@ -122,8 +122,8 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue'
-import { computed, ref, useSlots, watch } from 'vue'
+import type { PropType, Ref } from 'vue'
+import { computed, ref, useSlots } from 'vue'
 import type { RecordItem, ComponentAttrsData } from '../../types'
 import { ConfigurationSchemaType } from '../../types'
 import composables from '../../composables'
@@ -297,22 +297,9 @@ const componentAttrsData = computed((): ComponentAttrsData => {
   }
 })
 
-const textContent = ref(null)
-const textOffsetWidth = ref(0)
-const textScrollWidth = ref(0)
-const truncationCalculated = ref(false)
+const textContent = ref<HTMLElement>()
 
-watch(textContent, () => {
-  if (props.truncated && textContent.value && !truncationCalculated.value) {
-    textOffsetWidth.value = (textContent.value as HTMLElement).offsetWidth
-    textScrollWidth.value = (textContent.value as HTMLElement).scrollWidth
-    truncationCalculated.value = true
-  }
-})
-
-const isTruncated = computed(() => {
-  return props.truncated && textOffsetWidth.value < textScrollWidth.value
-})
+const { isTruncated } = composables.useTruncationDetector(textContent as Ref<HTMLElement>)
 
 </script>
 
