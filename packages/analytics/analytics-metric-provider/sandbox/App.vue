@@ -1,26 +1,50 @@
 <template>
+  <h4>Global props, Large cards</h4>
   <div>
     <MetricsProviderInternal v-bind="globalProviderProps">
-      <MetricsConsumer />
+      <MetricsConsumer
+        :card-size="MetricCardSize.Large"
+      />
     </MetricsProviderInternal>
   </div>
+
+  <h4>Global props, Small cards</h4>
+  <div>
+    <MetricsProviderInternal v-bind="globalProviderProps">
+      <MetricsConsumer
+        :card-size="MetricCardSize.Small"
+      />
+    </MetricsProviderInternal>
+  </div>
+
+  <h4>Filtered props, LargeCompact cards</h4>
   <div v-if="!USE_REAL_DATA">
     <MetricsProviderInternal v-bind="filteredProviderProps">
-      <MetricsConsumer />
+      <MetricsConsumer
+        :card-size="MetricCardSize.LargeCompact"
+      />
     </MetricsProviderInternal>
   </div>
   <div>
     <MetricsProviderInternal v-bind="singleProviderProps">
-      <MetricsConsumer />
+      <MetricsConsumer :card-size="MetricCardSize.LargeCompact" />
     </MetricsProviderInternal>
   </div>
+
+  <h4>Multiple Entities, Large cards</h4>
   <div>
     <MetricsProviderInternal v-bind="multiProviderProps">
       <div id="route-blah">
-        <MetricsConsumer lookup-key="blah😀😀" />
+        <MetricsConsumer
+          :card-size="MetricCardSize.Large"
+          lookup-key="blah😀😀"
+        />
       </div>
       <div id="route-arrgh">
-        <MetricsConsumer lookup-key="arrgh" />
+        <MetricsConsumer
+          :card-size=" MetricCardSize.Large"
+          lookup-key="arrgh"
+        />
       </div>
     </MetricsProviderInternal>
   </div>
@@ -36,6 +60,7 @@ import type { AxiosResponse } from 'axios'
 import axios from 'axios'
 import type { QueryTime, Timeframe } from '@kong-ui-public/analytics-utilities'
 import { DeltaQueryTime, TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
+import { MetricCardSize } from '@kong-ui-public/metric-cards'
 
 const refreshInterval = 60 * 1000
 const hasTrendAccess = true
@@ -124,8 +149,16 @@ const multiProviderProps = {
 
 </script>
 <style lang="scss">
-.metricscard {
-  margin: 10px;
-  padding: 10px;
+body {
+  padding: 0 20px;
+
+  h4 {
+    color: #bbb;
+    margin-top: 30px;
+  }
+
+  .metricscard {
+    margin: 10px 0;
+  }
 }
 </style>
