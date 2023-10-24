@@ -1,5 +1,4 @@
-import type { MetricCardSize } from '../constants'
-import type { MetricCardType } from '../enums'
+import type { MetricCardType, MetricCardSize } from '../enums'
 export interface MetricCardDef {
   cardType: MetricCardType
   currentValue: number

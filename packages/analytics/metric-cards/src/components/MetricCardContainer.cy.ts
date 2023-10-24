@@ -2,8 +2,7 @@
 
 import MetricCardContainer from './MetricCardContainer.vue'
 import { DECIMAL_DISPLAY } from '../utilities'
-import { MetricCardSize } from '../constants'
-import { MetricCardType } from '../enums'
+import { MetricCardSize, MetricCardType } from '../enums'
 
 const cards = [
   {

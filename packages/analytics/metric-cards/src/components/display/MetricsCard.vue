@@ -91,7 +91,6 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { MetricCardSize } from '../../constants'
 import {
   KUI_COLOR_BORDER_DANGER_STRONG,
   // KUI_COLOR_BACKGROUND_NEUTRAL,
@@ -103,7 +102,7 @@ import {
   KUI_COLOR_TEXT_NEUTRAL,
 } from '@kong/design-tokens'
 import { CloudUploadIcon, EqualIcon, ResponseIcon, VitalsIcon, WarningOutlineIcon } from '@kong/icons'
-import { MetricCardType } from '../../enums'
+import { MetricCardSize, MetricCardType } from '../../enums'
 
 const iconMap = new Map<MetricCardType, any>([
   [MetricCardType.GENERIC_COUNT, VitalsIcon],

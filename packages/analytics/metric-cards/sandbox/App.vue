@@ -77,8 +77,7 @@
 import { MetricCardContainer } from '../src'
 import { DECIMAL_DISPLAY, metricChange } from '../src/utilities'
 import type { MetricCardContainerOptions } from '../src/types'
-import { MetricCardSize } from '../src/constants'
-import { MetricCardType } from '../src/enums'
+import { MetricCardType, MetricCardSize } from '../src/enums'
 
 const cards = [
   {
