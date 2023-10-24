@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "^1.11.4",
+    "@kong/design-tokens": "^1.11.6",
     "@kong/kongponents": "^8.123.9",
     "axios": "^1.5.1",
     "vue": "^3.3.4",
@@ -69,7 +69,7 @@
   "dependencies": {
     "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/core": "workspace:^",
-    "@kong/icons": "^1.7.6",
+    "@kong/icons": "^1.7.7",
     "compare-versions": "^6.1.0"
   }
 }
