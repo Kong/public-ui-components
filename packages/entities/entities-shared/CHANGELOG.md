@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.6.6...@kong-ui-public/entities-shared@1.6.7) (2023-10-24)
+
+
+### Bug Fixes
+
+* **entities-shared:** use ktooltip for truncated item [MA-2088] ([#852](https://github.com/Kong/public-ui-components/issues/852)) ([e3a9c9f](https://github.com/Kong/public-ui-components/commit/e3a9c9f7b8fc7a652f7b760a0574c5899e797aec))
+
+
+
+
+
 ## [1.6.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.6.5...@kong-ui-public/entities-shared@1.6.6) (2023-10-24)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
