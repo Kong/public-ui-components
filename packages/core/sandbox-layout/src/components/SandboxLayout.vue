@@ -37,7 +37,10 @@
         </div>
       </div>
       <div class="header-right">
-        <div class="mobile-controls-container">
+        <div
+          v-if="!!$slots.controls"
+          class="mobile-controls-container"
+        >
           <KToggle v-slot="{ isToggled: controlsAreToggled, toggle: toggleControls }">
             <div>
               <div class="toggle-mobile-controls">
@@ -71,7 +74,10 @@
         </h1>
         <slot name="default" />
       </div>
-      <div class="sandbox-controls">
+      <div
+        v-if="!!$slots.controls"
+        class="sandbox-controls"
+      >
         <slot name="controls" />
       </div>
     </div>
