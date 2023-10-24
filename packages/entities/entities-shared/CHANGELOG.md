@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.6.7...@kong-ui-public/entities-shared@1.6.8) (2023-10-24)
+
+
+### Bug Fixes
+
+* lost data-testid on plaintext config card items ([#866](https://github.com/Kong/public-ui-components/issues/866)) ([95550c3](https://github.com/Kong/public-ui-components/commit/95550c3bcdeaf4f6644b2cfc8c38ed4679bfec92))
+
+
+
+
+
 ## [1.6.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.6.6...@kong-ui-public/entities-shared@1.6.7) (2023-10-24)
 
 
