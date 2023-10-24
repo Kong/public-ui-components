@@ -82,8 +82,8 @@ const {
 const trendRangeText = computed(() => {
   if (timeframe.value.isRelative) {
     return props.hasTrendAccess
-      ? i18n.t('trend.relative', { timeframe: timeframe.value.timeframeText })
-      : i18n.t('trend.relative', { timeframe: TimePeriods.get(TimeframeKeys.ONE_DAY)?.timeframeText })
+      ? i18n.t('trend.relative', { timeframe: timeframe.value.timeframeText }).toLowerCase()
+      : i18n.t('trend.relative', { timeframe: TimePeriods.get(TimeframeKeys.ONE_DAY)?.timeframeText }).toLowerCase()
   } else {
     return i18n.t('trend.custom', { numDays: Math.ceil(timeframe.value.timeframeLength() / (1000 * 60 * 24)) })
   }
