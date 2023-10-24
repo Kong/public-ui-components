@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/spec-renderer",
-  "version": "0.11.55",
+  "version": "0.11.57",
   "type": "module",
   "main": "./dist/spec-renderer.umd.js",
   "module": "./dist/spec-renderer.es.js",
@@ -38,12 +38,12 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^8.123.9",
+    "@kong/kongponents": "^8.124.1",
     "vue": "^3.3.4"
   },
   "devDependencies": {
-    "@kong/design-tokens": "^1.11.4",
-    "@kong/kongponents": "^8.123.9",
+    "@kong/design-tokens": "^1.11.6",
+    "@kong/kongponents": "^8.124.1",
     "@modyfi/vite-plugin-yaml": "^1.0.4",
     "@types/lodash.clonedeep": "^4.5.7",
     "@types/uuid": "^9.0.5",
