@@ -50,6 +50,7 @@ export default defineConfig({
     dedupe: ['vue', 'vue-router', '@kong/kongponents'],
     alias: {
       '@entities-shared-sandbox': path.resolve(__dirname, 'packages/entities/entities-shared/sandbox/shared'),
+      './runtimeConfig': './runtimeConfig.browser',
     },
   },
   css: {
