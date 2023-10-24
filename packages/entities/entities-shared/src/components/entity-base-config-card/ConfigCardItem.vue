@@ -288,7 +288,7 @@ const componentAttrsData = computed((): ComponentAttrsData => {
 
     default:
       return {
-        tag: 'div',
+        tag: 'KTooltip',
         attrs: {
           'data-testid': `${props.item.key}-plain-text`,
         },
