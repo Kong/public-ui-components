@@ -26,7 +26,7 @@ export default {
       },
     },
     kongManager: {
-      services: '/{workspace}/services/',
+      services: '/{workspace}/services',
       create: {
         all: '/{workspace}/routes',
         forGatewayService: '/{workspace}/services/{serviceId}/routes',
