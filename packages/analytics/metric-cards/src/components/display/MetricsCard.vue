@@ -24,7 +24,12 @@
         />
       </KTooltip>
     </div>
-
+    <div
+      v-if="cardDisplayFull && !isLargeCompact"
+      class="metricscard-description"
+    >
+      <span>{{ description }}</span>
+    </div>
     <!-- TODO: remove outer div once size variant no longer needed - MA-2193  -->
     <div
       class="metricscard-valuetrend"
@@ -122,6 +127,11 @@ const props = defineProps({
     type: String,
     default: '0%',
     required: true,
+  },
+  description: {
+    type: String,
+    default: '',
+    required: false,
   },
   tooltip: {
     type: String,
@@ -221,11 +231,12 @@ const hideTitleIcon = [MetricCardSize.Small, MetricCardSize.LargeCompact].includ
 
 <style lang="scss" scoped>
 @import "../../styles/base";
+$gap-size: 14px;
 
 .metricscard {
   display: flex;
   flex-direction: column;
-  row-gap: 16px;
+  row-gap: $gap-size;
   width: 100%;
 
   @media (max-width: ($kui-breakpoint-phablet - 1px)) {
@@ -250,6 +261,12 @@ const hideTitleIcon = [MetricCardSize.Small, MetricCardSize.LargeCompact].includ
     }
   }
 
+  &-description {
+    color: $kui-color-text-disabled;
+    font-size: $kui-font-size-20;
+    line-height: $kui-line-height-40;
+  }
+
   &-icon {
     margin-right: 6px;
   }
@@ -257,7 +274,7 @@ const hideTitleIcon = [MetricCardSize.Small, MetricCardSize.LargeCompact].includ
   &-valuetrend {
     display: flex;
     flex-direction: column;
-    row-gap: 16px;
+    row-gap: 14px;
 
     &.is-compact {
       align-items: center;

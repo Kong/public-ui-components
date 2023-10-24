@@ -7,13 +7,14 @@ import { DEFAULT_KEY } from './useMetricFetcher'
 export interface BuilderOptions {
   cardType: MetricCardType,
   title: Ref<string>,
+  description: Ref<string>,
   record: Ref<ChronologicalMappedMetrics>,
   hasError: Ref<boolean>,
   lookupKey?: string,
   sumGroupedValues?: string[],
   increaseIsBad?: boolean,
   formatValueFn?: (rawValue: number) => string,
-  trendRange?: string,
+  trendRange?: Ref<string> | undefined,
 }
 
 export const sumValues = (recordValue: ChronologicalMappedMetrics, period: 'current' | 'previous', dimensionLookupKey: string | typeof DEFAULT_KEY = DEFAULT_KEY, sumGroupedValues?: string[]) => {
@@ -34,6 +35,7 @@ export default function useMetricCardBuilder(opts: BuilderOptions): Ref<MetricCa
   const {
     cardType,
     title,
+    description,
     record,
     hasError,
     increaseIsBad,
@@ -64,9 +66,10 @@ export default function useMetricCardBuilder(opts: BuilderOptions): Ref<MetricCa
       currentValue,
       previousValue,
       title: title.value,
+      description: description?.value,
       increaseIsBad: !!increaseIsBad, // Coerce undefined to false
       formatValueFn,
-      trendRange,
+      trendRange: trendRange?.value,
     }
   })
 }

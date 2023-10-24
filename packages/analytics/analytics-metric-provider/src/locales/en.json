@@ -5,13 +5,19 @@
   "metricCard": {
     "short": {
       "traffic": "Requests",
+      "trafficDescription": "Total requests sent through all nodes",
       "errorRate": "Error Rate",
-      "latency": "P99 Latency"
+      "errorRateDescription": "Rate of 5xx request responses",
+      "latency": "P99 Latency",
+      "latencyDescription": "Client-side response time"
     },
     "long": {
       "traffic": "Number of Requests",
+      "trafficDescription": "Total number of requests proxied through all data plane nodes",
       "errorRate": "Average Error Rate",
-      "latency": "P99 Latency"
+      "errorRateDescription": "Rate of requests that ended up in a 5xx response",
+      "latency": "P99 Latency",
+      "latencyDescription": "Time taken to send a response back to the client"
     }
   },
   "trend": {

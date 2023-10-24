@@ -34,6 +34,7 @@
         v-bind="formatCardValues(card)"
         :card-size="cardSize"
         :card-type="(card.cardType as MetricCardType)"
+        :description="card.description"
         :error-message="errorMessage"
         :has-error="card.hasError"
         :title="card.title"
