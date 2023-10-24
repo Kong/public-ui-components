@@ -12,13 +12,13 @@ import EntityFormSection from './components/entity-form-section/EntityFormSectio
 import composables from './composables'
 
 // Extract specific composables to export
-const { useAxios, useDeleteUrlBuilder, useErrors, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported } = composables
+const { useAxios, useDeleteUrlBuilder, useErrors, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector } = composables
 
 // Components
 export { EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection }
 
 // Composables
-export { useAxios, useDeleteUrlBuilder, useErrors, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported }
+export { useAxios, useDeleteUrlBuilder, useErrors, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector }
 
 // Types
 export * from './types'

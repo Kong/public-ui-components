@@ -8,6 +8,7 @@ import useHelpers from './useHelpers'
 import useStringHelpers from './useStringHelpers'
 import useI18n from './useI18n'
 import useGatewayFeatureSupported from './useGatewayFeatureSupported'
+import useTruncationDetector from './useTruncationDetector'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -21,4 +22,5 @@ export default {
   useStringHelpers,
   useI18n,
   useGatewayFeatureSupported,
+  useTruncationDetector,
 }
