@@ -11,7 +11,7 @@
       >
         <router-link
           :to="link.to"
-          @click="$emit('router-link-click')"
+          @click="emit('router-link-click', link)"
         >
           {{ link.name }}
         </router-link>
@@ -24,8 +24,11 @@
 import { inject } from 'vue'
 import { KONG_UI_SANDBOX_LAYOUT_LINKS_INJECTION_KEY } from '../constants'
 import type { SandboxNavigationItem } from '../types'
+import type { RouteLocationRaw } from 'vue-router'
 
-defineEmits(['router-link-click'])
+const emit = defineEmits<{
+  (e: 'router-link-click', link: RouteLocationRaw): void
+}>()
 
 const navLinks: SandboxNavigationItem[] = inject(KONG_UI_SANDBOX_LAYOUT_LINKS_INJECTION_KEY, [])
 </script>
