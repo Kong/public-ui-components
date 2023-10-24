@@ -185,10 +185,6 @@ const controlsWidth = computed((): string => `${props.controlsMinWidth}px`)
     min-width: 240px;
   }
 
-  .sandbox-controls {
-    min-width: v-bind('controlsWidth');
-  }
-
   .sandbox-container {
     min-height: 50vh;
     width: 100%;
@@ -205,6 +201,8 @@ const controlsWidth = computed((): string => `${props.controlsMinWidth}px`)
   }
 
   .sandbox-controls {
+    min-width: v-bind('controlsWidth');
+
     @media (min-width: $kui-breakpoint-laptop) {
       border: $kui-border-width-10 solid $kui-color-border;
       border-radius: $kui-border-radius-30;
