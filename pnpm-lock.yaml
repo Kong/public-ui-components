@@ -250,7 +250,7 @@ importers:
         specifier: 1.1.0
         version: 1.1.0(axios@1.5.1)(swrv@1.0.4)(vue@3.3.4)
       '@kong-ui-public/metric-cards':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../metric-cards
       axios:
         specifier: ^1.5.1
