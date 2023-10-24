@@ -103,17 +103,17 @@
               />
             </div>
 
-            <div v-else>
-              <KTooltip :label="isTruncated && item.value">
-                <span
-                  ref="textContent"
-                  class="attrs-data-text"
-                  :class="{ 'truncated': truncated }"
-                >
-                  {{ componentAttrsData.text }}
-                </span>
-              </KTooltip>
-            </div>
+            <KTooltip v-else
+              :label="isTruncated && item.value"
+            >
+              <span
+                ref="textContent"
+                class="attrs-data-text"
+                :class="{ 'truncated': truncated }"
+              >
+                {{ componentAttrsData.text }}
+              </span>
+            </KTooltip>
           </component>
         </div>
       </slot>

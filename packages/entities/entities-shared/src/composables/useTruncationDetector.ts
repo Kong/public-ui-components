@@ -1,22 +1,23 @@
-import { ref, watch, computed } from 'vue'
-import type { Ref } from 'vue'
+import { ref, watch, computed, unref } from 'vue'
+import type { MaybeRef } from 'vue'
 
-export default function useTruncationDetector(textContent: Ref<HTMLElement>) {
+export default function useTruncationDetector(textContent: MaybeRef<HTMLElement>) {
   const textOffsetWidth = ref(0)
   const textScrollWidth = ref(0)
   const truncationCalculated = ref(false)
 
   const detectTruncation = () => {
-    if (textContent.value && !truncationCalculated.value) {
-      textOffsetWidth.value = (textContent.value as HTMLElement).offsetWidth
-      textScrollWidth.value = (textContent.value as HTMLElement).scrollWidth
+    const _textContent = unref(textContent)
+    if (_textContent && !truncationCalculated.value) {
+      textOffsetWidth.value = (_textContent as HTMLElement).offsetWidth
+      textScrollWidth.value = (_textContent as HTMLElement).scrollWidth
       truncationCalculated.value = true
     }
   }
 
   watch(textContent, detectTruncation)
 
-  const isTruncated = computed(() => {
+  const isTruncated = computed<boolean>(() => {
     return textOffsetWidth.value < textScrollWidth.value
   })
 
