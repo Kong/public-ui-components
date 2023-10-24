@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.4.2...@kong-ui-public/core@1.4.3) (2023-10-24)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.4.1...@kong-ui-public/core@1.4.2) (2023-10-23)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
 ## [1.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.4.0...@kong-ui-public/core@1.4.1) (2023-10-18)
 
 **Note:** Version bump only for package @kong-ui-public/core
