@@ -13,15 +13,13 @@ export default function useTruncationDetector(textContent: Ref<HTMLElement>) {
   const textScrollWidth = ref(0)
   const truncationCalculated = ref(false)
 
-  const detectTruncation = () => {
-    if (textContent.value && !truncationCalculated.value) {
-      textOffsetWidth.value = (textContent.value as HTMLElement).offsetWidth
-      textScrollWidth.value = (textContent.value as HTMLElement).scrollWidth
+  watch(textContent, (content: HTMLElement) => {
+    if (content && !truncationCalculated.value) {
+      textOffsetWidth.value = (content as HTMLElement).offsetWidth
+      textScrollWidth.value = (content as HTMLElement).scrollWidth
       truncationCalculated.value = true
     }
-  }
-
-  watch(textContent, detectTruncation)
+  })
 
   const isTruncated = computed<boolean>(() => {
     return textOffsetWidth.value < textScrollWidth.value
