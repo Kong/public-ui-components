@@ -150,8 +150,8 @@ The following scripts should be defined within your package so that it's properl
 - `build` to compile/transpile your package into a `dist/` artifact
   - `build:package` to build the package for production (will also produce a `/packages/{workspace}/{packageName}/bundle-analyzer/stats-treemap.html` file via `rollup-bundle-analyzer` that shows the stats and metrics for your package dependencies; see existing packages)
   - `build:types` to generate the types
-- `preview` to build your sandbox and build as if it was an app being built for production
-  - `preview:package` (see existing examples)
+  - `build:sandbox` to build your sandbox app as if it being built for production
+- `preview` to run your production build sandbox app locally (requires first running `build:sandbox`)
 - `lint` to validate your code style/formatting via ESLint
 - `lint:fix` to automatically resolve basic code style/formatting issues with ESLint
 - `typecheck` to validate typecheck the code

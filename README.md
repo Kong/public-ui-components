@@ -136,6 +136,8 @@ pnpm --filter "@kong-ui-public/{package-name}" run test:unit:open
 Build your `packages/{package-name}/sandbox/` directory for production and serve locally
 
 ```sh
+pnpm --filter "@kong-ui-public/{package-name}" run build:sandbox
+
 pnpm --filter "@kong-ui-public/{package-name}" run preview
 ```
 
