@@ -1,6 +1,7 @@
-import type { MetricCardType, MetricCardSize } from '../enums'
+import type { MetricCardType } from '../enums'
+import type { MetricCardSize } from '../constants'
 export interface MetricCardDef {
-  cardType: MetricCardType
+  cardType?: MetricCardType
   currentValue: number
   previousValue: number
   increaseIsBad: boolean

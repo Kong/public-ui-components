@@ -28,7 +28,7 @@
     <!-- TODO: remove outer div once size variant no longer needed - MA-2193  -->
     <div
       class="metricscard-valuetrend"
-      :class="{ 'is-compact' : isLargeCompact }"
+      :class="{ 'is-compact': isLargeCompact }"
     >
       <!-- Metric value - error -->
       <div
@@ -90,6 +90,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { PropType } from 'vue'
 import {
   KUI_COLOR_BORDER_DANGER_STRONG,
@@ -102,7 +103,8 @@ import {
   KUI_COLOR_TEXT_NEUTRAL,
 } from '@kong/design-tokens'
 import { CloudUploadIcon, EqualIcon, ResponseIcon, VitalsIcon, WarningOutlineIcon } from '@kong/icons'
-import { MetricCardSize, MetricCardType } from '../../enums'
+import { MetricCardType } from '../../enums'
+import { MetricCardSize } from '../../constants'
 
 const iconMap = new Map<MetricCardType, any>([
   [MetricCardType.GENERIC_COUNT, VitalsIcon],
@@ -195,7 +197,7 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
   : cardDisplayFull ? '22px' : KUI_FONT_SIZE_30
 
 // TODO: remove size variant as part of Dashboards epic - MA-2193
-const isLargeCompact = props.cardSize === MetricCardSize.LargeCompact
+const isLargeCompact = computed((): boolean => props.cardSize === MetricCardSize.LargeCompact)
 
 const hideTitleIcon = [MetricCardSize.Small, MetricCardSize.LargeCompact].includes(props.cardSize)
 </script>

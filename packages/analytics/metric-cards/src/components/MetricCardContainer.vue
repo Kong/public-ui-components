@@ -33,7 +33,7 @@
         :key="index"
         v-bind="formatCardValues(card)"
         :card-size="cardSize"
-        :card-type="card.cardType"
+        :card-type="(card.cardType as MetricCardType)"
         :error-message="errorMessage"
         :has-error="card.hasError"
         :title="card.title"
@@ -48,7 +48,8 @@
 import type { PropType } from 'vue'
 import { computed } from 'vue'
 import approxNum from 'approximate-number'
-import { MetricCardSize } from '../enums'
+import { MetricCardSize } from '../constants'
+import type { MetricCardType } from '../enums'
 import type { MetricCardDef, MetricCardDisplayValue } from '../types'
 import { changePolarity, metricChange, defineIcon, calculateChange } from '../utilities'
 import MetricsCard from './display/MetricsCard.vue'
