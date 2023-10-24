@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "^1.11.4",
+    "@kong/design-tokens": "^1.11.6",
     "@kong/kongponents": "^8.123.9",
     "@types/uuid": "^9.0.5",
     "vue": "^3.3.4"
