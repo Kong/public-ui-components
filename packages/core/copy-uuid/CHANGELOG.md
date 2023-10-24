@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@1.3.3...@kong-ui-public/copy-uuid@1.3.4) (2023-10-24)
+
+**Note:** Version bump only for package @kong-ui-public/copy-uuid
+
+
+
+
+
 ## [1.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@1.3.2...@kong-ui-public/copy-uuid@1.3.3) (2023-10-24)
 
 **Note:** Version bump only for package @kong-ui-public/copy-uuid

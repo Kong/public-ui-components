@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.49](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@1.1.48...@kong-ui-public/analytics-metric-provider@1.1.49) (2023-10-24)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
 ## [1.1.48](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@1.1.47...@kong-ui-public/analytics-metric-provider@1.1.48) (2023-10-24)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
