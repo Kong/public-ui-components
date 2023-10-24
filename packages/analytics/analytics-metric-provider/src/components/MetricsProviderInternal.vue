@@ -77,12 +77,14 @@ const {
   dataFetcher: props.dataFetcher,
 })
 
-// If one of our Preset timeframes, we display the requested time frame (if user has trend access); otherwise fall back to one day
+debugger
+
+// If one of our relative timeframes, we display the requested time frame (if user has trend access); otherwise fall back to one day
 // Else, we have a Custom start and end datetime coming from v-calendar, so we display "vs previous X days"
 const trendRangeText = timeframe.value.isRelative
   ? props.hasTrendAccess
-    ? i18n.t('trend.preset', { timeframe: TimePeriods.get(props.maxTimeframe)?.timeframeText })
-    : i18n.t('trend.preset', { timeframe: TimePeriods.get(TimeframeKeys.ONE_DAY)?.timeframeText })
+    ? i18n.t('trend.relative', { timeframe: timeframe.value.timeframeText })
+    : i18n.t('trend.relative', { timeframe: TimePeriods.get(TimeframeKeys.ONE_DAY)?.timeframeText })
   : i18n.t('trend.custom', { numDays: Math.ceil(timeframe.value.timeframeLength() / (1000 * 60 * 24)) })
 
 provide(METRICS_PROVIDER_KEY, {

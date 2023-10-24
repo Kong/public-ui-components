@@ -378,7 +378,7 @@ describe('<AnalyticsMetricProvider />', () => {
 
       cy.getTestId('metric-value').eq(0).should('have.text', '5K')
       cy.getTestId('metric-value').eq(1).should('have.text', '40.00%')
-      cy.get('.metricscard').eq(2).children('.metricscard-error').should('exist')
+      cy.get('.metricscard').eq(2).get('.metricscard-error').should('exist')
     })
   })
 
@@ -404,8 +404,8 @@ describe('<AnalyticsMetricProvider />', () => {
       cy.get('.metricscard').should('exist')
       cy.get('.error-display').should('not.exist')
 
-      cy.get('.metricscard').eq(0).children('.metricscard-error').should('exist')
-      cy.get('.metricscard').eq(1).children('.metricscard-error').should('exist')
+      cy.get('.metricscard').eq(0).get('.metricscard-error').should('exist')
+      cy.get('.metricscard').eq(1).get('.metricscard-error').should('exist')
       cy.getTestId('metric-value').eq(0).should('have.text', '1001ms')
     })
   })
