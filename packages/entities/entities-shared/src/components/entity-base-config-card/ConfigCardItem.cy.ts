@@ -549,6 +549,24 @@ describe('<ConfigCardItem />', () => {
         cy.getTestId(`${item.key}-external-link`).should('contain.text', link)
         cy.get(`a[href="${link}"]`).should('exist')
       })
+
+      it('plaintext config card item has data-testid', () => {
+        const item: RecordItem = {
+          type: ConfigurationSchemaType.Text,
+          key: 'textItem',
+          label: 'textItem',
+          value: 'asdf',
+        }
+
+        cy.mount(ConfigCardItem, {
+          props: {
+            item,
+          },
+        })
+
+        cy.get('[data-testid="textItem-plain-text"]').should('exist')
+        cy.get('[data-testid="textItem-plain-text"]').should('contain.text', 'asdf')
+      })
     })
   })
 })
