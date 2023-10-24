@@ -228,6 +228,9 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
+      '@kong-ui-public/sandbox-layout':
+        specifier: workspace:^
+        version: link:../../core/sandbox-layout
       '@kong/design-tokens':
         specifier: ^1.11.6
         version: 1.11.6
@@ -433,6 +436,25 @@ importers:
       vue:
         specifier: ^3.3.4
         version: 3.3.4
+
+  packages/core/sandbox-layout:
+    dependencies:
+      '@kong/icons':
+        specifier: ^1.7.7
+        version: 1.7.7(vue@3.3.4)
+    devDependencies:
+      '@kong/design-tokens':
+        specifier: ^1.11.4
+        version: 1.11.6
+      '@kong/kongponents':
+        specifier: ^8.123.9
+        version: 8.124.1(vue-router@4.2.5)(vue@3.3.4)
+      vue:
+        specifier: ^3.3.4
+        version: 3.3.4
+      vue-router:
+        specifier: ^4.2.5
+        version: 4.2.5(vue@3.3.4)
 
   packages/entities/entities-certificates:
     dependencies:
