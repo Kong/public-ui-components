@@ -444,10 +444,10 @@ importers:
         version: 1.7.7(vue@3.3.4)
     devDependencies:
       '@kong/design-tokens':
-        specifier: ^1.11.4
+        specifier: ^1.11.6
         version: 1.11.6
       '@kong/kongponents':
-        specifier: ^8.123.9
+        specifier: ^8.124.1
         version: 8.124.1(vue-router@4.2.5)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
