@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.44](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@0.5.43...@kong-ui-public/misc-widgets@0.5.44) (2023-10-25)
+
+
+### Bug Fixes
+
+* switching from data-tracking-id to data-testid for datalog tracking [KHCP-9550] ([#868](https://github.com/Kong/public-ui-components/issues/868)) ([b9c9eaa](https://github.com/Kong/public-ui-components/commit/b9c9eaa61b8fcdb09f60d245e2cd2a0387ef2e60))
+
+
+
+
+
 ## [0.5.43](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@0.5.42...@kong-ui-public/misc-widgets@0.5.43) (2023-10-25)
 
 **Note:** Version bump only for package @kong-ui-public/misc-widgets
