@@ -68,11 +68,19 @@ module.exports = {
         key: 'data-test-id',
         message: 'Using "data-test-id" is not allowed. Use "data-testid" instead.',
       },
+      {
+        key: 'data-tracking-id',
+        message: 'Using "data-tracking-id" is not allowed. Use "data-testid" instead.',
+      },
     ],
     'vue/no-restricted-v-bind': ['error',
       {
         argument: 'data-test-id',
         message: 'Using "data-test-id" is not allowed. Use "data-testid" instead.',
+      },
+      {
+        argument: 'data-tracking-id',
+        message: 'Using "data-tracking-id" is not allowed. Use "data-testid" instead.',
       },
     ],
   },
