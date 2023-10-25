@@ -11,7 +11,7 @@ interface ProviderData {
   },
   hasTrendAccess: boolean,
   longCardTitles: boolean,
-  trendRange: string,
+  trendRange: Ref<string>,
 }
 
 export const METRICS_PROVIDER_KEY = Symbol('METRICS_PROVIDER_KEY') as InjectionKey<ProviderData>

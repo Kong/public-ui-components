@@ -96,7 +96,7 @@ provide(METRICS_PROVIDER_KEY, {
   },
   hasTrendAccess: props.hasTrendAccess,
   longCardTitles: props.longCardTitles,
-  trendRange: trendRangeText.value,
+  trendRange: trendRangeText,
 })
 
 </script>
