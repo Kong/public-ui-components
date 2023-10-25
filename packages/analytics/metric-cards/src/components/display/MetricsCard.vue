@@ -50,6 +50,7 @@
       <div
         v-else
         class="metricscard-value"
+        :class="cardSize"
         data-testid="metric-value"
         :style="`font-size:${metricFontSize}`"
       >
@@ -231,12 +232,11 @@ const hideTitleIcon = [MetricCardSize.Small, MetricCardSize.LargeCompact].includ
 
 <style lang="scss" scoped>
 @import "../../styles/base";
-$gap-size: 14px;
+$row-gap-size: 12px;
 
 .metricscard {
   display: flex;
   flex-direction: column;
-  row-gap: $gap-size;
   width: 100%;
 
   @media (max-width: ($kui-breakpoint-phablet - 1px)) {
@@ -255,6 +255,7 @@ $gap-size: 14px;
     display: flex;
     flex-direction: row;
     font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-medium;
 
     &.sm {
       font-size: $kui-font-size-20;
@@ -262,19 +263,35 @@ $gap-size: 14px;
   }
 
   &-description {
-    color: $kui-color-text-disabled;
+    color: var(--kong-ui-metric-card-value, $kui-color-text-disabled);
     font-size: $kui-font-size-20;
-    line-height: $kui-line-height-40;
+    line-height: $kui-line-height-20;
+    margin-top: 10px;
   }
 
   &-icon {
     margin-right: 6px;
   }
 
+  &-value {
+    color: var(--kong-ui-metric-card-value, $kui-color-text);
+    display: flex;
+    flex-direction: row;
+    font-weight: $kui-font-weight-semibold;
+    justify-content: space-between;
+    line-height: $kui-line-height-60;
+    margin-top: $kui-space-60;
+
+    &.sm {
+      line-height: $kui-line-height-40;
+      margin-top: $kui-space-20;
+    }
+  }
+
   &-valuetrend {
     display: flex;
     flex-direction: column;
-    row-gap: 14px;
+    row-gap: $row-gap-size;
 
     &.is-compact {
       align-items: center;
@@ -282,13 +299,6 @@ $gap-size: 14px;
       justify-content: space-between;
       margin-top: 0;
     }
-  }
-  &-value {
-    color: var(--kong-ui-metric-card-value, $kui-color-text);
-    display: flex;
-    flex-direction: row;
-    font-weight: $kui-font-weight-medium;
-    justify-content: space-between;
   }
 
   &-trend {
@@ -301,8 +311,9 @@ $gap-size: 14px;
       border-radius: 4px;
       display: flex;
       flex-direction: row;
-      font-size: $kui-font-size-30;
-      padding: 4px;
+      font-size: $kui-font-size-20;
+      font-weight: $kui-font-weight-semibold;
+      padding: 4px 8px;
 
       .kui-icon {
         margin-right: 4px;

@@ -21,7 +21,7 @@
     }
   },
   "trend": {
-    "relative": "vs last {timeframe}",
+    "relative": "vs previous {timeframe}",
     "custom": "vs previous {numDays} days"
   }
 }
