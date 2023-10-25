@@ -84,8 +84,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       cypress:
-        specifier: ^12.17.4
-        version: 12.17.4
+        specifier: ^13.3.0
+        version: 13.3.0
       cz-conventional-changelog:
         specifier: ^3.3.0
         version: 3.3.0
@@ -1537,8 +1537,8 @@ packages:
       postcss-selector-parser: 6.0.13
     dev: true
 
-  /@cypress/request@2.88.12:
-    resolution: {integrity: sha512-tOn+0mDZxASFM+cuAP9szGUGPI1HwWVSvdzm7V4cCsPdFTx6qMj29CwaQmRAMIEhORIUBFBsYROYJcveK4uOjA==}
+  /@cypress/request@3.0.1:
+    resolution: {integrity: sha512-TWivJlJi8ZDx2wGOw1dbLuHJKUYX7bWySw377nlnGOW3hP9/MUKIsEdXT/YngWxVdgNCHRBmFlBipE+5/2ZZlQ==}
     engines: {node: '>= 6'}
     dependencies:
       aws-sign2: 0.7.0
@@ -3428,10 +3428,6 @@ packages:
 
   /@types/minimist@1.2.2:
     resolution: {integrity: sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==}
-    dev: true
-
-  /@types/node@16.18.40:
-    resolution: {integrity: sha512-+yno3ItTEwGxXiS/75Q/aHaa5srkpnJaH+kdkTVJ3DtJEwv92itpKbxU+FjPoh2m/5G9zmUQfrL4A4C13c+iGA==}
     dev: true
 
   /@types/node@18.18.4:
@@ -5771,15 +5767,15 @@ packages:
       underscore.string: 3.3.6
     dev: false
 
-  /cypress@12.17.4:
-    resolution: {integrity: sha512-gAN8Pmns9MA5eCDFSDJXWKUpaL3IDd89N9TtIupjYnzLSmlpVr+ZR+vb4U/qaMp+lB6tBvAmt7504c3Z4RU5KQ==}
-    engines: {node: ^14.0.0 || ^16.0.0 || >=18.0.0}
+  /cypress@13.3.0:
+    resolution: {integrity: sha512-mpI8qcTwLGiA4zEQvTC/U1xGUezVV4V8HQCOYjlEOrVmU1etVvxOjkCXHGwrlYdZU/EPmUiWfsO3yt1o+Q2bgw==}
+    engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@cypress/request': 2.88.12
+      '@cypress/request': 3.0.1
       '@cypress/xvfb': 1.2.4(supports-color@8.1.1)
-      '@types/node': 16.18.40
+      '@types/node': 18.18.4
       '@types/sinonjs__fake-timers': 8.1.1
       '@types/sizzle': 2.3.3
       arch: 2.2.0
