@@ -3,7 +3,6 @@
     v-if="url && scriptLoaded"
     class="kong-ui-public-misc-widgets-github-star"
     data-testid="github-star"
-    data-tracking-id="github-star"
   >
     <KTooltip :label="tooltipLabel">
       <span>
