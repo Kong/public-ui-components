@@ -1,106 +1,199 @@
 <template>
-  <div class="sandbox-container">
-    <h1> Analytics Charts</h1>
-    <div class="flex-row-parent">
-      <!-- AnalyticsChart / SimpleChart type selector -->
-      <div class="flex-vertical">
-        <KLabel>
-          Chart Type
-        </KLabel>
-        <div class="chart-radio-group">
-          <div>
-            <KRadio
-              v-model="chartType"
-              name="chartType"
-              :selected-value="ChartTypes.HORIZONTAL_BAR"
-            >
-              Horizontal Bar
-            </KRadio>
+  <SandboxLayout
+    :links="appLinks"
+    title="Analytics Charts"
+  >
+    <template #controls>
+      <div class="flex-row-parent">
+        <!-- AnalyticsChart / SimpleChart type selector -->
+        <div class="flex-vertical">
+          <KLabel>Chart Type</KLabel>
+          <div class="chart-radio-group">
+            <div>
+              <KRadio
+                v-model="chartType"
+                name="chartType"
+                :selected-value="ChartTypes.HORIZONTAL_BAR"
+              >
+                Horizontal Bar
+              </KRadio>
+            </div>
+            <div>
+              <KRadio
+                v-model="chartType"
+                name="chartType"
+                :selected-value="ChartTypes.VERTICAL_BAR"
+              >
+                VerticalBar
+              </KRadio>
+            </div>
+            <div>
+              <KRadio
+                v-model="chartType"
+                name="chartType"
+                :selected-value="ChartTypes.TIMESERIES_LINE"
+              >
+                Timeseries Line
+              </KRadio>
+            </div>
+            <div>
+              <KRadio
+                v-model="chartType"
+                name="chartType"
+                :selected-value="ChartTypes.TIMESERIES_BAR"
+              >
+                Timeseries Bar
+              </KRadio>
+            </div>
+            <div>
+              <KRadio
+                v-model="chartType"
+                name="chartType"
+                :selected-value="ChartTypes.DOUGHNUT"
+              >
+                Doughnut
+              </KRadio>
+            </div>
           </div>
-          <div>
-            <KRadio
-              v-model="chartType"
-              name="chartType"
-              :selected-value="ChartTypes.VERTICAL_BAR"
-            >
-              VerticalBar
-            </KRadio>
-          </div>
-          <div>
-            <KRadio
-              v-model="chartType"
-              name="chartType"
-              :selected-value="ChartTypes.TIMESERIES_LINE"
-            >
-              Timeseries Line
-            </KRadio>
-          </div>
-          <div>
-            <KRadio
-              v-model="chartType"
-              name="chartType"
-              :selected-value="ChartTypes.TIMESERIES_BAR"
-            >
-              Timeseries Bar
-            </KRadio>
-          </div>
-          <div>
-            <KRadio
-              v-model="chartType"
-              name="chartType"
-              :selected-value="ChartTypes.DOUGHNUT"
-            >
-              Doughnut
-            </KRadio>
-          </div>
+          <br>
         </div>
-      </div>
 
-      <!-- Legend position -->
-      <div
-        class="flex-vertical"
-      >
-        <KLabel>
-          Legend position
-        </KLabel>
-        <div class="chart-radio-group">
-          <div>
-            <KRadio
-              v-model="legendPosition"
-              name="legendPosition"
-              :selected-value="ChartLegendPosition.Right"
-            >
-              {{ ChartLegendPosition.Right }}
-            </KRadio>
+        <!-- Legend position -->
+        <div class="flex-vertical">
+          <KLabel>Legend position</KLabel>
+          <div class="chart-radio-group">
+            <div>
+              <KRadio
+                v-model="legendPosition"
+                name="legendPosition"
+                :selected-value="ChartLegendPosition.Right"
+              >
+                {{ ChartLegendPosition.Right }}
+              </KRadio>
+            </div>
+            <div>
+              <KRadio
+                v-model="legendPosition"
+                name="legendPosition"
+                :selected-value="ChartLegendPosition.Bottom"
+              >
+                {{ ChartLegendPosition.Bottom }}
+              </KRadio>
+            </div>
+            <div>
+              <KRadio
+                v-model="legendPosition"
+                name="legendPosition"
+                :selected-value="ChartLegendPosition.Hidden"
+              >
+                {{ ChartLegendPosition.Hidden }}
+              </KRadio>
+            </div>
           </div>
-          <div>
-            <KRadio
-              v-model="legendPosition"
-              name="legendPosition"
-              :selected-value="ChartLegendPosition.Bottom"
+        </div>
+        <br>
+        <!-- Metric item selection -->
+        <KSelect
+          :items="metricItems"
+          label="Metric"
+          placeholder="Select Metric"
+          @selected="onMetricSelected"
+        />
+      </div>
+      <br>
+
+      <!-- Dataset options -->
+      <KLabel>Dataset options</KLabel>
+      <div class="dataset-options">
+        <KButton
+          appearance="outline"
+          class="first-button"
+          size="small"
+          @click="randomizeData()"
+        >
+          Randomize data
+        </KButton>
+        <KButton
+          appearance="outline"
+          size="small"
+          @click="addDataset()"
+        >
+          Add dataset
+        </KButton>
+      </div>
+      <br>
+
+      <div class="option-toggles">
+        <KLabel>Option toggles</KLabel>
+        <div>
+          <KInputSwitch
+            v-model="multiMetricToggle"
+            :label="multiMetricToggle ? 'Multi Metric' : 'Single Metric'"
+          />
+        </div>
+        <div v-if="!chartType.includes('TimeSeries')">
+          <KInputSwitch
+            v-model="multiDimensionToggle"
+            :label="multiDimensionToggle ? 'Multi Dimension' : 'Single Dimension'"
+          />
+        </div>
+        <div v-if="chartType.includes('Line')">
+          <KInputSwitch
+            v-model="fillToggle"
+            :label="fillToggle ? 'Fill' : 'No Fill'"
+          />
+        </div>
+        <div>
+          <KInputSwitch
+            v-model="stackToggle"
+            :label="stackToggle ? 'Stacked' : 'Not Stacked'"
+          />
+        </div>
+        <div v-if="!isTimeSeriesChart">
+          <KInputSwitch
+            v-model="showAnnotationsToggle"
+            :label="showAnnotationsToggle ? 'Show Annotations' : 'No Annotations'"
+          />
+        </div>
+        <div>
+          <KInputSwitch
+            v-model="showLegendValuesToggle"
+            :label="showLegendValuesToggle ? 'Show Legend Values' : 'No Legend Values'"
+          />
+        </div>
+        <div>
+          <KInputSwitch
+            v-model="limitToggle"
+            :label="limitToggle ? 'Has Limit' : 'No Limit'"
+          />
+        </div>
+        <div>
+          <KInputSwitch
+            v-model="emptyState"
+            :label="emptyState ? 'Empty State' : 'Chart Has Data'"
+          />
+        </div>
+      </div>
+      <br>
+
+      <div class="config-container">
+        <div class="config-container-row">
+          <KLabel>Colors</KLabel>
+          <div
+            v-for="([label, color], i) in Object.entries(colorPalette)"
+            :key="i"
+            class="color-palette-section flex-vertical"
+          >
+            <label>{{ label }}</label>
+            <input
+              type="color"
+              :value="color"
+              @blur="updateSelectedColor($event, label)"
             >
-              {{ ChartLegendPosition.Bottom }}
-            </KRadio>
-          </div>
-          <div>
-            <KRadio
-              v-model="legendPosition"
-              name="legendPosition"
-              :selected-value="ChartLegendPosition.Hidden"
-            >
-              {{ ChartLegendPosition.Hidden }}
-            </KRadio>
           </div>
         </div>
       </div>
-      <!-- Metric item selection -->
-      <KSelect
-        :items="metricItems"
-        label="Metric"
-        placeholder="Select Metric"
-        @selected="onMetricSelected"
-      />
-    </div>
+    </template>
 
     <!-- Determine if a full blown chart is to be displayed, or a simplified one -->
     <AnalyticsChart
@@ -113,120 +206,35 @@
       tooltip-title="tooltip title"
     />
 
-    <!-- Dataset options -->
-    <div
-      class="dataset-options"
-    >
-      <KButton
-        appearance="outline"
-        class="first-button"
-        @click="randomizeData()"
-      >
-        Randomize data
-      </KButton>
-      <KButton
-        appearance="outline"
-        @click="addDataset()"
-      >
-        Add dataset
-      </KButton>
-    </div>
+    <br>
 
-    <div class="option-toggles">
-      <KLabel>
-        Option toggles
-      </KLabel>
-      <div>
-        <KInputSwitch
-          v-model="multiMetricToggle"
-          :label="multiMetricToggle ? 'Multi Metric' : 'Single Metric'"
-        />
-      </div>
-      <div v-if="!chartType.includes('TimeSeries')">
-        <KInputSwitch
-          v-model="multiDimensionToggle"
-          :label="multiDimensionToggle ? 'Multi Dimension' : 'Single Dimension'"
-        />
-      </div>
-      <div v-if="chartType.includes('Line')">
-        <KInputSwitch
-          v-model="fillToggle"
-          :label="fillToggle ? 'Fill' : 'No Fill'"
-        />
-      </div>
-      <div>
-        <KInputSwitch
-          v-model="stackToggle"
-          :label="stackToggle ? 'Stacked' : 'Not Stacked'"
-        />
-      </div>
-      <div v-if="!isTimeSeriesChart">
-        <KInputSwitch
-          v-model="showAnnotationsToggle"
-          :label="showAnnotationsToggle ? 'Show Annotations' : 'No Annotations'"
-        />
-      </div>
-      <div>
-        <KInputSwitch
-          v-model="showLegendValuesToggle"
-          :label="showLegendValuesToggle ? 'Show Legend Values' : 'No Legend Values'"
-        />
-      </div>
-      <div>
-        <KInputSwitch
-          v-model="limitToggle"
-          :label="limitToggle ? 'Has Limit' : 'No Limit'"
-        />
-      </div>
-      <div>
-        <KInputSwitch
-          v-model="emptyState"
-          :label="emptyState ? 'Empty State' : 'Chart Has Data'"
-        />
-      </div>
+    <div class="data-container">
+      <KLabel>ChartData</KLabel>
+      <KCodeBlock
+        v-if="dataCode"
+        id="data-codeblock"
+        :code="dataCode"
+        is-searchable
+        language="json"
+      />
     </div>
-    <div class="config-container">
-      <div class="config-container-row">
-        <KLabel>Colors</KLabel>
-        <div
-          v-for="([label, color], i) in Object.entries(colorPalette)"
-          :key="i"
-          class="color-palette-section flex-vertical"
-        >
-          <label>{{ label }}</label>
-          <input
-            type="color"
-            :value="color"
-            @blur="updateSelectedColor($event, label)"
-          >
-        </div>
-      </div>
-      <div class="data-container">
-        <KLabel>ChartData</KLabel>
-        <KCodeBlock
-          v-if="dataCode"
-          id="data-codeblock"
-          :code="dataCode"
-          is-searchable
-          language="json"
-        />
-      </div>
-      <div class="options-container">
-        <KLabel>Chart Options</KLabel>
-        <KCodeBlock
-          v-if="optionsCode"
-          id="options-codeblock"
-          :code="optionsCode"
-          is-searchable
-          language="json"
-        />
-      </div>
+    <br>
+
+    <div class="options-container">
+      <KLabel>Chart Options</KLabel>
+      <KCodeBlock
+        v-if="optionsCode"
+        id="options-codeblock"
+        :code="optionsCode"
+        is-searchable
+        language="json"
+      />
     </div>
-  </div>
+  </SandboxLayout>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, inject } from 'vue'
 import {
   AnalyticsChart,
   ChartLegendPosition,
@@ -238,6 +246,7 @@ import { SeededRandom } from '../SeedRandom'
 import { rand } from '../utils'
 import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'
+import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 
 enum Metrics {
   TotalRequests = 'TotalRequests',
@@ -249,6 +258,9 @@ interface MetricSelection {
   name: Metrics,
   unit: string,
 }
+
+// Inject the app-links from the entry file
+const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const seed = ref(rand(10, 10000))
 

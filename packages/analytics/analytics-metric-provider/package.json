@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-metric-provider",
-  "version": "1.1.46",
+  "version": "1.1.50",
   "type": "module",
   "main": "./dist/vitals-metric-provider.umd.js",
   "module": "./dist/vitals-metric-provider.es.js",
@@ -24,8 +24,8 @@
     "build": "run-s typecheck build:package build:types",
     "build:package": "BUILD_VISUALIZER='analytics/analytics-metric-provider' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
-    "preview:package": "vite preview --port 4173",
-    "preview": "cross-env USE_SANDBOX=true PREVIEW_SANDBOX=true run-s build:package preview:package",
+    "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
+    "preview": "cross-env USE_SANDBOX=true vite preview",
     "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
     "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore' --fix",
     "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
@@ -48,7 +48,7 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong-ui-public/analytics-utilities": "workspace:^0.8.4",
+    "@kong-ui-public/analytics-utilities": "workspace:^0.8.6",
     "@kong-ui-public/core": "1.1.0",
     "@kong-ui-public/metric-cards": "0.2.14",
     "axios": "^1.5.1",
@@ -56,7 +56,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^8.123.9"
+    "@kong/kongponents": "^8.124.1"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^"

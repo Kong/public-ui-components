@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.47](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@1.1.46...@kong-ui-public/entities-consumer-credentials@1.1.47) (2023-10-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [1.1.46](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@1.1.45...@kong-ui-public/entities-consumer-credentials@1.1.46) (2023-10-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [1.1.45](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@1.1.44...@kong-ui-public/entities-consumer-credentials@1.1.45) (2023-10-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [1.1.44](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@1.1.43...@kong-ui-public/entities-consumer-credentials@1.1.44) (2023-10-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [1.1.43](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@1.1.42...@kong-ui-public/entities-consumer-credentials@1.1.43) (2023-10-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [1.1.42](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@1.1.41...@kong-ui-public/entities-consumer-credentials@1.1.42) (2023-10-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
 ## [1.1.41](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@1.1.40...@kong-ui-public/entities-consumer-credentials@1.1.41) (2023-10-20)
 
 
