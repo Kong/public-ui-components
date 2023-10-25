@@ -22,7 +22,7 @@ module.exports = {
     indent: 'off',
     semi: ['error', 'never'],
     'space-before-function-paren': 'off',
-    quotes: ['error', 'single', { avoidEscape: true }],
+    quotes: ['error', 'single', {avoidEscape: true}],
     'no-multi-spaces': 'error',
     'no-unused-vars': 'off',
     'no-trailing-spaces': 'error',
@@ -63,6 +63,18 @@ module.exports = {
     'vue/no-restricted-class': ['error', ...kongponentsUtilityClasses],
     // This rule is too restrictive: https://github.com/vuejs/eslint-plugin-vue/issues/2259
     'vue/no-setup-props-destructure': 'off',
+    'vue/no-restricted-static-attribute': ['error',
+      {
+        key: 'data-test-id',
+        message: 'Using "data-test-id" is not allowed. Use "data-testid" instead.',
+      },
+    ],
+    'vue/no-restricted-v-bind': ['error',
+      {
+        argument: 'data-test-id',
+        message: 'Using "data-test-id" is not allowed. Use "data-testid" instead.',
+      },
+    ],
   },
   overrides: [
     {
