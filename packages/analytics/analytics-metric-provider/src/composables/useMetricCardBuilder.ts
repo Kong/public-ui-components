@@ -66,7 +66,7 @@ export default function useMetricCardBuilder(opts: BuilderOptions): Ref<MetricCa
       currentValue,
       previousValue,
       title: title.value,
-      description: description?.value,
+      description: description.value,
       increaseIsBad: !!increaseIsBad, // Coerce undefined to false
       formatValueFn,
       trendRange: trendRange?.value,

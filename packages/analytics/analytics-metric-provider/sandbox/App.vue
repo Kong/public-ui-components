@@ -116,6 +116,8 @@ const globalProviderProps = {
   refreshInterval,
   hasTrendAccess,
   dataFetcher: makeDataFetcher(),
+  overrideTimeframe: TimePeriods.get(TimeframeKeys.ONE_DAY),
+  longCardTitles: false,
 }
 
 // Query stats for an entire org, but also apply a filter.

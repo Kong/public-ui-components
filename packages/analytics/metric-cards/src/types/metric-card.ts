@@ -19,7 +19,7 @@ export interface MetricCardDisplayValue {
   metricChange: string
   changePolarity: number
   trendIcon?: any
-  cardSize?: string
+  cardSize?: MetricCardSize
 }
 
 export interface MetricCardContainerOptions {
