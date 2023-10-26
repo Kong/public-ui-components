@@ -43,9 +43,9 @@
           :title="group"
           :trigger-label="!shouldCollapsed[idx] ? triggerLabels[group] : t('plugins.select.view_less')"
         >
-          <!-- If there are 3 or less, don't display a trigger -->
+          <!-- don't display a trigger if all plugins will already be visible -->
           <template
-            v-if="nonCustomPlugins[group].length <= PLUGINS_PER_ROW"
+            v-if="getGroupPluginCount(group) <= PLUGINS_PER_ROW"
             #trigger
           >
             &nbsp;
@@ -53,7 +53,7 @@
           <template #visible-content>
             <div class="plugin-card-container">
               <PluginSelectCard
-                v-for="(plugin, index) in getPluginCards(nonCustomPlugins[group], 'visible')"
+                v-for="(plugin, index) in getPluginCards(group, 'visible')"
                 :key="index"
                 :config="config"
                 :no-route-change="noRouteChange"
@@ -65,7 +65,7 @@
 
           <div class="plugin-card-container">
             <PluginSelectCard
-              v-for="(plugin, index) in getPluginCards(nonCustomPlugins[group], 'hidden')"
+              v-for="(plugin, index) in getPluginCards(group, 'hidden')"
               :key="index"
               :config="config"
               :no-route-change="noRouteChange"
@@ -125,10 +125,16 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Manually control plugins that should not be displayed
+   */
   ignoredPlugins: {
     type: Array as PropType<String[]>,
     default: () => [],
   },
+  /**
+   * Plugins that are displayed but should not be selectable a displayed with a tooltip
+   */
   disabledPlugins: {
     type: Object as PropType<DisabledPlugin>,
     default: () => ({}),
@@ -137,6 +143,10 @@ const props = defineProps({
     type: Object as PropType<PluginCardList>,
     default: () => ({}),
   },
+  /**
+   * @param {boolean} noRouteChange if true, let consuming component handle event when clicking on a plugin
+   * Used in conjunction with `@plugin-clicked` event
+   */
   noRouteChange: {
     type: Boolean,
     default: false,
@@ -151,14 +161,14 @@ const emit = defineEmits<{
 
 const route = useRoute()
 const { i18n: { t } } = composables.useI18n()
+const { sortAlpha, objectsAreEqual } = useHelpers()
+const { getMessageFromError } = useErrors()
+const { pluginMetaData } = composables.usePluginMetaData()
 
 const { axiosInstance } = useAxios({
   headers: props.config?.requestHeaders,
 })
 
-const { sortAlpha, objectsAreEqual } = useHelpers()
-const { getMessageFromError } = useErrors()
-const { pluginMetaData } = composables.usePluginMetaData()
 const availablePlugins = ref<string[]>([])
 const pluginsList = ref<PluginCardList>({})
 const isLoading = ref(true)
@@ -168,6 +178,8 @@ const emitPluginData = (plugin: PluginType) => {
   emit('plugin-clicked', plugin)
 }
 
+// used for scoped plugins
+// entityType is currently determined off of the route query or params
 const entityType = computed((): string => {
   const entity = String(route.query.entity_type || '')
 
@@ -183,6 +195,7 @@ const entityType = computed((): string => {
     return 'consumer_group_id'
   }
 
+  // global
   return ''
 })
 
@@ -195,22 +208,9 @@ const nonCustomPlugins = computed((): PluginCardList => {
   return kongPlugins
 })
 
-const buildPluginList = (fromWatch?: boolean) => {
-  // If onlyAvailablePlugins is false,
-  // we included unavailable plugins from pluginMeta
-  // in addition to available plugins
-
-  if (fromWatch && !availablePlugins.value.length) {
-    // race condition between fetch of available plugins and setting
-    // plugins disabled by tier
-    // if plugins disabled by tier evaluates before record fetch
-    // wait for buildPluginList() call in fetch function
-    // if plugins disabled by tier evaluates AFTER record fetch
-    // rebuild the list
-    return
-  }
-
-  // array of unique plugin_id's
+const buildPluginList = (): PluginCardList => {
+  // If onlyAvailablePlugins is false, we included unavailable plugins from pluginMeta in addition to available plugins
+  // returning an array of unique plugin ids
   // either grab all plugins from metadata file or use list of available plugins provided by API
   return [...new Set(
     Object.assign(
@@ -248,14 +248,20 @@ const buildPluginList = (fromWatch?: boolean) => {
         }
       }
 
-      const isConsumerPlugin = pluginMetaData[plugin]?.scope.includes(PluginScope.CONSUMER) ?? true
+      if (entityType.value === 'consumer_id') {
+        const isNotConsumerPlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.CONSUMER))
+        if (isNotConsumerPlugin) {
+          return false
+        }
+      }
 
-      if (isConsumerPlugin || !['consumer_id', 'developer_id'].includes(entityType.value)) {
+      if (entityType.value !== 'developer_id') {
         return plugin
       }
 
       return false
     })
+    // build the actual card list
     .reduce((list: PluginCardList, pluginId: string) => {
       const pluginName = (pluginMetaData[pluginId] && pluginMetaData[pluginId].name) || pluginId
       const plugin = {
@@ -271,54 +277,49 @@ const buildPluginList = (fromWatch?: boolean) => {
       }
 
       const groupName = plugin.group || t('plugins.select.misc_plugins')
+      let plugins = list[groupName]
 
-      if (!list[groupName]) {
-        list[groupName] = []
+      if (!plugins) {
+        plugins = []
       }
 
-      list[groupName].push(plugin)
-      list[groupName].sort(sortAlpha('name'))
+      plugins.push(plugin)
+      plugins.sort(sortAlpha('name'))
 
       return list
     }, {})
 }
 
-const getPluginCards = (plugins: any[], type: 'visible' | 'hidden') => {
-  if (type === 'visible') {
+const getPluginCards = (group: string, type: 'all' | 'visible' | 'hidden') => {
+  const plugins = nonCustomPlugins.value[group as keyof PluginCardList] || []
+
+  if (type === 'all') {
+    return plugins
+  } else if (type === 'visible') {
     return plugins.slice(0, PLUGINS_PER_ROW)
   }
 
   return plugins.slice(PLUGINS_PER_ROW)
 }
 
+const getGroupPluginCount = (group: string) => {
+  return nonCustomPlugins.value[group as keyof PluginCardList]?.length || 0
+}
+
 const shouldCollapsed = ref<Record<string, boolean>>(PLUGIN_GROUPS_COLLAPSE_STATUS)
 
+// text for plugin group "view x more" label
 const triggerLabels = computed(() => {
   return Object.keys(pluginsList.value).reduce((acc: TriggerLabels, pluginGroup: string): TriggerLabels => {
-    const plugins = pluginsList.value[pluginGroup as PluginGroup] || []
+    const totalCount = getPluginCards(pluginGroup, 'all').length
+    const hiddenCount = getPluginCards(pluginGroup, 'hidden').length
 
-    const count = getPluginCards(plugins, 'hidden').length
-
-    if (plugins.length > PLUGINS_PER_ROW) {
-      acc[pluginGroup as keyof TriggerLabels] = t('plugins.select.view_more', { count })
+    if (totalCount > PLUGINS_PER_ROW) {
+      acc[pluginGroup as keyof TriggerLabels] = t('plugins.select.view_more', { hiddenCount })
     }
 
     return acc
   }, {})
-})
-
-watch(() => props.disabledPlugins, (val, oldVal) => {
-  if (!objectsAreEqual(val, oldVal)) {
-    pluginsList.value = buildPluginList(true)
-    emit('plugin-list-updated', pluginsList.value)
-  }
-})
-
-watch(() => props.ignoredPlugins, (val, oldVal) => {
-  if (!objectsAreEqual(val, oldVal)) {
-    pluginsList.value = buildPluginList(true)
-    emit('plugin-list-updated', pluginsList.value)
-  }
 })
 
 const availablePluginsUrl = computed<string>(() => {
@@ -333,30 +334,57 @@ const availablePluginsUrl = computed<string>(() => {
   return url
 })
 
-onMounted(async () => {
-  try {
-    fetchErrorMessage.value = ''
-    isLoading.value = true
-    emit('loading', isLoading.value)
-
-    const res = await axiosInstance.get(availablePluginsUrl.value)
-
-    if (props.config.app === 'konnect') {
-      const { names: available } = res.data
-      availablePlugins.value = available || []
-    } else if (props.config.app === 'kongManager') {
-      const { plugins: { available_on_server: aPlugins } } = res.data
-      availablePlugins.value = aPlugins ? Object.keys(aPlugins) : []
-    }
-
+// race condition between fetch of available plugins and setting
+// disabled/ignored plugins
+// if disabled/ignored plugins changes before availablePlugins fetch
+// wait for fetch to finish and don't attempt to build plugin list yet
+// if disabled/ignored plugins changes AFTER availablePlugins fetch
+// rebuild the list
+watch(() => props.disabledPlugins, (val, oldVal) => {
+  if (!objectsAreEqual(val, oldVal) && !isLoading.value) {
     pluginsList.value = buildPluginList()
     emit('plugin-list-updated', pluginsList.value)
-  } catch (error: any) {
-    fetchErrorMessage.value = getMessageFromError(error)
-  } finally {
-    isLoading.value = false
-    emit('loading', isLoading.value)
   }
+})
+
+watch(() => props.ignoredPlugins, (val, oldVal) => {
+  if (!objectsAreEqual(val, oldVal) && !isLoading.value) {
+    pluginsList.value = buildPluginList()
+    emit('plugin-list-updated', pluginsList.value)
+  }
+})
+
+onMounted(async () => {
+  fetchErrorMessage.value = ''
+  isLoading.value = true
+  emit('loading', isLoading.value)
+
+  // only fetch available plugins if needed
+  if (props.onlyAvailablePlugins) {
+    try {
+      const res = await axiosInstance.get(availablePluginsUrl.value)
+
+      // TODO: endpoints temporarily return different formats
+      if (props.config.app === 'konnect') {
+        const { names: available } = res.data
+        availablePlugins.value = available || []
+      } else if (props.config.app === 'kongManager') {
+        const { plugins: { available_on_server: aPlugins } } = res.data
+        availablePlugins.value = aPlugins ? Object.keys(aPlugins) : []
+      }
+
+      pluginsList.value = buildPluginList()
+      emit('plugin-list-updated', pluginsList.value)
+    } catch (error: any) {
+      fetchErrorMessage.value = getMessageFromError(error)
+    }
+  } else {
+    pluginsList.value = buildPluginList()
+    emit('plugin-list-updated', pluginsList.value)
+  }
+
+  isLoading.value = false
+  emit('loading', isLoading.value)
 })
 </script>
 

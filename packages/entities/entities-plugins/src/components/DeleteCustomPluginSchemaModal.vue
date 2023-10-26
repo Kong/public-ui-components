@@ -92,6 +92,7 @@
 <script setup lang="ts">
 import { ref, computed, type PropType } from 'vue'
 import composables from '../composables'
+import { useErrors } from '@kong-ui-public/entities-shared'
 
 const props = defineProps({
   plugin: {
@@ -103,20 +104,17 @@ const props = defineProps({
 const emit = defineEmits(['closed', 'proceed'])
 
 const { i18n: { t } } = composables.useI18n()
+const { getMessageFromError } = useErrors()
 
 const title = computed((): string => {
   return isPluginSchemaInUse.value
     ? t('configuration.plugins.list.deleteCustomPlugin.pluginSchemaInUseTitle', { name: props.plugin?.name })
-    : `${helpText.delete} ${props.plugin?.name || 'plugin'}`
+    : `${t('actions.delete')} ${props.plugin?.name || 'plugin'}`
 })
 
 const errorMessage = ref('')
 const customPluginNameFormValue = ref('')
 const isPluginSchemaInUse = ref(false)
-
-// TODO: from config
-const controlPlaneId = computed((): string => String(route.params.control_plane_id || ''))
-const customPluginServices = new CustomPluginServices(controlPlaneId.value)
 
 const handleCancel = (): void => {
   emit('closed')
@@ -128,14 +126,15 @@ const handleSubmit = async (): Promise<void> => {
   }
 
   try {
-    await customPluginServices.deletePluginSchema(props.plugin?.name)
+    // TODO:
+    // await customPluginServices.deletePluginSchema(props.plugin?.name)
 
     emit('proceed')
 
-    notify({
+    /* notify({
       appearance: 'success',
       message: i18n.t('configuration.plugins.list.deleteCustomPlugin.successMessage', { name: props.plugin?.name }),
-    })
+    }) */
   } catch (err) {
     if (
       err.response?.status === 400 &&
@@ -152,7 +151,8 @@ const handleSubmit = async (): Promise<void> => {
 
 const isDeleteButtonDisabled = computed((): boolean => {
   return (
-    currentState.value.matches('pending') ||
+    // TODO:
+  /*  currentState.value.matches('pending') || */
     props.plugin?.name !== customPluginNameFormValue.value
   )
 })

@@ -42,7 +42,7 @@ defineProps({
     width: 100%;
 
     &-divider {
-      margin: $kui-space-0 -1rem 1rem;
+      margin: $kui-space-0 $kui-space-70;
     }
 
     .footer-skeleton {

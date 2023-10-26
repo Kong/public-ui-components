@@ -13,7 +13,7 @@
       @loading="(val: boolean) => $emit('loading', val)"
       @submit="saveFormData"
     >
-      <EntityFormSection
+      <!-- <EntityFormSection
         :description="t('form.sections.general.description')"
         :title="t('form.sections.general.title')"
       >
@@ -49,7 +49,7 @@
         <p>
           content
         </p>
-      </EntityFormSection>
+      </EntityFormSection> -->
     </EntityBaseForm>
   </div>
 </template>
@@ -63,11 +63,11 @@ import type {
   KonnectPluginFormConfig,
   KongManagerPluginFormConfig,
   PluginFormState,
-  SniFormFields,
+  PluginFormFields,
 } from '../types'
 import endpoints from '../plugins-endpoints'
-import composables from '../composables'
-import { useAxios, useErrors, EntityFormSection, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
+// import composables from '../composables'
+import { useAxios, useErrors, /* EntityFormSection, */ EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
@@ -99,7 +99,7 @@ const props = defineProps({
 })
 
 const router = useRouter()
-const { i18n: { t } } = composables.useI18n()
+// const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = useErrors()
 
 const { axiosInstance } = useAxios({
@@ -108,33 +108,34 @@ const { axiosInstance } = useAxios({
 
 const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
-const consumerId = computed((): string => props.config.consumerId && formType.value === EntityBaseFormType.Create ? props.config.consumerId : '')
 
 const form = reactive<PluginFormState>({
   fields: {
     name: '',
     tags: '',
+    entity_id: '',
   },
   isReadonly: false,
   errorMessage: '',
 })
 
-const formFieldsOriginal = reactive<SniFormFields>({
+const formFieldsOriginal = reactive<PluginFormFields>({
   name: '',
   tags: '',
-  certificate_id: '',
+  entity_id: '',
 })
 
 /**
  * Is the form submit button enabled?
  * If the form.fields and formFieldsOriginal are equal, always return false
  */
-const canSubmit = computed((): boolean => JSON.stringify(form.fields) !== JSON.stringify(formFieldsOriginal) && !!form.fields.name && !!(form.fields.certificate_id || certificateId.value))
+const canSubmit = computed((): boolean => JSON.stringify(form.fields) !== JSON.stringify(formFieldsOriginal) && !!form.fields.name)
 
 const initForm = (data: Record<string, any>): void => {
   form.fields.name = data?.name || ''
   form.fields.tags = data?.tags?.join(', ') || ''
-  form.fields.certificate_id = data?.certificate?.id || ''
+  // TODO:
+  // form.fields.entity_id = data?.certificate?.id || ''
 
   // Set initial state of `formFieldsOriginal` to these values in order to detect changes
   Object.assign(formFieldsOriginal, form.fields)
@@ -190,7 +191,6 @@ const saveFormData = async (): Promise<void> => {
     const requestBody: Record<string, any> = {
       name: form.fields.name,
       tags: form.fields.tags.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
-      certificate: { id: certificateId.value || form.fields.certificate_id },
     }
 
     let response: AxiosResponse | undefined
@@ -209,7 +209,8 @@ const saveFormData = async (): Promise<void> => {
 
     form.fields.name = response?.data?.name || ''
     form.fields.tags = response?.data?.tags?.join(', ') || ''
-    form.fields.certificate_id = response?.data?.certificate?.id || ''
+    // TODO:
+    // form.fields.entity_id = response?.data?.certificate?.id || ''
 
     // Set initial state of `formFieldsOriginal` to these values in order to detect changes
     Object.assign(formFieldsOriginal, form.fields)

@@ -19,7 +19,7 @@
         v-model="activeTab"
         data-testid="plugins-tabs"
         :tabs="tabs"
-        @changed="hash => $router.replace({ hash })"
+        @changed="(hash: string) => $router.replace({ hash })"
       >
         <template #kong>
           <p class="tab-description">
@@ -44,10 +44,10 @@
               {{ t('plugins.select.tabs.custom.description') }}
             </p>
 
-            <!--  <PluginCustomGrid v-if="modifiedCustomPlugins.length" /> -->
+            <PluginCustomGrid v-if="modifiedCustomPlugins.length" />
 
-            <!-- v-else -->
             <KEmptyState
+              v-else
               class="custom-plugins-empty-state"
               cta-is-hidden
               icon="stateGruceo"
@@ -98,9 +98,9 @@ import type {
   PluginType,
 } from '../types'
 import { PluginGroup } from '../types'
-// import PluginCustomGrid from './PluginCustomGrid.vue'
-import PluginSelectGrid from './PluginSelectGrid.vue'
 import composables from '../composables'
+import PluginCustomGrid from './PluginCustomGrid.vue'
+import PluginSelectGrid from './PluginSelectGrid.vue'
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
