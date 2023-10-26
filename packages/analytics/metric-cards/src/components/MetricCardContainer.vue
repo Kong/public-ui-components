@@ -56,8 +56,9 @@ import { changePolarity, metricChange, defineIcon, calculateChange } from '../ut
 import MetricsCard from './display/MetricsCard.vue'
 import MetricCardLoadingSkeleton from './display/MetricCardLoadingSkeleton.vue'
 
-// Only needed for type definitions
-import type { IndeterminateSmallIcon as GenericIcon } from '@kong/icons'
+// Import any one of the `@kong/icons` components to access the interface - they are all the same.
+// Then alias as `GenericIcon` to provide the icon interface to the prop types.
+import type { KongIcon as GenericIcon } from '@kong/icons'
 
 const props = defineProps({
   fallbackDisplayText: {

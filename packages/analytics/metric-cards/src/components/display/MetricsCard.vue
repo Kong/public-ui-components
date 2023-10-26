@@ -108,10 +108,14 @@ import {
   KUI_COLOR_TEXT_NEUTRAL_STRONG, // Neutral trend
   KUI_COLOR_TEXT_NEUTRAL,
 } from '@kong/design-tokens'
-import type { IndeterminateSmallIcon as GenericIcon } from '@kong/icons'
-import { IndeterminateSmallIcon, CloudUploadIcon, EqualIcon, ResponseIcon, VitalsIcon, WarningOutlineIcon } from '@kong/icons'
 import { MetricCardType } from '../../enums'
 import { MetricCardSize } from '../../constants'
+
+// Import any one of the `@kong/icons` components to access the interface - they are all the same.
+// Then alias as `GenericIcon` to provide the icon interface to the prop types.
+import type { KongIcon as GenericIcon } from '@kong/icons'
+
+import { IndeterminateSmallIcon, CloudUploadIcon, EqualIcon, ResponseIcon, VitalsIcon, WarningOutlineIcon } from '@kong/icons'
 
 const iconMap = new Map<MetricCardType, any>([
   [MetricCardType.GENERIC_COUNT, VitalsIcon],

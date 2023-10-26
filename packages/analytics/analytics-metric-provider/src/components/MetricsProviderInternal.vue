@@ -27,6 +27,7 @@ const props = withDefaults(defineProps<{
   hasTrendAccess: boolean,
   refreshInterval: number,
   longCardTitles?: boolean,
+  description?: string,
 }>(), {
   maxTimeframe: TimeframeKeys.THIRTY_DAY,
   overrideTimeframe: undefined,
@@ -35,6 +36,7 @@ const props = withDefaults(defineProps<{
   additionalFilter: undefined,
   queryReady: true,
   longCardTitles: false,
+  description: undefined,
 })
 
 // Fail early if there's a programming error.
@@ -95,6 +97,7 @@ provide(METRICS_PROVIDER_KEY, {
     traffic: trafficData,
     latency: latencyData,
   },
+  description: props.description || '',
   hasTrendAccess: props.hasTrendAccess,
   longCardTitles: props.longCardTitles,
   trendRange: trendRangeText as Ref<string>,

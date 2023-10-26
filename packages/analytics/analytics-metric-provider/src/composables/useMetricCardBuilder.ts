@@ -7,7 +7,7 @@ import { DEFAULT_KEY } from './useMetricFetcher'
 export interface BuilderOptions {
   cardType: MetricCardType,
   title: Ref<string>,
-  description: Ref<string>,
+  description?: string,
   record: Ref<ChronologicalMappedMetrics>,
   hasError: Ref<boolean>,
   lookupKey?: string,
@@ -66,7 +66,7 @@ export default function useMetricCardBuilder(opts: BuilderOptions): Ref<MetricCa
       currentValue,
       previousValue,
       title: title.value,
-      description: description.value,
+      description,
       increaseIsBad: !!increaseIsBad, // Coerce undefined to false
       formatValueFn,
       trendRange: trendRange?.value,

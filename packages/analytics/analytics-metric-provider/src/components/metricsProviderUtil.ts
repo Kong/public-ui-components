@@ -9,6 +9,7 @@ interface ProviderData {
   data: {
     [key: string]: any // TODO
   },
+  description?: string,
   hasTrendAccess: boolean,
   longCardTitles: boolean,
   trendRange: Ref<string>,

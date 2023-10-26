@@ -118,6 +118,7 @@ const globalProviderProps = {
   dataFetcher: makeDataFetcher(),
   overrideTimeframe: TimePeriods.get(TimeframeKeys.SIX_HOUR),
   longCardTitles: false,
+  description: 'Generic Description',
 }
 
 // Query stats for an entire org, but also apply a filter.

@@ -43,9 +43,7 @@ const trafficCard = composables.useMetricCardBuilder({
   title: computed(() => providerData.longCardTitles
     ? i18n.t('metricCard.long.traffic')
     : i18n.t('metricCard.short.traffic')),
-  description: computed(() => providerData.longCardTitles
-    ? i18n.t('metricCard.long.trafficDescription')
-    : i18n.t('metricCard.short.trafficDescription')),
+  description: providerData.description,
   record: traffic.mapped,
   hasError: traffic.hasError,
   lookupKey: props.lookupKey,
@@ -77,9 +75,7 @@ const errorRateCard = computed<MetricCardDef>(() => {
     title: providerData.longCardTitles
       ? i18n.t('metricCard.long.errorRate')
       : i18n.t('metricCard.short.errorRate'),
-    description: providerData.longCardTitles
-      ? i18n.t('metricCard.long.errorRateDescription')
-      : i18n.t('metricCard.short.errorRateDescription'),
+    description: providerData.description,
     increaseIsBad: true,
     trendRange: providerData.trendRange.value,
   }
@@ -91,9 +87,7 @@ const latencyCard = composables.useMetricCardBuilder({
   title: computed(() => providerData.longCardTitles
     ? i18n.t('metricCard.long.latency')
     : i18n.t('metricCard.short.latency')),
-  description: computed(() => providerData.longCardTitles
-    ? i18n.t('metricCard.long.latencyDescription')
-    : i18n.t('metricCard.short.latencyDescription')),
+  description: providerData.description,
   hasError: latency.hasError,
   record: latency.mapped,
   lookupKey: props.lookupKey,
@@ -134,8 +128,6 @@ const containerOpts = computed(() => ({
   hideTitle: true,
   trendRange: providerData.trendRange.value,
 }))
-
-console.log(' >>> providerData ', providerData.trendRange)
 
 const cardValues = computed(() => ({
   loading: containerOpts.value.loading,
