@@ -2,10 +2,10 @@ import type { RouteLocationRaw } from 'vue-router'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 
 export interface BasePluginFormConfig {
-  /** Route for creating a plugin */
-  createRoute: RouteLocationRaw
-  /** Consumer to bind the Plugin to on creation if Consumer Credential */
-  consumerId?: string
+  /** A function that returns the route for creating a plugin */
+  getCreateRoute: (id: string) => RouteLocationRaw
+  /** Entity to bind the Plugin to on creation */
+  entityId?: string
 }
 
 /** Konnect Plugin form config */
@@ -22,7 +22,7 @@ export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongM
 export interface PluginFormFields {
   name: string
   tags: string
-  consumer_id: string
+  entity_id: string
 }
 
 export interface PluginFormState {

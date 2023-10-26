@@ -1,6 +1,6 @@
-# PluginForm.vue
+# PluginSelect.vue
 
-A form component for Plugins.
+A grid component for selecting Plugins.
 
 - [Requirements](#requirements)
 - [Usage](#usage)
@@ -49,11 +49,11 @@ A form component for Plugins.
     - default: `undefined`
     - Additional headers to send with all Axios requests.
 
-  - `cancelRoute`:
-    - type: `RouteLocationRaw`
+  - `getCreateRoute`:
+    - type: `(plugin: string) => RouteLocationRaw`
     - required: `true`
     - default: `undefined`
-    - Route to return to when canceling creation of a plugin.
+    - A function that returns the route for creating a specific plugin type.
 
   - `workspace`:
     - type: `string`
@@ -67,39 +67,21 @@ A form component for Plugins.
     - default: `undefined`
     - *Specific to Konnect*. Name of the current control plane.
 
-  - `entityId`:
-    - type: `string`
-    - required: `false`
-    - default: `''`
-    - Id of the entity to bind the plugin to on creation.
-
 The base konnect or kongManger config.
-
-#### `pluginId`
-
-- type: `String`
-- required: `false`
-- default: `''`
-
-If showing the `Edit` type form, the ID of the plugin.
 
 ### Events
 
-#### error
+#### plugin-clicked
 
-An `@error` event is emitted when form validation fails. The event payload is the response error.
+An `@plugin-clicked` event is emitted when a plugin in the selection grid is clicked. The event payload is the plugin object.
 
 #### loading
 
 A `@loading` event is emitted when loading state changes. The event payload is a boolean.
 
-#### update
-
-A `@update` event is emitted when the form is saved. The event payload is the plugin object.
-
 ### Usage example
 
-Please refer to the [sandbox](../sandbox/pages/PluginListPage.vue). The form is accessible by clicking the `Edit` action of an existing plugin or after selecting a plugin when creating a new one.
+Please refer to the [sandbox](../sandbox/pages/PluginListPage.vue). The form is accessible by clicking the `+ New Plugin` button.
 
 ## TypeScript interfaces
 

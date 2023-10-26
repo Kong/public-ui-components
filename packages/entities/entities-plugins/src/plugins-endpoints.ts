@@ -9,6 +9,14 @@ export default {
       forEntity: '/{workspace}/{entityType}/{entityId}/plugins',
     },
   },
+  select: {
+    konnect: {
+      availablePlugins: '/api/runtime_groups/{controlPlaneId}/v1/available-plugins',
+    },
+    kongManager: {
+      availablePlugins: '/{workspace}/kong',
+    },
+  },
   form: {
     konnect: {
       create: '/api/runtime_groups/{controlPlaneId}/plugins',

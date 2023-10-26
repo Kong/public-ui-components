@@ -1,26 +1,13 @@
 <template>
-  <component
-    :is="componentType"
-    class="plugin-card"
+  <KTooltip
+    class="plugin-card plugin-card-cursor-pointer"
     :class="{
       'disabled': !plugin.available || plugin.disabledMessage,
-      'plugin-card-cursor-pointer': componentType === 'div' && noRouteChange
     }"
     :label="plugin.disabledMessage"
-    :position-fixed="plugin.disabledMessage ? true : undefined"
-    :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
-    :to="componentType === 'router-link' ? onClickRoute : undefined"
-    @click="props.noRouteChange ? emitPluginData() : undefined"
+    position-fixed
+    @click="noRouteChange ? emitPluginData() : handleCreateClick(plugin.id)"
   >
-    <template
-      v-if="plugin.disabledMessage"
-      #content
-    >
-      <div style="max-width: 345px;">
-        {{ plugin.disabledMessage }}
-      </div>
-    </template>
-
     <KCard
       class="plugin-card-content"
       :data-testid="plugin.name"
@@ -90,6 +77,7 @@
         <div
           class="plugin-card-body"
           :class="{ 'custom-plugin': isCustomPlugin }"
+          :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
           @click="handleCustomClick"
         >
           <h4 class="plugin-card-title">
@@ -119,15 +107,16 @@
         </div>
       </template>
     </KCard>
-  </component>
+  </KTooltip>
 </template>
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
-import { useRoute, useRouter, type RouteLocationRaw } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { PluginGroup, type KongManagerPluginFormConfig, type KonnectPluginFormConfig, type PluginType } from '../types'
 import { KUI_ICON_SIZE_30, KUI_COLOR_TEXT_NEUTRAL_STRONGER } from '@kong/design-tokens'
 import composables from '../composables'
+import { PermissionsWrapper } from '@kong-ui-public/entities-shared'
 import PluginIcon from './PluginIcon.vue'
 
 const emit = defineEmits<{
@@ -143,7 +132,7 @@ const props = defineProps({
     required: true,
     validator: (config: KonnectPluginFormConfig | KongManagerPluginFormConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (!config.createRoute || !config.cancelRoute) return false
+      if (!config.getCreateRoute) return false
       return true
     },
   },
@@ -163,43 +152,19 @@ const props = defineProps({
     type: Object as PropType<PluginType>,
     required: true,
   },
-  // TODO: do I need this?
   noRouteChange: {
     type: Boolean,
     default: false,
   },
 })
 
-const route = useRoute()
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const controlPlaneId = computed((): string => props.config.app === 'konnect' ? props.config.controlPlaneId : '')
 
-const componentType = computed((): string => {
-  if (isCreateCustomPlugin.value || isCustomPlugin.value) {
-    return 'div'
-  } else if (props.plugin.disabledMessage) {
-    return 'KTooltip'
-  } else if (props.noRouteChange || !props.plugin.available) {
-    return 'div'
-  }
-
-  return 'router-link'
-})
-
-const onClickRoute = computed(() => {
-  return {
-    name: props.config.createRoute,
-    params: {
-      ...(controlPlaneId.value ? { control_plane_id: controlPlaneId.value } : {}),
-      // TODO: is this right for KM?
-      plugin: props.plugin.id,
-    },
-    query: {
-      ...route.query,
-    },
-  } as RouteLocationRaw
-})
+const handleCreateClick = (pluginName: string): void => {
+  router.push(props.config.getCreateRoute(pluginName))
+}
 
 const emitPluginData = () => {
   emit('plugin-clicked', props.plugin)

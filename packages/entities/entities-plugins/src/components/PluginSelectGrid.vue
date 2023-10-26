@@ -1,6 +1,36 @@
 <template>
   <div>
-    <template v-for="(group, idx) in pluginGroups">
+    <section v-if="isLoading">
+      <KSkeleton
+        :table-rows="1"
+        type="table"
+      >
+        <KSkeletonBox
+          width="6"
+        />
+        <KSkeletonBox
+          class="title-loading-skeleton"
+          width="6"
+        />
+      </KSkeleton>
+      <PluginCardSkeleton
+        :card-count="8"
+        type="card"
+      />
+    </section>
+
+    <KEmptyState
+      v-else-if="fetchErrorMessage"
+      data-testid="form-fetch-error"
+      hide-cta
+      is-error
+    >
+      <template #message>
+        <h3>{{ fetchErrorMessage }}</h3>
+      </template>
+    </KEmptyState>
+
+    <template v-for="(group, idx) in PluginGroupArray">
       <div
         v-if="nonCustomPlugins[group]"
         :key="idx"
@@ -11,9 +41,9 @@
           class="plugins-collapse"
           :data-testid="`${group}-collapse`"
           :title="group"
-          :trigger-label="shouldCollapsed[idx] ? triggerLabels[group] : pluginHelpText.viewLess"
+          :trigger-label="!shouldCollapsed[idx] ? triggerLabels[group] : t('plugins.select.view_less')"
         >
-          <!-- If there are 4 or less, don't display a trigger -->
+          <!-- If there are 3 or less, don't display a trigger -->
           <template
             v-if="nonCustomPlugins[group].length <= PLUGINS_PER_ROW"
             #trigger
@@ -25,6 +55,8 @@
               <PluginSelectCard
                 v-for="(plugin, index) in getPluginCards(nonCustomPlugins[group], 'visible')"
                 :key="index"
+                :config="config"
+                :no-route-change="noRouteChange"
                 :plugin="plugin"
                 @plugin-clicked="emitPluginData"
               />
@@ -35,6 +67,8 @@
             <PluginSelectCard
               v-for="(plugin, index) in getPluginCards(nonCustomPlugins[group], 'hidden')"
               :key="index"
+              :config="config"
+              :no-route-change="noRouteChange"
               :plugin="plugin"
               @plugin-clicked="emitPluginData"
             />
@@ -46,19 +80,25 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref, watch, type PropType } from 'vue'
+import { computed, ref, watch, onMounted, type PropType } from 'vue'
 import { useRoute } from 'vue-router'
 import {
   PluginGroup,
+  PluginGroupArray,
   PluginScope,
   PLUGIN_GROUPS_COLLAPSE_STATUS,
   type KongManagerPluginFormConfig,
   type KonnectPluginFormConfig,
   type PluginType,
+  type DisabledPlugin,
+  type PluginCardList,
+  type TriggerLabels,
 } from '../types'
-// TODO: copy helpers over
-import { sortAlpha, objectsAreEqual } from '@KHCP/helpers'
+import { useAxios, useHelpers, useErrors } from '@kong-ui-public/entities-shared'
+import { PLUGINS_PER_ROW } from '../constants'
 import composables from '../composables'
+import endpoints from '../plugins-endpoints'
+import PluginCardSkeleton from './PluginCardSkeleton.vue'
 import PluginSelectCard from './PluginSelectCard.vue'
 
 const props = defineProps({
@@ -68,18 +108,34 @@ const props = defineProps({
     required: true,
     validator: (config: KonnectPluginFormConfig | KongManagerPluginFormConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (!config.createRoute || !config.cancelRoute) return false
+      if (!config.getCreateRoute) return false
       return true
     },
   },
+  canCreate: {
+    type: Boolean,
+    default: true,
+  },
   /**
-    * @param {boolean} showOnlyAvailablePlugins checks kong config plugins.available_on_server and if
-    * showOnlyAvailablePlugins = true, then it will not show plugins from PluginMeta that are outside
+    * @param {boolean} onlyAvailablePlugins checks kong config plugins.available_on_server and if
+    * onlyAvailablePlugins = true, then it will not show plugins from PluginMeta that are outside
     * of the available_on_server array.
     */
-  showOnlyAvailablePlugins: {
+  onlyAvailablePlugins: {
     type: Boolean,
     default: false,
+  },
+  ignoredPlugins: {
+    type: Array as PropType<String[]>,
+    default: () => [],
+  },
+  disabledPlugins: {
+    type: Object as PropType<DisabledPlugin>,
+    default: () => ({}),
+  },
+  filteredPlugins: {
+    type: Object as PropType<PluginCardList>,
+    default: () => ({}),
   },
   noRouteChange: {
     type: Boolean,
@@ -88,25 +144,29 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
+  (e: 'loading', isLoading: boolean): void,
   (e: 'plugin-clicked', plugin: PluginType): void,
-  (e: 'plugin-list-updated', pluginsList: PluginType[]): void
+  (e: 'plugin-list-updated', pluginsList: PluginCardList): void
 }>()
 
 const route = useRoute()
 const { i18n: { t } } = composables.useI18n()
 
+const { axiosInstance } = useAxios({
+  headers: props.config?.requestHeaders,
+})
+
+const { sortAlpha, objectsAreEqual } = useHelpers()
+const { getMessageFromError } = useErrors()
 const { pluginMetaData } = composables.usePluginMetaData()
-const pluginsList = ref<PluginType[]>({})
+const availablePlugins = ref<string[]>([])
+const pluginsList = ref<PluginCardList>({})
 const isLoading = ref(true)
-const hasError = ref(false)
+const fetchErrorMessage = ref('')
 
-const record = ref(null)
-
-const emitPluginData = (plugin) => {
+const emitPluginData = (plugin: PluginType) => {
   emit('plugin-clicked', plugin)
 }
-// TODO: ??
-// const serviceVersionId = computed(() => String(route.params.version || ''))
 
 const entityType = computed((): string => {
   const entity = String(route.query.entity_type || '')
@@ -119,57 +179,16 @@ const entityType = computed((): string => {
     return 'route_id'
   } else if (route.params.consumer) {
     return 'consumer_id'
+  } else if (route.params.consumer_group) {
+    return 'consumer_group_id'
   }
 
   return ''
 })
-const applicationRegistration = ref(null)
 
-// TODO: what is this?
-/* if (String($route.params.service || '') && String($route.params.version || '')) {
-  applicationRegistration.value = composables.useApplicationRegistration(serviceVersionId)
-} */
-
-const disabledPlugins = computed(() => {
-  // Usages list returns allowed plugins for `free`, plus`, and `enterprise`.
-  const dPlugins = {}
-
-  // TODO: what do we do about tiers?
-  /* if (!usageData.value && !applicationRegistration.value?.status) {
-    return
-  }
-
-  if (usageData.value && orgTier.value) {
-    // allowedPlugins is the number of plugins available for a tier
-    const allowedPlugins = usageData.value[orgTier.value]?.valid_plugins || []
-
-    for (const aTier in usageData.value) {
-      if (aTier !== orgTier.value) {
-        usageData.value[aTier]?.valid_plugins?.filter(plugin => {
-          if (!allowedPlugins.includes(plugin)) {
-            dPlugins[plugin] = `This plugin is not supported on the ${capitalizeWord(orgTier.value)} tier.`
-          }
-        })
-      }
-    }
-  } */
-
-  // TODO: rethink this logic...
-  // Maybe we need to allow passing a list of disabled plugins like KM was doing?
-  if (applicationRegistration.value?.statusLabel === 'enabled') {
-    const disabledTooltipText = t('plugins.select.tabs.kong.app_reg_tooltip')
-    const acl = 'acl'
-
-    dPlugins[acl] = disabledTooltipText
-    dPlugins[(applicationRegistration.value.applicationRegistration.auth_config?.name)] = disabledTooltipText
-  }
-
-  return dPlugins
-})
-
-const nonCustomPlugins = computed(() => {
-  // remove custom plugin from original filteredPlugins
-  const kongPlugins = Object.assign({}, props.filteredPlugins)
+// remove custom plugin from original filteredPlugins
+const nonCustomPlugins = computed((): PluginCardList => {
+  const kongPlugins = JSON.parse(JSON.stringify(props.filteredPlugins))
 
   delete kongPlugins[PluginGroup.CUSTOM_PLUGINS]
 
@@ -177,11 +196,11 @@ const nonCustomPlugins = computed(() => {
 })
 
 const buildPluginList = (fromWatch?: boolean) => {
-  // If showOnlyAvailablePlugins is false,
+  // If onlyAvailablePlugins is false,
   // we included unavailable plugins from pluginMeta
   // in addition to available plugins
 
-  if (fromWatch && !record.value?.available) {
+  if (fromWatch && !availablePlugins.value.length) {
     // race condition between fetch of available plugins and setting
     // plugins disabled by tier
     // if plugins disabled by tier evaluates before record fetch
@@ -191,16 +210,17 @@ const buildPluginList = (fromWatch?: boolean) => {
     return
   }
 
+  // array of unique plugin_id's
+  // either grab all plugins from metadata file or use list of available plugins provided by API
   return [...new Set(
     Object.assign(
-      Object.keys({ ...(!props.showOnlyAvailablePlugins && pluginMetaData) }),
-      record.value.available,
+      Object.keys({ ...(!props.onlyAvailablePlugins && pluginMetaData) }),
+      availablePlugins.value,
     ),
   )]
     // Filter out ignored plugins
-    // TODO: do I need?
-    .filter(plugin => !this.pluginsToIgnore.includes(plugin))
-    // Filter to just consumer plugins if adding plugin to a consumer
+    .filter((plugin: string) => !props.ignoredPlugins.includes(plugin))
+    // Filter plugins by entity type if adding scoped plugin
     .filter((plugin: string) => {
       // For Global Plugins
       if (!entityType.value) {
@@ -236,67 +256,32 @@ const buildPluginList = (fromWatch?: boolean) => {
 
       return false
     })
-    .reduce((list: object, id: string) => {
-      const pluginName = (pluginMetaData[id] && pluginMetaData[id].name) || id
+    .reduce((list: PluginCardList, pluginId: string) => {
+      const pluginName = (pluginMetaData[pluginId] && pluginMetaData[pluginId].name) || pluginId
       const plugin = {
-        id,
+        ...pluginMetaData[pluginId],
+        id: pluginId,
         name: pluginName,
-        available: record.value.available.includes(id),
-        group: (pluginMetaData[id] && pluginMetaData[id].group) || PluginGroup.CUSTOM_PLUGINS,
-        ...pluginMetaData[id],
+        available: availablePlugins.value.includes(pluginId),
+        group: pluginMetaData[pluginId]?.group || PluginGroup.CUSTOM_PLUGINS,
+      } as PluginType
+
+      if (props.disabledPlugins) {
+        plugin.disabledMessage = props.disabledPlugins[pluginId] || ''
       }
 
-      if (disabledPlugins.value !== undefined) {
-        plugin.disabledMessage = disabledPlugins.value[id]
+      const groupName = plugin.group || t('plugins.select.misc_plugins')
+
+      if (!list[groupName]) {
+        list[groupName] = []
       }
 
-      if (!list[plugin.group]) {
-        list[plugin.group || t('plugins.select.misc_plugins')] = []
-      }
-
-      list[plugin.group || t('plugins.select.misc_plugins')].push(plugin)
-
-      list[plugin.group].sort(sortAlpha('name'))
+      list[groupName].push(plugin)
+      list[groupName].sort(sortAlpha('name'))
 
       return list
     }, {})
 }
-
-// TODO: how does this fit in?
-const selectedPlugin = ref(null)
-
-// TODO: will this work?
-const fetchRecord = async (): Promise<void> => {
-  try {
-    const { data } = await pluginServices.getAvailablePlugins()
-    const { names: available } = data
-
-    record.value = { available }
-    pluginsList.value = buildPluginList()
-    emit('plugin-list-updated', pluginsList.value)
-
-    isLoading.value = false
-  } catch (error) {
-    hasError.value = true
-    isLoading.value = false
-  }
-}
-
-// TODO: move to consts
-const PLUGINS_PER_ROW = 4
-// TODO: is from KM, should it be passed in?
-const PLUGINS_TO_IGNORE = [
-  // Deprecated with release of OpenID 0.0.9
-  'openid-connect-authentication',
-  'openid-connect-protection',
-  'openid-connect-verification',
-  'vault-auth',
-  'konnect-application-auth', // hide this for Kong Manager
-  'kubernetes-sidecar-injector',
-  'collector',
-  'openwhisk',
-  'upstream-tls',
-]
 
 const getPluginCards = (plugins: any[], type: 'visible' | 'hidden') => {
   if (type === 'visible') {
@@ -306,35 +291,72 @@ const getPluginCards = (plugins: any[], type: 'visible' | 'hidden') => {
   return plugins.slice(PLUGINS_PER_ROW)
 }
 
-const shouldCollapsed = ref(PLUGIN_GROUPS_COLLAPSE_STATUS)
+const shouldCollapsed = ref<Record<string, boolean>>(PLUGIN_GROUPS_COLLAPSE_STATUS)
 
 const triggerLabels = computed(() => {
-  return props.filteredPlugins
-    ? Object.keys(props.filteredPlugins).reduce((acc, key) => {
-      const plugins = props.filteredPlugins[key] || []
+  return Object.keys(pluginsList.value).reduce((acc: TriggerLabels, pluginGroup: string): TriggerLabels => {
+    const plugins = pluginsList.value[pluginGroup as PluginGroup] || []
 
-      const count = getPluginCards(plugins, 'hidden').length
+    const count = getPluginCards(plugins, 'hidden').length
 
-      acc[key] = plugins.length > PLUGINS_PER_ROW ? t('configuration.plugins.list.viewMore', { count }) : null
+    if (plugins.length > PLUGINS_PER_ROW) {
+      acc[pluginGroup as keyof TriggerLabels] = t('plugins.select.view_more', { count })
+    }
 
-      return acc
-    }, {})
-    : {}
+    return acc
+  }, {})
 })
 
-watch(disabledPlugins, (val, oldVal) => {
+watch(() => props.disabledPlugins, (val, oldVal) => {
   if (!objectsAreEqual(val, oldVal)) {
     pluginsList.value = buildPluginList(true)
     emit('plugin-list-updated', pluginsList.value)
   }
 })
 
-const userCanCreate = ref(false)
-onBeforeMount(async () => {
-  // Evaluate if the user has create permissions
-  userCanCreate.value = await props.canCreate()
+watch(() => props.ignoredPlugins, (val, oldVal) => {
+  if (!objectsAreEqual(val, oldVal)) {
+    pluginsList.value = buildPluginList(true)
+    emit('plugin-list-updated', pluginsList.value)
+  }
+})
 
-  fetchRecord()
+const availablePluginsUrl = computed<string>(() => {
+  let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePlugins}`
+
+  if (props.config.app === 'konnect') {
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+  } else if (props.config.app === 'kongManager') {
+    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+  }
+
+  return url
+})
+
+onMounted(async () => {
+  try {
+    fetchErrorMessage.value = ''
+    isLoading.value = true
+    emit('loading', isLoading.value)
+
+    const res = await axiosInstance.get(availablePluginsUrl.value)
+
+    if (props.config.app === 'konnect') {
+      const { names: available } = res.data
+      availablePlugins.value = available || []
+    } else if (props.config.app === 'kongManager') {
+      const { plugins: { available_on_server: aPlugins } } = res.data
+      availablePlugins.value = aPlugins ? Object.keys(aPlugins) : []
+    }
+
+    pluginsList.value = buildPluginList()
+    emit('plugin-list-updated', pluginsList.value)
+  } catch (error: any) {
+    fetchErrorMessage.value = getMessageFromError(error)
+  } finally {
+    isLoading.value = false
+    emit('loading', isLoading.value)
+  }
 })
 </script>
 

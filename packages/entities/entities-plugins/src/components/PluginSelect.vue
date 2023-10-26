@@ -10,27 +10,7 @@
       />
     </div>
 
-    <section v-if="isLoading">
-      <KSkeleton
-        :table-rows="1"
-        type="table"
-      >
-        <KSkeletonBox
-          width="6"
-        />
-        <KSkeletonBox
-          class="title-loading-skeleton"
-          width="6"
-        />
-      </KSkeleton>
-      <PluginCardSkeleton
-        :card-count="8"
-        type="card"
-      />
-    </section>
-
     <section
-      v-else-if="hasFilteredResults"
       aria-live="polite"
       class="plugins-results-container"
     >
@@ -46,8 +26,15 @@
             {{ t('plugins.select.tabs.kong.description') }}
           </p>
           <PluginSelectGrid
+            :can-create="userCanCreate"
             :config="config"
-            @plugin-list-updated="(val) => pluginsList = value"
+            :disabled-plugins="disabledPlugins"
+            :filtered-plugins="filteredPlugins"
+            :ignored-plugins="ignoredPlugins"
+            only-available-plugins
+            @loading="(val: boolean) => $emit('loading', val)"
+            @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
+            @plugin-list-updated="(val: PluginCardList) => pluginsList = val"
           />
         </template>
 
@@ -57,10 +44,10 @@
               {{ t('plugins.select.tabs.custom.description') }}
             </p>
 
-            <PluginCustomGrid v-if="modifiedCustomPlugins.length" />
+            <!--  <PluginCustomGrid v-if="modifiedCustomPlugins.length" /> -->
 
+            <!-- v-else -->
             <KEmptyState
-              v-else
               class="custom-plugins-empty-state"
               cta-is-hidden
               icon="stateGruceo"
@@ -86,7 +73,7 @@
     </section>
 
     <KEmptyState
-      v-else-if="noSearchResults"
+      v-if="noSearchResults"
       cta-is-hidden
       is-error
     >
@@ -103,8 +90,16 @@
 <script setup lang="ts">
 import { computed, ref, onBeforeMount, type PropType } from 'vue'
 import { useRoute } from 'vue-router'
-import { PluginGroup, type KongManagerPluginFormConfig, type KonnectPluginFormConfig, type PluginType } from '../types'
-import PluginCardSkeleton from './PluginCardSkeleton.vue'
+import type {
+  DisabledPlugin,
+  PluginCardList,
+  KongManagerPluginFormConfig,
+  KonnectPluginFormConfig,
+  PluginType,
+} from '../types'
+import { PluginGroup } from '../types'
+// import PluginCustomGrid from './PluginCustomGrid.vue'
+import PluginSelectGrid from './PluginSelectGrid.vue'
 import composables from '../composables'
 
 const props = defineProps({
@@ -114,7 +109,7 @@ const props = defineProps({
     required: true,
     validator: (config: KonnectPluginFormConfig | KongManagerPluginFormConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (!config.createRoute || !config.cancelRoute) return false
+      if (!config.getCreateRoute) return false
       return true
     },
   },
@@ -136,33 +131,51 @@ const props = defineProps({
     required: false,
     default: async () => true,
   },
+  noRouteChange: {
+    type: Boolean,
+    default: false,
+  },
+  ignoredPlugins: {
+    type: Array as PropType<String[]>,
+    default: () => [],
+  },
+  disabledPlugins: {
+    type: Object as PropType<DisabledPlugin>,
+    default: () => ({}),
+  },
 })
+
+defineEmits<{
+  (e: 'loading', isLoading: boolean): void,
+  (e: 'plugin-clicked', plugin: PluginType): void,
+}>()
 
 const route = useRoute()
 const { i18n: { t } } = composables.useI18n()
 
 const filter = ref('')
-const isLoading = ref(true)
 const hasError = ref(false)
-const pluginsList = ref<PluginType[]>([])
+const pluginsList = ref<PluginCardList>({})
 
-const filteredPlugins = computed((): PluginType[] => {
-  const plugins = pluginsList.value
+const filteredPlugins = computed((): PluginCardList => {
+  if (!pluginsList.value) {
+    return {}
+  }
+
   const query = filter.value.toLowerCase()
+  const results = JSON.parse(JSON.stringify(pluginsList.value))
 
-  return plugins
-    ? Object.keys(plugins).reduce((acc, cur) => {
-      const matches = plugins[cur].filter(plugin => {
-        return plugin.name.toLowerCase().includes(query) || plugin.group.toLowerCase().includes(query)
-      })
+  for (const type in pluginsList.value) {
+    const matches = pluginsList.value[type as keyof PluginCardList]?.filter((plugin: PluginType) => plugin.name.toLowerCase().includes(query) || plugin.group.toLowerCase().includes(query)) || []
 
-      if (matches.length) {
-        acc[cur] = matches
-      }
+    if (!matches.length) {
+      delete results[type]
+    } else {
+      results[type] = matches
+    }
+  }
 
-      return acc
-    }, {})
-    : {}
+  return results
 })
 
 const hasFilteredResults = computed((): boolean => {
@@ -177,11 +190,11 @@ const tabs = props.config.app === 'konnect'
   ? [
     {
       hash: '#kong',
-      title: t('configuration.plugins.list.tabs.kong'),
+      title: t('plugins.select.tabs.kong.title'),
     },
     {
       hash: '#custom',
-      title: t('configuration.plugins.list.tabs.custom'),
+      title: t('plugins.select.tabs.custom.title'),
     },
   ]
   : []
@@ -192,7 +205,7 @@ const modifiedCustomPlugins = computed(() => {
     return []
   }
 
-  const customPlugins = filteredPlugins.value[PluginGroup.CUSTOM_PLUGINS] || []
+  const customPlugins = filteredPlugins.value?.[PluginGroup.CUSTOM_PLUGINS] || []
 
   // ADD CUSTOM_PLUGIN_CREATE as the first card if allowed creation
   return userCanCreate.value && !props.noRouteChange
@@ -202,7 +215,7 @@ const modifiedCustomPlugins = computed(() => {
       available: true,
       group: PluginGroup.CUSTOM_PLUGINS,
       description: t('plugins.select.tabs.custom.create.description'),
-    }, ...customPlugins]
+    }].concat(customPlugins)
     : customPlugins
 })
 

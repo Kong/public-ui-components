@@ -11,6 +11,19 @@ export enum PluginGroup {
   CUSTOM_PLUGINS = 'Custom Plugins',
 }
 
+export const PluginGroupArray = [
+  PluginGroup.AUTHENTICATION,
+  PluginGroup.SECURITY,
+  PluginGroup.TRAFFIC_CONTROL,
+  PluginGroup.SERVERLESS,
+  PluginGroup.ANALYTICS_AND_MONITORING,
+  PluginGroup.TRANSFORMATIONS,
+  PluginGroup.LOGGING,
+  PluginGroup.DEPLOYMENT,
+  PluginGroup.WEBSOCKET,
+  PluginGroup.CUSTOM_PLUGINS,
+]
+
 export const PLUGIN_GROUPS_COLLAPSE_STATUS = {
   AUTHENTICATION: true,
   SECURITY: true,
@@ -45,4 +58,16 @@ export interface PluginType extends PluginMetaData {
   available: boolean // whether the plugin is available or not
   disabledMessage?: string // An optional field for plugin's disabled message.
   id: string // the plugin schema name
+}
+
+export type DisabledPlugin = {
+  [key: string]: string // [plugin.id]: plugin.disabledMessage
+}
+
+export type PluginCardList = {
+  [key in PluginGroup]?: PluginType[]
+}
+
+export type TriggerLabels = {
+  [key in PluginGroup]?: string // [plugin.group]: label
 }

@@ -401,6 +401,8 @@
       "custom_badge_text": "Data Plane Node Specific",
       "unavailable_tooltip": "This plugin is not available",
       "misc_plugins": "Other Plugins",
+      "view_more": "View {count} more",
+      "view_less": "View less",
       "tabs": {
         "kong": {
           "title": "Kong Plugins",

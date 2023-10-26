@@ -16,7 +16,12 @@ const init = async () => {
         component: () => import('./pages/PluginListPage.vue'),
       },
       {
-        path: '/plugin/create',
+        path: '/plugin/select',
+        name: 'select-plugin',
+        component: () => import('./pages/PluginSelectPage.vue'),
+      },
+      {
+        path: '/plugin/create/:plugin',
         name: 'create-plugin',
         component: () => import('./pages/FallbackPage.vue'),
       },
