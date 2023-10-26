@@ -1,4 +1,11 @@
-import { IndeterminateSmallIcon, TrendUpIcon, TrendDownIcon } from '@kong/icons'
+import {
+  IndeterminateSmallIcon,
+  TrendUpIcon,
+  TrendDownIcon,
+} from '@kong/icons'
+import type {
+  IndeterminateSmallIcon as GenericIcon,
+} from '@kong/icons'
 
 // Used to render a percentage display (eg: 30.97%)
 export const DECIMAL_DISPLAY = 2
@@ -53,7 +60,7 @@ export const calculateChange = (curr: number, prev: number) => {
 /**
  * Determines whether to display an upward or downward trend, or no change
  */
-export const defineIcon = (polarity: number, thisIsBad: boolean = false) => {
+export const defineIcon = (polarity: number, thisIsBad: boolean = false): typeof GenericIcon => {
   if (thisIsBad) {
     polarity *= -1
   }

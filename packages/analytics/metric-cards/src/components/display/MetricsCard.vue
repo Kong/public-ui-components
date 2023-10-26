@@ -96,8 +96,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { PropType } from 'vue'
+import { computed } from 'vue'
 import {
   KUI_COLOR_BORDER_DANGER_STRONG,
   // KUI_COLOR_BACKGROUND_NEUTRAL,
@@ -108,7 +108,8 @@ import {
   KUI_COLOR_TEXT_NEUTRAL_STRONG, // Neutral trend
   KUI_COLOR_TEXT_NEUTRAL,
 } from '@kong/design-tokens'
-import { CloudUploadIcon, EqualIcon, ResponseIcon, VitalsIcon, WarningOutlineIcon } from '@kong/icons'
+import type { IndeterminateSmallIcon as GenericIcon } from '@kong/icons'
+import { IndeterminateSmallIcon, CloudUploadIcon, EqualIcon, ResponseIcon, VitalsIcon, WarningOutlineIcon } from '@kong/icons'
 import { MetricCardType } from '../../enums'
 import { MetricCardSize } from '../../constants'
 
@@ -157,8 +158,8 @@ const props = defineProps({
     required: true,
   },
   trendIcon: {
-    type: String,
-    default: '',
+    type: Object as PropType<typeof GenericIcon>,
+    default: IndeterminateSmallIcon,
   },
   trendRange: {
     type: String,

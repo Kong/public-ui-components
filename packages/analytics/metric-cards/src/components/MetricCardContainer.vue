@@ -56,6 +56,9 @@ import { changePolarity, metricChange, defineIcon, calculateChange } from '../ut
 import MetricsCard from './display/MetricsCard.vue'
 import MetricCardLoadingSkeleton from './display/MetricCardLoadingSkeleton.vue'
 
+// Only needed for type definitions
+import type { IndeterminateSmallIcon as GenericIcon } from '@kong/icons'
+
 const props = defineProps({
   fallbackDisplayText: {
     type: String,
@@ -97,7 +100,7 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
     metricValue: card.formatValueFn ? card.formatValueFn(card.currentValue) : approxNum(card.currentValue, { capital: true, round: true }) || '0',
     metricChange: card.formatChangeFn ? card.formatChangeFn(change) : metricChange(change, props.hasTrendAccess, props.fallbackDisplayText),
     changePolarity: polarity,
-    trendIcon: defineIcon(polarity, card.increaseIsBad) as any,
+    trendIcon: defineIcon(polarity, card.increaseIsBad) as typeof GenericIcon,
     cardSize: props.cardSize,
   }
 }
