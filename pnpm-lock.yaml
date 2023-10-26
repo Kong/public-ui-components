@@ -378,8 +378,8 @@ importers:
   packages/core/error-boundary:
     dependencies:
       '@kong/icons':
-        specifier: ^1.7.7
-        version: 1.7.7(vue@3.3.4)
+        specifier: ^1.7.8
+        version: 1.7.8(vue@3.3.4)
     devDependencies:
       '@kong/design-tokens':
         specifier: ^1.11.6
@@ -440,8 +440,8 @@ importers:
   packages/core/sandbox-layout:
     dependencies:
       '@kong/icons':
-        specifier: ^1.7.7
-        version: 1.7.7(vue@3.3.4)
+        specifier: ^1.7.8
+        version: 1.7.8(vue@3.3.4)
     devDependencies:
       '@kong/design-tokens':
         specifier: ^1.11.6
@@ -717,8 +717,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/core
       '@kong/icons':
-        specifier: ^1.7.7
-        version: 1.7.7(vue@3.3.4)
+        specifier: ^1.7.8
+        version: 1.7.8(vue@3.3.4)
       compare-versions:
         specifier: ^6.1.0
         version: 6.1.0
@@ -2055,9 +2055,9 @@ packages:
     resolution: {integrity: sha512-K09zObaYWD7rm9FrJCHI7muKI3npWeDeqdY64unAjmlFW17Ox+bFGsJkaJIOXzsssXMGspHqVkl41vmUEhY8OQ==}
     dev: true
 
-  /@kong/icons@1.7.7(vue@3.3.4):
-    resolution: {integrity: sha512-CQHOXZ/S0SRTjW43ItRKFoA9e+roW/jh8vXE1X0HVHDy0LAymvX9nadoVUmtdjNHQnJvr4XZfGgdyXE+fYh6Fw==}
-    engines: {node: '>=18.18.0'}
+  /@kong/icons@1.7.8(vue@3.3.4):
+    resolution: {integrity: sha512-beURbCjLY7ihYXQjf8EoA9smh/K4MrxgVZ4xEGSfZx6y8YdocyHMZ4oZC3/UuopURzjUfiMbl+KZ9yEhGTTNIw==}
+    engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: ^3.3.4
     dependencies:
