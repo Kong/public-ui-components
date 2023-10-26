@@ -210,9 +210,9 @@ const handleCustomClick = (): void => {
     cursor: pointer;
   }
 
-  .header-wrapper {
+  .header-wrapper { // TODO: had to change from 2rem, does it work?
     // maintain the specified height if slot has no content
-    min-height: 2rem
+    min-height: 25px;
   }
 
   &-title {
