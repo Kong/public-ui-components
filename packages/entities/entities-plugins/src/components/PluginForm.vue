@@ -142,7 +142,9 @@ const initForm = (data: Record<string, any>): void => {
 }
 
 const handleClickCancel = (): void => {
-  router.push(props.config.cancelRoute)
+  if (props.config.cancelRoute) {
+    router.push(props.config.cancelRoute)
+  }
 }
 
 /* ---------------

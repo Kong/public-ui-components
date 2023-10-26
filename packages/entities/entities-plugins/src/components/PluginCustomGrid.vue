@@ -1,12 +1,11 @@
 <template>
   <div>
-    <KCollapse
+    <!--  <KCollapse
       v-model="shouldCollapsedCustomPlugins"
       class="plugins-collapse"
       :data-testid="`${PLUGIN_GROUPS.CUSTOM_PLUGINS}-collapse`"
       :trigger-label="shouldCollapsedCustomPlugins ? triggerLabels[PLUGIN_GROUPS.CUSTOM_PLUGINS] : pluginHelpText.viewLess"
     >
-      <!-- If there are 4 or less, don't display a trigger -->
       <template
         v-if="filteredCustomPlugins.length <= PLUGINS_PER_ROW"
         #trigger
@@ -82,17 +81,17 @@
       :plugin="selectedPlugin"
       @closed="handleClose"
       @proceed="handleCustomPluginDeleted"
-    />
+    /> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+/* import { ref } from 'vue'
 import DeleteCustomPluginSchemaModal from './DeleteCustomPluginSchemaModal.vue'
 
-const shouldCollapsedCustomPlugins = ref(true)
+const shouldCollapsedCustomPlugins = ref(true) */
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>
