@@ -5,6 +5,8 @@ import { DECIMAL_DISPLAY } from '../utilities'
 import { MetricCardType } from '../enums'
 import { MetricCardSize } from '../constants'
 
+const TREND_RANGE_TEXT = 'vs previous 7 days'
+
 const cards = [
   {
     cardType: MetricCardType.TRAFFIC,
@@ -12,6 +14,7 @@ const cards = [
     previousValue: 236609609,
     title: 'Number of Requests',
     increaseIsBad: false,
+    trendRange: TREND_RANGE_TEXT,
   },
   {
     cardType: MetricCardType.ERROR_RATE,
@@ -20,6 +23,7 @@ const cards = [
     formatValueFn: (val: number) => `${val.toFixed(DECIMAL_DISPLAY)}%`,
     title: 'Average Error Rate',
     increaseIsBad: true,
+    trendRange: TREND_RANGE_TEXT,
   },
   {
     cardType: MetricCardType.LATENCY,
@@ -28,6 +32,7 @@ const cards = [
     formatValueFn: (val: number) => `${val}ms`,
     title: 'P99 Latency',
     increaseIsBad: true,
+    trendRange: TREND_RANGE_TEXT,
   },
   {
     cardType: MetricCardType.GENERIC_COUNT,
@@ -35,6 +40,7 @@ const cards = [
     previousValue: 4,
     title: 'Active Runtime Groups',
     increaseIsBad: true,
+    trendRange: TREND_RANGE_TEXT,
   },
 ]
 
@@ -210,5 +216,18 @@ describe('<MetricCardContainer />', () => {
     // Check for neutral trend, zero value
     cy.getTestId('metric-trend-parent').should('have.class', 'neutral')
     cy.getTestId('metric-trend-parent').should('contain', '0.00%')
+  })
+
+  it('Large card size displays  the trend value and icon', () => {
+    cy.mount(MetricCardContainer, {
+      props: {
+        cards,
+        cardSize: MetricCardSize.Large,
+        hasTrendAccess: true,
+        loading: false,
+      },
+    })
+
+    cy.get('.metricscard').eq(0).find('.metricscard-trend-range').should('contain', TREND_RANGE_TEXT)
   })
 })

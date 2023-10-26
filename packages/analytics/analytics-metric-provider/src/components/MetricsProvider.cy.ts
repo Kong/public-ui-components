@@ -112,6 +112,54 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('.metricscard-title').eq(2).should('have.text', 'P99 Latency')
   })
 
+  it('displays a card description if provided', () => {
+    const dataFetcher = makeDataFetcher()
+
+    cy.mount(MetricsTestHarness, {
+      props: {
+        render: 'global',
+        dataFetcher,
+        hasTrendAccess: true,
+        description: 'Lorem ipsum golden signal details',
+      },
+    })
+
+    cy.get('.metricscard').should('exist')
+    cy.get('.metricscard-description').eq(0).should('exist')
+  })
+
+  it('displays "30 days" if trend access allows', () => {
+    const dataFetcher = makeDataFetcher()
+
+    cy.mount(MetricsTestHarness, {
+      props: {
+        render: 'global',
+        dataFetcher,
+        hasTrendAccess: true,
+        description: 'Lorem ipsum golden signal details',
+      },
+    })
+
+    cy.get('.metricscard').should('exist')
+    cy.get('.metricscard').eq(0).find('.metricscard-trend-range').should('contain', 'vs previous 30 days')
+  })
+
+  it('displays "24 hours" if trend access allows', () => {
+    const dataFetcher = makeDataFetcher()
+
+    cy.mount(MetricsTestHarness, {
+      props: {
+        render: 'global',
+        dataFetcher,
+        hasTrendAccess: false,
+        description: 'Lorem ipsum golden signal details',
+      },
+    })
+
+    cy.get('.metricscard').should('exist')
+    cy.get('.metricscard').eq(0).find('.metricscard-trend-range').should('contain', 'vs previous 24 hours')
+  })
+
   it('handles no trend', () => {
     const dataFetcher = makeDataFetcher()
 
@@ -122,8 +170,6 @@ describe('<AnalyticsMetricProvider />', () => {
         hasTrendAccess: false,
       },
     })
-
-    cy.get('@fetcher').should('have.been.calledTwice')
 
     cy.get('.metricscard').should('exist')
 

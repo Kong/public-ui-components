@@ -35,16 +35,10 @@
   <div>
     <MetricsProviderInternal v-bind="multiProviderProps">
       <div id="route-blah">
-        <MetricsConsumer
-          :card-size="MetricCardSize.Large"
-          lookup-key="blah😀😀"
-        />
+        <MetricsConsumer lookup-key="blah😀😀" />
       </div>
       <div id="route-arrgh">
-        <MetricsConsumer
-          :card-size=" MetricCardSize.Large"
-          lookup-key="arrgh"
-        />
+        <MetricsConsumer lookup-key="arrgh" />
       </div>
     </MetricsProviderInternal>
   </div>
