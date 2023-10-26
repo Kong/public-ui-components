@@ -58,6 +58,7 @@ Only `MetricCardContainer` is exported for use.
 ### Enums
 
 - MetricCardSize
+- MetricCardType
 
 ## Usage
 
@@ -68,17 +69,20 @@ Only `MetricCardContainer` is exported for use.
   />
 </template>
 <script setup lang="ts">
-import { MetricCardContainer } from '@kong-ui-public/metric-cards'
+import { MetricCardType, MetricCardSize, MetricCardContainer } from '@kong-ui-public/metric-cards'
 import '@kong-ui-public/metric-cards/dist/style.css'
 
 const metricCardOptions = {
   cards: [
     {
+      cardType: MetricCardType.TRAFFIC,
       currentValue: 192895156,
       previousValue: 236609609,
       title: 'Number of Requests',
+      description: 'Requests sent throgh all data plane nodes'
       increaseIsBad: false,
-      cardSize: 'lg',
+      cardSize: MetricCardSize.Large,
+      trendRange: 'vs previous 7 days'
     },
   ],
   loading: false,
