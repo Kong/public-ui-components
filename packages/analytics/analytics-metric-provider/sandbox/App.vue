@@ -116,7 +116,7 @@ const globalProviderProps = {
   refreshInterval,
   hasTrendAccess,
   dataFetcher: makeDataFetcher(),
-  overrideTimeframe: TimePeriods.get(TimeframeKeys.ONE_DAY),
+  overrideTimeframe: TimePeriods.get(TimeframeKeys.SIX_HOUR),
   longCardTitles: false,
 }
 
@@ -125,6 +125,7 @@ const filteredProviderProps = {
   refreshInterval,
   hasTrendAccess,
   dataFetcher: makeDataFetcher(),
+  overrideTimeframe: TimePeriods.get(TimeframeKeys.SIX_HOUR),
   additionalFilter: [{
     dimension: EXPLORE_V2_DIMENSIONS.APPLICATION,
     type: EXPLORE_V2_FILTER_TYPES.IN,
@@ -147,6 +148,7 @@ const multiProviderProps = {
   hasTrendAccess,
   dimension: EXPLORE_V2_DIMENSIONS.ROUTE,
   dataFetcher: makeDataFetcher({ dimensionNames: ['blah😀😀', 'arrgh'] }),
+  overrideTimeframe: TimePeriods.get(TimeframeKeys.CURRENT_MONTH),
 }
 
 </script>

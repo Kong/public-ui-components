@@ -29,7 +29,7 @@ Variable | Description | Default
 ---------|----------|---------
 `--kong-ui-metric-card-background` | The background of the `.kong-ui-public-metric-card-container` main container | `transparent`
 `--kong-ui-metric-card-title` | Metric card title font color | `#`
-`--kong-ui-metric-card-value` | Metric value font color | `#`
+`--kong-ui-metric-card-value` | Metric value and description font color | `#`
 `--kong-ui-metric-card-trend-negative` | Negative trend font color | `#AD000E`
 `--kong-ui-metric-card-trend-positive` | Positive trend font color | `#07a88d`
 `--kong-ui-metric-card-trend-neutral` | Neutral trend font color | `#52596E`

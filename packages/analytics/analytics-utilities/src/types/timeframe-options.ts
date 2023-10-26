@@ -3,6 +3,7 @@ import type { GranularityKeys } from './granularity-keys'
 export interface TimeframeOptions {
   key: string
   timeframeText: string
+  rangeDisplayText: string
   display: string
   defaultResponseGranularity: GranularityKeys
   dataGranularity: GranularityKeys

@@ -244,13 +244,13 @@ importers:
   packages/analytics/analytics-metric-provider:
     dependencies:
       '@kong-ui-public/analytics-utilities':
-        specifier: workspace:^0.8.6
+        specifier: workspace:^
         version: link:../analytics-utilities
       '@kong-ui-public/core':
         specifier: 1.1.0
         version: 1.1.0(axios@1.5.1)(swrv@1.0.4)(vue@3.3.4)
       '@kong-ui-public/metric-cards':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../metric-cards
       axios:
         specifier: ^1.5.1
@@ -272,6 +272,9 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(date-fns@2.30.0)
     devDependencies:
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: ^1.11.6
         version: 1.11.6

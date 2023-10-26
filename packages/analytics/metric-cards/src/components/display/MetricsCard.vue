@@ -25,7 +25,7 @@
       </KTooltip>
     </div>
     <div
-      v-if="cardDisplayFull && !isLargeCompact"
+      v-if="description && cardDisplayFull && !isLargeCompact"
       class="metricscard-description"
     >
       <span>{{ description }}</span>

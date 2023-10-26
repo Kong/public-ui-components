@@ -14,6 +14,8 @@ import {
   TimeframeKeys,
 } from './types'
 
+import composables from './composables'
+
 import type {
   DatePickerSelection,
   TimeframeOptions,
@@ -26,8 +28,12 @@ const adjustForTz = (d: Date, tz: string) => {
   return new Date(d.getTime() - getTimezoneOffset(tz, d))
 }
 
+const { i18n } = composables.useI18n()
+
 export class Timeframe {
   readonly timeframeText: string
+
+  readonly rangeDisplayText: string
 
   readonly key: string
 
@@ -60,6 +66,7 @@ export class Timeframe {
   constructor(opts: TimeframeOptions) {
     this.display = opts.display
     this.timeframeText = opts.timeframeText
+    this.rangeDisplayText = opts.rangeDisplayText
     this.key = opts.key
     this.timeframeLength = opts.timeframeLength
     this.allowedTiers = opts.allowedTiers
@@ -231,6 +238,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       key: TimeframeKeys.FIFTEEN_MIN,
       display: 'Last 15 minutes',
       timeframeText: '15 minutes',
+      rangeDisplayText: i18n.t('timeframe.rangeDisplay.fifteenMinutes'),
       timeframeLength: () => 60 * 15,
       defaultResponseGranularity: GranularityKeys.MINUTELY,
       dataGranularity: GranularityKeys.MINUTELY,
@@ -244,6 +252,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       key: TimeframeKeys.ONE_HOUR,
       display: 'Last hour',
       timeframeText: 'One hour',
+      rangeDisplayText: i18n.t('timeframe.rangeDisplay.oneHour'),
       timeframeLength: () => 60 * 60 * 1,
       defaultResponseGranularity: GranularityKeys.MINUTELY,
       dataGranularity: GranularityKeys.MINUTELY,
@@ -257,6 +266,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       key: TimeframeKeys.SIX_HOUR,
       display: 'Last 6 hours',
       timeframeText: '6 hours',
+      rangeDisplayText: i18n.t('timeframe.rangeDisplay.sixHours'),
       timeframeLength: () => 60 * 60 * 6,
       defaultResponseGranularity: GranularityKeys.HOURLY,
       dataGranularity: GranularityKeys.HOURLY,
@@ -270,6 +280,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       key: TimeframeKeys.TWELVE_HOUR,
       display: 'Last 12 hours',
       timeframeText: '12 hours',
+      rangeDisplayText: i18n.t('timeframe.rangeDisplay.twelveHours'),
       timeframeLength: () => 60 * 60 * 12,
       defaultResponseGranularity: GranularityKeys.HOURLY,
       dataGranularity: GranularityKeys.HOURLY,
@@ -283,6 +294,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       key: TimeframeKeys.ONE_DAY,
       display: 'Last 24 hours',
       timeframeText: '24 hours',
+      rangeDisplayText: i18n.t('timeframe.rangeDisplay.twentyfourHours'),
       timeframeLength: () => 60 * 60 * 24,
       defaultResponseGranularity: GranularityKeys.HOURLY,
       dataGranularity: GranularityKeys.HOURLY,
@@ -296,6 +308,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       key: TimeframeKeys.SEVEN_DAY,
       display: 'Last 7 days',
       timeframeText: '7 days',
+      rangeDisplayText: i18n.t('timeframe.rangeDisplay.sevenDays'),
       timeframeLength: () => 60 * 60 * 24 * 7,
       defaultResponseGranularity: GranularityKeys.DAILY,
       dataGranularity: GranularityKeys.DAILY,
@@ -309,6 +322,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       key: TimeframeKeys.THIRTY_DAY,
       display: 'Last 30 days',
       timeframeText: '30 days',
+      rangeDisplayText: i18n.t('timeframe.rangeDisplay.thirtyDays'),
       timeframeLength: () => 60 * 60 * 24 * 30,
       defaultResponseGranularity: GranularityKeys.DAILY,
       dataGranularity: GranularityKeys.DAILY,
@@ -322,6 +336,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       key: TimeframeKeys.CURRENT_WEEK,
       display: 'This week',
       timeframeText: 'Week',
+      rangeDisplayText: i18n.t('timeframe.rangeDisplay.thisWeek'),
       timeframeLength: () => {
         // Monday -> now
         const prevMonday = startOfWeek(new Date(), { weekStartsOn: 1 })
@@ -341,6 +356,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       key: TimeframeKeys.CURRENT_MONTH,
       display: 'This month',
       timeframeText: 'Month',
+      rangeDisplayText: i18n.t('timeframe.rangeDisplay.thisMonth'),
       timeframeLength: () => {
         // First of the month -> now
         const firstOfTheMonth = startOfMonth(new Date())
@@ -360,6 +376,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       key: TimeframeKeys.PREVIOUS_WEEK,
       display: 'Previous week',
       timeframeText: 'Week',
+      rangeDisplayText: i18n.t('timeframe.rangeDisplay.previousWeek'),
       timeframeLength: () => 60 * 60 * 24 * 7,
       defaultResponseGranularity: GranularityKeys.DAILY,
       dataGranularity: GranularityKeys.DAILY,
@@ -373,6 +390,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       key: TimeframeKeys.PREVIOUS_MONTH,
       display: 'Previous month',
       timeframeText: 'Month',
+      rangeDisplayText: i18n.t('timeframe.rangeDisplay.previousMonth'),
       timeframeLength: () => {
         let offset = 0
         const end = startOfMonth(new Date())
@@ -412,6 +430,7 @@ export function datePickerSelectionToTimeframe(datePickerSelection: DatePickerSe
     new Timeframe({
       key: 'custom',
       timeframeText: 'custom',
+      rangeDisplayText: '',
       display: 'custom',
       startCustom: start,
       endCustom: end,
@@ -440,6 +459,7 @@ export function timeframeToDatepickerTimeperiod(timeframe: Timeframe): TimePerio
     key: timeframe.key,
     display: timeframe.display,
     timeframeText: timeframe.timeframeText,
+    rangeDisplayText: timeframe.rangeDisplayText,
     timeframeLength: () => timeframe.key, // Used to generate test IDs for the Kongponent.
     start: () => timeframe.rawStart(),
     end: () => timeframe.rawEnd(),

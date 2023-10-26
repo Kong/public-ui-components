@@ -5,6 +5,7 @@
   />
 </template>
 <script setup lang="ts">
+import type { Ref } from 'vue'
 import { computed, provide, toRef } from 'vue'
 import type { Timeframe } from '@kong-ui-public/analytics-utilities'
 import { TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
@@ -66,12 +67,12 @@ const timeframe = computed(() => {
 // If one of our relative timeframes, we display the requested time frame (if user has trend access); otherwise fall back to one day
 // Else, we have a Custom start and end datetime coming from v-calendar, so we display "vs previous X days"
 const trendRangeText = computed(() => {
-  if (timeframe.value.isRelative) {
-    return props.hasTrendAccess
-      ? i18n.t('trend.relative', { timeframe: timeframe.value.timeframeText }).toLowerCase()
-      : i18n.t('trend.relative', { timeframe: TimePeriods.get(TimeframeKeys.ONE_DAY)?.timeframeText }).toLowerCase()
-  } else {
+  if (timeframe.value.key === 'custom') {
     return i18n.t('trend.custom', { numDays: Math.ceil(timeframe.value.timeframeLength() / (1000 * 60 * 24)) })
+  } else {
+    return props.hasTrendAccess
+      ? timeframe.value.rangeDisplayText
+      : TimePeriods.get(TimeframeKeys.ONE_DAY)?.rangeDisplayText
   }
 })
 
@@ -96,7 +97,7 @@ provide(METRICS_PROVIDER_KEY, {
   },
   hasTrendAccess: props.hasTrendAccess,
   longCardTitles: props.longCardTitles,
-  trendRange: trendRangeText,
+  trendRange: trendRangeText as Ref<string>,
 })
 
 </script>
