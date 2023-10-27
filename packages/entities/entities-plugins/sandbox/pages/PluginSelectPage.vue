@@ -1,13 +1,15 @@
 <template>
-  <h2>Konnect API</h2>
-  <PluginSelect
-    :config="konnectConfig"
-  />
+  <div class="plugin-select-sandbox">
+    <h2>Konnect API</h2>
+    <PluginSelect
+      :config="konnectConfig"
+    />
 
-  <h2>Kong Manager API</h2>
-  <PluginSelect
-    :config="kongManagerConfig"
-  />
+    <h2>Kong Manager API</h2>
+    <PluginSelect
+      :config="kongManagerConfig"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -60,3 +62,9 @@ const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   }),
 })
 </script>
+
+<style lang="scss" scoped>
+.plugin-select-sandbox {
+  padding: 20px;
+}
+</style>
