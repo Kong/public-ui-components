@@ -13,5 +13,21 @@
       "errorRate": "Average Error Rate",
       "latency": "P99 Latency"
     }
+  },
+  "trendRange": {
+    "custom": "vs previous {numDays} days",
+    "15m": "vs previous 15 minutes",
+    "1h": "vs previous hour",
+    "6h": "vs previous 6 hours",
+    "12h": "vs previous 12 hours",
+    "24h": "vs previous 24 hours",
+    "7d": "vs previous 7 days",
+    "30d": "vs previous 30 days",
+    "current_week": "vs previous week",
+    "current_month": "vs previous month",
+    "current_quarter": "vs previous quarter",
+    "previous_week": "vs previous time period",
+    "previous_month": "vs previous time period",
+    "previous_quarter": "vs previous quarter"
   }
 }

@@ -9,8 +9,10 @@ interface ProviderData {
   data: {
     [key: string]: any // TODO
   },
+  description?: string,
   hasTrendAccess: boolean,
   longCardTitles: boolean,
+  trendRange: Ref<string>,
 }
 
 export const METRICS_PROVIDER_KEY = Symbol('METRICS_PROVIDER_KEY') as InjectionKey<ProviderData>

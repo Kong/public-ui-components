@@ -1,17 +1,20 @@
-import type { MetricCardDef } from '@kong-ui-public/metric-cards'
+import type { MetricCardDef, MetricCardType } from '@kong-ui-public/metric-cards'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 import type { ChronologicalMappedMetrics } from './useMetricFetcher'
 import { DEFAULT_KEY } from './useMetricFetcher'
 
 export interface BuilderOptions {
+  cardType: MetricCardType,
   title: Ref<string>,
+  description?: string,
   record: Ref<ChronologicalMappedMetrics>,
   hasError: Ref<boolean>,
   lookupKey?: string,
   sumGroupedValues?: string[],
   increaseIsBad?: boolean,
   formatValueFn?: (rawValue: number) => string,
+  trendRange?: Ref<string>,
 }
 
 export const sumValues = (recordValue: ChronologicalMappedMetrics, period: 'current' | 'previous', dimensionLookupKey: string | typeof DEFAULT_KEY = DEFAULT_KEY, sumGroupedValues?: string[]) => {
@@ -30,11 +33,14 @@ export const sumValues = (recordValue: ChronologicalMappedMetrics, period: 'curr
 
 export default function useMetricCardBuilder(opts: BuilderOptions): Ref<MetricCardDef> {
   const {
+    cardType,
     title,
+    description,
     record,
     hasError,
     increaseIsBad,
     formatValueFn,
+    trendRange,
   } = opts
 
   return computed<MetricCardDef>(() => {
@@ -55,12 +61,15 @@ export default function useMetricCardBuilder(opts: BuilderOptions): Ref<MetricCa
     }
 
     return {
+      cardType,
       hasError: hasError.value,
       currentValue,
       previousValue,
       title: title.value,
+      description,
       increaseIsBad: !!increaseIsBad, // Coerce undefined to false
       formatValueFn,
+      trendRange: trendRange?.value,
     }
   })
 }

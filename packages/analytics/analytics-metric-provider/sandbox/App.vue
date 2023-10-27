@@ -1,19 +1,37 @@
 <template>
+  <h4>Global props, Large cards</h4>
   <div>
     <MetricsProviderInternal v-bind="globalProviderProps">
-      <MetricsConsumer />
+      <MetricsConsumer
+        :card-size="MetricCardSize.Large"
+      />
     </MetricsProviderInternal>
   </div>
+
+  <h4>Global props, Small cards</h4>
+  <div>
+    <MetricsProviderInternal v-bind="globalProviderProps">
+      <MetricsConsumer
+        :card-size="MetricCardSize.Small"
+      />
+    </MetricsProviderInternal>
+  </div>
+
+  <h4>Filtered props, LargeCompact cards</h4>
   <div v-if="!USE_REAL_DATA">
     <MetricsProviderInternal v-bind="filteredProviderProps">
-      <MetricsConsumer />
+      <MetricsConsumer
+        :card-size="MetricCardSize.LargeCompact"
+      />
     </MetricsProviderInternal>
   </div>
   <div>
     <MetricsProviderInternal v-bind="singleProviderProps">
-      <MetricsConsumer />
+      <MetricsConsumer :card-size="MetricCardSize.LargeCompact" />
     </MetricsProviderInternal>
   </div>
+
+  <h4>Multiple Entities, Large cards</h4>
   <div>
     <MetricsProviderInternal v-bind="multiProviderProps">
       <div id="route-blah">
@@ -36,6 +54,7 @@ import type { AxiosResponse } from 'axios'
 import axios from 'axios'
 import type { QueryTime, Timeframe } from '@kong-ui-public/analytics-utilities'
 import { DeltaQueryTime, TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
+import { MetricCardSize } from '@kong-ui-public/metric-cards'
 
 const refreshInterval = 60 * 1000
 const hasTrendAccess = true
@@ -91,6 +110,9 @@ const globalProviderProps = {
   refreshInterval,
   hasTrendAccess,
   dataFetcher: makeDataFetcher(),
+  overrideTimeframe: TimePeriods.get(TimeframeKeys.SIX_HOUR),
+  longCardTitles: false,
+  description: 'Generic Description',
 }
 
 // Query stats for an entire org, but also apply a filter.
@@ -98,6 +120,7 @@ const filteredProviderProps = {
   refreshInterval,
   hasTrendAccess,
   dataFetcher: makeDataFetcher(),
+  overrideTimeframe: TimePeriods.get(TimeframeKeys.SIX_HOUR),
   additionalFilter: [{
     dimension: EXPLORE_V2_DIMENSIONS.APPLICATION,
     type: EXPLORE_V2_FILTER_TYPES.IN,
@@ -120,6 +143,21 @@ const multiProviderProps = {
   hasTrendAccess,
   dimension: EXPLORE_V2_DIMENSIONS.ROUTE,
   dataFetcher: makeDataFetcher({ dimensionNames: ['blah😀😀', 'arrgh'] }),
+  overrideTimeframe: TimePeriods.get(TimeframeKeys.CURRENT_MONTH),
 }
 
 </script>
+<style lang="scss">
+body {
+  padding: 0 20px;
+
+  h4 {
+    color: #bbb;
+    margin-top: 30px;
+  }
+
+  .metricscard {
+    margin: 10px 0;
+  }
+}
+</style>

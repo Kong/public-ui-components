@@ -17,7 +17,15 @@
         />
       </div>
 
-      <h3>Large w/ custom theme</h3>
+      <h3>Large - compact</h3>
+      <div class="generic-card">
+        <MetricCardContainer
+          v-bind="cardsRegularCompact"
+          hide-title
+        />
+      </div>
+
+      <h3>Large - custom CSS theme</h3>
       <div class="generic-card dev-portal">
         <MetricCardContainer v-bind="cardsRegular" />
       </div>
@@ -69,44 +77,58 @@
 import { MetricCardContainer } from '../src'
 import { DECIMAL_DISPLAY, metricChange } from '../src/utilities'
 import type { MetricCardContainerOptions } from '../src/types'
+import { MetricCardType } from '../src/enums'
 import { MetricCardSize } from '../src/constants'
 
 const cards = [
   {
+    cardType: MetricCardType.TRAFFIC,
     currentValue: 192895156,
     previousValue: 236609609,
     title: 'Requests',
+    description: 'Requests proxied through all data plane nodes',
     tooltip: 'This is a tooltip',
     increaseIsBad: false,
+    trendRange: 'vs last week',
   },
   {
+    cardType: MetricCardType.ERROR_RATE,
     currentValue: 30.1448979685401,
     previousValue: 30.1891166494617,
     formatChangeFn: val => `${metricChange(val * 100, true, 'N/A')}`,
     formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
     title: 'Error Rate',
+    description: 'Rate of requests that ended up in a 5xx response',
     increaseIsBad: true,
+    trendRange: 'vs last week',
   },
   {
+    cardType: MetricCardType.LATENCY,
     currentValue: 335,
     previousValue: 511,
     formatValueFn: val => `${val}ms`,
     title: 'P99 Latency',
+    description: 'Time taken to send a response back to the client',
     increaseIsBad: true,
+    trendRange: 'vs last week',
   },
   {
+    cardType: MetricCardType.GENERIC_COUNT,
     currentValue: 5,
     previousValue: 4,
     title: 'Active Runtimes',
     increaseIsBad: true,
+    trendRange: 'vs last week',
   },
   {
+    cardType: MetricCardType.GENERIC_COUNT,
     currentValue: 67.323232,
     previousValue: 23.2121,
     formatValueFn: val => `${val.toFixed(0)}%`,
     title: 'Saturation',
     tooltip: 'A secondary tooltip',
     increaseIsBad: true,
+    trendRange: 'vs last week',
   },
 ]
 
@@ -129,6 +151,14 @@ const cardsRegular: MetricCardContainerOptions = {
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
   cardSize: MetricCardSize.Large,
+}
+
+const cardsRegularCompact: MetricCardContainerOptions = {
+  cards: [...cards].slice(0, 3),
+  loading: false,
+  hasTrendAccess: true,
+  fallbackDisplayText: 'Not available',
+  cardSize: MetricCardSize.LargeCompact,
 }
 
 const cardsXL: MetricCardContainerOptions = {
@@ -201,14 +231,14 @@ main {
     padding: 16px;
 
     &.dev-portal {
-      background-color: #555;
+      background-color: #999;
 
       // Customizable theme
-      --kong-ui-metric-card-background: #555;
+      --kong-ui-metric-card-background: #999;
       --kong-ui-metric-card-title: #ccc;
       --kong-ui-metric-card-value: white;
-      --kong-ui-metric-card-trend-negative: #c59fff;
-      --kong-ui-metric-card-trend-positive: #cfff56;
+      --kong-ui-metric-card-trend-negative: #592A71;
+      --kong-ui-metric-card-trend-positive: #AAAA39;
     }
   }
 }

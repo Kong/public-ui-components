@@ -10,7 +10,7 @@ import type { Ref } from 'vue'
 import { inject, computed } from 'vue'
 import { METRICS_PROVIDER_KEY } from './metricsProviderUtil'
 import type { MetricCardDef } from '@kong-ui-public/metric-cards'
-import { MetricCardSize, DECIMAL_DISPLAY, MetricCardContainer } from '@kong-ui-public/metric-cards'
+import { MetricCardSize, MetricCardType, DECIMAL_DISPLAY, MetricCardContainer } from '@kong-ui-public/metric-cards'
 import '@kong-ui-public/metric-cards/dist/style.css'
 import composables from '../composables'
 import { ALL_STATUS_CODE_GROUPS, STATUS_CODES_FAILED } from '../constants'
@@ -39,13 +39,16 @@ const { traffic, latency } = providerData.data
 const { i18n } = composables.useI18n()
 
 const trafficCard = composables.useMetricCardBuilder({
+  cardType: MetricCardType.TRAFFIC,
   title: computed(() => providerData.longCardTitles
     ? i18n.t('metricCard.long.traffic')
     : i18n.t('metricCard.short.traffic')),
+  description: providerData.description,
   record: traffic.mapped,
   hasError: traffic.hasError,
   lookupKey: props.lookupKey,
   sumGroupedValues: ALL_STATUS_CODE_GROUPS,
+  trendRange: providerData.trendRange,
 })
 
 // Error rate (special case, requires operation)
@@ -64,6 +67,7 @@ const errorRateCard = computed<MetricCardDef>(() => {
   const errorRatePrevious = previousErrors / previousTotal * 100 || 0
 
   return {
+    cardType: MetricCardType.ERROR_RATE,
     hasError: traffic.hasError.value,
     currentValue: errorRateCurrent,
     previousValue: errorRatePrevious,
@@ -71,20 +75,25 @@ const errorRateCard = computed<MetricCardDef>(() => {
     title: providerData.longCardTitles
       ? i18n.t('metricCard.long.errorRate')
       : i18n.t('metricCard.short.errorRate'),
+    description: providerData.description,
     increaseIsBad: true,
+    trendRange: providerData.trendRange.value,
   }
 })
 
 const formatLatency = (val: number) => `${val}ms`
 const latencyCard = composables.useMetricCardBuilder({
+  cardType: MetricCardType.LATENCY,
   title: computed(() => providerData.longCardTitles
     ? i18n.t('metricCard.long.latency')
     : i18n.t('metricCard.short.latency')),
+  description: providerData.description,
   hasError: latency.hasError,
   record: latency.mapped,
   lookupKey: props.lookupKey,
   increaseIsBad: true,
   formatValueFn: formatLatency,
+  trendRange: providerData.trendRange,
 })
 
 const cards: Ref<MetricCardDef[]> = computed(() => {
@@ -117,6 +126,7 @@ const containerOpts = computed(() => ({
   fallbackDisplayText: i18n.t('general.notAvailable'),
   cardSize: props.cardSize,
   hideTitle: true,
+  trendRange: providerData.trendRange.value,
 }))
 
 const cardValues = computed(() => ({

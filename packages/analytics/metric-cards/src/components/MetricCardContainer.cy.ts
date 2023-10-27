@@ -2,34 +2,45 @@
 
 import MetricCardContainer from './MetricCardContainer.vue'
 import { DECIMAL_DISPLAY } from '../utilities'
+import { MetricCardType } from '../enums'
 import { MetricCardSize } from '../constants'
+
+const TREND_RANGE_TEXT = 'vs previous 7 days'
 
 const cards = [
   {
+    cardType: MetricCardType.TRAFFIC,
     currentValue: 192895156,
     previousValue: 236609609,
     title: 'Number of Requests',
     increaseIsBad: false,
+    trendRange: TREND_RANGE_TEXT,
   },
   {
+    cardType: MetricCardType.ERROR_RATE,
     currentValue: 0.3014489796854011,
     previousValue: 0.29789116649461733,
     formatValueFn: (val: number) => `${val.toFixed(DECIMAL_DISPLAY)}%`,
     title: 'Average Error Rate',
     increaseIsBad: true,
+    trendRange: TREND_RANGE_TEXT,
   },
   {
+    cardType: MetricCardType.LATENCY,
     currentValue: 335,
     previousValue: 511,
     formatValueFn: (val: number) => `${val}ms`,
     title: 'P99 Latency',
     increaseIsBad: true,
+    trendRange: TREND_RANGE_TEXT,
   },
   {
+    cardType: MetricCardType.GENERIC_COUNT,
     currentValue: 4,
     previousValue: 4,
     title: 'Active Runtime Groups',
     increaseIsBad: true,
+    trendRange: TREND_RANGE_TEXT,
   },
 ]
 
@@ -87,6 +98,7 @@ describe('<MetricCardContainer />', () => {
       props: {
         cards: [
           {
+            cardType: MetricCardType.ERROR_RATE,
             currentValue: 0.3012,
             previousValue: 0.3013,
             formatValueFn: (val: number) => `${val.toFixed(DECIMAL_DISPLAY)}%`,
@@ -108,8 +120,8 @@ describe('<MetricCardContainer />', () => {
     cy.get(container).should('be.visible')
 
     // Check for upward trend, non-zero value
-    cy.get('.metricscard-value-trend').should('have.class', 'positive')
-    cy.get('.metricscard-value-trend').should('contain', '0.03%')
+    cy.getTestId('metric-trend-parent').should('have.class', 'positive')
+    cy.getTestId('metric-trend-parent').should('contain', '0.03%')
   })
 
   // Should display no icon, and gray trend value text
@@ -118,6 +130,7 @@ describe('<MetricCardContainer />', () => {
       props: {
         cards: [
           {
+            cardType: MetricCardType.ERROR_RATE,
             currentValue: 0.30171,
             previousValue: 0.3017,
             formatValueFn: (val: number) => `${val.toFixed(DECIMAL_DISPLAY)}%`,
@@ -139,8 +152,8 @@ describe('<MetricCardContainer />', () => {
     cy.get(container).should('be.visible')
 
     // Check for neutral trend, zero value
-    cy.get('.metricscard-value-trend').should('have.class', 'neutral')
-    cy.get('.metricscard-value-trend').should('contain', '0.00%')
+    cy.getTestId('metric-trend-parent').should('have.class', 'neutral')
+    cy.getTestId('metric-trend-parent').should('contain', '0.00%')
   })
 
   // Should use rounded approximate numbers by default.
@@ -149,6 +162,7 @@ describe('<MetricCardContainer />', () => {
       props: {
         cards: [
           {
+            cardType: MetricCardType.TRAFFIC,
             currentValue: 1198904,
             previousValue: 1198904,
             title: 'Traffic',
@@ -168,11 +182,11 @@ describe('<MetricCardContainer />', () => {
     cy.get(container).should('be.visible')
 
     // Check for neutral trend, zero value
-    cy.get('.metricscard-value-trend').should('have.class', 'neutral')
-    cy.get('.metricscard-value-trend').should('contain', '0.00%')
+    cy.getTestId('metric-trend-parent').should('have.class', 'neutral')
+    cy.getTestId('metric-trend-parent').should('contain', '0.00%')
 
     // Check for approximate numbers.
-    cy.get('.metricscard-value').should('contain', '1.2M')
+    cy.getTestId('metric-value').should('contain', '1.2M')
   })
 
   it('Avoid divide-by-zero', () => {
@@ -180,6 +194,7 @@ describe('<MetricCardContainer />', () => {
       props: {
         cards: [
           {
+            cardType: MetricCardType.TRAFFIC,
             currentValue: 1198904,
             previousValue: 0,
             title: 'Traffic',
@@ -199,7 +214,20 @@ describe('<MetricCardContainer />', () => {
     cy.get(container).should('be.visible')
 
     // Check for neutral trend, zero value
-    cy.get('.metricscard-value-trend').should('have.class', 'neutral')
-    cy.get('.metricscard-value-trend').should('contain', '0.00%')
+    cy.getTestId('metric-trend-parent').should('have.class', 'neutral')
+    cy.getTestId('metric-trend-parent').should('contain', '0.00%')
+  })
+
+  it('Large card size displays  the trend value and icon', () => {
+    cy.mount(MetricCardContainer, {
+      props: {
+        cards,
+        cardSize: MetricCardSize.Large,
+        hasTrendAccess: true,
+        loading: false,
+      },
+    })
+
+    cy.get('.metricscard').eq(0).find('.metricscard-trend-range').should('contain', TREND_RANGE_TEXT)
   })
 })

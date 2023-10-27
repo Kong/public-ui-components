@@ -33,10 +33,13 @@
         :key="index"
         v-bind="formatCardValues(card)"
         :card-size="cardSize"
+        :card-type="card.cardType"
+        :description="card.description"
         :error-message="errorMessage"
         :has-error="card.hasError"
         :title="card.title"
         :tooltip="card.tooltip"
+        :trend-range="card.trendRange"
       />
     </template>
   </div>
@@ -51,6 +54,10 @@ import type { MetricCardDef, MetricCardDisplayValue } from '../types'
 import { changePolarity, metricChange, defineIcon, calculateChange } from '../utilities'
 import MetricsCard from './display/MetricsCard.vue'
 import MetricCardLoadingSkeleton from './display/MetricCardLoadingSkeleton.vue'
+
+// Import any one of the `@kong/icons` components to access the interface - they are all the same.
+// Then alias as `GenericIcon` to provide the icon interface to the prop types.
+import type { KongIcon as GenericIcon } from '@kong/icons'
 
 const props = defineProps({
   fallbackDisplayText: {
@@ -93,7 +100,7 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
     metricValue: card.formatValueFn ? card.formatValueFn(card.currentValue) : approxNum(card.currentValue, { capital: true, round: true }) || '0',
     metricChange: card.formatChangeFn ? card.formatChangeFn(change) : metricChange(change, props.hasTrendAccess, props.fallbackDisplayText),
     changePolarity: polarity,
-    icon: defineIcon(polarity, card.increaseIsBad),
+    trendIcon: defineIcon(polarity, card.increaseIsBad) as typeof GenericIcon,
     cardSize: props.cardSize,
   }
 }

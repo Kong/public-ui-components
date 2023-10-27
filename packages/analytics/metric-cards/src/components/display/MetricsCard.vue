@@ -4,6 +4,13 @@
       class="metricscard-title"
       :class="cardSize"
     >
+      <component
+        :is="iconMap.get(cardType)"
+        v-if="!hideTitleIcon"
+        class="metricscard-icon"
+        :color="KUI_COLOR_TEXT_NEUTRAL"
+        :size="KUI_ICON_SIZE_30"
+      />
       <span>{{ title }}</span>
       <KTooltip
         v-if="tooltip"
@@ -18,35 +25,70 @@
       </KTooltip>
     </div>
     <div
-      v-if="hasError"
-      class="metricscard-error"
+      v-if="description && cardDisplayFull && !isLargeCompact"
+      class="metricscard-description"
     >
-      <KIcon
-        icon="warning"
-        size="20"
-      />
-      <div>{{ errorMessage }}</div>
+      <span>{{ description }}</span>
     </div>
+    <!-- TODO: remove outer div once size variant no longer needed - MA-2193  -->
     <div
-      v-else
-      class="metricscard-value"
+      class="metricscard-valuetrend"
+      :class="{ 'is-compact': isLargeCompact }"
     >
-      <div :style="`font-size:${metricFontSize}`">
+      <!-- Metric value - error -->
+      <div
+        v-if="hasError"
+        class="metricscard-error"
+      >
+        <KIcon
+          icon="warning"
+          size="20"
+        />
+        <div>{{ errorMessage }}</div>
+      </div>
+      <!-- Metric value -->
+      <div
+        v-else
+        class="metricscard-value"
+        :class="cardSize"
+        data-testid="metric-value"
+        :style="`font-size:${metricFontSize}`"
+      >
         {{ metricValue }}
       </div>
       <div
         v-if="cardDisplayFull"
-        class="metricscard-value-trend "
-        :class="textColor(changePolarity)"
+        class="metricscard-trend"
       >
-        <KIcon
-          v-if="changePolarity !== 0"
-          :color="colorAttribute(changePolarity)"
-          :icon="icon"
-          size="18"
-        />
-        <div>
-          {{ metricChange }}
+        <!-- Trend icon and percentage change -->
+        <div
+          class="metricscard-trend-change"
+          :class="textColor(changePolarity)"
+          data-testid="metric-trend-parent"
+        >
+          <!-- Trend Icon -->
+          <component
+            :is="trendIcon"
+            v-if="changePolarity !== 0"
+            :color="colorAttribute(changePolarity)"
+            :size="KUI_ICON_SIZE_30"
+          />
+          <!-- No change icon -->
+          <EqualIcon
+            v-else
+            :color="KUI_COLOR_TEXT_NEUTRAL_STRONG"
+            :size="KUI_ICON_SIZE_30"
+          />
+          <div data-testid="metric-trend-change">
+            {{ metricChange }}
+          </div>
+        </div>
+        <!-- Trend range text -->
+        <div
+          v-if="trendRange && cardSize !== MetricCardSize.LargeCompact"
+          class="metricscard-trend-range"
+        >
+          {{ trendRange }}
         </div>
       </div>
     </div>
@@ -55,14 +97,47 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
+import { computed } from 'vue'
+import {
+  KUI_COLOR_BORDER_DANGER_STRONG,
+  KUI_FONT_SIZE_30, // 14px
+  KUI_FONT_SIZE_100, // 48px
+  KUI_ICON_SIZE_30,
+  KUI_COLOR_TEXT_SUCCESS, // Positive trend
+  KUI_COLOR_TEXT_NEUTRAL_STRONG, // Neutral trend
+  KUI_COLOR_TEXT_NEUTRAL,
+} from '@kong/design-tokens'
+import { MetricCardType } from '../../enums'
 import { MetricCardSize } from '../../constants'
-import { KUI_COLOR_BACKGROUND_DANGER_WEAK, KUI_COLOR_BACKGROUND_NEUTRAL, KUI_FONT_SIZE_40, KUI_FONT_SIZE_100 } from '@kong/design-tokens'
+
+// Import any one of the `@kong/icons` components to access the interface - they are all the same.
+// Then alias as `GenericIcon` to provide the icon interface to the prop types.
+import type { KongIcon as GenericIcon } from '@kong/icons'
+
+import { IndeterminateSmallIcon, CloudUploadIcon, EqualIcon, ResponseIcon, VitalsIcon, WarningOutlineIcon } from '@kong/icons'
+
+const iconMap = new Map<MetricCardType, any>([
+  [MetricCardType.GENERIC_COUNT, VitalsIcon],
+  [MetricCardType.TRAFFIC, CloudUploadIcon],
+  [MetricCardType.ERROR_RATE, WarningOutlineIcon],
+  [MetricCardType.LATENCY, ResponseIcon],
+])
 
 const props = defineProps({
+  cardType: {
+    type: String as PropType<MetricCardType>,
+    required: true,
+    default: MetricCardType.GENERIC_COUNT,
+  },
   title: {
     type: String,
     default: '0%',
     required: true,
+  },
+  description: {
+    type: String,
+    default: '',
+    required: false,
   },
   tooltip: {
     type: String,
@@ -86,7 +161,11 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  icon: {
+  trendIcon: {
+    type: Object as PropType<typeof GenericIcon>,
+    default: IndeterminateSmallIcon,
+  },
+  trendRange: {
     type: String,
     default: '',
   },
@@ -107,9 +186,9 @@ const props = defineProps({
 
 const colorAttribute = (polarity: number): string => {
   const trendColor = {
-    red: `var(--kong-ui-metric-card-trend-negative, ${KUI_COLOR_BACKGROUND_DANGER_WEAK})`,
-    green: 'var(--kong-ui-metric-card-trend-positive, #07a88d)',
-    grey: `var(--kong-ui-metric-card-trend-neutral, ${KUI_COLOR_BACKGROUND_NEUTRAL})`,
+    red: `var(--kong-ui-metric-card-trend-negative, ${KUI_COLOR_BORDER_DANGER_STRONG})`,
+    green: `var(--kong-ui-metric-card-trend-positive, ${KUI_COLOR_TEXT_SUCCESS})`,
+    grey: `var(--kong-ui-metric-card-trend-neutral, ${KUI_COLOR_TEXT_NEUTRAL_STRONG})`,
   }
 
   return polarity > 0
@@ -127,12 +206,16 @@ const textColor = (polarity: number): string => {
       : 'neutral'
 }
 
-const cardDisplayFull = [MetricCardSize.Medium, MetricCardSize.Large].includes(props.cardSize)
+const cardDisplayFull = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardSize.LargeCompact].includes(props.cardSize)
 
 const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
   ? KUI_FONT_SIZE_100
-  : [MetricCardSize.Medium, MetricCardSize.Large].includes(props.cardSize) ? '22px' : KUI_FONT_SIZE_40
+  : cardDisplayFull ? '22px' : KUI_FONT_SIZE_30
 
+// TODO: remove size variant as part of Dashboards epic - MA-2193
+const isLargeCompact = computed((): boolean => props.cardSize === MetricCardSize.LargeCompact)
+
+const hideTitleIcon = [MetricCardSize.Small, MetricCardSize.LargeCompact].includes(props.cardSize)
 </script>
 
 <style lang="scss">
@@ -154,6 +237,7 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
 
 <style lang="scss" scoped>
 @import "../../styles/base";
+$row-gap-size: 12px;
 
 .metricscard {
   display: flex;
@@ -171,43 +255,92 @@ const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
   }
 
   &-title {
-    color: var(--kong-ui-metric-card-title, $kui-color-text-neutral);
+    align-items: center;
+    color: var(--kong-ui-metric-card-title, $kui-color-text);
+    display: flex;
+    flex-direction: row;
     font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-medium;
 
     &.sm {
       font-size: $kui-font-size-20;
     }
   }
 
+  &-description {
+    color: var(--kong-ui-metric-card-value, $kui-color-text-disabled);
+    font-size: $kui-font-size-20;
+    line-height: $kui-line-height-20;
+    margin-top: 10px;
+  }
+
+  &-icon {
+    margin-right: 6px;
+  }
+
   &-value {
-    color: var(--kong-ui-metric-card-value, $kui-color-text-neutral-stronger);
+    color: var(--kong-ui-metric-card-value, $kui-color-text);
     display: flex;
     flex-direction: row;
-    font-weight: $kui-font-weight-medium;
+    font-weight: $kui-font-weight-semibold;
     justify-content: space-between;
-    margin: $kui-space-40 $kui-space-0 $kui-space-0 $kui-space-0;
+    line-height: $kui-line-height-60;
+    margin-top: $kui-space-60;
 
-    &-trend {
+    &.sm {
+      line-height: $kui-line-height-40;
+      margin-top: $kui-space-20;
+    }
+  }
+
+  &-valuetrend {
+    display: flex;
+    flex-direction: column;
+    row-gap: $row-gap-size;
+
+    &.is-compact {
       align-items: center;
+      flex-direction: row !important;
+      justify-content: space-between;
+      margin-top: 0;
+    }
+  }
+
+  &-trend {
+    align-items: center;
+    column-gap: 8px;
+    display: flex;
+
+    &-change {
+      align-items: center;
+      border-radius: 4px;
       display: flex;
       flex-direction: row;
-      font-size: $kui-font-size-30;
-      margin-bottom: $kui-space-0;
-      margin-top: $kui-space-auto;
+      font-size: $kui-font-size-20;
+      font-weight: $kui-font-weight-semibold;
+      padding: 4px 8px;
 
-      .kong-icon {
-        display: flex;
+      .kui-icon {
+        margin-right: 4px;
       }
       &.positive {
-        color: var(--kong-ui-metric-card-trend-positive, $color-green);
+        background-color: var(--kong-ui-metric-card-trend-bg-positive, $kui-color-background-success-weakest);
+        color: var(--kong-ui-metric-card-trend-positive, $kui-color-text-success);
       }
       &.negative {
-        color: var(--kong-ui-metric-card-trend-negative, $color-red);
+        background-color: var(--kong-ui-metric-card-trend-bg-negative, $kui-color-background-danger-weakest);
+        color: var(--kong-ui-metric-card-trend-negative, $kui-color-border-danger-strong);
       }
       &.neutral {
-        color: var(--kong-ui-metric-card-trend-neutral, $kui-color-text-neutral);
+        background-color: var(--kong-ui-metric-card-trend-bg-neutral, $kui-color-background-neutral-weaker);
+        color: var(--kong-ui-metric-card-trend-neutral, $kui-color-text-neutral-strong);
       }
     }
+
+    &-range {
+      color: $kui-color-text;
+      font-size: $kui-font-size-20;
+     }
   }
 
   &-tooltip {
