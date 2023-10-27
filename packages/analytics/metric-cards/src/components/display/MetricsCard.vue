@@ -127,6 +127,7 @@ const props = defineProps({
   cardType: {
     type: String as PropType<MetricCardType>,
     required: true,
+    default: MetricCardType.GENERIC_COUNT,
   },
   title: {
     type: String,
