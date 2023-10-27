@@ -12,9 +12,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../src'
 import { PluginSelect } from '../../src'
 
+const route = useRoute()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 // Note: To try out scoping of plugins, append a query param to the end of the URL indicating the `entity_type`.
@@ -30,12 +32,13 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
     name: 'create-plugin',
     params: {
       control_plane_id: controlPlaneId.value,
-      // TODO: is this right for KM?
       plugin,
     },
-    /* query: {
+    query: {
       ...route.query,
-    }, */
+      // force the scope
+      // entity_type: 'consumer_id',
+    },
   }),
 })
 
@@ -50,10 +53,11 @@ const kongManagerConfig = ref<KongManagerPluginFormConfig>({
       // TODO: is this right for KM?
       plugin,
     },
-    // TODO:
-    /*  query: {
+    query: {
       ...route.query,
-    }, */
+      // force the scope
+      // entity_type: 'consumer_id',
+    },
   }),
 })
 </script>
