@@ -62,6 +62,6 @@
     "vue": "^3.3.4"
   },
   "dependencies": {
-    "@kong/icons": "^1.7.7"
+    "@kong/icons": "^1.7.8"
   }
 }
