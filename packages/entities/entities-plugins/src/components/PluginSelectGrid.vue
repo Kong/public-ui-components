@@ -34,7 +34,6 @@
       <div
         v-if="nonCustomPlugins[group]"
         :key="idx"
-        class="row"
       >
         <KCollapse
           v-model="shouldCollapsed[idx]"
@@ -45,7 +44,7 @@
         >
           <!-- don't display a trigger if all plugins will already be visible -->
           <template
-            v-if="getGroupPluginCount(group) <= PLUGINS_PER_ROW"
+            v-if="getGroupPluginCount(group) <= pluginsPerRow"
             #trigger
           >
             &nbsp;
@@ -95,7 +94,6 @@ import {
   type TriggerLabels,
 } from '../types'
 import { useAxios, useHelpers, useErrors } from '@kong-ui-public/entities-shared'
-import { PLUGINS_PER_ROW } from '../constants'
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
 import PluginCardSkeleton from './PluginCardSkeleton.vue'
@@ -150,6 +148,13 @@ const props = defineProps({
   noRouteChange: {
     type: Boolean,
     default: false,
+  },
+  /**
+   * Number of plugins to always have visible (never will be collapsed)
+   */
+  pluginsPerRow: {
+    type: Number,
+    default: 4,
   },
 })
 
@@ -281,10 +286,10 @@ const getPluginCards = (group: string, type: 'all' | 'visible' | 'hidden') => {
   if (type === 'all') {
     return plugins
   } else if (type === 'visible') {
-    return plugins.slice(0, PLUGINS_PER_ROW)
+    return plugins.slice(0, props.pluginsPerRow)
   }
 
-  return plugins.slice(PLUGINS_PER_ROW)
+  return plugins.slice(props.pluginsPerRow)
 }
 
 const getGroupPluginCount = (group: string) => {
@@ -299,7 +304,7 @@ const triggerLabels = computed(() => {
     const totalCount = getPluginCards(pluginGroup, 'all')?.length || 0
     const hiddenCount = getPluginCards(pluginGroup, 'hidden')?.length || 0
 
-    if (totalCount > PLUGINS_PER_ROW) {
+    if (totalCount > props.pluginsPerRow) {
       acc[pluginGroup as keyof TriggerLabels] = t('plugins.select.view_more', { count: hiddenCount })
     }
 

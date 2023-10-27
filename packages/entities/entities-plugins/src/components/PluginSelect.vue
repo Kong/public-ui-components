@@ -34,6 +34,7 @@
             :ignored-plugins="ignoredPlugins"
             :no-route-change="noRouteChange"
             :only-available-plugins="onlyAvailablePlugins"
+            :plugins-per-row="pluginsPerRow"
             @loading="(val: boolean) => $emit('loading', val)"
             @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
             @plugin-list-updated="(val: PluginCardList) => pluginsList = val"
@@ -88,6 +89,7 @@
         :ignored-plugins="ignoredPlugins"
         :no-route-change="noRouteChange"
         :only-available-plugins="onlyAvailablePlugins"
+        :plugins-per-row="pluginsPerRow"
         @loading="(val: boolean) => $emit('loading', val)"
         @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
         @plugin-list-updated="(val: PluginCardList) => pluginsList = val"
@@ -173,6 +175,13 @@ const props = defineProps({
   disabledPlugins: {
     type: Object as PropType<DisabledPlugin>,
     default: () => ({}),
+  },
+  /**
+   * Number of plugins to always have visible (never will be collapsed)
+   */
+  pluginsPerRow: {
+    type: Number,
+    default: 4,
   },
 })
 

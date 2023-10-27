@@ -7,7 +7,7 @@
       :trigger-label="shouldCollapsedCustomPlugins ? triggerLabels[PLUGIN_GROUPS.CUSTOM_PLUGINS] : pluginHelpText.viewLess"
     >
       <template
-        v-if="filteredCustomPlugins.length <= PLUGINS_PER_ROW"
+        v-if="filteredCustomPlugins.length <= pluginsPerRow"
         #trigger
       >
             &nbsp;
