@@ -197,7 +197,7 @@ const buildPluginList = (): PluginCardList => {
   // either grab all plugins from metadata file or use list of available plugins provided by API
   return [...new Set(
     Object.assign(
-      Object.keys({ ...(!props.onlyAvailablePlugins && pluginMetaData) }),
+      Object.keys({ ...(!props.onlyAvailablePlugins ? pluginMetaData : {}) }),
       availablePlugins.value,
     ),
   )]
@@ -269,6 +269,8 @@ const buildPluginList = (): PluginCardList => {
       plugins.push(plugin)
       plugins.sort(sortAlpha('name'))
 
+      list[groupName] = plugins
+
       return list
     }, {})
 }
@@ -294,11 +296,11 @@ const shouldCollapsed = ref<Record<string, boolean>>(PLUGIN_GROUPS_COLLAPSE_STAT
 // text for plugin group "view x more" label
 const triggerLabels = computed(() => {
   return Object.keys(pluginsList.value).reduce((acc: TriggerLabels, pluginGroup: string): TriggerLabels => {
-    const totalCount = getPluginCards(pluginGroup, 'all').length
-    const hiddenCount = getPluginCards(pluginGroup, 'hidden').length
+    const totalCount = getPluginCards(pluginGroup, 'all')?.length || 0
+    const hiddenCount = getPluginCards(pluginGroup, 'hidden')?.length || 0
 
     if (totalCount > PLUGINS_PER_ROW) {
-      acc[pluginGroup as keyof TriggerLabels] = t('plugins.select.view_more', { hiddenCount })
+      acc[pluginGroup as keyof TriggerLabels] = t('plugins.select.view_more', { count: hiddenCount })
     }
 
     return acc
