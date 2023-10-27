@@ -70,11 +70,13 @@ const timeframe = computed(() => {
 // Else, we have a Custom start and end datetime coming from v-calendar, so we display "vs previous X days"
 const trendRangeText = computed(() => {
   if (timeframe.value.key === 'custom') {
-    return i18n.t('trend.custom', { numDays: Math.ceil(timeframe.value.timeframeLength() / (1000 * 60 * 24)) })
+    return i18n.t('trendRange.custom', { numDays: Math.ceil(timeframe.value.timeframeLength() / (1000 * 60 * 24)) })
   } else {
     return props.hasTrendAccess
-      ? timeframe.value.rangeDisplayText
-      : TimePeriods.get(TimeframeKeys.ONE_DAY)?.rangeDisplayText
+      // @ts-ignore - dynamic i18n key
+      ? i18n.t(`trendRange.${timeframe.value.key}`)
+      // @ts-ignore - dynamic i18n key
+      : i18n.t(`trendRange.${TimePeriods.get(TimeframeKeys.ONE_DAY)?.key}`)
   }
 })
 
