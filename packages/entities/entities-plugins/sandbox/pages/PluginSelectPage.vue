@@ -40,6 +40,14 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
       // entity_type: 'consumer_id',
     },
   }),
+  createCustomRoute: { name: 'create-custom-plugin' },
+  getCustomEditRoute: (plugin: string) => ({
+    name: 'edit-custom-plugin',
+    params: {
+      control_plane_id: controlPlaneId.value,
+      plugin,
+    },
+  }),
 })
 
 const kongManagerConfig = ref<KongManagerPluginFormConfig>({

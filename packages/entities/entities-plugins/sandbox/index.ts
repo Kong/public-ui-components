@@ -26,10 +26,20 @@ const init = async () => {
         component: () => import('./pages/FallbackPage.vue'),
       },
       {
+        path: '/custom-plugin/create',
+        name: 'create-custom-plugin',
+        component: () => import('./pages/FallbackPage.vue'),
+      },
+      {
         path: '/plugin/:plugin/:id',
         name: 'view-plugin',
         component: () => import('./pages/PluginConfigCardPage.vue'),
         props: true,
+      },
+      {
+        path: '/custom-plugin/:plugin/edit',
+        name: 'edit-custom-plugin',
+        component: () => import('./pages/FallbackPage.vue'),
       },
       {
         path: '/plugin/:id/edit',

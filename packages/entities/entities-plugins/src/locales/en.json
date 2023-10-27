@@ -418,7 +418,8 @@
         "kong": {
           "title": "Kong Plugins",
           "description": "Kong plugins are bundled by default with Kong Gateway and are available across all control planes.",
-          "app_reg_tooltip": "This plugin is not available because App Registration is enabled for this Service."
+          "empty_title": "No Plugins",
+          "empty_description": "No plugins are available."
         },
         "custom": {
           "title": "Custom Plugins",

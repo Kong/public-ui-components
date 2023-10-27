@@ -10,7 +10,49 @@
       />
     </div>
 
+    <section v-if="isLoading">
+      <KSkeleton
+        :table-rows="1"
+        type="table"
+      >
+        <KSkeletonBox
+          width="6"
+        />
+        <KSkeletonBox
+          class="title-loading-skeleton"
+          width="6"
+        />
+      </KSkeleton>
+      <PluginCardSkeleton
+        :card-count="8"
+        type="card"
+      />
+    </section>
+
+    <KEmptyState
+      v-else-if="fetchErrorMessage"
+      data-testid="form-fetch-error"
+      hide-cta
+      is-error
+    >
+      <template #message>
+        <h3>{{ fetchErrorMessage }}</h3>
+      </template>
+    </KEmptyState>
+
+    <KEmptyState
+      v-else-if="noSearchResults && filter"
+      cta-is-hidden
+      icon="stateNoSearchResults"
+      icon-size="96"
+    >
+      <template #message>
+        <h5>{{ t('search.no_results', { filter }) }}</h5>
+      </template>
+    </KEmptyState>
+
     <section
+      v-else
       aria-live="polite"
       class="plugins-results-container"
     >
@@ -27,17 +69,11 @@
             {{ t('plugins.select.tabs.kong.description') }}
           </p>
           <PluginSelectGrid
-            :can-create="userCanCreate"
             :config="config"
-            :disabled-plugins="disabledPlugins"
-            :filtered-plugins="filteredPlugins"
-            :ignored-plugins="ignoredPlugins"
             :no-route-change="noRouteChange"
-            :only-available-plugins="onlyAvailablePlugins"
+            :plugin-list="filteredPlugins"
             :plugins-per-row="pluginsPerRow"
-            @loading="(val: boolean) => $emit('loading', val)"
             @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
-            @plugin-list-updated="(val: PluginCardList) => pluginsList = val"
           />
         </template>
 
@@ -48,33 +84,16 @@
             </p>
 
             <PluginCustomGrid
-              v-if="modifiedCustomPlugins.length"
-              :can-delete-custom="canDeleteCustom"
-              :can-edit-custom="canEditCustom"
+              :can-create="userCanCreate"
+              :can-delete-custom="userCanDeleteCustom"
+              :can-edit-custom="userCanEditCustom"
+              :config="config"
               :no-route-change="noRouteChange"
+              :plugin-list="filteredPlugins"
+              :plugins-per-row="pluginsPerRow"
+              @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
+              @revalidate="() => pluginsList = buildPluginList()"
             />
-
-            <KEmptyState
-              v-else
-              class="custom-plugins-empty-state"
-              cta-is-hidden
-              icon="stateGruceo"
-              icon-size="96"
-            >
-              <!-- this will only be shown if not allowed to create custom plugins -->
-              <!-- TODO: use props instead-->
-              <template #title>
-                <span class="empty-state-title">
-                  {{ t('plugins.select.tabs.custom.empty_title') }}
-                </span>
-              </template>
-
-              <template #message>
-                <span class="empty-state-description">
-                  {{ t('plugins.select.tabs.custom.empty_description') }}
-                </span>
-              </template>
-            </KEmptyState>
           </div>
         </template>
       </KTabs>
@@ -82,47 +101,32 @@
       <!-- Kong Manager -->
       <PluginSelectGrid
         v-else
-        :can-create="userCanCreate"
         :config="config"
-        :disabled-plugins="disabledPlugins"
-        :filtered-plugins="filteredPlugins"
-        :ignored-plugins="ignoredPlugins"
         :no-route-change="noRouteChange"
-        :only-available-plugins="onlyAvailablePlugins"
+        :plugin-list="filteredPlugins"
         :plugins-per-row="pluginsPerRow"
-        @loading="(val: boolean) => $emit('loading', val)"
         @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
-        @plugin-list-updated="(val: PluginCardList) => pluginsList = val"
       />
     </section>
-
-    <KEmptyState
-      v-if="noSearchResults"
-      cta-is-hidden
-      is-error
-    >
-      <template #message>
-        <h5>
-          <span v-if="filter && !hasError">{{ t('search.no_results', { filter }) }}</span>
-          <span v-else-if="hasError">{{ t('errors.load_results') }}</span>
-        </h5>
-      </template>
-    </KEmptyState>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onBeforeMount, type PropType } from 'vue'
+import { computed, ref, watch, onBeforeMount, onMounted, type PropType } from 'vue'
 import { useRoute } from 'vue-router'
-import type {
-  DisabledPlugin,
-  PluginCardList,
-  KongManagerPluginFormConfig,
-  KonnectPluginFormConfig,
-  PluginType,
+import {
+  PluginGroup,
+  PluginScope,
+  type KongManagerPluginFormConfig,
+  type KonnectPluginFormConfig,
+  type PluginType,
+  type DisabledPlugin,
+  type PluginCardList,
 } from '../types'
-import { PluginGroup } from '../types'
+import { useAxios, useHelpers, useErrors } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
+import endpoints from '../plugins-endpoints'
+import PluginCardSkeleton from './PluginCardSkeleton.vue'
 import PluginCustomGrid from './PluginCustomGrid.vue'
 import PluginSelectGrid from './PluginSelectGrid.vue'
 
@@ -155,6 +159,10 @@ const props = defineProps({
     required: false,
     default: async () => true,
   },
+  /**
+   * @param {boolean} noRouteChange if true, let consuming component handle event when clicking on a plugin
+   * Used in conjunction with `@plugin-clicked` event
+   */
   noRouteChange: {
     type: Boolean,
     default: false,
@@ -168,10 +176,16 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Plugins that should not be displayed
+   */
   ignoredPlugins: {
     type: Array as PropType<String[]>,
     default: () => [],
   },
+  /**
+   * Plugins that should be disabled and their disabled messages
+   */
   disabledPlugins: {
     type: Object as PropType<DisabledPlugin>,
     default: () => ({}),
@@ -185,17 +199,30 @@ const props = defineProps({
   },
 })
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void,
   (e: 'plugin-clicked', plugin: PluginType): void,
 }>()
 
 const route = useRoute()
 const { i18n: { t } } = composables.useI18n()
+const { pluginMetaData } = composables.usePluginMetaData()
+const { getMessageFromError } = useErrors()
+const { sortAlpha, objectsAreEqual } = useHelpers()
 
 const filter = ref('')
+const isLoading = ref(true)
 const hasError = ref(false)
+const fetchErrorMessage = ref('')
+const availablePlugins = ref<string[]>([])
 const pluginsList = ref<PluginCardList>({})
+// used for scoped plugins
+// entityType is currently determined off of the route query
+const entityType = computed((): string => String(route.query.entity_type || ''))
+
+const { axiosInstance } = useAxios({
+  headers: props.config?.requestHeaders,
+})
 
 const filteredPlugins = computed((): PluginCardList => {
   if (!pluginsList.value) {
@@ -240,29 +267,157 @@ const tabs = props.config.app === 'konnect'
   : []
 const activeTab = ref(tabs.length ? route.hash || tabs[0].hash : '')
 
-const modifiedCustomPlugins = computed(() => {
-  if (props.config.app === 'kongManager') {
-    return []
+const buildPluginList = (): PluginCardList => {
+  // If onlyAvailablePlugins is false, we included unavailable plugins from pluginMeta in addition to available plugins
+  // returning an array of unique plugin ids
+  // either grab all plugins from metadata file or use list of available plugins provided by API
+  return [...new Set(
+    Object.assign(
+      Object.keys({ ...(!props.onlyAvailablePlugins ? pluginMetaData : {}) }),
+      availablePlugins.value,
+    ),
+  )]
+    // Filter out ignored plugins
+    .filter((plugin: string) => !props.ignoredPlugins.includes(plugin))
+    // Filter plugins by entity type if adding scoped plugin
+    .filter((plugin: string) => {
+      // For Global Plugins
+      if (!entityType.value) {
+        return plugin
+      }
+
+      if (entityType.value === 'service_id') {
+        const isNotServicePlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.SERVICE))
+        if (isNotServicePlugin) {
+          return false
+        }
+      }
+
+      if (entityType.value === 'route_id') {
+        const isNotRoutePlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.ROUTE))
+        if (isNotRoutePlugin) {
+          return false
+        }
+      }
+
+      if (entityType.value === 'consumer_group_id') {
+        const isNotConsumerGroupPlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.CONSUMER_GROUP))
+        if (isNotConsumerGroupPlugin) {
+          return false
+        }
+      }
+
+      if (entityType.value === 'consumer_id') {
+        const isNotConsumerPlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.CONSUMER))
+        if (isNotConsumerPlugin) {
+          return false
+        }
+      }
+
+      if (entityType.value !== 'developer_id') {
+        return plugin
+      }
+
+      return false
+    })
+    // build the actual card list
+    .reduce((list: PluginCardList, pluginId: string) => {
+      const pluginName = (pluginMetaData[pluginId] && pluginMetaData[pluginId].name) || pluginId
+      const plugin = {
+        ...pluginMetaData[pluginId],
+        id: pluginId,
+        name: pluginName,
+        available: availablePlugins.value.includes(pluginId),
+        group: pluginMetaData[pluginId]?.group || PluginGroup.CUSTOM_PLUGINS,
+      } as PluginType
+
+      if (props.disabledPlugins) {
+        plugin.disabledMessage = props.disabledPlugins[pluginId] || ''
+      }
+
+      const groupName = plugin.group || t('plugins.select.misc_plugins')
+      let plugins = list[groupName]
+
+      if (!plugins) {
+        plugins = []
+      }
+
+      plugins.push(plugin)
+      plugins.sort(sortAlpha('name'))
+
+      list[groupName] = plugins
+
+      return list
+    }, {})
+}
+
+const availablePluginsUrl = computed<string>(() => {
+  let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePlugins}`
+
+  if (props.config.app === 'konnect') {
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+  } else if (props.config.app === 'kongManager') {
+    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
-  const customPlugins = filteredPlugins.value?.[PluginGroup.CUSTOM_PLUGINS] || []
+  return url
+})
 
-  // ADD CUSTOM_PLUGIN_CREATE as the first card if allowed creation
-  return userCanCreate.value && !props.noRouteChange && props.config.createCustomRoute
-    ? [{
-      id: 'custom-plugin-create',
-      name: t('plugins.select.tabs.custom.create.name'),
-      available: true,
-      group: PluginGroup.CUSTOM_PLUGINS,
-      description: t('plugins.select.tabs.custom.create.description'),
-    }].concat(customPlugins)
-    : customPlugins
+// race condition between fetch of available plugins and setting
+// disabled/ignored plugins
+// if disabled/ignored plugins changes before availablePlugins fetch
+// wait for fetch to finish and don't attempt to build plugin list yet
+// if disabled/ignored plugins changes AFTER availablePlugins fetch
+// rebuild the list
+watch(() => props.disabledPlugins, (val, oldVal) => {
+  if (!objectsAreEqual(val, oldVal) && !isLoading.value) {
+    pluginsList.value = buildPluginList()
+  }
+})
+
+watch(() => props.ignoredPlugins, (val, oldVal) => {
+  if (!objectsAreEqual(val, oldVal) && !isLoading.value) {
+    pluginsList.value = buildPluginList()
+  }
 })
 
 const userCanCreate = ref(false)
+const userCanEditCustom = ref(false)
+const userCanDeleteCustom = ref(false)
 onBeforeMount(async () => {
-  // Evaluate if the user has create permissions
+  // Evaluate the user permissions
   userCanCreate.value = await props.canCreate()
+  userCanEditCustom.value = await props.canEditCustom()
+  userCanDeleteCustom.value = await props.canDeleteCustom()
+})
+
+onMounted(async () => {
+  isLoading.value = true
+  hasError.value = false
+  fetchErrorMessage.value = ''
+
+  emit('loading', isLoading.value)
+
+  try {
+    const res = await axiosInstance.get(availablePluginsUrl.value)
+
+    // TODO: endpoints temporarily return different formats
+    if (props.config.app === 'konnect') {
+      const { names: available } = res.data
+      availablePlugins.value = available || []
+    } else if (props.config.app === 'kongManager') {
+      const { plugins: { available_on_server: aPlugins } } = res.data
+      availablePlugins.value = aPlugins ? Object.keys(aPlugins) : []
+    }
+
+    pluginsList.value = buildPluginList()
+  } catch (error: any) {
+    hasError.value = true
+    fetchErrorMessage.value = getMessageFromError(error)
+  }
+
+  isLoading.value = false
+  emit('loading', isLoading.value)
 })
 </script>
 

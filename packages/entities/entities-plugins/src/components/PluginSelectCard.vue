@@ -6,13 +6,13 @@
     }"
     :label="plugin.disabledMessage"
     position-fixed
-    @click="noRouteChange ? emitPluginData() : handleCreateClick(plugin.id)"
   >
     <KCard
       class="plugin-card-content"
       :data-testid="plugin.name"
       :disabled="!plugin.available || plugin.disabledMessage"
       has-hover
+      @click="isCustomPlugin ? undefined : noRouteChange ? emitPluginData() : handleCreateClick()"
     >
       <template
         v-if="isCustomPlugin"
@@ -26,11 +26,10 @@
       </template>
 
       <template
-        v-if="isCustomPlugin && controlPlaneId"
+        v-if="isCustomPlugin && !isCreateCustomPlugin && !noRouteChange && controlPlaneId && (canDeleteCustom || canEditCustom)"
         #actions
       >
         <KDropdownMenu
-          v-if="!isCreateCustomPlugin && !noRouteChange"
           :kpop-attributes="{ placement: 'bottom-end' }"
           width="150"
         >
@@ -51,24 +50,22 @@
           </template>
 
           <template #items>
-            <PermissionsWrapper :auth-function="() => canEditCustom()">
-              <KDropdownItem
-                data-testid="edit-plugin-schema"
-                @click.stop="handleCustomEdit(plugin.name)"
-              >
-                {{ t('actions.edit') }}
-              </KDropdownItem>
-            </PermissionsWrapper>
-            <PermissionsWrapper :auth-function="() => canDeleteCustom()">
-              <KDropdownItem
-                data-testid="delete-plugin-schema"
-                has-divider
-                is-dangerous
-                @click.stop="handleCustomDelete"
-              >
-                {{ t('actions.delete') }}
-              </KDropdownItem>
-            </PermissionsWrapper>
+            <KDropdownItem
+              v-if="canDeleteCustom"
+              data-testid="edit-plugin-schema"
+              @click.stop="handleCustomEdit(plugin.name)"
+            >
+              {{ t('actions.edit') }}
+            </KDropdownItem>
+            <KDropdownItem
+              v-if="canDeleteCustom"
+              data-testid="delete-plugin-schema"
+              has-divider
+              is-dangerous
+              @click.stop="handleCustomDelete"
+            >
+              {{ t('actions.delete') }}
+            </KDropdownItem>
           </template>
         </KDropdownMenu>
       </template>
@@ -116,12 +113,10 @@ import { useRouter } from 'vue-router'
 import { PluginGroup, type KongManagerPluginFormConfig, type KonnectPluginFormConfig, type PluginType } from '../types'
 import { KUI_ICON_SIZE_30, KUI_COLOR_TEXT_NEUTRAL_STRONGER } from '@kong/design-tokens'
 import composables from '../composables'
-import { PermissionsWrapper } from '@kong-ui-public/entities-shared'
 import PluginIcon from './PluginIcon.vue'
 
 const emit = defineEmits<{
   (e: 'plugin-clicked', plugin: PluginType) : void,
-  (e: 'custom-plugin-create'): void,
   (e: 'custom-plugin-delete'): void,
 }>()
 
@@ -136,17 +131,19 @@ const props = defineProps({
       return true
     },
   },
-  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can delete a given entity */
+  /**
+   * Whether or not user has rights to delete custom plugins
+   */
   canDeleteCustom: {
-    type: Function as PropType<() => boolean | Promise<boolean>>,
-    required: false,
-    default: async () => true,
+    type: Boolean,
+    default: false,
   },
-  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can edit a given entity */
+  /**
+   * Whether or not user has rights to edit custom plugins
+   */
   canEditCustom: {
-    type: Function as PropType<() => boolean | Promise<boolean>>,
-    required: false,
-    default: async () => true,
+    type: Boolean,
+    default: false,
   },
   plugin: {
     type: Object as PropType<PluginType>,
@@ -162,8 +159,8 @@ const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const controlPlaneId = computed((): string => props.config.app === 'konnect' ? props.config.controlPlaneId : '')
 
-const handleCreateClick = (pluginName: string): void => {
-  router.push(props.config.getCreateRoute(pluginName))
+const handleCreateClick = (): void => {
+  router.push(props.config.getCreateRoute(props.plugin.id))
 }
 
 const emitPluginData = (): void => {
@@ -191,9 +188,12 @@ const handleCustomEdit = (pluginName: string): void => {
 const handleCustomClick = (): void => {
   // TODO: verify
   // handle custom plugin card click only
-  // regular plugin card render as 'router-link' component which don't need this
-  if (props.config.app === 'konnect' && props.config.createCustomRoute && isCustomPlugin.value) {
-    router.push(props.config.createCustomRoute)
+  if (props.config.app === 'konnect') {
+    if (isCreateCustomPlugin.value && props.config.createCustomRoute) {
+      router.push(props.config.createCustomRoute)
+    } else if (isCustomPlugin.value) {
+      handleCreateClick()
+    }
   }
 }
 </script>
@@ -210,7 +210,7 @@ const handleCustomClick = (): void => {
     cursor: pointer;
   }
 
-  .header-wrapper { // TODO: had to change from 2rem, does it work?
+  .header-wrapper {
     // maintain the specified height if slot has no content
     min-height: 25px;
   }
@@ -230,6 +230,13 @@ const handleCustomClick = (): void => {
     color: $kui-color-text;
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-regular;
+  }
+
+  // TODO: do I still need this?
+  :deep(.k-card-body) {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
   }
 
   &-body {

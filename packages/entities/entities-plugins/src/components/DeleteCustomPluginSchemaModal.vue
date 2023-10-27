@@ -113,7 +113,7 @@ import { useErrors } from '@kong-ui-public/entities-shared'
 
 const props = defineProps({
   plugin: {
-    type: Object as PropType<{name: string, id: string}>,
+    type: Object as PropType<{ name: string, id: string }>,
     required: true,
   },
 })
