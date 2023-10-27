@@ -166,7 +166,7 @@ const handleCreateClick = (pluginName: string): void => {
   router.push(props.config.getCreateRoute(pluginName))
 }
 
-const emitPluginData = () => {
+const emitPluginData = (): void => {
   emit('plugin-clicked', props.plugin)
 }
 
