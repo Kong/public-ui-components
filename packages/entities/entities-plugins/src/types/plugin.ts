@@ -36,6 +36,8 @@ export const PLUGIN_GROUPS_COLLAPSE_STATUS = {
   CUSTOM_PLUGINS: true,
 }
 
+export type EntityType = 'consumers' | 'routes' | 'services' | 'consumer_groups'
+
 export enum PluginScope {
   GLOBAL = 'global',
   SERVICE = 'service',
