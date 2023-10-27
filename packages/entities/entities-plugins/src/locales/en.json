@@ -7,6 +7,7 @@
     "copy_json": "Copy JSON",
     "edit": "Edit",
     "enable": "Enable",
+    "enabled": "Enabled",
     "delete": "Delete",
     "confirm_delete": "Yes, delete",
     "view": "View Details",
@@ -411,6 +412,7 @@
     "select": {
       "custom_badge_text": "Data Plane Node Specific",
       "unavailable_tooltip": "This plugin is not available",
+      "already_exists": "This plugin is already applied to this resource",
       "misc_plugins": "Other Plugins",
       "view_more": "View {count} more",
       "view_less": "View less",

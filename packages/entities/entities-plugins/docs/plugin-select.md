@@ -67,6 +67,18 @@ A grid component for selecting Plugins.
     - default: `undefined`
     - *Specific to Konnect*. Name of the current control plane.
 
+  - `entityId`:
+    - type: `string`
+    - required: `false`
+    - default: `null`
+    - Current entity id if the PluginSelect is being launched from the plugins tab on a consumer, consumer group, gateway service, or route detail page.
+
+  - `entityType`:
+    - type: `'consumers' | 'consumer_groups' | 'services' | 'routes'`
+    - required: `false`
+    - default: `null`
+    - Current entity type if the PluginSelect is being launched from the plugins tab on a consumer, consumer group, gateway service, or route detail page.
+
 The base konnect or kongManger config.
 
 ### Events

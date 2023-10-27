@@ -100,7 +100,7 @@
           }"
           @click="handleCustomClick"
         >
-          {{ isCreateCustomPlugin ? t('actions.create_custom') : t('actions.enable') }}
+          {{ isCreateCustomPlugin ? t('actions.create_custom') : plugin.exists ? t('actions.enabled') : t('actions.enable') }}
         </div>
       </template>
     </KCard>

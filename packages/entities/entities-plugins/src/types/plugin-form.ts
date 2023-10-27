@@ -1,10 +1,13 @@
 import type { RouteLocationRaw } from 'vue-router'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 
+export type EntityType = 'consumers' | 'routes' | 'services' | 'consumer_groups'
+
 export interface BasePluginFormConfig {
   /** A function that returns the route for creating a plugin */
   getCreateRoute: (id: string) => RouteLocationRaw
-  /** Entity to bind the Plugin to on creation */
+  /** Current entity type and id for plugins for specific entity */
+  entityType?: EntityType
   entityId?: string
 }
 

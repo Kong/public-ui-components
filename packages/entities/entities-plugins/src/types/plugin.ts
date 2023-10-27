@@ -55,9 +55,10 @@ export type PluginMetaData = {
 }
 
 export interface PluginType extends PluginMetaData {
-  available: boolean // whether the plugin is available or not
-  disabledMessage?: string // An optional field for plugin's disabled message.
   id: string // the plugin schema name
+  available?: boolean // whether the plugin is available or not
+  exists?: boolean // whether the plugin exists already for the current entity
+  disabledMessage?: string // An optional field for plugin's disabled message.
 }
 
 export type DisabledPlugin = {
