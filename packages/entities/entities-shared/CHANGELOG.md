@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.6.9...@kong-ui-public/entities-shared@1.6.10) (2023-10-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.7.8 ([#871](https://github.com/Kong/public-ui-components/issues/871)) ([220ad8e](https://github.com/Kong/public-ui-components/commit/220ad8e291ae0c1bd4405383677d46310d2b1c6d))
+
+
+
+
+
+## [1.6.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.6.8...@kong-ui-public/entities-shared@1.6.9) (2023-10-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [1.6.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.6.7...@kong-ui-public/entities-shared@1.6.8) (2023-10-24)
+
+
+### Bug Fixes
+
+* lost data-testid on plaintext config card items ([#866](https://github.com/Kong/public-ui-components/issues/866)) ([95550c3](https://github.com/Kong/public-ui-components/commit/95550c3bcdeaf4f6644b2cfc8c38ed4679bfec92))
+
+
+
+
+
+## [1.6.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.6.6...@kong-ui-public/entities-shared@1.6.7) (2023-10-24)
+
+
+### Bug Fixes
+
+* **entities-shared:** use ktooltip for truncated item [MA-2088] ([#852](https://github.com/Kong/public-ui-components/issues/852)) ([e3a9c9f](https://github.com/Kong/public-ui-components/commit/e3a9c9f7b8fc7a652f7b760a0574c5899e797aec))
+
+
+
+
+
 ## [1.6.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.6.5...@kong-ui-public/entities-shared@1.6.6) (2023-10-24)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

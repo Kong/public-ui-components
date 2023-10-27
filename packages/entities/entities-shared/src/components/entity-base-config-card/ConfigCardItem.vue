@@ -103,14 +103,17 @@
               />
             </div>
 
-            <span
-              v-else
-              class="attrs-data-text"
-              :class="{ 'truncated': truncated }"
-              :title="truncated ? item.value : undefined"
+            <KTooltip v-else
+              :label="isTruncated && item.value"
             >
-              {{ componentAttrsData.text }}
-            </span>
+              <span
+                ref="textContent"
+                class="attrs-data-text"
+                :class="{ 'truncated': truncated }"
+              >
+                {{ componentAttrsData.text }}
+              </span>
+            </KTooltip>
           </component>
         </div>
       </slot>
@@ -119,8 +122,8 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue'
-import { computed, useSlots } from 'vue'
+import type { PropType, Ref } from 'vue'
+import { computed, ref, useSlots } from 'vue'
 import type { RecordItem, ComponentAttrsData } from '../../types'
 import { ConfigurationSchemaType } from '../../types'
 import composables from '../../composables'
@@ -285,7 +288,7 @@ const componentAttrsData = computed((): ComponentAttrsData => {
 
     default:
       return {
-        tag: 'div',
+        tag: 'KTooltip',
         attrs: {
           'data-testid': `${props.item.key}-plain-text`,
         },
@@ -293,6 +296,11 @@ const componentAttrsData = computed((): ComponentAttrsData => {
       }
   }
 })
+
+const textContent = ref<HTMLElement>()
+
+const { isTruncated } = composables.useTruncationDetector(textContent as Ref<HTMLElement>)
+
 </script>
 
 <script lang="ts">

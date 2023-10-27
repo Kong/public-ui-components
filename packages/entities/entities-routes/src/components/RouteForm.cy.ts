@@ -44,7 +44,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/services/*`,
+          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/services*`,
         },
         {
           statusCode: 200,
@@ -399,7 +399,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/services/*`,
+          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/services*`,
         },
         {
           statusCode: 500,

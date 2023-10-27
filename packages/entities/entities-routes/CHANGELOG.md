@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@1.2.12...@kong-ui-public/entities-routes@1.2.13) (2023-10-27)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [1.2.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@1.2.11...@kong-ui-public/entities-routes@1.2.12) (2023-10-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [1.2.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@1.2.10...@kong-ui-public/entities-routes@1.2.11) (2023-10-25)
+
+
+### Bug Fixes
+
+* **entities-routes:** remove a trailing slash ([#863](https://github.com/Kong/public-ui-components/issues/863)) ([aad06fb](https://github.com/Kong/public-ui-components/commit/aad06fb4ef47b5ba506034ccc49698c8d0edbab9))
+
+
+
+
+
+## [1.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@1.2.9...@kong-ui-public/entities-routes@1.2.10) (2023-10-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [1.2.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@1.2.8...@kong-ui-public/entities-routes@1.2.9) (2023-10-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
 ## [1.2.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@1.2.7...@kong-ui-public/entities-routes@1.2.8) (2023-10-24)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes

@@ -213,14 +213,23 @@
         :item="{
           key: 'slim3',
           label: 'Truncated',
-          value: 'I should be truncated because I am too long to fit in the space allocated',
+          value: 'Will have a tooltip and be truncated, because I am too long to fit in the space allocated',
         }"
         slim
         truncated
       />
       <ConfigCardItem
         :item="{
-          key: 'slim3',
+          key: 'slim4',
+          label: 'Truncated',
+          value: 'Short text, no tooltip',
+        }"
+        slim
+        truncated
+      />
+      <ConfigCardItem
+        :item="{
+          key: 'slim5',
           label: 'Not Truncated',
           value: 'I am a really long string but I am not truncated.',
         }"
