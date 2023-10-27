@@ -414,10 +414,11 @@ onMounted(async () => {
   } catch (error: any) {
     hasError.value = true
     fetchErrorMessage.value = getMessageFromError(error)
+  } finally {
+    isLoading.value = false
+    emit('loading', isLoading.value)
   }
 
-  isLoading.value = false
-  emit('loading', isLoading.value)
 })
 </script>
 
