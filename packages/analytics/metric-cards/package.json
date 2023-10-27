@@ -43,11 +43,11 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "^1.11.6",
+    "@kong/icons": "^1.7.8",
     "@kong/kongponents": "^8.124.1",
     "vue": "^3.3.4"
   },
   "dependencies": {
-    "@kong/icons": "^1.7.6",
     "approximate-number": "^2.1.1"
   },
   "repository": {
