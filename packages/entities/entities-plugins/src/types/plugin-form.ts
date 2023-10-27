@@ -11,9 +11,9 @@ export interface BasePluginFormConfig {
 /** Konnect Plugin form config */
 export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig {
   /** Route for creating a custom plugin */
-  createCustomRoute: RouteLocationRaw
+  createCustomRoute?: RouteLocationRaw
   /** A function that returns the route for editing a custom plugin */
-  getCustomEditRoute: (id: string) => RouteLocationRaw
+  getCustomEditRoute?: (id: string) => RouteLocationRaw
 }
 
 /** Kong Manager Plugin form config */

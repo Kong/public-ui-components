@@ -14,6 +14,7 @@
       aria-live="polite"
       class="plugins-results-container"
     >
+      <!-- Konnect -->
       <KTabs
         v-if="tabs.length"
         v-model="activeTab"
@@ -31,6 +32,7 @@
             :disabled-plugins="disabledPlugins"
             :filtered-plugins="filteredPlugins"
             :ignored-plugins="ignoredPlugins"
+            :no-route-change="noRouteChange"
             only-available-plugins
             @loading="(val: boolean) => $emit('loading', val)"
             @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
@@ -44,7 +46,12 @@
               {{ t('plugins.select.tabs.custom.description') }}
             </p>
 
-            <PluginCustomGrid v-if="modifiedCustomPlugins.length" />
+            <PluginCustomGrid
+              v-if="modifiedCustomPlugins.length"
+              :can-delete-custom="canDeleteCustom"
+              :can-edit-custom="canEditCustom"
+              :no-route-change="noRouteChange"
+            />
 
             <KEmptyState
               v-else
@@ -70,6 +77,21 @@
           </div>
         </template>
       </KTabs>
+
+      <!-- Kong Manager -->
+      <PluginSelectGrid
+        v-else
+        :can-create="userCanCreate"
+        :config="config"
+        :disabled-plugins="disabledPlugins"
+        :filtered-plugins="filteredPlugins"
+        :ignored-plugins="ignoredPlugins"
+        :no-route-change="noRouteChange"
+        only-available-plugins
+        @loading="(val: boolean) => $emit('loading', val)"
+        @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
+        @plugin-list-updated="(val: PluginCardList) => pluginsList = val"
+      />
     </section>
 
     <KEmptyState
@@ -208,7 +230,7 @@ const modifiedCustomPlugins = computed(() => {
   const customPlugins = filteredPlugins.value?.[PluginGroup.CUSTOM_PLUGINS] || []
 
   // ADD CUSTOM_PLUGIN_CREATE as the first card if allowed creation
-  return userCanCreate.value && !props.noRouteChange
+  return userCanCreate.value && !props.noRouteChange && props.config.createCustomRoute
     ? [{
       id: 'custom-plugin-create',
       name: t('plugins.select.tabs.custom.create.name'),

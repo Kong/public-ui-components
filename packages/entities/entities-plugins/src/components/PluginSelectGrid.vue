@@ -179,25 +179,8 @@ const emitPluginData = (plugin: PluginType) => {
 }
 
 // used for scoped plugins
-// entityType is currently determined off of the route query or params
-const entityType = computed((): string => {
-  const entity = String(route.query.entity_type || '')
-
-  if (entity) {
-    return entity
-  } else if (route.params.gateway_service) {
-    return 'service_id'
-  } else if (route.params.route) {
-    return 'route_id'
-  } else if (route.params.consumer) {
-    return 'consumer_id'
-  } else if (route.params.consumer_group) {
-    return 'consumer_group_id'
-  }
-
-  // global
-  return ''
-})
+// entityType is currently determined off of the route query
+const entityType = computed((): string => String(route.query.entity_type || ''))
 
 // remove custom plugin from original filteredPlugins
 const nonCustomPlugins = computed((): PluginCardList => {
