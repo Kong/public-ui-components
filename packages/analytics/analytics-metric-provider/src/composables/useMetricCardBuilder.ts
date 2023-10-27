@@ -14,7 +14,7 @@ export interface BuilderOptions {
   sumGroupedValues?: string[],
   increaseIsBad?: boolean,
   formatValueFn?: (rawValue: number) => string,
-  trendRange?: Ref<string> | undefined,
+  trendRange?: Ref<string>,
 }
 
 export const sumValues = (recordValue: ChronologicalMappedMetrics, period: 'current' | 'previous', dimensionLookupKey: string | typeof DEFAULT_KEY = DEFAULT_KEY, sumGroupedValues?: string[]) => {

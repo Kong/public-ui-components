@@ -97,7 +97,7 @@ provide(METRICS_PROVIDER_KEY, {
     traffic: trafficData,
     latency: latencyData,
   },
-  description: props.description || '',
+  description: props.description,
   hasTrendAccess: props.hasTrendAccess,
   longCardTitles: props.longCardTitles,
   trendRange: trendRangeText as Ref<string>,

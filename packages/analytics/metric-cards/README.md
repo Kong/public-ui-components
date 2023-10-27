@@ -7,6 +7,7 @@ A Kong UI component for display Traffic, Error Rate, and P99 Latency insights in
   - [Requirements](#requirements)
     - [CSS Variables](#css-variables)
     - [Install](#install)
+    - [Props](#props)
   - [Included Components](#included-components)
   - [Usage](#usage)
   
@@ -40,6 +41,71 @@ Variable | Description | Default
 ### Install
 
 `yarn add @kong-ui-public/metric-cards`
+
+### Props
+
+####  `cardType`
+
+One of the three golden signals (Traffic, Error Rate, Latency) or a Generic count
+
+  - type: `MetricCardType`
+  - required: `false`
+
+#### `title`
+
+Title to be displayed in the metric card header
+
+- type: `String`
+- required: `false`
+
+#### `tooltip`
+
+Deprecated
+
+- type: `String`
+- required: `false`
+
+#### `metricChange`
+
+Change from current to previous time frame
+
+- type: `String`
+- required: `false`
+
+#### `changePolarity`
+
+Determines if the `metricChange` is bad or good
+
+- type: `Number`
+- required: `true`
+
+#### `trendIcon`
+
+Whether trend is up, down, or neutral (no change)
+
+- type: `typeof GenericIcon`
+- required: `false`
+
+#### `trendRange`
+
+A description of the time period involved in the calculation, determined internally by the MetricsProvider
+
+- type: `string`
+- required: `false`
+
+#### `hasError`
+
+Will display a warning icon instead of metric value if true
+
+- type: `Boolean`
+- required: `false`
+
+#### `errorMessage`
+
+Message to be displayed if the API request fails
+
+- type: `String`
+- required: `false`
 
 ## Included Components
 

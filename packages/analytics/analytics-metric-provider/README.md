@@ -118,4 +118,3 @@ The provider and consumer support use in contexts where metric cards are not app
 - `additionalFilter`: commonly used to apply additional filters to the metric query: for example, to retrieve many entities within a given scope.
 - `queryReady`: if this property is set and is `false`, the metric cards will not issue a query -- they will remain in a "loading" state.  When this property becomes `true`, the query will fire.  Useful for when the component renders before the page has all of the necessary information to construct a query.
 - `longCardTitles`: whether to show the long or short translation for the title of the card.
-- `trendRange`: a description of the time period involved in the calculation, determined internally by the MetricsProvider

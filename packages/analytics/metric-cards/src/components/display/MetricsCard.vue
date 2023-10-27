@@ -100,7 +100,6 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import {
   KUI_COLOR_BORDER_DANGER_STRONG,
-  // KUI_COLOR_BACKGROUND_NEUTRAL,
   KUI_FONT_SIZE_30, // 14px
   KUI_FONT_SIZE_100, // 48px
   KUI_ICON_SIZE_30,
