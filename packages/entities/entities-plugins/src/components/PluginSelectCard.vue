@@ -183,17 +183,17 @@ const handleCustomDelete = (): void => {
 }
 
 const handleCustomEdit = (pluginName: string): void => {
-  if (props.config.app === 'konnect') {
+  if (props.config.app === 'konnect' && props.config.getCustomEditRoute) {
     router.push(props.config.getCustomEditRoute(pluginName))
   }
 }
 
-// TODO: shouldn't this be router.push?
 const handleCustomClick = (): void => {
+  // TODO: verify
   // handle custom plugin card click only
   // regular plugin card render as 'router-link' component which don't need this
-  if (isCustomPlugin.value) {
-    emit('custom-plugin-create')
+  if (props.config.app === 'konnect' && props.config.createCustomRoute && isCustomPlugin.value) {
+    router.push(props.config.createCustomRoute)
   }
 }
 </script>
