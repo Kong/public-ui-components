@@ -33,7 +33,7 @@
             :filtered-plugins="filteredPlugins"
             :ignored-plugins="ignoredPlugins"
             :no-route-change="noRouteChange"
-            only-available-plugins
+            :only-available-plugins="onlyAvailablePlugins"
             @loading="(val: boolean) => $emit('loading', val)"
             @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
             @plugin-list-updated="(val: PluginCardList) => pluginsList = val"
@@ -87,7 +87,7 @@
         :filtered-plugins="filteredPlugins"
         :ignored-plugins="ignoredPlugins"
         :no-route-change="noRouteChange"
-        only-available-plugins
+        :only-available-plugins="onlyAvailablePlugins"
         @loading="(val: boolean) => $emit('loading', val)"
         @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
         @plugin-list-updated="(val: PluginCardList) => pluginsList = val"
@@ -154,6 +154,15 @@ const props = defineProps({
     default: async () => true,
   },
   noRouteChange: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+    * @param {boolean} onlyAvailablePlugins checks kong config plugins.available_on_server and if
+    * onlyAvailablePlugins = true, then it will not show plugins from PluginMeta that are outside
+    * of the available_on_server array.
+    */
+  onlyAvailablePlugins: {
     type: Boolean,
     default: false,
   },
