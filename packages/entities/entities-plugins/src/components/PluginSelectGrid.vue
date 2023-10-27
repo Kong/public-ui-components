@@ -344,28 +344,22 @@ onMounted(async () => {
   isLoading.value = true
   emit('loading', isLoading.value)
 
-  // only fetch available plugins if needed
-  if (props.onlyAvailablePlugins) {
-    try {
-      const res = await axiosInstance.get(availablePluginsUrl.value)
+  try {
+    const res = await axiosInstance.get(availablePluginsUrl.value)
 
-      // TODO: endpoints temporarily return different formats
-      if (props.config.app === 'konnect') {
-        const { names: available } = res.data
-        availablePlugins.value = available || []
-      } else if (props.config.app === 'kongManager') {
-        const { plugins: { available_on_server: aPlugins } } = res.data
-        availablePlugins.value = aPlugins ? Object.keys(aPlugins) : []
-      }
-
-      pluginsList.value = buildPluginList()
-      emit('plugin-list-updated', pluginsList.value)
-    } catch (error: any) {
-      fetchErrorMessage.value = getMessageFromError(error)
+    // TODO: endpoints temporarily return different formats
+    if (props.config.app === 'konnect') {
+      const { names: available } = res.data
+      availablePlugins.value = available || []
+    } else if (props.config.app === 'kongManager') {
+      const { plugins: { available_on_server: aPlugins } } = res.data
+      availablePlugins.value = aPlugins ? Object.keys(aPlugins) : []
     }
-  } else {
+
     pluginsList.value = buildPluginList()
     emit('plugin-list-updated', pluginsList.value)
+  } catch (error: any) {
+    fetchErrorMessage.value = getMessageFromError(error)
   }
 
   isLoading.value = false
