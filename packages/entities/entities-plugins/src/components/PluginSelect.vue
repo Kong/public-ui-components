@@ -184,7 +184,10 @@ const props = defineProps({
     default: () => [],
   },
   /**
-   * Plugins that should be disabled and their disabled messages
+   * Plugins that should be disabled and their disabled messages.
+   * ex. {
+   *  'acl': 'ACL is not supported for this entity type',
+   * }
    */
   disabledPlugins: {
     type: Object as PropType<DisabledPlugin>,

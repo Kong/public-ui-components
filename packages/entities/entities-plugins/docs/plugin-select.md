@@ -55,6 +55,18 @@ A grid component for selecting Plugins.
     - default: `undefined`
     - A function that returns the route for creating a specific plugin type.
 
+  - `createCustomRoute`:
+    - type: RouteLocationRaw
+    - required: `false`
+    - default: `undefined`
+    - The route for creating a custom plugin.
+
+  - `getCustomEditRoute`:
+    - type: `(plugin: string) => RouteLocationRaw`
+    - required: `false`
+    - default: `undefined`
+    - A function that returns the route for editing a custom plugin.
+
   - `workspace`:
     - type: `string`
     - required: `true`
@@ -80,6 +92,77 @@ A grid component for selecting Plugins.
     - Current entity type if the PluginSelect is being launched from the plugins tab on a consumer, consumer group, gateway service, or route detail page.
 
 The base konnect or kongManger config.
+
+#### `canCreate`
+
+- type: `Function as PropType<() => boolean | Promise<boolean>>`
+- required: `false`
+- default: `async () => true`
+
+A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a new plugin.
+
+#### `canDeleteCustom`
+
+- type: `Function as PropType<(row: object) => boolean | Promise<boolean>>`
+- required: `false`
+- default: `async () => true`
+
+A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can delete a given custom plugin.
+
+#### `canEditCustom`
+
+- type: `Function as PropType<(row: object) => boolean | Promise<boolean>>`
+- required: `false`
+- default: `async () => true`
+
+A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can edit a given custom plugin.
+
+#### `noRouteChange`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+If true, let consuming component handle event when clicking on a plugin. Used in conjunction with `@plugin-clicked` event.
+
+#### `onlyAvailablePlugins`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+Checks the kong config plugins.available_on_server and if true, then it will not show plugins from PluginMeta that are outside of the available_on_server array.
+
+#### `ignoredPlugins`
+
+- type: `string[]`
+- required: `false`
+- default: '[]'
+
+An array of the plugin names. These are plugins that should not be displayed.
+
+#### `disabledPlugins`
+
+- type: `DisabledPlugin`
+- required: `false`
+- default: `{}`
+
+Plugins that should be disabled and their disabled messages.
+Example:
+
+```json
+{
+  'acl': 'ACL is not supported for this entity type',
+}
+```
+
+#### `pluginsPerRow`
+
+- type: `number`
+- required: `false`
+- default: `4`
+
+Number of plugins to always have visible (never will be collapsed).
 
 ### Events
 
