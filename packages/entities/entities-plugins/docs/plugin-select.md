@@ -93,13 +93,13 @@ A grid component for selecting Plugins.
 
 The base konnect or kongManger config.
 
-#### `canCreate`
+#### `canCreateCustom`
 
 - type: `Function as PropType<() => boolean | Promise<boolean>>`
 - required: `false`
 - default: `async () => true`
 
-A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a new plugin.
+A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a new custom plugin.
 
 #### `canDeleteCustom`
 

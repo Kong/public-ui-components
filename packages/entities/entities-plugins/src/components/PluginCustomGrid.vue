@@ -102,7 +102,7 @@ const props = defineProps({
   /**
    * Whether or not user has rights to create custom plugins
    */
-  canCreate: {
+  canCreateCustom: {
     type: Boolean,
     default: false,
   },
@@ -164,7 +164,7 @@ const modifiedCustomPlugins = computed((): PluginType[] => {
   const customPlugins: PluginType[] = JSON.parse(JSON.stringify(props.pluginList))[PluginGroup.CUSTOM_PLUGINS] || []
 
   // ADD CUSTOM_PLUGIN_CREATE as the first card if allowed creation
-  return props.canCreate && !props.noRouteChange && props.config.createCustomRoute
+  return props.canCreateCustom && !props.noRouteChange && props.config.createCustomRoute
     ? [{
       id: 'custom-plugin-create',
       name: t('plugins.select.tabs.custom.create.name'),

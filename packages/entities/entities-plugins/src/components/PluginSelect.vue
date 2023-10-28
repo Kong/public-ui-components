@@ -84,7 +84,7 @@
             </p>
 
             <PluginCustomGrid
-              :can-create="userCanCreate"
+              :can-create-custom="userCanCreateCustom"
               :can-delete-custom="userCanDeleteCustom"
               :can-edit-custom="userCanEditCustom"
               :config="config"
@@ -141,19 +141,19 @@ const props = defineProps({
       return true
     },
   },
-  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a new entity */
-  canCreate: {
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a custom plugin */
+  canCreateCustom: {
     type: Function as PropType<() => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
   },
-  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can delete a given entity */
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can delete a custom plugin */
   canDeleteCustom: {
     type: Function as PropType<() => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
   },
-  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can edit a given entity */
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can edit custom plugin */
   canEditCustom: {
     type: Function as PropType<() => boolean | Promise<boolean>>,
     required: false,
@@ -405,12 +405,12 @@ watch(() => props.ignoredPlugins, (val, oldVal) => {
   }
 })
 
-const userCanCreate = ref(false)
+const userCanCreateCustom = ref(false)
 const userCanEditCustom = ref(false)
 const userCanDeleteCustom = ref(false)
 onBeforeMount(async () => {
   // Evaluate the user permissions
-  userCanCreate.value = await props.canCreate()
+  userCanCreateCustom.value = await props.canCreateCustom()
   userCanEditCustom.value = await props.canEditCustom()
   userCanDeleteCustom.value = await props.canDeleteCustom()
 })
