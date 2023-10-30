@@ -3,6 +3,7 @@
     <h2>Konnect API</h2>
     <PluginSelect
       :config="konnectConfig"
+      @delete-custom:success="handleDeleteSuccess"
     />
 
     <h2>Kong Manager API</h2>
@@ -25,8 +26,8 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   // force the scope
-  entityType: 'services',
-  entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
+  // entityType: 'services',
+  // entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
   getCreateRoute: (plugin: string) => ({
     name: 'create-plugin',
     params: {
@@ -56,11 +57,14 @@ const kongManagerConfig = ref<KongManagerPluginFormConfig>({
     name: 'create-plugin',
     params: {
       control_plane_id: controlPlaneId.value,
-      // TODO: is this right for KM?
       plugin,
     },
   }),
 })
+
+const handleDeleteSuccess = (): void => {
+  console.log('Custom plugin deleted')
+}
 </script>
 
 <style lang="scss" scoped>

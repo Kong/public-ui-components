@@ -30,7 +30,7 @@
         #actions
       >
         <KDropdownMenu
-          :kpop-attributes="{ placement: 'bottom-end' }"
+          :kpop-attributes="{ placement: 'bottomEnd' }"
           width="150"
         >
           <template #default>

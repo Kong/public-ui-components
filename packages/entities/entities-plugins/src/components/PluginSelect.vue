@@ -91,6 +91,7 @@
               :no-route-change="noRouteChange"
               :plugin-list="filteredPlugins"
               :plugins-per-row="pluginsPerRow"
+              @delete:success="$emit('delete-custom:success')"
               @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
               @revalidate="() => pluginsList = buildPluginList()"
             />
@@ -205,6 +206,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void,
   (e: 'plugin-clicked', plugin: PluginType): void,
+  (e: 'delete-custom:success'): void,
 }>()
 
 const route = useRoute()

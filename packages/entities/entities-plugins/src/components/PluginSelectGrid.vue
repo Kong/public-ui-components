@@ -171,7 +171,6 @@ const triggerLabels = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-// TODO: styles from KM?
 .plugins-collapse {
   margin-bottom: $kui-space-90;
 }

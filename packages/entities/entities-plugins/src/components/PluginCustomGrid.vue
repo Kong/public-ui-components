@@ -68,6 +68,7 @@
 
     <DeleteCustomPluginSchemaModal
       v-if="openDeleteModal && selectedPlugin"
+      :config="config"
       :plugin="selectedPlugin"
       @closed="handleClose"
       @proceed="() => handleClose(true)"
@@ -147,6 +148,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'plugin-clicked', plugin: PluginType): void,
   (e: 'revalidate'): void,
+  (e: 'delete:success'): void,
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -211,6 +213,7 @@ const handleCustomPluginDelete = (plugin: PluginType): void => {
 const handleClose = (revalidate?: boolean): void => {
   if (revalidate) {
     emit('revalidate')
+    emit('delete:success')
   }
 
   openDeleteModal.value = false
