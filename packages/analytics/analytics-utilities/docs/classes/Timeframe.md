@@ -28,6 +28,7 @@
 - [rawEnd](Timeframe.md#rawend)
 - [rawStart](Timeframe.md#rawstart)
 - [timeframeLengthMs](Timeframe.md#timeframelengthms)
+- [tzAdjustedDate](Timeframe.md#tzadjusteddate)
 
 ## Constructors
 
@@ -43,7 +44,7 @@
 
 #### Defined in
 
-[timeframes.ts:51](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L51)
+[timeframes.ts:60](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L60)
 
 ## Properties
 
@@ -53,7 +54,7 @@
 
 #### Defined in
 
-[timeframes.ts:49](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L49)
+[timeframes.ts:58](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L58)
 
 ___
 
@@ -63,7 +64,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:47](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L47)
+[timeframes.ts:56](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L56)
 
 ___
 
@@ -73,7 +74,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:29](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L29)
+[timeframes.ts:38](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L38)
 
 ___
 
@@ -83,7 +84,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:38](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L38)
+[timeframes.ts:47](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L47)
 
 ___
 
@@ -93,7 +94,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:33](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L33)
+[timeframes.ts:42](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L42)
 
 ___
 
@@ -103,7 +104,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:25](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L25)
+[timeframes.ts:34](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L34)
 
 ___
 
@@ -113,7 +114,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:45](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L45)
+[timeframes.ts:54](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L54)
 
 ___
 
@@ -123,7 +124,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:23](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L23)
+[timeframes.ts:32](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L32)
 
 ___
 
@@ -141,7 +142,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:27](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L27)
+[timeframes.ts:36](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L36)
 
 ___
 
@@ -151,7 +152,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:21](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L21)
+[timeframes.ts:30](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L30)
 
 ## Methods
 
@@ -165,7 +166,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:85](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L85)
+[timeframes.ts:96](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L96)
 
 ___
 
@@ -179,13 +180,19 @@ ___
 
 #### Defined in
 
-[timeframes.ts:80](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L80)
+[timeframes.ts:91](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L91)
 
 ___
 
 ### rawEnd
 
-▸ **rawEnd**(): `Date`
+▸ **rawEnd**(`_tz?`): `Date`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `_tz?` | `string` |
 
 #### Returns
 
@@ -193,13 +200,19 @@ ___
 
 #### Defined in
 
-[timeframes.ts:66](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L66)
+[timeframes.ts:76](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L76)
 
 ___
 
 ### rawStart
 
-▸ **rawStart**(): `Date`
+▸ **rawStart**(`_tz?`): `Date`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `_tz?` | `string` |
 
 #### Returns
 
@@ -207,7 +220,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:72](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L72)
+[timeframes.ts:83](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L83)
 
 ___
 
@@ -221,4 +234,24 @@ ___
 
 #### Defined in
 
-[timeframes.ts:76](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L76)
+[timeframes.ts:87](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L87)
+
+___
+
+### tzAdjustedDate
+
+▸ `Protected` **tzAdjustedDate**(`tz?`): `Date`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `tz?` | `string` |
+
+#### Returns
+
+`Date`
+
+#### Defined in
+
+[timeframes.ts:123](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L123)

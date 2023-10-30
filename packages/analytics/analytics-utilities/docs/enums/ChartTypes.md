@@ -1,22 +1,22 @@
-[@kong-ui-public/analytics-utilities](../analytics-utils.md) / GranularityKeys
+[@kong-ui-public/analytics-utilities](../analytics-utils.md) / ChartTypes
 
-# Enumeration: GranularityKeys
+# Enumeration: ChartTypes
 
 ## Table of contents
 
 ### Enumeration Members
 
 - [DOUGHNUT](ChartTypes.md#doughnut)
-- [HORIZONTAL_BAR](ChartTypes.md#horizontal_bar)
-- [VERTICAL_BAR](ChartTypes.md#vertical_bar)
-- [TIMESERIES_LINE](ChartTypes.md#timeseries_line)
-- [TIMESERIES_BAR](ChartTypes.md#timeseries_bar)
+- [HORIZONTAL\_BAR](ChartTypes.md#horizontal_bar)
+- [TIMESERIES\_BAR](ChartTypes.md#timeseries_bar)
+- [TIMESERIES\_LINE](ChartTypes.md#timeseries_line)
+- [VERTICAL\_BAR](ChartTypes.md#vertical_bar)
 
 ## Enumeration Members
 
 ### DOUGHNUT
 
-• **DOUGHNUT** = ``"doughnut"``
+• **DOUGHNUT** = ``"Doughnut"``
 
 #### Defined in
 
@@ -24,9 +24,9 @@
 
 ___
 
-### HORIZONTAL_BAR
+### HORIZONTAL\_BAR
 
-• **HORIZONTAL_BAR** = ``"horizontal_bar"``
+• **HORIZONTAL\_BAR** = ``"HorizontalBar"``
 
 #### Defined in
 
@@ -34,19 +34,19 @@ ___
 
 ___
 
-### VERTICAL_BAR
+### TIMESERIES\_BAR
 
-• **VERTICAL_BAR** = ``"vertical_bar"``
+• **TIMESERIES\_BAR** = ``"TimeSeriesBar"``
 
 #### Defined in
 
-[types/chart-types.ts:5](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/chart-types.ts#L5)
+[types/chart-types.ts:7](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/chart-types.ts#L7)
 
 ___
 
-### TIMESERIES_LINE
+### TIMESERIES\_LINE
 
-• **TIMESERIES_LINE** = ``"timeseries_line"``
+• **TIMESERIES\_LINE** = ``"Line"``
 
 #### Defined in
 
@@ -54,10 +54,10 @@ ___
 
 ___
 
-### TIMESERIES_BAR
+### VERTICAL\_BAR
 
-• **TIMESERIES_BAR** = ``"timeseries_bar"``
+• **VERTICAL\_BAR** = ``"VerticalBar"``
 
 #### Defined in
 
-[types/chart-types.ts:7](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/chart-types.ts#L7)
+[types/chart-types.ts:5](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/chart-types.ts#L5)

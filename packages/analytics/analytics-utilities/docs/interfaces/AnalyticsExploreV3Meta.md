@@ -1,57 +1,54 @@
-[@kong-ui-public/analytics-utilities](../analytics-utils.md) / AnalyticsExploreMeta
+[@kong-ui-public/analytics-utilities](../analytics-utils.md) / AnalyticsExploreV3Meta
 
-# Interface: AnalyticsExploreMeta
+# Interface: AnalyticsExploreV3Meta
 
-Metadata about the explore result
+Metadata about the exploreV3 result
 
 ## Hierarchy
 
-- [`BaseExploreMeta`](BaseExploreMeta.md)
+- `Omit`<[`AnalyticsExploreV2Meta`](AnalyticsExploreV2Meta.md), ``"dimensions"``\>
 
-  ↳ **`AnalyticsExploreMeta`**
+  ↳ **`AnalyticsExploreV3Meta`**
 
 ## Table of contents
 
 ### Properties
 
-- [dimensions](AnalyticsExploreMeta.md#dimensions)
-- [end](AnalyticsExploreMeta.md#end)
-- [granularity](AnalyticsExploreMeta.md#granularity)
-- [limit](AnalyticsExploreMeta.md#limit)
-- [metricNames](AnalyticsExploreMeta.md#metricnames)
-- [metricUnits](AnalyticsExploreMeta.md#metricunits)
-- [queryId](AnalyticsExploreMeta.md#queryid)
-- [start](AnalyticsExploreMeta.md#start)
-- [truncated](AnalyticsExploreMeta.md#truncated)
+- [display](AnalyticsExploreV3Meta.md#display)
+- [endMs](AnalyticsExploreV3Meta.md#endms)
+- [granularity](AnalyticsExploreV3Meta.md#granularity)
+- [limit](AnalyticsExploreV3Meta.md#limit)
+- [metricNames](AnalyticsExploreV3Meta.md#metricnames)
+- [metricUnits](AnalyticsExploreV3Meta.md#metricunits)
+- [queryId](AnalyticsExploreV3Meta.md#queryid)
+- [startMs](AnalyticsExploreV3Meta.md#startms)
+- [truncated](AnalyticsExploreV3Meta.md#truncated)
 
 ## Properties
 
-### dimensions
+### display
 
-• `Optional` **dimensions**: [`DimensionMap`](DimensionMap.md)
-
-Map of dimension names
-Example - { Service: ['service1', 'service2', ... ] }
-
-#### Inherited from
-
-[BaseExploreMeta](BaseExploreMeta.md).[dimensions](BaseExploreMeta.md#dimensions)
+• **display**: `Record`<`string`, `Record`<`string`, `string`\>\>
 
 #### Defined in
 
-[types/analytics-data.ts:39](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L39)
+[types/analytics-data.ts:98](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L98)
 
 ___
 
-### end
+### endMs
 
-• **end**: `number`
+• **endMs**: `number`
 
-Second timestamp representing the end of this dataset
+Millisecond timestamp representing the end of this dataset
+
+#### Inherited from
+
+Omit.endMs
 
 #### Defined in
 
-[types/analytics-data.ts:74](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L74)
+[types/analytics-data.ts:88](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L88)
 
 ___
 
@@ -63,7 +60,7 @@ Granularity of this dataset in milliseconds
 
 #### Inherited from
 
-[BaseExploreMeta](BaseExploreMeta.md).[granularity](BaseExploreMeta.md#granularity)
+Omit.granularity
 
 #### Defined in
 
@@ -79,7 +76,7 @@ Limit applied to the original query
 
 #### Inherited from
 
-[BaseExploreMeta](BaseExploreMeta.md).[limit](BaseExploreMeta.md#limit)
+Omit.limit
 
 #### Defined in
 
@@ -95,7 +92,7 @@ List of metrics in this result
 
 #### Inherited from
 
-[BaseExploreMeta](BaseExploreMeta.md).[metricNames](BaseExploreMeta.md#metricnames)
+Omit.metricNames
 
 #### Defined in
 
@@ -112,7 +109,7 @@ Example - { TotalRequests: 'count', Latency: 'ms' }
 
 #### Inherited from
 
-[BaseExploreMeta](BaseExploreMeta.md).[metricUnits](BaseExploreMeta.md#metricunits)
+Omit.metricUnits
 
 #### Defined in
 
@@ -128,7 +125,7 @@ Optional query id to be used to trace the original query from which this data re
 
 #### Inherited from
 
-[BaseExploreMeta](BaseExploreMeta.md).[queryId](BaseExploreMeta.md#queryid)
+Omit.queryId
 
 #### Defined in
 
@@ -136,15 +133,19 @@ Optional query id to be used to trace the original query from which this data re
 
 ___
 
-### start
+### startMs
 
-• **start**: `number`
+• **startMs**: `number`
 
-Second timestamp representing the start of this dataset
+Millisecond timestamp representing the start of this dataset
+
+#### Inherited from
+
+Omit.startMs
 
 #### Defined in
 
-[types/analytics-data.ts:70](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L70)
+[types/analytics-data.ts:84](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L84)
 
 ___
 
@@ -156,7 +157,7 @@ True if results are truncated
 
 #### Inherited from
 
-[BaseExploreMeta](BaseExploreMeta.md).[truncated](BaseExploreMeta.md#truncated)
+Omit.truncated
 
 #### Defined in
 

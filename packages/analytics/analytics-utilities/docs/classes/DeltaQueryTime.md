@@ -17,16 +17,19 @@
 ### Properties
 
 - [timeframe](DeltaQueryTime.md#timeframe)
+- [tz](DeltaQueryTime.md#tz)
 
 ### Methods
 
 - [calculateStartDate](DeltaQueryTime.md#calculatestartdate)
 - [endDate](DeltaQueryTime.md#enddate)
+- [endMs](DeltaQueryTime.md#endms)
 - [endSeconds](DeltaQueryTime.md#endseconds)
 - [granularityDruid](DeltaQueryTime.md#granularitydruid)
 - [granularityMs](DeltaQueryTime.md#granularityms)
 - [granularitySeconds](DeltaQueryTime.md#granularityseconds)
 - [startDate](DeltaQueryTime.md#startdate)
+- [startMs](DeltaQueryTime.md#startms)
 - [startSeconds](DeltaQueryTime.md#startseconds)
 - [withinFreeTier](DeltaQueryTime.md#withinfreetier)
 
@@ -34,13 +37,14 @@
 
 ### constructor
 
-• **new DeltaQueryTime**(`timeframe`)
+• **new DeltaQueryTime**(`timeframe`, `tz?`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `timeframe` | [`Timeframe`](Timeframe.md) |
+| `tz?` | `string` |
 
 #### Inherited from
 
@@ -48,7 +52,7 @@
 
 #### Defined in
 
-[queryTime.ts:15](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L15)
+[queryTime.ts:16](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L16)
 
 ## Properties
 
@@ -63,6 +67,20 @@
 #### Defined in
 
 [queryTime.ts:13](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L13)
+
+___
+
+### tz
+
+• `Protected` `Optional` `Readonly` **tz**: `string`
+
+#### Inherited from
+
+[UnaryQueryTime](UnaryQueryTime.md).[tz](UnaryQueryTime.md#tz)
+
+#### Defined in
+
+[queryTime.ts:14](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L14)
 
 ## Methods
 
@@ -88,7 +106,7 @@
 
 #### Defined in
 
-[queryTime.ts:30](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L30)
+[queryTime.ts:32](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L32)
 
 ___
 
@@ -106,7 +124,25 @@ ___
 
 #### Defined in
 
-[queryTime.ts:106](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L106)
+[queryTime.ts:120](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L120)
+
+___
+
+### endMs
+
+▸ **endMs**(): `number`
+
+#### Returns
+
+`number`
+
+#### Inherited from
+
+[UnaryQueryTime](UnaryQueryTime.md).[endMs](UnaryQueryTime.md#endms)
+
+#### Defined in
+
+[queryTime.ts:77](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L77)
 
 ___
 
@@ -124,7 +160,7 @@ ___
 
 #### Defined in
 
-[queryTime.ts:63](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L63)
+[queryTime.ts:67](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L67)
 
 ___
 
@@ -142,7 +178,7 @@ ___
 
 #### Defined in
 
-[queryTime.ts:53](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L53)
+[queryTime.ts:57](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L57)
 
 ___
 
@@ -160,7 +196,7 @@ ___
 
 #### Defined in
 
-[queryTime.ts:123](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L123)
+[queryTime.ts:137](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L137)
 
 ___
 
@@ -178,7 +214,7 @@ ___
 
 #### Defined in
 
-[queryTime.ts:49](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L49)
+[queryTime.ts:53](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L53)
 
 ___
 
@@ -196,7 +232,25 @@ ___
 
 #### Defined in
 
-[queryTime.ts:119](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L119)
+[queryTime.ts:133](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L133)
+
+___
+
+### startMs
+
+▸ **startMs**(): `number`
+
+#### Returns
+
+`number`
+
+#### Inherited from
+
+[UnaryQueryTime](UnaryQueryTime.md).[startMs](UnaryQueryTime.md#startms)
+
+#### Defined in
+
+[queryTime.ts:72](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L72)
 
 ___
 
@@ -214,7 +268,7 @@ ___
 
 #### Defined in
 
-[queryTime.ts:58](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L58)
+[queryTime.ts:62](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L62)
 
 ___
 
@@ -232,4 +286,4 @@ ___
 
 #### Defined in
 
-[queryTime.ts:68](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L68)
+[queryTime.ts:82](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L82)
