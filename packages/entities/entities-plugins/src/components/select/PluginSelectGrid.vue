@@ -80,8 +80,8 @@ import {
   type PluginType,
   type PluginCardList,
   type TriggerLabels,
-} from '../types'
-import composables from '../composables'
+} from '../../types'
+import composables from '../../composables'
 import PluginSelectCard from './PluginSelectCard.vue'
 
 const props = defineProps({

@@ -84,9 +84,9 @@ import {
   type KonnectPluginFormConfig,
   type PluginType,
   type PluginCardList,
-} from '../types'
-import composables from '../composables'
-import PluginSelectCard from './PluginSelectCard.vue'
+} from '../../types'
+import composables from '../../composables'
+import PluginSelectCard from '../select/PluginSelectCard.vue'
 import DeleteCustomPluginSchemaModal from './DeleteCustomPluginSchemaModal.vue'
 
 const props = defineProps({

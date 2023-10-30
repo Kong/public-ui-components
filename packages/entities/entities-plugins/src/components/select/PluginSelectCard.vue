@@ -110,10 +110,15 @@
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
-import { PluginGroup, type KongManagerPluginFormConfig, type KonnectPluginFormConfig, type PluginType } from '../types'
+import {
+  PluginGroup,
+  type KongManagerPluginFormConfig,
+  type KonnectPluginFormConfig,
+  type PluginType,
+} from '../../types'
 import { KUI_ICON_SIZE_30, KUI_COLOR_TEXT_NEUTRAL_STRONGER } from '@kong/design-tokens'
-import composables from '../composables'
-import PluginIcon from './PluginIcon.vue'
+import composables from '../../composables'
+import PluginIcon from '../PluginIcon.vue'
 
 const emit = defineEmits<{
   (e: 'plugin-clicked', plugin: PluginType) : void,

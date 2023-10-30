@@ -57,8 +57,8 @@ import { ref, computed, type PropType } from 'vue'
 import {
   type KongManagerPluginFormConfig,
   type KonnectPluginFormConfig,
-} from '../types'
-import composables from '../composables'
+} from '../../types'
+import composables from '../../composables'
 import { useAxios, useErrors, EntityTypes, EntityDeleteModal } from '@kong-ui-public/entities-shared'
 
 const props = defineProps({

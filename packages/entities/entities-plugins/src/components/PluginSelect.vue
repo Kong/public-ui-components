@@ -127,9 +127,9 @@ import {
 import { useAxios, useHelpers, useErrors } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
-import PluginCardSkeleton from './PluginCardSkeleton.vue'
-import PluginCustomGrid from './PluginCustomGrid.vue'
-import PluginSelectGrid from './PluginSelectGrid.vue'
+import PluginCardSkeleton from './select/PluginCardSkeleton.vue'
+import PluginCustomGrid from './custom-plugins/PluginCustomGrid.vue'
+import PluginSelectGrid from './select/PluginSelectGrid.vue'
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
