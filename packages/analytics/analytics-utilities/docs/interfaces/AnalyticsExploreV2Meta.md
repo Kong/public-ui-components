@@ -1,28 +1,28 @@
-[@kong-ui-public/analytics-utilities](../analytics-utils.md) / AnalyticsExploreMeta
+[@kong-ui-public/analytics-utilities](../analytics-utils.md) / AnalyticsExploreV2Meta
 
-# Interface: AnalyticsExploreMeta
+# Interface: AnalyticsExploreV2Meta
 
-Metadata about the explore result
+Metadata about the exploreV2 result
 
 ## Hierarchy
 
 - [`BaseExploreMeta`](BaseExploreMeta.md)
 
-  ↳ **`AnalyticsExploreMeta`**
+  ↳ **`AnalyticsExploreV2Meta`**
 
 ## Table of contents
 
 ### Properties
 
-- [dimensions](AnalyticsExploreMeta.md#dimensions)
-- [end](AnalyticsExploreMeta.md#end)
-- [granularity](AnalyticsExploreMeta.md#granularity)
-- [limit](AnalyticsExploreMeta.md#limit)
-- [metricNames](AnalyticsExploreMeta.md#metricnames)
-- [metricUnits](AnalyticsExploreMeta.md#metricunits)
-- [queryId](AnalyticsExploreMeta.md#queryid)
-- [start](AnalyticsExploreMeta.md#start)
-- [truncated](AnalyticsExploreMeta.md#truncated)
+- [dimensions](AnalyticsExploreV2Meta.md#dimensions)
+- [endMs](AnalyticsExploreV2Meta.md#endms)
+- [granularity](AnalyticsExploreV2Meta.md#granularity)
+- [limit](AnalyticsExploreV2Meta.md#limit)
+- [metricNames](AnalyticsExploreV2Meta.md#metricnames)
+- [metricUnits](AnalyticsExploreV2Meta.md#metricunits)
+- [queryId](AnalyticsExploreV2Meta.md#queryid)
+- [startMs](AnalyticsExploreV2Meta.md#startms)
+- [truncated](AnalyticsExploreV2Meta.md#truncated)
 
 ## Properties
 
@@ -43,15 +43,15 @@ Example - { Service: ['service1', 'service2', ... ] }
 
 ___
 
-### end
+### endMs
 
-• **end**: `number`
+• **endMs**: `number`
 
-Second timestamp representing the end of this dataset
+Millisecond timestamp representing the end of this dataset
 
 #### Defined in
 
-[types/analytics-data.ts:74](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L74)
+[types/analytics-data.ts:88](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L88)
 
 ___
 
@@ -136,15 +136,15 @@ Optional query id to be used to trace the original query from which this data re
 
 ___
 
-### start
+### startMs
 
-• **start**: `number`
+• **startMs**: `number`
 
-Second timestamp representing the start of this dataset
+Millisecond timestamp representing the start of this dataset
 
 #### Defined in
 
-[types/analytics-data.ts:70](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L70)
+[types/analytics-data.ts:84](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L84)
 
 ___
 

@@ -7,11 +7,13 @@
 ### Methods
 
 - [endDate](QueryTime.md#enddate)
+- [endMs](QueryTime.md#endms)
 - [endSeconds](QueryTime.md#endseconds)
 - [granularityDruid](QueryTime.md#granularitydruid)
 - [granularityMs](QueryTime.md#granularityms)
 - [granularitySeconds](QueryTime.md#granularityseconds)
 - [startDate](QueryTime.md#startdate)
+- [startMs](QueryTime.md#startms)
 - [startSeconds](QueryTime.md#startseconds)
 
 ## Methods
@@ -23,6 +25,20 @@
 #### Returns
 
 `Date`
+
+#### Defined in
+
+[types/query-time.ts:11](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/query-time.ts#L11)
+
+___
+
+### endMs
+
+▸ **endMs**(): `number`
+
+#### Returns
+
+`number`
 
 #### Defined in
 
@@ -68,7 +84,7 @@ ___
 
 #### Defined in
 
-[types/query-time.ts:10](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/query-time.ts#L10)
+[types/query-time.ts:12](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/query-time.ts#L12)
 
 ___
 
@@ -93,6 +109,20 @@ ___
 #### Returns
 
 `Date`
+
+#### Defined in
+
+[types/query-time.ts:10](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/query-time.ts#L10)
+
+___
+
+### startMs
+
+▸ **startMs**(): `number`
+
+#### Returns
+
+`number`
 
 #### Defined in
 

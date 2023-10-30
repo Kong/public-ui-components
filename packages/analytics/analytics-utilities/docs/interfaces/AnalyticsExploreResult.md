@@ -21,7 +21,7 @@ Additional metadata about the query
 
 #### Defined in
 
-[types/analytics-data.ts:85](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L85)
+[types/analytics-data.ts:112](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L112)
 
 ___
 
@@ -33,4 +33,4 @@ Array of records
 
 #### Defined in
 
-[types/analytics-data.ts:81](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L81)
+[types/analytics-data.ts:108](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L108)

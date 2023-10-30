@@ -34,7 +34,7 @@ ___
 
 ### version
 
-• **version**: `string`
+• `Optional` **version**: `string`
 
 #### Defined in
 

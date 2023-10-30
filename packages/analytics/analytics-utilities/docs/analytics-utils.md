@@ -6,6 +6,7 @@
 
 ### Enumerations
 
+- [ChartTypes](enums/ChartTypes.md)
 - [GranularityKeys](enums/GranularityKeys.md)
 - [TimeframeKeys](enums/TimeframeKeys.md)
 
@@ -21,6 +22,11 @@
 - [AnalyticsExploreMeta](interfaces/AnalyticsExploreMeta.md)
 - [AnalyticsExploreRecord](interfaces/AnalyticsExploreRecord.md)
 - [AnalyticsExploreResult](interfaces/AnalyticsExploreResult.md)
+- [AnalyticsExploreV2Meta](interfaces/AnalyticsExploreV2Meta.md)
+- [AnalyticsExploreV2Result](interfaces/AnalyticsExploreV2Result.md)
+- [AnalyticsExploreV3Meta](interfaces/AnalyticsExploreV3Meta.md)
+- [AnalyticsExploreV3Result](interfaces/AnalyticsExploreV3Result.md)
+- [BaseExploreMeta](interfaces/BaseExploreMeta.md)
 - [DatePickerSelection](interfaces/DatePickerSelection.md)
 - [DimensionMap](interfaces/DimensionMap.md)
 - [DruidGranularity](interfaces/DruidGranularity.md)
@@ -42,6 +48,7 @@
 - [datePickerSelectionToTimeframe](analytics-utils.md#datepickerselectiontotimeframe)
 - [dstOffsetHours](analytics-utils.md#dstoffsethours)
 - [floorToNearestTimeGrain](analytics-utils.md#floortonearesttimegrain)
+- [formatISOTimeWithTZ](analytics-utils.md#formatisotimewithtz)
 - [granularitiesToOptions](analytics-utils.md#granularitiestooptions)
 - [granularityMsToQuery](analytics-utils.md#granularitymstoquery)
 - [msToGranularity](analytics-utils.md#mstogranularity)
@@ -65,7 +72,7 @@
 
 #### Defined in
 
-[granularity.ts:4](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/granularity.ts#L4)
+[granularity.ts:6](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/granularity.ts#L6)
 
 ___
 
@@ -75,13 +82,13 @@ ___
 
 #### Defined in
 
-[timeframes.ts:173](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L173)
+[timeframes.ts:227](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L227)
 
 ## Functions
 
 ### ceilToNearestTimeGrain
 
-▸ **ceilToNearestTimeGrain**(`date`, `granularity`): `Date`
+▸ **ceilToNearestTimeGrain**(`date`, `granularity`, `tz?`): `Date`
 
 #### Parameters
 
@@ -89,6 +96,7 @@ ___
 | :------ | :------ |
 | `date` | `Date` |
 | `granularity` | [`GranularityKeys`](enums/GranularityKeys.md) |
+| `tz?` | `string` |
 
 #### Returns
 
@@ -96,7 +104,7 @@ ___
 
 #### Defined in
 
-[granularity.ts:68](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/granularity.ts#L68)
+[granularity.ts:78](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/granularity.ts#L78)
 
 ___
 
@@ -116,7 +124,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:345](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L345)
+[timeframes.ts:399](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L399)
 
 ___
 
@@ -137,13 +145,13 @@ ___
 
 #### Defined in
 
-[timeframes.ts:395](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L395)
+[timeframes.ts:449](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L449)
 
 ___
 
 ### floorToNearestTimeGrain
 
-▸ **floorToNearestTimeGrain**(`date`, `granularity`): `Date`
+▸ **floorToNearestTimeGrain**(`date`, `granularity`, `tz?`): `Date`
 
 #### Parameters
 
@@ -151,6 +159,7 @@ ___
 | :------ | :------ |
 | `date` | `Date` |
 | `granularity` | [`GranularityKeys`](enums/GranularityKeys.md) |
+| `tz?` | `string` |
 
 #### Returns
 
@@ -158,7 +167,27 @@ ___
 
 #### Defined in
 
-[granularity.ts:64](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/granularity.ts#L64)
+[granularity.ts:74](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/granularity.ts#L74)
+
+___
+
+### formatISOTimeWithTZ
+
+▸ **formatISOTimeWithTZ**(`ts`): `string`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ts` | `number` \| `Date` |
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+[format.ts:3](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/format.ts#L3)
 
 ___
 
@@ -180,7 +209,7 @@ ___
 
 #### Defined in
 
-[granularity.ts:11](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/granularity.ts#L11)
+[granularity.ts:13](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/granularity.ts#L13)
 
 ___
 
@@ -201,7 +230,7 @@ ___
 
 #### Defined in
 
-[granularity.ts:21](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/granularity.ts#L21)
+[granularity.ts:23](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/granularity.ts#L23)
 
 ___
 
@@ -221,7 +250,7 @@ ___
 
 #### Defined in
 
-[granularity.ts:36](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/granularity.ts#L36)
+[granularity.ts:38](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/granularity.ts#L38)
 
 ___
 
@@ -241,7 +270,7 @@ ___
 
 #### Defined in
 
-[timeframes.ts:373](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L373)
+[timeframes.ts:427](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L427)
 
 ___
 
@@ -261,4 +290,4 @@ ___
 
 #### Defined in
 
-[timeframes.ts:383](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L383)
+[timeframes.ts:437](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/timeframes.ts#L437)
