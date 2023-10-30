@@ -174,6 +174,10 @@ An `@plugin-clicked` event is emitted when a plugin in the selection grid is cli
 
 A `@loading` event is emitted when loading state changes. The event payload is a boolean.
 
+#### delete-custom:success
+
+A `@delete-custom:success` event is emitted when custom plugin is successfully deleted. The event payload is the deleted plugin's name.
+
 ### Usage example
 
 Please refer to the [sandbox](../sandbox/pages/PluginListPage.vue). The form is accessible by clicking the `+ New Plugin` button.

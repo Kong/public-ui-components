@@ -148,7 +148,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'plugin-clicked', plugin: PluginType): void,
   (e: 'revalidate'): void,
-  (e: 'delete:success'): void,
+  (e: 'delete:success', pluginName: string): void,
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -213,7 +213,7 @@ const handleCustomPluginDelete = (plugin: PluginType): void => {
 const handleClose = (revalidate?: boolean): void => {
   if (revalidate) {
     emit('revalidate')
-    emit('delete:success')
+    emit('delete:success', selectedPlugin.value?.name || '')
   }
 
   openDeleteModal.value = false
