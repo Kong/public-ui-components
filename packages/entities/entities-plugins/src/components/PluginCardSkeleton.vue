@@ -50,13 +50,5 @@ defineProps({
       justify-content: center;
     }
   }
-
-  // TODO: do I need these two? They would be deep()
-  .skeleton-card-column {
-    width: calc(33% - $kui-space-60);
-  }
-  .skeleton-card {
-    height: 240px;
-  }
 }
 </style>

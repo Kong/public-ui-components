@@ -251,7 +251,6 @@ const handleClose = (revalidate?: boolean): void => {
     margin-top: $kui-space-90;
     row-gap: $kui-space-90;
 
-    // TODO: do I still need this?
     :deep(.kong-card) {
       display: flex;
       flex: 1 0 0;

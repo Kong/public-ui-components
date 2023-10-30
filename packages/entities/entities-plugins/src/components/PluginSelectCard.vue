@@ -186,7 +186,6 @@ const handleCustomEdit = (pluginName: string): void => {
 }
 
 const handleCustomClick = (): void => {
-  // TODO: verify
   // handle custom plugin card click only
   if (props.config.app === 'konnect') {
     if (isCreateCustomPlugin.value && props.config.createCustomRoute) {
@@ -232,7 +231,6 @@ const handleCustomClick = (): void => {
     font-weight: $kui-font-weight-regular;
   }
 
-  // TODO: do I still need this?
   :deep(.k-card-body) {
     display: flex;
     flex: 1;
