@@ -103,8 +103,9 @@
               />
             </div>
 
-            <KTooltip v-else
-              :label="isTruncated && item.value"
+            <KTooltip
+              v-else
+              :label="isTruncated ? item.value : ''"
             >
               <span
                 ref="textContent"
