@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.6.11...@kong-ui-public/entities-shared@1.6.12) (2023-10-30)
+
+
+### Bug Fixes
+
+* **entities-shared:** config card item tag ([#875](https://github.com/Kong/public-ui-components/issues/875)) ([5b0d44c](https://github.com/Kong/public-ui-components/commit/5b0d44c12ac65adb756c0f81a389e64d65721a82))
+
+
+
+
+
 ## [1.6.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.6.10...@kong-ui-public/entities-shared@1.6.11) (2023-10-30)
 
 
