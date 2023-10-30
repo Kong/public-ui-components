@@ -4,7 +4,7 @@
     :action-pending="isLoading"
     class="delete-custom-plugin-schema-modal"
     data-testid="delete-custom-plugin-schema-modal"
-    :description="t('delete.custom_description')"
+    :description="t('delete.description_custom')"
     :entity-name="plugin.name"
     :entity-type="EntityTypes.Plugin"
     :error="errorMessage"
