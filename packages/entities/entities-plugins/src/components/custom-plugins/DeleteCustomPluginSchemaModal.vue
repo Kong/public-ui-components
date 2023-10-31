@@ -11,7 +11,7 @@
     need-confirm
     :title="title"
     visible
-    @cancel="handleCancel"
+    @cancel="$emit('closed')"
     @proceed="handleSubmit"
   />
 
@@ -23,7 +23,7 @@
     is-visible
     :title="title"
     type="warning"
-    @canceled="handleCancel"
+    @canceled="$emit('closed')"
   >
     <template #body-content>
       <div>
@@ -43,7 +43,7 @@
           appearance="outline"
           class="cancel-button"
           data-testid="delete-custom-plugin-form-cancel"
-          @click="handleCancel"
+          @click="$emit('closed')"
         >
           {{ t('actions.cancel') }}
         </KButton>
@@ -95,10 +95,6 @@ const title = computed((): string => {
 const isLoading = ref(false)
 const errorMessage = ref('')
 const isPluginSchemaInUse = ref(false)
-
-const handleCancel = (): void => {
-  emit('closed')
-}
 
 const handleSubmit = async (): Promise<void> => {
   isLoading.value = true

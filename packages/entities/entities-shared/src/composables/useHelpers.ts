@@ -11,11 +11,11 @@ export default function useHelpers() {
   }
 
   /**
- * Check if 2 objects are equal
- * @param {Object} a first object to compare
- * @param {Object} b second object to compare
- * @returns {Boolean} whether or not the objects are equal
- */
+   * Check if 2 objects are equal
+   * @param {Object} a first object to compare
+   * @param {Object} b second object to compare
+   * @returns {Boolean} whether or not the objects are equal
+   */
   const objectsAreEqual = (a: Record<string, any>, b: Record<string, any>): boolean => {
     try {
       return JSON.stringify(a) === JSON.stringify(b)
@@ -25,12 +25,12 @@ export default function useHelpers() {
   }
 
   /**
- * A comparator function that given a key, compares object values with that key, and returns the results of
- * localCompare on those values (see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare for reference)
- * Also checks for undefined, nulls and sub-Arrays.
- * @param {String} property the key to sort on
- * @returns {Function} a comparator function
- */
+   * A comparator function that given a key, compares object values with that key, and returns the results of
+   * localCompare on those values (see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare for reference)
+   * Also checks for undefined, nulls and sub-Arrays.
+   * @param {String} property the key to sort on
+   * @returns {Function} a comparator function
+   */
   const sortAlpha = (property: string) => {
     return (a: Record<string, any>, b: Record<string, any>) => {
       let propertyA = a[property] === undefined || a[property] === null ? '' : a[property]

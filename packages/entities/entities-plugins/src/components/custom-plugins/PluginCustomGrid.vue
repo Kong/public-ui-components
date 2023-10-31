@@ -40,7 +40,7 @@
         <div class="plugin-card-container">
           <PluginSelectCard
             v-for="(plugin, index) in getPluginCards('visible')"
-            :key="index"
+            :key="`plugin-card-${index}`"
             :can-delete-custom="canDeleteCustom"
             :can-edit-custom="canEditCustom"
             :config="config"
@@ -55,7 +55,7 @@
       <div class="plugin-card-container">
         <PluginSelectCard
           v-for="(plugin, index) in getPluginCards('hidden')"
-          :key="index"
+          :key="`plugin-card-${index}`"
           :can-delete-custom="canDeleteCustom"
           :can-edit-custom="canEditCustom"
           :config="config"
@@ -147,7 +147,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'plugin-clicked', plugin: PluginType): void,
-  (e: 'revalidate'): void,
+  (e: 'revalidate'): void, /** internal use only */
   (e: 'delete:success', pluginName: string): void,
 }>()
 
@@ -167,13 +167,13 @@ const modifiedCustomPlugins = computed((): PluginType[] => {
 
   // ADD CUSTOM_PLUGIN_CREATE as the first card if allowed creation
   return props.canCreateCustom && !props.noRouteChange && props.config.createCustomRoute
-    ? [{
+    ? ([{
       id: 'custom-plugin-create',
       name: t('plugins.select.tabs.custom.create.name'),
       available: true,
       group: PluginGroup.CUSTOM_PLUGINS,
       description: t('plugins.select.tabs.custom.create.description'),
-    } as PluginType].concat(customPlugins)
+    }] as PluginType[]).concat(customPlugins)
     : customPlugins
 })
 

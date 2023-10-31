@@ -45,7 +45,7 @@
             <div class="plugin-card-container">
               <PluginSelectCard
                 v-for="(plugin, index) in getPluginCards(group, 'visible')"
-                :key="index"
+                :key="`plugin-card-${index}`"
                 :config="config"
                 :no-route-change="noRouteChange"
                 :plugin="plugin"
@@ -57,7 +57,7 @@
           <div class="plugin-card-container">
             <PluginSelectCard
               v-for="(plugin, index) in getPluginCards(group, 'hidden')"
-              :key="index"
+              :key="`plugin-card-${index}`"
               :config="config"
               :no-route-change="noRouteChange"
               :plugin="plugin"
