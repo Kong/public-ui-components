@@ -72,7 +72,7 @@
             </p>
             <PluginSelectGrid
               :config="config"
-              :no-route-change="noRouteChange"
+              :navigate-on-click="navigateOnClick"
               :plugin-list="filteredPlugins"
               :plugins-per-row="pluginsPerRow"
               @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
@@ -91,7 +91,7 @@
               :can-delete-custom="usercanDeleteCustomPlugin"
               :can-edit-custom="usercanEditCustomPlugin"
               :config="config"
-              :no-route-change="noRouteChange"
+              :navigate-on-click="navigateOnClick"
               :plugin-list="filteredPlugins"
               :plugins-per-row="pluginsPerRow"
               @delete:success="(name: string) => $emit('delete-custom:success', name)"
@@ -106,7 +106,7 @@
       <PluginSelectGrid
         v-else
         :config="config"
-        :no-route-change="noRouteChange"
+        :navigate-on-click="navigateOnClick"
         :plugin-list="filteredPlugins"
         :plugins-per-row="pluginsPerRow"
         @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
@@ -164,12 +164,12 @@ const props = defineProps({
     default: async () => true,
   },
   /**
-   * @param {boolean} noRouteChange if true, let consuming component handle event when clicking on a plugin
+   * @param {boolean} navigateOnClick if false, let consuming component handle event when clicking on a plugin
    * Used in conjunction with `@plugin-clicked` event
    */
-  noRouteChange: {
+  navigateOnClick: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   /**
     * @param {boolean} availableOnServer checks kong config plugins.available_on_server and if

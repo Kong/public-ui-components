@@ -47,7 +47,7 @@
                 v-for="(plugin, index) in getPluginCards('visible', nonCustomPlugins[group as keyof PluginCardList] || [], pluginsPerRow)"
                 :key="`plugin-card-${index}`"
                 :config="config"
-                :no-route-change="noRouteChange"
+                :navigate-on-click="navigateOnClick"
                 :plugin="plugin"
                 @plugin-clicked="emitPluginData"
               />
@@ -59,7 +59,7 @@
               v-for="(plugin, index) in getPluginCards('hidden', nonCustomPlugins[group as keyof PluginCardList] || [], pluginsPerRow)"
               :key="`plugin-card-${index}`"
               :config="config"
-              :no-route-change="noRouteChange"
+              :navigate-on-click="navigateOnClick"
               :plugin="plugin"
               @plugin-clicked="emitPluginData"
             />
@@ -104,12 +104,12 @@ const props = defineProps({
     default: () => ({}),
   },
   /**
-   * @param {boolean} noRouteChange if true, let consuming component handle event when clicking on a plugin
+   * @param {boolean} navigateOnClick if false, let consuming component handle event when clicking on a plugin
    * Used in conjunction with `@plugin-clicked` event
    */
-  noRouteChange: {
+  navigateOnClick: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   /**
    * Number of plugins to always have visible (never will be collapsed)

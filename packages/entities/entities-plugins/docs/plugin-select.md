@@ -116,13 +116,13 @@ A synchronous or asynchronous function, that returns a boolean, that evaluates i
 
 A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can edit a given custom plugin.
 
-#### `noRouteChange`
+#### `navigateOnClick`
 
 - type: `boolean`
 - required: `false`
-- default: `false`
+- default: `true`
 
-If true, let consuming component handle event when clicking on a plugin. Used in conjunction with `@plugin-clicked` event.
+If false, let consuming component handle event when clicking on a plugin. Used in conjunction with `@plugin-clicked` event.
 
 #### `availableOnServer`
 

@@ -41,11 +41,7 @@
               size="small"
             >
               <template #icon>
-                <KIcon
-                  :color="KUI_COLOR_TEXT_NEUTRAL_STRONGER"
-                  icon="more"
-                  :size="KUI_ICON_SIZE_30"
-                />
+                <MoreIcon :size="KUI_ICON_SIZE_30" />
               </template>
             </KButton>
           </template>
@@ -117,7 +113,8 @@ import {
   type KonnectPluginFormConfig,
   type PluginType,
 } from '../../types'
-import { KUI_ICON_SIZE_30, KUI_COLOR_TEXT_NEUTRAL_STRONGER } from '@kong/design-tokens'
+import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
+import { MoreIcon } from '@kong/icons'
 import composables from '../../composables'
 import PluginIcon from '../PluginIcon.vue'
 
@@ -155,9 +152,9 @@ const props = defineProps({
     type: Object as PropType<PluginType>,
     required: true,
   },
-  noRouteChange: {
+  navigateOnClick: {
     type: Boolean,
-    default: false,
+    default: true,
   },
 })
 
@@ -165,14 +162,14 @@ const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const controlPlaneId = computed((): string => props.config.app === 'konnect' ? props.config.controlPlaneId : '')
 const isDisabled = computed((): boolean => !!(!props.plugin.available || props.plugin.disabledMessage))
-const hasActions = computed((): boolean => !!(isCustomPlugin.value && !isCreateCustomPlugin.value && !props.noRouteChange && controlPlaneId.value && (props.canDeleteCustomPlugin || props.canEditCustomPlugin)))
+const hasActions = computed((): boolean => !!(isCustomPlugin.value && !isCreateCustomPlugin.value && props.navigateOnClick && controlPlaneId.value && (props.canDeleteCustomPlugin || props.canEditCustomPlugin)))
 
 const handleCreateClick = (): void => {
   router.push(props.config.getCreateRoute(props.plugin.id))
 }
 
 const handleClick = (): void => {
-  if (props.noRouteChange) {
+  if (!props.navigateOnClick) {
     emitPluginData()
   } else {
     handleCreateClick()
@@ -220,6 +217,10 @@ const handleCustomClick = (): void => {
   flex-basis: 100%;
   flex-flow: row-wrap;
   max-width: 335px;
+
+  .actions-trigger {
+    color: $kui-color-text-neutral-stronger;
+  }
 
   &.plugin-card-cursor-pointer {
     cursor: pointer;

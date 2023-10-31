@@ -253,14 +253,14 @@ describe('<PluginSelect />', () => {
       cy.getTestId('plugins-empty-state').should('be.visible')
     })
 
-    it('click event should be emitted when Plugin was clicked and noRouteChange is true', () => {
+    it('click event should be emitted when Plugin was clicked and navigateOnClick is false', () => {
       interceptKM()
 
       cy.mount(PluginSelect, {
         props: {
           config: baseConfigKM,
           onPluginClicked: cy.spy().as('onPluginClickedSpy'),
-          noRouteChange: true,
+          navigateOnClick: false,
         },
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
@@ -542,14 +542,14 @@ describe('<PluginSelect />', () => {
       cy.getTestId('plugins-empty-state').should('be.visible')
     })
 
-    it('click event should be emitted when Plugin was clicked and noRouteChange is true', () => {
+    it('click event should be emitted when Plugin was clicked and navigateOnClick is false', () => {
       interceptKonnect()
 
       cy.mount(PluginSelect, {
         props: {
           config: baseConfigKonnect,
           onPluginClicked: cy.spy().as('onPluginClickedSpy'),
-          noRouteChange: true,
+          navigateOnClick: false,
         },
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')

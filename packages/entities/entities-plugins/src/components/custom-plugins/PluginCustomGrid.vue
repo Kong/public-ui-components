@@ -44,7 +44,7 @@
             :can-delete-custom="canDeleteCustomPlugin"
             :can-edit-custom="canEditCustomPlugin"
             :config="config"
-            :no-route-change="noRouteChange"
+            :navigate-on-click="navigateOnClick"
             :plugin="plugin"
             @custom-plugin-delete="handleCustomPluginDelete(plugin)"
             @plugin-clicked="emitPluginData"
@@ -59,7 +59,7 @@
           :can-delete-custom="canDeleteCustomPlugin"
           :can-edit-custom="canEditCustomPlugin"
           :config="config"
-          :no-route-change="noRouteChange"
+          :navigate-on-click="navigateOnClick"
           :plugin="plugin"
           @plugin-clicked="emitPluginData"
         />
@@ -129,12 +129,12 @@ const props = defineProps({
     default: () => ({}),
   },
   /**
-   * @param {boolean} noRouteChange if true, let consuming component handle event when clicking on a plugin
+   * @param {boolean} navigateOnClick if false, let consuming component handle event when clicking on a plugin
    * Used in conjunction with `@plugin-clicked` event
    */
-  noRouteChange: {
+  navigateOnClick: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   /**
    * Number of plugins to always have visible (never will be collapsed)
@@ -167,7 +167,7 @@ const modifiedCustomPlugins = computed((): PluginType[] => {
   const customPlugins: PluginType[] = JSON.parse(JSON.stringify(props.pluginList))[PluginGroup.CUSTOM_PLUGINS] || []
 
   // ADD CUSTOM_PLUGIN_CREATE as the first card if allowed creation
-  return props.canCreateCustomPlugin && !props.noRouteChange && props.config.createCustomRoute
+  return props.canCreateCustomPlugin && props.navigateOnClick && props.config.createCustomRoute
     ? ([{
       id: 'custom-plugin-create',
       name: t('plugins.select.tabs.custom.create.name'),
