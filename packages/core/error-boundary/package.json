@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "^1.11.6",
+    "@kong/icons": "^1.7.8",
     "vue": "^3.3.4"
   },
   "repository": {
@@ -60,8 +61,5 @@
   },
   "peerDependencies": {
     "vue": "^3.3.4"
-  },
-  "dependencies": {
-    "@kong/icons": "^1.7.8"
   }
 }

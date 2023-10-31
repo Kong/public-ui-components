@@ -389,14 +389,13 @@ importers:
         version: 1.0.4(vue@3.3.4)
 
   packages/core/error-boundary:
-    dependencies:
-      '@kong/icons':
-        specifier: ^1.7.8
-        version: 1.7.8(vue@3.3.4)
     devDependencies:
       '@kong/design-tokens':
         specifier: ^1.11.6
         version: 1.11.6
+      '@kong/icons':
+        specifier: ^1.7.8
+        version: 1.7.8(vue@3.3.4)
       vue:
         specifier: ^3.3.4
         version: 3.3.4
