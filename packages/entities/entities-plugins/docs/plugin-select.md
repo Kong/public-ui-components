@@ -29,7 +29,6 @@ A grid component for selecting Plugins.
 
 - type: `Object as PropType<KonnectPluginFormConfig | KongManagerPluginFormConfig>`
 - required: `true`
-- default: `undefined`
 - properties:
   - `app`:
     - type: `'konnect' | 'kongManager'`

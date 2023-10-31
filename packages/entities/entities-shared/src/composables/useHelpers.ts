@@ -16,7 +16,7 @@ export default function useHelpers() {
  * @param {Object} b second object to compare
  * @returns {Boolean} whether or not the objects are equal
  */
-  const objectsAreEqual = (a: Record<string, any>, b: Record<string, any>) => {
+  const objectsAreEqual = (a: Record<string, any>, b: Record<string, any>): boolean => {
     try {
       return JSON.stringify(a) === JSON.stringify(b)
     } catch (e) {

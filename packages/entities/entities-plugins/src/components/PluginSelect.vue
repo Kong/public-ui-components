@@ -413,6 +413,7 @@ watch(() => props.ignoredPlugins, (val, oldVal) => {
 const userCanCreateCustom = ref(false)
 const userCanEditCustom = ref(false)
 const userCanDeleteCustom = ref(false)
+
 onBeforeMount(async () => {
   // Evaluate the user permissions
   userCanCreateCustom.value = await props.canCreateCustom()
