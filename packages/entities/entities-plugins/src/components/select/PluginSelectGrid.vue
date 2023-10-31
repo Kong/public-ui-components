@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="plugin-select-grid">
     <KEmptyState
       v-if="!Object.keys(nonCustomPlugins).length"
       class="plugins-empty-state"

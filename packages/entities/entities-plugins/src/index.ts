@@ -1,7 +1,7 @@
 import PluginIcon from './components/PluginIcon.vue'
 import PluginList from './components/PluginList.vue'
 import PluginSelect from './components/PluginSelect.vue'
-import PluginSelectGrid from './components/PluginSelectGrid.vue'
+import PluginSelectGrid from './components/select/PluginSelectGrid.vue'
 import PluginConfigCard from './components/PluginConfigCard.vue'
 import composables from './composables'
 

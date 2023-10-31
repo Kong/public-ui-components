@@ -65,20 +65,22 @@
         @changed="(hash: string) => $router.replace({ hash })"
       >
         <template #kong>
-          <p class="tab-description">
-            {{ t('plugins.select.tabs.kong.description') }}
-          </p>
-          <PluginSelectGrid
-            :config="config"
-            :no-route-change="noRouteChange"
-            :plugin-list="filteredPlugins"
-            :plugins-per-row="pluginsPerRow"
-            @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
-          />
+          <div data-testid="kong-tab">
+            <p class="tab-description">
+              {{ t('plugins.select.tabs.kong.description') }}
+            </p>
+            <PluginSelectGrid
+              :config="config"
+              :no-route-change="noRouteChange"
+              :plugin-list="filteredPlugins"
+              :plugins-per-row="pluginsPerRow"
+              @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
+            />
+          </div>
         </template>
 
         <template #custom>
-          <div>
+          <div data-testid="custom-tab">
             <p class="tab-description">
               {{ t('plugins.select.tabs.custom.description') }}
             </p>

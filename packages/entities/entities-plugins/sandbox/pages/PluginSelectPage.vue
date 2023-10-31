@@ -56,14 +56,13 @@ const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   getCreateRoute: (plugin: string) => ({
     name: 'create-plugin',
     params: {
-      control_plane_id: controlPlaneId.value,
       plugin,
     },
   }),
 })
 
-const handleDeleteSuccess = (): void => {
-  console.log('Custom plugin deleted')
+const handleDeleteSuccess = (plugin: string): void => {
+  console.log(`Custom plugin ${plugin} deleted`)
 }
 </script>
 

@@ -2,17 +2,17 @@
   <KTooltip
     class="plugin-card plugin-card-cursor-pointer"
     :class="{
-      'disabled': !plugin.available || plugin.disabledMessage,
+      'disabled': isDisabled,
     }"
     :label="plugin.disabledMessage"
     position-fixed
   >
     <KCard
       class="plugin-card-content"
-      :data-testid="plugin.name"
-      :disabled="!plugin.available || plugin.disabledMessage"
+      :data-testid="`${plugin.id}-card`"
+      :disabled="isDisabled"
       has-hover
-      @click="isCustomPlugin ? undefined : noRouteChange ? emitPluginData() : handleCreateClick()"
+      @click="isDisabled || isCustomPlugin ? undefined : noRouteChange ? emitPluginData() : handleCreateClick()"
     >
       <template
         v-if="isCustomPlugin"
@@ -163,6 +163,7 @@ const props = defineProps({
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const controlPlaneId = computed((): string => props.config.app === 'konnect' ? props.config.controlPlaneId : '')
+const isDisabled = computed((): boolean => !!(!props.plugin.available || props.plugin.disabledMessage))
 
 const handleCreateClick = (): void => {
   router.push(props.config.getCreateRoute(props.plugin.id))
@@ -192,7 +193,7 @@ const handleCustomEdit = (pluginName: string): void => {
 
 const handleCustomClick = (): void => {
   // handle custom plugin card click only
-  if (props.config.app === 'konnect') {
+  if (!isDisabled.value && props.config.app === 'konnect') {
     if (isCreateCustomPlugin.value && props.config.createCustomRoute) {
       router.push(props.config.createCustomRoute)
     } else if (isCustomPlugin.value) {
