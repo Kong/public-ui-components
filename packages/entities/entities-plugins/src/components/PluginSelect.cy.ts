@@ -1,5 +1,5 @@
 // Cypress component test spec file
-import { PluginGroupArray, type KongManagerPluginFormConfig, type KonnectPluginFormConfig } from '../types'
+import { PluginGroupArray, PluginGroup, type KongManagerPluginFormConfig, type KonnectPluginFormConfig } from '../types'
 import {
   kmAvailablePlugins,
   kmLimitedAvailablePlugins,
@@ -50,6 +50,19 @@ const baseConfigKM:KongManagerPluginFormConfig = {
   }),
 }
 
+// filter out these 3 groups because we currently don't have
+// any plugins for 'Deployment' and 'WebSocket Plugins'.
+// Custom plugins are not shown in Kong Manager and displayed
+// separately in Konnect.
+const PLUGIN_GROUPS_IN_USE = PluginGroupArray.filter((group: string) => {
+  if (group === PluginGroup.CUSTOM_PLUGINS || group === PluginGroup.DEPLOYMENT ||
+      group === PluginGroup.WEBSOCKET) {
+    return false
+  }
+
+  return true
+})
+
 describe('<PluginSelect />', () => {
   describe('Kong Manager', () => {
     const interceptKM = (params?: {
@@ -86,9 +99,9 @@ describe('<PluginSelect />', () => {
       cy.getTestId(`${firstShownPlugin}-card`).should('be.visible')
 
       // plugin group collapses show
-      for (const pluginGroup in PluginGroupArray.slice(-1)) {
-        cy.get(`${pluginGroup}-collapse`).should('be.visible')
-      }
+      PLUGIN_GROUPS_IN_USE.forEach((pluginGroup: string) => {
+        cy.get('[data-testid="k-collapse-title"]').should('contain.text', pluginGroup)
+      })
       // renders all plugins
       for (const pluginName in kmAvailablePlugins.plugins.available_on_server) {
         cy.getTestId(`${pluginName}-card`).should('exist')
@@ -97,6 +110,7 @@ describe('<PluginSelect />', () => {
 
     it('should allow customizing the pluginsPerRow', () => {
       const pluginsPerRow = 3
+      const expectedCount = pluginsPerRow * PLUGIN_GROUPS_IN_USE.length
 
       interceptKM()
 
@@ -111,7 +125,7 @@ describe('<PluginSelect />', () => {
 
       cy.get('.kong-ui-entities-plugin-select-form').should('be.visible')
       cy.get('.kong-ui-entities-plugin-select-form .plugins-results-container').should('be.visible')
-      cy.get('.k-collapse-visible-content .plugin-card').should('have.length', pluginsPerRow)
+      cy.get('.k-collapse-visible-content .plugin-card').should('have.length', expectedCount)
     })
 
     it('should correctly render disabled plugins', () => {
@@ -216,7 +230,7 @@ describe('<PluginSelect />', () => {
           statusCode: 500,
           body: {},
         },
-      ).as('getAvailablePlugins')
+      ).as('getAvailablePlugins2')
 
       cy.mount(PluginSelect, {
         props: {
@@ -224,11 +238,9 @@ describe('<PluginSelect />', () => {
         },
       })
 
-      cy.wait('@getAvailablePlugins')
+      cy.wait('@getAvailablePlugins2')
 
       cy.get('.kong-ui-entities-plugin-select-form').should('be.visible')
-      cy.get('.kong-ui-entities-plugin-select-form .plugins-results-container').should('be.visible')
-
       cy.getTestId('plugins-fetch-error').should('be.visible')
     })
 
@@ -269,12 +281,11 @@ describe('<PluginSelect />', () => {
 
       cy.getTestId(`${firstShownPlugin}-card`).should('be.visible')
       cy.getTestId(`${firstShownPlugin}-card`).click()
-      /* cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(PluginSelect)
-        .vm.$emit('submit'))
- */
-      cy.wait('@pluginClicked')
 
-      cy.get('onPluginClickedSpy').should('have.been.calledOnce')
+      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(PluginSelect)
+        .vm.$emit('plugin-clicked', {}))
+
+      cy.get('@onPluginClickedSpy').should('have.been.called')
     })
   })
 
@@ -294,55 +305,6 @@ describe('<PluginSelect />', () => {
         },
       ).as(params?.alias ?? 'getAvailablePlugins')
     }
-
-    describe('actions', () => {
-      it('should correctly render custom plugin actions', () => {
-        interceptKonnect()
-
-        cy.mount(PluginSelect, {
-          props: {
-            config: baseConfigKonnect,
-            canEditCustomPlugin: () => { },
-            canDeleteCustomPlugin: () => { },
-          },
-        })
-
-        cy.wait('@getAvailablePlugins')
-
-        // custom plugins
-        cy.getTestId('custom-tab').should('be.visible')
-        cy.getTestId('custom-tab').click()
-        cy.get('.custom-plugins-grid').should('be.visible')
-
-        cy.getTestId('overflow-actions-button').eq(0).click()
-        cy.getTestId('edit-plugin-schema').should('be.visible')
-        cy.getTestId('delete-plugin-schema').should('be.visible')
-        // negative test for create
-        cy.getTestId('custom-plugin-create-card').should('not.exist')
-      })
-
-      it('should render create card if user has create rights', () => {
-        interceptKonnect()
-
-        cy.mount(PluginSelect, {
-          props: {
-            config: baseConfigKonnect,
-            canCreateCustomPlugin: () => { },
-          },
-        })
-
-        cy.wait('@getAvailablePlugins')
-
-        // custom plugins
-        cy.getTestId('custom-tab').should('be.visible')
-        cy.getTestId('custom-tab').click()
-        cy.get('.custom-plugins-grid').should('be.visible')
-
-        cy.getTestId('custom-plugin-create-card').should('be.visible')
-        // negative test for edit and delete
-        cy.getTestId('custom-plugin-actions').should('not.exist')
-      })
-    })
 
     it('should show the select page tabs', () => {
       interceptKonnect()
@@ -367,9 +329,9 @@ describe('<PluginSelect />', () => {
       cy.getTestId(`${customPluginsNames[0]}-card`).should('not.be.visible')
 
       // plugin group collapses show
-      for (const pluginGroup in PluginGroupArray.slice(-1)) {
-        cy.get(`${pluginGroup}-collapse`).should('be.visible')
-      }
+      PLUGIN_GROUPS_IN_USE.forEach((pluginGroup: string) => {
+        cy.get('[data-testid="k-collapse-title"]').should('contain.text', pluginGroup)
+      })
 
       // custom plugins
       cy.getTestId('custom-tab').should('be.visible')
@@ -387,6 +349,7 @@ describe('<PluginSelect />', () => {
 
     it('should allow customizing the pluginsPerRow', () => {
       const pluginsPerRow = 3
+      const expectedCount = pluginsPerRow * PLUGIN_GROUPS_IN_USE.length
 
       interceptKonnect()
 
@@ -401,7 +364,7 @@ describe('<PluginSelect />', () => {
 
       cy.get('.kong-ui-entities-plugin-select-form').should('be.visible')
       cy.get('.kong-ui-entities-plugin-select-form .plugins-results-container').should('be.visible')
-      cy.get('.k-collapse-visible-content .plugin-card').should('have.length', pluginsPerRow)
+      cy.get('.k-collapse-visible-content .plugin-card').should('have.length', expectedCount)
     })
 
     it('should correctly render disabled plugins', () => {
@@ -515,9 +478,8 @@ describe('<PluginSelect />', () => {
       })
 
       cy.wait('@getAvailablePlugins')
-      cy.get('.kong-ui-entities-plugin-select-form').should('be.visible')
-      cy.get('.kong-ui-entities-plugin-select-form .plugins-results-container').should('be.visible')
 
+      cy.get('.kong-ui-entities-plugin-select-form').should('be.visible')
       cy.getTestId('plugins-fetch-error').should('be.visible')
     })
 
@@ -559,12 +521,59 @@ describe('<PluginSelect />', () => {
       cy.getTestId(`${firstShownPlugin}-card`).should('be.visible')
       cy.getTestId(`${firstShownPlugin}-card`).click()
 
-      /* cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
-        .vm.$emit('submit')) */
+      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(PluginSelect)
+        .vm.$emit('plugin-clicked', {}))
 
-      cy.wait('@pluginClicked')
+      cy.get('@onPluginClickedSpy').should('have.been.called')
+    })
 
-      cy.get('onPluginClickedSpy').should('have.been.calledOnce')
+    describe('actions', () => {
+      it('should correctly render custom plugin actions', () => {
+        interceptKonnect()
+
+        cy.mount(PluginSelect, {
+          props: {
+            config: baseConfigKonnect,
+            canEditCustomPlugin: () => { },
+            canDeleteCustomPlugin: () => { },
+          },
+        })
+
+        cy.wait('@getAvailablePlugins')
+
+        // custom plugins
+        cy.getTestId('custom-tab').should('be.visible')
+        cy.getTestId('custom-tab').click()
+        cy.get('.custom-plugins-grid').should('be.visible')
+
+        cy.getTestId('overflow-actions-button').eq(0).click()
+        cy.getTestId('edit-plugin-schema').should('be.visible')
+        cy.getTestId('delete-plugin-schema').should('be.visible')
+        // negative test for create
+        cy.getTestId('custom-plugin-create-card').should('not.exist')
+      })
+
+      it('should render create card if user has create rights', () => {
+        interceptKonnect()
+
+        cy.mount(PluginSelect, {
+          props: {
+            config: baseConfigKonnect,
+            canCreateCustomPlugin: () => { },
+          },
+        })
+
+        cy.wait('@getAvailablePlugins')
+
+        // custom plugins
+        cy.getTestId('custom-tab').should('be.visible')
+        cy.getTestId('custom-tab').click()
+        cy.get('.custom-plugins-grid').should('be.visible')
+
+        cy.getTestId('custom-plugin-create-card').should('be.visible')
+        // negative test for edit and delete
+        cy.getTestId('custom-plugin-actions').should('not.exist')
+      })
     })
   })
 })

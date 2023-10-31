@@ -30,8 +30,8 @@
     </section>
 
     <KEmptyState
-      v-else-if="fetchErrorMessage"
-      data-testid="form-fetch-error"
+      v-else-if="hasError"
+      data-testid="plugins-fetch-error"
       hide-cta
       is-error
     >
@@ -239,7 +239,7 @@ const filteredPlugins = computed((): PluginCardList => {
   const results = JSON.parse(JSON.stringify(pluginsList.value))
 
   for (const type in pluginsList.value) {
-    const matches = pluginsList.value[type as keyof PluginCardList]?.filter((plugin: PluginType) => plugin.name.toLowerCase().includes(query) || plugin.group.toLowerCase().includes(query)) || []
+    const matches = pluginsList.value[type as keyof PluginCardList]?.filter((plugin: PluginType) => plugin.name.toLowerCase().includes(query) || plugin.id.toLowerCase().includes(query) || plugin.group.toLowerCase().includes(query)) || []
 
     if (!matches.length) {
       delete results[type]
