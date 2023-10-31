@@ -197,6 +197,9 @@ importers:
       '@kong-ui-public/analytics-utilities':
         specifier: workspace:^0.8.7
         version: link:../analytics-utilities
+      '@kong/icons':
+        specifier: ^1.7.8
+        version: 1.7.8(vue@3.3.4)
       approximate-number:
         specifier: ^2.1.1
         version: 2.1.1

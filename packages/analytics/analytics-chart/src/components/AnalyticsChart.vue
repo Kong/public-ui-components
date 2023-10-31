@@ -15,13 +15,10 @@
           placement="right"
         >
           <div class="limit-icon-wrapper">
-            <KIcon
-              class="warning-icon"
-              color="currentColor"
-              hide-title
-              icon="warning"
-              :secondary-color="KUI_COLOR_TEXT_WARNING"
-              size="18"
+            <WarningIcon
+              :color="KUI_COLOR_TEXT_WARNING"
+              decorative
+              :size="KUI_ICON_SIZE_40"
             />
           </div>
           <template #content>
@@ -109,7 +106,8 @@ import { GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-util
 import type { AnalyticsExploreResult, AnalyticsExploreV2Result, GranularityFullObj } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette, hasMillisecondTimestamps } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
-import { KUI_COLOR_TEXT_WARNING } from '@kong/design-tokens'
+import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
+import { WarningIcon } from '@kong/icons'
 
 const props = defineProps({
   chartData: {
@@ -340,7 +338,6 @@ provide('legendPosition', toRef(props, 'legendPosition'))
   }
 
   .limit-icon-wrapper {
-    color: $kui-color-text-inverse;
     display: flex;
     flex-direction: row;
   }
