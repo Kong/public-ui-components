@@ -44,7 +44,7 @@
           <template #visible-content>
             <div class="plugin-card-container">
               <PluginSelectCard
-                v-for="(plugin, index) in getPluginCards(group, 'visible')"
+                v-for="(plugin, index) in getPluginCards('visible', nonCustomPlugins[group as keyof PluginCardList] || [], pluginsPerRow)"
                 :key="`plugin-card-${index}`"
                 :config="config"
                 :no-route-change="noRouteChange"
@@ -56,7 +56,7 @@
 
           <div class="plugin-card-container">
             <PluginSelectCard
-              v-for="(plugin, index) in getPluginCards(group, 'hidden')"
+              v-for="(plugin, index) in getPluginCards('hidden', nonCustomPlugins[group as keyof PluginCardList] || [], pluginsPerRow)"
               :key="`plugin-card-${index}`"
               :config="config"
               :no-route-change="noRouteChange"
@@ -125,6 +125,7 @@ const emit = defineEmits<{
 }>()
 
 const { i18n: { t } } = composables.useI18n()
+const { getPluginCards } = composables.usePluginHelpers()
 const shouldCollapsed = ref<Record<string, boolean>>(PLUGIN_GROUPS_COLLAPSE_STATUS)
 
 const emitPluginData = (plugin: PluginType) => {
@@ -140,18 +141,6 @@ const nonCustomPlugins = computed((): PluginCardList => {
   return kongPlugins
 })
 
-const getPluginCards = (group: string, type: 'all' | 'visible' | 'hidden') => {
-  const plugins = nonCustomPlugins.value[group as keyof PluginCardList] || []
-
-  if (type === 'all') {
-    return plugins
-  } else if (type === 'visible') {
-    return plugins.slice(0, props.pluginsPerRow)
-  }
-
-  return plugins.slice(props.pluginsPerRow)
-}
-
 const getGroupPluginCount = (group: string) => {
   return nonCustomPlugins.value[group as keyof PluginCardList]?.length || 0
 }
@@ -159,8 +148,8 @@ const getGroupPluginCount = (group: string) => {
 // text for plugin group "view x more" label
 const triggerLabels = computed(() => {
   return Object.keys(nonCustomPlugins.value).reduce((acc: TriggerLabels, pluginGroup: string): TriggerLabels => {
-    const totalCount = getPluginCards(pluginGroup, 'all')?.length || 0
-    const hiddenCount = getPluginCards(pluginGroup, 'hidden')?.length || 0
+    const totalCount = getPluginCards('all', nonCustomPlugins.value[pluginGroup as keyof PluginCardList] || [], props.pluginsPerRow)?.length || 0
+    const hiddenCount = getPluginCards('hidden', nonCustomPlugins.value[pluginGroup as keyof PluginCardList] || [], props.pluginsPerRow)?.length || 0
 
     if (totalCount > props.pluginsPerRow) {
       acc[pluginGroup as keyof TriggerLabels] = t('plugins.select.view_more', { count: hiddenCount })

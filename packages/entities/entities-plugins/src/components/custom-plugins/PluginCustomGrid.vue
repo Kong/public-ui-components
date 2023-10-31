@@ -39,7 +39,7 @@
       <template #visible-content>
         <div class="plugin-card-container">
           <PluginSelectCard
-            v-for="(plugin, index) in getPluginCards('visible')"
+            v-for="(plugin, index) in getPluginCards('visible', modifiedCustomPlugins, pluginsPerRow)"
             :key="`plugin-card-${index}`"
             :can-delete-custom="canDeleteCustomPlugin"
             :can-edit-custom="canEditCustomPlugin"
@@ -54,7 +54,7 @@
 
       <div class="plugin-card-container">
         <PluginSelectCard
-          v-for="(plugin, index) in getPluginCards('hidden')"
+          v-for="(plugin, index) in getPluginCards('hidden', modifiedCustomPlugins, pluginsPerRow)"
           :key="`plugin-card-${index}`"
           :can-delete-custom="canDeleteCustomPlugin"
           :can-edit-custom="canEditCustomPlugin"
@@ -152,6 +152,7 @@ const emit = defineEmits<{
 }>()
 
 const { i18n: { t } } = composables.useI18n()
+const { getPluginCards } = composables.usePluginHelpers()
 const shouldCollapsedCustomPlugins = ref(true)
 
 const emitPluginData = (plugin: PluginType) => {
@@ -177,20 +178,10 @@ const modifiedCustomPlugins = computed((): PluginType[] => {
     : customPlugins
 })
 
-const getPluginCards = (type: 'all' | 'visible' | 'hidden') => {
-  if (type === 'all') {
-    return modifiedCustomPlugins.value
-  } else if (type === 'visible') {
-    return modifiedCustomPlugins.value.slice(0, props.pluginsPerRow)
-  }
-
-  return modifiedCustomPlugins.value.slice(props.pluginsPerRow)
-}
-
 // text for plugin group "view x more" label
 const triggerLabel = computed((): string => {
-  const totalCount = getPluginCards('all')?.length || 0
-  const hiddenCount = getPluginCards('hidden')?.length || 0
+  const totalCount = getPluginCards('all', modifiedCustomPlugins.value, props.pluginsPerRow)?.length
+  const hiddenCount = getPluginCards('hidden', modifiedCustomPlugins.value, props.pluginsPerRow)?.length
 
   if (totalCount > props.pluginsPerRow) {
     return t('plugins.select.view_more', { count: hiddenCount })

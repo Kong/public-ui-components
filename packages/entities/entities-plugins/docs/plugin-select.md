@@ -124,7 +124,7 @@ A synchronous or asynchronous function, that returns a boolean, that evaluates i
 
 If true, let consuming component handle event when clicking on a plugin. Used in conjunction with `@plugin-clicked` event.
 
-#### `onlyAvailablePlugins`
+#### `availableOnServer`
 
 - type: `boolean`
 - required: `false`

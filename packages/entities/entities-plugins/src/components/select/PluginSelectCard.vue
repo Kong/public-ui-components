@@ -12,7 +12,7 @@
       :data-testid="`${plugin.id}-card`"
       :disabled="isDisabled"
       has-hover
-      @click="isDisabled || isCustomPlugin ? undefined : noRouteChange ? emitPluginData() : handleCreateClick()"
+      @click="isDisabled || isCustomPlugin ? undefined : handleClick()"
     >
       <template
         v-if="isCustomPlugin"
@@ -26,7 +26,7 @@
       </template>
 
       <template
-        v-if="isCustomPlugin && !isCreateCustomPlugin && !noRouteChange && controlPlaneId && (canDeleteCustomPlugin || canEditCustomPlugin)"
+        v-if="hasActions"
         #actions
       >
         <KDropdownMenu
@@ -165,9 +165,18 @@ const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const controlPlaneId = computed((): string => props.config.app === 'konnect' ? props.config.controlPlaneId : '')
 const isDisabled = computed((): boolean => !!(!props.plugin.available || props.plugin.disabledMessage))
+const hasActions = computed((): boolean => !!(isCustomPlugin.value && !isCreateCustomPlugin.value && !props.noRouteChange && controlPlaneId.value && (props.canDeleteCustomPlugin || props.canEditCustomPlugin)))
 
 const handleCreateClick = (): void => {
   router.push(props.config.getCreateRoute(props.plugin.id))
+}
+
+const handleClick = (): void => {
+  if (props.noRouteChange) {
+    emitPluginData()
+  } else {
+    handleCreateClick()
+  }
 }
 
 const emitPluginData = (): void => {

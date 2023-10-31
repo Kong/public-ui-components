@@ -172,11 +172,11 @@ const props = defineProps({
     default: false,
   },
   /**
-    * @param {boolean} onlyAvailablePlugins checks kong config plugins.available_on_server and if
-    * onlyAvailablePlugins = true, then it will not show plugins from PluginMeta that are outside
+    * @param {boolean} availableOnServer checks kong config plugins.available_on_server and if
+    * availableOnServer = true, then it will not show plugins from PluginMeta that are outside
     * of the available_on_server array.
     */
-  onlyAvailablePlugins: {
+  availableOnServer: {
     type: Boolean,
     default: false,
   },
@@ -274,12 +274,12 @@ const tabs = props.config.app === 'konnect'
 const activeTab = ref(tabs.length ? route.hash || tabs[0].hash : '')
 
 const buildPluginList = (): PluginCardList => {
-  // If onlyAvailablePlugins is false, we included unavailable plugins from pluginMeta in addition to available plugins
+  // If availableOnServer is false, we included unavailable plugins from pluginMeta in addition to available plugins
   // returning an array of unique plugin ids
   // either grab all plugins from metadata file or use list of available plugins provided by API
   return [...new Set(
     Object.assign(
-      Object.keys({ ...(!props.onlyAvailablePlugins ? pluginMetaData : {}) }),
+      Object.keys({ ...(!props.availableOnServer ? pluginMetaData : {}) }),
       availablePlugins.value,
     ),
   )]
@@ -426,9 +426,6 @@ onBeforeMount(async () => {
 })
 
 onMounted(async () => {
-  hasError.value = false
-  fetchErrorMessage.value = ''
-
   try {
     const { data } = await axiosInstance.get(availablePluginsUrl.value)
 
