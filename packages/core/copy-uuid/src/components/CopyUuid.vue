@@ -28,12 +28,11 @@
           tabindex="0"
           @click.stop="copyIdToClipboard(copyToClipboard)"
         >
-          <KIcon
+          <CopyIcon
             class="uuid-icon"
             :color="iconColor"
-            :hide-title="!!tooltip || undefined"
-            icon="copy"
-            size="16"
+            :decorative="!!tooltip"
+            :size="KUI_ICON_SIZE_40"
             :title="t('iconTitle')"
           />
         </span>
@@ -49,6 +48,8 @@ import { createI18n } from '@kong-ui-public/i18n'
 import english from '../locales/en.json'
 import { COPY_UUID_NOTIFY_KEY } from '../constants'
 import type { CopyUuidNotifyParam } from '../types'
+import { CopyIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 
 const { t } = createI18n('en-us', english)
 

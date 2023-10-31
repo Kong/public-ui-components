@@ -354,6 +354,10 @@ importers:
         version: 1.0.0
 
   packages/core/copy-uuid:
+    dependencies:
+      '@kong/icons':
+        specifier: ^1.7.8
+        version: 1.7.8(vue@3.3.4)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^0.8.6

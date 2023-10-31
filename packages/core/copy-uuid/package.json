@@ -62,5 +62,8 @@
   },
   "distSizeChecker": {
     "errorLimit": "250KB"
+  },
+  "dependencies": {
+    "@kong/icons": "^1.7.8"
   }
 }
