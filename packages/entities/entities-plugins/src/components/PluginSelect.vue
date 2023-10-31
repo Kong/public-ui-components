@@ -87,9 +87,9 @@
             </p>
 
             <PluginCustomGrid
-              :can-create-custom="userCanCreateCustom"
-              :can-delete-custom="userCanDeleteCustom"
-              :can-edit-custom="userCanEditCustom"
+              :can-create-custom="usercanCreateCustomPlugin"
+              :can-delete-custom="usercanDeleteCustomPlugin"
+              :can-edit-custom="usercanEditCustomPlugin"
               :config="config"
               :no-route-change="noRouteChange"
               :plugin-list="filteredPlugins"
@@ -146,19 +146,19 @@ const props = defineProps({
     },
   },
   /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a custom plugin */
-  canCreateCustom: {
+  canCreateCustomPlugin: {
     type: Function as PropType<() => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
   },
   /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can delete a custom plugin */
-  canDeleteCustom: {
+  canDeleteCustomPlugin: {
     type: Function as PropType<() => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
   },
   /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can edit custom plugin */
-  canEditCustom: {
+  canEditCustomPlugin: {
     type: Function as PropType<() => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
@@ -410,33 +410,34 @@ watch(() => props.ignoredPlugins, (val, oldVal) => {
   }
 })
 
-const userCanCreateCustom = ref(false)
-const userCanEditCustom = ref(false)
-const userCanDeleteCustom = ref(false)
+watch((isLoading), (loading: boolean) => {
+  emit('loading', loading)
+})
+
+const usercanCreateCustomPlugin = ref(false)
+const usercanEditCustomPlugin = ref(false)
+const usercanDeleteCustomPlugin = ref(false)
 
 onBeforeMount(async () => {
   // Evaluate the user permissions
-  userCanCreateCustom.value = await props.canCreateCustom()
-  userCanEditCustom.value = await props.canEditCustom()
-  userCanDeleteCustom.value = await props.canDeleteCustom()
+  usercanCreateCustomPlugin.value = await props.canCreateCustomPlugin()
+  usercanEditCustomPlugin.value = await props.canEditCustomPlugin()
+  usercanDeleteCustomPlugin.value = await props.canDeleteCustomPlugin()
 })
 
 onMounted(async () => {
-  isLoading.value = true
   hasError.value = false
   fetchErrorMessage.value = ''
 
-  emit('loading', isLoading.value)
-
   try {
-    const res = await axiosInstance.get(availablePluginsUrl.value)
+    const { data } = await axiosInstance.get(availablePluginsUrl.value)
 
     // TODO: endpoints temporarily return different formats
     if (props.config.app === 'konnect') {
-      const { names: available } = res.data
+      const { names: available } = data
       availablePlugins.value = available || []
     } else if (props.config.app === 'kongManager') {
-      const { plugins: { available_on_server: aPlugins } } = res.data
+      const { plugins: { available_on_server: aPlugins } } = data
       availablePlugins.value = aPlugins ? Object.keys(aPlugins) : []
     }
   } catch (error: any) {
@@ -447,8 +448,7 @@ onMounted(async () => {
   // fetch scoped entity to check for pre-existing plugins
   if (fetchEntityPluginsUrl.value) {
     try {
-      const res = await axiosInstance.get(fetchEntityPluginsUrl.value)
-      const { data } = res.data
+      const { data: { data } } = await axiosInstance.get(fetchEntityPluginsUrl.value)
 
       if (data?.length) {
         const eplugins = data.reduce((plugins: string[], plugin: Record<string, any>) => {
@@ -472,7 +472,6 @@ onMounted(async () => {
   }
 
   isLoading.value = false
-  emit('loading', isLoading.value)
 })
 </script>
 

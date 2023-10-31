@@ -26,8 +26,8 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   // force the scope
-  // entityType: 'services',
-  // entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
+  entityType: 'services',
+  entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
   getCreateRoute: (plugin: string) => ({
     name: 'create-plugin',
     params: {

@@ -41,12 +41,12 @@
           <PluginSelectCard
             v-for="(plugin, index) in getPluginCards('visible')"
             :key="`plugin-card-${index}`"
-            :can-delete-custom="canDeleteCustom"
-            :can-edit-custom="canEditCustom"
+            :can-delete-custom="canDeleteCustomPlugin"
+            :can-edit-custom="canEditCustomPlugin"
             :config="config"
             :no-route-change="noRouteChange"
             :plugin="plugin"
-            @custom-plugin-delete="() => handleCustomPluginDelete(plugin)"
+            @custom-plugin-delete="handleCustomPluginDelete(plugin)"
             @plugin-clicked="emitPluginData"
           />
         </div>
@@ -56,8 +56,8 @@
         <PluginSelectCard
           v-for="(plugin, index) in getPluginCards('hidden')"
           :key="`plugin-card-${index}`"
-          :can-delete-custom="canDeleteCustom"
-          :can-edit-custom="canEditCustom"
+          :can-delete-custom="canDeleteCustomPlugin"
+          :can-edit-custom="canEditCustomPlugin"
           :config="config"
           :no-route-change="noRouteChange"
           :plugin="plugin"
@@ -71,7 +71,7 @@
       :config="config"
       :plugin="selectedPlugin"
       @closed="handleClose"
-      @proceed="() => handleClose(true)"
+      @proceed="handleClose(true)"
     />
   </div>
 </template>
@@ -103,21 +103,21 @@ const props = defineProps({
   /**
    * Whether or not user has rights to create custom plugins
    */
-  canCreateCustom: {
+  canCreateCustomPlugin: {
     type: Boolean,
     default: false,
   },
   /**
    * Whether or not user has rights to delete custom plugins
    */
-  canDeleteCustom: {
+  canDeleteCustomPlugin: {
     type: Boolean,
     default: false,
   },
   /**
    * Whether or not user has rights to edit custom plugins
    */
-  canEditCustom: {
+  canEditCustomPlugin: {
     type: Boolean,
     default: false,
   },
@@ -166,7 +166,7 @@ const modifiedCustomPlugins = computed((): PluginType[] => {
   const customPlugins: PluginType[] = JSON.parse(JSON.stringify(props.pluginList))[PluginGroup.CUSTOM_PLUGINS] || []
 
   // ADD CUSTOM_PLUGIN_CREATE as the first card if allowed creation
-  return props.canCreateCustom && !props.noRouteChange && props.config.createCustomRoute
+  return props.canCreateCustomPlugin && !props.noRouteChange && props.config.createCustomRoute
     ? ([{
       id: 'custom-plugin-create',
       name: t('plugins.select.tabs.custom.create.name'),

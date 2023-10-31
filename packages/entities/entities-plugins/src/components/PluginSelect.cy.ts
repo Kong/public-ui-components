@@ -302,8 +302,8 @@ describe('<PluginSelect />', () => {
         cy.mount(PluginSelect, {
           props: {
             config: baseConfigKonnect,
-            canEditCustom: () => { },
-            canDeleteCustom: () => { },
+            canEditCustomPlugin: () => { },
+            canDeleteCustomPlugin: () => { },
           },
         })
 
@@ -327,7 +327,7 @@ describe('<PluginSelect />', () => {
         cy.mount(PluginSelect, {
           props: {
             config: baseConfigKonnect,
-            canCreateCustom: () => { },
+            canCreateCustomPlugin: () => { },
           },
         })
 

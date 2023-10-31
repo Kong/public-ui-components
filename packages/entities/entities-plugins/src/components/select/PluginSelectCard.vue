@@ -26,7 +26,7 @@
       </template>
 
       <template
-        v-if="isCustomPlugin && !isCreateCustomPlugin && !noRouteChange && controlPlaneId && (canDeleteCustom || canEditCustom)"
+        v-if="isCustomPlugin && !isCreateCustomPlugin && !noRouteChange && controlPlaneId && (canDeleteCustomPlugin || canEditCustomPlugin)"
         #actions
       >
         <KDropdownMenu
@@ -52,14 +52,14 @@
 
           <template #items>
             <KDropdownItem
-              v-if="canDeleteCustom"
+              v-if="canDeleteCustomPlugin"
               data-testid="edit-plugin-schema"
               @click.stop="handleCustomEdit(plugin.name)"
             >
               {{ t('actions.edit') }}
             </KDropdownItem>
             <KDropdownItem
-              v-if="canDeleteCustom"
+              v-if="canDeleteCustomPlugin"
               data-testid="delete-plugin-schema"
               has-divider
               is-dangerous
@@ -123,7 +123,7 @@ import PluginIcon from '../PluginIcon.vue'
 
 const emit = defineEmits<{
   (e: 'plugin-clicked', plugin: PluginType) : void,
-  (e: 'custom-plugin-delete'): void,
+  (e: 'custom-plugin-delete'): void, /** internal use only */
 }>()
 
 const props = defineProps({
@@ -140,14 +140,14 @@ const props = defineProps({
   /**
    * Whether or not user has rights to delete custom plugins
    */
-  canDeleteCustom: {
+  canDeleteCustomPlugin: {
     type: Boolean,
     default: false,
   },
   /**
    * Whether or not user has rights to edit custom plugins
    */
-  canEditCustom: {
+  canEditCustomPlugin: {
     type: Boolean,
     default: false,
   },
