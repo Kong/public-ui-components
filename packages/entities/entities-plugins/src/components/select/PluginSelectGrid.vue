@@ -4,6 +4,7 @@
       v-if="!Object.keys(nonCustomPlugins).length"
       class="plugins-empty-state"
       cta-is-hidden
+      data-testid="plugins-empty-state"
       icon="stateGruceo"
       icon-size="96"
     >

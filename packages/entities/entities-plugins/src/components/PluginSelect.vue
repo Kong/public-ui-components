@@ -43,6 +43,7 @@
     <KEmptyState
       v-else-if="noSearchResults && filter"
       cta-is-hidden
+      data-testid="plugins-empty-state"
       icon="stateNoSearchResults"
       icon-size="96"
     >
@@ -471,7 +472,6 @@ onMounted(async () => {
 
   isLoading.value = false
   emit('loading', isLoading.value)
-
 })
 </script>
 

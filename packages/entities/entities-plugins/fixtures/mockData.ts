@@ -73,6 +73,22 @@ export const paginate = (
   }
 }
 
+export const kmLimitedAvailablePlugins = {
+  plugins: {
+    enabled_in_cluster: [],
+    available_on_server: {
+      'hmac-auth': {
+        version: '3.6.0',
+        priority: 1030,
+      },
+      'ip-restriction': {
+        version: '3.6.0',
+        priority: 990,
+      },
+    },
+  },
+}
+
 export const firstShownPlugin = 'basic-auth'
 export const kmAvailablePlugins = {
   plugins: {
@@ -387,6 +403,13 @@ export const customPluginsNames = [
   'myplugin3',
   'myplugin4',
 ]
+
+export const konnectLimitedAvailablePlugins = {
+  names: [
+    'hmac-auth',
+    'ip-restriction',
+  ],
+}
 
 export const konnectAvailablePlugins = {
   names: [
