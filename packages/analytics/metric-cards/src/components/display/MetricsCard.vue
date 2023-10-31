@@ -18,9 +18,9 @@
         :label="tooltip"
         placement="right"
       >
-        <KIcon
-          icon="info"
-          size="12"
+        <InfoIcon
+          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :size="KUI_ICON_SIZE_30"
         />
       </KTooltip>
     </div>
@@ -40,11 +40,11 @@
         v-if="hasError"
         class="metricscard-error"
       >
-        <KIcon
-          icon="warning"
-          size="20"
+        <WarningIcon
+          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :size="KUI_ICON_SIZE_40"
         />
-        <div>{{ errorMessage }}</div>
+        <div>&nbsp;{{ errorMessage }}</div>
       </div>
       <!-- Metric value -->
       <div
@@ -103,18 +103,18 @@ import {
   KUI_FONT_SIZE_30, // 14px
   KUI_FONT_SIZE_100, // 48px
   KUI_ICON_SIZE_30,
+  KUI_ICON_SIZE_40,
   KUI_COLOR_TEXT_SUCCESS, // Positive trend
   KUI_COLOR_TEXT_NEUTRAL_STRONG, // Neutral trend
   KUI_COLOR_TEXT_NEUTRAL,
 } from '@kong/design-tokens'
 import { MetricCardType } from '../../enums'
 import { MetricCardSize } from '../../constants'
+import { InfoIcon, WarningIcon, IndeterminateSmallIcon, CloudUploadIcon, EqualIcon, ResponseIcon, VitalsIcon, WarningOutlineIcon } from '@kong/icons'
 
 // Import any one of the `@kong/icons` components to access the interface - they are all the same.
 // Then alias as `GenericIcon` to provide the icon interface to the prop types.
 import type { KongIcon as GenericIcon } from '@kong/icons'
-
-import { IndeterminateSmallIcon, CloudUploadIcon, EqualIcon, ResponseIcon, VitalsIcon, WarningOutlineIcon } from '@kong/icons'
 
 const iconMap = new Map<MetricCardType, any>([
   [MetricCardType.GENERIC_COUNT, VitalsIcon],
