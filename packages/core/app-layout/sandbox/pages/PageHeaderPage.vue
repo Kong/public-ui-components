@@ -60,18 +60,11 @@
       title="About this Cat"
     >
       <template #actions>
-        <KButton
-          appearance="btn-link"
-          class="about-action-button"
-        >
-          <template #icon>
-            <KIcon
-              color="#0044f4"
-              icon="pencil"
-              size="16"
-            />
-          </template>
-        </KButton>
+        <EditIcon
+          color="#0044f4"
+          role="button"
+          :size="20"
+        />
       </template>
 
       <div>
@@ -135,6 +128,7 @@
 import { computed, ref } from 'vue'
 import type { Method } from '@kong/kongponents'
 import { AppAboutSection, AppPageHeader } from '../../src'
+import { EditIcon } from '@kong/icons'
 
 const breadcrumbs = computed(() => {
   return [
@@ -178,8 +172,6 @@ const enabled = ref(false)
 
 .about-action-button {
   display: flex;
-  min-height: unset !important;
-  height: 16px !important;
 }
 
 .badge-label {
@@ -189,9 +181,9 @@ const enabled = ref(false)
 }
 
 .method-badges {
+  column-gap: 4px;
   display: flex;
   flex-wrap: wrap;
-  column-gap: 4px;
   row-gap: 8px;
 }
 </style>

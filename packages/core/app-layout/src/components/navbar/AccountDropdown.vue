@@ -56,7 +56,8 @@ defineProps({
   :deep(.k-button.primary),
   :deep(.k-button.primary:hover:not(:disabled)) {
     background-color: var(--kong-ui-account-dropdown-background, #9396FC);
-    color: var(--kong-ui-account-dropdown-color, $kui-color-text-inverse);
+    border-radius: $kui-border-radius-round;
+    color: var(--kong-ui-account-dropdown-color, $kui-color-text);
     font-size: $kui-font-size-20;
     height: 24px;
     justify-content: center;
@@ -65,14 +66,16 @@ defineProps({
     user-select: none;
     width: 24px;
 
+    &:hover,
+    &:focus,
     &:active {
-      background-color: var(--kong-ui-account-dropdown-background, #9396FC);
+      background-color: var(--kong-ui-account-dropdown-background, #9396FC) !important;
     }
   }
 
   // Align the dropdown to the bottom of the navbar
   :deep(.k-dropdown-popover) {
-    top: 10px !important;
+    top: 11px !important;
   }
 }
 </style>

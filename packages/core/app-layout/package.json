@@ -38,18 +38,19 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^8.125.0",
+    "@kong/kongponents": "9.0.0-alpha.33",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5"
   },
   "dependencies": {
+    "@kong/icons": "^1.7.8",
     "focus-trap": "^7.5.3",
     "focus-trap-vue": "^4.0.2",
     "lodash.clonedeep": "^4.5.0"
   },
   "devDependencies": {
     "@kong/design-tokens": "^1.11.6",
-    "@kong/kongponents": "^8.125.0",
+    "@kong/kongponents": "9.0.0-alpha.33",
     "@types/lodash.clonedeep": "^4.5.7",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5"
