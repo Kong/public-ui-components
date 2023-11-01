@@ -129,7 +129,7 @@ describe('<PluginSelect />', () => {
 
       cy.get('.kong-ui-entities-plugin-select-form').should('be.visible')
       cy.get('.kong-ui-entities-plugin-select-form .plugins-results-container').should('be.visible')
-      cy.get('.k-collapse-visible-content .plugin-card').should('have.length', expectedCount)
+      cy.get('.k-collapse-visible-content .plugin-card-content').should('have.length', expectedCount)
     })
 
     it('should correctly render disabled plugins', () => {
@@ -221,7 +221,7 @@ describe('<PluginSelect />', () => {
       cy.getTestId('plugins-filter').type(firstShownPlugin)
 
       cy.getTestId(`${firstShownPlugin}-card`).should('be.visible')
-      cy.get('.plugin-card').should('have.length', 1)
+      cy.get('.plugin-card-content').should('have.length', 1)
     })
 
     it('should handle error state - available plugins failed to load', () => {
@@ -387,7 +387,7 @@ describe('<PluginSelect />', () => {
 
       cy.get('.kong-ui-entities-plugin-select-form').should('be.visible')
       cy.get('.kong-ui-entities-plugin-select-form .plugins-results-container').should('be.visible')
-      cy.get('.k-collapse-visible-content .plugin-card').should('have.length', expectedCount)
+      cy.get('.k-collapse-visible-content .plugin-card-content').should('have.length', expectedCount)
     })
 
     it('should correctly render disabled plugins', () => {
@@ -483,7 +483,7 @@ describe('<PluginSelect />', () => {
       cy.getTestId('plugins-filter').type(firstShownPlugin)
 
       cy.getTestId(`${firstShownPlugin}-card`).should('be.visible')
-      cy.get('.plugin-card').should('have.length', 1)
+      cy.get('.plugin-card-content').should('have.length', 1)
     })
 
     it('should handle error state - available plugins failed to load', () => {
