@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.8.13...@kong-ui-public/swagger-ui-web-component@0.9.0) (2023-11-01)
+
+
+### Features
+
+* add customizable properties to swagger-ui-web-component ([#881](https://github.com/Kong/public-ui-components/issues/881)) ([241c15c](https://github.com/Kong/public-ui-components/commit/241c15c9e2faaad561a5b49ac8435ca8aaab498d))
+
+
+
+
+
 ## [0.8.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.8.12...@kong-ui-public/swagger-ui-web-component@0.8.13) (2023-10-25)
 
 **Note:** Version bump only for package @kong-ui-public/swagger-ui-web-component

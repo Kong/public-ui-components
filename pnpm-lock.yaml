@@ -854,7 +854,7 @@ importers:
         specifier: workspace:^0.8.6
         version: link:../../core/i18n
       '@kong-ui-public/swagger-ui-web-component':
-        specifier: workspace:^0.8.13
+        specifier: workspace:^0.9.0
         version: link:../swagger-ui-web-component
       lodash.clonedeep:
         specifier: ^4.5.0
