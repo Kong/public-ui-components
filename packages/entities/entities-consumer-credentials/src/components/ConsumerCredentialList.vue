@@ -156,7 +156,7 @@
           <KDropdownItem
             data-testid="action-entity-delete"
             has-divider
-            is-dangerous
+            danger
             @click="deleteRow(row)"
           >
             {{ t('credentials.actions.delete') }}

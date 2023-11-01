@@ -121,7 +121,7 @@
         <KLabel>Dataset options</KLabel>
         <div class="dataset-options">
           <KButton
-            appearance="outline"
+            appearance="secondary"
             class="first-button"
             size="small"
             @click="randomizeData()"
@@ -129,7 +129,7 @@
             Randomize data
           </KButton>
           <KButton
-            appearance="outline"
+            appearance="secondary"
             size="small"
             @click="addDataset()"
           >

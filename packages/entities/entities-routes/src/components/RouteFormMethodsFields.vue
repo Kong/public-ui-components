@@ -17,7 +17,7 @@
         />
       </div>
       <KButton
-        appearance="btn-link"
+        appearance="tertiary"
         class="remove-button"
         data-testid="remove-methods"
         @click="$emit('remove')"

@@ -16,7 +16,7 @@
   <template v-else>
     <div class="kong-ui-entity-filter">
       <KButton
-        appearance="btn-link"
+        appearance="tertiary"
         data-testid="filter-button"
         icon="filter"
         @click="toggleMenu"
@@ -77,7 +77,7 @@
               </div>
               <div class="menu-item-buttons">
                 <KButton
-                  appearance="btn-link"
+                  appearance="tertiary"
                   data-testid="apply-filter"
                   size="small"
                   @click="applyFields(true)"
@@ -85,7 +85,7 @@
                   {{ t('filter.applyButtonText') }}
                 </KButton>
                 <KButton
-                  appearance="btn-link"
+                  appearance="tertiary"
                   data-testid="clear-filter"
                   size="small"
                   @click="clearField(field.value)"

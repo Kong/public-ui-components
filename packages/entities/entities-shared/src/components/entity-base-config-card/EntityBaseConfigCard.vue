@@ -34,7 +34,7 @@
 
         <KButton
           v-if="props.config.jsonYamlEnabled && configCardDoc"
-          appearance="btn-link"
+          appearance="tertiary"
           class="book-icon"
           data-testid="book-icon"
         >
@@ -55,7 +55,7 @@
         >
           <KButton
             v-if="!isLoading && !fetchDetailsError"
-            appearance="btn-link"
+            appearance="tertiary"
             data-testid="json-copy-button"
             @click="handleClickCopy(copyToClipboard)"
           >

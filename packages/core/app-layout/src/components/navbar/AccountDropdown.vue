@@ -1,5 +1,5 @@
 <template>
-  <KDropdownMenu
+  <KDropdown
     class="account-dropdown"
     :kpop-attributes="{ placement: 'bottomStart' }"
     :label="userInitials"
@@ -22,7 +22,7 @@
         </KDropdownItem>
       </slot>
     </template>
-  </KDropdownMenu>
+  </KDropdown>
 </template>
 
 <script setup lang="ts">

@@ -3,7 +3,7 @@
     collapsed-context
     data-testid="field-multiselect"
     :items="schema.values"
-    :label-attributes="{ help: schema.help }"
+    :label-attributes="{ info: schema.help }"
     :model-value="value"
     :placeholder="schema.placeholder"
     :required="schema.required || undefined"

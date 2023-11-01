@@ -1,7 +1,7 @@
 <template>
   <div>
     <KButton
-      appearance="btn-link"
+      appearance="tertiary"
       class="navigation-button"
       @click="$emit('navigation-click', item)"
     >

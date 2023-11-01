@@ -421,10 +421,10 @@ export default {
   box-shadow: none;
   color: $kui-color-text-inverse;
 }
-.vue-form-generator .field-wrap button.btn-link:hover,
-.vue-form-generator .field-wrap input[type=submit].btn-link:hover,
-.vue-form-generator .field-wrap button.btn-link:active,
-.vue-form-generator .field-wrap input[type=submit].btn-link:active {
+.vue-form-generator .field-wrap button.tertiary:hover,
+.vue-form-generator .field-wrap input[type=submit].tertiary:hover,
+.vue-form-generator .field-wrap button.tertiary:active,
+.vue-form-generator .field-wrap input[type=submit].tertiary:active {
   background-color: $kui-color-background;
   box-shadow: none;
   color: $kui-color-text-primary;

@@ -114,7 +114,7 @@
             @blur="emitHeaders"
           />
           <KButton
-            appearance="btn-link"
+            appearance="tertiary"
             class="btn-remove"
             data-testid="btn-remove-header"
             @click="removeHeader(i)"
@@ -128,7 +128,7 @@
           </KButton>
           <KButton
             v-if="localHeaders && i === localHeaders.length - 1"
-            appearance="btn-link"
+            appearance="tertiary"
             class="btn-add-header"
             data-testid="btn-add-header"
             @click="addHeader"

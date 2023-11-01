@@ -34,7 +34,7 @@
           data-testid="sni-form-tags"
           :help="t('form.fields.tags.help')"
           :label="t('form.fields.tags.label')"
-          :label-attributes="{ help: t('form.fields.tags.tooltip') }"
+          :label-attributes="{ info: t('form.fields.tags.tooltip') }"
           :placeholder="t('form.fields.tags.placeholder')"
           :readonly="form.isReadonly"
           type="text"

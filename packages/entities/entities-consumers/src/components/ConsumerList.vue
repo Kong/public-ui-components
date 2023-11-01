@@ -98,7 +98,7 @@
           <KDropdownItem
             data-testid="action-entity-delete"
             has-divider
-            is-dangerous
+            danger
             @click="() => config.consumerGroupId ? handleRemoveConsumerClick(row) : deleteRow(row)"
           >
             {{ config.consumerGroupId ? t('consumers.actions.remove') : t('consumers.actions.delete') }}

@@ -38,7 +38,7 @@
             label-position="left"
           />
           <KButton
-            appearance="creation"
+            appearance="primary"
             icon="plus"
           >
             Do Things
@@ -108,7 +108,7 @@
           This cat has a habit of sleeping in uncomfortable looking positions.
         </div>
         <div>
-          <KButton appearance="btn-link">
+          <KButton appearance="tertiary">
             <template #icon>
               🍔
             </template>

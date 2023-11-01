@@ -44,7 +44,7 @@
         >
           <slot name="form-actions">
             <KButton
-              appearance="outline"
+              appearance="secondary"
               data-testid="form-cancel"
               :disabled="isReadonly"
               type="reset"

@@ -1,7 +1,7 @@
 <template>
   <div class="routing-rules-entities-controls-container">
     <KButton
-      appearance="btn-link"
+      appearance="tertiary"
       class="remove-button"
       :data-testid="`remove-${routingRulesEntity}`"
       @click="$emit('remove')"
@@ -11,7 +11,7 @@
       </template>
     </KButton>
     <KButton
-      appearance="btn-link"
+      appearance="tertiary"
       :data-testid="`add-${routingRulesEntity}`"
       :disabled="isAddDisabled"
       @click="$emit('add')"

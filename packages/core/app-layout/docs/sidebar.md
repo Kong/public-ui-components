@@ -37,7 +37,7 @@ A Kong UI dynamic sidebar component.
 - `vue` and `vue-router` must be initialized in the host application
 - `@kong/kongponents` must be available as a `dependency` in the host application, along with the package's style imports. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents). Specifically, the following Kongponents must be available:
   - `KDropdownItem`
-  - `KDropdownMenu`
+  - `KDropdown`
   - `KIcon`
   - `KTooltip`
 - The sidebar is set to `position: fixed` and is expected to render at 100% of the viewport height. This means your Navbar, etc. should never be placed above the sidebar unless on mobile.

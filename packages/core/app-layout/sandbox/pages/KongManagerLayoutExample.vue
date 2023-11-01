@@ -67,8 +67,8 @@
           Docs / Support
         </a>
       </div>
-      <KDropdownMenu
-        button-appearance="btn-link"
+      <KDropdown
+        appearance="tertiary"
         class="admin-menu"
         :items="[
           { label: 'AppLayout', to: '/' },
