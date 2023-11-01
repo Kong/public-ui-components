@@ -15,7 +15,7 @@
             <strong>{{ index }}</strong>
             <div>
               <KButton
-                appearance="btn-link"
+                appearance="tertiary"
                 class="delete"
                 type="button"
                 @click="removeElement(index)"
@@ -68,7 +68,7 @@
           type="text"
         >
         <KButton
-          appearance="btn-link"
+          appearance="tertiary"
           data-testid="add-key"
           :disabled="!newKeyName"
           @click="addKey"

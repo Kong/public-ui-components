@@ -79,7 +79,7 @@
       >
     </div>
     <KButton
-      appearance="btn-link"
+      appearance="tertiary"
       :class="schema.newElementButtonLabelClasses"
       :data-testid="`add-${getFieldID(schema)}`"
       type="button"
