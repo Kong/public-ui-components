@@ -50,9 +50,9 @@ defineProps({
     width: 100%;
 
     &-divider {
-      color: #afb7c538;
       background-color: #afb7c538;
       border-color: #afb7c538;
+      color: #afb7c538;
       margin: $kui-space-0 $kui-space-70;
     }
 
