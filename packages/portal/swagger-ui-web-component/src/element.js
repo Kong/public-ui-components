@@ -117,6 +117,12 @@ export class SwaggerUIElement extends HTMLElement {
         break
       case 'theme-overrides':
         this.themeOverrides = JSON.parse(decodeURIComponent(newValue))
+
+        if (typeof this.themeOverrides !== 'object') {
+          this.themeOverrides = {}
+          console.error('The "themeOverrides" attribute value has to be a valid object')
+        }
+
         break
     }
   }
