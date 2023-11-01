@@ -87,9 +87,9 @@
             </p>
 
             <PluginCustomGrid
-              :can-create-custom="usercanCreateCustomPlugin"
-              :can-delete-custom="usercanDeleteCustomPlugin"
-              :can-edit-custom="usercanEditCustomPlugin"
+              :can-create-custom-plugin="usercanCreateCustomPlugin"
+              :can-delete-custom-plugin="usercanDeleteCustomPlugin"
+              :can-edit-custom-plugin="usercanEditCustomPlugin"
               :config="config"
               :navigate-on-click="navigateOnClick"
               :plugin-list="filteredPlugins"

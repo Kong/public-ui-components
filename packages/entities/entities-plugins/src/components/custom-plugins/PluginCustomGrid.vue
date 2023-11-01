@@ -41,8 +41,8 @@
           <PluginSelectCard
             v-for="(plugin, index) in getPluginCards('visible', modifiedCustomPlugins, pluginsPerRow)"
             :key="`plugin-card-${index}`"
-            :can-delete-custom="canDeleteCustomPlugin"
-            :can-edit-custom="canEditCustomPlugin"
+            :can-delete-custom-plugin="canDeleteCustomPlugin"
+            :can-edit-custom-plugin="canEditCustomPlugin"
             :config="config"
             :navigate-on-click="navigateOnClick"
             :plugin="plugin"
@@ -56,8 +56,8 @@
         <PluginSelectCard
           v-for="(plugin, index) in getPluginCards('hidden', modifiedCustomPlugins, pluginsPerRow)"
           :key="`plugin-card-${index}`"
-          :can-delete-custom="canDeleteCustomPlugin"
-          :can-edit-custom="canEditCustomPlugin"
+          :can-delete-custom-plugin="canDeleteCustomPlugin"
+          :can-edit-custom-plugin="canEditCustomPlugin"
           :config="config"
           :navigate-on-click="navigateOnClick"
           :plugin="plugin"

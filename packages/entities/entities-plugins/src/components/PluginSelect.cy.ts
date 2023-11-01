@@ -6,8 +6,12 @@ import {
   konnectAvailablePlugins,
   konnectLimitedAvailablePlugins,
   firstShownPlugin,
-  customPluginsNames,
+  firstShownCustomPlugin,
+  kongPluginNames,
+  customPluginNames,
 } from '../../fixtures/mockData'
+import type { Router } from 'vue-router'
+import { createMemoryHistory, createRouter } from 'vue-router'
 import PluginSelect from './PluginSelect.vue'
 
 const baseConfigKonnect: KonnectPluginFormConfig = {
@@ -290,6 +294,8 @@ describe('<PluginSelect />', () => {
   })
 
   describe('Konnect', () => {
+    // Create a new router instance for each test
+    let router: Router
     const interceptKonnect = (params?: {
       mockData?: object
       alias?: string
@@ -306,6 +312,16 @@ describe('<PluginSelect />', () => {
       ).as(params?.alias ?? 'getAvailablePlugins')
     }
 
+    beforeEach(() => {
+      // Initialize a new router before each test
+      router = createRouter({
+        routes: [
+          { path: '/', name: 'list-plugin', component: { template: '<div>ListPage</div>' } },
+        ],
+        history: createMemoryHistory(),
+      })
+    })
+
     it('should show the select page tabs', () => {
       interceptKonnect()
 
@@ -313,6 +329,7 @@ describe('<PluginSelect />', () => {
         props: {
           config: baseConfigKonnect,
         },
+        router,
       })
 
       cy.wait('@getAvailablePlugins')
@@ -322,11 +339,16 @@ describe('<PluginSelect />', () => {
       cy.get('.plugins-filter-input-container').should('be.visible')
 
       // kong plugins
-      cy.getTestId('kong-tab').should('be.visible')
+      cy.get('#kong-tab').should('be.visible')
       cy.get('.plugin-select-grid').should('be.visible')
       // kong visible / custom not
       cy.getTestId(`${firstShownPlugin}-card`).should('be.visible')
-      cy.getTestId(`${customPluginsNames[0]}-card`).should('not.be.visible')
+      cy.getTestId(`${firstShownCustomPlugin}-card`).should('not.exist')
+
+      // renders all plugins (kong)
+      kongPluginNames.forEach((pluginName: string) => {
+        cy.getTestId(`${pluginName}-card`).should('exist')
+      })
 
       // plugin group collapses show
       PLUGIN_GROUPS_IN_USE.forEach((pluginGroup: string) => {
@@ -334,17 +356,17 @@ describe('<PluginSelect />', () => {
       })
 
       // custom plugins
-      cy.getTestId('custom-tab').should('be.visible')
-      cy.getTestId('custom-tab').click()
+      cy.get('#custom-tab').should('be.visible')
+      cy.get('#custom-tab').click()
       cy.get('.custom-plugins-grid').should('be.visible')
       // kong hidden / custom not
-      cy.getTestId(`${firstShownPlugin}-card`).should('not.be.visible')
-      cy.getTestId(`${customPluginsNames[0]}-card`).should('be.visible')
+      cy.getTestId(`${firstShownPlugin}-card`).should('not.exist')
+      cy.getTestId(`${firstShownCustomPlugin}-card`).should('be.visible')
 
-      // renders all plugins (kong + custom)
-      for (const pluginName in konnectAvailablePlugins.names) {
+      // renders all plugins (custom)
+      customPluginNames.forEach((pluginName: string) => {
         cy.getTestId(`${pluginName}-card`).should('exist')
-      }
+      })
     })
 
     it('should allow customizing the pluginsPerRow', () => {
@@ -358,6 +380,7 @@ describe('<PluginSelect />', () => {
           config: baseConfigKonnect,
           pluginsPerRow,
         },
+        router,
       })
 
       cy.wait('@getAvailablePlugins')
@@ -377,6 +400,7 @@ describe('<PluginSelect />', () => {
           config: baseConfigKonnect,
           disabledPlugins,
         },
+        router,
       })
 
       cy.wait('@getAvailablePlugins')
@@ -399,6 +423,7 @@ describe('<PluginSelect />', () => {
           config: baseConfigKonnect,
           ignoredPlugins,
         },
+        router,
       })
 
       cy.wait('@getAvailablePlugins')
@@ -421,6 +446,7 @@ describe('<PluginSelect />', () => {
           config: baseConfigKonnect,
           showAvailableOnly: true,
         },
+        router,
       })
 
       cy.wait('@getAvailablePlugins')
@@ -444,6 +470,7 @@ describe('<PluginSelect />', () => {
         props: {
           config: baseConfigKonnect,
         },
+        router,
       })
 
       cy.wait('@getAvailablePlugins')
@@ -475,6 +502,7 @@ describe('<PluginSelect />', () => {
         props: {
           config: baseConfigKonnect,
         },
+        router,
       })
 
       cy.wait('@getAvailablePlugins')
@@ -490,6 +518,7 @@ describe('<PluginSelect />', () => {
         props: {
           config: baseConfigKonnect,
         },
+        router,
       })
 
       cy.wait('@getAvailablePlugins')
@@ -513,6 +542,7 @@ describe('<PluginSelect />', () => {
           onPluginClicked: cy.spy().as('onPluginClickedSpy'),
           navigateOnClick: false,
         },
+        router,
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
@@ -527,26 +557,28 @@ describe('<PluginSelect />', () => {
       cy.get('@onPluginClickedSpy').should('have.been.called')
     })
 
-    describe('actions', () => {
+    describe('custom plugin actions', () => {
       it('should correctly render custom plugin actions', () => {
         interceptKonnect()
 
         cy.mount(PluginSelect, {
           props: {
             config: baseConfigKonnect,
-            canEditCustomPlugin: () => { },
-            canDeleteCustomPlugin: () => { },
+            canCreateCustomPlugin: () => false,
+            canEditCustomPlugin: () => true,
+            canDeleteCustomPlugin: () => true,
           },
+          router,
         })
 
         cy.wait('@getAvailablePlugins')
 
         // custom plugins
-        cy.getTestId('custom-tab').should('be.visible')
-        cy.getTestId('custom-tab').click()
+        cy.get('#custom-tab').should('be.visible')
+        cy.get('#custom-tab').click()
         cy.get('.custom-plugins-grid').should('be.visible')
 
-        cy.getTestId('overflow-actions-button').eq(0).click()
+        cy.getTestId('custom-plugin-actions').eq(0).click()
         cy.getTestId('edit-plugin-schema').should('be.visible')
         cy.getTestId('delete-plugin-schema').should('be.visible')
         // negative test for create
@@ -559,15 +591,18 @@ describe('<PluginSelect />', () => {
         cy.mount(PluginSelect, {
           props: {
             config: baseConfigKonnect,
-            canCreateCustomPlugin: () => { },
+            canCreateCustomPlugin: () => true,
+            canEditCustomPlugin: () => false,
+            canDeleteCustomPlugin: () => false,
           },
+          router,
         })
 
         cy.wait('@getAvailablePlugins')
 
         // custom plugins
-        cy.getTestId('custom-tab').should('be.visible')
-        cy.getTestId('custom-tab').click()
+        cy.get('#custom-tab').should('be.visible')
+        cy.get('#custom-tab').click()
         cy.get('.custom-plugins-grid').should('be.visible')
 
         cy.getTestId('custom-plugin-create-card').should('be.visible')
