@@ -213,7 +213,6 @@ const handleClose = (revalidate?: boolean): void => {
 </script>
 
 <style lang="scss" scoped>
-.custom-plugins-grid {
   :deep(.empty-state-wrapper) {
     .custom-plugins-empty-state {
       padding-bottom: $kui-space-0;
@@ -236,7 +235,7 @@ const handleClose = (revalidate?: boolean): void => {
   }
 
   .plugin-card-container {
-    column-gap: $kui-space-80;
+    column-gap: 50px;
     display: grid;
     grid-auto-rows: 1fr;
     margin-top: $kui-space-90;
@@ -251,6 +250,12 @@ const handleClose = (revalidate?: boolean): void => {
       text-align: center;
     }
 
+    :deep(.k-card-body) {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+
     @media (min-width: $kui-breakpoint-phablet) {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -263,5 +268,4 @@ const handleClose = (revalidate?: boolean): void => {
       grid-template-columns: repeat(4, 1fr);
     }
   }
-}
 </style>

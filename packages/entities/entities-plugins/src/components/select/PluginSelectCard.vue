@@ -216,7 +216,6 @@ const handleCustomClick = (): void => {
   display: flex;
   flex-basis: 100%;
   flex-flow: row-wrap;
-  width: 335px;
 
   .actions-trigger {
     color: $kui-color-text-neutral-stronger;
@@ -299,17 +298,6 @@ const handleCustomClick = (): void => {
     height: 100%;
   }
 
-  :deep(.k-plugin-card-body) {
-    display: flex;
-    flex-direction: column;
-  }
-
-  :deep(.k-card-header) {
-    padding-left: $kui-space-60;
-    padding-right: $kui-space-40;
-    padding-top: $kui-space-60;
-  }
-
   @media (min-width: $kui-breakpoint-phablet) {
     flex-basis: calc(50% - #{$kui-space-80});
   }
@@ -320,6 +308,34 @@ const handleCustomClick = (): void => {
 
   @media (min-width: $kui-breakpoint-laptop) {
     flex-basis: calc(25% - #{$kui-space-80});
+  }
+}
+</style>
+
+<style lang="scss">
+.plugin-card-content.kong-card {
+  max-width: 335px;
+
+  .k-card-header {
+    padding-left: $kui-space-60;
+    padding-right: $kui-space-40;
+    padding-top: $kui-space-60;
+  }
+
+  .k-plugin-card-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .k-card-content {
+    display: flex;
+    flex: 1 !important;
+  }
+
+  .k-card-actions {
+    .k-button.outline {
+      border: none;
+    }
   }
 }
 </style>
