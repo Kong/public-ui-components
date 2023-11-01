@@ -59,6 +59,24 @@ export class SwaggerUIElement extends HTMLElement {
   #instance = null
 
   /**
+   * Properties to override in the theme passed to SwaggerUI
+   * @type {object}
+   */
+  #themeOverrides = {}
+
+  /**
+   * Layout component name for custom Swagger Layout from @kong/swagger-ui-kong-theme-universal
+   * @type {string}
+   */
+  #customLayout = null
+
+  /**
+   * Overrides the SwaggerUI Kong Theme exported from @kong/swagger-ui-kong-theme-universal
+   * @type {funcdtion}
+   */
+  #customSwaggerTheme = null
+
+  /**
    * True if application registration available for service version
    * @type {boolean}
    */
@@ -172,6 +190,24 @@ export class SwaggerUIElement extends HTMLElement {
       this.dispatchEvent(new CustomEvent('clicked-register', { bubbles: true }))
     }
 
+    const defaultTheme = {
+      hasSidebar: this.#hasSidebar,
+      applicationRegistrationEnabled: this.#applicationRegistrationEnabled,
+      currentVersion: { version: this.#currentVersion },
+      onViewSpecClick,
+      onRegisterClick,
+    }
+
+    const mergedThemeObject = { ...defaultTheme, ...this.#themeOverrides }
+
+    const plugins = [SwaggerUI.plugins.DownloadUrl]
+
+    if (this.#customSwaggerTheme) {
+      plugins.push(this.#customSwaggerTheme)
+    } else {
+      plugins.push(SwaggerUIKongTheme)
+    }
+
     this.#instance = SwaggerUI({
       url: this.#url,
       spec: this.#spec,
@@ -182,18 +218,9 @@ export class SwaggerUIElement extends HTMLElement {
         SwaggerUI.presets.apis,
         SwaggerUI.SwaggerUIStandalonePreset,
       ],
-      plugins: [
-        SwaggerUI.plugins.DownloadUrl,
-        SwaggerUIKongTheme,
-      ],
-      layout: 'KongLayout',
-      theme: {
-        hasSidebar: this.#hasSidebar,
-        applicationRegistrationEnabled: this.#applicationRegistrationEnabled,
-        currentVersion: { version: this.#currentVersion },
-        onViewSpecClick,
-        onRegisterClick,
-      },
+      plugins,
+      layout: this.#customLayout ? this.#customLayout : 'KongLayout',
+      theme: mergedThemeObject,
     })
   }
 
@@ -225,7 +252,7 @@ export class SwaggerUIElement extends HTMLElement {
     const operationElementId = operationToSwaggerThingId(operation)
     let scrollElement = this.shadowRoot.getElementById(operationElementId)
     if (!scrollElement) {
-      // we are going to see if the parent div element exists and then try and find the 
+      // we are going to see if the parent div element exists and then try and find the
       // element again
       const parentDiv = this.shadowRoot.querySelector(`[data-tag='${operation.tag}']`)
 
