@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -666,6 +662,9 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
+      '@kong/icons':
+        specifier: ^1.7.8
+        version: 1.7.8(vue@3.3.4)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -854,7 +853,7 @@ importers:
         specifier: workspace:^0.8.6
         version: link:../../core/i18n
       '@kong-ui-public/swagger-ui-web-component':
-        specifier: workspace:^0.8.13
+        specifier: workspace:^0.9.0
         version: link:../swagger-ui-web-component
       lodash.clonedeep:
         specifier: ^4.5.0
@@ -2046,10 +2045,11 @@ packages:
     resolution: {integrity: sha512-+VT9MeR3EcKXhst0KLoMme8dRYQef5skGaob1bR6xbyRXbwHG34ymLmYUeZ+ObIqISz7yTPGgarMJfDyzuX/YQ==}
     engines: {node: '>=v16.20.2'}
     peerDependencies:
+      axios: ^0.27.2
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.2.4
     dependencies:
-      axios: 0.27.2
+      axios: 1.5.1
       date-fns: 2.30.0
       date-fns-tz: 2.0.0(date-fns@2.30.0)
       focus-trap: 7.5.3
@@ -2062,8 +2062,6 @@ packages:
       vue: 3.3.4
       vue-draggable-next: 2.2.1(sortablejs@1.15.0)(vue@3.3.4)
       vue-router: 4.2.5(vue@3.3.4)
-    transitivePeerDependencies:
-      - debug
 
   /@kong/swagger-ui-kong-theme-universal@4.2.8(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.5)(vue@3.3.4):
     resolution: {integrity: sha512-HS2Fjjd/tLWCmcEeRefzsDotsdNcF2d10L5ugzOYOuIMTRbCXq6wB7lTKJZQDCa7uy5syIeDuku1QSNpnmHOyw==}
@@ -2087,7 +2085,7 @@ packages:
       util: 0.12.5
     transitivePeerDependencies:
       - '@babel/core'
-      - debug
+      - axios
       - mkdirp
       - prop-types
       - react-dom
@@ -4527,14 +4525,6 @@ packages:
   /aws4@1.12.0:
     resolution: {integrity: sha512-NmWvPnx0F1SfrQbYwOi7OeaNGokp9XhzNioJ/CSBs8Qa4vxug81mhJEAVZwxXuBmYB5KDRfMq/F3RR0BIU7sWg==}
     dev: true
-
-  /axios@0.27.2:
-    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
-    dependencies:
-      follow-redirects: 1.15.2
-      form-data: 4.0.0
-    transitivePeerDependencies:
-      - debug
 
   /axios@1.5.1:
     resolution: {integrity: sha512-Q28iYCWzNHjAm+yEAot5QaAMxhMghWLFVf7rRdwhUI+c2jix2DUXjAHXVi+s1ibs3mjPO/cCgbA++3BjD0vP/A==}
@@ -14399,3 +14389,7 @@ packages:
   /zenscroll@4.0.2:
     resolution: {integrity: sha512-jEA1znR7b4C/NnaycInCU6h/d15ZzCd1jmsruqOKnZP6WXQSMH3W2GL+OXbkruslU4h+Tzuos0HdswzRUk/Vgg==}
     dev: false
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false

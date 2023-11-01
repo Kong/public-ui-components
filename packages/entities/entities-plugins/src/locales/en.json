@@ -1,16 +1,31 @@
 {
   "actions": {
+    "cancel": "Cancel",
     "create": "New Plugin",
+    "create_custom": "Create",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
     "edit": "Edit",
+    "enable": "Enable",
+    "enabled": "Enabled",
     "delete": "Delete",
+    "confirm_delete": "Yes, delete",
     "view": "View Details",
-    "configure_dynamic_ordering": "Configure Dynamic Ordering"
+    "configure_dynamic_ordering": "Configure Dynamic Ordering",
+    "go_to_plugins": "Go to Plugins"
   },
   "delete": {
     "title": "Delete a Plugin",
-    "description": "Are you sure you want to delete this plugin? This action cannot be reversed."
+    "custom_title": "Delete {name}",
+    "custom_plugin": "Custom Plugin",
+    "description": "Are you sure you want to delete this plugin? This action cannot be reversed.",
+    "description_custom": "Please ensure this plugin is not in use. This action cannot be reversed.",
+    "plugin_schema_in_use_title": "Unable to Delete Custom Plugin",
+    "plugin_schema_in_use_message": "The custom plugin schema {name} is being used in this control plane, please delete any existing instances before you delete this schema.",
+    "confirmModalText1": "Are you sure you want to delete",
+    "confirmModalText2": "Please ensure this plugin is not in use. This delete action cannot be reversed.",
+    "confirm_text": "Type {name} to confirm your action",
+    "success_message": "Successfully deleted custom plugin {name}"
   },
   "copy": {
     "success": "Copied {val} to clipboard",
@@ -21,17 +36,20 @@
   "errors": {
     "general": "Plugins could not be retrieved",
     "delete": "The plugin could not be deleted at this time.",
-    "copy": "Failed to copy to clipboard"
+    "copy": "Failed to copy to clipboard",
+    "load_results": "Error loading available plugins"
   },
   "search": {
     "placeholder": {
-      "konnect": "Filter by exact instance name or ID"
+      "konnect": "Filter by exact instance name or ID",
+      "select": "Filter plugins"
     },
     "filter": {
       "field": {
         "enabled": "Enabled"
       }
-    }
+    },
+    "no_results": "No results found for \"{filter}\""
   },
   "plugins": {
     "title": "Plugins",
@@ -391,6 +409,32 @@
       "route": "Route ID",
       "consumer": "Consumer ID",
       "consumer_group": "Consumer Group ID"
+    },
+    "select": {
+      "custom_badge_text": "Data Plane Node Specific",
+      "unavailable_tooltip": "This plugin is not available",
+      "already_exists": "This plugin is already applied to this resource",
+      "misc_plugins": "Other Plugins",
+      "view_more": "View {count} more",
+      "view_less": "View less",
+      "tabs": {
+        "kong": {
+          "title": "Kong Plugins",
+          "description": "Kong plugins are bundled by default with Kong Gateway and are available across all control planes.",
+          "empty_title": "No Plugins",
+          "empty_description": "No plugins are available."
+        },
+        "custom": {
+          "title": "Custom Plugins",
+          "description": "Custom plugins will be available in this control plane only.",
+          "empty_title": "No Custom Plugins",
+          "empty_description": "No custom plugins have been added to this Control Plane.",
+          "create": {
+            "name": "Custom Plugin",
+            "description": "Upload schema file to create custom plugin"
+          }
+        }
+      }
     }
   },
   "glossary": {

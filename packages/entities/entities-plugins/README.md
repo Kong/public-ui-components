@@ -37,11 +37,13 @@ yarn add @kong-ui-public/entities-plugins
 Import the component(s) in your host application as well as the package styles
 
 ```ts
-import { PluginList, PluginConfigCard } from '@kong-ui-public/entities-plugins'
+import { PluginList, PluginSelect, PluginForm, PluginConfigCard } from '@kong-ui-public/entities-plugins'
 import '@kong-ui-public/entities-plugins/dist/style.css'
 ```
 
 ## Individual component documentation
 
 - [`<PluginList.vue />`](docs/plugin-list.md)
+- [`<PluginSelect.vue />`](docs/plugin-select.md)
+- [`<PluginForm.vue />`](docs/plugin-form.md)
 - [`<PluginConfigCard.vue />`](docs/plugin-config-card.md)

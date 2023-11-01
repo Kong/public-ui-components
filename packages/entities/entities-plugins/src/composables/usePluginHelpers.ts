@@ -1,5 +1,6 @@
 import type { ConfigurationSchema } from '@kong-ui-public/entities-shared'
 import { ConfigurationSchemaType } from '@kong-ui-public/entities-shared'
+import type { PluginType } from '../types'
 
 export default function useHelpers() {
   const METHOD_KEYS = ['methods', 'logout_methods']
@@ -88,7 +89,18 @@ export default function useHelpers() {
     }
   }
 
+  const getPluginCards = (type: 'all' | 'visible' | 'hidden', plugins: PluginType[], pluginsPerRow: number) => {
+    if (type === 'all') {
+      return plugins
+    } else if (type === 'visible') {
+      return plugins.slice(0, pluginsPerRow)
+    }
+
+    return plugins.slice(pluginsPerRow)
+  }
+
   return {
     setFieldType,
+    getPluginCards,
   }
 }
