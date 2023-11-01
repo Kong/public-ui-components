@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "1.4.18",
+  "version": "1.5.0",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
@@ -64,7 +64,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "1.2MB"
+    "errorLimit": "1.6MB"
   },
   "dependencies": {
     "@kong-ui-public/copy-uuid": "workspace:^",
@@ -72,6 +72,7 @@
     "@kong-ui-public/entities-consumers": "workspace:^",
     "@kong-ui-public/entities-gateway-services": "workspace:^",
     "@kong-ui-public/entities-routes": "workspace:^",
-    "@kong-ui-public/entities-shared": "workspace:^"
+    "@kong-ui-public/entities-shared": "workspace:^",
+    "@kong/icons": "^1.7.8"
   }
 }

@@ -9,14 +9,26 @@ export default {
       forEntity: '/{workspace}/{entityType}/{entityId}/plugins',
     },
   },
-  form: {
+  select: {
     konnect: {
-      edit: '/api/runtime_groups/{controlPlaneId}/plugins/{id}',
-      pluginSchema: '/api/runtime_groups/{controlPlaneId}/schemas/plugins/{plugin}',
+      availablePlugins: '/api/runtime_groups/{controlPlaneId}/v1/available-plugins',
     },
     kongManager: {
+      availablePlugins: '/{workspace}/kong',
+    },
+  },
+  form: {
+    konnect: {
+      create: '/api/runtime_groups/{controlPlaneId}/plugins',
+      edit: '/api/runtime_groups/{controlPlaneId}/plugins/{id}',
+      pluginSchema: '/api/runtime_groups/{controlPlaneId}/schemas/plugins/{plugin}',
+      validate: '/api/runtime_groups/{controlPlaneId}/v1/schemas/json/plugin/validate',
+    },
+    kongManager: {
+      create: '/{workspace}/plugins',
       edit: '/{workspace}/plugins/{id}',
       pluginSchema: '/{workspace}/schemas/plugins/{plugin}',
+      validate: '/{workspace}/schemas/plugins/validate',
     },
   },
   item: {

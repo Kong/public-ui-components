@@ -1,13 +1,13 @@
 import type { RouteLocationRaw } from 'vue-router'
 import type { FilterSchema, KongManagerBaseTableConfig, KonnectBaseTableConfig } from '@kong-ui-public/entities-shared'
 
+import type { EntityType } from './plugin'
 import type { EntityRow as ServiceEntity } from '@kong-ui-public/entities-gateway-services'
 import type { EntityRow as ConsumerEntity } from '@kong-ui-public/entities-consumers'
 import type { EntityRow as RouteEntity } from '@kong-ui-public/entities-routes'
 import type { EntityRow as ConsumerGroupEntity } from '@kong-ui-public/entities-consumer-groups'
 
 export type ViewRouteType = 'consumer' | 'route' | 'service' | 'consumer_group'
-export type EntityType = 'consumers' | 'routes' | 'services' | 'consumer_groups'
 
 export interface EntityRow extends Record<string, any> {
   config: any
