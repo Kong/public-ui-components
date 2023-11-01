@@ -7,7 +7,7 @@ export default {
     type: 'checklist',
     multi: true,
     multiSelect: true,
-    transform (data) {
+    transform(data) {
       return data
         ? data.join(',')
         : null
@@ -18,7 +18,7 @@ export default {
     values: ['create', 'read', 'update', 'delete'],
     multi: true,
     multiSelect: true,
-    transform (data) {
+    transform(data) {
       return data
         ? data.join(',')
         : null

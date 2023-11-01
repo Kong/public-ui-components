@@ -20,12 +20,12 @@ interface ArrayItem {
   valueArrayType: string,
 }
 
-export type ReturnArrayItem = ArrayItem & Item
-
 export interface Item {
   inputAttributes?: any,
   newElementButtonLabel?: string
 }
+
+export type ReturnArrayItem = ArrayItem & Item
 
 export interface TypeDefs {
   [key: string]: any
