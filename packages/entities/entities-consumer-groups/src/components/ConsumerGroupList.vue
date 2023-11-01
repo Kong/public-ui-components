@@ -96,9 +96,9 @@
         </PermissionsWrapper>
         <PermissionsWrapper :auth-function="() => canDelete(row)">
           <KDropdownItem
+            danger
             data-testid="action-entity-delete"
             has-divider
-            danger
             @click="() => config.consumerId ? handleExitGroupClick(row) : deleteRow(row)"
           >
             {{ config.consumerId ? t('consumer_groups.actions.exit') : t('consumer_groups.actions.delete') }}

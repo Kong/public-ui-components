@@ -55,9 +55,9 @@
           Edit
         </KDropdownItem>
         <KDropdownItem
+          danger
           data-testaction="menu-delete"
           has-divider
-          danger
           @click="deleteEntity(row)"
         >
           Delete
