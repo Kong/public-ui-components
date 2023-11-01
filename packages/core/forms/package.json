@@ -54,13 +54,13 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.33",
+    "@kong/kongponents": "9.0.0-alpha.35",
     "vue": "^3.3.4"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "^1.11.8",
-    "@kong/kongponents": "9.0.0-alpha.33",
+    "@kong/kongponents": "9.0.0-alpha.35",
     "@types/lodash": "^4.14.199",
     "pug": "^3.0.2"
   },

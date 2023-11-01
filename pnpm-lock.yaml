@@ -27,8 +27,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       '@rushstack/eslint-patch':
         specifier: ^1.5.1
         version: 1.5.1
@@ -238,8 +238,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       '@types/uuid':
         specifier: ^9.0.5
         version: 9.0.5
@@ -269,8 +269,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
 
   packages/analytics/analytics-utilities:
     dependencies:
@@ -298,8 +298,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
         version: 3.3.4
@@ -323,8 +323,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       '@types/lodash.clonedeep':
         specifier: ^4.5.7
         version: 4.5.7
@@ -369,8 +369,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
         version: 3.3.4
@@ -419,8 +419,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       '@types/lodash':
         specifier: ^4.14.199
         version: 4.14.199
@@ -446,8 +446,8 @@ importers:
         specifier: workspace:^0.8.6
         version: link:../i18n
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
         version: 3.3.4
@@ -462,8 +462,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       vue:
         specifier: ^3.3.4
         version: 3.3.4
@@ -490,8 +490,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       axios:
         specifier: ^1.5.1
         version: 1.5.1
@@ -518,8 +518,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       axios:
         specifier: ^1.5.1
         version: 1.5.1
@@ -543,8 +543,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       axios:
         specifier: ^1.5.1
         version: 1.5.1
@@ -568,8 +568,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       axios:
         specifier: ^1.5.1
         version: 1.5.1
@@ -593,8 +593,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       axios:
         specifier: ^1.5.1
         version: 1.5.1
@@ -618,8 +618,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       axios:
         specifier: ^1.5.1
         version: 1.5.1
@@ -646,8 +646,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       axios:
         specifier: ^1.5.1
         version: 1.5.1
@@ -689,8 +689,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       axios:
         specifier: ^1.5.1
         version: 1.5.1
@@ -714,8 +714,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       axios:
         specifier: ^1.5.1
         version: 1.5.1
@@ -748,8 +748,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       axios:
         specifier: ^1.5.1
         version: 1.5.1
@@ -776,8 +776,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       axios:
         specifier: ^1.5.1
         version: 1.5.1
@@ -801,8 +801,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       axios:
         specifier: ^1.5.1
         version: 1.5.1
@@ -826,8 +826,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       axios:
         specifier: ^1.5.1
         version: 1.5.1
@@ -851,8 +851,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       '@types/prismjs':
         specifier: ^1.26.1
         version: 1.26.1
@@ -885,8 +885,8 @@ importers:
         specifier: ^1.11.8
         version: 1.11.8
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.33
-        version: 9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4)
+        specifier: 9.0.0-alpha.35
+        version: 9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.0.4
         version: 1.0.4(vite@4.5.0)
@@ -2083,16 +2083,17 @@ packages:
       - debug
     dev: false
 
-  /@kong/kongponents@9.0.0-alpha.33(vue-router@4.2.5)(vue@3.3.4):
-    resolution: {integrity: sha512-KSlIwaTJN9yDFTsQGlKo8lHZYFkbMxU/bbiMsSM6DN+QPkgg2320nm3hUYN6FPqj18DolU6ZYjMYu1p4XCBWqA==}
+  /@kong/kongponents@9.0.0-alpha.35(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4):
+    resolution: {integrity: sha512-0G/mQroYhlQdzii2UNURWZGf4gU3lbLYNPany5+hre+8TZmd8LmuPiH29ZviGmJML3PCoZihPmPv05QrQzC2Og==}
     engines: {node: '>=v16.20.2'}
     peerDependencies:
+      axios: ^0.27.2
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.2.5
     dependencies:
       '@kong/icons': 1.7.8(vue@3.3.4)
       '@popperjs/core': 2.11.8
-      axios: 0.27.2
+      axios: 1.5.1
       date-fns: 2.30.0
       date-fns-tz: 2.0.0(date-fns@2.30.0)
       focus-trap: 7.5.3
@@ -2105,8 +2106,6 @@ packages:
       vue: 3.3.4
       vue-draggable-next: 2.2.1(sortablejs@1.15.0)(vue@3.3.4)
       vue-router: 4.2.5(vue@3.3.4)
-    transitivePeerDependencies:
-      - debug
     dev: true
 
   /@kong/swagger-ui-kong-theme-universal@4.2.8(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.5)(vue@3.3.4):
@@ -4588,6 +4587,7 @@ packages:
       form-data: 4.0.0
     transitivePeerDependencies:
       - debug
+    dev: false
 
   /axios@1.5.1:
     resolution: {integrity: sha512-Q28iYCWzNHjAm+yEAot5QaAMxhMghWLFVf7rRdwhUI+c2jix2DUXjAHXVi+s1ibs3mjPO/cCgbA++3BjD0vP/A==}
