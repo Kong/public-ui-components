@@ -8,14 +8,12 @@
       ref="swaggerRef"
       :application-registration-enabled="applicationRegistrationEnabled"
       :current-version="currentVersion"
-      :custom-layout="customLayout"
-      :custom-swagger-theme="customSwaggerTheme"
       data-testid="kong-public-ui-spec-details-swagger"
       :essentials-only="essentialsOnly"
       :has-sidebar="hasSidebar"
       :relative-sidebar="relativeSidebar"
       :spec="document"
-      :theme-overrides="themeOverrides"
+      :theme-overrides="encodeURIComponent(JSON.stringify(themeOverrides))"
       :url="url"
     />
     <div
@@ -56,14 +54,6 @@ const props = defineProps({
     type: Object,
     default: null,
   },
-  customLayout: {
-    type: String,
-    default: null,
-  },
-  customSwaggerTheme: {
-    type: Function as PropType<() => {}>,
-    default: null,
-  },
   essentialsOnly: {
     type: Boolean,
     default: false,
@@ -89,8 +79,6 @@ const swaggerRef = ref<SwaggerUIElement | null>(null)
 const hasRequiredProps = computed((): boolean => {
   return !!(props.document || props.url)
 })
-
-console.log(props.customLayout, props.themeOverrides)
 
 const activeOperationFocused = ref(false)
 const showAndScrollToOperation = (): void => {

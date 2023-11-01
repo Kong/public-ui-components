@@ -65,18 +65,6 @@ export class SwaggerUIElement extends HTMLElement {
   #themeOverrides = {}
 
   /**
-   * Layout component name for custom Swagger Layout from @kong/swagger-ui-kong-theme-universal
-   * @type {string}
-   */
-  #customLayout = null
-
-  /**
-   * Overrides the SwaggerUI Kong Theme exported from @kong/swagger-ui-kong-theme-universal
-   * @type {funcdtion}
-   */
-  #customSwaggerTheme = null
-
-  /**
    * True if application registration available for service version
    * @type {boolean}
    */
@@ -126,6 +114,9 @@ export class SwaggerUIElement extends HTMLElement {
         break
       case 'current-version':
         this.currentVersion = newValue
+        break
+      case 'theme-overrides':
+        this.themeOverrides = JSON.parse(decodeURIComponent(newValue))
         break
     }
   }
@@ -200,14 +191,6 @@ export class SwaggerUIElement extends HTMLElement {
 
     const mergedThemeObject = { ...defaultTheme, ...this.#themeOverrides }
 
-    const plugins = [SwaggerUI.plugins.DownloadUrl]
-
-    if (this.#customSwaggerTheme) {
-      plugins.push(this.#customSwaggerTheme)
-    } else {
-      plugins.push(SwaggerUIKongTheme)
-    }
-
     this.#instance = SwaggerUI({
       url: this.#url,
       spec: this.#spec,
@@ -218,8 +201,8 @@ export class SwaggerUIElement extends HTMLElement {
         SwaggerUI.presets.apis,
         SwaggerUI.SwaggerUIStandalonePreset,
       ],
-      plugins,
-      layout: this.#customLayout ? this.#customLayout : 'KongLayout',
+      plugins: [SwaggerUI.plugins.DownloadUrl, SwaggerUIKongTheme],
+      layout: 'KongLayout',
       theme: mergedThemeObject,
     })
   }
@@ -342,6 +325,14 @@ export class SwaggerUIElement extends HTMLElement {
     this.#url = url
   }
 
+  get themeOverrides() {
+    return this.#themeOverrides
+  }
+
+  set themeOverrides(themeOverrides) {
+    this.#themeOverrides = themeOverrides
+  }
+
   get applicationRegistrationEnabled() {
     return this.#applicationRegistrationEnabled
   }
@@ -359,6 +350,16 @@ export class SwaggerUIElement extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['url', 'spec', 'auto-init', 'has-sidebar', 'relative-sidebar', 'essentials-only', 'application-registration-enabled', 'current-version']
+    return [
+      'url',
+      'spec',
+      'auto-init',
+      'has-sidebar',
+      'relative-sidebar',
+      'essentials-only',
+      'application-registration-enabled',
+      'current-version',
+      'theme-overrides',
+    ]
   }
 }
