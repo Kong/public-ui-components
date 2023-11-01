@@ -117,7 +117,7 @@ describe('<ConsumerList />', () => {
       ).as(params?.alias ?? 'getConsumersMultiPage')
     }
 
-    const triggerQuery = '.kong-ui-entities-consumers-list tbody tr [data-testid="k-dropdown-trigger"]'
+    const triggerQuery = '.kong-ui-entities-consumers-list tbody tr [data-testid="dropdown-trigger"]'
     const removeQuery = '.kong-ui-entities-consumers-list tbody tr [data-testid="action-entity-delete"]'
     const modalQuery = 'remove-consumer-modal'
 
@@ -738,7 +738,7 @@ describe('<ConsumerList />', () => {
       ).as(params?.alias ?? 'getConsumersMultiPage')
     }
 
-    const triggerQuery = '.kong-ui-entities-consumers-list tbody tr [data-testid="k-dropdown-trigger"]'
+    const triggerQuery = '.kong-ui-entities-consumers-list tbody tr [data-testid="dropdown-trigger"]'
     const removeQuery = '.kong-ui-entities-consumers-list tbody tr [data-testid="action-entity-delete"]'
     const modalQuery = 'remove-consumer-modal'
 

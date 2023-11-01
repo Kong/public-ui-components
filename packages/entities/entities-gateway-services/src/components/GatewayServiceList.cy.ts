@@ -80,7 +80,7 @@ describe('<GatewayServiceList />', () => {
         },
       })
 
-      cy.getTestId('k-dropdown-trigger').eq(0).click()
+      cy.getTestId('dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
@@ -139,7 +139,7 @@ describe('<GatewayServiceList />', () => {
             },
           })
 
-          cy.getTestId('k-dropdown-trigger').eq(0).click()
+          cy.getTestId('dropdown-trigger').eq(0).click()
           cy.getTestId('action-entity-view').should(`${!expected ? 'not.' : ''}exist`)
         })
 
@@ -155,7 +155,7 @@ describe('<GatewayServiceList />', () => {
             },
           })
 
-          cy.getTestId('k-dropdown-trigger').eq(0).click()
+          cy.getTestId('dropdown-trigger').eq(0).click()
           cy.getTestId('action-entity-edit').should(`${expected ? '' : 'not.'}exist`)
         })
 
@@ -171,7 +171,7 @@ describe('<GatewayServiceList />', () => {
             },
           })
 
-          cy.getTestId('k-dropdown-trigger').eq(0).click()
+          cy.getTestId('dropdown-trigger').eq(0).click()
           cy.getTestId('action-entity-delete').should(`${expected ? '' : 'not.'}exist`)
         })
       })

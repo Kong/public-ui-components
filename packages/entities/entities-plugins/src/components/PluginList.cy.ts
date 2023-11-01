@@ -89,7 +89,7 @@ describe('<PluginList />', () => {
         },
       })
 
-      cy.getTestId('k-dropdown-trigger').eq(0).click()
+      cy.getTestId('dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
@@ -254,7 +254,7 @@ describe('<PluginList />', () => {
             },
           })
 
-          cy.getTestId('k-dropdown-trigger').eq(0).click()
+          cy.getTestId('dropdown-trigger').eq(0).click()
           cy.getTestId('action-entity-view').should(`${!expected ? 'not.' : ''}exist`)
         })
 
@@ -270,7 +270,7 @@ describe('<PluginList />', () => {
             },
           })
 
-          cy.getTestId('k-dropdown-trigger').eq(0).click()
+          cy.getTestId('dropdown-trigger').eq(0).click()
           cy.getTestId('action-entity-edit').should(`${expected ? '' : 'not.'}exist`)
         })
 
@@ -286,7 +286,7 @@ describe('<PluginList />', () => {
             },
           })
 
-          cy.getTestId('k-dropdown-trigger').eq(0).click()
+          cy.getTestId('dropdown-trigger').eq(0).click()
           cy.getTestId('action-entity-delete').should(`${expected ? '' : 'not.'}exist`)
         })
 
@@ -303,7 +303,7 @@ describe('<PluginList />', () => {
             },
           })
 
-          cy.getTestId('k-dropdown-trigger').eq(0).click()
+          cy.getTestId('dropdown-trigger').eq(0).click()
           cy.getTestId('action-entity-config-dyn-order').should(`${!expected ? 'not.' : ''}exist`)
         })
 
@@ -708,7 +708,7 @@ describe('<PluginList />', () => {
       cy.wait('@getRoutes')
       cy.getTestId('basic-auth').getTestId('name').should('exist')
       cy.getTestId('basic-auth').getTestId('ordering').should('not.exist')
-      cy.getTestId('k-dropdown-trigger').eq(0).click()
+      cy.getTestId('dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-config-dyn-order').should('not.exist')
     })
   })

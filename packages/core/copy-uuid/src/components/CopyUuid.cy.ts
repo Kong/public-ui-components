@@ -26,8 +26,7 @@ describe('<CopyUuid />', () => {
     cy.get(container).find('[data-testid="copy-to-clipboard"]').should('be.visible')
     cy.get(container).find('.uuid-icon').should('be.visible')
 
-    cy.get(container).find('.uuid-icon path')
-      .should('have.attr', 'fill', 'rgba(0, 0, 0, 0.45)')
+    cy.get(container).find('.uuid-icon').should('have.css', 'color').and('eq', 'rgba(0, 0, 0, 0.45)')
   })
 
   it('renders with `truncated` set to false', () => {
@@ -231,11 +230,11 @@ describe('<CopyUuid />', () => {
     })
   })
 
-  it('renders with `iconColor` set to #473cfb', () => {
+  it('renders with `iconColor` set to rgb(71, 60, 251)', () => {
     cy.mount(CopyUuid, {
       props: {
         uuid,
-        iconColor: '#473cfb',
+        iconColor: 'rgb(71, 60, 251)',
       },
     })
 
@@ -243,8 +242,7 @@ describe('<CopyUuid />', () => {
     cy.get(container).find('.uuid-icon').should('be.visible')
     cy.get(container).find('[data-testid="copy-to-clipboard"]').should('be.visible')
 
-    cy.get(container).find('.uuid-icon path')
-      .should('have.attr', 'fill', '#473cfb')
+    cy.get(container).find('.uuid-icon').should('have.css', 'color').and('eq', 'rgb(71, 60, 251)')
   })
 
   describe('tooltips', () => {
