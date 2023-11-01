@@ -16,8 +16,18 @@ const init = async () => {
         component: () => import('./pages/PluginListPage.vue'),
       },
       {
-        path: '/plugin/create',
+        path: '/plugin/select',
+        name: 'select-plugin',
+        component: () => import('./pages/PluginSelectPage.vue'),
+      },
+      {
+        path: '/plugin/create/:plugin',
         name: 'create-plugin',
+        component: () => import('./pages/FallbackPage.vue'),
+      },
+      {
+        path: '/custom-plugin/create',
+        name: 'create-custom-plugin',
         component: () => import('./pages/FallbackPage.vue'),
       },
       {
@@ -25,6 +35,11 @@ const init = async () => {
         name: 'view-plugin',
         component: () => import('./pages/PluginConfigCardPage.vue'),
         props: true,
+      },
+      {
+        path: '/custom-plugin/:plugin/edit',
+        name: 'edit-custom-plugin',
+        component: () => import('./pages/FallbackPage.vue'),
       },
       {
         path: '/plugin/:id/edit',

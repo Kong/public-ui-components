@@ -8,8 +8,35 @@ export enum PluginGroup {
   LOGGING = 'Logging',
   DEPLOYMENT = 'Deployment',
   WEBSOCKET = 'WebSocket Plugins',
-  CUSTOM_PLUGINS = 'Other Plugins',
+  CUSTOM_PLUGINS = 'Custom Plugins',
 }
+
+export const PluginGroupArray = [
+  PluginGroup.AUTHENTICATION,
+  PluginGroup.SECURITY,
+  PluginGroup.TRAFFIC_CONTROL,
+  PluginGroup.SERVERLESS,
+  PluginGroup.ANALYTICS_AND_MONITORING,
+  PluginGroup.TRANSFORMATIONS,
+  PluginGroup.LOGGING,
+  PluginGroup.DEPLOYMENT,
+  PluginGroup.WEBSOCKET,
+  PluginGroup.CUSTOM_PLUGINS,
+]
+
+export const PLUGIN_GROUPS_COLLAPSE_STATUS = {
+  AUTHENTICATION: true,
+  SECURITY: true,
+  TRAFFIC_CONTROL: true,
+  SERVERLESS: true,
+  ANALYTICS_AND_MONITORING: true,
+  TRANSFORMATIONS: true,
+  LOGGING: true,
+  DEPLOYMENT: true,
+  CUSTOM_PLUGINS: true,
+}
+
+export type EntityType = 'consumers' | 'routes' | 'services' | 'consumer_groups'
 
 export enum PluginScope {
   GLOBAL = 'global',
@@ -27,4 +54,23 @@ export type PluginMetaData = {
   isEnterprise: boolean // The value will be True if the Plugin is enterprise only.
   name: string // A display name of the Plugin.
   scope: PluginScope[] // The scope supported by the Plugin.
+}
+
+export interface PluginType extends PluginMetaData {
+  id: string // the plugin schema name
+  available?: boolean // whether the plugin is available or not
+  exists?: boolean // whether the plugin exists already for the current entity
+  disabledMessage?: string // An optional field for plugin's disabled message.
+}
+
+export type DisabledPlugin = {
+  [key: string]: string // [plugin.id]: plugin.disabledMessage
+}
+
+export type PluginCardList = {
+  [key in PluginGroup]?: PluginType[]
+}
+
+export type TriggerLabels = {
+  [key in PluginGroup]?: string // [plugin.group]: label
 }

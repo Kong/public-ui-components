@@ -64,7 +64,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "1MB"
+    "errorLimit": "1.6MB"
   },
   "dependencies": {
     "@kong-ui-public/copy-uuid": "workspace:^",
@@ -72,6 +72,7 @@
     "@kong-ui-public/entities-consumers": "workspace:^",
     "@kong-ui-public/entities-gateway-services": "workspace:^",
     "@kong-ui-public/entities-routes": "workspace:^",
-    "@kong-ui-public/entities-shared": "workspace:^"
+    "@kong-ui-public/entities-shared": "workspace:^",
+    "@kong/icons": "^1.7.8"
   }
 }

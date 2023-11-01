@@ -56,7 +56,7 @@ const konnectConfig = ref<KonnectPluginListConfig>({
   apiBaseUrl: '/us/kong-api/konnect-api', // `/{geo}/kong-api/konnect-api`, with leading slash and no trailing slash
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
-  createRoute: { name: 'create-plugin' },
+  createRoute: { name: 'select-plugin' },
   getViewRoute: (plugin: EntityRow) => ({ name: 'view-plugin', params: { id: plugin.id, plugin: plugin.name } }),
   getEditRoute: (plugin: EntityRow) => ({ name: 'edit-plugin', params: { id: plugin.id } }),
   getScopedEntityViewRoute: (type: ViewRouteType, id: string) => ({ name: `view-${type}`, params: { id } }),
@@ -73,7 +73,7 @@ const kongManagerConfig = ref<KongManagerPluginListConfig>({
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   isExactMatch: false,
-  createRoute: { name: 'create-plugin' },
+  createRoute: { name: 'select-plugin' },
   getViewRoute: (plugin: EntityRow) => ({ name: 'view-plugin', params: { id: plugin.id, plugin: plugin.name } }),
   getEditRoute: (plugin: EntityRow) => ({ name: 'edit-plugin', params: { id: plugin.id } }),
   getScopedEntityViewRoute: (type: ViewRouteType, id: string) => ({ name: `view-${type}`, params: { id } }),
