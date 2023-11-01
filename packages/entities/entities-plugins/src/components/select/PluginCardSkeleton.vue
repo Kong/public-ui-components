@@ -34,6 +34,14 @@ defineProps({
 
 <style lang="scss" scoped>
 .plugin-card-skeleton {
+  :deep(.skeleton-card-column) {
+    width: calc(25% - $kui-space-70);
+  }
+
+  :deep(.skeleton-card-footer) {
+    height: 50px;
+  }
+
   .plugin-card-header {
     margin: $kui-space-0 $kui-space-auto;
   }
@@ -42,6 +50,9 @@ defineProps({
     width: 100%;
 
     &-divider {
+      color: #afb7c538;
+      background-color: #afb7c538;
+      border-color: #afb7c538;
       margin: $kui-space-0 $kui-space-70;
     }
 

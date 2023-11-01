@@ -165,7 +165,7 @@ const triggerLabels = computed(() => {
 }
 
 .plugin-card-container {
-  column-gap: $kui-space-80;
+  column-gap: 50px;
   display: grid;
   grid-auto-rows: 1fr;
   margin-top: $kui-space-90;

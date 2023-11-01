@@ -216,7 +216,7 @@ const handleCustomClick = (): void => {
   display: flex;
   flex-basis: 100%;
   flex-flow: row-wrap;
-  max-width: 335px;
+  width: 335px;
 
   .actions-trigger {
     color: $kui-color-text-neutral-stronger;
