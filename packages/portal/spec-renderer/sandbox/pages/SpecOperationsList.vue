@@ -23,7 +23,7 @@
           <br><br>
 
           <KButton
-            appearance="outline"
+            appearance="secondary"
             @click="handleClear"
           >
             Clear

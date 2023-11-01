@@ -868,6 +868,9 @@ importers:
       '@kong-ui-public/swagger-ui-web-component':
         specifier: workspace:^0.8.13
         version: link:../swagger-ui-web-component
+      '@kong/icons':
+        specifier: ^1.7.8
+        version: 1.7.8(vue@3.3.4)
       lodash.clonedeep:
         specifier: ^4.5.0
         version: 4.5.0
