@@ -2,8 +2,7 @@
   <KDropdown
     class="account-dropdown"
     :kpop-attributes="{ placement: 'bottomStart' }"
-    :label="userInitials"
-    size="small"
+    :trigger-text="userInitials"
     :width="width"
   >
     <template #items="{ handleSelection }">
