@@ -42,14 +42,9 @@
         <SpecDetails
           :key="key"
           :active-operation="activeOperation ?? undefined"
-          custom-layout="test"
-          :custom-swagger-theme="() => {}"
           :document="defaultDocument"
           :essentials-only="essentialsOnly"
           :has-sidebar="hasSidebar"
-          :theme-overrides="{
-            languages: []
-          }"
         />
       </div>
     </main>
