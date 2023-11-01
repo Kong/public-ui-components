@@ -40,6 +40,7 @@
   "devDependencies": {
     "@kong/design-tokens": "^1.11.8",
     "@kong/kongponents": "^8.125.0",
+    "axios": "^1.5.1",
     "vue": "^3.3.4"
   },
   "repository": {
@@ -62,5 +63,11 @@
   "peerDependencies": {
     "@kong/kongponents": "^8.125.0",
     "vue": "^3.3.4"
+  },
+  "dependencies": {
+    "@kong-ui-public/document-viewer": "workspace:^",
+    "@kong-ui-public/i18n": "workspace:^",
+    "@xstate/vue": "^2.0.0",
+    "xstate": "^4.38.3"
   }
 }
