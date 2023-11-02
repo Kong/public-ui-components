@@ -3,14 +3,6 @@
     border-variant="noBorder"
     class="documentation-content"
   >
-    <template #title>
-      <KLabel
-        class="doc-card-title"
-        :help="titleTooltip ? titleTooltip : undefined"
-      >
-        {{ i18n.t('documentation.show.card.title') }}
-      </KLabel>
-    </template>
     <template #body>
       <div class="documentation-parent-container">
         <KTreeList
@@ -41,7 +33,6 @@
 </template>
 
 <script setup lang="ts">
-import composables from '../composables'
 import DocumentationDisplay from './DocumentationDisplay.vue'
 import type { PropType } from 'vue'
 import type { AxiosResponse } from 'axios'
@@ -95,13 +86,7 @@ defineProps({
     type: Object as PropType<DocumentTree>,
     default: () => null,
   },
-  titleTooltip: {
-    type: String,
-    default: '',
-  },
 })
-
-const { i18n } = composables.useI18n()
 </script>
 
 <style lang="scss" scoped>

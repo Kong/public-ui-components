@@ -42,9 +42,6 @@
       "title_label": "Page Name"
     },
     "show": {
-      "card": {
-        "title": "Documentation"
-      },
       "empty_state": {
         "title": "Add New Documentation Page",
         "message": "Pages will allow you to provide guides examples and other useful information about your service to developers.",
