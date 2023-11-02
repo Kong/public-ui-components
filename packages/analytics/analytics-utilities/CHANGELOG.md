@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.8.8...@kong-ui-public/analytics-utilities@0.9.0) (2023-11-02)
+
+
+### Features
+
+* **analytics-*:** support additional explore v3 variation [MA-2094] ([#884](https://github.com/Kong/public-ui-components/issues/884)) ([8955195](https://github.com/Kong/public-ui-components/commit/8955195b17ab1341b6d87eb7a5e730494c68924f))
+
+
+
+
+
 ## [0.8.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.8.7...@kong-ui-public/analytics-utilities@0.8.8) (2023-11-01)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
