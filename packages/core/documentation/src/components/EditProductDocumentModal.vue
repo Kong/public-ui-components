@@ -120,7 +120,7 @@
               data-testid="edit-documentation-save-button"
               :disabled="state.matches('pending') || saveDisabled"
               :icon="state.matches('pending') ? 'spinner' : undefined"
-              @click="emit('save')"
+              @click="emit('save', { formData, selectedFile })"
             >
               {{ i18n.t('documentation.form_modal.save_button_text') }}
             </KButton>
