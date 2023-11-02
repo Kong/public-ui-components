@@ -1,4 +1,5 @@
 import type { PluginBasicSchema } from '../../types/plugins'
+import type { CommonSchemaFields } from '../../types/plugins/shared'
 
 interface ACLFieldSchema {
   fields: [
@@ -10,7 +11,7 @@ interface ACLFieldSchema {
   ]
 }
 
-export type ACLSchema = PluginBasicSchema & {
+export type ACLSchema = CommonSchemaFields & PluginBasicSchema & {
   schema: ACLFieldSchema,
   applyCredentialButtonText: string,
   fields: any

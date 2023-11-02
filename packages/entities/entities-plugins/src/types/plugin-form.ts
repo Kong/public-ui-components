@@ -1,13 +1,16 @@
 import type { RouteLocationRaw } from 'vue-router'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { EntityType } from './plugin'
-import type { ApplicationRegistrationSchema } from '../types/plugins/application-registration-schema'
-import type { StatsDSchema } from '../types/plugins/stats-d'
-import type { MockingSchema } from '../types/plugins/mocking'
-import type { DatadogSchema } from '../types/plugins/datadog-schema'
-import type { StatsDAdvancedSchema } from '../types/plugins/stats-d-advanced'
-import type { KafkaSchema } from '../types/plugins/kafka-schema'
-import type { UpstreamTlsSchema } from '../types/plugins/upstream-tls'
+import type { CommonSchemaFields } from './plugins/shared'
+import type { ApplicationRegistrationSchema } from './plugins/application-registration-schema'
+import type { StatsDSchema } from './plugins/stats-d'
+import type { MockingSchema } from './plugins/mocking'
+import type { DatadogSchema } from './plugins/datadog-schema'
+import type { StatsDAdvancedSchema } from './plugins/stats-d-advanced'
+import type { KafkaSchema } from './plugins/kafka-schema'
+import type { UpstreamTlsSchema } from './plugins/upstream-tls'
+import type { RateLimitingSchema } from './plugins/rate-limiting'
+import type { GraphQLRateLimitingAdvancedSchema } from './plugins/graphql-rate-limiting-advanced'
 
 export interface BasePluginFormConfig {
   /** A function that returns the route for creating a plugin */
@@ -17,6 +20,8 @@ export interface BasePluginFormConfig {
   /** Current entity type and id for plugins for specific entity */
   entityType?: EntityType
   entityId?: string
+  /** The type of plugin to be created or edited */
+  pluginType?: string
 }
 
 /** Konnect Plugin form config */
@@ -30,22 +35,18 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
 /** Kong Manager Plugin form config */
 export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig {}
 
-export interface PluginFormFields {
-  name: string
-  tags: string
-  entity_id: string
-}
+export interface PluginFormFields extends Record<string, any> {}
 
 export interface PluginFormState {
   /** Form fields */
-  fields: PluginFormFields
+  fields: Record<string, any>
   /** Form readonly state (only used when saving entity details) */
   isReadonly: boolean
   /** The error message to show on the form */
   errorMessage: string
 }
 
-export type PluginType = 'switch' | 'input' | 'foreign' | 'selectionGroup' | 'tag' | 'multiselect'
+export type PluginType = 'switch' | 'input' | 'foreign' | 'selectionGroup' | 'tag' | 'multiselect' | 'select'
 
 export interface PluginTags {
   label: string
@@ -61,7 +62,7 @@ export interface PluginTags {
 
 export interface DefaultPluginsFormSchema {
   type: PluginType
-  default?: boolean | string[]
+  default?: boolean | string[] | string
   model?: 'enabled' | 'disabled'
   label?: string
   textOn?: string
@@ -161,18 +162,6 @@ interface ArrayItem {
 
 export type ReturnArrayItem = ArrayItem & Item
 
-interface Field {
-  model?: string
-  label: string
-  type: string
-  values?: string[]
-  id?: string
-  default?: string
-  placeholder?: string
-  hint?: string
-  inputType?: 'text' | 'number'
-}
-
 export interface CustomSchemas {
   'application-registration': ApplicationRegistrationSchema
   datadog: DatadogSchema
@@ -182,34 +171,14 @@ export interface CustomSchemas {
   statsd: StatsDSchema
   'statsd-advanced': StatsDAdvancedSchema
   mocking: MockingSchema
-  'rate-limiting': {
-    useKonnectSchema: boolean
-    'config-policy': Field
-    'config-strategy': Field
-    'config-consumer_groups': Field
-  }
-  'rate-limiting-advanced': {
-    useKonnectSchema: boolean
-    'config-policy': Field
-    'config-strategy': Field
-    'config-consumer_groups': Field
-  }
-  'route-by-header': {
-    configurationDisabled: boolean
-  }
-  'graphql-rate-limiting-advanced': {
-    useKonnectSchema: boolean
-    'config-strategy': Field
-  }
-  'response-ratelimiting': {
-    useKonnectSchema: boolean
-    'config-policy': Field
-    'config-strategy': Field
-    'config-consumer_groups': Field
-  }
-  'pre-function': Record<string, any>
-  'post-function': Record<string, any>
-  'request-transformer-advanced': Record<string, any>
-  'request-validator': Record<string, any>
-  zipkin: Record<string, any>
+  'rate-limiting': RateLimitingSchema
+  'rate-limiting-advanced': RateLimitingSchema
+  'route-by-header': { configurationDisabled: boolean } & CommonSchemaFields
+  'graphql-rate-limiting-advanced': GraphQLRateLimitingAdvancedSchema
+  'response-ratelimiting': RateLimitingSchema
+  'pre-function': CommonSchemaFields & Record<string, any>
+  'post-function': CommonSchemaFields & Record<string, any>
+  'request-transformer-advanced': CommonSchemaFields & Record<string, any>
+  'request-validator': CommonSchemaFields & Record<string, any>
+  zipkin: CommonSchemaFields & Record<string, any>
 }

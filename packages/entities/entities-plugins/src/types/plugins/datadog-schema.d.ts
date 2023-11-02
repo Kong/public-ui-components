@@ -1,6 +1,6 @@
-import type { ItemsSchema } from '../../types/plugins/shared'
+import type { ItemsSchema, CommonSchemaFields } from '../../types/plugins/shared'
 
-export interface DatadogSchema {
+export interface DatadogSchema extends CommonSchemaFields {
   'config-metrics': {
     type: string
     showRemoveButton: boolean

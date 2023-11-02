@@ -17,3 +17,18 @@ export interface ItemsSchema {
     fields: Field[]
   }
 }
+
+export interface PluginBasicSchema {
+  title: string,
+  plugin: string,
+  name: string,
+  endpoint: string,
+  schemaEndpoint: string,
+}
+
+export interface CommonSchemaFields {
+  id?: string
+  useKonnectSchema?: boolean
+  overwriteDefault?: boolean
+  formSchema?: Record<string, any>
+}

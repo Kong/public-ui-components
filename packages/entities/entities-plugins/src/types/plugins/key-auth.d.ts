@@ -1,4 +1,4 @@
-import type { PluginBasicSchema } from '../../types/plugins'
+import type { CommonSchemaFields, PluginBasicSchema } from '../../types/plugins/shared'
 
 interface KeyAuthSFieldSchema {
   fields: [
@@ -11,7 +11,7 @@ interface KeyAuthSFieldSchema {
   ]
 }
 
-export type KeyAuthSchema = PluginBasicSchema & {
+export type KeyAuthSchema = PluginBasicSchema & CommonSchemaFields & {
   schema: KeyAuthSFieldSchema,
   fields: any
 }

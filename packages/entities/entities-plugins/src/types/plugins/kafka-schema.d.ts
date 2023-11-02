@@ -1,6 +1,6 @@
-import type { ItemsSchema } from '../../types/plugins/shared'
+import type { ItemsSchema, CommonSchemaFields } from '../../types/plugins/shared'
 
-export interface KafkaSchema {
+export interface KafkaSchema extends CommonSchemaFields {
   'config-bootstrap_servers': {
     type: string
     showRemoveButton: boolean

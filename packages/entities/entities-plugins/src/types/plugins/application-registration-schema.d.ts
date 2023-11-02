@@ -1,4 +1,5 @@
 import type { Tags } from '../../types/plugins'
+import type { CommonSchemaFields } from '../../types/plugins/shared'
 
 export interface AppRegFormSchema {
   enabled: {
@@ -45,7 +46,7 @@ export interface AppRegFormSchema {
   },
 }
 
-export interface ApplicationRegistrationSchema {
+export interface ApplicationRegistrationSchema extends CommonSchemaFields {
   overwriteDefault: boolean
   formSchema: AppRegFormSchema
 }

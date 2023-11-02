@@ -12,7 +12,8 @@
     "confirm_delete": "Yes, delete",
     "view": "View Details",
     "configure_dynamic_ordering": "Configure Dynamic Ordering",
-    "go_to_plugins": "Go to Plugins"
+    "go_to_plugins": "Go to Plugins",
+    "save": "Save"
   },
   "delete": {
     "title": "Delete a Plugin",
@@ -433,6 +434,19 @@
             "name": "Custom Plugin",
             "description": "Upload schema file to create custom plugin"
           }
+        }
+      }
+    },
+    "form": {
+      "disabled_warning": "This plugin must be configured using the Kong Admin API. Please see the documentation.",
+      "fields": {
+        "instance_name": {
+          "help": "A custom name for this plugin instance to help identifying from the list view."
+        },
+        "protocols": {
+          "label": "Protocols",
+          "placeholder": "Select valid protocols for the plugin",
+          "help": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type."
         }
       }
     }

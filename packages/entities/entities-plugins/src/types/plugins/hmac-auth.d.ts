@@ -1,4 +1,4 @@
-import type { PluginBasicSchema } from '../../types/plugins'
+import type { CommonSchemaFields, PluginBasicSchema } from '../../types/plugins/shared'
 
 interface HmacAuthFieldSchema {
   fields: [
@@ -17,7 +17,7 @@ interface HmacAuthFieldSchema {
   ]
 }
 
-export type HmacAuthSchema = PluginBasicSchema & {
+export type HmacAuthSchema = CommonSchemaFields & PluginBasicSchema & {
   schema: HmacAuthFieldSchema,
   fields: any
 }

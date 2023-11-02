@@ -1,4 +1,4 @@
-import type { PluginBasicSchema } from '../../types/plugins'
+import type { CommonSchemaFields, PluginBasicSchema } from '../../types/plugins/shared'
 
 interface JwtFieldSchema {
   fields: [
@@ -33,7 +33,7 @@ interface JwtFieldSchema {
   ]
 }
 
-export type JwtSchema = PluginBasicSchema & {
+export type JwtSchema = PluginBasicSchema & CommonSchemaFields & {
   schema: JwtFieldSchema,
   fields: {
     id: object,
