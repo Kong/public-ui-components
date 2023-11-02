@@ -89,13 +89,21 @@ export interface AnalyticsExploreV2Meta extends BaseExploreMeta {
 }
 
 /**
+ * Display information for a given entity ID.
+ */
+export interface AnalyticsExploreV3Display {
+  name: string;
+  deleted: boolean;
+}
+
+/**
  * Metadata about the exploreV3 result
  */
 export interface AnalyticsExploreV3Meta extends Omit<AnalyticsExploreV2Meta, 'dimensions'> {
   /*
    * Structure containing mappings of IDs to display names
   */
-  display: Record<string, Record<string, string>>
+  display: Record<string, Record<string, string>> | Record<string, Record<string, AnalyticsExploreV3Display>>
 }
 
 /**
