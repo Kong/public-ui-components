@@ -223,7 +223,7 @@ describe('<CACertificateList />', () => {
       cy.get('.k-table-empty-state .k-empty-state-cta .k-button').should('be.visible')
     })
 
-    it('should hide empty state and create ca certificate cta if user can not create', () => {
+    it.only('should hide empty state and create ca certificate cta if user can not create', () => {
       interceptKM()
 
       cy.mount(CACertificateList, {

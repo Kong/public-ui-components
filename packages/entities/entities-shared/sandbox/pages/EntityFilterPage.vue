@@ -62,13 +62,13 @@ const resetFuzzyMatchQuery = () => {
 }
 
 .entity-filter-wrapper {
-  width: 500px;
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: space-between;
+  width: 500px;
 
   .reset-button {
-    margin-left: 50px;
+    margin-left: 60px;
   }
 }
 </style>
