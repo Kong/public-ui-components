@@ -296,93 +296,93 @@ watch(() => props.record, () => {
 </script>
 
 <style lang="scss" scoped>
-.edit-document-modal {
-  & :deep(.k-modal-dialog) {
-    max-width: 750px;
-  }
-  .title {
-    display: block;
-  }
+  .edit-document-modal {
+    & :deep(.k-modal-dialog) {
+      max-width: 750px;
+    }
+    .title {
+      display: block;
+    }
 
-  .subtitle {
-    font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-regular;
-  }
+    .subtitle {
+      font-size: $kui-font-size-30;
+      font-weight: $kui-font-weight-regular;
+    }
 
-  .doc-link {
-    display: inline;
-  }
+    .doc-link {
+      display: inline;
+    }
 
-  .document-inputs {
-    display: flex;
-    margin-bottom: $kui-space-80;
-    margin-top: $kui-space-80;
-    width: 100%;
-  }
+    .document-inputs {
+      display: flex;
+      margin-bottom: $kui-space-80;
+      margin-top: $kui-space-80;
+      width: 100%;
+    }
 
-  .side-by-side {
-    width: 48%;
-  }
+    .side-by-side {
+      width: 48%;
+    }
 
-  .url-slug {
-    margin-left: $kui-space-auto;
-  }
+    .url-slug {
+      margin-left: $kui-space-auto;
+    }
 
-  .bottom-spacing {
-    margin-bottom: $kui-space-80;
-  }
+    .bottom-spacing {
+      margin-bottom: $kui-space-80;
+    }
 
-  .documentation-status {
-    display: block;
-    margin-bottom: $kui-space-80;
-    margin-top: $kui-space-80;
-  }
+    .documentation-status {
+      display: block;
+      margin-bottom: $kui-space-80;
+      margin-top: $kui-space-80;
+    }
 
-  .document-parent-select {
-    margin-top: $kui-space-80;
-  }
+    .document-parent-select {
+      margin-top: $kui-space-80;
+    }
 
-  .action-buttons {
-    display: flex;
-    width: 100%;
-  }
+    .action-buttons {
+      display: flex;
+      width: 100%;
+    }
 
-  .button-spacing {
-    margin-left: $kui-space-auto;
-  }
+    .button-spacing {
+      margin-left: $kui-space-auto;
+    }
 
-  .edit-documentation-delete-button {
-    margin-right: $kui-space-auto;
-  }
-  .edit-documentation-cancel-button {
-    margin-right: $kui-space-40;
-  }
+    .edit-documentation-delete-button {
+      margin-right: $kui-space-auto;
+    }
+    .edit-documentation-cancel-button {
+      margin-right: $kui-space-40;
+    }
 
-  .k-prompt .k-modal-dialog.modal-dialog .k-modal-content .k-modal-footer.modal-footer .k-prompt-action-buttons {
-    width: 100%;
+    .k-prompt .k-modal-dialog.modal-dialog .k-modal-content .k-modal-footer.modal-footer .k-prompt-action-buttons {
+      width: 100%;
+    }
   }
-}
 </style>
 
 <style lang="scss">
-.edit-document-modal.k-prompt .k-modal-dialog.modal-dialog {
-  .close-button {
-    align-self: start;
-  }
-  // TODO: fix in kongponents
-  .document-file-upload {
-    margin-bottom: $kui-space-80;
-    .upload-input {
-      height: 44px;
+  .edit-document-modal.k-prompt .k-modal-dialog.modal-dialog {
+    .close-button {
+      align-self: start;
+    }
+    // TODO: fix in kongponents
+    .document-file-upload {
+      margin-bottom: $kui-space-80;
+      .upload-input {
+        height: 44px;
+      }
+
+      .k-file-upload-btn {
+        top: 38px;
+      }
     }
 
-    .k-file-upload-btn {
-      top: 38px;
+    .k-modal-content .k-modal-footer.modal-footer .k-prompt-action-buttons {
+      width: 100%;
     }
   }
-
-  .k-modal-content .k-modal-footer.modal-footer .k-prompt-action-buttons {
-    width: 100%;
-  }
-}
 </style>
