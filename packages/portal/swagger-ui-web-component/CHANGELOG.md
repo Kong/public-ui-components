@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.9.0...@kong-ui-public/swagger-ui-web-component@0.10.0) (2023-11-02)
+
+
+### Features
+
+* **spec-details:** add customizable code snippet languages for swagger ([#882](https://github.com/Kong/public-ui-components/issues/882)) ([2b6bb33](https://github.com/Kong/public-ui-components/commit/2b6bb330bc741f7cd80da63cd82c2e8e9d86f432))
+
+
+
+
+
 # [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.8.13...@kong-ui-public/swagger-ui-web-component@0.9.0) (2023-11-01)
 
 
