@@ -225,15 +225,14 @@
 import { computed, ref, watch, inject } from 'vue'
 import {
   ChartMetricDisplay,
-  ChartLegendPosition,
   ChartTypesSimple,
   SimpleChart,
   TopNTable,
 } from '../../src'
 import type { AnalyticsExploreRecord, AnalyticsExploreV2Meta, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, SimpleChartOptions } from '../../src/types'
-import { SeededRandom } from '../SeedRandom'
-import { rand } from '../utils'
+import { SeededRandom } from '../utils/SeedRandom'
+import { rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
