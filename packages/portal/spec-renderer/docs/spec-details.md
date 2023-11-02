@@ -66,3 +66,11 @@ If enabled, only display the spec `paths` section; general information, schemes,
 - default: `null`
 
 Allows to expand specification operation details section for given operation and scroll the viewport to it.
+
+### `themeOverrides`
+
+- type: `Object`
+- required: `false`
+- default: `null`
+
+Allows the user to override objects in the SwaggerUI theme (e.g. languages for snippet support), or provide more properties that they may need in the spec.
