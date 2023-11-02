@@ -17,7 +17,18 @@ export default function useHelpers() {
       : i.charAt(0).toUpperCase() + i.substring(1)).join(' ')
   }
 
+  /**
+   * Captializes the first letter of a string
+   *
+   * @param str The string to capitalize
+   * @returns {String} The capitalized string
+   */
+  const capitalize = (str: string): string => {
+    return str.charAt(0).toUpperCase() + str.slice(1)
+  }
+
   return {
+    capitalize,
     convertKeyToTitle,
   }
 }

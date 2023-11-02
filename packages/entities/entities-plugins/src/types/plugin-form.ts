@@ -12,6 +12,8 @@ import type { UpstreamTlsSchema } from '../types/plugins/upstream-tls'
 export interface BasePluginFormConfig {
   /** A function that returns the route for creating a plugin */
   getCreateRoute: (id: string) => RouteLocationRaw
+  /** Route to return to if canceling create a Plugin (go back to plugin selection page) */
+  backRoute: RouteLocationRaw
   /** Current entity type and id for plugins for specific entity */
   entityType?: EntityType
   entityId?: string
@@ -42,6 +44,50 @@ export interface PluginFormState {
   /** The error message to show on the form */
   errorMessage: string
 }
+
+export type PluginType = 'switch' | 'input' | 'foreign' | 'selectionGroup' | 'tag' | 'multiselect'
+
+export interface PluginTags {
+  label: string
+  name: string
+  type: 'switch' | 'input' | 'foreign' | 'selectionGroup' | 'tag'
+  inputType: string
+  valueType: string
+  valueArrayType: string
+  placeholder: string
+  help: string
+  hint: string
+}
+
+export interface DefaultPluginsFormSchema {
+  type: PluginType
+  default?: boolean | string[]
+  model?: 'enabled' | 'disabled'
+  label?: string
+  textOn?: string
+  textOff?: string
+  styleClasses?: string
+  inputType?: 'hidden' | 'text'
+  // Will be fixed in KHCP-6469
+  fields? : any
+  help?: string
+  tags?: PluginTags
+  values?: Array<Record<string, string | number | boolean>>
+  placeholder?: string
+  required?: boolean,
+  // Will be fixed in KHCP-6469
+  getColumnFields?: (schema: unknown) => object
+}
+
+export type PartiallyRequired<T, K extends keyof T> = { [k in K]-?: T[k] } & { [k in keyof T]: T[k] };
+
+export type GetRequiredFieldsByContext<T extends DefaultPluginsFormSchema> = T['type'] extends 'input' ? PartiallyRequired<DefaultPluginsFormSchema, 'inputType'> : DefaultPluginsFormSchema
+
+export type DefaultPluginsSchemaRecord = Record<string, GetRequiredFieldsByContext<DefaultPluginsFormSchema>>
+
+/**
+ * Types for schemas
+ */
 
 export interface Tags {
   label: string
@@ -77,9 +123,9 @@ export interface AppRegFormSchema {
     label: string,
     styleClasses: string
     description: string
-    model: string,
+    model: string
     entity: string
-    placeholder: string,
+    placeholder: string
     inputValues: {
       fields: string[]
     },
@@ -89,28 +135,28 @@ export interface AppRegFormSchema {
 }
 
 export interface Item {
-  inputAttributes?: any,
+  inputAttributes?: any
   newElementButtonLabel?: string
 }
 
 interface ArrayItem {
-  type: string,
-  itemContainerComponent: string,
-  fieldClasses: string,
-  fieldItemsClasses: string,
-  newElementButtonLabelClasses: string,
+  type: string
+  itemContainerComponent: string
+  fieldClasses: string
+  fieldItemsClasses: string
+  newElementButtonLabelClasses: string
   inputAttributes: {
-    class: string,
+    class: string
     style: {
-      minWidth: string,
-    },
-    [key: string]: any,
+      minWidth: string
+    }
+    [key: string]: any
   },
-  removeElementButtonLabel: string,
-  styleClasses: string,
-  inputType: string,
-  valueType: string,
-  valueArrayType: string,
+  removeElementButtonLabel: string
+  styleClasses: string
+  inputType: string
+  valueType: string
+  valueArrayType: string
 }
 
 export type ReturnArrayItem = ArrayItem & Item
@@ -121,49 +167,49 @@ interface Field {
   type: string
   values?: string[]
   id?: string
-  default?: string,
-  placeholder?: string,
-  hint?: string,
+  default?: string
+  placeholder?: string
+  hint?: string
   inputType?: 'text' | 'number'
 }
 
 export interface CustomSchemas {
-  'application-registration': ApplicationRegistrationSchema,
-  datadog: DatadogSchema,
-  'upstream-tls': UpstreamTlsSchema,
-  'kafka-upstream': KafkaSchema,
-  'kafka-log': KafkaSchema,
-  statsd: StatsDSchema,
-  'statsd-advanced': StatsDAdvancedSchema,
-  mocking: MockingSchema,
+  'application-registration': ApplicationRegistrationSchema
+  datadog: DatadogSchema
+  'upstream-tls': UpstreamTlsSchema
+  'kafka-upstream': KafkaSchema
+  'kafka-log': KafkaSchema
+  statsd: StatsDSchema
+  'statsd-advanced': StatsDAdvancedSchema
+  mocking: MockingSchema
   'rate-limiting': {
-    useKonnectSchema: boolean,
-    'config-policy': Field,
-    'config-strategy': Field,
-    'config-consumer_groups': Field,
-  },
+    useKonnectSchema: boolean
+    'config-policy': Field
+    'config-strategy': Field
+    'config-consumer_groups': Field
+  }
   'rate-limiting-advanced': {
-    useKonnectSchema: boolean,
-    'config-policy': Field,
-    'config-strategy': Field,
-    'config-consumer_groups': Field,
-  },
+    useKonnectSchema: boolean
+    'config-policy': Field
+    'config-strategy': Field
+    'config-consumer_groups': Field
+  }
   'route-by-header': {
-    configurationDisabled: boolean,
-  },
+    configurationDisabled: boolean
+  }
   'graphql-rate-limiting-advanced': {
-    useKonnectSchema: boolean,
-    'config-strategy': Field,
-  },
+    useKonnectSchema: boolean
+    'config-strategy': Field
+  }
   'response-ratelimiting': {
-    useKonnectSchema: boolean,
-    'config-policy': Field,
-    'config-strategy': Field,
-    'config-consumer_groups': Field,
-  },
-  'pre-function': any,
-  'post-function': any,
-  'request-transformer-advanced': any,
-  'request-validator': any,
-  zipkin: any
+    useKonnectSchema: boolean
+    'config-policy': Field
+    'config-strategy': Field
+    'config-consumer_groups': Field
+  }
+  'pre-function': Record<string, any>
+  'post-function': Record<string, any>
+  'request-transformer-advanced': Record<string, any>
+  'request-validator': Record<string, any>
+  zipkin: Record<string, any>
 }

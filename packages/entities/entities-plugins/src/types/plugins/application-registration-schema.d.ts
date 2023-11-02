@@ -19,23 +19,26 @@ export interface AppRegFormSchema {
   }
   'service-id': {
     type: string
-    label: string,
+    label: string
     styleClasses: string
     description: string
-    model: string,
+    model: string
     entity: string
-    placeholder: string,
+    placeholder: string
     inputValues: {
       fields: string[]
     },
     help: string
   },
-  tags: Tags,
+  tags: Tags
   protocols: {
-    default: [],
+    default: []
     type: string
     label: string
-    values: { label: string, value: string }[]
+    values: {
+      label: string
+      value: string
+    }[]
     help: string
     placeholder: string
     styleClasses: string
@@ -43,6 +46,6 @@ export interface AppRegFormSchema {
 }
 
 export interface ApplicationRegistrationSchema {
-  overwriteDefault: boolean;
+  overwriteDefault: boolean
   formSchema: AppRegFormSchema
 }
