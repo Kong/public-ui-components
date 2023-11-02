@@ -22,7 +22,7 @@
   "peerDependencies": {
     "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.35",
+    "@kong/kongponents": "9.0.0-alpha.37",
     "axios": "^1.5.1",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5"
@@ -31,7 +31,7 @@
     "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "^1.11.8",
-    "@kong/kongponents": "9.0.0-alpha.35",
+    "@kong/kongponents": "9.0.0-alpha.37",
     "axios": "^1.5.1",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5"
