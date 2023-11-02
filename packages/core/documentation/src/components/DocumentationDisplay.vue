@@ -203,9 +203,9 @@ const handleDocumentResponse = () => {
     } else {
       error.value = i18n.t('documentation.form.errors.cannot_retrieve_document')
     }
-
-    isLoading.value = false
   }
+
+  isLoading.value = false
 }
 </script>
 
