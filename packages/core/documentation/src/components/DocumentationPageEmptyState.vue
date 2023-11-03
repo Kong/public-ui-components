@@ -45,6 +45,5 @@ defineProps({
 })
 
 const emit = defineEmits(['create-documentation'])
-
 const { i18n } = composables.useI18n()
 </script>

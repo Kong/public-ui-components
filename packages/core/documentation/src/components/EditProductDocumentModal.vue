@@ -140,6 +140,7 @@ import { cloneDeep } from '../helpers'
 import externalLinks from '../external-links'
 
 import type { PropType } from 'vue'
+import type { DocumentListItem } from 'src/types'
 
 const props = defineProps({
   showEditModal: {
@@ -165,7 +166,7 @@ const props = defineProps({
   },
   // TODO: type
   documents: {
-    type: Array as PropType<{ label: string, value: string, selected: boolean }[]>,
+    type: Array as PropType<DocumentListItem[]>,
     required: true,
   },
   errorMessage: {

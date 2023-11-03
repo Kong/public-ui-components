@@ -37,18 +37,17 @@ import DocumentationDisplay from './DocumentationDisplay.vue'
 import type { PropType } from 'vue'
 import type { AxiosResponse } from 'axios'
 import type { DocumentListItem, DocumentTree } from '../types'
+import type { ChangeEvent, ChildChangeEvent, TreeListItem } from '@kong/kongponents'
 
-// TODO: attempt to add types
-const emit = defineEmits([
-  'child-change',
-  'create',
-  'document-selection',
-  'edit',
-  'parent-change',
-  'toggle-publish',
-])
+const emit = defineEmits<{
+  (e: 'child-change', data: ChildChangeEvent): void,
+  (e: 'create'): void,
+  (e: 'document-selection', data: TreeListItem): void,
+  (e: 'edit'): void,
+  (e: 'parent-change', data: ChangeEvent): void,
+  (e: 'toggle-publish', data: boolean): void,
+}>()
 
-// TODO: add comments for each prop
 defineProps({
   cacheKey: {
     type: Number,
@@ -68,16 +67,23 @@ defineProps({
     required: true,
   },
   /**
-   * A function which returns a document response object
+   * Document response object returned by host app
    */
   documentResponse: {
     type: Object as PropType<AxiosResponse>,
     required: true,
   },
+  /**
+   * The ID of the entity to which a document is associated.
+   * Examples are API Product ID, Service ID etc.
+   */
   entityId: {
     type: String,
     required: true,
   },
+  /**
+   * Boolean assiting with responsive documents view
+   */
   isCard: {
     type: Boolean,
     default: false,
