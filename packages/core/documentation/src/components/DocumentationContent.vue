@@ -1,7 +1,7 @@
 <template>
   <KCard
     border-variant="noBorder"
-    class="documentation-content"
+    class="documentation-card"
   >
     <template #body>
       <div class="documentation-parent-container">
@@ -90,7 +90,7 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-.documentation-content {
+.documentation-card {
   .doc-card-title {
     font-size: $kui-font-size-60;
   }

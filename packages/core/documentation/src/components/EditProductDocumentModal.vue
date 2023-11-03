@@ -120,7 +120,7 @@
               data-testid="edit-documentation-save-button"
               :disabled="state.matches('pending') || saveDisabled"
               :icon="state.matches('pending') ? 'spinner' : undefined"
-              @click="emit('save', { formData, selectedFile })"
+              @click="handleClickSave"
             >
               {{ i18n.t('documentation.form_modal.save_button_text') }}
             </KButton>
@@ -267,6 +267,10 @@ const handleClickCancel = (): void => {
   resetForm()
   send('CLICK_CANCEL')
   emit('canceled')
+}
+
+const handleClickSave = (): void => {
+  emit('save', formData, selectedFile)
 }
 
 const errorMessage = ref<string>('')
