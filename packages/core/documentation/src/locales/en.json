@@ -1,22 +1,18 @@
 {
   "documentation": {
+    "common": {
+      "published": "Published",
+      "unpublished": "Unpublished"
+    },
     "documentation_display": {
       "added_label": "Added: ",
       "status_label": "Status: ",
-      "published_status": "Published",
-      "unpublished_status": "Unpublished",
       "edit_button": "Edit",
       "add_new": "Add Page"
     },
     "errors": {
+      "cannot_retrieve_document": "Cannot retrieve selected document. Please try again later",
       "unexpected": "An unexpected error has occurred"
-    },
-    "form": {
-      "errors": {
-        "cannot_retrieve_document": "Cannot retrieve selected document. Please try again later",
-        "published_status": "Published",
-        "unpublished_status": "Unpublished"
-      }
     },
     "form_modal": {
       "cancel_button_text": "Cancel",
@@ -33,10 +29,6 @@
       "save_button_text": "Save",
       "slug_label": "URL Slug",
       "slug_error": "Only letters, numbers, '-', and '_' characters are allowed",
-      "status": {
-        "unpublished": "Unpublished",
-        "published": "Published"
-      },
       "status_label": "Status",
       "subtitle": "Provide guides, examples and other useful information about this service to developers.",
       "title_label": "Page Name"

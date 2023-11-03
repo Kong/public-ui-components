@@ -252,8 +252,8 @@ const fileUploadButtonText = computed((): string => {
 
 const publishedStatusText = computed((): string => {
   return formData.status
-    ? i18n.t('documentation.form_modal.status.published')
-    : i18n.t('documentation.form_modal.status.unpublished')
+    ? i18n.t('documentation.common.published')
+    : i18n.t('documentation.common.unpublished')
 })
 
 const selectedFile = ref<any>(null)

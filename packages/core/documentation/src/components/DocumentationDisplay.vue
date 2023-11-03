@@ -14,7 +14,7 @@
           appearance="success"
           class="badge-modified"
         >
-          {{ i18n.t('documentation.documentation_display.published_status') }}
+          {{ i18n.t('documentation.common.published') }}
         </KBadge>
         <KBadge
           v-else
@@ -22,7 +22,7 @@
           class="badge-modified"
           :color="KUI_COLOR_TEXT_NEUTRAL"
         >
-          {{ i18n.t('documentation.documentation_display.unpublished_status') }}
+          {{ i18n.t('documentation.common.unpublished') }}
         </KBadge>
       </div>
 
@@ -153,7 +153,7 @@ const fileName = computed((): string => props.record.title || '')
 // formatIsoDate(props.record.created_at)
 const createdAt = computed((): string => '')
 const publishModel = ref<boolean>(false)
-const publishedStatusText = ref(i18n.t('documentation.form.errors.unpublished_status'))
+const publishedStatusText = ref(i18n.t('documentation.common.unpublished'))
 const error = ref('')
 const defaultDocument = ref<any>(null)
 
@@ -163,17 +163,17 @@ const handlePublishToggle = (): void => {
   emit('publish-toggled', newValue)
   publishModel.value = newValue
   publishedStatusText.value = newValue
-    ? i18n.t('documentation.form.errors.published_status')
-    : i18n.t('documentation.form.errors.unpublished_status')
+    ? i18n.t('documentation.common.published')
+    : i18n.t('documentation.common.unpublished')
 }
 
 const setStatus = (status: string): void => {
   if (status === 'published') {
     publishModel.value = true
-    publishedStatusText.value = i18n.t('documentation.form.errors.published_status')
+    publishedStatusText.value = i18n.t('documentation.common.published')
   } else {
     publishModel.value = false
-    publishedStatusText.value = i18n.t('documentation.form.errors.unpublished_status')
+    publishedStatusText.value = i18n.t('documentation.common.unpublished')
   }
 }
 
@@ -200,7 +200,7 @@ const handleDocumentResponse = () => {
       setStatus(data.status)
     }
   } else {
-    error.value = i18n.t('documentation.form.errors.cannot_retrieve_document')
+    error.value = i18n.t('documentation.errors.cannot_retrieve_document')
   }
 
   isLoading.value = false
