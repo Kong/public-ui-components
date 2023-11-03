@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-shared",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "type": "module",
   "main": "./dist/entities-shared.umd.js",
   "module": "./dist/entities-shared.es.js",
@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "^1.11.8",
+    "@kong/design-tokens": "^1.11.9",
     "@kong/kongponents": "9.0.0-alpha.37",
     "axios": "^1.5.1",
     "vue": "^3.3.4",

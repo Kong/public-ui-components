@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.12.0...@kong-ui-public/spec-renderer@0.12.1) (2023-11-03)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+# [0.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.11.61...@kong-ui-public/spec-renderer@0.12.0) (2023-11-02)
+
+
+### Features
+
+* **spec-details:** add customizable code snippet languages for swagger ([#882](https://github.com/Kong/public-ui-components/issues/882)) ([2b6bb33](https://github.com/Kong/public-ui-components/commit/2b6bb330bc741f7cd80da63cd82c2e8e9d86f432))
+
+
+
+
+
 ## [0.11.61](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.11.60...@kong-ui-public/spec-renderer@0.11.61) (2023-11-01)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer

@@ -45,6 +45,24 @@
           :document="defaultDocument"
           :essentials-only="essentialsOnly"
           :has-sidebar="hasSidebar"
+          :theme-overrides="{
+            languages: [
+              {
+                prismLanguage: 'bash',
+                target: 'shell',
+                client: 'curl'
+              },
+              {
+                prismLanguage: 'javascript',
+                target: 'javascript',
+                client: 'xhr'
+              },
+              {
+                prismLanguage: 'java',
+                target: 'java'
+              },
+            ]
+          }"
         />
       </div>
     </main>

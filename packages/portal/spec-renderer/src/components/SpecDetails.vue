@@ -13,6 +13,7 @@
       :has-sidebar="hasSidebar"
       :relative-sidebar="relativeSidebar"
       :spec="document"
+      :theme-overrides="encodeURIComponent(JSON.stringify(themeOverrides))"
       :url="url"
     />
     <div
@@ -48,6 +49,10 @@ const props = defineProps({
   relativeSidebar: {
     type: Boolean,
     default: false,
+  },
+  themeOverrides: {
+    type: Object,
+    default: null,
   },
   essentialsOnly: {
     type: Boolean,

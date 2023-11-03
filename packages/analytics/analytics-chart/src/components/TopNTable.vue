@@ -88,6 +88,7 @@
                 :record="{
                   id: getId(entry),
                   name: getName(entry),
+                  deleted: getDeleted(entry),
                   dimension: displayKey,
                 }"
               >
@@ -190,8 +191,33 @@ const getId = (record: AnalyticsExploreRecord): string => {
 }
 const getName = (record: AnalyticsExploreRecord): string => {
   const id = getId(record)
+  const idRecord = displayRecord.value[id]
 
-  return String(displayRecord.value[id]) || '–'
+  if (!idRecord) {
+    return '-'
+  }
+
+  if (typeof idRecord === 'string') {
+    // TODO: Remove shim after API is updated.
+    return idRecord
+  }
+
+  return idRecord.name
+}
+const getDeleted = (record: AnalyticsExploreRecord): boolean => {
+  const id = getId(record)
+  const idRecord = displayRecord.value[id]
+
+  if (!idRecord) {
+    return false
+  }
+
+  if (typeof idRecord === 'string') {
+    // TODO: Remove shim after API is updated.
+    return false
+  }
+
+  return idRecord.deleted
 }
 const getValue = (record: AnalyticsExploreRecord): string => {
   if (!columnKey.value) {
