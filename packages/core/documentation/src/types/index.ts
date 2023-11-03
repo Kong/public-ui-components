@@ -2,3 +2,4 @@
 // The actual types and interfaces should be contained in separate files within this folder.
 
 export * from './document-list'
+export * from './document-modal'

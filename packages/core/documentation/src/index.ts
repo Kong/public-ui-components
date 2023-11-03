@@ -2,7 +2,7 @@
 import DocumentationContent from './components/DocumentationContent.vue'
 import DocumentationDisplay from './components/DocumentationDisplay.vue'
 import DocumentationPageEmptyState from './components/DocumentationPageEmptyState.vue'
-import EditProductDocumentModal from './components/EditProductDocumentModal.vue'
+import ProductDocumentModal from './components/ProductDocumentModal.vue'
 
 // Export Vue plugin
 // We rarely want to export components as a plugin as we prefer to support proper tree-shaking in the host application. Only enable if you're packing a Vue plugin.
@@ -19,7 +19,7 @@ export {
   DocumentationContent,
   DocumentationDisplay,
   DocumentationPageEmptyState,
-  EditProductDocumentModal,
+  ProductDocumentModal,
 }
 
 export * from './types'

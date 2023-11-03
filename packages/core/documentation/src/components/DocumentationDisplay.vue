@@ -60,7 +60,7 @@
             class="document-edit-button"
             data-testid="document-edit-button"
             size="small"
-            @click="$emit('edit-clicked')"
+            @click="emit('edit-clicked')"
           >
             {{ i18n.t('documentation.documentation_display.edit_button') }}
           </KButton>
@@ -68,7 +68,7 @@
             appearance="primary"
             data-testid="add-new-page-button"
             size="small"
-            @click="$emit('add-clicked')"
+            @click="emit('add-clicked')"
           >
             {{ i18n.t('documentation.documentation_display.add_new') }}
           </KButton>
@@ -138,13 +138,13 @@ const props = defineProps({
     type: Object as PropType<DocumentTree>,
     required: true,
   },
-  type: {
-    type: String,
-    default: 'service',
-  },
 })
 
-const emit = defineEmits(['add-clicked', 'edit-clicked', 'publish-toggled'])
+const emit = defineEmits<{
+  (e: 'add-clicked'): void,
+  (e: 'edit-clicked'): void,
+  (e: 'toggle-published', newValue: boolean): void,
+}>()
 
 const { i18n } = composables.useI18n()
 const isLoading = ref(true)
@@ -160,7 +160,7 @@ const defaultDocument = ref<any>(null)
 const handlePublishToggle = (): void => {
   const newValue = !publishModel.value
 
-  emit('publish-toggled', newValue)
+  emit('toggle-published', newValue)
   publishModel.value = newValue
   publishedStatusText.value = newValue
     ? i18n.t('documentation.common.published')

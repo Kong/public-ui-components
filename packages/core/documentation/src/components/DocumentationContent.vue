@@ -22,10 +22,9 @@
           :document-response="documentResponse"
           :is-card="isCard"
           :record="selectedDocument"
-          :service-package-id="entityId"
           @add-clicked="emit('create')"
           @edit-clicked="emit('edit')"
-          @publish-toggled="(data) => emit('toggle-publish', data)"
+          @toggle-published="(data) => emit('toggle-published', data)"
         />
       </div>
     </template>
@@ -45,7 +44,7 @@ const emit = defineEmits<{
   (e: 'document-selection', data: TreeListItem): void,
   (e: 'edit'): void,
   (e: 'parent-change', data: ChangeEvent): void,
-  (e: 'toggle-publish', data: boolean): void,
+  (e: 'toggle-published', data: boolean): void,
 }>()
 
 defineProps({

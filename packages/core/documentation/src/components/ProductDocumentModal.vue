@@ -1,14 +1,14 @@
 <template>
   <Teleport
-    v-if="showEditModal"
+    v-if="showModal"
     to="#kong-ui-app-layout-teleport-default-slot"
   >
     <KPrompt
       class="edit-document-modal"
       data-testid="edit-document-modal"
-      :is-visible="showEditModal"
-      @canceled="$emit('canceled')"
-      @proceed="emit('save')"
+      :is-visible="showModal"
+      @canceled="emit('canceled')"
+      @proceed="handleClickSave"
     >
       <template #header-content>
         <div class="title">
@@ -140,23 +140,15 @@ import { cloneDeep } from '../helpers'
 import externalLinks from '../external-links'
 
 import type { PropType } from 'vue'
-import type { DocumentListItem } from 'src/types'
+import type { DocumentListItem, FormData } from 'src/types'
 
 const props = defineProps({
-  showEditModal: {
+  showModal: {
     type: Boolean,
     default: false,
   },
-  servicePackageId: {
-    type: String,
-    required: true,
-  },
-  documentId: {
-    type: String,
-    required: true,
-  },
   record: {
-    // TODO: type
+    // should be a DocumentTree object type
     type: Object,
     default: null,
   },
@@ -164,7 +156,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  // TODO: type
   documents: {
     type: Array as PropType<DocumentListItem[]>,
     required: true,
@@ -175,7 +166,11 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['canceled', 'save', 'delete'])
+const emit = defineEmits<{
+  (e: 'canceled'): void,
+  (e: 'save', formData: FormData, selectedFile: any): void,
+  (e: 'delete'): void,
+}>()
 
 const { i18n } = composables.useI18n()
 const filePlaceholderText = computed(() => props.record.file?.filename)
