@@ -47,7 +47,7 @@
           :class="{ 'k-select-placeholder': hasPlaceholderText }"
           :clearable="isKeySetFieldClearable"
           data-testid="key-form-key-set"
-          :dropdown-footer-text="additionalRecordsExist ? t('keys.form.fields.key_set.footer') : undefined"
+          :dropdown-footer-text="keySetDropdownFooterText"
           enable-filtering
           :items="availableKeySets"
           :label="t('keys.form.fields.key_set.label')"
@@ -411,6 +411,13 @@ const keySetErrorMessage = computed((): string => validationError.value ? t('key
 const keySetsSelectKey = ref<number>(0)
 // this will only be defined if we were able to initially fetch ALL available records
 const additionalRecordsExist = computed((): boolean => allKeySets.value === undefined)
+const keySetDropdownFooterText = computed(() => {
+  if (!additionalRecordsExist.value) {
+    return undefined
+  }
+
+  return props.config.app === 'konnect' ? t('keys.form.fields.key_set.footer') : undefined
+})
 
 // Create a ref to store valid key set ids
 const existingKeySets = ref<Set<Record<string, any>>>(new Set())
