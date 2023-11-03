@@ -181,28 +181,26 @@ watch(() => props.record, (newVal) => {
   setStatus(newVal.status)
 })
 
-watch(() => props.documentResponse, (newVal, oldVal) => {
-  if (!oldVal && newVal) {
+watch(() => props.documentResponse, (newVal) => {
+  if (newVal) {
     handleDocumentResponse()
   }
 }, { deep: true })
 
 const handleDocumentResponse = () => {
-  if (props.documentResponse) {
-    const { data } = props.documentResponse
-    if (data) {
-      defaultDocument.value = {
-        children: data.ast,
-        type: 'document',
-        version: 1,
-      }
-      // update child documentation status
-      if (data.status) {
-        setStatus(data.status)
-      }
-    } else {
-      error.value = i18n.t('documentation.form.errors.cannot_retrieve_document')
+  const { data } = props.documentResponse
+  if (data) {
+    defaultDocument.value = {
+      children: data.ast,
+      type: 'document',
+      version: 1,
     }
+    // update child documentation status
+    if (data.status) {
+      setStatus(data.status)
+    }
+  } else {
+    error.value = i18n.t('documentation.form.errors.cannot_retrieve_document')
   }
 
   isLoading.value = false

@@ -168,6 +168,10 @@ const props = defineProps({
     type: Array as PropType<{ label: string, value: string, selected: boolean }[]>,
     required: true,
   },
+  errorMessage: {
+    type: String,
+    default: '',
+  },
 })
 
 const emit = defineEmits(['canceled', 'save', 'delete'])
@@ -273,10 +277,7 @@ const handleClickSave = (): void => {
   emit('save', formData, selectedFile)
 }
 
-const errorMessage = ref<string>('')
-
 const resetForm = (): void => {
-  errorMessage.value = ''
   selectedFile.value = null
 
   if (props.isEditing && props.record) {
