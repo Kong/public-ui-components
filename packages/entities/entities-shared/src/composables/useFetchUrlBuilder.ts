@@ -36,7 +36,7 @@ export default function useFetchUrlBuilder(
       if (isExactMatch.value && query) {
         // Using exact match
         urlWithParams.search = '' // trim any query params
-        urlWithParams = new URL(`${urlWithParams.href}/${query}/`)
+        urlWithParams = new URL(`${urlWithParams.href}?filter[name]=${query}`)
       } else {
         if (!isExactMatch.value) {
           // Using fuzzy match

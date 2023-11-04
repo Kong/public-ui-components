@@ -34,7 +34,6 @@ export default function useFetcher(
   const state = ref<FetcherState>({
     status: FetcherStatus.Idle,
   })
-
   const fetcher = async (fetcherParams: FetcherParams): Promise<FetcherResponse> => {
     try {
       state.value = { status: FetcherStatus.Loading }
