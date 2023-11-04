@@ -6,3 +6,7 @@
 .swagger-ui .wrapper {
   padding-top: 0;
 }
+
+.swagger-ui .auth-container .renderedMarkdown code {
+  display: block;
+}
