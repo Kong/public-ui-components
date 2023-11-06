@@ -25,30 +25,42 @@ A set of Kong UI components for displaying documents.
       - Type: Number
       - Required: false
       - Default: 0
+      - Use: Used to make `key` attribute dynamic for the `KTreeList` and `DocumentationDisplay` components. The key special attribute is primarily used as a hint for Vue's virtual DOM algorithm to identify vnodes when diffing the new list of nodes against the old list.
     - `canEdit`
       - Type: Function
       - Required: false
       - Default: async () => false
+      - Use: Permission check for the `DocumentationDisplay` component for allowing CRUD actions
     - `documentList`
       - Type: Array
       - Required: true
       - Default: N/A
-    - `documentResponse`
+      - Use: The list of document items passed into the `items` prop of the `KTreeList` component
+    - `documentAst`
       - Type: Object
       - Required: true
       - Default: N/A
+      - Use: Used in the `DocumentationDisplay` component which uses it to create the document object passed to the `DocumentViewer` component
+    - `documentStatus`
+      - Type: String
+      - Required: true
+      - Default: N/A
+      - Use: Used in the `DocumentationDisplay` component to display and update the publish status of the document
     - `entityId`
       - Type: String
       - Required: true
       - Default: N/A
+      - Use: The ID of the entity to which a document is associated. Examples are API Product ID, Service ID etc.
     - `isCard`
       - Type: Boolean
       - Required: false
       - Default: false
+      - Use: Boolean assiting with responsive documents view
     - `selectedDocument`
       - Type: Object
       - Required: false
       - Default: async () => null
+      - Use: Denotes which document has been selected
   - Events
     - `child-change`
       - Triggered when a child document is moved (drag 'n drop)
@@ -84,18 +96,27 @@ A set of Kong UI components for displaying documents.
       - Type: Function
       - Required: false
       - Default: async () => false
-    - `documentResponse`
+      - Use: Permission check for allowing CRUD actions
+    - `documentAst`
       - Type: Object
       - Required: true
       - Default: N/A
+      - Use: Used in the `DocumentationDisplay` component which uses it to create the document object passed to the `DocumentViewer` component
+    - `documentStatus`
+      - Type: String
+      - Required: true
+      - Default: N/A
+      - Use: Used in the `DocumentationDisplay` component to display and update the publish status of the document
     - `isCard`
       - Type: Boolean
       - Required: false
       - Default: false
+      - Use: Boolean assiting with responsive documents view
     - `record`
       - Type: Object
       - Required: true
       - Default: N/A
+      - Use: Used to pass document title and status
   - Events
     - `add-clicked`
       - Triggered when
@@ -117,6 +138,7 @@ A set of Kong UI components for displaying documents.
       - Type: Function
       - Required: false
       - Default: async () => false
+      - Use: Permission check for allowing the `create` action
   - Events
     - `create-documentation`
       - Triggered when the `+ New Page` button is clicked
