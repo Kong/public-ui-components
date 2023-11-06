@@ -17,25 +17,27 @@
       <!-- TODO: rip out ALL action/button related props, like:
         :button-text="t('actions.save')"
         :hide-submit="true"
+         entity="plugins"
+        :entity-data="entityData"
+        entity-name="Plugin"
+        :fields="fields"
         :on-delete="onDeleteWhenEditing"
         :on-form-back="onBack"
         :on-form-cancel="onCancel"
         :on-load="onFormLoad"
         :on-submit="onFormSubmit"
         :prevent-submission-before-change="isEditing"
+        :resource-endpoint="resourceEndpoint"
         @clicked-submit="(payload) => $emit('clicked-submit', payload)"
 
         Can we also remove entity / entity-name?
       -->
       <PluginEntityForm
         v-if="!isDisabled && !schemaLoading"
-        entity="plugins"
-        :entity-data="entityData"
-        entity-name="Plugin"
-        :fields="fields"
+        :config="config"
         :is-editing="formType === EntityBaseFormType.Edit"
-        :resource-endpoint="resourceEndpoint"
-        :schema="schema"
+        :record="record || undefined"
+        :schema="schema ?? {}"
         @model-updated="handleUpdate"
       >
       <!-- <template #body-header-description>
@@ -177,11 +179,13 @@ const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
   (e: 'fetch-schema:error', error: AxiosError): void,
   (e: 'loading', isLoading: boolean): void,
-  (e: 'model-updated', payload: {
-    model: PluginFormFields,
-    data: Record<string, any>
-    resourceEndpoint: string
-  }): void,
+  (e: 'model-updated',
+    payload: {
+      model: Record<string, any>,
+      data: Record<string, any>,
+      resourceEndpoint: string
+    }
+  ): void,
 }>()
 
 // TODO: do we need any of these?
@@ -260,7 +264,7 @@ const props = defineProps({
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const { pluginMetaData } = composables.usePluginMetaData()
-const { customSchemas, typedefs } = composables.useCustomSchemas()
+const { customSchemas, typedefs } = composables.useSchemas()
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
 
@@ -360,7 +364,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
 })
 
 // TODO: do I need this?
-const fields = computed((): Record<string, any> => {
+/* const fields = computed((): Record<string, any> => {
   const fieldObj: Record<string, any> = {}
 
   if (props.config.entityType && props.config.entityId) {
@@ -368,7 +372,7 @@ const fields = computed((): Record<string, any> => {
   }
 
   return fieldObj
-})
+}) */
 
 const entity = computed((): PluginScope => {
   // TODO: do I need this?
@@ -752,14 +756,14 @@ const initForm = (data: Record<string, any>): void => {
   record.value = data
 }
 
-const handleUpdate = (fModel: Record<string, any>, oModel: Record<string, any>, data: Record<string, any>) => {
-  form.fields = fModel
-  Object.assign(formFieldsOriginal, oModel)
+const handleUpdate = (payload: Record<string, any>) => {
+  form.fields = payload.model
+  Object.assign(formFieldsOriginal, payload.originalModel)
 
   if (props.isWizardStep) {
     emit('model-updated', {
       model: form.fields,
-      data,
+      data: payload.data,
       resourceEndpoint: resourceEndpoint.value,
     })
   }

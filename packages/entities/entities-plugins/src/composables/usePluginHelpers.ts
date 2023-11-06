@@ -99,8 +99,68 @@ export default function useHelpers() {
     return plugins.slice(pluginsPerRow)
   }
 
+  const convertToDotNotation = (key: string) => {
+    return key.replace(/-/g, '.')
+  }
+  // TODO: pull over unit tests for these two
+
+  /**
+   * Takes an object with dot notated keys (key.nested.values)
+   * and returns an object with nested objects (key: { nested: values })
+   * @param {Object} obj
+   * @returns {Object}
+   */
+  const unFlattenObject = (obj: Record<string, any>) => {
+    const result = {}
+
+    // Loop object and reduce each key to build
+    // nested structure
+    for (const key in obj) {
+      const keys = key.split('.')
+
+      keys.reduce((acc: Record<string, any>, cur: string, curIdx: number) => {
+        return acc[cur] ||
+        // If current key in acc is the next
+        // item in the split array (dot notation)
+        // set its value
+        (acc[cur] = isNaN(keys[curIdx + 1] as any)
+          ? (keys.length - 1 === curIdx ? obj[key] : {})
+          : [])
+      }, result)
+    }
+
+    return result
+  }
+
+  /**
+   * A method to easily check if an object is empty or not
+   * @param {Object} obj object to check
+   * @return {Boolean}
+   */
+  const isObjectEmpty = (obj: Record<string, any>) => {
+    return Object.keys(obj).length === 0
+  }
+
+  /**
+   * Remove id of dot notated foreign key if null
+   * @param {string} key
+   * @param {Object} model
+   */
+  const unsetNullForeignKey = (key: string, model: Record<string, any>) => {
+    const keys = ['service.id', 'route.id', 'consumer.id', 'consumer_group.id']
+
+    if (keys.indexOf(key) > -1 && model[key] === null) {
+      delete model[key]
+      model[key.replace('.id', '')] = null
+    }
+  }
+
   return {
     setFieldType,
     getPluginCards,
+    convertToDotNotation,
+    unFlattenObject,
+    isObjectEmpty,
+    unsetNullForeignKey,
   }
 }

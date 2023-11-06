@@ -46,7 +46,7 @@ export interface PluginFormState {
   errorMessage: string
 }
 
-export type PluginType = 'switch' | 'input' | 'foreign' | 'selectionGroup' | 'tag' | 'multiselect' | 'select'
+export type PluginFieldType = 'switch' | 'input' | 'foreign' | 'selectionGroup' | 'tag' | 'multiselect' | 'select'
 
 export interface PluginTags {
   label: string
@@ -61,7 +61,7 @@ export interface PluginTags {
 }
 
 export interface DefaultPluginsFormSchema {
-  type: PluginType
+  type: PluginFieldType
   default?: boolean | string[] | string
   model?: 'enabled' | 'disabled'
   label?: string
