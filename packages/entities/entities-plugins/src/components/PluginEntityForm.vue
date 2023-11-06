@@ -493,8 +493,8 @@ onMounted(() => {
   }
 
   .vue-form-generator .field-checkbox label {
-    order: 1;
     margin: 0;
+    order: 1;
   }
 
   .vue-form-generator .field-checkbox input {
