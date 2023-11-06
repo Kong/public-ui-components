@@ -697,7 +697,7 @@ const initScopeFields = (): void => {
       ]
 
       // TODO: translate and concat correctly
-      const trailingEntities = scopeEntities.splice(scopeEntities.length - 2, 2).map(s => s === 'service' ? 'Gateway Services' : capitalize(`${s}s`))
+      const trailingEntities = scopeEntities.splice(scopeEntities.length - 2, 2).map((entityType: string) => entityType === 'service' ? t('plugins.form.scoping.gateway_service.plural') : t(`plugins.form.scoping.${entityType}.plural` as keyof typeof t))
       const trailingText = trailingEntities.join(`${scopeEntities.length > 0 ? ',' : ''} and/or `)
 
       // TODO: correct string concat
@@ -705,8 +705,8 @@ const initScopeFields = (): void => {
         'Specific',
         [
           ...scopeEntities.length > 0
-            ? [scopeEntities.map(s =>
-              s === 'service' ? 'Gateway Services' : capitalize(`${s}s`),
+            ? [scopeEntities.map((entityType: string) =>
+              entityType === 'service' ? t('plugins.form.scoping.gateway_service.plural') : t(`plugins.form.scoping.${entityType}.plural` as keyof typeof t),
             ).join(', ')]
             : [],
           trailingText,

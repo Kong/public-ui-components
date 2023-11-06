@@ -464,22 +464,26 @@
         "gateway_service": {
           "label": "Gateway Service",
           "help": "The Gateway Service to which this plugin configuration will apply",
-          "placeholder": "Select a Gateway Service"
+          "placeholder": "Select a Gateway Service",
+          "plural": "Gateway Services"
         },
         "route": {
           "label": "Route",
           "help": "The Route that this Plugin configuration will target",
-          "placeholder": "Select a Route"
+          "placeholder": "Select a Route",
+          "plural": "Routes"
         },
         "consumer": {
           "label": "Consumer",
           "help": "The Consumer that this plugin configuration will target",
-          "placeholder": "Select a Consumer"
+          "placeholder": "Select a Consumer",
+          "plural": "Consumers"
         },
         "consumer_group": {
           "label": "Consumer Group",
           "help": "The Consumer Group that this plugin configuration will target",
-          "placeholder": "Select a Consumer Group"
+          "placeholder": "Select a Consumer Group",
+          "plural": "Consumer Groups"
         }
       }
     }
