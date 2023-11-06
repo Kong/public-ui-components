@@ -167,7 +167,7 @@ const handlePublishToggle = (): void => {
     : i18n.t('documentation.common.unpublished')
 }
 
-const setStatus = (status: string): void => {
+const setStatus = (status: string | undefined): void => {
   if (status === 'published') {
     publishModel.value = true
     publishedStatusText.value = i18n.t('documentation.common.published')

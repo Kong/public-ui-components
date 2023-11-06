@@ -4,7 +4,7 @@ export interface DocumentTree {
   title: string
   slug: string
   metadata: object
-  status: 'published' | 'unpublished'
+  status?: 'published' | 'unpublished'
   children: Array<DocumentTree>
 }
 

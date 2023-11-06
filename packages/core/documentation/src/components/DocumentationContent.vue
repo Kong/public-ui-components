@@ -69,7 +69,7 @@ defineProps({
    * Document response object returned by host app
    */
   documentResponse: {
-    type: Object as PropType<AxiosResponse>,
+    type: Object as PropType<AxiosResponse<any, any>>,
     required: true,
   },
   /**
