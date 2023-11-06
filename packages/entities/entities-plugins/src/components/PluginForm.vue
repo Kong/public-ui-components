@@ -268,7 +268,7 @@ const { axiosInstance } = useAxios({
   headers: props.config?.requestHeaders,
 })
 
-const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit)
+const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
 const schema = ref<Record<string, any> | null>(null)
 
@@ -299,9 +299,9 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
   enabled: {
     type: 'switch',
     model: 'enabled',
-    label: 'Enabled', // TODO: translate
-    textOn: 'This plugin is Enabled',
-    textOff: 'This plugin is Disabled',
+    label: t('plugins.form.fields.enabled.label'),
+    textOn: t('plugins.form.fields.enabled.on_text'),
+    textOff: t('plugins.form.fields.enabled.off_text'),
     styleClasses: 'field-switch top-border bottom-border hide-label',
     default: true,
   },
@@ -318,14 +318,15 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
     // inputType: 'hidden',
     styleClasses: 'bottom-border', // TODO: does it need 'hide-label'?
     fields: [
-      { // TODO: translate
-        label: 'Global',
-        description: 'All services, routes, and consumers',
+      {
+        label: t('plugins.form.scoping.global.label'),
+        description: t('plugins.form.scoping.global.help'),
         // fields: null,
       },
     ],
   },
-  ...(props.useCustomNamesForPlugin && { // TODO: KM defaults to true so check is konnect before checking flag
+  // Support is feature flagged in Konnect
+  ...((props.config.app === 'kongManager' || props.useCustomNamesForPlugin) && {
     instance_name: {
       default: '',
       type: 'input',
@@ -537,7 +538,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       initialFormSchema[field].type = 'select'
       initialFormSchema[field].values = scheme.one_of
       initialFormSchema[field].selectOptions = {
-        noneSelectedText: 'No selection...', // TODO: translate
+        noneSelectedText: t('plugins.form.no_selection'),
       }
     }
 
@@ -627,56 +628,55 @@ const initScopeFields = (): void => {
 
     const scopeEntityArray = []
 
-    // TODO: translate
     if (supportServiceScope) {
       scopeEntityArray.push({
         model: 'service-id',
-        label: 'Gateway Service',
-        placeholder: 'Select a Gateway Service',
+        label: t('plugins.form.scoping.gateway_service.label'),
+        placeholder: t('plugins.form.scoping.gateway_service.placeholder'),
         type: 'AutoSuggest',
         entity: 'services',
         inputValues: {
           fields: ['name', 'id'],
         },
-        help: 'The Gateway Service that this Plugin configuration will target',
+        help: t('plugins.form.scoping.gateway_service.help'),
       })
     }
 
     if (supportRouteScope) {
       scopeEntityArray.push({
         model: 'route-id',
-        label: 'Route',
-        placeholder: 'Select a Route',
+        label: t('plugins.form.scoping.route.label'),
+        placeholder: t('plugins.form.scoping.route.placeholder'),
         type: 'AutoSuggest',
         entity: 'routes',
         inputValues: {
           fields: ['name', 'id'],
           primaryField: 'id',
         },
-        help: 'The Route that this Plugin configuration will target',
+        help: t('plugins.form.scoping.route.help'),
       })
     }
 
     if (supportConsumerScope) {
       scopeEntityArray.push({
         model: 'consumer-id',
-        label: 'Consumer',
-        placeholder: 'Select a Consumer',
+        label: t('plugins.form.scoping.consumer.label'),
+        placeholder: t('plugins.form.scoping.consumer.placeholder'),
         type: 'AutoSuggest',
         entity: 'consumers',
         inputValues: {
           fields: ['username', 'custom_id', 'id'],
           primaryField: 'username',
         },
-        help: 'The Consumer that this Plugin configuration will target',
+        help: t('plugins.form.scoping.consumer.help'),
       })
     }
 
     if (supportConsumerGroupScope) {
       scopeEntityArray.push({
         model: 'consumer_group-id',
-        label: 'Consumer Group',
-        placeholder: 'Select a Consumer Group',
+        label: t('plugins.form.scoping.consumer_group.label'),
+        placeholder: t('plugins.form.scoping.consumer_group.placeholder'),
         type: 'AutoSuggest',
         entity: 'consumer_groups',
         entityDataKey: 'consumer_group',
@@ -684,7 +684,7 @@ const initScopeFields = (): void => {
           fields: ['name', 'id'],
           primaryField: 'name',
         },
-        help: 'The Consumer Group that this Plugin configuration will target',
+        help: t('plugins.form.scoping.consumer_group.help'),
       })
     }
 
@@ -714,7 +714,7 @@ const initScopeFields = (): void => {
       ].join(' ')
 
       defaultFormSchema.selectionGroup.fields.push({
-        label: 'Scoped', // TODO: translate
+        label: t('plugins.form.scoping.label'),
         description: desc,
         fields: [],
       })
@@ -779,7 +779,7 @@ const handleClickCancel = (): void => {
 /*
  * Saving
  */
-// TODO: verify this URL is actually right
+
 /**
  * Build the validate and submit URL
  */
@@ -791,12 +791,13 @@ const validateSubmitUrl = computed((): string => {
   } else if (props.config.app === 'kongManager') {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
+
   // Always replace the id when editing
   url = url.replace(/{id}/gi, props.pluginId)
+
   return url
 })
 
-// TODO: add to plugin-endpoints.ts
 /**
  * Build the submit URL
  */
@@ -859,7 +860,7 @@ const saveFormData = async (): Promise<void> => {
   }
 }
 
-const schemaUrl = computed<string>(() => { // TODO: do I need better calculation?
+const schemaUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].pluginSchema}`
 
   if (props.config.app === 'konnect') {

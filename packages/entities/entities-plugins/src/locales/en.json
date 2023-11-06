@@ -439,7 +439,13 @@
     },
     "form": {
       "disabled_warning": "This plugin must be configured using the Kong Admin API. Please see the documentation.",
+      "no_selection": "No selection...",
       "fields": {
+        "enabled": {
+          "label": "Enabled",
+          "on_text": "This plugin is Enabled",
+          "off_text": "This plugin is Disabled"
+        },
         "instance_name": {
           "help": "A custom name for this plugin instance to help identifying from the list view."
         },
@@ -447,6 +453,33 @@
           "label": "Protocols",
           "placeholder": "Select valid protocols for the plugin",
           "help": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type."
+        }
+      },
+      "scoping": {
+        "label": "Scoped",
+        "global": {
+          "label": "Global",
+          "help": "All services, routes, and consumers"
+        },
+        "gateway_service": {
+          "label": "Gateway Service",
+          "help": "The Gateway Service to which this plugin configuration will apply",
+          "placeholder": "Select a Gateway Service"
+        },
+        "route": {
+          "label": "Route",
+          "help": "The Route that this Plugin configuration will target",
+          "placeholder": "Select a Route"
+        },
+        "consumer": {
+          "label": "Consumer",
+          "help": "The Consumer that this plugin configuration will target",
+          "placeholder": "Select a Consumer"
+        },
+        "consumer_group": {
+          "label": "Consumer Group",
+          "help": "The Consumer Group that this plugin configuration will target",
+          "placeholder": "Select a Consumer Group"
         }
       }
     }
