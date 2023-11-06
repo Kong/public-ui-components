@@ -489,30 +489,6 @@ onBeforeMount(() => {
   .fade-enter-from, .fade-leave-to {
     opacity: 0;
   }
-
-  // TODO: do I need these?? will use :deep
-  .vue-form-generator .field-checkbox {
-    align-items: center;
-    display: flex;
-  }
-
-  .vue-form-generator .field-checkbox label {
-    margin: 0;
-    order: 1;
-  }
-
-  .vue-form-generator .field-checkbox input {
-    margin-left: 0;
-    margin-right: 12px;
-  }
-
-  .vue-form-generator .field-radios .radio-list label input[type=radio] {
-    margin-right: 10px;
-  }
-
-  .vue-form-generator label {
-    font-weight: 500;
-  }
 }
 </style>
 
@@ -520,6 +496,28 @@ onBeforeMount(() => {
 .kong-ui-entities-plugin-form {
   .vue-form-generator > fieldset {
     border: none;
+  }
+
+  .vue-form-generator {
+    .bottom-border {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      padding-bottom: 24px;
+    }
+    .top-border {
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      padding-top: 24px;
+    }
+
+    .form-group label {
+      margin-bottom: 8px;
+    }
+
+    .hint {
+      font-size: small;
+      margin-bottom: 10px;
+      margin-top: 5px;
+      opacity: 0.6;
+    }
   }
   // TODO: do I need these?? will use :deep
   .vue-form-generator .field-checkbox {

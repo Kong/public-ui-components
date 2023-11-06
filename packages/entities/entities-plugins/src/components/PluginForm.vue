@@ -167,11 +167,7 @@ import { ArrayStringFieldSchema } from '../composables/plugin-schemas/ArrayStrin
 
 // TODO: do I need it?
 const formatPluginFieldLabel = (label: string) => {
-  if (!label.startsWith('config-')) {
-    return label
-  }
-
-  return label.replace(/-/g, '.')
+  return capitalize(label.replace(/_/g, ' '))
 }
 
 const emit = defineEmits<{
@@ -305,7 +301,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
     label: t('plugins.form.fields.enabled.label'),
     textOn: t('plugins.form.fields.enabled.on_text'),
     textOff: t('plugins.form.fields.enabled.off_text'),
-    styleClasses: 'field-switch top-border bottom-border hide-label',
+    styleClasses: 'field-switch bottom-border hide-label',
     default: true,
   },
   // this is a required field that the user cannot set, it's always the name of the plugin
@@ -333,6 +329,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
     instance_name: {
       default: '',
       type: 'input',
+      label: t('plugins.form.fields.instance_name.label'),
       inputType: 'text',
       help: t('plugins.form.fields.instance_name.help'),
     },

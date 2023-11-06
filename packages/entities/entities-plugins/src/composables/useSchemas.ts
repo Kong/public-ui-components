@@ -388,7 +388,7 @@ export const useSchemas = (entityId?: string) => {
       // This can be overridden in the field schema
     }
 
-    return convertToDotNotation(schema.label || capitalize(fieldName.replace(/_/g, ' ')))
+    return convertToDotNotation(capitalize(schema.label || fieldName.replace(/_/g, ' ')))
   }
 
   const fieldSchemaHandler = (schema: Record<string, any>, formModel: Record<string, any>) => {
@@ -421,6 +421,7 @@ export const useSchemas = (entityId?: string) => {
 
     // Set the field label
     schema.label = formatFieldLabel(schema, schema.model)
+    console.log('schema label???', schema)
   }
 
   return {

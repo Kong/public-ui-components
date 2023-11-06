@@ -447,6 +447,7 @@
           "off_text": "This plugin is Disabled"
         },
         "instance_name": {
+          "label": "Instance Name",
           "help": "A custom name for this plugin instance to help identifying from the list view."
         },
         "protocols": {

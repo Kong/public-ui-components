@@ -17,14 +17,18 @@ export default function useHelpers() {
       : i.charAt(0).toUpperCase() + i.substring(1)).join(' ')
   }
 
+  const capitalizeRegEx = /(?:^|[\s-:'"])\w/g
+
   /**
-   * Captializes the first letter of a string
+   * Capitalize the first letter of each word in a string
    *
    * @param str The string to capitalize
    * @returns {String} The capitalized string
    */
   const capitalize = (str: string): string => {
-    return str.charAt(0).toUpperCase() + str.slice(1)
+    if (!str) return ''
+
+    return str.replace(capitalizeRegEx, (a) => a.toUpperCase())
   }
 
   return {
