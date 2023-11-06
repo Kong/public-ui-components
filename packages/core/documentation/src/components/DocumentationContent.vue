@@ -19,7 +19,8 @@
           :key="`data-display-${cacheKey}-${selectedDocument.id}`"
           :can-edit="canEdit"
           class="document-holder"
-          :document-response="documentResponse"
+          :document-ast="documentAst"
+          :document-status="documentStatus"
           :is-card="isCard"
           :record="selectedDocument"
           @add-clicked="emit('create')"
@@ -34,7 +35,6 @@
 <script setup lang="ts">
 import DocumentationDisplay from './DocumentationDisplay.vue'
 import type { PropType } from 'vue'
-import type { AxiosResponse } from 'axios'
 import type { DocumentListItem, DocumentTree } from '../types'
 import type { ChangeEvent, ChildChangeEvent, TreeListItem } from '@kong/kongponents'
 
@@ -66,10 +66,17 @@ defineProps({
     required: true,
   },
   /**
-   * Document response object returned by host app
+   * The abstract syntax tree content for the document to be displayed
    */
-  documentResponse: {
-    type: Object as PropType<AxiosResponse<any, any>>,
+  documentAst: {
+    type: Array,
+    required: true,
+  },
+  /**
+   * The publish status of the document to be displayed
+   */
+  documentStatus: {
+    type: String,
     required: true,
   },
   /**

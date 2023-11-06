@@ -110,7 +110,6 @@ import DocumentViewer from '@kong-ui-public/document-viewer'
 import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER, KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import '@kong-ui-public/document-viewer/dist/style.css'
 import type { PropType } from 'vue'
-import type { AxiosResponse } from 'axios'
 import type { DocumentTree } from '../types'
 
 const props = defineProps({
@@ -124,10 +123,17 @@ const props = defineProps({
     default: async () => false,
   },
   /**
-   * A function which returns a document response object
+   * The abstract syntax tree content for the document to be displayed
    */
-  documentResponse: {
-    type: Object as PropType<AxiosResponse>,
+  documentAst: {
+    type: Array,
+    required: true,
+  },
+  /**
+   * The publish status of the document to be displayed
+   */
+  documentStatus: {
+    type: String,
     required: true,
   },
   isCard: {
@@ -149,8 +155,6 @@ const emit = defineEmits<{
 const { i18n } = composables.useI18n()
 const isLoading = ref(true)
 const fileName = computed((): string => props.record.title || '')
-// TODO: currently this prop is not returned
-// formatIsoDate(props.record.created_at)
 const createdAt = computed((): string => '')
 const publishModel = ref<boolean>(false)
 const publishedStatusText = ref(i18n.t('documentation.common.unpublished'))
@@ -181,23 +185,24 @@ watch(() => props.record, (newVal) => {
   setStatus(newVal.status)
 })
 
-watch(() => props.documentResponse, (newVal) => {
+watch(() => props.documentAst, (newVal) => {
   if (newVal) {
-    handleDocumentResponse()
+    handleDocument()
   }
 }, { deep: true })
 
-const handleDocumentResponse = () => {
-  const { data } = props.documentResponse
-  if (data) {
+watch(() => props.documentStatus, (newVal) => {
+  if (newVal) {
+    setStatus(newVal)
+  }
+})
+
+const handleDocument = () => {
+  if (props.documentAst) {
     defaultDocument.value = {
-      children: data.ast,
+      children: props.documentAst,
       type: 'document',
       version: 1,
-    }
-    // update child documentation status
-    if (data.status) {
-      setStatus(data.status)
     }
   } else {
     error.value = i18n.t('documentation.errors.cannot_retrieve_document')
