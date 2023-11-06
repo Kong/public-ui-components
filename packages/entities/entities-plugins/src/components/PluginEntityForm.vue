@@ -488,8 +488,8 @@ onMounted(() => {
 
   // TODO: do I need these?? will use :deep
   .vue-form-generator .field-checkbox {
-    display: flex;
     align-items: center;
+    display: flex;
   }
 
   .vue-form-generator .field-checkbox label {
