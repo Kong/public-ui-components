@@ -3,10 +3,12 @@
     ref="contentRef"
     class="content-wrapper"
   >
-    <span v-if="isFirst">
+    <span
+      v-if="isFirst"
+      data-testid="first-col"
+    >
       <KTooltip
-        :disabled="!hasTooltip"
-        :label="tooltipText"
+        :label="hasTooltip ? tooltipText : ''"
         max-width="300"
         placement="bottomStart"
       >
@@ -34,7 +36,7 @@ const props = defineProps({
 })
 
 const element = computed((): HTMLElement | null => props.rowEl?.querySelector(`[data-testid="${props.keyName}"]`) || null)
-const content = computed((): Element | null => element.value?.querySelector('[role="button"]') || null)
+const content = computed((): Element | null => element.value?.querySelector('[data-testid="first-col"]') || null)
 
 const isFirst = computed((): boolean => {
   const cells = props.rowEl?.querySelectorAll('td')
@@ -114,6 +116,10 @@ onUnmounted(() => {
 .content-wrapper {
   :deep([role='button']) {
     display: inline;
+  }
+
+  :deep(.k-tooltip) {
+    word-break: break-all;
   }
 }
 </style>

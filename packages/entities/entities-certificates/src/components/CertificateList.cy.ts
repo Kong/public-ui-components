@@ -484,8 +484,8 @@ describe('<CertificateList />', () => {
       })
 
       cy.mount(CertificateList, {
-        cacheIdentifier: `certificate-list-${uuidv4()}`,
         props: {
+          cacheIdentifier: `certificate-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -505,7 +505,7 @@ describe('<CertificateList />', () => {
       const rowWithVaultRef = '.kong-ui-entities-certificates-list tr[data-testid="certificate-3"]'
 
       cy.get(rowWithVaultRef).should('exist')
-      cy.get(rowWithVaultRef).find('[data-testid="subject"] div[role="button"]').should('contain.text', '-')
+      cy.get(rowWithVaultRef).find('[data-testid="subject"] .content-wrapper').should('contain.text', '-')
       cy.get(rowWithVaultRef).find('[data-testid="expiry"]').should('have.text', '-')
       cy.get(rowWithVaultRef).find('[data-testid="san"]').should('have.text', '-')
       cy.get(rowWithVaultRef).find('[data-testid="cert"]').should('contain.text', certificateVaultRef)
@@ -814,7 +814,7 @@ describe('<CertificateList />', () => {
       const rowWithVaultRef = '.kong-ui-entities-certificates-list tr[data-testid="certificate-3"]'
 
       cy.get(rowWithVaultRef).should('exist')
-      cy.get(rowWithVaultRef).find('[data-testid="subject"] div[role="button"]').should('contain.text', '-')
+      cy.get(rowWithVaultRef).find('[data-testid="subject"] .content-wrapper').should('contain.text', '-')
       cy.get(rowWithVaultRef).find('[data-testid="expiry"]').should('have.text', '-')
       cy.get(rowWithVaultRef).find('[data-testid="san"]').should('have.text', '-')
       cy.get(rowWithVaultRef).find('[data-testid="cert"]').should('contain.text', certificateVaultRef)
