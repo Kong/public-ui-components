@@ -16,7 +16,7 @@ export interface BasePluginFormConfig {
   /** A function that returns the route for creating a plugin */
   getCreateRoute: (id: string) => RouteLocationRaw
   /** Route to return to if canceling create a Plugin (go back to plugin selection page) */
-  backRoute: RouteLocationRaw
+  backRoute?: RouteLocationRaw
   /** Current entity type and id for plugins for specific entity */
   entityType?: EntityType
   entityId?: string

@@ -40,20 +40,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, reactive, watch, type PropType, onMounted } from 'vue'
+import { computed, ref, reactive, watch, type PropType, onBeforeMount } from 'vue'
 import {
   EntityTypeIdField,
   type KonnectPluginFormConfig,
   type KongManagerPluginFormConfig,
 } from '../types'
+import { useHelpers } from '@kong-ui-public/entities-shared'
+import composables from '../composables'
 import {
   customFields,
   getSharedFormName,
   // TODO: do I need it?
   // sharedForms,
 } from '@kong-ui-public/forms'
-import { useHelpers } from '@kong-ui-public/entities-shared'
-import composables from '../composables'
+import '@kong-ui-public/forms/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void,
@@ -388,33 +389,6 @@ const getModel = (): Record<string, any> => {
   return unFlattenObject(outputModel)
 }
 
-// TODO: how is this prop used??
-const disabled = ref(false)
-watch(formModel, (newModel) => {
-  // TODO: is this logic right???
-  formSchema.value = { fields: formSchema.value?.fields.map((r: Record<string, any>) => { return { ...r, disabled: r.disabled || false } }) }
-  const changesExist = !objectsAreEqual(newModel, originalModel)
-
-  if (changesExist) {
-    disabled.value = false
-  } else if (!changesExist && props.isEditing) {
-    disabled.value = true
-  }
-}, { deep: true })
-
-watch(() => props.schema, (newSchema) => {
-  const form: Record<string, any> = parseSchema(newSchema)
-
-  Object.assign(formModel, form.model)
-
-  // TODO: is this logic right???
-  formSchema.value = { fields: formSchema.value?.fields.map((r: Record<string, any>) => { return { ...r, disabled: r.disabled || false } }) }
-  Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
-  sharedFormName.value = getSharedFormName(form.model.name)
-
-  initFormModel()
-}, { immediate: true })
-
 // TODO: need it?
 const loading = ref(true)
 const initFormModel = (): void => {
@@ -465,9 +439,39 @@ const initFormModel = (): void => {
   loading.value = false
 }
 
-onMounted(() => {
+// TODO: how is this prop used??
+const disabled = ref(false)
+watch(formModel, (newModel) => {
+  // TODO: is this logic right???
+  formSchema.value = { fields: formSchema.value?.fields?.map((r: Record<string, any>) => { return { ...r, disabled: r.disabled || false } }) }
+  const changesExist = !objectsAreEqual(newModel, originalModel)
+
+  if (changesExist) {
+    disabled.value = false
+  } else if (!changesExist && props.isEditing) {
+    disabled.value = true
+  }
+}, { deep: true })
+
+watch(() => props.schema, (newSchema) => {
+  const form: Record<string, any> = parseSchema(newSchema)
+
+  Object.assign(formModel, form.model)
+
+  // TODO: is this logic right???
+  formSchema.value = { fields: formSchema.value?.fields?.map((r: Record<string, any>) => { return { ...r, disabled: r.disabled || false } }) }
+  Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
+  sharedFormName.value = getSharedFormName(form.model.name)
+
+  initFormModel()
+}, { immediate: true })
+
+onBeforeMount(() => {
   // TODO: am I calling in the right place?
   form.value = parseSchema(props.schema)
+
+  Object.assign(formModel, form.value?.model || {})
+  formSchema.value = form.value?.schema || {}
 
   initFormModel()
 })
@@ -486,6 +490,37 @@ onMounted(() => {
     opacity: 0;
   }
 
+  // TODO: do I need these?? will use :deep
+  .vue-form-generator .field-checkbox {
+    align-items: center;
+    display: flex;
+  }
+
+  .vue-form-generator .field-checkbox label {
+    margin: 0;
+    order: 1;
+  }
+
+  .vue-form-generator .field-checkbox input {
+    margin-left: 0;
+    margin-right: 12px;
+  }
+
+  .vue-form-generator .field-radios .radio-list label input[type=radio] {
+    margin-right: 10px;
+  }
+
+  .vue-form-generator label {
+    font-weight: 500;
+  }
+}
+</style>
+
+<style lang="scss">
+.kong-ui-entities-plugin-form {
+  .vue-form-generator > fieldset {
+    border: none;
+  }
   // TODO: do I need these?? will use :deep
   .vue-form-generator .field-checkbox {
     align-items: center;

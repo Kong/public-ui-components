@@ -215,7 +215,6 @@ const props = defineProps({
   /** The ID of a specific plugin instance. If a valid Plugin ID is provided, it will put the form in Edit mode instead of Create */
   pluginId: {
     type: String,
-    required: false,
     default: '',
   },
 
@@ -320,7 +319,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
     type: props.hideForeign ? 'foreign' : 'selectionGroup',
     // TODO: ??
     // inputType: 'hidden',
-    styleClasses: 'bottom-border', // TODO: does it need 'hide-label'?
+    styleClasses: 'bottom-border hide-label',
     fields: [
       {
         label: t('plugins.form.scoping.global.label'),
