@@ -103,7 +103,7 @@ export interface AnalyticsExploreV3Meta extends Omit<AnalyticsExploreV2Meta, 'di
   /*
    * Structure containing mappings of IDs to display names
   */
-  display: Record<string, Record<string, string>> | Record<string, Record<string, AnalyticsExploreV3Display>>
+  display: Record<string, Record<string, AnalyticsExploreV3Display>>
 }
 
 /**
