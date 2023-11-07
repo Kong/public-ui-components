@@ -35,7 +35,15 @@
       data-testid="kong-ui-public-spec-renderer-error"
     >
       <slot name="error-state">
-        {{ i18n.t('specRenderer.error') }}
+        <KEmptyState
+          cta-is-hidden
+          icon-size="50"
+          :is-error="true"
+        >
+          <template #title>
+            {{ i18n.t('specRenderer.error') }}
+          </template>
+        </KEmptyState>
       </slot>
     </div>
   </div>
