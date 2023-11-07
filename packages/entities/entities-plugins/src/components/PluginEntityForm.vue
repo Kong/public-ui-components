@@ -40,21 +40,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, reactive, watch, type PropType, onBeforeMount } from 'vue'
+import { computed, ref, reactive, provide, watch, type PropType, onBeforeMount } from 'vue'
+import type { AxiosResponse } from 'axios'
 import {
   EntityTypeIdField,
   type KonnectPluginFormConfig,
   type KongManagerPluginFormConfig,
 } from '../types'
-import { useHelpers } from '@kong-ui-public/entities-shared'
-import composables from '../composables'
+import { useHelpers, useAxios } from '@kong-ui-public/entities-shared'
 import {
   customFields,
   getSharedFormName,
+  FORMS_API_KEY,
   // TODO: do I need it?
   // sharedForms,
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
+import composables from '../composables'
+import endpoints from '../plugins-endpoints'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void,
@@ -97,9 +100,72 @@ const props = defineProps({
   },
 })
 
+const { axiosInstance } = useAxios({
+  headers: props.config?.requestHeaders,
+})
+
 const { objectsAreEqual } = useHelpers()
 const { parseSchema } = composables.useSchemas(props.config.entityId)
 const { convertToDotNotation, unFlattenObject, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
+
+// define endpoints for use by KFG
+const buildGetOneUrl = (entityType: string, entityId: string): string => {
+  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetOne}`
+
+  if (props.config.app === 'konnect') {
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+  } else if (props.config.app === 'kongManager') {
+    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+  }
+
+  // replace the entity type and id
+  url = url.replace(/{entity}/gi, entityType)
+  url = url.replace(/{id}/gi, entityId)
+
+  return url
+}
+
+const buildGetAllUrl = (entityType: string): string => {
+  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetAll}`
+
+  if (props.config.app === 'konnect') {
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+  } else if (props.config.app === 'kongManager') {
+    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+  }
+
+  // replace the entity type
+  url = url.replace(/{entity}/gi, entityType)
+
+  return url
+}
+
+/**
+ * @param {entityType} string - the entity query path WITHOUT leading/trailing slash (ex. 'routes')
+ * @param {entityId} string - the id of the entity to look up
+ * @returns {Promise<import('axios').AxiosResponse<T>>}
+ */
+const getOne = (entityType: string, entityId: string): Promise<AxiosResponse> => {
+  const url = buildGetOneUrl(entityType, entityId)
+
+  return axiosInstance.get(url)
+}
+
+/**
+ * @param {entityType} string - the entity query path WITHOUT leading/trailing slash (ex. 'routes')
+ * @returns {Promise<import('axios').AxiosResponse<T>>}
+ */
+const getAll = (entityType: string): Promise<AxiosResponse> => {
+  const url = buildGetAllUrl(entityType)
+
+  return axiosInstance.get(url)
+}
+
+// provide to KFG
+provide(FORMS_API_KEY, {
+  getOne,
+  getAll,
+})
 
 const sharedFormName = ref('')
 const form = ref<Record<string, any> | null>(null)
@@ -193,16 +259,16 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
   })
 }
 
-// TODO: might need to expose this for parent to call
 const getModel = (): Record<string, any> => {
   const schema = { ...props.schema }
-  const formModelFields = Object.keys(formModel)
+  const inputModel = formModel
+  const origModel = originalModel
+  const formModelFields = Object.keys(inputModel)
   const outputModel: Record<string, any> = {}
 
-  // TODO: Do I need?
   if (!isObjectEmpty(formSchema.value)) {
     // convert formSchema from array to object
-    for (let i = 0; i < formSchema.value.fields.length; i++) {
+    for (let i = 0; i < formSchema.value?.fields?.length; i++) {
       schema[formSchema.value.fields[i].model] = formSchema.value.fields[i]
     }
   }
@@ -233,8 +299,8 @@ const getModel = (): Record<string, any> => {
     }
 
     const fieldSchema = schema[fieldName]
-    let fieldValue = formModel[fieldName]
-    const originalValue = originalModel[fieldName]
+    let fieldValue = inputModel[fieldName]
+    const originalValue = origModel[fieldName]
     const fieldValueType = Array.isArray(fieldValue) ? 'array' : typeof fieldValue
     const fieldSchemaValueType = fieldSchema ? fieldSchema.valueType : null
     const fieldSchemaArrayValueType = fieldSchema ? fieldSchema.valueArrayType : null
@@ -346,13 +412,14 @@ const getModel = (): Record<string, any> => {
 
       [fieldNameDotNotation, key] = fieldNameDotNotation.split('.')
 
-      let fieldObject: Record<string, any> = {}
+      const fieldObject: Record<string, any> = {}
 
+      // TODO:
       // Rather then over writting the key in output model we, use the existing object if there is one
       // this allows us to do things like support multiple developer meta fields
-      if (outputModel[fieldNameDotNotation]) {
+      /* if (outputModel[fieldNameDotNotation]) {
         fieldObject = outputModel[fieldNameDotNotation]
-      }
+      } */
 
       fieldObject[key] = fieldValue
       fieldValue = fieldObject

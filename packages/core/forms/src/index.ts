@@ -1,8 +1,8 @@
-import type { App, Plugin } from 'vue'
-import validators from './generator/utils/validators'
+import type { App } from 'vue'
+// import validators from './generator/utils/validators'
 import VueFormGenerator from './generator/FormGenerator.vue'
 import * as sharedForms from './forms'
-import { FORMS_API_KEY } from './const'
+// import { FORMS_API_KEY } from './const'
 
 // Export Vue plugin as the default
 export default {
@@ -14,7 +14,8 @@ export default {
 export { customFields } from './generator/fields/advanced/exports'
 
 // this is to make kong-manager consume it old way with minimal changes
-export const vfgPlugin: Plugin = {
+// TODO: remove this export!!!
+/* export const vfgPlugin: Plugin = {
   install(app: App, options: any) {
     app.component('VueFormGenerator', VueFormGenerator)
     if (options) {
@@ -30,7 +31,7 @@ export const vfgPlugin: Plugin = {
       }
     }
   },
-}
+} */
 
 export { VueFormGenerator, sharedForms }
 

@@ -23,12 +23,18 @@ export default {
       edit: '/api/runtime_groups/{controlPlaneId}/plugins/{id}',
       pluginSchema: '/api/runtime_groups/{controlPlaneId}/schemas/plugins/{plugin}',
       validate: '/api/runtime_groups/{controlPlaneId}/v1/schemas/json/plugin/validate',
+      // VFG endpoints
+      entityGetOne: '/api/runtime_groups/{controlPlaneId}/{entity}/{id}',
+      entityGetAll: '/api/runtime_groups/{controlPlaneId}/{entity}?size=1000',
     },
     kongManager: {
       create: '/{workspace}/plugins',
       edit: '/{workspace}/plugins/{id}',
       pluginSchema: '/{workspace}/schemas/plugins/{plugin}',
       validate: '/{workspace}/schemas/plugins/validate',
+      // VFG endpoints
+      entityGetOne: '/{workspace}/{entity}/{id}',
+      entityGetAll: '/{workspace}/{entity}?size=1000',
     },
   },
   item: {

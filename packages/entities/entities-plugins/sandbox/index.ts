@@ -1,9 +1,9 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import { vfgPlugin } from '@kong-ui-public/forms'
-import App from './App.vue'
 import Kongponents from '@kong/kongponents'
 import '@kong/kongponents/dist/style.css'
+import { VueFormGenerator } from '../src'
+import App from './App.vue'
 
 const app = createApp(App)
 
@@ -78,12 +78,7 @@ const init = async () => {
   })
 
   app.use(Kongponents)
-  app.use(vfgPlugin, {
-    apiService: {
-      getOne: async () => ({}),
-      getAll: async () => [{}],
-    },
-  })
+  app.component('VueFormGenerator', VueFormGenerator)
   app.use(router)
   app.mount('#app')
 }
