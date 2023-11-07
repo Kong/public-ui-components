@@ -282,8 +282,8 @@ importers:
   packages/analytics/metric-cards:
     dependencies:
       '@kong/icons':
-        specifier: ^1.7.8
-        version: 1.7.8(vue@3.3.4)
+        specifier: ^1.8.0
+        version: 1.8.0(vue@3.3.4)
       approximate-number:
         specifier: ^2.1.1
         version: 2.1.1
@@ -381,8 +381,8 @@ importers:
   packages/core/error-boundary:
     dependencies:
       '@kong/icons':
-        specifier: ^1.7.8
-        version: 1.7.8(vue@3.3.4)
+        specifier: ^1.8.0
+        version: 1.8.0(vue@3.3.4)
     devDependencies:
       '@kong/design-tokens':
         specifier: ^1.11.9
@@ -443,8 +443,8 @@ importers:
   packages/core/sandbox-layout:
     dependencies:
       '@kong/icons':
-        specifier: ^1.7.8
-        version: 1.7.8(vue@3.3.4)
+        specifier: ^1.8.0
+        version: 1.8.0(vue@3.3.4)
     devDependencies:
       '@kong/design-tokens':
         specifier: ^1.11.9
@@ -667,8 +667,8 @@ importers:
         specifier: workspace:^
         version: link:../entities-shared
       '@kong/icons':
-        specifier: ^1.7.8
-        version: 1.7.8(vue@3.3.4)
+        specifier: ^1.8.0
+        version: 1.8.0(vue@3.3.4)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -723,8 +723,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/core
       '@kong/icons':
-        specifier: ^1.7.8
-        version: 1.7.8(vue@3.3.4)
+        specifier: ^1.8.0
+        version: 1.8.0(vue@3.3.4)
       compare-versions:
         specifier: ^6.1.0
         version: 6.1.0
@@ -2031,11 +2031,11 @@ packages:
     resolution: {integrity: sha512-e4q7yuPvZ3eB0eXGOg0o3h/ce3GIIdRtvCoRCZEA/d7R7MJfXrPa19H5VKy/khyhwEt2IjFJiDisImbfq+ApvQ==}
     dev: true
 
-  /@kong/icons@1.7.8(vue@3.3.4):
-    resolution: {integrity: sha512-beURbCjLY7ihYXQjf8EoA9smh/K4MrxgVZ4xEGSfZx6y8YdocyHMZ4oZC3/UuopURzjUfiMbl+KZ9yEhGTTNIw==}
+  /@kong/icons@1.8.0(vue@3.3.4):
+    resolution: {integrity: sha512-ynO3GXaJTh4yoJMZ7XeTbA+ZHvlrteleI+rWNGUbEr726Tw/jgHLdT6wZ1YWR65cA38FN0Q96vEX/7+6ExwaHA==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
-      vue: ^3.3.4
+      vue: ^3.3.7
     dependencies:
       vue: 3.3.4
     dev: false
