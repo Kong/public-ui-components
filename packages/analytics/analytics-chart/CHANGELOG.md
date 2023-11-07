@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.14.2...@kong-ui-public/analytics-chart@0.15.0) (2023-11-07)
+
+
+### Code Refactoring
+
+* **TopN:** remove support for old explore v3 format [MA-2094] ([#897](https://github.com/Kong/public-ui-components/issues/897)) ([7bcf548](https://github.com/Kong/public-ui-components/commit/7bcf548b8144932eb034f992de98aa82d3af3845))
+
+
+### BREAKING CHANGES
+
+* **TopN:** removed support for old display blob style.
+
+
+
+
+
 ## [0.14.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.14.1...@kong-ui-public/analytics-chart@0.14.2) (2023-11-03)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
