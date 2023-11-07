@@ -19,7 +19,7 @@
           type="spinner"
         />
         <InternalLinkItem
-          v-else-if="row.value && row.value.id === keySetId && keySetName"
+          v-else-if="row.value && row.value.id === entityKeySetId && keySetName"
           :item="{
             key: row.value.id,
             value: keySetName,
@@ -70,7 +70,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerKeyEntityConfig, KonnectKeyEntityConfig, KeyConfigurationSchema } from '../types'
 import { useAxios, EntityBaseConfigCard, ConfigurationSchemaSection, useStringHelpers, ConfigurationSchemaType, InternalLinkItem, ConfigCardItem } from '@kong-ui-public/entities-shared'
@@ -115,6 +115,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Keyset id for scoped key entity
+   */
+  keySetId: {
+    type: String as PropType<string | null>,
+    default: null,
+  },
 })
 
 interface KeySet {
@@ -147,34 +154,44 @@ const { axiosInstance } = useAxios({
 })
 const { convertKeyToTitle } = useStringHelpers()
 const { i18n: { t } } = composables.useI18n()
-const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit)
-const fetchKeySetName = computed<string>(() => endpoints.form[props.config.app]?.getKeySet)
+
+const fetchUrl = computed<string>(() => {
+  if (props.keySetId) {
+    return `${endpoints.form[props.config.app].edit.forKeySet}`
+      .replace(/{keySetId}/gi, props.keySetId)
+  }
+  return endpoints.form[props.config.app].edit.all
+})
+
+const fetchKeySetNameUrl = computed<string>(() => endpoints.form[props.config.app]?.getKeySet)
+
 const currentKey = ref<Key>()
 const result = ref<Record<string, string | undefined>>({})
-const keySetId = ref('')
+const entityKeySetId = ref<string>(props.keySetId || '')
 const keySetName = ref('')
 const isKeySetNameLoading = ref(false)
 
 const handleSuccess = async (entity: any) => {
   currentKey.value = entity
-  keySetId.value = entity?.set?.id
+  entityKeySetId.value = entity?.set?.id
   emit('fetch:success', entity)
+  mapToAdvanced(entity)
+}
 
-  await mapToAdvanced(entity)
-
-  if (!keySetId.value) {
+watch(entityKeySetId, async () => {
+  if (!entityKeySetId.value) {
     return
   }
 
-  let url = `${props.config.apiBaseUrl}${fetchKeySetName.value}`
+  let url = `${props.config.apiBaseUrl}${fetchKeySetNameUrl.value}`
   if (props.config.app === 'konnect') {
     url = url
       .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-      .replace(/{keySetId}/gi, keySetId.value || '')
+      .replace(/{keySetId}/gi, entityKeySetId.value || '')
   } else if (props.config.app === 'kongManager') {
     url = url
       .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
-      .replace(/{keySetId}/gi, keySetId.value || '')
+      .replace(/{keySetId}/gi, entityKeySetId.value || '')
   }
 
   try {
@@ -188,9 +205,9 @@ const handleSuccess = async (entity: any) => {
   } finally {
     isKeySetNameLoading.value = false
   }
-}
+}, { immediate: true })
 
-const mapToAdvanced = async (currentKey: Key) => {
+const mapToAdvanced = (currentKey: Key) => {
   try {
     if (currentKey.jwk) {
       const parsedJwk = JSON.parse(currentKey.jwk)

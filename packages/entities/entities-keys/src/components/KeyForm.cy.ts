@@ -38,33 +38,49 @@ describe('<KeyForm />', () => {
       ).as(params?.alias ?? 'getKeySets')
     }
 
-    const interceptKM = (params?: {
+    const interceptKMCreateKey = (params?: {
       mockData?: object
       alias?: string
-    }) => {
+      status?: number
+      keySetId?: string
+    }): void => {
+      const url = params?.keySetId
+        ? `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/key-sets/${params?.keySetId}/keys`
+        : `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/keys`
+
       cy.intercept(
         {
-          method: 'GET',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/keys/*`,
+          method: 'POST',
+          url,
+        },
+        {
+          statusCode: params?.status ?? 200,
+          body: params?.mockData ?? key1,
+        },
+      ).as(params?.alias ?? 'createKey')
+    }
+
+    const interceptKMOperateKey = (params: {
+      method: 'GET' | 'PATCH',
+      mockData?: object
+      alias?: string
+      status?: number
+      keySetId?: string
+    }) => {
+      const url = params?.keySetId
+        ? `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/key-sets/${params.keySetId}/keys/*`
+        : `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/keys/*`
+
+      cy.intercept(
+        {
+          method: params.method,
+          url,
         },
         {
           statusCode: 200,
-          body: params?.mockData ?? key1,
+          body: params.mockData ?? key1,
         },
-      ).as(params?.alias ?? 'getKey')
-    }
-
-    const interceptUpdate = (status = 200): void => {
-      cy.intercept(
-        {
-          method: 'PATCH',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/keys/*`,
-        },
-        {
-          statusCode: status,
-          body: { ...key1, tags: ['tag1', 'tag2'] },
-        },
-      ).as('updateKey')
+      ).as(params?.alias ?? 'operateKey')
     }
 
     it('should show create form', () => {
@@ -108,7 +124,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-public-key').should('be.visible')
     })
 
-    it('should accept key set id from props in create form', () => {
+    it('should accept `fixedKeySetId` from props in create form', () => {
       interceptKMKeySets()
 
       cy.mount(KeyForm, {
@@ -123,7 +139,7 @@ describe('<KeyForm />', () => {
       cy.get('.k-select .is-readonly .custom-selected-item').should('contain.text', key1.set.name)
     })
 
-    it('should change key set id when props.keySetId changed', () => {
+    it('should change key set id when props.fixedKeySetId changed', () => {
       interceptKMKeySets()
 
       cy
@@ -185,6 +201,48 @@ describe('<KeyForm />', () => {
       // disables save when required field is cleared
       cy.getTestId('key-form-id').clear()
       cy.getTestId('form-submit').should('be.disabled')
+    })
+
+    it('should pick correct url while creating global key', () => {
+      interceptKMKeySets()
+      interceptKMCreateKey()
+
+      cy.mount(KeyForm, {
+        props: {
+          config: baseConfigKM,
+        },
+      })
+
+      cy.wait('@getKeySets')
+      cy.getTestId('key-form-id').type(kid)
+      cy.getTestId('key-form-name').type('tk-meowstersmith')
+      cy.getTestId('key-form-key-set').click()
+      cy.get(`[data-testid="k-select-item-${keySets.data[0].id}"] button`).click()
+      cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
+      cy.getTestId('form-submit').click()
+      cy.wait('@createKey')
+    })
+
+    it('should pick correct url while creating key for key set', () => {
+      interceptKMKeySets()
+      interceptKMCreateKey({
+        keySetId: key1.set.id,
+      })
+
+      cy.mount(KeyForm, {
+        props: {
+          config: baseConfigKM,
+          keySetId: key1.set.id,
+        },
+      })
+      cy.wait('@getKeySets')
+      cy.getTestId('key-form-id').type(kid)
+      cy.getTestId('key-form-name').type('tk-meowstersmith')
+      cy.getTestId('key-form-key-set').click()
+      cy.get(`[data-testid="k-select-item-${keySets.data[0].id}"] button`).click()
+      cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
+      cy.getTestId('form-submit').click()
+      cy.wait('@createKey')
     })
 
     it('should allow partial match while filtering with key set name', () => {
@@ -269,7 +327,7 @@ describe('<KeyForm />', () => {
 
     it('should show edit form', () => {
       interceptKMKeySets()
-      interceptKM()
+      interceptKMOperateKey({ method: 'GET', alias: 'getKey' })
 
       cy.mount(KeyForm, {
         props: {
@@ -296,9 +354,9 @@ describe('<KeyForm />', () => {
       cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
     })
 
-    it('should not accept key set id from props in edit form', () => {
+    it('should not accept `fixedKeySetId` from props in edit form', () => {
       interceptKMKeySets()
-      interceptKM()
+      interceptKMOperateKey({ method: 'GET', alias: 'getKey' })
 
       cy.mount(KeyForm, {
         props: {
@@ -313,9 +371,52 @@ describe('<KeyForm />', () => {
       cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
     })
 
+    it('should pick correct submit url while editing global key', () => {
+      interceptKMKeySets()
+      interceptKMOperateKey({ method: 'GET', alias: 'getKey' })
+      interceptKMOperateKey({ method: 'PATCH', alias: 'updateKey' })
+
+      cy.mount(KeyForm, {
+        props: {
+          config: baseConfigKM,
+          keyId: key1.id,
+        },
+      })
+
+      cy.wait('@getKeySets')
+      cy.wait('@getKey')
+      cy.getTestId('key-form-tags').clear()
+      cy.getTestId('key-form-tags').type('tag1,tag2')
+      cy.getTestId('key-form-name').type('-edited')
+      cy.getTestId('form-submit').click()
+      cy.wait('@updateKey')
+    })
+
+    it('should pick correct submit url while editing key for key set', () => {
+      interceptKMKeySets()
+      interceptKMOperateKey({ method: 'GET', alias: 'getKeysetKey', keySetId: key1.set.id })
+      interceptKMOperateKey({ method: 'PATCH', alias: 'updateKeysetKey', keySetId: key1.set.id })
+
+      cy.mount(KeyForm, {
+        props: {
+          config: baseConfigKM,
+          keyId: key1.id,
+          keySetId: key1.set.id,
+        },
+      })
+
+      cy.wait('@getKeySets')
+      cy.wait('@getKeysetKey')
+      cy.getTestId('key-form-tags').clear()
+      cy.getTestId('key-form-tags').type('tag1,tag2')
+      cy.getTestId('key-form-name').type('-edited')
+      cy.getTestId('form-submit').click()
+      cy.wait('@updateKeysetKey')
+    })
+
     it('should correctly handle button state - edit', () => {
       interceptKMKeySets()
-      interceptKM()
+      interceptKMOperateKey({ method: 'GET', alias: 'getKey' })
 
       cy.mount(KeyForm, {
         props: {
@@ -413,9 +514,9 @@ describe('<KeyForm />', () => {
     })
 
     it('update event should be emitted when Key was edited', () => {
-      interceptKM()
       interceptKMKeySets()
-      interceptUpdate()
+      interceptKMOperateKey({ method: 'GET', alias: 'getKey' })
+      interceptKMOperateKey({ method: 'PATCH', alias: 'updateKey' })
 
       cy.mount(KeyForm, {
         props: {
@@ -457,33 +558,49 @@ describe('<KeyForm />', () => {
       ).as(params?.alias ?? 'getKeySets')
     }
 
-    const interceptUpdate = (status = 200): void => {
-      cy.intercept(
-        {
-          method: 'PUT',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/keys/*`,
-        },
-        {
-          statusCode: status,
-          body: { ...key1, tags: ['tag1', 'tag2'] },
-        },
-      ).as('updateKey')
-    }
-
-    const interceptKonnect = (params?: {
+    const interceptKonnectCreateKey = (params?: {
       mockData?: object
       alias?: string
-    }) => {
+      status?: number
+      keySetId?: string
+    }): void => {
+      const url = params?.keySetId
+        ? `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/key-sets/${params?.keySetId}/keys`
+        : `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/keys`
+
       cy.intercept(
         {
-          method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/keys/*`,
+          method: 'POST',
+          url,
+        },
+        {
+          statusCode: params?.status ?? 200,
+          body: params?.mockData ?? key1,
+        },
+      ).as(params?.alias ?? 'createKey')
+    }
+
+    const interceptKonnectOperateKey = (params: {
+      method: 'GET' | 'PUT',
+      mockData?: object
+      alias?: string
+      status?: number
+      keySetId?: string
+    }) => {
+      const url = params?.keySetId
+        ? `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/key-sets/${params?.keySetId}/keys/*`
+        : `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/keys/*`
+
+      cy.intercept(
+        {
+          method: params.method,
+          url,
         },
         {
           statusCode: 200,
-          body: params?.mockData ?? key1,
+          body: params.mockData ?? key1,
         },
-      ).as(params?.alias ?? 'getKey')
+      ).as(params?.alias ?? 'operateKey')
     }
 
     it('should show create form', () => {
@@ -527,7 +644,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-public-key').should('be.visible')
     })
 
-    it('should accept key set id from props in create form', () => {
+    it('should accept `fixedKeySetId` from props in create form', () => {
       interceptKonnectKeySets()
 
       cy.mount(KeyForm, {
@@ -604,6 +721,48 @@ describe('<KeyForm />', () => {
       // disables save when required field is cleared
       cy.getTestId('key-form-id').clear()
       cy.getTestId('form-submit').should('be.disabled')
+    })
+
+    it('should pick correct url while creating global key', () => {
+      interceptKonnectKeySets()
+      interceptKonnectCreateKey()
+
+      cy.mount(KeyForm, {
+        props: {
+          config: baseConfigKonnect,
+        },
+      })
+
+      cy.wait('@getKeySets')
+      cy.getTestId('key-form-id').type(kid)
+      cy.getTestId('key-form-name').type('tk-meowstersmith')
+      cy.getTestId('key-form-key-set').click()
+      cy.get(`[data-testid="k-select-item-${keySets.data[0].id}"] button`).click()
+      cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
+      cy.getTestId('form-submit').click()
+      cy.wait('@createKey')
+    })
+
+    it('should pick correct url while creating key for key set', () => {
+      interceptKonnectKeySets()
+      interceptKonnectCreateKey({
+        keySetId: key1.set.id,
+      })
+
+      cy.mount(KeyForm, {
+        props: {
+          config: baseConfigKonnect,
+          keySetId: key1.set.id,
+        },
+      })
+      cy.wait('@getKeySets')
+      cy.getTestId('key-form-id').type(kid)
+      cy.getTestId('key-form-name').type('tk-meowstersmith')
+      cy.getTestId('key-form-key-set').click()
+      cy.get(`[data-testid="k-select-item-${keySets.data[0].id}"] button`).click()
+      cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
+      cy.getTestId('form-submit').click()
+      cy.wait('@createKey')
     })
 
     it('should allow partial match while filtering with key set name', () => {
@@ -688,7 +847,7 @@ describe('<KeyForm />', () => {
 
     it('should show edit form', () => {
       interceptKonnectKeySets()
-      interceptKonnect()
+      interceptKonnectOperateKey({ method: 'GET', alias: 'getKey' })
 
       cy.mount(KeyForm, {
         props: {
@@ -715,9 +874,9 @@ describe('<KeyForm />', () => {
       cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
     })
 
-    it('should not accept key set id from props in edit form', () => {
+    it('should not accept `fixedKeySetId` from props in edit form', () => {
       interceptKonnectKeySets()
-      interceptKonnect()
+      interceptKonnectOperateKey({ method: 'GET', alias: 'getKey' })
 
       cy.mount(KeyForm, {
         props: {
@@ -732,9 +891,52 @@ describe('<KeyForm />', () => {
       cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
     })
 
+    it('should pick correct submit url while editing global key', () => {
+      interceptKonnectKeySets()
+      interceptKonnectOperateKey({ method: 'GET', alias: 'getKey' })
+      interceptKonnectOperateKey({ method: 'PUT', alias: 'updateKey' })
+
+      cy.mount(KeyForm, {
+        props: {
+          config: baseConfigKonnect,
+          keyId: key1.id,
+        },
+      })
+
+      cy.wait('@getKeySets')
+      cy.wait('@getKey')
+      cy.getTestId('key-form-tags').clear()
+      cy.getTestId('key-form-tags').type('tag1,tag2')
+      cy.getTestId('key-form-name').type('-edited')
+      cy.getTestId('form-submit').click()
+      cy.wait('@updateKey')
+    })
+
+    it('should pick correct submit url while editing key for key set', () => {
+      interceptKonnectKeySets()
+      interceptKonnectOperateKey({ method: 'GET', alias: 'getKeysetKey', keySetId: key1.set.id })
+      interceptKonnectOperateKey({ method: 'PUT', alias: 'updateKeysetKey', keySetId: key1.set.id })
+
+      cy.mount(KeyForm, {
+        props: {
+          config: baseConfigKonnect,
+          keyId: key1.id,
+          keySetId: key1.set.id,
+        },
+      })
+
+      cy.wait('@getKeySets')
+      cy.wait('@getKeysetKey')
+      cy.getTestId('key-form-tags').clear()
+      cy.getTestId('key-form-tags').type('tag1,tag2')
+      cy.getTestId('key-form-name').type('-edited')
+      cy.getTestId('form-submit').click()
+      cy.wait('@updateKeysetKey')
+    })
+
     it('should correctly handle button state - edit', () => {
       interceptKonnectKeySets()
-      interceptKonnect()
+      interceptKonnectOperateKey({ method: 'GET', alias: 'getKey' })
 
       cy.mount(KeyForm, {
         props: {
@@ -831,9 +1033,9 @@ describe('<KeyForm />', () => {
     })
 
     it('update event should be emitted when Key was edited', () => {
-      interceptKonnect()
       interceptKonnectKeySets()
-      interceptUpdate()
+      interceptKonnectOperateKey({ method: 'GET', alias: 'getKey' })
+      interceptKonnectOperateKey({ method: 'PUT', alias: 'updateKey' })
 
       cy.mount(KeyForm, {
         props: {
