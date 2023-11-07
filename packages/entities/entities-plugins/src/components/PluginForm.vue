@@ -148,6 +148,7 @@
 import { computed, reactive, ref, onBeforeMount, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
+import { marked, type MarkedOptions } from 'marked'
 import {
   PluginScope,
   type KonnectPluginFormConfig,
@@ -474,7 +475,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       if (schema[key]?.description) {
         // TODO: ask Yi about this
         // this is a new dependency
-        // initialFormSchema[field].help = marked.parse(schema[key].description, { mangle: false, headerIds: false })
+        initialFormSchema[field].help = marked.parse(schema[key].description, { mangle: false, headerIds: false } as MarkedOptions)
       }
     }
 

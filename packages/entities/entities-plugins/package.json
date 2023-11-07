@@ -75,5 +75,6 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/forms": "^1.2.24",
     "@kong/icons": "^1.8.0"
+    "marked": "^9.1.5"
   }
 }
