@@ -558,6 +558,11 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       }
     }
 
+    // Default is set and is not an object or string 'function'
+    if (scheme.default != null && typeof scheme.default !== 'object' && scheme.default !== 'function') {
+      initialFormSchema[field].default = scheme.default
+    }
+
     // Custom schema override
     if (pluginSchema && !pluginSchema.overwriteDefault && (customSchemas[props.pluginType as keyof typeof customSchemas].useKonnectSchema ? props.useKonnectSchema : true)) {
       Object.keys(pluginSchema).forEach(plugin => {
