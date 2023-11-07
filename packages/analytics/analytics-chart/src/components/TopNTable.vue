@@ -197,11 +197,6 @@ const getName = (record: AnalyticsExploreRecord): string => {
     return '-'
   }
 
-  if (typeof idRecord === 'string') {
-    // TODO: Remove shim after API is updated.
-    return idRecord
-  }
-
   return idRecord.name
 }
 const getDeleted = (record: AnalyticsExploreRecord): boolean => {
@@ -209,11 +204,6 @@ const getDeleted = (record: AnalyticsExploreRecord): boolean => {
   const idRecord = displayRecord.value[id]
 
   if (!idRecord) {
-    return false
-  }
-
-  if (typeof idRecord === 'string') {
-    // TODO: Remove shim after API is updated.
     return false
   }
 

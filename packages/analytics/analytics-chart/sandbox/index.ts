@@ -15,7 +15,17 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('./pages/ChartDemo.vue'),
+      component: () => import('./pages/TimeSeriesChartDemo.vue'),
+    },
+    {
+      path: '/bar-chart',
+      name: 'bar-chart',
+      component: () => import('./pages/BarChartDemo.vue'),
+    },
+    {
+      path: '/donut-chart',
+      name: 'donut-chart',
+      component: () => import('./pages/DonutChartDemo.vue'),
     },
     {
       path: '/simple',
@@ -28,8 +38,16 @@ const router = createRouter({
 // Define the sandbox layout links here
 const appLinks: SandboxNavigationItem[] = ([
   {
-    name: 'Analytics Charts',
+    name: 'Time Series Chart',
     to: { name: 'home' },
+  },
+  {
+    name: 'Bar Chart',
+    to: { name: 'bar-chart' },
+  },
+  {
+    name: 'Donut Chart',
+    to: { name: 'donut-chart' },
   },
   {
     name: 'Simple Charts',

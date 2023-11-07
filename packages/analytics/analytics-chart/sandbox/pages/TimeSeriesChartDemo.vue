@@ -13,24 +13,6 @@
               <KRadio
                 v-model="chartType"
                 name="chartType"
-                :selected-value="ChartTypes.HORIZONTAL_BAR"
-              >
-                Horizontal Bar
-              </KRadio>
-            </div>
-            <div>
-              <KRadio
-                v-model="chartType"
-                name="chartType"
-                :selected-value="ChartTypes.VERTICAL_BAR"
-              >
-                VerticalBar
-              </KRadio>
-            </div>
-            <div>
-              <KRadio
-                v-model="chartType"
-                name="chartType"
                 :selected-value="ChartTypes.TIMESERIES_LINE"
               >
                 Timeseries Line
@@ -43,15 +25,6 @@
                 :selected-value="ChartTypes.TIMESERIES_BAR"
               >
                 Timeseries Bar
-              </KRadio>
-            </div>
-            <div>
-              <KRadio
-                v-model="chartType"
-                name="chartType"
-                :selected-value="ChartTypes.DOUGHNUT"
-              >
-                Doughnut
               </KRadio>
             </div>
           </div>
@@ -99,6 +72,7 @@
           placeholder="Select Metric"
           @selected="onMetricSelected"
         />
+        <br>
       </div>
       <br>
 
@@ -106,15 +80,7 @@
       <KLabel>Dataset options</KLabel>
       <div class="dataset-options">
         <KButton
-          appearance="secondary"
-          class="first-button"
-          size="small"
-          @click="randomizeData()"
-        >
-          Randomize data
-        </KButton>
-        <KButton
-          appearance="secondary"
+          appearance="outline"
           size="small"
           @click="addDataset()"
         >
@@ -127,14 +93,14 @@
         <KLabel>Option toggles</KLabel>
         <div>
           <KInputSwitch
-            v-model="multiMetricToggle"
-            :label="multiMetricToggle ? 'Multi Metric' : 'Single Metric'"
-          />
-        </div>
-        <div v-if="!chartType.includes('TimeSeries')">
-          <KInputSwitch
             v-model="multiDimensionToggle"
             :label="multiDimensionToggle ? 'Multi Dimension' : 'Single Dimension'"
+          />
+        </div>
+        <div v-if="!multiDimensionToggle">
+          <KInputSwitch
+            v-model="multiMetricToggle"
+            :label="multiMetricToggle ? 'Multi Metric' : 'Single Metric'"
           />
         </div>
         <div v-if="chartType.includes('Line')">
@@ -147,12 +113,6 @@
           <KInputSwitch
             v-model="stackToggle"
             :label="stackToggle ? 'Stacked' : 'Not Stacked'"
-          />
-        </div>
-        <div v-if="!isTimeSeriesChart">
-          <KInputSwitch
-            v-model="showAnnotationsToggle"
-            :label="showAnnotationsToggle ? 'Show Annotations' : 'No Annotations'"
           />
         </div>
         <div>
@@ -177,7 +137,10 @@
       <br>
 
       <div class="config-container">
-        <div class="config-container-row">
+        <div
+          v-if="multiDimensionToggle"
+          class="config-container-row"
+        >
           <KLabel>Colors</KLabel>
           <div
             v-for="([label, color], i) in Object.entries(colorPalette)"
@@ -197,7 +160,7 @@
 
     <!-- Determine if a full blown chart is to be displayed, or a simplified one -->
     <AnalyticsChart
-      :chart-data="exploreResult"
+      :chart-data="(exploreResult as AnalyticsExploreV2Result)"
       :chart-options="analyticsChartOptions"
       chart-title="Request count by Status Code"
       :legend-position="legendPosition"
@@ -240,13 +203,13 @@ import {
   ChartLegendPosition,
   ChartTypes,
 } from '../../src'
-import type { AnalyticsExploreRecord, AnalyticsExploreV2Meta, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions } from '../../src/types'
-import { SeededRandom } from '../SeedRandom'
-import { rand } from '../utils'
+import { rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
+import { generateMultipleMetricTimeSeriesData, generateSingleMetricTimeSeriesData } from '../utils/chartDataGenerator'
 
 enum Metrics {
   TotalRequests = 'TotalRequests',
@@ -262,8 +225,6 @@ interface MetricSelection {
 // Inject the app-links from the entry file
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
-const seed = ref(rand(10, 10000))
-
 const multiMetricToggle = ref(false)
 const fillToggle = ref(true)
 const stackToggle = ref(true)
@@ -274,6 +235,7 @@ const showLegendValuesToggle = ref(true)
 const emptyState = ref(false)
 const chartType = ref<ChartTypes>(ChartTypes.TIMESERIES_LINE)
 const legendPosition = ref(ChartLegendPosition.Right)
+const secondaryMetrics = ref([{ name: 'secondaryMetric', unit: 'count' }])
 const selectedMetric = ref<MetricSelection>({
   name: Metrics.TotalRequests,
   unit: 'count',
@@ -310,136 +272,16 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
     return null
   }
 
-  const statusCodeDimensionType = 'StatusCode'
-  const serviceDimensionType = 'Service'
-  const rng = new SeededRandom(seed.value)
-
-  const start = Date.now() - 6 * 60 * 60 * 1000 // 6 hours ago
-  const end = Date.now()
-
-  const records: AnalyticsExploreRecord[] = []
-  let meta: AnalyticsExploreV2Meta
-  let totalRequests = 0
-  if (isTimeSeriesChart.value) {
-    for (let i = start; i <= end; i += 60 * 60 * 1000) { // 1 hour apart
-      totalRequests += rng.next(50, 500)
-
-      if (!multiMetricToggle.value) {
-        for (let j = 0; j < statusCodeDimensionValues.value.size; j++) {
-          const statusCode = [...statusCodeDimensionValues.value][j]
-          const getStatusCount = (statusCode: string) => {
-            // Mostly 2xx then 3xx then 4xx than 5xx
-            if (/^2\d\d$/.test(statusCode)) {
-              return totalRequests * (rand(7, 9) / 10)
-            } else if (/^3\d\d$/.test(statusCode)) {
-              return totalRequests * (rand(4, 6) / 10)
-            } else if (/^4\d\d$/.test(statusCode)) {
-              return totalRequests * (rand(3, 5) / 10)
-            } else if (/^5\d\d$/.test(statusCode)) {
-              return totalRequests * (rand(1, 2) / 10)
-            } else {
-              return Math.floor(totalRequests * 0.02)
-            }
-          }
-          const statusCount = getStatusCount(statusCode)
-          const record = {
-            version: '1.0',
-            timestamp: new Date(i).toISOString(),
-            event: {
-              ...(multiDimensionToggle.value && { [statusCodeDimensionType]: statusCode }),
-              [selectedMetric.value.name]: statusCount,
-            },
-          }
-          records.push(record)
-        }
-      } else {
-        const record = {
-          version: '1.0',
-          timestamp: new Date(i).toISOString(),
-          event: {
-            [selectedMetric.value.name]: rng.next(100000, 2000000),
-            secondaryMetric: rng.next(100000, 2000000),
-          },
-        }
-        records.push(record)
-      }
-    }
-
-    meta = {
-      startMs: start,
-      endMs: end,
-      queryId: '12345',
-      dimensions: {
-        ...(!multiMetricToggle.value && multiDimensionToggle.value && { [statusCodeDimensionType]: [...statusCodeDimensionValues.value] }),
+  if (multiDimensionToggle.value) {
+    return generateSingleMetricTimeSeriesData({ name: selectedMetric.value.name, unit: selectedMetric.value.unit },
+      {
+        statusCode: [...statusCodeDimensionValues.value],
       },
-      metricNames: [selectedMetric.value.name, ...(multiMetricToggle.value ? ['secondaryMetric'] : [])],
-      metricUnits: {
-        [selectedMetric.value.name]: selectedMetric.value.unit,
-        ...(multiMetricToggle.value && { secondaryMetric: selectedMetric.value.unit }),
-      },
-      granularity: 60 * 60 * 1000, // 1 hour in ms
-      truncated: limitToggle.value,
-      limit: 10,
-    }
-  } else {
-    [...statusCodeDimensionValues.value].forEach(statusCodeDimensionValue => {
-      if (multiDimensionToggle.value) {
-        [...serviceDimensionValues.value].forEach(serviceDimensionValue => {
-          const timestamp = new Date().toISOString()
-          const version = 'v1'
-          const statusCount = rng.next(100000, 2000000)
-          const record = {
-            version,
-            timestamp,
-            event: {
-              [serviceDimensionType]: serviceDimensionValue,
-              [statusCodeDimensionType]: statusCodeDimensionValue,
-              [selectedMetric.value.name]: statusCount,
-              ...(multiMetricToggle.value && { secondaryMetric: rng.next(100000, 2000000) }),
-            },
-          }
-          records.push(record)
-        })
-      } else {
-        const timestamp = new Date().toISOString()
-        const version = 'v1'
-        const statusCount = rng.next(100000, 2000000)
-        const record = {
-          version,
-          timestamp,
-          event: {
-            [statusCodeDimensionType]: statusCodeDimensionValue,
-            [selectedMetric.value.name]: statusCount,
-            ...(multiMetricToggle.value && { secondaryMetric: rng.next(100000, 2000000) }),
-          },
-        }
-        records.push(record)
-      }
-    })
-
-    meta = {
-      startMs: start,
-      endMs: end,
-      granularity: 86400000,
-      queryId: '',
-      truncated: limitToggle.value,
-      limit: 50,
-      metricNames: [selectedMetric.value.name, ...(multiMetricToggle.value ? ['secondaryMetric'] : [])],
-      metricUnits: {
-        [selectedMetric.value.name]: selectedMetric.value.unit,
-        ...(multiMetricToggle.value && { secondaryMetric: selectedMetric.value.unit }),
-      },
-      dimensions: {
-        ...(multiDimensionToggle.value && { [serviceDimensionType]: [...serviceDimensionValues.value] }),
-        [statusCodeDimensionType]: [...statusCodeDimensionValues.value],
-      },
-    }
+    )
+  } else if (multiMetricToggle.value) {
+    return generateMultipleMetricTimeSeriesData([{ name: selectedMetric.value.name, unit: selectedMetric.value.unit }, ...secondaryMetrics.value])
   }
-
-  return {
-    records,
-    meta,
-  }
+  return generateSingleMetricTimeSeriesData({ name: selectedMetric.value.name, unit: selectedMetric.value.unit })
 })
 
 const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {}))
@@ -455,25 +297,23 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => ({
   chartDatasetColors: colorPalette.value,
 }))
 
-const randomizeData = () => {
-  seed.value = rand(10, 10000)
-}
-
 const addDataset = () => {
-  const statusCode = `${rand(100, 599)}`
-  statusCodeDimensionValues.value.add(statusCode)
-  colorPalette.value[statusCode] = lookupStatusCodeColor(statusCode)
 
-  const service = `Service${rand(1, 100)}`
-  serviceDimensionValues.value.add(service)
+  if (multiDimensionToggle.value) {
+    const statusCode = `${rand(100, 599)}`
+    statusCodeDimensionValues.value.add(statusCode)
+    colorPalette.value[statusCode] = lookupStatusCodeColor(statusCode)
+
+    const service = `Service${rand(1, 100)}`
+    serviceDimensionValues.value.add(service)
+  } else if (multiMetricToggle.value) {
+    const metric = `Metric${rand(1, 100)}`
+    secondaryMetrics.value.push({ name: metric, unit: 'count' })
+  }
 }
 
 const dataCode = computed(() => JSON.stringify(exploreResult.value, null, 2))
 const optionsCode = computed(() => JSON.stringify(analyticsChartOptions.value, null, 2))
-
-const isTimeSeriesChart = computed<boolean>(() => {
-  return [ChartTypes.TIMESERIES_BAR, ChartTypes.TIMESERIES_LINE].some(e => e === chartType.value)
-})
 
 const onMetricSelected = (item: any) => {
   if (!item) {

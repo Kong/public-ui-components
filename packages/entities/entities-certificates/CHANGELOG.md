@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@1.3.20...@kong-ui-public/entities-certificates@1.3.21) (2023-11-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [1.3.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@1.3.19...@kong-ui-public/entities-certificates@1.3.20) (2023-11-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [1.3.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@1.3.18...@kong-ui-public/entities-certificates@1.3.19) (2023-11-06)
+
+
+### Bug Fixes
+
+* **entities-shared:** tooltip for the first column ([#892](https://github.com/Kong/public-ui-components/issues/892)) ([4830467](https://github.com/Kong/public-ui-components/commit/48304672bcca037f257012dad7c196bd379f763f))
+
+
+
+
+
 ## [1.3.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@1.3.17...@kong-ui-public/entities-certificates@1.3.18) (2023-11-03)
 
 **Note:** Version bump only for package @kong-ui-public/entities-certificates
