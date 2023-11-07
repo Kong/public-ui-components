@@ -27,11 +27,13 @@
       "parent_document_select_option_none": "None",
       "replace_file_button_text": "Select new file",
       "save_button_text": "Save",
-      "slug_label": "URL Slug",
       "slug_error": "Only letters, numbers, '-', and '_' characters are allowed",
+      "slug_label": "URL Slug",
+      "slug_placeholder": "Enter a URL slug",
       "status_label": "Status",
       "subtitle": "Provide guides, examples and other useful information about this service to developers.",
-      "title_label": "Page Name"
+      "title_label": "Page Name",
+      "title_placeholder": "Enter a page name"
     },
     "show": {
       "empty_state": {

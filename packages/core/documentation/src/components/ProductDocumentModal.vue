@@ -1,13 +1,12 @@
 <template>
   <Teleport
-    v-if="showModal"
     to="#kong-ui-app-layout-teleport-default-slot"
   >
     <KPrompt
       class="edit-document-modal"
       data-testid="edit-document-modal"
-      :is-visible="showModal"
-      @canceled="emit('canceled')"
+      is-visible
+      @canceled="handleClickCancel"
       @proceed="handleClickSave"
     >
       <template #header-content>
@@ -49,32 +48,37 @@
         <div class="document-inputs">
           <div class="page-name side-by-side">
             <KInput
-              v-model="formData.pageName"
+              v-model.trim="formData.pageName"
               data-testid="documentation-page-name"
               :label="i18n.t('documentation.form_modal.title_label')"
+              :placeholder="i18n.t('documentation.form_modal.title_placeholder')"
               required
             />
           </div>
           <div class="url-slug side-by-side">
             <KInput
-              v-model="formData.urlSlug"
+              v-model.trim="formData.urlSlug"
               data-testid="documentation-url-slug"
               :error-message="i18n.t('documentation.form_modal.slug_error')"
               :has-error="slugError"
               :label="i18n.t('documentation.form_modal.slug_label')"
               :pattern="slugRegex"
+              :placeholder="i18n.t('documentation.form_modal.slug_placeholder')"
             />
           </div>
         </div>
 
-        <div class="documentation-status">
+        <div
+          v-if="!hidePublishToggle"
+          class="documentation-status"
+        >
           <div>
             <KLabel>
               {{ i18n.t('documentation.form_modal.status_label') }}
             </KLabel>
           </div>
           <KInputSwitch
-            v-model="formData.status"
+            v-model="publishModel"
             data-testid="documentation-status"
             :label="publishedStatusText"
           />
@@ -132,7 +136,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, reactive, watch } from 'vue'
+import { computed, onMounted, ref, reactive } from 'vue'
 import { createMachine } from 'xstate'
 import { useMachine } from '@xstate/vue'
 import composables from '../composables'
@@ -143,19 +147,6 @@ import type { PropType } from 'vue'
 import type { DocumentListItem, FormData } from 'src/types'
 
 const props = defineProps({
-  showModal: {
-    type: Boolean,
-    default: false,
-  },
-  record: {
-    // should be a DocumentTree object type
-    type: Object,
-    default: null,
-  },
-  isEditing: {
-    type: Boolean,
-    default: false,
-  },
   documents: {
     type: Array as PropType<DocumentListItem[]>,
     required: true,
@@ -163,6 +154,18 @@ const props = defineProps({
   errorMessage: {
     type: String,
     default: '',
+  },
+  hidePublishToggle: {
+    type: Boolean,
+    default: false,
+  },
+  isEditing: {
+    type: Boolean,
+    default: false,
+  },
+  record: {
+    type: Object,
+    default: null,
   },
 })
 
@@ -175,6 +178,7 @@ const emit = defineEmits<{
 const { i18n } = composables.useI18n()
 const filePlaceholderText = computed(() => props.record.file?.filename)
 const namePlaceholderText = computed(() => selectedFile.value ? selectedFile.value.name?.split('.')[0] : '')
+const publishModel = ref<boolean>(false)
 
 const { state, send } = useMachine(createMachine({
   predictableActionArguments: true,
@@ -197,7 +201,7 @@ const formData = reactive({
   fileName: '',
   pageName: '',
   urlSlug: '',
-  status: true,
+  status: publishModel.value ? 'published' : 'unpublished',
   parent: '',
 })
 
@@ -264,35 +268,40 @@ const handleFileRemoved = (): void => {
 }
 
 const handleClickCancel = (): void => {
-  resetForm()
-  send('CLICK_CANCEL')
   emit('canceled')
+  send('CLICK_CANCEL')
+  setForm()
 }
 
 const handleClickSave = (): void => {
   emit('save', formData, selectedFile)
 }
 
-const resetForm = (): void => {
+const setForm = (): void => {
   selectedFile.value = null
 
-  if (props.isEditing && props.record) {
-    formData.fileName = cloneDeep(props.record.file?.filename)
-    formData.pageName = cloneDeep(props.record.title)
-    formData.urlSlug = cloneDeep(props.record.slug)
-    formData.parent = cloneDeep(props.record.parent_document_id)
-    formData.status = props.record.status === 'published'
+  if (props.isEditing && props.record?.document) {
+    const record = cloneDeep(props.record)
+    const status = record.status || props.record.document.status || publishModel.value
+
+    formData.fileName = record.document.file?.filename || record.document.revision?.file?.filename
+    formData.pageName = record.document.title || record.document.revision?.title
+    formData.urlSlug = record.document.slug
+    formData.parent = record.document.parent_document_id
+    formData.status = status
+    publishModel.value = status === 'published'
   } else {
     formData.fileName = ''
     formData.pageName = ''
     formData.urlSlug = ''
     formData.parent = ''
-    formData.status = true
+    formData.status = ''
+    publishModel.value = false
   }
 }
 
-watch(() => props.record, () => {
-  resetForm()
+onMounted(() => {
+  setForm()
 })
 </script>
 
