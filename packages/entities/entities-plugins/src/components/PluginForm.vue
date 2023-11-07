@@ -626,112 +626,112 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 }
 
 const initScopeFields = (): void => {
-  if (props.config.entityType) { // scoping
-    const supportServiceScope = pluginMetaData[props.config.entityType]?.scope.includes(PluginScope.SERVICE) ?? true
-    const supportRouteScope = pluginMetaData[props.config.entityType]?.scope.includes(PluginScope.ROUTE) ?? true
-    const supportConsumerScope = pluginMetaData[props.config.entityType]?.scope.includes(PluginScope.CONSUMER) ?? true
-    const supportConsumerGroupScope = pluginMetaData[props.config.entityType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true
+  const supportServiceScope = pluginMetaData[props.pluginType]?.scope.includes(PluginScope.SERVICE) ?? true
+  const supportRouteScope = pluginMetaData[props.pluginType]?.scope.includes(PluginScope.ROUTE) ?? true
+  const supportConsumerScope = pluginMetaData[props.pluginType]?.scope.includes(PluginScope.CONSUMER) ?? true
+  const supportConsumerGroupScope = pluginMetaData[props.pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true
 
-    const scopeEntityArray = []
+  const scopeEntityArray = []
 
-    if (supportServiceScope) {
-      scopeEntityArray.push({
-        model: 'service-id',
-        label: t('plugins.form.scoping.gateway_service.label'),
-        placeholder: t('plugins.form.scoping.gateway_service.placeholder'),
-        type: 'AutoSuggest',
-        entity: 'services',
-        inputValues: {
-          fields: ['name', 'id'],
-        },
-        help: t('plugins.form.scoping.gateway_service.help'),
-      })
-    }
+  console.log(pluginMetaData[props.pluginType])
 
-    if (supportRouteScope) {
-      scopeEntityArray.push({
-        model: 'route-id',
-        label: t('plugins.form.scoping.route.label'),
-        placeholder: t('plugins.form.scoping.route.placeholder'),
-        type: 'AutoSuggest',
-        entity: 'routes',
-        inputValues: {
-          fields: ['name', 'id'],
-          primaryField: 'id',
-        },
-        help: t('plugins.form.scoping.route.help'),
-      })
-    }
+  if (supportServiceScope) {
+    scopeEntityArray.push({
+      model: 'service-id',
+      label: t('plugins.form.scoping.gateway_service.label'),
+      placeholder: t('plugins.form.scoping.gateway_service.placeholder'),
+      type: 'AutoSuggest',
+      entity: 'services',
+      inputValues: {
+        fields: ['name', 'id'],
+      },
+      help: t('plugins.form.scoping.gateway_service.help'),
+    })
+  }
 
-    if (supportConsumerScope) {
-      scopeEntityArray.push({
-        model: 'consumer-id',
-        label: t('plugins.form.scoping.consumer.label'),
-        placeholder: t('plugins.form.scoping.consumer.placeholder'),
-        type: 'AutoSuggest',
-        entity: 'consumers',
-        inputValues: {
-          fields: ['username', 'custom_id', 'id'],
-          primaryField: 'username',
-        },
-        help: t('plugins.form.scoping.consumer.help'),
-      })
-    }
+  if (supportRouteScope) {
+    scopeEntityArray.push({
+      model: 'route-id',
+      label: t('plugins.form.scoping.route.label'),
+      placeholder: t('plugins.form.scoping.route.placeholder'),
+      type: 'AutoSuggest',
+      entity: 'routes',
+      inputValues: {
+        fields: ['name', 'id'],
+        primaryField: 'id',
+      },
+      help: t('plugins.form.scoping.route.help'),
+    })
+  }
 
-    if (supportConsumerGroupScope) {
-      scopeEntityArray.push({
-        model: 'consumer_group-id',
-        label: t('plugins.form.scoping.consumer_group.label'),
-        placeholder: t('plugins.form.scoping.consumer_group.placeholder'),
-        type: 'AutoSuggest',
-        entity: 'consumer_groups',
-        entityDataKey: 'consumer_group',
-        inputValues: {
-          fields: ['name', 'id'],
-          primaryField: 'name',
-        },
-        help: t('plugins.form.scoping.consumer_group.help'),
-      })
-    }
+  if (supportConsumerScope) {
+    scopeEntityArray.push({
+      model: 'consumer-id',
+      label: t('plugins.form.scoping.consumer.label'),
+      placeholder: t('plugins.form.scoping.consumer.placeholder'),
+      type: 'AutoSuggest',
+      entity: 'consumers',
+      inputValues: {
+        fields: ['username', 'custom_id', 'id'],
+        primaryField: 'username',
+      },
+      help: t('plugins.form.scoping.consumer.help'),
+    })
+  }
 
-    if (scopeEntityArray.length) {
-      const scopeEntities = [
-        ...supportServiceScope ? ['service'] : [],
-        ...supportRouteScope ? ['route'] : [],
-        ...supportConsumerScope ? ['consumer'] : [],
-        ...supportConsumerGroupScope ? ['consumer group'] : [],
-      ]
+  if (supportConsumerGroupScope) {
+    scopeEntityArray.push({
+      model: 'consumer_group-id',
+      label: t('plugins.form.scoping.consumer_group.label'),
+      placeholder: t('plugins.form.scoping.consumer_group.placeholder'),
+      type: 'AutoSuggest',
+      entity: 'consumer_groups',
+      entityDataKey: 'consumer_group',
+      inputValues: {
+        fields: ['name', 'id'],
+        primaryField: 'name',
+      },
+      help: t('plugins.form.scoping.consumer_group.help'),
+    })
+  }
 
-      // TODO: translate and concat correctly
-      const trailingEntities = scopeEntities.splice(scopeEntities.length - 2, 2).map((entityType: string) => entityType === 'service' ? t('plugins.form.scoping.gateway_service.plural') : t(`plugins.form.scoping.${entityType}.plural` as keyof typeof t))
-      const trailingText = trailingEntities.join(`${scopeEntities.length > 0 ? ',' : ''} and/or `)
+  if (scopeEntityArray.length) {
+    const scopeEntities = [
+      ...supportServiceScope ? ['service'] : [],
+      ...supportRouteScope ? ['route'] : [],
+      ...supportConsumerScope ? ['consumer'] : [],
+      ...supportConsumerGroupScope ? ['consumer group'] : [],
+    ]
 
-      // TODO: correct string concat
-      const desc = [
-        'Specific',
-        [
-          ...scopeEntities.length > 0
-            ? [scopeEntities.map((entityType: string) =>
-              entityType === 'service' ? t('plugins.form.scoping.gateway_service.plural') : t(`plugins.form.scoping.${entityType}.plural` as keyof typeof t),
-            ).join(', ')]
-            : [],
-          trailingText,
-        ].join(', '),
-      ].join(' ')
+    // TODO: translate and concat correctly
+    const trailingEntities = scopeEntities.splice(scopeEntities.length - 2, 2).map((entityType: string) => entityType === 'service' ? t('plugins.form.scoping.gateway_service.plural') : t(`plugins.form.scoping.${entityType}.plural` as keyof typeof t))
+    const trailingText = trailingEntities.join(`${scopeEntities.length > 0 ? ',' : ''} and/or `)
 
-      defaultFormSchema.selectionGroup.fields.push({
-        label: t('plugins.form.scoping.label'),
-        description: desc,
-        fields: [],
-      })
+    // TODO: correct string concat
+    const desc = [
+      'Specific',
+      [
+        ...scopeEntities.length > 0
+          ? [scopeEntities.map((entityType: string) =>
+            entityType === 'service' ? t('plugins.form.scoping.gateway_service.plural') : t(`plugins.form.scoping.${entityType}.plural` as keyof typeof t),
+          ).join(', ')]
+          : [],
+        trailingText,
+      ].join(', '),
+    ].join(' ')
 
-      defaultFormSchema.selectionGroup.fields[1].fields = scopeEntityArray
-    }
+    defaultFormSchema.selectionGroup.fields.push({
+      label: t('plugins.form.scoping.label'),
+      description: desc,
+      fields: [],
+    })
 
-    if (customSchemas[props.pluginType as keyof typeof customSchemas] && customSchemas[props.pluginType as keyof typeof customSchemas].overwriteDefault && (customSchemas[props.pluginType as keyof typeof customSchemas].useKonnectSchema ? props.useKonnectSchema : true)) {
-      if (Object.hasOwnProperty.call(customSchemas[props.pluginType as keyof typeof customSchemas], 'formSchema')) {
-        Object.assign(defaultFormSchema, customSchemas[props.pluginType as keyof typeof customSchemas].formSchema)
-      }
+    defaultFormSchema.selectionGroup.fields[1].fields = scopeEntityArray
+  }
+
+  if (customSchemas[props.pluginType as keyof typeof customSchemas] && customSchemas[props.pluginType as keyof typeof customSchemas].overwriteDefault && (customSchemas[props.pluginType as keyof typeof customSchemas].useKonnectSchema ? props.useKonnectSchema : true)) {
+    if (Object.hasOwnProperty.call(customSchemas[props.pluginType as keyof typeof customSchemas], 'formSchema')) {
+      Object.assign(defaultFormSchema, customSchemas[props.pluginType as keyof typeof customSchemas].formSchema)
     }
   }
 }

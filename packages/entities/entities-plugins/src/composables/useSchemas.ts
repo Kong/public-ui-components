@@ -421,7 +421,6 @@ export const useSchemas = (entityId?: string) => {
 
     // Set the field label
     schema.label = formatFieldLabel(schema, schema.model)
-    console.log('schema label???', schema)
   }
 
   return {

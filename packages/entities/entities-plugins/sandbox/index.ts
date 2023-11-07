@@ -78,7 +78,12 @@ const init = async () => {
   })
 
   app.use(Kongponents)
-  app.use(vfgPlugin)
+  app.use(vfgPlugin, {
+    apiService: {
+      getOne: async () => ({}),
+      getAll: async () => [{}],
+    },
+  })
   app.use(router)
   app.mount('#app')
 }
