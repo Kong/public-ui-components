@@ -646,7 +646,8 @@ onBeforeMount(() => {
       font-weight: $kui-font-weight-medium;
     }
 
-    .form-group.field-array label {
+    .form-group.field-array label,
+    .form-group.field-input label {
       display: flex;
       justify-content: flex-start;
     }
