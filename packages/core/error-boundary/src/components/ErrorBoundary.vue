@@ -81,6 +81,9 @@ onErrorCaptured((error: unknown, instance: ComponentPublicInstance | null, info:
     },
   }
 
+  // Log the error for easier debugging
+  console.warn('ErrorBoundary(onErrorCaptured)', capturedErrorContext.value.error, 'childComponent', capturedErrorContext.value.context.componentName, 'data-testid', capturedErrorContext.value.context.dataTestid)
+
   // Perform provided callback, if present before exiting
   // Note: component `props.onError` will override the global Vue plugin `options.onError`
   if (typeof props.onError === 'function') {
