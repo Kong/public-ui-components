@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.7.4...@kong-ui-public/entities-shared@1.8.0) (2023-11-08)
+
+
+### Features
+
+* **entities-shared:** fuzzy search filter ([#889](https://github.com/Kong/public-ui-components/issues/889)) ([2571213](https://github.com/Kong/public-ui-components/commit/25712137253f5f82da3db8883ebe0a9e7cf0b5be))
+
+
+
+
+
 ## [1.7.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.7.3...@kong-ui-public/entities-shared@1.7.4) (2023-11-07)
 
 

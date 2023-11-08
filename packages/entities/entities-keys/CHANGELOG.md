@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@1.2.21...@kong-ui-public/entities-keys@1.3.0) (2023-11-08)
+
+
+### Features
+
+* **entities-shared:** fuzzy search filter ([#889](https://github.com/Kong/public-ui-components/issues/889)) ([2571213](https://github.com/Kong/public-ui-components/commit/25712137253f5f82da3db8883ebe0a9e7cf0b5be))
+
+
+
+
+
 ## [1.2.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@1.2.20...@kong-ui-public/entities-keys@1.2.21) (2023-11-07)
 
 **Note:** Version bump only for package @kong-ui-public/entities-keys
