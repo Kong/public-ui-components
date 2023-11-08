@@ -5,6 +5,7 @@
       :config="konnectConfig"
       :plugin-id="id"
       :plugin-type="plugin"
+      use-custom-names-for-plugin
     />
 
     <h2>Kong Manager API</h2>

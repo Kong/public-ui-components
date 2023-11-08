@@ -149,6 +149,8 @@ import { computed, reactive, ref, onBeforeMount, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
+import { useAxios, useErrors, useStringHelpers, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
+import '@kong-ui-public/entities-shared/dist/style.css'
 import {
   PluginScope,
   type KonnectPluginFormConfig,
@@ -161,10 +163,8 @@ import {
 } from '../types'
 import endpoints from '../plugins-endpoints'
 import composables from '../composables'
-import { useAxios, useErrors, useStringHelpers, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
-import '@kong-ui-public/entities-shared/dist/style.css'
-import PluginEntityForm from './PluginEntityForm.vue'
 import { ArrayStringFieldSchema } from '../composables/plugin-schemas/ArrayStringFieldSchema'
+import PluginEntityForm from './PluginEntityForm.vue'
 
 // TODO: do I need it?
 const formatPluginFieldLabel = (label: string) => {
@@ -633,8 +633,6 @@ const initScopeFields = (): void => {
 
   const scopeEntityArray = []
 
-  console.log(pluginMetaData[props.pluginType])
-
   if (supportServiceScope) {
     scopeEntityArray.push({
       model: 'service-id',
@@ -747,20 +745,23 @@ const canSubmit = computed((): boolean => JSON.stringify(form.fields) !== JSON.s
 const record = ref<Record<string, any> | null>(null)
 const initForm = (data: Record<string, any>): void => {
   /* form.fields.name = data?.name || ''
-  form.fields.tags = data?.tags?.join(', ') || ''
+  form.fields.tags = data?.tags?.join(', ') || '' */
   // TODO:
-  // form.fields.entity_id = data?.certificate?.id || ''
+  form.fields.id = data?.id || undefined
 
   // Set initial state of `formFieldsOriginal` to these values in order to detect changes
-  Object.assign(formFieldsOriginal, form.fields) */
+  Object.assign(formFieldsOriginal, form.fields)
 
   // no init here, just set the record and it will be populated in PluginEntityForm
   record.value = data
 }
 
+const submitPayload = ref<Record<string, any>>({})
 const handleUpdate = (payload: Record<string, any>) => {
   form.fields = payload.model
+  form.fields.id = record.value?.id || undefined
   Object.assign(formFieldsOriginal, payload.originalModel)
+  submitPayload.value = payload.data
 
   if (props.isWizardStep) {
     emit('model-updated', {
@@ -826,10 +827,7 @@ const saveFormData = async (): Promise<void> => {
   try {
     form.isReadonly = true
 
-    const requestBody: Record<string, any> = {
-      name: form.fields.name,
-      tags: form.fields.tags.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
-    }
+    const requestBody: Record<string, any> = submitPayload.value
 
     let response: AxiosResponse | undefined
 
@@ -847,8 +845,6 @@ const saveFormData = async (): Promise<void> => {
 
     // if (response) {
     //   const { data } = response
-    form.fields.name = response?.data?.name || ''
-    form.fields.tags = response?.data?.tags?.join(', ') || ''
     // TODO:
     // form.fields.entity_id = response?.data?.certificate?.id || ''
 
