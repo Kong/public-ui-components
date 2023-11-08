@@ -167,13 +167,17 @@ const getAll = (entityType: string, params: AxiosRequestConfig['params']): Promi
   // TODO: currently hardcoded to fetch 1000 records, and filter
   // client side. If more than 1000 records, this won't work
   if (props.config.app === 'konnect') {
-    return axiosInstance.get(url, { params }).then(res => {
+    return axiosInstance.get(url).then(res => {
       const { data: { data } } = res
 
-      if (data.length && params.name) {
+      delete params.size
+      delete params.offset
+
+      if (data.length && Object.keys(params).length === 1) {
+        const queryKey = Object.keys(params)[0]
         const filteredData = data.filter((instance: Record<string, any>) => {
-          if (instance.name) {
-            return !!instance.name.toLowerCase().includes(params.name.toLowerCase())
+          if (instance[queryKey]) {
+            return !!instance[queryKey].toLowerCase().includes(params[queryKey].toLowerCase())
           }
 
           return false
