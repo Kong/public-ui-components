@@ -114,16 +114,16 @@ export default function useDebouncedFilter(
           } else {
             results.value = []
           }
-        } else { // Admin API supports filtering on specific fields
+        } else if (query) { // Admin API supports filtering on specific fields
           const promises = []
 
-          if (isValidUuid(query || '') && keys.searchKeys.includes('id')) {
+          if (isValidUuid(query) && keys.searchKeys.includes('id')) {
             // If query is a valid UUID, do the exact search
             promises.push((async () => {
-              const res: Record<string, any> = await axiosInstance.get(`${url}/${query}`)
-              return [res[keys.fetchedItemsKey]]
+              const { data } = await axiosInstance.get(`${url}/${query}`)
+              return [data[keys.fetchedItemsKey] ?? data]
             })())
-          } else if (query) {
+          } else {
             // Search on fields with backend filtering support
             promises.push(
               ...keys.searchKeys
@@ -135,21 +135,19 @@ export default function useDebouncedFilter(
             )
           }
 
-          if (query) {
-            const resolvedArray = await Promise.all(promises)
-            const dedupedIds = new Set()
-            results.value = []
-            resolvedArray?.forEach?.((resolvedItems: Array<Record<string, any>>) => {
-              resolvedItems?.forEach?.(item => {
-                if (!dedupedIds.has(item.id)) {
-                  dedupedIds.add(item.id)
-                  results.value.push(item)
-                }
-              })
+          const resolvedArray = await Promise.all(promises)
+          const dedupedIds = new Set()
+          results.value = []
+          resolvedArray?.forEach?.((resolvedItems: Array<Record<string, any>>) => {
+            resolvedItems?.forEach?.(item => {
+              if (!dedupedIds.has(item.id)) {
+                dedupedIds.add(item.id)
+                results.value.push(item)
+              }
             })
-          } else {
-            results.value = resultsCache.value
-          }
+          })
+        } else {
+          results.value = resultsCache.value
         }
       } catch (err: any) {
         if (err?.response?.status === 404) {

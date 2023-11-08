@@ -155,7 +155,7 @@ const {
   results,
 } = useDebouncedFilter(props.config, endpoints.form[props.config?.app]?.consumersList, '', {
   fetchedItemsKey: 'data',
-  searchKeys: ['username', 'custom_id'],
+  searchKeys: ['username', 'custom_id', 'id'],
 })
 
 const { axiosInstance } = useAxios({
