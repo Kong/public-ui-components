@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import { computed, ref, reactive, provide, watch, type PropType, onBeforeMount } from 'vue'
-import type { AxiosResponse } from 'axios'
+import type { AxiosResponse, AxiosRequestConfig } from 'axios'
 import {
   EntityTypeIdField,
   type KonnectPluginFormConfig,
@@ -155,10 +155,32 @@ const getOne = (entityType: string, entityId: string): Promise<AxiosResponse> =>
  * @param {entityType} string - the entity query path WITHOUT leading/trailing slash (ex. 'routes')
  * @returns {Promise<import('axios').AxiosResponse<T>>}
  */
-const getAll = (entityType: string): Promise<AxiosResponse> => {
+const getAll = (entityType: string, params: AxiosRequestConfig['params']): Promise<AxiosResponse> => {
   const url = buildGetAllUrl(entityType)
 
-  return axiosInstance.get(url)
+  // TODO: currently hardcoded to fetch 1000 records, and filter
+  // client side. If more than 1000 records, this won't work
+  if (props.config.app === 'konnect') {
+    return axiosInstance.get(url, { params }).then(res => {
+      const { data: { data } } = res
+
+      if (data.length && params.name) {
+        const filteredData = data.filter((instance: Record<string, any>) => {
+          if (instance.name) {
+            return !!instance.name.toLowerCase().includes(params.name.toLowerCase())
+          }
+
+          return false
+        })
+
+        res.data.data = filteredData
+      }
+
+      return res
+    })
+  }
+
+  return axiosInstance.get(url, { params })
 }
 
 // provide to KFG
