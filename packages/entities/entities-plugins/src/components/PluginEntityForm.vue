@@ -583,53 +583,63 @@ onBeforeMount(() => {
 
 <style lang="scss">
 .kong-ui-entities-plugin-form {
-  .vue-form-generator > fieldset {
-    border: none;
-  }
-
   .vue-form-generator {
-    .bottom-border {
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-      padding-bottom: 24px;
+    & > fieldset {
+      border: none;
     }
+
+    .bottom-border {
+      border-bottom: $kui-border-width-10 solid $kui-color-border;
+      padding-bottom: $kui-space-80;
+    }
+
     .top-border {
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
-      padding-top: 24px;
+      border-top: $kui-border-width-10 solid $kui-color-border;
+      padding-top: $kui-space-80;
     }
 
     .form-group label {
-      margin-bottom: 8px;
+      margin-bottom: $kui-space-40;
     }
 
     .hint {
-      font-size: small;
+      font-size: $kui-font-size-20;
       margin-bottom: 10px;
       margin-top: 5px;
       opacity: 0.6;
     }
-  }
-  // TODO: do I need these?? will use :deep
-  .vue-form-generator .field-checkbox {
-    align-items: center;
-    display: flex;
-  }
 
-  .vue-form-generator .field-checkbox label {
-    margin: 0;
-    order: 1;
-  }
+    .k-select-item button {
+      border: none;
 
-  .vue-form-generator .field-checkbox input {
-    margin-left: 0;
-    margin-right: 12px;
-  }
+      .k-select-item-label .first-part {
+        display: block;
+        text-align: start;
+      }
+    }
 
-  .vue-form-generator .field-radios .radio-list label input[type=radio] {
-    margin-right: 10px;
-  }
+    .field-checkbox {
+      align-items: center;
+      display: flex;
+    }
 
-  .vue-form-generator label {
-    font-weight: 500;
+    .field-checkbox label {
+      margin: $kui-space-0;
+      order: 1;
+
+      input {
+        margin-left: $kui-space-0;
+        margin-right: $kui-space-50;
+      }
+    }
+
+    .field-radios .radio-list label input[type=radio] {
+      margin-right: 10px;
+    }
+
+    label {
+      font-weight: $kui-font-weight-medium;
+    }
   }
 }
 </style>
