@@ -1,5 +1,6 @@
 {
   "actions": {
+    "back": "Back",
     "cancel": "Cancel",
     "create": "New Plugin",
     "create_custom": "Create",

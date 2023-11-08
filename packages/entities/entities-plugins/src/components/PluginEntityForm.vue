@@ -39,8 +39,8 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed, ref, reactive, provide, watch, type PropType, onBeforeMount } from 'vue'
+<script lang="ts">
+import { computed, ref, reactive, provide, watch, type PropType, onBeforeMount, defineComponent } from 'vue'
 import type { AxiosResponse, AxiosRequestConfig } from 'axios'
 import {
   EntityTypeIdField,
@@ -52,13 +52,19 @@ import {
   customFields,
   getSharedFormName,
   FORMS_API_KEY,
-  // TODO: do I need it?
-  // sharedForms,
+  sharedForms,
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
 
+// Must explicitly specify these as components since they are rendered dynamically
+export default defineComponent({
+  components: { ...sharedForms },
+})
+</script>
+
+<script setup lang="ts">
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void,
   (e: 'model-updated',
@@ -586,6 +592,7 @@ onBeforeMount(() => {
   .vue-form-generator {
     & > fieldset {
       border: none;
+      padding: $kui-space-0;
     }
 
     .bottom-border {
@@ -600,6 +607,10 @@ onBeforeMount(() => {
 
     .form-group label {
       margin-bottom: $kui-space-40;
+    }
+
+    .form-group.field-checkbox .form-group-label {
+      margin-bottom: $kui-space-0;
     }
 
     .hint {
@@ -623,22 +634,60 @@ onBeforeMount(() => {
       display: flex;
     }
 
-    .field-checkbox label {
-      margin: $kui-space-0;
-      order: 1;
-
-      input {
-        margin-left: $kui-space-0;
-        margin-right: $kui-space-50;
-      }
-    }
-
     .field-radios .radio-list label input[type=radio] {
       margin-right: 10px;
     }
 
     label {
       font-weight: $kui-font-weight-medium;
+    }
+
+    .form-group.field-array label {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .kong-form-array-field {
+      width: 100%;
+
+      .kong-form-array-field-item {
+        margin-bottom: $kui-space-40;
+
+        .k-button.delete {
+          align-self: center;
+        }
+      }
+    }
+  }
+
+  .global-fields {
+    border-bottom: $kui-border-width-10 solid $kui-color-border;
+  }
+
+  .general-settings {
+    .form-group label {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .form-group .field-wrap button {
+      margin-top: $kui-space-30;
+    }
+
+    .link-wrapper {
+      margin-top: $kui-space-60;
+    }
+
+    .k-checkbox {
+       label {
+        margin: $kui-space-0;
+        order: 1
+      }
+
+      input {
+        margin-left: $kui-space-0;
+        margin-right: $kui-space-50;
+      }
     }
   }
 }

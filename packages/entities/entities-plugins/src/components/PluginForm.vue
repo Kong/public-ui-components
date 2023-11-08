@@ -117,6 +117,15 @@
           {{ t('actions.cancel') }}
         </KButton>
         <KButton
+          appearance="secondary"
+          class="form-back-button"
+          data-testid="form-back"
+          :disabled="form.isReadonly"
+          @click="handleClickBack"
+        >
+          {{ t('actions.back') }}
+        </KButton>
+        <KButton
           appearance="primary"
           data-testid="form-submit"
           :disabled="!canSubmit"
@@ -783,6 +792,12 @@ const handleClickCancel = (): void => {
   }
 }
 
+const handleClickBack = (): void => {
+  if (props.config.backRoute) {
+    router.push(props.config.backRoute)
+  }
+}
+
 /*
  * Saving
  */
@@ -920,5 +935,9 @@ onBeforeMount(async () => { // TODO: confirm when the GET by ID happens in Entit
 <style lang="scss" scoped>
 .kong-ui-entities-plugin-form-container {
   width: 100%;
+
+  .form-back-button {
+    margin-left: $kui-space-60;
+  }
 }
 </style>
