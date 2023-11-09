@@ -117,6 +117,7 @@
           {{ t('actions.cancel') }}
         </KButton>
         <KButton
+          v-if="formType === EntityBaseFormType.Create"
           appearance="secondary"
           class="form-back-button"
           data-testid="form-back"
