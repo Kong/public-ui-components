@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@1.2.23...@kong-ui-public/entities-vaults@1.2.24) (2023-11-09)
+
+
+### Bug Fixes
+
+* **vaults:** fix delete modal for vault and plugin entities [khcp-9683] ([#905](https://github.com/Kong/public-ui-components/issues/905)) ([3f1a8dd](https://github.com/Kong/public-ui-components/commit/3f1a8dd9712956cc5b3f1e06fca8183d468193ad))
+
+
+
+
+
 ## [1.2.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@1.2.22...@kong-ui-public/entities-vaults@1.2.23) (2023-11-08)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
