@@ -627,6 +627,12 @@ onBeforeMount(() => {
       margin-bottom: $kui-space-0;
     }
 
+    .form-group hr.divider,
+    .form-group hr.wide-divider {
+      border-color: $kui-color-border;
+      opacity: .2;
+    }
+
     .form-group label {
       margin-bottom: $kui-space-40;
     }
