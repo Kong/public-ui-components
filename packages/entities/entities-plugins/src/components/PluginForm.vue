@@ -560,15 +560,15 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       initialFormSchema[field].default = scheme.default
     }
 
-    // Custom schema override
-    if (pluginSchema && !pluginSchema.overwriteDefault && (customSchemas[props.pluginType as keyof typeof customSchemas].useKonnectSchema ? props.useKonnectSchema : true)) {
+    // Custom frontend schema override
+    if (pluginSchema && !pluginSchema.overwriteDefault && (pluginSchema.useKonnectSchema ? props.useKonnectSchema : true)) {
       Object.keys(pluginSchema).forEach(plugin => {
         // Check if current plugin matches any of custom schema keys
         if (plugin === field) {
           // Use custom defined schema instead of building from default && set field label
           const { help, label } = initialFormSchema[field]
 
-          initialFormSchema[field] = { ...(pluginSchema[plugin as keyof typeof pluginSchema] as Record<string, any>), help, label }
+          initialFormSchema[field] = { help, label, ...(pluginSchema[plugin as keyof typeof pluginSchema] as Record<string, any>) }
         }
       })
     }
