@@ -72,10 +72,11 @@
     "date-fns-tz": "^2.0.0",
     "pretty-bytes": "^6.1.1",
     "uuid": "^9.0.1",
-    "vue-chartjs": "^5.2.0"
+    "vue-chartjs": "^5.2.0",
+    "vue-json-csv": "^2.1.0"
   },
   "distSizeChecker": {
     "warningLimit": "1.35MB",
-    "errorLimit": "1.4MB"
+    "errorLimit": "1.5MB"
   }
 }

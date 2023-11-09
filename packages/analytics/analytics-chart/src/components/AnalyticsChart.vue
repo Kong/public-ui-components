@@ -26,6 +26,24 @@
           </template>
         </KTooltip>
       </div>
+      <div class="chart-wrapper-export-button">
+        <KButton
+          appearance="secondary"
+          class="chart-wrapper-export-button-display"
+          data-testid="csv-export-button"
+          @click.prevent="exportCsv"
+        >
+          {{ i18n.t('csvExport.exportButton') }}
+        </KButton>
+      </div>
+      <CsvExportModal
+        v-if="exportModalVisible"
+        :chart-data="chartData"
+        :is-visible="true"
+        :modal-title="chartTitle"
+        :selected-range="selectedRange"
+        @toggle-modal="setModalVisibility"
+      />
     </div>
     <KEmptyState
       v-if="!hasValidChartData"
@@ -100,16 +118,22 @@ import type { AnalyticsChartOptions } from '../types'
 import { ChartTypes, ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
+import CsvExportModal from './CsvExportModal.vue'
 import type { PropType } from 'vue'
 import { computed, provide, ref, toRef } from 'vue'
 import { GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsExploreResult, AnalyticsExploreV2Result, GranularityFullObj } from '@kong-ui-public/analytics-utilities'
-import { datavisPalette, hasMillisecondTimestamps } from '../utils'
+import { datavisPalette, formatTime, hasMillisecondTimestamps } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
 
 const props = defineProps({
+  allowCsvExport: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
   chartData: {
     type: Object as PropType<AnalyticsExploreResult | AnalyticsExploreV2Result>,
     required: true,
@@ -304,6 +328,20 @@ const timeSeriesGranularity = computed<GranularityKeys>(() => {
   return msToGranularity(props.chartData.meta.granularity.duration) || GranularityKeys.HOURLY
 })
 
+// CSV Export Modal
+const exportModalVisible = ref(false)
+const selectedRange = computed(() => {
+  return ('start' in props.chartData.meta)
+    ? `${formatTime(props.chartData.meta.start)} - ${formatTime(props.chartData.meta.end, { includeTZ: true })}`
+    : ''
+})
+const setModalVisibility = (val: boolean) => {
+  exportModalVisible.value = val
+}
+const exportCsv = () => {
+  setModalVisibility(true)
+}
+
 provide('showLegendValues', showLegendValues)
 provide('legendPosition', toRef(props, 'legendPosition'))
 
@@ -320,7 +358,9 @@ provide('legendPosition', toRef(props, 'legendPosition'))
     padding: $kui-space-70 $kui-space-0 $kui-space-60 $kui-space-0;
   }
   .chart-header {
+    align-items: center;
     display: flex;
+    justify-content: space-between;
     padding-bottom: $kui-space-60;
   }
 
