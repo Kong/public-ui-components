@@ -39,7 +39,8 @@
     "general": "Plugins could not be retrieved",
     "delete": "The plugin could not be deleted at this time.",
     "copy": "Failed to copy to clipboard",
-    "load_results": "Error loading available plugins"
+    "load_results": "Error loading available plugins",
+    "load_schema": "Error loading plugin schema"
   },
   "search": {
     "placeholder": {

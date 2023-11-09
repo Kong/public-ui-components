@@ -1,7 +1,30 @@
 <template>
   <div class="kong-ui-entities-plugin-form-container">
-    <!-- TODO: I think I have to start with a loading state? -->
+    <KSkeleton
+      v-if="schemaLoading"
+      type="form"
+    />
+    <KEmptyState
+      v-else-if="fetchSchemaError"
+      cta-is-hidden
+      is-error
+    >
+      <template #message>
+        <h5>
+          {{ t('errors.load_schema') }}
+        </h5>
+      </template>
+    </KEmptyState>
+    <KEmptyState
+      v-else-if="isDisabled"
+      cta-is-hidden
+    >
+      <template #title>
+        {{ t('plugins.form.disabled_warning') }}
+      </template>
+    </KEmptyState>
     <EntityBaseForm
+      v-else
       :can-submit="canSubmit"
       :config="config"
       :edit-id="pluginId"
@@ -39,72 +62,7 @@
         :record="record || undefined"
         :schema="schema ?? {}"
         @model-updated="handleUpdate"
-      >
-      <!-- <template #body-header-description>
-        <div v-if="useCustomNamesForPlugin">
-          <KExternalLink
-            :href="docsLink"
-            :style="{ textDecoration: 'underline'}"
-          >
-            {{ helpText.general.viewDocs }}
-          </KExternalLink>
-        </div>
-        <div v-else>
-          {{ helpText.list.subtitle }}
-          <KExternalLink :href="docsLink">
-            {{ helpText.general.externalLinkText }}
-          </KExternalLink>
-        </div>
-      </template>
-
-      <template #afterFormContainer>
-        <div class="after-form-wrapper">
-          <KAlert
-            v-if="warningMessage"
-            :alert-message="warningMessage"
-            appearance="warning"
-            class="warning-alert"
-          />
-
-          <KSkeleton
-            v-if="isLoading"
-            :delay-milliseconds="0"
-            type="form"
-          />
-
-          <KEmptyState
-            v-if="error"
-            cta-is-hidden
-            is-error
-          >
-            <template #message>
-              <h5
-                class="empty-state-message"
-              >
-                {{ helpText.form.defaultErrorMessage }}
-              </h5>
-            </template>
-          </KEmptyState>
-
-          <KEmptyState
-            v-if="isDisabled && !isLoading"
-            :message="helpText.form.disabledWarningText"
-          >
-            <template #title>
-              {{ helpText.form.disabledWarningText }}
-            </template>
-            <template #cta>
-              <KExternalLink
-                class="empty-state-link"
-                :href="docsLink"
-              >
-                {{ helpText.general.externalLinkText }}
-              </KExternalLink>
-            </template>
-          </KEmptyState>
-        </div>
-      </template> -->
-      </PluginEntityForm>
+      />
 
       <template #form-actions>
         <KButton
@@ -137,20 +95,6 @@
         </KButton>
       </template>
     </EntityBaseForm>
-
-    <KEmptyState v-if="isDisabled && !schemaLoading">
-      <template #title>
-        {{ t('plugins.form.disabled_warning') }}
-      </template>
-      <!-- <template #cta>
-        <KExternalLink
-          class="empty-state-link"
-          :href="docsLink"
-        >
-          {{ helpText.general.externalLinkText }}
-        </KExternalLink>
-      </template> -->
-    </KEmptyState>
   </div>
 </template>
 
@@ -186,17 +130,15 @@ const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
   (e: 'fetch-schema:error', error: AxiosError): void,
   (e: 'loading', isLoading: boolean): void,
+  (e: 'clicked-submit', data: Record<string, any>): void,
   (e: 'model-updated',
     payload: {
       model: Record<string, any>,
       data: Record<string, any>,
       resourceEndpoint: string
     }
-  ): void,
+  ): void
 }>()
-
-// TODO: do we need any of these?
-// emits: ['clicked-submit', 'enable-save', 'model-updated'],
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
 const props = defineProps({
@@ -291,12 +233,6 @@ const form = reactive<PluginFormState>({
 })
 
 const formFieldsOriginal = reactive<PluginFormFields>({})
-
-// TODO: is there a way to use this approach instead of hideForeign?
-// or maybe just base it off of entityId existence?
-/* const isKeySetFieldReadonly = computed<boolean>(() => {
-  return form.isReadonly || (formType.value === EntityBaseFormType.Create && !!props.fixedKeySetId)
-}) */
 
 const isDisabled = computed((): boolean => {
   const currentPlugin = Object.keys(customSchemas).find((key: string) => key === props.pluginType)
@@ -822,6 +758,13 @@ const submitUrl = computed<string>(() => {
 })
 
 const saveFormData = async (): Promise<void> => {
+  // wizard step handles API call externally
+  if (props.isWizardStep) {
+    emit('clicked-submit', submitPayload.value)
+
+    return
+  }
+
   try {
     form.isReadonly = true
 
@@ -834,17 +777,8 @@ const saveFormData = async (): Promise<void> => {
     if (formType.value === 'create') {
       response = await axiosInstance.post(submitUrl.value, requestBody)
     } else if (formType.value === 'edit') {
-      response = props.config?.app === 'konnect'
-        // Note: Konnect currently uses PUT because PATCH is not fully supported in Koko
-        //       If this changes, the `edit` form methods should be re-evaluated/updated accordingly
-        ? await axiosInstance.put(submitUrl.value, requestBody)
-        : await axiosInstance.patch(submitUrl.value, requestBody)
+      response = await axiosInstance.patch(submitUrl.value, requestBody)
     }
-
-    // if (response) {
-    //   const { data } = response
-    // TODO:
-    // form.fields.entity_id = response?.data?.certificate?.id || ''
 
     // Set initial state of `formFieldsOriginal` to these values in order to detect changes
     Object.assign(formFieldsOriginal, form.fields)
@@ -877,7 +811,7 @@ const schemaUrl = computed((): string => {
 
 const schemaLoading = ref(false)
 const fetchSchemaError = ref('')
-onBeforeMount(async () => { // TODO: confirm when the GET by ID happens in EntityFormBase, how do I set record?
+onBeforeMount(async () => {
   schemaLoading.value = true
 
   try {
