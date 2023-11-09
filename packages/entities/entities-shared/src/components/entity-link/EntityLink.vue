@@ -19,13 +19,13 @@
       target="_blank"
     >
       <KTooltip
-        :label="isTruncated && entityLinkData.label || ''"
+        :label="isTruncated && displayLabel || ''"
       >
         <span
           ref="textContent"
           class="entity-link-label"
         >
-          {{ entityLinkData.label }}
+          {{ displayLabel }}
         </span>
       </KTooltip>
     </KExternalLink>
@@ -91,6 +91,8 @@ const entityUuid = computed(() => {
     ? props.entityLinkData.id.toString().split(':')[1]
     : props.entityLinkData.id
 })
+
+const displayLabel = computed(() => props.entityLinkData.label)
 
 const deletedUuidDisplay = computed(() => {
   // Note: in order for components that use EntityLink to look the same as other
