@@ -6,6 +6,7 @@
       :plugin-id="id"
       :plugin-type="plugin"
       use-custom-names-for-plugin
+      @update="onUpdate"
     />
 
     <h2>Kong Manager API</h2>
@@ -13,12 +14,14 @@
       :config="kongManagerConfig"
       :plugin-id="id"
       :plugin-type="plugin"
+      @update="onUpdate"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../src'
 import { PluginForm } from '../../src'
 
@@ -34,6 +37,7 @@ defineProps({
   },
 })
 
+const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig = ref<KonnectPluginFormConfig>({
@@ -71,6 +75,12 @@ const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   backRoute: { name: 'select-plugin' },
   cancelRoute: { name: 'home' },
 })
+
+const onUpdate = (payload: Record<string, any>) => {
+  console.log('update', payload)
+
+  router.push({ name: 'home' })
+}
 </script>
 
 <style lang="scss" scoped>

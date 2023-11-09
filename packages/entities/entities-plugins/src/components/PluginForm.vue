@@ -561,7 +561,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       })
     }
 
-    if (scheme.required) {
+    if (scheme.required && scheme.type !== 'boolean') {
       initialFormSchema[field].required = true
       initialFormSchema[field].selectOptions = {
         hideNoneSelectedText: true,
