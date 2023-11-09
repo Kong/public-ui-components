@@ -522,7 +522,7 @@ const initFormModel = (): void => {
   // Check if incoming field exists in current model and add if so update
   if (entityIdField.value && props.schema) {
     const updateFields: Record<string, any> = {}
-    const key = entityIdField.value === 'consumer_group_id' ? 'consumer_group-id' : JSON.stringify(JSON.parse(entityIdField.value)).replace('_', '-')
+    const key = entityIdField.value === 'consumer_group_id' ? 'consumer_group-id' : JSON.parse(JSON.stringify(entityIdField.value).replace('_', '-'))
 
     if (Object.prototype.hasOwnProperty.call(formModel, key)) {
       updateFields[key] = props.config.entityId
@@ -621,6 +621,10 @@ onBeforeMount(() => {
     .top-border {
       border-top: $kui-border-width-10 solid $kui-color-border;
       padding-top: $kui-space-80;
+    }
+
+    .form-group.kong-form-hidden-field-wrapper {
+      margin-bottom: $kui-space-0;
     }
 
     .form-group label {

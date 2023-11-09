@@ -322,9 +322,9 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
     styleClasses: 'd-none',
   },
   selectionGroup: {
-    type: props.hideForeign ? 'foreign' : 'selectionGroup',
+    type: props.hideForeign || props.config.entityId ? 'foreign' : 'selectionGroup',
     // TODO: ??
-    // inputType: 'hidden',
+    inputType: 'hidden',
     styleClasses: 'bottom-border hide-label',
     fields: [
       {
@@ -694,7 +694,7 @@ const initScopeFields = (): void => {
       ...supportServiceScope ? ['service'] : [],
       ...supportRouteScope ? ['route'] : [],
       ...supportConsumerScope ? ['consumer'] : [],
-      ...supportConsumerGroupScope ? ['consumer group'] : [],
+      ...supportConsumerGroupScope ? ['consumer_group'] : [],
     ]
 
     // TODO: translate and concat correctly
