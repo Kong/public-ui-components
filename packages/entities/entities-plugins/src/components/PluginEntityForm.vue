@@ -492,6 +492,14 @@ const getModel = (): Record<string, any> => {
 const loading = ref(true)
 const initFormModel = (): void => {
   if (props.record && props.schema) {
+    // top level fields
+    updateModel({
+      enabled: props.record.enabled ?? true,
+      instance_name: props.record.instance_name || '',
+      protocols: props.record.protocols || [],
+      tags: props.record.tags || [],
+    })
+
     if (props.record.data) {
       const newModel = props.record.data
       newModel.client_certificate = newModel.client_certificate?.id
@@ -597,6 +605,12 @@ onBeforeMount(() => {
     & > fieldset {
       border: none;
       padding: $kui-space-0;
+    }
+
+    .field-switch .field-wrap label {
+      .label {
+        background-color: $kui-color-background-neutral-weak;
+      }
     }
 
     .bottom-border {

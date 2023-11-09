@@ -288,7 +288,6 @@ const form = reactive<PluginFormState>({
   errorMessage: '',
 })
 
-// TODO: set defaults?
 const formFieldsOriginal = reactive<PluginFormFields>({})
 
 // TODO: is there a way to use this approach instead of hideForeign?
@@ -351,7 +350,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
     help: t('plugins.form.fields.protocols.help'),
     label: t('plugins.form.fields.protocols.label'),
     placeholder: t('plugins.form.fields.protocols.placeholder'),
-    // TODO: required: true, // konnect has true?
+    required: true,
     styleClasses: 'plugin-protocols-select',
     type: 'multiselect',
     values: [
@@ -368,17 +367,6 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
     ],
   },
 })
-
-// TODO: do I need this?
-/* const fields = computed((): Record<string, any> => {
-  const fieldObj: Record<string, any> = {}
-
-  if (props.config.entityType && props.config.entityId) {
-    fieldObj[props.config.entityType] = props.config.entityId
-  }
-
-  return fieldObj
-}) */
 
 const entity = computed((): PluginScope => {
   // TODO: do I need this?
@@ -482,8 +470,6 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
     if (parentKey === 'config') {
       if (schema[key]?.description) {
-        // TODO: ask Yi about this
-        // this is a new dependency
         initialFormSchema[field].help = marked.parse(schema[key].description, { mangle: false, headerIds: false } as MarkedOptions)
       }
     }
@@ -753,15 +739,11 @@ const canSubmit = computed((): boolean => JSON.stringify(form.fields) !== JSON.s
 // TODO: is this right?
 const record = ref<Record<string, any> | null>(null)
 const initForm = (data: Record<string, any>): void => {
-  /* form.fields.name = data?.name || ''
-  form.fields.tags = data?.tags?.join(', ') || '' */
-  // TODO:
   form.fields.id = data?.id || undefined
 
   // Set initial state of `formFieldsOriginal` to these values in order to detect changes
   Object.assign(formFieldsOriginal, form.fields)
 
-  // no init here, just set the record and it will be populated in PluginEntityForm
   record.value = data
 }
 
