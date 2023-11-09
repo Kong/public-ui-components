@@ -548,18 +548,6 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       }
     }
 
-    if (scheme.required) {
-      initialFormSchema[field].required = true
-      initialFormSchema[field].selectOptions = {
-        hideNoneSelectedText: true,
-      }
-    }
-
-    // Default is set and is not an object or string 'function'
-    if (scheme.default != null && typeof scheme.default !== 'object' && scheme.default !== 'function') {
-      initialFormSchema[field].default = scheme.default
-    }
-
     // Custom frontend schema override
     if (pluginSchema && !pluginSchema.overwriteDefault && (pluginSchema.useKonnectSchema ? props.useKonnectSchema : true)) {
       Object.keys(pluginSchema).forEach(plugin => {
@@ -571,6 +559,18 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
           initialFormSchema[field] = { help, label, ...(pluginSchema[plugin as keyof typeof pluginSchema] as Record<string, any>) }
         }
       })
+    }
+
+    if (scheme.required) {
+      initialFormSchema[field].required = true
+      initialFormSchema[field].selectOptions = {
+        hideNoneSelectedText: true,
+      }
+    }
+
+    // Default is set and is not an object or string 'function'
+    if (scheme.default != null && typeof scheme.default !== 'object' && scheme.default !== 'function') {
+      initialFormSchema[field].default = scheme.default
     }
 
     // Field type is an input, determine input type, such as 'text', or 'number'

@@ -495,9 +495,9 @@ const initFormModel = (): void => {
     // top level fields
     updateModel({
       enabled: props.record.enabled ?? true,
-      instance_name: props.record.instance_name || '',
-      protocols: props.record.protocols || [],
-      tags: props.record.tags || [],
+      ...(props.record.instance_name && { instance_name: props.record.instance_name || '' }),
+      ...(props.record.protocols && { protocols: props.record.protocols }),
+      ...(props.record.tags && { tags: props.record.tags }),
     })
 
     if (props.record.data) {
