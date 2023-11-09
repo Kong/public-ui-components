@@ -129,7 +129,7 @@
         <KButton
           appearance="primary"
           data-testid="form-submit"
-          :disabled="!canSubmit"
+          :disabled="!canSubmit || form.isReadonly"
           type="submit"
           @click="saveFormData"
         >
@@ -159,7 +159,7 @@ import { computed, reactive, ref, onBeforeMount, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
-import { useAxios, useErrors, useStringHelpers, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
+import { useAxios, useErrors, useHelpers, useStringHelpers, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import {
   PluginScope,
@@ -273,6 +273,7 @@ const { pluginMetaData } = composables.usePluginMetaData()
 const { customSchemas, typedefs } = composables.useSchemas()
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
+const { objectsAreEqual } = useHelpers()
 
 const { axiosInstance } = useAxios({
   headers: props.config?.requestHeaders,
@@ -303,7 +304,6 @@ const isDisabled = computed((): boolean => {
   return currentPlugin ? (customSchemas[currentPlugin as keyof typeof customSchemas] as Record<string, any>)?.configurationDisabled : false
 })
 
-// TODO: I think some of this is duplicated, I recognize that protocols def
 const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
   enabled: {
     type: 'switch',
@@ -323,14 +323,12 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
   },
   selectionGroup: {
     type: props.hideForeign || props.config.entityId ? 'foreign' : 'selectionGroup',
-    // TODO: ??
     inputType: 'hidden',
     styleClasses: 'bottom-border hide-label',
     fields: [
       {
         label: t('plugins.form.scoping.global.label'),
         description: t('plugins.form.scoping.global.help'),
-        // fields: null,
       },
     ],
   },
@@ -730,14 +728,16 @@ const initScopeFields = (): void => {
   }
 }
 
+const changesExist = computed(() => {
+  return !objectsAreEqual(form.fields, formFieldsOriginal, true)
+})
+
 /**
  * Is the form submit button enabled?
- * If the form.fields and formFieldsOriginal are equal, always return false
+ * If the form.fields and formFieldsOriginal are equal when editing, return false
  */
-// TODO: think about this
-const canSubmit = computed((): boolean => JSON.stringify(form.fields) !== JSON.stringify(formFieldsOriginal))
+const canSubmit = computed((): boolean => formType.value === EntityBaseFormType.Create || changesExist.value)
 
-// TODO: is this right?
 const record = ref<Record<string, any> | null>(null)
 const initForm = (data: Record<string, any>): void => {
   form.fields.id = data?.id || undefined

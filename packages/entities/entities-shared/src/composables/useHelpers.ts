@@ -10,13 +10,48 @@ export default function useHelpers() {
     return slotProps?.[propName] ?? undefined
   }
 
+  const unsortedArraysAreEqual = (a: any[], b: any[]): boolean => {
+    if (a.length !== b.length) return false
+    const uniqueValues = new Set([...a, ...b])
+    for (const v of uniqueValues) {
+      const aCount = a.filter(e => e === v).length
+      const bCount = b.filter(e => e === v).length
+      if (aCount !== bCount) return false
+    }
+    return true
+  }
+
   /**
    * Check if 2 objects are equal
    * @param {Object} a first object to compare
    * @param {Object} b second object to compare
+   * @param {Boolean} ignoreOrder whether or not to ignore the order of the objects
    * @returns {Boolean} whether or not the objects are equal
    */
-  const objectsAreEqual = (a: Record<string, any>, b: Record<string, any>): boolean => {
+  const objectsAreEqual = (a: Record<string, any>, b: Record<string, any>, ignoreOrder?: boolean): boolean => {
+    if (ignoreOrder) {
+      if (Object.keys(a).length === Object.keys(b).length) {
+        for (const key in a) {
+          if (Array.isArray(a[key]) && Array.isArray(b[key])) {
+            if (unsortedArraysAreEqual(a[key], b[key])) {
+              continue
+            } else {
+              console.log(`${a[key]} !== ${b[key]}`)
+              return false
+            }
+          } else if (a[key] === b[key]) {
+            continue
+          } else {
+            return false
+          }
+        }
+      } else {
+        return false
+      }
+
+      return true
+    }
+
     try {
       return JSON.stringify(a) === JSON.stringify(b)
     } catch (e) {
