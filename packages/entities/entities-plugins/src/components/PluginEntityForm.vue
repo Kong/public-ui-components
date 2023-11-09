@@ -648,10 +648,12 @@ onBeforeMount(() => {
       opacity: 0.6;
     }
 
-    .k-select-item button {
+    .k-select-item button,
+    .k-multiselect-item button {
       border: none;
 
-      .k-select-item-label .first-part {
+      .k-select-item-label .first-part,
+      .k-multiselect-item-label {
         display: block;
         text-align: start;
       }
@@ -671,7 +673,8 @@ onBeforeMount(() => {
     }
 
     .form-group.field-array label,
-    .form-group.field-input label {
+    .form-group.field-input label,
+    .form-group.field-multiselect label {
       display: flex;
       justify-content: flex-start;
     }
