@@ -1,4 +1,12 @@
 {
+  "global": {
+    "actions": {
+      "copyId": "Copy ID",
+      "copied_id": "Copied \"{id}\" to the clipboard",
+      "copyToClipboard": "Copied successfully!",
+      "copyToClipboardFailed": "Failed to copy to the clipboard"
+    }
+  },
   "deleteModal": {
     "message": "Are you sure you want to delete this {entityType}?",
     "messageWithName": "Are you sure you want to delete this {entityType} {entityName}?"

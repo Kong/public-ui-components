@@ -6,6 +6,12 @@ export const routes: Array<RouteRecordRaw & { label?: string }> = [
     component: () => import('./pages/HomePage.vue'),
   },
   {
+    path: '/entity-link',
+    name: 'entity-link',
+    label: 'EntityLink',
+    component: () => import('./pages/EntityLinkPage.vue'),
+  },
+  {
     path: '/entity-delete-modal',
     name: 'entity-delete-modal',
     label: 'EntityDeleteModal',

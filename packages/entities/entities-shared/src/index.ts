@@ -9,13 +9,14 @@ import EntityFilter from './components/entity-filter/EntityFilter.vue'
 import EntityToggleModal from './components/entity-toggle-modal/EntityToggleModal.vue'
 import PermissionsWrapper from './components/permissions-wrapper/PermissionsWrapper.vue'
 import EntityFormSection from './components/entity-form-section/EntityFormSection.vue'
+import EntityLink from './components/entity-link/EntityLink.vue'
 import composables from './composables'
 
 // Extract specific composables to export
 const { useAxios, useDeleteUrlBuilder, useErrors, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector } = composables
 
 // Components
-export { EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection }
+export { EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection, EntityLink }
 
 // Composables
 export { useAxios, useDeleteUrlBuilder, useErrors, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector }
