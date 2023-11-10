@@ -279,6 +279,37 @@ importers:
         specifier: ^1.11.9
         version: 1.11.9
 
+  packages/analytics/dashboard-renderer:
+    dependencies:
+      '@kong-ui-public/core':
+        specifier: workspace:^
+        version: link:../../core/core
+      ajv:
+        specifier: ^8.12.0
+        version: 8.12.0
+      swrv:
+        specifier: ^1.0.4
+        version: 1.0.4(vue@3.3.4)
+    devDependencies:
+      '@kong-ui-public/analytics-chart':
+        specifier: ^0.15.3
+        version: link:../analytics-chart
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../../core/i18n
+      '@kong/design-tokens':
+        specifier: ^1.11.9
+        version: 1.11.9
+      '@kong/kongponents':
+        specifier: ^8.126.2
+        version: 8.126.2(axios@1.6.0)(vue-router@4.2.5)(vue@3.3.4)
+      json-schema-to-ts:
+        specifier: ^2.9.2
+        version: 2.9.2
+      vue:
+        specifier: ^3.3.4
+        version: 3.3.4
+
   packages/analytics/metric-cards:
     dependencies:
       '@kong/icons':
@@ -4301,7 +4332,6 @@ packages:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
       uri-js: 4.4.1
-    dev: true
 
   /ansi-align@3.0.1:
     resolution: {integrity: sha512-IOfwwBF5iczOjp/WeY4YxyjqAFMQoZufdQWDd19SEExbVLNXqvpzSJ/M7Za4/sCPmQ0+GRquoA7bGcINcxew6w==}
@@ -8879,13 +8909,21 @@ packages:
     resolution: {integrity: sha512-gyidFWn/PHmLNh+dW4TzbdqpQOxvFDujkrTfvvbGeAL5LUkVF7Bbujn1KMKjJ3bDyRXMIrInyNNmZQejjw9eIw==}
     dev: false
 
+  /json-schema-to-ts@2.9.2:
+    resolution: {integrity: sha512-h9WqLkTVpBbiaPb5OmeUpz/FBLS/kvIJw4oRCPiEisIu2WjMh+aai0QIY2LoOhRFx5r92taGLcerIrzxKBAP6g==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@babel/runtime': 7.22.5
+      '@types/json-schema': 7.0.12
+      ts-algebra: 1.2.2
+    dev: true
+
   /json-schema-traverse@0.4.1:
     resolution: {integrity: sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==}
 
   /json-schema-traverse@1.0.0:
     resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==}
     requiresBuild: true
-    dev: true
 
   /json-schema@0.4.0:
     resolution: {integrity: sha512-es94M3nTIfsEPisRafak+HDLfHXnKBhV3vU5eqPcS3flIWqcxJWgXHXiey3YrpaNsanY5ei1VoYEbOzijuq9BA==}
@@ -11765,7 +11803,6 @@ packages:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
     requiresBuild: true
-    dev: true
 
   /requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
@@ -13288,6 +13325,10 @@ packages:
   /trim-newlines@4.1.1:
     resolution: {integrity: sha512-jRKj0n0jXWo6kh62nA5TEh3+4igKDXLvzBJcPpiizP7oOolUrYIxmVBG9TOtHYFHoddUk6YvAkGeGoSVTXfQXQ==}
     engines: {node: '>=12'}
+    dev: true
+
+  /ts-algebra@1.2.2:
+    resolution: {integrity: sha512-kloPhf1hq3JbCPOTYoOWDKxebWjNb2o/LKnNfkWhxVVisFFmMJPPdJeGoGmM+iRLyoXAR61e08Pb+vUXINg8aA==}
     dev: true
 
   /ts-api-utils@1.0.1(typescript@5.2.2):
