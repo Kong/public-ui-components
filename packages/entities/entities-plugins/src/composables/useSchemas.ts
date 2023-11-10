@@ -419,6 +419,12 @@ export const useSchemas = (entityId?: string) => {
         break
     }
 
+    // For some reason, credential schemas set `inputType` to foreign
+    // instead of type
+    if (schema.inputType === 'foreign') {
+      handleFieldForeign(schema, formModel)
+    }
+
     // Set the field label
     schema.label = formatFieldLabel(schema, schema.model)
   }

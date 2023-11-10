@@ -1,7 +1,12 @@
 import type { PluginMetaData } from '../types'
 import { PluginGroup, PluginScope } from '../types'
-
+import { getColumnFields } from './plugin-schemas/typedefs'
+import { aclSchema } from './plugin-schemas/ACL'
+import { basicAuthSchema } from './plugin-schemas/BasicAuth'
 import useI18n from './useI18n'
+import { keyAuthSchema } from './plugin-schemas/KeyAuth'
+import { hmacAuthSchema } from './plugin-schemas/HMAC'
+import { jwtSchema } from './plugin-schemas/JWT'
 
 export const getPluginIconURL = (pluginName: string) => {
   return new URL(`../assets/images/plugin-icons/${pluginName}.png`, import.meta.url).href
@@ -576,9 +581,71 @@ export const usePluginMetaData = () => {
     },
   }
 
+  const credentialMetaData: Record<string, any> = {
+    acl: {
+      title: t('plugins.meta.acl.name'),
+      plugin: 'acl',
+      schema: aclSchema,
+      name: t('plugins.meta.acl.credential_name'),
+      endpoint: '/acls',
+      schemaEndpoint: 'acls',
+      fields: getColumnFields(aclSchema),
+      applyCredentialButtonText: 'Add group to consumer',
+    },
+    'basic-auth': {
+      title: t('plugins.meta.basic-auth.name'),
+      plugin: 'basic-auth',
+      schema: basicAuthSchema,
+      name: t('plugins.meta.basic-auth.credential_name'),
+      endpoint: '/basic-auth',
+      schemaEndpoint: 'basicauth_credentials',
+      fields: getColumnFields(basicAuthSchema),
+    },
+    'key-auth': {
+      title: t('plugins.meta.key-auth.name'),
+      plugin: 'key-auth',
+      schema: keyAuthSchema,
+      name: t('plugins.meta.key-auth.credential_name'),
+      endpoint: '/key-auth',
+      schemaEndpoint: 'keyauth_credentials',
+      fields: getColumnFields(keyAuthSchema),
+    },
+    // oauth2: {
+    //   title: t('plugins.meta.oauth2.name'),
+    //   plugin: 'oauth2',
+    //   schema: OAuth2Schema,
+    //   name: t('plugins.meta.oauth2.credential_name'),
+    //   endpoint: '/oauth2',
+    //   schemaEndpoint: 'oauth2_credentials',
+    //   fields: getColumnFields(OAuth2Schema)
+    // },
+    'hmac-auth': {
+      title: t('plugins.meta.hmac-auth.name'),
+      plugin: 'hmac-auth',
+      schema: hmacAuthSchema,
+      name: t('plugins.meta.hmac-auth.credential_name'),
+      endpoint: '/hmac-auth',
+      schemaEndpoint: 'hmacauth_credentials',
+      fields: getColumnFields(hmacAuthSchema),
+    },
+    jwt: {
+      title: t('plugins.meta.jwt.name'),
+      plugin: 'jwt',
+      schema: jwtSchema,
+      name: t('plugins.meta.jwt.credential_name'),
+      endpoint: '/jwt',
+      schemaEndpoint: 'jwt_secrets',
+      fields: {
+        id: {},
+        key: {},
+        algorithm: {},
+      },
+    },
+  }
+
   const getDisplayName = (name: string) => {
     return pluginMetaData[name]?.name || name
   }
 
-  return { pluginMetaData, getDisplayName }
+  return { pluginMetaData, credentialMetaData, getDisplayName }
 }

@@ -44,6 +44,7 @@ import { computed, ref, reactive, provide, watch, type PropType, onBeforeMount, 
 import type { AxiosResponse, AxiosRequestConfig } from 'axios'
 import {
   EntityTypeIdField,
+  type PluginScope,
   type KonnectPluginFormConfig,
   type KongManagerPluginFormConfig,
 } from '../types'
@@ -89,6 +90,10 @@ const props = defineProps({
       return true
     },
   },
+  entityType: {
+    type: String as PropType<PluginScope>,
+    default: null,
+  },
   /**
    * Plugin data if being edited
    */
@@ -101,6 +106,10 @@ const props = defineProps({
     default: () => ({}),
   },
   isEditing: {
+    type: Boolean,
+    default: false,
+  },
+  isCredential: {
     type: Boolean,
     default: false,
   },
@@ -524,23 +533,25 @@ const initFormModel = (): void => {
     const updateFields: Record<string, any> = {}
     const key = entityIdField.value === 'consumer_group_id' ? 'consumer_group-id' : JSON.parse(JSON.stringify(entityIdField.value).replace('_', '-'))
 
+    // ex. set consumer-id: <entityId>
     if (Object.prototype.hasOwnProperty.call(formModel, key)) {
       updateFields[key] = props.config.entityId
+    }
+    updateModel(updateFields)
+  }
+
+  // Check if entity field exists in current model and if so update
+  // credentials don't recognize field with -id, so for now set it like
+  // ex. consumer: <entityId>
+  // we'll fix this on submit
+  if (props.config.entityId && props.schema && props.isCredential) {
+    const updateFields: Record<string, any> = {}
+    if (Object.prototype.hasOwnProperty.call(formModel, props.entityType)) {
+      updateFields[props.entityType] = props.config.entityId
     }
 
     updateModel(updateFields)
   }
-
-  // TODO: do I need?
-  // Check if referal query params field exists in current model and add if so update
-  /* if (props.config.entityId && props.schema) {
-    const updateFields = {}
-    if (Object.prototype.hasOwnProperty.call(formModel, entityType)) {
-      updateFields[entityType] = entityId.split(',')[0]
-    }
-
-    updateModel(updateFields)
-  } */
 
   disabled.value = false
   loading.value = false
@@ -624,7 +635,7 @@ onBeforeMount(() => {
     }
 
     .form-group.kong-form-hidden-field-wrapper {
-      margin-bottom: $kui-space-0;
+      display: none;
     }
 
     .form-group hr.divider,

@@ -36,7 +36,6 @@ export default function useHelpers() {
             if (unsortedArraysAreEqual(a[key], b[key])) {
               continue
             } else {
-              console.log(`${a[key]} !== ${b[key]}`)
               return false
             }
           } else if (a[key] === b[key]) {

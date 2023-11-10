@@ -92,10 +92,12 @@
     "meta": {
       "basic-auth": {
         "name": "Basic Authentication",
+        "credential_name": "Basic Auth Credential",
         "description": "Add Basic Authentication to your Services"
       },
       "hmac-auth": {
         "name": "HMAC Authentication",
+        "credential_name": "HMAC Credential",
         "description": "Add HMAC Authentication to your Services"
       },
       "jwt-signer": {
@@ -104,10 +106,12 @@
       },
       "jwt": {
         "name": "JWT",
+        "credential_name": "JWT Credential",
         "description": "Verify and authenticate JSON Web Tokens"
       },
       "key-auth": {
         "name": "Key Authentication",
+        "credential_name": "Key Auth Credential",
         "description": "Add key authentication to your Services"
       },
       "key-auth-enc": {
@@ -128,6 +132,7 @@
       },
       "oauth2": {
         "name": "OAuth 2.0 Authentication",
+        "credential_name": "OAuth 2.0 Application",
         "description": "Add OAuth 2.0 authentication to your Services"
       },
       "openid-connect": {
@@ -168,6 +173,7 @@
       },
       "acl": {
         "name": "ACL",
+        "credential_name": "Access Control Group",
         "description": "Control which consumers can access Services"
       },
       "canary": {
