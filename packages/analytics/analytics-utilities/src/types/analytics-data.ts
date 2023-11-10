@@ -1,5 +1,5 @@
 export interface RecordEvent {
-  [field: string]: string | number
+  [field: string]: string | number | null
 }
 
 export interface AnalyticsExploreRecord {
