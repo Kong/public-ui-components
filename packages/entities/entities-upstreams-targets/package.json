@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-upstreams-targets",
-  "version": "1.3.22",
+  "version": "1.3.23",
   "type": "module",
   "main": "./dist/entities-upstreams-targets.umd.js",
   "module": "./dist/entities-upstreams-targets.es.js",
