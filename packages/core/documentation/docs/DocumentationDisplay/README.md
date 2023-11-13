@@ -8,11 +8,11 @@ This component displays a selected document.
 - [Props](#props)
   - [`canEdit`](#canedit)
   - [`hidePublishToggle`](#hidepublishtoggle)
-  - [`isCard`](#iscard)
+  - [`card`](#card)
   - [`selectedDocument`](#selecteddocument)
 - [Events](#events)
-  - [`add-clicked`](#add-clicked)
-  - [`edit-clicked`](#edit-clicked)
+  - [`add`](#add)
+  - [`edit`](#edit)
   - [`toggle-published`](#toggle-published)
 
 ## Requirements
@@ -37,10 +37,10 @@ yarn add @kong-ui-public/documentation
   :can-edit="canEdit"
   class="documentation-display"
   :hide-publish-toggle="hidePublishToggle"
-  :is-card="isCard"
+  :card="card"
   :selected-document="selectedDocument"
-  @add-clicked="handleAddClick"
-  @edit-clicked="handleEditClick"
+  @add="handleAddClick"
+  @edit="handleEditClick"
   @toggle-published="handleTogglePublished"
 />
 ```
@@ -61,7 +61,7 @@ yarn add @kong-ui-public/documentation
 - Default: false
 - Use: Hide all the `published`/`unpublished` UI components
 
-### `isCard`
+### `card`
 
 - Type: Boolean
 - Required: false
@@ -77,13 +77,13 @@ yarn add @kong-ui-public/documentation
 
 ## Events
 
-### `add-clicked`
+### `add`
 
 - Triggered when
 - Host apps should hook into this event to handle displaying the `ProductDocumentModal` component
 - `args` emitted with event: none
 
-### `edit-clicked`
+### `edit`
 
 - Triggered when
 - Host apps should hook into this event to handle displaying the `ProductDocumentModal` component

@@ -40,7 +40,7 @@
           data-testid="document-file-upload"
           :label="i18n.t('documentation.form_modal.file_label')"
           :label-attributes="{ help: i18n.t('documentation.form_modal.file_tooltip') }"
-          :placeholder="isEditing ? filePlaceholderText : undefined"
+          :placeholder="editing ? filePlaceholderText : undefined"
           @file-added="handleFileSelected"
           @file-removed="handleFileRemoved"
         />
@@ -99,14 +99,19 @@
       <template #action-buttons>
         <div class="action-buttons">
           <KButton
-            v-if="isEditing"
+            v-if="editing"
             appearance="danger"
             class="edit-documentation-delete-button"
             data-testid="edit-documentation-delete-button"
-            :disabled="state.matches('pending')"
-            :icon="state.matches('pending') ? 'spinner' : undefined"
+            :disabled="actionPending"
             @click="emit('delete')"
           >
+            <template
+              v-if="actionPending"
+              #icon
+            >
+              <ProgressIcon />
+            </template>
             {{ i18n.t('documentation.form_modal.delete_button_text') }}
           </KButton>
 
@@ -122,10 +127,15 @@
             <KButton
               appearance="primary"
               data-testid="edit-documentation-save-button"
-              :disabled="state.matches('pending') || saveDisabled"
-              :icon="state.matches('pending') ? 'spinner' : undefined"
+              :disabled="actionPending || saveDisabled"
               @click="handleClickSave"
             >
+              <template
+                v-if="actionPending"
+                #icon
+              >
+                <ProgressIcon />
+              </template>
               {{ i18n.t('documentation.form_modal.save_button_text') }}
             </KButton>
           </div>
@@ -137,29 +147,32 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, reactive } from 'vue'
-import { createMachine } from 'xstate'
-import { useMachine } from '@xstate/vue'
 import composables from '../composables'
 import { cloneDeep } from '../helpers'
 import externalLinks from '../external-links'
+import { ProgressIcon } from '@kong/icons'
 
 import type { PropType } from 'vue'
 import type { DocumentListItem, FormData } from 'src/types'
 
 const props = defineProps({
+  actionPending: {
+    type: Boolean,
+    default: false,
+  },
   documents: {
     type: Array as PropType<DocumentListItem[]>,
     required: true,
+  },
+  editing: {
+    type: Boolean,
+    default: false,
   },
   errorMessage: {
     type: String,
     default: '',
   },
   hidePublishToggle: {
-    type: Boolean,
-    default: false,
-  },
-  isEditing: {
     type: Boolean,
     default: false,
   },
@@ -170,7 +183,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'canceled'): void,
+  (e: 'cancel'): void,
   (e: 'save', formData: FormData, selectedFile: any): void,
   (e: 'delete'): void,
 }>()
@@ -179,23 +192,6 @@ const { i18n } = composables.useI18n()
 const filePlaceholderText = computed(() => props.record.file?.filename)
 const namePlaceholderText = computed(() => selectedFile.value ? selectedFile.value.name?.split('.')[0] : '')
 const publishModel = ref<boolean>(false)
-
-const { state, send } = useMachine(createMachine({
-  predictableActionArguments: true,
-  id: 'UPDATE_SERVICE_DOCUMENTATION',
-  initial: 'idle',
-  states: {
-    idle: {
-      on: { CLICK_EDIT: 'pending', CLICK_DELETE: 'pending' },
-    },
-    pending: {
-      on: { RESOLVE: 'idle', REJECT: 'error' },
-    },
-    error: {
-      on: { CLICK_EDIT: 'pending', CLICK_CANCEL: 'idle', CLICK_DELETE: 'pending' },
-    },
-  },
-}))
 
 const formData = reactive({
   fileName: '',
@@ -235,16 +231,16 @@ const availableParentDocuments = computed((): { label: string, value: string, se
   return docs
 })
 
-const saveDisabled = computed((): boolean => (!props.isEditing && !selectedFile.value) || !formData.pageName || slugError.value)
+const saveDisabled = computed((): boolean => (!props.editing && !selectedFile.value) || !formData.pageName || slugError.value)
 
 const titleText = computed((): string => {
-  return props.isEditing
+  return props.editing
     ? i18n.t('documentation.form_modal.edit_title')
     : i18n.t('documentation.form_modal.create_title')
 })
 
 const fileUploadButtonText = computed((): string => {
-  return props.isEditing
+  return props.editing
     ? i18n.t('documentation.form_modal.replace_file_button_text')
     : i18n.t('documentation.form_modal.filename_button_text')
 })
@@ -268,8 +264,7 @@ const handleFileRemoved = (): void => {
 }
 
 const handleClickCancel = (): void => {
-  emit('canceled')
-  send('CLICK_CANCEL')
+  emit('cancel')
   setForm()
 }
 
@@ -280,7 +275,7 @@ const handleClickSave = (): void => {
 const setForm = (): void => {
   selectedFile.value = null
 
-  if (props.isEditing && props.record?.document) {
+  if (props.editing && props.record?.document) {
     const record = cloneDeep(props.record)
     const status = record.status || props.record.document.status || publishModel.value
 

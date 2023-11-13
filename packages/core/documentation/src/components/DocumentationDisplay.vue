@@ -34,9 +34,8 @@
       >
         <span class="meta-label">{{ i18n.t('documentation.documentation_display.added_label') }}</span>
         <KBadge
-          :background-color="KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER"
+          appearance="neutral"
           class="badge-modified"
-          :color="KUI_COLOR_TEXT_NEUTRAL"
         >
           {{ createdAt }}
         </KBadge>
@@ -49,7 +48,7 @@
           :auth-function="() => canEdit()"
         >
           <KInputSwitch
-            v-if="!hidePublishToggle && !isCard"
+            v-if="!hidePublishToggle && !card"
             v-model="publishModel"
             class="document-publish-toggle"
             data-testid="document-publish-toggle"
@@ -62,7 +61,7 @@
             class="document-edit-button"
             data-testid="document-edit-button"
             size="small"
-            @click="emit('edit-clicked')"
+            @click="emit('edit')"
           >
             {{ i18n.t('documentation.documentation_display.edit_button') }}
           </KButton>
@@ -70,7 +69,7 @@
             appearance="primary"
             data-testid="add-new-page-button"
             size="small"
-            @click="emit('add-clicked')"
+            @click="emit('add')"
           >
             {{ i18n.t('documentation.documentation_display.add_new') }}
           </KButton>
@@ -84,7 +83,7 @@
       data-testid="markdown-content-loading"
     >
       <KSkeleton
-        v-if="!isCard"
+        v-if="!card"
         class="markdown-content-loader"
       />
 
@@ -97,7 +96,7 @@
     <div v-else>
       <div
         class="document-content"
-        :class="{ 'content-card-view': isCard }"
+        :class="{ 'content-card-view': card }"
       >
         <DocumentViewer
           v-if="defaultDocument"
@@ -112,8 +111,8 @@
 import { computed, ref, watch } from 'vue'
 import composables from '../composables'
 import DocumentViewer from '@kong-ui-public/document-viewer'
-import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER, KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import { isObjectEmpty } from '../helpers'
+import { PermissionsWrapper } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/document-viewer/dist/style.css'
 import type { PropType } from 'vue'
 import type { DocumentTree } from '../types'
@@ -128,11 +127,11 @@ const props = defineProps({
     required: false,
     default: async () => false,
   },
-  hidePublishToggle: {
+  card: {
     type: Boolean,
     default: false,
   },
-  isCard: {
+  hidePublishToggle: {
     type: Boolean,
     default: false,
   },
@@ -143,8 +142,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'add-clicked'): void,
-  (e: 'edit-clicked'): void,
+  (e: 'add'): void,
+  (e: 'edit'): void,
   (e: 'toggle-published', newValue: boolean): void,
 }>()
 
@@ -178,7 +177,7 @@ const handlePublishToggle = (): void => {
     : i18n.t('documentation.common.unpublished')
 }
 
-const setStatus = (status: string | undefined): void => {
+const setStatus = (status?: string): void => {
   if (status === 'published') {
     publishModel.value = true
     publishedStatusText.value = i18n.t('documentation.common.published')

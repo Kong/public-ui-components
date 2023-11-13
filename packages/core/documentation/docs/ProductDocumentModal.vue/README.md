@@ -6,13 +6,14 @@ This component displays add/edit document modal.
 - [Usage](#usage)
   - [Install](#install)
 - [Props](#props)
+  - [`actionPending`](#actionpending)
   - [`documents`](#documents)
   - [`errorMessage`](#errormessage)
   - [`hidePublishToggle`](#hidepublishtoggle)
   - [`isEditing`](#isediting)
   - [`record`](#record)
 - [Events](#events)
-  - [`canceled`](#canceled)
+  - [`cancel`](#cancel)
   - [`save`](#save)
   - [`delete`](#delete)
 
@@ -34,18 +35,25 @@ yarn add @kong-ui-public/documentation
 ```jsx
 <ProductDocumentModal
   v-if="displayModal"
+  :action-pending="actionPending"
   :documents="documentList"
   :error-message="modalErrorMessage"
   :hide-publish-toggle="hidePublishToggle"
   :is-editing="isEditing"
   :record="isEditing && selectedDocument ? selectedDocument : undefined"
-  @canceled="displayModal = false"
+  @cancel="displayModal = false"
   @delete="emit('delete')"
   @save="(formData: FormData, selectedFile: any) => emit('save', formData, selectedFile)"
 />
 ```
 
 ## Props
+
+### `actionPending`
+
+- Type: Boolean
+- Required: false
+- Default: false
 
 ### `documents`
 
@@ -80,7 +88,7 @@ yarn add @kong-ui-public/documentation
 
 ## Events
 
-### `canceled`
+### `cancel`
 
 - Triggered when `Cancel` button is clicked
 - Host apps should hook into this event to handle hiding this modal component

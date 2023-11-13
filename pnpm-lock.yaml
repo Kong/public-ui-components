@@ -430,16 +430,16 @@ importers:
       '@kong-ui-public/document-viewer':
         specifier: workspace:^
         version: link:../../portal/document-viewer
+      '@kong-ui-public/entities-shared':
+        specifier: workspace:^
+        version: link:../../entities/entities-shared
+      '@kong/icons':
+        specifier: ^1.8.0
+        version: 1.8.0(vue@3.3.4)
+    devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../i18n
-      '@xstate/vue':
-        specifier: ^2.0.0
-        version: 2.0.0(vue@3.3.4)(xstate@4.38.3)
-      xstate:
-        specifier: ^4.38.3
-        version: 4.38.3
-    devDependencies:
       '@kong/design-tokens':
         specifier: ^1.11.8
         version: 1.11.9
@@ -4244,22 +4244,6 @@ packages:
       webpack-cli: 5.1.4(webpack-bundle-analyzer@4.9.1)(webpack-dev-server@4.15.1)(webpack@5.89.0)
       webpack-dev-server: 4.15.1(webpack-cli@5.1.4)(webpack@5.89.0)
     dev: true
-
-  /@xstate/vue@2.0.0(vue@3.3.4)(xstate@4.38.3):
-    resolution: {integrity: sha512-JlrJ3d+I6rZCcFBuu3O4GP+mGJfd11O9o69wRedzPMqZ+hxcMRBsih9L5kKnJHcU9CTmdJTT172oxTaYF7thzA==}
-    peerDependencies:
-      '@xstate/fsm': ^2.0.0
-      vue: ^3.0.0
-      xstate: ^4.31.0
-    peerDependenciesMeta:
-      '@xstate/fsm':
-        optional: true
-      xstate:
-        optional: true
-    dependencies:
-      vue: 3.3.4
-      xstate: 4.38.3
-    dev: false
 
   /@xtuc/ieee754@1.2.0:
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
@@ -14735,10 +14719,6 @@ packages:
   /xmlchars@2.2.0:
     resolution: {integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==}
     dev: true
-
-  /xstate@4.38.3:
-    resolution: {integrity: sha512-SH7nAaaPQx57dx6qvfcIgqKRXIh4L0A1iYEqim4s1u7c9VoCgzZc+63FY90AKU4ZzOC2cfJzTnpO4zK7fCUzzw==}
-    dev: false
 
   /xtend@4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}

@@ -18,9 +18,11 @@
         <KButton
           appearance="primary"
           data-testid="add-new-page-button"
-          icon="plus"
           @click="emit('create-documentation')"
         >
+          <template #icon>
+            <AddIcon />
+          </template>
           {{ i18n.t('documentation.show.empty_state.ctaText') }}
         </KButton>
       </PermissionsWrapper>
@@ -30,6 +32,8 @@
 
 <script setup lang="ts">
 import composables from '../composables'
+import { PermissionsWrapper } from '@kong-ui-public/entities-shared'
+import { AddIcon } from '@kong/icons'
 import type { PropType } from 'vue'
 
 defineProps({

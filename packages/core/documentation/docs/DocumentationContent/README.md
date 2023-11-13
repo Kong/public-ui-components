@@ -7,13 +7,14 @@ The main Kong UI component for display documentation.
 - [Usage](#usage)
   - [Install](#install)
 - [Props](#props)
+  - [`actionPending`](#actionpending)
   - [`actionSuccess`](#actionsuccess)
   - [`cacheKey`](#cachekey)
   - [`canEdit`](#canedit)
   - [`documentList`](#documentlist)
   - [`entityId`](#entityid)
   - [`hidePublishToggle`](#hidepublishtoggle)
-  - [`isCard`](#iscard)
+  - [`card`](#card)
   - [`modalErrorMessage`](#modalerrormessage)
   - [`selectedDocument`](#selecteddocument)
 - [Events](#events)
@@ -46,6 +47,7 @@ yarn add @kong-ui-public/documentation
 
 ```jsx
 <DocumentationContent
+  :action-pending="actionPending"
   :action-success="actionSuccess"
   :cache-key="cacheKey"
   :can-edit="isAllowed"
@@ -65,6 +67,13 @@ yarn add @kong-ui-public/documentation
 ```
 
 ## Props
+
+### `actionPending`
+
+- Type: Boolean
+- Required: false
+- Default: false
+- Use: Signal to `ProductDocumentModal` component that an action is pending. Allows the component to show loading state.
 
 ### `actionSuccess`
 
@@ -108,7 +117,7 @@ yarn add @kong-ui-public/documentation
 - Default: false
 - Use: Hide all the `published`/`unpublished` UI components
 
-### `isCard`
+### `card`
 
 - Type: Boolean
 - Required: false

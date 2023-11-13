@@ -25,12 +25,12 @@
             v-if="selectedDocument"
             :key="key"
             :can-edit="canEdit"
+            :card="card"
             class="document-holder"
             :hide-publish-toggle="hidePublishToggle"
-            :is-card="isCard"
             :selected-document="selectedDocument"
-            @add-clicked="handleAddClick"
-            @edit-clicked="handleEditClick"
+            @add="handleAddClick"
+            @edit="handleEditClick"
             @toggle-published="(data) => emit('toggle-published', data)"
           />
         </div>
@@ -38,12 +38,13 @@
     </KCard>
     <ProductDocumentModal
       v-if="displayModal"
+      :action-pending="actionPending"
       :documents="documentList"
+      :editing="editing"
       :error-message="modalErrorMessage"
       :hide-publish-toggle="hidePublishToggle"
-      :is-editing="isEditing"
-      :record="isEditing && selectedDocument ? selectedDocument : undefined"
-      @canceled="handleModalClosed"
+      :record="editing && selectedDocument ? selectedDocument : undefined"
+      @cancel="handleModalClosed"
       @delete="emit('delete')"
       @save="(formData: FormData, selectedFile: any) => emit('save', formData, selectedFile)"
     />
@@ -70,9 +71,13 @@ const emit = defineEmits<{
 }>()
 
 const displayModal = ref<boolean>(false)
-const isEditing = ref<boolean>(false)
+const editing = ref<boolean>(false)
 
 const props = defineProps({
+  actionPending: {
+    type: Boolean,
+    default: false,
+  },
   actionSuccess: {
     type: Boolean,
     default: false,
@@ -90,6 +95,13 @@ const props = defineProps({
     required: false,
     default: async () => false,
   },
+  /**
+   * Boolean assiting with responsive documents view
+   */
+  card: {
+    type: Boolean,
+    default: false,
+  },
   documentList: {
     type: Array as PropType<DocumentListItem[]>,
     required: true,
@@ -103,13 +115,6 @@ const props = defineProps({
     required: true,
   },
   hidePublishToggle: {
-    type: Boolean,
-    default: false,
-  },
-  /**
-   * Boolean assiting with responsive documents view
-   */
-  isCard: {
     type: Boolean,
     default: false,
   },
@@ -132,12 +137,12 @@ watch(() => props.actionSuccess, (newVal: boolean) => {
 const key = computed((): string => `data-display-${props.cacheKey}-${props.selectedDocument?.document?.id || ''}`)
 
 const handleAddClick = (): void => {
-  isEditing.value = false
+  editing.value = false
   displayModal.value = true
 }
 
 const handleEditClick = (): void => {
-  isEditing.value = true
+  editing.value = true
   displayModal.value = true
 }
 
