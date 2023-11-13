@@ -698,10 +698,13 @@ importers:
         version: link:../entities-shared
       '@kong-ui-public/forms':
         specifier: ^1.2.24
-        version: 1.2.24(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@8.125.0)(vue@3.3.4)
+        version: link:../../core/forms
       '@kong/icons':
         specifier: ^1.8.0
         version: 1.8.0(vue@3.3.4)
+      marked:
+        specifier: ^9.1.5
+        version: 9.1.5
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
