@@ -36,7 +36,7 @@ export default {
       validate: '/{workspace}/schemas/plugins/validate',
       // VFG endpoints
       entityGetOne: '/{workspace}/{entity}/{id}',
-      entityGetAll: '/{workspace}/{entity}?size=1000',
+      entityGetAll: '/{workspace}/{entity}',
     },
   },
   item: {
