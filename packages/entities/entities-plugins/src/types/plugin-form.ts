@@ -35,11 +35,18 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
 /** Kong Manager Plugin form config */
 export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig {}
 
-export interface PluginFormFields extends Record<string, any> {}
+export interface PluginFormFields {
+  enabled: boolean
+  name?: string
+  instance_name?: string
+  protocols: string[]
+  tags: string[]
+  [key: string]: any
+}
 
 export interface PluginFormState {
   /** Form fields */
-  fields: Record<string, any>
+  fields: PluginFormFields
   /** Form readonly state (only used when saving entity details) */
   isReadonly: boolean
   /** The error message to show on the form */

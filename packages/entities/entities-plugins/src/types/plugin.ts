@@ -53,6 +53,12 @@ export enum PluginScope {
   CONSUMER_GROUP = 'consumer_group',
 }
 
+export interface PluginEntityInfo {
+  entity: PluginScope,
+  entityEndpoint: EntityType,
+  id?: string
+}
+
 export type PluginMetaData = {
   description: string // A string to describe a Plugin.
   docsUrlName?: string // An optional field for plugin's documentation URL.

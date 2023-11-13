@@ -103,6 +103,7 @@ import {
   type DefaultPluginsSchemaRecord,
   type DefaultPluginsFormSchema,
   type EntityType,
+  type PluginEntityInfo,
 } from '../types'
 import endpoints from '../plugins-endpoints'
 import composables from '../composables'
@@ -119,7 +120,6 @@ const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
   (e: 'fetch-schema:error', error: AxiosError): void,
   (e: 'loading', isLoading: boolean): void,
-  (e: 'clicked-submit', data: Record<string, any>): void,
   (e: 'model-updated',
     payload: {
       model: Record<string, any>,
@@ -179,19 +179,12 @@ const props = defineProps({
     default: false,
   },
 
-  // TODO: what's this?
-  pluginData: {
-    type: Object,
+  /** If we don't want to rely on route/API to determine associated plugin entity */
+  pluginEntityData: {
+    type: Object as PropType<PluginEntityInfo | null>,
     default: null,
   },
 
-  // TODO: do I need?
-  // Yes, I think Konnect has it right, use this
-  // instead of props for each individual entity's id
-  /*   entityData: {
-    type: Object,
-    default: null,
-  }, */
   // TODO: do I need?
   warningMessage: {
     type: String,
@@ -222,11 +215,18 @@ const schema = ref<Record<string, any> | null>(null)
 const treatAsCredential = computed((): boolean => !!(props.isCredential && props.config.entityId))
 const record = ref<Record<string, any> | null>(null)
 const configResponse = ref<Record<string, any>>({})
-const formFieldsOriginal = reactive<PluginFormFields>({})
+const formFieldsOriginal = reactive<PluginFormFields>({
+  enabled: true,
+  protocols: [],
+  tags: [],
+})
 
-// TODO: something better for fields
 const form = reactive<PluginFormState>({
-  fields: {},
+  fields: {
+    enabled: true,
+    protocols: [],
+    tags: [],
+  },
   isReadonly: false,
   errorMessage: '',
 })
@@ -237,7 +237,15 @@ const isDisabled = computed((): boolean => {
   return currentPlugin ? (customSchemas[currentPlugin as keyof typeof customSchemas] as Record<string, any>)?.configurationDisabled : false
 })
 
-const entityData = computed(() => {
+const entityData = computed((): PluginEntityInfo => {
+  if (props.pluginEntityData) {
+    return {
+      entity: props.pluginEntityData.entity,
+      entityEndpoint: props.pluginEntityData.entityEndpoint,
+      id: props.pluginEntityData.id,
+    }
+  }
+
   const consumerId = (props.config.entityType === 'consumers' && props.config.entityId) || record.value?.consumer?.id
   const consumerGroupId = (props.config.entityType === 'consumer_groups' && props.config.entityId) || record.value?.consumer_group?.id
   const serviceId = (props.config.entityType === 'services' && props.config.entityId) || record.value?.service?.id
@@ -777,15 +785,6 @@ const submitUrl = computed<string>(() => {
 })
 
 const saveFormData = async (): Promise<void> => {
-  // wizard step handles API call externally
-  // should never be able to hit this
-  // TODO:
-  if (props.isWizardStep) {
-    emit('clicked-submit', submitPayload.value)
-
-    return
-  }
-
   try {
     form.isReadonly = true
 
