@@ -15,14 +15,12 @@
         <KBadge
           v-if="publishModel"
           appearance="success"
-          is-bordered
         >
           {{ i18n.t('documentation.common.published') }}
         </KBadge>
         <KBadge
           v-else
           appearance="neutral"
-          is-bordered
         >
           {{ i18n.t('documentation.common.unpublished') }}
         </KBadge>
@@ -33,10 +31,7 @@
         class="document-create meta-section"
       >
         <span class="meta-label">{{ i18n.t('documentation.documentation_display.added_label') }}</span>
-        <KBadge
-          appearance="neutral"
-          class="badge-modified"
-        >
+        <KBadge appearance="neutral">
           {{ createdAt }}
         </KBadge>
       </div>
