@@ -1,14 +1,5 @@
 <template>
   <div class="kong-ui-entities-plugin-form">
-    <!-- TODO: test pressing enter triggers -->
-    <!-- Having a hidden form here allows us to @submit like a native html form -->
-    <!--
-      <form
-        hidden
-        @submit="confirm"
-      />
-    -->
-
     <KSkeleton
       v-if="loading"
       type="form"
@@ -90,6 +81,10 @@ const props = defineProps({
       return true
     },
   },
+  entityId: {
+    type: String,
+    default: '',
+  },
   entityType: {
     type: String as PropType<PluginScope>,
     default: null,
@@ -119,7 +114,7 @@ const { axiosInstance } = useAxios({
   headers: props.config?.requestHeaders,
 })
 
-const { parseSchema } = composables.useSchemas(props.config.entityId)
+const { parseSchema } = composables.useSchemas(props.entityId || undefined)
 const { convertToDotNotation, unFlattenObject, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
 // define endpoints for use by KFG
@@ -215,14 +210,14 @@ const formModel = reactive<Record<string, any>>({})
 const formOptions = computed(() => form.value?.options)
 
 const entityIdField = computed((): string => {
-  switch (props.config.entityType) {
-    case 'services':
+  switch (props.entityType) {
+    case 'service':
       return EntityTypeIdField.SERVICE
-    case 'routes':
+    case 'route':
       return EntityTypeIdField.ROUTE
-    case 'consumers':
+    case 'consumer':
       return EntityTypeIdField.CONSUMER
-    case 'consumer_groups':
+    case 'consumer_group':
       return EntityTypeIdField.CONSUMER_GROUP
     default:
       return ''
@@ -526,14 +521,15 @@ const initFormModel = (): void => {
   }
 
   // Check if incoming field exists in current model and add if so update
-  if (entityIdField.value && props.schema) {
+  if (entityIdField.value && props.entityId && props.schema) {
     const updateFields: Record<string, any> = {}
     const key = entityIdField.value === 'consumer_group_id' ? 'consumer_group-id' : JSON.parse(JSON.stringify(entityIdField.value).replace('_', '-'))
 
     // ex. set consumer-id: <entityId>
     if (Object.prototype.hasOwnProperty.call(formModel, key)) {
-      updateFields[key] = props.config.entityId
+      updateFields[key] = props.entityId
     }
+
     updateModel(updateFields)
   }
 
@@ -541,10 +537,10 @@ const initFormModel = (): void => {
   // credentials don't recognize field with -id, so for now set it like
   // ex. consumer: <entityId>
   // we'll fix this on submit
-  if (props.config.entityId && props.schema && props.isCredential) {
+  if (props.entityId && props.schema && props.isCredential) {
     const updateFields: Record<string, any> = {}
     if (Object.prototype.hasOwnProperty.call(formModel, props.entityType)) {
-      updateFields[props.entityType] = props.config.entityId
+      updateFields[props.entityType] = props.entityId
     }
 
     updateModel(updateFields)

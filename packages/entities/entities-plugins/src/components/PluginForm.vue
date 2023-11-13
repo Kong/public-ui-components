@@ -11,15 +11,16 @@
       is-error
     >
       <template #message>
-        <h5>
+        <h3>
           {{ t('errors.load_schema') }}
-        </h5>
+        </h3>
       </template>
     </KEmptyState>
 
     <KEmptyState
       v-else-if="isDisabled"
       cta-is-hidden
+      is-error
     >
       <template #title>
         {{ t('plugins.form.disabled_warning') }}
@@ -40,8 +41,15 @@
       @loading="(val: boolean) => $emit('loading', val)"
       @submit="saveFormData"
     >
+      <!-- Having a hidden form here allows us to @submit like a native html form -->
+      <form
+        hidden
+        @submit="saveFormData"
+      />
+
       <PluginEntityForm
         :config="config"
+        :entity-id="entityData.id"
         :entity-type="entityData.entity"
         :is-credential="treatAsCredential"
         :is-editing="formType === EntityBaseFormType.Edit"
@@ -774,6 +782,11 @@ const submitUrl = computed<string>(() => {
 })
 
 const saveFormData = async (): Promise<void> => {
+  // if save/cancel buttons are hidden, don't submit on hitting Enter
+  if (props.isWizardStep) {
+    return
+  }
+
   try {
     form.isReadonly = true
 
