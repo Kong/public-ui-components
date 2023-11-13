@@ -47,6 +47,7 @@
         :is-editing="formType === EntityBaseFormType.Edit"
         :record="record || undefined"
         :schema="schema ?? {}"
+        @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
       />
 
@@ -199,6 +200,7 @@ const schema = ref<Record<string, any> | null>(null)
 const treatAsCredential = computed((): boolean => !!(props.isCredential && props.config.entityId))
 const record = ref<Record<string, any> | null>(null)
 const configResponse = ref<Record<string, any>>({})
+const formLoading = ref(false)
 const formFieldsOriginal = reactive<PluginFormFields>({
   enabled: true,
   protocols: [],
@@ -662,7 +664,7 @@ const changesExist = computed(() => {
  * Is the form submit button enabled?
  * If the form.fields and formFieldsOriginal are equal when editing, return false
  */
-const canSubmit = computed((): boolean => formType.value === EntityBaseFormType.Create || changesExist.value)
+const canSubmit = computed((): boolean => !schemaLoading.value && !formLoading.value && (formType.value === EntityBaseFormType.Create || changesExist.value))
 
 const initialized = ref(false)
 const initForm = (data: Record<string, any>): void => {
@@ -789,7 +791,7 @@ const saveFormData = async (): Promise<void> => {
       }
     }
 
-    // TODO: no support in Konnect
+    // TODO: determine validate URL for credentials
     if (!treatAsCredential.value) {
       await axiosInstance.post(validateSubmitUrl.value, requestBody)
     }

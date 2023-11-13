@@ -1,5 +1,6 @@
 <template>
   <div class="kong-ui-entities-plugin-form">
+    <!-- TODO: test pressing enter triggers -->
     <!-- Having a hidden form here allows us to @submit like a native html form -->
     <!--
       <form
@@ -8,7 +9,6 @@
       />
     -->
 
-    <!-- TODO: do I need? -->
     <KSkeleton
       v-if="loading"
       type="form"
@@ -48,7 +48,7 @@ import {
   type KonnectPluginFormConfig,
   type KongManagerPluginFormConfig,
 } from '../types'
-import { useHelpers, useAxios } from '@kong-ui-public/entities-shared'
+import { useAxios } from '@kong-ui-public/entities-shared'
 import {
   customFields,
   getSharedFormName,
@@ -119,7 +119,6 @@ const { axiosInstance } = useAxios({
   headers: props.config?.requestHeaders,
 })
 
-const { objectsAreEqual } = useHelpers()
 const { parseSchema } = composables.useSchemas(props.config.entityId)
 const { convertToDotNotation, unFlattenObject, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
@@ -453,14 +452,13 @@ const getModel = (): Record<string, any> => {
 
       [fieldNameDotNotation, key] = fieldNameDotNotation.split('.')
 
-      const fieldObject: Record<string, any> = {}
+      let fieldObject: Record<string, any> = {}
 
-      // TODO:
       // Rather then over writting the key in output model we, use the existing object if there is one
       // this allows us to do things like support multiple developer meta fields
-      /* if (outputModel[fieldNameDotNotation]) {
+      if (outputModel[fieldNameDotNotation]) {
         fieldObject = outputModel[fieldNameDotNotation]
-      } */
+      }
 
       fieldObject[key] = fieldValue
       fieldValue = fieldObject
@@ -497,7 +495,6 @@ const getModel = (): Record<string, any> => {
   return unFlattenObject(outputModel)
 }
 
-// TODO: need it?
 const loading = ref(true)
 const initFormModel = (): void => {
   if (props.record && props.schema) {
@@ -553,30 +550,18 @@ const initFormModel = (): void => {
     updateModel(updateFields)
   }
 
-  disabled.value = false
   loading.value = false
 }
 
-// TODO: how is this prop used??
-const disabled = ref(false)
-watch(formModel, (newModel) => {
-  // TODO: is this logic right???
-  formSchema.value = { fields: formSchema.value?.fields?.map((r: Record<string, any>) => { return { ...r, disabled: r.disabled || false } }) }
-  const changesExist = !objectsAreEqual(newModel, originalModel)
-
-  if (changesExist) {
-    disabled.value = false
-  } else if (!changesExist && props.isEditing) {
-    disabled.value = true
-  }
-}, { deep: true })
+watch(loading, (newLoading) => {
+  emit('loading', newLoading)
+})
 
 watch(() => props.schema, (newSchema) => {
   const form: Record<string, any> = parseSchema(newSchema)
 
   Object.assign(formModel, form.model)
 
-  // TODO: is this logic right???
   formSchema.value = { fields: formSchema.value?.fields?.map((r: Record<string, any>) => { return { ...r, disabled: r.disabled || false } }) }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
   sharedFormName.value = getSharedFormName(form.model.name)
@@ -585,7 +570,6 @@ watch(() => props.schema, (newSchema) => {
 }, { immediate: true })
 
 onBeforeMount(() => {
-  // TODO: am I calling in the right place?
   form.value = parseSchema(props.schema)
 
   Object.assign(formModel, form.value?.model || {})

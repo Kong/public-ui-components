@@ -102,7 +102,6 @@ export default function useHelpers() {
   const convertToDotNotation = (key: string) => {
     return key.replace(/-/g, '.')
   }
-  // TODO: pull over unit tests for these two
 
   /**
    * Takes an object with dot notated keys (key.nested.values)
