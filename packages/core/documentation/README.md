@@ -4,10 +4,10 @@ A set of Kong UI components for displaying documents.
 
 - [Requirements](#requirements)
 - [Components](#components)
-  - [`DocumentationContent`](#documentationcontent)
-  - [`DocumentationDisplay`](#documentationdisplay)
-  - [`DocumentationPageEmptyState`](#documentationpageemptystate)
-  - [`ProductDocumentModal`](#productdocumentmodal)
+  - [DocumentationContent](#documentationcontent)
+  - [DocumentationDisplay](#documentationdisplay)
+  - [DocumentationPageEmptyState](#documentationpageemptystate)
+  - [ProductDocumentModal](#productdocumentmodal)
 - [Usage](#usage)
   - [Install](#install)
 
@@ -20,13 +20,13 @@ A set of Kong UI components for displaying documents.
 
 Note: Each component has it's own README.md providing details about component props and events.
 
-### `DocumentationContent`
+### [DocumentationContent](./docs/DocumentationContent/README.md)
 
-### `DocumentationDisplay`
+### [DocumentationDisplay](./docs/DocumentationDisplay/README.md)
 
-### `DocumentationPageEmptyState`
+### [DocumentationPageEmptyState](./docs/DocumentationPageEmptyState/README.md)
 
-### `ProductDocumentModal`
+### [ProductDocumentModal](./docs/ProductDocumentModal/README.md)
 
 ## Usage
 

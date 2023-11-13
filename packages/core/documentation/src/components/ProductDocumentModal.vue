@@ -32,7 +32,6 @@
           class="bottom-spacing"
         />
 
-        <!-- TODO: help tooltip-->
         <KFileUpload
           :accept="['.md', '.markdown']"
           :button-text="fileUploadButtonText"
@@ -228,8 +227,7 @@ const availableParentDocuments = computed((): { label: string, value: string, se
   docs.push({
     label: i18n.t('documentation.form_modal.parent_document_select_option_none'),
     value: 'none',
-    // @ts-ignore
-    selected: !docCount ? true : undefined,
+    selected: !docCount,
   })
 
   return docs

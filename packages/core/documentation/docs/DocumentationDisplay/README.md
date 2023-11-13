@@ -1,4 +1,4 @@
-# @kong-ui-public/documentation
+# DocumentationDisplay
 
 This component displays a selected document.
 

@@ -1,4 +1,4 @@
-# @kong-ui-public/documentation
+# DocumentationContent
 
 The main Kong UI component for display documentation.
 
@@ -54,7 +54,7 @@ yarn add @kong-ui-public/documentation
   :document-list="documentList"
   :entity-id="serviceId"
   hide-publish-toggle
-  :is-card="false"
+  :card="false"
   :modal-error-message="modalErrorMessage"
   :selected-document="selectedDocument"
   @child-change="handleChildChange"

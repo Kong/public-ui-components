@@ -1,4 +1,4 @@
-# @kong-ui-public/documentation
+# ProductDocumentModal
 
 This component displays add/edit document modal.
 
@@ -10,7 +10,7 @@ This component displays add/edit document modal.
   - [`documents`](#documents)
   - [`errorMessage`](#errormessage)
   - [`hidePublishToggle`](#hidepublishtoggle)
-  - [`isEditing`](#isediting)
+  - [`editing`](#editing)
   - [`record`](#record)
 - [Events](#events)
   - [`cancel`](#cancel)
@@ -39,8 +39,8 @@ yarn add @kong-ui-public/documentation
   :documents="documentList"
   :error-message="modalErrorMessage"
   :hide-publish-toggle="hidePublishToggle"
-  :is-editing="isEditing"
-  :record="isEditing && selectedDocument ? selectedDocument : undefined"
+  :editing="editing"
+  :record="editing && selectedDocument ? selectedDocument : undefined"
   @cancel="displayModal = false"
   @delete="emit('delete')"
   @save="(formData: FormData, selectedFile: any) => emit('save', formData, selectedFile)"
@@ -74,7 +74,7 @@ yarn add @kong-ui-public/documentation
 - Default: false
 - Use: Hide all the `published`/`unpublished` UI components
 
-### `isEditing`
+### `editing`
 
 - Type: Boolean
 - Required: false

@@ -1,4 +1,4 @@
-# @kong-ui-public/documentation
+# DocumentationPageEmptyState
 
 This component displays the empty state content when no documents exist.
 
