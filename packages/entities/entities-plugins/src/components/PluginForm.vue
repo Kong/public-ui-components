@@ -110,11 +110,6 @@ import composables from '../composables'
 import { ArrayStringFieldSchema } from '../composables/plugin-schemas/ArrayStringFieldSchema'
 import PluginEntityForm from './PluginEntityForm.vue'
 
-// TODO: do I need it?
-const formatPluginFieldLabel = (label: string) => {
-  return capitalize(label.replace(/_/g, ' '))
-}
-
 const emit = defineEmits<{
   (e: 'update', data: Record<string, any>): void,
   (e: 'error', error: AxiosError): void,
@@ -161,12 +156,6 @@ const props = defineProps({
     default: false,
   },
 
-  // TODO: do we need?
-  useKonnectSchema: {
-    type: Boolean,
-    default: true,
-  },
-
   /** Credentials use */
   isCredential: {
     type: Boolean,
@@ -185,11 +174,6 @@ const props = defineProps({
     default: null,
   },
 
-  // TODO: do I need?
-  warningMessage: {
-    type: String,
-    default: null,
-  },
   // TODO: FF
   useCustomNamesForPlugin: {
     type: Boolean,
@@ -356,7 +340,10 @@ const getArrayType = (list: unknown[]): string => {
   return uniqueTypes.length > 1 ? 'string' : uniqueTypes[0]
 }
 
-// TODO: clean it up!
+const formatPluginFieldLabel = (label: string) => {
+  return capitalize(label.replace(/_/g, ' '))
+}
+
 const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>) => {
   let schema = (response && response.fields) || []
   const pluginSchema = customSchemas[props.pluginType as keyof typeof customSchemas]
@@ -486,7 +473,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     }
 
     // Custom frontend schema override
-    if (pluginSchema && !pluginSchema.overwriteDefault && (pluginSchema.useKonnectSchema ? props.useKonnectSchema : true)) {
+    if (pluginSchema && !pluginSchema.overwriteDefault) {
       Object.keys(pluginSchema).forEach(plugin => {
         // Check if current plugin matches any of custom schema keys
         if (plugin === field) {
@@ -660,7 +647,7 @@ const initScopeFields = (): void => {
     defaultFormSchema.selectionGroup.fields[1].fields = scopeEntityArray
   }
 
-  if (customSchemas[props.pluginType as keyof typeof customSchemas] && customSchemas[props.pluginType as keyof typeof customSchemas].overwriteDefault && (customSchemas[props.pluginType as keyof typeof customSchemas].useKonnectSchema ? props.useKonnectSchema : true)) {
+  if (customSchemas[props.pluginType as keyof typeof customSchemas] && customSchemas[props.pluginType as keyof typeof customSchemas].overwriteDefault) {
     if (Object.hasOwnProperty.call(customSchemas[props.pluginType as keyof typeof customSchemas], 'formSchema')) {
       Object.assign(defaultFormSchema, customSchemas[props.pluginType as keyof typeof customSchemas].formSchema)
     }
@@ -802,7 +789,7 @@ const saveFormData = async (): Promise<void> => {
       }
     }
 
-    // TODO: do I need to modify the validate URL???
+    // TODO: no support in Konnect
     if (!treatAsCredential.value) {
       await axiosInstance.post(validateSubmitUrl.value, requestBody)
     }
