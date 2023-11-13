@@ -183,7 +183,10 @@ const props = defineProps({
     default: null,
   },
 
-  // TODO: FF
+  /**
+   * Support instance names for plugins. This can be removed when KHCP-5872-custom-names-for-plugins is removed.
+   * Enabled by default for KM.
+   */
   useCustomNamesForPlugin: {
     type: Boolean,
     default: false,
@@ -631,11 +634,10 @@ const initScopeFields = (): void => {
       ...supportConsumerGroupScope ? ['consumer_group'] : [],
     ]
 
-    // TODO: translate and concat correctly
+    // TODO: correct string concat
     const trailingEntities = scopeEntities.splice(scopeEntities.length - 2, 2).map((entityType: string) => entityType === 'service' ? t('plugins.form.scoping.gateway_service.plural') : t(`plugins.form.scoping.${entityType}.plural` as keyof typeof t))
     const trailingText = trailingEntities.join(`${scopeEntities.length > 0 ? ',' : ''} and/or `)
 
-    // TODO: correct string concat
     const desc = [
       'Specific',
       [
