@@ -55,8 +55,8 @@
 <script setup lang="ts">
 import { ref, computed, type PropType } from 'vue'
 import {
-  type KongManagerPluginFormConfig,
-  type KonnectPluginFormConfig,
+  type KongManagerPluginSelectConfig,
+  type KonnectPluginSelectConfig,
 } from '../../types'
 import composables from '../../composables'
 import { useAxios, useErrors, EntityTypes, EntityDeleteModal } from '@kong-ui-public/entities-shared'
@@ -64,9 +64,9 @@ import { useAxios, useErrors, EntityTypes, EntityDeleteModal } from '@kong-ui-pu
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
-    type: Object as PropType<KonnectPluginFormConfig | KongManagerPluginFormConfig>,
+    type: Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>,
     required: true,
-    validator: (config: KonnectPluginFormConfig | KongManagerPluginFormConfig): boolean => {
+    validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
       return true
     },

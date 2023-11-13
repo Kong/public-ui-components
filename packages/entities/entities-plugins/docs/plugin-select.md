@@ -27,7 +27,7 @@ A grid component for selecting Plugins.
 
 #### `config`
 
-- type: `Object as PropType<KonnectPluginFormConfig | KongManagerPluginFormConfig>`
+- type: `Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>`
 - required: `true`
 - properties:
   - `app`:
@@ -187,7 +187,7 @@ TypeScript interfaces [are available here](https://github.com/Kong/public-ui-com
 
 ```ts
 import type {
-  KonnectPluginFormConfig,
-  KongManagerPluginFormConfig,
+  KonnectPluginSelectConfig,
+  KongManagerPluginSelectConfig,
 } from '@kong-ui-public/entities-plugins'
 ```

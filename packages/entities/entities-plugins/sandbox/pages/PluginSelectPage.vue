@@ -15,12 +15,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../src'
+import type { KonnectPluginSelectConfig, KongManagerPluginSelectConfig } from '../../src'
 import { PluginSelect } from '../../src'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
-const konnectConfig = ref<KonnectPluginFormConfig>({
+const konnectConfig = ref<KonnectPluginSelectConfig>({
   app: 'konnect',
   apiBaseUrl: '/us/kong-api/konnect-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
@@ -46,7 +46,7 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   }),
 })
 
-const kongManagerConfig = ref<KongManagerPluginFormConfig>({
+const kongManagerConfig = ref<KongManagerPluginSelectConfig>({
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy

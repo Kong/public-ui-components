@@ -12,25 +12,33 @@ import type { UpstreamTlsSchema } from './plugins/upstream-tls'
 import type { RateLimitingSchema } from './plugins/rate-limiting'
 import type { GraphQLRateLimitingAdvancedSchema } from './plugins/graphql-rate-limiting-advanced'
 
-export interface BasePluginFormConfig {
+export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
   getCreateRoute: (id: string) => RouteLocationRaw
-  /** Route to return to if canceling create a Plugin (go back to plugin selection page) */
-  backRoute?: RouteLocationRaw
   /** Current entity type and id for plugins for specific entity */
   entityType?: EntityType
   entityId?: string
-  /** The type of plugin to be created or edited */
-  pluginType?: string
 }
 
-/** Konnect Plugin form config */
-export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig {
-  /** Route for creating a custom plugin */
-  createCustomRoute?: RouteLocationRaw
-  /** A function that returns the route for editing a custom plugin */
-  getCustomEditRoute?: (id: string) => RouteLocationRaw
+export interface BasePluginFormConfig {
+  /** Route to return to if canceling create a Plugin (go back to plugin selection page) */
+  backRoute: RouteLocationRaw
+  /** Current entity type and id for plugins for specific entity */
+  entityType?: EntityType
+  entityId?: string
 }
+
+export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig {}
+
+/** Konnect Plugin form config */
+export interface KonnectPluginSelectConfig extends BasePluginSelectConfig, KonnectBaseFormConfig {
+  /** Route for creating a custom plugin */
+  createCustomRoute: RouteLocationRaw
+  /** A function that returns the route for editing a custom plugin */
+  getCustomEditRoute: (id: string) => RouteLocationRaw
+}
+
+export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig {}
 
 /** Kong Manager Plugin form config */
 export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig {}

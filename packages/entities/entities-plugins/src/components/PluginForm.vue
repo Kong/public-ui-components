@@ -120,10 +120,10 @@ import { ArrayStringFieldSchema } from '../composables/plugin-schemas/ArrayStrin
 import PluginEntityForm from './PluginEntityForm.vue'
 
 const emit = defineEmits<{
-  (e: 'update', data: Record<string, any>): void,
-  (e: 'error', error: AxiosError): void,
   (e: 'fetch-schema:error', error: AxiosError): void,
+  (e: 'error', error: AxiosError): void,
   (e: 'loading', isLoading: boolean): void,
+  (e: 'update', data: Record<string, any>): void,
   (e: 'model-updated',
     payload: {
       model: Record<string, any>,
@@ -160,7 +160,7 @@ const props = defineProps({
     default: '',
   },
 
-  hideForeign: {
+  hideScopeSelection: {
     type: Boolean,
     default: false,
   },
@@ -175,12 +175,6 @@ const props = defineProps({
   isWizardStep: {
     type: Boolean,
     default: false,
-  },
-
-  /** If we don't want to rely on route/API to determine associated plugin entity */
-  pluginEntityData: {
-    type: Object as PropType<PluginEntityInfo | null>,
-    default: null,
   },
 
   /**
@@ -235,14 +229,6 @@ const isDisabled = computed((): boolean => {
 })
 
 const entityData = computed((): PluginEntityInfo => {
-  if (props.pluginEntityData) {
-    return {
-      entity: props.pluginEntityData.entity,
-      entityEndpoint: props.pluginEntityData.entityEndpoint,
-      id: props.pluginEntityData.id,
-    }
-  }
-
   const consumerId = (props.config.entityType === 'consumers' && props.config.entityId) || record.value?.consumer?.id
   const consumerGroupId = (props.config.entityType === 'consumer_groups' && props.config.entityId) || record.value?.consumer_group?.id
   const serviceId = (props.config.entityType === 'services' && props.config.entityId) || record.value?.service?.id
@@ -290,7 +276,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
     styleClasses: 'd-none',
   },
   selectionGroup: {
-    type: props.hideForeign || entityData.value.id ? 'foreign' : 'selectionGroup',
+    type: props.hideScopeSelection || entityData.value.id ? 'foreign' : 'selectionGroup',
     inputType: 'hidden',
     styleClasses: 'bottom-border hide-label',
     fields: [

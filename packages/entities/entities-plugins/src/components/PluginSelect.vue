@@ -121,8 +121,8 @@ import { useRoute } from 'vue-router'
 import {
   PluginGroup,
   PluginScope,
-  type KongManagerPluginFormConfig,
-  type KonnectPluginFormConfig,
+  type KongManagerPluginSelectConfig,
+  type KonnectPluginSelectConfig,
   type PluginType,
   type DisabledPlugin,
   type PluginCardList,
@@ -137,9 +137,9 @@ import PluginSelectGrid from './select/PluginSelectGrid.vue'
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
-    type: Object as PropType<KonnectPluginFormConfig | KongManagerPluginFormConfig>,
+    type: Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>,
     required: true,
-    validator: (config: KonnectPluginFormConfig | KongManagerPluginFormConfig): boolean => {
+    validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
       if (!config.getCreateRoute) return false
       return true
