@@ -110,7 +110,9 @@
               v-if="actionPending"
               #icon
             >
-              <ProgressIcon />
+              <ProgressIcon
+                size="16"
+              />
             </template>
             {{ i18n.t('documentation.form_modal.delete_button_text') }}
           </KButton>
@@ -134,7 +136,9 @@
                 v-if="actionPending"
                 #icon
               >
-                <ProgressIcon />
+                <ProgressIcon
+                  size="16"
+                />
               </template>
               {{ i18n.t('documentation.form_modal.save_button_text') }}
             </KButton>

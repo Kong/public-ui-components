@@ -21,7 +21,9 @@
           @click="emit('create-documentation')"
         >
           <template #icon>
-            <AddIcon />
+            <AddIcon
+              size="22"
+            />
           </template>
           {{ i18n.t('documentation.show.empty_state.ctaText') }}
         </KButton>
