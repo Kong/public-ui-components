@@ -2,6 +2,7 @@ import useAxios from './useAxios'
 import useDebouncedFilter from './useDebouncedFilter'
 import useDeleteUrlBuilder from './useDeleteUrlBuilder'
 import useErrors from './useErrors'
+import useExternalLinkCreator from './useExternalLinkCreator'
 import useFetcher from './useFetcher'
 import useFetchUrlBuilder from './useFetchUrlBuilder'
 import useHelpers from './useHelpers'
@@ -17,6 +18,7 @@ export default {
   useDebouncedFilter,
   useDeleteUrlBuilder,
   useErrors,
+  useExternalLinkCreator,
   useFetcher,
   useFetchUrlBuilder,
   useHelpers,

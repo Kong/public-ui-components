@@ -12,30 +12,23 @@
     <div v-else-if="!entityUuid">
       {{ ' – ' }}
     </div>
-    <router-link
+    <KExternalLink
       v-else-if="entityUuid"
+      class="entity-link"
+      :href="externalLink"
       target="_blank"
-      :to="{ name: routeName, params: routeParams }"
     >
-      <div class="entity-link">
-        <KTooltip
-          :label="((isTruncated && entityLinkData.label) as string)"
+      <KTooltip
+        :label="isTruncated && entityLinkData.label || ''"
+      >
+        <span
+          ref="textContent"
+          class="entity-link-label"
         >
-          <span
-            ref="textContent"
-            class="entity-link-label"
-          >
-            {{ entityLinkData.label }}
-          </span>
-        </KTooltip>
-        <KIcon
-          class="entity-link-icon"
-          color="currentColor"
-          hide-title
-          icon="externalLink"
-        />
-      </div>
-    </router-link>
+          {{ entityLinkData.label }}
+        </span>
+      </KTooltip>
+    </KExternalLink>
     <CopyUuid
       v-if="entityUuid"
       class="entity-link-copy-id"
@@ -54,7 +47,6 @@
 import { computed, ref } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { CopyUuidNotifyParam } from '@kong-ui-public/copy-uuid'
-import type { RouteParamsRaw } from 'vue-router'
 import type { EntityLinkData } from '../../types'
 import composables from '../../composables'
 import { CopyUuid } from '@kong-ui-public/copy-uuid'
@@ -65,17 +57,12 @@ const props = defineProps({
     type: Object as PropType<EntityLinkData>,
     required: true,
   },
-  routeName: {
+  externalLink: {
     type: String,
-    required: true,
-  },
-  routeParams: {
-    type: Object as PropType<RouteParamsRaw>,
     required: true,
   },
 })
 
-debugger
 const textContent = ref<HTMLElement>()
 const { isTruncated } = composables.useTruncationDetector(textContent as Ref<HTMLElement>)
 
