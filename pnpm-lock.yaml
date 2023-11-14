@@ -646,18 +646,6 @@ importers:
         specifier: ^4.2.5
         version: 4.2.5(vue@3.3.4)
 
-  packages/entities/entities-link:
-    devDependencies:
-      '@kong/design-tokens':
-        specifier: ^1.11.9
-        version: 1.11.9
-      '@kong/kongponents':
-        specifier: ^8.125.0
-        version: 8.125.0(vue-router@4.2.5)(vue@3.3.4)
-      vue:
-        specifier: ^3.3.4
-        version: 3.3.4
-
   packages/entities/entities-plugins:
     dependencies:
       '@kong-ui-public/copy-uuid':
@@ -837,18 +825,6 @@ importers:
       vue-router:
         specifier: ^4.2.5
         version: 4.2.5(vue@3.3.4)
-
-  packages/entities/entity-link:
-    devDependencies:
-      '@kong/design-tokens':
-        specifier: ^1.11.9
-        version: 1.11.9
-      '@kong/kongponents':
-        specifier: ^8.125.0
-        version: 8.125.0(vue-router@4.2.5)(vue@3.3.4)
-      vue:
-        specifier: ^3.3.4
-        version: 3.3.4
 
   packages/portal/document-viewer:
     dependencies:
