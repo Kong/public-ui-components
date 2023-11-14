@@ -6,7 +6,8 @@
   >
     <label
       v-if="fieldTypeHasLabel(field)"
-      :class="`form-group-label ${field.labelClasses}`"
+      class="form-group-label"
+      :class="field.labelClasses"
       :for="getFieldID(field)"
     >
       <div class="icon-wrapper">
