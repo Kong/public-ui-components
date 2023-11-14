@@ -22,7 +22,7 @@ export interface BasePluginSelectConfig {
 
 export interface BasePluginFormConfig {
   /** Route to return to if canceling create a Plugin (go back to plugin selection page) */
-  backRoute: RouteLocationRaw
+  backRoute?: RouteLocationRaw
   /** Current entity type and id for plugins for specific entity */
   entityType?: EntityType
   entityId?: string
@@ -33,9 +33,9 @@ export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, K
 /** Konnect Plugin form config */
 export interface KonnectPluginSelectConfig extends BasePluginSelectConfig, KonnectBaseFormConfig {
   /** Route for creating a custom plugin */
-  createCustomRoute: RouteLocationRaw
+  createCustomRoute?: RouteLocationRaw
   /** A function that returns the route for editing a custom plugin */
-  getCustomEditRoute: (id: string) => RouteLocationRaw
+  getCustomEditRoute?: (id: string) => RouteLocationRaw
 }
 
 export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig {}

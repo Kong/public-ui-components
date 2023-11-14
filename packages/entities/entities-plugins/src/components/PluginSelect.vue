@@ -59,7 +59,7 @@
     >
       <!-- Konnect -->
       <KTabs
-        v-if="tabs.length"
+        v-if="tabs.length && !disableCustomPlugins"
         v-model="activeTab"
         data-testid="plugins-tabs"
         :tabs="tabs"
@@ -144,6 +144,11 @@ const props = defineProps({
       if (!config.getCreateRoute) return false
       return true
     },
+  },
+  /** If true don't display UIs related to custom plugins */
+  disableCustomPlugins: {
+    type: Boolean,
+    default: false,
   },
   /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a custom plugin */
   canCreateCustomPlugin: {
