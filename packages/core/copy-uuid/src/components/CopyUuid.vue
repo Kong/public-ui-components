@@ -32,7 +32,7 @@
             class="uuid-icon"
             :color="iconColor"
             :decorative="!!tooltip"
-            :size="KUI_ICON_SIZE_40"
+            :size="KUI_ICON_SIZE_30"
             :title="t('iconTitle')"
           />
         </span>
@@ -49,7 +49,7 @@ import english from '../locales/en.json'
 import { COPY_UUID_NOTIFY_KEY } from '../constants'
 import type { CopyUuidNotifyParam } from '../types'
 import { CopyIcon } from '@kong/icons'
-import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
+import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 
 const { t } = createI18n('en-us', english)
 
@@ -179,6 +179,7 @@ const copyIdToClipboard = (executeCopy: (prop: string) => boolean) => {
 
 <style lang="scss" scoped>
 .kong-ui-copy-uuid {
+  align-items: center;
   display: flex;
 
   .uuid-container {
