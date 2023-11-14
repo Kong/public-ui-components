@@ -49,7 +49,7 @@
         data-testid="page-header-actions"
       >
         <slot name="actions" />
-        <div id="action-button" />
+        <div id="kong-ui-app-page-header-action-button" />
       </div>
     </div>
 

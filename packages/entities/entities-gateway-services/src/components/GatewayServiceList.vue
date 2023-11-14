@@ -13,6 +13,7 @@
       preferences-storage-key="kong-ui-entities-gateway-services-list"
       :query="filterQuery"
       :table-headers="tableHeaders"
+      :use-action-outside="useActionOutside"
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @sort="resetPagination"
@@ -225,6 +226,11 @@ const props = defineProps({
     type: Function as PropType<(row: EntityRow) => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
+  },
+  /** A boolean, if true will teleport the toolbar button to the destination in the consuming app */
+  useActionOutside: {
+    type: Boolean,
+    default: false,
   },
 })
 
