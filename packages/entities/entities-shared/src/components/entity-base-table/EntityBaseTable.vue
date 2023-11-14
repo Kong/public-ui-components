@@ -46,7 +46,7 @@
               class="toolbar-button-container"
             >
               <Teleport
-                v-if="!useActionOutside"
+                v-if="useActionOutside"
                 to="#kong-ui-app-page-header-action-button"
               >
                 <slot name="toolbar-button" />
