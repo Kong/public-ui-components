@@ -92,6 +92,14 @@ A grid component for selecting Plugins.
 
 The base konnect or kongManger config.
 
+#### `disableCustomPlugins`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+Hide UIs for custom plugin create/selelect/delete.
+
 #### `canCreateCustomPlugin`
 
 - type: `Function as PropType<() => boolean | Promise<boolean>>`
