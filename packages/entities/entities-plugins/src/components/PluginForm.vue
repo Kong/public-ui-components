@@ -753,7 +753,7 @@ const validateSubmitUrl = computed((): string => {
  */
 const submitUrl = computed<string>(() => {
   // plugin endpoint vs credential endpoint
-  const submitEndpoint = !treatAsCredential.value ? endpoints.form[props.config.app][formType.value] : `/${resourceEndpoint.value}`
+  const submitEndpoint = !treatAsCredential.value ? endpoints.form[props.config.app][formType.value] : endpoints.form[props.config.app].credential[formType.value]
 
   let url = `${props.config.apiBaseUrl}${submitEndpoint}`
 
@@ -763,6 +763,8 @@ const submitUrl = computed<string>(() => {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
+  // replace resource endpoint for credentials
+  url = url.replace(/{resourceEndpoint}/gi, resourceEndpoint.value)
   // Always replace the id when editing
   url = url.replace(/{id}/gi, props.pluginId)
 
