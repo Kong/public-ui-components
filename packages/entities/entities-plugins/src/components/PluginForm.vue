@@ -73,7 +73,7 @@
           {{ t('actions.cancel') }}
         </KButton>
         <KButton
-          v-if="formType === EntityBaseFormType.Create"
+          v-if="formType === EntityBaseFormType.Create && config.backRoute"
           appearance="secondary"
           class="form-back-button"
           data-testid="form-back"
@@ -143,7 +143,7 @@ const props = defineProps({
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
       if (config.app === 'konnect' && !config.controlPlaneId) return false
       if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
-      if (!config.cancelRoute || !config.backRoute) return false
+      if (!config.cancelRoute) return false
       return true
     },
   },
