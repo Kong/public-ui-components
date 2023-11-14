@@ -183,7 +183,7 @@ const props = defineProps({
     */
   availableOnServer: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   /**
    * Plugins that should not be displayed

@@ -48,13 +48,6 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   // force the scope
   // entityType: 'services',
   // entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
-  getCreateRoute: (plugin: string) => ({
-    name: 'create-plugin',
-    params: {
-      control_plane_id: controlPlaneId.value,
-      plugin,
-    },
-  }),
   backRoute: { name: 'select-plugin' },
   cancelRoute: { name: 'home' },
 })
@@ -66,12 +59,6 @@ const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   // force the scope
   // entityType: 'consumers',
   // entityId: '123-abc-i-lover-cats',
-  getCreateRoute: (plugin: string) => ({
-    name: 'create-plugin',
-    params: {
-      plugin,
-    },
-  }),
   backRoute: { name: 'select-plugin' },
   cancelRoute: { name: 'home' },
 })

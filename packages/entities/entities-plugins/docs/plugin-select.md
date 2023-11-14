@@ -136,7 +136,7 @@ If false, let consuming component handle event when clicking on a plugin. Used i
 
 - type: `boolean`
 - required: `false`
-- default: `false`
+- default: `true`
 
 Checks the kong config plugins.available_on_server and if true, then it will not show plugins from PluginMeta that are outside of the available_on_server array.
 

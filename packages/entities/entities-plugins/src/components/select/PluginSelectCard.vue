@@ -193,16 +193,18 @@ const handleCustomDelete = (): void => {
 }
 
 const handleCustomEdit = (pluginName: string): void => {
-  if (props.config.app === 'konnect' && (props.config as KonnectPluginSelectConfig).getCustomEditRoute) {
-    router.push((props.config as KonnectPluginSelectConfig).getCustomEditRoute(pluginName))
+  const konnectConfig = props.config as KonnectPluginSelectConfig
+  if (props.config.app === 'konnect' && typeof konnectConfig.getCustomEditRoute === 'function' && konnectConfig.getCustomEditRoute) {
+    router.push(konnectConfig.getCustomEditRoute(pluginName))
   }
 }
 
 const handleCustomClick = (): void => {
   // handle custom plugin card click only
   if (!isDisabled.value && props.config.app === 'konnect') {
-    if (isCreateCustomPlugin.value && (props.config as KonnectPluginSelectConfig).createCustomRoute) {
-      router.push((props.config as KonnectPluginSelectConfig).createCustomRoute)
+    const konnectConfig = props.config as KonnectPluginSelectConfig
+    if (isCreateCustomPlugin.value && konnectConfig.createCustomRoute) {
+      router.push(konnectConfig.createCustomRoute)
     } else if (isCustomPlugin.value) {
       handleCreateClick()
     }
