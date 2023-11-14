@@ -28,13 +28,16 @@
       <!-- Create action -->
       <template #toolbar-button>
         <PermissionsWrapper :auth-function="() => canCreate()">
-          <KButton
-            appearance="primary"
-            icon="plus"
-            :to="config.createRoute"
-          >
-            {{ t('gateway_services.list.toolbar_actions.new_gateway_service') }}
-          </KButton>
+          <Teleport to="#kong-ui-app-page-header-action-button">
+            <KButton
+              appearance="primary"
+              icon="plus"
+              :to="config.createRoute"
+            >
+              {{ t('gateway_services.list.toolbar_actions.new_gateway_service') }}
+            </KButton>
+          </Teleport>
+          <span v-if="!useActionOutside" id="kong-ui-app-page-header-action-button"></span>
         </PermissionsWrapper>
       </template>
 
@@ -227,7 +230,7 @@ const props = defineProps({
     required: false,
     default: async () => true,
   },
-  /** A boolean, if true will teleport the toolbar button to the destination in the consuming app */
+  /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
   useActionOutside: {
     type: Boolean,
     default: false,

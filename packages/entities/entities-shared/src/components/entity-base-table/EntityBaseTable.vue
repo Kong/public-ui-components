@@ -45,16 +45,7 @@
               v-if="$slots['toolbar-button']"
               class="toolbar-button-container"
             >
-              <Teleport
-                v-if="useActionOutside"
-                to="#kong-ui-app-page-header-action-button"
-              >
-                <slot name="toolbar-button" />
-              </Teleport>
-              <slot
-                v-else
-                name="toolbar-button"
-              />
+              <slot name="toolbar-button" />
             </div>
           </div>
         </template>
@@ -237,11 +228,6 @@ const props = defineProps({
   },
   /** default to false, setting to true will suppress the row click event even if "@click:row" is attached */
   disableRowClick: {
-    type: Boolean,
-    default: false,
-  },
-  /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
-  useActionOutside: {
     type: Boolean,
     default: false,
   },
