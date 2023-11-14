@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.5.4...@kong-ui-public/metric-cards@0.5.5) (2023-11-11)
+
+**Note:** Version bump only for package @kong-ui-public/metric-cards
+
+
+
+
+
 ## [0.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.5.3...@kong-ui-public/metric-cards@0.5.4) (2023-11-07)
 
 

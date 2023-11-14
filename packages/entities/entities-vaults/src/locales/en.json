@@ -9,7 +9,7 @@
   },
   "delete": {
     "title": "Delete a Vault",
-    "description": "Are you sure you want to delete this vault? This action cannot be reversed."
+    "description": "This action cannot be reversed."
   },
   "errors": {
     "general": "Vaults could not be retrieved",
