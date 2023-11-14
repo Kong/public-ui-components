@@ -189,7 +189,7 @@ const props = defineProps({
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
-const { pluginMetaData, credentialMetaData } = composables.usePluginMetaData()
+const { pluginMetaData, credentialMetaData, credentialSchemas } = composables.usePluginMetaData()
 const { customSchemas, typedefs } = composables.useSchemas()
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
@@ -845,38 +845,47 @@ onBeforeMount(async () => {
   schemaLoading.value = true
 
   try {
-    const response = await axiosInstance.get(schemaUrl.value)
-    const { data } = response
+    if (treatAsCredential.value && props.config.app === 'konnect') {
+      // credential schema endpoints don't exist for Konnect, so we use hard-coded schemas
+      const pluginType = credentialMetaData[props.pluginType]?.schemaEndpoint
+      const data = credentialSchemas[pluginType]
 
-    if (data) {
-      if (treatAsCredential.value) {
-        schema.value = buildFormSchema('', data, {})
-        schemaLoading.value = false
-      } else {
-        // start from the config part of the schema
-        const configField = data.fields.find((field: Record<string, any>) => field.config)
-        configResponse.value = configField ? configField.config : response
+      schema.value = buildFormSchema('', data, {})
+      schemaLoading.value = false
+    } else {
+      const response = await axiosInstance.get(schemaUrl.value)
+      const { data } = response
 
-        initScopeFields()
+      if (data) {
+        if (treatAsCredential.value) {
+          // credential schema response is structured differently
+          schema.value = buildFormSchema('', data, {})
+          schemaLoading.value = false
+        } else {
+          // start from the config part of the schema
+          const configField = data.fields.find((field: Record<string, any>) => field.config)
+          configResponse.value = configField ? configField.config : response
 
-        const protocolsField = data.fields.find((field: Record<string, any>) => field.protocols)?.protocols
+          initScopeFields()
 
-        if (protocolsField) {
-          const { default: defaultValues = [], elements = {} } = protocolsField
+          const protocolsField = data.fields.find((field: Record<string, any>) => field.protocols)?.protocols
 
-          defaultFormSchema.protocols.default = defaultValues
+          if (protocolsField) {
+            const { default: defaultValues = [], elements = {} } = protocolsField
 
-          if (elements.one_of?.length) {
-            defaultFormSchema.protocols.values = elements.one_of.map((value: string) => ({ label: value, value }))
+            defaultFormSchema.protocols.default = defaultValues
+
+            if (elements.one_of?.length) {
+              defaultFormSchema.protocols.values = elements.one_of.map((value: string) => ({ label: value, value }))
+            }
+          }
+
+          // if editing, wait for record to load before building schema
+          if (initialized.value || formType.value === EntityBaseFormType.Create) {
+            schema.value = buildFormSchema('config', configResponse.value, defaultFormSchema)
           }
         }
-
-        // if editing, wait for record to load before building schema
-        if (initialized.value || formType.value === EntityBaseFormType.Create) {
-          schema.value = buildFormSchema('config', configResponse.value, defaultFormSchema)
-        }
       }
-
     }
   } catch (error: any) {
     fetchSchemaError.value = getMessageFromError(error)

@@ -1,12 +1,19 @@
 import type { PluginMetaData } from '../types'
 import { PluginGroup, PluginScope } from '../types'
+import useI18n from './useI18n'
 import { getColumnFields } from './plugin-schemas/typedefs'
 import { aclSchema } from './plugin-schemas/ACL'
+import aclsCredentialsSchema from './plugin-schemas/credentials/mockedAclSchema.json'
 import { basicAuthSchema } from './plugin-schemas/BasicAuth'
-import useI18n from './useI18n'
+import basicAuthCredentialsSchema from './plugin-schemas/credentials/mockedBasicAuthSchema.json'
 import { keyAuthSchema } from './plugin-schemas/KeyAuth'
+import keyAuthCredentialsSchema from './plugin-schemas/credentials/mockedKeyAuthSchema.json'
 import { hmacAuthSchema } from './plugin-schemas/HMAC'
+import hmacAuthCredentialsSchema from './plugin-schemas/credentials/mockedHmacAuthSchema.json'
 import { jwtSchema } from './plugin-schemas/JWT'
+import jwtCredentialsSchema from './plugin-schemas/credentials/mockedJwtSchema.json'
+import OAuth2Schema from './plugin-schemas/OAuth2'
+import oauthCredentialSchema from './plugin-schemas/credentials/mockedOAuthSchema.json'
 
 export const getPluginIconURL = (pluginName: string) => {
   return new URL(`../assets/images/plugin-icons/${pluginName}.png`, import.meta.url).href
@@ -610,15 +617,15 @@ export const usePluginMetaData = () => {
       schemaEndpoint: 'keyauth_credentials',
       fields: getColumnFields(keyAuthSchema),
     },
-    // oauth2: {
-    //   title: t('plugins.meta.oauth2.name'),
-    //   plugin: 'oauth2',
-    //   schema: OAuth2Schema,
-    //   name: t('plugins.meta.oauth2.credential_name'),
-    //   endpoint: '/oauth2',
-    //   schemaEndpoint: 'oauth2_credentials',
-    //   fields: getColumnFields(OAuth2Schema)
-    // },
+    oauth2: {
+      title: t('plugins.meta.oauth2.name'),
+      plugin: 'oauth2',
+      schema: OAuth2Schema,
+      name: t('plugins.meta.oauth2.credential_name'),
+      endpoint: '/oauth2',
+      schemaEndpoint: 'oauth2_credentials',
+      fields: getColumnFields(OAuth2Schema),
+    },
     'hmac-auth': {
       title: t('plugins.meta.hmac-auth.name'),
       plugin: 'hmac-auth',
@@ -643,9 +650,19 @@ export const usePluginMetaData = () => {
     },
   }
 
+  // Used by Konnect, since there is currently no API endpoints to fetch credential schemas from
+  const credentialSchemas: Record<string, any> = {
+    acls: aclsCredentialsSchema,
+    basicauth_credentials: basicAuthCredentialsSchema,
+    keyauth_credentials: keyAuthCredentialsSchema,
+    oauth2_credentials: oauthCredentialSchema,
+    hmacauth_credentials: hmacAuthCredentialsSchema,
+    jwt_secrets: jwtCredentialsSchema,
+  }
+
   const getDisplayName = (name: string) => {
     return pluginMetaData[name]?.name || name
   }
 
-  return { pluginMetaData, credentialMetaData, getDisplayName }
+  return { pluginMetaData, credentialMetaData, credentialSchemas, getDisplayName }
 }
