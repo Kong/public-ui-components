@@ -29,7 +29,8 @@
       <template #toolbar-button>
         <Teleport
           :disabled="!useActionOutside"
-          :to="`#action-buttons-${cacheIdentifier}`">
+          to="#kong-ui-app-page-header-action-button"
+        >
           <PermissionsWrapper :auth-function="() => canCreate()">
             <KButton
               appearance="primary"
