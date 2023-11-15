@@ -18,16 +18,21 @@
     >
       <!-- Create action -->
       <template #toolbar-button>
-        <PermissionsWrapper :auth-function="() => canCreate()">
-          <KButton
-            appearance="primary"
-            data-testid="toolbar-add-credential"
-            icon="plus"
-            :to="config.createRoute"
-          >
-            {{ t(`credentials.list.toolbar_actions.${config.plugin}.new`) }}
-          </KButton>
-        </PermissionsWrapper>
+        <Teleport
+          :disabled="!useActionOutside"
+          to="#kong-ui-app-page-header-action-button"
+        >
+          <PermissionsWrapper :auth-function="() => canCreate()">
+            <KButton
+              appearance="primary"
+              data-testid="toolbar-add-credential"
+              icon="plus"
+              :to="config.createRoute"
+            >
+              {{ t(`credentials.list.toolbar_actions.${config.plugin}.new`) }}
+            </KButton>
+          </PermissionsWrapper>
+        </Teleport>
       </template>
 
       <!-- Column Formatting -->
