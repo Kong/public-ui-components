@@ -116,6 +116,7 @@
       },
       "key-auth-enc": {
         "name": "Key Authentication Encrypted",
+        "credential_name": "Key Auth Encrypted",
         "description": "Add key authentication to your Services with an encrypted token"
       },
       "ldap-auth-advanced": {

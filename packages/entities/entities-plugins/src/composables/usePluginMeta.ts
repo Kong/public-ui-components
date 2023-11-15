@@ -13,6 +13,7 @@ import hmacAuthCredentialsSchema from './plugin-schemas/credentials/mockedHmacAu
 import { jwtSchema } from './plugin-schemas/JWT'
 import jwtCredentialsSchema from './plugin-schemas/credentials/mockedJwtSchema.json'
 import OAuth2Schema from './plugin-schemas/OAuth2'
+import KeyAuthEncSchema from './plugin-schemas/KeyAuthEnc'
 import oauthCredentialSchema from './plugin-schemas/credentials/mockedOAuthSchema.json'
 
 export const getPluginIconURL = (pluginName: string) => {
@@ -616,6 +617,15 @@ export const usePluginMetaData = () => {
       endpoint: '/key-auth',
       schemaEndpoint: 'keyauth_credentials',
       fields: getColumnFields(keyAuthSchema),
+    },
+    'key-auth-enc': {
+      title: t('plugins.meta.key-auth-enc.name'),
+      plugin: 'key-auth-enc',
+      schema: KeyAuthEncSchema,
+      name: t('plugins.meta.key-auth-enc.credential_name'),
+      endpoint: '/key-auth-enc',
+      schemaEndpoint: 'keyauth_enc_credentials',
+      fields: getColumnFields(KeyAuthEncSchema),
     },
     oauth2: {
       title: t('plugins.meta.oauth2.name'),
