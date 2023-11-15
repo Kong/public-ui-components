@@ -13,6 +13,7 @@
       preferences-storage-key="kong-ui-entities-key-sets-list"
       :query="filterQuery"
       :table-headers="tableHeaders"
+      :use-action-outside="useActionOutside"
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @sort="resetPagination"
@@ -26,16 +27,21 @@
       </template>
       <!-- Create action -->
       <template #toolbar-button>
-        <PermissionsWrapper :auth-function="() => canCreate()">
-          <KButton
-            appearance="primary"
-            data-testid="toolbar-add-key-set"
-            icon="plus"
-            :to="config.createRoute"
-          >
-            {{ t('keySets.list.toolbar_actions.new_key_set') }}
-          </KButton>
-        </PermissionsWrapper>
+        <Teleport
+          :disabled="!useActionOutside"
+          to="#kong-ui-app-page-header-action-button"
+        >
+          <PermissionsWrapper :auth-function="() => canCreate()">
+            <KButton
+              appearance="primary"
+              data-testid="toolbar-add-key-set"
+              icon="plus"
+              :to="config.createRoute"
+            >
+              {{ t('keySets.list.toolbar_actions.new_key_set') }}
+            </KButton>
+          </PermissionsWrapper>
+        </Teleport>
       </template>
 
       <!-- Column Formatting -->
@@ -203,6 +209,11 @@ const props = defineProps({
     type: Function as PropType<(row: EntityRow) => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
+  },
+  /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
+  useActionOutside: {
+    type: Boolean,
+    default: false,
   },
 })
 

@@ -34,6 +34,7 @@
           <PermissionsWrapper :auth-function="() => canCreate()">
             <KButton
               appearance="primary"
+              data-testid="toolbar-add-gateway-service"
               icon="plus"
               :to="config.createRoute"
             >

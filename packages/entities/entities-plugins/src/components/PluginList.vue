@@ -29,7 +29,7 @@
       </template>
       <!-- Create action -->
       <template #toolbar-button>
-         <Teleport
+        <Teleport
           :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
         >

@@ -12,22 +12,28 @@
       pagination-type="offset"
       preferences-storage-key="kong-ui-entities-targets-list"
       :table-headers="tableHeaders"
+      :use-action-outside="useActionOutside"
       @empty-state-cta-clicked="() => !props.config.createRoute ? handleCreateTarget() : undefined"
       @sort="resetPagination"
     >
       <!-- Create action -->
       <template #toolbar-button>
-        <PermissionsWrapper :auth-function="() => canCreate()">
-          <KButton
-            appearance="primary"
-            data-testid="toolbar-new-target"
-            icon="plus"
-            :to="props.config.createRoute ? props.config.createRoute : undefined"
-            @click="() => !props.config.createRoute ? handleCreateTarget() : undefined"
-          >
-            {{ t('targets.list.toolbar_actions.new_target') }}
-          </KButton>
-        </PermissionsWrapper>
+        <Teleport
+          :disabled="!useActionOutside"
+          to="#kong-ui-app-page-header-action-button"
+        >
+          <PermissionsWrapper :auth-function="() => canCreate()">
+            <KButton
+              appearance="primary"
+              data-testid="toolbar-new-target"
+              icon="plus"
+              :to="props.config.createRoute ? props.config.createRoute : undefined"
+              @click="() => !props.config.createRoute ? handleCreateTarget() : undefined"
+            >
+              {{ t('targets.list.toolbar_actions.new_target') }}
+            </KButton>
+          </PermissionsWrapper>
+        </Teleport>
       </template>
 
       <!-- Column formatting -->
@@ -209,6 +215,11 @@ const props = defineProps({
     type: Function as PropType<(row: EntityRow) => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
+  },
+  /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
+  useActionOutside: {
+    type: Boolean,
+    default: false,
   },
 })
 
