@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@1.3.2...@kong-ui-public/entities-keys@1.3.3) (2023-11-15)
+
+
+### Bug Fixes
+
+* **entities-keys:** introduce `keySetId` prop to `<KeyForm />` and `<KeyConfigCard />` ([#898](https://github.com/Kong/public-ui-components/issues/898)) ([629c154](https://github.com/Kong/public-ui-components/commit/629c154a34d9075d3370d68d9e13f4c2e4c0f86e))
+
+
+
+
+
 ## [1.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@1.3.1...@kong-ui-public/entities-keys@1.3.2) (2023-11-15)
 
 **Note:** Version bump only for package @kong-ui-public/entities-keys
