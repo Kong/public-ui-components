@@ -85,6 +85,14 @@ Set this value to display the documentation button.
 
 Set this value to `true` to hide the card title.
 
+#### `keySetId`
+
+- type: `string | null`
+- required: `false`
+- default: `null`
+
+Specify the KeySet ID once you want to fetch the key within a KeySet URL scope.
+
 ### Events
 
 #### fetch:error
