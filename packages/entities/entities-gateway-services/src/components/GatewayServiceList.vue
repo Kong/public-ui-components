@@ -27,8 +27,10 @@
       </template>
       <!-- Create action -->
       <template #toolbar-button>
-        <PermissionsWrapper :auth-function="() => canCreate()">
-          <Teleport to="#kong-ui-app-page-header-action-button">
+        <Teleport
+          :disabled="!useActionOutside"
+          :to="`#action-buttons-${cacheIdentifier}`">
+          <PermissionsWrapper :auth-function="() => canCreate()">
             <KButton
               appearance="primary"
               icon="plus"
@@ -36,9 +38,8 @@
             >
               {{ t('gateway_services.list.toolbar_actions.new_gateway_service') }}
             </KButton>
-          </Teleport>
-          <span v-if="!useActionOutside" id="kong-ui-app-page-header-action-button"></span>
-        </PermissionsWrapper>
+          </PermissionsWrapper>
+        </Teleport>
       </template>
 
       <!-- Column Formatting -->
