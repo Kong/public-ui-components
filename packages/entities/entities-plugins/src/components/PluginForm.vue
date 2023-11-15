@@ -276,7 +276,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
     styleClasses: 'd-none',
   },
   selectionGroup: {
-    type: props.hideScopeSelection || entityData.value.id ? 'foreign' : 'selectionGroup',
+    type: props.hideScopeSelection ? 'foreign' : 'selectionGroup',
     inputType: 'hidden',
     styleClasses: 'bottom-border hide-label',
     fields: [
@@ -751,7 +751,7 @@ const validateSubmitUrl = computed((): string => {
 /**
  * Build the submit URL
  */
-const submitUrl = computed<string>(() => {
+const submitUrl = computed((): string => {
   // plugin endpoint vs credential endpoint
   const submitEndpoint = !treatAsCredential.value ? endpoints.form[props.config.app][formType.value] : endpoints.form[props.config.app].credential[formType.value]
 
