@@ -859,6 +859,9 @@ importers:
       '@kong-ui-public/swagger-ui-web-component':
         specifier: workspace:^0.10.2
         version: link:../swagger-ui-web-component
+      '@kong/swagger-ui-kong-theme-universal':
+        specifier: 4.3.2
+        version: 4.3.2(vue-router@4.2.5)(vue@3.3.4)
       lodash.clonedeep:
         specifier: ^4.5.0
         version: 4.5.0
@@ -2062,6 +2065,28 @@ packages:
       vue-draggable-next: 2.2.1(sortablejs@1.15.0)(vue@3.3.4)
       vue-router: 4.2.5(vue@3.3.4)
 
+  /@kong/kongponents@8.126.2(vue-router@4.2.5)(vue@3.3.4):
+    resolution: {integrity: sha512-isTzDHB/21O+hMq+tMRH5A3WyOVC5FZqLs1YrfW8zb6VX9Xm1tmtVHO0Qtfo2DpMs2c9rNdl/yBa1vijkOSkHA==}
+    engines: {node: '>=v16.20.2'}
+    peerDependencies:
+      axios: ^1.6.1
+      vue: '>= 3.3.4 < 4'
+      vue-router: ^4.2.4
+    dependencies:
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.0(date-fns@2.30.0)
+      focus-trap: 7.5.3
+      focus-trap-vue: 4.0.2(focus-trap@7.5.3)(vue@3.3.4)
+      popper.js: 1.16.1
+      sortablejs: 1.15.0
+      swrv: 1.0.4(vue@3.3.4)
+      uuid: 9.0.1
+      v-calendar: 3.0.0-alpha.8(vue@3.3.4)
+      vue: 3.3.4
+      vue-draggable-next: 2.2.1(sortablejs@1.15.0)(vue@3.3.4)
+      vue-router: 4.2.5(vue@3.3.4)
+    dev: false
+
   /@kong/swagger-ui-kong-theme-universal@4.3.1(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.5)(vue@3.3.4):
     resolution: {integrity: sha512-TcPO3lmzGdU+1XZ7wRt9ytK+fpoIHbiNmoqdvUg/LakbR5h00WI7cCjjwLL8sCheWPSgBQpH/vjCDuhABR4mbQ==}
     peerDependencies:
@@ -2077,6 +2102,37 @@ packages:
       js-file-download: 0.4.12
       memoizee: 0.4.15
       react: 17.0.2
+      react-apiembed: 0.1.9
+      react-debounce-input: 3.3.0(react@17.0.2)
+      swagger2har: 1.0.3
+      tachyons-sass: 4.9.5
+      util: 0.12.5
+    transitivePeerDependencies:
+      - '@babel/core'
+      - axios
+      - mkdirp
+      - prop-types
+      - react-dom
+      - rollup
+      - supports-color
+      - vue
+      - vue-router
+    dev: false
+
+  /@kong/swagger-ui-kong-theme-universal@4.3.2(vue-router@4.2.5)(vue@3.3.4):
+    resolution: {integrity: sha512-+wv/1bIPARDh6ZnZYdknbpKjcedBEOhuM8NUkzojCzWk09lq9B1CXQJcIkKoN2bE61HuMZpAqKzCt3qeMjaQCg==}
+    peerDependencies:
+      react: 17.0.2
+    dependencies:
+      '@braintree/sanitize-url': 6.0.2
+      '@kong/kongponents': 8.126.2(vue-router@4.2.5)(vue@3.3.4)
+      '@kyleshockey/xml': 1.0.2
+      classnames: 2.3.2
+      curl-to-har: 1.0.1
+      focus-trap-react: 10.1.4(react-dom@17.0.2)(react@17.0.2)
+      immutable: 3.8.2
+      js-file-download: 0.4.12
+      memoizee: 0.4.15
       react-apiembed: 0.1.9
       react-debounce-input: 3.3.0(react@17.0.2)
       swagger2har: 1.0.3
