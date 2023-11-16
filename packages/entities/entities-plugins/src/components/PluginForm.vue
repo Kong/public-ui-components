@@ -276,7 +276,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
     styleClasses: 'd-none',
   },
   selectionGroup: {
-    type: props.hideScopeSelection ? 'foreign' : 'selectionGroup',
+    type: props.hideScopeSelection || (formType.value === EntityBaseFormType.Create && props.config.entityId) ? 'foreign' : 'selectionGroup',
     inputType: 'hidden',
     styleClasses: 'bottom-border hide-label',
     fields: [
