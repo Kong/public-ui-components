@@ -37,13 +37,10 @@ const routeParams = [
 const generatedLink = composables.useExternalLinkCreator(routeParams)
 
 const copyUuidStub = () => {
-  return new Promise(() => {
-    cy.window().its('navigator.clipboard').then((clipboard) => {
-      return cy.stub(clipboard, 'writeText').as('clipboardWriteText')
-    })
+  return cy.window().its('navigator.clipboard').then((clipboard) => {
+    return cy.stub(clipboard, 'writeText').as('clipboardWriteText')
   })
 }
-
 describe('<EntityLink />', () => {
 
   it('resolved entity', () => {
@@ -56,15 +53,13 @@ describe('<EntityLink />', () => {
 
     cy.getTestId('entity-link-parent').find('a').should('exist')
     cy.getTestId('entity-link-parent').find('a.entity-link .kong-icon-externalLink').should('exist')
-    cy.getTestId('entity-link-parent').find('.kong-ui-copy-uuid').should('exist').click()
-
     cy.getTestId('entity-link-parent').find('a').should('contain.text', resolvedRecord.label)
 
-    copyUuidStub().then((copyUuidStub) => {
-      cy.get('.toaster-container-outer').should('exist')
+    copyUuidStub().then(() => {
+      cy.getTestId('entity-link-parent').find('.entity-link-copy-id').should('exist').click()
 
-      expect(copyUuidStub).should('have.been.calledWith', resolvedRecord.id)
-      cy.get('@clipboardWriteText').should('have.been.called')
+      cy.get('.toaster-container-outer').should('exist')
+      cy.get('@clipboardWriteText').should('have.been.calledWith', resolvedRecord.id)
     })
   })
 
@@ -78,12 +73,12 @@ describe('<EntityLink />', () => {
 
     cy.getTestId('entity-link-parent').find('a').should('exist')
     cy.getTestId('entity-link-parent').find('a .kong-icon-externalLink').should('exist')
-    cy.getTestId('entity-link-parent').find('.kong-ui-copy-uuid').should('exist').click()
 
-    copyUuidStub().then((copyUuidStub) => {
+    copyUuidStub().then(() => {
+      cy.getTestId('entity-link-parent').find('.entity-link-copy-id').should('exist').click()
+
       cy.get('.toaster-container-outer').should('exist')
-      expect(copyUuidStub).should('have.been.calledWith', resolvedRecord.id)
-      cy.get('@clipboardWriteText').should('have.been.called')
+      cy.get('@clipboardWriteText').should('have.been.calledWith', resolvedRecordComplex?.id.toString().split(':')[1])
     })
   })
 
@@ -96,7 +91,7 @@ describe('<EntityLink />', () => {
     })
 
     cy.getTestId('entity-link-parent').find('a').should('not.exist')
-    cy.getTestId('entity-link-parent').find('.kong-ui-copy-uuid').should('not.exist')
+    cy.getTestId('entity-link-parent').find('.entity-link-copy-id').should('not.exist')
     cy.getTestId('entity-link-parent').should('contain.text', ' – ')
   })
 
@@ -109,16 +104,16 @@ describe('<EntityLink />', () => {
     })
 
     cy.getTestId('entity-link-parent').find('a').should('not.exist')
-    cy.getTestId('entity-link-parent').find('.kong-ui-copy-uuid').should('exist').click()
 
     const firstFiveChars = `${deletedRecord.id.toString().slice(0, 5)}`
     const deletedDisplay = `${firstFiveChars} (deleted)`
     cy.getTestId('entity-link-parent').should('contain.text', deletedDisplay)
 
-    copyUuidStub().then((copyUuidStub) => {
+    copyUuidStub().then(() => {
+      cy.getTestId('entity-link-parent').find('.entity-link-copy-id').should('exist').click()
+
       cy.get('.toaster-container-outer').should('exist')
-      expect(copyUuidStub).should('have.been.calledWith', firstFiveChars)
-      cy.get('@clipboardWriteText').should('have.been.called')
+      cy.get('@clipboardWriteText').should('have.been.calledWith', resolvedRecord.id)
     })
   })
 })

@@ -29,27 +29,47 @@
         </span>
       </KTooltip>
     </KExternalLink>
-    <CopyUuid
+    <KTooltip
       v-if="entityUuid"
-      class="entity-link-copy-id"
+      :key="copyUuidTooltipText"
+      class="copy-uuid-tooltip"
+      :label="copyUuidTooltipText"
+      max-width="160"
+      placement="bottomEnd"
+    >
+      <KClipboardProvider v-slot="{ copyToClipboard }">
+        <span
+          class="entity-link-copy-id"
+          @click.stop="onCopyUuid(copyToClipboard)"
+        >
+          <CopyIcon
+            class="copy-icon"
+            :color="KUI_COLOR_TEXT_PRIMARY"
+            data-testid="copy-id"
+            :size="16"
+          />
+        </span>
+      </KClipboardProvider>
+    </KTooltip>
+    <!-- <CopyUuid
+      v-if="entityUuid"
       data-testid="copy-id"
       format="hidden"
       :icon-color="KUI_COLOR_TEXT_PRIMARY"
-      :notify="notifyCopy"
-      :tooltip="t('global.actions.copyId')"
+      :tooltip="copyUuidTooltipText"
       :use-mono="false"
       :uuid="entityUuid"
-    />
+      @click.stop="notifyCopy"
+    /> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { PropType, Ref } from 'vue'
-import type { CopyUuidNotifyParam } from '@kong-ui-public/copy-uuid'
 import type { EntityLinkData } from '../../types'
 import composables from '../../composables'
-import { CopyUuid } from '@kong-ui-public/copy-uuid'
+import { CopyIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_PRIMARY } from '@kong/design-tokens'
 
 const props = defineProps({
@@ -66,9 +86,10 @@ const props = defineProps({
 
 const textContent = ref<HTMLElement>()
 const { isTruncated } = composables.useTruncationDetector(textContent as Ref<HTMLElement>)
-
 const { i18n: { t } } = composables.useI18n()
-const { notify } = composables.useToaster()
+
+const tooltipDefaultText = t('global.actions.copyId')
+const copyUuidTooltipText = ref(tooltipDefaultText)
 
 // If the dimension value is the same as the label, it means the entity has been deleted
 const isDeletedEntity = computed(() => {
@@ -88,17 +109,13 @@ const deletedUuidDisplay = computed(() => {
   return `${entityUuid.value.toString().slice(0, 5)} (deleted)`
 })
 
-const notifyCopy = (notifyParam: CopyUuidNotifyParam) => {
-  if (notifyParam.type === 'success') {
-    notify({
-      appearance: 'success',
-      message: t('global.actions.copied_id', { id: entityUuid.value }),
-    })
-  } else {
-    notify({
-      appearance: 'danger',
-      message: t('global.actions.copyToClipboardFailed'),
-    })
+const onCopyUuid = async (copyToClipboard: (str: string) => Promise<boolean>): Promise<void> => {
+  if (await copyToClipboard(entityUuid.value || '')) {
+    copyUuidTooltipText.value = t('global.actions.copyToClipboard')
+
+    setTimeout(() => {
+      copyUuidTooltipText.value = tooltipDefaultText
+    }, 1800)
   }
 }
 
@@ -106,6 +123,7 @@ const notifyCopy = (notifyParam: CopyUuidNotifyParam) => {
 
 <style lang="scss" scoped>
 .kong-ui-public-entity-link {
+  align-items: center;
   display: flex;
 
   .deleted-entity {
@@ -130,8 +148,12 @@ const notifyCopy = (notifyParam: CopyUuidNotifyParam) => {
     white-space: nowrap;
   }
 
-  .entity-link-copy-id {
-    margin-left: $kui-space-40;
+  .copy-uuid-tooltip {
+    align-items: center;
+    display: flex;
+    .entity-link-copy-id {
+      margin-left: $kui-space-30;
+    }
   }
 }
 </style>
