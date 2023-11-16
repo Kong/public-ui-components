@@ -81,6 +81,9 @@ const props = defineProps({
       return true
     },
   },
+  /**
+   * Entity data if plugin is scoped
+   */
   entityId: {
     type: String,
     default: '',
@@ -96,14 +99,23 @@ const props = defineProps({
     type: Object as PropType<Record<string, any>>,
     default: () => ({}),
   },
+  /**
+   * Form schema
+   */
   schema: {
     type: Object as PropType<Record<string, any>>,
     default: () => ({}),
   },
+  /**
+   * Whether or not the form is in edit mode
+   */
   editing: {
     type: Boolean,
     default: false,
   },
+  /**
+   * Plugin credential form
+   */
   credential: {
     type: Boolean,
     default: false,
@@ -133,7 +145,7 @@ const buildGetOneUrl = (entityType: string, entityId: string): string => {
 
   return url
 }
-
+// define endpoints for use by KFG
 const buildGetAllUrl = (entityType: string): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetAll}`
 
@@ -209,6 +221,7 @@ const originalModel = reactive<Record<string, any>>({})
 const formModel = reactive<Record<string, any>>({})
 const formOptions = computed(() => form.value?.options)
 
+// ex. service_id will be converted to service-id
 const entityIdField = computed((): string => {
   switch (props.entityType) {
     case 'service':
@@ -224,6 +237,7 @@ const entityIdField = computed((): string => {
   }
 })
 
+// This function transforms the form data into the correct structure to be submitted to the API
 const getModel = (): Record<string, any> => {
   const schema = { ...props.schema }
   const inputModel = formModel
@@ -256,8 +270,8 @@ const getModel = (): Record<string, any> => {
     }
   })
 
-  // Iterate over each field, transform each field value to match the
-  // Kong Admin APIs value expectations
+  // Iterate over each field in the form, transform each field value to match the
+  // Kong Admin APIs request expectations for submission
   formModelFields.forEach(fieldName => {
     if (!schema[fieldName]) {
       return
@@ -420,6 +434,7 @@ const getModel = (): Record<string, any> => {
   return unFlattenObject(outputModel)
 }
 
+// fired whenever the form data is modified
 const onModelUpdated = (model: Record<string, any>, schema: string) => {
   const newData = { [schema]: model }
   const newModel = Object.assign({}, formModel, newData)
@@ -433,6 +448,7 @@ const onModelUpdated = (model: Record<string, any>, schema: string) => {
   })
 }
 
+// special handling for problematic fields before we emit
 const updateModel = (data: Record<string, any>, parent?: string) => {
   Object.keys(data).forEach(key => {
     let modelKey = parent ? `${parent}-${key}` : key
@@ -461,6 +477,7 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
       return
     }
 
+    // avoid pass by ref
     if (Array.isArray(value)) {
       formModel[modelKey] = JSON.parse(JSON.stringify(value))
       originalModel[modelKey] = JSON.parse(JSON.stringify(value))
@@ -468,10 +485,12 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
       return
     }
 
+    // update the model for each child of the object
     if (type === 'object' && value && !value.length) {
       return updateModel(value, modelKey)
     }
 
+    // treatment for arrays, convert to comma separated string
     if (type === 'object' && value && value.length && scheme.type === 'input') {
       formModel[modelKey] = value.join(', ')
       originalModel[modelKey] = value.join(', ')
@@ -504,7 +523,7 @@ const initFormModel = (): void => {
     if (props.record.data) {
       updateModel(props.record.data)
     } else if (props.record.config) {
-      // scope and top level fields fields
+      // scope and top level fields
       if (props.record.consumer_id || props.record.service_id || props.record.route_id || props.record.consumer_group_id) {
         updateModel({
           service_id: props.record.service_id,
@@ -515,11 +534,13 @@ const initFormModel = (): void => {
         })
       }
 
+      // main plugin configuration
       updateModel(props.record.config, 'config')
     }
   }
 
-  // Check if incoming field exists in current model and add if so update
+  // scoping logic, convert _ to - for form model
+  // Check if incoming field exists in current model and if so update
   if (entityIdField.value && props.entityId && props.schema) {
     const updateFields: Record<string, any> = {}
     const key = entityIdField.value === 'consumer_group_id' ? 'consumer_group-id' : JSON.parse(JSON.stringify(entityIdField.value).replace('_', '-'))
@@ -552,6 +573,7 @@ watch(loading, (newLoading) => {
   emit('loading', newLoading)
 })
 
+// if the schema changed we've got to start over and completely rebuild the form model
 watch(() => props.schema, (newSchema) => {
   const form: Record<string, any> = parseSchema(newSchema)
 

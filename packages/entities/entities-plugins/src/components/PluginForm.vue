@@ -160,6 +160,7 @@ const props = defineProps({
     default: '',
   },
 
+  /** Rather than using internal logic to determine whether or not to hide scope, force it */
   hideScopeSelection: {
     type: Boolean,
     default: false,
@@ -222,6 +223,8 @@ const form = reactive<PluginFormState>({
   errorMessage: '',
 })
 
+// non-editable plugin type. They shouldn't be able to get to this unless they manually
+// type in the URL
 const isDisabled = computed((): boolean => {
   const currentPlugin = Object.keys(customSchemas).find((key: string) => key === props.pluginType)
 
@@ -258,6 +261,7 @@ const entityData = computed((): PluginEntityInfo => {
   }
 })
 
+// Configuration for globally shared fields
 const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
   enabled: {
     type: 'switch',
@@ -269,12 +273,14 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
     default: true,
   },
   // this is a required field that the user cannot set, it's always the name of the plugin
+  // ex. 'acl'
   name: {
     default: props.pluginType,
     type: 'input',
     inputType: 'hidden',
     styleClasses: 'd-none',
   },
+  // plugin scoping
   selectionGroup: {
     type: props.hideScopeSelection || (formType.value === EntityBaseFormType.Create && props.config.entityId) ? 'foreign' : 'selectionGroup',
     inputType: 'hidden',
@@ -322,6 +328,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
 })
 
 // This is specifically used for credential plugins
+// To create an 'ACL' credential we will end up submitting to a URL like: /<entityType>/<entityId>/acl
 const resourceEndpoint = computed((): string => {
   const entityPath: EntityType = entityData.value.entityEndpoint
 
@@ -339,6 +346,7 @@ const getArrayType = (list: unknown[]): string => {
   return uniqueTypes.length > 1 ? 'string' : uniqueTypes[0]
 }
 
+// _ gets converted to space and capitalize each word
 const formatPluginFieldLabel = (label: string) => {
   return capitalize(label.replace(/_/g, ' '))
 }
@@ -347,6 +355,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
   let schema = (response && response.fields) || []
   const pluginSchema = customSchemas[props.pluginType as keyof typeof customSchemas]
 
+  // schema can either be an object or an array of objects. If it's an array, convert it to an object
   if (Array.isArray(schema)) {
     schema = schema.reduce((acc, current) => {
       const key = Object.keys(current)[0]
@@ -368,6 +377,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     }, {})
   }
 
+  // alphabetically sort the schema keys and handle specifial configuration for each field type
   Object.keys(schema).sort().forEach(key => {
     const scheme = schema[key]
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
@@ -385,19 +395,21 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       return buildFormSchema(field, scheme, initialFormSchema)
     }
 
-    initialFormSchema[field] = { id: field }
+    initialFormSchema[field] = { id: field } // each field's key will be set as the id
     initialFormSchema[field].type = scheme.type === 'boolean' ? 'checkbox' : 'input'
 
     if (field.startsWith('config-')) {
       initialFormSchema[field].label = formatPluginFieldLabel(field)
     }
 
+    // plugin configuration fields should set description to `help` prop
     if (parentKey === 'config') {
       if (schema[key]?.description) {
         initialFormSchema[field].help = marked.parse(schema[key].description, { mangle: false, headerIds: false } as MarkedOptions)
       }
     }
 
+    // map -> object-advanced
     if (scheme.type === 'map') {
       initialFormSchema[field].type = 'object-advanced'
 
@@ -447,6 +459,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       return initialFormSchema
     }
 
+    // enum -> checklist
     if (scheme.enum && scheme.type === 'array') {
       initialFormSchema[field].type = 'checklist'
       initialFormSchema[field].values = scheme.enum
@@ -454,6 +467,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       initialFormSchema[field].multiSelect = true
     }
 
+    // one_of indicates a select
     if (scheme.one_of && scheme.type !== 'array') {
       initialFormSchema[field].type = 'select'
       initialFormSchema[field].values = scheme.one_of
@@ -484,6 +498,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       })
     }
 
+    // required fields, if it's boolean (a checkbox) it will be marked as required even though it isn't
     if (scheme.required && scheme.type !== 'boolean') {
       initialFormSchema[field].required = true
       initialFormSchema[field].selectOptions = {
@@ -552,6 +567,7 @@ const initScopeFields = (): void => {
 
   const scopeEntityArray = []
 
+  // if the plugin is enabled for a specific type of entity, add it's scope field to the form
   if (supportServiceScope) {
     scopeEntityArray.push({
       model: 'service-id',
@@ -621,6 +637,7 @@ const initScopeFields = (): void => {
     ]
 
     // TODO: correct string concat
+    // Building the description strings for global vs. scoped radio buttons
     const trailingEntities = scopeEntities.splice(scopeEntities.length - 2, 2).map((entityType: string) => entityType === 'service' ? t('plugins.form.scoping.gateway_service.plural') : t(`plugins.form.scoping.${entityType}.plural` as keyof typeof t))
     const trailingText = trailingEntities.join(`${scopeEntities.length > 0 ? ',' : ''} and/or `)
 
@@ -645,6 +662,7 @@ const initScopeFields = (): void => {
     defaultFormSchema.selectionGroup.fields[1].fields = scopeEntityArray
   }
 
+  // apply custom front-end schema if overwriteDefault is true
   if (customSchemas[props.pluginType as keyof typeof customSchemas] && customSchemas[props.pluginType as keyof typeof customSchemas].overwriteDefault) {
     if (Object.hasOwnProperty.call(customSchemas[props.pluginType as keyof typeof customSchemas], 'formSchema')) {
       Object.assign(defaultFormSchema, customSchemas[props.pluginType as keyof typeof customSchemas].formSchema)
@@ -663,6 +681,8 @@ const changesExist = computed(() => {
 const canSubmit = computed((): boolean => !schemaLoading.value && !formLoading.value && (formType.value === EntityBaseFormType.Create || changesExist.value))
 
 const initialized = ref(false)
+// The whole purpose of this function is to wait for the existing record to be loaded if editing
+// We need to wait for this before we start attempting to build the schema
 const initForm = (data: Record<string, any>): void => {
   form.fields.id = data?.id || undefined
 
@@ -674,12 +694,14 @@ const initForm = (data: Record<string, any>): void => {
 }
 
 const submitPayload = ref<Record<string, any>>({})
+// fired whenever form data is modified
 const handleUpdate = (payload: Record<string, any>) => {
   form.fields = payload.model
   form.fields.id = record.value?.id || undefined
   Object.assign(formFieldsOriginal, payload.originalModel)
   submitPayload.value = payload.data
 
+  // wizard relies on model-updated since action buttons are hidden
   if (props.isWizardStep) {
     emit('model-updated', {
       model: form.fields,
@@ -721,11 +743,13 @@ const handleClickBack = (): void => {
 }
 
 /*
+ * ---------------
  * Saving
+ * ---------------
  */
 
 /**
- * Build the validate and submit URL
+ * Build the validate URL. Currently doesn't work for credentials.
  */
 const validateSubmitUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].validate}`
@@ -765,6 +789,7 @@ const submitUrl = computed((): string => {
   return url
 })
 
+// make the actual API request to save on create/edit
 const saveFormData = async (): Promise<void> => {
   // if save/cancel buttons are hidden, don't submit on hitting Enter
   if (props.isWizardStep) {
@@ -817,6 +842,7 @@ const saveFormData = async (): Promise<void> => {
   }
 }
 
+// for fetching the plugin form schema
 const schemaUrl = computed((): string => {
   const pluginType = !treatAsCredential.value ? props.pluginType : credentialMetaData[props.pluginType]?.schemaEndpoint
   const schemaEndpoint = !treatAsCredential.value ? endpoints.form[props.config.app].pluginSchema : endpoints.form[props.config.app].credentialSchema
@@ -841,6 +867,7 @@ onBeforeMount(async () => {
   schemaLoading.value = true
 
   try {
+    // handling for plugin credentials (Konnect)
     if (treatAsCredential.value && props.config.app === 'konnect') {
       // credential schema endpoints don't exist for Konnect, so we use hard-coded schemas
       const pluginType = credentialMetaData[props.pluginType]?.schemaEndpoint
@@ -848,13 +875,13 @@ onBeforeMount(async () => {
 
       schema.value = buildFormSchema('', data, {})
       schemaLoading.value = false
-    } else {
+    } else { // handling for standard plugins
       const response = await axiosInstance.get(schemaUrl.value)
       const { data } = response
 
       if (data) {
         if (treatAsCredential.value) {
-          // credential schema response is structured differently
+          // credential schema response is structured differently, no `config` object or default schema
           schema.value = buildFormSchema('', data, {})
           schemaLoading.value = false
         } else {
@@ -862,6 +889,7 @@ onBeforeMount(async () => {
           const configField = data.fields.find((field: Record<string, any>) => field.config)
           configResponse.value = configField ? configField.config : response
 
+          // scoping and global field setup
           initScopeFields()
 
           const protocolsField = data.fields.find((field: Record<string, any>) => field.protocols)?.protocols
