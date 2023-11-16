@@ -51,16 +51,6 @@
         </span>
       </KClipboardProvider>
     </KTooltip>
-    <!-- <CopyUuid
-      v-if="entityUuid"
-      data-testid="copy-id"
-      format="hidden"
-      :icon-color="KUI_COLOR_TEXT_PRIMARY"
-      :tooltip="copyUuidTooltipText"
-      :use-mono="false"
-      :uuid="entityUuid"
-      @click.stop="notifyCopy"
-    /> -->
   </div>
 </template>
 

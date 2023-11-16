@@ -1,9 +1,5 @@
 import EntityLink from './EntityLink.vue'
-// import type { EntityLinkData } from '../../types'
 import composables from '../../composables'
-
-// const stub = () => {
-// }
 
 const resolvedRecord = {
   id: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219',
