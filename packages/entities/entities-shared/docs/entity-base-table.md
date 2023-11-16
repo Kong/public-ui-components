@@ -107,11 +107,11 @@ Options for the empty state.
 
 #### `errorMessage`
 
-- type: `String`
+- type: `TableErrorMessage`
 - required: `false`
-- default: `''`
+- default: `null`
 
-Error message to show in the error state.
+Error message to show in the error state. `string` is also supported for backwards compatibility.
 
 #### `preferencesStorageKey`
 
@@ -173,5 +173,6 @@ import type {
   FetcherParams,
   FetcherResponse,
   InternalHeader,
+  TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
 ```

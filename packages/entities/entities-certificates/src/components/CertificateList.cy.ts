@@ -284,31 +284,39 @@ describe('<CertificateList />', () => {
     })
 
     it('should handle error state', () => {
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/certificates*`,
-        },
-        {
-          statusCode: 500,
-          body: {},
-        },
-      ).as('getCertificate')
+      const testHandleErrorRequest = (message?: string) => {
+        cy.intercept(
+          {
+            method: 'GET',
+            url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/certificates*`,
+          },
+          {
+            statusCode: 500,
+            body: message ? { message } : {},
+          },
+        ).as('getCertificate')
 
-      cy.mount(CertificateList, {
-        props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
-          config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
-        },
-      })
+        cy.mount(CertificateList, {
+          props: {
+            cacheIdentifier: `certificate-list-${uuidv4()}`,
+            config: baseConfigKM,
+            canCreate: () => {},
+            canEdit: () => {},
+            canDelete: () => {},
+            canRetrieve: () => {},
+          },
+        })
 
-      cy.wait('@getCertificate')
-      cy.get('.kong-ui-entities-certificates-list').should('be.visible')
-      cy.get('.k-table-error-state').should('be.visible')
+        cy.wait('@getCertificate')
+        cy.get('.kong-ui-entities-certificates-list').should('be.visible')
+        cy.get('.k-table-error-state').should('be.visible')
+        if (message) {
+          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+        }
+      }
+
+      testHandleErrorRequest()
+      testHandleErrorRequest('Custom error message')
     })
 
     it('should allow switching between pages', () => {
@@ -593,31 +601,39 @@ describe('<CertificateList />', () => {
     })
 
     it('should handle error state', () => {
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/certificates*`,
-        },
-        {
-          statusCode: 500,
-          body: {},
-        },
-      ).as('getCertificate')
+      const testHandleErrorRequest = (message?: string) => {
+        cy.intercept(
+          {
+            method: 'GET',
+            url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/certificates*`,
+          },
+          {
+            statusCode: 500,
+            body: message ? { message } : {},
+          },
+        ).as('getCertificate')
 
-      cy.mount(CertificateList, {
-        props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
-          config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
-        },
-      })
+        cy.mount(CertificateList, {
+          props: {
+            cacheIdentifier: `certificate-list-${uuidv4()}`,
+            config: baseConfigKonnect,
+            canCreate: () => {},
+            canEdit: () => {},
+            canDelete: () => {},
+            canRetrieve: () => {},
+          },
+        })
 
-      cy.wait('@getCertificate')
-      cy.get('.kong-ui-entities-certificates-list').should('be.visible')
-      cy.get('.k-table-error-state').should('be.visible')
+        cy.wait('@getCertificate')
+        cy.get('.kong-ui-entities-certificates-list').should('be.visible')
+        cy.get('.k-table-error-state').should('be.visible')
+        if (message) {
+          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+        }
+      }
+
+      testHandleErrorRequest()
+      testHandleErrorRequest('Custom error message')
     })
 
     it('should allow switching between pages', () => {

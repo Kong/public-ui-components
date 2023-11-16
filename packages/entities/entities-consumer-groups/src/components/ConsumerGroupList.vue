@@ -196,6 +196,7 @@ import type {
   EmptyStateOptions,
   ExactMatchFilterConfig,
   FuzzyMatchFilterConfig,
+  TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import AddToGroupModal from './AddToGroupModal.vue'
@@ -339,7 +340,7 @@ const resetPagination = (): void => {
 /**
  * loading, Error, Empty state
  */
-const errorMessage = ref('')
+const errorMessage = ref<TableErrorMessage>(null)
 
 /**
  * Copy ID action
@@ -547,14 +548,19 @@ const exitGroups = async (): Promise<void> => {
  */
 watch(fetcherState, (state) => {
   if (state.status === FetcherStatus.Error) {
-    errorMessage.value = t('consumer_groups.errors.general')
+    errorMessage.value = {
+      title: t('consumer_groups.errors.general'),
+    }
+    if (state.error?.response?.data?.message) {
+      errorMessage.value.message = state.error.response.data.message
+    }
     // Emit the error for the host app
     emit('error', state.error)
 
     return
   }
 
-  errorMessage.value = ''
+  errorMessage.value = null
 })
 
 // Initialize the empty state options assuming a user does not have create permissions

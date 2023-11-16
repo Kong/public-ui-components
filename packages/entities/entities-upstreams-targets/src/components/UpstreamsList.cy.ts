@@ -247,31 +247,39 @@ describe('<UpstreamsList />', () => {
     })
 
     it('should handle error state', () => {
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/upstreams*`,
-        },
-        {
-          statusCode: 500,
-          body: {},
-        },
-      ).as('getUpstreams')
+      const testHandleErrorRequest = (message?: string) => {
+        cy.intercept(
+          {
+            method: 'GET',
+            url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/upstreams*`,
+          },
+          {
+            statusCode: 500,
+            body: message ? { message } : {},
+          },
+        ).as('getUpstreams')
 
-      cy.mount(UpstreamsList, {
-        props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
-          config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
-        },
-      })
+        cy.mount(UpstreamsList, {
+          props: {
+            cacheIdentifier: `certificate-list-${uuidv4()}`,
+            config: baseConfigKM,
+            canCreate: () => {},
+            canEdit: () => {},
+            canDelete: () => {},
+            canRetrieve: () => {},
+          },
+        })
 
-      cy.wait('@getUpstreams')
-      cy.get('.kong-ui-entities-upstreams-list').should('be.visible')
-      cy.get('.k-table-error-state').should('be.visible')
+        cy.wait('@getUpstreams')
+        cy.get('.kong-ui-entities-upstreams-list').should('be.visible')
+        cy.get('.k-table-error-state').should('be.visible')
+        if (message) {
+          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+        }
+      }
+
+      testHandleErrorRequest()
+      testHandleErrorRequest('Custom error message')
     })
 
     it('should show upstreams items', () => {
@@ -549,31 +557,39 @@ describe('<UpstreamsList />', () => {
     })
 
     it('should handle error state', () => {
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/upstreams*`,
-        },
-        {
-          statusCode: 500,
-          body: {},
-        },
-      ).as('getUpstreams')
+      const testHandleErrorRequest = (message?: string) => {
+        cy.intercept(
+          {
+            method: 'GET',
+            url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/upstreams*`,
+          },
+          {
+            statusCode: 500,
+            body: message ? { message } : {},
+          },
+        ).as('getUpstreams')
 
-      cy.mount(UpstreamsList, {
-        props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
-          config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
-        },
-      })
+        cy.mount(UpstreamsList, {
+          props: {
+            cacheIdentifier: `certificate-list-${uuidv4()}`,
+            config: baseConfigKonnect,
+            canCreate: () => {},
+            canEdit: () => {},
+            canDelete: () => {},
+            canRetrieve: () => {},
+          },
+        })
 
-      cy.wait('@getUpstreams')
-      cy.get('.kong-ui-entities-upstreams-list').should('be.visible')
-      cy.get('.k-table-error-state').should('be.visible')
+        cy.wait('@getUpstreams')
+        cy.get('.kong-ui-entities-upstreams-list').should('be.visible')
+        cy.get('.k-table-error-state').should('be.visible')
+        if (message) {
+          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+        }
+      }
+
+      testHandleErrorRequest()
+      testHandleErrorRequest('Custom error message')
     })
 
     it('should show upstreams items', () => {
