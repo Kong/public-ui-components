@@ -16,6 +16,16 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       entry: resolve(__dirname, './src/index.ts'),
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
     },
+    rollupOptions: {
+      // Make sure to externalize deps that shouldn't be bundled into your library
+      external: ['@kong-ui-public/analytics-chart'],
+      output: {
+        // Provide global variables to use in the UMD build for externalized deps
+        globals: {
+          '@kong-ui-public/analytics-chart': 'kong-ui-public-analytics-chart',
+        },
+      },
+    },
   },
 }))
 
