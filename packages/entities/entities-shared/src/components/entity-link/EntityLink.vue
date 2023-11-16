@@ -59,7 +59,8 @@ const props = defineProps({
   },
   externalLink: {
     type: String,
-    required: true,
+    required: false,
+    default: '',
   },
 })
 
@@ -75,7 +76,9 @@ const isDeletedEntity = computed(() => {
 })
 
 const entityUuid = computed(() => {
-  return props.entityLinkData.id.toString().includes(':') ? props.entityLinkData.id.toString().split(':')[1] : props.entityLinkData.id
+  return props.entityLinkData.id.toString().includes(':')
+    ? props.entityLinkData.id.toString().split(':')[1]
+    : props.entityLinkData.id
 })
 
 const deletedUuidDisplay = computed(() => {
