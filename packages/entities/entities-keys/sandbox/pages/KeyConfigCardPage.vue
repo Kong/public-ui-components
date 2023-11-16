@@ -2,6 +2,7 @@
   <h2>Konnect API</h2>
   <KeyConfigCard
     :config="konnectConfig"
+    :key-set-id="keySetId"
     @copy:success="onCopy"
     @fetch:error="onError"
     @fetch:success="onSuccess"
@@ -10,6 +11,7 @@
   <h2>Kong Manager API</h2>
   <KeyConfigCard
     :config="kongManagerConfig"
+    :key-set-id="keySetId"
     @copy:success="onCopy"
     @fetch:error="onError"
     @fetch:success="onSuccess"
@@ -17,7 +19,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectKeyEntityConfig, KongManagerKeyEntityConfig } from '../../src'
 import { KeyConfigCard } from '../../src'
@@ -29,7 +32,17 @@ const props = defineProps({
     default: '',
   },
 })
+const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
+// extract the keySetId from the route query
+const keySetId = computed(() => {
+  if (!router.currentRoute.value.query?.keySetId) {
+    return null
+  }
+
+  return router.currentRoute.value.query?.keySetId as string
+})
+
 const konnectConfig = ref<KonnectKeyEntityConfig>({
   app: 'konnect',
   apiBaseUrl: '/us/kong-api/konnect-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`

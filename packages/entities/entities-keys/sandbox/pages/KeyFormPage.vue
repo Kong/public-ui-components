@@ -3,6 +3,7 @@
   <KeyForm
     :config="konnectConfig"
     :key-id="id"
+    :key-set-id="keySetId"
     @error="onError"
     @update="onUpdate"
   />
@@ -11,13 +12,14 @@
   <KeyForm
     :config="kongManagerConfig"
     :key-id="id"
+    :key-set-id="keySetId"
     @error="onError"
     @update="onUpdate"
   />
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectKeyFormConfig, KongManagerKeyFormConfig } from '../../src'
@@ -34,6 +36,14 @@ defineProps({
 
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
+// extract the keySetId from the route query
+const keySetId = computed(() => {
+  if (!router.currentRoute.value.query?.keySetId) {
+    return null
+  }
+
+  return router.currentRoute.value.query?.keySetId as string
+})
 
 const konnectConfig = ref<KonnectKeyFormConfig>({
   app: 'konnect',

@@ -199,6 +199,12 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  /** Specific the keyset Id if the key entity is a scoped entity [both create and edit form] */
+  keySetId: {
+    type: String as PropType<string | null>,
+    required: false,
+    default: null,
+  },
   /** Pre-select the Key Set field and mark it as read-only [create form only] */
   fixedKeySetId: {
     type: String,
@@ -215,7 +221,11 @@ const { axiosInstance } = useAxios({
   headers: props.config?.requestHeaders,
 })
 
-const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit)
+const fetchUrl = computed<string>(() => {
+  return props.keySetId
+    ? endpoints.form[props.config.app].edit.forKeySet.replace(/{keySetId}/gi, props.keySetId)
+    : endpoints.form[props.config.app].edit.all
+})
 const formType = computed((): EntityBaseFormType => props.keyId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
 
 const form = reactive<KeyFormState>({
@@ -307,7 +317,7 @@ const handleClickCancel = (): void => {
  * Build the submit URL
  */
 const submitUrl = computed<string>(() => {
-  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app][formType.value]}`
+  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app][formType.value][props.keySetId ? 'forKeySet' : 'all']}`
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
@@ -317,6 +327,7 @@ const submitUrl = computed<string>(() => {
 
   // Always replace the id when editing
   url = url.replace(/{id}/gi, props.keyId)
+    .replace(/{keySetId}/gi, props.keySetId || '')
 
   return url
 })
