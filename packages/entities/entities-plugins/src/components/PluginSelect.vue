@@ -232,7 +232,7 @@ const pluginsList = ref<PluginCardList>({})
 const existingEntityPlugins = ref<string[]>([])
 
 const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
+  headers: props.config.requestHeaders,
 })
 
 const filteredPlugins = computed((): PluginCardList => {
@@ -371,22 +371,22 @@ const availablePluginsUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePlugins}`
 
   if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
   } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
   return url
 })
 
 const fetchEntityPluginsUrl = computed((): string => {
-  if (props.config?.entityType && props.config?.entityId) {
+  if (props.config.entityType && props.config.entityId) {
     let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app].forEntity}`
 
     if (props.config.app === 'konnect') {
-      url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+      url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
     } else if (props.config.app === 'kongManager') {
-      url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+      url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
     }
 
     return url

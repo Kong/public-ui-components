@@ -54,8 +54,8 @@ export enum PluginScope {
 }
 
 export interface PluginEntityInfo {
-  entity: PluginScope,
-  entityEndpoint: EntityType,
+  entity: PluginScope
+  entityEndpoint: EntityType
   id?: string
 }
 

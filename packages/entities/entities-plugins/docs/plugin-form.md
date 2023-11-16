@@ -141,9 +141,9 @@ Support instance names for plugins. This can be removed when KHCP-5872-custom-na
 
 An `@error` event is emitted when form validation fails. The event payload is the response error.
 
-#### fetch-schema:error
+#### error:fetch-schema
 
-An `@fetch-schema:error` event is emitted when attempting to fetch the plugin schema fails. The event payload is the response error.
+An `@error:fetch-schema` event is emitted when attempting to fetch the plugin schema fails. The event payload is the response error.
 
 #### loading
 

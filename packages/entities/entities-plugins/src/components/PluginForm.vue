@@ -120,7 +120,7 @@ import { ArrayStringFieldSchema } from '../composables/plugin-schemas/ArrayStrin
 import PluginEntityForm from './PluginEntityForm.vue'
 
 const emit = defineEmits<{
-  (e: 'fetch-schema:error', error: AxiosError): void,
+  (e: 'error:fetch-schema', error: AxiosError): void,
   (e: 'error', error: AxiosError): void,
   (e: 'loading', isLoading: boolean): void,
   (e: 'update', data: Record<string, any>): void,
@@ -196,7 +196,7 @@ const { capitalize } = useStringHelpers()
 const { objectsAreEqual } = useHelpers()
 
 const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
+  headers: props.config.requestHeaders,
 })
 
 const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
@@ -731,9 +731,9 @@ const validateSubmitUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].validate}`
 
   if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
   } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
   // Always replace the id when editing
@@ -752,9 +752,9 @@ const submitUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${submitEndpoint}`
 
   if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
   } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
   // replace resource endpoint for credentials
@@ -796,7 +796,7 @@ const saveFormData = async (): Promise<void> => {
     if (formType.value === 'create') {
       response = await axiosInstance.post(submitUrl.value, requestBody)
     } else if (formType.value === 'edit') {
-      response = props.config?.app === 'konnect'
+      response = props.config.app === 'konnect'
         // Note: Konnect currently uses PUT because PATCH is not fully supported in Koko
         //       If this changes, the `edit` form methods should be re-evaluated/updated accordingly
         ? await axiosInstance.put(submitUrl.value, requestBody)
@@ -824,9 +824,9 @@ const schemaUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${schemaEndpoint}`
 
   if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
   } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
   // replace the plugin type
@@ -886,7 +886,7 @@ onBeforeMount(async () => {
   } catch (error: any) {
     fetchSchemaError.value = getMessageFromError(error)
     // Emit the error for the host app
-    emit('fetch-schema:error', error)
+    emit('error:fetch-schema', error)
   } finally {
     schemaLoading.value = false
   }

@@ -111,7 +111,7 @@ const props = defineProps({
 })
 
 const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
+  headers: props.config.requestHeaders,
 })
 
 const { parseSchema } = composables.useSchemas(props.entityId || undefined)
@@ -122,9 +122,9 @@ const buildGetOneUrl = (entityType: string, entityId: string): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetOne}`
 
   if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
   } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
   // replace the entity type and id
@@ -138,9 +138,9 @@ const buildGetAllUrl = (entityType: string): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetAll}`
 
   if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
   } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
   // replace the entity type
@@ -167,7 +167,7 @@ const getOne = (entityType: string, entityId: string): Promise<AxiosResponse> =>
 const getAll = (entityType: string, params: AxiosRequestConfig['params']): Promise<AxiosResponse> => {
   const url = buildGetAllUrl(entityType)
 
-  // TODO: currently hardcoded to fetch 1000 records, and filter
+  // Currently hardcoded to fetch 1000 records, and filter
   // client side. If more than 1000 records, this won't work
   if (props.config.app === 'konnect') {
     return axiosInstance.get(url).then(res => {
@@ -493,7 +493,7 @@ const getModel = (): Record<string, any> => {
 const loading = ref(true)
 const initFormModel = (): void => {
   if (props.record && props.schema) {
-    // top level fields
+    // global fields
     updateModel({
       enabled: props.record.enabled ?? true,
       ...(props.record.instance_name && { instance_name: props.record.instance_name || '' }),
@@ -502,10 +502,9 @@ const initFormModel = (): void => {
     })
 
     if (props.record.data) {
-      const newModel = props.record.data
-      newModel.client_certificate = newModel.client_certificate?.id
       updateModel(props.record.data)
     } else if (props.record.config) {
+      // scope and top level fields fields
       if (props.record.consumer_id || props.record.service_id || props.record.route_id || props.record.consumer_group_id) {
         updateModel({
           service_id: props.record.service_id,
@@ -563,7 +562,7 @@ watch(() => props.schema, (newSchema) => {
   sharedFormName.value = getSharedFormName(form.model.name)
 
   initFormModel()
-}, { immediate: true })
+}, { immediate: true, deep: true })
 
 onBeforeMount(() => {
   form.value = parseSchema(props.schema)
