@@ -4,21 +4,29 @@
     :query="props.query"
     :query-ready="props.queryReady"
   >
-    Stub: {{ chartType }}
-    <pre>
-      {{ queryResult(data) }}
-    </pre>
+    <AnalyticsChart
+      :chart-data="data"
+      :chart-options="options"
+      chart-title=""
+      tooltip-title=""
+    />
   </QueryDataProvider>
 </template>
 <script setup lang="ts">
 import type { BarChartOptions, RendererProps } from '../types'
 import QueryDataProvider from './QueryDataProvider.vue'
 import { computed } from 'vue'
+import { AnalyticsChart, ChartTypes as AnalyticsChartTypes } from '@kong-ui-public/analytics-chart'
+import { ChartTypes } from '../types'
 
 const props = defineProps<RendererProps<BarChartOptions>>()
 
-// Temp: show _something_.
-const chartType = computed(() => props.chartOptions.type)
-const queryResult = (data: any) => JSON.stringify(data, undefined, '  ').substring(0, 500)
+const chartTypeLookup = {
+  [ChartTypes.HorizontalBar]: AnalyticsChartTypes.HORIZONTAL_BAR,
+  [ChartTypes.VerticalBar]: AnalyticsChartTypes.VERTICAL_BAR,
+}
 
+const options = computed(() => ({
+  type: chartTypeLookup[props.chartOptions.type],
+}))
 </script>
