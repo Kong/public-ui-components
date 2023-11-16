@@ -22,15 +22,22 @@ const routeParams = [
 ]
 
 describe('parse-route-parameters', () => {
-  it('builds valid url', () => {
+  it('builds valid url with multiple parameters', () => {
     const url = useExternalLinkCreator(routeParams)
 
     expect(url).toBe(`${host}/gateway-manager/${firstUuid}/routes/${secondUuid}`)
   })
 
-  it('fails if provided string is invalid', () => {
-    const url = useExternalLinkCreator([routeParams[0], ''])
+  it('builds with single parameter', () => {
+    const url = useExternalLinkCreator([routeParams[0]])
 
-    expect(url).toBe(`${host}/gateway-manager/`)
+    expect(url).toBe(`${host}/gateway-manager`)
+  })
+
+  it('fails if an empty path param is provided', () => {
+    const url = useExternalLinkCreator([routeParams[0], '-1', '   '])
+
+    // Console error should be thrown, and method will return empty string
+    expect(url).toBe('')
   })
 })
