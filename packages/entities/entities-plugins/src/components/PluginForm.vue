@@ -690,7 +690,6 @@ const handleUpdate = (payload: Record<string, any>) => {
 }
 
 watch([entityData, initialized], (newData, oldData) => {
-  const newEntityData = newData[0]
   const newId = newData[0] !== oldData[0]
   const newinitialized = newData[1]
   const oldinitialized = oldData[1]
@@ -698,11 +697,6 @@ watch([entityData, initialized], (newData, oldData) => {
   // rebuild schema if its not a credential and we either just determined a new entity id, or newly initialized the data
   if (!treatAsCredential.value && formType.value === EntityBaseFormType.Edit && (newId || (newinitialized && newinitialized !== oldinitialized))) {
     schemaLoading.value = true
-
-    // if new id was found, hide scoping
-    if (newId && newEntityData.id) {
-      defaultFormSchema.selectionGroup.type = 'foreign'
-    }
 
     schema.value = buildFormSchema('config', configResponse.value, defaultFormSchema)
     schemaLoading.value = false
