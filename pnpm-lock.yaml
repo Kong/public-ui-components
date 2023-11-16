@@ -297,6 +297,9 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
+      '@kong-ui-public/sandbox-layout':
+        specifier: workspace:^
+        version: link:../../core/sandbox-layout
       '@kong/design-tokens':
         specifier: ^1.11.9
         version: 1.11.9
