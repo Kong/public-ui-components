@@ -1,0 +1,77 @@
+{
+  "name": "@kong-ui-public/dashboard-renderer",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/dashboard-renderer.umd.js",
+  "module": "./dist/dashboard-renderer.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/dashboard-renderer.es.js",
+      "require": "./dist/dashboard-renderer.umd.js"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "cross-env USE_SANDBOX=true vite",
+    "build": "run-s typecheck build:package build:types",
+    "build:package": "vite build -m production",
+    "build:analyzer": "BUILD_VISUALIZER='analytics/dashboard-renderer' vite build -m production",
+    "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
+    "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
+    "preview": "cross-env USE_SANDBOX=true vite preview",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
+    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore' --fix",
+    "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
+    "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
+    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
+    "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
+    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
+    "test:unit": "cross-env FORCE_COLOR=1 vitest run",
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+  },
+  "devDependencies": {
+    "@kong-ui-public/analytics-chart": "^0.15.3",
+    "@kong-ui-public/i18n": "workspace:^",
+    "@kong-ui-public/sandbox-layout": "workspace:^",
+    "@kong/design-tokens": "^1.11.9",
+    "@kong/kongponents": "^8.126.2",
+    "json-schema-to-ts": "^2.9.2",
+    "vue": "^3.3.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kong/public-ui-components.git",
+    "directory": "packages/analytics/dashboard-renderer"
+  },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/analytics/dashboard-renderer",
+  "bugs": {
+    "url": "https://github.com/Kong/public-ui-components/issues"
+  },
+  "author": "Kong, Inc.",
+  "license": "Apache-2.0",
+  "volta": {
+    "extends": "../../../package.json"
+  },
+  "distSizeChecker": {
+    "errorLimit": "200KB"
+  },
+  "peerDependencies": {
+    "@kong-ui-public/analytics-chart": "^0.15.3",
+    "@kong-ui-public/i18n": "workspace:^",
+    "@kong/kongponents": "^8.125.0",
+    "vue": "^3.3.4"
+  },
+  "dependencies": {
+    "@kong-ui-public/core": "workspace:^",
+    "ajv": "^8.12.0",
+    "swrv": "^1.0.4"
+  }
+}
