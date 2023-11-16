@@ -34,7 +34,7 @@
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
             <KTooltip :label="t('upstreams.list.toolbar_actions.new_upstream_tooltip')">
-            <KButton
+              <KButton
                 appearance="primary"
                 data-testid="toolbar-add-upstream"
                 icon="plus"

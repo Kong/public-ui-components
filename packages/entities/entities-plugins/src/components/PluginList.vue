@@ -45,7 +45,7 @@
               </KButton>
             </KTooltip>
           </PermissionsWrapper>
-         </Teleport>
+        </Teleport>
       </template>
 
       <!-- Column Formatting -->
