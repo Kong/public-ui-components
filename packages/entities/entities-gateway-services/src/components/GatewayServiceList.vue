@@ -32,14 +32,16 @@
           to="#kong-ui-app-page-header-action-button"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
-            <KButton
-              appearance="primary"
-              data-testid="toolbar-add-gateway-service"
-              icon="plus"
-              :to="config.createRoute"
-            >
-              {{ t('gateway_services.list.toolbar_actions.new_gateway_service') }}
-            </KButton>
+            <KTooltip :label="t('gateway_services.list.toolbar_actions.new_gateway_service_tooltip')">
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-gateway-service"
+                icon="plus"
+                :to="config.createRoute"
+              >
+                {{ t('gateway_services.list.toolbar_actions.new_gateway_service') }}
+              </KButton>
+            </KTooltip>
           </PermissionsWrapper>
         </Teleport>
       </template>

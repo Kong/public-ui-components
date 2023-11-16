@@ -12,7 +12,8 @@
         "description": "Upstreams are used to load balance incoming requests."
       },
       "toolbar_actions": {
-        "new_upstream": "New Upstream"
+        "new_upstream": "New Upstream",
+        "new_upstream_tooltip": "An Upstream represents a virtual hostname and can be used to load balance incoming requests over multiple Gateway Services."
       }
     },
     "title": "Upstreams",

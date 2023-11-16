@@ -33,14 +33,16 @@
           to="#kong-ui-app-page-header-action-button"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
-            <KButton
-              appearance="primary"
-              data-testid="toolbar-add-sni"
-              icon="plus"
-              :to="config.createRoute"
-            >
-              {{ t('snis.list.toolbar_actions.new') }}
-            </KButton>
+            <KTooltip :label="t('snis.list.toolbar_actions.new_sni_tooltip')">
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-sni"
+                icon="plus"
+                :to="config.createRoute"
+              >
+                {{ t('snis.list.toolbar_actions.new') }}
+              </KButton>
+            </KTooltip>
           </PermissionsWrapper>
         </Teleport>
       </template>

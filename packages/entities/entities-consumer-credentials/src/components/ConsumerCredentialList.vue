@@ -23,14 +23,16 @@
           to="#kong-ui-app-page-header-action-button"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
-            <KButton
-              appearance="primary"
-              data-testid="toolbar-add-credential"
-              icon="plus"
-              :to="config.createRoute"
-            >
-              {{ t(`credentials.list.toolbar_actions.${config.plugin}.new`) }}
-            </KButton>
+            <KTooltip :label="t('credentials.list.toolbar_actions.new_credential_tooltip')">
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-credential"
+                icon="plus"
+                :to="config.createRoute"
+              >
+                {{ t(`credentials.list.toolbar_actions.${config.plugin}.new`) }}
+              </KButton>
+            </KTooltip>
           </PermissionsWrapper>
         </Teleport>
       </template>

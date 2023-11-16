@@ -34,14 +34,16 @@
           to="#kong-ui-app-page-header-action-button"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
-            <KButton
-              appearance="primary"
-              data-testid="toolbar-add-plugin"
-              icon="plus"
-              :to="config.createRoute"
-            >
-              {{ t('plugins.list.toolbar_actions.new_plugin') }}
-            </KButton>
+            <KTooltip :label="t('plugins.list.toolbar_actions.new_plugin_tooltip')">
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-plugin"
+                icon="plus"
+                :to="config.createRoute"
+              >
+                {{ t('plugins.list.toolbar_actions.new_plugin') }}
+              </KButton>
+            </KTooltip>
           </PermissionsWrapper>
          </Teleport>
       </template>

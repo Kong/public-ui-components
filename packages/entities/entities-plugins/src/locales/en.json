@@ -58,7 +58,8 @@
     "title": "Plugins",
     "list": {
       "toolbar_actions": {
-        "new_plugin": "New Plugin"
+        "new_plugin": "New Plugin",
+        "new_plugin_tooltip": "Plugins allow you to extend Kong's capabilities with features like rate limiting, authentication, and logging."
       },
       "table_headers": {
         "applied_to": "Applied To",

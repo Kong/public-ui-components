@@ -32,14 +32,16 @@
           to="#kong-ui-app-page-header-action-button"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
-            <KButton
-              appearance="primary"
-              data-testid="toolbar-add-certificate"
-              icon="plus"
-              :to="config.createRoute"
-            >
-              {{ t('certificates.list.toolbar_actions.new_certificate') }}
-            </KButton>
+            <KTooltip :label="t('certificates.list.empty_state.description')">
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-certificate"
+                icon="plus"
+                :to="config.createRoute"
+              >
+                {{ t('certificates.list.toolbar_actions.new_certificate') }}
+              </KButton>
+            </KTooltip>
           </PermissionsWrapper>
         </Teleport>
       </template>

@@ -32,14 +32,16 @@
           to="#kong-ui-app-page-header-action-button"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
-            <KButton
-              appearance="primary"
-              data-testid="toolbar-add-vault"
-              icon="plus"
-              :to="config.createRoute"
-            >
-              {{ t('vaults.list.toolbar_actions.new_vault') }}
-            </KButton>
+            <KTooltip :label="t('vaults.list.empty_state.description')">
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-vault"
+                icon="plus"
+                :to="config.createRoute"
+              >
+                {{ t('vaults.list.toolbar_actions.new_vault') }}
+              </KButton>
+            </KTooltip>
           </PermissionsWrapper>
         </Teleport>
       </template>

@@ -16,7 +16,8 @@
     "title": "SNIs",
     "list": {
       "toolbar_actions": {
-        "new": "New SNI"
+        "new": "New SNI",
+        "new_sni_tooltip": "An SNI object represents a many-to-one mapping of hostnames to a certificate."
       },
       "table_headers": {
         "name": "Name",
