@@ -1,11 +1,9 @@
 <template>
-  <!-- Loading state -->
   <KSkeleton
     v-if="isLoading || (!data && !hasError)"
     class="chart-skeleton"
     type="table"
   />
-  <!-- Error state -->
   <KEmptyState
     v-else-if="!isLoading && hasError"
     cta-is-hidden
@@ -28,6 +26,7 @@ import useSWRV from 'swrv'
 import type { QueryProvider } from '../types/query-provider'
 import { INJECT_QUERY_PROVIDER } from '../types/query-provider'
 import { useSwrvState } from '@kong-ui-public/core'
+import composables from '../composables'
 
 const props = defineProps<{
   query: any // TODO: Explore v4
@@ -35,6 +34,8 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['queryComplete'])
+
+const { i18n } = composables.useI18n()
 
 const queryBridge: QueryProvider | undefined = inject(INJECT_QUERY_PROVIDER)
 
@@ -58,13 +59,11 @@ const { data, error, isValidating } = useSWRV(queryKey, async () => {
   try {
     // Note that queryBridge is guaranteed to be set here because SWRV won't execute the query if the key is null.
     return queryBridge?.query(props.query, abortController)
-  } catch (e) {
+  } catch (e: any) {
     // Note: 'Range not allowed' is defined by the API, therefore cannot be stored as string translation
-    // errorMessage.value = e?.response?.data?.message === 'Range not allowed for this tier'
-    //     ? i18n.t('configuration.vitals.reports.timeRangeExceeded')
-    //     : e?.response?.data?.message || e?.message
-    // TODO: Re-implement this once translations are in ^^
-    errorMessage.value = 'Error'
+    errorMessage.value = e?.response?.data?.message === 'Range not allowed for this tier'
+      ? i18n.t('queryDataProvider.timeRangeExceeded')
+      : e?.response?.data?.message || e?.message
   } finally {
     emit('queryComplete')
   }

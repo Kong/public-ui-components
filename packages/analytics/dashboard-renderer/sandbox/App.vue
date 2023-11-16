@@ -59,8 +59,8 @@ const validate = ajv.compile(dashboardDefinitionSchema)
 const definitionText = ref(`{
   "tiles": [
     { "chart": {
-      "type": "horizontal_bar",
-     }, "query": null }
+      "type": "horizontal_bar"
+     }, "query": {} }
    ]
 }`)
 

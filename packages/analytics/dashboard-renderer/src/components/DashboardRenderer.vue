@@ -4,9 +4,8 @@
       v-if="!queryBridge"
       appearance="danger"
     >
-      No query bridge provided.  Unable to render dashboard.
+      {{ i18n.t('renderer.noQueryBridge') }}
     </KAlert>
-    <!-- Right now, tiles don't have unique keys.  Perhaps in the future they will, and this can be more specific? -->
     <Tile
       v-for="(tile, index) in props.definition.tiles"
       v-else
@@ -21,13 +20,19 @@ import type { DashboardDefinition, DashboardRendererContext } from '../types'
 import Tile from './DashboardTile.vue'
 import { INJECT_QUERY_PROVIDER } from '../types/query-provider'
 import { inject } from 'vue'
+import composables from '../composables'
 
 const props = defineProps<{
   context: DashboardRendererContext,
   definition: DashboardDefinition,
 }>()
 
+const { i18n } = composables.useI18n()
+
 const queryBridge = inject(INJECT_QUERY_PROVIDER)
+
+// Right now, tiles don't have unique keys.  Perhaps in the future they will,
+// and we can use that instead of `index` as the fragment key.
 
 </script>
 
