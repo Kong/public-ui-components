@@ -608,12 +608,8 @@ onBeforeMount(() => {
   .fade-enter-from, .fade-leave-to {
     opacity: 0;
   }
-}
-</style>
 
-<style lang="scss">
-.kong-ui-entities-plugin-form {
-  .vue-form-generator {
+  :deep(.vue-form-generator) {
     & > fieldset {
       border: none;
       padding: $kui-space-0;
