@@ -36,17 +36,15 @@
           to="#kong-ui-app-page-header-action-button"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
-            <KTooltip :label="t('consumers.list.empty_state.description')">
-              <KButton
-                appearance="primary"
-                data-testid="toolbar-add-consumer"
-                icon="plus"
-                :to="config.consumerGroupId ? undefined : config.createRoute"
-                @click="() => config.consumerGroupId ? handleAddConsumerClick() : undefined"
-              >
-                {{ config.consumerGroupId ? t('consumers.actions.add_consumer') : t('consumers.list.toolbar_actions.new_consumer') }}
-              </KButton>
-            </KTooltip>
+            <KButton
+              appearance="primary"
+              data-testid="toolbar-add-consumer"
+              icon="plus"
+              :to="config.consumerGroupId ? undefined : config.createRoute"
+              @click="() => config.consumerGroupId ? handleAddConsumerClick() : undefined"
+            >
+              {{ config.consumerGroupId ? t('consumers.actions.add_consumer') : t('consumers.list.toolbar_actions.new_consumer') }}
+            </KButton>
           </PermissionsWrapper>
         </Teleport>
       </template>

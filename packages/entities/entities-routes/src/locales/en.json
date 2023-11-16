@@ -17,8 +17,7 @@
     "title": "Routes",
     "list": {
       "toolbar_actions": {
-        "new_route": "New Route",
-        "new_route_tooltip": "A Route defines rules to match client requests, and is associated with a Gateway Service."
+        "new_route": "New Route"
       },
       "table_headers": {
         "name": "Name",

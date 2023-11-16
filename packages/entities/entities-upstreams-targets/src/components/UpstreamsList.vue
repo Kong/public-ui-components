@@ -33,16 +33,14 @@
           to="#kong-ui-app-page-header-action-button"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
-            <KTooltip :label="t('upstreams.list.toolbar_actions.new_upstream_tooltip')">
-              <KButton
-                appearance="primary"
-                data-testid="toolbar-add-upstream"
-                icon="plus"
-                :to="config.createRoute"
-              >
-                {{ t('upstreams.list.toolbar_actions.new_upstream') }}
-              </KButton>
-            </KTooltip>
+            <KButton
+              appearance="primary"
+              data-testid="toolbar-add-upstream"
+              icon="plus"
+              :to="config.createRoute"
+            >
+              {{ t('upstreams.list.toolbar_actions.new_upstream') }}
+            </KButton>
           </PermissionsWrapper>
         </Teleport>
       </template>

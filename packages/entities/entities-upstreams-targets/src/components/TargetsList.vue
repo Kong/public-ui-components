@@ -23,17 +23,15 @@
           to="#kong-ui-app-page-header-action-button"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
-            <KTooltip :label="t('targets.list.empty_state.description')">
-              <KButton
-                appearance="primary"
-                data-testid="toolbar-new-target"
-                icon="plus"
-                :to="props.config.createRoute ? props.config.createRoute : undefined"
-                @click="() => !props.config.createRoute ? handleCreateTarget() : undefined"
-              >
-                {{ t('targets.list.toolbar_actions.new_target') }}
-              </KButton>
-            </KTooltip>
+            <KButton
+              appearance="primary"
+              data-testid="toolbar-new-target"
+              icon="plus"
+              :to="props.config.createRoute ? props.config.createRoute : undefined"
+              @click="() => !props.config.createRoute ? handleCreateTarget() : undefined"
+            >
+              {{ t('targets.list.toolbar_actions.new_target') }}
+            </KButton>
           </PermissionsWrapper>
         </Teleport>
       </template>

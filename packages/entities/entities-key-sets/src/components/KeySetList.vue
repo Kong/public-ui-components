@@ -32,16 +32,14 @@
           to="#kong-ui-app-page-header-action-button"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
-            <KTooltip :label="t('keySets.list.empty_state.description')">
-              <KButton
-                appearance="primary"
-                data-testid="toolbar-add-key-set"
-                icon="plus"
-                :to="config.createRoute"
-              >
-                {{ t('keySets.list.toolbar_actions.new_key_set') }}
-              </KButton>
-            </KTooltip>
+            <KButton
+              appearance="primary"
+              data-testid="toolbar-add-key-set"
+              icon="plus"
+              :to="config.createRoute"
+            >
+              {{ t('keySets.list.toolbar_actions.new_key_set') }}
+            </KButton>
           </PermissionsWrapper>
         </Teleport>
       </template>

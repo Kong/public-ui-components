@@ -23,8 +23,7 @@
     "title": "Gateway Services",
     "list": {
       "toolbar_actions": {
-        "new_gateway_service": "New Gateway Service",
-        "new_gateway_service_tooltip": "Service entities are abstractions of each of your own upstream services."
+        "new_gateway_service": "New Gateway Service"
       },
       "table_headers": {
         "name": "Name",

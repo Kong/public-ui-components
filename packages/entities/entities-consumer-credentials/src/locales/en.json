@@ -3,7 +3,6 @@
     "title": "Consumer Credentials",
     "list": {
       "toolbar_actions": {
-        "new_credential_tooltip": "At least one credential of a single type is required.",
         "acls": {
           "new": "New ACL Credential"
         },
