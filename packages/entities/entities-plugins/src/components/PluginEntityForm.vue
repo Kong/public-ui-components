@@ -11,16 +11,16 @@
     >
       <component
         :is="sharedFormName"
-        v-if="sharedFormName && (formModel.id && isEditing || !isEditing)"
+        v-if="sharedFormName && (formModel.id && editing || !editing)"
+        :editing="editing"
         :form-model="formModel"
         :form-options="formOptions"
         :form-schema="formSchema"
-        :is-editing="isEditing"
         :on-model-updated="onModelUpdated"
       />
 
       <VueFormGenerator
-        v-if="!sharedFormName && (formModel.id && isEditing || !isEditing)"
+        v-if="!sharedFormName && (formModel.id && editing || !editing)"
         :model="formModel"
         :options="formOptions"
         :schema="formSchema"
@@ -100,11 +100,11 @@ const props = defineProps({
     type: Object as PropType<Record<string, any>>,
     default: () => ({}),
   },
-  isEditing: {
+  editing: {
     type: Boolean,
     default: false,
   },
-  isCredential: {
+  credential: {
     type: Boolean,
     default: false,
   },
@@ -223,76 +223,6 @@ const entityIdField = computed((): string => {
       return ''
   }
 })
-
-const onModelUpdated = (model: Record<string, any>, schema: string) => {
-  const newData = { [schema]: model }
-  const newModel = Object.assign({}, formModel, newData)
-
-  Object.assign(formModel, newModel)
-
-  emit('model-updated', {
-    model: formModel,
-    originalModel,
-    data: getModel(),
-  })
-}
-
-const updateModel = (data: Record<string, any>, parent?: string) => {
-  Object.keys(data).forEach(key => {
-    let modelKey = parent ? `${parent}-${key}` : key
-    let scheme = props.schema[modelKey]
-
-    // If `scheme` is undefined, it is either because the key is not the deepest nested key of the schema object
-    // or the field name has dashes in it and its schema key was converted to underscores during initiation.
-    if (!scheme) {
-      const underscoredModelKey = parent ? `${parent}-${key.replace(/-/g, '_')}` : key.replace(/-/g, '_')
-
-      // Here we check if the underscored key exists in the schema and the `fieldNameHasDashes` flag is true
-      if (props.schema[underscoredModelKey]?.fieldNameHasDashes) {
-        modelKey = underscoredModelKey
-        scheme = props.schema[modelKey]
-      }
-    }
-
-    const value = data[key]
-    const type = typeof value
-
-    // Ensure Object Advanced field is saved to model as empty object
-    if (scheme && scheme.type === 'object-advanced' && !value) {
-      formModel[modelKey] = {}
-      originalModel[modelKey] = {}
-
-      return
-    }
-
-    if (Array.isArray(value)) {
-      formModel[modelKey] = JSON.parse(JSON.stringify(value))
-      originalModel[modelKey] = JSON.parse(JSON.stringify(value))
-
-      return
-    }
-
-    if (type === 'object' && value && !value.length) {
-      return updateModel(value, modelKey)
-    }
-
-    if (type === 'object' && value && value.length && scheme.type === 'input') {
-      formModel[modelKey] = value.join(', ')
-      originalModel[modelKey] = value.join(', ')
-
-      return
-    }
-
-    formModel[modelKey] = value
-    originalModel[modelKey] = value
-  })
-
-  emit('model-updated', {
-    model: formModel,
-    originalModel,
-    data: getModel(),
-  })
-}
 
 const getModel = (): Record<string, any> => {
   const schema = { ...props.schema }
@@ -490,6 +420,76 @@ const getModel = (): Record<string, any> => {
   return unFlattenObject(outputModel)
 }
 
+const onModelUpdated = (model: Record<string, any>, schema: string) => {
+  const newData = { [schema]: model }
+  const newModel = Object.assign({}, formModel, newData)
+
+  Object.assign(formModel, newModel)
+
+  emit('model-updated', {
+    model: formModel,
+    originalModel,
+    data: getModel(),
+  })
+}
+
+const updateModel = (data: Record<string, any>, parent?: string) => {
+  Object.keys(data).forEach(key => {
+    let modelKey = parent ? `${parent}-${key}` : key
+    let scheme = props.schema[modelKey]
+
+    // If `scheme` is undefined, it is either because the key is not the deepest nested key of the schema object
+    // or the field name has dashes in it and its schema key was converted to underscores during initiation.
+    if (!scheme) {
+      const underscoredModelKey = parent ? `${parent}-${key.replace(/-/g, '_')}` : key.replace(/-/g, '_')
+
+      // Here we check if the underscored key exists in the schema and the `fieldNameHasDashes` flag is true
+      if (props.schema[underscoredModelKey]?.fieldNameHasDashes) {
+        modelKey = underscoredModelKey
+        scheme = props.schema[modelKey]
+      }
+    }
+
+    const value = data[key]
+    const type = typeof value
+
+    // Ensure Object Advanced field is saved to model as empty object
+    if (scheme && scheme.type === 'object-advanced' && !value) {
+      formModel[modelKey] = {}
+      originalModel[modelKey] = {}
+
+      return
+    }
+
+    if (Array.isArray(value)) {
+      formModel[modelKey] = JSON.parse(JSON.stringify(value))
+      originalModel[modelKey] = JSON.parse(JSON.stringify(value))
+
+      return
+    }
+
+    if (type === 'object' && value && !value.length) {
+      return updateModel(value, modelKey)
+    }
+
+    if (type === 'object' && value && value.length && scheme.type === 'input') {
+      formModel[modelKey] = value.join(', ')
+      originalModel[modelKey] = value.join(', ')
+
+      return
+    }
+
+    formModel[modelKey] = value
+    originalModel[modelKey] = value
+  })
+
+  emit('model-updated', {
+    model: formModel,
+    originalModel,
+    data: getModel(),
+  })
+}
+
 const loading = ref(true)
 const initFormModel = (): void => {
   if (props.record && props.schema) {
@@ -536,7 +536,7 @@ const initFormModel = (): void => {
   // credentials don't recognize field with -id, so for now set it like
   // ex. consumer: <entityId>
   // we'll fix this on submit
-  if (props.entityId && props.schema && props.isCredential) {
+  if (props.entityId && props.schema && props.credential) {
     const updateFields: Record<string, any> = {}
     if (Object.prototype.hasOwnProperty.call(formModel, props.entityType)) {
       updateFields[props.entityType] = props.entityId

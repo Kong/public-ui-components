@@ -49,10 +49,10 @@
 
       <PluginEntityForm
         :config="config"
+        :credential="treatAsCredential"
+        :editing="formType === EntityBaseFormType.Edit"
         :entity-id="entityData.id"
         :entity-type="entityData.entity"
-        :is-credential="treatAsCredential"
-        :is-editing="formType === EntityBaseFormType.Edit"
         :record="record || undefined"
         :schema="schema ?? {}"
         @loading="(val: boolean) => formLoading = val"
@@ -166,7 +166,7 @@ const props = defineProps({
   },
 
   /** Credentials use */
-  isCredential: {
+  credential: {
     type: Boolean,
     default: false,
   },
@@ -202,7 +202,7 @@ const { axiosInstance } = useAxios({
 const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
 const schema = ref<Record<string, any> | null>(null)
-const treatAsCredential = computed((): boolean => !!(props.isCredential && props.config.entityId))
+const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
 const record = ref<Record<string, any> | null>(null)
 const configResponse = ref<Record<string, any>>({})
 const formLoading = ref(false)

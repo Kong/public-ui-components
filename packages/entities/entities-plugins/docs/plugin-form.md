@@ -111,7 +111,7 @@ If showing the `Edit` type form, the ID of the plugin.
 
 Manually toggle visibility of plugin scope selection control.
 
-#### `isCredential`
+#### `credential`
 
 - type: `Boolean`
 - required: `false`
