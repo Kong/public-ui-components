@@ -83,7 +83,7 @@ const copyUuidTooltipText = ref(tooltipDefaultText)
 
 // If the dimension value is the same as the label, it means the entity has been deleted
 const isDeletedEntity = computed(() => {
-  return props.entityLinkData.deleted
+  return props.entityLinkData.deleted ?? false
 })
 
 const entityUuid = computed(() => {
