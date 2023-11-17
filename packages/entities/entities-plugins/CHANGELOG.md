@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.5.11...@kong-ui-public/entities-plugins@1.5.12) (2023-11-17)
+
+
+### Bug Fixes
+
+* **entities-plugins:** empty state description ([#927](https://github.com/Kong/public-ui-components/issues/927)) ([6d69d22](https://github.com/Kong/public-ui-components/commit/6d69d22db7ea3fbf78a833d5f04e7448d1f02538))
+
+
+
+
+
 ## [1.5.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.5.10...@kong-ui-public/entities-plugins@1.5.11) (2023-11-17)
 
 
