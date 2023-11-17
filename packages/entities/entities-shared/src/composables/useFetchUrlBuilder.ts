@@ -32,11 +32,10 @@ export default function useFetchUrlBuilder(
     // This is done within a try/catch block in case there is an error in constructing the URL; the fallback value will still fetch but without the params
     try {
       let urlWithParams: URL = new URL(baseRequestUrl.value.href)
-
       if (isExactMatch.value && query) {
         // Using exact match
         urlWithParams.search = '' // trim any query params
-        urlWithParams = new URL(`${urlWithParams.href}?filter[name]=${query}`)
+        urlWithParams = new URL(`${urlWithParams.href}?filter[name][contains]=${query}`)
       } else {
         if (!isExactMatch.value) {
           // Using fuzzy match

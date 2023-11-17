@@ -45,6 +45,9 @@ export default function useFetcher(
 
       if (data[dataKey] && Array.isArray(data[dataKey])) {
         tableData = data[dataKey]
+      } else if (Array.isArray(data)) {
+        // An array of object is returned
+        tableData = data
       } else {
         // Single object is returned, so wrap in an array
         tableData = Object.keys(data).length ? [data] : []
