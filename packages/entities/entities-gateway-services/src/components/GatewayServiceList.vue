@@ -1,6 +1,7 @@
 <template>
   <div class="kong-ui-entities-gateway-services-list">
     <EntityBaseTable
+      :key="key"
       :cache-identifier="cacheIdentifier"
       disable-pagination-page-jump
       :disable-sorting="disableSorting"
@@ -27,8 +28,9 @@
       </template>
       <!-- Create action -->
       <template #toolbar-button>
+        <!-- Hide Create button if table is empty -->
         <Teleport
-          :disabled="!useActionOutside"
+          :disabled="!useActionOutside || !hasData"
           to="#kong-ui-app-page-header-action-button"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
@@ -515,11 +517,21 @@ const deleteRow = async (): Promise<void> => {
     isDeletePending.value = false
   }
 }
+// Remount the table when hasData changes
+const key = ref(1)
+const hasData = ref(false)
+const isLoaded = ref(false)
 
 /**
  * Watchers
  */
 watch(fetcherState, (state) => {
+  // if table is populated, show the Create button
+  if (fetcherState.value.response?.data?.length && !isLoaded.value) {
+    hasData.value = true
+    isLoaded.value = true
+    key.value++
+  }
   if (state.status === FetcherStatus.Error) {
     errorMessage.value = {
       title: t('errors.general'),
