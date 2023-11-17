@@ -83,7 +83,7 @@
       },
       "empty_state": {
         "title": "Configure a New Plugin",
-        "description": "Improve the security of your Kong Gateway deployment with centralized secrets."
+        "description": "Plugins are used to extend Kong functionality."
       }
     },
     "meta": {
