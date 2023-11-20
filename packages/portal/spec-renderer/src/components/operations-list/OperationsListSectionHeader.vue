@@ -12,13 +12,12 @@
       aria-hidden="true"
       class="icon-wrapper"
     >
-      <KIcon
+      <ChevronRightIcon
         v-if="isCollapsed"
         :color="`var(--kong-ui-spec-renderer-operations-list-section-icon-color-collapsed, ${KUI_COLOR_TEXT_NEUTRAL_WEAK})`"
-        icon="chevronRight"
         :size="KUI_ICON_SIZE_40"
       />
-      <KIcon
+      <ChevronDownIcon
         v-else
         :color="`var(--kong-ui-spec-renderer-operations-list-section-icon-color-expanded, ${KUI_COLOR_TEXT_NEUTRAL_STRONGER})`"
         icon="chevronDown"
@@ -44,6 +43,7 @@
 import { computed } from 'vue'
 import composables from '../../composables'
 import { KUI_COLOR_TEXT_NEUTRAL_WEAK, KUI_COLOR_TEXT_NEUTRAL_STRONGER, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
+import { ChevronRightIcon, ChevronDownIcon } from '@kong/icons'
 
 const props = defineProps({
   isCollapsed: {

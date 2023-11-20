@@ -117,7 +117,7 @@ describe('<ConsumerGroupList />', () => {
       ).as(params?.alias ?? 'getConsumerGroupsMultiPage')
     }
 
-    const triggerQuery = '.kong-ui-entities-consumer-groups-list tbody tr [data-testid="k-dropdown-trigger"]'
+    const triggerQuery = '.kong-ui-entities-consumer-groups-list tbody tr [data-testid="dropdown-trigger"]'
     const exitQuery = '.kong-ui-entities-consumer-groups-list tbody tr [data-testid="action-entity-delete"]'
     const modalQuery = 'exit-group-modal'
 
@@ -738,7 +738,7 @@ describe('<ConsumerGroupList />', () => {
       ).as(params?.alias ?? 'getConsumerGroupsMultiPage')
     }
 
-    const triggerQuery = '.kong-ui-entities-consumer-groups-list tbody tr [data-testid="k-dropdown-trigger"]'
+    const triggerQuery = '.kong-ui-entities-consumer-groups-list tbody tr [data-testid="dropdown-trigger"]'
     const exitQuery = '.kong-ui-entities-consumer-groups-list tbody tr [data-testid="action-entity-delete"]'
     const modalQuery = 'exit-group-modal'
 

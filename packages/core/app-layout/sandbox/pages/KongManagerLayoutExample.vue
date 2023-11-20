@@ -67,8 +67,8 @@
           Docs / Support
         </a>
       </div>
-      <KDropdownMenu
-        button-appearance="btn-link"
+      <KDropdown
+        appearance="tertiary"
         class="admin-menu"
         :items="[
           { label: 'AppLayout', to: '/' },
@@ -321,7 +321,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
   --KButtonLink: #fff;
 
   // Ensure button is aligned center
-  :deep(.k-dropdown-trigger) {
+  :deep(.dropdown-trigger) {
     > div {
       align-items: center;
       display: flex;

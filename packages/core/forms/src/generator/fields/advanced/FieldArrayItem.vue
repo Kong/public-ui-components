@@ -2,7 +2,7 @@
   <div class="array-item">
     <slot />
     <KButton
-      appearance="btn-link"
+      appearance="tertiary"
       class="delete"
       type="button"
       @click="$emit('remove-item')"

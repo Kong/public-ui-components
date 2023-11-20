@@ -19,9 +19,9 @@
       >
         <KTextArea
           v-model.trim="form.fields.cert"
+          :character-limit="false"
           class="certificate-form-textarea"
           data-testid="certificate-form-cert"
-          disable-character-limit
           :label="t('certificates.form.fields.cert.label')"
           :readonly="form.isReadonly"
           required
@@ -40,9 +40,9 @@
 
         <KTextArea
           v-model.trim="form.fields.key"
+          :character-limit="false"
           class="certificate-form-textarea"
           data-testid="certificate-form-key"
-          disable-character-limit
           :label="t('certificates.form.fields.key.label')"
           :readonly="form.isReadonly"
           required
@@ -61,9 +61,9 @@
 
         <KTextArea
           v-model.trim="form.fields.certAlt"
+          :character-limit="false"
           class="certificate-form-textarea"
           data-testid="certificate-form-cert-alt"
-          disable-character-limit
           :label="t('certificates.form.fields.cert_alt.label')"
           :readonly="form.isReadonly"
         >
@@ -81,9 +81,9 @@
 
         <KTextArea
           v-model.trim="form.fields.keyAlt"
+          :character-limit="false"
           class="certificate-form-textarea"
           data-testid="certificate-form-key-alt"
-          disable-character-limit
           :label="t('certificates.form.fields.key_alt.label')"
           :readonly="form.isReadonly"
         >

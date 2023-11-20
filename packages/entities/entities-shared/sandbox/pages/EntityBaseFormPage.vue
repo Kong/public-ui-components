@@ -30,7 +30,7 @@
           data-testid="form-tags"
           help="e.g. tag1, tag2, tag3"
           label="Tags"
-          :label-attributes="{ help: 'An optional set of strings for grouping and filtering, separated by commas.' }"
+          :label-attributes="{ info: 'An optional set of strings for grouping and filtering, separated by commas.' }"
           placeholder="Enter a list of tags separated by comma"
           :readonly="form.isReadonly"
           type="text"

@@ -9,10 +9,10 @@
   >
     <div class="tooltip-title">
       <span class="title font-bold">{{ tooltipTitle }}</span>
-      <KIcon
+      <DragIcon
         v-if="locked"
         class="drag-icon"
-        icon="drag"
+        :color="KUI_COLOR_TEXT_NEUTRAL"
       />
       <span
         v-if="context"
@@ -41,6 +41,8 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { DragIcon } from '@kong/icons'
+import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 
 const emit = defineEmits(['dimensions', 'top', 'left'])
 

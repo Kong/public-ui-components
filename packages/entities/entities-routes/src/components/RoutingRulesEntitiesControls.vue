@@ -1,28 +1,24 @@
 <template>
   <div class="routing-rules-entities-controls-container">
     <KButton
-      appearance="btn-link"
+      appearance="tertiary"
       class="remove-button"
       :data-testid="`remove-${routingRulesEntity}`"
       @click="$emit('remove')"
     >
-      <template #icon>
-        <KIcon icon="trash" />
-      </template>
+      <KIcon icon="trash" />
     </KButton>
     <KButton
-      appearance="btn-link"
+      appearance="tertiary"
       :data-testid="`add-${routingRulesEntity}`"
       :disabled="isAddDisabled"
       @click="$emit('add')"
     >
-      <template #icon>
-        <KIcon
-          :color="KUI_COLOR_TEXT_PRIMARY_STRONG"
-          icon="plus"
-          size="22"
-        />
-      </template>
+      <KIcon
+        :color="KUI_COLOR_TEXT_PRIMARY_STRONG"
+        icon="plus"
+        size="22"
+      />
     </KButton>
   </div>
 </template>
@@ -67,10 +63,6 @@ defineEmits(['remove', 'add'])
       .kong-icon {
         opacity: 0 !important;
       }
-    }
-
-    &:not(:first-of-type) {
-      margin-left: $kui_space_50 !important;
     }
   }
 }

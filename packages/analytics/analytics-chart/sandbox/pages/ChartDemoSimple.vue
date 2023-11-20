@@ -121,7 +121,7 @@
         <KLabel>Dataset options</KLabel>
         <div class="dataset-options">
           <KButton
-            appearance="outline"
+            appearance="secondary"
             class="first-button"
             size="small"
             @click="randomizeData()"
@@ -129,7 +129,7 @@
             Randomize data
           </KButton>
           <KButton
-            appearance="outline"
+            appearance="secondary"
             size="small"
             @click="addDataset()"
           >
@@ -291,7 +291,6 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
   const end = Date.now()
 
   const records: AnalyticsExploreRecord[] = []
-  const totalRequests = 0
 
   const dimensions = [...statusCodeDimensionValues.value]
 
@@ -471,16 +470,16 @@ const isTopNTable = computed<boolean>(() => {
   return (ChartTypesSimple.TOPN === chartType.value)
 })
 
-const onMetricSelected = (item: any) => {
-  if (!item) {
-    return
-  }
+// const onMetricSelected = (item: any) => {
+//   if (!item) {
+//     return
+//   }
 
-  selectedMetric.value = {
-    name: item.value,
-    unit: item.unit,
-  }
-}
+//   selectedMetric.value = {
+//     name: item.value,
+//     unit: item.unit,
+//   }
+// }
 
 watch(multiDimensionToggle, () => {
   serviceDimensionValues.value = new Set(Array(5).fill(0).map(() => `Service${rand(1, 100)}`))

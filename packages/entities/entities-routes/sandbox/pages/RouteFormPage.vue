@@ -8,7 +8,7 @@
   >
     <template #form-actions="{ canSubmit, submit, cancel }">
       <KButton
-        appearance="outline"
+        appearance="secondary"
         @click="cancel"
       >
         Cancel
@@ -32,7 +32,7 @@
   >
     <template #form-actions="{ canSubmit, submit, cancel }">
       <KButton
-        appearance="outline"
+        appearance="secondary"
         @click="cancel"
       >
         Cancel

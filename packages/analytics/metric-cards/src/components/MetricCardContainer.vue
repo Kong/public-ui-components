@@ -7,11 +7,7 @@
       v-if="allCardsHaveErrors"
       class="error-display"
     >
-      <KIcon
-        class="error-display-icon"
-        icon="warning"
-        size="24"
-      />
+      <WarningIcon class="error-display-icon" />
       <div
         v-if="errorMessage"
         class="error-display-message"
@@ -54,6 +50,7 @@ import type { MetricCardDef, MetricCardDisplayValue } from '../types'
 import { changePolarity, metricChange, defineIcon, calculateChange } from '../utilities'
 import MetricsCard from './display/MetricsCard.vue'
 import MetricCardLoadingSkeleton from './display/MetricCardLoadingSkeleton.vue'
+import { WarningIcon } from '@kong/icons'
 
 // Import any one of the `@kong/icons` components to access the interface - they are all the same.
 // Then alias as `GenericIcon` to provide the icon interface to the prop types.

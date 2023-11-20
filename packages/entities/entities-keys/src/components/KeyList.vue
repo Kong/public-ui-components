@@ -100,9 +100,9 @@
         </PermissionsWrapper>
         <PermissionsWrapper :auth-function="() => canDelete(row)">
           <KDropdownItem
+            danger
             data-testid="action-entity-delete"
             has-divider
-            is-dangerous
             @click="deleteRow(row)"
           >
             {{ t('keys.actions.delete') }}

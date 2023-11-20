@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/error-boundary",
-  "version": "0.2.7",
+  "version": "1.0.0",
   "type": "module",
   "main": "./dist/error-boundary.umd.js",
   "module": "./dist/error-boundary.es.js",
@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "^1.11.9",
+    "@kong/icons": "^1.7.8",
     "vue": "^3.3.4"
   },
   "repository": {
@@ -60,8 +61,5 @@
   },
   "peerDependencies": {
     "vue": "^3.3.4"
-  },
-  "dependencies": {
-    "@kong/icons": "^1.8.0"
   }
 }

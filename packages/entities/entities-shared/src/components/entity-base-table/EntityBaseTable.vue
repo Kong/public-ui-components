@@ -72,7 +72,7 @@
             class="actions-container"
             :data-testid="row.name"
           >
-            <KDropdownMenu
+            <KDropdown
               :kpop-attributes="{ placement: 'bottomEnd' }"
               :width="dropdownMenuWidth"
             >
@@ -97,7 +97,7 @@
                   :row-value="rowValue"
                 />
               </template>
-            </KDropdownMenu>
+            </KDropdown>
           </div>
         </template>
       </KTable>

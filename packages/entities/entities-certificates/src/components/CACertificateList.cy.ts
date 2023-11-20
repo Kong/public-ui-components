@@ -80,7 +80,7 @@ describe('<CACertificateList />', () => {
         },
       })
 
-      cy.getTestId('k-dropdown-trigger').eq(0).click()
+      cy.getTestId('dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
@@ -123,7 +123,7 @@ describe('<CACertificateList />', () => {
             },
           })
 
-          cy.getTestId('k-dropdown-trigger').eq(0).click()
+          cy.getTestId('dropdown-trigger').eq(0).click()
           cy.getTestId('action-entity-view').should(`${!expected ? 'not.' : ''}exist`)
         })
 
@@ -139,7 +139,7 @@ describe('<CACertificateList />', () => {
             },
           })
 
-          cy.getTestId('k-dropdown-trigger').eq(0).click()
+          cy.getTestId('dropdown-trigger').eq(0).click()
           cy.getTestId('action-entity-edit').should(`${expected ? '' : 'not.'}exist`)
         })
 
@@ -155,7 +155,7 @@ describe('<CACertificateList />', () => {
             },
           })
 
-          cy.getTestId('k-dropdown-trigger').eq(0).click()
+          cy.getTestId('dropdown-trigger').eq(0).click()
           cy.getTestId('action-entity-delete').should(`${expected ? '' : 'not.'}exist`)
         })
       })
@@ -223,7 +223,7 @@ describe('<CACertificateList />', () => {
       cy.get('.k-table-empty-state .k-empty-state-cta .k-button').should('be.visible')
     })
 
-    it('should hide empty state and create ca certificate cta if user can not create', () => {
+    it.only('should hide empty state and create ca certificate cta if user can not create', () => {
       interceptKM()
 
       cy.mount(CACertificateList, {

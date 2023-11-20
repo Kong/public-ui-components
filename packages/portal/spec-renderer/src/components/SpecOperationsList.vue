@@ -17,13 +17,13 @@
           class="filter-input"
           data-testid="spec-operations-list-filter"
           :placeholder="i18n.t('specOperationsList.filterPlaceholder')"
-        />
-        <KIcon
-          aria-hidden="true"
-          class="filter-icon"
-          color="var(--kong-ui-spec-renderer-operations-list-filter-icon-color, #1C1B1F)"
-          icon="filter"
-        />
+        >
+          <template #before>
+            <FilterIcon
+              decorative
+            />
+          </template>
+        </KInput>
       </div>
 
       <!-- render operations list -->
@@ -153,6 +153,7 @@ import composables from '../composables'
 import { DEFAULT_UNTAGGED_SECTION_NAME } from '../constants'
 import OperationsListSectionHeader from './operations-list/OperationsListSectionHeader.vue'
 import OperationsListItem from './operations-list/OperationsListItem.vue'
+import { FilterIcon } from '@kong/icons'
 
 const props = defineProps({
   operations: {
@@ -325,12 +326,6 @@ const { getSizeFromString, hasRequiredProps } = composables.useUtilities()
     &:deep(.k-input) {
       padding-left: $kui-space-90;
     }
-  }
-
-  .filter-icon {
-    left: 10px;
-    position: absolute;
-    top: calc(50% - 8px);
   }
 
   .section-wrapper {

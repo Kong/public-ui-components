@@ -179,7 +179,7 @@
     {
       "type": "array",
       "showRemoveButton": false,
-      "newElementButtonLabelClasses": "k-button btn-link mt-2 p-2",
+      "newElementButtonLabelClasses": "k-button tertiary mt-2 p-2",
       "itemContainerComponent": "FieldArrayCardContainer",
       "fieldClasses": "array-card-container-wrapper",
       "submitWhenNull": true,
@@ -214,7 +214,7 @@
     {
       "type": "array",
       "showRemoveButton": false,
-      "newElementButtonLabelClasses": "k-button btn-link mt-2 p-2",
+      "newElementButtonLabelClasses": "k-button tertiary mt-2 p-2",
       "itemContainerComponent": "FieldArrayCardContainer",
       "fieldClasses": "array-card-container-wrapper",
       "submitWhenNull": true,

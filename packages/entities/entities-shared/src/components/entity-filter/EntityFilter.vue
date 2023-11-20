@@ -8,7 +8,7 @@
       :placeholder="config.placeholder"
       @update:model-value="handleQueryUpdate"
     >
-      <template #icon>
+      <template #before>
         <IconFilter />
       </template>
     </KInput>
@@ -16,11 +16,11 @@
   <template v-else>
     <div class="kong-ui-entity-filter">
       <KButton
-        appearance="btn-link"
+        appearance="tertiary"
         data-testid="filter-button"
-        icon="filter"
         @click="toggleMenu"
       >
+        <IconFilter />
         {{ t('filter.filterButtonText') }} {{ filteredFields.length > 0 ? `(${filteredFields.length})` : '' }}
       </KButton>
       <div
@@ -71,13 +71,12 @@
                   v-model="searchParams[field.value]"
                   autocomplete="off"
                   :placeholder="t('filter.inputPlaceholder')"
-                  size="small"
                   :type="getFieldInputType(field.value)"
                 />
               </div>
               <div class="menu-item-buttons">
                 <KButton
-                  appearance="btn-link"
+                  appearance="tertiary"
                   data-testid="apply-filter"
                   size="small"
                   @click="applyFields(true)"
@@ -85,7 +84,7 @@
                   {{ t('filter.applyButtonText') }}
                 </KButton>
                 <KButton
-                  appearance="btn-link"
+                  appearance="tertiary"
                   data-testid="clear-filter"
                   size="small"
                   @click="clearField(field.value)"
@@ -97,9 +96,14 @@
           </KMenuItem>
         </template>
         <template #actionButton>
-          <KButton @click="clearFields">
-            {{ t('filter.clearAllButtonText') }}
-          </KButton>
+          <div class="filter-clear-button-container">
+            <KButton
+              size="small"
+              @click="clearFields"
+            >
+              {{ t('filter.clearAllButtonText') }}
+            </KButton>
+          </div>
         </template>
       </KMenu>
     </div>
@@ -287,6 +291,7 @@ const applyFields = (hideMenu = false) => {
   :deep(.k-input) {
     padding-bottom: 4px!important;
     padding-top: 4px!important;
+    width: auto;
   }
 
   :deep(.k-input-wrapper) {
@@ -312,5 +317,9 @@ const applyFields = (hideMenu = false) => {
   display: flex;
   justify-content: space-between;
   margin: 10px 0 6px;
+}
+
+.filter-clear-button-container {
+  padding: 0 $kui-space-70;
 }
 </style>

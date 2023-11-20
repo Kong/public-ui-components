@@ -19,9 +19,9 @@
       >
         <KTextArea
           v-model.trim="form.fields.cert"
+          :character-limit="false"
           class="certificate-form-textarea"
           data-testid="ca-certificate-form-cert"
-          disable-character-limit
           :label="t('ca-certificates.form.fields.cert.label')"
           :label-attributes="{ info: t('ca-certificates.form.fields.cert.tooltip') }"
           :readonly="form.isReadonly"

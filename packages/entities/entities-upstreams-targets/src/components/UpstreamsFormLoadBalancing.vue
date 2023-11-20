@@ -29,8 +29,8 @@
     <KInput
       autocomplete="off"
       data-testid="upstreams-form-slots"
+      :error="!!slotsError"
       :error-message="slotsError"
-      :has-error="!!slotsError"
       :help="t('upstreams.form.fields.slots.help')"
       :label="t('upstreams.form.fields.slots.label')"
       :max="SlotsMaxNumber"
