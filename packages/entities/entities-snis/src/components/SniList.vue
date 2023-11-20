@@ -1,7 +1,6 @@
 <template>
   <div class="kong-ui-entities-snis-list">
     <EntityBaseTable
-      :key="key"
       :cache-identifier="cacheIdentifier"
       :cell-attributes="cellAttrsFn"
       disable-pagination-page-jump
@@ -31,11 +30,12 @@
       <template #toolbar-button>
         <!-- Hide Create button if table is empty -->
         <Teleport
-          :disabled="!useActionOutside || !hasData"
+          :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
             <KButton
+              v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-sni"
               icon="plus"
@@ -437,21 +437,17 @@ const confirmDelete = async (): Promise<void> => {
   }
 }
 
-// Remount the table when hasData changes
-const key = ref(1)
 const hasData = ref(false)
-const isLoaded = ref(false)
 
 /**
  * Watchers
  */
 watch(fetcherState, (state) => {
   // if table is populated, show the Create button
-  if (fetcherState.value.response?.data?.length && !isLoaded.value) {
+  if (state.status !== FetcherStatus.NoResults && state.status !== FetcherStatus.Loading && state.status !== FetcherStatus.Error) {
     hasData.value = true
-    isLoaded.value = true
-    key.value++
   }
+
   if (state.status === FetcherStatus.Error) {
     errorMessage.value = {
       title: t('errors.general'),
