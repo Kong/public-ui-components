@@ -56,10 +56,10 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.47"
+    "@kong/kongponents": "9.0.0-alpha.54"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.47"
+    "@kong/kongponents": "9.0.0-alpha.54"
   }
 }
