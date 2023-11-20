@@ -276,7 +276,7 @@ const tabs = props.config.app === 'konnect'
     },
   ]
   : []
-const activeTab = ref(tabs.length ? route.hash || tabs[0].hash : '')
+const activeTab = ref(tabs.length ? route?.hash || tabs[0]?.hash || '' : '')
 
 const buildPluginList = (): PluginCardList => {
   // If availableOnServer is false, we included unavailable plugins from pluginMeta in addition to available plugins
