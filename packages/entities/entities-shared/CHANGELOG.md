@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.8.5...@kong-ui-public/entities-shared@1.9.0) (2023-11-20)
+
+
+### Features
+
+* **plugins:** form unification [khcp-9513] ([#883](https://github.com/Kong/public-ui-components/issues/883)) ([4e8fc4d](https://github.com/Kong/public-ui-components/commit/4e8fc4dd4102aa7a8316af0a26dee7b25d50ce42))
+
+
+
+
+
 ## [1.8.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.8.4...@kong-ui-public/entities-shared@1.8.5) (2023-11-17)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.5.13...@kong-ui-public/entities-plugins@1.6.0) (2023-11-20)
+
+
+### Features
+
+* **plugins:** form unification [khcp-9513] ([#883](https://github.com/Kong/public-ui-components/issues/883)) ([4e8fc4d](https://github.com/Kong/public-ui-components/commit/4e8fc4dd4102aa7a8316af0a26dee7b25d50ce42))
+
+
+
+
+
 ## [1.5.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.5.12...@kong-ui-public/entities-plugins@1.5.13) (2023-11-17)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
