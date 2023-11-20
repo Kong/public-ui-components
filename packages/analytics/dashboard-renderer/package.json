@@ -41,7 +41,7 @@
     "@kong-ui-public/analytics-chart": "^0.16.1",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
-    "@kong/design-tokens": "^1.11.9",
+    "@kong/design-tokens": "^1.11.10",
     "@kong/kongponents": "^8.126.2",
     "json-schema-to-ts": "^2.9.2",
     "vue": "^3.3.4"
