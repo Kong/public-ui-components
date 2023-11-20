@@ -198,7 +198,7 @@ importers:
         specifier: workspace:^0.10.1
         version: link:../analytics-utilities
       '@kong/icons':
-        specifier: ^1.7.8
+        specifier: ^1.8.0
         version: 1.8.0(vue@3.3.4)
       approximate-number:
         specifier: ^2.1.1
@@ -341,7 +341,7 @@ importers:
   packages/core/app-layout:
     dependencies:
       '@kong/icons':
-        specifier: ^1.7.8
+        specifier: ^1.8.0
         version: 1.8.0(vue@3.3.4)
       focus-trap:
         specifier: ^7.5.3
@@ -393,7 +393,7 @@ importers:
   packages/core/copy-uuid:
     dependencies:
       '@kong/icons':
-        specifier: ^1.7.8
+        specifier: ^1.8.0
         version: 1.8.0(vue@3.3.4)
     devDependencies:
       '@kong-ui-public/i18n':
@@ -431,7 +431,7 @@ importers:
         specifier: ^1.11.9
         version: 1.11.9
       '@kong/icons':
-        specifier: ^1.7.8
+        specifier: ^1.8.0
         version: 1.8.0(vue@3.3.4)
       vue:
         specifier: ^3.3.4
@@ -912,7 +912,7 @@ importers:
         specifier: workspace:^0.10.3
         version: link:../swagger-ui-web-component
       '@kong/icons':
-        specifier: ^1.7.8
+        specifier: ^1.8.0
         version: 1.8.0(vue@3.3.4)
       lodash.clonedeep:
         specifier: ^4.5.0
