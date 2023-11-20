@@ -109,8 +109,8 @@ import { computed, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   PluginGroup,
-  type KongManagerPluginFormConfig,
-  type KonnectPluginFormConfig,
+  type KongManagerPluginSelectConfig,
+  type KonnectPluginSelectConfig,
   type PluginType,
 } from '../../types'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
@@ -126,9 +126,9 @@ const emit = defineEmits<{
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
-    type: Object as PropType<KonnectPluginFormConfig | KongManagerPluginFormConfig>,
+    type: Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>,
     required: true,
-    validator: (config: KonnectPluginFormConfig | KongManagerPluginFormConfig): boolean => {
+    validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
       if (!config.getCreateRoute) return false
       return true
@@ -193,16 +193,18 @@ const handleCustomDelete = (): void => {
 }
 
 const handleCustomEdit = (pluginName: string): void => {
-  if (props.config.app === 'konnect' && props.config.getCustomEditRoute) {
-    router.push(props.config.getCustomEditRoute(pluginName))
+  const konnectConfig = props.config as KonnectPluginSelectConfig
+  if (props.config.app === 'konnect' && typeof konnectConfig.getCustomEditRoute === 'function' && konnectConfig.getCustomEditRoute) {
+    router.push(konnectConfig.getCustomEditRoute(pluginName))
   }
 }
 
 const handleCustomClick = (): void => {
   // handle custom plugin card click only
   if (!isDisabled.value && props.config.app === 'konnect') {
-    if (isCreateCustomPlugin.value && props.config.createCustomRoute) {
-      router.push(props.config.createCustomRoute)
+    const konnectConfig = props.config as KonnectPluginSelectConfig
+    if (isCreateCustomPlugin.value && konnectConfig.createCustomRoute) {
+      router.push(konnectConfig.createCustomRoute)
     } else if (isCustomPlugin.value) {
       handleCreateClick()
     }

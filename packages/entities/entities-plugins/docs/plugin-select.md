@@ -27,7 +27,7 @@ A grid component for selecting Plugins.
 
 #### `config`
 
-- type: `Object as PropType<KonnectPluginFormConfig | KongManagerPluginFormConfig>`
+- type: `Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>`
 - required: `true`
 - properties:
   - `app`:
@@ -92,6 +92,14 @@ A grid component for selecting Plugins.
 
 The base konnect or kongManger config.
 
+#### `disableCustomPlugins`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+Hide UIs for custom plugin create/selelect/delete.
+
 #### `canCreateCustomPlugin`
 
 - type: `Function as PropType<() => boolean | Promise<boolean>>`
@@ -128,7 +136,7 @@ If false, let consuming component handle event when clicking on a plugin. Used i
 
 - type: `boolean`
 - required: `false`
-- default: `false`
+- default: `true`
 
 Checks the kong config plugins.available_on_server and if true, then it will not show plugins from PluginMeta that are outside of the available_on_server array.
 
@@ -187,7 +195,7 @@ TypeScript interfaces [are available here](https://github.com/Kong/public-ui-com
 
 ```ts
 import type {
-  KonnectPluginFormConfig,
-  KongManagerPluginFormConfig,
+  KonnectPluginSelectConfig,
+  KongManagerPluginSelectConfig,
 } from '@kong-ui-public/entities-plugins'
 ```

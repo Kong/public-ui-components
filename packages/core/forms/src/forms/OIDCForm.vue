@@ -28,7 +28,7 @@
             @model-updated="onModelUpdated"
           />
 
-          <KLabel>auth_methods</KLabel>
+          <KLabel>Auth Methods</KLabel>
           <div class="auth-method-container">
             <div
               v-for="(method) in authMethods"
