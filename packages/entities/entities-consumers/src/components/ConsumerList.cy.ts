@@ -22,7 +22,7 @@ describe('<ConsumerList />', () => {
     const baseConfigKM: KongManagerConsumerListConfig = {
       app: 'kongManager',
       workspace: 'default',
-      apiBaseUrl: '/kong-manager',
+      apiBaseUrl: '/us/konnect-v2',
       isExactMatch: false,
       filterSchema: {},
       createRoute: 'create-consumer',
@@ -672,7 +672,7 @@ describe('<ConsumerList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumers*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumers*`,
         },
         {
           statusCode: 200,
@@ -724,7 +724,7 @@ describe('<ConsumerList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumers*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumers*`,
         },
         (req) => {
           const size = req.query.size ? Number(req.query.size) : 30
@@ -786,7 +786,7 @@ describe('<ConsumerList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumers*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumers*`,
         },
         {
           statusCode: 500,
