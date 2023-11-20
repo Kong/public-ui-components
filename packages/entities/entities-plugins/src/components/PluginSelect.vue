@@ -59,7 +59,7 @@
     >
       <!-- Konnect -->
       <KTabs
-        v-if="tabs.length && !disableCustomPlugins"
+        v-if="tabs.length"
         v-model="activeTab"
         data-testid="plugins-tabs"
         :tabs="tabs"
@@ -121,8 +121,8 @@ import { useRoute } from 'vue-router'
 import {
   PluginGroup,
   PluginScope,
-  type KongManagerPluginSelectConfig,
-  type KonnectPluginSelectConfig,
+  type KongManagerPluginFormConfig,
+  type KonnectPluginFormConfig,
   type PluginType,
   type DisabledPlugin,
   type PluginCardList,
@@ -137,18 +137,13 @@ import PluginSelectGrid from './select/PluginSelectGrid.vue'
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
-    type: Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>,
+    type: Object as PropType<KonnectPluginFormConfig | KongManagerPluginFormConfig>,
     required: true,
-    validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig): boolean => {
+    validator: (config: KonnectPluginFormConfig | KongManagerPluginFormConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
       if (!config.getCreateRoute) return false
       return true
     },
-  },
-  /** If true don't display UIs related to custom plugins */
-  disableCustomPlugins: {
-    type: Boolean,
-    default: false,
   },
   /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a custom plugin */
   canCreateCustomPlugin: {
@@ -183,7 +178,7 @@ const props = defineProps({
     */
   availableOnServer: {
     type: Boolean,
-    default: true,
+    default: false,
   },
   /**
    * Plugins that should not be displayed
@@ -232,7 +227,7 @@ const pluginsList = ref<PluginCardList>({})
 const existingEntityPlugins = ref<string[]>([])
 
 const { axiosInstance } = useAxios({
-  headers: props.config.requestHeaders,
+  headers: props.config?.requestHeaders,
 })
 
 const filteredPlugins = computed((): PluginCardList => {
@@ -371,22 +366,22 @@ const availablePluginsUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePlugins}`
 
   if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
   return url
 })
 
 const fetchEntityPluginsUrl = computed((): string => {
-  if (props.config.entityType && props.config.entityId) {
+  if (props.config?.entityType && props.config?.entityId) {
     let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app].forEntity}`
 
     if (props.config.app === 'konnect') {
-      url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+      url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
     } else if (props.config.app === 'kongManager') {
-      url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+      url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     }
 
     return url

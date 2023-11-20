@@ -36,14 +36,7 @@ export const PLUGIN_GROUPS_COLLAPSE_STATUS = {
   CUSTOM_PLUGINS: true,
 }
 
-// this is the entity associated with a specific plugin, if no associated entity, then it's a global plugin meaning EntityType will be 'plugins'
-export type EntityType = 'consumers' | 'routes' | 'services' | 'consumer_groups' | 'plugins'
-export enum EntityTypeIdField {
-  SERVICE = 'service_id',
-  ROUTE = 'route_id',
-  CONSUMER = 'consumer_id',
-  CONSUMER_GROUP = 'consumer_group_id',
-}
+export type EntityType = 'consumers' | 'routes' | 'services' | 'consumer_groups'
 
 export enum PluginScope {
   GLOBAL = 'global',
@@ -51,12 +44,6 @@ export enum PluginScope {
   ROUTE = 'route',
   CONSUMER = 'consumer',
   CONSUMER_GROUP = 'consumer_group',
-}
-
-export interface PluginEntityInfo {
-  entity: PluginScope
-  entityEndpoint: EntityType
-  id?: string
 }
 
 export type PluginMetaData = {

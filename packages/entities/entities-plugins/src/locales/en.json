@@ -1,6 +1,5 @@
 {
   "actions": {
-    "back": "Back",
     "cancel": "Cancel",
     "create": "New Plugin",
     "create_custom": "Create",
@@ -13,8 +12,7 @@
     "confirm_delete": "Yes, delete",
     "view": "View Details",
     "configure_dynamic_ordering": "Configure Dynamic Ordering",
-    "go_to_plugins": "Go to Plugins",
-    "save": "Save"
+    "go_to_plugins": "Go to Plugins"
   },
   "delete": {
     "title": "Delete a Plugin",
@@ -39,8 +37,7 @@
     "general": "Plugins could not be retrieved",
     "delete": "The plugin could not be deleted at this time.",
     "copy": "Failed to copy to clipboard",
-    "load_results": "Error loading available plugins",
-    "load_schema": "Error loading plugin schema"
+    "load_results": "Error loading available plugins"
   },
   "search": {
     "placeholder": {
@@ -92,12 +89,10 @@
     "meta": {
       "basic-auth": {
         "name": "Basic Authentication",
-        "credential_name": "Basic Auth Credential",
         "description": "Add Basic Authentication to your Services"
       },
       "hmac-auth": {
         "name": "HMAC Authentication",
-        "credential_name": "HMAC Credential",
         "description": "Add HMAC Authentication to your Services"
       },
       "jwt-signer": {
@@ -106,17 +101,14 @@
       },
       "jwt": {
         "name": "JWT",
-        "credential_name": "JWT Credential",
         "description": "Verify and authenticate JSON Web Tokens"
       },
       "key-auth": {
         "name": "Key Authentication",
-        "credential_name": "Key Auth Credential",
         "description": "Add key authentication to your Services"
       },
       "key-auth-enc": {
         "name": "Key Authentication Encrypted",
-        "credential_name": "Key Auth Encrypted",
         "description": "Add key authentication to your Services with an encrypted token"
       },
       "ldap-auth-advanced": {
@@ -133,7 +125,6 @@
       },
       "oauth2": {
         "name": "OAuth 2.0 Authentication",
-        "credential_name": "OAuth 2.0 Application",
         "description": "Add OAuth 2.0 authentication to your Services"
       },
       "openid-connect": {
@@ -174,7 +165,6 @@
       },
       "acl": {
         "name": "ACL",
-        "credential_name": "Access Control Group",
         "description": "Control which consumers can access Services"
       },
       "canary": {
@@ -443,57 +433,6 @@
             "name": "Custom Plugin",
             "description": "Upload schema file to create custom plugin"
           }
-        }
-      }
-    },
-    "form": {
-      "disabled_warning": "This plugin must be configured using the Kong Admin API. Please see the documentation.",
-      "no_selection": "No selection...",
-      "fields": {
-        "enabled": {
-          "label": "Enabled",
-          "on_text": "This plugin is Enabled",
-          "off_text": "This plugin is Disabled"
-        },
-        "instance_name": {
-          "label": "Instance Name",
-          "help": "A custom name for this plugin instance to help identifying from the list view."
-        },
-        "protocols": {
-          "label": "Protocols",
-          "placeholder": "Select valid protocols for the plugin",
-          "help": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type."
-        }
-      },
-      "scoping": {
-        "label": "Scoped",
-        "global": {
-          "label": "Global",
-          "help": "All services, routes, and consumers"
-        },
-        "gateway_service": {
-          "label": "Gateway Service",
-          "help": "The Gateway Service to which this plugin configuration will apply",
-          "placeholder": "Select a Gateway Service",
-          "plural": "Gateway Services"
-        },
-        "route": {
-          "label": "Route",
-          "help": "The Route that this Plugin configuration will target",
-          "placeholder": "Select a Route",
-          "plural": "Routes"
-        },
-        "consumer": {
-          "label": "Consumer",
-          "help": "The Consumer that this plugin configuration will target",
-          "placeholder": "Select a Consumer",
-          "plural": "Consumers"
-        },
-        "consumer_group": {
-          "label": "Consumer Group",
-          "help": "The Consumer Group that this plugin configuration will target",
-          "placeholder": "Select a Consumer Group",
-          "plural": "Consumer Groups"
         }
       }
     }

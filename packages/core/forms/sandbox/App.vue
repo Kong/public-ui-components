@@ -13,6 +13,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+import { VueFormGenerator } from '../src'
 import schema from './schema.json'
 import model from './model.json'
 

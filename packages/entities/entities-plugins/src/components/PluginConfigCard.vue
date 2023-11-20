@@ -129,7 +129,7 @@ const PLUGIN_CONFIG_KEY = 'config'
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'fetch:error', error: AxiosError): void,
-  (e: 'error:fetch-schema', error: AxiosError): void,
+  (e: 'fetch-schema:error', error: AxiosError): void,
   (e: 'fetch:success', data: Record<string, any>): void,
   (e: 'copy:success', data: Record<string, any>): void,
 }>()
@@ -307,7 +307,7 @@ onBeforeMount(async () => {
   } catch (error: any) {
     fetchSchemaError.value = getMessageFromError(error)
     // Emit the error for the host app
-    emit('error:fetch-schema', error)
+    emit('fetch-schema:error', error)
   } finally {
     schemaLoading.value = false
   }

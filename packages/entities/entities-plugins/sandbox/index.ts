@@ -1,9 +1,8 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import App from './App.vue'
 import Kongponents from '@kong/kongponents'
 import '@kong/kongponents/dist/style.css'
-import { VueFormGenerator } from '../src'
-import App from './App.vue'
 
 const app = createApp(App)
 
@@ -24,8 +23,7 @@ const init = async () => {
       {
         path: '/plugin/create/:plugin',
         name: 'create-plugin',
-        props: true,
-        component: () => import('./pages/PluginFormPage.vue'),
+        component: () => import('./pages/FallbackPage.vue'),
       },
       {
         path: '/custom-plugin/create',
@@ -44,10 +42,9 @@ const init = async () => {
         component: () => import('./pages/FallbackPage.vue'),
       },
       {
-        path: '/plugin/:plugin/:id/edit',
+        path: '/plugin/:id/edit',
         name: 'edit-plugin',
-        props: true,
-        component: () => import('./pages/PluginFormPage.vue'),
+        component: () => import('./pages/FallbackPage.vue'),
       },
       {
         path: '/service/:id',
@@ -78,7 +75,6 @@ const init = async () => {
   })
 
   app.use(Kongponents)
-  app.component('VueFormGenerator', VueFormGenerator)
   app.use(router)
   app.mount('#app')
 }

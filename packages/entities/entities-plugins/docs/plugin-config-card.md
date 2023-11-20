@@ -113,9 +113,9 @@ The id of the entity with which the plugin is associated.
 
 A `@fetch:error` event is emitted when the component fails to fetch the Plugin. The event payload is the response error.
 
-#### error:fetch-schema
+#### fetch-schema:error
 
-A `@error:fetch-schema` event is emitted when the component fails to fetch the Plugin schema. The event payload is the response error.
+A `@fetch-schema:error` event is emitted when the component fails to fetch the Plugin schema. The event payload is the response error.
 
 #### fetch:success
 

@@ -58,7 +58,7 @@ const konnectConfig = ref<KonnectPluginListConfig>({
   controlPlaneId,
   createRoute: { name: 'select-plugin' },
   getViewRoute: (plugin: EntityRow) => ({ name: 'view-plugin', params: { id: plugin.id, plugin: plugin.name } }),
-  getEditRoute: (plugin: EntityRow) => ({ name: 'edit-plugin', params: { id: plugin.id, plugin: plugin.name } }),
+  getEditRoute: (plugin: EntityRow) => ({ name: 'edit-plugin', params: { id: plugin.id } }),
   getScopedEntityViewRoute: (type: ViewRouteType, id: string) => ({ name: `view-${type}`, params: { id } }),
   getConfigureDynamicOrderingRoute: (plugin: EntityRow) => ({ name: 'configure-dynamic-ordering', params: { id: plugin.id } }),
 })
@@ -75,7 +75,7 @@ const kongManagerConfig = ref<KongManagerPluginListConfig>({
   isExactMatch: false,
   createRoute: { name: 'select-plugin' },
   getViewRoute: (plugin: EntityRow) => ({ name: 'view-plugin', params: { id: plugin.id, plugin: plugin.name } }),
-  getEditRoute: (plugin: EntityRow) => ({ name: 'edit-plugin', params: { id: plugin.id, plugin: plugin.name } }),
+  getEditRoute: (plugin: EntityRow) => ({ name: 'edit-plugin', params: { id: plugin.id } }),
   getScopedEntityViewRoute: (type: ViewRouteType, id: string) => ({ name: `view-${type}`, params: { id } }),
   getConfigureDynamicOrderingRoute: (plugin: EntityRow) => ({ name: 'configure-dynamic-ordering', params: { id: plugin.id } }),
   filterSchema: {

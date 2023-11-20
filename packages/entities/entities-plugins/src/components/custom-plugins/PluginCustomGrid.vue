@@ -80,8 +80,8 @@
 import { computed, ref, type PropType } from 'vue'
 import {
   PluginGroup,
-  type KongManagerPluginSelectConfig,
-  type KonnectPluginSelectConfig,
+  type KongManagerPluginFormConfig,
+  type KonnectPluginFormConfig,
   type PluginType,
   type PluginCardList,
 } from '../../types'
@@ -92,9 +92,9 @@ import DeleteCustomPluginSchemaModal from './DeleteCustomPluginSchemaModal.vue'
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
-    type: Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>,
+    type: Object as PropType<KonnectPluginFormConfig | KongManagerPluginFormConfig>,
     required: true,
-    validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig): boolean => {
+    validator: (config: KonnectPluginFormConfig | KongManagerPluginFormConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
       if (!config.getCreateRoute) return false
       return true
