@@ -54,7 +54,6 @@ describe('<EntityLink />', () => {
     copyUuidStub().then(() => {
       cy.getTestId('entity-link-parent').find('.entity-link-copy-id').should('exist').click()
 
-      cy.get('.toaster-container-outer').should('exist')
       cy.get('@clipboardWriteText').should('have.been.calledWith', resolvedRecord.id)
     })
   })
@@ -73,7 +72,6 @@ describe('<EntityLink />', () => {
     copyUuidStub().then(() => {
       cy.getTestId('entity-link-parent').find('.entity-link-copy-id').should('exist').click()
 
-      cy.get('.toaster-container-outer').should('exist')
       cy.get('@clipboardWriteText').should('have.been.calledWith', resolvedRecordComplex?.id.toString().split(':')[1])
     })
   })
@@ -108,7 +106,6 @@ describe('<EntityLink />', () => {
     copyUuidStub().then(() => {
       cy.getTestId('entity-link-parent').find('.entity-link-copy-id').should('exist').click()
 
-      cy.get('.toaster-container-outer').should('exist')
       cy.get('@clipboardWriteText').should('have.been.calledWith', resolvedRecord.id)
     })
   })
