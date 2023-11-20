@@ -298,7 +298,7 @@ importers:
         version: 1.0.4(vue@3.3.4)
     devDependencies:
       '@kong-ui-public/analytics-chart':
-        specifier: ^0.16.0
+        specifier: ^0.16.1
         version: link:../analytics-chart
       '@kong-ui-public/i18n':
         specifier: workspace:^

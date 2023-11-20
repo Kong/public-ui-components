@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/error-boundary@2.0.0...@kong-ui-public/error-boundary@2.0.1) (2023-11-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.8.0 ([#923](https://github.com/Kong/public-ui-components/issues/923)) ([dc7c17f](https://github.com/Kong/public-ui-components/commit/dc7c17ffb340fe4bcc49b7cf98281bb2e68cf4b7))
+
+
+
+
+
 # [2.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/error-boundary@0.2.7...@kong-ui-public/error-boundary@2.0.0) (2023-11-20)
 
 
