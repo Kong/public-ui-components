@@ -77,6 +77,14 @@ The base konnect or kongManger config.
 
 If showing the `Edit` type form, the ID of the Key.
 
+#### `keySetId`
+
+- type: `string | null`
+- required: `false`
+- default: `null`
+
+Specify the KeySet ID once you want to create/fetch/edit a key within a KeySet URL scope.
+
 #### `fixedKeySetId`
 
 - type: `String`

@@ -1,0 +1,8 @@
+{
+  "renderer": {
+    "noQueryBridge": "No query bridge provided.  Unable to render dashboard."
+  },
+  "queryDataProvider": {
+    "timeRangeExceeded":  "The time range for this report is outside of your organization's data retention period"
+  }
+}

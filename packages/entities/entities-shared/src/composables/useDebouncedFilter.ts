@@ -9,6 +9,7 @@ import type {
 } from '../types'
 import useAxios from './useAxios'
 import useI18n from './useI18n'
+import useHelpers from './useHelpers'
 
 export default function useDebouncedFilter(
   config: KonnectBaseFormConfig | KongManagerBaseFormConfig | KonnectBaseTableConfig | KongManagerBaseTableConfig,
@@ -40,6 +41,7 @@ export default function useDebouncedFilter(
   const error = ref('')
   const validationError = ref('')
   const results = ref<Record<string, any>[]>([])
+  const resultsCache = ref<Record<string, any>[]>([])
   const allRecords = ref<Record<string, any>[] | undefined>(undefined)
 
   const _baseUrl = unref(baseUrl)
@@ -50,6 +52,8 @@ export default function useDebouncedFilter(
   } else if (config.app === 'kongManager') {
     url = url.replace(/\/{workspace}/gi, config?.workspace ? `/${config.workspace}` : '')
   }
+
+  const { isValidUuid } = useHelpers()
 
   // Handle initial load of records and determine filter type
   const loadItems = async (): Promise<void> => {
@@ -65,7 +69,8 @@ export default function useDebouncedFilter(
         allRecords.value = (keys.fetchedItemsKey in data) ? data[keys.fetchedItemsKey] : []
       }
 
-      results.value = (keys.fetchedItemsKey in data) ? data[keys.fetchedItemsKey] : []
+      resultsCache.value = (keys.fetchedItemsKey in data) ? data[keys.fetchedItemsKey] : []
+      results.value = resultsCache.value
     } catch (_error: any) {
       results.value = []
       error.value = t('debouncedFilter.errors.fetch')
@@ -93,20 +98,56 @@ export default function useDebouncedFilter(
         error.value = ''
         validationError.value = ''
 
-        // If user has typed info in the query field
-        let currUrl = url + '' // clone
-        if (query) {
-          currUrl += `/${query}`
-        }
+        if (config.app === 'konnect') { // KoKo only supports exact match
+          // If user has typed info in the query field
+          let currUrl = url + '' // clone
+          if (query) {
+            currUrl += `/${query}`
+          }
 
-        const { data }: Record<string, any> = await axiosInstance.get(`${currUrl}?size=${size}`)
+          const { data }: Record<string, any> = await axiosInstance.get(`${currUrl}?size=${size}`)
 
-        if (keys.fetchedItemsKey in data) {
-          results.value = data[keys.fetchedItemsKey]
-        } else if (data?.id) { // exact match
-          results.value = [data]
-        } else {
+          if (keys.fetchedItemsKey in data) {
+            results.value = data[keys.fetchedItemsKey]
+          } else if (data?.id) { // exact match
+            results.value = [data]
+          } else {
+            results.value = []
+          }
+        } else if (query) { // Admin API supports filtering on specific fields
+          const promises = []
+
+          if (isValidUuid(query) && keys.searchKeys.includes('id')) {
+            // If query is a valid UUID, do the exact search
+            promises.push((async () => {
+              const { data } = await axiosInstance.get(`${url}/${query}`)
+              return [data[keys.fetchedItemsKey] ?? data]
+            })())
+          } else {
+            // Search on fields with backend filtering support
+            promises.push(
+              ...keys.searchKeys
+                .filter(key => key !== 'id')
+                .map(async key => {
+                  const { data } = await axiosInstance.get(`${url}?${key}=${query}`)
+                  return data[keys.fetchedItemsKey]
+                }),
+            )
+          }
+
+          const resolvedArray = await Promise.all(promises)
+          const dedupedIds = new Set()
           results.value = []
+          resolvedArray?.forEach?.((resolvedItems: Array<Record<string, any>>) => {
+            resolvedItems?.forEach?.(item => {
+              if (!dedupedIds.has(item.id)) {
+                dedupedIds.add(item.id)
+                results.value.push(item)
+              }
+            })
+          })
+        } else {
+          results.value = resultsCache.value
         }
       } catch (err: any) {
         if (err?.response?.status === 404) {

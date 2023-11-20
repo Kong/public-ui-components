@@ -112,7 +112,7 @@
     <EntityDeleteModal
       :action-pending="isDeletePending"
       :description="t('delete.description')"
-      :entity-name="vaultToBeDeleted && (vaultToBeDeleted.name || vaultToBeDeleted.id)"
+      :entity-name="vaultToBeDeleted && (vaultToBeDeleted.prefix || vaultToBeDeleted.id)"
       :entity-type="EntityTypes.Vault"
       :error="deleteModalError"
       :title="t('delete.title')"

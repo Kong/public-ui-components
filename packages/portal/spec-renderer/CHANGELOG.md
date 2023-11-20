@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.13.3...@kong-ui-public/spec-renderer@0.13.4) (2023-11-16)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.13.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.13.2...@kong-ui-public/spec-renderer@0.13.3) (2023-11-15)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.13.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.13.1...@kong-ui-public/spec-renderer@0.13.2) (2023-11-14)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [0.13.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.13.0...@kong-ui-public/spec-renderer@0.13.1) (2023-11-11)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+# [0.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.12.2...@kong-ui-public/spec-renderer@0.13.0) (2023-11-07)
+
+
+### Features
+
+* **spec-renderer:** utilize kemptystate for empty state ([#903](https://github.com/Kong/public-ui-components/issues/903)) ([559ed0c](https://github.com/Kong/public-ui-components/commit/559ed0ca38c866926151d470301cd224311b729f))
+
+
+
+
+
 ## [0.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@0.12.1...@kong-ui-public/spec-renderer@0.12.2) (2023-11-06)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer

@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.8.4...@kong-ui-public/entities-shared@1.8.5) (2023-11-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [1.8.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.8.3...@kong-ui-public/entities-shared@1.8.4) (2023-11-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [1.8.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.8.2...@kong-ui-public/entities-shared@1.8.3) (2023-11-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [1.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.8.1...@kong-ui-public/entities-shared@1.8.2) (2023-11-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [1.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.8.0...@kong-ui-public/entities-shared@1.8.1) (2023-11-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+# [1.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.7.4...@kong-ui-public/entities-shared@1.8.0) (2023-11-08)
+
+
+### Features
+
+* **entities-shared:** fuzzy search filter ([#889](https://github.com/Kong/public-ui-components/issues/889)) ([2571213](https://github.com/Kong/public-ui-components/commit/25712137253f5f82da3db8883ebe0a9e7cf0b5be))
+
+
+
+
+
 ## [1.7.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@1.7.3...@kong-ui-public/entities-shared@1.7.4) (2023-11-07)
 
 

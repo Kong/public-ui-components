@@ -20,13 +20,14 @@ import type {
   TimePeriod,
 } from './types'
 import { getTimezoneOffset, utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz'
+import type { ITimeframe } from './types/timeframe'
 
 const adjustForTz = (d: Date, tz: string) => {
   // Adjust the given date by the given TZ offset.
   return new Date(d.getTime() - getTimezoneOffset(tz, d))
 }
 
-export class Timeframe {
+export class Timeframe implements ITimeframe {
   readonly timeframeText: string
 
   readonly key: string

@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@1.3.4...@kong-ui-public/entities-consumer-groups@1.3.5) (2023-11-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [1.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@1.3.3...@kong-ui-public/entities-consumer-groups@1.3.4) (2023-11-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [1.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@1.3.2...@kong-ui-public/entities-consumer-groups@1.3.3) (2023-11-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [1.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@1.3.1...@kong-ui-public/entities-consumer-groups@1.3.2) (2023-11-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [1.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@1.3.0...@kong-ui-public/entities-consumer-groups@1.3.1) (2023-11-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+# [1.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@1.2.21...@kong-ui-public/entities-consumer-groups@1.3.0) (2023-11-08)
+
+
+### Features
+
+* **entities-shared:** fuzzy search filter ([#889](https://github.com/Kong/public-ui-components/issues/889)) ([2571213](https://github.com/Kong/public-ui-components/commit/25712137253f5f82da3db8883ebe0a9e7cf0b5be))
+
+
+
+
+
 ## [1.2.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@1.2.20...@kong-ui-public/entities-consumer-groups@1.2.21) (2023-11-07)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-groups

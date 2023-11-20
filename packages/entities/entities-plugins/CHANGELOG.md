@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.5.12...@kong-ui-public/entities-plugins@1.5.13) (2023-11-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [1.5.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.5.11...@kong-ui-public/entities-plugins@1.5.12) (2023-11-17)
+
+
+### Bug Fixes
+
+* **entities-plugins:** empty state description ([#927](https://github.com/Kong/public-ui-components/issues/927)) ([6d69d22](https://github.com/Kong/public-ui-components/commit/6d69d22db7ea3fbf78a833d5f04e7448d1f02538))
+
+
+
+
+
+## [1.5.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.5.10...@kong-ui-public/entities-plugins@1.5.11) (2023-11-17)
+
+
+### Bug Fixes
+
+* **entities-plugins:** app-registration plugin scope ([#925](https://github.com/Kong/public-ui-components/issues/925)) ([46baa2a](https://github.com/Kong/public-ui-components/commit/46baa2a80d9e636a0f6cb36ab17f15adc43eacc7))
+
+
+
+
+
+## [1.5.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.5.9...@kong-ui-public/entities-plugins@1.5.10) (2023-11-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [1.5.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.5.8...@kong-ui-public/entities-plugins@1.5.9) (2023-11-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [1.5.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.5.7...@kong-ui-public/entities-plugins@1.5.8) (2023-11-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [1.5.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.5.6...@kong-ui-public/entities-plugins@1.5.7) (2023-11-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [1.5.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.5.5...@kong-ui-public/entities-plugins@1.5.6) (2023-11-09)
+
+
+### Bug Fixes
+
+* **vaults:** fix delete modal for vault and plugin entities [khcp-9683] ([#905](https://github.com/Kong/public-ui-components/issues/905)) ([3f1a8dd](https://github.com/Kong/public-ui-components/commit/3f1a8dd9712956cc5b3f1e06fca8183d468193ad))
+
+
+
+
+
+## [1.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.5.4...@kong-ui-public/entities-plugins@1.5.5) (2023-11-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [1.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@1.5.3...@kong-ui-public/entities-plugins@1.5.4) (2023-11-07)
 
 

@@ -465,7 +465,7 @@ export const usePluginMetaData = () => {
       group: PluginGroup.AUTHENTICATION,
       isEnterprise: true,
       name: t('plugins.meta.application-registration.name'),
-      scope: [PluginScope.GLOBAL, PluginScope.SERVICE],
+      scope: [PluginScope.SERVICE],
     },
     'konnect-application-auth': {
       description: t('plugins.meta.konnect-application-auth.description'),

@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.58](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@1.1.57...@kong-ui-public/entities-snis@1.1.58) (2023-11-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [1.1.57](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@1.1.56...@kong-ui-public/entities-snis@1.1.57) (2023-11-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [1.1.56](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@1.1.55...@kong-ui-public/entities-snis@1.1.56) (2023-11-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [1.1.55](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@1.1.54...@kong-ui-public/entities-snis@1.1.55) (2023-11-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [1.1.54](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@1.1.53...@kong-ui-public/entities-snis@1.1.54) (2023-11-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [1.1.53](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@1.1.52...@kong-ui-public/entities-snis@1.1.53) (2023-11-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
 ## [1.1.52](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@1.1.51...@kong-ui-public/entities-snis@1.1.52) (2023-11-07)
 
 **Note:** Version bump only for package @kong-ui-public/entities-snis

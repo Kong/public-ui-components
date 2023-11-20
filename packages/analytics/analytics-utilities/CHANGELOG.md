@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.10.0...@kong-ui-public/analytics-utilities@0.10.1) (2023-11-07)
+
+
+### Bug Fixes
+
+* add timeframe interface ([#902](https://github.com/Kong/public-ui-components/issues/902)) ([272238a](https://github.com/Kong/public-ui-components/commit/272238ad8da5719d785beb9769afdb4ac25bb772))
+
+
+
+
+
 # [0.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.9.1...@kong-ui-public/analytics-utilities@0.10.0) (2023-11-07)
 
 

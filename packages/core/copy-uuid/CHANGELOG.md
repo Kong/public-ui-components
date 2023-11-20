@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@1.3.11...@kong-ui-public/copy-uuid@1.3.12) (2023-11-16)
+
+
+### Bug Fixes
+
+* **copy-uuid:** add optional chaining [KHCP-9762] ([#915](https://github.com/Kong/public-ui-components/issues/915)) ([ddc340d](https://github.com/Kong/public-ui-components/commit/ddc340dd85d7fe289f21c6276667559789f3ec52))
+
+
+
+
+
+## [1.3.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@1.3.10...@kong-ui-public/copy-uuid@1.3.11) (2023-11-16)
+
+**Note:** Version bump only for package @kong-ui-public/copy-uuid
+
+
+
+
+
+## [1.3.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@1.3.9...@kong-ui-public/copy-uuid@1.3.10) (2023-11-15)
+
+**Note:** Version bump only for package @kong-ui-public/copy-uuid
+
+
+
+
+
+## [1.3.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@1.3.8...@kong-ui-public/copy-uuid@1.3.9) (2023-11-11)
+
+**Note:** Version bump only for package @kong-ui-public/copy-uuid
+
+
+
+
+
 ## [1.3.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@1.3.7...@kong-ui-public/copy-uuid@1.3.8) (2023-11-03)
 
 **Note:** Version bump only for package @kong-ui-public/copy-uuid
