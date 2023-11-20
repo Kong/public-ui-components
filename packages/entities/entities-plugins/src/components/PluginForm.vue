@@ -240,18 +240,21 @@ const entityData = computed((): PluginEntityInfo => {
   let entity = PluginScope.GLOBAL
   let endpoint = props.config.entityType || 'plugins'
 
-  if (consumerId) {
-    entity = PluginScope.CONSUMER
-    endpoint = 'consumers'
-  } if (consumerGroupId) {
-    entity = PluginScope.CONSUMER_GROUP
-    endpoint = 'consumer_groups'
+  // the order of these if statements is important
+  // they should match the order used to define entityIdField in
+  // PluginEntityForm.vue
+  if (serviceId) {
+    entity = PluginScope.SERVICE
+    endpoint = 'services'
   } else if (routeId) {
     entity = PluginScope.ROUTE
     endpoint = 'routes'
-  } else if (serviceId) {
-    entity = PluginScope.SERVICE
-    endpoint = 'services'
+  } else if (consumerId) {
+    entity = PluginScope.CONSUMER
+    endpoint = 'consumers'
+  } else if (consumerGroupId) {
+    entity = PluginScope.CONSUMER_GROUP
+    endpoint = 'consumer_groups'
   }
 
   return {
@@ -282,7 +285,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
   },
   // plugin scoping
   selectionGroup: {
-    type: props.hideScopeSelection || (formType.value === EntityBaseFormType.Create && props.config.entityId) ? 'foreign' : 'selectionGroup',
+    type: !props.hideScopeSelection ? 'selectionGroup' : props.hideScopeSelection || (formType.value === EntityBaseFormType.Create && props.config.entityId) ? 'foreign' : 'selectionGroup',
     inputType: 'hidden',
     styleClasses: 'bottom-border hide-label',
     fields: [

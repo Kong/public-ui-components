@@ -524,12 +524,13 @@ const initFormModel = (): void => {
       updateModel(props.record.data)
     } else if (props.record.config) {
       // scope and top level fields
-      if (props.record.consumer_id || props.record.service_id || props.record.route_id || props.record.consumer_group_id) {
+      if ((props.record.consumer_id || props.record.consumer) || (props.record.service_id || props.record.service) ||
+          (props.record.route_id || props.record.route) || (props.record.consumer_group_id || props.record.consumer_group)) {
         updateModel({
-          service_id: props.record.service_id,
-          route_id: props.record.route_id,
-          consumer_id: props.record.consumer_id,
-          consumer_group_id: props.record.consumer_group_id,
+          service_id: props.record.service_id || props.record.service,
+          route_id: props.record.route_id || props.record.route,
+          consumer_id: props.record.consumer_id || props.record.consumer,
+          consumer_group_id: props.record.consumer_group_id || props.record.consumer_group,
           enabled: props.record.enabled,
         })
       }
@@ -615,9 +616,13 @@ onBeforeMount(() => {
       padding: $kui-space-0;
     }
 
-    .field-switch .field-wrap label {
-      .label {
-        background-color: $kui-color-background-neutral-weak;
+    .field-switch {
+      #enabled {
+        &:not(:checked) {
+          & + .label {
+            background-color: $kui-color-background-neutral-weak;
+          }
+        }
       }
     }
 
