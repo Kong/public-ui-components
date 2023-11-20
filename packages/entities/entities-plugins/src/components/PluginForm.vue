@@ -200,7 +200,7 @@ const { axiosInstance } = useAxios({
   headers: props.config.requestHeaders,
 })
 
-const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
+const fetchUrl = computed((): string => treatAsCredential.value ? submitUrl.value : endpoints.form[props.config.app].edit)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
 const schema = ref<Record<string, any> | null>(null)
 const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
