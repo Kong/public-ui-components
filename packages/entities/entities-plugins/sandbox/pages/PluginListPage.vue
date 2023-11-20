@@ -71,7 +71,7 @@ const kongManagerConfig = ref<KongManagerPluginListConfig>({
   //   version: '3.3.0',
   // },
   workspace: 'default',
-  apiBaseUrl: '/kong-manager', // For local dev server proxy
+  apiBaseUrl: '/us/konnect-v2', // For local dev server proxy
   isExactMatch: false,
   createRoute: { name: 'select-plugin' },
   getViewRoute: (plugin: EntityRow) => ({ name: 'view-plugin', params: { id: plugin.id, plugin: plugin.name } }),

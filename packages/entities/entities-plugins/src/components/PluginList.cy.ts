@@ -33,7 +33,7 @@ const baseConfigKonnect: KonnectPluginListConfig = {
 const baseConfigKM: KongManagerPluginListConfig = {
   app: 'kongManager',
   workspace: 'default',
-  apiBaseUrl: '/kong-manager',
+  apiBaseUrl: '/us/konnect-v2',
   isExactMatch: false,
   filterSchema: {},
   createRoute,
@@ -67,7 +67,7 @@ describe('<PluginList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/plugins*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins*`,
         },
         {
           statusCode: 200,
@@ -721,7 +721,7 @@ describe('<PluginList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/plugins*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins*`,
         },
         {
           statusCode: 200,
@@ -740,7 +740,7 @@ describe('<PluginList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/plugins*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins*`,
         },
         (req) => {
           const size = req.query.size ? Number(req.query.size) : 30
@@ -798,7 +798,7 @@ describe('<PluginList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/plugins*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins*`,
         },
         {
           statusCode: 500,
