@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@1.1.59...@kong-ui-public/entities-snis@2.0.0) (2023-11-20)
+
+
+### Features
+
+* kongponents alpha [KHCP-9494] ([#880](https://github.com/Kong/public-ui-components/issues/880)) ([f81ab17](https://github.com/Kong/public-ui-components/commit/f81ab1718a954ff6883baa9b2b47c0ccdb1e2f5e))
+
+
+### BREAKING CHANGES
+
+* Updating Kongponents to version 9 alpha. Style changes are breaking.
+
+* fix: lockfile
+
+* feat(ktextarea): kongponents alpha fixes
+
+* fix(copy-uuid): alignment
+
+* fix: lockfile
+
+* chore(deps): update package
+
+
+
+
+
 ## [1.1.59](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@1.1.58...@kong-ui-public/entities-snis@1.1.59) (2023-11-20)
 
 **Note:** Version bump only for package @kong-ui-public/entities-snis
