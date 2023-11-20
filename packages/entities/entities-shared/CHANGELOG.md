@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.1...@kong-ui-public/entities-shared@2.0.2) (2023-11-20)
+
+
+### Bug Fixes
+
+* **entities-shared:** remove useToaster ([#932](https://github.com/Kong/public-ui-components/issues/932)) ([94209e1](https://github.com/Kong/public-ui-components/commit/94209e195b5eb517342bceebdc2055b04f4a847d))
+
+
+
+
+
 ## [2.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.0...@kong-ui-public/entities-shared@2.0.1) (2023-11-20)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
