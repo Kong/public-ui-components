@@ -53,7 +53,7 @@ const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig = ref<KonnectPluginListConfig>({
   app: 'konnect',
-  apiBaseUrl: '/us/kong-api/konnect-api', // `/{geo}/kong-api/konnect-api`, with leading slash and no trailing slash
+  apiBaseUrl: '/us/konnect-v2',
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   createRoute: { name: 'select-plugin' },
@@ -71,7 +71,7 @@ const kongManagerConfig = ref<KongManagerPluginListConfig>({
   //   version: '3.3.0',
   // },
   workspace: 'default',
-  apiBaseUrl: '/us/konnect-v2', // For local dev server proxy
+  apiBaseUrl: '/kong-manager', // For local dev server proxy
   isExactMatch: false,
   createRoute: { name: 'select-plugin' },
   getViewRoute: (plugin: EntityRow) => ({ name: 'view-plugin', params: { id: plugin.id, plugin: plugin.name } }),
