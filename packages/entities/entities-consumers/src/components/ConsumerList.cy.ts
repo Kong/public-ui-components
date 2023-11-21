@@ -690,7 +690,7 @@ describe('<ConsumerList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${configGroupKonnect.apiBaseUrl}/api/runtime_groups/${configGroupKonnect.controlPlaneId}/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers*`,
+          url: `${configGroupKonnect.apiBaseUrl}/v2/control-planes/${configGroupKonnect.controlPlaneId}/core-entities/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers*`,
         },
         {
           statusCode: 200,
@@ -708,7 +708,7 @@ describe('<ConsumerList />', () => {
       cy.intercept(
         {
           method: 'DELETE',
-          url: `${configGroupKonnect.apiBaseUrl}/api/runtime_groups/${configGroupKonnect.controlPlaneId}/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers/*`,
+          url: `${configGroupKonnect.apiBaseUrl}/v2/control-planes/${configGroupKonnect.controlPlaneId}/core-entities/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers/*`,
         },
         {
           statusCode: params?.status || 200,
