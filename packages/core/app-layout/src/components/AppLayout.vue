@@ -219,6 +219,7 @@ const sidebarMobileTopOffset = computed((): number => {
 const appLayoutBackgroundColor = computed((): string => props.theme === 'light' ? APP_LAYOUT_BACKGROUND : KUI_COLOR_BACKGROUND_INVERSE)
 const layoutMainColor = computed((): string => props.theme === 'light' ? KUI_COLOR_TEXT : KUI_COLOR_TEXT_INVERSE)
 const layoutMainBackgroundColor = computed((): string => props.theme === 'light' ? KUI_COLOR_BACKGROUND : KUI_COLOR_BACKGROUND_INVERSE)
+const layoutMainBoxShadow = computed((): string => props.theme === 'light' ? 'var(--kong-ui-app-layout-main-box-shadow, -30px 174px 250px #0023db)' : 'none')
 const layoutMainMarginTop = computed((): string => `${sidebarMobileTopOffset.value}px`)
 const layoutMainTopLeftBorderRadius = computed((): string => sidebar.hidden || navbar.hidden ? KUI_SPACE_0 : KUI_SPACE_60)
 
@@ -337,7 +338,7 @@ onBeforeUnmount(() => {
   .kong-ui-app-layout-main {
     align-items: stretch;
     background-color: v-bind('layoutMainBackgroundColor');
-    box-shadow: var(--kong-ui-app-layout-main-box-shadow, -30px 174px 250px #0023db);
+    box-shadow: v-bind('layoutMainBoxShadow');
     color: v-bind('layoutMainColor');
     display: flex;
     flex-grow: 1;
