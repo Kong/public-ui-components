@@ -68,7 +68,7 @@ const kongManagerConfig = ref<KongManagerConsumerGroupListConfig>({
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   isExactMatch: false,
   // Uncomment to test Consumer -> Consumer Groups
-  // consumerId: 'b20b1848-6640-4200-9102-73a184de976e',
+  // consumerId: import.meta.env.VITE_KONG_MANAGER_CONSUMER_ID,
   // consumerUsername: 'c-1',
   createRoute: { name: 'create-consumer-group' },
   getViewRoute: (id: string) => ({ name: 'view-consumer-group', params: { id } }),
