@@ -82,6 +82,7 @@ import type { SidebarPrimaryItem } from '../../types'
 import SidebarItem from '../sidebar/SidebarItem.vue'
 import { FocusTrap } from 'focus-trap-vue'
 import { useDebounce } from '../../composables'
+import { APP_LAYOUT_BACKGROUND } from '../../constants'
 import clonedeep from 'lodash.clonedeep'
 
 const emit = defineEmits(['click', 'toggle'])
@@ -313,7 +314,7 @@ onBeforeUnmount(() => {
 @import "../../styles/variables";
 
 .kong-ui-app-sidebar {
-  background: $app-layout-background;
+  background: v-bind('APP_LAYOUT_BACKGROUND');
   display: flex;
   flex-direction: column;
   height: v-bind('sidebarContainerStyles.mobileHeight');
