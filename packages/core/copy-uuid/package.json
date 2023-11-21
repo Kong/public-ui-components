@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "^1.11.9",
+    "@kong/design-tokens": "^1.11.10",
     "@kong/kongponents": "9.0.0-alpha.54",
     "vue": "^3.3.4"
   },
