@@ -9,7 +9,7 @@ export default function useExternalLinkCreator(routeParams: string[]): string {
 
     // Test validity of generated URL; only allows `http` protocal if domain is `localhost`
     /* eslint-disable-next-line no-useless-escape */
-    const validUrlRegex = /^(https:\/\/(www\.)?([a-zA-Z0-9-]+\.){1,}[a-zA-Z]{2,}(:[0-9]+)?(\/[^\/]*)*)$|^http:\/\/localhost(:[0-9]+)?(\/[^\/]*)*$/
+    const validUrlRegex = /^(https:\/\/(www\.)?([a-zA-Z0-9-]+\.){1,}[a-zA-Z]{2,}(:[0-9]+)?(\/[^\/]+)*)$|^(https|http):\/\/localhost(:[0-9]+)?(\/[^\/]+)*$/
 
     /* eslint-disable no-new */
     if (validUrlRegex.test(fullUrl) && !hasEmptyParams && new URL(fullUrl)) {
