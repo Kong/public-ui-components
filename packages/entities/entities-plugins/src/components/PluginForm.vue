@@ -54,7 +54,7 @@
         :entity-id="entityData.id"
         :entity-type="entityData.entity"
         :record="record || undefined"
-        :schema="schema ?? {}"
+        :schema="schema || {}"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
       />
