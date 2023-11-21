@@ -64,7 +64,7 @@
         #form-actions
       >
         <KButton
-          appearance="outline"
+          appearance="secondary"
           data-testid="form-cancel"
           :disabled="form.isReadonly"
           type="reset"
