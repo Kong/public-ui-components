@@ -57,11 +57,11 @@
         <div class="vault-form-provider-cards-container">
           <KRadio
             v-model="vaultProvider"
+            card
             data-testid="vault-form-provider-kong"
             :disabled="vaultProviderDisabled"
-            :selected-value="VaultProviders.KONG"
-            card
             :label="t('form.config.kong.label')"
+            :selected-value="VaultProviders.KONG"
           >
             <KIcon
               icon="kong"
@@ -75,11 +75,11 @@
           >
             <KRadio
               v-model="vaultProvider"
+              card
               data-testid="vault-form-provider-aws"
               :disabled="vaultProviderDisabled || !isOtherProvidersSupported"
-              :selected-value="VaultProviders.AWS"
               :label="t('form.config.aws.label')"
-              card
+              :selected-value="VaultProviders.AWS"
             >
               <img
                 alt="Amazon Web Services"
@@ -95,11 +95,11 @@
           >
             <KRadio
               v-model="vaultProvider"
+              card
               data-testid="vault-form-provider-gcp"
               :disabled="vaultProviderDisabled || !isOtherProvidersSupported"
-              :selected-value="VaultProviders.GCP"
               :label="t('form.config.gcp.label')"
-              card
+              :selected-value="VaultProviders.GCP"
             >
               <img
                 alt="Google Cloud"
@@ -115,11 +115,11 @@
           >
             <KRadio
               v-model="vaultProvider"
+              card
               data-testid="vault-form-provider-hcv"
               :disabled="vaultProviderDisabled || !isOtherProvidersSupported"
-              :selected-value="VaultProviders.HCV"
-              card
               :label="t('form.config.hcv.label')"
+              :selected-value="VaultProviders.HCV"
             >
               <img
                 alt="HashiCorp Vault"
@@ -136,11 +136,11 @@
           >
             <KRadio
               v-model="vaultProvider"
+              card
               data-testid="vault-form-provider-azure"
               :disabled="vaultProviderDisabled || !isOtherProvidersSupported"
-              :selected-value="VaultProviders.AZURE"
-              card
               :label="t('form.config.azure.label')"
+              :selected-value="VaultProviders.AZURE"
             >
               <img
                 alt="Azure"
