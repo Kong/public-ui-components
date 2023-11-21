@@ -200,7 +200,6 @@ const { axiosInstance } = useAxios({
   headers: props.config.requestHeaders,
 })
 
-const fetchUrl = computed((): string => treatAsCredential.value ? submitUrl.value : endpoints.form[props.config.app].edit)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
 const schema = ref<Record<string, any> | null>(null)
 const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
@@ -221,6 +220,20 @@ const form = reactive<PluginFormState>({
   },
   isReadonly: false,
   errorMessage: '',
+})
+
+const fetchUrl = computed((): string => {
+  if (treatAsCredential.value) { // credential
+    let submitEndpoint = endpoints.form[props.config.app].credential[formType.value]
+
+    // replace resource endpoint for credentials
+    submitEndpoint = submitEndpoint.replace(/{resourceEndpoint}/gi, resourceEndpoint.value)
+
+    return submitEndpoint
+  }
+
+  // plugin
+  return endpoints.form[props.config.app].edit
 })
 
 // non-editable plugin type. They shouldn't be able to get to this unless they manually
