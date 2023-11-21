@@ -9,7 +9,7 @@ describe('<AddConsumerModal/>', () => {
     const configGroupKonnect: KonnectConsumerListConfig = {
       app: 'konnect',
       controlPlaneId: '1234-asdf-asdf-asdf',
-      apiBaseUrl: '/us/kong-api/konnect-api',
+      apiBaseUrl: '/us/konnect-v2',
       createRoute: 'create-consumer',
       getViewRoute: () => 'view-consumer',
       getEditRoute: () => 'edit-consumer',
@@ -24,7 +24,7 @@ describe('<AddConsumerModal/>', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${configGroupKonnect.apiBaseUrl}/api/runtime_groups/${configGroupKonnect.controlPlaneId}/consumers*`,
+          url: `${configGroupKonnect.apiBaseUrl}/v2/control-planes/${configGroupKonnect.controlPlaneId}/core-entities/consumers*`,
         },
         {
           statusCode: 200,
@@ -40,7 +40,7 @@ describe('<AddConsumerModal/>', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `${configGroupKonnect.apiBaseUrl}/api/runtime_groups/${configGroupKonnect.controlPlaneId}/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers`,
+          url: `${configGroupKonnect.apiBaseUrl}/v2/control-planes/${configGroupKonnect.controlPlaneId}/core-entities/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers`,
         },
         {
           statusCode: status,
