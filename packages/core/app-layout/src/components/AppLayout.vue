@@ -337,7 +337,7 @@ onBeforeUnmount(() => {
   .kong-ui-app-layout-main {
     align-items: stretch;
     background-color: v-bind('layoutMainBackgroundColor');
-    box-shadow: $app-layout-main-box-shadow;
+    box-shadow: var(--kong-ui-app-layout-main-box-shadow, -30px 174px 250px #0023db);
     color: v-bind('layoutMainColor');
     display: flex;
     flex-grow: 1;
