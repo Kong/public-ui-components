@@ -71,6 +71,7 @@
         <div
           class="plugin-card-body"
           :class="{ 'custom-plugin': isCustomPlugin }"
+          :data-testid="plugin.name"
           :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
           @click="handleCustomClick"
         >
