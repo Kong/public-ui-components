@@ -22,7 +22,7 @@ describe('<ConsumerList />', () => {
     const baseConfigKM: KongManagerConsumerListConfig = {
       app: 'kongManager',
       workspace: 'default',
-      apiBaseUrl: '/us/konnect-v2',
+      apiBaseUrl: '/kong-manager',
       isExactMatch: false,
       filterSchema: {},
       createRoute: 'create-consumer',
@@ -649,7 +649,7 @@ describe('<ConsumerList />', () => {
     const baseConfigKonnect: KonnectConsumerListConfig = {
       app: 'konnect',
       controlPlaneId: '1234-abcd-ilove-cats',
-      apiBaseUrl: '/us/kong-api/konnect-api',
+      apiBaseUrl: '/us/konnect-v2',
       createRoute: 'create-consumer',
       getViewRoute: () => 'view-consumer',
       getEditRoute: () => 'edit-consumer',

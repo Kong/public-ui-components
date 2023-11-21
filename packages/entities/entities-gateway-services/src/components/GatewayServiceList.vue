@@ -255,8 +255,6 @@ const tableHeaders: BaseTableHeaders = fields
  */
 const fetcherBaseUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app].all}`
-  console.log(url)
-  console.log(endpoints)
 
   if (props.config.app === 'konnect') {
     url = url
