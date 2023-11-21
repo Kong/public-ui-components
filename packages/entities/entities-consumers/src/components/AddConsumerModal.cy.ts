@@ -16,7 +16,6 @@ describe('<AddConsumerModal/>', () => {
       consumerGroupId: '5921d16a-3e1d-4936-b21f-e5cae587415c',
       consumerGroupName: 'Test Group',
     }
-
     const interceptFilters = (params?: {
       mockData?: Consumer[];
       alias?: string;
@@ -40,7 +39,7 @@ describe('<AddConsumerModal/>', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `/us/kong-api/konnect-api/api/runtime_groups/${configGroupKonnect.controlPlaneId}/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers`,
+          url: `${configGroupKonnect.apiBaseUrl}/v2/control-planes/${configGroupKonnect.controlPlaneId}/core-entities/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers`,
         },
         {
           statusCode: status,

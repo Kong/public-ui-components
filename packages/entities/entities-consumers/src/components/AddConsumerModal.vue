@@ -224,7 +224,6 @@ const addConsumers = async (): Promise<void> => {
 
 const submitUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app].forConsumerGroup}`
-
   if (props.config.app === 'konnect') {
     url = url
       .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
