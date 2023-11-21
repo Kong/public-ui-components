@@ -40,7 +40,7 @@ describe('<AddConsumerModal/>', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `${configGroupKonnect.apiBaseUrl}/v2/control-planes/${configGroupKonnect.controlPlaneId}/core-entities/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers`,
+          url: `/us/kong-api/konnect-api/api/runtime_groups/${configGroupKonnect.controlPlaneId}/consumer_groups/${configGroupKonnect.consumerGroupId}/consumers`,
         },
         {
           statusCode: status,
