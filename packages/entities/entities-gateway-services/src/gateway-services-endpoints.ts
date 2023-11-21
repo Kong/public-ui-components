@@ -1,7 +1,7 @@
 export default {
   list: {
     konnect: {
-      all: '/api/runtime_groups/{controlPlaneId}/services',
+      all: '/v2/control-planes/{controlPlaneId}/core-entities/services',
     },
     kongManager: {
       all: '/{workspace}/services',

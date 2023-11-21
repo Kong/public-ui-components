@@ -17,7 +17,7 @@
     }
   },
   "search": {
-    "placeholder": "Filter by exact name or ID"
+    "placeholder": "Filter by name"
   },
   "gateway_services": {
     "title": "Gateway Services",

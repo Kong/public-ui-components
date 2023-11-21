@@ -281,10 +281,7 @@ const rowAttributes = (row: Record<string, any>) => ({
  * Fetcher & Filtering
  */
 const fetcherBaseUrl = computed<string>(() => {
-  console.log(endpoints.list, 'LIST')
-
   let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app][isConsumerGroupPage.value ? 'forConsumerGroup' : 'all']}`
-  console.log(url)
 
   if (props.config.app === 'konnect') {
     url = url

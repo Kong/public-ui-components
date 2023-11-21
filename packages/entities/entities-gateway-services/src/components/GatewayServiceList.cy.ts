@@ -31,7 +31,7 @@ describe('<GatewayServiceList />', () => {
   const baseConfigKonnect: KonnectGatewayServiceListConfig = {
     app: 'konnect',
     controlPlaneId: '1234-abcd-ilove-cats',
-    apiBaseUrl: '/us/kong-api/konnect-api',
+    apiBaseUrl: '/us/konnect-v2',
     createRoute,
     getViewRoute: () => viewRoute,
     getEditRoute: () => editRoute,
@@ -59,7 +59,7 @@ describe('<GatewayServiceList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/services*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/services*`,
         },
         {
           statusCode: 200,
@@ -488,7 +488,7 @@ describe('<GatewayServiceList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/services*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/services*`,
         },
         {
           statusCode: 200,
@@ -507,7 +507,7 @@ describe('<GatewayServiceList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/services*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/services*`,
         },
         (req) => {
           const size = req.query.size ? Number(req.query.size) : 30
@@ -565,7 +565,7 @@ describe('<GatewayServiceList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/services*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/services*`,
         },
         {
           statusCode: 500,
