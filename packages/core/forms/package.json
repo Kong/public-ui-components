@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/forms",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "module",
   "main": "./dist/forms.umd.js",
   "module": "./dist/forms.es.js",
