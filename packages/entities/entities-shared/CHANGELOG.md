@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.3...@kong-ui-public/entities-shared@2.0.4) (2023-11-21)
+
+
+### Bug Fixes
+
+* **entity-link:** more robust url regex ([#933](https://github.com/Kong/public-ui-components/issues/933)) ([4aaee15](https://github.com/Kong/public-ui-components/commit/4aaee1549cc8c76ca5fd763c59d84afb4988256a))
+
+
+
+
+
 ## [2.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.2...@kong-ui-public/entities-shared@2.0.3) (2023-11-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
