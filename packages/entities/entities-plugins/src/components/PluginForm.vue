@@ -531,10 +531,14 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     if (scheme.elements && scheme.type === 'array') {
       const elements = scheme.elements
       if (elements.type === 'string' && !elements.one_of) {
-        const { help, label } = initialFormSchema[field]
+        const { help, label, hint } = initialFormSchema[field]
 
-        initialFormSchema[field] = { ...JSON.parse(JSON.stringify(ArrayStringFieldSchema)), help, label }
+        initialFormSchema[field] = { help, label, hint, ...JSON.parse(JSON.stringify(ArrayStringFieldSchema)) }
       }
+    }
+
+    if (scheme.hint) {
+      initialFormSchema[field].hint = scheme.hint
     }
 
     // Custom frontend schema override
@@ -543,9 +547,9 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         // Check if current plugin matches any of custom schema keys
         if (plugin === field) {
           // Use custom defined schema instead of building from default && set field label
-          const { help, label } = initialFormSchema[field]
+          const { help, label, hint } = initialFormSchema[field]
 
-          initialFormSchema[field] = { help, label, ...(pluginSchema[plugin as keyof typeof pluginSchema] as Record<string, any>) }
+          initialFormSchema[field] = { help, label, hint, ...(pluginSchema[plugin as keyof typeof pluginSchema] as Record<string, any>) }
         }
       })
     }
