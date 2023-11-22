@@ -162,31 +162,39 @@ describe('<ConsumerGroupList />', () => {
     })
 
     it('should handle error state', () => {
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/consumer_groups*`,
-        },
-        {
-          statusCode: 500,
-          body: {},
-        },
-      ).as('getConsumerGroups')
+      const testHandleErrorRequest = (message?: string) => {
+        cy.intercept(
+          {
+            method: 'GET',
+            url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/consumer_groups*`,
+          },
+          {
+            statusCode: 500,
+            body: message ? { message } : {},
+          },
+        ).as('getConsumerGroups')
 
-      cy.mount(ConsumerGroupList, {
-        props: {
-          cacheIdentifier: `consumer-group-list-${uuidv4()}`,
-          config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
-        },
-      })
+        cy.mount(ConsumerGroupList, {
+          props: {
+            cacheIdentifier: `consumer-group-list-${uuidv4()}`,
+            config: baseConfigKM,
+            canCreate: () => {},
+            canEdit: () => {},
+            canDelete: () => {},
+            canRetrieve: () => {},
+          },
+        })
 
-      cy.wait('@getConsumerGroups')
-      cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
-      cy.get('.k-table-error-state').should('be.visible')
+        cy.wait('@getConsumerGroups')
+        cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
+        cy.get('.k-table-error-state').should('be.visible')
+        if (message) {
+          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+        }
+      }
+
+      testHandleErrorRequest()
+      testHandleErrorRequest('Custom error message')
     })
 
     it('should show consumer group items', () => {
@@ -783,31 +791,39 @@ describe('<ConsumerGroupList />', () => {
     })
 
     it('should handle error state', () => {
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumer_groups*`,
-        },
-        {
-          statusCode: 500,
-          body: {},
-        },
-      ).as('getConsumerGroups')
+      const testHandleErrorRequest = (message?: string) => {
+        cy.intercept(
+          {
+            method: 'GET',
+            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumer_groups*`,
+          },
+          {
+            statusCode: 500,
+            body: message ? { message } : {},
+          },
+        ).as('getConsumerGroups')
 
-      cy.mount(ConsumerGroupList, {
-        props: {
-          cacheIdentifier: `consumer-group-list-${uuidv4()}`,
-          config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
-        },
-      })
+        cy.mount(ConsumerGroupList, {
+          props: {
+            cacheIdentifier: `consumer-group-list-${uuidv4()}`,
+            config: baseConfigKonnect,
+            canCreate: () => {},
+            canEdit: () => {},
+            canDelete: () => {},
+            canRetrieve: () => {},
+          },
+        })
 
-      cy.wait('@getConsumerGroups')
-      cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
-      cy.get('.k-table-error-state').should('be.visible')
+        cy.wait('@getConsumerGroups')
+        cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
+        cy.get('.k-table-error-state').should('be.visible')
+        if (message) {
+          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+        }
+      }
+
+      testHandleErrorRequest()
+      testHandleErrorRequest('Custom error message')
     })
 
     it('should show consumer group items', () => {

@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, watch, onBeforeMount } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type {
   KongManagerConsumerListConfig,
   KonnectConsumerListConfig,
@@ -267,10 +267,11 @@ watch(availableConsumers, () => {
   consumersSelectKey.value++
 }, { immediate: true, deep: true })
 
-onBeforeMount(async () => {
-  // load consumers
-  await loadItems()
-})
+watch(() => props.visible, () => {
+  if (props.visible) {
+    loadItems() // load consumers
+  }
+}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

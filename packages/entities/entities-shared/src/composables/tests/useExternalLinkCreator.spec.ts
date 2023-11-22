@@ -1,4 +1,5 @@
-import { expect } from 'vitest'
+import { expect, vi } from 'vitest'
+import type { SpyInstance } from 'vitest'
 import composables from '..'
 
 const { useExternalLinkCreator } = composables
@@ -22,6 +23,12 @@ const routeParams = [
 ]
 
 describe('parse-route-parameters', () => {
+  let consoleMock: SpyInstance
+
+  beforeEach(() => {
+    consoleMock = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+  })
+
   it('builds valid url with multiple parameters', () => {
     const url = useExternalLinkCreator(routeParams)
 
@@ -39,5 +46,53 @@ describe('parse-route-parameters', () => {
 
     // Console error should be thrown, and method will return empty string
     expect(url).toBe('')
+    expect(consoleMock).toHaveBeenCalledOnce()
+    expect(consoleMock).toHaveBeenLastCalledWith('Failed to build valid URL:', new Error('Invalid url'))
+  })
+
+  it('fails if there are trailing slashes', () => {
+    const url = useExternalLinkCreator([routeParams[0], routeParams[1], '//'])
+
+    // Console error should be thrown, and method will return empty string
+    expect(url).toBe('')
+    expect(consoleMock).toHaveBeenLastCalledWith('Failed to build valid URL:', new Error('Invalid url'))
+  })
+
+  it('fails if the base URL uses http protocol', () => {
+    vi.spyOn(global as any, 'window', 'get').mockImplementationOnce(() => ({
+      location: {
+        origin: 'http://cloud.konghq.tech/',
+      },
+    }))
+
+    const url = useExternalLinkCreator([routeParams[0], routeParams[1]])
+
+    expect(url).toBe('')
+    expect(consoleMock).toHaveBeenLastCalledWith('Failed to build valid URL:', new Error('Invalid url'))
+  })
+
+  it('allows http only for localhost', () => {
+    vi.spyOn(global as any, 'window', 'get').mockImplementationOnce(() => ({
+      location: {
+        origin: 'http://localhost:3000/',
+      },
+    }))
+
+    const url = useExternalLinkCreator([routeParams[0], routeParams[1]])
+
+    expect(url).toBe(`http://localhost:3000/${routeParams[0]}/${routeParams[1]}`)
+  })
+
+  it('does not allow port number following an external domain', () => {
+    vi.spyOn(global as any, 'window', 'get').mockImplementationOnce(() => ({
+      location: {
+        origin: 'http://cloud.konghq.tech:3000/',
+      },
+    }))
+
+    const url = useExternalLinkCreator([routeParams[0]])
+
+    expect(url).toBe('')
+    expect(consoleMock).toHaveBeenLastCalledWith('Failed to build valid URL:', new Error('Invalid url'))
   })
 })

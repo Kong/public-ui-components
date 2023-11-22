@@ -245,6 +245,7 @@ import type {
   ExactMatchFilterConfig,
   FilterFields,
   FuzzyMatchFilterConfig,
+  TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
 
 import composables from '../composables'
@@ -438,7 +439,7 @@ const resetPagination = (): void => {
 /**
  * loading, Error, Empty state
  */
-const errorMessage = ref('')
+const errorMessage = ref<TableErrorMessage>(null)
 
 /**
  * Applied To ...
@@ -709,14 +710,19 @@ const confirmDelete = async (): Promise<void> => {
  */
 watch(fetcherState, (state) => {
   if (state.status === FetcherStatus.Error) {
-    errorMessage.value = t('errors.general')
+    errorMessage.value = {
+      title: t('errors.general'),
+    }
+    if (state.error?.response?.data?.message) {
+      errorMessage.value.message = state.error.response.data.message
+    }
     // Emit the error for the host app
     emit('error', state.error)
 
     return
   }
 
-  errorMessage.value = ''
+  errorMessage.value = null
 })
 
 // Initialize the empty state options assuming a user does not have create permissions

@@ -244,31 +244,39 @@ describe('<CACertificateList />', () => {
     })
 
     it('should handle error state', () => {
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/ca_certificates*`,
-        },
-        {
-          statusCode: 500,
-          body: {},
-        },
-      ).as('getCaCertificate')
+      const testHandleErrorRequest = (message?: string) => {
+        cy.intercept(
+          {
+            method: 'GET',
+            url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/ca_certificates*`,
+          },
+          {
+            statusCode: 500,
+            body: message ? { message } : {},
+          },
+        ).as('getCaCertificate')
 
-      cy.mount(CACertificateList, {
-        props: {
-          cacheIdentifier: `ca-certificate-list-${uuidv4()}`,
-          config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
-        },
-      })
+        cy.mount(CACertificateList, {
+          props: {
+            cacheIdentifier: `ca-certificate-list-${uuidv4()}`,
+            config: baseConfigKM,
+            canCreate: () => {},
+            canEdit: () => {},
+            canDelete: () => {},
+            canRetrieve: () => {},
+          },
+        })
 
-      cy.wait('@getCaCertificate')
-      cy.get('.kong-ui-entities-ca-certificates-list').should('be.visible')
-      cy.get('.k-table-error-state').should('be.visible')
+        cy.wait('@getCaCertificate')
+        cy.get('.kong-ui-entities-ca-certificates-list').should('be.visible')
+        cy.get('.k-table-error-state').should('be.visible')
+        if (message) {
+          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+        }
+      }
+
+      testHandleErrorRequest()
+      testHandleErrorRequest('Custom error message')
     })
 
     it('should allow switching between pages', () => {
@@ -546,31 +554,39 @@ describe('<CACertificateList />', () => {
     })
 
     it('should handle error state', () => {
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/ca_certificates*`,
-        },
-        {
-          statusCode: 500,
-          body: {},
-        },
-      ).as('getCaCertificate')
+      const testHandleErrorRequest = (message?: string) => {
+        cy.intercept(
+          {
+            method: 'GET',
+            url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/ca_certificates*`,
+          },
+          {
+            statusCode: 500,
+            body: message ? { message } : {},
+          },
+        ).as('getCaCertificate')
 
-      cy.mount(CACertificateList, {
-        props: {
-          cacheIdentifier: `ca-certificate-list-${uuidv4()}`,
-          config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
-        },
-      })
+        cy.mount(CACertificateList, {
+          props: {
+            cacheIdentifier: `ca-certificate-list-${uuidv4()}`,
+            config: baseConfigKonnect,
+            canCreate: () => {},
+            canEdit: () => {},
+            canDelete: () => {},
+            canRetrieve: () => {},
+          },
+        })
 
-      cy.wait('@getCaCertificate')
-      cy.get('.kong-ui-entities-ca-certificates-list').should('be.visible')
-      cy.get('.k-table-error-state').should('be.visible')
+        cy.wait('@getCaCertificate')
+        cy.get('.kong-ui-entities-ca-certificates-list').should('be.visible')
+        cy.get('.k-table-error-state').should('be.visible')
+        if (message) {
+          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+        }
+      }
+
+      testHandleErrorRequest()
+      testHandleErrorRequest('Custom error message')
     })
 
     it('should allow switching between pages', () => {

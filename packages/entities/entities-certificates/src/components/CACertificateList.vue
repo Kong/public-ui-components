@@ -162,6 +162,7 @@ import type {
   EmptyStateOptions,
   ExactMatchFilterConfig,
   FuzzyMatchFilterConfig,
+  TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -283,7 +284,7 @@ const resetPagination = (): void => {
 /**
  * loading, Error, Empty state
  */
-const errorMessage = ref<string>('')
+const errorMessage = ref<TableErrorMessage>(null)
 
 /**
  * Copy ID action
@@ -419,7 +420,12 @@ const confirmDelete = async (): Promise<void> => {
  */
 watch(fetcherState, (state) => {
   if (state.status === FetcherStatus.Error) {
-    errorMessage.value = t('ca-certificates.errors.general')
+    errorMessage.value = {
+      title: t('ca-certificates.errors.general'),
+    }
+    if (state.error?.response?.data?.message) {
+      errorMessage.value.message = state.error.response.data.message
+    }
     // Emit the error for the host app
     emit('error', state.error)
 
@@ -427,7 +433,7 @@ watch(fetcherState, (state) => {
   }
 
   certificateDataCache.value = {}
-  errorMessage.value = ''
+  errorMessage.value = null
 })
 
 // Initialize the empty state options assuming a user does not have create permissions

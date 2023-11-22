@@ -205,6 +205,7 @@ import type {
 import type {
   BaseTableHeaders,
   EmptyStateOptions,
+  TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -337,7 +338,7 @@ const resetPagination = (): void => {
 /**
  * loading, Error, Empty state
  */
-const errorMessage = ref<string>('')
+const errorMessage = ref<TableErrorMessage>(null)
 
 /**
  * Copy action
@@ -447,14 +448,19 @@ const confirmDelete = async (): Promise<void> => {
  */
 watch(fetcherState, (state) => {
   if (state.status === FetcherStatus.Error) {
-    errorMessage.value = t('credentials.error.general')
+    errorMessage.value = {
+      title: t('credentials.error.general'),
+    }
+    if (state.error?.response?.data?.message) {
+      errorMessage.value.message = state.error.response.data.message
+    }
     // Emit the error for the host app
     emit('error', state.error)
 
     return
   }
 
-  errorMessage.value = ''
+  errorMessage.value = null
 })
 
 // Initialize the empty state options assuming a user does not have create permissions

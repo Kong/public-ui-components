@@ -95,4 +95,52 @@ describe('<EntityBaseTable />', () => {
     cy.get('.kong-ui-entity-base-table tbody tr').eq(1).should('have.attr', 'data-rowid', mockTableData.data[1].id)
     cy.get('.kong-ui-entity-base-table tbody tr').eq(1).should('have.attr', 'data-testid', mockTableData.data[1].name)
   })
+
+  it('should not enter error state', () => {
+    cy.mount(EntityBaseTable, {
+      props: {
+        errorMessage: null,
+        fetcher: () => mockTableData,
+      },
+    })
+    cy.get('.kong-ui-entity-base-table .k-table-error-state').should('not.exist')
+
+    cy.mount(EntityBaseTable, {
+      props: {
+        errorMessage: '',
+        fetcher: () => mockTableData,
+      },
+    })
+    cy.get('.kong-ui-entity-base-table .k-table-error-state').should('not.exist')
+  })
+
+  it('should accept string for table error message', () => {
+    const message = 'I am an error message'
+
+    cy.mount(EntityBaseTable, {
+      props: {
+        errorMessage: message,
+        fetcher: () => mockTableData,
+      },
+    })
+
+    cy.get('.kong-ui-entity-base-table .k-empty-state-title-header').should('contain.text', message)
+  })
+
+  it('should accept object for table error message', () => {
+    const errorMessage = {
+      title: 'My error title',
+      message: 'My error message',
+    }
+
+    cy.mount(EntityBaseTable, {
+      props: {
+        errorMessage,
+        fetcher: () => mockTableData,
+      },
+    })
+
+    cy.get('.kong-ui-entity-base-table .k-empty-state-title-header').should('contain.text', errorMessage.title)
+    cy.get('.kong-ui-entity-base-table .k-empty-state-message').should('contain.text', errorMessage.message)
+  })
 })

@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, watch, onBeforeMount } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type {
   KongManagerConsumerGroupListConfig,
   KonnectConsumerGroupListConfig,
@@ -253,10 +253,11 @@ watch(availableConsumerGroups, () => {
   consumerGroupsSelectKey.value++
 }, { immediate: true, deep: true })
 
-onBeforeMount(async () => {
-  // load consumer groups
-  await loadItems()
-})
+watch(() => props.visible, () => {
+  if (props.visible) {
+    loadItems() // load consumer groups
+  }
+}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

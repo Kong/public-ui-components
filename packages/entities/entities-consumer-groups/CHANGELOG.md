@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.0.5...@kong-ui-public/entities-consumer-groups@2.0.6) (2023-11-22)
+
+
+### Bug Fixes
+
+* **entity-consumers:** optimize consumer data fetching in `<AddConsumerModal />` ([#935](https://github.com/Kong/public-ui-components/issues/935)) ([b2f8cc5](https://github.com/Kong/public-ui-components/commit/b2f8cc5b6fc9f7e58592bfc01a49a6abab564897))
+
+
+
+
+
+## [2.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.0.4...@kong-ui-public/entities-consumer-groups@2.0.5) (2023-11-22)
+
+
+### Bug Fixes
+
+* **entities-list:** show response error message in entity list ([#920](https://github.com/Kong/public-ui-components/issues/920)) ([6a6fa68](https://github.com/Kong/public-ui-components/commit/6a6fa6892469579ab98f97c3110c124ea2d99f68))
+
+
+
+
+
+## [2.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.0.3...@kong-ui-public/entities-consumer-groups@2.0.4) (2023-11-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
 ## [2.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.0.2...@kong-ui-public/entities-consumer-groups@2.0.3) (2023-11-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-groups

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.0.2...@kong-ui-public/app-layout@2.1.0) (2023-11-21)
+
+
+### Features
+
+* **app-layout:** dark theme ([#936](https://github.com/Kong/public-ui-components/issues/936)) ([dfdf37b](https://github.com/Kong/public-ui-components/commit/dfdf37b238381c49924f4b7ad5481894c9a092a4))
+
+
+
+
+
 ## [2.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.0.1...@kong-ui-public/app-layout@2.0.2) (2023-11-21)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
