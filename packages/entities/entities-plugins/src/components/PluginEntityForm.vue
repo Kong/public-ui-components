@@ -499,10 +499,18 @@ const initFormModel = (): void => {
       ...(props.record.tags && { tags: props.record.tags }),
     })
 
-    if (props.record.data) {
-      updateModel(props.record.data)
-    } else if (props.record.config) {
-      // scope and top level fields
+    // handle credentials
+    if (props.credential) {
+      // scope
+      if (props.record.consumer_id || props.record.consumer) {
+        updateModel({
+          consumer_id: props.record.consumer_id || props.record.consumer,
+        })
+      }
+
+      updateModel(props.record)
+    } else if (props.record.config) { // typical plugins
+      // scope fields
       if ((props.record.consumer_id || props.record.consumer) || (props.record.service_id || props.record.service) ||
           (props.record.route_id || props.record.route) || (props.record.consumer_group_id || props.record.consumer_group)) {
         updateModel({
@@ -510,7 +518,6 @@ const initFormModel = (): void => {
           route_id: props.record.route_id || props.record.route,
           consumer_id: props.record.consumer_id || props.record.consumer,
           consumer_group_id: props.record.consumer_group_id || props.record.consumer_group,
-          enabled: props.record.enabled,
         })
       }
 
