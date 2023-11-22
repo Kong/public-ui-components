@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.0.8...@kong-ui-public/entities-plugins@2.0.9) (2023-11-22)
+
+
+### Bug Fixes
+
+* **plugin/form:** schema hint propagation ([#939](https://github.com/Kong/public-ui-components/issues/939)) ([4ff96cc](https://github.com/Kong/public-ui-components/commit/4ff96ccaa96e9e1c0ccf0edb0c73f989f2bf5bb5))
+
+
+
+
+
 ## [2.0.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.0.7...@kong-ui-public/entities-plugins@2.0.8) (2023-11-22)
 
 
