@@ -196,6 +196,7 @@ import type {
   EmptyStateOptions,
   ExactMatchFilterConfig,
   FuzzyMatchFilterConfig,
+  TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import AddConsumerModal from './AddConsumerModal.vue'
@@ -335,7 +336,7 @@ const getRowValue = (val: any) => {
 /**
  * loading, Error, Empty state
  */
-const errorMessage = ref('')
+const errorMessage = ref<TableErrorMessage>(null)
 
 /**
  * Copy ID action
@@ -557,14 +558,19 @@ const removeConsumers = async (): Promise<void> => {
  */
 watch(fetcherState, (state) => {
   if (state.status === FetcherStatus.Error) {
-    errorMessage.value = t('consumers.errors.general')
+    errorMessage.value = {
+      title: t('consumers.errors.general'),
+    }
+    if (state.error?.response?.data?.message) {
+      errorMessage.value.message = state.error.response.data.message
+    }
     // Emit the error for the host app
     emit('error', state.error)
 
     return
   }
 
-  errorMessage.value = ''
+  errorMessage.value = null
 })
 
 // Initialize the empty state options assuming a user does not have create permissions

@@ -18,10 +18,11 @@
         :empty-state-message="query ? t('baseTable.emptyState.noSearchResultsMessage') : emptyStateOptions.message"
         :empty-state-title="query ? t('baseTable.emptyState.noSearchResultsTitle') : emptyStateOptions.title"
         :enable-client-sort="enableClientSort"
-        :error-state-title="errorMessage"
+        :error-state-message="tableErrorState.message"
+        :error-state-title="tableErrorState.title"
         :fetcher="fetcher"
         :fetcher-cache-key="String(fetcherCacheKey)"
-        :has-error="!!errorMessage"
+        :has-error="tableErrorState.hasError"
         :headers="headers"
         hide-pagination-when-optional
         :initial-fetcher-params="combinedInitialFetcherParams"
@@ -122,6 +123,7 @@ import type {
   FetcherResponse,
   InternalHeader,
   TableSortParams,
+  TableErrorMessage,
 } from '../../types'
 
 const props = defineProps({
@@ -181,9 +183,10 @@ const props = defineProps({
   },
   // error message to show in the error state
   // this prop being set (or empty) determines if the KTable is in an error state
+  // please use `TableErrorMessage` since `string` is only for backwards compatibility
   errorMessage: {
-    type: String,
-    default: '',
+    type: [String, Object] as PropType<string | TableErrorMessage>,
+    default: null,
   },
   disablePaginationPageJump: {
     type: Boolean,
@@ -238,6 +241,22 @@ const emit = defineEmits<{
 }>()
 
 const { i18n: { t } } = composables.useI18n()
+
+const tableErrorState = computed((): { hasError: boolean, title?: string, message?: string } => {
+  if (typeof props.errorMessage === 'string') {
+    return {
+      hasError: !!props.errorMessage,
+      title: props.errorMessage,
+      message: undefined,
+    }
+  } else {
+    return {
+      hasError: !!props.errorMessage,
+      title: props.errorMessage?.title,
+      message: props.errorMessage?.message,
+    }
+  }
+})
 
 const cacheId = computed((): string => {
   // Utilize the cacheIdentifier if provided; otherwise, fallback to the preferencesStorageKey that should always be defined

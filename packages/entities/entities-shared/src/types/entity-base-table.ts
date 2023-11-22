@@ -71,3 +71,5 @@ export interface TableSortParams {
   sortColumnKey: string
   sortColumnOrder: 'asc' | 'desc'
 }
+
+export type TableErrorMessage = { title?: string; message?: string } | null

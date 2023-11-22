@@ -260,31 +260,39 @@ describe('<GatewayServiceList />', () => {
     })
 
     it('should handle error state', () => {
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/services*`,
-        },
-        {
-          statusCode: 500,
-          body: {},
-        },
-      ).as('getGatewayServices')
+      const testHandleErrorRequest = (message?: string) => {
+        cy.intercept(
+          {
+            method: 'GET',
+            url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/services*`,
+          },
+          {
+            statusCode: 500,
+            body: message ? { message } : {},
+          },
+        ).as('getGatewayServices')
 
-      cy.mount(GatewayServiceList, {
-        props: {
-          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
-          config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
-        },
-      })
+        cy.mount(GatewayServiceList, {
+          props: {
+            cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+            config: baseConfigKM,
+            canCreate: () => { },
+            canEdit: () => { },
+            canDelete: () => { },
+            canRetrieve: () => { },
+          },
+        })
 
-      cy.wait('@getGatewayServices')
-      cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
-      cy.get('.k-table-error-state').should('be.visible')
+        cy.wait('@getGatewayServices')
+        cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
+        cy.get('.k-table-error-state').should('be.visible')
+        if (message) {
+          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+        }
+      }
+
+      testHandleErrorRequest()
+      testHandleErrorRequest('Custom error message')
     })
 
     it('should show gateway service items', () => {
@@ -562,31 +570,39 @@ describe('<GatewayServiceList />', () => {
     })
 
     it('should handle error state', () => {
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/services*`,
-        },
-        {
-          statusCode: 500,
-          body: {},
-        },
-      ).as('getGatewayServices')
+      const testHandleErrorRequest = (message?: string) => {
+        cy.intercept(
+          {
+            method: 'GET',
+            url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/services*`,
+          },
+          {
+            statusCode: 500,
+            body: message ? { message } : {},
+          },
+        ).as('getGatewayServices')
 
-      cy.mount(GatewayServiceList, {
-        props: {
-          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
-          config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
-        },
-      })
+        cy.mount(GatewayServiceList, {
+          props: {
+            cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+            config: baseConfigKonnect,
+            canCreate: () => { },
+            canEdit: () => { },
+            canDelete: () => { },
+            canRetrieve: () => { },
+          },
+        })
 
-      cy.wait('@getGatewayServices')
-      cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
-      cy.get('.k-table-error-state').should('be.visible')
+        cy.wait('@getGatewayServices')
+        cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
+        cy.get('.k-table-error-state').should('be.visible')
+        if (message) {
+          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+        }
+      }
+
+      testHandleErrorRequest()
+      testHandleErrorRequest('Custom error message')
     })
 
     it('should show gateway service items', () => {

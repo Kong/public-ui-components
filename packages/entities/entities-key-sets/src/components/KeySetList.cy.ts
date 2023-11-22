@@ -244,31 +244,39 @@ describe('<KeySetList />', () => {
     })
 
     it('should handle error state', () => {
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/key-sets*`,
-        },
-        {
-          statusCode: 500,
-          body: {},
-        },
-      ).as('getKeySets')
+      const testHandleErrorRequest = (message?: string) => {
+        cy.intercept(
+          {
+            method: 'GET',
+            url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/key-sets*`,
+          },
+          {
+            statusCode: 500,
+            body: message ? { message } : {},
+          },
+        ).as('getKeySets')
 
-      cy.mount(KeySetList, {
-        props: {
-          cacheIdentifier: `key-set-list-${uuidv4()}`,
-          config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
-        },
-      })
+        cy.mount(KeySetList, {
+          props: {
+            cacheIdentifier: `key-set-list-${uuidv4()}`,
+            config: baseConfigKM,
+            canCreate: () => {},
+            canEdit: () => {},
+            canDelete: () => {},
+            canRetrieve: () => {},
+          },
+        })
 
-      cy.wait('@getKeySets')
-      cy.get('.kong-ui-entities-key-sets-list').should('be.visible')
-      cy.get('.k-table-error-state').should('be.visible')
+        cy.wait('@getKeySets')
+        cy.get('.kong-ui-entities-key-sets-list').should('be.visible')
+        cy.get('.k-table-error-state').should('be.visible')
+        if (message) {
+          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+        }
+      }
+
+      testHandleErrorRequest()
+      testHandleErrorRequest('Custom error message')
     })
 
     it('should show key set items', () => {
@@ -546,31 +554,39 @@ describe('<KeySetList />', () => {
     })
 
     it('should handle error state', () => {
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/key-sets*`,
-        },
-        {
-          statusCode: 500,
-          body: {},
-        },
-      ).as('getKeySets')
+      const testHandleErrorRequest = (message?: string) => {
+        cy.intercept(
+          {
+            method: 'GET',
+            url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/key-sets*`,
+          },
+          {
+            statusCode: 500,
+            body: message ? { message } : {},
+          },
+        ).as('getKeySets')
 
-      cy.mount(KeySetList, {
-        props: {
-          cacheIdentifier: `key-set-list-${uuidv4()}`,
-          config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
-        },
-      })
+        cy.mount(KeySetList, {
+          props: {
+            cacheIdentifier: `key-set-list-${uuidv4()}`,
+            config: baseConfigKonnect,
+            canCreate: () => {},
+            canEdit: () => {},
+            canDelete: () => {},
+            canRetrieve: () => {},
+          },
+        })
 
-      cy.wait('@getKeySets')
-      cy.get('.kong-ui-entities-key-sets-list').should('be.visible')
-      cy.get('.k-table-error-state').should('be.visible')
+        cy.wait('@getKeySets')
+        cy.get('.kong-ui-entities-key-sets-list').should('be.visible')
+        cy.get('.k-table-error-state').should('be.visible')
+        if (message) {
+          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+        }
+      }
+
+      testHandleErrorRequest()
+      testHandleErrorRequest('Custom error message')
     })
 
     it('should show key set items', () => {

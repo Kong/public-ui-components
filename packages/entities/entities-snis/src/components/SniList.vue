@@ -148,6 +148,7 @@ import type {
   ExactMatchFilterConfig,
   FilterFields,
   FuzzyMatchFilterConfig,
+  TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
 import type { CopyUuidNotifyParam } from '@kong-ui-public/copy-uuid'
 import { CopyUuid } from '@kong-ui-public/copy-uuid'
@@ -304,7 +305,7 @@ const resetPagination = (): void => {
 /**
  * loading, Error, Empty state
  */
-const errorMessage = ref('')
+const errorMessage = ref<TableErrorMessage>(null)
 
 // Initialize the empty state options assuming a user does not have create permissions
 // IMPORTANT: you must initialize this object assuming the user does **NOT** have create
@@ -428,14 +429,19 @@ const confirmDelete = async (): Promise<void> => {
  */
 watch(fetcherState, (state) => {
   if (state.status === FetcherStatus.Error) {
-    errorMessage.value = t('errors.general')
+    errorMessage.value = {
+      title: t('errors.general'),
+    }
+    if (state.error?.response?.data?.message) {
+      errorMessage.value.message = state.error.response.data.message
+    }
     // Emit the error for the host app
     emit('error', state.error)
 
     return
   }
 
-  errorMessage.value = ''
+  errorMessage.value = null
 })
 
 onBeforeMount(async () => {
