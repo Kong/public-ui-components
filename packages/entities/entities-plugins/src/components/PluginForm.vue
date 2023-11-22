@@ -58,38 +58,41 @@
         @model-updated="handleUpdate"
       />
 
-      <template
-        v-if="!isWizardStep"
-        #form-actions
-      >
-        <KButton
-          appearance="secondary"
-          data-testid="form-cancel"
-          :disabled="form.isReadonly"
-          type="reset"
-          @click="handleClickCancel"
-        >
-          {{ t('actions.cancel') }}
-        </KButton>
-        <KButton
-          v-if="formType === EntityBaseFormType.Create && config.backRoute"
-          appearance="secondary"
-          class="form-back-button"
-          data-testid="form-back"
-          :disabled="form.isReadonly"
-          @click="handleClickBack"
-        >
-          {{ t('actions.back') }}
-        </KButton>
-        <KButton
-          appearance="primary"
-          data-testid="form-submit"
-          :disabled="!canSubmit || form.isReadonly"
-          type="submit"
-          @click="saveFormData"
-        >
-          {{ t('actions.save') }}
-        </KButton>
+      <template #form-actions>
+        <!--
+          Force the render of this slot
+             - if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included)
+        -->
+        <div v-if="!isWizardStep">
+          <KButton
+            appearance="secondary"
+            data-testid="form-cancel"
+            :disabled="form.isReadonly"
+            type="reset"
+            @click="handleClickCancel"
+          >
+            {{ t('actions.cancel') }}
+          </KButton>
+          <KButton
+            v-if="formType === EntityBaseFormType.Create && config.backRoute"
+            appearance="secondary"
+            class="form-back-button"
+            data-testid="form-back"
+            :disabled="form.isReadonly"
+            @click="handleClickBack"
+          >
+            {{ t('actions.back') }}
+          </KButton>
+          <KButton
+            appearance="primary"
+            data-testid="form-submit"
+            :disabled="!canSubmit || form.isReadonly"
+            type="submit"
+            @click="saveFormData"
+          >
+            {{ t('actions.save') }}
+          </KButton>
+        </div>
       </template>
     </EntityBaseForm>
   </div>
