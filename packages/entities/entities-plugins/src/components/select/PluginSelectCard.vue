@@ -36,6 +36,7 @@
         >
           <template #default>
             <KButton
+              appearance="tertiary"
               class="actions-trigger"
               data-testid="overflow-actions-button"
               size="small"
