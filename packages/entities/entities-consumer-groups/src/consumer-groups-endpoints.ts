@@ -4,9 +4,9 @@ const KMBaseApiUrl = '/{workspace}'
 export default {
   list: {
     konnect: {
-      all: `${konnectBaseApiUrl}/consumer_groups`,
-      forConsumer: `${konnectBaseApiUrl}/consumers/{consumerId}/consumer_groups`,
-      oneForConsumer: `${konnectBaseApiUrl}/consumers/{consumerId}/consumer_groups/{consumerGroupId}`,
+      all: '/v2/control-planes/{controlPlaneId}/core-entities/consumer_groups',
+      forConsumer: '/v2/control-planes/{controlPlaneId}/core-entities/consumers/{consumerId}/consumer_groups',
+      oneForConsumer: '/v2/control-planes/{controlPlaneId}/core-entities/consumers/{consumerId}/consumer_groups/{consumerGroupId}',
     },
     kongManager: {
       all: `${KMBaseApiUrl}/consumer_groups?counter=true`,
