@@ -57,16 +57,16 @@
         <div class="vault-form-provider-cards-container">
           <KRadio
             v-model="vaultProvider"
+            card
             data-testid="vault-form-provider-kong"
             :disabled="vaultProviderDisabled"
+            :label="t('form.config.kong.label')"
             :selected-value="VaultProviders.KONG"
-            type="card"
           >
             <KIcon
               icon="kong"
               size="46"
             />
-            <span class="k-radio-label">{{ t('form.config.kong.label') }}</span>
           </KRadio>
           <KTooltip
             :disabled="isOtherProvidersSupported"
@@ -75,17 +75,17 @@
           >
             <KRadio
               v-model="vaultProvider"
+              card
               data-testid="vault-form-provider-aws"
               :disabled="vaultProviderDisabled || !isOtherProvidersSupported"
+              :label="t('form.config.aws.label')"
               :selected-value="VaultProviders.AWS"
-              type="card"
             >
               <img
                 alt="Amazon Web Services"
                 :src="getProviderIconURL(VaultProviders.AWS)"
                 width="46"
               >
-              <span class="k-radio-label">{{ t('form.config.aws.label') }}</span>
             </KRadio>
           </KTooltip>
           <KTooltip
@@ -95,17 +95,17 @@
           >
             <KRadio
               v-model="vaultProvider"
+              card
               data-testid="vault-form-provider-gcp"
               :disabled="vaultProviderDisabled || !isOtherProvidersSupported"
+              :label="t('form.config.gcp.label')"
               :selected-value="VaultProviders.GCP"
-              type="card"
             >
               <img
                 alt="Google Cloud"
                 :src="getProviderIconURL(VaultProviders.GCP)"
                 width="46"
               >
-              <span class="k-radio-label">{{ t('form.config.gcp.label') }}</span>
             </KRadio>
           </KTooltip>
           <KTooltip
@@ -115,17 +115,17 @@
           >
             <KRadio
               v-model="vaultProvider"
+              card
               data-testid="vault-form-provider-hcv"
               :disabled="vaultProviderDisabled || !isOtherProvidersSupported"
+              :label="t('form.config.hcv.label')"
               :selected-value="VaultProviders.HCV"
-              type="card"
             >
               <img
                 alt="HashiCorp Vault"
                 :src="getProviderIconURL(VaultProviders.HCV)"
                 width="46"
               >
-              <span class="k-radio-label">{{ t('form.config.hcv.label') }}</span>
             </KRadio>
           </KTooltip>
           <KTooltip
@@ -136,17 +136,17 @@
           >
             <KRadio
               v-model="vaultProvider"
+              card
               data-testid="vault-form-provider-azure"
               :disabled="vaultProviderDisabled || !isOtherProvidersSupported"
+              :label="t('form.config.azure.label')"
               :selected-value="VaultProviders.AZURE"
-              type="card"
             >
               <img
                 alt="Azure"
                 :src="getProviderIconURL(VaultProviders.AZURE)"
                 width="46"
               >
-              <span class="k-radio-label">{{ t('form.config.azure.label') }}</span>
             </KRadio>
           </KTooltip>
         </div>
