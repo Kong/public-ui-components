@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.6.1...@kong-ui-public/metric-cards@0.6.2) (2023-11-22)
+
+
+### Bug Fixes
+
+* **entities-vaults:** fix kradio card occurrences ([#937](https://github.com/Kong/public-ui-components/issues/937)) ([21827e9](https://github.com/Kong/public-ui-components/commit/21827e9592a962ec0e7a7de1d76ebd80c36dcd2f))
+
+
+
+
+
 ## [0.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.6.0...@kong-ui-public/metric-cards@0.6.1) (2023-11-21)
 
 **Note:** Version bump only for package @kong-ui-public/metric-cards
