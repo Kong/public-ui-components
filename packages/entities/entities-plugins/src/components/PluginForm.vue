@@ -863,6 +863,8 @@ const saveFormData = async (): Promise<void> => {
           requestBody[entityKey] = { id: props.config.entityId }
         }
       }
+
+      delete requestBody.created_at
     }
 
     // TODO: determine validate URL for credentials
