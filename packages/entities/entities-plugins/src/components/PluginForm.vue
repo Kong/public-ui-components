@@ -63,7 +63,8 @@
           Force the render of this slot
              - if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included)
         -->
-        <div v-if="!isWizardStep">
+        <div v-if="isWizardStep" />
+        <div v-else>
           <KButton
             appearance="secondary"
             data-testid="form-cancel"
