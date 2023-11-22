@@ -57,6 +57,7 @@ export interface PluginEntityInfo {
   entity: PluginScope
   entityEndpoint: EntityType
   id?: string
+  idField?: EntityTypeIdField
 }
 
 export type PluginMetaData = {

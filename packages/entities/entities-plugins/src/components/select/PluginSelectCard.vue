@@ -36,6 +36,7 @@
         >
           <template #default>
             <KButton
+              appearance="tertiary"
               class="actions-trigger"
               data-testid="overflow-actions-button"
               size="small"
@@ -71,6 +72,7 @@
         <div
           class="plugin-card-body"
           :class="{ 'custom-plugin': isCustomPlugin }"
+          :data-testid="plugin.name"
           :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
           @click="handleCustomClick"
         >
