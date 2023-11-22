@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@2.0.5...@kong-ui-public/entities-consumers@2.0.6) (2023-11-22)
+
+
+### Bug Fixes
+
+* **entity-consumers:** optimize consumer data fetching in `<AddConsumerModal />` ([#935](https://github.com/Kong/public-ui-components/issues/935)) ([b2f8cc5](https://github.com/Kong/public-ui-components/commit/b2f8cc5b6fc9f7e58592bfc01a49a6abab564897))
+
+
+
+
+
 ## [2.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@2.0.4...@kong-ui-public/entities-consumers@2.0.5) (2023-11-22)
 
 
