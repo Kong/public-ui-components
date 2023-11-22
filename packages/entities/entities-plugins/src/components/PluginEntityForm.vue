@@ -34,8 +34,7 @@
 import { computed, ref, reactive, provide, watch, type PropType, onBeforeMount, defineComponent } from 'vue'
 import type { AxiosResponse, AxiosRequestConfig } from 'axios'
 import {
-  EntityTypeIdField,
-  type PluginScope,
+  type PluginEntityInfo,
   type KonnectPluginFormConfig,
   type KongManagerPluginFormConfig,
 } from '../types'
@@ -84,13 +83,9 @@ const props = defineProps({
   /**
    * Entity data if plugin is scoped
    */
-  entityId: {
-    type: String,
-    default: '',
-  },
-  entityType: {
-    type: String as PropType<PluginScope>,
-    default: null,
+  entityMap: {
+    type: Object as PropType<Record<string, PluginEntityInfo>>,
+    default: () => ({}),
   },
   /**
    * Plugin data if being edited
@@ -126,7 +121,7 @@ const { axiosInstance } = useAxios({
   headers: props.config.requestHeaders,
 })
 
-const { parseSchema } = composables.useSchemas(props.entityId || undefined)
+const { parseSchema } = composables.useSchemas(props.entityMap.focusedEntity?.id || undefined)
 const { convertToDotNotation, unFlattenObject, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
 // define endpoints for use by KFG
@@ -220,22 +215,6 @@ const formSchema = ref<Record<string, any>>({})
 const originalModel = reactive<Record<string, any>>({})
 const formModel = reactive<Record<string, any>>({})
 const formOptions = computed(() => form.value?.options)
-
-// ex. service_id will be converted to service-id
-const entityIdField = computed((): string => {
-  switch (props.entityType) {
-    case 'service':
-      return EntityTypeIdField.SERVICE
-    case 'route':
-      return EntityTypeIdField.ROUTE
-    case 'consumer':
-      return EntityTypeIdField.CONSUMER
-    case 'consumer_group':
-      return EntityTypeIdField.CONSUMER_GROUP
-    default:
-      return ''
-  }
-})
 
 // This function transforms the form data into the correct structure to be submitted to the API
 const getModel = (): Record<string, any> => {
@@ -542,26 +521,29 @@ const initFormModel = (): void => {
 
   // scoping logic, convert _ to - for form model
   // Check if incoming field exists in current model and if so update
-  if (entityIdField.value && props.entityId && props.schema) {
+  if (Object.keys(props.entityMap).length && !props.entityMap.global && props.schema) {
     const updateFields: Record<string, any> = {}
-    const key = entityIdField.value === 'consumer_group_id' ? 'consumer_group-id' : JSON.parse(JSON.stringify(entityIdField.value).replace('_', '-'))
+    for (const entity in props.entityMap) {
+      const id = props.entityMap[entity].id
+      const idField = props.entityMap[entity].idField
+      const key = idField === 'consumer_group_id' ? 'consumer_group-id' : JSON.parse(JSON.stringify(idField).replace('_', '-'))
 
-    // ex. set consumer-id: <entityId>
-    if (Object.prototype.hasOwnProperty.call(formModel, key)) {
-      updateFields[key] = props.entityId
+      // ex. set consumer-id: <entityId>
+      if (Object.prototype.hasOwnProperty.call(formModel, key)) {
+        updateFields[key] = id
+      }
     }
 
     updateModel(updateFields)
   }
 
-  // Check if entity field exists in current model and if so update
   // credentials don't recognize field with -id, so for now set it like
   // ex. consumer: <entityId>
   // we'll fix this on submit
-  if (props.entityId && props.schema && props.credential) {
+  if (props.entityMap.consumer?.id && props.schema && props.credential) {
     const updateFields: Record<string, any> = {}
-    if (Object.prototype.hasOwnProperty.call(formModel, props.entityType)) {
-      updateFields[props.entityType] = props.entityId
+    if (Object.prototype.hasOwnProperty.call(formModel, 'consumer')) {
+      updateFields.consumer = props.entityMap.consumer.id
     }
 
     updateModel(updateFields)
