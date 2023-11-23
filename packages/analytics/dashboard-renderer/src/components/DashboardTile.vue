@@ -14,16 +14,29 @@
 import type { TileDefinition } from '../types'
 import { ChartTypes } from '../types'
 import type {
-  Component,
+  Component, PropType,
 } from 'vue'
 import { computed } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
 import AnalyticsChartRenderer from './AnalyticsChartRenderer.vue'
 
-const props = defineProps<{
-  definition: TileDefinition
-}>()
+const props = defineProps({
+  definition: {
+    type: Object as PropType<TileDefinition>,
+    required: true,
+  },
+  height: {
+    type: Number,
+    required: false,
+    default: 150,
+  },
+  width: {
+    type: Number,
+    required: false,
+    default: 150,
+  },
+})
 
 // TODO: Should the chart be in charge of rendering its own title?
 // Analytics charts have a title, but gauge charts do not.
@@ -45,6 +58,7 @@ const componentData = computed(() => {
       query: props.definition.query,
       queryReady: true, // TODO: Pipelining
       chartOptions: props.definition.chart,
+      height: props.height,
     },
   }
 })

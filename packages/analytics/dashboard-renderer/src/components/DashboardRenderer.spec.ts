@@ -8,12 +8,25 @@ const validate = ajv.compile(dashboardDefinitionSchema)
 describe('Dashboard schemas', () => {
   it('successfully validates bar chart schemas', () => {
     const definition: any = {
+      gridSize: {
+        cols: 2,
+        rows: 2,
+      },
       tiles: [
         {
+          id: 'tile-1',
           chart: {
             type: 'horizontal_bar',
           },
           query: {},
+          position: {
+            col: 1,
+            row: 1,
+          },
+          size: {
+            cols: 1,
+            rows: 1,
+          },
         },
       ],
     }
@@ -23,8 +36,13 @@ describe('Dashboard schemas', () => {
 
   it('successfully validates gauge chart schemas', () => {
     const definition: any = {
+      gridSize: {
+        cols: 2,
+        rows: 2,
+      },
       tiles: [
         {
+          id: 'tile-1',
           chart: {
             type: 'gauge',
             metricDisplay: 'full',
@@ -32,6 +50,14 @@ describe('Dashboard schemas', () => {
             numerator: 0,
           },
           query: {},
+          position: {
+            col: 1,
+            row: 1,
+          },
+          size: {
+            cols: 1,
+            rows: 1,
+          },
         },
       ],
     }

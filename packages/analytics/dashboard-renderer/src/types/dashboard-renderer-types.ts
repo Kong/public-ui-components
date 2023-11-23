@@ -64,6 +64,10 @@ export type GaugeChartOptions = FromSchema<typeof gaugeChartSchema>
 export const tileSchema = {
   type: 'object',
   properties: {
+    id: {
+      type: 'string',
+      description: 'Unique identifier for the tile.',
+    },
     query: {
       // TODO: JSON Schema for Explore v4.
       type: 'object',
@@ -74,8 +78,36 @@ export const tileSchema = {
     title: {
       type: 'string',
     },
+    position: {
+      type: 'object',
+      properties: {
+        col: {
+          type: 'number',
+        },
+        row: {
+          type: 'number',
+        },
+      },
+      description: 'Position of the tile in the grid.',
+      required: ['col', 'row'],
+      additionalProperties: false,
+    },
+    size: {
+      type: 'object',
+      properties: {
+        cols: {
+          type: 'number',
+        },
+        rows: {
+          type: 'number',
+        },
+      },
+      description: 'Number of columns and rows the tile occupies.',
+      required: ['cols', 'rows'],
+      additionalProperties: false,
+    },
   },
-  required: ['chart', 'query'],
+  required: ['chart', 'query', 'position', 'size', 'id'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
@@ -88,8 +120,32 @@ export const dashboardDefinitionSchema = {
       type: 'array',
       items: tileSchema,
     },
+    tileHeight: {
+      type: 'number',
+      description: 'Height of each tile in pixels. Defaults to 150.',
+      default: 150,
+    },
+    tileWidth: {
+      type: 'number',
+      description: 'Width of each tile in pixels. Defaults to 150.',
+      default: 150,
+    },
+    gridSize: {
+      type: 'object',
+      properties: {
+        cols: {
+          type: 'number',
+        },
+        rows: {
+          type: 'number',
+        },
+      },
+      description: 'Number of columns and rows in the grid.',
+      required: ['cols', 'rows'],
+      additionalProperties: false,
+    },
   },
-  required: ['tiles'],
+  required: ['tiles', 'gridSize'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
@@ -99,4 +155,5 @@ export interface RendererProps<T> {
   query: any // TODO: Explore v4
   queryReady: boolean,
   chartOptions: T,
+  height: number,
 }

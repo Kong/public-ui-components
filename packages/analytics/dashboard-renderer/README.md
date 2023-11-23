@@ -46,16 +46,29 @@ const context: DashboardRendererContext = {
 }
 
 const definition: DashboardDefinition = {
+  // 5 x 5 grid
+  gridSize: {
+    cols: 5,
+    rows: 5,
+  }
   tiles: [
     {
-      title: 'Analytics chart',
       chart: {
         type: ChartTypes.HorizontalBar,
       },
       query: {},
+      // Position at column 1, row 1
+      position: {
+        col: 1,
+        row: 1,
+      },
+      // Spans 3 columns and 2 rows
+      size: {
+        col: 3,
+        row: 2,
+      }
     },
     {
-      title: 'Simple chart',
       chart: {
         type: ChartTypes.Gauge,
         metricDisplay: ChartMetricDisplay.Full,
@@ -63,6 +76,16 @@ const definition: DashboardDefinition = {
         numerator: 0,
       },
       query: {},
+      // Position at column 1, row 3
+      position: {
+        col: 1,
+        row: 3,
+      },
+      // Spans 3 columns and 2 rows
+      size: {
+        col: 3,
+        row: 2,
+      }
     },
   ],
 }

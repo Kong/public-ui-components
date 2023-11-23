@@ -7,6 +7,7 @@
     <SimpleChart
       :chart-data="data"
       :chart-options="mappedChartOptions"
+      :height="`${props.height}px`"
       :synthetics-data-key="props.chartOptions.syntheticsDataKey"
     />
   </QueryDataProvider>

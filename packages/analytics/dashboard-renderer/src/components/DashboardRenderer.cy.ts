@@ -26,6 +26,10 @@ describe('<DashboardRenderer />', () => {
         timeSpec: '',
       },
       definition: {
+        gridSize: {
+          cols: 2,
+          rows: 4,
+        },
         tiles: [
           {
             title: 'Analytics chart',
@@ -33,6 +37,14 @@ describe('<DashboardRenderer />', () => {
               type: ChartTypes.HorizontalBar,
             },
             query: {},
+            size: {
+              cols: 2,
+              rows: 2,
+            },
+            position: {
+              col: 1,
+              row: 1,
+            },
           },
           {
             title: 'Simple chart',
@@ -43,6 +55,14 @@ describe('<DashboardRenderer />', () => {
               numerator: 0,
             },
             query: {},
+            size: {
+              cols: 2,
+              rows: 2,
+            },
+            position: {
+              col: 1,
+              row: 3,
+            },
           },
         ],
       },

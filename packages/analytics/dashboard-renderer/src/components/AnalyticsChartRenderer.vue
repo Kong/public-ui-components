@@ -8,6 +8,8 @@
       :chart-data="data"
       :chart-options="options"
       chart-title=""
+      :height="`${props.height}px`"
+      legend-position="bottom"
       tooltip-title=""
     />
   </QueryDataProvider>
