@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.6...@kong-ui-public/entities-shared@2.0.7) (2023-11-23)
+
+
+### Bug Fixes
+
+* **forms:** misc style fix ([#942](https://github.com/Kong/public-ui-components/issues/942)) ([a783467](https://github.com/Kong/public-ui-components/commit/a78346715ac9f56da81f6d9e21e95f02d1edb4d0))
+
+
+
+
+
 ## [2.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.5...@kong-ui-public/entities-shared@2.0.6) (2023-11-22)
 
 
