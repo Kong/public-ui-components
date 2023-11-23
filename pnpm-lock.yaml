@@ -439,6 +439,9 @@ importers:
 
   packages/core/forms:
     dependencies:
+      '@kong/icons':
+        specifier: ^1.8.0
+        version: 1.8.0(vue@3.3.4)
       fecha:
         specifier: ^4.2.3
         version: 4.2.3
