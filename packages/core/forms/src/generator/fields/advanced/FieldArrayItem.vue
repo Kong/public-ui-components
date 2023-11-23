@@ -7,19 +7,17 @@
       type="button"
       @click="$emit('remove-item')"
     >
-      <template #icon>
-        <KIcon
-          icon="trash"
-          size="18"
-        />
-      </template>
+      <TrashIcon />
     </KButton>
   </div>
 </template>
 
 <script>
+import { TrashIcon } from '@kong/icons'
+
 export default {
   name: 'FieldArrayItem',
+  components: { TrashIcon },
   props: {
     model: {
       type: String,

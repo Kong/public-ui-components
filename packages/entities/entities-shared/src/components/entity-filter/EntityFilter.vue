@@ -98,6 +98,7 @@
         <template #actionButton>
           <div class="filter-clear-button-container">
             <KButton
+              appearance="tertiary"
               size="small"
               @click="clearFields"
             >

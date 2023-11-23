@@ -211,17 +211,6 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-.vue-form-generator .field-wrap {
-  .k-button {
-    &,
-    &:hover {
-      background: none;
-      border: none;
-    }
-  }
-}
-</style>
 
 <style lang="scss" scoped>
 .object-advanced-wrapper {
