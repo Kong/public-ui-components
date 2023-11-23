@@ -314,8 +314,6 @@ provide('legendPosition', toRef(props, 'legendPosition'))
 @import '../styles/chart-shell';
 
 .analytics-chart-shell {
-  border: $kui-border-width-10 solid $kui-color-border;
-  margin: $kui-space-60;
   padding: $kui-space-60;
 
   .chart-empty-state {
