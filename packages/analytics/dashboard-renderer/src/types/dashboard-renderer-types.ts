@@ -1,5 +1,6 @@
 import type { FromSchema, JSONSchema } from 'json-schema-to-ts'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
+import { DEFAULT_TILE_HEIGHT, DEFAULT_TILE_WIDTH } from '../constants'
 
 // TODO: Explore v4
 export interface DashboardRendererContext {
@@ -11,6 +12,7 @@ export enum ChartTypes {
   HorizontalBar = 'horizontal_bar',
   VerticalBar = 'vertical_bar',
   Gauge = 'gauge',
+  TimeseriesLine = 'timeseries_line',
 }
 
 // Common definition for many ChartJS tiles.
@@ -35,6 +37,24 @@ export const barChartSchema = {
 } as const satisfies JSONSchema
 
 export type BarChartOptions = FromSchema<typeof barChartSchema>
+
+export const timeseriesChartSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: [ChartTypes.TimeseriesLine],
+    },
+    stacked: {
+      type: 'boolean',
+    },
+    syntheticsDataKey,
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TimeseriesChartOptions = FromSchema<typeof barChartSchema>
 
 export const gaugeChartSchema = {
   type: 'object',
@@ -66,14 +86,13 @@ export const tileSchema = {
   properties: {
     id: {
       type: 'string',
-      description: 'Unique identifier for the tile.',
     },
     query: {
       // TODO: JSON Schema for Explore v4.
       type: 'object',
     },
     chart: {
-      oneOf: [barChartSchema, gaugeChartSchema],
+      oneOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema],
     },
     title: {
       type: 'string',
@@ -122,13 +141,13 @@ export const dashboardDefinitionSchema = {
     },
     tileHeight: {
       type: 'number',
-      description: 'Height of each tile in pixels. Defaults to 150.',
-      default: 150,
+      description: `Height of each tile in pixels. Default: ${DEFAULT_TILE_HEIGHT}`,
+      default: DEFAULT_TILE_HEIGHT,
     },
     tileWidth: {
       type: 'number',
-      description: 'Width of each tile in pixels. Defaults to 150.',
-      default: 150,
+      description: `Width of each tile in pixels. Default: ${DEFAULT_TILE_WIDTH}`,
+      default: DEFAULT_TILE_WIDTH,
     },
     gridSize: {
       type: 'object',
@@ -153,7 +172,7 @@ export type DashboardDefinition = FromSchema<typeof dashboardDefinitionSchema>
 
 export interface RendererProps<T> {
   query: any // TODO: Explore v4
-  queryReady: boolean,
-  chartOptions: T,
-  height: number,
+  queryReady: boolean
+  chartOptions: T
+  height: number
 }

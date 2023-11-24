@@ -8,15 +8,15 @@
     </KAlert>
     <GridLayout
       v-else
-      :grid-size="props.definition.gridSize"
-      :tile-height="props.definition.tileHeight"
-      :tile-width="props.definition.tileWidth"
-      :tiles="props.definition.tiles"
+      :grid-size="definition.gridSize"
+      :tile-height="definition.tileHeight"
+      :tile-width="definition.tileWidth"
+      :tiles="definition.tiles"
     >
       <template #tile="{ tile }">
         <Tile
           :definition="(tile as TileDefinition)"
-          :height="(props.definition.tileHeight ?? 150) * tile.size.rows"
+          :height="(definition.tileHeight ?? DEFAULT_TILE_HEIGHT) * tile.size.rows"
         />
       </template>
     </GridLayout>
@@ -30,8 +30,9 @@ import { INJECT_QUERY_PROVIDER } from '../types/query-provider'
 import { inject } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
+import { DEFAULT_TILE_HEIGHT } from '../constants'
 
-const props = defineProps<{
+defineProps<{
   context: DashboardRendererContext,
   definition: DashboardDefinition,
 }>()

@@ -18,3 +18,7 @@ export interface GridSize {
   rows: number,
   cols: number,
 }
+export interface Cell {
+  key: string
+  tile?: Tile
+}

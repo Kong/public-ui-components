@@ -5,8 +5,6 @@
   >
     <GridLayout
       :grid-size="{ cols: 6, rows: 9 }"
-      :tile-height="150"
-      :tile-width="150"
       :tiles="tiles"
     >
       <template #tile="{ tile }">

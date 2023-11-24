@@ -1,14 +1,14 @@
 <template>
   <QueryDataProvider
     v-slot="{ data }"
-    :query="props.query"
-    :query-ready="props.queryReady"
+    :query="query"
+    :query-ready="queryReady"
   >
     <AnalyticsChart
       :chart-data="data"
       :chart-options="options"
       chart-title=""
-      :height="`${props.height}px`"
+      :height="`${height}px`"
       legend-position="bottom"
       tooltip-title=""
     />
@@ -26,6 +26,7 @@ const props = defineProps<RendererProps<BarChartOptions>>()
 const chartTypeLookup = {
   [ChartTypes.HorizontalBar]: AnalyticsChartTypes.HORIZONTAL_BAR,
   [ChartTypes.VerticalBar]: AnalyticsChartTypes.VERTICAL_BAR,
+  [ChartTypes.TimeseriesLine]: AnalyticsChartTypes.TIMESERIES_LINE,
 }
 
 const options = computed(() => ({

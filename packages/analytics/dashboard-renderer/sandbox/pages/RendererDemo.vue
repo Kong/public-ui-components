@@ -68,9 +68,9 @@ const staticDefinition: DashboardDefinition = {
     {
       id: 'chart3',
       chart: {
-        type: ChartTypes.HorizontalBar,
+        type: ChartTypes.TimeseriesLine,
       },
-      query: {},
+      query: { type: 'timeseries' },
       position: {
         col: 1,
         row: 3,

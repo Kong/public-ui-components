@@ -1,14 +1,14 @@
 <template>
   <QueryDataProvider
     v-slot="{ data }"
-    :query="props.query"
-    :query-ready="props.queryReady"
+    :query="query"
+    :query-ready="queryReady"
   >
     <SimpleChart
       :chart-data="data"
       :chart-options="mappedChartOptions"
-      :height="`${props.height}px`"
-      :synthetics-data-key="props.chartOptions.syntheticsDataKey"
+      :height="`${height}px`"
+      :synthetics-data-key="chartOptions.syntheticsDataKey"
     />
   </QueryDataProvider>
 </template>
