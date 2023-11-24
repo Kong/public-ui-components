@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.16.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.16.3...@kong-ui-public/analytics-chart@0.16.4) (2023-11-24)
+
+
+### Bug Fixes
+
+* remove default border and margins let host app dictate ([#943](https://github.com/Kong/public-ui-components/issues/943)) ([74c16c8](https://github.com/Kong/public-ui-components/commit/74c16c8608f2eebac75c77dbfc4955d187a9ffca))
+
+
+
+
+
 ## [0.16.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.16.2...@kong-ui-public/analytics-chart@0.16.3) (2023-11-22)
 
 
