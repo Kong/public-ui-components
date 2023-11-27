@@ -63,6 +63,7 @@ import type { ChangeEvent, ChildChangeEvent, TreeListItem } from '@kong/kongpone
 const emit = defineEmits<{
   (e: 'child-change', data: ChildChangeEvent): void,
   (e: 'delete'): void,
+  (e: 'edit'): void,
   (e: 'document-selection', data: TreeListItem): void,
   (e: 'modal-closed'): void,
   (e: 'parent-change', data: ChangeEvent): void,
@@ -144,6 +145,7 @@ const handleAddClick = (): void => {
 const handleEditClick = (): void => {
   editing.value = true
   displayModal.value = true
+  emit('edit')
 }
 
 const handleModalClosed = (): void => {

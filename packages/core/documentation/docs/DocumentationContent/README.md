@@ -21,6 +21,7 @@ The main Kong UI component for display documentation.
   - [`child-change`](#child-change)
   - [`delete`](#delete)
   - [`document-selection`](#document-selection)
+  - [`edit`](#edit)
   - [`modal-closed`](#modal-closed)
   - [`parent-change`](#parent-change)
   - [`save`](#save)
@@ -157,6 +158,12 @@ yarn add @kong-ui-public/documentation
 
 - Triggered when document is selected
 - Host apps should hook into this event to handle the get document API call and routing to the clicked document
+- `args` emitted with event: none
+
+### `edit`
+
+- Triggered when the `Edit` button is clicked
+- Host apps should hook into this event to handle the patch document API call
 - `args` emitted with event: none
 
 ### `modal-closed`

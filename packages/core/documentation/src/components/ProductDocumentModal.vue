@@ -196,11 +196,13 @@ const filePlaceholderText = computed(() => props.record.file?.filename)
 const namePlaceholderText = computed(() => selectedFile.value ? selectedFile.value.name?.split('.')[0] : '')
 const publishModel = ref<boolean>(false)
 
+const status = computed(() => publishModel.value ? 'published' : 'unpublished')
+
 const formData = reactive({
   fileName: '',
   pageName: '',
   urlSlug: '',
-  status: publishModel.value ? 'published' : 'unpublished',
+  status: status.value,
   parent: '',
 })
 
@@ -248,7 +250,7 @@ const fileUploadButtonText = computed((): string => {
 })
 
 const publishedStatusText = computed((): string => {
-  return formData.status
+  return status.value === 'published'
     ? i18n.t('documentation.common.published')
     : i18n.t('documentation.common.unpublished')
 })
@@ -271,7 +273,7 @@ const handleClickCancel = (): void => {
 }
 
 const handleClickSave = (): void => {
-  emit('save', formData, selectedFile)
+  emit('save', Object.assign(formData, { status: status.value }), selectedFile)
 }
 
 const setForm = (): void => {
