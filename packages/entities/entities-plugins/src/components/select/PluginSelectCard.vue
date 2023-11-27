@@ -57,9 +57,9 @@
             </KDropdownItem>
             <KDropdownItem
               v-if="canDeleteCustomPlugin"
+              danger
               data-testid="delete-plugin-schema"
               has-divider
-              is-dangerous
               @click.stop="handleCustomDelete"
             >
               {{ t('actions.delete') }}
