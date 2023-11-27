@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.0.10...@kong-ui-public/entities-plugins@2.0.11) (2023-11-27)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fix kdropdownitem danger ([#948](https://github.com/Kong/public-ui-components/issues/948)) ([bc81d22](https://github.com/Kong/public-ui-components/commit/bc81d2272d79130da7d16cc25c7360ef3c5ea914))
+
+
+
+
+
 ## [2.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.0.9...@kong-ui-public/entities-plugins@2.0.10) (2023-11-23)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
