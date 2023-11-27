@@ -1,5 +1,8 @@
 <template>
-  <div class="analytics-chart-shell">
+  <div
+    class="analytics-chart-shell"
+    :style="{ height: heightRef, width }"
+  >
     <div class="chart-header">
       <div
         v-if="chartTitle"
@@ -45,7 +48,6 @@
     <div
       v-else
       class="analytics-chart-parent"
-      :style="{ height: heightRef, width }"
     >
       <TimeSeriesChart
         v-if="isTimeSeriesChart"
@@ -151,7 +153,7 @@ const props = defineProps({
     required: false,
     default: '500px',
     validator: (value: string): boolean => {
-      return /(\d *)(px|%)/.test(value)
+      return /(\d *)(px)/.test(value)
     },
   },
   width: {
@@ -314,7 +316,10 @@ provide('legendPosition', toRef(props, 'legendPosition'))
 @import '../styles/chart-shell';
 
 .analytics-chart-shell {
-  padding: $kui-space-60;
+  .analytics-chart-parent {
+    height: inherit;
+    width: inherit;
+  }
 
   .chart-empty-state {
     padding: $kui-space-70 $kui-space-0 $kui-space-60 $kui-space-0;
