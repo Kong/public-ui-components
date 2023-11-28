@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
@@ -73,7 +73,7 @@
     "@kong-ui-public/entities-gateway-services": "workspace:^",
     "@kong-ui-public/entities-routes": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@kong-ui-public/forms": "^2.0.4",
+    "@kong-ui-public/forms": "^2.0.5",
     "@kong/icons": "^1.8.0",
     "marked": "^9.1.5"
   }
