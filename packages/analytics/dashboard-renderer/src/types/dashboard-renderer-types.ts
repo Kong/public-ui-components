@@ -81,12 +81,9 @@ export const gaugeChartSchema = {
 
 export type GaugeChartOptions = FromSchema<typeof gaugeChartSchema>
 
-export const tileSchema = {
+export const tileDefinitionSchema = {
   type: 'object',
   properties: {
-    id: {
-      type: 'string',
-    },
     query: {
       // TODO: JSON Schema for Explore v4.
       type: 'object',
@@ -94,9 +91,16 @@ export const tileSchema = {
     chart: {
       oneOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema],
     },
-    title: {
-      type: 'string',
-    },
+  },
+  required: ['query', 'chart'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TileDefinition = FromSchema<typeof tileDefinitionSchema>
+
+export const tileLayoutSchema = {
+  type: 'object',
+  properties: {
     position: {
       type: 'object',
       properties: {
@@ -126,18 +130,37 @@ export const tileSchema = {
       additionalProperties: false,
     },
   },
-  required: ['chart', 'query', 'position', 'size', 'id'],
+  required: ['position', 'size'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type TileDefinition = FromSchema<typeof tileSchema>
+export type TileLayout = FromSchema<typeof tileLayoutSchema>
 
-export const dashboardDefinitionSchema = {
+export const tileConfigSchema = {
+  type: 'object',
+  properties: {
+    id: {
+      type: 'string',
+    },
+    definition: {
+      allOf: [tileDefinitionSchema],
+    },
+    layout: {
+      allOf: [tileLayoutSchema],
+    },
+  },
+  required: ['definition', 'layout', 'id'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TileConfig = FromSchema<typeof tileConfigSchema>
+
+export const dashboardConfigSchema = {
   type: 'object',
   properties: {
     tiles: {
       type: 'array',
-      items: tileSchema,
+      items: tileConfigSchema,
     },
     tileHeight: {
       type: 'number',
@@ -168,7 +191,7 @@ export const dashboardDefinitionSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type DashboardDefinition = FromSchema<typeof dashboardDefinitionSchema>
+export type DashboardConfig = FromSchema<typeof dashboardConfigSchema>
 
 export interface RendererProps<T> {
   query: any // TODO: Explore v4

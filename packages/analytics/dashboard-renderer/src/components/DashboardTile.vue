@@ -1,8 +1,5 @@
 <template>
   <div class="tile-boundary">
-    <h2 v-if="title">
-      {{ title }}
-    </h2>
     <component
       :is="componentData.component"
       v-if="componentData"
@@ -30,18 +27,14 @@ const props = defineProps({
   height: {
     type: Number,
     required: false,
-    default: DEFAULT_TILE_HEIGHT,
+    default: () => DEFAULT_TILE_HEIGHT,
   },
   width: {
     type: Number,
     required: false,
-    default: DEFAULT_TILE_WIDTH,
+    default: () => DEFAULT_TILE_WIDTH,
   },
 })
-
-// TODO: Should the chart be in charge of rendering its own title?
-// Analytics charts have a title, but gauge charts do not.
-const title = computed(() => props.definition.title)
 
 const rendererLookup: Record<ChartTypes, Component> = {
   [ChartTypes.TimeseriesLine]: AnalyticsChartRenderer,
@@ -65,13 +58,3 @@ const componentData = computed(() => {
   }
 })
 </script>
-<style scoped lang="scss">
-  .tile-boundary {
-    border: 1px solid black;
-    flex: 1 0 0;
-
-    & + & {
-      margin-left: 16px;
-    }
-  }
-</style>

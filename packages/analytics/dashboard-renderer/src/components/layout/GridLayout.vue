@@ -1,23 +1,15 @@
 <template>
-  <div
-    ref="gridContainer"
-    class="kong-ui-public-grid-layout"
-  >
+  <div class="kong-ui-public-grid-layout">
     <div
-      v-for="cell in totalCells"
+      v-for="cell in gridCells"
       :key="cell.key"
       class="grid-cell"
       :class="{
         'empty-cell': !cell.tile,
       }"
-      :style="cell.tile && {
-        gridRow: `span ${cell.tile.size.rows}`,
-        gridColumn: `span ${cell.tile.size.cols}`,
-      }"
+      :style="cell.style"
     >
       <slot
-        v-if="cell.tile"
-        class="tile-content"
         name="tile"
         :tile="cell.tile"
       />
@@ -26,9 +18,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, type PropType, ref, reactive } from 'vue'
-import type { GridSize, Tile, Cell } from 'src/types'
+import { computed, type PropType, reactive } from 'vue'
+import type { GridSize, Cell, GridTile } from 'src/types'
 import { DEFAULT_TILE_HEIGHT, DEFAULT_TILE_WIDTH } from '../../constants'
+import { KUI_SPACE_20 } from '@kong/design-tokens'
 
 const props = defineProps({
   gridSize: {
@@ -38,89 +31,84 @@ const props = defineProps({
   tileHeight: {
     type: Number,
     required: false,
-    default: DEFAULT_TILE_HEIGHT,
+    default: () => DEFAULT_TILE_HEIGHT,
   },
   tileWidth: {
     type: Number,
     required: false,
-    default: DEFAULT_TILE_WIDTH,
+    default: () => DEFAULT_TILE_WIDTH,
   },
   tiles: {
-    type: Array as PropType<Tile[]>,
+    type: Array as PropType<GridTile[]>,
     required: true,
   },
 })
 
-const gridCols = ref(props.gridSize.cols)
-const gridRows = ref(props.gridSize.rows)
-const gridContainer = ref<HTMLElement>()
 const localTiles = reactive([...props.tiles])
 
-const totalCells = computed<Cell[]>(() => {
-  const cells: Cell[] = []
-  const occupied = new Set()
-  const total = gridRows.value * gridCols.value
-  for (let index = 0; index < total; index++) {
-    const row = Math.floor(index / gridCols.value) + 1
-    const col = index % gridCols.value + 1
-    const key = `row-${row}-col-${col}`
+const gridCells = computed<Cell[]>(() => {
+  const gapSize = parseInt(KUI_SPACE_20)
 
-    if (occupied.has(key)) {
-      continue
-    }
+  return localTiles.map(tile => {
+    // Position elements based on their grid position and dimensions.
+    const translateX = tile.layout.position.col * (props.tileWidth + gapSize)
+    const translateY = tile.layout.position.row * (props.tileHeight + gapSize)
 
-    const tile = localTiles.find(t => t.position.row === row && t.position.col === col)
+    // Size tiles based on their dimensions and cell span.
+    const width = (tile.layout.size.cols * props.tileWidth) + (tile.layout.size.cols * gapSize)
+    const height = (tile.layout.size.rows * props.tileHeight) + (tile.layout.size.rows * gapSize)
 
-    // Create cell
-    cells.push({
-      key,
+    return {
+      key: `tile-${tile.id}`,
       tile,
-    })
-
-    // If cell has tile mark positions as occupied
-    if (tile) {
-      const tileSpan = tile.size.rows * tile.size.cols
-      for (let i = 0; i < tileSpan; i++) {
-        const rowSpan = Math.floor(i / tile.size.cols)
-        const colSpan = i % tile.size.cols
-        occupied.add(`row-${row + rowSpan}-col-${col + colSpan}`)
-      }
+      style: {
+        transform: `translate(${translateX}px, ${translateY}px)`,
+        width: `${width}px`,
+        height: `${height}px`,
+      },
     }
-
-  }
-
-  return cells
+  })
 })
 
-const tileWidthPixels = computed(() => `${props.tileWidth}px`)
-const tileHeightPixels = computed(() => `${props.tileHeight}px`)
+const gridHeight = computed(() => {
+  // get the tile with the highest row and add its height
+  const highestRow = Math.max(...localTiles.map(tile => tile.layout.position.row + tile.layout.size.rows))
+  return highestRow * props.tileHeight
+})
+
+const gridWidth = computed(() => {
+  const gapSize = parseInt(KUI_SPACE_20)
+  return props.gridSize.cols * (props.tileWidth + gapSize) + (props.gridSize.cols)
+})
 
 </script>
 
 <style lang="scss" scoped>
 .kong-ui-public-grid-layout {
-  box-sizing: border-box;
-  display: grid;
-  gap: $kui-space-20;
-  grid-template-columns: repeat(v-bind('gridSize.cols'), 1fr);
-  grid-template-rows: repeat(v-bind('gridSize.rows'), 1fr);
-
-  .grid-cell {
-    box-sizing: border-box;
-    min-height: v-bind('tileHeightPixels');
-    min-width: v-bind('tileWidthPixels');
-  }
-
-  .tile-content {
-    height: 100%;
-    width: 100%;
-  }
+  height: v-bind('`${gridHeight}px`');
+  position: relative; // Container for absolutely positioned item
+  width: v-bind('`${gridWidth}px`');
 }
 
-@media (max-width: $kui-breakpoint-mobile) {
+.grid-cell {
+  padding: $kui-space-20;
+  position: absolute;
+}
+
+@media (max-width: $kui-breakpoint-phablet) {
   .kong-ui-public-grid-layout {
     display: flex;
     flex-direction: column;
+
+    .grid-cell {
+      height: auto !important;
+      left: auto !important;
+      margin: $kui-space-10;
+      position: relative;
+      top: auto !important;
+      transform: none !important;
+      width: auto !important;
+    }
 
     .empty-cell {
       display: none;

@@ -1,3 +1,5 @@
+import type { TileLayout } from './dashboard-renderer-types'
+
 export interface TilePosition {
   col: number,
   row: number,
@@ -8,10 +10,9 @@ export interface TileSize {
   cols: number,
 }
 
-export interface Tile {
+export interface GridTile {
   id: string,
-  position: TilePosition,
-  size: TileSize,
+  layout: TileLayout
 }
 
 export interface GridSize {
@@ -20,5 +21,10 @@ export interface GridSize {
 }
 export interface Cell {
   key: string
-  tile?: Tile
+  tile: GridTile
+  style: {
+    width: string,
+    height: string,
+    transform: string,
+  }
 }

@@ -8,15 +8,16 @@
     </KAlert>
     <GridLayout
       v-else
-      :grid-size="definition.gridSize"
-      :tile-height="definition.tileHeight"
-      :tile-width="definition.tileWidth"
-      :tiles="definition.tiles"
+      :grid-size="config.gridSize"
+      :tile-height="config.tileHeight"
+      :tile-width="config.tileWidth"
+      :tiles="config.tiles"
     >
       <template #tile="{ tile }">
         <Tile
-          :definition="(tile as TileDefinition)"
-          :height="(definition.tileHeight ?? DEFAULT_TILE_HEIGHT) * tile.size.rows"
+          class="tile-container"
+          :definition="(tile as TileConfig).definition"
+          :height="(config.tileHeight || DEFAULT_TILE_HEIGHT) * tile.layout.size.rows"
         />
       </template>
     </GridLayout>
@@ -24,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TileDefinition, DashboardDefinition, DashboardRendererContext } from '../types'
+import { type TileConfig, type DashboardConfig, type DashboardRendererContext } from '../types'
 import Tile from './DashboardTile.vue'
 import { INJECT_QUERY_PROVIDER } from '../types/query-provider'
 import { inject } from 'vue'
@@ -34,7 +35,7 @@ import { DEFAULT_TILE_HEIGHT } from '../constants'
 
 defineProps<{
   context: DashboardRendererContext,
-  definition: DashboardDefinition,
+  config: DashboardConfig,
 }>()
 
 const { i18n } = composables.useI18n()
@@ -45,3 +46,12 @@ const queryBridge = inject(INJECT_QUERY_PROVIDER)
 // and we can use that instead of `index` as the fragment key.
 
 </script>
+
+<style lang="scss" scoped>
+  .kong-ui-public-dashboard-renderer {
+    .tile-container {
+      border: 1px solid $kui-color-border;
+      border-radius: $kui-border-radius-20;
+    }
+  }
+</style>

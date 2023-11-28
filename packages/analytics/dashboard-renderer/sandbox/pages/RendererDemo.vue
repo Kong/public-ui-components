@@ -6,15 +6,15 @@
     <div class="sandbox-container">
       <h2>Static Dashboard</h2>
       <DashboardRenderer
+        :config="(dashboardConfig as DashboardConfig)"
         :context="context"
-        :definition="staticDefinition"
       />
     </div>
   </SandboxLayout>
 </template>
 
 <script setup lang="ts">
-import type { DashboardDefinition, DashboardRendererContext } from '../../src'
+import type { DashboardConfig, DashboardRendererContext, TileConfig } from '../../src'
 import { ChartTypes, DashboardRenderer } from '../../src'
 import { inject } from 'vue'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
@@ -29,7 +29,7 @@ const context: DashboardRendererContext = {
   timeSpec: '',
 }
 
-const staticDefinition: DashboardDefinition = {
+const dashboardConfig: DashboardConfig = {
   gridSize: {
     cols: 6,
     rows: 9,
@@ -37,67 +37,83 @@ const staticDefinition: DashboardDefinition = {
   tiles: [
     {
       id: 'chart1',
-      chart: {
-        type: ChartTypes.HorizontalBar,
+      definition: {
+        chart: {
+          type: ChartTypes.HorizontalBar,
+        },
+        query: {},
       },
-      query: {},
-      position: {
-        col: 1,
-        row: 1,
+      layout: {
+        position: {
+          col: 0,
+          row: 0,
+        },
+        size: {
+          cols: 3,
+          rows: 2,
+        },
       },
-      size: {
-        cols: 3,
-        rows: 2,
-      },
-    },
+    } as TileConfig,
     {
       id: 'chart2',
-      chart: {
-        type: ChartTypes.VerticalBar,
+      definition: {
+        chart: {
+          type: ChartTypes.VerticalBar,
+        },
+        query: {},
       },
-      query: {},
-      position: {
-        col: 4,
-        row: 1,
+      layout: {
+        position: {
+          col: 3,
+          row: 0,
+        },
+        size: {
+          cols: 3,
+          rows: 2,
+        },
       },
-      size: {
-        cols: 3,
-        rows: 2,
-      },
-    },
+    } as TileConfig,
     {
       id: 'chart3',
-      chart: {
-        type: ChartTypes.TimeseriesLine,
+      definition: {
+        chart: {
+          type: ChartTypes.TimeseriesLine,
+        },
+        query: { type: 'timeseries' },
       },
-      query: { type: 'timeseries' },
-      position: {
-        col: 1,
-        row: 3,
+      layout: {
+        position: {
+          col: 0,
+          row: 2,
+        },
+        size: {
+          cols: 6,
+          rows: 2,
+        },
       },
-      size: {
-        cols: 6,
-        rows: 2,
-      },
-    },
+    } as TileConfig,
     {
       id: 'chart4',
-      chart: {
-        type: ChartTypes.Gauge,
-        metricDisplay: ChartMetricDisplay.Full,
-        reverseDataset: true,
-        numerator: 0,
+      definition: {
+        chart: {
+          type: ChartTypes.Gauge,
+          metricDisplay: ChartMetricDisplay.Full,
+          reverseDataset: true,
+          numerator: 0,
+        },
+        query: {},
       },
-      query: {},
-      position: {
-        col: 1,
-        row: 5,
+      layout: {
+        position: {
+          col: 0,
+          row: 4,
+        },
+        size: {
+          cols: 1,
+          rows: 1,
+        },
       },
-      size: {
-        cols: 1,
-        rows: 1,
-      },
-    },
+    } as TileConfig,
   ],
 }
 

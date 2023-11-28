@@ -16,16 +16,16 @@
     <div class="sandbox-container">
       <DashboardRenderer
         v-if="definition.type === ValidationResultType.Success"
+        :config="definition.data"
         :context="context"
-        :definition="definition.data"
       />
     </div>
   </SandboxLayout>
 </template>
 
 <script setup lang="ts">
-import type { DashboardDefinition, DashboardRendererContext } from '../../src'
-import { dashboardDefinitionSchema, DashboardRenderer } from '../../src'
+import type { DashboardConfig, DashboardRendererContext } from '../../src'
+import { dashboardConfigSchema, DashboardRenderer } from '../../src'
 import { computed, ref, inject } from 'vue'
 import Ajv from 'ajv'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
@@ -53,7 +53,7 @@ interface ValidationError {
 
 interface Success {
   type: ValidationResultType.Success,
-  data: DashboardDefinition
+  data: DashboardConfig
 }
 
 type ValidationResult = JsonParseError | ValidationError | Success
@@ -62,7 +62,7 @@ type ValidationResult = JsonParseError | ValidationError | Success
 // See https://github.com/ThomasAribart/json-schema-to-ts#validators
 const ajv = new Ajv()
 
-const validate = ajv.compile(dashboardDefinitionSchema)
+const validate = ajv.compile(dashboardConfigSchema)
 
 const definitionText = ref(`{
     "gridSize": {
@@ -72,32 +72,40 @@ const definitionText = ref(`{
     "tiles": [
       {
         "id": "chart1",
-        "chart": {
-          "type": "horizontal_bar"
+        "definition": {
+          "chart": {
+            "type": "horizontal_bar"
+          },
+          "query": {}
         },
-        "query": {},
-        "position": {
-          "col": 1,
-          "row": 1
-        },
-        "size": {
-          "cols": 2,
-          "rows": 2
+        "layout": {
+          "position": {
+            "col": 0,
+            "row": 0
+          },
+          "size": {
+            "cols": 2,
+            "rows": 2
+          }
         }
       },
       {
         "id": "chart2",
-        "chart": {
-          "type": "vertical_bar"
+        "definition": {
+          "chart": {
+            "type": "vertical_bar"
+          },
+          "query": {}
         },
-        "query": {},
-        "position": {
-          "col": 1,
-          "row": 3
-        },
-        "size": {
-          "cols": 2,
-          "rows": 2
+        "layout": {
+          "position": {
+            "col": 0,
+            "row": 2
+          },
+          "size": {
+            "cols": 2,
+            "rows": 2
+          }
         }
       }
     ]

@@ -25,43 +25,49 @@ describe('<DashboardRenderer />', () => {
         filters: {},
         timeSpec: '',
       },
-      definition: {
+      config: {
         gridSize: {
           cols: 2,
           rows: 4,
         },
         tiles: [
           {
-            title: 'Analytics chart',
-            chart: {
-              type: ChartTypes.HorizontalBar,
+            definition: {
+              chart: {
+                type: ChartTypes.HorizontalBar,
+              },
+              query: {},
             },
-            query: {},
-            size: {
-              cols: 2,
-              rows: 2,
-            },
-            position: {
-              col: 1,
-              row: 1,
+            layout: {
+              size: {
+                cols: 2,
+                rows: 2,
+              },
+              position: {
+                col: 1,
+                row: 1,
+              },
             },
           },
           {
-            title: 'Simple chart',
-            chart: {
-              type: ChartTypes.Gauge,
-              metricDisplay: ChartMetricDisplay.Full,
-              reverseDataset: true,
-              numerator: 0,
+            definition: {
+              chart: {
+                type: ChartTypes.Gauge,
+                metricDisplay: ChartMetricDisplay.Full,
+                reverseDataset: true,
+                numerator: 0,
+              },
+              query: {},
             },
-            query: {},
-            size: {
-              cols: 2,
-              rows: 2,
-            },
-            position: {
-              col: 1,
-              row: 3,
+            layout: {
+              size: {
+                cols: 2,
+                rows: 2,
+              },
+              position: {
+                col: 1,
+                row: 3,
+              },
             },
           },
         ],
