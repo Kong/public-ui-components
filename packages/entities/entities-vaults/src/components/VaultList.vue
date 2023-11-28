@@ -429,15 +429,15 @@ const confirmDelete = async (): Promise<void> => {
   }
 }
 
-const hasData = ref(false)
+const hasData = ref(true)
 
 /**
  * Watchers
  */
 watch(fetcherState, (state) => {
-  // if table is populated, show the Create button
-  if (state.status !== FetcherStatus.NoResults && state.status !== FetcherStatus.Loading && state.status !== FetcherStatus.Error) {
-    hasData.value = true
+  // if table is empty, hide the teleported Create button
+  if (state.status === FetcherStatus.NoResults) {
+    hasData.value = false
   }
 
   if (state.status === FetcherStatus.Error) {
