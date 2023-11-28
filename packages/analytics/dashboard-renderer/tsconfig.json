@@ -4,7 +4,6 @@
     "baseUrl": ".",
     "outDir": "dist",
     "declarationDir": "dist/types",
-    "skipLibCheck": true,
     "types": [
       "node",
       "vite/client",
