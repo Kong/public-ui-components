@@ -66,25 +66,29 @@
               :selected-value="whereToSendTraffic.url"
               @change="changeCheckedGroup"
             >
-              <KLabel
-                class="gateway-service-url-radio-label"
-                :info="t('gateway_services.form.fields.upstream_url.tooltip')"
-                required
-              >
+              <KLabel class="gateway-service-url-radio-label">
                 {{ t('gateway_services.form.sections.keys.urlLabel') }}
               </KLabel>
             </KRadio>
           </div>
 
-          <div v-if="checkedGroup === 'url'">
+          <div
+            v-if="checkedGroup === 'url'"
+            class="gateway-service-form-group-fields"
+          >
             <KInput
               v-model.trim="form.fields.url"
               class="gateway-service-url-input gateway-service-form-margin-bottom"
               data-testid="gateway-service-url-input"
+              :label="t('gateway_services.form.fields.upstream_url.label')"
+              :label-attributes="{
+                info: config.app === 'konnect'
+                  ? t('gateway_services.form.fields.upstream_url.tooltip_for_konnect')
+                  : t('gateway_services.form.fields.upstream_url.tooltip_for_km')
+              }"
               name="url"
               :placeholder="t('gateway_services.form.fields.upstream_url.placeholder')"
               required
-              :tooltip="t('gateway_services.form.fields.upstream_url.tooltip')"
             />
           </div>
 
@@ -101,7 +105,10 @@
           </KRadio>
         </div>
 
-        <div v-if="checkedGroup === 'protocol' || isEditing">
+        <div
+          v-if="checkedGroup === 'protocol' || isEditing"
+          class="gateway-service-form-group-fields"
+        >
           <KSelect
             v-model="form.fields.protocol"
             appearance="select"
@@ -153,7 +160,6 @@
               info: t('gateway_services.form.fields.port.tooltip')
             }"
             name="port"
-            :tooltip="t('gateway_services.form.fields.port.tooltip')"
             type="number"
             @update:model-value="() => {
               form.fields.port = handleFloatVal(form.fields.port + '')
@@ -868,9 +874,13 @@ defineExpose({
   .gateway-service-url-input {
     display: flex;
 
-    :deep(.k-input) {
-      margin-left: $kui-space-80;
+    :deep(.input-element-wrapper) {
+      display: flex;
     }
+  }
+
+  .gateway-service-form-group-fields {
+    margin-left: $kui-space-80;
   }
 
   .gateway-service-form-margin-bottom {

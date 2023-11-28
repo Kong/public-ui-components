@@ -303,7 +303,7 @@ export default {
 }
 
 .general-settings {
-  .k-input-label {
+  .k-label {
     margin-bottom: 8px;
     margin-top: 24px;
   }
