@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.9...@kong-ui-public/entities-shared@2.0.10) (2023-11-28)
+
+
+### Bug Fixes
+
+* **entities-shared:** filter input style ([#947](https://github.com/Kong/public-ui-components/issues/947)) ([b919891](https://github.com/Kong/public-ui-components/commit/b9198911a8f0fca26bdd2c151bc8c386ff645ead))
+
+
+
+
+
 ## [2.0.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.8...@kong-ui-public/entities-shared@2.0.9) (2023-11-28)
 
 
