@@ -1046,5 +1046,9 @@ defineExpose({ saveFormData, getPayload })
   .k-select-selected-item-label {
     margin-left: 30px;
   }
+
+  .k-checkbox {
+    display: flex;
+  }
 }
 </style>

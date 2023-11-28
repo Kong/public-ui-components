@@ -8,7 +8,7 @@
       <!-- Radio button -->
       <div class="form-group">
         <label
-          class="k-input-label"
+          class="k-label"
           :class="`${option.label}-check`"
         >
           <input
@@ -123,7 +123,7 @@ export default {
     }
   }
 
-  .k-input-label {
+  .k-label {
     display: block;
   }
 }
