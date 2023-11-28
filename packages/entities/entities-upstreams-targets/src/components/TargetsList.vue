@@ -409,7 +409,7 @@ const hasData = ref(true)
  */
 watch(fetcherState, (state) => {
   // if table is empty, hide the teleported Create button
-  if (state.status === FetcherStatus.NoResults) {
+  if (state?.response?.data?.length === 0) {
     hasData.value = false
   }
 
