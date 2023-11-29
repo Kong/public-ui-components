@@ -76,6 +76,7 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
   const options = computed(() => {
     return {
       indexAxis: chartOptions.indexAxis,
+      skipNull: true,
       scales: {
         x: {
           border: {
