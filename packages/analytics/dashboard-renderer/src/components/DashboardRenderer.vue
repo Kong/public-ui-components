@@ -10,7 +10,7 @@
       v-else
       :grid-size="config.gridSize"
       :tile-height="config.tileHeight"
-      :tiles="config.tiles"
+      :tiles="gridTiles"
     >
       <template #tile="{ tile }">
         <Tile
@@ -24,15 +24,15 @@
 </template>
 
 <script setup lang="ts">
-import { type TileConfig, type DashboardConfig, type DashboardRendererContext } from '../types'
+import type { TileConfig, DashboardConfig, DashboardRendererContext } from '../types'
 import Tile from './DashboardTile.vue'
 import { INJECT_QUERY_PROVIDER } from '../types/query-provider'
-import { inject } from 'vue'
+import { computed, inject } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
 
-defineProps<{
+const props = defineProps<{
   context: DashboardRendererContext,
   config: DashboardConfig,
 }>()
@@ -40,6 +40,14 @@ defineProps<{
 const { i18n } = composables.useI18n()
 
 const queryBridge = inject(INJECT_QUERY_PROVIDER)
+
+const gridTiles = computed(() => {
+  return props.config.tiles.map((tile: TileConfig, i: number) => ({
+    ...tile,
+    // Add a unique key to each tile internally.
+    id: i,
+  }))
+})
 
 // Right now, tiles don't have unique keys.  Perhaps in the future they will,
 // and we can use that instead of `index` as the fragment key.

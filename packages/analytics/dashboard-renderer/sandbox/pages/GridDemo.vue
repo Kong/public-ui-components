@@ -17,14 +17,14 @@
 </template>
 
 <script setup lang="ts">
-import { GridLayout } from '../../src'
+import { GridLayout, type GridTile } from '../../src'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import { inject } from 'vue'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
-const tiles = [
+const tiles: GridTile[] = [
   { id: 'Metrics1', layout: { position: { col: 0, row: 0 }, size: { cols: 2, rows: 1 } } },
   { id: 'Metrics2', layout: { position: { col: 2, row: 0 }, size: { cols: 2, rows: 1 } } },
   { id: 'Metrics3', layout: { position: { col: 4, row: 0 }, size: { cols: 2, rows: 1 } } },

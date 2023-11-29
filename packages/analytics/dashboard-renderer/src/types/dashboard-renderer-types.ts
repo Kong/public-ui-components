@@ -30,6 +30,9 @@ export const barChartSchema = {
     stacked: {
       type: 'boolean',
     },
+    showAnnotations: {
+      type: 'boolean',
+    },
     syntheticsDataKey,
   },
   required: ['type'],
@@ -48,13 +51,16 @@ export const timeseriesChartSchema = {
     stacked: {
       type: 'boolean',
     },
+    fill: {
+      type: 'boolean',
+    },
     syntheticsDataKey,
   },
   required: ['type'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type TimeseriesChartOptions = FromSchema<typeof barChartSchema>
+export type TimeseriesChartOptions = FromSchema<typeof timeseriesChartSchema>
 
 export const gaugeChartSchema = {
   type: 'object',
@@ -139,17 +145,10 @@ export type TileLayout = FromSchema<typeof tileLayoutSchema>
 export const tileConfigSchema = {
   type: 'object',
   properties: {
-    id: {
-      type: 'string',
-    },
-    definition: {
-      allOf: [tileDefinitionSchema],
-    },
-    layout: {
-      allOf: [tileLayoutSchema],
-    },
+    definition: tileDefinitionSchema,
+    layout: tileLayoutSchema,
   },
-  required: ['definition', 'layout', 'id'],
+  required: ['definition', 'layout'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 

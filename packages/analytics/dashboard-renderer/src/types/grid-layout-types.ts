@@ -11,8 +11,7 @@ export interface TileSize {
 }
 
 export interface GridTile {
-  id: string,
-  layout: TileLayout
+  layout: TileLayout,
 }
 
 export interface GridSize {

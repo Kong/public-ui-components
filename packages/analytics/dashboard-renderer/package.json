@@ -38,7 +38,7 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "devDependencies": {
-    "@kong-ui-public/analytics-chart": "^0.16.6",
+    "@kong-ui-public/analytics-chart": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "^1.11.11",

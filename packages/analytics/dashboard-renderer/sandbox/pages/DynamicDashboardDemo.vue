@@ -71,7 +71,6 @@ const definitionText = ref(`{
     },
     "tiles": [
       {
-        "id": "chart1",
         "definition": {
           "chart": {
             "type": "horizontal_bar"
@@ -90,7 +89,6 @@ const definitionText = ref(`{
         }
       },
       {
-        "id": "chart2",
         "definition": {
           "chart": {
             "type": "vertical_bar"

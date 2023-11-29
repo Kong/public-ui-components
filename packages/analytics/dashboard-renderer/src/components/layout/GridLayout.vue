@@ -26,6 +26,8 @@ import type { GridSize, Cell, GridTile } from 'src/types'
 import { DEFAULT_TILE_HEIGHT } from '../../constants'
 import { KUI_SPACE_20 } from '@kong/design-tokens'
 
+const GAP_SIZE = parseInt(KUI_SPACE_20)
+
 const props = defineProps({
   gridSize: {
     type: Object as PropType<GridSize>,
@@ -64,25 +66,21 @@ onUnmounted(() => {
 })
 
 const tileWidth = computed(() => {
-  const gapSize = parseInt(KUI_SPACE_20)
-
-  return (containerWidth.value / props.gridSize.cols) - gapSize
+  return (containerWidth.value / props.gridSize.cols) - GAP_SIZE
 })
 
 const gridCells = computed<Cell[]>(() => {
-  const gapSize = parseInt(KUI_SPACE_20)
-
-  return props.tiles.map(tile => {
+  return props.tiles.map((tile, i) => {
     // Position elements based on their grid position and dimensions.
-    const translateX = tile.layout.position.col * (tileWidth.value + gapSize)
-    const translateY = tile.layout.position.row * (props.tileHeight + gapSize)
+    const translateX = tile.layout.position.col * (tileWidth.value + GAP_SIZE)
+    const translateY = tile.layout.position.row * (props.tileHeight + GAP_SIZE)
 
     // Size tiles based on their dimensions and cell span.
-    const width = tile.layout.size.cols * tileWidth.value + gapSize * (tile.layout.size.cols - 1)
-    const height = tile.layout.size.rows * props.tileHeight - gapSize * (tile.layout.size.rows - 1)
+    const width = tile.layout.size.cols * tileWidth.value + GAP_SIZE * (tile.layout.size.cols - 1)
+    const height = tile.layout.size.rows * props.tileHeight - GAP_SIZE * (tile.layout.size.rows - 1)
 
     return {
-      key: `tile-${tile.id}`,
+      key: `tile-${i}`,
       tile,
       style: {
         transform: `translate(${translateX}px, ${translateY}px)`,
@@ -96,7 +94,7 @@ const gridCells = computed<Cell[]>(() => {
 const gridHeight = computed(() => {
   // get the tile with the highest row and add its height
   const highestRow = Math.max(...props.tiles.map(tile => tile.layout.position.row + tile.layout.size.rows))
-  return highestRow * props.tileHeight
+  return highestRow * props.tileHeight + (GAP_SIZE * props.gridSize.rows)
 })
 
 </script>

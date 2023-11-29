@@ -36,7 +36,6 @@ const dashboardConfig: DashboardConfig = {
   },
   tiles: [
     {
-      id: 'chart1',
       definition: {
         chart: {
           type: ChartTypes.HorizontalBar,
@@ -55,10 +54,10 @@ const dashboardConfig: DashboardConfig = {
       },
     } as TileConfig,
     {
-      id: 'chart2',
       definition: {
         chart: {
           type: ChartTypes.VerticalBar,
+          showAnnotations: false,
         },
         query: {},
       },
@@ -74,10 +73,10 @@ const dashboardConfig: DashboardConfig = {
       },
     } as TileConfig,
     {
-      id: 'chart3',
       definition: {
         chart: {
           type: ChartTypes.TimeseriesLine,
+          fill: true,
         },
         query: { type: 'timeseries' },
       },
@@ -93,7 +92,6 @@ const dashboardConfig: DashboardConfig = {
       },
     } as TileConfig,
     {
-      id: 'chart4',
       definition: {
         chart: {
           type: ChartTypes.Gauge,
