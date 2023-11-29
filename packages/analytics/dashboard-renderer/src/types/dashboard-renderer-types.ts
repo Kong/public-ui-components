@@ -1,6 +1,6 @@
 import type { FromSchema, JSONSchema } from 'json-schema-to-ts'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
-import { DEFAULT_TILE_HEIGHT, DEFAULT_TILE_WIDTH } from '../constants'
+import { DEFAULT_TILE_HEIGHT } from '../constants'
 
 // TODO: Explore v4
 export interface DashboardRendererContext {
@@ -166,11 +166,6 @@ export const dashboardConfigSchema = {
       type: 'number',
       description: `Height of each tile in pixels. Default: ${DEFAULT_TILE_HEIGHT}`,
       default: DEFAULT_TILE_HEIGHT,
-    },
-    tileWidth: {
-      type: 'number',
-      description: `Width of each tile in pixels. Default: ${DEFAULT_TILE_WIDTH}`,
-      default: DEFAULT_TILE_WIDTH,
     },
     gridSize: {
       type: 'object',

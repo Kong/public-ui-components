@@ -10,7 +10,6 @@
       v-else
       :grid-size="config.gridSize"
       :tile-height="config.tileHeight"
-      :tile-width="config.tileWidth"
       :tiles="config.tiles"
     >
       <template #tile="{ tile }">

@@ -17,7 +17,7 @@ import { computed } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
 import AnalyticsChartRenderer from './AnalyticsChartRenderer.vue'
-import { DEFAULT_TILE_HEIGHT, DEFAULT_TILE_WIDTH } from '../constants'
+import { DEFAULT_TILE_HEIGHT } from '../constants'
 
 const props = defineProps({
   definition: {
@@ -28,11 +28,6 @@ const props = defineProps({
     type: Number,
     required: false,
     default: () => DEFAULT_TILE_HEIGHT,
-  },
-  width: {
-    type: Number,
-    required: false,
-    default: () => DEFAULT_TILE_WIDTH,
   },
 })
 

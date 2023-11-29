@@ -1,5 +1,8 @@
 <template>
-  <div class="kong-ui-public-grid-layout">
+  <div
+    ref="gridContainer"
+    class="kong-ui-public-grid-layout"
+  >
     <div
       v-for="cell in gridCells"
       :key="cell.key"
@@ -18,9 +21,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, type PropType, reactive } from 'vue'
+import { computed, type PropType, ref, onMounted, onUnmounted } from 'vue'
 import type { GridSize, Cell, GridTile } from 'src/types'
-import { DEFAULT_TILE_HEIGHT, DEFAULT_TILE_WIDTH } from '../../constants'
+import { DEFAULT_TILE_HEIGHT } from '../../constants'
 import { KUI_SPACE_20 } from '@kong/design-tokens'
 
 const props = defineProps({
@@ -33,30 +36,50 @@ const props = defineProps({
     required: false,
     default: () => DEFAULT_TILE_HEIGHT,
   },
-  tileWidth: {
-    type: Number,
-    required: false,
-    default: () => DEFAULT_TILE_WIDTH,
-  },
   tiles: {
     type: Array as PropType<GridTile[]>,
     required: true,
   },
 })
 
-const localTiles = reactive([...props.tiles])
+const gridContainer = ref(null)
+
+const containerWidth = ref(0)
+
+const resizeObserver = new ResizeObserver(entries => {
+  // Only observing one element
+  containerWidth.value = entries[0].contentRect.width
+})
+
+onMounted(() => {
+  if (gridContainer.value) {
+    resizeObserver.observe(gridContainer.value)
+  }
+})
+
+onUnmounted(() => {
+  if (gridContainer.value) {
+    resizeObserver.unobserve(gridContainer.value)
+  }
+})
+
+const tileWidth = computed(() => {
+  const gapSize = parseInt(KUI_SPACE_20)
+
+  return (containerWidth.value / props.gridSize.cols) - gapSize
+})
 
 const gridCells = computed<Cell[]>(() => {
   const gapSize = parseInt(KUI_SPACE_20)
 
-  return localTiles.map(tile => {
+  return props.tiles.map(tile => {
     // Position elements based on their grid position and dimensions.
-    const translateX = tile.layout.position.col * (props.tileWidth + gapSize)
+    const translateX = tile.layout.position.col * (tileWidth.value + gapSize)
     const translateY = tile.layout.position.row * (props.tileHeight + gapSize)
 
     // Size tiles based on their dimensions and cell span.
-    const width = (tile.layout.size.cols * props.tileWidth) + (tile.layout.size.cols * gapSize)
-    const height = (tile.layout.size.rows * props.tileHeight) + (tile.layout.size.rows * gapSize)
+    const width = tile.layout.size.cols * tileWidth.value + gapSize * (tile.layout.size.cols - 1)
+    const height = tile.layout.size.rows * props.tileHeight - gapSize * (tile.layout.size.rows - 1)
 
     return {
       key: `tile-${tile.id}`,
@@ -72,13 +95,8 @@ const gridCells = computed<Cell[]>(() => {
 
 const gridHeight = computed(() => {
   // get the tile with the highest row and add its height
-  const highestRow = Math.max(...localTiles.map(tile => tile.layout.position.row + tile.layout.size.rows))
+  const highestRow = Math.max(...props.tiles.map(tile => tile.layout.position.row + tile.layout.size.rows))
   return highestRow * props.tileHeight
-})
-
-const gridWidth = computed(() => {
-  const gapSize = parseInt(KUI_SPACE_20)
-  return props.gridSize.cols * (props.tileWidth + gapSize) + (props.gridSize.cols)
 })
 
 </script>
@@ -86,8 +104,7 @@ const gridWidth = computed(() => {
 <style lang="scss" scoped>
 .kong-ui-public-grid-layout {
   height: v-bind('`${gridHeight}px`');
-  position: relative; // Container for absolutely positioned item
-  width: v-bind('`${gridWidth}px`');
+  width: 100%;
 }
 
 .grid-cell {
