@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.0.5...@kong-ui-public/forms@2.1.0) (2023-11-29)
+
+
+### Features
+
+* **entities-plugins:** support `route-by-header` ([#952](https://github.com/Kong/public-ui-components/issues/952)) ([2b8578f](https://github.com/Kong/public-ui-components/commit/2b8578f8e52417f10c31ee4054116ed9e51d266a))
+
+
+
+
+
 ## [2.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.0.4...@kong-ui-public/forms@2.0.5) (2023-11-28)
 
 
