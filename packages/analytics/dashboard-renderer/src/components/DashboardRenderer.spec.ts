@@ -14,7 +14,6 @@ describe('Dashboard schemas', () => {
       },
       tiles: [
         {
-          id: 'tile-1',
           definition: {
             chart: {
               type: 'horizontal_bar',
@@ -46,7 +45,6 @@ describe('Dashboard schemas', () => {
       },
       tiles: [
         {
-          id: 'tile-1',
           definition: {
             chart: {
               type: 'gauge',
