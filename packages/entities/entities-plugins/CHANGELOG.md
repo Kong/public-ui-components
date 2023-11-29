@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.1.2...@kong-ui-public/entities-plugins@2.2.0) (2023-11-29)
+
+
+### Features
+
+* add support to EntityBaseTable to use action button outside [KHCP-9618] ([#913](https://github.com/Kong/public-ui-components/issues/913)) ([bbe5a07](https://github.com/Kong/public-ui-components/commit/bbe5a07d3ac2d6fd1a8f87f8b9a7c21124f7dd02))
+
+
+
+
+
 ## [2.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.1.1...@kong-ui-public/entities-plugins@2.1.2) (2023-11-29)
 
 
