@@ -239,8 +239,19 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     }
 
     ul.level-secondary {
-      border-top: $kui-border-width-10 solid rgba($kui-color-border-neutral-weak, 0.1);
       padding: $kui-space-20 $kui-space-0 $kui-space-50;
+      position: relative;
+
+      // Add a top border to the ul element, offset from the left and right to prevent overlap
+      &:before {
+        background-color: $kui-navigation-color-border;
+        content: '';
+        height: 1px;
+        left: 1px;
+        position: absolute;
+        right: 1px;
+        top: 0;
+      }
     }
   }
 }
@@ -251,13 +262,11 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
 // Primary-level nav item
 .sidebar-item-primary {
-  border: $kui-border-width-10 solid $kui-color-border-transparent;
-
   &.active,
   &.expanded {
     background-color: $kui-navigation-color-background-selected;
-    border-color: $kui-navigation-shadow-border;
     border-radius: $sidebar-item-border-radius;
+    box-shadow: $kui-navigation-shadow-border;
   }
 
   > a,
@@ -284,8 +293,6 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
   a {
     background-color: $kui-color-background-transparent;
-    // Add a left border by default so the item doesn't "shift" to the right when active
-    border-left: $kui-border-width-30 solid $kui-color-border-transparent;
     color: $kui-color-text-neutral-weak !important;
     font-size: $sidebar-item-font-size;
     line-height: $kui-line-height-30;
@@ -305,7 +312,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   }
 
   &.active > a {
-    border-left: $kui-border-width-30 solid $kui-navigation-color-border-child;
+    box-shadow: $kui-navigation-shadow-border-child;
     color: $kui-navigation-color-text-selected !important;
     font-weight: $kui-font-weight-medium !important;
   }
