@@ -130,7 +130,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       active: !activeItem.value || (activeItem.value as SidebarPrimaryItem)?.key === 'overview',
     },
     {
-      name: 'Runtime Manager',
+      name: 'Gateway Manager',
       to: '/?runtime-manager',
       label: 'retail-sandbox-rg', // runtime group name
       key: 'runtime-manager',

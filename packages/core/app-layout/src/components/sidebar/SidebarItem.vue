@@ -27,6 +27,7 @@
             v-if="(item as SidebarPrimaryItem).icon"
             class="sidebar-item-icon"
           >
+            <!-- TODO: Replace with dynamic icon import(?) or a slot based on the `item.key` -->
             <KIcon
               :icon="String((item as SidebarPrimaryItem).icon)"
               size="20"
@@ -234,12 +235,12 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
       }
 
       .sidebar-item-name {
-        font-weight: $kui-font-weight-semibold !important;
+        font-weight: $kui-font-weight-medium !important;
       }
     }
 
     ul.level-secondary {
-      padding: $kui-space-20 $kui-space-0 $kui-space-50;
+      padding: $kui-space-0;
       position: relative;
 
       // Add a top border to the ul element, offset from the left and right to prevent overlap
@@ -262,6 +263,8 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
 // Primary-level nav item
 .sidebar-item-primary {
+  overflow: hidden; // ensure box-shadow doesn't extend beyond container
+
   &.active,
   &.expanded {
     background-color: $kui-navigation-color-background-selected;
@@ -293,7 +296,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
   a {
     background-color: $kui-color-background-transparent;
-    color: $kui-color-text-neutral-weak !important;
+    color: $kui-navigation-color-text !important;
     font-size: $sidebar-item-font-size;
     line-height: $kui-line-height-30;
     // Override the min-height for the secondary items
@@ -365,7 +368,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   }
 
   .sidebar-item-label {
-    color: $kui-color-text-neutral-weak;
+    color: $kui-navigation-color-text;
     font-size: $kui-font-size-20;
     margin-top: $kui-space-20;
   }

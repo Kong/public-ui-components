@@ -42,7 +42,7 @@
     "vue": "^3.3.4"
   },
   "devDependencies": {
-    "@kong/design-tokens": "1.11.13-pr.172.6fb4253.0",
+    "@kong/design-tokens": "^1.12.0",
     "@kong/kongponents": "9.0.0-alpha.58",
     "vue": "^3.3.4"
   },
