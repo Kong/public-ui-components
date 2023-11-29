@@ -18,7 +18,7 @@
     },
     "title": "Consumer Groups",
     "search": {
-      "placeholder": "Filter by name"
+      "placeholder": "Filter by exact name or ID"
     },
     "actions": {
       "add_to_group": "Add to Consumer Group",
