@@ -156,12 +156,13 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
     a.sidebar-item-link {
       align-items: center;
-      color: $kui-color-text-neutral-weak;
+      color: $kui-navigation-color-text;
       cursor: pointer;
       display: flex;
       font-size: $sidebar-item-font-size;
       font-weight: $kui-font-weight-medium;
       justify-content: space-between;
+      line-height: $kui-line-height-30;
       min-height: 48px;
       text-decoration: none;
       transition: color .2s ease-out;
@@ -184,22 +185,23 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
       &:hover,
       &:focus-visible {
-        color: #84E5AE;
+        color: $kui-navigation-color-text-hover;
 
         svg {
-          color: #84E5AE;
+          color: $kui-navigation-color-text-hover;
         }
 
         // specific SVG stroke color on hover
         .kong-icon {
           &.kong-icon-brain svg path[stroke-width="2"] {
-            stroke: #84E5AE;
+            stroke: $kui-navigation-color-text-hover;
           }
         }
       }
 
       &:focus-visible {
-        outline: 1px solid #afb7c5;
+        box-shadow: $kui-navigation-shadow-focus;
+        outline: none;
       }
 
       .sidebar-item-tooltip {
@@ -213,10 +215,26 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     &.active > div > a,
     &.expanded > a,
     &.expanded > div > a {
-      color: #84E5AE;
+      color: $kui-navigation-color-text-selected;
+
+      &.sidebar-item-link,
+      &.sidebar-item-link:hover {
+        color: $kui-navigation-color-text-selected;
+
+        svg {
+          color: $kui-navigation-color-text-selected;
+        }
+
+        // specific SVG stroke color on hover
+        .kong-icon {
+          &.kong-icon-brain svg path[stroke-width="2"] {
+            stroke: $kui-navigation-color-text-selected;
+          }
+        }
+      }
 
       .sidebar-item-name {
-        font-weight: $kui-font-weight-bold !important;
+        font-weight: $kui-font-weight-semibold !important;
       }
     }
 
@@ -237,8 +255,8 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
   &.active,
   &.expanded {
-    background-color: rgba($kui-color-background, .1);
-    border-color: rgba(#fff, .1);
+    background-color: $kui-navigation-color-background-selected;
+    border-color: $kui-navigation-shadow-border;
     border-radius: $sidebar-item-border-radius;
   }
 
@@ -270,14 +288,10 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     border-left: $kui-border-width-30 solid $kui-color-border-transparent;
     color: $kui-color-text-neutral-weak !important;
     font-size: $sidebar-item-font-size;
+    line-height: $kui-line-height-30;
     // Override the min-height for the secondary items
     min-height: 40px !important;
     transition: all .1s ease-in-out !important;
-
-    &:hover,
-    &:focus-visible {
-      background-color: rgba($kui-color-background, 0.05);
-    }
 
     > .sidebar-item-display {
       &.has-badge {
@@ -291,10 +305,9 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   }
 
   &.active > a {
-    background-color: rgba($kui-color-background, 0.1);
-    border-left: $kui-border-width-30 solid #84E5AE;
-    color: $kui-color-text-inverse !important;
-    font-weight: $kui-font-weight-semibold !important;
+    border-left: $kui-border-width-30 solid $kui-navigation-color-border-child;
+    color: $kui-navigation-color-text-selected !important;
+    font-weight: $kui-font-weight-medium !important;
   }
 }
 

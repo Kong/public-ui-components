@@ -121,8 +121,7 @@ import AppSidebar from './sidebar/AppSidebar.vue'
 import SidebarToggle from './sidebar/SidebarToggle.vue'
 import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../types'
 import { useDebounce } from '../composables'
-import { APP_LAYOUT_BACKGROUND } from '../constants'
-import { KUI_SPACE_0, KUI_BORDER_RADIUS_0, KUI_BORDER_RADIUS_20, KUI_COLOR_BACKGROUND, KUI_COLOR_BACKGROUND_INVERSE, KUI_COLOR_TEXT, KUI_COLOR_TEXT_INVERSE } from '@kong/design-tokens'
+import { KUI_BORDER_RADIUS_0, KUI_BORDER_RADIUS_20, KUI_COLOR_BACKGROUND, KUI_COLOR_BACKGROUND_INVERSE, KUI_COLOR_TEXT, KUI_COLOR_TEXT_INVERSE } from '@kong/design-tokens'
 
 interface AppSidebarProperties {
   topItems?: SidebarPrimaryItem[]
@@ -216,7 +215,6 @@ const sidebarMobileTopOffset = computed((): number => {
 
   return navbarHeight.value + notificationHeight.value
 })
-const appLayoutBackgroundColor = computed((): string => props.theme === 'light' ? APP_LAYOUT_BACKGROUND : KUI_COLOR_BACKGROUND_INVERSE)
 const layoutMainColor = computed((): string => props.theme === 'light' ? KUI_COLOR_TEXT : KUI_COLOR_TEXT_INVERSE)
 const layoutMainBackgroundColor = computed((): string => props.theme === 'light' ? KUI_COLOR_BACKGROUND : KUI_COLOR_BACKGROUND_INVERSE)
 const layoutMainBoxShadow = computed((): string => props.theme === 'light' ? 'var(--kong-ui-app-layout-main-box-shadow, -30px 174px 250px #0023db)' : 'none')
@@ -294,7 +292,7 @@ onBeforeUnmount(() => {
 @import "../styles/variables";
 
 .kong-ui-app-layout {
-  background: v-bind('appLayoutBackgroundColor');
+  background: $kui-color-background-inverse;
   bottom: 0;
   display: flex;
   flex-direction: column;

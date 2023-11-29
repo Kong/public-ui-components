@@ -82,7 +82,6 @@ import type { SidebarPrimaryItem } from '../../types'
 import SidebarItem from '../sidebar/SidebarItem.vue'
 import { FocusTrap } from 'focus-trap-vue'
 import { useDebounce } from '../../composables'
-import { APP_LAYOUT_BACKGROUND } from '../../constants'
 import clonedeep from 'lodash.clonedeep'
 
 const emit = defineEmits(['click', 'toggle'])
@@ -314,7 +313,7 @@ onBeforeUnmount(() => {
 @import "../../styles/variables";
 
 .kong-ui-app-sidebar {
-  background: v-bind('APP_LAYOUT_BACKGROUND');
+  background: $kui-color-background-inverse;
   display: flex;
   flex-direction: column;
   height: v-bind('sidebarContainerStyles.mobileHeight');
@@ -332,7 +331,6 @@ onBeforeUnmount(() => {
   }
 
   @media (min-width: $kui-breakpoint-tablet) {
-    background: var(--kong-ui-app-sidebar-background, transparent);
     height: v-bind('sidebarContainerStyles.height');
     left: 0;
     top: v-bind('sidebarContainerStyles.top');
@@ -397,7 +395,7 @@ onBeforeUnmount(() => {
 }
 
 .sidebar-level-divider {
-  background-color: rgba($kui-color-background, 0.5);
+  background-color: $kui-navigation-color-border-divider;
   height: 1px;
   margin: $kui-space-80 auto;
   min-height: 1px; // required for when scrollbar is present
@@ -440,7 +438,7 @@ onBeforeUnmount(() => {
   }
 
   &:after{
-    background-image: linear-gradient(#001740, #78785400);
+    background-image: linear-gradient($kui-color-background-inverse, transparent);
     bottom: 0;
     content: '';
     display: block;
