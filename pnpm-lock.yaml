@@ -311,7 +311,7 @@ importers:
         version: 1.11.12
       '@kong/kongponents':
         specifier: ^8.126.2
-        version: 8.126.2(vue-router@4.2.5)(vue@3.3.4)
+        version: 8.126.2(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       json-schema-to-ts:
         specifier: ^2.9.2
         version: 2.9.2
@@ -424,6 +424,34 @@ importers:
       swrv:
         specifier: ^1.0.4
         version: 1.0.4(vue@3.3.4)
+
+  packages/core/documentation:
+    dependencies:
+      '@kong-ui-public/document-viewer':
+        specifier: workspace:^
+        version: link:../../portal/document-viewer
+      '@kong-ui-public/entities-shared':
+        specifier: workspace:^
+        version: link:../../entities/entities-shared
+      '@kong/icons':
+        specifier: ^1.8.0
+        version: 1.8.0(vue@3.3.4)
+    devDependencies:
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../i18n
+      '@kong/design-tokens':
+        specifier: ^1.11.8
+        version: 1.11.10
+      '@kong/kongponents':
+        specifier: ^8.125.0
+        version: 8.126.2(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
+      axios:
+        specifier: ^1.5.1
+        version: 1.5.1
+      vue:
+        specifier: ^3.3.4
+        version: 3.3.4
 
   packages/core/error-boundary:
     devDependencies:
@@ -2158,7 +2186,7 @@ packages:
     dependencies:
       vue: 3.3.4
 
-  /@kong/kongponents@8.126.2(vue-router@4.2.5)(vue@3.3.4):
+  /@kong/kongponents@8.126.2(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4):
     resolution: {integrity: sha512-isTzDHB/21O+hMq+tMRH5A3WyOVC5FZqLs1YrfW8zb6VX9Xm1tmtVHO0Qtfo2DpMs2c9rNdl/yBa1vijkOSkHA==}
     engines: {node: '>=v16.20.2'}
     peerDependencies:
@@ -2166,6 +2194,7 @@ packages:
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.2.4
     dependencies:
+      axios: 1.5.1
       date-fns: 2.30.0
       date-fns-tz: 2.0.0(date-fns@2.30.0)
       focus-trap: 7.5.3
@@ -2210,7 +2239,7 @@ packages:
       react: 17.0.2
     dependencies:
       '@braintree/sanitize-url': 6.0.2
-      '@kong/kongponents': 8.126.2(vue-router@4.2.5)(vue@3.3.4)
+      '@kong/kongponents': 8.126.2(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
       '@kyleshockey/xml': 1.0.2
       classnames: 2.3.2
       curl-to-har: 1.0.1
@@ -4730,6 +4759,15 @@ packages:
   /aws4@1.12.0:
     resolution: {integrity: sha512-NmWvPnx0F1SfrQbYwOi7OeaNGokp9XhzNioJ/CSBs8Qa4vxug81mhJEAVZwxXuBmYB5KDRfMq/F3RR0BIU7sWg==}
     dev: true
+
+  /axios@1.5.1:
+    resolution: {integrity: sha512-Q28iYCWzNHjAm+yEAot5QaAMxhMghWLFVf7rRdwhUI+c2jix2DUXjAHXVi+s1ibs3mjPO/cCgbA++3BjD0vP/A==}
+    dependencies:
+      follow-redirects: 1.15.2
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
 
   /axios@1.6.0:
     resolution: {integrity: sha512-EZ1DYihju9pwVB+jg67ogm+Tmqc6JmhamRN6I4Zt8DfZu5lbcQGw3ozH9lFejSJgs/ibaef3A9PMXPLeefFGJg==}
