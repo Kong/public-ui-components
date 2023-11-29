@@ -17,16 +17,6 @@
       </template>
     </KEmptyState>
 
-    <KEmptyState
-      v-else-if="isDisabled"
-      cta-is-hidden
-      is-error
-    >
-      <template #title>
-        {{ t('plugins.form.disabled_warning') }}
-      </template>
-    </KEmptyState>
-
     <EntityBaseForm
       v-else
       :can-submit="canSubmit"
@@ -238,14 +228,6 @@ const fetchUrl = computed((): string => {
 
   // plugin
   return endpoints.form[props.config.app].edit
-})
-
-// non-editable plugin type. They shouldn't be able to get to this unless they manually
-// type in the URL
-const isDisabled = computed((): boolean => {
-  const currentPlugin = Object.keys(customSchemas).find((key: string) => key === props.pluginType)
-
-  return currentPlugin ? (customSchemas[currentPlugin as keyof typeof customSchemas] as Record<string, any>)?.configurationDisabled : false
 })
 
 const entityMap = computed((): Record<string, PluginEntityInfo> => {

@@ -401,6 +401,11 @@ export default {
       }
     }
   }
+
+  .kong-form-new-element-button-label {
+    margin-bottom: $kui-space-80!important;
+    margin-top: $kui-space-80!important;
+  }
 } // fieldset
 
 // stylelint-disable no-duplicate-selectors

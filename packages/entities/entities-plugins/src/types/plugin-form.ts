@@ -10,6 +10,7 @@ import type { StatsDAdvancedSchema } from './plugins/stats-d-advanced'
 import type { KafkaSchema } from './plugins/kafka-schema'
 import type { UpstreamTlsSchema } from './plugins/upstream-tls'
 import type { RateLimitingSchema } from './plugins/rate-limiting'
+import type { RouteByHeaderSchema } from './plugins/route-by-header'
 import type { GraphQLRateLimitingAdvancedSchema } from './plugins/graphql-rate-limiting-advanced'
 
 export interface BasePluginSelectConfig {
@@ -188,7 +189,7 @@ export interface CustomSchemas {
   mocking: MockingSchema
   'rate-limiting': RateLimitingSchema
   'rate-limiting-advanced': RateLimitingSchema
-  'route-by-header': { configurationDisabled: boolean } & CommonSchemaFields
+  'route-by-header': RouteByHeaderSchema
   'graphql-rate-limiting-advanced': GraphQLRateLimitingAdvancedSchema
   'response-ratelimiting': RateLimitingSchema
   'pre-function': CommonSchemaFields & Record<string, any>
