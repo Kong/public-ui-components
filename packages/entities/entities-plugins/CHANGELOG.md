@@ -3,6 +3,112 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.1.1...@kong-ui-public/entities-plugins@2.1.2) (2023-11-29)
+
+
+### Bug Fixes
+
+* **entities-plugins:** plugin select ([#954](https://github.com/Kong/public-ui-components/issues/954)) ([8beb7e1](https://github.com/Kong/public-ui-components/commit/8beb7e1549f2d4826a2b0b0bb0b71317a3b9beac))
+
+
+
+
+
+## [2.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.1.0...@kong-ui-public/entities-plugins@2.1.1) (2023-11-29)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [2.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.0.14...@kong-ui-public/entities-plugins@2.1.0) (2023-11-29)
+
+
+### Features
+
+* **entities-plugins:** support `route-by-header` ([#952](https://github.com/Kong/public-ui-components/issues/952)) ([2b8578f](https://github.com/Kong/public-ui-components/commit/2b8578f8e52417f10c31ee4054116ed9e51d266a))
+
+
+
+
+
+## [2.0.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.0.13...@kong-ui-public/entities-plugins@2.0.14) (2023-11-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.0.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.0.12...@kong-ui-public/entities-plugins@2.0.13) (2023-11-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.0.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.0.11...@kong-ui-public/entities-plugins@2.0.12) (2023-11-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.0.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.0.10...@kong-ui-public/entities-plugins@2.0.11) (2023-11-27)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fix kdropdownitem danger ([#948](https://github.com/Kong/public-ui-components/issues/948)) ([bc81d22](https://github.com/Kong/public-ui-components/commit/bc81d2272d79130da7d16cc25c7360ef3c5ea914))
+
+
+
+
+
+## [2.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.0.9...@kong-ui-public/entities-plugins@2.0.10) (2023-11-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.0.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.0.8...@kong-ui-public/entities-plugins@2.0.9) (2023-11-22)
+
+
+### Bug Fixes
+
+* **plugin/form:** schema hint propagation ([#939](https://github.com/Kong/public-ui-components/issues/939)) ([4ff96cc](https://github.com/Kong/public-ui-components/commit/4ff96ccaa96e9e1c0ccf0edb0c73f989f2bf5bb5))
+
+
+
+
+
+## [2.0.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.0.7...@kong-ui-public/entities-plugins@2.0.8) (2023-11-22)
+
+
+### Bug Fixes
+
+* **plugins-form:** general fixes [khcp-9513] ([#934](https://github.com/Kong/public-ui-components/issues/934)) ([7cc69bd](https://github.com/Kong/public-ui-components/commit/7cc69bdd15b7efde96aac9832ec44ca5119e67ab))
+
+
+
+
+
+## [2.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.0.6...@kong-ui-public/entities-plugins@2.0.7) (2023-11-22)
+
+
+### Bug Fixes
+
+* **entities-vaults:** fix kradio card occurrences ([#937](https://github.com/Kong/public-ui-components/issues/937)) ([21827e9](https://github.com/Kong/public-ui-components/commit/21827e9592a962ec0e7a7de1d76ebd80c36dcd2f))
+
+
+
+
+
 ## [2.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.0.5...@kong-ui-public/entities-plugins@2.0.6) (2023-11-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

@@ -8,7 +8,7 @@
       @click="contentVisible = !contentVisible"
     >
       {{ model.name ? model.name : 'New Item' }}
-      <i class="material-icons">add</i>
+      <AddIcon class="metric-add-icon" />
     </div>
     <transition name="slide-fade">
       <div
@@ -16,22 +16,25 @@
         class="content"
       >
         <slot />
-        <i
-          class="material-icons"
+        <KButton
+          appearance="tertiary"
+          class="metric-remove-button"
           @click="$emit('remove-item')"
         >
-          delete
-        </i>
+          <TrashIcon />
+        </KButton>
       </div>
     </transition>
   </div>
 </template>
 
 <script>
+import { AddIcon, TrashIcon } from '@kong/icons'
 import abstractField from '../abstractField'
 
 export default {
   name: 'FieldMetric',
+  components: { AddIcon, TrashIcon },
   mixins: [abstractField],
   emits: ['remove-item'],
 
@@ -76,7 +79,7 @@ export default {
     width: 100%;
     &:hover { background-color: #f5f5f5; }
   }
-  i {
+  .metric-add-icon {
     margin-left: auto;
     transition: all .7s;
     user-select: none;
@@ -87,10 +90,8 @@ export default {
     height: auto;
     overflow: hidden;
     transition: all .5s;
-    i:hover {
-      color: #c9302c;
-    }
-    .material-icons {
+
+    .metric-remove-button {
       float: right;
       margin-bottom: 16px;
       margin-right: 16px;
@@ -99,6 +100,8 @@ export default {
       padding: 16px;
     }
   }
-  &.active .title i { transform: rotate(135deg); }
+  &.active .title .metric-add-icon {
+    transform: rotate(45deg);
+  }
 }
 </style>

@@ -316,6 +316,7 @@ export default {
 
 <style lang="scss" scoped>
 .config-card-details-row {
+  align-items: center;
   border-bottom: v-bind('isJsonArray ? "none" : `solid ${KUI_BORDER_WIDTH_10} ${KUI_COLOR_BORDER}`');
   display: v-bind('isJson && itemHasValue ? "block" : "flex"');
   padding: $kui-space-60;
@@ -363,7 +364,7 @@ export default {
     margin-right: $kui-space-20;
   }
 
-  :deep(.k-input-label) {
+  :deep(.k-label) {
     margin-bottom: 0;
 
     .kong-icon-infoFilled {

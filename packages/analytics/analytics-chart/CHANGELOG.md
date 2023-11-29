@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.16.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.16.7...@kong-ui-public/analytics-chart@0.16.8) (2023-11-29)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [0.16.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.16.6...@kong-ui-public/analytics-chart@0.16.7) (2023-11-28)
+
+
+### Bug Fixes
+
+* misc style updates ([#951](https://github.com/Kong/public-ui-components/issues/951)) ([c6ed14b](https://github.com/Kong/public-ui-components/commit/c6ed14bdab8caef958379ac867b3d3dbf1150cbb))
+
+
+
+
+
+## [0.16.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.16.5...@kong-ui-public/analytics-chart@0.16.6) (2023-11-28)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [0.16.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.16.4...@kong-ui-public/analytics-chart@0.16.5) (2023-11-27)
+
+
+### Bug Fixes
+
+* fix analytics chart dimensions make more predictable ([#949](https://github.com/Kong/public-ui-components/issues/949)) ([66f2fa0](https://github.com/Kong/public-ui-components/commit/66f2fa094145bc02eb7afb7ee710eff0e2e7a369))
+
+
+
+
+
+## [0.16.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.16.3...@kong-ui-public/analytics-chart@0.16.4) (2023-11-24)
+
+
+### Bug Fixes
+
+* remove default border and margins let host app dictate ([#943](https://github.com/Kong/public-ui-components/issues/943)) ([74c16c8](https://github.com/Kong/public-ui-components/commit/74c16c8608f2eebac75c77dbfc4955d187a9ffca))
+
+
+
+
+
+## [0.16.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.16.2...@kong-ui-public/analytics-chart@0.16.3) (2023-11-22)
+
+
+### Bug Fixes
+
+* **entities-vaults:** fix kradio card occurrences ([#937](https://github.com/Kong/public-ui-components/issues/937)) ([21827e9](https://github.com/Kong/public-ui-components/commit/21827e9592a962ec0e7a7de1d76ebd80c36dcd2f))
+
+
+
+
+
 ## [0.16.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.16.1...@kong-ui-public/analytics-chart@0.16.2) (2023-11-21)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

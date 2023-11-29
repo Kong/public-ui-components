@@ -447,7 +447,6 @@
       }
     },
     "form": {
-      "disabled_warning": "This plugin must be configured using the Kong Admin API. Please see the documentation.",
       "no_selection": "No selection...",
       "fields": {
         "enabled": {

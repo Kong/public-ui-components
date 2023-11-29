@@ -538,6 +538,9 @@ onBeforeMount(async () => {
 
 <style lang="scss" scoped>
 .kong-ui-entity-base-config-card {
+  .k-card-title {
+    margin-bottom: 0;
+  }
   :deep(.k-card-content .k-card-body) {
     font-size: $kui-font-size-30;
   }

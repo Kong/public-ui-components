@@ -7,21 +7,21 @@
     </KCard>
 
     <KButton
+      appearance="tertiary"
+      class="array-card-remove-button"
       @click="$emit('remove-item')"
     >
-      <template #icon>
-        <KIcon
-          icon="trash"
-          size="18"
-        />
-      </template>
+      <TrashIcon />
     </KButton>
   </div>
 </template>
 
 <script>
+import { TrashIcon } from '@kong/icons'
 export default {
   name: 'FieldArrayCardContainer',
+
+  components: { TrashIcon },
 
   props: {
     model: {
@@ -50,10 +50,15 @@ export default {
 
 <style lang="scss" scoped>
 .array-card-container {
+  align-items: center;
   display: flex;
 
   .card {
     margin-bottom: 8px;
+  }
+
+  .array-card-remove-button {
+    margin-left: 12px;
   }
 }
 </style>

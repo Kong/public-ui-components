@@ -98,6 +98,7 @@
         <template #actionButton>
           <div class="filter-clear-button-container">
             <KButton
+              appearance="tertiary"
               size="small"
               @click="clearFields"
             >
@@ -291,7 +292,6 @@ const applyFields = (hideMenu = false) => {
   :deep(.k-input) {
     padding-bottom: 4px!important;
     padding-top: 4px!important;
-    width: auto;
   }
 
   :deep(.k-input-wrapper) {

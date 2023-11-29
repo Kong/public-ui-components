@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.4...@kong-ui-public/document-viewer@2.0.5) (2023-11-29)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [2.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.3...@kong-ui-public/document-viewer@2.0.4) (2023-11-28)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [2.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.2...@kong-ui-public/document-viewer@2.0.3) (2023-11-28)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [2.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.1...@kong-ui-public/document-viewer@2.0.2) (2023-11-22)
+
+
+### Bug Fixes
+
+* **entities-vaults:** fix kradio card occurrences ([#937](https://github.com/Kong/public-ui-components/issues/937)) ([21827e9](https://github.com/Kong/public-ui-components/commit/21827e9592a962ec0e7a7de1d76ebd80c36dcd2f))
+
+
+
+
+
 ## [2.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.0...@kong-ui-public/document-viewer@2.0.1) (2023-11-21)
 
 **Note:** Version bump only for package @kong-ui-public/document-viewer

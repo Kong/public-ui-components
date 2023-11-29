@@ -32,3 +32,4 @@ export { default as FieldSelectionGroup } from '../fields/advanced/FieldSelectio
 export { default as FieldRadio } from '../fields/advanced/FieldRadio.vue'
 export { default as FieldArrayCardContainer } from '../fields/advanced/FieldArrayCardContainer.vue'
 export { default as FieldMultiselect } from '../fields/advanced/FieldMultiselect.vue'
+export { default as FieldKeyValuePairs } from '../fields/advanced/FieldKeyValuePairs.vue'

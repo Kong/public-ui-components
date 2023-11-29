@@ -7,7 +7,7 @@
     >
       <div class="form-group">
         <label
-          class="k-input-label"
+          class="k-label"
           :class="option.name"
         >
           <input

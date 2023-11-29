@@ -30,6 +30,7 @@
         <KCollapse
           v-model="shouldCollapsed[idx]"
           class="plugins-collapse"
+          :data-testid="`${group}-collapse`"
           :title="group"
           :trigger-label="!shouldCollapsed[idx] ? triggerLabels[group] : t('plugins.select.view_less')"
         >

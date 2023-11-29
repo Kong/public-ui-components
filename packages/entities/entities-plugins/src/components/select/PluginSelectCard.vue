@@ -1,16 +1,12 @@
 <template>
   <KTooltip
-    class="plugin-card plugin-card-cursor-pointer"
-    :class="{
-      'disabled': isDisabled,
-    }"
     :label="plugin.disabledMessage"
     position-fixed
   >
     <KCard
       class="plugin-card-content"
+      :class="{ disabled: isDisabled }"
       :data-testid="`${plugin.id}-card`"
-      :disabled="isDisabled"
       has-hover
       @click="isDisabled || isCustomPlugin ? undefined : handleClick()"
     >
@@ -36,6 +32,7 @@
         >
           <template #default>
             <KButton
+              appearance="tertiary"
               class="actions-trigger"
               data-testid="overflow-actions-button"
               size="small"
@@ -56,9 +53,9 @@
             </KDropdownItem>
             <KDropdownItem
               v-if="canDeleteCustomPlugin"
+              danger
               data-testid="delete-plugin-schema"
               has-divider
-              is-dangerous
               @click.stop="handleCustomDelete"
             >
               {{ t('actions.delete') }}
@@ -71,6 +68,7 @@
         <div
           class="plugin-card-body"
           :class="{ 'custom-plugin': isCustomPlugin }"
+          :data-testid="plugin.name"
           :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
           @click="handleCustomClick"
         >
@@ -216,6 +214,7 @@ const handleCustomClick = (): void => {
 .plugin-card,
 .plugin-card-content {
   color: initial;
+  cursor: pointer;
   display: flex;
   flex-basis: 100%;
   flex-flow: row-wrap;

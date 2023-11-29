@@ -17,16 +17,6 @@
       </template>
     </KEmptyState>
 
-    <KEmptyState
-      v-else-if="isDisabled"
-      cta-is-hidden
-      is-error
-    >
-      <template #title>
-        {{ t('plugins.form.disabled_warning') }}
-      </template>
-    </KEmptyState>
-
     <EntityBaseForm
       v-else
       :can-submit="canSubmit"
@@ -51,46 +41,49 @@
         :config="config"
         :credential="treatAsCredential"
         :editing="formType === EntityBaseFormType.Edit"
-        :entity-id="entityData.id"
-        :entity-type="entityData.entity"
+        :entity-map="entityMap"
         :record="record || undefined"
-        :schema="schema ?? {}"
+        :schema="schema || {}"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
       />
 
-      <template
-        v-if="!isWizardStep"
-        #form-actions
-      >
-        <KButton
-          appearance="outline"
-          data-testid="form-cancel"
-          :disabled="form.isReadonly"
-          type="reset"
-          @click="handleClickCancel"
-        >
-          {{ t('actions.cancel') }}
-        </KButton>
-        <KButton
-          v-if="formType === EntityBaseFormType.Create && config.backRoute"
-          appearance="secondary"
-          class="form-back-button"
-          data-testid="form-back"
-          :disabled="form.isReadonly"
-          @click="handleClickBack"
-        >
-          {{ t('actions.back') }}
-        </KButton>
-        <KButton
-          appearance="primary"
-          data-testid="form-submit"
-          :disabled="!canSubmit || form.isReadonly"
-          type="submit"
-          @click="saveFormData"
-        >
-          {{ t('actions.save') }}
-        </KButton>
+      <template #form-actions>
+        <!--
+          Force the render of this slot
+             - if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included)
+        -->
+        <div v-if="isWizardStep" />
+        <div v-else>
+          <KButton
+            appearance="secondary"
+            data-testid="form-cancel"
+            :disabled="form.isReadonly"
+            type="reset"
+            @click="handleClickCancel"
+          >
+            {{ t('actions.cancel') }}
+          </KButton>
+          <KButton
+            v-if="formType === EntityBaseFormType.Create && config.backRoute"
+            appearance="secondary"
+            class="form-back-button"
+            data-testid="form-back"
+            :disabled="form.isReadonly"
+            @click="handleClickBack"
+          >
+            {{ t('actions.back') }}
+          </KButton>
+          <KButton
+            appearance="primary"
+            data-testid="form-submit"
+            :disabled="!canSubmit || form.isReadonly"
+            type="submit"
+            @click="saveFormData"
+          >
+            {{ t('actions.save') }}
+          </KButton>
+        </div>
       </template>
     </EntityBaseForm>
   </div>
@@ -104,6 +97,7 @@ import { marked, type MarkedOptions } from 'marked'
 import { useAxios, useErrors, useHelpers, useStringHelpers, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import {
+  EntityTypeIdField,
   PluginScope,
   type KonnectPluginFormConfig,
   type KongManagerPluginFormConfig,
@@ -200,7 +194,6 @@ const { axiosInstance } = useAxios({
   headers: props.config.requestHeaders,
 })
 
-const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
 const schema = ref<Record<string, any> | null>(null)
 const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
@@ -223,45 +216,86 @@ const form = reactive<PluginFormState>({
   errorMessage: '',
 })
 
-// non-editable plugin type. They shouldn't be able to get to this unless they manually
-// type in the URL
-const isDisabled = computed((): boolean => {
-  const currentPlugin = Object.keys(customSchemas).find((key: string) => key === props.pluginType)
+const fetchUrl = computed((): string => {
+  if (treatAsCredential.value) { // credential
+    let submitEndpoint = endpoints.form[props.config.app].credential[formType.value]
 
-  return currentPlugin ? (customSchemas[currentPlugin as keyof typeof customSchemas] as Record<string, any>)?.configurationDisabled : false
+    // replace resource endpoint for credentials
+    submitEndpoint = submitEndpoint.replace(/{resourceEndpoint}/gi, resourceEndpoint.value)
+
+    return submitEndpoint
+  }
+
+  // plugin
+  return endpoints.form[props.config.app].edit
 })
 
-const entityData = computed((): PluginEntityInfo => {
+const entityMap = computed((): Record<string, PluginEntityInfo> => {
   const consumerId = (props.config.entityType === 'consumers' && props.config.entityId) || record.value?.consumer?.id
   const consumerGroupId = (props.config.entityType === 'consumer_groups' && props.config.entityId) || record.value?.consumer_group?.id
   const serviceId = (props.config.entityType === 'services' && props.config.entityId) || record.value?.service?.id
   const routeId = (props.config.entityType === 'routes' && props.config.entityId) || record.value?.route?.id
 
-  let entity = PluginScope.GLOBAL
-  let endpoint = props.config.entityType || 'plugins'
+  // global plugins
+  if (!(consumerId || consumerGroupId || serviceId || routeId)) {
+    return {
+      global: {
+        entity: PluginScope.GLOBAL,
+        entityEndpoint: 'plugins',
+      },
+    }
+  }
 
-  // the order of these if statements is important
-  // they should match the order used to define entityIdField in
-  // PluginEntityForm.vue
+  const entityMap: Record<string, PluginEntityInfo> = {}
+
+  // scoped plugins
   if (serviceId) {
-    entity = PluginScope.SERVICE
-    endpoint = 'services'
-  } else if (routeId) {
-    entity = PluginScope.ROUTE
-    endpoint = 'routes'
-  } else if (consumerId) {
-    entity = PluginScope.CONSUMER
-    endpoint = 'consumers'
-  } else if (consumerGroupId) {
-    entity = PluginScope.CONSUMER_GROUP
-    endpoint = 'consumer_groups'
+    entityMap.service = {
+      entity: PluginScope.SERVICE,
+      entityEndpoint: 'services',
+      id: serviceId,
+      idField: EntityTypeIdField.SERVICE,
+    }
   }
 
-  return {
-    entity,
-    entityEndpoint: endpoint,
-    id: consumerId || consumerGroupId || serviceId || routeId,
+  if (routeId) {
+    entityMap.route = {
+      entity: PluginScope.ROUTE,
+      entityEndpoint: 'routes',
+      id: routeId,
+      idField: EntityTypeIdField.ROUTE,
+    }
   }
+
+  if (consumerId) {
+    entityMap.consumer = {
+      entity: PluginScope.CONSUMER,
+      entityEndpoint: 'consumers',
+      id: consumerId,
+      idField: EntityTypeIdField.CONSUMER,
+    }
+  }
+
+  if (consumerGroupId) {
+    entityMap.consumer_group = {
+      entity: PluginScope.CONSUMER_GROUP,
+      entityEndpoint: 'consumer_groups',
+      id: consumerGroupId,
+      idField: EntityTypeIdField.CONSUMER_GROUP,
+    }
+  }
+
+  // the actual entity requested in the config from the host app
+  if (props.config.entityType) {
+    entityMap.focusedEntity = {
+      entity: PluginScope[props.config.entityType.substring(0, props.config.entityType.length - 1).toUpperCase() as keyof typeof EntityTypeIdField],
+      entityEndpoint: props.config.entityType,
+      id: props.config.entityId,
+      idField: EntityTypeIdField[props.config.entityType.substring(0, props.config.entityType.length - 1).toUpperCase() as keyof typeof EntityTypeIdField],
+    }
+  }
+
+  return entityMap
 })
 
 // Configuration for globally shared fields
@@ -333,12 +367,9 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
 // This is specifically used for credential plugins
 // To create an 'ACL' credential we will end up submitting to a URL like: /<entityType>/<entityId>/acl
 const resourceEndpoint = computed((): string => {
-  const entityPath: EntityType = entityData.value.entityEndpoint
+  const entityPath: EntityType = 'consumers'
 
-  let type = '/plugins'
-  if (treatAsCredential.value) {
-    type = credentialMetaData[props.pluginType]?.endpoint
-  }
+  const type = credentialMetaData[props.pluginType]?.endpoint || '/plugins'
 
   return `${entityPath}/${props.config.entityId}${type}`
 })
@@ -482,10 +513,14 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     if (scheme.elements && scheme.type === 'array') {
       const elements = scheme.elements
       if (elements.type === 'string' && !elements.one_of) {
-        const { help, label } = initialFormSchema[field]
+        const { help, label, hint } = initialFormSchema[field]
 
-        initialFormSchema[field] = { ...JSON.parse(JSON.stringify(ArrayStringFieldSchema)), help, label }
+        initialFormSchema[field] = { help, label, hint, ...JSON.parse(JSON.stringify(ArrayStringFieldSchema)) }
       }
+    }
+
+    if (scheme.hint) {
+      initialFormSchema[field].hint = scheme.hint
     }
 
     // Custom frontend schema override
@@ -494,9 +529,9 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         // Check if current plugin matches any of custom schema keys
         if (plugin === field) {
           // Use custom defined schema instead of building from default && set field label
-          const { help, label } = initialFormSchema[field]
+          const { help, label, hint } = initialFormSchema[field]
 
-          initialFormSchema[field] = { help, label, ...(pluginSchema[plugin as keyof typeof pluginSchema] as Record<string, any>) }
+          initialFormSchema[field] = { help, label, hint, ...(pluginSchema[plugin as keyof typeof pluginSchema] as Record<string, any>) }
         }
       })
     }
@@ -714,19 +749,19 @@ const handleUpdate = (payload: Record<string, any>) => {
   }
 }
 
-watch([entityData, initialized], (newData, oldData) => {
-  const newId = newData[0] !== oldData[0]
+watch([entityMap, initialized], (newData, oldData) => {
+  const newEntityData = newData[0] !== oldData[0]
   const newinitialized = newData[1]
   const oldinitialized = oldData[1]
 
   // rebuild schema if its not a credential and we either just determined a new entity id, or newly initialized the data
-  if (!treatAsCredential.value && formType.value === EntityBaseFormType.Edit && (newId || (newinitialized && newinitialized !== oldinitialized))) {
+  if (!treatAsCredential.value && formType.value === EntityBaseFormType.Edit && (newEntityData || (newinitialized && newinitialized !== oldinitialized))) {
     schemaLoading.value = true
 
     schema.value = buildFormSchema('config', configResponse.value, defaultFormSchema)
     schemaLoading.value = false
   }
-})
+}, { deep: true })
 
 /**
  * ---------------
@@ -814,6 +849,8 @@ const saveFormData = async (): Promise<void> => {
           requestBody[entityKey] = { id: props.config.entityId }
         }
       }
+
+      delete requestBody.created_at
     }
 
     // TODO: determine validate URL for credentials

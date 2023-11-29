@@ -329,7 +329,6 @@ export default {
 
       &:hover {
         background-color: #e6e6e6;
-        border-color: #adadad;
         color: #333;
       }
 
@@ -401,6 +400,11 @@ export default {
         box-shadow: none;
       }
     }
+  }
+
+  .kong-form-new-element-button-label {
+    margin-bottom: $kui-space-80!important;
+    margin-top: $kui-space-80!important;
   }
 } // fieldset
 
