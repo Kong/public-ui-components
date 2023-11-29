@@ -15,6 +15,7 @@
       :query="filterQuery"
       :table-headers="tableHeaders"
       :title="title"
+      :use-action-outside="useActionOutside"
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @sort="resetPagination"
@@ -28,16 +29,23 @@
       </template>
       <!-- Create action -->
       <template #toolbar-button>
-        <PermissionsWrapper :auth-function="() => canCreate()">
-          <KButton
-            appearance="primary"
-            data-testid="toolbar-add-plugin"
-            icon="plus"
-            :to="config.createRoute"
-          >
-            {{ t('plugins.list.toolbar_actions.new_plugin') }}
-          </KButton>
-        </PermissionsWrapper>
+        <!-- Hide Create button if table is empty -->
+        <Teleport
+          :disabled="!useActionOutside"
+          to="#kong-ui-app-page-header-action-button"
+        >
+          <PermissionsWrapper :auth-function="() => canCreate()">
+            <KButton
+              v-show="hasData"
+              appearance="primary"
+              data-testid="toolbar-add-plugin"
+              icon="plus"
+              :to="config.createRoute"
+            >
+              {{ t('plugins.list.toolbar_actions.new_plugin') }}
+            </KButton>
+          </PermissionsWrapper>
+        </Teleport>
       </template>
 
       <!-- Column Formatting -->
@@ -334,6 +342,11 @@ const props = defineProps({
   title: {
     type: String,
     default: '',
+  },
+  /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
+  useActionOutside: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -705,10 +718,17 @@ const confirmDelete = async (): Promise<void> => {
   }
 }
 
+const hasData = ref(true)
+
 /**
  * Watchers
  */
 watch(fetcherState, (state) => {
+  // if table is empty, hide the teleported Create button
+  if (state?.response?.data?.length === 0) {
+    hasData.value = false
+  }
+
   if (state.status === FetcherStatus.Error) {
     errorMessage.value = {
       title: t('errors.general'),
