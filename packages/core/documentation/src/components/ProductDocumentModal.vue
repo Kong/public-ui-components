@@ -118,7 +118,7 @@
 
           <div class="button-spacing">
             <KButton
-              appearance="outline"
+              appearance="secondary"
               class="edit-documentation-cancel-button"
               data-testid="edit-documentation-cancel-button"
               @click="handleClickCancel"
