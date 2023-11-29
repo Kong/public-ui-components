@@ -17,16 +17,6 @@
       </template>
     </KEmptyState>
 
-    <KEmptyState
-      v-else-if="isDisabled"
-      cta-is-hidden
-      is-error
-    >
-      <template #title>
-        {{ t('plugins.form.disabled_warning') }}
-      </template>
-    </KEmptyState>
-
     <EntityBaseForm
       v-else
       :can-submit="canSubmit"
@@ -238,14 +228,6 @@ const fetchUrl = computed((): string => {
 
   // plugin
   return endpoints.form[props.config.app].edit
-})
-
-// non-editable plugin type. They shouldn't be able to get to this unless they manually
-// type in the URL
-const isDisabled = computed((): boolean => {
-  const currentPlugin = Object.keys(customSchemas).find((key: string) => key === props.pluginType)
-
-  return currentPlugin ? (customSchemas[currentPlugin as keyof typeof customSchemas] as Record<string, any>)?.configurationDisabled : false
 })
 
 const entityMap = computed((): Record<string, PluginEntityInfo> => {
@@ -845,6 +827,10 @@ const submitUrl = computed((): string => {
   return url
 })
 
+const isCustomPlugin = computed((): boolean => {
+  return !Object.keys(pluginMetaData).includes(props.pluginType)
+})
+
 // make the actual API request to save on create/edit
 const saveFormData = async (): Promise<void> => {
   // if save/cancel buttons are hidden, don't submit on hitting Enter
@@ -872,7 +858,8 @@ const saveFormData = async (): Promise<void> => {
     }
 
     // TODO: determine validate URL for credentials
-    if (!treatAsCredential.value) {
+    // don't validate custom plugins
+    if (!treatAsCredential.value && !isCustomPlugin.value) {
       await axiosInstance.post(validateSubmitUrl.value, requestBody)
     }
 

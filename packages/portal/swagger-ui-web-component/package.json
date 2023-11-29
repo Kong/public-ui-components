@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/swagger-ui-web-component",
-  "version": "0.10.3",
+  "version": "0.10.4",
   "main": "dist/main.js",
   "files": [
     "dist"
@@ -42,7 +42,7 @@
     "style-loader": "^3.3.3",
     "terser-webpack-plugin": "^5.3.9",
     "webpack": "^5.89.0",
-    "webpack-bundle-analyzer": "^4.9.1",
+    "webpack-bundle-analyzer": "^4.10.1",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"
   }

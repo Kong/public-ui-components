@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.0...@kong-ui-public/forms@2.1.1) (2023-11-29)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+# [2.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.0.5...@kong-ui-public/forms@2.1.0) (2023-11-29)
+
+
+### Features
+
+* **entities-plugins:** support `route-by-header` ([#952](https://github.com/Kong/public-ui-components/issues/952)) ([2b8578f](https://github.com/Kong/public-ui-components/commit/2b8578f8e52417f10c31ee4054116ed9e51d266a))
+
+
+
+
+
+## [2.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.0.4...@kong-ui-public/forms@2.0.5) (2023-11-28)
+
+
+### Bug Fixes
+
+* misc style updates ([#951](https://github.com/Kong/public-ui-components/issues/951)) ([c6ed14b](https://github.com/Kong/public-ui-components/commit/c6ed14bdab8caef958379ac867b3d3dbf1150cbb))
+
+
+
+
+
 ## [2.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.0.3...@kong-ui-public/forms@2.0.4) (2023-11-28)
 
 **Note:** Version bump only for package @kong-ui-public/forms

@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@2.0.11...@kong-ui-public/entities-key-sets@2.1.0) (2023-11-29)
+
+
+### Features
+
+* add support to EntityBaseTable to use action button outside [KHCP-9618] ([#913](https://github.com/Kong/public-ui-components/issues/913)) ([bbe5a07](https://github.com/Kong/public-ui-components/commit/bbe5a07d3ac2d6fd1a8f87f8b9a7c21124f7dd02))
+
+
+
+
+
+## [2.0.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@2.0.10...@kong-ui-public/entities-key-sets@2.0.11) (2023-11-29)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
+## [2.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@2.0.9...@kong-ui-public/entities-key-sets@2.0.10) (2023-11-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
+## [2.0.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@2.0.8...@kong-ui-public/entities-key-sets@2.0.9) (2023-11-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
 ## [2.0.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@2.0.7...@kong-ui-public/entities-key-sets@2.0.8) (2023-11-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-key-sets

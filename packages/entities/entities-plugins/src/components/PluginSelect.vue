@@ -283,10 +283,10 @@ const buildPluginList = (): PluginCardList => {
   // returning an array of unique plugin ids
   // either grab all plugins from metadata file or use list of available plugins provided by API
   return [...new Set(
-    Object.assign(
-      Object.keys({ ...(!props.availableOnServer ? pluginMetaData : {}) }),
-      availablePlugins.value,
-    ),
+    [
+      ...Object.keys({ ...(!props.availableOnServer ? pluginMetaData : {}) }),
+      ...availablePlugins.value,
+    ],
   )]
     // Filter out ignored plugins
     .filter((plugin: string) => !props.ignoredPlugins.includes(plugin))

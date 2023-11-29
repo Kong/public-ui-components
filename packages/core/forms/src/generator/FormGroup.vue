@@ -284,6 +284,10 @@ $errorColor: #f00;
 .form-group-label {
   display: flex;
   justify-content: space-between;
+
+  :deep(.k-tooltip p) {
+    margin: 0;
+  }
 }
 
 .icon-wrapper {
