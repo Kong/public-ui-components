@@ -153,18 +153,9 @@ export const getApiProxies = (pathToRoot: string = '../../../.') => {
   // Build the regional API proxies
   for (const region of availableRegions) {
     // @ts-ignore
-    regionalProxies[`^/${ region }/kong-api/konnect-api`] = {
+    regionalProxies[`^/${ region }/kong-api`] = {
       target: (env.VITE_KONNECT_API ?? '').replace(/\{geo\}/, region),
       rewrite: (path: string) => path.replace(`/${ region }/kong-api`, ''),
-      changeOrigin: true,
-      headers: {
-        ...konnectAuthHeader,
-      },
-    }
-    // @ts-ignore
-    regionalV2Proxies[`^/${region}/konnect-v2`] = {
-      target: (env.VITE_KONNECT_API ?? '').replace(/\{geo\}/, region),
-      rewrite: (path: string) => path.replace(`/${region}/konnect-v2`, ''),
       changeOrigin: true,
       headers: {
         ...konnectAuthHeader,
