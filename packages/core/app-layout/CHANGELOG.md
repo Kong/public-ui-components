@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.1.3...@kong-ui-public/app-layout@2.1.4) (2023-11-29)
+
+
+### Bug Fixes
+
+* **app-layout:** remove base font size ([#956](https://github.com/Kong/public-ui-components/issues/956)) ([6a1bb88](https://github.com/Kong/public-ui-components/commit/6a1bb887791572e553df9e5c7c03e289346806c1))
+
+
+
+
+
 ## [2.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.1.2...@kong-ui-public/app-layout@2.1.3) (2023-11-29)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
