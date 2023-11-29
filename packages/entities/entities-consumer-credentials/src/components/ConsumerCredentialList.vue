@@ -13,20 +13,28 @@
       pagination-type="offset"
       preferences-storage-key="kong-ui-entities-consumer-credentials-list"
       :table-headers="tableHeaders"
+      :use-action-outside="useActionOutside"
       @sort="resetPagination"
     >
       <!-- Create action -->
       <template #toolbar-button>
-        <PermissionsWrapper :auth-function="() => canCreate()">
-          <KButton
-            appearance="primary"
-            data-testid="toolbar-add-credential"
-            icon="plus"
-            :to="config.createRoute"
-          >
-            {{ t(`credentials.list.toolbar_actions.${config.plugin}.new`) }}
-          </KButton>
-        </PermissionsWrapper>
+        <!-- Hide Create button if table is empty -->
+        <Teleport
+          :disabled="!useActionOutside"
+          to="#kong-ui-app-page-header-action-button"
+        >
+          <PermissionsWrapper :auth-function="() => canCreate()">
+            <KButton
+              v-show="hasData"
+              appearance="primary"
+              data-testid="toolbar-add-credential"
+              icon="plus"
+              :to="config.createRoute"
+            >
+              {{ t(`credentials.list.toolbar_actions.${config.plugin}.new`) }}
+            </KButton>
+          </PermissionsWrapper>
+        </Teleport>
       </template>
 
       <!-- Column Formatting -->
@@ -251,6 +259,11 @@ const props = defineProps({
     required: false,
     default: async () => true,
   },
+  /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
+  useActionOutside: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
@@ -443,10 +456,18 @@ const confirmDelete = async (): Promise<void> => {
   }
 }
 
+// Remount the table when hasData changes
+const hasData = ref(true)
+
 /**
  * Watchers
  */
 watch(fetcherState, (state) => {
+  // if table is empty, hide the teleported Create button
+  if (state?.response?.data?.length === 0) {
+    hasData.value = false
+  }
+
   if (state.status === FetcherStatus.Error) {
     errorMessage.value = {
       title: t('credentials.error.general'),

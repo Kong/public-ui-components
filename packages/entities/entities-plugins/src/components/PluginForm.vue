@@ -827,6 +827,10 @@ const submitUrl = computed((): string => {
   return url
 })
 
+const isCustomPlugin = computed((): boolean => {
+  return !Object.keys(pluginMetaData).includes(props.pluginType)
+})
+
 // make the actual API request to save on create/edit
 const saveFormData = async (): Promise<void> => {
   // if save/cancel buttons are hidden, don't submit on hitting Enter
@@ -854,7 +858,8 @@ const saveFormData = async (): Promise<void> => {
     }
 
     // TODO: determine validate URL for credentials
-    if (!treatAsCredential.value) {
+    // don't validate custom plugins
+    if (!treatAsCredential.value && !isCustomPlugin.value) {
       await axiosInstance.post(validateSubmitUrl.value, requestBody)
     }
 

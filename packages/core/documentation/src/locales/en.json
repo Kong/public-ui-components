@@ -1,0 +1,46 @@
+{
+  "documentation": {
+    "common": {
+      "published": "Published",
+      "unpublished": "Unpublished"
+    },
+    "documentation_display": {
+      "added_label": "Added: ",
+      "status_label": "Status: ",
+      "edit_button": "Edit",
+      "add_new": "Add Page"
+    },
+    "errors": {
+      "cannot_retrieve_document": "Cannot retrieve selected document. Please try again later",
+      "unexpected": "An unexpected error has occurred"
+    },
+    "form_modal": {
+      "cancel_button_text": "Cancel",
+      "create_title": "New Documentation Page",
+      "delete_button_text": "Delete",
+      "documentation_link_text": "View Documentation",
+      "edit_title": "Edit Documentation",
+      "file_label": "Upload File",
+      "file_tooltip": "Select a .md file to upload",
+      "filename_button_text": "Select file",
+      "parent_document_select_label": "Parent",
+      "parent_document_select_option_none": "None",
+      "replace_file_button_text": "Select new file",
+      "save_button_text": "Save",
+      "slug_error": "Only letters, numbers, '-', and '_' characters are allowed",
+      "slug_label": "URL Slug",
+      "slug_placeholder": "Enter a URL slug",
+      "status_label": "Status",
+      "subtitle": "Provide guides, examples and other useful information about this service to developers.",
+      "title_label": "Page Name",
+      "title_placeholder": "Enter a page name"
+    },
+    "show": {
+      "empty_state": {
+        "title": "Add New Documentation Page",
+        "message": "Pages will allow you to provide guides examples and other useful information about your service to developers.",
+        "ctaText": "New Page"
+      }
+    }
+  }
+}
