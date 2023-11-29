@@ -441,8 +441,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: ^1.11.8
-        version: 1.11.10
+        specifier: ^1.11.12
+        version: 1.11.12
       '@kong/kongponents':
         specifier: ^8.125.0
         version: 8.126.2(axios@1.5.1)(vue-router@4.2.5)(vue@3.3.4)
