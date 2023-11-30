@@ -14,6 +14,7 @@
     >
       <slot
         name="tile"
+        :style="cell.style"
         :tile="cell.tile"
       />
     </div>
@@ -24,9 +25,9 @@
 import { computed, type PropType, ref, onMounted, onUnmounted } from 'vue'
 import type { GridSize, Cell, GridTile } from 'src/types'
 import { DEFAULT_TILE_HEIGHT } from '../../constants'
-import { KUI_SPACE_20 } from '@kong/design-tokens'
+import { KUI_SPACE_70 } from '@kong/design-tokens'
 
-const GAP_SIZE = parseInt(KUI_SPACE_20)
+const GAP_SIZE = parseInt(KUI_SPACE_70)
 
 const props = defineProps({
   gridSize: {
@@ -73,11 +74,12 @@ const gridCells = computed<Cell<T>[]>(() => {
   return props.tiles.map((tile, i) => {
     // Position elements based on their grid position and dimensions.
     const translateX = tile.layout.position.col * (tileWidth.value + GAP_SIZE)
+    // find the tile above the current tile
     const translateY = tile.layout.position.row * (props.tileHeight + GAP_SIZE)
 
     // Size tiles based on their dimensions and cell span.
-    const width = tile.layout.size.cols * tileWidth.value + GAP_SIZE * (tile.layout.size.cols - 1)
-    const height = tile.layout.size.rows * props.tileHeight - GAP_SIZE * (tile.layout.size.rows - 1)
+    const width = tile.layout.size.cols * tileWidth.value + (GAP_SIZE * (tile.layout.size.cols - 1))
+    const height = tile.layout.size.rows * props.tileHeight + (GAP_SIZE * (tile.layout.size.rows - 1))
 
     return {
       key: `tile-${i}`,
@@ -106,8 +108,11 @@ const gridHeight = computed(() => {
 }
 
 .grid-cell {
-  padding: $kui-space-20;
   position: absolute;
+
+  .tile-container {
+    margin: $kui-space-70;
+  }
 }
 
 @media (max-width: $kui-breakpoint-phablet) {

@@ -4,7 +4,7 @@ import DashboardRenderer from './DashboardRenderer.vue'
 import { ChartTypes } from '../types'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import type { GlobalMountOptions } from '@vue/test-utils/dist/types'
-import { exploreV3Response } from '../mock-data'
+import { exploreV3Response } from '../../sandbox/mock-data'
 import type { QueryProvider } from '../types/query-provider'
 import { INJECT_QUERY_PROVIDER } from '../types/query-provider'
 

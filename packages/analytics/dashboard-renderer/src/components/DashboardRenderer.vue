@@ -12,11 +12,11 @@
       :tile-height="config.tileHeight"
       :tiles="gridTiles"
     >
-      <template #tile="{ tile }">
-        <Tile
+      <template #tile="{ tile, style }">
+        <DashboardTile
           class="tile-container"
           :definition="tile.meta"
-          :height="(config.tileHeight || DEFAULT_TILE_HEIGHT) * tile.layout.size.rows"
+          :height="parseInt(style.height)"
         />
       </template>
     </GridLayout>
@@ -25,12 +25,11 @@
 
 <script setup lang="ts">
 import type { GridTile, TileConfig, DashboardConfig, DashboardRendererContext, TileDefinition } from '../types'
-import Tile from './DashboardTile.vue'
+import DashboardTile from './DashboardTile.vue'
 import { INJECT_QUERY_PROVIDER } from '../types/query-provider'
 import { computed, inject } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
-import { DEFAULT_TILE_HEIGHT } from '../constants'
 
 const props = defineProps<{
   context: DashboardRendererContext,
