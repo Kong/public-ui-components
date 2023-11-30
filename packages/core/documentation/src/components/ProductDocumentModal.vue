@@ -118,7 +118,7 @@
 
           <div class="button-spacing">
             <KButton
-              appearance="outline"
+              appearance="secondary"
               class="edit-documentation-cancel-button"
               data-testid="edit-documentation-cancel-button"
               @click="handleClickCancel"
@@ -194,7 +194,7 @@ const emit = defineEmits<{
 const { i18n } = composables.useI18n()
 const filePlaceholderText = computed(() => props.record.file?.filename)
 const namePlaceholderText = computed(() => selectedFile.value ? selectedFile.value.name?.split('.')[0] : '')
-const publishModel = ref<boolean>(false)
+const publishModel = ref<boolean>(true)
 
 const status = computed(() => publishModel.value ? 'published' : 'unpublished')
 
@@ -295,7 +295,6 @@ const setForm = (): void => {
     formData.urlSlug = ''
     formData.parent = ''
     formData.status = ''
-    publishModel.value = false
   }
 }
 
