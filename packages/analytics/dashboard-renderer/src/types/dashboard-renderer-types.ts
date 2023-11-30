@@ -33,6 +33,15 @@ export const barChartSchema = {
     showAnnotations: {
       type: 'boolean',
     },
+    chartDatasetColors: {
+      type: ['object', 'array'],
+      items: {
+        type: 'string',
+      },
+      additionalProperties: {
+        type: 'string',
+      },
+    },
     syntheticsDataKey,
   },
   required: ['type'],
@@ -53,6 +62,15 @@ export const timeseriesChartSchema = {
     },
     fill: {
       type: 'boolean',
+    },
+    chartDatasetColors: {
+      type: ['object', 'array'],
+      items: {
+        type: 'string',
+      },
+      additionalProperties: {
+        type: 'string',
+      },
     },
     syntheticsDataKey,
   },
