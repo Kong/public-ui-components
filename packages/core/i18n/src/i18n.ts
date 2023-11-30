@@ -11,7 +11,13 @@ const intlCache = createIntlCache()
 // this is global var to hold global (application) instance of Intl
 // typed as any since we don't have access to MessageSource here
 let globIntl: any
-
+const datetimeFormat: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+}
 /**
  * Creates and returns global or local instance of Intl
  * @param {SupportedLocales} locale one of the locales supported
@@ -22,13 +28,21 @@ let globIntl: any
 export const createI18n = <MessageSource extends Record<string, any>>
 (locale: SupportedLocales, messages: MessageSource, config: boolean|IntlConfigCore = false): IntlShapeEx<MessageSource> => {
 
+  const booleanConfig = typeof (config) === 'boolean'
   const intlOriginal = createIntl(
     {
-      ...(typeof (config) === 'boolean' ? null : config),
+      ...(booleanConfig ? null : config),
       locale,
       messages: flatten(messages, {
         safe: true, // Preserve arrays
       }),
+      formats: {
+        ...(booleanConfig ? null : config.formats),
+        date: {
+          ...(booleanConfig ? null : config.formats?.date),
+          datetime: datetimeFormat,
+        },
+      },
     },
     intlCache,
   )
@@ -52,13 +66,7 @@ export const createI18n = <MessageSource extends Record<string, any>>
     try {
       const date = new Date(timestamp * 1000)
 
-      return intl.formatDate(date, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-      })
+      return intl.formatDate(date, datetimeFormat)
     } catch (err) {
       return invalidDate
     }

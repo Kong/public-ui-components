@@ -8,6 +8,7 @@ const english = {
   test: {
     withParams: 'Good {dayPart}, My name is {name}!',
     withPluralization: 'There are {count} {count, plural, =0 {versions} =1 {version} other {versions}} available',
+    withDateTimeFormatting: '{value, date, datetime}',
   },
   array: {
     disabled: [
@@ -67,6 +68,15 @@ describe('i18n', () => {
       expect(t('test.withPluralization', { count: 0 })).toEqual('There are 0 versions available')
       expect(t('test.withPluralization', { count: 1 })).toEqual('There are 1 version available')
       expect(t('test.withPluralization', { count: 11 })).toEqual('There are 11 versions available')
+    })
+    it('should format message with datetime', () => {
+      const { t } = useI18n<typeof english>()
+      expect(t('test.withDateTimeFormatting', { value: new Date(0).getTime() })).toEqual('Jan 1, 1970, 12:00 AM')
+      expect(t('test.withDateTimeFormatting', { value: new Date(1701344449607).getTime() })).toEqual('Nov 30, 2023, 11:40 AM')
+      expect(t('test.withDateTimeFormatting', { value: 0 })).toEqual('Jan 1, 1970, 12:00 AM')
+      expect(t('test.withDateTimeFormatting', { value: 1701344449607 })).toEqual('Nov 30, 2023, 11:40 AM')
+      expect(t('test.withDateTimeFormatting', { value: Date.parse('Jan 1, 1970, 12:00 AM') })).toEqual('Jan 1, 1970, 12:00 AM')
+      expect(t('test.withDateTimeFormatting', { value: Date.parse('Nov 30, 2023, 11:40 AM') })).toEqual('Nov 30, 2023, 11:40 AM')
     })
   })
 
