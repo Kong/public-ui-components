@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-shared",
-  "version": "2.0.13",
+  "version": "2.0.14",
   "type": "module",
   "main": "./dist/entities-shared.umd.js",
   "module": "./dist/entities-shared.es.js",
@@ -69,7 +69,7 @@
   "dependencies": {
     "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/core": "workspace:^",
-    "@kong/icons": "^1.8.0",
+    "@kong/icons": "^1.8.1",
     "compare-versions": "^6.1.0"
   }
 }

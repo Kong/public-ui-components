@@ -194,8 +194,8 @@ importers:
         specifier: workspace:^0.10.5
         version: link:../analytics-utilities
       '@kong/icons':
-        specifier: ^1.8.0
-        version: 1.8.0(vue@3.3.4)
+        specifier: ^1.8.1
+        version: 1.8.1(vue@3.3.4)
       approximate-number:
         specifier: ^2.1.1
         version: 2.1.1
@@ -318,8 +318,8 @@ importers:
   packages/analytics/metric-cards:
     dependencies:
       '@kong/icons':
-        specifier: ^1.8.0
-        version: 1.8.0(vue@3.3.4)
+        specifier: ^1.8.1
+        version: 1.8.1(vue@3.3.4)
       approximate-number:
         specifier: ^2.1.1
         version: 2.1.1
@@ -337,8 +337,8 @@ importers:
   packages/core/app-layout:
     dependencies:
       '@kong/icons':
-        specifier: ^1.8.0
-        version: 1.8.0(vue@3.3.4)
+        specifier: ^1.8.1
+        version: 1.8.1(vue@3.3.4)
       focus-trap:
         specifier: ^7.5.3
         version: 7.5.3
@@ -389,8 +389,8 @@ importers:
   packages/core/copy-uuid:
     dependencies:
       '@kong/icons':
-        specifier: ^1.8.0
-        version: 1.8.0(vue@3.3.4)
+        specifier: ^1.8.1
+        version: 1.8.1(vue@3.3.4)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -430,8 +430,8 @@ importers:
         specifier: workspace:^
         version: link:../../entities/entities-shared
       '@kong/icons':
-        specifier: ^1.8.0
-        version: 1.8.0(vue@3.3.4)
+        specifier: ^1.8.1
+        version: 1.8.1(vue@3.3.4)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -455,8 +455,8 @@ importers:
         specifier: ^1.12.0
         version: 1.12.0
       '@kong/icons':
-        specifier: ^1.8.0
-        version: 1.8.0(vue@3.3.4)
+        specifier: ^1.8.1
+        version: 1.8.1(vue@3.3.4)
       vue:
         specifier: ^3.3.4
         version: 3.3.4
@@ -464,8 +464,8 @@ importers:
   packages/core/forms:
     dependencies:
       '@kong/icons':
-        specifier: ^1.8.0
-        version: 1.8.0(vue@3.3.4)
+        specifier: ^1.8.1
+        version: 1.8.1(vue@3.3.4)
       fecha:
         specifier: ^4.2.3
         version: 4.2.3
@@ -516,8 +516,8 @@ importers:
   packages/core/sandbox-layout:
     dependencies:
       '@kong/icons':
-        specifier: ^1.8.0
-        version: 1.8.0(vue@3.3.4)
+        specifier: ^1.8.1
+        version: 1.8.1(vue@3.3.4)
     devDependencies:
       '@kong/design-tokens':
         specifier: ^1.12.0
@@ -740,11 +740,11 @@ importers:
         specifier: workspace:^
         version: link:../entities-shared
       '@kong-ui-public/forms':
-        specifier: ^2.1.2
+        specifier: ^2.1.3
         version: link:../../core/forms
       '@kong/icons':
-        specifier: ^1.8.0
-        version: 1.8.0(vue@3.3.4)
+        specifier: ^1.8.1
+        version: 1.8.1(vue@3.3.4)
       marked:
         specifier: ^9.1.5
         version: 9.1.5
@@ -802,8 +802,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/core
       '@kong/icons':
-        specifier: ^1.8.0
-        version: 1.8.0(vue@3.3.4)
+        specifier: ^1.8.1
+        version: 1.8.1(vue@3.3.4)
       compare-versions:
         specifier: ^6.1.0
         version: 6.1.0
@@ -939,8 +939,8 @@ importers:
         specifier: workspace:^0.10.4
         version: link:../swagger-ui-web-component
       '@kong/icons':
-        specifier: ^1.8.0
-        version: 1.8.0(vue@3.3.4)
+        specifier: ^1.8.1
+        version: 1.8.1(vue@3.3.4)
       lodash.clonedeep:
         specifier: ^4.5.0
         version: 4.5.0
@@ -2151,6 +2151,15 @@ packages:
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: ^3.3.7
+    dependencies:
+      vue: 3.3.4
+    dev: true
+
+  /@kong/icons@1.8.1(vue@3.3.4):
+    resolution: {integrity: sha512-60Ud+nahbJ7zc1tsKuDpSZgVZrEXM+VHvnoC82aK3C8hMeFlNwi4XeVe8+Rf9fvVCZdFosMDuAa3J0xdzCF2jQ==}
+    engines: {node: '>=18.17.0'}
+    peerDependencies:
+      vue: ^3.3.8
     dependencies:
       vue: 3.3.4
 
