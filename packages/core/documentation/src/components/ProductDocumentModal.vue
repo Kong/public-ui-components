@@ -295,7 +295,6 @@ const setForm = (): void => {
     formData.urlSlug = ''
     formData.parent = ''
     formData.status = ''
-    publishModel.value = false
   }
 }
 
