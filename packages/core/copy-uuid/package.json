@@ -64,6 +64,6 @@
     "errorLimit": "250KB"
   },
   "dependencies": {
-    "@kong/icons": "^1.8.0"
+    "@kong/icons": "^1.8.1"
   }
 }
