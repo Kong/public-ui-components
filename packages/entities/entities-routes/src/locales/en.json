@@ -10,7 +10,7 @@
     "loading": "Loading..."
   },
   "search": {
-    "placeholder": "Filter by exact name or ID",
+    "placeholder": "Filter by name",
     "no_results": "No results found"
   },
   "routes": {

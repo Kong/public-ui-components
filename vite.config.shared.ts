@@ -17,7 +17,7 @@ dns.setDefaultResultOrder('verbatim')
 // Include the rollup-plugin-visualizer if the BUILD_VISUALIZER env var is set to "true"
 const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
   ? visualizer({
-    filename: path.resolve(__dirname, `packages/${ process.env.BUILD_VISUALIZER }/bundle-analyzer/stats-treemap.html`),
+    filename: path.resolve(__dirname, `packages/${process.env.BUILD_VISUALIZER}/bundle-analyzer/stats-treemap.html`),
     template: 'treemap', // sunburst|treemap|network
     sourcemap: true,
     gzipSize: true,
@@ -136,7 +136,7 @@ export const getApiProxies = (pathToRoot: string = '../../../.') => {
 
   const konnectAuthHeader = env.VITE_KONNECT_PAT
     ? {
-      authorization: `Bearer ${ env.VITE_KONNECT_PAT }`,
+      authorization: `Bearer ${env.VITE_KONNECT_PAT}`,
     }
     : undefined
 
@@ -152,9 +152,9 @@ export const getApiProxies = (pathToRoot: string = '../../../.') => {
   // Build the regional API proxies
   for (const region of availableRegions) {
     // @ts-ignore
-    regionalProxies[`^/${ region }/kong-api/konnect-api`] = {
+    regionalProxies[`^/${region}/kong-api`] = {
       target: (env.VITE_KONNECT_API ?? '').replace(/\{geo\}/, region),
-      rewrite: (path: string) => path.replace(`/${ region }/kong-api`, ''),
+      rewrite: (path: string) => path.replace(`/${region}/kong-api`, ''),
       changeOrigin: true,
       headers: {
         ...konnectAuthHeader,

@@ -44,7 +44,7 @@
   },
   "search": {
     "placeholder": {
-      "konnect": "Filter by exact instance name or ID",
+      "konnect": "Filter by name",
       "select": "Filter plugins"
     },
     "filter": {

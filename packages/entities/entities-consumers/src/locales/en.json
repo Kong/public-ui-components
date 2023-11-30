@@ -18,7 +18,7 @@
     },
     "title": "Consumers",
     "search": {
-      "placeholder": "Filter by exact username or ID"
+      "placeholder": "Filter by name"
     },
     "actions": {
       "add_consumer": "Add Consumer",
