@@ -377,7 +377,22 @@ onBeforeUnmount(() => {
     color: $kui-color-text-neutral-weak;
     display: flex;
     font-weight: $kui-font-weight-medium;
+    position: relative;
     width: 100%;
+
+    &:before{
+      background-image: linear-gradient(transparent, $kui-color-background-inverse);
+      content: '';
+      display: block;
+      height: $sidebar-header-spacing;
+      left: 50%;
+      margin-top: -$sidebar-header-spacing;
+      position: absolute;
+      top: 0;
+      transform: translateX(-50%); // center
+      width: calc(100% - 16px);
+      z-index: 1;
+    }
   }
 
   :deep(.k-dropdown-item) {
