@@ -17,7 +17,7 @@
     }
   },
   "search": {
-    "placeholder": "Filter by exact name or ID"
+    "placeholder": "Filter by name"
   },
   "gateway_services": {
     "title": "Gateway Services",
@@ -50,15 +50,17 @@
           "title": "Service Endpoint",
           "description": "Define the endpoint for this service by specifying the full URL or by its separate elements.",
           "checkedGroupLabel": "Choose how and where to send traffic",
-          "urlLabel": "Upstream URL",
+          "urlLabel": "Full URL",
           "checkedGroupAltLabel": "Protocol, Host, Port and Path",
           "viewAdvancedFields": "View Advanced Fields"
         }
       },
       "fields": {
         "upstream_url": {
+          "label": "Upstream URL",
           "placeholder": "Enter a URL",
-          "tooltip": "This is the URL of the API you will manage in Konnect."
+          "tooltip_for_konnect": "This is the URL of the API you will manage in Konnect.",
+          "tooltip_for_km": "This is the URL of the API you will manage in Kong Gateway."
         },
         "name": {
           "label": "Name",

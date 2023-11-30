@@ -7,6 +7,7 @@ interface Field {
   default?: string,
   placeholder?: string,
   hint?: string,
+  help?: string,
   inputType?: 'text' | 'number'
 }
 

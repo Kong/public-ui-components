@@ -150,7 +150,7 @@ describe('<PluginSelect />', () => {
       cy.get('.kong-ui-entities-plugin-select-form .plugins-results-container').should('be.visible')
 
       for (const key in disabledPlugins) {
-        cy.get(`.plugin-card.disabled [data-testid="${key}-card"]`).should('be.visible')
+        cy.get(`.plugin-card-content.disabled[data-testid="${key}-card"]`).should('be.visible')
       }
     })
 
@@ -409,7 +409,7 @@ describe('<PluginSelect />', () => {
       cy.get('.kong-ui-entities-plugin-select-form .plugins-results-container').should('be.visible')
 
       for (const key in disabledPlugins) {
-        cy.get(`.plugin-card.disabled [data-testid="${key}-card"]`).should('be.visible')
+        cy.get(`.plugin-card-content.disabled[data-testid="${key}-card"]`).should('be.visible')
       }
     })
 

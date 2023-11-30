@@ -1,8 +1,8 @@
 export default {
   list: {
     konnect: {
-      all: '/api/runtime_groups/{controlPlaneId}/plugins',
-      forEntity: '/api/runtime_groups/{controlPlaneId}/{entityType}/{entityId}/plugins',
+      all: '/v2/control-planes/{controlPlaneId}/core-entities/plugins',
+      forEntity: '/v2/control-planes/{controlPlaneId}/core-entities/{entityType}/{entityId}/plugins',
     },
     kongManager: {
       all: '/{workspace}/plugins',

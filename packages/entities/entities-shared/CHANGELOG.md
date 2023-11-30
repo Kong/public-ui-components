@@ -3,6 +3,85 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.14...@kong-ui-public/entities-shared@2.1.0) (2023-11-30)
+
+
+### Features
+
+* **entities-routes:** add filter api for routes list ([#891](https://github.com/Kong/public-ui-components/issues/891)) ([a0c5139](https://github.com/Kong/public-ui-components/commit/a0c5139e187cec80a614e7f94a295270174596d8))
+
+
+
+
+
+## [2.0.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.13...@kong-ui-public/entities-shared@2.0.14) (2023-11-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.8.1 ([#962](https://github.com/Kong/public-ui-components/issues/962)) ([66680c6](https://github.com/Kong/public-ui-components/commit/66680c6981424e3529478f8aec203de3ac4d2053))
+
+
+
+
+
+## [2.0.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.12...@kong-ui-public/entities-shared@2.0.13) (2023-11-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [2.0.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.11...@kong-ui-public/entities-shared@2.0.12) (2023-11-30)
+
+
+### Bug Fixes
+
+* **entities-shared:** remove dates from JSON/YAML config [KHCP-9837] ([#959](https://github.com/Kong/public-ui-components/issues/959)) ([4cd0b62](https://github.com/Kong/public-ui-components/commit/4cd0b628f2d83acf5d99a14cb99082db8d9e4747))
+
+
+
+
+
+## [2.0.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.10...@kong-ui-public/entities-shared@2.0.11) (2023-11-29)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [2.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.9...@kong-ui-public/entities-shared@2.0.10) (2023-11-28)
+
+
+### Bug Fixes
+
+* **entities-shared:** filter input style ([#947](https://github.com/Kong/public-ui-components/issues/947)) ([b919891](https://github.com/Kong/public-ui-components/commit/b9198911a8f0fca26bdd2c151bc8c386ff645ead))
+
+
+
+
+
+## [2.0.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.8...@kong-ui-public/entities-shared@2.0.9) (2023-11-28)
+
+
+### Bug Fixes
+
+* misc style updates ([#951](https://github.com/Kong/public-ui-components/issues/951)) ([c6ed14b](https://github.com/Kong/public-ui-components/commit/c6ed14bdab8caef958379ac867b3d3dbf1150cbb))
+
+
+
+
+
+## [2.0.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.7...@kong-ui-public/entities-shared@2.0.8) (2023-11-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
 ## [2.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.6...@kong-ui-public/entities-shared@2.0.7) (2023-11-23)
 
 

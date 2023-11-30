@@ -13,6 +13,7 @@
       preferences-storage-key="kong-ui-entities-gateway-services-list"
       :query="filterQuery"
       :table-headers="tableHeaders"
+      :use-action-outside="useActionOutside"
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @sort="resetPagination"
@@ -26,15 +27,23 @@
       </template>
       <!-- Create action -->
       <template #toolbar-button>
-        <PermissionsWrapper :auth-function="() => canCreate()">
-          <KButton
-            appearance="primary"
-            icon="plus"
-            :to="config.createRoute"
-          >
-            {{ t('gateway_services.list.toolbar_actions.new_gateway_service') }}
-          </KButton>
-        </PermissionsWrapper>
+        <!-- Hide Create button if table is empty -->
+        <Teleport
+          :disabled="!useActionOutside"
+          to="#kong-ui-app-page-header-action-button"
+        >
+          <PermissionsWrapper :auth-function="() => canCreate()">
+            <KButton
+              v-show="hasData"
+              appearance="primary"
+              data-testid="toolbar-add-gateway-service"
+              icon="plus"
+              :to="config.createRoute"
+            >
+              {{ t('gateway_services.list.toolbar_actions.new_gateway_service') }}
+            </KButton>
+          </PermissionsWrapper>
+        </Teleport>
       </template>
 
       <!-- Column Formatting -->
@@ -225,6 +234,11 @@ const props = defineProps({
     type: Function as PropType<(row: EntityRow) => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
+  },
+  /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
+  useActionOutside: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -504,10 +518,17 @@ const deleteRow = async (): Promise<void> => {
   }
 }
 
+const hasData = ref(true)
+
 /**
  * Watchers
  */
 watch(fetcherState, (state) => {
+  // if table is empty, hide the teleported Create button
+  if (state?.response?.data?.length === 0) {
+    hasData.value = false
+  }
+
   if (state.status === FetcherStatus.Error) {
     errorMessage.value = {
       title: t('errors.general'),

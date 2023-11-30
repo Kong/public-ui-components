@@ -10,6 +10,7 @@ import { mockingSchema } from './plugin-schemas/Mocking'
 import { preFunctionSchema } from './plugin-schemas/PreFunction'
 import { rateLimitingSchema } from './plugin-schemas/RateLimiting'
 import { requestTransformerAdvancedSchema } from './plugin-schemas/RequestTransformerAdvanced'
+import { routeByHeaderSchema } from './plugin-schemas/RouteByHeader'
 import { graphqlRateLimitingAdvancedSchema } from './plugin-schemas/GraphQLRateLimitingAdvanced'
 import { statsDSchema } from './plugin-schemas/StatsD'
 import { ArrayStringFieldSchema } from './plugin-schemas/ArrayStringFieldSchema'
@@ -63,7 +64,7 @@ export const useSchemas = (entityId?: string) => {
     },
 
     'route-by-header': {
-      configurationDisabled: true,
+      ...routeByHeaderSchema,
     },
 
     mocking: {

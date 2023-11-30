@@ -1,8 +1,8 @@
 export default {
   list: {
     konnect: {
-      all: '/api/runtime_groups/{controlPlaneId}/routes',
-      forGatewayService: '/api/runtime_groups/{controlPlaneId}/services/{serviceId}/routes',
+      all: '/v2/control-planes/{controlPlaneId}/core-entities/routes',
+      forGatewayService: '/v2/control-planes/{controlPlaneId}/core-entities/services/{serviceId}/routes',
     },
     kongManager: {
       all: '/{workspace}/routes',
