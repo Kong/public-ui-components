@@ -297,6 +297,10 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     box-shadow: $kui-navigation-shadow-border-child;
     color: $kui-navigation-color-text-selected !important;
     font-weight: $kui-font-weight-medium !important;
+
+    &:focus-visible {
+      box-shadow: $kui-navigation-shadow-border-child, $kui-navigation-shadow-focus;
+    }
   }
 }
 
