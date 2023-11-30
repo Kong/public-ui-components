@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@2.1.3...@kong-ui-public/entities-routes@2.2.0) (2023-11-30)
+
+
+### Features
+
+* **entities-routes:** add filter api for routes list ([#891](https://github.com/Kong/public-ui-components/issues/891)) ([a0c5139](https://github.com/Kong/public-ui-components/commit/a0c5139e187cec80a614e7f94a295270174596d8))
+
+
+
+
+
 ## [2.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@2.1.2...@kong-ui-public/entities-routes@2.1.3) (2023-11-30)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
