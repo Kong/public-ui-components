@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.2.3...@kong-ui-public/entities-plugins@2.2.4) (2023-11-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.8.1 ([#962](https://github.com/Kong/public-ui-components/issues/962)) ([66680c6](https://github.com/Kong/public-ui-components/commit/66680c6981424e3529478f8aec203de3ac4d2053))
+
+
+
+
+
+## [2.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.2.2...@kong-ui-public/entities-plugins@2.2.3) (2023-11-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.2.1...@kong-ui-public/entities-plugins@2.2.2) (2023-11-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.2.0...@kong-ui-public/entities-plugins@2.2.1) (2023-11-29)
+
+
+### Bug Fixes
+
+* **plugins:** create custom instance ([#957](https://github.com/Kong/public-ui-components/issues/957)) ([c636637](https://github.com/Kong/public-ui-components/commit/c636637e11acd5700331f5009cc444aedca247e1))
+
+
+
+
+
 # [2.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.1.2...@kong-ui-public/entities-plugins@2.2.0) (2023-11-29)
 
 

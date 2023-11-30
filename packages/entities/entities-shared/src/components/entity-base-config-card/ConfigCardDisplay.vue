@@ -120,10 +120,16 @@ const jsonContent = ref('')
 const yamlContent = ref('')
 
 watch(() => props.format, (format: string) => {
-  if (format === 'json') {
-    jsonContent.value = JSON.stringify(props.record, null, 2)
-  } else if (format === 'yaml') {
-    yamlContent.value = yaml.dump(props.record)
+  if (format !== 'structured') {
+    // remove dates from JSON/YAML config [KHCP-9837]
+    const jsonOrYamlRecord = JSON.parse(JSON.stringify(props.record))
+    delete jsonOrYamlRecord.created_at
+    delete jsonOrYamlRecord.updated_at
+    if (format === 'json') {
+      jsonContent.value = JSON.stringify(jsonOrYamlRecord, null, 2)
+    } else if (format === 'yaml') {
+      yamlContent.value = yaml.dump(jsonOrYamlRecord)
+    }
   }
 
 }, { immediate: true })
