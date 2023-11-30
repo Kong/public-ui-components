@@ -312,6 +312,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 .sidebar-item-display {
   align-items: center;
   display: flex;
+  gap: $kui-space-40;
   height: 100%;
   padding: $kui-space-0 $kui-space-60;
   width: 100%;
@@ -365,7 +366,6 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     align-items: center;
     display: flex;
     line-height: 0; // to align icon with the text baseline
-    padding-right: $kui-space-50;
   }
 }
 </style>

@@ -409,7 +409,7 @@ onBeforeUnmount(() => {
   display: v-bind('headerContainerStyles.display');
   left: 0;
   min-height: v-bind('headerContainerStyles.minHeight');
-  padding: $kui-space-0 $kui-space-60; // should match the padding of `.header-content` in the navbar
+  padding: $kui-space-0 $kui-space-60 $kui-space-0 $kui-space-90; // should match the padding of `.header-content` in the navbar
   position: absolute;
   right: 0;
   top: 0;

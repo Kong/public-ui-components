@@ -100,6 +100,7 @@ const headerStyles = computed(() => ({
     margin-right: v-bind('appLogoStyles.marginRight');
     max-width: v-bind('appLogoStyles.width');
     min-width: v-bind('appLogoStyles.width');
+    padding-left: $kui-space-60;
   }
 
   .mobile-header-left {
