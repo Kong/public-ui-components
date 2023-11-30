@@ -177,26 +177,12 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
         }
       }
 
-      // specific SVG stroke color on hover
-      .kong-icon {
-        &.kong-icon-brain svg path[stroke-width="2"] {
-          stroke: currentColor;
-        }
-      }
-
       &:hover,
       &:focus-visible {
         color: $kui-navigation-color-text-hover;
 
         svg {
           color: $kui-navigation-color-text-hover;
-        }
-
-        // specific SVG stroke color on hover
-        .kong-icon {
-          &.kong-icon-brain svg path[stroke-width="2"] {
-            stroke: $kui-navigation-color-text-hover;
-          }
         }
       }
 
@@ -224,13 +210,6 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
         svg {
           color: $kui-navigation-color-text-selected;
-        }
-
-        // specific SVG stroke color on hover
-        .kong-icon {
-          &.kong-icon-brain svg path[stroke-width="2"] {
-            stroke: $kui-navigation-color-text-selected;
-          }
         }
       }
 
