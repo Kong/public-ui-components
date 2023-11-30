@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.13...@kong-ui-public/entities-shared@2.0.14) (2023-11-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.8.1 ([#962](https://github.com/Kong/public-ui-components/issues/962)) ([66680c6](https://github.com/Kong/public-ui-components/commit/66680c6981424e3529478f8aec203de3ac4d2053))
+
+
+
+
+
+## [2.0.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.12...@kong-ui-public/entities-shared@2.0.13) (2023-11-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [2.0.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.11...@kong-ui-public/entities-shared@2.0.12) (2023-11-30)
+
+
+### Bug Fixes
+
+* **entities-shared:** remove dates from JSON/YAML config [KHCP-9837] ([#959](https://github.com/Kong/public-ui-components/issues/959)) ([4cd0b62](https://github.com/Kong/public-ui-components/commit/4cd0b628f2d83acf5d99a14cb99082db8d9e4747))
+
+
+
+
+
 ## [2.0.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.0.10...@kong-ui-public/entities-shared@2.0.11) (2023-11-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
