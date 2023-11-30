@@ -20,6 +20,16 @@ const syntheticsDataKey = {
   type: 'string',
 } as const
 
+const chartDatasetColorsSchema = {
+  type: ['object', 'array'],
+  items: {
+    type: 'string',
+  },
+  additionalProperties: {
+    type: 'string',
+  },
+} as const satisfies JSONSchema
+
 export const barChartSchema = {
   type: 'object',
   properties: {
@@ -33,15 +43,7 @@ export const barChartSchema = {
     showAnnotations: {
       type: 'boolean',
     },
-    chartDatasetColors: {
-      type: ['object', 'array'],
-      items: {
-        type: 'string',
-      },
-      additionalProperties: {
-        type: 'string',
-      },
-    },
+    chartDatasetColors: chartDatasetColorsSchema,
     syntheticsDataKey,
   },
   required: ['type'],
@@ -63,15 +65,7 @@ export const timeseriesChartSchema = {
     fill: {
       type: 'boolean',
     },
-    chartDatasetColors: {
-      type: ['object', 'array'],
-      items: {
-        type: 'string',
-      },
-      additionalProperties: {
-        type: 'string',
-      },
-    },
+    chartDatasetColors: chartDatasetColorsSchema,
     syntheticsDataKey,
   },
   required: ['type'],

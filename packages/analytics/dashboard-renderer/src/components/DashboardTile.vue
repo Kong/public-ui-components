@@ -16,8 +16,9 @@ import type {
 import { computed } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
-import AnalyticsChartRenderer from './AnalyticsChartRenderer.vue'
+import BarChartRenderer from './BarChartRenderer.vue'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
+import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 
 const props = defineProps({
   definition: {
@@ -32,9 +33,9 @@ const props = defineProps({
 })
 
 const rendererLookup: Record<ChartTypes, Component> = {
-  [ChartTypes.TimeseriesLine]: AnalyticsChartRenderer,
-  [ChartTypes.HorizontalBar]: AnalyticsChartRenderer,
-  [ChartTypes.VerticalBar]: AnalyticsChartRenderer,
+  [ChartTypes.TimeseriesLine]: TimeseriesChartRenderer,
+  [ChartTypes.HorizontalBar]: BarChartRenderer,
+  [ChartTypes.VerticalBar]: BarChartRenderer,
   [ChartTypes.Gauge]: SimpleChartRenderer,
 }
 
