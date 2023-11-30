@@ -31,7 +31,7 @@ describe('<GatewayServiceList />', () => {
   const baseConfigKonnect: KonnectGatewayServiceListConfig = {
     app: 'konnect',
     controlPlaneId: '1234-abcd-ilove-cats',
-    apiBaseUrl: '/us/konnect-v2',
+    apiBaseUrl: '/us/kong-api',
     createRoute,
     getViewRoute: () => viewRoute,
     getEditRoute: () => editRoute,

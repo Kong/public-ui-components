@@ -53,7 +53,7 @@ const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig = ref<KonnectPluginListConfig>({
   app: 'konnect',
-  apiBaseUrl: '/us/konnect-v2',
+  apiBaseUrl: '/us/kong-api',
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   createRoute: { name: 'select-plugin' },

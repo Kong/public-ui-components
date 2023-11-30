@@ -9,7 +9,7 @@ describe('<AddConsumerModal/>', () => {
     const configGroupKonnect: KonnectConsumerListConfig = {
       app: 'konnect',
       controlPlaneId: '1234-asdf-asdf-asdf',
-      apiBaseUrl: '/us/konnect-v2',
+      apiBaseUrl: '/us/kong-api',
       createRoute: 'create-consumer',
       getViewRoute: () => 'view-consumer',
       getEditRoute: () => 'edit-consumer',

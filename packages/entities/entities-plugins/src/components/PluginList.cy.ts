@@ -22,7 +22,7 @@ const configureDynamicOrderingRoute = 'configure-dynamic-ordering-route'
 const baseConfigKonnect: KonnectPluginListConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-cat-loves-everyone',
-  apiBaseUrl: '/us/konnect-v2',
+  apiBaseUrl: '/us/kong-api',
   createRoute,
   getViewRoute: () => viewRoute,
   getEditRoute: () => editRoute,

@@ -657,7 +657,7 @@ describe('<ConsumerList />', () => {
     const baseConfigKonnect: KonnectConsumerListConfig = {
       app: 'konnect',
       controlPlaneId: '1234-abcd-ilove-cats',
-      apiBaseUrl: '/us/konnect-v2',
+      apiBaseUrl: '/us/kong-api',
       createRoute: 'create-consumer',
       getViewRoute: () => 'view-consumer',
       getEditRoute: () => 'edit-consumer',
@@ -665,7 +665,7 @@ describe('<ConsumerList />', () => {
     const configGroupKonnect: KonnectConsumerListConfig = {
       app: 'konnect',
       controlPlaneId: '1234-abcd-ilove-cats',
-      apiBaseUrl: '/us/konnect-v2',
+      apiBaseUrl: '/us/kong-api',
       createRoute: 'create-consumer',
       getViewRoute: () => 'view-consumer',
       getEditRoute: () => 'edit-consumer',
