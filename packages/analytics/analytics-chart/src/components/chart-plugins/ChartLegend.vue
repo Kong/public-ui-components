@@ -233,7 +233,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     display: grid;
     justify-content: center;
     max-height: 15%;
-    width: 100%;
+    width: 95%;
     .truncate-label {
       max-width: 15ch;
       overflow: hidden;

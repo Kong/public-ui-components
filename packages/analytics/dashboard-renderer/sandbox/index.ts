@@ -19,14 +19,32 @@ const router = createRouter({
       name: 'home',
       component: () => import('./pages/RendererDemo.vue'),
     },
+    {
+      path: '/',
+      name: 'dynamic',
+      component: () => import('./pages/DynamicDashboardDemo.vue'),
+    },
+    {
+      path: '/grid-layout',
+      name: 'grid',
+      component: () => import('./pages/GridDemo.vue'),
+    },
   ],
 })
 
 // Define the sandbox layout links here
 const appLinks: SandboxNavigationItem[] = ([
   {
-    name: 'Dashboard Renderer',
+    name: 'Static Dashboard',
     to: { name: 'home' },
+  },
+  {
+    name: 'Dynamic Dashboard',
+    to: { name: 'dynamic' },
+  },
+  {
+    name: 'Grid Layout',
+    to: { name: 'grid' },
   },
 ])
 
