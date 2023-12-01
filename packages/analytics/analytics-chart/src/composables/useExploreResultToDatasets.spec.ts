@@ -170,10 +170,10 @@ describe('useVitalsExploreDatasets', () => {
       {
         labels: ['group-by-1', 'group-by-2'],
         datasets: [
-          { label: 'then-by-1', backgroundColor: '#a86cd5', data: [100, 0] },
-          { label: 'then-by-2', backgroundColor: '#6a86d2', data: [150, 0] },
-          { label: 'then-by-3', backgroundColor: '#00bbf9', data: [0, 200] },
-          { label: 'then-by-4', backgroundColor: '#00c4b0', data: [0, 250] },
+          { label: 'then-by-1', backgroundColor: '#a86cd5', data: [100, null] },
+          { label: 'then-by-2', backgroundColor: '#6a86d2', data: [150, null] },
+          { label: 'then-by-3', backgroundColor: '#00bbf9', data: [null, 200] },
+          { label: 'then-by-4', backgroundColor: '#00c4b0', data: [null, 250] },
         ],
       },
     )
@@ -284,8 +284,8 @@ it('handles multiple metrics with no dimension', () => {
     {
       labels: ['metric1', 'metric2'],
       datasets: [
-        { label: 'metric1', backgroundColor: '#a86cd5', data: [1, 0] },
-        { label: 'metric2', backgroundColor: '#6a86d2', data: [0, 2] },
+        { label: 'metric1', backgroundColor: '#a86cd5', data: [1, null] },
+        { label: 'metric2', backgroundColor: '#6a86d2', data: [null, 2] },
       ],
     },
   )

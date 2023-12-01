@@ -170,16 +170,18 @@
       </div>
     </template>
 
-    <!-- Determine if a full blown chart is to be displayed, or a simplified one -->
-    <AnalyticsChart
-      :chart-data="(exploreResult as AnalyticsExploreV2Result)"
-      :chart-options="analyticsChartOptions"
-      chart-title="Request count by Status Code"
-      :legend-position="legendPosition"
-      :show-annotations="showAnnotationsToggle"
-      :show-legend-values="showLegendValuesToggle"
-      tooltip-title="tooltip title"
-    />
+    <div class="chart-container">
+      <!-- Determine if a full blown chart is to be displayed, or a simplified one -->
+      <AnalyticsChart
+        :chart-data="(exploreResult as AnalyticsExploreV2Result)"
+        :chart-options="analyticsChartOptions"
+        chart-title="Request count by Status Code"
+        :legend-position="legendPosition"
+        :show-annotations="showAnnotationsToggle"
+        :show-legend-values="showLegendValuesToggle"
+        tooltip-title="tooltip title"
+      />
+    </div>
 
     <br>
 
@@ -367,4 +369,12 @@ watch(multiDimensionToggle, () => {
 <style lang="scss" scoped>
 @import '../src/styles/base';
 @import '../styles/charts-sandbox';
+
+.chart-container {
+  max-width:60vw;
+
+  @media(max-width: ($kui-breakpoint-laptop - 1px)) {
+    max-width: 100vw;
+  }
+}
 </style>

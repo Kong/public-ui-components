@@ -2,9 +2,57 @@ import type { AnalyticsExploreResult, AnalyticsExploreV2Result, AnalyticsExplore
 import { lookupDatavisColor, datavisPalette } from '../utils'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
-import type { Dataset, ExploreToDatasetDeps, KChartData } from '../types'
-import { isNullOrUndef } from 'chart.js/helpers'
+import type { Dataset, ExploreToDatasetDeps, KChartData, BarChartDatasetGenerationParams } from '../types'
 import composables from '../composables'
+
+function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationParams): Dataset[] {
+  const {
+    isMultiMetric,
+    hasDimensions,
+    metricNames,
+    barSegmentLabels,
+    pivotRecords,
+    rowLabels,
+    colorPalette,
+  } = dataSetGenerationParams
+  const { i18n } = composables.useI18n()
+
+  if (isMultiMetric) {
+    return metricNames.map((metric) => {
+      return {
+        // @ts-ignore - dynamic i18n key
+        label: (i18n && i18n.te(`chartLabels.${metric}`) && i18n.t(`chartLabels.${metric}`)) || metric,
+        backgroundColor: lookupDatavisColor(metricNames.indexOf(metric), datavisPalette),
+        data: rowLabels.map((rowPosition, i) => {
+          return hasDimensions ? pivotRecords[`${rowPosition},${metric}`] || 0 : pivotRecords[`${i},${metric}`] || null
+        }),
+      } as Dataset
+    })
+  }
+
+  return Array.from(barSegmentLabels).flatMap((dimension, i) => {
+    if (!dimension) {
+      return []
+    }
+
+    const colorMap: { [label: string]: string } = {}
+
+    const baseColor = Array.isArray(colorPalette)
+      ? lookupDatavisColor(i, colorPalette)
+      : colorPalette[dimension] || lookupDatavisColor(i) // fallback to default datavis palette if no color found
+
+    colorMap[dimension] = baseColor
+
+    return {
+      // @ts-ignore - dynamic i18n key
+      label: (i18n && i18n.te(`chartLabels.${dimension}`) && i18n.t(`chartLabels.${dimension}`)) || dimension,
+      backgroundColor: baseColor,
+      data: rowLabels.map(rowPosition => {
+        return pivotRecords[`${rowPosition},${dimension}`] || null
+      }),
+    } as Dataset
+  })
+}
 
 export default function useExploreResultToDatasets(
   deps: ExploreToDatasetDeps,
@@ -71,43 +119,16 @@ export default function useExploreResultToDatasets(
             ? metricNames.map(name => (i18n && i18n.te(`chartLabels.${name}`) && i18n.t(`chartLabels.${name}`)) || name)
             // @ts-ignore - dynamic i18n key
             : dimensions[primaryDimension].map(name => (i18n && i18n.te(`chartLabels.${name}`) && i18n.t(`chartLabels.${name}`)) || name),
-          datasets: isMultiMetric
-            ? metricNames.map((metric) => {
-              return {
-                // @ts-ignore - dynamic i18n key
-                label: (i18n && i18n.te(`chartLabels.${metric}`) && i18n.t(`chartLabels.${metric}`)) || metric,
-                backgroundColor: lookupDatavisColor(metricNames.indexOf(metric), datavisPalette),
-                data: rowLabels.map((rowPosition, i) => {
-                  return hasDimensions ? pivotRecords[`${rowPosition},${metric}`] || 0 : pivotRecords[`${i},${metric}`] || 0
-                }),
-              } as Dataset
-            })
-            : barSegmentLabels && Array.from(barSegmentLabels).flatMap((dimension, i) => {
-              if (!dimension) {
-                return []
-              }
-
-              let { colorPalette } = deps
-              if (isNullOrUndef(colorPalette)) {
-                colorPalette = datavisPalette
-              }
-              const colorMap: { [label: string]: string } = {}
-
-              const baseColor = Array.isArray(colorPalette)
-                ? lookupDatavisColor(i, colorPalette)
-                : colorPalette[dimension] || lookupDatavisColor(i) // fallback to default datavis palette if no color found
-
-              colorMap[dimension] = baseColor
-
-              return {
-              // @ts-ignore - dynamic i18n key
-                label: (i18n && i18n.te(`chartLabels.${dimension}`) && i18n.t(`chartLabels.${dimension}`)) || dimension,
-                backgroundColor: baseColor,
-                data: rowLabels.map(rowPosition => {
-                  return pivotRecords[`${rowPosition},${dimension}`] || 0
-                }),
-              } as Dataset
-            }),
+          datasets: generateDatasets({
+            isMultiMetric,
+            hasDimensions,
+            metricNames,
+            dimensionFieldNames,
+            barSegmentLabels,
+            pivotRecords,
+            rowLabels,
+            colorPalette: deps.colorPalette || datavisPalette,
+          }),
         }
 
         return data
