@@ -21,7 +21,7 @@ export default {
     konnect: {
       create: '/api/runtime_groups/{controlPlaneId}/plugins',
       edit: '/api/runtime_groups/{controlPlaneId}/plugins/{id}',
-      pluginSchema: '/api/runtime_groups/{controlPlaneId}/schemas/plugins/{plugin}',
+      pluginSchema: '/v2/control-planes/{controlPlaneId}/schemas/core-entities/plugins/{plugin}',
       credential: {
         create: '/api/runtime_groups/{controlPlaneId}/{resourceEndpoint}',
         edit: '/api/runtime_groups/{controlPlaneId}/{resourceEndpoint}/{id}',
@@ -49,7 +49,7 @@ export default {
   },
   item: {
     konnect: {
-      all: '/api/runtime_groups/{controlPlaneId}/plugins/{id}',
+      all: '/v2/control-planes/{controlPlaneId}/core-entities/plugins/{id}',
       forEntity: '/api/runtime_groups/{controlPlaneId}/{entityType}/{entityId}/plugins/{id}',
     },
     kongManager: {
