@@ -20,11 +20,11 @@ export default {
   form: {
     konnect: {
       create: '/api/runtime_groups/{controlPlaneId}/plugins',
-      edit: '/api/runtime_groups/{controlPlaneId}/plugins/{id}',
+      edit: '/v2/control-planes/{controlPlaneId}/core-entities/plugins/{id}',
       pluginSchema: '/api/runtime_groups/{controlPlaneId}/schemas/plugins/{plugin}',
       credential: {
         create: '/api/runtime_groups/{controlPlaneId}/{resourceEndpoint}',
-        edit: '/api/runtime_groups/{controlPlaneId}/{resourceEndpoint}/{id}',
+        edit: '/v2/control-planes/{controlPlaneId}/core-entities/{resourceEndpoint}/{id}',
       },
       credentialSchema: '/api/runtime_groups/{controlPlaneId}/schemas/{plugin}',
       validate: '/api/runtime_groups/{controlPlaneId}/v1/schemas/json/plugin/validate',
