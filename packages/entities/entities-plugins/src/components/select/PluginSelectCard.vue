@@ -267,11 +267,11 @@ const handleCustomClick = (): void => {
 
   &-footer {
     background-color: $kui-color-background-primary-weakest;
+    border-radius: $kui-border-radius-30;
     color: $kui-color-text-primary;
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-semibold;
     padding: $kui-space-60;
-    border-radius: $kui-border-radius-30;
   }
 
   &-create-footer {
