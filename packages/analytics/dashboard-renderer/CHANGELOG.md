@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.1.14...@kong-ui-public/dashboard-renderer@0.2.0) (2023-12-01)
+
+
+### Features
+
+* dashboard renderer grid layout ([#964](https://github.com/Kong/public-ui-components/issues/964)) ([3bb8210](https://github.com/Kong/public-ui-components/commit/3bb8210944ff9ed1ae27d33bd9daaeb7b8e39913))
+
+
+
+
+
 ## [0.1.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.1.13...@kong-ui-public/dashboard-renderer@0.1.14) (2023-12-01)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
