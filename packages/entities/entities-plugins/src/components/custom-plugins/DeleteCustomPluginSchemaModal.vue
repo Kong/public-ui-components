@@ -105,7 +105,7 @@ const handleSubmit = async (): Promise<void> => {
   }
 
   try {
-    const url = `${props.config.apiBaseUrl}/api/runtime_groups/${props.config.controlPlaneId}/v1/plugin-schemas/${props.plugin?.name}`
+    const url = `${props.config.apiBaseUrl}/v2/control-planes/${props.config.controlPlaneId}/core-entities/plugin-schemas/${props.plugin?.name}`
     await axiosInstance.delete(url)
 
     emit('proceed')
