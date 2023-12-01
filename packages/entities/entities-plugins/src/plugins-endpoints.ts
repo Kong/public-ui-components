@@ -50,7 +50,7 @@ export default {
   item: {
     konnect: {
       all: '/v2/control-planes/{controlPlaneId}/core-entities/plugins/{id}',
-      forEntity: '/v2/control-planes/{controlPlaneId}/core-entities/{entityType}{entityId}/plugins/{id}',
+      forEntity: '/api/runtime_groups/{controlPlaneId}/{entityType}/{entityId}/plugins/{id}',
     },
     kongManager: {
       all: '/{workspace}/plugins/{id}',
