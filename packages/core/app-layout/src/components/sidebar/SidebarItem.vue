@@ -179,7 +179,8 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
       &:hover,
       &:focus-visible {
-        color: $kui-navigation-color-text-hover;
+        // !important to also handle the L2 items
+        color: $kui-navigation-color-text-hover !important;
 
         svg {
           color: $kui-navigation-color-text-hover;
