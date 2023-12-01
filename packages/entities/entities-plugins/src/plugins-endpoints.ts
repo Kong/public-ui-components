@@ -21,7 +21,7 @@ export default {
     konnect: {
       create: '/api/runtime_groups/{controlPlaneId}/plugins',
       edit: '/api/runtime_groups/{controlPlaneId}/plugins/{id}',
-      pluginSchema: '/api/runtime_groups/{controlPlaneId}/schemas/plugins/{plugin}',
+      pluginSchema: '/v2/control-planes/{controlPlaneId}/schemas/core-entities/plugins/{plugin}',
       credential: {
         create: '/api/runtime_groups/{controlPlaneId}/{resourceEndpoint}',
         edit: '/api/runtime_groups/{controlPlaneId}/{resourceEndpoint}/{id}',
