@@ -22,15 +22,15 @@ Render Analytics charts on a page from a JSON definition.
 
 This component only takes two properties:
 
-- `context`: The time range that the dashboard should query and any additional filters that should be applied.
-- `definition`: The dashboard definition.
+- [context](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/src/types/dashboard-renderer-types.ts) : The time range that the dashboard should query and any additional filters that should be applied.
+- [config](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/src/types/dashboard-renderer-types.ts) : The dashboard config and layout.
 
 ### Example
 
 ```vue
 <DashboardRenderer
   :context="context"
-  :definition="definition"
+  :config="config"
 />
 ```
 
@@ -45,24 +45,55 @@ const context: DashboardRendererContext = {
   },
 }
 
-const definition: DashboardDefinition = {
+const config: DashboardConfig = {
+  // 5 x 5 grid
+  gridSize: {
+    cols: 5,
+    rows: 5,
+  }
   tiles: [
     {
-      title: 'Analytics chart',
-      chart: {
-        type: ChartTypes.HorizontalBar,
+      definition: {
+        chart: {
+          type: ChartTypes.HorizontalBar,
+        },
+        query: {},
       },
-      query: {},
+      layout: {
+        // Position at column 0, row 0
+        position: {
+          col: 1,
+          row: 1,
+        },
+        // Spans 3 columns and 2 rows
+        size: {
+          col: 3,
+          row: 2,
+        }
+      }
     },
     {
-      title: 'Simple chart',
-      chart: {
-        type: ChartTypes.Gauge,
-        metricDisplay: ChartMetricDisplay.Full,
-        reverseDataset: true,
-        numerator: 0,
+      definition: {
+        chart: {
+          type: ChartTypes.Gauge,
+          metricDisplay: ChartMetricDisplay.Full,
+          reverseDataset: true,
+          numerator: 0,
+        },
+        query: {},
       },
-      query: {},
+      layout: {
+        // Position at column 0, row 2
+        position: {
+          col: 0,
+          row: 2,
+        },
+        // Spans 3 columns and 2 rows
+        size: {
+          col: 3,
+          row: 2,
+        }
+      }
     },
   ],
 }

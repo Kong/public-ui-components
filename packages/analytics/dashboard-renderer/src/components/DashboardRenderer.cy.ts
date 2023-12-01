@@ -4,7 +4,7 @@ import DashboardRenderer from './DashboardRenderer.vue'
 import { ChartTypes } from '../types'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import type { GlobalMountOptions } from '@vue/test-utils/dist/types'
-import { exploreV3Response } from '../mock-data'
+import { exploreV3Response } from '../../sandbox/mock-data'
 import type { QueryProvider } from '../types/query-provider'
 import { INJECT_QUERY_PROVIDER } from '../types/query-provider'
 
@@ -25,24 +25,50 @@ describe('<DashboardRenderer />', () => {
         filters: {},
         timeSpec: '',
       },
-      definition: {
+      config: {
+        gridSize: {
+          cols: 2,
+          rows: 4,
+        },
         tiles: [
           {
-            title: 'Analytics chart',
-            chart: {
-              type: ChartTypes.HorizontalBar,
+            definition: {
+              chart: {
+                type: ChartTypes.HorizontalBar,
+              },
+              query: {},
             },
-            query: {},
+            layout: {
+              size: {
+                cols: 2,
+                rows: 2,
+              },
+              position: {
+                col: 1,
+                row: 1,
+              },
+            },
           },
           {
-            title: 'Simple chart',
-            chart: {
-              type: ChartTypes.Gauge,
-              metricDisplay: ChartMetricDisplay.Full,
-              reverseDataset: true,
-              numerator: 0,
+            definition: {
+              chart: {
+                type: ChartTypes.Gauge,
+                metricDisplay: ChartMetricDisplay.Full,
+                reverseDataset: true,
+                numerator: 0,
+              },
+              query: {},
             },
-            query: {},
+            layout: {
+              size: {
+                cols: 2,
+                rows: 2,
+              },
+              position: {
+                col: 1,
+                row: 3,
+              },
+            },
           },
         ],
       },
