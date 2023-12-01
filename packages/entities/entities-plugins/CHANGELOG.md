@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.3.2...@kong-ui-public/entities-plugins@2.3.3) (2023-12-01)
+
+
+### Bug Fixes
+
+* **entities-plugins:** non-VFG forms receiving incorrect prop ([#975](https://github.com/Kong/public-ui-components/issues/975)) ([5042635](https://github.com/Kong/public-ui-components/commit/5042635a12a8bb4376c27c9df1bf353a1fa14712))
+
+
+
+
+
 ## [2.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.3.1...@kong-ui-public/entities-plugins@2.3.2) (2023-12-01)
 
 
