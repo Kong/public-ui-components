@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.4.1...@kong-ui-public/entities-plugins@2.4.2) (2023-12-01)
+
+
+### Bug Fixes
+
+* delete modal ([#980](https://github.com/Kong/public-ui-components/issues/980)) ([5a67bca](https://github.com/Kong/public-ui-components/commit/5a67bcaddecfaf79a0bb3db37e160a562367e9b7))
+
+
+
+
+
 ## [2.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.4.0...@kong-ui-public/entities-plugins@2.4.1) (2023-12-01)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
