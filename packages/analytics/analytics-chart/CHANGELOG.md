@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.16.13...@kong-ui-public/analytics-chart@0.17.0) (2023-12-01)
+
+
+### Features
+
+* dashboard renderer grid layout ([#964](https://github.com/Kong/public-ui-components/issues/964)) ([3bb8210](https://github.com/Kong/public-ui-components/commit/3bb8210944ff9ed1ae27d33bd9daaeb7b8e39913))
+
+
+
+
+
+## [0.16.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.16.12...@kong-ui-public/analytics-chart@0.16.13) (2023-12-01)
+
+
+### Bug Fixes
+
+* do not inherit height and width for internal chart parent ([#978](https://github.com/Kong/public-ui-components/issues/978)) ([c9322e0](https://github.com/Kong/public-ui-components/commit/c9322e0afb97ee2a5823ece66e92d83a88bb832b))
+
+
+
+
+
 ## [0.16.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.16.11...@kong-ui-public/analytics-chart@0.16.12) (2023-12-01)
 
 

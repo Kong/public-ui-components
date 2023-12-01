@@ -4,31 +4,19 @@
     title="Dashboard Renderer"
   >
     <div class="sandbox-container">
-      <main>
-        <h2>Static Dashboard</h2>
-        <DashboardRenderer
-          :context="context"
-          :definition="staticDefinition"
-        />
-        <h2>Dynamic Dashboard</h2>
-        <DashboardRenderer
-          v-if="definition.type === ValidationResultType.Success"
-          :context="context"
-          :definition="definition.data"
-        />
-        <h2>Definition</h2>
-        <textarea v-model="definitionText" />
-        <pre>{{ JSON.stringify(definition) }}</pre>
-      </main>
+      <h2>Static Dashboard</h2>
+      <DashboardRenderer
+        :config="(dashboardConfig as DashboardConfig)"
+        :context="context"
+      />
     </div>
   </SandboxLayout>
 </template>
 
 <script setup lang="ts">
-import type { DashboardDefinition, DashboardRendererContext } from '../../src'
-import { ChartTypes, dashboardDefinitionSchema, DashboardRenderer } from '../../src'
-import { computed, ref, inject } from 'vue'
-import Ajv from 'ajv'
+import type { DashboardConfig, DashboardRendererContext, TileConfig } from '../../src'
+import { ChartTypes, DashboardRenderer } from '../../src'
+import { inject } from 'vue'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
@@ -36,93 +24,94 @@ import '@kong-ui-public/sandbox-layout/dist/style.css'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
-// Consider moving to its own package.
-enum ValidationResultType {
-  JsonParseError,
-  ValidationError,
-  Success,
-}
-
-interface JsonParseError {
-  type: ValidationResultType.JsonParseError
-  message: string
-}
-
-interface ValidationError {
-  type: ValidationResultType.ValidationError,
-  errors: any
-}
-
-interface Success {
-  type: ValidationResultType.Success,
-  data: DashboardDefinition
-}
-
-type ValidationResult = JsonParseError | ValidationError | Success
-
-// Validation boilerplate.
-// See https://github.com/ThomasAribart/json-schema-to-ts#validators
-const ajv = new Ajv()
-
-const validate = ajv.compile(dashboardDefinitionSchema)
-
-const definitionText = ref(`{
-  "tiles": [
-    { "chart": {
-      "type": "horizontal_bar"
-     }, "query": {} }
-   ]
-}`)
-
-const definition = computed<ValidationResult>(() => {
-  let data
-
-  try {
-    data = JSON.parse(definitionText.value)
-  } catch (e) {
-    return {
-      type: ValidationResultType.JsonParseError,
-      message: `${e}`,
-    }
-  }
-
-  if (!validate(data)) {
-    return {
-      type: ValidationResultType.ValidationError,
-      errors: validate.errors,
-    }
-  }
-
-  return {
-    type: ValidationResultType.Success,
-    data,
-  }
-})
-
 const context: DashboardRendererContext = {
   filters: {},
   timeSpec: '',
 }
 
-const staticDefinition: DashboardDefinition = {
+const dashboardConfig: DashboardConfig = {
+  gridSize: {
+    cols: 6,
+    rows: 9,
+  },
   tiles: [
     {
-      title: 'Analytics chart',
-      chart: {
-        type: ChartTypes.HorizontalBar,
+      definition: {
+        chart: {
+          type: ChartTypes.HorizontalBar,
+        },
+        query: {},
       },
-      query: {},
-    },
+      layout: {
+        position: {
+          col: 0,
+          row: 0,
+        },
+        size: {
+          cols: 3,
+          rows: 2,
+        },
+      },
+    } as TileConfig,
     {
-      title: 'Simple chart',
-      chart: {
-        type: ChartTypes.Gauge,
-        metricDisplay: ChartMetricDisplay.Full,
-        reverseDataset: true,
-        numerator: 0,
+      definition: {
+        chart: {
+          type: ChartTypes.VerticalBar,
+          showAnnotations: false,
+        },
+        query: {},
       },
-      query: {},
-    },
+      layout: {
+        position: {
+          col: 3,
+          row: 0,
+        },
+        size: {
+          cols: 3,
+          rows: 2,
+        },
+      },
+    } as TileConfig,
+    {
+      definition: {
+        chart: {
+          type: ChartTypes.TimeseriesLine,
+          fill: true,
+        },
+        query: { type: 'timeseries' },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 2,
+        },
+        size: {
+          cols: 6,
+          rows: 2,
+        },
+      },
+    } as TileConfig,
+    {
+      definition: {
+        chart: {
+          type: ChartTypes.Gauge,
+          metricDisplay: ChartMetricDisplay.Full,
+          reverseDataset: true,
+          numerator: 0,
+        },
+        query: {},
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 4,
+        },
+        size: {
+          cols: 1,
+          rows: 1,
+        },
+      },
+    } as TileConfig,
   ],
 }
 

@@ -1,8 +1,5 @@
 <template>
   <div class="tile-boundary">
-    <h2 v-if="title">
-      {{ title }}
-    </h2>
     <component
       :is="componentData.component"
       v-if="componentData"
@@ -14,24 +11,31 @@
 import type { TileDefinition } from '../types'
 import { ChartTypes } from '../types'
 import type {
-  Component,
+  Component, PropType,
 } from 'vue'
 import { computed } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
-import AnalyticsChartRenderer from './AnalyticsChartRenderer.vue'
+import BarChartRenderer from './BarChartRenderer.vue'
+import { DEFAULT_TILE_HEIGHT } from '../constants'
+import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 
-const props = defineProps<{
-  definition: TileDefinition
-}>()
-
-// TODO: Should the chart be in charge of rendering its own title?
-// Analytics charts have a title, but gauge charts do not.
-const title = computed(() => props.definition.title)
+const props = defineProps({
+  definition: {
+    type: Object as PropType<TileDefinition>,
+    required: true,
+  },
+  height: {
+    type: Number,
+    required: false,
+    default: () => DEFAULT_TILE_HEIGHT,
+  },
+})
 
 const rendererLookup: Record<ChartTypes, Component> = {
-  [ChartTypes.HorizontalBar]: AnalyticsChartRenderer,
-  [ChartTypes.VerticalBar]: AnalyticsChartRenderer,
+  [ChartTypes.TimeseriesLine]: TimeseriesChartRenderer,
+  [ChartTypes.HorizontalBar]: BarChartRenderer,
+  [ChartTypes.VerticalBar]: BarChartRenderer,
   [ChartTypes.Gauge]: SimpleChartRenderer,
 }
 
@@ -45,17 +49,8 @@ const componentData = computed(() => {
       query: props.definition.query,
       queryReady: true, // TODO: Pipelining
       chartOptions: props.definition.chart,
+      height: props.height,
     },
   }
 })
 </script>
-<style scoped lang="scss">
-  .tile-boundary {
-    border: 1px solid black;
-    flex: 1 0 0;
-
-    & + & {
-      margin-left: 16px;
-    }
-  }
-</style>

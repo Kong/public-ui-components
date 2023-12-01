@@ -16,7 +16,7 @@ import PluginSelect from './PluginSelect.vue'
 
 const baseConfigKonnect: KonnectPluginFormConfig = {
   app: 'konnect',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   controlPlaneId: 'abc-123-i-love-cats',
   // force the scope
   // entityType: 'services',
@@ -303,7 +303,7 @@ describe('<PluginSelect />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/v1/available-plugins`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/v1/available-plugins`,
         },
         {
           statusCode: 200,
@@ -490,7 +490,7 @@ describe('<PluginSelect />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/v1/available-plugins`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/v1/available-plugins`,
         },
         {
           statusCode: 500,

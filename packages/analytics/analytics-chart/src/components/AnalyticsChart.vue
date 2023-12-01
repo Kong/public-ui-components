@@ -1,7 +1,6 @@
 <template>
   <div
     class="analytics-chart-shell"
-    :style="{ height: heightRef, width }"
   >
     <div class="chart-header">
       <div
@@ -103,7 +102,7 @@ import { ChartTypes, ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
 import type { PropType } from 'vue'
-import { computed, provide, ref, toRef } from 'vue'
+import { computed, provide, ref, toRef, watch } from 'vue'
 import { GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsExploreResult, AnalyticsExploreV2Result, GranularityFullObj } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette, hasMillisecondTimestamps } from '../utils'
@@ -182,6 +181,10 @@ const heightRef = ref<string>(props.height)
 const handleHeightUpdate = (height: number) => {
   heightRef.value = `${height}px`
 }
+
+watch(() => props.height, (newHeight) => {
+  heightRef.value = newHeight
+})
 
 const computedChartData = computed(() => {
   return isTimeSeriesChart.value
@@ -316,9 +319,11 @@ provide('legendPosition', toRef(props, 'legendPosition'))
 @import '../styles/chart-shell';
 
 .analytics-chart-shell {
+  height: v-bind('heightRef');
+  width: v-bind('props.width');
   .analytics-chart-parent {
-    height: inherit;
-    width: inherit;
+    height: 100%;
+    width: 100%;
   }
 
   .chart-empty-state {

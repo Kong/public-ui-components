@@ -130,7 +130,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       active: !activeItem.value || (activeItem.value as SidebarPrimaryItem)?.key === 'overview',
     },
     {
-      name: 'Runtime Manager',
+      name: 'Gateway Manager',
       to: '/?runtime-manager',
       label: 'retail-sandbox-rg', // runtime group name
       key: 'runtime-manager',
@@ -207,7 +207,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       name: 'Mesh Manager',
       to: '/?mesh-manager',
       key: 'mesh-manager',
-      icon: 'brain',
+      icon: 'mesh',
       // TODO: using this item as a default when `activeItem` is undefined
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'mesh-manager',
     },
