@@ -23,85 +23,83 @@
       </div>
     </template>
 
-    <template #body>
-      <KEmptyState
-        v-if="errorMessage"
-        cta-is-hidden
-        data-testid="top-n-error-state"
-        is-error
-      >
-        <template #title>
-          {{ i18n.t('topNTable.defaultErrorStateTitle') }}
-        </template>
-        <template #message>
-          {{ errorMessage }}
-        </template>
-      </KEmptyState>
+    <KEmptyState
+      v-if="errorMessage"
+      cta-is-hidden
+      data-testid="top-n-error-state"
+      is-error
+    >
+      <template #title>
+        {{ i18n.t('topNTable.defaultErrorStateTitle') }}
+      </template>
+      <template #message>
+        {{ errorMessage }}
+      </template>
+    </KEmptyState>
 
-      <KSkeleton
-        v-else-if="isLoading"
-        :table-columns="2"
-        type="table"
-      />
+    <KSkeleton
+      v-else-if="isLoading"
+      :table-columns="2"
+      type="table"
+    />
 
-      <KEmptyState
-        v-else-if="!hasData"
-        cta-is-hidden
-        data-testid="top-n-empty-state"
-        icon="stateNoData"
-        icon-size="80"
-      >
-        <template #title>
-          {{ emptyStateTitle || i18n.t('topNTable.defaultEmptyStateTitle') }}
-        </template>
-      </KEmptyState>
+    <KEmptyState
+      v-else-if="!hasData"
+      cta-is-hidden
+      data-testid="top-n-empty-state"
+      icon="stateNoData"
+      icon-size="80"
+    >
+      <template #title>
+        {{ emptyStateTitle || i18n.t('topNTable.defaultEmptyStateTitle') }}
+      </template>
+    </KEmptyState>
 
-      <div
-        v-else
-        class="top-n-table"
-        data-testid="top-n-table"
-      >
-        <div class="table-headings">
-          <div class="table-row">
-            <div class="column-1">
-              {{ i18n.t('topNTable.nameLabel') }}
-            </div>
-            <div class="column-2">
-              {{ columnName }}
-            </div>
+    <div
+      v-else
+      class="top-n-table"
+      data-testid="top-n-table"
+    >
+      <div class="table-headings">
+        <div class="table-row">
+          <div class="column-1">
+            {{ i18n.t('topNTable.nameLabel') }}
           </div>
-        </div>
-
-        <div
-          class="table-body"
-          data-testid="top-n-data"
-        >
-          <div
-            v-for="(entry, idx) in records"
-            :key="`entry-${idx}`"
-            class="table-row"
-            :data-testid="`row-${getId(entry)}`"
-          >
-            <div class="column-1">
-              <slot
-                name="name"
-                :record="{
-                  id: getId(entry),
-                  name: getName(entry),
-                  deleted: getDeleted(entry),
-                  dimension: displayKey,
-                }"
-              >
-                {{ getName(entry) }}
-              </slot>
-            </div>
-            <div class="column-2">
-              &nbsp; {{ getValue(entry) }}
-            </div>
+          <div class="column-2">
+            {{ columnName }}
           </div>
         </div>
       </div>
-    </template>
+
+      <div
+        class="table-body"
+        data-testid="top-n-data"
+      >
+        <div
+          v-for="(entry, idx) in records"
+          :key="`entry-${idx}`"
+          class="table-row"
+          :data-testid="`row-${getId(entry)}`"
+        >
+          <div class="column-1">
+            <slot
+              name="name"
+              :record="{
+                id: getId(entry),
+                name: getName(entry),
+                deleted: getDeleted(entry),
+                dimension: displayKey,
+              }"
+            >
+              {{ getName(entry) }}
+            </slot>
+          </div>
+          <div class="column-2">
+            &nbsp; {{ getValue(entry) }}
+          </div>
+        </div>
+      </div>
+    </div>
   </KCard>
 </template>
 

@@ -42,191 +42,187 @@
     />
 
     <KCard>
-      <template #body>
-        <h5 class="fields-group-title">
-          {{ t('upstreams.form.fields.hash_on.label') }}
-        </h5>
-        <p class="fields-group-text">
-          {{ t('upstreams.form.fields.hash_on.help') }}
-        </p>
+      <h5 class="fields-group-title">
+        {{ t('upstreams.form.fields.hash_on.label') }}
+      </h5>
+      <p class="fields-group-text">
+        {{ t('upstreams.form.fields.hash_on.help') }}
+      </p>
 
-        <KSelect
-          appearance="select"
-          class="hash-on-select"
-          :items="(hashItems as SelectItem[])"
-          :label="t('upstreams.form.fields.hash_on.label')"
-          :model-value="hashOn"
-          :readonly="readonly"
-          width="100%"
-          @update:model-value="emit('update:hash-on', $event as UpstreamHash)"
-        />
+      <KSelect
+        appearance="select"
+        class="hash-on-select"
+        :items="(hashItems as SelectItem[])"
+        :label="t('upstreams.form.fields.hash_on.label')"
+        :model-value="hashOn"
+        :readonly="readonly"
+        width="100%"
+        @update:model-value="emit('update:hash-on', $event as UpstreamHash)"
+      />
 
+      <KInput
+        v-if="hashOn === 'header'"
+        autocomplete="off"
+        class="margin-top-6"
+        data-testid="upstreams-form-hash-on-header"
+        :label="t('upstreams.form.fields.header.label')"
+        :model-value="hashOnHeader"
+        :readonly="readonly"
+        required
+        type="text"
+        @update:model-value="emit('update:hash-on-header', $event)"
+      />
+
+      <template v-if="hashOn === 'cookie'">
         <KInput
-          v-if="hashOn === 'header'"
           autocomplete="off"
           class="margin-top-6"
-          data-testid="upstreams-form-hash-on-header"
-          :label="t('upstreams.form.fields.header.label')"
-          :model-value="hashOnHeader"
+          data-testid="upstreams-form-hash-on-cookie"
+          :label="t('upstreams.form.fields.cookie.label')"
+          :model-value="hashOnCookie"
           :readonly="readonly"
           required
           type="text"
-          @update:model-value="emit('update:hash-on-header', $event)"
+          @update:model-value="emit('update:hash-on-cookie', $event)"
         />
-
-        <template v-if="hashOn === 'cookie'">
-          <KInput
-            autocomplete="off"
-            class="margin-top-6"
-            data-testid="upstreams-form-hash-on-cookie"
-            :label="t('upstreams.form.fields.cookie.label')"
-            :model-value="hashOnCookie"
-            :readonly="readonly"
-            required
-            type="text"
-            @update:model-value="emit('update:hash-on-cookie', $event)"
-          />
-          <KInput
-            autocomplete="off"
-            class="margin-top-6"
-            data-testid="upstreams-form-hash-on-cookie-path"
-            :label="t('upstreams.form.fields.cookie_path.label')"
-            :model-value="hashOnCookiePath"
-            :readonly="readonly"
-            required
-            type="text"
-            @update:model-value="emit('update:hash-on-cookie-path', $event)"
-          />
-        </template>
-
         <KInput
-          v-if="hashOn === 'query_arg'"
           autocomplete="off"
           class="margin-top-6"
-          data-testid="upstreams-form-query-argument"
-          :label="t('upstreams.form.fields.query_argument.label')"
-          :model-value="hashOnQueryArgument"
+          data-testid="upstreams-form-hash-on-cookie-path"
+          :label="t('upstreams.form.fields.cookie_path.label')"
+          :model-value="hashOnCookiePath"
           :readonly="readonly"
           required
           type="text"
-          @update:model-value="emit('update:hash-on-query-argument', $event)"
-        />
-
-        <KInput
-          v-if="hashOn === 'uri_capture'"
-          autocomplete="off"
-          class="margin-top-6"
-          data-testid="upstreams-form-uri-capture"
-          :label="t('upstreams.form.fields.uri_capture.label')"
-          :model-value="hashOnUriCapture"
-          :readonly="readonly"
-          required
-          type="text"
-          @update:model-value="emit('update:hash-on-uri-capture', $event)"
+          @update:model-value="emit('update:hash-on-cookie-path', $event)"
         />
       </template>
+
+      <KInput
+        v-if="hashOn === 'query_arg'"
+        autocomplete="off"
+        class="margin-top-6"
+        data-testid="upstreams-form-query-argument"
+        :label="t('upstreams.form.fields.query_argument.label')"
+        :model-value="hashOnQueryArgument"
+        :readonly="readonly"
+        required
+        type="text"
+        @update:model-value="emit('update:hash-on-query-argument', $event)"
+      />
+
+      <KInput
+        v-if="hashOn === 'uri_capture'"
+        autocomplete="off"
+        class="margin-top-6"
+        data-testid="upstreams-form-uri-capture"
+        :label="t('upstreams.form.fields.uri_capture.label')"
+        :model-value="hashOnUriCapture"
+        :readonly="readonly"
+        required
+        type="text"
+        @update:model-value="emit('update:hash-on-uri-capture', $event)"
+      />
     </KCard>
 
     <KCard>
-      <template #body>
-        <h5 class="fields-group-title">
-          {{ t('upstreams.form.fields.hash_fallback.label') }}
-        </h5>
-        <p class="fields-group-text">
-          {{ t('upstreams.form.fields.hash_fallback.help') }}
-        </p>
+      <h5 class="fields-group-title">
+        {{ t('upstreams.form.fields.hash_fallback.label') }}
+      </h5>
+      <p class="fields-group-text">
+        {{ t('upstreams.form.fields.hash_fallback.help') }}
+      </p>
 
-        <KSelect
-          appearance="select"
-          class="hash-fallback-select"
-          :disabled="disableFallbackSelect"
-          :items="(hashItems as SelectItem[])"
-          :label="t('upstreams.form.fields.hash_fallback.label')"
-          :label-attributes="{ tooltipAttributes: { 'max-width': '250px' } }"
-          :model-value="hashFallback"
-          :readonly="readonly"
-          width="100%"
-          @update:model-value="emit('update:hash-fallback', $event as UpstreamHash)"
-        >
-          <template #label-tooltip>
-            <i18nT
-              keypath="upstreams.form.fields.hash_fallback.tooltip"
-              scope="global"
-            >
-              <template #hash_on>
-                <code>{{ t('upstreams.form.fields.hash_fallback.hash_on') }}</code>
-              </template>
-              <template #cookie>
-                <code>{{ t('upstreams.form.fields.hash_fallback.cookie') }}</code>
-              </template>
-            </i18nT>
-          </template>
-        </KSelect>
-
-        <KInput
-          v-if="hashFallback === 'header'"
-          autocomplete="off"
-          class="margin-top-6"
-          data-testid="upstreams-form-hash-fallback-header"
-          :label="t('upstreams.form.fields.header.label')"
-          :model-value="hashFallbackHeader"
-          :readonly="readonly"
-          required
-          type="text"
-          @update:model-value="emit('update:hash-fallback-header', $event)"
-        />
-
-        <template v-if="hashFallback === 'cookie'">
-          <KInput
-            autocomplete="off"
-            class="margin-top-6"
-            data-testid="upstreams-form-hash-on-cookie"
-            :label="t('upstreams.form.fields.cookie.label')"
-            :model-value="hashOnCookie"
-            :readonly="readonly"
-            required
-            type="text"
-            @update:model-value="emit('update:hash-on-cookie', $event)"
-          />
-          <KInput
-            autocomplete="off"
-            class="margin-top-6"
-            data-testid="upstreams-form-hash-on-cookie-path"
-            :label="t('upstreams.form.fields.cookie_path.label')"
-            :model-value="hashOnCookiePath"
-            :readonly="readonly"
-            required
-            type="text"
-            @update:model-value="emit('update:hash-on-cookie-path', $event)"
-          />
+      <KSelect
+        appearance="select"
+        class="hash-fallback-select"
+        :disabled="disableFallbackSelect"
+        :items="(hashItems as SelectItem[])"
+        :label="t('upstreams.form.fields.hash_fallback.label')"
+        :label-attributes="{ tooltipAttributes: { 'max-width': '250px' } }"
+        :model-value="hashFallback"
+        :readonly="readonly"
+        width="100%"
+        @update:model-value="emit('update:hash-fallback', $event as UpstreamHash)"
+      >
+        <template #label-tooltip>
+          <i18nT
+            keypath="upstreams.form.fields.hash_fallback.tooltip"
+            scope="global"
+          >
+            <template #hash_on>
+              <code>{{ t('upstreams.form.fields.hash_fallback.hash_on') }}</code>
+            </template>
+            <template #cookie>
+              <code>{{ t('upstreams.form.fields.hash_fallback.cookie') }}</code>
+            </template>
+          </i18nT>
         </template>
+      </KSelect>
 
+      <KInput
+        v-if="hashFallback === 'header'"
+        autocomplete="off"
+        class="margin-top-6"
+        data-testid="upstreams-form-hash-fallback-header"
+        :label="t('upstreams.form.fields.header.label')"
+        :model-value="hashFallbackHeader"
+        :readonly="readonly"
+        required
+        type="text"
+        @update:model-value="emit('update:hash-fallback-header', $event)"
+      />
+
+      <template v-if="hashFallback === 'cookie'">
         <KInput
-          v-if="hashFallback === 'query_arg'"
           autocomplete="off"
           class="margin-top-6"
-          data-testid="upstreams-form-hash-fallback-query-argument"
-          :label="t('upstreams.form.fields.query_argument.label')"
-          :model-value="hashFallbackQueryArgument"
+          data-testid="upstreams-form-hash-on-cookie"
+          :label="t('upstreams.form.fields.cookie.label')"
+          :model-value="hashOnCookie"
           :readonly="readonly"
           required
           type="text"
-          @update:model-value="emit('update:hash-fallback-query-argument', $event)"
+          @update:model-value="emit('update:hash-on-cookie', $event)"
         />
-
         <KInput
-          v-if="hashFallback === 'uri_capture'"
           autocomplete="off"
           class="margin-top-6"
-          data-testid="upstreams-form-hash-fallback-uri-capture"
-          :label="t('upstreams.form.fields.uri_capture.label')"
-          :model-value="hashFallbackUriCapture"
+          data-testid="upstreams-form-hash-on-cookie-path"
+          :label="t('upstreams.form.fields.cookie_path.label')"
+          :model-value="hashOnCookiePath"
           :readonly="readonly"
           required
           type="text"
-          @update:model-value="emit('update:hash-fallback-uri-capture', $event)"
+          @update:model-value="emit('update:hash-on-cookie-path', $event)"
         />
       </template>
+
+      <KInput
+        v-if="hashFallback === 'query_arg'"
+        autocomplete="off"
+        class="margin-top-6"
+        data-testid="upstreams-form-hash-fallback-query-argument"
+        :label="t('upstreams.form.fields.query_argument.label')"
+        :model-value="hashFallbackQueryArgument"
+        :readonly="readonly"
+        required
+        type="text"
+        @update:model-value="emit('update:hash-fallback-query-argument', $event)"
+      />
+
+      <KInput
+        v-if="hashFallback === 'uri_capture'"
+        autocomplete="off"
+        class="margin-top-6"
+        data-testid="upstreams-form-hash-fallback-uri-capture"
+        :label="t('upstreams.form.fields.uri_capture.label')"
+        :model-value="hashFallbackUriCapture"
+        :readonly="readonly"
+        required
+        type="text"
+        @update:model-value="emit('update:hash-fallback-uri-capture', $event)"
+      />
     </KCard>
   </EntityFormSection>
 </template>

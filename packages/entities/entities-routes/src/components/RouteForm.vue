@@ -106,125 +106,124 @@
               <span class="routing-rules-title">{{ t('form.sections.routingRules.title') }}</span>
             </div>
           </template>
-          <template #body>
-            <KAlert
-              v-if="showRoutingRulesWarning"
-              appearance="warning"
-              data-testid="routing-rules-warning"
-            >
-              <template #alertMessage>
-                <i18nT keypath="form.warning.rulesMessage">
-                  <template #protocol>
-                    <b>{{ protocolsLabels[form.fields.protocols] }}</b>
-                  </template>
-                  <template #routingRules>
-                    <i18nT :keypath="warningMessageRoutingRules[1] ? 'form.warning.multipleRules' : 'form.warning.singleRule'">
-                      <template #routingRules>
-                        <b>{{ warningMessageRoutingRules[0] }}</b>
-                      </template>
-                      <template #lastRoutingRule>
-                        <b>{{ warningMessageRoutingRules[1] }}</b>
-                      </template>
-                    </i18nT>
-                  </template>
-                </i18nT>
-              </template>
-            </KAlert>
 
-            <!-- Routing Rules Fields -->
-            <TransitionGroup name="appear">
-              <!-- paths -->
-              <RouteFormPathsFields
-                v-if="form.fields.paths"
-                key="paths-container"
-                v-model="form.fields.paths"
-                @add="handleAddRoutingRuleEntity(RoutingRulesEntities.PATHS)"
-                @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.PATHS, index)"
-              />
+          <KAlert
+            v-if="showRoutingRulesWarning"
+            appearance="warning"
+            data-testid="routing-rules-warning"
+          >
+            <template #alertMessage>
+              <i18nT keypath="form.warning.rulesMessage">
+                <template #protocol>
+                  <b>{{ protocolsLabels[form.fields.protocols] }}</b>
+                </template>
+                <template #routingRules>
+                  <i18nT :keypath="warningMessageRoutingRules[1] ? 'form.warning.multipleRules' : 'form.warning.singleRule'">
+                    <template #routingRules>
+                      <b>{{ warningMessageRoutingRules[0] }}</b>
+                    </template>
+                    <template #lastRoutingRule>
+                      <b>{{ warningMessageRoutingRules[1] }}</b>
+                    </template>
+                  </i18nT>
+                </template>
+              </i18nT>
+            </template>
+          </KAlert>
 
-              <!-- snis -->
-              <RouteFormSnisFields
-                v-if="form.fields.snis"
-                key="snis-container"
-                v-model="form.fields.snis"
-                @add="handleAddRoutingRuleEntity(RoutingRulesEntities.SNIS)"
-                @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.SNIS, index)"
-              />
+          <!-- Routing Rules Fields -->
+          <TransitionGroup name="appear">
+            <!-- paths -->
+            <RouteFormPathsFields
+              v-if="form.fields.paths"
+              key="paths-container"
+              v-model="form.fields.paths"
+              @add="handleAddRoutingRuleEntity(RoutingRulesEntities.PATHS)"
+              @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.PATHS, index)"
+            />
 
-              <!-- hosts -->
-              <RouteFormHostsFields
-                v-if="form.fields.hosts"
-                key="hosts-container"
-                v-model="form.fields.hosts"
-                @add="handleAddRoutingRuleEntity(RoutingRulesEntities.HOSTS)"
-                @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.HOSTS, index)"
-              />
+            <!-- snis -->
+            <RouteFormSnisFields
+              v-if="form.fields.snis"
+              key="snis-container"
+              v-model="form.fields.snis"
+              @add="handleAddRoutingRuleEntity(RoutingRulesEntities.SNIS)"
+              @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.SNIS, index)"
+            />
 
-              <!-- methods -->
-              <RouteFormMethodsFields
-                v-if="form.fields.methods"
-                key="methods-container"
-                v-model="form.fields.methods"
-                :custom-methods="customMethods"
-                @remove="handleRemoveRoutingRuleEntity(RoutingRulesEntities.METHODS)"
-                @update-custom-methods="(methods: string[]) => customMethods = methods"
-              />
+            <!-- hosts -->
+            <RouteFormHostsFields
+              v-if="form.fields.hosts"
+              key="hosts-container"
+              v-model="form.fields.hosts"
+              @add="handleAddRoutingRuleEntity(RoutingRulesEntities.HOSTS)"
+              @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.HOSTS, index)"
+            />
 
-              <!-- headers -->
-              <RouteFormHeadersFields
-                v-if="form.fields.headers"
-                key="headers-container"
-                v-model="form.fields.headers"
-                @add="handleAddRoutingRuleEntity(RoutingRulesEntities.HEADERS)"
-                @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.HEADERS, index)"
-              />
+            <!-- methods -->
+            <RouteFormMethodsFields
+              v-if="form.fields.methods"
+              key="methods-container"
+              v-model="form.fields.methods"
+              :custom-methods="customMethods"
+              @remove="handleRemoveRoutingRuleEntity(RoutingRulesEntities.METHODS)"
+              @update-custom-methods="(methods: string[]) => customMethods = methods"
+            />
 
-              <!-- sources -->
-              <RouteFormSourcesFields
-                v-if="form.fields.sources"
-                key="sources-container"
-                v-model="form.fields.sources"
-                @add="handleAddRoutingRuleEntity(RoutingRulesEntities.SOURCES)"
-                @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.SOURCES, index)"
-              />
+            <!-- headers -->
+            <RouteFormHeadersFields
+              v-if="form.fields.headers"
+              key="headers-container"
+              v-model="form.fields.headers"
+              @add="handleAddRoutingRuleEntity(RoutingRulesEntities.HEADERS)"
+              @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.HEADERS, index)"
+            />
 
-              <!-- destinations -->
-              <RouteFormDestinationsFields
-                v-if="form.fields.destinations"
-                key="destinations-container"
-                v-model="form.fields.destinations"
-                @add="handleAddRoutingRuleEntity(RoutingRulesEntities.DESTINATIONS)"
-                @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.DESTINATIONS, index)"
-              />
-            </TransitionGroup>
+            <!-- sources -->
+            <RouteFormSourcesFields
+              v-if="form.fields.sources"
+              key="sources-container"
+              v-model="form.fields.sources"
+              @add="handleAddRoutingRuleEntity(RoutingRulesEntities.SOURCES)"
+              @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.SOURCES, index)"
+            />
 
-            <!-- routing rules selector  -->
-            <div
-              v-if="displayRoutingRulesSelector"
-              class="route-form-routing-rules-selector-container"
-            >
-              <hr>
-              <div class="route-form-routing-rules-selector-options">
-                <ul>
-                  <li
-                    v-for="entity in routingRulesPerProtocolMap[form.fields.protocols]"
-                    :key="entity"
+            <!-- destinations -->
+            <RouteFormDestinationsFields
+              v-if="form.fields.destinations"
+              key="destinations-container"
+              v-model="form.fields.destinations"
+              @add="handleAddRoutingRuleEntity(RoutingRulesEntities.DESTINATIONS)"
+              @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.DESTINATIONS, index)"
+            />
+          </TransitionGroup>
+
+          <!-- routing rules selector  -->
+          <div
+            v-if="displayRoutingRulesSelector"
+            class="route-form-routing-rules-selector-container"
+          >
+            <hr>
+            <div class="route-form-routing-rules-selector-options">
+              <ul>
+                <li
+                  v-for="entity in routingRulesPerProtocolMap[form.fields.protocols]"
+                  :key="entity"
+                >
+                  <label
+                    :aria-disabled="!!form.fields[entity as RoutingRuleEntity]"
+                    class="option"
+                    :class="{ 'is-selected': form.fields[entity as RoutingRuleEntity] }"
+                    :data-testid="`routing-rule-${entity}`"
+                    role="button"
+                    @click="handleAddRoutingRuleEntity(entity)"
                   >
-                    <label
-                      :aria-disabled="!!form.fields[entity as RoutingRuleEntity]"
-                      class="option"
-                      :class="{ 'is-selected': form.fields[entity as RoutingRuleEntity] }"
-                      :data-testid="`routing-rule-${entity}`"
-                      role="button"
-                      @click="handleAddRoutingRuleEntity(entity)"
-                    >
-                      {{ getRoutingRuleLabel(entity) }}
-                    </label>
-                  </li>
-                </ul>
-              </div>
+                    {{ getRoutingRuleLabel(entity) }}
+                  </label>
+                </li>
+              </ul>
             </div>
-          </template>
+          </div>
         </KCard>
 
         <!-- Advanced Fields -->

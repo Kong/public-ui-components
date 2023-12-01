@@ -7,12 +7,11 @@
       class="plugin-card-content"
       :class="{ disabled: isDisabled }"
       :data-testid="`${plugin.id}-card`"
-      has-hover
       @click="isDisabled || isCustomPlugin ? undefined : handleClick()"
     >
       <template
         v-if="isCustomPlugin"
-        #statusHat
+        #footer
       >
         <div class="header-wrapper">
           <KBadge v-if="!isCreateCustomPlugin">
@@ -64,40 +63,38 @@
         </KDropdownMenu>
       </template>
 
-      <template #body>
-        <div
-          class="plugin-card-body"
-          :class="{ 'custom-plugin': isCustomPlugin }"
-          :data-testid="plugin.name"
-          :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
-          @click="handleCustomClick"
+      <div
+        class="plugin-card-body"
+        :class="{ 'custom-plugin': isCustomPlugin }"
+        :data-testid="plugin.name"
+        :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
+        @click="handleCustomClick"
+      >
+        <h4 class="plugin-card-title">
+          {{ plugin.name }}
+        </h4>
+        <PluginIcon
+          :alt="plugin.name"
+          class="plugin-card-icon"
+          :name="plugin.imageName || plugin.id"
+          :size="55"
+        />
+        <p
+          v-if="plugin.description"
+          class="plugin-card-text"
         >
-          <h4 class="plugin-card-title">
-            {{ plugin.name }}
-          </h4>
-          <PluginIcon
-            :alt="plugin.name"
-            class="plugin-card-icon"
-            :name="plugin.imageName || plugin.id"
-            :size="55"
-          />
-          <p
-            v-if="plugin.description"
-            class="plugin-card-text"
-          >
-            {{ plugin.description }}
-          </p>
-        </div>
-        <div
-          :class="{
-            'plugin-card-create-footer': isCreateCustomPlugin,
-            'plugin-card-footer': !isCreateCustomPlugin,
-          }"
-          @click="handleCustomClick"
-        >
-          {{ isCreateCustomPlugin ? t('actions.create_custom') : plugin.exists ? t('actions.enabled') : t('actions.enable') }}
-        </div>
-      </template>
+          {{ plugin.description }}
+        </p>
+      </div>
+      <div
+        :class="{
+          'plugin-card-create-footer': isCreateCustomPlugin,
+          'plugin-card-footer': !isCreateCustomPlugin,
+        }"
+        @click="handleCustomClick"
+      >
+        {{ isCreateCustomPlugin ? t('actions.create_custom') : plugin.exists ? t('actions.enabled') : t('actions.enable') }}
+      </div>
     </KCard>
   </KTooltip>
 </template>
@@ -274,6 +271,7 @@ const handleCustomClick = (): void => {
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-semibold;
     padding: $kui-space-60;
+    border-radius: $kui-border-radius-30;
   }
 
   &-create-footer {

@@ -3,106 +3,104 @@
     class="kong-ui-entity-base-table"
     :title="title"
   >
-    <template #body>
-      <KTable
-        ref="tableRefs"
-        :cache-identifier="cacheId"
-        :cell-attrs="cellAttrs"
-        :disable-pagination-page-jump="disablePaginationPageJump"
-        :disable-sorting="disableSorting"
-        :empty-state-action-button-icon="query ? '' : 'plus'"
-        :empty-state-action-message="query ? t('baseTable.emptyState.noSearchResultsCtaText') : emptyStateOptions.ctaText"
-        :empty-state-action-route="query ? '' : emptyStateOptions.ctaPath"
-        :empty-state-icon="query ? 'stateNoSearchResults' : 'stateGruceo'"
-        empty-state-icon-size="96"
-        :empty-state-message="query ? t('baseTable.emptyState.noSearchResultsMessage') : emptyStateOptions.message"
-        :empty-state-title="query ? t('baseTable.emptyState.noSearchResultsTitle') : emptyStateOptions.title"
-        :enable-client-sort="enableClientSort"
-        :error-state-message="tableErrorState.message"
-        :error-state-title="tableErrorState.title"
-        :fetcher="fetcher"
-        :fetcher-cache-key="String(fetcherCacheKey)"
-        :has-error="tableErrorState.hasError"
-        :headers="headers"
-        hide-pagination-when-optional
-        :initial-fetcher-params="combinedInitialFetcherParams"
-        :is-loading="isLoading"
-        :pagination-type="paginationType"
-        :row-attrs="rowAttrs"
-        :search-input="query"
-        @ktable-empty-state-cta-clicked="handleEmptyStateCtaClicked"
-        @row:click="handleRowClick"
-        @sort="(params) => handleSortChanged(params as TableSortParams)"
-        @update:table-preferences="handleUpdateTablePreferences"
-      >
-        <template #toolbar="{ state }">
-          <div
-            v-show="showToolbar(state)"
-            class="toolbar-container"
-          >
-            <slot name="toolbar-filter" />
-            <div
-              v-if="$slots['toolbar-button']"
-              class="toolbar-button-container"
-            >
-              <slot name="toolbar-button" />
-            </div>
-          </div>
-        </template>
-        <template
-          v-for="(_, key) in tableHeaders"
-          :key="key"
-          #[key]="{ row, rowKey, rowValue }"
+    <KTable
+      ref="tableRefs"
+      :cache-identifier="cacheId"
+      :cell-attrs="cellAttrs"
+      :disable-pagination-page-jump="disablePaginationPageJump"
+      :disable-sorting="disableSorting"
+      :empty-state-action-button-icon="query ? '' : 'plus'"
+      :empty-state-action-message="query ? t('baseTable.emptyState.noSearchResultsCtaText') : emptyStateOptions.ctaText"
+      :empty-state-action-route="query ? '' : emptyStateOptions.ctaPath"
+      :empty-state-icon="query ? 'stateNoSearchResults' : 'stateGruceo'"
+      empty-state-icon-size="96"
+      :empty-state-message="query ? t('baseTable.emptyState.noSearchResultsMessage') : emptyStateOptions.message"
+      :empty-state-title="query ? t('baseTable.emptyState.noSearchResultsTitle') : emptyStateOptions.title"
+      :enable-client-sort="enableClientSort"
+      :error-state-message="tableErrorState.message"
+      :error-state-title="tableErrorState.title"
+      :fetcher="fetcher"
+      :fetcher-cache-key="String(fetcherCacheKey)"
+      :has-error="tableErrorState.hasError"
+      :headers="headers"
+      hide-pagination-when-optional
+      :initial-fetcher-params="combinedInitialFetcherParams"
+      :is-loading="isLoading"
+      :pagination-type="paginationType"
+      :row-attrs="rowAttrs"
+      :search-input="query"
+      @ktable-empty-state-cta-clicked="handleEmptyStateCtaClicked"
+      @row:click="handleRowClick"
+      @sort="(params) => handleSortChanged(params as TableSortParams)"
+      @update:table-preferences="handleUpdateTablePreferences"
+    >
+      <template #toolbar="{ state }">
+        <div
+          v-show="showToolbar(state)"
+          class="toolbar-container"
         >
-          <EntityBaseTableCell
-            :key-name="String(key)"
-            :row-el="getRowEl(row)"
-          >
-            <slot
-              :name="key"
-              :row="row"
-              :row-key="rowKey"
-              :row-value="rowValue"
-            >
-              {{ rowValue }}
-            </slot>
-          </EntityBaseTableCell>
-        </template>
-        <template #actions="{ row, rowKey, rowValue }">
+          <slot name="toolbar-filter" />
           <div
-            class="actions-container"
-            :data-testid="row.name"
+            v-if="$slots['toolbar-button']"
+            class="toolbar-button-container"
           >
-            <KDropdown
-              :kpop-attributes="{ placement: 'bottomEnd' }"
-              :width="dropdownMenuWidth"
+            <slot name="toolbar-button" />
+          </div>
+        </div>
+      </template>
+      <template
+        v-for="(_, key) in tableHeaders"
+        :key="key"
+        #[key]="{ row, rowKey, rowValue }"
+      >
+        <EntityBaseTableCell
+          :key-name="String(key)"
+          :row-el="getRowEl(row)"
+        >
+          <slot
+            :name="key"
+            :row="row"
+            :row-key="rowKey"
+            :row-value="rowValue"
+          >
+            {{ rowValue }}
+          </slot>
+        </EntityBaseTableCell>
+      </template>
+      <template #actions="{ row, rowKey, rowValue }">
+        <div
+          class="actions-container"
+          :data-testid="row.name"
+        >
+          <KDropdown
+            :kpop-attributes="{ placement: 'bottomEnd' }"
+            :width="dropdownMenuWidth"
+          >
+            <KButton
+              class="actions-trigger"
+              data-testid="overflow-actions-button"
+              size="small"
             >
-              <KButton
-                class="actions-trigger"
-                data-testid="overflow-actions-button"
-                size="small"
-              >
-                <template #icon>
-                  <KIcon
-                    :color="KUI_COLOR_TEXT_NEUTRAL_STRONGER"
-                    icon="more"
-                    size="16"
-                  />
-                </template>
-              </KButton>
-              <template #items>
-                <slot
-                  name="actions"
-                  :row="row"
-                  :row-key="rowKey"
-                  :row-value="rowValue"
+              <template #icon>
+                <KIcon
+                  :color="KUI_COLOR_TEXT_NEUTRAL_STRONGER"
+                  icon="more"
+                  size="16"
                 />
               </template>
-            </KDropdown>
-          </div>
-        </template>
-      </KTable>
-    </template>
+            </KButton>
+            <template #items>
+              <slot
+                name="actions"
+                :row="row"
+                :row-key="rowKey"
+                :row-value="rowValue"
+              />
+            </template>
+          </KDropdown>
+        </div>
+      </template>
+    </KTable>
   </KCard>
 </template>
 

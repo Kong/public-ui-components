@@ -1,36 +1,34 @@
 <template>
   <KCard class="sandbox-permissions-control">
-    <template #body>
-      <KCollapse
-        v-model="isCollapsed"
-        :class="{ 'is-collapsed': isCollapsed }"
-        title="Permissions source"
-      >
-        <div class="wrapper">
-          <KInputSwitch
-            v-model="canCreate"
-            class="permission-toggle"
-            label="canCreate"
-          />
-          <KInputSwitch
-            v-model="canDelete"
-            class="permission-toggle"
-            label="canDelete"
-          />
-          <KInputSwitch
-            v-model="canEdit"
-            class="permission-toggle"
-            label="canEdit"
-          />
-          <KInputSwitch
-            v-model="canRetrieve"
-            class="permission-toggle"
-            label="canRetrieve"
-          />
-        </div>
-        <p><b>Note:</b> Use controls above to set permissions. This can produce unrealistic scenarios, such as a user having <em>edit</em> access, but not <em>retrieve</em> access.</p>
-      </KCollapse>
-    </template>
+    <KCollapse
+      v-model="isCollapsed"
+      :class="{ 'is-collapsed': isCollapsed }"
+      title="Permissions source"
+    >
+      <div class="wrapper">
+        <KInputSwitch
+          v-model="canCreate"
+          class="permission-toggle"
+          label="canCreate"
+        />
+        <KInputSwitch
+          v-model="canDelete"
+          class="permission-toggle"
+          label="canDelete"
+        />
+        <KInputSwitch
+          v-model="canEdit"
+          class="permission-toggle"
+          label="canEdit"
+        />
+        <KInputSwitch
+          v-model="canRetrieve"
+          class="permission-toggle"
+          label="canRetrieve"
+        />
+      </div>
+      <p><b>Note:</b> Use controls above to set permissions. This can produce unrealistic scenarios, such as a user having <em>edit</em> access, but not <em>retrieve</em> access.</p>
+    </KCollapse>
   </KCard>
 </template>
 
