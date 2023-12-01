@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.1.7...@kong-ui-public/app-layout@2.2.0) (2023-12-01)
+
+
+### Features
+
+* **app-layout:** update navigation styles [KHCP-9385] ([#958](https://github.com/Kong/public-ui-components/issues/958)) ([e06c2f8](https://github.com/Kong/public-ui-components/commit/e06c2f8df8f61cc62d0f23b09e34a0cba69af3f4))
+
+
+
+
+
 ## [2.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.1.6...@kong-ui-public/app-layout@2.1.7) (2023-12-01)
 
 
