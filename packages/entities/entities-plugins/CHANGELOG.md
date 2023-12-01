@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.3.1...@kong-ui-public/entities-plugins@2.3.2) (2023-12-01)
+
+
+### Bug Fixes
+
+* create button visibility ([#970](https://github.com/Kong/public-ui-components/issues/970)) ([7a90cbc](https://github.com/Kong/public-ui-components/commit/7a90cbcecfa621e595c3704a864c415391edde19))
+* **deps:** update dependency @kong/icons to ^1.8.2 ([#968](https://github.com/Kong/public-ui-components/issues/968)) ([afd8013](https://github.com/Kong/public-ui-components/commit/afd801327bfd53bede1215fa358b5828540af23a))
+* **entities-plugins:** collapse status of plugin groups ([#966](https://github.com/Kong/public-ui-components/issues/966)) ([a369c7f](https://github.com/Kong/public-ui-components/commit/a369c7f919d9c15c8024afea6a6d5b7c3b4787e1))
+
+
+
+
+
 ## [2.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.3.0...@kong-ui-public/entities-plugins@2.3.1) (2023-12-01)
 
 

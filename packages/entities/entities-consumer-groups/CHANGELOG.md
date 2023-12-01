@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.1.4...@kong-ui-public/entities-consumer-groups@2.1.5) (2023-12-01)
+
+
+### Bug Fixes
+
+* create button visibility ([#970](https://github.com/Kong/public-ui-components/issues/970)) ([7a90cbc](https://github.com/Kong/public-ui-components/commit/7a90cbcecfa621e595c3704a864c415391edde19))
+
+
+
+
+
 ## [2.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.1.3...@kong-ui-public/entities-consumer-groups@2.1.4) (2023-11-30)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
