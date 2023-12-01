@@ -317,8 +317,8 @@ provide('legendPosition', toRef(props, 'legendPosition'))
 
 .analytics-chart-shell {
   .analytics-chart-parent {
-    height: inherit;
-    width: inherit;
+    height: 100%;
+    width: 100%;
   }
 
   .chart-empty-state {
