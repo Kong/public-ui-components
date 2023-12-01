@@ -121,8 +121,7 @@ import AppSidebar from './sidebar/AppSidebar.vue'
 import SidebarToggle from './sidebar/SidebarToggle.vue'
 import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../types'
 import { useDebounce } from '../composables'
-import { APP_LAYOUT_BACKGROUND } from '../constants'
-import { KUI_SPACE_0, KUI_SPACE_60, KUI_COLOR_BACKGROUND, KUI_COLOR_BACKGROUND_INVERSE, KUI_COLOR_TEXT, KUI_COLOR_TEXT_INVERSE } from '@kong/design-tokens'
+import { KUI_BORDER_RADIUS_0, KUI_BORDER_RADIUS_20, KUI_COLOR_BACKGROUND, KUI_COLOR_BACKGROUND_INVERSE, KUI_COLOR_TEXT, KUI_COLOR_TEXT_INVERSE } from '@kong/design-tokens'
 
 interface AppSidebarProperties {
   topItems?: SidebarPrimaryItem[]
@@ -216,12 +215,11 @@ const sidebarMobileTopOffset = computed((): number => {
 
   return navbarHeight.value + notificationHeight.value
 })
-const appLayoutBackgroundColor = computed((): string => props.theme === 'light' ? APP_LAYOUT_BACKGROUND : KUI_COLOR_BACKGROUND_INVERSE)
 const layoutMainColor = computed((): string => props.theme === 'light' ? KUI_COLOR_TEXT : KUI_COLOR_TEXT_INVERSE)
 const layoutMainBackgroundColor = computed((): string => props.theme === 'light' ? KUI_COLOR_BACKGROUND : KUI_COLOR_BACKGROUND_INVERSE)
 const layoutMainBoxShadow = computed((): string => props.theme === 'light' ? 'var(--kong-ui-app-layout-main-box-shadow, -30px 174px 250px #0023db)' : 'none')
 const layoutMainMarginTop = computed((): string => `${sidebarMobileTopOffset.value}px`)
-const layoutMainTopLeftBorderRadius = computed((): string => sidebar.hidden || navbar.hidden ? KUI_SPACE_0 : KUI_SPACE_60)
+const layoutMainTopLeftBorderRadius = computed((): string => sidebar.hidden || navbar.hidden ? KUI_BORDER_RADIUS_0 : KUI_BORDER_RADIUS_20)
 
 const { debounce } = useDebounce()
 const debouncedSetNotificationHeight = debounce((force = false): void => {
@@ -294,7 +292,7 @@ onBeforeUnmount(() => {
 @import "../styles/variables";
 
 .kong-ui-app-layout {
-  background: v-bind('appLayoutBackgroundColor');
+  background: $kui-color-background-inverse;
   bottom: 0;
   display: flex;
   flex-direction: column;
@@ -364,11 +362,7 @@ onBeforeUnmount(() => {
 
       // Apply the padding to the inner element
       &-inner {
-        padding: var(--kong-ui-app-layout-content-padding, $kui-space-60);
-
-        @media (min-width: $kui-breakpoint-tablet) {
-          padding: var(--kong-ui-app-layout-content-padding, $kui-space-90);
-        }
+        padding: var(--kong-ui-app-layout-content-padding, $kui-space-70);
       }
     }
   }

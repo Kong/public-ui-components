@@ -70,6 +70,12 @@ defineProps({
     &:active {
       background-color: var(--kong-ui-account-dropdown-background, #9396FC) !important;
     }
+
+    &:focus-visible {
+      border-radius: $kui-border-radius-round;
+      outline: $kui-border-width-10 solid $kui-navigation-color-text !important;
+      outline-offset: 2px;
+    }
   }
 
   // Align the dropdown to the bottom of the navbar
