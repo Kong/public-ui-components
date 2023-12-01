@@ -322,8 +322,8 @@ provide('legendPosition', toRef(props, 'legendPosition'))
   height: v-bind('heightRef');
   width: v-bind('props.width');
   .analytics-chart-parent {
-    height: inherit;
-    width: inherit;
+    height: 100%;
+    width: 100%;
   }
 
   .chart-empty-state {
