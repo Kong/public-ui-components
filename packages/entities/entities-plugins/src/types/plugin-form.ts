@@ -12,6 +12,7 @@ import type { UpstreamTlsSchema } from './plugins/upstream-tls'
 import type { RateLimitingSchema } from './plugins/rate-limiting'
 import type { RouteByHeaderSchema } from './plugins/route-by-header'
 import type { GraphQLRateLimitingAdvancedSchema } from './plugins/graphql-rate-limiting-advanced'
+import type { SAMLSchema } from './plugins/saml'
 
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
@@ -197,4 +198,5 @@ export interface CustomSchemas {
   'request-transformer-advanced': CommonSchemaFields & Record<string, any>
   'request-validator': CommonSchemaFields & Record<string, any>
   zipkin: CommonSchemaFields & Record<string, any>
+  saml: SAMLSchema
 }
