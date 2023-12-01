@@ -16,7 +16,7 @@ import PluginSelect from './PluginSelect.vue'
 
 const baseConfigKonnect: KonnectPluginFormConfig = {
   app: 'konnect',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   controlPlaneId: 'abc-123-i-love-cats',
   // force the scope
   // entityType: 'services',
