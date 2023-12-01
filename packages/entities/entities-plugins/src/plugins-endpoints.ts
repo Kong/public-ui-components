@@ -20,11 +20,11 @@ export default {
   form: {
     konnect: {
       create: '/api/runtime_groups/{controlPlaneId}/plugins',
-      edit: '/v2/control-planes/{controlPlaneId}/core-entities/plugins/{id}',
+      edit: '/api/runtime_groups/{controlPlaneId}/plugins/{id}',
       pluginSchema: '/api/runtime_groups/{controlPlaneId}/schemas/plugins/{plugin}',
       credential: {
         create: '/api/runtime_groups/{controlPlaneId}/{resourceEndpoint}',
-        edit: '/v2/control-planes/{controlPlaneId}/core-entities/{resourceEndpoint}/{id}',
+        edit: '/api/runtime_groups/{controlPlaneId}/{resourceEndpoint}/{id}',
       },
       credentialSchema: '/api/runtime_groups/{controlPlaneId}/schemas/{plugin}',
       validate: '/api/runtime_groups/{controlPlaneId}/v1/schemas/json/plugin/validate',
@@ -49,8 +49,8 @@ export default {
   },
   item: {
     konnect: {
-      all: '/api/runtime_groups/{controlPlaneId}/plugins/{id}',
-      forEntity: '/api/runtime_groups/{controlPlaneId}/{entityType}/{entityId}/plugins/{id}',
+      all: '/v2/control-planes/{controlPlaneId}/core-entities/plugins/{id}',
+      forEntity: '/v2/control-planes/{controlPlaneId}/core-entities/{entityType}{entityId}/plugins/{id}',
     },
     kongManager: {
       all: '/{workspace}/plugins/{id}',
