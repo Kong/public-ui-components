@@ -123,11 +123,14 @@ const gridHeight = computed(() => {
     .grid-cell {
       height: auto !important;
       left: auto !important;
-      margin: $kui-space-10;
       position: relative;
       top: auto !important;
       transform: none !important;
       width: auto !important;
+
+      &:not(:first-child) {
+        margin-top: $kui-space-70;
+      }
     }
 
     .empty-cell {

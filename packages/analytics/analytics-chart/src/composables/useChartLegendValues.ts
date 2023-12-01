@@ -14,7 +14,7 @@ export default function useChartLegendValues(chartData: Ref<KChartData>, chartTy
       const raw = v.total
         ? v.total
         : (v.data as Array<number | AnalyticsDataPoint>).reduce((acc: number, e: number | AnalyticsDataPoint) => {
-          return acc + (typeof e === 'number' ? Number(e) || 0 : Number(e.y) || 0)
+          return acc + (typeof e === 'number' ? Number(e) || 0 : Number(e && e.y) || 0)
         }, 0) as number
 
       let formatted: string

@@ -13,6 +13,7 @@ import { requestTransformerAdvancedSchema } from './plugin-schemas/RequestTransf
 import { routeByHeaderSchema } from './plugin-schemas/RouteByHeader'
 import { graphqlRateLimitingAdvancedSchema } from './plugin-schemas/GraphQLRateLimitingAdvanced'
 import { statsDSchema } from './plugin-schemas/StatsD'
+import { samlSchema } from './plugin-schemas/SAML'
 import { ArrayStringFieldSchema } from './plugin-schemas/ArrayStringFieldSchema'
 import RequestValidatorSchema from './plugin-schemas/RequestValidator'
 import ZipkinSchema from './plugin-schemas/Zipkin'
@@ -109,6 +110,10 @@ export const useSchemas = (entityId?: string) => {
 
     zipkin: {
       ...ZipkinSchema,
+    },
+
+    saml: {
+      ...samlSchema,
     },
   }
 

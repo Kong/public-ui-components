@@ -270,7 +270,7 @@ describe('<AppSidebar />', () => {
               open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
               mobileEnabled: true,
               topItems: [{
-                name: 'Runtime Manager',
+                name: 'Gateway Manager',
                 to: '/?runtime-manager',
                 label: 'runtime-group-rg',
                 key: 'runtime-manager',
@@ -303,7 +303,7 @@ describe('<AppSidebar />', () => {
               open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
               mobileEnabled: true,
               topItems: [{
-                name: 'Runtime Manager',
+                name: 'Gateway Manager',
                 to: '/?runtime-manager',
                 label: 'runtime-group-rg',
                 key: 'runtime-manager',
@@ -333,7 +333,7 @@ describe('<AppSidebar />', () => {
               open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
               mobileEnabled: true,
               topItems: [{
-                name: 'Runtime Manager',
+                name: 'Gateway Manager',
                 to: '/?runtime-manager',
                 label: 'runtime-group-rg',
                 key: 'runtime-manager',
@@ -354,7 +354,7 @@ describe('<AppSidebar />', () => {
               open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
               mobileEnabled: true,
               topItems: [{
-                name: 'Runtime Manager',
+                name: 'Gateway Manager',
                 to: '/?runtime-manager',
                 label: 'runtime-group-rg',
                 key: 'runtime-manager',
@@ -378,7 +378,7 @@ describe('<AppSidebar />', () => {
                 open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
                 mobileEnabled: true,
                 topItems: [{
-                  name: 'Runtime Manager',
+                  name: 'Gateway Manager',
                   to: '/?runtime-manager',
                   label: 'retail-sandbox-rg',
                   key: 'runtime-manager',
@@ -409,7 +409,7 @@ describe('<AppSidebar />', () => {
                 open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
                 mobileEnabled: true,
                 topItems: [{
-                  name: 'Runtime Manager',
+                  name: 'Gateway Manager',
                   to: '/?runtime-manager',
                   label: labelText,
                   key: 'runtime-manager',
@@ -439,7 +439,7 @@ describe('<AppSidebar />', () => {
                 open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
                 mobileEnabled: true,
                 topItems: [{
-                  name: 'Runtime Manager',
+                  name: 'Gateway Manager',
                   to: '/?runtime-manager',
                   label: labelText,
                   key: 'runtime-manager',

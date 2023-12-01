@@ -6,7 +6,7 @@ export const topItems = [
     icon: 'sharedConfig',
   },
   {
-    name: 'Runtime Manager',
+    name: 'Gateway Manager',
     key: 'runtime-manager',
     to: { name: 'runtime-manager' },
     icon: 'runtimes',

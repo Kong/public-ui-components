@@ -354,4 +354,19 @@ export default {
 .link-wrapper {
   margin-bottom: 8px;
 }
+
+:deep(.k-tabs ul[role="tablist"]) {
+  margin-bottom: 32px;
+}
+
+:deep(.jwk-array-input-wrapper) {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  width: 400px;
+
+  input.form-control {
+    width: 300px;
+  }
+}
 </style>

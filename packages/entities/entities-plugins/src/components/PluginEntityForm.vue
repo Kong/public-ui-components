@@ -12,10 +12,10 @@
       <component
         :is="sharedFormName"
         v-if="sharedFormName && (formModel.id && editing || !editing)"
-        :editing="editing"
         :form-model="formModel"
         :form-options="formOptions"
         :form-schema="formSchema"
+        :is-editing="editing"
         :on-model-updated="onModelUpdated"
       />
 
