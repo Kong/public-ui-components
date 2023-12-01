@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.3...@kong-ui-public/forms@2.1.4) (2023-12-01)
+
+
+### Bug Fixes
+
+* **entities-plugins:** oidc form fields ([#965](https://github.com/Kong/public-ui-components/issues/965)) ([6cd0176](https://github.com/Kong/public-ui-components/commit/6cd01766ed23f3b1cfd861f670ae8f050604c727))
+
+
+
+
+
 ## [2.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.2...@kong-ui-public/forms@2.1.3) (2023-11-30)
 
 
