@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.2.0...@kong-ui-public/app-layout@2.2.1) (2023-12-01)
+
+
+### Bug Fixes
+
+* **app-layout:** l2 hover styles ([6455923](https://github.com/Kong/public-ui-components/commit/645592318c3578b0f317386890a9646fb9f871d6))
+
+
+
+
+
 # [2.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.1.7...@kong-ui-public/app-layout@2.2.0) (2023-12-01)
 
 
