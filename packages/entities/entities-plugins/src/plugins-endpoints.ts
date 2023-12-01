@@ -11,7 +11,7 @@ export default {
   },
   select: {
     konnect: {
-      availablePlugins: '/api/runtime_groups/{controlPlaneId}/v1/available-plugins',
+      availablePlugins: '/v2/control-planes/{controlPlaneId}/core-entities/v1/available-plugins',
     },
     kongManager: {
       availablePlugins: '/{workspace}/kong',
@@ -19,18 +19,18 @@ export default {
   },
   form: {
     konnect: {
-      create: '/api/runtime_groups/{controlPlaneId}/plugins',
-      edit: '/api/runtime_groups/{controlPlaneId}/plugins/{id}',
+      create: '/v2/control-planes/{controlPlaneId}/core-entities/plugins',
+      edit: '/v2/control-planes/{controlPlaneId}/core-entities/plugins/{id}',
       pluginSchema: '/v2/control-planes/{controlPlaneId}/schemas/core-entities/plugins/{plugin}',
       credential: {
-        create: '/api/runtime_groups/{controlPlaneId}/{resourceEndpoint}',
-        edit: '/api/runtime_groups/{controlPlaneId}/{resourceEndpoint}/{id}',
+        create: '/v2/control-planes/{controlPlaneId}/core-entities/{resourceEndpoint}',
+        edit: '/v2/control-planes/{controlPlaneId}/core-entities/{resourceEndpoint}/{id}',
       },
-      credentialSchema: '/api/runtime_groups/{controlPlaneId}/schemas/{plugin}',
-      validate: '/api/runtime_groups/{controlPlaneId}/v1/schemas/json/plugin/validate',
-      // VFG endpoints
-      entityGetOne: '/api/runtime_groups/{controlPlaneId}/{entity}/{id}',
-      entityGetAll: '/api/runtime_groups/{controlPlaneId}/{entity}?size=1000',
+      credentialSchema: '/v2/control-planes/{controlPlaneId}/schemas/core-entities/{plugin}',
+      validate: '/v2/control-planes/{controlPlaneId}/core-entities/v1/schemas/json/plugin/validate',
+      // VFG endpoints24
+      entityGetOne: '/v2/control-planes/{controlPlaneId}/core-entities/{entity}/{id}',
+      entityGetAll: '/v2/control-planes/{controlPlaneId}/core-entities/{entity}?size=1000',
     },
     kongManager: {
       create: '/{workspace}/plugins',
@@ -50,7 +50,7 @@ export default {
   item: {
     konnect: {
       all: '/v2/control-planes/{controlPlaneId}/core-entities/plugins/{id}',
-      forEntity: '/api/runtime_groups/{controlPlaneId}/{entityType}/{entityId}/plugins/{id}',
+      forEntity: '/v2/control-planes/{controlPlaneId}/core-entities/{entityType}/{entityId}/plugins/{id}',
     },
     kongManager: {
       all: '/{workspace}/plugins/{id}',
