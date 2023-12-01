@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.16.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.16.11...@kong-ui-public/analytics-chart@0.16.12) (2023-12-01)
+
+
+### Bug Fixes
+
+* **analytics-chart:** do not add zero values to datasets [MA-2342] ([#971](https://github.com/Kong/public-ui-components/issues/971)) ([0ee6543](https://github.com/Kong/public-ui-components/commit/0ee65437497761462b936d41aa8b06bff96afeba))
+
+
+
+
+
 ## [0.16.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.16.10...@kong-ui-public/analytics-chart@0.16.11) (2023-12-01)
 
 

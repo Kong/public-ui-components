@@ -298,7 +298,7 @@ importers:
         version: 1.0.4(vue@3.3.4)
     devDependencies:
       '@kong-ui-public/analytics-chart':
-        specifier: ^0.16.11
+        specifier: ^0.16.12
         version: link:../analytics-chart
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -1276,6 +1276,7 @@ packages:
   /@babel/highlight@7.22.10:
     resolution: {integrity: sha512-78aUtVcT7MUscr0K5mIEnkwxPE0MaxkR5RxRwuHaQ+JuU5AmTPhY+do2mdzVTnIJJpyBglql2pehuBIWHug+WQ==}
     engines: {node: '>=6.9.0'}
+    requiresBuild: true
     dependencies:
       '@babel/helper-validator-identifier': 7.22.20
       chalk: 2.4.2
@@ -8687,6 +8688,7 @@ packages:
 
   /is-arrayish@0.2.1:
     resolution: {integrity: sha512-zz06S8t0ozoDXMG+ube26zeCTNXcKIPJZJi8hBrF4idCLms4CG9QtK7qBl1boi5ODzFpjswb5JPmHCbMpjaYzg==}
+    requiresBuild: true
     dev: true
 
   /is-bigint@1.0.4:
