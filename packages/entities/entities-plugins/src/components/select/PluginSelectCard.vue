@@ -7,10 +7,11 @@
       class="plugin-card-content"
       :class="{ disabled: isDisabled }"
       :data-testid="`${plugin.id}-card`"
+      :title="plugin.name"
       @click="isDisabled || isCustomPlugin ? undefined : handleClick()"
     >
       <template
-        v-if="isCustomPlugin"
+        v-if="isCustomPlugin && !isCreateCustomPlugin"
         #footer
       >
         <div class="header-wrapper">
@@ -70,9 +71,6 @@
         :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
         @click="handleCustomClick"
       >
-        <h4 class="plugin-card-title">
-          {{ plugin.name }}
-        </h4>
         <PluginIcon
           :alt="plugin.name"
           class="plugin-card-icon"
@@ -227,13 +225,6 @@ const handleCustomClick = (): void => {
     min-height: 25px;
   }
 
-  &-title {
-    font-size: $kui-font-size-40;
-    font-weight: $kui-font-weight-medium;
-    margin-bottom: $kui-space-60;
-    margin-top: $kui-space-60;
-  }
-
   &-icon {
     margin-bottom: $kui-space-60;
   }
@@ -258,10 +249,6 @@ const handleCustomClick = (): void => {
     &.custom-plugin {
       cursor: pointer;
       padding-top: $kui-space-0;
-
-      .plugin-card-title {
-        margin-top: $kui-space-0;
-      }
     }
   }
 
@@ -276,6 +263,7 @@ const handleCustomClick = (): void => {
 
   &-create-footer {
     background-color: $kui-color-background-primary;
+    border-radius: $kui-border-radius-30;
     color: $kui-color-text-inverse;
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-semibold;
