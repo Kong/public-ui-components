@@ -38,6 +38,10 @@ th, td {
   padding: $kui-space-40;
   text-align: left;
   vertical-align: top;
+
+  :deep(code) {
+    line-height: $kui-line-height-40;
+  }
 }
 
 th:not(:last-of-type), td:not(:last-of-type) {
