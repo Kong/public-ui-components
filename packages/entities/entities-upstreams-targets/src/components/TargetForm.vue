@@ -341,8 +341,8 @@ watch(() => props.targetId, () => {
   }
 
   :deep(.k-card.kong-ui-entity-base-form) {
-    padding: 0;
     border: none;
+    padding: 0;
   }
 }
 </style>
