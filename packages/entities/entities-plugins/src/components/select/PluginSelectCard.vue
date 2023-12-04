@@ -216,6 +216,12 @@ const handleCustomClick = (): void => {
   max-width: 335px;
   overflow: hidden;
 
+  .plugin-card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .actions-trigger {
     color: $kui-color-text-neutral-stronger;
   }
@@ -233,12 +239,6 @@ const handleCustomClick = (): void => {
     color: $kui-color-text;
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-regular;
-  }
-
-  :deep(.k-card-body) {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
   }
 
   &-body {
@@ -278,27 +278,6 @@ const handleCustomClick = (): void => {
 
   &:hover {
     text-decoration: none;
-  }
-
-  :deep(.k-card-header) {
-    padding-left: $kui-space-60;
-    padding-right: $kui-space-40;
-    padding-top: $kui-space-60;
-  }
-
-  :deep(.k-plugin-card-body) {
-    display: flex;
-    flex-direction: column;
-  }
-
-  :deep(.k-card-content) {
-    display: flex;
-    flex: 1 !important;
-    height: 100%;
-  }
-
-  :deep(.k-card-actions .k-button.outline) {
-    border: none;
   }
 
   @media (min-width: $kui-breakpoint-phablet) {
