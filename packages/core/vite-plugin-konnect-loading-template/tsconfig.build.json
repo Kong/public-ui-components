@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "types": []
+  },
+  "exclude": [
+    "src/scripts/**/*",
+    "src/__template__/**/*",
+    "sandbox",
+    "dist"
+  ]
+}

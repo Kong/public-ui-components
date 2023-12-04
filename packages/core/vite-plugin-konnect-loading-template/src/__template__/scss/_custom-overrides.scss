@@ -1,0 +1,142 @@
+// Custom static loader override styles
+#konnect-app-navbar-logo a.navbar-logo-link {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+#konnect-app-navbar-logo a.navbar-logo-link .logo-title {
+  align-items: center;
+  justify-content: center;
+  padding-left: 16px;
+}
+
+// 1px smaller than the breakpoint, hide the logo when mobile menu icon not showing
+@media (max-width: 1023px) {
+  .app-navbar-logo {
+    display: none !important;
+  }
+}
+
+// Reset fullscreen loader
+.fullscreen-loading-container {
+  position: unset !important;
+}
+
+#konnect-loading-spinner {
+  height: 48px;
+  width: 48px;
+}
+
+#konnect-loading-spinner-icon {
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+  animation-name: spin-icon;
+  animation-timing-function: linear;
+  box-sizing: border-box;
+  color: #3a3f51;
+  display: block;
+  height: 48px;
+  line-height: 0;
+  width: 48px;
+}
+
+// Initially hide both loaders
+#konnect-loading-spinner,
+#konnect-loading-animation {
+  bottom: 0;
+  display: none;
+  left: 50%;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+@keyframes spin-icon {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// konnect-generic-loader styles
+.kong-ui-app-layout.konnect-generic-loader .kong-ui-app-navbar {
+  background: #000933 !important;
+  left: 0 !important;
+}
+
+.kong-ui-app-layout.konnect-generic-loader .kong-ui-app-sidebar {
+  display: none !important;
+}
+
+.kong-ui-app-layout.konnect-generic-loader #konnect-app-navbar-logo {
+  display: block !important;
+}
+
+.kong-ui-app-layout.konnect-generic-loader #konnect-app-navbar-logo .logo-title {
+  display: flex;
+}
+
+.kong-ui-app-layout.konnect-generic-loader .kong-ui-app-layout-main {
+  background-color: #000933 !important;
+  border-radius: 0 !important;
+}
+
+.kong-ui-app-layout.konnect-generic-loader #konnect-loading-spinner {
+  display: block !important;
+}
+
+.kong-ui-app-layout.konnect-generic-loader .kong-ui-konnect-global-search {
+  display: none !important;
+}
+
+// konnect-static-nav-loader styles
+.kong-ui-app-layout.konnect-static-nav-loader .kong-ui-app-layout-main {
+  background-color: #fff !important;
+}
+
+.kong-ui-app-layout.konnect-static-nav-loader #konnect-loading-animation {
+  display: block !important;
+}
+
+// Sidebar item loading skeleton
+.sidebar-item-name-container {
+  margin-left: auto;
+  max-width: 142px;
+  width: 100%;
+}
+
+.sidebar-item-skeleton {
+  background: #afb7c5;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: block;
+}
+
+.sidebar-item-icon,
+.sidebar-item-icon .sidebar-item-skeleton {
+  height: 20px;
+  min-width: 20px;
+  width: 20px;
+}
+
+// Custom sidebar footer styles
+.sidebar-footer-content > nav {
+  width: 100%;
+
+  ul.level-primary {
+    margin-bottom: 8px !important;
+  }
+}
+
+// Search filter button
+.dropdown-search-filter button {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}

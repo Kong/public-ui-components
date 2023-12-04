@@ -1,0 +1,976 @@
+.account-dropdown {
+  display: flex;
+  margin-right: 4px;
+}
+.account-dropdown .k-button.primary,
+.account-dropdown .k-button.primary:hover:not(:disabled) {
+  background-color: #9396fc;
+  background-color: var(--kong-ui-account-dropdown-background, #9396fc);
+  border-radius: 100px;
+  color: #000933;
+  color: var(--kong-ui-account-dropdown-color, #000933);
+  font-size: 12px;
+  height: 24px;
+  justify-content: center;
+  padding: 0;
+  -webkit-user-select: none;
+  user-select: none;
+  width: 24px;
+}
+.account-dropdown .k-button.primary:hover,
+.account-dropdown .k-button.primary:focus,
+.account-dropdown .k-button.primary:active,
+.account-dropdown .k-button.primary:hover:not(:disabled):hover,
+.account-dropdown .k-button.primary:hover:not(:disabled):focus,
+.account-dropdown .k-button.primary:hover:not(:disabled):active {
+  background-color: #9396fc !important;
+  background-color: var(--kong-ui-account-dropdown-background, #9396fc) !important;
+}
+.account-dropdown .k-button.primary:focus-visible,
+.account-dropdown .k-button.primary:hover:not(:disabled):focus-visible {
+  border-radius: 100px;
+  outline: 1px solid #bee2ff !important;
+  outline-offset: 2px;
+}
+.account-dropdown .k-dropdown-popover {
+  top: 11px !important;
+}
+.kong-ui-app-about-section .about-section-title {
+  color: #000933;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.24px;
+  line-height: 20px;
+}
+.kong-ui-app-about-section .about-section-header-end {
+  display: flex;
+}
+.kong-ui-app-about-section .about-section-header-end .about-section-timestamps {
+  align-self: center;
+  color: #6c7489;
+  flex-direction: column;
+  font-size: 12px;
+  line-height: 16px;
+  margin-bottom: 12px;
+}
+@media (min-width: 768px) {
+  .kong-ui-app-about-section .about-section-header-end .about-section-timestamps {
+    flex-direction: row;
+    margin-bottom: 0;
+  }
+}
+.kong-ui-app-about-section .about-section-header-end .about-section-timestamps.has-actions {
+  margin-right: 16px;
+}
+.kong-ui-app-about-section .about-section-header-end .about-section-timestamps .about-section-timestamps-arrow {
+  line-height: 20px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.kong-ui-app-about-section .about-section-description {
+  color: #000933;
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+.kong-ui-app-about-section .about-section-content {
+  align-items: flex-start;
+  align-self: stretch;
+  color: #6c7489;
+  column-gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 0;
+  row-gap: 6px;
+}
+.kong-ui-app-about-section .about-divider-section {
+  color: #6c7489;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  font-size: 14px;
+  line-height: 20px;
+  row-gap: 12px;
+}
+.kong-ui-app-about-section hr,
+.kong-ui-app-about-section hr {
+  background-color: #e0e4ea;
+  border: none;
+  height: 1px;
+  margin: 0;
+  width: 100%;
+}
+.kong-ui-app-about-section hr {
+  margin-bottom: 12px;
+  margin-top: 12px;
+}
+.kong-ui-app-about-section.kong-card.border {
+  border-radius: 4px;
+  padding: 20px;
+}
+.kong-ui-app-about-section.kong-card.border .k-card-header {
+  align-items: baseline;
+  margin-bottom: 0 !important;
+}
+@media (max-width: 768px) {
+  .kong-ui-app-about-section.kong-card.border .k-card-header {
+    flex-direction: column;
+  }
+  .kong-ui-app-about-section.kong-card.border .k-card-header .k-card-actions {
+    margin-left: unset;
+  }
+}
+.kong-ui-app-error {
+  align-items: center;
+  background-color: #fff;
+  border-top: 2px solid #00abd2;
+  display: flex;
+  flex-direction: column;
+  margin: 32px auto 0;
+  padding-bottom: 48px;
+  width: 100%;
+}
+@media (min-width: 640px) {
+  .kong-ui-app-error {
+    width: 80%;
+  }
+}
+@media (min-width: 1024px) {
+  .kong-ui-app-error {
+    max-width: 840px;
+  }
+}
+.kong-ui-app-error .banana-icon {
+  animation-delay: 0.75s;
+  margin: 32px auto 24px;
+}
+.kong-ui-app-error .kong-ui-app-error-content {
+  animation: 0.75s cubic-bezier(0.785, 0.135, 0.15, 0.86) forwards fadeIn-5cbccc66;
+  opacity: 0;
+  padding: 0 16px;
+}
+@media (min-width: 768px) {
+  .kong-ui-app-error .kong-ui-app-error-content {
+    padding: 0 32px;
+  }
+}
+@media (prefers-reduced-motion) {
+  .kong-ui-app-error .kong-ui-app-error-content {
+    animation: none;
+    opacity: 1;
+  }
+}
+@keyframes fadeIn-5cbccc66 {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.kong-ui-app-error .kong-ui-app-error-content {
+  color: #6c7489;
+  font-size: 16px;
+  text-align: center;
+}
+.kong-ui-app-error .kong-ui-app-error-content h1,
+.kong-ui-app-error .kong-ui-app-error-content h2,
+.kong-ui-app-error .kong-ui-app-error-content h3,
+.kong-ui-app-error .kong-ui-app-error-content h4 {
+  color: #000933;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+.kong-ui-app-navbar {
+  background: #000933;
+  background: var(--kong-ui-app-navbar-background, #000933);
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: var(--d96d0598);
+  z-index: var(--05b18f8e);
+}
+@media (min-width: 1024px) {
+  .kong-ui-app-navbar {
+    left: var(--543b3ff0);
+  }
+}
+.kong-ui-app-navbar .header-content {
+  align-items: center;
+  display: flex;
+  height: 60px;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+.kong-ui-app-navbar .app-navbar-logo {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: flex-start;
+  margin-right: var(--247c8fd0);
+  max-width: var(--278e63f0);
+  min-width: var(--278e63f0);
+  padding-left: 16px;
+}
+.kong-ui-app-navbar .mobile-header-left {
+  display: inline-flex;
+  gap: 16px;
+}
+@media (min-width: 1024px) {
+  .kong-ui-app-navbar .mobile-header-left {
+    display: none;
+  }
+}
+.kong-ui-app-navbar .app-navbar-links,
+.kong-ui-app-navbar .app-navbar-links,
+.kong-ui-app-navbar .app-navbar-links {
+  align-items: center;
+  display: flex;
+  height: 100%;
+}
+.kong-ui-app-navbar .app-navbar-links a,
+.kong-ui-app-navbar .app-navbar-links a,
+.kong-ui-app-navbar .app-navbar-links a {
+  align-items: center;
+  align-self: stretch;
+  border-bottom: 4px solid transparent;
+  color: #fff;
+  display: flex;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0 8px;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  white-space: nowrap;
+}
+@media (min-width: 768px) {
+  .kong-ui-app-navbar .app-navbar-links a,
+  .kong-ui-app-navbar .app-navbar-links a,
+  .kong-ui-app-navbar .app-navbar-links a {
+    font-size: 16px;
+    padding: 0 16px;
+  }
+}
+.kong-ui-app-navbar .app-navbar-links a.router-link-active,
+.kong-ui-app-navbar .app-navbar-links a.active,
+.kong-ui-app-navbar .app-navbar-links a.router-link-active,
+.kong-ui-app-navbar .app-navbar-links a.active,
+.kong-ui-app-navbar .app-navbar-links a.router-link-active,
+.kong-ui-app-navbar .app-navbar-links a.active {
+  border-color: #84e5ae;
+  font-weight: 600 !important;
+}
+.kong-ui-app-navbar .navbar-content {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  height: 100%;
+  justify-content: space-between;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .kong-ui-app-navbar .navbar-content {
+    gap: 16px;
+  }
+}
+.kong-ui-app-navbar .navbar-content-left,
+.kong-ui-app-navbar .navbar-content-center,
+.kong-ui-app-navbar .navbar-content-right {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  gap: 16px;
+  height: 100%;
+}
+.kong-ui-app-navbar .navbar-content-left {
+  justify-content: flex-start;
+}
+.kong-ui-app-navbar .navbar-content-center {
+  justify-content: center;
+}
+.kong-ui-app-navbar .navbar-content-right {
+  justify-content: flex-end;
+}
+.item-badge {
+  background-color: #d60027;
+  border-radius: 16px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  max-width: 36px;
+  overflow: hidden;
+  padding: 2px 6px;
+  text-overflow: ellipsis;
+  -webkit-user-select: none;
+  user-select: none;
+  white-space: nowrap;
+}
+.kong-ui-app-sidebar .sidebar-item-primary,
+.kong-ui-app-sidebar .sidebar-item-secondary {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  white-space: nowrap;
+}
+.kong-ui-app-sidebar .sidebar-item-primary:last-of-type,
+.kong-ui-app-sidebar .sidebar-item-secondary:last-of-type {
+  margin-bottom: 0;
+}
+.kong-ui-app-sidebar .sidebar-item-primary a.sidebar-item-link,
+.kong-ui-app-sidebar .sidebar-item-secondary a.sidebar-item-link {
+  align-items: center;
+  color: #bee2ff;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-weight: 500;
+  justify-content: space-between;
+  line-height: 20px;
+  min-height: 48px;
+  text-decoration: none;
+  transition: color 0.2s ease-out;
+}
+.kong-ui-app-sidebar .sidebar-item-primary a.sidebar-item-link svg:not(.profile-icon) path,
+.kong-ui-app-sidebar .sidebar-item-secondary a.sidebar-item-link svg:not(.profile-icon) path {
+  color: currentColor;
+  fill: currentColor;
+  transition: all 0.2s ease-out;
+}
+.kong-ui-app-sidebar .sidebar-item-primary a.sidebar-item-link:hover,
+.kong-ui-app-sidebar .sidebar-item-primary a.sidebar-item-link:focus-visible,
+.kong-ui-app-sidebar .sidebar-item-secondary a.sidebar-item-link:hover,
+.kong-ui-app-sidebar .sidebar-item-secondary a.sidebar-item-link:focus-visible {
+  color: #eefaff;
+}
+.kong-ui-app-sidebar .sidebar-item-primary a.sidebar-item-link:hover svg,
+.kong-ui-app-sidebar .sidebar-item-primary a.sidebar-item-link:focus-visible svg,
+.kong-ui-app-sidebar .sidebar-item-secondary a.sidebar-item-link:hover svg,
+.kong-ui-app-sidebar .sidebar-item-secondary a.sidebar-item-link:focus-visible svg {
+  color: #eefaff;
+}
+.kong-ui-app-sidebar .sidebar-item-primary a.sidebar-item-link:focus-visible,
+.kong-ui-app-sidebar .sidebar-item-secondary a.sidebar-item-link:focus-visible {
+  box-shadow: 0 0 0 1px #fff9 inset;
+  outline: none;
+}
+.kong-ui-app-sidebar .sidebar-item-primary a.sidebar-item-link .sidebar-item-tooltip,
+.kong-ui-app-sidebar .sidebar-item-secondary a.sidebar-item-link .sidebar-item-tooltip {
+  align-items: center;
+  display: flex;
+  height: 100%;
+}
+.kong-ui-app-sidebar .sidebar-item-primary.active > a,
+.kong-ui-app-sidebar .sidebar-item-primary.active > div > a,
+.kong-ui-app-sidebar .sidebar-item-primary.expanded > a,
+.kong-ui-app-sidebar .sidebar-item-primary.expanded > div > a,
+.kong-ui-app-sidebar .sidebar-item-secondary.active > a,
+.kong-ui-app-sidebar .sidebar-item-secondary.active > div > a,
+.kong-ui-app-sidebar .sidebar-item-secondary.expanded > a,
+.kong-ui-app-sidebar .sidebar-item-secondary.expanded > div > a {
+  color: #00fabe;
+}
+.kong-ui-app-sidebar .sidebar-item-primary.active > a.sidebar-item-link,
+.kong-ui-app-sidebar .sidebar-item-primary.active > a.sidebar-item-link:hover,
+.kong-ui-app-sidebar .sidebar-item-primary.active > div > a.sidebar-item-link,
+.kong-ui-app-sidebar .sidebar-item-primary.active > div > a.sidebar-item-link:hover,
+.kong-ui-app-sidebar .sidebar-item-primary.expanded > a.sidebar-item-link,
+.kong-ui-app-sidebar .sidebar-item-primary.expanded > a.sidebar-item-link:hover,
+.kong-ui-app-sidebar .sidebar-item-primary.expanded > div > a.sidebar-item-link,
+.kong-ui-app-sidebar .sidebar-item-primary.expanded > div > a.sidebar-item-link:hover,
+.kong-ui-app-sidebar .sidebar-item-secondary.active > a.sidebar-item-link,
+.kong-ui-app-sidebar .sidebar-item-secondary.active > a.sidebar-item-link:hover,
+.kong-ui-app-sidebar .sidebar-item-secondary.active > div > a.sidebar-item-link,
+.kong-ui-app-sidebar .sidebar-item-secondary.active > div > a.sidebar-item-link:hover,
+.kong-ui-app-sidebar .sidebar-item-secondary.expanded > a.sidebar-item-link,
+.kong-ui-app-sidebar .sidebar-item-secondary.expanded > a.sidebar-item-link:hover,
+.kong-ui-app-sidebar .sidebar-item-secondary.expanded > div > a.sidebar-item-link,
+.kong-ui-app-sidebar .sidebar-item-secondary.expanded > div > a.sidebar-item-link:hover {
+  color: #00fabe;
+}
+.kong-ui-app-sidebar .sidebar-item-primary.active > a.sidebar-item-link svg,
+.kong-ui-app-sidebar .sidebar-item-primary.active > a.sidebar-item-link:hover svg,
+.kong-ui-app-sidebar .sidebar-item-primary.active > div > a.sidebar-item-link svg,
+.kong-ui-app-sidebar .sidebar-item-primary.active > div > a.sidebar-item-link:hover svg,
+.kong-ui-app-sidebar .sidebar-item-primary.expanded > a.sidebar-item-link svg,
+.kong-ui-app-sidebar .sidebar-item-primary.expanded > a.sidebar-item-link:hover svg,
+.kong-ui-app-sidebar .sidebar-item-primary.expanded > div > a.sidebar-item-link svg,
+.kong-ui-app-sidebar .sidebar-item-primary.expanded > div > a.sidebar-item-link:hover svg,
+.kong-ui-app-sidebar .sidebar-item-secondary.active > a.sidebar-item-link svg,
+.kong-ui-app-sidebar .sidebar-item-secondary.active > a.sidebar-item-link:hover svg,
+.kong-ui-app-sidebar .sidebar-item-secondary.active > div > a.sidebar-item-link svg,
+.kong-ui-app-sidebar .sidebar-item-secondary.active > div > a.sidebar-item-link:hover svg,
+.kong-ui-app-sidebar .sidebar-item-secondary.expanded > a.sidebar-item-link svg,
+.kong-ui-app-sidebar .sidebar-item-secondary.expanded > a.sidebar-item-link:hover svg,
+.kong-ui-app-sidebar .sidebar-item-secondary.expanded > div > a.sidebar-item-link svg,
+.kong-ui-app-sidebar .sidebar-item-secondary.expanded > div > a.sidebar-item-link:hover svg {
+  color: #00fabe;
+}
+.kong-ui-app-sidebar .sidebar-item-primary.active > a .sidebar-item-name,
+.kong-ui-app-sidebar .sidebar-item-primary.active > div > a .sidebar-item-name,
+.kong-ui-app-sidebar .sidebar-item-primary.expanded > a .sidebar-item-name,
+.kong-ui-app-sidebar .sidebar-item-primary.expanded > div > a .sidebar-item-name,
+.kong-ui-app-sidebar .sidebar-item-secondary.active > a .sidebar-item-name,
+.kong-ui-app-sidebar .sidebar-item-secondary.active > div > a .sidebar-item-name,
+.kong-ui-app-sidebar .sidebar-item-secondary.expanded > a .sidebar-item-name,
+.kong-ui-app-sidebar .sidebar-item-secondary.expanded > div > a .sidebar-item-name {
+  font-weight: 500 !important;
+}
+.kong-ui-app-sidebar .sidebar-item-primary ul.level-secondary,
+.kong-ui-app-sidebar .sidebar-item-secondary ul.level-secondary {
+  padding: 0;
+  position: relative;
+}
+.kong-ui-app-sidebar .sidebar-item-primary ul.level-secondary:before,
+.kong-ui-app-sidebar .sidebar-item-secondary ul.level-secondary:before {
+  background-color: #ffffff1f;
+  content: "";
+  height: 1px;
+  left: 1px;
+  position: absolute;
+  right: 1px;
+  top: 0;
+}
+.sidebar-item-primary {
+  overflow: hidden;
+}
+.sidebar-item-primary.active,
+.sidebar-item-primary.expanded {
+  background-color: #ffffff1f;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px #ffffff1f inset;
+}
+.sidebar-item-primary > a,
+.sidebar-item-primary > div > a {
+  border-radius: 6px;
+}
+.sidebar-item-primary > a > .sidebar-item-display.has-label,
+.sidebar-item-primary > div > a > .sidebar-item-display.has-label {
+  padding-bottom: 12px;
+  padding-top: 12px;
+}
+.sidebar-item-secondary {
+  margin-bottom: 4px;
+}
+.sidebar-item-secondary:last-of-type {
+  margin-bottom: 0;
+}
+.sidebar-item-secondary:last-of-type a {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+.sidebar-item-secondary a {
+  background-color: #0000;
+  color: #bee2ff !important;
+  font-size: 14px;
+  line-height: 20px;
+  min-height: 40px !important;
+  transition: all 0.1s ease-in-out !important;
+}
+.sidebar-item-secondary a > .sidebar-item-display.has-badge {
+  justify-content: space-between;
+}
+.sidebar-item-secondary a > .sidebar-item-display.has-badge .has-badge-max-width {
+  max-width: 134px !important;
+}
+.sidebar-item-secondary.active > a {
+  box-shadow: 4px 0 #00fabe inset;
+  color: #00fabe !important;
+  font-weight: 500 !important;
+}
+.sidebar-item-secondary.active > a:focus-visible {
+  box-shadow:
+    4px 0 #00fabe inset,
+    0 0 0 1px #fff9 inset;
+}
+.sidebar-item-display {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  height: 100%;
+  padding: 0 16px;
+  width: 100%;
+}
+.sidebar-item-display .sidebar-item-name-container {
+  line-height: 16px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.sidebar-item-display .sidebar-item-name-container .truncate-text {
+  height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sidebar-item-display .sidebar-item-name-container .truncate-text.truncate-17 {
+  max-width: 17ch;
+}
+.sidebar-item-display .sidebar-item-name-container .truncate-text.truncate-18 {
+  max-width: 18ch;
+}
+.sidebar-item-display .sidebar-item-name-container .truncate-text.truncate-24 {
+  max-width: 24ch;
+}
+.sidebar-item-display .sidebar-item-name-container .sidebar-item-name {
+  align-items: center;
+  display: flex;
+}
+.sidebar-item-display .sidebar-item-name-container .sidebar-item-name.has-tooltip {
+  height: 100%;
+}
+.sidebar-item-display .sidebar-item-name-container .sidebar-item-name.has-tooltip span {
+  height: auto;
+  min-width: 0px;
+}
+.sidebar-item-display .sidebar-item-label {
+  color: #bee2ff;
+  font-size: 12px;
+  margin-top: 4px;
+}
+.sidebar-item-display .sidebar-item-icon {
+  align-items: center;
+  display: flex;
+  line-height: 0;
+}
+.kong-ui-app-sidebar {
+  background: #000933;
+  display: flex;
+  flex-direction: column;
+  height: var(--2c5b02a5);
+  left: -100%;
+  position: fixed;
+  top: var(--19baf097);
+  transition: left 0.2s ease-in-out;
+  width: 100%;
+  z-index: var(--01f7cae3);
+}
+@media (min-width: 640px) {
+  .kong-ui-app-sidebar {
+    max-width: 240px;
+    width: 240px;
+  }
+}
+@media (min-width: 1024px) {
+  .kong-ui-app-sidebar {
+    height: var(--e9cb373a);
+    left: 0;
+    top: var(--e991d0ce);
+  }
+}
+.kong-ui-app-sidebar.sidebar-open,
+.kong-ui-app-sidebar.mobile-disabled {
+  left: 0;
+}
+.kong-ui-app-sidebar.mobile-disabled {
+  width: 240px;
+}
+.kong-ui-app-sidebar.disable-transitions {
+  animation: none !important;
+  transition: none !important;
+}
+.kong-ui-app-sidebar .sidebar-content-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin-top: var(--8a4ad026);
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding-top: 8px;
+  scrollbar-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+  scrollbar-gutter: stable both-edges;
+  scrollbar-width: thin;
+}
+@supports (overflow: overlay) {
+  .kong-ui-app-sidebar .sidebar-content-container {
+    overflow-y: overlay;
+  }
+}
+.kong-ui-app-sidebar .sidebar-content-container::-webkit-scrollbar {
+  height: 8px;
+  opacity: 1;
+  width: 8px;
+}
+.kong-ui-app-sidebar .sidebar-content-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0);
+  border-radius: 8px;
+}
+.kong-ui-app-sidebar .sidebar-content-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0);
+}
+.kong-ui-app-sidebar .sidebar-content-container:hover {
+  scrollbar-color: #6c7489 rgba(0, 0, 0, 0);
+  scrollbar-gutter: stable both-edges;
+  scrollbar-width: thin;
+}
+.kong-ui-app-sidebar .sidebar-content-container:hover::-webkit-scrollbar-thumb {
+  background: #6c7489;
+}
+.kong-ui-app-sidebar .sidebar-content-container:hover::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0);
+}
+.kong-ui-app-sidebar .sidebar-footer {
+  align-items: center;
+  color: #afb7c5;
+  display: flex;
+  font-weight: 500;
+  position: relative;
+  width: 100%;
+}
+.kong-ui-app-sidebar .sidebar-footer:before {
+  background-image: linear-gradient(transparent, #000933);
+  content: "";
+  display: block;
+  height: 8px;
+  left: 50%;
+  margin-top: -8px;
+  position: absolute;
+  top: 0;
+  transform: translate(-50%);
+  width: calc(100% - 16px);
+  z-index: 1;
+}
+.kong-ui-app-sidebar .k-dropdown-item {
+  font-size: 14px;
+  line-height: 20px;
+}
+@media (max-width: 1023px) {
+  .mobile-header-hidden .sidebar-content-container,
+  .no-sidebar-header .sidebar-content-container {
+    margin-top: 0 !important;
+  }
+}
+.sidebar-level-divider {
+  background-color: #ffffff3d;
+  height: 1px;
+  margin: 24px auto;
+  min-height: 1px;
+  width: calc(100% - 32px);
+}
+.sidebar-header {
+  align-items: center;
+  background: rgba(0, 0, 0, 0);
+  background: var(--kong-ui-app-sidebar-header-background, rgba(0, 0, 0, 0));
+  color: #fff;
+  display: var(--28946a7f);
+  left: 0;
+  min-height: var(--3e6b7496);
+  padding: 0 16px 0 32px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-user-select: none;
+  user-select: none;
+  z-index: 1;
+}
+@media (min-width: 1024px) {
+  .sidebar-header {
+    display: flex;
+  }
+}
+.sidebar-header > * {
+  display: flex;
+}
+.sidebar-header > a {
+  text-decoration: none;
+}
+.sidebar-header > a:focus-visible {
+  border-radius: 6px;
+  outline: 1px solid #afb7c5;
+}
+.sidebar-header:after {
+  background-image: linear-gradient(#000933, transparent);
+  bottom: 0;
+  content: "";
+  display: block;
+  height: 8px;
+  left: 50%;
+  margin-bottom: -8px;
+  position: absolute;
+  transform: translate(-50%);
+  width: calc(100% - 16px);
+  z-index: 1;
+}
+.sidebar-top {
+  align-items: center;
+  color: #fff;
+  display: flex;
+  margin: 0 0 16px;
+  padding: 0 8px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.sidebar-item-external-link {
+  align-items: center;
+  display: flex;
+  font-size: 14px;
+  justify-content: space-between;
+  line-height: 20px;
+  text-decoration: none;
+}
+.sidebar-item-external-link:focus-visible {
+  outline: 1px solid #afb7c5 !important;
+}
+.sidebar-item-external-link .kong-icon {
+  display: inline-flex;
+  margin-bottom: -7px;
+}
+.kong-ui-app-sidebar-overlay {
+  background-color: #0b172d99;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: var(--92ecef30);
+  z-index: var(--16fef085);
+}
+@media (min-width: 1024px) {
+  .kong-ui-app-sidebar-overlay {
+    display: none !important;
+  }
+}
+.kong-ui-app-sidebar .level-primary,
+.kong-ui-app-sidebar .level-secondary {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.kong-ui-app-sidebar .level-primary {
+  display: flex;
+  flex-direction: column;
+  padding: 0 8px;
+}
+.kong-ui-app-sidebar .level-primary:last-of-type {
+  margin-bottom: 32px;
+}
+body.kong-ui-app-sidebar-open {
+  overflow: hidden;
+}
+@media (min-width: 1024px) {
+  body.kong-ui-app-sidebar-open {
+    overflow: auto;
+  }
+}
+.sidebar-menu-toggle {
+  border-radius: 4px;
+  padding: 0 4px;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+.sidebar-menu-toggle:focus-visible {
+  outline: 1px solid #0044f4;
+  outline: 1px solid var(--kong-ui-app-sidebar-mobile-icon-color, #0044f4);
+}
+@media (min-width: 1024px) {
+  .sidebar-menu-toggle {
+    display: none;
+  }
+}
+.sidebar-menu-toggle .line {
+  background-color: #ffffff;
+  background-color: var(--kong-ui-app-sidebar-mobile-icon-color, #ffffff);
+  border-radius: 6px;
+  display: block;
+  height: 2px;
+  margin: 6px auto;
+  transition: all 0.3s ease-in-out;
+  width: 24px;
+}
+.sidebar-menu-toggle.active .line:nth-child(2) {
+  opacity: 0;
+}
+.sidebar-menu-toggle.active .line:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+.sidebar-menu-toggle.active .line:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+.kong-ui-app-layout-html,
+.kong-ui-app-layout-body,
+.kong-ui-app-sidebar,
+.kong-ui-app-navbar {
+  --KInputLabelWeight: 600;
+  --KongAuthFontFamily: Inter, Roboto, Helvetica, sans-serif;
+  --KongAuthFontWeight: 400;
+}
+html.kong-ui-app-layout-html {
+  -ms-overflow-style: scrollbar;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+html.kong-ui-app-layout-html,
+body.kong-ui-app-layout-body {
+  height: 100%;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  overscroll-behavior-y: none;
+  padding: 0;
+  width: 100%;
+}
+body.kong-ui-app-layout-body {
+  background-color: #fff;
+  color: #000933;
+  font-family: Inter, Roboto, Helvetica, sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  line-height: 24px;
+}
+#app {
+  height: 100%;
+}
+.kong-auth-element {
+  font-family: Inter, Roboto, Helvetica, sans-serif !important;
+}
+.kong-auth-element .kong-auth-login-form .alert.danger .k-alert-msg {
+  white-space: pre-line;
+}
+.kong-ui-app-layout {
+  background: #000933;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: Inter, Roboto, Helvetica, sans-serif;
+  height: 100%;
+  left: 0;
+  overflow: hidden;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100%;
+}
+.kong-ui-app-layout .kong-ui-app-navbar .mobile-logo {
+  align-items: center;
+  display: flex;
+}
+@media (min-width: 1024px) {
+  .kong-ui-app-layout .kong-ui-app-navbar .mobile-logo {
+    display: none;
+  }
+}
+.kong-ui-app-layout .kong-ui-app-navbar .mobile-logo > * {
+  align-items: center;
+  display: flex;
+}
+.kong-ui-app-layout .kong-ui-app-navbar .mobile-logo a {
+  text-decoration: none;
+}
+.kong-ui-app-layout .kong-ui-app-navbar .navbar-logo {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .kong-ui-app-layout .kong-ui-app-navbar .navbar-logo {
+    display: block;
+  }
+}
+.kong-ui-app-layout .kong-ui-app-layout-main {
+  align-items: stretch;
+  background-color: var(--3c1b64a7);
+  box-shadow: var(--e1fe5bc6);
+  color: var(--74505bb5);
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+  margin-top: var(--24707019);
+  overflow: auto;
+  position: relative;
+  width: 100%;
+}
+@media (min-width: 1024px) {
+  .kong-ui-app-layout .kong-ui-app-layout-main {
+    border-top-left-radius: var(--1f0d0dcc);
+    margin-left: 240px;
+    width: calc(100% - 240px);
+  }
+}
+.kong-ui-app-layout .kong-ui-app-layout-main.full-width {
+  margin-left: 0;
+}
+.kong-ui-app-layout .kong-ui-app-layout-main .kong-ui-app-layout-content {
+  position: relative;
+  width: 100%;
+}
+.kong-ui-app-layout .kong-ui-app-layout-main .kong-ui-app-layout-content-inner {
+  padding: 20px;
+  padding: var(--kong-ui-app-layout-content-padding, 20px);
+}
+.kong-ui-app-layout.navbar-hidden .kong-ui-app-layout-main {
+  margin-top: 0;
+}
+.kong-ui-app-layout.sidebar-hidden .kong-ui-app-layout-main {
+  margin-left: 0;
+  width: 100%;
+}
+.kong-ui-app-layout #kong-ui-app-layout-notification {
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1;
+}
+.kong-ui-app-layout #kong-ui-app-layout-notification .k-alert {
+  border-radius: 0 !important;
+}
+.kong-ui-app-page-header {
+  margin-bottom: 20px;
+}
+.kong-ui-app-page-header .page-header-breadcrumb-divider {
+  color: #afb7c5;
+}
+.kong-ui-app-page-header .page-header-title-section {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: space-between;
+  min-height: 44.5px;
+}
+.kong-ui-app-page-header .page-header-title-section .page-header-title-wrapper {
+  align-items: baseline;
+  display: flex;
+  min-width: 0;
+}
+.kong-ui-app-page-header .page-header-title-section .page-header-title-wrapper .page-header-title-before {
+  align-self: center;
+  display: inline-flex;
+  margin-right: 8px;
+}
+.kong-ui-app-page-header .page-header-title-section .page-header-title-wrapper .page-header-title-after {
+  align-self: center;
+  display: inline-flex;
+  margin-left: 16px;
+}
+.kong-ui-app-page-header .page-header-title-section .page-header-title-wrapper .page-header-title {
+  color: #000933;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 32px;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.kong-ui-app-page-header .page-header-section-below {
+  margin-top: 8px;
+  width: 100%;
+}
+.kong-ui-app-page-header .k-breadcrumbs {
+  margin-bottom: 0;
+}
+@media (min-width: 640px) {
+  .kong-ui-app-page-header .page-header-title-section {
+    flex-wrap: nowrap;
+  }
+  .kong-ui-app-page-header .page-header-section-below {
+    margin-top: unset;
+  }
+}

@@ -1,0 +1,143 @@
+.logo-title {
+  display: none;
+  padding-left: 16px;
+}
+@media (min-width: 640px) {
+  .logo-title {
+    display: flex;
+  }
+}
+.sidebar-header-logo {
+  align-items: center;
+  display: flex;
+  min-height: 60px;
+  width: 100%;
+}
+.sidebar-header-logo > a {
+  align-items: center;
+  border-radius: 6px;
+  display: flex;
+  min-height: 40px;
+  text-decoration: none;
+  width: 100%;
+}
+.sidebar-header-logo > a:focus-visible {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+  outline: none;
+}
+.sidebar-header-logo > a .konnect-logo {
+  display: flex;
+  padding-left: 16px;
+}
+.sidebar-footer-content {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 0px 8px;
+  width: 100%;
+}
+.navbar-logo-desktop {
+  align-items: center;
+  display: none;
+}
+@media (min-width: 1024px) {
+  .navbar-logo-desktop {
+    display: flex;
+  }
+}
+.kong-ui-konnect-global-search {
+  margin: 0 auto;
+  max-width: 100%;
+  width: 500px;
+}
+@media (max-width: 1023px) {
+  .kong-ui-konnect-global-search {
+    display: none;
+  }
+}
+.impersonation-banner {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+.impersonation-banner .impersonation-banner-message {
+  align-items: center;
+  display: flex;
+  font-size: 14px;
+  gap: 16px;
+  justify-content: center;
+}
+@media (min-width: 640px) {
+  .impersonation-banner .impersonation-banner-message {
+    font-size: 16px;
+    gap: 8px;
+  }
+}
+.impersonation-banner .impersonation-banner-message svg {
+  display: block;
+}
+.account-dropdown .account-dropdown-user-name {
+  color: #3c4557;
+  font-size: 16px;
+  font-weight: 600 !important;
+}
+.account-dropdown .account-dropdown-user-info > .dropdown-item-trigger {
+  overflow-x: hidden;
+  width: auto;
+}
+.account-dropdown .account-dropdown-user-info > .dropdown-item-trigger:hover {
+  background-color: #ffffff !important;
+  cursor: auto !important;
+}
+.account-dropdown .account-dropdown-user-info > .dropdown-item-trigger .dropdown-item-trigger-label {
+  align-items: flex-start;
+  flex-direction: column;
+  width: 100%;
+}
+.account-dropdown .account-dropdown-user-info > .dropdown-item-trigger > span {
+  width: 180px;
+}
+.account-dropdown .account-dropdown-organization {
+  align-items: center;
+  color: #6f7787;
+  display: flex;
+  font-size: 14px;
+  width: 100%;
+}
+.account-dropdown .account-dropdown-organization .organization-name {
+  font-size: 12px;
+  line-height: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.account-dropdown .account-dropdown-organization .copy-org-id-tooltip {
+  cursor: pointer;
+  margin-left: auto;
+}
+.account-dropdown .account-dropdown-item.has-divider:before {
+  background-color: #e7e7ec;
+}
+.account-dropdown .k-popover.k-dropdown-popover {
+  top: 13px !important;
+}
+.account-dropdown .k-popover.k-dropdown-popover a {
+  color: #3c4557;
+}
+.kong-ui-global-loading .fullscreen-loading-container {
+  position: absolute;
+  z-index: 1;
+}
+.truncated {
+  line-height: initial;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.global-loading-icon-container {
+  align-items: center;
+  display: flex;
+  height: calc(100vh - 120px - 4px);
+  justify-content: center;
+  width: 100%;
+}

@@ -1,0 +1,63 @@
+{
+  "name": "@kong-ui-public/vite-plugin-konnect-loading-template",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/vite-plugin-konnect-loading-template.umd.js",
+  "module": "./dist/vite-plugin-konnect-loading-template.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/vite-plugin-konnect-loading-template.es.js",
+      "require": "./dist/vite-plugin-konnect-loading-template.umd.js"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "cross-env USE_SANDBOX=true vite",
+    "build": "run-s build:clean typecheck build:template lint:fix build:package build:types",
+    "build:template": "ts-node -P './tsconfig.json' './src/scripts/index.ts'",
+    "build:package:old": "tsc --project './tsconfig.build.json'",
+    "build:package": "vite build -m production",
+    "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
+    "build:clean": "rimraf ./dist",
+    "preview": "cross-env USE_SANDBOX=true vite preview",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
+    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore' --fix",
+    "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
+    "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
+    "typecheck": "tsc -p './tsconfig.json' --noEmit"
+  },
+  "devDependencies": {
+    "cheerio": "1.0.0-rc.12",
+    "html-format": "^1.1.2",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kong/public-ui-components.git",
+    "directory": "packages/core/vite-plugin-konnect-loading-template"
+  },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/core/vite-plugin-konnect-loading-template",
+  "bugs": {
+    "url": "https://github.com/Kong/public-ui-components/issues"
+  },
+  "author": "Kong, Inc.",
+  "license": "Apache-2.0",
+  "volta": {
+    "extends": "../../../package.json"
+  },
+  "distSizeChecker": {
+    "errorLimit": "200KB"
+  },
+  "peerDependencies": {
+    "cheerio": "1.0.0-rc.12"
+  }
+}

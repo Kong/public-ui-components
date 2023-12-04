@@ -1,0 +1,10 @@
+@use "sass:meta";
+
+// Scope all styles within the `html.konnect-loading` element.
+// The `.konnect-loading` class must be removed when the KonnectAppShell.vue component takes over
+html.konnect-loading {
+  @include meta.load-css("./scss/app-layout");
+  @include meta.load-css("./scss/konnect-global-search");
+  @include meta.load-css("./scss/konnect-app-shell");
+  @include meta.load-css("./scss/custom-overrides");
+}
