@@ -5,7 +5,7 @@ module.exports = {
     'stylelint-config-recommended-vue/scss'
   ],
   ignoreFiles: [
-    'packages/cli/src/__template__/**/*'
+    'packages/core/vite-plugin-konnect-loading-template/**/*'
   ],
   overrides: [
     {
