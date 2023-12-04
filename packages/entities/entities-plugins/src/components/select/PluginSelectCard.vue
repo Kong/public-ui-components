@@ -217,9 +217,9 @@ const handleCustomClick = (): void => {
   overflow: hidden;
 
   .plugin-card-body {
+    align-items: center;
     display: flex;
     flex-direction: column;
-    align-items: center;
   }
 
   .actions-trigger {
