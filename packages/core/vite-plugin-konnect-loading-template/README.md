@@ -5,7 +5,7 @@ A Vite plugin that injects a static HTML Konnect loading template in the host ap
 The template, by default, is hidden for the following URL paths on the Konnect UI domain(s):
 
 ```ts
-// Paths defined in `htpps://github.com/shared-ui-components/packages/core/konnect-app-shell/vite-plugins/vite-plugin-konnect-app-loading-template/template.html`
+// Paths defined in `https://github.com/shared-ui-components/packages/core/konnect-app-shell/vite-plugins/vite-plugin-konnect-app-loading-template/template.html`
 const excludedPaths = [
   '/login',
   '/logout',
@@ -32,7 +32,15 @@ const excludedPaths = [
 
 #### Installation
 
-First, ensure that your host app utilizes Vue's default root container in it's `/index.html` file:
+```shell
+# pnpm
+pnpm --filter "{your package name}" add -D @kong-ui-public/vite-plugin-konnect-loading-template
+
+# yarn
+yarn add -D @kong-ui-public/vite-plugin-konnect-loading-template
+```
+
+Ensure that your host app utilizes Vue's default root container in it's `/index.html` file:
 
 ```html
 <div id="app"></div>
@@ -44,7 +52,7 @@ Next, import the Vite plugin in your app's `vite.config.ts` file (if you are in 
 // vite.config.ts
 
 import { defineConfig } from 'vite'
-import KonnectLoadingTemplateVitePlugin from '@kong-ui/konnect-app-shell/vite-plugins'
+import KonnectLoadingTemplateVitePlugin from '@kong-ui-public/vite-plugin-konnect-loading-template'
 
 export default defineConfig({
   // ... more code
