@@ -14,7 +14,14 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       // Example: name: 'kong-ui-public-demo-component'
       name: `kong-ui-public-${sanitizedPackageName}`,
       entry: resolve(__dirname, './src/index.ts'),
-      fileName: (format) => `${sanitizedPackageName}.${format}.js`,
+      fileName: (format) => {
+        if (format === 'es') {
+          // Force the import as ESM
+          // You can rename a file with the .mjs extension to use ESM instead: https://vitejs.dev/guide/troubleshooting#vite-cjs-node-api-deprecated
+          return `${sanitizedPackageName}.${format}.mjs`
+        }
+        return `${sanitizedPackageName}.${format}.js`
+      },
     },
   },
 }))

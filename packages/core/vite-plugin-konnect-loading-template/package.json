@@ -3,14 +3,14 @@
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/vite-plugin-konnect-loading-template.umd.js",
-  "module": "./dist/vite-plugin-konnect-loading-template.es.js",
+  "module": "./dist/vite-plugin-konnect-loading-template.es.mjs",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/vite-plugin-konnect-loading-template.es.js",
+      "import": "./dist/vite-plugin-konnect-loading-template.es.mjs",
       "require": "./dist/vite-plugin-konnect-loading-template.umd.js"
     },
     "./package.json": "./package.json",
