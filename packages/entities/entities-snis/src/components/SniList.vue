@@ -9,7 +9,7 @@
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
       :error-message="errorMessage"
-      :fetcher="fetcher"
+      :fetcher="dummyFetcher"
       :fetcher-cache-key="fetchCacheKey"
       pagination-type="offset"
       preferences-storage-key="kong-ui-entities-snis-list"
@@ -285,7 +285,30 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   } as FuzzyMatchFilterConfig
 })
 
-const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value)
+const { fetcherState } = useFetcher(props.config, fetcherBaseUrl.value)
+
+const dummyFetcher = async (param: any) => {
+  const { query } = param
+
+  await new Promise(resolve => setTimeout(resolve, 100))
+
+  const data = new Array(2).fill('').map((_, i) => {
+    return { id: `${i}`, name: `test${i}` }
+  })
+
+  let result = data
+  if (query) {
+    const [key, value] = query.split('=')
+    if (key === 'name') {
+      result = result.filter((item: any) => item.name === value)
+    }
+  }
+
+  return {
+    data: result,
+    total: result.length,
+  }
+}
 
 const clearFilter = (): void => {
   filterQuery.value = ''
@@ -443,6 +466,17 @@ watch(fetcherState, (state) => {
   }
 
   errorMessage.value = null
+})
+
+watch(filterQuery, val => {
+  console.log(`[${Date.now()}] filterQuery changed to: ${val}`)
+
+  const t = Date.now()
+  console.log(`[${t}] Start on page reference timer`)
+  setTimeout(() => {
+    const n = Date.now()
+    console.log(`[${n}] On page reference timer 1000ms = ${n - t}ms`)
+  }, 1000)
 })
 
 onBeforeMount(async () => {
