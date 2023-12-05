@@ -248,7 +248,6 @@ const handleCustomClick = (): void => {
 
     &.custom-plugin {
       cursor: pointer;
-      padding-top: $kui-space-0;
     }
   }
 
