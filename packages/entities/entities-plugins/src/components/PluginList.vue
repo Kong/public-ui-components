@@ -104,7 +104,7 @@
               <KInputSwitch
                 :disabled="!isAllowed"
                 :disabled-tooltip-text="!isAllowed && config.getToggleDisabledTooltip?.(row) || undefined"
-                label-position="left"
+                label-before
                 :model-value="row.enabled"
                 @click.stop.prevent="isAllowed && toggleEnableStatus(row)"
               >

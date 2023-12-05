@@ -32,7 +32,7 @@
             v-model="enabled"
             class="actions-switch"
             :label="enabled ? 'Enabled' : 'Disabled'"
-            label-position="left"
+            label-before
           />
           <KButton
             appearance="primary"
