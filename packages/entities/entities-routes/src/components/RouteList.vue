@@ -56,8 +56,7 @@
           <KBadge
             v-for="protocol in rowValue"
             :key="protocol"
-            :background-color="KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST"
-            :color="KUI_COLOR_TEXT_NEUTRAL"
+            appearance="neutral"
             @click.stop
           >
             {{ protocol }}
@@ -69,9 +68,9 @@
           <KBadge
             v-for="host in rowValue"
             :key="host"
-            :background-color="KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST"
-            :color="KUI_COLOR_TEXT_NEUTRAL"
-            :truncation-tooltip="host"
+            appearance="neutral"
+            :tooltip="host"
+            truncation-tooltip
             @click.stop
           >
             {{ host }}
@@ -97,9 +96,9 @@
           <KBadge
             v-for="path in rowValue"
             :key="path"
-            :background-color="KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST"
-            :color="KUI_COLOR_TEXT_NEUTRAL"
-            :truncation-tooltip="path"
+            appearance="neutral"
+            :tooltip="path"
+            truncation-tooltip
             @click.stop
           >
             {{ path }}

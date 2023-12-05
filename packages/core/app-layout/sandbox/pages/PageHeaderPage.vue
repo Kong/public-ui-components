@@ -21,10 +21,7 @@
         />
       </template>
       <template #title-after>
-        <KBadge
-          appearance="neutral"
-          shape="rectangular"
-        >
+        <KBadge appearance="neutral">
           TRUTH
         </KBadge>
       </template>
@@ -69,28 +66,19 @@
 
       <div>
         <span class="badge-label">Name:</span>
-        <KBadge
-          appearance="neutral"
-          shape="rectangular"
-        >
+        <KBadge appearance="neutral">
           TK
         </KBadge>
       </div>
       <div>
         <span class="badge-label">Color:</span>
-        <KBadge
-          appearance="neutral"
-          shape="rectangular"
-        >
+        <KBadge appearance="neutral">
           BLACK
         </KBadge>
       </div>
       <div>
         <span class="badge-label">Type:</span>
-        <KBadge
-          appearance="success"
-          shape="rectangular"
-        >
+        <KBadge appearance="success">
           COOL
         </KBadge>
       </div>

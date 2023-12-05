@@ -124,7 +124,7 @@
       </template>
 
       <template #ordering="{ rowValue }">
-        <KBadge :appearance="rowValue ? 'warning' : 'default'">
+        <KBadge :appearance="rowValue ? 'warning' : 'info'">
           {{
             rowValue
               ? t('plugins.list.table_headers.ordering_badge.dynamic')

@@ -52,7 +52,8 @@
                 :key="`${item.key}-badge-tag-${idx}`"
                 class="config-badge"
                 :data-testid="`${item.key}-badge-tag-${idx}`"
-                :truncation-tooltip="tag"
+                :tooltip="tag"
+                truncation-tooltip
               >
                 {{ tag }}
               </KBadge>
