@@ -7,12 +7,12 @@
       class="plugin-card-content"
       :class="{ disabled: isDisabled }"
       :data-testid="`${plugin.id}-card`"
-      has-hover
+      :title="plugin.name"
       @click="isDisabled || isCustomPlugin ? undefined : handleClick()"
     >
       <template
-        v-if="isCustomPlugin"
-        #statusHat
+        v-if="isCustomPlugin && !isCreateCustomPlugin"
+        #footer
       >
         <div class="header-wrapper">
           <KBadge v-if="!isCreateCustomPlugin">
@@ -64,40 +64,35 @@
         </KDropdownMenu>
       </template>
 
-      <template #body>
-        <div
-          class="plugin-card-body"
-          :class="{ 'custom-plugin': isCustomPlugin }"
-          :data-testid="plugin.name"
-          :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
-          @click="handleCustomClick"
+      <div
+        class="plugin-card-body"
+        :class="{ 'custom-plugin': isCustomPlugin }"
+        :data-testid="plugin.name"
+        :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
+        @click="handleCustomClick"
+      >
+        <PluginIcon
+          :alt="plugin.name"
+          class="plugin-card-icon"
+          :name="plugin.imageName || plugin.id"
+          :size="55"
+        />
+        <p
+          v-if="plugin.description"
+          class="plugin-card-text"
         >
-          <h4 class="plugin-card-title">
-            {{ plugin.name }}
-          </h4>
-          <PluginIcon
-            :alt="plugin.name"
-            class="plugin-card-icon"
-            :name="plugin.imageName || plugin.id"
-            :size="55"
-          />
-          <p
-            v-if="plugin.description"
-            class="plugin-card-text"
-          >
-            {{ plugin.description }}
-          </p>
-        </div>
-        <div
-          :class="{
-            'plugin-card-create-footer': isCreateCustomPlugin,
-            'plugin-card-footer': !isCreateCustomPlugin,
-          }"
-          @click="handleCustomClick"
-        >
-          {{ isCreateCustomPlugin ? t('actions.create_custom') : plugin.exists ? t('actions.enabled') : t('actions.enable') }}
-        </div>
-      </template>
+          {{ plugin.description }}
+        </p>
+      </div>
+      <div
+        :class="{
+          'plugin-card-create-footer': isCreateCustomPlugin,
+          'plugin-card-footer': !isCreateCustomPlugin,
+        }"
+        @click="handleCustomClick"
+      >
+        {{ isCreateCustomPlugin ? t('actions.create_custom') : plugin.exists ? t('actions.enabled') : t('actions.enable') }}
+      </div>
     </KCard>
   </KTooltip>
 </template>
@@ -221,6 +216,12 @@ const handleCustomClick = (): void => {
   max-width: 335px;
   overflow: hidden;
 
+  .plugin-card-body {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+
   .actions-trigger {
     color: $kui-color-text-neutral-stronger;
   }
@@ -228,13 +229,6 @@ const handleCustomClick = (): void => {
   .header-wrapper {
     // maintain the specified height if slot has no content
     min-height: 25px;
-  }
-
-  &-title {
-    font-size: $kui-font-size-40;
-    font-weight: $kui-font-weight-medium;
-    margin-bottom: $kui-space-60;
-    margin-top: $kui-space-60;
   }
 
   &-icon {
@@ -247,12 +241,6 @@ const handleCustomClick = (): void => {
     font-weight: $kui-font-weight-regular;
   }
 
-  :deep(.k-card-body) {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-  }
-
   &-body {
     background-color: $kui-color-background;
     flex: 1;
@@ -260,16 +248,12 @@ const handleCustomClick = (): void => {
 
     &.custom-plugin {
       cursor: pointer;
-      padding-top: $kui-space-0;
-
-      .plugin-card-title {
-        margin-top: $kui-space-0;
-      }
     }
   }
 
   &-footer {
     background-color: $kui-color-background-primary-weakest;
+    border-radius: $kui-border-radius-30;
     color: $kui-color-text-primary;
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-semibold;
@@ -278,6 +262,7 @@ const handleCustomClick = (): void => {
 
   &-create-footer {
     background-color: $kui-color-background-primary;
+    border-radius: $kui-border-radius-30;
     color: $kui-color-text-inverse;
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-semibold;
@@ -292,27 +277,6 @@ const handleCustomClick = (): void => {
 
   &:hover {
     text-decoration: none;
-  }
-
-  :deep(.k-card-header) {
-    padding-left: $kui-space-60;
-    padding-right: $kui-space-40;
-    padding-top: $kui-space-60;
-  }
-
-  :deep(.k-plugin-card-body) {
-    display: flex;
-    flex-direction: column;
-  }
-
-  :deep(.k-card-content) {
-    display: flex;
-    flex: 1 !important;
-    height: 100%;
-  }
-
-  :deep(.k-card-actions .k-button.outline) {
-    border: none;
   }
 
   @media (min-width: $kui-breakpoint-phablet) {

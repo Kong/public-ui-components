@@ -66,100 +66,98 @@
     </template>
 
     <!-- Loading -->
-    <template #body>
-      <KSkeleton
-        v-if="isLoading"
-        data-testid="config-card-loader"
-        :table-columns="2"
-        type="table"
-      />
+    <KSkeleton
+      v-if="isLoading"
+      data-testid="config-card-loader"
+      :table-columns="2"
+      type="table"
+    />
 
-      <!-- Error fetching record -->
-      <KEmptyState
-        v-else-if="fetchDetailsError"
-        data-testid="config-card-fetch-error"
-        is-error
-      >
-        <template #message>
-          <h3>{{ fetchErrorMessage }}</h3>
-        </template>
-      </KEmptyState>
+    <!-- Error fetching record -->
+    <KEmptyState
+      v-else-if="fetchDetailsError"
+      data-testid="config-card-fetch-error"
+      is-error
+    >
+      <template #message>
+        <h3>{{ fetchErrorMessage }}</h3>
+      </template>
+    </KEmptyState>
 
-      <!-- Properties Content -->
-      <div
-        v-if="config.jsonYamlEnabled"
-        class="config-card-details-section"
+    <!-- Properties Content -->
+    <div
+      v-if="config.jsonYamlEnabled"
+      class="config-card-details-section"
+    >
+      <ConfigCardDisplay
+        :format="configFormat"
+        :prop-list-types="propListTypes"
+        :property-collections="propertyLists"
+        :record="record"
       >
-        <ConfigCardDisplay
-          :format="configFormat"
-          :prop-list-types="propListTypes"
-          :property-collections="propertyLists"
-          :record="record"
+        <!-- Pass all the slots from GrandParent to Child components -->
+        <template
+          v-for="slotKey in Object.keys($slots)"
+          :key="slotKey"
+          #[slotKey]="{ row, rowValue }"
         >
-          <!-- Pass all the slots from GrandParent to Child components -->
+          <slot
+            :name="slotKey"
+            :row="row"
+            :row-value="rowValue"
+          />
+        </template>
+      </ConfigCardDisplay>
+    </div>
+
+    <!-- TODO: Remove below div once Feature Flag `khcp-8778-json-yaml-configurations` is enabled -->
+    <div
+      v-else
+      class="config-card-details-section"
+    >
+      <div
+        v-for="pType in propListTypes"
+        :key="`config-card-details-${pType}-props`"
+        :class="`config-card-details-${pType}-props`"
+        :data-testid="`config-card-details-${pType}-props`"
+      >
+        <div
+          v-if="pType !== 'basic'"
+          class="config-card-prop-section-title"
+        >
+          {{ pType === 'advanced' ? t('baseConfigCard.sections.advanced') : t('baseConfigCard.sections.plugin') }}
+        </div>
+
+        <ConfigCardItem
+          v-for="propertyItem in propertyLists[pType as keyof typeof propertyLists]"
+          :key="propertyItem.key"
+          :item="propertyItem"
+        >
+          <template #label>
+            <slot
+              :name="`${propertyItem.key}-label`"
+              :row="propertyItem"
+            />
+          </template>
           <template
-            v-for="slotKey in Object.keys($slots)"
-            :key="slotKey"
-            #[slotKey]="{ row, rowValue }"
+            v-if="hasTooltip(propertyItem)"
+            #label-tooltip
           >
             <slot
-              :name="slotKey"
-              :row="row"
+              :name="`${propertyItem.key}-label-tooltip`"
+              :row="propertyItem"
+            />
+          </template>
+          <template #[propertyItem.key]="{ rowValue }">
+            <slot
+              :name="propertyItem.key"
+              :row="propertyItem"
               :row-value="rowValue"
             />
           </template>
-        </ConfigCardDisplay>
+        </ConfigCardItem>
       </div>
-
-      <!-- TODO: Remove below div once Feature Flag `khcp-8778-json-yaml-configurations` is enabled -->
-      <div
-        v-else
-        class="config-card-details-section"
-      >
-        <div
-          v-for="pType in propListTypes"
-          :key="`config-card-details-${pType}-props`"
-          :class="`config-card-details-${pType}-props`"
-          :data-testid="`config-card-details-${pType}-props`"
-        >
-          <div
-            v-if="pType !== 'basic'"
-            class="config-card-prop-section-title"
-          >
-            {{ pType === 'advanced' ? t('baseConfigCard.sections.advanced') : t('baseConfigCard.sections.plugin') }}
-          </div>
-
-          <ConfigCardItem
-            v-for="propertyItem in propertyLists[pType as keyof typeof propertyLists]"
-            :key="propertyItem.key"
-            :item="propertyItem"
-          >
-            <template #label>
-              <slot
-                :name="`${propertyItem.key}-label`"
-                :row="propertyItem"
-              />
-            </template>
-            <template
-              v-if="hasTooltip(propertyItem)"
-              #label-tooltip
-            >
-              <slot
-                :name="`${propertyItem.key}-label-tooltip`"
-                :row="propertyItem"
-              />
-            </template>
-            <template #[propertyItem.key]="{ rowValue }">
-              <slot
-                :name="propertyItem.key"
-                :row="propertyItem"
-                :row-value="rowValue"
-              />
-            </template>
-          </ConfigCardItem>
-        </div>
-      </div>
-    </template>
+    </div>
   </KCard>
 </template>
 

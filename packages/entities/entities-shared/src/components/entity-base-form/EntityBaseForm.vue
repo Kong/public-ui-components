@@ -1,68 +1,66 @@
 <template>
   <KCard class="kong-ui-entity-base-form">
-    <template #body>
-      <!-- Loading -->
-      <KSkeleton
-        v-if="isLoading"
-        type="form"
+    <!-- Loading -->
+    <KSkeleton
+      v-if="isLoading"
+      type="form"
+    />
+
+    <!-- Error fetching record for edit -->
+    <KEmptyState
+      v-else-if="fetchDetailsError"
+      :cta-text="t('baseForm.actions.back')"
+      data-testid="form-fetch-error"
+      :handle-click="handleErrorCtaClick"
+      :is-error="true"
+    >
+      <template #message>
+        <h3>{{ fetchErrorMessage }}</h3>
+      </template>
+    </KEmptyState>
+
+    <!-- Form content -->
+    <form
+      v-else
+      data-testid="form-content"
+      @reset.prevent="handleClickCancel"
+      @submit.prevent="handleClickSave"
+    >
+      <slot />
+
+      <!-- Form error -->
+      <KAlert
+        v-if="errorMessage"
+        :alert-message="errorMessage"
+        appearance="danger"
+        data-testid="form-error"
       />
 
-      <!-- Error fetching record for edit -->
-      <KEmptyState
-        v-else-if="fetchDetailsError"
-        :cta-text="t('baseForm.actions.back')"
-        data-testid="form-fetch-error"
-        :handle-click="handleErrorCtaClick"
-        :is-error="true"
+      <!-- Form actions -->
+      <div
+        class="form-actions"
+        data-testid="form-actions"
       >
-        <template #message>
-          <h3>{{ fetchErrorMessage }}</h3>
-        </template>
-      </KEmptyState>
-
-      <!-- Form content -->
-      <form
-        v-else
-        data-testid="form-content"
-        @reset.prevent="handleClickCancel"
-        @submit.prevent="handleClickSave"
-      >
-        <slot />
-
-        <!-- Form error -->
-        <KAlert
-          v-if="errorMessage"
-          :alert-message="errorMessage"
-          appearance="danger"
-          data-testid="form-error"
-        />
-
-        <!-- Form actions -->
-        <div
-          class="form-actions"
-          data-testid="form-actions"
-        >
-          <slot name="form-actions">
-            <KButton
-              appearance="secondary"
-              data-testid="form-cancel"
-              :disabled="isReadonly"
-              type="reset"
-            >
-              {{ t('baseForm.actions.cancel') }}
-            </KButton>
-            <KButton
-              appearance="primary"
-              data-testid="form-submit"
-              :disabled="disableSave"
-              type="submit"
-            >
-              {{ t('baseForm.actions.save') }}
-            </KButton>
-          </slot>
-        </div>
-      </form>
-    </template>
+        <slot name="form-actions">
+          <KButton
+            appearance="secondary"
+            data-testid="form-cancel"
+            :disabled="isReadonly"
+            type="reset"
+          >
+            {{ t('baseForm.actions.cancel') }}
+          </KButton>
+          <KButton
+            appearance="primary"
+            data-testid="form-submit"
+            :disabled="disableSave"
+            type="submit"
+          >
+            {{ t('baseForm.actions.save') }}
+          </KButton>
+        </slot>
+      </div>
+    </form>
   </KCard>
 </template>
 

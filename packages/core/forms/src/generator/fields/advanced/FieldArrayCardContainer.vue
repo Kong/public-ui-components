@@ -1,9 +1,7 @@
 <template>
   <div class="array-card-container">
     <KCard class="card">
-      <template #body>
-        <slot />
-      </template>
+      <slot />
     </KCard>
 
     <KButton

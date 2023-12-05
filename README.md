@@ -45,6 +45,14 @@ All packages must be created utilizing the `pnpm run create-package` CLI. [See h
 
 Be sure to familiarize yourself with the [Component Requirements](./docs/creating-a-package.md#component-requirements), including style rules.
 
+If you need to bump a version of a dependency for ALL consuming packages in this repo, use this command:
+
+```sh
+pnpm --recursive update {package-name}@{version}
+```
+
+**Note** that it will bump version of said dependency ONLY for those packages that have it as a `dependency` or `devDependency`, it won't add said dependency to package dependencies if it doesn't already have it.
+
 ### Requirements
 
 - [NodeJS >= 18.x](https://nodejs.org/en/download/)
