@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.0.1...@kong-ui-public/misc-widgets@2.0.2) (2023-12-05)
+
+
+### Bug Fixes
+
+* update kcard usage [KHCP-9887] ([#977](https://github.com/Kong/public-ui-components/issues/977)) ([3f00e69](https://github.com/Kong/public-ui-components/commit/3f00e69fd65d1eae07139cee52afb16825f34a9b))
+
+
+
+
+
 ## [2.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.0.0...@kong-ui-public/misc-widgets@2.0.1) (2023-11-22)
 
 

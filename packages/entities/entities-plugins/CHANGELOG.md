@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.4.2...@kong-ui-public/entities-plugins@2.4.3) (2023-12-05)
+
+
+### Bug Fixes
+
+* update kcard usage [KHCP-9887] ([#977](https://github.com/Kong/public-ui-components/issues/977)) ([3f00e69](https://github.com/Kong/public-ui-components/commit/3f00e69fd65d1eae07139cee52afb16825f34a9b))
+
+
+
+
+
 ## [2.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.4.1...@kong-ui-public/entities-plugins@2.4.2) (2023-12-01)
 
 
