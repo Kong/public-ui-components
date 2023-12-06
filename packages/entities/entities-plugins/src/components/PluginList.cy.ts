@@ -186,11 +186,11 @@ describe('<PluginList />', () => {
 
       cy.getTestId('basic-auth').find('[data-testid="ordering"]')
         .should('contain.text', 'Dynamic')
-        .find('.k-badge-warning').should('exist')
+        .find('.k-badge.warning').should('exist')
 
       cy.getTestId('acl').find('[data-testid="ordering"]')
         .should('contain.text', 'Static')
-        .find('.k-badge-default').should('exist')
+        .find('.k-badge.info').should('exist')
     })
 
     it('should render tooltip when toogle is disabled and "getToggleDisabledTooltip" provided', () => {
@@ -208,8 +208,12 @@ describe('<PluginList />', () => {
       })
 
       // eslint-disable-next-line cypress/unsafe-to-chain-command
-      cy.getTestId('basic-auth').find('[data-testid="enabled"]')
-        .trigger('mouseenter').find('.k-tooltip')
+      cy.getTestId('basic-auth')
+        .find('[data-testid="enabled"]')
+        .find('.switch-control')
+        .trigger('mouseenter')
+        .parent()
+        .find('.k-tooltip')
         .should('be.visible')
         .should('contain.text', kTooltipText)
     })
@@ -352,7 +356,7 @@ describe('<PluginList />', () => {
           const { getDisplayName } = composables.usePluginMetaData()
 
           // eslint-disable-next-line cypress/unsafe-to-chain-command
-          cy.get('[data-testid="basic-auth"] .k-switch').eq(0).click().then(() => {
+          cy.get('[data-testid="basic-auth"] .k-input-switch').eq(0).click().then(() => {
             if (expected) {
               cy.get('.k-modal')
                 .should('exist')
@@ -366,7 +370,7 @@ describe('<PluginList />', () => {
           })
 
           // eslint-disable-next-line cypress/unsafe-to-chain-command
-          cy.get('[data-testid="acl"] .k-switch').eq(0).click().then(() => {
+          cy.get('[data-testid="acl"] .k-input-switch').eq(0).click().then(() => {
             if (expected) {
               cy.get('.k-modal')
                 .should('exist')
