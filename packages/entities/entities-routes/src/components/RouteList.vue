@@ -83,7 +83,7 @@
           <KBadge
             v-for="method in rowValue"
             :key="method"
-            v-bind="getMethodBadgeColors(method)"
+            :appearance="Object.values(BadgeMethodAppearances).includes(method.toLowerCase() as BadgeMethodAppearance) ? method.toLowerCase() as BadgeMethodAppearance : 'custom'"
             @click.stop
           >
             {{ method }}
@@ -183,10 +183,8 @@ import { computed, ref, watch, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
 
-import {
-  KUI_COLOR_TEXT_NEUTRAL, KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST,
-} from '@kong/design-tokens'
-
+import { BadgeMethodAppearances } from '@kong/kongponents'
+import type { BadgeMethodAppearance } from '@kong/kongponents'
 import {
   EntityBaseTable,
   EntityDeleteModal,
@@ -216,7 +214,6 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 
 import composables from '../composables'
 import endpoints from '../routes-endpoints'
-import { getMethodBadgeColors } from '../utilities'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,

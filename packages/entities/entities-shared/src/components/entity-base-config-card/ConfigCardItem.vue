@@ -78,17 +78,15 @@
               class="method-badge-array"
               :data-testid="`${item.key}-badge-methods`"
             >
-              <KMethodBadge
+              <KBadge
                 v-for="(method, idx) in item.value"
                 :key="`${item.key}-badge-method-${idx}`"
+                :appearance="Object.values(BadgeMethodAppearances).includes(method.toLowerCase() as BadgeMethodAppearance) ? method.toLowerCase() as BadgeMethodAppearance : 'custom'"
                 class="config-badge"
                 :data-testid="`${item.key}-badge-method-${idx}`"
-                is-rounded
-                :label="method"
-                :method="MethodsArray.includes(method.toLowerCase()) ? method.toLowerCase() : 'custom'"
               >
                 {{ method }}
-              </KMethodBadge>
+              </KBadge>
             </div>
 
             <div
@@ -130,7 +128,8 @@ import type { RecordItem, ComponentAttrsData } from '../../types'
 import { ConfigurationSchemaType } from '../../types'
 import composables from '../../composables'
 import { CopyUuid } from '@kong-ui-public/copy-uuid'
-import { MethodsArray } from '@kong/kongponents'
+import { BadgeMethodAppearances } from '@kong/kongponents'
+import type { BadgeMethodAppearance } from '@kong/kongponents'
 import JsonCardItem from './JsonCardItem.vue'
 import InternalLinkItem from './InternalLinkItem.vue'
 import StatusBadge from './StatusBadge.vue'

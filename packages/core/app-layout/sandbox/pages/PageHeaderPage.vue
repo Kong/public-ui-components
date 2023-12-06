@@ -84,10 +84,10 @@
       </div>
       <div class="method-badges">
         <span class="badge-label">Methods:</span>
-        <KMethodBadge
+        <KBadge
           v-for="method in ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace', 'connect', 'custom']"
           :key="method"
-          :method="(method as Method)"
+          :appearance="(method as BadgeMethodAppearance)"
         />
       </div>
 
@@ -114,7 +114,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { Method } from '@kong/kongponents'
+import type { BadgeMethodAppearance } from '@kong/kongponents'
 import { AppAboutSection, AppPageHeader } from '../../src'
 import { EditIcon } from '@kong/icons'
 
