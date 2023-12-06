@@ -1,5 +1,6 @@
 import type { FromSchema, JSONSchema } from 'json-schema-to-ts'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
+import { DEFAULT_TILE_HEIGHT } from '../constants'
 
 // TODO: Explore v4
 export interface DashboardRendererContext {
@@ -11,12 +12,23 @@ export enum ChartTypes {
   HorizontalBar = 'horizontal_bar',
   VerticalBar = 'vertical_bar',
   Gauge = 'gauge',
+  TimeseriesLine = 'timeseries_line',
 }
 
 // Common definition for many ChartJS tiles.
 const syntheticsDataKey = {
   type: 'string',
 } as const
+
+const chartDatasetColorsSchema = {
+  type: ['object', 'array'],
+  items: {
+    type: 'string',
+  },
+  additionalProperties: {
+    type: 'string',
+  },
+} as const satisfies JSONSchema
 
 export const barChartSchema = {
   type: 'object',
@@ -28,6 +40,10 @@ export const barChartSchema = {
     stacked: {
       type: 'boolean',
     },
+    showAnnotations: {
+      type: 'boolean',
+    },
+    chartDatasetColors: chartDatasetColorsSchema,
     syntheticsDataKey,
   },
   required: ['type'],
@@ -35,6 +51,28 @@ export const barChartSchema = {
 } as const satisfies JSONSchema
 
 export type BarChartOptions = FromSchema<typeof barChartSchema>
+
+export const timeseriesChartSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: [ChartTypes.TimeseriesLine],
+    },
+    stacked: {
+      type: 'boolean',
+    },
+    fill: {
+      type: 'boolean',
+    },
+    chartDatasetColors: chartDatasetColorsSchema,
+    syntheticsDataKey,
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TimeseriesChartOptions = FromSchema<typeof timeseriesChartSchema>
 
 export const gaugeChartSchema = {
   type: 'object',
@@ -61,7 +99,7 @@ export const gaugeChartSchema = {
 
 export type GaugeChartOptions = FromSchema<typeof gaugeChartSchema>
 
-export const tileSchema = {
+export const tileDefinitionSchema = {
   type: 'object',
   properties: {
     query: {
@@ -69,34 +107,101 @@ export const tileSchema = {
       type: 'object',
     },
     chart: {
-      oneOf: [barChartSchema, gaugeChartSchema],
-    },
-    title: {
-      type: 'string',
+      oneOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema],
     },
   },
-  required: ['chart', 'query'],
+  required: ['query', 'chart'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type TileDefinition = FromSchema<typeof tileSchema>
+export type TileDefinition = FromSchema<typeof tileDefinitionSchema>
 
-export const dashboardDefinitionSchema = {
+export const tileLayoutSchema = {
+  type: 'object',
+  properties: {
+    position: {
+      type: 'object',
+      properties: {
+        col: {
+          type: 'number',
+        },
+        row: {
+          type: 'number',
+        },
+      },
+      description: 'Position of the tile in the grid.',
+      required: ['col', 'row'],
+      additionalProperties: false,
+    },
+    size: {
+      type: 'object',
+      properties: {
+        cols: {
+          type: 'number',
+        },
+        rows: {
+          type: 'number',
+        },
+      },
+      description: 'Number of columns and rows the tile occupies.',
+      required: ['cols', 'rows'],
+      additionalProperties: false,
+    },
+  },
+  required: ['position', 'size'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TileLayout = FromSchema<typeof tileLayoutSchema>
+
+export const tileConfigSchema = {
+  type: 'object',
+  properties: {
+    definition: tileDefinitionSchema,
+    layout: tileLayoutSchema,
+  },
+  required: ['definition', 'layout'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TileConfig = FromSchema<typeof tileConfigSchema>
+
+export const dashboardConfigSchema = {
   type: 'object',
   properties: {
     tiles: {
       type: 'array',
-      items: tileSchema,
+      items: tileConfigSchema,
+    },
+    tileHeight: {
+      type: 'number',
+      description: `Height of each tile in pixels. Default: ${DEFAULT_TILE_HEIGHT}`,
+      default: DEFAULT_TILE_HEIGHT,
+    },
+    gridSize: {
+      type: 'object',
+      properties: {
+        cols: {
+          type: 'number',
+        },
+        rows: {
+          type: 'number',
+        },
+      },
+      description: 'Number of columns and rows in the grid.',
+      required: ['cols', 'rows'],
+      additionalProperties: false,
     },
   },
-  required: ['tiles'],
+  required: ['tiles', 'gridSize'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type DashboardDefinition = FromSchema<typeof dashboardDefinitionSchema>
+export type DashboardConfig = FromSchema<typeof dashboardConfigSchema>
 
 export interface RendererProps<T> {
   query: any // TODO: Explore v4
-  queryReady: boolean,
-  chartOptions: T,
+  queryReady: boolean
+  chartOptions: T
+  height: number
 }

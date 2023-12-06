@@ -27,104 +27,100 @@
     />
 
     <KCard>
-      <template #body>
-        <h5 class="fields-group-title">
-          {{ t('upstreams.form.passive_healthy.label') }}
-        </h5>
-        <p class="fields-group-text">
-          {{ t('upstreams.form.passive_healthy.help') }}
-        </p>
+      <h5 class="fields-group-title">
+        {{ t('upstreams.form.passive_healthy.label') }}
+      </h5>
+      <p class="fields-group-text">
+        {{ t('upstreams.form.passive_healthy.help') }}
+      </p>
 
-        <KInput
-          autocomplete="off"
-          data-testid="passive-healthcheck-successes"
-          :label="t('upstreams.form.fields.successes.label')"
-          :max="SuccessOrFailureMaxNumber"
-          :min="SuccessOrFailureMinNumber"
-          :model-value="successes"
-          :readonly="readonly"
-          type="number"
-          @update:model-value="emit('update:successes', $event)"
-        />
+      <KInput
+        autocomplete="off"
+        data-testid="passive-healthcheck-successes"
+        :label="t('upstreams.form.fields.successes.label')"
+        :max="SuccessOrFailureMaxNumber"
+        :min="SuccessOrFailureMinNumber"
+        :model-value="successes"
+        :readonly="readonly"
+        type="number"
+        @update:model-value="emit('update:successes', $event)"
+      />
 
-        <KMultiselect
-          v-if="!isTcp"
-          class="margin-top-6 passive-healthcheck-http-statuses"
-          enable-item-creation
-          :items="HTTPStatuses"
-          :label="t('upstreams.form.fields.http_statuses.label')"
-          :model-value="httpStatuses"
-          :readonly="readonly"
-          width="100%"
-          @item:added="(item: MultiselectItem) => trackHealthyItem(item, true)"
-          @item:removed="(item: MultiselectItem) => trackHealthyItem(item, false)"
-          @update:model-value="emit('update:http-statuses', $event)"
-        />
-      </template>
+      <KMultiselect
+        v-if="!isTcp"
+        class="margin-top-6 passive-healthcheck-http-statuses"
+        enable-item-creation
+        :items="HTTPStatuses"
+        :label="t('upstreams.form.fields.http_statuses.label')"
+        :model-value="httpStatuses"
+        :readonly="readonly"
+        width="100%"
+        @item:added="(item: MultiselectItem) => trackHealthyItem(item, true)"
+        @item:removed="(item: MultiselectItem) => trackHealthyItem(item, false)"
+        @update:model-value="emit('update:http-statuses', $event)"
+      />
     </KCard>
 
     <KCard>
-      <template #body>
-        <h5 class="fields-group-title">
-          {{ t('upstreams.form.passive_unhealthy.label') }}
-        </h5>
-        <p class="fields-group-text">
-          {{ t('upstreams.form.passive_unhealthy.help') }}
-        </p>
+      <h5 class="fields-group-title">
+        {{ t('upstreams.form.passive_unhealthy.label') }}
+      </h5>
+      <p class="fields-group-text">
+        {{ t('upstreams.form.passive_unhealthy.help') }}
+      </p>
 
-        <KInput
-          autocomplete="off"
-          data-testid="passive-healthcheck-timeouts"
-          :label="t('upstreams.form.fields.timeouts.label')"
-          :max="TimeoutsMaxNumber"
-          :min="TimeoutsMinNumber"
-          :model-value="timeouts"
-          :readonly="readonly"
-          type="number"
-          @update:model-value="emit('update:timeouts', $event)"
-        />
+      <KInput
+        autocomplete="off"
+        data-testid="passive-healthcheck-timeouts"
+        :label="t('upstreams.form.fields.timeouts.label')"
+        :max="TimeoutsMaxNumber"
+        :min="TimeoutsMinNumber"
+        :model-value="timeouts"
+        :readonly="readonly"
+        type="number"
+        @update:model-value="emit('update:timeouts', $event)"
+      />
 
+      <KInput
+        v-if="isTcp"
+        autocomplete="off"
+        class="margin-top-6"
+        data-testid="passive-healthcheck-tcp-failures"
+        :label="t('upstreams.form.fields.tcp_failures.label')"
+        :max="SuccessOrFailureMaxNumber"
+        :min="SuccessOrFailureMinNumber"
+        :model-value="tcpFailures"
+        :readonly="readonly"
+        type="number"
+        @update:model-value="emit('update:tcp-failures', $event)"
+      />
+
+      <template v-else>
         <KInput
-          v-if="isTcp"
           autocomplete="off"
           class="margin-top-6"
-          data-testid="passive-healthcheck-tcp-failures"
-          :label="t('upstreams.form.fields.tcp_failures.label')"
+          data-testid="passive-healthcheck-http-failures"
+          :label="t('upstreams.form.fields.http_failures.label')"
           :max="SuccessOrFailureMaxNumber"
           :min="SuccessOrFailureMinNumber"
-          :model-value="tcpFailures"
+          :model-value="httpFailures"
           :readonly="readonly"
           type="number"
-          @update:model-value="emit('update:tcp-failures', $event)"
+          @update:model-value="emit('update:http-failures', $event)"
         />
-
-        <template v-else>
-          <KInput
-            autocomplete="off"
-            class="margin-top-6"
-            data-testid="passive-healthcheck-http-failures"
-            :label="t('upstreams.form.fields.http_failures.label')"
-            :max="SuccessOrFailureMaxNumber"
-            :min="SuccessOrFailureMinNumber"
-            :model-value="httpFailures"
-            :readonly="readonly"
-            type="number"
-            @update:model-value="emit('update:http-failures', $event)"
-          />
-          <KMultiselect
-            autocomplete="off"
-            class="margin-top-6 passive-healthcheck-unhealthy-http-statuses"
-            enable-item-creation
-            :items="HTTPStatuses"
-            :label="t('upstreams.form.fields.http_statuses.label')"
-            :model-value="unhealthyHttpStatuses"
-            :readonly="readonly"
-            width="100%"
-            @item:added="(item: MultiselectItem) => trackUnhealthyItem(item, true)"
-            @item:removed="(item: MultiselectItem) => trackUnhealthyItem(item, false)"
-            @update:model-value="emit('update:unhealthy-http-statuses', $event)"
-          />
-        </template>
+        <KMultiselect
+          autocomplete="off"
+          class="margin-top-6 passive-healthcheck-unhealthy-http-statuses"
+          enable-item-creation
+          :items="HTTPStatuses"
+          :label="t('upstreams.form.fields.http_statuses.label')"
+          :model-value="unhealthyHttpStatuses"
+          :readonly="readonly"
+          width="100%"
+          @item:added="(item: MultiselectItem) => trackUnhealthyItem(item, true)"
+          @item:removed="(item: MultiselectItem) => trackUnhealthyItem(item, false)"
+          @update:model-value="emit('update:unhealthy-http-statuses', $event)"
+        />
       </template>
     </KCard>
   </EntityFormSection>

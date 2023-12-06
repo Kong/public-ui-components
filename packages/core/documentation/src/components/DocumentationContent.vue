@@ -7,34 +7,31 @@
     />
     <KCard
       v-else
-      border-variant="noBorder"
       class="documentation-card"
     >
-      <template #body>
-        <div class="documentation-parent-container">
-          <KTreeList
-            :key="`tree-list-${cacheKey}`"
-            class="document-tree-list"
-            :items="documentList"
-            :max-depth="2"
-            @change="(data) => emit('parent-change', data)"
-            @child-change="(data) => emit('child-change', data)"
-            @selected="(data) => emit('document-selection', data)"
-          />
-          <DocumentationDisplay
-            v-if="selectedDocument"
-            :key="key"
-            :can-edit="canEdit"
-            :card="card"
-            class="document-holder"
-            :hide-publish-toggle="hidePublishToggle"
-            :selected-document="selectedDocument"
-            @add="handleAddClick"
-            @edit="handleEditClick"
-            @toggle-published="(data) => emit('toggle-published', data)"
-          />
-        </div>
-      </template>
+      <div class="documentation-parent-container">
+        <KTreeList
+          :key="`tree-list-${cacheKey}`"
+          class="document-tree-list"
+          :items="documentList"
+          :max-depth="2"
+          @change="(data) => emit('parent-change', data)"
+          @child-change="(data) => emit('child-change', data)"
+          @selected="(data) => emit('document-selection', data)"
+        />
+        <DocumentationDisplay
+          v-if="selectedDocument"
+          :key="key"
+          :can-edit="canEdit"
+          :card="card"
+          class="document-holder"
+          :hide-publish-toggle="hidePublishToggle"
+          :selected-document="selectedDocument"
+          @add="handleAddClick"
+          @edit="handleEditClick"
+          @toggle-published="(data) => emit('toggle-published', data)"
+        />
+      </div>
     </KCard>
     <ProductDocumentModal
       v-if="displayModal"

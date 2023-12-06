@@ -16,41 +16,37 @@
     </template>
 
     <KCard>
-      <template #body>
-        <h5 class="fields-group-title">
-          {{ t('upstreams.form.fields.active_health_checks.label') }}
-        </h5>
-        <p class="fields-group-text">
-          {{ t('upstreams.form.fields.active_health_checks.help') }}
-        </p>
+      <h5 class="fields-group-title">
+        {{ t('upstreams.form.fields.active_health_checks.label') }}
+      </h5>
+      <p class="fields-group-text">
+        {{ t('upstreams.form.fields.active_health_checks.help') }}
+      </p>
 
-        <KInputSwitch
-          class="active-health-switch"
-          data-testid="active-health-switch"
-          :disabled="readonly"
-          :model-value="activeHealthSwitch"
-          @change="emit('update:active-health-switch', $event)"
-        />
-      </template>
+      <KInputSwitch
+        class="active-health-switch"
+        data-testid="active-health-switch"
+        :disabled="readonly"
+        :model-value="activeHealthSwitch"
+        @change="emit('update:active-health-switch', $event)"
+      />
     </KCard>
 
     <KCard>
-      <template #body>
-        <h5 class="fields-group-title">
-          {{ t('upstreams.form.fields.passive_health_checks.label') }}
-        </h5>
-        <p class="fields-group-text">
-          {{ t('upstreams.form.fields.passive_health_checks.help') }}
-        </p>
+      <h5 class="fields-group-title">
+        {{ t('upstreams.form.fields.passive_health_checks.label') }}
+      </h5>
+      <p class="fields-group-text">
+        {{ t('upstreams.form.fields.passive_health_checks.help') }}
+      </p>
 
-        <KInputSwitch
-          class="passive-health-switch"
-          data-testid="passive-health-switch"
-          :disabled="readonly"
-          :model-value="passiveHealthSwitch"
-          @change="emit('update:passive-health-switch', $event)"
-        />
-      </template>
+      <KInputSwitch
+        class="passive-health-switch"
+        data-testid="passive-health-switch"
+        :disabled="readonly"
+        :model-value="passiveHealthSwitch"
+        @change="emit('update:passive-health-switch', $event)"
+      />
     </KCard>
 
     <KInput

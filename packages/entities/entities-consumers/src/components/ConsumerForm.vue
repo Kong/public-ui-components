@@ -29,55 +29,53 @@
           </div>
 
           <KCard>
-            <template #body>
-              <KInput
-                v-model.trim="state.fields.username"
-                autocomplete="off"
-                class="username-field"
-                data-testid="consumer-form-username"
-                :label="t('consumers.fields.username.label')"
-                :label-attributes="{
-                  tooltipAttributes: { maxWidth: '250' }
-                }"
-                :placeholder="t('consumers.fields.username.placeholder')"
-                :readonly="state.readonly"
-                type="text"
-              >
-                <template #label-tooltip>
-                  <i18nT
-                    keypath="consumers.fields.username.tooltip"
-                    scope="global"
-                  >
-                    <template #custom_id>
-                      <code>{{ t('consumers.fields.username.custom_id') }}</code>
-                    </template>
-                  </i18nT>
-                </template>
-              </KInput>
+            <KInput
+              v-model.trim="state.fields.username"
+              autocomplete="off"
+              class="username-field"
+              data-testid="consumer-form-username"
+              :label="t('consumers.fields.username.label')"
+              :label-attributes="{
+                tooltipAttributes: { maxWidth: '250' }
+              }"
+              :placeholder="t('consumers.fields.username.placeholder')"
+              :readonly="state.readonly"
+              type="text"
+            >
+              <template #label-tooltip>
+                <i18nT
+                  keypath="consumers.fields.username.tooltip"
+                  scope="global"
+                >
+                  <template #custom_id>
+                    <code>{{ t('consumers.fields.username.custom_id') }}</code>
+                  </template>
+                </i18nT>
+              </template>
+            </KInput>
 
-              <KInput
-                v-model.trim="state.fields.customId"
-                autocomplete="off"
-                data-testid="consumer-form-custom-id"
-                :label="t('consumers.fields.custom_id.label')"
-                :label-attributes="{
-                  tooltipAttributes: { maxWidth: '250' } }"
-                :placeholder="t('consumers.fields.custom_id.placeholder')"
-                :readonly="state.readonly"
-                type="text"
-              >
-                <template #label-tooltip>
-                  <i18nT
-                    keypath="consumers.fields.custom_id.tooltip"
-                    scope="global"
-                  >
-                    <template #username>
-                      <code>{{ t('consumers.fields.custom_id.username') }}</code>
-                    </template>
-                  </i18nT>
-                </template>
-              </KInput>
-            </template>
+            <KInput
+              v-model.trim="state.fields.customId"
+              autocomplete="off"
+              data-testid="consumer-form-custom-id"
+              :label="t('consumers.fields.custom_id.label')"
+              :label-attributes="{
+                tooltipAttributes: { maxWidth: '250' } }"
+              :placeholder="t('consumers.fields.custom_id.placeholder')"
+              :readonly="state.readonly"
+              type="text"
+            >
+              <template #label-tooltip>
+                <i18nT
+                  keypath="consumers.fields.custom_id.tooltip"
+                  scope="global"
+                >
+                  <template #username>
+                    <code>{{ t('consumers.fields.custom_id.username') }}</code>
+                  </template>
+                </i18nT>
+              </template>
+            </KInput>
           </KCard>
 
           <KInput

@@ -87,7 +87,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       active: !activeItem.value || (activeItem.value as SidebarPrimaryItem)?.key === 'overview',
     },
     {
-      name: 'Runtime Manager',
+      name: 'Gateway Manager',
       to: '/sidebar/?runtime-manager',
       label: 'retail-sandbox-rg', // runtime group name
       key: 'runtime-manager',
@@ -262,11 +262,6 @@ const sidebarItemsBottom = computed((): SidebarPrimaryItem[] => {
           name: 'Billing and Usage',
           to: '/sidebar/?billing-and-usage',
           active: activeItem.value?.name === 'Billing and Usage',
-        },
-        {
-          name: 'Auth Settings',
-          to: '/sidebar/?auth-settings',
-          active: activeItem.value?.name === 'Auth Settings',
         },
       ],
     },

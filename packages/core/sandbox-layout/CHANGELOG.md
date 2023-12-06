@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.0.8...@kong-ui-public/sandbox-layout@2.0.9) (2023-12-05)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.0.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.0.7...@kong-ui-public/sandbox-layout@2.0.8) (2023-12-05)
+
+
+### Bug Fixes
+
+* update kcard usage [KHCP-9887] ([#977](https://github.com/Kong/public-ui-components/issues/977)) ([3f00e69](https://github.com/Kong/public-ui-components/commit/3f00e69fd65d1eae07139cee52afb16825f34a9b))
+
+
+
+
+
+## [2.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.0.6...@kong-ui-public/sandbox-layout@2.0.7) (2023-12-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.8.2 ([#968](https://github.com/Kong/public-ui-components/issues/968)) ([afd8013](https://github.com/Kong/public-ui-components/commit/afd801327bfd53bede1215fa358b5828540af23a))
+
+
+
+
+
 ## [2.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.0.5...@kong-ui-public/sandbox-layout@2.0.6) (2023-11-30)
 
 

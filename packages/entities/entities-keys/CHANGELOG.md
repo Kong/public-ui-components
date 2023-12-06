@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@2.1.6...@kong-ui-public/entities-keys@2.1.7) (2023-12-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [2.1.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@2.1.5...@kong-ui-public/entities-keys@2.1.6) (2023-12-05)
+
+
+### Bug Fixes
+
+* update kcard usage [KHCP-9887] ([#977](https://github.com/Kong/public-ui-components/issues/977)) ([3f00e69](https://github.com/Kong/public-ui-components/commit/3f00e69fd65d1eae07139cee52afb16825f34a9b))
+
+
+
+
+
+## [2.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@2.1.4...@kong-ui-public/entities-keys@2.1.5) (2023-12-01)
+
+
+### Bug Fixes
+
+* create button visibility ([#970](https://github.com/Kong/public-ui-components/issues/970)) ([7a90cbc](https://github.com/Kong/public-ui-components/commit/7a90cbcecfa621e595c3704a864c415391edde19))
+
+
+
+
+
 ## [2.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@2.1.3...@kong-ui-public/entities-keys@2.1.4) (2023-11-30)
 
 **Note:** Version bump only for package @kong-ui-public/entities-keys

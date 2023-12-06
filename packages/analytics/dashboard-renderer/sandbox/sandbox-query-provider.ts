@@ -1,9 +1,20 @@
 import type { Plugin } from 'vue'
 import { INJECT_QUERY_PROVIDER } from '../src/types/query-provider'
-import { exploreV3Response } from '../src/mock-data'
+import { exploreV3Response, timeSeriesExploreResponse } from './mock-data'
 
-const query = async (): Promise<any> => {
-  return exploreV3Response
+const delayedResponse = (response: any) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(response)
+    }, 1000)
+  })
+}
+
+const query = async (query: any): Promise<any> => {
+  if (query.type === 'timeseries') {
+    return await delayedResponse(timeSeriesExploreResponse)
+  }
+  return await delayedResponse(exploreV3Response)
 }
 
 const sandboxQueryProvider: Plugin = {

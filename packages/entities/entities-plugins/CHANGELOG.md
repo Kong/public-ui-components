@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.4.3...@kong-ui-public/entities-plugins@2.4.4) (2023-12-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.4.2...@kong-ui-public/entities-plugins@2.4.3) (2023-12-05)
+
+
+### Bug Fixes
+
+* update kcard usage [KHCP-9887] ([#977](https://github.com/Kong/public-ui-components/issues/977)) ([3f00e69](https://github.com/Kong/public-ui-components/commit/3f00e69fd65d1eae07139cee52afb16825f34a9b))
+
+
+
+
+
+## [2.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.4.1...@kong-ui-public/entities-plugins@2.4.2) (2023-12-01)
+
+
+### Bug Fixes
+
+* delete modal ([#980](https://github.com/Kong/public-ui-components/issues/980)) ([5a67bca](https://github.com/Kong/public-ui-components/commit/5a67bcaddecfaf79a0bb3db37e160a562367e9b7))
+
+
+
+
+
+## [2.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.4.0...@kong-ui-public/entities-plugins@2.4.1) (2023-12-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [2.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.3.3...@kong-ui-public/entities-plugins@2.4.0) (2023-12-01)
+
+
+### Features
+
+* **entities-plugins:** endpoint fixes ([#976](https://github.com/Kong/public-ui-components/issues/976)) ([17cdc92](https://github.com/Kong/public-ui-components/commit/17cdc92a70612956aac97a9fb9ff97e1e9b90a4c))
+
+
+
+
+
+## [2.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.3.2...@kong-ui-public/entities-plugins@2.3.3) (2023-12-01)
+
+
+### Bug Fixes
+
+* **entities-plugins:** non-VFG forms receiving incorrect prop ([#975](https://github.com/Kong/public-ui-components/issues/975)) ([5042635](https://github.com/Kong/public-ui-components/commit/5042635a12a8bb4376c27c9df1bf353a1fa14712))
+
+
+
+
+
+## [2.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.3.1...@kong-ui-public/entities-plugins@2.3.2) (2023-12-01)
+
+
+### Bug Fixes
+
+* create button visibility ([#970](https://github.com/Kong/public-ui-components/issues/970)) ([7a90cbc](https://github.com/Kong/public-ui-components/commit/7a90cbcecfa621e595c3704a864c415391edde19))
+* **deps:** update dependency @kong/icons to ^1.8.2 ([#968](https://github.com/Kong/public-ui-components/issues/968)) ([afd8013](https://github.com/Kong/public-ui-components/commit/afd801327bfd53bede1215fa358b5828540af23a))
+* **entities-plugins:** collapse status of plugin groups ([#966](https://github.com/Kong/public-ui-components/issues/966)) ([a369c7f](https://github.com/Kong/public-ui-components/commit/a369c7f919d9c15c8024afea6a6d5b7c3b4787e1))
+
+
+
+
+
+## [2.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.3.0...@kong-ui-public/entities-plugins@2.3.1) (2023-12-01)
+
+
+### Bug Fixes
+
+* **entities-plugins:** oidc form fields ([#965](https://github.com/Kong/public-ui-components/issues/965)) ([6cd0176](https://github.com/Kong/public-ui-components/commit/6cd01766ed23f3b1cfd861f670ae8f050604c727))
+
+
+
+
+
 # [2.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.2.4...@kong-ui-public/entities-plugins@2.3.0) (2023-11-30)
 
 

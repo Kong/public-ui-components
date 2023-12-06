@@ -339,5 +339,10 @@ watch(() => props.targetId, () => {
     // hide EntityBaseForm default action buttons
     display: none !important;
   }
+
+  :deep(.k-card.kong-ui-entity-base-form) {
+    border: none;
+    padding: 0;
+  }
 }
 </style>

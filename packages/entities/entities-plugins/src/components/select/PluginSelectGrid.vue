@@ -28,11 +28,11 @@
         :key="idx"
       >
         <KCollapse
-          v-model="shouldCollapsed[idx]"
+          v-model="shouldCollapsed[group]"
           class="plugins-collapse"
           :data-testid="`${group}-collapse`"
           :title="group"
-          :trigger-label="!shouldCollapsed[idx] ? triggerLabels[group] : t('plugins.select.view_less')"
+          :trigger-label="shouldCollapsed[group] ? triggerLabels[group] : t('plugins.select.view_less')"
         >
           <!-- don't display a trigger if all plugins will already be visible -->
           <template

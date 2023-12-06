@@ -1,19 +1,35 @@
 import { describe, it, expect } from 'vitest'
 import Ajv from 'ajv'
-import { dashboardDefinitionSchema } from '../types'
+import { dashboardConfigSchema } from '../types'
 
 const ajv = new Ajv()
-const validate = ajv.compile(dashboardDefinitionSchema)
+const validate = ajv.compile(dashboardConfigSchema)
 
 describe('Dashboard schemas', () => {
   it('successfully validates bar chart schemas', () => {
     const definition: any = {
+      gridSize: {
+        cols: 2,
+        rows: 2,
+      },
       tiles: [
         {
-          chart: {
-            type: 'horizontal_bar',
+          definition: {
+            chart: {
+              type: 'horizontal_bar',
+            },
+            query: {},
           },
-          query: {},
+          layout: {
+            position: {
+              col: 1,
+              row: 1,
+            },
+            size: {
+              cols: 1,
+              rows: 1,
+            },
+          },
         },
       ],
     }
@@ -23,15 +39,31 @@ describe('Dashboard schemas', () => {
 
   it('successfully validates gauge chart schemas', () => {
     const definition: any = {
+      gridSize: {
+        cols: 2,
+        rows: 2,
+      },
       tiles: [
         {
-          chart: {
-            type: 'gauge',
-            metricDisplay: 'full',
-            reverseDataset: true,
-            numerator: 0,
+          definition: {
+            chart: {
+              type: 'gauge',
+              metricDisplay: 'full',
+              reverseDataset: true,
+              numerator: 0,
+            },
+            query: {},
           },
-          query: {},
+          layout: {
+            position: {
+              col: 1,
+              row: 1,
+            },
+            size: {
+              cols: 1,
+              rows: 1,
+            },
+          },
         },
       ],
     }

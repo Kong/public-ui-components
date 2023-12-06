@@ -48,52 +48,50 @@
       </div>
     </template>
 
-    <template #body>
-      <div
-        v-if="isLoading"
-        data-testid="about-section-loading-skeleton"
+    <div
+      v-if="isLoading"
+      data-testid="about-section-loading-skeleton"
+    >
+      <KSkeletonBox
+        height="2"
+        width="100"
+      />
+      <KSkeletonBox
+        height="2"
+        width="100"
+      />
+    </div>
+
+    <div v-else>
+      <p
+        v-if="description"
+        class="about-section-description"
+        data-testid="about-section-description"
       >
-        <KSkeletonBox
-          height="2"
-          width="100"
-        />
-        <KSkeletonBox
-          height="2"
-          width="100"
-        />
+        {{ description }}
+      </p>
+
+      <div
+        v-if="$slots.default"
+        class="about-section-content"
+        data-testid="about-section-content"
+      >
+        <slot name="default" />
       </div>
 
-      <div v-else>
-        <p
-          v-if="description"
-          class="about-section-description"
-          data-testid="about-section-description"
-        >
-          {{ description }}
-        </p>
+      <hr
+        v-if="$slots['divider-section']"
+        data-testid="about-divider-section-separator"
+      >
 
-        <div
-          v-if="$slots.default"
-          class="about-section-content"
-          data-testid="about-section-content"
-        >
-          <slot name="default" />
-        </div>
-
-        <hr
-          v-if="$slots['divider-section']"
-          data-testid="about-divider-section-separator"
-        >
-
-        <div
-          v-if="$slots['divider-section']"
-          class="about-divider-section"
-          data-testid="about-divider-section"
-        >
-          <slot name="divider-section" />
-        </div>
+      <div
+        v-if="$slots['divider-section']"
+        class="about-divider-section"
+        data-testid="about-divider-section"
+      >
+        <slot name="divider-section" />
       </div>
-    </template>
+    </div>
   </KCard>
 </template>
 

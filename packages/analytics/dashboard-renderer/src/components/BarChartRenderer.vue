@@ -1,13 +1,16 @@
 <template>
   <QueryDataProvider
     v-slot="{ data }"
-    :query="props.query"
-    :query-ready="props.queryReady"
+    :query="query"
+    :query-ready="queryReady"
   >
     <AnalyticsChart
       :chart-data="data"
       :chart-options="options"
       chart-title=""
+      :height="`${height}px`"
+      legend-position="bottom"
+      :show-annotations="chartOptions.showAnnotations"
       tooltip-title=""
     />
   </QueryDataProvider>
@@ -16,6 +19,7 @@
 import type { BarChartOptions, RendererProps } from '../types'
 import QueryDataProvider from './QueryDataProvider.vue'
 import { computed } from 'vue'
+import type { AnalyticsChartOptions } from '@kong-ui-public/analytics-chart'
 import { AnalyticsChart, ChartTypes as AnalyticsChartTypes } from '@kong-ui-public/analytics-chart'
 import { ChartTypes } from '../types'
 
@@ -26,7 +30,9 @@ const chartTypeLookup = {
   [ChartTypes.VerticalBar]: AnalyticsChartTypes.VERTICAL_BAR,
 }
 
-const options = computed(() => ({
+const options = computed<AnalyticsChartOptions>(() => ({
   type: chartTypeLookup[props.chartOptions.type],
+  stacked: props.chartOptions.stacked,
+  chartDatasetColors: props.chartOptions.chartDatasetColors,
 }))
 </script>
