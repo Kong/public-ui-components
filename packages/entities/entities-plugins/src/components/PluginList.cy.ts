@@ -370,17 +370,21 @@ describe('<PluginList />', () => {
           })
 
           // eslint-disable-next-line cypress/unsafe-to-chain-command
-          cy.get('[data-testid="acl"] .k-input-switch').eq(0).click().then(() => {
-            if (expected) {
-              cy.get('.k-modal')
-                .should('exist')
-                .should('contain.text', 'Disable plugin')
-                .should('contain.text', getDisplayName('acl'))
-                .should('contain.text', 'Yes, disable')
-            } else {
-              cy.get('.k-modal').should('not.exist')
-            }
-          })
+          cy.get('[data-testid="acl"] .k-input-switch')
+            .eq(0)
+            .find('.switch-control')
+            .click()
+            .then(() => {
+              if (expected) {
+                cy.get('.k-modal')
+                  .should('exist')
+                  .should('contain.text', 'Disable plugin')
+                  .should('contain.text', getDisplayName('acl'))
+                  .should('contain.text', 'Yes, disable')
+              } else {
+                cy.get('.k-modal').should('not.exist')
+              }
+            })
         })
       })
     }

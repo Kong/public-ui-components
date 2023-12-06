@@ -18,7 +18,7 @@ describe('<UpstreamsFormHealthChecks/>', () => {
       },
     })
 
-    cy.get('.active-health-switch').click()
+    cy.getTestId('active-health-switch').check({ force: true })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', true)
   })
@@ -30,7 +30,7 @@ describe('<UpstreamsFormHealthChecks/>', () => {
       },
     })
 
-    cy.get('.passive-health-switch').click()
+    cy.getTestId('passive-health-switch').check({ force: true })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', true)
   })

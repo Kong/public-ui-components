@@ -429,9 +429,9 @@ describe('<ConfigCardItem />', () => {
           cy.getTestId(`${item.key}-badge-status`).should('be.visible')
 
           if (status) {
-            cy.get('.k-badge-success').should('exist')
+            cy.get('.k-badge.success').should('exist')
           } else {
-            cy.get('.k-badge-neutral').should('exist')
+            cy.get('.k-badge.neutral').should('exist')
           }
         })
       })

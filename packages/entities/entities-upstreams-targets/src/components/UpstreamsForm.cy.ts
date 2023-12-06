@@ -9,7 +9,7 @@ import { EntityBaseForm } from '@kong-ui-public/entities-shared'
 import type { AxiosError } from 'axios'
 import type { UpstreamResponse } from '../types'
 
-describe('<UpstreamsForm/>', () => {
+describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => {
   describe('Konnect', () => {
     const interceptFetchServices = (status = 200): void => {
       cy.intercept(
@@ -120,10 +120,10 @@ describe('<UpstreamsForm/>', () => {
 
       cy.wait(['@fetchServices', '@fetchCertificates'])
 
-      cy.get('.active-health-switch').click()
+      cy.getTestId('active-health-switch').check({ force: true })
       cy.get('.kong-ui-entities-upstreams-active-healthcheck').should('exist')
 
-      cy.get('.passive-health-switch').click()
+      cy.getTestId('passive-health-switch').click({ force: true })
       cy.get('.kong-ui-entities-upstreams-passive-healthcheck').should('exist')
     })
 
@@ -447,13 +447,13 @@ describe('<UpstreamsForm/>', () => {
 
       cy.wait(['@fetchServices', '@fetchCertificates'])
 
-      cy.get('.active-health-switch').click()
+      cy.getTestId('active-health-switch').check({ force: true })
       cy.get('.kong-ui-entities-upstreams-active-healthcheck').should('exist')
       cy.get('.headers-row').should('exist')
       cy.getTestId('active-healthcheck-headers-header-1').should('exist')
       cy.getTestId('active-healthcheck-headers-value-1').should('exist')
 
-      cy.get('.passive-health-switch').click()
+      cy.getTestId('passive-health-switch').check({ force: true })
       cy.get('.kong-ui-entities-upstreams-passive-healthcheck').should('exist')
     })
 
@@ -687,7 +687,7 @@ describe('<UpstreamsForm/>', () => {
       cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'], { timeout: 10000 })
 
       cy.getTestId('active-health-switch').should('be.checked')
-      cy.get('[data-testid="active-health-switch"] + .switch-control').click({ force: true })
+      cy.getTestId('active-health-switch').uncheck({ force: true })
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
@@ -717,7 +717,7 @@ describe('<UpstreamsForm/>', () => {
       cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'], { timeout: 10000 })
 
       cy.getTestId('passive-health-switch').should('be.checked')
-      cy.get('[data-testid="passive-health-switch"] + .switch-control').click({ force: true })
+      cy.getTestId('passive-health-switch').uncheck({ force: true })
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))

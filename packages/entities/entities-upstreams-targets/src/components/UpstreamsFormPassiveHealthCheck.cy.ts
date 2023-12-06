@@ -1,7 +1,7 @@
 import UpstreamsFormPassiveHealthCheck from './UpstreamsFormPassiveHealthCheck.vue'
 import { PassiveHealthyHttpStatuses, PassiveUnhealthyHttpStatuses } from '../constants'
 
-describe('<UpstreamsFormPassiveHealthCheck/>', () => {
+describe('<UpstreamsFormPassiveHealthCheck/>', { viewportHeight: 700, viewportWidth: 700 }, () => {
   it('Component should be rendered correctly', () => {
     cy.mount(UpstreamsFormPassiveHealthCheck, {
       props: {
@@ -25,7 +25,7 @@ describe('<UpstreamsFormPassiveHealthCheck/>', () => {
       },
     })
 
-    cy.get('.passive-healthcheck-type-select').click()
+    cy.get('.passive-healthcheck-type-select').click({ waitForAnimations: false })
     cy.get('.passive-healthcheck-type-select .k-select-list .k-select-item').should('have.length', 5)
     cy.get('.passive-healthcheck-type-select .k-select-list [data-testid="k-select-item-tcp"]').click()
 
@@ -40,7 +40,7 @@ describe('<UpstreamsFormPassiveHealthCheck/>', () => {
       },
     })
 
-    cy.getTestId('passive-healthcheck-successes').type('10')
+    cy.getTestId('passive-healthcheck-successes').type('10', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '10')
   })
@@ -53,11 +53,11 @@ describe('<UpstreamsFormPassiveHealthCheck/>', () => {
       },
     })
 
-    cy.get('.passive-healthcheck-http-statuses').click()
+    cy.get('.passive-healthcheck-http-statuses').click({ waitForAnimations: false })
 
     cy.get('.passive-healthcheck-http-statuses .k-multiselect-list .k-multiselect-item').should('have.length', 92)
-    cy.get('.passive-healthcheck-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-200"]').click()
-    cy.get('.passive-healthcheck-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-201"]').click()
+    cy.get('.passive-healthcheck-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-200"]').click({ waitForAnimations: false })
+    cy.get('.passive-healthcheck-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-201"]').click({ waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', ['200', '201'])
   })
@@ -70,7 +70,7 @@ describe('<UpstreamsFormPassiveHealthCheck/>', () => {
       },
     })
 
-    cy.getTestId('passive-healthcheck-timeouts').type('4')
+    cy.getTestId('passive-healthcheck-timeouts').type('4', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
   })
@@ -83,7 +83,7 @@ describe('<UpstreamsFormPassiveHealthCheck/>', () => {
       },
     })
 
-    cy.getTestId('passive-healthcheck-http-failures').type('5')
+    cy.getTestId('passive-healthcheck-http-failures').type('5', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '5')
   })
@@ -96,11 +96,11 @@ describe('<UpstreamsFormPassiveHealthCheck/>', () => {
       },
     })
 
-    cy.get('.passive-healthcheck-unhealthy-http-statuses').click()
+    cy.get('.passive-healthcheck-unhealthy-http-statuses').click({ waitForAnimations: false })
 
     cy.get('.passive-healthcheck-unhealthy-http-statuses .k-multiselect-list .k-multiselect-item').should('have.length', 92)
-    cy.get('.passive-healthcheck-unhealthy-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-404"]').click()
-    cy.get('.passive-healthcheck-unhealthy-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-500"]').click()
+    cy.get('.passive-healthcheck-unhealthy-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-404"]').click({ waitForAnimations: false })
+    cy.get('.passive-healthcheck-unhealthy-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-500"]').click({ waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', ['404', '500'])
   })
@@ -126,7 +126,7 @@ describe('<UpstreamsFormPassiveHealthCheck/>', () => {
     })
 
     cy.getTestId('passive-healthcheck-tcp-failures').should('be.visible')
-    cy.getTestId('passive-healthcheck-tcp-failures').type('10')
+    cy.getTestId('passive-healthcheck-tcp-failures').type('10', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '10')
   })
