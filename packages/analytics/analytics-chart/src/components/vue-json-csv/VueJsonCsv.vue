@@ -9,8 +9,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ValidType } from '../types'
-import type { CsvData, CsvKeyValuePair } from '../types'
+import { ValidType } from '../../types'
+import type { CsvData, CsvKeyValuePair } from '../../types'
 import type { PropType } from 'vue'
 
 import mapKeys from 'lodash.mapkeys'
