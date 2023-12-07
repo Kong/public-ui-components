@@ -130,10 +130,4 @@ watch(customMethodsValue, (value) => {
 .routing-rule {
   @include routing-rule;
 }
-
-.methods-input-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $kui-space-30;
-}
 </style>
