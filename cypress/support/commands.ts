@@ -15,8 +15,8 @@ Cypress.Commands.add('getTestId', (dataTestId: string): any => {
   return cy.get(`[data-testid=${dataTestId}]`)
 })
 
-Cypress.Commands.add('findTestId', (dataTestId: string): any => {
-  return cy.find(`[data-testid=${dataTestId}]`)
+Cypress.Commands.add('findTestId', { prevSubject: true }, (subject, dataTestId: string): any => {
+  return cy.get(subject).find(`[data-testid="${dataTestId}"]`)
 })
 
 Cypress.Commands.add('onVueError', (vueError: VueError) => {
