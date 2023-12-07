@@ -18,7 +18,19 @@ import { unparse } from 'papaparse'
 
 const emit = defineEmits(['export-started', 'export-finished'])
 
-const isType = (value: any, type: string) => typeof value === type
+enum ValidType {
+  String = 'string',
+  Number = 'number',
+  Boolean = 'boolean',
+  Object = 'object',
+  Function = 'function',
+  Undefined = 'undefined',
+  Symbol = 'symbol'
+}
+
+const isType = (value: any, type: ValidType) => {
+  return typeof value === type
+}
 
 const props = defineProps({
   /**
@@ -107,21 +119,21 @@ const exportableData = computed(() => {
 const labelsFunctionGenerator = (): any => {
   const labels: any = props.labels
   if (
-    !isType(labels, 'undefined') &&
-      !isType(labels, 'function') &&
-      !isType(labels, 'object')
+    !isType(labels, ValidType.Undefined) &&
+      !isType(labels, ValidType.Function) &&
+      !isType(labels, ValidType.Object)
   ) {
     throw new Error('Labels needs to be a function(value,key) or object.')
   }
 
-  if (isType(labels, 'function')) {
+  if (isType(labels, ValidType.Function)) {
     return (item: any) => {
       const _mapKeys = mapKeys(item, labels)
       return _mapKeys
     }
   }
 
-  if (isType(labels, 'object')) {
+  if (isType(labels, ValidType.Object)) {
     // @ts-ignore
     return item => {
       return mapKeys(item, (item, key) => {
@@ -137,17 +149,17 @@ const labelsFunctionGenerator = (): any => {
 const fieldsFunctionGenerator = () => {
   const fields: any = props.fields
   if (
-    !isType(fields, 'undefined') &&
-      !isType(fields, 'function') &&
-      !isType(fields, 'object') &&
+    !isType(fields, ValidType.Undefined) &&
+      !isType(fields, ValidType.Function) &&
+      !isType(fields, ValidType.Object) &&
       !Array.isArray(fields)
   ) {
     throw new Error('Fields needs to be a function(value,key) or array.')
   }
 
   if (
-    isType(fields, 'function') ||
-      (isType(fields, 'object') && !Array.isArray(fields))
+    isType(fields, ValidType.Function) ||
+      (isType(fields, ValidType.Object) && !Array.isArray(fields))
   ) {
 
     // @ts-ignore
@@ -168,14 +180,13 @@ const fieldsFunctionGenerator = () => {
 }
 
 const cleaningData = () => {
-  if (isType(props.fields, 'undefined') && isType(props.labels, 'undefined')) {
+  if (isType(props.fields, ValidType.Undefined) && isType(props.labels, ValidType.Undefined)) {
     return props.data
   }
 
   const labels = labelsFunctionGenerator()
   const fields = fieldsFunctionGenerator()
 
-  debugger
   return props.data.map(item => labels(fields(item)))
 }
 
