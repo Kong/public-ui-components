@@ -163,23 +163,23 @@ const tableData = computed(() => {
     ]
   }
 
-  const dimensions = ('dimensions' in props.chartData.meta) && props.chartData.meta.dimensions
-    ? props.chartData.meta.dimensions
-    : props.chartData.meta.metricNames || {}
+  // TODO: Determine if this is needed for the older explore versions
+  // const dimensions = ('dimensions' in props.chartData.meta) && props.chartData.meta.dimensions
+  //   ? props.chartData.meta.dimensions
+  //   : props.chartData.meta.metricNames || {}
 
   const displayHeaders: Header[] = [
     ...timeseriesColumns,
-    ...Object.keys(dimensions).map(key => ({
-      label: key,
-      key,
-    })),
+    // TODO: Determine if this is needed for the older explore versions
+    // ...Object.keys(dimensions).map(key => ({
+    //   label: key,
+    //   key,
+    // })),
     ...props.chartData.meta.metricNames.map(key => ({
       label: key,
       key,
     })),
   ]
-
-  console.log('>> displayHeaders >>', displayHeaders)
 
   interface AccumulatorRow {
     [key: string]: string;

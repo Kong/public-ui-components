@@ -200,6 +200,21 @@ importers:
       '@kong/icons':
         specifier: ^1.8.2
         version: 1.8.2(vue@3.3.4)
+      '@types/file-saver':
+        specifier: ^2.0.7
+        version: 2.0.7
+      '@types/lodash.mapkeys':
+        specifier: ^4.6.9
+        version: 4.6.9
+      '@types/lodash.pick':
+        specifier: ^4.4.9
+        version: 4.4.9
+      '@types/lodash.pickby':
+        specifier: ^4.6.9
+        version: 4.6.9
+      '@types/papaparse':
+        specifier: ^5.3.14
+        version: 5.3.14
       approximate-number:
         specifier: ^2.1.1
         version: 2.1.1
@@ -227,9 +242,6 @@ importers:
       vue-chartjs:
         specifier: ^5.2.0
         version: 5.2.0(chart.js@4.4.0)(vue@3.3.4)
-      vue-json-csv:
-        specifier: ^2.1.0
-        version: 2.1.0
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -246,6 +258,21 @@ importers:
       '@types/uuid':
         specifier: ^9.0.5
         version: 9.0.5
+      file-saver:
+        specifier: ^2.0.5
+        version: 2.0.5
+      lodash.mapkeys:
+        specifier: ^4.6.0
+        version: 4.6.0
+      lodash.pick:
+        specifier: ^4.4.0
+        version: 4.4.0
+      lodash.pickby:
+        specifier: ^4.6.0
+        version: 4.6.0
+      papaparse:
+        specifier: ^5.4.1
+        version: 5.4.1
       vue:
         specifier: ^3.3.4
         version: 3.3.4
@@ -748,7 +775,7 @@ importers:
         version: link:../entities-shared
       '@kong-ui-public/forms':
         specifier: ^2.1.7
-        version: link:../../core/forms
+        version: 2.1.8(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.0.0-alpha.68)(vue@3.3.4)
       '@kong/icons':
         specifier: ^1.8.2
         version: 1.8.2(vue@3.3.4)
@@ -2167,6 +2194,21 @@ packages:
       vue: 3.3.4
     dev: false
 
+  /@kong-ui-public/forms@2.1.8(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.0.0-alpha.68)(vue@3.3.4):
+    resolution: {integrity: sha512-/ft3oS9scUGKl+4I6lSg94Ig9eCjK9nb74EwGbxMID8MW3ygirQ3Tl9Nt3qqtGZqAlOqaF+ItxgkYePWfSc/Pg==}
+    peerDependencies:
+      '@kong-ui-public/i18n': ^2.0.0
+      '@kong/kongponents': 9.0.0-alpha.68
+      vue: ^3.3.4
+    dependencies:
+      '@kong-ui-public/i18n': link:packages/core/i18n
+      '@kong/icons': 1.8.3(vue@3.3.4)
+      '@kong/kongponents': 9.0.0-alpha.68(axios@1.6.0)(vue-router@4.2.5)(vue@3.3.4)
+      fecha: 4.2.3
+      lodash: 4.17.21
+      vue: 3.3.4
+    dev: false
+
   /@kong/design-tokens@1.12.0:
     resolution: {integrity: sha512-CXcDgCD91UlzhF7TTrcyql9gei8Q1x0K1SXDz0dwba3+PHtR2DFYewIxHerI667M58tLPlmV0dcN8KB8Msx1zg==}
     dev: true
@@ -2186,7 +2228,6 @@ packages:
       vue: ^3.3.8
     dependencies:
       vue: 3.3.4
-    dev: true
 
   /@kong/kongponents@8.127.0(vue-router@4.2.5)(vue@3.3.4):
     resolution: {integrity: sha512-C/MFT+OZtyul62ElgHEggqMYPbLjXiRJg5GE3il8MZpaep2D5QV+F5UQ7frbA98TkZCCVBD4LpR0OmiwXKs+tg==}
@@ -2233,7 +2274,6 @@ packages:
       vue: 3.3.4
       vue-draggable-next: 2.2.1(sortablejs@1.15.1)(vue@3.3.4)
       vue-router: 4.2.5(vue@3.3.4)
-    dev: true
 
   /@kong/kongponents@9.0.0-alpha.68(axios@1.6.2)(vue-router@4.2.5)(vue@3.3.4):
     resolution: {integrity: sha512-/VVYUguYMrezGbM/tYQOfIcnimas3fz7Xrixqw1pS9NLkxTi8USQ5wGGNRFs/EWmhqAi8b8jyZG0y3nhMZsSIQ==}
@@ -3032,7 +3072,6 @@ packages:
 
   /@popperjs/core@2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
-    dev: true
 
   /@popperjs/core@2.4.0:
     resolution: {integrity: sha512-NMrDy6EWh9TPdSRiHmHH2ye1v5U0gBD7pRYwSwJvomx7Bm4GG04vu63dYiVzebLOx2obPpJugew06xVP0Nk7hA==}
@@ -3554,6 +3593,10 @@ packages:
       '@types/serve-static': 1.15.1
     dev: true
 
+  /@types/file-saver@2.0.7:
+    resolution: {integrity: sha512-dNKVfHd/jk0SkR/exKGj2ggkB45MAkzvWCaqLUUgkyjITkGNzH8H+yUwr+BLJUBjZOe9w8X3wgmXhZDRg1ED6A==}
+    dev: false
+
   /@types/flat@5.0.3:
     resolution: {integrity: sha512-uG/4x6EXYbq4VDsBJLNDHQAQmtRPg3x4tAXcBspxlnEknz8NiJxnHoxSiJKGNExiS00q4mJNvuEBgVA3jsDIdQ==}
     dev: true
@@ -3614,6 +3657,24 @@ packages:
       '@types/lodash': 4.14.197
     dev: true
 
+  /@types/lodash.mapkeys@4.6.9:
+    resolution: {integrity: sha512-6/ERBCabeDI656LsV+oopLjdnJ/x1PCAE6kkkssH8e4i0K7Pw307noxHCbUc6cAVfTo9vx0Z+k3QZwy1IrUZcA==}
+    dependencies:
+      '@types/lodash': 4.14.202
+    dev: false
+
+  /@types/lodash.pick@4.4.9:
+    resolution: {integrity: sha512-hDpr96x9xHClwy1KX4/RXRejqjDFTEGbEMT3t6wYSYeFDzxmMnSKB/xHIbktRlPj8Nii2g8L5dtFDRaNFBEzUQ==}
+    dependencies:
+      '@types/lodash': 4.14.202
+    dev: false
+
+  /@types/lodash.pickby@4.6.9:
+    resolution: {integrity: sha512-SPI248FYnyd3jOxDeJq2vX2UKQnDzqacuqdeOVqwE1MPSk8gN8TA3FcHSMQWLlpBnuHgXvgKInvywbOFbidpJA==}
+    dependencies:
+      '@types/lodash': 4.14.202
+    dev: false
+
   /@types/lodash@4.14.197:
     resolution: {integrity: sha512-BMVOiWs0uNxHVlHBgzTIqJYmj+PgCo4euloGF+5m4okL3rEYzM2EEv78mw8zWSMM57dM7kVIgJ2QDvwHSoCI5g==}
     dev: true
@@ -3643,7 +3704,6 @@ packages:
 
   /@types/node@18.18.4:
     resolution: {integrity: sha512-t3rNFBgJRugIhackit2mVcLfF6IRc0JE4oeizPQL8Zrm8n2WY/0wOdpOPhdtG0V9Q2TlW/axbF1MJ6z+Yj/kKQ==}
-    dev: true
 
   /@types/node@20.10.1:
     resolution: {integrity: sha512-T2qwhjWwGH81vUEx4EXmBKsTJRXFXNZTL4v0gi01+zyBmCwzE6TyHszqX01m+QHTEq+EZNo13NeJIdEqf+Myrg==}
@@ -3654,6 +3714,12 @@ packages:
   /@types/normalize-package-data@2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
     dev: true
+
+  /@types/papaparse@5.3.14:
+    resolution: {integrity: sha512-LxJ4iEFcpqc6METwp9f6BV6VVc43m6MfH0VqFosHvrUgfXiFe6ww7R3itkOQ+TCK6Y+Iv/+RnnvtRZnkc5Kc9g==}
+    dependencies:
+      '@types/node': 18.18.4
+    dev: false
 
   /@types/parse-json@4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
@@ -3691,7 +3757,6 @@ packages:
 
   /@types/resize-observer-browser@0.1.11:
     resolution: {integrity: sha512-cNw5iH8JkMkb3QkCoe7DaZiawbDQEUX8t7iuQaRTyLOyQCR2h+ibBD4GJt7p5yhUHrlOeL7ZtbxNHeipqNsBzQ==}
-    dev: true
 
   /@types/retry@0.12.0:
     resolution: {integrity: sha512-wWKOClTTiizcZhXnPY4wikVAwmdYHp8q6DmC+EJUzAMsycb7HB32Kh9RN4+0gExjmPmZSAQjgURXIGATPegAvA==}
@@ -7409,7 +7474,7 @@ packages:
 
   /file-saver@2.0.5:
     resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
-    dev: false
+    dev: true
 
   /file-url@3.0.0:
     resolution: {integrity: sha512-g872QGsHexznxkIAdK8UiZRe7SkE6kvylShU4Nsj8NvfvZag7S0QuQ4IgvPDkk75HxgjIVDwycFTDAgIiO4nDA==}
@@ -9528,7 +9593,7 @@ packages:
 
   /lodash.mapkeys@4.6.0:
     resolution: {integrity: sha512-0Al+hxpYvONWtg+ZqHpa/GaVzxuN3V7Xeo2p+bY06EaK/n+Y9R7nBePPN2o1LxmL0TWQSwP8LYZ008/hc9JzhA==}
-    dev: false
+    dev: true
 
   /lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -9545,11 +9610,11 @@ packages:
 
   /lodash.pick@4.4.0:
     resolution: {integrity: sha512-hXt6Ul/5yWjfklSGvLQl8vM//l3FtyHZeuelpzK6mm99pNvN9yTDruNZPEJZD1oWrqo+izBmB7oUfWgcCX7s4Q==}
-    dev: false
+    dev: true
 
   /lodash.pickby@4.6.0:
     resolution: {integrity: sha512-AZV+GsS/6ckvPOVQPXSiFFacKvKB4kOQu6ynt9wz0F3LO4R9Ij4K1ddYsIytDpSgLz88JHd9P+oaLeej5/Sl7Q==}
-    dev: false
+    dev: true
 
   /lodash.snakecase@4.1.1:
     resolution: {integrity: sha512-QZ1d4xoBHYUeuouhEq3lk3Uq7ldgyFXGBhg04+oRLnIz8o9T65Eh+8YdroUwn846zchkA9yDsDl5CVVaV2nqYw==}
@@ -10903,7 +10968,7 @@ packages:
 
   /papaparse@5.4.1:
     resolution: {integrity: sha512-HipMsgJkZu8br23pW15uvo6sib6wne/4woLZPlFf3rpDyMe9ywEXUsuD7+6K9PRkJlVT51j/sCOYDKGGS3ZJrw==}
-    dev: false
+    dev: true
 
   /parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -14059,7 +14124,6 @@ packages:
       lodash: 4.17.21
       vue: 3.3.4
       vue-screen-utils: 1.0.0-beta.13(vue@3.3.4)
-    dev: true
 
   /v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
@@ -14312,17 +14376,6 @@ packages:
       - supports-color
     dev: true
 
-  /vue-json-csv@2.1.0:
-    resolution: {integrity: sha512-JCHtHViiIIFgrJR9csLWq/d3X7sHVc8kDnPl5FgrVeCslYkaV/asacKyxKKZok8jVMPeFNWPAlwDbtUC1p/J/w==}
-    dependencies:
-      file-saver: 2.0.5
-      lodash.mapkeys: 4.6.0
-      lodash.pick: 4.4.0
-      lodash.pickby: 4.6.0
-      papaparse: 5.4.1
-      vue: 3.3.4
-    dev: false
-
   /vue-router@4.2.5(vue@3.3.4):
     resolution: {integrity: sha512-DIUpKcyg4+PTQKfFPX88UWhlagBEBEfJ5A8XDXRJLUnZOvcpMF8o/dnL90vpVkGaPbjvXazV/rC1qBKrZlFugw==}
     peerDependencies:
@@ -14337,7 +14390,6 @@ packages:
       vue: ^3.2.0
     dependencies:
       vue: 3.3.4
-    dev: true
 
   /vue-template-compiler@2.7.14:
     resolution: {integrity: sha512-zyA5Y3ArvVG0NacJDkkzJuPQDF8RFeRlzV2vLeSnhSpieO6LK2OVbdLPi5MPPs09Ii+gMO8nY4S3iKQxBxDmWQ==}
