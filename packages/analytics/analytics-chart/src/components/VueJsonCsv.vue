@@ -9,35 +9,24 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { ValidType } from '../types'
+import type { CsvData, CsvKeyValuePair } from '../types'
+import type { PropType } from 'vue'
+
 import mapKeys from 'lodash.mapkeys'
 import pickBy from 'lodash.pickby'
 import pick from 'lodash.pick'
-
 import { saveAs } from 'file-saver'
 import { unparse } from 'papaparse'
 
 const emit = defineEmits(['export-started', 'export-finished'])
-
-enum ValidType {
-  String = 'string',
-  Number = 'number',
-  Boolean = 'boolean',
-  Object = 'object',
-  Function = 'function',
-  Undefined = 'undefined',
-  Symbol = 'symbol'
-}
-
-const isType = (value: any, type: ValidType) => {
-  return typeof value === type
-}
 
 const props = defineProps({
   /**
    * Json to download
    */
   data: {
-    type: Array,
+    type: Array as PropType<CsvData>,
     required: true,
   },
   /**
@@ -46,7 +35,7 @@ const props = defineProps({
    * Can either be an array or a function
    */
   fields: {
-    type: [Array, Function],
+    type: Array<string>,
     required: true,
   },
   /**
@@ -81,20 +70,12 @@ const props = defineProps({
     default: 'utf-8',
   },
   /**
-   * Advanced options for Papaparse that is used to export to CSV
-   */
-  advancedOptions: {
-    type: Object,
-    default: () => {
-    },
-  },
-  /**
    * Labels for columns
    *
    * Object or function
    */
   labels: {
-    type: [Object, Function],
+    type: Object as PropType<CsvKeyValuePair>,
     required: true,
   },
   /**
@@ -118,22 +99,19 @@ const exportableData = computed(() => {
 
 const labelsFunctionGenerator = (): any => {
   const labels: any = props.labels
-  if (
-    !isType(labels, ValidType.Undefined) &&
-      !isType(labels, ValidType.Function) &&
-      !isType(labels, ValidType.Object)
-  ) {
+
+  if (![ValidType.Undefined, ValidType.Function, ValidType.Object].includes(typeof labels as ValidType)) {
     throw new Error('Labels needs to be a function(value,key) or object.')
   }
 
-  if (isType(labels, ValidType.Function)) {
+  if (typeof labels as ValidType === ValidType.Function) {
     return (item: any) => {
       const _mapKeys = mapKeys(item, labels)
       return _mapKeys
     }
   }
 
-  if (isType(labels, ValidType.Object)) {
+  if (typeof labels as ValidType === ValidType.Object) {
     // @ts-ignore
     return item => {
       return mapKeys(item, (item, key) => {
@@ -148,20 +126,13 @@ const labelsFunctionGenerator = (): any => {
 
 const fieldsFunctionGenerator = () => {
   const fields: any = props.fields
-  if (
-    !isType(fields, ValidType.Undefined) &&
-      !isType(fields, ValidType.Function) &&
-      !isType(fields, ValidType.Object) &&
-      !Array.isArray(fields)
+  if (![ValidType.Undefined, ValidType.Function, ValidType.Object].includes(typeof fields as ValidType) &&
+    !Array.isArray(fields)
   ) {
     throw new Error('Fields needs to be a function(value,key) or array.')
   }
 
-  if (
-    isType(fields, ValidType.Function) ||
-      (isType(fields, ValidType.Object) && !Array.isArray(fields))
-  ) {
-
+  if (typeof fields as ValidType === ValidType.Function || (typeof fields as ValidType === ValidType.Object && !Array.isArray(fields))) {
     // @ts-ignore
     return item => {
       return pickBy(item, fields)
@@ -180,7 +151,7 @@ const fieldsFunctionGenerator = () => {
 }
 
 const cleaningData = () => {
-  if (isType(props.fields, ValidType.Undefined) && isType(props.labels, ValidType.Undefined)) {
+  if (typeof props.fields as ValidType === ValidType.Undefined && typeof props.labels as ValidType === ValidType.Undefined) {
     return props.data
   }
 
@@ -194,7 +165,7 @@ const generate = () => {
   emit('export-started')
 
   if (!exportableData?.value) {
-    console.error('No data to export')
+    console.warn('No data to export')
     return
   }
 
@@ -205,7 +176,6 @@ const generate = () => {
         delimiter: props.delimiter,
         encoding: props.encoding,
       },
-      props.advancedOptions,
     ),
   )
   if (props.separatorExcel) {
@@ -225,9 +195,3 @@ const generate = () => {
   }
 }
 </script>
-
-<style scoped>
-div {
-  display: inline;
-}
-</style>

@@ -13,10 +13,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { CsvData } from '../types'
 import VueJsonCsv from './VueJsonCsv.vue'
 
 const props = defineProps<{
-  rows: any[],
+  rows: CsvData,
   headers: Record<string, string>,
   filename: string,
 }>()

@@ -65,7 +65,7 @@
         >
           {{ i18n.t('csvExport.cancelButton') }}
         </KButton>
-        <download-csv
+        <DownloadCsv
           class="vitals-report-export-button"
           data-testid="csv-download-button"
           :filename="reportFilename"
@@ -78,7 +78,7 @@
           >
             {{ i18n.t('csvExport.downloadButton') }}
           </KButton>
-        </download-csv>
+        </DownloadCsv>
       </template>
     </KPrompt>
   </div>
