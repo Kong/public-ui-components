@@ -505,6 +505,22 @@ importers:
         specifier: ^10.5.3
         version: 10.5.3
 
+  packages/core/labels:
+    dependencies:
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../i18n
+    devDependencies:
+      '@kong/design-tokens':
+        specifier: ^1.12.1
+        version: 1.12.1
+      '@kong/kongponents':
+        specifier: 9.0.0-alpha.68
+        version: 9.0.0-alpha.68(axios@1.6.2)(vue-router@4.2.5)(vue@3.3.4)
+      vue:
+        specifier: ^3.3.4
+        version: 3.3.4
+
   packages/core/misc-widgets:
     devDependencies:
       '@kong-ui-public/i18n':
