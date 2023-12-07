@@ -8,6 +8,7 @@
     <KEmptyState
       v-else-if="fetchSchemaError"
       cta-is-hidden
+      data-testid="plugin-form-schema-error"
       is-error
     >
       <template #message>

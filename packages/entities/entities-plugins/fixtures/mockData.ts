@@ -73,6 +73,10 @@ export const paginate = (
   }
 }
 
+/**
+ * Select page data
+ */
+
 export const kmLimitedAvailablePlugins = {
   plugins: {
     enabled_in_cluster: [],
@@ -489,4 +493,391 @@ export const konnectAvailablePlugins = {
     ...kongPluginNames,
     ...customPluginNames,
   ],
+}
+
+/**
+ * Form page data
+ */
+
+// CORS plugin
+export const schema = {
+  fields: [
+    {
+      consumer: {
+        description: 'Custom type for representing a foreign key with a null value allowed.',
+        eq: null,
+        reference: 'consumers',
+        type: 'foreign',
+      },
+    },
+    {
+      consumer_group: {
+        description: 'Custom type for representing a foreign key with a null value allowed.',
+        eq: null,
+        reference: 'consumer_groups',
+        type: 'foreign',
+      },
+    },
+    {
+      protocols: {
+        default: [
+          'grpc',
+          'grpcs',
+          'http',
+          'https',
+        ],
+        description: 'A set of strings representing HTTP protocols.',
+        elements: {
+          one_of: [
+            'grpc',
+            'grpcs',
+            'http',
+            'https',
+          ],
+          type: 'string',
+        },
+        required: true,
+        type: 'set',
+      },
+    },
+    {
+      config: {
+        fields: [
+          {
+            origins: {
+              description: 'List of allowed domains for the `Access-Control-Allow-Origin` header. If you want to allow all origins, add `*` as a single value to this configuration field. The accepted values can either be flat strings or PCRE regexes.',
+              elements: {
+                type: 'string',
+              },
+              type: 'array',
+            },
+          },
+          {
+            headers: {
+              description: 'Value for the `Access-Control-Allow-Headers` header.',
+              elements: {
+                type: 'string',
+              },
+              type: 'array',
+            },
+          },
+          {
+            exposed_headers: {
+              description: 'Value for the `Access-Control-Expose-Headers` header. If not specified, no custom headers are exposed.',
+              elements: {
+                type: 'string',
+              },
+              type: 'array',
+            },
+          },
+          {
+            methods: {
+              default: [
+                'GET',
+                'HEAD',
+                'PUT',
+                'PATCH',
+                'POST',
+                'DELETE',
+                'OPTIONS',
+                'TRACE',
+                'CONNECT',
+              ],
+              description: "'Value for the `Access-Control-Allow-Methods` header. Available options include `GET`, `HEAD`, `PUT`, `PATCH`, `POST`, `DELETE`, `OPTIONS`, `TRACE`, `CONNECT`. By default, all options are allowed.'",
+              elements: {
+                one_of: [
+                  'GET',
+                  'HEAD',
+                  'PUT',
+                  'PATCH',
+                  'POST',
+                  'DELETE',
+                  'OPTIONS',
+                  'TRACE',
+                  'CONNECT',
+                ],
+                type: 'string',
+              },
+              type: 'array',
+            },
+          },
+          {
+            max_age: {
+              description: 'Indicates how long the results of the preflight request can be cached, in `seconds`.',
+              type: 'number',
+            },
+          },
+          {
+            credentials: {
+              default: false,
+              description: 'Flag to determine whether the `Access-Control-Allow-Credentials` header should be sent with `true` as the value.',
+              required: true,
+              type: 'boolean',
+            },
+          },
+          {
+            preflight_continue: {
+              default: false,
+              description: 'A boolean value that instructs the plugin to proxy the `OPTIONS` preflight request to the Upstream service.',
+              required: true,
+              type: 'boolean',
+            },
+          },
+          {
+            private_network: {
+              default: false,
+              description: 'Flag to determine whether the `Access-Control-Allow-Private-Network` header should be sent with `true` as the value.',
+              required: true,
+              type: 'boolean',
+            },
+          },
+        ],
+        required: true,
+        type: 'record',
+      },
+    },
+  ],
+}
+
+// Mocking plugin
+export const schema2 = {
+  fields: [
+    {
+      protocols: {
+        default: [
+          'grpc',
+          'grpcs',
+          'http',
+          'https',
+        ],
+        description: 'A set of strings representing HTTP protocols.',
+        elements: {
+          one_of: [
+            'grpc',
+            'grpcs',
+            'http',
+            'https',
+          ],
+          type: 'string',
+        },
+        required: true,
+        type: 'set',
+      },
+    },
+    {
+      consumer_group: {
+        description: 'Custom type for representing a foreign key with a null value allowed.',
+        eq: null,
+        reference: 'consumer_groups',
+        type: 'foreign',
+      },
+    },
+    {
+      config: {
+        fields: [
+          {
+            api_specification_filename: {
+              description: "The path and name of the specification file loaded into Kong Gateway's database. You cannot use this option for DB-less or hybrid mode.",
+              required: false,
+              type: 'string',
+            },
+          },
+          {
+            api_specification: {
+              description: 'The contents of the specification file. You must use this option for hybrid or DB-less mode. You can include the full specification as part of the configuration. In Kong Manager, you can copy and paste the contents of the spec directly into the `Config.Api Specification` text field.',
+              required: false,
+              type: 'string',
+            },
+          },
+          {
+            random_delay: {
+              default: false,
+              description: 'Enables a random delay in the mocked response. Introduces delays to simulate real-time response times by APIs.',
+              type: 'boolean',
+            },
+          },
+          {
+            max_delay_time: {
+              default: 1,
+              description: 'The maximum value in seconds of delay time. Set this value when `random_delay` is enabled and you want to adjust the default. The value must be greater than the `min_delay_time`.',
+              type: 'number',
+            },
+          },
+          {
+            min_delay_time: {
+              default: 0.001,
+              description: 'The minimum value in seconds of delay time. Set this value when `random_delay` is enabled and you want to adjust the default. The value must be less than the `max_delay_time`.',
+              type: 'number',
+            },
+          },
+          {
+            random_examples: {
+              default: false,
+              description: 'Randomly selects one example and returns it. This parameter requires the spec to have multiple examples configured.',
+              type: 'boolean',
+            },
+          },
+          {
+            included_status_codes: {
+              description: 'A global list of the HTTP status codes that can only be selected and returned.',
+              elements: {
+                type: 'integer',
+              },
+              type: 'array',
+            },
+          },
+          {
+            random_status_code: {
+              default: false,
+              description: 'Determines whether to randomly select an HTTP status code from the responses of the corresponding API method. The default value is `false`, which means the minimum HTTP status code is always selected and returned.',
+              required: true,
+              type: 'boolean',
+            },
+          },
+          {
+            include_base_path: {
+              default: false,
+              description: 'Indicates whether to include the base path when performing path match evaluation.',
+              required: true,
+              type: 'boolean',
+            },
+          },
+        ],
+        required: true,
+        type: 'record',
+      },
+    },
+  ],
+}
+
+// ACL plugin credential
+export const credentialSchema = {
+  fields: [
+    {
+      id: {
+        uuid: true,
+        type: 'string',
+        auto: true,
+      },
+    },
+    {
+      created_at: {
+        auto: true,
+        timestamp: true,
+        type: 'integer',
+      },
+    },
+    {
+      consumer: {
+        reference: 'consumers',
+        type: 'foreign',
+        on_delete: 'cascade',
+        required: true,
+      },
+    },
+    {
+      group: {
+        required: true,
+        type: 'string',
+        hint: 'The arbitrary group name to associate to the consumer.',
+      },
+    },
+    {
+      tags: {
+        elements: {
+          type: 'string',
+          required: true,
+        },
+        type: 'set',
+      },
+    },
+  ],
+}
+
+const serviceId = '6ecce9f2-4f3e-45aa-af18-a0553d354845'
+// CORS plugin
+export const plugin1 = {
+  config: {
+    credentials: false,
+    exposed_headers: null,
+    headers: null,
+    max_age: null,
+    methods: [
+      'GET',
+      'HEAD',
+      'PUT',
+      'PATCH',
+      'POST',
+      'DELETE',
+      'OPTIONS',
+      'TRACE',
+      'CONNECT',
+    ],
+    origins: null,
+    preflight_continue: false,
+    private_network: true,
+  },
+  created_at: 1680888086,
+  enabled: true,
+  id: '0132e113-3d1a-413b-8d15-e62cbe2cf106',
+  instance_name: 'my_instance',
+  name: 'cors',
+  protocols: [
+    'grpc',
+    'grpcs',
+    'http',
+    'https',
+  ],
+  service: {
+    id: serviceId,
+  },
+  tags: [
+    'kai!',
+    'taggity',
+  ],
+  updated_at: 1701713573,
+}
+
+const consumerId = 'a5843a6f-f46e-4ce7-8f8e-d80e7ab3054b'
+// ACL plugin credential
+export const aclCredential1 = {
+  consumer: {
+    id: consumerId,
+  },
+  created_at: 1700516447,
+  group: 'test-1',
+  id: '5e023ff3-f22b-4012-b42e-0a3fbda17c04',
+  updated_at: 1700516447,
+}
+
+export const scopedService = {
+  connect_timeout: 60000,
+  created_at: 1649427714,
+  enabled: true,
+  host: 'httpbin.com',
+  id: serviceId,
+  name: 'trex-impX',
+  path: '/',
+  port: 443,
+  protocol: 'https',
+  read_timeout: 60000,
+  retries: 5,
+  tags: [
+    '_KonnectService:rrrrrrrraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+  ],
+  updated_at: 1682019712,
+  write_timeout: 60000,
+}
+
+export const scopedConsumer = {
+  item: {
+    id: consumerId,
+    username: 'kai-test',
+    created_at: 1678398140,
+    updated_at: 1678398140,
+    custom_id: 'kai',
+    tags: [
+      'tag1',
+    ],
+  },
 }
