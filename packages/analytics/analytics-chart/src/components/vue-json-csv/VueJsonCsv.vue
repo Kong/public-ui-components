@@ -1,6 +1,7 @@
 <template>
   <div
     :id="idName"
+    data-testid="export-csv"
     @click="generate"
   >
     <slot>Download {{ name }}</slot>
@@ -88,11 +89,19 @@ const props = defineProps({
   },
 })
 
+console.log(' >>> fields', props.fields)
+console.log(' >>> labels', props.labels)
+console.log(' >>> data', props.data)
+
 // unique identifier
 const idName = computed(() => `export_${new Date().getTime()}`)
 
 const exportableData = computed(() => {
   const filteredData = cleaningData()
+
+  if (props.testing) {
+    (window as any).__cypress_filteredData = { filteredData }
+  }
 
   return filteredData.length ? filteredData : null
 })
@@ -100,15 +109,8 @@ const exportableData = computed(() => {
 const labelsFunctionGenerator = (): any => {
   const labels: any = props.labels
 
-  if (![ValidType.Undefined, ValidType.Function, ValidType.Object].includes(typeof labels as ValidType)) {
-    throw new Error('Labels needs to be a function(value,key) or object.')
-  }
-
-  if (typeof labels as ValidType === ValidType.Function) {
-    return (item: any) => {
-      const _mapKeys = mapKeys(item, labels)
-      return _mapKeys
-    }
+  if (typeof props.fields as ValidType !== ValidType.Object) {
+    throw new Error('Labels needs to be a object containing key / value pairs.')
   }
 
   if (typeof labels as ValidType === ValidType.Object) {
@@ -126,17 +128,8 @@ const labelsFunctionGenerator = (): any => {
 
 const fieldsFunctionGenerator = () => {
   const fields: any = props.fields
-  if (![ValidType.Undefined, ValidType.Function, ValidType.Object].includes(typeof fields as ValidType) &&
-    !Array.isArray(fields)
-  ) {
-    throw new Error('Fields needs to be a function(value,key) or array.')
-  }
-
-  if (typeof fields as ValidType === ValidType.Function || (typeof fields as ValidType === ValidType.Object && !Array.isArray(fields))) {
-    // @ts-ignore
-    return item => {
-      return pickBy(item, fields)
-    }
+  if (typeof props.fields as ValidType !== ValidType.Object && !Array.isArray(fields)) {
+    throw new Error('Fields needs to be an array of strings.')
   }
 
   if (Array.isArray(fields)) {
@@ -178,6 +171,7 @@ const generate = () => {
       },
     ),
   )
+
   if (props.separatorExcel) {
     csv = 'SEP=' + props.delimiter + '\r\n' + csv
   }
@@ -191,6 +185,7 @@ const generate = () => {
     const blob = new Blob([csv], {
       type: 'text/csv;charset=' + props.encoding,
     })
+
     saveAs(blob, props.name)
   }
 }

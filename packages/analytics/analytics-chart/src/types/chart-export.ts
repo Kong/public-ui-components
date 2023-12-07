@@ -7,9 +7,7 @@ export enum ValidType {
   Number = 'number',
   Boolean = 'boolean',
   Object = 'object',
-  Function = 'function',
   Undefined = 'undefined',
-  Symbol = 'symbol'
 }
 
 export type CsvData = CsvKeyValuePair[]
