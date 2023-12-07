@@ -12,7 +12,7 @@ interface VueError {
 }
 
 Cypress.Commands.add('getTestId', (dataTestId: string): any => {
-  return cy.get(`[data-testid=${dataTestId}]`)
+  return cy.get(`[data-testid="${dataTestId}"]`)
 })
 
 Cypress.Commands.add('findTestId', { prevSubject: 'element' }, (subject, dataTestId: string): any => {
