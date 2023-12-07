@@ -2,11 +2,11 @@
 
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import Labels from './Labels.vue'
+import LabelList from './LabelList.vue'
 
-describe('<Labels />', () => {
+describe('<LabelList />', () => {
   it('renders', () => {
-    const wrapper = mount(Labels)
+    const wrapper = mount(LabelList)
 
     expect(wrapper.isVisible()).toBe(true)
   })

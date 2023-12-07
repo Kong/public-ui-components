@@ -510,7 +510,16 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../i18n
+      '@kong/entity-labels':
+        specifier: ^0.5.0
+        version: 0.5.0
+      '@kong/icons':
+        specifier: ^1.8.3
+        version: 1.8.3(vue@3.3.4)
     devDependencies:
+      '@kong-ui/konnect-app-shell':
+        specifier: ^2.5.0
+        version: 2.5.0(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.0.0-alpha.68)(vue-router@4.2.5)(vue@3.3.4)
       '@kong/design-tokens':
         specifier: ^1.12.1
         version: 1.12.1
@@ -1718,6 +1727,28 @@ packages:
       - supports-color
     dev: true
 
+  /@datadog/browser-core@4.50.1:
+    resolution: {integrity: sha512-2ypS19XngsMu6W4qUBtDwvImFz886Im+PziOnEycO1w41TVS5LH8/vWBMvjSf8Suer+CeRjRN9IOu0ocRx9BVw==}
+    dev: true
+
+  /@datadog/browser-rum-core@4.50.1:
+    resolution: {integrity: sha512-ABCzEjNiBq3izapvSq6uujdx9h7L4RM44n22qDhwSIBlQY6Psf9VlzlQ5fueCALoj2LgVy4rYDj5RHfGaF/lAQ==}
+    dependencies:
+      '@datadog/browser-core': 4.50.1
+    dev: true
+
+  /@datadog/browser-rum@4.50.1:
+    resolution: {integrity: sha512-Gcs8fMoufOr4Xlhwx0g6CHvgcXVNeCM+IyAtRAwoCBeezRhL18Jo1LALE+nsLegNKgNLO1f4vjm5TBx1WsnXWQ==}
+    peerDependencies:
+      '@datadog/browser-logs': 4.50.1
+    peerDependenciesMeta:
+      '@datadog/browser-logs':
+        optional: true
+    dependencies:
+      '@datadog/browser-core': 4.50.1
+      '@datadog/browser-rum-core': 4.50.1
+    dev: true
+
   /@digitalroute/cz-conventional-changelog-for-jira@8.0.1(typescript@5.2.2):
     resolution: {integrity: sha512-I7uNQ2R5LnDYVhQ01sfNvaxqe1PutXyDl8Kltj4L8uDa1LTYqQgWWp3yEj3XYDNjhUjsAheHW0lsmF1oiAjWVg==}
     engines: {node: '>= 10'}
@@ -2167,6 +2198,22 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
+  /@kong-ui-public/app-layout@2.2.3(@kong/kongponents@9.0.0-alpha.68)(vue-router@4.2.5)(vue@3.3.4):
+    resolution: {integrity: sha512-KhmZpaCKPjNrplGVhm7vVgFUmEdvwxf2vyYWYzsvw5J+sYjDnWDKdCBILZOlVS4RdH9q+/vVUMpdL8UGhGGCCA==}
+    peerDependencies:
+      '@kong/kongponents': 9.0.0-alpha.68
+      vue: ^3.3.4
+      vue-router: ^4.2.5
+    dependencies:
+      '@kong/icons': 1.8.3(vue@3.3.4)
+      '@kong/kongponents': 9.0.0-alpha.68(axios@1.6.2)(vue-router@4.2.5)(vue@3.3.4)
+      focus-trap: 7.5.4
+      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.3.4)
+      lodash.clonedeep: 4.5.0
+      vue: 3.3.4
+      vue-router: 4.2.5(vue@3.3.4)
+    dev: true
+
   /@kong-ui-public/core@1.1.0(axios@1.6.0)(swrv@1.0.4)(vue@3.3.4):
     resolution: {integrity: sha512-j1kK07/zDyxwePi1EX1rZ+3iL955VdhZiodzeT5ift7iVQTiPt9VNUFu9+IXJ/AxHfuYu/gaL+gily9TsJTX3w==}
     peerDependencies:
@@ -2180,9 +2227,97 @@ packages:
       vue: 3.3.4
     dev: false
 
+  /@kong-ui-public/core@1.4.10(axios@1.6.2)(vue@3.3.4):
+    resolution: {integrity: sha512-bWHvxpmcP99EBRC72cyALMvFDgtcUKI4okdi3B+Benc3RZJWV2XkPMis66xHXG3rydzSC4m3oLXF1zMTlSiMWQ==}
+    peerDependencies:
+      axios: ^1.6.0
+      swrv: ^1.0.4
+      vue: ^3.3.4
+    dependencies:
+      axios: 1.6.2
+      date-fns: 2.30.0
+      vue: 3.3.4
+    dev: true
+
+  /@kong-ui-public/error-boundary@2.0.7(vue@3.3.4):
+    resolution: {integrity: sha512-3Vx8LlAflewNPi3YgoQjhp13uqwrw8ejz4C9vnTCAMzdCWcWZ7P68QrhM1N4UmM2EpJkdL4iHRsNLG2E5Tfv6w==}
+    peerDependencies:
+      vue: ^3.3.4
+    dependencies:
+      vue: 3.3.4
+    dev: true
+
+  /@kong-ui-public/misc-widgets@2.0.3(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.0.0-alpha.68)(vue@3.3.4):
+    resolution: {integrity: sha512-UWpVcu2UURzjzteL/8o0yDzxW+tUBN5FPOOdnNtOfPI+MlxBMQkoKcMSvMTeFPPjrQoBGedNtfV/O0ecLGnZPg==}
+    peerDependencies:
+      '@kong-ui-public/i18n': ^2.0.0
+      '@kong/kongponents': 9.0.0-alpha.68
+      vue: ^3.3.4
+    dependencies:
+      '@kong-ui-public/i18n': link:packages/core/i18n
+      '@kong/kongponents': 9.0.0-alpha.68(axios@1.6.2)(vue-router@4.2.5)(vue@3.3.4)
+      vue: 3.3.4
+    dev: true
+
+  /@kong-ui/konnect-app-shell@2.5.0(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.0.0-alpha.68)(vue-router@4.2.5)(vue@3.3.4):
+    resolution: {integrity: sha512-MKZVy5md9pVjxSPD1Er8vOfyzPzya3FTZvefdCCuARLo5o9tzcIOxcvVfi2BDceuRQ8r2/zFbRDC3CJPtjs2LQ==}
+    peerDependencies:
+      '@kong-ui-public/i18n': ^2.0.0
+      '@kong/kongponents': 9.0.0-alpha.70
+      cheerio: 1.0.0-rc.12
+      vue: ^3.3.4
+      vue-router: ^4.2.5
+    dependencies:
+      '@datadog/browser-rum': 4.50.1
+      '@kong-ui-public/app-layout': 2.2.3(@kong/kongponents@9.0.0-alpha.68)(vue-router@4.2.5)(vue@3.3.4)
+      '@kong-ui-public/core': 1.4.10(axios@1.6.2)(vue@3.3.4)
+      '@kong-ui-public/error-boundary': 2.0.7(vue@3.3.4)
+      '@kong-ui-public/i18n': link:packages/core/i18n
+      '@kong-ui-public/misc-widgets': 2.0.3(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.0.0-alpha.68)(vue@3.3.4)
+      '@kong-ui/konnect-global-search': 2.2.0(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.0.0-alpha.68)(vue-router@4.2.5)(vue@3.3.4)
+      '@kong/icons': 1.8.3(vue@3.3.4)
+      '@kong/kauth-client-typescript-axios': 0.2154.0
+      '@kong/kauth-client-v2-axios': 0.0.54
+      '@kong/kongponents': 9.0.0-alpha.68(axios@1.6.2)(vue-router@4.2.5)(vue@3.3.4)
+      axios: 1.6.2
+      launchdarkly-js-client-sdk: 3.1.4
+      uuid: 9.0.1
+      vue: 3.3.4
+      vue-router: 4.2.5(vue@3.3.4)
+    transitivePeerDependencies:
+      - '@datadog/browser-logs'
+      - debug
+      - swrv
+    dev: true
+
+  /@kong-ui/konnect-global-search@2.2.0(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.0.0-alpha.68)(vue-router@4.2.5)(vue@3.3.4):
+    resolution: {integrity: sha512-0abB+Jjp3+wPZ+Z8kW1Y73Qp/4dFJ8wt299oGz5cKfE9JiY5ctyzkpAnboYc+qhVyb1lTpB262+d5jFdsrWpVw==}
+    peerDependencies:
+      '@kong-ui-public/i18n': ^2.0.0
+      '@kong/kongponents': 9.0.0-alpha.70
+      vue: ^3.3.4
+      vue-router: ^4.2.5
+    dependencies:
+      '@kong-ui-public/core': 1.4.10(axios@1.6.2)(vue@3.3.4)
+      '@kong-ui-public/i18n': link:packages/core/i18n
+      '@kong/icons': 1.8.3(vue@3.3.4)
+      '@kong/kongponents': 9.0.0-alpha.68(axios@1.6.2)(vue-router@4.2.5)(vue@3.3.4)
+      axios: 1.6.2
+      uuid: 9.0.1
+      vue: 3.3.4
+      vue-router: 4.2.5(vue@3.3.4)
+    transitivePeerDependencies:
+      - debug
+      - swrv
+    dev: true
+
   /@kong/design-tokens@1.12.1:
     resolution: {integrity: sha512-I6C2HHJ+Kx14Exmr9OEe4yzHvhneC5RGrWzViZXcWNOYCl2VN9dMmgjTAaowbdeyLEeZ+4AtC+LJ2JU7eN4o8w==}
     dev: true
+
+  /@kong/entity-labels@0.5.0:
+    resolution: {integrity: sha512-evGG9jagTQG9XLzF3bZTfFKFGUEyZx9RoauTQmvZfDTThZcviKu8WC5KrpTqD7LoiVNLxbHdGjmNjtgIfDrtAw==}
+    dev: false
 
   /@kong/icons@1.8.3(vue@3.3.4):
     resolution: {integrity: sha512-9xXD8au1ty9Osi4qhy3OXthNTa8rAnVTIXryGJuA41/T0o4YnOSXMA7oj0F/kX6tEVeEi6TWbqwzGrj881ZFvA==}
@@ -2191,6 +2326,14 @@ packages:
       vue: ^3.3.8
     dependencies:
       vue: 3.3.4
+
+  /@kong/kauth-client-typescript-axios@0.2154.0:
+    resolution: {integrity: sha512-Ik2WC3TGx23Mwl+Qb5J+KlSNTvY7WOED85rya4VSDUoMKBnTznT+Hp95PoZnv/esWrxWUPkyYz8XQp2OZf6NpQ==}
+    dev: true
+
+  /@kong/kauth-client-v2-axios@0.0.54:
+    resolution: {integrity: sha512-DLrzn457f+CvQYVFr9fAnSPWtoelJGHD9k9zY8j1inC6HNYNBd5aWTOMegKQCD+iPuq7nxApL69tRhqxKahaUQ==}
+    dev: true
 
   /@kong/kongponents@8.127.0(vue-router@4.2.5)(vue@3.3.4):
     resolution: {integrity: sha512-C/MFT+OZtyul62ElgHEggqMYPbLjXiRJg5GE3il8MZpaep2D5QV+F5UQ7frbA98TkZCCVBD4LpR0OmiwXKs+tg==}
@@ -7404,6 +7547,10 @@ packages:
     engines: {'0': node >=0.6.0}
     dev: true
 
+  /fast-deep-equal@2.0.1:
+    resolution: {integrity: sha512-bCK/2Z4zLidyB4ReuIsvALH6w31YfAQDmXMqMx6FyfHqvBxtjC0eRumeSu4Bs3XtXwpyIywtSTrVT99BxY1f9w==}
+    dev: true
+
   /fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
 
@@ -9366,6 +9513,21 @@ packages:
       shell-quote: 1.8.1
     dev: true
 
+  /launchdarkly-js-client-sdk@3.1.4:
+    resolution: {integrity: sha512-yq0FeklpVuHMSRz7jfUAfyM7I/659RvGztqJ0Y9G5eN/ZrG1o2W61ZU0Nrv/gqZCtLXjarh/u1otxSFFBjTpHw==}
+    dependencies:
+      escape-string-regexp: 4.0.0
+      launchdarkly-js-sdk-common: 5.0.3
+    dev: true
+
+  /launchdarkly-js-sdk-common@5.0.3:
+    resolution: {integrity: sha512-wKG8UsVbPVq8+7eavgAm5CVmulQWN6Ddod2ZoA3euZ1zPvJPwIQ2GrOYaCJr3cFrrMIX+nQyBJHBHYxUAPcM+Q==}
+    dependencies:
+      base64-js: 1.5.1
+      fast-deep-equal: 2.0.1
+      uuid: 8.3.2
+    dev: true
+
   /lazy-ass@1.6.0:
     resolution: {integrity: sha512-cc8oEVoctTvsFZ/Oje/kGnHbpWHYBe8IAJe4C0QNc3t8uM/0Y8+erSz/7Y1ALuXTEZTMvxXwO6YbX1ey3ujiZw==}
     engines: {node: '> 0.8'}
@@ -9595,7 +9757,6 @@ packages:
 
   /lodash.clonedeep@4.5.0:
     resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
-    dev: false
 
   /lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}

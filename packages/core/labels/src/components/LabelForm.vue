@@ -14,7 +14,7 @@
           :data-testid="`runtime-group-label-prompt-key-${item.id}`"
           :error="labelHasErrors(idx, 'key')"
           :error-message="getLabelErrorMsg(idx, 'key')"
-          :placeholder="helpText.keyPlaceholder"
+          :placeholder="i18n.t('label_form.key_placeholder')"
         />
       </div>
       <span class="divider">
@@ -26,7 +26,7 @@
           :data-testid="`runtime-group-label-prompt-value-${item.id}`"
           :error="labelHasErrors(idx, 'value')"
           :error-message="getLabelErrorMsg(idx, 'value')"
-          :placeholder="helpText.valuePlaceholder"
+          :placeholder="i18n.t('label_form.value_placeholder')"
         />
       </div>
       <KButton
@@ -52,12 +52,12 @@
         icon="plus"
         @click="addLabel"
       >
-        {{ helpText.addLabelButtonText }}
+        {{ i18n.t('label_form.add_label_button_text') }}
       </KButton>
 
       <KTooltip
         v-else
-        :label="helpText.addLabelTooltipDisabled"
+        :label="i18n.t('label_form.add_label_tooltip_disabled')"
         placement="right"
       >
         <KButton
@@ -68,7 +68,7 @@
           <template #icon>
             <KIcon icon="plus" />
           </template>
-          {{ helpText.addLabelButtonText }}
+          {{ i18n.t('label_form.add_label_button_text') }}
         </KButton>
       </KTooltip>
     </div>
@@ -77,9 +77,10 @@
 
 <script setup lang="ts">
 import { watch, computed } from 'vue'
-import composables from '@KHCP/composables'
-import type { Label } from '@KHCP/stores/runtime-groups'
+import composables from '../composables'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
+
+import type { Label } from '../types'
 
 const props = defineProps<{
   modelValue: Label[],
@@ -87,10 +88,9 @@ const props = defineProps<{
   errors: Label[]
 }>()
 
-const i18n = composables.useI18n()
-const helpText = i18n.source.components.labelForm
-
 const emit = defineEmits(['update:modelValue'])
+
+const { i18n } = composables.useI18n()
 const labelObject = (): Label => {
   return {
     id: Date.now(),
@@ -115,19 +115,13 @@ const removeLabel = (idx: number): void => {
   }
 }
 
-const labelHasErrors = (idx: number, type: string) => {
-  if (!props.errors) {
-    return false
-  }
-
+const labelHasErrors = (idx: number, type: 'key' | 'value'): boolean => {
+  // @ts-ignore
   return props.errors[idx] ? props.errors[idx].errors && !props.errors[idx].errors[type].isValid : false
 }
 
-const getLabelErrorMsg = (idx: number, type: string) => {
-  if (!props.errors) {
-    return ''
-  }
-
+const getLabelErrorMsg = (idx: number, type: 'key' | 'value'): string => {
+  // @ts-ignore
   return props.errors[idx] ? props.errors[idx].errors && props.errors[idx].errors[type].failureMessage : ''
 }
 

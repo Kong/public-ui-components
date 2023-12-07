@@ -1,6 +1,28 @@
 {
-  "header": {
-    "title": "Title of the header",
-    "content": "Content of the header"
+  "label_form": {
+    "add_label_button_text": "Add Another Label",
+    "add_label_tooltip_disabled": "A maximum of 5 labels are allowed.",
+    "error_text_for_duplicate_keys": "Duplicate keys",
+    "key_placeholder": "Enter a key",
+    "value_placeholder": "Enter a value"
+  },
+  "label_list": {
+    "edit_button_text": "Edit",
+    "hide_labels": "Collapse",
+    "no_labels": "None",
+    "show_all_labels": "Show all"
+  },
+  "label_modal": {
+    "add_label_button_text": "Add a Label",
+    "add_label_tooltip_disabled": "A maximum of 5 labels are allowed.",
+    "cancel_button_text": "Cancel",
+    "clear_all_button_text": "Clear all",
+    "describe": "A maximum of 5 user-defined labels are allowed. For syntax rules, ",
+    "edit_modal_title": "Edit labels",
+    "error_text_for_duplicate_keys": "Duplicate keys",
+    "loading_button_text": "Saving...",
+    "save_button_text": "Save",
+    "success_message": "Labels successfully updated",
+    "view_documentation": "view documentation"
   }
 }
