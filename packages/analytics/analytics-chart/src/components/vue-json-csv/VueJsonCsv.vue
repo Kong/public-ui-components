@@ -92,7 +92,7 @@ const exportableData: ComputedRef<CsvData|null> = computed(() => {
   return filteredData.length ? filteredData : null
 })
 
-const labelsFunctionGenerator = (): any => {
+const labelsFunctionGenerator = (): Function => {
   const labels: any = props.labels
 
   if (typeof props.fields as ValidType !== ValidType.Object) {
@@ -100,8 +100,7 @@ const labelsFunctionGenerator = (): any => {
   }
 
   if (typeof labels as ValidType === ValidType.Object) {
-    // @ts-ignore
-    return item => {
+    return (item: Function) => {
       return mapKeys(item, (item, key) => {
         return labels[key] || key
       })
@@ -112,15 +111,16 @@ const labelsFunctionGenerator = (): any => {
   return item => item
 }
 
-const fieldsFunctionGenerator = () => {
+// Trims each data row based, keeping only the columns (fields) passed in
+const fieldsFunctionGenerator = (): Function => {
   const fields: any = props.fields
   if (typeof props.fields as ValidType !== ValidType.Object && !Array.isArray(fields)) {
     throw new Error('Fields needs to be an array of strings.')
   }
 
   if (Array.isArray(fields)) {
-    // @ts-ignore
-    return item => {
+    // Keep only requested object properties
+    return (item: Function) => {
       return pick(item, fields)
     }
   }
@@ -129,8 +129,8 @@ const fieldsFunctionGenerator = () => {
   return item => item
 }
 
+// Use custom labels in key/value pairs; if none are provided, return the raw data as-is
 const cleaningData = (): CsvData => {
-  // If no custom labels are provided, return the raw data
   if (typeof props.fields as ValidType === ValidType.Undefined &&
    typeof props.labels as ValidType === ValidType.Undefined) {
     return props.data
@@ -142,6 +142,7 @@ const cleaningData = (): CsvData => {
   return props.data.map(item => labels(fields(item))) as CsvData
 }
 
+// Export filtered data as a CSV file
 const generate = () => {
   if (!exportableData?.value) {
     console.warn('No data to export')
