@@ -30,12 +30,21 @@ const props = defineProps({
     required: true,
   },
   /**
-   * Fields inside the `data` array you want to appear in the exported CSV
-   * If none provided, all properties will be exported file.
+   * Fields from `data` array that should be present in exported CSV
+   * If none provided, all fields will be included.
    */
   fields: {
     type: Array<string>,
-    required: true,
+    required: false,
+    default: null,
+  },
+  /**
+   * Column labels
+   */
+  labels: {
+    type: Object as PropType<CsvKeyValuePair> | null,
+    required: false,
+    default: null,
   },
   filename: {
     type: String,
@@ -50,31 +59,18 @@ const props = defineProps({
     required: false,
   },
   /**
-   * Whether module should add SEP={delimiter};
-   * Useful for opening file with Excel
+   * Whether module should add SEP={delimiter}; ideal for Excel compatibility
    */
   separatorExcel: {
     type: Boolean,
     default: false,
   },
-  /**
-   * What will be the encoding of the file
-   */
   encoding: {
     type: String,
     default: 'utf-8',
   },
   /**
-   * Labels for columns
-   *
-   * Object or function
-   */
-  labels: {
-    type: Object as PropType<CsvKeyValuePair>,
-    required: true,
-  },
-  /**
-   * Used only for testing purposes
+   * Component test specific
    */
   testing: {
     type: Boolean,
@@ -92,6 +88,7 @@ const exportableData: ComputedRef<CsvData|null> = computed(() => {
   return filteredData.length ? filteredData : null
 })
 
+// Replaces the keys in the key/value pairs with more human-readable ones (if provided)
 const labelsFunctionGenerator = (): Function => {
   const labels: any = props.labels
 
