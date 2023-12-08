@@ -207,7 +207,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
       &.sidebar-item-link,
       &.sidebar-item-link:hover {
-        color: $kui-navigation-color-text-selected;
+        color: $kui-navigation-color-text-selected !important;
 
         svg {
           color: $kui-navigation-color-text-selected;
