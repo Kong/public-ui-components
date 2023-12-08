@@ -4,7 +4,7 @@
     data-testid="export-csv"
     @click="generate"
   >
-    <slot>Download {{ name }}</slot>
+    <slot>Download {{ filename }}</slot>
   </div>
 </template>
 
@@ -12,38 +12,34 @@
 import { computed } from 'vue'
 import { ValidType } from '../../types'
 import type { CsvData, CsvKeyValuePair } from '../../types'
-import type { PropType } from 'vue'
+import type { ComputedRef, PropType } from 'vue'
 
 import mapKeys from 'lodash.mapkeys'
 import pick from 'lodash.pick'
 import { saveAs } from 'file-saver'
 import { unparse } from 'papaparse'
 
-const emit = defineEmits(['export-started', 'export-finished'])
+const emit = defineEmits<{
+  (event: 'export-started', data: CsvData): void,
+  (event: 'export-finished', data: string): void,
+}>()
 
 const props = defineProps({
-  /**
-   * Json to download
-   */
   data: {
     type: Array as PropType<CsvData>,
     required: true,
   },
   /**
-   * fields inside the Json Object that you want to export
-   * if no given, all the properties in the Json are exported
-   * Can either be an array or a function
+   * Fields inside the `data` array you want to appear in the exported CSV
+   * If none provided, all properties will be exported file.
    */
   fields: {
     type: Array<string>,
     required: true,
   },
-  /**
-   * filename to export, default: data.csv
-   */
-  name: {
+  filename: {
     type: String,
-    default: 'data.csv',
+    default: 'report-data.csv',
   },
   /**
    * Delimiter for the CSV file
@@ -54,8 +50,7 @@ const props = defineProps({
     required: false,
   },
   /**
-   * Should the module add SEP={delimiter}
-   *
+   * Whether module should add SEP={delimiter};
    * Useful for opening file with Excel
    */
   separatorExcel: {
@@ -88,19 +83,11 @@ const props = defineProps({
   },
 })
 
-console.log(' >>> fields', props.fields)
-console.log(' >>> labels', props.labels)
-console.log(' >>> data', props.data)
-
 // unique identifier
 const idName = computed(() => `export_${new Date().getTime()}`)
 
-const exportableData = computed(() => {
-  const filteredData = cleaningData()
-
-  if (props.testing) {
-    (window as any).__cypress_filteredData = { filteredData }
-  }
+const exportableData: ComputedRef<CsvData|null> = computed(() => {
+  const filteredData: CsvData = cleaningData()
 
   return filteredData.length ? filteredData : null
 })
@@ -142,34 +129,32 @@ const fieldsFunctionGenerator = () => {
   return item => item
 }
 
-const cleaningData = () => {
-  if (typeof props.fields as ValidType === ValidType.Undefined && typeof props.labels as ValidType === ValidType.Undefined) {
+const cleaningData = (): CsvData => {
+  // If no custom labels are provided, return the raw data
+  if (typeof props.fields as ValidType === ValidType.Undefined &&
+   typeof props.labels as ValidType === ValidType.Undefined) {
     return props.data
   }
 
   const labels = labelsFunctionGenerator()
   const fields = fieldsFunctionGenerator()
 
-  return props.data.map(item => labels(fields(item)))
+  return props.data.map(item => labels(fields(item))) as CsvData
 }
 
 const generate = () => {
-  emit('export-started')
-
   if (!exportableData?.value) {
     console.warn('No data to export')
     return
   }
 
-  let csv = unparse(
-    exportableData.value,
-    Object.assign(
-      {
-        delimiter: props.delimiter,
-        encoding: props.encoding,
-      },
-    ),
-  )
+  emit('export-started', exportableData.value)
+
+  // Convert JS object into csv string
+  let csv = unparse(exportableData.value, Object.assign({
+    delimiter: props.delimiter,
+    encoding: props.encoding,
+  }))
 
   if (props.separatorExcel) {
     csv = 'SEP=' + props.delimiter + '\r\n' + csv
@@ -178,14 +163,15 @@ const generate = () => {
   if (props.encoding === 'utf-8') {
     csv = '\ufeff' + csv
   }
-  emit('export-finished')
+
+  emit('export-finished', props.filename)
 
   if (!props.testing) {
     const blob = new Blob([csv], {
       type: 'text/csv;charset=' + props.encoding,
     })
 
-    saveAs(blob, props.name)
+    saveAs(blob, props.filename)
   }
 }
 </script>

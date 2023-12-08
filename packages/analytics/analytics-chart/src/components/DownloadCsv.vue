@@ -3,8 +3,8 @@
     <VueJsonCsv
       :data="rows"
       :fields="fields"
+      :filename="filename"
       :labels="headers"
-      :name="filename"
     >
       <slot />
     </VueJsonCsv>
