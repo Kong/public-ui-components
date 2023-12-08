@@ -48,7 +48,7 @@
             class="document-publish-toggle"
             data-testid="document-publish-toggle"
             :label="publishedStatusText"
-            label-position="left"
+            label-before
             @click="handlePublishToggle"
           />
           <KButton

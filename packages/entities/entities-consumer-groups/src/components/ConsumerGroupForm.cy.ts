@@ -330,7 +330,7 @@ describe('<ConsumerGroupForm />', () => {
 
       cy.getTestId('consumer-group-form-name').should('have.value', konnectGroup.item.name)
       cy.getTestId('consumer-group-form-tags').should('have.value', konnectGroup.item.tags?.join(', '))
-      cy.get('[data-testid="k-multiselect-trigger"] [data-testid="k-multiselect-selections"] .k-badge-text')
+      cy.get('[data-testid="k-multiselect-trigger"] [data-testid="k-multiselect-selections"] .badge-content-wrapper')
         .should('contain.text', consumersList5[0].username)
     })
 
@@ -741,7 +741,7 @@ describe('<ConsumerGroupForm />', () => {
 
       cy.getTestId('consumer-group-form-name').should('have.value', KMGroup.consumer_group.name)
       cy.getTestId('consumer-group-form-tags').should('have.value', KMGroup.consumer_group.tags?.join(', '))
-      cy.get('[data-testid="k-multiselect-trigger"] [data-testid="k-multiselect-selections"] .k-badge-text')
+      cy.get('[data-testid="k-multiselect-trigger"] [data-testid="k-multiselect-selections"] .badge-content-wrapper')
         .should('contain.text', KMGroup.consumers[0].username)
     })
 

@@ -56,8 +56,7 @@
           <KBadge
             v-for="protocol in rowValue"
             :key="protocol"
-            :background-color="KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST"
-            :color="KUI_COLOR_TEXT_NEUTRAL"
+            appearance="neutral"
             @click.stop
           >
             {{ protocol }}
@@ -69,9 +68,9 @@
           <KBadge
             v-for="host in rowValue"
             :key="host"
-            :background-color="KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST"
-            :color="KUI_COLOR_TEXT_NEUTRAL"
-            :truncation-tooltip="host"
+            appearance="neutral"
+            :tooltip="host"
+            truncation-tooltip
             @click.stop
           >
             {{ host }}
@@ -84,7 +83,7 @@
           <KBadge
             v-for="method in rowValue"
             :key="method"
-            v-bind="getMethodBadgeColors(method)"
+            :appearance="Object.values(BadgeMethodAppearances).includes(method.toLowerCase() as BadgeMethodAppearance) ? method.toLowerCase() as BadgeMethodAppearance : 'custom'"
             @click.stop
           >
             {{ method }}
@@ -97,9 +96,9 @@
           <KBadge
             v-for="path in rowValue"
             :key="path"
-            :background-color="KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST"
-            :color="KUI_COLOR_TEXT_NEUTRAL"
-            :truncation-tooltip="path"
+            appearance="neutral"
+            :tooltip="path"
+            truncation-tooltip
             @click.stop
           >
             {{ path }}
@@ -184,10 +183,8 @@ import { computed, ref, watch, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
 
-import {
-  KUI_COLOR_TEXT_NEUTRAL, KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST,
-} from '@kong/design-tokens'
-
+import { BadgeMethodAppearances } from '@kong/kongponents'
+import type { BadgeMethodAppearance } from '@kong/kongponents'
 import {
   EntityBaseTable,
   EntityDeleteModal,
@@ -217,7 +214,6 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 
 import composables from '../composables'
 import endpoints from '../routes-endpoints'
-import { getMethodBadgeColors } from '../utilities'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,

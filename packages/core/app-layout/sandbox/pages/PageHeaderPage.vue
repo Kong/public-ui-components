@@ -21,10 +21,7 @@
         />
       </template>
       <template #title-after>
-        <KBadge
-          appearance="neutral"
-          shape="rectangular"
-        >
+        <KBadge appearance="neutral">
           TRUTH
         </KBadge>
       </template>
@@ -35,7 +32,7 @@
             v-model="enabled"
             class="actions-switch"
             :label="enabled ? 'Enabled' : 'Disabled'"
-            label-position="left"
+            label-before
           />
           <KButton
             appearance="primary"
@@ -69,37 +66,28 @@
 
       <div>
         <span class="badge-label">Name:</span>
-        <KBadge
-          appearance="neutral"
-          shape="rectangular"
-        >
+        <KBadge appearance="neutral">
           TK
         </KBadge>
       </div>
       <div>
         <span class="badge-label">Color:</span>
-        <KBadge
-          appearance="neutral"
-          shape="rectangular"
-        >
+        <KBadge appearance="neutral">
           BLACK
         </KBadge>
       </div>
       <div>
         <span class="badge-label">Type:</span>
-        <KBadge
-          appearance="success"
-          shape="rectangular"
-        >
+        <KBadge appearance="success">
           COOL
         </KBadge>
       </div>
       <div class="method-badges">
         <span class="badge-label">Methods:</span>
-        <KMethodBadge
+        <KBadge
           v-for="method in ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace', 'connect', 'custom']"
           :key="method"
-          :method="(method as Method)"
+          :appearance="(method as BadgeMethodAppearance)"
         />
       </div>
 
@@ -126,7 +114,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { Method } from '@kong/kongponents'
+import type { BadgeMethodAppearance } from '@kong/kongponents'
 import { AppAboutSection, AppPageHeader } from '../../src'
 import { EditIcon } from '@kong/icons'
 
