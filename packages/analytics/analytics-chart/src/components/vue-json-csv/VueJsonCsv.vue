@@ -15,7 +15,6 @@ import type { CsvData, CsvKeyValuePair } from '../../types'
 import type { PropType } from 'vue'
 
 import mapKeys from 'lodash.mapkeys'
-import pickBy from 'lodash.pickby'
 import pick from 'lodash.pick'
 import { saveAs } from 'file-saver'
 import { unparse } from 'papaparse'

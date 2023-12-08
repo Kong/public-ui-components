@@ -22,9 +22,7 @@ describe('<VueJsonCsv />', () => {
       },
     })
 
-    cy.wait(2000)
-
-    cy.window().then((win) => {
+    cy.window().then(() => {
       const filteredData = (window as any).__cypress_filteredData
       const firstRow = filteredData[0]
 
