@@ -194,7 +194,7 @@ const addLabel = (): void => {
   }
 }
 
-const removeLabel = (labelId: number): void => {
+const removeLabel = (labelId: number | string): void => {
   if (tmpLabels.value.length > MIN_COUNTER_LABELS) {
     tmpLabels.value = tmpLabels.value.filter(item => item.id !== labelId)
   }
@@ -322,6 +322,10 @@ const clearAllLabels = (): void => {
       display: flex;
       gap: $kui-space-40;
     }
+  }
+
+  .runtime-group-prompt-description {
+    margin-top: $kui-space-0;
   }
 }
 </style>

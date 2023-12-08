@@ -507,6 +507,9 @@ importers:
 
   packages/core/labels:
     dependencies:
+      '@kong-ui-public/entities-shared':
+        specifier: workspace:^
+        version: link:../../entities/entities-shared
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../i18n

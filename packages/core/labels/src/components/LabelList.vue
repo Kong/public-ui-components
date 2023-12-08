@@ -37,13 +37,10 @@
       {{ i18n.t('label_list.no_labels') }}
     </span>
 
-    <AuthValidate
-      v-if="isEditEnabled"
-      v-slot="{ isAllowed }"
-      :krn-args="krnArgs"
+    <PermissionsWrapper
+      :auth-function="() => canEdit()"
     >
       <KTooltip
-        v-if="isAllowed"
         class="edit-wrapper"
         :label="i18n.t('label_list.edit_button_text')"
         placement="top"
@@ -64,7 +61,7 @@
           />
         </KButton>
       </KTooltip>
-    </AuthValidate>
+    </PermissionsWrapper>
 
     <Teleport
       v-if="openModal"
@@ -92,22 +89,24 @@ import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { EditIcon } from '@kong/icons'
 import { LabelScope } from '../enums'
+import { PermissionsWrapper } from '@kong-ui-public/entities-shared'
 
 import type { PropType } from 'vue'
 import type { Label } from 'src/types'
-import type { RequestedPermissionKrn } from '@kong-ui/konnect-app-shell'
 
 const props = defineProps({
   labels: {
     type: Array as PropType<Label[]>,
     default: () => [],
   },
-  krnArgs: {
-    type: Object as PropType<RequestedPermissionKrn>,
+  /**
+   * A synchronous or asynchronous function which returns a boolean evaluating
+   * if the user can edit an entity by create a new document
+   */
+  canEdit: {
+    type: Function as PropType<() => boolean | Promise<boolean>>,
     required: false,
-    default: () => {
-      return {}
-    },
+    default: async () => false,
   },
   name: {
     type: String,
@@ -158,6 +157,7 @@ watch(() => props.showModal, (newVal) => {
 
 <style lang="scss" scoped>
 .labels {
+  align-items: center;
   display: flex;
 
   .edit-wrapper {

@@ -80,13 +80,23 @@ import { watch, computed } from 'vue'
 import composables from '../composables'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 
+import type { PropType } from 'vue'
 import type { Label } from '../types'
 
-const props = defineProps<{
-  modelValue: Label[],
-  title: string,
-  errors: Label[]
-}>()
+const props = defineProps({
+  modelValue: {
+    type: Array as PropType<Label[]>,
+    default: null,
+  },
+  title: {
+    type: String,
+    default: 'Labels',
+  },
+  errors: {
+    type: Array as PropType<Label[]>,
+    default: null,
+  },
+})
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -104,25 +114,31 @@ const MAX_COUNTER_LABELS = 5
 const MIN_COUNTER_LABELS = 1
 
 const addLabel = (): void => {
-  if (labelValue.value.length <= MAX_COUNTER_LABELS) {
+  if (labelValue.value?.length <= MAX_COUNTER_LABELS) {
     emit('update:modelValue', labelValue.value.concat(labelObject()))
   }
 }
 
 const removeLabel = (idx: number): void => {
-  if (labelValue.value.length > MIN_COUNTER_LABELS) {
+  if (labelValue.value?.length > MIN_COUNTER_LABELS) {
     emit('update:modelValue', labelValue.value.filter((_, index) => index !== idx))
   }
 }
 
 const labelHasErrors = (idx: number, type: 'key' | 'value'): boolean => {
   // @ts-ignore
-  return props.errors[idx] ? props.errors[idx].errors && !props.errors[idx].errors[type].isValid : false
+  return props.errors && props.errors.length && props.errors[idx]
+    // @ts-ignore
+    ? props.errors[idx].errors && !props.errors[idx].errors[type].isValid
+    : false
 }
 
 const getLabelErrorMsg = (idx: number, type: 'key' | 'value'): string => {
   // @ts-ignore
-  return props.errors[idx] ? props.errors[idx].errors && props.errors[idx].errors[type].failureMessage : ''
+  return props.errors && props.errors.length && props.errors[idx]
+    // @ts-ignore
+    ? props.errors[idx].errors && props.errors[idx].errors[type].failureMessage
+    : ''
 }
 
 watch(() => labelValue.value, (newVal) => {
