@@ -32,15 +32,17 @@ describe('<ConfigCardDisplay />', () => {
       cy.get('.config-card-display-yaml').should('be.visible')
     })
 
-    it('renders the JSON content correctly', () => {
+    it('renders the JSON content and endpoint correctly', () => {
       cy.mount(ConfigCardDisplay, {
         props: {
+          fetchUrl: '/gateway-manager/ee96fdf4-130b-4e50-bc6e-9f68d6446e1b/gateway-services/15dea234-1725-4f5e-9564-ecb097a8f448',
           format: 'json',
           record,
         },
       })
 
       cy.get('.config-card-display-json').should('be.visible')
+      cy.get('.config-card-display-json-endpoint').should('be.visible')
     })
   })
 })

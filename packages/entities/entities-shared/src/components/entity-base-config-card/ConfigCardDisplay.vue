@@ -51,8 +51,24 @@
     v-if="format === 'json'"
     class="config-card-display-json"
   >
+    <div
+      v-if="getEndpoint"
+      class="config-card-display-json-endpoint"
+    >
+      <KBadge appearance="get">
+        {{ t('baseConfigCard.endpoints.get') }}
+      </KBadge>
+      <KCodeBlock
+        id="config-card-endpoint-codeblock"
+        :code="getEndpoint"
+        is-single-line
+        language="json"
+        theme="dark"
+      />
+    </div>
     <KCodeBlock
       id="config-card-codeblock"
+      :class="{ 'config-card-display-json-content': getEndpoint }"
       :code="jsonContent"
       language="json"
       theme="dark"
@@ -74,7 +90,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { useSlots, watch, ref } from 'vue'
+import { useSlots, watch, ref, computed } from 'vue'
 import type { RecordItem } from '../../types'
 import '@kong-ui-public/copy-uuid/dist/style.css'
 import ConfigCardItem from './ConfigCardItem.vue'
@@ -109,6 +125,10 @@ const props = defineProps({
     required: false,
     default: () => null,
   },
+  fetchUrl: {
+    type: String,
+    required: true,
+  },
 })
 
 const slots = useSlots()
@@ -118,6 +138,17 @@ const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${it
 
 const jsonContent = ref('')
 const yamlContent = ref('')
+
+const getEndpoint = computed(() => {
+  if (!props.fetchUrl) {
+    return ''
+  }
+  const url = props.fetchUrl.split('/')
+  if (url.length < 2) {
+    return ''
+  }
+  return '/'.concat(url[url.length - 2]).concat('/').concat(url[url.length - 1])
+})
 
 watch(() => props.format, (format: string) => {
   if (format !== 'structured') {
@@ -139,12 +170,36 @@ watch(() => props.format, (format: string) => {
 <style lang="scss">
 .config-card-display-json,
 .config-card-display-yaml {
+  #config-card-endpoint-codeblock,
   #config-card-codeblock {
     .k-highlighted-code-block {
       code {
         background-color: $kui-color-background-neutral-strongest;
       }
     }
+  }
+}
+
+.config-card-display-json-content {
+  .k-highlighted-code-block {
+    border-top-left-radius: $kui-border-radius-0 !important;
+    border-top-right-radius: $kui-border-radius-0 !important;
+  }
+}
+
+.config-card-display-json-endpoint {
+  align-items: baseline;
+  background-color: $kui-color-background-neutral-strongest;
+  border-bottom: $kui-border-width-10 solid $kui-navigation-color-border-divider;
+  border-top-left-radius: $kui-border-radius-40;
+  border-top-right-radius: $kui-border-radius-40;
+  display: flex;
+  padding-left: $kui-space-50;
+  .k-badge {
+    height: 24px;
+  }
+  .k-code-block {
+    flex: auto;
   }
 }
 </style>
