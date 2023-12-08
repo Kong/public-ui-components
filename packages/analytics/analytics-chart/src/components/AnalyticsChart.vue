@@ -28,7 +28,10 @@
           </template>
         </KTooltip>
       </div>
-      <div class="chart-wrapper-export-button">
+      <div
+        v-if="allowCsvExport && hasValidChartData"
+        class="chart-wrapper-export-button"
+      >
         <KButton
           appearance="secondary"
           class="chart-wrapper-export-button-display"
@@ -39,7 +42,7 @@
         </KButton>
       </div>
       <CsvExportModal
-        v-if="exportModalVisible"
+        v-if="allowCsvExport && hasValidChartData && exportModalVisible"
         :chart-data="chartData"
         :is-visible="true"
         :modal-title="chartTitle"
@@ -110,6 +113,7 @@
         :tooltip-title="tooltipTitle"
       />
     </div>
+    <!-- Optional: CSV Export modal -->
   </div>
 </template>
 
@@ -133,7 +137,7 @@ const props = defineProps({
   allowCsvExport: {
     type: Boolean,
     required: false,
-    default: false,
+    default: true,
   },
   chartData: {
     type: Object as PropType<AnalyticsExploreResult | AnalyticsExploreV2Result>,
