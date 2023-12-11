@@ -9,7 +9,7 @@
 
     <h2>Format: JSON</h2>
     <ConfigCardDisplay
-      fetch-url="/gateway-manager/ee96fdf4-130b-4e50-bc6e-9f68d6446e1b/gateway-services/15dea234-1725-4f5e-9564-ecb097a8f448"
+      fetcher-url="https://cloud.konghq.com/us/gateway-manager/91e192e0-5981-4662-a37d-7b24272c9da3/gateway-services/0af86198-9822-46e0-9028-47b173caf4aa"
       format="json"
       :record="record"
     />

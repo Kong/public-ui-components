@@ -52,7 +52,7 @@
     class="config-card-display-json"
   >
     <div
-      v-if="getEndpoint"
+      v-if="props.fetcherUrl"
       class="config-card-display-json-endpoint"
     >
       <KBadge appearance="get">
@@ -60,7 +60,7 @@
       </KBadge>
       <KCodeBlock
         id="config-card-endpoint-codeblock"
-        :code="getEndpoint"
+        :code="props.fetcherUrl"
         is-single-line
         language="json"
         theme="dark"
@@ -68,7 +68,7 @@
     </div>
     <KCodeBlock
       id="config-card-codeblock"
-      :class="{ 'config-card-display-json-content': getEndpoint }"
+      :class="{ 'config-card-display-json-content': props.fetcherUrl }"
       :code="jsonContent"
       language="json"
       theme="dark"
@@ -90,7 +90,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { useSlots, watch, ref, computed } from 'vue'
+import { useSlots, watch, ref } from 'vue'
 import type { RecordItem } from '../../types'
 import '@kong-ui-public/copy-uuid/dist/style.css'
 import ConfigCardItem from './ConfigCardItem.vue'
@@ -125,7 +125,7 @@ const props = defineProps({
     required: false,
     default: () => null,
   },
-  fetchUrl: {
+  fetcherUrl: {
     type: String,
     required: true,
   },
@@ -138,17 +138,6 @@ const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${it
 
 const jsonContent = ref('')
 const yamlContent = ref('')
-
-const getEndpoint = computed(() => {
-  if (!props.fetchUrl) {
-    return ''
-  }
-  const url = props.fetchUrl.split('/')
-  if (url.length < 2) {
-    return ''
-  }
-  return '/'.concat(url[url.length - 2]).concat('/').concat(url[url.length - 1])
-})
 
 watch(() => props.format, (format: string) => {
   if (format !== 'structured') {
@@ -200,6 +189,15 @@ watch(() => props.format, (format: string) => {
   }
   .k-code-block {
     flex: auto;
+  }
+  code {
+    /* truncate prefix to display relevant partial url but support copying entire url */
+    direction: rtl;
+    max-width: 394px;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 </style>
