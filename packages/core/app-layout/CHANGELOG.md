@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.2.5...@kong-ui-public/app-layout@2.2.6) (2023-12-08)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 3 [KHCP-9942] ([#985](https://github.com/Kong/public-ui-components/issues/985)) ([dc61424](https://github.com/Kong/public-ui-components/commit/dc61424540d15386c73db9d106143dc7e50714de))
+
+
+
+
+
+## [2.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.2.4...@kong-ui-public/app-layout@2.2.5) (2023-12-08)
+
+
+### Bug Fixes
+
+* **app-layout:** sidebar item hover color ([#993](https://github.com/Kong/public-ui-components/issues/993)) ([a85a786](https://github.com/Kong/public-ui-components/commit/a85a786a5d7f7f93f9a80f96733b17f9473da95a))
+
+
+
+
+
 ## [2.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.2.3...@kong-ui-public/app-layout@2.2.4) (2023-12-07)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout

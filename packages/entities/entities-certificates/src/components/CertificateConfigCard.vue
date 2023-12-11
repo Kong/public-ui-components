@@ -124,7 +124,8 @@
           :key="`key_usages-badge-tag-${idx}`"
           class="config-badge"
           :data-testid="`key_usages-badge-tag-${idx}`"
-          :truncation-tooltip="tag"
+          :tooltip="tag"
+          truncation-tooltip
         >
           {{ tag }}
         </KBadge>

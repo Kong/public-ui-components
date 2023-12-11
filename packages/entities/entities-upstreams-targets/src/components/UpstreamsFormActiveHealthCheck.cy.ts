@@ -2,7 +2,7 @@ import UpstreamsFormActiveHealthCheck from './UpstreamsFormActiveHealthCheck.vue
 import { KMConfig, konnectConfig } from '../../fixtures/mockData'
 import { ActiveHealthyHttpStatuses, ActiveUnhealthyHttpStatuses } from '../constants'
 
-describe('<UpstreamsFormActiveHealthCheck/>', () => {
+describe('<UpstreamsFormActiveHealthCheck/>', { viewportHeight: 700, viewportWidth: 700 }, () => {
   it('Component should be rendered correctly', () => {
     cy.mount(UpstreamsFormActiveHealthCheck, {
       props: {
@@ -33,7 +33,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', () => {
       },
     })
 
-    cy.get('.active-healthcheck-type-select').click()
+    cy.get('.active-healthcheck-type-select').click({ waitForAnimations: false })
     cy.get('.active-healthcheck-type-select .k-select-list .k-select-item').should('have.length', 5)
     cy.get('.active-healthcheck-type-select .k-select-list [data-testid="k-select-item-tcp"]').click()
 
@@ -49,7 +49,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', () => {
       },
     })
 
-    cy.getTestId('active-healthcheck-http-path').type('http-path')
+    cy.getTestId('active-healthcheck-http-path').type('http-path', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', 'http-path')
   })
@@ -63,7 +63,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', () => {
       },
     })
 
-    cy.getTestId('active-healthcheck-timeout').type('3')
+    cy.getTestId('active-healthcheck-timeout').type('3', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '3')
   })
@@ -77,7 +77,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', () => {
       },
     })
 
-    cy.getTestId('active-healthcheck-concurrency').type('3')
+    cy.getTestId('active-healthcheck-concurrency').type('3', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '3')
   })
@@ -92,7 +92,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', () => {
     })
 
     cy.getTestId('active-healthcheck-https-sni').should('be.visible')
-    cy.getTestId('active-healthcheck-https-sni').type('https-sni')
+    cy.getTestId('active-healthcheck-https-sni').type('https-sni', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', 'https-sni')
   })
@@ -122,7 +122,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', () => {
     })
 
     cy.getTestId('active-healthcheck-https-sni').should('be.visible')
-    cy.getTestId('active-healthcheck-https-sni').type('https-sni')
+    cy.getTestId('active-healthcheck-https-sni').type('https-sni', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', 'https-sni')
   })
@@ -151,7 +151,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', () => {
       },
     })
 
-    cy.getTestId('active-healthcheck-interval').type('4')
+    cy.getTestId('active-healthcheck-interval').type('4', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
   })
@@ -165,7 +165,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', () => {
       },
     })
 
-    cy.getTestId('active-healthcheck-successes').type('4')
+    cy.getTestId('active-healthcheck-successes').type('4', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
   })
@@ -179,11 +179,11 @@ describe('<UpstreamsFormActiveHealthCheck/>', () => {
       },
     })
 
-    cy.get('.active-healthcheck-http-statuses').click()
+    cy.get('.active-healthcheck-http-statuses').click({ waitForAnimations: false })
 
     cy.get('.active-healthcheck-http-statuses .k-multiselect-list .k-multiselect-item').should('have.length', 92)
-    cy.get('.active-healthcheck-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-200"]').click()
-    cy.get('.active-healthcheck-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-201"]').click()
+    cy.get('.active-healthcheck-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-200"]').click({ waitForAnimations: false })
+    cy.get('.active-healthcheck-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-201"]').click({ waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', ['200', '201'])
   })
@@ -197,7 +197,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', () => {
       },
     })
 
-    cy.getTestId('active-healthcheck-unhealthy-interval').type('4')
+    cy.getTestId('active-healthcheck-unhealthy-interval').type('4', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
   })
@@ -211,7 +211,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', () => {
       },
     })
 
-    cy.getTestId('active-healthcheck-http-failures').type('4')
+    cy.getTestId('active-healthcheck-http-failures').type('4', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
   })
@@ -225,11 +225,11 @@ describe('<UpstreamsFormActiveHealthCheck/>', () => {
       },
     })
 
-    cy.get('.active-healthcheck-unhealthy-http-statuses').click()
+    cy.get('.active-healthcheck-unhealthy-http-statuses').click({ waitForAnimations: false })
 
     cy.get('.active-healthcheck-unhealthy-http-statuses .k-multiselect-list .k-multiselect-item').should('have.length', 92)
-    cy.get('.active-healthcheck-unhealthy-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-404"]').click()
-    cy.get('.active-healthcheck-unhealthy-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-500"]').click()
+    cy.get('.active-healthcheck-unhealthy-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-404"]').click({ waitForAnimations: false })
+    cy.get('.active-healthcheck-unhealthy-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-500"]').click({ waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', ['404', '500'])
   })
@@ -243,7 +243,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', () => {
       },
     })
 
-    cy.getTestId('active-healthcheck-unhealthy-timeouts').type('4')
+    cy.getTestId('active-healthcheck-unhealthy-timeouts').type('4', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
   })
@@ -271,7 +271,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', () => {
     })
 
     cy.getTestId('active-healthcheck-tcp-failures').should('be.visible')
-    cy.getTestId('active-healthcheck-tcp-failures').type('4')
+    cy.getTestId('active-healthcheck-tcp-failures').type('4', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
   })
@@ -300,12 +300,12 @@ describe('<UpstreamsFormActiveHealthCheck/>', () => {
     })
 
     cy.get('.headers-row').should('be.visible')
-    cy.getTestId('active-healthcheck-headers-header-1').type('header')
-    cy.getTestId('active-healthcheck-headers-value-1').type('value1, value2')
+    cy.getTestId('active-healthcheck-headers-header-1').type('header', { waitForAnimations: false })
+    cy.getTestId('active-healthcheck-headers-value-1').type('value1, value2', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', [{ key: 'header', values: 'value1, value2' }])
 
-    cy.getTestId('btn-add-header').click()
+    cy.getTestId('btn-add-header').click({ waitForAnimations: false })
 
     cy.get('.headers-row').should('have.length', 2)
   })

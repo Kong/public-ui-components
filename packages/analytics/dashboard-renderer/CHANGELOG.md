@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.2.3...@kong-ui-public/dashboard-renderer@0.2.4) (2023-12-08)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 3 [KHCP-9942] ([#985](https://github.com/Kong/public-ui-components/issues/985)) ([dc61424](https://github.com/Kong/public-ui-components/commit/dc61424540d15386c73db9d106143dc7e50714de))
+
+
+
+
+
 ## [0.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.2.2...@kong-ui-public/dashboard-renderer@0.2.3) (2023-12-07)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
