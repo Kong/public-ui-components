@@ -29,9 +29,15 @@
     }
 
     .methods-input {
+      &-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $kui_space_50;
+      }
+
       display: flex;
       flex-wrap: wrap;
-      gap: $kui_space_50;
+      gap: $kui_space_20;
 
       // stylelint-disable-next-line selector-pseudo-class-no-unknown
       :deep(label.k-switch) {

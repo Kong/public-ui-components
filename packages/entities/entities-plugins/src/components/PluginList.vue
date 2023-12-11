@@ -104,7 +104,7 @@
               <KInputSwitch
                 :disabled="!isAllowed"
                 :disabled-tooltip-text="!isAllowed && config.getToggleDisabledTooltip?.(row) || undefined"
-                label-position="left"
+                label-before
                 :model-value="row.enabled"
                 @click.stop.prevent="isAllowed && toggleEnableStatus(row)"
               >
@@ -124,7 +124,7 @@
       </template>
 
       <template #ordering="{ rowValue }">
-        <KBadge :appearance="rowValue ? 'warning' : 'default'">
+        <KBadge :appearance="rowValue ? 'warning' : 'info'">
           {{
             rowValue
               ? t('plugins.list.table_headers.ordering_badge.dynamic')

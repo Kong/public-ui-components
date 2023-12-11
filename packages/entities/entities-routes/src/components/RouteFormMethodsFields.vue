@@ -5,16 +5,22 @@
       {{ t('form.fields.methods.label') }}
     </KLabel>
     <div class="routing-rule-input">
-      <div class="methods-input">
-        <KMethodBadge
+      <div class="methods-input-container">
+        <div
           v-for="method in Object.keys(fieldsValue)"
           :key="method"
-          v-model="fieldsValue[method]"
-          :data-testid="`${method.toLowerCase()}-method-toggle`"
-          is-toggle
-          :label="MethodsArray.includes(method.toLowerCase() as Method) ? '' : method"
-          :method="(MethodsArray.includes(method.toLowerCase() as Method) ? method.toLowerCase() as Method : 'custom')"
-        />
+          class="methods-input"
+        >
+          <KInputSwitch
+            v-model="fieldsValue[method]"
+            :data-testid="`${method.toLowerCase()}-method-toggle`"
+          />
+          <KBadge
+            :appearance="Object.values(BadgeMethodAppearances).includes(method.toLowerCase() as BadgeMethodAppearance) ? method.toLowerCase() as BadgeMethodAppearance : 'custom'"
+          >
+            {{ method.toLowerCase() }}
+          </KBadge>
+        </div>
       </div>
       <KButton
         appearance="tertiary"
@@ -66,8 +72,8 @@ import type { MethodsFields } from '../types'
 import { RoutingRulesEntities } from '../types'
 import composables from '../composables'
 import RoutingRulesEntitiesControls from './RoutingRulesEntitiesControls.vue'
-import type { Method } from '@kong/kongponents'
-import { MethodsArray } from '@kong/kongponents'
+import { BadgeMethodAppearances } from '@kong/kongponents'
+import type { BadgeMethodAppearance } from '@kong/kongponents'
 
 /** Local types, not exported
  * Same pattern used other fields components
