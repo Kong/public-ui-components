@@ -17,7 +17,10 @@
     }
   },
   "search": {
-    "placeholder": "Filter by name"
+    "placeholder": {
+      "konnect": "Filter by name",
+      "kongManager": "Filter by exact name or ID"
+    }
   },
   "gateway_services": {
     "title": "Gateway Services",

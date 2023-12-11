@@ -419,7 +419,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
         name: fields.name,
         id: { label: t('plugins.list.table_headers.id'), sortable: true },
       },
-      placeholder: t('search.placeholder.konnect'),
+      placeholder: t(`search.placeholder.${props.config.app}`),
     } as ExactMatchFilterConfig
   }
 

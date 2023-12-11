@@ -10,7 +10,10 @@
     "loading": "Loading..."
   },
   "search": {
-    "placeholder": "Filter by name",
+    "placeholder": {
+      "konnect": "Filter by name",
+      "kongManager": "Filter by exact name or ID"
+    },
     "no_results": "No results found"
   },
   "routes": {
