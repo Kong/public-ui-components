@@ -507,7 +507,7 @@ const multiDimensionExploreResult = {
 }
 
 describe('<AnalyticsChart />', () => {
-  it('Renders a line chart for total requests count with satus code dimension', () => {
+  it('Renders a line chart for total requests count with status code dimension', () => {
     cy.mount(AnalyticsChart, {
       props: {
         chartData: exploreResult,
@@ -719,6 +719,57 @@ describe('<AnalyticsChart />', () => {
 
     cy.get('[data-testid="no-data-in-report"] .k-empty-state-title-header').should('contain.text', emptyStateTitle)
     cy.get('[data-testid="no-data-in-report"] .k-empty-state-message').should('contain.text', emptyStateDescription)
+  })
+
+  it('doest not render an "Export button" if the datatet is empty', () => {
+    cy.mount(AnalyticsChart, {
+      props: {
+        allowCsvExport: true,
+        chartData: emptyExploreResult,
+        chartOptions: {
+          type: ChartTypes.TIMESERIES_LINE,
+        },
+        chartTitle: 'Requests',
+      },
+    })
+    cy.getTestId('csv-export-button').should('not.exist')
+  })
+
+  it('does not render an "Export" button if chart data is present but prop is set to `false`', () => {
+    cy.mount(AnalyticsChart, {
+      props: {
+        allowCsvExport: true,
+        chartData: emptyExploreResult,
+        chartOptions: {
+          type: ChartTypes.TIMESERIES_LINE,
+        },
+        chartTitle: 'Requests',
+      },
+    })
+    cy.getTestId('csv-export-button').should('not.exist')
+  })
+
+  it('Renders an "Export" button, and tabulated data in the modal preview', () => {
+    cy.viewport(1280, 800)
+
+    cy.mount(AnalyticsChart, {
+      props: {
+        allowCsvExport: true,
+        chartData: exploreResult,
+        chartOptions: {
+          type: ChartTypes.TIMESERIES_LINE,
+        },
+        chartTitle: 'Requests',
+      },
+    })
+
+    cy.getTestId('csv-export-button').should('exist')
+
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
+    cy.getTestId('csv-export-button').click().then(() => {
+      cy.getTestId('csv-export-modal').should('exist')
+      cy.get('.modal-body .vitals-table').should('exist')
+    })
   })
 
   it('multi dimension bar charts have "tooltipContext"', () => {

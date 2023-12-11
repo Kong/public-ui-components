@@ -14,7 +14,7 @@
         <div>
           <div
             v-if="hasData"
-            class="selected-text"
+            class="selected-range"
           >
             <p v-if="modalDescription">
               {{ modalDescription }}
@@ -217,7 +217,7 @@ watch(tableData, () => {
 </script>
 
 <style lang="scss">
-.vitals-report.k-modal {
+.kong-ui-public-csv-export-modal {
   .k-modal-dialog {
     max-width: 600px;
 
@@ -229,13 +229,19 @@ watch(tableData, () => {
       margin-right: $kui-space-40;
     }
 
-    .selected-text {
-      font-size: $kui-font-size-40;
+    .selected-range {
+      font-size: $kui-font-size-30;
+    }
+
+    .text-muted {
+      color: rgba(0, 0, 0, 0.45) !important;
+      font-size: $kui-font-size-30;
     }
 
     .vitals-table {
-      margin-bottom: $kui-space-90;
-      margin-top: $kui-space-90;
+      font-size: $kui-font-size-30;
+      margin-bottom: $kui-space-70;
+      margin-top: $kui-space-30;
       width: 100%;
     }
 

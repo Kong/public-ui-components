@@ -33,7 +33,7 @@
         class="chart-wrapper-export-button"
       >
         <KButton
-          appearance="secondary"
+          appearance="tertiary"
           class="chart-wrapper-export-button-display"
           data-testid="csv-export-button"
           @click.prevent="exportCsv"
@@ -137,7 +137,7 @@ const props = defineProps({
   allowCsvExport: {
     type: Boolean,
     required: false,
-    default: true,
+    default: false,
   },
   chartData: {
     type: Object as PropType<AnalyticsExploreResult | AnalyticsExploreV2Result>,
@@ -340,9 +340,10 @@ const timeSeriesGranularity = computed<GranularityKeys>(() => {
 // CSV Export Modal
 const exportModalVisible = ref(false)
 const selectedRange = computed(() => {
-  return ('start' in props.chartData.meta)
-    ? `${formatTime(props.chartData.meta.start)} - ${formatTime(props.chartData.meta.end, { includeTZ: true })}`
-    : ''
+  const start = 'startMs' in props.chartData.meta ? props.chartData.meta.startMs : props.chartData.meta?.end
+  const end = 'endMs' in props.chartData.meta ? props.chartData.meta.endMs : props.chartData.meta?.end
+
+  return `${formatTime(start)} - ${formatTime(end, { includeTZ: true })}`
 })
 const setModalVisibility = (val: boolean) => {
   exportModalVisible.value = val
