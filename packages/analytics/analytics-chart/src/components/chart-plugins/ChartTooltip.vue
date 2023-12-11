@@ -4,7 +4,12 @@
     ref="tooltipEl"
     class="tooltip-container"
     :class="{ 'locked': locked }"
-    :style="{ left: locked ? dragPosition.left : left, top: locked ? dragPosition.top : top, pointerEvents: locked ? 'all' : 'none' }"
+    :style="{
+      transform: locked ? `translate(${dragPosition.left}, ${dragPosition.top})` : `translate(${left}, ${top})`,
+      left: '0',
+      top: '0',
+      pointerEvents: locked ? 'all' : 'none'
+    }"
     @mousedown="handleMouseDown"
   >
     <div class="tooltip-title">
@@ -130,9 +135,22 @@ watch(() => props.locked, value => {
 function handleMouseDown(e: MouseEvent) {
   if (tooltipEl.value) {
     dragging.value = true
-    dragStartPosition.value = { x: tooltipEl.value.offsetLeft, y: tooltipEl.value.offsetTop }
-    dragMouseStartPosition.value = { x: e.clientX, y: e.clientY }
+    // Get computed style and extract transform values
+    const style = window.getComputedStyle(tooltipEl.value)
+    // @ts-ignore mozTransform is not in the types
+    const transform = style.transform || style.webkitTransform || style.mozTransform
 
+    // Generate the transform matrix for the tooltip element
+    const matrix = new DOMMatrix(transform)
+    // 4th column in the matrix represents the translations
+    // m41 and m42 are the x and y translations respectively
+    // https://developer.mozilla.org/en-US/docs/Web/API/DOMMatrix
+    const translateX = matrix.m41
+    const translateY = matrix.m42
+
+    // Set initial drag positions
+    dragStartPosition.value = { x: translateX, y: translateY }
+    dragMouseStartPosition.value = { x: e.clientX, y: e.clientY }
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('mouseup', handleMouseUp)
   }
@@ -195,7 +213,7 @@ function handleMouseUp() {
   max-width: 425px;
   min-width: 250px;
   position: absolute;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 999;
 
   .tooltip-title {
