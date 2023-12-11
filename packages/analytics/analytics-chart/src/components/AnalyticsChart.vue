@@ -30,11 +30,11 @@
       </div>
       <div
         v-if="allowCsvExport && hasValidChartData"
-        class="chart-wrapper-export-button"
+        class="chart-export-button"
       >
         <KButton
           appearance="tertiary"
-          class="chart-wrapper-export-button-display"
+          class="chart-export-button-display"
           data-testid="csv-export-button"
           @click.prevent="exportCsv"
         >
@@ -375,8 +375,14 @@ provide('legendPosition', toRef(props, 'legendPosition'))
   .chart-header {
     align-items: center;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding-bottom: $kui-space-60;
+
+    .chart-export-button {
+      display: flex;
+      margin-left: auto;
+      margin-right: 0;
+    }
   }
 
   .chart-title {
