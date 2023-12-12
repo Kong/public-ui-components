@@ -90,7 +90,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { useSlots, watch, ref } from 'vue'
+import { computed, useSlots, watch, ref } from 'vue'
 import type { RecordItem } from '../../types'
 import '@kong-ui-public/copy-uuid/dist/style.css'
 import ConfigCardItem from './ConfigCardItem.vue'
@@ -138,6 +138,19 @@ const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${it
 
 const jsonContent = ref('')
 const yamlContent = ref('')
+
+const displayedCharLength = computed(() => {
+  if (!props.fetcherUrl) {
+    return 0
+  }
+  const url = props.fetcherUrl?.split('/')
+  if (url.length < 2) {
+    return 0
+  }
+  const entityType = url[url.length - 2]
+  // each url contains 36 chars id + 2 slashes + 3 ellipses + number of characters in the entity type
+  return 41 + entityType.length
+})
 
 watch(() => props.format, (format: string) => {
   if (format !== 'structured') {
@@ -193,8 +206,8 @@ watch(() => props.format, (format: string) => {
   code {
     /* truncate prefix to display relevant partial url but support copying entire url */
     direction: rtl;
-    max-width: 394px;
-    overflow: hidden;
+    max-width: v-bind('`${displayedCharLength}ch`');
+    overflow: hidden !important;
     text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
