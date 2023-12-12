@@ -3,7 +3,7 @@ import CsvExportModal from './CsvExportModal.vue'
 import composables from '../composables'
 import { exploreResult, exploreV2Result, emptyExploreResult } from './mockData'
 
-// const DOWNLOADS_FOLDER = Cypress.config('downloadsFolder')
+const DOWNLOADS_FOLDER = Cypress.config('downloadsFolder')
 const MAX_ROWS = 3
 
 describe('<CsvExportModal />', () => {
@@ -43,7 +43,7 @@ describe('<CsvExportModal />', () => {
     // Timestamp should be naive localtime
     cy.getTestId('csv-export-modal').find('.k-table tbody td').eq(0).invoke('text').should('match', /\d{4}-\d\d-\d\d \d\d:\d\d:\d\d/)
 
-    // Table should contains the max number of rows allowed + 1 Header row
+    // Table should contain the max number of rows allowed + 1 Header row
     const numTableRows = MAX_ROWS + 1
 
     cy.getTestId('csv-export-modal').find('.k-table tr').should('have.length', numTableRows)
@@ -56,12 +56,12 @@ describe('<CsvExportModal />', () => {
     })
 
     // // Save to CSV and check actual contents
-    // cy.getTestId('csv-download-button').click()
+    cy.getTestId('csv-download-button').click()
 
-    // cy.readFile(`${DOWNLOADS_FOLDER}/${new Date().toISOString().slice(0, 10)}.csv`).then(contents => {
-    //   expect(contents).contain('Timestamp,UtcOffset,CodeClass,TotalRequests')
-    //   expect(contents).contain(',4XX,43945')
-    // })
+    cy.readFile(`${DOWNLOADS_FOLDER}/total-requests-${new Date().toISOString().slice(0, 10)}.csv`).then(contents => {
+      expect(contents).contain('Timestamp,UtcOffset,StatusCode,TotalRequests')
+      expect(contents).contain(',300,1239')
+    })
   })
 
   it('Export Modal with v2 explore data', () => {
