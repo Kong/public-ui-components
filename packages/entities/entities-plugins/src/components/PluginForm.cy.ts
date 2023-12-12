@@ -157,7 +157,9 @@ describe('<PluginForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: params?.credential ? `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/schemas/core-entities/*` : `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/schemas/core-entities/plugins/*`,
+          url: params?.credential
+            ? `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/schemas/core-entities/*`
+            : `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/schemas/core-entities/plugins/*`,
         },
         {
           statusCode: 200,
@@ -174,8 +176,8 @@ describe('<PluginForm />', () => {
       credential?: boolean
     }): void => {
       const url = params?.credential
-        ? `${baseConfigKonnect.apiBaseUrl}/${baseConfigKonnect.controlPlaneId}/core-entities/consumers/${params.entityId}/*`
-        : `${baseConfigKonnect.apiBaseUrl}/${baseConfigKonnect.controlPlaneId}/core-entities/plugins`
+        ? `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumers/${params.entityId}/*`
+        : `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins`
 
       cy.intercept(
         {
@@ -213,11 +215,14 @@ describe('<PluginForm />', () => {
       entityType: string
       mockData?: object
       alias?: string
+      credential?: boolean
     }) => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/${params.entityType}/*`,
+          url: params?.credential
+            ? `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/${params.entityType}/*/acls/*`
+            : `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/${params.entityType}/*`,
         },
         {
           statusCode: 200,
@@ -227,7 +232,7 @@ describe('<PluginForm />', () => {
     }
 
     const interceptKonnectOperatePlugin = (params: {
-      method: 'GET' | 'PATCH'
+      method: 'GET' | 'PUT'
       id: string
       mockData?: object
       alias?: string
@@ -375,7 +380,7 @@ describe('<PluginForm />', () => {
     })
 
     it('should show create form - acl credential', () => {
-      interceptKonnectSchema({ mockData: credentialSchema, credential: true })
+      interceptKonnectSchema({ mockData: credentialSchema })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -525,7 +530,7 @@ describe('<PluginForm />', () => {
       cy.get('.Scoped-check input').should('have.value', '1')
       cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
       cy.get('#service-id').should('be.visible')
-      cy.get('#service-id').should('have.value', scopedService.id)
+      cy.getTestId(`k-select-item-${scopedService.id}`).find('.selected').should('exist')
 
       // global fields
       cy.get('#enabled').should('be.checked')
@@ -542,7 +547,7 @@ describe('<PluginForm />', () => {
       interceptKonnectScopedEntity({ entityType: config.entityType })
       interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin', id: plugin1.id })
       interceptKonnectValidatePlugin()
-      interceptKonnectOperatePlugin({ method: 'PATCH', alias: 'updatePlugin', id: plugin1.id })
+      interceptKonnectOperatePlugin({ method: 'PUT', alias: 'updatePlugin', id: plugin1.id })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -574,7 +579,7 @@ describe('<PluginForm />', () => {
         mockData: scopedConsumer,
       })
       interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
-      interceptKonnectOperatePlugin({ method: 'PATCH', alias: 'updatePlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
+      interceptKonnectOperatePlugin({ method: 'PUT', alias: 'updatePlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -650,7 +655,6 @@ describe('<PluginForm />', () => {
         global: { components: { VueFormGenerator } },
         props: {
           config: baseConfigKonnect,
-          pluginId: 'i-dont-exist',
           pluginType: 'cors',
           useCustomNamesForPlugin: true,
         },
@@ -751,9 +755,11 @@ describe('<PluginForm />', () => {
     })
 
     it('update event should be emitted when plugin was edited', () => {
+      const config = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
       interceptKonnectSchema()
+      interceptKonnectScopedEntity({ entityType: config.entityType })
       interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin', id: plugin1.id })
-      interceptKonnectOperatePlugin({ method: 'PATCH', alias: 'updatePlugin', id: plugin1.id })
+      interceptKonnectOperatePlugin({ method: 'PUT', alias: 'updatePlugin', id: plugin1.id })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
