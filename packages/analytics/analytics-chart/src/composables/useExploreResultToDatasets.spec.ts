@@ -32,7 +32,7 @@ describe('useVitalsExploreDatasets', () => {
         version: 'v1',
         timestamp: '2022-01-01T01:01:02Z',
         event: {
-          dimension: null,
+          dimension: 'dimension',
         },
       }],
       meta: {
