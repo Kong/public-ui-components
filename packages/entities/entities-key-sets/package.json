@@ -23,16 +23,16 @@
     "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.0.0-alpha.73",
-    "axios": "^1.6.0",
-    "vue": "^3.3.4",
+    "axios": "^1.6.2",
+    "vue": "^3.3.9",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.0.0-alpha.73",
-    "axios": "^1.6.0",
-    "vue": "^3.3.4",
+    "axios": "^1.6.2",
+    "vue": "^3.3.9",
     "vue-router": "^4.2.5"
   },
   "scripts": {

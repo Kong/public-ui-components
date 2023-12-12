@@ -39,12 +39,12 @@
   },
   "peerDependencies": {
     "@kong/kongponents": "9.0.0-alpha.73",
-    "vue": "^3.3.4"
+    "vue": "^3.3.9"
   },
   "devDependencies": {
     "@kong/design-tokens": "^1.12.1",
     "@kong/kongponents": "9.0.0-alpha.73",
-    "vue": "^3.3.4"
+    "vue": "^3.3.9"
   },
   "dependencies": {
     "@kong/icons": "^1.8.3",
