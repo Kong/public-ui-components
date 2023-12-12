@@ -51,6 +51,9 @@
       "enabledLabel": "Enabled",
       "disabledLabel": "Disabled"
     },
+    "endpoints": {
+      "get": "Get"
+    },
     "copy": {
       "tooltip": "Copy {label}",
       "success": "Copied!"

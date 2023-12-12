@@ -90,6 +90,7 @@
       class="config-card-details-section"
     >
       <ConfigCardDisplay
+        :fetcher-url="fetcherUrl"
         :format="configFormat"
         :prop-list-types="propListTypes"
         :property-collections="propertyLists"
