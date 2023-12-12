@@ -9,24 +9,27 @@
       >
         {{ chartTitle }}
       </div>
-      <div id="result-truncated">
+      <div class="chart-header-icons-wrapper">
         <KTooltip
           v-if="hasValidChartData && resultSetTruncated && maxEntitiesShown"
           class="tooltip"
           max-width="500"
           placement="right"
         >
-          <div class="limit-icon-wrapper">
-            <WarningIcon
-              :color="KUI_COLOR_TEXT_WARNING"
-              decorative
-              :size="KUI_ICON_SIZE_40"
-            />
-          </div>
+          <WarningIcon
+            :color="KUI_COLOR_TEXT_WARNING"
+            decorative
+            :size="KUI_ICON_SIZE_40"
+          />
           <template #content>
             {{ notAllDataShownTooltipContent }}
           </template>
         </KTooltip>
+        <DebugModal
+          :analytics-chart-data="JSON.stringify(chartData, null, 2)"
+          :chart-data="JSON.stringify(computedChartData, null, 2)"
+          :chart-options="JSON.stringify(chartOptions, null, 2)"
+        />
       </div>
     </div>
     <KEmptyState
@@ -109,6 +112,7 @@ import { datavisPalette, hasMillisecondTimestamps } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
+import DebugModal from './DebugModal.vue'
 
 const props = defineProps({
   chartData: {
@@ -331,7 +335,13 @@ provide('legendPosition', toRef(props, 'legendPosition'))
   }
   .chart-header {
     display: flex;
+    justify-content: space-between;
     padding-bottom: $kui-space-60;
+
+    .chart-header-icons-wrapper {
+      display: flex;
+      justify-content: end;
+    }
   }
 
   .chart-title {
@@ -344,12 +354,6 @@ provide('legendPosition', toRef(props, 'legendPosition'))
     margin-left: $kui-space-50;
     margin-top: $kui-space-10;
   }
-
-  .limit-icon-wrapper {
-    display: flex;
-    flex-direction: row;
-  }
-
 }
 
 </style>

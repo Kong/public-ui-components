@@ -80,7 +80,6 @@
       <KLabel>Dataset options</KLabel>
       <div class="dataset-options">
         <KButton
-          appearance="outline"
           size="small"
           @click="addDataset()"
         >
@@ -135,6 +134,9 @@
         </div>
       </div>
       <br>
+
+      <label>Import chart data</label>
+      <CodeText v-model="exploreResultText" />
 
       <div class="config-container">
         <div
@@ -210,6 +212,7 @@ import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { generateMultipleMetricTimeSeriesData, generateSingleMetricTimeSeriesData } from '../utils/chartDataGenerator'
+import CodeText from '../CodeText.vue'
 
 enum Metrics {
   TotalRequests = 'TotalRequests',
@@ -267,9 +270,22 @@ const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',
 ]))
 
+const exploreResultText = ref()
+
 const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
   if (emptyState.value) {
     return null
+  }
+
+  if (exploreResultText.value) {
+
+    try {
+      const result = JSON.parse(exploreResultText.value)
+
+      return result as AnalyticsExploreV2Result
+    } catch (e) {
+      return null
+    }
   }
 
   if (multiDimensionToggle.value) {
@@ -290,12 +306,14 @@ const updateSelectedColor = (event: Event, label: string) => {
   colorPalette.value[label] = (event.target as HTMLInputElement).value
 }
 
-const analyticsChartOptions = computed<AnalyticsChartOptions>(() => ({
-  type: chartType.value,
-  stacked: stackToggle.value,
-  fill: fillToggle.value,
-  chartDatasetColors: colorPalette.value,
-}))
+const analyticsChartOptions = computed<AnalyticsChartOptions>(() => {
+  return {
+    type: chartType.value,
+    stacked: stackToggle.value,
+    fill: fillToggle.value,
+    chartDatasetColors: colorPalette.value,
+  }
+})
 
 const addDataset = () => {
 

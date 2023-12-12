@@ -86,6 +86,9 @@
       </div>
       <br>
 
+      <label>Import chart data</label>
+      <CodeText v-model="exploreResultText" />
+
       <div class="config-container">
         <div class="config-container-row">
           <KLabel>Colors</KLabel>
@@ -157,6 +160,7 @@ import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { generateCrossSectionalData } from '../utils/chartDataGenerator'
+import CodeText from '../CodeText.vue'
 
 enum Metrics {
   TotalRequests = 'TotalRequests',
@@ -205,9 +209,22 @@ const statusCodeLabels = [
 
 const statusCodeDimensionValues = ref(new Set(statusCodeLabels))
 
+const exploreResultText = ref()
+
 const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
   if (emptyState.value) {
     return null
+  }
+
+  if (exploreResultText.value) {
+
+    try {
+      const result = JSON.parse(exploreResultText.value)
+
+      return result as AnalyticsExploreV2Result
+    } catch (e) {
+      return null
+    }
   }
 
   return generateCrossSectionalData([{
