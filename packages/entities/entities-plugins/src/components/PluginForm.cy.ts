@@ -386,9 +386,10 @@ describe('<PluginForm />', () => {
         global: { components: { VueFormGenerator } },
         props: {
           config: baseConfigKonnect,
-          useCustomNamesForPlugin: true,
           pluginType: 'acl',
           credential: true,
+          hideScopeSelection: true,
+          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -469,10 +470,10 @@ describe('<PluginForm />', () => {
       const config = { ...baseConfigKonnect, entityId: scopedConsumer.item.id, entityType: 'consumers' }
       // TODO: remove?
       // interceptKonnectSchema({ mockData: credentialSchema })
-      interceptKonnectScopedEntity({
+      /*  interceptKonnectScopedEntity({
         entityType: config.entityType,
         mockData: scopedConsumer,
-      })
+      }) */
       interceptKonnectCreatePlugin()
 
       cy.mount(PluginForm, {
@@ -480,14 +481,15 @@ describe('<PluginForm />', () => {
         props: {
           config,
           pluginType: 'acl',
-          useCustomNamesForPlugin: true,
           credential: true,
+          hideScopeSelection: true,
+          useCustomNamesForPlugin: true,
         },
         router,
       })
 
       // cy.wait('@getPluginSchema')
-      cy.wait('@getScopedEntity')
+      // cy.wait('@getScopedEntity')
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       cy.get('#group').type('kai_group')
@@ -574,10 +576,6 @@ describe('<PluginForm />', () => {
 
     it('should pick correct submit url while editing plugin credential', () => {
       const config = { ...baseConfigKonnect, entityId: scopedConsumer.item.id, entityType: 'consumers' }
-      interceptKonnectScopedEntity({
-        entityType: config.entityType,
-        mockData: scopedConsumer,
-      })
       interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
       interceptKonnectOperatePlugin({ method: 'PUT', alias: 'updatePlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
 
@@ -585,15 +583,15 @@ describe('<PluginForm />', () => {
         global: { components: { VueFormGenerator } },
         props: {
           config,
+          credential: true,
           pluginType: 'acl',
           pluginId: aclCredential1.id,
+          hideScopeSelection: true,
           useCustomNamesForPlugin: true,
-          credential: true,
         },
         router,
       })
 
-      cy.wait('@getScopedEntity')
       cy.wait('@getPlugin')
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
@@ -647,7 +645,10 @@ describe('<PluginForm />', () => {
         },
         {
           statusCode: 500,
-          body: {},
+          body: {
+            code: 3,
+            message: 'Error: could not load schema',
+          },
         },
       ).as('getPluginSchema')
 
@@ -778,8 +779,8 @@ describe('<PluginForm />', () => {
       cy.wait('@getPlugin')
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.getTestId('#tags').clear()
-      cy.getTestId('#tags').type('tag1,tag2')
+      cy.get('#tags').clear()
+      cy.get('#tags').type('tag1,tag2')
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
