@@ -744,7 +744,7 @@ importers:
         specifier: workspace:^
         version: link:../entities-shared
       '@kong-ui-public/forms':
-        specifier: ^2.1.9
+        specifier: ^2.1.10
         version: link:../../core/forms
       '@kong/icons':
         specifier: ^1.8.3
@@ -940,7 +940,7 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong-ui-public/swagger-ui-web-component':
-        specifier: workspace:^0.10.4
+        specifier: workspace:^0.10.5
         version: link:../swagger-ui-web-component
       '@kong/icons':
         specifier: ^1.8.3
@@ -5912,6 +5912,7 @@ packages:
   /cosmiconfig-typescript-loader@5.0.0(@types/node@18.19.3)(cosmiconfig@8.3.6)(typescript@5.2.2):
     resolution: {integrity: sha512-+8cK7jRAReYkMwMiG+bxhcNKiHJDM6bR9FD/nGBXOWdMLuYawjF5cGrtLilJ+LGd3ZjCXnJjR5DkfWPoIVlqJA==}
     engines: {node: '>=v16'}
+    requiresBuild: true
     peerDependencies:
       '@types/node': '*'
       cosmiconfig: '>=8.2'
