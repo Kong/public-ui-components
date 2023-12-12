@@ -211,8 +211,7 @@ const fetcher = () => {
   }
 }
 
-// Parent component (eg: Overview Dashboard chart)
-// could send new data while modal is open
+// Parent component could send new data while modal is open
 watch(tableData, () => {
   fetcherCacheKey.value++
 })
@@ -221,7 +220,7 @@ watch(tableData, () => {
 <style lang="scss">
 .kong-ui-public-csv-export-modal {
   .k-modal-dialog {
-    max-width: 600px;
+    min-width: 580px;
 
     .k-empty-state-message {
       max-width: 80%;
