@@ -112,7 +112,6 @@
         :tooltip-title="tooltipTitle"
       />
     </div>
-    <!-- Optional: CSV Export modal -->
   </div>
 </template>
 
