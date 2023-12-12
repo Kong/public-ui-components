@@ -136,7 +136,10 @@
       <br>
 
       <label>Import chart data</label>
-      <CodeText v-model="exploreResultText" />
+      <CodeText
+        v-model="exploreResultText"
+        :class="{ 'has-error': hasError, 'is-valid': isValid }"
+      />
 
       <div class="config-container">
         <div
@@ -207,7 +210,7 @@ import {
 } from '../../src'
 import type { AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions } from '../../src/types'
-import { rand } from '../utils/utils'
+import { isValidJson, rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
@@ -271,6 +274,10 @@ const serviceDimensionValues = ref(new Set([
 ]))
 
 const exploreResultText = ref()
+const hasError = computed(() => !isValidJson(exploreResultText.value))
+const isValid = computed(() => exploreResultText.value !== undefined &&
+  exploreResultText.value !== '' &&
+  isValidJson(exploreResultText.value))
 
 const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
   if (emptyState.value) {

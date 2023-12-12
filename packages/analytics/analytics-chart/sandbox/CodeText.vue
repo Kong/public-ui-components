@@ -1,5 +1,7 @@
 <template>
-  <textarea v-model="localText" />
+  <div class="code-text">
+    <textarea v-model="localText" />
+  </div>
 </template>
 
 <script setup>
@@ -41,6 +43,20 @@ watch(() => props.modelValue, (newValue) => {
 </script>
 
 <style lang="scss" scoped>
+.code-text {
+  display: block;
+  margin: 1rem 0;
+  width: auto;
+  transition: filter .3s ease-in;
+
+  &.has-error {
+    filter: drop-shadow(0 0 0.15rem crimson);
+  }
+
+  &.is-valid {
+    filter: drop-shadow(0 0 0.15rem lightgreen);
+  }
+
   textarea {
     background-color: $kui-color-background-neutral-weakest;
     border: 1px solid $kui-color-background-neutral-weak;
@@ -50,7 +66,6 @@ watch(() => props.modelValue, (newValue) => {
     font-size: $kui-font-size-20;
     height: 500px;
     line-height: 1.5;
-    margin: 1rem 0;
     overflow: auto;
     padding: 1rem;
     resize: vertical;
@@ -76,9 +91,11 @@ watch(() => props.modelValue, (newValue) => {
     border-radius: 10px;
   }
 
-  textarea:focus {
+  textarea:focus :not(.has-error),
+  textarea:focus-visible :not(.has-error) {
     border-color: white;
     box-shadow: 0 0 0 2px $kui-color-background-neutral-weak;
     outline: none;
   }
+}
 </style>
