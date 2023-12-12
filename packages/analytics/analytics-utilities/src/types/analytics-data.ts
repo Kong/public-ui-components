@@ -1,5 +1,5 @@
 export interface RecordEvent {
-  [field: string]: string | number
+  [field: string]: string | number | null
 }
 
 export interface AnalyticsExploreRecord {
@@ -94,6 +94,7 @@ export interface AnalyticsExploreV2Meta extends BaseExploreMeta {
 export interface AnalyticsExploreV3Display {
   name: string;
   deleted: boolean;
+  isOtherGroup?: boolean;
 }
 
 /**

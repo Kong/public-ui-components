@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.1.5...@kong-ui-public/entities-shared@2.1.6) (2023-12-12)
+
+
+### Bug Fixes
+
+* **entities-shared:** method badges wrapping ([#998](https://github.com/Kong/public-ui-components/issues/998)) ([46bfc45](https://github.com/Kong/public-ui-components/commit/46bfc450b6a886bcaaa6d052bfdb5cc241ccdf15))
+
+
+
+
+
 ## [2.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.1.4...@kong-ui-public/entities-shared@2.1.5) (2023-12-08)
 
 

@@ -26,6 +26,46 @@ describe('useVitalsExploreDatasets', () => {
     expect(result.value).toEqual({ datasets: [], labels: [] })
   })
 
+  it('can handle null metric values', () => {
+    const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
+      records: [{
+        version: 'v1',
+        timestamp: '2022-01-01T01:01:02Z',
+        event: {
+          dimension: 'dimension',
+        },
+      }],
+      meta: {
+        start: 1640998862,
+        end: 1640998870,
+        granularity: 5000,
+        dimensions: { dimension: ['dimension'] },
+        metricNames: ['metric'],
+        queryId: '',
+        metricUnits: { metric: 'units' },
+        truncated: false,
+        limit: 15,
+      },
+    }))
+
+    const result = useExploreResultToDatasets({ fill: true }, exploreResult)
+
+    expect(result.value).toEqual({
+      datasets: [
+        {
+          backgroundColor: '#a86cd5',
+          data: [
+            null,
+          ],
+          label: 'dimension',
+        },
+      ],
+      labels: [
+        'dimension',
+      ],
+    })
+  })
+
   it('can handle no meta', () => {
     const exploreResult: ComputedRef = computed(() => ({
       records: [],
