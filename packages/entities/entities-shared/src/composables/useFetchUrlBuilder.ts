@@ -35,7 +35,9 @@ export default function useFetchUrlBuilder(
       if (isExactMatch.value && query) {
         // Using exact match
         urlWithParams.search = '' // trim any query params
-        urlWithParams = new URL(`${urlWithParams.href}?filter[name][contains]=${query}`)
+        urlWithParams = _config.value.app === 'konnect'
+          ? new URL(`${urlWithParams.href}?filter[name][contains]=${query}`)
+          : new URL(`${urlWithParams.href}/${query}/`)
       } else {
         if (!isExactMatch.value) {
           // Using fuzzy match

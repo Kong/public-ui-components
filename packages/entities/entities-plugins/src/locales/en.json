@@ -45,6 +45,7 @@
   "search": {
     "placeholder": {
       "konnect": "Filter by name",
+      "kongManager": "Filter by exact instance name or ID",
       "select": "Filter plugins"
     },
     "filter": {
