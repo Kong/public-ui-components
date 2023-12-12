@@ -1,6 +1,7 @@
 <template>
   <KTooltip v-if="secretCodeEntered">
     <SupportIcon
+      class="debug-icon"
       :size="KUI_ICON_SIZE_40"
       @click="showDebugModal = true"
     />
@@ -117,3 +118,20 @@ onUnmounted(() => {
   window.removeEventListener('keydown', checkKonamiCode)
 })
 </script>
+
+<style lang="scss" scoped>
+.debug-tooltip {
+  position: relative;
+  cursor: pointer;
+  right: 30px;
+  top: 50px;
+  z-index: 10;
+
+  .debug-icon {
+    transition: opacity 0.25s ease-out;
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+}
+</style>
