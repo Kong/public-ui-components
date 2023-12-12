@@ -51,7 +51,7 @@
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/core": "1.1.0",
     "@kong-ui-public/metric-cards": "workspace:^",
-    "axios": "^1.6.0",
+    "axios": "^1.6.2",
     "swrv": "^1.0.4"
   },
   "peerDependencies": {

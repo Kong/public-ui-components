@@ -55,11 +55,11 @@
     "errorLimit": "300KB"
   },
   "peerDependencies": {
-    "vue": "^3.3.4"
+    "vue": "^3.3.9"
   },
   "dependencies": {
-    "@formatjs/intl": "^2.9.3",
+    "@formatjs/intl": "^2.9.9",
     "flat": "^6.0.1",
-    "intl-messageformat": "^10.5.3"
+    "intl-messageformat": "^10.5.8"
   }
 }

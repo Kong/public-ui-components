@@ -40,12 +40,12 @@
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.0.0-alpha.73",
-    "vue": "^3.3.4"
+    "vue": "^3.3.9"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.0.0-alpha.73",
-    "vue": "^3.3.4"
+    "vue": "^3.3.9"
   },
   "repository": {
     "type": "git",
