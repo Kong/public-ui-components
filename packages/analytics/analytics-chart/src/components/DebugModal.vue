@@ -121,8 +121,8 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .debug-tooltip {
-  position: relative;
   cursor: pointer;
+  position: relative;
   right: 30px;
   top: 50px;
   z-index: 10;
