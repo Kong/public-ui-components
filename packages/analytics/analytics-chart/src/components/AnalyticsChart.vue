@@ -90,11 +90,6 @@
         :tooltip-title="tooltipTitle"
       />
     </div>
-    <DebugModal
-      :analytics-chart-data="JSON.stringify(chartData, null, 2)"
-      :chart-data="JSON.stringify(computedChartData, null, 2)"
-      :chart-options="JSON.stringify(chartOptions, null, 2)"
-    />
   </div>
 </template>
 
@@ -112,7 +107,6 @@ import { datavisPalette, hasMillisecondTimestamps } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
-import DebugModal from './DebugModal.vue'
 
 const props = defineProps({
   chartData: {
