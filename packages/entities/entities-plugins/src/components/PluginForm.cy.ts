@@ -115,7 +115,7 @@ describe('<PluginForm />', () => {
     }
 
     const interceptKMOperatePlugin = (params: {
-      method: 'GET' | 'PUT'
+      method: 'GET' | 'PATCH'
       id: string
       mockData?: object
       alias?: string
@@ -237,24 +237,6 @@ describe('<PluginForm />', () => {
       cy.getTestId('form-submit').should('not.exist')
       cy.getTestId('form-back').should('not.exist')
       cy.getTestId('form-cancel').should('not.exist')
-    })
-
-    it('should hide instance name field if useCustomNamesForPlugin is false', () => {
-      interceptKMSchema()
-
-      cy.mount(PluginForm, {
-        global: { components: { VueFormGenerator } },
-        props: {
-          config: baseConfigKM,
-          pluginType: 'cors',
-        },
-        router,
-      })
-
-      cy.wait('@getPluginSchema')
-      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
-
-      cy.get('#instance_name').should('not.exist')
     })
 
     it('should show create form - acl credential', () => {
@@ -419,7 +401,7 @@ describe('<PluginForm />', () => {
       interceptKMScopedEntity({ entityType: config.entityType })
       interceptKMOperatePlugin({ method: 'GET', alias: 'getPlugin', id: plugin1.id })
       interceptKMValidatePlugin()
-      interceptKMOperatePlugin({ method: 'PUT', alias: 'updatePlugin', id: plugin1.id })
+      interceptKMOperatePlugin({ method: 'PATCH', alias: 'updatePlugin', id: plugin1.id })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -447,7 +429,7 @@ describe('<PluginForm />', () => {
       const config = { ...baseConfigKM, entityId: scopedConsumer.item.id, entityType: 'consumers' }
       interceptKMSchema({ credential: true, mockData: credentialSchema })
       interceptKMOperatePlugin({ method: 'GET', alias: 'getPlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
-      interceptKMOperatePlugin({ method: 'PUT', alias: 'updatePlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
+      interceptKMOperatePlugin({ method: 'PATCH', alias: 'updatePlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -627,7 +609,7 @@ describe('<PluginForm />', () => {
       interceptKMScopedEntity({ entityType: config.entityType })
       interceptKMOperatePlugin({ method: 'GET', alias: 'getPlugin', id: plugin1.id })
       interceptKMValidatePlugin()
-      interceptKMOperatePlugin({ method: 'PUT', alias: 'updatePlugin', id: plugin1.id })
+      interceptKMOperatePlugin({ method: 'PATCH', alias: 'updatePlugin', id: plugin1.id })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
