@@ -1,5 +1,8 @@
 <template>
-  <KTooltip v-if="secretCodeEntered">
+  <KTooltip
+    v-if="secretCodeEntered"
+    class="debug-tooltip"
+  >
     <SupportIcon
       class="debug-icon"
       :size="KUI_ICON_SIZE_40"
@@ -123,8 +126,6 @@ onUnmounted(() => {
 .debug-tooltip {
   cursor: pointer;
   position: relative;
-  right: 30px;
-  top: 50px;
   z-index: 10;
 
   .debug-icon {
