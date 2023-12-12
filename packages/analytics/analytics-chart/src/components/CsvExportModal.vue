@@ -22,7 +22,9 @@
             <p v-else>
               {{ i18n.t('csvExport.exportDescription') }}
             </p>
-            <p>{{ i18n.t('csvExport.exportTimeRange') }}: {{ selectedRange }}</p>
+            <p>
+              {{ i18n.t('csvExport.exportTimeRange') }}: {{ selectedRange }}
+            </p>
           </div>
           <KTable
             class="vitals-table"
@@ -134,8 +136,6 @@ const closeModal = () => {
 }
 
 const tableData = computed(() => {
-  console.log(' >>>  tableData >>> ', tableData)
-
   if (!hasData.value || !props.chartData?.meta.metricNames) {
     return { headers: [], rows: [], csvHeaders: {} }
   }
@@ -203,7 +203,6 @@ const tableData = computed(() => {
 })
 
 const fetcher = () => {
-  console.log(' >>>> fetcher >>', tableData.value)
   const { rows } = tableData.value
 
   isLoading.value = false
@@ -216,7 +215,6 @@ const fetcher = () => {
 
 // Parent component could send new data while modal is open
 watch(tableData, () => {
-  console.log('>>>> table data watcher <<< ')
   fetcherCacheKey.value++
 })
 </script>
