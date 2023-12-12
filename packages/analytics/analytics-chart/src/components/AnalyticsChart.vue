@@ -44,7 +44,6 @@
       <CsvExportModal
         v-if="allowCsvExport && hasValidChartData && exportModalVisible"
         :chart-data="chartData"
-        :is-visible="true"
         :modal-title="chartTitle"
         :selected-range="selectedRange"
         @toggle-modal="setModalVisibility"
@@ -128,7 +127,7 @@ import type { PropType } from 'vue'
 import { computed, provide, ref, toRef, watch } from 'vue'
 import { GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsExploreResult, AnalyticsExploreV2Result, GranularityFullObj } from '@kong-ui-public/analytics-utilities'
-import { datavisPalette, formatTime, hasMillisecondTimestamps } from '../utils'
+import { datavisPalette, hasMillisecondTimestamps } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
@@ -339,12 +338,8 @@ const timeSeriesGranularity = computed<GranularityKeys>(() => {
 
 // CSV Export Modal
 const exportModalVisible = ref(false)
-const selectedRange = computed(() => {
-  const start = 'startMs' in props.chartData.meta ? props.chartData.meta.startMs : props.chartData.meta?.end
-  const end = 'endMs' in props.chartData.meta ? props.chartData.meta.endMs : props.chartData.meta?.end
+const selectedRange = composables.useChartSelectedRange(props.chartData)
 
-  return `${formatTime(start)} - ${formatTime(end, { includeTZ: true })}`
-})
 const setModalVisibility = (val: boolean) => {
   exportModalVisible.value = val
 }

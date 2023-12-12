@@ -67,13 +67,13 @@
         </KButton>
         <DownloadCsv
           class="vitals-report-export-button"
-          data-testid="csv-download-button"
           :filename="reportFilename"
           :headers="tableData.csvHeaders"
           :rows="tableData.rows"
         >
           <KButton
             appearance="primary"
+            data-testid="csv-download-button"
             :disabled="isLoading || !hasData"
           >
             {{ i18n.t('csvExport.downloadButton') }}
@@ -163,18 +163,20 @@ const tableData = computed(() => {
     ]
   }
 
-  // TODO: Determine if this is needed for the older explore versions
-  // const dimensions = ('dimensions' in props.chartData.meta) && props.chartData.meta.dimensions
-  //   ? props.chartData.meta.dimensions
-  //   : props.chartData.meta.metricNames || {}
+  const dimensions = ('dimensions' in props.chartData.meta) && props.chartData.meta?.dimensions
+    ? props.chartData.meta?.dimensions
+    : {}
 
   const displayHeaders: Header[] = [
     ...timeseriesColumns,
-    // TODO: Determine if this is needed for the older explore versions
-    // ...Object.keys(dimensions).map(key => ({
-    //   label: key,
-    //   key,
-    // })),
+
+    // `dimensions` are present in v1 and v2 explore meta
+    ...Object.keys(dimensions).map(key => ({
+      label: key,
+      key,
+    })),
+
+    // `metricNames` are common to all explore versions
     ...props.chartData.meta.metricNames.map(key => ({
       label: key,
       key,
