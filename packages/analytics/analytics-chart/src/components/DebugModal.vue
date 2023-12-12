@@ -1,5 +1,5 @@
 <template>
-  <KTooltip v-if="konamiEntered">
+  <KTooltip v-if="secretCodeEntered">
     <SupportIcon
       :size="KUI_ICON_SIZE_40"
       @click="showDebugModal = true"
@@ -90,18 +90,18 @@ const tabs = [
   },
 ]
 
-const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA']
-const konamiEntered = ref(false)
+const secretCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA']
+const secretCodeEntered = ref(false)
 const inputSequence = ref<String[]>([])
 
 const checkKonamiCode = (event: KeyboardEvent) => {
   inputSequence.value.push(event.code)
-  if (inputSequence.value.length > konamiCode.length) {
+  if (inputSequence.value.length > secretCode.length) {
     inputSequence.value.shift()
   }
 
-  if (konamiCode.every((v: string, i: number) => v === inputSequence.value[i])) {
-    konamiEntered.value = true
+  if (secretCode.every((v: string, i: number) => v === inputSequence.value[i])) {
+    secretCodeEntered.value = true
   }
 
   window.setTimeout(() => {

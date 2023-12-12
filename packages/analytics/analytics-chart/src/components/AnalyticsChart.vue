@@ -25,11 +25,6 @@
             {{ notAllDataShownTooltipContent }}
           </template>
         </KTooltip>
-        <DebugModal
-          :analytics-chart-data="JSON.stringify(chartData, null, 2)"
-          :chart-data="JSON.stringify(computedChartData, null, 2)"
-          :chart-options="JSON.stringify(chartOptions, null, 2)"
-        />
       </div>
     </div>
     <KEmptyState
@@ -95,6 +90,11 @@
         :tooltip-title="tooltipTitle"
       />
     </div>
+    <DebugModal
+      :analytics-chart-data="JSON.stringify(chartData, null, 2)"
+      :chart-data="JSON.stringify(computedChartData, null, 2)"
+      :chart-options="JSON.stringify(chartOptions, null, 2)"
+    />
   </div>
 </template>
 
