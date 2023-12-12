@@ -256,7 +256,6 @@ watch(tableData, () => {
     .k-modal-footer {
       .vitals-report-export-button {
         display: inline-flex;
-        margin-left: $kui-space-50;
       }
     }
   }

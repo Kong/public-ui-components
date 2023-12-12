@@ -262,14 +262,86 @@ export const exploreResult = {
 }
 
 export const exploreV2Result = {
-  records: exploreResult.records,
   meta: {
-    dimensions: exploreResult.meta.dimensions,
-    metricNames: exploreResult.meta.metricNames,
-    metricUnits: exploreResult.meta.metricUnits,
-    startMs: 1685452140987,
-    endMs: 1685473740987,
+    startMs: 1701158400000,
+    endMs: 1702368000000,
+    granularity: 604800000,
+    queryId: '00179418-9e55-4351-ae43-c8da0dcbed02',
+    metricNames: [
+      'REQUEST_COUNT',
+    ],
+    truncated: false,
+    limit: 50,
+    metricUnits: {
+      REQUEST_COUNT: 'count',
+    },
+    dimensions: {
+      STATUS_CODE_GROUPED: [
+        '2XX',
+        '3XX',
+        '4XX',
+        '5XX',
+      ],
+    },
   },
+  records: [
+    {
+      event: {
+        STATUS_CODE_GROUPED: '2XX',
+        REQUEST_COUNT: 22995565,
+      },
+      timestamp: '2023-11-28T08:00:00.000Z',
+    },
+    {
+      event: {
+        STATUS_CODE_GROUPED: '3XX',
+        REQUEST_COUNT: 7307048,
+      },
+      timestamp: '2023-11-28T08:00:00.000Z',
+    },
+    {
+      event: {
+        STATUS_CODE_GROUPED: '4XX',
+        REQUEST_COUNT: 9612003,
+      },
+      timestamp: '2023-11-28T08:00:00.000Z',
+    },
+    {
+      event: {
+        STATUS_CODE_GROUPED: '5XX',
+        REQUEST_COUNT: 6227845,
+      },
+      timestamp: '2023-11-28T08:00:00.000Z',
+    },
+    {
+      event: {
+        STATUS_CODE_GROUPED: '2XX',
+        REQUEST_COUNT: 22148124,
+      },
+      timestamp: '2023-12-05T08:00:00.000Z',
+    },
+    {
+      event: {
+        STATUS_CODE_GROUPED: '3XX',
+        REQUEST_COUNT: 7096101,
+      },
+      timestamp: '2023-12-05T08:00:00.000Z',
+    },
+    {
+      event: {
+        STATUS_CODE_GROUPED: '4XX',
+        REQUEST_COUNT: 9448612,
+      },
+      timestamp: '2023-12-05T08:00:00.000Z',
+    },
+    {
+      event: {
+        STATUS_CODE_GROUPED: '5XX',
+        REQUEST_COUNT: 6016577,
+      },
+      timestamp: '2023-12-05T08:00:00.000Z',
+    },
+  ],
 }
 
 export const dailyExploreResult = {
