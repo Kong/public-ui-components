@@ -357,6 +357,8 @@ export default {
 
     .method-badge-array {
       display: flex;
+      flex-wrap: wrap;
+      row-gap: 10px;
     }
   }
 
