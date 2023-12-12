@@ -367,12 +367,18 @@ provide('legendPosition', toRef(props, 'legendPosition'))
   .chart-header {
     align-items: center;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding-bottom: $kui-space-60;
 
     .chart-header-icons-wrapper {
       display: flex;
       justify-content: end;
+    }
+
+    .chart-export-button {
+      display: flex;
+      margin-left: auto;
+      margin-right: 0;
     }
   }
 
