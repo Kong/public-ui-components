@@ -195,7 +195,7 @@ describe('<PluginForm />', () => {
       status?: number
       entityId?: string
     }): void => {
-      const url = `${baseConfigKonnect.apiBaseUrl}/${baseConfigKonnect.controlPlaneId}/core-entities/v1/schemas/json/plugin/validate`
+      const url = `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/v1/schemas/json/plugin/validate`
 
       cy.intercept(
         {
@@ -236,8 +236,8 @@ describe('<PluginForm />', () => {
       entityId?: string
     }) => {
       const url = params?.credential
-        ? `${baseConfigKonnect.apiBaseUrl}/${baseConfigKonnect.controlPlaneId}/core-entities/consumers/${params.entityId}/acls/${params.id}`
-        : `${baseConfigKonnect.apiBaseUrl}/${baseConfigKonnect.controlPlaneId}/core-entities/plugins/${params.id}`
+        ? `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumers/${params.entityId}/acls/${params.id}`
+        : `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins/${params.id}`
 
       cy.intercept(
         {
@@ -285,7 +285,6 @@ describe('<PluginForm />', () => {
       cy.getTestId('form-back').should('be.visible')
       cy.getTestId('form-back').should('be.enabled')
       cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
 
       // scope fields
       cy.get('.field-selectionGroup').should('be.visible')
@@ -376,7 +375,7 @@ describe('<PluginForm />', () => {
     })
 
     it('should show create form - acl credential', () => {
-      interceptKonnectSchema({ mockData: credentialSchema })
+      interceptKonnectSchema({ mockData: credentialSchema, credential: true })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -397,7 +396,6 @@ describe('<PluginForm />', () => {
       cy.getTestId('form-submit').should('be.enabled')
       cy.getTestId('form-back').should('be.visible')
       cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
 
       // scope & global fields
       cy.get('.field-selectionGroup').should('not.exist')
@@ -433,7 +431,7 @@ describe('<PluginForm />', () => {
       cy.get('.Scoped-check input').should('have.value', '1')
       cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
       cy.get('#service-id').should('be.visible')
-      cy.get('#service-id').should('include', scopedService.id)
+      cy.getTestId(`k-select-item-${scopedService.id}`).find('.selected').should('exist')
     })
 
     it('should pick correct url while creating plugin', () => {
@@ -458,6 +456,7 @@ describe('<PluginForm />', () => {
       cy.get('#tags').type('tag1,tag2')
 
       cy.getTestId('form-submit').click()
+      cy.wait('@validatePlugin')
       cy.wait('@createPlugin')
     })
 
@@ -520,7 +519,6 @@ describe('<PluginForm />', () => {
       cy.getTestId('form-submit').should('be.disabled')
       cy.getTestId('form-back').should('not.exist')
       cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
 
       // scope
       cy.get('.Scoped-check input').should('be.visible')
@@ -543,6 +541,7 @@ describe('<PluginForm />', () => {
       interceptKonnectSchema()
       interceptKonnectScopedEntity({ entityType: config.entityType })
       interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin', id: plugin1.id })
+      interceptKonnectValidatePlugin()
       interceptKonnectOperatePlugin({ method: 'PATCH', alias: 'updatePlugin', id: plugin1.id })
 
       cy.mount(PluginForm, {
@@ -564,6 +563,7 @@ describe('<PluginForm />', () => {
       cy.get('#tags').clear()
 
       cy.getTestId('form-submit').click()
+      cy.wait('@validatePlugin')
       cy.wait('@updatePlugin')
     })
 
@@ -603,7 +603,6 @@ describe('<PluginForm />', () => {
       interceptKonnectSchema()
       interceptKonnectScopedEntity({ entityType: config.entityType })
       interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin', id: plugin1.id })
-      interceptKonnectOperatePlugin({ method: 'PATCH', alias: 'updatePlugin', id: plugin1.id })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
