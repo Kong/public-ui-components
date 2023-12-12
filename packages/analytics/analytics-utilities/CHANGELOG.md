@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.10.6...@kong-ui-public/analytics-utilities@0.11.0) (2023-12-12)
+
+
+### Features
+
+* **update-analytics-types:** Update types for null-positions, and grouped display ([#991](https://github.com/Kong/public-ui-components/issues/991)) ([50f7b12](https://github.com/Kong/public-ui-components/commit/50f7b12bbc7120fb30a72277c5895e50ac292646))
+
+
+
+
+
 ## [0.10.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.10.5...@kong-ui-public/analytics-utilities@0.10.6) (2023-12-07)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
