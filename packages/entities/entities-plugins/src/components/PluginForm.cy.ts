@@ -12,6 +12,7 @@ import {
   scopedConsumer,
 } from '../../fixtures/mockData'
 import PluginForm from './PluginForm.vue'
+import { VueFormGenerator } from '../../src'
 
 const baseConfigKonnect: KonnectPluginFormConfig = {
   app: 'konnect',
@@ -98,6 +99,7 @@ describe('<PluginForm />', () => {
       interceptKM()
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config: baseConfigKM,
         },
@@ -242,6 +244,7 @@ describe('<PluginForm />', () => {
       interceptKonnectSchema()
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config: baseConfigKonnect,
           pluginType: 'cors',
@@ -292,6 +295,7 @@ describe('<PluginForm />', () => {
       interceptKonnectSchema()
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config: baseConfigKonnect,
           pluginType: 'cors',
@@ -312,6 +316,7 @@ describe('<PluginForm />', () => {
       interceptKonnectCreatePlugin()
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config: baseConfigKonnect,
           pluginType: 'cors',
@@ -334,6 +339,7 @@ describe('<PluginForm />', () => {
       interceptKonnectCreatePlugin()
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config: baseConfigKonnect,
           pluginType: 'cors',
@@ -352,6 +358,7 @@ describe('<PluginForm />', () => {
       interceptKonnectSchema({ mockData: credentialSchema })
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config: baseConfigKonnect,
           useCustomNamesForPlugin: true,
@@ -388,6 +395,7 @@ describe('<PluginForm />', () => {
       interceptKonnectScopedEntity({ entityType: config.entityType })
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config,
           pluginType: 'cors',
@@ -412,6 +420,7 @@ describe('<PluginForm />', () => {
       interceptKonnectCreatePlugin()
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config: baseConfigKonnect,
           pluginType: 'cors',
@@ -440,6 +449,7 @@ describe('<PluginForm />', () => {
       interceptKonnectCreatePlugin()
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config,
           pluginType: 'acl',
@@ -467,6 +477,7 @@ describe('<PluginForm />', () => {
       interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin' })
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config,
           pluginType: 'cors',
@@ -512,6 +523,7 @@ describe('<PluginForm />', () => {
       interceptKonnectOperatePlugin({ method: 'PATCH', alias: 'updatePlugin' })
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config,
           pluginType: 'cors',
@@ -543,6 +555,7 @@ describe('<PluginForm />', () => {
       interceptKonnectOperatePlugin({ method: 'PATCH', alias: 'updatePlugin', credential: true, entityId: scopedConsumer.item.id })
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config,
           pluginType: 'acl',
@@ -571,6 +584,7 @@ describe('<PluginForm />', () => {
       interceptKonnectOperatePlugin({ method: 'PATCH', alias: 'updatePlugin' })
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config,
           pluginType: 'cors',
@@ -612,6 +626,7 @@ describe('<PluginForm />', () => {
       ).as('getPluginSchema')
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config: baseConfigKonnect,
           pluginId: 'i-dont-exist',
@@ -647,6 +662,7 @@ describe('<PluginForm />', () => {
       ).as('getPlugin')
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config: baseConfigKonnect,
           pluginId: 'i-dont-exist',
@@ -695,6 +711,7 @@ describe('<PluginForm />', () => {
       ).as('validate')
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config: baseConfigKonnect,
           pluginType: 'mocking',
@@ -718,6 +735,7 @@ describe('<PluginForm />', () => {
       interceptKonnectOperatePlugin({ method: 'PATCH', alias: 'updatePlugin' })
 
       cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
         props: {
           config: baseConfigKonnect,
           pluginType: 'cors',
