@@ -38,6 +38,8 @@ describe('<AnalyticsChart />', () => {
     })
 
     cy.get('.analytics-chart-parent').should('be.visible')
+    cy.get('.debug-tooltip').should('not.exist')
+
     cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
     cy.get('.chart-header').should('contain.text', 'Time series line chart')
     cy.get('[data-testid="legend"]').children().should('have.length', 4)

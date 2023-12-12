@@ -9,20 +9,18 @@
       >
         {{ chartTitle }}
       </div>
-      <div id="result-truncated">
+      <div class="chart-header-icons-wrapper">
         <KTooltip
           v-if="hasValidChartData && resultSetTruncated && maxEntitiesShown"
           class="tooltip"
           max-width="500"
           placement="right"
         >
-          <div class="limit-icon-wrapper">
-            <WarningIcon
-              :color="KUI_COLOR_TEXT_WARNING"
-              decorative
-              :size="KUI_ICON_SIZE_40"
-            />
-          </div>
+          <WarningIcon
+            :color="KUI_COLOR_TEXT_WARNING"
+            decorative
+            :size="KUI_ICON_SIZE_40"
+          />
           <template #content>
             {{ notAllDataShownTooltipContent }}
           </template>
@@ -369,13 +367,12 @@ provide('legendPosition', toRef(props, 'legendPosition'))
   .chart-header {
     align-items: center;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     padding-bottom: $kui-space-60;
 
-    .chart-export-button {
+    .chart-header-icons-wrapper {
       display: flex;
-      margin-left: auto;
-      margin-right: 0;
+      justify-content: end;
     }
   }
 
@@ -389,12 +386,6 @@ provide('legendPosition', toRef(props, 'legendPosition'))
     margin-left: $kui-space-50;
     margin-top: $kui-space-10;
   }
-
-  .limit-icon-wrapper {
-    display: flex;
-    flex-direction: row;
-  }
-
 }
 
 </style>

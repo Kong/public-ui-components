@@ -151,6 +151,12 @@
       </div>
       <br>
 
+      <label>Import chart data</label>
+      <CodeText
+        v-model="exploreResultText"
+        :class="{ 'has-error': hasError, 'is-valid': isValid }"
+      />
+
       <div class="config-container">
         <div class="config-container-row">
           <KLabel>Colors</KLabel>
@@ -220,11 +226,12 @@ import {
 } from '../../src'
 import type { AnalyticsExploreV2Result, DimensionMap } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions } from '../../src/types'
-import { rand } from '../utils/utils'
+import { isValidJson, rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { generateCrossSectionalData } from '../utils/chartDataGenerator'
+import CodeText from '../CodeText.vue'
 
 enum Metrics {
   TotalRequests = 'TotalRequests',
@@ -292,11 +299,30 @@ const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',
 ]))
 
+const exploreResultText = ref()
+const hasError = computed(() => !isValidJson(exploreResultText.value))
+const isValid = computed(() => exploreResultText.value !== undefined &&
+  exploreResultText.value !== '' &&
+  isValidJson(exploreResultText.value))
+
 const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
   if (emptyState.value) {
     return null
   }
 
+  // If sample json was provided, attempt to render the chart
+  if (exploreResultText.value) {
+
+    try {
+      const result = JSON.parse(exploreResultText.value)
+
+      return result as AnalyticsExploreV2Result
+    } catch (e) {
+      return null
+    }
+  }
+
+  // Else, generate sample data
   const dimensionMap: DimensionMap = dimensionSelection.value.reduce((obj, dimension) => {
     return {
       ...obj,
@@ -378,4 +404,5 @@ watch(multiDimensionToggle, () => {
     max-width: 100vw;
   }
 }
+
 </style>

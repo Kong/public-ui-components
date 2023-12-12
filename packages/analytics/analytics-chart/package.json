@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-chart",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "type": "module",
   "main": "./dist/vitals-chart.umd.js",
   "module": "./dist/vitals-chart.es.js",
@@ -22,20 +22,20 @@
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.0.0-alpha.73",
-    "vue": "^3.3.4"
+    "vue": "^3.3.9"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "^1.12.1",
     "@kong/kongponents": "9.0.0-alpha.73",
-    "@types/uuid": "^9.0.5",
+    "@types/uuid": "^9.0.7",
     "file-saver": "^2.0.5",
     "lodash.mapkeys": "^4.6.0",
     "lodash.pick": "^4.4.0",
     "lodash.pickby": "^4.6.0",
     "papaparse": "^5.4.1",
-    "vue": "^3.3.4"
+    "vue": "^3.3.9"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
