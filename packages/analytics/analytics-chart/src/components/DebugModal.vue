@@ -126,6 +126,7 @@ onUnmounted(() => {
 .debug-tooltip {
   cursor: pointer;
   position: relative;
+  width: $kui-space-80;
   z-index: 10;
 
   .debug-icon {
