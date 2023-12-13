@@ -92,6 +92,15 @@
       </template>
       <template #service="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
+        <InternalLinkItem
+          v-else-if="showIdAsLink"
+          :item="{
+            key: getPropValue('rowValue', slotProps).id,
+            value: getPropValue('rowValue', slotProps).id,
+            type: ConfigurationSchemaType.LinkInternal
+          }"
+          @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'service')"
+        />
         <CopyUuid
           v-else
           data-testid="service-copy-uuid"
@@ -104,6 +113,15 @@
       </template>
       <template #consumer_group="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
+        <InternalLinkItem
+          v-else-if="showIdAsLink"
+          :item="{
+            key: getPropValue('rowValue', slotProps).id,
+            value: getPropValue('rowValue', slotProps).id,
+            type: ConfigurationSchemaType.LinkInternal
+          }"
+          @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer_group')"
+        />
         <CopyUuid
           v-else
           data-testid="consumer-group-copy-uuid"
@@ -151,7 +169,7 @@ const emit = defineEmits<{
   (e: 'error:fetch-schema', error: AxiosError): void,
   (e: 'fetch:success', data: Record<string, any>): void,
   (e: 'copy:success', data: Record<string, any>): void,
-  (e: 'navigation-click', data: string, direction: 'route' | 'consumer'): void
+  (e: 'navigation-click', data: string, direction: 'route' | 'consumer' | 'consumer_group' | 'service'): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
