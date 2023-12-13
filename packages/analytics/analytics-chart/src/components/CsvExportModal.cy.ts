@@ -1,6 +1,7 @@
 // Cypress component test spec file
 import CsvExportModal from './CsvExportModal.vue'
 import composables from '../composables'
+import { computed } from 'vue'
 import { exploreResult, exploreV2Result, emptyExploreResult } from './mockData'
 
 const DOWNLOADS_FOLDER = Cypress.config('downloadsFolder')
@@ -12,11 +13,13 @@ describe('<CsvExportModal />', () => {
   })
 
   it('Export Modal with empty dataset', () => {
+    const computedChartData = computed(() => emptyExploreResult)
+
     cy.mount(CsvExportModal, {
       props: {
-        chartData: emptyExploreResult,
+        chartData: computedChartData,
         modalTitle: 'Total requests',
-        selectedRange: composables.useChartSelectedRange(exploreResult),
+        selectedRange: composables.useChartSelectedRange(computedChartData),
       },
     })
 
@@ -26,11 +29,13 @@ describe('<CsvExportModal />', () => {
   })
 
   it('Export Modal with v1 explore data', () => {
+    const computedChartData = computed(() => exploreResult)
+
     cy.mount(CsvExportModal, {
       props: {
-        chartData: exploreResult,
+        chartData: computedChartData,
         modalTitle: 'Total requests',
-        selectedRange: composables.useChartSelectedRange(exploreResult),
+        selectedRange: composables.useChartSelectedRange(computedChartData),
       },
     })
 
@@ -55,7 +60,7 @@ describe('<CsvExportModal />', () => {
       expect(elements).eql(['Timestamp', 'UtcOffset', 'StatusCode', 'TotalRequests'])
     })
 
-    // // Save to CSV and check actual contents
+    // Save to CSV and check actual contents
     cy.getTestId('csv-download-button').click()
 
     cy.readFile(`${DOWNLOADS_FOLDER}/total-requests-${new Date().toISOString().slice(0, 10)}.csv`).then(contents => {
@@ -65,11 +70,13 @@ describe('<CsvExportModal />', () => {
   })
 
   it('Export Modal with v2 explore data', () => {
+    const computedChartData = computed(() => exploreV2Result)
+
     cy.mount(CsvExportModal, {
       props: {
-        chartData: exploreV2Result,
+        chartData: computedChartData,
         modalTitle: 'Total requests',
-        selectedRange: composables.useChartSelectedRange(exploreV2Result),
+        selectedRange: composables.useChartSelectedRange(computedChartData),
       },
     })
 
