@@ -41,7 +41,7 @@
       </div>
       <CsvExportModal
         v-if="allowCsvExport && hasValidChartData && exportModalVisible"
-        :chart-data="chartData"
+        :chart-data="rawChartData"
         :modal-title="chartTitle"
         :selected-range="selectedRange"
         @toggle-modal="setModalVisibility"
@@ -210,6 +210,8 @@ watch(() => props.height, (newHeight) => {
   heightRef.value = newHeight
 })
 
+const rawChartData = computed(() => toRef(props, 'chartData'))
+
 const computedChartData = computed(() => {
   return isTimeSeriesChart.value
     ? composables.useExploreResultToTimeDataset(
@@ -335,7 +337,7 @@ const timeSeriesGranularity = computed<GranularityKeys>(() => {
 
 // CSV Export Modal
 const exportModalVisible = ref(false)
-const selectedRange = composables.useChartSelectedRange(props.chartData)
+const selectedRange = composables.useChartSelectedRange(rawChartData.value)
 
 const setModalVisibility = (val: boolean) => {
   exportModalVisible.value = val
