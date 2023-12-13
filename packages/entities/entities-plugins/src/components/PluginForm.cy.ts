@@ -1033,7 +1033,7 @@ describe('<PluginForm />', () => {
         router,
       })
 
-      cy.wait(['@getPluginSchema', 'getPlugin', '@getScopedEntity']).then(() => {
+      cy.wait(['@getPluginSchema', '@getPlugin', '@getScopedEntity']).then(() => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
         cy.get('#tags').clear()
