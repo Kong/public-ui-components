@@ -176,9 +176,9 @@ describe('<PluginForm />', () => {
       cy.get('.field-selectionGroup').should('be.visible')
       cy.get('.Global-check').should('be.visible')
       cy.get('.Scoped-check').should('be.visible')
-      cy.get('.field-selectionGroup .field-AutoSuggest').should('not.be.visible')
+      cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('not.be.visible')
       cy.get('.Scoped-check input').click()
-      cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
+      cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('be.visible')
       cy.get('#service-id').should('be.visible')
       cy.get('#route-id').should('be.visible')
 
@@ -289,15 +289,15 @@ describe('<PluginForm />', () => {
         router,
       })
 
-      cy.wait('@getPluginSchema')
-      cy.wait('@getScopedEntity')
-      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+      cy.wait(['@getPluginSchema', '@getScopedEntity']).then(() => {
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.get('.Scoped-check input').should('be.visible')
-      cy.get('.Scoped-check input').should('have.value', '1')
-      cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
-      cy.get('#service-id').should('be.visible')
-      cy.getTestId(`k-select-item-${scopedService.id}`).find('.selected').should('exist')
+        cy.get('.Scoped-check input').should('be.visible')
+        cy.get('.Scoped-check input').should('have.value', '1')
+        cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
+        cy.get('#service-id').should('be.visible')
+        cy.getTestId(`k-select-item-${scopedService.id}`).find('.selected').should('exist')
+      })
     })
 
     it('should pick correct url while creating plugin', () => {
@@ -321,8 +321,7 @@ describe('<PluginForm />', () => {
       cy.get('#tags').type('tag1,tag2')
 
       cy.getTestId('form-submit').click()
-      cy.wait('@validatePlugin')
-      cy.wait('@createPlugin')
+      cy.wait(['@validatePlugin', '@createPlugin'])
     })
 
     it('should pick correct url while creating plugin credential', () => {
@@ -368,31 +367,30 @@ describe('<PluginForm />', () => {
         router,
       })
 
-      cy.wait('@getPluginSchema')
-      cy.wait('@getPlugin')
-      cy.wait('@getScopedEntity')
-      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+      cy.wait(['@getPluginSchema', '@getPlugin', '@getScopedEntity']).then(() => {
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      // button state
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.disabled')
-      cy.getTestId('form-back').should('not.exist')
-      cy.getTestId('form-cancel').should('be.visible')
+        // button state
+        cy.getTestId('form-submit').should('be.visible')
+        cy.getTestId('form-submit').should('be.disabled')
+        cy.getTestId('form-back').should('not.exist')
+        cy.getTestId('form-cancel').should('be.visible')
 
-      // scope
-      cy.get('.Scoped-check input').should('be.visible')
-      cy.get('.Scoped-check input').should('have.value', '1')
-      cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
-      cy.get('#service-id').should('be.visible')
-      cy.getTestId(`k-select-item-${scopedService.id}`).find('.selected').should('exist')
+        // scope
+        cy.get('.Scoped-check input').should('be.visible')
+        cy.get('.Scoped-check input').should('have.value', '1')
+        cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
+        cy.get('#service-id').should('be.visible')
+        cy.getTestId(`k-select-item-${scopedService.id}`).find('.selected').should('exist')
 
-      // global fields
-      cy.get('#enabled').should('be.checked')
-      cy.get('#instance_name').should('have.value', plugin1.instance_name)
-      cy.get('#tags').should('have.value', plugin1.tags.join(','))
+        // global fields
+        cy.get('#enabled').should('be.checked')
+        cy.get('#instance_name').should('have.value', plugin1.instance_name)
+        cy.get('#tags').should('have.value', plugin1.tags.join(','))
 
-      // form fields
-      cy.get('#config-private_network').should('be.checked')
+        // form fields
+        cy.get('#config-private_network').should('be.checked')
+      })
     })
 
     it('should pick correct submit url while editing plugin', () => {
@@ -413,16 +411,15 @@ describe('<PluginForm />', () => {
         router,
       })
 
-      cy.wait('@getPluginSchema')
-      cy.wait('@getScopedEntity')
-      cy.wait('@getPlugin')
-      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+      cy.wait(['@getPluginSchema', '@getPlugin', '@getScopedEntity']).then(() => {
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.get('#tags').clear()
+        cy.get('#tags').clear()
 
-      cy.getTestId('form-submit').click()
-      cy.wait('@validatePlugin')
-      cy.wait('@updatePlugin')
+        cy.getTestId('form-submit').click()
+
+        cy.wait(['@validatePlugin', '@updatePlugin'])
+      })
     })
 
     it('should pick correct submit url while editing plugin credential', () => {
@@ -443,14 +440,14 @@ describe('<PluginForm />', () => {
         router,
       })
 
-      cy.wait('@getPluginSchema')
-      cy.wait('@getPlugin')
-      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+      cy.wait(['@getPluginSchema', '@getPlugin']).then(() => {
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.get('#group').type('-edited')
+        cy.get('#group').type('-edited')
 
-      cy.getTestId('form-submit').click()
-      cy.wait('@updatePlugin')
+        cy.getTestId('form-submit').click()
+        cy.wait('@updatePlugin')
+      })
     })
 
     it('should correctly handle button state - edit', () => {
@@ -469,23 +466,22 @@ describe('<PluginForm />', () => {
         router,
       })
 
-      cy.wait('@getPluginSchema')
-      cy.wait('@getPlugin')
-      cy.wait('@getScopedEntity')
-      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+      cy.wait(['@getPluginSchema', '@getPlugin', '@getScopedEntity']).then(() => {
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
-      // enables save when form has changes
-      cy.get('#instance_name').type('-edited')
-      cy.getTestId('form-submit').should('be.enabled')
-      // disables save when form changes are undone
-      cy.get('#instance_name').clear()
-      cy.get('#instance_name').type(plugin1.instance_name)
-      cy.getTestId('form-submit').should('be.disabled')
+        // default button state
+        cy.getTestId('form-cancel').should('be.visible')
+        cy.getTestId('form-submit').should('be.visible')
+        cy.getTestId('form-cancel').should('be.enabled')
+        cy.getTestId('form-submit').should('be.disabled')
+        // enables save when form has changes
+        cy.get('#instance_name').type('-edited')
+        cy.getTestId('form-submit').should('be.enabled')
+        // disables save when form changes are undone
+        cy.get('#instance_name').clear()
+        cy.get('#instance_name').type(plugin1.instance_name)
+        cy.getTestId('form-submit').should('be.disabled')
+      })
     })
 
     it('should handle error state - failed to load schema', () => {
@@ -547,17 +543,17 @@ describe('<PluginForm />', () => {
         router,
       })
 
-      cy.wait('@getPluginSchema')
-      cy.wait('@getPlugin')
-      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+      cy.wait(['@getPluginSchema', '@getPlugin']).then(() => {
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      // error state is displayed
-      cy.getTestId('form-fetch-error').should('be.visible')
+        // error state is displayed
+        cy.getTestId('form-fetch-error').should('be.visible')
 
-      // buttons and form hidden
-      cy.getTestId('form-cancel').should('not.exist')
-      cy.getTestId('form-submit').should('not.exist')
-      cy.get('.kong-ui-entities-plugin-form-container form').should('not.exist')
+        // buttons and form hidden
+        cy.getTestId('form-cancel').should('not.exist')
+        cy.getTestId('form-submit').should('not.exist')
+        cy.get('.kong-ui-entities-plugin-form-container form').should('not.exist')
+      })
     })
 
     it('should handle error state - validation error', () => {
@@ -623,20 +619,19 @@ describe('<PluginForm />', () => {
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
-      cy.wait('@getPluginSchema')
-      cy.wait('@getPlugin')
-      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+      cy.wait(['@getPluginSchema', '@getPlugin', '@getScopedEntity']).then(() => {
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.get('#tags').clear()
-      cy.get('#tags').type('tag1,tag2')
+        cy.get('#tags').clear()
+        cy.get('#tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
-        .vm.$emit('submit'))
+        cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+          .vm.$emit('submit'))
 
-      cy.wait('@validatePlugin')
-      cy.wait('@updatePlugin')
+        cy.wait(['@validatePlugin', '@updatePlugin'])
 
-      cy.get('@onUpdateSpy').should('have.been.calledOnce')
+        cy.get('@onUpdateSpy').should('have.been.calledOnce')
+      })
     })
   })
 
