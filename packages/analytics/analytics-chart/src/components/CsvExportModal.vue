@@ -120,7 +120,7 @@ const emit = defineEmits(['toggleModal'])
 const MAX_ROWS = 3
 const reportFilename = `${props.modalTitle.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`
 const isLoading = ref(true)
-const hasData = computed(() => !!props.chartData?.value.records?.length)
+const hasData = computed(() => !!props.chartData?.value?.records?.length)
 const fetcherCacheKey = ref(1)
 const rowsTotal = computed(() => tableData.value.rows.length)
 
