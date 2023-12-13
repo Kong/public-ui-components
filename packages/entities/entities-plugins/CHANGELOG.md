@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.4.11...@kong-ui-public/entities-plugins@2.4.12) (2023-12-13)
+
+
+### Bug Fixes
+
+* **plugins/form:** add component tests [khcp-9775] ([#989](https://github.com/Kong/public-ui-components/issues/989)) ([6f1fdd0](https://github.com/Kong/public-ui-components/commit/6f1fdd019c566dc38e91dd574b09bd27d6d4b93e))
+
+
+
+
+
 ## [2.4.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.4.10...@kong-ui-public/entities-plugins@2.4.11) (2023-12-13)
 
 
