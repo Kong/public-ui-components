@@ -274,7 +274,6 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     margin-bottom: $kui-space-0;
 
     a {
-      border-bottom-left-radius: $sidebar-item-border-radius;
       border-bottom-right-radius: $sidebar-item-border-radius;
     }
   }
