@@ -1,5 +1,5 @@
 // Cypress component test spec file
-import { PluginGroupArray, PluginGroup, type KongManagerPluginFormConfig, type KonnectPluginFormConfig } from '../types'
+import { PluginGroupArray, PluginGroup, type KongManagerPluginSelectConfig, type KonnectPluginSelectConfig } from '../types'
 import {
   kmAvailablePlugins,
   kmLimitedAvailablePlugins,
@@ -14,13 +14,10 @@ import type { Router } from 'vue-router'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import PluginSelect from './PluginSelect.vue'
 
-const baseConfigKonnect: KonnectPluginFormConfig = {
+const baseConfigKonnect: KonnectPluginSelectConfig = {
   app: 'konnect',
   apiBaseUrl: '/us/kong-api',
   controlPlaneId: 'abc-123-i-love-cats',
-  // force the scope
-  // entityType: 'services',
-  // entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
   getCreateRoute: (plugin: string) => ({
     name: 'create-plugin',
     params: {
@@ -39,13 +36,10 @@ const baseConfigKonnect: KonnectPluginFormConfig = {
   }),
 }
 
-const baseConfigKM:KongManagerPluginFormConfig = {
+const baseConfigKM:KongManagerPluginSelectConfig = {
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
-  // force the scope
-  // entityType: 'consumers',
-  // entityId: '123-abc-i-lover-cats',
   getCreateRoute: (plugin: string) => ({
     name: 'create-plugin',
     params: {
