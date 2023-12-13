@@ -13,9 +13,18 @@
   },
   "baseForm": {
     "actions": {
+      "viewConfiguration": "View Configuration",
       "save": "Save",
       "cancel": "Cancel",
       "back": "Back"
+    },
+    "configuration": {
+      "title": "Configuration",
+      "message": "Configuring your API has never been easier. Use YAML for human-friendly simplicity or JSON for machine-readability. Streamline your settings effortlessly.",
+      "yaml": "YAML",
+      "json": "JSON",
+      "put": "PUT",
+      "post": "POST"
     },
     "errors": {
       "edit": "The entity could not be edited at this time."

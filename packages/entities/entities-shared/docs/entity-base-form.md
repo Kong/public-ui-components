@@ -114,6 +114,13 @@ A Boolean to indicate if the form can be submitted. Used to track form validatio
 
 If form submission fails, this is the error message to display.
 
+#### `formFields`
+
+- type: `Object as PropType<Record<string, any>>`
+- required: `true`
+
+An Object to indicate the form fields present in a form. Used to populate the Configuration JSON/YAML code blocks.
+
 ### Events
 
 #### loading

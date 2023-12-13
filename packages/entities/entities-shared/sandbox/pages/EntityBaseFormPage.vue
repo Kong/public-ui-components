@@ -4,6 +4,7 @@
       :can-submit="canSubmit"
       :config="konnectConfig"
       :error-message="form.errorMessage"
+      :form-fields="form.fields"
       :is-readonly="form.isReadonly"
       @cancel="handleCancel"
       @submit="handleSave"

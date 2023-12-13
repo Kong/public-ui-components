@@ -15,6 +15,7 @@
           :edit-id="targetId"
           :error-message="form.errorMessage"
           :fetch-url="fetchUrl"
+          :form-fields="form.fields"
           :is-readonly="form.isReadonly"
           @cancel="onCancel"
           @fetch:error="(err: any) => $emit('error', err)"

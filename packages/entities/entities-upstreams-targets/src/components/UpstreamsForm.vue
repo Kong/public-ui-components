@@ -6,6 +6,7 @@
       :edit-id="upstreamId"
       :error-message="state.errorMessage"
       :fetch-url="fetchUrl"
+      :form-fields="state.fields"
       :is-readonly="state.readonly"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler"

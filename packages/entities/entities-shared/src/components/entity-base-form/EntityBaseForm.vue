@@ -42,23 +42,54 @@
         data-testid="form-actions"
       >
         <slot name="form-actions">
-          <KButton
-            appearance="secondary"
-            data-testid="form-cancel"
-            :disabled="isReadonly"
-            type="reset"
-          >
-            {{ t('baseForm.actions.cancel') }}
-          </KButton>
-          <KButton
-            appearance="primary"
-            data-testid="form-submit"
-            :disabled="disableSave"
-            type="submit"
-          >
-            {{ t('baseForm.actions.save') }}
-          </KButton>
+          <KToggle v-slot="{ isToggled, toggle }">
+            <div>
+              <KButton
+                appearance="tertiary"
+                @click="toggle"
+              >
+                {{ t('baseForm.actions.viewConfiguration') }}
+              </KButton>
+              <KSlideout
+                close-button-alignment="end"
+                :is-visible="isToggled.value"
+                :title="t('baseForm.configuration.title')"
+                @close="toggle"
+              >
+                <div>
+                  {{ t('baseForm.configuration.message') }}
+                </div>
+                <KTabs :tabs="tabs">
+                  <template #json>
+                    <JsonCodeBlock
+                      :fetcher-url="fetcherUrl"
+                      :record="formFields"
+                    />
+                  </template>
+                  <template #yaml>
+                    <YamlCodeBlock :record="formFields" />
+                  </template>
+                </KTabs>
+              </KSlideout>
+            </div>
+          </KToggle>
         </slot>
+        <KButton
+          appearance="secondary"
+          data-testid="form-cancel"
+          :disabled="isReadonly"
+          type="reset"
+        >
+          {{ t('baseForm.actions.cancel') }}
+        </KButton>
+        <KButton
+          appearance="primary"
+          data-testid="form-submit"
+          :disabled="disableSave"
+          type="submit"
+        >
+          {{ t('baseForm.actions.save') }}
+        </KButton>
       </div>
     </form>
   </KCard>
@@ -71,6 +102,9 @@ import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
 import composables from '../../composables'
+import type { Tab } from '@kong/kongponents'
+import JsonCodeBlock from '../common/JsonCodeBlock.vue'
+import YamlCodeBlock from '../common/YamlCodeBlock.vue'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void,
@@ -130,6 +164,11 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  /** Used to populate the Configuration JSON/YAML code blocks */
+  formFields: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => ({}),
+  },
 })
 
 const router = useRouter()
@@ -149,16 +188,16 @@ const disableSave = computed((): boolean => props.canSubmit === false || props.i
  * Build the fetcher URL
  */
 const fetcherUrl = computed<string>(() => {
-  if (!props.editId) {
-    return ''
-  }
-
   let url = `${props.config.apiBaseUrl}${props.fetchUrl}`
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   } else if (props.config.app === 'kongManager') {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+  }
+
+  if (!props.editId) {
+    return url
   }
 
   // Always replace the id for editing
@@ -188,6 +227,17 @@ const handleClickSave = (): void => {
   // Emit a save event for the entity component to respond to
   emit('submit')
 }
+
+const tabs = ref<Tab[]>([
+  {
+    title: t('baseForm.configuration.yaml'),
+    hash: '#yaml',
+  },
+  {
+    title: t('baseForm.configuration.json'),
+    hash: '#json',
+  },
+])
 
 watch(() => isLoading.value, (val: boolean) => {
   // Emit the loading state for the host app
@@ -231,9 +281,22 @@ onBeforeMount(async () => {
     margin-top: $kui-space-80;
 
     :deep(.k-button) {
-      &:last-of-type {
+      &:last-of-type,
+      &:nth-last-of-type(2) {
         margin-left: $kui-space-60;
       }
+    }
+
+    & :deep(.k-slideout-title) {
+      color: $kui-color-text !important;
+      font-size: $kui-font-size-70 !important;
+      font-weight: $kui-font-weight-bold !important;
+      line-height: $kui-line-height-60 !important;
+      margin-bottom: $kui-space-60 !important;
+    }
+
+    & :deep(.k-card.content-card) {
+      padding: $kui-space-0 $kui-space-60 !important;
     }
   }
 }
