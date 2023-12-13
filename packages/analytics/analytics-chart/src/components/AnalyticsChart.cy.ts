@@ -4,7 +4,7 @@ import AnalyticsChart from './AnalyticsChart.vue'
 import ChartTooltip from './chart-plugins/ChartTooltip.vue'
 import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
-import { dailyExploreResult, exploreResult, emptyExploreResult, multiDimensionExploreResult } from './mockData'
+import { dailyExploreResult, exploreResult, emptyExploreResult, multiDimensionExploreResult } from '../../fixtures/mockData'
 
 function mouseMove(x1: number, y1: number, x2: number, y2: number, duration: number, withClick = false) {
   const stepCount = duration / 100 // change denominator for more or less steps

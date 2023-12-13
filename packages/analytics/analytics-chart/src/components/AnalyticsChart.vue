@@ -210,7 +210,7 @@ watch(() => props.height, (newHeight) => {
   heightRef.value = newHeight
 })
 
-const rawChartData = computed(() => toRef(props, 'chartData'))
+const rawChartData = toRef(props, 'chartData')
 
 const computedChartData = computed(() => {
   return isTimeSeriesChart.value
@@ -337,7 +337,7 @@ const timeSeriesGranularity = computed<GranularityKeys>(() => {
 
 // CSV Export Modal
 const exportModalVisible = ref(false)
-const selectedRange = composables.useChartSelectedRange(rawChartData.value)
+const selectedRange = composables.useChartSelectedRange(rawChartData)
 
 const setModalVisibility = (val: boolean) => {
   exportModalVisible.value = val

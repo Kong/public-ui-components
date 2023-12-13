@@ -16,11 +16,8 @@
             v-if="hasData"
             class="selected-range"
           >
-            <p v-if="modalDescription">
-              {{ modalDescription }}
-            </p>
-            <p v-else>
-              {{ i18n.t('csvExport.exportDescription') }}
+            <p>
+              {{ modalDescription ? modalDescription : i18n.t('csvExport.exportDescription') }}
             </p>
             <p>
               {{ i18n.t('csvExport.exportTimeRange') }}: {{ selectedRange }}
@@ -87,40 +84,31 @@
 </template>
 
 <script setup lang="ts">
-import type { Ref } from 'vue'
 import { ref, computed, watch } from 'vue'
 
 import DownloadCsv from './DownloadCsv.vue'
 import composables from '../composables'
 import type { AnalyticsExploreResult, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import { format } from 'date-fns-tz'
+import type { Header, TimeseriesColumn } from '../types'
+
 const { i18n } = composables.useI18n()
 
 const props = withDefaults(defineProps<{
   modalTitle: string,
   modalDescription?: string,
   selectedRange: string,
-  chartData: Ref<AnalyticsExploreResult | AnalyticsExploreV2Result>,
+  chartData: AnalyticsExploreResult | AnalyticsExploreV2Result,
 }>(), {
   modalDescription: undefined,
 })
-
-interface Header {
-  label: string
-  key: string
-}
-
-interface TimeseriesColumn {
-  label: string;
-  key: string;
-}
 
 const emit = defineEmits(['toggleModal'])
 
 const MAX_ROWS = 3
 const reportFilename = `${props.modalTitle.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`
-const isLoading = ref(true)
-const hasData = computed(() => !!props.chartData?.value?.records?.length)
+const isLoading = ref<boolean>(true)
+const hasData = computed(() => !!props.chartData?.records?.length)
 const fetcherCacheKey = ref(1)
 const rowsTotal = computed(() => tableData.value.rows.length)
 
@@ -137,13 +125,13 @@ const closeModal = () => {
 }
 
 const tableData = computed(() => {
-  if (!hasData.value || !props.chartData?.value.meta.metricNames) {
+  if (!hasData.value || !props.chartData?.meta.metricNames) {
     return { headers: [], rows: [], csvHeaders: {} }
   }
 
-  const isTimeseries = props.chartData.value.records.some(r => r.timestamp !== props.chartData.value.records[0].timestamp)
+  const isTimeseries = props.chartData.records.some(r => r.timestamp !== props.chartData.records[0].timestamp)
 
-  const rows = props.chartData.value.records.map(rec => {
+  const rows = props.chartData.records.map(rec => {
     const recTs = new Date(rec.timestamp)
 
     return {
@@ -166,8 +154,8 @@ const tableData = computed(() => {
     ]
   }
 
-  const dimensions = ('dimensions' in props.chartData.value.meta) && props.chartData.value.meta?.dimensions
-    ? props.chartData.value.meta?.dimensions
+  const dimensions = ('dimensions' in props.chartData.meta) && props.chartData.meta?.dimensions
+    ? props.chartData.meta?.dimensions
     : {}
 
   const displayHeaders: Header[] = [
@@ -180,7 +168,7 @@ const tableData = computed(() => {
     })),
 
     // `metricNames` are common to all explore versions
-    ...props.chartData.value.meta.metricNames.map(key => ({
+    ...props.chartData.meta.metricNames.map(key => ({
       label: key,
       key,
     })),

@@ -2,7 +2,7 @@
 import CsvExportModal from './CsvExportModal.vue'
 import composables from '../composables'
 import { computed } from 'vue'
-import { exploreResult, exploreV2Result, emptyExploreResult } from './mockData'
+import { exploreResult, exploreV2Result, emptyExploreResult } from '../../fixtures/mockData'
 
 const DOWNLOADS_FOLDER = Cypress.config('downloadsFolder')
 const MAX_ROWS = 3
@@ -13,13 +13,11 @@ describe('<CsvExportModal />', () => {
   })
 
   it('Export Modal with empty dataset', () => {
-    const computedChartData = computed(() => emptyExploreResult)
-
     cy.mount(CsvExportModal, {
       props: {
-        chartData: computedChartData,
+        chartData: emptyExploreResult,
         modalTitle: 'Total requests',
-        selectedRange: composables.useChartSelectedRange(computedChartData),
+        selectedRange: composables.useChartSelectedRange(computed(() => emptyExploreResult)),
       },
     })
 
@@ -29,13 +27,11 @@ describe('<CsvExportModal />', () => {
   })
 
   it('Export Modal with v1 explore data', () => {
-    const computedChartData = computed(() => exploreResult)
-
     cy.mount(CsvExportModal, {
       props: {
-        chartData: computedChartData,
+        chartData: exploreResult,
         modalTitle: 'Total requests',
-        selectedRange: composables.useChartSelectedRange(computedChartData),
+        selectedRange: composables.useChartSelectedRange(computed(() => exploreResult)),
       },
     })
 
@@ -70,13 +66,11 @@ describe('<CsvExportModal />', () => {
   })
 
   it('Export Modal with v2 explore data', () => {
-    const computedChartData = computed(() => exploreV2Result)
-
     cy.mount(CsvExportModal, {
       props: {
-        chartData: computedChartData,
+        chartData: exploreV2Result,
         modalTitle: 'Total requests',
-        selectedRange: composables.useChartSelectedRange(computedChartData),
+        selectedRange: composables.useChartSelectedRange(computed(() => exploreV2Result)),
       },
     })
 
