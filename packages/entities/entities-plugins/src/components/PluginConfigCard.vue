@@ -50,7 +50,7 @@
       <template #consumer="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
-          v-else
+          v-else-if="showIdAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps).id,
             value: getPropValue('rowValue', slotProps).id,
@@ -58,18 +58,36 @@
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer')"
         />
+        <CopyUuid
+          v-else
+          data-testid="consumer-copy-uuid"
+          :notify="() => {}"
+          :success-tooltip="t('copy.success_tooltip')"
+          :tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
+          :truncated="false"
+          :uuid="getPropValue('rowValue', slotProps).id"
+        />
       </template>
 
       <template #route="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
-          v-else
+          v-else-if="showIdAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps).id,
             value: getPropValue('rowValue', slotProps).id,
             type: ConfigurationSchemaType.LinkInternal
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'route')"
+        />
+        <CopyUuid
+          v-else
+          data-testid="route-copy-uuid"
+          :notify="() => {}"
+          :success-tooltip="t('copy.success_tooltip')"
+          :tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
+          :truncated="false"
+          :uuid="getPropValue('rowValue', slotProps).id"
         />
       </template>
       <template #service="slotProps">
@@ -157,6 +175,10 @@ const props = defineProps({
     type: String,
     default: '',
     required: false,
+  },
+  showIdAsLink: {
+    type: Boolean,
+    default: false,
   },
   /**
    * Control visibility of card title content
