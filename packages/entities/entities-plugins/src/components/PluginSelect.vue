@@ -373,7 +373,9 @@ const availablePluginsUrl = computed((): string => {
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
   } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+    url = props.config.gatewayInfo?.edition === 'community'
+      ? `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePluginsForOss}`
+      : url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
   return url
