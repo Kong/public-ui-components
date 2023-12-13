@@ -15,6 +15,7 @@ export default {
     },
     kongManager: {
       availablePlugins: '/{workspace}/kong',
+      availablePluginsForOss: '/',
     },
   },
   form: {
