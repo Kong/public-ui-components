@@ -54,6 +54,7 @@ const konnectConfig = ref<KonnectBaseFormConfig>({
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   cancelRoute: { name: '/' },
+  jsonYamlMilestone2Enabled: true,
 })
 
 const canSubmit = computed((): boolean => !!form.fields.name)
