@@ -301,6 +301,18 @@ onBeforeMount(async () => {
     & :deep(.k-card.content-card) {
       padding: $kui-space-0 $kui-space-60 !important;
     }
+
+    & :deep(.tab-item > div.tab-link.has-panels) {
+      color: $kui-color-text-neutral !important;
+      font-size: $kui-font-size-30 !important;
+      font-weight: $kui-font-weight-bold !important;
+      line-height: $kui-line-height-40 !important;
+    }
+
+    & :deep(.tab-item.active > div.tab-link.has-panels) {
+      color: $kui-color-text !important;
+      font-weight: $kui-font-weight-semibold !important;
+    }
   }
 }
 </style>

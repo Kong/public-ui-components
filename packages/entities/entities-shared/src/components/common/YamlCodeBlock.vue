@@ -33,6 +33,9 @@ const yamlContent = reactive(props.yamlRecord)
         background-color: $kui-color-background-neutral-strongest;
       }
     }
+    .k-code-block-secondary-actions {
+      top: 12px !important;
+    }
   }
 }
 </style>
