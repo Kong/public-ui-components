@@ -50,17 +50,18 @@
   <JsonCodeBlock
     v-if="format === 'json' && props.record"
     :fetcher-url="props.fetcherUrl"
-    :record="props.record"
+    :json-record="props.record"
+    request-method="get"
   />
   <YamlCodeBlock
     v-if="format === 'yaml' && props.record"
-    :record="props.record"
+    :yaml-record="props.record"
   />
 </template>
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { useSlots } from 'vue'
+import { useSlots, watch } from 'vue'
 import type { RecordItem } from '../../types'
 import '@kong-ui-public/copy-uuid/dist/style.css'
 import ConfigCardItem from './ConfigCardItem.vue'
@@ -93,8 +94,7 @@ const props = defineProps({
   },
   record: {
     type: Object as PropType<Record<string, any>>,
-    required: false,
-    default: () => null,
+    required: true,
   },
   fetcherUrl: {
     type: String,
@@ -107,6 +107,15 @@ const slots = useSlots()
 const { i18n: { t } } = composables.useI18n()
 
 const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
+
+watch(() => props.format, (format: string) => {
+  if (format !== 'structured') {
+    // remove dates from JSON/YAML config [KHCP-9837]
+    const jsonOrYamlRecord = JSON.parse(JSON.stringify(props.record))
+    delete jsonOrYamlRecord.created_at
+    delete jsonOrYamlRecord.updated_at
+  }
+}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

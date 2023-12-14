@@ -1,6 +1,7 @@
 <template>
   <div class="yaml-config">
     <KCodeBlock
+      v-if="props.yamlRecord"
       id="yaml-codeblock"
       :code="yaml.dump(props.yamlRecord)"
       language="yaml"
@@ -12,12 +13,19 @@
 <script setup lang="ts">
 import yaml from 'js-yaml'
 import type { PropType } from 'vue'
+import { onMounted, ref } from 'vue'
+
+const jsonContent = ref('')
 
 const props = defineProps({
   yamlRecord: {
     type: Object as PropType<Record<string, any>>,
-    default: () => ({}),
+    required: true,
   },
+})
+
+onMounted(() => {
+  jsonContent.value = JSON.stringify(props.yamlRecord, null, 2)
 })
 </script>
 

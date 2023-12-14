@@ -334,7 +334,7 @@ const DEFAULT_BASIC_FIELDS_CONFIGURATION: DefaultCommonFieldsConfigurationSchema
 const isLoading = ref(false)
 const fetchDetailsError = ref(false)
 const fetchErrorMessage = ref('')
-const record = ref<Record<string, any>>()
+const record = ref<Record<string, any>>({})
 
 // Handle sorting by 'order' prop
 const orderedRecordArray = computed((): RecordItem[] => {

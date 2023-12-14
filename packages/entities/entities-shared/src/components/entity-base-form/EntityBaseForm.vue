@@ -63,11 +63,12 @@
                   <template #json>
                     <JsonCodeBlock
                       :fetcher-url="fetcherUrl"
-                      :record="formFields"
+                      :json-record="formFields"
+                      :request-method="props.editId ? 'put' : 'post'"
                     />
                   </template>
                   <template #yaml>
-                    <YamlCodeBlock :record="formFields" />
+                    <YamlCodeBlock :yaml-record="formFields" />
                   </template>
                 </KTabs>
               </KSlideout>
@@ -167,7 +168,7 @@ const props = defineProps({
   /** Used to populate the Configuration JSON/YAML code blocks */
   formFields: {
     type: Object as PropType<Record<string, any>>,
-    default: () => ({}),
+    required: true,
   },
 })
 

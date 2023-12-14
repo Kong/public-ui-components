@@ -4,8 +4,8 @@
       v-if="props.fetcherUrl"
       class="json-endpoint"
     >
-      <KBadge appearance="get">
-        {{ t('baseConfigCard.endpoints.get') }}
+      <KBadge :appearance="props.requestMethod">
+        <span request-method-badge>{{ props.requestMethod }}</span>
       </KBadge>
       <KCodeBlock
         id="json-endpoint-codeblock"
@@ -16,9 +16,10 @@
       />
     </div>
     <KCodeBlock
+      v-if="props.jsonRecord"
       id="json-codeblock"
       :class="{ 'json-content': props.fetcherUrl }"
-      :code="JSON.stringify(props.jsonRecord, null, 2)"
+      :code="jsonContent"
       language="json"
       theme="dark"
     />
@@ -26,10 +27,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'
-import composables from '../../composables'
-
-const { i18n: { t } } = composables.useI18n()
+import { computed, type PropType, onMounted, ref } from 'vue'
+import type { BadgeAppearance } from '@kong/kongponents/dist/types'
 
 const props = defineProps({
   fetcherUrl: {
@@ -38,12 +37,21 @@ const props = defineProps({
   },
   jsonRecord: {
     type: Object as PropType<Record<string, any>>,
-    default: () => ({}),
+    required: true,
+  },
+  requestMethod: {
+    type: String as PropType<BadgeAppearance>,
+    required: true,
   },
 })
 
+const jsonContent = ref('')
+
+onMounted(() => {
+  jsonContent.value = JSON.stringify(props.jsonRecord, null, 2)
+})
+
 const displayedCharLength = computed(() => {
-  console.log(props.fetcherUrl)
   if (!props.fetcherUrl) {
     return 0
   }
@@ -98,6 +106,9 @@ const displayedCharLength = computed(() => {
     text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .request-method-badge {
+    text-transform: uppercase;
   }
 }
 </style>
