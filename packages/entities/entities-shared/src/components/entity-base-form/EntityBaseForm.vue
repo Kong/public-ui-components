@@ -49,12 +49,14 @@
             <div>
               <KButton
                 appearance="tertiary"
+                data-testid="form-view-configuration"
                 @click="toggle"
               >
                 {{ t('baseForm.actions.viewConfiguration') }}
               </KButton>
               <KSlideout
                 close-button-alignment="end"
+                data-testid="form-view-configuration-slideout"
                 :has-overlay="false"
                 :is-visible="isToggled.value"
                 prevent-close-on-blur
@@ -64,7 +66,10 @@
                 <div>
                   {{ t('baseForm.configuration.message') }}
                 </div>
-                <KTabs :tabs="tabs">
+                <KTabs
+                  data-testid="form-view-configuration-slideout-tabs"
+                  :tabs="tabs"
+                >
                   <template #json>
                     <JsonCodeBlock
                       :fetcher-url="fetcherUrl"
