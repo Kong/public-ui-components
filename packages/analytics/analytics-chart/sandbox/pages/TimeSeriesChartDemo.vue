@@ -168,7 +168,6 @@
       :allow-csv-export="true"
       :chart-data="(exploreResult as AnalyticsExploreV2Result)"
       :chart-options="analyticsChartOptions"
-      chart-title="Request count by Status Code"
       :legend-position="legendPosition"
       :show-annotations="showAnnotationsToggle"
       :show-legend-values="showLegendValuesToggle"

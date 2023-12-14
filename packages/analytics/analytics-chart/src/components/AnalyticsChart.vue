@@ -161,6 +161,11 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  filenamePrefix: {
+    type: String,
+    required: false,
+    default: undefined,
+  },
   legendPosition: {
     type: String as PropType<`${ChartLegendPosition}`>,
     required: false,
@@ -201,7 +206,7 @@ const props = defineProps({
 
 const { i18n } = composables.useI18n()
 const heightRef = ref<string>(props.height)
-const csvFilename = computed<string>(() => props?.chartTitle ? props.chartTitle : i18n.t('csvExport.defaultFilename'))
+const csvFilename = computed<string>(() => props?.chartTitle ?? props?.filenamePrefix ?? i18n.t('csvExport.defaultFilename'))
 
 const handleHeightUpdate = (height: number) => {
   heightRef.value = `${height}px`
