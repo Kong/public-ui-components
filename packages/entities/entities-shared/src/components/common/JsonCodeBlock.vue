@@ -19,7 +19,7 @@
       v-if="props.jsonRecord"
       id="json-codeblock"
       :class="{ 'json-content': props.fetcherUrl }"
-      :code="jsonContent"
+      :code="JSON.stringify(jsonContent, null, 2)"
       language="json"
       theme="dark"
     />
@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType, onMounted, ref } from 'vue'
+import { computed, type PropType, reactive } from 'vue'
 import type { BadgeAppearance } from '@kong/kongponents/dist/types'
 
 const props = defineProps({
@@ -45,11 +45,7 @@ const props = defineProps({
   },
 })
 
-const jsonContent = ref('')
-
-onMounted(() => {
-  jsonContent.value = JSON.stringify(props.jsonRecord, null, 2)
-})
+const jsonContent = reactive(props.jsonRecord)
 
 const displayedCharLength = computed(() => {
   if (!props.fetcherUrl) {

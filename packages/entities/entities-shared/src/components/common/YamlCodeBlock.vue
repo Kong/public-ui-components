@@ -3,7 +3,7 @@
     <KCodeBlock
       v-if="props.yamlRecord"
       id="yaml-codeblock"
-      :code="yaml.dump(props.yamlRecord)"
+      :code="yaml.dump(yamlContent)"
       language="yaml"
       theme="dark"
     />
@@ -13,9 +13,7 @@
 <script setup lang="ts">
 import yaml from 'js-yaml'
 import type { PropType } from 'vue'
-import { onMounted, ref } from 'vue'
-
-const jsonContent = ref('')
+import { reactive } from 'vue'
 
 const props = defineProps({
   yamlRecord: {
@@ -24,9 +22,7 @@ const props = defineProps({
   },
 })
 
-onMounted(() => {
-  jsonContent.value = JSON.stringify(props.yamlRecord, null, 2)
-})
+const yamlContent = reactive(props.yamlRecord)
 </script>
 
 <style lang="scss">
