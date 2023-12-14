@@ -42,7 +42,10 @@
         data-testid="form-actions"
       >
         <slot name="form-actions">
-          <KToggle v-slot="{ isToggled, toggle }">
+          <KToggle
+            v-if="config.jsonYamlMilestone2Enabled"
+            v-slot="{ isToggled, toggle }"
+          >
             <div>
               <KButton
                 appearance="tertiary"

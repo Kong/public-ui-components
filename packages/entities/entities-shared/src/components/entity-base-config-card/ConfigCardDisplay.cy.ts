@@ -38,9 +38,9 @@ describe('<ConfigCardDisplay />', () => {
           fetcherUrl: 'https://cloud.konghq.com/us/gateway-manager/91e192e0-5981-4662-a37d-7b24272c9da3/routes/0af86198-9822-46e0-9028-47b173caf4aa',
           format: 'json',
           record,
-          // TODO: Remove config once Feature Flag `khcp-8778-json-yaml-configurations` is enabled
+          // TODO: Remove config once Feature Flag `Khcp-9892-json-yaml-milestone-2` is enabled
           config: {
-            jsonYamlEnabled: true,
+            jsonYamlMilestone2Enabled: true,
           },
         },
       })
