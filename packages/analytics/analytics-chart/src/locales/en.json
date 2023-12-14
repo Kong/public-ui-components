@@ -16,6 +16,7 @@
     "noDataRange": "No data in selected range",
     "noDataRetry": "Please adjust the time period and try again",
     "timeRangeSelected": "selected",
+    "defaultFilename": "Chart Export",
     "exportPreview": "Export Preview",
     "exportButton": "Export",
     "exportTimeRange": "Time range",

@@ -95,7 +95,7 @@ import type { Header, TimeseriesColumn } from '../types'
 const { i18n } = composables.useI18n()
 
 const props = withDefaults(defineProps<{
-  modalTitle: string,
+  filename: string,
   modalDescription?: string,
   selectedRange: string,
   chartData: AnalyticsExploreResult | AnalyticsExploreV2Result,
@@ -106,7 +106,7 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits(['toggleModal'])
 
 const MAX_ROWS = 3
-const reportFilename = `${props.modalTitle.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`
+const reportFilename = `${props.filename.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`
 const isLoading = ref<boolean>(true)
 const hasData = computed(() => !!props.chartData?.records?.length)
 const fetcherCacheKey = ref(1)

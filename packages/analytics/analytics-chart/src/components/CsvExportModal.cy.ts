@@ -16,7 +16,7 @@ describe('<CsvExportModal />', () => {
     cy.mount(CsvExportModal, {
       props: {
         chartData: emptyExploreResult,
-        modalTitle: 'Total requests',
+        filename: 'Total requests',
         selectedRange: composables.useChartSelectedRange(computed(() => emptyExploreResult)),
       },
     })
@@ -30,7 +30,7 @@ describe('<CsvExportModal />', () => {
     cy.mount(CsvExportModal, {
       props: {
         chartData: exploreResult,
-        modalTitle: 'Total requests',
+        filename: 'Total requests',
         selectedRange: composables.useChartSelectedRange(computed(() => exploreResult)),
       },
     })
@@ -68,8 +68,8 @@ describe('<CsvExportModal />', () => {
   it('Export Modal with v2 explore data', () => {
     cy.mount(CsvExportModal, {
       props: {
+        filename: 'Total requests',
         chartData: exploreV2Result,
-        modalTitle: 'Total requests',
         selectedRange: composables.useChartSelectedRange(computed(() => exploreV2Result)),
       },
     })

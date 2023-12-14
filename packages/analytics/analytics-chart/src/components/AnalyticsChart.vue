@@ -42,7 +42,7 @@
       <CsvExportModal
         v-if="allowCsvExport && hasValidChartData && exportModalVisible"
         :chart-data="rawChartData"
-        :modal-title="chartTitle"
+        :filename="csvFilename"
         :selected-range="selectedRange"
         @toggle-modal="setModalVisibility"
       />
@@ -201,6 +201,7 @@ const props = defineProps({
 
 const { i18n } = composables.useI18n()
 const heightRef = ref<string>(props.height)
+const csvFilename = computed<string>(() => props?.chartTitle ? props.chartTitle : i18n.t('csvExport.defaultFilename'))
 
 const handleHeightUpdate = (height: number) => {
   heightRef.value = `${height}px`
