@@ -159,7 +159,8 @@ const props = defineProps({
   },
   chartTitle: {
     type: String,
-    required: true,
+    required: false,
+    default: undefined,
   },
   filenamePrefix: {
     type: String,
