@@ -63,7 +63,7 @@ import { accessibleGrey, MAX_LABEL_LENGTH, formatNumber, getTextHeight, getTextW
 import composables from '../../composables'
 import { v4 as uuidv4 } from 'uuid'
 import { ChartLegendPosition, ChartTypes } from '../../enums'
-import type { AxesTooltipState, KChartData, LegendValues, TooltipState } from '../../types'
+import type { AxesTooltipState, ChartDatasetSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipState } from '../../types'
 import { highlightPlugin } from '../chart-plugins/HighlightPlugin'
 
 const props = defineProps({
@@ -126,6 +126,11 @@ const props = defineProps({
     validator: (value: string): boolean => {
       return /(\d *)(px|%)/.test(value)
     },
+  },
+  chartDatasetSortFn: {
+    type: Function as PropType<ChartDatasetSortFn>,
+    required: false,
+    default: (a: EnhancedLegendItem, b: EnhancedLegendItem) => a.value && b.value && b.value.raw - a.value.raw,
   },
 })
 
@@ -250,7 +255,7 @@ const htmlLegendPlugin = {
     // @ts-ignore - ChartJS types are incomplete
     legendItems.value = chart.options.plugins.legend.labels.generateLabels(chart)
       .map(e => ({ ...e, value: props.legendValues && props.legendValues[e.text] }))
-      .sort((a, b) => a.value && b.value && b.value.raw - a.value.raw)
+      .sort(props.chartDatasetSortFn)
   },
 }
 

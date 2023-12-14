@@ -49,6 +49,7 @@
       <TimeSeriesChart
         v-if="isTimeSeriesChart"
         :chart-data="computedChartData"
+        :chart-dataset-sort-fn="chartOptions.chartDatasetSortFn"
         :dataset-colors="chartOptions.chartDatasetColors"
         :dimension-axes-title="timestampAxisTitle"
         :fill="chartOptions.fill"

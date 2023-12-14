@@ -69,7 +69,7 @@ import {
 import { v4 as uuidv4 } from 'uuid'
 import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
-import type { AnalyticsChartColors, KChartData, LegendValues, TooltipState } from '../../types'
+import type { AnalyticsChartColors, ChartDatasetSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipState } from '../../types'
 import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
 import type { Chart, LegendItem } from 'chart.js'
 import { ChartLegendPosition, ChartTypes } from '../../enums'
@@ -142,7 +142,11 @@ const props = defineProps({
     type: Object as PropType<AnalyticsChartColors | string[]>,
     required: false,
     default: datavisPalette,
-
+  },
+  chartDatasetSortFn: {
+    type: Function as PropType<ChartDatasetSortFn>,
+    required: false,
+    default: (a: EnhancedLegendItem, b: EnhancedLegendItem) => a.value && b.value && b.value.raw - a.value.raw,
   },
 })
 
@@ -178,7 +182,7 @@ const htmlLegendPlugin = {
     // @ts-ignore - ChartJS types are incomplete
     legendItems.value = chart.options.plugins.legend.labels.generateLabels(chart)
       .map(e => ({ ...e, value: props.legendValues && props.legendValues[e.text] }))
-      .sort((a, b) => a.value && b.value && b.value.raw - a.value.raw)
+      .sort(props.chartDatasetSortFn)
   },
 }
 

@@ -63,6 +63,9 @@ yarn add @kong-ui-public/analytics-chart
           '400': '#00bbf9',
         }
       ```
+- `chartDatasetSortFn`
+  - Exposed sorting fn for datasets as they appear in the tooltip and legend
+  - Sorts in descending order of raw value by default.
 
 #### `chartTitle`
 
