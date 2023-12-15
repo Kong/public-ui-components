@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { useSlots, onBeforeMount, ref } from 'vue'
+import { computed, useSlots } from 'vue'
 import type { RecordItem, KonnectBaseEntityConfig, KongManagerBaseEntityConfig } from '../../types'
 import '@kong-ui-public/copy-uuid/dist/style.css'
 import ConfigCardItem from './ConfigCardItem.vue'
@@ -115,16 +115,13 @@ const slots = useSlots()
 const { i18n: { t } } = composables.useI18n()
 
 const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
-const jsonOrYamlRecord = ref<Record<string, any>>({})
-
-onBeforeMount(() => {
+const jsonOrYamlRecord = computed(() => {
+  const processedRecord = JSON.parse(JSON.stringify(props.record))
   // remove dates from JSON/YAML config [KHCP-9837]
-  jsonOrYamlRecord.value = JSON.parse(JSON.stringify(props.record))
-
-  delete jsonOrYamlRecord.value.created_at
-  delete jsonOrYamlRecord.value.updated_at
-},
-)
+  delete processedRecord.created_at
+  delete processedRecord.updated_at
+  return processedRecord
+})
 </script>
 
 <style lang="scss" scoped>
