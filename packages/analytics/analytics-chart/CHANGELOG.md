@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.20.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.19.0...@kong-ui-public/analytics-chart@0.20.0) (2023-12-15)
+
+
+### Features
+
+* **csv-export-modal:** migrate from Konnect [KHCP-8746] ([#940](https://github.com/Kong/public-ui-components/issues/940)) ([e68f874](https://github.com/Kong/public-ui-components/commit/e68f8746f3828c3b255e66d4fb7ca39a7aa464d4))
+
+
+
+
+
 # [0.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.18.1...@kong-ui-public/analytics-chart@0.19.0) (2023-12-12)
 
 
