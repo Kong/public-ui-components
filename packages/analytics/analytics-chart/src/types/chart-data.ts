@@ -1,5 +1,6 @@
-import type { ChartData, ChartDataset } from 'chart.js'
+import type { ChartData, ChartDataset, LegendItem } from 'chart.js'
 import type { ChartTypes, ChartMetricDisplay, ChartTypesSimple } from '../enums'
+import type { ChartTooltipSortFn } from './chartjs-options'
 
 // Chart.js extendend interfaces
 export type Dataset = ChartDataset & { rawDimension: string, rawMetric?: string, total?: number, lineTension?: number, fill?: boolean }
@@ -26,6 +27,23 @@ export interface AnalyticsDataPoint {
 export interface AnalyticsChartColors {
   [dimensionValue: string]: string
 }
+
+export interface LegendValueEntry {
+  raw: number,
+  formatted: string
+}
+
+/**
+ * Legend item with enhanced value
+ */
+export interface EnhancedLegendItem extends LegendItem {
+  value: LegendValueEntry
+}
+
+/**
+ * Chart dataset sort function
+ */
+export type ChartLegendSortFn = (a: EnhancedLegendItem, b: EnhancedLegendItem) => number
 
 /**
  * Analytics Chart options
@@ -61,6 +79,14 @@ export interface AnalyticsChartOptions {
    * Chart dataset color palette
    */
   chartDatasetColors?: AnalyticsChartColors | string[],
+  /**
+   * Sort the datasets as they are displayed in the legend and tooltip
+   */
+  chartLegendSortFn?: ChartLegendSortFn,
+  /**
+   * Sort tooltip entries
+   */
+  chartTooltipSortFn?: ChartTooltipSortFn,
 }
 
 /**
@@ -87,11 +113,6 @@ export interface SimpleChartOptions {
    * Determines which dataset value will be display as large text
    */
   numerator?: number,
-}
-
-export interface LegendValueEntry {
-  raw: number,
-  formatted: string
 }
 
 export interface LegendValues {

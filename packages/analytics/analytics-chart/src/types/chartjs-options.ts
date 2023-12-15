@@ -1,11 +1,22 @@
 import type { Ref } from 'vue'
-import type { Chart, ChartType, TooltipModel } from 'chart.js'
+import type { Chart, ChartType, TooltipModel, Color } from 'chart.js'
 import type { ChartTypes } from '../enums'
 import type { GranularityKeys } from '@kong-ui-public/analytics-utilities'
+
+export interface TooltipEntry {
+  backgroundColor: Color
+  borderColor: Color
+  label: string
+  value: string | number
+  rawValue: number
+}
+
+export type ChartTooltipSortFn = (a: TooltipEntry, b: TooltipEntry) => number
+
 export interface TooltipState {
   showTooltip: boolean,
   tooltipContext: string | number,
-  tooltipSeries: Array<any>,
+  tooltipSeries: Array<TooltipEntry>,
   left: string,
   top: string,
   units: string,
@@ -14,6 +25,7 @@ export interface TooltipState {
   height: number
   chartType: ChartTypes,
   locked?: boolean,
+  chartTooltipSortFn?: ChartTooltipSortFn
 }
 
 interface BaseChartOptions {

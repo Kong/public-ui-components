@@ -69,6 +69,8 @@
       <TimeSeriesChart
         v-if="isTimeSeriesChart"
         :chart-data="computedChartData"
+        :chart-legend-sort-fn="chartOptions.chartLegendSortFn"
+        :chart-tooltip-sort-fn="chartOptions.chartTooltipSortFn"
         :dataset-colors="chartOptions.chartDatasetColors"
         :dimension-axes-title="timestampAxisTitle"
         :fill="chartOptions.fill"
@@ -87,6 +89,8 @@
         v-else-if="isBarChart"
         :annotations="showAnnotations"
         :chart-data="computedChartData"
+        :chart-legend-sort-fn="chartOptions.chartLegendSortFn"
+        :chart-tooltip-sort-fn="chartOptions.chartTooltipSortFn"
         data-testid="bar-chart-container"
         :dimension-axes-title="dimensionAxesTitle"
         :legend-values="legendValues"

@@ -69,7 +69,7 @@ import {
 import { v4 as uuidv4 } from 'uuid'
 import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
-import type { AnalyticsChartColors, KChartData, LegendValues, TooltipState } from '../../types'
+import type { AnalyticsChartColors, ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry, TooltipState } from '../../types'
 import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
 import type { Chart, LegendItem } from 'chart.js'
 import { ChartLegendPosition, ChartTypes } from '../../enums'
@@ -142,7 +142,16 @@ const props = defineProps({
     type: Object as PropType<AnalyticsChartColors | string[]>,
     required: false,
     default: datavisPalette,
-
+  },
+  chartLegendSortFn: {
+    type: Function as PropType<ChartLegendSortFn>,
+    required: false,
+    default: (a: EnhancedLegendItem, b: EnhancedLegendItem) => a.value && b.value && b.value.raw - a.value.raw,
+  },
+  chartTooltipSortFn: {
+    type: Function as PropType<ChartTooltipSortFn>,
+    required: false,
+    default: (a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue,
   },
 })
 
@@ -170,6 +179,7 @@ const tooltipData: TooltipState = reactive({
   height: 0,
   chartType: props.type,
   locked: false,
+  chartTooltipSortFn: props.chartTooltipSortFn,
 })
 
 const htmlLegendPlugin = {
@@ -178,7 +188,7 @@ const htmlLegendPlugin = {
     // @ts-ignore - ChartJS types are incomplete
     legendItems.value = chart.options.plugins.legend.labels.generateLabels(chart)
       .map(e => ({ ...e, value: props.legendValues && props.legendValues[e.text] }))
-      .sort((a, b) => a.value && b.value && b.value.raw - a.value.raw)
+      .sort(props.chartLegendSortFn)
   },
 }
 

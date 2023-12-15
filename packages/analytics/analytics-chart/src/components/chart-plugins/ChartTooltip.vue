@@ -269,6 +269,7 @@ ul.tooltip {
   li {
     display: flex;
     font-size: $kui-font-size-30;
+    line-height: 1;
     margin: $kui-space-40;
   }
 
