@@ -61,7 +61,7 @@
                 :is-visible="isToggled.value"
                 prevent-close-on-blur
                 :title="t('baseForm.configuration.title')"
-                @close="toggle"
+                @close.stop="toggle"
               >
                 <div>
                   {{ t('baseForm.configuration.message') }}

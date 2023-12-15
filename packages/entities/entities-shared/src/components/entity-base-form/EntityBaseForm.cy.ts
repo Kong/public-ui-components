@@ -46,7 +46,7 @@ describe('<EntityBaseForm />', () => {
     cy.getTestId('form-submit').should('be.disabled')
   })
 
-  it('displays View Configuration and Slidout when FF is enabled', () => {
+  it('displays View Configuration and Slideout when FF is enabled', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config: {
