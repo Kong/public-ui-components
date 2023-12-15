@@ -116,6 +116,9 @@ const { i18n: { t } } = composables.useI18n()
 
 const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
 const jsonOrYamlRecord = computed(() => {
+  if (!props.record) {
+    return props.record
+  }
   const processedRecord = JSON.parse(JSON.stringify(props.record))
   // remove dates from JSON/YAML config [KHCP-9837]
   delete processedRecord.created_at
