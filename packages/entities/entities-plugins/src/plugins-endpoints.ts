@@ -20,8 +20,14 @@ export default {
   },
   form: {
     konnect: {
-      create: '/v2/control-planes/{controlPlaneId}/core-entities/plugins',
-      edit: '/v2/control-planes/{controlPlaneId}/core-entities/plugins/{id}',
+      create: {
+        all: '/v2/control-planes/{controlPlaneId}/core-entities/plugins',
+        forEntity: '/v2/control-planes/{controlPlaneId}/core-entities/{entityType}/{entityId}/plugins',
+      },
+      edit: {
+        all: '/v2/control-planes/{controlPlaneId}/core-entities/plugins/{id}',
+        forEntity: '/v2/control-planes/{controlPlaneId}/core-entities/{entityType}/{entityId}/plugins/{id}',
+      },
       pluginSchema: '/v2/control-planes/{controlPlaneId}/schemas/core-entities/plugins/{plugin}',
       credential: {
         create: '/v2/control-planes/{controlPlaneId}/core-entities/{resourceEndpoint}',
@@ -34,8 +40,14 @@ export default {
       entityGetAll: '/v2/control-planes/{controlPlaneId}/core-entities/{entity}?size=1000',
     },
     kongManager: {
-      create: '/{workspace}/plugins',
-      edit: '/{workspace}/plugins/{id}',
+      create: {
+        all: '/{workspace}/plugins',
+        forEntity: '/{workspace}/{entityType}/{entityId}/plugins',
+      },
+      edit: {
+        all: '/{workspace}/plugins/{id}',
+        forEntity: '/{workspace}/{entityType}/{entityId}/plugins/{id}',
+      },
       pluginSchema: '/{workspace}/schemas/plugins/{plugin}',
       credential: {
         create: '/{workspace}/{resourceEndpoint}',

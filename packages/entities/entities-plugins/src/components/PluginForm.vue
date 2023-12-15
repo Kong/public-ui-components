@@ -228,7 +228,13 @@ const fetchUrl = computed((): string => {
   }
 
   // plugin
-  return endpoints.form[props.config.app].edit
+  if (props.config.entityType && props.config.entityId) {
+    return endpoints.form[props.config.app].edit.forEntity
+      .replace(/{entityType}/gi, props.config.entityType)
+      .replace(/{entityId}/gi, props.config.entityId)
+  } else {
+    return endpoints.form[props.config.app].edit.all
+  }
 })
 
 const entityMap = computed((): Record<string, PluginEntityInfo> => {
@@ -842,8 +848,11 @@ const validateSubmitUrl = computed((): string => {
  * Build the submit URL
  */
 const submitUrl = computed((): string => {
+  const isScoped = props.config.entityType && props.config.entityId
   // plugin endpoint vs credential endpoint
-  const submitEndpoint = !treatAsCredential.value ? endpoints.form[props.config.app][formType.value] : endpoints.form[props.config.app].credential[formType.value]
+  const submitEndpoint = !treatAsCredential.value
+    ? endpoints.form[props.config.app][formType.value][isScoped ? 'forEntity' : 'all']
+    : endpoints.form[props.config.app].credential[formType.value]
 
   let url = `${props.config.apiBaseUrl}${submitEndpoint}`
 
@@ -857,6 +866,9 @@ const submitUrl = computed((): string => {
   url = url.replace(/{resourceEndpoint}/gi, resourceEndpoint.value)
   // Always replace the id when editing
   url = url.replace(/{id}/gi, props.pluginId)
+  // replace entityType and entityId if scoped
+  url = url.replace(/{entityType}/gi, props.config.entityType || '')
+  url = url.replace(/{entityId}/gi, props.config.entityId || '')
 
   return url
 })

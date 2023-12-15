@@ -76,7 +76,6 @@ const props = defineProps({
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
       if (config.app === 'konnect' && !config.controlPlaneId) return false
       if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
-      if (!config.cancelRoute || !config.backRoute) return false
       return true
     },
   },
