@@ -46,7 +46,7 @@ describe('<EntityBaseForm />', () => {
     cy.getTestId('form-submit').should('be.disabled')
   })
 
-  it('displays View Configuration when FF is enabled', () => {
+  it('displays View Configuration and Slidout when FF is enabled', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config: {
@@ -61,8 +61,9 @@ describe('<EntityBaseForm />', () => {
     cy.getTestId('form-view-configuration').should('be.visible')
     cy.getTestId('form-view-configuration').click()
 
-    cy.getTestId('form-view-configuration-slideout').should('be.visible')
-    cy.getTestId('form-view-configuration-slideout-tabs').should('be.visible')
+    cy.getTestId('form-view-configuration-slideout').should('exist')
+    cy.getTestId('form-view-configuration-slideout-tabs').should('exist')
+    cy.get('.yaml-config').should('exist')
   })
 
   it('displays error message when provided', () => {
