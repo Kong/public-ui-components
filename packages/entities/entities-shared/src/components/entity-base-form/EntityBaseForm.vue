@@ -209,6 +209,8 @@ const fetcherUrl = computed<string>(() => {
   }
 
   if (!props.editId) {
+    // strip placeholder /{id}/ from  post request url
+    url = url.replace(/\/{id}/gi, '')
     return url
   }
 

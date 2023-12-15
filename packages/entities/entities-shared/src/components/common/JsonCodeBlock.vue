@@ -64,7 +64,7 @@ const displayedCharLength = computed(() => {
   if (url.length < 2) {
     return 0
   }
-  const entityType = url[url.length - 2]
+  const entityType = props.requestMethod === 'post' ? url[url.length - 1] : url[url.length - 2]
   // each url contains 36 chars id + 2 slashes + 3 ellipses + number of characters in the entity type
   return 41 + entityType.length
 })
