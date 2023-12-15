@@ -51,18 +51,18 @@
     v-if="format === 'json' && props.record"
     :config="props.config"
     :fetcher-url="props.fetcherUrl"
-    :json-record="props.record"
+    :json-record="jsonOrYamlRecord"
     request-method="get"
   />
   <YamlCodeBlock
     v-if="format === 'yaml' && props.record"
-    :yaml-record="props.record"
+    :yaml-record="jsonOrYamlRecord"
   />
 </template>
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { useSlots, watch } from 'vue'
+import { useSlots, onBeforeMount, ref } from 'vue'
 import type { RecordItem, KonnectBaseEntityConfig, KongManagerBaseEntityConfig } from '../../types'
 import '@kong-ui-public/copy-uuid/dist/style.css'
 import ConfigCardItem from './ConfigCardItem.vue'
@@ -115,15 +115,16 @@ const slots = useSlots()
 const { i18n: { t } } = composables.useI18n()
 
 const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
+const jsonOrYamlRecord = ref<Record<string, any>>({})
 
-watch(() => props.format, (format: string) => {
-  if (format !== 'structured') {
-    // remove dates from JSON/YAML config [KHCP-9837]
-    const jsonOrYamlRecord = JSON.parse(JSON.stringify(props.record))
-    delete jsonOrYamlRecord.created_at
-    delete jsonOrYamlRecord.updated_at
-  }
-}, { immediate: true })
+onBeforeMount(() => {
+  // remove dates from JSON/YAML config [KHCP-9837]
+  jsonOrYamlRecord.value = JSON.parse(JSON.stringify(props.record))
+
+  delete jsonOrYamlRecord.value.created_at
+  delete jsonOrYamlRecord.value.updated_at
+},
+)
 </script>
 
 <style lang="scss" scoped>

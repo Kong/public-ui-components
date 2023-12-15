@@ -5,7 +5,7 @@
       class="json-endpoint"
     >
       <KBadge :appearance="props.requestMethod">
-        <span request-method-badge>{{ props.requestMethod }}</span>
+        {{ props.requestMethod }}
       </KBadge>
       <KCodeBlock
         id="json-endpoint-codeblock"
@@ -114,9 +114,6 @@ const displayedCharLength = computed(() => {
     text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-  .request-method-badge {
-    text-transform: uppercase;
   }
 }
 </style>

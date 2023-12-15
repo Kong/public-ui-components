@@ -29,7 +29,7 @@ describe('<ConfigCardDisplay />', () => {
         },
       })
 
-      cy.get('.config-card-display-yaml').should('be.visible')
+      cy.get('.yaml-config').should('be.visible')
     })
 
     it('renders the JSON content and endpoint correctly', () => {
@@ -45,8 +45,11 @@ describe('<ConfigCardDisplay />', () => {
         },
       })
 
-      cy.get('.config-card-display-json').should('be.visible')
-      cy.get('.config-card-display-json-endpoint').should('be.visible')
+      cy.get('.json-config').should('be.visible')
+      cy.get('.json-endpoint').should('be.visible')
+      cy.get('.json-endpoint').should('have.text', 'GET')
+      cy.get('.json-endpoint').should('have.text', '.../routes/0af86198-9822-46e0-9028-47b173caf4aa')
+
     })
   })
 })
