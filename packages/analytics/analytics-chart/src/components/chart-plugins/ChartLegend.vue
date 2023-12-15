@@ -261,6 +261,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     align-items: start;
     cursor: pointer;
     display: flex;
+    line-height: 1;
     margin-top: $kui-space-60;
 
     .legend {
