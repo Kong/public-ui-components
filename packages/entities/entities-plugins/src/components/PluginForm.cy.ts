@@ -360,7 +360,13 @@ describe('<PluginForm />', () => {
     it('should show edit form', () => {
       const config = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
       interceptKMSchema()
-      interceptKMOperatePlugin({ method: 'GET', alias: 'getPlugin', id: plugin1.id })
+      interceptKMOperatePlugin({
+        method: 'GET',
+        alias: 'getPlugin',
+        id: plugin1.id,
+        entityId: scopedService.id,
+        entityType: 'services',
+      })
       interceptKMScopedEntity({ entityType: config.entityType })
 
       cy.mount(PluginForm, {
@@ -403,9 +409,21 @@ describe('<PluginForm />', () => {
       const config = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
       interceptKMSchema()
       interceptKMScopedEntity({ entityType: config.entityType })
-      interceptKMOperatePlugin({ method: 'GET', alias: 'getPlugin', id: plugin1.id })
+      interceptKMOperatePlugin({
+        method: 'GET',
+        alias: 'getPlugin',
+        id: plugin1.id,
+        entityId: scopedService.id,
+        entityType: 'services',
+      })
       interceptKMValidatePlugin()
-      interceptKMOperatePlugin({ method: 'PATCH', alias: 'updatePlugin', id: plugin1.id })
+      interceptKMOperatePlugin({
+        method: 'PATCH',
+        alias: 'updatePlugin',
+        id: plugin1.id,
+        entityId: scopedService.id,
+        entityType: 'services',
+      })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -460,7 +478,13 @@ describe('<PluginForm />', () => {
       const config = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
       interceptKMSchema()
       interceptKMScopedEntity({ entityType: config.entityType })
-      interceptKMOperatePlugin({ method: 'GET', alias: 'getPlugin', id: plugin1.id })
+      interceptKMOperatePlugin({
+        method: 'GET',
+        alias: 'getPlugin',
+        id: plugin1.id,
+        entityId: scopedService.id,
+        entityType: 'services',
+      })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -986,7 +1010,13 @@ describe('<PluginForm />', () => {
     it('should show edit form', () => {
       const config = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
       interceptKonnectSchema()
-      interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin', id: plugin1.id })
+      interceptKonnectOperatePlugin({
+        method: 'GET',
+        alias: 'getPlugin',
+        id: plugin1.id,
+        entityId: scopedService.id,
+        entityType: 'services',
+      })
       interceptKonnectScopedEntity({ entityType: config.entityType })
 
       cy.mount(PluginForm, {
@@ -1030,9 +1060,21 @@ describe('<PluginForm />', () => {
       const config = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
       interceptKonnectSchema()
       interceptKonnectScopedEntity({ entityType: config.entityType })
-      interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin', id: plugin1.id })
+      interceptKonnectOperatePlugin({
+        method: 'GET',
+        alias: 'getPlugin',
+        id: plugin1.id,
+        entityId: scopedService.id,
+        entityType: 'services',
+      })
       interceptKonnectValidatePlugin()
-      interceptKonnectOperatePlugin({ method: 'PUT', alias: 'updatePlugin', id: plugin1.id })
+      interceptKonnectOperatePlugin({
+        method: 'PUT',
+        alias: 'updatePlugin',
+        id: plugin1.id,
+        entityId: scopedService.id,
+        entityType: 'services',
+      })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -1086,7 +1128,13 @@ describe('<PluginForm />', () => {
       const config = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
       interceptKonnectSchema()
       interceptKonnectScopedEntity({ entityType: config.entityType })
-      interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin', id: plugin1.id })
+      interceptKonnectOperatePlugin({
+        method: 'GET',
+        alias: 'getPlugin',
+        id: plugin1.id,
+        entityId: scopedService.id,
+        entityType: 'services',
+      })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
