@@ -27,7 +27,7 @@ describe('<JsonCodeBlock />', () => {
       })
 
       cy.get('.json-config').should('be.visible')
-      cy.get('.json-endpoint').should('not.be.visible')
+      cy.get('.json-endpoint').should('not.exist')
     })
 
     it('renders the JSON content and endpoint correctly', () => {
