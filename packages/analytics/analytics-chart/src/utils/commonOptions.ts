@@ -1,5 +1,5 @@
 import prettyBytes from 'pretty-bytes'
-import type { ExternalTooltipContext, KChartData, TooltipState } from '../types'
+import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry } from '../types'
 import { DECIMAL_DISPLAY, numberFormatter } from '../utils'
 import { isValid } from 'date-fns'
 import type { Point, ScatterDataPoint } from 'chart.js'
@@ -14,6 +14,8 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
 
     return
   }
+
+  const sortFn = tooltipData.chartTooltipSortFn || ((a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue)
 
   if (tooltip.body && !tooltipData.locked) {
     const colors = tooltip.labelColors
@@ -49,8 +51,8 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
         label: tooltipLabel,
         value,
         rawValue,
-      }
-    }).sort((a, b) => b.rawValue - a.rawValue)
+      } as TooltipEntry
+    }).sort(sortFn)
 
     tooltipData.left = `${tooltip.x}px`
     tooltipData.top = `${tooltip.y}px`

@@ -63,7 +63,7 @@ import { accessibleGrey, MAX_LABEL_LENGTH, formatNumber, getTextHeight, getTextW
 import composables from '../../composables'
 import { v4 as uuidv4 } from 'uuid'
 import { ChartLegendPosition, ChartTypes } from '../../enums'
-import type { AxesTooltipState, ChartDatasetSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipState } from '../../types'
+import type { AxesTooltipState, ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry, TooltipState } from '../../types'
 import { highlightPlugin } from '../chart-plugins/HighlightPlugin'
 
 const props = defineProps({
@@ -127,10 +127,15 @@ const props = defineProps({
       return /(\d *)(px|%)/.test(value)
     },
   },
-  chartDatasetSortFn: {
-    type: Function as PropType<ChartDatasetSortFn>,
+  chartLegendSortFn: {
+    type: Function as PropType<ChartLegendSortFn>,
     required: false,
     default: (a: EnhancedLegendItem, b: EnhancedLegendItem) => a.value && b.value && b.value.raw - a.value.raw,
+  },
+  chartTooltipSortFn: {
+    type: Function as PropType<ChartTooltipSortFn>,
+    required: false,
+    default: (a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue,
   },
 })
 
@@ -238,6 +243,7 @@ const tooltipData: TooltipState = reactive({
   height: 0,
   locked: false,
   chartType: isHorizontal.value ? ChartTypes.HORIZONTAL_BAR : ChartTypes.VERTICAL_BAR,
+  chartTooltipSortFn: props.chartTooltipSortFn,
 })
 const dependsOnChartUpdate = ref(0)
 
@@ -255,7 +261,7 @@ const htmlLegendPlugin = {
     // @ts-ignore - ChartJS types are incomplete
     legendItems.value = chart.options.plugins.legend.labels.generateLabels(chart)
       .map(e => ({ ...e, value: props.legendValues && props.legendValues[e.text] }))
-      .sort(props.chartDatasetSortFn)
+      .sort(props.chartLegendSortFn)
   },
 }
 

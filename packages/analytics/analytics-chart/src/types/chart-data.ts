@@ -1,5 +1,6 @@
 import type { ChartData, ChartDataset, LegendItem } from 'chart.js'
 import type { ChartTypes, ChartMetricDisplay, ChartTypesSimple } from '../enums'
+import type { ChartTooltipSortFn } from './chartjs-options'
 
 // Chart.js extendend interfaces
 export type Dataset = ChartDataset & { rawDimension: string, rawMetric?: string, total?: number, lineTension?: number, fill?: boolean }
@@ -42,7 +43,7 @@ export interface EnhancedLegendItem extends LegendItem {
 /**
  * Chart dataset sort function
  */
-export type ChartDatasetSortFn = (a: EnhancedLegendItem, b: EnhancedLegendItem) => number
+export type ChartLegendSortFn = (a: EnhancedLegendItem, b: EnhancedLegendItem) => number
 
 /**
  * Analytics Chart options
@@ -81,7 +82,11 @@ export interface AnalyticsChartOptions {
   /**
    * Sort the datasets as they are displayed in the legend and tooltip
    */
-  chartDatasetSortFn?: ChartDatasetSortFn,
+  chartLegendSortFn?: ChartLegendSortFn,
+  /**
+   * Sort tooltip entries
+   */
+  chartTooltipSortFn?: ChartTooltipSortFn,
 }
 
 /**
