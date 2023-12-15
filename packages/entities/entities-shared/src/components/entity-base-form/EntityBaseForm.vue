@@ -72,7 +72,6 @@
                 >
                   <template #json>
                     <JsonCodeBlock
-                      :config="config"
                       :fetcher-url="fetcherUrl"
                       :json-record="formFields"
                       :request-method="props.editId ? 'put' : 'post'"

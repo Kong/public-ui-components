@@ -9,7 +9,7 @@
 
     <h2>Format: JSON</h2>
     <ConfigCardDisplay
-      :config="config"
+      :config="konnectConfig"
       fetcher-url="https://cloud.konghq.com/us/gateway-manager/91e192e0-5981-4662-a37d-7b24272c9da3/routes/0af86198-9822-46e0-9028-47b173caf4aa"
       format="json"
       :record="record"
@@ -24,12 +24,22 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { ConfigCardDisplay } from '../../src'
 
-// TODO: Remove config once Feature Flag `Khcp-9892-json-yaml-milestone-2` is enabled
-const config = {
+import type { KonnectBaseEntityConfig } from '../../src'
+
+const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
+const entityId = 'ce83dd74-6455-40a9-b944-0f393c7ee22c'
+
+const konnectConfig = ref<KonnectBaseEntityConfig>({
+  app: 'konnect',
+  apiBaseUrl: '/us/kong-api/konnect-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
+  // Set the root `.env.development.local` variable to a control plane your PAT can access
+  controlPlaneId,
+  entityId,
   jsonYamlMilestone2Enabled: true,
-}
+})
 
 const item = {
   basic:

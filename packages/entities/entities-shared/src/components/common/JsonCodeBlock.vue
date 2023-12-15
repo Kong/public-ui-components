@@ -1,7 +1,7 @@
 <template>
   <div class="json-config">
     <div
-      v-if="props.fetcherUrl && props.config.jsonYamlMilestone2Enabled"
+      v-if="props.fetcherUrl && props.config?.jsonYamlMilestone2Enabled"
       class="json-endpoint"
     >
       <KBadge :appearance="props.requestMethod">
@@ -35,18 +35,13 @@ const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
     type: Object as PropType<KonnectBaseEntityConfig | KongManagerBaseEntityConfig | KonnectBaseFormConfig | KongManagerBaseFormConfig>,
-    required: true,
-    validator: (config: KonnectBaseEntityConfig | KongManagerBaseEntityConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
-      if (!config.entityId) return false
-      return true
-    },
+    required: false,
+    default: () => ({}),
   },
   fetcherUrl: {
     type: String,
-    required: true,
+    required: false,
+    default: '',
   },
   jsonRecord: {
     type: Object as PropType<Record<string, any>>,
@@ -54,7 +49,8 @@ const props = defineProps({
   },
   requestMethod: {
     type: String as PropType<BadgeAppearance>,
-    required: true,
+    required: false,
+    default: '',
   },
 })
 

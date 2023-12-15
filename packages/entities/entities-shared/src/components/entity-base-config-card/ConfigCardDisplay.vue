@@ -49,6 +49,7 @@
 
   <JsonCodeBlock
     v-if="format === 'json' && props.record"
+    :config="props.config"
     :fetcher-url="props.fetcherUrl"
     :json-record="props.record"
     request-method="get"
@@ -62,7 +63,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { useSlots, watch } from 'vue'
-import type { RecordItem } from '../../types'
+import type { RecordItem, KonnectBaseEntityConfig, KongManagerBaseEntityConfig } from '../../types'
 import '@kong-ui-public/copy-uuid/dist/style.css'
 import ConfigCardItem from './ConfigCardItem.vue'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
@@ -76,6 +77,12 @@ export interface PropList {
 }
 
 const props = defineProps({
+  /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+  config: {
+    type: Object as PropType<KonnectBaseEntityConfig | KongManagerBaseEntityConfig>,
+    required: false,
+    default: () => ({}),
+  },
   propertyCollections: {
     type: Object as PropType<PropList>,
     required: false,
@@ -94,7 +101,8 @@ const props = defineProps({
   },
   record: {
     type: Object as PropType<Record<string, any>>,
-    required: true,
+    required: false,
+    default: () => ({}),
   },
   fetcherUrl: {
     type: String,
