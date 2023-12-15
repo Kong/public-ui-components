@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.4.12...@kong-ui-public/entities-plugins@2.5.0) (2023-12-15)
+
+
+### Features
+
+* **entities-plugins:** replace copyUuid to InternalLinkItem ([#1005](https://github.com/Kong/public-ui-components/issues/1005)) ([4d9daa1](https://github.com/Kong/public-ui-components/commit/4d9daa1c7d7a2bc6caf7a830e3f49455f379cb8d))
+
+
+
+
+
 ## [2.4.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.4.11...@kong-ui-public/entities-plugins@2.4.12) (2023-12-13)
 
 
