@@ -68,6 +68,7 @@
         v-else-if="isBarChart"
         :annotations="showAnnotations"
         :chart-data="computedChartData"
+        :chart-dataset-sort-fn="chartOptions.chartDatasetSortFn"
         data-testid="bar-chart-container"
         :dimension-axes-title="dimensionAxesTitle"
         :legend-values="legendValues"
