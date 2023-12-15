@@ -99,11 +99,13 @@ const props = defineProps({
     required: false,
     default: () => ([]),
   },
+  /** A record to indicate the entity's configuration, used to populate the JSON/YAML code blocks */
   record: {
     type: Object as PropType<Record<string, any>>,
     required: false,
     default: () => ({}),
   },
+  /** Fetcher url for the entity with the filled-in controlPlaneId, workspace, and entity id. */
   fetcherUrl: {
     type: String,
     required: false,
@@ -115,7 +117,7 @@ const slots = useSlots()
 const { i18n: { t } } = composables.useI18n()
 
 const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
-const jsonOrYamlRecord = computed(() => {
+const jsonOrYamlRecord = computed((): PropType<Record<string, any>> => {
   if (!props.record) {
     return props.record
   }

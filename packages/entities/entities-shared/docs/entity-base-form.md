@@ -119,7 +119,7 @@ If form submission fails, this is the error message to display.
 - type: `Object as PropType<Record<string, any>>`
 - required: `true`
 
-An Object to indicate the form fields present in a form. Used to populate the Configuration JSON/YAML code blocks.
+A record to indicate the form fields present in a form. Used to populate the Configuration JSON/YAML code blocks.
 
 ### Events
 

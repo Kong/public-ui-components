@@ -16,6 +16,7 @@ import type { PropType } from 'vue'
 import { reactive } from 'vue'
 
 const props = defineProps({
+  /** A record to indicate the entity's configuration, used to populate the YAML code block */
   yamlRecord: {
     type: Object as PropType<Record<string, any>>,
     required: true,

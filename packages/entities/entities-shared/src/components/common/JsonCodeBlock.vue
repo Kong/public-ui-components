@@ -38,15 +38,18 @@ const props = defineProps({
     required: false,
     default: () => ({}),
   },
+  /** Fetcher url for the entity with the filled-in controlPlaneId, workspace, and entity id. */
   fetcherUrl: {
     type: String,
     required: false,
     default: '',
   },
+  /** A record to indicate the entity's configuration, used to populate the JSON code block */
   jsonRecord: {
     type: Object as PropType<Record<string, any>>,
     required: true,
   },
+  /** HTTP request method like GET, POST, PUT, used to make the api call. */
   requestMethod: {
     type: String as PropType<BadgeAppearance>,
     required: false,
@@ -56,7 +59,7 @@ const props = defineProps({
 
 const jsonContent = reactive(props.jsonRecord)
 
-const displayedCharLength = computed(() => {
+const displayedCharLength = computed((): number => {
   if (!props.fetcherUrl) {
     return 0
   }
