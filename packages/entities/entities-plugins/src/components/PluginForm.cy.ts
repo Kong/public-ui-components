@@ -121,11 +121,17 @@ describe('<PluginForm />', () => {
       alias?: string
       status?: number
       credential?: boolean
+      entityType?: string
       entityId?: string
     }) => {
-      const url = params?.credential
-        ? `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/consumers/${params.entityId}/acls/${params.id}`
-        : `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/plugins/${params.id}`
+      let url: string
+      if (params?.credential) {
+        url = `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/consumers/${params.entityId}/acls/${params.id}`
+      } else if (params?.entityType && params?.entityId) {
+        url = `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/${params.entityType}/${params.entityId}/plugins/${params.id}`
+      } else {
+        url = `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/plugins/${params.id}`
+      }
 
       cy.intercept(
         {
@@ -721,11 +727,17 @@ describe('<PluginForm />', () => {
       alias?: string
       status?: number
       credential?: boolean
+      entityType?: string
       entityId?: string
     }) => {
-      const url = params?.credential
-        ? `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumers/${params.entityId}/acls/${params.id}`
-        : `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins/${params.id}`
+      let url: string
+      if (params?.credential) {
+        url = `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumers/${params.entityId}/acls/${params.id}`
+      } else if (params?.entityType && params?.entityId) {
+        url = `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/${params.entityType}/${params.entityId}/plugins/${params.id}`
+      } else {
+        url = `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins/${params.id}`
+      }
 
       cy.intercept(
         {
