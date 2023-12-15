@@ -4,6 +4,7 @@ Dynamic chart component for kong analytics.
 
 - [Features](#features)
 - [Requirements](#requirements)
+- [Included composables](#included-composables)
 - [Usage](#usage)
   - [Install](#install)
   - [Props](#props)
@@ -17,6 +18,10 @@ Dynamic chart component for kong analytics.
 
 - `vue` must be initialized in the host application
 - `@kong-ui-public/i18n` must be available as a `dependency` in the host application.
+
+## Included components
+
+- `useChartSelectedRange`
 
 ## Usage
 
