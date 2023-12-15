@@ -85,23 +85,23 @@
               </KSlideout>
             </div>
           </KToggle>
+          <KButton
+            appearance="secondary"
+            data-testid="form-cancel"
+            :disabled="isReadonly"
+            type="reset"
+          >
+            {{ t('baseForm.actions.cancel') }}
+          </KButton>
+          <KButton
+            appearance="primary"
+            data-testid="form-submit"
+            :disabled="disableSave"
+            type="submit"
+          >
+            {{ t('baseForm.actions.save') }}
+          </KButton>
         </slot>
-        <KButton
-          appearance="secondary"
-          data-testid="form-cancel"
-          :disabled="isReadonly"
-          type="reset"
-        >
-          {{ t('baseForm.actions.cancel') }}
-        </KButton>
-        <KButton
-          appearance="primary"
-          data-testid="form-submit"
-          :disabled="disableSave"
-          type="submit"
-        >
-          {{ t('baseForm.actions.save') }}
-        </KButton>
       </div>
     </form>
   </KCard>
