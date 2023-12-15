@@ -1,7 +1,7 @@
 <template>
   <div class="json-config">
     <div
-      v-if="props.fetcherUrl"
+      v-if="props.fetcherUrl && props.config.jsonYamlMilestone2Enabled"
       class="json-endpoint"
     >
       <KBadge :appearance="props.requestMethod">
@@ -29,8 +29,21 @@
 <script setup lang="ts">
 import { computed, type PropType, reactive } from 'vue'
 import type { BadgeAppearance } from '@kong/kongponents/dist/types'
+import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
 
 const props = defineProps({
+  /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+  config: {
+    type: Object as PropType<KonnectBaseEntityConfig | KongManagerBaseEntityConfig | KonnectBaseFormConfig | KongManagerBaseFormConfig>,
+    required: true,
+    validator: (config: KonnectBaseEntityConfig | KongManagerBaseEntityConfig): boolean => {
+      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (config.app === 'konnect' && !config.controlPlaneId) return false
+      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config.entityId) return false
+      return true
+    },
+  },
   fetcherUrl: {
     type: String,
     required: true,
