@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.20.0...@kong-ui-public/analytics-chart@0.21.0) (2023-12-15)
+
+
+### Features
+
+* expose a custom sort function for datasets as they appear in tooltip and legend ([#1007](https://github.com/Kong/public-ui-components/issues/1007)) ([e7f07cf](https://github.com/Kong/public-ui-components/commit/e7f07cf4fa6f2522f3866e4977febd34524fd7fc))
+
+
+
+
+
 # [0.20.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.19.0...@kong-ui-public/analytics-chart@0.20.0) (2023-12-15)
 
 
