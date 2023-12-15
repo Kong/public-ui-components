@@ -1,25 +1,7 @@
 // Cypress component test spec file
 import { ChartMetricDisplay, ChartLegendPosition, ChartTypesSimple } from '../enums/'
 import SimpleChart from './SimpleChart.vue'
-
-const emptyExploreResult = {
-  records: [],
-  meta: {
-    start: 1685452140.987,
-    end: 1685473740.987,
-    queryId: '12345',
-    dimensions: {
-      StatusCode: ['200', '300', '400', '500'],
-    },
-    metricNames: ['TotalRequests'],
-    metricUnits: {
-      TotalRequests: 'requests',
-    },
-    granularity: 3600000,
-    truncated: false,
-    limit: 10,
-  },
-}
+import { emptyExploreResult } from '../../fixtures/mockData'
 
 const exploreResultTruncated = {
   records: [

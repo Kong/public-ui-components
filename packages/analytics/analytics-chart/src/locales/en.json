@@ -12,6 +12,19 @@
     "count/minute": "rpm",
     "requests": "requests"
   },
+  "csvExport" :{
+    "noDataRange": "No data in selected range",
+    "noDataRetry": "Please adjust the time period and try again",
+    "timeRangeSelected": "selected",
+    "defaultFilename": "Chart Export",
+    "exportPreview": "Export Preview",
+    "exportButton": "Export",
+    "exportTimeRange": "Time range",
+    "exportDescription": "Exports a CSV of the data represented in the chart.",
+    "previewRows": "Previewing {rowsMax} of {rowsTotal} row{plural}",
+    "downloadButton": "Export",
+    "cancelButton": "Cancel"
+  },
   "legend": {
     "datapointValueDisplay": "{value} {unit}"
   },

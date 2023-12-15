@@ -113,6 +113,7 @@
 
     <!-- Determine if a full blown chart is to be displayed, or a simplified one -->
     <AnalyticsChart
+      :allow-csv-export="true"
       :chart-data="(exploreResult as AnalyticsExploreV2Result)"
       :chart-options="analyticsChartOptions"
       chart-title="Request count by Status Code"

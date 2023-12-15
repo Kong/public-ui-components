@@ -26,6 +26,26 @@
           </template>
         </KTooltip>
       </div>
+      <div
+        v-if="allowCsvExport && hasValidChartData"
+        class="chart-export-button"
+      >
+        <KButton
+          appearance="tertiary"
+          class="chart-export-button-display"
+          data-testid="csv-export-button"
+          @click.prevent="exportCsv"
+        >
+          {{ i18n.t('csvExport.exportButton') }}
+        </KButton>
+      </div>
+      <CsvExportModal
+        v-if="allowCsvExport && hasValidChartData && exportModalVisible"
+        :chart-data="rawChartData"
+        :filename="csvFilename"
+        :selected-range="selectedRange"
+        @toggle-modal="setModalVisibility"
+      />
     </div>
     <KEmptyState
       v-if="!hasValidChartData"
@@ -99,6 +119,7 @@ import type { AnalyticsChartOptions } from '../types'
 import { ChartTypes, ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
+import CsvExportModal from './CsvExportModal.vue'
 import type { PropType } from 'vue'
 import { computed, provide, ref, toRef, watch } from 'vue'
 import { GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
@@ -109,6 +130,11 @@ import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
 
 const props = defineProps({
+  allowCsvExport: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
   chartData: {
     type: Object as PropType<AnalyticsExploreResult | AnalyticsExploreV2Result>,
     required: true,
@@ -133,7 +159,13 @@ const props = defineProps({
   },
   chartTitle: {
     type: String,
-    required: true,
+    required: false,
+    default: undefined,
+  },
+  filenamePrefix: {
+    type: String,
+    required: false,
+    default: undefined,
   },
   legendPosition: {
     type: String as PropType<`${ChartLegendPosition}`>,
@@ -175,6 +207,7 @@ const props = defineProps({
 
 const { i18n } = composables.useI18n()
 const heightRef = ref<string>(props.height)
+const csvFilename = computed<string>(() => props.filenamePrefix ?? (props.chartTitle || i18n.t('csvExport.defaultFilename')))
 
 const handleHeightUpdate = (height: number) => {
   heightRef.value = `${height}px`
@@ -183,6 +216,8 @@ const handleHeightUpdate = (height: number) => {
 watch(() => props.height, (newHeight) => {
   heightRef.value = newHeight
 })
+
+const rawChartData = toRef(props, 'chartData')
 
 const computedChartData = computed(() => {
   return isTimeSeriesChart.value
@@ -307,6 +342,17 @@ const timeSeriesGranularity = computed<GranularityKeys>(() => {
   return msToGranularity(props.chartData.meta.granularity.duration) || GranularityKeys.HOURLY
 })
 
+// CSV Export Modal
+const exportModalVisible = ref(false)
+const selectedRange = composables.useChartSelectedRange(rawChartData)
+
+const setModalVisibility = (val: boolean) => {
+  exportModalVisible.value = val
+}
+const exportCsv = () => {
+  setModalVisibility(true)
+}
+
 provide('showLegendValues', showLegendValues)
 provide('legendPosition', toRef(props, 'legendPosition'))
 
@@ -328,13 +374,20 @@ provide('legendPosition', toRef(props, 'legendPosition'))
     padding: $kui-space-70 $kui-space-0 $kui-space-60 $kui-space-0;
   }
   .chart-header {
+    align-items: center;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding-bottom: $kui-space-60;
 
     .chart-header-icons-wrapper {
       display: flex;
       justify-content: end;
+    }
+
+    .chart-export-button {
+      display: flex;
+      margin-left: auto;
+      margin-right: 0;
     }
   }
 
