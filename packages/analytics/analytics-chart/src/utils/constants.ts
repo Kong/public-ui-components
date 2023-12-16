@@ -1,16 +1,11 @@
 import { formatInTimeZone } from 'date-fns-tz'
+import type { TimeFormatOptions } from '../types'
 
 export const DECIMAL_DISPLAY = 2
 
 const numberFormatter = new Intl.NumberFormat(document?.documentElement?.lang || 'en-US')
 
 export { numberFormatter }
-
-export interface TimeFormatOptions {
-  includeTZ?: boolean,
-  tz?: string,
-  short?: boolean,
-}
 
 export function formatTime(ts: number, options: TimeFormatOptions = {}) {
   if (!ts) {
