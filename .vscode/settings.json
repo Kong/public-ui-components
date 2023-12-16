@@ -1,8 +1,8 @@
 {
   "markdown.extension.toc.levels": "2..3",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
-    "source.fixAll.stylelint": true
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit"
   },
   "editor.formatOnPaste": true,
   "editor.trimAutoWhitespace": true,
