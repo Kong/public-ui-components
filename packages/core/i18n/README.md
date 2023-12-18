@@ -211,7 +211,7 @@ With pluralization:
   11 version available
 
 With datetime formatting:
-  Nov 30, 2023, 11:40 AM0
+  Nov 30, 2023, 11:40 AM
   Jan 1, 1970, 12:00 AM 
   Nov 30, 2023, 11:40 AM 
 ```
