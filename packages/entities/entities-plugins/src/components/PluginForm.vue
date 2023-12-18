@@ -167,6 +167,12 @@ const props = defineProps({
     default: false,
   },
 
+  /** For Kong Manager portal developers */
+  developer: {
+    type: Boolean,
+    default: false,
+  },
+
   /** Don't render buttons and allow the host app to handle submitting the payload */
   isWizardStep: {
     type: Boolean,
@@ -850,7 +856,7 @@ const validateSubmitUrl = computed((): string => {
  * Build the submit URL
  */
 const submitUrl = computed((): string => {
-  const isScoped = props.config.entityType && props.config.entityId
+  const isScoped = props.config.entityType && props.config.entityId && !props.developer
   // plugin endpoint vs credential endpoint
   const submitEndpoint = !treatAsCredential.value
     ? endpoints.form[props.config.app][formType.value][isScoped ? 'forEntity' : 'all']
