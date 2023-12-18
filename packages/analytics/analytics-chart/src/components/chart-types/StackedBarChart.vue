@@ -359,16 +359,19 @@ const chartWidth = computed(() => {
   return value
 })
 
-watch(() => props.chartData.labels?.length, (numLabels) => {
+const chartHeight = computed(() => {
   let chartHeight = parseInt(props.height, 10)
-  if (numLabels && isHorizontal.value) {
+  if (numLabels.value && isHorizontal.value) {
 
     // The goal is to keep the bar width greater than or roughly equal to the text width.
-    const preferredChartHeight = numLabels * MIN_BAR_HEIGHT
+    const preferredChartHeight = numLabels.value * MIN_BAR_HEIGHT
     chartHeight = Math.max(preferredChartHeight, chartHeight)
   }
+  return chartHeight
+})
 
-  emit('heightUpdate', chartHeight)
+watch(() => chartHeight.value, (height) => {
+  emit('heightUpdate', height)
 })
 
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))
@@ -382,6 +385,10 @@ onMounted(() => {
   if (props.annotations) {
     Chart.register(annotationPlugin)
   }
+
+  window.requestAnimationFrame(() => {
+    emit('heightUpdate', chartHeight.value)
+  })
 })
 
 const options = computed<ChartOptions>(() => {
