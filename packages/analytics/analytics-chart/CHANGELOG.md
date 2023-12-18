@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.22.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.21.0...@kong-ui-public/analytics-chart@0.22.0) (2023-12-18)
+
+
+### Features
+
+* update vue-chartjs version to fix tooltip bug [MA-1926] ([#1013](https://github.com/Kong/public-ui-components/issues/1013)) ([e9a671b](https://github.com/Kong/public-ui-components/commit/e9a671b23838f90f1e29cd3e2852ab3cd1386840))
+
+
+
+
+
 # [0.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.20.0...@kong-ui-public/analytics-chart@0.21.0) (2023-12-15)
 
 
