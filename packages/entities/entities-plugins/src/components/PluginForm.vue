@@ -621,6 +621,8 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       if (scheme.len_min > 0) {
         initialFormSchema[field].submitWhenNull = true
       }
+    } else if (scheme.type === 'foreign') {
+      valueType = 'object'
     } else if (scheme.default && Array.isArray(scheme.default)) {
       valueType = 'array'
       initialFormSchema[field].valueArrayType = getArrayType(scheme.default)

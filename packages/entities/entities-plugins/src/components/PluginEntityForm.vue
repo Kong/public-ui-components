@@ -415,6 +415,9 @@ const getModel = (): Record<string, any> => {
 // fired whenever the form data is modified
 const onModelUpdated = (model: Record<string, any>, schema: string) => {
   const newData = { [schema]: model }
+  if (typeof props.schema[schema]?.modelTransformer === 'function') {
+    newData[schema] = props.schema[schema].modelTransformer(model)
+  }
   const newModel = Object.assign({}, formModel, newData)
 
   Object.assign(formModel, newModel)
@@ -432,14 +435,23 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
     let modelKey = parent ? `${parent}-${key}` : key
     let scheme = props.schema[modelKey]
 
-    // If `scheme` is undefined, it is either because the key is not the deepest nested key of the schema object
-    // or the field name has dashes in it and its schema key was converted to underscores during initiation.
+    // If `scheme` is undefined, it is because
+    // 1. the key is not the deepest nested key of the schema object
+    // 2. or the field name has dashes in it and its schema key was converted to underscores during initiation
+    // 3. or `parent` is already a schema key and `key` is a nested key of its value object
+    // For reasons 2 and 3, we need special logic to find the correct schema key
     if (!scheme) {
       const underscoredModelKey = parent ? `${parent}-${key.replace(/-/g, '_')}` : key.replace(/-/g, '_')
 
       // Here we check if the underscored key exists in the schema and the `fieldNameHasDashes` flag is true
       if (props.schema[underscoredModelKey]?.fieldNameHasDashes) {
         modelKey = underscoredModelKey
+        scheme = props.schema[modelKey]
+      }
+
+      // Here we check if `parent` is a schema key and `key` is a nested key of its value object
+      if (parent && props.schema[parent]?.keyFromObject === key) {
+        modelKey = parent
         scheme = props.schema[modelKey]
       }
     }
