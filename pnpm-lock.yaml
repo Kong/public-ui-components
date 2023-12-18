@@ -240,8 +240,8 @@ importers:
         specifier: ^9.0.1
         version: 9.0.1
       vue-chartjs:
-        specifier: ^5.2.0
-        version: 5.2.0(chart.js@4.4.0)(vue@3.3.11)
+        specifier: ^5.3.0
+        version: 5.3.0(chart.js@4.4.0)(vue@3.3.11)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -14395,8 +14395,8 @@ packages:
     resolution: {integrity: sha512-AFbieoL7a5LMqcnOF04ji+rpXadgOXnZsxQr//r83kLPr7biP7am3g9zbaZIaBGwBRWeSvoMD4mgPdX3e4NWBg==}
     dev: true
 
-  /vue-chartjs@5.2.0(chart.js@4.4.0)(vue@3.3.11):
-    resolution: {integrity: sha512-d3zpKmGZr2OWHQ1xmxBcAn5ShTG917+/UCLaSpaCDDqT0U7DBsvFzTs69ZnHCgKoXT55GZDW8YEj9Av+dlONLA==}
+  /vue-chartjs@5.3.0(chart.js@4.4.0)(vue@3.3.11):
+    resolution: {integrity: sha512-8XqX0JU8vFZ+WA2/knz4z3ThClduni2Nm0BMe2u0mXgTfd9pXrmJ07QBI+WAij5P/aPmPMX54HCE1seWL37ZdQ==}
     peerDependencies:
       chart.js: ^4.1.1
       vue: ^3.0.0-0 || ^2.7.0
