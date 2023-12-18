@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.22.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.22.0...@kong-ui-public/analytics-chart@0.22.1) (2023-12-18)
+
+
+### Bug Fixes
+
+* reactivity issue in computing the chart height ([#1014](https://github.com/Kong/public-ui-components/issues/1014)) ([338d7c3](https://github.com/Kong/public-ui-components/commit/338d7c3ec0b43700ee4032bef2a64cffdf3c083d))
+
+
+
+
+
 # [0.22.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.21.0...@kong-ui-public/analytics-chart@0.22.0) (2023-12-18)
 
 
