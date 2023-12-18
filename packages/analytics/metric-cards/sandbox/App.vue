@@ -75,7 +75,7 @@
 
 <script setup lang="ts">
 import { MetricCardContainer } from '../src'
-import { DECIMAL_DISPLAY, metricChange } from '../src/utilities'
+import { DECIMAL_DISPLAY_CARDS, metricChange } from '../src/utilities'
 import type { MetricCardContainerOptions } from '../src/types'
 import { MetricCardType } from '../src/enums'
 import { MetricCardSize } from '../src/constants'
@@ -96,7 +96,7 @@ const cards = [
     currentValue: 30.1448979685401,
     previousValue: 30.1891166494617,
     formatChangeFn: val => `${metricChange(val * 100, true, 'N/A')}`,
-    formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
+    formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY_CARDS)}%`,
     title: 'Error Rate',
     description: 'Rate of requests that ended up in a 5xx response',
     increaseIsBad: true,

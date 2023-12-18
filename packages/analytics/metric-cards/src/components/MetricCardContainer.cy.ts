@@ -1,7 +1,7 @@
 // Cypress component test spec file
 
 import MetricCardContainer from './MetricCardContainer.vue'
-import { DECIMAL_DISPLAY } from '../utilities'
+import { DECIMAL_DISPLAY_CARDS } from '../utilities'
 import { MetricCardType } from '../enums'
 import { MetricCardSize } from '../constants'
 
@@ -20,7 +20,7 @@ const cards = [
     cardType: MetricCardType.ERROR_RATE,
     currentValue: 0.3014489796854011,
     previousValue: 0.29789116649461733,
-    formatValueFn: (val: number) => `${val.toFixed(DECIMAL_DISPLAY)}%`,
+    formatValueFn: (val: number) => `${val.toFixed(DECIMAL_DISPLAY_CARDS)}%`,
     title: 'Average Error Rate',
     increaseIsBad: true,
     trendRange: TREND_RANGE_TEXT,
@@ -101,7 +101,7 @@ describe('<MetricCardContainer />', () => {
             cardType: MetricCardType.ERROR_RATE,
             currentValue: 0.3012,
             previousValue: 0.3013,
-            formatValueFn: (val: number) => `${val.toFixed(DECIMAL_DISPLAY)}%`,
+            formatValueFn: (val: number) => `${val.toFixed(DECIMAL_DISPLAY_CARDS)}%`,
             title: 'Average Error Rate',
             increaseIsBad: true,
           },
@@ -133,7 +133,7 @@ describe('<MetricCardContainer />', () => {
             cardType: MetricCardType.ERROR_RATE,
             currentValue: 0.30171,
             previousValue: 0.3017,
-            formatValueFn: (val: number) => `${val.toFixed(DECIMAL_DISPLAY)}%`,
+            formatValueFn: (val: number) => `${val.toFixed(DECIMAL_DISPLAY_CARDS)}%`,
             title: 'Average Error Rate',
             increaseIsBad: true,
           },

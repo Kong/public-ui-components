@@ -8,10 +8,10 @@ import type {
 } from '@kong/icons'
 
 // Used to render a percentage display (eg: 30.97%)
-export const DECIMAL_DISPLAY = 2
+export const DECIMAL_DISPLAY_CARDS = 2
 
 // Rounding precision for raw values (eg: 0.3097)
-export const DECIMAL_ROUNDING_PRECISION = DECIMAL_DISPLAY + 2
+export const DECIMAL_ROUNDING_PRECISION = DECIMAL_DISPLAY_CARDS + 2
 
 /**
  * Beneficial increase (eg: Traffic) is considered good.
@@ -43,7 +43,7 @@ export const changePolarity = (delta: number, hasTrendAccess: boolean, thisIsBad
  */
 export const metricChange = (delta: number, hasTrendAccess: boolean, fallback: string): string => {
   return hasTrendAccess
-    ? `${Math.abs(delta * 100).toFixed(DECIMAL_DISPLAY)}%`
+    ? `${Math.abs(delta * 100).toFixed(DECIMAL_DISPLAY_CARDS)}%`
     : fallback
 }
 

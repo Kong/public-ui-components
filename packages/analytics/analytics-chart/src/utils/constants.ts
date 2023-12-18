@@ -1,6 +1,6 @@
 import { formatInTimeZone } from 'date-fns-tz'
 
-export const DECIMAL_DISPLAY = 2
+export const DECIMAL_DISPLAY_CHARTS = 2
 
 const numberFormatter = new Intl.NumberFormat(document?.documentElement?.lang || 'en-US')
 
