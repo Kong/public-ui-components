@@ -401,6 +401,7 @@ const formatPluginFieldLabel = (label: string) => {
 const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>) => {
   let schema = (response && response.fields) || []
   const pluginSchema = customSchemas[props.pluginType as keyof typeof customSchemas]
+  const credentialSchema = credentialMetaData[props.pluginType]?.schema?.fields
 
   // schema can either be an object or an array of objects. If it's an array, convert it to an object
   if (Array.isArray(schema)) {
@@ -580,6 +581,18 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         }
       }
 
+    }
+
+    if (treatAsCredential.value && props.config.app === 'kongManager' && credentialSchema) {
+      for (let i = 0; i < credentialSchema.length; i++) {
+        if (credentialSchema[i][field]) {
+          initialFormSchema[field] = {
+            ...initialFormSchema[field],
+            ...credentialSchema[i][field],
+          }
+          break
+        }
+      }
     }
 
     // required fields, if it's boolean (a checkbox) it will be marked as required even though it isn't

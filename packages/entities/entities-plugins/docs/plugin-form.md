@@ -119,6 +119,14 @@ Manually toggle visibility of plugin scope selection control.
 
 A boolean indicating whether the form is being used to create a plugin or an auth credential.
 
+#### `developer`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+*Specific to Kong Manager*. A boolean indicating whether the form is being used to create or update a plugin for a portal developer.
+
 #### `isWizardStep`
 
 - type: `Boolean`
