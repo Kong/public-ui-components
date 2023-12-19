@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.23.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.23.1...@kong-ui-public/analytics-chart@0.23.2) (2023-12-19)
+
+
+### Bug Fixes
+
+* take into account margin between bars for height calc [MA-2409] ([#1019](https://github.com/Kong/public-ui-components/issues/1019)) ([108c812](https://github.com/Kong/public-ui-components/commit/108c812265d204d74c097b21fabaca8d246755f9))
+
+
+
+
+
 ## [0.23.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.23.0...@kong-ui-public/analytics-chart@0.23.1) (2023-12-19)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
