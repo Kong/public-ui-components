@@ -2,6 +2,12 @@ export interface CsvKeyValuePair {
   [key: string]: string
 }
 
+export interface TimeFormatOptions {
+  includeTZ?: boolean
+  tz?: string
+  short?: boolean
+}
+
 export enum ValidType {
   String = 'string',
   Number = 'number',
