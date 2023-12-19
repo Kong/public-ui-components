@@ -142,6 +142,7 @@ const props = defineProps({
 const emit = defineEmits(['heightUpdate'])
 
 const { i18n } = composables.useI18n()
+const { translateUnit } = composables.useTranslatedUnits()
 
 // https://www.chartjs.org/chartjs-plugin-annotation/latest/guide/types/label.html#label-annotation-specific-options
 const LABEL_PADDING = 6
@@ -224,10 +225,6 @@ const axesTooltip = ref<AxesTooltipState>({
   offset: 0,
 })
 const unitsRef = toRef(props, 'metricUnit')
-const translatedUnits = computed(() => {
-  // @ts-ignore - dynamic i18n key
-  return unitsRef.value && i18n.t(`chartUnits.${unitsRef.value}`)
-})
 
 const isHorizontal = computed(() => toRef(props, 'orientation').value === 'horizontal')
 
@@ -237,7 +234,8 @@ const tooltipData: TooltipState = reactive({
   tooltipSeries: [],
   left: '',
   top: '',
-  units: translatedUnits,
+  units: unitsRef,
+  translateUnit,
   offset: 0,
   width: 0,
   height: 0,

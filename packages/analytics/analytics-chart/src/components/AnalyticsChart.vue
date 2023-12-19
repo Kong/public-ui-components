@@ -293,7 +293,8 @@ const metricAxesTitle = computed<string | undefined>(() => {
   // @ts-ignore - dynamic i18n key
   return props.chartOptions?.metricAxesTitle || (i18n.te(`metricAxisTitles.${metricName}`) && i18n.te(`chartUnits.${metricUnit}`) &&
     // @ts-ignore - dynamic i18n key
-    i18n.t(`metricAxisTitles.${metricName}`, { unit: i18n.t(`chartUnits.${metricUnit}`) })) || undefined
+    // Metric units are always pluralized on the axis.
+    i18n.t(`metricAxisTitles.${metricName}`, { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })) || undefined
 })
 
 const dimensionAxesTitle = computed<string | undefined>(() => {
