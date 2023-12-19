@@ -129,6 +129,7 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
             drawBorder: false,
           },
           ticks: {
+            font: { size: 11 },
             callback: function(value: string, index: number): string {
               const that = this as unknown as CategoryScale
 
