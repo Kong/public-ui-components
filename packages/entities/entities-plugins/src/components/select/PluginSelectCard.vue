@@ -3,27 +3,39 @@
     :label="plugin.disabledMessage"
     position-fixed
   >
-    <KCard
-      class="plugin-card-content"
-      :class="{ disabled: isDisabled }"
+    <div
+      class="plugin-select-card"
+      :class="{ 'disabled': isDisabled }"
       :data-testid="`${plugin.id}-card`"
+      role="button"
       :title="plugin.name"
       @click="isDisabled || isCustomPlugin ? undefined : handleClick()"
     >
-      <template
-        v-if="isCustomPlugin && !isCreateCustomPlugin"
-        #footer
-      >
-        <div class="header-wrapper">
-          <KBadge v-if="!isCreateCustomPlugin">
-            {{ t('plugins.select.custom_badge_text') }}
-          </KBadge>
+    <div class="plugin-card-header">
+      <div class="plugin-card-title">
+        <span :class="{ 'non-custom-title': !isCustomPlugin }">
+          {{ plugin.name }}
+        </span>
+        <div
+          v-if="isCustomPlugin && !isCreateCustomPlugin"
+          class="custom-plugin-card-header"
+        >
+          <div class="header-wrapper">
+            <KBadge
+            v-if="!isCreateCustomPlugin"
+            max-width="100"
+            truncation-tooltip
+            :tooltip="t('plugins.select.custom_badge_text')"
+            >
+              {{ t('plugins.select.custom_badge_text') }}
+            </KBadge>
+          </div>
         </div>
-      </template>
+      </div>
 
-      <template
+      <div
         v-if="hasActions"
-        #actions
+        class="plugin-card-actions"
       >
         <KDropdownMenu
           data-testid="custom-plugin-actions"
@@ -62,7 +74,8 @@
             </KDropdownItem>
           </template>
         </KDropdownMenu>
-      </template>
+      </div>
+    </div>
 
       <div
         class="plugin-card-body"
@@ -80,6 +93,7 @@
         <p
           v-if="plugin.description"
           class="plugin-card-text"
+          :title="plugin.description"
         >
           {{ plugin.description }}
         </p>
@@ -93,7 +107,7 @@
       >
         {{ isCreateCustomPlugin ? t('actions.create_custom') : plugin.exists ? t('actions.enabled') : t('actions.enable') }}
       </div>
-    </KCard>
+    </div>
   </KTooltip>
 </template>
 
@@ -206,44 +220,78 @@ const handleCustomClick = (): void => {
 </script>
 
 <style lang="scss" scoped>
-.plugin-card,
-.plugin-card-content {
+.plugin-select-card {
+  border: $kui-border-width-10 solid $kui-color-border;
+  border-radius: $kui-border-radius-30;
+  box-sizing: border-box;
   color: initial;
   cursor: pointer;
   display: flex;
   flex-basis: 100%;
-  flex-flow: row-wrap;
+  flex-direction: column;
+  gap: $kui-space-70;
   max-width: 335px;
   overflow: hidden;
+  padding: $kui-space-70 $kui-space-70 0;
 
-  .plugin-card-body {
-    align-items: center;
+  &:hover {
+    box-shadow: 0 0 5px rgba(33,33,33,.2);
+  }
+
+  .plugin-card-header {
     display: flex;
-    flex-direction: column;
+
+    .plugin-card-title {
+      color: $kui-color-text;
+      display: flex;
+      font-size: $kui-font-size-50;
+      font-weight: $kui-font-weight-bold;
+      letter-spacing: $kui-letter-spacing-minus-30;
+      line-height: $kui-line-height-40;
+      width: 100%;
+
+      .non-custom-title {
+        text-align: center;
+        width: 100%;
+      }
+
+      .header-wrapper {
+        // maintain the specified height if slot has no content
+        margin-left: $kui-space-30;
+        min-height: 25px;
+      }
+    }
+
+    .plugin-card-actions {
+      margin-left: auto;
+    }
+
+    .actions-trigger {
+      color: $kui-color-text-neutral-stronger;
+    }
   }
 
-  .actions-trigger {
-    color: $kui-color-text-neutral-stronger;
-  }
-
-  .header-wrapper {
-    // maintain the specified height if slot has no content
-    min-height: 25px;
-  }
-
-  &-icon {
+  .plugin-card-icon {
     margin-bottom: $kui-space-60;
   }
 
-  &-text {
+  .plugin-card-text {
     color: $kui-color-text;
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-regular;
+    // truncate
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
-  &-body {
+  .plugin-card-body {
+    align-items: center;
     background-color: $kui-color-background;
+    display: flex;
     flex: 1;
+    flex-direction: column;
     padding: $kui-space-60;
 
     &.custom-plugin {
@@ -251,22 +299,26 @@ const handleCustomClick = (): void => {
     }
   }
 
-  &-footer {
+  .plugin-card-footer {
     background-color: $kui-color-background-primary-weakest;
     border-radius: $kui-border-radius-30;
     color: $kui-color-text-primary;
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-semibold;
+    margin: 0 calc(-1 * $kui-space-70);
     padding: $kui-space-60;
+    text-align: center;
   }
 
-  &-create-footer {
+  .plugin-card-create-footer {
     background-color: $kui-color-background-primary;
     border-radius: $kui-border-radius-30;
     color: $kui-color-text-inverse;
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-semibold;
+    margin: 0 calc(-1 * $kui-space-70);
     padding: $kui-space-60;
+    text-align: center;
   }
 
   &.disabled * {
