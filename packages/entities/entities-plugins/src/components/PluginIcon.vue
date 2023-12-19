@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import composables from '../composables'
 
 const props = defineProps({
@@ -30,21 +30,21 @@ const props = defineProps({
   },
 })
 
-const defaultIcon = computed((): string => {
-  try {
-    return new URL('../assets/images/plugin-icons/missing.png', import.meta.url).href
-  } catch (err) {
-    return ''
-  }
-})
+const defaultIcon = ref('')
+const src = ref('')
 const img = ref<HTMLImageElement>()
-const src = computed((): string => {
-  try {
-    return composables.getPluginIconURL(props.name)
-  } catch (err) {
-    return defaultIcon.value
-  }
-})
+
+try {
+  defaultIcon.value = new URL('../assets/images/plugin-icons/missing.png', import.meta.url).href
+} catch (err) {
+  defaultIcon.value = ''
+}
+
+try {
+  src.value = composables.getPluginIconURL(props.name)
+} catch (err) {
+  src.value = defaultIcon.value
+}
 
 const onError = (): void => {
   if (img.value && defaultIcon.value) {
