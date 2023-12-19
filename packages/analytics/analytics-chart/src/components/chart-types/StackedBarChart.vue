@@ -366,8 +366,6 @@ const chartHeight = computed(() => {
 
     // The goal is to keep the bar width greater than or roughly equal to the text width.
     const preferredChartHeight = numLabels.value * (MIN_BAR_HEIGHT + BAR_MARGIN)
-    console.log(' >>> preferredChartHeight >> ', preferredChartHeight)
-    console.log(' >>> chartHeight >> ', chartHeight)
     chartHeight = Math.max(preferredChartHeight, chartHeight)
   }
   return chartHeight
