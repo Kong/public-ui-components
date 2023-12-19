@@ -9,6 +9,7 @@ import composables from '../composables'
 
 export default function useChartLegendValues(chartData: Ref<KChartData>, chartType: ChartTypes | ChartTypesSimple, metricUnit: Ref<string>) {
   const { i18n } = composables.useI18n()
+  const { translateUnit } = composables.useTranslatedUnits()
   const legendValues = computed<LegendValues>(() => {
     return chartData.value.datasets.reduce((a, v) => {
       const raw = v.total
@@ -22,10 +23,8 @@ export default function useChartLegendValues(chartData: Ref<KChartData>, chartTy
       if (metricUnit.value === 'bytes') {
         formatted = isNaN(raw) ? '0' : prettyBytes(raw)
       } else {
-        formatted = `${approxNum(raw, { capital: true })} ${metricUnit.value}`
-
         // @ts-ignore - dynamic i18n key
-        const unitValue = (metricUnit.value && i18n && i18n.te(`chartUnits.${metricUnit.value}`) && i18n.t(`chartUnits.${metricUnit.value}`)) || metricUnit.value
+        const unitValue = translateUnit(metricUnit.value, raw)
         formatted = (i18n && i18n.t('legend.datapointValueDisplay', {
           value: approxNum(raw, { capital: true }),
           unit: unitValue,

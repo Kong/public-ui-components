@@ -7,10 +7,10 @@
   "total": "Total",
   "chartUnits": {
     "ms": "ms",
-    "bytes": "Bytes",
-    "count": "requests",
+    "bytes": "Byte{plural}",
+    "count": "request{plural}",
     "count/minute": "rpm",
-    "requests": "requests"
+    "requests": "request{plural}"
   },
   "csvExport" :{
     "noDataRange": "No data in selected range",

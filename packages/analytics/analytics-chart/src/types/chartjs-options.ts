@@ -19,7 +19,8 @@ export interface TooltipState {
   tooltipSeries: Array<TooltipEntry>,
   left: string,
   top: string,
-  units: string,
+  units: string, // units are untranslated
+  translateUnit: (unit: string, value: number) => string,
   offset: number,
   width: number,
   height: number
