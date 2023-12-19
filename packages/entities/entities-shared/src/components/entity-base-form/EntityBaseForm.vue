@@ -50,7 +50,7 @@
               <KButton
                 appearance="tertiary"
                 data-testid="form-view-configuration"
-                @click="toggle"
+                @click.prevent="toggle"
               >
                 {{ t('baseForm.actions.viewConfiguration') }}
               </KButton>
@@ -74,12 +74,12 @@
                     <JsonCodeBlock
                       :config="config"
                       :fetcher-url="fetcherUrl"
-                      :json-record="formFields"
+                      :json-record="jsonOrYamlRecord"
                       :request-method="props.editId ? 'put' : 'post'"
                     />
                   </template>
                   <template #yaml>
-                    <YamlCodeBlock :yaml-record="formFields" />
+                    <YamlCodeBlock :yaml-record="jsonOrYamlRecord" />
                   </template>
                 </KTabs>
               </KSlideout>
@@ -196,6 +196,17 @@ const fetchDetailsError = ref(false)
 const fetchErrorMessage = ref('')
 const disableSave = computed((): boolean => props.canSubmit === false || props.isReadonly)
 
+const jsonOrYamlRecord = computed((): PropType<Record<string, any>> => {
+  if (!props.formFields) {
+    return props.formFields
+  }
+  const processedRecord = JSON.parse(JSON.stringify(props.formFields))
+  // api requires default value for tags to be empty array
+  if (processedRecord.tags === '') {
+    processedRecord.tags = []
+  }
+  return processedRecord
+})
 /**
  * Build the fetcher URL
  */

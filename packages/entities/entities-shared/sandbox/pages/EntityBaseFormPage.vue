@@ -4,6 +4,7 @@
       :can-submit="canSubmit"
       :config="konnectConfig"
       :error-message="form.errorMessage"
+      :fetch-url="konnectFetchUrl"
       :form-fields="form.fields"
       :is-readonly="form.isReadonly"
       @cancel="handleCancel"
@@ -47,6 +48,7 @@ import type { KonnectBaseFormConfig } from '../../src'
 import { EntityBaseForm, EntityFormSection } from '../../src'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
+const konnectFetchUrl = ref(`/api/runtime_groups/${controlPlaneId}/services`)
 
 const konnectConfig = ref<KonnectBaseFormConfig>({
   app: 'konnect',

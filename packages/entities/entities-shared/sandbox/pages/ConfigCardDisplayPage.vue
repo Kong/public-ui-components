@@ -10,7 +10,7 @@
     <h2>Format: JSON</h2>
     <ConfigCardDisplay
       :config="konnectConfig"
-      fetcher-url="https://cloud.konghq.com/us/gateway-manager/91e192e0-5981-4662-a37d-7b24272c9da3/routes/0af86198-9822-46e0-9028-47b173caf4aa"
+      :fetcher-url="`${konnectConfig?.apiBaseUrl}${konnectFetchUrl}`"
       format="json"
       :record="record"
     />
@@ -31,6 +31,7 @@ import type { KonnectBaseEntityConfig } from '../../src'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const entityId = 'ce83dd74-6455-40a9-b944-0f393c7ee22c'
+const konnectFetchUrl = ref(`/api/runtime_groups/${controlPlaneId}/services/${entityId}`)
 
 const konnectConfig = ref<KonnectBaseEntityConfig>({
   app: 'konnect',
