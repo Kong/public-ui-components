@@ -31,6 +31,7 @@ export interface TooltipState {
 interface BaseChartOptions {
   tooltipState: TooltipState,
   legendID: string,
+  numLabels: Ref<number>, // number of Y axis labels in dataset
   stacked: Ref<boolean>, // stacked true or false
   metricAxesTitle?: Ref<string>, // metric axes title to display
   dimensionAxesTitle?: Ref<string> // dimension axes title to display

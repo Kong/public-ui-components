@@ -400,6 +400,7 @@ const options = computed<ChartOptions>(() => {
     metricAxesTitle: toRef(props, 'metricAxesTitle'),
     dimensionAxesTitle: toRef(props, 'dimensionAxesTitle'),
     indexAxis: isHorizontal.value ? 'y' : 'x',
+    numLabels,
   })
   return {
     ...defaultOptions.value,
