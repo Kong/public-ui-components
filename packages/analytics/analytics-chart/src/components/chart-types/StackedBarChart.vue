@@ -155,6 +155,7 @@ const SCROLL_MIN = 0
 const SCROLL_MAX = 10
 const AXIS_BOTTOM_OFFSET = 10
 const AXIS_RIGHT_PADDING = 1
+const BAR_MARGIN = 4
 
 const totalValueOfDataset = ({ chart }: EventContext, label: string) => {
   const chartData: BarChartData = chart.data as BarChartData
@@ -364,7 +365,7 @@ const chartHeight = computed(() => {
   if (numLabels.value && isHorizontal.value) {
 
     // The goal is to keep the bar width greater than or roughly equal to the text width.
-    const preferredChartHeight = numLabels.value * MIN_BAR_HEIGHT
+    const preferredChartHeight = numLabels.value * (MIN_BAR_HEIGHT + BAR_MARGIN)
     chartHeight = Math.max(preferredChartHeight, chartHeight)
   }
   return chartHeight
