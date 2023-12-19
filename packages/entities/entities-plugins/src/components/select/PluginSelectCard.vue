@@ -11,71 +11,71 @@
       :title="plugin.name"
       @click="isDisabled || isCustomPlugin ? undefined : handleClick()"
     >
-    <div class="plugin-card-header">
-      <div class="plugin-card-title">
-        <span :class="{ 'non-custom-title': !isCustomPlugin }">
-          {{ plugin.name }}
-        </span>
-        <div
-          v-if="isCustomPlugin && !isCreateCustomPlugin"
-          class="custom-plugin-card-header"
-        >
-          <div class="header-wrapper">
-            <KBadge
-            v-if="!isCreateCustomPlugin"
-            max-width="100"
-            truncation-tooltip
-            :tooltip="t('plugins.select.custom_badge_text')"
-            >
-              {{ t('plugins.select.custom_badge_text') }}
-            </KBadge>
+      <div class="plugin-card-header">
+        <div class="plugin-card-title">
+          <span :class="{ 'non-custom-title': !isCustomPlugin }">
+            {{ plugin.name }}
+          </span>
+          <div
+            v-if="isCustomPlugin && !isCreateCustomPlugin"
+            class="custom-plugin-card-header"
+          >
+            <div class="header-wrapper">
+              <KBadge
+                v-if="!isCreateCustomPlugin"
+                max-width="100"
+                :tooltip="t('plugins.select.custom_badge_text')"
+                truncation-tooltip
+              >
+                {{ t('plugins.select.custom_badge_text') }}
+              </KBadge>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div
-        v-if="hasActions"
-        class="plugin-card-actions"
-      >
-        <KDropdownMenu
-          data-testid="custom-plugin-actions"
-          :kpop-attributes="{ placement: 'bottomEnd' }"
-          width="150"
+        <div
+          v-if="hasActions"
+          class="plugin-card-actions"
         >
-          <template #default>
-            <KButton
-              appearance="tertiary"
-              class="actions-trigger"
-              data-testid="overflow-actions-button"
-              size="small"
-            >
-              <template #icon>
-                <MoreIcon :size="KUI_ICON_SIZE_30" />
-              </template>
-            </KButton>
-          </template>
+          <KDropdownMenu
+            data-testid="custom-plugin-actions"
+            :kpop-attributes="{ placement: 'bottomEnd' }"
+            width="150"
+          >
+            <template #default>
+              <KButton
+                appearance="tertiary"
+                class="actions-trigger"
+                data-testid="overflow-actions-button"
+                size="small"
+              >
+                <template #icon>
+                  <MoreIcon :size="KUI_ICON_SIZE_30" />
+                </template>
+              </KButton>
+            </template>
 
-          <template #items>
-            <KDropdownItem
-              v-if="canDeleteCustomPlugin"
-              data-testid="edit-plugin-schema"
-              @click.stop="handleCustomEdit(plugin.name)"
-            >
-              {{ t('actions.edit') }}
-            </KDropdownItem>
-            <KDropdownItem
-              v-if="canDeleteCustomPlugin"
-              danger
-              data-testid="delete-plugin-schema"
-              has-divider
-              @click.stop="handleCustomDelete"
-            >
-              {{ t('actions.delete') }}
-            </KDropdownItem>
-          </template>
-        </KDropdownMenu>
+            <template #items>
+              <KDropdownItem
+                v-if="canDeleteCustomPlugin"
+                data-testid="edit-plugin-schema"
+                @click.stop="handleCustomEdit(plugin.name)"
+              >
+                {{ t('actions.edit') }}
+              </KDropdownItem>
+              <KDropdownItem
+                v-if="canDeleteCustomPlugin"
+                danger
+                data-testid="delete-plugin-schema"
+                has-divider
+                @click.stop="handleCustomDelete"
+              >
+                {{ t('actions.delete') }}
+              </KDropdownItem>
+            </template>
+          </KDropdownMenu>
+        </div>
       </div>
-    </div>
 
       <div
         class="plugin-card-body"
@@ -236,6 +236,7 @@ const handleCustomClick = (): void => {
 
   &:hover {
     box-shadow: 0 0 5px rgba(33,33,33,.2);
+    text-decoration: none;
   }
 
   .plugin-card-header {
@@ -276,13 +277,13 @@ const handleCustomClick = (): void => {
   }
 
   .plugin-card-text {
+    -webkit-box-orient: vertical;
     color: $kui-color-text;
-    font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-regular;
     // truncate
     display: -webkit-box;
+    font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-regular;
     -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
@@ -325,10 +326,6 @@ const handleCustomClick = (): void => {
     cursor: not-allowed;
     filter: grayscale(100%);
     opacity: 0.9;
-  }
-
-  &:hover {
-    text-decoration: none;
   }
 
   @media (min-width: $kui-breakpoint-phablet) {
