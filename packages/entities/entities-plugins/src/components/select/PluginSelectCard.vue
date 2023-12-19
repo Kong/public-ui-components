@@ -3,7 +3,7 @@
     :label="plugin.disabledMessage"
     position-fixed
   >
-    <div
+    <a
       class="plugin-select-card"
       :class="{ 'disabled': isDisabled }"
       :data-testid="`${plugin.id}-card`"
@@ -106,7 +106,7 @@
       >
         {{ isCreateCustomPlugin ? t('actions.create_custom') : plugin.exists ? t('actions.enabled') : t('actions.enable') }}
       </div>
-    </div>
+    </a>
   </KTooltip>
 </template>
 
