@@ -32,6 +32,10 @@ const props = defineProps({
 const src = ref(composables.getPluginIconURL(props.name))
 
 const onError = (): void => {
-  src.value = ''
+  try {
+    src.value = new URL('../assets/images/plugin-icons/missing.png', import.meta.url).href
+  } catch (err) {
+    src.value = ''
+  }
 }
 </script>

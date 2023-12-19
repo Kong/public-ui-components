@@ -15,21 +15,6 @@
           <span :class="{ 'non-custom-title': !isCustomPlugin }">
             {{ plugin.name }}
           </span>
-          <div
-            v-if="isCustomPlugin && !isCreateCustomPlugin"
-            class="custom-plugin-card-header"
-          >
-            <div class="header-wrapper">
-              <KBadge
-                v-if="!isCreateCustomPlugin"
-                max-width="100"
-                :tooltip="t('plugins.select.custom_badge_text')"
-                truncation-tooltip
-              >
-                {{ t('plugins.select.custom_badge_text') }}
-              </KBadge>
-            </div>
-          </div>
         </div>
 
         <div
@@ -89,19 +74,25 @@
           :name="plugin.imageName || plugin.id"
           :size="55"
         />
-        <p
-          v-if="plugin.description"
+        <div
+          v-if="plugin.description || (isCustomPlugin && !isCreateCustomPlugin)"
           class="plugin-card-text"
-          :title="plugin.description"
         >
-          {{ plugin.description }}
-        </p>
+          <p v-if="isCustomPlugin && !isCreateCustomPlugin">
+            {{ t('plugins.select.custom_badge_text') }}
+          </p>
+
+          <p
+            v-if="plugin.description"
+            class="plugin-card-text"
+            :title="plugin.description"
+          >
+            {{ plugin.description }}
+          </p>
+        </div>
       </div>
       <div
-        :class="{
-          'plugin-card-create-footer': isCreateCustomPlugin,
-          'plugin-card-footer': !isCreateCustomPlugin,
-        }"
+        class="plugin-card-footer"
         @click="handleCustomClick"
       >
         {{ isCreateCustomPlugin ? t('actions.create_custom') : plugin.exists ? t('actions.enabled') : t('actions.enable') }}
@@ -254,12 +245,6 @@ const handleCustomClick = (): void => {
         text-align: center;
         width: 100%;
       }
-
-      .header-wrapper {
-        // maintain the specified height if slot has no content
-        margin-left: $kui-space-30;
-        min-height: 25px;
-      }
     }
 
     .plugin-card-actions {
@@ -303,17 +288,6 @@ const handleCustomClick = (): void => {
     background-color: $kui-color-background-primary-weakest;
     border-radius: $kui-border-radius-30;
     color: $kui-color-text-primary;
-    font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-semibold;
-    margin: 0 calc(-1 * $kui-space-70);
-    padding: $kui-space-60;
-    text-align: center;
-  }
-
-  .plugin-card-create-footer {
-    background-color: $kui-color-background-primary;
-    border-radius: $kui-border-radius-30;
-    color: $kui-color-text-inverse;
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-semibold;
     margin: 0 calc(-1 * $kui-space-70);

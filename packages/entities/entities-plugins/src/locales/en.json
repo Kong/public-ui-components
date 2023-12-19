@@ -422,7 +422,7 @@
       "consumer_group": "Consumer Group ID"
     },
     "select": {
-      "custom_badge_text": "Data Plane Node Specific",
+      "custom_badge_text": "This plugin is data plane node specific",
       "unavailable_tooltip": "This plugin is not available",
       "already_exists": "This plugin is already applied to this resource",
       "misc_plugins": "Other Plugins",
