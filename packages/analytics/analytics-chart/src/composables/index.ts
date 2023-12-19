@@ -8,6 +8,7 @@ import useLinechartOptions from './useLineChartOptions'
 import useExploreResultToDatasets from './useExploreResultToDatasets'
 import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
 import useReportChartDataForSynthetics from './useReportChartDataForSynthetics'
+import useTranslatedUnits from './useTranslatedUnits'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -21,4 +22,5 @@ export default {
   useLinechartOptions,
   useI18n,
   useReportChartDataForSynthetics,
+  useTranslatedUnits,
 }
