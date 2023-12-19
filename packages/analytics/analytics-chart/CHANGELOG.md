@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.23.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.22.1...@kong-ui-public/analytics-chart@0.23.0) (2023-12-19)
+
+
+### Features
+
+* export format time from analytics-chart ([#1011](https://github.com/Kong/public-ui-components/issues/1011)) ([e24bc73](https://github.com/Kong/public-ui-components/commit/e24bc7337a74e2b4a4d181846ecfe1f51e058d76))
+
+
+
+
+
 ## [0.22.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.22.0...@kong-ui-public/analytics-chart@0.22.1) (2023-12-18)
 
 
