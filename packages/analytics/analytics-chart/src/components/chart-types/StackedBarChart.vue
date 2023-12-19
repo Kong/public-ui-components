@@ -156,7 +156,7 @@ const SCROLL_MIN = 0
 const SCROLL_MAX = 10
 const AXIS_BOTTOM_OFFSET = 10
 const AXIS_RIGHT_PADDING = 1
-const BAR_MARGIN = 10
+const BAR_MARGIN = 6
 
 const totalValueOfDataset = ({ chart }: EventContext, label: string) => {
   const chartData: BarChartData = chart.data as BarChartData
