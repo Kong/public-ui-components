@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import composables from '../composables'
 
 const props = defineProps({
@@ -34,21 +34,23 @@ const defaultIcon = ref('')
 const src = ref('')
 const img = ref<HTMLImageElement>()
 
-try {
-  defaultIcon.value = new URL('../assets/images/plugin-icons/missing.png', import.meta.url).href
-} catch (err) {
-  defaultIcon.value = ''
-}
-
-try {
-  src.value = composables.getPluginIconURL(props.name)
-} catch (err) {
-  src.value = defaultIcon.value
-}
-
 const onError = (): void => {
   if (img.value && defaultIcon.value) {
     img.value.src = defaultIcon.value
   }
 }
+
+onBeforeMount(() => {
+  try {
+    defaultIcon.value = new URL('../assets/images/plugin-icons/missing.png', import.meta.url).href
+  } catch (err) {
+    defaultIcon.value = ''
+  }
+
+  try {
+    src.value = composables.getPluginIconURL(props.name)
+  } catch (err) {
+    src.value = defaultIcon.value
+  }
+})
 </script>
