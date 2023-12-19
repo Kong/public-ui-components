@@ -46,8 +46,8 @@ const src = computed((): string => {
   }
 })
 
-const onError = () => {
-  if (img.value) {
+const onError = (): void => {
+  if (img.value && defaultIcon.value) {
     img.value.src = defaultIcon.value
   }
 }
