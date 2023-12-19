@@ -12,7 +12,7 @@
         :chart-id="chartID"
         :data="(mutableData as any)"
         :options="(options as any)"
-        :plugins="[htmlLegendPlugin]"
+        :plugins="(plugins as any)"
       />
       <ToolTip
         :left="tooltipData.left"
@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue'
+import type { PropType, Ref } from 'vue'
 import { computed, reactive, ref, toRef } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
@@ -48,7 +48,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Doughnut } from 'vue-chartjs'
 import composables from '../../composables'
 import type { AnalyticsChartColors, KChartData, TooltipState } from '../../types'
-import type { Chart, ChartDataset } from 'chart.js'
+import type { Chart, ChartDataset, Plugin } from 'chart.js'
 import { ChartLegendPosition, ChartTypes } from '../../enums'
 import type { DoughnutChartData } from '../../types/chart-data'
 
@@ -118,20 +118,16 @@ const tooltipData: TooltipState = reactive({
   chartType: ChartTypes.DOUGHNUT,
 })
 
-const htmlLegendPlugin = {
+const htmlLegendPlugin: Plugin = {
   id: legendID.value,
   afterUpdate(chart: Chart) {
     // @ts-ignore - chart js options internally, are not well typed
     legendItems.value = chart.options.plugins.legend.labels.generateLabels(chart)
-      .map(e => {
-        return {
-          ...e,
-          value: props.legendValues && props.legendValues[e.text],
-          hidden: false,
-        }
-      })
+      .map(e => ({ ...e, value: props.legendValues && props.legendValues[e.text], hidden: false }))
   },
 }
+
+const plugins: Ref<Plugin[]> = computed(() => [htmlLegendPlugin])
 
 // Flatten the datasets into a single element array, since we only want to
 // display a single dataset containing dimension totals in our Doughnut chart
