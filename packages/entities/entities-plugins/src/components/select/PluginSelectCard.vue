@@ -8,7 +8,6 @@
       :class="{ 'disabled': isDisabled }"
       :data-testid="`${plugin.id}-card`"
       role="button"
-      :title="plugin.name"
       @click="isDisabled || isCustomPlugin ? undefined : handleClick()"
     >
       <div class="plugin-card-header">
