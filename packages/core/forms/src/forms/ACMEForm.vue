@@ -390,4 +390,8 @@ const onChangeStorage = (payload: string, schema: string): void => {
 .description {
   margin-bottom: 12px;
 }
+
+:deep(.k-tabs ul[role="tablist"]) {
+  margin-bottom: 32px;
+}
 </style>

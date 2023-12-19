@@ -106,7 +106,6 @@ import {
   type PluginFormFields,
   type DefaultPluginsSchemaRecord,
   type DefaultPluginsFormSchema,
-  type EntityType,
   type PluginEntityInfo,
 } from '../types'
 import endpoints from '../plugins-endpoints'
@@ -380,11 +379,11 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
 // This is specifically used for credential plugins
 // To create an 'ACL' credential we will end up submitting to a URL like: /<entityType>/<entityId>/acl
 const resourceEndpoint = computed((): string => {
-  const entityPath: EntityType = 'consumers'
+  const entityPath: string = props.developer ? 'developers' : 'consumers'
 
   const type = credentialMetaData[props.pluginType]?.endpoint || '/plugins'
 
-  return `${entityPath}/${props.config.entityId}${type}`
+  return `${entityPath}/${props.config.entityId}${props.developer ? '/credentials' : ''}${type}`
 })
 
 const getArrayType = (list: unknown[]): string => {
