@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.23.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.23.2...@kong-ui-public/analytics-chart@0.23.3) (2023-12-19)
+
+
+### Bug Fixes
+
+* **charts:** properly pluralize tooltip and legend values [MA-2360] ([#1018](https://github.com/Kong/public-ui-components/issues/1018)) ([256d654](https://github.com/Kong/public-ui-components/commit/256d654eee7a89485a1d2290cc34db934a4f70cb))
+
+
+
+
+
 ## [0.23.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.23.1...@kong-ui-public/analytics-chart@0.23.2) (2023-12-19)
 
 
