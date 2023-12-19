@@ -22,7 +22,7 @@
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.0.0-alpha.73",
-    "vue": "^3.3.9"
+    "vue": "^3.3.11"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
@@ -35,7 +35,7 @@
     "lodash.pick": "^4.4.0",
     "lodash.pickby": "^4.6.0",
     "papaparse": "^5.4.1",
-    "vue": "^3.3.9"
+    "vue": "^3.3.11"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
@@ -75,7 +75,7 @@
     "@types/lodash.pickby": "^4.6.9",
     "@types/papaparse": "^5.3.14",
     "approximate-number": "^2.1.1",
-    "chart.js": "^4.4.0",
+    "chart.js": "^4.4.1",
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-plugin-annotation": "^3.0.1",
     "date-fns": "^2.30.0",

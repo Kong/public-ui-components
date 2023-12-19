@@ -55,7 +55,7 @@
     "errorLimit": "300KB"
   },
   "peerDependencies": {
-    "vue": "^3.3.9"
+    "vue": "^3.3.11"
   },
   "dependencies": {
     "@formatjs/intl": "^2.9.9",
