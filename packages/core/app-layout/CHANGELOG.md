@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.2.10...@kong-ui-public/app-layout@2.2.11) (2023-12-20)
+
+
+### Bug Fixes
+
+* **app-layout:** bottom padding for intercom ([#1026](https://github.com/Kong/public-ui-components/issues/1026)) ([a06ddb6](https://github.com/Kong/public-ui-components/commit/a06ddb61e873ae5bae48a4ec48c577d601864198))
+
+
+
+
+
 ## [2.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.2.9...@kong-ui-public/app-layout@2.2.10) (2023-12-20)
 
 
