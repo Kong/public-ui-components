@@ -10,7 +10,7 @@ import { keyAuthSchema } from './plugin-schemas/KeyAuth'
 import keyAuthCredentialsSchema from './plugin-schemas/credentials/mockedKeyAuthSchema.json'
 import { hmacAuthSchema } from './plugin-schemas/HMAC'
 import hmacAuthCredentialsSchema from './plugin-schemas/credentials/mockedHmacAuthSchema.json'
-import { jwtSchema } from './plugin-schemas/JWT'
+import { jwtSecretSchema } from './plugin-schemas/JWT'
 import jwtCredentialsSchema from './plugin-schemas/credentials/mockedJwtSchema.json'
 import OAuth2Schema from './plugin-schemas/OAuth2'
 import oauthCredentialSchema from './plugin-schemas/credentials/mockedOAuthSchema.json'
@@ -649,7 +649,7 @@ export const usePluginMetaData = () => {
     jwt: {
       title: t('plugins.meta.jwt.name'),
       plugin: 'jwt',
-      schema: jwtSchema,
+      schema: jwtSecretSchema,
       name: t('plugins.meta.jwt.credential_name'),
       endpoint: '/jwt',
       schemaEndpoint: 'jwt_secrets',

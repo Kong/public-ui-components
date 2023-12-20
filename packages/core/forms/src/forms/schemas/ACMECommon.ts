@@ -1,4 +1,21 @@
-export const ACMECommonSchema = {
+export interface Field {
+  label: string
+  model: string
+  type: string
+  default?: any
+  disabled?: boolean
+  help?: string
+  inputType?: string
+  order?: number
+  required?: boolean
+  valueType?: string
+}
+
+export interface Schema {
+  fields: Field[]
+}
+
+export const ACMECommonSchema: Schema = {
   fields: [
     {
       inputType: 'text',
@@ -35,7 +52,7 @@ export const ACMECommonSchema = {
   ],
 }
 
-export const ACMELetsEncryptSchema = {
+export const ACMELetsEncryptSchema: Schema = {
   fields: [
     {
       type: 'input',
@@ -59,7 +76,7 @@ export const ACMELetsEncryptSchema = {
   ],
 }
 
-export const ACMEZeroSSLSchema = {
+export const ACMEZeroSSLSchema: Schema = {
   fields: [
     {
       type: 'input',

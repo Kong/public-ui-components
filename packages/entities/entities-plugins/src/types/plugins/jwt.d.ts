@@ -1,6 +1,11 @@
-import type { CommonSchemaFields, PluginBasicSchema } from '../../types/plugins/shared'
+import type { CommonSchemaFields, Field, PluginBasicSchema } from '../../types/plugins/shared'
 
-interface JwtFieldSchema {
+export interface JWTPluginSchema extends CommonSchemaFields{
+  'config-cookie_names': Field,
+  'config-uri_param_names': Field,
+}
+
+interface JwtSecretFieldSchema {
   fields: [
     {
       key: {
@@ -34,7 +39,7 @@ interface JwtFieldSchema {
 }
 
 export type JwtSchema = PluginBasicSchema & CommonSchemaFields & {
-  schema: JwtFieldSchema,
+  schema: JwtSecretFieldSchema,
   fields: {
     id: object,
     key: object,
