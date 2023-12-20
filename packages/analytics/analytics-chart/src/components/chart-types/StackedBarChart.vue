@@ -156,7 +156,7 @@ const SCROLL_MIN = 0
 const SCROLL_MAX = 10
 const AXIS_BOTTOM_OFFSET = 10
 const AXIS_RIGHT_PADDING = 1
-const BAR_MARGIN = 4
+const BAR_MARGIN = 6
 
 const totalValueOfDataset = ({ chart }: EventContext, label: string) => {
   const chartData: BarChartData = chart.data as BarChartData
@@ -398,6 +398,7 @@ const options = computed<ChartOptions>(() => {
     metricAxesTitle: toRef(props, 'metricAxesTitle'),
     dimensionAxesTitle: toRef(props, 'dimensionAxesTitle'),
     indexAxis: isHorizontal.value ? 'y' : 'x',
+    numLabels,
   })
   return {
     ...defaultOptions.value,

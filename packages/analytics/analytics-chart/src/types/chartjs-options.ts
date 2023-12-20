@@ -39,6 +39,7 @@ interface BaseChartOptions {
 
 export interface BarChartOptions extends BaseChartOptions {
   indexAxis: 'x' | 'y', // index axes x or y
+  numLabels: Ref<number>, // number of axis labels in dataset
 }
 
 export interface LineChartOptions extends BaseChartOptions {

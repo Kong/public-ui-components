@@ -10,7 +10,7 @@ import type {
   CategoryScale,
 } from 'chart.js'
 import { isNullOrUndef, getRelativePosition } from 'chart.js/helpers'
-import { MAX_LABEL_LENGTH, horizontalTooltipPositioning, tooltipBehavior } from '../utils'
+import { FONT_SIZE_SMALL, FONT_SIZE_REGULAR, MAX_LABEL_LENGTH, horizontalTooltipPositioning, tooltipBehavior } from '../utils'
 import { computed } from 'vue'
 
 export default function useBarChartOptions(chartOptions: BarChartOptions) {
@@ -73,6 +73,9 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
     return items
   }
 
+  // For larger datasets, allow enough vertical space to display all axis labels
+  const labelFontSize = chartOptions.numLabels.value > 25 ? FONT_SIZE_SMALL : FONT_SIZE_REGULAR
+
   const options = computed(() => {
     return {
       indexAxis: chartOptions.indexAxis,
@@ -90,6 +93,7 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
           ticks: {
             maxRotation: 90,
             autoSkip: false,
+            font: labelFontSize,
             callback: function(value: string, index: number): string {
               const that = this as unknown as CategoryScale
               if (that.chart.options.indexAxis === that.axis) {
@@ -129,6 +133,7 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
             drawBorder: false,
           },
           ticks: {
+            font: labelFontSize,
             callback: function(value: string, index: number): string {
               const that = this as unknown as CategoryScale
 
