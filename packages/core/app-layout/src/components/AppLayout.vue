@@ -362,7 +362,7 @@ onBeforeUnmount(() => {
 
       // Apply the padding to the inner element
       &-inner {
-        padding: var(--kong-ui-app-layout-content-padding, $kui-space-70);
+        padding: var(--kong-ui-app-layout-content-padding-top, $kui-space-70) var(--kong-ui-app-layout-content-padding-x, $kui-space-70) var(--kong-ui-app-layout-content-padding-bottom, $kui-space-130);
       }
     }
   }
