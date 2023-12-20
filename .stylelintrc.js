@@ -32,6 +32,6 @@ module.exports = {
   plugins: [
     'stylelint-order',
     '@kong/design-tokens/stylelint-plugin',
- ],
+  ],
   rules: { 'order/properties-alphabetical-order': true }
 }
