@@ -15,6 +15,7 @@ module.exports = {
       rules: {
         // Disallow relative font units
         'unit-disallowed-list': ['rem', 'em'],
+        '@kong/design-tokens/use-proper-token': true,
         // Only allow @kong/design-tokens or `--kong-ui-*` CSS custom properties
         'custom-property-pattern': [
           "^(kui-|kong-ui-).+$",
@@ -28,6 +29,9 @@ module.exports = {
       }
     }
   ],
-  plugins: [ 'stylelint-order' ],
+  plugins: [
+    'stylelint-order',
+    '@kong/design-tokens/stylelint-plugin',
+  ],
   rules: { 'order/properties-alphabetical-order': true }
 }

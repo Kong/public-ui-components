@@ -35,6 +35,7 @@ defineProps({
 <style lang="scss" scoped>
 .plugin-card-skeleton {
   :deep(.skeleton-card-column) {
+    /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
     width: calc(25% - $kui-space-70);
   }
 

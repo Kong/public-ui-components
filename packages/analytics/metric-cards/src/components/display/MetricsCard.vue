@@ -329,7 +329,7 @@ $row-gap-size: 12px;
       }
       &.negative {
         background-color: var(--kong-ui-metric-card-trend-bg-negative, $kui-color-background-danger-weakest);
-        color: var(--kong-ui-metric-card-trend-negative, $kui-color-border-danger-strong);
+        color: var(--kong-ui-metric-card-trend-negative, $kui-color-text-danger-strong);
       }
       &.neutral {
         background-color: var(--kong-ui-metric-card-trend-bg-neutral, $kui-color-background-neutral-weaker);

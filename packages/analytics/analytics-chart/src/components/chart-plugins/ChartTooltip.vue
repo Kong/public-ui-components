@@ -221,7 +221,7 @@ function handleMouseUp() {
     display: flex;
     flex-direction: column;
     margin: $kui-space-40;
-    min-height: $kui-space-80;
+    min-height: 24px;
     padding-bottom: $kui-space-40;
 
     .title {

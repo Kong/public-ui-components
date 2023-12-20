@@ -205,7 +205,7 @@ const displayModified = computed(() => {
 
   :deep(hr),
   hr {
-    background-color: $kui-color-border;
+    background-color: $kui-color-background-disabled;
     border: none;
     height: 1px;
     margin: $kui-space-0;
