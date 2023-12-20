@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/error-boundary@2.0.10...@kong-ui-public/error-boundary@2.0.11) (2023-12-20)
+
+
+### Bug Fixes
+
+* add design tokens plugin ([#1024](https://github.com/Kong/public-ui-components/issues/1024)) ([0d6b971](https://github.com/Kong/public-ui-components/commit/0d6b971fc8fb13ea32714416f8d20ce8f5ecf35e))
+
+
+
+
+
 ## [2.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/error-boundary@2.0.9...@kong-ui-public/error-boundary@2.0.10) (2023-12-19)
 
 **Note:** Version bump only for package @kong-ui-public/error-boundary

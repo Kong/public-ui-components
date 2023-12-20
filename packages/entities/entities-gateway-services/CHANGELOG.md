@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.2.10...@kong-ui-public/entities-gateway-services@2.2.11) (2023-12-20)
+
+
+### Bug Fixes
+
+* add design tokens plugin ([#1024](https://github.com/Kong/public-ui-components/issues/1024)) ([0d6b971](https://github.com/Kong/public-ui-components/commit/0d6b971fc8fb13ea32714416f8d20ce8f5ecf35e))
+
+
+
+
+
 ## [2.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.2.9...@kong-ui-public/entities-gateway-services@2.2.10) (2023-12-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services

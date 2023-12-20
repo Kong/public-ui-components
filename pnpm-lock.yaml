@@ -195,7 +195,7 @@ importers:
   packages/analytics/analytics-chart:
     dependencies:
       '@kong-ui-public/analytics-utilities':
-        specifier: workspace:^0.11.0
+        specifier: workspace:^0.11.1
         version: link:../analytics-utilities
       '@kong/icons':
         specifier: ^1.8.3
@@ -774,7 +774,7 @@ importers:
         specifier: workspace:^
         version: link:../entities-shared
       '@kong-ui-public/forms':
-        specifier: ^2.1.11
+        specifier: ^2.1.12
         version: link:../../core/forms
       '@kong/icons':
         specifier: ^1.8.3
