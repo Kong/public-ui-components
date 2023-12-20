@@ -73,7 +73,7 @@ defineProps({
 
     &:focus-visible {
       border-radius: $kui-border-radius-round;
-      outline: $kui-border-width-10 solid $kui-navigation-color-text !important;
+      outline: 1px solid #bee2ff !important;
       outline-offset: 2px;
     }
   }

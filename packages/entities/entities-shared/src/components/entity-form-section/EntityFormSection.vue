@@ -101,7 +101,7 @@ fieldset {
           height: fit-content;
           margin-bottom: $kui-space-60;
           position: sticky;
-          top: $kui-space-60;
+          top: 16px;
         }
       }
 
@@ -109,7 +109,7 @@ fieldset {
         color: $kui-color-text;
         font-size: $kui-font-size-50;
         font-weight: 600;
-        line-height: $kui-line_height-40;
+        line-height: $kui-line-height-40;
         margin-bottom: $kui-space-40;
         margin-top: 0;
       }

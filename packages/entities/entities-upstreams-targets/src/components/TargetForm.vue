@@ -318,7 +318,7 @@ watch(() => props.targetId, () => {
     .target-form-info :deep(p) {
       color: $kui-color-text;
       font-size: $kui-font-size-30;
-      line-height: $kui-space-80;
+      line-height: $kui-line-height-30;
       margin-bottom: $kui-space-90;
     }
 

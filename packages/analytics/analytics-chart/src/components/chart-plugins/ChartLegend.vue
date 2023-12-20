@@ -273,12 +273,12 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 
     .label {
       font-size: $kui-font-size-30;
-      line-height: $kui-font-size-50;
+      line-height: $kui-line-height-50;
     }
 
     .sub-label {
       font-size: $kui-font-size-20;
-      line-height: $kui-font-size-30;
+      line-height: $kui-line-height-20;
       word-break: none;
     }
 

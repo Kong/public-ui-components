@@ -225,6 +225,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
       // Add a top border to the ul element, offset from the left and right to prevent overlap
       &:before {
+        /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
         background-color: $kui-navigation-color-border;
         content: '';
         height: 1px;
@@ -350,7 +351,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
         span {
           height: auto;
-          min-width: $kui-space-0; // Important: must be present to truncate the text
+          min-width: 0; // Important: must be present to truncate the text
         }
       }
     }

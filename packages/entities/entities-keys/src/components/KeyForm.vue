@@ -476,7 +476,7 @@ onBeforeMount(async () => {
   }
 
   .invalid-key-set-message {
-    color: $kui-color-background-danger;
+    color: $kui-color-text-danger;
     font-size: 11px;
     font-weight: 500;
     margin-top: 3px !important;
