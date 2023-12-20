@@ -18,7 +18,22 @@ import KeyAuthEncSchema from './plugin-schemas/KeyAuthEnc'
 import keyEncCredentialSchema from './plugin-schemas/credentials/mockedKeyEncAuthSchema.json'
 
 export const getPluginIconURL = (pluginName: string) => {
-  return new URL(`../assets/images/plugin-icons/${pluginName}.png`, import.meta.url).href
+  let defaultIcon = ''
+  let imgSrc = ''
+
+  try {
+    defaultIcon = new URL('../assets/images/plugin-icons/missing.png', import.meta.url).href
+  } catch (err) {
+    defaultIcon = ''
+  }
+
+  try {
+    imgSrc = new URL(`../assets/images/plugin-icons/${pluginName}.png`, import.meta.url).href
+  } catch (err) {
+    imgSrc = defaultIcon
+  }
+
+  return imgSrc
 }
 
 export const usePluginMetaData = () => {
