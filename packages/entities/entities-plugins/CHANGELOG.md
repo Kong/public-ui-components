@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.5.1...@kong-ui-public/entities-plugins@2.5.2) (2023-12-20)
+
+
+### Bug Fixes
+
+* **plugins:** card component is not KCard [khcp-9970] ([#1017](https://github.com/Kong/public-ui-components/issues/1017)) ([608a401](https://github.com/Kong/public-ui-components/commit/608a40124bd3bf2a5830f3857dd93d491fdcb204))
+
+
+
+
+
 ## [2.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.5.0...@kong-ui-public/entities-plugins@2.5.1) (2023-12-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
