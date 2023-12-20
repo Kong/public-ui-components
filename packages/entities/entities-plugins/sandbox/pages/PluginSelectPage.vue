@@ -3,6 +3,7 @@
     <h2>Konnect API</h2>
     <PluginSelect
       :config="konnectConfig"
+      :disabled-plugins="{ 'acl': 'ACL is not supported for this entity type'}"
       @delete-custom:success="handleDeleteSuccess"
     />
 

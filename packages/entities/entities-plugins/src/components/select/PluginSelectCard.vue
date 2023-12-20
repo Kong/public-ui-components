@@ -3,66 +3,63 @@
     :label="plugin.disabledMessage"
     position-fixed
   >
-    <KCard
-      class="plugin-card-content"
-      :class="{ disabled: isDisabled }"
+    <a
+      class="plugin-select-card"
+      :class="{ 'disabled': isDisabled }"
       :data-testid="`${plugin.id}-card`"
-      :title="plugin.name"
+      role="button"
       @click="isDisabled || isCustomPlugin ? undefined : handleClick()"
     >
-      <template
-        v-if="isCustomPlugin && !isCreateCustomPlugin"
-        #footer
-      >
-        <div class="header-wrapper">
-          <KBadge v-if="!isCreateCustomPlugin">
-            {{ t('plugins.select.custom_badge_text') }}
-          </KBadge>
+      <div class="plugin-card-header">
+        <div class="plugin-card-title">
+          <span :class="{ 'non-custom-title': !isCustomPlugin }">
+            {{ plugin.name }}
+          </span>
         </div>
-      </template>
 
-      <template
-        v-if="hasActions"
-        #actions
-      >
-        <KDropdownMenu
-          data-testid="custom-plugin-actions"
-          :kpop-attributes="{ placement: 'bottomEnd' }"
-          width="150"
+        <div
+          v-if="hasActions"
+          class="plugin-card-actions"
         >
-          <template #default>
-            <KButton
-              appearance="tertiary"
-              class="actions-trigger"
-              data-testid="overflow-actions-button"
-              size="small"
-            >
-              <template #icon>
-                <MoreIcon :size="KUI_ICON_SIZE_30" />
-              </template>
-            </KButton>
-          </template>
+          <KDropdownMenu
+            data-testid="custom-plugin-actions"
+            :kpop-attributes="{ placement: 'bottomEnd' }"
+            width="150"
+          >
+            <template #default>
+              <KButton
+                appearance="tertiary"
+                class="actions-trigger"
+                data-testid="overflow-actions-button"
+                size="small"
+              >
+                <template #icon>
+                  <MoreIcon :size="KUI_ICON_SIZE_30" />
+                </template>
+              </KButton>
+            </template>
 
-          <template #items>
-            <KDropdownItem
-              v-if="canDeleteCustomPlugin"
-              data-testid="edit-plugin-schema"
-              @click.stop="handleCustomEdit(plugin.name)"
-            >
-              {{ t('actions.edit') }}
-            </KDropdownItem>
-            <KDropdownItem
-              v-if="canDeleteCustomPlugin"
-              danger
-              data-testid="delete-plugin-schema"
-              has-divider
-              @click.stop="handleCustomDelete"
-            >
-              {{ t('actions.delete') }}
-            </KDropdownItem>
-          </template>
-        </KDropdownMenu>
-      </template>
+            <template #items>
+              <KDropdownItem
+                v-if="canDeleteCustomPlugin"
+                data-testid="edit-plugin-schema"
+                @click.stop="handleCustomEdit(plugin.name)"
+              >
+                {{ t('actions.edit') }}
+              </KDropdownItem>
+              <KDropdownItem
+                v-if="canDeleteCustomPlugin"
+                danger
+                data-testid="delete-plugin-schema"
+                has-divider
+                @click.stop="handleCustomDelete"
+              >
+                {{ t('actions.delete') }}
+              </KDropdownItem>
+            </template>
+          </KDropdownMenu>
+        </div>
+      </div>
 
       <div
         class="plugin-card-body"
@@ -77,23 +74,30 @@
           :name="plugin.imageName || plugin.id"
           :size="55"
         />
-        <p
-          v-if="plugin.description"
+        <div
+          v-if="plugin.description || (isCustomPlugin && !isCreateCustomPlugin)"
           class="plugin-card-text"
         >
-          {{ plugin.description }}
-        </p>
+          <p v-if="isCustomPlugin && !isCreateCustomPlugin">
+            {{ t('plugins.select.custom_badge_text') }}
+          </p>
+
+          <p
+            v-if="plugin.description"
+            class="plugin-card-text"
+            :title="plugin.description"
+          >
+            {{ plugin.description }}
+          </p>
+        </div>
       </div>
       <div
-        :class="{
-          'plugin-card-create-footer': isCreateCustomPlugin,
-          'plugin-card-footer': !isCreateCustomPlugin,
-        }"
+        class="plugin-card-footer"
         @click="handleCustomClick"
       >
         {{ isCreateCustomPlugin ? t('actions.create_custom') : plugin.exists ? t('actions.enabled') : t('actions.enable') }}
       </div>
-    </KCard>
+    </a>
   </KTooltip>
 </template>
 
@@ -206,44 +210,73 @@ const handleCustomClick = (): void => {
 </script>
 
 <style lang="scss" scoped>
-.plugin-card,
-.plugin-card-content {
+.plugin-select-card {
+  border: $kui-border-width-10 solid $kui-color-border;
+  border-radius: $kui-border-radius-30;
+  box-sizing: border-box;
   color: initial;
   cursor: pointer;
   display: flex;
   flex-basis: 100%;
-  flex-flow: row-wrap;
+  flex-direction: column;
+  gap: $kui-space-70;
   max-width: 335px;
   overflow: hidden;
+  padding: $kui-space-70 $kui-space-70 0;
 
-  .plugin-card-body {
-    align-items: center;
+  &:hover {
+    box-shadow: 0 0 5px rgba(33,33,33,.2);
+    text-decoration: none;
+  }
+
+  .plugin-card-header {
     display: flex;
-    flex-direction: column;
+
+    .plugin-card-title {
+      color: $kui-color-text;
+      display: flex;
+      font-size: $kui-font-size-50;
+      font-weight: $kui-font-weight-bold;
+      letter-spacing: $kui-letter-spacing-minus-30;
+      line-height: $kui-line-height-40;
+      width: 100%;
+
+      .non-custom-title {
+        text-align: center;
+        width: 100%;
+      }
+    }
+
+    .plugin-card-actions {
+      margin-left: auto;
+    }
+
+    .actions-trigger {
+      color: $kui-color-text-neutral-stronger;
+    }
   }
 
-  .actions-trigger {
-    color: $kui-color-text-neutral-stronger;
-  }
-
-  .header-wrapper {
-    // maintain the specified height if slot has no content
-    min-height: 25px;
-  }
-
-  &-icon {
+  .plugin-card-icon {
     margin-bottom: $kui-space-60;
   }
 
-  &-text {
+  .plugin-card-text {
+    -webkit-box-orient: vertical;
     color: $kui-color-text;
+    // truncate
+    display: -webkit-box;
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-regular;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
   }
 
-  &-body {
+  .plugin-card-body {
+    align-items: center;
     background-color: $kui-color-background;
+    display: flex;
     flex: 1;
+    flex-direction: column;
     padding: $kui-space-60;
 
     &.custom-plugin {
@@ -251,32 +284,21 @@ const handleCustomClick = (): void => {
     }
   }
 
-  &-footer {
+  .plugin-card-footer {
     background-color: $kui-color-background-primary-weakest;
     border-radius: $kui-border-radius-30;
     color: $kui-color-text-primary;
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-semibold;
+    margin: 0 calc(-1 * $kui-space-70);
     padding: $kui-space-60;
-  }
-
-  &-create-footer {
-    background-color: $kui-color-background-primary;
-    border-radius: $kui-border-radius-30;
-    color: $kui-color-text-inverse;
-    font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-semibold;
-    padding: $kui-space-60;
+    text-align: center;
   }
 
   &.disabled * {
     cursor: not-allowed;
     filter: grayscale(100%);
     opacity: 0.9;
-  }
-
-  &:hover {
-    text-decoration: none;
   }
 
   @media (min-width: $kui-breakpoint-phablet) {
