@@ -640,10 +640,14 @@ onBeforeMount(() => {
       display: none;
     }
 
-    .form-group hr.divider,
+    .form-group hr.divider {
+      border-color: $kui-color-border;
+      opacity: .3;
+    }
+
     .form-group hr.wide-divider {
       border-color: $kui-color-border;
-      opacity: .2;
+      opacity: .6;
     }
 
     .form-group label {

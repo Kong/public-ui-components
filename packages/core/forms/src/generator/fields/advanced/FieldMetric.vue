@@ -73,7 +73,7 @@ export default {
     cursor: pointer;
     display: flex;
     height: 45px;
-    padding: 0 16px 0 5px;
+    padding: 0 16px;
     position: relative;
     transition: transform .2s cubic-bezier(0.41,0.35,1,0.28) 0s, background-color .2s ease-in;
     width: 100%;

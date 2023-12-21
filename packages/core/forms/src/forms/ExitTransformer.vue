@@ -60,8 +60,8 @@ const finalSchema = computed((): Object => {
       f.type = 'array'
       f.valueArrayType = 'array'
       f.itemContainerComponent = 'FieldArrayItem'
-      f.fieldClasses = 'w-100'
-      f.fieldItemsClasses = 'w-100 mt-2 mb-2'
+      f.fieldClasses = 'exit-transformer-array-item-container'
+      f.fieldItemsClasses = 'exit-transformer-array-item'
       f.inputAttributes = { ...f.inputAttributes, type: 'textarea' }
     }
     return f
@@ -69,3 +69,13 @@ const finalSchema = computed((): Object => {
   return final
 })
 </script>
+
+<style lang="scss" scoped>
+:deep(.exit-transformer-array-item-container) {
+  width: 100%;
+}
+
+:deep(.exit-transformer-array-item) {
+  margin-top: 8px;
+}
+</style>
