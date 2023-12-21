@@ -34,11 +34,18 @@ export default function useFetcher(
   const state = ref<FetcherState>({
     status: FetcherStatus.Idle,
   })
+
   const fetcher = async (fetcherParams: FetcherParams): Promise<FetcherResponse> => {
     try {
       state.value = { status: FetcherStatus.Loading }
 
-      const requestUrl = buildFetchUrl(fetcherParams)
+      let requestUrl = buildFetchUrl(fetcherParams)
+
+      // support for new filtering
+      if (requestUrl.includes('filter[name]')) {
+        requestUrl = `${requestUrl}&page[size]=${fetcherParams.pageSize}&page[number]=${fetcherParams.page}`
+      }
+
       const { data } = await axiosInstance.get(requestUrl)
       const dataKey = (dataKeyName && dataKeyName.replace(/[^\w-_]/gi, ''))
       let tableData
