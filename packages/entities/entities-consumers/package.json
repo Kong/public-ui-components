@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/entities-consumers.es.js",
-      "require": "./dist/entities-consumers.umd.js"
+      "require": "./dist/entities-consumers.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

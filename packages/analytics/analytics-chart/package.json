@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/vitals-chart.es.js",
-      "require": "./dist/vitals-chart.umd.js"
+      "require": "./dist/vitals-chart.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

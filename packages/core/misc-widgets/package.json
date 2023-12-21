@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/misc-widgets.es.js",
-      "require": "./dist/misc-widgets.umd.js"
+      "require": "./dist/misc-widgets.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

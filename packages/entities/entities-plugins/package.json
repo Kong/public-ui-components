@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/entities-plugins.es.js",
-      "require": "./dist/entities-plugins.umd.js"
+      "require": "./dist/entities-plugins.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

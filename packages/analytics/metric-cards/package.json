@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/metric-cards.es.js",
-      "require": "./dist/metric-cards.umd.js"
+      "require": "./dist/metric-cards.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
