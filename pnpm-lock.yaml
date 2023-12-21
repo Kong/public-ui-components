@@ -970,7 +970,7 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong-ui-public/swagger-ui-web-component':
-        specifier: workspace:^0.10.6
+        specifier: workspace:^0.10.7
         version: link:../swagger-ui-web-component
       '@kong/icons':
         specifier: ^1.8.3
