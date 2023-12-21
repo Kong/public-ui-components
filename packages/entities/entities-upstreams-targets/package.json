@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-upstreams-targets",
-  "version": "2.1.15",
+  "version": "2.1.16",
   "type": "module",
   "main": "./dist/entities-upstreams-targets.umd.js",
   "module": "./dist/entities-upstreams-targets.es.js",
@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/entities-upstreams-targets.es.js",
-      "require": "./dist/entities-upstreams-targets.umd.js"
+      "require": "./dist/entities-upstreams-targets.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

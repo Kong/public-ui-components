@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/error-boundary",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "type": "module",
   "main": "./dist/error-boundary.umd.js",
   "module": "./dist/error-boundary.es.js",
@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/error-boundary.es.js",
-      "require": "./dist/error-boundary.umd.js"
+      "require": "./dist/error-boundary.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

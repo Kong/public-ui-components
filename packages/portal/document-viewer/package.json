@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/document-viewer",
-  "version": "2.0.14",
+  "version": "2.0.15",
   "type": "module",
   "main": "./dist/document-viewer.umd.js",
   "module": "./dist/document-viewer.es.js",
@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/document-viewer.es.js",
-      "require": "./dist/document-viewer.umd.js"
+      "require": "./dist/document-viewer.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

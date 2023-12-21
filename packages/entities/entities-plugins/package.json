@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "2.5.3",
+  "version": "2.5.4",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/entities-plugins.es.js",
-      "require": "./dist/entities-plugins.umd.js"
+      "require": "./dist/entities-plugins.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -73,7 +74,7 @@
     "@kong-ui-public/entities-gateway-services": "workspace:^",
     "@kong-ui-public/entities-routes": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@kong-ui-public/forms": "^2.1.12",
+    "@kong-ui-public/forms": "^2.1.13",
     "@kong/icons": "^1.8.3",
     "marked": "^9.1.6"
   }

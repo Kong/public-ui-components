@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/copy-uuid",
-  "version": "2.0.15",
+  "version": "2.0.16",
   "type": "module",
   "main": "./dist/copy-uuid.umd.js",
   "module": "./dist/copy-uuid.es.js",
@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/copy-uuid.es.js",
-      "require": "./dist/copy-uuid.umd.js"
+      "require": "./dist/copy-uuid.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

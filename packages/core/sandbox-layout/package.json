@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/sandbox-layout",
-  "version": "2.0.14",
+  "version": "2.0.15",
   "type": "module",
   "main": "./dist/sandbox-layout.umd.js",
   "module": "./dist/sandbox-layout.es.js",
@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/sandbox-layout.es.js",
-      "require": "./dist/sandbox-layout.umd.js"
+      "require": "./dist/sandbox-layout.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

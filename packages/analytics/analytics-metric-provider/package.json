@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-metric-provider",
-  "version": "2.0.15",
+  "version": "2.0.16",
   "type": "module",
   "main": "./dist/vitals-metric-provider.umd.js",
   "module": "./dist/vitals-metric-provider.es.js",
@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/vitals-metric-provider.es.js",
-      "require": "./dist/vitals-metric-provider.umd.js"
+      "require": "./dist/vitals-metric-provider.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

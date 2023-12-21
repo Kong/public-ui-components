@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/dashboard-renderer",
-  "version": "0.2.17",
+  "version": "0.2.18",
   "type": "module",
   "main": "./dist/dashboard-renderer.umd.js",
   "module": "./dist/dashboard-renderer.es.js",
@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/dashboard-renderer.es.js",
-      "require": "./dist/dashboard-renderer.umd.js"
+      "require": "./dist/dashboard-renderer.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

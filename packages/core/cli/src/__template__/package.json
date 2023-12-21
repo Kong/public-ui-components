@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/{%%SANITIZED_PACKAGE_NAME%%}.es.js",
-      "require": "./dist/{%%SANITIZED_PACKAGE_NAME%%}.umd.js"
+      "require": "./dist/{%%SANITIZED_PACKAGE_NAME%%}.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

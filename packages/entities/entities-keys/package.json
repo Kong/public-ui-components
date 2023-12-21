@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-keys",
-  "version": "2.1.15",
+  "version": "2.1.16",
   "type": "module",
   "main": "./dist/entities-keys.umd.js",
   "module": "./dist/entities-keys.es.js",
@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/entities-keys.es.js",
-      "require": "./dist/entities-keys.umd.js"
+      "require": "./dist/entities-keys.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

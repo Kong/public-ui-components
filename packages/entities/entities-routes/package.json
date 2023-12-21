@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-routes",
-  "version": "2.2.11",
+  "version": "2.2.12",
   "type": "module",
   "main": "./dist/entities-routes.umd.js",
   "module": "./dist/entities-routes.es.js",
@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/entities-routes.es.js",
-      "require": "./dist/entities-routes.umd.js"
+      "require": "./dist/entities-routes.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

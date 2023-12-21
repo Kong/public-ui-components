@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-consumers",
-  "version": "2.2.11",
+  "version": "2.2.12",
   "type": "module",
   "main": "./dist/entities-consumers.umd.js",
   "module": "./dist/entities-consumers.es.js",
@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/entities-consumers.es.js",
-      "require": "./dist/entities-consumers.umd.js"
+      "require": "./dist/entities-consumers.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-chart",
-  "version": "0.24.0",
+  "version": "0.24.1",
   "type": "module",
   "main": "./dist/vitals-chart.umd.js",
   "module": "./dist/vitals-chart.es.js",
@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/vitals-chart.es.js",
-      "require": "./dist/vitals-chart.umd.js"
+      "require": "./dist/vitals-chart.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -67,7 +68,7 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong-ui-public/analytics-utilities": "workspace:^0.11.1",
+    "@kong-ui-public/analytics-utilities": "workspace:^0.11.2",
     "@kong/icons": "^1.8.3",
     "@types/file-saver": "^2.0.7",
     "@types/lodash.mapkeys": "^4.6.9",

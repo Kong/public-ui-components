@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/app-layout",
-  "version": "2.2.11",
+  "version": "2.2.12",
   "type": "module",
   "main": "./dist/app-layout.umd.js",
   "module": "./dist/app-layout.es.js",
@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/app-layout.es.js",
-      "require": "./dist/app-layout.umd.js"
+      "require": "./dist/app-layout.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
