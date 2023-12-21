@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.4.14...@kong-ui-public/core@1.4.15) (2023-12-21)
+
+
+### Bug Fixes
+
+* type exports ([efecd88](https://github.com/Kong/public-ui-components/commit/efecd8859a01aae41d9490b1758237233c925c19))
+
+
+
+
+
 ## [1.4.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.4.13...@kong-ui-public/core@1.4.14) (2023-12-20)
 
 
