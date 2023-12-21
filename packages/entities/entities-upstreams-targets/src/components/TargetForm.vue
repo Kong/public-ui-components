@@ -15,7 +15,7 @@
           :edit-id="targetId"
           :error-message="form.errorMessage"
           :fetch-url="fetchUrl"
-          :form-fields="requestBody"
+          :form-fields="form.fields"
           :is-readonly="form.isReadonly"
           @cancel="onCancel"
           @fetch:error="(err: any) => $emit('error', err)"
@@ -233,17 +233,17 @@ const submitUrl = computed((): string => {
   return url
 })
 
-const requestBody: Record<string, any> = reactive({
-  target: form.fields.target,
-  weight: parseInt(form.fields.weight as unknown as string),
-  tags: form.fields.tags?.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
-  upstream: { id: props.config.upstreamId },
-})
-
 const saveFormData = async (): Promise<void> => {
   try {
     form.isReadonly = true
     form.errorMessage = ''
+
+    const requestBody: Record<string, any> = {
+      target: form.fields.target,
+      weight: parseInt(form.fields.weight as unknown as string),
+      tags: form.fields.tags?.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
+      upstream: { id: props.config.upstreamId },
+    }
 
     let response: AxiosResponse | undefined
 

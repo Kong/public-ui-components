@@ -6,7 +6,7 @@
       :edit-id="routeId"
       :error-message="form.errorMessage || fetchServicesErrorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="payload"
+      :form-fields="form.fields"
       :is-readonly="form.isReadonly"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler"
@@ -349,6 +349,7 @@ import RouteFormMethodsFields from './RouteFormMethodsFields.vue'
 import RouteFormHeadersFields from './RouteFormHeadersFields.vue'
 import RouteFormSourcesFields from './RouteFormSourcesFields.vue'
 import RouteFormDestinationsFields from './RouteFormDestinationsFields.vue'
+import { isRoutePayloadValid } from '../utilities'
 import type { SelectItem } from '@kong/kongponents'
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -407,7 +408,7 @@ const emit = defineEmits<{
   (e: 'update', data: RoutePayload): void,
   (e: 'error', error: AxiosError): void,
   (e: 'loading', isLoading: boolean): void,
-  (e: 'model-updated', payload: RoutePayload): void,
+  (e: 'model-updated', val: RoutePayload): void,
 }>()
 
 const { i18nT, i18n, i18n: { t } } = composables.useI18n()
@@ -869,13 +870,13 @@ const submitUrl = computed<string>(() => {
 })
 
 watch(() => form.fields, () => {
-  emit('model-updated', payload.value)
+  emit('model-updated', getPayload())
 }, { deep: true })
 
 const getArrPayload = (arr?: any[]) => arr?.length ? arr : null
 
-const payload = computed((serviceId?: string): RoutePayload => {
-  const result: RoutePayload = {
+const getPayload = (serviceId?: string): RoutePayload => {
+  const payload: RoutePayload = {
     service: (form.fields.service_id || serviceId) ? { id: serviceId || form.fields.service_id } : null,
     ...(!props.hideNameField && { name: form.fields.name || null }),
     paths: getArrPayload(cleanDataArr(RoutingRulesEntities.PATHS, form.fields.paths || [])),
@@ -898,40 +899,42 @@ const payload = computed((serviceId?: string): RoutePayload => {
   }
 
   if (selectedMethods.value?.length) {
-    result.methods = [...selectedMethods.value]
+    payload.methods = [...selectedMethods.value]
 
     // handle custom method input
     // add any custom methods from input field, avoid duplicate
 
     if (selectedMethods.value?.includes('CUSTOM')) {
-      const customMethodIndex = result.methods.indexOf('CUSTOM')
+      const customMethodIndex = payload.methods.indexOf('CUSTOM')
       if (customMethodIndex !== -1) {
-        result.methods.splice(customMethodIndex, 1)
+        payload.methods.splice(customMethodIndex, 1)
       }
 
       customMethods.value.forEach(method => {
-        if (method && result.methods && !result.methods?.includes(method)) {
-          result.methods.push(method.toUpperCase())
+        if (method && payload.methods && !payload.methods?.includes(method)) {
+          payload.methods.push(method.toUpperCase())
         }
       })
     }
   }
 
-  return result
-})
+  return payload
+}
 
 const saveFormData = async (payload?: RoutePayload): Promise<void> => {
+  const validPayload: RoutePayload = (payload && isRoutePayloadValid(payload)) ? payload : getPayload()
+
   try {
     form.isReadonly = true
 
     let response: AxiosResponse | undefined
 
     if (formType.value === 'create') {
-      response = await axiosInstance.post(submitUrl.value, payload)
+      response = await axiosInstance.post(submitUrl.value, validPayload)
     } else if (formType.value === 'edit') {
       response = props.config?.app === 'konnect'
-        ? await axiosInstance.put(submitUrl.value, payload)
-        : await axiosInstance.patch(submitUrl.value, payload)
+        ? await axiosInstance.put(submitUrl.value, validPayload)
+        : await axiosInstance.patch(submitUrl.value, validPayload)
     }
 
     updateFormValues(response?.data)
@@ -974,10 +977,10 @@ onBeforeMount(async () => {
 })
 
 onMounted(() => {
-  emit('model-updated', payload.value)
+  emit('model-updated', getPayload())
 })
 
-defineExpose({ saveFormData, payload })
+defineExpose({ saveFormData, getPayload })
 </script>
 
 <style lang="scss">

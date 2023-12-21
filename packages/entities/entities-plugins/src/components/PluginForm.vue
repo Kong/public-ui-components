@@ -25,7 +25,7 @@
       :edit-id="pluginId"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="payload"
+      :form-fields="form.fields"
       :is-readonly="form.isReadonly"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
@@ -56,49 +56,6 @@
         -->
         <div v-if="isWizardStep" />
         <div v-else>
-          <KToggle
-            v-if="config.jsonYamlMilestone2Enabled"
-            v-slot="{ isToggled, toggle }"
-          >
-            <div>
-              <KButton
-                appearance="tertiary"
-                data-testid="form-view-configuration"
-                @click.prevent="toggle"
-              >
-                {{ t('actions.view_configuration') }}
-              </KButton>
-              <KSlideout
-                close-button-alignment="end"
-                data-testid="form-view-configuration-slideout"
-                :has-overlay="false"
-                :is-visible="isToggled.value"
-                prevent-close-on-blur
-                :title="t('view_configuration.title')"
-                @close="toggle"
-              >
-                <div>
-                  {{ t('view_configuration.message') }}
-                </div>
-                <KTabs
-                  data-testid="form-view-configuration-slideout-tabs"
-                  :tabs="tabs"
-                >
-                  <template #json>
-                    <JsonCodeBlock
-                      :config="config"
-                      :fetcher-url="submitUrl"
-                      :json-record="payload"
-                      :request-method="props.pluginId ? 'put' : 'post'"
-                    />
-                  </template>
-                  <template #yaml>
-                    <YamlCodeBlock :yaml-record="payload" />
-                  </template>
-                </KTabs>
-              </KSlideout>
-            </div>
-          </KToggle>
           <KButton
             appearance="secondary"
             data-testid="form-cancel"
@@ -155,7 +112,6 @@ import endpoints from '../plugins-endpoints'
 import composables from '../composables'
 import { ArrayStringFieldSchema } from '../composables/plugin-schemas/ArrayStringFieldSchema'
 import PluginEntityForm from './PluginEntityForm.vue'
-import type { Tab } from '@kong/kongponents'
 
 const emit = defineEmits<{
   (e: 'error:fetch-schema', error: AxiosError): void,
@@ -265,17 +221,6 @@ const form = reactive<PluginFormState>({
   isReadonly: false,
   errorMessage: '',
 })
-
-const tabs = ref<Tab[]>([
-  {
-    title: t('view_configuration.yaml'),
-    hash: '#yaml',
-  },
-  {
-    title: t('view_configuration.json'),
-    hash: '#json',
-  },
-])
 
 const fetchUrl = computed((): string => {
   if (treatAsCredential.value) { // credential
@@ -952,25 +897,6 @@ const isCustomPlugin = computed((): boolean => {
   return !Object.keys(pluginMetaData).includes(props.pluginType)
 })
 
-const payload = computed((): Record<string, any> => {
-  const requestBody: Record<string, any> = submitPayload.value
-
-  // credentials incorrectly build the entity id object
-  if (treatAsCredential.value) {
-    for (const key in PluginScope) {
-      const entityKey = PluginScope[key as keyof typeof PluginScope]
-      // ex. { consumer: '1234-567-899' } => { consumer: { id: '1234-567-899' } }
-      if (requestBody[entityKey] && !requestBody[entityKey].id) {
-        requestBody[entityKey] = { id: props.config.entityId }
-      }
-    }
-
-    delete requestBody.created_at
-  }
-
-  return requestBody
-})
-
 // make the actual API request to save on create/edit
 const saveFormData = async (): Promise<void> => {
   // if save/cancel buttons are hidden, don't submit on hitting Enter
@@ -981,22 +907,36 @@ const saveFormData = async (): Promise<void> => {
   try {
     form.isReadonly = true
 
+    const requestBody: Record<string, any> = submitPayload.value
     let response: AxiosResponse | undefined
+
+    // credentials incorrectly build the entity id object
+    if (treatAsCredential.value) {
+      for (const key in PluginScope) {
+        const entityKey = PluginScope[key as keyof typeof PluginScope]
+        // ex. { consumer: '1234-567-899' } => { consumer: { id: '1234-567-899' } }
+        if (requestBody[entityKey] && !requestBody[entityKey].id) {
+          requestBody[entityKey] = { id: props.config.entityId }
+        }
+      }
+
+      delete requestBody.created_at
+    }
 
     // TODO: determine validate URL for credentials
     // don't validate custom plugins
     if (!treatAsCredential.value && !isCustomPlugin.value) {
-      await axiosInstance.post(validateSubmitUrl.value, payload)
+      await axiosInstance.post(validateSubmitUrl.value, requestBody)
     }
 
     if (formType.value === 'create') {
-      response = await axiosInstance.post(submitUrl.value, payload)
+      response = await axiosInstance.post(submitUrl.value, requestBody)
     } else if (formType.value === 'edit') {
       response = props.config.app === 'konnect'
         // Note: Konnect currently uses PUT because PATCH is not fully supported in Koko
         //       If this changes, the `edit` form methods should be re-evaluated/updated accordingly
-        ? await axiosInstance.put(submitUrl.value, payload)
-        : await axiosInstance.patch(submitUrl.value, payload)
+        ? await axiosInstance.put(submitUrl.value, requestBody)
+        : await axiosInstance.patch(submitUrl.value, requestBody)
     }
 
     // Set initial state of `formFieldsOriginal` to these values in order to detect changes

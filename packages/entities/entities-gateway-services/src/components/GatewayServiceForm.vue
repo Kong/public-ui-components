@@ -6,7 +6,7 @@
       :edit-id="gatewayServiceId"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="payload"
+      :form-fields="form.fields"
       :is-readonly="form.isReadonly"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
@@ -765,20 +765,16 @@ const getPayload = (): Record<string, any> => {
   return requestBody
 }
 
-const payload = computed((): Record<string, any> => {
-  const result = getPayload()
-  saveTlsVerify(result)
-  return result
-})
-
 const saveFormData = async (): Promise<AxiosResponse | undefined> => {
   try {
     form.isReadonly = true
 
     validateUrl()
 
+    const payload = getPayload()
     let response: AxiosResponse | undefined
 
+    saveTlsVerify(payload)
     await axiosInstance.post(validateSubmitUrl.value, payload)
 
     if (formType.value === 'create') {
