@@ -891,8 +891,8 @@ importers:
   packages/portal/swagger-ui-web-component:
     dependencies:
       '@kong/swagger-ui-kong-theme-universal':
-        specifier: ^4.3.2
-        version: 4.3.2(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.5)(vue@3.3.4)
+        specifier: ^4.3.3
+        version: 4.3.3(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.5)(vue@3.3.11)
       react:
         specifier: 17.0.2
         version: 17.0.2
@@ -2057,13 +2057,39 @@ packages:
       sortablejs: 1.15.0
       swrv: 1.0.4(vue@3.3.4)
       uuid: 9.0.1
-      v-calendar: 3.0.0-alpha.8(vue@3.3.4)
-      vue: 3.3.4
-      vue-draggable-next: 2.2.1(sortablejs@1.15.0)(vue@3.3.4)
-      vue-router: 4.2.5(vue@3.3.4)
+      v-calendar: 3.0.0-alpha.8(vue@3.3.11)
+      vue: 3.3.11(typescript@5.2.2)
+      vue-draggable-next: 2.2.1(sortablejs@1.15.1)(vue@3.3.11)
+      vue-router: 4.2.5(vue@3.3.11)
+    dev: false
 
-  /@kong/swagger-ui-kong-theme-universal@4.3.2(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.5)(vue@3.3.4):
-    resolution: {integrity: sha512-+wv/1bIPARDh6ZnZYdknbpKjcedBEOhuM8NUkzojCzWk09lq9B1CXQJcIkKoN2bE61HuMZpAqKzCt3qeMjaQCg==}
+  /@kong/kongponents@9.0.0-alpha.73(axios@1.6.2)(vue-router@4.2.5)(vue@3.3.11):
+    resolution: {integrity: sha512-61jSUBHPignrr60gvrUfxgrRVTXEts0073tBrqTFk2rlmpSRHl/eEHTVXDFy8V1DtdL+AUz8uSY3xyoLUFZrgA==}
+    engines: {node: '>=v16.20.2'}
+    peerDependencies:
+      axios: ^1.6.1
+      vue: '>= 3.3.4 < 4'
+      vue-router: ^4.2.5
+    dependencies:
+      '@kong/icons': 1.8.3(vue@3.3.11)
+      '@popperjs/core': 2.11.8
+      axios: 1.6.2
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.0(date-fns@2.30.0)
+      focus-trap: 7.5.4
+      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.3.11)
+      popper.js: 1.16.1
+      sortablejs: 1.15.1
+      swrv: 1.0.4(vue@3.3.11)
+      uuid: 9.0.1
+      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.3.11)
+      vue: 3.3.11(typescript@5.2.2)
+      vue-draggable-next: 2.2.1(sortablejs@1.15.1)(vue@3.3.11)
+      vue-router: 4.2.5(vue@3.3.11)
+    dev: true
+
+  /@kong/swagger-ui-kong-theme-universal@4.3.3(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.5)(vue@3.3.11):
+    resolution: {integrity: sha512-g89NLf7Vu19BJ157fVUkLIrjzTmNE74zGfzktK2rxdZgIUegt4VBDsG8K0MAxDwQELQqSK3kPkamgdD9j1eV3Q==}
     peerDependencies:
       react: 17.0.2
     dependencies:
@@ -2079,7 +2105,7 @@ packages:
       react: 17.0.2
       react-apiembed: 0.1.9
       react-debounce-input: 3.3.0(react@17.0.2)
-      swagger2har: 1.0.3
+      swagger2har: 1.0.6
       tachyons-sass: 4.9.5
       util: 0.12.5
     transitivePeerDependencies:
@@ -12972,8 +12998,8 @@ packages:
       - react-native
     dev: false
 
-  /swagger2har@1.0.3:
-    resolution: {integrity: sha512-5lJZ0GW65ea5i1IpsBpOySHP2AZhHNo4I6vzwJFRsxNV5kEzYj454R47UKf16x7x7vSTyVHZidy1UuNBF50ReQ==}
+  /swagger2har@1.0.6:
+    resolution: {integrity: sha512-Nqn0VCeYSrslBMM/WnG4OrPi0r+ri86/a2uK4rzLsXj9HWxOOGW+Rgh4D6jUIE8V+44jyL/IUR50gfBwdDFyuA==}
     dependencies:
       json-schema-instantiator: 0.4.4
       rollup-plugin-babel: 4.4.0
