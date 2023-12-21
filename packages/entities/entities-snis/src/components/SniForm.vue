@@ -6,7 +6,7 @@
       :edit-id="sniId"
       :error-message="form.errorMessage || fetchCertsErrorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="form.fields"
+      :form-fields="requestBody"
       :is-readonly="form.isReadonly"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
@@ -228,15 +228,15 @@ const submitUrl = computed<string>(() => {
   return url
 })
 
+const requestBody: Record<string, any> = reactive({
+  name: form.fields.name,
+  tags: form.fields.tags.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
+  certificate: { id: certificateId.value || form.fields.certificate_id },
+})
+
 const saveFormData = async (): Promise<void> => {
   try {
     form.isReadonly = true
-
-    const requestBody: Record<string, any> = {
-      name: form.fields.name,
-      tags: form.fields.tags.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
-      certificate: { id: certificateId.value || form.fields.certificate_id },
-    }
 
     let response: AxiosResponse | undefined
 
