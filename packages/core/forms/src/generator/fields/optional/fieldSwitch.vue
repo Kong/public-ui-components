@@ -61,6 +61,7 @@ $field-switch-height: 30px;
     height: inherit;
     position: relative;
     text-transform: uppercase;
+    width: 100%;
   }
   .label:before,
   .label:after {
@@ -87,7 +88,6 @@ $field-switch-height: 30px;
     text-shadow: 0 1px rgba(0, 0, 0, 0.2);
   }
   input:checked ~ .label {
-    background: #e1b42b;
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
   }
   input:checked ~ .label:before {

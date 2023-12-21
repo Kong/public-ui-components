@@ -322,6 +322,10 @@ export default {
     margin-top: 24px;
   }
 
+  .k-input-switch .k-label {
+    margin-top: 0;
+  }
+
   .auth-method-container {
     display: flex;
     flex-wrap: wrap;
@@ -382,5 +386,18 @@ export default {
   input.form-control {
     width: 300px;
   }
+}
+
+:deep(.auth-array-item-container) {
+  width: 100%;
+}
+
+:deep(.auth-array-item) {
+  display: flex;
+  margin-top: 8px;
+}
+
+:deep(.k-button.auth-array-item-new) {
+  margin-top: 24px;
 }
 </style>
