@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.5.4...@kong-ui-public/entities-plugins@2.5.5) (2023-12-22)
+
+
+### Bug Fixes
+
+* schema desc transformation in plugin forms ([#1021](https://github.com/Kong/public-ui-components/issues/1021)) ([afad420](https://github.com/Kong/public-ui-components/commit/afad4209fe3199d5f05412613afd214590a75943))
+
+
+
+
+
 ## [2.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.5.3...@kong-ui-public/entities-plugins@2.5.4) (2023-12-21)
 
 
