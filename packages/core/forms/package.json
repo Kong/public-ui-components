@@ -50,7 +50,7 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong/icons": "^1.8.3",
+    "@kong/icons": "^1.8.8",
     "fecha": "^4.2.3",
     "lodash": "^4.17.21"
   },
