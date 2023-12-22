@@ -41,16 +41,6 @@ const props = defineProps({
 
 const isProcessing = ref(false)
 
-const supportedPrismLanguages = Object.keys(components.languages)
-  // @ts-ignore
-  .reduce((arr, lang) => {
-    const alias = components.languages[lang].alias || []
-
-    return [...arr, lang, ...(Array.isArray(alias) ? alias : [alias])]
-  }, [])
-  // @ts-ignore
-  .sort()
-
 /**
  * Applies PrismJS syntax highlighting.
  *
@@ -98,13 +88,34 @@ const stringifiedCode = computed(() => {
   return code
 })
 
-watch(() => props.lang, async (language: string) => {
-  if (supportedPrismLanguages.includes(language)) {
-    try {
-      await import(/* @vite-ignore */`../../../node_modules/prismjs/components/prism-${language}.min.js`)
-    } catch (e) {
-      console.warn(`Prism does not have a language file for '${language}'`)
-    }
+watch(() => props.lang, async () => {
+  try {
+    // Import a list of allowed languages
+    await Promise.all([
+      import('prismjs/components/prism-bash.min.js'),
+      import('prismjs/components/prism-css.min.js'),
+      import('prismjs/components/prism-docker.min.js'),
+      import('prismjs/components/prism-go.min.js'),
+      import('prismjs/components/prism-http.min.js'),
+      import('prismjs/components/prism-javascript.min.js'),
+      import('prismjs/components/prism-jq.min.js'),
+      import('prismjs/components/prism-json.min.js'),
+      import('prismjs/components/prism-log.min.js'),
+      import('prismjs/components/prism-lua.min.js'),
+      import('prismjs/components/prism-makefile.min.js'),
+      import('prismjs/components/prism-markdown.min.js'),
+      import('prismjs/components/prism-python.min.js'),
+      import('prismjs/components/prism-regex.min.js'),
+      import('prismjs/components/prism-rust.min.js'),
+      import('prismjs/components/prism-rest.min.js'),
+      import('prismjs/components/prism-scss.min.js'),
+      import('prismjs/components/prism-sql.min.js'),
+      import('prismjs/components/prism-typescript.min.js'),
+      import('prismjs/components/prism-yaml.min.js'),
+      import('prismjs/components/prism-xml-doc.min.js'),
+    ])
+  } catch (e) {
+    console.warn('Could not import PrismJS language file.')
   }
   Prism.highlightAll()
 }, { immediate: true })
