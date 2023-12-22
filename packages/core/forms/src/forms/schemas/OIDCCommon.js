@@ -1,23 +1,23 @@
 export default {
   fields: [{
     inputType: 'password',
-    label: 'Config.Client Id',
+    label: 'Client ID',
     model: 'config-client_id',
     type: 'input',
   }, {
     inputType: 'password',
-    label: 'Config.Client Secret',
+    label: 'Client Secret',
     model: 'config-client_secret',
     type: 'input',
   }, {
     inputType: 'text',
-    label: 'Config.Issuer',
+    label: 'Issuer',
     model: 'config-issuer',
     required: true,
     type: 'input',
   }, {
     inputType: 'text',
-    label: 'Config.Auth Methods',
+    label: 'Auth Methods',
     model: 'config-auth_methods',
     type: 'input',
   }],

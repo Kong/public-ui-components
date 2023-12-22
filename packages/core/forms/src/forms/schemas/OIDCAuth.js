@@ -1,37 +1,37 @@
 export default {
   fields: [{
     inputType: 'text',
-    label: 'Config.Scopes Claim',
+    label: 'Scopes Claim',
     model: 'config-scopes_claim',
     type: 'input',
   }, {
     inputType: 'text',
-    label: 'Config.Scopes Required',
+    label: 'Scopes Required',
     model: 'config-scopes_required',
     type: 'input',
   }, {
     inputType: 'text',
-    label: 'Config.Audience Claim',
+    label: 'Audience Claim',
     model: 'config-audience_claim',
     type: 'input',
   }, {
     inputType: 'text',
-    label: 'Config.Audience Required',
+    label: 'Audience Required',
     model: 'config-audience_required',
     type: 'input',
   }, {
     inputType: 'text',
-    label: 'Config.Roles Claim',
+    label: 'Roles Claim',
     model: 'config-roles_claim',
     type: 'input',
   }, {
     inputType: 'text',
-    label: 'Config.Roles Required',
+    label: 'Roles Required',
     model: 'config-roles_required',
     type: 'input',
   }, {
     inputType: 'text',
-    label: 'Config.Groups Claim',
+    label: 'Groups Claim',
     model: 'config-groups_claim',
     type: 'array',
     valueType: 'string',
@@ -45,7 +45,7 @@ export default {
     newElementButtonLabel: '+ Add',
   }, {
     inputType: 'text',
-    label: 'Config.Groups Required',
+    label: 'Groups Required',
     model: 'config-groups_required',
     type: 'array',
     valueType: 'string',
@@ -59,7 +59,7 @@ export default {
     newElementButtonLabel: '+ Add',
   }, {
     inputType: 'text',
-    label: 'Config.Authenticated Groups Claim',
+    label: 'Authenticated Groups Claim',
     model: 'config-authenticated_groups_claim',
     type: 'array',
     valueType: 'string',
