@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.24.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.24.2...@kong-ui-public/analytics-chart@0.24.3) (2023-12-22)
+
+
+### Bug Fixes
+
+* legend offset pluse tweaks and improvements to legend styling ([#1033](https://github.com/Kong/public-ui-components/issues/1033)) ([ff6c3a4](https://github.com/Kong/public-ui-components/commit/ff6c3a488bff69f7c7d5619d888772c09b90beb8))
+
+
+
+
+
 ## [0.24.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.24.1...@kong-ui-public/analytics-chart@0.24.2) (2023-12-22)
 
 
