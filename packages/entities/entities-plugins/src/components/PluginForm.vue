@@ -376,7 +376,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
   },
 })
 
-// This is specifically used for credential plugins
+// This is specifically used for credential plugins and portal developer plugins
 // To create an 'ACL' credential we will end up submitting to a URL like: /<entityType>/<entityId>/acl
 const resourceEndpoint = computed((): string => {
   const entityPath: string = props.developer ? 'developers' : 'consumers'
