@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.2.4...@kong-ui-public/entities-shared@2.3.0) (2023-12-22)
+
+
+### Features
+
+* **entities-shared:** support pagination for new filtering [KHCP-10099] ([#1029](https://github.com/Kong/public-ui-components/issues/1029)) ([bd41b1a](https://github.com/Kong/public-ui-components/commit/bd41b1aa2aed5374aa50fd9ea6b3fb7c7d4acdda))
+
+
+
+
+
 ## [2.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.2.3...@kong-ui-public/entities-shared@2.2.4) (2023-12-22)
 
 
