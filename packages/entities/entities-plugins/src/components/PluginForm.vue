@@ -437,8 +437,9 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       initialFormSchema[field].label = formatPluginFieldLabel(field)
     }
 
-    // plugin configuration fields should set description to `help` prop
-    if (parentKey === 'config') {
+    // Apply descriptions from BE schema
+    // KAG-3347: Add /config-.*/ to cover deep fields like `config.redis.*` in the rate-limiting-advanced plugin
+    if (parentKey === 'config' || parentKey.startsWith('config-')) {
       if (schema[key]?.description) {
         initialFormSchema[field].help = marked.parse(schema[key].description, { mangle: false, headerIds: false } as MarkedOptions)
       }
@@ -515,8 +516,12 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       const elements = scheme.elements
       if (elements.type === 'string' && !elements.one_of) {
         const { help, label, hint } = initialFormSchema[field]
-
-        initialFormSchema[field] = { help, label, hint, ...JSON.parse(JSON.stringify(ArrayStringFieldSchema)) }
+        const { help: helpOverride, ...overrides } = JSON.parse(JSON.stringify(ArrayStringFieldSchema))
+        initialFormSchema[field] = { help, label, hint, ...overrides }
+        // Only replace the help text when it is not defined because ArrayStringFieldSchema is more generic
+        if (initialFormSchema[field].help === undefined && typeof helpOverride === 'string') {
+          initialFormSchema[field].help = marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions)
+        }
       }
     }
 
@@ -531,10 +536,38 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         if (plugin === field) {
           // Use custom defined schema instead of building from default && set field label
           const { help, label, hint } = initialFormSchema[field]
-
-          initialFormSchema[field] = { help, label, hint, ...(pluginSchema[plugin as keyof typeof pluginSchema] as Record<string, any>) }
+          const { help: helpOverride, ...overrides } = pluginSchema[plugin as keyof typeof pluginSchema] as Record<string, any>
+          initialFormSchema[field] = { help, label, hint, ...overrides }
+          // Eagerly replace the help text because we are overriding
+          if (typeof helpOverride === 'string') {
+            initialFormSchema[field].help = marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions)
+          }
         }
       })
+    }
+
+    // Apply descriptions from BE schema
+    // KAG-3347: Fix help text in nested fields like `metrics` in the datadog and `parameter_schema`
+    // in the request-validator plugin
+    if (scheme.type === 'array' && scheme.elements?.type === 'record' && Array.isArray(scheme.elements.fields)) {
+      let schemaFieldMap: Record<string, { description?: string }> = {}
+
+      for (const field of scheme.elements.fields) {
+        schemaFieldMap = { ...schemaFieldMap, ...field }
+      }
+
+      const itemFields = initialFormSchema[field]?.items?.schema?.fields
+      if (Array.isArray(itemFields)) {
+        for (const itemField of initialFormSchema[field].items.schema.fields) {
+          const description = schemaFieldMap[itemField.model]?.description
+          // Only replace the help text when it is not defined because it may have already been
+          // overridden by the previous step
+          if (itemField.help === undefined && typeof description === 'string') {
+            itemField.help = marked.parse(description, { mangle: false, headerIds: false } as MarkedOptions)
+          }
+        }
+      }
+
     }
 
     // required fields, if it's boolean (a checkbox) it will be marked as required even though it isn't

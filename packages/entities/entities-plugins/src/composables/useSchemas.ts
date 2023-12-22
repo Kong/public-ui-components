@@ -6,6 +6,7 @@ import { applicationRegistrationSchema } from './plugin-schemas/ApplicationRegis
 import { dataDogSchema } from './plugin-schemas/Datadog'
 import { statsDAdvancedSchema } from './plugin-schemas/StatsDAdvanced'
 import { kafkaSchema } from './plugin-schemas/Kafka'
+import { jwtSchema } from './plugin-schemas/JWT'
 import { mockingSchema } from './plugin-schemas/Mocking'
 import { preFunctionSchema } from './plugin-schemas/PreFunction'
 import { rateLimitingSchema } from './plugin-schemas/RateLimiting'
@@ -46,6 +47,11 @@ export const useSchemas = (entityId?: string) => {
         rows: 4,
         help: 'A comma separated list of certificate values',
       },
+    },
+
+    // KAG-3347: BE descriptions missing. Should remove when BE descriptions are available
+    jwt: {
+      ...jwtSchema,
     },
 
     'kafka-upstream': {

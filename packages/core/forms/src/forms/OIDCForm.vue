@@ -256,6 +256,20 @@ export default {
           prop: this.isEditing ? this.formModel['config-auth_methods'].includes('refresh_token') : false,
         }]
       }
+
+      const fieldMap = {}
+      for (const field of this.formSchema.fields) {
+        fieldMap[field.model] = field
+      }
+
+      for (const s of [this.commonFieldsSchema, this.authFieldsSchema, this.advancedFieldsSchema]) {
+        for (const f of s.fields) {
+          const help = fieldMap[f.model]?.help
+          if (f.help === undefined && typeof help === 'string') {
+            f.help = help
+          }
+        }
+      }
     },
     getAuthMethodsValue(prop, evt) {
       const arr = []

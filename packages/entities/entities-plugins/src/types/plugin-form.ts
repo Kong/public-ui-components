@@ -7,6 +7,7 @@ import type { StatsDSchema } from './plugins/stats-d'
 import type { MockingSchema } from './plugins/mocking'
 import type { DatadogSchema } from './plugins/datadog-schema'
 import type { StatsDAdvancedSchema } from './plugins/stats-d-advanced'
+import type { JWTPluginSchema } from './plugins/jwt'
 import type { KafkaSchema } from './plugins/kafka-schema'
 import type { UpstreamTlsSchema } from './plugins/upstream-tls'
 import type { RateLimitingSchema } from './plugins/rate-limiting'
@@ -183,6 +184,7 @@ export interface CustomSchemas {
   'application-registration': ApplicationRegistrationSchema
   datadog: DatadogSchema
   'upstream-tls': UpstreamTlsSchema
+  jwt: JWTPluginSchema
   'kafka-upstream': KafkaSchema
   'kafka-log': KafkaSchema
   statsd: StatsDSchema

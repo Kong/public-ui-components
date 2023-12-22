@@ -42,7 +42,7 @@
               v-if="selectedIssuer === 'letsEncrypt'"
               :model="formModel"
               :options="formOptions"
-              :schema="ACMELetsEncryptSchema"
+              :schema="acmeLetsEncryptSchema"
               @model-updated="onModelUpdated"
             />
 
@@ -50,7 +50,7 @@
               v-if="selectedIssuer === 'zeroSsl' || selectedIssuer === 'other'"
               :model="formModel"
               :options="formOptions"
-              :schema="ACMEZeroSSLSchema"
+              :schema="acmeZeroSSLSchema"
               @model-updated="onModelUpdated"
             />
           </div>
@@ -134,8 +134,10 @@
 <script setup lang="ts">
 
 import VueFormGenerator from '../generator/FormGenerator.vue'
+import { cloneDeep } from 'lodash'
 import type { PropType } from 'vue'
 import { computed, onMounted, ref } from 'vue'
+import type { Schema } from './schemas/ACMECommon'
 import { ACMECommonSchema, ACMELetsEncryptSchema, ACMEZeroSSLSchema } from './schemas/ACMECommon'
 
 const props = defineProps({
@@ -164,6 +166,51 @@ const props = defineProps({
 const selectedIssuer = ref<string>('zeroSsl')
 const selectedStorageConfig = ref<string>('shm')
 
+const formFieldMap = computed(() => {
+  const fieldMap: Record<string, any> = {}
+
+  if (props.formSchema?.fields) {
+    for (const field of props.formSchema.fields) {
+      fieldMap[field.model] = field
+    }
+  }
+
+  return fieldMap
+})
+
+const acmeCommonSchema = computed<Schema>(() => {
+  const schema = cloneDeep(ACMECommonSchema)
+  for (const field of schema.fields) {
+    const help = formFieldMap.value[field.model]?.help
+    if (field.help === undefined && typeof help === 'string') {
+      field.help = help
+    }
+  }
+  return schema
+})
+
+const acmeLetsEncryptSchema = computed<Schema>(() => {
+  const schema = cloneDeep(ACMELetsEncryptSchema)
+  for (const field of schema.fields) {
+    const help = formFieldMap.value[field.model]?.help
+    if (field.help === undefined && typeof help === 'string') {
+      field.help = help
+    }
+  }
+  return schema
+})
+
+const acmeZeroSSLSchema = computed<Schema>(() => {
+  const schema = cloneDeep(ACMEZeroSSLSchema)
+  for (const field of schema.fields) {
+    const help = formFieldMap.value[field.model]?.help
+    if (field.help === undefined && typeof help === 'string') {
+      field.help = help
+    }
+  }
+  return schema
+})
+
 const globalFields = computed(() => {
   return {
     fields: props.formSchema.fields.filter((r: any) => {
@@ -173,9 +220,9 @@ const globalFields = computed(() => {
 })
 
 const commonFieldsSchema = computed(() => {
-  const result = ACMECommonSchema.fields.filter((item) =>
-    !ACMELetsEncryptSchema.fields.some((i) => i.model === item.model) &&
-    !ACMEZeroSSLSchema.fields.some((i) => i.model === item.model),
+  const result = acmeCommonSchema.value.fields.filter((item) =>
+    !acmeLetsEncryptSchema.value.fields.some((i) => i.model === item.model) &&
+    !acmeZeroSSLSchema.value.fields.some((i) => i.model === item.model),
   )
 
   return {

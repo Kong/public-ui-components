@@ -7,7 +7,7 @@ export const kafkaSchema: KafkaSchema = {
     newElementButtonLabel: '+ Add Bootstrap Server',
     label: 'Bootstrap Server(s)',
     placeholder: 'Enter a Bootstrap Server',
-    help: 'A list of bootstrap servers',
+    help: 'Set of bootstrap brokers.', // KAG-3347: UI text updated. Should remove when BE description is available
     items: {
       type: 'object',
       schema: {
