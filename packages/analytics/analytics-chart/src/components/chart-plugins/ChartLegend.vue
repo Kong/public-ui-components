@@ -67,33 +67,29 @@ const showValues = inject('showLegendValues', true)
 const position = inject('legendPosition', ref(ChartLegendPosition.Right))
 const legendItemsTracker = ref<LegendItem[]>([])
 
-// Return the number of rows for a grid layout
-// by cmparing the top position of each item.
-const numberOfRows = () => {
+// Check if the legend wraps by comparing the top position of each item.
+const doesTheLegendWrap = () => {
   const element = legendContainerRef.value
   if (!element || !legendItemsRef.value || element.children.length === 0) {
     return 0
   }
 
-  let numberOfRows = 1
-  let previousTop = element.children[0].getBoundingClientRect().top
+  const previousTop = element.children[0].getBoundingClientRect().top
   for (const item of legendItemsRef.value) {
     const currentTop = item.getBoundingClientRect().top
     // If the top position of the current item is
     // different from the previous item, that means
     // there is a new row.
-    if (currentTop !== previousTop) {
-      numberOfRows++
-      previousTop = currentTop
+    if (currentTop > previousTop) {
+      return true
     }
   }
-
-  return numberOfRows
+  return false
 }
 
 const checkForWrap = () => {
   if (legendContainerRef.value && position.value === ChartLegendPosition.Bottom) {
-    if (numberOfRows() > 1) {
+    if (doesTheLegendWrap()) {
       shouldTruncate.value = true
     } else {
       shouldTruncate.value = false
@@ -144,17 +140,25 @@ watch(() => props.items, () => {
   }
 }, { immediate: true, flush: 'post' })
 
+const resizeObserver = new ResizeObserver(() => {
+  checkForWrap()
+})
+
 watch(() => position.value, () => {
   formatGrid()
 })
 
 onMounted(() => {
   legendItemsTracker.value = props.items
-  window.addEventListener('resize', checkForWrap)
+  if (legendContainerRef.value) {
+    resizeObserver.observe(legendContainerRef.value)
+  }
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', checkForWrap)
+  if (legendContainerRef.value) {
+    resizeObserver.unobserve(legendContainerRef.value)
+  }
 })
 
 const handleLegendItemClick = (datasetIndex: number = 0, segmentIndex: number): void => {
@@ -232,13 +236,24 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     column-gap: $kui-space-10;
     display: grid;
     justify-content: center;
-    max-height: 15%;
+    max-height: 12%;
     width: 95%;
     .truncate-label {
       max-width: 15ch;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    li {
+      margin-top: 0;
+
+      .legend {
+        margin-top: $kui-space-50;
+      }
+      .label {
+        line-height: $kui-line-height-50;
+      }
     }
   }
 
@@ -268,12 +283,11 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
       flex: 0 0 14px;
       height: 3px;
       margin-right: $kui-space-50;
-      margin-top: $kui-space-30;
+      margin-top: $kui-space-20;
     }
 
     .label {
       font-size: $kui-font-size-30;
-      line-height: $kui-line-height-50;
     }
 
     .sub-label {
