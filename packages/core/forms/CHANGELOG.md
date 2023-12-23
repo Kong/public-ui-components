@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.15...@kong-ui-public/forms@2.1.16) (2023-12-23)
+
+
+### Bug Fixes
+
+* **entities-plugins:** issues in KM ([#1009](https://github.com/Kong/public-ui-components/issues/1009)) ([fc47c0e](https://github.com/Kong/public-ui-components/commit/fc47c0e3e967921f4e98ea6fadad37e06f76409b))
+
+
+
+
+
 ## [2.1.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.14...@kong-ui-public/forms@2.1.15) (2023-12-22)
 
 
