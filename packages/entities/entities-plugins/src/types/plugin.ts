@@ -62,7 +62,6 @@ export interface PluginEntityInfo {
 
 export type PluginMetaData = {
   description: string // A string to describe a Plugin.
-  docsUrlName?: string // An optional field for plugin's documentation URL.
   group: PluginGroup // Plugin categories meta.
   imageName?: string // An optional tag to define plugin's icon image.
   isEnterprise: boolean // The value will be True if the Plugin is enterprise only.

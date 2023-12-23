@@ -286,7 +286,6 @@ export const usePluginMetaData = () => {
       name: t('plugins.meta.pre-function.name'),
       scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
       imageName: 'kong-function',
-      docsUrlName: 'serverless-functions',
     },
     'post-function': {
       description: t('plugins.meta.post-function.description'),
@@ -295,7 +294,6 @@ export const usePluginMetaData = () => {
       name: t('plugins.meta.post-function.name'),
       scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
       imageName: 'kong-function',
-      docsUrlName: 'serverless-functions',
     },
     datadog: {
       description: t('plugins.meta.datadog.description'),

@@ -15,6 +15,7 @@ import { routeByHeaderSchema } from './plugin-schemas/RouteByHeader'
 import { graphqlRateLimitingAdvancedSchema } from './plugin-schemas/GraphQLRateLimitingAdvanced'
 import { statsDSchema } from './plugin-schemas/StatsD'
 import { samlSchema } from './plugin-schemas/SAML'
+import { vaultAuthSchema } from './plugin-schemas/VaultAuth'
 import { ArrayStringFieldSchema } from './plugin-schemas/ArrayStringFieldSchema'
 import RequestValidatorSchema from './plugin-schemas/RequestValidator'
 import ZipkinSchema from './plugin-schemas/Zipkin'
@@ -72,6 +73,10 @@ export const useSchemas = (entityId?: string) => {
 
     'route-by-header': {
       ...routeByHeaderSchema,
+    },
+
+    'vault-auth': {
+      ...vaultAuthSchema,
     },
 
     mocking: {

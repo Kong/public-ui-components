@@ -106,7 +106,6 @@ import {
   type PluginFormFields,
   type DefaultPluginsSchemaRecord,
   type DefaultPluginsFormSchema,
-  type EntityType,
   type PluginEntityInfo,
 } from '../types'
 import endpoints from '../plugins-endpoints'
@@ -163,6 +162,12 @@ const props = defineProps({
 
   /** Credentials use */
   credential: {
+    type: Boolean,
+    default: false,
+  },
+
+  /** For Kong Manager portal developers */
+  developer: {
     type: Boolean,
     default: false,
   },
@@ -228,7 +233,13 @@ const fetchUrl = computed((): string => {
   }
 
   // plugin
-  return endpoints.form[props.config.app].edit
+  if (props.config.entityType && props.config.entityId) {
+    return endpoints.form[props.config.app].edit.forEntity
+      .replace(/{entityType}/gi, props.config.entityType)
+      .replace(/{entityId}/gi, props.config.entityId)
+  } else {
+    return endpoints.form[props.config.app].edit.all
+  }
 })
 
 const entityMap = computed((): Record<string, PluginEntityInfo> => {
@@ -365,14 +376,14 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
   },
 })
 
-// This is specifically used for credential plugins
+// This is specifically used for credential plugins and portal developer plugins
 // To create an 'ACL' credential we will end up submitting to a URL like: /<entityType>/<entityId>/acl
 const resourceEndpoint = computed((): string => {
-  const entityPath: EntityType = 'consumers'
+  const entityPath: string = props.developer ? 'developers' : 'consumers'
 
   const type = credentialMetaData[props.pluginType]?.endpoint || '/plugins'
 
-  return `${entityPath}/${props.config.entityId}${type}`
+  return `${entityPath}/${props.config.entityId}${props.developer ? '/credentials' : ''}${type}`
 })
 
 const getArrayType = (list: unknown[]): string => {
@@ -389,6 +400,7 @@ const formatPluginFieldLabel = (label: string) => {
 const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>) => {
   let schema = (response && response.fields) || []
   const pluginSchema = customSchemas[props.pluginType as keyof typeof customSchemas]
+  const credentialSchema = credentialMetaData[props.pluginType]?.schema?.fields
 
   // schema can either be an object or an array of objects. If it's an array, convert it to an object
   if (Array.isArray(schema)) {
@@ -570,6 +582,18 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
     }
 
+    if (treatAsCredential.value && props.config.app === 'kongManager' && credentialSchema) {
+      for (let i = 0; i < credentialSchema.length; i++) {
+        if (credentialSchema[i][field]) {
+          initialFormSchema[field] = {
+            ...initialFormSchema[field],
+            ...credentialSchema[i][field],
+          }
+          break
+        }
+      }
+    }
+
     // required fields, if it's boolean (a checkbox) it will be marked as required even though it isn't
     if (scheme.required && scheme.type !== 'boolean') {
       initialFormSchema[field].required = true
@@ -615,6 +639,8 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       if (scheme.len_min > 0) {
         initialFormSchema[field].submitWhenNull = true
       }
+    } else if (scheme.type === 'foreign') {
+      valueType = 'object'
     } else if (scheme.default && Array.isArray(scheme.default)) {
       valueType = 'array'
       initialFormSchema[field].valueArrayType = getArrayType(scheme.default)
@@ -842,8 +868,11 @@ const validateSubmitUrl = computed((): string => {
  * Build the submit URL
  */
 const submitUrl = computed((): string => {
+  const isScoped = props.config.entityType && props.config.entityId && !props.developer
   // plugin endpoint vs credential endpoint
-  const submitEndpoint = !treatAsCredential.value ? endpoints.form[props.config.app][formType.value] : endpoints.form[props.config.app].credential[formType.value]
+  const submitEndpoint = !treatAsCredential.value
+    ? endpoints.form[props.config.app][formType.value][isScoped ? 'forEntity' : 'all']
+    : endpoints.form[props.config.app].credential[formType.value]
 
   let url = `${props.config.apiBaseUrl}${submitEndpoint}`
 
@@ -857,6 +886,9 @@ const submitUrl = computed((): string => {
   url = url.replace(/{resourceEndpoint}/gi, resourceEndpoint.value)
   // Always replace the id when editing
   url = url.replace(/{id}/gi, props.pluginId)
+  // replace entityType and entityId if scoped
+  url = url.replace(/{entityType}/gi, props.config.entityType || '')
+  url = url.replace(/{entityId}/gi, props.config.entityId || '')
 
   return url
 })

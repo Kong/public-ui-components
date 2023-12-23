@@ -12,6 +12,7 @@ import type { KafkaSchema } from './plugins/kafka-schema'
 import type { UpstreamTlsSchema } from './plugins/upstream-tls'
 import type { RateLimitingSchema } from './plugins/rate-limiting'
 import type { RouteByHeaderSchema } from './plugins/route-by-header'
+import type { VaultAuthSchema } from './plugins/vault-auth'
 import type { GraphQLRateLimitingAdvancedSchema } from './plugins/graphql-rate-limiting-advanced'
 import type { SAMLSchema } from './plugins/saml'
 
@@ -193,6 +194,7 @@ export interface CustomSchemas {
   'rate-limiting': RateLimitingSchema
   'rate-limiting-advanced': RateLimitingSchema
   'route-by-header': RouteByHeaderSchema
+  'vault-auth': VaultAuthSchema
   'graphql-rate-limiting-advanced': GraphQLRateLimitingAdvancedSchema
   'response-ratelimiting': RateLimitingSchema
   'pre-function': CommonSchemaFields & Record<string, any>

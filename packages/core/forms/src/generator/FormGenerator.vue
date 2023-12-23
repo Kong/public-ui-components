@@ -374,7 +374,6 @@ export default {
       }
     }
     .label {
-      background-color: $kui-color-background-neutral-weakest;
       box-shadow: none;
       &:before,
       &:after {
