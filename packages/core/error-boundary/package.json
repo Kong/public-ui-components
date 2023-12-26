@@ -41,7 +41,7 @@
   "devDependencies": {
     "@kong/design-tokens": "1.12.3",
     "@kong/icons": "^1.8.8",
-    "vue": "^3.3.11"
+    "vue": "^3.3.12"
   },
   "repository": {
     "type": "git",
@@ -61,6 +61,6 @@
     "errorLimit": "200KB"
   },
   "peerDependencies": {
-    "vue": "^3.3.11"
+    "vue": "^3.3.12"
   }
 }
