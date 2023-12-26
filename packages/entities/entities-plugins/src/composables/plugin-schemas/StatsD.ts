@@ -55,11 +55,6 @@ export const statsDSchema: StatsDSchema = {
             'username',
           ],
         }, {
-          model: 'custom_identifier',
-          label: 'Custom Identifier',
-          type: 'input',
-          inputType: 'text',
-        }, {
           model: 'service_identifier',
           label: 'Service Identifier',
           type: 'select',
