@@ -105,6 +105,16 @@ export default {
     },
   },
 
+  watch: {
+    idValue: {
+      handler(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.updateModel(newVal)
+        }
+      },
+    },
+  },
+
   async created() {
     await this.$nextTick()
     let presetEntity
@@ -258,7 +268,7 @@ export default {
 
     updateModel(value) {
       // Emit value of field to EntityForm. If empty string send as null
-      this.$emit('model-updated', value && value.length ? value : null, this.schema.model)
+      this.$emit('model-updated', value?.length ? value : null, this.schema.model)
     },
 
     onSelected(item) {
