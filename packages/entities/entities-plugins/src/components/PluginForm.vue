@@ -616,7 +616,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       }
 
       initialFormSchema[field].inputType = scheme.type === 'array' || scheme.type === 'string'
-        ? (scheme.encrypted ? 'password' : 'text')
+        ? 'text'
         : scheme.type
     }
 

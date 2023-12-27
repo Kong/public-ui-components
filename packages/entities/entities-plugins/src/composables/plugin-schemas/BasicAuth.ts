@@ -8,7 +8,7 @@ export const basicAuthSchema: BasicAuthFieldSchema = {
 
     {
       password: {
-        inputType: 'password',
+        inputType: 'text',
       },
     },
   ],
