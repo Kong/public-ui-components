@@ -2,7 +2,7 @@ import type { GraphQLRateLimitingAdvancedSchema } from '../../types/plugins/grap
 
 export const graphqlRateLimitingAdvancedSchema: GraphQLRateLimitingAdvancedSchema = {
   'config-strategy': {
-    label: 'Config.Strategy',
+    label: 'Strategy',
     type: 'select',
     default: 'cluster',
     values: ['cluster', 'redis'],

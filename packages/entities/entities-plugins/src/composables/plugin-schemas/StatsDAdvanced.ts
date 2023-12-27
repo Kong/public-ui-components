@@ -7,7 +7,7 @@ export const statsDAdvancedSchema: StatsDAdvancedSchema = {
     inputType: 'text',
     valueArrayType: 'string',
     valueType: 'array',
-    label: 'config.allow_status_codes',
+    label: 'Allow Status Codes',
     help: 'A list of status code ranges, separated by commas. e.g. 200-204, 500-505',
   },
   'config-metrics': {
