@@ -9,7 +9,7 @@ export const hmacAuthSchema: HmacAuthFieldSchema = {
     },
     {
       secret: {
-        inputType: 'password',
+        inputType: 'text',
         submitWhenNull: false,
         hint: `The secret to use in the HMAC Signature verification. Note that
         if this parameter isn’t provided, Kong will generate a value for you and

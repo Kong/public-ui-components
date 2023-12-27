@@ -44,7 +44,7 @@ export const jwtSecretSchema: JwtSecretFieldSchema = {
     },
     {
       secret: {
-        inputType: 'password',
+        inputType: 'text',
         hint: `If algorithm is HMAC, the secret used to sign JWTs for
                this credential. If left out, will be auto-generated.`,
       },

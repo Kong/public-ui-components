@@ -1,11 +1,11 @@
 export default {
   fields: [{
-    inputType: 'password',
+    inputType: 'text',
     label: 'Config.Client Id',
     model: 'config-client_id',
     type: 'input',
   }, {
-    inputType: 'password',
+    inputType: 'text',
     label: 'Config.Client Secret',
     model: 'config-client_secret',
     type: 'input',
