@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.5.11...@kong-ui-public/entities-plugins@2.5.12) (2023-12-28)
+
+
+### Bug Fixes
+
+* **entities:** teleport warning ([#1001](https://github.com/Kong/public-ui-components/issues/1001)) ([78d903e](https://github.com/Kong/public-ui-components/commit/78d903ec611fc7e23a29b81a482ac92dc54dc23a))
+
+
+
+
+
 ## [2.5.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.5.10...@kong-ui-public/entities-plugins@2.5.11) (2023-12-27)
 
 
