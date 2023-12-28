@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@2.2.16...@kong-ui-public/entities-consumers@2.3.0) (2023-12-28)
+
+
+### Features
+
+* add `paginatedEndpoint` prop ([#759](https://github.com/Kong/public-ui-components/issues/759)) ([efdb2fd](https://github.com/Kong/public-ui-components/commit/efdb2fd2f07974df676d4602efc14fbb177e93a2))
+
+
+
+
+
 ## [2.2.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@2.2.15...@kong-ui-public/entities-consumers@2.2.16) (2023-12-28)
 
 
