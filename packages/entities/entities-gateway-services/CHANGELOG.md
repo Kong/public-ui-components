@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.2.16...@kong-ui-public/entities-gateway-services@2.2.17) (2023-12-28)
+
+
+### Bug Fixes
+
+* **entities-gateway-services:** fix broken radio label ([#1040](https://github.com/Kong/public-ui-components/issues/1040)) ([f084302](https://github.com/Kong/public-ui-components/commit/f084302bdcff47df2120abf577bf7fba7a26eefc))
+
+
+
+
+
 ## [2.2.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.2.15...@kong-ui-public/entities-gateway-services@2.2.16) (2023-12-28)
 
 
