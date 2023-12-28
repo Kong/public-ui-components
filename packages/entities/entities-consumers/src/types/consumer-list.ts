@@ -12,6 +12,8 @@ export interface BaseConsumerListConfig {
   consumerGroupName?: string
   /** Route for creating a consumer */
   createRoute: RouteLocationRaw
+  /** A boolean to indicate if the paginated endpoint is used when consumerGroupId is provided */
+  paginatedEndpoint?: boolean
   /** A function that returns the route for viewing a consumer */
   getViewRoute: (id: string) => RouteLocationRaw
   /** A function that returns the route for editing a consumer */
