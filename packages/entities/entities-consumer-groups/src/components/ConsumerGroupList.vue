@@ -2,7 +2,7 @@
   <div class="kong-ui-entities-consumer-groups-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
-      :disable-pagination="isConsumerPage"
+      :disable-pagination="isConsumerPage && !config.paginatedEndpoint"
       disable-pagination-page-jump
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
@@ -11,7 +11,7 @@
       :fetcher="fetcher"
       :fetcher-cache-key="fetcherCacheKey"
       pagination-type="offset"
-      preferences-storage-key="kong-ui-entities-consumer-groups-list"
+      :preferences-storage-key="preferencesStorageKey"
       :query="filterQuery"
       :row-attributes="rowAttributes"
       :table-headers="tableHeaders"
@@ -275,6 +275,9 @@ const { axiosInstance } = useAxios({
 })
 const fetcherCacheKey = ref<number>(1)
 const isConsumerPage = computed<boolean>(() => !!props.config.consumerId)
+const preferencesStorageKey = computed<string>(
+  () => isConsumerPage.value ? 'kong-ui-entities-consumer-groups-list-in-consumer-page' : 'kong-ui-entities-consumer-groups-list',
+)
 
 /**
  * Table Headers
@@ -338,7 +341,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   } as FuzzyMatchFilterConfig
 })
 
-const dataKeyName = computed((): string | undefined => isConsumerPage.value ? 'consumer_groups' : undefined)
+const dataKeyName = computed((): string | undefined => isConsumerPage.value && !props.config.paginatedEndpoint ? 'consumer_groups' : undefined)
 const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value, dataKeyName.value)
 
 const clearFilter = (): void => {
