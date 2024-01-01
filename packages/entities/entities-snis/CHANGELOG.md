@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@2.1.20...@kong-ui-public/entities-snis@2.1.21) (2024-01-01)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#1042](https://github.com/Kong/public-ui-components/issues/1042)) ([6112776](https://github.com/Kong/public-ui-components/commit/61127764e7f193177a394e292db30ff11aab0409))
+
+
+
+
+
 ## [2.1.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@2.1.19...@kong-ui-public/entities-snis@2.1.20) (2023-12-28)
 
 
