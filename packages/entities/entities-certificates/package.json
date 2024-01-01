@@ -24,7 +24,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.0.0-alpha.73",
     "axios": "^1.6.2",
-    "vue": "^3.3.12",
+    "vue": "^3.3.13",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
@@ -32,7 +32,7 @@
     "@kong/design-tokens": "1.12.3",
     "@kong/kongponents": "9.0.0-alpha.73",
     "axios": "^1.6.2",
-    "vue": "^3.3.12",
+    "vue": "^3.3.13",
     "vue-router": "^4.2.5"
   },
   "scripts": {
@@ -67,7 +67,7 @@
   "dependencies": {
     "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@peculiar/x509": "^1.9.5"
+    "@peculiar/x509": "^1.9.6"
   },
   "distSizeChecker": {
     "errorLimit": "1.5MB"

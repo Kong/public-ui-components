@@ -45,7 +45,7 @@
     "@kong/design-tokens": "1.12.3",
     "@kong/kongponents": "9.0.0-alpha.73",
     "json-schema-to-ts": "^2.9.2",
-    "vue": "^3.3.12"
+    "vue": "^3.3.13"
   },
   "repository": {
     "type": "git",
@@ -68,7 +68,7 @@
     "@kong-ui-public/analytics-chart": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^8.126.2",
-    "vue": "^3.3.12"
+    "vue": "^3.3.13"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
