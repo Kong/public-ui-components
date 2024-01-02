@@ -55,7 +55,10 @@
              - if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included)
         -->
         <div v-if="isWizardStep" />
-        <div v-else>
+        <div
+          v-else
+          class="plugin-form-actions"
+        >
           <KToggle
             v-if="config.jsonYamlMilestone2Enabled"
             v-slot="{ isToggled, toggle }"
@@ -75,6 +78,7 @@
                 :is-visible="isToggled.value"
                 prevent-close-on-blur
                 :title="t('view_configuration.title')"
+                type="submit"
                 @close="toggle"
               >
                 <div>
@@ -101,6 +105,7 @@
           </KToggle>
           <KButton
             appearance="secondary"
+            class="form-action-button"
             data-testid="form-cancel"
             :disabled="form.isReadonly"
             type="reset"
@@ -111,7 +116,7 @@
           <KButton
             v-if="formType === EntityBaseFormType.Create && config.backRoute"
             appearance="secondary"
-            class="form-back-button"
+            class="form-action-button"
             data-testid="form-back"
             :disabled="form.isReadonly"
             @click="handleClickBack"
@@ -156,6 +161,8 @@ import composables from '../composables'
 import { ArrayStringFieldSchema } from '../composables/plugin-schemas/ArrayStringFieldSchema'
 import PluginEntityForm from './PluginEntityForm.vue'
 import type { Tab } from '@kong/kongponents'
+import JsonCodeBlock from '../../../entities-shared/src/components/common/JsonCodeBlock.vue'
+import YamlCodeBlock from '../../../entities-shared/src/components/common/YamlCodeBlock.vue'
 
 const emit = defineEmits<{
   (e: 'error:fetch-schema', error: AxiosError): void,
@@ -1091,8 +1098,12 @@ onBeforeMount(async () => {
 .kong-ui-entities-plugin-form-container {
   width: 100%;
 
-  .form-back-button {
+  .form-action-button {
     margin-left: $kui-space-60;
+  }
+
+  .plugin-form-actions {
+    display: flex;
   }
 }
 </style>
