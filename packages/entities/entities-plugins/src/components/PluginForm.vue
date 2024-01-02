@@ -78,7 +78,7 @@
                 :is-visible="isToggled.value"
                 prevent-close-on-blur
                 :title="t('view_configuration.title')"
-                type="submit"
+                type="button"
                 @close="toggle"
               >
                 <div>
