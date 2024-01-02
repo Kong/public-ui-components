@@ -56,6 +56,49 @@
         -->
         <div v-if="isWizardStep" />
         <div v-else>
+          <KToggle
+            v-if="config.jsonYamlMilestone2Enabled"
+            v-slot="{ isToggled, toggle }"
+          >
+            <div>
+              <KButton
+                appearance="tertiary"
+                data-testid="form-view-configuration"
+                @click.prevent="toggle"
+              >
+                {{ t('actions.view_configuration') }}
+              </KButton>
+              <KSlideout
+                close-button-alignment="end"
+                data-testid="form-view-configuration-slideout"
+                :has-overlay="false"
+                :is-visible="isToggled.value"
+                prevent-close-on-blur
+                :title="t('view_configuration.title')"
+                @close="toggle"
+              >
+                <div>
+                  {{ t('view_configuration.message') }}
+                </div>
+                <KTabs
+                  data-testid="form-view-configuration-slideout-tabs"
+                  :tabs="tabs"
+                >
+                  <template #json>
+                    <JsonCodeBlock
+                      :config="config"
+                      :fetcher-url="submitUrl"
+                      :json-record="form.fields"
+                      :request-method="props.pluginId ? 'put' : 'post'"
+                    />
+                  </template>
+                  <template #yaml>
+                    <YamlCodeBlock :yaml-record="form.fields" />
+                  </template>
+                </KTabs>
+              </KSlideout>
+            </div>
+          </KToggle>
           <KButton
             appearance="secondary"
             data-testid="form-cancel"
@@ -112,6 +155,7 @@ import endpoints from '../plugins-endpoints'
 import composables from '../composables'
 import { ArrayStringFieldSchema } from '../composables/plugin-schemas/ArrayStringFieldSchema'
 import PluginEntityForm from './PluginEntityForm.vue'
+import type { Tab } from '@kong/kongponents'
 
 const emit = defineEmits<{
   (e: 'error:fetch-schema', error: AxiosError): void,
@@ -221,6 +265,17 @@ const form = reactive<PluginFormState>({
   isReadonly: false,
   errorMessage: '',
 })
+
+const tabs = ref<Tab[]>([
+  {
+    title: t('view_configuration.yaml'),
+    hash: '#yaml',
+  },
+  {
+    title: t('view_configuration.json'),
+    hash: '#json',
+  },
+])
 
 const fetchUrl = computed((): string => {
   if (treatAsCredential.value) { // credential

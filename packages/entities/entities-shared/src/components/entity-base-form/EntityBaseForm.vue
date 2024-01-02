@@ -61,6 +61,7 @@
                 :is-visible="isToggled.value"
                 prevent-close-on-blur
                 :title="t('baseForm.configuration.title')"
+                type="button"
                 @close="toggle"
               >
                 <div>
@@ -74,12 +75,12 @@
                     <JsonCodeBlock
                       :config="config"
                       :fetcher-url="fetcherUrl"
-                      :json-record="jsonOrYamlRecord"
+                      :json-record="props.formFields"
                       :request-method="props.editId ? 'put' : 'post'"
                     />
                   </template>
                   <template #yaml>
-                    <YamlCodeBlock :yaml-record="jsonOrYamlRecord" />
+                    <YamlCodeBlock :yaml-record="props.formFields" />
                   </template>
                 </KTabs>
               </KSlideout>
@@ -196,17 +197,6 @@ const fetchDetailsError = ref(false)
 const fetchErrorMessage = ref('')
 const disableSave = computed((): boolean => props.canSubmit === false || props.isReadonly)
 
-const jsonOrYamlRecord = computed((): PropType<Record<string, any>> => {
-  if (!props.formFields) {
-    return props.formFields
-  }
-  const processedRecord = JSON.parse(JSON.stringify(props.formFields))
-  // api requires default value for tags to be empty array
-  if (processedRecord.tags === '') {
-    processedRecord.tags = []
-  }
-  return processedRecord
-})
 /**
  * Build the fetcher URL
  */
