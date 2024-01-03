@@ -4,6 +4,8 @@
       :can-submit="canSubmit"
       :config="konnectConfig"
       :error-message="form.errorMessage"
+      :fetch-url="konnectFetchUrl"
+      :form-fields="form.fields"
       :is-readonly="form.isReadonly"
       @cancel="handleCancel"
       @submit="handleSave"
@@ -46,6 +48,7 @@ import type { KonnectBaseFormConfig } from '../../src'
 import { EntityBaseForm, EntityFormSection } from '../../src'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
+const konnectFetchUrl = ref(`/api/runtime_groups/${controlPlaneId}/services`)
 
 const konnectConfig = ref<KonnectBaseFormConfig>({
   app: 'konnect',
@@ -53,6 +56,7 @@ const konnectConfig = ref<KonnectBaseFormConfig>({
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   cancelRoute: { name: '/' },
+  jsonYamlMilestone2Enabled: true,
 })
 
 const canSubmit = computed((): boolean => !!form.fields.name)

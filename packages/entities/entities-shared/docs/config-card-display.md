@@ -54,6 +54,16 @@ List types of element in the item object.
 
 The base record configuration when format is either JSON or YAML.
 
+#### `fetcherUrl`
+
+- type: `String`
+- required: `false`
+- default: `''`
+
+Fetcher url for the entity with the filled-in controlPlaneId, workspace, and entity id.
+
+ex. `https://cloud.konghq.com/us/gateway-manager/91e192e0-5981-4662-a37d-7b24272c9da3/routes/0af86198-9822-46e0-9028-47b173caf4aa`
+
 ### Usage example
 
 Please refer to the [sandbox](../sandbox/pages/ConfigCardDisplayPage.vue).

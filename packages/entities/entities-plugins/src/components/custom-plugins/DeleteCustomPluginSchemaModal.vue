@@ -40,7 +40,7 @@
     <template #action-buttons>
       <div>
         <KButton
-          appearance="outline"
+          appearance="tertiary"
           class="cancel-button"
           data-testid="delete-custom-plugin-form-cancel"
           @click="$emit('closed')"
