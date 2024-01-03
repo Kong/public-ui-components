@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@2.3.0...@kong-ui-public/entities-routes@2.3.1) (2024-01-03)
+
+
+### Bug Fixes
+
+* **routes:** datadog errors [khcp-10204] ([#1047](https://github.com/Kong/public-ui-components/issues/1047)) ([728991c](https://github.com/Kong/public-ui-components/commit/728991cda53e011505042f4b28d26e6a410a4ab8))
+
+
+
+
+
 # [2.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@2.2.17...@kong-ui-public/entities-routes@2.3.0) (2024-01-03)
 
 
