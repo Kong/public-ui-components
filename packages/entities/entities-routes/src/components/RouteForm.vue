@@ -673,7 +673,7 @@ const handleAddRoutingRuleEntity = (entity: string): void => {
 
 // display or hide routing rules selector
 const displayRoutingRulesSelector = computed(() => {
-  return routingRulesPerProtocolMap[form.fields.protocols].filter(protocol => !form.fields[protocol as RoutingRuleEntity])
+  return routingRulesPerProtocolMap[form.fields.protocols]?.filter(protocol => !form.fields[protocol as RoutingRuleEntity])
 })
 
 // removes rule entity from the form
@@ -720,7 +720,7 @@ const sanitizeRoutingRulesEntities = () => {
   const routingRulesEntities = Object.keys(form.fields).filter(element => allRoutingRulesEntities.includes(element))
 
   routingRulesEntities.forEach(entity => {
-    if (!protocolEntities.includes(entity)) {
+    if (!protocolEntities?.includes(entity)) {
       handleRemoveRoutingRuleEntity(entity)
     }
   })
