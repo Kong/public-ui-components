@@ -30,7 +30,6 @@
       @fetch:error="(err: any) => $emit('error', err)"
       @fetch:success="initForm"
       @loading="(val: boolean) => $emit('loading', val)"
-      @submit="saveFormData"
     >
       <!-- Having a hidden form here allows us to @submit like a native html form -->
       <form

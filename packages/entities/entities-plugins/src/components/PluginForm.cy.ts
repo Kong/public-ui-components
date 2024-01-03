@@ -655,8 +655,7 @@ describe('<PluginForm />', () => {
         cy.get('#tags').clear()
         cy.get('#tags').type('tag1,tag2')
 
-        cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
-          .vm.$emit('submit'))
+        cy.getTestId('form-submit').click()
 
         cy.wait(['@validatePlugin', '@updatePlugin'])
 
@@ -1310,8 +1309,7 @@ describe('<PluginForm />', () => {
         cy.get('#tags').clear()
         cy.get('#tags').type('tag1,tag2')
 
-        cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
-          .vm.$emit('submit'))
+        cy.getTestId('form-submit').click()
 
         cy.wait(['@validatePlugin', '@updatePlugin']).then(() => {
           cy.get('@onUpdateSpy').should('have.been.calledOnce')
