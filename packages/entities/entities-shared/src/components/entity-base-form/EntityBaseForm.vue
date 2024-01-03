@@ -42,50 +42,15 @@
         data-testid="form-actions"
       >
         <slot name="form-actions">
-          <KToggle
-            v-if="config.jsonYamlMilestone2Enabled"
-            v-slot="{ isToggled, toggle }"
-          >
-            <div>
-              <KButton
-                appearance="tertiary"
-                data-testid="form-view-configuration"
-                @click.prevent="toggle"
-              >
-                {{ t('baseForm.actions.viewConfiguration') }}
-              </KButton>
-              <KSlideout
-                close-button-alignment="end"
-                data-testid="form-view-configuration-slideout"
-                :has-overlay="false"
-                :is-visible="isToggled.value"
-                prevent-close-on-blur
-                :title="t('baseForm.configuration.title')"
-                type="button"
-                @close="toggle"
-              >
-                <div>
-                  {{ t('baseForm.configuration.message') }}
-                </div>
-                <KTabs
-                  data-testid="form-view-configuration-slideout-tabs"
-                  :tabs="tabs"
-                >
-                  <template #json>
-                    <JsonCodeBlock
-                      :config="config"
-                      :fetcher-url="fetcherUrl"
-                      :json-record="props.formFields"
-                      :request-method="props.editId ? 'put' : 'post'"
-                    />
-                  </template>
-                  <template #yaml>
-                    <YamlCodeBlock :yaml-record="props.formFields" />
-                  </template>
-                </KTabs>
-              </KSlideout>
-            </div>
-          </KToggle>
+          <div v-if="config.jsonYamlMilestone2Enabled">
+            <KButton
+              appearance="tertiary"
+              data-testid="form-view-configuration"
+              @click="toggle()"
+            >
+              {{ t('baseForm.actions.viewConfiguration') }}
+            </KButton>
+          </div>
           <KButton
             appearance="secondary"
             data-testid="form-cancel"
@@ -105,6 +70,35 @@
         </slot>
       </div>
     </form>
+    <KSlideout
+      close-button-alignment="end"
+      data-testid="form-view-configuration-slideout"
+      :has-overlay="false"
+      :is-visible="isToggled"
+      prevent-close-on-blur
+      :title="t('baseForm.configuration.title')"
+      @close="toggle()"
+    >
+      <div>
+        {{ t('baseForm.configuration.message') }}
+      </div>
+      <KTabs
+        data-testid="form-view-configuration-slideout-tabs"
+        :tabs="tabs"
+      >
+        <template #json>
+          <JsonCodeBlock
+            :config="config"
+            :fetcher-url="fetcherUrl"
+            :json-record="props.formFields"
+            :request-method="props.editId ? 'put' : 'post'"
+          />
+        </template>
+        <template #yaml>
+          <YamlCodeBlock :yaml-record="props.formFields" />
+        </template>
+      </KTabs>
+    </KSlideout>
   </KCard>
 </template>
 
@@ -196,6 +190,7 @@ const isLoading = ref(false)
 const fetchDetailsError = ref(false)
 const fetchErrorMessage = ref('')
 const disableSave = computed((): boolean => props.canSubmit === false || props.isReadonly)
+const isToggled = ref(false)
 
 /**
  * Build the fetcher URL
@@ -220,6 +215,10 @@ const fetcherUrl = computed<string>(() => {
 
   return url
 })
+
+const toggle = (): void => {
+  isToggled.value = !isToggled.value
+}
 
 const handleErrorCtaClick = (): void => {
   if (props.config.cancelRoute) {

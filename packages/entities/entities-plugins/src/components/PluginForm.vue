@@ -59,50 +59,15 @@
           v-else
           class="plugin-form-actions"
         >
-          <KToggle
-            v-if="config.jsonYamlMilestone2Enabled"
-            v-slot="{ isToggled, toggle }"
-          >
-            <div>
-              <KButton
-                appearance="tertiary"
-                data-testid="form-view-configuration"
-                @click.prevent="toggle"
-              >
-                {{ t('actions.view_configuration') }}
-              </KButton>
-              <KSlideout
-                close-button-alignment="end"
-                data-testid="form-view-configuration-slideout"
-                :has-overlay="false"
-                :is-visible="isToggled.value"
-                prevent-close-on-blur
-                :title="t('view_configuration.title')"
-                type="button"
-                @close="toggle"
-              >
-                <div>
-                  {{ t('view_configuration.message') }}
-                </div>
-                <KTabs
-                  data-testid="form-view-configuration-slideout-tabs"
-                  :tabs="tabs"
-                >
-                  <template #json>
-                    <JsonCodeBlock
-                      :config="config"
-                      :fetcher-url="submitUrl"
-                      :json-record="form.fields"
-                      :request-method="props.pluginId ? 'put' : 'post'"
-                    />
-                  </template>
-                  <template #yaml>
-                    <YamlCodeBlock :yaml-record="form.fields" />
-                  </template>
-                </KTabs>
-              </KSlideout>
-            </div>
-          </KToggle>
+          <div v-if="config.jsonYamlMilestone2Enabled">
+            <KButton
+              appearance="tertiary"
+              data-testid="form-view-configuration"
+              @click="toggle()"
+            >
+              {{ t('actions.view_configuration') }}
+            </KButton>
+          </div>
           <KButton
             appearance="secondary"
             class="form-action-button"
@@ -135,6 +100,35 @@
         </div>
       </template>
     </EntityBaseForm>
+    <KSlideout
+      close-button-alignment="end"
+      data-testid="form-view-configuration-slideout"
+      :has-overlay="false"
+      :is-visible="isToggled"
+      prevent-close-on-blur
+      :title="t('view_configuration.title')"
+      @close="toggle"
+    >
+      <div>
+        {{ t('view_configuration.message') }}
+      </div>
+      <KTabs
+        data-testid="form-view-configuration-slideout-tabs"
+        :tabs="tabs"
+      >
+        <template #json>
+          <JsonCodeBlock
+            :config="config"
+            :fetcher-url="submitUrl"
+            :json-record="form.fields"
+            :request-method="props.pluginId ? 'put' : 'post'"
+          />
+        </template>
+        <template #yaml>
+          <YamlCodeBlock :yaml-record="form.fields" />
+        </template>
+      </KTabs>
+    </KSlideout>
   </div>
 </template>
 
@@ -251,6 +245,7 @@ const { axiosInstance } = useAxios({
   headers: props.config.requestHeaders,
 })
 
+const isToggled = ref(false)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
 const schema = ref<Record<string, any> | null>(null)
 const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
@@ -303,6 +298,10 @@ const fetchUrl = computed((): string => {
     return endpoints.form[props.config.app].edit.all
   }
 })
+
+const toggle = (): void => {
+  isToggled.value = !isToggled.value
+}
 
 const entityMap = computed((): Record<string, PluginEntityInfo> => {
   const consumerId = (props.config.entityType === 'consumers' && props.config.entityId) || record.value?.consumer?.id
