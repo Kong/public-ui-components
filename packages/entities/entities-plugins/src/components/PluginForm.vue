@@ -1104,5 +1104,29 @@ onBeforeMount(async () => {
   .plugin-form-actions {
     display: flex;
   }
+
+  & :deep(.k-slideout-title) {
+    color: $kui-color-text !important;
+    font-size: $kui-font-size-70 !important;
+    font-weight: $kui-font-weight-bold !important;
+    line-height: $kui-line-height-60 !important;
+    margin-bottom: $kui-space-60 !important;
+  }
+
+  & :deep(.k-card.content-card) {
+    padding: $kui-space-0 $kui-space-60 !important;
+  }
+
+  & :deep(.tab-item > div.tab-link.has-panels) {
+    color: $kui-color-text-neutral !important;
+    font-size: $kui-font-size-30 !important;
+    font-weight: $kui-font-weight-bold !important;
+    line-height: $kui-line-height-40 !important;
+  }
+
+  & :deep(.tab-item.active > div.tab-link.has-panels) {
+    color: $kui-color-text !important;
+    font-weight: $kui-font-weight-semibold !important;
+  }
 }
 </style>
