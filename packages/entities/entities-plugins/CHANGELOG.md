@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.5.15...@kong-ui-public/entities-plugins@2.5.16) (2024-01-03)
+
+
+### Bug Fixes
+
+* **entities-plugins:** remove submit handler ([#1046](https://github.com/Kong/public-ui-components/issues/1046)) ([c71e6b8](https://github.com/Kong/public-ui-components/commit/c71e6b8644fb299294c12132e95db4d72412f283))
+
+
+
+
+
 ## [2.5.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.5.14...@kong-ui-public/entities-plugins@2.5.15) (2024-01-01)
 
 
