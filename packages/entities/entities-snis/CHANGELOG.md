@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@2.1.21...@kong-ui-public/entities-snis@2.2.0) (2024-01-03)
+
+
+### Features
+
+* **entities-shared:** JSON/YAML forms [KHCP-9967][KHCP-9968][KHCP-9986] ([#1006](https://github.com/Kong/public-ui-components/issues/1006)) ([b95a9eb](https://github.com/Kong/public-ui-components/commit/b95a9eb2d91bbc7d566c95b9c879ef6a420e10bb))
+
+
+
+
+
 ## [2.1.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@2.1.20...@kong-ui-public/entities-snis@2.1.21) (2024-01-01)
 
 

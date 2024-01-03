@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.2.18...@kong-ui-public/entities-gateway-services@2.3.0) (2024-01-03)
+
+
+### Features
+
+* **entities-shared:** JSON/YAML forms [KHCP-9967][KHCP-9968][KHCP-9986] ([#1006](https://github.com/Kong/public-ui-components/issues/1006)) ([b95a9eb](https://github.com/Kong/public-ui-components/commit/b95a9eb2d91bbc7d566c95b9c879ef6a420e10bb))
+
+
+
+
+
 ## [2.2.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.2.17...@kong-ui-public/entities-gateway-services@2.2.18) (2024-01-01)
 
 
