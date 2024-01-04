@@ -14,7 +14,7 @@ export default function useErrors() {
     }
 
     // If the error.status is 401, the user's auth token is expired or missing. We will handle this in the host app by showing a toast notification, etc.
-    if (error?.status === 401) {
+    if (error?.response?.status === 401) {
       console.warn('getMessageFromError: User auth token is expired or missing, returning empty message.')
       return ''
     }
