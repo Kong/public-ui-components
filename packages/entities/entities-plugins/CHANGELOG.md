@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.6.1...@kong-ui-public/entities-plugins@2.6.2) (2024-01-04)
+
+
+### Bug Fixes
+
+* **plugins:** export endpoints [khcp-10220] ([#1048](https://github.com/Kong/public-ui-components/issues/1048)) ([69cfa53](https://github.com/Kong/public-ui-components/commit/69cfa53818490ae53c5a8fa93c434fad3e639dae))
+
+
+
+
+
 ## [2.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.6.0...@kong-ui-public/entities-plugins@2.6.1) (2024-01-03)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
