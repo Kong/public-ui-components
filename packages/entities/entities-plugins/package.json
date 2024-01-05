@@ -17,9 +17,9 @@
     "./package.json": "./package.json",
     "./dist/*": "./dist/*",
     "./endpoints": {
-      "import": "./dist/plugins-endpoints.js",
-      "require": "./dist/plugins-endpoints.js",
-      "types": "./dist/plugins-endpoints.d.ts"
+      "import": "./dist/endpoints/plugins-endpoints.js",
+      "require": "./dist/endpoints/plugins-endpoints.js",
+      "types": "./dist/endpoints/plugins-endpoints.d.ts"
     }
   },
   "publishConfig": {
