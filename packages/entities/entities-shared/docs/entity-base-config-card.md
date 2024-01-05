@@ -74,6 +74,18 @@ A base display component for an entity's record data.
     - default: `undefined`
     - The ID of the entity to display record data for.
 
+  - `jsonYamlEnabled`:
+    - type: `boolean`
+    - required: `false`
+    - default: `false`
+    - Feature flag value for Config card format: `khcp-8778-json-yaml-configurations`. Will be removed after feature goes GA.
+
+  - `jsonYamlMilestone2Enabled`:
+    - type: `boolean`
+    - required: `false`
+    - default: `false`
+    - Feature flag value for JSON/YAML Milestone 2: `Khcp-9892-json-yaml-milestone-2`. Will be removed after feature goes GA.
+
 The base konnect or kongManger config.
 
 #### `fetchUrl`

@@ -55,6 +55,12 @@ A base form component for entity create/edit views.
     - default: `undefined`
     - Route to return to when canceling creation of an entity.
 
+  - `jsonYamlMilestone2Enabled`:
+    - type: `boolean`
+    - required: `false`
+    - default: `false`
+    - Feature flag value for JSON/YAML Milestone 2: `Khcp-9892-json-yaml-milestone-2`. Will be removed after feature goes GA.
+
   - `workspace`:
     - type: `string`
     - required: `true`
