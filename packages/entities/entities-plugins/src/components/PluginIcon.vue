@@ -2,19 +2,19 @@
   <img
     ref="img"
     :alt="alt"
-    :src="composables.getPluginIconURL(name)"
+    :src="iconSrc || defaultIcon"
     :width="size"
     @error="onError"
   >
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import composables from '../composables'
 
 const defaultIcon = new URL('../assets/images/plugin-icons/missing.png', import.meta.url).href
 
-defineProps({
+const props = defineProps({
   name: {
     type: String,
     required: true,
@@ -32,6 +32,7 @@ defineProps({
 })
 
 const img = ref<HTMLImageElement>()
+const iconSrc = computed((): string => props.name ? composables.getPluginIconURL(props.name) : '')
 
 const onError = () => {
   if (img.value) {
