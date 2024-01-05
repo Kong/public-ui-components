@@ -137,7 +137,16 @@ import { computed, reactive, ref, watch, onBeforeMount, type PropType } from 'vu
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
-import { useAxios, useErrors, useHelpers, useStringHelpers, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
+import {
+  useAxios,
+  useErrors,
+  useHelpers,
+  useStringHelpers,
+  EntityBaseForm,
+  EntityBaseFormType,
+  JsonCodeBlock,
+  YamlCodeBlock,
+} from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import {
   EntityTypeIdField,
@@ -155,8 +164,6 @@ import composables from '../composables'
 import { ArrayStringFieldSchema } from '../composables/plugin-schemas/ArrayStringFieldSchema'
 import PluginEntityForm from './PluginEntityForm.vue'
 import type { Tab } from '@kong/kongponents'
-import JsonCodeBlock from '../../../entities-shared/src/components/common/JsonCodeBlock.vue'
-import YamlCodeBlock from '../../../entities-shared/src/components/common/YamlCodeBlock.vue'
 
 const emit = defineEmits<{
   (e: 'error:fetch-schema', error: AxiosError): void,
