@@ -59,7 +59,7 @@
           v-else
           class="plugin-form-actions"
         >
-          <div v-if="config.jsonYamlMilestone2Enabled">
+          <div v-if="config.jsonYamlFormsEnabled">
             <KButton
               appearance="tertiary"
               data-testid="form-view-configuration"

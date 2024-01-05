@@ -55,7 +55,7 @@ A base form component for entity create/edit views.
     - default: `undefined`
     - Route to return to when canceling creation of an entity.
 
-  - `jsonYamlMilestone2Enabled`:
+  - `jsonYamlFormsEnabled`:
     - type: `boolean`
     - required: `false`
     - default: `false`

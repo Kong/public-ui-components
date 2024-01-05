@@ -52,7 +52,7 @@ describe('<EntityBaseForm />', () => {
         config: {
           ...config,
           // TODO: Remove config once Feature Flag `Khcp-9892-json-yaml-milestone-2` is enabled
-          jsonYamlMilestone2Enabled: true,
+          jsonYamlFormsEnabled: true,
         },
         canSubmit: true,
       },

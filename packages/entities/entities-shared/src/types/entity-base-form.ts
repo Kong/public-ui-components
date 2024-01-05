@@ -8,9 +8,9 @@ export interface BaseFormConfig {
   editId?: string
   /**
    * Feature flag value for JSON/YAML Milestone 2: `Khcp-9892-json-yaml-milestone-2`
-   * TODO: Remove jsonYamlMilestone2Enabled once FF is enabled
+   * TODO: Remove jsonYamlFormsEnabled once FF is enabled
    */
-  jsonYamlMilestone2Enabled?: boolean
+  jsonYamlFormsEnabled?: boolean
 }
 
 /** Konnect base form config */
