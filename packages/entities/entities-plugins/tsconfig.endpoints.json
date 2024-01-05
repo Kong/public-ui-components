@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": [],
+  },
+  "include": [
+    "src/plugins-endpoints.ts"
+  ],
+  "files": [
+    "src/plugins-endpoints.ts"
+  ]
+}
