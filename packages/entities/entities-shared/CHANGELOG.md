@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.4.1...@kong-ui-public/entities-shared@2.4.2) (2024-01-05)
+
+
+### Bug Fixes
+
+* update readme [khcp-9892] ([#1051](https://github.com/Kong/public-ui-components/issues/1051)) ([d844564](https://github.com/Kong/public-ui-components/commit/d84456462c56bb89f5d70a19b45d7b8ea1782c83))
+
+
+
+
+
 ## [2.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.4.0...@kong-ui-public/entities-shared@2.4.1) (2024-01-05)
 
 
