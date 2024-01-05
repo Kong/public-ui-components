@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.6.5...@kong-ui-public/entities-plugins@2.6.6) (2024-01-05)
+
+
+### Bug Fixes
+
+* **plugins:** icon rendering conditionals ([#1053](https://github.com/Kong/public-ui-components/issues/1053)) ([6fe1241](https://github.com/Kong/public-ui-components/commit/6fe12411fba967881f75ab9409debd7684a43182))
+
+
+
+
+
 ## [2.6.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.6.4...@kong-ui-public/entities-plugins@2.6.5) (2024-01-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
