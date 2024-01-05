@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.4.2...@kong-ui-public/entities-shared@2.4.3) (2024-01-05)
+
+
+### Bug Fixes
+
+* **entities-shared:** suppress 401 errors [KHCP-10222] ([#1049](https://github.com/Kong/public-ui-components/issues/1049)) ([cc4dcbc](https://github.com/Kong/public-ui-components/commit/cc4dcbc022dfaaecee5944ef812aa3ccdcc0f3fa))
+
+
+
+
+
 ## [2.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.4.1...@kong-ui-public/entities-shared@2.4.2) (2024-01-05)
 
 
