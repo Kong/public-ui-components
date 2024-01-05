@@ -28,7 +28,7 @@ importers:
         version: 1.12.3
       '@kong/kongponents':
         specifier: 9.0.0-alpha.73
-        version: 9.0.0-alpha.73(vue-router@4.2.5)(vue@3.3.13)
+        version: 9.0.0-alpha.73(axios@1.6.2)(vue-router@4.2.5)(vue@3.3.13)
       '@rushstack/eslint-patch':
         specifier: ^1.5.1
         version: 1.5.1
@@ -2248,30 +2248,6 @@ packages:
       '@kong/icons': 1.8.3(vue@3.3.13)
       '@popperjs/core': 2.11.8
       axios: 1.6.2
-      date-fns: 2.30.0
-      date-fns-tz: 2.0.0(date-fns@2.30.0)
-      focus-trap: 7.5.4
-      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.3.13)
-      popper.js: 1.16.1
-      sortablejs: 1.15.1
-      swrv: 1.0.4(vue@3.3.13)
-      uuid: 9.0.1
-      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.3.13)
-      vue: 3.3.13(typescript@5.2.2)
-      vue-draggable-next: 2.2.1(sortablejs@1.15.1)(vue@3.3.13)
-      vue-router: 4.2.5(vue@3.3.13)
-    dev: true
-
-  /@kong/kongponents@9.0.0-alpha.73(vue-router@4.2.5)(vue@3.3.13):
-    resolution: {integrity: sha512-61jSUBHPignrr60gvrUfxgrRVTXEts0073tBrqTFk2rlmpSRHl/eEHTVXDFy8V1DtdL+AUz8uSY3xyoLUFZrgA==}
-    engines: {node: '>=v16.20.2'}
-    peerDependencies:
-      axios: ^1.6.1
-      vue: '>= 3.3.4 < 4'
-      vue-router: ^4.2.5
-    dependencies:
-      '@kong/icons': 1.8.3(vue@3.3.13)
-      '@popperjs/core': 2.11.8
       date-fns: 2.30.0
       date-fns-tz: 2.0.0(date-fns@2.30.0)
       focus-trap: 7.5.4
