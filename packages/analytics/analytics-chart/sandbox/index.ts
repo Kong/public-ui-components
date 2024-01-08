@@ -32,6 +32,11 @@ const router = createRouter({
       name: 'simple',
       component: () => import('./pages/ChartDemoSimple.vue'),
     },
+    {
+      path: '/geo-chart',
+      name: 'geo-chart',
+      component: () => import('./pages/GeoChartDemo.vue'),
+    },
   ],
 })
 
@@ -52,6 +57,10 @@ const appLinks: SandboxNavigationItem[] = ([
   {
     name: 'Simple Charts',
     to: { name: 'simple' },
+  },
+  {
+    name: 'Geo Chart',
+    to: { name: 'geo-chart' },
   },
 ])
 

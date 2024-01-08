@@ -4,6 +4,8 @@ import type { Ref } from 'vue'
 import { onMounted, watch, shallowRef, onBeforeUnmount } from 'vue'
 import { isNullOrUndef } from 'chart.js/helpers'
 
+type ChartTypeGeo = 'choropleth' | 'bubbleMap'
+
 // Based on
 // https://github.com/apertureless/vue-chartjs/blob/e61d0b5ce94d71214300a26876e0f2a12e9a26d6/src/utils.ts#L139
 const isSameShape = (oldData: ChartData, newData: ChartData) => {
@@ -23,7 +25,7 @@ const isSameShape = (oldData: ChartData, newData: ChartData) => {
 }
 
 export default function useChartJSCommon<T extends ChartType, D extends ChartData<T>>(
-  chartType: T,
+  chartType: T | ChartTypeGeo,
   canvas: Ref<HTMLCanvasElement | undefined>,
   chartData: Ref<D>,
   plugins: Plugin[],
@@ -34,7 +36,7 @@ export default function useChartJSCommon<T extends ChartType, D extends ChartDat
   const createChart = (data: ChartData, options: ChartOptions) => {
     if (canvas.value) {
       return new Chart(canvas.value, {
-        type: chartType,
+        type: chartType as ChartType,
         data,
         plugins,
         options,
