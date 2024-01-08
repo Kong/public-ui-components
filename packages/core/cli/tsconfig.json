@@ -7,6 +7,7 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "strict": true,
+    "noEmit": false,
     "types": [
       "@types/inquirer",
       "@types/node"
