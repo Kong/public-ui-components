@@ -43,12 +43,12 @@
     "vue": "^3.3.13"
   },
   "devDependencies": {
-    "@kong/design-tokens": "1.12.3",
+    "@kong/design-tokens": "1.12.4",
     "@kong/kongponents": "9.0.0-alpha.73",
     "vue": "^3.3.13"
   },
   "dependencies": {
-    "@kong/icons": "^1.8.8",
+    "@kong/icons": "^1.8.10",
     "approximate-number": "^2.1.1"
   },
   "repository": {
