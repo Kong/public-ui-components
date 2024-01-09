@@ -44,13 +44,13 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
-    "@kong/icons": "^1.8.8",
+    "@kong/icons": "^1.8.10",
     "focus-trap": "^7.5.4",
     "focus-trap-vue": "^4.0.3",
     "lodash.clonedeep": "^4.5.0"
   },
   "devDependencies": {
-    "@kong/design-tokens": "1.12.3",
+    "@kong/design-tokens": "1.12.4",
     "@kong/kongponents": "9.0.0-alpha.73",
     "@types/lodash.clonedeep": "^4.5.9",
     "vue": "^3.3.13",
