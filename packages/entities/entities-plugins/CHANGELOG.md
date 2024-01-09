@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.6.10...@kong-ui-public/entities-plugins@2.6.11) (2024-01-09)
+
+
+### Bug Fixes
+
+* **entities-plugins:** rate limiting form ([#1060](https://github.com/Kong/public-ui-components/issues/1060)) ([006b8a4](https://github.com/Kong/public-ui-components/commit/006b8a4936afd4372815c969336cf6a57a5e4f5d))
+
+
+
+
+
 ## [2.6.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.6.9...@kong-ui-public/entities-plugins@2.6.10) (2024-01-09)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
