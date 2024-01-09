@@ -25,7 +25,7 @@ import typedefs from './plugin-schemas/typedefs'
  * @param entityId (optional) The id of the entity associated with the plugin
  * @returns
  */
-export const useSchemas = (entityId?: string) => {
+export const useSchemas = (entityId?: string, app?: 'konnect' | 'kongManager') => {
   const { capitalize } = useStringHelpers()
   const { convertToDotNotation } = usePluginHelpers()
 
@@ -84,22 +84,22 @@ export const useSchemas = (entityId?: string) => {
     },
 
     'rate-limiting': {
-      useKonnectSchema: true,
       ...rateLimitingSchema,
     },
 
-    'rate-limiting-advanced': {
-      useKonnectSchema: true,
-      ...rateLimitingSchema,
-    },
+    'rate-limiting-advanced': app === 'kongManager'
+      ? {
+        'config-consumer_groups': rateLimitingSchema['config-consumer_groups'],
+      }
+      : {
+        ...rateLimitingSchema,
+      },
 
     'graphql-rate-limiting-advanced': {
-      useKonnectSchema: true,
       ...graphqlRateLimitingAdvancedSchema,
     },
 
     'response-ratelimiting': {
-      useKonnectSchema: true,
       ...rateLimitingSchema,
     },
 
