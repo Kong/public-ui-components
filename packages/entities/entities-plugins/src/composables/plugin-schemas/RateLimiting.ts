@@ -1,12 +1,6 @@
 import type { RateLimitingSchema } from '../../types/plugins/rate-limiting'
 
 export const rateLimitingSchema: RateLimitingSchema = {
-  'config-policy': {
-    label: 'Config.Policy',
-    type: 'select',
-    default: 'redis',
-    values: ['local', 'redis'],
-  },
   'config-strategy': {
     label: 'Config.Strategy',
     type: 'select',

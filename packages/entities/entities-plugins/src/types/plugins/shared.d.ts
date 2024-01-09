@@ -29,7 +29,6 @@ export interface PluginBasicSchema {
 
 export interface CommonSchemaFields {
   id?: string
-  useKonnectSchema?: boolean
   overwriteDefault?: boolean
   formSchema?: Record<string, any>
 }
