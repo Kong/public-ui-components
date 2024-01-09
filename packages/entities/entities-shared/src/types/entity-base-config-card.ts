@@ -8,6 +8,11 @@ export interface BaseEntityConfig {
    * TODO: Remove jsonYamlEnabled once FF is enabled
    */
   jsonYamlEnabled?: boolean
+  /**
+   * Feature flag value for JSON/YAML Milestone 2: `Khcp-9892-json-yaml-milestone-2`
+   * TODO: Remove jsonYamlFormsEnabled once FF is enabled
+   */
+  jsonYamlFormsEnabled?: boolean
 }
 
 /** Konnect base form config */

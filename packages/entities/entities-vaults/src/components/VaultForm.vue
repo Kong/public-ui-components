@@ -6,6 +6,7 @@
       :edit-id="vaultId"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
+      :form-fields="form.fields"
       :is-readonly="form.isReadonly"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler"

@@ -47,55 +47,28 @@
     </div>
   </div>
 
-  <div
-    v-if="format === 'json'"
-    class="config-card-display-json"
-  >
-    <div
-      v-if="props.fetcherUrl"
-      class="config-card-display-json-endpoint"
-    >
-      <KBadge appearance="get">
-        {{ t('baseConfigCard.endpoints.get') }}
-      </KBadge>
-      <KCodeBlock
-        id="config-card-endpoint-codeblock"
-        :code="props.fetcherUrl"
-        is-single-line
-        language="json"
-        theme="dark"
-      />
-    </div>
-    <KCodeBlock
-      id="config-card-codeblock"
-      :class="{ 'config-card-display-json-content': props.fetcherUrl }"
-      :code="jsonContent"
-      language="json"
-      theme="dark"
-    />
-  </div>
-
-  <div
-    v-if="format === 'yaml'"
-    class="config-card-display-yaml"
-  >
-    <KCodeBlock
-      id="config-card-codeblock"
-      :code="yamlContent"
-      language="yaml"
-      theme="dark"
-    />
-  </div>
+  <JsonCodeBlock
+    v-if="format === 'json' && props.record"
+    :config="props.config"
+    :fetcher-url="props.fetcherUrl"
+    :json-record="jsonOrYamlRecord"
+    request-method="get"
+  />
+  <YamlCodeBlock
+    v-if="format === 'yaml' && props.record"
+    :yaml-record="jsonOrYamlRecord"
+  />
 </template>
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, useSlots, watch, ref } from 'vue'
-import type { RecordItem } from '../../types'
+import { computed, useSlots } from 'vue'
+import type { RecordItem, KonnectBaseEntityConfig, KongManagerBaseEntityConfig } from '../../types'
 import '@kong-ui-public/copy-uuid/dist/style.css'
 import ConfigCardItem from './ConfigCardItem.vue'
+import JsonCodeBlock from '../common/JsonCodeBlock.vue'
+import YamlCodeBlock from '../common/YamlCodeBlock.vue'
 import composables from '../../composables'
-import yaml from 'js-yaml'
 
 export interface PropList {
   basic?: RecordItem[]
@@ -104,6 +77,12 @@ export interface PropList {
 }
 
 const props = defineProps({
+  /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+  config: {
+    type: Object as PropType<KonnectBaseEntityConfig | KongManagerBaseEntityConfig>,
+    required: false,
+    default: () => ({}),
+  },
   propertyCollections: {
     type: Object as PropType<PropList>,
     required: false,
@@ -120,14 +99,17 @@ const props = defineProps({
     required: false,
     default: () => ([]),
   },
+  /** A record to indicate the entity's configuration, used to populate the JSON/YAML code blocks */
   record: {
     type: Object as PropType<Record<string, any>>,
     required: false,
-    default: () => null,
+    default: () => ({}),
   },
+  /** Fetcher url for the entity with the filled-in controlPlaneId, workspace, and entity id. */
   fetcherUrl: {
     type: String,
-    required: true,
+    required: false,
+    default: '',
   },
 })
 
@@ -135,85 +117,17 @@ const slots = useSlots()
 const { i18n: { t } } = composables.useI18n()
 
 const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
-
-const jsonContent = ref('')
-const yamlContent = ref('')
-
-const displayedCharLength = computed(() => {
-  if (!props.fetcherUrl) {
-    return 0
+const jsonOrYamlRecord = computed((): PropType<Record<string, any>> => {
+  if (!props.record) {
+    return props.record
   }
-  const url = props.fetcherUrl?.split('/')
-  if (url.length < 2) {
-    return 0
-  }
-  const entityType = url[url.length - 2]
-  // each url contains 36 chars id + 2 slashes + 3 ellipses + number of characters in the entity type
-  return 41 + entityType.length
+  const processedRecord = JSON.parse(JSON.stringify(props.record))
+  // remove dates from JSON/YAML config [KHCP-9837]
+  delete processedRecord.created_at
+  delete processedRecord.updated_at
+  return processedRecord
 })
-
-watch(() => props.format, (format: string) => {
-  if (format !== 'structured') {
-    // remove dates from JSON/YAML config [KHCP-9837]
-    const jsonOrYamlRecord = JSON.parse(JSON.stringify(props.record))
-    delete jsonOrYamlRecord.created_at
-    delete jsonOrYamlRecord.updated_at
-    if (format === 'json') {
-      jsonContent.value = JSON.stringify(jsonOrYamlRecord, null, 2)
-    } else if (format === 'yaml') {
-      yamlContent.value = yaml.dump(jsonOrYamlRecord)
-    }
-  }
-
-}, { immediate: true })
-
 </script>
-
-<style lang="scss">
-.config-card-display-json,
-.config-card-display-yaml {
-  #config-card-endpoint-codeblock,
-  #config-card-codeblock {
-    .k-highlighted-code-block {
-      code {
-        background-color: $kui-color-background-neutral-strongest;
-      }
-    }
-  }
-}
-
-.config-card-display-json-content {
-  .k-highlighted-code-block {
-    border-top-left-radius: $kui-border-radius-0 !important;
-    border-top-right-radius: $kui-border-radius-0 !important;
-  }
-}
-
-.config-card-display-json-endpoint {
-  align-items: baseline;
-  background-color: $kui-color-background-neutral-strongest;
-  border-bottom: $kui-border-width-10 solid $kui-navigation-color-border-divider;
-  border-top-left-radius: $kui-border-radius-40;
-  border-top-right-radius: $kui-border-radius-40;
-  display: flex;
-  padding-left: $kui-space-50;
-  .k-badge {
-    height: 24px;
-  }
-  .k-code-block {
-    flex: auto;
-  }
-  code {
-    /* truncate prefix to display relevant partial url but support copying entire url */
-    direction: rtl;
-    max-width: v-bind('`${displayedCharLength}ch`');
-    overflow: hidden !important;
-    text-align: left;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
-</style>
 
 <style lang="scss" scoped>
 .config-card-prop-section-title {

@@ -6,6 +6,7 @@
       :edit-id="gatewayServiceId"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
+      :form-fields="form.fields"
       :is-readonly="form.isReadonly"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
@@ -66,9 +67,7 @@
               :selected-value="whereToSendTraffic.url"
               @change="changeCheckedGroup"
             >
-              <KLabel class="gateway-service-url-radio-label">
-                {{ t('gateway_services.form.sections.keys.urlLabel') }}
-              </KLabel>
+              {{ t('gateway_services.form.sections.keys.urlLabel') }}
             </KRadio>
           </div>
 
@@ -99,9 +98,7 @@
             :selected-value="whereToSendTraffic.protocol"
             @change="changeCheckedGroup"
           >
-            <KLabel class="gateway-service-protocol-radio-label">
-              {{ t('gateway_services.form.sections.keys.checkedGroupAltLabel') }}
-            </KLabel>
+            {{ t('gateway_services.form.sections.keys.checkedGroupAltLabel') }}
           </KRadio>
         </div>
 
@@ -857,14 +854,6 @@ defineExpose({
 
   .gateway-service-form-margin-top {
     margin-top: $kui-space-60;
-  }
-
-  .gateway-service-url-radio-label {
-    font-weight: 600;
-  }
-
-  .gateway-service-protocol-radio-label {
-    font-weight: 600;
   }
 
   .gateway-service-form-traffic-label {

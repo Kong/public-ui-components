@@ -6,6 +6,7 @@
       :edit-id="keyId"
       :error-message="form.errorMessage || fetchKeySetsErrorMessage"
       :fetch-url="fetchUrl"
+      :form-fields="form.fields"
       :is-readonly="form.isReadonly"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"

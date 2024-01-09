@@ -74,6 +74,18 @@ A base display component for an entity's record data.
     - default: `undefined`
     - The ID of the entity to display record data for.
 
+  - `jsonYamlEnabled`:
+    - type: `boolean`
+    - required: `false`
+    - default: `false`
+    - Feature flag value for Config card format. Will be removed after feature goes GA.
+
+  - `jsonYamlFormsEnabled`:
+    - type: `boolean`
+    - required: `false`
+    - default: `false`
+    - Feature flag value for JSON/YAML Forms. Will be removed after feature goes GA.
+
 The base konnect or kongManger config.
 
 #### `fetchUrl`

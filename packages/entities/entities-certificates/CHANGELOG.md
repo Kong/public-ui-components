@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@2.2.3...@kong-ui-public/entities-certificates@2.2.4) (2024-01-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [2.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@2.2.2...@kong-ui-public/entities-certificates@2.2.3) (2024-01-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [2.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@2.2.1...@kong-ui-public/entities-certificates@2.2.2) (2024-01-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [2.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@2.2.0...@kong-ui-public/entities-certificates@2.2.1) (2024-01-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+# [2.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@2.1.21...@kong-ui-public/entities-certificates@2.2.0) (2024-01-03)
+
+
+### Features
+
+* **entities-shared:** JSON/YAML forms [KHCP-9967][KHCP-9968][KHCP-9986] ([#1006](https://github.com/Kong/public-ui-components/issues/1006)) ([b95a9eb](https://github.com/Kong/public-ui-components/commit/b95a9eb2d91bbc7d566c95b9c879ef6a420e10bb))
+
+
+
+
+
+## [2.1.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@2.1.20...@kong-ui-public/entities-certificates@2.1.21) (2024-01-01)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#1042](https://github.com/Kong/public-ui-components/issues/1042)) ([6112776](https://github.com/Kong/public-ui-components/commit/61127764e7f193177a394e292db30ff11aab0409))
+
+
+
+
+
+## [2.1.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@2.1.19...@kong-ui-public/entities-certificates@2.1.20) (2023-12-28)
+
+
+### Bug Fixes
+
+* **entities:** teleport warning ([#1001](https://github.com/Kong/public-ui-components/issues/1001)) ([78d903e](https://github.com/Kong/public-ui-components/commit/78d903ec611fc7e23a29b81a482ac92dc54dc23a))
+
+
+
+
+
 ## [2.1.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@2.1.18...@kong-ui-public/entities-certificates@2.1.19) (2023-12-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-certificates

@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@2.1.25...@kong-ui-public/entities-consumer-credentials@2.1.26) (2024-01-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [2.1.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@2.1.24...@kong-ui-public/entities-consumer-credentials@2.1.25) (2024-01-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [2.1.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@2.1.23...@kong-ui-public/entities-consumer-credentials@2.1.24) (2024-01-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [2.1.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@2.1.22...@kong-ui-public/entities-consumer-credentials@2.1.23) (2024-01-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [2.1.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@2.1.21...@kong-ui-public/entities-consumer-credentials@2.1.22) (2024-01-03)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [2.1.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@2.1.20...@kong-ui-public/entities-consumer-credentials@2.1.21) (2024-01-01)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#1042](https://github.com/Kong/public-ui-components/issues/1042)) ([6112776](https://github.com/Kong/public-ui-components/commit/61127764e7f193177a394e292db30ff11aab0409))
+
+
+
+
+
+## [2.1.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@2.1.19...@kong-ui-public/entities-consumer-credentials@2.1.20) (2023-12-28)
+
+
+### Bug Fixes
+
+* **entities:** teleport warning ([#1001](https://github.com/Kong/public-ui-components/issues/1001)) ([78d903e](https://github.com/Kong/public-ui-components/commit/78d903ec611fc7e23a29b81a482ac92dc54dc23a))
+
+
+
+
+
 ## [2.1.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@2.1.18...@kong-ui-public/entities-consumer-credentials@2.1.19) (2023-12-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials

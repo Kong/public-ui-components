@@ -3,6 +3,82 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.3.3...@kong-ui-public/entities-gateway-services@2.3.4) (2024-01-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [2.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.3.2...@kong-ui-public/entities-gateway-services@2.3.3) (2024-01-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [2.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.3.1...@kong-ui-public/entities-gateway-services@2.3.2) (2024-01-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [2.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.3.0...@kong-ui-public/entities-gateway-services@2.3.1) (2024-01-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+# [2.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.2.18...@kong-ui-public/entities-gateway-services@2.3.0) (2024-01-03)
+
+
+### Features
+
+* **entities-shared:** JSON/YAML forms [KHCP-9967][KHCP-9968][KHCP-9986] ([#1006](https://github.com/Kong/public-ui-components/issues/1006)) ([b95a9eb](https://github.com/Kong/public-ui-components/commit/b95a9eb2d91bbc7d566c95b9c879ef6a420e10bb))
+
+
+
+
+
+## [2.2.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.2.17...@kong-ui-public/entities-gateway-services@2.2.18) (2024-01-01)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#1042](https://github.com/Kong/public-ui-components/issues/1042)) ([6112776](https://github.com/Kong/public-ui-components/commit/61127764e7f193177a394e292db30ff11aab0409))
+
+
+
+
+
+## [2.2.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.2.16...@kong-ui-public/entities-gateway-services@2.2.17) (2023-12-28)
+
+
+### Bug Fixes
+
+* **entities-gateway-services:** fix broken radio label ([#1040](https://github.com/Kong/public-ui-components/issues/1040)) ([f084302](https://github.com/Kong/public-ui-components/commit/f084302bdcff47df2120abf577bf7fba7a26eefc))
+
+
+
+
+
+## [2.2.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.2.15...@kong-ui-public/entities-gateway-services@2.2.16) (2023-12-28)
+
+
+### Bug Fixes
+
+* **entities:** teleport warning ([#1001](https://github.com/Kong/public-ui-components/issues/1001)) ([78d903e](https://github.com/Kong/public-ui-components/commit/78d903ec611fc7e23a29b81a482ac92dc54dc23a))
+
+
+
+
+
 ## [2.2.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.2.14...@kong-ui-public/entities-gateway-services@2.2.15) (2023-12-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services

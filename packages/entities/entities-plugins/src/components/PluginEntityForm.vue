@@ -38,7 +38,7 @@ import {
   type KonnectPluginFormConfig,
   type KongManagerPluginFormConfig,
 } from '../types'
-import { useAxios } from '@kong-ui-public/entities-shared'
+import { useAxios, useHelpers } from '@kong-ui-public/entities-shared'
 import {
   customFields,
   getSharedFormName,
@@ -122,6 +122,8 @@ const { axiosInstance } = useAxios({
 
 const { parseSchema } = composables.useSchemas(props.entityMap.focusedEntity?.id || undefined)
 const { convertToDotNotation, unFlattenObject, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
+
+const { objectsAreEqual } = useHelpers()
 
 // define endpoints for use by KFG
 const buildGetOneUrl = (entityType: string, entityId: string): string => {
@@ -575,7 +577,10 @@ watch(loading, (newLoading) => {
 })
 
 // if the schema changed we've got to start over and completely rebuild the form model
-watch(() => props.schema, (newSchema) => {
+watch(() => props.schema, (newSchema, oldSchema) => {
+  if (objectsAreEqual(newSchema || {}, oldSchema || {})) {
+    return
+  }
   const form: Record<string, any> = parseSchema(newSchema)
 
   Object.assign(formModel, form.model)

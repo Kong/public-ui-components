@@ -2,6 +2,7 @@
   "actions": {
     "back": "Back",
     "cancel": "Cancel",
+    "view_configuration": "View Configuration",
     "create": "New Plugin",
     "create_custom": "Create",
     "copy_id": "Copy ID",
@@ -15,6 +16,12 @@
     "configure_dynamic_ordering": "Configure Dynamic Ordering",
     "go_to_plugins": "Go to Plugins",
     "save": "Save"
+  },
+  "view_configuration": {
+    "title": "Configuration",
+    "message": "Configuring your API has never been easier. Use YAML for human-friendly simplicity or JSON for machine-readability. Streamline your settings effortlessly.",
+    "yaml": "YAML",
+    "json": "JSON"
   },
   "delete": {
     "title": "Delete a Plugin",

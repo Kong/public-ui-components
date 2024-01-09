@@ -9,7 +9,7 @@ export default {
         submitWhenNull: false,
         hint: `You can optionally set your own unique client_id. If missing, it
                will be generated for you.`,
-        inputType: 'password',
+        inputType: 'text',
         encrypted: true,
       },
     },
@@ -18,7 +18,7 @@ export default {
         submitWhenNull: false,
         hint: `You can optionally set your own unique client_secret. If missing,
                it will be generated for you.`,
-        inputType: 'password',
+        inputType: 'text',
         encrypted: true,
       },
     },

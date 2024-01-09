@@ -55,6 +55,12 @@ A base form component for entity create/edit views.
     - default: `undefined`
     - Route to return to when canceling creation of an entity.
 
+  - `jsonYamlFormsEnabled`:
+    - type: `boolean`
+    - required: `false`
+    - default: `false`
+    - Feature flag value for JSON/YAML Forms. Will be removed after feature goes GA.
+
   - `workspace`:
     - type: `string`
     - required: `true`
@@ -113,6 +119,13 @@ A Boolean to indicate if the form can be submitted. Used to track form validatio
 - default: `''`
 
 If form submission fails, this is the error message to display.
+
+#### `formFields`
+
+- type: `Object as PropType<Record<string, any>>`
+- required: `true`
+
+A record to indicate the form fields present in a form. Used to populate the Configuration JSON/YAML code blocks.
 
 ### Events
 

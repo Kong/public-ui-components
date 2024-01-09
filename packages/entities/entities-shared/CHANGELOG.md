@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.4.3...@kong-ui-public/entities-shared@2.4.4) (2024-01-08)
+
+
+### Bug Fixes
+
+* rename ff and update docs ([#1052](https://github.com/Kong/public-ui-components/issues/1052)) ([f6e9692](https://github.com/Kong/public-ui-components/commit/f6e9692d2ccfe6b32d4177e29bf5f94be69df1dd))
+
+
+
+
+
+## [2.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.4.2...@kong-ui-public/entities-shared@2.4.3) (2024-01-05)
+
+
+### Bug Fixes
+
+* **entities-shared:** suppress 401 errors [KHCP-10222] ([#1049](https://github.com/Kong/public-ui-components/issues/1049)) ([cc4dcbc](https://github.com/Kong/public-ui-components/commit/cc4dcbc022dfaaecee5944ef812aa3ccdcc0f3fa))
+
+
+
+
+
+## [2.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.4.1...@kong-ui-public/entities-shared@2.4.2) (2024-01-05)
+
+
+### Bug Fixes
+
+* update readme [khcp-9892] ([#1051](https://github.com/Kong/public-ui-components/issues/1051)) ([d844564](https://github.com/Kong/public-ui-components/commit/d84456462c56bb89f5d70a19b45d7b8ea1782c83))
+
+
+
+
+
+## [2.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.4.0...@kong-ui-public/entities-shared@2.4.1) (2024-01-05)
+
+
+### Bug Fixes
+
+* **entities-plugins:** package dist ([#1050](https://github.com/Kong/public-ui-components/issues/1050)) ([00501ab](https://github.com/Kong/public-ui-components/commit/00501abc44af64aced8fd691806a67c6b2182835))
+
+
+
+
+
+# [2.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.3.2...@kong-ui-public/entities-shared@2.4.0) (2024-01-03)
+
+
+### Features
+
+* **entities-shared:** JSON/YAML forms [KHCP-9967][KHCP-9968][KHCP-9986] ([#1006](https://github.com/Kong/public-ui-components/issues/1006)) ([b95a9eb](https://github.com/Kong/public-ui-components/commit/b95a9eb2d91bbc7d566c95b9c879ef6a420e10bb))
+
+
+
+
+
+## [2.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.3.1...@kong-ui-public/entities-shared@2.3.2) (2024-01-01)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#1042](https://github.com/Kong/public-ui-components/issues/1042)) ([6112776](https://github.com/Kong/public-ui-components/commit/61127764e7f193177a394e292db30ff11aab0409))
+
+
+
+
+
 ## [2.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.3.0...@kong-ui-public/entities-shared@2.3.1) (2023-12-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

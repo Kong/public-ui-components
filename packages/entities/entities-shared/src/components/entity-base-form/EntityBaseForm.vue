@@ -42,6 +42,15 @@
         data-testid="form-actions"
       >
         <slot name="form-actions">
+          <div v-if="config.jsonYamlFormsEnabled">
+            <KButton
+              appearance="tertiary"
+              data-testid="form-view-configuration"
+              @click="toggle()"
+            >
+              {{ t('baseForm.actions.viewConfiguration') }}
+            </KButton>
+          </div>
           <KButton
             appearance="secondary"
             data-testid="form-cancel"
@@ -61,6 +70,35 @@
         </slot>
       </div>
     </form>
+    <KSlideout
+      close-button-alignment="end"
+      data-testid="form-view-configuration-slideout"
+      :has-overlay="false"
+      :is-visible="isToggled"
+      prevent-close-on-blur
+      :title="t('baseForm.configuration.title')"
+      @close="toggle()"
+    >
+      <div>
+        {{ t('baseForm.configuration.message') }}
+      </div>
+      <KTabs
+        data-testid="form-view-configuration-slideout-tabs"
+        :tabs="tabs"
+      >
+        <template #json>
+          <JsonCodeBlock
+            :config="config"
+            :fetcher-url="fetcherUrl"
+            :json-record="props.formFields"
+            :request-method="props.editId ? 'put' : 'post'"
+          />
+        </template>
+        <template #yaml>
+          <YamlCodeBlock :yaml-record="props.formFields" />
+        </template>
+      </KTabs>
+    </KSlideout>
   </KCard>
 </template>
 
@@ -71,6 +109,9 @@ import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
 import composables from '../../composables'
+import type { Tab } from '@kong/kongponents'
+import JsonCodeBlock from '../common/JsonCodeBlock.vue'
+import YamlCodeBlock from '../common/YamlCodeBlock.vue'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void,
@@ -130,6 +171,11 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  /** Used to populate the Configuration JSON/YAML code blocks */
+  formFields: {
+    type: Object as PropType<Record<string, any>>,
+    required: true,
+  },
 })
 
 const router = useRouter()
@@ -144,15 +190,12 @@ const isLoading = ref(false)
 const fetchDetailsError = ref(false)
 const fetchErrorMessage = ref('')
 const disableSave = computed((): boolean => props.canSubmit === false || props.isReadonly)
+const isToggled = ref(false)
 
 /**
  * Build the fetcher URL
  */
 const fetcherUrl = computed<string>(() => {
-  if (!props.editId) {
-    return ''
-  }
-
   let url = `${props.config.apiBaseUrl}${props.fetchUrl}`
 
   if (props.config.app === 'konnect') {
@@ -161,11 +204,21 @@ const fetcherUrl = computed<string>(() => {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
+  if (!props.editId) {
+    // strip placeholder /{id}/ from  post request url
+    url = url.replace(/\/{id}/gi, '')
+    return url
+  }
+
   // Always replace the id for editing
   url = url.replace(/{id}/gi, props.editId)
 
   return url
 })
+
+const toggle = (): void => {
+  isToggled.value = !isToggled.value
+}
 
 const handleErrorCtaClick = (): void => {
   if (props.config.cancelRoute) {
@@ -188,6 +241,17 @@ const handleClickSave = (): void => {
   // Emit a save event for the entity component to respond to
   emit('submit')
 }
+
+const tabs = ref<Tab[]>([
+  {
+    title: t('baseForm.configuration.yaml'),
+    hash: '#yaml',
+  },
+  {
+    title: t('baseForm.configuration.json'),
+    hash: '#json',
+  },
+])
 
 watch(() => isLoading.value, (val: boolean) => {
   // Emit the loading state for the host app
@@ -231,10 +295,35 @@ onBeforeMount(async () => {
     margin-top: $kui-space-80;
 
     :deep(.k-button) {
-      &:last-of-type {
+      &:last-of-type,
+      &:nth-last-of-type(2) {
         margin-left: $kui-space-60;
       }
     }
+  }
+
+  & :deep(.k-slideout-title) {
+    color: $kui-color-text !important;
+    font-size: $kui-font-size-70 !important;
+    font-weight: $kui-font-weight-bold !important;
+    line-height: $kui-line-height-60 !important;
+    margin-bottom: $kui-space-60 !important;
+  }
+
+  & :deep(.k-card.content-card) {
+    padding: $kui-space-0 $kui-space-60 !important;
+  }
+
+  & :deep(.tab-item > div.tab-link.has-panels) {
+    color: $kui-color-text-neutral !important;
+    font-size: $kui-font-size-30 !important;
+    font-weight: $kui-font-weight-bold !important;
+    line-height: $kui-line-height-40 !important;
+  }
+
+  & :deep(.tab-item.active > div.tab-link.has-panels) {
+    color: $kui-color-text !important;
+    font-weight: $kui-font-weight-semibold !important;
   }
 }
 </style>

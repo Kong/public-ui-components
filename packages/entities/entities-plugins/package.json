@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "2.5.10",
+  "version": "2.6.9",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
@@ -15,7 +15,11 @@
       "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
-    "./dist/*": "./dist/*"
+    "./dist/*": "./dist/*",
+    "./endpoints": {
+      "require": "./dist/endpoints/plugins-endpoints.js",
+      "types": "./dist/endpoints/plugins-endpoints.d.ts"
+    }
   },
   "publishConfig": {
     "access": "public"
@@ -24,7 +28,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.0.0-alpha.73",
     "axios": "^1.6.2",
-    "vue": "^3.3.12",
+    "vue": "^3.3.13",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
@@ -32,15 +36,16 @@
     "@kong/design-tokens": "1.12.3",
     "@kong/kongponents": "9.0.0-alpha.73",
     "axios": "^1.6.2",
-    "vue": "^3.3.12",
+    "vue": "^3.3.13",
     "vue-router": "^4.2.5"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
-    "build": "run-s typecheck build:package build:types",
+    "build": "run-s typecheck build:package build:types build:endpoints",
     "build:package": "vite build -m production",
     "build:analyzer": "BUILD_VISUALIZER='entities/entities-plugins' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
+    "build:endpoints": "tsc -p './tsconfig.endpoints.json'",
     "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
     "preview": "cross-env USE_SANDBOX=true vite preview",
     "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
@@ -65,7 +70,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "2.0MB"
+    "errorLimit": "2.5MB"
   },
   "dependencies": {
     "@kong-ui-public/copy-uuid": "workspace:^",
@@ -74,7 +79,7 @@
     "@kong-ui-public/entities-gateway-services": "workspace:^",
     "@kong-ui-public/entities-routes": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@kong-ui-public/forms": "^2.1.18",
+    "@kong-ui-public/forms": "^2.1.20",
     "@kong/icons": "^1.8.8",
     "marked": "^9.1.6"
   }

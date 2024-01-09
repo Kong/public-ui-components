@@ -46,6 +46,26 @@ describe('<EntityBaseForm />', () => {
     cy.getTestId('form-submit').should('be.disabled')
   })
 
+  it('displays View Configuration and Slideout when FF is enabled', () => {
+    cy.mount(EntityBaseForm, {
+      props: {
+        config: {
+          ...config,
+          // TODO: Remove config once Feature Flag `Khcp-9892-json-yaml-milestone-2` is enabled
+          jsonYamlFormsEnabled: true,
+        },
+        canSubmit: true,
+      },
+    })
+
+    cy.getTestId('form-view-configuration').should('be.visible')
+    cy.getTestId('form-view-configuration').click()
+
+    cy.getTestId('form-view-configuration-slideout').should('exist')
+    cy.getTestId('form-view-configuration-slideout-tabs').should('exist')
+    cy.get('.yaml-config').should('exist')
+  })
+
   it('displays error message when provided', () => {
     const error = 'Beware! Here there be errors'
 

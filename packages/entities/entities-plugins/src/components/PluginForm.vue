@@ -25,12 +25,12 @@
       :edit-id="pluginId"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
+      :form-fields="form.fields"
       :is-readonly="form.isReadonly"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
       @fetch:success="initForm"
       @loading="(val: boolean) => $emit('loading', val)"
-      @submit="saveFormData"
     >
       <!-- Having a hidden form here allows us to @submit like a native html form -->
       <form
@@ -55,9 +55,22 @@
              - if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included)
         -->
         <div v-if="isWizardStep" />
-        <div v-else>
+        <div
+          v-else
+          class="plugin-form-actions"
+        >
+          <div v-if="config.jsonYamlFormsEnabled">
+            <KButton
+              appearance="tertiary"
+              data-testid="form-view-configuration"
+              @click="toggle()"
+            >
+              {{ t('actions.view_configuration') }}
+            </KButton>
+          </div>
           <KButton
             appearance="secondary"
+            class="form-action-button"
             data-testid="form-cancel"
             :disabled="form.isReadonly"
             type="reset"
@@ -68,7 +81,7 @@
           <KButton
             v-if="formType === EntityBaseFormType.Create && config.backRoute"
             appearance="secondary"
-            class="form-back-button"
+            class="form-action-button"
             data-testid="form-back"
             :disabled="form.isReadonly"
             @click="handleClickBack"
@@ -87,6 +100,35 @@
         </div>
       </template>
     </EntityBaseForm>
+    <KSlideout
+      close-button-alignment="end"
+      data-testid="form-view-configuration-slideout"
+      :has-overlay="false"
+      :is-visible="isToggled"
+      prevent-close-on-blur
+      :title="t('view_configuration.title')"
+      @close="toggle"
+    >
+      <div>
+        {{ t('view_configuration.message') }}
+      </div>
+      <KTabs
+        data-testid="form-view-configuration-slideout-tabs"
+        :tabs="tabs"
+      >
+        <template #json>
+          <JsonCodeBlock
+            :config="config"
+            :fetcher-url="submitUrl"
+            :json-record="form.fields"
+            :request-method="props.pluginId ? 'put' : 'post'"
+          />
+        </template>
+        <template #yaml>
+          <YamlCodeBlock :yaml-record="form.fields" />
+        </template>
+      </KTabs>
+    </KSlideout>
   </div>
 </template>
 
@@ -95,7 +137,16 @@ import { computed, reactive, ref, watch, onBeforeMount, type PropType } from 'vu
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
-import { useAxios, useErrors, useHelpers, useStringHelpers, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
+import {
+  useAxios,
+  useErrors,
+  useHelpers,
+  useStringHelpers,
+  EntityBaseForm,
+  EntityBaseFormType,
+  JsonCodeBlock,
+  YamlCodeBlock,
+} from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import {
   EntityTypeIdField,
@@ -112,6 +163,7 @@ import endpoints from '../plugins-endpoints'
 import composables from '../composables'
 import { ArrayStringFieldSchema } from '../composables/plugin-schemas/ArrayStringFieldSchema'
 import PluginEntityForm from './PluginEntityForm.vue'
+import type { Tab } from '@kong/kongponents'
 
 const emit = defineEmits<{
   (e: 'error:fetch-schema', error: AxiosError): void,
@@ -200,6 +252,7 @@ const { axiosInstance } = useAxios({
   headers: props.config.requestHeaders,
 })
 
+const isToggled = ref(false)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
 const schema = ref<Record<string, any> | null>(null)
 const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
@@ -222,6 +275,17 @@ const form = reactive<PluginFormState>({
   errorMessage: '',
 })
 
+const tabs = ref<Tab[]>([
+  {
+    title: t('view_configuration.yaml'),
+    hash: '#yaml',
+  },
+  {
+    title: t('view_configuration.json'),
+    hash: '#json',
+  },
+])
+
 const fetchUrl = computed((): string => {
   if (treatAsCredential.value) { // credential
     let submitEndpoint = endpoints.form[props.config.app].credential[formType.value]
@@ -241,6 +305,10 @@ const fetchUrl = computed((): string => {
     return endpoints.form[props.config.app].edit.all
   }
 })
+
+const toggle = (): void => {
+  isToggled.value = !isToggled.value
+}
 
 const entityMap = computed((): Record<string, PluginEntityInfo> => {
   const consumerId = (props.config.entityType === 'consumers' && props.config.entityId) || record.value?.consumer?.id
@@ -616,7 +684,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       }
 
       initialFormSchema[field].inputType = scheme.type === 'array' || scheme.type === 'string'
-        ? (scheme.encrypted ? 'password' : 'text')
+        ? 'text'
         : scheme.type
     }
 
@@ -1036,8 +1104,36 @@ onBeforeMount(async () => {
 .kong-ui-entities-plugin-form-container {
   width: 100%;
 
-  .form-back-button {
+  .form-action-button {
     margin-left: $kui-space-60;
+  }
+
+  .plugin-form-actions {
+    display: flex;
+  }
+
+  & :deep(.k-slideout-title) {
+    color: $kui-color-text !important;
+    font-size: $kui-font-size-70 !important;
+    font-weight: $kui-font-weight-bold !important;
+    line-height: $kui-line-height-60 !important;
+    margin-bottom: $kui-space-60 !important;
+  }
+
+  & :deep(.k-card.content-card) {
+    padding: $kui-space-0 $kui-space-60 !important;
+  }
+
+  & :deep(.tab-item > div.tab-link.has-panels) {
+    color: $kui-color-text-neutral !important;
+    font-size: $kui-font-size-30 !important;
+    font-weight: $kui-font-weight-bold !important;
+    line-height: $kui-line-height-40 !important;
+  }
+
+  & :deep(.tab-item.active > div.tab-link.has-panels) {
+    color: $kui-color-text !important;
+    font-weight: $kui-font-weight-semibold !important;
   }
 }
 </style>

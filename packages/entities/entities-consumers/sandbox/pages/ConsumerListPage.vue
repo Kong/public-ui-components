@@ -70,6 +70,7 @@ const kongManagerConfig = ref<KongManagerConsumerListConfig>({
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   isExactMatch: false,
+  paginatedEndpoint: true,
   createRoute: { name: 'create-consumer' },
   // Uncomment to test Consumer Groups -> Consumers
   // consumerGroupId: import.meta.env.VITE_KONG_MANAGER_CONSUMER_GROUP_ID,

@@ -27,12 +27,12 @@
       </template>
       <!-- Create action -->
       <template #toolbar-button>
-        <!-- Hide Create button if table is empty -->
-        <Teleport
-          :disabled="!useActionOutside"
-          to="#kong-ui-app-page-header-action-button"
+        <component
+          :is="useActionOutside ? 'Teleport' : 'div'"
+          :to="useActionOutside ? '#kong-ui-app-page-header-action-button' : undefined"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
+            <!-- Hide Create button if table is empty -->
             <KButton
               v-show="hasData"
               appearance="primary"
@@ -43,7 +43,7 @@
               {{ t('ca-certificates.list.toolbar_actions.new_ca_certificate') }}
             </KButton>
           </PermissionsWrapper>
-        </Teleport>
+        </component>
       </template>
 
       <!-- Column Formatting -->
