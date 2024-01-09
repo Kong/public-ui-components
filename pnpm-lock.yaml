@@ -343,8 +343,8 @@ importers:
         specifier: 9.0.0-alpha.73
         version: 9.0.0-alpha.73(axios@1.6.2)(vue-router@4.2.5)(vue@3.3.13)
       json-schema-to-ts:
-        specifier: ^2.9.2
-        version: 2.9.2
+        specifier: ^3.0.0
+        version: 3.0.0
       vue:
         specifier: ^3.3.13
         version: 3.3.13(typescript@5.2.2)
@@ -9272,8 +9272,8 @@ packages:
     resolution: {integrity: sha512-gyidFWn/PHmLNh+dW4TzbdqpQOxvFDujkrTfvvbGeAL5LUkVF7Bbujn1KMKjJ3bDyRXMIrInyNNmZQejjw9eIw==}
     dev: false
 
-  /json-schema-to-ts@2.9.2:
-    resolution: {integrity: sha512-h9WqLkTVpBbiaPb5OmeUpz/FBLS/kvIJw4oRCPiEisIu2WjMh+aai0QIY2LoOhRFx5r92taGLcerIrzxKBAP6g==}
+  /json-schema-to-ts@3.0.0:
+    resolution: {integrity: sha512-2adDesYifYEXYxNySx3gG0RR69rDWIjqAFzK/JPXdOvjHLZ/UP6d2rkpy6a+AxyhtRp2SvFPZ4+EW36jBinUbA==}
     engines: {node: '>=16'}
     dependencies:
       '@babel/runtime': 7.22.5
