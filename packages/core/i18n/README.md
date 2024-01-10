@@ -399,7 +399,10 @@ This comes for free from FormatJS, and documentation on those methods can be fou
 
 You can use [ICU Message syntax](https://unicode-org.github.io/icu/userguide/format_parse/messages/) with FormatJS and they have a [description of how you can use this syntax within i18n strings](https://formatjs.io/docs/core-concepts/icu-syntax).
 
-This plugin includes an additional `datetime` formatter (examples above) which uses the same `Intl.DateTimeFormatOptions` as the below javascript functions for consistency.
+This plugin includes an additional `datetime` formatter (examples above) which uses the same `Intl.DateTimeFormatOptions` as the below javascript functions for consistency. Date formatting is documented at https://formatjs.io/docs/core-concepts/icu-syntax/#date-type with `datetime` being an additional format element of the argument:
+
+- `datetime` format the date as date and time using the same format as `formatIsoDate` e.g. `Sale begins {start, date, datetime}`
+
 
 Unit tests for I18n wrapper in kong-ui/core also has view examples as a references for those.
 [FormatDate](https://github.com/Kong/shared-ui-components/blob/4a1f99d5cee2d4409f4370a9bce2377450a6429d/packages/core/src/useI18n/i18n.spec.ts#L81)
