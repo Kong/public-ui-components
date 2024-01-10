@@ -28,6 +28,7 @@
           :hide-publish-toggle="hidePublishToggle"
           :selected-document="selectedDocument"
           @add="handleAddClick"
+          @download="emit('download')"
           @edit="handleEditClick"
           @toggle-published="(data) => emit('toggle-published', data)"
         />
@@ -60,6 +61,7 @@ import type { ChangeEvent, ChildChangeEvent, TreeListItem } from '@kong/kongpone
 const emit = defineEmits<{
   (e: 'child-change', data: ChildChangeEvent): void,
   (e: 'delete'): void,
+  (e: 'download'): void,
   (e: 'edit'): void,
   (e: 'document-selection', data: TreeListItem): void,
   (e: 'modal-closed'): void,
