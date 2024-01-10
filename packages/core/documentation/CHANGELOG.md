@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.1.31...@kong-ui-public/documentation@0.2.0) (2024-01-10)
+
+
+### Features
+
+* **documentation:** add document download ([#1065](https://github.com/Kong/public-ui-components/issues/1065)) ([87d12d3](https://github.com/Kong/public-ui-components/commit/87d12d3fdc2a804d63602835dc4dc4eb45f19937))
+
+
+
+
+
 ## [0.1.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.1.30...@kong-ui-public/documentation@0.1.31) (2024-01-10)
 
 **Note:** Version bump only for package @kong-ui-public/documentation
