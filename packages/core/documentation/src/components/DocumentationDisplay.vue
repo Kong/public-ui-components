@@ -39,6 +39,19 @@
       <div
         class="document-display-actions"
       >
+        <PermissionsWrapper
+          :auth-function="() => canEdit()"
+        >
+          <KInputSwitch
+            v-if="!hidePublishToggle && !card"
+            v-model="publishModel"
+            class="document-publish-toggle"
+            data-testid="document-publish-toggle"
+            :label="publishedStatusText"
+            label-before
+            @click="handlePublishToggle"
+          />
+        </PermissionsWrapper>
         <KButton
           v-if="!!selectedDocument.markdown"
           appearance="secondary"
@@ -52,15 +65,6 @@
         <PermissionsWrapper
           :auth-function="() => canEdit()"
         >
-          <KInputSwitch
-            v-if="!hidePublishToggle && !card"
-            v-model="publishModel"
-            class="document-publish-toggle"
-            data-testid="document-publish-toggle"
-            :label="publishedStatusText"
-            label-before
-            @click="handlePublishToggle"
-          />
           <KButton
             appearance="secondary"
             class="document-edit-button"
@@ -184,7 +188,7 @@ const handleDownloadDocument = (): void => {
     const data = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = data
-    link.download = `${fileName.value.replace(/ /g, '-').replace(/[^-+.a-zA-Z0-9_]/g, '').replace(/(\.md)+$/g, '')}.md`
+    link.download = `${fileName.value.replace(/(\.md)+$/g, '')}.md`
 
     // link.click() doesn't work in Firefox
     link.dispatchEvent(
@@ -298,6 +302,7 @@ const handleDocument = () => {
     margin-right: $kui-space-80;
   }
 
+  .document-download-button,
   .document-edit-button {
     margin-right: $kui-space-40;
   }
