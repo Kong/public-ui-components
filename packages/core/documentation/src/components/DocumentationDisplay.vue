@@ -39,6 +39,16 @@
       <div
         class="document-display-actions"
       >
+        <KButton
+          v-if="!!selectedDocument.markdown"
+          appearance="secondary"
+          class="document-download-button"
+          data-testid="document-download-button"
+          size="small"
+          @click="handleDownloadDocument"
+        >
+          {{ i18n.t('documentation.documentation_display.download_button') }}
+        </KButton>
         <PermissionsWrapper
           :auth-function="() => canEdit()"
         >
@@ -131,7 +141,7 @@ const props = defineProps({
     default: false,
   },
   selectedDocument: {
-    type: Object as PropType<{ document: DocumentTree, ast: Object, status: 'published' | 'unpublished'}>,
+    type: Object as PropType<{ document: DocumentTree, ast: Object, markdown?: string, status: 'published' | 'unpublished'}>,
     default: () => null,
   },
 })
@@ -139,6 +149,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'add'): void,
   (e: 'edit'): void,
+  (e: 'download'): void,
   (e: 'toggle-published', newValue: boolean): void,
 }>()
 
@@ -161,6 +172,40 @@ watch(() => props.selectedDocument, (newVal) => {
     }
   }
 }, { deep: true })
+
+const handleDownloadDocument = (): void => {
+  try {
+    // If the raw markdown is not available, exit early
+    if (!props.selectedDocument.markdown) {
+      return
+    }
+
+    const blob = new Blob([props.selectedDocument.markdown], { type: 'text/markdown;charset=utf-8' })
+    const data = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = data
+    link.download = `${fileName.value.replace(/ /g, '-').replace(/[^-+.a-zA-Z0-9_]/g, '').replace(/(\.md)+$/g, '')}.md`
+
+    // link.click() doesn't work in Firefox
+    link.dispatchEvent(
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+      }),
+    )
+    emit('download')
+
+    // For Firefox it is necessary to delay revoking the ObjectURL
+    setTimeout(() => {
+      window.URL.revokeObjectURL(data)
+      link.remove()
+    }, 100)
+  } catch (err) {
+    // For now, log the error
+    console.error(`Could not download document '${fileName.value}'`, err)
+  }
+}
 
 const handlePublishToggle = (): void => {
   const newValue = !publishModel.value
