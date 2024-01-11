@@ -15,9 +15,9 @@
           class="document-tree-list"
           :items="documentList"
           :max-depth="2"
-          @change="(data) => emit('parent-change', data)"
-          @child-change="(data) => emit('child-change', data)"
-          @selected="(data) => emit('document-selection', data)"
+          @change="(data: ChangeEvent) => emit('parent-change', data)"
+          @child-change="(data: ChildChangeEvent) => emit('child-change', data)"
+          @selected="(data: TreeListItem) => emit('document-selection', data)"
         />
         <DocumentationDisplay
           v-if="selectedDocument"
