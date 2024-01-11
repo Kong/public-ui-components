@@ -143,7 +143,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.getTestId('form-submit').should('be.disabled')
 
       cy.get('.name-select').click()
-      cy.get('.name-select .select-list [data-testid="select-item-2"]').click()
+      cy.getTestId('select-item-2').first().click()
 
       cy.getTestId('form-submit').should('be.enabled')
     })
@@ -214,7 +214,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.wait(['@fetchServices', '@fetchCertificates'])
 
       cy.get('.name-select').click()
-      cy.get('.name-select .select-list [data-testid="select-item-2"]').click()
+      cy.getTestId('select-item-2').first().click()
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
@@ -242,7 +242,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.wait(['@fetchServices', '@fetchCertificates'])
 
       cy.get('.name-select').click()
-      cy.get('.name-select .select-list [data-testid="select-item-2"]').click()
+      cy.getTestId('select-item-2').first().click()
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
@@ -473,7 +473,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.getTestId('form-submit').should('be.disabled')
 
       cy.get('.name-select').click()
-      cy.get('.name-select .select-list [data-testid="select-item-2"]').click()
+      cy.getTestId('select-item-2').first().click()
 
       cy.getTestId('form-submit').should('be.enabled')
     })
@@ -544,7 +544,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.wait(['@fetchServices', '@fetchCertificates'])
 
       cy.get('.name-select').click()
-      cy.get('.name-select .select-list [data-testid="select-item-2"]').click()
+      cy.getTestId('select-item-2').first().click()
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
@@ -572,7 +572,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.wait(['@fetchServices', '@fetchCertificates'])
 
       cy.get('.name-select').click()
-      cy.get('.name-select .select-list [data-testid="select-item-2"]').click()
+      cy.getTestId('select-item-2').first().click()
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))

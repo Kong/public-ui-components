@@ -34,8 +34,8 @@ describe('<UpstreamsFormActiveHealthCheck/>', { viewportHeight: 700, viewportWid
     })
 
     cy.get('.active-healthcheck-type-select').click({ waitForAnimations: false })
-    cy.get('.active-healthcheck-type-select .select-list .select-item').should('have.length', 5)
-    cy.get('.active-healthcheck-type-select .select-list [data-testid="select-item-tcp"]').click()
+    cy.get('.active-healthcheck-type-select .select-items-container .select-item').should('have.length', 5)
+    cy.get('.active-healthcheck-type-select .select-items-container [data-testid="select-item-tcp"]').click()
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', 'tcp')
   })

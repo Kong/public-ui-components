@@ -107,9 +107,9 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').should('be.visible')
       // key sets load in select
       cy.getTestId('key-form-key-set').click()
-      cy.get('.select-list .select-item .select-item-desc').should('have.length', keySets.data.length)
+      cy.getTestId('key-form-key-set').parent().parent().parent().find('.select-item').should('have.length', keySets.data.length)
       cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
-      cy.get('.kong-ui-entities-keys-form .clear-selection-icon').should('exist')
+      cy.get('.kong-ui-entities-keys-form [data-testid="clear-selection-icon"]').should('exist')
       // key formats load correctly - jwk
       cy.getTestId('key-form-jwk').should('be.visible')
       cy.getTestId('key-form-private-key').should('not.exist')
@@ -136,7 +136,7 @@ describe('<KeyForm />', () => {
 
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
-      cy.get('.k-select .is-readonly .custom-selected-item-wrapper').should('contain.text', key1.set.name)
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should change key set id when props.fixedKeySetId changed', () => {
@@ -153,11 +153,11 @@ describe('<KeyForm />', () => {
         .as('vueWrapper')
 
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
-      cy.get('.k-select .is-readonly .custom-selected-item-wrapper').should('contain.text', key1.set.name)
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
 
       cy.get('@vueWrapper').then(async (wrapper: any) => {
         await wrapper.setProps({ fixedKeySetId: keySets.data[1].id })
-        cy.get('.k-select .is-readonly .custom-selected-item-wrapper').should('contain.text', keySets.data[1].name)
+        cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', keySets.data[1].name)
       })
     })
 
@@ -627,9 +627,9 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').should('be.visible')
       // key sets load in select
       cy.getTestId('key-form-key-set').click()
-      cy.get('.select-list .select-item .select-item-desc').should('have.length', keySets.data.length)
+      cy.getTestId('key-form-key-set').parent().parent().parent().find('.select-item').should('have.length', keySets.data.length)
       cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
-      cy.get('.kong-ui-entities-keys-form .clear-selection-icon').should('exist')
+      cy.get('.kong-ui-entities-keys-form [data-testid="clear-selection-icon"]').should('exist')
       // key formats load correctly - jwk
       cy.getTestId('key-form-jwk').should('be.visible')
       cy.getTestId('key-form-private-key').should('not.exist')
@@ -656,7 +656,7 @@ describe('<KeyForm />', () => {
 
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
-      cy.get('.k-select .is-readonly .custom-selected-item-wrapper').should('contain.text', key1.set.name)
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should change key set id when props.keySetId changed', () => {
@@ -673,11 +673,11 @@ describe('<KeyForm />', () => {
         .as('vueWrapper')
 
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
-      cy.get('.k-select .is-readonly .custom-selected-item-wrapper').should('contain.text', key1.set.name)
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
 
       cy.get('@vueWrapper').then(async (wrapper: any) => {
         await wrapper.setProps({ fixedKeySetId: keySets.data[1].id })
-        cy.get('.k-select .is-readonly .custom-selected-item-wrapper').should('contain.text', keySets.data[1].name)
+        cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', keySets.data[1].name)
       })
     })
 

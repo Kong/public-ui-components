@@ -26,8 +26,8 @@ describe('<UpstreamsFormPassiveHealthCheck/>', { viewportHeight: 700, viewportWi
     })
 
     cy.get('.passive-healthcheck-type-select').click({ waitForAnimations: false })
-    cy.get('.passive-healthcheck-type-select .select-list .select-item').should('have.length', 5)
-    cy.get('.passive-healthcheck-type-select .select-list [data-testid="select-item-tcp"]').click()
+    cy.get('.passive-healthcheck-type-select .select-items-container .select-item').should('have.length', 5)
+    cy.get('.passive-healthcheck-type-select .select-items-container [data-testid="select-item-tcp"]').click()
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', 'tcp')
   })

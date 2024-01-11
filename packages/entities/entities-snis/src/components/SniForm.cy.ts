@@ -101,7 +101,7 @@ describe('<SniForm />', () => {
       cy.getTestId('sni-form-certificate-id').should('be.visible')
       // certs load in select
       cy.getTestId('sni-form-certificate-id').click()
-      cy.get('.select-list .select-item').should('have.length', certificates.data.length)
+      cy.getTestId('sni-form-certificate-id').parent().parent().parent().find('.select-item').should('have.length', certificates.data.length)
     })
 
     it('should correctly handle button state - create', () => {
@@ -427,7 +427,7 @@ describe('<SniForm />', () => {
       cy.getTestId('sni-form-certificate-id').should('be.visible')
       // certs load in select
       cy.getTestId('sni-form-certificate-id').click()
-      cy.get('.select-list .select-item').should('have.length', certificates.data.length)
+      cy.getTestId('sni-form-certificate-id').parent().parent().parent().find('.select-item').should('have.length', certificates.data.length)
     })
 
     it('should correctly handle button state - create', () => {
