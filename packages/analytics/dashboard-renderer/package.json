@@ -44,7 +44,7 @@
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "1.12.4",
     "@kong/kongponents": "9.0.0-alpha.73",
-    "json-schema-to-ts": "^2.9.2",
+    "json-schema-to-ts": "^3.0.0",
     "vue": "^3.3.13"
   },
   "repository": {
