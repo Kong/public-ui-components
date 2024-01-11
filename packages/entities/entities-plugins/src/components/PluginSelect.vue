@@ -63,7 +63,7 @@
         v-model="activeTab"
         data-testid="plugins-tabs"
         :tabs="tabs"
-        @changed="(hash: string) => $router.replace({ hash })"
+        @change="(hash: string) => $router.replace({ hash })"
       >
         <template #kong>
           <div data-testid="kong-tab">
