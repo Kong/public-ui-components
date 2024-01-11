@@ -43,13 +43,12 @@
 
         <KSelect
           v-model="form.fields.key_set"
-          appearance="select"
-          autosuggest
           :class="{ 'k-select-placeholder': hasPlaceholderText }"
           :clearable="isKeySetFieldClearable"
           data-testid="key-form-key-set"
           :dropdown-footer-text="keySetDropdownFooterText"
           enable-filtering
+          :filter-function="() => true"
           :items="availableKeySets"
           :label="t('keys.form.fields.key_set.label')"
           :loading="loadingKeySets"
@@ -109,7 +108,6 @@
         <div data-testid="key-format-container">
           <KSelect
             v-model="form.fields.key_format"
-            appearance="select"
             data-testid="key-form-key-format"
             :items="keyFormatItems"
             :label="t('keys.form.fields.key_format.label')"

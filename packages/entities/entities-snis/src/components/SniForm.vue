@@ -59,13 +59,12 @@
         <KSelect
           v-else
           v-model="form.fields.certificate_id"
-          appearance="select"
-          autosuggest
           :class="{ 'k-select-placeholder': hasPlaceholderText }"
           clearable
           data-testid="sni-form-certificate-id"
           :dropdown-footer-text="additionalRecordsExist ? t('form.fields.certificate_id.footer') : undefined"
           enable-filtering
+          :filter-function="() => true"
           :items="availableCertificates"
           :label="t('form.fields.certificate_id.label')"
           :loading="loadingCertificates"

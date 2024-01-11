@@ -30,7 +30,6 @@
           <hr>
 
           <KSelect
-            appearance="select"
             class="issuer-select"
             :items="items"
             label="Issuer"

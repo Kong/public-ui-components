@@ -180,7 +180,6 @@
           >
             <KSelect
               v-model="configFields[VaultProviders.AWS].region"
-              appearance="select"
               data-testid="vault-form-config-aws-region"
               :items="awsRegions"
               :label="t('form.config.aws.fields.region.label')"
@@ -229,7 +228,6 @@
           >
             <KSelect
               v-model="configFields[VaultProviders.HCV].protocol"
-              appearance="select"
               data-testid="vault-form-config-hcv-protocol"
               :items="protocols"
               :label="t('form.config.hcv.fields.protocol.label')"
@@ -267,7 +265,6 @@
             />
             <KSelect
               v-model="configFields[VaultProviders.HCV].kv"
-              appearance="select"
               data-testid="vault-form-config-hcv-kv"
               :items="kvVersions"
               :label="t('form.config.hcv.fields.kv.label')"
@@ -285,7 +282,6 @@
             />
             <KSelect
               v-model="configFields[VaultProviders.HCV].auth_method"
-              appearance="select"
               data-testid="vault-form-config-hcv-auth_method"
               :items="[{ label: VaultAuthMethods.TOKEN, value: VaultAuthMethods.TOKEN }, { label: VaultAuthMethods.K8S, value: VaultAuthMethods.K8S}]"
               :label="t('form.config.hcv.fields.auth_method.label')"
@@ -361,7 +357,6 @@
             />
             <KSelect
               v-model="configFields[VaultProviders.AZURE].type"
-              appearance="select"
               data-testid="vault-form-config-azure-type"
               :items="azureTypes"
               :label="t('form.config.azure.fields.type.label')"

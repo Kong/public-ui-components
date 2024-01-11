@@ -26,7 +26,6 @@
         </KLabel>
         <KSelect
           v-if="config.jsonYamlEnabled"
-          appearance="select"
           data-testid="select-config-format"
           :items="configFormatItems"
           @change="handleChange"
