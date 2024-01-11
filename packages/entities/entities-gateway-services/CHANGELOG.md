@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.3.6...@kong-ui-public/entities-gateway-services@2.3.7) (2024-01-11)
+
+
+### Bug Fixes
+
+* **entities-gateway-serviecs:** empty list title when readonly ([#1066](https://github.com/Kong/public-ui-components/issues/1066)) ([4971584](https://github.com/Kong/public-ui-components/commit/4971584484e2521d127afbc5f5f57713e6c4a0d4))
+
+
+
+
+
 ## [2.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.3.5...@kong-ui-public/entities-gateway-services@2.3.6) (2024-01-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.7.0...@kong-ui-public/entities-plugins@2.7.1) (2024-01-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.8.11 ([#1063](https://github.com/Kong/public-ui-components/issues/1063)) ([2eee31d](https://github.com/Kong/public-ui-components/commit/2eee31d1e56367c283f46d5bfa11e37bd9a6e31f))
+* **deps:** update dependency marked to v11 ([#1003](https://github.com/Kong/public-ui-components/issues/1003)) ([d91925f](https://github.com/Kong/public-ui-components/commit/d91925f9fe5884a57a22a980132ecf80f9842cc5))
+
+
+
+
+
 # [2.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.6.12...@kong-ui-public/entities-plugins@2.7.0) (2024-01-10)
 
 
