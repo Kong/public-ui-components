@@ -1,6 +1,5 @@
 <template>
   <KMultiselect
-    collapsed-context
     data-testid="field-multiselect"
     :items="schema.values"
     :label-attributes="{ info: schema.help }"

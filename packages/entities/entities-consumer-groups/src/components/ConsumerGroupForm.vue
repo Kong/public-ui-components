@@ -51,7 +51,6 @@
           v-model="state.fields.consumers"
           appearance="select"
           autosuggest
-          expand-selected
           :items="displayedConsumers"
           :label="t('consumer_groups.form.fields.consumers.label')"
           :loading="loading"
