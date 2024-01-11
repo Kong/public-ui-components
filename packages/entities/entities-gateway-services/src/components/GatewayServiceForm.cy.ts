@@ -139,48 +139,48 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService1.port)
 
       // Protocol - https; Port - 443
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-https').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-https').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService2.port)
 
       // Protocol - tcp; Port - 80
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-tcp').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-tcp').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService1.port)
 
       // Protocol - tls; Port - 443
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-tls').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-tls').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService2.port)
 
       // Protocol - tls_passthrough; Port - 80
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-tls_passthrough').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-tls_passthrough').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService1.port)
 
       // Protocol - grpc; Port - 80
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-grpc').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-grpc').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService1.port)
 
       // Protocol - grpcs; Port - 443
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-grpcs').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-grpcs').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService2.port)
 
       // Protocol - ws; Port - 80
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-ws').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-ws').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService1.port)
 
       // Protocol - wss; Port - 443
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-wss').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-wss').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService2.port)
 
       // Protocol - udp; Port - 80
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-udp').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-udp').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService1.port)
     })
 
@@ -220,22 +220,22 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-tls-verify-checkbox').should('not.exist')
 
       // show clineCert, caCert and tlsVerify fields when protocol is https
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-https').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-https').click()
       cy.getTestId('gateway-service-clientCert-input').should('be.visible')
       cy.getTestId('gateway-service-ca-certs-input').should('be.visible')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
 
       // show clineCert, caCert and tlsVerify fields when protocol is tls
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-tls').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-tls').click()
       cy.getTestId('gateway-service-clientCert-input').should('be.visible')
       cy.getTestId('gateway-service-ca-certs-input').should('be.visible')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
 
       // show clineCert and tlsVerify fields when protocol is wss
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-wss').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-wss').click()
       cy.getTestId('gateway-service-clientCert-input').should('be.visible')
       cy.getTestId('gateway-service-ca-certs-input').should('not.exist')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
@@ -473,48 +473,48 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService1.port)
 
       // Protocol - https; Port - 443
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-https').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-https').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService2.port)
 
       // Protocol - tcp; Port - 80
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-tcp').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-tcp').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService1.port)
 
       // Protocol - tls; Port - 443
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-tls').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-tls').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService2.port)
 
       // Protocol - tls_passthrough; Port - 80
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-tls_passthrough').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-tls_passthrough').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService1.port)
 
       // Protocol - grpc; Port - 80
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-grpc').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-grpc').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService1.port)
 
       // Protocol - grpcs; Port - 443
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-grpcs').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-grpcs').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService2.port)
 
       // Protocol - ws; Port - 80
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-ws').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-ws').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService1.port)
 
       // Protocol - wss; Port - 443
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-wss').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-wss').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService2.port)
 
       // Protocol - udp; Port - 80
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-udp').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-udp').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService1.port)
     })
 
@@ -554,22 +554,22 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-tls-verify-checkbox').should('not.exist')
 
       // show clineCert, caCert and tlsVerify fields when protocol is https
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-https').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-https').click()
       cy.getTestId('gateway-service-clientCert-input').should('be.visible')
       cy.getTestId('gateway-service-ca-certs-input').should('be.visible')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
 
       // show clineCert, caCert and tlsVerify fields when protocol is tls
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-tls').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-tls').click()
       cy.getTestId('gateway-service-clientCert-input').should('be.visible')
       cy.getTestId('gateway-service-ca-certs-input').should('be.visible')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
 
       // show clineCert and tlsVerify fields when protocol is wss
-      cy.getTestId('k-select-input').click()
-      cy.getTestId('k-select-item-wss').click()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-item-wss').click()
       cy.getTestId('gateway-service-clientCert-input').should('be.visible')
       cy.getTestId('gateway-service-ca-certs-input').should('not.exist')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
@@ -705,9 +705,9 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
 
       cy.getTestId('gateway-service-protocol-radio').click()
       cy.getTestId('gateway-service-protocol-select').click({ force: true })
-      cy.getTestId('k-select-item-http').should('exist')
-      cy.getTestId('k-select-item-ws').should('not.exist')
-      cy.getTestId('k-select-item-wss').should('not.exist')
+      cy.getTestId('select-item-http').should('exist')
+      cy.getTestId('select-item-ws').should('not.exist')
+      cy.getTestId('select-item-wss').should('not.exist')
     })
   })
 })

@@ -302,7 +302,7 @@ describe('<PluginForm />', () => {
         cy.get('.Scoped-check input').should('have.value', '1')
         cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
         cy.get('#service-id').should('be.visible')
-        cy.getTestId(`k-select-item-${scopedService.id}`).find('.selected').should('exist')
+        cy.getTestId(`select-item-${scopedService.id}`).find('.selected').should('exist')
       })
     })
 
@@ -393,7 +393,7 @@ describe('<PluginForm />', () => {
         cy.get('.Scoped-check input').should('have.value', '1')
         cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
         cy.get('#service-id').should('be.visible')
-        cy.getTestId(`k-select-item-${scopedService.id}`).find('.selected').should('exist')
+        cy.getTestId(`select-item-${scopedService.id}`).find('.selected').should('exist')
 
         // global fields
         cy.get('#enabled').should('be.checked')
@@ -952,7 +952,7 @@ describe('<PluginForm />', () => {
         cy.get('.Scoped-check input').should('have.value', '1')
         cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
         cy.get('#service-id').should('be.visible')
-        cy.getTestId(`k-select-item-${scopedService.id}`).find('.selected').should('exist')
+        cy.getTestId(`select-item-${scopedService.id}`).find('.selected').should('exist')
       })
     })
 
@@ -1043,7 +1043,7 @@ describe('<PluginForm />', () => {
         cy.get('.Scoped-check input').should('have.value', '1')
         cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
         cy.get('#service-id').should('be.visible')
-        cy.getTestId(`k-select-item-${scopedService.id}`).find('.selected').should('exist')
+        cy.getTestId(`select-item-${scopedService.id}`).find('.selected').should('exist')
 
         // global fields
         cy.get('#enabled').should('be.checked')
