@@ -329,7 +329,7 @@ const emptyStateOptions = computed((): EmptyStateOptions => {
     ctaPath: props.config.createRoute,
     ctaText: userCanCreate.value ? t('actions.create') : undefined,
     message: t('gateway_services.list.empty_state.description'),
-    title: userCanCreate.value ? t('gateway_services.list.empty_state.title') : '',
+    title: userCanCreate.value ? t('gateway_services.list.empty_state.title') : t('gateway_services.title'),
   }
 })
 
