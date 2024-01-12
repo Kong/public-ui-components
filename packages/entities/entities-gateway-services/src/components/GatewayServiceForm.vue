@@ -767,9 +767,8 @@ const getPayload = (): Record<string, any> => {
 
 const getProcessedPayload = computed((): Record<string, any> => {
   validateUrl()
-  r getPayload()
-  saveTlsVerify(processedPayload)
-  return processedPayload
+  return getPayload()
+
 })
 
 const saveFormData = async (): Promise<AxiosResponse | undefined> => {
