@@ -60,7 +60,7 @@
             <template #item-template="{ item }">
               <div class="route-form-service-dropdown-item">
                 <span class="select-item-label">{{ item.name }}</span>
-                <span class="select-item-desc">{{ item.value }}</span>
+                <span class="select-item-description">{{ item.value }}</span>
               </div>
             </template>
           </KSelect>
@@ -1000,6 +1000,13 @@ defineExpose({ saveFormData, getPayload })
     &-service-dropdown-item {
       display: flex;
       flex-direction: column;
+
+      .select-item-label {
+        font-weight: $kui-font-weight-bold;
+      }
+      .select-item-description {
+        color: $kui-color-text-neutral;
+      }
     }
 
     &-routing-rules-title-container {

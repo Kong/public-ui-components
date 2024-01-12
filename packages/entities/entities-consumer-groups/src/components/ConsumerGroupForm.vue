@@ -59,14 +59,16 @@
           @query-change="debouncedQueryChange"
         >
           <template #item-template="{ item }: { item: any }">
-            <div class="select-item-label">
-              {{ item.label }}
-            </div>
-            <div
-              v-if="item?.data?.username && item?.data?.custom_id"
-              class="select-item-desc"
-            >
-              {{ item?.data?.custom_id }}
+            <div class="select-item-container">
+              <div class="select-item-label">
+                {{ item.label }}
+              </div>
+              <div
+                v-if="item?.data?.username && item?.data?.custom_id"
+                class="select-item-description"
+              >
+                {{ item?.data?.custom_id }}
+              </div>
             </div>
           </template>
         </KMultiselect>
@@ -367,6 +369,15 @@ onBeforeMount(async () => {
   @media screen and (min-width: $kui-breakpoint-laptop) {
     &:deep(.form-section-wrapper) {
       column-gap: $kui-space-130;
+    }
+  }
+
+  .select-item-container {
+    .select-item-label {
+      font-weight: $kui-font-weight-bold;
+    }
+    .select-item-description {
+      color: $kui-color-text-neutral;
     }
   }
 }

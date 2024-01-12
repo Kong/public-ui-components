@@ -71,11 +71,13 @@
             </div>
           </template>
           <template #item-template="{ item }">
-            <div class="select-item-label">
-              {{ (item as SelectItem).name }}
-            </div>
-            <div class="select-item-desc">
-              {{ item.value }}
+            <div class="select-item-container">
+              <div class="select-item-label">
+                {{ (item as SelectItem).name }}
+              </div>
+              <div class="select-item-description">
+                {{ item.value }}
+              </div>
             </div>
           </template>
         </KSelect>
@@ -490,6 +492,15 @@ onBeforeMount(async () => {
   :deep(.k-select.k-select-placeholder) {
     .k-select-input .k-input {
       color: rgba(0, 0, 0, 0.45);
+    }
+  }
+
+  .select-item-container {
+    .select-item-label {
+      font-weight: $kui-font-weight-bold;
+    }
+    .select-item-description {
+      color: $kui-color-text-neutral;
     }
   }
 }
