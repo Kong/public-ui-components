@@ -210,12 +210,14 @@ const getUrl = (action: 'validate' | 'create' | 'edit'): string => {
 const isFormValid = computed((): boolean => !!state.fields.username || !!state.fields.customId)
 const changesExist = computed((): boolean => JSON.stringify(state.fields) !== JSON.stringify(originalFields))
 
-const payload: ConsumerPayload = {
-  username: state.fields.username || null,
-  custom_id: state.fields.customId || null,
-  tags: state.fields.tags.split(',')?.map((tag: string) => String(tag || '')
-    .trim())?.filter((tag: string) => tag !== ''),
-}
+const payload = computed((): ConsumerPayload => {
+  return {
+    username: state.fields.username || null,
+    custom_id: state.fields.customId || null,
+    tags: state.fields.tags.split(',')?.map((tag: string) => String(tag || '')
+      .trim())?.filter((tag: string) => tag !== ''),
+  }
+})
 
 const submitData = async (): Promise<void> => {
   try {
@@ -223,14 +225,14 @@ const submitData = async (): Promise<void> => {
 
     let response: AxiosResponse | undefined
 
-    await axiosInstance.post(getUrl('validate'), payload)
+    await axiosInstance.post(getUrl('validate'), payload.value)
 
     if (formType.value === 'create') {
-      response = await axiosInstance.post(getUrl('create'), payload)
+      response = await axiosInstance.post(getUrl('create'), payload.value)
     } else if (formType.value === 'edit') {
       response = props.config?.app === 'konnect'
-        ? await axiosInstance.put(getUrl('edit'), payload)
-        : await axiosInstance.patch(getUrl('edit'), payload)
+        ? await axiosInstance.put(getUrl('edit'), payload.value)
+        : await axiosInstance.patch(getUrl('edit'), payload.value)
     }
 
     updateFormValues(response?.data)

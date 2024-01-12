@@ -25,7 +25,7 @@
       :edit-id="pluginId"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="getRequestBody()"
+      :form-fields="getRequestBody"
       :is-readonly="form.isReadonly"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
@@ -965,7 +965,7 @@ const isCustomPlugin = computed((): boolean => {
   return !Object.keys(pluginMetaData).includes(props.pluginType)
 })
 
-const getRequestBody = () => {
+const getRequestBody = computed(() => {
   const requestBody: Record<string, any> = submitPayload.value
   // credentials incorrectly build the entity id object
   if (treatAsCredential.value) {
@@ -980,7 +980,7 @@ const getRequestBody = () => {
     delete requestBody.created_at
   }
   return requestBody
-}
+})
 
 // make the actual API request to save on create/edit
 const saveFormData = async (): Promise<void> => {
@@ -997,17 +997,17 @@ const saveFormData = async (): Promise<void> => {
     // TODO: determine validate URL for credentials
     // don't validate custom plugins
     if (!treatAsCredential.value && !isCustomPlugin.value) {
-      await axiosInstance.post(validateSubmitUrl.value, getRequestBody())
+      await axiosInstance.post(validateSubmitUrl.value, getRequestBody.value)
     }
 
     if (formType.value === 'create') {
-      response = await axiosInstance.post(submitUrl.value, getRequestBody())
+      response = await axiosInstance.post(submitUrl.value, getRequestBody.value)
     } else if (formType.value === 'edit') {
       response = props.config.app === 'konnect'
         // Note: Konnect currently uses PUT because PATCH is not fully supported in Koko
         //       If this changes, the `edit` form methods should be re-evaluated/updated accordingly
-        ? await axiosInstance.put(submitUrl.value, getRequestBody())
-        : await axiosInstance.patch(submitUrl.value, getRequestBody())
+        ? await axiosInstance.put(submitUrl.value, getRequestBody.value)
+        : await axiosInstance.patch(submitUrl.value, getRequestBody.value)
     }
 
     // Set initial state of `formFieldsOriginal` to these values in order to detect changes

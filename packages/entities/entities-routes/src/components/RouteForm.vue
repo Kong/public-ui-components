@@ -6,7 +6,7 @@
       :edit-id="routeId"
       :error-message="form.errorMessage || fetchServicesErrorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="getPayload()"
+      :form-fields="getPayload"
       :is-readonly="form.isReadonly"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler"
@@ -870,12 +870,12 @@ const submitUrl = computed<string>(() => {
 })
 
 watch(() => form.fields, () => {
-  emit('model-updated', getPayload())
+  emit('model-updated', getPayload.value)
 }, { deep: true })
 
 const getArrPayload = (arr?: any[]) => arr?.length ? arr : null
 
-const getPayload = (serviceId?: string): RoutePayload => {
+const getPayload = computed((serviceId?: string): RoutePayload => {
   const payload: RoutePayload = {
     service: (form.fields.service_id || serviceId) ? { id: serviceId || form.fields.service_id } : null,
     ...(!props.hideNameField && { name: form.fields.name || null }),
@@ -919,10 +919,10 @@ const getPayload = (serviceId?: string): RoutePayload => {
   }
 
   return payload
-}
+})
 
 const saveFormData = async (payload?: RoutePayload): Promise<void> => {
-  const validPayload: RoutePayload = (payload && isRoutePayloadValid(payload)) ? payload : getPayload()
+  const validPayload: RoutePayload = (payload && isRoutePayloadValid(payload)) ? payload : getPayload.value
 
   try {
     form.isReadonly = true
@@ -977,7 +977,7 @@ onBeforeMount(async () => {
 })
 
 onMounted(() => {
-  emit('model-updated', getPayload())
+  emit('model-updated', getPayload.value)
 })
 
 defineExpose({ saveFormData, getPayload })

@@ -6,7 +6,7 @@
       :edit-id="vaultId"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="getPayload()"
+      :form-fields="getPayload"
       :is-readonly="form.isReadonly"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler"
@@ -753,7 +753,7 @@ const submitUrl = computed<string>(() => {
   return url
 })
 
-const getPayload = () => {
+const getPayload = computed(() => {
   const hcvConfig = {
     protocol: configFields[VaultProviders.HCV].protocol,
     host: configFields[VaultProviders.HCV].host,
@@ -806,7 +806,7 @@ const getPayload = () => {
   }
 
   return payload
-}
+})
 
 const saveFormData = async (): Promise<void> => {
   try {
@@ -815,11 +815,11 @@ const saveFormData = async (): Promise<void> => {
     let response: AxiosResponse | undefined
 
     if (formType.value === 'create') {
-      response = await axiosInstance.post(submitUrl.value, getPayload())
+      response = await axiosInstance.post(submitUrl.value, getPayload.value)
     } else if (formType.value === 'edit') {
       response = props.config?.app === 'konnect'
-        ? await axiosInstance.put(submitUrl.value, getPayload())
-        : await axiosInstance.patch(submitUrl.value, getPayload())
+        ? await axiosInstance.put(submitUrl.value, getPayload.value)
+        : await axiosInstance.patch(submitUrl.value, getPayload.value)
     }
 
     updateFormValues(response?.data)

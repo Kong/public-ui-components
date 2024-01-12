@@ -228,11 +228,13 @@ const submitUrl = computed<string>(() => {
   return url
 })
 
-const requestBody: Record<string, any> = {
-  name: form.fields.name,
-  tags: form.fields.tags.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
-  certificate: { id: certificateId.value || form.fields.certificate_id },
-}
+const requestBody = computed((): Record<string, any> => {
+  return {
+    name: form.fields.name,
+    tags: form.fields.tags.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
+    certificate: { id: certificateId.value || form.fields.certificate_id },
+  }
+})
 
 const saveFormData = async (): Promise<void> => {
   try {
@@ -240,16 +242,16 @@ const saveFormData = async (): Promise<void> => {
 
     let response: AxiosResponse | undefined
 
-    await axiosInstance.post(validateSubmitUrl.value, requestBody)
+    await axiosInstance.post(validateSubmitUrl.value, requestBody.value)
 
     if (formType.value === 'create') {
-      response = await axiosInstance.post(submitUrl.value, requestBody)
+      response = await axiosInstance.post(submitUrl.value, requestBody.value)
     } else if (formType.value === 'edit') {
       response = props.config?.app === 'konnect'
         // Note: Konnect currently uses PUT because PATCH is not fully supported in Koko
         //       If this changes, the `edit` form methods should be re-evaluated/updated accordingly
-        ? await axiosInstance.put(submitUrl.value, requestBody)
-        : await axiosInstance.patch(submitUrl.value, requestBody)
+        ? await axiosInstance.put(submitUrl.value, requestBody.value)
+        : await axiosInstance.patch(submitUrl.value, requestBody.value)
     }
 
     form.fields.name = response?.data?.name || ''

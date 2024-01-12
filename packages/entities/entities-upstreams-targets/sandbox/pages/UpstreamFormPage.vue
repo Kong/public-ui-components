@@ -39,6 +39,7 @@ const konnectConfig = ref<KonnectUpstreamsFormConfig>({
   apiBaseUrl: '/us/kong-api/konnect-api',
   controlPlaneId,
   cancelRoute: { name: 'upstreams-list' },
+  jsonYamlFormsEnabled: true,
 })
 
 const KMConfig = ref<KongManagerUpstreamsFormConfig>({

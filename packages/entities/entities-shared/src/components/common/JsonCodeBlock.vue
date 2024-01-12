@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType, reactive } from 'vue'
+import { computed, type PropType } from 'vue'
 import type { BadgeAppearance } from '@kong/kongponents/dist/types'
 import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
 
@@ -57,7 +57,7 @@ const props = defineProps({
   },
 })
 
-const jsonContent = reactive(props.jsonRecord)
+const jsonContent = computed(() => props.jsonRecord)
 
 const displayedCharLength = computed((): number => {
   if (!props.fetcherUrl) {
