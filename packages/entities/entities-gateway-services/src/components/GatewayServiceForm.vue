@@ -767,7 +767,7 @@ const getPayload = (): Record<string, any> => {
 
 const getProcessedPayload = computed((): Record<string, any> => {
   validateUrl()
-  const processedPayload = getPayload()
+  r getPayload()
   saveTlsVerify(processedPayload)
   return processedPayload
 })
@@ -777,6 +777,7 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
     form.isReadonly = true
 
     const payload = getProcessedPayload.value
+    saveTlsVerify(payload)
 
     let response: AxiosResponse | undefined
 
