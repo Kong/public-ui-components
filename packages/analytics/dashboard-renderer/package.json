@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/dashboard-renderer",
-  "version": "0.2.25",
+  "version": "0.2.26",
   "type": "module",
   "main": "./dist/dashboard-renderer.umd.js",
   "module": "./dist/dashboard-renderer.es.js",
@@ -45,7 +45,7 @@
     "@kong/design-tokens": "1.12.4",
     "@kong/kongponents": "9.0.0-pr.1932.9f1bbb7a.0",
     "json-schema-to-ts": "^3.0.0",
-    "vue": "^3.3.13"
+    "vue": "^3.4.3"
   },
   "repository": {
     "type": "git",
@@ -68,7 +68,7 @@
     "@kong-ui-public/analytics-chart": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^8.126.2",
-    "vue": "^3.3.13"
+    "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",

@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-consumers",
-  "version": "2.4.7",
+  "version": "2.4.8",
   "type": "module",
   "main": "./dist/entities-consumers.umd.js",
   "module": "./dist/entities-consumers.es.js",
@@ -24,7 +24,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.0.0-alpha.73",
     "axios": "^1.6.3",
-    "vue": "^3.3.13",
+    "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
@@ -32,7 +32,7 @@
     "@kong/design-tokens": "1.12.4",
     "@kong/kongponents": "9.0.0-pr.1932.9f1bbb7a.0",
     "axios": "^1.6.3",
-    "vue": "^3.3.13",
+    "vue": "^3.4.3",
     "vue-router": "^4.2.5"
   },
   "scripts": {
