@@ -497,7 +497,7 @@ onBeforeMount(async () => {
 
   .select-item-container {
     .select-item-label {
-      font-weight: $kui-font-weight-bold;
+      font-weight: $kui-font-weight-semibold;
     }
     .select-item-description {
       color: $kui-color-text-neutral;

@@ -1002,7 +1002,7 @@ defineExpose({ saveFormData, getPayload })
       flex-direction: column;
 
       .select-item-label {
-        font-weight: $kui-font-weight-bold;
+        font-weight: $kui-font-weight-semibold;
       }
       .select-item-description {
         color: $kui-color-text-neutral;
