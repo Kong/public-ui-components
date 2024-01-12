@@ -1,5 +1,6 @@
 <template>
   <div
+    :key="String(forceError)"
     class="error-boundary-child-component"
     data-testid="error-boundary-child-component"
   >
@@ -40,7 +41,6 @@ const computedName = computed((): string => {
     throw new Error('computed name error')
   }
 
-  // eslint-disable-next-line no-unreachable
   return 'Test Error Component'
 })
 </script>
