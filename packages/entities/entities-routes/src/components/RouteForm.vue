@@ -875,9 +875,9 @@ watch(() => form.fields, () => {
 
 const getArrPayload = (arr?: any[]) => arr?.length ? arr : null
 
-const getPayload = computed((serviceId?: string): RoutePayload => {
+const getPayload = computed((): RoutePayload => {
   const payload: RoutePayload = {
-    service: (form.fields.service_id || serviceId) ? { id: serviceId || form.fields.service_id } : null,
+    service: (form.fields.service_id) ? { id: form.fields.service_id } : null,
     ...(!props.hideNameField && { name: form.fields.name || null }),
     paths: getArrPayload(cleanDataArr(RoutingRulesEntities.PATHS, form.fields.paths || [])),
     snis: getArrPayload(cleanDataArr(RoutingRulesEntities.SNIS, form.fields.snis || [])),
