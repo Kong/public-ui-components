@@ -40,7 +40,7 @@
   },
   "peerDependencies": {
     "@kong/kongponents": "9.0.0-alpha.73",
-    "vue": "^3.4.3"
+    "vue": ">= 3.3.13 < 4"
   },
   "devDependencies": {
     "@kong/design-tokens": "1.12.4",
