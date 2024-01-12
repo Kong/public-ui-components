@@ -1006,6 +1006,7 @@ defineExpose({ saveFormData, getPayload })
       }
       .select-item-description {
         color: $kui-color-text-neutral;
+        font-size: $kui-font-size-20;
       }
     }
 
