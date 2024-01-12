@@ -6,7 +6,7 @@
       :edit-id="vaultId"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="form.fields"
+      :form-fields="getPayload()"
       :is-readonly="form.isReadonly"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler"
@@ -753,69 +753,73 @@ const submitUrl = computed<string>(() => {
   return url
 })
 
+const getPayload = () => {
+  const hcvConfig = {
+    protocol: configFields[VaultProviders.HCV].protocol,
+    host: configFields[VaultProviders.HCV].host,
+    port: parseInt(configFields[VaultProviders.HCV].port.toString()),
+    mount: configFields[VaultProviders.HCV].mount,
+    kv: configFields[VaultProviders.HCV].kv,
+    namespace: configFields[VaultProviders.HCV].namespace || null,
+    auth_method: configFields[VaultProviders.HCV].auth_method,
+    ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.TOKEN && { token: configFields[VaultProviders.HCV].token }),
+    // For Kong Admin API, when auth_method is kubernetes, token must be in the request body and its value has to be null
+    ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.K8S && { kube_role: configFields[VaultProviders.HCV].kube_role, kube_api_token_file: configFields[VaultProviders.HCV].kube_api_token_file, token: null }),
+  }
+
+  const azureConfig = {
+    ...configFields[vaultProvider.value],
+    client_id: (configFields[vaultProvider.value] as AzureVaultConfig).client_id || null,
+    tenant_id: (configFields[vaultProvider.value] as AzureVaultConfig).tenant_id || null,
+  }
+
+  let config: VaultPayload['config'] = configFields[vaultProvider.value]
+  if (vaultProvider.value === VaultProviders.HCV) {
+    config = hcvConfig
+  } else if (vaultProvider.value === VaultProviders.AZURE) {
+    config = azureConfig
+  }
+
+  let ttlFields = {}
+  if (vaultProvider.value !== VaultProviders.KONG) {
+    const fields = configFields[vaultProvider.value as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS | VaultProviders.AZURE]
+    const ttl = fields.ttl
+    const negTtl = fields.neg_ttl
+    const resurrectTtl = fields.resurrect_ttl
+    ttlFields = {
+      ttl: ttl ? parseInt(ttl.toString(), 10) : null,
+      neg_ttl: negTtl ? parseInt(negTtl.toString(), 10) : null,
+      resurrect_ttl: resurrectTtl ? parseInt(resurrectTtl.toString(), 10) : null,
+    }
+  }
+
+  const payload: VaultPayload = {
+    prefix: form.fields.prefix,
+    description: form.fields.description || null,
+    tags: form.fields.tags.split(',')?.map((tag: string) => String(tag || '')
+      .trim())?.filter((tag: string) => tag !== ''),
+    name: vaultProvider.value,
+    config: {
+      ...config,
+      ...ttlFields,
+    },
+  }
+
+  return payload
+}
+
 const saveFormData = async (): Promise<void> => {
   try {
     form.isReadonly = true
 
-    const hcvConfig = {
-      protocol: configFields[VaultProviders.HCV].protocol,
-      host: configFields[VaultProviders.HCV].host,
-      port: parseInt(configFields[VaultProviders.HCV].port.toString()),
-      mount: configFields[VaultProviders.HCV].mount,
-      kv: configFields[VaultProviders.HCV].kv,
-      namespace: configFields[VaultProviders.HCV].namespace || null,
-      auth_method: configFields[VaultProviders.HCV].auth_method,
-      ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.TOKEN && { token: configFields[VaultProviders.HCV].token }),
-      // For Kong Admin API, when auth_method is kubernetes, token must be in the request body and its value has to be null
-      ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.K8S && { kube_role: configFields[VaultProviders.HCV].kube_role, kube_api_token_file: configFields[VaultProviders.HCV].kube_api_token_file, token: null }),
-    }
-
-    const azureConfig = {
-      ...configFields[vaultProvider.value],
-      client_id: (configFields[vaultProvider.value] as AzureVaultConfig).client_id || null,
-      tenant_id: (configFields[vaultProvider.value] as AzureVaultConfig).tenant_id || null,
-    }
-
-    let config: VaultPayload['config'] = configFields[vaultProvider.value]
-    if (vaultProvider.value === VaultProviders.HCV) {
-      config = hcvConfig
-    } else if (vaultProvider.value === VaultProviders.AZURE) {
-      config = azureConfig
-    }
-
-    let ttlFields = {}
-    if (vaultProvider.value !== VaultProviders.KONG) {
-      const fields = configFields[vaultProvider.value as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS | VaultProviders.AZURE]
-      const ttl = fields.ttl
-      const negTtl = fields.neg_ttl
-      const resurrectTtl = fields.resurrect_ttl
-      ttlFields = {
-        ttl: ttl ? parseInt(ttl.toString(), 10) : null,
-        neg_ttl: negTtl ? parseInt(negTtl.toString(), 10) : null,
-        resurrect_ttl: resurrectTtl ? parseInt(resurrectTtl.toString(), 10) : null,
-      }
-    }
-
-    const payload: VaultPayload = {
-      prefix: form.fields.prefix,
-      description: form.fields.description || null,
-      tags: form.fields.tags.split(',')?.map((tag: string) => String(tag || '')
-        .trim())?.filter((tag: string) => tag !== ''),
-      name: vaultProvider.value,
-      config: {
-        ...config,
-        ...ttlFields,
-      },
-    }
-
     let response: AxiosResponse | undefined
 
     if (formType.value === 'create') {
-      response = await axiosInstance.post(submitUrl.value, payload)
+      response = await axiosInstance.post(submitUrl.value, getPayload())
     } else if (formType.value === 'edit') {
       response = props.config?.app === 'konnect'
-        ? await axiosInstance.put(submitUrl.value, payload)
-        : await axiosInstance.patch(submitUrl.value, payload)
+        ? await axiosInstance.put(submitUrl.value, getPayload())
+        : await axiosInstance.patch(submitUrl.value, getPayload())
     }
 
     updateFormValues(response?.data)

@@ -6,7 +6,7 @@
       :edit-id="certificateId"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="form.fields"
+      :form-fields="requestBody"
       :is-readonly="form.isReadonly"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
@@ -187,15 +187,15 @@ const submitUrl = computed<string>(() => {
   return url
 })
 
+const requestBody: Record<string, any> = {
+  cert: form.fields.cert,
+  cert_digest: form.fields.certDigest || null,
+  tags: form.fields.tags.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
+}
+
 const saveFormData = async (): Promise<void> => {
   try {
     form.isReadonly = true
-
-    const requestBody: Record<string, any> = {
-      cert: form.fields.cert,
-      cert_digest: form.fields.certDigest || null,
-      tags: form.fields.tags.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
-    }
 
     let response: AxiosResponse | undefined
 

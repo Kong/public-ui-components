@@ -6,7 +6,7 @@
       :edit-id="consumerId"
       :error-message="state.errorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="state.fields"
+      :form-fields="payload"
       :is-readonly="state.readonly"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler($event)"
@@ -210,16 +210,16 @@ const getUrl = (action: 'validate' | 'create' | 'edit'): string => {
 const isFormValid = computed((): boolean => !!state.fields.username || !!state.fields.customId)
 const changesExist = computed((): boolean => JSON.stringify(state.fields) !== JSON.stringify(originalFields))
 
+const payload: ConsumerPayload = {
+  username: state.fields.username || null,
+  custom_id: state.fields.customId || null,
+  tags: state.fields.tags.split(',')?.map((tag: string) => String(tag || '')
+    .trim())?.filter((tag: string) => tag !== ''),
+}
+
 const submitData = async (): Promise<void> => {
   try {
     state.readonly = true
-
-    const payload: ConsumerPayload = {
-      username: state.fields.username || null,
-      custom_id: state.fields.customId || null,
-      tags: state.fields.tags.split(',')?.map((tag: string) => String(tag || '')
-        .trim())?.filter((tag: string) => tag !== ''),
-    }
 
     let response: AxiosResponse | undefined
 

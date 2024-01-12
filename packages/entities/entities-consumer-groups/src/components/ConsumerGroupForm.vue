@@ -6,7 +6,7 @@
       :edit-id="consumerGroupId"
       :error-message="state.errorMessage || fetchError || preValidateErrorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="state.fields"
+      :form-fields="getPayload()"
       :is-readonly="state.readonly"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler($event)"

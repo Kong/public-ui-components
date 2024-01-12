@@ -6,7 +6,7 @@
       :edit-id="routeId"
       :error-message="form.errorMessage || fetchServicesErrorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="form.fields"
+      :form-fields="getPayload()"
       :is-readonly="form.isReadonly"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler"

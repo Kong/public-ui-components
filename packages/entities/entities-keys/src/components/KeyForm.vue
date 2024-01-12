@@ -6,7 +6,7 @@
       :edit-id="keyId"
       :error-message="form.errorMessage || fetchKeySetsErrorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="form.fields"
+      :form-fields="requestBody"
       :is-readonly="form.isReadonly"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
@@ -333,18 +333,18 @@ const submitUrl = computed<string>(() => {
   return url
 })
 
+const requestBody: Record<string, any> = {
+  kid: form.fields.key_id,
+  name: form.fields.name || null,
+  tags: form.fields.tags?.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== '') || [],
+  set: form.fields.key_set ? { id: form.fields.key_set } : null,
+  jwk: form.fields.key_format === 'jwk' ? form.fields.jwk : null,
+  pem: form.fields.key_format === 'pem' ? { private_key: form.fields.private_key, public_key: form.fields.public_key } : null,
+}
+
 const saveFormData = async (): Promise<void> => {
   try {
     form.isReadonly = true
-
-    const requestBody: Record<string, any> = {
-      kid: form.fields.key_id,
-      name: form.fields.name || null,
-      tags: form.fields.tags?.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== '') || [],
-      set: form.fields.key_set ? { id: form.fields.key_set } : null,
-      jwk: form.fields.key_format === 'jwk' ? form.fields.jwk : null,
-      pem: form.fields.key_format === 'pem' ? { private_key: form.fields.private_key, public_key: form.fields.public_key } : null,
-    }
 
     let response: AxiosResponse | undefined
 
