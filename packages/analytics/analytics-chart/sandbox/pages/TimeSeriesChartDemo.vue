@@ -163,6 +163,7 @@
       </div>
     </template>
 
+    <div style="height: 500px">
     <!-- Determine if a full blown chart is to be displayed, or a simplified one -->
     <AnalyticsChart
       :allow-csv-export="true"
@@ -174,6 +175,7 @@
       :show-legend-values="showLegendValuesToggle"
       tooltip-title="tooltip title"
     />
+    </div>
 
     <br>
 

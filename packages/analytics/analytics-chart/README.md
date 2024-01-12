@@ -101,20 +101,6 @@ yarn add @kong-ui-public/analytics-chart
 - required: `false`
 - default: `right`
 
-#### `height`
-
-- type: `string`
-- required: `false`
-- default: `'500px'`
-- set the chart height using css height values (px, %, etc...)
-
-#### `width`
-
-- type: `string`
-- required: `false`
-- default: `'100%'`
-- set the chart width using css width values (px, %, etc...)
-
 #### `showLegendValues`
 
 - type: `boolean`

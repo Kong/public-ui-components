@@ -4,14 +4,16 @@
     :query="query"
     :query-ready="queryReady"
   >
-    <AnalyticsChart
-      :chart-data="data"
-      :chart-options="options"
-      chart-title=""
-      :height="`${height}px`"
-      legend-position="bottom"
-      tooltip-title=""
-    />
+    <div :style="{ height: `${height}px`}">
+      <AnalyticsChart
+        :chart-data="data"
+        :chart-options="options"
+        chart-title=""
+        :height="`${height}px`"
+        legend-position="bottom"
+        tooltip-title=""
+      />
+    </div>
   </QueryDataProvider>
 </template>
 <script setup lang="ts">

@@ -42,7 +42,7 @@ export default function useDoughnutChartOptions(chartOptions: DoughnutChartOptio
     const xAlign: TooltipXAlignment = position.x < chartCenterX ? 'left' : 'center'
 
     return {
-      x: x - chartOptions.tooltipState.offset,
+      x: x - chartOptions.tooltipState.offsetX,
       y,
       xAlign,
     }

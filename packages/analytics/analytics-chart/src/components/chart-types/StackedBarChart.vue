@@ -1,5 +1,6 @@
 <template>
   <div
+    :key="redrawKey"
     class="chart-parent"
     :class="chartFlexClass[legendPosition]"
   >
@@ -8,6 +9,7 @@
       class="axis"
     />
     <div
+      ref="chartContainerRef"
       class="chart-container"
       :style="{
         'overflow-x': numLabels > MAX_BARS_VERTICAL ? 'auto' : 'hidden',
@@ -17,7 +19,7 @@
     >
       <div
         class="chart-body"
-        :style="{ width: chartWidth }"
+        :style="{ width: chartWidth, height: chartHeight }"
       >
         <canvas
           ref="canvas"
@@ -118,15 +120,6 @@ const props = defineProps({
     required: false,
     default: '',
   },
-  // This component needs to keep track of the height.
-  height: {
-    type: String,
-    required: false,
-    default: '500px',
-    validator: (value: string): boolean => {
-      return /(\d *)(px|%)/.test(value)
-    },
-  },
   chartLegendSortFn: {
     type: Function as PropType<ChartLegendSortFn>,
     required: false,
@@ -139,8 +132,6 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['heightUpdate'])
-
 const { i18n } = composables.useI18n()
 const { translateUnit } = composables.useTranslatedUnits()
 
@@ -148,15 +139,24 @@ const { translateUnit } = composables.useTranslatedUnits()
 const LABEL_PADDING = 6
 
 // Parameters for bar sizing.
-const MIN_BAR_HEIGHT = 20
-const MIN_CHART_WIDTH = '100%'
+const DEFAULT_CHART_WIDTH = '100%'
+const DEFAULT_CHART_HEIGHT = '100%'
 const MAX_BARS_VERTICAL = 30
+const MAX_BARS_HORIZONTAL = 35
 const MIN_BAR_WIDTH = 40
 const SCROLL_MIN = 0
 const SCROLL_MAX = 10
 const AXIS_BOTTOM_OFFSET = 10
 const AXIS_RIGHT_PADDING = 1
-const BAR_MARGIN = 6
+
+const chartContainerRef = ref<HTMLDivElement>()
+const initialContainerHeight = ref(0)
+
+onMounted(() => {
+  if (chartContainerRef.value) {
+    initialContainerHeight.value = chartContainerRef.value.offsetHeight
+  }
+})
 
 const totalValueOfDataset = ({ chart }: EventContext, label: string) => {
   const chartData: BarChartData = chart.data as BarChartData
@@ -237,7 +237,8 @@ const tooltipData: TooltipState = reactive({
   top: '',
   units: unitsRef,
   translateUnit,
-  offset: 0,
+  offsetX: 0,
+  offsetY: 0,
   width: 0,
   height: 0,
   locked: false,
@@ -340,7 +341,7 @@ const numLabels = computed(() => {
 })
 
 const chartWidth = computed(() => {
-  let value: number | string = MIN_CHART_WIDTH
+  let value: number | string = DEFAULT_CHART_WIDTH
 
   if (canvas.value) {
     value = canvas.value.width
@@ -359,18 +360,22 @@ const chartWidth = computed(() => {
 })
 
 const chartHeight = computed(() => {
-  let chartHeight = parseInt(props.height, 10)
-  if (numLabels.value && isHorizontal.value) {
+  let value: number | string = DEFAULT_CHART_HEIGHT
 
-    // The goal is to keep the bar width greater than or roughly equal to the text width.
-    const preferredChartHeight = numLabels.value * (MIN_BAR_HEIGHT + BAR_MARGIN)
-    chartHeight = Math.max(preferredChartHeight, chartHeight)
+  if (canvas.value) {
+    value = canvas.value.width
+
+    if (canvas.value && props.chartData?.labels && props.chartData?.labels.length > MAX_BARS_HORIZONTAL && isHorizontal.value) {
+      const numLabels = props.chartData.labels.length
+
+      const baseHeight = canvas.value.offsetHeight
+      const preferredChartHeight = baseHeight + ((numLabels - MAX_BARS_HORIZONTAL) * MIN_BAR_WIDTH)
+
+      value = `${preferredChartHeight}px`
+    }
   }
-  return chartHeight
-})
 
-watch(() => chartHeight.value, (height) => {
-  emit('heightUpdate', height)
+  return value
 })
 
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))
@@ -384,10 +389,6 @@ onMounted(() => {
   if (props.annotations) {
     Chart.register(annotationPlugin)
   }
-
-  window.requestAnimationFrame(() => {
-    emit('heightUpdate', chartHeight.value)
-  })
 })
 
 const options = computed<ChartOptions>(() => {
@@ -492,14 +493,14 @@ const axisDimensions = computed(() => {
 })
 
 const onScrolling = (event: Event) => {
-  if (axisDimensions.value && chartInstance.value) {
+  const target: HTMLElement = event.target as HTMLElement
+  if (axisDimensions.value && chartInstance.value && !isHorizontal.value) {
     const scale = axisDimensions.value.scale
     const targetCtx = axisDimensions.value.targetCtx
     const width = axisDimensions.value.width
     const height = axisDimensions.value.height
     const chart = chartInstance.value
     const sourceCanvas = chart.canvas
-    const target: HTMLElement = event.target as HTMLElement
 
     targetCtx.fillStyle = 'white'
 
@@ -519,10 +520,11 @@ const onScrolling = (event: Event) => {
       targetCtx.fillRect(0, (chart.scales.y.height + chart.scales.y.top + AXIS_BOTTOM_OFFSET) * scale, width, (chart.scales.x.height) * scale)
 
     }
-
-    tooltipData.offset = target.scrollLeft
-    axesTooltip.value.offset = target.scrollLeft
   }
+
+  tooltipData.offsetY = target.scrollTop
+  tooltipData.offsetX = target.scrollLeft
+  axesTooltip.value.offset = target.scrollLeft
 }
 
 const tooltipDimensions = ({ width, height }: { width: number, height: number}) => {
@@ -563,6 +565,7 @@ const handleChartClick = () => {
   }
 }
 
+const redrawKey = computed(() => `${props.orientation}`)
 </script>
 
 <style lang="scss" scoped>
@@ -571,7 +574,7 @@ const handleChartClick = () => {
 
 .chart-container {
   -ms-overflow-style: thin;  /* IE and Edge */
-  overflow-y: hidden;
+  overflow-y: scroll;
   scrollbar-width: thin;  /* Firefox */
 
   .chart-body {
