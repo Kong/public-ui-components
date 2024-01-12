@@ -480,7 +480,7 @@ importers:
         specifier: ^1.6.3
         version: 1.6.3
       vue:
-        specifier: ^3.3.13
+        specifier: '>= 3.3.13 < 4'
         version: 3.3.13(typescript@5.2.2)
 
   packages/core/error-boundary:
