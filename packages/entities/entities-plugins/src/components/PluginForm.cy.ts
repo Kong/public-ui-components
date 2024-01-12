@@ -1,7 +1,6 @@
 // Cypress component test spec file
 import type { Router } from 'vue-router'
 import { createMemoryHistory, createRouter } from 'vue-router'
-import { EntityBaseForm } from '@kong-ui-public/entities-shared'
 import { type KongManagerPluginFormConfig, type KonnectPluginFormConfig } from '../types'
 import {
   schema,
@@ -41,6 +40,8 @@ describe('<PluginForm />', () => {
       alias?: string
       credential?: boolean
     }) => {
+      interceptKMScopedEntityFallback()
+
       cy.intercept(
         {
           method: 'GET',
@@ -112,6 +113,20 @@ describe('<PluginForm />', () => {
           body: params?.mockData ?? scopedService,
         },
       ).as(params?.alias ?? 'getScopedEntity')
+    }
+
+    // We just need to stub this call and we don't care about the response, otherwise it will fail occasionally
+    const interceptKMScopedEntityFallback = () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/services?*`,
+        },
+        {
+          statusCode: 200,
+          body: { data: [] },
+        },
+      ).as('getScopedEntityFallback')
     }
 
     const interceptKMOperatePlugin = (params: {
@@ -671,6 +686,8 @@ describe('<PluginForm />', () => {
       mockData?: object
       alias?: string
     }) => {
+      interceptKonnectScopedEntityFallback()
+
       cy.intercept(
         {
           method: 'GET',
@@ -729,7 +746,6 @@ describe('<PluginForm />', () => {
       entityType: string
       mockData?: object
       alias?: string
-      credential?: boolean
     }) => {
       cy.intercept(
         {
@@ -741,6 +757,20 @@ describe('<PluginForm />', () => {
           body: params?.mockData ?? scopedService,
         },
       ).as(params?.alias ?? 'getScopedEntity')
+    }
+
+    // We just need to stub this call and we don't care about the response, otherwise it will fail occasionally
+    const interceptKonnectScopedEntityFallback = () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/service?*`,
+        },
+        {
+          statusCode: 200,
+          body: { data: [] },
+        },
+      ).as('getScopedEntityFallback')
     }
 
     const interceptKonnectOperatePlugin = (params: {
@@ -1098,6 +1128,7 @@ describe('<PluginForm />', () => {
 
     it('should pick correct submit url while editing plugin credential', () => {
       const config = { ...baseConfigKonnect, entityId: scopedConsumer.item.id, entityType: 'consumers' }
+      interceptKonnectScopedEntityFallback()
       interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
       interceptKonnectOperatePlugin({ method: 'PUT', alias: 'updatePlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
 
