@@ -136,7 +136,7 @@ function handleMouseDown(e: MouseEvent) {
   if (tooltipEl.value) {
     dragging.value = true
     // Get computed style and extract transform values
-    const style = window.getComputedStyle(tooltipEl.value)
+    const style = window.getComputedStyle(tooltipEl.value as HTMLElement)
     // @ts-ignore mozTransform is not in the types
     const transform = style.transform || style.webkitTransform || style.mozTransform
 
