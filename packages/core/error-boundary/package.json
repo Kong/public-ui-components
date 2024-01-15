@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.12.4",
-    "@kong/icons": "^1.8.11",
+    "@kong/icons": "^1.8.12",
     "vue": "^3.4.3"
   },
   "repository": {

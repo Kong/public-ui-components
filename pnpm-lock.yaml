@@ -198,8 +198,8 @@ importers:
         specifier: workspace:^0.11.3
         version: link:../analytics-utilities
       '@kong/icons':
-        specifier: ^1.8.11
-        version: 1.8.11(vue@3.4.10)
+        specifier: ^1.8.12
+        version: 1.8.12(vue@3.4.10)
       '@types/file-saver':
         specifier: ^2.0.7
         version: 2.0.7
@@ -352,8 +352,8 @@ importers:
   packages/analytics/metric-cards:
     dependencies:
       '@kong/icons':
-        specifier: ^1.8.11
-        version: 1.8.11(vue@3.4.10)
+        specifier: ^1.8.12
+        version: 1.8.12(vue@3.4.10)
       approximate-number:
         specifier: ^2.1.1
         version: 2.1.1
@@ -371,8 +371,8 @@ importers:
   packages/core/app-layout:
     dependencies:
       '@kong/icons':
-        specifier: ^1.8.11
-        version: 1.8.11(vue@3.4.10)
+        specifier: ^1.8.12
+        version: 1.8.12(vue@3.4.10)
       focus-trap:
         specifier: ^7.5.4
         version: 7.5.4
@@ -423,8 +423,8 @@ importers:
   packages/core/copy-uuid:
     dependencies:
       '@kong/icons':
-        specifier: ^1.8.11
-        version: 1.8.11(vue@3.4.10)
+        specifier: ^1.8.12
+        version: 1.8.12(vue@3.4.10)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -464,8 +464,8 @@ importers:
         specifier: workspace:^
         version: link:../../entities/entities-shared
       '@kong/icons':
-        specifier: ^1.8.11
-        version: 1.8.11(vue@3.4.10)
+        specifier: ^1.8.12
+        version: 1.8.12(vue@3.4.10)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -489,8 +489,8 @@ importers:
         specifier: 1.12.4
         version: 1.12.4
       '@kong/icons':
-        specifier: ^1.8.11
-        version: 1.8.11(vue@3.4.10)
+        specifier: ^1.8.12
+        version: 1.8.12(vue@3.4.10)
       vue:
         specifier: ^3.4.3
         version: 3.4.10(typescript@5.3.3)
@@ -498,8 +498,8 @@ importers:
   packages/core/forms:
     dependencies:
       '@kong/icons':
-        specifier: ^1.8.11
-        version: 1.8.11(vue@3.4.10)
+        specifier: ^1.8.12
+        version: 1.8.12(vue@3.4.10)
       fecha:
         specifier: ^4.2.3
         version: 4.2.3
@@ -550,8 +550,8 @@ importers:
   packages/core/sandbox-layout:
     dependencies:
       '@kong/icons':
-        specifier: ^1.8.11
-        version: 1.8.11(vue@3.4.10)
+        specifier: ^1.8.12
+        version: 1.8.12(vue@3.4.10)
     devDependencies:
       '@kong/design-tokens':
         specifier: 1.12.4
@@ -777,8 +777,8 @@ importers:
         specifier: ^2.1.24
         version: link:../../core/forms
       '@kong/icons':
-        specifier: ^1.8.11
-        version: 1.8.11(vue@3.4.10)
+        specifier: ^1.8.12
+        version: 1.8.12(vue@3.4.10)
       marked:
         specifier: ^11.1.1
         version: 11.1.1
@@ -836,8 +836,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/core
       '@kong/icons':
-        specifier: ^1.8.11
-        version: 1.8.11(vue@3.4.10)
+        specifier: ^1.8.12
+        version: 1.8.12(vue@3.4.10)
       compare-versions:
         specifier: ^6.1.0
         version: 6.1.0
@@ -973,8 +973,8 @@ importers:
         specifier: workspace:^0.10.9
         version: link:../swagger-ui-web-component
       '@kong/icons':
-        specifier: ^1.8.11
-        version: 1.8.11(vue@3.4.10)
+        specifier: ^1.8.12
+        version: 1.8.12(vue@3.4.10)
       lodash.clonedeep:
         specifier: ^4.5.0
         version: 4.5.0
@@ -2179,8 +2179,8 @@ packages:
     resolution: {integrity: sha512-ldBWJbpNLU34OR0d+ptErp/FJrwc8GK8nUZjUmu9zy69ebjztcNAoULgc8MXS+bjzwGZ8U/v8Vmbhh3WFQq0gA==}
     dev: true
 
-  /@kong/icons@1.8.11(vue@3.4.10):
-    resolution: {integrity: sha512-1WQqPZEvXMnrgRWcm1P3wIYohNAHTwLKCsze6GztrBO54GHfRFn+qZidDt019pUq2Swa+gmWFWUdhBWOMOXfvA==}
+  /@kong/icons@1.8.12(vue@3.4.10):
+    resolution: {integrity: sha512-UV9+Oq7Rum7VFuLb3KfTI0Nka4Y30vSjpXygz9y+DWGIO04M84QkC/iNLPY7Y8yA79h3BIXaMB2vL75Diyn2Gg==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: '>= 3.3.4 < 4'
