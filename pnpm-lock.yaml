@@ -970,7 +970,7 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong-ui-public/swagger-ui-web-component':
-        specifier: workspace:^0.10.9
+        specifier: workspace:^0.10.10
         version: link:../swagger-ui-web-component
       '@kong/icons':
         specifier: ^1.8.12
@@ -3117,6 +3117,7 @@ packages:
 
   /@swagger-api/apidom-ns-json-schema-draft-4@0.92.0:
     resolution: {integrity: sha512-7s2EKjCQwRXbK4Y4AGpVkyn1AANCxOUFSHebo1h2katyVeAopV0LJmbXH5yQedTltV0k3BIjnd7hS+7dI846Pw==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
       '@swagger-api/apidom-ast': 0.92.0
