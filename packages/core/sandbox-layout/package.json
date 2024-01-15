@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/sandbox-layout",
-  "version": "2.0.22",
+  "version": "2.0.23",
   "type": "module",
   "main": "./dist/sandbox-layout.umd.js",
   "module": "./dist/sandbox-layout.es.js",
@@ -66,6 +66,6 @@
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
-    "@kong/icons": "^1.8.11"
+    "@kong/icons": "^1.8.12"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/metric-cards",
-  "version": "0.6.22",
+  "version": "0.6.23",
   "type": "module",
   "main": "./dist/metric-cards.umd.js",
   "module": "./dist/metric-cards.es.js",
@@ -48,7 +48,7 @@
     "vue": "^3.4.3"
   },
   "dependencies": {
-    "@kong/icons": "^1.8.11",
+    "@kong/icons": "^1.8.12",
     "approximate-number": "^2.1.1"
   },
   "repository": {
