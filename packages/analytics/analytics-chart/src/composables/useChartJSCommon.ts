@@ -24,7 +24,7 @@ const isSameShape = (oldData: ChartData, newData: ChartData) => {
 
 export default function useChartJSCommon<T extends ChartType, D extends ChartData<T>>(
   chartType: T,
-  canvas: Ref<HTMLCanvasElement | undefined>,
+  canvas: Ref<HTMLCanvasElement | null>,
   chartData: Ref<D>,
   plugins: Plugin[],
   options: Ref<ChartOptions>,
