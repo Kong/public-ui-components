@@ -6,7 +6,7 @@
       :edit-id="upstreamId"
       :error-message="state.errorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="state.fields"
+      :form-fields="getPayload"
       :is-readonly="state.readonly"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler"
@@ -232,7 +232,7 @@ const fetchErrorHandler = (err: AxiosError): void => {
   emit('error', err)
 }
 
-const getPayload = (): UpstreamFormPayload => {
+const getPayload = computed((): UpstreamFormPayload => {
   const result: UpstreamFormPayload = {
     name: state.fields.name,
     slots: Number(state.fields.slots),
@@ -429,7 +429,7 @@ const getPayload = (): UpstreamFormPayload => {
   }
 
   return result
-}
+})
 
 const getUrl = (action: UpstreamsFormActions): string => {
   let url = `${props.config?.apiBaseUrl}${endpoints.form[props.config?.app][action]}`
@@ -449,16 +449,16 @@ const submitData = async (): Promise<void> => {
   try {
     state.readonly = true
 
-    await axiosInstance.post(getUrl('validate'), getPayload())
+    await axiosInstance.post(getUrl('validate'), getPayload.value)
 
     let response: AxiosResponse | undefined
 
     if (formType.value === EntityBaseFormType.Create) {
-      response = await axiosInstance.post(getUrl('create'), getPayload())
+      response = await axiosInstance.post(getUrl('create'), getPayload.value)
     } else if (formType.value === EntityBaseFormType.Edit) {
       response = props.config?.app === 'konnect'
-        ? await axiosInstance.put(getUrl('edit'), getPayload())
-        : await axiosInstance.patch(getUrl('edit'), getPayload())
+        ? await axiosInstance.put(getUrl('edit'), getPayload.value)
+        : await axiosInstance.patch(getUrl('edit'), getPayload.value)
     }
 
     emit('update', response?.data as UpstreamResponse)

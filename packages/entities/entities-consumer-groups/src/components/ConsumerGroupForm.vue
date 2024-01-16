@@ -6,7 +6,7 @@
       :edit-id="consumerGroupId"
       :error-message="state.errorMessage || fetchError || preValidateErrorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="state.fields"
+      :form-fields="getPayload"
       :is-readonly="state.readonly"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler($event)"
@@ -241,10 +241,12 @@ const preValidateErrorMessage = computed(() => {
   return namePattern.test(state.fields.name) ? '' : t('consumer_groups.form.validation_errors.name')
 })
 
-const getPayload = (): ConsumerGroupPayload => ({
-  name: state.fields.name,
-  tags: state.fields.tags.split(',')?.map((tag: string) => String(tag || '')
-    .trim())?.filter((tag: string) => tag !== ''),
+const getPayload = computed((): ConsumerGroupPayload => {
+  return {
+    name: state.fields.name,
+    tags: state.fields.tags.split(',')?.map((tag: string) => String(tag || '')
+      .trim())?.filter((tag: string) => tag !== ''),
+  }
 })
 
 const addConsumer = async (consumerId: string, groupId = ''): Promise<void> => {
@@ -281,7 +283,7 @@ const handleConsumers = (results: any[] | undefined, message: string, groupId = 
 const createGroup = async (): Promise<void> => {
   let newGroupId = ''
   try {
-    const { data } = await axiosInstance.post(getUrl('create'), getPayload())
+    const { data } = await axiosInstance.post(getUrl('create'), getPayload.value)
 
     newGroupId = ('item' in data) ? data.item.id : data.id
   } catch (e) {
@@ -306,9 +308,9 @@ const createGroup = async (): Promise<void> => {
 const updateGroup = async (): Promise<void> => {
   try {
     if (props.config?.app === 'konnect') {
-      await axiosInstance.put(getUrl('edit'), getPayload())
+      await axiosInstance.put(getUrl('edit'), getPayload.value)
     } else {
-      await axiosInstance.patch(getUrl('edit'), getPayload())
+      await axiosInstance.patch(getUrl('edit'), getPayload.value)
     }
   } catch (e) {
     emitError(e as AxiosError)

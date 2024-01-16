@@ -6,7 +6,7 @@
       :edit-id="keyId"
       :error-message="form.errorMessage || fetchKeySetsErrorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="form.fields"
+      :form-fields="requestBody"
       :is-readonly="form.isReadonly"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
@@ -333,29 +333,31 @@ const submitUrl = computed<string>(() => {
   return url
 })
 
+const requestBody = computed((): Record<string, any> => {
+  return {
+    kid: form.fields.key_id,
+    name: form.fields.name || null,
+    tags: form.fields.tags?.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== '') || [],
+    set: form.fields.key_set ? { id: form.fields.key_set } : null,
+    jwk: form.fields.key_format === 'jwk' ? form.fields.jwk : null,
+    pem: form.fields.key_format === 'pem' ? { private_key: form.fields.private_key, public_key: form.fields.public_key } : null,
+  }
+})
+
 const saveFormData = async (): Promise<void> => {
   try {
     form.isReadonly = true
 
-    const requestBody: Record<string, any> = {
-      kid: form.fields.key_id,
-      name: form.fields.name || null,
-      tags: form.fields.tags?.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== '') || [],
-      set: form.fields.key_set ? { id: form.fields.key_set } : null,
-      jwk: form.fields.key_format === 'jwk' ? form.fields.jwk : null,
-      pem: form.fields.key_format === 'pem' ? { private_key: form.fields.private_key, public_key: form.fields.public_key } : null,
-    }
-
     let response: AxiosResponse | undefined
 
     if (formType.value === 'create') {
-      response = await axiosInstance.post(submitUrl.value, requestBody)
+      response = await axiosInstance.post(submitUrl.value, requestBody.value)
     } else if (formType.value === 'edit') {
       response = props.config?.app === 'konnect'
         // Note: Konnect currently uses PUT because PATCH is not fully supported in Koko
         //       If this changes, the `edit` form methods should be re-evaluated/updated accordingly
-        ? await axiosInstance.put(submitUrl.value, requestBody)
-        : await axiosInstance.patch(submitUrl.value, requestBody)
+        ? await axiosInstance.put(submitUrl.value, requestBody.value)
+        : await axiosInstance.patch(submitUrl.value, requestBody.value)
     }
 
     if (response) {
