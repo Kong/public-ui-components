@@ -59,7 +59,6 @@
         <KSelect
           v-else
           v-model="form.fields.certificate_id"
-          :class="{ 'k-select-placeholder': hasPlaceholderText }"
           clearable
           data-testid="sni-form-certificate-id"
           :dropdown-footer-text="additionalRecordsExist ? t('form.fields.certificate_id.footer') : undefined"
@@ -284,9 +283,7 @@ const {
   results,
 } = useDebouncedFilter(props.config, endpoints.form[props.config.app].certificates)
 
-const hasPlaceholderText = ref<boolean>(true)
 const debouncedCertificateQueryChange = (query: string) => {
-  hasPlaceholderText.value = !query
   debouncedQueryChange(query)
 }
 
