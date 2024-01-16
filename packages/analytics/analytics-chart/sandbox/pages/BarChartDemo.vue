@@ -190,8 +190,6 @@
       />
     </div>
 
-    <br>
-
     <div class="data-container">
       <KLabel>ChartData</KLabel>
       <KCodeBlock
@@ -256,7 +254,7 @@ const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const emptyState = ref(false)
 const dimensionSelection = ref(['statusCode'])
-const chartType = ref<ChartTypes>(ChartTypes.VERTICAL_BAR)
+const chartType = ref<ChartTypes>(ChartTypes.HORIZONTAL_BAR)
 const legendPosition = ref(ChartLegendPosition.Right)
 const selectedMetric = ref<MetricSelection>({
   name: Metrics.TotalRequests,
@@ -398,11 +396,16 @@ watch(multiDimensionToggle, () => {
 @import '../styles/charts-sandbox';
 
 .chart-container {
+  height: 500px;
   max-width:60vw;
 
   @media(max-width: ($kui-breakpoint-laptop - 1px)) {
     max-width: 100vw;
   }
+}
+
+.data-container {
+  margin-top: $kui-space-100;
 }
 
 </style>

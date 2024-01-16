@@ -21,7 +21,8 @@ export interface TooltipState {
   top: string,
   units: string, // units are untranslated
   translateUnit: (unit: string, value: number) => string,
-  offset: number,
+  offsetX: number,
+  offsetY: number,
   width: number,
   height: number
   chartType: ChartTypes,

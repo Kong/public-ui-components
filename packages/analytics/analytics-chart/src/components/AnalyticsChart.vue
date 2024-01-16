@@ -100,7 +100,6 @@
         :stacked="chartOptions.stacked"
         :synthetics-data-key="syntheticsDataKey"
         :tooltip-title="tooltipTitle"
-        @height-update="handleHeightUpdate"
       />
       <DoughnutChart
         v-else-if="isDoughnutChart"
@@ -125,7 +124,7 @@ import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
 import CsvExportModal from './CsvExportModal.vue'
 import type { PropType } from 'vue'
-import { computed, provide, ref, toRef, watch } from 'vue'
+import { computed, provide, ref, toRef } from 'vue'
 import { GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsExploreResult, AnalyticsExploreV2Result, GranularityFullObj } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette, hasMillisecondTimestamps } from '../utils'
@@ -149,7 +148,8 @@ const props = defineProps({
   },
   tooltipTitle: {
     type: String,
-    required: true,
+    required: false,
+    default: '',
   },
   emptyStateTitle: {
     type: String,
@@ -164,7 +164,7 @@ const props = defineProps({
   chartTitle: {
     type: String,
     required: false,
-    default: undefined,
+    default: '',
   },
   filenamePrefix: {
     type: String,
@@ -181,22 +181,6 @@ const props = defineProps({
     required: false,
     default: '',
   },
-  height: {
-    type: String,
-    required: false,
-    default: '500px',
-    validator: (value: string): boolean => {
-      return /(\d *)(px)/.test(value)
-    },
-  },
-  width: {
-    type: String,
-    required: false,
-    default: '100%',
-    validator: (value: string): boolean => {
-      return /(\d *)(px|%)/.test(value)
-    },
-  },
   showLegendValues: {
     type: Boolean,
     required: false,
@@ -210,16 +194,7 @@ const props = defineProps({
 })
 
 const { i18n } = composables.useI18n()
-const heightRef = ref<string>(props.height)
 const csvFilename = computed<string>(() => props.filenamePrefix ?? (props.chartTitle || i18n.t('csvExport.defaultFilename')))
-
-const handleHeightUpdate = (height: number) => {
-  heightRef.value = `${height}px`
-}
-
-watch(() => props.height, (newHeight) => {
-  heightRef.value = newHeight
-})
 
 const rawChartData = toRef(props, 'chartData')
 
@@ -368,11 +343,11 @@ provide('legendPosition', toRef(props, 'legendPosition'))
 @import '../styles/chart-shell';
 
 .analytics-chart-shell {
-  height: v-bind('heightRef');
-  width: v-bind('props.width');
+  height: 100%;
+  width: 100%;
   .analytics-chart-parent {
-    height: 100%;
-    width: 100%;
+    height: inherit;
+    width: inherit;
   }
 
   .chart-empty-state {

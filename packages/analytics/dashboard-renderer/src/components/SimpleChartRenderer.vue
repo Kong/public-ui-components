@@ -4,12 +4,13 @@
     :query="query"
     :query-ready="queryReady"
   >
-    <SimpleChart
-      :chart-data="data"
-      :chart-options="mappedChartOptions"
-      :height="`${height}px`"
-      :synthetics-data-key="chartOptions.syntheticsDataKey"
-    />
+    <div class="analytics-chart">
+      <SimpleChart
+        :chart-data="data"
+        :chart-options="mappedChartOptions"
+        :synthetics-data-key="chartOptions.syntheticsDataKey"
+      />
+    </div>
   </QueryDataProvider>
 </template>
 
@@ -33,3 +34,9 @@ const mappedChartOptions = computed<SimpleChartOptions>(() => ({
 }))
 
 </script>
+
+<style scoped lang="scss">
+.analytics-chart {
+  height: v-bind('`${height}px`')
+}
+</style>
