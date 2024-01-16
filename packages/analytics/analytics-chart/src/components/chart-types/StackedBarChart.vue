@@ -10,9 +10,6 @@
     <div
       ref="chartContainerRef"
       class="chart-container"
-      :style="{
-        'overflow-x': numLabels > MAX_BARS_VERTICAL ? 'auto' : 'hidden',
-      }"
       @:scroll="onScrolling"
       @click="handleChartClick()"
     >
@@ -55,7 +52,7 @@ import type { ChartDataset, ChartOptions } from 'chart.js'
 import { Chart } from 'chart.js'
 import type { EventContext } from 'chartjs-plugin-annotation'
 import annotationPlugin from 'chartjs-plugin-annotation'
-import { ref, toRef, onMounted, computed, reactive, watch, inject, onBeforeUnmount } from 'vue'
+import { ref, toRef, onMounted, computed, reactive, watch, inject, onBeforeUnmount, onUnmounted } from 'vue'
 import type { PropType, Ref } from 'vue'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
@@ -140,9 +137,9 @@ const LABEL_PADDING = 6
 // Parameters for bar sizing.
 const DEFAULT_CHART_WIDTH = '100%'
 const DEFAULT_CHART_HEIGHT = '100%'
-const MAX_BARS_VERTICAL = 30
-const MAX_BARS_HORIZONTAL = 35
-const MIN_BAR_WIDTH = 40
+const MIN_BAR_WIDTH = 20
+const MIN_BAR_HEIGHT = 20
+const BAR_MARGIN = 6
 const SCROLL_MIN = 0
 const SCROLL_MAX = 10
 const AXIS_BOTTOM_OFFSET = 10
@@ -203,7 +200,7 @@ const makeAnnotations = (data: BarChartData, label: string, unit: string, orient
   }
 }
 
-const canvas = ref<HTMLCanvasElement>()
+const canvas = ref<HTMLCanvasElement | null>(null)
 const axis = ref< HTMLCanvasElement>()
 const legendID = ref(uuidv4())
 const reactiveAnnotationsID = uuidv4()
@@ -332,12 +329,19 @@ const numLabels = computed(() => {
   return (props.chartData.labels && props.chartData.labels.length) || 0
 })
 
-const chartWidth = computed<string>(() => {
-  if (canvas.value && props.chartData?.labels && props.chartData?.labels.length > MAX_BARS_VERTICAL && !isHorizontal.value) {
-    const numLabels = props.chartData.labels.length
+const baseWidth = ref<number>(0)
+const baseHeight = ref<number>(0)
 
-    const baseWidth = canvas.value.offsetWidth
-    const preferredChartWidth = baseWidth + ((numLabels - MAX_BARS_VERTICAL) * MIN_BAR_WIDTH)
+const resizeObserver = new ResizeObserver(entries => {
+  // Only observing one element
+  baseWidth.value = entries[0].contentRect.width
+  baseHeight.value = entries[0].contentRect.height
+})
+
+const chartWidth = computed<string>(() => {
+  const numLabels = props.chartData?.labels?.length
+  if (canvas.value && numLabels && !isHorizontal.value) {
+    const preferredChartWidth = Math.max(numLabels * (MIN_BAR_WIDTH + BAR_MARGIN), baseWidth.value)
 
     return `${preferredChartWidth}px`
   }
@@ -345,12 +349,10 @@ const chartWidth = computed<string>(() => {
   return DEFAULT_CHART_WIDTH
 })
 
-const chartHeight = computed(() => {
-  if (canvas.value && props.chartData?.labels && props.chartData?.labels.length > MAX_BARS_HORIZONTAL && isHorizontal.value) {
-    const numLabels = props.chartData.labels.length
-
-    const baseHeight = canvas.value.offsetHeight
-    const preferredChartHeight = baseHeight + ((numLabels - MAX_BARS_HORIZONTAL) * MIN_BAR_WIDTH)
+const chartHeight = computed<string>(() => {
+  const numLabels = props.chartData?.labels?.length
+  if (canvas.value && numLabels && isHorizontal.value) {
+    const preferredChartHeight = Math.max(numLabels * (MIN_BAR_HEIGHT + BAR_MARGIN), baseHeight.value)
 
     return `${preferredChartHeight}px`
   }
@@ -368,6 +370,16 @@ onMounted(() => {
   // using vue-chartjs).
   if (props.annotations) {
     Chart.register(annotationPlugin)
+  }
+
+  if (chartContainerRef.value) {
+    resizeObserver.observe(chartContainerRef.value)
+  }
+})
+
+onUnmounted(() => {
+  if (chartContainerRef.value) {
+    resizeObserver.unobserve(chartContainerRef.value)
   }
 })
 
@@ -402,7 +414,7 @@ const options = computed<ChartOptions>(() => {
 
 const chartInstance = composables.useChartJSCommon(
   'bar',
-  canvas,
+  canvas as Ref<HTMLCanvasElement>,
   toRef(props, 'chartData') as Ref<BarChartData>,
   plugins,
   options,
@@ -551,8 +563,8 @@ const handleChartClick = () => {
 @import '../../styles/chart';
 
 .chart-container {
+  overflow: auto;
   -ms-overflow-style: thin;  /* IE and Edge */
-  overflow-y: auto;
   scrollbar-width: thin;  /* Firefox */
 
   .chart-body {

@@ -8,7 +8,6 @@
       <AnalyticsChart
         :chart-data="data"
         :chart-options="options"
-        :height="`${height}px`"
         legend-position="bottom"
       />
     </div>
