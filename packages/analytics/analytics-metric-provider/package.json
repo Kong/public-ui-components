@@ -61,6 +61,6 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-pr.1932.9f1bbb7a.0"
+    "@kong/kongponents": "9.0.0-pr.1932.59fcb574.0"
   }
 }

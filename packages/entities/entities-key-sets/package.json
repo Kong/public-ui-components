@@ -31,7 +31,7 @@
   "devDependencies": {
     "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-pr.1932.9f1bbb7a.0",
+    "@kong/kongponents": "9.0.0-pr.1932.59fcb574.0",
     "axios": "^1.6.3",
     "vue": "^3.4.3",
     "vue-router": "^4.2.5"
