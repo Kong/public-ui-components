@@ -107,8 +107,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       jsdom:
-        specifier: ^23.0.1
-        version: 23.0.1
+        specifier: ^23.1.0
+        version: 23.2.0
       lerna:
         specifier: ^8.0.1
         version: 8.0.1
@@ -158,7 +158,7 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       typedoc:
-        specifier: ^0.25.5
+        specifier: ^0.25.6
         version: 0.25.7(typescript@5.3.3)
       typedoc-plugin-markdown:
         specifier: ^3.17.1
@@ -177,7 +177,7 @@ importers:
         version: 0.6.2(vite@5.0.10)
       vitest:
         specifier: ^1.1.1
-        version: 1.2.0(@types/node@18.19.4)(@vitest/ui@1.2.0)(jsdom@23.0.1)(sass@1.69.6)
+        version: 1.2.0(@types/node@18.19.4)(@vitest/ui@1.2.0)(jsdom@23.2.0)(sass@1.69.6)
       vue:
         specifier: ^3.4.3
         version: 3.4.11(typescript@5.3.3)
@@ -1056,6 +1056,14 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.18
+    dev: true
+
+  /@asamuzakjp/dom-selector@2.0.2:
+    resolution: {integrity: sha512-x1KXOatwofR6ZAYzXRBL5wrdV0vwNxlTCK9NCuLqAzQYARqGcvFwiJA6A1ERuh+dgeA4Dxm3JBYictIes+SqUQ==}
+    dependencies:
+      bidi-js: 1.0.3
+      css-tree: 2.3.1
+      is-potential-custom-element-name: 1.0.1
     dev: true
 
   /@babel/code-frame@7.23.4:
@@ -2267,11 +2275,11 @@ packages:
       focus-trap: 7.5.4
       focus-trap-vue: 4.0.3(focus-trap@7.5.4)
       popper.js: 1.16.1
-      sortablejs: 1.15.1
+      sortablejs: 1.15.2
       swrv: 1.0.4
       uuid: 9.0.1
       v-calendar: 3.0.0-alpha.8
-      vue-draggable-next: 2.2.1(sortablejs@1.15.1)
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)
     dev: false
 
   /@kong/kongponents@9.0.0-pr.1932.9f1bbb7a.0:
@@ -2289,11 +2297,11 @@ packages:
       focus-trap: 7.5.4
       focus-trap-vue: 4.0.3(focus-trap@7.5.4)
       popper.js: 1.16.1
-      sortablejs: 1.15.1
+      sortablejs: 1.15.2
       swrv: 1.0.4
       uuid: 9.0.1
       v-calendar: 3.1.2(@popperjs/core@2.11.8)
-      vue-draggable-next: 2.2.1(sortablejs@1.15.1)
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)
     dev: true
 
   /@kong/kongponents@9.0.0-pr.1932.9f1bbb7a.0(axios@1.6.3):
@@ -2312,11 +2320,11 @@ packages:
       focus-trap: 7.5.4
       focus-trap-vue: 4.0.3(focus-trap@7.5.4)
       popper.js: 1.16.1
-      sortablejs: 1.15.1
+      sortablejs: 1.15.2
       swrv: 1.0.4
       uuid: 9.0.1
       v-calendar: 3.1.2(@popperjs/core@2.11.8)
-      vue-draggable-next: 2.2.1(sortablejs@1.15.1)
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)
     dev: true
 
   /@kong/kongponents@9.0.0-pr.1932.9f1bbb7a.0(axios@1.6.3)(vue-router@4.2.5)(vue@3.4.11):
@@ -2335,12 +2343,12 @@ packages:
       focus-trap: 7.5.4
       focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.4.11)
       popper.js: 1.16.1
-      sortablejs: 1.15.1
+      sortablejs: 1.15.2
       swrv: 1.0.4(vue@3.4.11)
       uuid: 9.0.1
       v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.4.11)
       vue: 3.4.11
-      vue-draggable-next: 2.2.1(sortablejs@1.15.1)(vue@3.4.11)
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.11)
       vue-router: 4.2.5(vue@3.4.11)
     dev: true
 
@@ -2360,12 +2368,12 @@ packages:
       focus-trap: 7.5.4
       focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.3.13)
       popper.js: 1.16.1
-      sortablejs: 1.15.1
+      sortablejs: 1.15.2
       swrv: 1.0.4(vue@3.3.13)
       uuid: 9.0.1
       v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.3.13)
       vue: 3.3.13
-      vue-draggable-next: 2.2.1(sortablejs@1.15.1)(vue@3.3.13)
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.3.13)
     dev: true
 
   /@kong/kongponents@9.0.0-pr.1932.9f1bbb7a.0(vue-router@4.2.5)(vue@3.4.11):
@@ -2383,12 +2391,12 @@ packages:
       focus-trap: 7.5.4
       focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.4.11)
       popper.js: 1.16.1
-      sortablejs: 1.15.1
+      sortablejs: 1.15.2
       swrv: 1.0.4(vue@3.4.11)
       uuid: 9.0.1
       v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.4.11)
       vue: 3.4.11
-      vue-draggable-next: 2.2.1(sortablejs@1.15.1)(vue@3.4.11)
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.11)
       vue-router: 4.2.5(vue@3.4.11)
     dev: true
 
@@ -2407,12 +2415,12 @@ packages:
       focus-trap: 7.5.4
       focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.4.11)
       popper.js: 1.16.1
-      sortablejs: 1.15.1
+      sortablejs: 1.15.2
       swrv: 1.0.4(vue@3.4.11)
       uuid: 9.0.1
       v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.4.11)
       vue: 3.4.11
-      vue-draggable-next: 2.2.1(sortablejs@1.15.1)(vue@3.4.11)
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.11)
     dev: true
 
   /@kong/swagger-ui-kong-theme-universal@4.3.3(react-dom@17.0.2)(react@17.0.2):
@@ -4182,7 +4190,7 @@ packages:
       pathe: 1.1.1
       picocolors: 1.0.0
       sirv: 2.0.4
-      vitest: 1.2.0(@types/node@18.19.4)(@vitest/ui@1.2.0)(jsdom@23.0.1)(sass@1.69.6)
+      vitest: 1.2.0(@types/node@18.19.4)(@vitest/ui@1.2.0)(jsdom@23.2.0)(sass@1.69.6)
     dev: true
 
   /@vitest/utils@1.2.0:
@@ -5204,6 +5212,12 @@ packages:
     resolution: {integrity: sha512-NzUnlZexiaH/46WDhANlyR2bXRopNg4F/zuSA3OpZnllCUgRaOF2znDioDWrmbNVsuZk6l9pMquQB38cfBZwkQ==}
     dev: true
 
+  /bidi-js@1.0.3:
+    resolution: {integrity: sha512-RKshQI1R3YQ+n9YJz2QQ147P66ELpa1FQEg20Dk8oW9t2KgLbpDLLp9aGZ7y8WHSshDknG0bknqGw5/tyCs5tw==}
+    dependencies:
+      require-from-string: 2.0.2
+    dev: true
+
   /big.js@5.2.2:
     resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==}
     dev: true
@@ -6198,9 +6212,9 @@ packages:
     hasBin: true
     dev: true
 
-  /cssstyle@3.0.0:
-    resolution: {integrity: sha512-N4u2ABATi3Qplzf0hWbVCdjenim8F3ojEXpBDF5hBpjzW182MjNGLqfmQ0SkSPeQ+V86ZXgeH8aXj6kayd4jgg==}
-    engines: {node: '>=14'}
+  /cssstyle@4.0.1:
+    resolution: {integrity: sha512-8ZYiJ3A/3OkDd093CBT/0UKDWry7ak4BdPTFP2+QEP7cmhouyq/Up709ASSj2cK02BbZiMgk7kYjZNS4QP5qrQ==}
+    engines: {node: '>=18'}
     dependencies:
       rrweb-cssom: 0.6.0
     dev: true
@@ -9311,8 +9325,8 @@ packages:
     resolution: {integrity: sha512-UVU9dibq2JcFWxQPA6KCqj5O42VOmAY3zQUfEKxU0KpTGXwNoCjkX1e13eHNvw/xPynt6pU0rZ1htjWTNTSXsg==}
     dev: true
 
-  /jsdom@23.0.1:
-    resolution: {integrity: sha512-2i27vgvlUsGEBO9+/kJQRbtqtm+191b5zAZrU/UezVmnC2dlDAFLgDYJvAEi94T4kjsRKkezEtLQTgsNEsW2lQ==}
+  /jsdom@23.2.0:
+    resolution: {integrity: sha512-L88oL7D/8ufIES+Zjz7v0aes+oBMh2Xnh3ygWvL0OaICOomKEPKuPnIfBJekiXr+BHbbMjrWn/xqrDQuxFTeyA==}
     engines: {node: '>=18'}
     peerDependencies:
       canvas: ^2.11.2
@@ -9320,7 +9334,8 @@ packages:
       canvas:
         optional: true
     dependencies:
-      cssstyle: 3.0.0
+      '@asamuzakjp/dom-selector': 2.0.2
+      cssstyle: 4.0.1
       data-urls: 5.0.0
       decimal.js: 10.4.3
       form-data: 4.0.0
@@ -9328,7 +9343,6 @@ packages:
       http-proxy-agent: 7.0.0
       https-proxy-agent: 7.0.2
       is-potential-custom-element-name: 1.0.1
-      nwsapi: 2.2.7
       parse5: 7.1.2
       rrweb-cssom: 0.6.0
       saxes: 6.0.0
@@ -9339,7 +9353,7 @@ packages:
       whatwg-encoding: 3.1.1
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.0.0
-      ws: 8.15.1
+      ws: 8.16.0
       xml-name-validator: 5.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -10699,10 +10713,6 @@ packages:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
     dependencies:
       boolbase: 1.0.0
-    dev: true
-
-  /nwsapi@2.2.7:
-    resolution: {integrity: sha512-ub5E4+FBPKwAZx0UwIQOjYWGHTEq5sPqHQNRN8Z9e4A7u3Tj1weLJsL59yH9vmvqEtBHaOmT6cYQKIZOxp35FQ==}
     dev: true
 
   /nx@17.2.8:
@@ -12789,8 +12799,8 @@ packages:
       is-plain-obj: 1.1.0
     dev: true
 
-  /sortablejs@1.15.1:
-    resolution: {integrity: sha512-P5Cjvb0UG1ZVNiDPj/n4V+DinttXG6K8n7vM/HQf0C25K3YKQTQY6fsr/sEGsJGpQ9exmPxluHxKBc0mLKU1lQ==}
+  /sortablejs@1.15.2:
+    resolution: {integrity: sha512-FJF5jgdfvoKn1MAKSdGs33bIqLi3LmsgVTliuX6iITj834F+JRQZN90Z93yql8h0K2t0RwDPBmxwlbZfDcxNZA==}
 
   /source-map-js@1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
@@ -13626,7 +13636,7 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       psl: 1.9.0
-      punycode: 2.3.0
+      punycode: 2.3.1
       universalify: 0.2.0
       url-parse: 1.5.10
     dev: true
@@ -14265,7 +14275,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitest@1.2.0(@types/node@18.19.4)(@vitest/ui@1.2.0)(jsdom@23.0.1)(sass@1.69.6):
+  /vitest@1.2.0(@types/node@18.19.4)(@vitest/ui@1.2.0)(jsdom@23.2.0)(sass@1.69.6):
     resolution: {integrity: sha512-Ixs5m7BjqvLHXcibkzKRQUvD/XLw0E3rvqaCMlrm/0LMsA0309ZqYvTlPzkhh81VlEyVZXFlwWnkhb6/UMtcaQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -14302,7 +14312,7 @@ packages:
       chai: 4.3.10
       debug: 4.3.4
       execa: 8.0.1
-      jsdom: 23.0.1
+      jsdom: 23.2.0
       local-pkg: 0.5.0
       magic-string: 0.30.5
       pathe: 1.1.1
@@ -14351,31 +14361,31 @@ packages:
     resolution: {integrity: sha512-NCA6sekiJIMnMs4DdORxATXD+/NRkQpS32UC+I1KQJUasx+Z7MZUb3Y+MsKsFmX+PgyTYSteb73JW77AibaCCw==}
     dev: true
 
-  /vue-draggable-next@2.2.1(sortablejs@1.15.1):
+  /vue-draggable-next@2.2.1(sortablejs@1.15.2):
     resolution: {integrity: sha512-EAMS1IRHF0kZO0o5PMOinsQsXIqsrKT1hKmbICxG3UEtn7zLFkLxlAtajcCcUTisNvQ6TtCB5COjD9a1raNADw==}
     peerDependencies:
       sortablejs: ^1.14.0
       vue: ^3.2.2
     dependencies:
-      sortablejs: 1.15.1
+      sortablejs: 1.15.2
 
-  /vue-draggable-next@2.2.1(sortablejs@1.15.1)(vue@3.3.13):
+  /vue-draggable-next@2.2.1(sortablejs@1.15.2)(vue@3.3.13):
     resolution: {integrity: sha512-EAMS1IRHF0kZO0o5PMOinsQsXIqsrKT1hKmbICxG3UEtn7zLFkLxlAtajcCcUTisNvQ6TtCB5COjD9a1raNADw==}
     peerDependencies:
       sortablejs: ^1.14.0
       vue: ^3.2.2
     dependencies:
-      sortablejs: 1.15.1
+      sortablejs: 1.15.2
       vue: 3.3.13
     dev: true
 
-  /vue-draggable-next@2.2.1(sortablejs@1.15.1)(vue@3.4.11):
+  /vue-draggable-next@2.2.1(sortablejs@1.15.2)(vue@3.4.11):
     resolution: {integrity: sha512-EAMS1IRHF0kZO0o5PMOinsQsXIqsrKT1hKmbICxG3UEtn7zLFkLxlAtajcCcUTisNvQ6TtCB5COjD9a1raNADw==}
     peerDependencies:
       sortablejs: ^1.14.0
       vue: ^3.2.2
     dependencies:
-      sortablejs: 1.15.1
+      sortablejs: 1.15.2
       vue: 3.4.11
     dev: true
 
@@ -14944,8 +14954,8 @@ packages:
         optional: true
     dev: true
 
-  /ws@8.15.1:
-    resolution: {integrity: sha512-W5OZiCjXEmk0yZ66ZN82beM5Sz7l7coYxpRkzS+p9PP+ToQry8szKh+61eNktr7EA9DOwvFGhfC605jDHbP6QQ==}
+  /ws@8.16.0:
+    resolution: {integrity: sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
