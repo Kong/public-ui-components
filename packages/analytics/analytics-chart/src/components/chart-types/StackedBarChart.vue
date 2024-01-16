@@ -1,6 +1,5 @@
 <template>
   <div
-    :key="redrawKey"
     class="chart-parent"
     :class="chartFlexClass[legendPosition]"
   >
@@ -340,42 +339,30 @@ const numLabels = computed(() => {
   return (props.chartData.labels && props.chartData.labels.length) || 0
 })
 
-const chartWidth = computed(() => {
-  let value: number | string = DEFAULT_CHART_WIDTH
+const chartWidth = computed<string>(() => {
+  if (canvas.value && props.chartData?.labels && props.chartData?.labels.length > MAX_BARS_VERTICAL && !isHorizontal.value) {
+    const numLabels = props.chartData.labels.length
 
-  if (canvas.value) {
-    value = canvas.value.width
+    const baseWidth = canvas.value.offsetWidth
+    const preferredChartWidth = baseWidth + ((numLabels - MAX_BARS_VERTICAL) * MIN_BAR_WIDTH)
 
-    if (canvas.value && props.chartData?.labels && props.chartData?.labels.length > MAX_BARS_VERTICAL && !isHorizontal.value) {
-      const numLabels = props.chartData.labels.length
-
-      const baseWidth = canvas.value.offsetWidth
-      const preferredChartWidth = baseWidth + ((numLabels - MAX_BARS_VERTICAL) * MIN_BAR_WIDTH)
-
-      value = `${preferredChartWidth}px`
-    }
+    return `${preferredChartWidth}px`
   }
 
-  return value
+  return DEFAULT_CHART_WIDTH
 })
 
 const chartHeight = computed(() => {
-  let value: number | string = DEFAULT_CHART_HEIGHT
+  if (canvas.value && props.chartData?.labels && props.chartData?.labels.length > MAX_BARS_HORIZONTAL && isHorizontal.value) {
+    const numLabels = props.chartData.labels.length
 
-  if (canvas.value) {
-    value = canvas.value.width
+    const baseHeight = canvas.value.offsetHeight
+    const preferredChartHeight = baseHeight + ((numLabels - MAX_BARS_HORIZONTAL) * MIN_BAR_WIDTH)
 
-    if (canvas.value && props.chartData?.labels && props.chartData?.labels.length > MAX_BARS_HORIZONTAL && isHorizontal.value) {
-      const numLabels = props.chartData.labels.length
-
-      const baseHeight = canvas.value.offsetHeight
-      const preferredChartHeight = baseHeight + ((numLabels - MAX_BARS_HORIZONTAL) * MIN_BAR_WIDTH)
-
-      value = `${preferredChartHeight}px`
-    }
+    return `${preferredChartHeight}px`
   }
 
-  return value
+  return DEFAULT_CHART_HEIGHT
 })
 
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))
@@ -493,7 +480,7 @@ const axisDimensions = computed(() => {
 })
 
 const onScrolling = (event: Event) => {
-  const target: HTMLElement = event.target as HTMLElement
+  const target = event.target as HTMLElement
   if (axisDimensions.value && chartInstance.value && !isHorizontal.value) {
     const scale = axisDimensions.value.scale
     const targetCtx = axisDimensions.value.targetCtx
@@ -564,8 +551,6 @@ const handleChartClick = () => {
     tooltipData.locked = !tooltipData.locked
   }
 }
-
-const redrawKey = computed(() => `${props.orientation}`)
 </script>
 
 <style lang="scss" scoped>
@@ -574,7 +559,7 @@ const redrawKey = computed(() => `${props.orientation}`)
 
 .chart-container {
   -ms-overflow-style: thin;  /* IE and Edge */
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-width: thin;  /* Firefox */
 
   .chart-body {

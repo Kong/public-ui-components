@@ -4,12 +4,11 @@
     :query="query"
     :query-ready="queryReady"
   >
-    <div :style="{ height: `${height}px`}">
+    <div class="analytics-chart">
       <AnalyticsChart
         :chart-data="data"
         :chart-options="options"
         chart-title=""
-        :height="`${height}px`"
         legend-position="bottom"
         :show-annotations="chartOptions.showAnnotations"
         tooltip-title=""
@@ -38,3 +37,9 @@ const options = computed<AnalyticsChartOptions>(() => ({
   chartDatasetColors: props.chartOptions.chartDatasetColors,
 }))
 </script>
+
+<style scoped lang="scss">
+.analytics-chart {
+  height: v-bind('`${height}px`')
+}
+</style>
