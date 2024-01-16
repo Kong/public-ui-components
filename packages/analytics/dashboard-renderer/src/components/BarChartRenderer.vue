@@ -8,10 +8,8 @@
       <AnalyticsChart
         :chart-data="data"
         :chart-options="options"
-        chart-title=""
         legend-position="bottom"
         :show-annotations="chartOptions.showAnnotations"
-        tooltip-title=""
       />
     </div>
   </QueryDataProvider>

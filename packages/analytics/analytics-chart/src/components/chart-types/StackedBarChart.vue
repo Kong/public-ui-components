@@ -148,14 +148,7 @@ const SCROLL_MAX = 10
 const AXIS_BOTTOM_OFFSET = 10
 const AXIS_RIGHT_PADDING = 1
 
-const chartContainerRef = ref<HTMLDivElement>()
-const initialContainerHeight = ref(0)
-
-onMounted(() => {
-  if (chartContainerRef.value) {
-    initialContainerHeight.value = chartContainerRef.value.offsetHeight
-  }
-})
+const chartContainerRef = ref<HTMLDivElement| null>(null)
 
 const totalValueOfDataset = ({ chart }: EventContext, label: string) => {
   const chartData: BarChartData = chart.data as BarChartData

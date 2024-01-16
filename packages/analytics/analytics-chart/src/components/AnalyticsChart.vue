@@ -148,7 +148,8 @@ const props = defineProps({
   },
   tooltipTitle: {
     type: String,
-    required: true,
+    required: false,
+    default: '',
   },
   emptyStateTitle: {
     type: String,
@@ -163,7 +164,7 @@ const props = defineProps({
   chartTitle: {
     type: String,
     required: false,
-    default: undefined,
+    default: '',
   },
   filenamePrefix: {
     type: String,
