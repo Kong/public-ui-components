@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@2.2.10...@kong-ui-public/entities-keys@2.3.0) (2024-01-16)
+
+
+### Features
+
+* reuse preprocessing form fields for config forms and save [khcp-10152] ([#1070](https://github.com/Kong/public-ui-components/issues/1070)) ([01513b3](https://github.com/Kong/public-ui-components/commit/01513b37c3ff284ff27c39d2c577d08b1c21284b))
+
+
+
+
+
 ## [2.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@2.2.9...@kong-ui-public/entities-keys@2.2.10) (2024-01-15)
 
 **Note:** Version bump only for package @kong-ui-public/entities-keys
