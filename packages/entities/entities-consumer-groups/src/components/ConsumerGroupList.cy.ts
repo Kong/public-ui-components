@@ -34,6 +34,7 @@ describe('<ConsumerGroupList />', () => {
       workspace: 'default',
       apiBaseUrl: '/kong-manager',
       isExactMatch: false,
+      paginatedEndpoint: true,
       filterSchema: {},
       createRoute: 'create-consumer-group',
       getViewRoute: () => 'view-consumer-group',
@@ -70,12 +71,14 @@ describe('<ConsumerGroupList />', () => {
           method: 'GET',
           url: `${baseConfigKM.apiBaseUrl}/${configConsumerKM.workspace}/consumers/${configConsumerKM.consumerId}/consumer_groups*`,
         },
-        {
-          statusCode: 200,
-          body: {
-            data: params?.mockData ?? [],
-            total: params?.mockData?.length ?? 0,
-          },
+        (req) => {
+          const size = req.query.size ? Number(req.query.size) : 30
+          const offset = req.query.offset ? Number(req.query.offset) : 0
+
+          req.reply({
+            statusCode: 200,
+            body: paginate(params?.mockData ?? [], size, offset),
+          })
         },
       ).as(params?.alias ?? 'getGroups')
     }
@@ -117,8 +120,8 @@ describe('<ConsumerGroupList />', () => {
       ).as(params?.alias ?? 'getConsumerGroupsMultiPage')
     }
 
-    const triggerQuery = '.kong-ui-entities-consumer-groups-list tbody tr [data-testid="k-dropdown-trigger"]'
-    const exitQuery = '.kong-ui-entities-consumer-groups-list tbody tr [data-testid="action-entity-delete"]'
+    const triggerQuery = '.kong-ui-entities-consumer-groups-list tbody tr:first-child [data-testid="k-dropdown-trigger"]'
+    const exitQuery = '.kong-ui-entities-consumer-groups-list tbody tr:first-child [data-testid="action-entity-delete"]'
     const modalQuery = 'exit-group-modal'
 
     it('should show empty state and create consumer group cta', () => {
@@ -397,8 +400,8 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('toolbar-add-consumer-group').should('exist')
-      cy.getTestId('toolbar-add-consumer-group').should('contain.text', 'Add to Consumer Group')
+      cy.getTestId('add-to-consumer-group').should('exist')
+      cy.getTestId('add-to-consumer-group').should('contain.text', 'Add to Consumer Group')
     })
 
     it('should render AddToGroupModal onclick Add to Group button when consumerId is provided', () => {
@@ -417,7 +420,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('toolbar-add-consumer-group').click()
+      cy.getTestId('add-to-consumer-group').click()
       cy.getTestId('add-to-group-modal').should('exist')
     })
 
@@ -438,7 +441,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('toolbar-add-consumer-group').click()
+      cy.getTestId('add-to-consumer-group').click()
       cy.getTestId('add-to-group-modal').should('exist')
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddToGroupModal).vm.$emit('cancel'))
@@ -465,7 +468,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('toolbar-add-consumer-group').click()
+      cy.getTestId('add-to-consumer-group').click()
       cy.getTestId('add-to-group-modal').should('exist')
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddToGroupModal).vm.$emit('add:success', expectedData))
@@ -494,7 +497,7 @@ describe('<ConsumerGroupList />', () => {
 
         cy.wait('@getGroups')
 
-        cy.getTestId('toolbar-add-consumer-group').click()
+        cy.getTestId('add-to-consumer-group').click()
         cy.getTestId('add-to-group-modal').should('exist')
 
         cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddToGroupModal)
@@ -695,8 +698,7 @@ describe('<ConsumerGroupList />', () => {
         {
           statusCode: 200,
           body: {
-            data: params?.mockData ?? [],
-            total: params?.mockData?.length ?? 0,
+            consumer_groups: params?.mockData ?? [],
           },
         },
       ).as(params?.alias ?? 'getGroups')
@@ -738,8 +740,8 @@ describe('<ConsumerGroupList />', () => {
       ).as(params?.alias ?? 'getConsumerGroupsMultiPage')
     }
 
-    const triggerQuery = '.kong-ui-entities-consumer-groups-list tbody tr [data-testid="k-dropdown-trigger"]'
-    const exitQuery = '.kong-ui-entities-consumer-groups-list tbody tr [data-testid="action-entity-delete"]'
+    const triggerQuery = '.kong-ui-entities-consumer-groups-list tbody tr:first-child [data-testid="k-dropdown-trigger"]'
+    const exitQuery = '.kong-ui-entities-consumer-groups-list tbody tr:first-child [data-testid="action-entity-delete"]'
     const modalQuery = 'exit-group-modal'
 
     it('should show empty state and create consumer group cta', () => {
@@ -1018,8 +1020,8 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('toolbar-add-consumer-group').should('exist')
-      cy.getTestId('toolbar-add-consumer-group').should('contain.text', 'Add to Consumer Group')
+      cy.getTestId('add-to-consumer-group').should('exist')
+      cy.getTestId('add-to-consumer-group').should('contain.text', 'Add to Consumer Group')
     })
 
     it('should render AddToGroupModal onclick Add to Group button when consumerId is provided', () => {
@@ -1038,7 +1040,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('toolbar-add-consumer-group').click()
+      cy.getTestId('add-to-consumer-group').click()
       cy.getTestId('add-to-group-modal').should('exist')
     })
 
@@ -1059,7 +1061,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('toolbar-add-consumer-group').click()
+      cy.getTestId('add-to-consumer-group').click()
       cy.getTestId('add-to-group-modal').should('exist')
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddToGroupModal).vm.$emit('cancel'))
@@ -1086,7 +1088,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('toolbar-add-consumer-group').click()
+      cy.getTestId('add-to-consumer-group').click()
       cy.getTestId('add-to-group-modal').should('exist')
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddToGroupModal).vm.$emit('add:success', expectedData))
@@ -1115,7 +1117,7 @@ describe('<ConsumerGroupList />', () => {
 
         cy.wait('@getGroups')
 
-        cy.getTestId('toolbar-add-consumer-group').click()
+        cy.getTestId('add-to-consumer-group').click()
         cy.getTestId('add-to-group-modal').should('exist')
 
         cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddToGroupModal)

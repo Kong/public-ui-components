@@ -79,6 +79,12 @@ A table component for consumers.
     - default: `null`
     - Current consumer group name if the ConsumerList in nested in the consumers tab on a consumer group detail page.
 
+  - `paginatedEndpoint`:
+    - type: `boolean`
+    - required: `false`
+    - default: `null`
+    - A boolean to indicate if the paginated endpoint is used when `consumerGroupId` is provided.
+
   - `workspace`:
     - type: `string`
     - required: `true`

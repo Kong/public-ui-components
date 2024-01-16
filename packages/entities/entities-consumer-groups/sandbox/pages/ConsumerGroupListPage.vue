@@ -67,6 +67,7 @@ const kongManagerConfig = ref<KongManagerConsumerGroupListConfig>({
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   isExactMatch: false,
+  paginatedEndpoint: true,
   // Uncomment to test Consumer -> Consumer Groups
   // consumerId: 'b20b1848-6640-4200-9102-73a184de976e',
   // consumerUsername: 'c-1',

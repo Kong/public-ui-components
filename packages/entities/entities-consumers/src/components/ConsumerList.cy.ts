@@ -34,6 +34,7 @@ describe('<ConsumerList />', () => {
       workspace: 'default',
       apiBaseUrl: '/kong-manager',
       isExactMatch: false,
+      paginatedEndpoint: true,
       filterSchema: {},
       createRoute: 'create-consumer',
       getViewRoute: () => 'view-consumer',
@@ -70,12 +71,14 @@ describe('<ConsumerList />', () => {
           method: 'GET',
           url: `${baseConfigKM.apiBaseUrl}/${configGroupKM.workspace}/consumer_groups/${configGroupKM.consumerGroupId}/consumers*`,
         },
-        {
-          statusCode: 200,
-          body: {
-            data: params?.mockData ?? [],
-            total: params?.mockData?.length ?? 0,
-          },
+        (req) => {
+          const size = req.query.size ? Number(req.query.size) : 30
+          const offset = req.query.offset ? Number(req.query.offset) : 0
+
+          req.reply({
+            statusCode: 200,
+            body: paginate(params?.mockData ?? [], size, offset),
+          })
         },
       ).as(params?.alias ?? 'getGroupConsumers')
     }
@@ -117,8 +120,8 @@ describe('<ConsumerList />', () => {
       ).as(params?.alias ?? 'getConsumersMultiPage')
     }
 
-    const triggerQuery = '.kong-ui-entities-consumers-list tbody tr [data-testid="k-dropdown-trigger"]'
-    const removeQuery = '.kong-ui-entities-consumers-list tbody tr [data-testid="action-entity-delete"]'
+    const triggerQuery = '.kong-ui-entities-consumers-list tbody tr:first-child [data-testid="k-dropdown-trigger"]'
+    const removeQuery = '.kong-ui-entities-consumers-list tbody tr:first-child [data-testid="action-entity-delete"]'
     const modalQuery = 'remove-consumer-modal'
 
     it('should show empty state and create consumer cta', () => {
@@ -397,7 +400,7 @@ describe('<ConsumerList />', () => {
 
       cy.wait('@getGroupConsumers')
 
-      cy.getTestId('toolbar-add-consumer').should('exist')
+      cy.getTestId('add-consumer').should('exist')
       cy.getTestId('new-consumer').should('not.exist')
     })
 
@@ -417,7 +420,7 @@ describe('<ConsumerList />', () => {
 
       cy.wait('@getGroupConsumers')
 
-      cy.getTestId('toolbar-add-consumer').click()
+      cy.getTestId('add-consumer').click()
       cy.getTestId('add-consumer-modal').should('exist')
     })
 
@@ -438,7 +441,7 @@ describe('<ConsumerList />', () => {
 
       cy.wait('@getGroupConsumers')
 
-      cy.getTestId('toolbar-add-consumer').click()
+      cy.getTestId('add-consumer').click()
       cy.getTestId('add-consumer-modal').should('exist')
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddConsumerModal).vm.$emit('cancel'))
@@ -465,7 +468,7 @@ describe('<ConsumerList />', () => {
 
       cy.wait('@getGroupConsumers')
 
-      cy.getTestId('toolbar-add-consumer').click()
+      cy.getTestId('add-consumer').click()
       cy.getTestId('add-consumer-modal').should('exist')
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddConsumerModal).vm.$emit('add:success', expectedData))
@@ -494,7 +497,7 @@ describe('<ConsumerList />', () => {
 
         cy.wait('@getGroupConsumers')
 
-        cy.getTestId('toolbar-add-consumer').click()
+        cy.getTestId('add-consumer').click()
         cy.getTestId('add-consumer-modal').should('exist')
 
         cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddConsumerModal)
@@ -695,8 +698,7 @@ describe('<ConsumerList />', () => {
         {
           statusCode: 200,
           body: {
-            data: params?.mockData ?? [],
-            total: params?.mockData?.length ?? 0,
+            consumers: params?.mockData ?? [],
           },
         },
       ).as(params?.alias ?? 'getGroupConsumers')
@@ -738,8 +740,8 @@ describe('<ConsumerList />', () => {
       ).as(params?.alias ?? 'getConsumersMultiPage')
     }
 
-    const triggerQuery = '.kong-ui-entities-consumers-list tbody tr [data-testid="k-dropdown-trigger"]'
-    const removeQuery = '.kong-ui-entities-consumers-list tbody tr [data-testid="action-entity-delete"]'
+    const triggerQuery = '.kong-ui-entities-consumers-list tbody tr:first-child [data-testid="k-dropdown-trigger"]'
+    const removeQuery = '.kong-ui-entities-consumers-list tbody tr:first-child [data-testid="action-entity-delete"]'
     const modalQuery = 'remove-consumer-modal'
 
     it('should show empty state and create consumer cta', () => {
@@ -1018,7 +1020,7 @@ describe('<ConsumerList />', () => {
 
       cy.wait('@getGroupConsumers')
 
-      cy.getTestId('toolbar-add-consumer').should('exist')
+      cy.getTestId('add-consumer').should('exist')
       cy.getTestId('new-consumer').should('not.exist')
     })
 
@@ -1038,7 +1040,7 @@ describe('<ConsumerList />', () => {
 
       cy.wait('@getGroupConsumers')
 
-      cy.getTestId('toolbar-add-consumer').click()
+      cy.getTestId('add-consumer').click()
       cy.getTestId('add-consumer-modal').should('exist')
     })
 
@@ -1059,7 +1061,7 @@ describe('<ConsumerList />', () => {
 
       cy.wait('@getGroupConsumers')
 
-      cy.getTestId('toolbar-add-consumer').click()
+      cy.getTestId('add-consumer').click()
       cy.getTestId('add-consumer-modal').should('exist')
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddConsumerModal).vm.$emit('cancel'))
@@ -1086,7 +1088,7 @@ describe('<ConsumerList />', () => {
 
       cy.wait('@getGroupConsumers')
 
-      cy.getTestId('toolbar-add-consumer').click()
+      cy.getTestId('add-consumer').click()
       cy.getTestId('add-consumer-modal').should('exist')
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddConsumerModal).vm.$emit('add:success', expectedData))
@@ -1115,7 +1117,7 @@ describe('<ConsumerList />', () => {
 
         cy.wait('@getGroupConsumers')
 
-        cy.getTestId('toolbar-add-consumer').click()
+        cy.getTestId('add-consumer').click()
         cy.getTestId('add-consumer-modal').should('exist')
 
         cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddConsumerModal)
