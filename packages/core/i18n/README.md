@@ -403,6 +403,8 @@ This plugin includes an additional `datetime` formatter (examples above) which u
 
 - `datetime` format the date as date and time using the same format as `formatIsoDate` e.g. `Sale begins {start, date, datetime}`
 
+In the example `Sale begins {start, date, datetime}`, `start` is the value passed into `t` i.e. `t('key.of.string', {start: new Date().toString()})`, `date` is the name of the ICU format we are using, and `datetime` is to tell FormatJS to use the format we have defined as a standard/common format for formatting 'datetimes'.
+
 
 Unit tests for I18n wrapper in kong-ui/core also has view examples as a references for those.
 [FormatDate](https://github.com/Kong/shared-ui-components/blob/4a1f99d5cee2d4409f4370a9bce2377450a6429d/packages/core/src/useI18n/i18n.spec.ts#L81)
