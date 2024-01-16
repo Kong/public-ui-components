@@ -23,7 +23,7 @@ const props = defineProps({
   },
 })
 
-const yamlContent = computed(() => props.yamlRecord)
+const yamlContent = computed((): Record<string, any> => props.yamlRecord)
 </script>
 
 <style lang="scss">

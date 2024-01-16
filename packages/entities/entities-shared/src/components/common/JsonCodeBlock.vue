@@ -57,7 +57,7 @@ const props = defineProps({
   },
 })
 
-const jsonContent = computed(() => props.jsonRecord)
+const jsonContent = computed((): Record<string, any> => props.jsonRecord)
 
 const displayedCharLength = computed((): number => {
   if (!props.fetcherUrl) {

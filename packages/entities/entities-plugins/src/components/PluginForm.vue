@@ -965,7 +965,7 @@ const isCustomPlugin = computed((): boolean => {
   return !Object.keys(pluginMetaData).includes(props.pluginType)
 })
 
-const getRequestBody = computed(() => {
+const getRequestBody = computed((): Record<string, any> => {
   const requestBody: Record<string, any> = submitPayload.value
   // credentials incorrectly build the entity id object
   if (treatAsCredential.value) {

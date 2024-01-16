@@ -753,7 +753,7 @@ const submitUrl = computed<string>(() => {
   return url
 })
 
-const getPayload = computed(() => {
+const getPayload = computed((): Record<string, any> => {
   const hcvConfig = {
     protocol: configFields[VaultProviders.HCV].protocol,
     host: configFields[VaultProviders.HCV].host,
