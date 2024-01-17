@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.4.1...@kong-ui-public/entities-gateway-services@2.4.2) (2024-01-17)
+
+
+### Bug Fixes
+
+* **gatewayServiceForm:** validate gateway service form ([#1080](https://github.com/Kong/public-ui-components/issues/1080)) ([bef5444](https://github.com/Kong/public-ui-components/commit/bef5444cc39b30b05d2891c6aa9bbe0939a07025))
+
+
+
+
+
 ## [2.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.4.0...@kong-ui-public/entities-gateway-services@2.4.1) (2024-01-17)
 
 
