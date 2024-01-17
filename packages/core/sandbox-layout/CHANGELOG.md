@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.0.23...@kong-ui-public/sandbox-layout@2.0.24) (2024-01-17)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 4 [KHCP-10182] ([#1069](https://github.com/Kong/public-ui-components/issues/1069)) ([8dc4cb0](https://github.com/Kong/public-ui-components/commit/8dc4cb060fc5414381824b1eb8ce7691d1346ce5))
+
+
+
+
+
 ## [2.0.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.0.22...@kong-ui-public/sandbox-layout@2.0.23) (2024-01-15)
 
 
