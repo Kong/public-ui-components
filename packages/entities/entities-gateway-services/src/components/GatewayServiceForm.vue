@@ -6,7 +6,7 @@
       :edit-id="gatewayServiceId"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="getProcessedPayload()"
+      :form-fields="getPayload.value"
       :is-readonly="form.isReadonly"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
@@ -764,16 +764,12 @@ const getPayload = computed((): Record<string, any> => {
   return requestBody
 })
 
-const getProcessedPayload = (): Record<string, any> => {
-  validateUrl()
-  return getPayload.value
-}
-
 const saveFormData = async (): Promise<AxiosResponse | undefined> => {
   try {
     form.isReadonly = true
 
-    const payload = getProcessedPayload()
+    validateUrl()
+    const payload = getPayload.value
     saveTlsVerify(payload)
 
     let response: AxiosResponse | undefined
