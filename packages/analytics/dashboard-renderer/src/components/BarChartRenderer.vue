@@ -4,15 +4,14 @@
     :query="query"
     :query-ready="queryReady"
   >
-    <AnalyticsChart
-      :chart-data="data"
-      :chart-options="options"
-      chart-title=""
-      :height="`${height}px`"
-      legend-position="bottom"
-      :show-annotations="chartOptions.showAnnotations"
-      tooltip-title=""
-    />
+    <div class="analytics-chart">
+      <AnalyticsChart
+        :chart-data="data"
+        :chart-options="options"
+        legend-position="bottom"
+        :show-annotations="chartOptions.showAnnotations"
+      />
+    </div>
   </QueryDataProvider>
 </template>
 <script setup lang="ts">
@@ -36,3 +35,9 @@ const options = computed<AnalyticsChartOptions>(() => ({
   chartDatasetColors: props.chartOptions.chartDatasetColors,
 }))
 </script>
+
+<style scoped lang="scss">
+.analytics-chart {
+  height: v-bind('`${height}px`')
+}
+</style>

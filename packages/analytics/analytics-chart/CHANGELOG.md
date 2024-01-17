@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.25.0...@kong-ui-public/analytics-chart@1.1.0) (2024-01-17)
+
+
+### Features
+
+* **analytics-chart:** sizing, overflow issues, and scroll [MA-2508] ([0cc8ba3](https://github.com/Kong/public-ui-components/commit/0cc8ba34298e5e651c3ffc2ec0cba4100b40d233))
+
+
+
+
+
+# [0.25.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.24.10...@kong-ui-public/analytics-chart@0.25.0) (2024-01-16)
+
+
+### Bug Fixes
+
+* **analytics-chart:** sizing and overflow issues plus vertical scroll ([#1072](https://github.com/Kong/public-ui-components/issues/1072)) ([e8c0bba](https://github.com/Kong/public-ui-components/commit/e8c0bba1ed227a8c329e1bf2ff4f1c5b1689faa5))
+
+
+### BREAKING CHANGES
+
+* **analytics-chart:** - No more hight and width props. Host app must wrap in a container that explicitely
+sets width and height.
+- There is vertical scroll now in bar charts verify in host apps where applicable.
+
+* fix: address comments
+
+* fix: address comments round 2
+
+* fix: better dimensions calculation
+
+* fix: comment
+
+
+
+
+
 ## [0.24.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.24.9...@kong-ui-public/analytics-chart@0.24.10) (2024-01-15)
 
 

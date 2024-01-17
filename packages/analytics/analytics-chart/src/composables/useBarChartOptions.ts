@@ -45,8 +45,8 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
     const xAlign: TooltipXAlignment = position.x < chartCenterX ? 'left' : 'center'
 
     return {
-      x: x - chartOptions.tooltipState.offset,
-      y,
+      x: x - chartOptions.tooltipState.offsetX,
+      y: y - chartOptions.tooltipState.offsetY,
       xAlign,
     }
   }

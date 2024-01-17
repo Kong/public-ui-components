@@ -45,6 +45,7 @@ const konnectConfig = ref<KonnectConsumerFormConfig>({
   apiBaseUrl: '/us/kong-api/konnect-api',
   controlPlaneId,
   cancelRoute: { name: 'consumer-list' },
+  jsonYamlFormsEnabled: true,
 })
 
 const KMConfig = ref<KongManagerConsumerFormConfig>({

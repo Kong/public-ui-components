@@ -25,7 +25,7 @@
       :edit-id="pluginId"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="form.fields"
+      :form-fields="getRequestBody"
       :is-readonly="form.isReadonly"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
@@ -965,6 +965,23 @@ const isCustomPlugin = computed((): boolean => {
   return !Object.keys(pluginMetaData).includes(props.pluginType)
 })
 
+const getRequestBody = computed((): Record<string, any> => {
+  const requestBody: Record<string, any> = submitPayload.value
+  // credentials incorrectly build the entity id object
+  if (treatAsCredential.value) {
+    for (const key in PluginScope) {
+      const entityKey = PluginScope[key as keyof typeof PluginScope]
+      // ex. { consumer: '1234-567-899' } => { consumer: { id: '1234-567-899' } }
+      if (requestBody[entityKey] && !requestBody[entityKey].id) {
+        requestBody[entityKey] = { id: props.config.entityId }
+      }
+    }
+
+    delete requestBody.created_at
+  }
+  return requestBody
+})
+
 // make the actual API request to save on create/edit
 const saveFormData = async (): Promise<void> => {
   // if save/cancel buttons are hidden, don't submit on hitting Enter
@@ -975,36 +992,22 @@ const saveFormData = async (): Promise<void> => {
   try {
     form.isReadonly = true
 
-    const requestBody: Record<string, any> = submitPayload.value
     let response: AxiosResponse | undefined
-
-    // credentials incorrectly build the entity id object
-    if (treatAsCredential.value) {
-      for (const key in PluginScope) {
-        const entityKey = PluginScope[key as keyof typeof PluginScope]
-        // ex. { consumer: '1234-567-899' } => { consumer: { id: '1234-567-899' } }
-        if (requestBody[entityKey] && !requestBody[entityKey].id) {
-          requestBody[entityKey] = { id: props.config.entityId }
-        }
-      }
-
-      delete requestBody.created_at
-    }
 
     // TODO: determine validate URL for credentials
     // don't validate custom plugins
     if (!treatAsCredential.value && !isCustomPlugin.value) {
-      await axiosInstance.post(validateSubmitUrl.value, requestBody)
+      await axiosInstance.post(validateSubmitUrl.value, getRequestBody.value)
     }
 
     if (formType.value === 'create') {
-      response = await axiosInstance.post(submitUrl.value, requestBody)
+      response = await axiosInstance.post(submitUrl.value, getRequestBody.value)
     } else if (formType.value === 'edit') {
       response = props.config.app === 'konnect'
         // Note: Konnect currently uses PUT because PATCH is not fully supported in Koko
         //       If this changes, the `edit` form methods should be re-evaluated/updated accordingly
-        ? await axiosInstance.put(submitUrl.value, requestBody)
-        : await axiosInstance.patch(submitUrl.value, requestBody)
+        ? await axiosInstance.put(submitUrl.value, getRequestBody.value)
+        : await axiosInstance.patch(submitUrl.value, getRequestBody.value)
     }
 
     // Set initial state of `formFieldsOriginal` to these values in order to detect changes

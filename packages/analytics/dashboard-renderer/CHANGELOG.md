@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.3.0...@kong-ui-public/dashboard-renderer@0.3.1) (2024-01-17)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.2.28...@kong-ui-public/dashboard-renderer@0.3.0) (2024-01-16)
+
+
+### Bug Fixes
+
+* **analytics-chart:** sizing and overflow issues plus vertical scroll ([#1072](https://github.com/Kong/public-ui-components/issues/1072)) ([e8c0bba](https://github.com/Kong/public-ui-components/commit/e8c0bba1ed227a8c329e1bf2ff4f1c5b1689faa5))
+
+
+### BREAKING CHANGES
+
+* **analytics-chart:** - No more hight and width props. Host app must wrap in a container that explicitely
+sets width and height.
+- There is vertical scroll now in bar charts verify in host apps where applicable.
+
+* fix: address comments
+
+* fix: address comments round 2
+
+* fix: better dimensions calculation
+
+* fix: comment
+
+
+
+
+
 ## [0.2.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.2.27...@kong-ui-public/dashboard-renderer@0.2.28) (2024-01-15)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

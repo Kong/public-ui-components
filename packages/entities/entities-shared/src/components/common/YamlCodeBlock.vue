@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import yaml from 'js-yaml'
 import type { PropType } from 'vue'
-import { reactive } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps({
   /** A record to indicate the entity's configuration, used to populate the YAML code block */
@@ -23,7 +23,7 @@ const props = defineProps({
   },
 })
 
-const yamlContent = reactive(props.yamlRecord)
+const yamlContent = computed((): Record<string, any> => props.yamlRecord)
 </script>
 
 <style lang="scss">

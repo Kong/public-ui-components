@@ -36,6 +36,7 @@ const konnectConfig = ref<KonnectVaultFormConfig>({
   controlPlaneId,
   cancelRoute: { name: 'vault-list' },
   azureVaultProviderAvailable: true,
+  jsonYamlFormsEnabled: true,
   ttl: true,
 })
 
