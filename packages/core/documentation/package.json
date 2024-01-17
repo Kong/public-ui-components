@@ -41,7 +41,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.12.4",
-    "@kong/kongponents": "9.0.0-alpha.85",
+    "@kong/kongponents": "9.0.0-alpha.86",
     "axios": "^1.6.3",
     "vue": ">= 3.3.13 < 4"
   },
