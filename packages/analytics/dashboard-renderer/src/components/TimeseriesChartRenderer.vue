@@ -9,6 +9,7 @@
         :chart-data="data"
         :chart-options="options"
         legend-position="bottom"
+        tooltip-title=""
       />
     </div>
   </QueryDataProvider>

@@ -108,7 +108,6 @@
         >
           <KSelect
             v-model="form.fields.protocol"
-            appearance="select"
             data-testid="gateway-service-protocol-select"
             :items="gatewayServiceProtocolItems"
             :label="t('gateway_services.form.fields.protocol.label')"

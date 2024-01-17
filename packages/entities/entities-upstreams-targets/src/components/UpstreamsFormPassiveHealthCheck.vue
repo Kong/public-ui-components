@@ -16,7 +16,6 @@
     </template>
 
     <KSelect
-      appearance="select"
       class="passive-healthcheck-type-select"
       :items="(typeItems as SelectItem[])"
       :label="t('upstreams.form.fields.passive_health_check_type.label')"
@@ -55,8 +54,8 @@
         :model-value="httpStatuses"
         :readonly="readonly"
         width="100%"
-        @item:added="(item: MultiselectItem) => trackHealthyItem(item, true)"
-        @item:removed="(item: MultiselectItem) => trackHealthyItem(item, false)"
+        @item-added="(item: MultiselectItem) => trackHealthyItem(item, true)"
+        @item-removed="(item: MultiselectItem) => trackHealthyItem(item, false)"
         @update:model-value="emit('update:http-statuses', $event)"
       />
     </KCard>
@@ -117,8 +116,8 @@
           :model-value="unhealthyHttpStatuses"
           :readonly="readonly"
           width="100%"
-          @item:added="(item: MultiselectItem) => trackUnhealthyItem(item, true)"
-          @item:removed="(item: MultiselectItem) => trackUnhealthyItem(item, false)"
+          @item-added="(item: MultiselectItem) => trackUnhealthyItem(item, true)"
+          @item-removed="(item: MultiselectItem) => trackUnhealthyItem(item, false)"
           @update:model-value="emit('update:unhealthy-http-statuses', $event)"
         />
       </template>

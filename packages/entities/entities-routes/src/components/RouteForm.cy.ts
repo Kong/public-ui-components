@@ -155,7 +155,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('route-form-headers-values-input-2').should('not.exist')
 
       cy.getTestId('route-form-protocols').click({ force: true })
-      cy.get("[data-testid='k-select-item-tcp,tls,udp']").click()
+      cy.get("[data-testid='select-item-tcp,tls,udp']").click()
       cy.getTestId('routing-rule-paths').should('not.exist')
       cy.getTestId('routing-rule-hosts').should('not.exist')
       cy.getTestId('routing-rule-methods').should('not.exist')
@@ -245,7 +245,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('form-submit').should('be.disabled')
 
       cy.getTestId('route-form-protocols').click({ force: true })
-      cy.get("[data-testid='k-select-item-tcp,tls,udp']").click()
+      cy.get("[data-testid='select-item-tcp,tls,udp']").click()
 
       // sources
       cy.getTestId('routing-rule-sources').click()
@@ -328,7 +328,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
       // enables save when form has changes
       cy.getTestId('route-form-service-id').click({ force: true })
-      cy.get("[data-testid='k-select-item-2']").click()
+      cy.get("[data-testid='select-item-2']").click()
       cy.getTestId('form-submit').should('be.enabled')
       cy.getTestId('remove-methods').click()
       cy.getTestId('remove-paths').first().click()
@@ -390,8 +390,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('route-form-service-id').type(services[1].name)
 
       // click kselect item
-      cy.getTestId(`k-select-item-${services[1].id}`).should('be.visible')
-      cy.get(`[data-testid="k-select-item-${services[1].id}"] button`).click()
+      cy.getTestId(`select-item-${services[1].id}`).should('be.visible')
+      cy.get(`[data-testid="select-item-${services[1].id}"] button`).click()
       cy.getTestId('route-form-service-id').should('have.value', services[1].id)
     })
 
@@ -497,9 +497,9 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.get('.kong-ui-entities-route-form').should('be.visible')
 
       cy.getTestId('route-form-protocols').click({ force: true })
-      cy.getTestId('k-select-item-http').should('exist')
-      cy.getTestId('k-select-item-ws').should('not.exist')
-      cy.getTestId('k-select-item-wss').should('not.exist')
+      cy.getTestId('select-item-http').should('exist')
+      cy.getTestId('select-item-ws').should('not.exist')
+      cy.getTestId('select-item-wss').should('not.exist')
     })
   })
 
@@ -636,7 +636,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('route-form-headers-values-input-2').should('not.exist')
 
       cy.getTestId('route-form-protocols').click({ force: true })
-      cy.get("[data-testid='k-select-item-tcp,tls,udp']").click()
+      cy.get("[data-testid='select-item-tcp,tls,udp']").click()
       cy.getTestId('routing-rule-paths').should('not.exist')
       cy.getTestId('routing-rule-hosts').should('not.exist')
       cy.getTestId('routing-rule-methods').should('not.exist')
@@ -726,7 +726,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('form-submit').should('be.disabled')
 
       cy.getTestId('route-form-protocols').click({ force: true })
-      cy.get("[data-testid='k-select-item-tcp,tls,udp']").click()
+      cy.get("[data-testid='select-item-tcp,tls,udp']").click()
 
       // sources
       cy.getTestId('routing-rule-sources').click()
@@ -809,7 +809,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
       // enables save when form has changes
       cy.getTestId('route-form-service-id').click({ force: true })
-      cy.get("[data-testid='k-select-item-2']").click()
+      cy.get("[data-testid='select-item-2']").click()
       cy.getTestId('form-submit').should('be.enabled')
       cy.getTestId('remove-methods').click()
       cy.getTestId('remove-paths').first().click()
@@ -871,8 +871,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('route-form-service-id').type(services[1].name)
 
       // click kselect item
-      cy.getTestId(`k-select-item-${services[1].id}`).should('be.visible')
-      cy.get(`[data-testid="k-select-item-${services[1].id}"] button`).click()
+      cy.getTestId(`select-item-${services[1].id}`).should('be.visible')
+      cy.get(`[data-testid="select-item-${services[1].id}"] button`).click()
       cy.getTestId('route-form-service-id').should('have.value', services[1].id)
     })
 

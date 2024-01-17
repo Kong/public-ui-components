@@ -417,7 +417,7 @@ describe('<KeyList />', () => {
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
-      ).click()
+      ).last().click()
 
       cy.wait('@getKeysMultiPage')
 
@@ -455,7 +455,7 @@ describe('<KeyList />', () => {
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
-      ).click()
+      ).last().click()
 
       cy.wait('@getKeysMultiPage')
 
@@ -727,7 +727,7 @@ describe('<KeyList />', () => {
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
-      ).click()
+      ).last().click()
 
       cy.wait('@getKeysMultiPage')
 
@@ -765,7 +765,7 @@ describe('<KeyList />', () => {
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
-      ).click()
+      ).last().click()
 
       cy.wait('@getKeysMultiPage')
 

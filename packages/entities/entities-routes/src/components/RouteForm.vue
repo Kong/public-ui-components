@@ -33,11 +33,10 @@
         <div v-if="hideServiceField ? false : !serviceId">
           <KSelect
             v-model="form.fields.service_id"
-            appearance="select"
-            autosuggest
             clearable
             data-testid="route-form-service-id"
             enable-filtering
+            :filter-function="() => true"
             :items="availableServices"
             :label="t('form.fields.service_id.label')"
             :loading="loadingServices"
@@ -61,7 +60,7 @@
             <template #item-template="{ item }">
               <div class="route-form-service-dropdown-item">
                 <span class="select-item-label">{{ item.name }}</span>
-                <span class="select-item-desc">{{ item.value }}</span>
+                <span class="select-item-description">{{ item.value }}</span>
               </div>
             </template>
           </KSelect>
@@ -85,7 +84,6 @@
       >
         <KSelect
           v-model="form.fields.protocols"
-          appearance="select"
           data-testid="route-form-protocols"
           :items="protocols"
           :label="t('form.fields.protocols.label')"
@@ -236,7 +234,6 @@
             <KSelect
               v-if="form.fields.paths"
               v-model="form.fields.path_handling"
-              appearance="select"
               data-testid="route-form-path-handling"
               :items="pathHandlingOptions"
               :label="t('form.fields.path_handling.label')"
@@ -246,7 +243,6 @@
             />
             <KSelect
               v-model="form.fields.https_redirect_status_code"
-              appearance="select"
               data-testid="route-form-http-redirect-status-code"
               :items="httpsRedirectStatusCodes"
               :label="t('form.fields.https_redirect_status_code.label')"
@@ -1004,6 +1000,14 @@ defineExpose({ saveFormData, getPayload })
     &-service-dropdown-item {
       display: flex;
       flex-direction: column;
+
+      .select-item-label {
+        font-weight: $kui-font-weight-semibold;
+      }
+      .select-item-description {
+        color: $kui-color-text-neutral;
+        font-size: $kui-font-size-20;
+      }
     }
 
     &-routing-rules-title-container {

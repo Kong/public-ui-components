@@ -373,13 +373,13 @@ onMounted(() => {
   }
 
   if (chartContainerRef.value) {
-    resizeObserver.observe(chartContainerRef.value)
+    resizeObserver.observe(chartContainerRef.value as HTMLDivElement)
   }
 })
 
 onUnmounted(() => {
   if (chartContainerRef.value) {
-    resizeObserver.unobserve(chartContainerRef.value)
+    resizeObserver.unobserve(chartContainerRef.value as HTMLDivElement)
   }
 })
 
@@ -414,7 +414,7 @@ const options = computed<ChartOptions>(() => {
 
 const chartInstance = composables.useChartJSCommon(
   'bar',
-  canvas,
+  canvas as Ref<HTMLCanvasElement | null>,
   toRef(props, 'chartData') as Ref<BarChartData>,
   plugins,
   options,

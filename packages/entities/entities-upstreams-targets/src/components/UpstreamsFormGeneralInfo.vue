@@ -11,13 +11,12 @@
 
     <div v-else>
       <KSelect
-        appearance="select"
-        autosuggest
         class="name-select margin-bottom-6"
         clearable
         data-testid="upstreams-form-name"
         enable-filtering
         enable-item-creation
+        :filter-function="() => true"
         :items="displayedHosts"
         :label="t('upstreams.form.fields.name.label')"
         :label-attributes="{ tooltipAttributes: { 'max-width': '250px' } }"
@@ -27,8 +26,8 @@
         :readonly="readonly"
         required
         width="100%"
-        @item:added="onAddItem"
-        @item:removed="onRemoveItem"
+        @item-added="onAddItem"
+        @item-removed="onRemoveItem"
         @query-change="onHostQueryChange"
         @update:model-value="(onUpdateName as any)"
       >
@@ -54,12 +53,11 @@
         @update:model-value="emit('update:host-header', $event)"
       />
       <KSelect
-        appearance="select"
-        autosuggest
         class="certificate-select margin-bottom-6"
         clearable
         data-testid="upstreams-form-client-certificate"
         enable-filtering
+        :filter-function="() => true"
         :items="displayedCertificates"
         :label="t('upstreams.form.fields.client_certificate.label')"
         :label-attributes="{ info: t('upstreams.form.fields.client_certificate.tooltip'), tooltipAttributes: { maxWidth: '250px' } }"

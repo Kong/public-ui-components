@@ -4,10 +4,9 @@
       :id="schema.model"
       ref="suggestion"
       v-model="idValue"
-      appearance="select"
-      autosuggest
       clearable
       enable-filtering
+      :filter-function="() => true"
       :items="items"
       :loading="loading"
       :placeholder="schema.placeholder"

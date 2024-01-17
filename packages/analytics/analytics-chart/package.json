@@ -22,14 +22,14 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.73",
+    "@kong/kongponents": "9.0.0-alpha.86",
     "vue": ">= 3.3.13 < 4"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "1.12.4",
-    "@kong/kongponents": "9.0.0-alpha.73",
+    "@kong/kongponents": "9.0.0-alpha.86",
     "@types/uuid": "^9.0.7",
     "file-saver": "^2.0.5",
     "lodash.mapkeys": "^4.6.0",

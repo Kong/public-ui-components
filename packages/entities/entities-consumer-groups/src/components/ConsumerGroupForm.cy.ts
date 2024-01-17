@@ -128,11 +128,11 @@ describe('<ConsumerGroupForm />', () => {
 
       cy.getTestId('consumer-group-form-name').should('be.visible')
       cy.getTestId('consumer-group-form-tags').should('be.visible')
-      cy.getTestId('k-multiselect-trigger').should('be.visible')
+      cy.getTestId('multiselect-trigger').should('be.visible')
 
-      cy.getTestId('k-multiselect-trigger').click()
-      cy.get('.k-multiselect-popover').should('be.visible')
-      cy.get('.k-multiselect-popover .k-multiselect-item').should('have.length', 5)
+      cy.getTestId('multiselect-trigger').click()
+      cy.get('.multiselect-popover').should('be.visible')
+      cy.get('.multiselect-popover .multiselect-item').should('have.length', 5)
 
       cy.getTestId('form-cancel').should('be.visible')
       cy.getTestId('form-cancel').should('be.enabled')
@@ -218,10 +218,10 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('consumer-group-form-name').type('test_name')
       cy.getTestId('consumer-group-form-tags').type('test_tag')
 
-      cy.getTestId('k-multiselect-trigger').click()
-      cy.get('.k-multiselect-popover').should('be.visible')
-      cy.get('.k-multiselect-popover .k-multiselect-item').should('have.length', 5)
-      cy.get(`.k-multiselect-popover [data-testid="k-multiselect-item-${consumersList5[0].id}"] .select-item-label`).click()
+      cy.getTestId('multiselect-trigger').click()
+      cy.get('.multiselect-popover').should('be.visible')
+      cy.get('.multiselect-popover .multiselect-item').should('have.length', 5)
+      cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[0].id}"] .select-item-label`).click()
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
@@ -295,10 +295,10 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('consumer-group-form-name').type('test_name')
       cy.getTestId('consumer-group-form-tags').type('test_tag')
 
-      cy.getTestId('k-multiselect-trigger').click()
-      cy.get('.k-multiselect-popover').should('be.visible')
-      cy.get('.k-multiselect-popover .k-multiselect-item').should('have.length', 5)
-      cy.get(`.k-multiselect-popover [data-testid="k-multiselect-item-${consumersList5[0].id}"] .select-item-label`).click()
+      cy.getTestId('multiselect-trigger').click()
+      cy.get('.multiselect-popover').should('be.visible')
+      cy.get('.multiselect-popover .multiselect-item').should('have.length', 5)
+      cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[0].id}"] .select-item-label`).click()
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
@@ -330,7 +330,7 @@ describe('<ConsumerGroupForm />', () => {
 
       cy.getTestId('consumer-group-form-name').should('have.value', konnectGroup.item.name)
       cy.getTestId('consumer-group-form-tags').should('have.value', konnectGroup.item.tags?.join(', '))
-      cy.get('[data-testid="k-multiselect-trigger"] [data-testid="k-multiselect-selections"] .badge-content-wrapper')
+      cy.get('[data-testid="multiselect-trigger"] [data-testid="selection-badges-container"] .badge-content-wrapper')
         .should('contain.text', consumersList5[0].username)
     })
 
@@ -397,8 +397,8 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('consumer-group-form-name').clear()
       cy.getTestId('consumer-group-form-name').type(expectedOutput.name)
 
-      cy.getTestId('k-multiselect-trigger').click()
-      cy.get(`.k-multiselect-popover [data-testid="k-multiselect-item-${consumersList5[1].id}"] .select-item-label`).click()
+      cy.getTestId('multiselect-trigger').click()
+      cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[1].id}"] .select-item-label`).click()
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
@@ -437,8 +437,8 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('consumer-group-form-name').clear()
       cy.getTestId('consumer-group-form-name').type(expectedOutput.name)
 
-      cy.getTestId('k-multiselect-trigger').click()
-      cy.get(`.k-multiselect-popover [data-testid="k-multiselect-item-${consumersList5[1].id}"] .select-item-label`).click({ force: true })
+      cy.getTestId('multiselect-trigger').click()
+      cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[1].id}"] .select-item-label`).click({ force: true })
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
@@ -540,11 +540,11 @@ describe('<ConsumerGroupForm />', () => {
 
       cy.getTestId('consumer-group-form-name').should('be.visible')
       cy.getTestId('consumer-group-form-tags').should('be.visible')
-      cy.getTestId('k-multiselect-trigger').should('be.visible')
+      cy.getTestId('multiselect-trigger').should('be.visible')
 
-      cy.getTestId('k-multiselect-trigger').click()
-      cy.get('.k-multiselect-popover').should('be.visible')
-      cy.get('.k-multiselect-popover .k-multiselect-item').should('have.length', 5)
+      cy.getTestId('multiselect-trigger').click()
+      cy.get('.multiselect-popover').should('be.visible')
+      cy.get('.multiselect-popover .multiselect-item').should('have.length', 5)
 
       cy.getTestId('form-cancel').should('be.visible')
       cy.getTestId('form-cancel').should('be.enabled')
@@ -630,10 +630,10 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('consumer-group-form-name').type('test_name')
       cy.getTestId('consumer-group-form-tags').type('test_tag')
 
-      cy.getTestId('k-multiselect-trigger').click()
-      cy.get('.k-multiselect-popover').should('be.visible')
-      cy.get('.k-multiselect-popover .k-multiselect-item').should('have.length', 5)
-      cy.get(`.k-multiselect-popover [data-testid="k-multiselect-item-${consumersList5[0].id}"] .select-item-label`).click()
+      cy.getTestId('multiselect-trigger').click()
+      cy.get('.multiselect-popover').should('be.visible')
+      cy.get('.multiselect-popover .multiselect-item').should('have.length', 5)
+      cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[0].id}"] .select-item-label`).click()
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
@@ -707,10 +707,10 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('consumer-group-form-name').type('test_name')
       cy.getTestId('consumer-group-form-tags').type('test_tag')
 
-      cy.getTestId('k-multiselect-trigger').click()
-      cy.get('.k-multiselect-popover').should('be.visible')
-      cy.get('.k-multiselect-popover .k-multiselect-item').should('have.length', 5)
-      cy.get(`.k-multiselect-popover [data-testid="k-multiselect-item-${consumersList5[0].id}"] .select-item-label`).click()
+      cy.getTestId('multiselect-trigger').click()
+      cy.get('.multiselect-popover').should('be.visible')
+      cy.get('.multiselect-popover .multiselect-item').should('have.length', 5)
+      cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[0].id}"] .select-item-label`).click()
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
@@ -741,7 +741,7 @@ describe('<ConsumerGroupForm />', () => {
 
       cy.getTestId('consumer-group-form-name').should('have.value', KMGroup.consumer_group.name)
       cy.getTestId('consumer-group-form-tags').should('have.value', KMGroup.consumer_group.tags?.join(', '))
-      cy.get('[data-testid="k-multiselect-trigger"] [data-testid="k-multiselect-selections"] .badge-content-wrapper')
+      cy.get('[data-testid="multiselect-trigger"] [data-testid="selection-badges-container"] .badge-content-wrapper')
         .should('contain.text', KMGroup.consumers[0].username)
     })
 
@@ -802,8 +802,8 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('consumer-group-form-name').clear()
       cy.getTestId('consumer-group-form-name').type(expectedOutput.name)
 
-      cy.getTestId('k-multiselect-trigger').click()
-      cy.get(`.k-multiselect-popover [data-testid="k-multiselect-item-${consumersList5[1].id}"] .select-item-label`).click()
+      cy.getTestId('multiselect-trigger').click()
+      cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[1].id}"] .select-item-label`).click()
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
@@ -839,8 +839,8 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('consumer-group-form-name').clear()
       cy.getTestId('consumer-group-form-name').type(expectedOutput.name)
 
-      cy.getTestId('k-multiselect-trigger').click()
-      cy.get(`.k-multiselect-popover [data-testid="k-multiselect-item-${consumersList5[1].id}"] .select-item-label`).click({ force: true })
+      cy.getTestId('multiselect-trigger').click()
+      cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[1].id}"] .select-item-label`).click({ force: true })
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
