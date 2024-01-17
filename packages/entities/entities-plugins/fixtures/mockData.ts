@@ -390,6 +390,30 @@ export const kmAvailablePlugins = {
         version: '3.6.0',
         priority: 400,
       },
+      "ai-response-transformer": {
+        version: "3.6.0",
+        priority: 777
+      },
+      "ai-prompt-template": {
+        version: "3.6.0",
+        priority: 773
+      },
+      "ai-prompt-decorator": {
+        version: "3.6.0",
+        priority: 772
+      },
+      "ai-prompt-guard": {
+        version: "3.6.0",
+        priority: 771
+      },
+      "ai-proxy": {
+        version: "3.6.0",
+        priority: 770
+      },
+      "ai-request-transformer": {
+        version: "3.6.0",
+        priority: 769
+      },
       mocking: {
         version: '3.6.0',
         priority: -1,

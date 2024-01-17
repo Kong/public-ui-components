@@ -237,6 +237,30 @@
         "name": "Route by Header",
         "description": "Route requests based on request headers"
       },
+      "ai-proxy": {
+        "name": "AI Proxy",
+        "description": "Directly call a configured LLM, with mediated security and tuning parameters, and using standardised Kong request and response formats."
+      },
+      "ai-prompt-decorator": {
+        "name": "AI Prompt Decorator",
+        "description": "Prepend and append chat prompts to AI Proxy plugin LLM requests."
+      },
+      "ai-prompt-template": {
+        "name": "AI Prompt Template",
+        "description": "Define a set of templates, containing string variable placeholders, that can be consumed by users when used with the AI Proxy plugin."
+      },
+      "ai-prompt-guard": {
+        "name": "AI Prompt Guard",
+        "description": "Define a set of valid, and a set of invalid, regular expression patterns when calling LLM models with the AI Proxy plugin."
+      },
+      "ai-request-transformer": {
+        "name": "AI Request Transformer",
+        "description": "Use an LLM to transform API request from a user, before sending to the upstream service."
+      },
+      "ai-response-transformer": {
+        "name": "AI Response Transformer",
+        "description": "Use an LLM to transform API responses from the upstream service, before returning to the user."
+      },
       "aws-lambda": {
         "name": "AWS Lambda",
         "description": "Invoke and manage AWS Lambda functions from Kong"
