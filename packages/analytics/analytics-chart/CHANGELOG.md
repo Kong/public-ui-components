@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.25.0...@kong-ui-public/analytics-chart@1.1.0) (2024-01-17)
+
+
+### Features
+
+* **analytics-chart:** sizing, overflow issues, and scroll [MA-2508] ([0cc8ba3](https://github.com/Kong/public-ui-components/commit/0cc8ba34298e5e651c3ffc2ec0cba4100b40d233))
+
+
+
+
+
 # [0.25.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@0.24.10...@kong-ui-public/analytics-chart@0.25.0) (2024-01-16)
 
 
