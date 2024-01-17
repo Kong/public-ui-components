@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.3.2...@kong-ui-public/dashboard-renderer@0.3.3) (2024-01-17)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** default in the schema makes prop required ([#1082](https://github.com/Kong/public-ui-components/issues/1082)) ([0999681](https://github.com/Kong/public-ui-components/commit/0999681e73732df17df7e67d5d6a740a7c8a5173))
+
+
+
+
+
 ## [0.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.3.1...@kong-ui-public/dashboard-renderer@0.3.2) (2024-01-17)
 
 
