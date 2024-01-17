@@ -176,7 +176,6 @@ export const dashboardConfigSchema = {
     tileHeight: {
       type: 'number',
       description: `Height of each tile in pixels. Default: ${DEFAULT_TILE_HEIGHT}`,
-      default: DEFAULT_TILE_HEIGHT,
     },
     gridSize: {
       type: 'object',
