@@ -85,7 +85,6 @@
 
         <KSelect
           v-model="formData.parent"
-          appearance="select"
           class="document-parent-select"
           data-testid="documentation-parent"
           enable-filtering

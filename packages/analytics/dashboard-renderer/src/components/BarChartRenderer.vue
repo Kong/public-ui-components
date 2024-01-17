@@ -10,6 +10,7 @@
         :chart-options="options"
         legend-position="bottom"
         :show-annotations="chartOptions.showAnnotations"
+        tooltip-title=""
       />
     </div>
   </QueryDataProvider>

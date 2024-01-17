@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.2.20...@kong-ui-public/app-layout@2.2.21) (2024-01-17)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 4 [KHCP-10182] ([#1069](https://github.com/Kong/public-ui-components/issues/1069)) ([8dc4cb0](https://github.com/Kong/public-ui-components/commit/8dc4cb060fc5414381824b1eb8ce7691d1346ce5))
+
+
+
+
+
 ## [2.2.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.2.19...@kong-ui-public/app-layout@2.2.20) (2024-01-15)
 
 

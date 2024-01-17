@@ -107,18 +107,18 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').should('be.visible')
       // key sets load in select
       cy.getTestId('key-form-key-set').click()
-      cy.get('.k-select-list .k-select-item .select-item-desc').should('have.length', keySets.data.length)
-      cy.get(`[data-testid="k-select-item-${keySets.data[0].id}"] button`).click()
-      cy.get('.kong-ui-entities-keys-form .clear-selection-icon').should('exist')
+      cy.getTestId('key-form-key-set').parent().parent().parent().find('.select-item').should('have.length', keySets.data.length)
+      cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
+      cy.get('.kong-ui-entities-keys-form [data-testid="clear-selection-icon"]').should('exist')
       // key formats load correctly - jwk
       cy.getTestId('key-form-jwk').should('be.visible')
       cy.getTestId('key-form-private-key').should('not.exist')
       cy.getTestId('key-form-public-key').should('not.exist')
       cy.get('[data-testid="key-format-container"] .k-select [role="button"]').click()
-      cy.getTestId('k-select-item-jwk').should('be.visible')
-      cy.getTestId('k-select-item-pem').should('be.visible')
+      cy.getTestId('select-item-jwk').should('be.visible')
+      cy.getTestId('select-item-pem').should('be.visible')
       // key formats load correctly - pem
-      cy.getTestId('k-select-item-pem').click()
+      cy.getTestId('select-item-pem').click()
       cy.getTestId('key-form-jwk').should('not.exist')
       cy.getTestId('key-form-private-key').should('be.visible')
       cy.getTestId('key-form-public-key').should('be.visible')
@@ -136,7 +136,7 @@ describe('<KeyForm />', () => {
 
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
-      cy.get('.k-select .is-readonly .custom-selected-item').should('contain.text', key1.set.name)
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should change key set id when props.fixedKeySetId changed', () => {
@@ -153,11 +153,11 @@ describe('<KeyForm />', () => {
         .as('vueWrapper')
 
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
-      cy.get('.k-select .is-readonly .custom-selected-item').should('contain.text', key1.set.name)
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
 
       cy.get('@vueWrapper').then(async (wrapper: any) => {
         await wrapper.setProps({ fixedKeySetId: keySets.data[1].id })
-        cy.get('.k-select .is-readonly .custom-selected-item').should('contain.text', keySets.data[1].name)
+        cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', keySets.data[1].name)
       })
     })
 
@@ -195,7 +195,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-id').type(kid)
       cy.getTestId('key-form-name').type('tk-meowstersmith')
       cy.getTestId('key-form-key-set').click()
-      cy.get(`[data-testid="k-select-item-${keySets.data[0].id}"] button`).click()
+      cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
       cy.getTestId('form-submit').should('be.enabled')
       // disables save when required field is cleared
@@ -217,7 +217,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-id').type(kid)
       cy.getTestId('key-form-name').type('tk-meowstersmith')
       cy.getTestId('key-form-key-set').click()
-      cy.get(`[data-testid="k-select-item-${keySets.data[0].id}"] button`).click()
+      cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
       cy.getTestId('form-submit').click()
       cy.wait('@createKey')
@@ -239,7 +239,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-id').type(kid)
       cy.getTestId('key-form-name').type('tk-meowstersmith')
       cy.getTestId('key-form-key-set').click()
-      cy.get(`[data-testid="k-select-item-${keySets.data[0].id}"] button`).click()
+      cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
       cy.getTestId('form-submit').click()
       cy.wait('@createKey')
@@ -260,9 +260,9 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').should('be.visible')
       cy.getTestId('key-form-key-set').type(key1.set.name.slice(0, 5))
       // click kselect item
-      cy.getTestId(`k-select-item-${key1.set.id}`).should('be.visible')
-      cy.get(`[data-testid="k-select-item-${key1.set.id}"] button`).click()
-      cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
+      cy.getTestId(`select-item-${key1.set.id}`).should('be.visible')
+      cy.get(`[data-testid="select-item-${key1.set.id}"] button`).click()
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should allow exact match while filtering with key set name', () => {
@@ -280,9 +280,9 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').should('be.visible')
       cy.getTestId('key-form-key-set').type(key1.set.name)
       // click kselect item
-      cy.getTestId(`k-select-item-${key1.set.id}`).should('be.visible')
-      cy.get(`[data-testid="k-select-item-${key1.set.id}"] button`).click()
-      cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
+      cy.getTestId(`select-item-${key1.set.id}`).should('be.visible')
+      cy.get(`[data-testid="select-item-${key1.set.id}"] button`).click()
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should allow partial match while filtering with key set id', () => {
@@ -300,9 +300,9 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').should('be.visible')
       cy.getTestId('key-form-key-set').type(key1.set.id.slice(0, 5))
       // click kselect item
-      cy.getTestId(`k-select-item-${key1.set.id}`).should('be.visible')
-      cy.get(`[data-testid="k-select-item-${key1.set.id}"] button`).click()
-      cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
+      cy.getTestId(`select-item-${key1.set.id}`).should('be.visible')
+      cy.get(`[data-testid="select-item-${key1.set.id}"] button`).click()
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should allow exact match while filtering with key set id', () => {
@@ -320,9 +320,9 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').should('be.visible')
       cy.getTestId('key-form-key-set').type(key1.set.id)
       // click kselect item
-      cy.getTestId(`k-select-item-${key1.set.id}`).should('be.visible')
-      cy.get(`[data-testid="k-select-item-${key1.set.id}"] button`).click()
-      cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
+      cy.getTestId(`select-item-${key1.set.id}`).should('be.visible')
+      cy.get(`[data-testid="select-item-${key1.set.id}"] button`).click()
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should show edit form', () => {
@@ -351,7 +351,7 @@ describe('<KeyForm />', () => {
           expect(val).to.contain(tag)
         })
       })
-      cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should not accept `fixedKeySetId` from props in edit form', () => {
@@ -368,7 +368,7 @@ describe('<KeyForm />', () => {
 
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
-      cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should pick correct submit url while editing global key', () => {
@@ -627,18 +627,18 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').should('be.visible')
       // key sets load in select
       cy.getTestId('key-form-key-set').click()
-      cy.get('.k-select-list .k-select-item .select-item-desc').should('have.length', keySets.data.length)
-      cy.get(`[data-testid="k-select-item-${keySets.data[0].id}"] button`).click()
-      cy.get('.kong-ui-entities-keys-form .clear-selection-icon').should('exist')
+      cy.getTestId('key-form-key-set').parent().parent().parent().find('.select-item').should('have.length', keySets.data.length)
+      cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
+      cy.get('.kong-ui-entities-keys-form [data-testid="clear-selection-icon"]').should('exist')
       // key formats load correctly - jwk
       cy.getTestId('key-form-jwk').should('be.visible')
       cy.getTestId('key-form-private-key').should('not.exist')
       cy.getTestId('key-form-public-key').should('not.exist')
       cy.get('[data-testid="key-format-container"] .k-select [role="button"]').click()
-      cy.getTestId('k-select-item-jwk').should('be.visible')
-      cy.getTestId('k-select-item-pem').should('be.visible')
+      cy.getTestId('select-item-jwk').should('be.visible')
+      cy.getTestId('select-item-pem').should('be.visible')
       // key formats load correctly - pem
-      cy.getTestId('k-select-item-pem').click()
+      cy.getTestId('select-item-pem').click()
       cy.getTestId('key-form-jwk').should('not.exist')
       cy.getTestId('key-form-private-key').should('be.visible')
       cy.getTestId('key-form-public-key').should('be.visible')
@@ -656,7 +656,7 @@ describe('<KeyForm />', () => {
 
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
-      cy.get('.k-select .is-readonly .custom-selected-item').should('contain.text', key1.set.name)
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should change key set id when props.keySetId changed', () => {
@@ -673,11 +673,11 @@ describe('<KeyForm />', () => {
         .as('vueWrapper')
 
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
-      cy.get('.k-select .is-readonly .custom-selected-item').should('contain.text', key1.set.name)
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
 
       cy.get('@vueWrapper').then(async (wrapper: any) => {
         await wrapper.setProps({ fixedKeySetId: keySets.data[1].id })
-        cy.get('.k-select .is-readonly .custom-selected-item').should('contain.text', keySets.data[1].name)
+        cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', keySets.data[1].name)
       })
     })
 
@@ -715,7 +715,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-id').type(kid)
       cy.getTestId('key-form-name').type('tk-meowstersmith')
       cy.getTestId('key-form-key-set').click()
-      cy.get(`[data-testid="k-select-item-${keySets.data[0].id}"] button`).click()
+      cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
       cy.getTestId('form-submit').should('be.enabled')
       // disables save when required field is cleared
@@ -737,7 +737,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-id').type(kid)
       cy.getTestId('key-form-name').type('tk-meowstersmith')
       cy.getTestId('key-form-key-set').click()
-      cy.get(`[data-testid="k-select-item-${keySets.data[0].id}"] button`).click()
+      cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
       cy.getTestId('form-submit').click()
       cy.wait('@createKey')
@@ -759,7 +759,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-id').type(kid)
       cy.getTestId('key-form-name').type('tk-meowstersmith')
       cy.getTestId('key-form-key-set').click()
-      cy.get(`[data-testid="k-select-item-${keySets.data[0].id}"] button`).click()
+      cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
       cy.getTestId('form-submit').click()
       cy.wait('@createKey')
@@ -780,9 +780,9 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').should('be.visible')
       cy.getTestId('key-form-key-set').type(key1.set.name.slice(0, 5))
       // click kselect item
-      cy.getTestId(`k-select-item-${key1.set.id}`).should('be.visible')
-      cy.get(`[data-testid="k-select-item-${key1.set.id}"] button`).click()
-      cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
+      cy.getTestId(`select-item-${key1.set.id}`).should('be.visible')
+      cy.get(`[data-testid="select-item-${key1.set.id}"] button`).click()
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should allow exact match while filtering with key set name', () => {
@@ -800,9 +800,9 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').should('be.visible')
       cy.getTestId('key-form-key-set').type(key1.set.name)
       // click kselect item
-      cy.getTestId(`k-select-item-${key1.set.id}`).should('be.visible')
-      cy.get(`[data-testid="k-select-item-${key1.set.id}"] button`).click()
-      cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
+      cy.getTestId(`select-item-${key1.set.id}`).should('be.visible')
+      cy.get(`[data-testid="select-item-${key1.set.id}"] button`).click()
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should allow partial match while filtering with key set id', () => {
@@ -820,9 +820,9 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').should('be.visible')
       cy.getTestId('key-form-key-set').type(key1.set.id.slice(0, 5))
       // click kselect item
-      cy.getTestId(`k-select-item-${key1.set.id}`).should('be.visible')
-      cy.get(`[data-testid="k-select-item-${key1.set.id}"] button`).click()
-      cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
+      cy.getTestId(`select-item-${key1.set.id}`).should('be.visible')
+      cy.get(`[data-testid="select-item-${key1.set.id}"] button`).click()
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should allow exact match while filtering with key set id', () => {
@@ -840,9 +840,9 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').should('be.visible')
       cy.getTestId('key-form-key-set').type(key1.set.id)
       // click kselect item
-      cy.getTestId(`k-select-item-${key1.set.id}`).should('be.visible')
-      cy.get(`[data-testid="k-select-item-${key1.set.id}"] button`).click()
-      cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
+      cy.getTestId(`select-item-${key1.set.id}`).should('be.visible')
+      cy.get(`[data-testid="select-item-${key1.set.id}"] button`).click()
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should show edit form', () => {
@@ -871,7 +871,7 @@ describe('<KeyForm />', () => {
           expect(val).to.contain(tag)
         })
       })
-      cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should not accept `fixedKeySetId` from props in edit form', () => {
@@ -888,7 +888,7 @@ describe('<KeyForm />', () => {
 
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
-      cy.get('.k-select .custom-selected-item').should('contain.text', key1.set.name)
+      cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
     })
 
     it('should pick correct submit url while editing global key', () => {

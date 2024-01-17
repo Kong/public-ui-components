@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@2.1.33...@kong-ui-public/entities-consumer-credentials@2.1.34) (2024-01-17)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 4 [KHCP-10182] ([#1069](https://github.com/Kong/public-ui-components/issues/1069)) ([8dc4cb0](https://github.com/Kong/public-ui-components/commit/8dc4cb060fc5414381824b1eb8ce7691d1346ce5))
+
+
+
+
+
 ## [2.1.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@2.1.32...@kong-ui-public/entities-consumer-credentials@2.1.33) (2024-01-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials

@@ -156,8 +156,8 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
     })
 
     cy.get('.algorithm-select').click()
-    cy.get('.algorithm-select .k-select-list .k-select-item').should('have.length', 4)
-    cy.get('.algorithm-select .k-select-list [data-testid="k-select-item-least-connections"]').click()
+    cy.get('.algorithm-select .select-items-container .select-item').should('have.length', 4)
+    cy.get('.algorithm-select .select-items-container [data-testid="select-item-least-connections"]').click()
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', 'least-connections')
   })
@@ -183,7 +183,7 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
     })
 
     cy.get('.hash-on-select').click()
-    cy.get('.hash-on-select .k-select-list [data-testid="k-select-item-header"]').click()
+    cy.get('.hash-on-select .select-items-container [data-testid="select-item-header"]').click()
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', 'header')
   })
@@ -235,7 +235,7 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
     })
 
     cy.get('.hash-fallback-select').click()
-    cy.get('.hash-fallback-select .k-select-list [data-testid="k-select-item-header"]').click()
+    cy.get('.hash-fallback-select .select-items-container [data-testid="select-item-header"]').click()
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', 'header')
   })

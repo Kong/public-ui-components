@@ -392,7 +392,7 @@ describe('<CACertificateList />', () => {
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
-      ).click()
+      ).last().click()
 
       cy.wait('@getCaCertificateMultiPage')
 
@@ -430,7 +430,7 @@ describe('<CACertificateList />', () => {
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
-      ).click()
+      ).last().click()
 
       cy.wait('@getCaCertificateMultiPage')
 
@@ -702,7 +702,7 @@ describe('<CACertificateList />', () => {
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
-      ).click()
+      ).last().click()
 
       cy.wait('@getCaCertificateMultiPage')
 
@@ -740,7 +740,7 @@ describe('<CACertificateList />', () => {
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
-      ).click()
+      ).last().click()
 
       cy.wait('@getCaCertificateMultiPage')
 

@@ -26,8 +26,8 @@ describe('<UpstreamsFormPassiveHealthCheck/>', { viewportHeight: 700, viewportWi
     })
 
     cy.get('.passive-healthcheck-type-select').click({ waitForAnimations: false })
-    cy.get('.passive-healthcheck-type-select .k-select-list .k-select-item').should('have.length', 5)
-    cy.get('.passive-healthcheck-type-select .k-select-list [data-testid="k-select-item-tcp"]').click()
+    cy.get('.passive-healthcheck-type-select .select-items-container .select-item').should('have.length', 5)
+    cy.get('.passive-healthcheck-type-select .select-items-container [data-testid="select-item-tcp"]').click()
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', 'tcp')
   })
@@ -55,9 +55,9 @@ describe('<UpstreamsFormPassiveHealthCheck/>', { viewportHeight: 700, viewportWi
 
     cy.get('.passive-healthcheck-http-statuses').click({ waitForAnimations: false })
 
-    cy.get('.passive-healthcheck-http-statuses .k-multiselect-list .k-multiselect-item').should('have.length', 92)
-    cy.get('.passive-healthcheck-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-200"]').click({ waitForAnimations: false })
-    cy.get('.passive-healthcheck-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-201"]').click({ waitForAnimations: false })
+    cy.get('.passive-healthcheck-http-statuses .multiselect-list .multiselect-item').should('have.length', 92)
+    cy.get('.passive-healthcheck-http-statuses .multiselect-list [data-testid="multiselect-item-200"]').click({ waitForAnimations: false })
+    cy.get('.passive-healthcheck-http-statuses .multiselect-list [data-testid="multiselect-item-201"]').click({ waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', ['200', '201'])
   })
@@ -98,9 +98,9 @@ describe('<UpstreamsFormPassiveHealthCheck/>', { viewportHeight: 700, viewportWi
 
     cy.get('.passive-healthcheck-unhealthy-http-statuses').click({ waitForAnimations: false })
 
-    cy.get('.passive-healthcheck-unhealthy-http-statuses .k-multiselect-list .k-multiselect-item').should('have.length', 92)
-    cy.get('.passive-healthcheck-unhealthy-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-404"]').click({ waitForAnimations: false })
-    cy.get('.passive-healthcheck-unhealthy-http-statuses .k-multiselect-list [data-testid="k-multiselect-item-500"]').click({ waitForAnimations: false })
+    cy.get('.passive-healthcheck-unhealthy-http-statuses .multiselect-list .multiselect-item').should('have.length', 92)
+    cy.get('.passive-healthcheck-unhealthy-http-statuses .multiselect-list [data-testid="multiselect-item-404"]').click({ waitForAnimations: false })
+    cy.get('.passive-healthcheck-unhealthy-http-statuses .multiselect-list [data-testid="multiselect-item-500"]').click({ waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', ['404', '500'])
   })

@@ -68,9 +68,9 @@ describe('<UpstreamsFormGeneralInfo />', () => {
 
       cy.get('.name-select').click()
 
-      cy.get('.name-select .k-select-list').should('be.visible')
-      cy.get('.name-select .k-select-list .k-select-item').should('have.length', 5)
-      cy.get('.name-select .k-select-list [data-testid="k-select-item-2"]').click()
+      cy.get('.name-select .select-items-container').should('be.visible')
+      cy.get('.name-select .select-items-container .select-item').should('have.length', 5)
+      cy.get('.name-select .select-items-container [data-testid="select-item-2"]').click()
 
       cy.get('@onUpdateSpy').should('have.been.calledWith', 'host-2.com')
     })
@@ -92,11 +92,11 @@ describe('<UpstreamsFormGeneralInfo />', () => {
       cy.wait('@fetchCertificates')
 
       cy.get('.name-select').click()
-      cy.get('.name-select .k-select-list').should('be.visible')
+      cy.get('.name-select .select-items-container').should('be.visible')
 
       cy.getTestId('upstreams-form-name').type(newHost)
-      cy.get('.name-select .k-select-list .k-select-new-item').should('have.length', 1)
-      cy.get('.name-select .k-select-list .k-select-new-item').click()
+      cy.get('.name-select .select-items-container .select-add-item').should('have.length', 1)
+      cy.get('.name-select .select-items-container .select-add-item').click()
 
       cy.get('@onUpdateSpy').should('have.been.calledWith', newHost)
     })
@@ -118,8 +118,8 @@ describe('<UpstreamsFormGeneralInfo />', () => {
 
       cy.get('.name-select input').should('have.value', createdName)
       cy.get('.name-select').click()
-      cy.get('.name-select .k-select-list').should('be.visible')
-      cy.get('.name-select .k-select-list .k-select-item').last().should('contain.text', createdName)
+      cy.get('.name-select .select-items-container').should('be.visible')
+      cy.get('.name-select .select-items-container .select-item').last().should('contain.text', createdName)
     })
 
     it('bind hostHeader data correctly', () => {
@@ -171,9 +171,9 @@ describe('<UpstreamsFormGeneralInfo />', () => {
 
       cy.get('.certificate-select').click()
 
-      cy.get('.certificate-select .k-select-list').should('be.visible')
-      cy.get('.certificate-select .k-select-list .k-select-item').should('have.length', 5)
-      cy.get('.certificate-select .k-select-list [data-testid="k-select-item-2"]').click()
+      cy.get('.certificate-select .select-items-container').should('be.visible')
+      cy.get('.certificate-select .select-items-container .select-item').should('have.length', 5)
+      cy.get('.certificate-select .select-items-container [data-testid="select-item-2"]').click()
 
       cy.get('@onUpdateSpy').should('have.been.calledWith', clientCertificate2)
     })
@@ -272,9 +272,9 @@ describe('<UpstreamsFormGeneralInfo />', () => {
 
       cy.get('.name-select').click()
 
-      cy.get('.name-select .k-select-list').should('be.visible')
-      cy.get('.name-select .k-select-list .k-select-item').should('have.length', 5)
-      cy.get('.name-select .k-select-list [data-testid="k-select-item-2"]').click()
+      cy.get('.name-select .select-items-container').should('be.visible')
+      cy.get('.name-select .select-items-container .select-item').should('have.length', 5)
+      cy.get('.name-select .select-items-container [data-testid="select-item-2"]').click()
 
       cy.get('@onUpdateSpy').should('have.been.calledWith', 'host-2.com')
     })
@@ -296,11 +296,11 @@ describe('<UpstreamsFormGeneralInfo />', () => {
       cy.wait('@fetchCertificates')
 
       cy.get('.name-select').click()
-      cy.get('.name-select .k-select-list').should('be.visible')
+      cy.get('.name-select .select-items-container').should('be.visible')
 
       cy.getTestId('upstreams-form-name').type(newHost)
-      cy.get('.name-select .k-select-list .k-select-new-item').should('have.length', 1)
-      cy.get('.name-select .k-select-list .k-select-new-item').click()
+      cy.get('.name-select .select-items-container .select-add-item').should('have.length', 1)
+      cy.get('.name-select .select-items-container .select-add-item').click()
 
       cy.get('@onUpdateSpy').should('have.been.calledWith', newHost)
     })
@@ -322,8 +322,8 @@ describe('<UpstreamsFormGeneralInfo />', () => {
 
       cy.get('.name-select input').should('have.value', createdName)
       cy.get('.name-select').click()
-      cy.get('.name-select .k-select-list').should('be.visible')
-      cy.get('.name-select .k-select-list .k-select-item').last().should('contain.text', createdName)
+      cy.get('.name-select .select-items-container').should('be.visible')
+      cy.get('.name-select .select-items-container .select-item').last().should('contain.text', createdName)
     })
 
     it('bind hostHeader data correctly', () => {
@@ -375,9 +375,9 @@ describe('<UpstreamsFormGeneralInfo />', () => {
 
       cy.get('.certificate-select').click()
 
-      cy.get('.certificate-select .k-select-list').should('be.visible')
-      cy.get('.certificate-select .k-select-list .k-select-item').should('have.length', 5)
-      cy.get('.certificate-select .k-select-list [data-testid="k-select-item-2"]').click()
+      cy.get('.certificate-select .select-items-container').should('be.visible')
+      cy.get('.certificate-select .select-items-container .select-item').should('have.length', 5)
+      cy.get('.certificate-select .select-items-container [data-testid="select-item-2"]').click()
 
       cy.get('@onUpdateSpy').should('have.been.calledWith', clientCertificate2)
     })

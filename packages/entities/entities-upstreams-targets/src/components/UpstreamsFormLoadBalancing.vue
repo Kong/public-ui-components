@@ -16,7 +16,6 @@
     </template>
 
     <KSelect
-      appearance="select"
       class="algorithm-select"
       :items="(algorithmItems as SelectItem[])"
       :label="t('upstreams.form.fields.algorithm.label')"
@@ -50,7 +49,6 @@
       </p>
 
       <KSelect
-        appearance="select"
         class="hash-on-select"
         :items="(hashItems as SelectItem[])"
         :label="t('upstreams.form.fields.hash_on.label')"
@@ -134,7 +132,6 @@
       </p>
 
       <KSelect
-        appearance="select"
         class="hash-fallback-select"
         :disabled="disableFallbackSelect"
         :items="(hashItems as SelectItem[])"

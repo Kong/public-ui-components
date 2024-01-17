@@ -63,7 +63,7 @@
         v-model="activeTab"
         data-testid="plugins-tabs"
         :tabs="tabs"
-        @changed="(hash: string) => $router.replace({ hash })"
+        @change="onTabsChange"
       >
         <template #kong>
           <div data-testid="kong-tab">
@@ -117,7 +117,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, onBeforeMount, onMounted, type PropType } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import {
   PluginGroup,
   PluginScope,
@@ -218,6 +218,7 @@ const emit = defineEmits<{
 }>()
 
 const route = useRoute()
+const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const { pluginMetaData } = composables.usePluginMetaData()
 const { getMessageFromError } = useErrors()
@@ -398,6 +399,10 @@ const fetchEntityPluginsUrl = computed((): string => {
 
   return ''
 })
+
+const onTabsChange = (hash: string) => {
+  router.replace({ hash })
+}
 
 // race condition between fetch of available plugins and setting
 // disabled/ignored plugins

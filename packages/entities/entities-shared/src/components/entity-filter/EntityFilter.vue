@@ -61,7 +61,6 @@
                   v-if="config.schema?.[field.value]?.type === 'select'"
                   :id="getFieldId(field.value)"
                   v-model="searchParams[field.value]"
-                  appearance="select"
                   :items="getFieldOptions(field.value)"
                   :placeholder="t('filter.selectPlaceholder')"
                 />

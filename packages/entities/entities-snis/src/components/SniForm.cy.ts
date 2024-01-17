@@ -101,7 +101,7 @@ describe('<SniForm />', () => {
       cy.getTestId('sni-form-certificate-id').should('be.visible')
       // certs load in select
       cy.getTestId('sni-form-certificate-id').click()
-      cy.get('.k-select-list .k-select-item').should('have.length', certificates.data.length)
+      cy.getTestId('sni-form-certificate-id').parent().parent().parent().find('.select-item').should('have.length', certificates.data.length)
     })
 
     it('should correctly handle button state - create', () => {
@@ -123,7 +123,7 @@ describe('<SniForm />', () => {
       // enables save when required fields have values
       cy.getTestId('sni-form-name').type('tk-meowstersmith')
       cy.getTestId('sni-form-certificate-id').click()
-      cy.get(`[data-testid="k-select-item-${certificates.data[0].id}"] button`).click()
+      cy.get(`[data-testid="select-item-${certificates.data[0].id}"] button`).click()
       cy.getTestId('form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('sni-form-name').clear()
@@ -145,8 +145,8 @@ describe('<SniForm />', () => {
       cy.getTestId('sni-form-certificate-id').should('be.visible')
       cy.getTestId('sni-form-certificate-id').type(sni1.certificate.id)
       // click kselect item
-      cy.getTestId(`k-select-item-${sni1.certificate.id}`).should('be.visible')
-      cy.get(`[data-testid="k-select-item-${sni1.certificate.id}"] button`).click()
+      cy.getTestId(`select-item-${sni1.certificate.id}`).should('be.visible')
+      cy.get(`[data-testid="select-item-${sni1.certificate.id}"] button`).click()
       cy.getTestId('sni-form-certificate-id').should('have.value', sni1.certificate.id)
     })
 
@@ -427,7 +427,7 @@ describe('<SniForm />', () => {
       cy.getTestId('sni-form-certificate-id').should('be.visible')
       // certs load in select
       cy.getTestId('sni-form-certificate-id').click()
-      cy.get('.k-select-list .k-select-item').should('have.length', certificates.data.length)
+      cy.getTestId('sni-form-certificate-id').parent().parent().parent().find('.select-item').should('have.length', certificates.data.length)
     })
 
     it('should correctly handle button state - create', () => {
@@ -449,7 +449,7 @@ describe('<SniForm />', () => {
       // enables save when required fields have values
       cy.getTestId('sni-form-name').type('tk-meowstersmith')
       cy.getTestId('sni-form-certificate-id').click()
-      cy.get(`[data-testid="k-select-item-${certificates.data[0].id}"] button`).click()
+      cy.get(`[data-testid="select-item-${certificates.data[0].id}"] button`).click()
       cy.getTestId('form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('sni-form-name').clear()
@@ -471,8 +471,8 @@ describe('<SniForm />', () => {
       cy.getTestId('sni-form-certificate-id').should('be.visible')
       cy.getTestId('sni-form-certificate-id').type(sni1.certificate.id)
       // click kselect item
-      cy.getTestId(`k-select-item-${sni1.certificate.id}`).should('be.visible')
-      cy.get(`[data-testid="k-select-item-${sni1.certificate.id}"] button`).click()
+      cy.getTestId(`select-item-${sni1.certificate.id}`).should('be.visible')
+      cy.get(`[data-testid="select-item-${sni1.certificate.id}"] button`).click()
       cy.getTestId('sni-form-certificate-id').should('have.value', sni1.certificate.id)
     })
 

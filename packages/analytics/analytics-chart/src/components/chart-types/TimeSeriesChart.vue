@@ -46,7 +46,7 @@
       :id="legendID"
       :chart-instance="chartInstance"
       data-testid="legend"
-      :items="legendItems"
+      :items="(legendItems as LegendItem[])"
     />
   </div>
 </template>

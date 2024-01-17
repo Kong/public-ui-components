@@ -43,13 +43,11 @@
 
         <KSelect
           v-model="form.fields.key_set"
-          appearance="select"
-          autosuggest
-          :class="{ 'k-select-placeholder': hasPlaceholderText }"
           :clearable="isKeySetFieldClearable"
           data-testid="key-form-key-set"
           :dropdown-footer-text="keySetDropdownFooterText"
           enable-filtering
+          :filter-function="() => true"
           :items="availableKeySets"
           :label="t('keys.form.fields.key_set.label')"
           :loading="loadingKeySets"
@@ -72,11 +70,13 @@
             </div>
           </template>
           <template #item-template="{ item }">
-            <div class="select-item-label">
-              {{ (item as SelectItem).name }}
-            </div>
-            <div class="select-item-desc">
-              {{ item.value }}
+            <div class="select-item-container">
+              <div class="select-item-label">
+                {{ (item as SelectItem).name }}
+              </div>
+              <div class="select-item-description">
+                {{ item.value }}
+              </div>
             </div>
           </template>
         </KSelect>
@@ -109,7 +109,6 @@
         <div data-testid="key-format-container">
           <KSelect
             v-model="form.fields.key_format"
-            appearance="select"
             data-testid="key-form-key-format"
             :items="keyFormatItems"
             :label="t('keys.form.fields.key_format.label')"
@@ -297,10 +296,6 @@ const initForm = (data: Record<string, any>): void => {
   form.fields.private_key = data?.pem?.private_key || ''
   form.fields.public_key = data?.pem?.public_key || ''
 
-  if (form.fields.key_set) {
-    hasPlaceholderText.value = false
-  }
-
   // Set initial state of `formFieldsOriginal` to these values in order to detect changes
   Object.assign(formFieldsOriginal, form.fields)
 }
@@ -405,10 +400,7 @@ const {
   searchKeys: ['id', 'name'],
 })
 
-const hasPlaceholderText = ref<boolean>(true)
 const debouncedKeySetQueryChange = (query: string) => {
-  hasPlaceholderText.value = !query
-
   // - always search if the query is empty, we need to reset the results list
   // - don't search if query matches the current selected id
   //    this happens when the user clicks an item in the KSelect and collapses the dropdown, displaying their selection in the input
@@ -491,9 +483,13 @@ onBeforeMount(async () => {
     }
   }
 
-  :deep(.k-select.k-select-placeholder) {
-    .k-select-input .k-input {
-      color: rgba(0, 0, 0, 0.45);
+  .select-item-container {
+    .select-item-label {
+      font-weight: $kui-font-weight-semibold;
+    }
+    .select-item-description {
+      color: $kui-color-text-neutral;
+      font-size: $kui-font-size-20;
     }
   }
 }

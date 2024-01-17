@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.25...@kong-ui-public/forms@2.1.26) (2024-01-17)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 4 [KHCP-10182] ([#1069](https://github.com/Kong/public-ui-components/issues/1069)) ([8dc4cb0](https://github.com/Kong/public-ui-components/commit/8dc4cb060fc5414381824b1eb8ce7691d1346ce5))
+
+
+
+
+
 ## [2.1.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.24...@kong-ui-public/forms@2.1.25) (2024-01-15)
 
 

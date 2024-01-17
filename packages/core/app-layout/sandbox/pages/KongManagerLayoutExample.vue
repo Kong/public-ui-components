@@ -97,8 +97,7 @@
       <div class="sidebar-top-slot-content">
         <div>
           <KSelect
-            appearance="select"
-            :enable-filtering="true"
+            enable-filtering
             :items="workspaceItems"
           />
         </div>
