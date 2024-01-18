@@ -141,9 +141,22 @@ watch(() => props.items, () => {
   }
 }, { immediate: true, flush: 'post' })
 
-const resizeObserver = new ResizeObserver(debounce(() => {
-  checkForWrap()
-  formatGrid()
+const oldWidth = ref(0)
+const oldHeight = ref(0)
+
+const resizeObserver = new ResizeObserver(debounce((entries: ResizeObserverEntry[]) => {
+
+  const entry = entries[0]
+  const newWidth = entry.contentRect.width
+  const newHeight = entry.contentRect.height
+
+  // Check if the resize is only in the X direction
+  if (newWidth !== oldWidth.value && newHeight === oldHeight.value) {
+    checkForWrap()
+    formatGrid()
+  }
+  oldWidth.value = newWidth
+  oldHeight.value = newHeight
 }, 100))
 
 watch(() => position.value, () => {
