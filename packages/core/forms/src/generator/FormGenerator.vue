@@ -303,7 +303,6 @@ export default {
       white-space: nowrap;
     }
 
-    button:not(.multiselect-item button):not(.select-item button),
     input[type="submit"] {
       background-color: #fff;
       border: 1px solid #ccc;
