@@ -2,6 +2,7 @@
   "global": {
     "ok": "O-k-key",
     "named": "{greeting}, my name is {name}. And I am {occupation}. I want {amount}",
+    "dates": "I want {amount, number, :: ! currency/USD} {value, select, 0 { for Christmas! } undefined { for Christmas! } other { on { value, date, datetime } } }",
     "default": "See the news at {0}. There is a lot there."
   },
   "custom_dogs": {

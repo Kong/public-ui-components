@@ -165,6 +165,7 @@ const i18n = createI18n<typeof english>(props.locale || 'en-us', english)
   "test": {
     "withParams": "Good {dayPart}, My name is {name}!",
     "withPluralization": "{count} {count, plural, =0 {versions} =1 {version} other {versions}} available"
+    "withDateTimeFormatting": "{value, date, datetime}",
   }
 }
 ```
@@ -181,6 +182,10 @@ const i18n = createI18n<typeof english>(props.locale || 'en-us', english)
     {{ i18n.t('test.withPluralization', { count: 0 }) }}
     {{ i18n.t('test.withPluralization', { count: 1 }) }}
     {{ i18n.t('test.withPluralization', { count: 11 }) }}
+  With datetime formatting
+    {{ i18n.t('test.withDateTimeFormatting', { value: Date.parse('Nov 30, 2023, 11:40 AM') }) }}
+    {{ i18n.t('test.withDateTimeFormatting', { value: new Date(0).getTime() }) }}
+    {{ i18n.t('test.withDateTimeFormatting', { value: 1701344449607 }) }}
 </template>
 
 
@@ -204,6 +209,11 @@ With pluralization:
   0 versions available
   1 version available
   11 version available
+
+With datetime formatting:
+  Nov 30, 2023, 11:40 AM
+  Jan 1, 1970, 12:00 AM 
+  Nov 30, 2023, 11:40 AM 
 ```
 
 ### Where is my helpText?
@@ -386,6 +396,15 @@ Or in old `defineComponent` way
 ## Formatting numbers, dates and times
 
 This comes for free from FormatJS, and documentation on those methods can be found there: [FormatJS](https://formatjs.io/docs/intl)
+
+You can use [ICU Message syntax](https://unicode-org.github.io/icu/userguide/format_parse/messages/) with FormatJS and they have a [description of how you can use this syntax within i18n strings](https://formatjs.io/docs/core-concepts/icu-syntax).
+
+This plugin includes an additional `datetime` formatter (examples above) which uses the same `Intl.DateTimeFormatOptions` as the below javascript functions for consistency. Date formatting is documented at https://formatjs.io/docs/core-concepts/icu-syntax/#date-type with `datetime` being an additional format element of the argument:
+
+- `datetime` format the date as date and time using the same format as `formatIsoDate` e.g. `Sale begins {start, date, datetime}`
+
+In the example `Sale begins {start, date, datetime}`, `start` is the value passed into `t` i.e. `t('key.of.string', {start: new Date().toString()})`, `date` is the name of the ICU format we are using, and `datetime` is to tell FormatJS to use the format we have defined as a standard/common format for formatting 'datetimes'.
+
 
 Unit tests for I18n wrapper in kong-ui/core also has view examples as a references for those.
 [FormatDate](https://github.com/Kong/shared-ui-components/blob/4a1f99d5cee2d4409f4370a9bce2377450a6429d/packages/core/src/useI18n/i18n.spec.ts#L81)

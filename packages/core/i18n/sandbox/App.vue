@@ -2,6 +2,9 @@
   <div class="sandbox-container">
     <main>
       <p>{{ i18n.t('global.ok') }}</p>
+      <p>{{ i18n.t('global.dates', {amount: '1000', value: Date.now()}) }}</p>
+      <p>{{ i18n.t('global.dates', {amount: '1000', value: undefined}) }}</p>
+      <p>{{ i18n.t('global.dates', {amount: '1000', value: new Date(0).getTime()}) }}</p>
 
       <i18n-t
         keypath="global.named"
