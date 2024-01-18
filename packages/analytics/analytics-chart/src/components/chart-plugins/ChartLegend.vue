@@ -43,6 +43,7 @@ import { ChartLegendPosition } from '../../enums'
 import { Chart, type LegendItem } from 'chart.js'
 import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType } from 'vue'
 import { KUI_SPACE_100 } from '@kong/design-tokens'
+import { debounce } from '../../utils'
 
 const props = defineProps({
   id: {
@@ -140,11 +141,13 @@ watch(() => props.items, () => {
   }
 }, { immediate: true, flush: 'post' })
 
-const resizeObserver = new ResizeObserver(() => {
+const resizeObserver = new ResizeObserver(debounce(() => {
   checkForWrap()
-})
+  formatGrid()
+}, 100))
 
 watch(() => position.value, () => {
+  checkForWrap()
   formatGrid()
 })
 
@@ -233,11 +236,10 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
   }
 
   &.horizontal {
-    column-gap: $kui-space-10;
     display: grid;
     justify-content: center;
     max-height: 12%;
-    width: 95%;
+    width: 99%;
     .truncate-label {
       max-width: 15ch;
       overflow: hidden;
