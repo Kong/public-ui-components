@@ -169,6 +169,11 @@ onMounted(() => {
   if (legendContainerRef.value) {
     resizeObserver.observe(legendContainerRef.value)
   }
+
+  window.requestAnimationFrame(() => {
+    checkForWrap()
+    formatGrid()
+  })
 })
 
 onBeforeUnmount(() => {
