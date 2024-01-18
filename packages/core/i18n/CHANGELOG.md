@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@2.0.7...@kong-ui-public/i18n@2.1.0) (2024-01-18)
+
+
+### Features
+
+* add ICU datetime date format ([#1012](https://github.com/Kong/public-ui-components/issues/1012)) ([8285e25](https://github.com/Kong/public-ui-components/commit/8285e25b0083b59933f195c5a5efb7074add4514))
+
+
+
+
+
 ## [2.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@2.0.6...@kong-ui-public/i18n@2.0.7) (2024-01-12)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-gateway-services",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "type": "module",
   "main": "./dist/entities-gateway-services.umd.js",
   "module": "./dist/entities-gateway-services.es.js",
