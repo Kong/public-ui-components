@@ -297,6 +297,25 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-host-input').should('have.value', gatewayService1.host)
     })
 
+    it('should correctly pass getPayload as props to json/yaml code blocks', () => {
+      interceptKonnect()
+
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          gatewayServiceId: gatewayService1.id,
+          isEditing: true,
+        },
+      })
+
+      cy.wait('@getGatewayService')
+      cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
+      // view configuration cta
+      cy.getTestId('form-view-configuration').should('be.visible')
+      cy.getTestId('form-view-configuration').click()
+      cy.getTestId('k-code-block-highlighted-code-block').should('be.visible')
+    })
+
     it('should correctly show zero values', () => {
       interceptKonnect({
         mockData: {
