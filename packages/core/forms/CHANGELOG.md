@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.26...@kong-ui-public/forms@2.1.27) (2024-01-18)
+
+
+### Bug Fixes
+
+* **forms:** style pollution ([#1085](https://github.com/Kong/public-ui-components/issues/1085)) ([b28692a](https://github.com/Kong/public-ui-components/commit/b28692a74c0503415c65ff50c169528d2d2bbc4f))
+
+
+
+
+
 ## [2.1.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.25...@kong-ui-public/forms@2.1.26) (2024-01-17)
 
 

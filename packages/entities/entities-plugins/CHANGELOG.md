@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.8.2...@kong-ui-public/entities-plugins@2.8.3) (2024-01-18)
+
+
+### Bug Fixes
+
+* **entities-plugins:** ai plugin icon names ([#1084](https://github.com/Kong/public-ui-components/issues/1084)) ([4becdb3](https://github.com/Kong/public-ui-components/commit/4becdb30cb4e8c9e18dc4143278d093d45d9190c))
+
+
+
+
+
 ## [2.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.8.1...@kong-ui-public/entities-plugins@2.8.2) (2024-01-17)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
