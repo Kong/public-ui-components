@@ -6,7 +6,7 @@
       :edit-id="gatewayServiceId"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="getPayload.value"
+      :form-fields="getPayload()"
       :is-readonly="form.isReadonly"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
@@ -713,7 +713,7 @@ const saveTlsVerify = (gatewayService: Record<string, any>) => {
   delete gatewayService.tls_verify_value
 }
 
-const getPayload = computed((): Record<string, any> => {
+const getPayload = (): Record<string, any> => {
   const requestBody: Record<string, any> = {
     name: form.fields.name || null,
     tags: form.fields.tags ? form.fields.tags?.split(',').filter(tag => tag !== '') : null,
@@ -762,14 +762,14 @@ const getPayload = computed((): Record<string, any> => {
   }
 
   return requestBody
-})
+}
 
 const saveFormData = async (): Promise<AxiosResponse | undefined> => {
   try {
     form.isReadonly = true
 
     validateUrl()
-    const payload = getPayload.value
+    const payload = getPayload()
     saveTlsVerify(payload)
 
     let response: AxiosResponse | undefined
@@ -828,11 +828,11 @@ watch(() => props.gatewayServiceId, () => {
 
 watch(form.fields, (newValue) => {
   form.fields.port = getPort.getPortFromProtocol(newValue.protocol, String(newValue.port))
-  emit('model-updated', getPayload.value)
+  emit('model-updated', getPayload())
 })
 
 onMounted(() => {
-  emit('model-updated', getPayload.value)
+  emit('model-updated', getPayload())
 })
 
 defineExpose({
