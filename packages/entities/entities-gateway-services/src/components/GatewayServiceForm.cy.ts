@@ -11,6 +11,7 @@ const baseConfigKonnect:KonnectGatewayServiceFormConfig = {
   controlPlaneId: '1234-abcd-ilove-dogs',
   apiBaseUrl: '/us/kong-api/konnect-api',
   cancelRoute,
+  jsonYamlFormsEnabled: true,
 }
 
 const baseConfigKM:KongManagerGatewayServiceFormConfig = {
