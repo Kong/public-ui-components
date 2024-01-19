@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.9.1...@kong-ui-public/entities-plugins@2.10.0) (2024-01-19)
+
+
+### Features
+
+* **entities-plugins:** enable more plugins to consumer groups ([#1039](https://github.com/Kong/public-ui-components/issues/1039)) ([2c8bf62](https://github.com/Kong/public-ui-components/commit/2c8bf62a3b2b783eb2f4869018c91c8f8da28a40))
+
+
+
+
+
 ## [2.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.9.0...@kong-ui-public/entities-plugins@2.9.1) (2024-01-19)
 
 
