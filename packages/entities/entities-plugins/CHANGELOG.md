@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.8.5...@kong-ui-public/entities-plugins@2.9.0) (2024-01-19)
+
+
+### Features
+
+* **ai-plugins:** added all AI plugins, included complex array schemas ([#1086](https://github.com/Kong/public-ui-components/issues/1086)) ([793f821](https://github.com/Kong/public-ui-components/commit/793f821b904c59d35270764b42f9cca1689768df))
+
+
+
+
+
 ## [2.8.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.8.4...@kong-ui-public/entities-plugins@2.8.5) (2024-01-18)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
