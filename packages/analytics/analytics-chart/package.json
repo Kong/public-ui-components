@@ -69,7 +69,7 @@
   },
   "dependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^0.11.3",
-    "@kong/icons": "^1.8.12",
+    "@kong/icons": "^1.8.13",
     "@types/file-saver": "^2.0.7",
     "@types/lodash.mapkeys": "^4.6.9",
     "@types/lodash.pick": "^4.4.9",
