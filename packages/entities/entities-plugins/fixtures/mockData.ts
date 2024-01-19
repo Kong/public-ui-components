@@ -390,6 +390,30 @@ export const kmAvailablePlugins = {
         version: '3.6.0',
         priority: 400,
       },
+      'ai-response-transformer': {
+        version: '3.6.0',
+        priority: 777,
+      },
+      'ai-prompt-template': {
+        version: '3.6.0',
+        priority: 773,
+      },
+      'ai-prompt-decorator': {
+        version: '3.6.0',
+        priority: 772,
+      },
+      'ai-prompt-guard': {
+        version: '3.6.0',
+        priority: 771,
+      },
+      'ai-proxy': {
+        version: '3.6.0',
+        priority: 770,
+      },
+      'ai-request-transformer': {
+        version: '3.6.0',
+        priority: 769,
+      },
       mocking: {
         version: '3.6.0',
         priority: -1,
@@ -411,6 +435,12 @@ export const customPluginNames = [
 export const kongPluginNames = [
   'acl',
   'acme',
+  'ai-prompt-decorator',
+  'ai-prompt-guard',
+  'ai-prompt-template',
+  'ai-proxy',
+  'ai-request-transformer',
+  'ai-response-transformer',
   'app-dynamics',
   'aws-lambda',
   'azure-functions',

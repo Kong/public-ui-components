@@ -12,6 +12,8 @@ import { preFunctionSchema } from './plugin-schemas/PreFunction'
 import { rateLimitingSchema } from './plugin-schemas/RateLimiting'
 import { requestTransformerAdvancedSchema } from './plugin-schemas/RequestTransformerAdvanced'
 import { routeByHeaderSchema } from './plugin-schemas/RouteByHeader'
+import { aiPromptDecoratorSchema } from './plugin-schemas/AIPromptDecorator'
+import { aiPromptTemplateSchema } from './plugin-schemas/AIPromptTemplate'
 import { graphqlRateLimitingAdvancedSchema } from './plugin-schemas/GraphQLRateLimitingAdvanced'
 import { statsDSchema } from './plugin-schemas/StatsD'
 import { samlSchema } from './plugin-schemas/SAML'
@@ -73,6 +75,14 @@ export const useSchemas = (entityId?: string, app?: 'konnect' | 'kongManager') =
 
     'route-by-header': {
       ...routeByHeaderSchema,
+    },
+
+    'ai-prompt-decorator': {
+      ...aiPromptDecoratorSchema,
+    },
+
+    'ai-prompt-template': {
+      ...aiPromptTemplateSchema,
     },
 
     'vault-auth': {

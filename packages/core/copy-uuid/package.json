@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/copy-uuid",
-  "version": "2.0.26",
+  "version": "2.0.27",
   "type": "module",
   "main": "./dist/copy-uuid.umd.js",
   "module": "./dist/copy-uuid.es.js",
@@ -38,13 +38,13 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.89",
+    "@kong/kongponents": "9.0.0-alpha.93",
     "vue": ">= 3.3.13 < 4"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.12.4",
-    "@kong/kongponents": "9.0.0-alpha.89",
+    "@kong/kongponents": "9.0.0-alpha.93",
     "vue": "^3.4.3"
   },
   "repository": {
@@ -65,6 +65,6 @@
     "errorLimit": "250KB"
   },
   "dependencies": {
-    "@kong/icons": "^1.8.12"
+    "@kong/icons": "^1.8.13"
   }
 }
