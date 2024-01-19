@@ -43,6 +43,7 @@ import { ChartLegendPosition } from '../../enums'
 import { Chart, type LegendItem } from 'chart.js'
 import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType } from 'vue'
 import { KUI_SPACE_100 } from '@kong/design-tokens'
+import { debounce } from '../../utils'
 
 const props = defineProps({
   id: {
@@ -140,11 +141,26 @@ watch(() => props.items, () => {
   }
 }, { immediate: true, flush: 'post' })
 
-const resizeObserver = new ResizeObserver(() => {
-  checkForWrap()
-})
+const oldWidth = ref(0)
+const oldHeight = ref(0)
+
+const resizeObserver = new ResizeObserver(debounce((entries: ResizeObserverEntry[]) => {
+
+  const entry = entries[0]
+  const newWidth = entry.contentRect.width
+  const newHeight = entry.contentRect.height
+
+  // Check if the resize is only in the X direction
+  if (newWidth !== oldWidth.value && newHeight === oldHeight.value) {
+    checkForWrap()
+    formatGrid()
+  }
+  oldWidth.value = newWidth
+  oldHeight.value = newHeight
+}, 100))
 
 watch(() => position.value, () => {
+  checkForWrap()
   formatGrid()
 })
 
@@ -153,6 +169,11 @@ onMounted(() => {
   if (legendContainerRef.value) {
     resizeObserver.observe(legendContainerRef.value)
   }
+
+  window.requestAnimationFrame(() => {
+    checkForWrap()
+    formatGrid()
+  })
 })
 
 onBeforeUnmount(() => {
@@ -233,11 +254,10 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
   }
 
   &.horizontal {
-    column-gap: $kui-space-10;
     display: grid;
     justify-content: center;
     max-height: 12%;
-    width: 95%;
+    width: 99%;
     .truncate-label {
       max-width: 15ch;
       overflow: hidden;
