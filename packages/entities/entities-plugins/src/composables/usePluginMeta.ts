@@ -135,7 +135,7 @@ export const usePluginMetaData = () => {
       group: PluginGroup.SECURITY,
       isEnterprise: false,
       name: t('plugins.meta.ip-restriction.name'),
-      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     },
     opa: {
       description: t('plugins.meta.opa.description'),
@@ -184,14 +184,14 @@ export const usePluginMetaData = () => {
       group: PluginGroup.TRAFFIC_CONTROL,
       isEnterprise: true,
       name: t('plugins.meta.proxy-cache.name'),
-      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     },
     'proxy-cache-advanced': {
       description: t('plugins.meta.proxy-cache-advanced.description'),
       group: PluginGroup.TRAFFIC_CONTROL,
       isEnterprise: true,
       name: t('plugins.meta.proxy-cache-advanced.name'),
-      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
       imageName: 'proxy-cache',
     },
     'graphql-proxy-cache-advanced': {
@@ -214,7 +214,7 @@ export const usePluginMetaData = () => {
       group: PluginGroup.TRAFFIC_CONTROL,
       isEnterprise: false,
       name: t('plugins.meta.rate-limiting.name'),
-      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     },
     'graphql-rate-limiting-advanced': {
       description: t('plugins.meta.graphql-rate-limiting-advanced.description'),
@@ -242,7 +242,7 @@ export const usePluginMetaData = () => {
       group: PluginGroup.TRAFFIC_CONTROL,
       isEnterprise: false,
       name: t('plugins.meta.request-termination.name'),
-      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     },
     'response-ratelimiting': {
       description: t('plugins.meta.response-ratelimiting.description'),
