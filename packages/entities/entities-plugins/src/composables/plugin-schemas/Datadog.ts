@@ -53,7 +53,7 @@ export const dataDogSchema: DatadogSchema = {
         }, {
           model: 'tags',
           label: 'Tags',
-          type: 'input',
+          type: 'array',
           inputType: 'text',
         }],
       },
