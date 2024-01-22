@@ -53,7 +53,11 @@ export const dataDogSchema: DatadogSchema = {
         }, {
           model: 'tags',
           label: 'Tags',
-          type: 'input',
+          type: 'array',
+          itemContainerComponent: 'FieldArrayItem',
+          fieldClasses: 'kong-form-array-field',
+          fieldItemsClasses: 'kong-form-array-field-item',
+          inputAttributes: { class: 'form-control', style: { minWidth: '200px' } },
           inputType: 'text',
         }],
       },
