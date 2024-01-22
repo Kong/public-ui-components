@@ -283,7 +283,7 @@ jobs:
 
       - name: Save Build Artifacts
         if: ${{ steps.changed_packages.outputs.filter != '' }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: package-dist-artifacts
           path: packages/*/*/dist
@@ -311,7 +311,7 @@ jobs:
         run: pnpm cypress install
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: package-dist-artifacts
           path: packages/
@@ -332,7 +332,7 @@ jobs:
           echo "artifactName=component-test-failures-${packageName}" >> $GITHUB_OUTPUT
 
       - name: Upload Component Test Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         continue-on-error: true
         if: failure()
         with:
@@ -374,7 +374,7 @@ jobs:
 
       - name: Download build artifacts
         if: ${{ github.event_name == 'push' }}
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: package-dist-artifacts
           path: packages/
