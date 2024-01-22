@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.11.1...@kong-ui-public/entities-plugins@2.11.2) (2024-01-22)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fix DataDog plugin tags array conversion [khcp-10331] ([#1092](https://github.com/Kong/public-ui-components/issues/1092)) ([69306e8](https://github.com/Kong/public-ui-components/commit/69306e81520c5c203eb11bd0441592e725b26e44))
+
+
+
+
+
 ## [2.11.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.11.0...@kong-ui-public/entities-plugins@2.11.1) (2024-01-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
