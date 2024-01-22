@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.10.2...@kong-ui-public/entities-plugins@2.11.0) (2024-01-22)
+
+
+### Features
+
+* **entities-plugins:** add a prop to disable consumer group scope ([#1093](https://github.com/Kong/public-ui-components/issues/1093)) ([d2fbe07](https://github.com/Kong/public-ui-components/commit/d2fbe0771b220f03545420d9f216d43d42e9dbfd))
+
+
+
+
+
 ## [2.10.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.10.1...@kong-ui-public/entities-plugins@2.10.2) (2024-01-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
