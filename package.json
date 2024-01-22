@@ -70,7 +70,7 @@
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.8",
     "tslib": "^2.6.2",
-    "typedoc": "^0.25.6",
+    "typedoc": "^0.25.7",
     "typedoc-plugin-markdown": "^3.17.1",
     "typescript": "~5.3.3",
     "uuid": "^9.0.1",
