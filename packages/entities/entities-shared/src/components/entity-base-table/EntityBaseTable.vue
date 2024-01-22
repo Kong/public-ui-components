@@ -386,12 +386,6 @@ const handleUpdateTablePreferences = (tablePreferences: UserTablePreferences): v
 </style>
 
 <style lang="scss">
-// Exclude the top border if contained inside a KTab element
-.k-tabs > .tab-container > .kong-ui-entity-base-table,
-.k-tabs > .tab-container > [class^="kong-ui-entities-"] > .kong-ui-entity-base-table {
-  border-top: 0;
-}
-
 .kong-ui-entity-base-table {
   :deep(.k-table) {
     table-layout: fixed;
