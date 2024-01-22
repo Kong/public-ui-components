@@ -970,7 +970,7 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong-ui-public/swagger-ui-web-component':
-        specifier: workspace:^0.10.10
+        specifier: workspace:^0.10.11
         version: link:../swagger-ui-web-component
       '@kong/icons':
         specifier: ^1.8.13
@@ -11689,6 +11689,7 @@ packages:
       react: 16.14.0
       scheduler: 0.19.1
     dev: false
+    bundledDependencies: false
 
   /react-dom@17.0.2(react@17.0.2):
     resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
@@ -11793,6 +11794,7 @@ packages:
       object-assign: 4.1.1
       prop-types: 15.8.1
     dev: false
+    bundledDependencies: false
 
   /react@17.0.2:
     resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}
