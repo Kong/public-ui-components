@@ -85,6 +85,12 @@ A form component for Plugins.
     - default: `''`
     - The entity type the plugin is bound to on create/edit.
 
+  - `disableConsumerGroupScope`:
+    - type: `boolean`
+    - required: `false`
+    - default: `false`
+    - *Specific to Kong Manager*. Whether or not to hide the consumer group scope field.
+
 The base konnect or kongManger config.
 
 #### `pluginType`
