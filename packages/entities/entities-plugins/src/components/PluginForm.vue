@@ -729,7 +729,9 @@ const initScopeFields = (): void => {
   const supportServiceScope = pluginMetaData[props.pluginType]?.scope.includes(PluginScope.SERVICE) ?? true
   const supportRouteScope = pluginMetaData[props.pluginType]?.scope.includes(PluginScope.ROUTE) ?? true
   const supportConsumerScope = pluginMetaData[props.pluginType]?.scope.includes(PluginScope.CONSUMER) ?? true
-  const supportConsumerGroupScope = pluginMetaData[props.pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true
+  const supportConsumerGroupScope = props.config.disableConsumerGroupScope
+    ? false
+    : (pluginMetaData[props.pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true)
 
   const scopeEntityArray = []
 
