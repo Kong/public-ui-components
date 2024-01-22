@@ -11,11 +11,23 @@ interface Field {
   inputType?: 'text' | 'number'
 }
 
+interface ArrayItem extends Field {
+  itemContainerComponent: string
+  fieldClasses?: string
+  fieldItemsClasses?: string
+  inputAttributes?: {
+    class: string
+    style: {
+      minWidth: string
+    }
+  }
+}
+
 export interface ItemsSchema {
   type: string,
   default?: object,
   schema: {
-    fields: Field[]
+    fields: Array<Field | ArrayItem>
   }
 }
 
