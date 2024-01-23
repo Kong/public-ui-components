@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.2.11...@kong-ui-public/documentation@0.2.12) (2024-01-23)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 5 [KHCP-10381] ([#1097](https://github.com/Kong/public-ui-components/issues/1097)) ([24e5ba6](https://github.com/Kong/public-ui-components/commit/24e5ba6d6b256b092276c70e16d2e221d5be0c17))
+
+
+
+
+
 ## [0.2.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.2.10...@kong-ui-public/documentation@0.2.11) (2024-01-22)
 
 **Note:** Version bump only for package @kong-ui-public/documentation
