@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.2.25...@kong-ui-public/app-layout@3.0.0) (2024-01-24)
+
+
+### Features
+
+* **app-layout:** use dynamic component for sidebar icons [KHCP-10350] ([#1099](https://github.com/Kong/public-ui-components/issues/1099)) ([6086fd9](https://github.com/Kong/public-ui-components/commit/6086fd952ea5dcdc9d24adee85523be0699ec6b9))
+
+
+### BREAKING CHANGES
+
+* **app-layout:** The SidebarPrimaryItem 'icon' property now accepts a component instance rather than
+a KIcon name string.
+
+
+
+
+
 ## [2.2.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@2.2.24...@kong-ui-public/app-layout@2.2.25) (2024-01-23)
 
 
