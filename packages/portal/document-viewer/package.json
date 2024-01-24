@@ -45,7 +45,7 @@
     "@kong/kongponents": "9.0.0-alpha.95",
     "@types/prismjs": "^1.26.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
-    "vue": "^3.4.3"
+    "vue": "^3.4.13"
   },
   "dependencies": {
     "@kong-ui-public/i18n": "workspace:^",
