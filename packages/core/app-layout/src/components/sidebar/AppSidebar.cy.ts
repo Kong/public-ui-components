@@ -3,6 +3,7 @@
 import AppSidebar from './AppSidebar.vue'
 import { h } from 'vue'
 import { topItems, bottomItems } from '../../../fixtures/sidebar-items'
+import { RuntimesIcon, PeopleIcon, MeshIcon } from '@kong/icons'
 
 const viewports = {
   desktop: {
@@ -66,7 +67,7 @@ describe('<AppSidebar />', () => {
                 name: 'Organization',
                 key: 'organization',
                 to: { name: 'organization' }, // Route must be defined in `cypress/fixtures/routes.ts`
-                icon: 'organizations',
+                icon: PeopleIcon,
               }],
             },
           })
@@ -83,7 +84,7 @@ describe('<AppSidebar />', () => {
                 name: 'Organization',
                 key: 'organization',
                 to: 'https://google.com',
-                icon: 'organizations',
+                icon: PeopleIcon,
               }],
             },
           })
@@ -101,7 +102,7 @@ describe('<AppSidebar />', () => {
                 key: 'organization',
                 to: '/organizations',
                 external: true,
-                icon: 'organizations',
+                icon: PeopleIcon,
               }],
             },
           })
@@ -119,7 +120,7 @@ describe('<AppSidebar />', () => {
                 key: 'organization',
                 to: '/organizations',
                 external: true,
-                icon: 'organizations',
+                icon: PeopleIcon,
               }],
             },
           })
@@ -138,7 +139,7 @@ describe('<AppSidebar />', () => {
                 to: '/mesh/',
                 newWindow: true,
                 external: true,
-                icon: 'info',
+                icon: MeshIcon,
               }],
             },
           })
@@ -158,7 +159,7 @@ describe('<AppSidebar />', () => {
                 to: '/mesh/',
                 newWindow: true,
                 external: false,
-                icon: 'info',
+                icon: MeshIcon,
               }],
             },
           })
@@ -178,7 +179,7 @@ describe('<AppSidebar />', () => {
                 to: '/mesh/',
                 newWindow: true,
                 external: false,
-                icon: 'info',
+                icon: MeshIcon,
               }],
             },
           })
@@ -196,7 +197,7 @@ describe('<AppSidebar />', () => {
                 name: 'Organization',
                 key: 'organization',
                 to: { name: 'organization' }, // Route must be defined in `cypress/fixtures/routes.ts`
-                icon: 'organizations',
+                icon: PeopleIcon,
               }],
             },
           })
@@ -276,7 +277,7 @@ describe('<AppSidebar />', () => {
                 key: 'runtime-manager',
                 active: true,
                 expanded: true,
-                icon: 'runtimes',
+                icon: RuntimesIcon,
                 items: [
                   {
                     name: 'Runtime Instances',
@@ -309,7 +310,7 @@ describe('<AppSidebar />', () => {
                 key: 'runtime-manager',
                 active: true,
                 expanded: true,
-                icon: 'runtimes',
+                icon: RuntimesIcon,
                 testId: testIdL1,
                 items: [
                   {
@@ -339,13 +340,13 @@ describe('<AppSidebar />', () => {
                 key: 'runtime-manager',
                 active: true,
                 expanded: true,
-                icon: 'runtimes',
+                icon: RuntimesIcon,
               }],
             },
           })
 
           cy.get('.kong-ui-app-sidebar').find('.level-primary.top-items').find('li').eq(0).should('be.visible')
-          cy.get('.kong-ui-app-sidebar').find('.level-primary.top-items').find('.sidebar-item-icon .kong-icon').should('be.visible')
+          cy.get('.kong-ui-app-sidebar').find('.level-primary.top-items').find('.sidebar-item-icon .kui-icon').should('be.visible')
         })
 
         it('does not render an icon next to L1 items when not provided', () => {
@@ -365,7 +366,7 @@ describe('<AppSidebar />', () => {
           })
 
           cy.get('.kong-ui-app-sidebar').find('.level-primary.top-items').find('li').eq(0).should('be.visible')
-          cy.get('.kong-ui-app-sidebar').find('.level-primary.top-items').find('.sidebar-item-icon .kong-icon').should('not.exist')
+          cy.get('.kong-ui-app-sidebar').find('.level-primary.top-items').find('.sidebar-item-icon .kui-icon').should('not.exist')
         })
 
         // Expanded
@@ -384,7 +385,7 @@ describe('<AppSidebar />', () => {
                   key: 'runtime-manager',
                   active: true,
                   expanded: true,
-                  icon: 'runtimes',
+                  icon: RuntimesIcon,
                   items: [
                     {
                       name: childItemName,
@@ -415,7 +416,7 @@ describe('<AppSidebar />', () => {
                   key: 'runtime-manager',
                   active: true,
                   expanded: true,
-                  icon: 'runtimes',
+                  icon: RuntimesIcon,
                   items: [
                     {
                       name: 'Runtime Instances',
@@ -445,7 +446,7 @@ describe('<AppSidebar />', () => {
                   key: 'runtime-manager',
                   active: true,
                   expanded: false,
-                  icon: 'runtimes',
+                  icon: RuntimesIcon,
                   items: [
                     {
                       name: 'Runtime Instances',

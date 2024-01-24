@@ -1,15 +1,17 @@
+import { OverviewIcon, RuntimesIcon, PeopleIcon, CogIcon } from '@kong/icons'
+
 export const topItems = [
   {
     name: 'Overview',
     key: 'overview',
     to: { name: 'overview' },
-    icon: 'sharedConfig',
+    icon: OverviewIcon,
   },
   {
     name: 'Gateway Manager',
     key: 'runtime-manager',
     to: { name: 'runtime-manager' },
-    icon: 'runtimes',
+    icon: RuntimesIcon,
     label: 'runtime-group-name',
     items: [
       {
@@ -25,7 +27,7 @@ export const bottomItems = [
     name: 'Organization',
     key: 'organization',
     to: { name: 'organization' },
-    icon: 'organizations',
+    icon: PeopleIcon,
     items: [
       {
         name: 'Teams',
@@ -41,7 +43,7 @@ export const bottomItems = [
     name: 'Settings',
     key: 'settings',
     to: { name: 'settings' },
-    icon: 'cogwheel',
+    icon: CogIcon,
     items: [
       {
         name: 'Billing and Usage',

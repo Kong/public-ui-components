@@ -66,6 +66,7 @@ import { AppLogo, AppGruceLogo } from '../components/icons'
 import '@kong/kongponents/dist/style.css'
 // Sandbox only
 import NavLinks from '../components/NavLinks.vue'
+import { OverviewIcon, RuntimesIcon, ServiceHubIcon, MeshIcon, DevPortalIcon, BarChartIcon, PeopleIcon, CogIcon } from '@kong/icons'
 
 const activeItem = ref<SidebarPrimaryItem | SidebarSecondaryItem>()
 
@@ -82,7 +83,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       // external: true,
       newWindow: true,
       key: 'overview',
-      icon: 'sharedConfig',
+      icon: OverviewIcon,
       // TODO: using this item as a default when `activeItem` is undefined
       active: !activeItem.value || (activeItem.value as SidebarPrimaryItem)?.key === 'overview',
     },
@@ -94,7 +95,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'runtime-manager',
       // TODO: actually when you click on Runtime Manager it would not expand until the user picks a runtime group
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'runtime-manager' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'runtime-manager',
-      icon: 'runtimes',
+      icon: RuntimesIcon,
       items: [
         {
           name: 'Runtime Instances',
@@ -146,7 +147,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'servicehub',
       // TODO: actually when you click on Service Hub it would not expand until the user picks a service
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'servicehub' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'servicehub',
-      icon: 'serviceHub',
+      icon: ServiceHubIcon,
       items: [
         {
           name: 'Overview',
@@ -167,7 +168,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'dev-portal',
       // This item can always show the subnav
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'dev-portal' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'dev-portal',
-      icon: 'devPortal',
+      icon: DevPortalIcon,
       items: [
         {
           name: 'Published Services',
@@ -209,7 +210,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'analytics',
       // This item can always show the subnav
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'analytics' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'analytics',
-      icon: 'vitalsChart',
+      icon: BarChartIcon,
       items: [
         {
           name: 'Overview',
@@ -235,7 +236,7 @@ const sidebarItemsBottom = computed((): SidebarPrimaryItem[] => {
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'organization',
       // This item can always show the subnav
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'organization' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'organization',
-      icon: 'organizations',
+      icon: PeopleIcon,
       items: [
         {
           name: 'Teams',
@@ -256,7 +257,7 @@ const sidebarItemsBottom = computed((): SidebarPrimaryItem[] => {
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'settings',
       // This item can always show the subnav
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'settings' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'settings',
-      icon: 'cogwheel',
+      icon: CogIcon,
       items: [
         {
           name: 'Billing and Usage',

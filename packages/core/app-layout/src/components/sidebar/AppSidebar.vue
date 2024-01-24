@@ -489,7 +489,7 @@ onBeforeUnmount(() => {
     outline: 1px solid #afb7c5 !important;
   }
 
-  :deep(.kong-icon) {
+  :deep(.kui-icon) {
     display: inline-flex;
     margin-bottom: -7px;
   }

@@ -24,13 +24,12 @@
           :class="{ 'has-label': !!(item as SidebarPrimaryItem).label && (item as SidebarPrimaryItem).expanded, 'has-badge': itemHasBadge }"
         >
           <div
-            v-if="(item as SidebarPrimaryItem).icon"
+            v-if="(item as SidebarPrimaryItem).icon !== undefined && typeof (item as SidebarPrimaryItem).icon !== 'string'"
             class="sidebar-item-icon"
           >
-            <!-- TODO: Replace with dynamic icon import(?) or a slot based on the `item.key` -->
-            <KIcon
-              :icon="String((item as SidebarPrimaryItem).icon)"
-              size="20"
+            <component
+              :is="(item as SidebarPrimaryItem).icon"
+              :size="KUI_ICON_SIZE_40"
             />
           </div>
           <div class="sidebar-item-name-container">
@@ -90,6 +89,7 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../../types'
 import ItemBadge from './ItemBadge.vue'
+import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 
 const emit = defineEmits(['click'])
 
