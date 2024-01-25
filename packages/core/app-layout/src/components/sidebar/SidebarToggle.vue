@@ -26,7 +26,8 @@ const props = defineProps({
 })
 
 const isActive = ref<boolean>(props.active || false)
-const toggle = () => {
+const toggle = (e: Event) => {
+  e.preventDefault()
   isActive.value = !isActive.value
   emit('toggle', isActive.value)
 }
