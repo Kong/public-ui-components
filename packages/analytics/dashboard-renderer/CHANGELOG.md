@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.3.11...@kong-ui-public/dashboard-renderer@0.3.12) (2024-01-25)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** `console.warn` if query bridge is missing ([#1100](https://github.com/Kong/public-ui-components/issues/1100)) ([2c2cd6b](https://github.com/Kong/public-ui-components/commit/2c2cd6bc3a8b7f5b73dc0ab28e7a68a5a5785bc0))
+
+
+
+
+
 ## [0.3.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.3.10...@kong-ui-public/dashboard-renderer@0.3.11) (2024-01-25)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
