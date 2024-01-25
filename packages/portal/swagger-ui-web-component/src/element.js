@@ -144,15 +144,18 @@ export class SwaggerUIElement extends HTMLElement {
 
   init() {
     if (this.#instance) {
-      throw new Error('SwaggerUI is already initialized')
+      console.warn('SwaggerUI is already initialized')
+      return
     }
 
     if (!this.isConnected) {
-      throw new Error('kong-swagger-ui is no longer connected')
+      console.warn('kong-swagger-ui is no longer connected')
+      return
     }
 
     if (!this.#url && !this.#spec) {
-      throw new Error('either `spec` or `url` has to be set to initialize SwaggerUI')
+      console.warn('either `spec` or `url` has to be set to initialize SwaggerUI')
+      return
     }
 
     if ((this.relativeSidebar && !this.#hasSidebar) || (this.#relativeSidebar && !this.#essentialsOnly)) {
@@ -305,7 +308,8 @@ export class SwaggerUIElement extends HTMLElement {
 
   set spec(spec) {
     if (!spec) {
-      throw new Error('Spec cannot be empty')
+      console.warn('spec cannot be empty')
+      return
     }
 
     let parsedSpec
