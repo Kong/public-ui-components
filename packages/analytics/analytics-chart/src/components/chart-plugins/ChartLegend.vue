@@ -229,14 +229,16 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 </script>
 
 <style lang="scss" scoped>
+@import '../../styles/base';
 .legend-container {
   display: flex;
   max-height: inherit;
   -ms-overflow-style: thin;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding-left: $kui-space-50;
-  scrollbar-width: thin;
+
+  @include scrollbarBase;
 
   &.vertical {
     flex-direction: column;
@@ -275,20 +277,6 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
         line-height: $kui-line-height-50;
       }
     }
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: $kui-color-background;
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: $kui-color-background-disabled;
-    border-radius: 10px;
   }
 
   // Individual legend item
