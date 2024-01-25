@@ -38,7 +38,16 @@ const props = defineProps<{
 
 const { i18n } = composables.useI18n()
 
+// Note: queryBridge is not directly used by the DashboardRenderer component.  It is required by many of the
+// subcomponents that get rendered in the dashboard, however.  Check for its existence here in order to catch
+// programming errors early.
 const queryBridge = inject(INJECT_QUERY_PROVIDER)
+
+if (!queryBridge) {
+  console.warn('Analytics dashboards require a query bridge supplied via provide / inject.')
+  console.warn("Please ensure your application has a query bridge provided under the key 'analytics-query-provider', as described in")
+  console.warn('https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/README.md#requirements')
+}
 
 const gridTiles = computed(() => {
   return props.config.tiles.map((tile: TileConfig, i: number) => {
