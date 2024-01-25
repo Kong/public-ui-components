@@ -564,8 +564,8 @@ const handleChartClick = () => {
 
 .chart-container {
   overflow: auto;
-  -ms-overflow-style: thin;  /* IE and Edge */
-  scrollbar-width: thin;  /* Firefox */
+
+  @include scrollbarBase;
 
   .chart-body {
     height: 100%;
