@@ -95,6 +95,8 @@ const checkForWrap = () => {
     } else {
       shouldTruncate.value = false
     }
+  } else if (legendContainerRef.value && position.value === ChartLegendPosition.Right) {
+    shouldTruncate.value = true
   }
 }
 
@@ -116,6 +118,8 @@ const formatGrid = () => {
     const padding = parseInt(KUI_SPACE_100, 10)
     legendContainerRef.value.style.gridTemplateColumns = `repeat(auto-fit, ${maxWidth + padding}px)`
   }
+
+  checkForWrap()
 }
 
 const legendItemsChanged = () => {
@@ -135,7 +139,6 @@ const legendItemsChanged = () => {
 }
 
 watch(() => props.items, () => {
-  checkForWrap()
   if (legendItemsChanged()) {
     formatGrid()
   }
@@ -152,7 +155,6 @@ const resizeObserver = new ResizeObserver(debounce((entries: ResizeObserverEntry
 
   // Check if the resize is only in the X direction
   if (newWidth !== oldWidth.value && newHeight === oldHeight.value) {
-    checkForWrap()
     formatGrid()
   }
   oldWidth.value = newWidth
@@ -160,7 +162,6 @@ const resizeObserver = new ResizeObserver(debounce((entries: ResizeObserverEntry
 }, 100))
 
 watch(() => position.value, () => {
-  checkForWrap()
   formatGrid()
 })
 
@@ -171,7 +172,6 @@ onMounted(() => {
   }
 
   window.requestAnimationFrame(() => {
-    checkForWrap()
     formatGrid()
   })
 })
@@ -243,8 +243,14 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
   &.vertical {
     flex-direction: column;
     max-height: 400px;
-    max-width: 15%;
-    word-break: break-word;
+    width: 15%;
+
+    .truncate-label {
+      max-width: 10ch;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
     // Allow legend to expand horizontally at lower resolutions
     @media (max-width: ($kui-breakpoint-phablet - 1px)) {
@@ -256,6 +262,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
   }
 
   &.horizontal {
+    column-gap: $kui-space-80;
     display: grid;
     justify-content: center;
     max-height: 12%;
