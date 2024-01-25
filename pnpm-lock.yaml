@@ -24,8 +24,8 @@ importers:
         specifier: ^1.5.6
         version: 1.6.0
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -250,8 +250,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/sandbox-layout
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -312,8 +312,8 @@ importers:
         version: 2.0.0(date-fns@2.30.0)
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
 
   packages/analytics/dashboard-renderer:
     dependencies:
@@ -337,8 +337,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/sandbox-layout
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -359,8 +359,8 @@ importers:
         version: 2.1.1
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -384,8 +384,8 @@ importers:
         version: 4.5.0
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -430,8 +430,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -446,8 +446,8 @@ importers:
         version: 2.30.0
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       axios:
         specifier: ^1.6.5
         version: 1.6.5
@@ -471,8 +471,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.3.13)
@@ -486,8 +486,8 @@ importers:
   packages/core/error-boundary:
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/icons':
         specifier: ^1.8.14
         version: 1.8.14(vue@3.4.15)
@@ -511,8 +511,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -554,8 +554,8 @@ importers:
         version: 1.8.14(vue@3.4.15)
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -582,8 +582,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -610,8 +610,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -635,8 +635,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -660,8 +660,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -685,8 +685,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -738,8 +738,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -787,8 +787,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -812,8 +812,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -846,8 +846,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -874,8 +874,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -899,8 +899,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -924,8 +924,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -949,8 +949,8 @@ importers:
         version: 1.29.0
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -983,8 +983,8 @@ importers:
         version: 9.0.1
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.12.6
-        version: 1.12.6
+        specifier: 1.12.7
+        version: 1.12.7
       '@kong/kongponents':
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
@@ -2167,8 +2167,8 @@ packages:
       vue: 3.4.15(typescript@5.3.3)
     dev: false
 
-  /@kong/design-tokens@1.12.6:
-    resolution: {integrity: sha512-2Fbck+Gt2+si2csRZ2XRw1mZ30dIY5ncSsK+eTapWirwjW1rPSwHEICpw7etsf8uf34X4voHGVoI7tJmlULDtA==}
+  /@kong/design-tokens@1.12.7:
+    resolution: {integrity: sha512-gyUX+1hDUtgvMZgNvPxTrIF6lD5x2bd+qMx8EATQ9FE+naaMHvP+dFp6jmHAEVwY4yQrCWv6e4Et4UOG2XSuFA==}
     dev: true
 
   /@kong/icons@1.8.13(vue@3.3.13):
@@ -11619,7 +11619,6 @@ packages:
       react: 16.14.0
       scheduler: 0.19.1
     dev: false
-    bundledDependencies: false
 
   /react-dom@17.0.2(react@17.0.2):
     resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
@@ -11724,7 +11723,6 @@ packages:
       object-assign: 4.1.1
       prop-types: 15.8.1
     dev: false
-    bundledDependencies: false
 
   /react@17.0.2:
     resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}

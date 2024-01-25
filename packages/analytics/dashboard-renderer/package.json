@@ -42,7 +42,7 @@
     "@kong-ui-public/analytics-chart": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
-    "@kong/design-tokens": "1.12.6",
+    "@kong/design-tokens": "1.12.7",
     "@kong/kongponents": "9.0.0-alpha.95",
     "json-schema-to-ts": "^3.0.0",
     "vue": "^3.4.13"
