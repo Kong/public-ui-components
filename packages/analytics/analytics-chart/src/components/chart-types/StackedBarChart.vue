@@ -57,7 +57,7 @@ import type { PropType, Ref } from 'vue'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
 import type { BarChartData } from '../../utils'
-import { accessibleGrey, MAX_LABEL_LENGTH, formatNumber, getTextHeight, getTextWidth, drawPercentage, dataTotal, conditionalDataTotal } from '../../utils'
+import { accessibleGrey, MAX_LABEL_LENGTH, formatNumber, getTextHeight, getTextWidth, drawPercentage, dataTotal, conditionalDataTotal, debounce } from '../../utils'
 import composables from '../../composables'
 import { v4 as uuidv4 } from 'uuid'
 import { ChartLegendPosition, ChartTypes } from '../../enums'
@@ -332,11 +332,11 @@ const numLabels = computed(() => {
 const baseWidth = ref<number>(0)
 const baseHeight = ref<number>(0)
 
-const resizeObserver = new ResizeObserver(entries => {
+const resizeObserver = new ResizeObserver(debounce((entries: ResizeObserverEntry[]) => {
   // Only observing one element
   baseWidth.value = entries[0].contentRect.width
   baseHeight.value = entries[0].contentRect.height
-})
+}, 100))
 
 const chartWidth = computed<string>(() => {
   const numLabels = props.chartData?.labels?.length
