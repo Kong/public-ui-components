@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.10...@kong-ui-public/analytics-chart@1.1.11) (2024-01-25)
+
+
+### Bug Fixes
+
+* some chart style tweaks + debounce ResizeObserver callback ([#1107](https://github.com/Kong/public-ui-components/issues/1107)) ([aedde36](https://github.com/Kong/public-ui-components/commit/aedde3643a7369382e081e6c14ecc1911782de2a))
+
+
+
+
+
 ## [1.1.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.9...@kong-ui-public/analytics-chart@1.1.10) (2024-01-25)
 
 
