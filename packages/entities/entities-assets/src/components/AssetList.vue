@@ -114,7 +114,7 @@
       :action-pending="isDeletePending"
       data-testid="delete-asset-modal"
       :description="t('assets.delete.description')"
-      :entity-name="assetToBeDeleted && (assetToBeDeleted.username || assetToBeDeleted.custom_id || assetToBeDeleted.id)"
+      :entity-name="assetToBeDeleted && (assetToBeDeleted.name || assetToBeDeleted.id)"
       :entity-type="EntityTypes.Asset"
       :error="deleteModalError"
       :title="t('assets.delete.title')"

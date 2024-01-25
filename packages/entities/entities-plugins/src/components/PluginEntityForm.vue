@@ -512,6 +512,11 @@ const initFormModel = (): void => {
       ...(props.record.tags && { tags: props.record.tags }),
     })
 
+    const assetId = props.record.asset?.id || props.config.assetId
+    if (assetId) {
+      updateModel({ 'asset-id': assetId })
+    }
+
     // handle credentials
     if (props.credential) {
       // scope

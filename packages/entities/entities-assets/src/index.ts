@@ -1,4 +1,4 @@
-// import type { App } from 'vue'
+import AssetForm from './components/AssetForm.vue'
 import AssetList from './components/AssetList.vue'
 
 // Export Vue plugin
@@ -12,6 +12,6 @@ import AssetList from './components/AssetList.vue'
 //   },
 // }
 
-export { AssetList }
+export { AssetList, AssetForm }
 
 export * from './types'
