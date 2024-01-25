@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@3.0.2...@kong-ui-public/app-layout@3.0.3) (2024-01-25)
+
+
+### Bug Fixes
+
+* **app-layout:** prevent default click ([#1106](https://github.com/Kong/public-ui-components/issues/1106)) ([9496011](https://github.com/Kong/public-ui-components/commit/94960119145fc003d3d9257343bd2c5e9fee0a45))
+
+
+
+
+
 ## [3.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@3.0.1...@kong-ui-public/app-layout@3.0.2) (2024-01-25)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
