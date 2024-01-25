@@ -490,6 +490,11 @@
           "label": "Instance Name",
           "help": "A custom name for this plugin instance to help identifying from the list view."
         },
+        "asset": {
+          "label": "Asset",
+          "placeholder": "Select an Asset",
+          "help": "The id (a UUID) of the asset that plugin relies upon."
+        },
         "protocols": {
           "label": "Protocols",
           "placeholder": "Select valid protocols for the plugin",

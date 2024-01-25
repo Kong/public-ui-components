@@ -133,7 +133,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch, onBeforeMount, type PropType } from 'vue'
+import { computed, reactive, ref, watch, onBeforeMount, type PropType, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
@@ -419,6 +419,24 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
       help: t('plugins.form.fields.instance_name.help'),
     },
   }),
+
+  // ...props.config.app === 'kongManager'
+  //   ? {
+  //     'asset-id': {
+  //       default: '',
+  //       type: 'AutoSuggest',
+  //       entity: 'assets',
+  //       inputValues: {
+  //         fields: ['name', 'id'],
+  //       },
+  //       entityDataKey: 'asset',
+  //       label: t('plugins.form.fields.asset.label'),
+  //       inputType: 'text',
+  //       help: t('plugins.form.fields.asset.help'),
+  //       placeholder: t('plugins.form.fields.asset.placeholder'),
+  //     } as DefaultPluginsFormSchema,
+  //   }
+  //   : null,
 
   tags: typedefs.tags as DefaultPluginsFormSchema,
   protocols: {
@@ -721,6 +739,22 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       initialFormSchema[field].fieldNameHasDashes = true
     }
   })
+
+  console.log(toRaw(initialFormSchema))
+
+  initialFormSchema['asset-id'] = {
+    default: '',
+    type: 'AutoSuggest',
+    entity: 'assets',
+    inputValues: {
+      fields: ['name', 'id'],
+    },
+    entityDataKey: 'asset',
+    label: t('plugins.form.fields.asset.label'),
+    inputType: 'text',
+    help: t('plugins.form.fields.asset.help'),
+    placeholder: t('plugins.form.fields.asset.placeholder'),
+  }
 
   return initialFormSchema
 }

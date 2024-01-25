@@ -1,0 +1,94 @@
+{
+  "assets": {
+    "list": {
+      "table_headers": {
+        "name": "Name",
+        "url": "URL",
+        "type": "Type"
+      },
+      "empty_state": {
+        "title": "Configure a New Consumer",
+        "description": "Consumers are the end users of a service.",
+        "title_for_consumer_group": "Configure a New Consumer"
+      },
+      "toolbar_actions": {
+        "new_consumer": "New Consumer"
+      }
+    },
+    "title": "Consumers",
+    "search": {
+      "placeholder": {
+        "konnect": "Filter by name",
+        "kongManager": "Filter by exact username or ID"
+      }
+    },
+    "actions": {
+      "add_asset": "Add Asset",
+      "create_plugin": "Create Plugin",
+      "create": "New Consumer",
+      "copy_id": "Copy ID",
+      "copy_json": "Copy JSON",
+      "edit": "Edit",
+      "delete": "Delete",
+      "remove": "Remove",
+      "view": "View Details"
+    },
+    "delete": {
+      "title": "Delete a Consumer",
+      "description": "Deleting this consumer will also remove this consumer from any associated consumer group. This action cannot be reversed."
+    },
+    "consumer_groups": {
+      "add": {
+        "title": "Add Consumers",
+        "ctaText": "Add consumers to this group",
+        "consumers_label": "Consumers",
+        "consumer_placeholder": "Add consumer",
+        "footer": "Search by exact name or ID to find consumers not included in the list"
+      },
+      "remove": {
+        "title": "Remove a Consumer",
+        "confirmation": "Are you sure you want to remove this consumer {consumer} from consumer group {consumerGroup}?",
+        "confirmationNoCG": "Are you sure you want to remove this consumer {consumer} from this consumer group?",
+        "description": "Removing this consumer from the group could change the rate limit policy applied to this consumer."
+      }
+    },
+    "errors": {
+      "general": "Consumers could not be retrieved",
+      "delete": "The consumer could not be deleted at this time.",
+      "copy": "Failed to copy to clipboard",
+      "add": "Some consumers could not be added at this time.",
+      "already_added": "This consumer has already been added to the consumer group"
+    },
+    "copy": {
+      "success": "Copied {val} to clipboard",
+      "success_brief": "Successfully copied to clipboard"
+    },
+    "form": {
+      "title": "Consumer Identification",
+      "info": {
+        "title": "General Information",
+        "description": "General information will help identify and manage added consumer."
+      }
+    },
+    "fields": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter a unique username",
+        "tooltip": "The unique username of the Consumer. You must send either this field or {custom_id} with the request.",
+        "custom_id": "custom_id"
+      },
+      "content": {
+        "label": "Content",
+        "placeholder": "Enter a unique custom ID",
+        "tooltip": "Field for storing an existing unique ID for the Consumer - useful for mapping Kong with users in your existing database. You must send either this field or {username} with the request.",
+        "username": "username"
+      },
+      "tags": {
+        "label": "Tags",
+        "placeholder": "Enter a list of tags separated by comma",
+        "help": "e.g. tag1, tag2, tag3",
+        "tooltip": "An optional set of strings associated with the Consumer for grouping and filtering."
+      }
+    }
+  }
+}

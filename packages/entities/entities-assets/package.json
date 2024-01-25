@@ -1,0 +1,76 @@
+{
+  "name": "@kong-ui-public/entities-assets",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/entities-assets.umd.js",
+  "module": "./dist/entities-assets.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/entities-assets.es.js",
+      "require": "./dist/entities-assets.umd.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "cross-env USE_SANDBOX=true vite",
+    "build": "run-s typecheck build:package build:types",
+    "build:package": "vite build -m production",
+    "build:analyzer": "BUILD_VISUALIZER='entities/entities-assets' vite build -m production",
+    "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
+    "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
+    "preview": "cross-env USE_SANDBOX=true vite preview",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
+    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore' --fix",
+    "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
+    "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
+    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
+    "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
+    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
+    "test:unit": "cross-env FORCE_COLOR=1 vitest run",
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+  },
+  "peerDependencies": {
+    "@kong-ui-public/i18n": "workspace:^",
+    "@kong/kongponents": "9.0.0-alpha.95",
+    "axios": "^1.6.3",
+    "vue": ">= 3.3.13 < 4",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@kong-ui-public/i18n": "workspace:^",
+    "@kong/design-tokens": "1.12.4",
+    "@kong/kongponents": "9.0.0-alpha.95",
+    "axios": "^1.6.3",
+    "vue": "^3.4.3",
+    "vue-router": "^4.2.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kong/public-ui-components.git",
+    "directory": "packages/entities/entities-assets"
+  },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/entities/entities-assets",
+  "bugs": {
+    "url": "https://github.com/Kong/public-ui-components/issues"
+  },
+  "author": "Kong, Inc.",
+  "license": "Apache-2.0",
+  "volta": {
+    "extends": "../../../package.json"
+  },
+  "distSizeChecker": {
+    "errorLimit": "200KB"
+  },
+  "dependencies": {
+    "@kong-ui-public/entities-shared": "workspace:^"
+  }
+}

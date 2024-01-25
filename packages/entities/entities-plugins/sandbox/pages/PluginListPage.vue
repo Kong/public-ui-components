@@ -70,7 +70,7 @@ const kongManagerConfig = ref<KongManagerPluginListConfig>({
   //   edition: 'community',
   //   version: '3.3.0',
   // },
-  workspace: 'default',
+  // workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   isExactMatch: false,
   createRoute: { name: 'select-plugin' },
