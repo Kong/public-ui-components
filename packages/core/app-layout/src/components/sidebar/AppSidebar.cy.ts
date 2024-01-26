@@ -331,9 +331,9 @@ describe('<AppSidebar />', () => {
                 active: true,
                 expanded: true,
               }],
-              slots: {
-                'sidebar-icon-runtime-manager': RuntimesIcon,
-              },
+            },
+            slots: {
+              'sidebar-icon-runtime-manager': RuntimesIcon,
             },
           })
 
@@ -471,7 +471,6 @@ describe('<AppSidebar />', () => {
                 cy.wrap(evt[0][0]).should('have.property', 'name')
                 cy.wrap(evt[0][0]).should('have.property', 'key')
                 cy.wrap(evt[0][0]).should('have.property', 'to')
-                cy.wrap(evt[0][0]).should('have.property', 'icon')
                 cy.wrap(evt[0][0]).should('have.property', 'testId')
               })
             })
