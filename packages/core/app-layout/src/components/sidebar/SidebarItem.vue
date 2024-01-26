@@ -29,6 +29,7 @@
           >
             <component
               :is="(item as SidebarPrimaryItem).icon"
+              v-if="(item as SidebarPrimaryItem).icon"
               :size="KUI_ICON_SIZE_40"
             />
           </div>
