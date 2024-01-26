@@ -10,7 +10,6 @@ body {
 
 .sandbox-container {
   margin: 0;
-  padding: $kui-space-60;
 
   .k-label {
     margin-bottom: 2px;
@@ -53,7 +52,6 @@ body {
   .config-container {
     display: flex;
     gap: 24px;
-    padding: $kui-space-60;
     --KCodeBlockFontSize: 15px;
 
     .config-container-row {
@@ -67,6 +65,7 @@ body {
     .flex-vertical {
       display: flex;
       flex-direction: column;
+      gap: 10px;
     }
 
     .options-container {
