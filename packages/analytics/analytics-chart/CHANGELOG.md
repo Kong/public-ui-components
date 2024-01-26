@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.13...@kong-ui-public/analytics-chart@1.1.14) (2024-01-26)
+
+
+### Bug Fixes
+
+* show border when not filled ([#1115](https://github.com/Kong/public-ui-components/issues/1115)) ([5ee20d8](https://github.com/Kong/public-ui-components/commit/5ee20d8d85dff743cc2bd45374abdb67b905f856))
+
+
+
+
+
 ## [1.1.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.12...@kong-ui-public/analytics-chart@1.1.13) (2024-01-26)
 
 
