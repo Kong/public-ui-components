@@ -1,5 +1,5 @@
 import type { AnalyticsExploreResult, AnalyticsExploreV2Result, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
-import { defaultLineOptions, darkenColor, lookupDatavisColor, datavisPalette } from '../utils'
+import { defaultLineOptions, darkenColor, lookupDatavisColor, datavisPalette, BORDER_WIDTH, NO_BORDER } from '../utils'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 import type { Dataset, KChartData, ExploreToDatasetDeps } from '../types'
@@ -176,6 +176,7 @@ export default function useExploreResultToTimeDataset(
             total: filled.reduce((acc, { y }) => acc + Number(y), 0),
             ...defaultLineOptions,
             fill,
+            borderWidth: fill ? NO_BORDER : BORDER_WIDTH,
           }
         })
 
