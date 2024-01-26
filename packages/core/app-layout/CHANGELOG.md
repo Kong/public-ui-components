@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@3.0.4...@kong-ui-public/app-layout@3.0.5) (2024-01-26)
+
+
+### Bug Fixes
+
+* icon render ([424a721](https://github.com/Kong/public-ui-components/commit/424a7213509360a24f55ae98ad3283710f9de7b6))
+
+
+
+
+
 ## [3.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@3.0.3...@kong-ui-public/app-layout@3.0.4) (2024-01-26)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
