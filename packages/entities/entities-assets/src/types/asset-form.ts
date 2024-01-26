@@ -14,6 +14,7 @@ export interface KongManagerAssetFormConfig extends Omit<KongManagerBaseFormConf
 
 export interface AssetFormFields {
   name: string
+  url: string
   file: File | null
 }
 

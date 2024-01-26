@@ -15,7 +15,7 @@ export interface BaseAssetListConfig {
   /** A function that returns the route for editing a consumer */
   getEditRoute: (id: string) => RouteLocationRaw
 
-  getCreatePluginRoute: (id: string) => RouteLocationRaw
+  getCreatePluginRoute: (id: string, pluginName: string) => RouteLocationRaw
 }
 
 /** Konnect route list config */

@@ -59,14 +59,17 @@
       "name": {
         "label": "Name",
         "placeholder": "Enter a unique name",
-        "tooltip": "The name of the asset.",
-        "custom_id": "custom_id"
+        "tooltip": "The name of the asset."
+      },
+      "url": {
+        "label": "URL",
+        "placeholder": "External URL of the asset, like s3://bucket/plugin-a-v1",
+        "tooltip": "External URL of the asset."
       },
       "content": {
         "label": "Content",
-        "placeholder": "Enter a unique custom ID",
-        "tooltip": "",
-        "username": "username"
+        "placeholder": "Select an archive file to upload",
+        "tooltip": ""
       },
       "tags": {
         "label": "Tags",

@@ -34,9 +34,25 @@
             type="text"
           />
 
+         <KInput
+            v-model.trim="state.fields.url"
+            autocomplete="off"
+            class="url-field"
+            data-testid="asset-form-url"
+            :label="t('assets.fields.url.label')"
+            :label-attributes="{
+              tooltipAttributes: { maxWidth: '250' }
+            }"
+            :placeholder="t('assets.fields.url.placeholder')"
+            :readonly="state.readonly"
+            type="text"
+          />
+
+
           <KFileUpload
             :label="t('assets.fields.content.label')"
-            @file-added="(file: File) => state.fields.file = file"
+            :accept="['*.tgz', '*.tar.gz']"
+            @file-added="(files: FileList) => state.fields.file = files[0]"
             @file-removed="() => state.fields.file = null"
           />
         </EntityFormSection>
@@ -98,6 +114,7 @@ const { getMessageFromError } = useErrors()
 const state = reactive<AssetFormState>({
   fields: {
     name: '',
+    url: '',
     file: null,
   },
   readonly: false,
@@ -106,6 +123,7 @@ const state = reactive<AssetFormState>({
 
 const originalFields = reactive<AssetFormFields>({
   name: '',
+  url: '',
   file: null,
 })
 
@@ -125,6 +143,7 @@ const fetchErrorHandler = (err: AxiosError): void => {
 
 const updateFormValues = (data: Record<string, any>): void => {
   state.fields.name = data?.item?.name || data?.name || ''
+  state.fields.url = data?.item?.url || data?.url || null
 
   Object.assign(originalFields, state.fields)
 }
@@ -149,6 +168,7 @@ const getUrl = (action: 'validate' | 'create' | 'edit'): string => {
 
 const formModel = computed(() => ({
   name: state.fields.name,
+  url: state.fields.url,
 }))
 
 const isFormValid = computed((): boolean => !!state.fields.name)
@@ -162,6 +182,7 @@ const submitData = async (): Promise<void> => {
 
     const formData = new FormData()
     formData.append('name', state.fields.name)
+    formData.append('url', state.fields.url)
     formData.append('content', state.fields.file as File)
 
     // FIXME: Skipping the validation. Do we really need this?

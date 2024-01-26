@@ -92,7 +92,7 @@
         <PermissionsWrapper :auth-function="() => canCreatePlugin()">
           <KDropdownItem
             data-testid="action-entity-create-plugin"
-            :item="getCreatePluginDropdownItem(row.id)"
+            :item="getCreatePluginDropdownItem(row.id, row.metadata?.plugin_name)"
           >
             {{ t('assets.actions.create_plugin') }}
           </KDropdownItem>
@@ -361,10 +361,10 @@ const rowClick = async (row: EntityRow): Promise<void> => {
   router.push(props.config.getViewRoute(row.id as string))
 }
 
-const getCreatePluginDropdownItem = (id: string) => {
+const getCreatePluginDropdownItem = (id: string, pluginName: string) => {
   return {
     label: t('assets.actions.create_plugin'),
-    to: props.config.getCreatePluginRoute(id),
+    to: props.config.getCreatePluginRoute(id, pluginName),
   }
 }
 
