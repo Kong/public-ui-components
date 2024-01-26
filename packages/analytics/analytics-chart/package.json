@@ -28,7 +28,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
-    "@kong/design-tokens": "1.12.6",
+    "@kong/design-tokens": "1.12.7",
     "@kong/kongponents": "9.0.0-alpha.95",
     "@types/uuid": "^9.0.7",
     "file-saver": "^2.0.5",
