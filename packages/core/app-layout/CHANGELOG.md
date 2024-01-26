@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@3.0.5...@kong-ui-public/app-layout@4.0.0) (2024-01-26)
+
+
+### Features
+
+* **app-layout:** sidebar icon slots ([#1116](https://github.com/Kong/public-ui-components/issues/1116)) ([18fadbe](https://github.com/Kong/public-ui-components/commit/18fadbe628b798d23cbb4836862876ae256dbcd3))
+
+
+### BREAKING CHANGES
+
+* **app-layout:** The AppLayout and AppSidebar components now require slotting in the sidebar icons
+via sidebar-icon-KEY slots.
+
+* chore: docs and cleanup
+
+* test: update test for icons
+
+
+
+
+
 ## [3.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@3.0.4...@kong-ui-public/app-layout@3.0.5) (2024-01-26)
 
 
