@@ -1,6 +1,3 @@
-// Get a generic `@kong/icons` interface for the option prop
-import type { SearchIcon as GenericIcon } from '@kong/icons'
-
 export interface SidebarSecondaryItem {
   /** The display text of the sidebar item */
   name: string
@@ -27,8 +24,6 @@ export interface SidebarPrimaryItem extends Omit<SidebarSecondaryItem, 'parentKe
   label?: string
   /** Is the top-level sidebar item expanded */
   expanded?: boolean
-  /** An icon Vue component exported from `@kong/icons` that will be rendered as a [dynamic component](https://vuejs.org/guide/essentials/component-basics.html#dynamic-components) in the `SidebarItem.vue` template. */
-  icon?: typeof GenericIcon
   /** Nested sidebar items (children) without icons */
   items?: SidebarSecondaryItem[]
 }
