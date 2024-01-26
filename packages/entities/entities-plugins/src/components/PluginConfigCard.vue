@@ -190,7 +190,7 @@ const emit = defineEmits<{
   (e: 'error:fetch-schema', error: AxiosError): void,
   (e: 'fetch:success', data: Record<string, any>): void,
   (e: 'copy:success', data: Record<string, any>): void,
-  (e: 'navigation-click', data: string, direction: 'route' | 'consumer' | 'consumer_group' | 'service'): void
+  (e: 'navigation-click', data: string, direction: 'route' | 'consumer' | 'consumer_group' | 'service' | 'asset'): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)

@@ -34,7 +34,7 @@
             type="text"
           />
 
-         <KInput
+          <KInput
             v-model.trim="state.fields.url"
             autocomplete="off"
             class="url-field"
@@ -48,10 +48,9 @@
             type="text"
           />
 
-
           <KFileUpload
-            :label="t('assets.fields.content.label')"
             :accept="['*.tgz', '*.tar.gz']"
+            :label="t('assets.fields.content.label')"
             @file-added="(files: FileList) => state.fields.file = files[0]"
             @file-removed="() => state.fields.file = null"
           />
