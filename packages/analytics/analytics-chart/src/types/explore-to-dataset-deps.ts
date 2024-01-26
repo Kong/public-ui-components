@@ -5,7 +5,7 @@ import type { AnalyticsChartColors } from './chart-data'
  * that can be provided to the useExploreResultToTimeddatasets composable
  *
  * borderWidth
- *   - determines the line chart line thickness; defaults to zero 
+ *   - determines the line chart line thickness; defaults to zero
  * fill
  *   - determines if the generated should have the area under the line filled
  * useMetricForColor

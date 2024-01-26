@@ -176,7 +176,7 @@ export default function useExploreResultToTimeDataset(
             total: filled.reduce((acc, { y }) => acc + Number(y), 0),
             ...defaultLineOptions,
             fill,
-            borderWidth: borderWidth && !fill,  // only show chart line if single dimension, and not "filled"
+            borderWidth: borderWidth && !fill, // only show chart line if single dimension, and not "filled"
           }
         })
 
