@@ -3,7 +3,7 @@
 import AppSidebar from './AppSidebar.vue'
 import { h } from 'vue'
 import { topItems, bottomItems } from '../../../fixtures/sidebar-items'
-import { RuntimesIcon, PeopleIcon, MeshIcon } from '@kong/icons'
+import { RuntimesIcon } from '@kong/icons'
 
 const viewports = {
   desktop: {
@@ -67,7 +67,6 @@ describe('<AppSidebar />', () => {
                 name: 'Organization',
                 key: 'organization',
                 to: { name: 'organization' }, // Route must be defined in `cypress/fixtures/routes.ts`
-                icon: PeopleIcon,
               }],
             },
           })
@@ -84,7 +83,6 @@ describe('<AppSidebar />', () => {
                 name: 'Organization',
                 key: 'organization',
                 to: 'https://google.com',
-                icon: PeopleIcon,
               }],
             },
           })
@@ -102,7 +100,6 @@ describe('<AppSidebar />', () => {
                 key: 'organization',
                 to: '/organizations',
                 external: true,
-                icon: PeopleIcon,
               }],
             },
           })
@@ -120,7 +117,6 @@ describe('<AppSidebar />', () => {
                 key: 'organization',
                 to: '/organizations',
                 external: true,
-                icon: PeopleIcon,
               }],
             },
           })
@@ -139,7 +135,6 @@ describe('<AppSidebar />', () => {
                 to: '/mesh/',
                 newWindow: true,
                 external: true,
-                icon: MeshIcon,
               }],
             },
           })
@@ -159,7 +154,6 @@ describe('<AppSidebar />', () => {
                 to: '/mesh/',
                 newWindow: true,
                 external: false,
-                icon: MeshIcon,
               }],
             },
           })
@@ -179,7 +173,6 @@ describe('<AppSidebar />', () => {
                 to: '/mesh/',
                 newWindow: true,
                 external: false,
-                icon: MeshIcon,
               }],
             },
           })
@@ -197,7 +190,6 @@ describe('<AppSidebar />', () => {
                 name: 'Organization',
                 key: 'organization',
                 to: { name: 'organization' }, // Route must be defined in `cypress/fixtures/routes.ts`
-                icon: PeopleIcon,
               }],
             },
           })
@@ -277,7 +269,6 @@ describe('<AppSidebar />', () => {
                 key: 'runtime-manager',
                 active: true,
                 expanded: true,
-                icon: RuntimesIcon,
                 items: [
                   {
                     name: 'Runtime Instances',
@@ -310,7 +301,6 @@ describe('<AppSidebar />', () => {
                 key: 'runtime-manager',
                 active: true,
                 expanded: true,
-                icon: RuntimesIcon,
                 testId: testIdL1,
                 items: [
                   {
@@ -340,8 +330,10 @@ describe('<AppSidebar />', () => {
                 key: 'runtime-manager',
                 active: true,
                 expanded: true,
-                icon: RuntimesIcon,
               }],
+            },
+            slots: {
+              'sidebar-icon-runtime-manager': RuntimesIcon,
             },
           })
 
@@ -385,7 +377,6 @@ describe('<AppSidebar />', () => {
                   key: 'runtime-manager',
                   active: true,
                   expanded: true,
-                  icon: RuntimesIcon,
                   items: [
                     {
                       name: childItemName,
@@ -416,7 +407,6 @@ describe('<AppSidebar />', () => {
                   key: 'runtime-manager',
                   active: true,
                   expanded: true,
-                  icon: RuntimesIcon,
                   items: [
                     {
                       name: 'Runtime Instances',
@@ -446,7 +436,6 @@ describe('<AppSidebar />', () => {
                   key: 'runtime-manager',
                   active: true,
                   expanded: false,
-                  icon: RuntimesIcon,
                   items: [
                     {
                       name: 'Runtime Instances',
@@ -482,7 +471,6 @@ describe('<AppSidebar />', () => {
                 cy.wrap(evt[0][0]).should('have.property', 'name')
                 cy.wrap(evt[0][0]).should('have.property', 'key')
                 cy.wrap(evt[0][0]).should('have.property', 'to')
-                cy.wrap(evt[0][0]).should('have.property', 'icon')
                 cy.wrap(evt[0][0]).should('have.property', 'testId')
               })
             })

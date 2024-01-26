@@ -45,7 +45,11 @@
               :key="item.name"
               :item="item"
               @click="itemClick"
-            />
+            >
+              <template #[`sidebar-icon-${item.key}`]>
+                <slot :name="`sidebar-icon-${(item as SidebarPrimaryItem).key}`" />
+              </template>
+            </SidebarItem>
           </ul>
 
           <div
@@ -63,7 +67,11 @@
               :key="item.name"
               :item="item"
               @click="itemClick"
-            />
+            >
+              <template #[`sidebar-icon-${item.key}`]>
+                <slot :name="`sidebar-icon-${(item as SidebarPrimaryItem).key}`" />
+              </template>
+            </SidebarItem>
           </ul>
         </nav>
       </div>

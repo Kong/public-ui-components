@@ -24,13 +24,12 @@
           :class="{ 'has-label': !!(item as SidebarPrimaryItem).label && (item as SidebarPrimaryItem).expanded, 'has-badge': itemHasBadge }"
         >
           <div
-            v-if="(item as SidebarPrimaryItem).icon !== undefined && typeof (item as SidebarPrimaryItem).icon !== 'string'"
+            v-if="$slots[`sidebar-icon-${(item as SidebarPrimaryItem).key}`]"
             class="sidebar-item-icon"
           >
-            <component
-              :is="(item as SidebarPrimaryItem).icon"
-              v-if="(item as SidebarPrimaryItem).icon"
-              :size="KUI_ICON_SIZE_40"
+            <slot
+              v-if="!subnavItem"
+              :name="`sidebar-icon-${(item as SidebarPrimaryItem).key}`"
             />
           </div>
           <div class="sidebar-item-name-container">
@@ -90,7 +89,6 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../../types'
 import ItemBadge from './ItemBadge.vue'
-import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 
 const emit = defineEmits(['click'])
 
@@ -99,6 +97,7 @@ const props = defineProps({
     type: Object as PropType<SidebarPrimaryItem | SidebarSecondaryItem>,
     required: true,
   },
+  /** True if the item is not an L1 primary sidebar item */
   subnavItem: {
     type: Boolean,
     default: false,

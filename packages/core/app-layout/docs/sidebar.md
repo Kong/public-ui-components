@@ -11,6 +11,7 @@ A Kong UI dynamic sidebar component.
 - [Usage](#usage)
   - [Install](#install)
 - [`AppSidebar.vue`](#appsidebarvue-1)
+  - [Sidebar Icons](#sidebar-icons)
   - [Props](#props)
   - [Slots](#slots)
   - [Events](#events)
@@ -38,7 +39,6 @@ A Kong UI dynamic sidebar component.
 - `@kong/kongponents` must be available as a `dependency` in the host application, along with the package's style imports. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents). Specifically, the following Kongponents must be available:
   - `KDropdownItem`
   - `KDropdown`
-  - `KIcon`
   - `KTooltip`
 - The sidebar is set to `position: fixed` and is expected to render at 100% of the viewport height. This means your Navbar, etc. should never be placed above the sidebar unless on mobile.
 - If L2 sidebar items have required `route.params` in their route, they must be properly declared in the `item.to` property. Example:
@@ -49,7 +49,6 @@ A Kong UI dynamic sidebar component.
       name: 'Runtime Manager',
       key: 'runtime-manager',
       to: { name: 'runtime-manager' },
-      icon: 'runtimes',
       // Require the 'runtime-manager' page to be active and expanded to render the L2 items
       items: active('runtime-manager') && !!String(currentRoute?.params.control_plane_id || '') && [
         {
@@ -77,6 +76,33 @@ A Kong UI dynamic sidebar component.
 You will likely want to utilize a wrapper component in your application to generate the dynamic sidebar items, so import the `AppSidebar` component and the package styles into your wrapper component.
 
 You will also need to utilize a factory function (e.g. a composable) in order to generate and update your sidebar menu items.
+
+### Sidebar Icons
+
+Each primary SidebarItem `key` generates a `sidebar-icon-{key}` slot in the `AppSidebar`, and a corresponding slot in the `AppLayout` component in order to slot in sidebar icons from `@kong/icons`.
+
+```html
+<template>
+  <AppLayout :sidebar-top-items="sidebarItemsTop">
+    <template #sidebar-icon-overview>
+      <OverviewIcon :size="KUI_ICON_SIZE_40" />
+    </template>
+  </AppLayout>
+</template>
+
+<script setup lang="ts">
+import { OverviewIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
+
+const sidebarItemsTop = [
+  {
+    key: 'overview',
+    name: 'Overview',
+    to: '/sidebar/?overview',
+  },
+]
+</script>
+```
 
 ### Props
 
@@ -360,21 +386,18 @@ export const useSidebar = () => {
         key: 'organizations',
         to: { name: 'organizations' },
         active: active('root-organizations'), // L1 active() name must point to the root parent
-        icon: 'organizations',
       },
       {
         name: 'Users',
         key: 'users',
         to: { name: 'users' },
         active: active('root-users'), // L1 active() name must point to the root parent
-        icon: 'profile',
       },
       {
         name: 'Control Planes',
         key: 'control-planes',
         to: { name: 'control-planes' },
         active: active('root-control-planes'), // L1 active() name must point to the root parent
-        icon: 'workspaces',
       },
     ]
   }

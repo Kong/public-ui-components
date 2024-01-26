@@ -107,6 +107,16 @@
       </div>
     </template>
 
+    <template #sidebar-icon-api-gateway>
+      <RuntimesIcon :size="KUI_ICON_SIZE_40" />
+    </template>
+    <template #sidebar-icon-dev-portal>
+      <DevPortalIcon :size="KUI_ICON_SIZE_40" />
+    </template>
+    <template #sidebar-icon-analytics>
+      <BarChartIcon :size="KUI_ICON_SIZE_40" />
+    </template>
+
     <!-- Default slot content -->
 
     <p>This is the top.</p>
@@ -129,6 +139,7 @@ import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../../src'
 import AppGruceLogo from '../components/icons/AppGruceLogo.vue'
 import AppLogo from '../components/icons/AppLogo.vue'
 import { RuntimesIcon, DevPortalIcon, BarChartIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 
 const sidebarIsHidden = ref<boolean>(false)
 const toggleSidebar = (): void => {
@@ -167,7 +178,6 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       active: !activeItem.value || (activeItem.value as SidebarPrimaryItem)?.key === 'api-gateway',
       // TODO: actually when you click on API Gateway it would not expand until the user picks a runtime group
       expanded: !activeItem.value || (activeItem.value as SidebarPrimaryItem)?.key === 'api-gateway' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'api-gateway',
-      icon: RuntimesIcon,
       items: [
         {
           name: 'Runtime Instances',
@@ -218,7 +228,6 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'dev-portal',
       // This item can always show the subnav
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'dev-portal' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'dev-portal',
-      icon: DevPortalIcon,
       items: [
         {
           name: 'Published Services',
@@ -260,7 +269,6 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'analytics',
       // This item can always show the subnav
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'analytics' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'analytics',
-      icon: BarChartIcon,
       items: [
         {
           name: 'Overview',

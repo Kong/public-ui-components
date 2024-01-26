@@ -92,6 +92,13 @@
       >
         <slot name="sidebar-footer" />
       </template>
+      <template
+        v-for="item in [...(sidebar.topItems || []), ...(sidebar.bottomItems || [])]"
+        :key="item.key"
+        #[`sidebar-icon-${item.key}`]
+      >
+        <slot :name="`sidebar-icon-${(item as SidebarPrimaryItem).key}`" />
+      </template>
     </AppSidebar>
 
     <main
