@@ -23,7 +23,7 @@
         <div
           class="label"
           :class="{ 'truncate-label' : shouldTruncate }"
-          :title="position === ChartLegendPosition.Bottom && text"
+          :title="text"
         >
           {{ text }}
         </div>
