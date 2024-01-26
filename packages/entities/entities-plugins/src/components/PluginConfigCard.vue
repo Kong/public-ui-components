@@ -132,6 +132,27 @@
           :uuid="getPropValue('rowValue', slotProps).id"
         />
       </template>
+      <template #asset="slotProps">
+        <span v-if="!getPropValue('rowValue', slotProps)">–</span>
+        <InternalLinkItem
+          v-else-if="showIdAsLink"
+          :item="{
+            key: getPropValue('rowValue', slotProps).id,
+            value: getPropValue('rowValue', slotProps).id,
+            type: ConfigurationSchemaType.LinkInternal
+          }"
+          @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'asset')"
+        />
+        <CopyUuid
+          v-else
+          data-testid="consumer-group-copy-uuid"
+          :notify="() => { }"
+          :success-tooltip="t('copy.success_tooltip')"
+          :tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
+          :truncated="false"
+          :uuid="getPropValue('rowValue', slotProps).id"
+        />
+      </template>
     </EntityBaseConfigCard>
   </div>
 </template>
@@ -268,10 +289,15 @@ const configSchema = computed((): ConfigurationSchema => {
       section: ConfigurationSchemaSection.Basic,
       order: 6,
     },
+    asset: {
+      label: t('plugins.fields.asset'),
+      section: ConfigurationSchemaSection.Basic,
+      order: 7,
+    },
     protocols: {
       type: ConfigurationSchemaType.BadgeTag,
       section: ConfigurationSchemaSection.Basic,
-      order: 7,
+      order: 8,
     },
   }
 })
