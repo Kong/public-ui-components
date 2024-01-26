@@ -151,7 +151,7 @@ export default function useExploreResultToTimeDataset(
             return { x: ts, y: 0 }
           })
 
-          let { colorPalette, fill } = deps
+          let { colorPalette, fill, borderWidth } = deps
 
           if (isNullOrUndef(colorPalette)) {
             colorPalette = datavisPalette
@@ -176,6 +176,7 @@ export default function useExploreResultToTimeDataset(
             total: filled.reduce((acc, { y }) => acc + Number(y), 0),
             ...defaultLineOptions,
             fill,
+            borderWidth: borderWidth && !fill,  // only show chart line if single dimension, and not "filled"
           }
         })
 

@@ -202,6 +202,7 @@ const computedChartData = computed(() => {
   return isTimeSeriesChart.value
     ? composables.useExploreResultToTimeDataset(
       {
+        borderWidth: 2,
         fill: props.chartOptions.fill,
         colorPalette: props.chartOptions.chartDatasetColors || datavisPalette,
       },
