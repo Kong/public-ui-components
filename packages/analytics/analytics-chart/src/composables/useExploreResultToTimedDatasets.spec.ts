@@ -4,6 +4,7 @@ import { describe, it, expect, vitest } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
+import { BORDER_WIDTH, NO_BORDER } from '../utils'
 
 const START_FOR_DAILY_QUERY = new Date(1672560000000)
 const END_FOR_DAILY_QUERY = new Date(1672646400000)
@@ -497,7 +498,7 @@ it('handles multiple metrics', () => {
         ],
         total: 4,
         lineTension: 0,
-        borderWidth: 0,
+        borderWidth: BORDER_WIDTH,
         pointBorderWidth: 1.2,
         borderJoinStyle: 'round',
         fill: false,
@@ -520,7 +521,7 @@ it('handles multiple metrics', () => {
         ],
         total: 6,
         lineTension: 0,
-        borderWidth: 0,
+        borderWidth: BORDER_WIDTH,
         pointBorderWidth: 1.2,
         borderJoinStyle: 'round',
         fill: false,
@@ -529,4 +530,80 @@ it('handles multiple metrics', () => {
   )
 
   expect(result.value.datasets[0].label).toEqual('metric1')
+})
+
+it('borderWidth 0 when fill === true', () => {
+  const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
+    records: [
+      {
+        version: 'v1',
+        timestamp: START_FOR_DAILY_QUERY.toISOString(),
+        event: {
+          metric1: 1,
+        },
+      },
+      {
+        version: 'v1',
+        timestamp: END_FOR_DAILY_QUERY.toISOString(),
+        event: {
+          metric1: 3,
+        },
+      },
+    ],
+    meta: {
+      start: Math.trunc(START_FOR_DAILY_QUERY.getTime() / 1000),
+      end: Math.trunc(END_FOR_DAILY_QUERY.getTime() / 1000),
+      granularity: 86400000,
+      metricNames: [
+        'metric1',
+      ],
+      queryId: '',
+      metricUnits: { metric1: 'units', metric2: 'units' },
+      dimensions: {},
+    },
+  }))
+  const result = useExploreResultToTimeDataset(
+    { fill: true },
+    exploreResult,
+  )
+
+  expect(result.value.datasets[0].borderWidth).toEqual(NO_BORDER)
+})
+
+it('borderWidth set when fill === false', () => {
+  const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
+    records: [
+      {
+        version: 'v1',
+        timestamp: START_FOR_DAILY_QUERY.toISOString(),
+        event: {
+          metric1: 1,
+        },
+      },
+      {
+        version: 'v1',
+        timestamp: END_FOR_DAILY_QUERY.toISOString(),
+        event: {
+          metric1: 3,
+        },
+      },
+    ],
+    meta: {
+      start: Math.trunc(START_FOR_DAILY_QUERY.getTime() / 1000),
+      end: Math.trunc(END_FOR_DAILY_QUERY.getTime() / 1000),
+      granularity: 86400000,
+      metricNames: [
+        'metric1',
+      ],
+      queryId: '',
+      metricUnits: { metric1: 'units', metric2: 'units' },
+      dimensions: {},
+    },
+  }))
+  const result = useExploreResultToTimeDataset(
+    { fill: false },
+    exploreResult,
+  )
+
+  expect(result.value.datasets[0].borderWidth).toEqual(BORDER_WIDTH)
 })
