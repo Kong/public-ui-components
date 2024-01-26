@@ -1,3 +1,4 @@
+import AssetConfigCard from './components/AssetConfigCard.vue'
 import AssetForm from './components/AssetForm.vue'
 import AssetList from './components/AssetList.vue'
 
@@ -12,6 +13,6 @@ import AssetList from './components/AssetList.vue'
 //   },
 // }
 
-export { AssetList, AssetForm }
+export { AssetConfigCard, AssetList, AssetForm }
 
 export * from './types'
