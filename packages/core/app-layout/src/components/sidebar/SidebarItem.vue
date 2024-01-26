@@ -31,11 +31,6 @@
               v-if="!subnavItem"
               :name="`sidebar-icon-${(item as SidebarPrimaryItem).key}`"
             />
-            <!-- <component
-              :is="(item as SidebarPrimaryItem).icon"
-              v-if="(item as SidebarPrimaryItem).icon"
-              :size="KUI_ICON_SIZE_40"
-            /> -->
           </div>
           <div class="sidebar-item-name-container">
             <div
@@ -94,7 +89,6 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../../types'
 import ItemBadge from './ItemBadge.vue'
-import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 
 const emit = defineEmits(['click'])
 

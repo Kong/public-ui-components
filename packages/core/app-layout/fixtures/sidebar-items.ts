@@ -5,13 +5,11 @@ export const topItems = [
     name: 'Overview',
     key: 'overview',
     to: { name: 'overview' },
-    icon: OverviewIcon,
   },
   {
     name: 'Gateway Manager',
     key: 'runtime-manager',
     to: { name: 'runtime-manager' },
-    icon: RuntimesIcon,
     label: 'runtime-group-name',
     items: [
       {
@@ -27,7 +25,6 @@ export const bottomItems = [
     name: 'Organization',
     key: 'organization',
     to: { name: 'organization' },
-    icon: PeopleIcon,
     items: [
       {
         name: 'Teams',
@@ -43,7 +40,6 @@ export const bottomItems = [
     name: 'Settings',
     key: 'settings',
     to: { name: 'settings' },
-    icon: CogIcon,
     items: [
       {
         name: 'Billing and Usage',

@@ -9,7 +9,6 @@ A Kong UI application layout component that provides a responsive navbar, sideba
   - [Vue Plugin](#vue-plugin)
   - [In-Component registration](#in-component-registration)
 - [Usage](#usage)
-  - [Sidebar Icons](#sidebar-icons)
   - [Props](#props)
   - [Slots](#slots)
   - [Teleport Containers](#teleport-containers)
@@ -80,33 +79,6 @@ import { AppLayout } from '@kong-ui-public/app-layout'
 ## Usage
 
 > **Note**: TODO - for now, you can reference the sandbox app `pnpm --filter "@kong-ui-public/app-layout" run dev`
-
-### Sidebar Icons
-
-Each primary SidebarItem `key` generates a `sidebar-icon-{key}` slot in the `AppSidebar`, and a corresponding slot in the `AppLayout` component in order to slot in sidebar icons from `@kong/icons`.
-
-```html
-<template>
-  <AppLayout :sidebar-top-items="sidebarItemsTop">
-    <template #sidebar-icon-overview>
-      <OverviewIcon :size="KUI_ICON_SIZE_40" />
-    </template>
-  </AppLayout>
-</template>
-
-<script setup lang="ts">
-import { OverviewIcon } from '@kong/icons'
-import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
-
-const sidebarItemsTop = [
-  {
-    key: 'overview',
-    name: 'Overview',
-    to: '/sidebar/?overview',
-  },
-]
-</script>
-```
 
 ### Props
 
