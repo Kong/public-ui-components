@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.16...@kong-ui-public/analytics-chart@1.1.17) (2024-01-29)
+
+
+### Bug Fixes
+
+* values should not display when legend snaps to the bottom ([#1123](https://github.com/Kong/public-ui-components/issues/1123)) ([0bba35a](https://github.com/Kong/public-ui-components/commit/0bba35a7404698eadac2b5abbfbce5b1f8fe9830))
+
+
+
+
+
 ## [1.1.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.15...@kong-ui-public/analytics-chart@1.1.16) (2024-01-29)
 
 
