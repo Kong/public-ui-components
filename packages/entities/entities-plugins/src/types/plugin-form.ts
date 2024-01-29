@@ -37,7 +37,9 @@ export interface BasePluginFormConfig {
   disableConsumerGroupScope?: boolean
 }
 
-export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig {}
+export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig {
+  enableStreamingPlugins?: boolean
+}
 
 /** Konnect Plugin form config */
 export interface KonnectPluginSelectConfig extends BasePluginSelectConfig, KonnectBaseFormConfig {

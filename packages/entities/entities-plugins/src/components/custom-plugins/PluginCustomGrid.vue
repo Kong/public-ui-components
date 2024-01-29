@@ -10,13 +10,15 @@
       <!-- this will only be shown if not allowed to create custom plugins -->
       <template #title>
         <span class="empty-state-title">
-          {{ t('plugins.select.tabs.custom.empty_title') }}
+          {{ !streamingPlugins ? t('plugins.select.tabs.custom.empty_title') :
+            t('plugins.select.tabs.streaming.empty_title') }}
         </span>
       </template>
 
       <template #message>
         <span class="empty-state-description">
-          {{ t('plugins.select.tabs.custom.empty_description') }}
+          {{ !streamingPlugins ? t('plugins.select.tabs.custom.empty_description') :
+            t('plugins.select.tabs.streaming.empty_description') }}
         </span>
       </template>
     </KEmptyState>
@@ -26,7 +28,7 @@
       v-model="shouldCollapsedCustomPlugins"
       class="custom-plugins-collapse"
       :data-testid="`${PluginGroup.CUSTOM_PLUGINS}-collapse`"
-      :title="PluginGroup.CUSTOM_PLUGINS"
+      :title="!props.streamingPlugins ? PluginGroup.CUSTOM_PLUGINS : PluginGroup.STREAMING_PLUGINS"
       :trigger-label="triggerLabel"
     >
       <!-- don't display a trigger if all plugins will already be visible -->
@@ -44,7 +46,7 @@
             :can-delete-custom-plugin="canDeleteCustomPlugin"
             :can-edit-custom-plugin="canEditCustomPlugin"
             :config="config"
-            :navigate-on-click="navigateOnClick"
+            :navigate-on-click="(!props.streamingPlugins || plugin.id !== 'custom-plugin-create') && navigateOnClick"
             :plugin="plugin"
             @custom-plugin-delete="handleCustomPluginDelete(plugin)"
             @plugin-clicked="emitPluginData"
@@ -59,7 +61,7 @@
           :can-delete-custom-plugin="canDeleteCustomPlugin"
           :can-edit-custom-plugin="canEditCustomPlugin"
           :config="config"
-          :navigate-on-click="navigateOnClick"
+          :navigate-on-click="(!props.streamingPlugins || plugin.id !== 'custom-plugin-create') && navigateOnClick"
           :plugin="plugin"
           @plugin-clicked="emitPluginData"
         />
@@ -77,15 +79,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, type PropType } from 'vue'
+import { type Asset, type AssetPluginMetadata } from '@kong-ui-public/entities-assets'
+import { useAxios } from '@kong-ui-public/entities-shared'
+import { computed, onBeforeMount, ref, type PropType } from 'vue'
+import composables from '../../composables'
+import endpoints from '../../plugins-endpoints'
 import {
   PluginGroup,
   type KongManagerPluginSelectConfig,
   type KonnectPluginSelectConfig,
-  type PluginType,
   type PluginCardList,
+  type PluginType,
 } from '../../types'
-import composables from '../../composables'
 import PluginSelectCard from '../select/PluginSelectCard.vue'
 import DeleteCustomPluginSchemaModal from './DeleteCustomPluginSchemaModal.vue'
 
@@ -143,6 +148,15 @@ const props = defineProps({
     type: Number,
     default: 4,
   },
+
+  streamingPlugins: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const { axiosInstance } = useAxios({
+  headers: props.config.requestHeaders,
 })
 
 const emit = defineEmits<{
@@ -155,25 +169,27 @@ const { i18n: { t } } = composables.useI18n()
 const { getPluginCards } = composables.usePluginHelpers()
 const shouldCollapsedCustomPlugins = ref(true)
 
+const pluginsFromAssets = ref<PluginType[]>([])
+
 const emitPluginData = (plugin: PluginType) => {
   emit('plugin-clicked', plugin)
 }
 
 const modifiedCustomPlugins = computed((): PluginType[] => {
-  if (props.config.app === 'kongManager') {
+  if (props.config.app === 'kongManager' && !props.streamingPlugins) {
     return []
   }
 
-  const customPlugins: PluginType[] = JSON.parse(JSON.stringify(props.pluginList))[PluginGroup.CUSTOM_PLUGINS] || []
+  const customPlugins: PluginType[] = !props.streamingPlugins ? JSON.parse(JSON.stringify(props.pluginList))[PluginGroup.CUSTOM_PLUGINS] || [] : pluginsFromAssets.value
 
   // ADD CUSTOM_PLUGIN_CREATE as the first card if allowed creation
   return props.canCreateCustomPlugin && props.navigateOnClick && props.config.createCustomRoute
     ? ([{
       id: 'custom-plugin-create',
-      name: t('plugins.select.tabs.custom.create.name'),
+      name: !props.streamingPlugins ? t('plugins.select.tabs.custom.create.name') : t('plugins.select.tabs.streaming.create.name'),
       available: true,
-      group: PluginGroup.CUSTOM_PLUGINS,
-      description: t('plugins.select.tabs.custom.create.description'),
+      group: !props.streamingPlugins ? PluginGroup.CUSTOM_PLUGINS : PluginGroup.STREAMING_PLUGINS,
+      description: !props.streamingPlugins ? t('plugins.select.tabs.custom.create.description') : t('plugins.select.tabs.streaming.create.description'),
     }] as PluginType[]).concat(customPlugins)
     : customPlugins
 })
@@ -210,62 +226,86 @@ const handleClose = (revalidate?: boolean): void => {
   openDeleteModal.value = false
   selectedPlugin.value = null
 }
+
+onBeforeMount(async () => {
+  if (props.streamingPlugins) {
+    const { data } = await axiosInstance.get(`${props.config.apiBaseUrl}${endpoints.select.kongManager.assetsForOss}?size=1000`)
+    const assets: Asset[] = data.data
+
+    pluginsFromAssets.value = Array.from(assets.reduce((plugins, asset) => {
+      if (asset.metadata.type === 'plugin') {
+        const plugin = (asset.metadata as AssetPluginMetadata).plugin_name
+        if (!plugins.has(plugin)) {
+          plugins.add(plugin)
+        }
+      }
+
+      return plugins
+    }, new Set<string>()).keys()).map((plugin) => ({
+      id: plugin,
+      name: plugin,
+      available: true,
+      group: PluginGroup.CUSTOM_PLUGINS,
+      description: '',
+    } as PluginType))
+  }
+})
 </script>
 
 <style lang="scss" scoped>
-  :deep(.empty-state-wrapper) {
-    .custom-plugins-empty-state {
-      padding-bottom: $kui-space-0;
+:deep(.empty-state-wrapper) {
+  .custom-plugins-empty-state {
+    padding-bottom: $kui-space-0;
 
-      .empty-state-title {
-        font-size: $kui-font-size-40;
-        font-weight: $kui-font-weight-semibold;
-      }
+    .empty-state-title {
+      font-size: $kui-font-size-40;
+      font-weight: $kui-font-weight-semibold;
+    }
 
-      .empty-state-description {
-        font-size: $kui-font-size-30;
-        margin-left: $kui-space-60;
-        margin-right: $kui-space-60;
-      }
+    .empty-state-description {
+      font-size: $kui-font-size-30;
+      margin-left: $kui-space-60;
+      margin-right: $kui-space-60;
     }
   }
+}
 
-  .plugins-collapse {
-    margin-bottom: $kui-space-90;
+.plugins-collapse {
+  margin-bottom: $kui-space-90;
+}
+
+.plugin-card-container {
+  column-gap: 50px;
+  display: grid;
+  grid-auto-rows: 1fr;
+  margin-top: $kui-space-90;
+  row-gap: $kui-space-90;
+
+  :deep(.kong-card) {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    margin: $kui-space-0;
+    padding: $kui-space-0;
+    text-align: center;
   }
 
-  .plugin-card-container {
-    column-gap: 50px;
-    display: grid;
-    grid-auto-rows: 1fr;
-    margin-top: $kui-space-90;
-    row-gap: $kui-space-90;
-
-    :deep(.kong-card) {
-      display: flex;
-      flex: 1 0 0;
-      flex-direction: column;
-      margin: $kui-space-0;
-      padding: $kui-space-0;
-      text-align: center;
-    }
-
-    :deep(.k-card-body) {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-    }
-
-    @media (min-width: $kui-breakpoint-phablet) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (min-width: $kui-breakpoint-tablet) {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    @media (min-width: $kui-breakpoint-laptop) {
-      grid-template-columns: repeat(4, 1fr);
-    }
+  :deep(.k-card-body) {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
   }
+
+  @media (min-width: $kui-breakpoint-phablet) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: $kui-breakpoint-tablet) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: $kui-breakpoint-laptop) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
 </style>

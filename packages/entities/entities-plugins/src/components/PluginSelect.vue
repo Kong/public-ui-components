@@ -15,9 +15,7 @@
         :table-rows="1"
         type="table"
       >
-        <KSkeletonBox
-          width="6"
-        />
+        <KSkeletonBox width="6" />
         <KSkeletonBox
           class="title-loading-skeleton"
           width="6"
@@ -94,6 +92,28 @@
               :navigate-on-click="navigateOnClick"
               :plugin-list="filteredPlugins"
               :plugins-per-row="pluginsPerRow"
+              @delete:success="(name: string) => $emit('delete-custom:success', name)"
+              @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
+              @revalidate="() => pluginsList = buildPluginList()"
+            />
+          </div>
+        </template>
+
+        <template #streaming>
+          <div data-testid="streaming-tab">
+            <p class="tab-description">
+              {{ t('plugins.select.tabs.streaming.description') }}
+            </p>
+
+            <PluginCustomGrid
+              :can-create-custom-plugin="true"
+              :can-delete-custom-plugin="false"
+              :can-edit-custom-plugin="false"
+              :config="config"
+              :navigate-on-click="navigateOnClick"
+              :plugin-list="filteredPlugins"
+              :plugins-per-row="pluginsPerRow"
+              streaming-plugins
               @delete:success="(name: string) => $emit('delete-custom:success', name)"
               @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
               @revalidate="() => pluginsList = buildPluginList()"
@@ -276,7 +296,17 @@ const tabs = props.config.app === 'konnect'
       title: t('plugins.select.tabs.custom.title'),
     },
   ]
-  : []
+  : props.config.app === 'kongManager' && props.config.enableStreamingPlugins
+    ? [
+      {
+        hash: '#kong',
+        title: t('plugins.select.tabs.classic.title'),
+      }, {
+        hash: '#streaming',
+        title: t('plugins.select.tabs.streaming.title'),
+      }]
+    : []
+
 const activeTab = ref(tabs.length ? route?.hash || tabs[0]?.hash || '' : '')
 
 const buildPluginList = (): PluginCardList => {

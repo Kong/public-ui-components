@@ -783,6 +783,9 @@ importers:
       '@kong-ui-public/copy-uuid':
         specifier: workspace:^
         version: link:../../core/copy-uuid
+      '@kong-ui-public/entities-assets':
+        specifier: workspace:^
+        version: link:../entities-assets
       '@kong-ui-public/entities-consumer-groups':
         specifier: workspace:^
         version: link:../entities-consumer-groups

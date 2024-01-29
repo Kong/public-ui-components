@@ -476,6 +476,22 @@
             "name": "Custom Plugin",
             "description": "Upload schema file to create custom plugin"
           }
+        },
+        "classic": {
+          "title": "Classic Plugins",
+          "description": "Classic plugins include those bundled by default with Kong Gateway, as well as those that are custom-enabled.",
+          "empty_title": "No Plugins",
+          "empty_description": "No plugins are available."
+        },
+        "streaming": {
+          "title": "Streaming Plugins",
+          "description": "Plugins available for streaming",
+          "empty_title": "No Plugins",
+          "empty_description": "No plugins are available.",
+          "create": {
+            "name": "Add Plugin",
+            "description": "Upload a packed plugin"
+          }
         }
       }
     },

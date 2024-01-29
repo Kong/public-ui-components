@@ -9,6 +9,7 @@ export enum PluginGroup {
   DEPLOYMENT = 'Deployment',
   WEBSOCKET = 'WebSocket Plugins',
   CUSTOM_PLUGINS = 'Custom Plugins',
+  STREAMING_PLUGINS = 'Streaming Plugins',
 }
 
 export const PluginGroupArray = [

@@ -182,7 +182,9 @@ const submitData = async (): Promise<void> => {
     const formData = new FormData()
     formData.append('name', state.fields.name)
     formData.append('url', state.fields.url)
-    formData.append('content', state.fields.file as File)
+    if (state.fields.file) {
+      formData.append('content', state.fields.file as File)
+    }
 
     // FIXME: Skipping the validation. Do we really need this?
     // await axiosInstance.post(getUrl('validate'), formData)
@@ -190,7 +192,7 @@ const submitData = async (): Promise<void> => {
     if (formType.value === 'create') {
       response = await axiosInstance.post(getUrl('create'), formData)
     } else if (formType.value === 'edit') {
-      throw new Error('stub')
+      response = await axiosInstance.patch(getUrl('edit'), formData)
     }
 
     updateFormValues(response?.data)

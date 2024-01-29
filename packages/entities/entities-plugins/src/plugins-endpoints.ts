@@ -16,6 +16,7 @@ export default {
     kongManager: {
       availablePlugins: '/{workspace}/kong',
       availablePluginsForOss: '/',
+      assetsForOss: '/assets',
     },
   },
   form: {

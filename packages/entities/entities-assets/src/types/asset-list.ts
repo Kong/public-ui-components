@@ -29,8 +29,8 @@ export interface KongManagerAssetListConfig extends KongManagerBaseTableConfig, 
 
 export interface EntityRow extends Record<string, any> {
   id: string;
-  username: string
-  custom_id: string
+  name:string;
+  url: string;
 }
 
 /** Copy field event payload */
