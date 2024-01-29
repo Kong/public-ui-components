@@ -46,7 +46,7 @@
             :can-delete-custom-plugin="canDeleteCustomPlugin"
             :can-edit-custom-plugin="canEditCustomPlugin"
             :config="config"
-            :navigate-on-click="(!props.streamingPlugins || plugin.id !== 'custom-plugin-create') && navigateOnClick"
+            :navigate-on-click="!props.streamingPlugins && navigateOnClick"
             :plugin="plugin"
             @custom-plugin-delete="handleCustomPluginDelete(plugin)"
             @plugin-clicked="emitPluginData"
@@ -61,7 +61,7 @@
           :can-delete-custom-plugin="canDeleteCustomPlugin"
           :can-edit-custom-plugin="canEditCustomPlugin"
           :config="config"
-          :navigate-on-click="(!props.streamingPlugins || plugin.id !== 'custom-plugin-create') && navigateOnClick"
+          :navigate-on-click="!props.streamingPlugins && navigateOnClick"
           :plugin="plugin"
           @plugin-clicked="emitPluginData"
         />
@@ -232,22 +232,29 @@ onBeforeMount(async () => {
     const { data } = await axiosInstance.get(`${props.config.apiBaseUrl}${endpoints.select.kongManager.assetsForOss}?size=1000`)
     const assets: Asset[] = data.data
 
-    pluginsFromAssets.value = Array.from(assets.reduce((plugins, asset) => {
+    const plugins = assets.reduce((plugins, asset) => {
       if (asset.metadata.type === 'plugin') {
         const plugin = (asset.metadata as AssetPluginMetadata).plugin_name
-        if (!plugins.has(plugin)) {
-          plugins.add(plugin)
+        if (!(plugin in plugins)) {
+          plugins[plugin] = {
+            plugin,
+            assetId: asset.id,
+          }
         }
       }
 
       return plugins
-    }, new Set<string>()).keys()).map((plugin) => ({
-      id: plugin,
-      name: plugin,
-      available: true,
-      group: PluginGroup.CUSTOM_PLUGINS,
-      description: '',
-    } as PluginType))
+    }, {} as { [plugin: string]: { plugin: string; assetId: string } })
+
+    pluginsFromAssets.value = Object.values(plugins)
+      .map((plugin) => ({
+        id: plugin.plugin,
+        name: plugin.plugin,
+        available: true,
+        group: PluginGroup.STREAMING_PLUGINS,
+        description: '',
+        assetId: plugin.assetId,
+      } as PluginType))
   }
 })
 </script>
