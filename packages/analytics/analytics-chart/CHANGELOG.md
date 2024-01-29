@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.14...@kong-ui-public/analytics-chart@1.1.15) (2024-01-29)
+
+
+### Bug Fixes
+
+* **analytics-chart:** full legend label text on hover in all positions ([#1117](https://github.com/Kong/public-ui-components/issues/1117)) ([3301262](https://github.com/Kong/public-ui-components/commit/3301262f078978e15ce91ab3f5fe95a014c65180))
+
+
+
+
+
 ## [1.1.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.13...@kong-ui-public/analytics-chart@1.1.14) (2024-01-26)
 
 
