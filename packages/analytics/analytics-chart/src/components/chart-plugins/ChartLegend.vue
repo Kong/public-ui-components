@@ -260,6 +260,10 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
       justify-content: center;
       max-height: 12%;
       width: 99%;
+
+      .sub-label {
+        display: none;
+      }
     }
   }
 
