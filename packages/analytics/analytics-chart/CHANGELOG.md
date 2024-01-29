@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.15...@kong-ui-public/analytics-chart@1.1.16) (2024-01-29)
+
+
+### Bug Fixes
+
+* style improvements + scrollbar updates in tooltip for consistency ([#1118](https://github.com/Kong/public-ui-components/issues/1118)) ([acf36be](https://github.com/Kong/public-ui-components/commit/acf36be6f6245bf1ca080f068f0ae7db7303fc3e))
+
+
+
+
+
 ## [1.1.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.14...@kong-ui-public/analytics-chart@1.1.15) (2024-01-29)
 
 
