@@ -277,7 +277,7 @@ export const usePluginMetaData = () => {
       group: PluginGroup.TRANSFORMATIONS,
       isEnterprise: true,
       name: t('plugins.meta.ai-prompt-template.name'),
-      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+      scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
     },
     'ai-prompt-guard': {
       description: t('plugins.meta.ai-prompt-guard.description'),
