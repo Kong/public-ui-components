@@ -4,7 +4,7 @@
     title="Analytics Charts"
   >
     <template #controls>
-      <div class="flex-row-parent">
+      <div class="sandbox-container">
         <!-- AnalyticsChart / SimpleChart type selector -->
         <div class="flex-vertical">
           <KLabel>Chart Type</KLabel>
@@ -28,13 +28,11 @@
               </KRadio>
             </div>
           </div>
-          <br>
-        </div>
 
-        <!-- Legend position -->
-        <div class="flex-vertical">
-          <KLabel>Legend position</KLabel>
-          <div class="chart-radio-group">
+          <!-- Legend position -->
+          <div class="flex-vertical">
+            <KLabel>Legend position</KLabel>
+
             <div>
               <KRadio
                 v-model="legendPosition"
@@ -63,32 +61,27 @@
               </KRadio>
             </div>
           </div>
+          <br>
+          <!-- Metric item selection -->
+          <KSelect
+            :items="metricItems"
+            label="Metric"
+            placeholder="Select Metric"
+            @selected="onMetricSelected"
+          />
         </div>
-        <br>
-        <!-- Metric item selection -->
-        <KSelect
-          :items="metricItems"
-          label="Metric"
-          placeholder="Select Metric"
-          @selected="onMetricSelected"
-        />
-        <br>
-      </div>
-      <br>
 
-      <!-- Dataset options -->
-      <KLabel>Dataset options</KLabel>
-      <div class="dataset-options">
-        <KButton
-          size="small"
-          @click="addDataset()"
-        >
-          Add dataset
-        </KButton>
-      </div>
-      <br>
+        <!-- Dataset options -->
+        <KLabel>Dataset options</KLabel>
+        <div class="dataset-options">
+          <KButton
+            size="small"
+            @click="addDataset()"
+          >
+            Add dataset
+          </KButton>
+        </div>
 
-      <div class="option-toggles">
         <KLabel>Option toggles</KLabel>
         <div>
           <KInputSwitch
@@ -132,32 +125,73 @@
             :label="emptyState ? 'Empty State' : 'Chart Has Data'"
           />
         </div>
-      </div>
-      <br>
+        <br>
 
-      <label>Import chart data</label>
-      <CodeText
-        v-model="exploreResultText"
-        :class="{ 'has-error': hasError, 'is-valid': isValid }"
-      />
+        <div class="config-container">
+          <div class="flex-vertical">
+            <button @click="exportCsv()">
+              Custom export csv click handler
+            </button>
+            <CsvExportModal
+              v-if="exportModalVisible"
+              :chart-data="(exploreResult as AnalyticsExploreV2Result)"
+              filename="asdf.csv"
+              @toggle-modal="setModalVisibility"
+            />
 
-      <div class="config-container">
-        <div
-          v-if="multiDimensionToggle"
-          class="config-container-row"
-        >
-          <KLabel>Colors</KLabel>
+            <CsvExportButton
+              button-appearance="primary"
+              :data="(exploreResult as AnalyticsExploreV2Result)"
+              filename-prefix="asdf"
+              text="Primary export csv button"
+            />
+            <CsvExportButton
+              button-appearance="secondary"
+              :data="(exploreResult as AnalyticsExploreV2Result)"
+              filename-prefix="asdf"
+              text="Secondary export csv button"
+            />
+            <CsvExportButton
+              button-appearance="tertiary"
+              :data="(exploreResult as AnalyticsExploreV2Result)"
+              filename-prefix="asdf"
+              text="Tertiary export csv button"
+            />
+            <CsvExportButton
+              button-appearance="danger"
+              :data="(exploreResult as AnalyticsExploreV2Result)"
+              filename-prefix="asdf"
+              text="Danger export csv button"
+            />
+          </div>
+        </div>
+
+        <br>
+
+        <label>Import chart data</label>
+        <CodeText
+          v-model="exploreResultText"
+          :class="{ 'has-error': hasError, 'is-valid': isValid }"
+        />
+
+        <div class="config-container">
           <div
-            v-for="([label, color], i) in Object.entries(colorPalette)"
-            :key="i"
-            class="color-palette-section flex-vertical"
+            v-if="multiDimensionToggle"
+            class="config-container-row"
           >
-            <label>{{ label }}</label>
-            <input
-              type="color"
-              :value="color"
-              @blur="updateSelectedColor($event, label)"
+            <KLabel>Colors</KLabel>
+            <div
+              v-for="([label, color], i) in Object.entries(colorPalette)"
+              :key="i"
+              class="color-palette-section flex-vertical"
             >
+              <label>{{ label }}</label>
+              <input
+                type="color"
+                :value="color"
+                @blur="updateSelectedColor($event, label)"
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -210,6 +244,8 @@ import {
   AnalyticsChart,
   ChartLegendPosition,
   ChartTypes,
+  CsvExportModal,
+  CsvExportButton,
 } from '../../src'
 import type { AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions } from '../../src/types'
@@ -275,6 +311,14 @@ const statusCodeDimensionValues = ref(new Set(statusCodeLabels))
 const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',
 ]))
+
+const exportModalVisible = ref(false)
+const setModalVisibility = (val: boolean) => {
+  exportModalVisible.value = val
+}
+const exportCsv = () => {
+  setModalVisibility(true)
+}
 
 const exploreResultText = ref()
 const hasError = computed(() => !isValidJson(exploreResultText.value))

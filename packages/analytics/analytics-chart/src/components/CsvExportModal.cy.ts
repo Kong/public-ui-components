@@ -17,7 +17,6 @@ describe('<CsvExportModal />', () => {
       props: {
         chartData: emptyExploreResult,
         filename: 'Total requests',
-        selectedRange: composables.useChartSelectedRange(computed(() => emptyExploreResult)),
       },
     })
 
@@ -31,7 +30,6 @@ describe('<CsvExportModal />', () => {
       props: {
         chartData: exploreResult,
         filename: 'Total requests',
-        selectedRange: composables.useChartSelectedRange(computed(() => exploreResult)),
       },
     })
 
@@ -70,7 +68,6 @@ describe('<CsvExportModal />', () => {
       props: {
         filename: 'Total requests',
         chartData: exploreV2Result,
-        selectedRange: composables.useChartSelectedRange(computed(() => exploreV2Result)),
       },
     })
 

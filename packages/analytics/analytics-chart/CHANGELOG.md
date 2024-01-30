@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.17...@kong-ui-public/analytics-chart@1.2.0) (2024-01-30)
+
+
+### Features
+
+* explore csv standalone ([#1119](https://github.com/Kong/public-ui-components/issues/1119)) ([09c1e2a](https://github.com/Kong/public-ui-components/commit/09c1e2a4234bfd055075ec76898265c03cfa84c5))
+
+
+
+
+
 ## [1.1.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.16...@kong-ui-public/analytics-chart@1.1.17) (2024-01-29)
 
 

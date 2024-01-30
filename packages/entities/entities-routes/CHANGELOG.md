@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@2.4.11...@kong-ui-public/entities-routes@2.4.12) (2024-01-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [2.4.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@2.4.10...@kong-ui-public/entities-routes@2.4.11) (2024-01-30)
+
+
+### Bug Fixes
+
+* **entities-routes:** fix routingRulesPerProtocolMap keys [KHCP-10486] ([#1126](https://github.com/Kong/public-ui-components/issues/1126)) ([9991842](https://github.com/Kong/public-ui-components/commit/9991842722c7fdf364435f1aae5e2a38eac5f369))
+
+
+
+
+
 ## [2.4.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@2.4.9...@kong-ui-public/entities-routes@2.4.10) (2024-01-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes

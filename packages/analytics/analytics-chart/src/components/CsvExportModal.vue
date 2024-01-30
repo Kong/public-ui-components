@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, toRef } from 'vue'
 
 import DownloadCsv from './DownloadCsv.vue'
 import composables from '../composables'
@@ -97,7 +97,6 @@ const { i18n } = composables.useI18n()
 const props = withDefaults(defineProps<{
   filename: string,
   modalDescription?: string,
-  selectedRange: string,
   chartData: AnalyticsExploreResult | AnalyticsExploreV2Result,
 }>(), {
   modalDescription: undefined,
@@ -111,6 +110,7 @@ const isLoading = ref<boolean>(true)
 const hasData = computed(() => !!props.chartData?.records?.length)
 const fetcherCacheKey = ref(1)
 const rowsTotal = computed(() => tableData.value.rows.length)
+const selectedRange = composables.useChartSelectedRange(toRef(props, 'chartData'))
 
 const previewMessage = computed(() => {
   return i18n.t('csvExport.previewRows', {
