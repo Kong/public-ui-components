@@ -23,4 +23,5 @@ export enum EntityTypes {
   jwt = 'JWT Credential',
   Target = 'target',
   Policy = 'policy',
+  Asset = 'asset',
 }

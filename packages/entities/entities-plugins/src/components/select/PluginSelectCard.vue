@@ -116,7 +116,7 @@ import composables from '../../composables'
 import PluginIcon from '../PluginIcon.vue'
 
 const emit = defineEmits<{
-  (e: 'plugin-clicked', plugin: PluginType) : void,
+  (e: 'plugin-clicked', plugin: PluginType): void,
   (e: 'custom-plugin-delete'): void, /** internal use only */
 }>()
 
@@ -198,7 +198,7 @@ const handleCustomEdit = (pluginName: string): void => {
 
 const handleCustomClick = (): void => {
   // handle custom plugin card click only
-  if (!isDisabled.value && props.config.app === 'konnect') {
+  if ((!isDisabled.value && props.config.app === 'konnect') || (props.config.app === 'kongManager' && props.config.enableStreamingPlugins)) {
     const konnectConfig = props.config as KonnectPluginSelectConfig
     if (isCreateCustomPlugin.value && konnectConfig.createCustomRoute) {
       router.push(konnectConfig.createCustomRoute)
@@ -225,7 +225,7 @@ const handleCustomClick = (): void => {
   padding: $kui-space-70 $kui-space-70 0;
 
   &:hover {
-    box-shadow: 0 0 5px rgba(33,33,33,.2);
+    box-shadow: 0 0 5px rgba(33, 33, 33, .2);
     text-decoration: none;
   }
 

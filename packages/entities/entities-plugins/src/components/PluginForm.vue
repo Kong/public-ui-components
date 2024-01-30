@@ -492,6 +492,21 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     }, {})
   }
 
+  initialFormSchema['asset-id'] = {
+    default: '',
+    type: 'AutoSuggest',
+    entity: 'assets',
+    inputValues: {
+      fields: ['name', 'id'],
+      primaryField: 'id',
+    },
+    label: t('plugins.form.fields.asset.label'),
+    inputType: 'text',
+    help: t('plugins.form.fields.asset.help'),
+    placeholder: t('plugins.form.fields.asset.placeholder'),
+    visible: false,
+  }
+
   // alphabetically sort the schema keys and handle specifial configuration for each field type
   Object.keys(schema).sort().forEach(key => {
     const scheme = schema[key]

@@ -47,7 +47,7 @@ const konnectConfig = ref<KonnectPluginEntityConfig>({
 })
 const kongManagerConfig = ref<KongManagerPluginEntityConfig>({
   app: 'kongManager',
-  workspace: 'default',
+  // workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   entityId: props.id,
   pluginType: props.plugin,

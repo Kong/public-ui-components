@@ -1,15 +1,10 @@
 <template>
   <div class="plugin-select-sandbox">
-    <h2>Konnect API</h2>
-    <PluginSelect
-      :config="konnectConfig"
-      :disabled-plugins="{ 'acl': 'ACL is not supported for this entity type'}"
-      @delete-custom:success="handleDeleteSuccess"
-    />
-
     <h2>Kong Manager API</h2>
     <PluginSelect
+      :can-create-custom-plugin="() => true"
       :config="kongManagerConfig"
+      enable-streaming
     />
   </div>
 </template>
@@ -49,11 +44,16 @@ const konnectConfig = ref<KonnectPluginSelectConfig>({
 
 const kongManagerConfig = ref<KongManagerPluginSelectConfig>({
   app: 'kongManager',
+  gatewayInfo: {
+    edition: 'community',
+    version: '3.6.0',
+  },
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   // force the scope
   // entityType: 'consumers',
   // entityId: '123-abc-i-lover-cats',
+  createCustomRoute: { name: 'assets-create' },
   getCreateRoute: (plugin: string) => ({
     name: 'create-plugin',
     params: {

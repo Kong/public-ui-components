@@ -272,6 +272,8 @@ export const useSchemas = (entityId?: string, app?: 'konnect' | 'kongManager') =
    * @param {*} formModel vfg form model to modify
    */
   const handleFieldForeign = (schema: Record<string, any>, formModel: Record<string, any>) => {
+    console.log('formModel', formModel)
+
     schema.type = 'input'
     schema.inputType = 'hidden'
     schema.styleClasses = 'kong-form-hidden-field-wrapper'

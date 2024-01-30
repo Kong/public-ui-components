@@ -1,0 +1,82 @@
+{
+  "assets": {
+    "list": {
+      "table_headers": {
+        "name": "Name",
+        "url": "URL",
+        "type": "Type"
+      },
+      "empty_state": {
+        "title": "Configure a New Asset",
+        "description": "Assets are the end users of a service.",
+        "title_for_asset_group": "Configure a New Asset"
+      },
+      "toolbar_actions": {
+        "new_asset": "New Asset"
+      }
+    },
+    "title": "Assets",
+    "search": {
+      "placeholder": {
+        "konnect": "Filter by name",
+        "kongManager": "Filter by exact name"
+      }
+    },
+    "actions": {
+      "add_asset": "Add Asset",
+      "create_plugin": "Create Plugin",
+      "create": "New Asset",
+      "copy_id": "Copy ID",
+      "copy_json": "Copy JSON",
+      "edit": "Edit",
+      "delete": "Delete",
+      "remove": "Remove",
+      "view": "View Details"
+    },
+    "delete": {
+      "title": "Delete a Asset",
+      "description": "Deleting this asset will also remove this asset from any associated asset group. This action cannot be reversed."
+    },
+    "errors": {
+      "general": "Assets could not be retrieved",
+      "delete": "The asset could not be deleted at this time.",
+      "copy": "Failed to copy to clipboard",
+      "add": "Some assets could not be added at this time.",
+      "already_added": "This asset has already been added to the asset group"
+    },
+    "copy": {
+      "success": "Copied {val} to clipboard",
+      "success_brief": "Successfully copied to clipboard"
+    },
+    "form": {
+      "title": "Asset Identification",
+      "info": {
+        "title": "General Information",
+        "description": "General information will help identify and manage added asset."
+      }
+    },
+    "fields": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter a unique name",
+        "tooltip": "The name of the asset."
+      },
+      "url": {
+        "label": "URL",
+        "placeholder": "External URL of the asset, like s3://bucket/plugin-a-v1",
+        "tooltip": "External URL of the asset."
+      },
+      "content": {
+        "label": "Content",
+        "placeholder": "Select an archive file to upload",
+        "tooltip": ""
+      },
+      "tags": {
+        "label": "Tags",
+        "placeholder": "Enter a list of tags separated by comma",
+        "help": "e.g. tag1, tag2, tag3",
+        "tooltip": "An optional set of strings associated with the Asset for grouping and filtering."
+      }
+    }
+  }
+}

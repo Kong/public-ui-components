@@ -55,7 +55,7 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
 
 const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   app: 'kongManager',
-  workspace: 'default',
+  // workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   // force the scope
   // entityType: 'consumers',
