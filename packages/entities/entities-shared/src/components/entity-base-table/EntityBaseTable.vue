@@ -31,7 +31,7 @@
       :search-input="query"
       @ktable-empty-state-cta-clicked="handleEmptyStateCtaClicked"
       @row:click="handleRowClick"
-      @sort="(params: TableSortParams) => handleSortChanged(params as TableSortParams)"
+      @sort="(params: TableSortParams) => handleSortChanged(params)"
       @update:table-preferences="handleUpdateTablePreferences"
     >
       <template #toolbar="{ state }">
@@ -334,7 +334,7 @@ const handleRowClick = computed(() => {
     }
 })
 
-const handleSortChanged = (sortParams: TableSortParams) => {
+const handleSortChanged = (sortParams: TableSortParams): void => {
   emit('sort', sortParams)
 }
 
