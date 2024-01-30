@@ -61,8 +61,8 @@ export enum TimeRangeTypeV2 {
 export interface AbsoluteTimeRangeV4 {
   type: TimeRangeTypeV2.absolute
   tz?: string
-  start?: Date
-  end?: Date
+  start: Date
+  end: Date
 }
 
 export enum RelativeTimeRangeValuesV4 {
