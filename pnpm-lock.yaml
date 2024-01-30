@@ -30,8 +30,8 @@ importers:
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
       '@rushstack/eslint-patch':
-        specifier: ^1.6.1
-        version: 1.6.1
+        specifier: ^1.7.0
+        version: 1.7.0
       '@types/flat':
         specifier: ^5.0.5
         version: 5.0.5
@@ -989,8 +989,8 @@ importers:
         specifier: 9.0.0-alpha.95
         version: 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
       '@modyfi/vite-plugin-yaml':
-        specifier: ^1.0.4
-        version: 1.0.4(vite@5.0.12)
+        specifier: ^1.1.0
+        version: 1.1.0(vite@5.0.12)
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -2409,12 +2409,12 @@ packages:
       call-bind: 1.0.5
     dev: true
 
-  /@modyfi/vite-plugin-yaml@1.0.4(vite@5.0.12):
-    resolution: {integrity: sha512-qkT0KiR3AQQRfUvDzLv4+1rYAzXj+QmGhAbyUd0Ordf9xynK76i758lk5GiEfxuQxbvdqDaJ9oXkH/KacbSjQQ==}
+  /@modyfi/vite-plugin-yaml@1.1.0(vite@5.0.12):
+    resolution: {integrity: sha512-L26xfzkSo1yamODCAtk/ipVlL6OEw2bcJ92zunyHu8zxi7+meV0zefA9xscRMDCsMY8xL3C3wi3DhMiPxcbxbw==}
     peerDependencies:
-      vite: ^2.6.0 || ^3.0.0 || ^4.0.0
+      vite: ^3.2.7 || ^4.0.5 || ^5.0.5
     dependencies:
-      '@rollup/pluginutils': 5.0.2
+      '@rollup/pluginutils': 5.1.0
       js-yaml: 4.1.0
       tosource: 2.0.0-alpha.3
       vite: 5.0.12(@types/node@18.19.7)(sass@1.70.0)
@@ -2902,11 +2902,11 @@ packages:
     resolution: {integrity: sha512-NMrDy6EWh9TPdSRiHmHH2ye1v5U0gBD7pRYwSwJvomx7Bm4GG04vu63dYiVzebLOx2obPpJugew06xVP0Nk7hA==}
     dev: false
 
-  /@rollup/pluginutils@5.0.2:
-    resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
+  /@rollup/pluginutils@5.1.0:
+    resolution: {integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
     peerDependenciesMeta:
       rollup:
         optional: true
@@ -3012,8 +3012,8 @@ packages:
     dev: true
     optional: true
 
-  /@rushstack/eslint-patch@1.6.1:
-    resolution: {integrity: sha512-UY+FGM/2jjMkzQLn8pxcHGMaVLh9aEitG3zY2CiY7XHdLiz3bZOwa6oDxNqEMv7zZkV+cj5DOdz0cQ1BP5Hjgw==}
+  /@rushstack/eslint-patch@1.7.0:
+    resolution: {integrity: sha512-Jh4t/593gxs0lJZ/z3NnasKlplXT2f+4y/LZYuaKZW5KAaiVFL/fThhs+17EbUd53jUVJ0QudYCBGbN/psvaqg==}
     dev: true
 
   /@sigstore/bundle@2.1.0:

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.11.8...@kong-ui-public/entities-plugins@2.11.9) (2024-01-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.11.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.11.7...@kong-ui-public/entities-plugins@2.11.8) (2024-01-29)
+
+
+### Bug Fixes
+
+* **entities-plugins:** ai-prompt-template scope ([#1122](https://github.com/Kong/public-ui-components/issues/1122)) ([45141fe](https://github.com/Kong/public-ui-components/commit/45141fee4cf962a1eea561a24e0fa63bc51387d3))
+
+
+
+
+
 ## [2.11.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.11.6...@kong-ui-public/entities-plugins@2.11.7) (2024-01-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

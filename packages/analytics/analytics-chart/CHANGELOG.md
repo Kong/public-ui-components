@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.16...@kong-ui-public/analytics-chart@1.1.17) (2024-01-29)
+
+
+### Bug Fixes
+
+* values should not display when legend snaps to the bottom ([#1123](https://github.com/Kong/public-ui-components/issues/1123)) ([0bba35a](https://github.com/Kong/public-ui-components/commit/0bba35a7404698eadac2b5abbfbce5b1f8fe9830))
+
+
+
+
+
+## [1.1.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.15...@kong-ui-public/analytics-chart@1.1.16) (2024-01-29)
+
+
+### Bug Fixes
+
+* style improvements + scrollbar updates in tooltip for consistency ([#1118](https://github.com/Kong/public-ui-components/issues/1118)) ([acf36be](https://github.com/Kong/public-ui-components/commit/acf36be6f6245bf1ca080f068f0ae7db7303fc3e))
+
+
+
+
+
+## [1.1.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.14...@kong-ui-public/analytics-chart@1.1.15) (2024-01-29)
+
+
+### Bug Fixes
+
+* **analytics-chart:** full legend label text on hover in all positions ([#1117](https://github.com/Kong/public-ui-components/issues/1117)) ([3301262](https://github.com/Kong/public-ui-components/commit/3301262f078978e15ce91ab3f5fe95a014c65180))
+
+
+
+
+
 ## [1.1.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.13...@kong-ui-public/analytics-chart@1.1.14) (2024-01-26)
 
 

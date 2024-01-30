@@ -248,23 +248,10 @@ ul.tooltip {
   margin: 0px;
   max-height: 300px;
   min-width: 250px;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding-left: 0px;
-  scrollbar-width: thin;
 
-  &::-webkit-scrollbar-track {
-    background-color: $kui-color-background;
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: $kui-color-background-disabled;
-    border-radius: 10px;
-  }
+  @include scrollbarBase;
 
   li {
     display: flex;

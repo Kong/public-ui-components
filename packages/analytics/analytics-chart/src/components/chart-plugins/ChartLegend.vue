@@ -242,7 +242,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 
   &.vertical {
     flex-direction: column;
-    max-height: 400px;
+    max-height: 90%;
     width: 15%;
 
     .truncate-label {
@@ -254,10 +254,16 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 
     // Allow legend to expand horizontally at lower resolutions
     @media (max-width: ($kui-breakpoint-phablet - 1px)) {
-      flex-direction: row;
-      height: 20%;
-      max-width: 100%;
-      width: 100%;
+      column-gap: $kui-space-80;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, 10ch);
+      justify-content: center;
+      max-height: 12%;
+      width: 99%;
+
+      .sub-label {
+        display: none;
+      }
     }
   }
 
