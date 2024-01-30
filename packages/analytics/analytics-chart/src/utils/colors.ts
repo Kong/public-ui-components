@@ -1,5 +1,13 @@
 import type { AnalyticsChartColors } from '../../src/types'
 
+interface StatusCodeColor {
+  background: string;
+  text: string;
+}
+interface StatusCodeColors {
+  [statusCode: number]: StatusCodeColor;
+}
+
 // Collection of colors matching existing Kong Manager Status Code chart
 const kongManangerColorPalette = {
   '1XXCount|1XX|1[0-9][0-9]': { solid: '#0072E5', light: '#4DA6FF', description: 'Informational' },
@@ -72,7 +80,7 @@ export const darkenColor = (hex: string, amt: number): string => {
 
 export const accessibleGrey = '#6f7787' // grey-500
 
-export const apiRequestStatusCodeColors = {
+export const apiRequestStatusCodeColors: StatusCodeColors = {
   100: { background: '#f0f5fd', text: '#10599e' },
   200: { background: '#e5f7f4', text: '#1b6955' },
   300: { background: '#fff1d5', text: '#a06027' },
@@ -81,16 +89,10 @@ export const apiRequestStatusCodeColors = {
 }
 
 export const statusCodeBadgeBackgroundColor = (statusCode: string) => {
-  // @ts-ignore TODO
-  return apiRequestStatusCodeColors[Math.floor(statusCode / 100) * 100]?.background || '#fafafa'
+  const keyIndex = Math.floor(statusCode as any as number / 100) * 100
+
+  return apiRequestStatusCodeColors[keyIndex]?.background || '#fafafa'
 }
-
-// TODO: Is this unused ?
-
-// export const statusCodeBadgeTextColor = (statusCode: number) => {
-//   // @ts-ignore TODO
-//   return apiRequestStatusCodeColors[Math.floor(statusCode / 100) * 100]?.text || '#bbb'
-// }
 
 export const trafficColors: AnalyticsChartColors = {
   SUCCESS: '#6FCC83',
