@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.2.0...@kong-ui-public/analytics-chart@1.3.0) (2024-01-30)
+
+
+### Features
+
+* **analytics-chart:** migrate relevant things from konnect-vitals [MA-2557] ([#1124](https://github.com/Kong/public-ui-components/issues/1124)) ([6005513](https://github.com/Kong/public-ui-components/commit/600551331478c22c0ae4d16e0fb09ceecadaf4b1))
+
+
+
+
+
 # [1.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.1.17...@kong-ui-public/analytics-chart@1.2.0) (2024-01-30)
 
 

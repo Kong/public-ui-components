@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.11.5...@kong-ui-public/analytics-utilities@0.12.0) (2024-01-30)
+
+
+### Features
+
+* **analytics-chart:** migrate relevant things from konnect-vitals [MA-2557] ([#1124](https://github.com/Kong/public-ui-components/issues/1124)) ([6005513](https://github.com/Kong/public-ui-components/commit/600551331478c22c0ae4d16e0fb09ceecadaf4b1))
+
+
+
+
+
 ## [0.11.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.11.4...@kong-ui-public/analytics-utilities@0.11.5) (2024-01-26)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
