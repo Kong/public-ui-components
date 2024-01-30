@@ -89,7 +89,7 @@ export const apiRequestStatusCodeColors: StatusCodeColors = {
 }
 
 export const statusCodeBadgeBackgroundColor = (statusCode: string) => {
-  const keyIndex = Math.floor(parseInt(statusCode) / 100) * 100
+  const keyIndex = Math.floor(parseInt(statusCode, 10) / 100) * 100
 
   return apiRequestStatusCodeColors[keyIndex]?.background || '#fafafa'
 }
