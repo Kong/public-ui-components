@@ -1,6 +1,6 @@
 import type { Plugin } from 'vue'
-import { INJECT_QUERY_PROVIDER } from '../src/types/query-provider'
 import { exploreV3Response, timeSeriesExploreResponse } from './mock-data'
+import { INJECT_QUERY_PROVIDER } from '../src'
 
 const delayedResponse = (response: any) => {
   return new Promise((resolve) => {

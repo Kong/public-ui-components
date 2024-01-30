@@ -23,10 +23,10 @@
 <script setup lang="ts">
 import { computed, inject, onUnmounted, ref } from 'vue'
 import useSWRV from 'swrv'
-import type { QueryProvider } from '../types/query-provider'
-import { INJECT_QUERY_PROVIDER } from '../types/query-provider'
 import { useSwrvState } from '@kong-ui-public/core'
 import composables from '../composables'
+import type { AnalyticsBridge } from '@kong-ui-public/analytics-utilities'
+import { INJECT_QUERY_PROVIDER } from '../constants'
 
 const props = defineProps<{
   query: any // TODO: Explore v4
@@ -37,7 +37,7 @@ const emit = defineEmits(['queryComplete'])
 
 const { i18n } = composables.useI18n()
 
-const queryBridge: QueryProvider | undefined = inject(INJECT_QUERY_PROVIDER)
+const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 
 const queryKey = () => {
   // SWRV can't accept `false` as a key, so use a more complicated conditional to match its `IKey` interface.
@@ -58,7 +58,7 @@ onUnmounted(() => {
 const { data, error, isValidating } = useSWRV(queryKey, async () => {
   try {
     // Note that queryBridge is guaranteed to be set here because SWRV won't execute the query if the key is null.
-    return queryBridge?.query(props.query, abortController)
+    return queryBridge?.queryFn(props.query, abortController)
   } catch (e: any) {
     // Note: 'Range not allowed' is defined by the API, therefore cannot be stored as string translation
     errorMessage.value = e?.response?.data?.message === 'Range not allowed for this tier'

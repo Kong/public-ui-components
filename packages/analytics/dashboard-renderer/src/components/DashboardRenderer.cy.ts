@@ -5,11 +5,14 @@ import { ChartTypes } from '../types'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import type { GlobalMountOptions } from '@vue/test-utils/dist/types'
 import { exploreV3Response } from '../../sandbox/mock-data'
-import type { QueryProvider } from '../types/query-provider'
-import { INJECT_QUERY_PROVIDER } from '../types/query-provider'
 
-const mockQueryProvider: QueryProvider = {
-  query: async () => { return exploreV3Response },
+import { INJECT_QUERY_PROVIDER } from '../constants'
+import type { AnalyticsBridge } from '@kong-ui-public/analytics-utilities'
+
+const mockQueryProvider: AnalyticsBridge = {
+  // TODO: fix sandbox
+  // @ts-ignore
+  queryFn: async () => { return exploreV3Response },
 }
 
 const global: GlobalMountOptions = {
