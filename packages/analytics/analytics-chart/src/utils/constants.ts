@@ -1,5 +1,5 @@
 import { formatInTimeZone } from 'date-fns-tz'
-import type { TimeFormatOptions } from '../types'
+import type { TimeFormatOptions } from '@kong-ui-public/analytics-utilities'
 
 export const DECIMAL_DISPLAY = 2
 export const FONT_SIZE_SMALL = 10
@@ -9,6 +9,7 @@ const numberFormatter = new Intl.NumberFormat(document?.documentElement?.lang ||
 
 export { numberFormatter }
 
+// TODO: import `formatTime` from `analytics-utilities`; update Konnect + MFE imports as well
 export function formatTime(ts: number, options: TimeFormatOptions = {}) {
   if (!ts) {
     return ts
