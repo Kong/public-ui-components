@@ -71,6 +71,7 @@ const props = defineProps({
   title: {
     type: String,
     required: true,
+    default: '', // Provide a fallback string to prevent the component unmounting from throwing an error
   },
   breadcrumbs: {
     type: Array as PropType<BreadcrumbItem[]>,
