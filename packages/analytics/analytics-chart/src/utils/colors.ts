@@ -80,16 +80,17 @@ export const apiRequestStatusCodeColors = {
   500: { background: '#fedada', text: '#852021' },
 }
 
-export const statusCodeBadgeBackgroundColor = (statusCode: number) => {
+export const statusCodeBadgeBackgroundColor = (statusCode: string) => {
   // @ts-ignore TODO
   return apiRequestStatusCodeColors[Math.floor(statusCode / 100) * 100]?.background || '#fafafa'
 }
 
-// TODO: move to public-ui-components
-export const statusCodeBadgeTextColor = (statusCode: number) => {
-  // @ts-ignore TODO
-  return apiRequestStatusCodeColors[Math.floor(statusCode / 100) * 100]?.text || '#bbb'
-}
+// TODO: Is this unused ?
+
+// export const statusCodeBadgeTextColor = (statusCode: number) => {
+//   // @ts-ignore TODO
+//   return apiRequestStatusCodeColors[Math.floor(statusCode / 100) * 100]?.text || '#bbb'
+// }
 
 export const trafficColors: AnalyticsChartColors = {
   SUCCESS: '#6FCC83',
