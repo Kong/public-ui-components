@@ -4,10 +4,16 @@ Dynamic chart component for kong analytics.
 
 - [Features](#features)
 - [Requirements](#requirements)
-- [Usage](#usage)
-  - [Install](#install)
-  - [Props](#props)
-  - [Usage Example](#usage-example)
+- [Install](#install)
+- [AnalyticsChart](#AnalyticsChart)
+  - [Usage Example](#usage-example-analyticschart)
+- [SimpleChart](#SimpleChart)
+  - [Usage Example](#usage-example-simplechart)
+- [CsvExportButton](#CsvExportButton)
+  - [Usage Example](#usage-example-csvexportbutton)
+- [CsvExportModal](#CsvExportModal)
+  - [Events](#CsvExportModal-events)
+  - [Usage Example](#usage-example-csvexportmodal)
 
 ## Features
 
@@ -18,9 +24,8 @@ Dynamic chart component for kong analytics.
 - `vue` must be initialized in the host application
 - `@kong-ui-public/i18n` must be available as a `dependency` in the host application.
 
-## Usage
 
-### Install
+## Install
 
 Install the component in your host application
 
@@ -28,7 +33,9 @@ Install the component in your host application
 yarn add @kong-ui-public/analytics-chart
 ```
 
-### Props - AnalyticsChart
+## AnalyticsChart
+
+### `Props`
 
 #### `allowCsvExport`
 
@@ -108,7 +115,7 @@ yarn add @kong-ui-public/analytics-chart
 - default: `true`
 - Show the sum of each dataset in the legend
 
-### Usage Example
+## Usage Example AnalyticsChart
 
 ```html
 <template>
@@ -189,7 +196,9 @@ export default defineComponent({
 </script>
 ```
 
-### Props - SimpleChart
+## SimpleChart
+
+### Props
 
 #### `chartData`
 
@@ -227,9 +236,7 @@ Optional. Array index which specifies the dataset value to be shown in the cente
 - type: `number`
 - required: `false`
 
-#### SimpleChart
-
-Contains the same chart-data 
+#### Usage Example SimpleChart
 
 ```html
 <template>
@@ -296,4 +303,194 @@ export default defineComponent({
   },
 })
 </script>
+```
+
+## CsvExportButton
+
+### Props
+
+#### `data`
+
+Chart data to be exported
+
+- type: [AnalyticsExploreResult](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L77)
+- required: `true`
+
+#### `text`
+
+Text to appear in the button
+
+- type: `string`
+- required: `false`
+- default: `'Export'`
+
+#### `buttonAppearance`
+
+Text to appear in the button
+
+- type: `'primary' | 'secondary' | 'tertiary' | 'danger'`
+- required: `false`
+- default: `'tertiary'`
+
+#### `filenamePrefix`
+
+Resulting csv filename
+
+- type: `string`
+- required: `false`
+- default: `'Chart Export'`
+
+### Usage Example CsvExportButton
+
+```html
+
+<template>
+  <CsvExportButton
+    :data="(chartData as AnalyticsExploreV2Result)"
+    :filename-prefix="filenamePrefix"
+  />
+</template>
+
+<script setup lang="ts">
+
+import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
+import { CsvExportButton } from '@kong-ui-public/analytics-chart'
+
+const chartData = ref<AnalyticsExploreResult>({
+  records: [
+    {
+      version: '1.0',
+      timestamp: '2023-04-24T10:27:22.798Z',
+      event: {
+        Service: 'Service A',
+        TotalRequests: 849,
+      },
+    },
+    {
+      version: '1.0',
+      timestamp: '2023-04-24T10:27:22.798Z',
+      event: {
+        Service: 'Service B',
+        TotalRequests: 5434,
+      },
+    },
+  ],
+  meta: {
+    start: 1682332042798,
+    end: 1682353642798,
+    queryId: '12345',
+    dimensions: {
+      Service: ['Service A', 'Service B'],
+    },
+    metricNames: ['TotalRequests'],
+    metricUnits: {
+      TotalRequests: 'requests',
+    },
+  },
+})
+
+const fileName = ref('exportFilename')
+
+</script>
+
+```
+
+## CsvExportModal
+
+### Props
+
+#### `chartData`
+
+Chart data to be exported
+
+- type: [AnalyticsExploreResult](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L77)
+- required: `true`
+
+#### `filename`
+
+Resulting csv filename
+
+- type: `string`
+- required: `true`
+
+#### `modalDescription`
+
+Desctiption text that appears in the modal
+
+- type: `string`
+- required: `false`
+- default: `'Exports a CSV of the data represented in the chart.'`
+
+### CsvExportModal Events
+
+`@toggle-modal` event is emitted when the modal is toggled (dismissed)
+
+### Usage Example CsvExportModal
+
+```html
+
+<template>
+  <button @click.prevent="exportCsv">
+    Export to CSV
+  </button>
+
+  <CsvExportModal
+    v-if="exportModalVisible"
+    :chart-data="chartData"
+    filename="exportCsvFilename"
+    @toggle-modal="setModalVisibility"
+  />
+</template>
+
+<script setup lang="ts">
+
+import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
+import { CsvExportModal } from '@kong-ui-public/analytics-chart'
+
+const exportModalVisible = ref(false)
+
+const setModalVisibility = (val: boolean) => {
+  exportModalVisible.value = val
+}
+const exportCsv = () => {
+  setModalVisibility(true)
+}
+
+const chartData = ref<AnalyticsExploreResult>({
+  records: [
+    {
+      version: '1.0',
+      timestamp: '2023-04-24T10:27:22.798Z',
+      event: {
+        Service: 'Service A',
+        TotalRequests: 849,
+      },
+    },
+    {
+      version: '1.0',
+      timestamp: '2023-04-24T10:27:22.798Z',
+      event: {
+        Service: 'Service B',
+        TotalRequests: 5434,
+      },
+    },
+  ],
+  meta: {
+    start: 1682332042798,
+    end: 1682353642798,
+    queryId: '12345',
+    dimensions: {
+      Service: ['Service A', 'Service B'],
+    },
+    metricNames: ['TotalRequests'],
+    metricUnits: {
+      TotalRequests: 'requests',
+    },
+  },
+})
+
+const fileName = ref('exportFilename')
+
+</script>
+
 ```
