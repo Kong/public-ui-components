@@ -14,6 +14,7 @@ const addDays = (date: Date, amount: number) => {
   return newDate
 }
 
+// Not imported from `analytics-chart` to keep bundle size small
 const CHART_REFRESH_INTERVAL_MS = 30 * 1000
 
 const timePeriod = TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe

@@ -5,6 +5,8 @@ export const DECIMAL_DISPLAY = 2
 export const FONT_SIZE_SMALL = 10
 export const FONT_SIZE_REGULAR = 12
 
+export const CHART_REFRESH_INTERVAL_MS = 30 * 1000
+
 const numberFormatter = new Intl.NumberFormat(document?.documentElement?.lang || 'en-US')
 
 export { numberFormatter }
@@ -38,6 +40,10 @@ export function formatTime(ts: number, options: TimeFormatOptions = {}) {
 
     return '(invalid date)'
   }
+}
+
+export function formatTimeRange(start: number, end: number) {
+  return `${formatTime(start)} - ${formatTime(end, { includeTZ: true })}`
 }
 
 export const MAX_LABEL_LENGTH = 10
