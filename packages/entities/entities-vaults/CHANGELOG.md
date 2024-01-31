@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@2.3.11...@kong-ui-public/entities-vaults@2.4.0) (2024-01-31)
+
+
+### Features
+
+* **entities-vaults:** add approle method support ([#1131](https://github.com/Kong/public-ui-components/issues/1131)) ([11ea9ac](https://github.com/Kong/public-ui-components/commit/11ea9ac036a7de6c257c22218a4edbda21aeb4c1))
+
+
+
+
+
 ## [2.3.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@2.3.10...@kong-ui-public/entities-vaults@2.3.11) (2024-01-30)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
