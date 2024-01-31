@@ -494,7 +494,7 @@ returns array values defined for given key
 
 ```ts
 const { tm } = useI18n()
-console.log(te('global.disabled'))
+console.log(tm('global.disabled'))
 ```
 
 `result:`
