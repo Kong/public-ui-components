@@ -323,9 +323,6 @@ importers:
       ajv:
         specifier: ^8.12.0
         version: 8.12.0
-      swrv:
-        specifier: ^1.0.4
-        version: 1.0.4(vue@3.4.15)
     devDependencies:
       '@kong-ui-public/analytics-chart':
         specifier: workspace:^
@@ -348,6 +345,9 @@ importers:
       json-schema-to-ts:
         specifier: ^3.0.0
         version: 3.0.0
+      swrv:
+        specifier: ^1.0.4
+        version: 1.0.4(vue@3.4.15)
       vue:
         specifier: ^3.4.13
         version: 3.4.15(typescript@5.3.3)
@@ -778,7 +778,7 @@ importers:
         version: link:../entities-shared
       '@kong-ui-public/forms':
         specifier: ^2.1.35
-        version: link:../../core/forms
+        version: 2.1.36(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.0.0-alpha.95)(vue@3.4.15)
       '@kong/icons':
         specifier: ^1.8.14
         version: 1.8.14(vue@3.4.15)
@@ -2170,6 +2170,21 @@ packages:
       vue: 3.4.15(typescript@5.3.3)
     dev: false
 
+  /@kong-ui-public/forms@2.1.36(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.0.0-alpha.95)(vue@3.4.15):
+    resolution: {integrity: sha512-Mls1FdfkMr0nyPfrCIxqg6oXejp9Frx0+CGxqADW37yN3JiJ7s2CWmIDo8+3f2h2MKa+2vqaD0yF4Q2GiJkHxw==}
+    peerDependencies:
+      '@kong-ui-public/i18n': ^2.1.1
+      '@kong/kongponents': 9.0.0-alpha.95
+      vue: ^3.4.13
+    dependencies:
+      '@kong-ui-public/i18n': link:packages/core/i18n
+      '@kong/icons': 1.8.14(vue@3.4.15)
+      '@kong/kongponents': 9.0.0-alpha.95(axios@1.6.5)(vue-router@4.2.5)(vue@3.4.15)
+      fecha: 4.2.3
+      lodash: 4.17.21
+      vue: 3.4.15(typescript@5.3.3)
+    dev: false
+
   /@kong/design-tokens@1.12.7:
     resolution: {integrity: sha512-gyUX+1hDUtgvMZgNvPxTrIF6lD5x2bd+qMx8EATQ9FE+naaMHvP+dFp6jmHAEVwY4yQrCWv6e4Et4UOG2XSuFA==}
     dev: true
@@ -2190,7 +2205,6 @@ packages:
       vue: '>= 3.3.4 < 4'
     dependencies:
       vue: 3.4.15(typescript@5.3.3)
-    dev: true
 
   /@kong/icons@1.8.14(vue@3.3.13):
     resolution: {integrity: sha512-nJUTtLpqelKCTY8lS8VByWaHYUq1CuB5cBUX/q2FEDu5o6IKH/B7fEDQpb/pB1lLRYTqZXneHR/lGYjxy4u8eQ==}
@@ -2279,7 +2293,6 @@ packages:
       vue: 3.4.15(typescript@5.3.3)
       vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.15)
       vue-router: 4.2.5(vue@3.4.15)
-    dev: true
 
   /@kong/swagger-ui-kong-theme-universal@4.3.3(react-dom@17.0.2)(react@17.0.2)(vue-router@4.2.5)(vue@3.4.15):
     resolution: {integrity: sha512-g89NLf7Vu19BJ157fVUkLIrjzTmNE74zGfzktK2rxdZgIUegt4VBDsG8K0MAxDwQELQqSK3kPkamgdD9j1eV3Q==}
@@ -2899,7 +2912,6 @@ packages:
 
   /@popperjs/core@2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
-    dev: true
 
   /@popperjs/core@2.4.0:
     resolution: {integrity: sha512-NMrDy6EWh9TPdSRiHmHH2ye1v5U0gBD7pRYwSwJvomx7Bm4GG04vu63dYiVzebLOx2obPpJugew06xVP0Nk7hA==}
@@ -3750,7 +3762,6 @@ packages:
 
   /@types/resize-observer-browser@0.1.11:
     resolution: {integrity: sha512-cNw5iH8JkMkb3QkCoe7DaZiawbDQEUX8t7iuQaRTyLOyQCR2h+ibBD4GJt7p5yhUHrlOeL7ZtbxNHeipqNsBzQ==}
-    dev: true
 
   /@types/retry@0.12.0:
     resolution: {integrity: sha512-wWKOClTTiizcZhXnPY4wikVAwmdYHp8q6DmC+EJUzAMsycb7HB32Kh9RN4+0gExjmPmZSAQjgURXIGATPegAvA==}
@@ -13904,7 +13915,6 @@ packages:
       lodash: 4.17.21
       vue: 3.4.15(typescript@5.3.3)
       vue-screen-utils: 1.0.0-beta.13(vue@3.4.15)
-    dev: true
 
   /v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
@@ -14187,7 +14197,6 @@ packages:
       vue: ^3.2.0
     dependencies:
       vue: 3.4.15(typescript@5.3.3)
-    dev: true
 
   /vue-template-compiler@2.7.14:
     resolution: {integrity: sha512-zyA5Y3ArvVG0NacJDkkzJuPQDF8RFeRlzV2vLeSnhSpieO6LK2OVbdLPi5MPPs09Ii+gMO8nY4S3iKQxBxDmWQ==}
