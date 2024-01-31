@@ -64,7 +64,7 @@ onUnmounted(() => {
   abortController.abort()
 })
 
-const { data, error, isValidating } = useSWRV(queryKey, async () => {
+const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
   try {
     // Note that queryBridge is guaranteed to be set here because SWRV won't execute the query if the key is null.
     return queryBridge?.queryFn(props.query, abortController)
@@ -75,6 +75,39 @@ const { data, error, isValidating } = useSWRV(queryKey, async () => {
       : e?.response?.data?.message || e?.message
   } finally {
     emit('queryComplete')
+  }
+})
+
+// TODO: Support v4 natively and get rid of this hack.
+const data = computed(() => {
+  if (!v4Data.value) {
+    return undefined
+  }
+
+  const v4Meta = v4Data.value.meta
+
+  return {
+    records: v4Data.value.data.map(d => ({
+      ...d,
+      event: Object.entries(d.event).reduce((acc, [k, v]) => {
+        acc[k.toUpperCase()] = v
+        return acc
+      }, {} as Record<string, any>),
+    })),
+    meta: {
+      ...v4Meta,
+      metricNames: v4Meta.metric_names?.map(n => n.toUpperCase()),
+      granularity: v4Meta.granularity_ms,
+      startMs: v4Meta.start_ms,
+      endMs: v4Meta.end_ms,
+
+      // status_code_grouped: { '2XX': { name: '2XX' }} ->
+      // STATUS_CODE_GROUPED: [ '2XX' ]
+      dimensions: Object.entries(v4Meta.display).reduce((acc, [v, disp]) => {
+        acc[v.toUpperCase()] = Object.keys(disp)
+        return acc
+      }, {} as Record<string, any>),
+    },
   }
 })
 
