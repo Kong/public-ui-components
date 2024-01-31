@@ -1,11 +1,11 @@
 import type { FromSchema, JSONSchema } from 'json-schema-to-ts'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
+import type { ExploreFilter, ExploreQuery, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 
-// TODO: Explore v4
 export interface DashboardRendererContext {
-  filters: any
-  timeSpec: any
+  filters: ExploreFilter[]
+  timeSpec: TimeRangeV4
 }
 
 export enum ChartTypes {
@@ -199,7 +199,7 @@ export const dashboardConfigSchema = {
 export type DashboardConfig = FromSchema<typeof dashboardConfigSchema>
 
 export interface RendererProps<T> {
-  query: any // TODO: Explore v4
+  query: ExploreQuery
   queryReady: boolean
   chartOptions: T
   height: number

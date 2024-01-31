@@ -42,7 +42,7 @@ const { i18n } = composables.useI18n()
 // Note: queryBridge is not directly used by the DashboardRenderer component.  It is required by many of the
 // subcomponents that get rendered in the dashboard, however.  Check for its existence here in order to catch
 // programming errors early.
-const queryBridge: AnalyticsBridge = inject(INJECT_QUERY_PROVIDER)
+const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 
 if (!queryBridge) {
   console.warn('Analytics dashboards require a query bridge supplied via provide / inject.')

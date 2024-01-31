@@ -5,7 +5,7 @@
     type="table"
   />
   <KEmptyState
-    v-else-if="!isLoading && hasError"
+    v-else-if="hasError"
     cta-is-hidden
     data-testid="chart-empty-state"
     is-error
@@ -16,20 +16,29 @@
   </KEmptyState>
 
   <slot
-    v-else
+    v-else-if="data"
     :data="data"
   />
 </template>
 <script setup lang="ts">
+/*
+ * A note about the conditionals in the template:
+ * It's impossible to reach step 3 (render the slot) unless you have data.
+ * If you aren't loading (bypassing step 1), and you don't have an error (bypassing step 2),
+ * the only way to also have no data also lands you in step 1 (via `(!data && !hasError)`).
+ * However, TS doesn't seem to narrow this type correctly, so there's an explicit `v-else-if`
+ * on the third step to ensure that the type is correctly inferred as "not undefined".
+ */
+
 import { computed, inject, onUnmounted, ref } from 'vue'
 import useSWRV from 'swrv'
 import { useSwrvState } from '@kong-ui-public/core'
 import composables from '../composables'
-import type { AnalyticsBridge } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsBridge, ExploreQuery } from '@kong-ui-public/analytics-utilities'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 
 const props = defineProps<{
-  query: any // TODO: Explore v4
+  query: ExploreQuery
   queryReady: boolean,
 }>()
 
