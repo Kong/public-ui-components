@@ -281,7 +281,7 @@ const apiPluginSchema = computed((): Record<string, any>[] => {
     return []
   }
 
-  const configField = schema.value.fields.find((rec: Record<string, any>) => {
+  const configField = schema.value.fields?.find((rec: Record<string, any>) => {
     const key = Object.keys(rec)?.[0]
 
     return key === PLUGIN_CONFIG_KEY
