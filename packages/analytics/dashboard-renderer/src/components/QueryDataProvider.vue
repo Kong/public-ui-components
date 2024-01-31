@@ -90,7 +90,11 @@ const data = computed(() => {
     records: v4Data.value.data.map(d => ({
       ...d,
       event: Object.entries(d.event).reduce((acc, [k, v]) => {
-        acc[k.toUpperCase()] = v
+        if (typeof v === 'string') {
+          acc[k.toUpperCase()] = v4Meta.display[k][v].name
+        } else {
+          acc[k.toUpperCase()] = v
+        }
         return acc
       }, {} as Record<string, any>),
     })),
@@ -104,7 +108,7 @@ const data = computed(() => {
       // status_code_grouped: { '2XX': { name: '2XX' }} ->
       // STATUS_CODE_GROUPED: [ '2XX' ]
       dimensions: Object.entries(v4Meta.display).reduce((acc, [v, disp]) => {
-        acc[v.toUpperCase()] = Object.keys(disp)
+        acc[v.toUpperCase()] = Object.keys(disp).map(k => v4Meta.display[v][k].name)
         return acc
       }, {} as Record<string, any>),
     },
