@@ -243,10 +243,10 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
   &.vertical {
     flex-direction: column;
     max-height: 90%;
-    width: 15%;
-
+    max-width: 15%;
+    min-width: 10%;
     .truncate-label {
-      max-width: 10ch;
+      max-width: 12ch;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;

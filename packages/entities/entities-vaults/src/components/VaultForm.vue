@@ -84,8 +84,8 @@
             >
               <img
                 alt="Amazon Web Services"
+                height="46"
                 :src="getProviderIconURL(VaultProviders.AWS)"
-                width="46"
               >
             </KRadio>
           </KTooltip>
@@ -104,8 +104,8 @@
             >
               <img
                 alt="Google Cloud"
+                height="46"
                 :src="getProviderIconURL(VaultProviders.GCP)"
-                width="46"
               >
             </KRadio>
           </KTooltip>
@@ -124,8 +124,8 @@
             >
               <img
                 alt="HashiCorp Vault"
+                height="46"
                 :src="getProviderIconURL(VaultProviders.HCV)"
-                width="46"
               >
             </KRadio>
           </KTooltip>
@@ -145,8 +145,8 @@
             >
               <img
                 alt="Azure"
+                height="46"
                 :src="getProviderIconURL(VaultProviders.AZURE)"
-                width="46"
               >
             </KRadio>
           </KTooltip>
@@ -283,7 +283,11 @@
             <KSelect
               v-model="configFields[VaultProviders.HCV].auth_method"
               data-testid="vault-form-config-hcv-auth_method"
-              :items="[{ label: VaultAuthMethods.TOKEN, value: VaultAuthMethods.TOKEN }, { label: VaultAuthMethods.K8S, value: VaultAuthMethods.K8S}]"
+              :items="[
+                { label: VaultAuthMethods.TOKEN, value: VaultAuthMethods.TOKEN },
+                { label: VaultAuthMethods.K8S, value: VaultAuthMethods.K8S},
+                ...(config.hcvAppRoleMethodAvailable ? [{ label: VaultAuthMethods.APP_ROLE, value: VaultAuthMethods.APP_ROLE }] : []),
+              ]"
               :label="t('form.config.hcv.fields.auth_method.label')"
               :readonly="form.isReadonly"
               required
@@ -311,6 +315,14 @@
                 type="text"
               />
               <KInput
+                v-model.trim="configFields[VaultProviders.HCV].kube_auth_path"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-kube_auth_path"
+                :is-readonly="form.isReadonly"
+                :label="t('form.config.hcv.fields.kube_auth_path.label')"
+                type="text"
+              />
+              <KInput
                 v-model.trim="configFields[VaultProviders.HCV].kube_api_token_file"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-kube_api_token_file"
@@ -318,6 +330,46 @@
                 :label="t('form.config.hcv.fields.kube_api_token_file.label')"
                 required
                 type="text"
+              />
+            </div>
+            <div v-else-if="configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.APP_ROLE">
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].approle_auth_path"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-approle_auth_path"
+                :is-readonly="form.isReadonly"
+                :label="t('form.config.hcv.fields.approle_auth_path.label')"
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].approle_role_id"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-approle_role_id"
+                :is-readonly="form.isReadonly"
+                :label="t('form.config.hcv.fields.approle_role_id.label')"
+                required
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].approle_secret_id"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-approle_secret_id"
+                :is-readonly="form.isReadonly"
+                :label="t('form.config.hcv.fields.approle_secret_id.label')"
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].approle_secret_id_file"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-approle_secret_id_file"
+                :is-readonly="form.isReadonly"
+                :label="t('form.config.hcv.fields.approle_secret_id_file.label')"
+                type="text"
+              />
+              <KCheckbox
+                v-model="configFields[VaultProviders.HCV].approle_response_wrapping"
+                data-testid="vault-form-config-hcv-approle_response_wrapping"
+                :label="t('form.config.hcv.fields.approle_response_wrapping.label')"
               />
             </div>
           </div>
@@ -551,7 +603,13 @@ const configFields = reactive<ConfigFields>({
     auth_method: VaultAuthMethods.TOKEN,
     token: '',
     kube_role: '',
+    kube_auth_path: '',
     kube_api_token_file: '',
+    approle_auth_path: '',
+    approle_role_id: '',
+    approle_secret_id: '',
+    approle_secret_id_file: '',
+    approle_response_wrapping: false,
   } as HCVVaultConfig,
   [VaultProviders.AZURE]: {
     location: '',
@@ -583,7 +641,13 @@ const originalConfigFields = reactive<ConfigFields>({
     auth_method: VaultAuthMethods.TOKEN,
     token: '',
     kube_role: '',
+    kube_auth_path: '',
     kube_api_token_file: '',
+    approle_auth_path: '',
+    approle_role_id: '',
+    approle_secret_id: '',
+    approle_secret_id_file: '',
+    approle_response_wrapping: false,
   } as HCVVaultConfig,
   [VaultProviders.AZURE]: {
     location: '',
@@ -687,16 +751,34 @@ const isVaultConfigValid = computed((): boolean => {
   // HashiCorp Vault fields logic
   if (vaultProvider.value === VaultProviders.HCV) {
     return !Object.keys(configFields[VaultProviders.HCV]).filter(key => {
-      // namespace and ttl fields are optional
-      if (['namespace', 'ttl', 'neg_ttl', 'resurrect_ttl'].includes(key)) {
+      // namespace and ttl fields are optional fields
+      if (
+        [
+          'namespace',
+          'ttl',
+          'neg_ttl',
+          'resurrect_ttl',
+          'kube_auth_path',
+          'approle_auth_path',
+          'approle_secret_id',
+          'approle_secret_id_file',
+        ].includes(key)
+      ) {
         return false
       }
-      // kube_role and kube_api_token_file are not needed if auth method is token
-      if (configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.TOKEN && (key === 'kube_role' || key === 'kube_api_token_file')) {
+      // kube_role and kube_api_token_file are not needed if auth method is not kubernetes
+      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.K8S && (key === 'kube_role' || key === 'kube_api_token_file')) {
         return false
       }
-      // token is not needed if auth method is kubernetes
-      if (configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.K8S && key === 'token') {
+      // token is not needed if auth method is not token
+      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.TOKEN && key === 'token') {
+        return false
+      }
+      // approle_role_id and approle_response_wrapping don't need to be verified if auth method is not approle
+      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.APP_ROLE && (key === 'approle_role_id' || key === 'approle_response_wrapping')) {
+        return false
+      }
+      if (configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.APP_ROLE && key === 'approle_response_wrapping' && typeof (configFields[vaultProvider.value] as HCVVaultConfig)[key] === 'boolean') {
         return false
       }
       return !(configFields[vaultProvider.value] as HCVVaultConfig)[key as keyof HCVVaultConfig]
@@ -759,7 +841,19 @@ const getPayload = computed((): Record<string, any> => {
     auth_method: configFields[VaultProviders.HCV].auth_method,
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.TOKEN && { token: configFields[VaultProviders.HCV].token }),
     // For Kong Admin API, when auth_method is kubernetes, token must be in the request body and its value has to be null
-    ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.K8S && { kube_role: configFields[VaultProviders.HCV].kube_role, kube_api_token_file: configFields[VaultProviders.HCV].kube_api_token_file, token: null }),
+    ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.K8S && {
+      kube_role: configFields[VaultProviders.HCV].kube_role,
+      kube_auth_path: configFields[VaultProviders.HCV].kube_auth_path || undefined,
+      kube_api_token_file: configFields[VaultProviders.HCV].kube_api_token_file,
+      token: null,
+    }),
+    ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.APP_ROLE && {
+      approle_auth_path: configFields[VaultProviders.HCV].approle_auth_path || undefined,
+      approle_role_id: configFields[VaultProviders.HCV].approle_role_id,
+      approle_secret_id: configFields[VaultProviders.HCV].approle_secret_id || undefined,
+      approle_secret_id_file: configFields[VaultProviders.HCV].approle_secret_id_file || undefined,
+      approle_response_wrapping: configFields[VaultProviders.HCV].approle_response_wrapping ?? false,
+    }),
   }
 
   const azureConfig = {

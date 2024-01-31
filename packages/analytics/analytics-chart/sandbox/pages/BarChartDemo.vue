@@ -397,7 +397,7 @@ watch(multiDimensionToggle, () => {
 
 .chart-container {
   height: 500px;
-  max-width:60vw;
+  max-width:70vw;
 
   @media(max-width: ($kui-breakpoint-laptop - 1px)) {
     max-width: 100vw;

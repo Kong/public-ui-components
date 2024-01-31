@@ -30,22 +30,11 @@
         v-if="allowCsvExport && hasValidChartData"
         class="chart-export-button"
       >
-        <KButton
-          appearance="tertiary"
-          class="chart-export-button-display"
-          data-testid="csv-export-button"
-          @click.prevent="exportCsv"
-        >
-          {{ i18n.t('csvExport.exportButton') }}
-        </KButton>
+        <CsvExportButton
+          :data="(rawChartData as AnalyticsExploreV2Result)"
+          :filename-prefix="filenamePrefix"
+        />
       </div>
-      <CsvExportModal
-        v-if="allowCsvExport && hasValidChartData && exportModalVisible"
-        :chart-data="rawChartData"
-        :filename="csvFilename"
-        :selected-range="selectedRange"
-        @toggle-modal="setModalVisibility"
-      />
     </div>
     <KEmptyState
       v-if="!hasValidChartData"
@@ -122,15 +111,15 @@ import type { AnalyticsChartOptions } from '../types'
 import { ChartTypes, ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
-import CsvExportModal from './CsvExportModal.vue'
 import type { PropType } from 'vue'
-import { computed, provide, ref, toRef } from 'vue'
+import { computed, provide, toRef } from 'vue'
 import { GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsExploreResult, AnalyticsExploreV2Result, GranularityFullObj } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette, hasMillisecondTimestamps } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
+import CsvExportButton from './CsvExportButton.vue'
 
 const props = defineProps({
   allowCsvExport: {
@@ -169,7 +158,7 @@ const props = defineProps({
   filenamePrefix: {
     type: String,
     required: false,
-    default: undefined,
+    default: '',
   },
   legendPosition: {
     type: String as PropType<`${ChartLegendPosition}`>,
@@ -194,7 +183,6 @@ const props = defineProps({
 })
 
 const { i18n } = composables.useI18n()
-const csvFilename = computed<string>(() => props.filenamePrefix ?? (props.chartTitle || i18n.t('csvExport.defaultFilename')))
 
 const rawChartData = toRef(props, 'chartData')
 
@@ -321,17 +309,6 @@ const timeSeriesGranularity = computed<GranularityKeys>(() => {
 
   return msToGranularity(props.chartData.meta.granularity.duration) || GranularityKeys.HOURLY
 })
-
-// CSV Export Modal
-const exportModalVisible = ref(false)
-const selectedRange = composables.useChartSelectedRange(rawChartData)
-
-const setModalVisibility = (val: boolean) => {
-  exportModalVisible.value = val
-}
-const exportCsv = () => {
-  setModalVisibility(true)
-}
 
 provide('showLegendValues', showLegendValues)
 provide('legendPosition', toRef(props, 'legendPosition'))

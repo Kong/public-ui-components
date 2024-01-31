@@ -14,6 +14,11 @@ export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>
    * TODO: remove when support for Support TTL is added
    */
   ttl: boolean
+  /**
+   * Show/hide approle option and corresponding fields
+   * TODO: remove when support for approle option is added
+   */
+  hcvAppRoleMethodAvailable?: boolean
 }
 
 /** Konnect Vault form config */
@@ -32,7 +37,8 @@ export enum VaultProviders {
 
 export enum VaultAuthMethods {
   TOKEN = 'token',
-  K8S = 'kubernetes'
+  K8S = 'kubernetes',
+  APP_ROLE = 'approle'
 }
 
 export interface KongVaultConfig {
@@ -63,7 +69,13 @@ export interface HCVVaultConfig {
   auth_method: string
   token?: string
   kube_role?: string
+  kube_auth_path?: string
   kube_api_token_file?: string
+  approle_auth_path?: string
+  approle_role_id?: string
+  approle_secret_id?: string
+  approle_secret_id_file?: string
+  approle_response_wrapping?: boolean
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number

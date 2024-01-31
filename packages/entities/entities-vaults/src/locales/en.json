@@ -213,8 +213,26 @@
           "kube_role": {
             "label": "Kubernetes Role"
           },
+          "kube_auth_path": {
+            "label": "Kubernetes Auth Path"
+          },
           "kube_api_token_file": {
             "label": "Kubernetes API Token File"
+          },
+          "approle_auth_path": {
+            "label": "App Role Auth Path"
+          },
+          "approle_role_id": {
+            "label": "App Role Role ID"
+          },
+          "approle_secret_id": {
+            "label": "App Role Secret ID"
+          },
+          "approle_secret_id_file": {
+            "label": "App Role Secret ID File"
+          },
+          "approle_response_wrapping": {
+            "label": "App Role Response Wrapping"
           }
         }
       },
