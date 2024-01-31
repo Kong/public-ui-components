@@ -169,7 +169,7 @@ const tooltipData: TooltipState = reactive({
   tooltipSeries: [],
   left: '',
   top: '',
-  units: props.metricUnit,
+  units: toRef(props, 'metricUnit'),
   translateUnit,
   offsetX: 0,
   offsetY: 0,
