@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.11.11...@kong-ui-public/entities-plugins@2.11.12) (2024-01-31)
+
+
+### Bug Fixes
+
+* **entities-plugins:** add optional chaining [KHCP-10516] ([#1132](https://github.com/Kong/public-ui-components/issues/1132)) ([d9fb0c6](https://github.com/Kong/public-ui-components/commit/d9fb0c65431dcc9a7d52d317c25329f0e6103a3d))
+
+
+
+
+
 ## [2.11.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.11.10...@kong-ui-public/entities-plugins@2.11.11) (2024-01-31)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
