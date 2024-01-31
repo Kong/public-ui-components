@@ -31,6 +31,7 @@ import Ajv from 'ajv'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
+import { RelativeTimeRangeValuesV4, TimeRangeTypeV2 } from '@kong-ui-public/analytics-utilities'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
@@ -136,8 +137,11 @@ const definition = computed<ValidationResult>(() => {
 })
 
 const context: DashboardRendererContext = {
-  filters: {},
-  timeSpec: '',
+  filters: [],
+  timeSpec: {
+    type: TimeRangeTypeV2.relative,
+    time_range: RelativeTimeRangeValuesV4.one_day,
+  },
 }
 
 </script>

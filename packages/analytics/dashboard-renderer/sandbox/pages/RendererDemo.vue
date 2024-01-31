@@ -21,12 +21,16 @@ import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
+import { RelativeTimeRangeValuesV4, TimeRangeTypeV2 } from '@kong-ui-public/analytics-utilities'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const context: DashboardRendererContext = {
-  filters: {},
-  timeSpec: '',
+  filters: [],
+  timeSpec: {
+    type: TimeRangeTypeV2.relative,
+    time_range: RelativeTimeRangeValuesV4.one_day,
+  },
 }
 
 const dashboardConfig: DashboardConfig = {
@@ -78,7 +82,9 @@ const dashboardConfig: DashboardConfig = {
           type: ChartTypes.TimeseriesLine,
           fill: true,
         },
-        query: { type: 'timeseries' },
+        query: {
+          dimensions: ['time'],
+        },
       },
       layout: {
         position: {

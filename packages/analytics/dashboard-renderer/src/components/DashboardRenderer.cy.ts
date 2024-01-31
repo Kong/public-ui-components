@@ -7,12 +7,11 @@ import type { GlobalMountOptions } from '@vue/test-utils/dist/types'
 import { exploreV3Response } from '../../sandbox/mock-data'
 
 import { INJECT_QUERY_PROVIDER } from '../constants'
-import type { AnalyticsBridge } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsBridge, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 
+// TODO: Remove the type hack
 const mockQueryProvider: AnalyticsBridge = {
-  // TODO: fix sandbox
-  // @ts-ignore
-  queryFn: async () => { return exploreV3Response },
+  queryFn: async () => { return exploreV3Response as unknown as ExploreResultV4 },
 }
 
 const global: GlobalMountOptions = {
@@ -25,7 +24,7 @@ describe('<DashboardRenderer />', () => {
   it('Renders the correct number of tiles', () => {
     const props = {
       context: {
-        filters: {},
+        filters: [],
         timeSpec: '',
       },
       config: {
