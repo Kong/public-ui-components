@@ -349,11 +349,6 @@ onMounted(() => {
       margin-top: $kui-space-80;
     }
 
-    .action-buttons {
-      display: flex;
-      width: 100%;
-    }
-
     .button-spacing {
       margin-left: $kui-space-auto;
     }
