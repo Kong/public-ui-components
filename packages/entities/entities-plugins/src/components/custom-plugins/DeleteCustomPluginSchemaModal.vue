@@ -15,7 +15,7 @@
     @proceed="handleSubmit"
   />
 
-  <KPrompt
+  <KModal
     v-else-if="plugin"
     action-button-appearance="warning"
     :action-button-disabled="isLoading"
@@ -37,7 +37,7 @@
         </i18n-t>
       </div>
     </template>
-    <template #action-buttons>
+    <template #footer-actions>
       <div>
         <KButton
           appearance="tertiary"
@@ -49,7 +49,7 @@
         </KButton>
       </div>
     </template>
-  </KPrompt>
+  </KModal>
 </template>
 
 <script setup lang="ts">

@@ -2,7 +2,7 @@
   <Teleport
     to="#kong-ui-app-layout-teleport-default-slot"
   >
-    <KPrompt
+    <KModal
       class="edit-document-modal"
       data-testid="edit-document-modal"
       visible
@@ -94,7 +94,7 @@
         />
       </template>
 
-      <template #action-buttons>
+      <template #footer-actions>
         <div class="action-buttons">
           <KButton
             v-if="editing"
@@ -117,7 +117,7 @@
 
           <div class="button-spacing">
             <KButton
-              appearance="secondary"
+              appearance="tertiary"
               class="edit-documentation-cancel-button"
               data-testid="edit-documentation-cancel-button"
               @click="handleClickCancel"
@@ -143,7 +143,7 @@
           </div>
         </div>
       </template>
-    </KPrompt>
+    </KModal>
   </Teleport>
 </template>
 

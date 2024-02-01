@@ -1,6 +1,6 @@
 <template>
   <div class="kong-ui-public-csv-export-modal">
-    <KPrompt
+    <KModal
       class="vitals-report"
       data-testid="csv-export-modal"
       show-dismiss-icon
@@ -56,9 +56,9 @@
           </div>
         </div>
       </template>
-      <template #action-buttons>
+      <template #footer-actions>
         <KButton
-          appearance="secondary"
+          appearance="tertiary"
           class="cancel-btn"
           @click="closeModal"
         >
@@ -79,7 +79,7 @@
           </KButton>
         </DownloadCsv>
       </template>
-    </KPrompt>
+    </KModal>
   </div>
 </template>
 
