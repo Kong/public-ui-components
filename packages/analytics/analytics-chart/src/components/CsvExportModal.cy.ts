@@ -1,7 +1,5 @@
 // Cypress component test spec file
 import CsvExportModal from './CsvExportModal.vue'
-import composables from '../composables'
-import { computed } from 'vue'
 import { exploreResult, exploreV2Result, emptyExploreResult } from '../../fixtures/mockData'
 
 const DOWNLOADS_FOLDER = Cypress.config('downloadsFolder')

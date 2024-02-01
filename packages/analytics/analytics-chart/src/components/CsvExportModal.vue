@@ -4,7 +4,6 @@
       class="vitals-report"
       data-testid="csv-export-modal"
       show-dismiss-icon
-      text-align="left"
       :title="i18n.t('csvExport.exportPreview')"
       visible
       @cancel="closeModal"
@@ -243,7 +242,7 @@ watch(tableData, () => {
         height: auto;   // Match KTable legacy styling
       }
     }
-    .k-modal-footer {
+    .modal-footer {
       .vitals-report-export-button {
         display: inline-flex;
       }

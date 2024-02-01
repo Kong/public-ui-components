@@ -127,12 +127,6 @@ const handleSubmit = async (): Promise<void> => {
 </script>
 
 <style lang="scss" scoped>
-.delete-custom-plugin-schema-modal {
-  & :deep(.k-modal-dialog) {
-    max-width: 550px;
-  }
-}
-
 .error-wrapper {
   margin-bottom: $kui-space-60;
 }

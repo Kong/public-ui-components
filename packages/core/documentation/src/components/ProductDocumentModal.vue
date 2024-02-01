@@ -5,6 +5,7 @@
     <KModal
       class="edit-document-modal"
       data-testid="edit-document-modal"
+      max-width="750px"
       visible
       @cancel="handleClickCancel"
       @proceed="handleClickSave"
@@ -302,9 +303,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
   .edit-document-modal {
-    & :deep(.k-modal-dialog) {
-      max-width: 750px;
-    }
     .title {
       display: block;
     }
