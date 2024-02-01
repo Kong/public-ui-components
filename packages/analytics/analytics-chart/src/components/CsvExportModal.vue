@@ -209,15 +209,11 @@ watch(tableData, () => {
 
 <style lang="scss">
 .kong-ui-public-csv-export-modal {
-  .k-modal-dialog {
+  .modal-container {
     min-width: 580px;
 
     .k-empty-state-message {
       max-width: 80%;
-    }
-
-    .cancel-btn {
-      margin-right: $kui-space-40;
     }
 
     .selected-range {

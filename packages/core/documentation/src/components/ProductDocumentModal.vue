@@ -359,10 +359,7 @@ onMounted(() => {
 </style>
 
 <style lang="scss">
-  .edit-document-modal.k-prompt .k-modal-dialog.modal-dialog {
-    .close-button {
-      align-self: start;
-    }
+  .edit-document-modal.k-prompt .modal-container {
     // TODO: fix in kongponents
     .document-file-upload {
       margin-bottom: $kui-space-80;
