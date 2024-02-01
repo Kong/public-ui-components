@@ -15,3 +15,8 @@ export interface AnalyticsConfigNoAnalytics {
 }
 
 export type AnalyticsConfig = AnalyticsConfigNoAnalytics | AnalyticsConfigEnabled
+
+export interface ControlPlaneConfig {
+  id: string
+  analytics: boolean
+}
