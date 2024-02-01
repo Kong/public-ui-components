@@ -3,14 +3,14 @@
     <KPrompt
       class="vitals-report"
       data-testid="csv-export-modal"
-      is-visible
       show-dismiss-icon
       text-align="left"
       :title="i18n.t('csvExport.exportPreview')"
-      @canceled="closeModal"
+      visible
+      @cancel="closeModal"
       @keyup.esc="closeModal"
     >
-      <template #body-content>
+      <template #default>
         <div>
           <div
             v-if="hasData"

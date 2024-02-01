@@ -1,14 +1,14 @@
 <template>
   <KPrompt
+    :action-button-disabled="!canSubmit || form.isReadonly"
     :action-button-text="t('targets.form.buttons.save')"
-    :action-pending="!canSubmit || form.isReadonly"
     :cancel-button-text="t('targets.form.buttons.cancel')"
-    :is-visible="isVisible"
     :title="formTitle"
-    @canceled="onCancel"
+    :visible="isVisible"
+    @cancel="onCancel"
     @proceed="saveFormData"
   >
-    <template #body-content>
+    <template #default>
       <div class="kong-ui-entities-target-form">
         <EntityBaseForm
           :config="config"

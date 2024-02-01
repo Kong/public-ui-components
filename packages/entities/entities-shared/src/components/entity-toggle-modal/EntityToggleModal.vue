@@ -3,16 +3,16 @@
     to="body"
   >
     <KPrompt
+      action-button-appearance="warning"
+      :action-button-disabled="isPending"
       :action-button-text="actionButtonText"
-      :action-pending="isPending"
       :data-testid="`${entityType}-${entityId}-toggle-prompt`"
-      :is-visible="visible"
       :title="title"
-      type="warning"
-      @canceled="handleCancel"
+      :visible="visible"
+      @cancel="handleCancel"
       @proceed="handleConfirm"
     >
-      <template #body-content>
+      <template #default>
         <i18nT
           :keypath="`toggleModal.${props.action}.message`"
           scope="global"

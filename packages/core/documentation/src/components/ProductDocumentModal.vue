@@ -5,11 +5,11 @@
     <KPrompt
       class="edit-document-modal"
       data-testid="edit-document-modal"
-      is-visible
-      @canceled="handleClickCancel"
+      visible
+      @cancel="handleClickCancel"
       @proceed="handleClickSave"
     >
-      <template #header-content>
+      <template #title>
         <div class="title">
           {{ titleText }}
           <div class="subtitle">
@@ -24,7 +24,7 @@
           </div>
         </div>
       </template>
-      <template #body-content>
+      <template #default>
         <KAlert
           v-if="errorMessage"
           :alert-message="errorMessage"

@@ -116,7 +116,7 @@
     </EntityBaseTable>
 
     <EntityDeleteModal
-      :action-pending="isDeletePending"
+      :action-button-disabled="isDeletePending"
       data-testid="delete-consumer-modal"
       :description="t('consumers.delete.description')"
       :entity-name="consumerToBeDeleted && (consumerToBeDeleted.username || consumerToBeDeleted.custom_id || consumerToBeDeleted.id)"
@@ -140,14 +140,14 @@
 
     <KPrompt
       v-if="config.consumerGroupId && consumerToBeRemoved"
+      action-button-appearance="danger"
       data-testid="remove-consumer-modal"
-      :is-visible="isRemoveModalVisible"
       :title="t('consumers.consumer_groups.remove.title')"
-      type="danger"
-      @canceled="hideRemoveConsumerModal"
+      :visible="isRemoveModalVisible"
+      @cancel="hideRemoveConsumerModal"
       @proceed="removeConsumers"
     >
-      <template #body-content>
+      <template #default>
         <i18n-t
           class="message"
           :keypath="config.consumerGroupName ? 'consumers.consumer_groups.remove.confirmation' : 'consumers.consumer_groups.remove.confirmationNoCG'"

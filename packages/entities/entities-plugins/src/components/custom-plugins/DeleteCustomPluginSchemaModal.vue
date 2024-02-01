@@ -17,15 +17,15 @@
 
   <KPrompt
     v-else-if="plugin"
-    :action-pending="isLoading"
+    action-button-appearance="warning"
+    :action-button-disabled="isLoading"
     class="delete-custom-plugin-schema-modal"
     data-testid="delete-custom-plugin-schema-modal"
-    is-visible
     :title="title"
-    type="warning"
-    @canceled="$emit('closed')"
+    visible
+    @cancel="$emit('closed')"
   >
-    <template #body-content>
+    <template #default>
       <div>
         <i18n-t
           keypath="delete.plugin_schema_in_use_message"

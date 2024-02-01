@@ -62,8 +62,8 @@ describe('<AddConsumerModal/>', () => {
 
       cy.getTestId('add-consumer-modal').should('exist')
       cy.get('.k-prompt-body .k-multiselect').should('exist')
-      cy.get('.k-prompt-action-buttons .k-prompt-cancel').should('exist')
-      cy.get('.k-prompt-action-buttons .k-prompt-proceed').should('exist')
+      cy.get('.k-prompt-action-buttons button[data-testid="modal-cancel-button"]').should('exist')
+      cy.get('.k-prompt-action-buttons button[data-testid="modal-action-button"]').should('exist')
     })
 
     it('should emit cancel event when KPrompt emits canceled event', () => {
@@ -181,8 +181,8 @@ describe('<AddConsumerModal/>', () => {
 
       cy.getTestId('add-consumer-modal').should('exist')
       cy.get('.k-prompt-body .k-multiselect').should('exist')
-      cy.get('.k-prompt-action-buttons .k-prompt-cancel').should('exist')
-      cy.get('.k-prompt-action-buttons .k-prompt-proceed').should('exist')
+      cy.get('.k-prompt-action-buttons button[data-testid="modal-cancel-button"]').should('exist')
+      cy.get('.k-prompt-action-buttons button[data-testid="modal-action-button"]').should('exist')
     })
 
     it('should emit cancel event when KPrompt emits canceled event', () => {

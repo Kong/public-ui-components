@@ -38,13 +38,13 @@ describe('<EntityToggleModal />', () => {
         cy.get('.k-prompt-header-content').should('contain.text', t(`toggleModal.${action}.title`, { entityType: entity.type }))
         cy.get('.k-prompt-body').should('contain.text', t(`toggleModal.${action}.message`, { entityType: entity.type, entityName: entity.name }))
         cy.get('.k-prompt-body strong').should('contain.text', entity.name)
-        cy.get('.k-prompt-proceed').should('contain.text', t(`toggleModal.${action}.confirmText`))
+        cy.get('button[data-testid="modal-action-button"]').should('contain.text', t(`toggleModal.${action}.confirmText`))
       })
 
       it('should emit a "canceled" event when clicking cancel button', () => {
         cy.wrap(Cypress.vueWrapper.emitted('canceled')).should('be.undefined')
         // eslint-disable-next-line cypress/unsafe-to-chain-command
-        cy.get('.k-prompt-cancel').click().then(() => {
+        cy.get('button[data-testid="modal-cancel-button"]').click().then(() => {
           cy.wrap(Cypress.vueWrapper.emitted('canceled')).should('have.length', 1)
         })
       })
@@ -52,7 +52,7 @@ describe('<EntityToggleModal />', () => {
       it('should emit a "proceed" event after |onConfirm| finish', () => {
         cy.wrap(Cypress.vueWrapper.emitted('proceed')).should('be.undefined')
         // eslint-disable-next-line cypress/unsafe-to-chain-command
-        cy.get('.k-prompt-proceed').click().then(() => {
+        cy.get('button[data-testid="modal-action-button"]').click().then(() => {
           // proceed should not be emitted immediately
           cy.wrap(Cypress.vueWrapper.emitted('proceed')).should('be.undefined')
           // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -63,13 +63,13 @@ describe('<EntityToggleModal />', () => {
       })
 
       it('should disable action button when |onConfirm| is pending', () => {
-        cy.get('.k-prompt-proceed').should('not.be.disabled')
+        cy.get('button[data-testid="modal-action-button"]').should('not.be.disabled')
         // eslint-disable-next-line cypress/unsafe-to-chain-command
-        cy.get('.k-prompt-proceed').click().then(() => {
-          cy.get('.k-prompt-proceed').should('be.disabled')
+        cy.get('button[data-testid="modal-action-button"]').click().then(() => {
+          cy.get('button[data-testid="modal-action-button"]').should('be.disabled')
           // eslint-disable-next-line cypress/no-unnecessary-waiting
           cy.wait(kConfirmDelay + 10).then(() => {
-            cy.get('.k-prompt-proceed').should('not.be.disabled')
+            cy.get('button[data-testid="modal-action-button"]').should('not.be.disabled')
           })
         })
       })
@@ -77,12 +77,12 @@ describe('<EntityToggleModal />', () => {
       it('should not |onConfirm| more than once when |onConfirm| is pending', () => {
         cy.wrap(onConfirmSpy).should('not.be.called')
         // eslint-disable-next-line cypress/unsafe-to-chain-command
-        cy.get('.k-prompt-proceed').click().then(() => {
+        cy.get('button[data-testid="modal-action-button"]').click().then(() => {
           cy.wrap(onConfirmSpy).should('be.calledOnce')
           // eslint-disable-next-line cypress/no-unnecessary-waiting
           cy.wait(10).then(() => {
             // eslint-disable-next-line cypress/unsafe-to-chain-command
-            cy.get('.k-prompt-proceed').click({ force: true }).then(() => {
+            cy.get('button[data-testid="modal-action-button"]').click({ force: true }).then(() => {
               cy.wrap(onConfirmSpy).should('be.calledOnce')
             })
           })
