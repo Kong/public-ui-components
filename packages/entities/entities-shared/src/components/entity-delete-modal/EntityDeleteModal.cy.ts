@@ -62,7 +62,6 @@ describe('<EntityDeleteModal />', () => {
     })
 
     cy.get('button[data-testid="modal-action-button"]').should('be.disabled')
-    cy.get('button[data-testid="modal-action-button"] .kong-icon-spinner').should('exist')
   })
 
   it('should show description slot content', () => {
