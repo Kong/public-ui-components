@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.12.0...@kong-ui-public/analytics-utilities@0.13.0) (2024-02-01)
+
+
+### Features
+
+* **analytics:** add explore v4 types [MA-2303] ([#1129](https://github.com/Kong/public-ui-components/issues/1129)) ([8bfee21](https://github.com/Kong/public-ui-components/commit/8bfee215c29809cce7f5c5aedaa9588e6d7e8c49))
+
+
+
+
+
 # [0.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.11.5...@kong-ui-public/analytics-utilities@0.12.0) (2024-01-30)
 
 

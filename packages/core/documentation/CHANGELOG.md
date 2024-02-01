@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.2.17...@kong-ui-public/documentation@0.3.0) (2024-02-01)
+
+
+### Features
+
+* **documentation:** add prop to wrap empty state in a KCard ([#1136](https://github.com/Kong/public-ui-components/issues/1136)) ([be9cb7b](https://github.com/Kong/public-ui-components/commit/be9cb7b260fa485ceaf1319677a846a7a59db9a4))
+
+
+
+
+
 ## [0.2.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.2.16...@kong-ui-public/documentation@0.2.17) (2024-01-31)
 
 **Note:** Version bump only for package @kong-ui-public/documentation
