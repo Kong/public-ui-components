@@ -12,6 +12,7 @@ The main Kong UI component for display documentation.
   - [`cacheKey`](#cachekey)
   - [`canEdit`](#canedit)
   - [`documentList`](#documentlist)
+  - [`emptyStateCard`](#emptystatecard)
   - [`entityId`](#entityid)
   - [`hidePublishToggle`](#hidepublishtoggle)
   - [`card`](#card)
@@ -53,6 +54,7 @@ yarn add @kong-ui-public/documentation
   :cache-key="cacheKey"
   :can-edit="isAllowed"
   :document-list="documentList"
+  empty-state-card
   :entity-id="serviceId"
   hide-publish-toggle
   :card="false"
@@ -103,6 +105,13 @@ yarn add @kong-ui-public/documentation
 - Required: true
 - Default: N/A
 - Use: The list of document items passed into the `items` prop of the `KTreeList` component
+
+### `emptyStateCard`
+
+- Type: Boolean
+- Required: false
+- Default: false
+- Use: Boolean for wrapping the empty state component in a KCard
 
 ### `entityId`
 
