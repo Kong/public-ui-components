@@ -2,6 +2,7 @@
 import type { MetricUnit, RecordEvent } from './analytics-data'
 
 export const exploreFilterTypesV2 = ['in', 'not_in', 'selector'] as const
+
 export type ExploreFilterTypesV2 = typeof exploreFilterTypesV2[number]
 
 export const queryableExploreDimensions = [
@@ -18,6 +19,7 @@ export const queryableExploreDimensions = [
   'status_code_grouped',
   'time',
 ] as const
+
 export type QueryableExploreDimensions = typeof queryableExploreDimensions[number]
 
 export interface ExploreFilter {
@@ -50,9 +52,11 @@ export const exploreAggregations = [
   'request_size_average',
   'response_size_average',
 ] as const
+
 export type ExploreAggregations = typeof exploreAggregations[number]
 
 export const timeRangeTypeV2 = ['absolute', 'relative'] as const
+
 export type TimeRangeTypeV2 = typeof timeRangeTypeV2[number]
 
 export interface AbsoluteTimeRangeV4 {
@@ -75,6 +79,7 @@ export const relativeTimeRangeValuesV4 = [
   'previous_week',
   'previous_month',
 ] as const
+
 export type RelativeTimeRangeValuesV4 = typeof relativeTimeRangeValuesV4[number]
 
 export interface RelativeTimeRangeV4 {
