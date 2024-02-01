@@ -25,8 +25,11 @@ import '@kong-ui-public/sandbox-layout/dist/style.css'
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const context: DashboardRendererContext = {
-  filters: {},
-  timeSpec: '',
+  filters: [],
+  timeSpec: {
+    type: 'relative',
+    time_range: '24h',
+  },
 }
 
 const dashboardConfig: DashboardConfig = {
@@ -78,7 +81,9 @@ const dashboardConfig: DashboardConfig = {
           type: ChartTypes.TimeseriesLine,
           fill: true,
         },
-        query: { type: 'timeseries' },
+        query: {
+          dimensions: ['time'],
+        },
       },
       layout: {
         position: {

@@ -1,10 +1,18 @@
 <template>
   <div class="documentation">
-    <DocumentationPageEmptyState
-      v-if="documentList && !documentList.length"
-      :can-edit="canEdit"
-      @create-documentation="handleAddClick"
-    />
+    <div v-if="documentList && !documentList.length">
+      <KCard v-if="emptyStateCard">
+        <DocumentationPageEmptyState
+          :can-edit="canEdit"
+          @create-documentation="handleAddClick"
+        />
+      </KCard>
+      <DocumentationPageEmptyState
+        v-else
+        :can-edit="canEdit"
+        @create-documentation="handleAddClick"
+      />
+    </div>
     <KCard
       v-else
       class="documentation-card"
@@ -105,6 +113,13 @@ const props = defineProps({
   documentList: {
     type: Array as PropType<DocumentListItem[]>,
     required: true,
+  },
+  /**
+   * Boolean for wrapping the empty state component in a KCard
+   */
+  emptyStateCard: {
+    type: Boolean,
+    default: false,
   },
   /**
    * The ID of the entity to which a document is associated.

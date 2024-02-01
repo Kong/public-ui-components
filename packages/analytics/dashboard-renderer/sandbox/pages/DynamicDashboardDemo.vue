@@ -136,8 +136,11 @@ const definition = computed<ValidationResult>(() => {
 })
 
 const context: DashboardRendererContext = {
-  filters: {},
-  timeSpec: '',
+  filters: [],
+  timeSpec: {
+    type: 'relative',
+    time_range: '24h',
+  },
 }
 
 </script>

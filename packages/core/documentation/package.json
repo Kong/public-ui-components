@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/documentation",
-  "version": "0.2.17",
+  "version": "0.3.0",
   "type": "module",
   "main": "./dist/documentation.umd.js",
   "module": "./dist/documentation.es.js",

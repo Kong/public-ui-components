@@ -14,7 +14,13 @@ Render Analytics charts on a page from a JSON definition.
   - This plugin must `provide` a `query` method that adheres to the `QueryBridge` interface exported from this package.
   - The plugin's query method is in charge of passing the query to the correct API for the host app's environment.
   - See the sandbox plugin (`./sandbox/sandbox-query-provider.ts`) for an example that simply returns static data rather than consuming an API.
-- `@kong-ui-public/analytics-chart` and `@kong/kongponents` must be installed as peer dependencies.
+- The host application must supply peer dependencies for:
+  - `@kong-ui-public/analytics-chart`
+  - `@kong-ui-public/analytics-utilities`
+  - `@kong-ui-public/i18n`
+  - `@kong/kongponents`
+  - `swrv`
+  - `vue`
 
 ## Usage
 
