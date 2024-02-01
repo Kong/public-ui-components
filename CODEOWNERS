@@ -32,6 +32,7 @@
 /packages/core/i18n/ @adamdehaven @ValeryG @jillztom
 /packages/core/misc-widgets/ @Kong/team-core-ui
 /packages/core/forms/ @Kong/team-km @Kong/team-core-ui @LukeSwierlik @QueaT-kong
+/packages/core/documentation/ @Kong/team-core-ui @dustinryerson @lukewhchen
 
 # Portal packages
 /packages/portal/document-viewer/ @Kong/team-devx
