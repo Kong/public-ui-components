@@ -20,7 +20,7 @@ describe('<EntityDeleteModal />', () => {
       },
     })
 
-    cy.get('.k-prompt-header-content').should('contain.text', title)
+    cy.get('.modal-header').should('contain.text', title)
     cy.get('.kong-ui-entity-delete-modal .description').should('contain.text', description)
   })
 
@@ -80,7 +80,7 @@ describe('<EntityDeleteModal />', () => {
       },
     })
 
-    cy.get('.k-prompt-header-content').should('contain.text', title)
+    cy.get('.modal-header').should('contain.text', title)
     cy.get('.kong-ui-entity-delete-modal .description').should('contain.text', description)
   })
 })

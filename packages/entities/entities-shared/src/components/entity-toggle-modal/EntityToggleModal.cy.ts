@@ -35,7 +35,7 @@ describe('<EntityToggleModal />', () => {
       })
 
       it('should have correct title, body and button', () => {
-        cy.get('.k-prompt-header-content').should('contain.text', t(`toggleModal.${action}.title`, { entityType: entity.type }))
+        cy.get('.modal-header').should('contain.text', t(`toggleModal.${action}.title`, { entityType: entity.type }))
         cy.get('.k-prompt-body').should('contain.text', t(`toggleModal.${action}.message`, { entityType: entity.type, entityName: entity.name }))
         cy.get('.k-prompt-body strong').should('contain.text', entity.name)
         cy.get('button[data-testid="modal-action-button"]').should('contain.text', t(`toggleModal.${action}.confirmText`))

@@ -62,11 +62,11 @@ describe('<AddConsumerModal/>', () => {
 
       cy.getTestId('add-consumer-modal').should('exist')
       cy.get('.k-prompt-body .k-multiselect').should('exist')
-      cy.get('.k-prompt-action-buttons button[data-testid="modal-cancel-button"]').should('exist')
-      cy.get('.k-prompt-action-buttons button[data-testid="modal-action-button"]').should('exist')
+      cy.get('.k-modal .footer-actions button[data-testid="modal-cancel-button"]').should('exist')
+      cy.get('.k-modal .footer-actions button[data-testid="modal-action-button"]').should('exist')
     })
 
-    it('should emit cancel event when KPrompt emits canceled event', () => {
+    it('should emit cancel event when KPrompt emits cancel event', () => {
       interceptFilters()
 
       cy.mount(AddConsumerModal, {
@@ -81,7 +81,7 @@ describe('<AddConsumerModal/>', () => {
       cy.wait('@interceptFilters')
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(KPrompt)
-        .vm.$emit('canceled'))
+        .vm.$emit('cancel'))
 
       cy.get('@cancelSpy').should('have.been.called')
     })
@@ -181,11 +181,11 @@ describe('<AddConsumerModal/>', () => {
 
       cy.getTestId('add-consumer-modal').should('exist')
       cy.get('.k-prompt-body .k-multiselect').should('exist')
-      cy.get('.k-prompt-action-buttons button[data-testid="modal-cancel-button"]').should('exist')
-      cy.get('.k-prompt-action-buttons button[data-testid="modal-action-button"]').should('exist')
+      cy.get('.k-modal .footer-actions button[data-testid="modal-cancel-button"]').should('exist')
+      cy.get('.k-modal .footer-actions button[data-testid="modal-action-button"]').should('exist')
     })
 
-    it('should emit cancel event when KPrompt emits canceled event', () => {
+    it('should emit cancel event when KPrompt emits cancel event', () => {
       interceptFilters()
 
       cy.mount(AddConsumerModal, {
@@ -200,7 +200,7 @@ describe('<AddConsumerModal/>', () => {
       cy.wait('@interceptFilters')
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(KPrompt)
-        .vm.$emit('canceled'))
+        .vm.$emit('cancel'))
 
       cy.get('@cancelSpy').should('have.been.called')
     })

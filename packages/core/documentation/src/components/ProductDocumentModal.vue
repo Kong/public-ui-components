@@ -95,14 +95,39 @@
       </template>
 
       <template #footer-actions>
-        <div class="action-buttons">
+        <KButton
+          v-if="editing"
+          appearance="danger"
+          class="edit-documentation-delete-button"
+          data-testid="edit-documentation-delete-button"
+          :disabled="actionPending"
+          @click="emit('delete')"
+        >
+          <template
+            v-if="actionPending"
+            #icon
+          >
+            <ProgressIcon
+              size="16"
+            />
+          </template>
+          {{ i18n.t('documentation.form_modal.delete_button_text') }}
+        </KButton>
+
+        <div class="button-spacing">
           <KButton
-            v-if="editing"
-            appearance="danger"
-            class="edit-documentation-delete-button"
-            data-testid="edit-documentation-delete-button"
-            :disabled="actionPending"
-            @click="emit('delete')"
+            appearance="tertiary"
+            class="edit-documentation-cancel-button"
+            data-testid="edit-documentation-cancel-button"
+            @click="handleClickCancel"
+          >
+            {{ i18n.t('documentation.form_modal.cancel_button_text') }}
+          </KButton>
+          <KButton
+            appearance="primary"
+            data-testid="edit-documentation-save-button"
+            :disabled="actionPending || saveDisabled"
+            @click="handleClickSave"
           >
             <template
               v-if="actionPending"
@@ -112,35 +137,8 @@
                 size="16"
               />
             </template>
-            {{ i18n.t('documentation.form_modal.delete_button_text') }}
+            {{ i18n.t('documentation.form_modal.save_button_text') }}
           </KButton>
-
-          <div class="button-spacing">
-            <KButton
-              appearance="tertiary"
-              class="edit-documentation-cancel-button"
-              data-testid="edit-documentation-cancel-button"
-              @click="handleClickCancel"
-            >
-              {{ i18n.t('documentation.form_modal.cancel_button_text') }}
-            </KButton>
-            <KButton
-              appearance="primary"
-              data-testid="edit-documentation-save-button"
-              :disabled="actionPending || saveDisabled"
-              @click="handleClickSave"
-            >
-              <template
-                v-if="actionPending"
-                #icon
-              >
-                <ProgressIcon
-                  size="16"
-                />
-              </template>
-              {{ i18n.t('documentation.form_modal.save_button_text') }}
-            </KButton>
-          </div>
         </div>
       </template>
     </KModal>
@@ -359,10 +357,6 @@ onMounted(() => {
     .edit-documentation-cancel-button {
       margin-right: $kui-space-40;
     }
-
-    .k-prompt .k-modal-dialog.modal-dialog .k-modal-content .k-modal-footer.modal-footer .k-prompt-action-buttons {
-      width: 100%;
-    }
   }
 </style>
 
@@ -381,10 +375,6 @@ onMounted(() => {
       .k-file-upload-btn {
         top: 38px;
       }
-    }
-
-    .k-modal-content .k-modal-footer.modal-footer .k-prompt-action-buttons {
-      width: 100%;
     }
   }
 </style>
