@@ -2,7 +2,6 @@ import type { Plugin } from 'vue'
 import { exploreV3Response, timeSeriesExploreResponse } from './mock-data'
 import { INJECT_QUERY_PROVIDER } from '../src/constants'
 import type { AnalyticsBridge, ExploreQuery, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import { QueryableExploreDimensions } from '@kong-ui-public/analytics-utilities'
 
 const delayedResponse = (response: any) => {
   return new Promise((resolve) => {
@@ -14,7 +13,7 @@ const delayedResponse = (response: any) => {
 
 // TODO: Remove the type hacks
 const queryFn = async (query: ExploreQuery): Promise<ExploreResultV4> => {
-  if (query.dimensions && query.dimensions.findIndex(d => d === QueryableExploreDimensions.time) > -1) {
+  if (query.dimensions && query.dimensions.findIndex(d => d === 'time') > -1) {
     return await delayedResponse(timeSeriesExploreResponse) as ExploreResultV4
   }
   return await delayedResponse(exploreV3Response) as ExploreResultV4
