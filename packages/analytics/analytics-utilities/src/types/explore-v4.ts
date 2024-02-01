@@ -102,7 +102,7 @@ export interface ExploreQuery {
 export interface Display {
   [id: string]: {
     name: string
-    deleted: boolean
+    deleted?: boolean
     is_other_group?: boolean
   }
 }
