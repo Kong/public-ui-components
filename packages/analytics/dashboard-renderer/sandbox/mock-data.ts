@@ -1,4 +1,6 @@
-export const exploreV3Response = {
+import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+
+export const nonTsExploreResponse: ExploreResultV4 = {
   data: [{
     event: { status_code_grouped: '2XX', request_count: 128618 },
     timestamp: '2024-01-31T19:16:00.000Z',
@@ -28,7 +30,7 @@ export const exploreV3Response = {
   },
 }
 
-export const timeSeriesExploreResponse = {
+export const timeSeriesExploreResponse: ExploreResultV4 = {
   data: [{
     event: { kong_latency_p99: 119, kong_latency_p95: 49, kong_latency_p50: 0 },
     timestamp: '2024-01-31T18:43:00.000Z',

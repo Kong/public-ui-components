@@ -4,14 +4,13 @@ import DashboardRenderer from './DashboardRenderer.vue'
 import { ChartTypes } from '../types'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import type { GlobalMountOptions } from '@vue/test-utils/dist/types'
-import { exploreV3Response } from '../../sandbox/mock-data'
+import { nonTsExploreResponse } from '../../sandbox/mock-data'
 
 import { INJECT_QUERY_PROVIDER } from '../constants'
-import type { AnalyticsBridge, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsBridge } from '@kong-ui-public/analytics-utilities'
 
-// TODO: Remove the type hack
 const mockQueryProvider: AnalyticsBridge = {
-  queryFn: async () => { return exploreV3Response as unknown as ExploreResultV4 },
+  queryFn: async () => { return nonTsExploreResponse },
 }
 
 const global: GlobalMountOptions = {
