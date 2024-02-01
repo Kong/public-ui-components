@@ -283,10 +283,6 @@ const saveFormData = async (): Promise<void> => {
   }
 }
 
-const loadingSpinnerDisplay = computed((): string => {
-  return form.isReadonly ? 'inline-flex' : 'none'
-})
-
 watch(() => props.targetId, () => {
   // Reset the form fields
   Object.assign(form.fields, formFieldsInitial)
@@ -304,12 +300,6 @@ watch(() => props.targetId, () => {
   }
 
   padding: 0;
-}
-
-:deep(.k-prompt-proceed) {
-  .kong-icon-spinner {
-    display: v-bind('loadingSpinnerDisplay');
-  }
 }
 
 .kong-ui-entities-target-form {
