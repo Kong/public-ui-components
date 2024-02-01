@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-pr.1972.93c8e7bf.0",
+    "@kong/kongponents": "9.0.0-pr.1972.30ce2198.0",
     "vue": "^3.4.13"
   },
   "repository": {
