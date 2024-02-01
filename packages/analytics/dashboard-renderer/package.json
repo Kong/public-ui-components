@@ -40,11 +40,13 @@
   },
   "devDependencies": {
     "@kong-ui-public/analytics-chart": "workspace:^",
+    "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "1.12.7",
     "@kong/kongponents": "9.0.0-alpha.95",
     "json-schema-to-ts": "^3.0.0",
+    "swrv": "^1.0.4",
     "vue": "^3.4.13"
   },
   "repository": {
@@ -66,13 +68,14 @@
   },
   "peerDependencies": {
     "@kong-ui-public/analytics-chart": "workspace:^",
+    "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^8.126.2",
+    "swrv": "^1.0.4",
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
-    "ajv": "^8.12.0",
-    "swrv": "^1.0.4"
+    "ajv": "^8.12.0"
   }
 }

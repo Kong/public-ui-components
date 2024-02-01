@@ -1,8 +1,9 @@
 import type { Plugin } from 'vue'
-import { INJECT_QUERY_PROVIDER } from '../src/types/query-provider'
-import { exploreV3Response, timeSeriesExploreResponse } from './mock-data'
+import { nonTsExploreResponse, timeSeriesExploreResponse } from './mock-data'
+import { INJECT_QUERY_PROVIDER } from '../src/constants'
+import type { AnalyticsBridge, ExploreQuery, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 
-const delayedResponse = (response: any) => {
+const delayedResponse = <T>(response: T): Promise<T> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(response)
@@ -10,16 +11,16 @@ const delayedResponse = (response: any) => {
   })
 }
 
-const query = async (query: any): Promise<any> => {
-  if (query.type === 'timeseries') {
+const queryFn = async (query: ExploreQuery): Promise<ExploreResultV4> => {
+  if (query.dimensions && query.dimensions.findIndex(d => d === 'time') > -1) {
     return await delayedResponse(timeSeriesExploreResponse)
   }
-  return await delayedResponse(exploreV3Response)
+  return await delayedResponse(nonTsExploreResponse)
 }
 
 const sandboxQueryProvider: Plugin = {
   install(app) {
-    app.provide(INJECT_QUERY_PROVIDER, { query })
+    app.provide(INJECT_QUERY_PROVIDER, { queryFn } as AnalyticsBridge)
   },
 }
 

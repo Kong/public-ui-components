@@ -6,7 +6,7 @@
   >
     <div class="analytics-chart">
       <SimpleChart
-        :chart-data="data"
+        :chart-data="data as unknown as AnalyticsExploreResult"
         :chart-options="mappedChartOptions"
         :synthetics-data-key="chartOptions.syntheticsDataKey"
       />
@@ -21,6 +21,7 @@ import { SimpleChart, ChartTypesSimple } from '@kong-ui-public/analytics-chart'
 import type { SimpleChartOptions } from '@kong-ui-public/analytics-chart'
 import { ChartTypes } from '../types'
 import QueryDataProvider from './QueryDataProvider.vue'
+import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
 
 const props = defineProps<RendererProps<GaugeChartOptions>>()
 

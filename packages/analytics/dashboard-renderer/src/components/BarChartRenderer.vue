@@ -6,7 +6,7 @@
   >
     <div class="analytics-chart">
       <AnalyticsChart
-        :chart-data="data"
+        :chart-data="data as unknown as AnalyticsExploreResult"
         :chart-options="options"
         legend-position="bottom"
         :show-annotations="chartOptions.showAnnotations"
@@ -22,6 +22,7 @@ import { computed } from 'vue'
 import type { AnalyticsChartOptions } from '@kong-ui-public/analytics-chart'
 import { AnalyticsChart, ChartTypes as AnalyticsChartTypes } from '@kong-ui-public/analytics-chart'
 import { ChartTypes } from '../types'
+import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
 
 const props = defineProps<RendererProps<BarChartOptions>>()
 

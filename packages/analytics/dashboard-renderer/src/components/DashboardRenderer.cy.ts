@@ -4,12 +4,13 @@ import DashboardRenderer from './DashboardRenderer.vue'
 import { ChartTypes } from '../types'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import type { GlobalMountOptions } from '@vue/test-utils/dist/types'
-import { exploreV3Response } from '../../sandbox/mock-data'
-import type { QueryProvider } from '../types/query-provider'
-import { INJECT_QUERY_PROVIDER } from '../types/query-provider'
+import { nonTsExploreResponse } from '../../sandbox/mock-data'
 
-const mockQueryProvider: QueryProvider = {
-  query: async () => { return exploreV3Response },
+import { INJECT_QUERY_PROVIDER } from '../constants'
+import type { AnalyticsBridge } from '@kong-ui-public/analytics-utilities'
+
+const mockQueryProvider: AnalyticsBridge = {
+  queryFn: async () => { return nonTsExploreResponse },
 }
 
 const global: GlobalMountOptions = {
@@ -22,7 +23,7 @@ describe('<DashboardRenderer />', () => {
   it('Renders the correct number of tiles', () => {
     const props = {
       context: {
-        filters: {},
+        filters: [],
         timeSpec: '',
       },
       config: {
