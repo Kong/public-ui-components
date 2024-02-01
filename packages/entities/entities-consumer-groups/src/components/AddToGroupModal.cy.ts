@@ -62,7 +62,7 @@ describe('<AddToGroupModal/>', () => {
       cy.wait('@interceptFilters')
 
       cy.getTestId('add-to-group-modal').should('exist')
-      cy.get('.k-prompt-body .k-multiselect').should('exist')
+      cy.get('.modal-content .k-multiselect').should('exist')
       cy.get('.k-modal .footer-actions button[data-testid="modal-cancel-button"]').should('exist')
       cy.get('.k-modal .footer-actions button[data-testid="modal-action-button"]').should('exist')
     })
@@ -181,7 +181,7 @@ describe('<AddToGroupModal/>', () => {
       cy.wait('@interceptFilters')
 
       cy.getTestId('add-to-group-modal').should('exist')
-      cy.get('.k-prompt-body .k-multiselect').should('exist')
+      cy.get('.modal-content .k-multiselect').should('exist')
       cy.get('.k-modal .footer-actions button[data-testid="modal-cancel-button"]').should('exist')
       cy.get('.k-modal .footer-actions button[data-testid="modal-action-button"]').should('exist')
     })

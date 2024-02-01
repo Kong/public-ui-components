@@ -287,7 +287,7 @@ describe('<AnalyticsChart />', () => {
     // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.getTestId('csv-export-button').click().then(() => {
       cy.getTestId('csv-export-modal').should('exist')
-      cy.get('.modal-body .vitals-table').should('exist')
+      cy.get('.modal-content .vitals-table').should('exist')
     })
   })
 

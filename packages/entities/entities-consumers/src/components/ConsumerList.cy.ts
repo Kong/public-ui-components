@@ -544,7 +544,7 @@ describe('<ConsumerList />', () => {
         cy.get(removeQuery).should('have.text', 'Remove')
       })
 
-    it('should hide Remove Consumer modal when this modal emits canceled event',
+    it('should hide Remove Consumer modal when this modal emits cancel event',
       () => {
         interceptGroupKM({
           mockData: consumers5,
@@ -572,7 +572,7 @@ describe('<ConsumerList />', () => {
         cy.getTestId(modalQuery).should('exist')
 
         cy.get('@vueWrapper').then((wrapper: any) => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
-          .vm.$emit('canceled'))
+          .vm.$emit('cancel'))
 
         cy.getTestId(modalQuery).should('not.exist')
       })
@@ -1172,7 +1172,7 @@ describe('<ConsumerList />', () => {
         cy.get(removeQuery).should('have.text', 'Remove')
       })
 
-    it('should hide Remove Consumer modal when this modal emits canceled event',
+    it('should hide Remove Consumer modal when this modal emits cancel event',
       () => {
         interceptGroupKonnect({
           mockData: consumers5,
@@ -1200,7 +1200,7 @@ describe('<ConsumerList />', () => {
         cy.getTestId(modalQuery).should('exist')
 
         cy.get('@vueWrapper').then((wrapper: any) => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
-          .vm.$emit('canceled'))
+          .vm.$emit('cancel'))
 
         cy.getTestId(modalQuery).should('not.exist')
       })
