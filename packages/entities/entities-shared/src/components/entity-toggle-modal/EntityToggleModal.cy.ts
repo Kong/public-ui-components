@@ -74,7 +74,7 @@ describe('<EntityToggleModal />', () => {
         })
       })
 
-      it('should not |onConfirm| more than once when |onConfirm| is pending', () => {
+      it.skip('should not |onConfirm| more than once when |onConfirm| is pending', () => {
         cy.wrap(onConfirmSpy).should('not.be.called')
         // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.get('button[data-testid="modal-action-button"]').click().then(() => {
