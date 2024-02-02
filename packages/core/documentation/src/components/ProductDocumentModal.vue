@@ -123,14 +123,7 @@
             :disabled="actionPending || saveDisabled"
             @click="handleClickSave"
           >
-            <template
-              v-if="actionPending"
-              #icon
-            >
-              <ProgressIcon
-                size="16"
-              />
-            </template>
+            <ProgressIcon v-if="actionPending" />
             {{ i18n.t('documentation.form_modal.save_button_text') }}
           </KButton>
         </div>
