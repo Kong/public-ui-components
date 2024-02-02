@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.0.1...@kong-ui-public/app-layout@4.0.2) (2024-02-02)
+
+
+### Bug Fixes
+
+* **app-layout:** sidebar overflow ([#1137](https://github.com/Kong/public-ui-components/issues/1137)) ([2b8c839](https://github.com/Kong/public-ui-components/commit/2b8c83926fec291867b552381c1bb8073c157619))
+
+
+
+
+
 ## [4.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.0.0...@kong-ui-public/app-layout@4.0.1) (2024-01-30)
 
 
