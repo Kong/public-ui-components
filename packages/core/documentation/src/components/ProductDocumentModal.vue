@@ -104,14 +104,7 @@
           :disabled="actionPending"
           @click="emit('delete')"
         >
-          <template
-            v-if="actionPending"
-            #icon
-          >
-            <ProgressIcon
-              size="16"
-            />
-          </template>
+          <ProgressIcon v-if="actionPending" />
           {{ i18n.t('documentation.form_modal.delete_button_text') }}
         </KButton>
 
