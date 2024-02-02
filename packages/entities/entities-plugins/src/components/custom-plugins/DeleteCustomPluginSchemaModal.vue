@@ -17,7 +17,6 @@
 
   <KModal
     v-else-if="plugin"
-    action-button-appearance="warning"
     :action-button-disabled="isLoading"
     class="delete-custom-plugin-schema-modal"
     data-testid="delete-custom-plugin-schema-modal"

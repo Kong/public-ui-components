@@ -3,7 +3,6 @@
     to="body"
   >
     <KPrompt
-      action-button-appearance="warning"
       :action-button-disabled="isPending"
       :action-button-text="actionButtonText"
       :data-testid="`${entityType}-${entityId}-toggle-prompt`"
