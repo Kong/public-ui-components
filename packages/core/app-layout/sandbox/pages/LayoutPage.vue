@@ -159,9 +159,9 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       to: '/?runtime-manager',
       label: 'retail-sandbox-rg', // runtime group name
       key: 'gateway-manager',
-      active: (activeItem.value as SidebarPrimaryItem)?.key === 'runtime-manager',
+      active: (activeItem.value as SidebarPrimaryItem)?.key === 'gateway-manager',
       // TODO: actually when you click on Runtime Manager it would not expand until the user picks a runtime group
-      expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'runtime-manager' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'runtime-manager',
+      expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'gateway-manager' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'gateway-manager',
       items: [
         {
           name: 'Runtime Instances',
