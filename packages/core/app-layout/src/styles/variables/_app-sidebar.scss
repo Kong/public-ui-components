@@ -25,7 +25,7 @@ $scrollbar-background-color: $kui-color-background-transparent;
 
   // Standard version (Firefox only for now) - always include
   scrollbar-color: $kui-color-background-transparent $kui-color-background-transparent;
-  scrollbar-gutter: stable both-edges;
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
 }
 
@@ -42,6 +42,6 @@ $scrollbar-background-color: $kui-color-background-transparent;
 
   // Standard version (Firefox only for now) - always include
   scrollbar-color: $foreground-color $background-color;
-  scrollbar-gutter: stable both-edges;
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
 }
