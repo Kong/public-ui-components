@@ -360,6 +360,7 @@ onBeforeUnmount(() => {
   }
 
   .sidebar-content-container {
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -368,6 +369,8 @@ onBeforeUnmount(() => {
     // Must use `scroll` so that the scrollbar width is always accounted for. Cannot use `overlay` here as it breaks in Firefox.
     overflow-y: scroll;
     padding-top: $sidebar-header-spacing;
+    position: relative;
+    width: 100%;
     // Only some browsers support `overflow: overlay`, it's deprecated
     @supports(overflow: overlay) {
       overflow-y: overlay;
@@ -377,6 +380,11 @@ onBeforeUnmount(() => {
     // Only show scrollbar when hovering over nav
     &:hover {
       @include scrollbarVisible;
+    }
+
+    nav {
+      box-sizing: border-box;
+      width: 100%;
     }
   }
 
@@ -532,9 +540,15 @@ onBeforeUnmount(() => {
   }
 
   .level-primary {
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    padding: $kui-space-0 $kui-space-40; // if changed, ensure you test in ALL browsers
+    padding: $kui-space-0 $kui-space-10 $kui-space-0 $kui-space-50; // if changed, ensure you test in ALL browsers
+    width: 100%;
+    // Adjust padding for Safari-only
+    @supports (background: -webkit-named-image(i)) {
+      padding: $kui-space-0 $kui-space-40;
+    }
 
     &:last-of-type {
       margin-bottom: $sidebar-header-spacing * 4;
