@@ -41,11 +41,11 @@ describe('<EntityToggleModal />', () => {
         cy.get('button[data-testid="modal-action-button"]').should('contain.text', t(`toggleModal.${action}.confirmText`))
       })
 
-      it('should emit a "canceled" event when clicking cancel button', () => {
-        cy.wrap(Cypress.vueWrapper.emitted('canceled')).should('be.undefined')
+      it('should emit a "cancel" event when clicking cancel button', () => {
+        cy.wrap(Cypress.vueWrapper.emitted('cancel')).should('be.undefined')
         // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.get('button[data-testid="modal-cancel-button"]').click().then(() => {
-          cy.wrap(Cypress.vueWrapper.emitted('canceled')).should('have.length', 1)
+          cy.wrap(Cypress.vueWrapper.emitted('cancel')).should('have.length', 1)
         })
       })
 

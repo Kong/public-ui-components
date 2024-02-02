@@ -208,7 +208,7 @@
       :entity-type="t('glossary.plugin')"
       :on-confirm="confirmSwitchEnablement"
       :visible="enablementModalVisible"
-      @canceled="closeEnablementModal"
+      @cancel="closeEnablementModal"
       @proceed="closeEnablementModal"
     />
 

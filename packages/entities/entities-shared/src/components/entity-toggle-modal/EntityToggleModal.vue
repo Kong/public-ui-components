@@ -67,7 +67,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'canceled'): void
+  (e: 'cancel'): void
   (e: 'proceed'): void
 }>()
 
@@ -83,7 +83,7 @@ const actionButtonText = computed((): string => props.action === 'enable'
   : t('toggleModal.disable.confirmText'),
 )
 
-const handleCancel = (): void => emit('canceled')
+const handleCancel = (): void => emit('cancel')
 
 const handleConfirm = async (): Promise<void> => {
   if (props.onConfirm) {
