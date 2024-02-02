@@ -61,7 +61,7 @@ describe('<EntityDeleteModal />', () => {
       },
     })
 
-    cy.get('button[data-testid="modal-action-button"]').should('be.disabled')
+    cy.getTestId('modal-action-button').should('be.disabled')
   })
 
   it('should show description slot content', () => {
