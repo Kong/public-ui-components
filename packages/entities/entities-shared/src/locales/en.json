@@ -20,7 +20,7 @@
     },
     "configuration": {
       "title": "Configuration",
-      "message": "Configuring your API has never been easier. Use YAML for human-friendly simplicity or JSON for machine-readability. Streamline your settings effortlessly.",
+      "message": "Export configuration of core Gateway Manager objects, like services, routes, and plugins, to YAML or JSON. This allows you to import the file to APIOps tooling, like decK.",
       "yaml": "YAML",
       "json": "JSON"
     },
