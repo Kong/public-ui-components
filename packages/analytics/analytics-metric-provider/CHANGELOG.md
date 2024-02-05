@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@2.0.38...@kong-ui-public/analytics-metric-provider@2.0.39) (2024-02-05)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 6 [KHCP-10444] ([#1135](https://github.com/Kong/public-ui-components/issues/1135)) ([bf6d314](https://github.com/Kong/public-ui-components/commit/bf6d314c1fe657a10f64e8db926f3f3feb36ca3f))
+
+
+
+
+
 ## [2.0.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@2.0.37...@kong-ui-public/analytics-metric-provider@2.0.38) (2024-02-05)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
