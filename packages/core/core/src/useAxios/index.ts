@@ -2,11 +2,7 @@ import axios from 'axios'
 import { inject } from 'vue'
 import type { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios'
 
-/**
- * A composable to generate the default axios instance.
- * @param {AxiosRequestConfig} options The axios request config
- */
-export default function useAxios(options?: AxiosRequestConfig) {
+export default function useAxios() {
   /**
    * A function to return the app-level provided base axios instance, if it exists. Otherwise, returns a fallback axios instance.
    * @param {AxiosRequestConfig} options The axios request config
@@ -22,13 +18,6 @@ export default function useAxios(options?: AxiosRequestConfig) {
   })
 
   /**
-   * The default axios instance
-   * @param {AxiosRequestConfig} options The axios request config
-   * @returns {AxiosInstance} The axios instance
-   */
-  const axiosInstance = getAxiosInstance(options)
-
-  /**
    * Get the `x-datadog-trace-id` header from the provided error, if it exists
    * @param {AxiosError | any} error The response error
    * @returns {string} The trace ID
@@ -38,7 +27,7 @@ export default function useAxios(options?: AxiosRequestConfig) {
   }
 
   return {
-    axiosInstance,
+    getAxiosInstance,
     getTraceIdFromError,
   }
 }

@@ -11,8 +11,10 @@ A host application or component can provide a base axios instance factory to uti
 ```typescript
 import { useAxios } from '@kong-ui-public/core'
 
+const { getAxiosInstance } = useAxios()
+
 // **Must** be called at the root of the `script setup` block, optionally passing in custom `AxiosRequestConfig` options
-const { axiosInstance } = useAxios()
+const axiosInstance = getAxiosInstance()
 
 const fetchData = async (): Promise<void> => {
   try {
@@ -24,7 +26,7 @@ const fetchData = async (): Promise<void> => {
 ```
 
 
-### Providing a base axios instance factory from a host app or parent component
+### Providing a base axios instance factory
 
 ```typescript
 const createCustomAxiosInstance = (options: AxiosRequestConfig = {}): AxiosInstance => {
