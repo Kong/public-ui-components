@@ -1,0 +1,21 @@
+name: Verify PR
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  check-packages:
+    name: No PR preview references
+    runs-on: ${{ vars.RUNS_ON }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: No PR preview references
+        uses: Kong/public-shared-actions/pr-previews/validate@main
+
