@@ -1,7 +1,5 @@
 // Cypress component test spec file
 import CsvExportModal from './CsvExportModal.vue'
-import composables from '../composables'
-import { computed } from 'vue'
 import { exploreResult, exploreV2Result, emptyExploreResult } from '../../fixtures/mockData'
 
 const DOWNLOADS_FOLDER = Cypress.config('downloadsFolder')
@@ -35,8 +33,8 @@ describe('<CsvExportModal />', () => {
 
     cy.getTestId('csv-export-modal').should('exist')
     cy.get('.k-table-empty-state').should('not.exist')
-    cy.get('.modal-body .vitals-table').should('exist')
-    cy.get('.modal-body .vitals-table').should('exist')
+    cy.get('.modal-content .vitals-table').should('exist')
+    cy.get('.modal-content .vitals-table').should('exist')
     cy.getTestId('csv-download-button').should('not.be.disabled')
 
     // Timestamp should be naive localtime
@@ -73,8 +71,8 @@ describe('<CsvExportModal />', () => {
 
     cy.getTestId('csv-export-modal').should('exist')
     cy.get('.k-table-empty-state').should('not.exist')
-    cy.get('.modal-body .vitals-table').should('exist')
-    cy.get('.modal-body .vitals-table').should('exist')
+    cy.get('.modal-content .vitals-table').should('exist')
+    cy.get('.modal-content .vitals-table').should('exist')
     cy.getTestId('csv-download-button').should('not.be.disabled')
   })
 })

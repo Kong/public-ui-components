@@ -1,14 +1,14 @@
 <template>
   <KPrompt
+    :action-button-disabled="!canSubmit || form.isReadonly"
     :action-button-text="t('targets.form.buttons.save')"
-    :action-pending="!canSubmit || form.isReadonly"
     :cancel-button-text="t('targets.form.buttons.cancel')"
-    :is-visible="isVisible"
     :title="formTitle"
-    @canceled="onCancel"
+    :visible="isVisible"
+    @cancel="onCancel"
     @proceed="saveFormData"
   >
-    <template #body-content>
+    <template #default>
       <div class="kong-ui-entities-target-form">
         <EntityBaseForm
           :config="config"
@@ -283,10 +283,6 @@ const saveFormData = async (): Promise<void> => {
   }
 }
 
-const loadingSpinnerDisplay = computed((): string => {
-  return form.isReadonly ? 'inline-flex' : 'none'
-})
-
 watch(() => props.targetId, () => {
   // Reset the form fields
   Object.assign(form.fields, formFieldsInitial)
@@ -304,12 +300,6 @@ watch(() => props.targetId, () => {
   }
 
   padding: 0;
-}
-
-:deep(.k-prompt-proceed) {
-  .kong-icon-spinner {
-    display: v-bind('loadingSpinnerDisplay');
-  }
 }
 
 .kong-ui-entities-target-form {

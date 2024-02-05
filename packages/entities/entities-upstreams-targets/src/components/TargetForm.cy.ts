@@ -51,10 +51,10 @@ describe('<TargetForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.get('.kong-ui-entities-target-form').should('be.visible')
       cy.get('.kong-ui-entities-target-form form').should('be.visible')
       // button state
-      cy.get('.k-prompt-cancel').should('be.visible')
-      cy.get('.k-prompt-proceed').should('be.visible')
-      cy.get('.k-prompt-cancel').should('be.enabled')
-      cy.get('.k-prompt-proceed').should('be.disabled')
+      cy.getTestId('modal-cancel-button').should('be.visible')
+      cy.getTestId('modal-action-button').should('be.visible')
+      cy.getTestId('modal-cancel-button').should('be.enabled')
+      cy.getTestId('modal-action-button').should('be.disabled')
       // form fields
       cy.getTestId('target-form-target').should('be.visible')
       cy.getTestId('target-form-weight').should('be.visible')
@@ -71,18 +71,18 @@ describe('<TargetForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
       cy.get('.kong-ui-entities-target-form').should('be.visible')
       // default button state
-      cy.get('.k-prompt-cancel').should('be.visible')
-      cy.get('.k-prompt-proceed').should('be.visible')
-      cy.get('.k-prompt-cancel').should('be.enabled')
-      cy.get('.k-prompt-proceed').should('be.disabled')
+      cy.getTestId('modal-cancel-button').should('be.visible')
+      cy.getTestId('modal-action-button').should('be.visible')
+      cy.getTestId('modal-cancel-button').should('be.enabled')
+      cy.getTestId('modal-action-button').should('be.disabled')
       // enables save when required fields have values
       cy.getTestId('target-form-target').type('bicycle-kick')
       cy.getTestId('target-form-weight').clear()
       cy.getTestId('target-form-weight').type('101')
-      cy.get('.k-prompt-proceed').should('be.enabled')
+      cy.getTestId('modal-action-button').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('target-form-target').clear()
-      cy.get('.k-prompt-proceed').should('be.disabled')
+      cy.getTestId('modal-action-button').should('be.disabled')
     })
 
     it('should show edit form', () => {
@@ -99,10 +99,10 @@ describe('<TargetForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.wait('@getTarget')
       cy.get('.kong-ui-entities-target-form').should('be.visible')
       // default button state
-      cy.get('.k-prompt-cancel').should('be.visible')
-      cy.get('.k-prompt-proceed').should('be.visible')
-      cy.get('.k-prompt-cancel').should('be.enabled')
-      cy.get('.k-prompt-proceed').should('be.disabled')
+      cy.getTestId('modal-cancel-button').should('be.visible')
+      cy.getTestId('modal-action-button').should('be.visible')
+      cy.getTestId('modal-cancel-button').should('be.enabled')
+      cy.getTestId('modal-action-button').should('be.disabled')
       // form fields
       cy.getTestId('target-form-target').should('have.value', target.target)
       cy.getTestId('target-form-weight').should('have.value', target.weight)
@@ -127,17 +127,17 @@ describe('<TargetForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.wait('@getTarget')
       cy.get('.kong-ui-entities-target-form').should('be.visible')
       // default button state
-      cy.get('.k-prompt-cancel').should('be.visible')
-      cy.get('.k-prompt-proceed').should('be.visible')
-      cy.get('.k-prompt-cancel').should('be.enabled')
-      cy.get('.k-prompt-proceed').should('be.disabled')
+      cy.getTestId('modal-cancel-button').should('be.visible')
+      cy.getTestId('modal-action-button').should('be.visible')
+      cy.getTestId('modal-cancel-button').should('be.enabled')
+      cy.getTestId('modal-action-button').should('be.disabled')
       // enables save when form has changes
       cy.getTestId('target-form-target').type('ubiquitous')
-      cy.get('.k-prompt-proceed').should('be.enabled')
+      cy.getTestId('modal-action-button').should('be.enabled')
       // disables save when form changes are undone
       cy.getTestId('target-form-target').clear()
       cy.getTestId('target-form-target').type(target.target)
-      cy.get('.k-prompt-proceed').should('be.disabled')
+      cy.getTestId('modal-action-button').should('be.disabled')
     })
 
     it('should handle error state - failed to load target', () => {
@@ -213,10 +213,10 @@ describe('<TargetForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.get('.kong-ui-entities-target-form').should('be.visible')
       cy.get('.kong-ui-entities-target-form form').should('be.visible')
       // button state
-      cy.get('.k-prompt-cancel').should('be.visible')
-      cy.get('.k-prompt-proceed').should('be.visible')
-      cy.get('.k-prompt-cancel').should('be.enabled')
-      cy.get('.k-prompt-proceed').should('be.disabled')
+      cy.getTestId('modal-cancel-button').should('be.visible')
+      cy.getTestId('modal-action-button').should('be.visible')
+      cy.getTestId('modal-cancel-button').should('be.enabled')
+      cy.getTestId('modal-action-button').should('be.disabled')
       // form fields
       cy.getTestId('target-form-target').should('be.visible')
       cy.getTestId('target-form-weight').should('be.visible')
@@ -233,18 +233,18 @@ describe('<TargetForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
       cy.get('.kong-ui-entities-target-form').should('be.visible')
       // default button state
-      cy.get('.k-prompt-cancel').should('be.visible')
-      cy.get('.k-prompt-proceed').should('be.visible')
-      cy.get('.k-prompt-cancel').should('be.enabled')
-      cy.get('.k-prompt-proceed').should('be.disabled')
+      cy.getTestId('modal-cancel-button').should('be.visible')
+      cy.getTestId('modal-action-button').should('be.visible')
+      cy.getTestId('modal-cancel-button').should('be.enabled')
+      cy.getTestId('modal-action-button').should('be.disabled')
       // enables save when required fields have values
       cy.getTestId('target-form-target').type('bicycle-kick')
       cy.getTestId('target-form-weight').clear()
       cy.getTestId('target-form-weight').type('101')
-      cy.get('.k-prompt-proceed').should('be.enabled')
+      cy.getTestId('modal-action-button').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('target-form-target').clear()
-      cy.get('.k-prompt-proceed').should('be.disabled')
+      cy.getTestId('modal-action-button').should('be.disabled')
     })
 
     it('should show edit form', () => {
@@ -261,10 +261,10 @@ describe('<TargetForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.wait('@getTarget')
       cy.get('.kong-ui-entities-target-form').should('be.visible')
       // default button state
-      cy.get('.k-prompt-cancel').should('be.visible')
-      cy.get('.k-prompt-proceed').should('be.visible')
-      cy.get('.k-prompt-cancel').should('be.enabled')
-      cy.get('.k-prompt-proceed').should('be.disabled')
+      cy.getTestId('modal-cancel-button').should('be.visible')
+      cy.getTestId('modal-action-button').should('be.visible')
+      cy.getTestId('modal-cancel-button').should('be.enabled')
+      cy.getTestId('modal-action-button').should('be.disabled')
       // form fields
       cy.getTestId('target-form-target').should('have.value', target.target)
       cy.getTestId('target-form-weight').should('have.value', target.weight)
@@ -289,17 +289,17 @@ describe('<TargetForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.wait('@getTarget')
       cy.get('.kong-ui-entities-target-form').should('be.visible')
       // default button state
-      cy.get('.k-prompt-cancel').should('be.visible')
-      cy.get('.k-prompt-proceed').should('be.visible')
-      cy.get('.k-prompt-cancel').should('be.enabled')
-      cy.get('.k-prompt-proceed').should('be.disabled')
+      cy.getTestId('modal-cancel-button').should('be.visible')
+      cy.getTestId('modal-action-button').should('be.visible')
+      cy.getTestId('modal-cancel-button').should('be.enabled')
+      cy.getTestId('modal-action-button').should('be.disabled')
       // enables save when form has changes
       cy.getTestId('target-form-target').type('ubiquitous')
-      cy.get('.k-prompt-proceed').should('be.enabled')
+      cy.getTestId('modal-action-button').should('be.enabled')
       // disables save when form changes are undone
       cy.getTestId('target-form-target').clear()
       cy.getTestId('target-form-target').type(target.target)
-      cy.get('.k-prompt-proceed').should('be.disabled')
+      cy.getTestId('modal-action-button').should('be.disabled')
     })
 
     it('should handle error state - failed to load target', () => {

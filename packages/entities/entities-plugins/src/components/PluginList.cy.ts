@@ -363,7 +363,7 @@ describe('<PluginList />', () => {
                 .should('contain.text', 'Enable plugin')
                 .should('contain.text', getDisplayName('basic-auth'))
                 .should('contain.text', 'Yes, enable')
-              cy.get('.k-modal-dialog .k-prompt-cancel').click()
+              cy.get('.modal-container button[data-testid="modal-cancel-button"]').click()
             } else {
               cy.get('.k-modal').should('not.exist')
             }

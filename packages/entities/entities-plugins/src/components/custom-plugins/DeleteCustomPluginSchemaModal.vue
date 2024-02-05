@@ -15,17 +15,16 @@
     @proceed="handleSubmit"
   />
 
-  <KPrompt
+  <KModal
     v-else-if="plugin"
-    :action-pending="isLoading"
+    :action-button-disabled="isLoading"
     class="delete-custom-plugin-schema-modal"
     data-testid="delete-custom-plugin-schema-modal"
-    is-visible
     :title="title"
-    type="warning"
-    @canceled="$emit('closed')"
+    visible
+    @cancel="$emit('closed')"
   >
-    <template #body-content>
+    <template #default>
       <div>
         <i18n-t
           keypath="delete.plugin_schema_in_use_message"
@@ -37,7 +36,7 @@
         </i18n-t>
       </div>
     </template>
-    <template #action-buttons>
+    <template #footer-actions>
       <div>
         <KButton
           appearance="tertiary"
@@ -49,7 +48,7 @@
         </KButton>
       </div>
     </template>
-  </KPrompt>
+  </KModal>
 </template>
 
 <script setup lang="ts">
@@ -127,12 +126,6 @@ const handleSubmit = async (): Promise<void> => {
 </script>
 
 <style lang="scss" scoped>
-.delete-custom-plugin-schema-modal {
-  & :deep(.k-modal-dialog) {
-    max-width: 550px;
-  }
-}
-
 .error-wrapper {
   margin-bottom: $kui-space-60;
 }

@@ -3,16 +3,15 @@
     to="body"
   >
     <KPrompt
+      :action-button-disabled="isPending"
       :action-button-text="actionButtonText"
-      :action-pending="isPending"
       :data-testid="`${entityType}-${entityId}-toggle-prompt`"
-      :is-visible="visible"
       :title="title"
-      type="warning"
-      @canceled="handleCancel"
+      :visible="visible"
+      @cancel="handleCancel"
       @proceed="handleConfirm"
     >
-      <template #body-content>
+      <template #default>
         <i18nT
           :keypath="`toggleModal.${props.action}.message`"
           scope="global"
@@ -68,7 +67,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'canceled'): void
+  (e: 'cancel'): void
   (e: 'proceed'): void
 }>()
 
@@ -84,7 +83,7 @@ const actionButtonText = computed((): string => props.action === 'enable'
   : t('toggleModal.disable.confirmText'),
 )
 
-const handleCancel = (): void => emit('canceled')
+const handleCancel = (): void => emit('cancel')
 
 const handleConfirm = async (): Promise<void> => {
   if (props.onConfirm) {

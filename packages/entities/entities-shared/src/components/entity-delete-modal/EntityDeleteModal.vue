@@ -1,16 +1,16 @@
 <template>
   <KPrompt
+    action-button-appearance="danger"
+    :action-button-disabled="actionPending"
     action-button-text="Yes, delete"
-    :action-pending="actionPending"
     class="kong-ui-entity-delete-modal"
     :confirmation-text="confirmText"
-    :is-visible="visible"
     :title="title"
-    type="danger"
-    @canceled="cancel"
+    :visible="visible"
+    @cancel="cancel"
     @proceed="proceed"
   >
-    <template #body-content>
+    <template #default>
       <div
         v-if="error"
         class="kong-ui-entity-delete-error"

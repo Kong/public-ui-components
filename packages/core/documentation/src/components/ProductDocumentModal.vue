@@ -2,14 +2,15 @@
   <Teleport
     to="#kong-ui-app-layout-teleport-default-slot"
   >
-    <KPrompt
+    <KModal
       class="edit-document-modal"
       data-testid="edit-document-modal"
-      is-visible
-      @canceled="handleClickCancel"
+      max-width="750px"
+      visible
+      @cancel="handleClickCancel"
       @proceed="handleClickSave"
     >
-      <template #header-content>
+      <template #title>
         <div class="title">
           {{ titleText }}
           <div class="subtitle">
@@ -24,7 +25,7 @@
           </div>
         </div>
       </template>
-      <template #body-content>
+      <template #default>
         <KAlert
           v-if="errorMessage"
           :alert-message="errorMessage"
@@ -94,56 +95,40 @@
         />
       </template>
 
-      <template #action-buttons>
-        <div class="action-buttons">
-          <KButton
-            v-if="editing"
-            appearance="danger"
-            class="edit-documentation-delete-button"
-            data-testid="edit-documentation-delete-button"
-            :disabled="actionPending"
-            @click="emit('delete')"
-          >
-            <template
-              v-if="actionPending"
-              #icon
-            >
-              <ProgressIcon
-                size="16"
-              />
-            </template>
-            {{ i18n.t('documentation.form_modal.delete_button_text') }}
-          </KButton>
+      <template #footer-actions>
+        <KButton
+          v-if="editing"
+          appearance="danger"
+          class="edit-documentation-delete-button"
+          data-testid="edit-documentation-delete-button"
+          :disabled="actionPending"
+          @click="emit('delete')"
+        >
+          <ProgressIcon v-if="actionPending" />
+          {{ i18n.t('documentation.form_modal.delete_button_text') }}
+        </KButton>
 
-          <div class="button-spacing">
-            <KButton
-              appearance="secondary"
-              class="edit-documentation-cancel-button"
-              data-testid="edit-documentation-cancel-button"
-              @click="handleClickCancel"
-            >
-              {{ i18n.t('documentation.form_modal.cancel_button_text') }}
-            </KButton>
-            <KButton
-              appearance="primary"
-              data-testid="edit-documentation-save-button"
-              :disabled="actionPending || saveDisabled"
-              @click="handleClickSave"
-            >
-              <template
-                v-if="actionPending"
-                #icon
-              >
-                <ProgressIcon
-                  size="16"
-                />
-              </template>
-              {{ i18n.t('documentation.form_modal.save_button_text') }}
-            </KButton>
-          </div>
+        <div class="button-spacing">
+          <KButton
+            appearance="tertiary"
+            class="edit-documentation-cancel-button"
+            data-testid="edit-documentation-cancel-button"
+            @click="handleClickCancel"
+          >
+            {{ i18n.t('documentation.form_modal.cancel_button_text') }}
+          </KButton>
+          <KButton
+            appearance="primary"
+            data-testid="edit-documentation-save-button"
+            :disabled="actionPending || saveDisabled"
+            @click="handleClickSave"
+          >
+            <ProgressIcon v-if="actionPending" />
+            {{ i18n.t('documentation.form_modal.save_button_text') }}
+          </KButton>
         </div>
       </template>
-    </KPrompt>
+    </KModal>
   </Teleport>
 </template>
 
@@ -304,9 +289,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
   .edit-document-modal {
-    & :deep(.k-modal-dialog) {
-      max-width: 750px;
-    }
     .title {
       display: block;
     }
@@ -349,11 +331,6 @@ onMounted(() => {
       margin-top: $kui-space-80;
     }
 
-    .action-buttons {
-      display: flex;
-      width: 100%;
-    }
-
     .button-spacing {
       margin-left: $kui-space-auto;
     }
@@ -364,18 +341,11 @@ onMounted(() => {
     .edit-documentation-cancel-button {
       margin-right: $kui-space-40;
     }
-
-    .k-prompt .k-modal-dialog.modal-dialog .k-modal-content .k-modal-footer.modal-footer .k-prompt-action-buttons {
-      width: 100%;
-    }
   }
 </style>
 
 <style lang="scss">
-  .edit-document-modal.k-prompt .k-modal-dialog.modal-dialog {
-    .close-button {
-      align-self: start;
-    }
+  .edit-document-modal.k-prompt .modal-container {
     // TODO: fix in kongponents
     .document-file-upload {
       margin-bottom: $kui-space-80;
@@ -386,10 +356,6 @@ onMounted(() => {
       .k-file-upload-btn {
         top: 38px;
       }
-    }
-
-    .k-modal-content .k-modal-footer.modal-footer .k-prompt-action-buttons {
-      width: 100%;
     }
   }
 </style>

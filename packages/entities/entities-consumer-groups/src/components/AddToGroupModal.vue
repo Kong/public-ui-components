@@ -1,14 +1,14 @@
 <template>
   <KPrompt
-    :action-pending="isPending"
+    :action-button-disabled="isPending"
     class="kong-ui-entities-add-to-groups-modal"
     data-testid="add-to-group-modal"
-    :is-visible="visible"
     :title="t('consumer_groups.consumers.add.title')"
-    @canceled="cancel"
+    :visible="visible"
+    @cancel="cancel"
     @proceed="addToConsumerGroups"
   >
-    <template #body-content>
+    <template #default>
       <div class="add-to-group-form-container">
         <p class="add-to-group-cta-text">
           {{ t('consumer_groups.consumers.add.ctaText') }}

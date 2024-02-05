@@ -132,7 +132,7 @@
       :entity-type="t('glossary.gateway_services')"
       :on-confirm="confirmSwitchEnablement"
       :visible="enablementModalVisible"
-      @canceled="closeEnablementModal"
+      @cancel="closeEnablementModal"
       @proceed="closeEnablementModal"
     />
 

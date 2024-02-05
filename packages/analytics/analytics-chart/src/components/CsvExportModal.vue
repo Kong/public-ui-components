@@ -1,16 +1,15 @@
 <template>
   <div class="kong-ui-public-csv-export-modal">
-    <KPrompt
+    <KModal
       class="vitals-report"
       data-testid="csv-export-modal"
-      is-visible
       show-dismiss-icon
-      text-align="left"
       :title="i18n.t('csvExport.exportPreview')"
-      @canceled="closeModal"
+      visible
+      @cancel="closeModal"
       @keyup.esc="closeModal"
     >
-      <template #body-content>
+      <template #default>
         <div>
           <div
             v-if="hasData"
@@ -56,9 +55,9 @@
           </div>
         </div>
       </template>
-      <template #action-buttons>
+      <template #footer-actions>
         <KButton
-          appearance="secondary"
+          appearance="tertiary"
           class="cancel-btn"
           @click="closeModal"
         >
@@ -79,7 +78,7 @@
           </KButton>
         </DownloadCsv>
       </template>
-    </KPrompt>
+    </KModal>
   </div>
 </template>
 
@@ -210,15 +209,11 @@ watch(tableData, () => {
 
 <style lang="scss">
 .kong-ui-public-csv-export-modal {
-  .k-modal-dialog {
+  .modal-container {
     min-width: 580px;
 
     .k-empty-state-message {
       max-width: 80%;
-    }
-
-    .cancel-btn {
-      margin-right: $kui-space-40;
     }
 
     .selected-range {
@@ -243,7 +238,7 @@ watch(tableData, () => {
         height: auto;   // Match KTable legacy styling
       }
     }
-    .k-modal-footer {
+    .modal-footer {
       .vitals-report-export-button {
         display: inline-flex;
       }

@@ -140,14 +140,14 @@
 
     <KPrompt
       v-if="config.consumerId && groupToExit"
+      action-button-appearance="danger"
       data-testid="exit-group-modal"
-      :is-visible="isExitModalVisible"
       :title="t('consumer_groups.consumers.exit.title')"
-      type="danger"
-      @canceled="hideExitGroupModal"
+      :visible="isExitModalVisible"
+      @cancel="hideExitGroupModal"
       @proceed="exitGroups"
     >
-      <template #body-content>
+      <template #default>
         <i18n-t
           class="exit-modal-message"
           :keypath="config.consumerUsername ? 'consumer_groups.consumers.exit.confirmation' : 'consumer_groups.consumers.exit.confirmationNoUsername'"

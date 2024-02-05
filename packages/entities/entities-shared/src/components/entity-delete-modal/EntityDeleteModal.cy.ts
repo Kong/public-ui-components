@@ -20,7 +20,7 @@ describe('<EntityDeleteModal />', () => {
       },
     })
 
-    cy.get('.k-prompt-header-content').should('contain.text', title)
+    cy.get('.modal-header').should('contain.text', title)
     cy.get('.kong-ui-entity-delete-modal .description').should('contain.text', description)
   })
 
@@ -35,7 +35,7 @@ describe('<EntityDeleteModal />', () => {
     cy.get('.kong-ui-entity-delete-modal .message')
       .should('contain.text', t('deleteModal.message', { entityType }))
     cy.get('.kong-ui-entity-delete-modal .description').should('not.exist')
-    cy.get('.k-prompt-confirm-text').should('not.exist')
+    cy.get('.prompt-confirmation-text').should('not.exist')
   })
 
   it('should show entity name and confirmation input', () => {
@@ -49,7 +49,7 @@ describe('<EntityDeleteModal />', () => {
 
     cy.get('.kong-ui-entity-delete-modal .message')
       .should('contain.text', t('deleteModal.messageWithName', { entityType, entityName }))
-    cy.get('.k-prompt-confirm-text').should('exist')
+    cy.get('.prompt-confirmation-text').should('exist')
   })
 
   it('should disable action button', () => {
@@ -61,8 +61,7 @@ describe('<EntityDeleteModal />', () => {
       },
     })
 
-    cy.get('.k-prompt-proceed').should('be.disabled')
-    cy.get('.k-prompt-proceed .kong-icon-spinner').should('exist')
+    cy.getTestId('modal-action-button').should('be.disabled')
   })
 
   it('should show description slot content', () => {
@@ -80,7 +79,7 @@ describe('<EntityDeleteModal />', () => {
       },
     })
 
-    cy.get('.k-prompt-header-content').should('contain.text', title)
+    cy.get('.modal-header').should('contain.text', title)
     cy.get('.kong-ui-entity-delete-modal .description').should('contain.text', description)
   })
 })
