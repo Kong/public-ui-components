@@ -2,11 +2,16 @@
 
 > **Note**: This package must **not** contain Vue components.
 
+- [useAxios](#useaxios)
 - [useDebounce](#usedebounce)
 - [usePackage](#usepackage)
 - [useSwrvState](#useswrvstate)
 - [useTablePreferences](#usetablepreferences)
 - [useWindow](#usewindow)
+
+## useAxios
+
+[useAxios docs](./src/useAxios/README.md)
 
 ## useDebounce
 
