@@ -20,7 +20,7 @@
     },
     "configuration": {
       "title": "Configuration",
-      "message": "Export configuration of core Gateway Manager objects, like services, routes, and plugins, to YAML or JSON. This allows you to import the file to APIOps tooling, like decK.",
+      "message": "Export configuration of core Kong Gateway objects, like services, routes, and plugins, to YAML or JSON. This allows you to import the YAML file to APIOps tooling like decK, or the JSON file to Insomnia or curL.",
       "yaml": "YAML",
       "json": "JSON"
     },
