@@ -11,7 +11,8 @@ concurrency:
 jobs:
   check-packages:
     name: No PR preview references
-    runs-on: ${{ vars.RUNS_ON }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
