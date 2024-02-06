@@ -1,8 +1,8 @@
-import type { AnalyticsExploreResult, AnalyticsExploreV2Result, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
 import { defaultLineOptions, darkenColor, lookupDatavisColor, datavisPalette, BORDER_WIDTH, NO_BORDER } from '../utils'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
-import type { Dataset, KChartData, ExploreToDatasetDeps } from '../types'
+import type { Dataset, KChartData, ExploreToDatasetDeps, DatasetLabel } from '../types'
 import { parseISO } from 'date-fns'
 import { isNullOrUndef } from 'chart.js/helpers'
 import composables from '../composables'
@@ -55,34 +55,30 @@ export const createZeroFilledTimeSeries = (startMs: number, endMs: number, stepM
 
 export default function useExploreResultToTimeDataset(
   deps: ExploreToDatasetDeps,
-  exploreResult: Ref<AnalyticsExploreV2Result | AnalyticsExploreResult>,
+  exploreResult: Ref<ExploreResultV4>,
 ): Ref<KChartData> {
   const { i18n } = composables.useI18n()
   const chartData: Ref<KChartData> = computed(() => {
 
     try {
-      if (exploreResult.value && 'meta' in exploreResult.value && 'records' in exploreResult.value) {
-        const records = exploreResult.value.records as AnalyticsExploreRecord[]
-        const { dimensions, metricNames } = exploreResult.value.meta
-
-        const startMs = ('startMs' in exploreResult.value.meta) ? exploreResult.value.meta.startMs : exploreResult.value.meta.start * 1000
-        const endMs = ('endMs' in exploreResult.value.meta) ? exploreResult.value.meta.endMs : exploreResult.value.meta.end * 1000
-
+      if (exploreResult.value && 'meta' in exploreResult.value && 'data' in exploreResult.value) {
+        const records = exploreResult.value.data as AnalyticsExploreRecord[]
+        const { display, metric_names: metricNames, start_ms: startMs, end_ms: endMs } = exploreResult.value.meta
         if (!metricNames) {
           console.error('Cannot build chart data from this explore result. Missing metric names.')
           return { datasets: [] }
         }
-        const dimensionFieldNames = (dimensions && Object.keys(dimensions)) || metricNames
+        const dimensionFieldNames = (display && Object.keys(display)) || metricNames
 
         // Time based datasets can only display one "dimension"
         // It will either be the first dimension or if no dimensions
         // are provided, then the metric is the primary dimension
         const dimension = (dimensionFieldNames && dimensionFieldNames[0])
-        const datasetLabels = (dimensions && (dimensions as {[label: string]: string[]})[dimension]) || metricNames
+        const datasetLabels: DatasetLabel[] = (display && display[dimension] && Object.keys(display[dimension]).map(id => ({ id, name: display[dimension][id].name }))) || metricNames.map(name => ({ id: name, name }))
 
         // Bail out early if we can't handle the value of `step`.
         // Not sure when this happens, but it seems to at times in production.
-        const stepMs = exploreResult.value.meta.granularity
+        const stepMs = exploreResult.value.meta.granularity_ms
 
         if (typeof stepMs !== 'number' || isNaN(stepMs) || !isFinite(stepMs) || stepMs === 0) {
           console.error('Invalid step value:', stepMs)
@@ -116,17 +112,17 @@ export default function useExploreResultToTimeDataset(
             }
 
             for (const metric of metricNames) {
-              datasetLabels.forEach((label: string) => {
-                if (event[dimension] === label || metric === label) {
+              datasetLabels.forEach((label: DatasetLabel) => {
+                if (event[dimension] === label.id || metric === label.id) {
                   if (!acc[timestamp][metric]) {
                     acc[timestamp][metric] = {}
                   }
-                  acc[timestamp][metric][label] = Math.round(Number(event[metric]) * 1e3) / 1e3
+                  acc[timestamp][metric][label.name] = Math.round(Number(event[metric]) * 1e3) / 1e3
                 } else if (!dimensionFieldNames.length) { // using metrics as dimensions
                   if (!acc[timestamp][metric]) {
                     acc[timestamp][metric] = {}
                   }
-                  acc[timestamp][metric][label] = Math.round(Number(event[label]) * 1e3) / 1e3
+                  acc[timestamp][metric][label.name] = Math.round(Number(event[label.id]) * 1e3) / 1e3
                 }
               })
             }
@@ -136,9 +132,9 @@ export default function useExploreResultToTimeDataset(
 
         const dimensionsCrossMetrics = metricNames.length === 1
           ? metricNames.flatMap(metric => {
-            return datasetLabels.map(label => [metric, label])
+            return datasetLabels.map(label => [metric, label.name])
           })
-          : datasetLabels.map(label => [label, label])
+          : datasetLabels.map(label => [label.name, label.name])
 
         const colorMap: {[label: string]: string} = {}
 

@@ -1,4 +1,4 @@
-import type { AnalyticsExploreV2Meta, DimensionMap, MetricUnit, RecordEvent } from '@kong-ui-public/analytics-utilities'
+import type { DimensionMap, MetricUnit, RecordEvent, DisplayBlob, QueryResponseMeta, ExploreAggregations, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import { SeededRandom } from './SeedRandom'
 import { rand } from './utils'
 
@@ -13,7 +13,7 @@ export const generateSingleMetricTimeSeriesData = (metric: Metric, dimensionMap?
 
   const start = Date.now() - 6 * 60 * 60 * 1000 // 6 hours ago
   const end = Date.now()
-  const records = []
+  const data = []
   let totalRequests = 0
 
   for (let i = start; i <= end; i += 60 * 60 * 1000) { // 1 hour apart
@@ -33,7 +33,7 @@ export const generateSingleMetricTimeSeriesData = (metric: Metric, dimensionMap?
             timestamp: new Date(i).toISOString(),
             event,
           }
-          records.push(record)
+          data.push(record)
         })
       }
     } else {
@@ -47,26 +47,41 @@ export const generateSingleMetricTimeSeriesData = (metric: Metric, dimensionMap?
           [metric.name]: totalRequests,
         },
       }
-      records.push(record)
+      data.push(record)
     }
   }
 
-  const meta = {
-    startMs: start,
-    endMs: end,
-    queryId: '12345',
-    metricNames: [metric.name],
-    metricUnits: {
+  // V4 display blob
+  const displayBlob: DisplayBlob = {}
+
+  if (dimensionMap) {
+    for (const dimension in dimensionMap) {
+      displayBlob[dimension] = {}
+      dimensionMap[dimension].forEach(dimensionValue => {
+        displayBlob[dimension][dimensionValue] = {
+          name: dimensionValue,
+          deleted: false,
+        }
+      })
+    }
+  }
+
+  const meta: QueryResponseMeta = {
+    start_ms: start,
+    end_ms: end,
+    query_id: '12345',
+    metric_names: [metric.name] as ExploreAggregations[],
+    metric_units: {
       [metric.name]: metric.unit,
     },
-    granularity: 60 * 60 * 1000, // 1 hour in ms
-    dimensions: dimensionMap,
+    granularity_ms: 60 * 60 * 1000, // 1 hour in ms
+    display: displayBlob,
   }
 
   return {
-    records,
+    data,
     meta,
-  }
+  } as ExploreResultV4
 }
 
 export const generateMultipleMetricTimeSeriesData = (metrics: Metric[]) => {
@@ -75,7 +90,7 @@ export const generateMultipleMetricTimeSeriesData = (metrics: Metric[]) => {
 
   const start = Date.now() - 6 * 60 * 60 * 1000 // 6 hours ago
   const end = Date.now()
-  const records = []
+  const data = []
   const metricValues: {[metric: string]: number} = {}
 
   metrics.forEach(metric => {
@@ -95,25 +110,26 @@ export const generateMultipleMetricTimeSeriesData = (metrics: Metric[]) => {
       timestamp: new Date(i).toISOString(),
       event,
     }
-    records.push(record)
+    data.push(record)
   }
 
-  const meta = {
-    startMs: start,
-    endMs: end,
-    queryId: '12345',
-    metricNames: metrics.map(metric => metric.name),
-    metricUnits: metrics.reduce((units: MetricUnit, metric) => {
+  const meta: QueryResponseMeta = {
+    start_ms: start,
+    end_ms: end,
+    query_id: '12345',
+    metric_names: metrics.map(metric => metric.name) as ExploreAggregations[],
+    metric_units: metrics.reduce((units: MetricUnit, metric) => {
       units[metric.name] = metric.unit
       return units
     }, {}),
-    granularity: 60 * 60 * 1000, // 1 hour in ms
+    granularity_ms: 60 * 60 * 1000, // 1 hour in ms
+    display: {},
   }
 
   return {
-    records,
+    data,
     meta,
-  }
+  } as ExploreResultV4
 }
 
 export const generateCrossSectionalData = (metrics: Metric[], dimensionMap: DimensionMap) => {
@@ -124,7 +140,7 @@ export const generateCrossSectionalData = (metrics: Metric[], dimensionMap: Dime
   const end = Date.now()
   const timestamp = new Date((start + end) / 2).toISOString()
 
-  const records = []
+  const data = []
 
   if (dimensionMap) {
     const dimensions = Object.keys(dimensionMap)
@@ -137,7 +153,7 @@ export const generateCrossSectionalData = (metrics: Metric[], dimensionMap: Dime
         metrics.forEach(metric => {
           currentEvent[metric.name] = rng.next(50, 500)
         })
-        records.push({
+        data.push({
           version: '1.0',
           timestamp: new Date().toISOString(),
           event: { ...currentEvent },
@@ -158,34 +174,45 @@ export const generateCrossSectionalData = (metrics: Metric[], dimensionMap: Dime
       event[metric.name] = rng.next(50, 500)
     })
 
-    records.push({
+    data.push({
       version: '1.0',
       timestamp,
       event,
     })
   }
 
-  const meta: AnalyticsExploreV2Meta = {
-    startMs: start,
-    endMs: end,
-    queryId: '12345',
-    metricNames: metrics.map(metric => metric.name),
-    metricUnits: metrics.reduce((units: MetricUnit, metric) => {
+  // V4 display blob
+  const displayBlob: DisplayBlob = {}
+
+  if (dimensionMap) {
+    for (const dimension in dimensionMap) {
+      displayBlob[dimension] = {}
+      dimensionMap[dimension].forEach(dimensionValue => {
+        displayBlob[dimension][dimensionValue] = {
+          name: dimensionValue,
+          deleted: false,
+        }
+      })
+    }
+  }
+
+  const meta: QueryResponseMeta = {
+    start_ms: start,
+    end_ms: end,
+    query_id: '12345',
+    metric_names: metrics.map(metric => metric.name) as ExploreAggregations[],
+    metric_units: metrics.reduce((units: MetricUnit, metric) => {
       units[metric.name] = metric.unit
       return units
     }, {}),
-    granularity: {
-      type: 'period',
-      period: 'P1D',
-      timeZone: 'UTC',
-    },
     truncated: false,
     limit: 50,
-    dimensions: dimensionMap,
+    display: displayBlob,
+    granularity_ms: end - start,
   }
 
   return {
-    records,
+    data,
     meta,
-  }
+  } as ExploreResultV4
 }

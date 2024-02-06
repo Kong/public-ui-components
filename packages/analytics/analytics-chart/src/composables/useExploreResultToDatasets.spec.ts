@@ -1,24 +1,25 @@
-import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreResult, DisplayBlob, ExploreAggregations, ExploreResultV4, GroupByResult, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import { describe, it, expect } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import useExploreResultToDatasets from './useExploreResultToDatasets'
+import type { as } from 'vitest/dist/reporters-trlZlObr'
 
 describe('useVitalsExploreDatasets', () => {
   it('can handle empty records', () => {
-    const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-      records: [],
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [] as GroupByResult[],
       meta: {
-        start: 1640998862,
-        end: 1640998870,
-        granularity: 5000,
-        dimensions: { dimension: ['dimension'] },
-        metricNames: ['metric'],
-        queryId: '',
-        metricUnits: { metric: 'units' },
+        start_ms: 1640998862000,
+        end_ms: 1640998870000,
+        granularity_ms: 8000,
+        display: { dimension: { key: { name: 'dimension' } } } as DisplayBlob,
+        metric_names: ['request_count'] as ExploreAggregations[],
+        query_id: '',
+        metric_units: { request_count: 'units' },
         truncated: false,
         limit: 15,
-      },
+      } as QueryResponseMeta,
     }))
 
     const result = useExploreResultToDatasets({ fill: true }, exploreResult)
@@ -27,26 +28,25 @@ describe('useVitalsExploreDatasets', () => {
   })
 
   it('can handle null metric values', () => {
-    const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-      records: [{
-        version: 'v1',
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [{
         timestamp: '2022-01-01T01:01:02Z',
         event: {
           dimension: 'dimension',
         },
       }],
       meta: {
-        start: 1640998862,
-        end: 1640998870,
-        granularity: 5000,
-        dimensions: { dimension: ['dimension'] },
-        metricNames: ['metric'],
-        queryId: '',
-        metricUnits: { metric: 'units' },
+        start_ms: 1640998862000,
+        end_ms: 1640998870000,
+        granularity_ms: 8000,
+        display: { dimension: { key: { name: 'dimension' } } } as DisplayBlob,
+        metric_names: ['request_count'] as ExploreAggregations[],
+        query_id: '',
+        metric_units: { request_count: 'units' },
         truncated: false,
         limit: 15,
       },
-    }))
+    } as ExploreResultV4))
 
     const result = useExploreResultToDatasets({ fill: true }, exploreResult)
 
@@ -68,7 +68,7 @@ describe('useVitalsExploreDatasets', () => {
 
   it('can handle no meta', () => {
     const exploreResult: ComputedRef = computed(() => ({
-      records: [],
+      data: [],
       meta: {},
     }))
 
@@ -77,62 +77,25 @@ describe('useVitalsExploreDatasets', () => {
     expect(result.value).toEqual({ datasets: [], labels: [] })
   })
 
-  it('falls back to metric if single dimension is "organization"', () => {
-    const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-      records: [
-        {
-          version: 'v1',
-          timestamp: '2022-01-01T01:01:02Z',
-          event: {
-            metric: 1,
-            Organization: 'dimension1',
-          },
-        },
-      ],
-      meta: {
-        start: 1640998862,
-        end: 1640998870,
-        granularity: 5000,
-        dimensions: { Organization: ['dimension1'] },
-        metricNames: ['metric'],
-        queryId: '',
-        metricUnits: { metric: 'units' },
-        truncated: false,
-        limit: 15,
-      },
-    }))
-    const result = useExploreResultToDatasets({ fill: true }, exploreResult)
-
-    expect(result.value).toEqual(
-      {
-        labels: ['metric'],
-        datasets: [
-          { label: 'metric', backgroundColor: '#a86cd5', data: [1] },
-        ],
-      },
-    )
-  })
-
   it('single dimension result works as normal', () => {
-    const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-      records: [
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
         {
-          version: 'v1',
           timestamp: '2022-01-01T01:01:02Z',
           event: {
-            metric: 1,
-            dimension: 'dimension1',
+            request_count: 1,
+            dimension: 'dimension-uuid',
           },
         },
       ],
       meta: {
-        start: 1640998862,
-        end: 1640998870,
-        granularity: 5000,
-        dimensions: { dimension: ['dimension1'] },
-        metricNames: ['metric'],
-        queryId: '',
-        metricUnits: { metric: 'units' },
+        start_ms: 1640998862000,
+        end_ms: 1640998870000,
+        granularity_ms: 8000,
+        display: { dimension: { 'dimension-uuid': { name: 'dimension1' } } } as DisplayBlob,
+        metric_names: ['request_count'] as ExploreAggregations[],
+        query_id: '',
+        metric_units: { request_count: 'units' },
         truncated: false,
         limit: 15,
       },
@@ -150,56 +113,52 @@ describe('useVitalsExploreDatasets', () => {
   })
 
   it('handles multi dimension query', () => {
-    const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-      records: [
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
         {
-          version: 'v1',
           timestamp: '2023-02-20T21:00:00.000Z',
           event: {
             GroupBy: 'group-by-1',
             ThenBy: 'then-by-1',
-            metric: 100,
+            request_count: 100,
           },
         },
         {
-          version: 'v1',
           timestamp: '2023-02-20T21:00:00.000Z',
           event: {
             GroupBy: 'group-by-1',
             ThenBy: 'then-by-2',
-            metric: 150,
+            request_count: 150,
           },
         },
         {
-          version: 'v1',
           timestamp: '2023-02-20T21:00:00.000Z',
           event: {
             GroupBy: 'group-by-2',
             ThenBy: 'then-by-3',
-            metric: 200,
+            request_count: 200,
           },
         },
         {
-          version: 'v1',
           timestamp: '2023-02-20T21:00:00.000Z',
           event: {
             GroupBy: 'group-by-2',
             ThenBy: 'then-by-4',
-            metric: 250,
+            request_count: 250,
           },
         },
       ],
       meta: {
-        start: 1669928400,
-        end: 1670014800,
+        start_ms: 1669928400000,
+        end_ms: 1670014800000,
         granularity: 86400000,
-        metricNames: ['metric'],
-        dimensions: {
-          GroupBy: ['group-by-1', 'group-by-2'],
-          ThenBy: ['then-by-1', 'then-by-2', 'then-by-3', 'then-by-4'],
+        metric_names: ['request_count'] as ExploreAggregations[],
+        display: {
+          GroupBy: { 'group-by-1': { name: 'GroupBy1' }, 'group-by-2': { name: 'GroupBy2' } },
+          ThenBy: { 'then-by-1': { name: 'ThenBy1' }, 'then-by-2': { name: 'ThenBy2' }, 'then-by-3': { name: 'ThenBy3' }, 'then-by-4': { name: 'ThenBy4' } },
         },
-        queryId: '',
-        metricUnits: { metric: 'units' },
+        query_id: '',
+        metric_units: { request_count: 'units' },
         truncated: false,
         limit: 15,
       },
@@ -208,12 +167,12 @@ describe('useVitalsExploreDatasets', () => {
 
     expect(result.value).toEqual(
       {
-        labels: ['group-by-1', 'group-by-2'],
+        labels: ['GroupBy1', 'GroupBy2'],
         datasets: [
-          { label: 'then-by-1', backgroundColor: '#a86cd5', data: [100, null] },
-          { label: 'then-by-2', backgroundColor: '#6a86d2', data: [150, null] },
-          { label: 'then-by-3', backgroundColor: '#00bbf9', data: [null, 200] },
-          { label: 'then-by-4', backgroundColor: '#00c4b0', data: [null, 250] },
+          { label: 'ThenBy1', backgroundColor: '#a86cd5', data: [100, null] },
+          { label: 'ThenBy2', backgroundColor: '#6a86d2', data: [150, null] },
+          { label: 'ThenBy3', backgroundColor: '#00bbf9', data: [null, 200] },
+          { label: 'ThenBy4', backgroundColor: '#00c4b0', data: [null, 250] },
         ],
       },
     )

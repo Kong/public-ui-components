@@ -106,7 +106,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { PropType } from 'vue'
-import type { AnalyticsExploreV3Result, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
 import composables from '../composables'
@@ -121,7 +121,7 @@ const props = defineProps({
     default: '',
   },
   data: {
-    type: Object as PropType<AnalyticsExploreV3Result>,
+    type: Object as PropType<ExploreResultV4>,
     required: true,
   },
   emptyStateTitle: {
@@ -135,7 +135,7 @@ const props = defineProps({
 })
 
 const { i18n } = composables.useI18n()
-const records = computed((): AnalyticsExploreRecord[] => props.data.records)
+const records = computed((): AnalyticsExploreRecord[] => props.data.data)
 const hasData = computed((): boolean => !!(records.value?.length))
 const displayKey = computed((): string => {
   if (!props.data.meta?.display) {
@@ -152,11 +152,11 @@ const displayRecord = computed(() => {
   return props.data.meta.display[displayKey.value]
 })
 const columnKey = computed((): string => {
-  if (!props.data.meta?.metricNames?.length) {
+  if (!props.data.meta?.metric_names?.length) {
     return ''
   }
 
-  return props.data.meta.metricNames[0]
+  return props.data.meta.metric_names[0]
 })
 const columnName = computed((): string => {
   if (!columnKey.value) {
@@ -197,7 +197,7 @@ const getName = (record: AnalyticsExploreRecord): string => {
 
   return idRecord.name
 }
-const getDeleted = (record: AnalyticsExploreRecord): boolean => {
+const getDeleted = (record: AnalyticsExploreRecord): boolean | undefined => {
   const id = getId(record)
   const idRecord = displayRecord.value[id]
 

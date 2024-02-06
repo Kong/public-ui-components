@@ -38,12 +38,12 @@ import { ChartTypesSimple } from '../enums'
 import GaugeChart from './chart-types/GaugeChart.vue'
 import type { PropType } from 'vue'
 import { computed, toRef } from 'vue'
-import type { AnalyticsExploreResult, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette } from '../utils'
 
 const props = defineProps({
   chartData: {
-    type: Object as PropType<AnalyticsExploreResult | AnalyticsExploreV2Result>,
+    type: Object as PropType<ExploreResultV4>,
     required: true,
   },
   chartOptions: {
@@ -96,18 +96,18 @@ const computedChartData = computed(() => {
 })
 
 const computedMetricUnit = computed<string>(() => {
-  if (!props.chartData.meta?.metricUnits) {
+  if (!props.chartData.meta?.metric_units) {
     return ''
   }
 
-  return Object.values(props.chartData.meta.metricUnits)[0]
+  return Object.values(props.chartData.meta.metric_units)[0]
 })
 
 const isGaugeChart = computed<boolean>(() => props.chartOptions.type === ChartTypesSimple.GAUGE)
 
 const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAvailableTitle'))
 const hasValidChartData = computed(() => {
-  return props.chartData && props.chartData.meta && props.chartData.records.length
+  return props.chartData && props.chartData.meta && props.chartData.data.length
 })
 </script>
 

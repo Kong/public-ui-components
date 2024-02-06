@@ -111,11 +111,7 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
   })
 
   const hourDisplayFormat = computed(() => {
-    if (chartOptions.timeRangeMs) {
-      return millisecondsToHours(Number(chartOptions.timeRangeMs.value)) >= 24 ? 'yyyy-MM-dd h:mm' : 'h:mm'
-    } else {
-      return secondsToHours(Number(chartOptions.timeRangeSec.value)) >= 24 ? 'yyyy-MM-dd h:mm' : 'h:mm'
-    }
+    return millisecondsToHours(Number(chartOptions.timeRangeMs.value)) >= 24 ? 'yyyy-MM-dd h:mm' : 'h:mm'
   })
 
   const dayDisplayFormat = computed(() => {
