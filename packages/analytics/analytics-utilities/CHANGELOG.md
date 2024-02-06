@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.13.0...@kong-ui-public/analytics-utilities@0.13.1) (2024-02-06)
+
+
+### Bug Fixes
+
+* **explore-types:** update granularity in response meta [MA-2303] ([#1145](https://github.com/Kong/public-ui-components/issues/1145)) ([4888aca](https://github.com/Kong/public-ui-components/commit/4888aca6492703543bf12abade1339f9b54d931c))
+
+
+
+
+
 # [0.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.12.0...@kong-ui-public/analytics-utilities@0.13.0) (2024-02-01)
 
 
