@@ -226,16 +226,16 @@ importers:
         version: 4.4.1
       chartjs-adapter-date-fns:
         specifier: ^3.0.0
-        version: 3.0.0(chart.js@4.4.1)(date-fns@2.30.0)
+        version: 3.0.0(chart.js@4.4.1)(date-fns@3.3.1)
       chartjs-plugin-annotation:
         specifier: ^3.0.1
         version: 3.0.1(chart.js@4.4.1)
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^3.3.1
+        version: 3.3.1
       date-fns-tz:
         specifier: ^2.0.0
-        version: 2.0.0(date-fns@2.30.0)
+        version: 2.0.0(date-fns@3.3.1)
       pretty-bytes:
         specifier: ^6.1.1
         version: 6.1.1
@@ -308,11 +308,11 @@ importers:
   packages/analytics/analytics-utilities:
     dependencies:
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^3.3.1
+        version: 3.3.1
       date-fns-tz:
         specifier: ^2.0.0
-        version: 2.0.0(date-fns@2.30.0)
+        version: 2.0.0(date-fns@3.3.1)
     devDependencies:
       '@kong/design-tokens':
         specifier: 1.12.7
@@ -448,8 +448,8 @@ importers:
   packages/core/core:
     dependencies:
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^3.3.1
+        version: 3.3.1
     devDependencies:
       '@kong/design-tokens':
         specifier: 1.12.7
@@ -5557,14 +5557,14 @@ packages:
       '@kurkle/color': 0.3.2
     dev: false
 
-  /chartjs-adapter-date-fns@3.0.0(chart.js@4.4.1)(date-fns@2.30.0):
+  /chartjs-adapter-date-fns@3.0.0(chart.js@4.4.1)(date-fns@3.3.1):
     resolution: {integrity: sha512-Rs3iEB3Q5pJ973J93OBTpnP7qoGwvq3nUnoMdtxO+9aoJof7UFcRbWcIDteXuYd1fgAvct/32T9qaLyLuZVwCg==}
     peerDependencies:
       chart.js: '>=2.8.0'
       date-fns: '>=2.0.0'
     dependencies:
       chart.js: 4.4.1
-      date-fns: 2.30.0
+      date-fns: 3.3.1
     dev: false
 
   /chartjs-plugin-annotation@3.0.1(chart.js@4.4.1):
@@ -6304,11 +6304,23 @@ packages:
     dependencies:
       date-fns: 2.30.0
 
+  /date-fns-tz@2.0.0(date-fns@3.3.1):
+    resolution: {integrity: sha512-OAtcLdB9vxSXTWHdT8b398ARImVwQMyjfYGkKD2zaGpHseG2UPHbHjXELReErZFxWdSLph3c2zOaaTyHfOhERQ==}
+    peerDependencies:
+      date-fns: '>=2.0.0'
+    dependencies:
+      date-fns: 3.3.1
+    dev: false
+
   /date-fns@2.30.0:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
     dependencies:
       '@babel/runtime': 7.22.5
+
+  /date-fns@3.3.1:
+    resolution: {integrity: sha512-y8e109LYGgoQDveiEBD3DYXKba1jWf5BA8YU1FL5Tvm0BTdEfy54WLCwnuYWZNnzzvALy/QQ4Hov+Q9RVRv+Zw==}
+    dev: false
 
   /dateformat@3.0.3:
     resolution: {integrity: sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==}
@@ -11860,7 +11872,6 @@ packages:
       react: 16.14.0
       scheduler: 0.19.1
     dev: false
-    bundledDependencies: false
 
   /react-dom@17.0.2(react@17.0.2):
     resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
@@ -11965,7 +11976,6 @@ packages:
       object-assign: 4.1.1
       prop-types: 15.8.1
     dev: false
-    bundledDependencies: false
 
   /react@17.0.2:
     resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}
