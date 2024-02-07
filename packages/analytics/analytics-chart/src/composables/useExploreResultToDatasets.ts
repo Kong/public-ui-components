@@ -69,10 +69,7 @@ export default function useExploreResultToDatasets(
         const { display, metric_names: metricNames } = exploreResult.value.meta
 
         const dimensionKeys = display && Object.keys(display)
-
         const isMultiMetric = metricNames && metricNames.length > 1
-
-        // TODO: remove "Organization" fallback when we are fully migrated to explore v2
         const hasDimensions = display && dimensionKeys && dimensionKeys.length > 0
 
         if (!records.length || !metricNames) {

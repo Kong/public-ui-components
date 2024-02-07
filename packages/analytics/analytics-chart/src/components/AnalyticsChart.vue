@@ -206,7 +206,7 @@ const computedChartData = computed(() => {
 const timeRangeMs = computed<number | undefined>(() => {
   if (!props.chartData?.meta) { return 0 }
 
-  return ('startMs' in props.chartData.meta)
+  return ('start_ms' in props.chartData.meta)
     ? props.chartData.meta.end_ms - props.chartData.meta.start_ms
     : undefined
 })
@@ -288,14 +288,10 @@ const hasValidChartData = computed(() => {
 
 const timeSeriesGranularity = computed<GranularityKeys>(() => {
 
-  if (!props.chartData.meta.granularity) {
+  if (!props.chartData.meta.granularity_ms) {
     return msToGranularity(
       new Date(props.chartData.data[1].timestamp).getTime() - new Date(props.chartData.data[0].timestamp).getTime(),
     ) || GranularityKeys.HOURLY
-  }
-
-  if (typeof props.chartData.meta.granularity === 'number') {
-    return msToGranularity(props.chartData.meta.granularity_ms) || GranularityKeys.HOURLY
   }
 
   return msToGranularity(props.chartData.meta.granularity_ms) || GranularityKeys.HOURLY
