@@ -47,6 +47,7 @@ export default function useFetcher(
       }
 
       const { data } = await axiosInstance.get(requestUrl)
+
       const dataKey = (dataKeyName && dataKeyName.replace(/[^\w-_]/gi, ''))
       let tableData
 
@@ -55,6 +56,9 @@ export default function useFetcher(
       } else if (Array.isArray(data)) {
         // An array of object is returned
         tableData = data
+      } else if (data?.data && Array.isArray(data.data)) {
+        // Structure { data: { data: [{ id: 1, ... }]
+        tableData = data.data
       } else {
         // Single object is returned, so wrap in an array
         tableData = Object.keys(data).length ? [data] : []
