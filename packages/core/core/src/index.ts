@@ -1,3 +1,4 @@
+export { default as useAxios } from './useAxios'
 export { default as useDate } from './useDate'
 export { default as useDebounce } from './useDebounce'
 export { default as usePackage } from './usePackage'

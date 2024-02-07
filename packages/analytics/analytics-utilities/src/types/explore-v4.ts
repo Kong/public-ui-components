@@ -122,8 +122,7 @@ export interface QueryResponseMeta {
   display: DisplayBlob
   metric_names?: string[]
   metric_units?: MetricUnit
-  granularity?: number
-  granularity_ms?: number
+  granularity_ms: number
   truncated?: boolean
   limit?: number
   query_id: string

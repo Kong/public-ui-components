@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.4.23...@kong-ui-public/core@1.5.0) (2024-02-05)
+
+
+### Features
+
+* **core:** add useAxios composable ([#1141](https://github.com/Kong/public-ui-components/issues/1141)) ([580ce7c](https://github.com/Kong/public-ui-components/commit/580ce7caaed5356bc8fbf93e51699ad059fb10ce))
+
+
+
+
+
 ## [1.4.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.4.22...@kong-ui-public/core@1.4.23) (2024-01-26)
 
 **Note:** Version bump only for package @kong-ui-public/core
