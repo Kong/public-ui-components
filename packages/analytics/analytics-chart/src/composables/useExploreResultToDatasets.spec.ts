@@ -1,4 +1,4 @@
-import type { DisplayBlob, ExploreAggregations, ExploreResultV4, GroupByResult, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
+import type { DisplayBlob, ExploreResultV4, GroupByResult, MetricUnit, QueryResponseMeta, ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 import { describe, it, expect } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
@@ -12,10 +12,10 @@ describe('useVitalsExploreDatasets', () => {
         start_ms: 1640998862000,
         end_ms: 1640998870000,
         granularity_ms: 8000,
-        display: { dimension: { key: { name: 'dimension' } } } as DisplayBlob,
+        display: { route: { id: { name: 'dimension' } } } as DisplayBlob,
         metric_names: ['request_count'],
         query_id: '',
-        metric_units: { request_count: 'units' },
+        metric_units: { request_count: 'units' } as MetricUnit,
         truncated: false,
         limit: 15,
       } as QueryResponseMeta,
@@ -31,14 +31,14 @@ describe('useVitalsExploreDatasets', () => {
       data: [{
         timestamp: '2022-01-01T01:01:02Z',
         event: {
-          dimension: 'dimension',
+          route: 'id',
         },
       }],
       meta: {
         start_ms: 1640998862000,
         end_ms: 1640998870000,
         granularity_ms: 8000,
-        display: { dimension: { key: { name: 'dimension' } } } as DisplayBlob,
+        display: { route: { id: { name: 'dimension' } } } as DisplayBlob,
         metric_names: ['request_count'],
         query_id: '',
         metric_units: { request_count: 'units' },
@@ -83,7 +83,7 @@ describe('useVitalsExploreDatasets', () => {
           timestamp: '2022-01-01T01:01:02Z',
           event: {
             request_count: 1,
-            dimension: 'dimension-uuid',
+            route: 'dimension-uuid',
           },
         },
       ],
@@ -91,7 +91,7 @@ describe('useVitalsExploreDatasets', () => {
         start_ms: 1640998862000,
         end_ms: 1640998870000,
         granularity_ms: 8000,
-        display: { dimension: { 'dimension-uuid': { name: 'dimension1' } } } as DisplayBlob,
+        display: { route: { 'dimension-uuid': { name: 'dimension1' } } },
         metric_names: ['request_count'],
         query_id: '',
         metric_units: { request_count: 'units' },
@@ -150,7 +150,7 @@ describe('useVitalsExploreDatasets', () => {
       meta: {
         start_ms: 1669928400000,
         end_ms: 1670014800000,
-        granularity: 86400000,
+        granularity_ms: 86400000,
         metric_names: ['request_count'],
         display: {
           GroupBy: { 'group-by-1': { name: 'GroupBy1' }, 'group-by-2': { name: 'GroupBy2' } },
@@ -160,7 +160,7 @@ describe('useVitalsExploreDatasets', () => {
         metric_units: { request_count: 'units' },
         truncated: false,
         limit: 15,
-      },
+      } as QueryResponseMeta,
     }))
     const result = useExploreResultToDatasets({ fill: true }, exploreResult)
 
@@ -222,7 +222,7 @@ it('handles multiple metrics with no dimension', () => {
           metric1: 1,
           metric2: 2,
         },
-      },
+      } as GroupByResult,
     ],
     meta: {
       start_ms: 1640998862000,
@@ -231,14 +231,13 @@ it('handles multiple metrics with no dimension', () => {
       metric_names: [
         'metric1',
         'metric2',
-      // we just care about how the data gets formatted, not if it's a vald metric.
-      ],
+      ] as any as ExploreAggregations[],
       query_id: '',
       metric_units: { metric1: 'units', metric2: 'units' },
       truncated: false,
       limit: 15,
       display: {},
-    },
+    } as QueryResponseMeta,
   }))
   const result = useExploreResultToDatasets({ fill: true }, exploreResult)
 
@@ -261,7 +260,7 @@ it('handles multiple metrics with dimension', () => {
         event: {
           metric1: 1,
           metric2: 2,
-          Service: 'service1',
+          gateway_service: 'service1',
         },
       },
       {
@@ -269,7 +268,7 @@ it('handles multiple metrics with dimension', () => {
         event: {
           metric1: 3,
           metric2: 4,
-          Service: 'service2',
+          gateway_service: 'service2',
         },
       },
     ],
@@ -280,18 +279,18 @@ it('handles multiple metrics with dimension', () => {
       metric_names: [
         'metric1',
         'metric2',
-      ],
+      ] as any as ExploreAggregations[],
       query_id: '',
       metric_units: { metric1: 'units', metric2: 'units' },
       truncated: false,
       limit: 15,
       display: {
-        Service: {
+        gateway_service: {
           service1: { name: 'service1' },
           service2: { name: 'service2' },
         },
       },
-    },
+    } as QueryResponseMeta,
   }))
   const result = useExploreResultToDatasets({ fill: true }, exploreResult)
 

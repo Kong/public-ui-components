@@ -112,15 +112,15 @@ export interface Display {
   }
 }
 
-export interface DisplayBlob {
-  [dimension: string]: Display
+export type DisplayBlob = {
+  [dimension in QueryableExploreDimensions]?: Display
 }
 
 export interface QueryResponseMeta {
   start_ms: number
   end_ms: number
   display: DisplayBlob
-  metric_names?: string[]
+  metric_names?: ExploreAggregations[]
   metric_units?: MetricUnit
   granularity_ms: number
   truncated?: boolean

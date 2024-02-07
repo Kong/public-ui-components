@@ -113,7 +113,7 @@ import DoughnutChart from './chart-types/DoughnutChart.vue'
 import type { PropType } from 'vue'
 import { computed, provide, toRef } from 'vue'
 import { GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type { ExploreResultV4, GranularityFullObj } from '@kong-ui-public/analytics-utilities'
+import type { ExploreAggregations, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette, hasMillisecondTimestamps } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
@@ -243,7 +243,7 @@ const metricAxesTitle = computed<string | undefined>(() => {
   }
 
   const metricName = props.chartData.meta.metric_names[0]
-  const metricUnit = props.chartData.meta.metric_units[metricName]
+  const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations]
   // @ts-ignore - dynamic i18n key
   return props.chartOptions?.metricAxesTitle || (i18n.te(`metricAxisTitles.${metricName}`) && i18n.te(`chartUnits.${metricUnit}`) &&
     // @ts-ignore - dynamic i18n key
@@ -260,20 +260,10 @@ const dimensionAxesTitle = computed<string | undefined>(() => {
 })
 
 const timestampAxisTitle = computed(() => {
-  if (props.chartData.meta.granularity && typeof props.chartData.meta.granularity !== 'number' && 'duration' in (props.chartData.meta.granularity as GranularityFullObj)) {
-    const granularity = msToGranularity((props.chartData.meta.granularity as GranularityFullObj).duration)
-
-    // @ts-ignore - dynamic i18n key
-    return i18n.t(`granularityAxisTitles.${granularity}`)
-  } else if (props.chartData.meta.granularity && !isNaN(Number(props.chartData.meta.granularity))) {
-    const granularity = msToGranularity(Number(props.chartData.meta.granularity))
-
-    // @ts-ignore - dynamic i18n key
-    return i18n.t(`granularityAxisTitles.${granularity}`)
-  }
+  const granularity = msToGranularity(Number(props.chartData.meta.granularity_ms))
 
   // @ts-ignore - dynamic i18n key
-  return i18n.t('chartlabels.Time')
+  return i18n.t(`granularityAxisTitles.${granularity}`)
 })
 
 const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAvailableTitle'))

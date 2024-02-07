@@ -1,4 +1,4 @@
-import type { AnalyticsExploreRecord, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, ExploreResultV4, QueryableExploreDimensions } from '@kong-ui-public/analytics-utilities'
 import { lookupDatavisColor, datavisPalette } from '../utils'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
@@ -77,8 +77,8 @@ export default function useExploreResultToDatasets(
         }
 
         const dimensionFieldNames = (hasDimensions && dimensionKeys) || metricNames
-        const primaryDimension = dimensionFieldNames[0]
-        const secondaryDimension = dimensionFieldNames.length > 1 ? dimensionFieldNames[1] : dimensionFieldNames[0]
+        const primaryDimension = dimensionFieldNames[0] as QueryableExploreDimensions
+        const secondaryDimension = (dimensionFieldNames.length > 1 ? dimensionFieldNames[1] : dimensionFieldNames[0]) as QueryableExploreDimensions
 
         const pivotRecords = isMultiMetric
           ? Object.fromEntries(records.flatMap(e => {
@@ -98,9 +98,11 @@ export default function useExploreResultToDatasets(
             return [label, value]
           }))
 
-        const rowLabels: DatasetLabel[] = (hasDimensions && Object.entries(display[primaryDimension]).map(([id, val]) => ({ id, name: val.name }))) || metricNames.map(name => ({ id: name, name }))
+        const primaryDimensionDisplay = display[primaryDimension]
+        const secondaryDimensionDisplay = display[secondaryDimension]
+        const rowLabels: DatasetLabel[] = (hasDimensions && primaryDimensionDisplay && Object.entries(primaryDimensionDisplay).map(([id, val]) => ({ id, name: val.name }))) || metricNames.map(name => ({ id: name, name }))
 
-        const barSegmentLabels: DatasetLabel[] = (hasDimensions && Object.entries(display[secondaryDimension]).map(([id, val]) => ({ id, name: val.name }))) || metricNames.map(name => ({ id: name, name }))
+        const barSegmentLabels: DatasetLabel[] = (hasDimensions && secondaryDimensionDisplay && Object.entries(secondaryDimensionDisplay).map(([id, val]) => ({ id, name: val.name }))) || metricNames.map(name => ({ id: name, name }))
 
         if (!rowLabels || !barSegmentLabels) {
           return { labels: [], datasets: [] }

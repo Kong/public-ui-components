@@ -1,4 +1,4 @@
-import type { ExploreResultV4, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4, AnalyticsExploreRecord, QueryableExploreDimensions } from '@kong-ui-public/analytics-utilities'
 import { defaultLineOptions, darkenColor, lookupDatavisColor, datavisPalette, BORDER_WIDTH, NO_BORDER } from '../utils'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
@@ -73,8 +73,9 @@ export default function useExploreResultToTimeDataset(
         // Time based datasets can only display one "dimension"
         // It will either be the first dimension or if no dimensions
         // are provided, then the metric is the primary dimension
-        const dimension = (dimensionFieldNames && dimensionFieldNames[0])
-        const datasetLabels: DatasetLabel[] = (display && display[dimension] && Object.keys(display[dimension]).map(id => ({ id, name: display[dimension][id].name }))) || metricNames.map(name => ({ id: name, name }))
+        const dimension = (dimensionFieldNames && dimensionFieldNames[0]) as QueryableExploreDimensions
+        const dimensionDisplay = display[dimension]
+        const datasetLabels: DatasetLabel[] = (display && dimensionDisplay && Object.keys(dimensionDisplay).map(id => ({ id, name: dimensionDisplay[id].name }))) || metricNames.map(name => ({ id: name, name }))
 
         // Bail out early if we can't handle the value of `step`.
         // Not sure when this happens, but it seems to at times in production.

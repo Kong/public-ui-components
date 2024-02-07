@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from 'chart.js'
 import { horizontalTooltipPositioning, tooltipBehavior, verticalTooltipPositioning } from '../utils'
-import { millisecondsToHours, secondsToHours } from 'date-fns'
+import { millisecondsToHours } from 'date-fns'
 import { isNullOrUndef } from 'chart.js/helpers'
 import type { ExternalTooltipContext, LineChartOptions } from '../types'
 import { GranularityKeys } from '@kong-ui-public/analytics-utilities'

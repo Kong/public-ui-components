@@ -106,7 +106,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { PropType } from 'vue'
-import type { AnalyticsExploreRecord, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, ExploreAggregations, ExploreResultV4, QueryableExploreDimensions } from '@kong-ui-public/analytics-utilities'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
 import composables from '../composables'
@@ -149,7 +149,7 @@ const displayRecord = computed(() => {
     return {}
   }
 
-  return props.data.meta.display[displayKey.value]
+  return props.data.meta.display[displayKey.value as QueryableExploreDimensions]
 })
 const columnKey = computed((): string => {
   if (!props.data.meta?.metric_names?.length) {
@@ -173,7 +173,7 @@ const errorMessage = computed((): string => {
 
   if (!props.data.meta) {
     return i18n.t('topNTable.errors.meta')
-  } else if (!Object.keys(displayRecord.value).length) {
+  } else if (displayRecord.value && !Object.keys(displayRecord.value).length) {
     return i18n.t('topNTable.errors.display')
   } else if (!columnKey.value) {
     return i18n.t('topNTable.errors.metricNames')
@@ -185,11 +185,11 @@ const errorMessage = computed((): string => {
 const getId = (record: AnalyticsExploreRecord): string => {
   const event = record.event
 
-  return String(event[displayKey.value])
+  return String(event[displayKey.value as QueryableExploreDimensions | ExploreAggregations])
 }
 const getName = (record: AnalyticsExploreRecord): string => {
   const id = getId(record)
-  const idRecord = displayRecord.value[id]
+  const idRecord = displayRecord.value && displayRecord.value[id]
 
   if (!idRecord) {
     return '-'
@@ -197,15 +197,15 @@ const getName = (record: AnalyticsExploreRecord): string => {
 
   return idRecord.name
 }
-const getDeleted = (record: AnalyticsExploreRecord): boolean | undefined => {
+const getDeleted = (record: AnalyticsExploreRecord): boolean => {
   const id = getId(record)
-  const idRecord = displayRecord.value[id]
+  const idRecord = displayRecord.value && displayRecord.value[id]
 
   if (!idRecord) {
     return false
   }
 
-  return idRecord.deleted
+  return !!idRecord.deleted
 }
 const getValue = (record: AnalyticsExploreRecord): string => {
   if (!columnKey.value) {
@@ -213,7 +213,7 @@ const getValue = (record: AnalyticsExploreRecord): string => {
   }
 
   const event = record.event
-  const val = event[columnKey.value]
+  const val = event[columnKey.value as QueryableExploreDimensions | ExploreAggregations]
 
   if (!val) {
     return '–'

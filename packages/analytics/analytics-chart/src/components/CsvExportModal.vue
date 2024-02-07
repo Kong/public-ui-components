@@ -87,9 +87,9 @@ import { ref, computed, watch, toRef } from 'vue'
 
 import DownloadCsv from './DownloadCsv.vue'
 import composables from '../composables'
-import type { ExploreResultV4, RecordEvent } from '@kong-ui-public/analytics-utilities'
+import type { ExploreAggregations, ExploreResultV4, QueryableExploreDimensions } from '@kong-ui-public/analytics-utilities'
 import { format } from 'date-fns-tz'
-import type { Header, TimeseriesColumn } from '../types'
+import type { CsvData, Header, TimeseriesColumn } from '../types'
 
 const { i18n } = composables.useI18n()
 
@@ -133,12 +133,13 @@ const tableData = computed(() => {
   const rows = props.chartData.data.map(rec => {
     const recTs = new Date(rec.timestamp)
 
-    const translatedEvent = Object.keys(rec.event).reduce((acc: RecordEvent, key) => {
+    const translatedEvent = Object.keys(rec.event).reduce((acc: { [key: string]: string | number }, key) => {
       if (key in props.chartData.meta.display) {
-        const dimensionId = rec.event[key]
-        acc[key] = (dimensionId && props.chartData.meta.display[key][dimensionId].name) || rec.event[key]
+        const dimensionId = rec.event[key as QueryableExploreDimensions | ExploreAggregations]
+        const displayEntry = props.chartData.meta.display[key as QueryableExploreDimensions]
+        acc[key] = (dimensionId && displayEntry && displayEntry[dimensionId].name) || rec.event[key as QueryableExploreDimensions & ExploreAggregations]
       } else {
-        acc[key] = rec.event[key]
+        acc[key] = rec.event[key as QueryableExploreDimensions & ExploreAggregations]
       }
       return acc
     }, {})
@@ -152,7 +153,7 @@ const tableData = computed(() => {
         }
         : {}),
     }
-  })
+  }) as CsvData
 
   let timeseriesColumns: TimeseriesColumn[] = []
 
