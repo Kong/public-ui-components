@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.11.15...@kong-ui-public/entities-plugins@2.11.16) (2024-02-07)
+
+
+### Bug Fixes
+
+* **flycode:** text changes ([#1138](https://github.com/Kong/public-ui-components/issues/1138)) ([eaed5ad](https://github.com/Kong/public-ui-components/commit/eaed5ad830085322b678800874ea8c4e09554dde))
+
+
+
+
+
 ## [2.11.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.11.14...@kong-ui-public/entities-plugins@2.11.15) (2024-02-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
