@@ -3,7 +3,6 @@ import { describe, it, expect } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import useExploreResultToDatasets from './useExploreResultToDatasets'
-import type { as } from 'vitest/dist/reporters-trlZlObr'
 
 describe('useVitalsExploreDatasets', () => {
   it('can handle empty records', () => {
@@ -181,80 +180,43 @@ describe('useVitalsExploreDatasets', () => {
 })
 
 it('handles no dimension', () => {
-  const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-    records: [
+  const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+    data: [
       {
-        version: 'v1',
         timestamp: '2022-01-01T01:01:02Z',
         event: {
-          metric: 1,
-          dimension: 'dimension1',
+          request_count: 1,
         },
       },
     ],
     meta: {
-      start: 1640998862,
-      end: 1640998870,
-      granularity: 5000,
-      metricNames: ['metric'],
-      queryId: '',
-      metricUnits: { metric: 'units' },
+      start_ms: 1640998862000,
+      end_ms: 1640998870000,
+      granularity_ms: 8000,
+      metric_names: ['request_count'],
+      query_id: '',
+      metric_units: { request_count: 'units' },
       truncated: false,
       limit: 15,
+      display: {},
     },
   }))
   const result = useExploreResultToDatasets({ fill: true }, exploreResult)
 
   expect(result.value).toEqual(
     {
-      labels: ['metric'],
+      labels: ['Request Count'],
       datasets: [
-        { label: 'metric', backgroundColor: '#a86cd5', data: [1] },
-      ],
-    },
-  )
-})
-
-it('handles empty dimension', () => {
-  const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-    records: [
-      {
-        version: 'v1',
-        timestamp: '2022-01-01T01:01:02Z',
-        event: {
-          metric: 1,
-        },
-      },
-    ],
-    meta: {
-      start: 1640998862,
-      end: 1640998870,
-      granularity: 5000,
-      metricNames: ['metric'],
-      queryId: '',
-      metricUnits: { metric: 'units' },
-      truncated: false,
-      limit: 15,
-      dimensions: {},
-    },
-  }))
-  const result = useExploreResultToDatasets({ fill: true }, exploreResult)
-
-  expect(result.value).toEqual(
-    {
-      labels: ['metric'],
-      datasets: [
-        { label: 'metric', backgroundColor: '#a86cd5', data: [1] },
+        { label: 'Request Count', backgroundColor: '#a86cd5', data: [1] },
       ],
     },
   )
 })
 
 it('handles multiple metrics with no dimension', () => {
-  const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-    records: [
+  const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+    data: [
       {
-        version: 'v1',
         timestamp: '2022-01-01T01:01:02Z',
         event: {
           metric1: 1,
@@ -263,18 +225,19 @@ it('handles multiple metrics with no dimension', () => {
       },
     ],
     meta: {
-      start: 1640998862,
-      end: 1640998870,
-      granularity: 5000,
-      metricNames: [
+      start_ms: 1640998862000,
+      end_ms: 1640998870000,
+      granularity_ms: 8000,
+      metric_names: [
         'metric1',
         'metric2',
-      ],
-      queryId: '',
-      metricUnits: { metric1: 'units', metric2: 'units' },
+      // we just care about how the data gets formatted, not if it's a vald metric.
+      ] as unknown as ExploreAggregations[],
+      query_id: '',
+      metric_units: { metric1: 'units', metric2: 'units' },
       truncated: false,
       limit: 15,
-      dimensions: {},
+      display: {},
     },
   }))
   const result = useExploreResultToDatasets({ fill: true }, exploreResult)
@@ -291,10 +254,9 @@ it('handles multiple metrics with no dimension', () => {
 })
 
 it('handles multiple metrics with dimension', () => {
-  const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-    records: [
+  const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+    data: [
       {
-        version: 'v1',
         timestamp: '2022-01-01T01:01:02Z',
         event: {
           metric1: 1,
@@ -303,7 +265,6 @@ it('handles multiple metrics with dimension', () => {
         },
       },
       {
-        version: 'v1',
         timestamp: '2022-01-01T01:01:02Z',
         event: {
           metric1: 3,
@@ -313,22 +274,22 @@ it('handles multiple metrics with dimension', () => {
       },
     ],
     meta: {
-      start: 1640998862,
-      end: 1640998870,
-      granularity: 5000,
-      metricNames: [
+      start_ms: 1640998862000,
+      end_ms: 1640998870000,
+      granularity_ms: 8000,
+      metric_names: [
         'metric1',
         'metric2',
-      ],
-      queryId: '',
-      metricUnits: { metric1: 'units', metric2: 'units' },
+      ] as unknown as ExploreAggregations[],
+      query_id: '',
+      metric_units: { metric1: 'units', metric2: 'units' },
       truncated: false,
       limit: 15,
-      dimensions: {
-        Service: [
-          'service1',
-          'service2',
-        ],
+      display: {
+        Service: {
+          service1: { name: 'service1' },
+          service2: { name: 'service2' },
+        },
       },
     },
   }))
