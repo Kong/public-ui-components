@@ -357,7 +357,7 @@ const exploreResult = computed<ExploreResultV4>(() => {
     query_id: '',
     truncated: limitToggle.value,
     limit: 50,
-    metric_names: [selectedMetric.value.name, ...(multiMetricToggle.value ? ['secondaryMetric'] : [])] as ExploreAggregations[],
+    metric_names: [selectedMetric.value.name, ...(multiMetricToggle.value ? ['secondaryMetric'] : [])],
     metric_units: {
       [selectedMetric.value.name]: selectedMetric.value.unit,
       ...(multiMetricToggle.value && { secondaryMetric: selectedMetric.value.unit }),
@@ -397,7 +397,7 @@ const topNTableData = computed<ExploreResultV4>(() => {
       limit: 50,
       metric_names: [
         'request_count',
-      ] as ExploreAggregations[],
+      ],
       metric_units: {
         request_count: 'count',
       },

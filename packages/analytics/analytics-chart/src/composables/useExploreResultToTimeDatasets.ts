@@ -83,11 +83,11 @@ export default function useExploreResultToTimeDataset(
         if (typeof stepMs !== 'number' || isNaN(stepMs) || !isFinite(stepMs) || stepMs === 0) {
           console.error('Invalid step value:', stepMs)
 
-          return { datasets: [] }
+          return { datasets: [], labels: [] }
         }
 
         if (!records.length) {
-          return { datasets: [] }
+          return { datasets: [], labels: [] }
         }
 
         const offsetMs = originToOffset(startMs)

@@ -120,7 +120,7 @@ export interface QueryResponseMeta {
   start_ms: number
   end_ms: number
   display: DisplayBlob
-  metric_names?: ExploreAggregations[]
+  metric_names?: string[]
   metric_units?: MetricUnit
   granularity?: number
   granularity_ms?: number

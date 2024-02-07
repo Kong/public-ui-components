@@ -1,4 +1,4 @@
-import type { AnalyticsExploreResult, DisplayBlob, ExploreAggregations, ExploreResultV4, GroupByResult, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
+import type { DisplayBlob, ExploreAggregations, ExploreResultV4, GroupByResult, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import { describe, it, expect } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
@@ -13,7 +13,7 @@ describe('useVitalsExploreDatasets', () => {
         end_ms: 1640998870000,
         granularity_ms: 8000,
         display: { dimension: { key: { name: 'dimension' } } } as DisplayBlob,
-        metric_names: ['request_count'] as ExploreAggregations[],
+        metric_names: ['request_count'],
         query_id: '',
         metric_units: { request_count: 'units' },
         truncated: false,
@@ -39,7 +39,7 @@ describe('useVitalsExploreDatasets', () => {
         end_ms: 1640998870000,
         granularity_ms: 8000,
         display: { dimension: { key: { name: 'dimension' } } } as DisplayBlob,
-        metric_names: ['request_count'] as ExploreAggregations[],
+        metric_names: ['request_count'],
         query_id: '',
         metric_units: { request_count: 'units' },
         truncated: false,
@@ -92,7 +92,7 @@ describe('useVitalsExploreDatasets', () => {
         end_ms: 1640998870000,
         granularity_ms: 8000,
         display: { dimension: { 'dimension-uuid': { name: 'dimension1' } } } as DisplayBlob,
-        metric_names: ['request_count'] as ExploreAggregations[],
+        metric_names: ['request_count'],
         query_id: '',
         metric_units: { request_count: 'units' },
         truncated: false,
@@ -151,7 +151,7 @@ describe('useVitalsExploreDatasets', () => {
         start_ms: 1669928400000,
         end_ms: 1670014800000,
         granularity: 86400000,
-        metric_names: ['request_count'] as ExploreAggregations[],
+        metric_names: ['request_count'],
         display: {
           GroupBy: { 'group-by-1': { name: 'GroupBy1' }, 'group-by-2': { name: 'GroupBy2' } },
           ThenBy: { 'then-by-1': { name: 'ThenBy1' }, 'then-by-2': { name: 'ThenBy2' }, 'then-by-3': { name: 'ThenBy3' }, 'then-by-4': { name: 'ThenBy4' } },
@@ -232,7 +232,7 @@ it('handles multiple metrics with no dimension', () => {
         'metric1',
         'metric2',
       // we just care about how the data gets formatted, not if it's a vald metric.
-      ] as unknown as ExploreAggregations[],
+      ],
       query_id: '',
       metric_units: { metric1: 'units', metric2: 'units' },
       truncated: false,
@@ -280,7 +280,7 @@ it('handles multiple metrics with dimension', () => {
       metric_names: [
         'metric1',
         'metric2',
-      ] as unknown as ExploreAggregations[],
+      ],
       query_id: '',
       metric_units: { metric1: 'units', metric2: 'units' },
       truncated: false,
