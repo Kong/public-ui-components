@@ -1,4 +1,4 @@
-import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { DisplayBlob, ExploreAggregations, ExploreResultV4, GroupByResult, MetricUnit, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import { describe, it, expect, vitest } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
@@ -26,10 +26,10 @@ describe('useVitalsExploreDatasets', () => {
         start_ms: 1667308380000,
         end_ms: 1667481180000,
         granularity_ms: 0,
-        display: { dimension: { 'dimension-id': { name: 'dimension-name' } } },
-        metric_names: ['metric'],
+        display: { route: { 'dimension-id': { name: 'dimension-name' } } },
+        metric_names: ['request_count'],
         query_id: '',
-        metric_units: { units: 'units' },
+        metric_units: { request_count: 'units' },
       },
     }))
     const result = useExploreResultToTimeDataset(
@@ -48,10 +48,10 @@ describe('useVitalsExploreDatasets', () => {
         start_ms: 1640998862000,
         end_ms: 1640998870000,
         granularity_ms: 5000,
-        display: { dimension: { 'dimension-id': { name: 'dimension-name' } } },
-        metric_names: ['metric'],
+        display: { route: { 'dimension-id': { name: 'dimension-name' } } },
+        metric_names: ['request_count'],
         query_id: '',
-        metric_units: { metric: 'units' },
+        metric_units: { request_count: 'units' },
       },
     }))
 
@@ -69,8 +69,8 @@ describe('useVitalsExploreDatasets', () => {
         {
           timestamp: '2022-01-01T01:01:07Z',
           event: {
-            metric: 1,
-            dimension: 'id',
+            request_count: 1,
+            route: 'id',
           },
         },
       ],
@@ -78,10 +78,10 @@ describe('useVitalsExploreDatasets', () => {
         start_ms: 1640998862000,
         end_ms: 1640998872000,
         granularity_ms: 5000,
-        display: { dimension: { id: { name: 'label' } } },
-        metric_names: ['metric'],
+        display: { route: { id: { name: 'label' } } },
+        metric_names: ['request_count'],
         query_id: '',
-        metric_units: { metric: 'units' },
+        metric_units: { request_count: 'units' },
       },
     }))
 
@@ -110,8 +110,8 @@ describe('useVitalsExploreDatasets', () => {
         {
           timestamp: '2022-01-01T01:01:02Z',
           event: {
-            metric: 1,
-            dimension: 'id',
+            request_count: 1,
+            route: 'id',
           },
         },
       ],
@@ -119,10 +119,10 @@ describe('useVitalsExploreDatasets', () => {
         start_ms: 1640998862000,
         end_ms: 1640998872000,
         granularity_ms: 5000,
-        display: { dimension: { id: { name: 'label' } } },
-        metric_names: ['metric'],
+        display: { route: { id: { name: 'label' } } },
+        metric_names: ['request_count'],
         query_id: '',
-        metric_units: { metric: 'units' },
+        metric_units: { request_count: 'units' },
       },
     }))
     const result = useExploreResultToTimeDataset(
@@ -146,15 +146,15 @@ describe('useVitalsExploreDatasets', () => {
         {
           timestamp: '2022-01-01T01:01:02Z',
           event: {
-            metric: 1,
-            dimension: 'id',
+            request_count: 1,
+            route: 'id',
           },
         },
         {
           timestamp: '2022-01-01T01:01:07Z',
           event: {
-            metric: 1,
-            dimension: 'id',
+            request_count: 1,
+            route: 'id',
           },
         },
       ],
@@ -162,10 +162,10 @@ describe('useVitalsExploreDatasets', () => {
         start_ms: 1640998862000,
         end_ms: 1640998872000,
         granularity_ms: 5000,
-        display: { dimension: { id: { name: 'label' } } },
-        metric_names: ['metric'],
+        display: { route: { id: { name: 'label' } } },
+        metric_names: ['request_count'],
         query_id: '',
-        metric_units: { metric: 'units' },
+        metric_units: { request_count: 'units' },
       },
     }))
     const result = useExploreResultToTimeDataset(
@@ -195,15 +195,15 @@ describe('useVitalsExploreDatasets', () => {
         {
           timestamp: START_FOR_DAILY_QUERY.toISOString(),
           event: {
-            metric: 1,
-            dimension: 'id',
+            request_count: 1,
+            route: 'id',
           },
         },
         {
           timestamp: END_FOR_DAILY_QUERY.toISOString(),
           event: {
-            metric: 1,
-            dimension: 'id',
+            request_count: 1,
+            route: 'id',
           },
         },
       ],
@@ -211,10 +211,10 @@ describe('useVitalsExploreDatasets', () => {
         start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
         end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
         granularity_ms: 86400000,
-        display: { dimension: { id: { name: 'label' } } },
-        metric_names: ['metric'],
+        display: { route: { id: { name: 'label' } } },
+        metric_names: ['request_count'],
         query_id: '',
-        metric_units: { metric: 'units' },
+        metric_units: { request_count: 'units' },
       },
     }))
     const result = useExploreResultToTimeDataset(
@@ -245,24 +245,24 @@ describe('useVitalsExploreDatasets', () => {
             metric1: 1,
             metric2: 2,
           },
-        },
+        } as GroupByResult,
         {
           timestamp: END_FOR_DAILY_QUERY.toISOString(),
           event: {
             metric1: 1,
             metric2: 2,
           },
-        },
+        } as GroupByResult,
       ],
       meta: {
         start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
         end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
         granularity_ms: 86400000,
-        metric_names: ['metric1', 'metric2'],
+        metric_names: ['metric1', 'metric2'] as any as ExploreAggregations[],
         display: {},
         query_id: '',
-        metric_units: { metric1: 'units' },
-      },
+        metric_units: { metric1: 'units' } as MetricUnit,
+      } as QueryResponseMeta,
     }))
     const result = useExploreResultToTimeDataset(
       { fill: false },
@@ -307,23 +307,23 @@ describe('useVitalsExploreDatasets', () => {
             metric1: 2,
             metric2: 1,
           },
-        },
+        } as GroupByResult,
         {
           timestamp: END_FOR_DAILY_QUERY.toISOString(),
           event: {
             metric1: 2,
             metric2: 1,
           },
-        },
+        } as GroupByResult,
       ],
       meta: {
         start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
         end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
         granularity_ms: 86400000,
-        metric_names: ['metric1', 'metric2'],
+        metric_names: ['metric1', 'metric2'] as any as ExploreAggregations[],
         display: {},
         query_id: '',
-        metric_units: { metric1: 'units' },
+        metric_units: { metric1: 'units' } as MetricUnit,
       },
     }))
     const result = useExploreResultToTimeDataset(
@@ -340,23 +340,23 @@ describe('useVitalsExploreDatasets', () => {
         {
           timestamp: START_FOR_DAILY_QUERY.toISOString(),
           event: {
-            metric1: 1,
+            metric: 1,
           },
-        },
+        } as GroupByResult,
         {
           timestamp: END_FOR_DAILY_QUERY.toISOString(),
           event: {
-            metric1: 2,
+            metric: 2,
           },
-        },
+        } as GroupByResult,
       ],
       meta: {
         start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
         end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
         granularity_ms: 86400000,
-        metric_names: ['metric1'],
+        metric_names: ['metric'] as any as ExploreAggregations[],
         query_id: '',
-        metric_units: { metric1: 'units' },
+        metric_units: { metric: 'units' } as MetricUnit,
         display: {},
       },
     }))
@@ -378,7 +378,7 @@ describe('useVitalsExploreDatasets', () => {
       ],
     )
 
-    expect(result.value.datasets[0].label).toEqual('metric1')
+    expect(result.value.datasets[0].label).toEqual('metric')
   })
 
   it('handles multiple metrics', () => {
@@ -390,14 +390,14 @@ describe('useVitalsExploreDatasets', () => {
             metric1: 1,
             metric2: 2,
           },
-        },
+        } as GroupByResult,
         {
           timestamp: END_FOR_DAILY_QUERY.toISOString(),
           event: {
             metric1: 3,
             metric2: 4,
           },
-        },
+        } as GroupByResult,
       ],
       meta: {
         start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
@@ -406,9 +406,9 @@ describe('useVitalsExploreDatasets', () => {
         metric_names: [
           'metric1',
           'metric2',
-        ],
+        ] as any as ExploreAggregations[],
         query_id: '',
-        metric_units: { metric1: 'units', metric2: 'units' },
+        metric_units: { metric1: 'units', metric2: 'units' } as MetricUnit,
         display: {},
       },
     }))
@@ -479,13 +479,13 @@ describe('useVitalsExploreDatasets', () => {
           event: {
             metric1: 1,
           },
-        },
+        } as GroupByResult,
         {
           timestamp: END_FOR_DAILY_QUERY.toISOString(),
           event: {
             metric1: 3,
           },
-        },
+        } as GroupByResult,
       ],
       meta: {
         start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
@@ -493,9 +493,9 @@ describe('useVitalsExploreDatasets', () => {
         granularity_ms: 86400000,
         metric_names: [
           'metric1',
-        ],
+        ] as any as ExploreAggregations[],
         query_id: '',
-        metric_units: { metric1: 'units', metric2: 'units' },
+        metric_units: { metric1: 'units', metric2: 'units' } as MetricUnit,
         display: {},
       },
     }))
@@ -515,13 +515,13 @@ describe('useVitalsExploreDatasets', () => {
           event: {
             metric1: 1,
           },
-        },
+        } as GroupByResult,
         {
           timestamp: END_FOR_DAILY_QUERY.toISOString(),
           event: {
             metric1: 3,
           },
-        },
+        } as GroupByResult,
       ],
       meta: {
         start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
@@ -529,9 +529,9 @@ describe('useVitalsExploreDatasets', () => {
         granularity_ms: 86400000,
         metric_names: [
           'metric1',
-        ],
+        ] as any as ExploreAggregations[],
         query_id: '',
-        metric_units: { metric1: 'units', metric2: 'units' },
+        metric_units: { metric1: 'units' } as MetricUnit,
         display: {},
       },
     }))
@@ -552,23 +552,23 @@ describe('useVitalsExploreDatasets', () => {
             metric: 1,
             dimension: 'id',
           },
-        },
+        } as GroupByResult,
         {
           timestamp: addHours(START_FOR_DAILY_QUERY, 3).toISOString(),
           event: {
             metric: 2,
             dimension: 'id',
           },
-        },
+        } as GroupByResult,
       ],
       meta: {
         start_ms: START_FOR_DAILY_QUERY.getTime(),
         end_ms: addHours(START_FOR_DAILY_QUERY, 6).getTime(),
         granularity_ms: 3600000,
-        display: { dimension: { id: { name: 'label' } } },
-        metric_names: ['metric'],
+        display: { dimension: { id: { name: 'label' } } } as DisplayBlob,
+        metric_names: ['metric'] as any as ExploreAggregations[],
         query_id: '',
-        metric_units: { metric: 'units' },
+        metric_units: { metric: 'units' } as MetricUnit,
       },
     }))
     const result = useExploreResultToTimeDataset(
