@@ -1,7 +1,7 @@
-import type { ExploreAggregations, QueryableExploreDimensions } from './explore-v4'
+import type { ExploreAggregations } from './explore-v4'
 
-export type RecordEvent = {
-  [field in ExploreAggregations | QueryableExploreDimensions]?: string | number | null
+export interface RecordEvent {
+  [field: string]: string | number | null
 }
 
 export interface AnalyticsExploreRecord {
