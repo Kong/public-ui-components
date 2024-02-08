@@ -49,7 +49,7 @@ describe('<CsvExportModal />', () => {
     cy.getTestId('csv-export-modal').find('.k-table thead th').should(th => {
       const elements = Array.from(th, e => e.innerText)
 
-      expect(elements.join(',')).eql('Timestamp,UTC Offset,Status Code,Request Count')
+      expect(JSON.stringify(elements)).to.equal('["Timestamp","UTC Offset","Status Code","Request Count"]')
     })
 
     // Save to CSV and check actual contents
