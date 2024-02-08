@@ -1,7 +1,7 @@
 <template>
   <KTooltip
-    :label="plugin.disabledMessage"
     position-fixed
+    :text="plugin.disabledMessage"
   >
     <a
       class="plugin-select-card"
