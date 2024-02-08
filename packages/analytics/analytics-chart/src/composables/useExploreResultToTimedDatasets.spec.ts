@@ -1,16 +1,17 @@
-import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
-import type { SpyInstance } from 'vitest'
+import type { DisplayBlob, ExploreAggregations, ExploreResultV4, GroupByResult, MetricUnit, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import { describe, it, expect, vitest } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
 import { BORDER_WIDTH, NO_BORDER } from '../utils'
+import { addHours } from 'date-fns'
+import type { MockInstance } from 'vitest'
 
 const START_FOR_DAILY_QUERY = new Date(1672560000000)
 const END_FOR_DAILY_QUERY = new Date(1672646400000)
 
 describe('useVitalsExploreDatasets', () => {
-  let _consoleErrorSpy: SpyInstance
+  let _consoleErrorSpy: MockInstance
 
   beforeEach(() => {
     vitest.restoreAllMocks()
@@ -19,16 +20,16 @@ describe('useVitalsExploreDatasets', () => {
   })
 
   it('can handle invalid step values', () => {
-    const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-      records: [],
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [],
       meta: {
-        start: 1667308380,
-        end: 1667481180,
-        granularity: 0,
-        dimensions: { dimension: ['dimension'] },
-        metricNames: ['metric'],
-        queryId: '',
-        metricUnits: { units: 'units' },
+        start_ms: 1667308380000,
+        end_ms: 1667481180000,
+        granularity_ms: 0,
+        display: { route: { 'dimension-id': { name: 'dimension-name' } } },
+        metric_names: ['request_count'],
+        query_id: '',
+        metric_units: { request_count: 'units' },
       },
     }))
     const result = useExploreResultToTimeDataset(
@@ -36,21 +37,21 @@ describe('useVitalsExploreDatasets', () => {
       exploreResult,
     )
 
-    expect(result.value).toEqual({ datasets: [] })
+    expect(result.value).toEqual({ datasets: [], labels: [] })
     expect(_consoleErrorSpy).toHaveBeenCalled()
   })
 
   it('can handle empty records', () => {
-    const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-      records: [],
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [],
       meta: {
-        start: 1640998862,
-        end: 1640998870,
-        granularity: 5000,
-        dimensions: { dimension: ['dimension'] },
-        metricNames: ['metric'],
-        queryId: '',
-        metricUnits: { units: 'units' },
+        start_ms: 1640998862000,
+        end_ms: 1640998870000,
+        granularity_ms: 5000,
+        display: { route: { 'dimension-id': { name: 'dimension-name' } } },
+        metric_names: ['request_count'],
+        query_id: '',
+        metric_units: { request_count: 'units' },
       },
     }))
 
@@ -59,29 +60,28 @@ describe('useVitalsExploreDatasets', () => {
       exploreResult,
     )
 
-    expect(result.value).toEqual({ datasets: [] })
+    expect(result.value).toEqual({ datasets: [], labels: [] })
   })
 
   it('fills in empty-start values', () => {
-    const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-      records: [
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
         {
-          version: 'v1',
           timestamp: '2022-01-01T01:01:07Z',
           event: {
-            metric: 1,
-            dimension: 'label',
+            request_count: 1,
+            route: 'id',
           },
         },
       ],
       meta: {
-        start: 1640998862, // 2022-01-01T01:01:02Z
-        end: 1640998870, // 2022-01-01T01:01:10Z
-        granularity: 5000, // (5 seconds)
-        dimensions: { dimension: ['label'] },
-        metricNames: ['metric'],
-        queryId: '',
-        metricUnits: { units: 'units' },
+        start_ms: 1640998862000,
+        end_ms: 1640998872000,
+        granularity_ms: 5000,
+        display: { route: { id: { name: 'label' } } },
+        metric_names: ['request_count'],
+        query_id: '',
+        metric_units: { request_count: 'units' },
       },
     }))
 
@@ -105,25 +105,24 @@ describe('useVitalsExploreDatasets', () => {
   })
 
   it('shaves off late 0s', () => {
-    const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-      records: [
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
         {
-          version: 'v1',
           timestamp: '2022-01-01T01:01:02Z',
           event: {
-            metric: 1,
-            dimension: 'label',
+            request_count: 1,
+            route: 'id',
           },
         },
       ],
       meta: {
-        start: 1640998862, // 2022-01-01T01:01:02Z
-        end: 1640998872, // 2022-01-01T01:01:10Z
-        granularity: 5000,
-        dimensions: { dimension: ['label'] },
-        metricNames: ['metric'],
-        queryId: '',
-        metricUnits: { units: 'units' },
+        start_ms: 1640998862000,
+        end_ms: 1640998872000,
+        granularity_ms: 5000,
+        display: { route: { id: { name: 'label' } } },
+        metric_names: ['request_count'],
+        query_id: '',
+        metric_units: { request_count: 'units' },
       },
     }))
     const result = useExploreResultToTimeDataset(
@@ -142,33 +141,31 @@ describe('useVitalsExploreDatasets', () => {
   })
 
   it('keeps full data', () => {
-    const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-      records: [
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
         {
-          version: 'v1',
           timestamp: '2022-01-01T01:01:02Z',
           event: {
-            metric: 1,
-            dimension: 'label',
+            request_count: 1,
+            route: 'id',
           },
         },
         {
-          version: 'v1',
           timestamp: '2022-01-01T01:01:07Z',
           event: {
-            metric: 1,
-            dimension: 'label',
+            request_count: 1,
+            route: 'id',
           },
         },
       ],
       meta: {
-        start: 1640998862,
-        end: 1640998870,
-        granularity: 5000,
-        dimensions: { dimension: ['label'] },
-        metricNames: ['metric'],
-        queryId: '',
-        metricUnits: { units: 'units' },
+        start_ms: 1640998862000,
+        end_ms: 1640998872000,
+        granularity_ms: 5000,
+        display: { route: { id: { name: 'label' } } },
+        metric_names: ['request_count'],
+        query_id: '',
+        metric_units: { request_count: 'units' },
       },
     }))
     const result = useExploreResultToTimeDataset(
@@ -188,36 +185,36 @@ describe('useVitalsExploreDatasets', () => {
         },
       ],
     )
+
+    expect(result.value.datasets[0].label).toEqual('label')
   })
 
   it('handles daily granularity and locking to localtime', () => {
-    const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-      records: [
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
         {
-          version: 'v1',
           timestamp: START_FOR_DAILY_QUERY.toISOString(),
           event: {
-            metric: 1,
-            dimension: 'label',
+            request_count: 1,
+            route: 'id',
           },
         },
         {
-          version: 'v1',
           timestamp: END_FOR_DAILY_QUERY.toISOString(),
           event: {
-            metric: 1,
-            dimension: 'label',
+            request_count: 1,
+            route: 'id',
           },
         },
       ],
       meta: {
-        start: Math.trunc(START_FOR_DAILY_QUERY.getTime() / 1000),
-        end: Math.trunc(END_FOR_DAILY_QUERY.getTime() / 1000),
-        granularity: 86400000,
-        dimensions: { dimension: ['label'] },
-        metricNames: ['metric'],
-        queryId: '',
-        metricUnits: { units: 'units' },
+        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
+        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        granularity_ms: 86400000,
+        display: { route: { id: { name: 'label' } } },
+        metric_names: ['request_count'],
+        query_id: '',
+        metric_units: { request_count: 'units' },
       },
     }))
     const result = useExploreResultToTimeDataset(
@@ -240,34 +237,32 @@ describe('useVitalsExploreDatasets', () => {
   })
 
   it('handles multi-metric/no dimension query', () => {
-    const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-      records: [
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
         {
-          version: 'v1',
           timestamp: START_FOR_DAILY_QUERY.toISOString(),
           event: {
             metric1: 1,
             metric2: 2,
           },
-        },
+        } as GroupByResult,
         {
-          version: 'v1',
           timestamp: END_FOR_DAILY_QUERY.toISOString(),
           event: {
             metric1: 1,
             metric2: 2,
           },
-        },
+        } as GroupByResult,
       ],
       meta: {
-        start: Math.trunc(START_FOR_DAILY_QUERY.getTime() / 1000),
-        end: Math.trunc(END_FOR_DAILY_QUERY.getTime() / 1000),
-        granularity: 86400000,
-        metricNames: ['metric1', 'metric2'],
-        dimensions: {},
-        queryId: '',
-        metricUnits: { metric1: 'units' },
-      },
+        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
+        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        granularity_ms: 86400000,
+        metric_names: ['metric1', 'metric2'] as any as ExploreAggregations[],
+        display: {},
+        query_id: '',
+        metric_units: { metric1: 'units' } as MetricUnit,
+      } as QueryResponseMeta,
     }))
     const result = useExploreResultToTimeDataset(
       { fill: false },
@@ -304,33 +299,31 @@ describe('useVitalsExploreDatasets', () => {
   })
 
   it('Datasets sorted by total descending', () => {
-    const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-      records: [
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
         {
-          version: 'v1',
           timestamp: START_FOR_DAILY_QUERY.toISOString(),
           event: {
             metric1: 2,
             metric2: 1,
           },
-        },
+        } as GroupByResult,
         {
-          version: 'v1',
           timestamp: END_FOR_DAILY_QUERY.toISOString(),
           event: {
             metric1: 2,
             metric2: 1,
           },
-        },
+        } as GroupByResult,
       ],
       meta: {
-        start: Math.trunc(START_FOR_DAILY_QUERY.getTime() / 1000),
-        end: Math.trunc(END_FOR_DAILY_QUERY.getTime() / 1000),
-        granularity: 86400000,
-        metricNames: ['metric1', 'metric2'],
-        dimensions: {},
-        queryId: '',
-        metricUnits: { metric1: 'units' },
+        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
+        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        granularity_ms: 86400000,
+        metric_names: ['metric1', 'metric2'] as any as ExploreAggregations[],
+        display: {},
+        query_id: '',
+        metric_units: { metric1: 'units' } as MetricUnit,
       },
     }))
     const result = useExploreResultToTimeDataset(
@@ -341,269 +334,278 @@ describe('useVitalsExploreDatasets', () => {
     expect(result.value.datasets[0].label).toEqual('metric2')
   })
 
-})
-
-it('handle no dimension query', () => {
-  const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-    records: [
-      {
-        version: 'v1',
-        timestamp: START_FOR_DAILY_QUERY.toISOString(),
-        event: {
-          metric1: 1,
-        },
-      },
-      {
-        version: 'v1',
-        timestamp: END_FOR_DAILY_QUERY.toISOString(),
-        event: {
-          metric1: 2,
-        },
-      },
-    ],
-    meta: {
-      start: Math.trunc(START_FOR_DAILY_QUERY.getTime() / 1000),
-      end: Math.trunc(END_FOR_DAILY_QUERY.getTime() / 1000),
-      granularity: 86400000,
-      metricNames: ['metric1'],
-      queryId: '',
-      metricUnits: { metric1: 'units' },
-    },
-  }))
-  const result = useExploreResultToTimeDataset(
-    { fill: false },
-    exploreResult,
-  )
-
-  expect(result.value.datasets[0].data).toEqual(
-    [
-      {
-        x: START_FOR_DAILY_QUERY.getTime(),
-        y: 1,
-      },
-      {
-        x: END_FOR_DAILY_QUERY.getTime(),
-        y: 2,
-      },
-    ],
-  )
-
-  expect(result.value.datasets[0].label).toEqual('metric1')
-})
-
-it('handle empty dimension query', () => {
-  const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-    records: [
-      {
-        version: 'v1',
-        timestamp: START_FOR_DAILY_QUERY.toISOString(),
-        event: {
-          metric1: 1,
-        },
-      },
-      {
-        version: 'v1',
-        timestamp: END_FOR_DAILY_QUERY.toISOString(),
-        event: {
-          metric1: 2,
-        },
-      },
-    ],
-    meta: {
-      start: Math.trunc(START_FOR_DAILY_QUERY.getTime() / 1000),
-      end: Math.trunc(END_FOR_DAILY_QUERY.getTime() / 1000),
-      granularity: 86400000,
-      metricNames: ['metric1'],
-      queryId: '',
-      metricUnits: { metric1: 'units' },
-      dimensions: {},
-    },
-  }))
-  const result = useExploreResultToTimeDataset(
-    { fill: false },
-    exploreResult,
-  )
-
-  expect(result.value.datasets[0].data).toEqual(
-    [
-      {
-        x: START_FOR_DAILY_QUERY.getTime(),
-        y: 1,
-      },
-      {
-        x: END_FOR_DAILY_QUERY.getTime(),
-        y: 2,
-      },
-    ],
-  )
-
-  expect(result.value.datasets[0].label).toEqual('metric1')
-})
-
-it('handles multiple metrics', () => {
-  const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-    records: [
-      {
-        version: 'v1',
-        timestamp: START_FOR_DAILY_QUERY.toISOString(),
-        event: {
-          metric1: 1,
-          metric2: 2,
-        },
-      },
-      {
-        version: 'v1',
-        timestamp: END_FOR_DAILY_QUERY.toISOString(),
-        event: {
-          metric1: 3,
-          metric2: 4,
-        },
-      },
-    ],
-    meta: {
-      start: Math.trunc(START_FOR_DAILY_QUERY.getTime() / 1000),
-      end: Math.trunc(END_FOR_DAILY_QUERY.getTime() / 1000),
-      granularity: 86400000,
-      metricNames: [
-        'metric1',
-        'metric2',
+  it('handle no dimension query', () => {
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            metric: 1,
+          },
+        } as GroupByResult,
+        {
+          timestamp: END_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            metric: 2,
+          },
+        } as GroupByResult,
       ],
-      queryId: '',
-      metricUnits: { metric1: 'units', metric2: 'units' },
-      dimensions: {},
-    },
-  }))
-  const result = useExploreResultToTimeDataset(
-    { fill: false },
-    exploreResult,
-  )
-
-  expect(result.value.datasets).toEqual(
-    [
-      {
-        rawDimension: 'metric1',
-        rawMetric: 'metric1',
-        label: 'metric1',
-        borderColor: '#763aa3',
-        backgroundColor: '#a86cd5',
-        data: [
-          {
-            x: START_FOR_DAILY_QUERY.getTime(),
-            y: 1,
-          },
-          {
-            x: END_FOR_DAILY_QUERY.getTime(),
-            y: 3,
-          },
-        ],
-        total: 4,
-        lineTension: 0,
-        borderWidth: BORDER_WIDTH,
-        pointBorderWidth: 1.2,
-        borderJoinStyle: 'round',
-        fill: false,
+      meta: {
+        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
+        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        granularity_ms: 86400000,
+        metric_names: ['metric'] as any as ExploreAggregations[],
+        query_id: '',
+        metric_units: { metric: 'units' } as MetricUnit,
+        display: {},
       },
-      {
-        rawDimension: 'metric2',
-        rawMetric: 'metric2',
-        label: 'metric2',
-        borderColor: '#3854a0',
-        backgroundColor: '#6a86d2',
-        data: [
-          {
-            x: START_FOR_DAILY_QUERY.getTime(),
-            y: 2,
-          },
-          {
-            x: END_FOR_DAILY_QUERY.getTime(),
-            y: 4,
-          },
-        ],
-        total: 6,
-        lineTension: 0,
-        borderWidth: BORDER_WIDTH,
-        pointBorderWidth: 1.2,
-        borderJoinStyle: 'round',
-        fill: false,
-      },
-    ],
-  )
+    }))
+    const result = useExploreResultToTimeDataset(
+      { fill: false },
+      exploreResult,
+    )
 
-  expect(result.value.datasets[0].label).toEqual('metric1')
-})
-
-it('borderWidth 0 when fill === true', () => {
-  const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-    records: [
-      {
-        version: 'v1',
-        timestamp: START_FOR_DAILY_QUERY.toISOString(),
-        event: {
-          metric1: 1,
+    expect(result.value.datasets[0].data).toEqual(
+      [
+        {
+          x: START_FOR_DAILY_QUERY.getTime(),
+          y: 1,
         },
-      },
-      {
-        version: 'v1',
-        timestamp: END_FOR_DAILY_QUERY.toISOString(),
-        event: {
-          metric1: 3,
+        {
+          x: END_FOR_DAILY_QUERY.getTime(),
+          y: 2,
         },
-      },
-    ],
-    meta: {
-      start: Math.trunc(START_FOR_DAILY_QUERY.getTime() / 1000),
-      end: Math.trunc(END_FOR_DAILY_QUERY.getTime() / 1000),
-      granularity: 86400000,
-      metricNames: [
-        'metric1',
       ],
-      queryId: '',
-      metricUnits: { metric1: 'units', metric2: 'units' },
-      dimensions: {},
-    },
-  }))
-  const result = useExploreResultToTimeDataset(
-    { fill: true },
-    exploreResult,
-  )
+    )
 
-  expect(result.value.datasets[0].borderWidth).toEqual(NO_BORDER)
-})
+    expect(result.value.datasets[0].label).toEqual('metric')
+  })
 
-it('borderWidth set when fill === false', () => {
-  const exploreResult: ComputedRef<AnalyticsExploreResult> = computed(() => ({
-    records: [
-      {
-        version: 'v1',
-        timestamp: START_FOR_DAILY_QUERY.toISOString(),
-        event: {
-          metric1: 1,
-        },
-      },
-      {
-        version: 'v1',
-        timestamp: END_FOR_DAILY_QUERY.toISOString(),
-        event: {
-          metric1: 3,
-        },
-      },
-    ],
-    meta: {
-      start: Math.trunc(START_FOR_DAILY_QUERY.getTime() / 1000),
-      end: Math.trunc(END_FOR_DAILY_QUERY.getTime() / 1000),
-      granularity: 86400000,
-      metricNames: [
-        'metric1',
+  it('handles multiple metrics', () => {
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            metric1: 1,
+            metric2: 2,
+          },
+        } as GroupByResult,
+        {
+          timestamp: END_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            metric1: 3,
+            metric2: 4,
+          },
+        } as GroupByResult,
       ],
-      queryId: '',
-      metricUnits: { metric1: 'units', metric2: 'units' },
-      dimensions: {},
-    },
-  }))
-  const result = useExploreResultToTimeDataset(
-    { fill: false },
-    exploreResult,
-  )
+      meta: {
+        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
+        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        granularity_ms: 86400000,
+        metric_names: [
+          'metric1',
+          'metric2',
+        ] as any as ExploreAggregations[],
+        query_id: '',
+        metric_units: { metric1: 'units', metric2: 'units' } as MetricUnit,
+        display: {},
+      },
+    }))
+    const result = useExploreResultToTimeDataset(
+      { fill: false },
+      exploreResult,
+    )
 
-  expect(result.value.datasets[0].borderWidth).toEqual(BORDER_WIDTH)
+    expect(result.value.datasets).toEqual(
+      [
+        {
+          rawDimension: 'metric1',
+          rawMetric: 'metric1',
+          label: 'metric1',
+          borderColor: '#763aa3',
+          backgroundColor: '#a86cd5',
+          data: [
+            {
+              x: START_FOR_DAILY_QUERY.getTime(),
+              y: 1,
+            },
+            {
+              x: END_FOR_DAILY_QUERY.getTime(),
+              y: 3,
+            },
+          ],
+          total: 4,
+          lineTension: 0,
+          borderWidth: BORDER_WIDTH,
+          pointBorderWidth: 1.2,
+          borderJoinStyle: 'round',
+          fill: false,
+        },
+        {
+          rawDimension: 'metric2',
+          rawMetric: 'metric2',
+          label: 'metric2',
+          borderColor: '#3854a0',
+          backgroundColor: '#6a86d2',
+          data: [
+            {
+              x: START_FOR_DAILY_QUERY.getTime(),
+              y: 2,
+            },
+            {
+              x: END_FOR_DAILY_QUERY.getTime(),
+              y: 4,
+            },
+          ],
+          total: 6,
+          lineTension: 0,
+          borderWidth: BORDER_WIDTH,
+          pointBorderWidth: 1.2,
+          borderJoinStyle: 'round',
+          fill: false,
+        },
+      ],
+    )
+
+    expect(result.value.datasets[0].label).toEqual('metric1')
+  })
+
+  it('borderWidth 0 when fill === true', () => {
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            metric1: 1,
+          },
+        } as GroupByResult,
+        {
+          timestamp: END_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            metric1: 3,
+          },
+        } as GroupByResult,
+      ],
+      meta: {
+        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
+        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        granularity_ms: 86400000,
+        metric_names: [
+          'metric1',
+        ] as any as ExploreAggregations[],
+        query_id: '',
+        metric_units: { metric1: 'units', metric2: 'units' } as MetricUnit,
+        display: {},
+      },
+    }))
+    const result = useExploreResultToTimeDataset(
+      { fill: true },
+      exploreResult,
+    )
+
+    expect(result.value.datasets[0].borderWidth).toEqual(NO_BORDER)
+  })
+
+  it('borderWidth set when fill === false', () => {
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            metric1: 1,
+          },
+        } as GroupByResult,
+        {
+          timestamp: END_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            metric1: 3,
+          },
+        } as GroupByResult,
+      ],
+      meta: {
+        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
+        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        granularity_ms: 86400000,
+        metric_names: [
+          'metric1',
+        ] as any as ExploreAggregations[],
+        query_id: '',
+        metric_units: { metric1: 'units' } as MetricUnit,
+        display: {},
+      },
+    }))
+    const result = useExploreResultToTimeDataset(
+      { fill: false },
+      exploreResult,
+    )
+
+    expect(result.value.datasets[0].borderWidth).toEqual(BORDER_WIDTH)
+  })
+
+  it('generates correct number of datapoints for time range and granularity', () => {
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: addHours(START_FOR_DAILY_QUERY, 1).toISOString(),
+          event: {
+            metric: 1,
+            dimension: 'id',
+          },
+        } as GroupByResult,
+        {
+          timestamp: addHours(START_FOR_DAILY_QUERY, 3).toISOString(),
+          event: {
+            metric: 2,
+            dimension: 'id',
+          },
+        } as GroupByResult,
+      ],
+      meta: {
+        start_ms: START_FOR_DAILY_QUERY.getTime(),
+        end_ms: addHours(START_FOR_DAILY_QUERY, 6).getTime(),
+        granularity_ms: 3600000,
+        display: { dimension: { id: { name: 'label' } } } as DisplayBlob,
+        metric_names: ['metric'] as any as ExploreAggregations[],
+        query_id: '',
+        metric_units: { metric: 'units' } as MetricUnit,
+      },
+    }))
+    const result = useExploreResultToTimeDataset(
+      { fill: false },
+      exploreResult,
+    )
+
+    expect(result.value.datasets[0].data.length).toEqual(6)
+
+    expect(result.value.datasets[0].data).toEqual(
+      [
+        {
+          x: START_FOR_DAILY_QUERY.getTime(),
+          y: 0,
+        },
+        {
+          x: addHours(START_FOR_DAILY_QUERY, 1).getTime(),
+          y: 1,
+        },
+        {
+          x: addHours(START_FOR_DAILY_QUERY, 2).getTime(),
+          y: 0,
+        },
+        {
+          x: addHours(START_FOR_DAILY_QUERY, 3).getTime(),
+          y: 2,
+        },
+        {
+          x: addHours(START_FOR_DAILY_QUERY, 4).getTime(),
+          y: 0,
+        },
+        {
+          x: addHours(START_FOR_DAILY_QUERY, 5).getTime(),
+          y: 0,
+        },
+      ],
+    )
+  })
+
 })

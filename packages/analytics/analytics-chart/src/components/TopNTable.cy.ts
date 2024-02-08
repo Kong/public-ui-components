@@ -69,26 +69,26 @@ const TABLE_DATA_V2 = {
     display: {
       ROUTE: ROUTE_DISPLAY_V2,
     },
-    endMs: 1692295253000,
-    granularity: 300000,
+    end_ms: 1692295253000,
+    granularity_ms: 300000,
     limit: 50,
-    metricNames: [
+    metric_names: [
       'REQUEST_COUNT',
     ],
-    metricUnits: {
+    metric_units: {
       REQUEST_COUNT: 'count',
     },
-    queryId: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
-    startMs: 1692294953000,
+    query_id: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
+    start_ms: 1692294953000,
     truncated: false,
   },
-  records: TABLE_RECORDS,
+  data: TABLE_RECORDS,
 }
 const TITLE = 'Top 5 Routes'
 const DESCRIPTION = 'Last 30-Day Summary'
 
 describe('<TopNTable />', () => {
-  it('correctly renders explore v3 prop data', () => {
+  it('correctly renders explore prop data', () => {
     cy.mount(TopNTable, {
       props: {
         data: TABLE_DATA_V2,
@@ -101,7 +101,7 @@ describe('<TopNTable />', () => {
     cy.getTestId('top-n-card-title').should('contain.text', TITLE)
     cy.getTestId('top-n-card-description').should('contain.text', DESCRIPTION)
     cy.getTestId('top-n-table').should('be.visible')
-    cy.get('.table-row').should('have.length', TABLE_DATA_V2.records.length + 1)
+    cy.get('.table-row').should('have.length', TABLE_DATA_V2.data.length + 1)
     cy.get('.table-row').last().should('contain.text', DELETED_NAME)
   })
 
@@ -110,7 +110,7 @@ describe('<TopNTable />', () => {
       props: {
         data: {
           meta: {},
-          records: [],
+          data: [],
         },
         title: TITLE,
         description: DESCRIPTION,
@@ -126,7 +126,7 @@ describe('<TopNTable />', () => {
       props: {
         data: {
           meta: {},
-          records: TABLE_DATA_V2.records,
+          data: TABLE_DATA_V2.data,
         },
         title: TITLE,
         description: DESCRIPTION,

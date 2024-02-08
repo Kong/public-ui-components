@@ -1,8 +1,8 @@
-import type { AnalyticsExploreResult, AnalyticsExploreV2Result, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import { lookupDatavisColor, datavisPalette } from '../utils'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
-import type { Dataset, ExploreToDatasetDeps, KChartData, BarChartDatasetGenerationParams } from '../types'
+import type { Dataset, ExploreToDatasetDeps, KChartData, BarChartDatasetGenerationParams, DatasetLabel } from '../types'
 import composables from '../composables'
 
 function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationParams): Dataset[] {
@@ -24,7 +24,7 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
         label: (i18n && i18n.te(`chartLabels.${metric}`) && i18n.t(`chartLabels.${metric}`)) || metric,
         backgroundColor: lookupDatavisColor(metricNames.indexOf(metric), datavisPalette),
         data: rowLabels.map((rowPosition, i) => {
-          return hasDimensions ? pivotRecords[`${rowPosition},${metric}`] || 0 : pivotRecords[`${i},${metric}`] || null
+          return hasDimensions ? pivotRecords[`${rowPosition.id},${metric}`] || 0 : pivotRecords[`${i},${metric}`] || null
         }),
       } as Dataset
     })
@@ -39,16 +39,16 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
 
     const baseColor = Array.isArray(colorPalette)
       ? lookupDatavisColor(i, colorPalette)
-      : colorPalette[dimension] || lookupDatavisColor(i) // fallback to default datavis palette if no color found
+      : colorPalette[dimension.name] || lookupDatavisColor(i) // fallback to default datavis palette if no color found
 
-    colorMap[dimension] = baseColor
+    colorMap[dimension.name] = baseColor
 
     return {
       // @ts-ignore - dynamic i18n key
-      label: (i18n && i18n.te(`chartLabels.${dimension}`) && i18n.t(`chartLabels.${dimension}`)) || dimension,
+      label: (i18n && i18n.te(`chartLabels.${dimension.name}`) && i18n.t(`chartLabels.${dimension.name}`)) || dimension.name,
       backgroundColor: baseColor,
       data: rowLabels.map(rowPosition => {
-        return pivotRecords[`${rowPosition},${dimension}`] || null
+        return pivotRecords[`${rowPosition.id},${dimension.id}`] || null
       }),
     } as Dataset
   })
@@ -56,7 +56,7 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
 
 export default function useExploreResultToDatasets(
   deps: ExploreToDatasetDeps,
-  exploreResult: Ref<AnalyticsExploreV2Result | AnalyticsExploreResult>,
+  exploreResult: Ref<ExploreResultV4>,
 ): Ref<KChartData> {
 
   const { i18n } = composables.useI18n()
@@ -64,20 +64,13 @@ export default function useExploreResultToDatasets(
   const chartData: Ref<KChartData> = computed(() => {
 
     try {
-      if (exploreResult.value && 'meta' in exploreResult.value && 'records' in exploreResult.value) {
-        const records = exploreResult.value.records as AnalyticsExploreRecord[]
-        const { dimensions, metricNames } = exploreResult.value.meta
+      if (exploreResult.value && 'meta' in exploreResult.value && 'data' in exploreResult.value) {
+        const records = exploreResult.value.data as AnalyticsExploreRecord[]
+        const { display, metric_names: metricNames } = exploreResult.value.meta
 
-        const dimensionKeys = dimensions && Object.keys(dimensions)
-
+        const dimensionKeys = display && Object.keys(display)
         const isMultiMetric = metricNames && metricNames.length > 1
-
-        // TODO: remove "Organization" fallback when we are fully migrated to explore v2
-        const hasDimensions = dimensions && dimensionKeys && (
-          dimensionKeys.length === 1
-            ? dimensionKeys[0] !== 'Organization'
-            : dimensionKeys.length > 0
-        )
+        const hasDimensions = display && dimensionKeys && dimensionKeys.length > 0
 
         if (!records.length || !metricNames) {
           return { datasets: [], labels: [] }
@@ -85,7 +78,7 @@ export default function useExploreResultToDatasets(
 
         const dimensionFieldNames = (hasDimensions && dimensionKeys) || metricNames
         const primaryDimension = dimensionFieldNames[0]
-        const secondaryDimension = dimensionFieldNames.length > 1 ? dimensionFieldNames[1] : dimensionFieldNames[0]
+        const secondaryDimension = (dimensionFieldNames.length > 1 ? dimensionFieldNames[1] : dimensionFieldNames[0])
 
         const pivotRecords = isMultiMetric
           ? Object.fromEntries(records.flatMap(e => {
@@ -105,9 +98,11 @@ export default function useExploreResultToDatasets(
             return [label, value]
           }))
 
-        const rowLabels: string[] = (hasDimensions && dimensions[primaryDimension]) || metricNames
+        const primaryDimensionDisplay = display[primaryDimension]
+        const secondaryDimensionDisplay = display[secondaryDimension]
+        const rowLabels: DatasetLabel[] = (hasDimensions && primaryDimensionDisplay && Object.entries(primaryDimensionDisplay).map(([id, val]) => ({ id, name: val.name }))) || metricNames.map(name => ({ id: name, name }))
 
-        const barSegmentLabels: string[] = (hasDimensions && dimensions[secondaryDimension]) || metricNames
+        const barSegmentLabels: DatasetLabel[] = (hasDimensions && secondaryDimensionDisplay && Object.entries(secondaryDimensionDisplay).map(([id, val]) => ({ id, name: val.name }))) || metricNames.map(name => ({ id: name, name }))
 
         if (!rowLabels || !barSegmentLabels) {
           return { labels: [], datasets: [] }
@@ -118,7 +113,7 @@ export default function useExploreResultToDatasets(
             // @ts-ignore - dynamic i18n key
             ? metricNames.map(name => (i18n && i18n.te(`chartLabels.${name}`) && i18n.t(`chartLabels.${name}`)) || name)
             // @ts-ignore - dynamic i18n key
-            : dimensions[primaryDimension].map(name => (i18n && i18n.te(`chartLabels.${name}`) && i18n.t(`chartLabels.${name}`)) || name),
+            : Object.entries(display[primaryDimension]).map(([, val]) => (i18n && i18n.te(`chartLabels.${val.name}`) && i18n.t(`chartLabels.${val.name}`)) || val.name),
           datasets: generateDatasets({
             isMultiMetric,
             hasDimensions,

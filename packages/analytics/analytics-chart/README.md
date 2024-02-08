@@ -130,7 +130,7 @@ yarn add @kong-ui-public/analytics-chart
 
 <script>
 import { AnalyticsChart } from '@kong-ui-public/analytics-chart'
-import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartOptions } from '@kong-ui-public/analytics-chart'
 
 import { defineComponent, ref } from 'vue'
@@ -140,38 +140,38 @@ export default defineComponent({
     AnalyticsChart,
   },
   setup() {
-    const chartData = ref<AnalyticsExploreResult>({
-      records: [
+    const chartData = ref<ExploreResultV4>({
+      data: [
         {
-          version: '1.0',
           timestamp: '2023-04-24T10:27:22.798Z',
           event: {
-            Service: 'Service A',
+            Service: 'service-a-id',
             TotalRequests: 849,
           },
         },
         {
-          version: '1.0',
           timestamp: '2023-04-24T10:27:22.798Z',
           event: {
-            Service: 'Service B',
+            Service: 'service-b-id',
             TotalRequests: 5434,
           },
         },
         // more data...
       ],
       meta: {
-        start: 1682332042798,
-        end: 1682353642798,
-        queryId: '12345',
-        dimensions: {
-          Service: ['Service A', 'Service B'],
+        start_ms: 1682332042798,
+        end_ms: 1682353642798,
+        granularity_ms: 3600000,
+        query_id: '12345',
+        display: {
+          Service: {
+            'service-a-id': { name: 'Service A' },
+            'service-b-id': { name: 'Service B' },
         },
-        metricNames: ['TotalRequests'],
-        metricUnits: {
+        metric_names: ['TotalRequests'],
+        metric_units: {
           TotalRequests: 'requests',
         },
-        granularity: 3600000,
         truncated: false,
         limit: 1000,
       },
@@ -202,7 +202,7 @@ export default defineComponent({
 
 #### `chartData`
 
-- type: [AnalyticsExploreResult](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L77)
+- type: [ExploreResultV4](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore-v4.ts)
 - required: `true`
 
 #### `chartOptions`
@@ -241,14 +241,14 @@ Optional. Array index which specifies the dataset value to be shown in the cente
 ```html
 <template>
   <SimpleChart
-    :chart-data="exploreResult"
+    :chart-data="chartData"
     :chart-options="simpleChartOptions"
   />
 </template>
 
 <script>
 import { SimpleChart } from '@kong-ui-public/analytics-chart'
-import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { SimpleChartOptions } from '@kong-ui-public/analytics-chart'
 
 import { defineComponent, ref } from 'vue'
@@ -258,34 +258,35 @@ export default defineComponent({
     SimpleChart,
   },
   setup() {
-    const chartData = ref<AnalyticsExploreResult>({
-      records: [
+    const chartData = ref<ExploreResultV4>({
+      data: [
         {
-          version: '1.0',
           timestamp: '2023-04-24T10:27:22.798Z',
           event: {
-            Service: 'Service A',
+            Service: 'service-a-id',
             TotalRequests: 849,
           },
         },
         {
-          version: '1.0',
           timestamp: '2023-04-24T10:27:22.798Z',
           event: {
-            Service: 'Service B',
+            Service: 'service-b-id',
             TotalRequests: 5434,
           },
         },
       ],
       meta: {
-        start: 1682332042798,
-        end: 1682353642798,
-        queryId: '12345',
-        dimensions: {
-          Service: ['Service A', 'Service B'],
+        start_ms: 1682332042798,
+        end_ms: 1682353642798,
+        granularity_ms: 21600000,
+        query_id: '12345',
+        display: {
+          Service: {
+            'service-a-id': { name: 'Service A' },
+            'service-b-id': { name: 'Service B' },
         },
-        metricNames: ['TotalRequests'],
-        metricUnits: {
+        metric_names: ['TotalRequests'],
+        metric_units: {
           TotalRequests: 'requests',
         },
       },
@@ -313,7 +314,7 @@ export default defineComponent({
 
 Chart data to be exported
 
-- type: [AnalyticsExploreResult](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L77)
+- type: [ExploreResultV4](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore-v4.ts)
 - required: `true`
 
 #### `text`
@@ -346,44 +347,45 @@ Resulting csv filename
 
 <template>
   <CsvExportButton
-    :data="(chartData as AnalyticsExploreV2Result)"
+    :data="(chartData as ExploreResultV4)"
     :filename-prefix="filenamePrefix"
   />
 </template>
 
 <script setup lang="ts">
 
-import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportButton } from '@kong-ui-public/analytics-chart'
 
-const chartData = ref<AnalyticsExploreResult>({
-  records: [
+const chartData = ref<ExploreResultV4>({
+  data: [
     {
-      version: '1.0',
       timestamp: '2023-04-24T10:27:22.798Z',
       event: {
-        Service: 'Service A',
+        Service: 'service-a-id',
         TotalRequests: 849,
       },
     },
     {
-      version: '1.0',
       timestamp: '2023-04-24T10:27:22.798Z',
       event: {
-        Service: 'Service B',
+        Service: 'service-b-id',
         TotalRequests: 5434,
       },
     },
   ],
   meta: {
-    start: 1682332042798,
-    end: 1682353642798,
-    queryId: '12345',
-    dimensions: {
-      Service: ['Service A', 'Service B'],
+    start_ms: 1682332042798,
+    end_ms: 1682353642798,
+    granularity_ms: 3600000,
+    query_id: '12345',
+    display: {
+      Service: {
+        'service-a-id': { name: 'Service A' },
+        'service-b-id': { name: 'Service B' },
     },
-    metricNames: ['TotalRequests'],
-    metricUnits: {
+    metric_names: ['TotalRequests'],
+    metric_units: {
       TotalRequests: 'requests',
     },
   },
@@ -403,7 +405,7 @@ const fileName = ref('exportFilename')
 
 Chart data to be exported
 
-- type: [AnalyticsExploreResult](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L77)
+- type: [ExploreResultV4](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore-v4.ts)
 - required: `true`
 
 #### `filename`
@@ -444,7 +446,7 @@ Desctiption text that appears in the modal
 
 <script setup lang="ts">
 
-import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 
 const exportModalVisible = ref(false)
@@ -456,34 +458,36 @@ const exportCsv = () => {
   setModalVisibility(true)
 }
 
-const chartData = ref<AnalyticsExploreResult>({
-  records: [
+const chartData = ref<ExploreResultV4>({
+  data: [
     {
-      version: '1.0',
       timestamp: '2023-04-24T10:27:22.798Z',
       event: {
-        Service: 'Service A',
+        Service: 'service-a-id',
         TotalRequests: 849,
       },
     },
     {
-      version: '1.0',
       timestamp: '2023-04-24T10:27:22.798Z',
       event: {
-        Service: 'Service B',
+        Service: 'service-b-id',
         TotalRequests: 5434,
       },
     },
   ],
   meta: {
-    start: 1682332042798,
-    end: 1682353642798,
-    queryId: '12345',
-    dimensions: {
-      Service: ['Service A', 'Service B'],
+    start_ms: 1682332042798,
+    end_ms: 1682353642798,
+    granularity_ms: 3600000,
+    query_id: '12345',
+    display: {
+      Service: {
+        'service-a-id': { name: 'Service A' },
+        'service-b-id': { name: 'Service B' }
+      },
     },
-    metricNames: ['TotalRequests'],
-    metricUnits: {
+    metric_names: ['TotalRequests'],
+    metric_units: {
       TotalRequests: 'requests',
     },
   },

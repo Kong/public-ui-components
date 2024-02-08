@@ -186,7 +186,7 @@
     <TopNTable
       v-else
       class="top-n-sandbox"
-      :data="exploreResultV3"
+      :data="topNTableData"
       description="Last 30-Day Summary"
       :is-loading="showLoadingState"
       title="Top 5 Routes"
@@ -229,7 +229,7 @@ import {
   SimpleChart,
   TopNTable,
 } from '../../src'
-import type { AnalyticsExploreRecord, AnalyticsExploreV2Meta, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, DisplayBlob, ExploreAggregations, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, SimpleChartOptions } from '../../src/types'
 import { SeededRandom } from '../utils/SeedRandom'
 import { rand } from '../utils/utils'
@@ -278,9 +278,9 @@ const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',
 ]))
 
-const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
+const exploreResult = computed<ExploreResultV4>(() => {
   if (emptyState.value) {
-    return null
+    return { data: [] as AnalyticsExploreRecord[], meta: {} as QueryResponseMeta }
   }
 
   const statusCodeDimensionType = 'StatusCode'
@@ -290,7 +290,7 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
   const start = Date.now() - 6 * 60 * 60 * 1000 // 6 hours ago
   const end = Date.now()
 
-  const records: AnalyticsExploreRecord[] = []
+  const data: AnalyticsExploreRecord[] = []
 
   const dimensions = [...statusCodeDimensionValues.value]
 
@@ -310,7 +310,7 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
             ...(multiMetricToggle.value && { secondaryMetric: rng.next(100000, 2000000) }),
           },
         }
-        records.push(record)
+        data.push(record)
       })
     } else {
       const timestamp = new Date().toISOString()
@@ -325,106 +325,123 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
           ...(multiMetricToggle.value && { secondaryMetric: rng.next(100000, 2000000) }),
         },
       }
-      records.push(record)
+      data.push(record)
     }
   })
 
-  const meta: AnalyticsExploreV2Meta = {
-    startMs: start,
-    endMs: end,
-    granularity: 86400000,
-    queryId: '',
+  // V4 display blob
+  const displayBlob: DisplayBlob = {}
+  if (multiDimensionToggle.value) {
+    displayBlob[serviceDimensionType] = {}
+
+    serviceDimensionValues.value.forEach(val => {
+      displayBlob[serviceDimensionType][val] = {
+        name: val,
+        deleted: false,
+      }
+    })
+  }
+
+  displayBlob[statusCodeDimensionType] = {}
+  statusCodeDimensionValues.value.forEach(val => {
+    displayBlob[statusCodeDimensionType][val] = {
+      name: val,
+      deleted: false,
+    }
+  })
+
+  const meta: QueryResponseMeta = {
+    start_ms: start,
+    end_ms: end,
+    granularity_ms: 86400000,
+    query_id: '',
     truncated: limitToggle.value,
     limit: 50,
-    metricNames: [selectedMetric.value.name, ...(multiMetricToggle.value ? ['secondaryMetric'] : [])],
-    metricUnits: {
+    metric_names: [selectedMetric.value.name, ...(multiMetricToggle.value ? ['secondaryMetric'] : [])],
+    metric_units: {
       [selectedMetric.value.name]: selectedMetric.value.unit,
       ...(multiMetricToggle.value && { secondaryMetric: selectedMetric.value.unit }),
     },
-    dimensions: {
-      ...(multiDimensionToggle.value && { [serviceDimensionType]: [...serviceDimensionValues.value] }),
-      [statusCodeDimensionType]: [...statusCodeDimensionValues.value],
-    },
+    display: displayBlob,
   }
 
   return {
     // Gauge doughnut chart type should only receive 2 data points
-    records: !isGaugeChart.value
-      ? records
-      : records.slice(0, 2),
+    data: !isGaugeChart.value
+      ? data
+      : data.slice(0, 2),
     meta,
   }
 })
-const exploreResultV3 = computed(() => {
+const topNTableData = computed<ExploreResultV4>(() => {
   if (emptyState.value) {
     return {
-      meta: {},
-      records: [],
+      meta: {} as QueryResponseMeta,
+      data: [] as AnalyticsExploreRecord[],
     }
   }
 
   return {
     meta: {
       display: {
-        ROUTE: {
-          'b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6': 'GetMeAKongDefault (secondaryRuntime)',
-          'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:2a3e9d21-804b-4b3b-ab7e-c6f002dadbf4': 'dp-mock-msg-per-sec-us-dev (default)',
-          'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8b1db7eb-5c3c-489c-9344-eb0b272019ca': '8b1db (default)',
-          'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8f3f6808-a723-4793-8444-f2046961226b': 'dp-mock-us-dev (default)',
-          'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:b4cd1c10-d77f-41b0-a84d-31fc0d99f0d9': 'GetMeASongRoute (default)',
+        route: {
+          'b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6': { name: 'GetMeAKongDefault (secondaryRuntime)', deleted: false },
+          'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:2a3e9d21-804b-4b3b-ab7e-c6f002dadbf4': { name: 'dp-mock-msg-per-sec-us-dev (default)', deleted: false },
+          'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8b1db7eb-5c3c-489c-9344-eb0b272019ca': { name: '8b1db (default)', deleted: false },
+          'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8f3f6808-a723-4793-8444-f2046961226b': { name: 'dp-mock-us-dev (default)', deleted: false },
+          'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:b4cd1c10-d77f-41b0-a84d-31fc0d99f0d9': { name: 'GetMeASongRoute (default)', deleted: false },
         },
       },
-      endMs: 1692295253000,
-      granularity: 300000,
+      end_ms: 1692295253000,
+      granularity_ms: 300000,
       limit: 50,
-      metricNames: [
-        'REQUEST_COUNT',
+      metric_names: [
+        'request_count',
       ],
-      metricUnits: {
-        REQUEST_COUNT: 'count',
+      metric_units: {
+        request_count: 'count',
       },
-      queryId: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
-      startMs: 1692294953000,
-      truncated: false,
-    },
-    records: [
+      query_id: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
+      start_ms: 1692294953000,
+    } as QueryResponseMeta,
+    data: [
       {
         event: {
-          REQUEST_COUNT: 9483,
-          ROUTE: 'b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6',
+          request_count: 9483,
+          route: 'b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6',
         },
         timestamp: '2023-08-17T17:55:53.000Z',
       },
       {
         event: {
-          REQUEST_COUNT: 5587,
-          ROUTE: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:b4cd1c10-d77f-41b0-a84d-31fc0d99f0d9',
+          request_count: 5587,
+          route: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:b4cd1c10-d77f-41b0-a84d-31fc0d99f0d9',
         },
         timestamp: '2023-08-17T17:55:53.000Z',
       },
       {
         event: {
-          REQUEST_COUNT: 5583,
-          ROUTE: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8b1db7eb-5c3c-489c-9344-eb0b272019ca',
+          request_count: 5583,
+          route: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8b1db7eb-5c3c-489c-9344-eb0b272019ca',
         },
         timestamp: '2023-08-17T17:55:53.000Z',
       },
       {
         event: {
-          REQUEST_COUNT: 1485,
-          ROUTE: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8f3f6808-a723-4793-8444-f2046961226b',
+          request_count: 1485,
+          route: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8f3f6808-a723-4793-8444-f2046961226b',
         },
         timestamp: '2023-08-17T17:55:53.000Z',
       },
       {
         event: {
-          REQUEST_COUNT: 309,
-          ROUTE: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:2a3e9d21-804b-4b3b-ab7e-c6f002dadbf4',
+          request_count: 309,
+          route: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:2a3e9d21-804b-4b3b-ab7e-c6f002dadbf4',
         },
         timestamp: '2023-08-17T17:55:53.000Z',
       },
     ],
-  }
+  } as ExploreResultV4
 })
 
 const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {}))

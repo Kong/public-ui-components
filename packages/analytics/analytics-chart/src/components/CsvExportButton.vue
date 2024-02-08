@@ -18,14 +18,14 @@
 
 import { computed, ref } from 'vue'
 import type { PropType } from 'vue'
-import type { AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import CsvExportModal from './CsvExportModal.vue'
 import composables from '../composables'
 import type { ButtonAppearance } from '@kong/kongponents/dist/types'
 
 const props = defineProps({
   data: {
-    type: Object as PropType<AnalyticsExploreV2Result>,
+    type: Object as PropType<ExploreResultV4>,
     required: true,
   },
   text: {

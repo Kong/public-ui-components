@@ -1,4 +1,3 @@
-import type { AnalyticsExploreResult } from '@kong-ui-public/analytics-utilities'
 import type { ExploreV2Query } from './types'
 import { EXPLORE_V2_DIMENSIONS } from './types'
 import type { CyHttpMessages } from 'cypress/types/net-stubbing'
@@ -108,5 +107,5 @@ export const mockExploreResponse = (
   return {
     records,
     meta,
-  } as AnalyticsExploreResult
+  }
 }

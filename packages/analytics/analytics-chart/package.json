@@ -68,7 +68,7 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong-ui-public/analytics-utilities": "workspace:^0.13.1",
+    "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong/icons": "^1.8.14",
     "@types/file-saver": "^2.0.7",
     "@types/lodash.mapkeys": "^4.6.9",

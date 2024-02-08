@@ -4,7 +4,7 @@ import AnalyticsChart from './AnalyticsChart.vue'
 import ChartTooltip from './chart-plugins/ChartTooltip.vue'
 import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
-import { dailyExploreResult, exploreResult, emptyExploreResult, multiDimensionExploreResult } from '../../fixtures/mockData'
+import { exploreResult, emptyExploreResult, multiDimensionExploreResult } from '../../fixtures/mockData'
 
 function mouseMove(x1: number, y1: number, x2: number, y2: number, duration: number, withClick = false) {
   const stepCount = duration / 100 // change denominator for more or less steps
@@ -46,15 +46,15 @@ describe('<AnalyticsChart />', () => {
 
     cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
     cy.get('.chart-header').should('contain.text', 'Time series line chart')
-    cy.get('[data-testid="legend"]').children().should('have.length', 4)
+    cy.get('[data-testid="legend"]').children().should('have.length', 5)
     cy.get('.label').eq(0).should('include.text', '200')
-    cy.get('.sub-label').eq(0).should('include.text', '6.4K requests')
-    cy.get('.label').eq(1).should('include.text', '300')
-    cy.get('.sub-label').eq(1).should('include.text', '4.2K requests')
-    cy.get('.label').eq(2).should('include.text', '400')
-    cy.get('.sub-label').eq(2).should('include.text', '3K requests')
-    cy.get('.label').eq(3).should('include.text', '500')
-    cy.get('.sub-label').eq(3).should('include.text', '1.3K requests')
+    cy.get('.sub-label').eq(0).should('include.text', '1.2M requests')
+    cy.get('.label').eq(1).should('include.text', '202')
+    cy.get('.sub-label').eq(1).should('include.text', '910K requests')
+    cy.get('.label').eq(2).should('include.text', '201')
+    cy.get('.sub-label').eq(2).should('include.text', '907K requests')
+    cy.get('.label').eq(3).should('include.text', '300')
+    cy.get('.sub-label').eq(3).should('include.text', '378K requests')
   })
 
   it('shows the empty state with no data', () => {
@@ -78,7 +78,7 @@ describe('<AnalyticsChart />', () => {
   it('renders time series bar chart with no dimension and limited results', () => {
     cy.mount(AnalyticsChart, {
       props: {
-        chartData: dailyExploreResult,
+        chartData: exploreResult,
         chartOptions: {
           type: ChartTypes.TIMESERIES_BAR,
           stacked: false,
@@ -94,8 +94,8 @@ describe('<AnalyticsChart />', () => {
     cy.get('.chart-header').contains('Time series bar chart')
     cy.get('[data-testid="time-series-bar-chart"]').should('be.visible')
     cy.get('[data-testid="legend"]').should('have.length', 1)
-    cy.get('.label').should('include.text', 'Request Count')
-    cy.get('.sub-label').should('include.text', '2.7M requests')
+    cy.get(':nth-child(1) > .label-container > .label').should('include.text', '200')
+    cy.get(':nth-child(1) > .label-container > .sub-label').should('include.text', '1.2M requests')
     cy.get("[role='tooltip']").should(
       'include.text',
       'Not all data is shown in the below report. Reports are currently limited to a maximum of 50 entities.',
@@ -119,7 +119,7 @@ describe('<AnalyticsChart />', () => {
     cy.get('.analytics-chart-parent').should('be.visible')
     cy.get('[data-testid="bar-chart-container"]').should('be.visible')
     cy.get('.chart-header').should('contain.text', 'Horizontal bar chart')
-    cy.get('.legend').should('have.length', 4)
+    cy.get('.legend').should('have.length', 5)
     cy.get('.label').eq(0).should('have.text', '200')
     cy.get('.sub-label').should('not.exist')
   })
@@ -150,15 +150,15 @@ describe('<AnalyticsChart />', () => {
     cy.get('.analytics-chart-parent').should('be.visible')
     cy.get('[data-testid="bar-chart-container"]').should('be.visible')
     cy.get('.chart-header').should('contain.text', 'Vertical bar chart')
-    cy.get('[data-testid="legend"]').children().should('have.length', 4)
-    cy.get('.label').eq(0).should('include.text', '500')
-    cy.get('.sub-label').eq(0).should('include.text', '35K requests')
-    cy.get('.label').eq(1).should('include.text', '300')
-    cy.get('.sub-label').eq(1).should('include.text', '35K requests')
-    cy.get('.label').eq(2).should('include.text', '200')
-    cy.get('.sub-label').eq(2).should('include.text', '35K requests')
-    cy.get('.label').eq(3).should('include.text', '400')
-    cy.get('.sub-label').eq(3).should('include.text', '17K requests')
+    cy.get('[data-testid="legend"]').children().should('have.length', 20)
+    cy.get('.label').eq(0).should('include.text', '200')
+    cy.get('.sub-label').eq(0).should('include.text', '1.2M requests')
+    cy.get('.label').eq(1).should('include.text', '202')
+    cy.get('.sub-label').eq(1).should('include.text', '885K requests')
+    cy.get('.label').eq(2).should('include.text', '201')
+    cy.get('.sub-label').eq(2).should('include.text', '882K requests')
+    cy.get('.label').eq(3).should('include.text', '300')
+    cy.get('.sub-label').eq(3).should('include.text', '367K requests')
   })
 
   it('renders a doughnut chart with multi dimension data', () => {
@@ -176,9 +176,9 @@ describe('<AnalyticsChart />', () => {
     cy.get('.analytics-chart-parent').should('be.visible')
     cy.get('[data-testid="doughnut-chart-parent"]').should('be.visible')
     cy.get('.chart-header').should('contain.text', 'Doughnut chart')
-    cy.get('[data-testid="legend"]').children().should('have.length', 2)
-    cy.get('.label').eq(0).should('include.text', 'service A')
-    cy.get('.label').eq(1).should('include.text', 'service B')
+    cy.get('[data-testid="legend"]').children().should('have.length', 6)
+    cy.get('.label').eq(0).should('include.text', 'dp-mock-msg-per-sec-us-dev')
+    cy.get('.label').eq(1).should('include.text', '8b1db7eb-5c3c-489c-9344-eb0b272019ca')
   })
 
   it('renders a doughnut chart with sigle dimension data', () => {
@@ -196,15 +196,15 @@ describe('<AnalyticsChart />', () => {
     cy.get('.analytics-chart-parent').should('be.visible')
     cy.get('[data-testid="doughnut-chart-parent"]').should('be.visible')
     cy.get('.chart-header').should('contain.text', 'Doughnut chart')
-    cy.get('[data-testid="legend"]').children().should('have.length', 4)
+    cy.get('[data-testid="legend"]').children().should('have.length', 5)
     cy.get('.label').eq(0).should('include.text', '200')
-    cy.get('.sub-label').eq(0).should('include.text', '1.6K requests')
-    cy.get('.label').eq(1).should('include.text', '300')
-    cy.get('.sub-label').eq(1).should('include.text', '1.2K requests')
-    cy.get('.label').eq(2).should('include.text', '400')
-    cy.get('.sub-label').eq(2).should('include.text', '619 requests')
-    cy.get('.label').eq(3).should('include.text', '500')
-    cy.get('.sub-label').eq(3).should('include.text', '413 requests')
+    cy.get('.sub-label').eq(0).should('include.text', '42K requests')
+    cy.get('.label').eq(1).should('include.text', '201')
+    cy.get('.sub-label').eq(1).should('include.text', '31K requests')
+    cy.get('.label').eq(2).should('include.text', '202')
+    cy.get('.sub-label').eq(2).should('include.text', '30K requests')
+    cy.get('.label').eq(3).should('include.text', '300')
+    cy.get('.sub-label').eq(3).should('include.text', '12K requests')
   })
 
   it('renders an empty state with default title and description text', () => {
@@ -306,22 +306,21 @@ describe('<AnalyticsChart />', () => {
     cy.get('.analytics-chart-parent').should('be.visible')
 
     mouseMove(200, 50, 300, 50, 100, true)
-    // This is flaky since were testing the canvas.
-    // Do not fail the test in case the tooltip is not found.
-    // The tooltip, might not get triggered in a bar chart
-    // if you're in between bars.
-    cy.get('body').then(($body) => {
-      if ($body.find('.tooltip-container').length) {
-        cy.get('.subtitle').should('contain.text', 'service A')
-      }
-
+    cy.get('body').should(($body) => {
+      const tooltipExists = $body.find('.tooltip-container').length > 0
+      return expect(tooltipExists).to.be.true
     })
+
+    cy.get('.tooltip-container')
+      .should('be.visible')
+      .find('.subtitle')
+      .should('exist')
   })
 
   it('single dimension bar charts should not have "tooltipContext"', () => {
     cy.mount(AnalyticsChart, {
       props: {
-        chartData: dailyExploreResult,
+        chartData: exploreResult,
         chartOptions: {
           type: ChartTypes.HORIZONTAL_BAR,
         },
@@ -332,16 +331,15 @@ describe('<AnalyticsChart />', () => {
 
     cy.get('.analytics-chart-parent').should('be.visible')
 
-    mouseMove(200, 100, 300, 100, 100, true)
-    // This is flaky since were testing the canvas.
-    // Do not fail the test in case the tooltip is not found.
-    // The tooltip, might not get triggered in a bar chart
-    // if you're in between bars.
-    cy.get('body').then(($body) => {
-      if ($body.find('.tooltip-container').length) {
-        cy.get('.subtitle').should('not.exist')
-      }
-
+    mouseMove(200, 50, 300, 50, 100, true)
+    cy.get('body').should(($body) => {
+      const tooltipExists = $body.find('.tooltip-container').length > 0
+      return expect(tooltipExists).to.be.true
     })
+
+    cy.get('.tooltip-container')
+      .should('be.visible')
+      .find('.subtitle')
+      .should('not.exist')
   })
 })

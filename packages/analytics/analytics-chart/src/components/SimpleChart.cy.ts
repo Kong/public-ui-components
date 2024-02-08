@@ -4,9 +4,8 @@ import SimpleChart from './SimpleChart.vue'
 import { emptyExploreResult } from '../../fixtures/mockData'
 
 const exploreResultTruncated = {
-  records: [
+  data: [
     {
-      version: '1.0',
       timestamp: '2023-05-30T13:09:00.987Z',
       event: {
         StatusCode: '200',
@@ -14,7 +13,6 @@ const exploreResultTruncated = {
       },
     },
     {
-      version: '1.0',
       timestamp: '2023-05-30T13:09:00.987Z',
       event: {
         StatusCode: '300',
@@ -23,17 +21,17 @@ const exploreResultTruncated = {
     },
   ],
   meta: {
-    start: 1685452140.987,
-    end: 1685473740.987,
-    queryId: '12346',
-    dimensions: {
-      StatusCode: ['200', '300'],
+    start_ms: 1685452140.987,
+    end_ms: 1685473740.987,
+    query_id: '12346',
+    display: {
+      StatusCode: { 200: { name: '200' }, 300: { name: '300' } },
     },
-    metricNames: ['TotalRequests'],
-    metricUnits: {
+    metric_names: ['TotalRequests'],
+    metric_units: {
       TotalRequests: 'requests',
     },
-    granularity: 3600000,
+    granularity_ms: 3600000,
     truncated: false,
     limit: 10,
   },
