@@ -13,6 +13,7 @@ export enum ChartTypes {
   VerticalBar = 'vertical_bar',
   Gauge = 'gauge',
   TimeseriesLine = 'timeseries_line',
+  GoldenSignals = 'golden_signals',
 }
 
 // Common definition for many ChartJS tiles.
@@ -98,6 +99,25 @@ export const gaugeChartSchema = {
 } as const satisfies JSONSchema
 
 export type GaugeChartOptions = FromSchema<typeof gaugeChartSchema>
+
+export const metricCardSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: [ChartTypes.GoldenSignals],
+    },
+    longCardTitles: {
+      type: 'boolean',
+    },
+    description: {
+      type: 'string',
+    },
+  },
+  required: ['type'],
+} as const satisfies JSONSchema
+
+export type MetricCardOptions = FromSchema<typeof metricCardSchema>
 
 const exploreV4FilterSchema = {
   type: 'object',
@@ -295,7 +315,7 @@ export const tileDefinitionSchema = {
   properties: {
     query: exploreV4QuerySchema,
     chart: {
-      oneOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema],
+      oneOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema, metricCardSchema],
     },
   },
   required: ['query', 'chart'],

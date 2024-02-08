@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/analytics-chart": "workspace:^",
+    "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
@@ -68,6 +69,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/analytics-chart": "workspace:^",
+    "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^8.126.2",

@@ -330,6 +330,9 @@ importers:
       '@kong-ui-public/analytics-chart':
         specifier: workspace:^
         version: link:../analytics-chart
+      '@kong-ui-public/analytics-metric-provider':
+        specifier: workspace:^
+        version: link:../analytics-metric-provider
       '@kong-ui-public/analytics-utilities':
         specifier: workspace:^
         version: link:../analytics-utilities
@@ -11913,6 +11916,7 @@ packages:
       react: 16.14.0
       scheduler: 0.19.1
     dev: false
+    bundledDependencies: false
 
   /react-dom@17.0.2(react@17.0.2):
     resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
@@ -12017,6 +12021,7 @@ packages:
       object-assign: 4.1.1
       prop-types: 15.8.1
     dev: false
+    bundledDependencies: false
 
   /react@17.0.2:
     resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}
