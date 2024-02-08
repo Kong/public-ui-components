@@ -1,4 +1,4 @@
-import type { AnalyticsExploreRecord, ExploreResultV4, QueryableExploreDimensions } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import { lookupDatavisColor, datavisPalette } from '../utils'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
@@ -77,8 +77,8 @@ export default function useExploreResultToDatasets(
         }
 
         const dimensionFieldNames = (hasDimensions && dimensionKeys) || metricNames
-        const primaryDimension = dimensionFieldNames[0] as QueryableExploreDimensions
-        const secondaryDimension = (dimensionFieldNames.length > 1 ? dimensionFieldNames[1] : dimensionFieldNames[0]) as QueryableExploreDimensions
+        const primaryDimension = dimensionFieldNames[0]
+        const secondaryDimension = (dimensionFieldNames.length > 1 ? dimensionFieldNames[1] : dimensionFieldNames[0])
 
         const pivotRecords = isMultiMetric
           ? Object.fromEntries(records.flatMap(e => {

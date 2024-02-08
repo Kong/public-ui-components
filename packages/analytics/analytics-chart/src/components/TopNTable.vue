@@ -106,7 +106,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { PropType } from 'vue'
-import type { AnalyticsExploreRecord, ExploreAggregations, ExploreResultV4, QueryableExploreDimensions } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
 import composables from '../composables'
@@ -149,7 +149,7 @@ const displayRecord = computed(() => {
     return {}
   }
 
-  return props.data.meta.display[displayKey.value as QueryableExploreDimensions]
+  return props.data.meta.display[displayKey.value]
 })
 const columnKey = computed((): string => {
   if (!props.data.meta?.metric_names?.length) {
@@ -185,7 +185,7 @@ const errorMessage = computed((): string => {
 const getId = (record: AnalyticsExploreRecord): string => {
   const event = record.event
 
-  return String(event[displayKey.value as QueryableExploreDimensions | ExploreAggregations])
+  return String(event[displayKey.value])
 }
 const getName = (record: AnalyticsExploreRecord): string => {
   const id = getId(record)
@@ -213,7 +213,7 @@ const getValue = (record: AnalyticsExploreRecord): string => {
   }
 
   const event = record.event
-  const val = event[columnKey.value as QueryableExploreDimensions | ExploreAggregations]
+  const val = event[columnKey.value]
 
   if (!val) {
     return '–'

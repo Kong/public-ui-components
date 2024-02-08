@@ -112,8 +112,8 @@ export interface Display {
   }
 }
 
-export type DisplayBlob = {
-  [dimension in QueryableExploreDimensions]?: Display
+export interface DisplayBlob {
+  [dimension: string]: Display
 }
 
 export interface QueryResponseMeta {

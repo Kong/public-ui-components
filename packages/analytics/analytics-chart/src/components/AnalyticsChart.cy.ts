@@ -306,16 +306,15 @@ describe('<AnalyticsChart />', () => {
     cy.get('.analytics-chart-parent').should('be.visible')
 
     mouseMove(200, 50, 300, 50, 100, true)
-    // This is flaky since were testing the canvas.
-    // Do not fail the test in case the tooltip is not found.
-    // The tooltip, might not get triggered in a bar chart
-    // if you're in between bars.
-    cy.get('body').then(($body) => {
-      if ($body.find('.tooltip-container').length) {
-        cy.get('.subtitle').should('exist')
-      }
-
+    cy.get('body').should(($body) => {
+      const tooltipExists = $body.find('.tooltip-container').length > 0
+      return expect(tooltipExists).to.be.true
     })
+
+    cy.get('.tooltip-container')
+      .should('be.visible')
+      .find('.subtitle')
+      .should('exist')
   })
 
   it('single dimension bar charts should not have "tooltipContext"', () => {
@@ -332,16 +331,15 @@ describe('<AnalyticsChart />', () => {
 
     cy.get('.analytics-chart-parent').should('be.visible')
 
-    mouseMove(200, 100, 300, 100, 100, true)
-    // This is flaky since were testing the canvas.
-    // Do not fail the test in case the tooltip is not found.
-    // The tooltip, might not get triggered in a bar chart
-    // if you're in between bars.
-    cy.get('body').then(($body) => {
-      if ($body.find('.tooltip-container').length) {
-        cy.get('.subtitle').should('not.exist')
-      }
-
+    mouseMove(200, 50, 300, 50, 100, true)
+    cy.get('body').should(($body) => {
+      const tooltipExists = $body.find('.tooltip-container').length > 0
+      return expect(tooltipExists).to.be.true
     })
+
+    cy.get('.tooltip-container')
+      .should('be.visible')
+      .find('.subtitle')
+      .should('not.exist')
   })
 })
