@@ -1,6 +1,6 @@
 <template>
   <KSkeleton
-    v-if="isLoading || (!data && !hasError)"
+    v-if="isLoading || (!v4Data && !hasError)"
     class="chart-skeleton"
     type="table"
   />
@@ -16,8 +16,8 @@
   </KEmptyState>
 
   <slot
-    v-else-if="data"
-    :data="data"
+    v-else-if="v4Data"
+    :data="v4Data"
   />
 </template>
 <script setup lang="ts">
@@ -78,44 +78,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
   }
 })
 
-// TODO: Support v4 natively and get rid of this hack.
-const data = computed(() => {
-  if (!v4Data.value) {
-    return undefined
-  }
-
-  const v4Meta = v4Data.value.meta
-
-  return {
-    records: v4Data.value.data.map(d => ({
-      ...d,
-      event: Object.entries(d.event).reduce((acc, [k, v]) => {
-        if (typeof v === 'string') {
-          acc[k.toUpperCase()] = v4Meta.display[k][v].name
-        } else {
-          acc[k.toUpperCase()] = v
-        }
-        return acc
-      }, {} as Record<string, any>),
-    })),
-    meta: {
-      ...v4Meta,
-      metricNames: v4Meta.metric_names?.map(n => n.toUpperCase()),
-      granularity: v4Meta.granularity_ms,
-      startMs: v4Meta.start_ms,
-      endMs: v4Meta.end_ms,
-
-      // status_code_grouped: { '2XX': { name: '2XX' }} ->
-      // STATUS_CODE_GROUPED: [ '2XX' ]
-      dimensions: Object.entries(v4Meta.display).reduce((acc, [v, disp]) => {
-        acc[v.toUpperCase()] = Object.keys(disp).map(k => v4Meta.display[v][k].name)
-        return acc
-      }, {} as Record<string, any>),
-    },
-  }
-})
-
-const { state, swrvState: STATE } = useSwrvState(data, error, isValidating)
+const { state, swrvState: STATE } = useSwrvState(v4Data, error, isValidating)
 
 const errorMessage = ref<string | null>(null)
 const hasError = computed(() => state.value === STATE.ERROR || !!errorMessage.value)
