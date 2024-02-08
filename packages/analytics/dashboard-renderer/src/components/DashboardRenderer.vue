@@ -15,6 +15,7 @@
       <template #tile="{ tile, style }">
         <DashboardTile
           class="tile-container"
+          :context="mergedContext"
           :definition="tile.meta"
           :height="parseInt(style.height)"
         />
@@ -59,6 +60,17 @@ const gridTiles = computed(() => {
       id: i,
     } as GridTile<TileDefinition>
   })
+})
+
+const mergedContext = computed(() => {
+  if (props.context.tz) {
+    return props.context
+  }
+
+  return {
+    ...props.context,
+    tz: (new Intl.DateTimeFormat()).resolvedOptions().timeZone,
+  }
 })
 
 // Right now, tiles don't have unique keys.  Perhaps in the future they will,
