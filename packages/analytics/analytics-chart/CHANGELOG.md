@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.3.6...@kong-ui-public/analytics-chart@2.0.0) (2024-02-08)
+
+
+### Features
+
+* **analytics-chart:** support explore v4 ([#1146](https://github.com/Kong/public-ui-components/issues/1146)) ([88ccb7e](https://github.com/Kong/public-ui-components/commit/88ccb7e6e3c0172755024dc2cc49f39ec62ab30a))
+
+
+### BREAKING CHANGES
+
+* **analytics-chart:** new chart data format
+
+* fix: address comments
+
+* fix: useExploreResultToDatasets spec
+
+* fix: all tests pass!
+
+* fix: better typing, address comments
+
+* fix: fix types
+
+* fix: fix types
+
+* fix: remove explore v4 -> v2/v1 translation from dashboard-renderer
+
+* fix: don't check the timestamp in the csv export test
+
+* fix: update test address comments
+
+* fix: address comments
+
+* fix: update readme
+
+
+
+
+
 ## [1.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@1.3.5...@kong-ui-public/analytics-chart@1.3.6) (2024-02-06)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
