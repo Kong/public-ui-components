@@ -344,14 +344,6 @@ const buildPluginList = (): PluginCardList => {
         plugin.disabledMessage = props.disabledPlugins[pluginId]
       }
 
-      if (existingEntityPlugins.value.includes(pluginId)) {
-        plugin.exists = true
-
-        if (!plugin.disabledMessage) {
-          plugin.disabledMessage = t('plugins.select.already_exists')
-        }
-      }
-
       const groupName = plugin.group || t('plugins.select.misc_plugins')
       let plugins = list[groupName]
 
