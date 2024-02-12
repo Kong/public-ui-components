@@ -17,6 +17,7 @@ export default defineConfig({
   includeShadowDom: true,
   fixturesFolder: 'cypress/fixtures',
   screenshotsFolder: 'cypress/screenshots',
+  video: true,
   videosFolder: 'cypress/videos',
   videoUploadOnPasses: false,
   retries: {
