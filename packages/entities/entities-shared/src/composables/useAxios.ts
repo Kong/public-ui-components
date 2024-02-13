@@ -1,12 +1,9 @@
-import axios from 'axios'
+import { useAxios as useAxiosCore } from '@kong-ui-public/core'
 import type { AxiosRequestConfig } from 'axios'
 
 export default function useAxios(options: AxiosRequestConfig = {}) {
-  const axiosInstance = axios.create({
-    withCredentials: true,
-    timeout: 30000,
-    ...options,
-  })
+  const { getAxiosInstance } = useAxiosCore()
+  const axiosInstance = getAxiosInstance(options)
 
   return {
     axiosInstance,
