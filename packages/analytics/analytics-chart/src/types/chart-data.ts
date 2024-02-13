@@ -125,3 +125,8 @@ export interface DoughnutChartData {
   borderColor: string[]
   data: number[]
 }
+
+export interface DatasetLabel {
+  name: string,
+  id: string,
+}

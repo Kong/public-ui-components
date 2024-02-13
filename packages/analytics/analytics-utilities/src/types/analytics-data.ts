@@ -1,3 +1,5 @@
+import type { ExploreAggregations } from './explore-v4'
+
 export interface RecordEvent {
   [field: string]: string | number | null
 }
@@ -12,8 +14,8 @@ export interface DimensionMap {
   [dimension: string]: string[]
 }
 
-export interface MetricUnit {
-  [metricName: string]: string
+export type MetricUnit = {
+  [metricName in ExploreAggregations]?: string
 }
 
 /**
@@ -40,7 +42,7 @@ export interface BaseExploreMeta {
   /**
    * List of metrics in this result
    */
-  metricNames?: string[]
+  metricNames?: ExploreAggregations[]
   /**
    * Mapping of metric names to metric units
    * Example - { TotalRequests: 'count', Latency: 'ms' }

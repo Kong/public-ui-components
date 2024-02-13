@@ -134,32 +134,32 @@
             </button>
             <CsvExportModal
               v-if="exportModalVisible"
-              :chart-data="(exploreResult as AnalyticsExploreV2Result)"
+              :chart-data="(exploreResult)"
               filename="asdf.csv"
               @toggle-modal="setModalVisibility"
             />
 
             <CsvExportButton
               button-appearance="primary"
-              :data="(exploreResult as AnalyticsExploreV2Result)"
+              :data="(exploreResult)"
               filename-prefix="asdf"
               text="Primary export csv button"
             />
             <CsvExportButton
               button-appearance="secondary"
-              :data="(exploreResult as AnalyticsExploreV2Result)"
+              :data="(exploreResult)"
               filename-prefix="asdf"
               text="Secondary export csv button"
             />
             <CsvExportButton
               button-appearance="tertiary"
-              :data="(exploreResult as AnalyticsExploreV2Result)"
+              :data="(exploreResult)"
               filename-prefix="asdf"
               text="Tertiary export csv button"
             />
             <CsvExportButton
               button-appearance="danger"
-              :data="(exploreResult as AnalyticsExploreV2Result)"
+              :data="(exploreResult)"
               filename-prefix="asdf"
               text="Danger export csv button"
             />
@@ -201,7 +201,7 @@
       <!-- Determine if a full blown chart is to be displayed, or a simplified one -->
       <AnalyticsChart
         :allow-csv-export="true"
-        :chart-data="(exploreResult as AnalyticsExploreV2Result)"
+        :chart-data="(exploreResult)"
         :chart-options="analyticsChartOptions"
         chart-title="Request count by Status Code"
         :legend-position="legendPosition"
@@ -247,7 +247,7 @@ import {
   CsvExportModal,
   CsvExportButton,
 } from '../../src'
-import type { AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions } from '../../src/types'
 import { isValidJson, rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
@@ -326,9 +326,9 @@ const isValid = computed(() => exploreResultText.value !== undefined &&
   exploreResultText.value !== '' &&
   isValidJson(exploreResultText.value))
 
-const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
+const exploreResult = computed<ExploreResultV4>(() => {
   if (emptyState.value) {
-    return null
+    return { data: [] as AnalyticsExploreRecord[], meta: {} as QueryResponseMeta } as ExploreResultV4
   }
 
   if (exploreResultText.value) {
@@ -336,9 +336,9 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
     try {
       const result = JSON.parse(exploreResultText.value)
 
-      return result as AnalyticsExploreV2Result
+      return result as ExploreResultV4
     } catch (e) {
-      return null
+      return { data: [] as AnalyticsExploreRecord[], meta: {} as QueryResponseMeta } as ExploreResultV4
     }
   }
 

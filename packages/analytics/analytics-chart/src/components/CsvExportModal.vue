@@ -87,16 +87,16 @@ import { ref, computed, watch, toRef } from 'vue'
 
 import DownloadCsv from './DownloadCsv.vue'
 import composables from '../composables'
-import type { AnalyticsExploreResult, AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4, RecordEvent } from '@kong-ui-public/analytics-utilities'
 import { format } from 'date-fns-tz'
-import type { Header, TimeseriesColumn } from '../types'
+import type { CsvData, Header, TimeseriesColumn } from '../types'
 
 const { i18n } = composables.useI18n()
 
 const props = withDefaults(defineProps<{
   filename: string,
   modalDescription?: string,
-  chartData: AnalyticsExploreResult | AnalyticsExploreV2Result,
+  chartData: ExploreResultV4,
 }>(), {
   modalDescription: undefined,
 })
@@ -106,7 +106,7 @@ const emit = defineEmits(['toggleModal'])
 const MAX_ROWS = 3
 const reportFilename = `${props.filename.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`
 const isLoading = ref<boolean>(true)
-const hasData = computed(() => !!props.chartData?.records?.length)
+const hasData = computed(() => !!props.chartData?.data?.length)
 const fetcherCacheKey = ref(1)
 const rowsTotal = computed(() => tableData.value.rows.length)
 const selectedRange = composables.useChartSelectedRange(toRef(props, 'chartData'))
@@ -124,17 +124,28 @@ const closeModal = () => {
 }
 
 const tableData = computed(() => {
-  if (!hasData.value || !props.chartData?.meta.metricNames) {
+  if (!hasData.value || !props.chartData?.meta.metric_names) {
     return { headers: [], rows: [], csvHeaders: {} }
   }
 
-  const isTimeseries = props.chartData.records.some(r => r.timestamp !== props.chartData.records[0].timestamp)
+  const isTimeseries = props.chartData.data.some(r => r.timestamp !== props.chartData.data[0].timestamp)
 
-  const rows = props.chartData.records.map(rec => {
+  const rows = props.chartData.data.map(rec => {
     const recTs = new Date(rec.timestamp)
 
+    const translatedEvent = Object.keys(rec.event).reduce((acc: RecordEvent, key) => {
+      if (key in props.chartData.meta.display) {
+        const dimensionId = rec.event[key]
+        const displayEntry = props.chartData.meta.display[key]
+        acc[key] = (dimensionId && displayEntry && displayEntry[dimensionId].name) || rec.event[key]
+      } else {
+        acc[key] = rec.event[key]
+      }
+      return acc
+    }, {})
+
     return {
-      ...rec.event,
+      ...translatedEvent,
       ...(isTimeseries
         ? {
           timestamp: format(recTs, 'yyyy-MM-dd HH:mm:ss'),
@@ -142,19 +153,19 @@ const tableData = computed(() => {
         }
         : {}),
     }
-  })
+  }) as CsvData
 
   let timeseriesColumns: TimeseriesColumn[] = []
 
   if (isTimeseries) {
     timeseriesColumns = [
-      { label: 'Timestamp', key: 'timestamp' },
-      { label: 'UtcOffset', key: 'tzOffset' },
+      { label: i18n.t('csvExport.Timestamp'), key: 'timestamp' },
+      { label: i18n.t('csvExport.UtcOffset'), key: 'tzOffset' },
     ]
   }
 
-  const dimensions = ('dimensions' in props.chartData.meta) && props.chartData.meta?.dimensions
-    ? props.chartData.meta?.dimensions
+  const dimensions = ('display' in props.chartData.meta) && props.chartData.meta?.display
+    ? props.chartData.meta?.display
     : {}
 
   const displayHeaders: Header[] = [
@@ -162,13 +173,15 @@ const tableData = computed(() => {
 
     // `dimensions` are present in v1 and v2 explore meta
     ...Object.keys(dimensions).map(key => ({
-      label: key,
+      // @ts-ignore - dynamic i18n key
+      label: i18n.t(`chartLabels.${key}`),
       key,
     })),
 
     // `metricNames` are common to all explore versions
-    ...props.chartData.meta.metricNames.map(key => ({
-      label: key,
+    ...props.chartData.meta.metric_names.map(key => ({
+      // @ts-ignore - dynamic i18n key
+      label: i18n.t(`chartLabels.${key}`),
       key,
     })),
   ]

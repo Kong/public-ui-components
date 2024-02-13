@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.5.2...@kong-ui-public/dashboard-renderer@0.5.3) (2024-02-13)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.5.1...@kong-ui-public/dashboard-renderer@0.5.2) (2024-02-13)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.5.0...@kong-ui-public/dashboard-renderer@0.5.1) (2024-02-13)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.4.4...@kong-ui-public/dashboard-renderer@0.5.0) (2024-02-08)
+
+
+### Features
+
+* **analytics-chart:** support explore v4 ([#1146](https://github.com/Kong/public-ui-components/issues/1146)) ([88ccb7e](https://github.com/Kong/public-ui-components/commit/88ccb7e6e3c0172755024dc2cc49f39ec62ab30a))
+
+
+### BREAKING CHANGES
+
+* **analytics-chart:** new chart data format
+
+* fix: address comments
+
+* fix: useExploreResultToDatasets spec
+
+* fix: all tests pass!
+
+* fix: better typing, address comments
+
+* fix: fix types
+
+* fix: fix types
+
+* fix: remove explore v4 -> v2/v1 translation from dashboard-renderer
+
+* fix: don't check the timestamp in the csv export test
+
+* fix: update test address comments
+
+* fix: address comments
+
+* fix: update readme
+
+
+
+
+
+## [0.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.4.3...@kong-ui-public/dashboard-renderer@0.4.4) (2024-02-06)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
 ## [0.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.4.2...@kong-ui-public/dashboard-renderer@0.4.3) (2024-02-05)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

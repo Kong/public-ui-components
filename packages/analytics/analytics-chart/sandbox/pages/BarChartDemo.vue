@@ -180,7 +180,7 @@
       <!-- Determine if a full blown chart is to be displayed, or a simplified one -->
       <AnalyticsChart
         :allow-csv-export="true"
-        :chart-data="(exploreResult as AnalyticsExploreV2Result)"
+        :chart-data="(exploreResult)"
         :chart-options="analyticsChartOptions"
         chart-title="Request count by Status Code"
         :legend-position="legendPosition"
@@ -222,7 +222,7 @@ import {
   ChartLegendPosition,
   ChartTypes,
 } from '../../src'
-import type { AnalyticsExploreV2Result, DimensionMap } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, DimensionMap, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions } from '../../src/types'
 import { isValidJson, rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
@@ -253,7 +253,7 @@ const multiDimensionToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const emptyState = ref(false)
-const dimensionSelection = ref(['statusCode'])
+const dimensionSelection = ref(['status_code'])
 const chartType = ref<ChartTypes>(ChartTypes.HORIZONTAL_BAR)
 const legendPosition = ref(ChartLegendPosition.Right)
 const selectedMetric = ref<MetricSelection>({
@@ -279,7 +279,7 @@ const metricItems = [{
 
 const dimensionItems = [{
   label: 'Status Code',
-  value: 'statusCode',
+  value: 'status_code',
   selected: true,
 }, {
   label: 'Service',
@@ -303,9 +303,9 @@ const isValid = computed(() => exploreResultText.value !== undefined &&
   exploreResultText.value !== '' &&
   isValidJson(exploreResultText.value))
 
-const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
+const exploreResult = computed<ExploreResultV4>(() => {
   if (emptyState.value) {
-    return null
+    return { data: [] as AnalyticsExploreRecord[], meta: {} as QueryResponseMeta }
   }
 
   // If sample json was provided, attempt to render the chart
@@ -314,9 +314,9 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
     try {
       const result = JSON.parse(exploreResultText.value)
 
-      return result as AnalyticsExploreV2Result
+      return result as ExploreResultV4
     } catch (e) {
-      return null
+      return { data: [] as AnalyticsExploreRecord[], meta: {} as QueryResponseMeta }
     }
   }
 
@@ -324,7 +324,7 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
   const dimensionMap: DimensionMap = dimensionSelection.value.reduce((obj, dimension) => {
     return {
       ...obj,
-      [dimension]: [...(dimension === 'statusCode' ? statusCodeDimensionValues.value : serviceDimensionValues.value)],
+      [dimension]: [...(dimension === 'status_code' ? statusCodeDimensionValues.value : serviceDimensionValues.value)],
     }
   }, {})
 

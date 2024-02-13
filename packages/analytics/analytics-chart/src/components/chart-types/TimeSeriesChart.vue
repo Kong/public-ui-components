@@ -104,11 +104,6 @@ const props = defineProps({
     required: false,
     default: undefined,
   },
-  timeRangeSec: {
-    type: Number,
-    required: false,
-    default: undefined,
-  },
   granularity: {
     type: String as PropType<`${GranularityKeys}`>,
     required: true,
@@ -195,7 +190,6 @@ const plugins = computed(() => [htmlLegendPlugin, highlightPlugin, ...(props.typ
 const { options } = composables.useLinechartOptions({
   tooltipState: tooltipData,
   timeRangeMs: toRef(props, 'timeRangeMs'),
-  timeRangeSec: toRef(props, 'timeRangeSec'),
   granularity: toRef(props, 'granularity'),
   legendID: legendID.value,
   stacked: toRef(props, 'stacked'),

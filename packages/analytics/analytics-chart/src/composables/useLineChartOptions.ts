@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from 'chart.js'
 import { horizontalTooltipPositioning, tooltipBehavior, verticalTooltipPositioning } from '../utils'
-import { millisecondsToHours, secondsToHours } from 'date-fns'
+import { millisecondsToHours } from 'date-fns'
 import { isNullOrUndef } from 'chart.js/helpers'
 import type { ExternalTooltipContext, LineChartOptions } from '../types'
 import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
@@ -111,11 +111,7 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
   })
 
   const hourDisplayFormat = computed(() => {
-    if (chartOptions.timeRangeMs) {
-      return millisecondsToHours(Number(chartOptions.timeRangeMs.value)) >= 24 ? 'yyyy-MM-dd h:mm' : 'h:mm'
-    } else {
-      return secondsToHours(Number(chartOptions.timeRangeSec.value)) >= 24 ? 'yyyy-MM-dd h:mm' : 'h:mm'
-    }
+    return millisecondsToHours(Number(chartOptions.timeRangeMs.value)) >= 24 ? 'yyyy-MM-dd h:mm' : 'h:mm'
   })
 
   const dayDisplayFormat = computed(() => {

@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.14.1...@kong-ui-public/analytics-utilities@0.15.0) (2024-02-13)
+
+
+### Features
+
+* **query-time:** add second-level granularity [MA-2594] ([#1155](https://github.com/Kong/public-ui-components/issues/1155)) ([7aa9ced](https://github.com/Kong/public-ui-components/commit/7aa9cedcbaa490845ae525f76092524b66c1b3c2))
+
+
+
+
+
+## [0.14.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.14.0...@kong-ui-public/analytics-utilities@0.14.1) (2024-02-13)
+
+
+### Bug Fixes
+
+* **explore-types:** move granularity to an enum [MA-2594] ([#1148](https://github.com/Kong/public-ui-components/issues/1148)) ([a5e62d6](https://github.com/Kong/public-ui-components/commit/a5e62d6e80536bc8ad9a8e1b6ba36083ccc48585))
+
+
+
+
+
+# [0.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.13.1...@kong-ui-public/analytics-utilities@0.14.0) (2024-02-08)
+
+
+### Features
+
+* **analytics-chart:** support explore v4 ([#1146](https://github.com/Kong/public-ui-components/issues/1146)) ([88ccb7e](https://github.com/Kong/public-ui-components/commit/88ccb7e6e3c0172755024dc2cc49f39ec62ab30a))
+
+
+### BREAKING CHANGES
+
+* **analytics-chart:** new chart data format
+
+* fix: address comments
+
+* fix: useExploreResultToDatasets spec
+
+* fix: all tests pass!
+
+* fix: better typing, address comments
+
+* fix: fix types
+
+* fix: fix types
+
+* fix: remove explore v4 -> v2/v1 translation from dashboard-renderer
+
+* fix: don't check the timestamp in the csv export test
+
+* fix: update test address comments
+
+* fix: address comments
+
+* fix: update readme
+
+
+
+
+
+## [0.13.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.13.0...@kong-ui-public/analytics-utilities@0.13.1) (2024-02-06)
+
+
+### Bug Fixes
+
+* **explore-types:** update granularity in response meta [MA-2303] ([#1145](https://github.com/Kong/public-ui-components/issues/1145)) ([4888aca](https://github.com/Kong/public-ui-components/commit/4888aca6492703543bf12abade1339f9b54d931c))
+
+
+
+
+
 # [0.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.12.0...@kong-ui-public/analytics-utilities@0.13.0) (2024-02-01)
 
 

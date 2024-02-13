@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.11.17...@kong-ui-public/entities-plugins@2.12.0) (2024-02-12)
+
+
+### Features
+
+* **plugins:** allow creating dup plugins [khcp-10683] ([#1153](https://github.com/Kong/public-ui-components/issues/1153)) ([06a7ddc](https://github.com/Kong/public-ui-components/commit/06a7ddc14f678236dd7204cb3b8806104fd09f1b))
+
+
+
+
+
+## [2.11.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.11.16...@kong-ui-public/entities-plugins@2.11.17) (2024-02-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency marked to ^11.2.0 ([#1144](https://github.com/Kong/public-ui-components/issues/1144)) ([941c0c8](https://github.com/Kong/public-ui-components/commit/941c0c80121d105de9652a56592e5ada60d5459b))
+
+
+
+
+
+## [2.11.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.11.15...@kong-ui-public/entities-plugins@2.11.16) (2024-02-07)
+
+
+### Bug Fixes
+
+* **flycode:** text changes ([#1138](https://github.com/Kong/public-ui-components/issues/1138)) ([eaed5ad](https://github.com/Kong/public-ui-components/commit/eaed5ad830085322b678800874ea8c4e09554dde))
+
+
+
+
+
 ## [2.11.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.11.14...@kong-ui-public/entities-plugins@2.11.15) (2024-02-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
