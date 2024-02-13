@@ -544,7 +544,7 @@ describe('<ConfigCardItem />', () => {
         })
 
         cy.get('.config-card-details-row').should('be.visible')
-        cy.get('.k-external-link .kong-icon-externalLink').should('be.visible')
+        cy.get('.k-external-link .kui-icon.external-link-icon').should('be.visible')
         cy.getTestId(`${item.key}-external-link`).should('be.visible')
         cy.getTestId(`${item.key}-external-link`).should('contain.text', link)
         cy.get(`a[href="${link}"]`).should('exist')

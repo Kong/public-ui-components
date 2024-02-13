@@ -19,7 +19,7 @@
       target="_blank"
     >
       <KTooltip
-        :label="isTruncated && entityLinkData.label || ''"
+        :text="isTruncated && entityLinkData.label || ''"
       >
         <span
           ref="textContent"
@@ -33,9 +33,9 @@
       v-if="entityUuid"
       :key="copyUuidTooltipText"
       class="copy-uuid-tooltip"
-      :label="copyUuidTooltipText"
       max-width="160"
       placement="bottomEnd"
+      :text="copyUuidTooltipText"
     >
       <KClipboardProvider v-slot="{ copyToClipboard }">
         <span

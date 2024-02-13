@@ -4,7 +4,7 @@
     class="kong-ui-public-misc-widgets-github-star"
     data-testid="github-star"
   >
-    <KTooltip :label="tooltipLabel">
+    <KTooltip :text="tooltipLabel">
       <span>
         <a
           :aria-label="i18n.t('githubStar.ariaLabel')"

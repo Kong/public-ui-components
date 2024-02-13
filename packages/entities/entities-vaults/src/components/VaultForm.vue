@@ -71,8 +71,8 @@
           </KRadio>
           <KTooltip
             :disabled="isOtherProvidersSupported"
-            :label="t('form.unavailable')"
             placement="top"
+            :text="t('form.unavailable')"
           >
             <KRadio
               v-model="vaultProvider"
@@ -91,8 +91,8 @@
           </KTooltip>
           <KTooltip
             :disabled="isOtherProvidersSupported"
-            :label="t('form.unavailable')"
             placement="top"
+            :text="t('form.unavailable')"
           >
             <KRadio
               v-model="vaultProvider"
@@ -111,8 +111,8 @@
           </KTooltip>
           <KTooltip
             :disabled="isOtherProvidersSupported"
-            :label="t('form.unavailable')"
             placement="top"
+            :text="t('form.unavailable')"
           >
             <KRadio
               v-model="vaultProvider"
@@ -132,8 +132,8 @@
           <KTooltip
             v-if="config.azureVaultProviderAvailable"
             :disabled="isOtherProvidersSupported"
-            :label="t('form.unavailable')"
             placement="top"
+            :text="t('form.unavailable')"
           >
             <KRadio
               v-model="vaultProvider"

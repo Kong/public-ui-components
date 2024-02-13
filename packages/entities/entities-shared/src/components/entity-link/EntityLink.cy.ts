@@ -48,7 +48,7 @@ describe('<EntityLink />', () => {
     })
 
     cy.getTestId('entity-link-parent').find('a').should('exist')
-    cy.getTestId('entity-link-parent').find('a.entity-link .kong-icon-externalLink').should('exist')
+    cy.getTestId('entity-link-parent').find('a.entity-link .kui-icon.external-link-icon').should('exist')
     cy.getTestId('entity-link-parent').find('a').should('contain.text', resolvedRecord.label)
 
     copyUuidStub().then(() => {
@@ -67,7 +67,7 @@ describe('<EntityLink />', () => {
     })
 
     cy.getTestId('entity-link-parent').find('a').should('exist')
-    cy.getTestId('entity-link-parent').find('a .kong-icon-externalLink').should('exist')
+    cy.getTestId('entity-link-parent').find('a .kui-icon.external-link-icon').should('exist')
 
     copyUuidStub().then(() => {
       cy.getTestId('entity-link-parent').find('.entity-link-copy-id').should('exist').click()
