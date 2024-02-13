@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.5.16...@kong-ui-public/entities-shared@2.6.0) (2024-02-13)
+
+
+### Features
+
+* import axios base instance [KHCP-10281] ([#1143](https://github.com/Kong/public-ui-components/issues/1143)) ([787c80c](https://github.com/Kong/public-ui-components/commit/787c80c650a9e71ca3dbcdaa4265ad23a859a7b8))
+
+
+
+
+
 ## [2.5.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.5.15...@kong-ui-public/entities-shared@2.5.16) (2024-02-07)
 
 
