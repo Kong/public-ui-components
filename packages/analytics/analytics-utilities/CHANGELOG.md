@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.14.1...@kong-ui-public/analytics-utilities@0.15.0) (2024-02-13)
+
+
+### Features
+
+* **query-time:** add second-level granularity [MA-2594] ([#1155](https://github.com/Kong/public-ui-components/issues/1155)) ([7aa9ced](https://github.com/Kong/public-ui-components/commit/7aa9cedcbaa490845ae525f76092524b66c1b3c2))
+
+
+
+
+
+## [0.14.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.14.0...@kong-ui-public/analytics-utilities@0.14.1) (2024-02-13)
+
+
+### Bug Fixes
+
+* **explore-types:** move granularity to an enum [MA-2594] ([#1148](https://github.com/Kong/public-ui-components/issues/1148)) ([a5e62d6](https://github.com/Kong/public-ui-components/commit/a5e62d6e80536bc8ad9a8e1b6ba36083ccc48585))
+
+
+
+
+
 # [0.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@0.13.1...@kong-ui-public/analytics-utilities@0.14.0) (2024-02-08)
 
 

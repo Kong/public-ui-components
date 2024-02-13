@@ -90,11 +90,21 @@ export interface RelativeTimeRangeV4 {
 
 export type TimeRangeV4 = AbsoluteTimeRangeV4 | RelativeTimeRangeV4
 
+export const granularityValues = [
+  'minutely',
+  'hourly',
+  'daily',
+  'weekly',
+  'trend',
+] as const
+
+export type GranularityValues = typeof granularityValues[number]
+
 export interface ExploreQuery {
   metrics?: ExploreAggregations[]
   dimensions?: QueryableExploreDimensions[]
   filters?: ExploreFilter[]
-  granularity_ms?: number
+  granularity?: GranularityValues
   time_range: TimeRangeV4
   limit?: number
   descending?: boolean
