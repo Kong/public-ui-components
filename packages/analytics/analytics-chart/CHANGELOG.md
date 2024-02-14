@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.0.4...@kong-ui-public/analytics-chart@2.0.5) (2024-02-14)
+
+
+### Bug Fixes
+
+* add back old locales for the metric axis titles ([#1158](https://github.com/Kong/public-ui-components/issues/1158)) ([d43b6f3](https://github.com/Kong/public-ui-components/commit/d43b6f3b3b9a5a8c390dce211868720e8238b452))
+
+
+
+
+
 ## [2.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.0.3...@kong-ui-public/analytics-chart@2.0.4) (2024-02-13)
 
 
