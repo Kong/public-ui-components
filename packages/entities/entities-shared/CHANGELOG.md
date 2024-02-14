@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.6.2...@kong-ui-public/entities-shared@2.6.3) (2024-02-14)
+
+
+### Bug Fixes
+
+* **entities-shared:** filter out null values and empty arrays from yaml in entity forms [KHCP-10642] ([#1154](https://github.com/Kong/public-ui-components/issues/1154)) ([d9cff99](https://github.com/Kong/public-ui-components/commit/d9cff99acbfeba77fedec0cfe5d73ff07de8064c))
+
+
+
+
+
 ## [2.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.6.1...@kong-ui-public/entities-shared@2.6.2) (2024-02-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
