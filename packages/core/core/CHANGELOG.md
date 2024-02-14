@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.5.0...@kong-ui-public/core@1.5.1) (2024-02-14)
+
+
+### Bug Fixes
+
+* **core:** catch an improper inject and provide fallback ([#1157](https://github.com/Kong/public-ui-components/issues/1157)) ([0e21000](https://github.com/Kong/public-ui-components/commit/0e2100042a31cbbf44b99e8fc68a2abcb328b5c2))
+
+
+
+
+
 # [1.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.4.23...@kong-ui-public/core@1.5.0) (2024-02-05)
 
 
