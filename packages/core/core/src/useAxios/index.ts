@@ -8,22 +8,30 @@ export default function useAxios() {
    * @param {AxiosRequestConfig} options The axios request config
    * @returns {AxiosInstance} The axios instance
    */
-  const getAxiosInstance = (options?: AxiosRequestConfig) => {
-    const fallbackInstance: AxiosInstance = axios.create({
-      withCredentials: true,
-      timeout: 30000,
-      ...options,
-    })
-
+  const getAxiosInstance = (options: AxiosRequestConfig = {}) => {
     try {
-      return inject<(options?: AxiosRequestConfig) => AxiosInstance>('get-axios-instance', (): AxiosInstance => {
-        // Return a fallback instance if the injection key is not provided
-        return fallbackInstance
+      const injectedInstance = inject<(options?: AxiosRequestConfig) => AxiosInstance>('get-axios-instance')
+      // If the injected instance exists, return the called function
+      if (typeof injectedInstance === 'function') {
+        return injectedInstance(options)
+      }
+
+      // Return a fallback instance
+      return axios.create({
+        withCredentials: true,
+        timeout: 30000,
+        ...options,
       })
     } catch (err: any) {
+      // Log a warning
       console.warn('getAxiosInstance:', err.message || err)
-      // inject() can only be used inside setup() or functional components, so provide the fallback instance
-      return fallbackInstance
+
+      // Return a fallback instance
+      return axios.create({
+        withCredentials: true,
+        timeout: 30000,
+        ...options,
+      })
     }
   }
 
