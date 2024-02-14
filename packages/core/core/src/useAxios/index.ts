@@ -8,14 +8,32 @@ export default function useAxios() {
    * @param {AxiosRequestConfig} options The axios request config
    * @returns {AxiosInstance} The axios instance
    */
-  const getAxiosInstance = inject<(options?: AxiosRequestConfig) => AxiosInstance>('get-axios-instance', (options: AxiosRequestConfig = {}): AxiosInstance => {
-    // Return a fallback instance
-    return axios.create({
-      withCredentials: true,
-      timeout: 30000,
-      ...options,
-    })
-  })
+  const getAxiosInstance = (options: AxiosRequestConfig = {}) => {
+    try {
+      const injectedInstance = inject<(options?: AxiosRequestConfig) => AxiosInstance>('get-axios-instance')
+      // If the injected instance exists, return the called function
+      if (typeof injectedInstance === 'function') {
+        return injectedInstance(options)
+      }
+
+      // Otherwise, return a fallback instance
+      return axios.create({
+        withCredentials: true,
+        timeout: 30000,
+        ...options,
+      })
+    } catch (err: any) {
+      // Log a warning
+      console.warn('getAxiosInstance:', err.message || err)
+
+      // Return a fallback instance
+      return axios.create({
+        withCredentials: true,
+        timeout: 30000,
+        ...options,
+      })
+    }
+  }
 
   /**
    * Get the `x-datadog-trace-id` header from the provided error, if it exists
