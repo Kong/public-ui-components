@@ -267,6 +267,7 @@ const handleDocument = () => {
   border-radius: $kui-border-radius-20;
 
   .document-meta {
+    align-items: center;
     border-bottom: $kui-border-width-10 solid $kui-color-border;
     display: flex;
     padding: 10px $kui-space-60;
@@ -295,6 +296,8 @@ const handleDocument = () => {
   }
 
   .document-display-actions {
+    align-items: center;
+    display: flex;
     margin-left: $kui-space-auto;
   }
 
