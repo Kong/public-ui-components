@@ -16,7 +16,7 @@ export default function useAxios() {
         return injectedInstance(options)
       }
 
-      // Return a fallback instance
+      // Otherwise, return a fallback instance
       return axios.create({
         withCredentials: true,
         timeout: 30000,
