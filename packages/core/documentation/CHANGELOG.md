@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.8...@kong-ui-public/documentation@0.3.9) (2024-02-14)
+
+
+### Bug Fixes
+
+* **documentation:** align document meta and actions ([#1159](https://github.com/Kong/public-ui-components/issues/1159)) ([8e66152](https://github.com/Kong/public-ui-components/commit/8e661521419b25f4b1836e956f0bf45e7bfdbba8))
+
+
+
+
+
 ## [0.3.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.7...@kong-ui-public/documentation@0.3.8) (2024-02-14)
 
 **Note:** Version bump only for package @kong-ui-public/documentation
