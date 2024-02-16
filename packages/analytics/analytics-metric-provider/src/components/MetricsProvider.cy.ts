@@ -73,7 +73,7 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('@fetcher').should('have.been.calledTwice')
 
     // Ensure the filter is undefined.
-    cy.get('@fetcher').should('always.have.not.been.calledWithMatch', Cypress.sinon.match.has('filter'))
+    cy.get('@fetcher').should('always.have.not.been.calledWithMatch', Cypress.sinon.match.has('filters'))
 
     cy.get('.metricscard').should('exist')
 
@@ -262,7 +262,7 @@ describe('<AnalyticsMetricProvider />', () => {
 
     cy.get('@fetcher').should('have.been.calledTwice')
     cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-      filter: [{
+      filters: [{
         dimension: 'application',
         type: 'in',
         values: ['app1'],
@@ -285,7 +285,7 @@ describe('<AnalyticsMetricProvider />', () => {
       }]
 
       cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({
-        filter: [{
+        filters: [{
           dimension: 'api_product',
           type: 'in',
           values: ['product1'],
@@ -311,7 +311,7 @@ describe('<AnalyticsMetricProvider />', () => {
 
     cy.get('@fetcher').should('have.been.calledTwice')
     cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-      filter: [{
+      filters: [{
         dimension: 'route',
         type: 'in',
         values: ['blah'],
