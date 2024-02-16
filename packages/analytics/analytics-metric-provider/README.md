@@ -14,6 +14,10 @@ Query data for metric cards and render default "golden signal" metrics cards usi
 - `vue` must be initialized in the host application
 - `@kong/kongponents` must be added as a `dependency` in the host application, globally available via the Vue Plugin installation, and the package's style imports must be added in the app entry file. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents).
 - `@kong-ui-public/i18n` must be available as a `dependency` in the host application.
+- A plugin providing a `QueryBridge` must be installed in the root of the application.
+  - This plugin must `provide` a `query` method that adheres to the `QueryBridge` interface.
+  - The plugin's query method is in charge of passing the query to the correct API for the host app's environment.
+  - See the sandbox app (`./sandbox/App.vue`) for an example that returns a mock response rather than consuming an API.
 
 ## Usage
 

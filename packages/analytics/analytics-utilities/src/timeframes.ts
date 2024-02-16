@@ -18,6 +18,7 @@ import type {
   DatePickerSelection,
   TimeframeOptions,
   TimePeriod,
+  RelativeTimeRangeValuesV4, TimeRangeV4,
 } from './types'
 import { getTimezoneOffset, utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz'
 import type { ITimeframe } from './types/timeframe'
@@ -30,7 +31,7 @@ const adjustForTz = (d: Date, tz: string) => {
 export class Timeframe implements ITimeframe {
   readonly timeframeText: string
 
-  readonly key: string
+  readonly key: RelativeTimeRangeValuesV4 | 'custom'
 
   readonly display: string
 
@@ -119,6 +120,30 @@ export class Timeframe implements ITimeframe {
     }
 
     return allowedValues
+  }
+
+  cacheKey(): string {
+    if (this.isRelative) {
+      return this.key
+    }
+
+    return `${this.rawStart().toISOString()}-${this.rawEnd().toISOString()}`
+  }
+
+  v4Query(): TimeRangeV4 {
+    if (this.key === 'custom') {
+      // Right now, `key === custom` is our flag for whether or not we're dealing with an absolute or relative timeframe.
+      return {
+        type: 'absolute',
+        start: this.rawStart(),
+        end: this.rawEnd(),
+      }
+    }
+
+    return {
+      type: 'relative',
+      time_range: this.key,
+    }
   }
 
   protected tzAdjustedDate(tz?: string): Date {

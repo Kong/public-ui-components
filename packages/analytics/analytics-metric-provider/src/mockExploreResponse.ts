@@ -1,7 +1,13 @@
-import type { ExploreV2Query } from './types'
-import { EXPLORE_V2_DIMENSIONS } from './types'
 import type { CyHttpMessages } from 'cypress/types/net-stubbing'
 import { ALL_STATUS_CODE_GROUPS } from './constants'
+import type {
+  Display,
+  ExploreQuery,
+  ExploreResultV4,
+  GroupByResult,
+  QueryResponseMeta,
+} from '@kong-ui-public/analytics-utilities'
+import { DeltaQueryTime, TimeframeKeys, TimePeriods, UnaryQueryTime } from '@kong-ui-public/analytics-utilities'
 
 // Replicate date-fns `fromUnixTime` here to avoid a dependency.
 const fromUnixTimeMs = (t: number) => new Date(t)
@@ -15,43 +21,42 @@ export const mockExploreResponseFromCypress = (
   req: CyHttpMessages.IncomingHttpRequest,
   opts?: MockOptions,
 ) => {
-  const body: ExploreV2Query = req.body
-
-  const { startMs: qStart, endMs: qEnd } = req.query
-
-  const start = typeof qStart !== 'number' ? parseInt(qStart, 10) : qStart
-  const end = typeof qEnd !== 'number' ? parseInt(qEnd, 10) : qEnd
+  const body: ExploreQuery = req.body
 
   req.reply({
     statusCode: 200,
-    body: mockExploreResponse(body, start, end, opts),
+    body: mockExploreResponse(body, opts),
   })
 }
 
+const arrayToDisplay = (arr: string[]): Display =>
+  arr.reduce((acc, val) => {
+    acc[val] = { name: val }
+    return acc
+  }, {} as Display)
+
 export const mockExploreResponse = (
-  body: ExploreV2Query,
-  start: number,
-  end: number,
+  body: ExploreQuery,
   opts?: MockOptions,
 ) => {
-  const granularity = body.granularityMs || 0
+  const timeframe = TimePeriods.get(TimeframeKeys.ONE_DAY)!
+  const defaultQueryTime = body.granularity === 'trend' ? new DeltaQueryTime(timeframe) : new UnaryQueryTime(timeframe)
+  const end = defaultQueryTime.endMs()
+  const start = defaultQueryTime.startMs()
 
-  const numRecords = granularity ? (end - start) / granularity : 1
+  const granularity = defaultQueryTime.granularityMs()
 
-  if (numRecords !== 1 && numRecords !== 2) {
-    throw new Error(
-      "Query did not request 1 or 2 records.  Perhaps there's a chart query on the same page interfering with the stub?",
-    )
-  }
+  const numRecords = body.granularity === 'trend' ? 2 : 1
 
   if ((body.dimensions ?? []).length > 2) {
     throw new Error(`Explore only supports 0-2 dimensions; got: ${JSON.stringify(body.dimensions)}`)
   }
 
-  const primaryDimension = (body.dimensions ?? []).find((x) => x !== 'TIME')
+  const primaryDimension = (body.dimensions ?? []).find((x) => x !== 'time')
   const dimensionNames = opts?.dimensionNames ?? []
   const dimensionLength = Math.max(dimensionNames.length, 1)
-  const records: any = []
+  const metrics = body.metrics || []
+  const data: GroupByResult[] = []
 
   for (let i = 0; i < numRecords; i++) {
     for (let j = 0; j < dimensionLength; j++) {
@@ -59,14 +64,14 @@ export const mockExploreResponse = (
         ? { [primaryDimension]: dimensionNames[j] }
         : {}
 
-      if (body.dimensions?.includes(EXPLORE_V2_DIMENSIONS.STATUS_CODE_GROUPED)) {
+      if (body.dimensions?.includes('status_code_grouped')) {
         ALL_STATUS_CODE_GROUPS.forEach(code => {
-          const event = body.metrics.reduce((accum, agg) => {
+          const event = metrics.reduce((accum, agg) => {
             accum[agg] = (numRecords - i) * 1000 + 100 * j + 1
             return accum
-          }, { ...eventValue, STATUS_CODE_GROUPED: code })
+          }, { ...eventValue, status_code_grouped: code })
 
-          records.push({
+          data.push({
             version: 'v1',
             timestamp:
               i === 0
@@ -76,13 +81,13 @@ export const mockExploreResponse = (
           })
         })
       } else {
-        records.push({
+        data.push({
           version: 'v1',
           timestamp:
             i === 0
               ? fromUnixTimeMs(start).toISOString()
               : fromUnixTimeMs(start + granularity).toISOString(),
-          event: body.metrics.reduce((accum, agg) => {
+          event: metrics.reduce((accum, agg) => {
             accum[agg] = (numRecords - i) * 1000 + (100 * j) + 1
             return accum
           }, { ...eventValue }),
@@ -91,21 +96,22 @@ export const mockExploreResponse = (
     }
   }
 
-  const meta = {
-    start,
-    end,
-    granularity,
-    dimensions: primaryDimension
+  const meta: QueryResponseMeta = {
+    start_ms: start,
+    end_ms: end,
+    granularity_ms: granularity,
+    display: primaryDimension
       ? {
-        [primaryDimension]: dimensionNames,
-        ...(body.dimensions?.includes(EXPLORE_V2_DIMENSIONS.STATUS_CODE_GROUPED) ? { STATUS_CODE_GROUPED: ALL_STATUS_CODE_GROUPS } : {}),
+        [primaryDimension]: arrayToDisplay(dimensionNames),
+        ...(body.dimensions?.includes('status_code_grouped') ? { status_code_grouped: arrayToDisplay(ALL_STATUS_CODE_GROUPS) } : {}),
       }
       : {},
-    metricNames: body.metrics,
+    metric_names: body.metrics,
+    query_id: 'test',
   }
 
   return {
-    records,
+    data,
     meta,
-  }
+  } as ExploreResultV4
 }

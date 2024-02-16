@@ -44,20 +44,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import { EXPLORE_V2_DIMENSIONS } from '../types'
-import type { DataFetcher, ExploreV2Filter } from '../types'
 import MetricsConsumer from './MetricsConsumer.vue'
 import MetricsProviderInternal from './MetricsProviderInternal.vue'
 import { MetricCardSize } from '@kong-ui-public/metric-cards'
+import type { ExploreFilter, QueryableExploreDimensions } from '@kong-ui-public/analytics-utilities'
 
 // Allow passing in a mock data fetcher.
 const props = withDefaults(defineProps<{
   render: 'global' | 'single' | 'multi' | 'latencyCard',
-  dataFetcher: DataFetcher,
   hasTrendAccess: boolean,
   queryReady?: boolean,
   refreshInterval?: number,
-  additionalFilter?: ExploreV2Filter[],
+  additionalFilter?: ExploreFilter[],
   longCardTitles?: boolean,
   description: 'Generic Description',
 }>(), {
@@ -76,14 +74,14 @@ const globalProviderProps = {
 // Query stats for a single entity, no grouping.
 const singleProviderProps = {
   ...props,
-  dimension: EXPLORE_V2_DIMENSIONS.ROUTE,
+  dimension: 'route' as QueryableExploreDimensions,
   filterValue: 'blah',
 }
 
 // Query stats for multiple entities.
 const multiProviderProps = {
   ...props,
-  dimension: EXPLORE_V2_DIMENSIONS.ROUTE,
+  dimension: 'route' as QueryableExploreDimensions,
 }
 
 </script>
