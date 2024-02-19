@@ -84,3 +84,33 @@ describe('cacheKey', () => {
     })).cacheKey()).toBe('2024-01-01T00:00:00.000Z-2024-01-02T00:00:00.000Z')
   })
 })
+
+describe('v4Query', () => {
+  it('handles relative keys', () => {
+    expect(TimePeriods.get(TimeframeKeys.ONE_DAY)!.v4Query()).toEqual({
+      type: 'relative',
+      time_range: '24h',
+    })
+  })
+
+  it('handles custom timeframes', () => {
+    const customTime = new Timeframe({
+      key: 'custom',
+      timeframeText: 'custom',
+      display: 'custom',
+      startCustom: new Date('2024-01-01T00:00:00Z'),
+      endCustom: new Date('2024-02-01T00:00:00Z'),
+      timeframeLength: () => 0,
+      defaultResponseGranularity: GranularityKeys.DAILY,
+      dataGranularity: GranularityKeys.DAILY,
+      isRelative: false,
+      allowedTiers: ['free', 'plus', 'enterprise'],
+    })
+
+    expect(customTime.v4Query()).toEqual({
+      type: 'absolute',
+      start: new Date('2024-01-01T00:00:00Z'),
+      end: new Date('2024-02-01T00:00:00Z'),
+    })
+  })
+})
