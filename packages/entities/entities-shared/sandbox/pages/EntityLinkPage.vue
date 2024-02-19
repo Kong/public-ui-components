@@ -10,8 +10,8 @@
       <h3>Resolved entity </h3>
       <EntityLink
         :entity-link-data="(record as EntityLinkData)"
+        :external="false"
         :external-link="generateEntityUrl(routeParams)"
-        target-self
       />
 
       <h3>Deleted entity</h3>

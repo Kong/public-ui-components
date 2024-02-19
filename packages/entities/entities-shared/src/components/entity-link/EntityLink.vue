@@ -15,9 +15,9 @@
     <KExternalLink
       v-else-if="entityUuid"
       class="entity-link"
-      :hide-icon="targetSelf ? true : false"
+      :hide-icon="external ? false : true"
       :href="externalLink"
-      :target="targetSelf ? '_self' : '_blank'"
+      :target="external ? '_blank' : '_self'"
     >
       <KTooltip
         :text="isTruncated && entityLinkData.label || ''"
@@ -31,7 +31,7 @@
       </KTooltip>
     </KExternalLink>
     <KTooltip
-      v-if="entityUuid && !targetSelf"
+      v-if="entityUuid && external"
       :key="copyUuidTooltipText"
       class="copy-uuid-tooltip"
       max-width="160"
@@ -73,10 +73,10 @@ const props = defineProps({
     required: false,
     default: '',
   },
-  targetSelf: {
+  external: {
     type: Boolean,
     required: false,
-    default: false,
+    default: true,
   },
 })
 
