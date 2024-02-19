@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.6.2...@kong-ui-public/entities-shared@2.6.3) (2024-02-14)
+
+
+### Bug Fixes
+
+* **entities-shared:** filter out null values and empty arrays from yaml in entity forms [KHCP-10642] ([#1154](https://github.com/Kong/public-ui-components/issues/1154)) ([d9cff99](https://github.com/Kong/public-ui-components/commit/d9cff99acbfeba77fedec0cfe5d73ff07de8064c))
+
+
+
+
+
+## [2.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.6.1...@kong-ui-public/entities-shared@2.6.2) (2024-02-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [2.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.6.0...@kong-ui-public/entities-shared@2.6.1) (2024-02-13)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 7 [KHCP-10653] ([#1149](https://github.com/Kong/public-ui-components/issues/1149)) ([bd76d01](https://github.com/Kong/public-ui-components/commit/bd76d011107f92109022fc22877b795167798d01))
+
+
+
+
+
+# [2.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.5.16...@kong-ui-public/entities-shared@2.6.0) (2024-02-13)
+
+
+### Features
+
+* import axios base instance [KHCP-10281] ([#1143](https://github.com/Kong/public-ui-components/issues/1143)) ([787c80c](https://github.com/Kong/public-ui-components/commit/787c80c650a9e71ca3dbcdaa4265ad23a859a7b8))
+
+
+
+
+
 ## [2.5.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.5.15...@kong-ui-public/entities-shared@2.5.16) (2024-02-07)
 
 

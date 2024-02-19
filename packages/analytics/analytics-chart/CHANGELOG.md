@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.0.4...@kong-ui-public/analytics-chart@2.0.5) (2024-02-14)
+
+
+### Bug Fixes
+
+* add back old locales for the metric axis titles ([#1158](https://github.com/Kong/public-ui-components/issues/1158)) ([d43b6f3](https://github.com/Kong/public-ui-components/commit/d43b6f3b3b9a5a8c390dce211868720e8238b452))
+
+
+
+
+
+## [2.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.0.3...@kong-ui-public/analytics-chart@2.0.4) (2024-02-13)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 7 [KHCP-10653] ([#1149](https://github.com/Kong/public-ui-components/issues/1149)) ([bd76d01](https://github.com/Kong/public-ui-components/commit/bd76d011107f92109022fc22877b795167798d01))
+
+
+
+
+
+## [2.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.0.2...@kong-ui-public/analytics-chart@2.0.3) (2024-02-13)
+
+
+### Bug Fixes
+
+* **analytics-chart:** add back translations ([#1156](https://github.com/Kong/public-ui-components/issues/1156)) ([3956e35](https://github.com/Kong/public-ui-components/commit/3956e35b5d9a3fcd8da7cc2d70d30fd025ac1802))
+
+
+
+
+
 ## [2.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.0.1...@kong-ui-public/analytics-chart@2.0.2) (2024-02-13)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

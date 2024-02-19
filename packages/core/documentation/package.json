@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/documentation",
-  "version": "0.3.4",
+  "version": "0.3.9",
   "type": "module",
   "main": "./dist/documentation.umd.js",
   "module": "./dist/documentation.es.js",
@@ -41,7 +41,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.12.7",
-    "@kong/kongponents": "9.0.0-alpha.101",
+    "@kong/kongponents": "9.0.0-alpha.105",
     "axios": "^1.6.5",
     "vue": ">= 3.3.13 < 4"
   },

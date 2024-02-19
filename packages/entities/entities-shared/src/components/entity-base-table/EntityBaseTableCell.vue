@@ -8,9 +8,9 @@
       data-testid="first-col"
     >
       <KTooltip
-        :label="hasTooltip ? tooltipText : ''"
         max-width="300"
         placement="bottomStart"
+        :text="hasTooltip ? tooltipText : ''"
       >
         <slot />
       </KTooltip>

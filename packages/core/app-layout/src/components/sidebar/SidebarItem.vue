@@ -43,9 +43,9 @@
             <KTooltip
               v-else
               class="sidebar-item-tooltip"
-              :label="item.name"
               placement="right"
               position-fixed
+              :text="item.name"
             >
               <div class="sidebar-item-name has-tooltip">
                 <span

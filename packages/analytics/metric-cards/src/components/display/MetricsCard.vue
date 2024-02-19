@@ -15,8 +15,8 @@
       <KTooltip
         v-if="tooltip"
         class="metricscard-tooltip"
-        :label="tooltip"
         placement="right"
+        :text="tooltip"
       >
         <InfoIcon
           :color="KUI_COLOR_TEXT_NEUTRAL"

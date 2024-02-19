@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/app-layout",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "type": "module",
   "main": "./dist/app-layout.umd.js",
   "module": "./dist/app-layout.es.js",
@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.12.7",
-    "@kong/kongponents": "9.0.0-alpha.101",
+    "@kong/kongponents": "9.0.0-alpha.105",
     "@types/lodash.clonedeep": "^4.5.9",
     "vue": "^3.4.13",
     "vue-router": "^4.2.5"

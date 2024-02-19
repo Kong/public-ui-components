@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.8...@kong-ui-public/documentation@0.3.9) (2024-02-14)
+
+
+### Bug Fixes
+
+* **documentation:** align document meta and actions ([#1159](https://github.com/Kong/public-ui-components/issues/1159)) ([8e66152](https://github.com/Kong/public-ui-components/commit/8e661521419b25f4b1836e956f0bf45e7bfdbba8))
+
+
+
+
+
+## [0.3.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.7...@kong-ui-public/documentation@0.3.8) (2024-02-14)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.3.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.6...@kong-ui-public/documentation@0.3.7) (2024-02-14)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.5...@kong-ui-public/documentation@0.3.6) (2024-02-13)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 7 [KHCP-10653] ([#1149](https://github.com/Kong/public-ui-components/issues/1149)) ([bd76d01](https://github.com/Kong/public-ui-components/commit/bd76d011107f92109022fc22877b795167798d01))
+
+
+
+
+
+## [0.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.4...@kong-ui-public/documentation@0.3.5) (2024-02-13)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
 ## [0.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.3...@kong-ui-public/documentation@0.3.4) (2024-02-07)
 
 **Note:** Version bump only for package @kong-ui-public/documentation
