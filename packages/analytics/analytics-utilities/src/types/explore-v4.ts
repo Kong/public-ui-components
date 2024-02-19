@@ -105,7 +105,7 @@ export interface ExploreQuery {
   dimensions?: QueryableExploreDimensions[]
   filters?: ExploreFilter[]
   granularity?: GranularityValues
-  time_range: TimeRangeV4
+  time_range?: TimeRangeV4
   limit?: number
   descending?: boolean
   meta?: {
