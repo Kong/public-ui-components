@@ -66,10 +66,10 @@ describe('allowedGranularities', () => {
 describe('cacheKey', () => {
   it('handles relative keys', () => {
     expect(TimePeriods.get(TimeframeKeys.ONE_DAY)?.cacheKey()).toBe('24h')
+    expect(TimePeriods.get(TimeframeKeys.CURRENT_MONTH)?.cacheKey()).toBe('current_month')
   })
 
   it('handles absolute keys', () => {
-    expect(TimePeriods.get(TimeframeKeys.CURRENT_MONTH)?.cacheKey()).toMatch(/\d{4}.*Z-\d{4}.*Z/)
     expect((new Timeframe({
       key: 'custom',
       timeframeText: 'custom',

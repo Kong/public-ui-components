@@ -123,7 +123,8 @@ export class Timeframe implements ITimeframe {
   }
 
   cacheKey(): string {
-    if (this.isRelative) {
+    if (this.key !== 'custom') {
+      // Right now, `key === custom` is our flag for whether we're dealing with an absolute or relative timeframe.
       return this.key
     }
 
