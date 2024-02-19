@@ -1,6 +1,6 @@
 import { expect } from 'vitest'
 import { GranularityKeys, TimeframeKeys } from './types'
-import { TimePeriods } from './timeframes'
+import { Timeframe, TimePeriods } from './timeframes'
 
 const freeTierMax = TimePeriods.get(TimeframeKeys.ONE_DAY)?.timeframeLength() || 86400
 const sevenDays = TimePeriods.get(TimeframeKeys.SEVEN_DAY)?.timeframeLength() || 86400 * 7
@@ -60,5 +60,57 @@ describe('allowedGranularities', () => {
 
     expect(TimePeriods.get(TimeframeKeys.PREVIOUS_MONTH)?.allowedGranularities())
       .toEqual(new Set([GranularityKeys.DAILY, GranularityKeys.WEEKLY]))
+  })
+})
+
+describe('cacheKey', () => {
+  it('handles relative keys', () => {
+    expect(TimePeriods.get(TimeframeKeys.ONE_DAY)?.cacheKey()).toBe('24h')
+    expect(TimePeriods.get(TimeframeKeys.CURRENT_MONTH)?.cacheKey()).toBe('current_month')
+  })
+
+  it('handles absolute keys', () => {
+    expect((new Timeframe({
+      key: 'custom',
+      timeframeText: 'custom',
+      display: 'custom',
+      startCustom: new Date('2024-01-01T00:00:00Z'),
+      endCustom: new Date('2024-01-02T00:00:00Z'),
+      timeframeLength: () => 0,
+      defaultResponseGranularity: GranularityKeys.DAILY,
+      dataGranularity: GranularityKeys.DAILY,
+      isRelative: false,
+      allowedTiers: ['free', 'plus', 'enterprise'],
+    })).cacheKey()).toBe('2024-01-01T00:00:00.000Z-2024-01-02T00:00:00.000Z')
+  })
+})
+
+describe('v4Query', () => {
+  it('handles relative keys', () => {
+    expect(TimePeriods.get(TimeframeKeys.ONE_DAY)!.v4Query()).toEqual({
+      type: 'relative',
+      time_range: '24h',
+    })
+  })
+
+  it('handles custom timeframes', () => {
+    const customTime = new Timeframe({
+      key: 'custom',
+      timeframeText: 'custom',
+      display: 'custom',
+      startCustom: new Date('2024-01-01T00:00:00Z'),
+      endCustom: new Date('2024-02-01T00:00:00Z'),
+      timeframeLength: () => 0,
+      defaultResponseGranularity: GranularityKeys.DAILY,
+      dataGranularity: GranularityKeys.DAILY,
+      isRelative: false,
+      allowedTiers: ['free', 'plus', 'enterprise'],
+    })
+
+    expect(customTime.v4Query()).toEqual({
+      type: 'absolute',
+      start: new Date('2024-01-01T00:00:00Z'),
+      end: new Date('2024-02-01T00:00:00Z'),
+    })
   })
 })
