@@ -31,7 +31,7 @@
       </KTooltip>
     </KExternalLink>
     <KTooltip
-      v-if="entityUuid && external"
+      v-if="entityUuid && showCopy"
       :key="copyUuidTooltipText"
       class="copy-uuid-tooltip"
       max-width="160"
@@ -47,7 +47,7 @@
             class="copy-icon"
             :color="KUI_COLOR_TEXT_PRIMARY"
             data-testid="copy-id"
-            :size="16"
+            :size="KUI_ICON_SIZE_30"
           />
         </span>
       </KClipboardProvider>
@@ -61,7 +61,7 @@ import type { PropType, Ref } from 'vue'
 import type { EntityLinkData } from '../../types'
 import composables from '../../composables'
 import { CopyIcon } from '@kong/icons'
-import { KUI_COLOR_TEXT_PRIMARY } from '@kong/design-tokens'
+import { KUI_COLOR_TEXT_PRIMARY, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 
 const props = defineProps({
   entityLinkData: {
@@ -74,6 +74,11 @@ const props = defineProps({
     default: '',
   },
   external: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
+  showCopy: {
     type: Boolean,
     required: false,
     default: true,
@@ -129,9 +134,11 @@ const onCopyUuid = async (copyToClipboard: (str: string) => Promise<boolean>): P
   .entity-link {
     display: flex;
 
-    &-icon {
+    :deep(.external-link-icon) {
       color: $kui-color-text-primary;
       margin-left: $kui-space-20;
+      // Match size of copy icon
+      padding: $kui-space-10;
     }
   }
 
@@ -146,9 +153,10 @@ const onCopyUuid = async (copyToClipboard: (str: string) => Promise<boolean>): P
 
   .copy-uuid-tooltip {
     align-items: center;
+    cursor: pointer;
     display: flex;
     .entity-link-copy-id {
-      margin-left: $kui-space-30;
+      margin-left: $kui-space-10;
     }
   }
 }
