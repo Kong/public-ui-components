@@ -6,6 +6,14 @@
         :entity-link-data="(record as EntityLinkData)"
         :external-link="generateEntityUrl(routeParams)"
       />
+
+      <h3>Resolved entity </h3>
+      <EntityLink
+        :entity-link-data="(record as EntityLinkData)"
+        :external-link="generateEntityUrl(routeParams)"
+        target-self
+      />
+
       <h3>Deleted entity</h3>
       <EntityLink
         :entity-link-data="(deletedRecord as EntityLinkData)"
