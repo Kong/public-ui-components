@@ -307,7 +307,7 @@ const scrollbarExtraPadding = ref<string>('0px')
 /**
  * Determine the width of the user's scrollbar, if on a Mac, based on the `Appearance > Show scroll bars` setting.
  * If the width equals zero, add 8px of extra padding to the .sidebar-content-container.
- * This is crap and I hate it, but it works ¯\_(ツ)_/¯
+ * This isn't great and I hate it, but it works ¯\_(ツ)_/¯
  */
 const getScrollbarWidth = (): void => {
   // @ts-ignore Determine if the user is on MacOS
@@ -317,24 +317,24 @@ const getScrollbarWidth = (): void => {
     return
   }
 
-  const outer = document.createElement('div')
-  outer.style.visibility = 'hidden'
-  outer.style.width = '100px'
-  document.body.appendChild(outer)
+  const outerElement = document.createElement('div')
+  outerElement.style.visibility = 'hidden'
+  outerElement.style.width = '100px'
+  document.body.appendChild(outerElement)
 
-  const widthNoScroll = outer.offsetWidth
-  // force scrollbars
-  outer.style.overflow = 'scroll'
+  const widthNoScroll = outerElement.offsetWidth
+  // force scrollbar
+  outerElement.style.overflow = 'scroll'
 
-  // add innerdiv
-  const inner = document.createElement('div')
-  inner.style.width = '100%'
-  outer.appendChild(inner)
+  // add inner element
+  const innerElement = document.createElement('div')
+  innerElement.style.width = '100%'
+  outerElement.appendChild(innerElement)
 
-  const widthWithScroll = inner.offsetWidth
+  const widthWithScroll = innerElement.offsetWidth
 
-  // remove divs
-  outer.parentNode && outer.parentNode.removeChild(outer)
+  // remove inner elements
+  outerElement.parentNode && outerElement.parentNode.removeChild(outerElement)
 
   const scrollbarWidth = widthNoScroll - widthWithScroll
 
