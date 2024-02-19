@@ -48,6 +48,7 @@ describe('<EntityLink />', () => {
     })
 
     cy.getTestId('entity-link-parent').find('a').should('exist')
+    cy.getTestId('entity-link-parent').find('a').should('have.attr', 'target', '_blank')
     cy.getTestId('entity-link-parent').find('a.entity-link .kui-icon.external-link-icon').should('exist')
     cy.getTestId('entity-link-parent').find('a').should('contain.text', resolvedRecord.label)
 
@@ -67,6 +68,7 @@ describe('<EntityLink />', () => {
     })
 
     cy.getTestId('entity-link-parent').find('a').should('exist')
+    cy.getTestId('entity-link-parent').find('a').should('have.attr', 'target', '_blank')
     cy.getTestId('entity-link-parent').find('a .kui-icon.external-link-icon').should('exist')
 
     copyUuidStub().then(() => {
@@ -108,5 +110,22 @@ describe('<EntityLink />', () => {
 
       cy.get('@clipboardWriteText').should('have.been.calledWith', resolvedRecord.id)
     })
+  })
+
+  it('hides the icons if `external` prop is set to `false`', () => {
+    cy.mount(EntityLink, {
+      props: {
+        entityLinkData: resolvedRecord,
+        externalLink: generatedLink,
+        external: false,
+      },
+    })
+
+    cy.getTestId('kui-icon-wrapper-external-link-icon').should('not.exist')
+    cy.getTestId('entity-link-parent').find('.copy-uuid-tooltip').should('not.exist')
+
+    // Ensure that link is set to open in same window
+    cy.getTestId('entity-link-parent').find('a').should('exist')
+    cy.getTestId('entity-link-parent').find('a').should('have.attr', 'target', '_self')
   })
 })

@@ -1,13 +1,13 @@
 <template>
   <div class="sandbox-container">
     <main>
-      <h3>Resolved entity</h3>
+      <h3>Resolved entity with external link</h3>
       <EntityLink
         :entity-link-data="(record as EntityLinkData)"
         :external-link="generateEntityUrl(routeParams)"
       />
 
-      <h3>Resolved entity </h3>
+      <h3>Resolved entity</h3>
       <EntityLink
         :entity-link-data="(record as EntityLinkData)"
         :external="false"
