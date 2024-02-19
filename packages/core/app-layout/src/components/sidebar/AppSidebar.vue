@@ -301,13 +301,59 @@ watch(focusTrapEnabled, async (enabled: boolean) => {
   }
 }, { immediate: true })
 
-onMounted(() => {
+// If the user is on a Mac, we may need to add extra padding to the sidebar scroll container
+const scrollbarExtraPadding = ref<string>('0px')
+
+/**
+ * Determine the width of the user's scrollbar, if on a Mac, based on the `Appearance > Show scroll bars` setting.
+ * If the width equals zero, add 8px of extra padding to the .sidebar-content-container.
+ * This is crap and I hate it, but it works ¯\_(ツ)_/¯
+ */
+const getScrollbarWidth = (): void => {
+  // @ts-ignore Determine if the user is on MacOS
+  const isMac = /Mac|iPhone|iPod|iPad/i.test(navigator?.platform) || /macOS|Mac|iPhone|iPod|iPad/i.test(navigator?.userAgentData?.platform)
+
+  if (!isMac) {
+    return
+  }
+
+  const outer = document.createElement('div')
+  outer.style.visibility = 'hidden'
+  outer.style.width = '100px'
+  document.body.appendChild(outer)
+
+  const widthNoScroll = outer.offsetWidth
+  // force scrollbars
+  outer.style.overflow = 'scroll'
+
+  // add innerdiv
+  const inner = document.createElement('div')
+  inner.style.width = '100%'
+  outer.appendChild(inner)
+
+  const widthWithScroll = inner.offsetWidth
+
+  // remove divs
+  outer.parentNode && outer.parentNode.removeChild(outer)
+
+  const scrollbarWidth = widthNoScroll - widthWithScroll
+
+  if (scrollbarWidth === 0) {
+    scrollbarExtraPadding.value = '8px'
+  }
+}
+
+onMounted(async () => {
   // Set the window width once the component mounts
   windowWidth.value = window?.innerWidth
   // Automatically close the sidebar if the window is resized
   window.addEventListener('resize', debouncedResizeHandler)
   // Disable mobile sidebar transitions when the window is resized
   window.addEventListener('resize', disableTransitions)
+
+  await nextTick()
+  // Adjust the sidebar padding
+  getScrollbarWidth()
 })
 
 onBeforeUnmount(() => {
@@ -368,6 +414,7 @@ onBeforeUnmount(() => {
     overflow-x: hidden;
     // Must use `scroll` so that the scrollbar width is always accounted for. Cannot use `overlay` here as it breaks in Firefox.
     overflow-y: scroll;
+    padding-right: v-bind('scrollbarExtraPadding');
     padding-top: $sidebar-header-spacing;
     position: relative;
     width: 100%;
