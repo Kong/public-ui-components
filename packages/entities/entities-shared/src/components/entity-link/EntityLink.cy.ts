@@ -117,7 +117,7 @@ describe('<EntityLink />', () => {
       props: {
         entityLinkData: resolvedRecord,
         externalLink: generatedLink,
-        external: false,
+        newWindow: false,
       },
     })
 
@@ -151,8 +151,8 @@ describe('<EntityLink />', () => {
       props: {
         entityLinkData: resolvedRecord,
         externalLink: generatedLink,
-        external: false,
         allowCopy: false,
+        newWindow: false,
       },
     })
 
