@@ -786,8 +786,8 @@ importers:
         specifier: ^1.8.14
         version: 1.8.14(vue@3.4.15)
       marked:
-        specifier: ^11.2.0
-        version: 11.2.0
+        specifier: ^12.0.0
+        version: 12.0.0
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -10012,8 +10012,8 @@ packages:
     resolution: {integrity: sha512-CkYQrPYZfWnu/DAmVCpTSX/xHpKZ80eKh2lAkyA6AJTef6bW+6JpbQZN5rofum7da+SyN1bi5ctTm+lTfcCW3g==}
     dev: false
 
-  /marked@11.2.0:
-    resolution: {integrity: sha512-HR0m3bvu0jAPYiIvLUUQtdg1g6D247//lvcekpHO1WMvbwDlwSkZAX9Lw4F4YHE1T0HaaNve0tuAWuV1UJ6vtw==}
+  /marked@12.0.0:
+    resolution: {integrity: sha512-Vkwtq9rLqXryZnWaQc86+FHLC6tr/fycMfYAhiOIXkrNmeGAyhSxjqu0Rs1i0bBqw5u0S7+lV9fdH2ZSVaoa0w==}
     engines: {node: '>= 18'}
     hasBin: true
     dev: false
