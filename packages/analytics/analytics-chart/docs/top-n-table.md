@@ -18,7 +18,7 @@ A simple table component to display the top N records.
 
 ### Install
 
-[See instructions for installing the `@kong-ui-public/analytics-chart` package](../README.md#install)
+[See instructions for installing the `@kong-ui-public/analytics-chart` package.](../README.md#install)
 
 ### Props
 
