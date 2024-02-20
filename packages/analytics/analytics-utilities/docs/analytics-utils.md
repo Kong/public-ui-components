@@ -17,7 +17,7 @@
 - [TimeseriesQueryTime](classes/TimeseriesQueryTime.md)
 - [UnaryQueryTime](classes/UnaryQueryTime.md)
 
-### Interfaces (TODO: run build:docs)
+### Interfaces
 
 - [AnalyticsExploreMeta](interfaces/AnalyticsExploreMeta.md)
 - [AnalyticsExploreRecord](interfaces/AnalyticsExploreRecord.md)
