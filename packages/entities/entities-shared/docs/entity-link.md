@@ -18,7 +18,7 @@ A link component that displays label text, and optionally links to an absolute U
 
 ### Install
 
-[See instructions for installing the `@kong-ui-public/entities-shared` package.](../README.md#install)
+[See instructions for installing the `@kong-ui-public/entities-shared` package](../README.md#install)
 
 ### Props
 
