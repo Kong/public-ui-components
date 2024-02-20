@@ -76,12 +76,12 @@ const props = defineProps({
   newWindow: {
     type: Boolean,
     required: false,
-    default: true,
+    default: false,
   },
   allowCopy: {
     type: Boolean,
     required: false,
-    default: true,
+    default: false,
   },
 })
 
