@@ -1,12 +1,11 @@
 import type { IConfig } from 'swrv'
 import useSWRV from 'swrv'
-import type { AxiosResponse, AxiosError } from 'axios'
 import type { IKey, fetcherFn } from 'swrv/dist/types'
 import { computed } from 'vue'
 
 export default function useRequest<Data = unknown, Error = { message: string }>(
   key: IKey,
-  fn?: fetcherFn<AxiosResponse<Data>>,
+  fn?: fetcherFn<Data>,
   config?: IConfig,
 ) {
   const {
@@ -14,7 +13,7 @@ export default function useRequest<Data = unknown, Error = { message: string }>(
     error,
     isValidating,
     mutate: revalidate,
-  } = useSWRV<AxiosResponse<Data>, AxiosError<Error>>(key, fn, {
+  } = useSWRV<Data, Error>(key, fn, {
     revalidateDebounce: 500,
     revalidateOnFocus: false,
     dedupingInterval: 100,
@@ -22,7 +21,7 @@ export default function useRequest<Data = unknown, Error = { message: string }>(
   })
 
   const data = computed<Data | undefined>(() => {
-    return response.value?.data
+    return response.value
   })
 
   return {

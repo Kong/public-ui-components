@@ -1,12 +1,13 @@
 import type { Ref } from 'vue'
 import { computed } from 'vue'
-import { DeltaQueryTime, UnaryQueryTime } from '@kong-ui-public/analytics-utilities'
-import type { AnalyticsExploreV2Result, QueryTime } from '@kong-ui-public/analytics-utilities'
-import { EXPLORE_V2_DIMENSIONS } from '../types'
-import type { EXPLORE_V2_AGGREGATIONS, ExploreV2Query, MetricFetcherOptions } from '../types'
+import type {
+  ExploreQuery,
+  QueryableExploreDimensions,
+  ExploreResultV4,
+} from '@kong-ui-public/analytics-utilities'
+import type { MetricFetcherOptions } from '../types'
 import { MAX_ANALYTICS_REQUEST_RETRIES } from '../constants'
 import composables from '.'
-import type { AxiosResponse } from 'axios'
 import { useSwrvState } from '@kong-ui-public/core'
 
 export const DEFAULT_KEY = Symbol('default')
@@ -14,7 +15,7 @@ export type MappedMetrics = Record<string | typeof DEFAULT_KEY, Record<string | 
 
 // This dimension is special: metric cards are never going to group on this dimension
 // except in order to determine traffic and error rate information.
-const ERROR_RATE_DIMENSION = EXPLORE_V2_DIMENSIONS.STATUS_CODE_GROUPED
+const ERROR_RATE_DIMENSION: QueryableExploreDimensions = 'status_code_grouped'
 
 export interface ChronologicalMappedMetrics {
   current: MappedMetrics
@@ -24,7 +25,7 @@ export interface ChronologicalMappedMetrics {
 export interface FetcherResult {
   isLoading: Ref<boolean>
   hasError: Ref<boolean>
-  raw: Ref<AxiosResponse<AnalyticsExploreV2Result, any> | undefined>
+  raw: Ref<ExploreResultV4 | undefined>
   mapped: Ref<ChronologicalMappedMetrics>
 }
 
@@ -35,14 +36,17 @@ const setMetric = (result: ChronologicalMappedMetrics, time: 'previous' | 'curre
   result[time][topLevelKey][secondLevelKey] = metricValue
 }
 
-export function buildDeltaMapping(result: AnalyticsExploreV2Result, queryTime: QueryTime, withTrend: boolean): ChronologicalMappedMetrics {
+export function buildDeltaMapping(result: ExploreResultV4, withTrend: boolean): ChronologicalMappedMetrics {
   // We should always have metric names in the result; if they're not present, just pick something that won't crash.
-  const metricName = result.meta.metricNames?.[0] || ''
+  const metricName = result.meta.metric_names?.[0] || ''
+
+  // Figure out the first expected timestamp.
+  const queriedStartTime = result.meta.start_ms
 
   // We only ever have 2 dimensions in the response if the second dimension is STATUS_CODE_GROUPED.
   // TIME doesn't show up in the response.
   // Assert that this is the case; raise a reportable error if not.
-  const dimensionNames = Object.keys(result.meta.dimensions || {})
+  const dimensionNames = Object.keys(result.meta.display || {})
   const hasErrorRateDimension = !!dimensionNames.find(k => k === ERROR_RATE_DIMENSION)
   const keyDimension = dimensionNames.find(k => k !== ERROR_RATE_DIMENSION)
 
@@ -56,7 +60,7 @@ export function buildDeltaMapping(result: AnalyticsExploreV2Result, queryTime: Q
 
   // Go through each record and add it to the correct group.
   // Explore always returns results sorted in ascending order by time.
-  return result.records.reduce<ChronologicalMappedMetrics>((result, record) => {
+  return result.data.reduce<ChronologicalMappedMetrics>((result, record) => {
     const metricValue = record.event[metricName] as number
 
     // If we have dimensions, then index the results based on the dimension name.
@@ -70,7 +74,7 @@ export function buildDeltaMapping(result: AnalyticsExploreV2Result, queryTime: Q
     // The records are in ascending order, so the first record is the earliest.
     // If the timestamp of the current record is the same as the query start date, it belongs to
     // the previous group, otherwise it belongs to the current group.
-    if (new Date(record.timestamp).getTime() === queryTime.startDate().getTime() && withTrend) {
+    if (new Date(record.timestamp).getTime() === queriedStartTime && withTrend) {
       setMetric(result, 'previous', topLevelKey, secondLevelKey, metricValue)
     } else {
       setMetric(result, 'current', topLevelKey, secondLevelKey, metricValue)
@@ -88,21 +92,17 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
     opts.queryReady = computed(() => true)
   }
 
-  const queryTime: Ref<QueryTime> = computed(() => {
-    return opts.withTrend ? new DeltaQueryTime(opts.timeframe.value) : new UnaryQueryTime(opts.timeframe.value)
-  })
-
-  const query: Ref<ExploreV2Query> = computed(() => ({
-    metrics: opts.metrics as EXPLORE_V2_AGGREGATIONS[],
+  const query: Ref<ExploreQuery> = computed(() => ({
+    metrics: opts.metrics,
     dimensions: [
-      ...(opts.dimensions?.length ? [...opts.dimensions as EXPLORE_V2_DIMENSIONS[]] : []),
-      ...(opts.withTrend ? [EXPLORE_V2_DIMENSIONS.TIME] : []),
+      ...(opts.dimensions?.length ? [...opts.dimensions] : []),
+      ...(opts.withTrend ? ['time'] : []),
     ],
-    granularityMs: queryTime.value.granularityMs(),
-    ...(opts.filter.value?.length ? { filter: opts.filter.value } : {}),
-  }))
+    granularity: opts.withTrend ? 'trend' : undefined,
+    ...(opts.filter.value?.length ? { filters: opts.filter.value } : {}),
+    time_range: opts.timeframe.value.v4Query(),
+  } as ExploreQuery))
 
-  const timeRangeString = computed(() => `${queryTime.value.endDate().toString()}-${queryTime.value.startDate().toString()}`)
   const cacheKey: Ref<string | null> = computed(() => {
     if (!opts.queryReady?.value || (opts.featureFlags && !opts.featureFlags.every(e => e))) {
       return null
@@ -112,12 +112,12 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
     // need to have some uniqueness in the cache key to avoid collisions.
     // this was happening when there are multiple providers on the same page with the same dimensions and metrics.
     // For example the singleProvider and multiProvider that appear in the test harness.
-    return `metric-fetcher-${timeRangeString.value}-${opts.dimensions?.join('-')}-${opts.metrics?.join('-')}-${additionalFilterKey}`
+    return `metric-fetcher-${opts.timeframe.value.cacheKey()}-${opts.dimensions?.join('-')}-${opts.metrics?.join('-')}-${additionalFilterKey}`
   })
 
-  const { response: raw, error: metricError, isValidating: isMetricDataValidating } = composables.useRequest<AnalyticsExploreV2Result>(
+  const { response: raw, error: metricError, isValidating: isMetricDataValidating } = composables.useRequest<ExploreResultV4>(
     () => cacheKey.value,
-    () => opts.dataFetcher(queryTime.value, query.value),
+    () => opts.queryFn(query.value, opts.abortController ?? new AbortController()),
     {
       refreshInterval: opts.refreshInterval,
       revalidateOnFocus: false,
@@ -128,12 +128,12 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
   const { state: metricRequestState, swrvState: STATE } = useSwrvState(raw, metricError, isMetricDataValidating)
 
   const mapped = computed<ChronologicalMappedMetrics>(() => {
-    if (!raw.value?.data?.records?.length || !raw.value?.data?.meta?.dimensions || !raw.value?.data?.meta?.metricNames?.length) {
+    if (!raw.value?.data?.length || !raw.value?.meta?.display || !raw.value?.meta?.metric_names?.length) {
       // Invalid or empty result.
       return { current: {}, previous: {} } as ChronologicalMappedMetrics
     }
 
-    return buildDeltaMapping(raw.value.data, queryTime.value, !!opts.withTrend)
+    return buildDeltaMapping(raw.value, !!opts.withTrend)
   })
 
   return {

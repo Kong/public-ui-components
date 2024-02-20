@@ -1,10 +1,9 @@
 import { vi, describe, expect } from 'vitest'
 import useMetricFetcher, { buildDeltaMapping, DEFAULT_KEY } from './useMetricFetcher'
 import { ref } from 'vue'
-import type { Timeframe } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4, Timeframe } from '@kong-ui-public/analytics-utilities'
 import { DeltaQueryTime, TimeframeKeys, TimePeriods, UnaryQueryTime } from '@kong-ui-public/analytics-utilities'
-import type { DataFetcher, MetricFetcherOptions } from '../types'
-import { EXPLORE_V2_AGGREGATIONS, EXPLORE_V2_DIMENSIONS } from '../types'
+import type { MetricFetcherOptions } from '../types'
 import composables from '.'
 
 // Stub `addDays` from `date-fns` here to avoid a dependency just for unit testing.
@@ -20,312 +19,288 @@ const timePeriod = TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe
 const deltaQueryTime = new DeltaQueryTime(timePeriod)
 const unaryQueryTime = new UnaryQueryTime(timePeriod)
 
-const EXPLORE_RESULT_TREND = {
-  records: [
+const EXPLORE_RESULT_TREND: ExploreResultV4 = {
+  data: [
     {
       version: 'v1',
       timestamp: deltaQueryTime.startDate().toISOString(),
       event: {
-        ORGANIZATION: 'test-org-uuid',
-        REQUEST_COUNT: 10,
+        request_count: 10,
       },
     },
     {
       version: 'v1',
       timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
       event: {
-        ORGANIZATION: 'test-org-uuid',
-        REQUEST_COUNT: 20,
+        request_count: 20,
       },
     },
   ],
   meta: {
-    startMs: deltaQueryTime.startMs(),
-    endMs: deltaQueryTime.endMs(),
-    granularity: 86400000,
-    queryId: '',
-    metricNames: [
-      'REQUEST_COUNT',
+    start_ms: deltaQueryTime.startMs(),
+    end_ms: deltaQueryTime.endMs(),
+    granularity_ms: 86400000,
+    query_id: '',
+    metric_names: [
+      'request_count',
     ],
-    metricUnits: {
-      REQUEST_COUNT: 'count',
+    metric_units: {
+      request_count: 'count',
     },
-    dimensions: {
-      ORGANIZATION: [
-        'test-org-uuid',
-      ],
-    },
+    display: {},
   },
 }
 
-const EXPLORE_RESULT_NO_TREND = {
-  records: [
+const EXPLORE_RESULT_NO_TREND: ExploreResultV4 = {
+  data: [
     {
       version: 'v1',
       timestamp: unaryQueryTime.startDate().toISOString(),
       event: {
-        ORGANIZATION: 'test-org-uuid',
-        REQUEST_COUNT: 20,
+        request_count: 20,
       },
     },
   ],
   meta: {
-    startMs: unaryQueryTime.startMs(),
-    endMs: unaryQueryTime.endMs(),
-    granularity: 86400000,
-    queryId: '',
-    metricNames: [
-      'REQUEST_COUNT',
+    start_ms: unaryQueryTime.startMs(),
+    end_ms: unaryQueryTime.endMs(),
+    granularity_ms: 86400000,
+    query_id: '',
+    metric_names: [
+      'request_count',
     ],
-    metricUnits: {
-      REQUEST_COUNT: 'count',
+    metric_units: {
+      request_count: 'count',
     },
-    dimensions: {
-      ORGANIZATION: [
-        'test-org-uuid',
-      ],
-    },
+    display: {},
   },
 }
 
-const EXPLORE_RESULT_PREVIOUS_DATA_ONLY = {
-  records: [
+const EXPLORE_RESULT_PREVIOUS_DATA_ONLY: ExploreResultV4 = {
+  data: [
     {
       version: 'v1',
       timestamp: deltaQueryTime.startDate().toISOString(),
       event: {
-        ORGANIZATION: 'test-org-uuid',
-        REQUEST_COUNT: 10,
+        request_count: 10,
       },
     },
   ],
   meta: {
-    startMs: deltaQueryTime.startMs(),
-    endMs: deltaQueryTime.endMs(),
-    granularity: 86400000,
-    queryId: '',
-    metricNames: [
-      'REQUEST_COUNT',
+    start_ms: deltaQueryTime.startMs(),
+    end_ms: deltaQueryTime.endMs(),
+    granularity_ms: 86400000,
+    query_id: '',
+    metric_names: [
+      'request_count',
     ],
-    metricUnits: {
-      REQUEST_COUNT: 'count',
+    metric_units: {
+      request_count: 'count',
     },
-    dimensions: {
-      ORGANIZATION: [
-        'test-org-uuid',
-      ],
-    },
+    display: {},
   },
 }
 
-const EXPLORE_RESULT_CURRENT_DATA_ONLY = {
-  records: [
+const EXPLORE_RESULT_CURRENT_DATA_ONLY: ExploreResultV4 = {
+  data: [
     {
       version: 'v1',
       timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
       event: {
-        ORGANIZATION: 'test-org-uuid',
-        REQUEST_COUNT: 20,
+        request_count: 20,
       },
     },
   ],
   meta: {
-    startMs: deltaQueryTime.startMs(),
-    endMs: deltaQueryTime.endMs(),
-    granularity: 86400000,
-    queryId: '',
-    metricNames: [
-      'REQUEST_COUNT',
+    start_ms: deltaQueryTime.startMs(),
+    end_ms: deltaQueryTime.endMs(),
+    granularity_ms: 86400000,
+    query_id: '',
+    metric_names: [
+      'request_count',
     ],
-    metricUnits: {
-      REQUEST_COUNT: 'count',
+    metric_units: {
+      request_count: 'count',
     },
-    dimensions: {
-      ORGANIZATION: [
-        'test-org-uuid',
-      ],
-    },
+    display: {},
   },
 }
 
-const EXPLORE_RESULT_NO_RECORDS = {
-  records: [],
+const EXPLORE_RESULT_NO_RECORDS: ExploreResultV4 = {
+  data: [],
   meta: {
-    startMs: deltaQueryTime.startMs(),
-    endMs: deltaQueryTime.endMs(),
-    granularity: 86400000,
-    queryId: '',
-    metricNames: [
-      'REQUEST_COUNT',
+    start_ms: deltaQueryTime.startMs(),
+    end_ms: deltaQueryTime.endMs(),
+    granularity_ms: 86400000,
+    query_id: '',
+    metric_names: [
+      'request_count',
     ],
-    metricUnits: {
-      REQUEST_COUNT: 'count',
+    metric_units: {
+      request_count: 'count',
     },
-    dimensions: {},
+    display: {},
   },
 }
 
-const EXPLORE_RESULT_CURRENT_DATA_MULTI_DIMENSION = {
-  records: [
+const EXPLORE_RESULT_CURRENT_DATA_MULTI_DIMENSION: ExploreResultV4 = {
+  data: [
     {
       version: 'v1',
       timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
       event: {
-        ROUTE: 'route1',
-        REQUEST_COUNT: 20,
-        STATUS_CODE_GROUPED: '2XX',
+        route: 'route1',
+        request_count: 20,
+        status_code_grouped: '2XX',
       },
     },
     {
       version: 'v1',
       timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
       event: {
-        ROUTE: 'route1',
-        REQUEST_COUNT: 10,
-        STATUS_CODE_GROUPED: '5XX',
+        route: 'route1',
+        request_count: 10,
+        status_code_grouped: '5XX',
       },
     },
     {
       version: 'v1',
       timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
       event: {
-        ROUTE: 'route2',
-        REQUEST_COUNT: 20,
-        STATUS_CODE_GROUPED: '2XX',
+        route: 'route2',
+        request_count: 20,
+        status_code_grouped: '2XX',
       },
     },
     {
       version: 'v1',
       timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
       event: {
-        ROUTE: 'route2',
-        REQUEST_COUNT: 10,
-        STATUS_CODE_GROUPED: '5XX',
+        route: 'route2',
+        request_count: 10,
+        status_code_grouped: '5XX',
       },
     },
   ],
   meta: {
-    startMs: deltaQueryTime.startMs(),
-    endMs: deltaQueryTime.endMs(),
-    granularity: 86400000,
-    queryId: '',
-    metricNames: [
-      'REQUEST_COUNT',
+    start_ms: deltaQueryTime.startMs(),
+    end_ms: deltaQueryTime.endMs(),
+    granularity_ms: 86400000,
+    query_id: '',
+    metric_names: [
+      'request_count',
     ],
-    metricUnits: {
-      REQUEST_COUNT: 'count',
+    metric_units: {
+      request_count: 'count',
     },
-    dimensions: {
-      STATUS_CODE_GROUPED: [
-        '2XX', '5XX',
-      ],
-      ROUTE: [
-        'route1',
-        'route2',
-      ],
+    display: {
+      status_code_grouped: {
+        '2XX': { name: '2XX' }, '5XX': { name: '5XX' },
+      },
+      route: {
+        route1: { name: 'route1' },
+        route2: { name: 'route2' },
+      },
     },
   },
 }
 
-const EXPLORE_RESULT_TREND_DATA_MULTI_DIMENSION = {
-  records: [
+const EXPLORE_RESULT_TREND_DATA_MULTI_DIMENSION: ExploreResultV4 = {
+  data: [
     {
       version: 'v1',
       timestamp: deltaQueryTime.startDate().toISOString(),
       event: {
-        REQUEST_COUNT: 20,
-        ROUTE: 'route1',
-        STATUS_CODE_GROUPED: '2XX',
+        request_count: 20,
+        route: 'route1',
+        status_code_grouped: '2XX',
       },
     },
     {
       version: 'v1',
       timestamp: deltaQueryTime.startDate().toISOString(),
       event: {
-        REQUEST_COUNT: 10,
-        ROUTE: 'route1',
-        STATUS_CODE_GROUPED: '5XX',
+        request_count: 10,
+        route: 'route1',
+        status_code_grouped: '5XX',
       },
     },
     {
       version: 'v1',
       timestamp: deltaQueryTime.startDate().toISOString(),
       event: {
-        REQUEST_COUNT: 25,
-        ROUTE: 'route2',
-        STATUS_CODE_GROUPED: '2XX',
+        request_count: 25,
+        route: 'route2',
+        status_code_grouped: '2XX',
       },
     },
     {
       version: 'v1',
       timestamp: deltaQueryTime.startDate().toISOString(),
       event: {
-        REQUEST_COUNT: 15,
-        ROUTE: 'route2',
-        STATUS_CODE_GROUPED: '5XX',
+        request_count: 15,
+        route: 'route2',
+        status_code_grouped: '5XX',
       },
     },
     {
       version: 'v1',
       timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
       event: {
-        REQUEST_COUNT: 40,
-        ROUTE: 'route1',
-        STATUS_CODE_GROUPED: '2XX',
+        request_count: 40,
+        route: 'route1',
+        status_code_grouped: '2XX',
       },
     },
     {
       version: 'v1',
       timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
       event: {
-        REQUEST_COUNT: 20,
-        ROUTE: 'route1',
-        STATUS_CODE_GROUPED: '5XX',
+        request_count: 20,
+        route: 'route1',
+        status_code_grouped: '5XX',
       },
     },
     {
       version: 'v1',
       timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
       event: {
-        REQUEST_COUNT: 45,
-        ROUTE: 'route2',
-        STATUS_CODE_GROUPED: '2XX',
+        request_count: 45,
+        route: 'route2',
+        status_code_grouped: '2XX',
       },
     },
     {
       version: 'v1',
       timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
       event: {
-        REQUEST_COUNT: 25,
-        ROUTE: 'route2',
-        STATUS_CODE_GROUPED: '5XX',
+        request_count: 25,
+        route: 'route2',
+        status_code_grouped: '5XX',
       },
     },
   ],
   meta: {
-    startMs: deltaQueryTime.startMs(),
-    endMs: deltaQueryTime.endMs(),
-    granularity: 86400000,
-    queryId: '',
-    metricNames: [
-      'REQUEST_COUNT',
+    start_ms: deltaQueryTime.startMs(),
+    end_ms: deltaQueryTime.endMs(),
+    granularity_ms: 86400000,
+    query_id: '',
+    metric_names: [
+      'request_count',
     ],
-    metricUnits: {
-      REQUEST_COUNT: 'count',
+    metric_units: {
+      request_count: 'count',
     },
-    dimensions: {
-      ROUTE: [
-        'route1', 'route2',
-      ],
-      STATUS_CODE_GROUPED: [
-        '2XX', '5XX',
-      ],
+    display: {
+      route: {
+        route1: { name: 'route1' }, route2: { name: 'route2' },
+      },
+      status_code_grouped: {
+        '2XX': { name: '2XX' }, '5XX': { name: '5XX' },
+      },
     },
   },
 }
-
-const dataFetcher: DataFetcher =
-  () => { throw new Error('Should never reach here -- mock failed?') }
 
 describe('useMetricFetcher', () => {
 
@@ -337,19 +312,17 @@ describe('useMetricFetcher', () => {
 
     const fetcherOptions: MetricFetcherOptions = {
       metrics: [
-        EXPLORE_V2_AGGREGATIONS.REQUEST_COUNT,
+        'request_count',
       ],
-      dimensions: [EXPLORE_V2_DIMENSIONS.ORGANIZATION],
       timeframe: ref(TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe),
       loading: ref(true),
       hasError: ref(false),
       withTrend: true,
       refreshInterval: CHART_REFRESH_INTERVAL_MS,
-      dataFetcher,
     }
 
     // @ts-ignore
-    vi.spyOn(composables, 'useRequest').mockReturnValue({ response: ref({ data: EXPLORE_RESULT_TREND }), error: {}, isValidating: ref(false) })
+    vi.spyOn(composables, 'useRequest').mockReturnValue({ response: ref(EXPLORE_RESULT_TREND), error: {}, isValidating: ref(false) })
 
     const trafficData = useMetricFetcher(fetcherOptions)
 
@@ -357,12 +330,12 @@ describe('useMetricFetcher', () => {
 
     const expected = {
       current: {
-        'test-org-uuid': {
+        [DEFAULT_KEY]: {
           [DEFAULT_KEY]: 20,
         },
       },
       previous: {
-        'test-org-uuid': {
+        [DEFAULT_KEY]: {
           [DEFAULT_KEY]: 10,
         },
       },
@@ -374,19 +347,17 @@ describe('useMetricFetcher', () => {
 
     const fetcherOptions: MetricFetcherOptions = {
       metrics: [
-        EXPLORE_V2_AGGREGATIONS.REQUEST_COUNT,
+        'request_count',
       ],
-      dimensions: [EXPLORE_V2_DIMENSIONS.ORGANIZATION],
       timeframe: ref(TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe),
       loading: ref(true),
       hasError: ref(false),
       withTrend: true,
       refreshInterval: CHART_REFRESH_INTERVAL_MS,
-      dataFetcher,
     }
 
     // @ts-ignore
-    vi.spyOn(composables, 'useRequest').mockReturnValue({ response: ref({ data: undefined }), error: {}, isValidating: ref(false) })
+    vi.spyOn(composables, 'useRequest').mockReturnValue({ response: ref({}), error: {}, isValidating: ref(false) })
 
     const trafficData = useMetricFetcher(fetcherOptions)
 
@@ -406,19 +377,17 @@ describe('useMetricFetcher', () => {
 
     const fetcherOptions: MetricFetcherOptions = {
       metrics: [
-        EXPLORE_V2_AGGREGATIONS.REQUEST_COUNT,
+        'request_count',
       ],
-      dimensions: [EXPLORE_V2_DIMENSIONS.ORGANIZATION],
       timeframe: ref(TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe),
       loading: ref(true),
       hasError: ref(false),
       withTrend: true,
       refreshInterval: CHART_REFRESH_INTERVAL_MS,
-      dataFetcher,
     }
 
     // @ts-ignore
-    vi.spyOn(composables, 'useRequest').mockReturnValue({ response: ref({ data: EXPLORE_RESULT_NO_RECORDS }), error: {}, isValidating: ref(false) })
+    vi.spyOn(composables, 'useRequest').mockReturnValue({ response: ref(EXPLORE_RESULT_NO_RECORDS), error: {}, isValidating: ref(false) })
 
     const trafficData = useMetricFetcher(fetcherOptions)
 
@@ -436,7 +405,7 @@ describe('useMetricFetcher', () => {
 
     const fetcherOptions: MetricFetcherOptions = {
       metrics: [
-        EXPLORE_V2_AGGREGATIONS.REQUEST_COUNT,
+        'request_count',
       ],
       filterValues: ['test-org-uuid'],
       timeframe: ref(TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe),
@@ -444,11 +413,10 @@ describe('useMetricFetcher', () => {
       hasError: ref(false),
       withTrend: false,
       refreshInterval: CHART_REFRESH_INTERVAL_MS,
-      dataFetcher,
     }
 
     // @ts-ignore
-    vi.spyOn(composables, 'useRequest').mockReturnValue({ response: ref({ data: EXPLORE_RESULT_NO_RECORDS }), error: {}, isValidating: ref(false) })
+    vi.spyOn(composables, 'useRequest').mockReturnValue({ response: ref(EXPLORE_RESULT_NO_RECORDS), error: {}, isValidating: ref(false) })
 
     const trafficData = useMetricFetcher(fetcherOptions)
 
@@ -466,11 +434,11 @@ describe('useMetricFetcher', () => {
 
 describe('buildDeltaMapping', () => {
   it('can get metric data without trend', () => {
-    const trafficData = buildDeltaMapping(EXPLORE_RESULT_NO_TREND, unaryQueryTime, false)
+    const trafficData = buildDeltaMapping(EXPLORE_RESULT_NO_TREND, false)
 
     const expected = {
       current: {
-        'test-org-uuid': {
+        [DEFAULT_KEY]: {
           [DEFAULT_KEY]: 20,
         },
       },
@@ -481,12 +449,12 @@ describe('buildDeltaMapping', () => {
   })
 
   it('can get metric data when there is only previous data', () => {
-    const trafficData = buildDeltaMapping(EXPLORE_RESULT_PREVIOUS_DATA_ONLY, deltaQueryTime, true)
+    const trafficData = buildDeltaMapping(EXPLORE_RESULT_PREVIOUS_DATA_ONLY, true)
 
     const expected = {
       current: {},
       previous: {
-        'test-org-uuid': {
+        [DEFAULT_KEY]: {
           [DEFAULT_KEY]: 10,
         },
       },
@@ -495,11 +463,11 @@ describe('buildDeltaMapping', () => {
   })
 
   it('can get metric data when there is only current data', () => {
-    const trafficData = buildDeltaMapping(EXPLORE_RESULT_CURRENT_DATA_ONLY, deltaQueryTime, true)
+    const trafficData = buildDeltaMapping(EXPLORE_RESULT_CURRENT_DATA_ONLY, true)
 
     const expected = {
       current: {
-        'test-org-uuid': {
+        [DEFAULT_KEY]: {
           [DEFAULT_KEY]: 20,
         },
       },
@@ -510,11 +478,11 @@ describe('buildDeltaMapping', () => {
   })
 
   it('handles current record only, trend, and no dimensions', () => {
-    const trafficData = buildDeltaMapping(EXPLORE_RESULT_CURRENT_DATA_ONLY, deltaQueryTime, true)
+    const trafficData = buildDeltaMapping(EXPLORE_RESULT_CURRENT_DATA_ONLY, true)
 
     const expected = {
       current: {
-        'test-org-uuid': {
+        [DEFAULT_KEY]: {
           [DEFAULT_KEY]: 20,
         },
       },
@@ -525,11 +493,11 @@ describe('buildDeltaMapping', () => {
   })
 
   it('handles current record only, no trend', () => {
-    const trafficData = buildDeltaMapping(EXPLORE_RESULT_CURRENT_DATA_ONLY, deltaQueryTime, true)
+    const trafficData = buildDeltaMapping(EXPLORE_RESULT_CURRENT_DATA_ONLY, true)
 
     const expected = {
       current: {
-        'test-org-uuid': {
+        [DEFAULT_KEY]: {
           [DEFAULT_KEY]: 20,
         },
       },
@@ -539,7 +507,7 @@ describe('buildDeltaMapping', () => {
   })
 
   it('can get metric data when there is only current data for multi-dimensional result', () => {
-    const trafficData = buildDeltaMapping(EXPLORE_RESULT_CURRENT_DATA_MULTI_DIMENSION, deltaQueryTime, true)
+    const trafficData = buildDeltaMapping(EXPLORE_RESULT_CURRENT_DATA_MULTI_DIMENSION, true)
 
     const expected = {
       current: {
@@ -559,7 +527,7 @@ describe('buildDeltaMapping', () => {
   })
 
   it('can get metric data with trend for multi-dimensional result', () => {
-    const trafficData = buildDeltaMapping(EXPLORE_RESULT_TREND_DATA_MULTI_DIMENSION, deltaQueryTime, true)
+    const trafficData = buildDeltaMapping(EXPLORE_RESULT_TREND_DATA_MULTI_DIMENSION, true)
 
     const expected = {
       current: {
