@@ -44,6 +44,8 @@ describe('<EntityLink />', () => {
       props: {
         entityLinkData: resolvedRecord,
         externalLink: generatedLink,
+        allowCopy: true,
+        newWindow: true,
       },
     })
 
@@ -64,6 +66,8 @@ describe('<EntityLink />', () => {
       props: {
         entityLinkData: resolvedRecordComplex,
         externalLink: generatedLink,
+        allowCopy: true,
+        newWindow: true,
       },
     })
 
@@ -83,6 +87,8 @@ describe('<EntityLink />', () => {
       props: {
         entityLinkData: emptyEntityUuidRecord,
         externalLink: generatedLink,
+        allowCopy: true,
+        newWindow: true,
       },
     })
 
@@ -96,6 +102,8 @@ describe('<EntityLink />', () => {
       props: {
         entityLinkData: deletedRecord,
         externalLink: generatedLink,
+        allowCopy: true,
+        newWindow: true,
       },
     })
 
@@ -112,11 +120,12 @@ describe('<EntityLink />', () => {
     })
   })
 
-  it('hides the External Link icon', () => {
+  it('opens links locally', () => {
     cy.mount(EntityLink, {
       props: {
         entityLinkData: resolvedRecord,
         externalLink: generatedLink,
+        allowCopy: true,
         newWindow: false,
       },
     })
@@ -135,6 +144,7 @@ describe('<EntityLink />', () => {
         entityLinkData: resolvedRecord,
         externalLink: generatedLink,
         allowCopy: false,
+        newWindow: true,
       },
     })
 
@@ -151,8 +161,6 @@ describe('<EntityLink />', () => {
       props: {
         entityLinkData: resolvedRecord,
         externalLink: generatedLink,
-        allowCopy: false,
-        newWindow: false,
       },
     })
 

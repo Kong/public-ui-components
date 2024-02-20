@@ -41,7 +41,7 @@ The absolute URL to be used as the `href` attribute.
 
 - type: `Boolean`
 - required: `false`
-- default: `true`
+- default: `false`
 
 If `true`, the link will open in a new window. Otherwise, it will open in the same window.
 
@@ -49,7 +49,7 @@ If `true`, the link will open in a new window. Otherwise, it will open in the sa
 
 - type: `Boolean`
 - required: `false`
-- default: `true`
+- default: `false`
 
 If `true`, an adjacent tooltip will show, enabling a copy action of the `EntityLinkData` metadata object's `id`.
 

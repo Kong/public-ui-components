@@ -3,8 +3,10 @@
     <main>
       <h3>Resolved entity w/ External link and Copy ID button</h3>
       <EntityLink
+        allow-copy
         :entity-link-data="(record as EntityLinkData)"
         :external-link="generateEntityUrl(routeParams)"
+        new-window
       />
 
       <h3>Resolved entity with local link</h3>
