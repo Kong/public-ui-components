@@ -25,7 +25,7 @@
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
     "@evilmartians/lefthook": "^1.5.6",
     "@kong/design-tokens": "1.12.7",
-    "@kong/kongponents": "9.0.0-alpha.105",
+    "@kong/kongponents": "9.0.0-pr.2020.19de55b2.0",
     "@rushstack/eslint-patch": "^1.7.0",
     "@types/flat": "^5.0.5",
     "@types/js-yaml": "^4.0.9",
