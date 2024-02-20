@@ -1,7 +1,11 @@
-import type { Timeframe } from '@kong-ui-public/analytics-utilities'
+import type {
+  AnalyticsBridge,
+  ExploreFilter,
+  QueryableExploreDimensions,
+  Timeframe,
+} from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
-import { EXPLORE_V2_AGGREGATIONS, EXPLORE_V2_DIMENSIONS, EXPLORE_V2_FILTER_TYPES } from '../types'
-import type { DataFetcher, ExploreV2Filter, MetricFetcherOptions } from '../types'
+import type { MetricFetcherOptions } from '../types'
 import { computed } from 'vue'
 import type { InjectionKey, Ref } from 'vue'
 
@@ -18,14 +22,15 @@ interface ProviderData {
 export const METRICS_PROVIDER_KEY = Symbol('METRICS_PROVIDER_KEY') as InjectionKey<ProviderData>
 
 interface FetcherOptions {
-  dimension?: EXPLORE_V2_DIMENSIONS
+  dimension?: QueryableExploreDimensions
   dimensionFilterValue?: string
-  additionalFilter: Ref<ExploreV2Filter[] | undefined>
+  additionalFilter: Ref<ExploreFilter[] | undefined>
   queryReady: Ref<boolean>
   timeframe: Ref<Timeframe>
   hasTrendAccess: boolean
   refreshInterval: number
-  dataFetcher: DataFetcher
+  queryFn: AnalyticsBridge['queryFn']
+  abortController?: AbortController
 }
 
 export const defaultFetcherDefs = (opts: FetcherOptions) => {
@@ -37,7 +42,8 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
     timeframe,
     hasTrendAccess,
     refreshInterval,
-    dataFetcher,
+    abortController,
+    queryFn,
   } = opts
 
   if (dimensionFilterValue && !dimension) {
@@ -47,13 +53,13 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
   const singleEntityQuery = !!(dimension && dimensionFilterValue)
   const multiEntityQuery = !!(dimension && !dimensionFilterValue)
 
-  const filter = computed<ExploreV2Filter[]>(() => {
-    const retval: ExploreV2Filter[] = []
+  const filter = computed<ExploreFilter[]>(() => {
+    const retval: ExploreFilter[] = []
 
     if (singleEntityQuery) {
       retval.push({
         dimension,
-        type: EXPLORE_V2_FILTER_TYPES.IN,
+        type: 'in',
         values: [dimensionFilterValue],
       })
     }
@@ -67,14 +73,14 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
 
   const trafficMetricFetcherOptions: MetricFetcherOptions = {
     metrics: [
-      EXPLORE_V2_AGGREGATIONS.REQUEST_COUNT,
+      'request_count',
     ],
 
     // Traffic and error rate cards should only try to query for the dimension if it's going to be used.
     // It isn't used for single entity queries.
     dimensions: [
       ...((dimension && !singleEntityQuery) ? [dimension] : []),
-      EXPLORE_V2_DIMENSIONS.STATUS_CODE_GROUPED,
+      'status_code_grouped',
     ],
 
     filter,
@@ -85,12 +91,13 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
     withTrend: hasTrendAccess && !multiEntityQuery,
 
     refreshInterval,
-    dataFetcher,
+    queryFn,
+    abortController,
   }
 
   const latencyMetricFetcherOptions: MetricFetcherOptions = {
     metrics: [
-      EXPLORE_V2_AGGREGATIONS.RESPONSE_LATENCY_P99,
+      'response_latency_p99',
     ],
 
     // To keep single-entity queries consistent, don't bother querying the dimension for latency
@@ -105,7 +112,8 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
     withTrend: hasTrendAccess && !multiEntityQuery,
 
     refreshInterval,
-    dataFetcher,
+    queryFn,
+    abortController,
   }
 
   const trafficData = composables.useMetricFetcher(trafficMetricFetcherOptions)

@@ -5,29 +5,34 @@
   />
 </template>
 <script setup lang="ts">
-import type { Ref } from 'vue'
+import { inject, type Ref } from 'vue'
 import { computed, provide, toRef } from 'vue'
-import type { Timeframe } from '@kong-ui-public/analytics-utilities'
+import {
+  type AnalyticsBridge,
+  type ExploreFilter,
+  queryableExploreDimensions,
+  type QueryableExploreDimensions,
+  type Timeframe,
+} from '@kong-ui-public/analytics-utilities'
 import { TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
 import { METRICS_PROVIDER_KEY, defaultFetcherDefs } from './metricsProviderUtil'
-import { EXPLORE_V2_DIMENSIONS } from '../types'
-import type { DataFetcher, ExploreV2Filter } from '../types'
 import composables from '../composables'
+import { INJECT_QUERY_PROVIDER } from '../constants'
 
 const { i18n } = composables.useI18n()
 
 const props = withDefaults(defineProps<{
   maxTimeframe?: TimeframeKeys,
   overrideTimeframe?: Timeframe,
-  dimension?: `${EXPLORE_V2_DIMENSIONS}`,
+  dimension?: QueryableExploreDimensions,
   filterValue?: string,
-  additionalFilter?: ExploreV2Filter[],
+  additionalFilter?: ExploreFilter[],
   queryReady?: boolean,
-  dataFetcher: DataFetcher,
   hasTrendAccess: boolean,
   refreshInterval: number,
   longCardTitles?: boolean,
   description?: string,
+  abortController?: AbortController,
 }>(), {
   maxTimeframe: TimeframeKeys.THIRTY_DAY,
   overrideTimeframe: undefined,
@@ -37,11 +42,25 @@ const props = withDefaults(defineProps<{
   queryReady: true,
   longCardTitles: false,
   description: undefined,
+  abortController: undefined,
 })
 
 // Fail early if there's a programming error.
-if (props.dimension && !{}.hasOwnProperty.call(EXPLORE_V2_DIMENSIONS, props.dimension)) {
+if (props.dimension && queryableExploreDimensions.findIndex(x => x === props.dimension) === -1) {
   throw new Error(`Attempted to use MetricsProvider with an invalid dimension: ${props.dimension}`)
+}
+
+const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
+
+let queryFn: AnalyticsBridge['queryFn']
+
+if (!queryBridge) {
+  console.warn('Analytics dashboards require a query bridge supplied via provide / inject.')
+  console.warn("Please ensure your application has a query bridge provided under the key 'analytics-query-provider', as described in")
+  console.warn('https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-metric-provider/README.md#requirements')
+  queryFn = () => Promise.reject(new Error('Query bridge required'))
+} else {
+  queryFn = queryBridge.queryFn
 }
 
 // Note: the component implicitly assumes the values it feeds to the composables aren't going to change.
@@ -84,14 +103,15 @@ const {
   trafficData,
   latencyData,
 } = defaultFetcherDefs({
-  dimension: props.dimension as (EXPLORE_V2_DIMENSIONS | undefined),
+  dimension: props.dimension,
   dimensionFilterValue: props.filterValue,
   additionalFilter: toRef(props, 'additionalFilter'),
   queryReady: toRef(props, 'queryReady'),
   timeframe,
   hasTrendAccess: props.hasTrendAccess,
   refreshInterval: props.refreshInterval,
-  dataFetcher: props.dataFetcher,
+  queryFn,
+  abortController: props.abortController,
 })
 
 provide(METRICS_PROVIDER_KEY, {
