@@ -231,16 +231,16 @@ const getValue = (record: AnalyticsExploreRecord): string => {
     font-size: $kui-font-size-40;
   }
 
+  .top-n-card-description {
+    color: $kui-color-text-neutral;
+    font-size: $kui-font-size-20;
+    text-align: right;
+  }
+
   :deep(.k-card-actions) {
     align-self: baseline;
     display: flex;
     line-height: 22px;
-
-    .top-n-card-description {
-      color: $kui-color-text-neutral;
-      font-size: $kui-font-size-20;
-      text-align: right;
-    }
   }
 
   .top-n-table {
