@@ -102,7 +102,6 @@ const gridCells = computed<Cell<T>[]>(() => {
       translateX += (GAP_SIZE / tilesPerRow.value[tile.layout.position.row]) * (nthPosition - 1)
     }
     const translateY = tile.layout.position.row * (props.tileHeight + GAP_SIZE)
-
     // Size tiles based on their dimensions and cell span.
     const width = tile.layout.size.cols * tileWidth.value + (GAP_SIZE * (tile.layout.size.cols - 1)) + (GAP_SIZE / tilesPerRow.value[tile.layout.position.row]) - 1
     const height = tile.layout.size.rows * props.tileHeight + (GAP_SIZE * (tile.layout.size.rows - 1))
