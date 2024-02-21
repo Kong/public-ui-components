@@ -1,4 +1,4 @@
-import type { DimensionMap, MetricUnit, RecordEvent, DisplayBlob, QueryResponseMeta, ExploreAggregations, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { DimensionMap, MetricUnit, RecordEvent, DisplayBlob, QueryResponseMeta, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import { SeededRandom } from './SeedRandom'
 import { rand } from './utils'
 

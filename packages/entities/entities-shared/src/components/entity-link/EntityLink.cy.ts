@@ -44,10 +44,13 @@ describe('<EntityLink />', () => {
       props: {
         entityLinkData: resolvedRecord,
         externalLink: generatedLink,
+        allowCopy: true,
+        newWindow: true,
       },
     })
 
     cy.getTestId('entity-link-parent').find('a').should('exist')
+    cy.getTestId('entity-link-parent').find('a').should('have.attr', 'target', '_blank')
     cy.getTestId('entity-link-parent').find('a.entity-link .kui-icon.external-link-icon').should('exist')
     cy.getTestId('entity-link-parent').find('a').should('contain.text', resolvedRecord.label)
 
@@ -63,10 +66,13 @@ describe('<EntityLink />', () => {
       props: {
         entityLinkData: resolvedRecordComplex,
         externalLink: generatedLink,
+        allowCopy: true,
+        newWindow: true,
       },
     })
 
     cy.getTestId('entity-link-parent').find('a').should('exist')
+    cy.getTestId('entity-link-parent').find('a').should('have.attr', 'target', '_blank')
     cy.getTestId('entity-link-parent').find('a .kui-icon.external-link-icon').should('exist')
 
     copyUuidStub().then(() => {
@@ -81,6 +87,8 @@ describe('<EntityLink />', () => {
       props: {
         entityLinkData: emptyEntityUuidRecord,
         externalLink: generatedLink,
+        allowCopy: true,
+        newWindow: true,
       },
     })
 
@@ -94,6 +102,8 @@ describe('<EntityLink />', () => {
       props: {
         entityLinkData: deletedRecord,
         externalLink: generatedLink,
+        allowCopy: true,
+        newWindow: true,
       },
     })
 
@@ -108,5 +118,57 @@ describe('<EntityLink />', () => {
 
       cy.get('@clipboardWriteText').should('have.been.calledWith', resolvedRecord.id)
     })
+  })
+
+  it('opens links locally', () => {
+    cy.mount(EntityLink, {
+      props: {
+        entityLinkData: resolvedRecord,
+        externalLink: generatedLink,
+        allowCopy: true,
+        newWindow: false,
+      },
+    })
+
+    cy.getTestId('kui-icon-wrapper-external-link-icon').should('not.exist')
+    cy.getTestId('entity-link-parent').find('.copy-uuid-tooltip').should('exist')
+
+    // Ensure that link is set to open in same window
+    cy.getTestId('entity-link-parent').find('a').should('exist')
+    cy.getTestId('entity-link-parent').find('a').should('have.attr', 'target', '_self')
+  })
+
+  it('hides the Copy ID icon', () => {
+    cy.mount(EntityLink, {
+      props: {
+        entityLinkData: resolvedRecord,
+        externalLink: generatedLink,
+        allowCopy: false,
+        newWindow: true,
+      },
+    })
+
+    cy.getTestId('kui-icon-wrapper-external-link-icon').should('exist')
+    cy.getTestId('entity-link-parent').find('.copy-uuid-tooltip').should('not.exist')
+
+    // Ensure that link is set to open in same window
+    cy.getTestId('entity-link-parent').find('a').should('exist')
+    cy.getTestId('entity-link-parent').find('a').should('have.attr', 'target', '_blank')
+  })
+
+  it('hides both the Copy ID and External Link icons', () => {
+    cy.mount(EntityLink, {
+      props: {
+        entityLinkData: resolvedRecord,
+        externalLink: generatedLink,
+      },
+    })
+
+    cy.getTestId('kui-icon-wrapper-external-link-icon').should('not.exist')
+    cy.getTestId('entity-link-parent').find('.copy-uuid-tooltip').should('not.exist')
+
+    // Ensure that link is set to open in same window
+    cy.getTestId('entity-link-parent').find('a').should('exist')
+    cy.getTestId('entity-link-parent').find('a').should('have.attr', 'target', '_self')
   })
 })

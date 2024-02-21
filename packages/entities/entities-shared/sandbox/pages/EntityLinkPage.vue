@@ -1,11 +1,30 @@
 <template>
   <div class="sandbox-container">
     <main>
-      <h3>Resolved entity</h3>
+      <h3>Resolved entity w/ External link and Copy ID button</h3>
       <EntityLink
+        allow-copy
         :entity-link-data="(record as EntityLinkData)"
         :external-link="generateEntityUrl(routeParams)"
+        new-window
       />
+
+      <h3>Resolved entity with local link</h3>
+      <EntityLink
+        :allow-copy="false"
+        :entity-link-data="(record as EntityLinkData)"
+        :external-link="generateEntityUrl(routeParams)"
+        :new-window="false"
+      />
+
+      <h3>Resolved entity with Copy ID button</h3>
+      <EntityLink
+        allow-copy
+        :entity-link-data="(record as EntityLinkData)"
+        :external-link="generateEntityUrl(routeParams)"
+        :new-window="false"
+      />
+
       <h3>Deleted entity</h3>
       <EntityLink
         :entity-link-data="(deletedRecord as EntityLinkData)"
