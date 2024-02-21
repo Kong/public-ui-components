@@ -75,6 +75,9 @@ describe('<AnalyticsMetricProvider />', () => {
     // Ensure the filter is undefined.
     cy.get('@fetcher').should('always.have.not.been.calledWithMatch', Cypress.sinon.match.has('filters'))
 
+    // Ensure timezone is included.
+    cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match.hasNested('time_range.tz'))
+
     cy.get('.metricscard').should('exist')
 
     cy.get('.metricscard-title').eq(0).should('have.text', 'Requests')
