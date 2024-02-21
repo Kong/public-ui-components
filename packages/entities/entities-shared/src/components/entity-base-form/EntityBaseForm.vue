@@ -71,12 +71,11 @@
       </div>
     </form>
     <KSlideout
-      close-button-alignment="end"
+      :close-on-blur="false"
       data-testid="form-view-configuration-slideout"
       :has-overlay="false"
-      :is-visible="isToggled"
-      prevent-close-on-blur
       :title="t('baseForm.configuration.title')"
+      :visible="isToggled"
       @close="toggle()"
     >
       <div>
