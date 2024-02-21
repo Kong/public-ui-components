@@ -100,7 +100,7 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
     ],
     granularity: opts.withTrend ? 'trend' : undefined,
     ...(opts.filter.value?.length ? { filters: opts.filter.value } : {}),
-    time_range: opts.timeframe.value.v4Query(),
+    time_range: opts.timeframe.value.v4Query(opts.tz.value),
   } as ExploreQuery))
 
   const cacheKey: Ref<string | null> = computed(() => {

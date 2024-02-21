@@ -9,6 +9,7 @@ export interface MetricFetcherOptions {
   dimensions?: QueryableExploreDimensions[]
   filter: Ref<ExploreFilter[] | undefined>
   timeframe: Ref<Timeframe>
+  tz: Ref<string>
   refreshInterval: number
   withTrend?: boolean
   featureFlags?: boolean[]

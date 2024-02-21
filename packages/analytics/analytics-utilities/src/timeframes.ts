@@ -131,19 +131,21 @@ export class Timeframe implements ITimeframe {
     return `${this.rawStart().toISOString()}-${this.rawEnd().toISOString()}`
   }
 
-  v4Query(): TimeRangeV4 {
+  v4Query(tz?: string): TimeRangeV4 {
     if (this.key === 'custom') {
       // Right now, `key === custom` is our flag for whether we're dealing with an absolute or relative timeframe.
       return {
         type: 'absolute',
         start: this.rawStart(),
         end: this.rawEnd(),
+        tz,
       }
     }
 
     return {
       type: 'relative',
       time_range: this.key,
+      tz,
     }
   }
 
