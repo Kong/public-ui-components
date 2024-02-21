@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.5.8...@kong-ui-public/dashboard-renderer@0.5.9) (2024-02-21)
+
+
+### Bug Fixes
+
+* make sure cells are centered within their avaialble space in the grid ([#1163](https://github.com/Kong/public-ui-components/issues/1163)) ([3652454](https://github.com/Kong/public-ui-components/commit/3652454791dbff640f6ec78b3bdbaf24bde1132c))
+* trigger release ([#1172](https://github.com/Kong/public-ui-components/issues/1172)) ([e33eccf](https://github.com/Kong/public-ui-components/commit/e33eccfddb8d3b0d7c4022710b4492a8728c1a71))
+
+
+
+
+
 ## [0.5.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.5.7...@kong-ui-public/dashboard-renderer@0.5.8) (2024-02-21)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
