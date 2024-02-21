@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.6.3...@kong-ui-public/entities-shared@2.7.0) (2024-02-21)
+
+
+### Features
+
+* **entity-link:** allow links to open in same tab [MA-2617] ([#1167](https://github.com/Kong/public-ui-components/issues/1167)) ([d5cb98b](https://github.com/Kong/public-ui-components/commit/d5cb98ba34e95176a9c8522ee97f590e22b371fe))
+
+
+
+
+
 ## [2.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.6.2...@kong-ui-public/entities-shared@2.6.3) (2024-02-14)
 
 

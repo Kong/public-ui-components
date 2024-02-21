@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.0.6...@kong-ui-public/analytics-chart@2.1.0) (2024-02-21)
+
+
+### Features
+
+* **entity-link:** allow links to open in same tab [MA-2617] ([#1167](https://github.com/Kong/public-ui-components/issues/1167)) ([d5cb98b](https://github.com/Kong/public-ui-components/commit/d5cb98ba34e95176a9c8522ee97f590e22b371fe))
+
+
+
+
+
 ## [2.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.0.5...@kong-ui-public/analytics-chart@2.0.6) (2024-02-19)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
