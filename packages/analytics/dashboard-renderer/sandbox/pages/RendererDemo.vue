@@ -41,7 +41,7 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.HorizontalBar,
+          type: ChartTypes.GoldenSignals,
         },
         query: {},
       },
@@ -49,6 +49,24 @@ const dashboardConfig: DashboardConfig = {
         position: {
           col: 0,
           row: 0,
+        },
+        size: {
+          cols: 6,
+          rows: 1,
+        },
+      },
+    } as TileConfig,
+    {
+      definition: {
+        chart: {
+          type: ChartTypes.HorizontalBar,
+        },
+        query: {},
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 1,
         },
         size: {
           cols: 3,
@@ -67,7 +85,7 @@ const dashboardConfig: DashboardConfig = {
       layout: {
         position: {
           col: 3,
-          row: 0,
+          row: 1,
         },
         size: {
           cols: 3,
@@ -88,7 +106,7 @@ const dashboardConfig: DashboardConfig = {
       layout: {
         position: {
           col: 0,
-          row: 2,
+          row: 3,
         },
         size: {
           cols: 6,
@@ -109,7 +127,7 @@ const dashboardConfig: DashboardConfig = {
       layout: {
         position: {
           col: 0,
-          row: 4,
+          row: 5,
         },
         size: {
           cols: 1,

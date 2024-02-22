@@ -11,25 +11,22 @@
 import type { TileDefinition } from '../types'
 import { ChartTypes } from '../types'
 import type {
-  Component, PropType,
+  Component,
 } from 'vue'
 import { computed } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
+import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
 import BarChartRenderer from './BarChartRenderer.vue'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
+import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 
-const props = defineProps({
-  definition: {
-    type: Object as PropType<TileDefinition>,
-    required: true,
-  },
-  height: {
-    type: Number,
-    required: false,
-    default: () => DEFAULT_TILE_HEIGHT,
-  },
+const props = withDefaults(defineProps<{
+  definition: TileDefinition,
+  height?: number
+}>(), {
+  height: DEFAULT_TILE_HEIGHT,
 })
 
 const rendererLookup: Record<ChartTypes, Component> = {
@@ -37,6 +34,7 @@ const rendererLookup: Record<ChartTypes, Component> = {
   [ChartTypes.HorizontalBar]: BarChartRenderer,
   [ChartTypes.VerticalBar]: BarChartRenderer,
   [ChartTypes.Gauge]: SimpleChartRenderer,
+  [ChartTypes.GoldenSignals]: GoldenSignalsRenderer,
 }
 
 const componentData = computed(() => {
