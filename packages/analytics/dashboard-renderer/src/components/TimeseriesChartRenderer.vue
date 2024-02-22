@@ -40,6 +40,6 @@ const options = computed<AnalyticsChartOptions>(() => ({
 
 <style scoped lang="scss">
 .analytics-chart {
-  height: v-bind('`${height}px`')
+  height: v-bind('`${height}px`');
 }
 </style>
