@@ -1,7 +1,7 @@
 <template>
   <div class="plugin-select-grid">
     <KEmptyState
-      v-if="!Object.keys(nonCustomPlugins).length"
+      v-if="!Object.keys(displayedPlugins).length"
       class="plugins-empty-state"
       cta-is-hidden
       data-testid="plugins-empty-state"
@@ -24,7 +24,7 @@
 
     <template v-for="(group, idx) in PluginGroupArray">
       <div
-        v-if="nonCustomPlugins[group]"
+        v-if="displayedPlugins[group]"
         :key="idx"
       >
         <KCollapse
@@ -44,7 +44,7 @@
           <template #visible-content>
             <div class="plugin-card-container">
               <PluginSelectCard
-                v-for="(plugin, index) in getPluginCards('visible', nonCustomPlugins[group as keyof PluginCardList] || [], pluginsPerRow)"
+                v-for="(plugin, index) in getPluginCards('visible', displayedPlugins[group as keyof PluginCardList] || [], pluginsPerRow)"
                 :key="`plugin-card-${index}`"
                 :config="config"
                 :navigate-on-click="navigateOnClick"
@@ -56,7 +56,7 @@
 
           <div class="plugin-card-container">
             <PluginSelectCard
-              v-for="(plugin, index) in getPluginCards('hidden', nonCustomPlugins[group as keyof PluginCardList] || [], pluginsPerRow)"
+              v-for="(plugin, index) in getPluginCards('hidden', displayedPlugins[group as keyof PluginCardList] || [], pluginsPerRow)"
               :key="`plugin-card-${index}`"
               :config="config"
               :navigate-on-click="navigateOnClick"
@@ -132,24 +132,26 @@ const emitPluginData = (plugin: PluginType) => {
   emit('plugin-clicked', plugin)
 }
 
-// remove custom plugin from original pluginList
-const nonCustomPlugins = computed((): PluginCardList => {
+const displayedPlugins = computed((): PluginCardList => {
   const kongPlugins = JSON.parse(JSON.stringify(props.pluginList))
 
-  delete kongPlugins[PluginGroup.CUSTOM_PLUGINS]
+  // remove custom plugin from original pluginList in Konnect
+  if (props.config.app === 'konnect') {
+    delete kongPlugins[PluginGroup.CUSTOM_PLUGINS]
+  }
 
   return kongPlugins
 })
 
 const getGroupPluginCount = (group: string) => {
-  return nonCustomPlugins.value[group as keyof PluginCardList]?.length || 0
+  return displayedPlugins.value[group as keyof PluginCardList]?.length || 0
 }
 
 // text for plugin group "view x more" label
 const triggerLabels = computed(() => {
-  return Object.keys(nonCustomPlugins.value).reduce((acc: TriggerLabels, pluginGroup: string): TriggerLabels => {
-    const totalCount = getPluginCards('all', nonCustomPlugins.value[pluginGroup as keyof PluginCardList] || [], props.pluginsPerRow)?.length || 0
-    const hiddenCount = getPluginCards('hidden', nonCustomPlugins.value[pluginGroup as keyof PluginCardList] || [], props.pluginsPerRow)?.length || 0
+  return Object.keys(displayedPlugins.value).reduce((acc: TriggerLabels, pluginGroup: string): TriggerLabels => {
+    const totalCount = getPluginCards('all', displayedPlugins.value[pluginGroup as keyof PluginCardList] || [], props.pluginsPerRow)?.length || 0
+    const hiddenCount = getPluginCards('hidden', displayedPlugins.value[pluginGroup as keyof PluginCardList] || [], props.pluginsPerRow)?.length || 0
 
     if (totalCount > props.pluginsPerRow) {
       acc[pluginGroup as keyof TriggerLabels] = t('plugins.select.view_more', { count: hiddenCount })
