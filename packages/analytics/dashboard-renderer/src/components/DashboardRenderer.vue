@@ -71,6 +71,7 @@ const gridTiles = computed(() => {
     .tile-container {
       border: 1px solid $kui-color-border;
       border-radius: $kui-border-radius-20;
+      height: 100%;
     }
   }
 </style>
