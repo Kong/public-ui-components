@@ -282,9 +282,6 @@ importers:
 
   packages/analytics/analytics-metric-provider:
     dependencies:
-      '@kong-ui-public/analytics-utilities':
-        specifier: workspace:^
-        version: link:../analytics-utilities
       '@kong-ui-public/core':
         specifier: 1.1.0
         version: 1.1.0(axios@1.6.5)(swrv@1.0.4)(vue@3.4.15)
@@ -298,6 +295,9 @@ importers:
         specifier: ^1.0.4
         version: 1.0.4(vue@3.4.15)
     devDependencies:
+      '@kong-ui-public/analytics-utilities':
+        specifier: workspace:^
+        version: link:../analytics-utilities
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
