@@ -22,6 +22,10 @@ const syntheticsDataKey = {
   type: 'string',
 } as const
 
+const chartTitle = {
+  type: 'string',
+} as const
+
 const chartDatasetColorsSchema = {
   type: ['object', 'array'],
   items: {
@@ -42,11 +46,9 @@ export const barChartSchema = {
     stacked: {
       type: 'boolean',
     },
-    showAnnotations: {
-      type: 'boolean',
-    },
     chartDatasetColors: chartDatasetColorsSchema,
     syntheticsDataKey,
+    chartTitle,
   },
   required: ['type'],
   additionalProperties: false,
@@ -69,6 +71,7 @@ export const timeseriesChartSchema = {
     },
     chartDatasetColors: chartDatasetColorsSchema,
     syntheticsDataKey,
+    chartTitle,
   },
   required: ['type'],
   additionalProperties: false,
@@ -94,6 +97,7 @@ export const gaugeChartSchema = {
       type: 'number',
     },
     syntheticsDataKey,
+    chartTitle,
   },
   required: ['type'],
   additionalProperties: false,
