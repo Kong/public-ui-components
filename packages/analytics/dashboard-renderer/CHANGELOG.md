@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.6.1...@kong-ui-public/dashboard-renderer@0.7.0) (2024-02-23)
+
+
+### Features
+
+* **dashboard-renderer:** merge context into queries [MA-2304] ([#1178](https://github.com/Kong/public-ui-components/issues/1178)) ([75799c0](https://github.com/Kong/public-ui-components/commit/75799c01e6fc77906eff222c14d79654284584c5))
+
+
+
+
+
 ## [0.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.6.0...@kong-ui-public/dashboard-renderer@0.6.1) (2024-02-22)
 
 
