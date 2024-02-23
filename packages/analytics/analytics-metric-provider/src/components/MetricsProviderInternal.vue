@@ -24,6 +24,7 @@ const { i18n } = composables.useI18n()
 const props = withDefaults(defineProps<{
   maxTimeframe?: TimeframeKeys,
   overrideTimeframe?: Timeframe,
+  tz?: string,
   dimension?: QueryableExploreDimensions,
   filterValue?: string,
   additionalFilter?: ExploreFilter[],
@@ -36,6 +37,7 @@ const props = withDefaults(defineProps<{
 }>(), {
   maxTimeframe: TimeframeKeys.THIRTY_DAY,
   overrideTimeframe: undefined,
+  tz: undefined,
   dimension: undefined,
   filterValue: undefined,
   additionalFilter: undefined,
@@ -62,6 +64,14 @@ if (!queryBridge) {
 } else {
   queryFn = queryBridge.queryFn
 }
+
+const tz = computed(() => {
+  if (props.tz) {
+    return props.tz
+  }
+
+  return (new Intl.DateTimeFormat()).resolvedOptions().timeZone
+})
 
 // Note: the component implicitly assumes the values it feeds to the composables aren't going to change.
 // If they do need to change, then the `useMetricCardGoldenSignals` composable, and dependencies,
@@ -108,6 +118,7 @@ const {
   additionalFilter: toRef(props, 'additionalFilter'),
   queryReady: toRef(props, 'queryReady'),
   timeframe,
+  tz,
   hasTrendAccess: props.hasTrendAccess,
   refreshInterval: props.refreshInterval,
   queryFn,

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@4.0.0...@kong-ui-public/analytics-metric-provider@4.0.1) (2024-02-21)
+
+
+### Bug Fixes
+
+* **metric-provider:** include timezone in v4 queries ([#1173](https://github.com/Kong/public-ui-components/issues/1173)) ([4eaad9e](https://github.com/Kong/public-ui-components/commit/4eaad9ef8ed9790add498410ef20dc8df70d8ba0))
+
+
+
+
+
 # [4.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@3.0.4...@kong-ui-public/analytics-metric-provider@4.0.0) (2024-02-20)
 
 

@@ -50,8 +50,8 @@ const baseConfigKM:KongManagerPluginSelectConfig = {
 
 // filter out these 3 groups because we currently don't have
 // any plugins for 'Deployment' and 'WebSocket Plugins'.
-// Custom plugins are not shown in Kong Manager and displayed
-// separately in Konnect.
+// Custom plugins are not shown with `kmAvailablePlugins` in Kong Manager
+// and displayed separately in Konnect.
 const PLUGIN_GROUPS_IN_USE = PluginGroupArray.filter((group: string) => {
   if (group === PluginGroup.CUSTOM_PLUGINS || group === PluginGroup.DEPLOYMENT ||
       group === PluginGroup.WEBSOCKET) {
@@ -168,6 +168,35 @@ describe('<PluginSelect />', () => {
       ignoredPlugins.forEach((pluginName) => {
         cy.getTestId(`${pluginName}-card`).should('not.exist')
       })
+    })
+
+    it('should correctly render custom plugins', () => {
+      interceptKM({
+        mockData: {
+          plugins: {
+            enabled_in_cluster: [],
+            available_on_server: {
+              ...kmAvailablePlugins.plugins.available_on_server,
+              'custom-plugin-a': {},
+              'custom-plugin-b': {},
+            },
+          },
+        },
+      })
+
+      cy.mount(PluginSelect, {
+        props: {
+          config: baseConfigKM,
+        },
+      })
+
+      cy.wait('@getAvailablePlugins')
+
+      cy.get('.kong-ui-entities-plugin-select-form').should('be.visible')
+      cy.get('.kong-ui-entities-plugin-select-form .plugins-results-container').should('be.visible')
+
+      cy.get('.plugin-select-card[data-testid="custom-plugin-a-card"]').should('be.visible')
+      cy.get('.plugin-select-card[data-testid="custom-plugin-b-card"]').should('be.visible')
     })
 
     it('should correctly render available plugins when isAvailableOnly is true', () => {

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.12.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.12.5...@kong-ui-public/entities-plugins@2.12.6) (2024-02-22)
+
+
+### Bug Fixes
+
+* **entities-plugins:** custom plugins are hidden in select page for KM ([#1175](https://github.com/Kong/public-ui-components/issues/1175)) ([07716ed](https://github.com/Kong/public-ui-components/commit/07716ed330ac06cad5f389ceb4aaaf95d279da2d))
+
+
+
+
+
 ## [2.12.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.12.4...@kong-ui-public/entities-plugins@2.12.5) (2024-02-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
