@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@2.4.10...@kong-ui-public/entities-vaults@2.4.11) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
 ## [2.4.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@2.4.9...@kong-ui-public/entities-vaults@2.4.10) (2024-02-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

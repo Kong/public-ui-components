@@ -74,6 +74,7 @@
       :close-on-blur="false"
       data-testid="form-view-configuration-slideout"
       :has-overlay="false"
+      :offset-top="60"
       :title="t('baseForm.configuration.title')"
       :visible="isToggled"
       @close="toggle()"
