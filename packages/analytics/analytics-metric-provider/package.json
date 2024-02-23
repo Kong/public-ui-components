@@ -52,7 +52,7 @@
   "dependencies": {
     "@kong-ui-public/core": "1.1.0",
     "@kong-ui-public/metric-cards": "workspace:^",
-    "axios": "^1.6.5",
+    "axios": "^1.6.7",
     "swrv": "^1.0.4"
   },
   "peerDependencies": {

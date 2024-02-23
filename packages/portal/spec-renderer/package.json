@@ -47,9 +47,9 @@
     "@kong/kongponents": "9.0.0-alpha.105",
     "@modyfi/vite-plugin-yaml": "^1.1.0",
     "@types/lodash.clonedeep": "^4.5.9",
-    "@types/uuid": "^9.0.7",
+    "@types/uuid": "^9.0.8",
     "openapi-types": "^12.1.3",
-    "vue": "^3.4.13"
+    "vue": "^3.4.18"
   },
   "dependencies": {
     "@kong-ui-public/i18n": "workspace:^",
