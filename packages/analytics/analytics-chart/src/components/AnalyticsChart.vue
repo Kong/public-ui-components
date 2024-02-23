@@ -283,8 +283,6 @@ const showChartHeader = computed(() => {
   return (hasValidChartData.value && resultSetTruncated.value && maxEntitiesShown.value) || props.chartTitle || (props.allowCsvExport && hasValidChartData.value)
 })
 
-console.log(' >>> showChartHeader ', showChartHeader.value)
-
 const timeSeriesGranularity = computed<GranularityKeys>(() => {
 
   if (!props.chartData.meta.granularity_ms) {

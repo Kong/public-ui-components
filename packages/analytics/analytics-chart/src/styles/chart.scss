@@ -1,7 +1,7 @@
 .chart-parent {
   align-items: center;
   display: flex;
-  height: 100%;
+  height: inherit;
   justify-content: space-around;
   position: relative;
   width: inherit;
@@ -36,7 +36,6 @@
       flex-wrap: wrap;
     }
   }
-
 
   .chart-container {
     // Per ChartJS docs, the chart container needs to be position: relative and _only_ contain the chart canvas.
