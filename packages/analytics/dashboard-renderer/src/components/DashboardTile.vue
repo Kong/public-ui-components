@@ -8,8 +8,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { TileDefinition } from '../types'
-import { ChartTypes } from '../types'
+import { ChartTypes, type DashboardRendererContext, type TileDefinition } from '../types'
 import type {
   Component,
 } from 'vue'
@@ -24,6 +23,7 @@ import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 
 const props = withDefaults(defineProps<{
   definition: TileDefinition,
+  context: DashboardRendererContext,
   height?: number
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
@@ -45,6 +45,7 @@ const componentData = computed(() => {
     component,
     rendererProps: {
       query: props.definition.query,
+      context: props.context,
       queryReady: true, // TODO: Pipelining
       chartOptions: props.definition.chart,
       height: props.height,

@@ -6,6 +6,7 @@ import type { ExploreFilter, ExploreQuery, TimeRangeV4 } from '@kong-ui-public/a
 export interface DashboardRendererContext {
   filters: ExploreFilter[]
   timeSpec: TimeRangeV4
+  tz?: string
 }
 
 export enum ChartTypes {
@@ -408,6 +409,7 @@ export type DashboardConfig = FromSchema<typeof dashboardConfigSchema>
 
 export interface RendererProps<T> {
   query: ExploreQuery
+  context: DashboardRendererContext
   queryReady: boolean
   chartOptions: T
   height: number
