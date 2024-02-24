@@ -212,7 +212,7 @@ const axesTooltip = ref<AxesTooltipState>({
   top: '0px',
   left: '0px',
   text: '',
-  offset: 0,
+  offset: -50, // Avoids App Shell obstruction
 })
 const unitsRef = toRef(props, 'metricUnit')
 

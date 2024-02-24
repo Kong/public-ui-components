@@ -1,10 +1,12 @@
 .chart-parent {
   align-items: center;
   display: flex;
-  height: inherit ;
+  height: inherit;
+  justify-content: space-around;
   position: relative;
   width: inherit;
 
+  // Chart and Legend are stacked
   &.column {
     flex-direction: column;
 
@@ -14,17 +16,18 @@
     }
   }
 
+  // Chart and Legend on same row
   &.legend-row {
     flex-direction: row;
 
     .chart-container {
       flex-grow: 1;
       height: 100%;
-      width: 85%;
+      width: 90%;
 
       // Allow chart to expand full width on mobile
       @media (max-width: ($kui-breakpoint-phablet - 1px)) {
-        height: 80% !important;
+        height: 100% !important;
         width: 100% !important;
       }
     }
@@ -33,7 +36,6 @@
       flex-wrap: wrap;
     }
   }
-
 
   .chart-container {
     // Per ChartJS docs, the chart container needs to be position: relative and _only_ contain the chart canvas.
