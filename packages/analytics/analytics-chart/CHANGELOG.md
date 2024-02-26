@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.1.4...@kong-ui-public/analytics-chart@2.2.0) (2024-02-26)
+
+
+### Features
+
+* **analytics-chart:** forgot the height [MA-2536] ([#1181](https://github.com/Kong/public-ui-components/issues/1181)) ([0637d27](https://github.com/Kong/public-ui-components/commit/0637d27d8cc705de525646400edd14facef430b4))
+
+
+
+
+
 ## [2.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.1.3...@kong-ui-public/analytics-chart@2.1.4) (2024-02-24)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
