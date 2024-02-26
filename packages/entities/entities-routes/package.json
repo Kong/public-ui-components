@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-routes",
-  "version": "2.4.23",
+  "version": "2.4.25",
   "type": "module",
   "main": "./dist/entities-routes.umd.js",
   "module": "./dist/entities-routes.es.js",
@@ -23,16 +23,16 @@
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.0.0-alpha.105",
-    "axios": "^1.6.5",
+    "axios": "^1.6.7",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.12.7",
+    "@kong/design-tokens": "1.12.10",
     "@kong/kongponents": "9.0.0-pr.2020.7ccf0922.0",
-    "axios": "^1.6.5",
-    "vue": "^3.4.13",
+    "axios": "^1.6.7",
+    "vue": "^3.4.18",
     "vue-router": "^4.2.5"
   },
   "scripts": {

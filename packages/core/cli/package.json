@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/cli",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "private": true,
   "type": "module",
   "main": "./bin/index.js",
@@ -15,7 +15,7 @@
   "devDependencies": {
     "@types/inquirer": "^9.0.7",
     "boxen": "^7.1.1",
-    "inquirer": "^9.2.12",
+    "inquirer": "^9.2.14",
     "nanospinner": "^1.1.0",
     "node-emoji": "^2.1.3",
     "picocolors": "^1.0.0"

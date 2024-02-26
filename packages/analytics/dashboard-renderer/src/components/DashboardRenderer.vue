@@ -15,6 +15,7 @@
       <template #tile="{ tile, style }">
         <DashboardTile
           class="tile-container"
+          :context="mergedContext"
           :definition="tile.meta"
           :height="parseInt(style.height)"
         />
@@ -61,17 +62,28 @@ const gridTiles = computed(() => {
   })
 })
 
+const mergedContext = computed(() => {
+  if (props.context.tz) {
+    return props.context
+  }
+
+  return {
+    ...props.context,
+    tz: (new Intl.DateTimeFormat()).resolvedOptions().timeZone,
+  }
+})
+
 // Right now, tiles don't have unique keys.  Perhaps in the future they will,
 // and we can use that instead of `index` as the fragment key.
 
 </script>
 
 <style lang="scss" scoped>
-  .kong-ui-public-dashboard-renderer {
-    .tile-container {
-      border: 1px solid $kui-color-border;
-      border-radius: $kui-border-radius-20;
-      height: 100%;
-    }
+.kong-ui-public-dashboard-renderer {
+  .tile-container {
+    border: 1px solid $kui-color-border;
+    border-radius: $kui-border-radius-20;
+    height: 100%;
   }
+}
 </style>

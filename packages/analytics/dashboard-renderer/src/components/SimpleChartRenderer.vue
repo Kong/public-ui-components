@@ -1,6 +1,7 @@
 <template>
   <QueryDataProvider
     v-slot="{ data }"
+    :context="context"
     :query="query"
     :query-ready="queryReady"
   >

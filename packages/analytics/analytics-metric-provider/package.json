@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-metric-provider",
-  "version": "4.0.1",
+  "version": "4.0.5",
   "type": "module",
   "main": "./dist/vitals-metric-provider.umd.js",
   "module": "./dist/vitals-metric-provider.es.js",
@@ -23,7 +23,8 @@
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
     "build": "run-s typecheck build:package build:types",
-    "build:package": "BUILD_VISUALIZER='analytics/analytics-metric-provider' vite build -m production",
+    "build:package": "vite build -m production",
+    "build:analyzer": "BUILD_VISUALIZER='analytics/analytics-metric-provider' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
     "preview": "cross-env USE_SANDBOX=true vite preview",
@@ -49,17 +50,18 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/core": "1.1.0",
     "@kong-ui-public/metric-cards": "workspace:^",
-    "axios": "^1.6.5",
+    "axios": "^1.6.7",
     "swrv": "^1.0.4"
   },
   "peerDependencies": {
+    "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.0.0-alpha.105"
   },
   "devDependencies": {
+    "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.0.0-pr.2020.7ccf0922.0"
   }

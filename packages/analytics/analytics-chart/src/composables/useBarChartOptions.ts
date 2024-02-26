@@ -116,7 +116,7 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
             text: chartOptions.indexAxis === 'y'
               ? chartOptions.metricAxesTitle?.value
               : chartOptions.dimensionAxesTitle?.value,
-            padding: { top: 20 },
+            padding: { top: 10 },
             font: {
               weight: 'bold',
             },

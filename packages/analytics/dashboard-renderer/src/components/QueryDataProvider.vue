@@ -34,12 +34,14 @@ import { computed, inject, onUnmounted, ref } from 'vue'
 import useSWRV from 'swrv'
 import { useSwrvState } from '@kong-ui-public/core'
 import composables from '../composables'
-import type { AnalyticsBridge, ExploreQuery } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsBridge, ExploreFilter, ExploreQuery } from '@kong-ui-public/analytics-utilities'
 import { INJECT_QUERY_PROVIDER } from '../constants'
+import type { DashboardRendererContext } from '../types'
 
 const props = defineProps<{
+  context: DashboardRendererContext
   query: ExploreQuery
-  queryReady: boolean,
+  queryReady: boolean
 }>()
 
 const emit = defineEmits(['queryComplete'])
@@ -51,7 +53,7 @@ const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const queryKey = () => {
   // SWRV can't accept `false` as a key, so use a more complicated conditional to match its `IKey` interface.
   if (props.queryReady && queryBridge) {
-    return JSON.stringify(props.query)
+    return JSON.stringify([props.query, props.context])
   }
 
   return null
@@ -66,8 +68,25 @@ onUnmounted(() => {
 
 const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
   try {
+    const mergedFilters: ExploreFilter[] = []
+
+    if (props.query.filters) {
+      mergedFilters.push(...props.query.filters)
+    }
+
+    mergedFilters.push(...props.context.filters)
+
+    const mergedQuery: ExploreQuery = {
+      ...props.query,
+      time_range: {
+        ...props.context.timeSpec,
+        tz: props.context.tz,
+      },
+      filters: mergedFilters,
+    }
+
     // Note that queryBridge is guaranteed to be set here because SWRV won't execute the query if the key is null.
-    return queryBridge?.queryFn(props.query, abortController)
+    return queryBridge?.queryFn(mergedQuery, abortController)
   } catch (e: any) {
     // Note: 'Range not allowed' is defined by the API, therefore cannot be stored as string translation
     errorMessage.value = e?.response?.data?.message === 'Range not allowed for this tier'

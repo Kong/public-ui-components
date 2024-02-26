@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/document-viewer",
-  "version": "2.0.33",
+  "version": "2.0.35",
   "type": "module",
   "main": "./dist/document-viewer.umd.js",
   "module": "./dist/document-viewer.es.js",
@@ -41,11 +41,11 @@
     "vue": ">= 3.3.13 < 4"
   },
   "devDependencies": {
-    "@kong/design-tokens": "1.12.7",
+    "@kong/design-tokens": "1.12.10",
     "@kong/kongponents": "9.0.0-pr.2020.7ccf0922.0",
     "@types/prismjs": "^1.26.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
-    "vue": "^3.4.13"
+    "vue": "^3.4.18"
   },
   "dependencies": {
     "@kong-ui-public/i18n": "workspace:^",

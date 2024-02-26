@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.6.35...@kong-ui-public/metric-cards@0.6.36) (2024-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/metric-cards
+
+
+
+
+
+## [0.6.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.6.34...@kong-ui-public/metric-cards@0.6.35) (2024-02-24)
+
+
+### Bug Fixes
+
+* **analytics-chart:** chart height, legend padding, y-axis hover [MA-2536] ([#1179](https://github.com/Kong/public-ui-components/issues/1179)) ([14aea5b](https://github.com/Kong/public-ui-components/commit/14aea5b9c9c30d51ff6c932cfc2e8a4249270f87))
+
+
+
+
+
+## [0.6.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.6.33...@kong-ui-public/metric-cards@0.6.34) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/metric-cards
+
+
+
+
+
 ## [0.6.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.6.32...@kong-ui-public/metric-cards@0.6.33) (2024-02-13)
 
 

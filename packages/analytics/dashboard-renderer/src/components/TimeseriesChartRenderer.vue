@@ -1,6 +1,7 @@
 <template>
   <QueryDataProvider
     v-slot="{ data }"
+    :context="context"
     :query="query"
     :query-ready="queryReady"
   >
@@ -39,6 +40,6 @@ const options = computed<AnalyticsChartOptions>(() => ({
 
 <style scoped lang="scss">
 .analytics-chart {
-  height: v-bind('`${height}px`')
+  height: v-bind('`${height}px`');
 }
 </style>

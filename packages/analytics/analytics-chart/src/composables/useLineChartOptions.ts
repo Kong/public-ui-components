@@ -34,7 +34,7 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
     title: {
       display: !isNullOrUndef(chartOptions.dimensionAxesTitle?.value),
       text: chartOptions.dimensionAxesTitle?.value,
-      padding: { top: 20 },
+      padding: { top: 2 }, // Line chart X-axis label seems farther off than Bar charts
       font: {
         weight: 'bold',
       },
@@ -44,7 +44,7 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
     title: {
       display: !isNullOrUndef(chartOptions.metricAxesTitle?.value),
       text: chartOptions.metricAxesTitle?.value,
-      padding: { bottom: 20 },
+      padding: { bottom: 10 },
       font: {
         weight: 'bold',
       },

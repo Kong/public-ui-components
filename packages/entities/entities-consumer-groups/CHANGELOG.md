@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.4.23...@kong-ui-public/entities-consumer-groups@2.4.24) (2024-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [2.4.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.4.22...@kong-ui-public/entities-consumer-groups@2.4.23) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
 ## [2.4.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.4.21...@kong-ui-public/entities-consumer-groups@2.4.22) (2024-02-23)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
