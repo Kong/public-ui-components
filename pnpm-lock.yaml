@@ -783,7 +783,7 @@ importers:
         specifier: workspace:^
         version: link:../entities-shared
       '@kong-ui-public/forms':
-        specifier: ^2.1.41
+        specifier: ^2.1.42
         version: link:../../core/forms
       '@kong/icons':
         specifier: ^1.8.14
@@ -979,7 +979,7 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong-ui-public/swagger-ui-web-component':
-        specifier: workspace:^0.10.16
+        specifier: workspace:^0.10.17
         version: link:../swagger-ui-web-component
       '@kong/icons':
         specifier: ^1.8.14
