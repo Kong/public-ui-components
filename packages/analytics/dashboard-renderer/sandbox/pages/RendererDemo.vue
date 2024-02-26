@@ -116,6 +116,7 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
+          chartTitle: 'Timeseries line chart of mock data',
           type: ChartTypes.TimeseriesLine,
           fill: true,
         },
