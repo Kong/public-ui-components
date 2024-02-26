@@ -50,7 +50,7 @@ runs:
 
     - name: Dependency Cache
       id: dependency-cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: '**/node_modules'
         key: pnpm-${{ steps.node-version.outputs.pnpm-version }}-${{ steps.node-version.outputs.node-version }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
