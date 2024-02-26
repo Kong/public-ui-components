@@ -372,6 +372,59 @@ export const summaryDashboardConfig: DashboardConfig = {
   ],
 }
 
+export const simpleConfigNoFilters: DashboardConfig = {
+  gridSize: {
+    cols: 6,
+    rows: 2,
+  },
+  tileHeight: 167,
+  tiles: [
+    // 3 x Metric cards
+    {
+      definition: {
+        chart: {
+          type: ChartTypes.GoldenSignals,
+          chartTitle: 'Analytics',
+          description: '{timeframe}',
+        },
+        query: {
+          datasource: 'advanced',
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 0,
+        },
+        size: {
+          cols: 6,
+          rows: 1,
+        },
+      },
+    },
+    {
+      definition: {
+        chart: {
+          type: ChartTypes.TimeseriesLine,
+        },
+        query: {
+          datasource: 'advanced',
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 1,
+        },
+        size: {
+          cols: 6,
+          rows: 1,
+        },
+      },
+    },
+  ],
+}
+
 export const routeExploreResponse: ExploreResultV4 = {
   meta: {
     display: {

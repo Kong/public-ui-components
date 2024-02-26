@@ -370,6 +370,7 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
+        datasource: 'advanced',
         additionalFilter,
       },
       global: {
@@ -553,7 +554,7 @@ describe('<AnalyticsMetricProvider />', () => {
       props: {
         render: 'global',
         additionalFilter: ref([{
-          dimension: 'application',
+          dimension: 'api_product',
           type: 'in',
           values: ['all-cards'], // SWRV cache busting
         }]),
@@ -580,7 +581,7 @@ describe('<AnalyticsMetricProvider />', () => {
       props: {
         render: 'global',
         additionalFilter: ref([{
-          dimension: 'application',
+          dimension: 'api_product',
           type: 'in',
           values: ['latency-cards'], // SWRV cache busting
         }]),
@@ -611,7 +612,7 @@ describe('<AnalyticsMetricProvider />', () => {
       props: {
         render: 'global',
         additionalFilter: ref([{
-          dimension: 'application',
+          dimension: 'api_product',
           type: 'in',
           values: ['traffic-cards'], // SWRV cache busting
         }]),
