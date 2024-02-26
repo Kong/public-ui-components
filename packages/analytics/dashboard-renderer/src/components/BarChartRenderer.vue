@@ -9,8 +9,10 @@
       <AnalyticsChart
         :chart-data="data"
         :chart-options="options"
+        :chart-title="chartOptions.chartTitle"
         legend-position="bottom"
-        :show-annotations="chartOptions.showAnnotations"
+        :show-annotations="false"
+        :synthetics-data-key="chartOptions.syntheticsDataKey"
         tooltip-title=""
       />
     </div>

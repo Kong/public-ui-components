@@ -84,6 +84,7 @@ const mergedContext = computed(() => {
     border: 1px solid $kui-color-border;
     border-radius: $kui-border-radius-20;
     height: 100%;
+    padding: $kui-space-70;
   }
 }
 </style>

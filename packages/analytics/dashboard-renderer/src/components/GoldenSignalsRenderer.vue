@@ -59,12 +59,10 @@ const options = computed<ProviderProps>(() => ({
 
 <style scoped lang="scss">
 .metric-card-tile-wrapper {
-  padding: $kui-space-80;
   @media (min-width: ($kui-breakpoint-phablet - 1px)) {
     align-items: center;
     display: flex;
     height: 100%;
-    padding: 0 $kui-space-80;
   }
 
   :deep(.kong-ui-public-metric-card-container) {

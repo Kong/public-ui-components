@@ -60,6 +60,7 @@ const dashboardConfig: DashboardConfig = {
       definition: {
         chart: {
           type: ChartTypes.HorizontalBar,
+          chartTitle: 'Horizontal bar chart of mock data',
         },
         query: {},
       },
@@ -78,7 +79,6 @@ const dashboardConfig: DashboardConfig = {
       definition: {
         chart: {
           type: ChartTypes.VerticalBar,
-          showAnnotations: false,
         },
         query: {},
       },
