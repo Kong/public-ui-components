@@ -55,7 +55,7 @@
     "js-yaml": "^4.1.0",
     "jsdom": "^23.2.0",
     "lerna": "^8.1.2",
-    "npm-run-all2": "^5.0.0",
+    "npm-run-all2": "^6.1.2",
     "postcss": "^8.4.35",
     "postcss-custom-properties": "^13.3.4",
     "postcss-html": "^1.6.0",
