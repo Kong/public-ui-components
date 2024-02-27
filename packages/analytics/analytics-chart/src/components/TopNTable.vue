@@ -233,6 +233,7 @@ const getValue = (record: AnalyticsExploreRecord): string => {
 <style lang="scss" scoped>
 .kong-ui-public-top-n-table {
   border-radius: $kui-border-radius-40 !important;
+  padding: 0 !important;
 
   &.border-none {
     border: none !important;

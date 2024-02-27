@@ -119,7 +119,7 @@ export const topNTableSchema = {
       type: 'string',
     },
   },
-  required: ['chartTitle'],
+  required: ['type'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
