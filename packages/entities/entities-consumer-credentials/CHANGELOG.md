@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.61](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@2.1.60...@kong-ui-public/entities-consumer-credentials@2.1.61) (2024-02-27)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 8 [KHCP-10758] ([#1170](https://github.com/Kong/public-ui-components/issues/1170)) ([ff130c3](https://github.com/Kong/public-ui-components/commit/ff130c3c9f1af9e9fcb09fb8c23ae758cc0a5ae2))
+
+
+
+
+
 ## [2.1.60](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@2.1.59...@kong-ui-public/entities-consumer-credentials@2.1.60) (2024-02-27)
 
 

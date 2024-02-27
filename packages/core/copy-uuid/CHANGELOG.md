@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.41](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@2.0.40...@kong-ui-public/copy-uuid@2.0.41) (2024-02-27)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 8 [KHCP-10758] ([#1170](https://github.com/Kong/public-ui-components/issues/1170)) ([ff130c3](https://github.com/Kong/public-ui-components/commit/ff130c3c9f1af9e9fcb09fb8c23ae758cc0a5ae2))
+
+
+
+
+
 ## [2.0.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@2.0.39...@kong-ui-public/copy-uuid@2.0.40) (2024-02-26)
 
 **Note:** Version bump only for package @kong-ui-public/copy-uuid
