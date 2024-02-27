@@ -14,9 +14,8 @@
                 />
               </div>
               <KSlideout
-                close-button-alignment="end"
-                :is-visible="mobileNavIsToggled.value"
                 title="Main Menu"
+                :visible="mobileNavIsToggled.value"
                 @close="toggleMobileNav"
               >
                 <SandboxNavigation @router-link-click="toggleMobileNav" />
@@ -52,9 +51,8 @@
                 />
               </div>
               <KSlideout
-                close-button-alignment="end"
-                :is-visible="controlsAreToggled.value"
                 title="Controls"
+                :visible="controlsAreToggled.value"
                 @close="toggleControls"
               >
                 <slot name="controls" />

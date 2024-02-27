@@ -279,7 +279,7 @@ const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const emptyState = ref(false)
 const chartType = ref<ChartTypes>(ChartTypes.TIMESERIES_LINE)
-const legendPosition = ref(ChartLegendPosition.Right)
+const legendPosition = ref(ChartLegendPosition.Bottom)
 const secondaryMetrics = ref([{ name: 'secondaryMetric', unit: 'count' }])
 const selectedMetric = ref<MetricSelection>({
   name: Metrics.TotalRequests,

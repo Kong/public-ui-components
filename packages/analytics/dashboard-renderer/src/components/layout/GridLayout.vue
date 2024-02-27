@@ -133,10 +133,6 @@ const gridHeight = computed(() => {
 }
 .grid-cell {
   position: absolute;
-
-  .tile-container {
-    margin: $kui-space-70;
-  }
 }
 
 @media (max-width: $kui-breakpoint-phablet) {

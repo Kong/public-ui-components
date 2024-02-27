@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@2.4.15...@kong-ui-public/entities-vaults@2.4.16) (2024-02-27)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 8 [KHCP-10758] ([#1170](https://github.com/Kong/public-ui-components/issues/1170)) ([ff130c3](https://github.com/Kong/public-ui-components/commit/ff130c3c9f1af9e9fcb09fb8c23ae758cc0a5ae2))
+
+
+
+
+
 ## [2.4.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@2.4.14...@kong-ui-public/entities-vaults@2.4.15) (2024-02-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
