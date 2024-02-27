@@ -8,7 +8,6 @@
     <TopNTable
       :data="data"
       :description="chartOptions.description"
-      no-border
       :synthetics-data-key="chartOptions.syntheticsDataKey"
       :title="chartOptions.chartTitle || ''"
     />

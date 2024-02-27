@@ -11,7 +11,6 @@
     flex-direction: column;
 
     .chart-container {
-      flex: 1 1 auto;
       max-height: calc(100% - 60px);
       width: 100%;
     }
@@ -22,7 +21,6 @@
     flex-direction: row;
 
     .chart-container {
-      flex-shrink: 2;
       height: 100%;
       width: 90%;
 
@@ -39,6 +37,7 @@
   }
 
   .chart-container {
+    flex: 1 1 auto;
     // Per ChartJS docs, the chart container needs to be position: relative and _only_ contain the chart canvas.
     // https://www.chartjs.org/docs/latest/configuration/responsive.html
     position: relative;
