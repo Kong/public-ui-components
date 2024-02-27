@@ -4,6 +4,7 @@ import kongThemeStyles from '@kong/swagger-ui-kong-theme-universal/dist/main.css
 import { attributeValueToBoolean, operationToSwaggerThingArray, operationToSwaggerThingId } from './utils'
 import overridesStyles from './styles/overrides.css'
 import essentialsOnlyStyles from './styles/essentialsOnly.css'
+import swaggerStyles from './styles/swagger-ui.css'
 
 const relativeSidebarStyles = `
 /* relative sidebar styles */
@@ -136,6 +137,7 @@ export class SwaggerUIElement extends HTMLElement {
   disconnectedCallback() {
     kongThemeStyles.unuse()
     overridesStyles.unuse()
+    swaggerStyles.unuse()
 
     if (this.#essentialsOnly) {
       essentialsOnlyStyles.unuse()
@@ -161,6 +163,9 @@ export class SwaggerUIElement extends HTMLElement {
     if ((this.relativeSidebar && !this.#hasSidebar) || (this.#relativeSidebar && !this.#essentialsOnly)) {
       console.warn('For correct positioning, you must enable the sidebar with `has-sidebar="true"` and should only display essentials with `essentials-only="true"`')
     }
+
+    // Swagger UI styles
+    swaggerStyles.use({ target: this.shadowRoot, testId: 'swagger-ui-styles' })
 
     // load base styles
     kongThemeStyles.use({ target: this.shadowRoot, testId: 'default-styles' })

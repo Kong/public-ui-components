@@ -42,6 +42,19 @@ describe('<SpecDetails />', () => {
     cy.getTestId('hide-essentials-styles').should('exist')
   })
 
+  // TODO: evaluate if we need to test this
+  it('renders swagger UI styles', () => {
+    cy.mount(SpecDetails, {
+      props: {
+        document: jsonSpec as any,
+      },
+    })
+
+    cy.getTestId('kong-public-ui-spec-details-swagger').should('be.visible')
+    cy.getTestId('default-styles').should('exist')
+    cy.getTestId('swagger-ui-styles').should('exist')
+  })
+
   it('renders custom styles for swagger-ui for props: relativeSidebar', () => {
     cy.mount(SpecDetails, {
       props: {
