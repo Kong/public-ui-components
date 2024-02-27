@@ -15,6 +15,7 @@ export enum ChartTypes {
   Gauge = 'gauge',
   TimeseriesLine = 'timeseries_line',
   GoldenSignals = 'golden_signals',
+  TopN = 'top_n',
 }
 
 // Common definition for many ChartJS tiles.
@@ -104,6 +105,25 @@ export const gaugeChartSchema = {
 } as const satisfies JSONSchema
 
 export type GaugeChartOptions = FromSchema<typeof gaugeChartSchema>
+
+export const topNTableSchema = {
+  type: 'object',
+  properties: {
+    chartTitle,
+    syntheticsDataKey,
+    type: {
+      type: 'string',
+      enum: [ChartTypes.TopN],
+    },
+    description: {
+      type: 'string',
+    },
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TopNTableOptions = FromSchema<typeof topNTableSchema>
 
 export const metricCardSchema = {
   type: 'object',
@@ -320,7 +340,7 @@ export const tileDefinitionSchema = {
   properties: {
     query: exploreV4QuerySchema,
     chart: {
-      oneOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema, metricCardSchema],
+      oneOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema, metricCardSchema, topNTableSchema],
     },
   },
   required: ['query', 'chart'],

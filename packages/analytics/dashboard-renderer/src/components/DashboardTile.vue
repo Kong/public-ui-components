@@ -21,6 +21,7 @@ import { DEFAULT_TILE_HEIGHT } from '../constants'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
+import TopNTableRenderer from './TopNTableRenderer.vue'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
@@ -38,6 +39,7 @@ const rendererLookup: Record<ChartTypes, Component> = {
   [ChartTypes.VerticalBar]: BarChartRenderer,
   [ChartTypes.Gauge]: SimpleChartRenderer,
   [ChartTypes.GoldenSignals]: GoldenSignalsRenderer,
+  [ChartTypes.TopN]: TopNTableRenderer,
 }
 
 const componentData = computed(() => {

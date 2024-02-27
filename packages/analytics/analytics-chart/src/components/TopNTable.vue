@@ -1,5 +1,8 @@
 <template>
-  <KCard class="kong-ui-public-top-n-table">
+  <KCard
+    class="kong-ui-public-top-n-table"
+    :class="{ 'border-none': noBorder }"
+  >
     <template
       v-if="title"
       #title
@@ -132,6 +135,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  noBorder: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { i18n } = composables.useI18n()
@@ -226,7 +233,11 @@ const getValue = (record: AnalyticsExploreRecord): string => {
 <style lang="scss" scoped>
 .kong-ui-public-top-n-table {
   border-radius: $kui-border-radius-40 !important;
+  padding: 0 !important;
 
+  &.border-none {
+    border: none !important;
+  }
   .top-n-card-title {
     font-size: $kui-font-size-40;
   }

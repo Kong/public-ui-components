@@ -189,6 +189,7 @@
       :data="topNTableData"
       description="Last 30-Day Summary"
       :is-loading="showLoadingState"
+      no-border
       title="Top 5 Routes"
     >
       <template #name="{ record }">

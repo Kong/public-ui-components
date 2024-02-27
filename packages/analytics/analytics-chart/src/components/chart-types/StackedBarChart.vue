@@ -373,6 +373,9 @@ onMounted(() => {
   }
 
   if (chartContainerRef.value) {
+    // Initialize base dimensions since resize observer is debounced.
+    baseWidth.value = (chartContainerRef.value as HTMLDivElement).offsetWidth
+    baseHeight.value = (chartContainerRef.value as HTMLDivElement).offsetHeight
     resizeObserver.observe(chartContainerRef.value as HTMLDivElement)
   }
 })

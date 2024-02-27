@@ -96,6 +96,27 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
+          type: ChartTypes.TopN,
+          chartTitle: 'Top N chart of mock data',
+          description: 'Description',
+        },
+        query: {},
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 3,
+        },
+        size: {
+          cols: 3,
+          rows: 2,
+        },
+      },
+    } as TileConfig,
+    {
+      definition: {
+        chart: {
+          chartTitle: 'Timeseries line chart of mock data',
           type: ChartTypes.TimeseriesLine,
           fill: true,
         },
@@ -105,11 +126,11 @@ const dashboardConfig: DashboardConfig = {
       },
       layout: {
         position: {
-          col: 0,
+          col: 3,
           row: 3,
         },
         size: {
-          cols: 6,
+          cols: 3,
           rows: 2,
         },
       },
