@@ -305,7 +305,6 @@ provide('legendPosition', toRef(props, 'legendPosition'))
 
 .analytics-chart-shell {
   height: 100%;
-  justify-content: space-evenly;
   width: 100%;
 
   .analytics-chart-parent {
