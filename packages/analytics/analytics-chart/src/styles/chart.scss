@@ -2,7 +2,7 @@
   align-items: center;
   display: flex;
   height: inherit;
-  justify-content: space-around;
+  justify-content: space-evenly;
   position: relative;
   width: inherit;
 
@@ -11,7 +11,8 @@
     flex-direction: column;
 
     .chart-container {
-      height: calc(100% - 80px);
+      flex: 1 1 auto;
+      max-height: calc(100% - 60px);
       width: 100%;
     }
   }
@@ -21,7 +22,7 @@
     flex-direction: row;
 
     .chart-container {
-      flex-grow: 1;
+      flex-shrink: 2;
       height: 100%;
       width: 90%;
 
