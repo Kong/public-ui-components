@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.2.4...@kong-ui-public/analytics-chart@2.2.5) (2024-02-27)
+
+
+### Bug Fixes
+
+* legend item labels should not wrap ([#1195](https://github.com/Kong/public-ui-components/issues/1195)) ([7c0fc18](https://github.com/Kong/public-ui-components/commit/7c0fc18856588f1e32a9fd9f4d5c545ffd5eaecc))
+
+
+
+
+
 ## [2.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.2.3...@kong-ui-public/analytics-chart@2.2.4) (2024-02-27)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
