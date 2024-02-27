@@ -844,11 +844,11 @@ importers:
   packages/entities/entities-vaults:
     dependencies:
       '@kong-ui-public/entities-shared':
-        specifier: workspace:^
-        version: link:../entities-shared
+        specifier: 1.8.4
+        version: 1.8.4(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@8.126.2)(axios@1.6.0)(vue-router@4.2.5)(vue@3.3.4)
     devDependencies:
       '@kong-ui-public/i18n':
-        specifier: workspace:^
+        specifier: ^0.8.6
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: ^1.11.9
@@ -2054,6 +2054,18 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
+  /@kong-ui-public/copy-uuid@1.3.12(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@8.126.2)(vue@3.3.4):
+    resolution: {integrity: sha512-3d2D+HY9DDqLyS8VJRPcO3Mx3j7RWdb1SHeQ38ax/vPh/S/sYBQO6XN2GxZPBOCS75ObZIHU5y1KPDlZMxTesA==}
+    peerDependencies:
+      '@kong-ui-public/i18n': ^0.4.2
+      '@kong/kongponents': ^8.126.2
+      vue: ^3.3.4
+    dependencies:
+      '@kong-ui-public/i18n': link:packages/core/i18n
+      '@kong/kongponents': 8.126.2(axios@1.6.0)(vue-router@4.2.5)(vue@3.3.4)
+      vue: 3.3.4
+    dev: false
+
   /@kong-ui-public/core@1.1.0(axios@1.6.0)(swrv@1.0.4)(vue@3.3.4):
     resolution: {integrity: sha512-j1kK07/zDyxwePi1EX1rZ+3iL955VdhZiodzeT5ift7iVQTiPt9VNUFu9+IXJ/AxHfuYu/gaL+gily9TsJTX3w==}
     peerDependencies:
@@ -2065,6 +2077,40 @@ packages:
       date-fns: 2.30.0
       swrv: 1.0.4(vue@3.3.4)
       vue: 3.3.4
+    dev: false
+
+  /@kong-ui-public/core@1.5.5(axios@1.6.0)(vue@3.3.4):
+    resolution: {integrity: sha512-fBlbaA3j/M9n+euyKo36xsQBoEDM2LUmm9hDhC3w592UN3I/9vLb7P0dvXi2q6RbIlBUP7PWImIJCwEx1ulGcA==}
+    peerDependencies:
+      axios: ^1.6.7
+      swrv: ^1.0.4
+      vue: ^3.4.19
+    dependencies:
+      axios: 1.6.0
+      date-fns: 2.30.0
+      vue: 3.3.4
+    dev: false
+
+  /@kong-ui-public/entities-shared@1.8.4(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@8.126.2)(axios@1.6.0)(vue-router@4.2.5)(vue@3.3.4):
+    resolution: {integrity: sha512-sI8QapEOy69jDFB6yQ2pXqHQ1phS4tC+ZsXDcZdV3RPNuOBj6gffMSw5GVwijzHiIiC6SiddgGnj7+7fiUKX0g==}
+    peerDependencies:
+      '@kong-ui-public/i18n': ^0.8.6
+      '@kong/kongponents': ^8.126.2
+      axios: ^1.6.0
+      vue: ^3.3.4
+      vue-router: ^4.2.5
+    dependencies:
+      '@kong-ui-public/copy-uuid': 1.3.12(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@8.126.2)(vue@3.3.4)
+      '@kong-ui-public/core': 1.5.5(axios@1.6.0)(vue@3.3.4)
+      '@kong-ui-public/i18n': link:packages/core/i18n
+      '@kong/icons': 1.8.0(vue@3.3.4)
+      '@kong/kongponents': 8.126.2(axios@1.6.0)(vue-router@4.2.5)(vue@3.3.4)
+      axios: 1.6.0
+      compare-versions: 6.1.0
+      vue: 3.3.4
+      vue-router: 4.2.5(vue@3.3.4)
+    transitivePeerDependencies:
+      - swrv
     dev: false
 
   /@kong/design-tokens@1.11.9:

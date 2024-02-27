@@ -37,6 +37,7 @@ const konnectConfig = ref<KonnectVaultFormConfig>({
   cancelRoute: { name: 'vault-list' },
   azureVaultProviderAvailable: true,
   ttl: true,
+  hcvAppRoleMethodAvailable: true,
 })
 
 const kongManagerConfig = ref<KongManagerVaultFormConfig>({
@@ -51,6 +52,7 @@ const kongManagerConfig = ref<KongManagerVaultFormConfig>({
   cancelRoute: { name: 'vault-list' },
   azureVaultProviderAvailable: false,
   ttl: true,
+  hcvAppRoleMethodAvailable: true,
 })
 
 const onError = (error: AxiosError) => {
