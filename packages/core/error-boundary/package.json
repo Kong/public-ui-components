@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/error-boundary",
-  "version": "2.0.26",
+  "version": "2.0.27",
   "type": "module",
   "main": "./dist/error-boundary.umd.js",
   "module": "./dist/error-boundary.es.js",
@@ -41,7 +41,7 @@
   "devDependencies": {
     "@kong/design-tokens": "1.12.10",
     "@kong/icons": "^1.8.14",
-    "vue": "^3.4.18"
+    "vue": "^3.4.19"
   },
   "repository": {
     "type": "git",

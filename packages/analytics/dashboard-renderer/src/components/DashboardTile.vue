@@ -20,6 +20,9 @@ import BarChartRenderer from './BarChartRenderer.vue'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
+import { KUI_SPACE_70 } from '@kong/design-tokens'
+
+const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
 const props = withDefaults(defineProps<{
   definition: TileDefinition,
@@ -48,7 +51,7 @@ const componentData = computed(() => {
       context: props.context,
       queryReady: true, // TODO: Pipelining
       chartOptions: props.definition.chart,
-      height: props.height,
+      height: props.height - PADDING_SIZE * 2,
     },
   }
 })

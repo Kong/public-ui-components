@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.5.4...@kong-ui-public/core@1.5.5) (2024-02-27)
+
+
+### Bug Fixes
+
+* **core:** provide a default value for axios injection ([#1182](https://github.com/Kong/public-ui-components/issues/1182)) ([7fc4c1b](https://github.com/Kong/public-ui-components/commit/7fc4c1b75eac506e53bdc564d2e26d5f2e3b3bd3))
+
+
+
+
+
+## [1.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.5.3...@kong-ui-public/core@1.5.4) (2024-02-26)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
 ## [1.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.5.2...@kong-ui-public/core@1.5.3) (2024-02-24)
 
 **Note:** Version bump only for package @kong-ui-public/core
