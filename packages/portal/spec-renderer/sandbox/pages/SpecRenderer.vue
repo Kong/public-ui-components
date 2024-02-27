@@ -10,13 +10,33 @@
             type="checkbox"
           > essentialsOnly
         </label>
+
+        <br>
+
+        <label>
+          <input
+            v-model="format"
+            name="format"
+            type="radio"
+            value="yaml"
+          > YAML
+        </label>
+
+        <label>
+          <input
+            v-model="format"
+            name="format"
+            type="radio"
+            value="json"
+          > JSON
+        </label>
       </div>
       <br><br>
       <SpecRenderer
         :key="key"
         :essentials-only="essentialsOnly"
         :operations-list="opsList"
-        :spec="defaultDocument"
+        :spec="format === 'yaml' ? defaultDocument : jsonContent"
         :tags="tags"
       />
     </main>
@@ -28,6 +48,7 @@ import { ref, watch } from 'vue'
 import type { Operation, Tag } from '../../src/types'
 // @ts-ignore
 import yamlContent from '../test.yaml'
+import jsonContent from '../test.json'
 import { SpecRenderer } from '../../src'
 // only imported in Sandbox! Parent app should do this
 import '@kong/kongponents/dist/style.css'
@@ -151,9 +172,10 @@ const tags = ref<Tag[]>([
 
 // checkboxes for toggling options
 const essentialsOnly = ref(false)
+const format = ref<'yaml' | 'json'>('yaml')
 
 const key = ref(0)
-watch(() => [essentialsOnly.value], () => {
+watch(() => [essentialsOnly.value, format.value], () => {
   key.value++
 }, { deep: true, immediate: true })
 </script>
