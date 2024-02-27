@@ -293,6 +293,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
       }
       .label {
         line-height: $kui-line-height-50;
+        white-space: nowrap;
       }
     }
   }
