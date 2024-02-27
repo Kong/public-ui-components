@@ -10,7 +10,7 @@ export default function useAxios() {
    */
   const getAxiosInstance = (options: AxiosRequestConfig = {}) => {
     try {
-      const injectedInstance = inject<(options?: AxiosRequestConfig) => AxiosInstance>('get-axios-instance')
+      const injectedInstance = inject<((options?: AxiosRequestConfig) => AxiosInstance) | undefined>('get-axios-instance', undefined)
       // If the injected instance exists, return the called function
       if (typeof injectedInstance === 'function') {
         return injectedInstance(options)
