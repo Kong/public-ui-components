@@ -15,7 +15,7 @@
     }
   },
   "trendRange": {
-    "custom": "vs previous {numDays} days",
+    "custom": "vs previous {numDays, plural, =1 {day} other {# days}}",
     "15m": "vs previous 15 minutes",
     "1h": "vs previous hour",
     "6h": "vs previous 6 hours",

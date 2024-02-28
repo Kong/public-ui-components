@@ -9,6 +9,7 @@ import type { MetricFetcherOptions } from '../types'
 import { MAX_ANALYTICS_REQUEST_RETRIES } from '../constants'
 import composables from '.'
 import { useSwrvState } from '@kong-ui-public/core'
+import { TimeframeKeys, TimePeriods } from '@kong-ui-public/analytics-utilities'
 
 export const DEFAULT_KEY = Symbol('default')
 export type MappedMetrics = Record<string | typeof DEFAULT_KEY, Record<string | typeof DEFAULT_KEY, number>>
@@ -27,6 +28,7 @@ export interface FetcherResult {
   hasError: Ref<boolean>
   raw: Ref<ExploreResultV4 | undefined>
   mapped: Ref<ChronologicalMappedMetrics>
+  trendRange: Ref<string>
 }
 
 const setMetric = (result: ChronologicalMappedMetrics, time: 'previous' | 'current', topLevelKey: string | typeof DEFAULT_KEY, secondLevelKey: string | typeof DEFAULT_KEY, metricValue: number) => {
@@ -92,6 +94,8 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
     opts.queryReady = computed(() => true)
   }
 
+  const { i18n } = composables.useI18n()
+
   const query: Ref<ExploreQuery> = computed(() => ({
     metrics: opts.metrics,
     dimensions: [
@@ -136,10 +140,39 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
     return buildDeltaMapping(raw.value, !!opts.withTrend)
   })
 
+  // If one of our relative timeframes, we display the requested time frame (if user has trend access); otherwise fall back to one day
+  // Else, we have a Custom start and end datetime coming from v-calendar, so we display "vs previous X days"
+  const trendRange = computed<string>(() => {
+    if (opts.timeframe.value.key === 'custom') {
+      if (!raw.value?.meta?.start_ms) {
+        return ''
+      }
+
+      const { start_ms: startMs, end_ms: endMs } = raw.value.meta
+
+      let numDays = (endMs - startMs) / (1000 * 60 * 60 * 24)
+
+      if (opts.withTrend) {
+        // If we're querying a trend, then the time range queried is doubled.
+        numDays /= 2
+      }
+
+      // Avoid weirdness around daylight savings time by rounding up or down to the nearest day.
+      return i18n.t('trendRange.custom', { numDays: Math.round(numDays) })
+    } else {
+      return opts.withTrend
+        // @ts-ignore - dynamic i18n key
+        ? i18n.t(`trendRange.${opts.timeframe.value.key}`)
+        // @ts-ignore - dynamic i18n key
+        : i18n.t(`trendRange.${TimePeriods.get(TimeframeKeys.ONE_DAY)?.key}`)
+    }
+  })
+
   return {
     isLoading: computed(() => STATE.PENDING === metricRequestState.value),
     hasError: computed(() => STATE.ERROR === metricRequestState.value),
     raw,
     mapped,
+    trendRange,
   }
 }
