@@ -462,7 +462,7 @@ onBeforeMount(async () => {
 <style lang="scss" scoped>
 .kong-ui-entities-upstreams-list {
   .kong-ui-entity-filter-input {
-    width: 300px;
+    margin-right: $kui-space-50;
   }
   .upstream-name {
     font-weight: 600;

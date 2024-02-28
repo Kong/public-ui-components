@@ -771,7 +771,7 @@ onBeforeMount(async () => {
   width: 100%;
 
   .kong-ui-entity-filter-input {
-    width: 330px;
+    margin-right: $kui-space-50;
   }
 
   .table-content-overflow-wrapper {
