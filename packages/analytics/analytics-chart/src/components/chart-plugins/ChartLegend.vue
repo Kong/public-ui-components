@@ -42,7 +42,7 @@
 import { ChartLegendPosition } from '../../enums'
 import { Chart, type LegendItem } from 'chart.js'
 import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType } from 'vue'
-import { KUI_SPACE_60 } from '@kong/design-tokens'
+import { KUI_SPACE_80 } from '@kong/design-tokens'
 import { debounce } from '../../utils'
 
 const props = defineProps({
@@ -120,7 +120,7 @@ const formatGrid = () => {
         maxWidth = width
       }
     })
-    const padding = parseInt(KUI_SPACE_60, 10)
+    const padding = parseInt(KUI_SPACE_80, 10)
     legendContainerRef.value.style.gridTemplateColumns = `repeat(auto-fit, ${maxWidth + padding}px)`
   }
 
@@ -241,22 +241,30 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
   -ms-overflow-style: thin;
   overflow-x: hidden;
   overflow-y: auto;
-  margin: 0;
 
   @include scrollbarBase;
 
   &.vertical {
     flex-direction: column;
+    justify-content: flex-start;
     max-height: 90%;
     max-width: 15%;
     min-width: 10%;
-    padding-left: $kui-space-50;
+    padding-left: $kui-space-30;
+    row-gap: $kui-space-60;
 
     .truncate-label {
       max-width: 12ch;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    li {
+      // Legend on right side of chart allows for two lines of text
+      .legend {
+        margin-top: $kui-space-20;
+      }
     }
 
     // Allow legend to expand horizontally at lower resolutions
@@ -278,7 +286,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     column-gap: $kui-space-50;
     display: grid;
     height: v-bind('legendHeight');
-    justify-content: center;
+    justify-content: center;  // Legend below chart only allows one line of text
     width: 99%;
     .truncate-label {
       max-width: 15ch;
@@ -288,8 +296,8 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     }
 
     li {
-      margin-top: 0;
       align-items: center;
+      margin-top: 0;
       .label {
         line-height: $kui-line-height-40;
         white-space: nowrap;
@@ -303,9 +311,8 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     cursor: pointer;
     display: flex;
     line-height: 1;
-    margin-top: $kui-space-60;
 
-    // Color bar preceing label
+    // Color bar preceding label
     .legend {
       flex: 0 0 14px;
       height: 3px;
