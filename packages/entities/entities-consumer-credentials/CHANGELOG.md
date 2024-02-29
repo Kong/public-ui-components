@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.62](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@2.1.61...@kong-ui-public/entities-consumer-credentials@2.1.62) (2024-02-29)
+
+
+### Bug Fixes
+
+* make filter input width take up max available space [KHCP-9907] ([#1196](https://github.com/Kong/public-ui-components/issues/1196)) ([9775060](https://github.com/Kong/public-ui-components/commit/97750609a2d6f921a8a04c1bc04d3fb6d1a98b76))
+
+
+
+
+
 ## [2.1.61](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@2.1.60...@kong-ui-public/entities-consumer-credentials@2.1.61) (2024-02-27)
 
 
