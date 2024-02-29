@@ -42,6 +42,7 @@
               appearance="primary"
               data-testid="toolbar-add-consumer"
               icon="plus"
+              size="large"
               :to="config.consumerGroupId ? undefined : config.createRoute"
               @click="() => config.consumerGroupId ? handleAddConsumerClick() : undefined"
             >
@@ -626,7 +627,7 @@ onBeforeMount(async () => {
   }
 
   .kong-ui-entity-filter-input {
-    width: 300px;
+    margin-right: $kui-space-50;
   }
 }
 </style>

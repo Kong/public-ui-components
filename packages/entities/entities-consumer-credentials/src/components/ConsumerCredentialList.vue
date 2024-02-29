@@ -29,6 +29,7 @@
               appearance="primary"
               data-testid="toolbar-add-credential"
               icon="plus"
+              size="large"
               :to="config.createRoute"
             >
               {{ t(`credentials.list.toolbar_actions.${config.plugin}.new`) }}

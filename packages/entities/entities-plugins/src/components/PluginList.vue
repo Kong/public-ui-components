@@ -40,6 +40,7 @@
               appearance="primary"
               data-testid="toolbar-add-plugin"
               icon="plus"
+              size="large"
               :to="config.createRoute"
             >
               {{ t('plugins.list.toolbar_actions.new_plugin') }}
@@ -771,7 +772,7 @@ onBeforeMount(async () => {
   width: 100%;
 
   .kong-ui-entity-filter-input {
-    width: 330px;
+    margin-right: $kui-space-50;
   }
 
   .table-content-overflow-wrapper {
