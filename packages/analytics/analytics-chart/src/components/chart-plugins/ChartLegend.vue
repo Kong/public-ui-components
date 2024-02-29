@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { ChartLegendPosition } from '../../enums'
 import { Chart, type LegendItem } from 'chart.js'
-import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType } from 'vue'
+import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType, computed } from 'vue'
 import { KUI_SPACE_80 } from '@kong/design-tokens'
 import { debounce } from '../../utils'
 
@@ -63,7 +63,6 @@ const props = defineProps({
 
 const legendContainerRef = ref<HTMLElement>()
 const legendItemsRef = ref<HTMLElement[]>([])
-const shouldTruncate = ref(false)
 const showValues = inject('showLegendValues', true)
 const position = inject('legendPosition', ref(ChartLegendPosition.Right))
 const legendItemsTracker = ref<LegendItem[]>([])
@@ -89,19 +88,19 @@ const doesTheLegendWrap = () => {
   return false
 }
 
+const shouldTruncate = computed(() => {
+  return props.items.length > 2 || position.value === ChartLegendPosition.Right
+})
+
 const checkForWrap = () => {
   if (legendContainerRef.value && position.value === ChartLegendPosition.Bottom) {
     if (doesTheLegendWrap()) {
-      shouldTruncate.value = true
       // Allow for two rows of legend items
       legendHeight.value = '60px'
     } else {
-      shouldTruncate.value = false
       // Only need space for one row of legend items
       legendHeight.value = '30px'
     }
-  } else if (legendContainerRef.value && position.value === ChartLegendPosition.Right) {
-    shouldTruncate.value = true
   }
 }
 
@@ -273,9 +272,9 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
       column-gap: $kui-space-50;
       display: grid;
       grid-template-columns: repeat(auto-fit, 10ch);
+      height: 40px;
       justify-content: center;
-      max-height: 12%;
-      width: 99%;
+      max-width: 99% !important;
 
       .sub-label {
         display: none;
