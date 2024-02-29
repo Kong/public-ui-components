@@ -39,6 +39,7 @@
               appearance="primary"
               data-testid="toolbar-add-route"
               icon="plus"
+              size="large"
               :to="config.createRoute"
             >
               {{ t('routes.list.toolbar_actions.new_route') }}

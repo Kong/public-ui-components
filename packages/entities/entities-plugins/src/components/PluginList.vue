@@ -40,6 +40,7 @@
               appearance="primary"
               data-testid="toolbar-add-plugin"
               icon="plus"
+              size="large"
               :to="config.createRoute"
             >
               {{ t('plugins.list.toolbar_actions.new_plugin') }}

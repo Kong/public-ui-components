@@ -42,6 +42,7 @@
               appearance="primary"
               data-testid="toolbar-add-consumer-group"
               icon="plus"
+              size="large"
               :to="config.consumerId ? undefined : config.createRoute"
               @click="() => config.consumerId ? handleAddToGroupClick() : undefined"
             >

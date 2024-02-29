@@ -39,6 +39,7 @@
               appearance="primary"
               data-testid="toolbar-add-upstream"
               icon="plus"
+              size="large"
               :to="config.createRoute"
             >
               {{ t('upstreams.list.toolbar_actions.new_upstream') }}

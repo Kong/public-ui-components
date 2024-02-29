@@ -38,6 +38,7 @@
               appearance="primary"
               data-testid="toolbar-add-key-set"
               icon="plus"
+              size="large"
               :to="config.createRoute"
             >
               {{ t('keySets.list.toolbar_actions.new_key_set') }}

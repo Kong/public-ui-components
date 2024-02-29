@@ -38,6 +38,7 @@
               appearance="primary"
               data-testid="toolbar-add-certificate"
               icon="plus"
+              size="large"
               :to="config.createRoute"
             >
               {{ t('certificates.list.toolbar_actions.new_certificate') }}

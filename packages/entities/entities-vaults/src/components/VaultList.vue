@@ -38,6 +38,7 @@
               appearance="primary"
               data-testid="toolbar-add-vault"
               icon="plus"
+              size="large"
               :to="config.createRoute"
             >
               {{ t('vaults.list.toolbar_actions.new_vault') }}
