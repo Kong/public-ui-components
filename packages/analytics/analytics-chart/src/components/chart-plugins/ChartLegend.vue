@@ -241,6 +241,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
   -ms-overflow-style: thin;
   overflow-x: hidden;
   overflow-y: auto;
+  padding-left: 0;
 
   @include scrollbarBase;
 
@@ -250,7 +251,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     max-height: 90%;
     max-width: 15%;
     min-width: 10%;
-    padding-left: $kui-space-30;
+    padding-left: $kui-space-50;
     row-gap: $kui-space-60;
 
     .truncate-label {
