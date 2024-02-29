@@ -42,7 +42,7 @@
 import { ChartLegendPosition } from '../../enums'
 import { Chart, type LegendItem } from 'chart.js'
 import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType } from 'vue'
-import { KUI_SPACE_100 } from '@kong/design-tokens'
+import { KUI_SPACE_60 } from '@kong/design-tokens'
 import { debounce } from '../../utils'
 
 const props = defineProps({
@@ -120,7 +120,7 @@ const formatGrid = () => {
         maxWidth = width
       }
     })
-    const padding = parseInt(KUI_SPACE_100, 10)
+    const padding = parseInt(KUI_SPACE_60, 10)
     legendContainerRef.value.style.gridTemplateColumns = `repeat(auto-fit, ${maxWidth + padding}px)`
   }
 
@@ -241,7 +241,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
   -ms-overflow-style: thin;
   overflow-x: hidden;
   overflow-y: auto;
-  padding-left: $kui-space-50;
+  margin: 0;
 
   @include scrollbarBase;
 
@@ -250,6 +250,8 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     max-height: 90%;
     max-width: 15%;
     min-width: 10%;
+    padding-left: $kui-space-50;
+
     .truncate-label {
       max-width: 12ch;
       overflow: hidden;
@@ -273,7 +275,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
   }
 
   &.horizontal {
-    column-gap: $kui-space-80;
+    column-gap: $kui-space-50;
     display: grid;
     height: v-bind('legendHeight');
     justify-content: center;
@@ -287,12 +289,9 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 
     li {
       margin-top: 0;
-
-      .legend {
-        margin-top: $kui-space-50;
-      }
+      align-items: center;
       .label {
-        line-height: $kui-line-height-50;
+        line-height: $kui-line-height-40;
         white-space: nowrap;
       }
     }
@@ -306,15 +305,15 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     line-height: 1;
     margin-top: $kui-space-60;
 
+    // Color bar preceing label
     .legend {
       flex: 0 0 14px;
       height: 3px;
-      margin-right: $kui-space-50;
-      margin-top: $kui-space-20;
+      margin-right: $kui-space-30;
     }
 
     .label {
-      font-size: $kui-font-size-30;
+      font-size: $kui-font-size-20;
     }
 
     .sub-label {
