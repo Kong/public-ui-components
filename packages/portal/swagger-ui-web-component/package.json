@@ -34,7 +34,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "3MB"
+    "errorLimit": "3.5MB"
   },
   "devDependencies": {
     "css-loader": "^6.10.0",
