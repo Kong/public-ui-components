@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.2.5...@kong-ui-public/analytics-chart@2.3.0) (2024-03-01)
+
+
+### Features
+
+* **analytics-chart:** title and legend [MA-2670] ([#1198](https://github.com/Kong/public-ui-components/issues/1198)) ([d6766dd](https://github.com/Kong/public-ui-components/commit/d6766dd0b017f7bde67309c4265df52c928ec317))
+
+
+
+
+
 ## [2.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.2.4...@kong-ui-public/analytics-chart@2.2.5) (2024-02-27)
 
 
