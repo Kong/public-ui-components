@@ -1,37 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8">
-    <title>SwaggerUI Web Component</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,400&display=swap"
-      rel="stylesheet">
-    <!-- TODO: we should be able to remove this when SwaggerUIBundle is removed -->
-    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <title>SwaggerUI Web Component</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,400&display=swap"
+    rel="stylesheet">
+</head>
 
-  <body>
-    <script src="/main.js"></script>
-    <!-- TODO: remove this div when SwaggerUIBundle removed -->
-    <div id="swagger-ui"></div>
-    <!-- TODO: remove this script import when SwaggerUIBundle removed -->
-    <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js" crossorigin></script>
-    <!-- TODO: remove this script block when SwaggerUIBundle removed -->
-    <script>
-      window.onload = () => {
-        window.ui = SwaggerUIBundle({
-          url: 'http://localhost:5173/test.yaml',
-          dom_id: '#swagger-ui',
-        })
-      };
-    </script>
-    <!-- TODO: remove this text when swaggerUIBundle is removed -->
-    //////////////////////////////// kong-swagger-ui ////////////////////////////////
-    <!-- Render swagger ui web component -->
-    <kong-swagger-ui url="http://localhost:5173/test.yaml"></kong-swagger-ui>
-  </body>
+<body>
+  <kong-swagger-ui url="http://localhost:5173/test.yaml"></kong-swagger-ui>
+  <script src="/main.js"></script>
+</body>
 
 </html>
