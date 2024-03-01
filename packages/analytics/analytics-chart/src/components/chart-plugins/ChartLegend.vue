@@ -42,7 +42,7 @@
 import { ChartLegendPosition } from '../../enums'
 import { Chart, type LegendItem } from 'chart.js'
 import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType, computed } from 'vue'
-import { KUI_SPACE_80 } from '@kong/design-tokens'
+import { KUI_SPACE_100 } from '@kong/design-tokens'
 import { debounce } from '../../utils'
 
 const props = defineProps({
@@ -119,7 +119,7 @@ const formatGrid = () => {
         maxWidth = width
       }
     })
-    const padding = parseInt(KUI_SPACE_80, 10)
+    const padding = parseInt(KUI_SPACE_100, 10)
     legendContainerRef.value.style.gridTemplateColumns = `repeat(auto-fit, ${maxWidth + padding}px)`
   }
 

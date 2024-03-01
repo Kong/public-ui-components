@@ -1,3 +1,5 @@
+$legend-height: $kui-space-130;
+
 .chart-parent {
   align-items: center;
   display: flex;
@@ -11,7 +13,7 @@
     flex-direction: column;
 
     .chart-container {
-      max-height: calc(100% - 60px);
+      max-height: calc(100% - #{$legend-height});
       width: 100%;
     }
   }
@@ -26,7 +28,7 @@
 
       // Allow chart to expand full width on mobile
       @media (max-width: ($kui-breakpoint-phablet - 1px)) {
-        max-height: calc(100% - 60px) !important;
+        max-height: calc(100% - #{$legend-height}) !important;
         width: 100% !important;
       }
     }
