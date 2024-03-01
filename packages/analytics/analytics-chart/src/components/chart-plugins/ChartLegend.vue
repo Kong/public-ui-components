@@ -289,7 +289,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     justify-content: center;  // Legend below chart only allows one line of text
     width: 99%;
     .truncate-label {
-      max-width: 15ch;
+      max-width: 20ch;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
