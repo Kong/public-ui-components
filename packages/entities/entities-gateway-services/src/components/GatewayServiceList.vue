@@ -38,6 +38,7 @@
               appearance="primary"
               data-testid="toolbar-add-gateway-service"
               icon="plus"
+              size="large"
               :to="config.createRoute"
             >
               {{ t('gateway_services.list.toolbar_actions.new_gateway_service') }}
@@ -556,7 +557,7 @@ onBeforeMount(async () => {
   width: 100%;
 
   .kong-ui-entity-filter-input {
-    width: 300px;
+    margin-right: $kui-space-50;
   }
 }
 </style>
