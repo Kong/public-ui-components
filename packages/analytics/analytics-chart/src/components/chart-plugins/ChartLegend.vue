@@ -235,7 +235,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 @import '../../styles/base';
 .legend-container {
   display: flex;
-  margin: $kui-space-30 0;
+  margin: $kui-space-30 0 0 0;
   max-height: inherit;
   -ms-overflow-style: thin;
   overflow-x: hidden;
@@ -271,7 +271,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     @media (max-width: ($kui-breakpoint-phablet - 1px)) {
       column-gap: $kui-space-50;
       display: grid;
-      grid-template-columns: repeat(auto-fit, 10ch);
+      grid-template-columns: repeat(auto-fit, 12ch);
       height: 40px;
       justify-content: center;
       max-width: 99% !important;
