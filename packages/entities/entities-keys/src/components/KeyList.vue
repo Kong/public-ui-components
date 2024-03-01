@@ -38,6 +38,7 @@
               appearance="primary"
               data-testid="toolbar-add-key"
               icon="plus"
+              size="large"
               :to="config.createRoute"
             >
               {{ t('keys.list.toolbar_actions.new_key') }}
@@ -493,7 +494,7 @@ onBeforeMount(async () => {
   width: 100%;
 
   .kong-ui-entity-filter-input {
-    width: 300px;
+    margin-right: $kui-space-50;
   }
 }
 </style>

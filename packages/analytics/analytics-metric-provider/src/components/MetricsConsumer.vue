@@ -48,7 +48,7 @@ const trafficCard = composables.useMetricCardBuilder({
   hasError: traffic.hasError,
   lookupKey: props.lookupKey,
   sumGroupedValues: ALL_STATUS_CODE_GROUPS,
-  trendRange: providerData.trendRange,
+  trendRange: traffic.trendRange,
 })
 
 // Error rate (special case, requires operation)
@@ -77,7 +77,7 @@ const errorRateCard = computed<MetricCardDef>(() => {
       : i18n.t('metricCard.short.errorRate'),
     description: providerData.description,
     increaseIsBad: true,
-    trendRange: providerData.trendRange.value,
+    trendRange: traffic.trendRange.value,
   }
 })
 
@@ -93,7 +93,7 @@ const latencyCard = composables.useMetricCardBuilder({
   lookupKey: props.lookupKey,
   increaseIsBad: true,
   formatValueFn: formatLatency,
-  trendRange: providerData.trendRange,
+  trendRange: latency.trendRange,
 })
 
 const cards: Ref<MetricCardDef[]> = computed(() => {
@@ -126,7 +126,6 @@ const containerOpts = computed(() => ({
   fallbackDisplayText: i18n.t('general.notAvailable'),
   cardSize: props.cardSize,
   hideTitle: true,
-  trendRange: providerData.trendRange.value,
 }))
 
 const cardValues = computed(() => ({

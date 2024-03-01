@@ -285,11 +285,9 @@ $row-gap-size: 12px;
     font-weight: $kui-font-weight-semibold;
     justify-content: space-between;
     line-height: $kui-line-height-60;
-    margin-top: $kui-space-60;
 
     &.sm {
       line-height: $kui-line-height-40;
-      margin-top: $kui-space-20;
     }
   }
 

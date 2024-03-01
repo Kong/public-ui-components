@@ -3,6 +3,109 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.2.4...@kong-ui-public/analytics-chart@2.2.5) (2024-02-27)
+
+
+### Bug Fixes
+
+* legend item labels should not wrap ([#1195](https://github.com/Kong/public-ui-components/issues/1195)) ([7c0fc18](https://github.com/Kong/public-ui-components/commit/7c0fc18856588f1e32a9fd9f4d5c545ffd5eaecc))
+
+
+
+
+
+## [2.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.2.3...@kong-ui-public/analytics-chart@2.2.4) (2024-02-27)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [2.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.2.2...@kong-ui-public/analytics-chart@2.2.3) (2024-02-27)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 8 [KHCP-10758] ([#1170](https://github.com/Kong/public-ui-components/issues/1170)) ([ff130c3](https://github.com/Kong/public-ui-components/commit/ff130c3c9f1af9e9fcb09fb8c23ae758cc0a5ae2))
+
+
+
+
+
+## [2.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.2.1...@kong-ui-public/analytics-chart@2.2.2) (2024-02-27)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [2.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.2.0...@kong-ui-public/analytics-chart@2.2.1) (2024-02-26)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+# [2.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.1.4...@kong-ui-public/analytics-chart@2.2.0) (2024-02-26)
+
+
+### Features
+
+* **analytics-chart:** forgot the height [MA-2536] ([#1181](https://github.com/Kong/public-ui-components/issues/1181)) ([0637d27](https://github.com/Kong/public-ui-components/commit/0637d27d8cc705de525646400edd14facef430b4))
+
+
+
+
+
+## [2.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.1.3...@kong-ui-public/analytics-chart@2.1.4) (2024-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [2.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.1.2...@kong-ui-public/analytics-chart@2.1.3) (2024-02-24)
+
+
+### Bug Fixes
+
+* **analytics-chart:** chart height, legend padding, y-axis hover [MA-2536] ([#1179](https://github.com/Kong/public-ui-components/issues/1179)) ([14aea5b](https://github.com/Kong/public-ui-components/commit/14aea5b9c9c30d51ff6c932cfc2e8a4249270f87))
+
+
+
+
+
+## [2.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.1.1...@kong-ui-public/analytics-chart@2.1.2) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [2.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.1.0...@kong-ui-public/analytics-chart@2.1.1) (2024-02-21)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+# [2.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.0.6...@kong-ui-public/analytics-chart@2.1.0) (2024-02-21)
+
+
+### Features
+
+* **entity-link:** allow links to open in same tab [MA-2617] ([#1167](https://github.com/Kong/public-ui-components/issues/1167)) ([d5cb98b](https://github.com/Kong/public-ui-components/commit/d5cb98ba34e95176a9c8522ee97f590e22b371fe))
+
+
+
+
+
 ## [2.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.0.5...@kong-ui-public/analytics-chart@2.0.6) (2024-02-19)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

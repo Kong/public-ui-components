@@ -38,6 +38,7 @@
               appearance="primary"
               data-testid="toolbar-add-ca-certificate"
               icon="plus"
+              size="large"
               :to="config.createRoute"
             >
               {{ t('ca-certificates.list.toolbar_actions.new_ca_certificate') }}
@@ -483,7 +484,7 @@ onBeforeMount(async () => {
   width: 100%;
 
   .kong-ui-entity-filter-input {
-    width: 300px;
+    margin-right: $kui-space-50;
   }
 }
 </style>

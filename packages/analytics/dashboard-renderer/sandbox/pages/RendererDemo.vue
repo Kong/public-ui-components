@@ -41,7 +41,7 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.HorizontalBar,
+          type: ChartTypes.GoldenSignals,
         },
         query: {},
       },
@@ -49,6 +49,25 @@ const dashboardConfig: DashboardConfig = {
         position: {
           col: 0,
           row: 0,
+        },
+        size: {
+          cols: 6,
+          rows: 1,
+        },
+      },
+    } as TileConfig,
+    {
+      definition: {
+        chart: {
+          type: ChartTypes.HorizontalBar,
+          chartTitle: 'Horizontal bar chart of mock data',
+        },
+        query: {},
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 1,
         },
         size: {
           cols: 3,
@@ -60,14 +79,13 @@ const dashboardConfig: DashboardConfig = {
       definition: {
         chart: {
           type: ChartTypes.VerticalBar,
-          showAnnotations: false,
         },
         query: {},
       },
       layout: {
         position: {
           col: 3,
-          row: 0,
+          row: 1,
         },
         size: {
           cols: 3,
@@ -78,6 +96,27 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
+          type: ChartTypes.TopN,
+          chartTitle: 'Top N chart of mock data',
+          description: 'Description',
+        },
+        query: {},
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 3,
+        },
+        size: {
+          cols: 3,
+          rows: 2,
+        },
+      },
+    } as TileConfig,
+    {
+      definition: {
+        chart: {
+          chartTitle: 'Timeseries line chart of mock data',
           type: ChartTypes.TimeseriesLine,
           fill: true,
         },
@@ -87,11 +126,11 @@ const dashboardConfig: DashboardConfig = {
       },
       layout: {
         position: {
-          col: 0,
-          row: 2,
+          col: 3,
+          row: 3,
         },
         size: {
-          cols: 6,
+          cols: 3,
           rows: 2,
         },
       },
@@ -109,7 +148,7 @@ const dashboardConfig: DashboardConfig = {
       layout: {
         position: {
           col: 0,
-          row: 4,
+          row: 5,
         },
         size: {
           cols: 1,

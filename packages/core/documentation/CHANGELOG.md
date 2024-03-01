@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.16...@kong-ui-public/documentation@0.3.17) (2024-03-01)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.3.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.15...@kong-ui-public/documentation@0.3.16) (2024-02-27)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 8 [KHCP-10758] ([#1170](https://github.com/Kong/public-ui-components/issues/1170)) ([ff130c3](https://github.com/Kong/public-ui-components/commit/ff130c3c9f1af9e9fcb09fb8c23ae758cc0a5ae2))
+
+
+
+
+
+## [0.3.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.14...@kong-ui-public/documentation@0.3.15) (2024-02-27)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.3.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.13...@kong-ui-public/documentation@0.3.14) (2024-02-26)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.3.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.12...@kong-ui-public/documentation@0.3.13) (2024-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.3.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.11...@kong-ui-public/documentation@0.3.12) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.3.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.10...@kong-ui-public/documentation@0.3.11) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.3.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.9...@kong-ui-public/documentation@0.3.10) (2024-02-21)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
 ## [0.3.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.8...@kong-ui-public/documentation@0.3.9) (2024-02-14)
 
 

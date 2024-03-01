@@ -212,7 +212,7 @@ const axesTooltip = ref<AxesTooltipState>({
   top: '0px',
   left: '0px',
   text: '',
-  offset: 0,
+  offset: -50, // Avoids App Shell obstruction
 })
 const unitsRef = toRef(props, 'metricUnit')
 
@@ -373,6 +373,9 @@ onMounted(() => {
   }
 
   if (chartContainerRef.value) {
+    // Initialize base dimensions since resize observer is debounced.
+    baseWidth.value = (chartContainerRef.value as HTMLDivElement).offsetWidth
+    baseHeight.value = (chartContainerRef.value as HTMLDivElement).offsetHeight
     resizeObserver.observe(chartContainerRef.value as HTMLDivElement)
   }
 })

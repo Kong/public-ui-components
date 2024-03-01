@@ -3,6 +3,106 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.12.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.12.14...@kong-ui-public/entities-plugins@2.12.15) (2024-03-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.12.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.12.13...@kong-ui-public/entities-plugins@2.12.14) (2024-02-29)
+
+
+### Bug Fixes
+
+* make filter input width take up max available space [KHCP-9907] ([#1196](https://github.com/Kong/public-ui-components/issues/1196)) ([9775060](https://github.com/Kong/public-ui-components/commit/97750609a2d6f921a8a04c1bc04d3fb6d1a98b76))
+
+
+
+
+
+## [2.12.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.12.12...@kong-ui-public/entities-plugins@2.12.13) (2024-02-27)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 8 [KHCP-10758] ([#1170](https://github.com/Kong/public-ui-components/issues/1170)) ([ff130c3](https://github.com/Kong/public-ui-components/commit/ff130c3c9f1af9e9fcb09fb8c23ae758cc0a5ae2))
+
+
+
+
+
+## [2.12.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.12.11...@kong-ui-public/entities-plugins@2.12.12) (2024-02-27)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.12.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.12.10...@kong-ui-public/entities-plugins@2.12.11) (2024-02-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.12.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.12.9...@kong-ui-public/entities-plugins@2.12.10) (2024-02-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency marked to v12 ([#1164](https://github.com/Kong/public-ui-components/issues/1164)) ([0c0d450](https://github.com/Kong/public-ui-components/commit/0c0d450affe2c5600689085a8ce17d9c5b896bd1))
+
+
+
+
+
+## [2.12.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.12.8...@kong-ui-public/entities-plugins@2.12.9) (2024-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.12.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.12.7...@kong-ui-public/entities-plugins@2.12.8) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.12.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.12.6...@kong-ui-public/entities-plugins@2.12.7) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.12.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.12.5...@kong-ui-public/entities-plugins@2.12.6) (2024-02-22)
+
+
+### Bug Fixes
+
+* **entities-plugins:** custom plugins are hidden in select page for KM ([#1175](https://github.com/Kong/public-ui-components/issues/1175)) ([07716ed](https://github.com/Kong/public-ui-components/commit/07716ed330ac06cad5f389ceb4aaaf95d279da2d))
+
+
+
+
+
+## [2.12.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.12.4...@kong-ui-public/entities-plugins@2.12.5) (2024-02-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [2.12.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.12.3...@kong-ui-public/entities-plugins@2.12.4) (2024-02-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

@@ -1,6 +1,7 @@
 <template>
   <QueryDataProvider
     v-slot="{ data }"
+    :context="context"
     :query="query"
     :query-ready="queryReady"
   >
@@ -8,8 +9,10 @@
       <AnalyticsChart
         :chart-data="data"
         :chart-options="options"
+        :chart-title="chartOptions.chartTitle"
         legend-position="bottom"
-        :show-annotations="chartOptions.showAnnotations"
+        :show-annotations="false"
+        :synthetics-data-key="chartOptions.syntheticsDataKey"
         tooltip-title=""
       />
     </div>
@@ -39,6 +42,6 @@ const options = computed<AnalyticsChartOptions>(() => ({
 
 <style scoped lang="scss">
 .analytics-chart {
-  height: v-bind('`${height}px`')
+  height: v-bind('`${height}px`');
 }
 </style>

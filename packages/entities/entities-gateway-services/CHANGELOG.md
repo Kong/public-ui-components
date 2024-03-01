@@ -3,6 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.4.30...@kong-ui-public/entities-gateway-services@2.4.31) (2024-03-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [2.4.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.4.29...@kong-ui-public/entities-gateway-services@2.4.30) (2024-02-29)
+
+
+### Bug Fixes
+
+* make filter input width take up max available space [KHCP-9907] ([#1196](https://github.com/Kong/public-ui-components/issues/1196)) ([9775060](https://github.com/Kong/public-ui-components/commit/97750609a2d6f921a8a04c1bc04d3fb6d1a98b76))
+
+
+
+
+
+## [2.4.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.4.28...@kong-ui-public/entities-gateway-services@2.4.29) (2024-02-27)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 8 [KHCP-10758] ([#1170](https://github.com/Kong/public-ui-components/issues/1170)) ([ff130c3](https://github.com/Kong/public-ui-components/commit/ff130c3c9f1af9e9fcb09fb8c23ae758cc0a5ae2))
+
+
+
+
+
+## [2.4.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.4.27...@kong-ui-public/entities-gateway-services@2.4.28) (2024-02-27)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [2.4.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.4.26...@kong-ui-public/entities-gateway-services@2.4.27) (2024-02-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [2.4.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.4.25...@kong-ui-public/entities-gateway-services@2.4.26) (2024-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [2.4.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.4.24...@kong-ui-public/entities-gateway-services@2.4.25) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [2.4.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.4.23...@kong-ui-public/entities-gateway-services@2.4.24) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [2.4.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.4.22...@kong-ui-public/entities-gateway-services@2.4.23) (2024-02-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
 ## [2.4.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@2.4.21...@kong-ui-public/entities-gateway-services@2.4.22) (2024-02-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services

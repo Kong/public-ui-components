@@ -29,6 +29,7 @@
               appearance="primary"
               data-testid="toolbar-add-credential"
               icon="plus"
+              size="large"
               :to="config.createRoute"
             >
               {{ t(`credentials.list.toolbar_actions.${config.plugin}.new`) }}
@@ -376,11 +377,14 @@ const notifyCopyAction = (param: CopyUuidNotifyParam, entity: EntityRow, field: 
 }
 
 const onCopySuccess = (entity: EntityRow, field: string | undefined) => {
+  const encryptedFields = ['password', 'key', 'client_secret', 'secret']
   // Emit the success event for the host app
   emit('copy:success', {
     entity,
     field,
-    message: field ? t('credentials.copy.success', { val: entity[field] }) : t('credentials.copy.success_brief'),
+    message: field && !encryptedFields.includes(field)
+      ? t('credentials.copy.success', { val: entity[field] })
+      : t('credentials.copy.success_brief'),
   })
 }
 

@@ -5,8 +5,7 @@
   />
 </template>
 <script setup lang="ts">
-import { inject, type Ref } from 'vue'
-import { computed, provide, toRef } from 'vue'
+import { inject, computed, provide, toRef } from 'vue'
 import {
   type AnalyticsBridge,
   type ExploreFilter,
@@ -16,14 +15,12 @@ import {
 } from '@kong-ui-public/analytics-utilities'
 import { TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
 import { METRICS_PROVIDER_KEY, defaultFetcherDefs } from './metricsProviderUtil'
-import composables from '../composables'
 import { INJECT_QUERY_PROVIDER } from '../constants'
-
-const { i18n } = composables.useI18n()
 
 const props = withDefaults(defineProps<{
   maxTimeframe?: TimeframeKeys,
   overrideTimeframe?: Timeframe,
+  tz?: string,
   dimension?: QueryableExploreDimensions,
   filterValue?: string,
   additionalFilter?: ExploreFilter[],
@@ -36,6 +33,7 @@ const props = withDefaults(defineProps<{
 }>(), {
   maxTimeframe: TimeframeKeys.THIRTY_DAY,
   overrideTimeframe: undefined,
+  tz: undefined,
   dimension: undefined,
   filterValue: undefined,
   additionalFilter: undefined,
@@ -63,6 +61,14 @@ if (!queryBridge) {
   queryFn = queryBridge.queryFn
 }
 
+const tz = computed(() => {
+  if (props.tz) {
+    return props.tz
+  }
+
+  return (new Intl.DateTimeFormat()).resolvedOptions().timeZone
+})
+
 // Note: the component implicitly assumes the values it feeds to the composables aren't going to change.
 // If they do need to change, then the `useMetricCardGoldenSignals` composable, and dependencies,
 // needs to be reactive as well.  Ideally, this would be the case; we don't have any guarantee that the
@@ -85,20 +91,6 @@ const timeframe = computed(() => {
   return retval
 })
 
-// If one of our relative timeframes, we display the requested time frame (if user has trend access); otherwise fall back to one day
-// Else, we have a Custom start and end datetime coming from v-calendar, so we display "vs previous X days"
-const trendRangeText = computed(() => {
-  if (timeframe.value.key === 'custom') {
-    return i18n.t('trendRange.custom', { numDays: Math.ceil(timeframe.value.timeframeLength() / (1000 * 60 * 24)) })
-  } else {
-    return props.hasTrendAccess
-      // @ts-ignore - dynamic i18n key
-      ? i18n.t(`trendRange.${timeframe.value.key}`)
-      // @ts-ignore - dynamic i18n key
-      : i18n.t(`trendRange.${TimePeriods.get(TimeframeKeys.ONE_DAY)?.key}`)
-  }
-})
-
 const {
   trafficData,
   latencyData,
@@ -108,6 +100,7 @@ const {
   additionalFilter: toRef(props, 'additionalFilter'),
   queryReady: toRef(props, 'queryReady'),
   timeframe,
+  tz,
   hasTrendAccess: props.hasTrendAccess,
   refreshInterval: props.refreshInterval,
   queryFn,
@@ -122,7 +115,6 @@ provide(METRICS_PROVIDER_KEY, {
   description: props.description,
   hasTrendAccess: props.hasTrendAccess,
   longCardTitles: props.longCardTitles,
-  trendRange: trendRangeText as Ref<string>,
 })
 
 </script>

@@ -35,6 +35,7 @@ Shared components for Kong entities.
 - `EntityFilter`
 - `PermissionsWrapper`
 - `EntityFormSection`
+- `EntityLink`
 - `EntityToggleModal`
 - `EntityBaseConfigCard`
 
@@ -75,6 +76,7 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 - [`<EntityFilter.vue />`](docs/entity-filter.md)
 - [`<PermissionsWrapper.vue />`](docs/permissions-wrapper.md)
 - [`<EntityFormSection.vue />`](docs/entity-form-section.md)
+- [`<EntityLink.vue />`](docs/entity-link.md)
 - [`<EntityToggleModal.vue />`](docs/entity-toggle-modal.md)
 - [`<EntityBaseConfigCard.vue />`](docs/entity-base-config-card.md)
 

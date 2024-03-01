@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.43](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.42...@kong-ui-public/forms@2.1.43) (2024-02-27)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 8 [KHCP-10758] ([#1170](https://github.com/Kong/public-ui-components/issues/1170)) ([ff130c3](https://github.com/Kong/public-ui-components/commit/ff130c3c9f1af9e9fcb09fb8c23ae758cc0a5ae2))
+
+
+
+
+
+## [2.1.42](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.41...@kong-ui-public/forms@2.1.42) (2024-02-26)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [2.1.41](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.40...@kong-ui-public/forms@2.1.41) (2024-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [2.1.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.39...@kong-ui-public/forms@2.1.40) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [2.1.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.38...@kong-ui-public/forms@2.1.39) (2024-02-13)
 
 

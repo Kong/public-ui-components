@@ -6,6 +6,7 @@ import type { ExploreFilter, ExploreQuery, TimeRangeV4 } from '@kong-ui-public/a
 export interface DashboardRendererContext {
   filters: ExploreFilter[]
   timeSpec: TimeRangeV4
+  tz?: string
 }
 
 export enum ChartTypes {
@@ -13,10 +14,16 @@ export enum ChartTypes {
   VerticalBar = 'vertical_bar',
   Gauge = 'gauge',
   TimeseriesLine = 'timeseries_line',
+  GoldenSignals = 'golden_signals',
+  TopN = 'top_n',
 }
 
 // Common definition for many ChartJS tiles.
 const syntheticsDataKey = {
+  type: 'string',
+} as const
+
+const chartTitle = {
   type: 'string',
 } as const
 
@@ -40,11 +47,9 @@ export const barChartSchema = {
     stacked: {
       type: 'boolean',
     },
-    showAnnotations: {
-      type: 'boolean',
-    },
     chartDatasetColors: chartDatasetColorsSchema,
     syntheticsDataKey,
+    chartTitle,
   },
   required: ['type'],
   additionalProperties: false,
@@ -67,6 +72,7 @@ export const timeseriesChartSchema = {
     },
     chartDatasetColors: chartDatasetColorsSchema,
     syntheticsDataKey,
+    chartTitle,
   },
   required: ['type'],
   additionalProperties: false,
@@ -92,12 +98,51 @@ export const gaugeChartSchema = {
       type: 'number',
     },
     syntheticsDataKey,
+    chartTitle,
   },
   required: ['type'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
 export type GaugeChartOptions = FromSchema<typeof gaugeChartSchema>
+
+export const topNTableSchema = {
+  type: 'object',
+  properties: {
+    chartTitle,
+    syntheticsDataKey,
+    type: {
+      type: 'string',
+      enum: [ChartTypes.TopN],
+    },
+    description: {
+      type: 'string',
+    },
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TopNTableOptions = FromSchema<typeof topNTableSchema>
+
+export const metricCardSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: [ChartTypes.GoldenSignals],
+    },
+    longCardTitles: {
+      type: 'boolean',
+    },
+    description: {
+      type: 'string',
+    },
+  },
+  required: ['type'],
+} as const satisfies JSONSchema
+
+export type MetricCardOptions = FromSchema<typeof metricCardSchema>
 
 const exploreV4FilterSchema = {
   type: 'object',
@@ -295,7 +340,7 @@ export const tileDefinitionSchema = {
   properties: {
     query: exploreV4QuerySchema,
     chart: {
-      oneOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema],
+      oneOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema, metricCardSchema, topNTableSchema],
     },
   },
   required: ['query', 'chart'],
@@ -388,6 +433,7 @@ export type DashboardConfig = FromSchema<typeof dashboardConfigSchema>
 
 export interface RendererProps<T> {
   query: ExploreQuery
+  context: DashboardRendererContext
   queryReady: boolean
   chartOptions: T
   height: number

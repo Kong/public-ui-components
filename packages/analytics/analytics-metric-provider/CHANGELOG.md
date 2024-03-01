@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@4.0.7...@kong-ui-public/analytics-metric-provider@4.0.8) (2024-02-28)
+
+
+### Bug Fixes
+
+* **metric-cards:** determine trend range text from response [MA-2650] ([#1197](https://github.com/Kong/public-ui-components/issues/1197)) ([8560ed8](https://github.com/Kong/public-ui-components/commit/8560ed884d09ebebb83a3c981120a3be1e71f876))
+
+
+
+
+
+## [4.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@4.0.6...@kong-ui-public/analytics-metric-provider@4.0.7) (2024-02-27)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 8 [KHCP-10758] ([#1170](https://github.com/Kong/public-ui-components/issues/1170)) ([ff130c3](https://github.com/Kong/public-ui-components/commit/ff130c3c9f1af9e9fcb09fb8c23ae758cc0a5ae2))
+
+
+
+
+
+## [4.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@4.0.5...@kong-ui-public/analytics-metric-provider@4.0.6) (2024-02-26)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [4.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@4.0.4...@kong-ui-public/analytics-metric-provider@4.0.5) (2024-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [4.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@4.0.3...@kong-ui-public/analytics-metric-provider@4.0.4) (2024-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [4.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@4.0.2...@kong-ui-public/analytics-metric-provider@4.0.3) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [4.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@4.0.1...@kong-ui-public/analytics-metric-provider@4.0.2) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [4.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@4.0.0...@kong-ui-public/analytics-metric-provider@4.0.1) (2024-02-21)
+
+
+### Bug Fixes
+
+* **metric-provider:** include timezone in v4 queries ([#1173](https://github.com/Kong/public-ui-components/issues/1173)) ([4eaad9e](https://github.com/Kong/public-ui-components/commit/4eaad9ef8ed9790add498410ef20dc8df70d8ba0))
+
+
+
+
+
 # [4.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@3.0.4...@kong-ui-public/analytics-metric-provider@4.0.0) (2024-02-20)
 
 

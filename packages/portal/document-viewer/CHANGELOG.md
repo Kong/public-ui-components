@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.36...@kong-ui-public/document-viewer@2.0.37) (2024-02-27)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 8 [KHCP-10758] ([#1170](https://github.com/Kong/public-ui-components/issues/1170)) ([ff130c3](https://github.com/Kong/public-ui-components/commit/ff130c3c9f1af9e9fcb09fb8c23ae758cc0a5ae2))
+
+
+
+
+
+## [2.0.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.35...@kong-ui-public/document-viewer@2.0.36) (2024-02-26)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [2.0.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.34...@kong-ui-public/document-viewer@2.0.35) (2024-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [2.0.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.33...@kong-ui-public/document-viewer@2.0.34) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
 ## [2.0.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.32...@kong-ui-public/document-viewer@2.0.33) (2024-02-13)
 
 

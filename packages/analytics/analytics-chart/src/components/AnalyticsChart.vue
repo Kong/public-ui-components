@@ -2,7 +2,10 @@
   <div
     class="analytics-chart-shell"
   >
-    <div class="chart-header">
+    <div
+      v-if="showChartHeader"
+      class="chart-header"
+    >
       <div
         v-if="chartTitle"
         class="chart-title"
@@ -276,6 +279,10 @@ const hasValidChartData = computed(() => {
   return props.chartData && props.chartData.meta && props.chartData.data.length
 })
 
+const showChartHeader = computed(() => {
+  return (hasValidChartData.value && resultSetTruncated.value && maxEntitiesShown.value) || props.chartTitle || (props.allowCsvExport && hasValidChartData.value)
+})
+
 const timeSeriesGranularity = computed<GranularityKeys>(() => {
 
   if (!props.chartData.meta.granularity_ms) {
@@ -299,6 +306,7 @@ provide('legendPosition', toRef(props, 'legendPosition'))
 .analytics-chart-shell {
   height: 100%;
   width: 100%;
+
   .analytics-chart-parent {
     height: inherit;
     width: inherit;

@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.7.6...@kong-ui-public/entities-shared@2.8.0) (2024-03-01)
+
+
+### Features
+
+* **entities-shared:** add clear icon for EntityFilter in exact mode ([#1199](https://github.com/Kong/public-ui-components/issues/1199)) ([cbc940e](https://github.com/Kong/public-ui-components/commit/cbc940e9513fdc695d14e4ae615eed145be3f87d))
+
+
+
+
+
+## [2.7.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.7.5...@kong-ui-public/entities-shared@2.7.6) (2024-02-27)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 8 [KHCP-10758] ([#1170](https://github.com/Kong/public-ui-components/issues/1170)) ([ff130c3](https://github.com/Kong/public-ui-components/commit/ff130c3c9f1af9e9fcb09fb8c23ae758cc0a5ae2))
+
+
+
+
+
+## [2.7.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.7.4...@kong-ui-public/entities-shared@2.7.5) (2024-02-27)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [2.7.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.7.3...@kong-ui-public/entities-shared@2.7.4) (2024-02-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [2.7.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.7.2...@kong-ui-public/entities-shared@2.7.3) (2024-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [2.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.7.1...@kong-ui-public/entities-shared@2.7.2) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [2.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.7.0...@kong-ui-public/entities-shared@2.7.1) (2024-02-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+# [2.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.6.3...@kong-ui-public/entities-shared@2.7.0) (2024-02-21)
+
+
+### Features
+
+* **entity-link:** allow links to open in same tab [MA-2617] ([#1167](https://github.com/Kong/public-ui-components/issues/1167)) ([d5cb98b](https://github.com/Kong/public-ui-components/commit/d5cb98ba34e95176a9c8522ee97f590e22b371fe))
+
+
+
+
+
 ## [2.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.6.2...@kong-ui-public/entities-shared@2.6.3) (2024-02-14)
 
 

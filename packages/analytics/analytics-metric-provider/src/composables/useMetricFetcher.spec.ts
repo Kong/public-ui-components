@@ -1,8 +1,15 @@
 import { vi, describe, expect } from 'vitest'
 import useMetricFetcher, { buildDeltaMapping, DEFAULT_KEY } from './useMetricFetcher'
 import { ref } from 'vue'
-import type { ExploreResultV4, Timeframe } from '@kong-ui-public/analytics-utilities'
-import { DeltaQueryTime, TimeframeKeys, TimePeriods, UnaryQueryTime } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import {
+  DeltaQueryTime,
+  GranularityKeys,
+  TimeframeKeys,
+  TimePeriods,
+  UnaryQueryTime,
+  Timeframe,
+} from '@kong-ui-public/analytics-utilities'
 import type { MetricFetcherOptions } from '../types'
 import composables from '.'
 
@@ -428,6 +435,76 @@ describe('useMetricFetcher', () => {
     }
 
     expect(trafficData.mapped.value).toEqual(expected)
+  })
+
+  it('properly calculates descriptions for custom timeperiods with trend', () => {
+    const fetcherOptionsTrend: MetricFetcherOptions = {
+      metrics: [
+        'request_count',
+      ],
+      filterValues: ['test-org-uuid'],
+      timeframe: ref(new Timeframe({
+        key: 'custom',
+        timeframeText: 'custom',
+        display: 'custom',
+        // Note -- these values don't matter, just the `withTrend` value and the value in the response.
+        startCustom: new Date('2024-01-01T00:00:00Z'),
+        endCustom: new Date('2024-01-02T00:00:00Z'),
+        timeframeLength: () => 0,
+        defaultResponseGranularity: GranularityKeys.DAILY,
+        dataGranularity: GranularityKeys.DAILY,
+        isRelative: false,
+        allowedTiers: ['free', 'plus', 'enterprise'],
+      })),
+      loading: ref(true),
+      hasError: ref(false),
+      withTrend: true,
+      refreshInterval: CHART_REFRESH_INTERVAL_MS,
+    }
+
+    // @ts-ignore
+    vi.spyOn(composables, 'useRequest').mockReturnValue({ response: ref(EXPLORE_RESULT_TREND), error: {}, isValidating: ref(false) })
+
+    const trafficData = useMetricFetcher(fetcherOptionsTrend)
+
+    expect(composables.useRequest).toBeCalledTimes(1)
+
+    expect(trafficData.trendRange.value).toEqual('vs previous day')
+  })
+
+  it('properly calculates descriptions for custom timeperiods without trend', () => {
+    const fetcherOptionsTrend: MetricFetcherOptions = {
+      metrics: [
+        'request_count',
+      ],
+      filterValues: ['test-org-uuid'],
+      timeframe: ref(new Timeframe({
+        key: 'custom',
+        timeframeText: 'custom',
+        display: 'custom',
+        // Note -- these values don't matter, just the `withTrend` value and the value in the response.
+        startCustom: new Date('2024-01-01T00:00:00Z'),
+        endCustom: new Date('2024-01-02T00:00:00Z'),
+        timeframeLength: () => 0,
+        defaultResponseGranularity: GranularityKeys.DAILY,
+        dataGranularity: GranularityKeys.DAILY,
+        isRelative: false,
+        allowedTiers: ['free', 'plus', 'enterprise'],
+      })),
+      loading: ref(true),
+      hasError: ref(false),
+      withTrend: false,
+      refreshInterval: CHART_REFRESH_INTERVAL_MS,
+    }
+
+    // @ts-ignore
+    vi.spyOn(composables, 'useRequest').mockReturnValue({ response: ref(EXPLORE_RESULT_NO_TREND), error: {}, isValidating: ref(false) })
+
+    const trafficData = useMetricFetcher(fetcherOptionsTrend)
+
+    expect(composables.useRequest).toBeCalledTimes(1)
+
+    expect(trafficData.trendRange.value).toEqual('vs previous day')
   })
 
 })

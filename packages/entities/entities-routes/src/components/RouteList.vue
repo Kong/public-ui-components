@@ -39,6 +39,7 @@
               appearance="primary"
               data-testid="toolbar-add-route"
               icon="plus"
+              size="large"
               :to="config.createRoute"
             >
               {{ t('routes.list.toolbar_actions.new_route') }}
@@ -541,7 +542,7 @@ onBeforeMount(async () => {
   width: 100%;
 
   .kong-ui-entity-filter-input {
-    width: 300px;
+    margin-right: $kui-space-50;
   }
 }
 </style>

@@ -70,15 +70,40 @@ const tileWidth = computed(() => {
   return (containerWidth.value / props.gridSize.cols) - GAP_SIZE
 })
 
-const gridCells = computed<Cell<T>[]>(() => {
-  return props.tiles.map((tile, i) => {
-    // Position elements based on their grid position and dimensions.
-    const translateX = tile.layout.position.col * (tileWidth.value + GAP_SIZE)
-    // find the tile above the current tile
-    const translateY = tile.layout.position.row * (props.tileHeight + GAP_SIZE)
+const tilesPerRow = computed(() => {
+  const count = new Array(props.gridSize.rows).fill(0) // Initialize an array to hold the count of tiles per row
 
+  props.tiles.forEach(tile => {
+    const rowIndex = tile.layout.position.row // Assuming rows are zero-indexed
+    count[rowIndex]++
+  })
+
+  return count
+})
+
+const gridCells = computed<Cell<T>[]>(() => {
+  const rowTileCounts: number[] = []
+  return props.tiles.map((tile, i) => {
+    const row = tile.layout.position.row
+
+    // If this row hasn't been encountered yet, initialize its count
+    if (!rowTileCounts[row]) {
+      rowTileCounts[row] = 0
+    }
+
+    // Increment the tile count for this row to determine the tile's ordinal position
+    rowTileCounts[row]++
+
+    // This is the tile's nth position in its row
+    const nthPosition = rowTileCounts[row]
+    // Position elements based on their grid position and dimensions.
+    let translateX = tile.layout.position.col * (tileWidth.value + GAP_SIZE)
+    if (tile.layout.position.col > 0) {
+      translateX += (GAP_SIZE / tilesPerRow.value[tile.layout.position.row]) * (nthPosition - 1)
+    }
+    const translateY = tile.layout.position.row * (props.tileHeight + GAP_SIZE)
     // Size tiles based on their dimensions and cell span.
-    const width = tile.layout.size.cols * tileWidth.value + (GAP_SIZE * (tile.layout.size.cols - 1))
+    const width = tile.layout.size.cols * tileWidth.value + (GAP_SIZE * (tile.layout.size.cols - 1)) + (GAP_SIZE / tilesPerRow.value[tile.layout.position.row]) - 1
     const height = tile.layout.size.rows * props.tileHeight + (GAP_SIZE * (tile.layout.size.rows - 1))
 
     return {
@@ -106,13 +131,8 @@ const gridHeight = computed(() => {
   height: v-bind('`${gridHeight}px`');
   width: 100%;
 }
-
 .grid-cell {
   position: absolute;
-
-  .tile-container {
-    margin: $kui-space-70;
-  }
 }
 
 @media (max-width: $kui-breakpoint-phablet) {

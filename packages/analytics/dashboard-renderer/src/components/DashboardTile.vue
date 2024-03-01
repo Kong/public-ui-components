@@ -8,28 +8,29 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { TileDefinition } from '../types'
-import { ChartTypes } from '../types'
+import { ChartTypes, type DashboardRendererContext, type TileDefinition } from '../types'
 import type {
-  Component, PropType,
+  Component,
 } from 'vue'
 import { computed } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
+import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
 import BarChartRenderer from './BarChartRenderer.vue'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
+import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
+import { KUI_SPACE_70 } from '@kong/design-tokens'
+import TopNTableRenderer from './TopNTableRenderer.vue'
 
-const props = defineProps({
-  definition: {
-    type: Object as PropType<TileDefinition>,
-    required: true,
-  },
-  height: {
-    type: Number,
-    required: false,
-    default: () => DEFAULT_TILE_HEIGHT,
-  },
+const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
+
+const props = withDefaults(defineProps<{
+  definition: TileDefinition,
+  context: DashboardRendererContext,
+  height?: number
+}>(), {
+  height: DEFAULT_TILE_HEIGHT,
 })
 
 const rendererLookup: Record<ChartTypes, Component> = {
@@ -37,6 +38,8 @@ const rendererLookup: Record<ChartTypes, Component> = {
   [ChartTypes.HorizontalBar]: BarChartRenderer,
   [ChartTypes.VerticalBar]: BarChartRenderer,
   [ChartTypes.Gauge]: SimpleChartRenderer,
+  [ChartTypes.GoldenSignals]: GoldenSignalsRenderer,
+  [ChartTypes.TopN]: TopNTableRenderer,
 }
 
 const componentData = computed(() => {
@@ -47,9 +50,10 @@ const componentData = computed(() => {
     component,
     rendererProps: {
       query: props.definition.query,
+      context: props.context,
       queryReady: true, // TODO: Pipelining
       chartOptions: props.definition.chart,
-      height: props.height,
+      height: props.height - PADDING_SIZE * 2,
     },
   }
 })
