@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.7.6...@kong-ui-public/entities-shared@2.8.0) (2024-03-01)
+
+
+### Features
+
+* **entities-shared:** add clear icon for EntityFilter in exact mode ([#1199](https://github.com/Kong/public-ui-components/issues/1199)) ([cbc940e](https://github.com/Kong/public-ui-components/commit/cbc940e9513fdc695d14e4ae615eed145be3f87d))
+
+
+
+
+
 ## [2.7.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.7.5...@kong-ui-public/entities-shared@2.7.6) (2024-02-27)
 
 
