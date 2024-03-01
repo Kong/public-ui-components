@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@4.0.7...@kong-ui-public/analytics-metric-provider@4.0.8) (2024-02-28)
+
+
+### Bug Fixes
+
+* **metric-cards:** determine trend range text from response [MA-2650] ([#1197](https://github.com/Kong/public-ui-components/issues/1197)) ([8560ed8](https://github.com/Kong/public-ui-components/commit/8560ed884d09ebebb83a3c981120a3be1e71f876))
+
+
+
+
+
 ## [4.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@4.0.6...@kong-ui-public/analytics-metric-provider@4.0.7) (2024-02-27)
 
 

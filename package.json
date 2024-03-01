@@ -57,7 +57,7 @@
     "lerna": "^8.1.2",
     "npm-run-all2": "^6.1.2",
     "postcss": "^8.4.35",
-    "postcss-custom-properties": "^13.3.4",
+    "postcss-custom-properties": "^13.3.5",
     "postcss-html": "^1.6.0",
     "rimraf": "^5.0.5",
     "rollup-plugin-visualizer": "^5.12.0",
