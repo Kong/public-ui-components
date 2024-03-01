@@ -11,6 +11,13 @@
       <template #before>
         <IconFilter />
       </template>
+      <template #after>
+        <CloseIcon
+          v-show="modelValue !== ''"
+          class="kong-ui-entity-filter-clear"
+          @click="handleQueryClear"
+        />
+      </template>
     </KInput>
   </template>
   <template v-else>
@@ -113,6 +120,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { computed, ref, watch } from 'vue'
+import { CloseIcon } from '@kong/icons'
 import type { ExactMatchFilterConfig, FuzzyMatchFilterConfig } from '../../types'
 import composables from '../../composables'
 import IconFilter from '../icons/IconFilter.vue'
@@ -179,6 +187,10 @@ const handleQueryUpdate = (query: string) => {
   emit('update:modelValue', query)
 }
 
+const handleQueryClear = () => {
+  handleQueryUpdate('')
+}
+
 const getFieldId = (field: string) => {
   return `filter-${field}`
 }
@@ -228,6 +240,10 @@ const applyFields = (hideMenu = false) => {
 <style lang="scss" scoped>
 .kong-ui-entity-filter-input {
   width: 100%;
+}
+
+.kong-ui-entity-filter-clear {
+  cursor: pointer;
 }
 
 .kong-ui-entity-filter {
