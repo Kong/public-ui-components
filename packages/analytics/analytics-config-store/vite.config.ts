@@ -3,7 +3,7 @@ import { resolve } from 'path'
 import { defineConfig, mergeConfig } from 'vite'
 
 // Package name MUST always match the kebab-case package name inside the component's package.json file and the name of your `/packages/{package-name}` directory
-const packageName = 'analytics-metric-provider'
+const packageName = 'analytics-config-store'
 const sanitizedPackageName = sanitizePackageName(packageName)
 
 // Merge the shared Vite config with the local one defined below
@@ -19,16 +19,12 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     rollupOptions: {
       // Make sure to externalize deps that shouldn't be bundled into your library
       external: [
-        '@kong-ui-public/i18n',
-        '@kong-ui-public/analytics-config-store',
         '@kong-ui-public/analytics-utilities',
         'pinia',
       ],
       output: {
         // Provide global variables to use in the UMD build for externalized deps
         globals: {
-          '@kong-ui-public/i18n': 'kong-ui-public-i18n',
-          '@kong-ui-public/analytics-config-store': 'kong-ui-public-analytics-config-store',
           '@kong-ui-public/analytics-utilities': 'kong-ui-public-analytics-utilities',
           pinia: 'pinia',
         },
@@ -37,7 +33,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
   },
 }))
 
-// If we are trying to preview a build of the local `package/analytics-metric-provider/sandbox` directory,
+// If we are trying to preview a build of the local `package/analytics-config-store/sandbox` directory,
 // unset the lib, rollupOptions.external and rollupOptions.output.globals properties
 if (process.env.USE_SANDBOX) {
   config.build.lib = undefined
