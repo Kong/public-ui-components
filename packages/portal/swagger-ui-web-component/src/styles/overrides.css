@@ -6,3 +6,7 @@
 .swagger-ui .wrapper {
   padding-top: 0;
 }
+
+.swagger-ui .opblock {
+  background: none !important;
+}
