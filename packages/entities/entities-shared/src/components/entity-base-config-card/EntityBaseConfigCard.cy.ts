@@ -135,10 +135,6 @@ describe('<EntityBaseConfigCard />', () => {
 
       cy.mount(EntityBaseConfigCard, {
         props: {
-          // TODO: Remove config once Feature Flag `khcp-8778-json-yaml-configurations` is enabled
-          config: {
-            jsonYamlEnabled: true,
-          },
           configSchema,
           fetchUrl,
         },
@@ -152,10 +148,6 @@ describe('<EntityBaseConfigCard />', () => {
 
       cy.mount(EntityBaseConfigCard, {
         props: {
-          // TODO: Remove config once Feature Flag `khcp-8778-json-yaml-configurations` is enabled
-          config: {
-            jsonYamlEnabled: true,
-          },
           configSchema,
           fetchUrl,
           configCardDoc: 'www.test.com',
