@@ -42,7 +42,7 @@
 import { ChartLegendPosition } from '../../enums'
 import { Chart, type LegendItem } from 'chart.js'
 import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType, computed } from 'vue'
-import { KUI_SPACE_100, KUI_SPACE_80 } from '@kong/design-tokens'
+import { KUI_SPACE_100, KUI_SPACE_80, KUI_SPACE_110 } from '@kong/design-tokens'
 import { debounce } from '../../utils'
 
 const props = defineProps({
@@ -96,7 +96,7 @@ const checkForWrap = () => {
   if (legendContainerRef.value && position.value === ChartLegendPosition.Bottom) {
     if (doesTheLegendWrap()) {
       // Allow for two rows of legend items
-      legendHeight.value = KUI_SPACE_100
+      legendHeight.value = KUI_SPACE_110
     } else {
       // Only need space for one row of legend items
       legendHeight.value = KUI_SPACE_80
