@@ -97,7 +97,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, onBeforeMount, watch, useSlots } from 'vue'
+import { computed, ref, onBeforeMount, watch } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, ConfigurationSchema, PluginConfigurationSchema, RecordItem, DefaultCommonFieldsConfigurationSchema } from '../../types'
 import { ConfigurationSchemaType, ConfigurationSchemaSection } from '../../types'
@@ -192,7 +192,6 @@ const props = defineProps({
   },
 })
 
-const slots = useSlots()
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
 const { convertKeyToTitle } = composables.useStringHelpers()
@@ -395,8 +394,6 @@ const propListTypes = computed((): string[] => {
   return types
 })
 
-const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
-
 /**
  * Build the fetcher URL
  */
@@ -414,14 +411,6 @@ const fetcherUrl = computed<string>(() => {
 
   return url
 })
-
-const handleClickCopy = (executeCopy: Function): void => {
-  if (record.value && executeCopy(JSON.stringify(record.value))) {
-    emit('copy:success', record.value)
-  } else {
-    emit('copy:error')
-  }
-}
 
 watch(isLoading, (loading: boolean) => {
   // Emit the loading state for the host app
