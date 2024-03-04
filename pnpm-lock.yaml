@@ -1024,7 +1024,7 @@ importers:
         specifier: ^3.25.1
         version: 3.25.3
       swagger-ui:
-        specifier: 5.1.0
+        specifier: ^5.1.0
         version: 5.1.0
     devDependencies:
       css-loader:
