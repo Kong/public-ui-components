@@ -96,10 +96,10 @@ const checkForWrap = () => {
   if (legendContainerRef.value && position.value === ChartLegendPosition.Bottom) {
     if (doesTheLegendWrap()) {
       // Allow for two rows of legend items
-      legendHeight.value = '60px'
+      legendHeight.value = '48px'
     } else {
       // Only need space for one row of legend items
-      legendHeight.value = '30px'
+      legendHeight.value = '24px'
     }
   }
 }
