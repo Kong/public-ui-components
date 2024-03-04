@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.3.0...@kong-ui-public/analytics-chart@2.3.1) (2024-03-04)
+
+
+### Bug Fixes
+
+* adjust legend height ([#1204](https://github.com/Kong/public-ui-components/issues/1204)) ([da758e0](https://github.com/Kong/public-ui-components/commit/da758e0688183e170612fd3ab46b7f31d1ccf07a))
+
+
+
+
+
 # [2.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.2.5...@kong-ui-public/analytics-chart@2.3.0) (2024-03-01)
 
 
