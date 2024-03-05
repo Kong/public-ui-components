@@ -31,9 +31,9 @@
       <!-- Form error -->
       <KAlert
         v-if="errorMessage"
-        :alert-message="errorMessage"
         appearance="danger"
         data-testid="form-error"
+        :message="errorMessage"
       />
 
       <!-- Form actions -->

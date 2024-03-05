@@ -28,9 +28,9 @@
       <template #default>
         <KAlert
           v-if="errorMessage"
-          :alert-message="errorMessage"
           appearance="danger"
           class="bottom-spacing"
+          :message="errorMessage"
         />
 
         <KFileUpload
