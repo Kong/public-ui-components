@@ -267,7 +267,7 @@ describe('<VaultList />', () => {
         cy.get('.kong-ui-entities-vaults-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -329,11 +329,11 @@ describe('<VaultList />', () => {
       cy.get(`${l} tbody tr[data-testid="vault-30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
@@ -346,17 +346,17 @@ describe('<VaultList />', () => {
       cy.get(`${l} tbody tr[data-testid="vault-59"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="vault-60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getRoutesMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
@@ -367,11 +367,11 @@ describe('<VaultList />', () => {
       cy.get(`${l} tbody tr[data-testid="vault-99"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="vault-100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
         'have.class',
         'disabled',
       )
@@ -577,7 +577,7 @@ describe('<VaultList />', () => {
         cy.get('.kong-ui-entities-vaults-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -639,11 +639,11 @@ describe('<VaultList />', () => {
       cy.get(`${l} tbody tr[data-testid="vault-30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
@@ -656,17 +656,17 @@ describe('<VaultList />', () => {
       cy.get(`${l} tbody tr[data-testid="vault-59"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="vault-60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getRoutesMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
@@ -677,11 +677,11 @@ describe('<VaultList />', () => {
       cy.get(`${l} tbody tr[data-testid="vault-99"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="vault-100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
         'have.class',
         'disabled',
       )

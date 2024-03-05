@@ -260,7 +260,7 @@ describe('<CertificateList />', () => {
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-certificates-list').should('be.visible')
       cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .k-empty-state-cta .k-button').should('be.visible')
+      cy.get('.k-table-empty-state .empty-state-action .k-button').should('be.visible')
     })
 
     it('should hide empty state and create certificate cta if user can not create', () => {
@@ -311,7 +311,7 @@ describe('<CertificateList />', () => {
         cy.get('.kong-ui-entities-certificates-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -348,11 +348,11 @@ describe('<CertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="certificate-30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
@@ -365,17 +365,17 @@ describe('<CertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="certificate-59"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="certificate-60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getCertificateMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
@@ -386,11 +386,11 @@ describe('<CertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="certificate-99"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="certificate-100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
         'have.class',
         'disabled',
       )
@@ -578,7 +578,7 @@ describe('<CertificateList />', () => {
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-certificates-list').should('be.visible')
       cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .k-empty-state-cta .k-button').should('be.visible')
+      cy.get('.k-table-empty-state .empty-state-action .k-button').should('be.visible')
     })
 
     it('should hide empty state and create certificate cta if user can not create', () => {
@@ -628,7 +628,7 @@ describe('<CertificateList />', () => {
         cy.get('.kong-ui-entities-certificates-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -665,11 +665,11 @@ describe('<CertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="certificate-30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
@@ -682,17 +682,17 @@ describe('<CertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="certificate-59"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="certificate-60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getCertificateMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
@@ -703,11 +703,11 @@ describe('<CertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="certificate-99"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="certificate-100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
         'have.class',
         'disabled',
       )

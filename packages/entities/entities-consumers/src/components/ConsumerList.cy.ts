@@ -192,7 +192,7 @@ describe('<ConsumerList />', () => {
         cy.get('.kong-ui-entities-consumers-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -254,11 +254,11 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
@@ -271,17 +271,17 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.59"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="consumer.60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getConsumersMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
@@ -292,11 +292,11 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.99"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="consumer.100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
         'have.class',
         'disabled',
       )
@@ -820,7 +820,7 @@ describe('<ConsumerList />', () => {
         cy.get('.kong-ui-entities-consumers-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -882,11 +882,11 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
@@ -899,17 +899,17 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.59"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="consumer.60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getConsumersMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .should('not.have.class', 'disabled')
         .click() // next page
 
@@ -920,11 +920,11 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.99"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="consumer.100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.class',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
         'have.class',
         'disabled',
       )

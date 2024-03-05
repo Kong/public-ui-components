@@ -124,7 +124,7 @@ const hasValidChartData = computed(() => {
     justify-content: center;
     width: 100px;
 
-    &:deep(.k-empty-state-title-header) {
+    &:deep(.empty-state-title) {
       font-size: $kui-font-size-20;
       line-height: $kui-line-height-20;
       margin: $kui-space-0;
