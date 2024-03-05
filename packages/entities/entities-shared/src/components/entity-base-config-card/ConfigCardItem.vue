@@ -132,7 +132,6 @@ import type { BadgeMethodAppearance } from '@kong/kongponents'
 import JsonCardItem from './JsonCardItem.vue'
 import InternalLinkItem from './InternalLinkItem.vue'
 import StatusBadge from './StatusBadge.vue'
-import '@kong-ui-public/copy-uuid/dist/style.css'
 
 const props = defineProps({
   item: {
