@@ -2,29 +2,23 @@
   <KEmptyState
     class="documentation-page-empty-state"
     data-testid="documentation-page-empty-state"
-    icon="stateGruceo"
-    icon-size="96"
   >
+    <template #icon>
+      <KongIcon />
+    </template>
     <template #title>
       {{ i18n.t('documentation.show.empty_state.title') }}
     </template>
-    <template #message>
+    <template #default>
       {{ i18n.t('documentation.show.empty_state.message') }}
     </template>
-    <template #cta>
-      <PermissionsWrapper
-        :auth-function="() => canEdit()"
-      >
+    <template #action>
+      <PermissionsWrapper :auth-function="() => canEdit()">
         <KButton
-          appearance="primary"
           data-testid="add-new-page-button"
           @click="emit('create-documentation')"
         >
-          <template #icon>
-            <AddIcon
-              size="22"
-            />
-          </template>
+          <AddIcon />
           {{ i18n.t('documentation.show.empty_state.ctaText') }}
         </KButton>
       </PermissionsWrapper>
@@ -35,7 +29,7 @@
 <script setup lang="ts">
 import composables from '../composables'
 import { PermissionsWrapper } from '@kong-ui-public/entities-shared'
-import { AddIcon } from '@kong/icons'
+import { AddIcon, KongIcon } from '@kong/icons'
 import type { PropType } from 'vue'
 
 defineProps({

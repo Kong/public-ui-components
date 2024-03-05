@@ -33,14 +33,12 @@
           >
             <template #empty-state>
               <KEmptyState
-                cta-is-hidden
-                icon="stateNoData"
-                icon-size="96"
+                :action-button-visible="false"
               >
                 <template #title>
                   <h5>{{ i18n.t('csvExport.noDataRange') }}</h5>
                 </template>
-                <template #message>
+                <template #default>
                   <p>{{ i18n.t('csvExport.noDataRetry') }}</p>
                 </template>
               </KEmptyState>

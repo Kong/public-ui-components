@@ -41,16 +41,14 @@
     </div>
     <KEmptyState
       v-if="!hasValidChartData"
+      :action-button-visible="false"
       class="chart-empty-state"
-      :cta-is-hidden="true"
       data-testid="no-data-in-report"
-      icon="stateNoData"
-      icon-size="170"
     >
       <template #title>
         {{ emptyStateTitle }}
       </template>
-      <template #message>
+      <template #default>
         {{ emptyStateDescription }}
       </template>
     </KEmptyState>

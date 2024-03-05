@@ -2,12 +2,14 @@
   <div class="plugin-select-grid">
     <KEmptyState
       v-if="!Object.keys(displayedPlugins).length"
+      :action-button-visible="false"
       class="plugins-empty-state"
-      cta-is-hidden
       data-testid="plugins-empty-state"
-      icon="stateGruceo"
-      icon-size="96"
     >
+      <template #icon>
+        <KongIcon />
+      </template>
+
       <!-- this will only be shown if there are no existing Kong plugins -->
       <template #title>
         <span class="empty-state-title">
@@ -15,7 +17,7 @@
         </span>
       </template>
 
-      <template #message>
+      <template #default>
         <span class="empty-state-description">
           {{ t('plugins.select.tabs.kong.empty_description') }}
         </span>
@@ -84,6 +86,7 @@ import {
 } from '../../types'
 import composables from '../../composables'
 import PluginSelectCard from './PluginSelectCard.vue'
+import { KongIcon } from '@kong/icons'
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */

@@ -36,9 +36,8 @@
     >
       <slot name="error-state">
         <KEmptyState
-          cta-is-hidden
-          icon-size="50"
-          :is-error="true"
+          :action-button-visible="false"
+          icon-variant="error"
         >
           <template #title>
             {{ i18n.t('specRenderer.error') }}

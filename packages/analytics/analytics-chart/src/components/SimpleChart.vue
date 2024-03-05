@@ -2,11 +2,9 @@
   <div class="simple-chart-shell">
     <KEmptyState
       v-if="!hasValidChartData"
+      :action-button-visible="true"
       class="chart-empty-state"
-      :cta-is-hidden="true"
       data-testid="no-data-in-report"
-      icon="stateNoData"
-      icon-size="80"
     >
       <template #title>
         {{ emptyStateTitle }}
