@@ -350,11 +350,10 @@ describe('<GatewayServiceList />', () => {
 
       cy.get(`${l} ${p}`).should('exist')
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'have.class',
+        'have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getGatewayServicesMultiPage')
@@ -367,17 +366,15 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-60"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'not.have.class',
+        'not.have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getGatewayServicesMultiPage')
 
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       // Page #4
@@ -388,11 +385,11 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-100"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'not.have.class',
+        'not.have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`).should(
-        'have.class',
+        'have.attr',
         'disabled',
       )
     })
@@ -426,10 +423,7 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-29"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -464,10 +458,7 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-14"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -481,10 +472,7 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-49"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
   })
 
@@ -660,11 +648,10 @@ describe('<GatewayServiceList />', () => {
 
       cy.get(`${l} ${p}`).should('exist')
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'have.class',
+        'have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getGatewayServicesMultiPage')
@@ -677,17 +664,15 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-60"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'not.have.class',
+        'not.have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getGatewayServicesMultiPage')
 
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       // Page #4
@@ -698,11 +683,11 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-100"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'not.have.class',
+        'not.have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`).should(
-        'have.class',
+        'have.attr',
         'disabled',
       )
     })
@@ -735,10 +720,7 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-29"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -773,10 +755,7 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-14"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -790,10 +769,7 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-49"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
   })
 })

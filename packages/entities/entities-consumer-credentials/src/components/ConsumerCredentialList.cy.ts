@@ -405,11 +405,10 @@ describe('<ConsumerCredentialList />', () => {
 
       cy.get(`${l} ${p}`).should('exist')
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'have.class',
+        'have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getCredentialsMultiPage')
@@ -422,17 +421,15 @@ describe('<ConsumerCredentialList />', () => {
       cy.get(`${l} tbody tr[data-rowid="60"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'not.have.class',
+        'not.have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getCredentialsMultiPage')
 
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       // Page #4
@@ -443,11 +440,11 @@ describe('<ConsumerCredentialList />', () => {
       cy.get(`${l} tbody tr[data-rowid="100"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'not.have.class',
+        'not.have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`).should(
-        'have.class',
+        'have.attr',
         'disabled',
       )
     })
@@ -481,10 +478,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.get(`${l} tbody tr[data-rowid="29"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -519,10 +513,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.get(`${l} tbody tr[data-rowid="14"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -536,10 +527,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.get(`${l} tbody tr[data-rowid="49"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
   })
 
@@ -710,11 +698,10 @@ describe('<ConsumerCredentialList />', () => {
 
       cy.get(`${l} ${p}`).should('exist')
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'have.class',
+        'have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getCredentialsMultiPage')
@@ -727,17 +714,15 @@ describe('<ConsumerCredentialList />', () => {
       cy.get(`${l} tbody tr[data-rowid="60"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'not.have.class',
+        'not.have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getCredentialsMultiPage')
 
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       // Page #4
@@ -748,11 +733,11 @@ describe('<ConsumerCredentialList />', () => {
       cy.get(`${l} tbody tr[data-rowid="100"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'not.have.class',
+        'not.have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`).should(
-        'have.class',
+        'have.attr',
         'disabled',
       )
     })
@@ -785,10 +770,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.get(`${l} tbody tr[data-rowid="29"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -822,10 +804,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.get(`${l} tbody tr[data-rowid="14"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -839,10 +818,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.get(`${l} tbody tr[data-rowid="49"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
   })
 })

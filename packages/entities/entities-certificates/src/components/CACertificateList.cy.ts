@@ -223,7 +223,7 @@ describe('<CACertificateList />', () => {
       cy.get('.k-table-empty-state .empty-state-action .k-button').should('be.visible')
     })
 
-    it.only('should hide empty state and create ca certificate cta if user can not create', () => {
+    it('should hide empty state and create ca certificate cta if user can not create', () => {
       interceptKM()
 
       cy.mount(CACertificateList, {
@@ -309,11 +309,10 @@ describe('<CACertificateList />', () => {
 
       cy.get(`${l} ${p}`).should('exist')
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'have.class',
+        'have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getCaCertificateMultiPage')
@@ -326,17 +325,15 @@ describe('<CACertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="ca-certificate-60"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'not.have.class',
+        'not.have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getCaCertificateMultiPage')
 
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       // Page #4
@@ -347,11 +344,11 @@ describe('<CACertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="ca-certificate-100"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'not.have.class',
+        'not.have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`).should(
-        'have.class',
+        'have.attr',
         'disabled',
       )
     })
@@ -385,10 +382,7 @@ describe('<CACertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="ca-certificate-29"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="ca-certificate-30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -423,10 +417,7 @@ describe('<CACertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="ca-certificate-14"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="ca-certificate-15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -440,10 +431,7 @@ describe('<CACertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="ca-certificate-49"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="ca-certificate-50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
 
     it('should show ca certificate items', () => {
@@ -619,11 +607,10 @@ describe('<CACertificateList />', () => {
 
       cy.get(`${l} ${p}`).should('exist')
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'have.class',
+        'have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getCaCertificateMultiPage')
@@ -636,17 +623,15 @@ describe('<CACertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="ca-certificate-60"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'not.have.class',
+        'not.have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       cy.wait('@getCaCertificateMultiPage')
 
       cy.get(`${l} ${p} [data-testid="next-button"]`)
-        .should('not.have.class', 'disabled')
         .click() // next page
 
       // Page #4
@@ -657,11 +642,11 @@ describe('<CACertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="ca-certificate-100"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
-        'not.have.class',
+        'not.have.attr',
         'disabled',
       )
       cy.get(`${l} ${p} [data-testid="next-button"]`).should(
-        'have.class',
+        'have.attr',
         'disabled',
       )
     })
@@ -695,10 +680,7 @@ describe('<CACertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="ca-certificate-29"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="ca-certificate-30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -733,10 +715,7 @@ describe('<CACertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="ca-certificate-14"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="ca-certificate-15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -750,10 +729,7 @@ describe('<CACertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="ca-certificate-49"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="ca-certificate-50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
 
     it('should show certificate items', () => {
