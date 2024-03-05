@@ -9,11 +9,10 @@
       :cell-attrs="cellAttrs"
       :disable-pagination-page-jump="disablePaginationPageJump"
       :disable-sorting="disableSorting"
-      :empty-state-action-button-icon="query ? '' : 'plus'"
+      :empty-state-action-button-show-plus-icon="!query"
       :empty-state-action-message="query ? t('baseTable.emptyState.noSearchResultsCtaText') : emptyStateOptions.ctaText"
       :empty-state-action-route="query ? '' : emptyStateOptions.ctaPath"
-      :empty-state-icon="query ? 'stateNoSearchResults' : 'stateGruceo'"
-      empty-state-icon-size="96"
+      empty-state-icon-variant="search"
       :empty-state-message="query ? t('baseTable.emptyState.noSearchResultsMessage') : emptyStateOptions.message"
       :empty-state-title="query ? t('baseTable.emptyState.noSearchResultsTitle') : emptyStateOptions.title"
       :enable-client-sort="enableClientSort"
@@ -34,6 +33,12 @@
       @sort="(params: any) => handleSortChanged(params)"
       @update:table-preferences="handleUpdateTablePreferences"
     >
+      <template
+        v-if="!query"
+        #empty-state-icon
+      >
+        <KongIcon />
+      </template>
       <template #toolbar="{ state }">
         <div
           v-show="showToolbar(state)"
@@ -123,6 +128,7 @@ import type {
   TableSortParams,
   TableErrorMessage,
 } from '../../types'
+import { KongIcon } from '@kong/icons'
 
 const props = defineProps({
   // table header configuration
