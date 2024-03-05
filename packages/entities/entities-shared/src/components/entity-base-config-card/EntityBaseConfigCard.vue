@@ -1,4 +1,3 @@
-<!-- TODO: Remove jsonYamlEnabled reference once Feature Flag `khcp-8778-json-yaml-configurations` is enabled -->
 <template>
   <KCard
     class="kong-ui-entity-base-config-card"
@@ -18,21 +17,19 @@
       <div class="config-card-actions">
         <slot name="actions" />
         <KLabel
-          v-if="config.jsonYamlEnabled"
           class="config-format-select-label"
           data-testid="config-format-select-label"
         >
           {{ label }}
         </KLabel>
         <KSelect
-          v-if="config.jsonYamlEnabled"
           data-testid="select-config-format"
           :items="configFormatItems"
           @change="handleChange"
         />
 
         <KButton
-          v-if="props.config.jsonYamlEnabled && configCardDoc"
+          v-if="configCardDoc"
           appearance="tertiary"
           class="book-icon"
           data-testid="book-icon"
@@ -47,20 +44,6 @@
             />
           </a>
         </KButton>
-
-        <KClipboardProvider
-          v-if="!config.jsonYamlEnabled"
-          v-slot="{ copyToClipboard }"
-        >
-          <KButton
-            v-if="!isLoading && !fetchDetailsError"
-            appearance="tertiary"
-            data-testid="json-copy-button"
-            @click="handleClickCopy(copyToClipboard)"
-          >
-            {{ t('baseConfigCard.actions.copy') }}
-          </KButton>
-        </KClipboardProvider>
       </div>
     </template>
 
@@ -85,7 +68,6 @@
 
     <!-- Properties Content -->
     <div
-      v-if="config.jsonYamlEnabled"
       class="config-card-details-section"
     >
       <ConfigCardDisplay
@@ -110,66 +92,16 @@
         </template>
       </ConfigCardDisplay>
     </div>
-
-    <!-- TODO: Remove below div once Feature Flag `khcp-8778-json-yaml-configurations` is enabled -->
-    <div
-      v-else
-      class="config-card-details-section"
-    >
-      <div
-        v-for="pType in propListTypes"
-        :key="`config-card-details-${pType}-props`"
-        :class="`config-card-details-${pType}-props`"
-        :data-testid="`config-card-details-${pType}-props`"
-      >
-        <div
-          v-if="pType !== 'basic'"
-          class="config-card-prop-section-title"
-        >
-          {{ pType === 'advanced' ? t('baseConfigCard.sections.advanced') : t('baseConfigCard.sections.plugin') }}
-        </div>
-
-        <ConfigCardItem
-          v-for="propertyItem in propertyLists[pType as keyof typeof propertyLists]"
-          :key="propertyItem.key"
-          :item="propertyItem"
-        >
-          <template #label>
-            <slot
-              :name="`${propertyItem.key}-label`"
-              :row="propertyItem"
-            />
-          </template>
-          <template
-            v-if="hasTooltip(propertyItem)"
-            #label-tooltip
-          >
-            <slot
-              :name="`${propertyItem.key}-label-tooltip`"
-              :row="propertyItem"
-            />
-          </template>
-          <template #[propertyItem.key]="{ rowValue }">
-            <slot
-              :name="propertyItem.key"
-              :row="propertyItem"
-              :row-value="rowValue"
-            />
-          </template>
-        </ConfigCardItem>
-      </div>
-    </div>
   </KCard>
 </template>
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, onBeforeMount, watch, useSlots } from 'vue'
+import { computed, ref, onBeforeMount, watch } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, ConfigurationSchema, PluginConfigurationSchema, RecordItem, DefaultCommonFieldsConfigurationSchema } from '../../types'
 import { ConfigurationSchemaType, ConfigurationSchemaSection } from '../../types'
 import composables from '../../composables'
-import ConfigCardItem from './ConfigCardItem.vue'
 import ConfigCardDisplay from './ConfigCardDisplay.vue'
 import { BookIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
@@ -260,7 +192,6 @@ const props = defineProps({
   },
 })
 
-const slots = useSlots()
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
 const { convertKeyToTitle } = composables.useStringHelpers()
@@ -463,8 +394,6 @@ const propListTypes = computed((): string[] => {
   return types
 })
 
-const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
-
 /**
  * Build the fetcher URL
  */
@@ -482,14 +411,6 @@ const fetcherUrl = computed<string>(() => {
 
   return url
 })
-
-const handleClickCopy = (executeCopy: Function): void => {
-  if (record.value && executeCopy(JSON.stringify(record.value))) {
-    emit('copy:success', record.value)
-  } else {
-    emit('copy:error')
-  }
-}
 
 watch(isLoading, (loading: boolean) => {
   // Emit the loading state for the host app
