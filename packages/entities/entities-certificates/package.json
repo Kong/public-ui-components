@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-certificates",
-  "version": "2.3.29",
+  "version": "2.3.30",
   "type": "module",
   "main": "./dist/entities-certificates.umd.js",
   "module": "./dist/entities-certificates.es.js",

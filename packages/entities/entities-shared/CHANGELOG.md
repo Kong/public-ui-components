@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.8.0...@kong-ui-public/entities-shared@2.9.0) (2024-03-05)
+
+
+### Features
+
+* remove json/yaml milestone 1 config table ff post GA [KHCP-10815] ([#1207](https://github.com/Kong/public-ui-components/issues/1207)) ([5fa95ae](https://github.com/Kong/public-ui-components/commit/5fa95aecbd7b7ea0a5605e5b5b766c409d29fd31))
+
+
+
+
+
 # [2.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.7.6...@kong-ui-public/entities-shared@2.8.0) (2024-03-01)
 
 
