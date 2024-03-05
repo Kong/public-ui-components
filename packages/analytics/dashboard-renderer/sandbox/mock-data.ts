@@ -1,29 +1,45 @@
-import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4, ExploreQuery } from '@kong-ui-public/analytics-utilities'
+import type { DashboardConfig, TileConfig } from '../src/types'
+import { ChartTypes } from '../src/types'
 
 export const nonTsExploreResponse: ExploreResultV4 = {
   data: [{
-    event: { status_code_grouped: '2XX', request_count: 128618 },
-    timestamp: '2024-01-31T19:16:00.000Z',
-  }, {
-    event: { status_code_grouped: '4XX', request_count: 45950 },
-    timestamp: '2024-01-31T19:16:00.000Z',
-  }, {
-    event: { status_code_grouped: '3XX', request_count: 39334 },
-    timestamp: '2024-01-31T19:16:00.000Z',
-  }, { event: { status_code_grouped: '5XX', request_count: 36851 }, timestamp: '2024-01-31T19:16:00.000Z' }],
+    event: { status_code_grouped: '2XX', request_count: 42114 },
+    timestamp: '2024-03-05T04:34:00.000Z',
+  },
+  {
+    event: { status_code_grouped: '3XX', request_count: 14147 },
+    timestamp: '2024-03-05T04:34:00.000Z',
+  },
+  {
+    event: { status_code_grouped: '4XX', request_count: 13617 },
+    timestamp: '2024-03-05T04:34:00.000Z',
+  },
+  {
+    event: { status_code_grouped: '2XX', request_count: 27902 },
+    timestamp: '2024-03-05T04:49:00.000Z',
+  },
+  {
+    event: { status_code_grouped: '3XX', request_count: 9080 },
+    timestamp: '2024-03-05T04:49:00.000Z',
+  },
+  {
+    event: { status_code_grouped: '4XX', request_count: 26745 },
+    timestamp: '2024-03-05T04:49:00.000Z',
+  }],
   meta: {
-    start_ms: 1706728560000,
-    end_ms: 1706732160000,
-    granularity_ms: 3600000,
-    query_id: 'explore-4533113e-af8f-4ded-be25-332ccded4d8c',
+    start_ms: 1709613240000,
+    end_ms: 1709615040000,
+    granularity_ms: 900000,
+    query_id: 'explore-814be27f-ff3c-470e-9a08-3fsv92vbd',
     metric_names: ['request_count'],
     truncated: false,
     display: {
       status_code_grouped: {
-        '2XX': { name: '2XX', deleted: false },
-        '4XX': { name: '4XX', deleted: false },
-        '3XX': { name: '3XX', deleted: false },
-        '5XX': { name: '5XX', deleted: false },
+        '2XX': { name: '2XX' },
+        '3XX': { name: '3XX' },
+        '4XX': { name: '4XX' },
+        '5XX': { name: '5XX' },
       },
     },
     metric_units: { request_count: 'count' },
@@ -222,4 +238,129 @@ export const timeSeriesExploreResponse: ExploreResultV4 = {
     display: {},
     metric_units: { kong_latency_p99: 'ms', kong_latency_p95: 'ms', kong_latency_p50: 'ms' },
   },
+}
+
+export const summaryDashboardConfig: DashboardConfig = {
+  gridSize: {
+    cols: 6,
+    rows: 9,
+  },
+  tileHeight: 167,
+  tiles: [
+    // 3 x Metric cards
+    {
+      definition: {
+        chart: {
+          type: ChartTypes.GoldenSignals,
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 0,
+        },
+        size: {
+          cols: 6,
+          rows: 1,
+        },
+      },
+    } as TileConfig,
+
+    // 2 x Timeseries
+    {
+      definition: {
+        chart: {
+          type: ChartTypes.TimeseriesLine,
+          chartDatasetColors: {
+            request_count: '#169FCC',
+          },
+          chartTitle: 'Total Traffic over Time',
+        },
+        query: {
+          metrics: [
+            'request_count',
+          ],
+          dimensions: [
+            'time',
+          ],
+        } as ExploreQuery,
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 1,
+        },
+        size: {
+          cols: 3,
+          rows: 2,
+        },
+      },
+    } as unknown as TileConfig,
+    {
+      definition: {
+        chart: {
+          type: ChartTypes.TimeseriesLine,
+          chartDatasetColors: {
+            response_latency_p99: '#169FCC',
+            response_latency_p95: '#1155CB',
+            response_latency_p50: '#42D782',
+          },
+          chartTitle: 'Latency Breakdown over Time',
+        },
+        query: {
+          metrics: [
+            'response_latency_p99',
+            'response_latency_p95',
+            'response_latency_p50',
+          ],
+          dimensions: [
+            'time',
+          ],
+        } as unknown as ExploreQuery,
+      },
+      layout: {
+        position: {
+          col: 3,
+          row: 1,
+        },
+        size: {
+          cols: 3,
+          rows: 2,
+        },
+      },
+    } as unknown as TileConfig,
+
+    // 1 x Timeseries
+    {
+      definition: {
+        chart: {
+          type: ChartTypes.TimeseriesLine,
+          chartDatasetColors: {
+            upstream_latency_p99: '#169FCC',
+            kong_latency_p99: '#1155CB',
+          },
+          chartTitle: 'Kong vs Upstream Latency over Time',
+        },
+        query: {
+          metrics: [
+            'upstream_latency_p99',
+            'kong_latency_p99',
+          ],
+          dimensions: [
+            'time',
+          ],
+        } as ExploreQuery,
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 3,
+        },
+        size: {
+          cols: 6,
+          rows: 2,
+        },
+      },
+    } as unknown as TileConfig,
+  ],
 }

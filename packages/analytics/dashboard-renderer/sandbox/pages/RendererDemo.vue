@@ -62,7 +62,14 @@ const dashboardConfig: DashboardConfig = {
           type: ChartTypes.HorizontalBar,
           chartTitle: 'Horizontal bar chart of mock data',
         },
-        query: {},
+        query: {
+          metrics: [
+            'request_size_average',
+          ],
+          dimensions: [
+            'api_product_version',
+          ],
+        },
       },
       layout: {
         position: {
@@ -116,12 +123,19 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
-          chartTitle: 'Timeseries line chart of mock data',
+          chartTitle: 'Timeseries line chart of mock latency data',
           type: ChartTypes.TimeseriesLine,
           fill: true,
         },
         query: {
-          dimensions: ['time'],
+          metrics: [
+            'kong_latency_p99',
+            'kong_latency_p95',
+            'kong_latency_p50',
+          ],
+          dimensions: [
+            'time',
+          ],
         },
       },
       layout: {
