@@ -14,7 +14,6 @@ A table component for keys.
 
 - `vue` and `vue-router` must be initialized in the host application
 - `@kong/kongponents` must be added as a `dependency` in the host application, globally available via the Vue Plugin installation, and the package's style imports must be added in the app entry file. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents).
-- `@kong-ui-public/copy-uuid` must be available as a `dependency` in the host application, globally available via the Vue Plugin installation, and the package's style imports must be added in the app entry file.
 - `@kong-ui-public/i18n` must be available as a `dependency` in the host application.
 - `axios` must be installed as a dependency in the host application
 

@@ -22,7 +22,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.107",
+    "@kong/kongponents": "9.0.0-alpha.111",
     "axios": "^1.6.7",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.3.0"
@@ -30,7 +30,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.12.10",
-    "@kong/kongponents": "9.0.0-alpha.107",
+    "@kong/kongponents": "9.0.0-alpha.111",
     "axios": "^1.6.7",
     "vue": "^3.4.20",
     "vue-router": "^4.3.0"
@@ -65,7 +65,6 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
     "@peculiar/x509": "^1.9.7"
   },

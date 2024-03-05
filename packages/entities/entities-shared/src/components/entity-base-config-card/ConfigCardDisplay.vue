@@ -64,7 +64,6 @@
 import type { PropType } from 'vue'
 import { computed, useSlots } from 'vue'
 import type { RecordItem, KonnectBaseEntityConfig, KongManagerBaseEntityConfig } from '../../types'
-import '@kong-ui-public/copy-uuid/dist/style.css'
 import ConfigCardItem from './ConfigCardItem.vue'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
 import YamlCodeBlock from '../common/YamlCodeBlock.vue'

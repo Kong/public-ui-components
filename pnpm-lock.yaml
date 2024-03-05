@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -598,9 +594,6 @@ importers:
 
   packages/entities/entities-certificates:
     dependencies:
-      '@kong-ui-public/copy-uuid':
-        specifier: workspace:^
-        version: link:../../core/copy-uuid
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
@@ -633,9 +626,6 @@ importers:
         specifier: workspace:^
         version: link:../entities-shared
     devDependencies:
-      '@kong-ui-public/copy-uuid':
-        specifier: workspace:^
-        version: link:../../core/copy-uuid
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
@@ -736,9 +726,6 @@ importers:
         specifier: workspace:^
         version: link:../entities-shared
     devDependencies:
-      '@kong-ui-public/copy-uuid':
-        specifier: workspace:^
-        version: link:../../core/copy-uuid
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
@@ -761,9 +748,6 @@ importers:
         specifier: workspace:^
         version: link:../entities-shared
     devDependencies:
-      '@kong-ui-public/copy-uuid':
-        specifier: workspace:^
-        version: link:../../core/copy-uuid
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
@@ -785,9 +769,6 @@ importers:
 
   packages/entities/entities-plugins:
     dependencies:
-      '@kong-ui-public/copy-uuid':
-        specifier: workspace:^
-        version: link:../../core/copy-uuid
       '@kong-ui-public/entities-consumer-groups':
         specifier: workspace:^
         version: link:../entities-consumer-groups
@@ -859,9 +840,6 @@ importers:
 
   packages/entities/entities-shared:
     dependencies:
-      '@kong-ui-public/copy-uuid':
-        specifier: workspace:^
-        version: link:../../core/copy-uuid
       '@kong-ui-public/core':
         specifier: workspace:^
         version: link:../../core/core
@@ -893,9 +871,6 @@ importers:
 
   packages/entities/entities-snis:
     dependencies:
-      '@kong-ui-public/copy-uuid':
-        specifier: workspace:^
-        version: link:../../core/copy-uuid
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
@@ -1595,12 +1570,11 @@ packages:
       ajv: 8.12.0
     dev: true
 
-  /@commitlint/config-validator@19.0.0:
-    resolution: {integrity: sha512-oxJ2k+jBPRyWzv1ixfxwGZO5DJ1S+v3D8u/QESMwuPh3kQmeOYBRxGI+5FDWMwiVSHpztlhvvxDAU9SFXeMqUA==}
+  /@commitlint/config-validator@19.0.3:
+    resolution: {integrity: sha512-2D3r4PKjoo59zBc2auodrSCaUnCSALCx54yveOFwwP/i2kfEAQrygwOleFWswLqK0UL/F9r07MFi5ev2ohyM4Q==}
     engines: {node: '>=v18'}
-    requiresBuild: true
     dependencies:
-      '@commitlint/types': 19.0.0
+      '@commitlint/types': 19.0.3
       ajv: 8.12.0
     dev: true
     optional: true
@@ -1677,15 +1651,15 @@ packages:
       - typescript
     dev: true
 
-  /@commitlint/load@19.0.1(@types/node@18.19.18)(typescript@5.3.3):
-    resolution: {integrity: sha512-5w5RHhtidRPMRm8ktph+NKypt1Wu5Z2jbU1Lc+1IS9Azy83JWRBQ9xKBbW9gF66R/TwHF0v6Jy8KOqRS8I/GgA==}
+  /@commitlint/load@19.0.3(@types/node@18.19.18)(typescript@5.3.3):
+    resolution: {integrity: sha512-18Tk/ZcDFRKIoKfEcl7kC+bYkEQ055iyKmGsYDoYWpKf6FUvBrP9bIWapuy/MB+kYiltmP9ITiUx6UXtqC9IRw==}
     engines: {node: '>=v18'}
     requiresBuild: true
     dependencies:
-      '@commitlint/config-validator': 19.0.0
+      '@commitlint/config-validator': 19.0.3
       '@commitlint/execute-rule': 19.0.0
-      '@commitlint/resolve-extends': 19.0.1
-      '@commitlint/types': 19.0.0
+      '@commitlint/resolve-extends': 19.0.3
+      '@commitlint/types': 19.0.3
       chalk: 5.3.0
       cosmiconfig: 8.3.6(typescript@5.3.3)
       cosmiconfig-typescript-loader: 5.0.0(@types/node@18.19.18)(cosmiconfig@8.3.6)(typescript@5.3.3)
@@ -1735,16 +1709,16 @@ packages:
       resolve-global: 1.0.0
     dev: true
 
-  /@commitlint/resolve-extends@19.0.1:
-    resolution: {integrity: sha512-U5BRCNEiib0I06e6utNzBXZRu/t/bzlqVljS5kaNwggPN1VS+Kvuks8fY97j85B8sifHXU5dhUICPRKP8Oj31A==}
+  /@commitlint/resolve-extends@19.0.3:
+    resolution: {integrity: sha512-18BKmta8OC8+Ub+Q3QGM9l27VjQaXobloVXOrMvu8CpEwJYv62vC/t7Ka5kJnsW0tU9q1eMqJFZ/nN9T/cOaIA==}
     engines: {node: '>=v18'}
-    requiresBuild: true
     dependencies:
-      '@commitlint/config-validator': 19.0.0
-      '@commitlint/types': 19.0.0
+      '@commitlint/config-validator': 19.0.3
+      '@commitlint/types': 19.0.3
       global-directory: 4.0.1
       import-meta-resolve: 4.0.0
       lodash.mergewith: 4.6.2
+      resolve-from: 5.0.0
     dev: true
     optional: true
 
@@ -1779,11 +1753,11 @@ packages:
       chalk: 4.1.2
     dev: true
 
-  /@commitlint/types@19.0.0:
-    resolution: {integrity: sha512-qLjLUdYXKi0TIavONrjBkxrElp7KguqDbvzIRbqTdJBV/cAAr8QEhHe1qUq8OcCM3gFWTlUrDz3ISZbkRoGsAg==}
+  /@commitlint/types@19.0.3:
+    resolution: {integrity: sha512-tpyc+7i6bPG9mvaBbtKUeghfyZSDgWquIDfMgqYtTbmZ9Y9VzEm2je9EYcQ0aoz5o7NvGS+rcDec93yO08MHYA==}
     engines: {node: '>=v18'}
-    requiresBuild: true
     dependencies:
+      '@types/conventional-commits-parser': 5.0.0
       chalk: 5.3.0
     dev: true
     optional: true
@@ -1905,7 +1879,7 @@ packages:
       right-pad: 1.0.1
       word-wrap: 1.2.3
     optionalDependencies:
-      '@commitlint/load': 19.0.1(@types/node@18.19.18)(typescript@5.3.3)
+      '@commitlint/load': 19.0.3(@types/node@18.19.18)(typescript@5.3.3)
     transitivePeerDependencies:
       - '@types/node'
       - typescript
@@ -2396,7 +2370,7 @@ packages:
     peerDependencies:
       axios: ^1.6.7
       vue: '>= 3.3.4 < 4'
-      vue-router: ^4.2.5
+      vue-router: ^4.3.0
     dependencies:
       '@kong/icons': 1.8.14(vue@3.3.13)
       '@popperjs/core': 2.11.8
@@ -2421,7 +2395,7 @@ packages:
     peerDependencies:
       axios: ^1.6.7
       vue: '>= 3.3.4 < 4'
-      vue-router: ^4.2.5
+      vue-router: ^4.3.0
     dependencies:
       '@kong/icons': 1.8.14(vue@3.4.20)
       '@popperjs/core': 2.11.8
@@ -3718,6 +3692,13 @@ packages:
     dependencies:
       '@types/node': 18.19.18
     dev: true
+
+  /@types/conventional-commits-parser@5.0.0:
+    resolution: {integrity: sha512-loB369iXNmAZglwWATL+WRe+CRMmmBPtpolYzIebFaX4YA3x+BEfLqhUAV9WanycKI3TG1IMr5bMJDajDKLlUQ==}
+    dependencies:
+      '@types/node': 18.19.18
+    dev: true
+    optional: true
 
   /@types/eslint-scope@3.7.4:
     resolution: {integrity: sha512-9K4zoImiZc3HlIp6AVUDE4CWYx22a+lhSZMYNpbjW04+YF0KWj4pJXnEMjdnFTiQibFFmElcsasJXDbdI/EPhA==}
@@ -6392,7 +6373,7 @@ packages:
       longest: 2.0.1
       word-wrap: 1.2.3
     optionalDependencies:
-      '@commitlint/load': 19.0.1(@types/node@18.19.18)(typescript@5.3.3)
+      '@commitlint/load': 19.0.3(@types/node@18.19.18)(typescript@5.3.3)
     transitivePeerDependencies:
       - '@types/node'
       - typescript
@@ -9303,7 +9284,7 @@ packages:
     hasBin: true
     dependencies:
       async: 3.2.4
-      chalk: 4.1.2
+      chalk: 4.1.0
       filelist: 1.0.4
       minimatch: 3.1.2
     dev: true
@@ -9312,7 +9293,7 @@ packages:
     resolution: {integrity: sha512-LMIgiIrhigmPrs03JHpxUh2yISK3vLFPkAodPeo0+BuF7wA2FoQbkEg1u8gBYBThncu7e1oEDUfIXVuTqLRUjw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      chalk: 4.1.2
+      chalk: 4.1.0
       diff-sequences: 29.6.3
       jest-get-type: 29.6.3
       pretty-format: 29.7.0
@@ -10809,7 +10790,7 @@ packages:
       '@yarnpkg/parsers': 3.0.0-rc.46
       '@zkochan/js-yaml': 0.0.6
       axios: 1.6.7
-      chalk: 4.1.2
+      chalk: 4.1.0
       cli-cursor: 3.1.0
       cli-spinners: 2.6.1
       cliui: 8.0.1
@@ -15295,3 +15276,7 @@ packages:
   /zenscroll@4.0.2:
     resolution: {integrity: sha512-jEA1znR7b4C/NnaycInCU6h/d15ZzCd1jmsruqOKnZP6WXQSMH3W2GL+OXbkruslU4h+Tzuos0HdswzRUk/Vgg==}
     dev: false
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false

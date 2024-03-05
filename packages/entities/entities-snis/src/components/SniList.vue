@@ -53,13 +53,11 @@
         <b>{{ rowValue ?? '-' }}</b>
       </template>
       <template #certificate="{ row }">
-        <CopyUuid
+        <KCopy
           v-if="row.certificate && row.certificate.id"
           class="copy-certificate-uuid"
           data-testid="copy-certificate-uuid"
-          :notify="(params: CopyUuidNotifyParam) => handleCopy(params, row)"
-          :truncated="false"
-          :uuid="row.certificate.id"
+          :text="row.certificate.id"
         />
         <span v-else>-</span>
       </template>
@@ -159,10 +157,7 @@ import type {
   FuzzyMatchFilterConfig,
   TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
-import type { CopyUuidNotifyParam } from '@kong-ui-public/copy-uuid'
-import { CopyUuid } from '@kong-ui-public/copy-uuid'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import '@kong-ui-public/copy-uuid/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
@@ -221,22 +216,6 @@ const props = defineProps({
 })
 
 const { i18n: { t } } = composables.useI18n()
-
-const handleCopy = (params: CopyUuidNotifyParam, entity: EntityRow) => {
-  if (params.type === 'error') {
-    emit('copy:error', {
-      entity,
-      field: 'certificate.id',
-      message: t('errors.copy'),
-    })
-  } else {
-    emit('copy:success', {
-      entity,
-      field: 'certificate.id',
-      message: t('copy.success', { val: entity.certificate?.id }),
-    })
-  }
-}
 
 const { axiosInstance } = useAxios({
   headers: props.config?.requestHeaders,

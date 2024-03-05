@@ -58,14 +58,11 @@
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer')"
         />
-        <CopyUuid
+        <KCopy
           v-else
+          :copy-tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
           data-testid="consumer-copy-uuid"
-          :notify="() => {}"
-          :success-tooltip="t('copy.success_tooltip')"
-          :tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
-          :truncated="false"
-          :uuid="getPropValue('rowValue', slotProps).id"
+          :text="getPropValue('rowValue', slotProps).id"
         />
       </template>
 
@@ -80,14 +77,11 @@
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'route')"
         />
-        <CopyUuid
+        <KCopy
           v-else
+          :copy-tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
           data-testid="route-copy-uuid"
-          :notify="() => {}"
-          :success-tooltip="t('copy.success_tooltip')"
-          :tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
-          :truncated="false"
-          :uuid="getPropValue('rowValue', slotProps).id"
+          :text="getPropValue('rowValue', slotProps).id"
         />
       </template>
       <template #service="slotProps">
@@ -101,14 +95,11 @@
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'service')"
         />
-        <CopyUuid
+        <KCopy
           v-else
+          :copy-tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
           data-testid="service-copy-uuid"
-          :notify="() => {}"
-          :success-tooltip="t('copy.success_tooltip')"
-          :tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
-          :truncated="false"
-          :uuid="getPropValue('rowValue', slotProps).id"
+          :text="getPropValue('rowValue', slotProps).id"
         />
       </template>
       <template #consumer_group="slotProps">
@@ -122,14 +113,11 @@
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer_group')"
         />
-        <CopyUuid
+        <KCopy
           v-else
+          :copy-tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
           data-testid="consumer-group-copy-uuid"
-          :notify="() => { }"
-          :success-tooltip="t('copy.success_tooltip')"
-          :tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
-          :truncated="false"
-          :uuid="getPropValue('rowValue', slotProps).id"
+          :text="getPropValue('rowValue', slotProps).id"
         />
       </template>
     </EntityBaseConfigCard>
@@ -154,12 +142,10 @@ import {
   useErrors,
   useHelpers,
 } from '@kong-ui-public/entities-shared'
-import { CopyUuid } from '@kong-ui-public/copy-uuid'
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
 import PluginIcon from './PluginIcon.vue'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import '@kong-ui-public/copy-uuid/dist/style.css'
 
 const PLUGIN_CONFIG_KEY = 'config'
 

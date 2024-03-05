@@ -51,11 +51,8 @@
       <template #name="{ rowValue }">
         <b>{{ rowValue ?? '-' }}</b>
       </template>
-      <template #kid="{ row, rowValue }">
-        <CopyUuid
-          :notify="(param: CopyUuidNotifyParam) => notifyCopyAction(param, row, 'kid')"
-          :uuid="rowValue"
-        />
+      <template #kid="{ rowValue }">
+        <KCopy :text="rowValue" />
       </template>
       <template #tags="{ rowValue }">
         <KTruncate v-if="rowValue?.length > 0">
@@ -69,11 +66,8 @@
         </KTruncate>
         <span v-else>-</span>
       </template>
-      <template #id="{ row, rowValue }">
-        <CopyUuid
-          :notify="(param: CopyUuidNotifyParam) => notifyCopyAction(param, row, 'id')"
-          :uuid="rowValue"
-        />
+      <template #id="{ rowValue }">
+        <KCopy :text="rowValue" />
       </template>
 
       <!-- Row actions -->
@@ -153,7 +147,6 @@ import {
   useFetcher,
   useDeleteUrlBuilder,
 } from '@kong-ui-public/entities-shared'
-import type { CopyUuidNotifyParam } from '@kong-ui-public/copy-uuid'
 import type {
   KongManagerKeyListConfig,
   KonnectKeyListConfig,
@@ -333,15 +326,6 @@ const copyJson = (row: EntityRow, copyToClipboard: (val: string) => boolean): vo
     entity: row,
     message: t('keys.copy.success_brief'),
   })
-}
-
-const notifyCopyAction = (param: CopyUuidNotifyParam, entity: EntityRow, field: string) => {
-  const { type } = param
-  if (type === 'success') {
-    onCopySuccess(entity, field)
-  } else {
-    onCopyError(entity, field)
-  }
 }
 
 const onCopySuccess = (entity: EntityRow, field: string) => {
