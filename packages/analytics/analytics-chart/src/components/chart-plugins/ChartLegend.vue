@@ -41,8 +41,8 @@
 <script setup lang="ts">
 import { ChartLegendPosition } from '../../enums'
 import { Chart, type LegendItem } from 'chart.js'
-import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType } from 'vue'
-import { KUI_SPACE_100 } from '@kong/design-tokens'
+import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType, computed } from 'vue'
+import { KUI_SPACE_100, KUI_SPACE_80, KUI_SPACE_110 } from '@kong/design-tokens'
 import { debounce } from '../../utils'
 
 const props = defineProps({
@@ -63,11 +63,10 @@ const props = defineProps({
 
 const legendContainerRef = ref<HTMLElement>()
 const legendItemsRef = ref<HTMLElement[]>([])
-const shouldTruncate = ref(false)
 const showValues = inject('showLegendValues', true)
 const position = inject('legendPosition', ref(ChartLegendPosition.Right))
 const legendItemsTracker = ref<LegendItem[]>([])
-const legendHeight = ref('30px')
+const legendHeight = ref<string>(KUI_SPACE_80)
 
 // Check if the legend wraps by comparing the top position of each item.
 const doesTheLegendWrap = () => {
@@ -89,19 +88,19 @@ const doesTheLegendWrap = () => {
   return false
 }
 
+const shouldTruncate = computed(() => {
+  return props.items.length > 2 || position.value === ChartLegendPosition.Right
+})
+
 const checkForWrap = () => {
   if (legendContainerRef.value && position.value === ChartLegendPosition.Bottom) {
     if (doesTheLegendWrap()) {
-      shouldTruncate.value = true
       // Allow for two rows of legend items
-      legendHeight.value = '60px'
+      legendHeight.value = KUI_SPACE_110
     } else {
-      shouldTruncate.value = false
       // Only need space for one row of legend items
-      legendHeight.value = '30px'
+      legendHeight.value = KUI_SPACE_80
     }
-  } else if (legendContainerRef.value && position.value === ChartLegendPosition.Right) {
-    shouldTruncate.value = true
   }
 }
 
@@ -236,20 +235,24 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 @import '../../styles/base';
 .legend-container {
   display: flex;
-  margin: $kui-space-30 0;
+  margin: $kui-space-30 0 0 0;
   max-height: inherit;
   -ms-overflow-style: thin;
   overflow-x: hidden;
   overflow-y: auto;
-  padding-left: $kui-space-50;
+  padding-left: 0;
 
   @include scrollbarBase;
 
   &.vertical {
     flex-direction: column;
+    justify-content: flex-start;
     max-height: 90%;
     max-width: 15%;
     min-width: 10%;
+    padding-left: $kui-space-50;
+    row-gap: $kui-space-60;
+
     .truncate-label {
       max-width: 12ch;
       overflow: hidden;
@@ -257,14 +260,21 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
       white-space: nowrap;
     }
 
+    li {
+      // Legend on right side of chart allows for two lines of text
+      .legend {
+        margin-top: $kui-space-20;
+      }
+    }
+
     // Allow legend to expand horizontally at lower resolutions
     @media (max-width: ($kui-breakpoint-phablet - 1px)) {
       column-gap: $kui-space-50;
       display: grid;
-      grid-template-columns: repeat(auto-fit, 10ch);
+      grid-template-columns: repeat(auto-fit, 12ch);
+      height: 40px;
       justify-content: center;
-      max-height: 12%;
-      width: 99%;
+      max-width: 99% !important;
 
       .sub-label {
         display: none;
@@ -273,26 +283,23 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
   }
 
   &.horizontal {
-    column-gap: $kui-space-80;
+    column-gap: $kui-space-50;
     display: grid;
     height: v-bind('legendHeight');
-    justify-content: center;
+    justify-content: center;  // Legend below chart only allows one line of text
     width: 99%;
     .truncate-label {
-      max-width: 15ch;
+      max-width: 20ch;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
     li {
+      align-items: center;
       margin-top: 0;
-
-      .legend {
-        margin-top: $kui-space-50;
-      }
       .label {
-        line-height: $kui-line-height-50;
+        line-height: $kui-line-height-40;
         white-space: nowrap;
       }
     }
@@ -304,17 +311,16 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     cursor: pointer;
     display: flex;
     line-height: 1;
-    margin-top: $kui-space-60;
 
+    // Color bar preceding label
     .legend {
       flex: 0 0 14px;
       height: 3px;
-      margin-right: $kui-space-50;
-      margin-top: $kui-space-20;
+      margin-right: $kui-space-30;
     }
 
     .label {
-      font-size: $kui-font-size-30;
+      font-size: $kui-font-size-20;
     }
 
     .sub-label {

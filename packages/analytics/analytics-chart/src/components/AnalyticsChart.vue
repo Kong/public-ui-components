@@ -334,7 +334,7 @@ provide('legendPosition', toRef(props, 'legendPosition'))
   }
 
   .chart-title {
-    font-size: $kui-font-size-50;
+    font-size: $kui-font-size-40;
     font-weight: $kui-font-weight-semibold;
   }
 
