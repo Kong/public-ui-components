@@ -19,7 +19,7 @@
     </h2>
     <div class="details">
       <KBadge
-        appearance="custom"
+        :appearance="methodName"
         :aria-label="i18n.t('specOperationsList.item.methodAriaLabel', { method: methodName.toUpperCase() })"
         background-color="var(--kong-ui-spec-renderer-operations-list-item-method-background)"
         class="method-badge"
