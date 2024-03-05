@@ -155,6 +155,9 @@ describe('<DashboardRenderer />', () => {
       },
     })
 
+    // Two queries for the metric cards, three for the charts
+    // cy.get('@fetcher').should('have.callCount', 5)
+
     cy.get('.kong-ui-public-dashboard-renderer').should('be.visible')
     cy.get('.tile-boundary').should('have.length', 4)
 
@@ -162,9 +165,6 @@ describe('<DashboardRenderer />', () => {
     cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
       time_range: { time_range: '24h' },
     }))
-
-    // Two queries for the metric cards, three for the charts
-    // cy.get('@fetcher').should('have.callCount', 5)
   })
 
   it('Renders a summary dashboard with 7d timeframe', () => {
@@ -186,6 +186,9 @@ describe('<DashboardRenderer />', () => {
       },
     })
 
+    // Two queries for the metric cards, three for the charts
+    cy.get('@fetcher').should('have.callCount', 5)
+
     cy.get('.kong-ui-public-dashboard-renderer').should('be.visible')
     cy.get('.tile-boundary').should('have.length', 4)
 
@@ -193,8 +196,5 @@ describe('<DashboardRenderer />', () => {
     cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
       time_range: { time_range: '7d' },
     }))
-
-    // Two queries for the metric cards, three for the charts
-    // cy.get('@fetcher').should('have.callCount', 5)
   })
 })
