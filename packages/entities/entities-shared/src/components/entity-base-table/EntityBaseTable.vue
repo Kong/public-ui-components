@@ -116,7 +116,10 @@
             v-if="emptyStateOptions.ctaText"
             #action
           >
-            <KButton @click="handleEmptyStateCtaClicked">
+            <KButton
+              :data-testid="getTestIdString(emptyStateOptions.ctaText)"
+              @click="handleEmptyStateCtaClicked"
+            >
               <AddIcon />
               {{ emptyStateOptions.ctaText }}
             </KButton>
@@ -339,6 +342,12 @@ const cellAttrs = (params: Record<string, any>) => {
   }
 
   return result
+}
+
+const getTestIdString = (message: string): string => {
+  const msg = message.toLowerCase().replace(/[^[a-z0-9]/gi, '-')
+
+  return msg
 }
 
 const handleEmptyStateCtaClicked = () => {
