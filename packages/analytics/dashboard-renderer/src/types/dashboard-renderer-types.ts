@@ -85,9 +85,6 @@ export const timeseriesChartSchema = {
     stacked: {
       type: 'boolean',
     },
-    fill: {
-      type: 'boolean',
-    },
     chartDatasetColors: chartDatasetColorsSchema,
     syntheticsDataKey,
     chartTitle,
