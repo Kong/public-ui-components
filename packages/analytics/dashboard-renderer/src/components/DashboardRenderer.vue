@@ -13,7 +13,14 @@
       :tiles="gridTiles"
     >
       <template #tile="{ tile, style }">
+        <div
+          v-if="tile.meta.chart.type === ChartTypes.Slottable"
+          class="tile-container"
+        >
+          <slot :name="tile.meta.chart.id" />
+        </div>
         <DashboardTile
+          v-else
           class="tile-container"
           :context="mergedContext"
           :definition="tile.meta"
@@ -25,6 +32,7 @@
 </template>
 
 <script setup lang="ts">
+import { ChartTypes } from '../types'
 import type { GridTile, TileConfig, DashboardConfig, DashboardRendererContext, TileDefinition } from '../types'
 import DashboardTile from './DashboardTile.vue'
 import { computed, inject } from 'vue'

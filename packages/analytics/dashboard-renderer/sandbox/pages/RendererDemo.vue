@@ -8,7 +8,20 @@
       <DashboardRenderer
         :config="(dashboardConfig as DashboardConfig)"
         :context="context"
-      />
+      >
+        <template #slot-1>
+          <div class="slot-container">
+            <h3>Custom Slot</h3>
+            <p>This is a slotted tile</p>
+          </div>
+        </template>
+        <template #slot-2>
+          <div class="slot-container">
+            <h3>Custom Slot 2</h3>
+            <p>This is another slotted tile</p>
+          </div>
+        </template>
+      </DashboardRenderer>
     </div>
   </SandboxLayout>
 </template>
@@ -152,6 +165,44 @@ const dashboardConfig: DashboardConfig = {
         },
         size: {
           cols: 1,
+          rows: 1,
+        },
+      },
+    } as TileConfig,
+    {
+      definition: {
+        chart: {
+          type: ChartTypes.Slottable,
+          id: 'slot-1',
+        },
+        query: {},
+      },
+      layout: {
+        position: {
+          col: 1,
+          row: 5,
+        },
+        size: {
+          cols: 1,
+          rows: 1,
+        },
+      },
+    } as TileConfig,
+    {
+      definition: {
+        chart: {
+          type: ChartTypes.Slottable,
+          id: 'slot-2',
+        },
+        query: {},
+      },
+      layout: {
+        position: {
+          col: 2,
+          row: 5,
+        },
+        size: {
+          cols: 3,
           rows: 1,
         },
       },
