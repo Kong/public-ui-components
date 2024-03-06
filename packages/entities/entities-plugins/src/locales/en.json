@@ -476,6 +476,9 @@
             "description": "Upload schema file to create custom plugin"
           }
         }
+      },
+      "highlighted_plugins": {
+        "title": "Highlighted Plugins"
       }
     },
     "form": {

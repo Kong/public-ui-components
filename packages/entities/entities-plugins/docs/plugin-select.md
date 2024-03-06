@@ -30,55 +30,65 @@ A grid component for selecting Plugins.
 - type: `Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>`
 - required: `true`
 - properties:
+
   - `app`:
+
     - type: `'konnect' | 'kongManager'`
     - required: `true`
     - default: `undefined`
     - App name.
 
   - `apiBaseUrl`:
+
     - type: `string`
     - required: `true`
     - default: `undefined`
     - Base URL for API requests.
 
   - `requestHeaders`:
+
     - type: `RawAxiosRequestHeaders | AxiosHeaders`
     - required: `false`
     - default: `undefined`
     - Additional headers to send with all Axios requests.
 
   - `getCreateRoute`:
+
     - type: `(plugin: string) => RouteLocationRaw`
     - required: `true`
     - default: `undefined`
     - A function that returns the route for creating a specific plugin type.
 
   - `createCustomRoute`:
+
     - type: RouteLocationRaw
     - required: `false`
     - default: `undefined`
     - The route for creating a custom plugin.
 
   - `getCustomEditRoute`:
+
     - type: `(plugin: string) => RouteLocationRaw`
     - required: `false`
     - default: `undefined`
     - A function that returns the route for editing a custom plugin.
 
   - `workspace`:
+
     - type: `string`
     - required: `true`
     - default: `undefined`
-    - *Specific to Kong Manager*. Name of the current workspace.
+    - _Specific to Kong Manager_. Name of the current workspace.
 
   - `controlPlaneId`:
+
     - type: `string`
     - required: `true`
     - default: `undefined`
-    - *Specific to Konnect*. Name of the current control plane.
+    - _Specific to Konnect_. Name of the current control plane.
 
   - `entityId`:
+
     - type: `string`
     - required: `false`
     - default: `null`
@@ -159,7 +169,7 @@ Example:
 
 ```json
 {
-  'acl': 'ACL is not supported for this entity type',
+  "acl": "ACL is not supported for this entity type"
 }
 ```
 
@@ -170,6 +180,22 @@ Example:
 - default: `4`
 
 Number of plugins to always have visible (never will be collapsed).
+
+#### `highlightedPluginIds`
+
+- type: `string[]`
+- required: `false`
+- default: `[]`
+
+Ids of plugins to show in the highlighted plugins group.
+
+#### `highlightedPluginsTitle`
+
+- type: `string`
+- required: `false`
+- default: `''`
+
+Title for the highlighted plugins group
 
 ### Events
 

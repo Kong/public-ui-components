@@ -21,49 +21,31 @@
       </template>
     </KEmptyState>
 
+    <PluginSelectGroup
+      v-if="!props.hideHighlightedPlugins && props.highlightedPlugins.length > 0"
+      v-model="isHighlightedPluginsCollapsed"
+      :config="config"
+      :name="props.highlightedPluginsTitle ?? t('plugins.select.highlighted_plugins.title')"
+      :navigate-on-click="navigateOnClick"
+      :plugins="props.highlightedPlugins"
+      :plugins-per-row="pluginsPerRow"
+      @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
+    />
+
     <template v-for="(group, idx) in PluginGroupArray">
       <div
         v-if="displayedPlugins[group]"
         :key="idx"
       >
-        <KCollapse
+        <PluginSelectGroup
           v-model="shouldCollapsed[group]"
-          class="plugins-collapse"
-          :data-testid="`${group}-collapse`"
-          :title="group"
-          :trigger-label="shouldCollapsed[group] ? triggerLabels[group] : t('plugins.select.view_less')"
-        >
-          <!-- don't display a trigger if all plugins will already be visible -->
-          <template
-            v-if="getGroupPluginCount(group) <= pluginsPerRow"
-            #trigger
-          >
-            &nbsp;
-          </template>
-          <template #visible-content>
-            <div class="plugin-card-container">
-              <PluginSelectCard
-                v-for="(plugin, index) in getPluginCards('visible', displayedPlugins[group as keyof PluginCardList] || [], pluginsPerRow)"
-                :key="`plugin-card-${index}`"
-                :config="config"
-                :navigate-on-click="navigateOnClick"
-                :plugin="plugin"
-                @plugin-clicked="emitPluginData"
-              />
-            </div>
-          </template>
-
-          <div class="plugin-card-container">
-            <PluginSelectCard
-              v-for="(plugin, index) in getPluginCards('hidden', displayedPlugins[group as keyof PluginCardList] || [], pluginsPerRow)"
-              :key="`plugin-card-${index}`"
-              :config="config"
-              :navigate-on-click="navigateOnClick"
-              :plugin="plugin"
-              @plugin-clicked="emitPluginData"
-            />
-          </div>
-        </KCollapse>
+          :config="config"
+          :name="group"
+          :navigate-on-click="navigateOnClick"
+          :plugins="displayedPlugins[group as keyof PluginCardList] || []"
+          :plugins-per-row="pluginsPerRow"
+          @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
+        />
       </div>
     </template>
   </div>
@@ -71,18 +53,17 @@
 
 <script setup lang="ts">
 import { computed, ref, type PropType } from 'vue'
+import composables from '../../composables'
 import {
+  PLUGIN_GROUPS_COLLAPSE_STATUS,
   PluginGroup,
   PluginGroupArray,
-  PLUGIN_GROUPS_COLLAPSE_STATUS,
   type KongManagerPluginSelectConfig,
   type KonnectPluginSelectConfig,
-  type PluginType,
   type PluginCardList,
-  type TriggerLabels,
+  type PluginType,
 } from '../../types'
-import composables from '../../composables'
-import PluginSelectCard from './PluginSelectCard.vue'
+import PluginSelectGroup from './PluginSelectGroup.vue'
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
@@ -117,6 +98,27 @@ const props = defineProps({
     type: Number,
     default: 4,
   },
+  /**
+   * List of plugins to show in the highlighted plugins group
+   */
+  highlightedPlugins: {
+    type: Array as PropType<PluginType[]>,
+    default: () => [],
+  },
+  /**
+   * Title for the highlighted plugins group
+   */
+  highlightedPluginsTitle: {
+    type: String,
+    default: '',
+  },
+  /**
+   * Whether or not to hide the highlighted plugins group
+   */
+  hideHighlightedPlugins: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -124,7 +126,7 @@ const emit = defineEmits<{
 }>()
 
 const { i18n: { t } } = composables.useI18n()
-const { getPluginCards } = composables.usePluginHelpers()
+const isHighlightedPluginsCollapsed = ref(false)
 const shouldCollapsed = ref<Record<string, boolean>>(PLUGIN_GROUPS_COLLAPSE_STATUS)
 
 const emitPluginData = (plugin: PluginType) => {
@@ -139,69 +141,6 @@ const displayedPlugins = computed((): PluginCardList => {
     delete kongPlugins[PluginGroup.CUSTOM_PLUGINS]
   }
 
-  return kongPlugins
-})
-
-const getGroupPluginCount = (group: string) => {
-  return displayedPlugins.value[group as keyof PluginCardList]?.length || 0
-}
-
-// text for plugin group "view x more" label
-const triggerLabels = computed(() => {
-  return Object.keys(displayedPlugins.value).reduce((acc: TriggerLabels, pluginGroup: string): TriggerLabels => {
-    const totalCount = getPluginCards('all', displayedPlugins.value[pluginGroup as keyof PluginCardList] || [], props.pluginsPerRow)?.length || 0
-    const hiddenCount = getPluginCards('hidden', displayedPlugins.value[pluginGroup as keyof PluginCardList] || [], props.pluginsPerRow)?.length || 0
-
-    if (totalCount > props.pluginsPerRow) {
-      acc[pluginGroup as keyof TriggerLabels] = t('plugins.select.view_more', { count: hiddenCount })
-    }
-
-    return acc
-  }, {})
+  return kongPlugins as PluginCardList
 })
 </script>
-
-<style lang="scss" scoped>
-.plugins-collapse {
-  margin-bottom: $kui-space-90;
-}
-
-.plugin-card-container {
-  column-gap: 50px;
-  display: grid;
-  grid-auto-rows: 1fr;
-  margin-top: $kui-space-90;
-  row-gap: $kui-space-90;
-
-  .plugin-card-cursor-pointer {
-    cursor: pointer;
-  }
-
-  :deep(.kong-card) {
-    display: flex;
-    flex: 1 0 0;
-    flex-direction: column;
-    margin: $kui-space-0;
-    padding: $kui-space-0;
-    text-align: center;
-  }
-
-  :deep(.k-card-body) {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-  }
-
-  @media (min-width: $kui-breakpoint-phablet) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (min-width: $kui-breakpoint-tablet) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media (min-width: $kui-breakpoint-laptop) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-</style>
