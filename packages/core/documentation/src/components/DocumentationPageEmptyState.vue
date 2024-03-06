@@ -2,10 +2,8 @@
   <KEmptyState
     class="documentation-page-empty-state"
     data-testid="documentation-page-empty-state"
+    icon-variant="kong"
   >
-    <template #icon>
-      <KongIcon />
-    </template>
     <template #title>
       {{ i18n.t('documentation.show.empty_state.title') }}
     </template>

@@ -5,11 +5,8 @@
       :action-button-visible="false"
       class="plugins-empty-state"
       data-testid="plugins-empty-state"
+      icon-variant="kong"
     >
-      <template #icon>
-        <KongIcon />
-      </template>
-
       <!-- this will only be shown if there are no existing Kong plugins -->
       <template #title>
         <span class="empty-state-title">

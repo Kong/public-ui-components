@@ -4,11 +4,8 @@
       v-if="!modifiedCustomPlugins.length"
       :action-button-visible="false"
       class="custom-plugins-empty-state"
+      icon-variant="kong"
     >
-      <template #icon>
-        <KongIcon />
-      </template>
-
       <!-- this will only be shown if not allowed to create custom plugins -->
       <template #title>
         <span class="empty-state-title">
