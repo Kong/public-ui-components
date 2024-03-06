@@ -2,12 +2,16 @@ import type { RouteLocationRaw } from 'vue-router'
 import type { FilterSchema, KongManagerBaseTableConfig, KonnectBaseTableConfig } from '@kong-ui-public/entities-shared'
 
 export interface BaseGatewayServiceListConfig {
+  /** Whether to show the belonged control plane column */
+  showControlPlaneColumn?: boolean
   /** route for creating a Gateway Service */
   createRoute: RouteLocationRaw
   /** A function that returns the route for viewing a Gateway Service */
   getViewRoute: (id: string) => RouteLocationRaw
   /** A function that returns the route for editing a Gateway Service */
   getEditRoute: (id: string) => RouteLocationRaw
+  /** A function that returns the route for the belonged control plane */
+  getControlPlaneRoute?: (id: string) => RouteLocationRaw
 }
 
 /** Konnect GatewayService list config */
