@@ -32,12 +32,19 @@ const chartTypeLookup = {
   // TODO: Timeseries bar
 }
 
-const options = computed<AnalyticsChartOptions>(() => ({
-  type: chartTypeLookup[props.chartOptions.type],
-  fill: props.chartOptions.fill,
-  stacked: props.chartOptions.stacked,
-  chartDatasetColors: props.chartOptions.chartDatasetColors,
-}))
+const options = computed<AnalyticsChartOptions>(() => {
+  // Default `stacked` to false.
+  const stacked = props.chartOptions.stacked ?? false
+
+  // Note that `fill` and `stacked` are linked; it's not possible to have a non-filled stacked chart.
+  // This matches our intuitions about how these charts work.
+  return {
+    type: chartTypeLookup[props.chartOptions.type],
+    fill: stacked,
+    stacked,
+    chartDatasetColors: props.chartOptions.chartDatasetColors,
+  }
+})
 </script>
 
 <style scoped lang="scss">

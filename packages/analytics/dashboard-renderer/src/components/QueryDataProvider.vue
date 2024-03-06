@@ -95,6 +95,9 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
   } finally {
     emit('queryComplete')
   }
+}, {
+  refreshInterval: 0,
+  revalidateOnFocus: false,
 })
 
 const { state, swrvState: STATE } = useSwrvState(v4Data, error, isValidating)

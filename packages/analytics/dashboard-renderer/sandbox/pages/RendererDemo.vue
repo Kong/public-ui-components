@@ -131,7 +131,6 @@ const dashboardConfig: DashboardConfig = {
         chart: {
           chartTitle: 'Timeseries line chart of mock data',
           type: ChartTypes.TimeseriesLine,
-          fill: true,
         },
         query: {
           dimensions: ['time'],
