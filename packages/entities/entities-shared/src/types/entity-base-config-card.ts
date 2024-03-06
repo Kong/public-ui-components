@@ -4,11 +4,6 @@ export interface BaseEntityConfig {
   /** the ID of the entity */
   entityId: string
   /**
-   * Feature flag value for Config card format: `khcp-8778-json-yaml-configurations`
-   * TODO: Remove jsonYamlEnabled once FF is enabled
-   */
-  jsonYamlEnabled?: boolean
-  /**
    * Feature flag value for JSON/YAML Milestone 2: `Khcp-9892-json-yaml-milestone-2`
    * TODO: Remove jsonYamlFormsEnabled once FF is enabled
    */

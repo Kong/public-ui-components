@@ -107,6 +107,7 @@ import {
   KUI_COLOR_TEXT_SUCCESS, // Positive trend
   KUI_COLOR_TEXT_NEUTRAL_STRONG, // Neutral trend
   KUI_COLOR_TEXT_NEUTRAL,
+  KUI_FONT_SIZE_70,
 } from '@kong/design-tokens'
 import { MetricCardType } from '../../enums'
 import { MetricCardSize } from '../../constants'
@@ -210,7 +211,7 @@ const cardDisplayFull = [MetricCardSize.Medium, MetricCardSize.Large, MetricCard
 
 const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
   ? KUI_FONT_SIZE_100
-  : cardDisplayFull ? '22px' : KUI_FONT_SIZE_30
+  : cardDisplayFull ? KUI_FONT_SIZE_70 : KUI_FONT_SIZE_30
 
 // TODO: remove size variant as part of Dashboards epic - MA-2193
 const isLargeCompact = computed((): boolean => props.cardSize === MetricCardSize.LargeCompact)
@@ -247,6 +248,11 @@ $row-gap-size: 12px;
   @media (max-width: ($kui-breakpoint-phablet - 1px)) {
     max-width: none;
     width: auto;
+  }
+
+  @media (min-width: $kui-breakpoint-phablet) {
+    height: 100%;
+    justify-content: space-evenly;
   }
 
   &:hover {
