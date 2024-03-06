@@ -2,7 +2,13 @@ import { ChartTypes } from '../types'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { AnalyticsBridge, ExploreQuery, ExploreResultV4, Timeframe } from '@kong-ui-public/analytics-utilities'
-import { generateSingleMetricTimeSeriesData, generateCrossSectionalData, TimeframeKeys, TimePeriods } from '@kong-ui-public/analytics-utilities'
+import {
+  datePickerSelectionToTimeframe,
+  generateSingleMetricTimeSeriesData,
+  generateCrossSectionalData,
+  TimeframeKeys,
+  TimePeriods,
+} from '@kong-ui-public/analytics-utilities'
 import DashboardRenderer from './DashboardRenderer.vue'
 import { nonTsExploreResponse, timeSeriesExploreResponse, summaryDashboardConfig } from '../../sandbox/mock-data'
 
@@ -16,6 +22,7 @@ describe('<DashboardRenderer />', () => {
       // Dimensions to use if query is not provided
       const dimensionMap = { statusCode: ['1XX', '2XX', '3XX', '4XX', '5XX'] }
 
+      console.log(' query filters >>> ', query.filters)
       if (query.dimensions && query.dimensions.findIndex(d => d === 'time') > -1) {
         if (query.metrics && query.metrics[0] === 'request_count') {
         // Traffic + Error rate cards
@@ -49,21 +56,6 @@ describe('<DashboardRenderer />', () => {
       queryFn: cy.spy(queryFn).as('fetcher'),
     }
   }
-
-  afterEach(() => {
-    const customStyles = `
-      // body { height: 100%; width: 100%; display: block; position: relative;}
-      .kong-ui-public-dashboard-renderer { position: absolute; width: 100vw; }
-    `
-    cy.document().then(document => {
-      const style = document.createElement('style')
-      style.appendChild(document.createTextNode(customStyles))
-      document.head.appendChild(style)
-    })
-  })
-
-  // NOTE: `swrv` remembers state in between test runs.  To ensure isolation, either change the timeframe or the
-  // filters in each test.
 
   it('Renders the correct number of tiles', () => {
     const props = {
@@ -195,5 +187,42 @@ describe('<DashboardRenderer />', () => {
         })
       })
     })
+  })
+
+  it('Renders a dashboard with custom timeframe, checks query filter', () => {
+    const customTimeframe = datePickerSelectionToTimeframe({
+      timePeriodsKey: 'custom',
+      start: new Date('2024-03-03T21:10:28.969Z'),
+      end: new Date('2024-03-06T21:10:28.969Z'),
+    }) as Timeframe
+
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: customTimeframe.v4Query(),
+      },
+      config: summaryDashboardConfig,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    })
+
+    cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+      time_range: { type: 'absolute' },
+    }))
+
+    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({
+      filters: [{
+        dimension: 'control_plane',
+        type: 'in',
+        values: ['default_uuid'],
+      }],
+    }))
   })
 })

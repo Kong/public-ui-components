@@ -283,6 +283,11 @@ export const summaryDashboardConfig: DashboardConfig = {
           dimensions: [
             'time',
           ],
+          filters: [{
+            dimension: 'control_plane',
+            type: 'in',
+            values: ['default_uuid'],
+          }],
         } as ExploreQuery,
       },
       layout: {
