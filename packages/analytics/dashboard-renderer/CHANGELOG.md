@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.7.18...@kong-ui-public/dashboard-renderer@0.8.0) (2024-03-06)
+
+
+### Features
+
+* **dashboard-renderer:** add support for slottable tiles ([#1213](https://github.com/Kong/public-ui-components/issues/1213)) ([b36307a](https://github.com/Kong/public-ui-components/commit/b36307a89608a2cc117b50ec43d245ede6611afa))
+
+
+
+
+
 ## [0.7.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.7.17...@kong-ui-public/dashboard-renderer@0.7.18) (2024-03-06)
 
 
