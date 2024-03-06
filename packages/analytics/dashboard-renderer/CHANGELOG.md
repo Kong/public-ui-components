@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.8.0...@kong-ui-public/dashboard-renderer@0.8.1) (2024-03-06)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** tweak default options [MA-2709] ([#1214](https://github.com/Kong/public-ui-components/issues/1214)) ([262c2ca](https://github.com/Kong/public-ui-components/commit/262c2ca854d3faaf385867c9423e0ed915821f5d))
+
+
+
+
+
 # [0.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.7.18...@kong-ui-public/dashboard-renderer@0.8.0) (2024-03-06)
 
 
