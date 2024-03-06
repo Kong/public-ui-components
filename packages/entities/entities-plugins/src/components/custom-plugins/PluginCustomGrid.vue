@@ -87,7 +87,6 @@ import {
 import composables from '../../composables'
 import PluginSelectCard from '../select/PluginSelectCard.vue'
 import DeleteCustomPluginSchemaModal from './DeleteCustomPluginSchemaModal.vue'
-import { KongIcon } from '@kong/icons'
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */

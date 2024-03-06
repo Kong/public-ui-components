@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import composables from '../composables'
 import { PermissionsWrapper } from '@kong-ui-public/entities-shared'
-import { AddIcon, KongIcon } from '@kong/icons'
+import { AddIcon } from '@kong/icons'
 import type { PropType } from 'vue'
 
 defineProps({
