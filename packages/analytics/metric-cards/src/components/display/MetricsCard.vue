@@ -250,6 +250,11 @@ $row-gap-size: 12px;
     width: auto;
   }
 
+  @media (min-width: $kui-breakpoint-phablet) {
+    height: 100%;
+    justify-content: space-evenly;
+  }
+
   &:hover {
     border: none;
     text-decoration: none;
