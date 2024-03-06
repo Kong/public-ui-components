@@ -69,8 +69,6 @@ const options = computed<ProviderProps>(() => ({
     height: 100%;
 
     .metricscard {
-      justify-content: space-evenly;
-
       @media (min-width: ($kui-breakpoint-phablet - 1px)) {
         &:not(:last-of-type) {
           border-right: $kui-border-width-10 solid $kui-color-border;
