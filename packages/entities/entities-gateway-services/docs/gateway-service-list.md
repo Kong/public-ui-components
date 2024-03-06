@@ -67,6 +67,12 @@ A table component for gateway services.
     - default: `undefined`
     - A function that returns the route for editing a gateway service.
 
+  - `getControlPlaneRoute`:
+    - type: `(id: string) => RouteLocationRaw`
+    - required: `false`
+    - default: `undefined`
+    - *Specific to Konnect*. A function that returns the route for the belonged control plane.
+
   - `workspace`:
     - type: `string`
     - required: `true`
@@ -96,6 +102,12 @@ A table component for gateway services.
     - required: `true`
     - default: `undefined`
     - *Specific to Konnect*. Name of the current control plane.
+
+  - `showControlPlaneColumn`:
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - *Specific to Konnect*. Whether to show the belonged control plane column.
 
 The base konnect or kongManger config.
 
