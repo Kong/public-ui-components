@@ -105,7 +105,6 @@
         <!-- When no search query is present - show custom empty state with plus icon in action button -->
         <!-- Standard KTable empty state will only be shown when there is a search query or error -->
         <KEmptyState
-          icon-variant="search"
           icon-variant="kong"
           :message="emptyStateOptions.message || t('baseTable.emptyState.message')"
           :title="emptyStateOptions.title || t('baseTable.emptyState.title')"
@@ -147,7 +146,7 @@ import type {
   TableSortParams,
   TableErrorMessage,
 } from '../../types'
-import { AddIcon, KongIcon } from '@kong/icons'
+import { AddIcon } from '@kong/icons'
 
 const props = defineProps({
   // table header configuration
