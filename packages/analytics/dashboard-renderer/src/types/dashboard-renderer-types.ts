@@ -411,7 +411,7 @@ export const tileConfigSchema = {
     definition: tileDefinitionSchema,
     layout: tileLayoutSchema,
   },
-  required: ['layout'],
+  required: ['definition', 'layout'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
