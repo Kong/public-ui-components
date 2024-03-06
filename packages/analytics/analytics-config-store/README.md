@@ -19,3 +19,7 @@ This package provides a cache for analytics config information (including whethe
 ## Usage
 
 Install this package in the host app alongside the component that requires it, such as `@kong-ui-public/dashboard-renderer` or `@kong-ui-public/analytics-metric-provider`.  The component will use this package without any further changes.
+
+The config store uses the host app's Pinia instance, and must only be used after the host app has called `createPinia`.  As long as the store is only accessed during component renders, this is guaranteed to be the case.
+
+**Note:** Pinia and this package _must_ be externalized (i.e., added to `vite.config.ts`'s `build.rollupOptions.external` array).  See notes in [[1]](https://github.com/vuejs/pinia/discussions/1073#discussioncomment-2196098) and [[2]](https://github.com/vuejs/pinia/discussions/1073#discussioncomment-6286516).  This ensures that the store uses the same instance of Pinia as the host app, rather than incorporating and using its own instance that never properly gets inited.
