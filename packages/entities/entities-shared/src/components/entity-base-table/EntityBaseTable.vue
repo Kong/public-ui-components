@@ -9,12 +9,11 @@
       :cell-attrs="cellAttrs"
       :disable-pagination-page-jump="disablePaginationPageJump"
       :disable-sorting="disableSorting"
-      :empty-state-action-button-show-plus-icon="!query"
-      :empty-state-action-message="query ? t('baseTable.emptyState.noSearchResultsCtaText') : emptyStateOptions.ctaText"
-      :empty-state-action-route="query ? '' : emptyStateOptions.ctaPath"
+      :empty-state-action-message="emptyStateOptions.ctaText"
+      :empty-state-action-route="emptyStateOptions.ctaPath"
       empty-state-icon-variant="search"
-      :empty-state-message="query ? t('baseTable.emptyState.noSearchResultsMessage') : emptyStateOptions.message"
-      :empty-state-title="query ? t('baseTable.emptyState.noSearchResultsTitle') : emptyStateOptions.title"
+      :empty-state-message="t('baseTable.emptyState.noSearchResultsMessage')"
+      :empty-state-title="t('baseTable.emptyState.noSearchResultsTitle')"
       :enable-client-sort="enableClientSort"
       :error-state-message="tableErrorState.message"
       :error-state-title="tableErrorState.title"
@@ -33,12 +32,6 @@
       @sort="(params: any) => handleSortChanged(params)"
       @update:table-preferences="handleUpdateTablePreferences"
     >
-      <template
-        v-if="!query"
-        #empty-state-icon
-      >
-        <KongIcon />
-      </template>
       <template #toolbar="{ state }">
         <div
           v-show="showToolbar(state)"
@@ -105,6 +98,31 @@
           </KDropdown>
         </div>
       </template>
+      <template
+        v-if="!query"
+        #empty-state
+      >
+        <!-- When no search query is present - show custom empty state with plus icon in action button -->
+        <!-- Standard KTable empty state will only be shown when there is a search query or error -->
+        <KEmptyState
+          icon-variant="search"
+          :message="emptyStateOptions.ctaText"
+          :title="emptyStateOptions.title"
+        >
+          <template #icon>
+            <KongIcon />
+          </template>
+          <template
+            v-if="emptyStateOptions.ctaText"
+            #action
+          >
+            <KButton @click="handleEmptyStateCtaClicked">
+              <AddIcon />
+              {{ emptyStateOptions.ctaText }}
+            </KButton>
+          </template>
+        </KEmptyState>
+      </template>
     </KTable>
   </KCard>
 </template>
@@ -128,7 +146,7 @@ import type {
   TableSortParams,
   TableErrorMessage,
 } from '../../types'
-import { KongIcon } from '@kong/icons'
+import { AddIcon, KongIcon } from '@kong/icons'
 
 const props = defineProps({
   // table header configuration
