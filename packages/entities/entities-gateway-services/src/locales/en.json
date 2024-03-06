@@ -30,6 +30,7 @@
       },
       "table_headers": {
         "name": "Name",
+        "control_plane": "Control Plane",
         "protocol": "Protocol",
         "host": "Host",
         "port": "Port",

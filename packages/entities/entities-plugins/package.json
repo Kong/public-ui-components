@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "2.12.15",
+  "version": "2.12.18",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
@@ -29,7 +29,7 @@
     "@kong/kongponents": "9.0.0-alpha.107",
     "axios": "^1.6.7",
     "vue": ">= 3.3.13 < 4",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
@@ -37,7 +37,7 @@
     "@kong/kongponents": "9.0.0-pr.2054.06fa7471.0",
     "axios": "^1.6.7",
     "vue": "^3.4.19",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.3.0"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
