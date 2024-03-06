@@ -62,13 +62,16 @@ describe('<DashboardRenderer />', () => {
     })
   })
 
+  // NOTE: `swrv` remembers state in between test runs.  To ensure isolation, either change the timeframe or the
+  // filters in each test.
+
   it('Renders the correct number of tiles', () => {
     const props = {
       context: {
         filters: [],
         timeSpec: {
           type: 'relative',
-          time_range: '24h',
+          time_range: '15m',
         },
       },
       config: {
@@ -136,8 +139,8 @@ describe('<DashboardRenderer />', () => {
     cy.get('@fetcher').should('have.been.calledThrice')
   })
 
-  it('Renders a summary dashboard with 24h timeframe', () => {
-    const oneDayTimeframe: Timeframe = TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe
+  it('Changing the timeframe changes the query', () => {
+    const oneDayTimeframe: Timeframe = TimePeriods.get(TimeframeKeys.ONE_DAY)!
     const props = {
       context: {
         filters: [],
@@ -153,48 +156,44 @@ describe('<DashboardRenderer />', () => {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
       },
+    }).then(({ wrapper }) => {
+      // Two queries for the metric cards, three for the charts
+      cy.get('@fetcher').should('have.callCount', 5)
+
+      cy.get('.kong-ui-public-dashboard-renderer').should('be.visible')
+      cy.get('.tile-boundary').should('have.length', 4)
+
+      cy.get('.metricscard-trend-range').eq(0).should('contain.text', 'previous 24 hours')
+
+      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match.hasNested('time_range'))
+      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+        time_range: { time_range: '24h' },
+      })).then(() => {
+        cy.get('@fetcher').then((m) => m.resetHistory()).then(() => {
+
+          const sevenDayTimeframe: Timeframe = TimePeriods.get(TimeframeKeys.SEVEN_DAY)!
+
+          wrapper.setProps({
+            context: {
+              filters: [],
+              timeSpec: sevenDayTimeframe.v4Query(),
+            },
+          }).then(() => {
+            // Two more queries for the metric cards, three for the charts
+            cy.get('@fetcher').should('have.callCount', 5)
+
+            cy.get('.kong-ui-public-dashboard-renderer').should('be.visible')
+            cy.get('.tile-boundary').should('have.length', 4)
+
+            cy.get('.metricscard-trend-range').eq(0).should('contain.text', 'previous 7 days')
+
+            cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match.hasNested('time_range'))
+            cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+              time_range: { time_range: '7d' },
+            }))
+          })
+        })
+      })
     })
-
-    // Two queries for the metric cards, three for the charts
-    // cy.get('@fetcher').should('have.callCount', 5)
-
-    cy.get('.kong-ui-public-dashboard-renderer').should('be.visible')
-    cy.get('.tile-boundary').should('have.length', 4)
-
-    cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match.hasNested('time_range'))
-    cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-      time_range: { time_range: '24h' },
-    }))
-  })
-
-  it('Renders a summary dashboard with 7d timeframe', () => {
-    const sevenDayTimeframe: Timeframe = TimePeriods.get(TimeframeKeys.SEVEN_DAY) as Timeframe
-    const props = {
-      context: {
-        filters: [],
-        timeSpec: sevenDayTimeframe.v4Query(),
-      },
-      config: summaryDashboardConfig,
-    }
-
-    cy.mount(DashboardRenderer, {
-      props,
-      global: {
-        provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
-        },
-      },
-    })
-
-    // Two queries for the metric cards, three for the charts
-    cy.get('@fetcher').should('have.callCount', 5)
-
-    cy.get('.kong-ui-public-dashboard-renderer').should('be.visible')
-    cy.get('.tile-boundary').should('have.length', 4)
-
-    cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match.hasNested('time_range'))
-    cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-      time_range: { time_range: '7d' },
-    }))
   })
 })
