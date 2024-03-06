@@ -12,8 +12,8 @@
       :empty-state-action-message="emptyStateOptions.ctaText"
       :empty-state-action-route="emptyStateOptions.ctaPath"
       empty-state-icon-variant="search"
-      :empty-state-message="t('baseTable.emptyState.noSearchResultsMessage')"
-      :empty-state-title="t('baseTable.emptyState.noSearchResultsTitle')"
+      :empty-state-message="t('baseTable.emptySearch.noSearchResultsMessage')"
+      :empty-state-title="t('baseTable.emptySearch.noSearchResultsTitle')"
       :enable-client-sort="enableClientSort"
       :error-state-message="tableErrorState.message"
       :error-state-title="tableErrorState.title"
@@ -106,8 +106,8 @@
         <!-- Standard KTable empty state will only be shown when there is a search query or error -->
         <KEmptyState
           icon-variant="search"
-          :message="emptyStateOptions.ctaText"
-          :title="emptyStateOptions.title"
+          :message="emptyStateOptions.ctaText || t('baseTable.emptyState.title')"
+          :title="emptyStateOptions.title || t('baseTable.emptyState.message')"
         >
           <template #icon>
             <KongIcon />
