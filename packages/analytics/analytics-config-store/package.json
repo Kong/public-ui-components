@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/vitals-config-store.es.js",
-      "require": "./dist/vitals-config-store.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/vitals-config-store.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -40,8 +40,8 @@
   },
   "devDependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^",
-    "pinia": "^2.1.7",
-    "vue": "^3.4.21"
+    "pinia": ">= 2.1.7 < 3",
+    "vue": ">= 3.4.21 < 4"
   },
   "repository": {
     "type": "git",
@@ -62,7 +62,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^",
-    "pinia": "^2.1.7",
-    "vue": "^3.4.21"
+    "pinia": ">= 2.1.7 < 3",
+    "vue": ">= 3.4.21 < 4"
   }
 }
