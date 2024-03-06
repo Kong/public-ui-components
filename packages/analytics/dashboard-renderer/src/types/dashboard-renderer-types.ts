@@ -390,10 +390,17 @@ export type TileLayout = FromSchema<typeof tileLayoutSchema>
 export const tileConfigSchema = {
   type: 'object',
   properties: {
+    id: {
+      type: 'string',
+      description: 'A unique identifier for the tile.',
+    },
+    slottable: {
+      type: 'boolean',
+    },
     definition: tileDefinitionSchema,
     layout: tileLayoutSchema,
   },
-  required: ['definition', 'layout'],
+  required: ['layout'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 

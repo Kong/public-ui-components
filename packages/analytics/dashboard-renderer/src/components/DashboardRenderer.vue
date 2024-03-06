@@ -13,7 +13,14 @@
       :tiles="gridTiles"
     >
       <template #tile="{ tile, style }">
+        <div
+          v-if="tile.slottable"
+          class="tile-container"
+        >
+          <slot :name="tile.id" />
+        </div>
         <DashboardTile
+          v-else
           class="tile-container"
           :context="mergedContext"
           :definition="tile.meta"
@@ -53,11 +60,20 @@ if (!queryBridge) {
 
 const gridTiles = computed(() => {
   return props.config.tiles.map((tile: TileConfig, i: number) => {
+
+    if (tile.slottable && !tile.id) {
+      console.warn('Slottable tiles must have a unique id.')
+    }
+    if (!tile.slottable && !tile.definition) {
+      console.warn('Non-slottable tiles must have a definition.')
+    }
+
     return {
       layout: tile.layout,
       meta: tile.definition,
       // Add a unique key to each tile internally.
-      id: i,
+      id: tile.id || i,
+      slottable: tile.slottable,
     } as GridTile<TileDefinition>
   })
 })
