@@ -106,8 +106,8 @@
         <!-- Standard KTable empty state will only be shown when there is a search query or error -->
         <KEmptyState
           icon-variant="search"
-          :message="emptyStateOptions.ctaText || t('baseTable.emptyState.title')"
-          :title="emptyStateOptions.title || t('baseTable.emptyState.message')"
+          :message="emptyStateOptions.ctaText || t('baseTable.emptyState.message')"
+          :title="emptyStateOptions.title || t('baseTable.emptyState.title')"
         >
           <template #icon>
             <KongIcon />
