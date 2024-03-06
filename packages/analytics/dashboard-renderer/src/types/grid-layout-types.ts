@@ -12,7 +12,6 @@ export interface TileSize {
 
 export interface GridTile<T> {
   id: string | number,
-  slottable: boolean,
   layout: TileLayout,
   meta: T,
 }

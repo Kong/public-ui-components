@@ -33,20 +33,21 @@ const props = withDefaults(defineProps<{
   height: DEFAULT_TILE_HEIGHT,
 })
 
-const rendererLookup: Record<ChartTypes, Component> = {
+const rendererLookup: Record<ChartTypes, Component | undefined> = {
   [ChartTypes.TimeseriesLine]: TimeseriesChartRenderer,
   [ChartTypes.HorizontalBar]: BarChartRenderer,
   [ChartTypes.VerticalBar]: BarChartRenderer,
   [ChartTypes.Gauge]: SimpleChartRenderer,
   [ChartTypes.GoldenSignals]: GoldenSignalsRenderer,
   [ChartTypes.TopN]: TopNTableRenderer,
+  [ChartTypes.Slottable]: undefined,
 }
 
 const componentData = computed(() => {
   // Ideally, Typescript would ensure that the prop types of the renderers match
   // the props that they're going to receive.  Unfortunately, actually doing this seems difficult.
   const component = rendererLookup[props.definition.chart.type]
-  return {
+  return component && {
     component,
     rendererProps: {
       query: props.definition.query,

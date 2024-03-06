@@ -14,10 +14,10 @@
     >
       <template #tile="{ tile, style }">
         <div
-          v-if="tile.slottable"
+          v-if="tile.meta.chart.type === ChartTypes.Slottable"
           class="tile-container"
         >
-          <slot :name="tile.id" />
+          <slot :name="tile.meta.chart.id" />
         </div>
         <DashboardTile
           v-else
@@ -32,6 +32,7 @@
 </template>
 
 <script setup lang="ts">
+import { ChartTypes } from '../types'
 import type { GridTile, TileConfig, DashboardConfig, DashboardRendererContext, TileDefinition } from '../types'
 import DashboardTile from './DashboardTile.vue'
 import { computed, inject } from 'vue'
@@ -60,20 +61,11 @@ if (!queryBridge) {
 
 const gridTiles = computed(() => {
   return props.config.tiles.map((tile: TileConfig, i: number) => {
-
-    if (tile.slottable && !tile.id) {
-      console.warn('Slottable tiles must have a unique id.')
-    }
-    if (!tile.slottable && !tile.definition) {
-      console.warn('Non-slottable tiles must have a definition.')
-    }
-
     return {
       layout: tile.layout,
       meta: tile.definition,
       // Add a unique key to each tile internally.
-      id: tile.id || i,
-      slottable: tile.slottable,
+      id: i,
     } as GridTile<TileDefinition>
   })
 })

@@ -170,6 +170,13 @@ const dashboardConfig: DashboardConfig = {
       },
     } as TileConfig,
     {
+      definition: {
+        chart: {
+          type: ChartTypes.Slottable,
+          id: 'slot-1',
+        },
+        query: {},
+      },
       layout: {
         position: {
           col: 1,
@@ -180,10 +187,15 @@ const dashboardConfig: DashboardConfig = {
           rows: 1,
         },
       },
-      slottable: true,
-      id: 'slot-1',
-    },
+    } as TileConfig,
     {
+      definition: {
+        chart: {
+          type: ChartTypes.Slottable,
+          id: 'slot-2',
+        },
+        query: {},
+      },
       layout: {
         position: {
           col: 2,
@@ -194,9 +206,7 @@ const dashboardConfig: DashboardConfig = {
           rows: 1,
         },
       },
-      slottable: true,
-      id: 'slot-2',
-    },
+    } as TileConfig,
   ],
 }
 
