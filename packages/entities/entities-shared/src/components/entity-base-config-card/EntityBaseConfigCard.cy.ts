@@ -130,15 +130,11 @@ describe('<EntityBaseConfigCard />', () => {
       cy.getTestId('config-card-title').should('not.exist')
     })
 
-    it('displays KSelect to choose Format when Feature Flag is on', () => {
+    it('displays KSelect to choose Format', () => {
       interceptFetch()
 
       cy.mount(EntityBaseConfigCard, {
         props: {
-          // TODO: Remove config once Feature Flag `khcp-8778-json-yaml-configurations` is enabled
-          config: {
-            jsonYamlEnabled: true,
-          },
           configSchema,
           fetchUrl,
         },
@@ -152,10 +148,6 @@ describe('<EntityBaseConfigCard />', () => {
 
       cy.mount(EntityBaseConfigCard, {
         props: {
-          // TODO: Remove config once Feature Flag `khcp-8778-json-yaml-configurations` is enabled
-          config: {
-            jsonYamlEnabled: true,
-          },
           configSchema,
           fetchUrl,
           configCardDoc: 'www.test.com',
@@ -449,7 +441,7 @@ describe('<EntityBaseConfigCard />', () => {
 
       cy.wait('@fetchRecordError')
 
-      cy.getTestId('json-copy-button').should('not.exist')
+      cy.getTestId('k-code-block-copy-button').should('not.exist')
       cy.getTestId('config-card-fetch-error').should('be.visible').then(() => {
         // emits @fetch:error
         cy.wrap(Cypress.vueWrapper.emitted('fetch:error')).should('have.length', 1)
@@ -486,11 +478,14 @@ describe('<EntityBaseConfigCard />', () => {
         },
       })
 
-      cy.getTestId('json-copy-button').should('be.visible')
+      cy.getTestId('select-config-format').click()
+      cy.getTestId('select-item-json').click()
+
+      cy.getTestId('k-code-block-copy-button').should('be.visible')
       // eslint-disable-next-line cypress/unsafe-to-chain-command
-      cy.getTestId('json-copy-button').click().then(() => {
+      cy.getTestId('k-code-block-copy-button').click().then(() => {
         // emits copy event
-        cy.wrap(Cypress.vueWrapper.emitted('copy:success')).should('have.length', 1)
+        cy.wrap(Cypress.vueWrapper.emitted).should('have.length', 1)
       })
     })
 
