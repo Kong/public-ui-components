@@ -322,12 +322,6 @@ const cellAttrs = (params: Record<string, any>) => {
   return result
 }
 
-const getTestIdString = (message: string): string => {
-  const msg = message.toLowerCase().replace(/[^[a-z0-9]/gi, '-')
-
-  return msg
-}
-
 const handleEmptyStateCtaClicked = () => {
   emit('empty-state-cta-clicked')
   clearSearchInput()
