@@ -40,11 +40,12 @@
 /packages/portal/swagger-ui-web-component/ @adamdehaven @davidma415 @kaiarrowood
 
 # Analytics packages
-/packages/analytics/analytics-utilities @Kong/team-data
-/packages/analytics/metric-cards @Kong/team-data
 /packages/analytics/analytics-chart @Kong/team-data
+/packages/analytics/analytics-config-store @Kong/team-data
 /packages/analytics/analytics-metric-provider @Kong/team-data
+/packages/analytics/analytics-utilities @Kong/team-data
 /packages/analytics/dashboard-renderer @Kong/team-data
+/packages/analytics/metric-cards @Kong/team-data
 
 # =========================================================================
 # Renovate Bot approvals

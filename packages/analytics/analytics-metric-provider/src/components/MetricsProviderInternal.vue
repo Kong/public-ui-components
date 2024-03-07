@@ -1,6 +1,6 @@
 <template>
   <slot
-    :has-trend-access="props.hasTrendAccess"
+    :has-trend-access="hasTrendAccess"
     :timeframe="timeframe"
   />
 </template>
@@ -16,6 +16,7 @@ import {
 import { TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
 import { METRICS_PROVIDER_KEY, defaultFetcherDefs } from './metricsProviderUtil'
 import { INJECT_QUERY_PROVIDER } from '../constants'
+import { useAnalyticsConfigStore, SEVEN_DAYS_MS } from '@kong-ui-public/analytics-config-store'
 
 const props = withDefaults(defineProps<{
   maxTimeframe?: TimeframeKeys,
@@ -25,7 +26,6 @@ const props = withDefaults(defineProps<{
   filterValue?: string,
   additionalFilter?: ExploreFilter[],
   queryReady?: boolean,
-  hasTrendAccess: boolean,
   refreshInterval: number,
   longCardTitles?: boolean,
   description?: string,
@@ -61,6 +61,18 @@ if (!queryBridge) {
   queryFn = queryBridge.queryFn
 }
 
+const analyticsConfigStore = useAnalyticsConfigStore()
+const analyticsConfig = analyticsConfigStore.getConfig()
+
+// Don't attempt to issue a query until we know what we can query for.
+const queryReady = computed(() => analyticsConfig.value !== null && props.queryReady)
+
+const hasTrendAccess = computed(() =>
+  analyticsConfig.value !== null &&
+  analyticsConfig.value.analytics &&
+  analyticsConfig.value.api_analytics_retention_ms > SEVEN_DAYS_MS,
+)
+
 const tz = computed(() => {
   if (props.tz) {
     return props.tz
@@ -80,7 +92,7 @@ const timeframe = computed(() => {
     return props.overrideTimeframe
   }
 
-  const retval = props.hasTrendAccess
+  const retval = hasTrendAccess.value
     ? TimePeriods.get(props.maxTimeframe)
     : TimePeriods.get(TimeframeKeys.ONE_DAY)
 
@@ -98,10 +110,10 @@ const {
   dimension: props.dimension,
   dimensionFilterValue: props.filterValue,
   additionalFilter: toRef(props, 'additionalFilter'),
-  queryReady: toRef(props, 'queryReady'),
+  queryReady,
   timeframe,
   tz,
-  hasTrendAccess: props.hasTrendAccess,
+  hasTrendAccess,
   refreshInterval: props.refreshInterval,
   queryFn,
   abortController: props.abortController,
@@ -113,7 +125,7 @@ provide(METRICS_PROVIDER_KEY, {
     latency: latencyData,
   },
   description: props.description,
-  hasTrendAccess: props.hasTrendAccess,
+  hasTrendAccess,
   longCardTitles: props.longCardTitles,
 })
 

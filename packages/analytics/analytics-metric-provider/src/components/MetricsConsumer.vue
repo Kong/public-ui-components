@@ -122,7 +122,7 @@ const isLoading = computed<boolean>(() => {
 const containerOpts = computed(() => ({
   cards: cards.value,
   loading: isLoading.value,
-  hasTrendAccess: providerData.hasTrendAccess,
+  hasTrendAccess: providerData.hasTrendAccess.value,
   fallbackDisplayText: i18n.t('general.notAvailable'),
   cardSize: props.cardSize,
   hideTitle: true,

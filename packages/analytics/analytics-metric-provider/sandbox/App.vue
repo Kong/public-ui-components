@@ -65,7 +65,6 @@ import { MetricCardSize } from '@kong-ui-public/metric-cards'
 import SandboxBridgeInjector from './SandboxBridgeInjector.vue'
 
 const refreshInterval = 60 * 1000
-const hasTrendAccess = true
 
 // Need to have a local proxy running forwarding traffic to konnect api to hit real data.
 const USE_REAL_DATA = false
@@ -91,13 +90,23 @@ const makeQueryBridge = (opts?: MockOptions): AnalyticsBridge => {
         return Promise.resolve(mockExploreResponse(query, opts))
       }
     },
+
+    configFn: () => {
+      return Promise.resolve({
+        analytics: true,
+        percentiles: true,
+        api_analytics_retention: '1d',
+        api_analytics_retention_ms: 86400000,
+        api_requests_retention: '30d',
+        api_requests_retention_ms: 30 * 86400000,
+      })
+    },
   }
 }
 
 // Query stats for an entire org, no grouping or filtering.
 const globalProviderProps = {
   refreshInterval,
-  hasTrendAccess,
   overrideTimeframe: TimePeriods.get(TimeframeKeys.SIX_HOUR),
   longCardTitles: false,
   description: 'Generic Description',
@@ -107,7 +116,6 @@ const globalBridge = makeQueryBridge()
 // Query stats for an entire org, but also apply a filter.
 const filteredProviderProps = {
   refreshInterval,
-  hasTrendAccess,
   overrideTimeframe: TimePeriods.get(TimeframeKeys.SIX_HOUR),
   additionalFilter: [{
     dimension: 'application',
@@ -119,7 +127,6 @@ const filteredProviderProps = {
 // Query stats for a single entity, no grouping.
 const singleProviderProps = {
   refreshInterval,
-  hasTrendAccess,
   dimension: 'route',
   filterValue: 'blah',
 }
@@ -128,7 +135,6 @@ const singleProviderBridge = makeQueryBridge({ dimensionNames: ['blah'] })
 // Query stats for multiple entities.
 const multiProviderProps = {
   refreshInterval,
-  hasTrendAccess,
   dimension: 'route',
   overrideTimeframe: TimePeriods.get(TimeframeKeys.CURRENT_MONTH),
 }

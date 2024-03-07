@@ -14,7 +14,7 @@ interface ProviderData {
     [key: string]: any // TODO
   },
   description?: string,
-  hasTrendAccess: boolean,
+  hasTrendAccess: Ref<boolean>,
   longCardTitles: boolean,
 }
 
@@ -27,7 +27,7 @@ interface FetcherOptions {
   queryReady: Ref<boolean>
   timeframe: Ref<Timeframe>
   tz: Ref<string>
-  hasTrendAccess: boolean
+  hasTrendAccess: Ref<boolean>
   refreshInterval: number
   queryFn: AnalyticsBridge['queryFn']
   abortController?: AbortController
@@ -90,7 +90,7 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
     tz,
 
     // Traffic and error rate cards can't query trend if multiple entities are expected.
-    withTrend: hasTrendAccess && !multiEntityQuery,
+    withTrend: computed<boolean>(() => hasTrendAccess.value && !multiEntityQuery),
 
     refreshInterval,
     queryFn,
@@ -112,7 +112,7 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
     tz,
 
     // Don't query latency trends in the multi-entity case: it's possible, but wasteful.
-    withTrend: hasTrendAccess && !multiEntityQuery,
+    withTrend: computed<boolean>(() => hasTrendAccess.value && !multiEntityQuery),
 
     refreshInterval,
     queryFn,

@@ -1,18 +1,18 @@
 {
-  "name": "@kong-ui-public/analytics-metric-provider",
-  "version": "4.0.11",
+  "name": "@kong-ui-public/analytics-config-store",
+  "version": "0.0.1",
   "type": "module",
-  "main": "./dist/vitals-metric-provider.umd.js",
-  "module": "./dist/vitals-metric-provider.es.js",
+  "main": "./dist/vitals-config-store.umd.js",
+  "module": "./dist/vitals-config-store.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/vitals-metric-provider.es.js",
-      "require": "./dist/vitals-metric-provider.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/vitals-config-store.es.js",
+      "require": "./dist/vitals-config-store.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -24,7 +24,7 @@
     "dev": "cross-env USE_SANDBOX=true vite",
     "build": "run-s typecheck build:package build:types",
     "build:package": "vite build -m production",
-    "build:analyzer": "BUILD_VISUALIZER='analytics/analytics-metric-provider' vite build -m production",
+    "build:analyzer": "BUILD_VISUALIZER='analytics/analytics-config-store' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
     "preview": "cross-env USE_SANDBOX=true vite preview",
@@ -38,34 +38,31 @@
     "test:unit": "cross-env FORCE_COLOR=1 vitest run",
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
+  "devDependencies": {
+    "@kong-ui-public/analytics-utilities": "workspace:^",
+    "pinia": ">= 2.1.7 < 3",
+    "vue": ">= 3.4.21 < 4"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Kong/public-ui-components.git",
-    "directory": "packages/analytics/analytics-metric-provider"
+    "directory": "packages/analytics/analytics-config-store"
   },
-  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/analytics/analytics-metric-provider",
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/analytics/analytics-config-store",
+  "bugs": {
+    "url": "https://github.com/Kong/public-ui-components/issues"
+  },
   "author": "Kong, Inc.",
   "license": "Apache-2.0",
   "volta": {
     "extends": "../../../package.json"
   },
-  "dependencies": {
-    "@kong-ui-public/core": "1.1.0",
-    "@kong-ui-public/metric-cards": "workspace:^",
-    "axios": "^1.6.7",
-    "swrv": "^1.0.4"
+  "distSizeChecker": {
+    "errorLimit": "200KB"
   },
   "peerDependencies": {
-    "@kong-ui-public/analytics-config-store": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
-    "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.107"
-  },
-  "devDependencies": {
-    "@kong-ui-public/analytics-config-store": "workspace:^",
-    "@kong-ui-public/analytics-utilities": "workspace:^",
-    "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.107",
-    "pinia": ">= 2.1.7 < 3"
+    "pinia": ">= 2.1.7 < 3",
+    "vue": ">= 3.4.21 < 4"
   }
 }
