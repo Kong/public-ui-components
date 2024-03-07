@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.9.0...@kong-ui-public/dashboard-renderer@0.10.0) (2024-03-07)
+
+
+### Bug Fixes
+
+* **analytics:** fix dashboard renderer test ([#1216](https://github.com/Kong/public-ui-components/issues/1216)) ([dd0b77a](https://github.com/Kong/public-ui-components/commit/dd0b77a27a7d8acd323531a2102ddd67dd261e50))
+
+
+### Features
+
+* **analytics:** get config from analytics endpoint [MA-2532] ([#1208](https://github.com/Kong/public-ui-components/issues/1208)) ([3a1ae09](https://github.com/Kong/public-ui-components/commit/3a1ae09827dd5797d4fd5e93fe60935758c1c6bc))
+
+
+
+
+
 # [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.8.2...@kong-ui-public/dashboard-renderer@0.9.0) (2024-03-07)
 
 
