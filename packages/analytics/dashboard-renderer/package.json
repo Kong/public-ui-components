@@ -47,6 +47,7 @@
     "@kong/design-tokens": "1.12.10",
     "@kong/kongponents": "9.0.0-alpha.107",
     "json-schema-to-ts": "^3.0.0",
+    "pinia": ">= 2.1.7 < 3",
     "swrv": "^1.0.4",
     "vue": "^3.4.20"
   },
