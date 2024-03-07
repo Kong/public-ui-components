@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-key-sets",
-  "version": "2.3.31",
+  "version": "2.3.32",
   "type": "module",
   "main": "./dist/entities-key-sets.umd.js",
   "module": "./dist/entities-key-sets.es.js",
@@ -31,9 +31,9 @@
   "devDependencies": {
     "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-pr.2054.fc5ae398.0",
+    "@kong/kongponents": "9.0.0-pr.2054.2f512ddd.0",
     "axios": "^1.6.7",
-    "vue": "^3.4.19",
+    "vue": "^3.4.20",
     "vue-router": "^4.3.0"
   },
   "scripts": {

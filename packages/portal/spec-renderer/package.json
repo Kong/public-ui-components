@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/spec-renderer",
-  "version": "2.0.52",
+  "version": "2.0.53",
   "type": "module",
   "main": "./dist/spec-renderer.umd.js",
   "module": "./dist/spec-renderer.es.js",
@@ -44,12 +44,12 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.12.10",
-    "@kong/kongponents": "9.0.0-pr.2054.fc5ae398.0",
+    "@kong/kongponents": "9.0.0-pr.2054.2f512ddd.0",
     "@modyfi/vite-plugin-yaml": "^1.1.0",
     "@types/lodash.clonedeep": "^4.5.9",
     "@types/uuid": "^9.0.8",
     "openapi-types": "^12.1.3",
-    "vue": "^3.4.19"
+    "vue": "^3.4.20"
   },
   "dependencies": {
     "@kong-ui-public/i18n": "workspace:^",
