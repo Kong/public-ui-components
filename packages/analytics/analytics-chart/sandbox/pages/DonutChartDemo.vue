@@ -165,7 +165,7 @@ import { isValidJson, rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
-import { generateCrossSectionalData } from '../utils/chartDataGenerator'
+import { generateCrossSectionalData } from '@kong-ui-public/analytics-utilities'
 import CodeText from '../CodeText.vue'
 
 enum Metrics {

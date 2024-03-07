@@ -1,6 +1,14 @@
-import type { DimensionMap, MetricUnit, RecordEvent, DisplayBlob, QueryResponseMeta, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type {
+  DimensionMap,
+  ExploreAggregations,
+  MetricUnit,
+  DisplayBlob,
+  RecordEvent,
+  QueryResponseMeta,
+  ExploreResultV4,
+} from '../types'
 import { SeededRandom } from './SeedRandom'
-import { rand } from './utils'
+import { rand } from '../utils'
 
 export interface Metric {
   name: string,
@@ -70,7 +78,7 @@ export const generateSingleMetricTimeSeriesData = (metric: Metric, dimensionMap?
     start_ms: start,
     end_ms: end,
     query_id: '12345',
-    metric_names: [metric.name],
+    metric_names: [metric.name] as ExploreAggregations[],
     metric_units: {
       [metric.name]: metric.unit,
     },
@@ -117,9 +125,9 @@ export const generateMultipleMetricTimeSeriesData = (metrics: Metric[]) => {
     start_ms: start,
     end_ms: end,
     query_id: '12345',
-    metric_names: metrics.map(metric => metric.name),
+    metric_names: metrics.map(metric => metric.name) as ExploreAggregations[],
     metric_units: metrics.reduce((units: MetricUnit, metric) => {
-      units[metric.name] = metric.unit
+      units[metric.name as ExploreAggregations] = metric.unit
       return units
     }, {}),
     granularity_ms: 60 * 60 * 1000, // 1 hour in ms
@@ -200,9 +208,9 @@ export const generateCrossSectionalData = (metrics: Metric[], dimensionMap: Dime
     start_ms: start,
     end_ms: end,
     query_id: '12345',
-    metric_names: metrics.map(metric => metric.name),
+    metric_names: metrics.map(metric => metric.name) as ExploreAggregations[],
     metric_units: metrics.reduce((units: MetricUnit, metric) => {
-      units[metric.name] = metric.unit
+      units[metric.name as ExploreAggregations] = metric.unit
       return units
     }, {}),
     truncated: false,
