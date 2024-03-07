@@ -41,7 +41,7 @@
   "devDependencies": {
     "@kong/design-tokens": "1.12.10",
     "@kong/kongponents": "9.0.0-alpha.107",
-    "vue": "^3.4.19",
+    "vue": "^3.4.20",
     "vue-router": "^4.3.0"
   },
   "repository": {
