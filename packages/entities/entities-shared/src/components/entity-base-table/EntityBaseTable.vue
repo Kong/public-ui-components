@@ -9,11 +9,11 @@
       :cell-attrs="cellAttrs"
       :disable-pagination-page-jump="disablePaginationPageJump"
       :disable-sorting="disableSorting"
-      :empty-state-action-message="emptyStateOptions.ctaText"
-      :empty-state-action-route="emptyStateOptions.ctaPath"
-      empty-state-icon-variant="search"
-      :empty-state-message="t('baseTable.emptySearch.noSearchResultsMessage')"
-      :empty-state-title="t('baseTable.emptySearch.noSearchResultsTitle')"
+      :empty-state-action-message="query ? t('baseTable.emptyState.noSearchResultsCtaText') : emptyStateOptions.ctaText"
+      :empty-state-action-route="query ? undefined : emptyStateOptions.ctaPath"
+      :empty-state-icon-variant="query ? 'search' : 'kong'"
+      :empty-state-message="query ? t('baseTable.emptyState.noSearchResultsMessage') : emptyStateOptions.message"
+      :empty-state-title="query ? t('baseTable.emptyState.noSearchResultsTitle') : emptyStateOptions.title"
       :enable-client-sort="enableClientSort"
       :error-state-message="tableErrorState.message"
       :error-state-title="tableErrorState.title"
@@ -100,28 +100,9 @@
       </template>
       <template
         v-if="!query"
-        #empty-state
+        #empty-state-action-icon
       >
-        <!-- When no search query is present - show custom empty state with plus icon in action button -->
-        <!-- Standard KTable empty state will only be shown when there is a search query or error -->
-        <KEmptyState
-          icon-variant="kong"
-          :message="emptyStateOptions.message || t('baseTable.emptyState.message')"
-          :title="emptyStateOptions.title || t('baseTable.emptyState.title')"
-        >
-          <template
-            v-if="emptyStateOptions.ctaText"
-            #action
-          >
-            <KButton
-              :data-testid="getTestIdString(emptyStateOptions.ctaText)"
-              @click="handleEmptyStateCtaClicked"
-            >
-              <AddIcon />
-              {{ emptyStateOptions.ctaText }}
-            </KButton>
-          </template>
-        </KEmptyState>
+        <AddIcon />
       </template>
     </KTable>
   </KCard>

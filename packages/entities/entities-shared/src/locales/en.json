@@ -30,10 +30,6 @@
   },
   "baseTable": {
     "emptyState": {
-      "title": "No Data",
-      "message": "There is no data to display."
-    },
-    "emptySearch": {
       "noSearchResultsTitle": "No results found",
       "noSearchResultsMessage": "Please adjust the criteria and try again.",
       "noSearchResultsCtaText": "Clear"
