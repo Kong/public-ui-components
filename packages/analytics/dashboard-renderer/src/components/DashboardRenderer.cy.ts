@@ -1,7 +1,13 @@
 import { ChartTypes } from '../types'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import { INJECT_QUERY_PROVIDER } from '../constants'
-import type { AnalyticsBridge, ExploreQuery, ExploreResultV4, Timeframe } from '@kong-ui-public/analytics-utilities'
+import type {
+  AnalyticsBridge,
+  AnalyticsConfig,
+  ExploreQuery,
+  ExploreResultV4,
+  Timeframe,
+} from '@kong-ui-public/analytics-utilities'
 import {
   datePickerSelectionToTimeframe,
   generateSingleMetricTimeSeriesData,
@@ -11,10 +17,12 @@ import {
 } from '@kong-ui-public/analytics-utilities'
 import DashboardRenderer from './DashboardRenderer.vue'
 import { nonTsExploreResponse, timeSeriesExploreResponse, summaryDashboardConfig } from '../../sandbox/mock-data'
+import { createPinia, setActivePinia } from 'pinia'
 
 describe('<DashboardRenderer />', () => {
   beforeEach(() => {
     cy.viewport(1200, 1000)
+    setActivePinia(createPinia())
   })
 
   const mockQueryProvider = (): AnalyticsBridge => {
@@ -52,8 +60,18 @@ describe('<DashboardRenderer />', () => {
       }
     }
 
+    const configFn = (): Promise<AnalyticsConfig> => Promise.resolve({
+      analytics: true,
+      percentiles: true,
+      api_requests_retention: '24h',
+      api_requests_retention_ms: 86400000,
+      api_analytics_retention: '30d',
+      api_analytics_retention_ms: 30 * 86400000,
+    })
+
     return {
       queryFn: cy.spy(queryFn).as('fetcher'),
+      configFn,
     }
   }
 
