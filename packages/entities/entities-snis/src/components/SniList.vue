@@ -58,6 +58,7 @@
           class="copy-certificate-uuid"
           data-testid="copy-certificate-uuid"
           :text="row.certificate.id"
+          truncate
         />
         <span v-else>-</span>
       </template>

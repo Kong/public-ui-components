@@ -64,7 +64,10 @@
         <span v-else>-</span>
       </template>
       <template #id="{ rowValue }">
-        <KCopy :text="rowValue" />
+        <KCopy
+          :text="rowValue"
+          truncate
+        />
       </template>
 
       <!-- Row actions -->
