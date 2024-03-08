@@ -11,15 +11,15 @@
   background: none !important;
 }
 
-.swagger-ui .model-box .json-schema-2020-12-accordion,
-.swagger-ui .model-box .json-schema-2020-12-expand-deep-button {
-  background-color: var(--kong-ui-section_colors-body);
+.swagger-ui .json-schema-2020-12-accordion,
+.swagger-ui .json-schema-2020-12-expand-deep-button {
+  background-color: var(--kong-ui-section_colors-body) !important;
 }
 
-.json-schema-2020-12-accordion__icon {
-  color: var(--kong-ui-text_colors-primary);
+.swagger-ui .json-schema-2020-12-accordion__icon {
+  color: var(--kong-ui-text_colors-primary) !important;
 }
 
-.json-schema-2020-12-accordion__icon svg {
-  fill: currentColor;
+.swagger-ui .json-schema-2020-12-accordion__icon svg {
+  fill: currentColor !important;
 }
