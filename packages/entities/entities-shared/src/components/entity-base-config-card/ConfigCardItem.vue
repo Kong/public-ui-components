@@ -60,16 +60,16 @@
             </div>
 
             <div
-              v-if="componentAttrsData.additionalComponent === 'CopyUuid'"
+              v-if="componentAttrsData.additionalComponent === 'KCopy'"
               class="copy-uuid-array"
               :data-testid="`${item.key}-copy-uuid-array`"
             >
-              <CopyUuid
+              <KCopy
                 v-for="(id, idx) in item.value"
                 v-bind="componentAttrsData.childAttrs"
                 :key="`${item.key}-copy-uuid-${idx}`"
                 :data-testid="`${item.key}-copy-uuid-${idx}`"
-                :uuid="id"
+                :text="id"
               />
             </div>
 
@@ -127,13 +127,11 @@ import { computed, ref, useSlots } from 'vue'
 import type { RecordItem, ComponentAttrsData } from '../../types'
 import { ConfigurationSchemaType } from '../../types'
 import composables from '../../composables'
-import { CopyUuid } from '@kong-ui-public/copy-uuid'
 import { BadgeMethodAppearances } from '@kong/kongponents'
 import type { BadgeMethodAppearance } from '@kong/kongponents'
 import JsonCardItem from './JsonCardItem.vue'
 import InternalLinkItem from './InternalLinkItem.vue'
 import StatusBadge from './StatusBadge.vue'
-import '@kong-ui-public/copy-uuid/dist/style.css'
 
 const props = defineProps({
   item: {
@@ -168,53 +166,41 @@ const componentAttrsData = computed((): ComponentAttrsData => {
   switch (props.item.type) {
     case ConfigurationSchemaType.ID:
       return {
-        tag: 'CopyUuid',
+        tag: 'KCopy',
         attrs: {
           'data-testid': `${props.item.key}-copy-uuid`,
-          'success-tooltip': t('baseConfigCard.copy.success'),
-          tooltip: t('baseConfigCard.copy.tooltip', { label: props.item.label }),
-          truncated: false,
-          uuid: props.item.value,
-          notify: () => {},
+          'copy-tooltip': t('baseConfigCard.copy.tooltip', { label: props.item.label }),
+          text: props.item.value,
         },
       }
 
     case ConfigurationSchemaType.IdArray:
       return {
         tag: 'div',
-        additionalComponent: 'CopyUuid',
+        additionalComponent: 'KCopy',
         childAttrs: {
-          'success-tooltip': t('baseConfigCard.copy.success'),
-          tooltip: t('baseConfigCard.copy.tooltip', { label: props.item.label }),
-          truncated: false,
-          notify: () => {},
+          'copy-tooltip': t('baseConfigCard.copy.tooltip', { label: props.item.label }),
         },
       }
 
     case ConfigurationSchemaType.Redacted:
       return {
-        tag: 'CopyUuid',
+        tag: 'KCopy',
         attrs: {
           'data-testid': `${props.item.key}-copy-uuid-redacted`,
           format: 'redacted',
-          'success-tooltip': t('baseConfigCard.copy.success'),
-          tooltip: t('baseConfigCard.copy.tooltip', { label: props.item.label }),
-          truncated: false,
-          uuid: props.item.value,
-          notify: () => {},
+          'copy-tooltip': t('baseConfigCard.copy.tooltip', { label: props.item.label }),
+          text: props.item.value,
         },
       }
 
     case ConfigurationSchemaType.RedactedArray:
       return {
         tag: 'div',
-        additionalComponent: 'CopyUuid',
+        additionalComponent: 'KCopy',
         childAttrs: {
           format: 'redacted',
-          'success-tooltip': t('baseConfigCard.copy.success'),
-          tooltip: t('baseConfigCard.copy.tooltip', { label: props.item.label }),
-          truncated: false,
-          notify: () => {},
+          'copy-tooltip': t('baseConfigCard.copy.tooltip', { label: props.item.label }),
         },
       }
 
@@ -310,7 +296,7 @@ import { KUI_BORDER_WIDTH_10, KUI_COLOR_BORDER } from '@kong/design-tokens'
 // Must explicitly define components so <component :is="type"> works
 export default {
   name: 'ConfigCardItem',
-  components: { CopyUuid, JsonCardItem, StatusBadge, InternalLinkItem },
+  components: { JsonCardItem, StatusBadge, InternalLinkItem },
 }
 </script>
 
@@ -348,7 +334,7 @@ export default {
     }
 
     .copy-uuid-array {
-      :deep(.kong-ui-copy-uuid) {
+      :deep(.k-copy) {
         &:not(:last-of-type) {
           margin-bottom: $kui-space-40;
         }
