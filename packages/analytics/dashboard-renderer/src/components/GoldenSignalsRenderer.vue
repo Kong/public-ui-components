@@ -49,7 +49,7 @@ const overrideTimeframe: Ref<Timeframe> = computed(() => {
 const options = computed<ProviderProps>(() => ({
   overrideTimeframe: overrideTimeframe.value,
   tz: props.context.tz,
-  additionalFilters: props.context.filters,
+  additionalFilter: props.context.filters,
   longCardTitles: props.chartOptions.longCardTitles,
   description: props.chartOptions.description,
   hasTrendAccess: true,
