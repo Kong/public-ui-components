@@ -10,3 +10,16 @@
 .swagger-ui .opblock {
   background: none !important;
 }
+
+.swagger-ui .model-box .json-schema-2020-12-accordion,
+.swagger-ui .model-box .json-schema-2020-12-expand-deep-button {
+  background-color: var(--kong-ui-section_colors-body);
+}
+
+.json-schema-2020-12-accordion__icon {
+  color: var(--kong-ui-text_colors-primary);
+}
+
+.json-schema-2020-12-accordion__icon svg {
+  fill: currentColor;
+}
