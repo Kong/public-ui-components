@@ -51,6 +51,17 @@
       <template #name="{ rowValue }">
         <b>{{ rowValue ?? '-' }}</b>
       </template>
+      <template #control_plane="{ row }">
+        <KBadge
+          v-if="row.x_meta?.cluster_id"
+          :tooltip="row.x_meta.cluster_id"
+          truncation-tooltip
+          @click.stop="handleControlPlaneClick(row.x_meta.cluster_id)"
+        >
+          {{ row.x_meta.cluster_id }}
+        </KBadge>
+        <b v-else>-</b>
+      </template>
       <template #enabled="{ row }">
         <PermissionsWrapper
           :auth-function="() => canEdit(row)"
@@ -257,6 +268,7 @@ const fetchCacheKey = ref<number>(1)
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
   name: { label: t('gateway_services.list.table_headers.name'), searchable: true, sortable: true },
+  ...(props.config.showControlPlaneColumn ? { control_plane: { label: t('gateway_services.list.table_headers.control_plane') } } : {}),
   protocol: { label: t('gateway_services.list.table_headers.protocol'), searchable: true, sortable: true },
   host: { label: t('gateway_services.list.table_headers.host'), searchable: true, sortable: true },
   port: { label: t('gateway_services.list.table_headers.port'), searchable: true, sortable: true },
@@ -390,6 +402,16 @@ const confirmSwitchEnablement = async () => {
 
   // Update switchEnablementTarget
   switchEnablementTarget.value.enabled = enabled
+}
+
+/**
+ * Redirect to control plane
+ */
+const handleControlPlaneClick = (id: string) => {
+  if (!props.config.getControlPlaneRoute) {
+    return
+  }
+  router.push(props.config.getControlPlaneRoute(id))
 }
 
 /**

@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@2.3.32...@kong-ui-public/entities-certificates@2.3.33) (2024-03-08)
+
+
+### Bug Fixes
+
+* replace CopyUuid with KCopy [khcp-9465] ([#1210](https://github.com/Kong/public-ui-components/issues/1210)) ([e409d60](https://github.com/Kong/public-ui-components/commit/e409d60b7ab483c200ed6bb33f43ff571d6e6b88))
+
+
+
+
+
+## [2.3.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@2.3.31...@kong-ui-public/entities-certificates@2.3.32) (2024-03-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [2.3.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@2.3.30...@kong-ui-public/entities-certificates@2.3.31) (2024-03-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [2.3.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@2.3.29...@kong-ui-public/entities-certificates@2.3.30) (2024-03-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
 ## [2.3.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@2.3.28...@kong-ui-public/entities-certificates@2.3.29) (2024-03-01)
 
 **Note:** Version bump only for package @kong-ui-public/entities-certificates

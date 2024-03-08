@@ -11,7 +11,7 @@ export interface MetricFetcherOptions {
   timeframe: Ref<Timeframe>
   tz: Ref<string>
   refreshInterval: number
-  withTrend?: boolean
+  withTrend: Ref<boolean>
   featureFlags?: boolean[]
   queryReady: Ref<boolean>
   queryFn: AnalyticsBridge['queryFn']

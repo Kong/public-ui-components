@@ -355,10 +355,10 @@ describe('<ConfigCardItem />', () => {
 
         cy.get('.config-card-details-row').should('be.visible')
         cy.getTestId(`${item.key}-copy-uuid`).should('be.visible')
-        cy.get('.uuid-icon-wrapper [data-testid="copy-to-clipboard"]').should('exist')
-        cy.get('.uuid-icon-wrapper .k-tooltip').should('exist')
-        cy.get('.uuid-icon-wrapper [data-testid="copy-to-clipboard"]').click()
-        cy.get('.uuid-icon-wrapper .k-tooltip').should('contain.text', 'Copied!')
+        cy.get('.text-icon-wrapper [data-testid="copy-to-clipboard"]').should('exist')
+        cy.get('.text-icon-wrapper .k-tooltip').should('exist')
+        cy.get('.text-icon-wrapper [data-testid="copy-to-clipboard"]').click()
+        cy.get('.text-icon-wrapper .k-tooltip').should('contain.text', 'Copied!')
       })
 
       it('renders a redacted ID correctly', () => {

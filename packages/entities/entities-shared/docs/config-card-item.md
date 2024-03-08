@@ -91,17 +91,17 @@ The base item configuration.
 
 #### `slim`
 
-  - type: `Boolean`
-  - required: `false`
-  - default: `false`
-  - This prop is used to force the label and value of the config card item to each use 50% of the available space rather than the default 25/75. Useful when rendering config cards inside narrower containers such as a slideout.
+- type: `Boolean`
+- required: `false`
+- default: `false`
+- This prop is used to force the label and value of the config card item to each use 50% of the available space rather than the default 25/75. Useful when rendering config cards inside narrower containers such as a slideout.
 
 #### `truncated`
 
-  - type: `Boolean`
-  - required: `false`
-  - default: `false`
-  - This prop is used to truncate text values. If this is set to true, the value will truncate with `overflow: ellipsis`. Useful for values that have the potential to be very long strings.
+- type: `Boolean`
+- required: `false`
+- default: `false`
+- This prop is used to truncate text values. If this is set to true, the value will truncate with `overflow: ellipsis`. Useful for values that have the potential to be very long strings.
 
 ### Types
 
@@ -109,7 +109,7 @@ There are multiple predefined display types that are supported. The default disp
 
 #### ID & Redacted
 
-These types are used to display copiable ids and make use of the `CopyUUID` component from the `@kong-ui-public/copy-uuid` package. The `ID` (`ConfigurationSchemaType.ID`) type will render the value as plain text, while `Redacted` (`ConfigurationSchemaType.Redacted`) will obfuscate it. Both types offer the ability to copy the value and handle the copy success/failure events internally.
+These types are used to display copiable ids and make use of the `KCopy` component from the `@kong/kongponents` package. The `ID` (`ConfigurationSchemaType.ID`) type will render the value as plain text, while `Redacted` (`ConfigurationSchemaType.Redacted`) will obfuscate it. Both types offer the ability to copy the value and handle the copy success/failure events internally.
 
 #### Date
 

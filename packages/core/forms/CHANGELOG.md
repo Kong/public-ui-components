@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.45](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.44...@kong-ui-public/forms@2.1.45) (2024-03-08)
+
+
+### Bug Fixes
+
+* replace CopyUuid with KCopy [khcp-9465] ([#1210](https://github.com/Kong/public-ui-components/issues/1210)) ([e409d60](https://github.com/Kong/public-ui-components/commit/e409d60b7ab483c200ed6bb33f43ff571d6e6b88))
+
+
+
+
+
+## [2.1.44](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.43...@kong-ui-public/forms@2.1.44) (2024-03-07)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [2.1.43](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.1.42...@kong-ui-public/forms@2.1.43) (2024-02-27)
 
 

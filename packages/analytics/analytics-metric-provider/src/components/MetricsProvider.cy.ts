@@ -1,13 +1,22 @@
 import MetricsTestHarness from './MetricsTestHarness.vue'
 import { ref } from 'vue'
-import type { AnalyticsBridge, ExploreQuery, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsBridge, AnalyticsConfig, ExploreQuery, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { MockOptions } from '../mockExploreResponse'
 import { mockExploreResponse } from '../mockExploreResponse'
 import { INJECT_QUERY_PROVIDER } from '../constants'
+import { createPinia, setActivePinia } from 'pinia'
+
+interface MakeQueryBridgeOptions extends MockOptions {
+  hasTrendAccess?: boolean
+}
 
 describe('<AnalyticsMetricProvider />', () => {
 
-  const makeQueryBridge = (opts?: MockOptions): AnalyticsBridge => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
+  const makeQueryBridge = (opts?: MakeQueryBridgeOptions): AnalyticsBridge => {
     const queryFn = (query: ExploreQuery): Promise<ExploreResultV4> => {
       if (opts?.injectErrors) {
 
@@ -36,8 +45,20 @@ describe('<AnalyticsMetricProvider />', () => {
       return Promise.resolve(result)
     }
 
+    const hasTrendAccess = opts?.hasTrendAccess ?? true
+
+    const configFn = (): Promise<AnalyticsConfig> => Promise.resolve({
+      analytics: true,
+      percentiles: true,
+      api_requests_retention: '24h',
+      api_requests_retention_ms: 86400000,
+      api_analytics_retention: hasTrendAccess ? '30d' : '1d',
+      api_analytics_retention_ms: hasTrendAccess ? 30 * 86400000 : 86400000,
+    })
+
     return {
       queryFn: cy.spy(queryFn).as('fetcher'),
+      configFn,
     }
   }
 
@@ -45,7 +66,6 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        hasTrendAccess: true,
       },
     })
 
@@ -61,7 +81,6 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        hasTrendAccess: true,
       },
       global: {
         provide: {
@@ -104,7 +123,6 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        hasTrendAccess: true,
         longCardTitles: true,
       },
       global: {
@@ -128,7 +146,6 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        hasTrendAccess: true,
         description: 'Lorem ipsum golden signal details',
       },
       global: {
@@ -139,7 +156,7 @@ describe('<AnalyticsMetricProvider />', () => {
     })
 
     cy.get('.metricscard').should('exist')
-    cy.get('.metricscard-description').eq(0).should('exist')
+    cy.get('.metricscard-description').eq(0).should('contain', 'Lorem ipsum golden signal details')
   })
 
   it('displays "30 days" if trend access allows', () => {
@@ -148,7 +165,6 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        hasTrendAccess: true,
         description: 'Lorem ipsum golden signal details',
       },
       global: {
@@ -163,12 +179,11 @@ describe('<AnalyticsMetricProvider />', () => {
   })
 
   it('displays "24 hours" if trend access allows', () => {
-    const queryBridge = makeQueryBridge()
+    const queryBridge = makeQueryBridge({ hasTrendAccess: false })
 
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        hasTrendAccess: false,
         description: 'Lorem ipsum golden signal details',
       },
       global: {
@@ -183,12 +198,11 @@ describe('<AnalyticsMetricProvider />', () => {
   })
 
   it('handles no trend', () => {
-    const queryBridge = makeQueryBridge()
+    const queryBridge = makeQueryBridge({ hasTrendAccess: false })
 
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        hasTrendAccess: false,
       },
       global: {
         provide: {
@@ -209,14 +223,12 @@ describe('<AnalyticsMetricProvider />', () => {
   })
 
   it('handles queryReady', () => {
-    const queryBridge = makeQueryBridge()
-    const queryReady = ref(false)
+    const queryBridge = makeQueryBridge({ hasTrendAccess: false })
 
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        hasTrendAccess: false,
-        queryReady,
+        queryReady: false,
       },
       global: {
         provide: {
@@ -228,16 +240,15 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('.loading-tabs').should('exist')
     cy.get('.metricscard').should('not.exist')
     cy.get('@fetcher').should('not.have.been.called').then(() => {
+      cy.wrap(Cypress.vueWrapper.setProps({ queryReady: true })).then(() => {
+        cy.get('.loading-tabs').should('not.exist')
 
-      queryReady.value = true
+        // Note: I'd like to assert that the fetcher was called, but this seems to cause Cypress
+        // to flake with an error about promises and the use of `cy.log` in the fetcher.
+        cy.get('.metricscard').should('exist')
 
-      cy.get('.loading-tabs').should('not.exist')
-
-      // Note: I'd like to assert that the fetcher was called, but this seems to cause Cypress
-      // to flake with an error about promises and the use of `cy.log` in the fetcher.
-      cy.get('.metricscard').should('exist')
-
-      cy.getTestId('metric-value').eq(0).should('have.text', '5K')
+        cy.getTestId('metric-value').eq(0).should('have.text', '5K')
+      })
     })
   })
 
@@ -253,7 +264,6 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        hasTrendAccess: true,
         additionalFilter,
       },
       global: {
@@ -303,7 +313,6 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'single',
-        hasTrendAccess: true,
       },
       global: {
         provide: {
@@ -335,12 +344,11 @@ describe('<AnalyticsMetricProvider />', () => {
   })
 
   it('displays single-entity metrics with no trend', () => {
-    const queryBridge = makeQueryBridge({ dimensionNames: ['blah'] })
+    const queryBridge = makeQueryBridge({ dimensionNames: ['blah'], hasTrendAccess: false })
 
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'single',
-        hasTrendAccess: false,
       },
       global: {
         provide: {
@@ -368,7 +376,6 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'multi',
-        hasTrendAccess: true,
       },
       global: {
         provide: {
@@ -406,7 +413,6 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'latencyCard',
-        hasTrendAccess: true,
       },
       global: {
         provide: {
@@ -432,7 +438,6 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        hasTrendAccess: true,
         additionalFilter: ref([{
           dimension: 'application',
           type: 'in',
@@ -460,7 +465,6 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        hasTrendAccess: true,
         additionalFilter: ref([{
           dimension: 'application',
           type: 'in',
@@ -492,7 +496,6 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        hasTrendAccess: true,
         additionalFilter: ref([{
           dimension: 'application',
           type: 'in',

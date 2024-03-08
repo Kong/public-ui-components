@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@1.2.0...@kong-ui-public/analytics-utilities@1.3.0) (2024-03-07)
+
+
+### Features
+
+* **analytics:** get config from analytics endpoint [MA-2532] ([#1208](https://github.com/Kong/public-ui-components/issues/1208)) ([3a1ae09](https://github.com/Kong/public-ui-components/commit/3a1ae09827dd5797d4fd5e93fe60935758c1c6bc))
+
+
+
+
+
+# [1.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@1.1.2...@kong-ui-public/analytics-utilities@1.2.0) (2024-03-07)
+
+
+### Features
+
+* **dashboard-renderer:** expand component test [MA-2629] ([#1193](https://github.com/Kong/public-ui-components/issues/1193)) ([9aaf215](https://github.com/Kong/public-ui-components/commit/9aaf215449105147f6ff35405f181da533105474))
+
+
+
+
+
 ## [1.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@1.1.1...@kong-ui-public/analytics-utilities@1.1.2) (2024-02-24)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities

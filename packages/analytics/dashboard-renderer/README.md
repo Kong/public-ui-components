@@ -10,8 +10,8 @@ Render Analytics charts on a page from a JSON definition.
 ## Requirements
 
 - `vue` must be initialized in the host application
-- A plugin providing a `QueryBridge` must be installed in the root of the application.
-  - This plugin must `provide` a `query` method that adheres to the `QueryBridge` interface exported from this package.
+- A plugin providing an `AnalyticsBridge` must be installed in the root of the application.
+  - This plugin must `provide` the necessary methods to adhere to the `AnalyticsBridge` interface defined in `@kong-ui-public/analytics-utilities`.
   - The plugin's query method is in charge of passing the query to the correct API for the host app's environment.
   - See the sandbox plugin (`./sandbox/sandbox-query-provider.ts`) for an example that simply returns static data rather than consuming an API.
 - The host application must supply peer dependencies for:

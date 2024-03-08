@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@2.4.21...@kong-ui-public/entities-vaults@2.4.22) (2024-03-08)
+
+
+### Bug Fixes
+
+* replace CopyUuid with KCopy [khcp-9465] ([#1210](https://github.com/Kong/public-ui-components/issues/1210)) ([e409d60](https://github.com/Kong/public-ui-components/commit/e409d60b7ab483c200ed6bb33f43ff571d6e6b88))
+
+
+
+
+
+## [2.4.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@2.4.20...@kong-ui-public/entities-vaults@2.4.21) (2024-03-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [2.4.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@2.4.19...@kong-ui-public/entities-vaults@2.4.20) (2024-03-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [2.4.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@2.4.18...@kong-ui-public/entities-vaults@2.4.19) (2024-03-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
 ## [2.4.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@2.4.17...@kong-ui-public/entities-vaults@2.4.18) (2024-03-01)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

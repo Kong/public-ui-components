@@ -1,0 +1,1 @@
+export const SEVEN_DAYS_MS = 604800000

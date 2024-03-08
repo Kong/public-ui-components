@@ -324,7 +324,7 @@ describe('useMetricFetcher', () => {
       timeframe: ref(TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe),
       loading: ref(true),
       hasError: ref(false),
-      withTrend: true,
+      withTrend: ref(true),
       refreshInterval: CHART_REFRESH_INTERVAL_MS,
     }
 
@@ -359,7 +359,7 @@ describe('useMetricFetcher', () => {
       timeframe: ref(TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe),
       loading: ref(true),
       hasError: ref(false),
-      withTrend: true,
+      withTrend: ref(true),
       refreshInterval: CHART_REFRESH_INTERVAL_MS,
     }
 
@@ -389,7 +389,7 @@ describe('useMetricFetcher', () => {
       timeframe: ref(TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe),
       loading: ref(true),
       hasError: ref(false),
-      withTrend: true,
+      withTrend: ref(true),
       refreshInterval: CHART_REFRESH_INTERVAL_MS,
     }
 
@@ -418,7 +418,7 @@ describe('useMetricFetcher', () => {
       timeframe: ref(TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe),
       loading: ref(true),
       hasError: ref(false),
-      withTrend: false,
+      withTrend: ref(false),
       refreshInterval: CHART_REFRESH_INTERVAL_MS,
     }
 
@@ -458,7 +458,7 @@ describe('useMetricFetcher', () => {
       })),
       loading: ref(true),
       hasError: ref(false),
-      withTrend: true,
+      withTrend: ref(true),
       refreshInterval: CHART_REFRESH_INTERVAL_MS,
     }
 
@@ -493,7 +493,7 @@ describe('useMetricFetcher', () => {
       })),
       loading: ref(true),
       hasError: ref(false),
-      withTrend: false,
+      withTrend: ref(false),
       refreshInterval: CHART_REFRESH_INTERVAL_MS,
     }
 

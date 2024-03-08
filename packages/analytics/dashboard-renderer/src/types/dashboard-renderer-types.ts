@@ -16,6 +16,7 @@ export enum ChartTypes {
   TimeseriesLine = 'timeseries_line',
   GoldenSignals = 'golden_signals',
   TopN = 'top_n',
+  Slottable = 'slottable',
 }
 
 // Common definition for many ChartJS tiles.
@@ -36,6 +37,23 @@ const chartDatasetColorsSchema = {
     type: 'string',
   },
 } as const satisfies JSONSchema
+
+export const slottableSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: [ChartTypes.Slottable],
+    },
+    id: {
+      type: 'string',
+    },
+  },
+  required: ['type', 'id'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type SlottableOptions = FromSchema<typeof slottableSchema>
 
 export const barChartSchema = {
   type: 'object',
@@ -65,9 +83,6 @@ export const timeseriesChartSchema = {
       enum: [ChartTypes.TimeseriesLine],
     },
     stacked: {
-      type: 'boolean',
-    },
-    fill: {
       type: 'boolean',
     },
     chartDatasetColors: chartDatasetColorsSchema,
@@ -340,7 +355,7 @@ export const tileDefinitionSchema = {
   properties: {
     query: exploreV4QuerySchema,
     chart: {
-      oneOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema, metricCardSchema, topNTableSchema],
+      oneOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema, metricCardSchema, topNTableSchema, slottableSchema],
     },
   },
   required: ['query', 'chart'],

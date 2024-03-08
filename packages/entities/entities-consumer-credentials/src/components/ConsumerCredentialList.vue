@@ -48,32 +48,32 @@
       <template #username="{ rowValue }">
         <span>{{ rowValue ?? '-' }}</span>
       </template>
-      <template #password="{ row, rowValue }">
-        <CopyUuid
+      <template #password="{ rowValue }">
+        <KCopy
           format="redacted"
-          :notify="(param: CopyUuidNotifyParam) => notifyCopyAction(param, row, 'password')"
-          :uuid="rowValue"
+          :text="rowValue"
+          truncate
         />
       </template>
-      <template #key="{ row, rowValue }">
-        <CopyUuid
+      <template #key="{ rowValue }">
+        <KCopy
           format="redacted"
-          :notify="(param: CopyUuidNotifyParam) => notifyCopyAction(param, row, 'key')"
-          :uuid="rowValue"
+          :text="rowValue"
+          truncate
         />
       </template>
-      <template #client_secret="{ row, rowValue }">
-        <CopyUuid
+      <template #client_secret="{ rowValue }">
+        <KCopy
           format="redacted"
-          :notify="(param: CopyUuidNotifyParam) => notifyCopyAction(param, row, 'client_secret')"
-          :uuid="rowValue"
+          :text="rowValue"
+          truncate
         />
       </template>
-      <template #secret="{ row, rowValue }">
-        <CopyUuid
+      <template #secret="{ rowValue }">
+        <KCopy
           format="redacted"
-          :notify="(param: CopyUuidNotifyParam) => notifyCopyAction(param, row, 'secret')"
-          :uuid="rowValue"
+          :text="rowValue"
+          truncate
         />
       </template>
       <template #created_at="{ rowValue }">
@@ -203,7 +203,6 @@ import {
   useFetcher,
   useDeleteUrlBuilder,
 } from '@kong-ui-public/entities-shared'
-import type { CopyUuidNotifyParam } from '@kong-ui-public/copy-uuid'
 import type {
   CredentialPlugins,
   KongManagerConsumerCredentialListConfig,
@@ -365,15 +364,6 @@ const copy = (entity: EntityRow, field: string | undefined, copyToClipboard: (va
   }
 
   onCopySuccess(entity, field)
-}
-
-const notifyCopyAction = (param: CopyUuidNotifyParam, entity: EntityRow, field: string) => {
-  const { type } = param
-  if (type === 'success') {
-    onCopySuccess(entity, field)
-  } else {
-    onCopyError(entity, field)
-  }
 }
 
 const onCopySuccess = (entity: EntityRow, field: string | undefined) => {
