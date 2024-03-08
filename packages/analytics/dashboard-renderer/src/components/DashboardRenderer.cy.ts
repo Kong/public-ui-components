@@ -4,6 +4,7 @@ import { INJECT_QUERY_PROVIDER } from '../constants'
 import type {
   AnalyticsBridge,
   AnalyticsConfig,
+  ExploreFilter,
   ExploreQuery,
   ExploreResultV4,
   Timeframe,
@@ -30,7 +31,6 @@ describe('<DashboardRenderer />', () => {
       // Dimensions to use if query is not provided
       const dimensionMap = { statusCode: ['1XX', '2XX', '3XX', '4XX', '5XX'] }
 
-      console.log(' query filters >>> ', query.filters)
       if (query.dimensions && query.dimensions.findIndex(d => d === 'time') > -1) {
         if (query.metrics && query.metrics[0] === 'request_count') {
         // Traffic + Error rate cards
@@ -242,5 +242,74 @@ describe('<DashboardRenderer />', () => {
         values: ['default_uuid'],
       }],
     }))
+  })
+
+  it('has reactive contextual filters', () => {
+    const filter1: ExploreFilter = {
+      type: 'in',
+      dimension: 'api_product',
+      values: ['blah'],
+    }
+
+    const filter2: ExploreFilter = {
+      type: 'in',
+      dimension: 'api_product',
+      values: ['arrgh'],
+    }
+
+    const oneDayTimeframe = TimePeriods.get(TimeframeKeys.ONE_DAY)!
+
+    const props = {
+      context: {
+        filters: [filter1],
+        timeSpec: oneDayTimeframe.v4Query(),
+      },
+      config: summaryDashboardConfig,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    }).then(({ wrapper }) => {
+      // Two queries for the metric cards, three for the charts
+      cy.get('@fetcher').should('have.callCount', 5)
+
+      cy.get('.kong-ui-public-dashboard-renderer').should('be.visible')
+      cy.get('.tile-boundary').should('have.length', 4)
+
+      cy.get('@fetcher')
+        .should('always.have.been.calledWithMatch', Cypress.sinon.match({
+          filters: Cypress.sinon.match.some(Cypress.sinon.match(filter1)),
+        }))
+        .should('have.been.calledWithMatch', Cypress.sinon.match({
+          filters: Cypress.sinon.match.some(Cypress.sinon.match({ values: ['default_uuid'] })),
+        }))
+        .then(() => {
+          cy.get('@fetcher').then((m) => m.resetHistory()).then(() => {
+            wrapper.setProps({
+              context: {
+                filters: [filter2],
+                timeSpec: oneDayTimeframe.v4Query(),
+              },
+            }).then(() => {
+              // Two more queries for the metric cards, three for the charts
+              cy.get('@fetcher').should('have.callCount', 5)
+
+              cy.get('.kong-ui-public-dashboard-renderer').should('be.visible')
+              cy.get('.tile-boundary').should('have.length', 4)
+
+              cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+                filters: Cypress.sinon.match.some(Cypress.sinon.match(filter2)),
+              })).should('have.been.calledWithMatch', Cypress.sinon.match({
+                filters: Cypress.sinon.match.some(Cypress.sinon.match({ values: ['default_uuid'] })),
+              }))
+            })
+          })
+        })
+    })
   })
 })
