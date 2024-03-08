@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.54](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.0.53...@kong-ui-public/spec-renderer@2.0.54) (2024-03-08)
+
+
+### Bug Fixes
+
+* replace CopyUuid with KCopy [khcp-9465] ([#1210](https://github.com/Kong/public-ui-components/issues/1210)) ([e409d60](https://github.com/Kong/public-ui-components/commit/e409d60b7ab483c200ed6bb33f43ff571d6e6b88))
+
+
+
+
+
 ## [2.0.53](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.0.52...@kong-ui-public/spec-renderer@2.0.53) (2024-03-07)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer
