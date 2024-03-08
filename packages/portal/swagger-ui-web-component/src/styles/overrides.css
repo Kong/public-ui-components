@@ -16,8 +16,11 @@
   background-color: var(--kong-ui-section_colors-body) !important;
 }
 
-.swagger-ui .json-schema-2020-12-accordion__icon {
-  color: var(--kong-ui-text_colors-primary) !important;
+.swagger-ui .json-schema-2020-12-accordion__icon,
+.swagger-ui .json-schema-2020-12-accordion__icon--collapsed,
+.swagger-ui .json-schema-2020-12-accordion__icon--expanded {
+  /* stylelint-disable-next-line custom-property-pattern*/
+  color: var(--text_colors-primary) !important;
 }
 
 .swagger-ui .json-schema-2020-12-accordion__icon svg {
