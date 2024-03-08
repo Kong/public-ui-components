@@ -13,7 +13,8 @@
 
 .swagger-ui .json-schema-2020-12-accordion,
 .swagger-ui .json-schema-2020-12-expand-deep-button {
-  background-color: var(--kong-ui-section_colors-body) !important;
+  /* stylelint-disable-next-line custom-property-pattern*/
+  background-color: var(--section_colors-body) !important;
 }
 
 .swagger-ui .json-schema-2020-12-accordion__icon,
