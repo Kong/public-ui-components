@@ -19,7 +19,7 @@
     "lerna": "lerna"
   },
   "devDependencies": {
-    "@babel/types": "^7.23.9",
+    "@babel/types": "^7.24.0",
     "@commitlint/cli": "^18.6.1",
     "@commitlint/config-conventional": "^18.6.2",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
