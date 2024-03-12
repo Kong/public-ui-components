@@ -2,29 +2,21 @@
   <KEmptyState
     class="documentation-page-empty-state"
     data-testid="documentation-page-empty-state"
-    icon="stateGruceo"
-    icon-size="96"
+    icon-variant="kong"
   >
     <template #title>
       {{ i18n.t('documentation.show.empty_state.title') }}
     </template>
-    <template #message>
+    <template #default>
       {{ i18n.t('documentation.show.empty_state.message') }}
     </template>
-    <template #cta>
-      <PermissionsWrapper
-        :auth-function="() => canEdit()"
-      >
+    <template #action>
+      <PermissionsWrapper :auth-function="() => canEdit()">
         <KButton
-          appearance="primary"
           data-testid="add-new-page-button"
           @click="emit('create-documentation')"
         >
-          <template #icon>
-            <AddIcon
-              size="22"
-            />
-          </template>
+          <AddIcon />
           {{ i18n.t('documentation.show.empty_state.ctaText') }}
         </KButton>
       </PermissionsWrapper>

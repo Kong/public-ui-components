@@ -18,13 +18,13 @@ importers:
         version: 8.0.1(@types/node@18.19.21)(typescript@5.3.3)
       '@evilmartians/lefthook':
         specifier: ^1.6.4
-        version: 1.6.4
+        version: 1.6.5
       '@kong/design-tokens':
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(vue-router@4.3.0)(vue@3.4.21)
       '@rushstack/eslint-patch':
         specifier: ^1.7.2
         version: 1.7.2
@@ -252,8 +252,8 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(vue@3.4.21)
       '@types/uuid':
         specifier: ^9.0.8
         version: 9.0.8
@@ -274,7 +274,7 @@ importers:
         version: 5.4.1
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
 
   packages/analytics/analytics-config-store:
     devDependencies:
@@ -283,16 +283,16 @@ importers:
         version: link:../analytics-utilities
       pinia:
         specifier: '>= 2.1.7 < 3'
-        version: 2.1.7(typescript@5.3.3)(vue@3.4.21)
+        version: 2.1.7(vue@3.4.21)
       vue:
         specifier: '>= 3.4.21 < 4'
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
 
   packages/analytics/analytics-metric-provider:
     dependencies:
       '@kong-ui-public/core':
         specifier: 1.1.0
-        version: 1.1.0(axios@1.6.7)(swrv@1.0.4)(vue@3.4.21)
+        version: 1.1.0(axios@1.6.7)(swrv@1.0.4)
       '@kong-ui-public/metric-cards':
         specifier: workspace:^
         version: link:../metric-cards
@@ -301,7 +301,7 @@ importers:
         version: 1.6.7
       swrv:
         specifier: ^1.0.4
-        version: 1.0.4(vue@3.4.21)
+        version: 1.0.4
     devDependencies:
       '@kong-ui-public/analytics-config-store':
         specifier: workspace:^
@@ -313,11 +313,11 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(axios@1.6.7)
       pinia:
         specifier: '>= 2.1.7 < 3'
-        version: 2.1.7(typescript@5.3.3)(vue@3.4.21)
+        version: 2.1.7
 
   packages/analytics/analytics-utilities:
     dependencies:
@@ -360,20 +360,20 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(vue@3.4.21)
       json-schema-to-ts:
         specifier: ^3.0.0
         version: 3.0.0
       pinia:
         specifier: '>= 2.1.7 < 3'
-        version: 2.1.7(typescript@5.3.3)(vue@3.4.21)
+        version: 2.1.7(vue@3.4.21)
       swrv:
         specifier: ^1.0.4
         version: 1.0.4(vue@3.4.21)
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
 
   packages/analytics/metric-cards:
     dependencies:
@@ -388,11 +388,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(vue@3.4.21)
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
 
   packages/core/app-layout:
     dependencies:
@@ -413,14 +413,14 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(vue-router@4.3.0)(vue@3.4.21)
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
       vue-router:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21)
@@ -459,11 +459,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(vue@3.4.21)
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
 
   packages/core/core:
     dependencies:
@@ -479,7 +479,7 @@ importers:
         version: 1.6.7
       swrv:
         specifier: ^1.0.4
-        version: 1.0.4(vue@3.4.21)
+        version: 1.0.4
 
   packages/core/documentation:
     dependencies:
@@ -500,14 +500,14 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue@3.3.13)
       axios:
         specifier: ^1.6.7
         version: 1.6.7
       vue:
         specifier: '>= 3.3.13 < 4'
-        version: 3.3.13(typescript@5.3.3)
+        version: 3.3.13
 
   packages/core/error-boundary:
     devDependencies:
@@ -519,13 +519,13 @@ importers:
         version: 1.8.14(vue@3.4.21)
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
 
   packages/core/forms:
     dependencies:
       '@kong/icons':
         specifier: ^1.8.14
-        version: 1.8.14(vue@3.4.21)
+        version: 1.8.14
       fecha:
         specifier: ^4.2.3
         version: 4.2.3
@@ -540,8 +540,8 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112
       '@types/lodash':
         specifier: ^4.14.202
         version: 4.14.202
@@ -553,7 +553,7 @@ importers:
     dependencies:
       '@formatjs/intl':
         specifier: ^2.10.0
-        version: 2.10.0(typescript@5.3.3)
+        version: 2.10.0
       flat:
         specifier: ^6.0.1
         version: 6.0.1
@@ -567,11 +567,11 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(vue@3.4.21)
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
 
   packages/core/sandbox-layout:
     dependencies:
@@ -583,11 +583,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(vue-router@4.3.0)(vue@3.4.21)
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
       vue-router:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21)
@@ -608,14 +608,14 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       axios:
         specifier: ^1.6.7
         version: 1.6.7
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
       vue-router:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21)
@@ -633,14 +633,14 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       axios:
         specifier: ^1.6.7
         version: 1.6.7
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
       vue-router:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21)
@@ -658,14 +658,14 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       axios:
         specifier: ^1.6.7
         version: 1.6.7
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
       vue-router:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21)
@@ -683,14 +683,14 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       axios:
         specifier: ^1.6.7
         version: 1.6.7
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
       vue-router:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21)
@@ -708,14 +708,14 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       axios:
         specifier: ^1.6.7
         version: 1.6.7
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
       vue-router:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21)
@@ -730,14 +730,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       axios:
         specifier: ^1.6.7
         version: 1.6.7
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
       vue-router:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21)
@@ -755,14 +755,14 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       axios:
         specifier: ^1.6.7
         version: 1.6.7
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
       vue-router:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21)
@@ -801,14 +801,14 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       axios:
         specifier: ^1.6.7
         version: 1.6.7
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
       vue-router:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21)
@@ -826,14 +826,14 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       axios:
         specifier: ^1.6.7
         version: 1.6.7
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
       vue-router:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21)
@@ -857,14 +857,14 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       axios:
         specifier: ^1.6.7
         version: 1.6.7
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
       vue-router:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21)
@@ -882,14 +882,14 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       axios:
         specifier: ^1.6.7
         version: 1.6.7
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
       vue-router:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21)
@@ -907,14 +907,14 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       axios:
         specifier: ^1.6.7
         version: 1.6.7
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
       vue-router:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21)
@@ -932,14 +932,14 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       axios:
         specifier: ^1.6.7
         version: 1.6.7
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
       vue-router:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21)
@@ -957,17 +957,17 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(vue@3.4.21)
       '@types/prismjs':
         specifier: ^1.26.3
         version: 1.26.3
       '@vitejs/plugin-vue-jsx':
         specifier: ^3.1.0
-        version: 3.1.0(vite@5.1.4)(vue@3.4.21)
+        version: 3.1.0(vue@3.4.21)
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
 
   packages/portal/spec-renderer:
     dependencies:
@@ -991,11 +991,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.111
-        version: 9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        specifier: 9.0.0-alpha.112
+        version: 9.0.0-alpha.112(vue@3.4.21)
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.1.0
-        version: 1.1.0(vite@5.1.4)
+        version: 1.1.0
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -1007,13 +1007,13 @@ importers:
         version: 12.1.3
       vue:
         specifier: ^3.4.21
-        version: 3.4.21(typescript@5.3.3)
+        version: 3.4.21
 
   packages/portal/swagger-ui-web-component:
     dependencies:
       '@kong/swagger-ui-kong-theme-universal':
         specifier: ^4.3.3
-        version: 4.3.3(react-dom@17.0.2)(react@17.0.2)(vue-router@4.3.0)(vue@3.4.21)
+        version: 4.3.3(react-dom@17.0.2)(react@17.0.2)
       react:
         specifier: 17.0.2
         version: 17.0.2
@@ -1022,7 +1022,7 @@ importers:
         version: 17.0.2(react@17.0.2)
       swagger-client:
         specifier: ^3.25.4
-        version: 3.25.4
+        version: 3.26.0
       swagger-ui:
         specifier: ^5.1.0
         version: 5.1.0
@@ -1099,7 +1099,7 @@ packages:
       '@babel/traverse': 7.23.4
       '@babel/types': 7.24.0
       convert-source-map: 2.0.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -1186,6 +1186,19 @@ packages:
     engines: {node: '>=6.9.0'}
     dev: true
 
+  /@babel/helper-environment-visitor@7.22.5:
+    resolution: {integrity: sha512-XGmhECfVA/5sAt+H+xpSg0mfrHq6FzNr9Oxh7PSEBBRUb/mL7Kz3NICXb194rCqAEdxkhPT1a88teizAFyvk8Q==}
+    engines: {node: '>=6.9.0'}
+    dev: true
+
+  /@babel/helper-function-name@7.22.5:
+    resolution: {integrity: sha512-wtHSq6jMRE3uF2otvfuD3DIvVhOsSNshQl0Qrd7qC9oQJzHvOL4qQXlQn2916+CXGywIjpGuIkoyZRRxHPiNQQ==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      '@babel/template': 7.22.5
+      '@babel/types': 7.24.0
+    dev: true
+
   /@babel/helper-function-name@7.23.0:
     resolution: {integrity: sha512-OErEqsrxjZTJciZ4Oo+eoZqeW9UIiOcuYKRJA4ZAgV9myA+pOXhhmpfNCKjEH/auVfEYVFJ6y1Tc4r0eIApqiw==}
     engines: {node: '>=6.9.0'}
@@ -1255,6 +1268,18 @@ packages:
     dependencies:
       '@babel/core': 7.23.3
       '@babel/helper-environment-visitor': 7.22.20
+      '@babel/helper-member-expression-to-functions': 7.23.0
+      '@babel/helper-optimise-call-expression': 7.22.5
+    dev: true
+
+  /@babel/helper-replace-supers@7.22.9(@babel/core@7.23.3):
+    resolution: {integrity: sha512-LJIKvvpgPOPUThdYqcX6IXRuIcTkcAub0IaDRGCZH0p5GPUp7PhRU9QVgFcDDd51BaPkk77ZjqFwh6DZTAEmGg==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0
+    dependencies:
+      '@babel/core': 7.23.3
+      '@babel/helper-environment-visitor': 7.22.5
       '@babel/helper-member-expression-to-functions': 7.23.0
       '@babel/helper-optimise-call-expression': 7.22.5
     dev: true
@@ -1439,13 +1464,13 @@ packages:
     dependencies:
       '@babel/code-frame': 7.23.4
       '@babel/generator': 7.22.10
-      '@babel/helper-environment-visitor': 7.22.20
-      '@babel/helper-function-name': 7.23.0
+      '@babel/helper-environment-visitor': 7.22.5
+      '@babel/helper-function-name': 7.22.5
       '@babel/helper-hoist-variables': 7.22.5
       '@babel/helper-split-export-declaration': 7.22.6
       '@babel/parser': 7.23.9
       '@babel/types': 7.24.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -1463,7 +1488,7 @@ packages:
       '@babel/helper-split-export-declaration': 7.22.6
       '@babel/parser': 7.23.9
       '@babel/types': 7.24.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -1532,7 +1557,6 @@ packages:
   /@commitlint/config-validator@19.0.0:
     resolution: {integrity: sha512-oxJ2k+jBPRyWzv1ixfxwGZO5DJ1S+v3D8u/QESMwuPh3kQmeOYBRxGI+5FDWMwiVSHpztlhvvxDAU9SFXeMqUA==}
     engines: {node: '>=v18'}
-    requiresBuild: true
     dependencies:
       '@commitlint/types': 19.0.0
       ajv: 8.12.0
@@ -1611,15 +1635,15 @@ packages:
       - typescript
     dev: true
 
-  /@commitlint/load@19.0.1(@types/node@18.19.21)(typescript@5.3.3):
-    resolution: {integrity: sha512-5w5RHhtidRPMRm8ktph+NKypt1Wu5Z2jbU1Lc+1IS9Azy83JWRBQ9xKBbW9gF66R/TwHF0v6Jy8KOqRS8I/GgA==}
+  /@commitlint/load@19.1.0(@types/node@18.19.21)(typescript@5.3.3):
+    resolution: {integrity: sha512-rWqnvNDpeshX8JfUC/qjpDkQB78qF+4uHcJmIRJMwvlj6zWce08SP/TPKN3GlNKgXhAawwcAPxXL9qOTTdiOBA==}
     engines: {node: '>=v18'}
     requiresBuild: true
     dependencies:
       '@commitlint/config-validator': 19.0.0
       '@commitlint/execute-rule': 19.0.0
-      '@commitlint/resolve-extends': 19.0.1
-      '@commitlint/types': 19.0.0
+      '@commitlint/resolve-extends': 19.1.0
+      '@commitlint/types': 19.0.3
       chalk: 5.3.0
       cosmiconfig: 8.3.6(typescript@5.3.3)
       cosmiconfig-typescript-loader: 5.0.0(@types/node@18.19.21)(cosmiconfig@8.3.6)(typescript@5.3.3)
@@ -1669,10 +1693,9 @@ packages:
       resolve-global: 1.0.0
     dev: true
 
-  /@commitlint/resolve-extends@19.0.1:
-    resolution: {integrity: sha512-U5BRCNEiib0I06e6utNzBXZRu/t/bzlqVljS5kaNwggPN1VS+Kvuks8fY97j85B8sifHXU5dhUICPRKP8Oj31A==}
+  /@commitlint/resolve-extends@19.1.0:
+    resolution: {integrity: sha512-z2riI+8G3CET5CPgXJPlzftH+RiWYLMYv4C9tSLdLXdr6pBNimSKukYP9MS27ejmscqCTVA4almdLh0ODD2KYg==}
     engines: {node: '>=v18'}
-    requiresBuild: true
     dependencies:
       '@commitlint/config-validator': 19.0.0
       '@commitlint/types': 19.0.0
@@ -1716,7 +1739,6 @@ packages:
   /@commitlint/types@19.0.0:
     resolution: {integrity: sha512-qLjLUdYXKi0TIavONrjBkxrElp7KguqDbvzIRbqTdJBV/cAAr8QEhHe1qUq8OcCM3gFWTlUrDz3ISZbkRoGsAg==}
     engines: {node: '>=v18'}
-    requiresBuild: true
     dependencies:
       chalk: 5.3.0
     dev: true
@@ -1839,7 +1861,7 @@ packages:
       right-pad: 1.0.1
       word-wrap: 1.2.3
     optionalDependencies:
-      '@commitlint/load': 19.0.1(@types/node@18.19.21)(typescript@5.3.3)
+      '@commitlint/load': 19.1.0(@types/node@18.19.21)(typescript@5.3.3)
     transitivePeerDependencies:
       - '@types/node'
       - typescript
@@ -2068,7 +2090,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       espree: 9.6.1
       globals: 13.20.0
       ignore: 5.3.0
@@ -2085,8 +2107,8 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@evilmartians/lefthook@1.6.4:
-    resolution: {integrity: sha512-TCLkRr4p91qSuMJ9D728/Yx3ZSTiZaPiPTUHMKcD5iRb/zdfWc/HSlujG6bvkXNaCvznO4W68qYSmdSwaEewkQ==}
+  /@evilmartians/lefthook@1.6.5:
+    resolution: {integrity: sha512-OtHskXpEdDE4UNMLqtlkEdNOmg80Yy1aq7aqo6s6rVi9MUpksGkVNL3oS4oBdpjJhGwkSordBpclbQrHIUhjkg==}
     cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
@@ -2143,7 +2165,7 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@formatjs/intl@2.10.0(typescript@5.3.3):
+  /@formatjs/intl@2.10.0:
     resolution: {integrity: sha512-X3xT9guVkKDS86EKV80lS0KxoazUglkJTGZO66sKY7otgl0VeStPA8B3u8UkKT47PexVV98fUzjpkchYmbe9nw==}
     peerDependencies:
       typescript: ^4.7 || 5
@@ -2158,7 +2180,6 @@ packages:
       '@formatjs/intl-listformat': 7.5.5
       intl-messageformat: 10.5.11
       tslib: 2.6.2
-      typescript: 5.3.3
     dev: false
 
   /@humanwhocodes/config-array@0.11.14:
@@ -2166,7 +2187,7 @@ packages:
     engines: {node: '>=10.10.0'}
     dependencies:
       '@humanwhocodes/object-schema': 2.0.2
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -2269,7 +2290,7 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@kong-ui-public/core@1.1.0(axios@1.6.7)(swrv@1.0.4)(vue@3.4.21):
+  /@kong-ui-public/core@1.1.0(axios@1.6.7)(swrv@1.0.4):
     resolution: {integrity: sha512-j1kK07/zDyxwePi1EX1rZ+3iL955VdhZiodzeT5ift7iVQTiPt9VNUFu9+IXJ/AxHfuYu/gaL+gily9TsJTX3w==}
     peerDependencies:
       axios: ^1.4.0
@@ -2278,13 +2299,18 @@ packages:
     dependencies:
       axios: 1.6.7
       date-fns: 2.30.0
-      swrv: 1.0.4(vue@3.4.21)
-      vue: 3.4.21(typescript@5.3.3)
+      swrv: 1.0.4
     dev: false
 
   /@kong/design-tokens@1.12.10:
     resolution: {integrity: sha512-6IY1H6UMg95BqjU4Xov5sfjsG94G8KadUnf8MawuovbjGAcOh1Avr5Ooq4jEqmFcfjH6q+BjZHgKxO4A6Vt0kA==}
     dev: true
+
+  /@kong/icons@1.8.14:
+    resolution: {integrity: sha512-nJUTtLpqelKCTY8lS8VByWaHYUq1CuB5cBUX/q2FEDu5o6IKH/B7fEDQpb/pB1lLRYTqZXneHR/lGYjxy4u8eQ==}
+    engines: {node: '>=18.17.0'}
+    peerDependencies:
+      vue: '>= 3.3.4 < 4'
 
   /@kong/icons@1.8.14(vue@3.3.13):
     resolution: {integrity: sha512-nJUTtLpqelKCTY8lS8VByWaHYUq1CuB5cBUX/q2FEDu5o6IKH/B7fEDQpb/pB1lLRYTqZXneHR/lGYjxy4u8eQ==}
@@ -2292,7 +2318,7 @@ packages:
     peerDependencies:
       vue: '>= 3.3.4 < 4'
     dependencies:
-      vue: 3.3.13(typescript@5.3.3)
+      vue: 3.3.13
 
   /@kong/icons@1.8.14(vue@3.4.21):
     resolution: {integrity: sha512-nJUTtLpqelKCTY8lS8VByWaHYUq1CuB5cBUX/q2FEDu5o6IKH/B7fEDQpb/pB1lLRYTqZXneHR/lGYjxy4u8eQ==}
@@ -2300,9 +2326,9 @@ packages:
     peerDependencies:
       vue: '>= 3.3.4 < 4'
     dependencies:
-      vue: 3.4.21(typescript@5.3.3)
+      vue: 3.4.21
 
-  /@kong/kongponents@8.127.0(vue-router@4.3.0)(vue@3.4.21):
+  /@kong/kongponents@8.127.0:
     resolution: {integrity: sha512-C/MFT+OZtyul62ElgHEggqMYPbLjXiRJg5GE3il8MZpaep2D5QV+F5UQ7frbA98TkZCCVBD4LpR0OmiwXKs+tg==}
     engines: {node: '>=v16.20.2'}
     peerDependencies:
@@ -2311,46 +2337,64 @@ packages:
       vue-router: ^4.2.4
     dependencies:
       date-fns: 2.30.0
-      date-fns-tz: 2.0.0(date-fns@2.30.0)
+      date-fns-tz: 2.0.1(date-fns@2.30.0)
       focus-trap: 7.5.4
-      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.4.21)
+      focus-trap-vue: 4.0.3(focus-trap@7.5.4)
       popper.js: 1.16.1
       sortablejs: 1.15.2
-      swrv: 1.0.4(vue@3.4.21)
+      swrv: 1.0.4
       uuid: 9.0.1
-      v-calendar: 3.0.0-alpha.8(vue@3.4.21)
-      vue: 3.4.21(typescript@5.3.3)
-      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.21)
-      vue-router: 4.3.0(vue@3.4.21)
+      v-calendar: 3.0.0-alpha.8
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)
     dev: false
 
-  /@kong/kongponents@9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13):
-    resolution: {integrity: sha512-oKTcxFbJtDPnrmKr5yfpJo6kbJZyZF7TXnhWEw3hDeXAazu/9ziwjfDC9sUEoaaQ5GSVjkQr8IH8zbxkBZ35Ug==}
+  /@kong/kongponents@9.0.0-alpha.112:
+    resolution: {integrity: sha512-9NQrKlRLnjVJJy5SyYNW6N4E/yhi2Lrog6e9oSlpWPROHmA2db08S2udrqp1cFFiE+2IIr+rGK1L6gwU6qxHcA==}
     engines: {node: '>=v16.20.2'}
     peerDependencies:
       axios: ^1.6.7
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.3.0
     dependencies:
-      '@kong/icons': 1.8.14(vue@3.3.13)
+      '@kong/icons': 1.8.14
+      '@popperjs/core': 2.11.8
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.0(date-fns@2.30.0)
+      focus-trap: 7.5.4
+      focus-trap-vue: 4.0.3(focus-trap@7.5.4)
+      popper.js: 1.16.1
+      sortablejs: 1.15.2
+      swrv: 1.0.4
+      uuid: 9.0.1
+      v-calendar: 3.1.2(@popperjs/core@2.11.8)
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)
+    dev: true
+
+  /@kong/kongponents@9.0.0-alpha.112(axios@1.6.7):
+    resolution: {integrity: sha512-9NQrKlRLnjVJJy5SyYNW6N4E/yhi2Lrog6e9oSlpWPROHmA2db08S2udrqp1cFFiE+2IIr+rGK1L6gwU6qxHcA==}
+    engines: {node: '>=v16.20.2'}
+    peerDependencies:
+      axios: ^1.6.7
+      vue: '>= 3.3.4 < 4'
+      vue-router: ^4.3.0
+    dependencies:
+      '@kong/icons': 1.8.14
       '@popperjs/core': 2.11.8
       axios: 1.6.7
       date-fns: 2.30.0
       date-fns-tz: 2.0.0(date-fns@2.30.0)
       focus-trap: 7.5.4
-      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.3.13)
+      focus-trap-vue: 4.0.3(focus-trap@7.5.4)
       popper.js: 1.16.1
       sortablejs: 1.15.2
-      swrv: 1.0.4(vue@3.3.13)
+      swrv: 1.0.4
       uuid: 9.0.1
-      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.3.13)
-      vue: 3.3.13(typescript@5.3.3)
-      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.3.13)
-      vue-router: 4.3.0(vue@3.4.21)
+      v-calendar: 3.1.2(@popperjs/core@2.11.8)
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)
     dev: true
 
-  /@kong/kongponents@9.0.0-alpha.111(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21):
-    resolution: {integrity: sha512-oKTcxFbJtDPnrmKr5yfpJo6kbJZyZF7TXnhWEw3hDeXAazu/9ziwjfDC9sUEoaaQ5GSVjkQr8IH8zbxkBZ35Ug==}
+  /@kong/kongponents@9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21):
+    resolution: {integrity: sha512-9NQrKlRLnjVJJy5SyYNW6N4E/yhi2Lrog6e9oSlpWPROHmA2db08S2udrqp1cFFiE+2IIr+rGK1L6gwU6qxHcA==}
     engines: {node: '>=v16.20.2'}
     peerDependencies:
       axios: ^1.6.7
@@ -2369,18 +2413,89 @@ packages:
       swrv: 1.0.4(vue@3.4.21)
       uuid: 9.0.1
       v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.4.21)
-      vue: 3.4.21(typescript@5.3.3)
+      vue: 3.4.21
       vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.21)
       vue-router: 4.3.0(vue@3.4.21)
     dev: true
 
-  /@kong/swagger-ui-kong-theme-universal@4.3.3(react-dom@17.0.2)(react@17.0.2)(vue-router@4.3.0)(vue@3.4.21):
+  /@kong/kongponents@9.0.0-alpha.112(axios@1.6.7)(vue@3.3.13):
+    resolution: {integrity: sha512-9NQrKlRLnjVJJy5SyYNW6N4E/yhi2Lrog6e9oSlpWPROHmA2db08S2udrqp1cFFiE+2IIr+rGK1L6gwU6qxHcA==}
+    engines: {node: '>=v16.20.2'}
+    peerDependencies:
+      axios: ^1.6.7
+      vue: '>= 3.3.4 < 4'
+      vue-router: ^4.3.0
+    dependencies:
+      '@kong/icons': 1.8.14(vue@3.3.13)
+      '@popperjs/core': 2.11.8
+      axios: 1.6.7
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.0(date-fns@2.30.0)
+      focus-trap: 7.5.4
+      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.3.13)
+      popper.js: 1.16.1
+      sortablejs: 1.15.2
+      swrv: 1.0.4(vue@3.3.13)
+      uuid: 9.0.1
+      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.3.13)
+      vue: 3.3.13
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.3.13)
+    dev: true
+
+  /@kong/kongponents@9.0.0-alpha.112(vue-router@4.3.0)(vue@3.4.21):
+    resolution: {integrity: sha512-9NQrKlRLnjVJJy5SyYNW6N4E/yhi2Lrog6e9oSlpWPROHmA2db08S2udrqp1cFFiE+2IIr+rGK1L6gwU6qxHcA==}
+    engines: {node: '>=v16.20.2'}
+    peerDependencies:
+      axios: ^1.6.7
+      vue: '>= 3.3.4 < 4'
+      vue-router: ^4.3.0
+    dependencies:
+      '@kong/icons': 1.8.14(vue@3.4.21)
+      '@popperjs/core': 2.11.8
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.0(date-fns@2.30.0)
+      focus-trap: 7.5.4
+      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.4.21)
+      popper.js: 1.16.1
+      sortablejs: 1.15.2
+      swrv: 1.0.4(vue@3.4.21)
+      uuid: 9.0.1
+      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.4.21)
+      vue: 3.4.21
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.21)
+      vue-router: 4.3.0(vue@3.4.21)
+    dev: true
+
+  /@kong/kongponents@9.0.0-alpha.112(vue@3.4.21):
+    resolution: {integrity: sha512-9NQrKlRLnjVJJy5SyYNW6N4E/yhi2Lrog6e9oSlpWPROHmA2db08S2udrqp1cFFiE+2IIr+rGK1L6gwU6qxHcA==}
+    engines: {node: '>=v16.20.2'}
+    peerDependencies:
+      axios: ^1.6.7
+      vue: '>= 3.3.4 < 4'
+      vue-router: ^4.3.0
+    dependencies:
+      '@kong/icons': 1.8.14(vue@3.4.21)
+      '@popperjs/core': 2.11.8
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.0(date-fns@2.30.0)
+      focus-trap: 7.5.4
+      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.4.21)
+      popper.js: 1.16.1
+      sortablejs: 1.15.2
+      swrv: 1.0.4(vue@3.4.21)
+      uuid: 9.0.1
+      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.4.21)
+      vue: 3.4.21
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.21)
+    dev: true
+
+  /@kong/swagger-ui-kong-theme-universal@4.3.3(react-dom@17.0.2)(react@17.0.2):
     resolution: {integrity: sha512-g89NLf7Vu19BJ157fVUkLIrjzTmNE74zGfzktK2rxdZgIUegt4VBDsG8K0MAxDwQELQqSK3kPkamgdD9j1eV3Q==}
     peerDependencies:
       react: 17.0.2
     dependencies:
       '@braintree/sanitize-url': 6.0.2
-      '@kong/kongponents': 8.127.0(vue-router@4.3.0)(vue@3.4.21)
+      '@kong/kongponents': 8.127.0
       '@kyleshockey/xml': 1.0.2
       classnames: 2.3.2
       curl-to-har: 1.0.1
@@ -2505,7 +2620,7 @@ packages:
       call-bind: 1.0.5
     dev: true
 
-  /@modyfi/vite-plugin-yaml@1.1.0(vite@5.1.4):
+  /@modyfi/vite-plugin-yaml@1.1.0:
     resolution: {integrity: sha512-L26xfzkSo1yamODCAtk/ipVlL6OEw2bcJ92zunyHu8zxi7+meV0zefA9xscRMDCsMY8xL3C3wi3DhMiPxcbxbw==}
     peerDependencies:
       vite: ^3.2.7 || ^4.0.5 || ^5.0.5
@@ -2513,7 +2628,6 @@ packages:
       '@rollup/pluginutils': 5.1.0
       js-yaml: 4.1.0
       tosource: 2.0.0-alpha.3
-      vite: 5.1.4(@types/node@18.19.21)(sass@1.71.1)
     transitivePeerDependencies:
       - rollup
     dev: true
@@ -3170,24 +3284,23 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /@swagger-api/apidom-ast@0.92.0:
-    resolution: {integrity: sha512-j9vuKaYZP3mAGXUcKeWIkSToxPPCBLJcLEfjSEh14P0n6NRJp7Yg19SA+IwHdIvOAfJonuebj/lhPOMjzd6P1g==}
+  /@swagger-api/apidom-ast@0.97.0:
+    resolution: {integrity: sha512-KpPyC8x5ZrB4l9+jgl8FAhokedh+8b5VuBTTdTJKFf+x5uznMiBf/MZTWgvsIk8/9MtjkQYUN1qgVzEPiKWvHg==}
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-error': 0.92.0
+      '@swagger-api/apidom-error': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
-      stampit: 4.3.2
       unraw: 3.0.0
     dev: false
 
-  /@swagger-api/apidom-core@0.92.0:
-    resolution: {integrity: sha512-PK1zlS0UCcE5dIPtSy8/+oWfXAVf7b/iM3LRaPgaFGF5b8qa6S/zmROTh10Yjug9v9Vnuq8opEhyHkGyl+WdSA==}
+  /@swagger-api/apidom-core@0.97.0:
+    resolution: {integrity: sha512-3LYlN0Cox0FBFNZqmgi7VyJ4MXppCmZoFjlurT+Y90ND1y2lCidcwjAthr3QpV8b+UCc7MG3APBGRfwqaYZ2IA==}
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-ast': 0.92.0
-      '@swagger-api/apidom-error': 0.92.0
+      '@swagger-api/apidom-ast': 0.97.0
+      '@swagger-api/apidom-error': 0.97.0
       '@types/ramda': 0.29.8
       minim: 0.23.8
       ramda: 0.29.1
@@ -3196,31 +3309,69 @@ packages:
       stampit: 4.3.2
     dev: false
 
-  /@swagger-api/apidom-error@0.92.0:
-    resolution: {integrity: sha512-wo7xCvTpWr5Lpt/ly1L4bhZ6W7grgtAg7SK/d8FNZR85zPJXM4FPMpcRtKktfWJ/RikQJT/g5DjI33iTqB6z/w==}
+  /@swagger-api/apidom-error@0.97.0:
+    resolution: {integrity: sha512-Y2YRnsJSXp+MdgwwMSCtidzJfy/bL6CZEpc+5aWUw1mphTjfLZC66uA4btUgUevyiT6mNHXm8tUmGomHA7Izdw==}
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
     dev: false
 
-  /@swagger-api/apidom-json-pointer@0.92.0:
-    resolution: {integrity: sha512-VmZ1EXE7BWX+ndeeh9t1uFRql5jbPRmAcglUfdtu3jlg6fOqXzzgx9qFpRz9GhpMHWEGFm1ymd8tMAa1CvgcHw==}
+  /@swagger-api/apidom-json-pointer@0.97.0:
+    resolution: {integrity: sha512-9vcgePgcYXUiYEqnvx8Ew04j8JtfenosysbSuGgRs93Ls8mQ/+ndIOklHaXJzNjBZZxqxS0p6QLFcj1jpUiojQ==}
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-error': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-error': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
     dev: false
 
-  /@swagger-api/apidom-ns-api-design-systems@0.92.0:
-    resolution: {integrity: sha512-wXEXhw0wDQIPTUqff953h44oQZr29DcoAzZfROWlGtOLItGDDMjhfIYiRg1406mXA4N7d5d0vNi9V/HXkxItQw==}
-    requiresBuild: true
+  /@swagger-api/apidom-ns-api-design-systems@0.97.0:
+    resolution: {integrity: sha512-uSTIEX4q9XWoP9TQq9nEtW5xG3hVQN2VD5spYoxvYlzUOtg12yxkVgu776eq0kVZd74acZhKIF7mn3uiqaQcHA==}
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-error': 0.92.0
-      '@swagger-api/apidom-ns-openapi-3-1': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-error': 0.97.0
+      '@swagger-api/apidom-ns-openapi-3-1': 0.97.0
+      '@types/ramda': 0.29.8
+      ramda: 0.29.1
+      ramda-adjunct: 4.1.1(ramda@0.29.1)
+      ts-mixer: 6.0.4
+    dev: false
+    optional: true
+
+  /@swagger-api/apidom-ns-asyncapi-2@0.97.0:
+    resolution: {integrity: sha512-buEQSrXdtjoAkqIWSZ448HlvnareupthIoObYELp25LVuQwhxxVSY3NR0aCIR37GHgSchrmPBVcsvPMtXV96BA==}
+    dependencies:
+      '@babel/runtime-corejs3': 7.22.15
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-ns-json-schema-draft-7': 0.97.0
+      '@types/ramda': 0.29.8
+      ramda: 0.29.1
+      ramda-adjunct: 4.1.1(ramda@0.29.1)
+      ts-mixer: 6.0.4
+    dev: false
+    optional: true
+
+  /@swagger-api/apidom-ns-json-schema-draft-4@0.97.0:
+    resolution: {integrity: sha512-eBMIPxX4huNDGle6TOfSe1kKS1/HvL6w66GWWLFxZW2doCQHMADgjo7j/kVowrXiJtEoMgjBVp3W30WkcwBVug==}
+    dependencies:
+      '@babel/runtime-corejs3': 7.22.15
+      '@swagger-api/apidom-ast': 0.97.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@types/ramda': 0.29.8
+      ramda: 0.29.1
+      ramda-adjunct: 4.1.1(ramda@0.29.1)
+      stampit: 4.3.2
+    dev: false
+
+  /@swagger-api/apidom-ns-json-schema-draft-6@0.97.0:
+    resolution: {integrity: sha512-tRbg3/b4aJGfcODc0HDngZDjBdhPAv8OZM1OZdsqI4EEIw3PI/wpd+b6b8a5udOjAdbUYqnYsq6gCylCDNBnzw==}
+    dependencies:
+      '@babel/runtime-corejs3': 7.22.15
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-error': 0.97.0
+      '@swagger-api/apidom-ns-json-schema-draft-4': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
@@ -3228,13 +3379,13 @@ packages:
     dev: false
     optional: true
 
-  /@swagger-api/apidom-ns-asyncapi-2@0.92.0:
-    resolution: {integrity: sha512-FmJLT3GqzT4HK7Mwh54cXZ4PZt58yKVtJAKWKJ0dg2/Gim0AKJWf6t6B3Z9ZFUiKyehbqP4K7gSM7qGL0tKe2Q==}
-    requiresBuild: true
+  /@swagger-api/apidom-ns-json-schema-draft-7@0.97.0:
+    resolution: {integrity: sha512-0GITsoa6kVVkoKBUxyeODmh6vjGXuvDQZd3Vxs1nz0c/O6ZR+VBfBB3JW5wzhVr+WCXebaOJGDyWkxJMHKycxw==}
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-ns-json-schema-draft-7': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-error': 0.97.0
+      '@swagger-api/apidom-ns-json-schema-draft-6': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
@@ -3242,297 +3393,250 @@ packages:
     dev: false
     optional: true
 
-  /@swagger-api/apidom-ns-json-schema-draft-4@0.92.0:
-    resolution: {integrity: sha512-7s2EKjCQwRXbK4Y4AGpVkyn1AANCxOUFSHebo1h2katyVeAopV0LJmbXH5yQedTltV0k3BIjnd7hS+7dI846Pw==}
-    requiresBuild: true
+  /@swagger-api/apidom-ns-openapi-2@0.97.0:
+    resolution: {integrity: sha512-5gOA9FiO1J9OxJhcVBeXdm77kuh2cwPXG6Sh/DOlbk733Pz9v9W0aQgpLi5Ltsgagxe1sHhBqxJ1asw10QFzzw==}
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-ast': 0.92.0
-      '@swagger-api/apidom-core': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-error': 0.97.0
+      '@swagger-api/apidom-ns-json-schema-draft-4': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
-      stampit: 4.3.2
-    dev: false
-
-  /@swagger-api/apidom-ns-json-schema-draft-6@0.92.0:
-    resolution: {integrity: sha512-zur80x04jesXVzlU9sLZhW4giO9RfOouI7L/H8v2wUlcBvjaPBn1tIqrURw2VEHKAcJORhTRusQCR21vnFot2g==}
-    requiresBuild: true
-    dependencies:
-      '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-error': 0.92.0
-      '@swagger-api/apidom-ns-json-schema-draft-4': 0.92.0
-      '@types/ramda': 0.29.8
-      ramda: 0.29.1
-      ramda-adjunct: 4.1.1(ramda@0.29.1)
-      stampit: 4.3.2
+      ts-mixer: 6.0.4
     dev: false
     optional: true
 
-  /@swagger-api/apidom-ns-json-schema-draft-7@0.92.0:
-    resolution: {integrity: sha512-DSY7lY98XHnc0wg0V38ZmBPs5HWuRuSb6G+n5Z+qs5RRodh1x5BrTIY6M0Yk3oJVbbEoFGmF0VlTe6vHf44pbw==}
-    requiresBuild: true
+  /@swagger-api/apidom-ns-openapi-3-0@0.97.0:
+    resolution: {integrity: sha512-fbnN87SF0WN/4DcSpceuo+NUtkAGeicMIucEMF+LIIiCAF27Xi5d6Q823i9DgOEfJtifHKVj6Zhl/zSKAD2eyw==}
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-error': 0.92.0
-      '@swagger-api/apidom-ns-json-schema-draft-6': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-error': 0.97.0
+      '@swagger-api/apidom-ns-json-schema-draft-4': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
-      stampit: 4.3.2
+      ts-mixer: 6.0.4
+    dev: false
+
+  /@swagger-api/apidom-ns-openapi-3-1@0.97.0:
+    resolution: {integrity: sha512-DyvkTim+t7iVKyze6N3tITsfyElthmOwOcxwOjKj/3lySEy61DuY4X2FaPD5+owftVDxMs4Q6F9Chm7qv91a+Q==}
+    dependencies:
+      '@babel/runtime-corejs3': 7.22.15
+      '@swagger-api/apidom-ast': 0.97.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-ns-openapi-3-0': 0.97.0
+      '@types/ramda': 0.29.8
+      ramda: 0.29.1
+      ramda-adjunct: 4.1.1(ramda@0.29.1)
+      ts-mixer: 6.0.4
+    dev: false
+
+  /@swagger-api/apidom-ns-workflows-1@0.97.0:
+    resolution: {integrity: sha512-eIuoTRSITlUtMjpM3J0H9b2rVeEVu13i/Fv6+ZMPob0yHmQBWo9bnLjxxnfEZkpvp050worKULfNMdJV8NKBkA==}
+    dependencies:
+      '@babel/runtime-corejs3': 7.22.15
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-ns-openapi-3-1': 0.97.0
+      '@types/ramda': 0.29.8
+      ramda: 0.29.1
+      ramda-adjunct: 4.1.1(ramda@0.29.1)
+      ts-mixer: 6.0.4
     dev: false
     optional: true
 
-  /@swagger-api/apidom-ns-openapi-2@0.92.0:
-    resolution: {integrity: sha512-OJlSTvPzK+zqzd2xXeWkF50z08Wlpygc98eVzZjYI0Af8mz7x6R5T9BCP5p6ZlQoO9OTvk4gfv7ViWXCdamObg==}
+  /@swagger-api/apidom-parser-adapter-api-design-systems-json@0.97.0:
+    resolution: {integrity: sha512-ZDzaiTHMEpz0kM0/iyHEjySTf0xoLKDJwJiSxKNuew141k0rakTVeVisxXeq+6JQi2eC6KuyS98DHMe7hEIVUw==}
     requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-error': 0.92.0
-      '@swagger-api/apidom-ns-json-schema-draft-4': 0.92.0
-      '@types/ramda': 0.29.8
-      ramda: 0.29.1
-      ramda-adjunct: 4.1.1(ramda@0.29.1)
-      stampit: 4.3.2
-    dev: false
-    optional: true
-
-  /@swagger-api/apidom-ns-openapi-3-0@0.92.0:
-    resolution: {integrity: sha512-VGha4RRnoeoAZBWLGy37YsBzwICM3ZFNyCk2Dwpaqfg9zFN+E6BL2CtIbkxvFkMdwaMURmDItiQsw28pF0tOgQ==}
-    dependencies:
-      '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-error': 0.92.0
-      '@swagger-api/apidom-ns-json-schema-draft-4': 0.92.0
-      '@types/ramda': 0.29.8
-      ramda: 0.29.1
-      ramda-adjunct: 4.1.1(ramda@0.29.1)
-      stampit: 4.3.2
-    dev: false
-
-  /@swagger-api/apidom-ns-openapi-3-1@0.92.0:
-    resolution: {integrity: sha512-xZD+JxifYhDoTjn76K2ZT3xNoXBQChaKfSkJr4l5Xh9Guuk0IcsPTUDRpuytuZZXVez0O401XFoUso/mZRTjkA==}
-    dependencies:
-      '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-ast': 0.92.0
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-ns-openapi-3-0': 0.92.0
-      '@types/ramda': 0.29.8
-      ramda: 0.29.1
-      ramda-adjunct: 4.1.1(ramda@0.29.1)
-      stampit: 4.3.2
-    dev: false
-
-  /@swagger-api/apidom-ns-workflows-1@0.92.0:
-    resolution: {integrity: sha512-gl1dF+SrRHK4lLiwaK4PMjL9A5z28cW9xiMWCxRyppX/I2bVTVVOfgdAyqLWsFA0gopmITWesJxohRumG35fTw==}
-    requiresBuild: true
-    dependencies:
-      '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-ns-openapi-3-1': 0.92.0
-      '@types/ramda': 0.29.8
-      ramda: 0.29.1
-      ramda-adjunct: 4.1.1(ramda@0.29.1)
-      stampit: 4.3.2
-    dev: false
-    optional: true
-
-  /@swagger-api/apidom-parser-adapter-api-design-systems-json@0.92.0:
-    resolution: {integrity: sha512-i07FeLdNobWzHT9LnfsdOix+XrlZN/KnQL1RODPzxWk7i7ya2e4uc3JemyHh4Tnv04G8JV32SQqtzOtMteJsdA==}
-    requiresBuild: true
-    dependencies:
-      '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-ns-api-design-systems': 0.92.0
-      '@swagger-api/apidom-parser-adapter-json': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-ns-api-design-systems': 0.97.0
+      '@swagger-api/apidom-parser-adapter-json': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
     dev: false
     optional: true
 
-  /@swagger-api/apidom-parser-adapter-api-design-systems-yaml@0.92.0:
-    resolution: {integrity: sha512-bbjFkU0D4zqaZnd8/m1Kyx2UuHpri8ZxLdT1TiXqHweSfRQcNt4VYt0bjWBnnGGBMkHElgYbX5ov6kHvPf3wJg==}
+  /@swagger-api/apidom-parser-adapter-api-design-systems-yaml@0.97.0:
+    resolution: {integrity: sha512-5/BziPWqrHLr91VR+EC4pXt/fNToWMmvG+d7RVjksHinrjps2E6HA+oZOhqKqA2LRCLNjGhNUptXzRMDjjtenw==}
     requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-ns-api-design-systems': 0.92.0
-      '@swagger-api/apidom-parser-adapter-yaml-1-2': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-ns-api-design-systems': 0.97.0
+      '@swagger-api/apidom-parser-adapter-yaml-1-2': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
     dev: false
     optional: true
 
-  /@swagger-api/apidom-parser-adapter-asyncapi-json-2@0.92.0:
-    resolution: {integrity: sha512-Q7gudmGA5TUGbbr0QYNQkndktP91C0WE7uDDS2IwCBtHroRDiMPFCjzE9dsjIST5WnP+LUXmxG1Bv0NLTWcSUg==}
+  /@swagger-api/apidom-parser-adapter-asyncapi-json-2@0.97.0:
+    resolution: {integrity: sha512-XLD/YZifnhezRQY5ADQQAje5G5qtZ4GAbXk//1sRNe3R/qCk1pDxmRYr27yzt8w1XhfM+9VQmCTI21ZFpNFQOA==}
     requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-ns-asyncapi-2': 0.92.0
-      '@swagger-api/apidom-parser-adapter-json': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-ns-asyncapi-2': 0.97.0
+      '@swagger-api/apidom-parser-adapter-json': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
     dev: false
     optional: true
 
-  /@swagger-api/apidom-parser-adapter-asyncapi-yaml-2@0.92.0:
-    resolution: {integrity: sha512-V5/VdDj0aeOKp+3AtvPSz2b0HosJfYkHPjNvPU5eafLSzqzMIR/evYq5BvKWoJL1IvLdjoEPqDVVaEZluHZTew==}
+  /@swagger-api/apidom-parser-adapter-asyncapi-yaml-2@0.97.0:
+    resolution: {integrity: sha512-whyThDiGN4FoNirgY0XtXF7IJeU6NfsrBwjaxCkYBuSPslZBoWy4ojEQbfg+2HqNLbnHKJyvabh9/tSIxgB92A==}
     requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-ns-asyncapi-2': 0.92.0
-      '@swagger-api/apidom-parser-adapter-yaml-1-2': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-ns-asyncapi-2': 0.97.0
+      '@swagger-api/apidom-parser-adapter-yaml-1-2': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
     dev: false
     optional: true
 
-  /@swagger-api/apidom-parser-adapter-json@0.92.0:
-    resolution: {integrity: sha512-KA1Nn6FN0zTA5JhRazwYN9voTDlmExID7Jwz6GXmY826OXqeT4Yl0Egyo1aLYrfT0S73vhC4LVqpdORWLGdZtg==}
-    requiresBuild: true
+  /@swagger-api/apidom-parser-adapter-json@0.97.0:
+    resolution: {integrity: sha512-MPhAX77Z9Csti+Kljtbrl/ez2H610R4fQg0RnkNW40f4e6TXeOogT5tmceeWP+IKGAKX45HA1JpVPxdtSJn3ww==}
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-ast': 0.92.0
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-error': 0.92.0
+      '@swagger-api/apidom-ast': 0.97.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-error': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
       tree-sitter: 0.20.4
-      tree-sitter-json: 0.20.1
+      tree-sitter-json: 0.20.2
       web-tree-sitter: 0.20.3
     dev: false
     optional: true
 
-  /@swagger-api/apidom-parser-adapter-openapi-json-2@0.92.0:
-    resolution: {integrity: sha512-8OlvjcvI/GuOFJJxN+Mc4tJSo9UWuJdzQtQOtO4k3QwWwS28hGvRTjQ5PpsXAVZoLJMAbDuRdREYD9qeIKvM2g==}
+  /@swagger-api/apidom-parser-adapter-openapi-json-2@0.97.0:
+    resolution: {integrity: sha512-HtaoRN7wnVB2ilxs/RpLBR7+MwIfUqUcdCzC/EVV788CnSbutwj61W3jR2w9BRXeANJ4K2APcvU4W7WiI9Sugg==}
     requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-ns-openapi-2': 0.92.0
-      '@swagger-api/apidom-parser-adapter-json': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-ns-openapi-2': 0.97.0
+      '@swagger-api/apidom-parser-adapter-json': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
     dev: false
     optional: true
 
-  /@swagger-api/apidom-parser-adapter-openapi-json-3-0@0.92.0:
-    resolution: {integrity: sha512-kzE4COaNobKIUjGsdqqXgO/LruaQHs2kTzOzHPUTR1TH1ZlB2t8MTV+6LJzGNG3IB3QSfZDd7KBEYWklsCTyTA==}
+  /@swagger-api/apidom-parser-adapter-openapi-json-3-0@0.97.0:
+    resolution: {integrity: sha512-psfxh7k671HukibaY53cems0fcsLQP8U5lQPzVDevEGJQoguAWHyV2C5kOr52XOJInmsN5E+COEn6oPzsIaDCg==}
     requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-ns-openapi-3-0': 0.92.0
-      '@swagger-api/apidom-parser-adapter-json': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-ns-openapi-3-0': 0.97.0
+      '@swagger-api/apidom-parser-adapter-json': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
     dev: false
     optional: true
 
-  /@swagger-api/apidom-parser-adapter-openapi-json-3-1@0.92.0:
-    resolution: {integrity: sha512-4gkIXfKGwEKZQ6+kxp4EdFBlAc7Kjq8GAgaC7ilGTSSxIaz5hBHBOJoe3cXWpQ/WlXiOyNCy7WdbuKRpUDKIdg==}
+  /@swagger-api/apidom-parser-adapter-openapi-json-3-1@0.97.0:
+    resolution: {integrity: sha512-PJpcLhS441ATFjbCHHhVUPd8K1JZaiFQJS7yfQEKQmA5MlBRh3w7mqCJAbZN49wuMkelTdB8qJJlVEGUDSxX5Q==}
     requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-ns-openapi-3-1': 0.92.0
-      '@swagger-api/apidom-parser-adapter-json': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-ns-openapi-3-1': 0.97.0
+      '@swagger-api/apidom-parser-adapter-json': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
     dev: false
     optional: true
 
-  /@swagger-api/apidom-parser-adapter-openapi-yaml-2@0.92.0:
-    resolution: {integrity: sha512-TIY9cytYhA3yUf+5PcwsH9UjzKy5V4nGUtK6n5RvcL4btaGQA2LUB5CiV/1nSvYLNjYjGxhtB3haZDbHe3/gyw==}
+  /@swagger-api/apidom-parser-adapter-openapi-yaml-2@0.97.0:
+    resolution: {integrity: sha512-X5saN/AElpS+LohbSjNPesUPWYOM8Wb19+OD7/WS1r6AVRIlj5gKLy3vO7BLBvaER5G73qYylfrPxCoUPlpZZg==}
     requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-ns-openapi-2': 0.92.0
-      '@swagger-api/apidom-parser-adapter-yaml-1-2': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-ns-openapi-2': 0.97.0
+      '@swagger-api/apidom-parser-adapter-yaml-1-2': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
     dev: false
     optional: true
 
-  /@swagger-api/apidom-parser-adapter-openapi-yaml-3-0@0.92.0:
-    resolution: {integrity: sha512-AUwtAxeautYtiwifNCmv6Kjs7ksptRFxcQ3sgLv2bP3f9t5jzcI9NhmgJNdbRfohHYaHMwTuUESrfsTdBgKlAA==}
+  /@swagger-api/apidom-parser-adapter-openapi-yaml-3-0@0.97.0:
+    resolution: {integrity: sha512-kBW6atIN0rONf9kjNeE5eHkxb3amfby0vxKfk+9fiRdQbJVCg4UiWOFmU5rD9bc2smtLWSQNkjlMkKS3i2/4Wg==}
     requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-ns-openapi-3-0': 0.92.0
-      '@swagger-api/apidom-parser-adapter-yaml-1-2': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-ns-openapi-3-0': 0.97.0
+      '@swagger-api/apidom-parser-adapter-yaml-1-2': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
     dev: false
     optional: true
 
-  /@swagger-api/apidom-parser-adapter-openapi-yaml-3-1@0.92.0:
-    resolution: {integrity: sha512-gMR4zUZ/RrjVJVr6DnqwsCsnlplGXJk6O9UKbkoBsiom81dkcHx68BmWA2oM2lYVGKx+G8WVmVDo2EJaZvZYGg==}
+  /@swagger-api/apidom-parser-adapter-openapi-yaml-3-1@0.97.0:
+    resolution: {integrity: sha512-cclRwQ9IQj6sFLUCDzqRbbbplQfKdt9xz8YONvtq4XBHZO6Ab8z5CF3A9eLiuW1TJZ3y0QU7xmI6h5jWwUrC9w==}
     requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-ns-openapi-3-1': 0.92.0
-      '@swagger-api/apidom-parser-adapter-yaml-1-2': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-ns-openapi-3-1': 0.97.0
+      '@swagger-api/apidom-parser-adapter-yaml-1-2': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
     dev: false
     optional: true
 
-  /@swagger-api/apidom-parser-adapter-workflows-json-1@0.92.0:
-    resolution: {integrity: sha512-tyLiSxEKeU6mhClFjNxrTQJA2aSgfEF7LJ/ZcJgvREsvyk6ns3op9wN2SXw4UmD+657IgN0aUPihh92aEXKovA==}
+  /@swagger-api/apidom-parser-adapter-workflows-json-1@0.97.0:
+    resolution: {integrity: sha512-UvnISzq5JDG43sTIJ2oE8u8qALHmBKbYMGncYgUdlHx7z5RgPAWxIRDWH40YFzUSuKSRNp4TI7eG/9MUd3RnGA==}
     requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-ns-workflows-1': 0.92.0
-      '@swagger-api/apidom-parser-adapter-json': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-ns-workflows-1': 0.97.0
+      '@swagger-api/apidom-parser-adapter-json': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
     dev: false
     optional: true
 
-  /@swagger-api/apidom-parser-adapter-workflows-yaml-1@0.92.0:
-    resolution: {integrity: sha512-0Nr+5oAocuw3SZXcO8WEqnU7GGWP7O6GrsFafD6KLBL05v3I0erPfmnWQjWh6jBeXv8r5W69WEQItzES0DBJjA==}
+  /@swagger-api/apidom-parser-adapter-workflows-yaml-1@0.97.0:
+    resolution: {integrity: sha512-TTZS0YkFvy0X8Huom+fr3muZsCy8mtDpuUks45EvPqv6gjGLCBw3/AZ507CS0YxYvoERbXkYfAYqxW8lptwKuQ==}
     requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-ns-workflows-1': 0.92.0
-      '@swagger-api/apidom-parser-adapter-yaml-1-2': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-ns-workflows-1': 0.97.0
+      '@swagger-api/apidom-parser-adapter-yaml-1-2': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
     dev: false
     optional: true
 
-  /@swagger-api/apidom-parser-adapter-yaml-1-2@0.92.0:
-    resolution: {integrity: sha512-cFLqlhehMuY5WRdU1780Vno6iWpjMlr7CfOOloZW1rKf2lvojn0c4eDsyfWFaB2DgE+Xd4CWl55McuaPZMngsw==}
-    requiresBuild: true
+  /@swagger-api/apidom-parser-adapter-yaml-1-2@0.97.0:
+    resolution: {integrity: sha512-3f1ADjQyKyLnuRhPuoHMgWMW28o0ylohWCQwX4q69CMH0kqGxP7HnqIU/i0I2cxZdjGv72OCdiKwaR/OgHcmEw==}
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-ast': 0.92.0
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-error': 0.92.0
+      '@swagger-api/apidom-ast': 0.97.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-error': 0.97.0
       '@types/ramda': 0.29.8
       ramda: 0.29.1
       ramda-adjunct: 4.1.1(ramda@0.29.1)
@@ -3542,11 +3646,11 @@ packages:
     dev: false
     optional: true
 
-  /@swagger-api/apidom-reference@0.92.0:
-    resolution: {integrity: sha512-G/qJBTpXCdwPsc5dqPjX+vAfhvtnhIFqnKtEZ71wnEvF7TpIxdeZKKfqpg+Zxi7MSuZD/Gpkr4J/eP0lO0fAdA==}
+  /@swagger-api/apidom-reference@0.97.1:
+    resolution: {integrity: sha512-Bs1U2VutmVpqbCxbCt4DTiL8v0s6osAJx+4v49BGrTcfFFh97K/EOAm48WgA8ViP7qHUNBhUF83rjbpEwOshFw==}
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
       '@types/ramda': 0.29.8
       axios: 1.6.7
       minimatch: 7.4.6
@@ -3555,27 +3659,27 @@ packages:
       ramda-adjunct: 4.1.1(ramda@0.29.1)
       stampit: 4.3.2
     optionalDependencies:
-      '@swagger-api/apidom-error': 0.92.0
-      '@swagger-api/apidom-json-pointer': 0.92.0
-      '@swagger-api/apidom-ns-asyncapi-2': 0.92.0
-      '@swagger-api/apidom-ns-openapi-2': 0.92.0
-      '@swagger-api/apidom-ns-openapi-3-0': 0.92.0
-      '@swagger-api/apidom-ns-openapi-3-1': 0.92.0
-      '@swagger-api/apidom-ns-workflows-1': 0.92.0
-      '@swagger-api/apidom-parser-adapter-api-design-systems-json': 0.92.0
-      '@swagger-api/apidom-parser-adapter-api-design-systems-yaml': 0.92.0
-      '@swagger-api/apidom-parser-adapter-asyncapi-json-2': 0.92.0
-      '@swagger-api/apidom-parser-adapter-asyncapi-yaml-2': 0.92.0
-      '@swagger-api/apidom-parser-adapter-json': 0.92.0
-      '@swagger-api/apidom-parser-adapter-openapi-json-2': 0.92.0
-      '@swagger-api/apidom-parser-adapter-openapi-json-3-0': 0.92.0
-      '@swagger-api/apidom-parser-adapter-openapi-json-3-1': 0.92.0
-      '@swagger-api/apidom-parser-adapter-openapi-yaml-2': 0.92.0
-      '@swagger-api/apidom-parser-adapter-openapi-yaml-3-0': 0.92.0
-      '@swagger-api/apidom-parser-adapter-openapi-yaml-3-1': 0.92.0
-      '@swagger-api/apidom-parser-adapter-workflows-json-1': 0.92.0
-      '@swagger-api/apidom-parser-adapter-workflows-yaml-1': 0.92.0
-      '@swagger-api/apidom-parser-adapter-yaml-1-2': 0.92.0
+      '@swagger-api/apidom-error': 0.97.0
+      '@swagger-api/apidom-json-pointer': 0.97.0
+      '@swagger-api/apidom-ns-asyncapi-2': 0.97.0
+      '@swagger-api/apidom-ns-openapi-2': 0.97.0
+      '@swagger-api/apidom-ns-openapi-3-0': 0.97.0
+      '@swagger-api/apidom-ns-openapi-3-1': 0.97.0
+      '@swagger-api/apidom-ns-workflows-1': 0.97.0
+      '@swagger-api/apidom-parser-adapter-api-design-systems-json': 0.97.0
+      '@swagger-api/apidom-parser-adapter-api-design-systems-yaml': 0.97.0
+      '@swagger-api/apidom-parser-adapter-asyncapi-json-2': 0.97.0
+      '@swagger-api/apidom-parser-adapter-asyncapi-yaml-2': 0.97.0
+      '@swagger-api/apidom-parser-adapter-json': 0.97.0
+      '@swagger-api/apidom-parser-adapter-openapi-json-2': 0.97.0
+      '@swagger-api/apidom-parser-adapter-openapi-json-3-0': 0.97.0
+      '@swagger-api/apidom-parser-adapter-openapi-json-3-1': 0.97.0
+      '@swagger-api/apidom-parser-adapter-openapi-yaml-2': 0.97.0
+      '@swagger-api/apidom-parser-adapter-openapi-yaml-3-0': 0.97.0
+      '@swagger-api/apidom-parser-adapter-openapi-yaml-3-1': 0.97.0
+      '@swagger-api/apidom-parser-adapter-workflows-json-1': 0.97.0
+      '@swagger-api/apidom-parser-adapter-workflows-yaml-1': 0.97.0
+      '@swagger-api/apidom-parser-adapter-yaml-1-2': 0.97.0
     transitivePeerDependencies:
       - debug
     dev: false
@@ -3649,6 +3753,12 @@ packages:
 
   /@types/connect@3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
+    dependencies:
+      '@types/node': 18.19.21
+    dev: true
+
+  /@types/conventional-commits-parser@5.0.0:
+    resolution: {integrity: sha512-loB369iXNmAZglwWATL+WRe+CRMmmBPtpolYzIebFaX4YA3x+BEfLqhUAV9WanycKI3TG1IMr5bMJDajDKLlUQ==}
     dependencies:
       '@types/node': 18.19.21
     dev: true
@@ -3773,6 +3883,10 @@ packages:
 
   /@types/lodash@4.14.202:
     resolution: {integrity: sha512-OvlIYQK9tNneDlS0VN54LLd5uiPCBOp7gS5Z0f1mjoJYBrtStzgmJBxONW3U6OZqdtNzZPmn9BS/7WI7BFFcFQ==}
+
+  /@types/lodash@4.17.0:
+    resolution: {integrity: sha512-t7dhREVv6dbNj0q17X12j7yDG4bD/DHYX7o5/DbDxobP0HnGPgpRz2Ej77aL7TZT3DSw13fqUTj8J4mMnqa7WA==}
+    dev: true
 
   /@types/mime@1.3.2:
     resolution: {integrity: sha512-YATxVxgRqNH6nHEIsvg6k2Boc1JHI9ZbH5iWFFv/MTkchz3b1ieGDa5T0a9RznNdI0KhVbdbWSN+KWWrQZRxTw==}
@@ -3945,7 +4059,7 @@ packages:
       '@typescript-eslint/type-utils': 6.21.0(eslint@8.57.0)(typescript@5.3.3)
       '@typescript-eslint/utils': 6.21.0(eslint@8.57.0)(typescript@5.3.3)
       '@typescript-eslint/visitor-keys': 6.21.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       eslint: 8.57.0
       graphemer: 1.4.0
       ignore: 5.3.0
@@ -3971,7 +4085,7 @@ packages:
       '@typescript-eslint/types': 6.21.0
       '@typescript-eslint/typescript-estree': 6.21.0(typescript@5.3.3)
       '@typescript-eslint/visitor-keys': 6.21.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       eslint: 8.57.0
       typescript: 5.3.3
     transitivePeerDependencies:
@@ -3998,7 +4112,7 @@ packages:
     dependencies:
       '@typescript-eslint/typescript-estree': 6.21.0(typescript@5.3.3)
       '@typescript-eslint/utils': 6.21.0(eslint@8.57.0)(typescript@5.3.3)
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       eslint: 8.57.0
       ts-api-utils: 1.0.1(typescript@5.3.3)
       typescript: 5.3.3
@@ -4022,7 +4136,7 @@ packages:
     dependencies:
       '@typescript-eslint/types': 6.21.0
       '@typescript-eslint/visitor-keys': 6.21.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.3
@@ -4076,6 +4190,21 @@ packages:
       '@vue/babel-plugin-jsx': 1.1.5(@babel/core@7.23.3)
       vite: 5.1.4(@types/node@18.19.21)(sass@1.71.1)
       vue: 3.4.21(typescript@5.3.3)
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@vitejs/plugin-vue-jsx@3.1.0(vue@3.4.21):
+    resolution: {integrity: sha512-w9M6F3LSEU5kszVb9An2/MmXNxocAnUb3WhRr8bHlimhDrXNt6n6D2nJQR3UXpGlZHh/EsgouOHCsM8V3Ln+WA==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    peerDependencies:
+      vite: ^4.0.0 || ^5.0.0
+      vue: ^3.0.0
+    dependencies:
+      '@babel/core': 7.23.3
+      '@babel/plugin-transform-typescript': 7.23.4(@babel/core@7.23.3)
+      '@vue/babel-plugin-jsx': 1.1.5(@babel/core@7.23.3)
+      vue: 3.4.21
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -4261,6 +4390,7 @@ packages:
 
   /@vue/devtools-api@6.6.1:
     resolution: {integrity: sha512-LgPscpE3Vs0x96PzSSB4IGVSZXZBZHpfxs+ZA1d+VEPwHdOXowy/Y2CsvCAIFrf+ssVU1pD1jidj505EpUnfbA==}
+    dev: true
 
   /@vue/devtools-core@7.0.17(vite@5.1.4)(vue@3.4.21):
     resolution: {integrity: sha512-5AYbBdAUeQBncPeIcC48LMnElFDbehRt0DuqMfiLOciUYz0znMfDxy97xcRIRLWXrlKOl48GQjTmHOJiVSpXoQ==}
@@ -4409,7 +4539,7 @@ packages:
     dependencies:
       '@vue/compiler-ssr': 3.3.13
       '@vue/shared': 3.3.13
-      vue: 3.3.13(typescript@5.3.3)
+      vue: 3.3.13
 
   /@vue/server-renderer@3.4.21(vue@3.4.21):
     resolution: {integrity: sha512-aV1gXyKSN6Rz+6kZ6kr5+Ll14YzmIbeuWe7ryJl5muJ4uwSwY/aStXTixx76TwkZFJLm1aAlA/HSWEJ4EyiMkg==}
@@ -4418,7 +4548,7 @@ packages:
     dependencies:
       '@vue/compiler-ssr': 3.4.21
       '@vue/shared': 3.4.21
-      vue: 3.4.21(typescript@5.3.3)
+      vue: 3.4.21
 
   /@vue/shared@3.3.13:
     resolution: {integrity: sha512-/zYUwiHD8j7gKx2argXEMCUXVST6q/21DFU0sTfNX0URJroCe3b1UF6vLJ3lQDfLNIiiRl2ONp7Nh5UVWS6QnA==}
@@ -4696,7 +4826,7 @@ packages:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -4705,7 +4835,7 @@ packages:
     resolution: {integrity: sha512-o/zjMZRhJxny7OyEF+Op8X+efiELC7k7yOjMzgfzVqOzXqkBkWI79YoTdOtsuWd5BWhAGAuOY/Xa6xpiaWXiNg==}
     engines: {node: '>= 14'}
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -4714,7 +4844,7 @@ packages:
     resolution: {integrity: sha512-7Epl1Blf4Sy37j4v9f9FjICCh4+KAQOyXgHEwlyBiAQLbhKdq/i2QQU3amQalS/wPhdPzDXPL5DMR5bkn+YeWg==}
     engines: {node: '>= 8.0.0'}
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       depd: 2.0.0
       humanize-ms: 1.2.1
     transitivePeerDependencies:
@@ -5783,6 +5913,27 @@ packages:
     engines: {node: ^12.20.0 || >=14}
     dev: true
 
+  /commitizen@4.3.0:
+    resolution: {integrity: sha512-H0iNtClNEhT0fotHvGV3E9tDejDeS04sN1veIebsKYGMuGscFaswRoYJKmT3eW85eIJAs0F28bG2+a/9wCOfPw==}
+    engines: {node: '>= 12'}
+    hasBin: true
+    dependencies:
+      cachedir: 2.3.0
+      cz-conventional-changelog: 3.3.0(@types/node@18.19.21)(typescript@5.3.3)
+      dedent: 0.7.0
+      detect-indent: 6.1.0
+      find-node-modules: 2.1.3
+      find-root: 1.1.0
+      fs-extra: 9.1.0
+      glob: 7.2.3
+      inquirer: 8.2.5
+      is-utf8: 0.2.1
+      lodash: 4.17.21
+      minimist: 1.2.7
+      strip-bom: 4.0.0
+      strip-json-comments: 3.1.1
+    dev: true
+
   /commitizen@4.3.0(@types/node@18.19.21)(typescript@5.3.3):
     resolution: {integrity: sha512-H0iNtClNEhT0fotHvGV3E9tDejDeS04sN1veIebsKYGMuGscFaswRoYJKmT3eW85eIJAs0F28bG2+a/9wCOfPw==}
     engines: {node: '>= 12'}
@@ -6229,13 +6380,13 @@ packages:
     engines: {node: '>= 10'}
     dependencies:
       chalk: 2.4.2
-      commitizen: 4.3.0(@types/node@18.19.21)(typescript@5.3.3)
+      commitizen: 4.3.0
       conventional-commit-types: 3.0.0
       lodash.map: 4.6.0
       longest: 2.0.1
       word-wrap: 1.2.3
     optionalDependencies:
-      '@commitlint/load': 19.0.1(@types/node@18.19.21)(typescript@5.3.3)
+      '@commitlint/load': 19.1.0(@types/node@18.19.21)(typescript@5.3.3)
     transitivePeerDependencies:
       - '@types/node'
       - typescript
@@ -6283,6 +6434,14 @@ packages:
     dependencies:
       date-fns: 2.30.0
 
+  /date-fns-tz@2.0.1(date-fns@2.30.0):
+    resolution: {integrity: sha512-fJCG3Pwx8HUoLhkepdsP7Z5RsucUi+ZBOxyM5d0ZZ6c4SdYustq0VMmOu6Wf7bli+yS/Jwp91TOCqn9jMcVrUA==}
+    peerDependencies:
+      date-fns: 2.x
+    dependencies:
+      date-fns: 2.30.0
+    dev: false
+
   /date-fns@2.30.0:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
@@ -6315,6 +6474,17 @@ packages:
     dependencies:
       ms: 2.0.0
 
+  /debug@3.2.7:
+    resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+    dependencies:
+      ms: 2.1.3
+    dev: true
+
   /debug@3.2.7(supports-color@8.1.1):
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
     peerDependencies:
@@ -6325,6 +6495,18 @@ packages:
     dependencies:
       ms: 2.1.3
       supports-color: 8.1.1
+    dev: true
+
+  /debug@4.3.4:
+    resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+    dependencies:
+      ms: 2.1.2
     dev: true
 
   /debug@4.3.4(supports-color@8.1.1):
@@ -6907,7 +7089,7 @@ packages:
   /eslint-import-resolver-node@0.3.7:
     resolution: {integrity: sha512-gozW2blMLJCeFpBwugLTGyvVjNoeo1knonXAcatC6bjPBZitotxdWf7Gimr25N4c0AAOo4eOUfaG82IJPDpqCA==}
     dependencies:
-      debug: 3.2.7(supports-color@8.1.1)
+      debug: 3.2.7
       is-core-module: 2.13.1
       resolve: 1.22.4
     transitivePeerDependencies:
@@ -6917,7 +7099,7 @@ packages:
   /eslint-import-resolver-node@0.3.9:
     resolution: {integrity: sha512-WFj2isz22JahUv+B788TlO3N6zL3nNJGU8CcZbPZvVEkBPaJdCV4vy5wyghty5ROFbCRnm132v8BScu5/1BQ8g==}
     dependencies:
-      debug: 3.2.7(supports-color@8.1.1)
+      debug: 3.2.7
       is-core-module: 2.13.1
       resolve: 1.22.4
     transitivePeerDependencies:
@@ -6946,7 +7128,7 @@ packages:
         optional: true
     dependencies:
       '@typescript-eslint/parser': 6.21.0(eslint@8.57.0)(typescript@5.3.3)
-      debug: 3.2.7(supports-color@8.1.1)
+      debug: 3.2.7
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
     transitivePeerDependencies:
@@ -6999,7 +7181,7 @@ packages:
       array.prototype.findlastindex: 1.2.3
       array.prototype.flat: 1.3.2
       array.prototype.flatmap: 1.3.2
-      debug: 3.2.7(supports-color@8.1.1)
+      debug: 3.2.7
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
@@ -7142,7 +7324,7 @@ packages:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.2.2
@@ -7639,6 +7821,14 @@ packages:
       tabbable: 6.2.0
     dev: false
 
+  /focus-trap-vue@4.0.3(focus-trap@7.5.4):
+    resolution: {integrity: sha512-cIX5rybkCAlNZ4IHYJ3nCFIsipDDljJHHjtTO2IgYWkVYg7X9ipUVdab3HzYp88kmHgMwjcB71LYnXRRsF6ZqQ==}
+    peerDependencies:
+      focus-trap: ^7.0.0
+      vue: ^3.0.0
+    dependencies:
+      focus-trap: 7.5.4
+
   /focus-trap-vue@4.0.3(focus-trap@7.5.4)(vue@3.3.13):
     resolution: {integrity: sha512-cIX5rybkCAlNZ4IHYJ3nCFIsipDDljJHHjtTO2IgYWkVYg7X9ipUVdab3HzYp88kmHgMwjcB71LYnXRRsF6ZqQ==}
     peerDependencies:
@@ -7646,7 +7836,7 @@ packages:
       vue: ^3.0.0
     dependencies:
       focus-trap: 7.5.4
-      vue: 3.3.13(typescript@5.3.3)
+      vue: 3.3.13
     dev: true
 
   /focus-trap-vue@4.0.3(focus-trap@7.5.4)(vue@3.4.21):
@@ -7656,7 +7846,7 @@ packages:
       vue: ^3.0.0
     dependencies:
       focus-trap: 7.5.4
-      vue: 3.4.21(typescript@5.3.3)
+      vue: 3.4.21
 
   /focus-trap@7.5.4:
     resolution: {integrity: sha512-N7kHdlgsO/v+iD/dMoJKtsSqs5Dz/dXZVebRgJw23LDk+jMi/974zyiOYDziY2JPp8xivq9BmUGwIJMiuSBi7w==}
@@ -8420,7 +8610,7 @@ packages:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8430,7 +8620,7 @@ packages:
     engines: {node: '>= 14'}
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8479,7 +8669,7 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8489,7 +8679,7 @@ packages:
     engines: {node: '>= 14'}
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -11184,7 +11374,7 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /pinia@2.1.7(typescript@5.3.3)(vue@3.4.21):
+  /pinia@2.1.7:
     resolution: {integrity: sha512-+C2AHFtcFqjPih0zpYuvof37SFxMQ7OEG2zV9jRI12i9BOy3YQVAHwdKtyyc8pDcDyIc33WCIsZaCFWU7WWxGQ==}
     peerDependencies:
       '@vue/composition-api': ^1.4.0
@@ -11196,9 +11386,24 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@vue/devtools-api': 6.5.0
-      typescript: 5.3.3
-      vue: 3.4.21(typescript@5.3.3)
+      '@vue/devtools-api': 6.6.1
+      vue-demi: 0.14.7
+    dev: true
+
+  /pinia@2.1.7(vue@3.4.21):
+    resolution: {integrity: sha512-+C2AHFtcFqjPih0zpYuvof37SFxMQ7OEG2zV9jRI12i9BOy3YQVAHwdKtyyc8pDcDyIc33WCIsZaCFWU7WWxGQ==}
+    peerDependencies:
+      '@vue/composition-api': ^1.4.0
+      typescript: '>=4.4.4'
+      vue: ^2.6.14 || ^3.3.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+      typescript:
+        optional: true
+    dependencies:
+      '@vue/devtools-api': 6.6.1
+      vue: 3.4.21
       vue-demi: 0.14.7(vue@3.4.21)
     dev: true
 
@@ -12693,7 +12898,7 @@ packages:
     engines: {node: '>= 10'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       socks: 2.7.1
     transitivePeerDependencies:
       - supports-color
@@ -12704,7 +12909,7 @@ packages:
     engines: {node: '>= 14'}
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       socks: 2.7.1
     transitivePeerDependencies:
       - supports-color
@@ -12783,7 +12988,7 @@ packages:
   /spdy-transport@3.0.0:
     resolution: {integrity: sha512-hsLVFE5SjA6TCisWeJXFKniGGOpBgMLmerfO2aCyCU5s7nJ/rpAepqmFifv/GCbSbueEeAJJnmSQ2rKC/g8Fcw==}
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       detect-node: 2.1.0
       hpack.js: 2.1.6
       obuf: 1.1.2
@@ -12797,7 +13002,7 @@ packages:
     resolution: {integrity: sha512-r46gZQZQV+Kl9oItvl1JZZqJKGr+oEkB08A6BzkiR7593/7IbtuncXHd2YoYeTsG4157ZssMu9KYvUHLcjcDoA==}
     engines: {node: '>=6.0.0'}
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       handle-thing: 2.0.1
       http-deceiver: 1.2.7
       select-hose: 2.0.0
@@ -13151,7 +13356,7 @@ packages:
       cosmiconfig: 9.0.0(typescript@5.3.3)
       css-functions-list: 3.2.1
       css-tree: 2.3.1
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       fast-glob: 3.3.2
       fastest-levenshtein: 1.0.16
       file-entry-cache: 8.0.0
@@ -13227,15 +13432,15 @@ packages:
     resolution: {integrity: sha512-ovssysQTa+luh7A5Weu3Rta6FJlFBBbInjOh722LIt6klpU2/HtdUbszju/G4devcvk8PGt7FCLv5wftu3THUA==}
     dev: true
 
-  /swagger-client@3.25.4:
-    resolution: {integrity: sha512-pq9Zs6yf6Giy5JLnkUSeH+y1AQrhomDCkmVYpMY5Rkx6u70jnyiuRWwkGW6cgsPY+/8N38jRGieoWzJYPPGIuA==}
+  /swagger-client@3.26.0:
+    resolution: {integrity: sha512-1yFR/S2V3v5DwgmNePoHEjq2dZJxDx1leDQ53r5M4hZs+dozm9VnznlSl9a1V5iTYw4UsS4PQuBRQsmBH21ViA==}
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
-      '@swagger-api/apidom-core': 0.92.0
-      '@swagger-api/apidom-error': 0.92.0
-      '@swagger-api/apidom-json-pointer': 0.92.0
-      '@swagger-api/apidom-ns-openapi-3-1': 0.92.0
-      '@swagger-api/apidom-reference': 0.92.0
+      '@swagger-api/apidom-core': 0.97.0
+      '@swagger-api/apidom-error': 0.97.0
+      '@swagger-api/apidom-json-pointer': 0.97.0
+      '@swagger-api/apidom-ns-openapi-3-1': 0.97.0
+      '@swagger-api/apidom-reference': 0.97.1
       cookie: 0.6.0
       deepmerge: 4.3.1
       fast-json-patch: 3.1.1
@@ -13284,7 +13489,7 @@ packages:
       reselect: 4.1.8
       serialize-error: 8.1.0
       sha.js: 2.4.11
-      swagger-client: 3.25.4
+      swagger-client: 3.26.0
       url-parse: 1.5.10
       xml: 1.0.1
       xml-but-prettier: 1.0.1
@@ -13307,12 +13512,17 @@ packages:
       - rollup
     dev: false
 
+  /swrv@1.0.4:
+    resolution: {integrity: sha512-zjEkcP8Ywmj+xOJW3lIT65ciY/4AL4e/Or7Gj0MzU3zBJNMdJiT8geVZhINavnlHRMMCcJLHhraLTAiDOTmQ9g==}
+    peerDependencies:
+      vue: '>=3.2.26 < 4'
+
   /swrv@1.0.4(vue@3.3.13):
     resolution: {integrity: sha512-zjEkcP8Ywmj+xOJW3lIT65ciY/4AL4e/Or7Gj0MzU3zBJNMdJiT8geVZhINavnlHRMMCcJLHhraLTAiDOTmQ9g==}
     peerDependencies:
       vue: '>=3.2.26 < 4'
     dependencies:
-      vue: 3.3.13(typescript@5.3.3)
+      vue: 3.3.13
     dev: true
 
   /swrv@1.0.4(vue@3.4.21):
@@ -13320,7 +13530,8 @@ packages:
     peerDependencies:
       vue: '>=3.2.26 < 4'
     dependencies:
-      vue: 3.4.21(typescript@5.3.3)
+      vue: 3.4.21
+    dev: true
 
   /symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
@@ -13572,8 +13783,8 @@ packages:
     resolution: {integrity: sha512-/y956gpUo9ZNCb99YjxG7OaslxZWHfCHAUUfshwqOXmxUIvqLjVO581BT+gM59+QV9tFe6/CGG53tsA1Y7RSdg==}
     dev: false
 
-  /tree-sitter-json@0.20.1:
-    resolution: {integrity: sha512-482hf7J+aBwhksSw8yWaqI8nyP1DrSwnS4IMBShsnkFWD3SE8oalHnsEik59fEVi3orcTCUtMzSjZx+0Tpa6Vw==}
+  /tree-sitter-json@0.20.2:
+    resolution: {integrity: sha512-eUxrowp4F1QEGk/i7Sa+Xl8Crlfp7J0AXxX1QdJEQKQYMWhgMbCIgyQvpO3Q0P9oyTrNQxRLlRipDS44a8EtRw==}
     requiresBuild: true
     dependencies:
       nan: 2.18.0
@@ -13614,6 +13825,10 @@ packages:
     dependencies:
       typescript: 5.3.3
     dev: true
+
+  /ts-mixer@6.0.4:
+    resolution: {integrity: sha512-ufKpbmrugz5Aou4wcr5Wc1UUFWOLhq+Fm6qa6P0w0K5Qw2yhaUoiWszhCVuNQyNwrlGiscHOmqYoAox1PtvgjA==}
+    dev: false
 
   /ts-node@10.9.2(@types/node@18.19.21)(typescript@5.3.3):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
@@ -13699,7 +13914,7 @@ packages:
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
       '@tufjs/models': 1.0.4
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       make-fetch-happen: 11.1.1
     transitivePeerDependencies:
       - supports-color
@@ -13710,7 +13925,7 @@ packages:
     engines: {node: ^16.14.0 || >=18.0.0}
     dependencies:
       '@tufjs/models': 2.0.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       make-fetch-happen: 13.0.0
     transitivePeerDependencies:
       - supports-color
@@ -13862,6 +14077,7 @@ packages:
     resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
     engines: {node: '>=14.17'}
     hasBin: true
+    dev: true
 
   /ufo@1.3.2:
     resolution: {integrity: sha512-o+ORpgGwaYQXgqGDwd+hkS4PuZ3QnmqMMxRuajK/a38L6fTpcE5GPIfrf+L/KemFzfUpeUQc1rRS1iDBozvnFA==}
@@ -14006,7 +14222,7 @@ packages:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
 
-  /v-calendar@3.0.0-alpha.8(vue@3.4.21):
+  /v-calendar@3.0.0-alpha.8:
     resolution: {integrity: sha512-T23H5UbK0EomrwArlF/jrT2LFbV/lu+Bp9JroZ1paN6rPoaMyvE+HrLxvAmUgi+pODrdTURDMzM3+WPgeFKEBQ==}
     peerDependencies:
       vue: ^3.1.0
@@ -14016,8 +14232,22 @@ packages:
       date-fns: 2.30.0
       date-fns-tz: 1.3.8(date-fns@2.30.0)
       lodash: 4.17.21
-      vue: 3.4.21(typescript@5.3.3)
     dev: false
+
+  /v-calendar@3.1.2(@popperjs/core@2.11.8):
+    resolution: {integrity: sha512-QDWrnp4PWCpzUblctgo4T558PrHgHzDtQnTeUNzKxfNf29FkCeFpwGd9bKjAqktaa2aJLcyRl45T5ln1ku34kg==}
+    peerDependencies:
+      '@popperjs/core': ^2.0.0
+      vue: ^3.2.0
+    dependencies:
+      '@popperjs/core': 2.11.8
+      '@types/lodash': 4.17.0
+      '@types/resize-observer-browser': 0.1.11
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.0(date-fns@2.30.0)
+      lodash: 4.17.21
+      vue-screen-utils: 1.0.0-beta.13
+    dev: true
 
   /v-calendar@3.1.2(@popperjs/core@2.11.8)(vue@3.3.13):
     resolution: {integrity: sha512-QDWrnp4PWCpzUblctgo4T558PrHgHzDtQnTeUNzKxfNf29FkCeFpwGd9bKjAqktaa2aJLcyRl45T5ln1ku34kg==}
@@ -14026,12 +14256,12 @@ packages:
       vue: ^3.2.0
     dependencies:
       '@popperjs/core': 2.11.8
-      '@types/lodash': 4.14.202
+      '@types/lodash': 4.17.0
       '@types/resize-observer-browser': 0.1.11
       date-fns: 2.30.0
       date-fns-tz: 2.0.0(date-fns@2.30.0)
       lodash: 4.17.21
-      vue: 3.3.13(typescript@5.3.3)
+      vue: 3.3.13
       vue-screen-utils: 1.0.0-beta.13(vue@3.3.13)
     dev: true
 
@@ -14042,12 +14272,12 @@ packages:
       vue: ^3.2.0
     dependencies:
       '@popperjs/core': 2.11.8
-      '@types/lodash': 4.14.202
+      '@types/lodash': 4.17.0
       '@types/resize-observer-browser': 0.1.11
       date-fns: 2.30.0
       date-fns-tz: 2.0.0(date-fns@2.30.0)
       lodash: 4.17.21
-      vue: 3.4.21(typescript@5.3.3)
+      vue: 3.4.21
       vue-screen-utils: 1.0.0-beta.13(vue@3.4.21)
     dev: true
 
@@ -14112,7 +14342,7 @@ packages:
     hasBin: true
     dependencies:
       cac: 6.7.14
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.0
       vite: 5.1.4(@types/node@18.19.21)(sass@1.71.1)
@@ -14152,7 +14382,7 @@ packages:
     dependencies:
       '@antfu/utils': 0.7.7
       '@rollup/pluginutils': 5.1.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       error-stack-parser-es: 0.1.1
       fs-extra: 11.2.0
       open: 10.0.3
@@ -14276,7 +14506,7 @@ packages:
       '@vitest/utils': 1.3.1
       acorn-walk: 8.3.2
       chai: 4.3.10
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       execa: 8.0.1
       jsdom: 24.0.0
       local-pkg: 0.5.0
@@ -14320,11 +14550,24 @@ packages:
       vue: ^3.0.0-0 || ^2.7.0
     dependencies:
       chart.js: 4.4.2
-      vue: 3.4.21(typescript@5.3.3)
+      vue: 3.4.21
     dev: false
 
   /vue-component-type-helpers@1.8.25:
     resolution: {integrity: sha512-NCA6sekiJIMnMs4DdORxATXD+/NRkQpS32UC+I1KQJUasx+Z7MZUb3Y+MsKsFmX+PgyTYSteb73JW77AibaCCw==}
+    dev: true
+
+  /vue-demi@0.14.7:
+    resolution: {integrity: sha512-EOG8KXDQNwkJILkx/gPcoL/7vH+hORoBaKgGe+6W7VFMvCYJfmF2dGbvgDroVnI8LU7/kTu8mbjRZGBU1z9NTA==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
     dev: true
 
   /vue-demi@0.14.7(vue@3.4.21):
@@ -14339,8 +14582,16 @@ packages:
       '@vue/composition-api':
         optional: true
     dependencies:
-      vue: 3.4.21(typescript@5.3.3)
+      vue: 3.4.21
     dev: true
+
+  /vue-draggable-next@2.2.1(sortablejs@1.15.2):
+    resolution: {integrity: sha512-EAMS1IRHF0kZO0o5PMOinsQsXIqsrKT1hKmbICxG3UEtn7zLFkLxlAtajcCcUTisNvQ6TtCB5COjD9a1raNADw==}
+    peerDependencies:
+      sortablejs: ^1.14.0
+      vue: ^3.2.2
+    dependencies:
+      sortablejs: 1.15.2
 
   /vue-draggable-next@2.2.1(sortablejs@1.15.2)(vue@3.3.13):
     resolution: {integrity: sha512-EAMS1IRHF0kZO0o5PMOinsQsXIqsrKT1hKmbICxG3UEtn7zLFkLxlAtajcCcUTisNvQ6TtCB5COjD9a1raNADw==}
@@ -14349,7 +14600,7 @@ packages:
       vue: ^3.2.2
     dependencies:
       sortablejs: 1.15.2
-      vue: 3.3.13(typescript@5.3.3)
+      vue: 3.3.13
     dev: true
 
   /vue-draggable-next@2.2.1(sortablejs@1.15.2)(vue@3.4.21):
@@ -14359,7 +14610,8 @@ packages:
       vue: ^3.2.2
     dependencies:
       sortablejs: 1.15.2
-      vue: 3.4.21(typescript@5.3.3)
+      vue: 3.4.21
+    dev: true
 
   /vue-eslint-parser@9.3.1(eslint@8.57.0):
     resolution: {integrity: sha512-Clr85iD2XFZ3lJ52/ppmUDG/spxQu6+MAeHXjjyI4I1NUYZ9xmenQp4N0oaHJhrA8OOxltCVxMRfANGa70vU0g==}
@@ -14367,7 +14619,7 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       eslint: 8.57.0
       eslint-scope: 7.2.2
       eslint-visitor-keys: 3.4.3
@@ -14385,7 +14637,7 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       eslint: 8.57.0
       eslint-scope: 7.2.2
       eslint-visitor-keys: 3.4.3
@@ -14403,14 +14655,21 @@ packages:
       vue: ^3.2.0
     dependencies:
       '@vue/devtools-api': 6.6.1
-      vue: 3.4.21(typescript@5.3.3)
+      vue: 3.4.21
+    dev: true
+
+  /vue-screen-utils@1.0.0-beta.13:
+    resolution: {integrity: sha512-EJ/8TANKhFj+LefDuOvZykwMr3rrLFPLNb++lNBqPOpVigT2ActRg6icH9RFQVm4nHwlHIHSGm5OY/Clar9yIg==}
+    peerDependencies:
+      vue: ^3.2.0
+    dev: true
 
   /vue-screen-utils@1.0.0-beta.13(vue@3.3.13):
     resolution: {integrity: sha512-EJ/8TANKhFj+LefDuOvZykwMr3rrLFPLNb++lNBqPOpVigT2ActRg6icH9RFQVm4nHwlHIHSGm5OY/Clar9yIg==}
     peerDependencies:
       vue: ^3.2.0
     dependencies:
-      vue: 3.3.13(typescript@5.3.3)
+      vue: 3.3.13
     dev: true
 
   /vue-screen-utils@1.0.0-beta.13(vue@3.4.21):
@@ -14418,7 +14677,7 @@ packages:
     peerDependencies:
       vue: ^3.2.0
     dependencies:
-      vue: 3.4.21(typescript@5.3.3)
+      vue: 3.4.21
     dev: true
 
   /vue-template-compiler@2.7.14:
@@ -14440,7 +14699,7 @@ packages:
       typescript: 5.3.3
     dev: true
 
-  /vue@3.3.13(typescript@5.3.3):
+  /vue@3.3.13:
     resolution: {integrity: sha512-LDnUpQvDgsfc0u/YgtAgTMXJlJQqjkxW1PVcOnJA5cshPleULDjHi7U45pl2VJYazSSvLH8UKcid/kzH8I0a0Q==}
     peerDependencies:
       typescript: '*'
@@ -14453,7 +14712,20 @@ packages:
       '@vue/runtime-dom': 3.3.13
       '@vue/server-renderer': 3.3.13(vue@3.3.13)
       '@vue/shared': 3.3.13
-      typescript: 5.3.3
+
+  /vue@3.4.21:
+    resolution: {integrity: sha512-5hjyV/jLEIKD/jYl4cavMcnzKwjMKohureP8ejn3hhEjwhWIhWeuzL2kJAjzl/WyVsgPY56Sy4Z40C3lVshxXA==}
+    peerDependencies:
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@vue/compiler-dom': 3.4.21
+      '@vue/compiler-sfc': 3.4.21
+      '@vue/runtime-dom': 3.4.21
+      '@vue/server-renderer': 3.4.21(vue@3.4.21)
+      '@vue/shared': 3.4.21
 
   /vue@3.4.21(typescript@5.3.3):
     resolution: {integrity: sha512-5hjyV/jLEIKD/jYl4cavMcnzKwjMKohureP8ejn3hhEjwhWIhWeuzL2kJAjzl/WyVsgPY56Sy4Z40C3lVshxXA==}
@@ -14469,6 +14741,7 @@ packages:
       '@vue/server-renderer': 3.4.21(vue@3.4.21)
       '@vue/shared': 3.4.21
       typescript: 5.3.3
+    dev: true
 
   /w3c-xmlserializer@5.0.0:
     resolution: {integrity: sha512-o8qghlI8NZHU1lLPrpi2+Uq7abh4GGPpYANlalzWxyWteJOCsr/P+oPBA49TOLu5FTZO4d3F9MnWJfiMo4BkmA==}

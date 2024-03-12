@@ -2,11 +2,9 @@
   <div class="simple-chart-shell">
     <KEmptyState
       v-if="!hasValidChartData"
+      :action-button-visible="true"
       class="chart-empty-state"
-      :cta-is-hidden="true"
       data-testid="no-data-in-report"
-      icon="stateNoData"
-      icon-size="80"
     >
       <template #title>
         {{ emptyStateTitle }}
@@ -126,7 +124,7 @@ const hasValidChartData = computed(() => {
     justify-content: center;
     width: 100px;
 
-    &:deep(.k-empty-state-title-header) {
+    &:deep(.empty-state-title) {
       font-size: $kui-font-size-20;
       line-height: $kui-line-height-20;
       margin: $kui-space-0;

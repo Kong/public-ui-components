@@ -236,7 +236,7 @@ describe('<GatewayServiceList />', () => {
       cy.wait('@getGatewayServices')
       cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
       cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .k-empty-state-cta .k-button').should('be.visible')
+      cy.get('.k-table-empty-state .empty-state-action .k-button').should('be.visible')
     })
 
     it('should hide empty state and create gateway service cta if user can not create', () => {
@@ -256,7 +256,7 @@ describe('<GatewayServiceList />', () => {
       cy.wait('@getGatewayServices')
       cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
       cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .k-empty-state-cta .k-button').should('not.exist')
+      cy.get('.k-table-empty-state .empty-state-action .k-button').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -287,7 +287,7 @@ describe('<GatewayServiceList />', () => {
         cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -349,12 +349,11 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getGatewayServicesMultiPage')
@@ -366,18 +365,16 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-59"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getGatewayServicesMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       // Page #4
@@ -387,12 +384,12 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-99"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
+        'have.attr',
         'disabled',
       )
     })
@@ -426,10 +423,7 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-29"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -464,10 +458,7 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-14"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -481,10 +472,7 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-49"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
   })
 
@@ -546,7 +534,7 @@ describe('<GatewayServiceList />', () => {
       cy.wait('@getGatewayServices')
       cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
       cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .k-empty-state-cta .k-button').should('be.visible')
+      cy.get('.k-table-empty-state .empty-state-action .k-button').should('be.visible')
     })
 
     it('should hide empty state and create gateway service cta if user can not create', () => {
@@ -597,7 +585,7 @@ describe('<GatewayServiceList />', () => {
         cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -659,12 +647,11 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getGatewayServicesMultiPage')
@@ -676,18 +663,16 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-59"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getGatewayServicesMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       // Page #4
@@ -697,12 +682,12 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-99"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
+        'have.attr',
         'disabled',
       )
     })
@@ -735,10 +720,7 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-29"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -773,10 +755,7 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-14"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -790,10 +769,7 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-49"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
   })
 })

@@ -7,11 +7,11 @@
 
     <KEmptyState
       v-else-if="fetchSchemaError"
-      cta-is-hidden
+      :action-button-visible="false"
       data-testid="plugin-form-schema-error"
-      is-error
+      icon-variant="error"
     >
-      <template #message>
+      <template #default>
         <h3>
           {{ t('errors.load_schema') }}
         </h3>

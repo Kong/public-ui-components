@@ -46,8 +46,8 @@ describe('<EntityBaseTable />', () => {
       },
     })
 
-    cy.get('.kong-ui-entity-base-table .k-empty-state-title-header').should('contain.text', 'No Data')
-    cy.get('.kong-ui-entity-base-table .k-empty-state-message').should('contain.text', 'There is no data to display.')
+    cy.get('.kong-ui-entity-base-table .empty-state-title').should('contain.text', 'No Data')
+    cy.get('.kong-ui-entity-base-table .empty-state-message').should('contain.text', 'There is no data to display.')
   })
 
   it('should show empty state with passed-in options', () => {
@@ -65,9 +65,9 @@ describe('<EntityBaseTable />', () => {
       },
     })
 
-    cy.get('.kong-ui-entity-base-table .k-empty-state-title-header').should('contain.text', emptyStateOptions.title)
-    cy.get('.kong-ui-entity-base-table .k-empty-state-message').should('contain.text', emptyStateOptions.message)
-    cy.get('.kong-ui-entity-base-table .k-empty-state-cta').should('contain.text', emptyStateOptions.ctaText)
+    cy.get('.kong-ui-entity-base-table .empty-state-title').should('contain.text', emptyStateOptions.title)
+    cy.get('.kong-ui-entity-base-table .empty-state-message').should('contain.text', emptyStateOptions.message)
+    cy.get('.kong-ui-entity-base-table .empty-state-action').should('contain.text', emptyStateOptions.ctaText)
   })
 
   it('should hide actions column', () => {
@@ -124,7 +124,7 @@ describe('<EntityBaseTable />', () => {
       },
     })
 
-    cy.get('.kong-ui-entity-base-table .k-empty-state-title-header').should('contain.text', message)
+    cy.get('.kong-ui-entity-base-table .empty-state-title').should('contain.text', message)
   })
 
   it('should accept object for table error message', () => {
@@ -140,7 +140,7 @@ describe('<EntityBaseTable />', () => {
       },
     })
 
-    cy.get('.kong-ui-entity-base-table .k-empty-state-title-header').should('contain.text', errorMessage.title)
-    cy.get('.kong-ui-entity-base-table .k-empty-state-message').should('contain.text', errorMessage.message)
+    cy.get('.kong-ui-entity-base-table .empty-state-title').should('contain.text', errorMessage.title)
+    cy.get('.kong-ui-entity-base-table .empty-state-message').should('contain.text', errorMessage.message)
   })
 })

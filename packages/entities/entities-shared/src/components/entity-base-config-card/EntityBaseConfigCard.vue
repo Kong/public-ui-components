@@ -59,9 +59,9 @@
     <KEmptyState
       v-else-if="fetchDetailsError"
       data-testid="config-card-fetch-error"
-      is-error
+      icon-variant="error"
     >
-      <template #message>
+      <template #default>
         <h3>{{ fetchErrorMessage }}</h3>
       </template>
     </KEmptyState>

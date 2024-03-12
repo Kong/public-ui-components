@@ -219,8 +219,8 @@ describe('<AnalyticsChart />', () => {
       },
     })
 
-    cy.get('[data-testid="no-data-in-report"] .k-empty-state-title-header').should('contain.text', i18n.t('noDataAvailableTitle'))
-    cy.get('[data-testid="no-data-in-report"] .k-empty-state-message').should('contain.text', i18n.t('noDataAvailableDescription'))
+    cy.get('[data-testid="no-data-in-report"] .empty-state-title').should('contain.text', i18n.t('noDataAvailableTitle'))
+    cy.get('[data-testid="no-data-in-report"] .empty-state-message').should('contain.text', i18n.t('noDataAvailableDescription'))
   })
 
   it('renders an empty state with default title and description text', () => {
@@ -238,8 +238,8 @@ describe('<AnalyticsChart />', () => {
       },
     })
 
-    cy.get('[data-testid="no-data-in-report"] .k-empty-state-title-header').should('contain.text', emptyStateTitle)
-    cy.get('[data-testid="no-data-in-report"] .k-empty-state-message').should('contain.text', emptyStateDescription)
+    cy.get('[data-testid="no-data-in-report"] .empty-state-title').should('contain.text', emptyStateTitle)
+    cy.get('[data-testid="no-data-in-report"] .empty-state-message').should('contain.text', emptyStateDescription)
   })
 
   it('doest not render an "Export button" if the dataset is empty', () => {

@@ -44,7 +44,7 @@
           class="kong-ui-entity-add-consumers-error"
         >
           <KAlert appearance="danger">
-            <template #alertMessage>
+            <template #default>
               <p>{{ t('consumers.errors.add') }}</p>
               <ul v-if="errorArray.length">
                 <li

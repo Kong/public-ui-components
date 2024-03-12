@@ -12,9 +12,9 @@
     <KEmptyState
       v-else-if="fetchSchemaError"
       data-testid="plugin-config-card-schema-error"
-      is-error
+      icon-variant="error"
     >
-      <template #message>
+      <template #default>
         <h3>{{ fetchSchemaError }}</h3>
       </template>
     </KEmptyState>

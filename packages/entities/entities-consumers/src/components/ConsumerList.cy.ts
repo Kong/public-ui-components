@@ -192,7 +192,7 @@ describe('<ConsumerList />', () => {
         cy.get('.kong-ui-entities-consumers-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -254,12 +254,11 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getConsumersMultiPage')
@@ -271,18 +270,16 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.59"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="consumer.60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getConsumersMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       // Page #4
@@ -292,12 +289,12 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.99"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="consumer.100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
+        'have.attr',
         'disabled',
       )
     })
@@ -331,10 +328,7 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.29"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="consumer.30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -369,10 +363,7 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.14"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="consumer.15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -386,10 +377,7 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.49"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="consumer.50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
 
     it('should render correct Add Consumer button when consumerGroupId is provided', () => {
@@ -820,7 +808,7 @@ describe('<ConsumerList />', () => {
         cy.get('.kong-ui-entities-consumers-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -882,12 +870,11 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getConsumersMultiPage')
@@ -899,18 +886,16 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.59"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="consumer.60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getConsumersMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       // Page #4
@@ -920,12 +905,12 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.99"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="consumer.100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
+        'have.attr',
         'disabled',
       )
     })
@@ -959,10 +944,7 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.29"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="consumer.30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -997,10 +979,7 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.14"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="consumer.15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -1014,10 +993,7 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.49"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="consumer.50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
 
     it('should render correct Add Consumer button when consumerGroupId is provided', () => {

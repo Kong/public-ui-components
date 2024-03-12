@@ -27,14 +27,14 @@
 
     <KEmptyState
       v-if="errorMessage"
-      cta-is-hidden
+      :action-button-visible="false"
       data-testid="top-n-error-state"
-      is-error
+      icon-variant="error"
     >
       <template #title>
         {{ i18n.t('topNTable.defaultErrorStateTitle') }}
       </template>
-      <template #message>
+      <template #default>
         {{ errorMessage }}
       </template>
     </KEmptyState>
@@ -47,10 +47,8 @@
 
     <KEmptyState
       v-else-if="!hasData"
-      cta-is-hidden
+      :action-button-visible="false"
       data-testid="top-n-empty-state"
-      icon="stateNoData"
-      icon-size="80"
     >
       <template #title>
         {{ emptyStateTitle || i18n.t('topNTable.defaultEmptyStateTitle') }}

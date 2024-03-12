@@ -180,7 +180,7 @@ describe('<SniList />', () => {
       cy.wait('@getSnis')
       cy.get('.kong-ui-entities-snis-list').should('be.visible')
       cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .k-empty-state-cta .k-button').should('be.visible')
+      cy.get('.k-table-empty-state .empty-state-action .k-button').should('be.visible')
     })
 
     it('should hide empty state and create sni cta if user can not create', () => {
@@ -200,7 +200,7 @@ describe('<SniList />', () => {
       cy.wait('@getSnis')
       cy.get('.kong-ui-entities-snis-list').should('be.visible')
       cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .k-empty-state-cta .k-button').should('not.exist')
+      cy.get('.k-table-empty-state .empty-state-action .k-button').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -231,7 +231,7 @@ describe('<SniList />', () => {
         cy.get('.kong-ui-entities-snis-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -289,12 +289,11 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getSnisMultiPage')
@@ -306,18 +305,16 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-59"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="sni-60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getSnisMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       // Page #4
@@ -327,12 +324,12 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-99"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="sni-100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
+        'have.attr',
         'disabled',
       )
     })
@@ -366,10 +363,7 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-29"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="sni-30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -404,10 +398,7 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-14"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="sni-15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -421,10 +412,7 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-49"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="sni-50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
   })
 
@@ -486,7 +474,7 @@ describe('<SniList />', () => {
       cy.wait('@getSnis')
       cy.get('.kong-ui-entities-snis-list').should('be.visible')
       cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .k-empty-state-cta .k-button').should('be.visible')
+      cy.get('.k-table-empty-state .empty-state-action .k-button').should('be.visible')
     })
 
     it('should hide empty state and create sni cta if user can not create', () => {
@@ -537,7 +525,7 @@ describe('<SniList />', () => {
         cy.get('.kong-ui-entities-snis-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -595,12 +583,11 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getSnisMultiPage')
@@ -612,18 +599,16 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-59"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="sni-60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getSnisMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       // Page #4
@@ -633,12 +618,12 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-99"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="sni-100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
+        'have.attr',
         'disabled',
       )
     })
@@ -672,10 +657,7 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-29"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="sni-30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -710,10 +692,7 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-14"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="sni-15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -727,10 +706,7 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-49"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="sni-50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
   })
 })
