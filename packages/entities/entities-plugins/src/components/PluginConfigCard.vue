@@ -29,7 +29,6 @@
       :hide-title="hideTitle"
       :plugin-config-key="PLUGIN_CONFIG_KEY"
       :plugin-config-schema="pluginConfigSchema"
-      @copy:success="(entity: any) => $emit('copy:success', entity)"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
       @fetch:success="(entity: any) => $emit('fetch:success', entity)"
       @loading="(val: boolean) => $emit('loading', val)"
@@ -154,7 +153,6 @@ const emit = defineEmits<{
   (e: 'fetch:error', error: AxiosError): void,
   (e: 'error:fetch-schema', error: AxiosError): void,
   (e: 'fetch:success', data: Record<string, any>): void,
-  (e: 'copy:success', data: Record<string, any>): void,
   (e: 'navigation-click', data: string, direction: 'route' | 'consumer' | 'consumer_group' | 'service'): void
 }>()
 
