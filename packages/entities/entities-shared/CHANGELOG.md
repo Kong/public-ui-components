@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.9.4...@kong-ui-public/entities-shared@2.10.0) (2024-03-12)
+
+
+### Features
+
+* **entities:** add additionMessageForEmptyState ([#1226](https://github.com/Kong/public-ui-components/issues/1226)) ([d988fe7](https://github.com/Kong/public-ui-components/commit/d988fe72a0d19bd047f4569925082d5c19902f96))
+
+
+
+
+
 ## [2.9.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.9.3...@kong-ui-public/entities-shared@2.9.4) (2024-03-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
