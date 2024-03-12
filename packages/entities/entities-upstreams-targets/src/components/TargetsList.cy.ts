@@ -339,7 +339,7 @@ describe('<TargetsList />', () => {
         cy.get('.kong-ui-entities-targets-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -401,12 +401,11 @@ describe('<TargetsList />', () => {
       cy.get(`${l} tbody tr[data-rowid="30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getTargetsMultiPage')
@@ -418,18 +417,16 @@ describe('<TargetsList />', () => {
       cy.get(`${l} tbody tr[data-rowid="59"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getTargetsMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       // Page #4
@@ -439,12 +436,12 @@ describe('<TargetsList />', () => {
       cy.get(`${l} tbody tr[data-rowid="99"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
+        'have.attr',
         'disabled',
       )
     })
@@ -478,10 +475,7 @@ describe('<TargetsList />', () => {
       cy.get(`${l} tbody tr[data-rowid="29"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -516,10 +510,7 @@ describe('<TargetsList />', () => {
       cy.get(`${l} tbody tr[data-rowid="14"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -533,10 +524,7 @@ describe('<TargetsList />', () => {
       cy.get(`${l} tbody tr[data-rowid="49"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
   })
 
@@ -649,7 +637,7 @@ describe('<TargetsList />', () => {
         cy.get('.kong-ui-entities-targets-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -711,12 +699,11 @@ describe('<TargetsList />', () => {
       cy.get(`${l} tbody tr[data-rowid="30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getTargetsMultiPage')
@@ -728,18 +715,16 @@ describe('<TargetsList />', () => {
       cy.get(`${l} tbody tr[data-rowid="59"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getTargetsMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       // Page #4
@@ -749,12 +734,12 @@ describe('<TargetsList />', () => {
       cy.get(`${l} tbody tr[data-rowid="99"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
+        'have.attr',
         'disabled',
       )
     })
@@ -788,10 +773,7 @@ describe('<TargetsList />', () => {
       cy.get(`${l} tbody tr[data-rowid="29"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -826,10 +808,7 @@ describe('<TargetsList />', () => {
       cy.get(`${l} tbody tr[data-rowid="14"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -843,10 +822,7 @@ describe('<TargetsList />', () => {
       cy.get(`${l} tbody tr[data-rowid="49"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
   })
 })

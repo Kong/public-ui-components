@@ -9,12 +9,12 @@
     <!-- Error fetching record for edit -->
     <KEmptyState
       v-else-if="fetchDetailsError"
-      :cta-text="t('baseForm.actions.back')"
+      :action-button-text="t('baseForm.actions.back')"
       data-testid="form-fetch-error"
-      :handle-click="handleErrorCtaClick"
-      :is-error="true"
+      icon-variant="error"
+      @click-action="handleErrorCtaClick"
     >
-      <template #message>
+      <template #default>
         <h3>{{ fetchErrorMessage }}</h3>
       </template>
     </KEmptyState>
@@ -31,9 +31,9 @@
       <!-- Form error -->
       <KAlert
         v-if="errorMessage"
-        :alert-message="errorMessage"
         appearance="danger"
         data-testid="form-error"
+        :message="errorMessage"
       />
 
       <!-- Form actions -->

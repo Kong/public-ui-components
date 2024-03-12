@@ -32,7 +32,7 @@
           class="kong-ui-entity-add-to-groups-error"
         >
           <KAlert appearance="danger">
-            <template #alertMessage>
+            <template #default>
               <p>{{ t('consumer_groups.errors.add') }}</p>
               <ul v-if="errorArray.length">
                 <li

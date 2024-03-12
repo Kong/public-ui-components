@@ -33,14 +33,12 @@
           >
             <template #empty-state>
               <KEmptyState
-                cta-is-hidden
-                icon="stateNoData"
-                icon-size="96"
+                :action-button-visible="false"
               >
                 <template #title>
                   <h5>{{ i18n.t('csvExport.noDataRange') }}</h5>
                 </template>
-                <template #message>
+                <template #default>
                   <p>{{ i18n.t('csvExport.noDataRetry') }}</p>
                 </template>
               </KEmptyState>
@@ -224,10 +222,6 @@ watch(tableData, () => {
 .kong-ui-public-csv-export-modal {
   .modal-container {
     min-width: 580px;
-
-    .k-empty-state-message {
-      max-width: 80%;
-    }
 
     .selected-range {
       font-size: $kui-font-size-30;

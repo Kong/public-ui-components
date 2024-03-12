@@ -9,11 +9,9 @@
       :cell-attrs="cellAttrs"
       :disable-pagination-page-jump="disablePaginationPageJump"
       :disable-sorting="disableSorting"
-      :empty-state-action-button-icon="query ? '' : 'plus'"
       :empty-state-action-message="query ? t('baseTable.emptyState.noSearchResultsCtaText') : emptyStateOptions.ctaText"
-      :empty-state-action-route="query ? '' : emptyStateOptions.ctaPath"
-      :empty-state-icon="query ? 'stateNoSearchResults' : 'stateGruceo'"
-      empty-state-icon-size="96"
+      :empty-state-action-route="query ? undefined : emptyStateOptions.ctaPath"
+      :empty-state-icon-variant="query ? 'search' : 'kong'"
       :empty-state-message="query ? t('baseTable.emptyState.noSearchResultsMessage') : emptyStateOptions.message"
       :empty-state-title="query ? t('baseTable.emptyState.noSearchResultsTitle') : emptyStateOptions.title"
       :enable-client-sort="enableClientSort"
@@ -100,6 +98,12 @@
           </KDropdown>
         </div>
       </template>
+      <template
+        v-if="!query"
+        #empty-state-action-icon
+      >
+        <AddIcon />
+      </template>
     </KTable>
   </KCard>
 </template>
@@ -123,6 +127,7 @@ import type {
   TableSortParams,
   TableErrorMessage,
 } from '../../types'
+import { AddIcon } from '@kong/icons'
 
 const props = defineProps({
   // table header configuration

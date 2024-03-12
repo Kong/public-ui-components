@@ -111,7 +111,7 @@
             appearance="warning"
             data-testid="routing-rules-warning"
           >
-            <template #alertMessage>
+            <template #default>
               <i18nT keypath="form.warning.rulesMessage">
                 <template #protocol>
                   <b>{{ protocolsLabels[form.fields.protocols] }}</b>

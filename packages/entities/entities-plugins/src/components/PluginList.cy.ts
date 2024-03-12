@@ -499,7 +499,7 @@ describe('<PluginList />', () => {
         cy.get('.kong-ui-entities-plugins-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -561,12 +561,11 @@ describe('<PluginList />', () => {
       cy.get(`${l} tbody tr[data-testid="plugin-30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getRoutesMultiPage')
@@ -578,18 +577,16 @@ describe('<PluginList />', () => {
       cy.get(`${l} tbody tr[data-testid="plugin-59"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="plugin-60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getRoutesMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       // Page #4
@@ -599,12 +596,12 @@ describe('<PluginList />', () => {
       cy.get(`${l} tbody tr[data-testid="plugin-99"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="plugin-100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
+        'have.attr',
         'disabled',
       )
     })
@@ -638,10 +635,7 @@ describe('<PluginList />', () => {
       cy.get(`${l} tbody tr[data-testid="plugin-29"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="plugin-30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -676,10 +670,7 @@ describe('<PluginList />', () => {
       cy.get(`${l} tbody tr[data-testid="plugin-14"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="plugin-15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -693,10 +684,7 @@ describe('<PluginList />', () => {
       cy.get(`${l} tbody tr[data-testid="plugin-49"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="plugin-50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
 
     it('should hide `order` column and dropdown item when not supported', () => {
@@ -838,7 +826,7 @@ describe('<PluginList />', () => {
         cy.get('.kong-ui-entities-plugins-list').should('be.visible')
         cy.get('.k-table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .k-empty-state-message').should('contain.text', message)
+          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -900,12 +888,11 @@ describe('<PluginList />', () => {
       cy.get(`${l} tbody tr[data-testid="plugin-30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getRoutesMultiPage')
@@ -917,18 +904,16 @@ describe('<PluginList />', () => {
       cy.get(`${l} tbody tr[data-testid="plugin-59"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="plugin-60"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       cy.wait('@getRoutesMultiPage')
 
-      cy.get(`${l} ${p} [data-testid="next-btn"]`)
-        .should('not.have.class', 'disabled')
+      cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
       // Page #4
@@ -938,12 +923,12 @@ describe('<PluginList />', () => {
       cy.get(`${l} tbody tr[data-testid="plugin-99"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="plugin-100"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="prev-btn"]`).should(
-        'not.have.class',
+      cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
+        'not.have.attr',
         'disabled',
       )
-      cy.get(`${l} ${p} [data-testid="next-btn"]`).should(
-        'have.class',
+      cy.get(`${l} ${p} [data-testid="next-button"]`).should(
+        'have.attr',
         'disabled',
       )
     })
@@ -977,10 +962,7 @@ describe('<PluginList />', () => {
       cy.get(`${l} tbody tr[data-testid="plugin-29"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="plugin-30"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '30 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
@@ -1015,10 +997,7 @@ describe('<PluginList />', () => {
       cy.get(`${l} tbody tr[data-testid="plugin-14"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="plugin-15"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '15 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
       cy.get(
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
@@ -1032,10 +1011,7 @@ describe('<PluginList />', () => {
       cy.get(`${l} tbody tr[data-testid="plugin-49"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="plugin-50"]`).should('exist')
 
-      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).should(
-        'contain.text',
-        '50 items per page',
-      )
+      cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
   })
 })

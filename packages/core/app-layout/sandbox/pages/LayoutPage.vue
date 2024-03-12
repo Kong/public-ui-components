@@ -7,11 +7,10 @@
   >
     <template #notification>
       <KAlert
-        alert-message="I'm an alert from the host app"
+        v-if="showAlert"
         appearance="warning"
-        dismiss-type="icon"
-        :is-showing="showAlert"
-        @closed="handleCloseAlert"
+        message="I'm an alert from the host app"
+        @dismiss="handleCloseAlert"
       />
     </template>
     <template #navbar-mobile-logo>

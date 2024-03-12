@@ -15,10 +15,8 @@
         v-if="error"
         class="kong-ui-entity-delete-error"
       >
-        <KAlert
-          appearance="danger"
-        >
-          <template #alertMessage>
+        <KAlert appearance="danger">
+          <template #default>
             {{ error }}
           </template>
         </KAlert>

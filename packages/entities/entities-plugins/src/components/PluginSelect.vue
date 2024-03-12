@@ -31,23 +31,22 @@
 
     <KEmptyState
       v-else-if="hasError"
+      :action-button-visible="false"
       data-testid="plugins-fetch-error"
-      hide-cta
-      is-error
+      icon-variant="error"
     >
-      <template #message>
+      <template #default>
         <h3>{{ fetchErrorMessage }}</h3>
       </template>
     </KEmptyState>
 
     <KEmptyState
       v-else-if="noSearchResults && filter"
-      cta-is-hidden
+      :action-button-visible="false"
       data-testid="plugins-empty-state"
-      icon="stateNoSearchResults"
-      icon-size="96"
+      icon-variant="search"
     >
-      <template #message>
+      <template #default>
         <h5>{{ t('search.no_results', { filter }) }}</h5>
       </template>
     </KEmptyState>

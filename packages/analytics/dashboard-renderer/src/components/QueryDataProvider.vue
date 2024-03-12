@@ -6,11 +6,11 @@
   />
   <KEmptyState
     v-else-if="hasError"
-    cta-is-hidden
+    :action-button-visible="false"
     data-testid="chart-empty-state"
-    is-error
+    icon-variant="error"
   >
-    <template #message>
+    <template #default>
       {{ errorMessage }}
     </template>
   </KEmptyState>
