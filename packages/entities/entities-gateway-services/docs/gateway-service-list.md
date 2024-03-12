@@ -67,6 +67,12 @@ A table component for gateway services.
     - default: `undefined`
     - A function that returns the route for editing a gateway service.
 
+  - `additionMessageForEmptyState`:
+    - type: `string`
+    - required: `false`
+    - default: `undefined`
+    - Additional message to show when there are no records.
+
   - `getControlPlaneRoute`:
     - type: `(id: string) => RouteLocationRaw`
     - required: `false`

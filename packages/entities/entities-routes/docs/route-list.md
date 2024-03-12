@@ -77,6 +77,12 @@ A table component for routes.
     - default: `null`
     - Current service id if the RouteList is nested in the routes tab on a service detail page.
 
+  - `additionMessageForEmptyState`:
+    - type: `string`
+    - required: `false`
+    - default: `undefined`
+    - Additional message to show when there are no records.
+
   - `workspace`:
     - type: `string`
     - required: `true`
