@@ -85,6 +85,12 @@ A table component for consumer groups.
     - default: `null`
     - A boolean to indicate if the paginated endpoint is used when `consumerId` is provided.
 
+  - `additionMessageForEmptyState`:
+    - type: `string`
+    - required: `false`
+    - default: `undefined`
+    - Additional message to show when there are no records.
+
   - `workspace`:
     - type: `string`
     - required: `true`

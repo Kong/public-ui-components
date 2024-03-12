@@ -68,6 +68,12 @@ A table component for upstreams.
     - default: `undefined`
     - A function that returns the route for editing an upstream.
 
+  - `additionMessageForEmptyState`:
+    - type: `string`
+    - required: `false`
+    - default: `undefined`
+    - Additional message to show when there are no records.
+
   - `workspace`:
     - type: `string`
     - required: `true`

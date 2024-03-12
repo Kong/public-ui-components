@@ -58,6 +58,12 @@ A table component for targets. Includes target create/edit form modal out of the
     - Route for creating a target.
     - Optional because a form could open in a modal or in a new page.
 
+  - `additionMessageForEmptyState`:
+    - type: `string`
+    - required: `false`
+    - default: `undefined`
+    - Additional message to show when there are no records.
+
   - `workspace`:
     - type: `string`
     - required: `true`

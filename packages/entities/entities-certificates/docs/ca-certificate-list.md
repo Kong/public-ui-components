@@ -66,6 +66,12 @@ A table component for ca-certificates.
     - required: `true`
     - default: `undefined`
     - A function that returns the route for editing a route.
+  
+  - `additionMessageForEmptyState`:
+    - type: `string`
+    - required: `false`
+    - default: `undefined`
+    - Additional message to show when there are no records.
 
   - `workspace`:
     - type: `string`
