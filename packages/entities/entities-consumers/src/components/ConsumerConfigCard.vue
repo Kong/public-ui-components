@@ -6,7 +6,6 @@
       :config-schema="configSchema"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
-      @copy:success="(entity: any) => $emit('copy:success', entity)"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
       @fetch:success="(entity: any) => $emit('fetch:success', entity)"
       @loading="(val: boolean) => $emit('loading', val)"
@@ -50,7 +49,6 @@ defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'fetch:error', error: AxiosError): void,
   (e: 'fetch:success', data: Record<string, any>): void,
-  (e: 'copy:success', data: Record<string, any>): void,
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)

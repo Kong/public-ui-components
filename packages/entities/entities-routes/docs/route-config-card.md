@@ -107,10 +107,6 @@ A `@fetch:success` event is emitted when the route is successfully fetched. The 
 
 A `@loading` event is emitted when loading state changes. The event payload is a boolean.
 
-#### copy:success
-
-A `@copy:success` event is emitted when a user clicks the `Copy JSON` button and the JSON object is copied successfully.
-
 #### navigation-click
 
 A `@navigation-click` event is emitted when a user clicks the `service name` button and the event payload is the entity type (`services`) and the service id.

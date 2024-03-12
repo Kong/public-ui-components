@@ -107,10 +107,6 @@ A `@fetch:success` event is emitted when the Key is successfully fetched. The ev
 
 A `@loading` event is emitted when loading state changes. The event payload is a boolean.
 
-#### copy:success
-
-A `@copy:success` event is emitted when a user clicks the `Copy JSON` button and the JSON object is copied successfully.
-
 #### navigation-click
 
 A `@navigation-click` event is emitted when a user clicks the `key set name` button and the event payload is the entity type (`key-sets`) and the key set id.
