@@ -1,5 +1,5 @@
-export type AnalyticsRetention = '1d' | '30d' | '90d' | '180d' | '365d'
-export type RequestsRetention = '1d' | '7d' | '14d' | '30d'
+export type AnalyticsRetention = '0d' | '1d' | '30d' | '90d' | '180d' | '365d'
+export type RequestsRetention = '0d' | '1d' | '7d' | '14d' | '30d'
 
 export interface AnalyticsConfigEnabled {
   analytics: true
