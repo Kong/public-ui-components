@@ -35,84 +35,90 @@
         class="kong-ui-entity-filter-backdrop"
         @click="toggleMenu"
       />
-      <KMenu
+      <div
         v-show="showMenu"
         class="kong-ui-entity-filter-menu"
       >
-        <template #body>
-          <KMenuItem
-            v-for="(field, index) in searchableFields"
-            :key="field.value"
-            :data-testid="field.value"
-            expandable
-            :last-menu-item="index === searchableFields.length - 1"
+        <div
+          v-for="field in searchableFields"
+          :key="field.value"
+          class="kong-ui-entity-filter-menu-item"
+          :data-testid="field.value"
+        >
+          <span
+            class="menu-item-title"
+            :class="{ expanded: expandedFields.has(field.value) }"
+            @click="toggleExpanded(field.value)"
           >
-            <template #itemTitle>
-              <span class="menu-item-title">
-                {{ field.label }}
-                <span
-                  v-show="filteredFields.includes(field.value)"
-                  class="menu-item-indicator"
-                />
-              </span>
-            </template>
-            <template #itemBody>
-              <div class="menu-item-body">
-                <label
-                  class="menu-item-label"
-                  :for="getFieldId(field.value)"
-                >
-                  {{ t('filter.fieldLabel') }}
-                </label>
-                <KSelect
-                  v-if="config.schema?.[field.value]?.type === 'select'"
-                  :id="getFieldId(field.value)"
-                  v-model="searchParams[field.value]"
-                  :items="getFieldOptions(field.value)"
-                  :placeholder="t('filter.selectPlaceholder')"
-                />
-                <KInput
-                  v-else
-                  :id="getFieldId(field.value)"
-                  v-model="searchParams[field.value]"
-                  autocomplete="off"
-                  :placeholder="t('filter.inputPlaceholder')"
-                  :type="getFieldInputType(field.value)"
-                />
-              </div>
-              <div class="menu-item-buttons">
-                <KButton
-                  appearance="tertiary"
-                  data-testid="apply-filter"
-                  size="small"
-                  @click="applyFields(true)"
-                >
-                  {{ t('filter.applyButtonText') }}
-                </KButton>
-                <KButton
-                  appearance="tertiary"
-                  data-testid="clear-filter"
-                  size="small"
-                  @click="clearField(field.value)"
-                >
-                  {{ t('filter.clearButtonText') }}
-                </KButton>
-              </div>
-            </template>
-          </KMenuItem>
-        </template>
-        <template #actionButton>
-          <div class="filter-clear-button-container">
+            {{ field.label }}
+            <span
+              v-show="filteredFields.includes(field.value)"
+              class="menu-item-indicator"
+            />
+            <ChevronDownIcon
+              class="menu-item-expand-icon"
+              :class="{ expanded: expandedFields.has(field.value) }"
+              :color="KUI_COLOR_TEXT_NEUTRAL_WEAK"
+            />
+          </span>
+          <div
+            v-show="expandedFields.has(field.value)"
+            class="menu-item-body"
+          >
+            <label
+              class="menu-item-label"
+              :for="getFieldId(field.value)"
+            >
+              {{ t('filter.fieldLabel') }}
+            </label>
+            <KSelect
+              v-if="config.schema?.[field.value]?.type === 'select'"
+              :id="getFieldId(field.value)"
+              v-model="searchParams[field.value]"
+              :items="getFieldOptions(field.value)"
+              :placeholder="t('filter.selectPlaceholder')"
+            />
+            <KInput
+              v-else
+              :id="getFieldId(field.value)"
+              v-model="searchParams[field.value]"
+              autocomplete="off"
+              :placeholder="t('filter.inputPlaceholder')"
+              :type="getFieldInputType(field.value)"
+            />
+          </div>
+          <div
+            v-show="expandedFields.has(field.value)"
+            class="menu-item-buttons"
+          >
             <KButton
               appearance="tertiary"
+              data-testid="apply-filter"
               size="small"
-              @click="clearFields"
+              @click="applyFields(true)"
             >
-              {{ t('filter.clearAllButtonText') }}
+              {{ t('filter.applyButtonText') }}
+            </KButton>
+            <KButton
+              appearance="tertiary"
+              data-testid="clear-filter"
+              size="small"
+              @click="clearField(field.value)"
+            >
+              {{ t('filter.clearButtonText') }}
             </KButton>
           </div>
-        </template>
-      </KMenu>
+        </div>
+        <div class="filter-clear-button-container">
+          <KButton
+            appearance="tertiary"
+            size="small"
+            @click="clearFields"
+          >
+            {{ t('filter.clearAllButtonText') }}
+          </KButton>
+        </div>
+      </div>
     </div>
   </template>
 </template>
@@ -120,7 +126,8 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { computed, ref, watch } from 'vue'
-import { CloseIcon } from '@kong/icons'
+import { CloseIcon, ChevronDownIcon } from '@kong/icons'
+import { KUI_COLOR_TEXT_NEUTRAL_WEAK } from '@kong/design-tokens'
 import type { ExactMatchFilterConfig, FuzzyMatchFilterConfig } from '../../types'
 import composables from '../../composables'
 import IconFilter from '../icons/IconFilter.vue'
@@ -150,6 +157,7 @@ const emit = defineEmits<{
 
 const showMenu = ref(false)
 const searchParams = ref<{ [key: string]: string | number }>({})
+const expandedFields = ref<Set<string>>(new Set())
 
 const filteredFields = computed<string[]>(() => {
   const fields: string[] = []
@@ -161,7 +169,7 @@ const filteredFields = computed<string[]>(() => {
   return fields
 })
 
-const searchableFields = computed<{ label: string, value: string }[]>(() => {
+const searchableFields = computed<{ label: string, value: string, expanded: boolean }[]>(() => {
   const fields = (props.config as FuzzyMatchFilterConfig).fields
   return Object
     .keys(fields)
@@ -169,7 +177,8 @@ const searchableFields = computed<{ label: string, value: string }[]>(() => {
     .map((key: string) => ({
       label: fields[key].label || key,
       value: key,
-    })) as { label: string, value: string }[]
+      expanded: false,
+    })) as { label: string, value: string, expanded: boolean }[]
 })
 
 watch(() => props.modelValue, (val) => {
@@ -181,6 +190,10 @@ watch(() => props.modelValue, (val) => {
 
 const toggleMenu = () => {
   showMenu.value = !showMenu.value
+}
+
+const toggleExpanded = (field: string) => {
+  expandedFields.value.has(field) ? expandedFields.value.delete(field) : expandedFields.value.add(field)
 }
 
 const handleQueryUpdate = (query: string) => {
@@ -269,26 +282,49 @@ const applyFields = (hideMenu = false) => {
 }
 
 .kong-ui-entity-filter-menu {
+  background-color: $kui-color-background;
+  border: $kui-border-width-10 solid $kui-color-border-neutral-weak;
+  border-radius: $kui-border-radius-20;
   box-shadow: 0 4px 20px $kui-color-border;
   left: 0;
   margin-top: 16px;
+  padding: $kui-space-40 0 $kui-space-50;
   position: absolute;
   top: 100%;
+  width: 300px;
   z-index: 1060;
+}
 
-  :deep(.k-menu-item .menu-button) {
-    &:focus {
-      box-shadow: none;
-    }
-    &:focus-visible {
-      box-shadow: 0 0 0 1px $kui-color-border-primary-weaker;
-    }
-  }
+.kong-ui-entity-filter-menu-item {
+  border-bottom: $kui-border-width-10 solid $kui-color-border;
+  color: $kui-color-text-neutral;
+  font-size: $kui-font-size-20;
+  font-weight: $kui-font-weight-regular;
+  line-height: $kui-line-height-20;
+  list-style: none;
+  margin: $kui-space-0 $kui-space-70;
+  padding: $kui-space-60 0;
+  position: relative;
+  white-space: nowrap;
 }
 
 .menu-item-title {
   align-items: center;
+  cursor: pointer;
   display: flex;
+  line-height: $kui-line-height-40;
+
+  &.expanded {
+    color: $kui-color-text-neutral-strongest;
+  }
+}
+
+.menu-item-expand-icon {
+  margin-left: auto;
+
+  &.expanded {
+    transform: rotate(180deg);
+  }
 }
 
 .menu-item-indicator {
@@ -303,6 +339,7 @@ const applyFields = (hideMenu = false) => {
   align-items: center;
   display: flex;
   justify-content: space-between;
+  margin-top: $kui-space-60;
 
   :deep(.k-input) {
     padding-bottom: 4px!important;
@@ -335,6 +372,6 @@ const applyFields = (hideMenu = false) => {
 }
 
 .filter-clear-button-container {
-  padding: 0 $kui-space-70;
+  padding: $kui-space-50 $kui-space-70 0;
 }
 </style>
