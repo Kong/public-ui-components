@@ -602,7 +602,7 @@ watch(fetcherState, (state) => {
 const emptyStateOptions = ref<EmptyStateOptions>({
   ctaPath: isConsumerGroupPage.value ? undefined : props.config.createRoute,
   ctaText: undefined,
-  message: t('consumers.list.empty_state.description'),
+  message: `${t('consumers.list.empty_state.description')}${props.config.additionMessageForEmptyState ? ` ${props.config.additionMessageForEmptyState}` : ''}`,
   title: t('consumers.title'),
 })
 

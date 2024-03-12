@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.10.2...@kong-ui-public/dashboard-renderer@0.10.3) (2024-03-12)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.10.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.10.1...@kong-ui-public/dashboard-renderer@0.10.2) (2024-03-08)
+
+
+### Bug Fixes
+
+* **dashboards:** fix metric card filter [MA-2719] ([#1219](https://github.com/Kong/public-ui-components/issues/1219)) ([7ca865d](https://github.com/Kong/public-ui-components/commit/7ca865d9723e43148a0dc3f068eab281e6d1dbf4))
+
+
+
+
+
 ## [0.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.10.0...@kong-ui-public/dashboard-renderer@0.10.1) (2024-03-08)
 
 

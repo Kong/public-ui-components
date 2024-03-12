@@ -61,6 +61,12 @@ A table component for key sets.
     - default: `undefined`
     - A function that returns the route for editing a key set.
 
+  - `additionMessageForEmptyState`:
+    - type: `string`
+    - required: `false`
+    - default: `undefined`
+    - Additional message to show when there are no records.
+
   - `workspace`:
     - type: `string`
     - required: `true`

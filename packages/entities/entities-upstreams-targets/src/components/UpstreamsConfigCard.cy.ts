@@ -74,24 +74,5 @@ describe('<UpstreamsConfigCard/>', () => {
 
       cy.get('@onSuccess').should('have.been.calledWith', { message: 'text' })
     })
-
-    it('emits copy:success event when EntityBaseConfigCard emits copy:success event', () => {
-      interceptGetUpstream()
-
-      cy.mount(UpstreamsConfigCard, {
-        props: {
-          config: konnectCardConfig,
-          'onCopy:success': cy.spy().as('onCopy'),
-        },
-      }).then(({ wrapper }) => wrapper)
-        .as('vueWrapper')
-
-      cy.wait('@getUpstream')
-
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseConfigCard)
-        .vm.$emit('copy:success', { message: 'text' }))
-
-      cy.get('@onCopy').should('have.been.calledWith', { message: 'text' })
-    })
   })
 })

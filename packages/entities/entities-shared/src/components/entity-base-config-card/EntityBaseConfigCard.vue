@@ -110,8 +110,6 @@ const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void,
   (e: 'fetch:success', data: Record<string, any>): void,
   (e: 'fetch:error', error: AxiosError): void,
-  (e: 'copy:success', payload: Record<string, any>): void,
-  (e: 'copy:error'): void,
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props

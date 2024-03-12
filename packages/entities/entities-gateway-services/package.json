@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-gateway-services",
-  "version": "2.5.3",
+  "version": "2.6.1",
   "type": "module",
   "main": "./dist/entities-gateway-services.umd.js",
   "module": "./dist/entities-gateway-services.es.js",
@@ -32,7 +32,7 @@
     "@kong/design-tokens": "1.12.10",
     "@kong/kongponents": "9.0.0-pr.2043.17067864.0",
     "axios": "^1.6.7",
-    "vue": "^3.4.20",
+    "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
   "scripts": {

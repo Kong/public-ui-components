@@ -83,6 +83,12 @@ A table component for plugins.
     - default: `() => null`,
     - A synchronous function, that returns a string for a entity row, will be displayed on the switch hover tooltip. A null return will not make tooltip displayed. Please note it's a synchronous function.
 
+  - `additionMessageForEmptyState`:
+    - type: `string`
+    - required: `false`
+    - default: `undefined`
+    - Additional message to show when there are no records.
+
   - `workspace`:
     - type: `string`
     - required: `true`

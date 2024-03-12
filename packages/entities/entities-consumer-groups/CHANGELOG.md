@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.5.0...@kong-ui-public/entities-consumer-groups@2.5.1) (2024-03-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+# [2.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.4.34...@kong-ui-public/entities-consumer-groups@2.5.0) (2024-03-12)
+
+
+### Features
+
+* **entities:** add additionMessageForEmptyState ([#1226](https://github.com/Kong/public-ui-components/issues/1226)) ([d988fe7](https://github.com/Kong/public-ui-components/commit/d988fe72a0d19bd047f4569925082d5c19902f96))
+
+
+
+
+
+## [2.4.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.4.33...@kong-ui-public/entities-consumer-groups@2.4.34) (2024-03-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
 ## [2.4.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.4.32...@kong-ui-public/entities-consumer-groups@2.4.33) (2024-03-08)
 
 

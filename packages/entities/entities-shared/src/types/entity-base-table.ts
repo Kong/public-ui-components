@@ -1,13 +1,18 @@
 import type { RouteLocationRaw } from 'vue-router'
 import type { Field, KongManagerConfig, KonnectConfig } from './index'
 
-export interface KonnectBaseTableConfig extends KonnectConfig {}
+export interface KonnectBaseTableConfig extends KonnectConfig {
+  /** Additional message to show when there are no records */
+  additionMessageForEmptyState?: string
+}
 
 export interface KongManagerBaseTableConfig extends KongManagerConfig {
+  /** Additional message to show when there are no records */
+  additionMessageForEmptyState?: string
   /** Whether to use exact match or not */
-  isExactMatch?: boolean;
+  isExactMatch?: boolean
   /** Whether to disable table sorting */
-  disableSorting?: boolean;
+  disableSorting?: boolean
 }
 
 export interface BaseTableHeaders {

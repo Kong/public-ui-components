@@ -125,10 +125,6 @@ A `@fetch:success` event is emitted when the Plugin is successfully fetched. The
 
 A `@loading` event is emitted when loading state changes. The event payload is a boolean.
 
-#### copy:success
-
-A `@copy:success` event is emitted when a user clicks the `Copy JSON` button and the JSON object is copied successfully.
-
 ### Usage example
 
 Please refer to the [sandbox](../sandbox/pages/PluginConfigCardPage.vue). The page is accessible by clicking on the row or `View details` button of an existing Plugin.
