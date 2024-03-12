@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -24,7 +28,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.112
-        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       '@rushstack/eslint-patch':
         specifier: ^1.7.2
         version: 1.7.2
@@ -253,7 +257,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.112
-        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       '@types/uuid':
         specifier: ^9.0.8
         version: 9.0.8
@@ -361,7 +365,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.112
-        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       json-schema-to-ts:
         specifier: ^3.0.0
         version: 3.0.0
@@ -389,7 +393,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.112
-        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.3.3)
@@ -414,7 +418,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.112
-        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -460,7 +464,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.112
-        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.3.3)
@@ -541,7 +545,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.112
-        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       '@types/lodash':
         specifier: ^4.14.202
         version: 4.14.202
@@ -568,7 +572,7 @@ importers:
         version: link:../i18n
       '@kong/kongponents':
         specifier: 9.0.0-alpha.112
-        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.3.3)
@@ -584,7 +588,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.112
-        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.3.3)
@@ -785,7 +789,7 @@ importers:
         specifier: workspace:^
         version: link:../entities-shared
       '@kong-ui-public/forms':
-        specifier: ^2.1.46
+        specifier: ^2.1.47
         version: link:../../core/forms
       '@kong/icons':
         specifier: ^1.8.14
@@ -958,7 +962,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.112
-        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       '@types/prismjs':
         specifier: ^1.26.3
         version: 1.26.3
@@ -992,7 +996,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.112
-        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.112(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.1.0
         version: 1.1.0(vite@5.1.4)
@@ -1545,6 +1549,7 @@ packages:
   /@commitlint/config-validator@19.0.3:
     resolution: {integrity: sha512-2D3r4PKjoo59zBc2auodrSCaUnCSALCx54yveOFwwP/i2kfEAQrygwOleFWswLqK0UL/F9r07MFi5ev2ohyM4Q==}
     engines: {node: '>=v18'}
+    requiresBuild: true
     dependencies:
       '@commitlint/types': 19.0.3
       ajv: 8.12.0
@@ -1684,6 +1689,7 @@ packages:
   /@commitlint/resolve-extends@19.1.0:
     resolution: {integrity: sha512-z2riI+8G3CET5CPgXJPlzftH+RiWYLMYv4C9tSLdLXdr6pBNimSKukYP9MS27ejmscqCTVA4almdLh0ODD2KYg==}
     engines: {node: '>=v18'}
+    requiresBuild: true
     dependencies:
       '@commitlint/config-validator': 19.0.3
       '@commitlint/types': 19.0.3
@@ -1728,6 +1734,7 @@ packages:
   /@commitlint/types@19.0.3:
     resolution: {integrity: sha512-tpyc+7i6bPG9mvaBbtKUeghfyZSDgWquIDfMgqYtTbmZ9Y9VzEm2je9EYcQ0aoz5o7NvGS+rcDec93yO08MHYA==}
     engines: {node: '>=v18'}
+    requiresBuild: true
     dependencies:
       '@types/conventional-commits-parser': 5.0.0
       chalk: 5.3.0
@@ -3226,6 +3233,7 @@ packages:
 
   /@swagger-api/apidom-ns-api-design-systems@0.97.0:
     resolution: {integrity: sha512-uSTIEX4q9XWoP9TQq9nEtW5xG3hVQN2VD5spYoxvYlzUOtg12yxkVgu776eq0kVZd74acZhKIF7mn3uiqaQcHA==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
       '@swagger-api/apidom-core': 0.97.0
@@ -3240,6 +3248,7 @@ packages:
 
   /@swagger-api/apidom-ns-asyncapi-2@0.97.0:
     resolution: {integrity: sha512-buEQSrXdtjoAkqIWSZ448HlvnareupthIoObYELp25LVuQwhxxVSY3NR0aCIR37GHgSchrmPBVcsvPMtXV96BA==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
       '@swagger-api/apidom-core': 0.97.0
@@ -3265,6 +3274,7 @@ packages:
 
   /@swagger-api/apidom-ns-json-schema-draft-6@0.97.0:
     resolution: {integrity: sha512-tRbg3/b4aJGfcODc0HDngZDjBdhPAv8OZM1OZdsqI4EEIw3PI/wpd+b6b8a5udOjAdbUYqnYsq6gCylCDNBnzw==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
       '@swagger-api/apidom-core': 0.97.0
@@ -3279,6 +3289,7 @@ packages:
 
   /@swagger-api/apidom-ns-json-schema-draft-7@0.97.0:
     resolution: {integrity: sha512-0GITsoa6kVVkoKBUxyeODmh6vjGXuvDQZd3Vxs1nz0c/O6ZR+VBfBB3JW5wzhVr+WCXebaOJGDyWkxJMHKycxw==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
       '@swagger-api/apidom-core': 0.97.0
@@ -3293,6 +3304,7 @@ packages:
 
   /@swagger-api/apidom-ns-openapi-2@0.97.0:
     resolution: {integrity: sha512-5gOA9FiO1J9OxJhcVBeXdm77kuh2cwPXG6Sh/DOlbk733Pz9v9W0aQgpLi5Ltsgagxe1sHhBqxJ1asw10QFzzw==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
       '@swagger-api/apidom-core': 0.97.0
@@ -3333,6 +3345,7 @@ packages:
 
   /@swagger-api/apidom-ns-workflows-1@0.97.0:
     resolution: {integrity: sha512-eIuoTRSITlUtMjpM3J0H9b2rVeEVu13i/Fv6+ZMPob0yHmQBWo9bnLjxxnfEZkpvp050worKULfNMdJV8NKBkA==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
       '@swagger-api/apidom-core': 0.97.0
@@ -3402,6 +3415,7 @@ packages:
 
   /@swagger-api/apidom-parser-adapter-json@0.97.0:
     resolution: {integrity: sha512-MPhAX77Z9Csti+Kljtbrl/ez2H610R4fQg0RnkNW40f4e6TXeOogT5tmceeWP+IKGAKX45HA1JpVPxdtSJn3ww==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
       '@swagger-api/apidom-ast': 0.97.0
@@ -3530,6 +3544,7 @@ packages:
 
   /@swagger-api/apidom-parser-adapter-yaml-1-2@0.97.0:
     resolution: {integrity: sha512-3f1ADjQyKyLnuRhPuoHMgWMW28o0ylohWCQwX4q69CMH0kqGxP7HnqIU/i0I2cxZdjGv72OCdiKwaR/OgHcmEw==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
       '@swagger-api/apidom-ast': 0.97.0
@@ -3657,6 +3672,7 @@ packages:
 
   /@types/conventional-commits-parser@5.0.0:
     resolution: {integrity: sha512-loB369iXNmAZglwWATL+WRe+CRMmmBPtpolYzIebFaX4YA3x+BEfLqhUAV9WanycKI3TG1IMr5bMJDajDKLlUQ==}
+    requiresBuild: true
     dependencies:
       '@types/node': 18.19.21
     dev: true
@@ -4740,9 +4756,6 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependenciesMeta:
-      ajv:
-        optional: true
     dependencies:
       ajv: 8.12.0
     dev: true
@@ -15064,7 +15077,3 @@ packages:
   /zenscroll@4.0.2:
     resolution: {integrity: sha512-jEA1znR7b4C/NnaycInCU6h/d15ZzCd1jmsruqOKnZP6WXQSMH3W2GL+OXbkruslU4h+Tzuos0HdswzRUk/Vgg==}
     dev: false
-
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false
