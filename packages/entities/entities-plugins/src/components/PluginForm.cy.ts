@@ -220,6 +220,82 @@ describe('<PluginForm />', () => {
       cy.get('#config-private_network').should('be.visible')
     })
 
+    it.only('should show common, required, and advanced fields when groupFields is true', () => {
+      interceptKMSchema({ mockData: schema2 })
+
+      cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
+        props: {
+          config: {
+            ...baseConfigKM,
+            groupFields: true,
+          },
+          pluginType: 'mocking',
+        },
+        router,
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      // button state
+      cy.getTestId('form-submit').should('be.visible')
+      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('form-back').should('be.visible')
+      cy.getTestId('form-back').should('be.enabled')
+      cy.getTestId('form-cancel').should('be.visible')
+
+      // scope fields
+      cy.get('.field-selectionGroup').should('be.visible')
+      cy.get('.Global-check').should('be.visible')
+      cy.get('.Scoped-check').should('be.visible')
+      cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('not.be.visible')
+      cy.get('.Scoped-check input').click()
+      cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('be.visible')
+      cy.get('#service-id').should('be.visible')
+      cy.get('#route-id').should('be.visible')
+
+      cy.getTestId('k-collapse-title')
+        .contains('Common Fields')
+        .parents('.k-collapse')
+        .first()
+        .as('commonFields')
+
+      cy.getTestId('k-collapse-title')
+        .contains('Required Fields')
+        .parents('.k-collapse')
+        .first()
+        .as('requiredFields')
+
+      cy.getTestId('k-collapse-title')
+        .contains('Advanced Fields')
+        .parents('.k-collapse')
+        .first()
+        .as('advancedFields')
+
+      // common fields
+      cy.get('@commonFields').find('#enabled').should('exist')
+      cy.get('@commonFields').find('#instance_name').should('exist')
+      cy.get('@commonFields').find('#tags').should('exist')
+      cy.get('@commonFields').find('.plugin-protocols-select').should('be.visible')
+
+      // required fields
+      cy.get('@requiredFields').find('#config-include_base_path').should('be.visible')
+      cy.get('@requiredFields').find('#config-random_status_code').should('be.visible')
+
+      // advanced fields should be hidden by default
+      cy.get('@advancedFields').findTestId('k-collapse-hidden-content').should('be.hidden')
+
+      // reveal them
+      cy.get('@advancedFields').findTestId('k-collapse-trigger-content').click()
+      cy.get('@advancedFields').findTestId('k-collapse-hidden-content').should('be.visible')
+
+      // advanced fields
+      cy.get('@advancedFields').find('#config-api_specification').should('be.visible')
+      cy.get('@advancedFields').find('#config-api_specification_filename').should('be.visible')
+      cy.get('@advancedFields').find('#config-included_status_codes').should('be.visible')
+    })
+
     it('should hide scope selection when hideScopeSelection is true', () => {
       interceptKMSchema()
 
