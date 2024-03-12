@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/forms",
-  "version": "2.1.44",
+  "version": "2.1.45",
   "type": "module",
   "main": "./dist/forms.umd.js",
   "module": "./dist/forms.es.js",
@@ -56,7 +56,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.107",
+    "@kong/kongponents": "9.0.0-alpha.111",
     "vue": "^3.4.20"
   },
   "devDependencies": {

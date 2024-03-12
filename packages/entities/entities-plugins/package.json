@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "2.12.19",
+  "version": "2.12.20",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
@@ -26,7 +26,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.107",
+    "@kong/kongponents": "9.0.0-alpha.111",
     "axios": "^1.6.7",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.3.0"
@@ -73,13 +73,12 @@
     "errorLimit": "2.5MB"
   },
   "dependencies": {
-    "@kong-ui-public/copy-uuid": "workspace:^",
     "@kong-ui-public/entities-consumer-groups": "workspace:^",
     "@kong-ui-public/entities-consumers": "workspace:^",
     "@kong-ui-public/entities-gateway-services": "workspace:^",
     "@kong-ui-public/entities-routes": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@kong-ui-public/forms": "^2.1.44",
+    "@kong-ui-public/forms": "^2.1.45",
     "@kong/icons": "^1.8.14",
     "marked": "^12.0.0"
   }

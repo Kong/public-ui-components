@@ -67,12 +67,11 @@
         </span>
       </template>
       <template #cert="{ row }">
-        <CopyUuid
+        <KCopy
           v-if="row?.cert"
           data-testid="copy-certificate-cert"
-          :notify="(params: CopyUuidNotifyParam) => handleCertCopy(params, row)"
-          :truncated="true"
-          :uuid="row.cert"
+          :text="row.cert"
+          truncate
         />
         <span v-else>-</span>
       </template>
@@ -173,8 +172,6 @@ import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import endpoints from '../certificates-endpoints'
-import type { CopyUuidNotifyParam } from '@kong-ui-public/copy-uuid'
-import { CopyUuid } from '@kong-ui-public/copy-uuid'
 
 import {
   EntityBaseTable,
@@ -201,7 +198,6 @@ import type {
   TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import '@kong-ui-public/copy-uuid/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
@@ -382,22 +378,6 @@ const copyJson = (row: EntityRow, copyToClipboard: (val: string) => boolean): vo
     entity: row,
     message: t('certificates.copy.success_brief'),
   })
-}
-
-const handleCertCopy = (params: CopyUuidNotifyParam, entity: EntityRow) => {
-  if (params.type === 'error') {
-    emit('copy:error', {
-      entity,
-      field: 'cert',
-      message: t('certificates.errors.copy'),
-    })
-  } else {
-    emit('copy:success', {
-      entity,
-      field: 'cert',
-      message: t('certificates.copy.success_brief'),
-    })
-  }
 }
 
 /**

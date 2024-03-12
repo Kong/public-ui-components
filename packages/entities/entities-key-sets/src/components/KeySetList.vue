@@ -63,11 +63,10 @@
         </KTruncate>
         <span v-else>-</span>
       </template>
-      <template #id="{ row, rowValue }">
-        <CopyUuid
-          :notify="(param: CopyUuidNotifyParam) => notifyCopyAction(param, row, 'id')"
-          :truncated="false"
-          :uuid="rowValue"
+      <template #id="{ rowValue }">
+        <KCopy
+          :text="rowValue"
+          truncate
         />
       </template>
 
@@ -147,7 +146,6 @@ import {
   useFetcher,
   useDeleteUrlBuilder,
 } from '@kong-ui-public/entities-shared'
-import type { CopyUuidNotifyParam } from '@kong-ui-public/copy-uuid'
 import type {
   KongManagerKeySetListConfig,
   KonnectKeySetListConfig,
@@ -324,15 +322,6 @@ const copyJson = (row: EntityRow, copyToClipboard: (val: string) => boolean): vo
     entity: row,
     message: t('keySets.copy.success_brief'),
   })
-}
-
-const notifyCopyAction = (param: CopyUuidNotifyParam, entity: EntityRow, field: string) => {
-  const { type } = param
-  if (type === 'success') {
-    onCopySuccess(entity, field)
-  } else {
-    onCopyError(entity, field)
-  }
 }
 
 const onCopySuccess = (entity: EntityRow, field: string) => {

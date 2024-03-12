@@ -100,9 +100,9 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
     metrics: opts.metrics,
     dimensions: [
       ...(opts.dimensions?.length ? [...opts.dimensions] : []),
-      ...(opts.withTrend ? ['time'] : []),
+      ...(opts.withTrend.value ? ['time'] : []),
     ],
-    granularity: opts.withTrend ? 'trend' : undefined,
+    granularity: opts.withTrend.value ? 'trend' : undefined,
     ...(opts.filter.value?.length ? { filters: opts.filter.value } : {}),
     time_range: opts.timeframe.value.v4Query(opts.tz.value),
   } as ExploreQuery))
@@ -137,7 +137,7 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
       return { current: {}, previous: {} } as ChronologicalMappedMetrics
     }
 
-    return buildDeltaMapping(raw.value, !!opts.withTrend)
+    return buildDeltaMapping(raw.value, opts.withTrend.value)
   })
 
   // If one of our relative timeframes, we display the requested time frame (if user has trend access); otherwise fall back to one day
@@ -152,7 +152,7 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
 
       let numDays = (endMs - startMs) / (1000 * 60 * 60 * 24)
 
-      if (opts.withTrend) {
+      if (opts.withTrend.value) {
         // If we're querying a trend, then the time range queried is doubled.
         numDays /= 2
       }
@@ -160,7 +160,7 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
       // Avoid weirdness around daylight savings time by rounding up or down to the nearest day.
       return i18n.t('trendRange.custom', { numDays: Math.round(numDays) })
     } else {
-      return opts.withTrend
+      return opts.withTrend.value
         // @ts-ignore - dynamic i18n key
         ? i18n.t(`trendRange.${opts.timeframe.value.key}`)
         // @ts-ignore - dynamic i18n key

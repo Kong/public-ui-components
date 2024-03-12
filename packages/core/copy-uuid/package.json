@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/copy-uuid",
-  "version": "2.0.42",
+  "version": "2.0.43",
   "type": "module",
   "main": "./dist/copy-uuid.umd.js",
   "module": "./dist/copy-uuid.es.js",
@@ -38,7 +38,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.107",
+    "@kong/kongponents": "9.0.0-alpha.111",
     "vue": ">= 3.3.13 < 4"
   },
   "devDependencies": {

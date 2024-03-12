@@ -3,8 +3,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
 import Kongponents from '@kong/kongponents'
 import '@kong/kongponents/dist/style.css'
-import CopyUuid from '@kong-ui-public/copy-uuid'
-import '@kong-ui-public/copy-uuid/dist/style.css'
 
 const app = createApp(App)
 
@@ -45,7 +43,6 @@ const init = async () => {
   })
 
   app.use(Kongponents)
-  app.use(CopyUuid)
 
   app.use(router)
 
