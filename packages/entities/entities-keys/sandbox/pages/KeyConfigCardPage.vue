@@ -3,7 +3,6 @@
   <KeyConfigCard
     :config="konnectConfig"
     :key-set-id="keySetId"
-    @copy:success="onCopy"
     @fetch:error="onError"
     @fetch:success="onSuccess"
   />
@@ -12,7 +11,6 @@
   <KeyConfigCard
     :config="kongManagerConfig"
     :key-set-id="keySetId"
-    @copy:success="onCopy"
     @fetch:error="onError"
     @fetch:success="onSuccess"
   />
@@ -61,8 +59,5 @@ const onError = (error: AxiosError) => {
 }
 const onSuccess = (payload: Record<string, any>) => {
   console.log('fetch:success', payload)
-}
-const onCopy = (payload: Record<string, any>) => {
-  console.log('copy:success', payload)
 }
 </script>

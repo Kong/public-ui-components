@@ -67,6 +67,12 @@ A table component for keys.
     - default: `null`
     - Current key set id if the KeyList in nested in the keys tab on a key set detail page.
 
+  - `additionMessageForEmptyState`:
+    - type: `string`
+    - required: `false`
+    - default: `undefined`
+    - Additional message to show when there are no records.
+
   - `workspace`:
     - type: `string`
     - required: `true`

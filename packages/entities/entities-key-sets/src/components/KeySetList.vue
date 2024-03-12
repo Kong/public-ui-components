@@ -453,7 +453,7 @@ watch(fetcherState, (state) => {
 const emptyStateOptions = ref<EmptyStateOptions>({
   ctaPath: props.config.createRoute,
   ctaText: undefined,
-  message: t('keySets.list.empty_state.description'),
+  message: `${t('keySets.list.empty_state.description')}${props.config.additionMessageForEmptyState ? ` ${props.config.additionMessageForEmptyState}` : ''}`,
   title: t('keySets.title'),
 })
 

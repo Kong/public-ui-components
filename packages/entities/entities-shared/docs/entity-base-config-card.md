@@ -213,14 +213,6 @@ A `@fetch:success` event is emitted when the GET of the entity succeeded. The ev
 
 A `@fetch:error` event is emitted when the GET of the entity failed. The event payload is the AxiosError.
 
-#### copy:success
-
-A `@copy:success` event is emitted when the 'Copy JSON' action in the top right corner is clicked. The event payload is the entity item data object.
-
-#### copy:error
-
-A `@copy:error` event is emitted when the 'Copy JSON' action in the top right corner is clicked and fails.
-
 ### Slots
 
 #### title

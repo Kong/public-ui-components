@@ -3,14 +3,12 @@
     <h2>Konnect API</h2>
     <UpstreamsConfigCard
       :config="konnectConfig"
-      @copy:success="onCopy"
       @fetch:error="onError"
       @fetch:success="onSuccess"
     />
     <h2>Kong Manager API</h2>
     <UpstreamsConfigCard
       :config="kongManagerConfig"
-      @copy:success="onCopy"
       @fetch:error="onError"
       @fetch:success="onSuccess"
     />
@@ -47,8 +45,5 @@ const onError = (error: AxiosError) => {
 }
 const onSuccess = (payload: Record<string, any>) => {
   console.log('fetch:success', payload)
-}
-const onCopy = (payload: Record<string, any>) => {
-  console.log('copy:success', payload)
 }
 </script>

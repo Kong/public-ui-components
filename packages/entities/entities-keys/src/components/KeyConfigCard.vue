@@ -6,7 +6,6 @@
       :config-schema="configSchema"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
-      @copy:success="(entity: any) => $emit('copy:success', entity)"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
       @fetch:success="handleSuccess"
       @loading="(val: boolean) => $emit('loading', val)"
@@ -82,7 +81,6 @@ const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'fetch:error', error: AxiosError): void,
   (e: 'fetch:success', data: Record<string, any>): void,
-  (e: 'copy:success', data: Record<string, any>): void,
   (e: 'navigation-click', id: string, entityType: string): void,
 }>()
 

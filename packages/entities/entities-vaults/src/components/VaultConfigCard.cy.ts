@@ -73,24 +73,5 @@ describe('<VaultConfigCard/>', () => {
 
       cy.get('@onSuccess').should('have.been.calledWith', { message: 'text' })
     })
-
-    it('emits copy:success event when EntityBaseConfigCard emits copy:success event', () => {
-      interceptGetVault()
-
-      cy.mount(VaultConfigCard, {
-        props: {
-          config: konnectCardConfig,
-          'onCopy:success': cy.spy().as('onCopy'),
-        },
-      }).then(({ wrapper }) => wrapper)
-        .as('vueWrapper')
-
-      cy.wait('@getVault')
-
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseConfigCard)
-        .vm.$emit('copy:success', { message: 'text' }))
-
-      cy.get('@onCopy').should('have.been.calledWith', { message: 'text' })
-    })
   })
 })

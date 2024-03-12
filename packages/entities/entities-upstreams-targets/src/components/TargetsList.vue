@@ -433,7 +433,7 @@ watch(fetcherState, (state) => {
 // IMPORTANT: you must initialize this object assuming the user does **NOT** have create permissions so that the onBeforeMount hook can properly evaluate the props.canCreate function.
 const emptyStateOptions = ref<EmptyStateOptions>({
   ctaText: undefined,
-  message: t('targets.list.empty_state.description'),
+  message: `${t('targets.list.empty_state.description')}${props.config.additionMessageForEmptyState ? ` ${props.config.additionMessageForEmptyState}` : ''}`,
   title: t('targets.title'),
   ...(props.config.createRoute && {
     // If `createRoute` provided in config, add a `ctaPath` to empty state CTA button so it becomes a link

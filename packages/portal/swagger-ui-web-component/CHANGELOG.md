@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.10.19...@kong-ui-public/swagger-ui-web-component@0.10.20) (2024-03-12)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#1223](https://github.com/Kong/public-ui-components/issues/1223)) ([e840e88](https://github.com/Kong/public-ui-components/commit/e840e88816751daaf5a239c60518b16243c1021f))
+
+
+
+
+
 ## [0.10.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.10.18...@kong-ui-public/swagger-ui-web-component@0.10.19) (2024-03-05)
 
 **Note:** Version bump only for package @kong-ui-public/swagger-ui-web-component
