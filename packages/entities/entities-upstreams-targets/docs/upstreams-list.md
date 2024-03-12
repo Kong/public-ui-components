@@ -84,7 +84,7 @@ A table component for upstreams.
     - type: `boolean`
     - required: `false`
     - default: `undefined`
-    - *Specific to Kong Manager*. Whether to use exact match.
+    - Whether to use exact match.
 
   - `disableSorting`:
     - type: `boolean`
