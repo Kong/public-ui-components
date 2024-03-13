@@ -89,6 +89,13 @@ export const useSchemas = (entityId?: string, app?: 'konnect' | 'kongManager') =
       ...vaultAuthSchema,
     },
 
+    'oas-validation': {
+      'config-api_spec': {
+        type: 'textArea',
+        rows: 15,
+      },
+    },
+
     mocking: {
       ...mockingSchema,
     },

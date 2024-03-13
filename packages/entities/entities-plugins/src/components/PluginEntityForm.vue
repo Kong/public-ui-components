@@ -663,6 +663,10 @@ onBeforeMount(() => {
       margin-bottom: $kui-space-0;
     }
 
+    .form-group.field-textArea textarea {
+      resize: vertical;
+    }
+
     .hint {
       font-size: $kui-font-size-20;
       margin-bottom: 10px;
