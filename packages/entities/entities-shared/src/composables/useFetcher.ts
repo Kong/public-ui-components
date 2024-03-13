@@ -10,6 +10,7 @@ import type {
 import { FetcherStatus } from '../types'
 import useAxios from './useAxios'
 import useFetchUrlBuilder from './useFetchUrlBuilder'
+import type { AxiosRequestConfig } from 'axios'
 
 export default function useFetcher(
   config: KonnectBaseTableConfig | KongManagerBaseTableConfig,
@@ -21,12 +22,17 @@ export default function useFetcher(
    * { data: [{ ... }] }
    */
   dataKeyName = 'data',
+  /** @param {AxiosRequestConfig} An optional configuration object for the underlying Axios request. Defaults to an empty object. */
+  axiosRequestConfig: AxiosRequestConfig = {},
 ) {
   const _baseUrl = unref(baseUrl)
 
+  // Combine any config.requestHeaders with the optional axiosRequestConfig.headers
+
   // Is this reactive?
   const { axiosInstance } = useAxios({
-    headers: config.requestHeaders,
+    ...axiosRequestConfig,
+    ...{ headers: { ...axiosRequestConfig.headers, ...config.requestHeaders } },
   })
 
   const buildFetchUrl = useFetchUrlBuilder(config, _baseUrl)
