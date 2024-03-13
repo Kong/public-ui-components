@@ -56,10 +56,10 @@ describe('<EntityFilter />', () => {
       })
 
       cy.get('.kong-ui-entity-filter [data-testid="filter-button"]').click()
-      cy.get('.k-menu .menu-button').eq(0).click()
-      cy.get('.k-menu #filter-name').type('testName')
+      cy.get('.kong-ui-entity-filter-menu .kong-ui-entity-filter-menu-item').eq(0).click()
+      cy.get('.kong-ui-entity-filter-menu #filter-name').type('testName')
       // eslint-disable-next-line cypress/unsafe-to-chain-command
-      cy.get('.k-menu [data-testid="apply-filter"]').eq(0).click().then(() => {
+      cy.get('.kong-ui-entity-filter-menu [data-testid="apply-filter"]').eq(0).click().then(() => {
         // Check for emitted event
         cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'update:modelValue').then((evt) => {
           // Verify emit payload
@@ -77,12 +77,12 @@ describe('<EntityFilter />', () => {
       })
 
       cy.get('.kong-ui-entity-filter [data-testid="filter-button"]').click()
-      cy.get('.k-menu .menu-button').eq(0).click()
-      cy.get('.k-menu #filter-name').type('testName')
-      cy.get('.k-menu .menu-button').eq(2).click()
-      cy.get('.k-menu #filter-methods').type('GET')
+      cy.get('.kong-ui-entity-filter-menu .kong-ui-entity-filter-menu-item').eq(0).click()
+      cy.get('.kong-ui-entity-filter-menu #filter-name').type('testName')
+      cy.get('.kong-ui-entity-filter-menu .kong-ui-entity-filter-menu-item').eq(2).click()
+      cy.get('.kong-ui-entity-filter-menu #filter-methods').type('GET')
       // eslint-disable-next-line cypress/unsafe-to-chain-command
-      cy.get('.k-menu [data-testid="clear-filter"]').eq(0).click().then(() => {
+      cy.get('.kong-ui-entity-filter-menu [data-testid="clear-filter"]').eq(0).click().then(() => {
         // Check for emitted event
         cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'update:modelValue').then((evt) => {
           // Verify emit payload
@@ -100,12 +100,12 @@ describe('<EntityFilter />', () => {
       })
 
       cy.get('.kong-ui-entity-filter [data-testid="filter-button"]').click()
-      cy.get('.k-menu .menu-button').eq(0).click()
-      cy.get('.k-menu #filter-name').type('testName')
-      cy.get('.k-menu .menu-button').eq(2).click()
-      cy.get('.k-menu #filter-methods').type('GET')
+      cy.get('.kong-ui-entity-filter-menu .kong-ui-entity-filter-menu-item').eq(0).click()
+      cy.get('.kong-ui-entity-filter-menu #filter-name').type('testName')
+      cy.get('.kong-ui-entity-filter-menu .kong-ui-entity-filter-menu-item').eq(2).click()
+      cy.get('.kong-ui-entity-filter-menu #filter-methods').type('GET')
       // eslint-disable-next-line cypress/unsafe-to-chain-command
-      cy.get('.k-menu .clear-cta-button .k-button').click().then(() => {
+      cy.get('.kong-ui-entity-filter-menu .filter-clear-button-container .k-button').click().then(() => {
         // Check for emitted event
         cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'update:modelValue').then((evt) => {
           // Verify emit payload
