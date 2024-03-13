@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@2.4.4...@kong-ui-public/entities-upstreams-targets@2.4.5) (2024-03-13)
+
+
+### Bug Fixes
+
+* **upstream-list:** use exact match search on upstream list [KHCP-11054] ([#1230](https://github.com/Kong/public-ui-components/issues/1230)) ([d7266c3](https://github.com/Kong/public-ui-components/commit/d7266c38c4260eb78bf2b721e3d9f21a92cc4529))
+
+
+
+
+
 ## [2.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@2.4.3...@kong-ui-public/entities-upstreams-targets@2.4.4) (2024-03-13)
 
 **Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
