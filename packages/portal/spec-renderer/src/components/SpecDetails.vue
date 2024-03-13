@@ -76,6 +76,10 @@ const { i18n } = composables.useI18n()
 
 const swaggerRef = ref<SwaggerUIElement | null>(null)
 
+defineExpose({
+  swaggerInstance: swaggerRef,
+})
+
 const hasRequiredProps = computed((): boolean => {
   return !!(props.document || props.url)
 })
