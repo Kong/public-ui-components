@@ -6,3 +6,46 @@
 .swagger-ui .wrapper {
   padding-top: 0;
 }
+
+.swagger-ui .opblock {
+  background: none !important;
+}
+
+/* Note: stylelint-disable-next-line added below as were using Portal variables (NOT design tokens) */
+
+.swagger-ui .json-schema-2020-12-accordion,
+.swagger-ui .json-schema-2020-12-expand-deep-button {
+  /* stylelint-disable-next-line custom-property-pattern*/
+  background-color: unset !important;
+}
+
+.swagger-ui .json-schema-2020-12-accordion__icon,
+.swagger-ui .json-schema-2020-12-accordion__icon--collapsed,
+.swagger-ui .json-schema-2020-12-accordion__icon--expanded {
+  /* stylelint-disable-next-line custom-property-pattern*/
+  color: var(--text_colors-primary) !important;
+}
+
+.swagger-ui .json-schema-2020-12-accordion__icon svg {
+  fill: currentColor !important;
+}
+
+.swagger-ui .json-schema-2020-12__attribute--primary {
+  /* stylelint-disable-next-line custom-property-pattern*/
+  color: var(--text_colors-primary) !important;
+}
+
+.swagger-ui .json-schema-2020-12-property .json-schema-2020-12__title {
+  /* stylelint-disable-next-line custom-property-pattern*/
+  color: var(--text_colors-primary) !important;
+}
+
+.swagger-ui .json-schema-2020-12-keyword__name--secondary {
+  /* stylelint-disable-next-line custom-property-pattern*/
+  color: var(--text_colors-primary) !important;
+} 
+
+.swagger-ui .json-schema-2020-12-expand-deep-button {
+  /* stylelint-disable-next-line custom-property-pattern*/
+  color: var(--text_colors-primary) !important;
+}

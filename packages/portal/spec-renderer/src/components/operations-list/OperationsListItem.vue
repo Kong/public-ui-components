@@ -19,7 +19,7 @@
     </h2>
     <div class="details">
       <KBadge
-        appearance="custom"
+        :appearance="methodName"
         :aria-label="i18n.t('specOperationsList.item.methodAriaLabel', { method: methodName.toUpperCase() })"
         background-color="var(--kong-ui-spec-renderer-operations-list-item-method-background)"
         class="method-badge"
@@ -94,7 +94,7 @@ const methodName = computed((): string => {
   }
 
   &:hover {
-    background: var(--kong-ui-spec-renderer-operations-list-item-background-hover, $kui-color-background-inverse);
+    background: var(--kong-ui-spec-renderer-operations-list-item-background-hover, $kui-color-background-neutral-weakest);
 
     .summary, .path {
       color: var(--kong-ui-spec-renderer-operations-list-item-summary-text-color-hover, $kui-color-text);

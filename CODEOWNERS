@@ -37,7 +37,7 @@
 # Portal packages
 /packages/portal/document-viewer/ @Kong/team-devx
 /packages/portal/spec-renderer/ @Kong/team-devx
-/packages/portal/swagger-ui-web-component/ @adamdehaven @davidma415 @kaiarrowood
+/packages/portal/swagger-ui-web-component/ @adamdehaven @davidma415 @kaiarrowood @mptap
 
 # Analytics packages
 /packages/analytics/analytics-chart @Kong/team-data

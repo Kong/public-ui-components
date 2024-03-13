@@ -14,6 +14,7 @@ describe('<SpecDetails />', () => {
 
     cy.getTestId('kong-public-ui-spec-details-swagger').should('be.visible')
     cy.getTestId('default-styles').should('exist')
+    cy.getTestId('swagger-ui-styles').should('exist')
   })
 
   it('renders custom styles for swagger-ui for props: hasSidebar', () => {
