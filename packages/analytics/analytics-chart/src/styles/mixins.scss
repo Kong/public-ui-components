@@ -15,3 +15,42 @@
     border-radius: 10px;
   }
 }
+
+@mixin legendAsGrid($max-height) {
+  column-gap: $kui-space-50;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 12ch);
+  margin-top: $kui-space-30;
+  max-height: $max-height;
+  max-width: 99% !important;
+  row-gap: $kui-space-20;
+  width: 99%;
+
+  .label-container {
+    .label {
+      line-height: $kui-line-height-10;
+    }
+
+    .sub-label {
+      display: none;
+    }
+  }
+  
+
+  .truncate-label {
+    max-width: 20ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  li {
+    align-items: center;
+    margin-top: 0;
+
+    .label {
+      line-height: $kui-line-height-40;
+      white-space: nowrap;
+    }
+  }
+}

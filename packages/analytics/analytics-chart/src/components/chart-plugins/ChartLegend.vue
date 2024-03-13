@@ -13,7 +13,7 @@
       @click="handleLegendItemClick(datasetIndex, index)"
     >
       <div
-        class="legend"
+        class="square-marker"
         :style="{ background: fillStyle, 'border-color': strokeStyle }"
       />
       <div
@@ -42,7 +42,7 @@
 import { ChartLegendPosition } from '../../enums'
 import { Chart, type LegendItem } from 'chart.js'
 import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType, computed } from 'vue'
-import { KUI_SPACE_100, KUI_SPACE_80, KUI_SPACE_110 } from '@kong/design-tokens'
+import { KUI_SPACE_100, KUI_SPACE_80 } from '@kong/design-tokens'
 import { debounce } from '../../utils'
 
 const props = defineProps({
@@ -66,43 +66,11 @@ const legendItemsRef = ref<HTMLElement[]>([])
 const showValues = inject('showLegendValues', true)
 const position = inject('legendPosition', ref(ChartLegendPosition.Right))
 const legendItemsTracker = ref<LegendItem[]>([])
-const legendHeight = ref<string>(KUI_SPACE_80)
-
-// Check if the legend wraps by comparing the top position of each item.
-const doesTheLegendWrap = () => {
-  const element = legendContainerRef.value
-  if (!element || !legendItemsRef.value || element.children.length === 0) {
-    return 0
-  }
-
-  const previousTop = element.children[0].getBoundingClientRect().top
-  for (const item of legendItemsRef.value) {
-    const currentTop = item.getBoundingClientRect().top
-    // If the top position of the current item is
-    // different from the previous item, that means
-    // there is a new row.
-    if (currentTop > previousTop) {
-      return true
-    }
-  }
-  return false
-}
+const legendMaxHeight = ref<string>(KUI_SPACE_80)
 
 const shouldTruncate = computed(() => {
   return props.items.length > 2 || position.value === ChartLegendPosition.Right
 })
-
-const checkForWrap = () => {
-  if (legendContainerRef.value && position.value === ChartLegendPosition.Bottom) {
-    if (doesTheLegendWrap()) {
-      // Allow for two rows of legend items
-      legendHeight.value = KUI_SPACE_110
-    } else {
-      // Only need space for one row of legend items
-      legendHeight.value = KUI_SPACE_80
-    }
-  }
-}
 
 // Set the grid-template-columns style based on the width of the widest item
 const formatGrid = () => {
@@ -122,8 +90,6 @@ const formatGrid = () => {
     const padding = parseInt(KUI_SPACE_100, 10)
     legendContainerRef.value.style.gridTemplateColumns = `repeat(auto-fit, ${maxWidth + padding}px)`
   }
-
-  checkForWrap()
 }
 
 const legendItemsChanged = () => {
@@ -224,8 +190,8 @@ const isDatasetVisible = (datasetIndex: number = 0, segmentIndex: number): boole
 
 const positionToClass = (position: `${ChartLegendPosition}`) => {
   return {
-    [ChartLegendPosition.Right]: 'vertical',
-    [ChartLegendPosition.Bottom]: 'horizontal',
+    [ChartLegendPosition.Right]: 'right',
+    [ChartLegendPosition.Bottom]: 'bottom',
     [ChartLegendPosition.Hidden]: 'hidden',
   }[position]
 }
@@ -233,25 +199,26 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 
 <style lang="scss" scoped>
 @import '../../styles/base';
-.legend-container {
+
+ul.legend-container {
+  background: rgba(0,0,0, 0.02);
+  border-radius: 6px;
   display: flex;
-  margin: $kui-space-30 0 0 0;
+  margin: 0;
   max-height: inherit;
   -ms-overflow-style: thin;
   overflow-x: hidden;
   overflow-y: auto;
-  padding-left: 0;
+  padding: $kui-space-30;
 
   @include scrollbarBase;
 
-  &.vertical {
+  &.right {
     flex-direction: column;
     justify-content: flex-start;
     max-height: 90%;
-    max-width: 15%;
-    min-width: 10%;
-    padding-left: $kui-space-50;
-    row-gap: $kui-space-60;
+    min-width: 15%;
+    row-gap: $kui-space-40;
 
     .truncate-label {
       max-width: 12ch;
@@ -260,49 +227,15 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
       white-space: nowrap;
     }
 
-    li {
-      // Legend on right side of chart allows for two lines of text
-      .legend {
-        margin-top: $kui-space-20;
-      }
-    }
-
     // Allow legend to expand horizontally at lower resolutions
     @media (max-width: ($kui-breakpoint-phablet - 1px)) {
-      column-gap: $kui-space-50;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, 12ch);
-      height: 40px;
-      justify-content: center;
-      max-width: 99% !important;
-
-      .sub-label {
-        display: none;
-      }
+      @include legendAsGrid(v-bind('legendMaxHeight'));
     }
   }
 
-  &.horizontal {
-    column-gap: $kui-space-50;
-    display: grid;
-    height: v-bind('legendHeight');
-    justify-content: center;  // Legend below chart only allows one line of text
-    width: 99%;
-    .truncate-label {
-      max-width: 20ch;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    li {
-      align-items: center;
-      margin-top: 0;
-      .label {
-        line-height: $kui-line-height-40;
-        white-space: nowrap;
-      }
-    }
+  &.bottom {
+    height: auto;
+    @include legendAsGrid(v-bind('legendMaxHeight'));
   }
 
   // Individual legend item
@@ -313,10 +246,10 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     line-height: 1;
 
     // Color bar preceding label
-    .legend {
-      flex: 0 0 14px;
-      height: 3px;
-      margin-right: $kui-space-30;
+    .square-marker {
+      height: 8px;
+      margin: $kui-space-10 $kui-space-30 0 0;
+      width: 8px;
     }
 
     .label {
