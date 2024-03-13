@@ -392,7 +392,7 @@ const fetchEntityPluginsUrl = computed((): string => {
 })
 
 const onTabsChange = (hash: string) => {
-  router.replace({ hash })
+  router.replace({ hash, query: route.query })
 }
 
 // race condition between fetch of available plugins and setting
