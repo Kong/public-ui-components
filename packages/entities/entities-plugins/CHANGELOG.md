@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.13.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.13.6...@kong-ui-public/entities-plugins@2.13.7) (2024-03-13)
+
+
+### Bug Fixes
+
+* **plugins:** persist query params on tab change [khcp-11068] ([#1236](https://github.com/Kong/public-ui-components/issues/1236)) ([8a0597d](https://github.com/Kong/public-ui-components/commit/8a0597de3dd688000e593a9fbef8a7cfbb4b532a))
+
+
+
+
+
 ## [2.13.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.13.5...@kong-ui-public/entities-plugins@2.13.6) (2024-03-13)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
