@@ -17,6 +17,7 @@ import type { AIPromptTemplateSchema } from './plugins/ai-prompt-template'
 import type { VaultAuthSchema } from './plugins/vault-auth'
 import type { GraphQLRateLimitingAdvancedSchema } from './plugins/graphql-rate-limiting-advanced'
 import type { SAMLSchema } from './plugins/saml'
+import type { OasValidationSchema } from './plugins/oas-validation'
 
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
@@ -209,4 +210,5 @@ export interface CustomSchemas {
   'request-validator': CommonSchemaFields & Record<string, any>
   zipkin: CommonSchemaFields & Record<string, any>
   saml: SAMLSchema
+  'oas-validation': OasValidationSchema
 }
