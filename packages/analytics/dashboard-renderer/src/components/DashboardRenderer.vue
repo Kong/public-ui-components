@@ -12,7 +12,7 @@
       :tile-height="config.tileHeight"
       :tiles="gridTiles"
     >
-      <template #tile="{ tile, style }">
+      <template #tile="{ tile }">
         <div
           v-if="tile.meta.chart.type === ChartTypes.Slottable"
           class="tile-container"
@@ -24,7 +24,7 @@
           class="tile-container"
           :context="mergedContext"
           :definition="tile.meta"
-          :height="parseInt(style.height)"
+          :height="tile.layout.size.rows * (config.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
         />
       </template>
     </GridLayout>
@@ -39,7 +39,8 @@ import { computed, inject } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
 import type { AnalyticsBridge } from '@kong-ui-public/analytics-utilities'
-import { INJECT_QUERY_PROVIDER } from '../constants'
+import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER } from '../constants'
+import { KUI_SPACE_70 } from '@kong/design-tokens'
 
 const props = defineProps<{
   context: DashboardRendererContext,

@@ -25,9 +25,6 @@
 import { computed, type PropType, ref, onMounted, onUnmounted } from 'vue'
 import type { GridSize, Cell, GridTile } from 'src/types'
 import { DEFAULT_TILE_HEIGHT } from '../../constants'
-import { KUI_SPACE_70 } from '@kong/design-tokens'
-
-const GAP_SIZE = parseInt(KUI_SPACE_70)
 
 const props = defineProps({
   gridSize: {
@@ -66,73 +63,30 @@ onUnmounted(() => {
   }
 })
 
-const tileWidth = computed(() => {
-  return (containerWidth.value / props.gridSize.cols) - GAP_SIZE
-})
-
-const tilesPerRow = computed(() => {
-  const count = new Array(props.gridSize.rows).fill(0) // Initialize an array to hold the count of tiles per row
-
-  props.tiles.forEach(tile => {
-    const rowIndex = tile.layout.position.row // Assuming rows are zero-indexed
-    count[rowIndex]++
-  })
-
-  return count
-})
-
 const gridCells = computed<Cell<T>[]>(() => {
-  const rowTileCounts: number[] = []
   return props.tiles.map((tile, i) => {
-    const row = tile.layout.position.row
-
-    // If this row hasn't been encountered yet, initialize its count
-    if (!rowTileCounts[row]) {
-      rowTileCounts[row] = 0
-    }
-
-    // Increment the tile count for this row to determine the tile's ordinal position
-    rowTileCounts[row]++
-
-    // This is the tile's nth position in its row
-    const nthPosition = rowTileCounts[row]
-    // Position elements based on their grid position and dimensions.
-    let translateX = tile.layout.position.col * (tileWidth.value + GAP_SIZE)
-    if (tile.layout.position.col > 0) {
-      translateX += (GAP_SIZE / tilesPerRow.value[tile.layout.position.row]) * (nthPosition - 1)
-    }
-    const translateY = tile.layout.position.row * (props.tileHeight + GAP_SIZE)
-    // Size tiles based on their dimensions and cell span.
-    const width = tile.layout.size.cols * tileWidth.value + (GAP_SIZE * (tile.layout.size.cols - 1)) + (GAP_SIZE / tilesPerRow.value[tile.layout.position.row]) - 1
-    const height = tile.layout.size.rows * props.tileHeight + (GAP_SIZE * (tile.layout.size.rows - 1))
-
     return {
       key: `tile-${i}`,
       tile,
       style: {
-        transform: `translate(${translateX}px, ${translateY}px)`,
-        width: `${width}px`,
-        height: `${height}px`,
+        'grid-column-start': tile.layout.position.col + 1,
+        'grid-column-end': tile.layout.position.col + 1 + tile.layout.size.cols,
+        'grid-row-start': tile.layout.position.row + 1,
+        'grid-row-end': tile.layout.position.row + 1 + tile.layout.size.rows,
       },
     }
   })
-})
-
-const gridHeight = computed(() => {
-  // get the tile with the highest row and add its height
-  const highestRow = Math.max(...props.tiles.map(tile => tile.layout.position.row + tile.layout.size.rows))
-  return highestRow * props.tileHeight + (GAP_SIZE * props.gridSize.rows)
 })
 
 </script>
 
 <style lang="scss" scoped>
 .kong-ui-public-grid-layout {
-  height: v-bind('`${gridHeight}px`');
+  display: grid;
+  gap: $kui-space-70;
+  grid-template-columns: repeat(v-bind('gridSize.cols'), 1fr);
+  grid-template-rows: repeat(v-bind('gridSize.rows'), v-bind('`${tileHeight}px`'));
   width: 100%;
-}
-.grid-cell {
-  position: absolute;
 }
 
 @media (max-width: $kui-breakpoint-phablet) {

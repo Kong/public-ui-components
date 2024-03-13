@@ -24,8 +24,9 @@ export interface Cell<T> {
   key: string
   tile: GridTile<T>
   style: {
-    width: string,
-    height: string,
-    transform: string,
+    'grid-column-start': number
+    'grid-column-end': number
+    'grid-row-start': number
+    'grid-row-end': number
   }
 }
