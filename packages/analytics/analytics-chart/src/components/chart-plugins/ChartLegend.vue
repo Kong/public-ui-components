@@ -42,7 +42,7 @@
 import { ChartLegendPosition } from '../../enums'
 import { Chart, type LegendItem } from 'chart.js'
 import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType, computed } from 'vue'
-import { KUI_SPACE_100, KUI_SPACE_80 } from '@kong/design-tokens'
+import { KUI_SPACE_100 } from '@kong/design-tokens'
 import { debounce } from '../../utils'
 
 const props = defineProps({
@@ -66,7 +66,7 @@ const legendItemsRef = ref<HTMLElement[]>([])
 const showValues = inject('showLegendValues', true)
 const position = inject('legendPosition', ref(ChartLegendPosition.Right))
 const legendItemsTracker = ref<LegendItem[]>([])
-const legendMaxHeight = ref<string>(KUI_SPACE_80)
+const legendMaxHeight = ref<string>(KUI_SPACE_100)
 
 const shouldTruncate = computed(() => {
   return props.items.length > 2 || position.value === ChartLegendPosition.Right
@@ -201,7 +201,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 @import '../../styles/base';
 
 ul.legend-container {
-  background: rgba(0,0,0, 0.02);
+  background: rgba(0,0,0, 0.03);
   border-radius: 6px;
   display: flex;
   margin: 0;
@@ -209,13 +209,14 @@ ul.legend-container {
   -ms-overflow-style: thin;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: $kui-space-30;
+  padding: $kui-space-50;
 
   @include scrollbarBase;
 
   &.right {
     flex-direction: column;
     justify-content: flex-start;
+    margin-left: $kui-space-30;
     max-height: 90%;
     min-width: 15%;
     row-gap: $kui-space-40;
