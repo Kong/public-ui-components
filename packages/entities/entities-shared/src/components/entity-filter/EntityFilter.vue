@@ -48,7 +48,10 @@
           <span
             class="menu-item-title"
             :class="{ expanded: expandedFields.has(field.value) }"
+            role="button"
+            tabindex="0"
             @click="toggleExpanded(field.value)"
+            @keydown.enter="toggleExpanded(field.value)"
           >
             {{ field.label }}
             <span
