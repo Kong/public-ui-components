@@ -33,12 +33,15 @@ export default function useFetchUrlBuilder(
     try {
       let urlWithParams: URL = new URL(baseRequestUrl.value.href)
       if (isExactMatch.value && query) {
-        // Using exact match
+        // handle
+        // 1) all konnect usage or
+        // 2) kongManager usage with _config.value.isExactMatch === true
         urlWithParams.search = '' // trim any query params
-        urlWithParams = _config.value.app === 'konnect'
-          ? new URL(`${urlWithParams.href}?filter[name][contains]=${query}`)
-          : new URL(`${urlWithParams.href}/${query}/`)
+        urlWithParams = _config.value.isExactMatch
+          ? new URL(`${urlWithParams.href}/${query}/`)
+          : new URL(`${urlWithParams.href}?filter[name][contains]=${query}`)
       } else {
+        // handle kongManager usage with _config.value.isExactMatch === false
         if (!isExactMatch.value) {
           // Using fuzzy match
           new URLSearchParams(query).forEach((value, key) => {
