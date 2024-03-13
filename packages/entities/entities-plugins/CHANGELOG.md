@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.13.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.13.2...@kong-ui-public/entities-plugins@2.13.3) (2024-03-13)
+
+
+### Bug Fixes
+
+* **entities-plugins:** spec input for OAS ([#1232](https://github.com/Kong/public-ui-components/issues/1232)) ([39c8ed8](https://github.com/Kong/public-ui-components/commit/39c8ed88b1ffcf9598a1437304c80dd0efcb02ea))
+
+
+
+
+
 ## [2.13.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.13.1...@kong-ui-public/entities-plugins@2.13.2) (2024-03-12)
 
 
