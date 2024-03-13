@@ -218,7 +218,7 @@ ul.legend-container {
     justify-content: flex-start;
     margin-left: $kui-space-30;
     max-height: 90%;
-    min-width: 15%;
+    min-width: 16%;
     row-gap: $kui-space-40;
 
     .truncate-label {
