@@ -1,5 +1,5 @@
 import type { ExploreResultV4, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
-import { defaultLineOptions, darkenColor, lookupDatavisColor, datavisPalette, BORDER_WIDTH, NO_BORDER } from '../utils'
+import { defaultLineOptions, lookupDatavisColor, datavisPalette, BORDER_WIDTH, NO_BORDER } from '../utils'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 import type { Dataset, KChartData, ExploreToDatasetDeps, DatasetLabel } from '../types'
@@ -158,8 +158,6 @@ export default function useExploreResultToTimeDataset(
             ? lookupDatavisColor(i, colorPalette)
             : colorPalette[dimension] || lookupDatavisColor(i) // fallback to default datavis palette if no color found
 
-          const borderColor = darkenColor(baseColor, 50)
-
           colorMap[dimension] = baseColor
 
           return {
@@ -167,7 +165,7 @@ export default function useExploreResultToTimeDataset(
             rawMetric: metric,
             // @ts-ignore - dynamic i18n key
             label: (i18n && i18n.te(`chartLabels.${dimension}`) && i18n.t(`chartLabels.${dimension}`)) || dimension,
-            borderColor,
+            borderColor: baseColor,
             backgroundColor: baseColor,
             data: filled,
             total: filled.reduce((acc, { y }) => acc + Number(y), 0),
