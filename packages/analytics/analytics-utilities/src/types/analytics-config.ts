@@ -39,8 +39,8 @@ export interface ApiAnalyticsV2 {
 export interface ApiRequestsV2 {
   retention_ms: RequestsRetentionMs
 }
+
 export interface AnalyticsConfigV2 {
-  analytics: null | ApiAnalyticsV2
+  analytics: null | ApiAnalyticsV2,
   requests: null | ApiRequestsV2
 }
-
