@@ -31,28 +31,16 @@ export type AnalyticsConfig = AnalyticsConfigNoAnalytics | AnalyticsConfigEnable
 export interface ControlPlaneConfig {
   analytics: boolean
 }
-
-export interface AnalyticsConfigNoAnalyticsV2 {
-  analytics: null,
-  requests: null
+export interface ApiAnalyticsV2 {
+  percentiles: boolean,
+  retention_ms: AnalyticsRetentionMs
 }
 
-export interface AnalyticsConfigBasicV2 {
-  analytics: {
-    percentiles: false,
-    retention_ms: 86400000
-  },
-  requests: null
+export interface ApiRequestsV2 {
+  retention_ms: RequestsRetentionMs
+}
+export interface AnalyticsConfigV2 {
+  analytics: null | ApiAnalyticsV2
+  requests: null | ApiRequestsV2
 }
 
-export interface AnalyticsConfigAdvancedV2 {
-  analytics: {
-    percentiles: true,
-    retention_ms: AnalyticsRetentionMs
-  },
-  requests: {
-    retention_ms: RequestsRetentionMs
-  }
-}
-
-export type AnalyticsConfigV2 = AnalyticsConfigNoAnalyticsV2 | AnalyticsConfigBasicV2 | AnalyticsConfigAdvancedV2
