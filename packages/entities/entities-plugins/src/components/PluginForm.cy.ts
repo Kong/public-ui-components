@@ -220,7 +220,7 @@ describe('<PluginForm />', () => {
       cy.get('#config-private_network').should('be.visible')
     })
 
-    it.only('should show common, required, and advanced fields when groupFields is true', () => {
+    it('should show common, required, and advanced fields when groupFields is true', () => {
       interceptKMSchema({ mockData: schema2 })
 
       cy.mount(PluginForm, {
