@@ -35,6 +35,8 @@ export interface BasePluginFormConfig {
   entityId?: string
   /** Whether to hide the consumer group scope field. For Kong Manager OSS, this is true */
   disableConsumerGroupScope?: boolean
+  /** Whether to enable grouping for required and advanced (optional) fields. Default: false */
+  groupFields?: boolean
 }
 
 export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig {}

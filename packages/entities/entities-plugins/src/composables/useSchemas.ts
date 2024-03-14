@@ -1,35 +1,68 @@
-import type { CustomSchemas } from '../types'
 import { useStringHelpers } from '@kong-ui-public/entities-shared'
 import { customFields } from '@kong-ui-public/forms'
-import usePluginHelpers from './usePluginHelpers'
+import type { CustomSchemas } from '../types'
+import { aiPromptDecoratorSchema } from './plugin-schemas/AIPromptDecorator'
+import { aiPromptTemplateSchema } from './plugin-schemas/AIPromptTemplate'
 import { applicationRegistrationSchema } from './plugin-schemas/ApplicationRegistration'
+import { ArrayStringFieldSchema } from './plugin-schemas/ArrayStringFieldSchema'
 import { dataDogSchema } from './plugin-schemas/Datadog'
-import { statsDAdvancedSchema } from './plugin-schemas/StatsDAdvanced'
-import { kafkaSchema } from './plugin-schemas/Kafka'
+import { graphqlRateLimitingAdvancedSchema } from './plugin-schemas/GraphQLRateLimitingAdvanced'
 import { jwtSchema } from './plugin-schemas/JWT'
+import { kafkaSchema } from './plugin-schemas/Kafka'
 import { mockingSchema } from './plugin-schemas/Mocking'
 import { preFunctionSchema } from './plugin-schemas/PreFunction'
 import { rateLimitingSchema } from './plugin-schemas/RateLimiting'
 import { requestTransformerAdvancedSchema } from './plugin-schemas/RequestTransformerAdvanced'
-import { routeByHeaderSchema } from './plugin-schemas/RouteByHeader'
-import { aiPromptDecoratorSchema } from './plugin-schemas/AIPromptDecorator'
-import { aiPromptTemplateSchema } from './plugin-schemas/AIPromptTemplate'
-import { graphqlRateLimitingAdvancedSchema } from './plugin-schemas/GraphQLRateLimitingAdvanced'
-import { statsDSchema } from './plugin-schemas/StatsD'
-import { samlSchema } from './plugin-schemas/SAML'
-import { vaultAuthSchema } from './plugin-schemas/VaultAuth'
-import { ArrayStringFieldSchema } from './plugin-schemas/ArrayStringFieldSchema'
 import RequestValidatorSchema from './plugin-schemas/RequestValidator'
+import { routeByHeaderSchema } from './plugin-schemas/RouteByHeader'
+import { samlSchema } from './plugin-schemas/SAML'
+import { statsDSchema } from './plugin-schemas/StatsD'
+import { statsDAdvancedSchema } from './plugin-schemas/StatsDAdvanced'
+import { vaultAuthSchema } from './plugin-schemas/VaultAuth'
 import ZipkinSchema from './plugin-schemas/Zipkin'
 import typedefs from './plugin-schemas/typedefs'
+import useI18n from './useI18n'
+import usePluginHelpers from './usePluginHelpers'
+
+export interface Field extends Record<string, any>{
+  model: string
+  required?: boolean
+  styleClasses?: string
+}
+
+export interface Group {
+  legend?: string
+  fields?: Field[]
+  collapsible?: boolean
+  /**
+   * Whether the group is collapsed by default
+   * @default false
+   */
+  collapsedByDefault?: boolean
+}
+
+export interface Schema {
+  fields?: Field[]
+  groups?: Group[]
+}
+
+export interface UseSchemasOptions {
+  app?: 'konnect' | 'kongManager'
+  groupFields?: boolean
+}
+
+const sortFieldByOrder = (a: Field, b: Field) => (a.order ?? 0) - (b.order ?? 0)
+
+const sortFieldByOrderAndModel = (a: Field, b: Field) => sortFieldByOrder(a, b) || a.model.localeCompare(b.model)
 
 /**
  * @param entityId (optional) The id of the entity associated with the plugin
  * @returns
  */
-export const useSchemas = (entityId?: string, app?: 'konnect' | 'kongManager') => {
+export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
   const { capitalize } = useStringHelpers()
   const { convertToDotNotation } = usePluginHelpers()
+  const { i18n: { t } } = useI18n()
 
   const customSchemas: CustomSchemas = {
     'application-registration': {
@@ -104,7 +137,7 @@ export const useSchemas = (entityId?: string, app?: 'konnect' | 'kongManager') =
       ...rateLimitingSchema,
     },
 
-    'rate-limiting-advanced': app === 'kongManager'
+    'rate-limiting-advanced': options?.app === 'kongManager'
       ? {
         'config-consumer_groups': rateLimitingSchema['config-consumer_groups'],
       }
@@ -174,7 +207,7 @@ export const useSchemas = (entityId?: string, app?: 'konnect' | 'kongManager') =
 
     comparatorIdx > -1 && inputSchemaFields.splice(comparatorIdx, 1)
 
-    const formSchema = { fields: [] }
+    let formSchema: Schema = { fields: [] }
     const formModel = {}
 
     // Iterate over each schema field to augment with display configuration.
@@ -182,13 +215,67 @@ export const useSchemas = (entityId?: string, app?: 'konnect' | 'kongManager') =
       buildFormSchema(inputSchema[fieldName], fieldName, inputSchema, formModel, formSchema, frontendSchema)
     })
 
-    // Assume the fields are sorted, unless they have an `order` property
-    formSchema.fields.sort((a: Record<string, any>, b: Record<string, any>) => {
-      a.order = a.order || 0
-      b.order = b.order || 0
+    if (options?.groupFields) {
+      const commonFields = []
+      const requiredFields = []
+      const advancedFields = []
 
-      return a.order - b.order
-    })
+      for (const field of formSchema.fields!) {
+        // Fields that don't start with 'config-' are considered common fields
+        if (!field.model.startsWith('config-')) {
+          commonFields.push(field)
+          continue
+        }
+
+        if (field.required) {
+          requiredFields.push(field)
+          continue
+        }
+
+        advancedFields.push(field)
+      }
+
+      const fieldGroups: Group[] = []
+
+      if (commonFields.length > 0) {
+        fieldGroups.push({
+          legend: t('plugins.form.grouping.common_fields'),
+          fields: commonFields.sort(sortFieldByOrder),
+          collapsible: true,
+          collapsedByDefault: false,
+        })
+      }
+
+      if (requiredFields.length > 0) {
+        fieldGroups.push({
+          legend: t('plugins.form.grouping.required_fields'),
+          fields: requiredFields.sort(sortFieldByOrderAndModel),
+          collapsible: true,
+          collapsedByDefault: false,
+        })
+      }
+
+      if (advancedFields.length > 0) {
+        fieldGroups.push({
+          legend: t('plugins.form.grouping.advanced_fields'),
+          fields: advancedFields.sort(sortFieldByOrderAndModel),
+          collapsible: true,
+          collapsedByDefault: true,
+        })
+      }
+
+      formSchema = {
+        groups: fieldGroups,
+      }
+    } else {
+      // Assume the fields are sorted, unless they have an `order` property
+      formSchema.fields!.sort((a: Record<string, any>, b: Record<string, any>) => {
+        a.order = a.order || 0
+        b.order = b.order || 0
+
+        return a.order - b.order
+      })
+    }
 
     return {
       schema: formSchema,
