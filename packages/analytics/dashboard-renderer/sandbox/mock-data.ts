@@ -369,3 +369,65 @@ export const summaryDashboardConfig: DashboardConfig = {
     } as unknown as TileConfig,
   ],
 }
+
+export const routeExploreResponse: ExploreResultV4 = {
+  meta: {
+    display: {
+      route: {
+        'b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6': { name: 'GetMeAKongDefault (secondaryRuntime)', deleted: false },
+        'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:2a3e9d21-804b-4b3b-ab7e-c6f002dadbf4': { name: 'dp-mock-msg-per-sec-us-dev (default)', deleted: false },
+        'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8b1db7eb-5c3c-489c-9344-eb0b272019ca': { name: '8b1db (default)', deleted: false },
+        'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8f3f6808-a723-4793-8444-f2046961226b': { name: 'dp-mock-us-dev (default)', deleted: false },
+        'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:b4cd1c10-d77f-41b0-a84d-31fc0d99f0d9': { name: 'GetMeASongRoute (default)', deleted: false },
+      },
+    },
+    end_ms: 1692295253000,
+    granularity_ms: 300000,
+    limit: 50,
+    metric_names: [
+      'request_count',
+    ],
+    metric_units: {
+      request_count: 'count',
+    },
+    query_id: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
+    start_ms: 1692294953000,
+  },
+  data: [
+    {
+      event: {
+        request_count: 9483,
+        route: 'b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6',
+      },
+      timestamp: '2023-08-17T17:55:53.000Z',
+    },
+    {
+      event: {
+        request_count: 5587,
+        route: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:b4cd1c10-d77f-41b0-a84d-31fc0d99f0d9',
+      },
+      timestamp: '2023-08-17T17:55:53.000Z',
+    },
+    {
+      event: {
+        request_count: 5583,
+        route: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8b1db7eb-5c3c-489c-9344-eb0b272019ca',
+      },
+      timestamp: '2023-08-17T17:55:53.000Z',
+    },
+    {
+      event: {
+        request_count: 1485,
+        route: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8f3f6808-a723-4793-8444-f2046961226b',
+      },
+      timestamp: '2023-08-17T17:55:53.000Z',
+    },
+    {
+      event: {
+        request_count: 309,
+        route: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:2a3e9d21-804b-4b3b-ab7e-c6f002dadbf4',
+      },
+      timestamp: '2023-08-17T17:55:53.000Z',
+    },
+  ],
+}

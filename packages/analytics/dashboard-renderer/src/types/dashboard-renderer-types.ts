@@ -3,6 +3,9 @@ import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
 import type { ExploreFilter, ExploreQuery, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 
+export const ENTITY_ID_TOKEN = '{entity-id}'
+export const CP_ID_TOKEN = '{cp-id}'
+
 export interface DashboardRendererContext {
   filters: ExploreFilter[]
   timeSpec: TimeRangeV4

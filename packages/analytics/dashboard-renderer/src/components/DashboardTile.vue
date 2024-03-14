@@ -59,3 +59,9 @@ const componentData = computed(() => {
   }
 })
 </script>
+
+<style lang="scss" scoped>
+.tile-boundary {
+  height: v-bind('`${height}px`');
+}
+</style>

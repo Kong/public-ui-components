@@ -130,3 +130,10 @@ export interface DatasetLabel {
   name: string,
   id: string,
 }
+
+export interface TopNTableRecord {
+  id: string
+  name: string
+  deleted: boolean
+  dimension: string
+}

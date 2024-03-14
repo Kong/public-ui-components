@@ -21,13 +21,7 @@
             label: record.name,
             deleted: record.deleted
           }"
-          :external-link="generateEntityUrl([
-            '{geo}',
-            'gateway-manager',
-            '{idTuple0}',
-            'gateway-services',
-            '{idTuple1}'
-          ])"
+          :external-link="parseLink(record)"
         />
       </template>
     </TopNTable>
@@ -35,15 +29,25 @@
 </template>
 
 <script setup lang="ts">
-import type { RendererProps, TopNTableOptions } from '../types'
+import { CP_ID_TOKEN, ENTITY_ID_TOKEN, type RendererProps, type TopNTableOptions } from '../types'
 import { TopNTable } from '@kong-ui-public/analytics-chart'
-import composables from '../composables'
+import type { TopNTableRecord } from '@kong-ui-public/analytics-chart'
 import QueryDataProvider from './QueryDataProvider.vue'
+import { EntityLink } from '@kong-ui-public/entities-shared'
 
 const props = defineProps<RendererProps<TopNTableOptions>>()
 
-const generateEntityUrl = (routeParams: string[]): string => {
-  return composables.useExternalLinkCreator(routeParams)
+const parseLink = (record: TopNTableRecord) => {
+  if (props.chartOptions?.entityLink) {
+    if (record.id.includes(':')) {
+      const [cpId, entityId] = record.id.split(':')
+
+      return props.chartOptions.entityLink.replace(CP_ID_TOKEN, cpId).replace(ENTITY_ID_TOKEN, entityId)
+    } else {
+      return props.chartOptions.entityLink.replace(ENTITY_ID_TOKEN, record.id)
+    }
+  }
+  return ''
 }
 
 </script>

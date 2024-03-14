@@ -8,6 +8,7 @@ import sandboxQueryProvider from './sandbox-query-provider'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import { createRouter, createWebHistory } from 'vue-router'
+import { createPinia } from 'pinia'
 
 const app = createApp(App)
 
@@ -47,6 +48,9 @@ const appLinks: SandboxNavigationItem[] = ([
     to: { name: 'grid' },
   },
 ])
+
+const pinia = createPinia()
+app.use(pinia)
 
 app.provide('app-links', appLinks)
 
