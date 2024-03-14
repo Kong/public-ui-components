@@ -1,4 +1,4 @@
-import { ChartTypes } from '../types'
+import { CP_ID_TOKEN, ENTITY_ID_TOKEN, ChartTypes } from '../types'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type {
@@ -17,7 +17,7 @@ import {
   TimePeriods,
 } from '@kong-ui-public/analytics-utilities'
 import DashboardRenderer from './DashboardRenderer.vue'
-import { nonTsExploreResponse, timeSeriesExploreResponse, summaryDashboardConfig } from '../../sandbox/mock-data'
+import { nonTsExploreResponse, timeSeriesExploreResponse, routeExploreResponse, summaryDashboardConfig } from '../../sandbox/mock-data'
 import { createPinia, setActivePinia } from 'pinia'
 
 describe('<DashboardRenderer />', () => {
@@ -30,6 +30,10 @@ describe('<DashboardRenderer />', () => {
     const queryFn = (query: ExploreQuery): Promise<ExploreResultV4> => {
       // Dimensions to use if query is not provided
       const dimensionMap = { statusCode: ['1XX', '2XX', '3XX', '4XX', '5XX'] }
+
+      if (query.dimensions && query.dimensions.findIndex(d => d === 'route') > -1) {
+        return Promise.resolve(routeExploreResponse)
+      }
 
       if (query.dimensions && query.dimensions.findIndex(d => d === 'time') > -1) {
         if (query.metrics && query.metrics[0] === 'request_count') {
@@ -60,6 +64,7 @@ describe('<DashboardRenderer />', () => {
       }
     }
 
+    // @ts-ignore
     const configFn = (): Promise<AnalyticsConfig> => Promise.resolve({
       analytics: true,
       percentiles: true,
@@ -311,5 +316,56 @@ describe('<DashboardRenderer />', () => {
           })
         })
     })
+  })
+
+  it('Renders a dashboard with a TopNTable with EntityLinks', () => {
+    const customTimeframe = datePickerSelectionToTimeframe({
+      timePeriodsKey: 'custom',
+      start: new Date('2024-03-03T21:10:28.969Z'),
+      end: new Date('2024-03-06T21:10:28.969Z'),
+    }) as Timeframe
+
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: customTimeframe.v4Query(),
+      },
+      config: {
+        gridSize: { cols: 3, rows: 2 },
+        tiles: [
+          {
+            definition: {
+              chart: {
+                type: ChartTypes.TopN,
+                entityLink: `https://test.com/cp/${CP_ID_TOKEN}/entity/${ENTITY_ID_TOKEN}`,
+              },
+              query: { dimensions: ['route'] },
+            },
+            layout: {
+              position: {
+                col: 0,
+                row: 0,
+              },
+              size: {
+                cols: 3,
+                rows: 2,
+              },
+            },
+          },
+        ],
+      },
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    })
+
+    // Check value of href attribute
+    cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > .column-1 > [data-testid="entity-link-parent"] > a').should('have.attr', 'href').and('eq', 'https://test.com/cp/b486fb30-e058-4b5f-85c2-495ec26ba522/entity/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
   })
 })
