@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.13.7...@kong-ui-public/entities-plugins@2.14.0) (2024-03-14)
+
+
+### Features
+
+* **entities-plugins:** support field grouping ([#1224](https://github.com/Kong/public-ui-components/issues/1224)) ([58ef983](https://github.com/Kong/public-ui-components/commit/58ef983848b34673fc335bbacf1b013f66abdde9))
+
+
+
+
+
 ## [2.13.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.13.6...@kong-ui-public/entities-plugins@2.13.7) (2024-03-13)
 
 
