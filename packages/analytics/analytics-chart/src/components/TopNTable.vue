@@ -183,6 +183,7 @@ const errorMessage = computed((): string => {
 })
 
 const getId = (record: AnalyticsExploreRecord): string => {
+  console.log(' >>> record >>>', record)
   const event = record.event
 
   return String(event[displayKey.value])
