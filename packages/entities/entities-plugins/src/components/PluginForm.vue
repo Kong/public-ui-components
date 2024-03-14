@@ -243,7 +243,7 @@ const props = defineProps({
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const { pluginMetaData, credentialMetaData, credentialSchemas } = composables.usePluginMetaData()
-const { customSchemas, typedefs } = composables.useSchemas(undefined, props.config.app)
+const { customSchemas, typedefs } = composables.useSchemas(undefined, { app: props.config.app })
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
 const { objectsAreEqual } = useHelpers()
@@ -512,6 +512,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
     initialFormSchema[field] = { id: field } // each field's key will be set as the id
     initialFormSchema[field].type = scheme.type === 'boolean' ? 'checkbox' : 'input'
+    initialFormSchema[field].required = scheme.required
 
     if (field.startsWith('config-')) {
       initialFormSchema[field].label = formatPluginFieldLabel(field)

@@ -51,6 +51,7 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   backRoute: { name: 'select-plugin' },
   cancelRoute: { name: 'home' },
   jsonYamlFormsEnabled: true,
+  groupFields: true,
 })
 
 const kongManagerConfig = ref<KongManagerPluginFormConfig>({
@@ -62,6 +63,7 @@ const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   // entityId: '123-abc-i-lover-cats',
   backRoute: { name: 'select-plugin' },
   cancelRoute: { name: 'home' },
+  groupFields: true,
 })
 
 const onUpdate = (payload: Record<string, any>) => {

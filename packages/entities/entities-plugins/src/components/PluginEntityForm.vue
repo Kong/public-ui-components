@@ -31,23 +31,23 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, reactive, provide, watch, type PropType, onBeforeMount, defineComponent } from 'vue'
-import type { AxiosResponse, AxiosRequestConfig } from 'axios'
-import {
-  type PluginEntityInfo,
-  type KonnectPluginFormConfig,
-  type KongManagerPluginFormConfig,
-} from '../types'
 import { useAxios, useHelpers } from '@kong-ui-public/entities-shared'
 import {
+  FORMS_API_KEY,
   customFields,
   getSharedFormName,
-  FORMS_API_KEY,
   sharedForms,
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
+import type { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { computed, defineComponent, onBeforeMount, provide, reactive, ref, watch, type PropType } from 'vue'
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
+import {
+  type KongManagerPluginFormConfig,
+  type KonnectPluginFormConfig,
+  type PluginEntityInfo,
+} from '../types'
 
 // Must explicitly specify these as components since they are rendered dynamically
 export default defineComponent({
@@ -120,7 +120,9 @@ const { axiosInstance } = useAxios({
   headers: props.config.requestHeaders,
 })
 
-const { parseSchema } = composables.useSchemas(props.entityMap.focusedEntity?.id || undefined)
+const { parseSchema } = composables.useSchemas(props.entityMap.focusedEntity?.id || undefined, {
+  groupFields: props.config.groupFields,
+})
 const { convertToDotNotation, unFlattenObject, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
 const { objectsAreEqual } = useHelpers()
@@ -616,7 +618,12 @@ onBeforeMount(() => {
   }
 
   :deep(.vue-form-generator) {
-    & > fieldset {
+    .k-collapse:not(:last-child) {
+      border-bottom: $kui-border-width-10 solid $kui-color-border;
+      margin-bottom: $kui-space-80;
+    }
+
+    fieldset {
       border: none;
       padding: $kui-space-0;
     }

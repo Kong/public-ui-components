@@ -526,6 +526,11 @@
           "placeholder": "Select a Consumer Group",
           "plural": "Consumer Groups"
         }
+      },
+      "grouping": {
+        "common_fields": "Common Fields",
+        "required_fields": "Required Fields",
+        "advanced_fields": "Advanced Fields"
       }
     }
   },

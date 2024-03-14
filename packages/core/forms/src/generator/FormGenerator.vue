@@ -1,14 +1,89 @@
-<template lang="pug">
-div.vue-form-generator(v-if='schema != null')
-  fieldset(v-if="schema.fields", :is='tag')
-    template(v-for='field in fields')
-      form-group(v-if='fieldVisible(field)', ref="children", :vfg="vfg", :field="field", :errors="errors", :model="model", :options="options", @validated="onFieldValidated", @model-updated="onModelUpdated")
+<template>
+  <div
+    v-if="schema != null"
+    class="vue-form-generator"
+  >
+    <component
+      :is="tag"
+      v-if="schema.fields"
+    >
+      <template
+        v-for="field in fields"
+        :key="field.model"
+      >
+        <form-group
+          v-if="fieldVisible(field)"
+          ref="children"
+          :errors="errors"
+          :field="field"
+          :model="model"
+          :options="options"
+          :vfg="vfg"
+          @model-updated="onModelUpdated"
+          @validated="onFieldValidated"
+        />
+      </template>
+    </component>
 
-  template(v-for='group in groups')
-    fieldset(:is='tag', :class='getFieldRowClasses(group)')
-      legend(v-if='group.legend') {{ group.legend }}
-      template(v-for='field in group.fields')
-        form-group(v-if='fieldVisible(field)', ref="children", :vfg="vfg", :field="field", :errors="errors", :model="model", :options="options", @validated="onFieldValidated", @model-updated="onModelUpdated")
+    <template
+      v-for="(group, i) in groups"
+      :key="`group-${i}`"
+    >
+      <KCollapse
+        v-if="group.collapsible"
+        :model-value="group.collapsedByDefault === undefined ? false : group.collapsedByDefault"
+        :title="group.legend"
+      >
+        <component
+          :is="tag"
+          :class="getFieldRowClasses(group)"
+        >
+          <template
+            v-for="field in group.fields"
+            :key="field.model"
+          >
+            <form-group
+              v-if="fieldVisible(field)"
+              ref="children"
+              :errors="errors"
+              :field="field"
+              :model="model"
+              :options="options"
+              :vfg="vfg"
+              @model-updated="onModelUpdated"
+              @validated="onFieldValidated"
+            />
+          </template>
+        </component>
+      </KCollapse>
+
+      <component
+        :is="tag"
+        v-else
+        :class="getFieldRowClasses(group)"
+      >
+        <legend v-if="group.legend">
+          {{ group.legend }}
+        </legend>
+        <template
+          v-for="field in group.fields"
+          :key="field.model"
+        >
+          <form-group
+            v-if="fieldVisible(field)"
+            ref="children"
+            :errors="errors"
+            :field="field"
+            :model="model"
+            :options="options"
+            :vfg="vfg"
+            @model-updated="onModelUpdated"
+            @validated="onFieldValidated"
+          />
+        </template>
+      </component>
+    </template>
+  </div>
 </template>
 
 <script>
@@ -16,6 +91,7 @@ import { get as objGet, forEach, isFunction, isNil, isArray } from 'lodash'
 import formMixin from './FormMixin.vue'
 import formGroup from './FormGroup.vue'
 import { ref } from 'vue'
+
 export default {
   name: 'FormGenerator',
   components: { formGroup },
