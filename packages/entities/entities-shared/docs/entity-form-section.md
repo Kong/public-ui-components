@@ -27,7 +27,15 @@ Component that provides basic layout and styling for descriptive form section. R
 - required: `false`
 - default: `''`
 
-Renders the provided `string` as the `h4` tag content.
+The title text of the form section.
+
+#### `titleTag`
+
+- type: `String`
+- required: `false`
+- default: `'h2'`
+
+Tag to render title text. Defaults to `h2`, however based on [heading hierarchy](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) on your page you can change it to be any other heading level.
 
 #### `description`
 

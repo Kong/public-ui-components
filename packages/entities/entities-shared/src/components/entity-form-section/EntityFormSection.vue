@@ -9,12 +9,13 @@
         class="form-section-info"
         :class="{ 'sticky': stickyInfoHeader }"
       >
-        <h4
+        <component
+          :is="titleTag"
           v-if="title"
           class="form-section-title"
         >
           {{ title }}
-        </h4>
+        </component>
         <div
           v-if="description || slots.description"
           class="form-section-description"
@@ -48,6 +49,10 @@ defineProps({
   title: {
     type: String,
     default: '',
+  },
+  titleTag: {
+    type: String,
+    default: 'h2',
   },
   description: {
     type: String,
