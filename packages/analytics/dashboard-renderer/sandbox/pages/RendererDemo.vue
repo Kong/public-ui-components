@@ -50,6 +50,7 @@ const dashboardConfig: DashboardConfig = {
     cols: 6,
     rows: 9,
   },
+  tileHeight: 167,
   tiles: [
     {
       definition: {

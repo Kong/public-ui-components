@@ -64,7 +64,9 @@ const ajv = new Ajv()
 
 const validate = ajv.compile(dashboardConfigSchema)
 
-const definitionText = ref(`{
+const definitionText = ref(
+  `
+{
     "gridSize": {
       "cols": 5,
       "rows": 5
@@ -80,6 +82,24 @@ const definitionText = ref(`{
         "layout": {
           "position": {
             "col": 0,
+            "row": 0
+          },
+          "size": {
+            "cols": 2,
+            "rows": 2
+          }
+        }
+      },
+      {
+        "definition": {
+          "chart": {
+            "type": "horizontal_bar"
+          },
+          "query": {}
+        },
+        "layout": {
+          "position": {
+            "col": 2,
             "row": 0
           },
           "size": {
@@ -107,7 +127,8 @@ const definitionText = ref(`{
         }
       }
     ]
-  }`,
+  }
+  `,
 )
 
 const definition = computed<ValidationResult>(() => {
