@@ -25,7 +25,7 @@
       v-if="!props.hideHighlightedPlugins && props.highlightedPlugins.length > 0"
       v-model="isHighlightedPluginsCollapsed"
       :config="config"
-      :name="props.highlightedPluginsTitle ?? t('plugins.select.highlighted_plugins.title')"
+      :name="props.highlightedPluginsTitle || t('plugins.select.highlighted_plugins.title')"
       :navigate-on-click="navigateOnClick"
       :plugins="props.highlightedPlugins"
       :plugins-per-row="pluginsPerRow"
