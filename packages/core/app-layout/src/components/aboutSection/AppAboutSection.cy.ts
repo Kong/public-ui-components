@@ -21,6 +21,7 @@ describe('<AppAboutSection />', () => {
 
   it('should correctly render content when using props', () => {
     const title = 'Cats are Cool'
+    const titleTag = 'h4'
     const description = 'cool cat description'
     const created = '2023-02-17'
     const createdLabel = 'Joined'
@@ -30,6 +31,7 @@ describe('<AppAboutSection />', () => {
     cy.mount(AppAboutSection, {
       props: {
         title,
+        titleTag,
         description,
         created,
         createdLabel,
@@ -39,7 +41,7 @@ describe('<AppAboutSection />', () => {
     })
 
     cy.get('.kong-ui-app-about-section').should('exist')
-    cy.getTestId('about-section-title').should('be.visible')
+    cy.get(`${titleTag}.about-section-title`).should('be.visible')
     cy.getTestId('about-section-title').should('contain.text', title)
     cy.getTestId('about-section-description').should('be.visible')
     cy.getTestId('about-section-description').should('contain.text', description)

@@ -35,6 +35,14 @@ A Kong UI dynamic about section component.
 
 The title text of the about section.
 
+#### `titleTag`
+
+- type: `String`
+- required: `false`
+- default: `'h2'`
+
+Tag to render title text. Defaults to `h2`, however based on [heading hierarchy](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) on your page you can change it to be any other heading level.
+
 #### `description`
 
 - type: `String`

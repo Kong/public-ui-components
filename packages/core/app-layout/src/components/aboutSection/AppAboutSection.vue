@@ -4,12 +4,13 @@
       v-if="title"
       #title
     >
-      <span
+      <component
+        :is="titleTag"
         class="about-section-title"
         data-testid="about-section-title"
       >
         {{ title }}
-      </span>
+      </component>
     </template>
 
     <template
@@ -102,6 +103,10 @@ const props = defineProps({
   title: {
     type: String,
     default: '',
+  },
+  titleTag: {
+    type: String,
+    default: 'h2',
   },
   description: {
     type: String,
