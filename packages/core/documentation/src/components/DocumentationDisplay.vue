@@ -55,7 +55,7 @@
             size="small"
             @click="emit('edit')"
           >
-            {{ i18n.t('documentation.documentation_display.edit_button') }}
+            {{ i18n.t('documentation.documentation_display.edit_info_button') }}
           </KButton>
           <KButton
             appearance="primary"
@@ -127,6 +127,7 @@
                 <KDropdownItem
                   v-if="!!selectedDocument.markdown"
                   data-testid="document-download-button"
+                  has-divider
                   @click="handleDownloadDocument(download)"
                 >
                   {{ i18n.t('documentation.documentation_display.download_button') }}
