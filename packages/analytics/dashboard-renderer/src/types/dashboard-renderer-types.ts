@@ -133,6 +133,9 @@ export const topNTableSchema = {
     description: {
       type: 'string',
     },
+    entityLink: {
+      type: 'string',
+    },
   },
   required: ['type'],
   additionalProperties: false,
