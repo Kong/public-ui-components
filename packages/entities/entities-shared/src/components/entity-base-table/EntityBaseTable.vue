@@ -2,6 +2,7 @@
   <KCard
     class="kong-ui-entity-base-table"
     :title="title"
+    :title-tag="titleTag"
   >
     <KTable
       ref="tableRefs"
@@ -228,6 +229,10 @@ const props = defineProps({
   title: {
     type: String,
     default: '',
+  },
+  titleTag: {
+    type: String,
+    default: 'h2',
   },
   /** default to false, setting to true will suppress the row click event even if "@click:row" is attached */
   disableRowClick: {
