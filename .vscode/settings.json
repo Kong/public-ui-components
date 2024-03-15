@@ -19,5 +19,6 @@
   "scss.scannerExclude": [
     "**/.git",
     "**/bower_components",
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

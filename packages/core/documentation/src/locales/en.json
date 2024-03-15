@@ -8,8 +8,10 @@
       "added_label": "Added: ",
       "status_label": "Status: ",
       "edit_button": "Edit",
-      "download_button": "Download",
-      "add_new": "Add Page"
+      "edit_markdown_button": "Edit markdown",
+      "download_button": "Download document",
+      "add_new": "Add Page",
+      "actions_title": "Content Actions"
     },
     "errors": {
       "cannot_retrieve_document": "Cannot retrieve selected document. Please try again later",
@@ -33,6 +35,7 @@
       "slug_placeholder": "Enter a URL slug",
       "status_label": "Status",
       "subtitle": "Provide guides, examples and other useful information about this service to developers.",
+      "edit_markdown": "To edit the document's markdown content instead of uploading a new document, close this modal and click the 'Content Actions' icon at the top right of the document.",
       "title_label": "Page Name",
       "title_placeholder": "Enter a page name"
     },

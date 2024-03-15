@@ -33,6 +33,13 @@
           :message="errorMessage"
         />
 
+        <KAlert
+          appearance="info"
+          class="bottom-spacing"
+          :message="i18n.t('documentation.form_modal.edit_markdown')"
+          show-icon
+        />
+
         <KFileUpload
           :accept="['.md', '.markdown']"
           :button-text="fileUploadButtonText"
