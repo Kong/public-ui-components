@@ -1,39 +1,32 @@
 <template>
   <div class="documentation-display">
     <div class="document-meta">
-      <div class="document-title meta-section">
-        <slot name="document-title">
-          <span>{{ fileName }}</span>.<span class="document-title-extension">md</span>
-        </slot>
-      </div>
+      <div class="document-meta-start">
+        <div class="document-title meta-section">
+          <slot name="document-title">
+            <span>{{ fileName }}</span>.<span class="document-title-extension">md</span>
+          </slot>
+        </div>
 
-      <div
-        v-if="!hidePublishToggle"
-        class="document-status meta-section"
-      >
-        <span class="meta-label">{{ i18n.t('documentation.documentation_display.status_label') }}</span>
-        <KBadge
-          v-if="publishModel"
-          appearance="success"
+        <div
+          v-if="!hidePublishToggle"
+          class="document-status meta-section"
         >
-          {{ i18n.t('documentation.common.published') }}
-        </KBadge>
-        <KBadge
-          v-else
-          appearance="neutral"
-        >
-          {{ i18n.t('documentation.common.unpublished') }}
-        </KBadge>
-      </div>
+          <span class="meta-label">{{ i18n.t('documentation.documentation_display.status_label') }}</span>
+          <KBadge :appearance="publishModel ? 'success' : 'neutral'">
+            {{ publishModel ? i18n.t('documentation.common.published') : i18n.t('documentation.common.unpublished') }}
+          </KBadge>
+        </div>
 
-      <div
-        v-if="createdAt"
-        class="document-create meta-section"
-      >
-        <span class="meta-label">{{ i18n.t('documentation.documentation_display.added_label') }}</span>
-        <KBadge appearance="neutral">
-          {{ createdAt }}
-        </KBadge>
+        <div
+          v-if="createdAt"
+          class="document-create meta-section"
+        >
+          <span class="meta-label">{{ i18n.t('documentation.documentation_display.added_label') }}</span>
+          <KBadge appearance="neutral">
+            {{ createdAt }}
+          </KBadge>
+        </div>
       </div>
 
       <div
@@ -165,18 +158,6 @@ const publishModel = ref<boolean>(false)
 const publishedStatusText = ref(i18n.t('documentation.common.unpublished'))
 const defaultDocument = ref<any>(null)
 
-watch(() => props.selectedDocument, (newVal) => {
-  if (!isObjectEmpty(newVal)) {
-    if (!props.hidePublishToggle) {
-      setStatus(newVal.document?.status)
-    }
-
-    if (newVal.ast) {
-      handleDocument()
-    }
-  }
-}, { deep: true })
-
 const handleDownloadDocument = (): void => {
   try {
     // If the raw markdown is not available, exit early
@@ -240,6 +221,18 @@ const handleDocument = () => {
 
   isLoading.value = false
 }
+
+watch(() => props.selectedDocument, (newVal) => {
+  if (!isObjectEmpty(newVal)) {
+    if (!props.hidePublishToggle) {
+      setStatus(newVal.document?.status)
+    }
+
+    if (newVal.ast) {
+      handleDocument()
+    }
+  }
+}, { deep: true, immediate: true })
 </script>
 
 <style lang="scss" scoped>
@@ -270,7 +263,14 @@ const handleDocument = () => {
     align-items: center;
     border-bottom: $kui-border-width-10 solid $kui-color-border;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     padding: 10px $kui-space-60;
+    row-gap: $kui-space-40;
+
+    .document-meta-start {
+      display: flex;
+    }
   }
 
   .meta-section {
@@ -298,7 +298,6 @@ const handleDocument = () => {
   .document-display-actions {
     align-items: center;
     display: flex;
-    margin-left: $kui-space-auto;
   }
 
   .document-publish-toggle {

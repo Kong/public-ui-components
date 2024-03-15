@@ -38,7 +38,7 @@
           @add="handleAddClick"
           @download="emit('download')"
           @edit="handleEditClick"
-          @toggle-published="(data) => emit('toggle-published', data)"
+          @toggle-published="(data: any) => emit('toggle-published', data)"
         />
       </div>
     </KCard>

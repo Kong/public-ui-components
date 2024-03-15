@@ -39,7 +39,7 @@
           class="document-file-upload"
           data-testid="document-file-upload"
           :label="i18n.t('documentation.form_modal.file_label')"
-          :label-attributes="{ help: i18n.t('documentation.form_modal.file_tooltip') }"
+          :label-attributes="{ info: i18n.t('documentation.form_modal.file_tooltip') }"
           :placeholder="editing ? filePlaceholderText : undefined"
           @file-added="handleFileSelected"
           @file-removed="handleFileRemoved"
