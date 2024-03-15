@@ -14,6 +14,7 @@
       :query="filterQuery"
       :table-headers="tableHeaders"
       :title="title"
+      :title-tag="titleTag"
       :use-action-outside="useActionOutside"
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
@@ -268,6 +269,10 @@ const props = defineProps({
   title: {
     type: String,
     default: '',
+  },
+  titleTag: {
+    type: String,
+    default: 'h2',
   },
   /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
   useActionOutside: {
