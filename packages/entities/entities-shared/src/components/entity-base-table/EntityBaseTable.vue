@@ -115,7 +115,7 @@ import { computed, ref } from 'vue'
 import composables from '../../composables'
 import { useTablePreferences } from '@kong-ui-public/core'
 import type { UserTablePreferences } from '@kong-ui-public/core'
-import type { SwrvStateData } from '@kong/kongponents'
+import type { SwrvStateData, HeaderTag } from '@kong/kongponents'
 import { KUI_COLOR_TEXT_NEUTRAL_STRONGER } from '@kong/design-tokens'
 import EntityBaseTableCell from './EntityBaseTableCell.vue'
 
@@ -231,7 +231,7 @@ const props = defineProps({
     default: '',
   },
   titleTag: {
-    type: String,
+    type: String as PropType<HeaderTag>,
     default: 'h2',
   },
   /** default to false, setting to true will suppress the row click event even if "@click:row" is attached */

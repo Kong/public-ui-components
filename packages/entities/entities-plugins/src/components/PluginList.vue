@@ -271,6 +271,8 @@ import type {
 
 import PluginIcon from './PluginIcon.vue'
 
+import type { HeaderTag } from '@kong/kongponents'
+
 const pluginMetaData = composables.usePluginMetaData()
 
 const emit = defineEmits<{
@@ -346,7 +348,7 @@ const props = defineProps({
     default: '',
   },
   titleTag: {
-    type: String,
+    type: String as PropType<HeaderTag>,
     default: 'h2',
   },
   /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
