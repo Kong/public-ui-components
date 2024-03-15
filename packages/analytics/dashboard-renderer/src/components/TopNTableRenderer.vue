@@ -12,7 +12,7 @@
       :title="chartOptions.chartTitle || ''"
     >
       <template
-        v-if="props.chartOptions?.entityLink"
+        v-if="props.chartOptions.entityLink"
         #name="{ record }"
       >
         <EntityLink
@@ -29,7 +29,8 @@
 </template>
 
 <script setup lang="ts">
-import { CP_ID_TOKEN, ENTITY_ID_TOKEN, type RendererProps, type TopNTableOptions } from '../types'
+import type { RendererProps, TopNTableOptions } from '../types'
+import { CP_ID_TOKEN, ENTITY_ID_TOKEN } from '../constants'
 import { TopNTable } from '@kong-ui-public/analytics-chart'
 import type { TopNTableRecord } from '@kong-ui-public/analytics-chart'
 import QueryDataProvider from './QueryDataProvider.vue'

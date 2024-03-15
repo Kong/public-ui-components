@@ -1,6 +1,6 @@
-import { CP_ID_TOKEN, ENTITY_ID_TOKEN, ChartTypes } from '../types'
+import { ChartTypes } from '../types'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
-import { INJECT_QUERY_PROVIDER } from '../constants'
+import { INJECT_QUERY_PROVIDER, CP_ID_TOKEN, ENTITY_ID_TOKEN } from '../constants'
 import type {
   AnalyticsBridge,
   AnalyticsConfig,
@@ -64,11 +64,10 @@ describe('<DashboardRenderer />', () => {
       }
     }
 
-    // @ts-ignore
     const configFn = (): Promise<AnalyticsConfig> => Promise.resolve({
       analytics: true,
       percentiles: true,
-      api_requests_retention: '24h',
+      api_requests_retention: '1d',
       api_requests_retention_ms: 86400000,
       api_analytics_retention: '30d',
       api_analytics_retention_ms: 30 * 86400000,
