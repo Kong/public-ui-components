@@ -6,11 +6,14 @@
       v-if="!hideTitle"
       #title
     >
-      <div data-testid="config-card-title">
+      <component
+        :is="titleTag"
+        data-testid="config-card-title"
+      >
         <slot name="title">
           {{ t('baseConfigCard.title') }}
         </slot>
-      </div>
+      </component>
     </template>
 
     <template #actions>
@@ -171,6 +174,13 @@ const props = defineProps({
   hideTitle: {
     type: Boolean,
     default: false,
+  },
+  /**
+   * The tag to use for the title
+   */
+  titleTag: {
+    type: String,
+    default: 'h2',
   },
   /**
    * The label text to show for the select Format element

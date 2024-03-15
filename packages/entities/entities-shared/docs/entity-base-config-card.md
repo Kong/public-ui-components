@@ -175,6 +175,14 @@ interface PluginConfigurationSchemaItem {
 
 Controls the visibility of the card's title and `title` slot. A value of `true` will hide the `title` content (including slot content).
 
+#### `titleTag`
+
+- type: `String`
+- required: `false`
+- default: `'h2'`
+
+Tag to render title text. Defaults to `h2`, however based on [heading hierarchy](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) on your page you can change it to be any other heading level.
+
 #### `configCardDoc`
 
 - type: `String`

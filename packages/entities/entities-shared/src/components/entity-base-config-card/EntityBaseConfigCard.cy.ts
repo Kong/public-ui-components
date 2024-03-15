@@ -130,6 +130,26 @@ describe('<EntityBaseConfigCard />', () => {
       cy.getTestId('config-card-title').should('not.exist')
     })
 
+    it('renders the title correctly passed', () => {
+      interceptFetch()
+
+      const title = 'Custom Title'
+      const titleTag = 'h4'
+
+      cy.mount(EntityBaseConfigCard, {
+        props: {
+          config,
+          configSchema,
+          fetchUrl,
+          titleTag,
+        },
+        slots: { title },
+      })
+
+      cy.get('h4[data-testid="config-card-title"]').should('be.visible')
+      cy.getTestId('config-card-title').should('contain.text', title)
+    })
+
     it('displays KSelect to choose Format', () => {
       interceptFetch()
 
