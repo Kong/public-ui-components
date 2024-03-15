@@ -772,6 +772,13 @@ export const schema2 = {
               type: 'boolean',
             },
           },
+          {
+            required_non_checkbox_field: {
+              description: 'A non-checkbox but required field.',
+              required: true,
+              type: 'string',
+            },
+          },
         ],
         required: true,
         type: 'record',
