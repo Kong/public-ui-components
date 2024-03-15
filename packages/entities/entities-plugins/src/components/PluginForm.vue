@@ -512,7 +512,6 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
     initialFormSchema[field] = { id: field } // each field's key will be set as the id
     initialFormSchema[field].type = scheme.type === 'boolean' ? 'checkbox' : 'input'
-    initialFormSchema[field].required = scheme.required
 
     if (field.startsWith('config-')) {
       initialFormSchema[field].label = formatPluginFieldLabel(field)
