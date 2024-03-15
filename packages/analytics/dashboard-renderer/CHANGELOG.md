@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.11.1...@kong-ui-public/dashboard-renderer@0.12.0) (2024-03-15)
+
+
+### Features
+
+* **dashboard-renderer:** entity links in TopN table ([#1247](https://github.com/Kong/public-ui-components/issues/1247)) ([daa48df](https://github.com/Kong/public-ui-components/commit/daa48df29e75d4eee08c2389c0894773e95083af))
+
+
+
+
+
 ## [0.11.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.11.0...@kong-ui-public/dashboard-renderer@0.11.1) (2024-03-14)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
