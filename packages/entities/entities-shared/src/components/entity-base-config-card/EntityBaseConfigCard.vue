@@ -6,11 +6,11 @@
       v-if="!hideTitle"
       #title
     >
-      <div data-testid="config-card-title">
+      <h2 data-testid="config-card-title">
         <slot name="title">
           {{ t('baseConfigCard.title') }}
         </slot>
-      </div>
+      </h2>
     </template>
 
     <template #actions>

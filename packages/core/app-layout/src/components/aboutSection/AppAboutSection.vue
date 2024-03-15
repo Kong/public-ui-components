@@ -4,12 +4,12 @@
       v-if="title"
       #title
     >
-      <span
+      <h2
         class="about-section-title"
         data-testid="about-section-title"
       >
         {{ title }}
-      </span>
+      </h2>
     </template>
 
     <template

@@ -11,7 +11,7 @@
         :color="KUI_COLOR_TEXT_NEUTRAL"
         :size="KUI_ICON_SIZE_30"
       />
-      <span>{{ title }}</span>
+      <h2>{{ title }}</h2>
       <KTooltip
         v-if="tooltip"
         class="metricscard-tooltip"

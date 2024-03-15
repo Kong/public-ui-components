@@ -9,12 +9,12 @@
         class="form-section-info"
         :class="{ 'sticky': stickyInfoHeader }"
       >
-        <h4
+        <h2
           v-if="title"
           class="form-section-title"
         >
           {{ title }}
-        </h4>
+        </h2>
         <div
           v-if="description || slots.description"
           class="form-section-description"

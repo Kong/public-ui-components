@@ -6,12 +6,12 @@
       v-if="title"
       #title
     >
-      <div
+      <h2
         class="top-n-card-title"
         data-testid="top-n-card-title"
       >
         {{ title }}
-      </div>
+      </h2>
     </template>
     <template
       v-if="description"
