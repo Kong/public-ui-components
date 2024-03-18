@@ -38,6 +38,7 @@
           @add="handleAddClick"
           @download="emit('download')"
           @edit="handleEditClick"
+          @edit-markdown="handleEditMarkdown"
           @save-markdown="(content: string) => emit('save-markdown', content)"
           @toggle-published="(data: any) => emit('toggle-published', data)"
         />
@@ -76,6 +77,7 @@ const emit = defineEmits<{
   (e: 'modal-closed'): void,
   (e: 'parent-change', data: ChangeEvent): void,
   (e: 'save', formData: FormData, selectedFile: any): void,
+  (e: 'edit-markdown', content: string): void,
   (e: 'save-markdown', content: string): void,
   (e: 'toggle-published', data: boolean): void,
 }>()
@@ -164,6 +166,13 @@ const handleEditClick = (): void => {
   emit('edit')
 }
 
+const handleEditMarkdown = (editingMarkdown: boolean): void => {
+  editing.value = editingMarkdown
+  if (editing.value === true) {
+    emit('edit')
+  }
+}
+
 const handleModalClosed = (): void => {
   displayModal.value = false
   emit('modal-closed')
@@ -191,7 +200,7 @@ const handleModalClosed = (): void => {
   }
 
   .document-holder {
-    width: 82.5%; // we need to set this explicitly to override width: 100%; inherited from KCard
+    width: 83%; // we need to set this explicitly to override width: 100%; inherited from KCard
   }
 }
 </style>

@@ -99,6 +99,7 @@
           :max-height="600"
           mode="read"
           theme="light"
+          @mode="(mode: MarkdownMode) => handleMarkdownUiModeChange(mode)"
           @save="(payload: EmitUpdatePayload) => emit('save-markdown', payload.content)"
         >
           <template
@@ -131,7 +132,7 @@
                 <KDropdownItem
                   v-if="!!selectedDocument.markdown"
                   data-testid="document-download-button"
-                  has-divider
+                  :has-divider="userCanEdit"
                   @click="handleDownloadDocument(download)"
                 >
                   {{ i18n.t('documentation.documentation_display.download_button') }}
@@ -151,7 +152,7 @@ import composables from '../composables'
 import { isObjectEmpty } from '../helpers'
 import { PermissionsWrapper } from '@kong-ui-public/entities-shared'
 import { MarkdownUi } from '@kong/markdown'
-import type { EmitUpdatePayload } from '@kong/markdown'
+import type { EmitUpdatePayload, MarkdownMode } from '@kong/markdown'
 import { MoreIcon } from '@kong/icons'
 import '@kong/markdown/dist/style.css'
 import type { PropType } from 'vue'
@@ -186,6 +187,7 @@ const emit = defineEmits<{
   (e: 'edit'): void,
   (e: 'download'): void,
   (e: 'toggle-published', newValue: boolean): void,
+  (e: 'edit-markdown', isEditingMarkdown: boolean): void,
   (e: 'save-markdown', content: string): void,
 }>()
 
@@ -203,6 +205,10 @@ const handleDownloadDocument = (downloadFunction: () => void): void => {
     downloadFunction()
     emit('download')
   }
+}
+
+const handleMarkdownUiModeChange = (mode: MarkdownMode): void => {
+  emit('edit-markdown', mode === 'edit')
 }
 
 const handlePublishToggle = (): void => {
@@ -283,6 +289,7 @@ watch(() => props.selectedDocument, (newVal) => {
 .documentation-display {
   border: $kui-border-width-10 solid $kui-color-border;
   border-radius: $kui-border-radius-20;
+  margin-top: $kui-space-20;
 
   .document-meta {
     align-items: center;
