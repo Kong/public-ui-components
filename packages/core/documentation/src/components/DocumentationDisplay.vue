@@ -99,6 +99,7 @@
           :max-height="600"
           mode="read"
           theme="light"
+          @save="(payload: EmitUpdatePayload) => emit('save-markdown', payload.content)"
         >
           <template
             v-if="userCanEdit || !!selectedDocument.markdown"
@@ -150,6 +151,7 @@ import composables from '../composables'
 import { isObjectEmpty } from '../helpers'
 import { PermissionsWrapper } from '@kong-ui-public/entities-shared'
 import { MarkdownUi } from '@kong/markdown'
+import type { EmitUpdatePayload } from '@kong/markdown'
 import { MoreIcon } from '@kong/icons'
 import '@kong/markdown/dist/style.css'
 import type { PropType } from 'vue'
@@ -184,6 +186,7 @@ const emit = defineEmits<{
   (e: 'edit'): void,
   (e: 'download'): void,
   (e: 'toggle-published', newValue: boolean): void,
+  (e: 'save-markdown', content: string): void,
 }>()
 
 const { i18n } = composables.useI18n()

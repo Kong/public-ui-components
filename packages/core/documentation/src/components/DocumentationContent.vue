@@ -38,6 +38,7 @@
           @add="handleAddClick"
           @download="emit('download')"
           @edit="handleEditClick"
+          @save-markdown="(content: string) => emit('save-markdown', content)"
           @toggle-published="(data: any) => emit('toggle-published', data)"
         />
       </div>
@@ -75,6 +76,7 @@ const emit = defineEmits<{
   (e: 'modal-closed'): void,
   (e: 'parent-change', data: ChangeEvent): void,
   (e: 'save', formData: FormData, selectedFile: any): void,
+  (e: 'save-markdown', content: string): void,
   (e: 'toggle-published', data: boolean): void,
 }>()
 
