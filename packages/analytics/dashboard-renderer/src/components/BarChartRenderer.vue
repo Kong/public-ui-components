@@ -7,6 +7,7 @@
   >
     <div class="analytics-chart">
       <AnalyticsChart
+        :allow-csv-export="chartOptions.allowCsvExport"
         :chart-data="data"
         :chart-options="options"
         :chart-title="chartOptions.chartTitle"
