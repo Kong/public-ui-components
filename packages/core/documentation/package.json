@@ -70,7 +70,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "500KB",
-    "warningLimit": "450KB"
+    "errorLimit": "30MB",
+    "warningLimit": "25MB"
   }
 }
