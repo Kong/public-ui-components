@@ -49,15 +49,6 @@
           :auth-function="() => canEdit()"
         >
           <KButton
-            appearance="secondary"
-            class="document-edit-button"
-            data-testid="document-edit-button"
-            size="small"
-            @click="emit('edit')"
-          >
-            {{ i18n.t('documentation.documentation_display.edit_info_button') }}
-          </KButton>
-          <KButton
             appearance="primary"
             data-testid="add-new-page-button"
             size="small"
@@ -96,7 +87,7 @@
           downloadable
           :editable="userCanEdit"
           :filename="fileName"
-          :max-height="600"
+          :max-height="700"
           mode="read"
           theme="light"
           @cancel="restoreOriginalDocument"
@@ -129,6 +120,14 @@
                   @click="edit"
                 >
                   {{ i18n.t('documentation.documentation_display.edit_markdown_button') }}
+                </KDropdownItem>
+                <KDropdownItem
+                  v-if="userCanEdit"
+                  class="document-edit-button"
+                  data-testid="document-edit-button"
+                  @click="emit('edit')"
+                >
+                  {{ i18n.t('documentation.documentation_display.edit_info_button') }}
                 </KDropdownItem>
                 <KDropdownItem
                   v-if="!!selectedDocument.markdown"
@@ -247,6 +246,7 @@ const handleDocument = () => {
   }
 
   markdownContent.value = props.selectedDocument?.markdown || ''
+  originalMarkdownContent.value = markdownContent.value
   isLoading.value = false
 }
 
@@ -340,12 +340,7 @@ watch(() => props.selectedDocument, (newVal) => {
   }
 
   .document-publish-toggle {
-    margin-right: $kui-space-80;
-  }
-
-  .document-download-button,
-  .document-edit-button {
-    margin-right: $kui-space-40;
+    margin-right: $kui-space-50;
   }
 }
 </style>
