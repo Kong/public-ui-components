@@ -49,11 +49,7 @@ describe('<EntityBaseForm />', () => {
   it('displays View Configuration and Slideout when FF is enabled', () => {
     cy.mount(EntityBaseForm, {
       props: {
-        config: {
-          ...config,
-          // TODO: Remove config once Feature Flag `Khcp-9892-json-yaml-milestone-2` is enabled
-          jsonYamlFormsEnabled: true,
-        },
+        config,
         canSubmit: true,
       },
     })
