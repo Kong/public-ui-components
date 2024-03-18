@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.47](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@2.0.46...@kong-ui-public/copy-uuid@2.0.47) (2024-03-18)
+
+
+### Bug Fixes
+
+* **copy-uuid:** deprecated warning ([#1258](https://github.com/Kong/public-ui-components/issues/1258)) ([2e5cce4](https://github.com/Kong/public-ui-components/commit/2e5cce45e2d852cf05223083cb9f5fdffa946bc2))
+
+
+
+
+
 ## [2.0.46](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/copy-uuid@2.0.45...@kong-ui-public/copy-uuid@2.0.46) (2024-03-13)
 
 **Note:** Version bump only for package @kong-ui-public/copy-uuid
