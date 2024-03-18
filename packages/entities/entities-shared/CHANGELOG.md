@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.11.0...@kong-ui-public/entities-shared@2.12.0) (2024-03-18)
+
+
+### Features
+
+* **entities:** add axiosRequestConfig ([#1243](https://github.com/Kong/public-ui-components/issues/1243)) ([980301e](https://github.com/Kong/public-ui-components/commit/980301e0f866c4389096558ddcdff07d0b27d38f))
+
+
+
+
+
 # [2.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.10.5...@kong-ui-public/entities-shared@2.11.0) (2024-03-18)
 
 
