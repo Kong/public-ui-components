@@ -99,6 +99,7 @@
           :max-height="600"
           mode="read"
           theme="light"
+          @cancel="restoreOriginalDocument"
           @mode="(mode: MarkdownMode) => handleMarkdownUiModeChange(mode)"
           @save="(payload: EmitUpdatePayload) => emit('save-markdown', payload.content)"
         >
@@ -198,6 +199,8 @@ const createdAt = computed((): string => '')
 const publishModel = ref<boolean>(false)
 const publishedStatusText = ref(i18n.t('documentation.common.unpublished'))
 const markdownContent = ref<string>(props.selectedDocument?.markdown || '')
+// Store the previous markdown content in case the user cancels editing
+const originalMarkdownContent = ref<string>(markdownContent.value)
 const defaultDocument = ref<any>(null)
 
 const handleDownloadDocument = (downloadFunction: () => void): void => {
@@ -219,6 +222,11 @@ const handlePublishToggle = (): void => {
   publishedStatusText.value = newValue
     ? i18n.t('documentation.common.published')
     : i18n.t('documentation.common.unpublished')
+}
+
+const restoreOriginalDocument = (): void => {
+  markdownContent.value = originalMarkdownContent.value
+  originalMarkdownContent.value = markdownContent.value
 }
 
 const setStatus = (status?: string): void => {
