@@ -6,11 +6,6 @@ export interface BaseFormConfig {
   cancelRoute?: RouteLocationRaw
   /** If showing an edit form, the ID of the entity to edit */
   editId?: string
-  /**
-   * Feature flag value for JSON/YAML Milestone 2: `Khcp-9892-json-yaml-milestone-2`
-   * TODO: Remove jsonYamlFormsEnabled once FF is enabled
-   */
-  jsonYamlFormsEnabled?: boolean
 }
 
 /** Konnect base form config */

@@ -39,10 +39,6 @@ describe('<ConfigCardDisplay />', () => {
           fetcherUrl,
           format: 'json',
           record,
-          // TODO: Remove config once Feature Flag `Khcp-9892-json-yaml-milestone-2` is enabled
-          config: {
-            jsonYamlFormsEnabled: true,
-          },
         },
       })
 

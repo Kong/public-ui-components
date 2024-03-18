@@ -1,7 +1,7 @@
 <template>
   <div class="json-config">
     <div
-      v-if="props.fetcherUrl && props.config?.jsonYamlFormsEnabled"
+      v-if="props.fetcherUrl"
       class="json-endpoint"
     >
       <KBadge :appearance="props.requestMethod">

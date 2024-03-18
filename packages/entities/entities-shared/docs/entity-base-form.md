@@ -55,12 +55,6 @@ A base form component for entity create/edit views.
     - default: `undefined`
     - Route to return to when canceling creation of an entity.
 
-  - `jsonYamlFormsEnabled`:
-    - type: `boolean`
-    - required: `false`
-    - default: `false`
-    - Feature flag value for JSON/YAML Forms. Will be removed after feature goes GA.
-
   - `workspace`:
     - type: `string`
     - required: `true`
