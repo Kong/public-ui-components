@@ -449,25 +449,6 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
 
-  packages/core/copy-uuid:
-    dependencies:
-      '@kong/icons':
-        specifier: ^1.8.14
-        version: 1.8.14(vue@3.4.21)
-    devDependencies:
-      '@kong-ui-public/i18n':
-        specifier: workspace:^
-        version: link:../i18n
-      '@kong/design-tokens':
-        specifier: 1.12.10
-        version: 1.12.10
-      '@kong/kongponents':
-        specifier: 9.0.0-alpha.115
-        version: 9.0.0-alpha.115(vue@3.4.21)
-      vue:
-        specifier: ^3.4.21
-        version: 3.4.21
-
   packages/core/core:
     dependencies:
       date-fns:
