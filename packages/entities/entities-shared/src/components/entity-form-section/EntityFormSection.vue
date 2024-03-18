@@ -106,12 +106,12 @@ fieldset {
       }
 
       .form-section-title {
+        margin-top: $kui-space-0;
         color: $kui-color-text;
-        font-size: $kui-font-size-50;
-        font-weight: 600;
-        line-height: $kui-line-height-40;
+        font-size: $kui-font-size-40;
+        font-weight: $kui-font-weight-bold;
+        line-height: $kui-line-height-30;
         margin-bottom: $kui-space-40;
-        margin-top: 0;
       }
 
       .form-section-description,

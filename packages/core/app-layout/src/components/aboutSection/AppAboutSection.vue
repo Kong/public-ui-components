@@ -137,10 +137,10 @@ const displayModified = computed(() => {
 <style lang="scss" scoped>
 .kong-ui-app-about-section {
   .about-section-title {
+    margin: $kui-space-0;
     color: $kui-color-text;
     font-size: $kui-font-size-40;
     font-weight: $kui-font-weight-bold;
-    letter-spacing: $kui-letter-spacing-minus-20;
     line-height: $kui-line-height-30;
   }
 

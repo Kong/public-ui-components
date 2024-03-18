@@ -6,7 +6,10 @@
       v-if="!hideTitle"
       #title
     >
-      <h2 data-testid="config-card-title">
+      <h2
+        class="config-card-title"
+        data-testid="config-card-title"
+      >
         <slot name="title">
           {{ t('baseConfigCard.title') }}
         </slot>
@@ -456,11 +459,11 @@ onBeforeMount(async () => {
 
 <style lang="scss" scoped>
 .kong-ui-entity-base-config-card {
-  .k-card-title {
-    margin-bottom: 0;
-  }
-  :deep(.k-card-content .k-card-body) {
-    font-size: $kui-font-size-30;
+  .config-card-title {
+    color: $kui-color-text;
+    font-size: $kui-font-size-40;
+    font-weight: $kui-font-weight-bold;
+    line-height: $kui-line-height-30;
   }
 
   .config-card-actions {
@@ -486,8 +489,8 @@ onBeforeMount(async () => {
   }
 
   .book-icon {
-      margin-left: $kui-space-40;
-      padding: $kui-space-0;
+    margin-left: $kui-space-40;
+    padding: $kui-space-0;
   }
 }
 </style>
