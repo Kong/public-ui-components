@@ -21,9 +21,9 @@
           :title="t('consumers.form.info.title')"
         >
           <div>
-            <h5 class="fields-group-title">
+            <h3 class="fields-group-title">
               {{ t('consumers.form.consumer_identification.title') }}*
-            </h5>
+            </h3>
             <p class="fields-group-text">
               {{ t('consumers.form.consumer_identification.description') }}
             </p>
