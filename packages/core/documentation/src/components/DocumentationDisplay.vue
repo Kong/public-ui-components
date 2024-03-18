@@ -109,12 +109,15 @@
               :kpop-attributes="{ placement: 'bottomEnd' }"
             >
               <template #default>
-                <KButton
-                  appearance="secondary"
-                  class="icon-button"
-                >
-                  <MoreIcon :title="i18n.t('documentation.documentation_display.actions_title')" />
-                </KButton>
+                <KTooltip :text="i18n.t('documentation.documentation_display.actions_title')">
+                  <KButton
+                    appearance="secondary"
+                    :aria-label="i18n.t('documentation.documentation_display.actions_title')"
+                    class="icon-button"
+                  >
+                    <MoreIcon decorative />
+                  </KButton>
+                </KTooltip>
               </template>
               <template #items>
                 <KDropdownItem

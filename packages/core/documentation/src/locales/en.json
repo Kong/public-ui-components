@@ -12,7 +12,7 @@
       "edit_markdown_button": "Edit Markdown",
       "download_button": "Download Document",
       "add_new": "Add Page",
-      "actions_title": "Content Actions"
+      "actions_title": "Document Actions"
     },
     "errors": {
       "cannot_retrieve_document": "Cannot retrieve selected document. Please try again later",
@@ -36,7 +36,7 @@
       "slug_placeholder": "Enter a URL slug",
       "status_label": "Status",
       "subtitle": "Provide guides, examples and other useful information about this service to developers.",
-      "edit_markdown": "To edit the document's markdown content rather than replacing the file, close this modal and click the 'Content Actions' icon button at the top right of the document.",
+      "edit_markdown": "To edit the document's markdown content rather than replacing the file, close this modal and click the 'Document Actions' icon button at the top right of the document.",
       "title_label": "Page Name",
       "title_placeholder": "Enter a page name"
     },
