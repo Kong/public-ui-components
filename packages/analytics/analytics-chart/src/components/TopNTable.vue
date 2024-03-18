@@ -1,17 +1,18 @@
 <template>
   <KCard
     class="kong-ui-public-top-n-table"
+    title-tag="h2"
   >
     <template
       v-if="title"
       #title
     >
-      <h2
+      <span
         class="top-n-card-title"
         data-testid="top-n-card-title"
       >
         {{ title }}
-      </h2>
+      </span>
     </template>
     <template
       v-if="description"
@@ -229,13 +230,6 @@ const getValue = (record: AnalyticsExploreRecord): string => {
   border: none !important;
   height: 100%;
   padding: 0 !important;
-  .top-n-card-title {
-    color: $kui-color-text;
-    font-size: $kui-font-size-40;
-    font-weight: $kui-font-weight-bold;
-    line-height: $kui-line-height-30;
-    margin: $kui-space-0;
-  }
 
   .top-n-card-description {
     color: $kui-color-text-neutral;
