@@ -249,9 +249,10 @@ const publishedStatusText = computed((): string => {
 const selectedFile = ref<any>(null)
 const handleFileSelected = (file: any): void => {
   selectedFile.value = file?.[0]
-  formData.pageName = namePlaceholderText.value
-  formData.urlSlug = namePlaceholderText.value
   formData.fileName = namePlaceholderText.value
+  // Only replace the pageName and urlSlug if not already set
+  formData.pageName = formData.pageName ? formData.pageName : namePlaceholderText.value
+  formData.urlSlug = formData.urlSlug ? formData.urlSlug : namePlaceholderText.value
 }
 
 const handleFileRemoved = (): void => {
