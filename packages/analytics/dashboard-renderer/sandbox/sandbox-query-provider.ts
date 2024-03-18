@@ -1,7 +1,7 @@
 import type { Plugin } from 'vue'
 import { nonTsExploreResponse, timeSeriesExploreResponse, routeExploreResponse } from './mock-data'
 import { INJECT_QUERY_PROVIDER } from '../src/constants'
-import type { AnalyticsBridge, AnalyticsConfig, ExploreQuery, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsBridge, AnalyticsConfigV2, ExploreQuery, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 
 const delayedResponse = <T>(response: T): Promise<T> => {
   return new Promise((resolve) => {
@@ -22,13 +22,14 @@ const queryFn = async (query: ExploreQuery): Promise<ExploreResultV4> => {
   return await delayedResponse(nonTsExploreResponse)
 }
 
-const configFn = (): Promise<AnalyticsConfig> => Promise.resolve({
-  analytics: true,
-  percentiles: true,
-  api_requests_retention: '1d',
-  api_requests_retention_ms: 86400000,
-  api_analytics_retention: '30d',
-  api_analytics_retention_ms: 30 * 86400000,
+const configFn = (): Promise<AnalyticsConfigV2> => Promise.resolve({
+  analytics: {
+    percentiles: true,
+    retention_ms: 2592000000, // 30d
+  },
+  requests: {
+    retention_ms: 86400000,
+  },
 })
 
 const sandboxQueryProvider: Plugin = {
