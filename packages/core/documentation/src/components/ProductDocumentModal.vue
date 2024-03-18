@@ -34,6 +34,7 @@
         />
 
         <KAlert
+          v-if="editing"
           appearance="info"
           class="bottom-spacing"
           :message="i18n.t('documentation.form_modal.edit_markdown')"
