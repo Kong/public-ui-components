@@ -230,11 +230,11 @@ const getValue = (record: AnalyticsExploreRecord): string => {
   height: 100%;
   padding: 0 !important;
   .top-n-card-title {
-    margin: $kui-space-0;
     color: $kui-color-text;
     font-size: $kui-font-size-40;
     font-weight: $kui-font-weight-bold;
     line-height: $kui-line-height-30;
+    margin: $kui-space-0;
   }
 
   .top-n-card-description {

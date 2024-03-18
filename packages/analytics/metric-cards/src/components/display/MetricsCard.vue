@@ -267,10 +267,10 @@ $row-gap-size: 12px;
     color: var(--kong-ui-metric-card-title, $kui-color-text);
     display: flex;
     flex-direction: row;
-    margin: $kui-space-0;
     font-size: $kui-font-size-40;
     font-weight: $kui-font-weight-bold;
     line-height: $kui-line-height-30;
+    margin: $kui-space-0;
   }
 
   &-description {
