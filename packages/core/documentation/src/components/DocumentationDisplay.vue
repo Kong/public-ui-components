@@ -239,8 +239,6 @@ const handleDocument = () => {
   }
 
   markdownContent.value = props.selectedDocument?.markdown || ''
-  console.log('markdownContent changed')
-
   isLoading.value = false
 }
 
