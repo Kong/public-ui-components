@@ -253,7 +253,8 @@ watch(() => props.selectedDocument, (newVal) => {
       setStatus(newVal.document?.status)
     }
 
-    if (newVal.ast) {
+    // Ensure we trigger updates for ast and markdown content
+    if (newVal.ast || newVal.markdown) {
       handleDocument()
     }
   }
