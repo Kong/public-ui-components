@@ -1,15 +1,18 @@
 <template>
-  <KCard class="kong-ui-app-about-section">
+  <KCard
+    class="kong-ui-app-about-section"
+    title-tag="h2"
+  >
     <template
       v-if="title"
       #title
     >
-      <h2
+      <span
         class="about-section-title"
         data-testid="about-section-title"
       >
         {{ title }}
-      </h2>
+      </span>
     </template>
 
     <template
@@ -141,7 +144,6 @@ const displayModified = computed(() => {
     font-size: $kui-font-size-40;
     font-weight: $kui-font-weight-bold;
     line-height: $kui-line-height-30;
-    margin: $kui-space-0;
   }
 
   .about-section-header-end {
