@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.12.0...@kong-ui-public/dashboard-renderer@0.13.0) (2024-03-18)
+
+
+### Features
+
+* **dashboard-renderer:** pass through allowCsvExport to charts in dashboard ([#1260](https://github.com/Kong/public-ui-components/issues/1260)) ([1ffe761](https://github.com/Kong/public-ui-components/commit/1ffe761c756d7b11c81bc723c6a8b3db30c80553))
+
+
+
+
+
 # [0.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.11.1...@kong-ui-public/dashboard-renderer@0.12.0) (2024-03-15)
 
 
