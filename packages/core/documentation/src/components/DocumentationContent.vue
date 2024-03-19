@@ -13,9 +13,9 @@
         @create-documentation="handleAddClick"
       />
     </div>
-    <KCard
+    <div
       v-else
-      class="documentation-card"
+      class="documentation"
     >
       <div class="documentation-parent-container">
         <KTreeList
@@ -43,19 +43,20 @@
           @toggle-published="(data: any) => emit('toggle-published', data)"
         />
       </div>
-    </KCard>
-    <ProductDocumentModal
-      v-if="displayModal"
-      :action-pending="actionPending"
-      :documents="documentList"
-      :editing="editing"
-      :error-message="modalErrorMessage"
-      :hide-publish-toggle="hidePublishToggle"
-      :record="editing && selectedDocument ? selectedDocument : undefined"
-      @cancel="handleModalClosed"
-      @delete="emit('delete')"
-      @save="(formData: FormData, selectedFile: any) => emit('save', formData, selectedFile)"
-    />
+      </d>
+      <ProductDocumentModal
+        v-if="displayModal"
+        :action-pending="actionPending"
+        :documents="documentList"
+        :editing="editing"
+        :error-message="modalErrorMessage"
+        :hide-publish-toggle="hidePublishToggle"
+        :record="editing && selectedDocument ? selectedDocument : undefined"
+        @cancel="handleModalClosed"
+        @delete="emit('delete')"
+        @save="(formData: FormData, selectedFile: any) => emit('save', formData, selectedFile)"
+      />
+    </div>
   </div>
 </template>
 
@@ -180,7 +181,7 @@ const handleModalClosed = (): void => {
 </script>
 
 <style lang="scss" scoped>
-.documentation-card {
+.documentation {
   padding: $kui-space-80 $kui-space-0;
 
   .doc-card-title {
