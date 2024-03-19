@@ -59,15 +59,13 @@
           v-else
           class="plugin-form-actions"
         >
-          <div v-if="config.jsonYamlFormsEnabled">
-            <KButton
-              appearance="tertiary"
-              data-testid="form-view-configuration"
-              @click="toggle()"
-            >
-              {{ t('actions.view_configuration') }}
-            </KButton>
-          </div>
+          <KButton
+            appearance="tertiary"
+            data-testid="form-view-configuration"
+            @click="toggle()"
+          >
+            {{ t('actions.view_configuration') }}
+          </KButton>
           <KButton
             appearance="secondary"
             class="form-action-button"

@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@2.6.1...@kong-ui-public/entities-routes@2.6.2) (2024-03-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [2.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@2.6.0...@kong-ui-public/entities-routes@2.6.1) (2024-03-18)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+# [2.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@2.5.5...@kong-ui-public/entities-routes@2.6.0) (2024-03-18)
+
+
+### Features
+
+* **jsonYamlForms:** remove json yaml milestone 2 ff for all entity forms post GA [KHCP-9971] ([#1259](https://github.com/Kong/public-ui-components/issues/1259)) ([109cd54](https://github.com/Kong/public-ui-components/commit/109cd544c1d706641c9cbf3df3532e85765f3a3a))
+
+
+
+
+
 ## [2.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@2.5.4...@kong-ui-public/entities-routes@2.5.5) (2024-03-13)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
