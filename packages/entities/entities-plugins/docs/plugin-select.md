@@ -35,46 +35,55 @@ A grid component for selecting Plugins.
     - required: `true`
     - default: `undefined`
     - App name.
+
   - `apiBaseUrl`:
     - type: `string`
     - required: `true`
     - default: `undefined`
     - Base URL for API requests.
+
   - `requestHeaders`:
     - type: `RawAxiosRequestHeaders | AxiosHeaders`
     - required: `false`
     - default: `undefined`
     - Additional headers to send with all Axios requests.
+
   - `getCreateRoute`:
     - type: `(plugin: string) => RouteLocationRaw`
     - required: `true`
     - default: `undefined`
     - A function that returns the route for creating a specific plugin type.
+
   - `createCustomRoute`:
     - type: RouteLocationRaw
     - required: `false`
     - default: `undefined`
     - The route for creating a custom plugin.
+
   - `getCustomEditRoute`:
     - type: `(plugin: string) => RouteLocationRaw`
     - required: `false`
     - default: `undefined`
     - A function that returns the route for editing a custom plugin.
+
   - `workspace`:
     - type: `string`
     - required: `true`
     - default: `undefined`
     - *Specific to Kong Manager*. Name of the current workspace.
+
   - `controlPlaneId`:
     - type: `string`
     - required: `true`
     - default: `undefined`
     - *Specific to Konnect*. Name of the current control plane.
+
   - `entityId`:
     - type: `string`
     - required: `false`
     - default: `null`
     - Current entity id if the PluginSelect is being launched from the plugins tab on a consumer, consumer group, gateway service, or route detail page.
+
   - `entityType`:
     - type: `'consumers' | 'consumer_groups' | 'services' | 'routes'`
     - required: `false`
