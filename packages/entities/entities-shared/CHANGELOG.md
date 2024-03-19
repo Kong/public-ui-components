@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.0...@kong-ui-public/entities-shared@2.12.1) (2024-03-19)
+
+
+### Bug Fixes
+
+* **entities:** default filter size to 1000 ([#1261](https://github.com/Kong/public-ui-components/issues/1261)) ([b5be869](https://github.com/Kong/public-ui-components/commit/b5be86956b937c80639f492ad8a44ac83f40f314))
+
+
+
+
+
 # [2.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.11.0...@kong-ui-public/entities-shared@2.12.0) (2024-03-18)
 
 
