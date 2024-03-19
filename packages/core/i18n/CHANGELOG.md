@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@2.1.3...@kong-ui-public/i18n@2.1.4) (2024-03-19)
+
+
+### Bug Fixes
+
+* **i18n:** datadog alert ([#1263](https://github.com/Kong/public-ui-components/issues/1263)) ([14cf376](https://github.com/Kong/public-ui-components/commit/14cf376ff7c2d73d3d74287a5e0e604ac7360bbd))
+
+
+
+
+
 ## [2.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@2.1.2...@kong-ui-public/i18n@2.1.3) (2024-02-23)
 
 **Note:** Version bump only for package @kong-ui-public/i18n

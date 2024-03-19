@@ -28,7 +28,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.113
-        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       '@rushstack/eslint-patch':
         specifier: ^1.7.2
         version: 1.7.2
@@ -257,7 +257,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.113
-        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       '@types/uuid':
         specifier: ^9.0.8
         version: 9.0.8
@@ -368,7 +368,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.113
-        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       json-schema-to-ts:
         specifier: ^3.0.0
         version: 3.0.0
@@ -396,7 +396,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.113
-        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.3.3)
@@ -421,7 +421,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.113
-        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -529,7 +529,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.113
-        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       '@types/lodash':
         specifier: ^4.14.202
         version: 4.14.202
@@ -556,7 +556,7 @@ importers:
         version: link:../i18n
       '@kong/kongponents':
         specifier: 9.0.0-alpha.113
-        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.3.3)
@@ -572,7 +572,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.113
-        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.3.3)
@@ -773,7 +773,7 @@ importers:
         specifier: workspace:^
         version: link:../entities-shared
       '@kong-ui-public/forms':
-        specifier: ^2.2.0
+        specifier: ^2.2.1
         version: link:../../core/forms
       '@kong/icons':
         specifier: ^1.8.14
@@ -946,7 +946,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.113
-        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       '@types/prismjs':
         specifier: ^1.26.3
         version: 1.26.3
@@ -980,7 +980,7 @@ importers:
         version: 1.12.10
       '@kong/kongponents':
         specifier: 9.0.0-alpha.113
-        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.3.13)
+        version: 9.0.0-alpha.113(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.1.0
         version: 1.1.0(vite@5.1.5)
@@ -4740,9 +4740,6 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependenciesMeta:
-      ajv:
-        optional: true
     dependencies:
       ajv: 8.12.0
     dev: true
