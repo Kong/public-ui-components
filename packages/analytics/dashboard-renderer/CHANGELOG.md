@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.13.3...@kong-ui-public/dashboard-renderer@0.14.0) (2024-03-19)
+
+
+### Features
+
+* **analytics:** move to v2 config endpoint [MA-2730] ([#1257](https://github.com/Kong/public-ui-components/issues/1257)) ([e61e42f](https://github.com/Kong/public-ui-components/commit/e61e42fddb221a8e04f7faa18aa965bf7584d0e3))
+
+
+### BREAKING CHANGES
+
+* **analytics:** new config endpoint; types updated
+
+The following components are updated:
+
+- AnalyticsConfigCheck, and the associated store
+- MetricsProviderInternal
+- AnalyticsBridge (updates type that implementations must adhere to)
+- DashboardRenderer (sandbox and tests)
+
+
+
+
+
 ## [0.13.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.13.2...@kong-ui-public/dashboard-renderer@0.13.3) (2024-03-19)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
