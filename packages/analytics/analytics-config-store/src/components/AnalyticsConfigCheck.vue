@@ -24,8 +24,8 @@ const analyticsConfigStore = useAnalyticsConfigStore()
 const analyticsConfig: Ref<ConfigStoreState> = analyticsConfigStore.getConfig()
 
 const loading = computed<boolean>(() => !analyticsConfig.value)
-const hasAnalytics = computed<boolean>(() => !!analyticsConfig.value && analyticsConfig.value.analytics)
-const hasPercentiles = computed<boolean>(() => !!analyticsConfig.value && analyticsConfig.value.analytics && analyticsConfig.value.percentiles)
+const hasAnalytics = computed<boolean>(() => !!analyticsConfig.value?.analytics)
+const hasPercentiles = computed<boolean>(() => !!analyticsConfig.value?.analytics?.percentiles)
 const passThrough = computed<boolean>(() =>
   (props.requireAnalytics ? hasAnalytics.value : true) &&
   (props.requirePercentiles ? hasPercentiles.value : true),

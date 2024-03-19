@@ -3,7 +3,7 @@ import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import { INJECT_QUERY_PROVIDER, CP_ID_TOKEN, ENTITY_ID_TOKEN } from '../constants'
 import type {
   AnalyticsBridge,
-  AnalyticsConfig,
+  AnalyticsConfigV2,
   ExploreFilter,
   ExploreQuery,
   ExploreResultV4,
@@ -64,13 +64,14 @@ describe('<DashboardRenderer />', () => {
       }
     }
 
-    const configFn = (): Promise<AnalyticsConfig> => Promise.resolve({
-      analytics: true,
-      percentiles: true,
-      api_requests_retention: '1d',
-      api_requests_retention_ms: 86400000,
-      api_analytics_retention: '30d',
-      api_analytics_retention_ms: 30 * 86400000,
+    const configFn = (): Promise<AnalyticsConfigV2> => Promise.resolve({
+      analytics: {
+        percentiles: true,
+        retention_ms: 2592000000, // 30d
+      },
+      requests: {
+        retention_ms: 86400000,
+      },
     })
 
     return {

@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
 import type { Ref } from 'vue'
 import { inject, ref } from 'vue'
-import type { AnalyticsBridge, AnalyticsConfig } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsBridge, AnalyticsConfigV2 } from '@kong-ui-public/analytics-utilities'
 
 const INJECT_QUERY_PROVIDER = 'analytics-query-provider'
 
-export type ConfigStoreState = null | AnalyticsConfig
+export type ConfigStoreState = null | AnalyticsConfigV2
 
 export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
   let fetchedConfig = false
@@ -22,7 +22,8 @@ export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
       // Return a mock instance in order to prevent downstream components from waiting forever on the query.
       // This allows, e.g., metric cards to show an error rather than just endlessly "loading".
       configResult.value = {
-        analytics: false,
+        analytics: null,
+        requests: null,
       }
 
       return configResult

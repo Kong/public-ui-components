@@ -1,5 +1,5 @@
 import { createPinia, setActivePinia } from 'pinia'
-import type { AnalyticsBridge, AnalyticsConfig } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsBridge, AnalyticsConfigV2 } from '@kong-ui-public/analytics-utilities'
 import AnalyticsConfigCheck from './AnalyticsConfigCheck.vue'
 import { h } from 'vue'
 
@@ -8,29 +8,30 @@ const DEFAULT_SLOT_TEXT = 'Default slot rendered'
 const FALLBACK_SLOT_TEXT = 'Fallback slot rendered'
 
 const makeQueryBridge = (level: 'networkFail' | 'none' | 'analytics' | 'percentiles'): AnalyticsBridge => {
-  let config: AnalyticsConfig
+  let config: AnalyticsConfigV2
 
   if (level === 'analytics') {
     config = {
-      analytics: true,
-      percentiles: false,
-      api_requests_retention: '1d',
-      api_requests_retention_ms: 86400000,
-      api_analytics_retention: '30d',
-      api_analytics_retention_ms: 30 * 86400000,
+      analytics: {
+        percentiles: false,
+        retention_ms: 2592000000, // 30d
+      },
+      requests: null,
     }
   } else if (level === 'percentiles') {
     config = {
-      analytics: true,
-      percentiles: true,
-      api_requests_retention: '1d',
-      api_requests_retention_ms: 86400000,
-      api_analytics_retention: '30d',
-      api_analytics_retention_ms: 30 * 86400000,
+      analytics: {
+        percentiles: true,
+        retention_ms: 2592000000, // 30d
+      },
+      requests: {
+        retention_ms: 86400000,
+      },
     }
   } else {
     config = {
-      analytics: false,
+      analytics: null,
+      requests: null,
     }
   }
 
