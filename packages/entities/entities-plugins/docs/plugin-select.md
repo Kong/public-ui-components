@@ -30,70 +30,51 @@ A grid component for selecting Plugins.
 - type: `Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>`
 - required: `true`
 - properties:
-
   - `app`:
-
     - type: `'konnect' | 'kongManager'`
     - required: `true`
     - default: `undefined`
     - App name.
-
   - `apiBaseUrl`:
-
     - type: `string`
     - required: `true`
     - default: `undefined`
     - Base URL for API requests.
-
   - `requestHeaders`:
-
     - type: `RawAxiosRequestHeaders | AxiosHeaders`
     - required: `false`
     - default: `undefined`
     - Additional headers to send with all Axios requests.
-
   - `getCreateRoute`:
-
     - type: `(plugin: string) => RouteLocationRaw`
     - required: `true`
     - default: `undefined`
     - A function that returns the route for creating a specific plugin type.
-
   - `createCustomRoute`:
-
     - type: RouteLocationRaw
     - required: `false`
     - default: `undefined`
     - The route for creating a custom plugin.
-
   - `getCustomEditRoute`:
-
     - type: `(plugin: string) => RouteLocationRaw`
     - required: `false`
     - default: `undefined`
     - A function that returns the route for editing a custom plugin.
-
   - `workspace`:
-
     - type: `string`
     - required: `true`
     - default: `undefined`
-    - _Specific to Kong Manager_. Name of the current workspace.
-
+    - *Specific to Kong Manager*. Name of the current workspace.
   - `controlPlaneId`:
-
     - type: `string`
     - required: `true`
     - default: `undefined`
-    - _Specific to Konnect_. Name of the current control plane.
-
+    - *Specific to Konnect*. Name of the current control plane.
   - `entityId`:
-
     - type: `string`
     - required: `false`
     - default: `null`
     - Current entity id if the PluginSelect is being launched from the plugins tab on a consumer, consumer group, gateway service, or route detail page.
-
   - `entityType`:
     - type: `'consumers' | 'consumer_groups' | 'services' | 'routes'`
     - required: `false`
@@ -193,7 +174,7 @@ Ids of plugins to show in the highlighted plugins group.
 
 - type: `string`
 - required: `false`
-- default: `''`
+- default: `i18n.t('plugins.select.highlighted_plugins.title')`
 
 Title for the highlighted plugins group
 
