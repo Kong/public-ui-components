@@ -43,20 +43,19 @@
           @toggle-published="(data: any) => emit('toggle-published', data)"
         />
       </div>
-      </d>
-      <ProductDocumentModal
-        v-if="displayModal"
-        :action-pending="actionPending"
-        :documents="documentList"
-        :editing="editing"
-        :error-message="modalErrorMessage"
-        :hide-publish-toggle="hidePublishToggle"
-        :record="editing && selectedDocument ? selectedDocument : undefined"
-        @cancel="handleModalClosed"
-        @delete="emit('delete')"
-        @save="(formData: FormData, selectedFile: any) => emit('save', formData, selectedFile)"
-      />
     </div>
+    <ProductDocumentModal
+      v-if="displayModal"
+      :action-pending="actionPending"
+      :documents="documentList"
+      :editing="editing"
+      :error-message="modalErrorMessage"
+      :hide-publish-toggle="hidePublishToggle"
+      :record="editing && selectedDocument ? selectedDocument : undefined"
+      @cancel="handleModalClosed"
+      @delete="emit('delete')"
+      @save="(formData: FormData, selectedFile: any) => emit('save', formData, selectedFile)"
+    />
   </div>
 </template>
 
