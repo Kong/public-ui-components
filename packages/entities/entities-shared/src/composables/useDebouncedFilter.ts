@@ -23,7 +23,7 @@ export default function useDebouncedFilter(
   // size defaulted to 100 in hopes of retrieving all available
   // entries until better server-side filtering is offered
   if (!size) {
-    size = '100'
+    size = '1000'
   }
 
   // Is this reactive?
