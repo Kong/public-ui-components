@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.14.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.14.0...@kong-ui-public/dashboard-renderer@0.14.1) (2024-03-19)
+
+
+### Bug Fixes
+
+* remove unnecessary class ([#1264](https://github.com/Kong/public-ui-components/issues/1264)) ([449dd70](https://github.com/Kong/public-ui-components/commit/449dd705db7013c4316061cc6b27aa85cb9c7046))
+
+
+
+
+
 # [0.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.13.3...@kong-ui-public/dashboard-renderer@0.14.0) (2024-03-19)
 
 
