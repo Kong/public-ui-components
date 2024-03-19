@@ -35,55 +35,46 @@ A grid component for selecting Plugins.
     - required: `true`
     - default: `undefined`
     - App name.
-
   - `apiBaseUrl`:
     - type: `string`
     - required: `true`
     - default: `undefined`
     - Base URL for API requests.
-
   - `requestHeaders`:
     - type: `RawAxiosRequestHeaders | AxiosHeaders`
     - required: `false`
     - default: `undefined`
     - Additional headers to send with all Axios requests.
-
   - `getCreateRoute`:
     - type: `(plugin: string) => RouteLocationRaw`
     - required: `true`
     - default: `undefined`
     - A function that returns the route for creating a specific plugin type.
-
   - `createCustomRoute`:
     - type: RouteLocationRaw
     - required: `false`
     - default: `undefined`
     - The route for creating a custom plugin.
-
   - `getCustomEditRoute`:
     - type: `(plugin: string) => RouteLocationRaw`
     - required: `false`
     - default: `undefined`
     - A function that returns the route for editing a custom plugin.
-
   - `workspace`:
     - type: `string`
     - required: `true`
     - default: `undefined`
     - *Specific to Kong Manager*. Name of the current workspace.
-
   - `controlPlaneId`:
     - type: `string`
     - required: `true`
     - default: `undefined`
     - *Specific to Konnect*. Name of the current control plane.
-
   - `entityId`:
     - type: `string`
     - required: `false`
     - default: `null`
     - Current entity id if the PluginSelect is being launched from the plugins tab on a consumer, consumer group, gateway service, or route detail page.
-
   - `entityType`:
     - type: `'consumers' | 'consumer_groups' | 'services' | 'routes'`
     - required: `false`
@@ -159,7 +150,7 @@ Example:
 
 ```json
 {
-  'acl': 'ACL is not supported for this entity type',
+  "acl": "ACL is not supported for this entity type"
 }
 ```
 
@@ -170,6 +161,22 @@ Example:
 - default: `4`
 
 Number of plugins to always have visible (never will be collapsed).
+
+#### `highlightedPluginIds`
+
+- type: `string[]`
+- required: `false`
+- default: `[]`
+
+Ids of plugins to show in the highlighted plugins group.
+
+#### `highlightedPluginsTitle`
+
+- type: `string`
+- required: `false`
+- default: `i18n.t('plugins.select.highlighted_plugins.title')`
+
+Title for the highlighted plugins group
 
 ### Events
 
