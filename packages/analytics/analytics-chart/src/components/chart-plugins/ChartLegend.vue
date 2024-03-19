@@ -201,25 +201,23 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 @import '../../styles/base';
 
 ul.legend-container {
-  background: rgba(0,0,0, 0.03);
-  border-radius: 6px;
   display: flex;
   margin: 0;
   max-height: inherit;
   -ms-overflow-style: thin;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: $kui-space-50;
 
   @include scrollbarBase;
 
   &.right {
     flex-direction: column;
     justify-content: flex-start;
-    margin-left: $kui-space-30;
+    margin-left: $kui-space-40;
     max-height: 90%;
-    min-width: 16%;
+    min-width: 12%;
     row-gap: $kui-space-40;
+    width: auto;
 
     .truncate-label {
       max-width: 12ch;
@@ -244,12 +242,11 @@ ul.legend-container {
     align-items: start;
     cursor: pointer;
     display: flex;
-    line-height: 1;
 
     // Color bar preceding label
     .square-marker {
       height: 8px;
-      margin: $kui-space-10 $kui-space-30 0 0;
+      margin: 0 $kui-space-30 0 0;
       width: 8px;
     }
 
