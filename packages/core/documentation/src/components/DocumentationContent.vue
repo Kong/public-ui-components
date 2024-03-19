@@ -15,34 +15,32 @@
     </div>
     <div
       v-else
-      class="documentation"
+      class="documentation-parent-container"
     >
-      <div class="documentation-parent-container">
-        <KTreeList
-          :key="`tree-list-${cacheKey}`"
-          class="document-tree-list"
-          :items="documentList"
-          :max-depth="2"
-          @change="(data: ChangeEvent) => emit('parent-change', data)"
-          @child-change="(data: ChildChangeEvent) => emit('child-change', data)"
-          @selected="(data: TreeListItem) => emit('document-selection', data)"
-        />
-        <DocumentationDisplay
-          v-if="selectedDocument"
-          :key="key"
-          :can-edit="canEdit"
-          :card="card"
-          class="document-holder"
-          :hide-publish-toggle="hidePublishToggle"
-          :selected-document="selectedDocument"
-          @add="handleAddClick"
-          @download="emit('download')"
-          @edit="handleEditClick"
-          @edit-markdown="handleEditMarkdown"
-          @save-markdown="(content: string) => emit('save-markdown', content)"
-          @toggle-published="(data: any) => emit('toggle-published', data)"
-        />
-      </div>
+      <KTreeList
+        :key="`tree-list-${cacheKey}`"
+        class="document-tree-list"
+        :items="documentList"
+        :max-depth="2"
+        @change="(data: ChangeEvent) => emit('parent-change', data)"
+        @child-change="(data: ChildChangeEvent) => emit('child-change', data)"
+        @selected="(data: TreeListItem) => emit('document-selection', data)"
+      />
+      <DocumentationDisplay
+        v-if="selectedDocument"
+        :key="key"
+        :can-edit="canEdit"
+        :card="card"
+        class="document-holder"
+        :hide-publish-toggle="hidePublishToggle"
+        :selected-document="selectedDocument"
+        @add="handleAddClick"
+        @download="emit('download')"
+        @edit="handleEditClick"
+        @edit-markdown="handleEditMarkdown"
+        @save-markdown="(content: string) => emit('save-markdown', content)"
+        @toggle-published="(data: any) => emit('toggle-published', data)"
+      />
     </div>
     <ProductDocumentModal
       v-if="displayModal"
@@ -181,8 +179,6 @@ const handleModalClosed = (): void => {
 
 <style lang="scss" scoped>
 .documentation {
-  padding: $kui-space-80 $kui-space-0;
-
   .doc-card-title {
     font-size: $kui-font-size-60;
   }

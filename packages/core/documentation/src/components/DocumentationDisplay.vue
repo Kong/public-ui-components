@@ -296,7 +296,6 @@ watch(() => props.selectedDocument, (newVal) => {
 .documentation-display {
   border: $kui-border-width-10 solid $kui-color-border;
   border-radius: $kui-border-radius-20;
-  margin-top: $kui-space-20;
 
   .document-meta {
     align-items: center;
