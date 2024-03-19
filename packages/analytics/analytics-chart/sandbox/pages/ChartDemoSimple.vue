@@ -229,9 +229,9 @@ import {
   SimpleChart,
   TopNTable,
 } from '../../src'
+import { SeededRandom } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsExploreRecord, DisplayBlob, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, SimpleChartOptions } from '../../src/types'
-import { SeededRandom } from '../utils/SeedRandom'
 import { rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'

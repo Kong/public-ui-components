@@ -423,7 +423,7 @@ describe('useVitalsExploreDatasets', () => {
           rawDimension: 'metric1',
           rawMetric: 'metric1',
           label: 'metric1',
-          borderColor: '#763aa3',
+          borderColor: '#a86cd5',
           backgroundColor: '#a86cd5',
           data: [
             {
@@ -446,7 +446,7 @@ describe('useVitalsExploreDatasets', () => {
           rawDimension: 'metric2',
           rawMetric: 'metric2',
           label: 'metric2',
-          borderColor: '#3854a0',
+          borderColor: '#6a86d2',
           backgroundColor: '#6a86d2',
           data: [
             {

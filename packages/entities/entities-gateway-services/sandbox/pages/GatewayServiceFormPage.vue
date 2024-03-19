@@ -39,7 +39,6 @@ const konnectConfig = ref<KonnectGatewayServiceFormConfig>({
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   cancelRoute: { name: 'gateway-services-list' },
-  jsonYamlFormsEnabled: true,
 })
 
 const kongManagerConfig = ref<KongManagerGatewayServiceFormConfig>({

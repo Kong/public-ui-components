@@ -106,6 +106,62 @@ describe('<PluginSelect />', () => {
       }
     })
 
+    it('should show highlighted plugins', () => {
+      interceptKM()
+
+      cy.mount(PluginSelect, {
+        props: {
+          config: baseConfigKM,
+          highlightedPluginIds: ['basic-auth'],
+        },
+      })
+
+      cy.wait('@getAvailablePlugins')
+
+      cy.getTestId('Highlighted Plugins-collapse').as('highlightedPlugins').should('be.visible')
+
+      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content').should('not.exist')
+      cy.get('@highlightedPlugins').findTestId('basic-auth-card').should('be.visible')
+
+      // highlighted plugins should be hidden
+      cy.getTestId('plugins-filter').type('gnok')
+      cy.get('@highlightedPlugins').should('not.exist')
+    })
+
+    it('should show highlighted plugins and collapse trigger', () => {
+      interceptKM()
+
+      const highlightedPluginIds = ['basic-auth', 'hmac-auth', 'ip-restriction', 'rate-limiting', 'syslog']
+
+      cy.mount(PluginSelect, {
+        props: {
+          config: baseConfigKM,
+          highlightedPluginIds,
+        },
+      })
+
+      cy.wait('@getAvailablePlugins')
+
+      cy.getTestId('Highlighted Plugins-collapse').as('highlightedPlugins').should('be.visible')
+
+      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content')
+        .should('be.visible')
+        .should('contain.text', 'View less')
+
+      for (const pluginId of highlightedPluginIds) {
+        cy.get('@highlightedPlugins').findTestId(`${pluginId}-card`).should('be.visible')
+      }
+
+      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content').click()
+      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content')
+        .should('be.visible')
+        .should('contain.text', 'View 1 more')
+
+      // highlighted plugins should be hidden
+      cy.getTestId('plugins-filter').type('gnok')
+      cy.get('@highlightedPlugins').should('not.exist')
+    })
+
     it('should allow customizing the pluginsPerRow', () => {
       const pluginsPerRow = 3
       const expectedCount = pluginsPerRow * PLUGIN_GROUPS_IN_USE.length
@@ -390,6 +446,62 @@ describe('<PluginSelect />', () => {
       customPluginNames.forEach((pluginName: string) => {
         cy.getTestId(`${pluginName}-card`).should('exist')
       })
+    })
+
+    it('should show highlighted plugins', () => {
+      interceptKonnect()
+
+      cy.mount(PluginSelect, {
+        props: {
+          config: baseConfigKonnect,
+          highlightedPluginIds: ['basic-auth'],
+        },
+      })
+
+      cy.wait('@getAvailablePlugins')
+
+      cy.getTestId('Highlighted Plugins-collapse').as('highlightedPlugins').should('be.visible')
+
+      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content').should('not.exist')
+      cy.get('@highlightedPlugins').findTestId('basic-auth-card').should('be.visible')
+
+      // highlighted plugins should be hidden
+      cy.getTestId('plugins-filter').type('gnok')
+      cy.get('@highlightedPlugins').should('not.exist')
+    })
+
+    it('should show highlighted plugins and collapse trigger', () => {
+      interceptKonnect()
+
+      const highlightedPluginIds = ['basic-auth', 'hmac-auth', 'ip-restriction', 'rate-limiting', 'syslog']
+
+      cy.mount(PluginSelect, {
+        props: {
+          config: baseConfigKonnect,
+          highlightedPluginIds,
+        },
+      })
+
+      cy.wait('@getAvailablePlugins')
+
+      cy.getTestId('Highlighted Plugins-collapse').as('highlightedPlugins').should('be.visible')
+
+      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content')
+        .should('be.visible')
+        .should('contain.text', 'View less')
+
+      for (const pluginId of highlightedPluginIds) {
+        cy.get('@highlightedPlugins').findTestId(`${pluginId}-card`).should('be.visible')
+      }
+
+      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content').click()
+      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content')
+        .should('be.visible')
+        .should('contain.text', 'View 1 more')
+
+      // highlighted plugins should be hidden
+      cy.getTestId('plugins-filter').type('gnok')
+      cy.get('@highlightedPlugins').should('not.exist')
     })
 
     it('should allow customizing the pluginsPerRow', () => {

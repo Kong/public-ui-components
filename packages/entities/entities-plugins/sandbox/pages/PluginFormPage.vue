@@ -50,7 +50,7 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   // entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
   backRoute: { name: 'select-plugin' },
   cancelRoute: { name: 'home' },
-  jsonYamlFormsEnabled: true,
+  groupFields: true,
 })
 
 const kongManagerConfig = ref<KongManagerPluginFormConfig>({
@@ -62,6 +62,7 @@ const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   // entityId: '123-abc-i-lover-cats',
   backRoute: { name: 'select-plugin' },
   cancelRoute: { name: 'home' },
+  groupFields: true,
 })
 
 const onUpdate = (payload: Record<string, any>) => {

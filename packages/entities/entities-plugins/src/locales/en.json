@@ -476,6 +476,9 @@
             "description": "Upload schema file to create custom plugin"
           }
         }
+      },
+      "highlighted_plugins": {
+        "title": "Highlighted Plugins"
       }
     },
     "form": {
@@ -526,6 +529,11 @@
           "placeholder": "Select a Consumer Group",
           "plural": "Consumer Groups"
         }
+      },
+      "grouping": {
+        "common_fields": "Common Fields",
+        "required_fields": "Required Fields",
+        "advanced_fields": "Advanced Fields"
       }
     }
   },

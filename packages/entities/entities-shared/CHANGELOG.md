@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.0...@kong-ui-public/entities-shared@2.12.1) (2024-03-19)
+
+
+### Bug Fixes
+
+* **entities:** default filter size to 1000 ([#1261](https://github.com/Kong/public-ui-components/issues/1261)) ([b5be869](https://github.com/Kong/public-ui-components/commit/b5be86956b937c80639f492ad8a44ac83f40f314))
+
+
+
+
+
+# [2.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.11.0...@kong-ui-public/entities-shared@2.12.0) (2024-03-18)
+
+
+### Features
+
+* **entities:** add axiosRequestConfig ([#1243](https://github.com/Kong/public-ui-components/issues/1243)) ([980301e](https://github.com/Kong/public-ui-components/commit/980301e0f866c4389096558ddcdff07d0b27d38f))
+
+
+
+
+
+# [2.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.10.5...@kong-ui-public/entities-shared@2.11.0) (2024-03-18)
+
+
+### Features
+
+* **jsonYamlForms:** remove json yaml milestone 2 ff for all entity forms post GA [KHCP-9971] ([#1259](https://github.com/Kong/public-ui-components/issues/1259)) ([109cd54](https://github.com/Kong/public-ui-components/commit/109cd544c1d706641c9cbf3df3532e85765f3a3a))
+
+
+
+
+
+## [2.10.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.10.4...@kong-ui-public/entities-shared@2.10.5) (2024-03-13)
+
+
+### Bug Fixes
+
+* **upstream-list:** use exact match search on upstream list [KHCP-11054] ([#1230](https://github.com/Kong/public-ui-components/issues/1230)) ([d7266c3](https://github.com/Kong/public-ui-components/commit/d7266c38c4260eb78bf2b721e3d9f21a92cc4529))
+
+
+
+
+
 ## [2.10.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.10.3...@kong-ui-public/entities-shared@2.10.4) (2024-03-13)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

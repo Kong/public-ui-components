@@ -224,8 +224,10 @@ const getValue = (record: AnalyticsExploreRecord): string => {
 </script>
 
 <style lang="scss" scoped>
+@import '../styles/base';
 .kong-ui-public-top-n-table {
   border: none !important;
+  height: 100%;
   padding: 0 !important;
   .top-n-card-title {
     font-size: $kui-font-size-40;
@@ -243,12 +245,20 @@ const getValue = (record: AnalyticsExploreRecord): string => {
     line-height: 22px;
   }
 
+  :deep(.card-content) {
+    overflow-y: auto;
+
+    @include scrollbarBase;
+  }
+
   .top-n-table {
     display: flex;
     flex-direction: column;
+    max-height: 100%;
     width: 100%;
 
     .table-headings {
+      flex-shrink: 0;
       font-size: $kui-font-size-30;
       font-weight: $kui-font-weight-semibold;
       line-height: $kui-line-height-40;
@@ -276,6 +286,7 @@ const getValue = (record: AnalyticsExploreRecord): string => {
     }
 
     .table-body {
+      overflow-y: auto;
       .table-row:first-of-type {
         border-top: $kui-border-width-10 solid $kui-color-border;
       }

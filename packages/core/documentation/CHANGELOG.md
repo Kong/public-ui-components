@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.31...@kong-ui-public/documentation@0.3.32) (2024-03-19)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.3.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.30...@kong-ui-public/documentation@0.3.31) (2024-03-18)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.3.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.29...@kong-ui-public/documentation@0.3.30) (2024-03-18)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.3.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.28...@kong-ui-public/documentation@0.3.29) (2024-03-15)
+
+
+### Bug Fixes
+
+* **documentation:** mobile view [khcp-10984] ([#1251](https://github.com/Kong/public-ui-components/issues/1251)) ([bf49bed](https://github.com/Kong/public-ui-components/commit/bf49bedc5033affc020d3fe49e7ab93ecf9c7ab2))
+
+
+
+
+
+## [0.3.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.27...@kong-ui-public/documentation@0.3.28) (2024-03-13)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
 ## [0.3.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.26...@kong-ui-public/documentation@0.3.27) (2024-03-13)
 
 **Note:** Version bump only for package @kong-ui-public/documentation

@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import type { DashboardConfig, DashboardRendererContext, TileConfig } from '../../src'
-import { ChartTypes, DashboardRenderer } from '../../src'
+import { CP_ID_TOKEN, ChartTypes, DashboardRenderer, ENTITY_ID_TOKEN } from '../../src'
 import { inject } from 'vue'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
@@ -50,6 +50,7 @@ const dashboardConfig: DashboardConfig = {
     cols: 6,
     rows: 9,
   },
+  tileHeight: 167,
   tiles: [
     {
       definition: {
@@ -74,6 +75,7 @@ const dashboardConfig: DashboardConfig = {
         chart: {
           type: ChartTypes.HorizontalBar,
           chartTitle: 'Horizontal bar chart of mock data',
+          allowCsvExport: true,
         },
         query: {},
       },
@@ -91,7 +93,9 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.VerticalBar,
+          type: ChartTypes.TopN,
+          chartTitle: 'Top N chart of mock data',
+          description: 'Description',
         },
         query: {},
       },
@@ -112,8 +116,9 @@ const dashboardConfig: DashboardConfig = {
           type: ChartTypes.TopN,
           chartTitle: 'Top N chart of mock data',
           description: 'Description',
+          entityLink: `https://test.com/cp/${CP_ID_TOKEN}/entity/${ENTITY_ID_TOKEN}`,
         },
-        query: {},
+        query: { dimensions: ['route'] },
       },
       layout: {
         position: {

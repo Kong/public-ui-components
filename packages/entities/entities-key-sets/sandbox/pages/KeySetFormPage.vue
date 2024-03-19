@@ -38,7 +38,6 @@ const konnectConfig = ref<KonnectKeySetFormConfig>({
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   cancelRoute: { name: 'key-set-list' },
-  jsonYamlFormsEnabled: true,
 })
 const kongManagerConfig = ref<KongManagerKeySetFormConfig>({
   app: 'kongManager',

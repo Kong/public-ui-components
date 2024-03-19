@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@1.4.0...@kong-ui-public/analytics-utilities@2.0.0) (2024-03-19)
+
+
+### Features
+
+* **analytics:** move to v2 config endpoint [MA-2730] ([#1257](https://github.com/Kong/public-ui-components/issues/1257)) ([e61e42f](https://github.com/Kong/public-ui-components/commit/e61e42fddb221a8e04f7faa18aa965bf7584d0e3))
+
+
+### BREAKING CHANGES
+
+* **analytics:** new config endpoint; types updated
+
+The following components are updated:
+
+- AnalyticsConfigCheck, and the associated store
+- MetricsProviderInternal
+- AnalyticsBridge (updates type that implementations must adhere to)
+- DashboardRenderer (sandbox and tests)
+
+
+
+
+
+# [1.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@1.3.1...@kong-ui-public/analytics-utilities@1.4.0) (2024-03-13)
+
+
+### Features
+
+* **analytics:** add types for config V2 ([#1235](https://github.com/Kong/public-ui-components/issues/1235)) ([dcd3dfe](https://github.com/Kong/public-ui-components/commit/dcd3dfeeb59a22e2d1d133c24375945ec3eeeca1))
+
+
+
+
+
 ## [1.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@1.3.0...@kong-ui-public/analytics-utilities@1.3.1) (2024-03-12)
 
 

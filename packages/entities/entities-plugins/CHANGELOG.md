@@ -3,6 +3,109 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.16.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.16.0...@kong-ui-public/entities-plugins@2.16.1) (2024-03-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [2.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.15.2...@kong-ui-public/entities-plugins@2.16.0) (2024-03-19)
+
+
+### Features
+
+* **entities-plugins:** UX improvements on plugin select [KM-18] ([#1225](https://github.com/Kong/public-ui-components/issues/1225)) ([57bf552](https://github.com/Kong/public-ui-components/commit/57bf5522e179098063f1718c11ca37b446ef4775))
+
+
+
+
+
+## [2.15.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.15.1...@kong-ui-public/entities-plugins@2.15.2) (2024-03-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.15.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.15.0...@kong-ui-public/entities-plugins@2.15.1) (2024-03-18)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [2.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.14.3...@kong-ui-public/entities-plugins@2.15.0) (2024-03-18)
+
+
+### Features
+
+* **jsonYamlForms:** remove json yaml milestone 2 ff for all entity forms post GA [KHCP-9971] ([#1259](https://github.com/Kong/public-ui-components/issues/1259)) ([109cd54](https://github.com/Kong/public-ui-components/commit/109cd544c1d706641c9cbf3df3532e85765f3a3a))
+
+
+
+
+
+## [2.14.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.14.2...@kong-ui-public/entities-plugins@2.14.3) (2024-03-18)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.14.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.14.1...@kong-ui-public/entities-plugins@2.14.2) (2024-03-15)
+
+
+### Bug Fixes
+
+* **entities-plugins:** revert the changes on the required field ([#1249](https://github.com/Kong/public-ui-components/issues/1249)) ([755fe82](https://github.com/Kong/public-ui-components/commit/755fe82d350fa31dc80669a2cf5accc6deeb4d84))
+
+
+
+
+
+## [2.14.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.14.0...@kong-ui-public/entities-plugins@2.14.1) (2024-03-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [2.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.13.7...@kong-ui-public/entities-plugins@2.14.0) (2024-03-14)
+
+
+### Features
+
+* **entities-plugins:** support field grouping ([#1224](https://github.com/Kong/public-ui-components/issues/1224)) ([58ef983](https://github.com/Kong/public-ui-components/commit/58ef983848b34673fc335bbacf1b013f66abdde9))
+
+
+
+
+
+## [2.13.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.13.6...@kong-ui-public/entities-plugins@2.13.7) (2024-03-13)
+
+
+### Bug Fixes
+
+* **plugins:** persist query params on tab change [khcp-11068] ([#1236](https://github.com/Kong/public-ui-components/issues/1236)) ([8a0597d](https://github.com/Kong/public-ui-components/commit/8a0597de3dd688000e593a9fbef8a7cfbb4b532a))
+
+
+
+
+
+## [2.13.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.13.5...@kong-ui-public/entities-plugins@2.13.6) (2024-03-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [2.13.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.13.4...@kong-ui-public/entities-plugins@2.13.5) (2024-03-13)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

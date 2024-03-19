@@ -59,15 +59,13 @@
           v-else
           class="plugin-form-actions"
         >
-          <div v-if="config.jsonYamlFormsEnabled">
-            <KButton
-              appearance="tertiary"
-              data-testid="form-view-configuration"
-              @click="toggle()"
-            >
-              {{ t('actions.view_configuration') }}
-            </KButton>
-          </div>
+          <KButton
+            appearance="tertiary"
+            data-testid="form-view-configuration"
+            @click="toggle()"
+          >
+            {{ t('actions.view_configuration') }}
+          </KButton>
           <KButton
             appearance="secondary"
             class="form-action-button"
@@ -243,7 +241,7 @@ const props = defineProps({
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const { pluginMetaData, credentialMetaData, credentialSchemas } = composables.usePluginMetaData()
-const { customSchemas, typedefs } = composables.useSchemas(undefined, props.config.app)
+const { customSchemas, typedefs } = composables.useSchemas(undefined, { app: props.config.app })
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
 const { objectsAreEqual } = useHelpers()

@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@4.1.7...@kong-ui-public/analytics-metric-provider@5.0.0) (2024-03-19)
+
+
+### Features
+
+* **analytics:** move to v2 config endpoint [MA-2730] ([#1257](https://github.com/Kong/public-ui-components/issues/1257)) ([e61e42f](https://github.com/Kong/public-ui-components/commit/e61e42fddb221a8e04f7faa18aa965bf7584d0e3))
+
+
+### BREAKING CHANGES
+
+* **analytics:** new config endpoint; types updated
+
+The following components are updated:
+
+- AnalyticsConfigCheck, and the associated store
+- MetricsProviderInternal
+- AnalyticsBridge (updates type that implementations must adhere to)
+- DashboardRenderer (sandbox and tests)
+
+
+
+
+
+## [4.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@4.1.6...@kong-ui-public/analytics-metric-provider@4.1.7) (2024-03-14)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [4.1.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@4.1.5...@kong-ui-public/analytics-metric-provider@4.1.6) (2024-03-13)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
 ## [4.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@4.1.4...@kong-ui-public/analytics-metric-provider@4.1.5) (2024-03-13)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider

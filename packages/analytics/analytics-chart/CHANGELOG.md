@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.5.0...@kong-ui-public/analytics-chart@2.5.1) (2024-03-19)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+# [2.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.4.8...@kong-ui-public/analytics-chart@2.5.0) (2024-03-15)
+
+
+### Features
+
+* **dashboard-renderer:** entity links in TopN table ([#1247](https://github.com/Kong/public-ui-components/issues/1247)) ([daa48df](https://github.com/Kong/public-ui-components/commit/daa48df29e75d4eee08c2389c0894773e95083af))
+
+
+
+
+
+## [2.4.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.4.7...@kong-ui-public/analytics-chart@2.4.8) (2024-03-13)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [2.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.4.6...@kong-ui-public/analytics-chart@2.4.7) (2024-03-13)
+
+
+### Bug Fixes
+
+* dont need to darken color for line chart border anymore ([#1234](https://github.com/Kong/public-ui-components/issues/1234)) ([45c806c](https://github.com/Kong/public-ui-components/commit/45c806ce388be7cf51cdcd704e1df788eb0b7f7d))
+
+
+
+
+
 ## [2.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.4.5...@kong-ui-public/analytics-chart@2.4.6) (2024-03-13)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
