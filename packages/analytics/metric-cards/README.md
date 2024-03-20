@@ -27,6 +27,7 @@ A Kong UI component for display Traffic, Error Rate, and P99 Latency insights in
   - `KTooltip`
 
 ### CSS Variables
+
 Variable | Description | Default
 ---------|----------|---------
 `--kong-ui-metric-card-background` | The background of the `.kong-ui-public-metric-card-container` main container | `transparent`
