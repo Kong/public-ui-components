@@ -55,7 +55,6 @@ const componentData = computed(() => {
       queryReady: true, // TODO: Pipelining
       chartOptions: props.definition.chart,
       height: props.height - PADDING_SIZE * 2,
-      refreshInterval: props.definition.refreshInterval,
     },
   }
 })

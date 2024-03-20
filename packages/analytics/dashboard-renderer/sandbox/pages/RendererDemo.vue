@@ -43,6 +43,7 @@ const context: DashboardRendererContext = {
     type: 'relative',
     time_range: '24h',
   },
+  refreshInterval: 5000,
 }
 
 const dashboardConfig: DashboardConfig = {
@@ -140,7 +141,6 @@ const dashboardConfig: DashboardConfig = {
         query: {
           dimensions: ['time'],
         },
-        refreshInterval: 5000,
       },
       layout: {
         position: {
