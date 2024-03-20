@@ -420,6 +420,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
 
   tags: typedefs.tags as DefaultPluginsFormSchema,
   protocols: {
+    id: 'protocols',
     default: [],
     help: t('plugins.form.fields.protocols.help'),
     label: t('plugins.form.fields.protocols.label'),
