@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.14.6...@kong-ui-public/dashboard-renderer@0.15.0) (2024-03-20)
+
+
+### Features
+
+* allow dashbaord renderer to optionally auto refresh queries ([#1271](https://github.com/Kong/public-ui-components/issues/1271)) ([eee8e28](https://github.com/Kong/public-ui-components/commit/eee8e28d0333935782b2570be27881be6beced01))
+
+
+
+
+
 ## [0.14.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.14.5...@kong-ui-public/dashboard-renderer@0.14.6) (2024-03-20)
 
 
