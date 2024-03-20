@@ -483,7 +483,12 @@ describe('<EntityBaseConfigCard />', () => {
 
       cy.getTestId('k-code-block-copy-button').should('be.visible')
       // eslint-disable-next-line cypress/unsafe-to-chain-command
-      cy.getTestId('k-code-block-copy-button').click().then(() => {
+      cy.getTestId('k-code-block-copy-button').eq(0).click().then(() => {
+        // emits copy event
+        cy.wrap(Cypress.vueWrapper.emitted).should('have.length', 1)
+      })
+      // eslint-disable-next-line cypress/unsafe-to-chain-command
+      cy.getTestId('k-code-block-copy-button').eq(1).click().then(() => {
         // emits copy event
         cy.wrap(Cypress.vueWrapper.emitted).should('have.length', 1)
       })

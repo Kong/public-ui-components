@@ -25,15 +25,15 @@ export const PluginGroupArray = [
 ]
 
 export const PLUGIN_GROUPS_COLLAPSE_STATUS = {
-  [PluginGroup.AUTHENTICATION]: true,
-  [PluginGroup.SECURITY]: true,
-  [PluginGroup.TRAFFIC_CONTROL]: true,
-  [PluginGroup.SERVERLESS]: true,
-  [PluginGroup.ANALYTICS_AND_MONITORING]: true,
-  [PluginGroup.TRANSFORMATIONS]: true,
-  [PluginGroup.LOGGING]: true,
-  [PluginGroup.DEPLOYMENT]: true,
-  [PluginGroup.CUSTOM_PLUGINS]: true,
+  [PluginGroup.AUTHENTICATION]: false,
+  [PluginGroup.SECURITY]: false,
+  [PluginGroup.TRAFFIC_CONTROL]: false,
+  [PluginGroup.SERVERLESS]: false,
+  [PluginGroup.ANALYTICS_AND_MONITORING]: false,
+  [PluginGroup.TRANSFORMATIONS]: false,
+  [PluginGroup.LOGGING]: false,
+  [PluginGroup.DEPLOYMENT]: false,
+  [PluginGroup.CUSTOM_PLUGINS]: false,
 }
 
 // this is the entity associated with a specific plugin, if no associated entity, then it's a global plugin meaning EntityType will be 'plugins'

@@ -39,7 +39,6 @@ const konnectConfig = ref<KonnectBaseEntityConfig>({
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   entityId,
-  jsonYamlFormsEnabled: true,
 })
 
 const item = {

@@ -50,7 +50,6 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   // entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
   backRoute: { name: 'select-plugin' },
   cancelRoute: { name: 'home' },
-  jsonYamlFormsEnabled: true,
   groupFields: true,
 })
 

@@ -75,6 +75,7 @@ const dashboardConfig: DashboardConfig = {
         chart: {
           type: ChartTypes.HorizontalBar,
           chartTitle: 'Horizontal bar chart of mock data',
+          allowCsvExport: true,
         },
         query: {},
       },

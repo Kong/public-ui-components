@@ -1,6 +1,6 @@
 import MetricsTestHarness from './MetricsTestHarness.vue'
 import { ref } from 'vue'
-import type { AnalyticsBridge, AnalyticsConfig, ExploreQuery, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsBridge, AnalyticsConfigV2, ExploreQuery, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { MockOptions } from '../mockExploreResponse'
 import { mockExploreResponse } from '../mockExploreResponse'
 import { INJECT_QUERY_PROVIDER } from '../constants'
@@ -47,13 +47,14 @@ describe('<AnalyticsMetricProvider />', () => {
 
     const hasTrendAccess = opts?.hasTrendAccess ?? true
 
-    const configFn = (): Promise<AnalyticsConfig> => Promise.resolve({
-      analytics: true,
-      percentiles: true,
-      api_requests_retention: '24h',
-      api_requests_retention_ms: 86400000,
-      api_analytics_retention: hasTrendAccess ? '30d' : '1d',
-      api_analytics_retention_ms: hasTrendAccess ? 30 * 86400000 : 86400000,
+    const configFn = (): Promise<AnalyticsConfigV2> => Promise.resolve({
+      analytics: {
+        percentiles: true,
+        retention_ms: hasTrendAccess ? 2592000000 : 86400000, // 30d | 1d
+      },
+      requests: {
+        retention_ms: 86400000,
+      },
     })
 
     return {

@@ -1,7 +1,7 @@
 <template>
   <div class="metric-card-tile-wrapper">
     <MetricsProviderInternal v-bind="options">
-      <MetricsConsumer class="metric-consumer" />
+      <MetricsConsumer />
     </MetricsProviderInternal>
   </div>
 </template>

@@ -93,12 +93,13 @@ const makeQueryBridge = (opts?: MockOptions): AnalyticsBridge => {
 
     configFn: () => {
       return Promise.resolve({
-        analytics: true,
-        percentiles: true,
-        api_analytics_retention: '1d',
-        api_analytics_retention_ms: 86400000,
-        api_requests_retention: '30d',
-        api_requests_retention_ms: 30 * 86400000,
+        analytics: {
+          percentiles: true,
+          retention_ms: 2592000000, // 30d
+        },
+        requests: {
+          retention_ms: 86400000,
+        },
       })
     },
   }

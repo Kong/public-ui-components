@@ -41,7 +41,6 @@ const konnectConfig = ref<KonnectCertificateFormConfig>({
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   cancelRoute: { name: 'ca-certificate-list' },
-  jsonYamlFormsEnabled: true,
 })
 
 const kongManagerConfig = ref<KongManagerCertificateFormConfig>({

@@ -42,15 +42,13 @@
         data-testid="form-actions"
       >
         <slot name="form-actions">
-          <div v-if="config.jsonYamlFormsEnabled">
-            <KButton
-              appearance="tertiary"
-              data-testid="form-view-configuration"
-              @click="toggle()"
-            >
-              {{ t('baseForm.actions.viewConfiguration') }}
-            </KButton>
-          </div>
+          <KButton
+            appearance="tertiary"
+            data-testid="form-view-configuration"
+            @click="toggle()"
+          >
+            {{ t('baseForm.actions.viewConfiguration') }}
+          </KButton>
           <KButton
             appearance="secondary"
             data-testid="form-cancel"

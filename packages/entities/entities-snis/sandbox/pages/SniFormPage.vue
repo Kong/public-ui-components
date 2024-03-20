@@ -41,7 +41,6 @@ const konnectConfig = ref<KonnectSniFormConfig>({
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   cancelRoute: { name: 'snis-list' },
-  jsonYamlFormsEnabled: true,
   // uncomment to see create with provided certificate
   /* certificateId: '1234-ilove-cats', */
 

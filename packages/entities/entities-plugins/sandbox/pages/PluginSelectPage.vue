@@ -4,12 +4,14 @@
     <PluginSelect
       :config="konnectConfig"
       :disabled-plugins="{ 'acl': 'ACL is not supported for this entity type'}"
+      :highlighted-plugin-ids="highlightedPluginIds"
       @delete-custom:success="handleDeleteSuccess"
     />
 
     <h2>Kong Manager API</h2>
     <PluginSelect
       :config="kongManagerConfig"
+      :highlighted-plugin-ids="highlightedPluginIds"
     />
   </div>
 </template>
@@ -61,6 +63,11 @@ const kongManagerConfig = ref<KongManagerPluginSelectConfig>({
     },
   }),
 })
+
+const highlightedPluginIds = ref([
+  'basic-auth', 'ip-restriction', 'jwt', 'key-auth',
+  'rate-limiting', 'request-termination', 'response-ratelimiting', 'tcp-log',
+])
 
 const handleDeleteSuccess = (plugin: string): void => {
   console.log(`Custom plugin ${plugin} deleted`)

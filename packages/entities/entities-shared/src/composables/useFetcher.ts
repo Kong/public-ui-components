@@ -24,9 +24,12 @@ export default function useFetcher(
 ) {
   const _baseUrl = unref(baseUrl)
 
+  // Combine any config.requestHeaders with the optional axiosRequestConfig.headers
+
   // Is this reactive?
   const { axiosInstance } = useAxios({
-    headers: config.requestHeaders,
+    ...config.axiosRequestConfig,
+    ...{ headers: { ...config.axiosRequestConfig?.headers, ...config.requestHeaders } },
   })
 
   const buildFetchUrl = useFetchUrlBuilder(config, _baseUrl)
@@ -46,7 +49,15 @@ export default function useFetcher(
         requestUrl = `${requestUrl}&page[size]=${fetcherParams.pageSize}&page[number]=${fetcherParams.page}`
       }
 
-      const { data } = await axiosInstance.get(requestUrl)
+      const res = await axiosInstance.get(requestUrl)
+      // If the host app treats 4xx and 5xx responses as resolved through its validateStatus,
+      // we need to throw the error to trigger the catch block
+      // because we still need to show the error UI accordingly.
+      if (res.status >= 400) {
+        throw res
+      }
+
+      const data = res.data
       const dataKey = (dataKeyName && dataKeyName.replace(/[^\w-_]/gi, ''))
       let tableData
 
@@ -85,11 +96,11 @@ export default function useFetcher(
       }
 
       // If response is 404, and there is a filterQuery, show no results instead of error
-      if (fetcherParams.query && error.response.status === 404) {
+      if (fetcherParams.query && (error.response?.status === 404 || error.status === 404)) {
         state.value = {
           status: FetcherStatus.NoResults,
           response,
-          error,
+          error: error.response ? error : { response: error },
         }
 
         return response
@@ -98,7 +109,7 @@ export default function useFetcher(
       state.value = {
         status: FetcherStatus.Error,
         response,
-        error,
+        error: error.response ? error : { response: error },
       }
 
       return response
