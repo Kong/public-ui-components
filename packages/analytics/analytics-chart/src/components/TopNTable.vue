@@ -65,6 +65,16 @@
           <div class="column-1">
             {{ i18n.t('topNTable.nameLabel') }}
           </div>
+          <template v-if="extraColumns?.length">
+            <div
+              v-for="column in extraColumns"
+              :key="column.key"
+              class="extra-column"
+              :class="`column-${column.key}`"
+            >
+              {{ column.label }}
+            </div>
+          </template>
           <div class="column-2">
             {{ columnName }}
           </div>
@@ -94,6 +104,20 @@
               {{ getName(entry) }}
             </slot>
           </div>
+          <template v-if="extraColumns?.length">
+            <div
+              v-for="column in extraColumns"
+              :key="column.key"
+              class="extra-column"
+              :class="`column-${column.key}`"
+            >
+              <slot
+                :meta="data.meta"
+                :name="column.key"
+                :record="entry"
+              />
+            </div>
+          </template>
           <div class="column-2">
             &nbsp; {{ getValue(entry) }}
           </div>
@@ -131,6 +155,10 @@ const props = defineProps({
   isLoading: {
     type: Boolean,
     default: false,
+  },
+  extraColumns: {
+    type: Array as PropType<Array<{ key: string, label: string }>>,
+    default: () => [],
   },
 })
 
@@ -275,7 +303,8 @@ const getValue = (record: AnalyticsExploreRecord): string => {
       }
     }
 
-    .column-1 {
+    .column-1, .extra-column {
+      flex: 1;
       padding: $kui-space-0 $kui-space-80 $kui-space-50 $kui-space-0;
     }
 
@@ -291,7 +320,7 @@ const getValue = (record: AnalyticsExploreRecord): string => {
         border-top: $kui-border-width-10 solid $kui-color-border;
       }
 
-      .column-1, .column-2 {
+      .column-1, .extra-column, .column-2 {
         padding-top: $kui-space-50;
       }
 

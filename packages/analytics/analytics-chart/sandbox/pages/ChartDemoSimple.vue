@@ -188,11 +188,17 @@
       class="top-n-sandbox"
       :data="topNTableData"
       description="Last 30-Day Summary"
+      :extra-columns="[
+        { key: 'timestamp', label: 'Timestamp' },
+      ]"
       :is-loading="showLoadingState"
       title="Top 5 Routes"
     >
       <template #name="{ record }">
         <a href="#">{{ record.name }}</a>
+      </template>
+      <template #timestamp="{ record }">
+        {{ record.timestamp }}
       </template>
     </TopNTable>
 

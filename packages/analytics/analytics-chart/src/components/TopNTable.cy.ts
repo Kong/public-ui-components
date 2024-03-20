@@ -176,4 +176,27 @@ describe('<TopNTable />', () => {
     cy.get('.kong-ui-public-top-n-table').should('be.visible')
     cy.get('.table-row').last().should('contain', 'deleted')
   })
+
+  it('renders extra columns', () => {
+    cy.mount(TopNTable, {
+      props: {
+        data: TABLE_DATA_V2,
+        title: TITLE,
+        description: DESCRIPTION,
+        extraColumns: [
+          { key: 'timestamp', label: 'Timestamp' },
+        ],
+      },
+      slots: {
+        timestamp: `<template #timestamp="{ record }">
+                {{ record.timestamp }}
+               </template>
+        `,
+      },
+    })
+
+    cy.get('.kong-ui-public-top-n-table').should('be.visible')
+    cy.get('.table-body .table-row').first().get('.extra-column.column-timestamp').should('be.visible')
+    cy.get('.table-body .table-row').first().should('contain', TABLE_RECORDS[0].timestamp)
+  })
 })

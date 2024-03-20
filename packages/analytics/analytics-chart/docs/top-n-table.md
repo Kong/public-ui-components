@@ -62,11 +62,23 @@ Text to be displayed on the empty state.
 
 Whether or not to display the loading state.
 
+#### `extraColumns`
+
+- type: `Array as PropType<Array<{ key: string, label: string }>>`
+- required: `false`
+- default: `[]`
+
+Additional columns to insert bewteen the name column and the request count column. For each extra column, the `key` is used to identify its content slot, and the `label` is the text to display in the table header.
+
 ### Slots
 
 #### name
 
 Content to override the display for each row item's first column. The `id`, `name`, and `dimension` of the row item will be provided in the slot params. If not provided, the `name` will be displayed in plain text.
+
+#### [extraColumn.key]
+
+Content for each row item's extra column. The `record` and `meta` of the row item will be provided in the slot params. If not provided, nothing will be displayed.
 
 ### Usage example
 
