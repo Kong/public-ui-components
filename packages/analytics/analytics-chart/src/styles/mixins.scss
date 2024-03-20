@@ -20,7 +20,6 @@
   column-gap: $kui-space-50;
   display: grid;
   grid-template-columns: repeat(auto-fit, 12ch);
-  margin-top: $kui-space-30;
   max-height: $max-height;
   max-width: 99% !important;
   row-gap: $kui-space-20;
@@ -45,7 +44,7 @@
   }
 
   li {
-    align-items: center;
+    align-items: baseline;
     margin-top: 0;
 
     .label {

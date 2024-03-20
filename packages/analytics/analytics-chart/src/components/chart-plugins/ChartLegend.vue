@@ -202,18 +202,19 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 
 ul.legend-container {
   display: flex;
-  margin: 0;
   max-height: inherit;
   -ms-overflow-style: thin;
   overflow-x: hidden;
   overflow-y: auto;
+  padding: 0;
 
   @include scrollbarBase;
 
   &.right {
+    align-items: baseline;
     flex-direction: column;
     justify-content: flex-start;
-    margin-left: $kui-space-40;
+    margin-left: $kui-space-50;
     max-height: 90%;
     min-width: 12%;
     row-gap: $kui-space-40;
@@ -228,12 +229,14 @@ ul.legend-container {
 
     // Allow legend to expand horizontally at lower resolutions
     @media (max-width: ($kui-breakpoint-phablet - 1px)) {
+      margin-left: $kui-space-90;
       @include legendAsGrid(v-bind('legendMaxHeight'));
     }
   }
 
   &.bottom {
     height: auto;
+    margin-left: $kui-space-90;
     @include legendAsGrid(v-bind('legendMaxHeight'));
   }
 
@@ -245,9 +248,9 @@ ul.legend-container {
 
     // Color bar preceding label
     .square-marker {
-      height: 8px;
-      margin: 0 $kui-space-30 0 0;
-      width: 8px;
+      height: 9px;
+      margin: 2px $kui-space-20 0 0;
+      width: 9px;
     }
 
     .label {
