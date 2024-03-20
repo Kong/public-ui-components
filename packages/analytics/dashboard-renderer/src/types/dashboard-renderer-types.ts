@@ -6,7 +6,8 @@ import type { ExploreFilter, ExploreQuery, TimeRangeV4 } from '@kong-ui-public/a
 export interface DashboardRendererContext {
   filters: ExploreFilter[]
   timeSpec: TimeRangeV4
-  tz?: string
+  tz?: string,
+  refreshInterval?: number
 }
 
 export enum ChartTypes {
