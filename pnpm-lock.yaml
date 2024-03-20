@@ -162,11 +162,11 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       typedoc:
-        specifier: ^0.25.10
-        version: 0.25.10(typescript@5.3.3)
+        specifier: ^0.25.11
+        version: 0.25.11(typescript@5.3.3)
       typedoc-plugin-markdown:
         specifier: ^3.17.1
-        version: 3.17.1(typedoc@0.25.10)
+        version: 3.17.1(typedoc@0.25.11)
       typescript:
         specifier: ~5.3.3
         version: 5.3.3
@@ -4740,6 +4740,9 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependenciesMeta:
+      ajv:
+        optional: true
     dependencies:
       ajv: 8.12.0
     dev: true
@@ -13843,17 +13846,17 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: true
 
-  /typedoc-plugin-markdown@3.17.1(typedoc@0.25.10):
+  /typedoc-plugin-markdown@3.17.1(typedoc@0.25.11):
     resolution: {integrity: sha512-QzdU3fj0Kzw2XSdoL15ExLASt2WPqD7FbLeaqwT70+XjKyTshBnUlQA5nNREO1C2P8Uen0CDjsBLMsCQ+zd0lw==}
     peerDependencies:
       typedoc: '>=0.24.0'
     dependencies:
       handlebars: 4.7.7
-      typedoc: 0.25.10(typescript@5.3.3)
+      typedoc: 0.25.11(typescript@5.3.3)
     dev: true
 
-  /typedoc@0.25.10(typescript@5.3.3):
-    resolution: {integrity: sha512-v10rtOFojrjW9og3T+6wAKeJaGMuojU87DXGZ33sfs+554wgPTRG+s07Ag1BjPZI85Y5QPVouPI63JQ6fcQM5w==}
+  /typedoc@0.25.11(typescript@5.3.3):
+    resolution: {integrity: sha512-5MbI1W/FOG6oXsd8bdssQidSTeKh8Kt3xA5uKVzI+K99uzP8EGN45uPnPvQesyaWdD+89s4wCQdtWEd8QUbiRg==}
     engines: {node: '>= 16'}
     hasBin: true
     peerDependencies:
