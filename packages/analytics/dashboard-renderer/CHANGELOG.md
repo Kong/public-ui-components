@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.14.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.14.5...@kong-ui-public/dashboard-renderer@0.14.6) (2024-03-20)
+
+
+### Bug Fixes
+
+* proper heading element in widgets [KHCP-11027] ([#1252](https://github.com/Kong/public-ui-components/issues/1252)) ([b66ce71](https://github.com/Kong/public-ui-components/commit/b66ce711fa876bb75bb880eece8514a8055034be))
+
+
+
+
+
 ## [0.14.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.14.4...@kong-ui-public/dashboard-renderer@0.14.5) (2024-03-20)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
