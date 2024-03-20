@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@2.0.0...@kong-ui-public/analytics-utilities@2.0.1) (2024-03-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency date-fns-tz to ^2.0.1 ([#1269](https://github.com/Kong/public-ui-components/issues/1269)) ([0d727ab](https://github.com/Kong/public-ui-components/commit/0d727ab1d574a9ed63f4fe1c61c474452213d3fc))
+
+
+
+
+
 # [2.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@1.4.0...@kong-ui-public/analytics-utilities@2.0.0) (2024-03-19)
 
 
