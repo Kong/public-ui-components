@@ -1,7 +1,7 @@
 import type { Plugin } from 'vue'
 import { nonTsExploreResponse, timeSeriesExploreResponse, routeExploreResponse } from './mock-data'
 import { INJECT_QUERY_PROVIDER } from '../src/constants'
-import type { AnalyticsBridge, AnalyticsConfigV2, ExploreQuery, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import { generateSingleMetricTimeSeriesData, type AnalyticsBridge, type AnalyticsConfigV2, type ExploreQuery, type ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 
 const delayedResponse = <T>(response: T): Promise<T> => {
   return new Promise((resolve) => {
@@ -13,7 +13,12 @@ const delayedResponse = <T>(response: T): Promise<T> => {
 
 const queryFn = async (query: ExploreQuery): Promise<ExploreResultV4> => {
   if (query.dimensions && query.dimensions.findIndex(d => d === 'time') > -1) {
-    return await delayedResponse(timeSeriesExploreResponse)
+    return await delayedResponse(
+      generateSingleMetricTimeSeriesData(
+        { name: 'requests', unit: 'count' },
+        { status_code: ['200', '400', '500'] },
+      ),
+    )
   }
   if (query.dimensions && query.dimensions.findIndex(d => d === 'route') > -1) {
     return await delayedResponse(routeExploreResponse)

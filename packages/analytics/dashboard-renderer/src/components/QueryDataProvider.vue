@@ -96,7 +96,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
     emit('queryComplete')
   }
 }, {
-  refreshInterval: 0,
+  refreshInterval: props.context.refreshInterval ?? 0,
   revalidateOnFocus: false,
 })
 

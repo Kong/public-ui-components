@@ -43,6 +43,7 @@ const context: DashboardRendererContext = {
     type: 'relative',
     time_range: '24h',
   },
+  refreshInterval: 5000,
 }
 
 const dashboardConfig: DashboardConfig = {
