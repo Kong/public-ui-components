@@ -61,6 +61,10 @@ Prop to enable/disable sticky behavior for infoheader element.
 
 Prop to show/hide infoheader element.
 
+#### `titleTag`
+
+HTML element you want title to be rendered as. Defaults to `h2`.
+
 ### Slots
 
 #### description

@@ -183,6 +183,10 @@ Controls the visibility of the card's title and `title` slot. A value of `true` 
 
 External link for documentation. Controls the visibility of the documentation button.
 
+#### `titleTag`
+
+HTML element you want title to be rendered as. Defaults to `h2`.
+
 ### Sections
 
 There are 3 sections that properties can be displayed in: `basic`, `advanced`, and `plugin`.

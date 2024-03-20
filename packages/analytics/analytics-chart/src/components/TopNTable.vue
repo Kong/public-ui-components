@@ -1,7 +1,7 @@
 <template>
   <KCard
     class="kong-ui-public-top-n-table"
-    title-tag="h2"
+    :title-tag="titleTag"
   >
     <template
       v-if="title"
@@ -111,6 +111,7 @@ import type { AnalyticsExploreRecord, ExploreResultV4 } from '@kong-ui-public/an
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
 import composables from '../composables'
+import type { HeaderTag } from '@kong/kongponents'
 
 const props = defineProps({
   title: {
@@ -132,6 +133,10 @@ const props = defineProps({
   isLoading: {
     type: Boolean,
     default: false,
+  },
+  titleTag: {
+    type: String as PropType<HeaderTag>,
+    default: 'h2',
   },
 })
 
