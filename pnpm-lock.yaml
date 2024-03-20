@@ -234,8 +234,8 @@ importers:
         specifier: ^2.30.0
         version: 2.30.0
       date-fns-tz:
-        specifier: ^2.0.0
-        version: 2.0.0(date-fns@2.30.0)
+        specifier: ^2.0.1
+        version: 2.0.1(date-fns@2.30.0)
       pretty-bytes:
         specifier: ^6.1.1
         version: 6.1.1
@@ -329,8 +329,8 @@ importers:
         specifier: ^2.30.0
         version: 2.30.0
       date-fns-tz:
-        specifier: ^2.0.0
-        version: 2.0.0(date-fns@2.30.0)
+        specifier: ^2.0.1
+        version: 2.0.1(date-fns@2.30.0)
     devDependencies:
       '@kong/design-tokens':
         specifier: 1.12.10
@@ -4740,6 +4740,9 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependenciesMeta:
+      ajv:
+        optional: true
     dependencies:
       ajv: 8.12.0
     dev: true
@@ -6288,6 +6291,7 @@ packages:
       date-fns: '>=2.0.0'
     dependencies:
       date-fns: 2.30.0
+    dev: true
 
   /date-fns-tz@2.0.1(date-fns@2.30.0):
     resolution: {integrity: sha512-fJCG3Pwx8HUoLhkepdsP7Z5RsucUi+ZBOxyM5d0ZZ6c4SdYustq0VMmOu6Wf7bli+yS/Jwp91TOCqn9jMcVrUA==}
@@ -6295,7 +6299,6 @@ packages:
       date-fns: 2.x
     dependencies:
       date-fns: 2.30.0
-    dev: false
 
   /date-fns@2.30.0:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
@@ -14043,7 +14046,7 @@ packages:
       '@types/lodash': 4.17.0
       '@types/resize-observer-browser': 0.1.11
       date-fns: 2.30.0
-      date-fns-tz: 2.0.0(date-fns@2.30.0)
+      date-fns-tz: 2.0.1(date-fns@2.30.0)
       lodash: 4.17.21
       vue: 3.3.13(typescript@5.3.3)
       vue-screen-utils: 1.0.0-beta.13(vue@3.3.13)
@@ -14059,7 +14062,7 @@ packages:
       '@types/lodash': 4.17.0
       '@types/resize-observer-browser': 0.1.11
       date-fns: 2.30.0
-      date-fns-tz: 2.0.0(date-fns@2.30.0)
+      date-fns-tz: 2.0.1(date-fns@2.30.0)
       lodash: 4.17.21
       vue: 3.4.21(typescript@5.3.3)
       vue-screen-utils: 1.0.0-beta.13(vue@3.4.21)
