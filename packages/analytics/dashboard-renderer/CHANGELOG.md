@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.14.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.14.3...@kong-ui-public/dashboard-renderer@0.14.4) (2024-03-20)
+
+
+### Bug Fixes
+
+* **dashboard-tile:** needed Entity Link css ([#1267](https://github.com/Kong/public-ui-components/issues/1267)) ([4cd2f25](https://github.com/Kong/public-ui-components/commit/4cd2f258e5f98ff48735cf5e8934b97af0d15c87))
+
+
+
+
+
 ## [0.14.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.14.2...@kong-ui-public/dashboard-renderer@0.14.3) (2024-03-19)
 
 
