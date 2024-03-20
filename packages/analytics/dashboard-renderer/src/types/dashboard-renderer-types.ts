@@ -7,7 +7,6 @@ export interface DashboardRendererContext {
   filters: ExploreFilter[]
   timeSpec: TimeRangeV4
   tz?: string,
-  refreshInterval?: number
 }
 
 export enum ChartTypes {
@@ -367,6 +366,9 @@ export const tileDefinitionSchema = {
     chart: {
       oneOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema, metricCardSchema, topNTableSchema, slottableSchema],
     },
+    refreshInterval: {
+      type: 'number',
+    },
   },
   required: ['query', 'chart'],
   additionalProperties: false,
@@ -462,4 +464,5 @@ export interface RendererProps<T> {
   queryReady: boolean
   chartOptions: T
   height: number
+  refreshInterval?: number
 }

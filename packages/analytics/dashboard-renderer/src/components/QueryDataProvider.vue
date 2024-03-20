@@ -38,11 +38,14 @@ import type { AnalyticsBridge, ExploreFilter, ExploreQuery } from '@kong-ui-publ
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContext } from '../types'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   context: DashboardRendererContext
   query: ExploreQuery
   queryReady: boolean
-}>()
+  refreshInterval: number
+}>(), {
+  refreshInterval: 0,
+})
 
 const emit = defineEmits(['queryComplete'])
 
@@ -96,7 +99,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
     emit('queryComplete')
   }
 }, {
-  refreshInterval: props.context.refreshInterval ?? 0,
+  refreshInterval: props.refreshInterval,
   revalidateOnFocus: false,
 })
 

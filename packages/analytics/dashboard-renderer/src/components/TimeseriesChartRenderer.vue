@@ -4,6 +4,7 @@
     :context="context"
     :query="query"
     :query-ready="queryReady"
+    :refresh-interval="refreshInterval"
   >
     <div class="analytics-chart">
       <AnalyticsChart
