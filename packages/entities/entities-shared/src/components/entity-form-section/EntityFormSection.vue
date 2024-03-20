@@ -9,12 +9,13 @@
         class="form-section-info"
         :class="{ 'sticky': stickyInfoHeader }"
       >
-        <h4
+        <component
+          :is="titleTag"
           v-if="title"
           class="form-section-title"
         >
           {{ title }}
-        </h4>
+        </component>
         <div
           v-if="description || slots.description"
           class="form-section-description"
@@ -42,7 +43,9 @@
 </template>
 
 <script setup lang="ts">
+import type { PropType } from 'vue'
 import { useSlots } from 'vue'
+import type { HeaderTag } from '@kong/kongponents'
 
 defineProps({
   title: {
@@ -64,6 +67,10 @@ defineProps({
   hideInfoHeader: {
     type: Boolean,
     default: false,
+  },
+  titleTag: {
+    type: String as PropType<HeaderTag>,
+    default: 'h2',
   },
 })
 
@@ -107,11 +114,11 @@ fieldset {
 
       .form-section-title {
         color: $kui-color-text;
-        font-size: $kui-font-size-50;
-        font-weight: 600;
-        line-height: $kui-line-height-40;
+        font-size: $kui-font-size-40;
+        font-weight: $kui-font-weight-bold;
+        line-height: $kui-line-height-30;
         margin-bottom: $kui-space-40;
-        margin-top: 0;
+        margin-top: $kui-space-0;
       }
 
       .form-section-description,

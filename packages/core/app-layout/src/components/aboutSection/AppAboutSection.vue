@@ -1,5 +1,8 @@
 <template>
-  <KCard class="kong-ui-app-about-section">
+  <KCard
+    class="kong-ui-app-about-section"
+    title-tag="h2"
+  >
     <template
       v-if="title"
       #title
@@ -140,7 +143,6 @@ const displayModified = computed(() => {
     color: $kui-color-text;
     font-size: $kui-font-size-40;
     font-weight: $kui-font-weight-bold;
-    letter-spacing: $kui-letter-spacing-minus-20;
     line-height: $kui-line-height-30;
   }
 

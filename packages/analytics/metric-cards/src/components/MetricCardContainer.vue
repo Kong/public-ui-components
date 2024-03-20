@@ -34,6 +34,7 @@
         :error-message="errorMessage"
         :has-error="card.hasError"
         :title="card.title"
+        :title-tag="card.titleTag"
         :tooltip="card.tooltip"
         :trend-range="card.trendRange"
       />

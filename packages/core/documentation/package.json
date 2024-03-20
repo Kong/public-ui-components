@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/documentation",
-  "version": "0.3.33",
+  "version": "0.3.34",
   "type": "module",
   "main": "./dist/documentation.umd.js",
   "module": "./dist/documentation.es.js",
@@ -65,7 +65,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.113",
+    "@kong/kongponents": "9.0.0-alpha.117",
     "vue": "^3.4.21"
   },
   "dependencies": {
