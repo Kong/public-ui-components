@@ -160,6 +160,10 @@ A synchronous or asynchronous function, that returns a boolean, that evaluates i
 
 The table is rendered inside a `KCard`. `title` text is displayed in the upper left corner of the `KCard` above the table.
 
+#### `titleTag`
+
+HTML element you want title to be rendered as. Defaults to `h2`.
+
 ### Events
 
 #### error

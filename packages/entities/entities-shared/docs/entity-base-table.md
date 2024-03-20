@@ -123,9 +123,14 @@ Table key to use for user table preferences. If empty, will fallback to use defa
 
 #### `title`
 
-The table is rendered inside a `KCard`. `tttle` text is displayed in the upper left corner of the `KCard` above the table.
+The table is rendered inside a `KCard`. `title` text is displayed in the upper left corner of the `KCard` above the table.
+
+#### `titleTag`
+
+HTML element you want title to be rendered as. Defaults to `h2`.
 
 #### `disableRowClick`
+
 Controls whether the table rows are clickable or not. Defaults to `false`. Setting to `true` will suppress the `click:row` event even if a `@click:row` handler is provided.
 
 ### Slots

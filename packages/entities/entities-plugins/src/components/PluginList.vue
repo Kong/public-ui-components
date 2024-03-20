@@ -15,6 +15,7 @@
       :query="filterQuery"
       :table-headers="tableHeaders"
       :title="title"
+      :title-tag="titleTag"
       :use-action-outside="useActionOutside"
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
@@ -270,6 +271,8 @@ import type {
 
 import PluginIcon from './PluginIcon.vue'
 
+import type { HeaderTag } from '@kong/kongponents'
+
 const pluginMetaData = composables.usePluginMetaData()
 
 const emit = defineEmits<{
@@ -343,6 +346,10 @@ const props = defineProps({
   title: {
     type: String,
     default: '',
+  },
+  titleTag: {
+    type: String as PropType<HeaderTag>,
+    default: 'h2',
   },
   /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
   useActionOutside: {

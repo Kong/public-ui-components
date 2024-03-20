@@ -1,16 +1,20 @@
 <template>
   <KCard
     class="kong-ui-entity-base-config-card"
+    :title-tag="titleTag"
   >
     <template
       v-if="!hideTitle"
       #title
     >
-      <div data-testid="config-card-title">
+      <span
+        class="config-card-title"
+        data-testid="config-card-title"
+      >
         <slot name="title">
           {{ t('baseConfigCard.title') }}
         </slot>
-      </div>
+      </span>
     </template>
 
     <template #actions>
@@ -105,6 +109,7 @@ import composables from '../../composables'
 import ConfigCardDisplay from './ConfigCardDisplay.vue'
 import { BookIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
+import type { HeaderTag } from '@kong/kongponents'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void,
@@ -187,6 +192,10 @@ const props = defineProps({
     type: String,
     default: '',
     required: false,
+  },
+  titleTag: {
+    type: String as PropType<HeaderTag>,
+    default: 'h2',
   },
 })
 
@@ -456,13 +465,6 @@ onBeforeMount(async () => {
 
 <style lang="scss" scoped>
 .kong-ui-entity-base-config-card {
-  .k-card-title {
-    margin-bottom: 0;
-  }
-  :deep(.k-card-content .k-card-body) {
-    font-size: $kui-font-size-30;
-  }
-
   .config-card-actions {
     align-items: center;
     display: flex;
@@ -486,8 +488,8 @@ onBeforeMount(async () => {
   }
 
   .book-icon {
-      margin-left: $kui-space-40;
-      padding: $kui-space-0;
+    margin-left: $kui-space-40;
+    padding: $kui-space-0;
   }
 }
 </style>
