@@ -1,0 +1,71 @@
+{
+  "name": "@kong-ui-public/profiling",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/profiling.umd.js",
+  "module": "./dist/profiling.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/profiling.es.js",
+      "require": "./dist/profiling.umd.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "cross-env USE_SANDBOX=true vite",
+    "build": "run-s typecheck build:package build:types",
+    "build:package": "vite build -m production",
+    "build:analyzer": "BUILD_VISUALIZER='core/profiling' vite build -m production",
+    "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
+    "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
+    "preview": "cross-env USE_SANDBOX=true vite preview",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
+    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore' --fix",
+    "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
+    "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
+    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
+    "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
+    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
+    "test:unit": "cross-env FORCE_COLOR=1 vitest run",
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+  },
+  "devDependencies": {
+    "@kong/design-tokens": "1.12.10",
+    "@kong/kongponents": "9.0.0-alpha.113",
+    "vue": "^3.4.21"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kong/public-ui-components.git",
+    "directory": "packages/core/profiling"
+  },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/core/profiling",
+  "bugs": {
+    "url": "https://github.com/Kong/public-ui-components/issues"
+  },
+  "author": "Kong, Inc.",
+  "license": "Apache-2.0",
+  "volta": {
+    "extends": "../../../package.json"
+  },
+  "distSizeChecker": {
+    "errorLimit": "200KB"
+  },
+  "peerDependencies": {
+    "@kong/kongponents": "9.0.0-alpha.113",
+    "vue": "^3.4.21"
+  },
+  "dependencies": {
+    "@kong/flame-chart-js": "3.3.0-patch.1",
+    "@kong/icons": "^1.8.14"
+  }
+}
