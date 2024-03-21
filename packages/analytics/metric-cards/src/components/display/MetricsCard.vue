@@ -188,7 +188,7 @@ const props = defineProps({
   },
   titleTag: {
     type: String as PropType<HeaderTag>,
-    default: 'h2',
+    default: 'span',
   },
 })
 
