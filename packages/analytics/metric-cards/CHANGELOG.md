@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.47](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.6.46...@kong-ui-public/metric-cards@0.6.47) (2024-03-21)
+
+
+### Bug Fixes
+
+* **metrics-card:** font-weight ([#1278](https://github.com/Kong/public-ui-components/issues/1278)) ([a7f5f43](https://github.com/Kong/public-ui-components/commit/a7f5f438879b661944896d7e4e3b30bcd3c780bf))
+
+
+
+
+
+## [0.6.46](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.6.45...@kong-ui-public/metric-cards@0.6.46) (2024-03-21)
+
+
+### Bug Fixes
+
+* **metric-cards:** don't default to a heading tag ([#1277](https://github.com/Kong/public-ui-components/issues/1277)) ([f6b6ca1](https://github.com/Kong/public-ui-components/commit/f6b6ca16f90c2a83029c494ed7d5ea2e3be529a8))
+
+
+
+
+
 ## [0.6.45](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.6.44...@kong-ui-public/metric-cards@0.6.45) (2024-03-20)
 
 

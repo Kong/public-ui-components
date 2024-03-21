@@ -188,7 +188,7 @@ const props = defineProps({
   },
   titleTag: {
     type: String as PropType<HeaderTag>,
-    default: 'h2',
+    default: 'span',
   },
 })
 
@@ -272,10 +272,14 @@ $row-gap-size: 12px;
     color: var(--kong-ui-metric-card-title, $kui-color-text);
     display: flex;
     flex-direction: row;
-    font-size: $kui-font-size-40;
-    font-weight: $kui-font-weight-bold;
-    line-height: $kui-line-height-30;
+    font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-medium;
+    line-height: $kui-line-height-20;
     margin: $kui-space-0;
+
+    &.sm {
+      font-size: $kui-font-size-20;
+    }
   }
 
   &-description {

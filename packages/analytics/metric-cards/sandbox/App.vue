@@ -74,13 +74,13 @@
 </template>
 
 <script setup lang="ts">
-import { MetricCardContainer } from '../src'
+import { MetricCardContainer, type MetricCardDef } from '../src'
 import { DECIMAL_DISPLAY, metricChange } from '../src/utilities'
 import type { MetricCardContainerOptions } from '../src/types'
 import { MetricCardType } from '../src/enums'
 import { MetricCardSize } from '../src/constants'
 
-const cards = [
+const cards: MetricCardDef[] = [
   {
     cardType: MetricCardType.TRAFFIC,
     currentValue: 192895156,
@@ -98,7 +98,6 @@ const cards = [
     formatChangeFn: val => `${metricChange(val * 100, true, 'N/A')}`,
     formatValueFn: val => `${val.toFixed(DECIMAL_DISPLAY)}%`,
     title: 'Error Rate',
-    titleTag: 'h3',
     description: 'Rate of requests that ended up in a 5xx response',
     increaseIsBad: true,
     trendRange: 'vs last week',
@@ -109,7 +108,6 @@ const cards = [
     previousValue: 511,
     formatValueFn: val => `${val}ms`,
     title: 'P99 Latency',
-    titleTag: 'h3',
     description: 'Time taken to send a response back to the client',
     increaseIsBad: true,
     trendRange: 'vs last week',
@@ -119,7 +117,6 @@ const cards = [
     currentValue: 5,
     previousValue: 4,
     title: 'Active Runtimes',
-    titleTag: 'h4',
     increaseIsBad: true,
     trendRange: 'vs last week',
   },
@@ -129,12 +126,15 @@ const cards = [
     previousValue: 23.2121,
     formatValueFn: val => `${val.toFixed(0)}%`,
     title: 'Saturation',
-    titleTag: 'h4',
     tooltip: 'A secondary tooltip',
     increaseIsBad: true,
     trendRange: 'vs last week',
   },
 ]
+
+const cardsWithHeadings: MetricCardDef[] = cards.map((item) => {
+  return { titleTag: 'h2', ...item }
+})
 
 const cardsWithErrors = JSON.parse(JSON.stringify(cards))
 cardsWithErrors[0].hasError = true
@@ -166,7 +166,7 @@ const cardsRegularCompact: MetricCardContainerOptions = {
 }
 
 const cardsXL: MetricCardContainerOptions = {
-  cards: [...cards].slice(0, 3),
+  cards: [...cardsWithHeadings].slice(0, 3),
   loading: false,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
