@@ -273,7 +273,7 @@ $row-gap-size: 12px;
     display: flex;
     flex-direction: row;
     font-size: $kui-font-size-40;
-    font-weight: $kui-font-weight-bold;
+    font-weight: $kui-font-weight-semibold;
     line-height: $kui-line-height-30;
     margin: $kui-space-0;
   }
