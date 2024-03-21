@@ -6,7 +6,7 @@
   >
     <label
       v-if="fieldTypeHasLabel(field)"
-      :aria-describedby="getTooltipId(field)"
+      :aria-describedby="field.help ? getTooltipId(field) : undefined"
       class="form-group-label"
       :class="field.labelClasses"
       :for="getFieldID(field)"
