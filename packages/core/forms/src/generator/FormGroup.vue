@@ -6,7 +6,7 @@
   >
     <label
       v-if="fieldTypeHasLabel(field)"
-      :id="getLabelId(field)"
+      :aria-describedby="getTooltipId(field)"
       class="form-group-label"
       :class="field.labelClasses"
       :for="getFieldID(field)"
@@ -15,10 +15,10 @@
         <span v-html="formattedLabel(field.label)" />
         <KTooltip
           v-if="field.help"
-          :aria-labelledby="getLabelId(field)"
           max-width="300"
           placement="top"
           :position-fixed="true"
+          :tooltip-id="getTooltipId(field)"
         >
           <div
             class="help"
@@ -162,8 +162,8 @@ export default {
       const idPrefix = objGet(this.options, 'fieldIdPrefix', '')
       return slugifyFormID(schema, idPrefix)
     },
-    getLabelId(schema) {
-      return `${this.getFieldID(schema)}-label`
+    getTooltipId(schema) {
+      return `${this.getFieldID(schema)}-tooltip`
     },
     // Get type of field 'field-xxx'. It'll be the name of HTML element
     getFieldType(fieldSchema) {
