@@ -11,7 +11,11 @@
         :color="KUI_COLOR_TEXT_NEUTRAL"
         :size="KUI_ICON_SIZE_30"
       />
-      <component :is="titleTag">
+      <span v-if="!titleTag">{{ title }}</span>
+      <component
+        :is="titleTag"
+        else
+      >
         {{ title }}
       </component>
       <KTooltip
@@ -188,7 +192,7 @@ const props = defineProps({
   },
   titleTag: {
     type: String as PropType<HeaderTag>,
-    default: 'h2',
+    default: '',
   },
 })
 
