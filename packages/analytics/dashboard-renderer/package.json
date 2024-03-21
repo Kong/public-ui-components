@@ -73,7 +73,7 @@
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.117",
+    "@kong/kongponents": "9.0.0-alpha.121",
     "swrv": "^1.0.4",
     "vue": ">= 3.3.13 < 4"
   },
