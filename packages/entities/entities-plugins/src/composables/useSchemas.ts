@@ -1,5 +1,5 @@
 import { useStringHelpers } from '@kong-ui-public/entities-shared'
-import { customFields } from '@kong-ui-public/forms'
+import { customFields, getSharedFormName } from '@kong-ui-public/forms'
 import type { CustomSchemas } from '../types'
 import { aiPromptDecoratorSchema } from './plugin-schemas/AIPromptDecorator'
 import { aiPromptTemplateSchema } from './plugin-schemas/AIPromptTemplate'
@@ -208,14 +208,15 @@ export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
     comparatorIdx > -1 && inputSchemaFields.splice(comparatorIdx, 1)
 
     let formSchema: Schema = { fields: [] }
-    const formModel = {}
+    const formModel: any = {}
 
     // Iterate over each schema field to augment with display configuration.
     inputSchemaFields.forEach(fieldName => {
       buildFormSchema(inputSchema[fieldName], fieldName, inputSchema, formModel, formSchema, frontendSchema)
     })
 
-    if (options?.groupFields) {
+    // Do not group fields for plugins with custom layouts
+    if (!getSharedFormName(formModel.name) && options?.groupFields) {
       const commonFields = []
       const requiredFields = []
       const advancedFields = []
