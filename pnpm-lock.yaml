@@ -370,8 +370,8 @@ importers:
         specifier: 9.0.0-alpha.117
         version: 9.0.0-alpha.117(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
       json-schema-to-ts:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^3.0.1
+        version: 3.0.1
       pinia:
         specifier: '>= 2.1.7 < 3'
         version: 2.1.7(typescript@5.3.3)(vue@3.4.21)
@@ -4749,6 +4749,9 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependenciesMeta:
+      ajv:
+        optional: true
     dependencies:
       ajv: 8.12.0
     dev: true
@@ -9321,12 +9324,11 @@ packages:
     resolution: {integrity: sha512-gyidFWn/PHmLNh+dW4TzbdqpQOxvFDujkrTfvvbGeAL5LUkVF7Bbujn1KMKjJ3bDyRXMIrInyNNmZQejjw9eIw==}
     dev: false
 
-  /json-schema-to-ts@3.0.0:
-    resolution: {integrity: sha512-2adDesYifYEXYxNySx3gG0RR69rDWIjqAFzK/JPXdOvjHLZ/UP6d2rkpy6a+AxyhtRp2SvFPZ4+EW36jBinUbA==}
+  /json-schema-to-ts@3.0.1:
+    resolution: {integrity: sha512-ANphQxnKbzLWPeYDmdoci8C9g9ttpfMx8etTlJJ8UCEmNXH9jxGkn3AAbMe+lR4N5OG/01nYxPrDyugLdsRt+A==}
     engines: {node: '>=16'}
     dependencies:
       '@babel/runtime': 7.22.5
-      '@types/json-schema': 7.0.12
       ts-algebra: 1.2.2
     dev: true
 
