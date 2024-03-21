@@ -647,6 +647,25 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
 
+  packages/core/profiling:
+    dependencies:
+      '@kong/flame-chart-js':
+        specifier: 3.3.0-patch.2
+        version: 3.3.0-patch.2(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(use-resize-observer@9.1.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2))
+      '@kong/icons':
+        specifier: ^1.8.14
+        version: 1.15.1(vue@3.4.21(typescript@5.3.3))
+    devDependencies:
+      '@kong/design-tokens':
+        specifier: 1.12.10
+        version: 1.12.10
+      '@kong/kongponents':
+        specifier: 9.0.0-alpha.113
+        version: 9.0.0-alpha.113(axios@1.6.8)(vue-router@4.4.0(vue@3.4.21(typescript@5.3.3)))(vue@3.4.21(typescript@5.3.3))
+      vue:
+        specifier: ^3.4.21
+        version: 3.4.21(typescript@5.3.3)
+
   packages/core/sandbox-layout:
     dependencies:
       '@kong/icons':
@@ -1867,7 +1886,6 @@ packages:
 
   '@evilmartians/lefthook@1.7.1':
     resolution: {integrity: sha512-Wp8DaTMHZM1tUV4Mow6nG+6zq+giruD5054zHmFIDLXlPQxqYxnZMqJg0aYxe16vYwqFmH6NIClEMRdtGucO0Q==}
-    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -1978,6 +1996,9 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
+  '@juggle/resize-observer@3.4.0':
+    resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
+
   '@kong-ui-public/core@1.1.0':
     resolution: {integrity: sha512-j1kK07/zDyxwePi1EX1rZ+3iL955VdhZiodzeT5ift7iVQTiPt9VNUFu9+IXJ/AxHfuYu/gaL+gily9TsJTX3w==}
     peerDependencies:
@@ -1988,6 +2009,9 @@ packages:
   '@kong/atc-router@1.6.0-rc.1':
     resolution: {integrity: sha512-nFR01kKK4vAsXGZ0g8YPzJSOrTEPzgtVm3iWv4JPNx1kFFRKDTJrmDFSWZmEPC2VtsSdglewGB3Sqzpi/DfiIg==}
 
+  '@kong/design-tokens@1.12.10':
+    resolution: {integrity: sha512-6IY1H6UMg95BqjU4Xov5sfjsG94G8KadUnf8MawuovbjGAcOh1Avr5Ooq4jEqmFcfjH6q+BjZHgKxO4A6Vt0kA==}
+
   '@kong/design-tokens@1.17.2':
     resolution: {integrity: sha512-979FHvvqPkjdUmbUL7Q2+z04GiVLXqu+OgucD3krAczuTWGfbFG6mOzbO6QIZ7/YlFMbe/N7TH85yJ+YfA/uUg==}
     engines: {node: '>=18.19.1', pnpm: '>=9.7.0'}
@@ -1997,6 +2021,13 @@ packages:
     engines: {node: '>=18.0.0 || >=20.13.1'}
     peerDependencies:
       eslint: '>= 9.4.0'
+
+  '@kong/flame-chart-js@3.3.0-patch.2':
+    resolution: {integrity: sha512-XCLs7HWkso00PfrSttwim7zh69pKFQC5hN6ng3+8fPLYBaDbBFk2beJ3EVk2jUBoXgW4j/CMc8db7331kapsOQ==}
+    peerDependencies:
+      react: ^16.0.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
+      use-resize-observer: ^9.1.0
 
   '@kong/icons@1.15.1':
     resolution: {integrity: sha512-L6uiLGWhcsyn+jLOKY162pTybqTm4wvPQs7JEqRJfjcPX7v4K2CacieKMcFy6RHlDhyiSUwhQYNwvYGGZXKQ7A==}
@@ -2011,6 +2042,14 @@ packages:
       axios: ^1.6.1
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.2.4
+
+  '@kong/kongponents@9.0.0-alpha.113':
+    resolution: {integrity: sha512-MDs6dsdTG26tWiS5795R1a7y94SoATEtlynx6PqSfWrum0NgCxcqnpIq7lHhdquGnMCYVocw/3hOe3gDG4LOJw==}
+    engines: {node: '>=v16.20.2'}
+    peerDependencies:
+      axios: ^1.6.7
+      vue: '>= 3.3.4 < 4'
+      vue-router: ^4.3.0
 
   '@kong/kongponents@9.5.5':
     resolution: {integrity: sha512-0geufybIAFRUb92HDzaRASUEnmKpdpPF1lTABfjJgfy9BJPvvU8Kakw+kMcIl3oAt05zgTx+p2EmpobnSjsmqQ==}
@@ -3925,9 +3964,15 @@ packages:
   color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
 
+  color-string@1.9.1:
+    resolution: {integrity: sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==}
+
   color-support@1.1.3:
     resolution: {integrity: sha512-qiBjkpbMLO/HL68y+lh4q0/O1MZFj2RX6X/KmMa3+gJD3z+WwI1ZzDHysvqHGS3mP6mznPckpXmw1nI9cJjyRg==}
     hasBin: true
+
+  color@3.2.1:
+    resolution: {integrity: sha512-aBl7dZI9ENN6fUGC7mWpMTPNHmWUSNan9tuWN6ahh5ZLNk9baLJOnSMlrQkHcrfFgz2/RigjUVAjdx36VcemKA==}
 
   colord@2.9.3:
     resolution: {integrity: sha512-jeC1axXpnb0/2nn/Y1LPuLdgXBLH7aDcHu4KEKfqw3CUhX7ZpfBSlPKyqXE6btIgEzfWtrX3/tyBCaCvXvMkOw==}
@@ -5659,6 +5704,9 @@ packages:
 
   is-arrayish@0.2.1:
     resolution: {integrity: sha512-zz06S8t0ozoDXMG+ube26zeCTNXcKIPJZJi8hBrF4idCLms4CG9QtK7qBl1boi5ODzFpjswb5JPmHCbMpjaYzg==}
+
+  is-arrayish@0.3.2:
+    resolution: {integrity: sha512-eVRqCvVlZbuw3GrM63ovNSNAeA1K16kaR/LRY/92w0zxQ5/1YzwblUX652i4Xs9RwAGjW9d9y6X88t8OaAJfWQ==}
 
   is-binary-path@2.1.0:
     resolution: {integrity: sha512-ZMERYes6pDydyuGidse7OsHxtbI7WVeUEozgR/g7rd0xUimYNlvZRE/K2MgZTjWy725IfelLeVcEM97mmtRGXw==}
@@ -7972,6 +8020,9 @@ packages:
   simple-get@4.0.1:
     resolution: {integrity: sha512-brv7p5WgH0jmQJr1ZDDfKDOSeWWg+OVypG99A/5vYGPqJ6pxiaHLy8nxtFjBA7oMa01ebA9gfh1uMCFqOuXxvA==}
 
+  simple-swizzle@0.2.2:
+    resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}
+
   sirv@2.0.4:
     resolution: {integrity: sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==}
     engines: {node: '>= 10'}
@@ -8711,6 +8762,12 @@ packages:
 
   url-parse@1.5.10:
     resolution: {integrity: sha512-WypcfiRhfeUP9vvF0j6rw0J3hrWrw6iZv3+22h6iRMJ/8z1Tj6XfLP4DsUix5MhMPnXpiHDoKyoZ/bdCkwBCiQ==}
+
+  use-resize-observer@9.1.0:
+    resolution: {integrity: sha512-R25VqO9Wb3asSD4eqtcxk8sJalvIOYBqS8MNZlpDSQ4l4xMQxC/J7Id9HoTqPq8FwULIn0PVW+OAqF2dyYbjow==}
+    peerDependencies:
+      react: 16.8.0 - 18
+      react-dom: 16.8.0 - 18
 
   use-sync-external-store@1.2.2:
     resolution: {integrity: sha512-PElTlVMwpblvbNqQ82d2n6RjStvdSoNe9FG28kNfz3WiXilJm4DdNkEzRhCZuIDwY8U08WVihhGR5iRqAwfDiw==}
@@ -10191,6 +10248,8 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
 
+  '@juggle/resize-observer@3.4.0': {}
+
   '@kong-ui-public/core@1.1.0(axios@1.6.8)(swrv@1.0.4(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))':
     dependencies:
       axios: 1.6.8
@@ -10199,6 +10258,8 @@ snapshots:
       vue: 3.4.31(typescript@5.3.3)
 
   '@kong/atc-router@1.6.0-rc.1': {}
+
+  '@kong/design-tokens@1.12.10': {}
 
   '@kong/design-tokens@1.17.2': {}
 
@@ -10222,9 +10283,21 @@ snapshots:
       - supports-color
       - typescript
 
+  '@kong/flame-chart-js@3.3.0-patch.2(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(use-resize-observer@9.1.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2))':
+    dependencies:
+      color: 3.2.1
+      events: 3.3.0
+      react: 17.0.2
+      react-dom: 17.0.2(react@17.0.2)
+      use-resize-observer: 9.1.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+
   '@kong/icons@1.15.1(vue@3.3.13(typescript@5.3.3))':
     dependencies:
       vue: 3.3.13(typescript@5.3.3)
+
+  '@kong/icons@1.15.1(vue@3.4.21(typescript@5.3.3))':
+    dependencies:
+      vue: 3.4.21(typescript@5.3.3)
 
   '@kong/icons@1.15.1(vue@3.4.31(typescript@5.3.3))':
     dependencies:
@@ -10245,6 +10318,24 @@ snapshots:
       vue: 3.4.31(typescript@5.3.3)
       vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.31(typescript@5.3.3))
       vue-router: 4.4.0(vue@3.4.31(typescript@5.3.3))
+
+  '@kong/kongponents@9.0.0-alpha.113(axios@1.6.8)(vue-router@4.4.0(vue@3.4.21(typescript@5.3.3)))(vue@3.4.21(typescript@5.3.3))':
+    dependencies:
+      '@kong/icons': 1.15.1(vue@3.4.21(typescript@5.3.3))
+      '@popperjs/core': 2.11.8
+      axios: 1.6.8
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.1(date-fns@2.30.0)
+      focus-trap: 7.5.4
+      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.4.21(typescript@5.3.3))
+      popper.js: 1.16.1
+      sortablejs: 1.15.2
+      swrv: 1.0.4(vue@3.4.21(typescript@5.3.3))
+      uuid: 9.0.1
+      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.4.21(typescript@5.3.3))
+      vue: 3.4.21(typescript@5.3.3)
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.21(typescript@5.3.3))
+      vue-router: 4.4.0(vue@3.4.21(typescript@5.3.3))
 
   '@kong/kongponents@9.5.5(axios@1.6.8)(vue-router@4.4.0(vue@3.3.13(typescript@5.3.3)))(vue@3.3.13(typescript@5.3.3))':
     dependencies:
@@ -12988,7 +13079,17 @@ snapshots:
 
   color-name@1.1.4: {}
 
+  color-string@1.9.1:
+    dependencies:
+      color-name: 1.1.4
+      simple-swizzle: 0.2.2
+
   color-support@1.1.3: {}
+
+  color@3.2.1:
+    dependencies:
+      color-convert: 1.9.3
+      color-string: 1.9.1
 
   colord@2.9.3: {}
 
@@ -14285,6 +14386,11 @@ snapshots:
       focus-trap: 7.5.4
       vue: 3.3.13(typescript@5.3.3)
 
+  focus-trap-vue@4.0.3(focus-trap@7.5.4)(vue@3.4.21(typescript@5.3.3)):
+    dependencies:
+      focus-trap: 7.5.4
+      vue: 3.4.21(typescript@5.3.3)
+
   focus-trap-vue@4.0.3(focus-trap@7.5.4)(vue@3.4.31(typescript@5.3.3)):
     dependencies:
       focus-trap: 7.5.4
@@ -14951,6 +15057,8 @@ snapshots:
       has-tostringtag: 1.0.0
 
   is-arrayish@0.2.1: {}
+
+  is-arrayish@0.3.2: {}
 
   is-binary-path@2.1.0:
     dependencies:
@@ -17538,6 +17646,10 @@ snapshots:
       simple-concat: 1.0.1
     optional: true
 
+  simple-swizzle@0.2.2:
+    dependencies:
+      is-arrayish: 0.3.2
+
   sirv@2.0.4:
     dependencies:
       '@polka/url': 1.0.0-next.24
@@ -17973,6 +18085,10 @@ snapshots:
     dependencies:
       vue: 3.3.13(typescript@5.3.3)
 
+  swrv@1.0.4(vue@3.4.21(typescript@5.3.3)):
+    dependencies:
+      vue: 3.4.21(typescript@5.3.3)
+
   swrv@1.0.4(vue@3.4.31(typescript@5.3.3)):
     dependencies:
       vue: 3.4.31(typescript@5.3.3)
@@ -18358,6 +18474,12 @@ snapshots:
       querystringify: 2.2.0
       requires-port: 1.0.0
 
+  use-resize-observer@9.1.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
+    dependencies:
+      '@juggle/resize-observer': 3.4.0
+      react: 17.0.2
+      react-dom: 17.0.2(react@17.0.2)
+
   use-sync-external-store@1.2.2(react@17.0.2):
     dependencies:
       react: 17.0.2
@@ -18406,6 +18528,17 @@ snapshots:
       lodash: 4.17.21
       vue: 3.3.13(typescript@5.3.3)
       vue-screen-utils: 1.0.0-beta.13(vue@3.3.13(typescript@5.3.3))
+
+  v-calendar@3.1.2(@popperjs/core@2.11.8)(vue@3.4.21(typescript@5.3.3)):
+    dependencies:
+      '@popperjs/core': 2.11.8
+      '@types/lodash': 4.17.7
+      '@types/resize-observer-browser': 0.1.11
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.1(date-fns@2.30.0)
+      lodash: 4.17.21
+      vue: 3.4.21(typescript@5.3.3)
+      vue-screen-utils: 1.0.0-beta.13(vue@3.4.21(typescript@5.3.3))
 
   v-calendar@3.1.2(@popperjs/core@2.11.8)(vue@3.4.31(typescript@5.3.3)):
     dependencies:
@@ -18627,6 +18760,11 @@ snapshots:
       sortablejs: 1.15.2
       vue: 3.3.13(typescript@5.3.3)
 
+  vue-draggable-next@2.2.1(sortablejs@1.15.2)(vue@3.4.21(typescript@5.3.3)):
+    dependencies:
+      sortablejs: 1.15.2
+      vue: 3.4.21(typescript@5.3.3)
+
   vue-draggable-next@2.2.1(sortablejs@1.15.2)(vue@3.4.31(typescript@5.3.3)):
     dependencies:
       sortablejs: 1.15.2
@@ -18650,6 +18788,11 @@ snapshots:
       '@vue/devtools-api': 6.6.1
       vue: 3.3.13(typescript@5.3.3)
 
+  vue-router@4.4.0(vue@3.4.21(typescript@5.3.3)):
+    dependencies:
+      '@vue/devtools-api': 6.6.1
+      vue: 3.4.21(typescript@5.3.3)
+
   vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)):
     dependencies:
       '@vue/devtools-api': 6.6.1
@@ -18658,6 +18801,10 @@ snapshots:
   vue-screen-utils@1.0.0-beta.13(vue@3.3.13(typescript@5.3.3)):
     dependencies:
       vue: 3.3.13(typescript@5.3.3)
+
+  vue-screen-utils@1.0.0-beta.13(vue@3.4.21(typescript@5.3.3)):
+    dependencies:
+      vue: 3.4.21(typescript@5.3.3)
 
   vue-screen-utils@1.0.0-beta.13(vue@3.4.31(typescript@5.3.3)):
     dependencies:
