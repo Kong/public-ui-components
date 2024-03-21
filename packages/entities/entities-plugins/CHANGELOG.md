@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.16.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.16.3...@kong-ui-public/entities-plugins@2.16.4) (2024-03-21)
+
+
+### Bug Fixes
+
+* **entities-plugins:** do not group fields for plugins with custom layouts ([#1273](https://github.com/Kong/public-ui-components/issues/1273)) ([69b6921](https://github.com/Kong/public-ui-components/commit/69b6921cf2b6314abb4e026726d0c2272163dc2f))
+
+
+
+
+
 ## [2.16.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.16.2...@kong-ui-public/entities-plugins@2.16.3) (2024-03-20)
 
 
