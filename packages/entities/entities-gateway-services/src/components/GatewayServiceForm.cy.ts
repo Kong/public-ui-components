@@ -83,6 +83,35 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('form-submit').should('be.disabled')
     })
 
+    it("should check for name's validity", () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+        },
+      })
+
+      cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
+      cy.get('.kong-ui-entities-gateway-service-form form').should('be.visible')
+
+      cy.getTestId('gateway-service-name-input').should('be.visible')
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .should('not.exist')
+
+      cy.getTestId('gateway-service-name-input').type('service')
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .should('not.exist')
+
+      cy.getTestId('gateway-service-name-input').clear()
+      cy.getTestId('gateway-service-name-input').type('service abc') // with a space
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .first().find('.help-text').should('be.visible')
+
+      cy.getTestId('gateway-service-name-input').clear()
+      cy.getTestId('gateway-service-name-input').type('Hello-ÆBČÐẼF-你好-妳好-こんにちは-안녕하세요-𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯') // UTF-8
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .should('not.exist')
+    })
+
     it('should enable Save button if Upstream URL is selected and Upstream URL field is filled in', () => {
       cy.mount(GatewayServiceForm, {
         props: {
@@ -434,6 +463,35 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('form-cancel').should('be.enabled')
       cy.getTestId('form-submit').should('be.visible')
       cy.getTestId('form-submit').should('be.disabled')
+    })
+
+    it("should check for name's validity", () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+        },
+      })
+
+      cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
+      cy.get('.kong-ui-entities-gateway-service-form form').should('be.visible')
+
+      cy.getTestId('gateway-service-name-input').should('be.visible')
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .should('not.exist')
+
+      cy.getTestId('gateway-service-name-input').type('service')
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .should('not.exist')
+
+      cy.getTestId('gateway-service-name-input').clear()
+      cy.getTestId('gateway-service-name-input').type('service abc') // with a space
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .first().find('.help-text').should('be.visible')
+
+      cy.getTestId('gateway-service-name-input').clear()
+      cy.getTestId('gateway-service-name-input').type('Hello-ÆBČÐẼF-你好-妳好-こんにちは-안녕하세요-𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯') // UTF-8
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .should('not.exist')
     })
 
     it('should enable Save button if Upstream URL is selected and Upstream URL field is filled in', () => {
