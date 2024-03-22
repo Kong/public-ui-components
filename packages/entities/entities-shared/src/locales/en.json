@@ -90,6 +90,9 @@
     "unexpected": "An unexpected error has occurred",
     "dataKeyUndefined": "The data key \"{dataKey}\" does not exist in the response."
   },
+  "validationErrors": {
+    "utf8Name": "The name can be any string containing characters, letters, numbers, or the following characters: ., -, _, or ~. Do not use spaces."
+  },
   "toggleModal": {
     "enable": {
       "title": "Enable {entityType}",

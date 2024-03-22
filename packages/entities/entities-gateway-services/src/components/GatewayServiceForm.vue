@@ -31,7 +31,7 @@
           :placeholder="t('gateway_services.form.fields.name.placeholder')"
           :readonly="form.isReadonly"
           type="text"
-          @input="preValidate"
+          @input="validateName"
         />
 
         <KInput
@@ -361,6 +361,7 @@ import {
   EntityFormSection,
   EntityBaseForm,
   EntityBaseFormType,
+  useValidators,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -408,6 +409,7 @@ const { getMessageFromError } = useErrors()
 const { axiosInstance } = useAxios({
   headers: props.config?.requestHeaders,
 })
+const validators = useValidators()
 
 const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit)
 const formType = computed((): EntityBaseFormType => props.gatewayServiceId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
@@ -621,21 +623,8 @@ const showTlsVerify = computed((): boolean => {
   return checkedGroup.value === 'protocol' && isValidProtocol
 })
 
-/**
- * Check whether the given string matches name formats
-* and returns an error message (if invalid) or empty string (if valid)
-* @param {String} str the str to test
-* @returns {String} an error message
-*/
-const validateName = (str: string): string => {
-  // eslint-disable-next-line prefer-regex-literals
-  const namePattern = new RegExp('^[0-9a-zA-Z.\\-_~]*$')
-
-  return namePattern.test(str) ? '' : t('errors.validationNameError')
-}
-
-const preValidate = (input: string): void => {
-  preValidateErrorMessage.value = validateName(input)
+const validateName = (input: string): void => {
+  preValidateErrorMessage.value = validators.utf8Name(input)
 }
 
 /**
