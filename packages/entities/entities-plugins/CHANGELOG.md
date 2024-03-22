@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.16.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.16.5...@kong-ui-public/entities-plugins@2.16.6) (2024-03-22)
+
+
+### Bug Fixes
+
+* **entities-plugins:** icons with imageName overrides ([#1283](https://github.com/Kong/public-ui-components/issues/1283)) ([6514c64](https://github.com/Kong/public-ui-components/commit/6514c6429aaf88b0b23082a7d33b2a6afd8cad93))
+
+
+
+
+
 ## [2.16.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.16.4...@kong-ui-public/entities-plugins@2.16.5) (2024-03-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
