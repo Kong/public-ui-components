@@ -132,7 +132,6 @@ export const registerLanguage = (schema: NamedSchemaDefinition) => {
         endColumn: position.column,
       })
 
-      // nosemgrep: javascript.lang.security.audit.incomplete-sanitization.incomplete-sanitization
       const words = lastChars.replace('\t', '').split(' ')
       const activeTyping = words[words.length - 1] // what the user is currently typing (everything after the last space)
 
