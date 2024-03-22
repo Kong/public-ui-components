@@ -400,8 +400,12 @@ export const tileLayoutSchema = {
         rows: {
           type: 'number',
         },
+        fitToContent: {
+          type: 'boolean',
+        },
       },
-      description: 'Number of columns and rows the tile occupies.',
+      description: 'Number of columns and rows the tile occupies.  If fitToContent is true for every tile in a row, ' +
+        'and each tile only occupies 1 row, then the row will auto-fit to its content.',
       required: ['cols', 'rows'],
       additionalProperties: false,
     },
