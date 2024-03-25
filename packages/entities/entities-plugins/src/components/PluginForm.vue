@@ -420,6 +420,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
 
   tags: typedefs.tags as DefaultPluginsFormSchema,
   protocols: {
+    id: 'protocols',
     default: [],
     help: t('plugins.form.fields.protocols.help'),
     label: t('plugins.form.fields.protocols.label'),
@@ -736,6 +737,7 @@ const initScopeFields = (): void => {
   // if the plugin is enabled for a specific type of entity, add it's scope field to the form
   if (supportServiceScope) {
     scopeEntityArray.push({
+      id: 'service-id',
       model: 'service-id',
       label: t('plugins.form.scoping.gateway_service.label'),
       placeholder: t('plugins.form.scoping.gateway_service.placeholder'),
@@ -750,6 +752,7 @@ const initScopeFields = (): void => {
 
   if (supportRouteScope) {
     scopeEntityArray.push({
+      id: 'route-id',
       model: 'route-id',
       label: t('plugins.form.scoping.route.label'),
       placeholder: t('plugins.form.scoping.route.placeholder'),

@@ -35,6 +35,7 @@ export const applicationRegistrationSchema: AppRegFormSchema = {
   },
   tags: typedefs.tags,
   protocols: {
+    id: 'protocols',
     default: [],
     type: 'multiselect',
     label: 'Protocols',

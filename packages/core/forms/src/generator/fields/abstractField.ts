@@ -211,6 +211,10 @@ export default {
       return slugifyFormID(schema, idPrefix) + (unique ? '-' + uniqueId() : '')
     },
 
+    getLabelId(schema) {
+      return `${this.getFieldID(schema)}-label`
+    },
+
     getFieldClasses() {
       return objGet(this.schema, 'fieldClasses', [])
     },
