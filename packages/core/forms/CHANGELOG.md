@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.2.2...@kong-ui-public/forms@2.2.3) (2024-03-25)
+
+
+### Bug Fixes
+
+* **entities-plugins, vfg:** create plugin form a11y improvements [KHCP-11026] ([#1272](https://github.com/Kong/public-ui-components/issues/1272)) ([b1ed04e](https://github.com/Kong/public-ui-components/commit/b1ed04eb56ff2869b988a217220debc78655f3f0))
+
+
+
+
+
 ## [2.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.2.1...@kong-ui-public/forms@2.2.2) (2024-03-20)
 
 

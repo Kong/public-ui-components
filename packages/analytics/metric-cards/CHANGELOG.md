@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.48](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.6.47...@kong-ui-public/metric-cards@0.6.48) (2024-03-25)
+
+
+### Bug Fixes
+
+* **entities-plugins, vfg:** create plugin form a11y improvements [KHCP-11026] ([#1272](https://github.com/Kong/public-ui-components/issues/1272)) ([b1ed04e](https://github.com/Kong/public-ui-components/commit/b1ed04eb56ff2869b988a217220debc78655f3f0))
+
+
+
+
+
 ## [0.6.47](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.6.46...@kong-ui-public/metric-cards@0.6.47) (2024-03-21)
 
 

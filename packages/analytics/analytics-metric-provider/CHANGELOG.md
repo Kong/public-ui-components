@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@5.0.6...@kong-ui-public/analytics-metric-provider@5.0.7) (2024-03-25)
+
+
+### Bug Fixes
+
+* **entities-plugins, vfg:** create plugin form a11y improvements [KHCP-11026] ([#1272](https://github.com/Kong/public-ui-components/issues/1272)) ([b1ed04e](https://github.com/Kong/public-ui-components/commit/b1ed04eb56ff2869b988a217220debc78655f3f0))
+
+
+
+
+
 ## [5.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@5.0.5...@kong-ui-public/analytics-metric-provider@5.0.6) (2024-03-21)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
