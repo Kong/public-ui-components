@@ -21,8 +21,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(@types/node@18.19.24)(typescript@5.3.3)
       '@evilmartians/lefthook':
-        specifier: ^1.6.6
-        version: 1.6.6
+        specifier: ^1.6.7
+        version: 1.6.7
       '@kong/design-tokens':
         specifier: 1.12.10
         version: 1.12.10
@@ -2019,8 +2019,8 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@evilmartians/lefthook@1.6.6:
-    resolution: {integrity: sha512-utdo+0gf1KOdtkWd709exejQhXzyh6WnK7+OkpZyCBfdwg6OC3omfeXe0HEKEQiyGCCeWYpRrjhY8cAaddqMrw==}
+  /@evilmartians/lefthook@1.6.7:
+    resolution: {integrity: sha512-nRCNWUl4xxkIwzChkARezEGuIcm6l2aywDPR3C4f8bGTzDJhVtEPcByqrOqPJ9emS7MnYz9WKI/NFdIsph/apw==}
     cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
