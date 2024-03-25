@@ -21,7 +21,7 @@ describe('<AppPageHeader />', () => {
 
     cy.get('.kong-ui-app-page-header').should('exist')
     cy.getTestId('page-header-breadcrumbs').should('be.visible')
-    cy.get('.k-breadcrumb-text').should('contain.text', breadcrumbTitle)
+    cy.get('.breadcrumb-text').should('contain.text', breadcrumbTitle)
     cy.getTestId('page-header-title').should('be.visible')
     cy.getTestId('page-header-title').should('contain.text', title)
   })
@@ -53,8 +53,8 @@ describe('<AppPageHeader />', () => {
     })
 
     cy.get('.kong-ui-app-page-header').should('exist')
-    cy.get('.k-breadcrumb-icon-wrapper').should('be.visible')
-    cy.get('.k-breadcrumb-icon-wrapper').should('contain.text', breadcrumbIcon)
+    cy.get('.breadcrumb-icon-container').should('be.visible')
+    cy.get('.breadcrumb-icon-container').should('contain.text', breadcrumbIcon)
     cy.getTestId('page-header-title-before').should('be.visible')
     cy.getTestId('page-header-title-before').should('contain.text', iconText)
     cy.getTestId('page-header-title-after').should('be.visible')
