@@ -25,6 +25,7 @@
 import { computed, type PropType, ref, onMounted, onUnmounted } from 'vue'
 import type { GridSize, Cell, GridTile } from 'src/types'
 import { DEFAULT_TILE_HEIGHT } from '../../constants'
+import { calculateRowDefs } from './grid-utils'
 
 const props = defineProps({
   gridSize: {
@@ -63,6 +64,12 @@ onUnmounted(() => {
   }
 })
 
+const rowDefinition = computed<string>(() => {
+  const rowDefs = calculateRowDefs(props.gridSize?.rows, props.tileHeight, props.tiles)
+
+  return rowDefs.join(' ')
+})
+
 const gridCells = computed<Cell<T>[]>(() => {
   return props.tiles.map((tile, i) => {
     return {
@@ -85,7 +92,7 @@ const gridCells = computed<Cell<T>[]>(() => {
   display: grid;
   gap: $kui-space-70;
   grid-template-columns: repeat(v-bind('gridSize.cols'), 1fr);
-  grid-template-rows: repeat(v-bind('gridSize.rows'), v-bind('`${tileHeight}px`'));
+  grid-template-rows: v-bind('rowDefinition');
   width: 100%;
 }
 

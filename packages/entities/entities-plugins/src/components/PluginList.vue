@@ -55,7 +55,7 @@
         <div class="name-cell-wrapper">
           <PluginIcon
             class="plugin-icon"
-            :name="row.name"
+            :name="pluginMetaData.getImageName(row.name)"
             :width="24"
           />
           <div class="info-wrapper">

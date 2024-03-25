@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.16.1...@kong-ui-public/dashboard-renderer@0.17.0) (2024-03-22)
+
+
+### Features
+
+* **dashboard:** allow rows to fit content [MA-2744] ([#1284](https://github.com/Kong/public-ui-components/issues/1284)) ([5fca230](https://github.com/Kong/public-ui-components/commit/5fca230ab61736e964d92272fbcbffd06c0b7e82))
+
+
+
+
+
+## [0.16.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.16.0...@kong-ui-public/dashboard-renderer@0.16.1) (2024-03-22)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [0.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.15.4...@kong-ui-public/dashboard-renderer@0.16.0) (2024-03-21)
+
+
+### Bug Fixes
+
+* **analytics-chart:** remove fill prop [MA-2659] ([#1280](https://github.com/Kong/public-ui-components/issues/1280)) ([b24f07d](https://github.com/Kong/public-ui-components/commit/b24f07d6e230116c619e690b35d030cfbfb37bd9))
+
+
+### BREAKING CHANGES
+
+* **analytics-chart:** removed the fill prop from chart options
+
+* fix: no need to pass fill to chart options anymore in dashboard renderer
+
+
+
+
+
 ## [0.15.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.15.3...@kong-ui-public/dashboard-renderer@0.15.4) (2024-03-21)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

@@ -41,7 +41,6 @@ const options = computed<AnalyticsChartOptions>(() => {
   // This matches our intuitions about how these charts work.
   return {
     type: chartTypeLookup[props.chartOptions.type],
-    fill: stacked,
     stacked,
     chartDatasetColors: props.chartOptions.chartDatasetColors,
   }

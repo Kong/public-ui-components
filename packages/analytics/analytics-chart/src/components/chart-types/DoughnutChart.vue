@@ -58,11 +58,6 @@ const props = defineProps({
     required: false,
     default: null,
   },
-  fill: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
   tooltipTitle: {
     type: String,
     required: true,

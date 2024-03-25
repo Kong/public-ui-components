@@ -63,7 +63,7 @@
         :chart-tooltip-sort-fn="chartOptions.chartTooltipSortFn"
         :dataset-colors="chartOptions.chartDatasetColors"
         :dimension-axes-title="timestampAxisTitle"
-        :fill="chartOptions.fill"
+        :fill="chartOptions.stacked"
         :granularity="timeSeriesGranularity"
         :legend-values="legendValues"
         :metric-axes-title="metricAxesTitle"
@@ -94,7 +94,6 @@
         v-else-if="isDoughnutChart"
         :chart-data="computedChartData"
         :dataset-colors="chartOptions.chartDatasetColors"
-        :fill="chartOptions.fill"
         :legend-position="legendPosition"
         :legend-values="legendValues"
         :metric-unit="computedMetricUnit"
@@ -190,14 +189,14 @@ const computedChartData = computed(() => {
   return isTimeSeriesChart.value
     ? composables.useExploreResultToTimeDataset(
       {
-        fill: props.chartOptions.fill,
+        fill: props.chartOptions.stacked,
         colorPalette: props.chartOptions.chartDatasetColors || datavisPalette,
       },
       toRef(props, 'chartData'),
     ).value
     : composables.useExploreResultToDatasets(
       {
-        fill: props.chartOptions.fill,
+        fill: props.chartOptions.stacked,
         colorPalette: props.chartOptions.chartDatasetColors || datavisPalette,
       },
       toRef(props, 'chartData'),

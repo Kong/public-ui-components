@@ -17,8 +17,19 @@ import oauthCredentialSchema from './plugin-schemas/credentials/mockedOAuthSchem
 import KeyAuthEncSchema from './plugin-schemas/KeyAuthEnc'
 import keyEncCredentialSchema from './plugin-schemas/credentials/mockedKeyEncAuthSchema.json'
 
-export const getPluginIconURL = (pluginName: string) => {
-  return new URL(`../assets/images/plugin-icons/${pluginName}.png`, import.meta.url).href
+/**
+ * Gets the URL for a plugin icon
+ *
+ * Note: some plugins may have icons which named differently from their names
+ * (e.g. `pre-function` -> `kong-function`)
+ *
+ * Hint: you can use the helper `getImageName` returned by `usePluginMetaData`
+ *
+ * @param imageName the name of the plugin icon's image
+ * @returns the URL for the plugin icon
+ */
+export const getPluginIconURL = (imageName: string) => {
+  return new URL(`../assets/images/plugin-icons/${imageName}.png`, import.meta.url).href
 }
 
 export const usePluginMetaData = () => {
@@ -716,5 +727,9 @@ export const usePluginMetaData = () => {
     return pluginMetaData[name]?.name || name
   }
 
-  return { pluginMetaData, credentialMetaData, credentialSchemas, getDisplayName }
+  const getImageName = (name: string) => {
+    return pluginMetaData[name]?.imageName || name
+  }
+
+  return { pluginMetaData, credentialMetaData, credentialSchemas, getDisplayName, getImageName }
 }

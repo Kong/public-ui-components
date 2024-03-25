@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.5.5...@kong-ui-public/analytics-chart@3.0.0) (2024-03-21)
+
+
+### Bug Fixes
+
+* **analytics-chart:** remove fill prop [MA-2659] ([#1280](https://github.com/Kong/public-ui-components/issues/1280)) ([b24f07d](https://github.com/Kong/public-ui-components/commit/b24f07d6e230116c619e690b35d030cfbfb37bd9))
+
+
+### BREAKING CHANGES
+
+* **analytics-chart:** removed the fill prop from chart options
+
+* fix: no need to pass fill to chart options anymore in dashboard renderer
+
+
+
+
+
 ## [2.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.5.4...@kong-ui-public/analytics-chart@2.5.5) (2024-03-21)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

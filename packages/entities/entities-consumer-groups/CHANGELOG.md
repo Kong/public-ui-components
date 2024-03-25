@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.6.4...@kong-ui-public/entities-consumer-groups@2.6.5) (2024-03-22)
+
+
+### Bug Fixes
+
+* **entities-*:** allow UTF-8 chars in some fields ([#1282](https://github.com/Kong/public-ui-components/issues/1282)) ([26da464](https://github.com/Kong/public-ui-components/commit/26da464c06539a8c83f2bad9a16aa916311793b7))
+
+
+
+
+
 ## [2.6.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.6.3...@kong-ui-public/entities-consumer-groups@2.6.4) (2024-03-20)
 
 

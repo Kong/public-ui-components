@@ -86,9 +86,6 @@
           "label": "Consumers",
           "placeholder": "Select one or more consumers"
         }
-      },
-      "validation_errors": {
-        "name": "The name can be any string containing letters, numbers, or the following characters: ., -, _, or ~. Do not use spaces."
       }
     }
   }

@@ -95,12 +95,6 @@
             :label="multiMetricToggle ? 'Multi Metric' : 'Single Metric'"
           />
         </div>
-        <div v-if="chartType.includes('Line')">
-          <KInputSwitch
-            v-model="fillToggle"
-            :label="fillToggle ? 'Fill' : 'No Fill'"
-          />
-        </div>
         <div>
           <KInputSwitch
             v-model="stackToggle"
@@ -271,7 +265,6 @@ interface MetricSelection {
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const multiMetricToggle = ref(false)
-const fillToggle = ref(true)
 const stackToggle = ref(true)
 const limitToggle = ref(false)
 const multiDimensionToggle = ref(false)
@@ -364,7 +357,6 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => {
   return {
     type: chartType.value,
     stacked: stackToggle.value,
-    fill: fillToggle.value,
     chartDatasetColors: colorPalette.value,
   }
 })
