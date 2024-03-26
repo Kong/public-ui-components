@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.16.8...@kong-ui-public/entities-plugins@2.17.0) (2024-03-26)
+
+
+### Features
+
+* **entities-plugins:** support array fields in custom plugins ([#1289](https://github.com/Kong/public-ui-components/issues/1289)) ([a1529e4](https://github.com/Kong/public-ui-components/commit/a1529e41b9b85d8ced2aba01f1f754b0b7db0c3a))
+
+
+
+
+
 ## [2.16.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.16.7...@kong-ui-public/entities-plugins@2.16.8) (2024-03-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
