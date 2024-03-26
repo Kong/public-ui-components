@@ -114,15 +114,15 @@ watch(expression, (newExpression) => {
 })
 
 watch([expression, schema], (() => {
-  const cb = () => {
+  const parseAndUpdate = () => {
     parseResult.value = parse(expression.value, schema.value)
   }
 
   if (props.parseDebounce === undefined || props.parseDebounce <= 0) {
-    return cb
+    return parseAndUpdate
   }
 
-  return debounce(cb, props.parseDebounce) as typeof cb
+  return debounce(parseAndUpdate, props.parseDebounce) as typeof parseAndUpdate
 })())
 
 watch(() => parseResult.value, (result?: ParseResult) => {
@@ -197,7 +197,7 @@ watch(() => parseResult.value, (result?: ParseResult) => {
 
 <style lang="scss" scoped>
 .expression-editor {
-  border: 1px solid $kui-color-border;
+  border: $kui-border-width-10 solid $kui-color-border;
   border-radius: 3px;
   min-height: 200px;
   overflow: hidden;
@@ -205,7 +205,7 @@ watch(() => parseResult.value, (result?: ParseResult) => {
   width: 100%;
 
   &.invalid {
-    border-color: #d44324;
+    border-color: $kui-color-border-danger;
   }
 }
 </style>

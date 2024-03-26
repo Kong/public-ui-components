@@ -64,8 +64,6 @@ export const registerLanguage = (schema: NamedSchemaDefinition) => {
 
   const tokenTree = buildTokenTree(schema.definition)
 
-  console.debug(`Registering language "${languageId}" with token tree:`, tokenTree)
-
   const keywords = ['not', 'in', 'contains']
 
   monaco.languages.register({ id: languageId })
