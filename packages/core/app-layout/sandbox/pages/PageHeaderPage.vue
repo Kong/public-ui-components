@@ -4,13 +4,8 @@
       :breadcrumbs="breadcrumbs"
       title="Cats are Cool"
     >
-      <template #icon-home>
-        <KIcon
-          class="home-breadcrumb-icon"
-          color="#169fcc"
-          icon="immunity"
-          size="16"
-        />
+      <template #icon-app-layout>
+        <KongIcon :color="KUI_COLOR_TEXT_DECORATIVE_AQUA" />
       </template>
       <template #title-before>
         <KIcon
@@ -116,14 +111,20 @@
 import { computed, ref } from 'vue'
 import type { BadgeMethodAppearance } from '@kong/kongponents'
 import { AppAboutSection, AppPageHeader } from '../../src'
-import { EditIcon } from '@kong/icons'
+import { EditIcon, KongIcon } from '@kong/icons'
+import { KUI_COLOR_TEXT_DECORATIVE_AQUA } from '@kong/design-tokens'
 
 const breadcrumbs = computed(() => {
   return [
     {
-      key: 'home',
+      key: 'app-layout',
       to: { name: 'home' },
-      text: 'Home',
+      text: 'App Layout',
+    },
+    {
+      key: 'app-page-header',
+      to: { name: 'page-header' },
+      text: 'App Page Header',
     },
   ]
 })

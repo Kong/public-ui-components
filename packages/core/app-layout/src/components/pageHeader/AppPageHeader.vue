@@ -5,7 +5,10 @@
       class="page-header-breadcrumbs"
       data-testid="page-header-breadcrumbs"
     >
-      <KBreadcrumbs :items="breadcrumbs">
+      <KBreadcrumbs
+        item-max-width="150px"
+        :items="breadcrumbs"
+      >
         <template
           v-for="slotName in breadcrumbIconSlots"
           #[slotName]
@@ -61,7 +64,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed } from 'vue'
+import { computed, useSlots } from 'vue'
 import type { BreadcrumbItem } from '@kong/kongponents'
 
 const props = defineProps({
@@ -75,10 +78,12 @@ const props = defineProps({
   },
 })
 
+const slots = useSlots()
+
 const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs?.length)
-const getBreadcrumbKey = (item: BreadcrumbItem, idx: number): string => { return item.key || `breadcrumb-${idx}` }
 const breadcrumbIconSlots = computed((): string[] => {
-  return props.breadcrumbs.map((item, idx) => `icon-${getBreadcrumbKey(item, idx)}`) || []
+  // only return used icon slots
+  return Object.keys(slots).filter((slotName) => slotName.startsWith('icon-'))
 })
 </script>
 
