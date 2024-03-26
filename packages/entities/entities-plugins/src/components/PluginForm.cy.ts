@@ -10,6 +10,7 @@ import {
   schema2,
   scopedService,
   scopedConsumer,
+  customPluginSchema,
 } from '../../fixtures/mockData'
 import PluginForm from './PluginForm.vue'
 import { VueFormGenerator } from '../../src'
@@ -295,6 +296,29 @@ describe('<PluginForm />', () => {
       cy.get('@advancedFields').find('#config-include_base_path').should('be.visible')
       cy.get('@advancedFields').find('#config-included_status_codes').should('be.visible')
       cy.get('@advancedFields').find('#config-random_status_code').should('be.visible')
+    })
+
+    it('should show correct form components for custom plugin with arrays of objects', () => {
+      interceptKMSchema({ mockData: customPluginSchema })
+
+      cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
+        props: {
+          config: baseConfigKM,
+          pluginType: 'custom',
+        },
+        router,
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      // array field
+      cy.getTestId('add-config-discovery_uris').click()
+      cy.get('#config-discovery_uris-issuer-0').should('have.attr', 'required')
+      cy.get('#config-discovery_uris-requires_proxy-0').should('have.attr', 'type', 'checkbox').and('be.checked')
+      cy.get('#config-discovery_uris-ssl_verify-0').should('have.attr', 'type', 'checkbox').and('not.be.checked')
+      cy.get('#config-discovery_uris-timeout_ms-0').should('have.attr', 'type', 'number').and('have.value', '5000')
     })
 
     it('should hide scope selection when hideScopeSelection is true', () => {
@@ -1018,6 +1042,30 @@ describe('<PluginForm />', () => {
       cy.get('@advancedFields').find('#config-include_base_path').should('be.visible')
       cy.get('@advancedFields').find('#config-included_status_codes').should('be.visible')
       cy.get('@advancedFields').find('#config-random_status_code').should('be.visible')
+    })
+
+    it('should show correct form components for custom plugin with arrays of objects', () => {
+      interceptKonnectSchema({ mockData: customPluginSchema })
+
+      cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
+        props: {
+          config: baseConfigKonnect,
+          pluginType: 'custom',
+          useCustomNamesForPlugin: true,
+        },
+        router,
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      // array field
+      cy.getTestId('add-config-discovery_uris').click()
+      cy.get('#config-discovery_uris-issuer-0').should('have.attr', 'required')
+      cy.get('#config-discovery_uris-requires_proxy-0').should('have.attr', 'type', 'checkbox').and('be.checked')
+      cy.get('#config-discovery_uris-ssl_verify-0').should('have.attr', 'type', 'checkbox').and('not.be.checked')
+      cy.get('#config-discovery_uris-timeout_ms-0').should('have.attr', 'type', 'number').and('have.value', '5000')
     })
 
     it('should hide scope selection when hideScopeSelection is true', () => {
