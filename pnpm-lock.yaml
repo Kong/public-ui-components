@@ -292,13 +292,13 @@ importers:
     dependencies:
       '@kong-ui-public/core':
         specifier: 1.1.0
-        version: 1.1.0(axios@1.6.7)(swrv@1.0.4)
+        version: 1.1.0(axios@1.6.8)(swrv@1.0.4)
       '@kong-ui-public/metric-cards':
         specifier: workspace:^
         version: link:../metric-cards
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       swrv:
         specifier: ^1.0.4
         version: 1.0.4
@@ -314,7 +314,7 @@ importers:
         version: link:../../core/i18n
       '@kong/kongponents':
         specifier: 9.0.0-pr.2097.1fe79832.0
-        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.7)
+        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.8)
       pinia:
         specifier: '>= 2.1.7 < 3'
         version: 2.1.7
@@ -459,8 +459,8 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       swrv:
         specifier: ^1.0.4
         version: 1.0.4
@@ -484,11 +484,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-pr.2097.1fe79832.0
-        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue@3.3.13)
+        specifier: 9.0.0-alpha.121
+        version: 9.0.0-alpha.121(axios@1.6.8)(vue@3.3.13)
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       vue:
         specifier: '>= 3.3.13 < 4'
         version: 3.3.13
@@ -503,6 +503,37 @@ importers:
         version: 1.8.14(vue@3.4.21)
       vue:
         specifier: ^3.4.21
+        version: 3.4.21
+
+  packages/core/expressions:
+    dependencies:
+      '@kong-ui-public/core':
+        specifier: workspace:^
+        version: link:../core
+    devDependencies:
+      '@kong/atc-router':
+        specifier: 1.6.0-rc.1
+        version: 1.6.0-rc.1
+      '@kong/design-tokens':
+        specifier: 1.12.7
+        version: 1.12.7
+      '@kong/kongponents':
+        specifier: 9.0.0-alpha.105
+        version: 9.0.0-alpha.105(vue@3.4.21)
+      monaco-editor:
+        specifier: 0.21.3
+        version: 0.21.3
+      vite-plugin-monaco-editor:
+        specifier: ^1.1.0
+        version: 1.1.0(monaco-editor@0.21.3)
+      vite-plugin-top-level-await:
+        specifier: ^1.4.1
+        version: 1.4.1
+      vite-plugin-wasm:
+        specifier: ^3.3.0
+        version: 3.3.0
+      vue:
+        specifier: ^3.4.19
         version: 3.4.21
 
   packages/core/forms:
@@ -592,11 +623,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-pr.2097.1fe79832.0
-        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.121
+        version: 9.0.0-alpha.121(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       vue:
         specifier: ^3.4.21
         version: 3.4.21
@@ -617,11 +648,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-pr.2097.1fe79832.0
-        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.121
+        version: 9.0.0-alpha.121(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       vue:
         specifier: ^3.4.21
         version: 3.4.21
@@ -642,11 +673,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-pr.2097.1fe79832.0
-        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.121
+        version: 9.0.0-alpha.121(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       vue:
         specifier: ^3.4.21
         version: 3.4.21
@@ -667,11 +698,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-pr.2097.1fe79832.0
-        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.121
+        version: 9.0.0-alpha.121(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       vue:
         specifier: ^3.4.21
         version: 3.4.21
@@ -692,11 +723,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-pr.2097.1fe79832.0
-        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.121
+        version: 9.0.0-alpha.121(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       vue:
         specifier: ^3.4.21
         version: 3.4.21
@@ -714,11 +745,11 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/kongponents':
-        specifier: 9.0.0-pr.2097.1fe79832.0
-        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.121
+        version: 9.0.0-alpha.121(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       vue:
         specifier: ^3.4.21
         version: 3.4.21
@@ -739,11 +770,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-pr.2097.1fe79832.0
-        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.121
+        version: 9.0.0-alpha.121(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       vue:
         specifier: ^3.4.21
         version: 3.4.21
@@ -785,11 +816,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-pr.2097.1fe79832.0
-        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.121
+        version: 9.0.0-alpha.121(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       vue:
         specifier: ^3.4.21
         version: 3.4.21
@@ -810,11 +841,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-pr.2097.1fe79832.0
-        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.121
+        version: 9.0.0-alpha.121(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       vue:
         specifier: ^3.4.21
         version: 3.4.21
@@ -841,11 +872,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-pr.2097.1fe79832.0
-        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.121
+        version: 9.0.0-alpha.121(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       vue:
         specifier: ^3.4.21
         version: 3.4.21
@@ -866,11 +897,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-pr.2097.1fe79832.0
-        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.121
+        version: 9.0.0-alpha.121(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       vue:
         specifier: ^3.4.21
         version: 3.4.21
@@ -891,11 +922,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-pr.2097.1fe79832.0
-        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.121
+        version: 9.0.0-alpha.121(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       vue:
         specifier: ^3.4.21
         version: 3.4.21
@@ -916,11 +947,11 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/kongponents':
-        specifier: 9.0.0-pr.2097.1fe79832.0
-        version: 9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21)
+        specifier: 9.0.0-alpha.121
+        version: 9.0.0-alpha.121(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
       axios:
-        specifier: ^1.6.7
-        version: 1.6.7
+        specifier: ^1.6.8
+        version: 1.6.8
       vue:
         specifier: ^3.4.21
         version: 3.4.21
@@ -2281,20 +2312,28 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@kong-ui-public/core@1.1.0(axios@1.6.7)(swrv@1.0.4):
+  /@kong-ui-public/core@1.1.0(axios@1.6.8)(swrv@1.0.4):
     resolution: {integrity: sha512-j1kK07/zDyxwePi1EX1rZ+3iL955VdhZiodzeT5ift7iVQTiPt9VNUFu9+IXJ/AxHfuYu/gaL+gily9TsJTX3w==}
     peerDependencies:
       axios: ^1.4.0
       swrv: ^1.0.4
       vue: ^3.2.47
     dependencies:
-      axios: 1.6.7
+      axios: 1.6.8
       date-fns: 2.30.0
       swrv: 1.0.4
     dev: false
 
+  /@kong/atc-router@1.6.0-rc.1:
+    resolution: {integrity: sha512-nFR01kKK4vAsXGZ0g8YPzJSOrTEPzgtVm3iWv4JPNx1kFFRKDTJrmDFSWZmEPC2VtsSdglewGB3Sqzpi/DfiIg==}
+    dev: true
+
   /@kong/design-tokens@1.12.10:
     resolution: {integrity: sha512-6IY1H6UMg95BqjU4Xov5sfjsG94G8KadUnf8MawuovbjGAcOh1Avr5Ooq4jEqmFcfjH6q+BjZHgKxO4A6Vt0kA==}
+    dev: true
+
+  /@kong/design-tokens@1.12.7:
+    resolution: {integrity: sha512-gyUX+1hDUtgvMZgNvPxTrIF6lD5x2bd+qMx8EATQ9FE+naaMHvP+dFp6jmHAEVwY4yQrCWv6e4Et4UOG2XSuFA==}
     dev: true
 
   /@kong/icons@1.8.14:
@@ -2339,6 +2378,78 @@ packages:
       vue-draggable-next: 2.2.1(sortablejs@1.15.2)
     dev: false
 
+  /@kong/kongponents@9.0.0-alpha.105(vue@3.4.21):
+    resolution: {integrity: sha512-ZCoA3RxtzHUAvBVcxmMvG7gF0nnlmj/pM+/ZvnVgOydfOIhgMPZ6Ou19XQa10gcGD+h90BhBJR4+TXAamkb/OQ==}
+    engines: {node: '>=v16.20.2'}
+    peerDependencies:
+      axios: ^1.6.7
+      vue: '>= 3.3.4 < 4'
+      vue-router: ^4.2.5
+    dependencies:
+      '@kong/icons': 1.8.14(vue@3.4.21)
+      '@popperjs/core': 2.11.8
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.1(date-fns@2.30.0)
+      focus-trap: 7.5.4
+      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.4.21)
+      popper.js: 1.16.1
+      sortablejs: 1.15.2
+      swrv: 1.0.4(vue@3.4.21)
+      uuid: 9.0.1
+      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.4.21)
+      vue: 3.4.21
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.21)
+    dev: true
+
+  /@kong/kongponents@9.0.0-alpha.121(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21):
+    resolution: {integrity: sha512-4ksgaSJeASw7B5OxTn73KB9s2F2gIP91Nw7aqnWlTBUxtxX8GHv/o9tBZ9EO+poRNjGxz48m18yF5k9fHbkojA==}
+    engines: {node: '>=v16.20.2'}
+    peerDependencies:
+      axios: ^1.6.7
+      vue: '>= 3.3.4 < 4'
+      vue-router: ^4.3.0
+    dependencies:
+      '@kong/icons': 1.8.14(vue@3.4.21)
+      '@popperjs/core': 2.11.8
+      axios: 1.6.8
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.1(date-fns@2.30.0)
+      focus-trap: 7.5.4
+      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.4.21)
+      popper.js: 1.16.1
+      sortablejs: 1.15.2
+      swrv: 1.0.4(vue@3.4.21)
+      uuid: 9.0.1
+      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.4.21)
+      vue: 3.4.21
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.21)
+      vue-router: 4.3.0(vue@3.4.21)
+    dev: true
+
+  /@kong/kongponents@9.0.0-alpha.121(axios@1.6.8)(vue@3.3.13):
+    resolution: {integrity: sha512-4ksgaSJeASw7B5OxTn73KB9s2F2gIP91Nw7aqnWlTBUxtxX8GHv/o9tBZ9EO+poRNjGxz48m18yF5k9fHbkojA==}
+    engines: {node: '>=v16.20.2'}
+    peerDependencies:
+      axios: ^1.6.7
+      vue: '>= 3.3.4 < 4'
+      vue-router: ^4.3.0
+    dependencies:
+      '@kong/icons': 1.8.14(vue@3.3.13)
+      '@popperjs/core': 2.11.8
+      axios: 1.6.8
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.1(date-fns@2.30.0)
+      focus-trap: 7.5.4
+      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.3.13)
+      popper.js: 1.16.1
+      sortablejs: 1.15.2
+      swrv: 1.0.4(vue@3.3.13)
+      uuid: 9.0.1
+      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.3.13)
+      vue: 3.3.13
+      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.3.13)
+    dev: true
+
   /@kong/kongponents@9.0.0-pr.2097.1fe79832.0:
     resolution: {integrity: sha512-BZzIOPg5/6BcqJM7nKy6TyyanEw7CyQbkJhlqhMGNGKlVVeqTVkj9fBUZOYHO2kHewOI/+CwfTmpyvA60QEwLw==}
     engines: {node: '>=v16.20.2'}
@@ -2361,7 +2472,7 @@ packages:
       vue-draggable-next: 2.2.1(sortablejs@1.15.2)
     dev: true
 
-  /@kong/kongponents@9.0.0-pr.2097.1fe79832.0(axios@1.6.7):
+  /@kong/kongponents@9.0.0-pr.2097.1fe79832.0(axios@1.6.8):
     resolution: {integrity: sha512-BZzIOPg5/6BcqJM7nKy6TyyanEw7CyQbkJhlqhMGNGKlVVeqTVkj9fBUZOYHO2kHewOI/+CwfTmpyvA60QEwLw==}
     engines: {node: '>=v16.20.2'}
     peerDependencies:
@@ -2371,7 +2482,7 @@ packages:
     dependencies:
       '@kong/icons': 1.8.14
       '@popperjs/core': 2.11.8
-      axios: 1.6.7
+      axios: 1.6.8
       date-fns: 2.30.0
       date-fns-tz: 2.0.1(date-fns@2.30.0)
       focus-trap: 7.5.4
@@ -2382,55 +2493,6 @@ packages:
       uuid: 9.0.1
       v-calendar: 3.1.2(@popperjs/core@2.11.8)
       vue-draggable-next: 2.2.1(sortablejs@1.15.2)
-    dev: true
-
-  /@kong/kongponents@9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue-router@4.3.0)(vue@3.4.21):
-    resolution: {integrity: sha512-BZzIOPg5/6BcqJM7nKy6TyyanEw7CyQbkJhlqhMGNGKlVVeqTVkj9fBUZOYHO2kHewOI/+CwfTmpyvA60QEwLw==}
-    engines: {node: '>=v16.20.2'}
-    peerDependencies:
-      axios: ^1.6.7
-      vue: '>= 3.3.4 < 4'
-      vue-router: ^4.3.0
-    dependencies:
-      '@kong/icons': 1.8.14(vue@3.4.21)
-      '@popperjs/core': 2.11.8
-      axios: 1.6.7
-      date-fns: 2.30.0
-      date-fns-tz: 2.0.1(date-fns@2.30.0)
-      focus-trap: 7.5.4
-      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.4.21)
-      popper.js: 1.16.1
-      sortablejs: 1.15.2
-      swrv: 1.0.4(vue@3.4.21)
-      uuid: 9.0.1
-      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.4.21)
-      vue: 3.4.21
-      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.21)
-      vue-router: 4.3.0(vue@3.4.21)
-    dev: true
-
-  /@kong/kongponents@9.0.0-pr.2097.1fe79832.0(axios@1.6.7)(vue@3.3.13):
-    resolution: {integrity: sha512-BZzIOPg5/6BcqJM7nKy6TyyanEw7CyQbkJhlqhMGNGKlVVeqTVkj9fBUZOYHO2kHewOI/+CwfTmpyvA60QEwLw==}
-    engines: {node: '>=v16.20.2'}
-    peerDependencies:
-      axios: ^1.6.7
-      vue: '>= 3.3.4 < 4'
-      vue-router: ^4.3.0
-    dependencies:
-      '@kong/icons': 1.8.14(vue@3.3.13)
-      '@popperjs/core': 2.11.8
-      axios: 1.6.7
-      date-fns: 2.30.0
-      date-fns-tz: 2.0.1(date-fns@2.30.0)
-      focus-trap: 7.5.4
-      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.3.13)
-      popper.js: 1.16.1
-      sortablejs: 1.15.2
-      swrv: 1.0.4(vue@3.3.13)
-      uuid: 9.0.1
-      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.3.13)
-      vue: 3.3.13
-      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.3.13)
     dev: true
 
   /@kong/kongponents@9.0.0-pr.2097.1fe79832.0(vue-router@4.3.0)(vue@3.4.21):
@@ -3103,6 +3165,16 @@ packages:
     resolution: {integrity: sha512-NMrDy6EWh9TPdSRiHmHH2ye1v5U0gBD7pRYwSwJvomx7Bm4GG04vu63dYiVzebLOx2obPpJugew06xVP0Nk7hA==}
     dev: false
 
+  /@rollup/plugin-virtual@3.0.2:
+    resolution: {integrity: sha512-10monEYsBp3scM4/ND4LNH5Rxvh3e/cVeL3jWTgZ2SrQ+BmUoQcopVQvnaMcOnykb1VkxUFuDAN+0FnpTFRy2A==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dev: true
+
   /@rollup/pluginutils@5.1.0:
     resolution: {integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==}
     engines: {node: '>=14.0.0'}
@@ -3660,7 +3732,7 @@ packages:
       '@babel/runtime-corejs3': 7.22.15
       '@swagger-api/apidom-core': 0.97.0
       '@types/ramda': 0.29.8
-      axios: 1.6.7
+      axios: 1.6.8
       minimatch: 7.4.6
       process: 0.11.10
       ramda: 0.29.1
@@ -3691,6 +3763,131 @@ packages:
     transitivePeerDependencies:
       - debug
     dev: false
+
+  /@swc/core-darwin-arm64@1.4.11:
+    resolution: {integrity: sha512-C1j1Qp/IHSelVWdEnT7f0iONWxQz6FAqzjCF2iaL+0vFg4V5f2nlgrueY8vj5pNNzSGhrAlxsMxEIp4dj1MXkg==}
+    engines: {node: '>=10'}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@swc/core-darwin-x64@1.4.11:
+    resolution: {integrity: sha512-0TTy3Ni8ncgaMCchSQ7FK8ZXQLlamy0FXmGWbR58c+pVZWYZltYPTmheJUvVcR0H2+gPAymRKyfC0iLszDALjg==}
+    engines: {node: '>=10'}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@swc/core-linux-arm-gnueabihf@1.4.11:
+    resolution: {integrity: sha512-XJLB71uw0rog4DjYAPxFGAuGCBQpgJDlPZZK6MTmZOvI/1t0+DelJ24IjHIxk500YYM26Yv47xPabqFPD7I2zQ==}
+    engines: {node: '>=10'}
+    cpu: [arm]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@swc/core-linux-arm64-gnu@1.4.11:
+    resolution: {integrity: sha512-vYQwzJvm/iu052d5Iw27UFALIN5xSrGkPZXxLNMHPySVko2QMNNBv35HLatkEQHbQ3X+VKSW9J9SkdtAvAVRAQ==}
+    engines: {node: '>=10'}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@swc/core-linux-arm64-musl@1.4.11:
+    resolution: {integrity: sha512-eV+KduiRYUFjPsvbZuJ9aknQH9Tj0U2/G9oIZSzLx/18WsYi+upzHbgxmIIHJ2VJgfd7nN40RI/hMtxNsUzR/g==}
+    engines: {node: '>=10'}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@swc/core-linux-x64-gnu@1.4.11:
+    resolution: {integrity: sha512-WA1iGXZ2HpqM1OR9VCQZJ8sQ1KP2or9O4bO8vWZo6HZJIeoQSo7aa9waaCLRpkZvkng1ct/TF/l6ymqSNFXIzQ==}
+    engines: {node: '>=10'}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@swc/core-linux-x64-musl@1.4.11:
+    resolution: {integrity: sha512-UkVJToKf0owwQYRnGvjHAeYVDfeimCEcx0VQSbJoN7Iy0ckRZi7YPlmWJU31xtKvikE2bQWCOVe0qbSDqqcWXA==}
+    engines: {node: '>=10'}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@swc/core-win32-arm64-msvc@1.4.11:
+    resolution: {integrity: sha512-35khwkyly7lF5NDSyvIrukBMzxPorgc5iTSDfVO/LvnmN5+fm4lTlrDr4tUfTdOhv3Emy7CsKlsNAeFRJ+Pm+w==}
+    engines: {node: '>=10'}
+    cpu: [arm64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@swc/core-win32-ia32-msvc@1.4.11:
+    resolution: {integrity: sha512-Wx8/6f0ufgQF2pbVPsJ2dAmFLwIOW+xBE5fxnb7VnEbGkTgP1qMDWiiAtD9rtvDSuODG3i1AEmAak/2HAc6i6A==}
+    engines: {node: '>=10'}
+    cpu: [ia32]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@swc/core-win32-x64-msvc@1.4.11:
+    resolution: {integrity: sha512-0xRFW6K9UZQH2NVC/0pVB0GJXS45lY24f+6XaPBF1YnMHd8A8GoHl7ugyM5yNUTe2AKhSgk5fJV00EJt/XBtdQ==}
+    engines: {node: '>=10'}
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@swc/core@1.4.11:
+    resolution: {integrity: sha512-WKEakMZxkVwRdgMN4AMJ9K5nysY8g8npgQPczmjBeNK5In7QEAZAJwnyccrWwJZU0XjVeHn2uj+XbOKdDW17rg==}
+    engines: {node: '>=10'}
+    requiresBuild: true
+    peerDependencies:
+      '@swc/helpers': ^0.5.0
+    peerDependenciesMeta:
+      '@swc/helpers':
+        optional: true
+    dependencies:
+      '@swc/counter': 0.1.3
+      '@swc/types': 0.1.6
+    optionalDependencies:
+      '@swc/core-darwin-arm64': 1.4.11
+      '@swc/core-darwin-x64': 1.4.11
+      '@swc/core-linux-arm-gnueabihf': 1.4.11
+      '@swc/core-linux-arm64-gnu': 1.4.11
+      '@swc/core-linux-arm64-musl': 1.4.11
+      '@swc/core-linux-x64-gnu': 1.4.11
+      '@swc/core-linux-x64-musl': 1.4.11
+      '@swc/core-win32-arm64-msvc': 1.4.11
+      '@swc/core-win32-ia32-msvc': 1.4.11
+      '@swc/core-win32-x64-msvc': 1.4.11
+    dev: true
+
+  /@swc/counter@0.1.3:
+    resolution: {integrity: sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==}
+    dev: true
+
+  /@swc/types@0.1.6:
+    resolution: {integrity: sha512-/JLo/l2JsT/LRd80C3HfbmVpxOAJ11FO2RCEslFrgzLltoP9j8XIbsyDcfCt2WWyX+CM96rBoNM+IToAkFOugg==}
+    dependencies:
+      '@swc/counter': 0.1.3
+    dev: true
 
   /@tootallnate/once@2.0.0:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
@@ -5164,10 +5361,10 @@ packages:
     resolution: {integrity: sha512-NmWvPnx0F1SfrQbYwOi7OeaNGokp9XhzNioJ/CSBs8Qa4vxug81mhJEAVZwxXuBmYB5KDRfMq/F3RR0BIU7sWg==}
     dev: true
 
-  /axios@1.6.7:
-    resolution: {integrity: sha512-/hDJGff6/c7u0hDkvkGxR/oy6CbCs8ziCsC7SqmhjfozqiJGc8Z11wrv9z9lYfY4K8l+H9TpjcMDX0xOZmx+RA==}
+  /axios@1.6.8:
+    resolution: {integrity: sha512-v/ZHtJDU39mDpyBoFVkETcd/uNdxrWRrg3bKpOKzXFA6Bvqopts6ALSMU3y6ijYxbw2B+wPrIv46egTzJXCLGQ==}
     dependencies:
-      follow-redirects: 1.15.4
+      follow-redirects: 1.15.6
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -7876,8 +8073,8 @@ packages:
     dependencies:
       tabbable: 6.2.0
 
-  /follow-redirects@1.15.4:
-    resolution: {integrity: sha512-Cr4D/5wlrb0z9dgERpUL3LrmPKVDsETIJhaCMeDfuFYcqa5bldGV6wBsAN6X/vxlXQtFBMrXdXxdL8CbDTGniw==}
+  /follow-redirects@1.15.6:
+    resolution: {integrity: sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -8688,7 +8885,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.15.4
+      follow-redirects: 1.15.6
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -10433,6 +10630,10 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /monaco-editor@0.21.3:
+    resolution: {integrity: sha512-9N7wATLpi+googstvtm6IKg97vPQ77FDYEpkow5tLriM/VJ0DaTRyUP4UVzcoH7KlPDX+e/rE7/imcOUeGkT6g==}
+    dev: true
+
   /mrmime@1.0.1:
     resolution: {integrity: sha512-hzzEagAgDyoU1Q6yg5uI+AorQgdvMCur3FcKf7NhMKWsaYg+RnbTyHRa/9IlLF9rf455MOCtcqqrQQ83pPP7Uw==}
     engines: {node: '>=10'}
@@ -10864,7 +11065,7 @@ packages:
       '@yarnpkg/lockfile': 1.1.0
       '@yarnpkg/parsers': 3.0.0-rc.46
       '@zkochan/js-yaml': 0.0.6
-      axios: 1.6.7
+      axios: 1.6.8
       chalk: 4.1.2
       cli-cursor: 3.1.0
       cli-spinners: 2.6.1
@@ -14447,6 +14648,27 @@ packages:
       - supports-color
     dev: true
 
+  /vite-plugin-monaco-editor@1.1.0(monaco-editor@0.21.3):
+    resolution: {integrity: sha512-IvtUqZotrRoVqwT0PBBDIZPNraya3BxN/bfcNfnxZ5rkJiGcNtO5eAOWWSgT7zullIAEqQwxMU83yL9J5k7gww==}
+    peerDependencies:
+      monaco-editor: '>=0.33.0'
+    dependencies:
+      monaco-editor: 0.21.3
+    dev: true
+
+  /vite-plugin-top-level-await@1.4.1:
+    resolution: {integrity: sha512-hogbZ6yT7+AqBaV6lK9JRNvJDn4/IJvHLu6ET06arNfo0t2IsyCaon7el9Xa8OumH+ESuq//SDf8xscZFE0rWw==}
+    peerDependencies:
+      vite: '>=2.8'
+    dependencies:
+      '@rollup/plugin-virtual': 3.0.2
+      '@swc/core': 1.4.11
+      uuid: 9.0.1
+    transitivePeerDependencies:
+      - '@swc/helpers'
+      - rollup
+    dev: true
+
   /vite-plugin-vue-devtools@7.0.20(vite@5.2.6)(vue@3.4.21):
     resolution: {integrity: sha512-b7C57JVekRxqJPLqmrze48dSEG4+1f0nOHP3PetV1Csn/KhEuDNUWX/B5W/ppxv36Tilx86nozwQopYFG/5ndw==}
     engines: {node: '>=v14.21.3'}
@@ -14485,6 +14707,12 @@ packages:
       vite: 5.2.6(@types/node@18.19.24)(sass@1.71.1)
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /vite-plugin-wasm@3.3.0:
+    resolution: {integrity: sha512-tVhz6w+W9MVsOCHzxo6SSMSswCeIw4HTrXEi6qL3IRzATl83jl09JVO1djBqPSwfjgnpVHNLYcaMbaDX5WB/pg==}
+    peerDependencies:
+      vite: ^2 || ^3 || ^4 || ^5
     dev: true
 
   /vite@5.2.6(@types/node@18.19.24)(sass@1.71.1):
