@@ -155,7 +155,7 @@ const props = defineProps({
    * Value should NOT contain config.apiBaseUrl, as we auto include this. Typically this will just an entry from
    * the endpoints file.
    *
-   * ex. `/api/runtime_groups/{controlPlaneId}/snis/{id}`
+   * ex. `/v2/control-planes/{controlPlaneId}/core-entities/snis/{id}`
    */
   fetchUrl: {
     type: String,

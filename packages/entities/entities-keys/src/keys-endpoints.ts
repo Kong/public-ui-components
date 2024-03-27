@@ -1,38 +1,41 @@
+const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
+const KMBaseApiUrl = '/{workspace}'
+
 export default {
   list: {
     konnect: {
-      all: '/api/runtime_groups/{controlPlaneId}/keys',
-      forKeySet: '/api/runtime_groups/{controlPlaneId}/key-sets/{keySetId}/keys',
+      all: `${konnectBaseApiUrl}/keys`,
+      forKeySet: `${konnectBaseApiUrl}/key-sets/{keySetId}/keys`,
     },
     kongManager: {
-      all: '/{workspace}/keys',
-      forKeySet: '/{workspace}/key-sets/{keySetId}/keys',
+      all: `${KMBaseApiUrl}/keys`,
+      forKeySet: `${KMBaseApiUrl}/key-sets/{keySetId}/keys`,
     },
   },
   form: {
     konnect: {
       create: {
-        all: '/api/runtime_groups/{controlPlaneId}/keys',
-        forKeySet: '/api/runtime_groups/{controlPlaneId}/key-sets/{keySetId}/keys',
+        all: `${konnectBaseApiUrl}/keys`,
+        forKeySet: `${konnectBaseApiUrl}/key-sets/{keySetId}/keys`,
       },
       edit: {
-        all: '/api/runtime_groups/{controlPlaneId}/keys/{id}',
-        forKeySet: '/api/runtime_groups/{controlPlaneId}/key-sets/{keySetId}/keys/{id}',
+        all: `${konnectBaseApiUrl}/keys/{id}`,
+        forKeySet: `${konnectBaseApiUrl}/key-sets/{keySetId}/keys/{id}`,
       },
-      keySets: '/api/runtime_groups/{controlPlaneId}/key-sets',
-      getKeySet: '/api/runtime_groups/{controlPlaneId}/key-sets/{keySetId}',
+      keySets: `${konnectBaseApiUrl}/key-sets`,
+      getKeySet: `${konnectBaseApiUrl}/key-sets/{keySetId}`,
     },
     kongManager: {
       create: {
-        all: '/{workspace}/keys',
-        forKeySet: '/{workspace}/key-sets/{keySetId}/keys',
+        all: `${KMBaseApiUrl}/keys`,
+        forKeySet: `${KMBaseApiUrl}/key-sets/{keySetId}/keys`,
       },
       edit: {
-        all: '/{workspace}/keys/{id}',
-        forKeySet: '/{workspace}/key-sets/{keySetId}/keys/{id}',
+        all: `${KMBaseApiUrl}/keys/{id}`,
+        forKeySet: `${KMBaseApiUrl}/key-sets/{keySetId}/keys/{id}`,
       },
-      keySets: '/{workspace}/key-sets',
-      getKeySet: '/{workspace}/key-sets/{keySetId}',
+      keySets: `${KMBaseApiUrl}/key-sets`,
+      getKeySet: `${KMBaseApiUrl}/key-sets/{keySetId}`,
     },
   },
 }

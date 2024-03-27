@@ -1,56 +1,59 @@
+const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
+const KMBaseApiUrl = '/{workspace}'
+
 export default {
   list: {
     konnect: {
-      all: '/v2/control-planes/{controlPlaneId}/core-entities/routes',
-      forGatewayService: '/v2/control-planes/{controlPlaneId}/core-entities/services/{serviceId}/routes',
+      all: `${konnectBaseApiUrl}/routes`,
+      forGatewayService: `${konnectBaseApiUrl}/services/{serviceId}/routes`,
     },
     kongManager: {
-      all: '/{workspace}/routes',
-      forGatewayService: '/{workspace}/services/{serviceId}/routes',
+      all: `${KMBaseApiUrl}/routes`,
+      forGatewayService: `${KMBaseApiUrl}/services/{serviceId}/routes`,
     },
   },
   form: {
     konnect: {
-      services: '/api/runtime_groups/{controlPlaneId}/services',
+      services: `${konnectBaseApiUrl}/services`,
       create: {
-        all: '/api/runtime_groups/{controlPlaneId}/routes',
-        forGatewayService: '/api/runtime_groups/{controlPlaneId}/services/{serviceId}/routes',
+        all: `${konnectBaseApiUrl}/routes`,
+        forGatewayService: `${konnectBaseApiUrl}/services/{serviceId}/routes`,
       },
       fetch: {
-        all: '/api/runtime_groups/{controlPlaneId}/routes/{id}',
-        forGatewayService: '/api/runtime_groups/{controlPlaneId}/services/{serviceId}/routes/{id}',
+        all: `${konnectBaseApiUrl}/routes/{id}`,
+        forGatewayService: `${konnectBaseApiUrl}/services/{serviceId}/routes/{id}`,
       },
       edit: {
-        all: '/api/runtime_groups/{controlPlaneId}/routes/{id}',
-        forGatewayService: '/api/runtime_groups/{controlPlaneId}/services/{serviceId}/routes/{id}',
+        all: `${konnectBaseApiUrl}/routes/{id}`,
+        forGatewayService: `${konnectBaseApiUrl}/services/{serviceId}/routes/{id}`,
       },
     },
     kongManager: {
-      services: '/{workspace}/services',
+      services: `${KMBaseApiUrl}/services`,
       create: {
-        all: '/{workspace}/routes',
-        forGatewayService: '/{workspace}/services/{serviceId}/routes',
+        all: `${KMBaseApiUrl}/routes`,
+        forGatewayService: `${KMBaseApiUrl}/services/{serviceId}/routes`,
       },
       fetch: {
-        all: '/{workspace}/routes/{id}',
-        forGatewayService: '/{workspace}/services/{serviceId}/routes/{id}',
+        all: `${KMBaseApiUrl}/routes/{id}`,
+        forGatewayService: `${KMBaseApiUrl}/services/{serviceId}/routes/{id}`,
       },
       edit: {
-        all: '/{workspace}/routes/{id}',
-        forGatewayService: '/{workspace}/services/{serviceId}/routes/{id}',
+        all: `${KMBaseApiUrl}/routes/{id}`,
+        forGatewayService: `${KMBaseApiUrl}/services/{serviceId}/routes/{id}`,
       },
     },
   },
   item: {
     konnect: {
-      getService: '/api/runtime_groups/{controlPlaneId}/services/{serviceId}',
-      all: '/api/runtime_groups/{controlPlaneId}/routes/{id}',
-      forGatewayService: '/api/runtime_groups/{controlPlaneId}/services/{serviceId}/routes/{id}',
+      getService: `${konnectBaseApiUrl}/services/{serviceId}`,
+      all: `${konnectBaseApiUrl}/routes/{id}`,
+      forGatewayService: `${konnectBaseApiUrl}/services/{serviceId}/routes/{id}`,
     },
     kongManager: {
-      getService: '/{workspace}/services/{serviceId}',
-      all: '/{workspace}/routes/{id}',
-      forGatewayService: '/{workspace}/services/{serviceId}/routes/{id}',
+      getService: `${KMBaseApiUrl}/services/{serviceId}`,
+      all: `${KMBaseApiUrl}/routes/{id}`,
+      forGatewayService: `${KMBaseApiUrl}/services/{serviceId}/routes/{id}`,
     },
   },
 }

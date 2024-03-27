@@ -12,7 +12,7 @@ const cancelRoute = { name: 'consumer-list' }
 const konnectConfig: KonnectConsumerFormConfig = {
   app: 'konnect',
   controlPlaneId: 'f0acb165-ff05-4788-aa06-6909b8d1694e',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   cancelRoute,
 }
 
@@ -139,7 +139,7 @@ describe('<ConsumerForm/>', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/v1/schemas/json/consumer/validate`,
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/v1/schemas/json/consumer/validate`,
         },
         {
           statusCode: status,
@@ -152,7 +152,7 @@ describe('<ConsumerForm/>', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/consumers`,
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/consumers`,
         },
         {
           statusCode: status,
@@ -165,7 +165,7 @@ describe('<ConsumerForm/>', () => {
       cy.intercept(
         {
           method: 'PUT',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/consumers/*`,
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/consumers/*`,
         },
         {
           statusCode: status,
@@ -178,7 +178,7 @@ describe('<ConsumerForm/>', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/consumers/*`,
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/consumers/*`,
         },
         {
           statusCode: 200,

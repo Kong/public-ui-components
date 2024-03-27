@@ -11,13 +11,13 @@ const controlPlaneId = '1234-abcd-ilove-cats-too'
 const entityId = '1234-cats-rule'
 const config: KonnectBaseEntityConfig = {
   app: 'konnect',
-  apiBaseUrl: '/us/kong-api/konnect-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
+  apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   entityId,
 }
-const fetchUrl = `/api/runtime_groups/${config.controlPlaneId}/services/{id}`
-const pluginsFetchUrl = `/api/runtime_groups/${config.controlPlaneId}/plugins/{id}`
+const fetchUrl = `/v2/control-planes/${config.controlPlaneId}/core-entities/services/{id}`
+const pluginsFetchUrl = `/v2/control-planes/${config.controlPlaneId}/core-entities/plugins/{id}`
 const pluginConfigKey = 'config'
 
 const customizedKey = 'ca_certificates'
@@ -92,7 +92,7 @@ describe('<EntityBaseConfigCard />', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: `${config.apiBaseUrl}/api/runtime_groups/${config.controlPlaneId}/services/${entityId}`,
+        url: `${config.apiBaseUrl}/v2/control-planes/${config.controlPlaneId}/core-entities/services/${entityId}`,
       },
       {
         statusCode: status,
@@ -105,7 +105,7 @@ describe('<EntityBaseConfigCard />', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: `${config.apiBaseUrl}/api/runtime_groups/${config.controlPlaneId}/plugins/${entityId}`,
+        url: `${config.apiBaseUrl}/v2/control-planes/${config.controlPlaneId}/core-entities/plugins/${entityId}`,
       },
       {
         statusCode: status,
@@ -250,7 +250,7 @@ describe('<EntityBaseConfigCard />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${config.apiBaseUrl}/api/runtime_groups/${config.controlPlaneId}/services/${entityId}`,
+          url: `${config.apiBaseUrl}/v2/control-planes/${config.controlPlaneId}/core-entities/services/${entityId}`,
         },
         {
           statusCode: 200,
@@ -423,7 +423,7 @@ describe('<EntityBaseConfigCard />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${config.apiBaseUrl}/api/runtime_groups/${config.controlPlaneId}/services/${entityId}`,
+          url: `${config.apiBaseUrl}/v2/control-planes/${config.controlPlaneId}/core-entities/services/${entityId}`,
         },
         {
           statusCode: 500,

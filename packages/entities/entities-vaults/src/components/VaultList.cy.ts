@@ -19,7 +19,7 @@ const createRoute = 'create-route'
 const baseConfigKonnect: KonnectVaultListConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-cats',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   createRoute,
   getViewRoute: () => viewRoute,
   getEditRoute: () => editRoute,
@@ -55,7 +55,7 @@ describe('<VaultList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/vaults*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults*`,
         },
         {
           statusCode: 200,
@@ -464,7 +464,7 @@ describe('<VaultList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/vaults*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults*`,
         },
         {
           statusCode: 200,
@@ -483,7 +483,7 @@ describe('<VaultList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/vaults*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults*`,
         },
         (req) => {
           const size = req.query.size ? Number(req.query.size) : 30
@@ -542,7 +542,7 @@ describe('<VaultList />', () => {
         cy.intercept(
           {
             method: 'GET',
-            url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/vaults*`,
+            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults*`,
           },
           {
             statusCode: 500,

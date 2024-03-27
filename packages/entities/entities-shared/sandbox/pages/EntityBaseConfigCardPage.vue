@@ -58,7 +58,7 @@ import composables from '../../src/composables'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 // replace with your own endpoint
-const konnectFetchUrl = ref('/api/runtime_groups/{controlPlaneId}/upstreams/{id}')
+const konnectFetchUrl = ref('/v2/control-planes/{controlPlaneId}/core-entities/upstreams/{id}')
 const kmFetchUrl = ref('/{workspace}/upstreams/{id}')
 // replace with you own ID
 const entityId = 'ce83dd74-6455-40a9-b944-0f393c7ee22c'
@@ -68,7 +68,7 @@ const { convertKeyToTitle } = composables.useStringHelpers()
 
 const konnectConfig = ref<KonnectBaseEntityConfig>({
   app: 'konnect',
-  apiBaseUrl: '/us/kong-api/konnect-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
+  apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   entityId,
