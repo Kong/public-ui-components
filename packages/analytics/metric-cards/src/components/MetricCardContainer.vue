@@ -129,14 +129,15 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
   width: 100%;
 
   .container-title {
-    font-size: $kui-font-size-50;
+    font-size: $kui-font-size-40;
     font-weight: $kui-font-weight-semibold;
-    margin-bottom: $kui-space-40;
+    margin-bottom: $kui-space-50;
   }
 
   .cards-wrapper {
     display: flex;
     flex-direction: row;
+    flex-grow: 1;
     @include flex-gap(24px, 16px);
 
     @media (max-width: ($kui-breakpoint-phablet - 1px)) {

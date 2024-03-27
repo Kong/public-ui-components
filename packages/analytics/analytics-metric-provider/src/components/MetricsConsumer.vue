@@ -125,7 +125,8 @@ const containerOpts = computed(() => ({
   loading: isLoading.value,
   hasTrendAccess: providerData.hasTrendAccess.value,
   fallbackDisplayText: i18n.t('general.notAvailable'),
-  cardSize: props.cardSize,
+  // If the parent container has a title, we enforce a Medium card size; otherwise, pass down provided cardSize
+  cardSize: providerData.containerTitle ? MetricCardSize.Medium : props.cardSize,
   hideTitle: true,
 }))
 

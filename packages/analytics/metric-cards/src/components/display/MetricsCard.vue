@@ -2,7 +2,7 @@
   <div class="metricscard">
     <div
       class="metricscard-title"
-      :class="[ cardSize, {'small-heading': hasContainerTitle }]"
+      :class="cardSize"
     >
       <component
         :is="iconMap.get(cardType)"
@@ -54,7 +54,6 @@
         class="metricscard-value"
         :class="cardSize"
         data-testid="metric-value"
-        :style="`font-size:${metricFontSize}`"
       >
         {{ metricValue }}
       </div>
@@ -102,14 +101,11 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import {
   KUI_COLOR_BORDER_DANGER_STRONG,
-  KUI_FONT_SIZE_30, // 14px
-  KUI_FONT_SIZE_100, // 48px
   KUI_ICON_SIZE_30,
   KUI_ICON_SIZE_40,
   KUI_COLOR_TEXT_SUCCESS, // Positive trend
   KUI_COLOR_TEXT_NEUTRAL_STRONG, // Neutral trend
   KUI_COLOR_TEXT_NEUTRAL,
-  KUI_FONT_SIZE_70,
 } from '@kong/design-tokens'
 import { MetricCardType } from '../../enums'
 import { MetricCardSize } from '../../constants'
@@ -221,10 +217,6 @@ const textColor = (polarity: number): string => {
 
 const cardDisplayFull = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardSize.LargeCompact].includes(props.cardSize)
 
-const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
-  ? KUI_FONT_SIZE_100
-  : cardDisplayFull ? KUI_FONT_SIZE_70 : KUI_FONT_SIZE_30
-
 // TODO: remove size variant as part of Dashboards epic - MA-2193
 const isLargeCompact = computed((): boolean => props.cardSize === MetricCardSize.LargeCompact)
 
@@ -278,17 +270,22 @@ $row-gap-size: 12px;
     display: flex;
     flex-direction: row;
     font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-medium;
+    font-weight: $kui-font-weight-semibold;
     line-height: $kui-line-height-20;
     margin: $kui-space-0;
 
     &.sm {
       font-size: $kui-font-size-20;
+      font-weight: $kui-font-weight-medium;
     }
-
-    &.small-heading {
-      font-size: $kui-font-size-30 !important;
-      font-weight: $kui-font-weight-semibold;
+    &.md {
+      font-size: $kui-font-size-30;
+    }
+    &.lg {
+      font-size: $kui-font-size-40;
+    }
+    &.xl {
+      font-size: $kui-font-size-30;
     }
   }
 
@@ -313,6 +310,9 @@ $row-gap-size: 12px;
 
     &.sm {
       line-height: $kui-line-height-40;
+    }
+    &.xl {
+      font-size: $kui-font-size-70;
     }
   }
 

@@ -76,14 +76,6 @@ const options = computed<ProviderProps>(() => ({
           border-right: $kui-border-width-10 solid $kui-color-border;
         }
       }
-
-      // These overrides are here because, for now, we only want the bolder metric titles
-      // on dashboards.  In other places, the golden signal cards tend to be embedded into KCards which
-      // already have titles.
-      .metricscard-title.lg {
-        font-size: $kui-font-size-40;
-        font-weight: $kui-font-weight-semibold;
-      }
     }
   }
 }

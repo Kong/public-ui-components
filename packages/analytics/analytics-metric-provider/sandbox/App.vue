@@ -111,6 +111,7 @@ const globalProviderProps = {
   overrideTimeframe: TimePeriods.get(TimeframeKeys.SIX_HOUR),
   longCardTitles: false,
   description: 'Generic Description',
+  containerTitle: 'Analytics',
 }
 const globalBridge = makeQueryBridge()
 
