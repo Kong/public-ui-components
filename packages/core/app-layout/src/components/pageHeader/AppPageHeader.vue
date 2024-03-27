@@ -5,10 +5,10 @@
       class="page-header-breadcrumbs"
       data-testid="page-header-breadcrumbs"
     >
-      <KBreadcrumbs :items="breadcrumbs">
-        <template #divider>
-          <span class="page-header-breadcrumb-divider">/</span>
-        </template>
+      <KBreadcrumbs
+        item-max-width="150"
+        :items="breadcrumbs"
+      >
         <template
           v-for="slotName in breadcrumbIconSlots"
           #[slotName]
@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed } from 'vue'
+import { computed, useSlots } from 'vue'
 import type { BreadcrumbItem } from '@kong/kongponents'
 
 const props = defineProps({
@@ -78,20 +78,18 @@ const props = defineProps({
   },
 })
 
+const slots = useSlots()
+
 const hasBreadcrumbs = computed((): boolean => !!props.breadcrumbs?.length)
-const getBreadcrumbKey = (item: BreadcrumbItem, idx: number): string => { return item.key || `breadcrumb-${idx}` }
 const breadcrumbIconSlots = computed((): string[] => {
-  return props.breadcrumbs.map((item, idx) => `icon-${getBreadcrumbKey(item, idx)}`) || []
+  // only return used icon slots
+  return Object.keys(slots).filter((slotName) => slotName.startsWith('icon-'))
 })
 </script>
 
 <style lang="scss" scoped>
 .kong-ui-app-page-header {
   margin-bottom: $kui-space-70;
-
-  .page-header-breadcrumb-divider {
-    color: $kui-color-text-neutral-weak;
-  }
 
   .page-header-title-section {
     align-items: center;
