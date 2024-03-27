@@ -4,6 +4,12 @@
     :class="cardSize"
   >
     <div
+      v-if="props.containerTitle"
+      class="container-title"
+    >
+      {{ props.containerTitle }}
+    </div>
+    <div
       v-if="allCardsHaveErrors"
       class="error-display"
     >
@@ -15,30 +21,32 @@
         {{ errorMessage }}
       </div>
     </div>
-    <template
-      v-for="(card, index) in cards"
+    <div
       v-else
+      class="cards-wrapper"
     >
-      <MetricCardLoadingSkeleton
-        v-if="loading"
-        :key="`skeleton-${index}`"
-        :class="cardSize === MetricCardSize.Small ? 'loading-tabs-small' : 'loading-tabs-large'"
-      />
-      <MetricsCard
-        v-else
-        :key="index"
-        v-bind="formatCardValues(card)"
-        :card-size="cardSize"
-        :card-type="card.cardType"
-        :description="card.description"
-        :error-message="errorMessage"
-        :has-error="card.hasError"
-        :title="card.title"
-        :title-tag="card.titleTag"
-        :tooltip="card.tooltip"
-        :trend-range="card.trendRange"
-      />
-    </template>
+      <template v-for="(card, index) in cards">
+        <MetricCardLoadingSkeleton
+          v-if="loading"
+          :key="`skeleton-${index}`"
+          :class="cardSize === MetricCardSize.Small ? 'loading-tabs-small' : 'loading-tabs-large'"
+        />
+        <MetricsCard
+          v-else
+          :key="index"
+          v-bind="formatCardValues(card)"
+          :card-size="cardSize"
+          :card-type="card.cardType"
+          :description="card.description"
+          :error-message="errorMessage"
+          :has-error="card.hasError"
+          :title="card.title"
+          :title-tag="card.titleTag"
+          :tooltip="card.tooltip"
+          :trend-range="card.trendRange"
+        />
+      </template>
+    </div>
   </div>
 </template>
 
@@ -86,6 +94,11 @@ const props = defineProps({
     required: false,
     default: () => MetricCardSize.Large,
   },
+  containerTitle: {
+    type: String,
+    required: false,
+    default: '',
+  },
 })
 
 const allCardsHaveErrors = computed((): boolean => props.cards.every(val => val?.hasError === true))
@@ -100,6 +113,7 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
     changePolarity: polarity,
     trendIcon: defineIcon(polarity, card.increaseIsBad) as typeof GenericIcon,
     cardSize: props.cardSize,
+    hasContainerTitle: !!props.containerTitle,
   }
 }
 </script>
@@ -110,14 +124,25 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
 .kong-ui-public-metric-card-container {
   background-color: var(--kong-ui-metric-card-background, transparent);
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  @include flex-gap(24px, 16px);
 
-  @media (max-width: ($kui-breakpoint-phablet - 1px)) {
-    @include flex-gap(16px, 16px);
-    flex-direction: column;
+  .container-title {
+    font-size: $kui-font-size-50;
+    font-weight: $kui-font-weight-semibold;
+    margin-bottom: $kui-space-40;
+  }
+
+  .cards-wrapper {
+    display: flex;
+    flex-direction: row;
+    @include flex-gap(24px, 16px);
+
+    @media (max-width: ($kui-breakpoint-phablet - 1px)) {
+      @include flex-gap(16px, 16px);
+      flex-direction: column;
+    }
   }
 
   // Ensure tightest possible spacing

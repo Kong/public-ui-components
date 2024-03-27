@@ -28,6 +28,7 @@ const props = withDefaults(defineProps<{
   queryReady?: boolean,
   refreshInterval: number,
   longCardTitles?: boolean,
+  containerTitle?: string,
   description?: string,
   abortController?: AbortController,
 }>(), {
@@ -39,6 +40,7 @@ const props = withDefaults(defineProps<{
   additionalFilter: undefined,
   queryReady: true,
   longCardTitles: false,
+  containerTitle: undefined,
   description: undefined,
   abortController: undefined,
 })
@@ -125,6 +127,7 @@ provide(METRICS_PROVIDER_KEY, {
     latency: latencyData,
   },
   description: props.description,
+  containerTitle: props.containerTitle,
   hasTrendAccess,
   longCardTitles: props.longCardTitles,
 })

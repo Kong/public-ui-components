@@ -2,7 +2,7 @@
   <div class="metricscard">
     <div
       class="metricscard-title"
-      :class="cardSize"
+      :class="[ cardSize, {'small-heading': hasContainerTitle }]"
     >
       <component
         :is="iconMap.get(cardType)"
@@ -184,7 +184,12 @@ const props = defineProps({
   cardSize: {
     type: String as PropType<MetricCardSize>,
     required: false,
-    default: () => 'lg',
+    default: () => MetricCardSize.Large,
+  },
+  hasContainerTitle: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
   titleTag: {
     type: String as PropType<HeaderTag>,
@@ -280,6 +285,11 @@ $row-gap-size: 12px;
     &.sm {
       font-size: $kui-font-size-20;
     }
+
+    &.small-heading {
+      font-size: $kui-font-size-30 !important;
+      font-weight: $kui-font-weight-semibold;
+    }
   }
 
   &-description {
@@ -290,7 +300,7 @@ $row-gap-size: 12px;
   }
 
   &-icon {
-    margin-right: 6px;
+    margin-right: $kui-space-20;
   }
 
   &-value {

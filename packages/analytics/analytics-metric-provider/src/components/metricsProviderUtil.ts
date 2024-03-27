@@ -13,6 +13,7 @@ interface ProviderData {
   data: {
     [key: string]: any // TODO
   },
+  containerTitle?: string,
   description?: string,
   hasTrendAccess: Ref<boolean>,
   longCardTitles: boolean,

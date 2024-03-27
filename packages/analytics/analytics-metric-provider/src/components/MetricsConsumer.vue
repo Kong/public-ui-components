@@ -121,6 +121,7 @@ const isLoading = computed<boolean>(() => {
 // TODO: per-card loading?
 const containerOpts = computed(() => ({
   cards: cards.value,
+  containerTitle: providerData.containerTitle,
   loading: isLoading.value,
   hasTrendAccess: providerData.hasTrendAccess.value,
   fallbackDisplayText: i18n.t('general.notAvailable'),
