@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.0.16...@kong-ui-public/app-layout@4.0.17) (2024-03-25)
+
+
+### Bug Fixes
+
+* **entities-plugins, vfg:** create plugin form a11y improvements [KHCP-11026] ([#1272](https://github.com/Kong/public-ui-components/issues/1272)) ([b1ed04e](https://github.com/Kong/public-ui-components/commit/b1ed04eb56ff2869b988a217220debc78655f3f0))
+
+
+
+
+
+## [4.0.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.0.15...@kong-ui-public/app-layout@4.0.16) (2024-03-20)
+
+
+### Bug Fixes
+
+* proper heading element in widgets [KHCP-11027] ([#1252](https://github.com/Kong/public-ui-components/issues/1252)) ([b66ce71](https://github.com/Kong/public-ui-components/commit/b66ce711fa876bb75bb880eece8514a8055034be))
+
+
+
+
+
 ## [4.0.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.0.14...@kong-ui-public/app-layout@4.0.15) (2024-03-13)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout

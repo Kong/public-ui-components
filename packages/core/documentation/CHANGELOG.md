@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.36...@kong-ui-public/documentation@0.3.37) (2024-03-26)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.3.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.35...@kong-ui-public/documentation@0.3.36) (2024-03-25)
+
+
+### Bug Fixes
+
+* **entities-plugins, vfg:** create plugin form a11y improvements [KHCP-11026] ([#1272](https://github.com/Kong/public-ui-components/issues/1272)) ([b1ed04e](https://github.com/Kong/public-ui-components/commit/b1ed04eb56ff2869b988a217220debc78655f3f0))
+
+
+
+
+
+## [0.3.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.34...@kong-ui-public/documentation@0.3.35) (2024-03-22)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.3.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.33...@kong-ui-public/documentation@0.3.34) (2024-03-20)
+
+
+### Bug Fixes
+
+* proper heading element in widgets [KHCP-11027] ([#1252](https://github.com/Kong/public-ui-components/issues/1252)) ([b66ce71](https://github.com/Kong/public-ui-components/commit/b66ce711fa876bb75bb880eece8514a8055034be))
+
+
+
+
+
 ## [0.3.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.32...@kong-ui-public/documentation@0.3.33) (2024-03-19)
 
 **Note:** Version bump only for package @kong-ui-public/documentation

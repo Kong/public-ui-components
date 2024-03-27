@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.12.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.5...@kong-ui-public/entities-shared@2.12.6) (2024-03-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [2.12.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.4...@kong-ui-public/entities-shared@2.12.5) (2024-03-25)
+
+
+### Bug Fixes
+
+* **entities-plugins, vfg:** create plugin form a11y improvements [KHCP-11026] ([#1272](https://github.com/Kong/public-ui-components/issues/1272)) ([b1ed04e](https://github.com/Kong/public-ui-components/commit/b1ed04eb56ff2869b988a217220debc78655f3f0))
+
+
+
+
+
+## [2.12.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.3...@kong-ui-public/entities-shared@2.12.4) (2024-03-22)
+
+
+### Bug Fixes
+
+* **entities-*:** allow UTF-8 chars in some fields ([#1282](https://github.com/Kong/public-ui-components/issues/1282)) ([26da464](https://github.com/Kong/public-ui-components/commit/26da464c06539a8c83f2bad9a16aa916311793b7))
+
+
+
+
+
+## [2.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.2...@kong-ui-public/entities-shared@2.12.3) (2024-03-20)
+
+
+### Bug Fixes
+
+* proper heading element in widgets [KHCP-11027] ([#1252](https://github.com/Kong/public-ui-components/issues/1252)) ([b66ce71](https://github.com/Kong/public-ui-components/commit/b66ce711fa876bb75bb880eece8514a8055034be))
+
+
+
+
+
 ## [2.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.1...@kong-ui-public/entities-shared@2.12.2) (2024-03-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

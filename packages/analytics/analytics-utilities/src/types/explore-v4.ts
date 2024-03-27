@@ -25,7 +25,7 @@ export type QueryableExploreDimensions = typeof queryableExploreDimensions[numbe
 export interface ExploreFilter {
   type: ExploreFilterTypesV2
   dimension: QueryableExploreDimensions
-  values: (string | number)[]
+  values: (string | number | null)[]
 }
 
 export const exploreAggregations = [

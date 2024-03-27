@@ -11,7 +11,9 @@
         :color="KUI_COLOR_TEXT_NEUTRAL"
         :size="KUI_ICON_SIZE_30"
       />
-      <span>{{ title }}</span>
+      <component :is="titleTag">
+        {{ title }}
+      </component>
       <KTooltip
         v-if="tooltip"
         class="metricscard-tooltip"
@@ -112,6 +114,7 @@ import {
 import { MetricCardType } from '../../enums'
 import { MetricCardSize } from '../../constants'
 import { InfoIcon, WarningIcon, IndeterminateSmallIcon, CloudUploadIcon, EqualIcon, ResponseIcon, VitalsIcon, WarningOutlineIcon } from '@kong/icons'
+import type { HeaderTag } from '@kong/kongponents'
 
 // Import any one of the `@kong/icons` components to access the interface - they are all the same.
 // Then alias as `GenericIcon` to provide the icon interface to the prop types.
@@ -182,6 +185,10 @@ const props = defineProps({
     type: String as PropType<MetricCardSize>,
     required: false,
     default: () => 'lg',
+  },
+  titleTag: {
+    type: String as PropType<HeaderTag>,
+    default: 'span',
   },
 })
 
@@ -267,6 +274,8 @@ $row-gap-size: 12px;
     flex-direction: row;
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-medium;
+    line-height: $kui-line-height-20;
+    margin: $kui-space-0;
 
     &.sm {
       font-size: $kui-font-size-20;

@@ -32,7 +32,7 @@ This component only takes two properties:
 - [context](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/src/types/dashboard-renderer-types.ts) : The time range that the dashboard should query and any additional filters that should be applied.
 - [config](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/src/types/dashboard-renderer-types.ts) : The dashboard config and layout.
 
-For context `filters` and `timeSpec` see [here](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore-v4.ts)
+For context `filters` and `timeSpec` see [here](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore-v4.ts).
 
 ### Example
 
@@ -120,7 +120,7 @@ const config: DashboardConfig = {
 }
 ```
 
-### Example with slotted content
+#### Slotted content
 
 ```html
 <DashboardRenderer
@@ -202,6 +202,77 @@ const config: DashboardConfig = {
           row: 1,
         }
       }
+    },
+  ],
+}
+```
+
+#### Auto-fit row content
+
+This example will create a dynamically-sized row that fits to its content rather than being fixed at the configured row height.  Note that this works because each chart is only rendered in 1 row; if a chart has `fitToContent` and `layout.size.rows > 1`, the `fitToContent` setting will be ignored.
+
+Rendering `AnalyticsChart` components (e.g., horizontal bar, vertical bar, timeseries charts) with dynamic row heights may lead to undefined behavior.  This option is best used with non-canvas charts (e.g., TopN charts).
+
+```typescript
+import type { DashboardRendererContext, DashboardConfig } from '@kong-ui-public/dashboard-renderer'
+import { DashboardRenderer, ChartTypes } from '@kong-ui-public/dashboard-renderer'
+
+const context: DashboardRendererContext = {
+  filters: [],
+  timeSpec: {
+    type: 'relative',
+    time_range: '15M',
+  },
+}
+
+const config: DashboardConfig = {
+  // 4 x 1 grid
+  gridSize: {
+    cols: 4,
+    rows: 1,
+  }
+  tiles: [
+    {
+      definition: {
+        chart: {
+          type: ChartTypes.TopN,
+          chartTitle: 'Top N chart of mock data',
+          description: 'Description'
+        },
+        query: {},
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 0,
+        },
+        size: {
+          cols: 3,
+          rows: 1,
+          fitToContent: true,
+        },
+      },
+    },
+    {
+      definition: {
+        chart: {
+          type: ChartTypes.TopN,
+          chartTitle: 'Top N chart of mock data',
+          description: 'Description',
+        },
+        query: {},
+      },
+      layout: {
+        position: {
+          col: 3,
+          row: 0,
+        },
+        size: {
+          cols: 3,
+          rows: 1,
+          fitToContent: true,
+        },
+      },
     },
   ],
 }

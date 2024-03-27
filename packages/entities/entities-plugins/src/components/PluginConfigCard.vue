@@ -37,7 +37,7 @@
         <div class="name-cell-wrapper">
           <PluginIcon
             class="plugin-icon"
-            :name="getPropValue('rowValue', slotProps)"
+            :name="pluginMetaData.getImageName(getPropValue('rowValue', slotProps))"
             :width="24"
           />
           <span class="info-name">

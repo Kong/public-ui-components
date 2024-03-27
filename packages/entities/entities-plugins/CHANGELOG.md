@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.16.8...@kong-ui-public/entities-plugins@2.17.0) (2024-03-26)
+
+
+### Features
+
+* **entities-plugins:** support array fields in custom plugins ([#1289](https://github.com/Kong/public-ui-components/issues/1289)) ([a1529e4](https://github.com/Kong/public-ui-components/commit/a1529e41b9b85d8ced2aba01f1f754b0b7db0c3a))
+
+
+
+
+
+## [2.16.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.16.7...@kong-ui-public/entities-plugins@2.16.8) (2024-03-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.16.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.16.6...@kong-ui-public/entities-plugins@2.16.7) (2024-03-25)
+
+
+### Bug Fixes
+
+* **entities-plugins, vfg:** create plugin form a11y improvements [KHCP-11026] ([#1272](https://github.com/Kong/public-ui-components/issues/1272)) ([b1ed04e](https://github.com/Kong/public-ui-components/commit/b1ed04eb56ff2869b988a217220debc78655f3f0))
+
+
+
+
+
+## [2.16.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.16.5...@kong-ui-public/entities-plugins@2.16.6) (2024-03-22)
+
+
+### Bug Fixes
+
+* **entities-plugins:** icons with imageName overrides ([#1283](https://github.com/Kong/public-ui-components/issues/1283)) ([6514c64](https://github.com/Kong/public-ui-components/commit/6514c6429aaf88b0b23082a7d33b2a6afd8cad93))
+
+
+
+
+
+## [2.16.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.16.4...@kong-ui-public/entities-plugins@2.16.5) (2024-03-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.16.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.16.3...@kong-ui-public/entities-plugins@2.16.4) (2024-03-21)
+
+
+### Bug Fixes
+
+* **entities-plugins:** do not group fields for plugins with custom layouts ([#1273](https://github.com/Kong/public-ui-components/issues/1273)) ([69b6921](https://github.com/Kong/public-ui-components/commit/69b6921cf2b6314abb4e026726d0c2272163dc2f))
+
+
+
+
+
+## [2.16.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.16.2...@kong-ui-public/entities-plugins@2.16.3) (2024-03-20)
+
+
+### Bug Fixes
+
+* proper heading element in widgets [KHCP-11027] ([#1252](https://github.com/Kong/public-ui-components/issues/1252)) ([b66ce71](https://github.com/Kong/public-ui-components/commit/b66ce711fa876bb75bb880eece8514a8055034be))
+
+
+
+
+
 ## [2.16.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.16.1...@kong-ui-public/entities-plugins@2.16.2) (2024-03-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

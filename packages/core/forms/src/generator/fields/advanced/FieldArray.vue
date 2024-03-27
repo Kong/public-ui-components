@@ -43,6 +43,7 @@
       >
         <FieldTextArea
           v-if=" schema.inputAttributes?.type === 'textarea'"
+          :aria-labelledby="getLabelId(schema)"
           class="k-input"
           :form-options="formOptions"
           :model="item"
@@ -53,6 +54,7 @@
         <input
           v-else
           v-model="value[index]"
+          :aria-labelledby="getLabelId(schema)"
           v-bind="schema.inputAttributes"
           :type="schema.inputAttributes?.type || 'text'"
         >
@@ -68,6 +70,7 @@
         v-else
         v-bind="schema.inputAttributes"
         v-model="value[index]"
+        :aria-labelledby="getLabelId(schema)"
         type="text"
       >
       <input

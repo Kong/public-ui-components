@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@2.0.1...@kong-ui-public/analytics-utilities@2.0.2) (2024-03-21)
+
+
+### Bug Fixes
+
+* filter values can be null ([#1279](https://github.com/Kong/public-ui-components/issues/1279)) ([3e2757c](https://github.com/Kong/public-ui-components/commit/3e2757cc6ded48217e6dc54cb0b4a446f3718ed2))
+
+
+
+
+
 ## [2.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@2.0.0...@kong-ui-public/analytics-utilities@2.0.1) (2024-03-20)
 
 

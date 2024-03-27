@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.0.31...@kong-ui-public/misc-widgets@2.0.32) (2024-03-25)
+
+
+### Bug Fixes
+
+* **entities-plugins, vfg:** create plugin form a11y improvements [KHCP-11026] ([#1272](https://github.com/Kong/public-ui-components/issues/1272)) ([b1ed04e](https://github.com/Kong/public-ui-components/commit/b1ed04eb56ff2869b988a217220debc78655f3f0))
+
+
+
+
+
+## [2.0.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.0.30...@kong-ui-public/misc-widgets@2.0.31) (2024-03-20)
+
+
+### Bug Fixes
+
+* proper heading element in widgets [KHCP-11027] ([#1252](https://github.com/Kong/public-ui-components/issues/1252)) ([b66ce71](https://github.com/Kong/public-ui-components/commit/b66ce711fa876bb75bb880eece8514a8055034be))
+
+
+
+
+
 ## [2.0.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.0.29...@kong-ui-public/misc-widgets@2.0.30) (2024-03-19)
 
 **Note:** Version bump only for package @kong-ui-public/misc-widgets

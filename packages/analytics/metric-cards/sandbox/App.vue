@@ -74,13 +74,13 @@
 </template>
 
 <script setup lang="ts">
-import { MetricCardContainer } from '../src'
+import { MetricCardContainer, type MetricCardDef } from '../src'
 import { DECIMAL_DISPLAY, metricChange } from '../src/utilities'
 import type { MetricCardContainerOptions } from '../src/types'
 import { MetricCardType } from '../src/enums'
 import { MetricCardSize } from '../src/constants'
 
-const cards = [
+const cards: MetricCardDef[] = [
   {
     cardType: MetricCardType.TRAFFIC,
     currentValue: 192895156,
@@ -132,6 +132,10 @@ const cards = [
   },
 ]
 
+const cardsWithHeadings: MetricCardDef[] = cards.map((item) => {
+  return { titleTag: 'h2', ...item }
+})
+
 const cardsWithErrors = JSON.parse(JSON.stringify(cards))
 cardsWithErrors[0].hasError = true
 cardsWithErrors[1].hasError = true
@@ -162,7 +166,7 @@ const cardsRegularCompact: MetricCardContainerOptions = {
 }
 
 const cardsXL: MetricCardContainerOptions = {
-  cards: [...cards].slice(0, 3),
+  cards: [...cardsWithHeadings].slice(0, 3),
   loading: false,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',

@@ -167,8 +167,7 @@
     "general": "Gateway Services could not be retrieved",
     "delete": "The gateway service could not be deleted at this time.",
     "copy": "Failed to copy to clipboard",
-    "urlErrorMessage": "Error: invalid URL",
-    "validationNameError": "The name can be any string containing letters, numbers, or the following characters: ., -, _, or ~. Do not use spaces."
+    "urlErrorMessage": "Error: invalid URL"
   },
   "copy": {
     "success": "Copied {val} to clipboard",

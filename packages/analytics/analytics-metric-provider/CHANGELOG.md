@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@5.0.7...@kong-ui-public/analytics-metric-provider@5.0.8) (2024-03-26)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [5.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@5.0.6...@kong-ui-public/analytics-metric-provider@5.0.7) (2024-03-25)
+
+
+### Bug Fixes
+
+* **entities-plugins, vfg:** create plugin form a11y improvements [KHCP-11026] ([#1272](https://github.com/Kong/public-ui-components/issues/1272)) ([b1ed04e](https://github.com/Kong/public-ui-components/commit/b1ed04eb56ff2869b988a217220debc78655f3f0))
+
+
+
+
+
+## [5.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@5.0.5...@kong-ui-public/analytics-metric-provider@5.0.6) (2024-03-21)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [5.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@5.0.4...@kong-ui-public/analytics-metric-provider@5.0.5) (2024-03-21)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [5.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@5.0.3...@kong-ui-public/analytics-metric-provider@5.0.4) (2024-03-21)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [5.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@5.0.2...@kong-ui-public/analytics-metric-provider@5.0.3) (2024-03-20)
+
+
+### Bug Fixes
+
+* proper heading element in widgets [KHCP-11027] ([#1252](https://github.com/Kong/public-ui-components/issues/1252)) ([b66ce71](https://github.com/Kong/public-ui-components/commit/b66ce711fa876bb75bb880eece8514a8055034be))
+
+
+
+
+
 ## [5.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@5.0.1...@kong-ui-public/analytics-metric-provider@5.0.2) (2024-03-20)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider

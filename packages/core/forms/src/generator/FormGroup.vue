@@ -6,6 +6,7 @@
   >
     <label
       v-if="fieldTypeHasLabel(field)"
+      :aria-describedby="field.help ? getTooltipId(field) : undefined"
       class="form-group-label"
       :class="field.labelClasses"
       :for="getFieldID(field)"
@@ -17,6 +18,7 @@
           max-width="300"
           placement="top"
           :position-fixed="true"
+          :tooltip-id="getTooltipId(field)"
         >
           <div
             class="help"
@@ -159,6 +161,9 @@ export default {
     getFieldID(schema) {
       const idPrefix = objGet(this.options, 'fieldIdPrefix', '')
       return slugifyFormID(schema, idPrefix)
+    },
+    getTooltipId(schema) {
+      return `${this.getFieldID(schema)}-tooltip`
     },
     // Get type of field 'field-xxx'. It'll be the name of HTML element
     getFieldType(fieldSchema) {

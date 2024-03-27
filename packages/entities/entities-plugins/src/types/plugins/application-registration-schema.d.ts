@@ -33,6 +33,7 @@ export interface AppRegFormSchema {
   },
   tags: Tags
   protocols: {
+    id: string
     default: []
     type: string
     label: string

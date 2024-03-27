@@ -6,7 +6,8 @@ import type { ExploreFilter, ExploreQuery, TimeRangeV4 } from '@kong-ui-public/a
 export interface DashboardRendererContext {
   filters: ExploreFilter[]
   timeSpec: TimeRangeV4
-  tz?: string
+  tz?: string,
+  refreshInterval?: number
 }
 
 export enum ChartTypes {
@@ -399,8 +400,12 @@ export const tileLayoutSchema = {
         rows: {
           type: 'number',
         },
+        fitToContent: {
+          type: 'boolean',
+        },
       },
-      description: 'Number of columns and rows the tile occupies.',
+      description: 'Number of columns and rows the tile occupies.  If fitToContent is true for every tile in a row, ' +
+        'and each tile only occupies 1 row, then the row will auto-fit to its content.',
       required: ['cols', 'rows'],
       additionalProperties: false,
     },

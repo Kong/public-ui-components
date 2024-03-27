@@ -2,15 +2,16 @@
 
 A Kong UI component for display Traffic, Error Rate, and P99 Latency insights in a card-like format
 
-- [@kong-ui-public/metric-cards](#kong-ui-publicmetric-cards)
-  - [Features](#features)
-  - [Requirements](#requirements)
-    - [CSS Variables](#css-variables)
-    - [Install](#install)
-    - [Props](#props)
-  - [Included Components](#included-components)
-  - [Usage](#usage)
-  
+- [Features](#features)
+- [Requirements](#requirements)
+  - [CSS Variables](#css-variables)
+  - [Install](#install)
+  - [Props](#props)
+- [Included Components](#included-components)
+- [Exports](#exports)
+  - [Types](#types)
+  - [Enums](#enums)
+- [Usage](#usage)
 
 ## Features
 
@@ -26,6 +27,7 @@ A Kong UI component for display Traffic, Error Rate, and P99 Latency insights in
   - `KTooltip`
 
 ### CSS Variables
+
 Variable | Description | Default
 ---------|----------|---------
 `--kong-ui-metric-card-background` | The background of the `.kong-ui-public-metric-card-container` main container | `transparent`
@@ -44,12 +46,12 @@ Variable | Description | Default
 
 ### Props
 
-####  `cardType`
+#### `cardType`
 
 One of the three golden signals (Traffic, Error Rate, Latency) or a Generic count
 
-  - type: `MetricCardType`
-  - required: `false`
+- type: `MetricCardType`
+- required: `false`
 
 #### `title`
 
@@ -57,6 +59,14 @@ Title to be displayed in the metric card header
 
 - type: `String`
 - required: `false`
+
+#### `titleTag`
+
+HTML element you want title to be rendered as.
+
+- type: `String`
+- required: `false`
+- default: `h2`
 
 #### `tooltip`
 
@@ -145,6 +155,7 @@ const metricCardOptions = {
       currentValue: 192895156,
       previousValue: 236609609,
       title: 'Number of Requests',
+      titleTag: 'h3',
       description: 'Requests sent throgh all data plane nodes'
       increaseIsBad: false,
       cardSize: MetricCardSize.Large,

@@ -1,17 +1,18 @@
 <template>
   <KCard
     class="kong-ui-public-top-n-table"
+    :title-tag="titleTag"
   >
     <template
       v-if="title"
       #title
     >
-      <div
+      <span
         class="top-n-card-title"
         data-testid="top-n-card-title"
       >
         {{ title }}
-      </div>
+      </span>
     </template>
     <template
       v-if="description"
@@ -110,6 +111,7 @@ import type { AnalyticsExploreRecord, ExploreResultV4 } from '@kong-ui-public/an
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
 import composables from '../composables'
+import type { HeaderTag } from '@kong/kongponents'
 
 const props = defineProps({
   title: {
@@ -131,6 +133,10 @@ const props = defineProps({
   isLoading: {
     type: Boolean,
     default: false,
+  },
+  titleTag: {
+    type: String as PropType<HeaderTag>,
+    default: 'h2',
   },
 })
 
@@ -229,9 +235,6 @@ const getValue = (record: AnalyticsExploreRecord): string => {
   border: none !important;
   height: 100%;
   padding: 0 !important;
-  .top-n-card-title {
-    font-size: $kui-font-size-40;
-  }
 
   .top-n-card-description {
     color: $kui-color-text-neutral;
