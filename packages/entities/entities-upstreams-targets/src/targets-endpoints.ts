@@ -1,18 +1,21 @@
+const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
+const KMBaseApiUrl = '/{workspace}'
+
 export default {
   list: {
-    konnect: '/api/runtime_groups/{controlPlaneId}/upstreams/{upstreamId}/targets',
-    kongManager: '/{workspace}/upstreams/{upstreamId}/targets',
+    konnect: `${konnectBaseApiUrl}/upstreams/{upstreamId}/targets`,
+    kongManager: `${KMBaseApiUrl}/upstreams/{upstreamId}/targets`,
   },
   form: {
     konnect: {
-      create: '/api/runtime_groups/{controlPlaneId}/upstreams/{upstreamId}/targets',
-      edit: '/api/runtime_groups/{controlPlaneId}/upstreams/{upstreamId}/targets/{id}',
-      validate: '/api/runtime_groups/{controlPlaneId}/v1/schemas/json/target/validate',
+      create: `${konnectBaseApiUrl}/upstreams/{upstreamId}/targets`,
+      edit: `${konnectBaseApiUrl}/upstreams/{upstreamId}/targets/{id}`,
+      validate: `${konnectBaseApiUrl}/v1/schemas/json/target/validate`,
     },
     kongManager: {
-      create: '/{workspace}/upstreams/{upstreamId}/targets',
-      edit: '/{workspace}/upstreams/{upstreamId}/targets/{id}',
-      validate: '/{workspace}/schemas/targets/validate',
+      create: `${KMBaseApiUrl}/upstreams/{upstreamId}/targets`,
+      edit: `${KMBaseApiUrl}/upstreams/{upstreamId}/targets/{id}`,
+      validate: `${KMBaseApiUrl}/schemas/targets/validate`,
     },
   },
 }
