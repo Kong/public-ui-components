@@ -525,11 +525,11 @@ importers:
         specifier: 9.0.0-alpha.105
         version: 9.0.0-alpha.105(vue-router@4.3.0)(vue@3.4.21)
       monaco-editor:
-        specifier: 0.21.3
-        version: 0.21.3
+        specifier: 0.47.0
+        version: 0.47.0
       vite-plugin-monaco-editor:
         specifier: ^1.1.0
-        version: 1.1.0(monaco-editor@0.21.3)
+        version: 1.1.0(monaco-editor@0.47.0)
       vite-plugin-top-level-await:
         specifier: ^1.4.1
         version: 1.4.1(vite@5.2.2)
@@ -10499,8 +10499,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /monaco-editor@0.21.3:
-    resolution: {integrity: sha512-9N7wATLpi+googstvtm6IKg97vPQ77FDYEpkow5tLriM/VJ0DaTRyUP4UVzcoH7KlPDX+e/rE7/imcOUeGkT6g==}
+  /monaco-editor@0.47.0:
+    resolution: {integrity: sha512-VabVvHvQ9QmMwXu4du008ZDuyLnHs9j7ThVFsiJoXSOQk18+LF89N4ADzPbFenm0W4V2bGHnFBztIRQTgBfxzw==}
     dev: true
 
   /mrmime@1.0.1:
@@ -14492,12 +14492,12 @@ packages:
       - supports-color
     dev: true
 
-  /vite-plugin-monaco-editor@1.1.0(monaco-editor@0.21.3):
+  /vite-plugin-monaco-editor@1.1.0(monaco-editor@0.47.0):
     resolution: {integrity: sha512-IvtUqZotrRoVqwT0PBBDIZPNraya3BxN/bfcNfnxZ5rkJiGcNtO5eAOWWSgT7zullIAEqQwxMU83yL9J5k7gww==}
     peerDependencies:
       monaco-editor: '>=0.33.0'
     dependencies:
-      monaco-editor: 0.21.3
+      monaco-editor: 0.47.0
     dev: true
 
   /vite-plugin-top-level-await@1.4.1(vite@5.2.2):
