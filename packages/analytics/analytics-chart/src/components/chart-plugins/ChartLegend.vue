@@ -42,7 +42,7 @@
 import { ChartLegendPosition } from '../../enums'
 import { Chart, type LegendItem } from 'chart.js'
 import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType, computed } from 'vue'
-import { KUI_SPACE_100 } from '@kong/design-tokens'
+import { KUI_SPACE_80, KUI_SPACE_100 } from '@kong/design-tokens'
 import { debounce } from '../../utils'
 
 const props = defineProps({
@@ -66,11 +66,42 @@ const legendItemsRef = ref<HTMLElement[]>([])
 const showValues = inject('showLegendValues', true)
 const position = inject('legendPosition', ref(ChartLegendPosition.Right))
 const legendItemsTracker = ref<LegendItem[]>([])
-const legendMaxHeight = ref<string>(KUI_SPACE_100)
+const legendHeight = ref<string>(KUI_SPACE_80)
+
+// Check if the legend wraps by comparing the top position of each item.
+const doesTheLegendWrap = () => {
+  const element = legendContainerRef.value
+  if (!element || !legendItemsRef.value || element.children.length === 0) {
+    return 0
+  }
+  const previousTop = element.children[0].getBoundingClientRect().top
+  for (const item of legendItemsRef.value) {
+    const currentTop = item.getBoundingClientRect().top
+    // If the top position of the current item is
+    // different from the previous item, that means
+    // there is a new row.
+    if (currentTop > previousTop) {
+      return true
+    }
+  }
+  return false
+}
 
 const shouldTruncate = computed(() => {
   return props.items.length > 2 || position.value === ChartLegendPosition.Right
 })
+
+const checkForWrap = () => {
+  if (legendContainerRef.value && position.value === ChartLegendPosition.Bottom) {
+    if (doesTheLegendWrap()) {
+      // Allow for two rows of legend items
+      legendHeight.value = KUI_SPACE_100
+    } else {
+      // Only need space for one row of legend items
+      legendHeight.value = KUI_SPACE_80
+    }
+  }
+}
 
 // Set the grid-template-columns style based on the width of the widest item
 const formatGrid = () => {
@@ -90,6 +121,8 @@ const formatGrid = () => {
     const padding = parseInt(KUI_SPACE_100, 10)
     legendContainerRef.value.style.gridTemplateColumns = `repeat(auto-fit, ${maxWidth + padding}px)`
   }
+
+  checkForWrap()
 }
 
 const legendItemsChanged = () => {
@@ -214,9 +247,9 @@ ul.legend-container {
     align-items: baseline;
     flex-direction: column;
     justify-content: flex-start;
-    margin-left: $kui-space-50;
+    margin: 0 0 0 $kui-space-40;
     max-height: 90%;
-    min-width: 12%;
+    min-width: 10%;
     row-gap: $kui-space-40;
     width: auto;
 
@@ -230,14 +263,14 @@ ul.legend-container {
     // Allow legend to expand horizontally at lower resolutions
     @media (max-width: ($kui-breakpoint-phablet - 1px)) {
       margin-left: $kui-space-90;
-      @include legendAsGrid(v-bind('legendMaxHeight'));
+      @include legendAsGrid(v-bind('legendHeight'));
     }
   }
 
   &.bottom {
     height: auto;
-    margin-left: $kui-space-90;
-    @include legendAsGrid(v-bind('legendMaxHeight'));
+    margin: $kui-space-30 0 0 $kui-space-100;
+    @include legendAsGrid(v-bind('legendHeight'));
   }
 
   // Individual legend item
