@@ -6,7 +6,7 @@
       data-testid="page-header-breadcrumbs"
     >
       <KBreadcrumbs
-        item-max-width="150px"
+        item-max-width="150"
         :items="breadcrumbs"
       >
         <template
