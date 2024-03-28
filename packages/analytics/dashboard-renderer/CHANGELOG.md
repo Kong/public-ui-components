@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.17.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.17.3...@kong-ui-public/dashboard-renderer@0.17.4) (2024-03-28)
+
+
+### Bug Fixes
+
+* **entities-consumers:** group form fields [KHCP-11029] ([#1300](https://github.com/Kong/public-ui-components/issues/1300)) ([c9375c0](https://github.com/Kong/public-ui-components/commit/c9375c07c0b7a6f09fe714f64ed48eac0ea187dd))
+
+
+
+
+
 ## [0.17.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.17.2...@kong-ui-public/dashboard-renderer@0.17.3) (2024-03-27)
 
 

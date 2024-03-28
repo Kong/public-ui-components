@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.6.8...@kong-ui-public/entities-consumer-groups@2.6.9) (2024-03-28)
+
+
+### Bug Fixes
+
+* **entities-consumers:** group form fields [KHCP-11029] ([#1300](https://github.com/Kong/public-ui-components/issues/1300)) ([c9375c0](https://github.com/Kong/public-ui-components/commit/c9375c07c0b7a6f09fe714f64ed48eac0ea187dd))
+
+
+
+
+
 ## [2.6.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.6.7...@kong-ui-public/entities-consumer-groups@2.6.8) (2024-03-27)
 
 
