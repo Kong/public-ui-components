@@ -310,8 +310,8 @@ $row-gap-size: 12px;
     line-height: $kui-line-height-60;
 
     &.sm {
-      line-height: $kui-line-height-40;
       font-size: $kui-font-size-30;
+      line-height: $kui-line-height-40;
     }
     &.xl {
       font-size: $kui-font-size-100;
