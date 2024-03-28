@@ -270,19 +270,20 @@ $row-gap-size: 12px;
     display: flex;
     flex-direction: row;
     font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-semibold;
+    font-weight: $kui-font-weight-medium;
     line-height: $kui-line-height-20;
     margin: $kui-space-0;
 
+    // The metric card title is always 14px; the "small" variant is the exception
     &.sm {
       font-size: $kui-font-size-20;
-      font-weight: $kui-font-weight-medium;
     }
     &.md {
       font-size: $kui-font-size-30;
+      font-weight: $kui-font-weight-semibold;
     }
     &.lg {
-      font-size: $kui-font-size-40;
+      font-size: $kui-font-size-30;
     }
     &.xl {
       font-size: $kui-font-size-30;
@@ -343,7 +344,7 @@ $row-gap-size: 12px;
       flex-direction: row;
       font-size: $kui-font-size-20;
       font-weight: $kui-font-weight-semibold;
-      padding: 4px 8px;
+      padding: $kui-space-20 $kui-space-40;
 
       .kui-icon {
         margin-right: 4px;
