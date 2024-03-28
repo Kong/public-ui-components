@@ -22,6 +22,12 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       // Add the API proxies to inject the Authorization header
       ...getApiProxies(),
     },
+    watch: {
+      ignored: ['!**/node_modules/@kong-ui-public/forms/**'],
+    },
+  },
+  optimizeDeps: {
+    exclude: ['@kong-ui-public/forms'],
   },
 }))
 

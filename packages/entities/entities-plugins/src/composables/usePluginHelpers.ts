@@ -1,8 +1,10 @@
 import type { ConfigurationSchema } from '@kong-ui-public/entities-shared'
-import { ConfigurationSchemaType } from '@kong-ui-public/entities-shared'
+import { ConfigurationSchemaType, useStringHelpers } from '@kong-ui-public/entities-shared'
 import type { PluginType } from '../types'
 
 export default function useHelpers() {
+  const { capitalize } = useStringHelpers()
+
   const METHOD_KEYS = ['methods', 'logout_methods']
 
   /**
@@ -154,6 +156,11 @@ export default function useHelpers() {
     }
   }
 
+  // _ gets converted to space and capitalize each word
+  const formatPluginFieldLabel = (label: string) => {
+    return capitalize(label.replace(/_/g, ' '))
+  }
+
   return {
     setFieldType,
     getPluginCards,
@@ -161,5 +168,6 @@ export default function useHelpers() {
     unFlattenObject,
     isObjectEmpty,
     unsetNullForeignKey,
+    formatPluginFieldLabel,
   }
 }

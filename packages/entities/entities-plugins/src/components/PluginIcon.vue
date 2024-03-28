@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import composables from '../composables'
+import { getPluginIconURL } from '../definitions/metadata'
 
 const defaultIcon = new URL('../assets/images/plugin-icons/missing.png', import.meta.url).href
 
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const img = ref<HTMLImageElement>()
-const iconSrc = computed((): string => props.name ? composables.getPluginIconURL(props.name) : '')
+const iconSrc = computed((): string => props.name ? getPluginIconURL(props.name) : '')
 
 const onError = () => {
   if (img.value) {

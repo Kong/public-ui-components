@@ -26,4 +26,5 @@ export const getSharedFormName = (modelName: string, enabledAcmeCustomTemplate =
 }
 
 export * from './const'
+export * from './types'
 export * as abstractField from './generator/fields/abstractField'

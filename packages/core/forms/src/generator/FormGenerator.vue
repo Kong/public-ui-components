@@ -30,12 +30,31 @@
       :key="`group-${i}`"
     >
       <KCollapse
-        v-if="group.collapsible"
-        :model-value="group.collapsedByDefault === undefined ? false : group.collapsedByDefault"
-        :title="group.legend"
+        v-if="group.collapsible !== undefined && group.collapsible !== false"
+        class="root-level-collapse"
+        :model-value="false"
+        :title="group.collapsible.title"
       >
+        <template
+          v-if="group.collapsible.description"
+          #visible-content
+        >
+          {{ group.collapsible.description }}
+        </template>
+
+        <slot
+          v-if="group.slots?.beforeContent"
+          :name="group.slots?.beforeContent"
+        />
+
+        <slot
+          v-if="group.fields.length === 0 && group.slots?.emptyState"
+          :name="group.slots?.emptyState"
+        />
+
         <component
           :is="tag"
+          v-else
           :class="getFieldRowClasses(group)"
         >
           <template
@@ -55,6 +74,37 @@
             />
           </template>
         </component>
+
+        <KCollapse
+          v-if="group.collapsible !== true && group.collapsible.nestedCollapsible && group.collapsible.nestedCollapsible.fields.length > 0"
+          class="nested-collapse"
+          :model-value="collapseStates[`group-${i}-nested`] ?? true"
+          trigger-alignment="leading"
+          :trigger-label="(collapseStates[`group-${i}-nested`] ?? true) ? group.collapsible.nestedCollapsible.triggerLabel.expand : group.collapsible.nestedCollapsible.triggerLabel.collapse"
+          @update:model-value="(value) => collapseStates[`group-${i}-nested`] = value"
+        >
+          <component
+            :is="tag"
+            :class="getFieldRowClasses(group)"
+          >
+            <template
+              v-for="field in group.collapsible.nestedCollapsible.fields"
+              :key="field.model"
+            >
+              <form-group
+                v-if="fieldVisible(field)"
+                ref="children"
+                :errors="errors"
+                :field="field"
+                :model="model"
+                :options="options"
+                :vfg="vfg"
+                @model-updated="onModelUpdated"
+                @validated="onFieldValidated"
+              />
+            </template>
+          </component>
+        </KCollapse>
       </KCollapse>
 
       <component
@@ -87,6 +137,17 @@
 </template>
 
 <script>
+/**
+ * @typedef {import('./types').FGCollapsibleOptions} FGCollapsibleOptions
+ * @typedef {import('./types').FGSlots} FGSlots
+ *
+ * @typedef PartialGroup
+ * @prop {FGCollapsibleOptions=} collapsible
+ * @prop {FGSlots=} slots
+ *
+ * @typedef {Record<string, any> & PartialGroup} Group
+ */
+
 import { get as objGet, forEach, isFunction, isNil, isArray } from 'lodash'
 import formMixin from './FormMixin.vue'
 import formGroup from './FormGroup.vue'
@@ -148,6 +209,7 @@ export default {
       vfg: this,
       errors: [], // Validation errors,
       children: ref([]),
+      collapseStates: {},
     }
   },
 
@@ -163,6 +225,7 @@ export default {
       return res
     },
     groups() {
+      /** @type {Group[]} */
       const res = []
       if (this.schema && this.schema.groups) {
         forEach(this.schema.groups.slice(0), group => {
@@ -201,7 +264,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       if (this.model) {
-        // First load, running validation if neccessary
+        // First load, running validation if necessary
         if (this.options.validateAfterLoad === true && this.isNewModel !== true) {
           this.validate()
         } else {
@@ -302,6 +365,10 @@ export default {
 .vue-form-generator {
   * {
     box-sizing: border-box;
+  }
+
+  .hidden-field {
+    display: none;
   }
 
   .form-group {
@@ -530,6 +597,7 @@ export default {
 .vue-form-generator label {
   font-weight: 500;
 }
+
 .vue-form-generator .form-group input[type=radio] {
   align-items: center;
   appearance: none;
@@ -550,6 +618,22 @@ export default {
 
   &:checked:after {
     background-color: currentColor;
+  }
+}
+
+.vue-form-generator {
+  .root-level-collapse {
+    .k-collapse-heading {
+      margin-bottom: 0 !important;
+    }
+
+    .k-collapse-visible-content {
+      color: $kui-color-text-neutral;
+    }
+  }
+
+  .nested-collapse .k-collapse-heading {
+    margin-bottom: $kui-space-80 !important;
   }
 }
 </style>

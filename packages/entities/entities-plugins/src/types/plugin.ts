@@ -1,3 +1,5 @@
+import type { PathToDotNotation } from '@kong-ui-public/i18n/dist/types/types'
+
 export enum PluginGroup {
   AUTHENTICATION = 'Authentication',
   SECURITY = 'Security',
@@ -60,13 +62,37 @@ export interface PluginEntityInfo {
   idField?: EntityTypeIdField
 }
 
-export type PluginMetaData = {
+export interface FieldChecks {
+  atLeastOneOf?: string[][] // aligned with `at_least_one_of` in BE schema
+  onlyOneOf?: string[][] // aligned with `only_one_of` in BE schema
+  mutuallyRequired?: string[][] // aligned with `mutually_required` in BE schema
+
+  /**
+   * Require EXACTLY one parameter among the parameters.
+   *
+   * NOTE: This does not have a corresponding BE check.
+   */
+  exactOneOf?: string[][]
+
+  /**
+   * Require EXACTLY one COMBINATION of parameters.
+   * Parameters in each COMBINATION are mutually required.
+   *
+   * NOTE: This does not have a corresponding BE check.
+   */
+  exactOneOfMutuallyRequired?: string[][][]
+}
+
+export type PluginMetaData<I18nMessageSource = void> = {
+  nameKey: I18nMessageSource extends void ? string : PathToDotNotation<I18nMessageSource, string>
+  name: string // A display name of the Plugin.
+  descriptionKey: I18nMessageSource extends void ? string : PathToDotNotation<I18nMessageSource, string>
   description: string // A string to describe a Plugin.
   group: PluginGroup // Plugin categories meta.
-  imageName?: string // An optional tag to define plugin's icon image.
-  isEnterprise: boolean // The value will be True if the Plugin is enterprise only.
-  name: string // A display name of the Plugin.
   scope: PluginScope[] // The scope supported by the Plugin.
+  isEnterprise: boolean // The value will be True if the Plugin is enterprise only.
+  imageName?: string // An optional tag to define plugin's icon image.
+  fieldChecks?: FieldChecks
 }
 
 export interface PluginType extends PluginMetaData {

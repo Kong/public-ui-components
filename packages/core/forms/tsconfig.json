@@ -10,7 +10,8 @@
       "cypress",
       "cypress/vue",
       "../../../cypress/support"
-    ]
+    ],
+    "allowJs": true
   },
   "include": [
     "src/**/*",
