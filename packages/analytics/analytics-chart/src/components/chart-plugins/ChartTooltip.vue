@@ -225,11 +225,11 @@ function handleMouseUp() {
     padding-bottom: $kui-space-40;
 
     .title {
-      font-size: $kui-font-size-40;
+      font-size: $kui-font-size-30;
       font-weight: $kui-font-weight-semibold;
     }
     .subtitle {
-      font-size: $kui-font-size-30;
+      font-size: $kui-font-size-20;
       margin-top: $kui-space-40;
     }
 
@@ -254,8 +254,9 @@ ul.tooltip {
   @include scrollbarBase;
 
   li {
+    align-items: center;
     display: flex;
-    font-size: $kui-font-size-30;
+    font-size: $kui-font-size-20;
     line-height: 1;
     margin: $kui-space-40;
   }
@@ -280,9 +281,9 @@ ul.tooltip {
   .tooltip-legend {
     display: inline-flex;
     flex-direction: row;
-    height: 15px;
-    margin-right: 8px;
-    width: 3px;
+    height: 12px;
+    margin-right: $kui-space-30;
+    width: 12px;
   }
 }
 </style>

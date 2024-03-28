@@ -13,7 +13,7 @@
       @click="handleLegendItemClick(datasetIndex, index)"
     >
       <div
-        class="legend"
+        class="square-marker"
         :style="{ background: fillStyle, 'border-color': strokeStyle }"
       />
       <div
@@ -42,7 +42,7 @@
 import { ChartLegendPosition } from '../../enums'
 import { Chart, type LegendItem } from 'chart.js'
 import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType, computed } from 'vue'
-import { KUI_SPACE_100, KUI_SPACE_80, KUI_SPACE_110 } from '@kong/design-tokens'
+import { KUI_SPACE_80, KUI_SPACE_100 } from '@kong/design-tokens'
 import { debounce } from '../../utils'
 
 const props = defineProps({
@@ -74,7 +74,6 @@ const doesTheLegendWrap = () => {
   if (!element || !legendItemsRef.value || element.children.length === 0) {
     return 0
   }
-
   const previousTop = element.children[0].getBoundingClientRect().top
   for (const item of legendItemsRef.value) {
     const currentTop = item.getBoundingClientRect().top
@@ -96,7 +95,7 @@ const checkForWrap = () => {
   if (legendContainerRef.value && position.value === ChartLegendPosition.Bottom) {
     if (doesTheLegendWrap()) {
       // Allow for two rows of legend items
-      legendHeight.value = KUI_SPACE_110
+      legendHeight.value = KUI_SPACE_100
     } else {
       // Only need space for one row of legend items
       legendHeight.value = KUI_SPACE_80
@@ -224,8 +223,8 @@ const isDatasetVisible = (datasetIndex: number = 0, segmentIndex: number): boole
 
 const positionToClass = (position: `${ChartLegendPosition}`) => {
   return {
-    [ChartLegendPosition.Right]: 'vertical',
-    [ChartLegendPosition.Bottom]: 'horizontal',
+    [ChartLegendPosition.Right]: 'right',
+    [ChartLegendPosition.Bottom]: 'bottom',
     [ChartLegendPosition.Hidden]: 'hidden',
   }[position]
 }
@@ -233,25 +232,26 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 
 <style lang="scss" scoped>
 @import '../../styles/base';
-.legend-container {
+
+ul.legend-container {
   display: flex;
-  margin: $kui-space-30 0 0 0;
   max-height: inherit;
   -ms-overflow-style: thin;
   overflow-x: hidden;
   overflow-y: auto;
-  padding-left: 0;
+  padding: 0;
 
   @include scrollbarBase;
 
-  &.vertical {
+  &.right {
+    align-items: baseline;
     flex-direction: column;
     justify-content: flex-start;
+    margin: 0 0 0 $kui-space-40;
     max-height: 90%;
-    max-width: 15%;
     min-width: 10%;
-    padding-left: $kui-space-50;
-    row-gap: $kui-space-60;
+    row-gap: $kui-space-40;
+    width: auto;
 
     .truncate-label {
       max-width: 12ch;
@@ -260,49 +260,17 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
       white-space: nowrap;
     }
 
-    li {
-      // Legend on right side of chart allows for two lines of text
-      .legend {
-        margin-top: $kui-space-20;
-      }
-    }
-
     // Allow legend to expand horizontally at lower resolutions
     @media (max-width: ($kui-breakpoint-phablet - 1px)) {
-      column-gap: $kui-space-50;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, 12ch);
-      height: 40px;
-      justify-content: center;
-      max-width: 99% !important;
-
-      .sub-label {
-        display: none;
-      }
+      margin-left: $kui-space-90;
+      @include legendAsGrid(v-bind('legendHeight'));
     }
   }
 
-  &.horizontal {
-    column-gap: $kui-space-50;
-    display: grid;
-    height: v-bind('legendHeight');
-    justify-content: center;  // Legend below chart only allows one line of text
-    width: 99%;
-    .truncate-label {
-      max-width: 20ch;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    li {
-      align-items: center;
-      margin-top: 0;
-      .label {
-        line-height: $kui-line-height-40;
-        white-space: nowrap;
-      }
-    }
+  &.bottom {
+    height: auto;
+    margin: $kui-space-30 0 0 $kui-space-100;
+    @include legendAsGrid(v-bind('legendHeight'));
   }
 
   // Individual legend item
@@ -310,13 +278,12 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     align-items: start;
     cursor: pointer;
     display: flex;
-    line-height: 1;
 
     // Color bar preceding label
-    .legend {
-      flex: 0 0 14px;
-      height: 3px;
-      margin-right: $kui-space-30;
+    .square-marker {
+      height: 9px;
+      margin: 2px $kui-space-20 0 0;
+      width: 9px;
     }
 
     .label {
