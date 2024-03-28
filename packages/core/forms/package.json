@@ -63,7 +63,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.12.10",
     "@kong/kongponents": "9.0.0-alpha.123",
-    "@types/lodash": "^4.14.202",
+    "@types/lodash": "^4.17.0",
     "pug": "^3.0.2"
   },
   "distSizeChecker": {
