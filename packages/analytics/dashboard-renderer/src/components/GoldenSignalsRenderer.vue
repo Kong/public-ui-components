@@ -52,7 +52,7 @@ const options = computed<ProviderProps>(() => ({
   tz: props.context.tz,
   additionalFilter: props.context.filters,
   longCardTitles: props.chartOptions.longCardTitles,
-  containerTitle: props.chartOptions?.chartTitle,
+  containerTitle: props.chartOptions.chartTitle,
   description: props.chartOptions.description,
   hasTrendAccess: true,
   refreshInterval: props.context.refreshInterval ?? DEFAULT_TILE_REFRESH_INTERVAL_MS,
