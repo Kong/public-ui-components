@@ -354,13 +354,6 @@ jobs:
       GH_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
     steps:
-      - name: Successful tests
-        if: ${{ !(contains(needs.*.result, 'failure')) }}
-        run: exit 0
-      - name: Failing tests
-        if: ${{ contains(needs.*.result, 'failure') }}
-        run: exit 1
-
       - name: Checkout Source Code
         if: ${{ github.event_name == 'push' }}
         uses: actions/checkout@v4
