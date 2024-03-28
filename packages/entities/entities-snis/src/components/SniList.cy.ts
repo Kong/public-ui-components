@@ -17,7 +17,7 @@ const createRoute = 'create-sni'
 const baseConfigKonnect: KonnectSniListConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-cats',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   createRoute,
   getViewRoute: () => viewRoute,
   getEditRoute: () => editRoute,
@@ -45,7 +45,7 @@ describe('<SniList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/snis*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/snis*`,
         },
         {
           statusCode: 200,
@@ -424,7 +424,7 @@ describe('<SniList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/snis*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/snis*`,
         },
         {
           statusCode: 200,
@@ -443,7 +443,7 @@ describe('<SniList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/snis*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/snis*`,
         },
         (req) => {
           const size = req.query.size ? Number(req.query.size) : 30
@@ -502,7 +502,7 @@ describe('<SniList />', () => {
         cy.intercept(
           {
             method: 'GET',
-            url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/snis*`,
+            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/snis*`,
           },
           {
             statusCode: 500,

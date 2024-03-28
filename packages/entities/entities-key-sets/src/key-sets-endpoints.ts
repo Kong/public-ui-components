@@ -1,16 +1,19 @@
+const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
+const KMBaseApiUrl = '/{workspace}'
+
 export default {
   list: {
-    konnect: '/api/runtime_groups/{controlPlaneId}/key-sets',
-    kongManager: '/{workspace}/key-sets',
+    konnect: `${konnectBaseApiUrl}/key-sets`,
+    kongManager: `${KMBaseApiUrl}/key-sets`,
   },
   form: {
     konnect: {
-      create: '/api/runtime_groups/{controlPlaneId}/key-sets',
-      edit: '/api/runtime_groups/{controlPlaneId}/key-sets/{id}',
+      create: `${konnectBaseApiUrl}/key-sets`,
+      edit: `${konnectBaseApiUrl}/key-sets/{id}`,
     },
     kongManager: {
-      create: '/{workspace}/key-sets',
-      edit: '/{workspace}/key-sets/{id}',
+      create: `${KMBaseApiUrl}/key-sets`,
+      edit: `${KMBaseApiUrl}/key-sets/{id}`,
     },
   },
 }

@@ -29,7 +29,7 @@ const baseConfigKonnect: KonnectTargetsListConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-targets',
   upstreamId: '123-qwerty-french-dj',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
 }
 
 const createRoute = 'create-target'
@@ -45,7 +45,7 @@ describe('<TargetsList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/upstreams/${baseConfigKonnect.upstreamId}/targets*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/upstreams/${baseConfigKonnect.upstreamId}/targets*`,
         },
         {
           statusCode: 200,
@@ -125,7 +125,7 @@ describe('<TargetsList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/upstreams/${baseConfigKonnect.upstreamId}/targets*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/upstreams/${baseConfigKonnect.upstreamId}/targets*`,
         },
         {
           statusCode: 200,
@@ -536,7 +536,7 @@ describe('<TargetsList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/upstreams/${baseConfigKonnect.upstreamId}/targets*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/upstreams/${baseConfigKonnect.upstreamId}/targets*`,
         },
         {
           statusCode: 200,
@@ -555,7 +555,7 @@ describe('<TargetsList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/upstreams/${baseConfigKonnect.upstreamId}/targets*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/upstreams/${baseConfigKonnect.upstreamId}/targets*`,
         },
         (req) => {
           const size = req.query.size ? Number(req.query.size) : 30
@@ -614,7 +614,7 @@ describe('<TargetsList />', () => {
         cy.intercept(
           {
             method: 'GET',
-            url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/upstreams/${baseConfigKonnect.upstreamId}/targets*`,
+            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/upstreams/${baseConfigKonnect.upstreamId}/targets*`,
           },
           {
             statusCode: 500,

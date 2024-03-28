@@ -9,7 +9,7 @@ const cancelRoute = { name: 'snis-list' }
 const baseConfigKonnect:KonnectSniFormConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-cats',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   cancelRoute,
 }
 
@@ -355,7 +355,7 @@ describe('<SniForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/certificates*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/certificates*`,
         },
         {
           statusCode: 200,
@@ -371,7 +371,7 @@ describe('<SniForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/snis/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/snis/*`,
         },
         {
           statusCode: 200,
@@ -384,7 +384,7 @@ describe('<SniForm />', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/v1/schemas/json/sni/validate`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/v1/schemas/json/sni/validate`,
         },
         {
           statusCode: status,
@@ -395,7 +395,7 @@ describe('<SniForm />', () => {
       cy.intercept(
         {
           method: 'PUT',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/snis/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/snis/*`,
         },
         {
           statusCode: status,
@@ -578,7 +578,7 @@ describe('<SniForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/snis/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/snis/*`,
         },
         {
           statusCode: 404,
@@ -608,7 +608,7 @@ describe('<SniForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/certificates*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/certificates*`,
         },
         {
           statusCode: 500,

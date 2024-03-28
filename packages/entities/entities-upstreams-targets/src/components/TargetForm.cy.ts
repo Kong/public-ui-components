@@ -9,7 +9,7 @@ const upstreamId = '12345-qwerty'
 const baseConfigKonnect:KonnectTargetFormConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-cats',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   cancelRoute,
   upstreamId,
 }
@@ -193,7 +193,7 @@ describe('<TargetForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/upstreams/${upstreamId}/targets/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/upstreams/${upstreamId}/targets/*`,
         },
         {
           statusCode: 200,
@@ -306,7 +306,7 @@ describe('<TargetForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/upstreams/${upstreamId}/targets/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/upstreams/${upstreamId}/targets/*`,
         },
         {
           statusCode: 404,

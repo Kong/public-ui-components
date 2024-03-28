@@ -1,73 +1,76 @@
+const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
+const KMBaseApiUrl = '/{workspace}'
+
 export default {
   list: {
     konnect: {
-      all: '/v2/control-planes/{controlPlaneId}/core-entities/plugins',
-      forEntity: '/v2/control-planes/{controlPlaneId}/core-entities/{entityType}/{entityId}/plugins',
+      all: `${konnectBaseApiUrl}/plugins`,
+      forEntity: `${konnectBaseApiUrl}/{entityType}/{entityId}/plugins`,
     },
     kongManager: {
-      all: '/{workspace}/plugins',
-      forEntity: '/{workspace}/{entityType}/{entityId}/plugins',
+      all: `${KMBaseApiUrl}/plugins`,
+      forEntity: `${KMBaseApiUrl}/{entityType}/{entityId}/plugins`,
     },
   },
   select: {
     konnect: {
-      availablePlugins: '/v2/control-planes/{controlPlaneId}/core-entities/v1/available-plugins',
+      availablePlugins: `${konnectBaseApiUrl}/v1/available-plugins`,
     },
     kongManager: {
-      availablePlugins: '/{workspace}/kong',
+      availablePlugins: `${KMBaseApiUrl}/kong`,
       availablePluginsForOss: '/',
     },
   },
   form: {
     konnect: {
       create: {
-        all: '/v2/control-planes/{controlPlaneId}/core-entities/plugins',
-        forEntity: '/v2/control-planes/{controlPlaneId}/core-entities/{entityType}/{entityId}/plugins',
+        all: `${konnectBaseApiUrl}/plugins`,
+        forEntity: `${konnectBaseApiUrl}/{entityType}/{entityId}/plugins`,
       },
       edit: {
-        all: '/v2/control-planes/{controlPlaneId}/core-entities/plugins/{id}',
-        forEntity: '/v2/control-planes/{controlPlaneId}/core-entities/{entityType}/{entityId}/plugins/{id}',
+        all: `${konnectBaseApiUrl}/plugins/{id}`,
+        forEntity: `${konnectBaseApiUrl}/{entityType}/{entityId}/plugins/{id}`,
       },
       pluginSchema: '/v2/control-planes/{controlPlaneId}/schemas/core-entities/plugins/{plugin}',
       credential: {
-        create: '/v2/control-planes/{controlPlaneId}/core-entities/{resourceEndpoint}',
-        edit: '/v2/control-planes/{controlPlaneId}/core-entities/{resourceEndpoint}/{id}',
+        create: `${konnectBaseApiUrl}/{resourceEndpoint}`,
+        edit: `${konnectBaseApiUrl}/{resourceEndpoint}/{id}`,
       },
       credentialSchema: '/v2/control-planes/{controlPlaneId}/schemas/core-entities/{plugin}',
-      validate: '/v2/control-planes/{controlPlaneId}/core-entities/v1/schemas/json/plugin/validate',
+      validate: `${konnectBaseApiUrl}/v1/schemas/json/plugin/validate`,
       // VFG endpoints24
-      entityGetOne: '/v2/control-planes/{controlPlaneId}/core-entities/{entity}/{id}',
-      entityGetAll: '/v2/control-planes/{controlPlaneId}/core-entities/{entity}?size=1000',
+      entityGetOne: `${konnectBaseApiUrl}/{entity}/{id}`,
+      entityGetAll: `${konnectBaseApiUrl}/{entity}?size=1000`,
     },
     kongManager: {
       create: {
-        all: '/{workspace}/plugins',
-        forEntity: '/{workspace}/{entityType}/{entityId}/plugins',
+        all: `${KMBaseApiUrl}/plugins`,
+        forEntity: `${KMBaseApiUrl}/{entityType}/{entityId}/plugins`,
       },
       edit: {
-        all: '/{workspace}/plugins/{id}',
-        forEntity: '/{workspace}/{entityType}/{entityId}/plugins/{id}',
+        all: `${KMBaseApiUrl}/plugins/{id}`,
+        forEntity: `${KMBaseApiUrl}/{entityType}/{entityId}/plugins/{id}`,
       },
-      pluginSchema: '/{workspace}/schemas/plugins/{plugin}',
+      pluginSchema: `${KMBaseApiUrl}/schemas/plugins/{plugin}`,
       credential: {
-        create: '/{workspace}/{resourceEndpoint}',
-        edit: '/{workspace}/{resourceEndpoint}/{id}',
+        create: `${KMBaseApiUrl}/{resourceEndpoint}`,
+        edit: `${KMBaseApiUrl}/{resourceEndpoint}/{id}`,
       },
-      credentialSchema: '/{workspace}/schemas/{plugin}',
-      validate: '/{workspace}/schemas/plugins/validate',
+      credentialSchema: `${KMBaseApiUrl}/schemas/{plugin}`,
+      validate: `${KMBaseApiUrl}/schemas/plugins/validate`,
       // VFG endpoints
-      entityGetOne: '/{workspace}/{entity}/{id}',
-      entityGetAll: '/{workspace}/{entity}',
+      entityGetOne: `${KMBaseApiUrl}/{entity}/{id}`,
+      entityGetAll: `${KMBaseApiUrl}/{entity}`,
     },
   },
   item: {
     konnect: {
-      all: '/v2/control-planes/{controlPlaneId}/core-entities/plugins/{id}',
-      forEntity: '/v2/control-planes/{controlPlaneId}/core-entities/{entityType}/{entityId}/plugins/{id}',
+      all: `${konnectBaseApiUrl}/plugins/{id}`,
+      forEntity: `${konnectBaseApiUrl}/{entityType}/{entityId}/plugins/{id}`,
     },
     kongManager: {
-      all: '/{workspace}/plugins/{id}',
-      forEntity: '/{workspace}/{entityType}/{entityId}/plugins/{id}',
+      all: `${KMBaseApiUrl}/plugins/{id}`,
+      forEntity: `${KMBaseApiUrl}/{entityType}/{entityId}/plugins/{id}`,
     },
   },
 }
