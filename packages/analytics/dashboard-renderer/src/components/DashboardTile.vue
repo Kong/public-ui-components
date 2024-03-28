@@ -1,5 +1,8 @@
 <template>
-  <div class="tile-boundary">
+  <div
+    ref="tileBoundary"
+    class="tile-boundary"
+  >
     <component
       :is="componentData.component"
       v-if="componentData"
@@ -12,7 +15,7 @@ import { ChartTypes, type DashboardRendererContext, type TileDefinition } from '
 import type {
   Component,
 } from 'vue'
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
@@ -20,17 +23,26 @@ import BarChartRenderer from './BarChartRenderer.vue'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
-import { KUI_SPACE_70 } from '@kong/design-tokens'
 import TopNTableRenderer from './TopNTableRenderer.vue'
+import { KUI_SPACE_70 } from '@kong/design-tokens'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
 const props = withDefaults(defineProps<{
   definition: TileDefinition,
   context: DashboardRendererContext,
-  height?: number
+  height?: number,
+  fitToContent?: boolean,
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
+  fitToContent: false,
+})
+
+const heightRef = ref(props.height)
+const tileBoundary = ref<HTMLDivElement | null>(null)
+
+const resizeObserver = new ResizeObserver(entries => {
+  heightRef.value = entries[0].contentRect.height
 })
 
 const rendererLookup: Record<ChartTypes, Component | undefined> = {
@@ -54,14 +66,27 @@ const componentData = computed(() => {
       context: props.context,
       queryReady: true, // TODO: Pipelining
       chartOptions: props.definition.chart,
-      height: props.height - PADDING_SIZE * 2,
+      height: heightRef.value - PADDING_SIZE * 2,
     },
   }
 })
+
+onMounted(() => {
+  if (tileBoundary.value && props.fitToContent) {
+    resizeObserver.observe(tileBoundary.value as HTMLDivElement)
+  }
+})
+
+onUnmounted(() => {
+  if (tileBoundary.value) {
+    resizeObserver.unobserve(tileBoundary.value as HTMLDivElement)
+  }
+})
+
 </script>
 
 <style lang="scss" scoped>
 .tile-boundary {
-  height: v-bind('`${height}px`');
+  height: v-bind('`${heightRef}px`');
 }
 </style>

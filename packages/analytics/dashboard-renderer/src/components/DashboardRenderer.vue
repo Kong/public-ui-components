@@ -24,6 +24,7 @@
           class="tile-container"
           :context="mergedContext"
           :definition="tile.meta"
+          :fit-to-content="tile.layout.size.fitToContent"
           :height="tile.layout.size.rows * (config.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
         />
       </template>
