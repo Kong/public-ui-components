@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.6.50...@kong-ui-public/metric-cards@0.7.0) (2024-03-28)
+
+
+### Features
+
+* **metric-card-container:** add optional title [MA-2726] ([#1298](https://github.com/Kong/public-ui-components/issues/1298)) ([cbee003](https://github.com/Kong/public-ui-components/commit/cbee003c22262268f69da2529829cbe2347a075f))
+
+
+
+
+
 ## [0.6.50](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.6.49...@kong-ui-public/metric-cards@0.6.50) (2024-03-28)
 
 

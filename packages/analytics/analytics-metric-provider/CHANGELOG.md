@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@5.0.10...@kong-ui-public/analytics-metric-provider@5.1.0) (2024-03-28)
+
+
+### Features
+
+* **metric-card-container:** add optional title [MA-2726] ([#1298](https://github.com/Kong/public-ui-components/issues/1298)) ([cbee003](https://github.com/Kong/public-ui-components/commit/cbee003c22262268f69da2529829cbe2347a075f))
+
+
+
+
+
 ## [5.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@5.0.9...@kong-ui-public/analytics-metric-provider@5.0.10) (2024-03-28)
 
 

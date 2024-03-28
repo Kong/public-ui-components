@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.17.4...@kong-ui-public/dashboard-renderer@0.18.0) (2024-03-28)
+
+
+### Features
+
+* **metric-card-container:** add optional title [MA-2726] ([#1298](https://github.com/Kong/public-ui-components/issues/1298)) ([cbee003](https://github.com/Kong/public-ui-components/commit/cbee003c22262268f69da2529829cbe2347a075f))
+
+
+
+
+
 ## [0.17.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.17.3...@kong-ui-public/dashboard-renderer@0.17.4) (2024-03-28)
 
 
