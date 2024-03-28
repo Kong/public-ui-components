@@ -56,7 +56,7 @@
     "jsdom": "^24.0.0",
     "lerna": "^8.1.2",
     "npm-run-all2": "^6.1.2",
-    "postcss": "^8.4.35",
+    "postcss": "^8.4.36",
     "postcss-custom-properties": "^13.3.6",
     "postcss-html": "^1.6.0",
     "rimraf": "^5.0.5",
@@ -76,7 +76,7 @@
     "uuid": "^9.0.1",
     "vite": "^5.1.6",
     "vite-plugin-externals": "^0.6.2",
-    "vite-plugin-vue-devtools": "^7.0.17",
+    "vite-plugin-vue-devtools": "^7.0.18",
     "vitest": "^1.3.1",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
@@ -105,6 +105,6 @@
   },
   "volta": {
     "node": "18.19.1",
-    "pnpm": "8.15.4"
+    "pnpm": "8.15.5"
   }
 }
