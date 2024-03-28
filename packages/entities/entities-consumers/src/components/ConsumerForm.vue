@@ -265,9 +265,9 @@ const submitData = async (): Promise<void> => {
   }
 
   fieldset {
+    border: none;
     margin: 0;
     padding: 0;
-    border: none;
   }
 }
 
