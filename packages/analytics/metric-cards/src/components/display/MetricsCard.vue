@@ -304,15 +304,17 @@ $row-gap-size: 12px;
     color: var(--kong-ui-metric-card-value, $kui-color-text);
     display: flex;
     flex-direction: row;
+    font-size: $kui-font-size-70;
     font-weight: $kui-font-weight-semibold;
     justify-content: space-between;
     line-height: $kui-line-height-60;
 
     &.sm {
       line-height: $kui-line-height-40;
+      font-size: $kui-font-size-30;
     }
     &.xl {
-      font-size: $kui-font-size-70;
+      font-size: $kui-font-size-100;
     }
   }
 
