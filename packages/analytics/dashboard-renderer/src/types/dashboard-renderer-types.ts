@@ -153,6 +153,7 @@ export type TopNTableOptions = FromSchema<typeof topNTableSchema>
 export const metricCardSchema = {
   type: 'object',
   properties: {
+    chartTitle,
     type: {
       type: 'string',
       enum: [ChartTypes.GoldenSignals],

@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import type { DashboardConfig, DashboardRendererContext, TileConfig } from '../../src'
-import { CP_ID_TOKEN, ChartTypes, DashboardRenderer, ENTITY_ID_TOKEN } from '../../src'
+import { ChartTypes, DashboardRenderer } from '../../src'
 import { inject } from 'vue'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
@@ -57,6 +57,7 @@ const dashboardConfig: DashboardConfig = {
       definition: {
         chart: {
           type: ChartTypes.GoldenSignals,
+          chartTitle: 'Analytics Golden Signals',
         },
         query: {},
       },

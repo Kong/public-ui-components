@@ -121,10 +121,12 @@ const isLoading = computed<boolean>(() => {
 // TODO: per-card loading?
 const containerOpts = computed(() => ({
   cards: cards.value,
+  containerTitle: providerData.containerTitle,
   loading: isLoading.value,
   hasTrendAccess: providerData.hasTrendAccess.value,
   fallbackDisplayText: i18n.t('general.notAvailable'),
-  cardSize: props.cardSize,
+  // If the parent container has a title, we enforce a Medium card size; otherwise, pass down provided cardSize
+  cardSize: providerData.containerTitle ? MetricCardSize.Medium : props.cardSize,
   hideTitle: true,
 }))
 

@@ -26,6 +26,7 @@ export interface MetricCardDisplayValue {
   changePolarity: number
   trendIcon?: typeof GenericIcon
   cardSize?: MetricCardSize
+  hasContainerTitle?: boolean
 }
 
 export interface MetricCardContainerOptions {
@@ -34,5 +35,6 @@ export interface MetricCardContainerOptions {
   hasTrendAccess: boolean
   loading: boolean
   cardSize?: MetricCardSize
+  containerTitle?: string
   errorMessage?: string
 }
