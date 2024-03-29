@@ -1,26 +1,28 @@
 import { useStringHelpers } from '@kong-ui-public/entities-shared'
+import type { FGCollapsibleOptions, FGSlots } from '@kong-ui-public/forms'
 import { customFields, getSharedFormName } from '@kong-ui-public/forms'
-import type { CustomSchemas } from '../types'
-import { aiPromptDecoratorSchema } from './plugin-schemas/AIPromptDecorator'
-import { aiPromptTemplateSchema } from './plugin-schemas/AIPromptTemplate'
-import { applicationRegistrationSchema } from './plugin-schemas/ApplicationRegistration'
-import { ArrayStringFieldSchema } from './plugin-schemas/ArrayStringFieldSchema'
-import { dataDogSchema } from './plugin-schemas/Datadog'
-import { graphqlRateLimitingAdvancedSchema } from './plugin-schemas/GraphQLRateLimitingAdvanced'
-import { jwtSchema } from './plugin-schemas/JWT'
-import { kafkaSchema } from './plugin-schemas/Kafka'
-import { mockingSchema } from './plugin-schemas/Mocking'
-import { preFunctionSchema } from './plugin-schemas/PreFunction'
-import { rateLimitingSchema } from './plugin-schemas/RateLimiting'
-import { requestTransformerAdvancedSchema } from './plugin-schemas/RequestTransformerAdvanced'
-import RequestValidatorSchema from './plugin-schemas/RequestValidator'
-import { routeByHeaderSchema } from './plugin-schemas/RouteByHeader'
-import { samlSchema } from './plugin-schemas/SAML'
-import { statsDSchema } from './plugin-schemas/StatsD'
-import { statsDAdvancedSchema } from './plugin-schemas/StatsDAdvanced'
-import { vaultAuthSchema } from './plugin-schemas/VaultAuth'
-import ZipkinSchema from './plugin-schemas/Zipkin'
-import typedefs from './plugin-schemas/typedefs'
+import { PLUGIN_METADATA } from '../definitions/metadata'
+import { aiPromptDecoratorSchema } from '../definitions/schemas/AIPromptDecorator'
+import { aiPromptTemplateSchema } from '../definitions/schemas/AIPromptTemplate'
+import { applicationRegistrationSchema } from '../definitions/schemas/ApplicationRegistration'
+import { ArrayStringFieldSchema } from '../definitions/schemas/ArrayStringFieldSchema'
+import { dataDogSchema } from '../definitions/schemas/Datadog'
+import { graphqlRateLimitingAdvancedSchema } from '../definitions/schemas/GraphQLRateLimitingAdvanced'
+import { jwtSchema } from '../definitions/schemas/JWT'
+import { kafkaSchema } from '../definitions/schemas/Kafka'
+import { mockingSchema } from '../definitions/schemas/Mocking'
+import { preFunctionSchema } from '../definitions/schemas/PreFunction'
+import { rateLimitingSchema } from '../definitions/schemas/RateLimiting'
+import { requestTransformerAdvancedSchema } from '../definitions/schemas/RequestTransformerAdvanced'
+import RequestValidatorSchema from '../definitions/schemas/RequestValidator'
+import { routeByHeaderSchema } from '../definitions/schemas/RouteByHeader'
+import { samlSchema } from '../definitions/schemas/SAML'
+import { statsDSchema } from '../definitions/schemas/StatsD'
+import { statsDAdvancedSchema } from '../definitions/schemas/StatsDAdvanced'
+import { vaultAuthSchema } from '../definitions/schemas/VaultAuth'
+import ZipkinSchema from '../definitions/schemas/Zipkin'
+import typedefs from '../definitions/schemas/typedefs'
+import { type CustomSchemas } from '../types'
 import useI18n from './useI18n'
 import usePluginHelpers from './usePluginHelpers'
 
@@ -33,12 +35,8 @@ export interface Field extends Record<string, any>{
 export interface Group {
   legend?: string
   fields?: Field[]
-  collapsible?: boolean
-  /**
-   * Whether the group is collapsed by default
-   * @default false
-   */
-  collapsedByDefault?: boolean
+  collapsible?: FGCollapsibleOptions
+  slots?: FGSlots
 }
 
 export interface Schema {
@@ -215,53 +213,102 @@ export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
       buildFormSchema(inputSchema[fieldName], fieldName, inputSchema, formModel, formSchema, frontendSchema)
     })
 
+    const pluginName = formModel.name
+
+    // KM-18 KM-21 related branch
     // Do not group fields for plugins with custom layouts
-    if (!getSharedFormName(formModel.name) && options?.groupFields) {
-      const commonFields = []
-      const requiredFields = []
+    if (!getSharedFormName(pluginName) && options?.groupFields) {
+      const metadata = PLUGIN_METADATA[pluginName]
+
+      const generalFields = []
+      const hoistedFields = []
       const advancedFields = []
+
+      // Transform the any of field sets into a flatten set for fast lookup
+      // The boolean values help us to know if we have unknown fields in the plugin metadata
+      const ruledFields: Record<string, boolean> = {}
+
+      if (metadata?.fieldRules) {
+        const flattenRules = [
+          ...metadata.fieldRules.atLeastOneOf ?? [],
+          ...metadata.fieldRules.onlyOneOf ?? [],
+          ...metadata.fieldRules.mutuallyRequired ?? [],
+        ]
+
+        if (metadata.fieldRules.onlyOneOfMutuallyRequired) {
+          for (const ruleSet of metadata.fieldRules.onlyOneOfMutuallyRequired) {
+            flattenRules.push(...ruleSet)
+          }
+        }
+
+        for (const fields of flattenRules) {
+          for (const field of fields) {
+            // We flatten the schema with hyphen notation
+            ruledFields[field.replace(/-/g, '_').replace(/\./g, '-')] = false // Not visited yet
+          }
+        }
+      }
 
       for (const field of formSchema.fields!) {
         // Fields that don't start with 'config-' are considered common fields
         if (!field.model.startsWith('config-')) {
-          commonFields.push(field)
+          generalFields.push(field)
           continue
         }
 
-        if (field.required) {
-          requiredFields.push(field)
+        // A field is hoisted if any of the following is true:
+        // - It has a `required` property and it's set to true
+        // - Is a field with one or more field rules
+        if (field.required || ruledFields[field.model] !== undefined) {
+          if (ruledFields[field.model] === false) {
+            ruledFields[field.model] = true // Mark this as visited
+          }
+          hoistedFields.push(field)
           continue
         }
 
+        // Otherwise, consider it an advanced field
         advancedFields.push(field)
+      }
+
+      // For better dev: warn about unknown checked fields
+      const unknownRuleFields = Object.entries(ruledFields)
+        .filter(([, visited]) => !visited)
+        .map(([field]) => field.replace(/-/g, '.').replace(/_/g, '-'))
+      if (unknownRuleFields.length > 0) {
+        console.warn(`Unknown checked fields for plugin ${pluginName}: ${unknownRuleFields.join(', ')}`)
       }
 
       const fieldGroups: Group[] = []
 
-      if (commonFields.length > 0) {
+      if (generalFields.length > 0) {
         fieldGroups.push({
-          legend: t('plugins.form.grouping.common_fields'),
-          fields: commonFields.sort(sortFieldByOrder),
-          collapsible: true,
-          collapsedByDefault: false,
+          fields: generalFields.sort(sortFieldByOrder),
+          collapsible: {
+            title: t('plugins.form.grouping.general_information.title'),
+            description: t('plugins.form.grouping.general_information.description'),
+          },
         })
       }
 
-      if (requiredFields.length > 0) {
+      if (hoistedFields.length > 0 || advancedFields.length > 0) {
         fieldGroups.push({
-          legend: t('plugins.form.grouping.required_fields'),
-          fields: requiredFields.sort(sortFieldByOrderAndModel),
-          collapsible: true,
-          collapsedByDefault: false,
-        })
-      }
-
-      if (advancedFields.length > 0) {
-        fieldGroups.push({
-          legend: t('plugins.form.grouping.advanced_fields'),
-          fields: advancedFields.sort(sortFieldByOrderAndModel),
-          collapsible: true,
-          collapsedByDefault: true,
+          fields: hoistedFields.sort(sortFieldByOrderAndModel),
+          collapsible: {
+            title: t('plugins.form.grouping.plugin_configuration.title'),
+            description: t('plugins.form.grouping.plugin_configuration.description'),
+            nestedCollapsible: {
+              fields: advancedFields.sort(sortFieldByOrderAndModel),
+              triggerLabel: {
+                expand: t('plugins.form.grouping.advanced_parameters.view'),
+                collapse: t('plugins.form.grouping.advanced_parameters.hide'),
+              },
+            },
+          },
+          slots: {
+            beforeContent: 'plugin-config-before-content',
+            emptyState: 'plugin-config-empty-state',
+          },
         })
       }
 
@@ -297,7 +344,7 @@ export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
 
   /**
    * This is a helper function for mergeSchema. It takes in a field and depending on the field type,
-   * sets the appropiate properties for it to be consumed by VFG (vue form generator)
+   * sets the appropriate properties for it to be consumed by VFG (vue form generator)
    * @param {Object} field the field coming from either the backend schema OR a recursive call to be merged with the frontend schema
    * @param {string} key the current backend schema key we are looping over
    * @param {Object} inputSchema this is the inputSchema we are building to be consumed later by parseSchema

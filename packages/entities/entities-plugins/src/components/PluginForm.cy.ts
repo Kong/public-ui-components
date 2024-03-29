@@ -221,7 +221,7 @@ describe('<PluginForm />', () => {
       cy.get('#config-private_network').should('be.visible')
     })
 
-    it('should show common, required, and advanced fields when groupFields is true', () => {
+    it('should show general, hoisted, and advanced fields when groupFields is true', () => {
       interceptKMSchema({ mockData: schema2 })
 
       cy.mount(PluginForm, {
@@ -257,31 +257,42 @@ describe('<PluginForm />', () => {
       cy.get('#route-id').should('be.visible')
 
       cy.getTestId('k-collapse-title')
-        .contains('Common Fields')
+        .contains('General Configuration')
         .parents('.k-collapse')
         .first()
-        .as('commonFields')
+        .as('generalFields')
 
       cy.getTestId('k-collapse-title')
-        .contains('Required Fields')
+        .contains('Plugin Configuration')
         .parents('.k-collapse')
         .first()
-        .as('requiredFields')
+        .as('pluginFields')
 
-      cy.getTestId('k-collapse-title')
-        .contains('Advanced Fields')
-        .parents('.k-collapse')
-        .first()
+      cy.get('.k-collapse.nested-collapse [data-testid="k-collapse-trigger-label"]')
+        .contains('Advanced Parameters')
+        .parents('.k-collapse.nested-collapse')
         .as('advancedFields')
 
-      // common fields
-      cy.get('@commonFields').find('#enabled').should('exist')
-      cy.get('@commonFields').find('#instance_name').should('exist')
-      cy.get('@commonFields').find('#tags').should('exist')
-      cy.get('@commonFields').find('.plugin-protocols-select').should('be.visible')
+      // general fields
+      cy.get('@generalFields').find('#enabled').should('exist')
+      cy.get('@generalFields').find('#instance_name').should('exist')
+      cy.get('@generalFields').find('#tags').should('exist')
+      cy.get('@generalFields').find('.plugin-protocols-select').should('be.visible')
 
-      // required fields
-      cy.get('@requiredFields').find('#config-required_non_checkbox_field').should('be.visible')
+      // field rule alerts
+      cy.get('@pluginFields').find('.plugin-field-rule-alerts').contains('At least one of').should('be.visible')
+
+      // hoisted fields
+      cy.get('@pluginFields').find('#config-required_non_checkbox_field').should('be.visible')
+        .parents('.k-collapse.nested-collapse').should('not.exist')
+      cy.get('@pluginFields').find('#config-api_specification').should('be.visible')
+        .parents('.k-collapse.nested-collapse').should('not.exist')
+      cy.get('@pluginFields').find('#config-api_specification_filename').should('be.visible')
+        .parents('.k-collapse.nested-collapse').should('not.exist')
+      cy.get('@pluginFields').find('#config-include_base_path').should('be.visible')
+        .parents('.k-collapse.nested-collapse').should('not.exist')
+      cy.get('@pluginFields').find('#config-random_status_code').should('be.visible')
+        .parents('.k-collapse.nested-collapse').should('not.exist')
 
       // advanced fields should be hidden by default
       cy.get('@advancedFields').findTestId('k-collapse-hidden-content').should('be.hidden')
@@ -291,11 +302,9 @@ describe('<PluginForm />', () => {
       cy.get('@advancedFields').findTestId('k-collapse-hidden-content').should('be.visible')
 
       // advanced fields
-      cy.get('@advancedFields').find('#config-api_specification').should('be.visible')
-      cy.get('@advancedFields').find('#config-api_specification_filename').should('be.visible')
-      cy.get('@advancedFields').find('#config-include_base_path').should('be.visible')
       cy.get('@advancedFields').find('#config-included_status_codes').should('be.visible')
-      cy.get('@advancedFields').find('#config-random_status_code').should('be.visible')
+      cy.get('@advancedFields').find('#config-max_delay_time').should('be.visible')
+      cy.get('@advancedFields').find('#config-min_delay_time').should('be.visible')
     })
 
     it('should show correct form components for custom plugin with arrays of objects', () => {
@@ -966,7 +975,7 @@ describe('<PluginForm />', () => {
       cy.get('#config-private_network').should('be.visible')
     })
 
-    it('should show common, required, and advanced fields when groupFields is true', () => {
+    it('should show general, hoisted, and advanced fields when groupFields is true', () => {
       interceptKonnectSchema({ mockData: schema2 })
 
       cy.mount(PluginForm, {
@@ -1003,31 +1012,42 @@ describe('<PluginForm />', () => {
       cy.get('#route-id').should('be.visible')
 
       cy.getTestId('k-collapse-title')
-        .contains('Common Fields')
+        .contains('General Configuration')
         .parents('.k-collapse')
         .first()
-        .as('commonFields')
+        .as('generalFields')
 
       cy.getTestId('k-collapse-title')
-        .contains('Required Fields')
+        .contains('Plugin Configuration')
         .parents('.k-collapse')
         .first()
-        .as('requiredFields')
+        .as('pluginFields')
 
-      cy.getTestId('k-collapse-title')
-        .contains('Advanced Fields')
-        .parents('.k-collapse')
-        .first()
+      cy.get('.k-collapse.nested-collapse [data-testid="k-collapse-trigger-label"]')
+        .contains('Advanced Parameters')
+        .parents('.k-collapse.nested-collapse')
         .as('advancedFields')
 
-      // common fields
-      cy.get('@commonFields').find('#enabled').should('exist')
-      cy.get('@commonFields').find('#instance_name').should('exist')
-      cy.get('@commonFields').find('#tags').should('exist')
-      cy.get('@commonFields').find('.plugin-protocols-select').should('be.visible')
+      // general fields
+      cy.get('@generalFields').find('#enabled').should('exist')
+      cy.get('@generalFields').find('#instance_name').should('exist')
+      cy.get('@generalFields').find('#tags').should('exist')
+      cy.get('@generalFields').find('.plugin-protocols-select').should('be.visible')
 
-      // required fields
-      cy.get('@requiredFields').find('#config-required_non_checkbox_field').should('be.visible')
+      // field rule alerts
+      cy.get('@pluginFields').find('.plugin-field-rule-alerts').contains('At least one of').should('be.visible')
+
+      // hoisted fields
+      cy.get('@pluginFields').find('#config-required_non_checkbox_field').should('be.visible')
+        .parents('.k-collapse.nested-collapse').should('not.exist')
+      cy.get('@pluginFields').find('#config-api_specification').should('be.visible')
+        .parents('.k-collapse.nested-collapse').should('not.exist')
+      cy.get('@pluginFields').find('#config-api_specification_filename').should('be.visible')
+        .parents('.k-collapse.nested-collapse').should('not.exist')
+      cy.get('@pluginFields').find('#config-include_base_path').should('be.visible')
+        .parents('.k-collapse.nested-collapse').should('not.exist')
+      cy.get('@pluginFields').find('#config-random_status_code').should('be.visible')
+        .parents('.k-collapse.nested-collapse').should('not.exist')
 
       // advanced fields should be hidden by default
       cy.get('@advancedFields').findTestId('k-collapse-hidden-content').should('be.hidden')
@@ -1037,11 +1057,9 @@ describe('<PluginForm />', () => {
       cy.get('@advancedFields').findTestId('k-collapse-hidden-content').should('be.visible')
 
       // advanced fields
-      cy.get('@advancedFields').find('#config-api_specification').should('be.visible')
-      cy.get('@advancedFields').find('#config-api_specification_filename').should('be.visible')
-      cy.get('@advancedFields').find('#config-include_base_path').should('be.visible')
       cy.get('@advancedFields').find('#config-included_status_codes').should('be.visible')
-      cy.get('@advancedFields').find('#config-random_status_code').should('be.visible')
+      cy.get('@advancedFields').find('#config-max_delay_time').should('be.visible')
+      cy.get('@advancedFields').find('#config-min_delay_time').should('be.visible')
     })
 
     it('should show correct form components for custom plugin with arrays of objects', () => {

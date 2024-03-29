@@ -23,6 +23,7 @@
     <form
       v-else
       data-testid="form-content"
+      :novalidate="props.noValidate"
       @reset.prevent="handleClickCancel"
       @submit.prevent="handleClickSave"
     >
@@ -173,6 +174,13 @@ const props = defineProps({
   formFields: {
     type: Object as PropType<Record<string, any>>,
     required: true,
+  },
+  /**
+   * Set true to disable the form validation upon submission.
+   */
+  noValidate: {
+    type: Boolean,
+    default: false,
   },
 })
 
