@@ -147,9 +147,7 @@ interface Key {
   pem?: PemKey;
 }
 
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { convertKeyToTitle } = useStringHelpers()
 const { i18n: { t } } = composables.useI18n()
 

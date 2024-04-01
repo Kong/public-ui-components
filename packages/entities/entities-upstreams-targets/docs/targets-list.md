@@ -45,11 +45,11 @@ A table component for targets. Includes target create/edit form modal out of the
     - default: `undefined`
     - Base URL for API requests.
 
-  - `requestHeaders`:
-    - type: `RawAxiosRequestHeaders | AxiosHeaders`
+  - `axiosRequestConfig`:
+    - type: `AxiosRequestConfig`
     - required: `false`
     - default: `undefined`
-    - Additional headers to send with all Axios requests.
+    - An optional configuration object for the underlying Axios request.
 
   - `createRoute`:
     - type: `RouteLocationRaw`

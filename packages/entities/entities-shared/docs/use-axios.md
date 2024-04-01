@@ -29,9 +29,7 @@ Additional Axios request config settings.
 <script setup lang="ts">
 import { useAxios } from '@kong-ui-public/entities-shared'
 
-const { axiosInstance } = useAxios({
-  headers: props.config.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config.axiosRequestConfig)
 
 const fetcher = async ({ page, pageSize, offset, sortColumnKey, sortColumnOrder, query }) => {
   try {

@@ -24,14 +24,7 @@ export default function useFetcher(
 ) {
   const _baseUrl = unref(baseUrl)
 
-  // Combine any config.requestHeaders with the optional axiosRequestConfig.headers
-
-  // Is this reactive?
-  const { axiosInstance } = useAxios({
-    ...config.axiosRequestConfig,
-    ...{ headers: { ...config.axiosRequestConfig?.headers, ...config.requestHeaders } },
-  })
-
+  const { axiosInstance } = useAxios(config.axiosRequestConfig)
   const buildFetchUrl = useFetchUrlBuilder(config, _baseUrl)
 
   const state = ref<FetcherState>({

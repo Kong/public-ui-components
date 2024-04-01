@@ -271,9 +271,7 @@ const props = defineProps({
 const { i18nT, i18n: { t } } = composables.useI18n()
 const router = useRouter()
 
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const fetcherCacheKey = ref<number>(1)
 const isConsumerGroupPage = computed<boolean>(() => !!props.config.consumerGroupId)
 const preferencesStorageKey = computed<string>(

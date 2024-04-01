@@ -116,9 +116,7 @@ const props = defineProps({
   },
 })
 
-const { axiosInstance } = useAxios({
-  headers: props.config.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const { parseSchema } = composables.useSchemas(props.entityMap.focusedEntity?.id || undefined, {
   groupFields: props.config.groupFields,

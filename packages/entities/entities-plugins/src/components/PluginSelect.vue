@@ -252,9 +252,7 @@ const availablePlugins = ref<string[]>([])
 const pluginsList = ref<PluginCardList>({})
 const existingEntityPlugins = ref<string[]>([])
 
-const { axiosInstance } = useAxios({
-  headers: props.config.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const flattenPluginMap = computed(() => {
   if (!pluginsList.value) {

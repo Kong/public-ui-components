@@ -143,9 +143,7 @@ const emit = defineEmits<{
 
 const { inRange, stringToNumberArray, upstreamsResponseToFields, getDefaultUpstreamFields, objectsAreEqual, cloneDeep } =
   useHelpers()
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { getMessageFromError } = useErrors()
 const router = useRouter()
 
