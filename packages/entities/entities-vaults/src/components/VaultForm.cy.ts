@@ -8,7 +8,7 @@ const cancelRoute = { name: 'vaults-list' }
 const baseConfigKonnect: KonnectVaultFormConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-dogs',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   cancelRoute,
   azureVaultProviderAvailable: false,
   ttl: true,
@@ -17,7 +17,7 @@ const baseConfigKonnect: KonnectVaultFormConfig = {
 const baseConfigKonnectTurnOffTTL: KonnectVaultFormConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-dogs',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   cancelRoute,
   azureVaultProviderAvailable: false,
   ttl: false,
@@ -430,7 +430,7 @@ describe('<VaultForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/vaults/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/*`,
         },
         {
           statusCode: 200,
@@ -443,7 +443,7 @@ describe('<VaultForm />', () => {
       cy.intercept(
         {
           method: 'PUT',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/vaults/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/*`,
         },
         {
           statusCode: status,
@@ -736,7 +736,7 @@ describe('<VaultForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/vaults/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/*`,
         },
         {
           statusCode: 404,

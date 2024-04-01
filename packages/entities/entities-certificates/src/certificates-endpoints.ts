@@ -1,18 +1,21 @@
+const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
+const KMBaseApiUrl = '/{workspace}'
+
 export default {
   list: {
-    konnect: '/api/runtime_groups/{controlPlaneId}/certificates',
-    kongManager: '/{workspace}/certificates',
+    konnect: `${konnectBaseApiUrl}/certificates`,
+    kongManager: `${KMBaseApiUrl}/certificates`,
   },
   form: {
     konnect: {
-      create: '/api/runtime_groups/{controlPlaneId}/certificates',
-      edit: '/api/runtime_groups/{controlPlaneId}/certificates/{id}',
-      validate: '/api/runtime_groups/{controlPlaneId}/v1/schemas/json/certificate/validate',
+      create: `${konnectBaseApiUrl}/certificates`,
+      edit: `${konnectBaseApiUrl}/certificates/{id}`,
+      validate: `${konnectBaseApiUrl}/v1/schemas/json/certificate/validate`,
     },
     kongManager: {
-      create: '/{workspace}/certificates',
-      edit: '/{workspace}/certificates/{id}',
-      validate: '/{workspace}/schemas/certificates/validate',
+      create: `${KMBaseApiUrl}/certificates`,
+      edit: `${KMBaseApiUrl}/certificates/{id}`,
+      validate: `${KMBaseApiUrl}/schemas/certificates/validate`,
     },
   },
 }

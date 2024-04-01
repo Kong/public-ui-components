@@ -9,7 +9,7 @@ const cancelRoute = { name: 'keys-list' }
 const baseConfigKonnect:KonnectKeyFormConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-cats',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   cancelRoute,
 }
 
@@ -549,7 +549,7 @@ describe('<KeyForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/key-sets*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/key-sets*`,
         },
         {
           statusCode: 200,
@@ -565,8 +565,8 @@ describe('<KeyForm />', () => {
       keySetId?: string
     }): void => {
       const url = params?.keySetId
-        ? `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/key-sets/${params?.keySetId}/keys`
-        : `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/keys`
+        ? `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/key-sets/${params?.keySetId}/keys`
+        : `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/keys`
 
       cy.intercept(
         {
@@ -588,8 +588,8 @@ describe('<KeyForm />', () => {
       keySetId?: string
     }) => {
       const url = params?.keySetId
-        ? `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/key-sets/${params?.keySetId}/keys/*`
-        : `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/keys/*`
+        ? `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/key-sets/${params?.keySetId}/keys/*`
+        : `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/keys/*`
 
       cy.intercept(
         {
@@ -967,7 +967,7 @@ describe('<KeyForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/keys/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/keys/*`,
         },
         {
           statusCode: 404,
@@ -997,7 +997,7 @@ describe('<KeyForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/key-sets*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/key-sets*`,
         },
         {
           statusCode: 500,

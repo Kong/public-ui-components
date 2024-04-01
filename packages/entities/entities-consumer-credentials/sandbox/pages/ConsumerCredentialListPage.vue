@@ -52,7 +52,7 @@ const activePlugin = ref<CredentialPlugins>('basic-auth')
 
 const konnectConfig = computed<KonnectConsumerCredentialListConfig>(() => ({
   app: 'konnect',
-  apiBaseUrl: '/us/kong-api/konnect-api', // `/{geo}/kong-api/konnect-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
+  apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   // Set the root `.env.development.local` variable to a consumer your PAT can access

@@ -22,7 +22,7 @@ const createRoute = 'create-route'
 const baseConfigKonnect: KonnectConsumerCredentialListConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-cats-too',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   createRoute,
   getEditRoute: () => editRoute,
   consumerId: '1234-abcd',
@@ -49,7 +49,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumers/${baseConfigKonnect.consumerId}/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumers/${baseConfigKonnect.consumerId}/*`,
         },
         {
           statusCode: 200,
@@ -539,7 +539,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumers/${baseConfigKonnect.consumerId}/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumers/${baseConfigKonnect.consumerId}/*`,
         },
         {
           statusCode: 200,
@@ -558,7 +558,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumers/${baseConfigKonnect.consumerId}/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumers/${baseConfigKonnect.consumerId}/*`,
         },
         (req) => {
           const size = req.query.size ? Number(req.query.size) : 30
@@ -615,7 +615,7 @@ describe('<ConsumerCredentialList />', () => {
         cy.intercept(
           {
             method: 'GET',
-            url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumers/${baseConfigKonnect.consumerId}/*`,
+            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumers/${baseConfigKonnect.consumerId}/*`,
           },
           {
             statusCode: 500,

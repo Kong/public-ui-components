@@ -1,13 +1,13 @@
-const konnectBaseApiUrl = '/api/runtime_groups/{controlPlaneId}'
+const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
 const KMBaseApiUrl = '/{workspace}'
 
 export default {
   list: {
     konnect: {
-      all: '/v2/control-planes/{controlPlaneId}/core-entities/consumers',
+      all: `${konnectBaseApiUrl}/consumers`,
       forConsumerGroup:
-        '/v2/control-planes/{controlPlaneId}/core-entities/consumer_groups/{consumerGroupId}/consumers',
-      oneForConsumerGroup: '/v2/control-planes/{controlPlaneId}/core-entities/consumer_groups/{consumerGroupId}/consumers/{consumerId}',
+        `${konnectBaseApiUrl}/consumer_groups/{consumerGroupId}/consumers`,
+      oneForConsumerGroup: `${konnectBaseApiUrl}/consumer_groups/{consumerGroupId}/consumers/{consumerId}`,
     },
     kongManager: {
       all: `${KMBaseApiUrl}/consumers`,

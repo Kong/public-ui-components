@@ -73,7 +73,7 @@ const upstreamId = route.params.id as string
 
 const konnectConfig = ref<KonnectTargetsListConfig>({
   app: 'konnect',
-  apiBaseUrl: '/us/kong-api/konnect-api', // `/{geo}/kong-api/konnect-api`, with leading slash and no trailing slash
+  apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   upstreamId,

@@ -7,7 +7,7 @@ describe('<UpstreamsFormGeneralInfo />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/services*`,
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/services*`,
         },
         {
           statusCode: status,
@@ -19,7 +19,7 @@ describe('<UpstreamsFormGeneralInfo />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${konnectConfig.apiBaseUrl}/api/runtime_groups/${konnectConfig.controlPlaneId}/certificates*`,
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/certificates*`,
         },
         {
           statusCode: status,
