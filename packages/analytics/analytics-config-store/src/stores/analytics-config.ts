@@ -10,10 +10,9 @@ export type ConfigStoreState = null | AnalyticsConfigV2
 export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
   let fetchedConfig = false
   const configResult = ref<ConfigStoreState>(null)
+  const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 
   const getConfig = (): Ref<ConfigStoreState> => {
-    const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
-
     if (!queryBridge) {
       console.warn('Analytics components require a query bridge supplied via provide / inject.')
       console.warn("Please ensure your application has a query bridge provided under the key 'analytics-query-provider', as described in")
@@ -32,10 +31,10 @@ export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
     if (!fetchedConfig) {
       // We haven't tried to fetch the config yet.
       fetchedConfig = true
-
       queryBridge.configFn().then(res => {
         configResult.value = res
       }).catch(err => {
+        fetchedConfig = false
         console.warn('Error fetching analytics config')
         console.warn(err)
       })
@@ -46,5 +45,6 @@ export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
 
   return {
     getConfig,
+    configResult,
   }
 })
