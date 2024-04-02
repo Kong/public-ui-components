@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.42...@kong-ui-public/documentation@0.4.0) (2024-04-02)
+
+
+### Features
+
+* markdown editor [KHCP-11101] ([#1253](https://github.com/Kong/public-ui-components/issues/1253)) ([a0ced15](https://github.com/Kong/public-ui-components/commit/a0ced159fbde91c0db4d549b55ec2234cf93f569))
+
+
+
+
+
 ## [0.3.42](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.41...@kong-ui-public/documentation@0.3.42) (2024-04-02)
 
 **Note:** Version bump only for package @kong-ui-public/documentation
