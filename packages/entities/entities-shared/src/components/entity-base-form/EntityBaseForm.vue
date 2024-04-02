@@ -180,9 +180,7 @@ const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
 
-const { axiosInstance } = composables.useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = composables.useAxios(props.config?.axiosRequestConfig)
 
 const isLoading = ref(false)
 const fetchDetailsError = ref(false)

@@ -150,9 +150,7 @@ const emit = defineEmits<{
 
 const { i18nT, i18n: { t } } = composables.useI18n()
 const router = useRouter()
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { getMessageFromError } = useErrors()
 const uuid = uuidv4()
 

@@ -203,9 +203,7 @@ const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
 const { convertKeyToTitle } = composables.useStringHelpers()
 
-const { axiosInstance } = composables.useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = composables.useAxios(props.config?.axiosRequestConfig)
 
 const configFormatItems = [
   {

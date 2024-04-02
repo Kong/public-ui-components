@@ -406,9 +406,7 @@ const isCollapsed = ref(true)
 const router = useRouter()
 const { i18nT, i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = useErrors()
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const validators = useValidators()
 
 const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit)

@@ -221,9 +221,7 @@ const props = defineProps({
 const { i18n: { t } } = composables.useI18n()
 const router = useRouter()
 
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const fetcherCacheKey = ref<number>(1)
 
 /**

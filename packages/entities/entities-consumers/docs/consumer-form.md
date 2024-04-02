@@ -40,11 +40,11 @@ A form component to create/edit Consumer.
         - required: `true`
         - default: `undefined`
         - Base URL for API requests.
-    - `requestHeaders`:
-        - type: `RawAxiosRequestHeaders | AxiosHeaders`
+    - `axiosRequestConfig`:
+        - type: `AxiosRequestConfig`
         - required: `false`
         - default: `undefined`
-        - Additional headers to send with all Axios requests.
+        - An optional configuration object for the underlying Axios request.
     - `cancelRoute`:
       - type: `RouteLocationRaw`
       - required: `true`

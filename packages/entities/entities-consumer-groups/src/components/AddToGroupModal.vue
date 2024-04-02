@@ -92,9 +92,7 @@ const emit = defineEmits<{
   (e: 'error', msg: string): void
 }>()
 
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 /**
  * ------------------------------
