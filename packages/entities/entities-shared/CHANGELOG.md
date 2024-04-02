@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.12.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.9...@kong-ui-public/entities-shared@2.12.10) (2024-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.8.15 ([#1304](https://github.com/Kong/public-ui-components/issues/1304)) ([36c16f4](https://github.com/Kong/public-ui-components/commit/36c16f474c85b28208bd7a0a60eea3ceceedc9e7))
+
+
+
+
+
 ## [2.12.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.8...@kong-ui-public/entities-shared@2.12.9) (2024-04-01)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
