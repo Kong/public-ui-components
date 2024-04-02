@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.6.11...@kong-ui-public/entities-consumer-groups@3.0.0) (2024-04-02)
+
+
+### Code Refactoring
+
+* **entities:** remove config.requestHeaders [KM-43] ([#1302](https://github.com/Kong/public-ui-components/issues/1302)) ([144c9d8](https://github.com/Kong/public-ui-components/commit/144c9d86832ddf313df3c8e865091232792eb020))
+
+
+### BREAKING CHANGES
+
+* **entities:** Now `config.requestHeaders` is removed. Use `config.axiosRequestConfig` instead.
+
+
+
+
+
 ## [2.6.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@2.6.10...@kong-ui-public/entities-consumer-groups@2.6.11) (2024-04-02)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
