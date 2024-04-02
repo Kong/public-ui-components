@@ -201,8 +201,8 @@ importers:
         specifier: workspace:^
         version: link:../analytics-utilities
       '@kong/icons':
-        specifier: ^1.8.14
-        version: 1.8.14(vue@3.4.21)
+        specifier: ^1.8.15
+        version: 1.8.15(vue@3.4.21)
       '@types/file-saver':
         specifier: ^2.0.7
         version: 2.0.7
@@ -385,8 +385,8 @@ importers:
   packages/analytics/metric-cards:
     dependencies:
       '@kong/icons':
-        specifier: ^1.8.14
-        version: 1.8.14(vue@3.4.21)
+        specifier: ^1.8.15
+        version: 1.8.15(vue@3.4.21)
       approximate-number:
         specifier: ^2.1.1
         version: 2.1.1
@@ -404,8 +404,8 @@ importers:
   packages/core/app-layout:
     dependencies:
       '@kong/icons':
-        specifier: ^1.8.14
-        version: 1.8.14(vue@3.4.21)
+        specifier: ^1.8.15
+        version: 1.8.15(vue@3.4.21)
       focus-trap:
         specifier: ^7.5.4
         version: 7.5.4
@@ -478,8 +478,8 @@ importers:
         specifier: workspace:^
         version: link:../../entities/entities-shared
       '@kong/icons':
-        specifier: ^1.8.14
-        version: 1.8.14(vue@3.3.13)
+        specifier: ^1.8.15
+        version: 1.8.15(vue@3.3.13)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -503,8 +503,8 @@ importers:
         specifier: 1.12.10
         version: 1.12.10
       '@kong/icons':
-        specifier: ^1.8.14
-        version: 1.8.14(vue@3.4.21)
+        specifier: ^1.8.15
+        version: 1.8.15(vue@3.4.21)
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.3.3)
@@ -543,8 +543,8 @@ importers:
   packages/core/forms:
     dependencies:
       '@kong/icons':
-        specifier: ^1.8.14
-        version: 1.8.14(vue@3.4.21)
+        specifier: ^1.8.15
+        version: 1.8.15(vue@3.4.21)
       fecha:
         specifier: ^4.2.3
         version: 4.2.3
@@ -595,8 +595,8 @@ importers:
   packages/core/sandbox-layout:
     dependencies:
       '@kong/icons':
-        specifier: ^1.8.14
-        version: 1.8.14(vue@3.4.21)
+        specifier: ^1.8.15
+        version: 1.8.15(vue@3.4.21)
     devDependencies:
       '@kong/design-tokens':
         specifier: 1.12.10
@@ -807,8 +807,8 @@ importers:
         specifier: ^2.2.5
         version: link:../../core/forms
       '@kong/icons':
-        specifier: ^1.8.14
-        version: 1.8.14(vue@3.4.21)
+        specifier: ^1.8.15
+        version: 1.8.15(vue@3.4.21)
       marked:
         specifier: ^12.0.1
         version: 12.0.1
@@ -863,8 +863,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/core
       '@kong/icons':
-        specifier: ^1.8.14
-        version: 1.8.14(vue@3.4.21)
+        specifier: ^1.8.15
+        version: 1.8.15(vue@3.4.21)
       compare-versions:
         specifier: ^6.1.0
         version: 6.1.0
@@ -997,8 +997,8 @@ importers:
         specifier: workspace:^0.11.4
         version: link:../swagger-ui-web-component
       '@kong/icons':
-        specifier: ^1.8.14
-        version: 1.8.14(vue@3.4.21)
+        specifier: ^1.8.15
+        version: 1.8.15(vue@3.4.21)
       lodash.clonedeep:
         specifier: ^4.5.0
         version: 4.5.0
@@ -2332,9 +2332,28 @@ packages:
       vue: '>= 3.3.4 < 4'
     dependencies:
       vue: 3.3.13(typescript@5.3.3)
+    dev: true
 
   /@kong/icons@1.8.14(vue@3.4.21):
     resolution: {integrity: sha512-nJUTtLpqelKCTY8lS8VByWaHYUq1CuB5cBUX/q2FEDu5o6IKH/B7fEDQpb/pB1lLRYTqZXneHR/lGYjxy4u8eQ==}
+    engines: {node: '>=18.17.0'}
+    peerDependencies:
+      vue: '>= 3.3.4 < 4'
+    dependencies:
+      vue: 3.4.21(typescript@5.3.3)
+    dev: true
+
+  /@kong/icons@1.8.15(vue@3.3.13):
+    resolution: {integrity: sha512-8Qyp0letN0uQ5GF1Y4fvkkbU5yG5e9IggpTxUynmUsUC15Hlrtpy/dZIZNDdpwxeKqGjaGL456iaV/sErA5Tug==}
+    engines: {node: '>=18.17.0'}
+    peerDependencies:
+      vue: '>= 3.3.4 < 4'
+    dependencies:
+      vue: 3.3.13(typescript@5.3.3)
+    dev: false
+
+  /@kong/icons@1.8.15(vue@3.4.21):
+    resolution: {integrity: sha512-8Qyp0letN0uQ5GF1Y4fvkkbU5yG5e9IggpTxUynmUsUC15Hlrtpy/dZIZNDdpwxeKqGjaGL456iaV/sErA5Tug==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: '>= 3.3.4 < 4'
@@ -4905,6 +4924,9 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependenciesMeta:
+      ajv:
+        optional: true
     dependencies:
       ajv: 8.12.0
     dev: true
