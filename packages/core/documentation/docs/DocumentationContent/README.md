@@ -26,6 +26,7 @@ The main Kong UI component for display documentation.
   - [`modal-closed`](#modal-closed)
   - [`parent-change`](#parent-change)
   - [`save`](#save)
+  - [`save-markdown`](#save-markdown)
   - [`toggle-published`](#toggle-published)
 
 ## Features
@@ -195,6 +196,13 @@ yarn add @kong-ui-public/documentation
 - `args` emitted with this event
   - formData - the form data from the `ProductDocumentModal` component
   - selectedFile - the selected file
+
+### `save-markdown`
+
+- Triggered when the Markdown editor's save button is clicked on the `DocumentationDisplay` component
+- Host apps should hook into this event to handle the save document API call
+- `args` emitted with this event
+  - content - the updated, raw markdown `string`
 
 ### `toggle-published`
 
