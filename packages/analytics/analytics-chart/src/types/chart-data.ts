@@ -60,12 +60,6 @@ export interface AnalyticsChartOptions {
    */
   stacked?: boolean,
   /**
-   * Apply fill to datasets.
-   * If true, fill the area under the line.
-   * Only applies to time series charts.
-   */
-  fill?: boolean,
-  /**
    * Title to display for the metric axis
    * If not provided, show nothing
    */

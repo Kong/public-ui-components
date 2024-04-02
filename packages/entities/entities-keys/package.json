@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-keys",
-  "version": "2.4.5",
+  "version": "3.0.0",
   "type": "module",
   "main": "./dist/entities-keys.umd.js",
   "module": "./dist/entities-keys.es.js",
@@ -22,16 +22,16 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.113",
-    "axios": "^1.6.7",
+    "@kong/kongponents": "9.0.0-alpha.124",
+    "axios": "^1.6.8",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.12.10",
-    "@kong/kongponents": "9.0.0-alpha.113",
-    "axios": "^1.6.7",
+    "@kong/kongponents": "9.0.0-alpha.124",
+    "axios": "^1.6.8",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },

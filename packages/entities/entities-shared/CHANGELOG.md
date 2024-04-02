@@ -3,6 +3,145 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.10...@kong-ui-public/entities-shared@3.0.0) (2024-04-02)
+
+
+### Code Refactoring
+
+* **entities:** remove config.requestHeaders [KM-43] ([#1302](https://github.com/Kong/public-ui-components/issues/1302)) ([144c9d8](https://github.com/Kong/public-ui-components/commit/144c9d86832ddf313df3c8e865091232792eb020))
+
+
+### BREAKING CHANGES
+
+* **entities:** Now `config.requestHeaders` is removed. Use `config.axiosRequestConfig` instead.
+
+
+
+
+
+## [2.12.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.9...@kong-ui-public/entities-shared@2.12.10) (2024-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.8.15 ([#1304](https://github.com/Kong/public-ui-components/issues/1304)) ([36c16f4](https://github.com/Kong/public-ui-components/commit/36c16f474c85b28208bd7a0a60eea3ceceedc9e7))
+
+
+
+
+
+## [2.12.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.8...@kong-ui-public/entities-shared@2.12.9) (2024-04-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [2.12.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.7...@kong-ui-public/entities-shared@2.12.8) (2024-03-28)
+
+
+### Bug Fixes
+
+* **entities-consumers:** group form fields [KHCP-11029] ([#1300](https://github.com/Kong/public-ui-components/issues/1300)) ([c9375c0](https://github.com/Kong/public-ui-components/commit/c9375c07c0b7a6f09fe714f64ed48eac0ea187dd))
+
+
+
+
+
+## [2.12.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.6...@kong-ui-public/entities-shared@2.12.7) (2024-03-27)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 10 [KHCP-11172] ([#1292](https://github.com/Kong/public-ui-components/issues/1292)) ([47f01aa](https://github.com/Kong/public-ui-components/commit/47f01aa1ec4c57a48bc046987bed9482b7c832a2))
+
+
+
+
+
+## [2.12.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.5...@kong-ui-public/entities-shared@2.12.6) (2024-03-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [2.12.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.4...@kong-ui-public/entities-shared@2.12.5) (2024-03-25)
+
+
+### Bug Fixes
+
+* **entities-plugins, vfg:** create plugin form a11y improvements [KHCP-11026] ([#1272](https://github.com/Kong/public-ui-components/issues/1272)) ([b1ed04e](https://github.com/Kong/public-ui-components/commit/b1ed04eb56ff2869b988a217220debc78655f3f0))
+
+
+
+
+
+## [2.12.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.3...@kong-ui-public/entities-shared@2.12.4) (2024-03-22)
+
+
+### Bug Fixes
+
+* **entities-*:** allow UTF-8 chars in some fields ([#1282](https://github.com/Kong/public-ui-components/issues/1282)) ([26da464](https://github.com/Kong/public-ui-components/commit/26da464c06539a8c83f2bad9a16aa916311793b7))
+
+
+
+
+
+## [2.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.2...@kong-ui-public/entities-shared@2.12.3) (2024-03-20)
+
+
+### Bug Fixes
+
+* proper heading element in widgets [KHCP-11027] ([#1252](https://github.com/Kong/public-ui-components/issues/1252)) ([b66ce71](https://github.com/Kong/public-ui-components/commit/b66ce711fa876bb75bb880eece8514a8055034be))
+
+
+
+
+
+## [2.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.1...@kong-ui-public/entities-shared@2.12.2) (2024-03-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [2.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.0...@kong-ui-public/entities-shared@2.12.1) (2024-03-19)
+
+
+### Bug Fixes
+
+* **entities:** default filter size to 1000 ([#1261](https://github.com/Kong/public-ui-components/issues/1261)) ([b5be869](https://github.com/Kong/public-ui-components/commit/b5be86956b937c80639f492ad8a44ac83f40f314))
+
+
+
+
+
+# [2.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.11.0...@kong-ui-public/entities-shared@2.12.0) (2024-03-18)
+
+
+### Features
+
+* **entities:** add axiosRequestConfig ([#1243](https://github.com/Kong/public-ui-components/issues/1243)) ([980301e](https://github.com/Kong/public-ui-components/commit/980301e0f866c4389096558ddcdff07d0b27d38f))
+
+
+
+
+
+# [2.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.10.5...@kong-ui-public/entities-shared@2.11.0) (2024-03-18)
+
+
+### Features
+
+* **jsonYamlForms:** remove json yaml milestone 2 ff for all entity forms post GA [KHCP-9971] ([#1259](https://github.com/Kong/public-ui-components/issues/1259)) ([109cd54](https://github.com/Kong/public-ui-components/commit/109cd544c1d706641c9cbf3df3532e85765f3a3a))
+
+
+
+
+
 ## [2.10.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.10.4...@kong-ui-public/entities-shared@2.10.5) (2024-03-13)
 
 

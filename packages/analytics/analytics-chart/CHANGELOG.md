@@ -3,6 +3,114 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@3.0.3...@kong-ui-public/analytics-chart@3.0.4) (2024-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.8.15 ([#1304](https://github.com/Kong/public-ui-components/issues/1304)) ([36c16f4](https://github.com/Kong/public-ui-components/commit/36c16f474c85b28208bd7a0a60eea3ceceedc9e7))
+
+
+
+
+
+## [3.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@3.0.2...@kong-ui-public/analytics-chart@3.0.3) (2024-03-28)
+
+
+### Bug Fixes
+
+* **entities-consumers:** group form fields [KHCP-11029] ([#1300](https://github.com/Kong/public-ui-components/issues/1300)) ([c9375c0](https://github.com/Kong/public-ui-components/commit/c9375c07c0b7a6f09fe714f64ed48eac0ea187dd))
+
+
+
+
+
+## [3.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@3.0.1...@kong-ui-public/analytics-chart@3.0.2) (2024-03-27)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 10 [KHCP-11172] ([#1292](https://github.com/Kong/public-ui-components/issues/1292)) ([47f01aa](https://github.com/Kong/public-ui-components/commit/47f01aa1ec4c57a48bc046987bed9482b7c832a2))
+
+
+
+
+
+## [3.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@3.0.0...@kong-ui-public/analytics-chart@3.0.1) (2024-03-25)
+
+
+### Bug Fixes
+
+* **entities-plugins, vfg:** create plugin form a11y improvements [KHCP-11026] ([#1272](https://github.com/Kong/public-ui-components/issues/1272)) ([b1ed04e](https://github.com/Kong/public-ui-components/commit/b1ed04eb56ff2869b988a217220debc78655f3f0))
+
+
+
+
+
+# [3.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.5.5...@kong-ui-public/analytics-chart@3.0.0) (2024-03-21)
+
+
+### Bug Fixes
+
+* **analytics-chart:** remove fill prop [MA-2659] ([#1280](https://github.com/Kong/public-ui-components/issues/1280)) ([b24f07d](https://github.com/Kong/public-ui-components/commit/b24f07d6e230116c619e690b35d030cfbfb37bd9))
+
+
+### BREAKING CHANGES
+
+* **analytics-chart:** removed the fill prop from chart options
+
+* fix: no need to pass fill to chart options anymore in dashboard renderer
+
+
+
+
+
+## [2.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.5.4...@kong-ui-public/analytics-chart@2.5.5) (2024-03-21)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [2.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.5.3...@kong-ui-public/analytics-chart@2.5.4) (2024-03-20)
+
+
+### Bug Fixes
+
+* proper heading element in widgets [KHCP-11027] ([#1252](https://github.com/Kong/public-ui-components/issues/1252)) ([b66ce71](https://github.com/Kong/public-ui-components/commit/b66ce711fa876bb75bb880eece8514a8055034be))
+
+
+
+
+
+## [2.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.5.2...@kong-ui-public/analytics-chart@2.5.3) (2024-03-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency date-fns-tz to ^2.0.1 ([#1269](https://github.com/Kong/public-ui-components/issues/1269)) ([0d727ab](https://github.com/Kong/public-ui-components/commit/0d727ab1d574a9ed63f4fe1c61c474452213d3fc))
+
+
+
+
+
+## [2.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.5.1...@kong-ui-public/analytics-chart@2.5.2) (2024-03-19)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [2.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.5.0...@kong-ui-public/analytics-chart@2.5.1) (2024-03-19)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 # [2.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@2.4.8...@kong-ui-public/analytics-chart@2.5.0) (2024-03-15)
 
 

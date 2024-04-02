@@ -831,6 +831,84 @@ export const credentialSchema = {
   ],
 }
 
+// custom plugin with array of custom schema objects
+export const customPluginSchema = {
+  fields: [
+    {
+      consumer: {
+        description: 'Custom type for representing a foreign key with a null value allowed.',
+        eq: null,
+        reference: 'consumers',
+        type: 'foreign',
+      },
+    },
+    {
+      protocols: {
+        default: [
+          'grpc',
+          'grpcs',
+          'http',
+          'https',
+        ],
+        description: 'A set of strings representing HTTP protocols.',
+        elements: {
+          one_of: [
+            'grpc',
+            'grpcs',
+            'http',
+            'https',
+          ],
+          type: 'string',
+        },
+        required: true,
+        type: 'set',
+      },
+    },
+    {
+      config: {
+        fields: [
+          {
+            discovery_uris: {
+              elements: {
+                fields: [
+                  {
+                    issuer: {
+                      required: true,
+                      type: 'string',
+                    },
+                  },
+                  {
+                    requires_proxy: {
+                      default: true,
+                      type: 'boolean',
+                    },
+                  },
+                  {
+                    ssl_verify: {
+                      default: false,
+                      type: 'boolean',
+                    },
+                  },
+                  {
+                    timeout_ms: {
+                      default: 5000,
+                      type: 'number',
+                    },
+                  },
+                ],
+                type: 'record',
+              },
+              type: 'array',
+            },
+          },
+        ],
+        required: true,
+        type: 'record',
+      },
+    },
+  ],
+}
+
 const serviceId = '6ecce9f2-4f3e-45aa-af18-a0553d354845'
 // CORS plugin
 export const plugin1 = {

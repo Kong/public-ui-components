@@ -43,23 +43,17 @@ A base form component for entity create/edit views.
     - default: `undefined`
     - Base URL for API requests.
 
-  - `requestHeaders`:
-    - type: `RawAxiosRequestHeaders | AxiosHeaders`
+  - `axiosRequestConfig`:
+    - type: `AxiosRequestConfig`
     - required: `false`
     - default: `undefined`
-    - Additional headers to send with all Axios requests.
+    - An optional configuration object for the underlying Axios request.
 
   - `cancelRoute`:
     - type: `RouteLocationRaw`
     - required: `true`
     - default: `undefined`
     - Route to return to when canceling creation of an entity.
-
-  - `jsonYamlFormsEnabled`:
-    - type: `boolean`
-    - required: `false`
-    - default: `false`
-    - Feature flag value for JSON/YAML Forms. Will be removed after feature goes GA.
 
   - `workspace`:
     - type: `string`

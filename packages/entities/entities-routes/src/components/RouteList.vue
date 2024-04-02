@@ -14,6 +14,7 @@
       :query="filterQuery"
       :table-headers="tableHeaders"
       :title="title"
+      :title-tag="titleTag"
       :use-action-outside="useActionOutside"
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
@@ -185,7 +186,7 @@ import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
 
 import { BadgeMethodAppearances } from '@kong/kongponents'
-import type { BadgeMethodAppearance } from '@kong/kongponents'
+import type { BadgeMethodAppearance, HeaderTag } from '@kong/kongponents'
 import {
   EntityBaseTable,
   EntityDeleteModal,
@@ -269,6 +270,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  titleTag: {
+    type: String as PropType<HeaderTag>,
+    default: 'h2',
+  },
   /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
   useActionOutside: {
     type: Boolean,
@@ -279,9 +284,7 @@ const props = defineProps({
 const { i18n: { t } } = composables.useI18n()
 const router = useRouter()
 
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const fetcherCacheKey = ref<number>(1)
 
 /**

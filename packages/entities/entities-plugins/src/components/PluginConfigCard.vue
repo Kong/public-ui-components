@@ -37,7 +37,7 @@
         <div class="name-cell-wrapper">
           <PluginIcon
             class="plugin-icon"
-            :name="getPropValue('rowValue', slotProps)"
+            :name="pluginMetaData.getImageName(getPropValue('rowValue', slotProps))"
             :width="24"
           />
           <span class="info-name">
@@ -301,9 +301,7 @@ const pluginConfigSchema = computed((): PluginConfigurationSchema => {
 })
 
 const { getMessageFromError } = useErrors()
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const schemaUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].pluginSchema}`

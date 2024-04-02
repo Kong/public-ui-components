@@ -15,6 +15,7 @@
       :query="filterQuery"
       :table-headers="tableHeaders"
       :title="title"
+      :title-tag="titleTag"
       :use-action-outside="useActionOutside"
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
@@ -54,7 +55,7 @@
         <div class="name-cell-wrapper">
           <PluginIcon
             class="plugin-icon"
-            :name="row.name"
+            :name="pluginMetaData.getImageName(row.name)"
             :width="24"
           />
           <div class="info-wrapper">
@@ -270,6 +271,8 @@ import type {
 
 import PluginIcon from './PluginIcon.vue'
 
+import type { HeaderTag } from '@kong/kongponents'
+
 const pluginMetaData = composables.usePluginMetaData()
 
 const emit = defineEmits<{
@@ -344,6 +347,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  titleTag: {
+    type: String as PropType<HeaderTag>,
+    default: 'h2',
+  },
   /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
   useActionOutside: {
     type: Boolean,
@@ -354,9 +361,7 @@ const props = defineProps({
 const { i18n: { t } } = composables.useI18n()
 const router = useRouter()
 
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const isConsumerPage = computed((): boolean => props.config?.entityType === 'consumers')
 

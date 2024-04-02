@@ -44,11 +44,11 @@ A base display component for an entity's record data.
     - default: `undefined`
     - Base URL for API requests.
 
-  - `requestHeaders`:
-    - type: `RawAxiosRequestHeaders | AxiosHeaders`
+  - `axiosRequestConfig`:
+    - type: `AxiosRequestConfig`
     - required: `false`
     - default: `undefined`
-    - Additional headers to send with all Axios requests.
+    - An optional configuration object for the underlying Axios request.
 
   - `cancelRoute`:
     - type: `RouteLocationRaw`
@@ -73,12 +73,6 @@ A base display component for an entity's record data.
     - required: `true`
     - default: `undefined`
     - The ID of the entity to display record data for.
-
-  - `jsonYamlFormsEnabled`:
-    - type: `boolean`
-    - required: `false`
-    - default: `false`
-    - Feature flag value for JSON/YAML Forms. Will be removed after feature goes GA.
 
 The base konnect or kongManger config.
 
@@ -182,6 +176,10 @@ Controls the visibility of the card's title and `title` slot. A value of `true` 
 - default: `null`
 
 External link for documentation. Controls the visibility of the documentation button.
+
+#### `titleTag`
+
+HTML element you want title to be rendered as. Defaults to `h2`.
 
 ### Sections
 

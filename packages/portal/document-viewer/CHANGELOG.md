@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.47](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.46...@kong-ui-public/document-viewer@2.0.47) (2024-03-28)
+
+
+### Bug Fixes
+
+* **entities-consumers:** group form fields [KHCP-11029] ([#1300](https://github.com/Kong/public-ui-components/issues/1300)) ([c9375c0](https://github.com/Kong/public-ui-components/commit/c9375c07c0b7a6f09fe714f64ed48eac0ea187dd))
+
+
+
+
+
+## [2.0.46](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.45...@kong-ui-public/document-viewer@2.0.46) (2024-03-27)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 10 [KHCP-11172] ([#1292](https://github.com/Kong/public-ui-components/issues/1292)) ([47f01aa](https://github.com/Kong/public-ui-components/commit/47f01aa1ec4c57a48bc046987bed9482b7c832a2))
+
+
+
+
+
+## [2.0.45](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.44...@kong-ui-public/document-viewer@2.0.45) (2024-03-25)
+
+
+### Bug Fixes
+
+* **entities-plugins, vfg:** create plugin form a11y improvements [KHCP-11026] ([#1272](https://github.com/Kong/public-ui-components/issues/1272)) ([b1ed04e](https://github.com/Kong/public-ui-components/commit/b1ed04eb56ff2869b988a217220debc78655f3f0))
+
+
+
+
+
+## [2.0.44](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.43...@kong-ui-public/document-viewer@2.0.44) (2024-03-20)
+
+
+### Bug Fixes
+
+* proper heading element in widgets [KHCP-11027] ([#1252](https://github.com/Kong/public-ui-components/issues/1252)) ([b66ce71](https://github.com/Kong/public-ui-components/commit/b66ce711fa876bb75bb880eece8514a8055034be))
+
+
+
+
+
+## [2.0.43](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.42...@kong-ui-public/document-viewer@2.0.43) (2024-03-19)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
 ## [2.0.42](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.41...@kong-ui-public/document-viewer@2.0.42) (2024-03-13)
 
 **Note:** Version bump only for package @kong-ui-public/document-viewer

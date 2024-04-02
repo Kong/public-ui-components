@@ -42,15 +42,13 @@
         data-testid="form-actions"
       >
         <slot name="form-actions">
-          <div v-if="config.jsonYamlFormsEnabled">
-            <KButton
-              appearance="tertiary"
-              data-testid="form-view-configuration"
-              @click="toggle()"
-            >
-              {{ t('baseForm.actions.viewConfiguration') }}
-            </KButton>
-          </div>
+          <KButton
+            appearance="tertiary"
+            data-testid="form-view-configuration"
+            @click="toggle()"
+          >
+            {{ t('baseForm.actions.viewConfiguration') }}
+          </KButton>
           <KButton
             appearance="secondary"
             data-testid="form-cancel"
@@ -146,7 +144,7 @@ const props = defineProps({
    * the endpoints file.
    * Required if `editId` is specified.
    *
-   * ex. `/api/runtime_groups/{controlPlaneId}/snis/{id}`
+   * ex. `/v2/control-planes/{controlPlaneId}/core-entities/snis/{id}`
    */
   fetchUrl: {
     type: String,
@@ -182,9 +180,7 @@ const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
 
-const { axiosInstance } = composables.useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = composables.useAxios(props.config?.axiosRequestConfig)
 
 const isLoading = ref(false)
 const fetchDetailsError = ref(false)

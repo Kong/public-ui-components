@@ -1,7 +1,7 @@
 <template>
   <div class="metric-card-tile-wrapper">
     <MetricsProviderInternal v-bind="options">
-      <MetricsConsumer class="metric-consumer" />
+      <MetricsConsumer />
     </MetricsProviderInternal>
   </div>
 </template>
@@ -10,6 +10,7 @@ import type { MetricCardOptions, RendererProps } from '../types'
 import { MetricsProviderInternal, MetricsConsumer } from '@kong-ui-public/analytics-metric-provider'
 import { computed, type Ref } from 'vue'
 import { GranularityKeys, Timeframe, TimePeriods } from '@kong-ui-public/analytics-utilities'
+import { DEFAULT_TILE_REFRESH_INTERVAL_MS } from '../constants'
 
 // Unlike AnalyticsChart, the metric card package doesn't currently expose its options
 // in a convenient interface.
@@ -51,9 +52,10 @@ const options = computed<ProviderProps>(() => ({
   tz: props.context.tz,
   additionalFilter: props.context.filters,
   longCardTitles: props.chartOptions.longCardTitles,
+  containerTitle: props.chartOptions.chartTitle,
   description: props.chartOptions.description,
   hasTrendAccess: true,
-  refreshInterval: 0,
+  refreshInterval: props.context.refreshInterval ?? DEFAULT_TILE_REFRESH_INTERVAL_MS,
 }))
 </script>
 
@@ -73,14 +75,6 @@ const options = computed<ProviderProps>(() => ({
         &:not(:last-of-type) {
           border-right: $kui-border-width-10 solid $kui-color-border;
         }
-      }
-
-      // These overrides are here because, for now, we only want the bolder metric titles
-      // on dashboards.  In other places, the golden signal cards tend to be embedded into KCards which
-      // already have titles.
-      .metricscard-title.lg {
-        font-size: $kui-font-size-40;
-        font-weight: $kui-font-weight-semibold;
       }
     }
   }

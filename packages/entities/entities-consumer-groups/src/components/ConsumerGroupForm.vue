@@ -83,7 +83,7 @@ import {
   EntityBaseFormType,
   EntityFormSection,
   useAxios,
-  useDebouncedFilter, useErrors,
+  useDebouncedFilter, useErrors, useValidators,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import composables from '../composables'
@@ -160,10 +160,9 @@ const {
   searchKeys: ['username', 'custom_id', 'id'],
 })
 
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { getMessageFromError } = useErrors()
+const validators = useValidators()
 
 const displayedConsumers = computed((): MultiselectItem[] => {
   return results.value.map((record: Record<string, any>) => ({
@@ -236,11 +235,7 @@ const updateFormValues = async (data: Record<string, any>): Promise<void> => {
   Object.assign(originalFields, state.fields)
 }
 
-const preValidateErrorMessage = computed(() => {
-  const namePattern = /^[0-9a-zA-Z.\-_~]*$/
-
-  return namePattern.test(state.fields.name) ? '' : t('consumer_groups.form.validation_errors.name')
-})
+const preValidateErrorMessage = computed(() => validators.utf8Name(state.fields.name))
 
 const getPayload = computed((): ConsumerGroupPayload => {
   return {

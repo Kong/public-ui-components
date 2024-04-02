@@ -33,7 +33,7 @@ const baseConfigKM: KongManagerUpstreamsListConfig = {
 const baseConfigKonnect: KonnectUpstreamsListConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-upstreams',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   createRoute,
   getViewRoute: () => viewRoute,
   getEditRoute: () => editRoute,
@@ -62,7 +62,7 @@ describe('<UpstreamsList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/upstreams*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/upstreams*`,
         },
         {
           statusCode: 200,
@@ -471,7 +471,7 @@ describe('<UpstreamsList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/upstreams*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/upstreams*`,
         },
         {
           statusCode: 200,
@@ -490,7 +490,7 @@ describe('<UpstreamsList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/upstreams*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/upstreams*`,
         },
         (req) => {
           const size = req.query.size ? Number(req.query.size) : 30
@@ -549,7 +549,7 @@ describe('<UpstreamsList />', () => {
         cy.intercept(
           {
             method: 'GET',
-            url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/upstreams*`,
+            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/upstreams*`,
           },
           {
             statusCode: 500,

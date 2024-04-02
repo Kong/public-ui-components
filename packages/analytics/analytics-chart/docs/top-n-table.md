@@ -62,6 +62,10 @@ Text to be displayed on the empty state.
 
 Whether or not to display the loading state.
 
+#### `titleTag`
+
+HTML element you want title to be rendered as. Defaults to `h2`.
+
 ### Slots
 
 #### name

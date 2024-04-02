@@ -28,6 +28,7 @@ const props = withDefaults(defineProps<{
   queryReady?: boolean,
   refreshInterval: number,
   longCardTitles?: boolean,
+  containerTitle?: string,
   description?: string,
   abortController?: AbortController,
 }>(), {
@@ -39,6 +40,7 @@ const props = withDefaults(defineProps<{
   additionalFilter: undefined,
   queryReady: true,
   longCardTitles: false,
+  containerTitle: undefined,
   description: undefined,
   abortController: undefined,
 })
@@ -67,11 +69,11 @@ const analyticsConfig = analyticsConfigStore.getConfig()
 // Don't attempt to issue a query until we know what we can query for.
 const queryReady = computed(() => analyticsConfig.value !== null && props.queryReady)
 
-const hasTrendAccess = computed(() =>
-  analyticsConfig.value !== null &&
-  analyticsConfig.value.analytics &&
-  analyticsConfig.value.api_analytics_retention_ms > SEVEN_DAYS_MS,
-)
+// `undefined` compared with any number is false, but TS still complains.
+const hasTrendAccess = computed(() => {
+  const retentionMs = analyticsConfig.value?.analytics?.retention_ms
+  return !!retentionMs && retentionMs > SEVEN_DAYS_MS
+})
 
 const tz = computed(() => {
   if (props.tz) {
@@ -125,6 +127,7 @@ provide(METRICS_PROVIDER_KEY, {
     latency: latencyData,
   },
   description: props.description,
+  containerTitle: props.containerTitle,
   hasTrendAccess,
   longCardTitles: props.longCardTitles,
 })

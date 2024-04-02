@@ -59,15 +59,13 @@
           v-else
           class="plugin-form-actions"
         >
-          <div v-if="config.jsonYamlFormsEnabled">
-            <KButton
-              appearance="tertiary"
-              data-testid="form-view-configuration"
-              @click="toggle()"
-            >
-              {{ t('actions.view_configuration') }}
-            </KButton>
-          </div>
+          <KButton
+            appearance="tertiary"
+            data-testid="form-view-configuration"
+            @click="toggle()"
+          >
+            {{ t('actions.view_configuration') }}
+          </KButton>
           <KButton
             appearance="secondary"
             class="form-action-button"
@@ -248,9 +246,7 @@ const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
 const { objectsAreEqual } = useHelpers()
 
-const { axiosInstance } = useAxios({
-  headers: props.config.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const isToggled = ref(false)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
@@ -422,6 +418,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
 
   tags: typedefs.tags as DefaultPluginsFormSchema,
   protocols: {
+    id: 'protocols',
     default: [],
     help: t('plugins.form.fields.protocols.help'),
     label: t('plugins.form.fields.protocols.label'),
@@ -648,6 +645,43 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         }
       }
 
+      // If itemFields is not defined, it means no custom schema for this field is defined
+      // This usually happens for a custom plugin, so we need to build the schema
+      if (!itemFields) {
+        initialFormSchema[field].fieldClasses = 'array-card-container-wrapper'
+        initialFormSchema[field].itemContainerComponent = 'FieldArrayCardContainer'
+        initialFormSchema[field].items = {
+          type: 'object',
+          schema: {
+            fields: Object.values(buildFormSchema(field, scheme.elements, {})),
+          },
+        }
+        initialFormSchema[field].type = 'array'
+        initialFormSchema[field].newElementButtonLabelClasses = 'kong-form-new-element-button-label'
+        // Set the model to the field name, and the label to the formatted field name
+        initialFormSchema[field].items.schema.fields.forEach(
+          (field: { id?: string, model?: string, label?: string }) => {
+            for (const f of scheme.elements.fields) {
+              const modelName = Object.keys(f)[0]
+              const idParts = field.id?.split?.('-') ?? []
+              if (idParts[idParts.length - 1] === modelName) {
+                field.model = modelName
+                field.label = formatPluginFieldLabel(modelName)
+                break
+              }
+            }
+          },
+        )
+      }
+
+      // If the field is an array of objects, set the default value to an object
+      // with the default values of the nested fields
+      initialFormSchema[field].items.default = () =>
+        scheme.elements.fields.reduce((acc: Record<string, any>, current: Record<string, { default?: string }>) => {
+          const key = Object.keys(current)[0]
+          acc[key] = current[key].default
+          return acc
+        }, {})
     }
 
     if (treatAsCredential.value && props.config.app === 'kongManager' && credentialSchema) {
@@ -738,6 +772,7 @@ const initScopeFields = (): void => {
   // if the plugin is enabled for a specific type of entity, add it's scope field to the form
   if (supportServiceScope) {
     scopeEntityArray.push({
+      id: 'service-id',
       model: 'service-id',
       label: t('plugins.form.scoping.gateway_service.label'),
       placeholder: t('plugins.form.scoping.gateway_service.placeholder'),
@@ -752,6 +787,7 @@ const initScopeFields = (): void => {
 
   if (supportRouteScope) {
     scopeEntityArray.push({
+      id: 'route-id',
       model: 'route-id',
       label: t('plugins.form.scoping.route.label'),
       placeholder: t('plugins.form.scoping.route.placeholder'),

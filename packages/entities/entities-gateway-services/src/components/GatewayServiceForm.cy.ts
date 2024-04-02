@@ -9,9 +9,8 @@ const cancelRoute = { name: 'gateway-services-list' }
 const baseConfigKonnect:KonnectGatewayServiceFormConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-dogs',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   cancelRoute,
-  jsonYamlFormsEnabled: true,
 }
 
 const baseConfigKM:KongManagerGatewayServiceFormConfig = {
@@ -30,7 +29,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/services/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/services/*`,
         },
         {
           statusCode: 200,
@@ -43,7 +42,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.intercept(
         {
           method: 'POST',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/v1/schemas/json/service/validate`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/v1/schemas/json/service/validate`,
         },
         {
           statusCode: status,
@@ -54,7 +53,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.intercept(
         {
           method: 'PUT',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/services/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/services/*`,
         },
         {
           statusCode: status,
@@ -82,6 +81,35 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('form-cancel').should('be.enabled')
       cy.getTestId('form-submit').should('be.visible')
       cy.getTestId('form-submit').should('be.disabled')
+    })
+
+    it("should check for name's validity", () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+        },
+      })
+
+      cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
+      cy.get('.kong-ui-entities-gateway-service-form form').should('be.visible')
+
+      cy.getTestId('gateway-service-name-input').should('be.visible')
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .should('not.exist')
+
+      cy.getTestId('gateway-service-name-input').type('service')
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .should('not.exist')
+
+      cy.getTestId('gateway-service-name-input').clear()
+      cy.getTestId('gateway-service-name-input').type('service abc') // with a space
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .first().find('.help-text').should('be.visible')
+
+      cy.getTestId('gateway-service-name-input').clear()
+      cy.getTestId('gateway-service-name-input').type('Hello-ÆBČÐẼF-你好-妳好-こんにちは-안녕하세요-𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯') // UTF-8
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .should('not.exist')
     })
 
     it('should enable Save button if Upstream URL is selected and Upstream URL field is filled in', () => {
@@ -246,7 +274,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/services/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/services/*`,
         },
         {
           statusCode: 404,
@@ -435,6 +463,35 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('form-cancel').should('be.enabled')
       cy.getTestId('form-submit').should('be.visible')
       cy.getTestId('form-submit').should('be.disabled')
+    })
+
+    it("should check for name's validity", () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+        },
+      })
+
+      cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
+      cy.get('.kong-ui-entities-gateway-service-form form').should('be.visible')
+
+      cy.getTestId('gateway-service-name-input').should('be.visible')
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .should('not.exist')
+
+      cy.getTestId('gateway-service-name-input').type('service')
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .should('not.exist')
+
+      cy.getTestId('gateway-service-name-input').clear()
+      cy.getTestId('gateway-service-name-input').type('service abc') // with a space
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .first().find('.help-text').should('be.visible')
+
+      cy.getTestId('gateway-service-name-input').clear()
+      cy.getTestId('gateway-service-name-input').type('Hello-ÆBČÐẼF-你好-妳好-こんにちは-안녕하세요-𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯') // UTF-8
+      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+        .should('not.exist')
     })
 
     it('should enable Save button if Upstream URL is selected and Upstream URL field is filled in', () => {

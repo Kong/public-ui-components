@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/sandbox-layout",
-  "version": "2.0.43",
+  "version": "2.0.48",
   "type": "module",
   "main": "./dist/sandbox-layout.umd.js",
   "module": "./dist/sandbox-layout.es.js",
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.12.10",
-    "@kong/kongponents": "9.0.0-alpha.113",
+    "@kong/kongponents": "9.0.0-alpha.124",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
@@ -62,10 +62,10 @@
     "errorLimit": "200KB"
   },
   "peerDependencies": {
-    "@kong/kongponents": "9.0.0-alpha.113",
+    "@kong/kongponents": "9.0.0-alpha.124",
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
-    "@kong/icons": "^1.8.14"
+    "@kong/icons": "^1.8.15"
   }
 }

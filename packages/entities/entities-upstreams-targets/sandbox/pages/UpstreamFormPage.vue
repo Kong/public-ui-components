@@ -36,10 +36,9 @@ const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig = ref<KonnectUpstreamsFormConfig>({
   app: 'konnect',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   controlPlaneId,
   cancelRoute: { name: 'upstreams-list' },
-  jsonYamlFormsEnabled: true,
 })
 
 const KMConfig = ref<KongManagerUpstreamsFormConfig>({

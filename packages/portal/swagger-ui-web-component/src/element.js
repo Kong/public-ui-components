@@ -307,6 +307,10 @@ export class SwaggerUIElement extends HTMLElement {
     this.#essentialsOnly = attributeValueToBoolean(essentialsOnly)
   }
 
+  get instance() {
+    return this.#instance
+  }
+
   get spec() {
     return this.#spec
   }

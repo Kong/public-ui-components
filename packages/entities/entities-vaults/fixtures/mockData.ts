@@ -67,6 +67,6 @@ export const vault = {
 export const konnectCardConfig: KonnectVaultEntityConfig = {
   app: 'konnect',
   controlPlaneId: 'f0acb165-ff05-4788-aa06-6909b8d1694e',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   entityId: '1234',
 }

@@ -41,11 +41,11 @@ A table component for plugins.
     - default: `undefined`
     - Base URL for API requests.
 
-  - `requestHeaders`:
-    - type: `RawAxiosRequestHeaders | AxiosHeaders`
+  - `axiosRequestConfig`:
+    - type: `AxiosRequestConfig`
     - required: `false`
     - default: `undefined`
-    - Additional headers to send with all Axios requests.
+    - An optional configuration object for the underlying Axios request.
 
   - `createRoute`:
     - type: `RouteLocationRaw`
@@ -201,6 +201,10 @@ A synchronous or asynchronous function, that returns a boolean, that evaluates i
 #### `title`
 
 The table is rendered inside a `KCard`. `title` text is displayed in the upper left corner of the `KCard` above the table.
+
+#### `titleTag`
+
+HTML element you want title to be rendered as. Defaults to `h2`.
 
 ### Events
 

@@ -69,8 +69,12 @@
             <p class="tab-description">
               {{ t('plugins.select.tabs.kong.description') }}
             </p>
+
             <PluginSelectGrid
               :config="config"
+              :hide-highlighted-plugins="filter.length > 0"
+              :highlighted-plugins="highlightedPlugins"
+              :highlighted-plugins-title="props.highlightedPluginsTitle"
               :navigate-on-click="navigateOnClick"
               :plugin-list="filteredPlugins"
               :plugins-per-row="pluginsPerRow"
@@ -105,6 +109,9 @@
       <PluginSelectGrid
         v-else
         :config="config"
+        :hide-highlighted-plugins="filter.length > 0"
+        :highlighted-plugins="highlightedPlugins"
+        :highlighted-plugins-title="props.highlightedPluginsTitle"
         :navigate-on-click="navigateOnClick"
         :plugin-list="filteredPlugins"
         :plugins-per-row="pluginsPerRow"
@@ -208,6 +215,20 @@ const props = defineProps({
     type: Number,
     default: 4,
   },
+  /**
+   * Ids of plugins to show in the highlighted plugins group
+   */
+  highlightedPluginIds: {
+    type: Array as PropType<string[]>,
+    default: () => [],
+  },
+  /**
+   * Title for the highlighted plugins group
+   */
+  highlightedPluginsTitle: {
+    type: String,
+    default: '',
+  },
 })
 
 const emit = defineEmits<{
@@ -231,8 +252,21 @@ const availablePlugins = ref<string[]>([])
 const pluginsList = ref<PluginCardList>({})
 const existingEntityPlugins = ref<string[]>([])
 
-const { axiosInstance } = useAxios({
-  headers: props.config.requestHeaders,
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+
+const flattenPluginMap = computed(() => {
+  if (!pluginsList.value) {
+    return {}
+  }
+
+  return Object.entries(pluginsList.value)
+    .filter(([group]) => group !== PluginGroup.CUSTOM_PLUGINS)
+    .reduce((m, [, plugins]) => {
+      for (const plugin of plugins) {
+        m[plugin.id] = plugin
+      }
+      return m
+    }, {} as Record<string, PluginType>)
 })
 
 const filteredPlugins = computed((): PluginCardList => {
@@ -254,6 +288,18 @@ const filteredPlugins = computed((): PluginCardList => {
   }
 
   return results
+})
+
+const highlightedPlugins = computed(() => {
+  return props.highlightedPluginIds.reduce((plugins, id) => {
+    const plugin = flattenPluginMap.value[id]
+
+    if (plugin) {
+      plugins.push(plugin)
+    }
+
+    return plugins
+  }, [] as PluginType[])
 })
 
 const hasFilteredResults = computed((): boolean => {

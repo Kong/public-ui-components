@@ -37,11 +37,10 @@ const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig = ref<KonnectSniFormConfig>({
   app: 'konnect',
-  apiBaseUrl: '/us/kong-api/konnect-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
+  apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   cancelRoute: { name: 'snis-list' },
-  jsonYamlFormsEnabled: true,
   // uncomment to see create with provided certificate
   /* certificateId: '1234-ilove-cats', */
 

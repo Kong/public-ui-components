@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import type { DashboardConfig, DashboardRendererContext, TileConfig } from '../../src'
-import { CP_ID_TOKEN, ChartTypes, DashboardRenderer, ENTITY_ID_TOKEN } from '../../src'
+import { ChartTypes, DashboardRenderer } from '../../src'
 import { inject } from 'vue'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
@@ -43,12 +43,13 @@ const context: DashboardRendererContext = {
     type: 'relative',
     time_range: '24h',
   },
+  refreshInterval: 0,
 }
 
 const dashboardConfig: DashboardConfig = {
   gridSize: {
     cols: 6,
-    rows: 9,
+    rows: 5,
   },
   tileHeight: 167,
   tiles: [
@@ -56,6 +57,7 @@ const dashboardConfig: DashboardConfig = {
       definition: {
         chart: {
           type: ChartTypes.GoldenSignals,
+          chartTitle: 'Analytics Golden Signals',
         },
         query: {},
       },
@@ -73,10 +75,11 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.HorizontalBar,
-          chartTitle: 'Horizontal bar chart of mock data',
+          type: ChartTypes.TopN,
+          chartTitle: 'Top N chart of mock data',
+          description: 'Description',
         },
-        query: {},
+        query: { limit: 1 },
       },
       layout: {
         position: {
@@ -85,7 +88,8 @@ const dashboardConfig: DashboardConfig = {
         },
         size: {
           cols: 3,
-          rows: 2,
+          rows: 1,
+          fitToContent: true,
         },
       },
     } as TileConfig,
@@ -96,7 +100,7 @@ const dashboardConfig: DashboardConfig = {
           chartTitle: 'Top N chart of mock data',
           description: 'Description',
         },
-        query: {},
+        query: { limit: 3 },
       },
       layout: {
         position: {
@@ -105,24 +109,24 @@ const dashboardConfig: DashboardConfig = {
         },
         size: {
           cols: 3,
-          rows: 2,
+          rows: 1,
+          fitToContent: true,
         },
       },
     } as TileConfig,
     {
       definition: {
         chart: {
-          type: ChartTypes.TopN,
-          chartTitle: 'Top N chart of mock data',
-          description: 'Description',
-          entityLink: `https://test.com/cp/${CP_ID_TOKEN}/entity/${ENTITY_ID_TOKEN}`,
+          type: ChartTypes.HorizontalBar,
+          chartTitle: 'Horizontal bar chart of mock data',
+          allowCsvExport: true,
         },
         query: { dimensions: ['route'] },
       },
       layout: {
         position: {
           col: 0,
-          row: 3,
+          row: 2,
         },
         size: {
           cols: 3,
@@ -143,7 +147,7 @@ const dashboardConfig: DashboardConfig = {
       layout: {
         position: {
           col: 3,
-          row: 3,
+          row: 2,
         },
         size: {
           cols: 3,
@@ -164,7 +168,7 @@ const dashboardConfig: DashboardConfig = {
       layout: {
         position: {
           col: 0,
-          row: 5,
+          row: 4,
         },
         size: {
           cols: 1,
@@ -183,7 +187,7 @@ const dashboardConfig: DashboardConfig = {
       layout: {
         position: {
           col: 1,
-          row: 5,
+          row: 4,
         },
         size: {
           cols: 1,
@@ -202,7 +206,7 @@ const dashboardConfig: DashboardConfig = {
       layout: {
         position: {
           col: 2,
-          row: 5,
+          row: 4,
         },
         size: {
           cols: 3,

@@ -7,13 +7,13 @@ describe('<EntityBaseForm />', () => {
   const controlPlaneId = '123abc-ilove-cats'
   const config: KonnectBaseFormConfig = {
     app: 'konnect',
-    apiBaseUrl: '/us/kong-api/konnect-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
+    apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
     // Set the root `.env.development.local` variable to a control plane your PAT can access
     controlPlaneId,
     cancelRoute: { name: '/' },
   }
   const editId = '1234-ideclare-athumb-war'
-  const fetchUrl = `/api/runtime_groups/${config.controlPlaneId}/routes/{id}`
+  const fetchUrl = `/v2/control-planes/${config.controlPlaneId}/core-entities/routes/{id}`
 
   it('disables save button when canSubmit is false', () => {
     cy.mount(EntityBaseForm, {
@@ -49,11 +49,7 @@ describe('<EntityBaseForm />', () => {
   it('displays View Configuration and Slideout when FF is enabled', () => {
     cy.mount(EntityBaseForm, {
       props: {
-        config: {
-          ...config,
-          // TODO: Remove config once Feature Flag `Khcp-9892-json-yaml-milestone-2` is enabled
-          jsonYamlFormsEnabled: true,
-        },
+        config,
         canSubmit: true,
       },
     })
@@ -84,7 +80,7 @@ describe('<EntityBaseForm />', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: `${config.apiBaseUrl}/api/runtime_groups/${config.controlPlaneId}/routes/${editId}`,
+        url: `${config.apiBaseUrl}/v2/control-planes/${config.controlPlaneId}/core-entities/routes/${editId}`,
       },
       {
         statusCode: 200,
@@ -113,7 +109,7 @@ describe('<EntityBaseForm />', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: `${config.apiBaseUrl}/api/runtime_groups/${config.controlPlaneId}/routes/${editId}`,
+        url: `${config.apiBaseUrl}/v2/control-planes/${config.controlPlaneId}/core-entities/routes/${editId}`,
       },
       {
         statusCode: 500,

@@ -169,9 +169,7 @@ const router = useRouter()
 const { i18nT, i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = useErrors()
 
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit)
 const formType = computed((): EntityBaseFormType => props.certificateId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)

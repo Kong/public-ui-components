@@ -35,6 +35,7 @@ import { TopNTable } from '@kong-ui-public/analytics-chart'
 import type { TopNTableRecord } from '@kong-ui-public/analytics-chart'
 import QueryDataProvider from './QueryDataProvider.vue'
 import { EntityLink } from '@kong-ui-public/entities-shared'
+import '@kong-ui-public/entities-shared/dist/style.css'
 
 const props = defineProps<RendererProps<TopNTableOptions>>()
 

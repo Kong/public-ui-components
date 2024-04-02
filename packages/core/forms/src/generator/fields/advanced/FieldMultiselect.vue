@@ -1,5 +1,6 @@
 <template>
   <KMultiselect
+    :aria-labelledby="getLabelId(schema)"
     data-testid="field-multiselect"
     :items="schema.values"
     :label-attributes="{ info: schema.help }"

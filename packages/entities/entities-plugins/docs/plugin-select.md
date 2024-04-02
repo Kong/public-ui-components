@@ -42,11 +42,11 @@ A grid component for selecting Plugins.
     - default: `undefined`
     - Base URL for API requests.
 
-  - `requestHeaders`:
-    - type: `RawAxiosRequestHeaders | AxiosHeaders`
+  - `axiosRequestConfig`:
+    - type: `AxiosRequestConfig`
     - required: `false`
     - default: `undefined`
-    - Additional headers to send with all Axios requests.
+    - An optional configuration object for the underlying Axios request.
 
   - `getCreateRoute`:
     - type: `(plugin: string) => RouteLocationRaw`
@@ -159,7 +159,7 @@ Example:
 
 ```json
 {
-  'acl': 'ACL is not supported for this entity type',
+  "acl": "ACL is not supported for this entity type"
 }
 ```
 
@@ -170,6 +170,22 @@ Example:
 - default: `4`
 
 Number of plugins to always have visible (never will be collapsed).
+
+#### `highlightedPluginIds`
+
+- type: `string[]`
+- required: `false`
+- default: `[]`
+
+Ids of plugins to show in the highlighted plugins group.
+
+#### `highlightedPluginsTitle`
+
+- type: `string`
+- required: `false`
+- default: `i18n.t('plugins.select.highlighted_plugins.title')`
+
+Title for the highlighted plugins group
 
 ### Events
 
