@@ -642,9 +642,17 @@ onBeforeMount(() => {
   }
 
   :deep(.vue-form-generator) {
-    .k-collapse:not(:last-child) {
-      border-bottom: $kui-border-width-10 solid $kui-color-border;
-      margin-bottom: $kui-space-80;
+    > fieldset {
+      margin-top: $kui-space-40;
+
+      .form-group:last-child {
+        margin-bottom: $kui-space-60;
+      }
+    }
+
+    .k-collapse.root-level-collapse {
+      border-top: $kui-border-width-10 solid $kui-color-border;
+      padding-top: $kui-space-80;
     }
 
     fieldset {

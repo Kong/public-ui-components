@@ -49,9 +49,26 @@ export interface UseSchemasOptions {
   groupFields?: boolean
 }
 
+/** Sorts non-config fields and place them at the top */
+const sortFieldByNonConfigTakePrecedence = (a: Field, b: Field) => {
+  const aIsConfig = a.model.startsWith('config-')
+  const bIsConfig = b.model.startsWith('config-')
+
+  if (aIsConfig && !bIsConfig) {
+    return 1
+  }
+
+  if (!aIsConfig && bIsConfig) {
+    return -1
+  }
+
+  return 0
+}
+
 const sortFieldByOrder = (a: Field, b: Field) => (a.order ?? 0) - (b.order ?? 0)
 
-const sortFieldByOrderAndModel = (a: Field, b: Field) => sortFieldByOrder(a, b) || a.model.localeCompare(b.model)
+const sortNonPinnedFields = (a: Field, b: Field) =>
+  sortFieldByNonConfigTakePrecedence(a, b) || sortFieldByOrder(a, b) || a.model.localeCompare(b.model)
 
 /**
  * @param entityId (optional) The id of the entity associated with the plugin
@@ -220,8 +237,8 @@ export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
     if (!getSharedFormName(pluginName) && options?.groupFields) {
       const metadata = PLUGIN_METADATA[pluginName]
 
-      const generalFields = []
-      const hoistedFields = []
+      const pinnedFields = []
+      const defaultVisibleFields = []
       const advancedFields = []
 
       // Transform the any of field sets into a flatten set for fast lookup
@@ -251,8 +268,8 @@ export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
 
       for (const field of formSchema.fields!) {
         // Fields that don't start with 'config-' are considered common fields
-        if (!field.model.startsWith('config-')) {
-          generalFields.push(field)
+        if (field.pinned) {
+          pinnedFields.push(field)
           continue
         }
 
@@ -263,7 +280,7 @@ export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
           if (ruledFields[field.model] === false) {
             ruledFields[field.model] = true // Mark this as visited
           }
-          hoistedFields.push(field)
+          defaultVisibleFields.push(field)
           continue
         }
 
@@ -281,24 +298,20 @@ export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
 
       const fieldGroups: Group[] = []
 
-      if (generalFields.length > 0) {
+      if (pinnedFields.length > 0) {
         fieldGroups.push({
-          fields: generalFields.sort(sortFieldByOrder),
-          collapsible: {
-            title: t('plugins.form.grouping.general_information.title'),
-            description: t('plugins.form.grouping.general_information.description'),
-          },
+          fields: pinnedFields.sort(sortFieldByOrder),
         })
       }
 
-      if (hoistedFields.length > 0 || advancedFields.length > 0) {
+      if (defaultVisibleFields.length > 0 || advancedFields.length > 0) {
         fieldGroups.push({
-          fields: hoistedFields.sort(sortFieldByOrderAndModel),
+          fields: defaultVisibleFields.sort(sortNonPinnedFields),
           collapsible: {
             title: t('plugins.form.grouping.plugin_configuration.title'),
             description: t('plugins.form.grouping.plugin_configuration.description'),
             nestedCollapsible: {
-              fields: advancedFields.sort(sortFieldByOrderAndModel),
+              fields: advancedFields.sort(sortNonPinnedFields),
               triggerLabel: {
                 expand: t('plugins.form.grouping.advanced_parameters.view'),
                 collapse: t('plugins.form.grouping.advanced_parameters.hide'),

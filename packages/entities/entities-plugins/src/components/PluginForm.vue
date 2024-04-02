@@ -378,15 +378,6 @@ const entityMap = computed((): Record<string, PluginEntityInfo> => {
 
 // Configuration for globally shared fields
 const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
-  enabled: {
-    type: 'switch',
-    model: 'enabled',
-    label: t('plugins.form.fields.enabled.label'),
-    textOn: t('plugins.form.fields.enabled.on_text'),
-    textOff: t('plugins.form.fields.enabled.off_text'),
-    styleClasses: 'field-switch bottom-border hide-label',
-    default: true,
-  },
   // this is a required field that the user cannot set, it's always the name of the plugin
   // ex. 'acl'
   name: {
@@ -394,31 +385,31 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
     type: 'input',
     inputType: 'hidden',
     styleClasses: 'd-none hidden-field',
+    pinned: true, // does not matter because it's hidden
+  },
+  enabled: {
+    type: 'switch',
+    model: 'enabled',
+    label: t('plugins.form.fields.enabled.label'),
+    textOn: t('plugins.form.fields.enabled.on_text'),
+    textOff: t('plugins.form.fields.enabled.off_text'),
+    styleClasses: 'field-switch hide-label',
+    default: true,
+    pinned: true,
   },
   // plugin scoping
   selectionGroup: {
     type: !props.hideScopeSelection ? 'selectionGroup' : props.hideScopeSelection || (formType.value === EntityBaseFormType.Create && props.config.entityId) ? 'foreign' : 'selectionGroup',
     inputType: 'hidden',
-    styleClasses: 'bottom-border hide-label',
+    styleClasses: 'hide-label',
     fields: [
       {
         label: t('plugins.form.scoping.global.label'),
         description: t('plugins.form.scoping.global.help'),
       },
     ],
+    pinned: true,
   },
-  // Support is feature flagged in Konnect
-  ...((props.config.app === 'kongManager' || props.useCustomNamesForPlugin) && {
-    instance_name: {
-      default: '',
-      type: 'input',
-      label: t('plugins.form.fields.instance_name.label'),
-      inputType: 'text',
-      help: t('plugins.form.fields.instance_name.help'),
-    },
-  }),
-
-  tags: typedefs.tags as DefaultPluginsFormSchema,
   protocols: {
     id: 'protocols',
     default: [],
@@ -441,6 +432,17 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
       { label: 'wss', value: 'wss' },
     ],
   },
+  // Support is feature flagged in Konnect
+  ...((props.config.app === 'kongManager' || props.useCustomNamesForPlugin) && {
+    instance_name: {
+      default: '',
+      type: 'input',
+      label: t('plugins.form.fields.instance_name.label'),
+      inputType: 'text',
+      help: t('plugins.form.fields.instance_name.help'),
+    },
+  }),
+  tags: typedefs.tags as DefaultPluginsFormSchema,
 })
 
 // This is specifically used for credential plugins and portal developer plugins
