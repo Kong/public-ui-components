@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.0.0...@kong-ui-public/entities-shared@3.0.1) (2024-04-03)
+
+
+### Bug Fixes
+
+* **entities-plugins:** plugin form UX phase 2 [KM-61] ([#1301](https://github.com/Kong/public-ui-components/issues/1301)) ([210a0c2](https://github.com/Kong/public-ui-components/commit/210a0c26dda0f6751676ebb61f6cc0e0c14597b4))
+
+
+
+
+
 # [3.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@2.12.10...@kong-ui-public/entities-shared@3.0.0) (2024-04-02)
 
 
