@@ -27,6 +27,7 @@
       :fetch-url="fetchUrl"
       :form-fields="getRequestBody"
       :is-readonly="form.isReadonly"
+      no-validate
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
       @fetch:success="initForm"
@@ -131,37 +132,38 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch, onBeforeMount, type PropType } from 'vue'
-import { useRouter } from 'vue-router'
-import type { AxiosError, AxiosResponse } from 'axios'
-import { marked, type MarkedOptions } from 'marked'
 import {
-  useAxios,
-  useErrors,
-  useHelpers,
-  useStringHelpers,
   EntityBaseForm,
   EntityBaseFormType,
   JsonCodeBlock,
   YamlCodeBlock,
+  useAxios,
+  useErrors,
+  useHelpers,
+  useStringHelpers,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
+import type { Tab } from '@kong/kongponents'
+import type { AxiosError, AxiosResponse } from 'axios'
+import { marked, type MarkedOptions } from 'marked'
+import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
+import { computed, onBeforeMount, reactive, ref, watch, type PropType } from 'vue'
+import { useRouter } from 'vue-router'
+import composables from '../composables'
+import { ArrayStringFieldSchema } from '../definitions/schemas/ArrayStringFieldSchema'
+import endpoints from '../plugins-endpoints'
 import {
   EntityTypeIdField,
   PluginScope,
-  type KonnectPluginFormConfig,
-  type KongManagerPluginFormConfig,
-  type PluginFormState,
-  type PluginFormFields,
-  type DefaultPluginsSchemaRecord,
   type DefaultPluginsFormSchema,
+  type DefaultPluginsSchemaRecord,
+  type KongManagerPluginFormConfig,
+  type KonnectPluginFormConfig,
   type PluginEntityInfo,
+  type PluginFormFields,
+  type PluginFormState,
 } from '../types'
-import endpoints from '../plugins-endpoints'
-import composables from '../composables'
-import { ArrayStringFieldSchema } from '../composables/plugin-schemas/ArrayStringFieldSchema'
 import PluginEntityForm from './PluginEntityForm.vue'
-import type { Tab } from '@kong/kongponents'
 
 const emit = defineEmits<{
   (e: 'error:fetch-schema', error: AxiosError): void,
@@ -240,8 +242,8 @@ const props = defineProps({
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
-const { pluginMetaData, credentialMetaData, credentialSchemas } = composables.usePluginMetaData()
 const { customSchemas, typedefs } = composables.useSchemas(undefined, { app: props.config.app })
+const { formatPluginFieldLabel } = composables.usePluginHelpers()
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
 const { objectsAreEqual } = useHelpers()
@@ -376,47 +378,38 @@ const entityMap = computed((): Record<string, PluginEntityInfo> => {
 
 // Configuration for globally shared fields
 const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
-  enabled: {
-    type: 'switch',
-    model: 'enabled',
-    label: t('plugins.form.fields.enabled.label'),
-    textOn: t('plugins.form.fields.enabled.on_text'),
-    textOff: t('plugins.form.fields.enabled.off_text'),
-    styleClasses: 'field-switch bottom-border hide-label',
-    default: true,
-  },
   // this is a required field that the user cannot set, it's always the name of the plugin
   // ex. 'acl'
   name: {
     default: props.pluginType,
     type: 'input',
     inputType: 'hidden',
-    styleClasses: 'd-none',
+    styleClasses: 'd-none hidden-field',
+    pinned: true, // does not matter because it's hidden
+  },
+  enabled: {
+    type: 'switch',
+    model: 'enabled',
+    label: t('plugins.form.fields.enabled.label'),
+    textOn: t('plugins.form.fields.enabled.on_text'),
+    textOff: t('plugins.form.fields.enabled.off_text'),
+    styleClasses: 'field-switch hide-label',
+    default: true,
+    pinned: true,
   },
   // plugin scoping
   selectionGroup: {
     type: !props.hideScopeSelection ? 'selectionGroup' : props.hideScopeSelection || (formType.value === EntityBaseFormType.Create && props.config.entityId) ? 'foreign' : 'selectionGroup',
     inputType: 'hidden',
-    styleClasses: 'bottom-border hide-label',
+    styleClasses: 'hide-label',
     fields: [
       {
         label: t('plugins.form.scoping.global.label'),
         description: t('plugins.form.scoping.global.help'),
       },
     ],
+    pinned: true,
   },
-  // Support is feature flagged in Konnect
-  ...((props.config.app === 'kongManager' || props.useCustomNamesForPlugin) && {
-    instance_name: {
-      default: '',
-      type: 'input',
-      label: t('plugins.form.fields.instance_name.label'),
-      inputType: 'text',
-      help: t('plugins.form.fields.instance_name.help'),
-    },
-  }),
-
-  tags: typedefs.tags as DefaultPluginsFormSchema,
   protocols: {
     id: 'protocols',
     default: [],
@@ -439,6 +432,17 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
       { label: 'wss', value: 'wss' },
     ],
   },
+  // Support is feature flagged in Konnect
+  ...((props.config.app === 'kongManager' || props.useCustomNamesForPlugin) && {
+    instance_name: {
+      default: '',
+      type: 'input',
+      label: t('plugins.form.fields.instance_name.label'),
+      inputType: 'text',
+      help: t('plugins.form.fields.instance_name.help'),
+    },
+  }),
+  tags: typedefs.tags as DefaultPluginsFormSchema,
 })
 
 // This is specifically used for credential plugins and portal developer plugins
@@ -446,7 +450,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
 const resourceEndpoint = computed((): string => {
   const entityPath: string = props.developer ? 'developers' : 'consumers'
 
-  const type = credentialMetaData[props.pluginType]?.endpoint || '/plugins'
+  const type = CREDENTIAL_METADATA[props.pluginType]?.endpoint || '/plugins'
 
   return `${entityPath}/${props.config.entityId}${props.developer ? '/credentials' : ''}${type}`
 })
@@ -457,15 +461,10 @@ const getArrayType = (list: unknown[]): string => {
   return uniqueTypes.length > 1 ? 'string' : uniqueTypes[0]
 }
 
-// _ gets converted to space and capitalize each word
-const formatPluginFieldLabel = (label: string) => {
-  return capitalize(label.replace(/_/g, ' '))
-}
-
 const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>) => {
   let schema = (response && response.fields) || []
   const pluginSchema = customSchemas[props.pluginType as keyof typeof customSchemas]
-  const credentialSchema = credentialMetaData[props.pluginType]?.schema?.fields
+  const credentialSchema = CREDENTIAL_METADATA[props.pluginType]?.schema?.fields
 
   // schema can either be an object or an array of objects. If it's an array, convert it to an object
   if (Array.isArray(schema)) {
@@ -489,7 +488,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     }, {})
   }
 
-  // alphabetically sort the schema keys and handle specifial configuration for each field type
+  // alphabetically sort the schema keys and handle specific configuration for each field type
   Object.keys(schema).sort().forEach(key => {
     const scheme = schema[key]
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
@@ -509,6 +508,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
     initialFormSchema[field] = { id: field } // each field's key will be set as the id
     initialFormSchema[field].type = scheme.type === 'boolean' ? 'checkbox' : 'input'
+    initialFormSchema[field].required = scheme.required
 
     if (field.startsWith('config-')) {
       initialFormSchema[field].label = formatPluginFieldLabel(field)
@@ -760,12 +760,12 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 }
 
 const initScopeFields = (): void => {
-  const supportServiceScope = pluginMetaData[props.pluginType]?.scope.includes(PluginScope.SERVICE) ?? true
-  const supportRouteScope = pluginMetaData[props.pluginType]?.scope.includes(PluginScope.ROUTE) ?? true
-  const supportConsumerScope = pluginMetaData[props.pluginType]?.scope.includes(PluginScope.CONSUMER) ?? true
+  const supportServiceScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.SERVICE) ?? true
+  const supportRouteScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.ROUTE) ?? true
+  const supportConsumerScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.CONSUMER) ?? true
   const supportConsumerGroupScope = props.config.disableConsumerGroupScope
     ? false
-    : (pluginMetaData[props.pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true)
+    : (PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true)
 
   const scopeEntityArray = []
 
@@ -1000,7 +1000,7 @@ const submitUrl = computed((): string => {
 })
 
 const isCustomPlugin = computed((): boolean => {
-  return !Object.keys(pluginMetaData).includes(props.pluginType)
+  return !Object.keys(PLUGIN_METADATA).includes(props.pluginType)
 })
 
 const getRequestBody = computed((): Record<string, any> => {
@@ -1064,7 +1064,7 @@ const saveFormData = async (): Promise<void> => {
 
 // for fetching the plugin form schema
 const schemaUrl = computed((): string => {
-  const pluginType = !treatAsCredential.value ? props.pluginType : credentialMetaData[props.pluginType]?.schemaEndpoint
+  const pluginType = !treatAsCredential.value ? props.pluginType : CREDENTIAL_METADATA[props.pluginType]?.schemaEndpoint
   const schemaEndpoint = !treatAsCredential.value ? endpoints.form[props.config.app].pluginSchema : endpoints.form[props.config.app].credentialSchema
 
   let url = `${props.config.apiBaseUrl}${schemaEndpoint}`
@@ -1090,8 +1090,8 @@ onBeforeMount(async () => {
     // handling for plugin credentials (Konnect)
     if (treatAsCredential.value && props.config.app === 'konnect') {
       // credential schema endpoints don't exist for Konnect, so we use hard-coded schemas
-      const pluginType = credentialMetaData[props.pluginType]?.schemaEndpoint
-      const data = credentialSchemas[pluginType]
+      const pluginType = CREDENTIAL_METADATA[props.pluginType]?.schemaEndpoint
+      const data = CREDENTIAL_SCHEMAS[pluginType]
 
       schema.value = buildFormSchema('', data, {})
       schemaLoading.value = false
