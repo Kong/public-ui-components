@@ -231,12 +231,13 @@ export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
     })
 
     const pluginName = formModel.name
+    const metadata = PLUGIN_METADATA[pluginName]
 
-    // KM-18 KM-21 related branch
-    // Do not group fields for plugins with custom layouts
-    if (!getSharedFormName(pluginName) && options?.groupFields) {
-      const metadata = PLUGIN_METADATA[pluginName]
-
+    // KM-18 KM-21 guarded branch
+    // No field grouping for:
+    // - Plugins with custom layouts
+    // - Plugins explicitly marked to use legacy form
+    if (!getSharedFormName(pluginName) && options?.groupFields && !metadata?.useLegacyForm) {
       const pinnedFields = []
       const defaultVisibleFields = []
       const advancedFields = []

@@ -288,6 +288,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-proxy.name',
     scope: [PluginScope.ROUTE],
+    useLegacyForm: true,
   },
   'ai-prompt-decorator': {
     descriptionKey: 'plugins.meta.ai-prompt-decorator.description',
@@ -295,6 +296,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-prompt-decorator.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+    useLegacyForm: true,
   },
   'ai-prompt-template': {
     descriptionKey: 'plugins.meta.ai-prompt-template.description',
@@ -302,6 +304,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-prompt-template.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    useLegacyForm: true,
   },
   'ai-prompt-guard': {
     descriptionKey: 'plugins.meta.ai-prompt-guard.description',
@@ -309,6 +312,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-prompt-guard.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+    useLegacyForm: true,
   },
   'ai-request-transformer': {
     descriptionKey: 'plugins.meta.ai-request-transformer.description',
@@ -316,6 +320,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-request-transformer.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    useLegacyForm: true,
   },
   'ai-response-transformer': {
     descriptionKey: 'plugins.meta.ai-response-transformer.description',
@@ -323,6 +328,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-response-transformer.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    useLegacyForm: true,
   },
   'aws-lambda': {
     descriptionKey: 'plugins.meta.aws-lambda.description',
