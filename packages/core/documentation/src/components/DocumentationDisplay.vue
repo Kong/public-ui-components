@@ -108,6 +108,7 @@
                     appearance="secondary"
                     :aria-label="i18n.t('documentation.documentation_display.actions_title')"
                     class="icon-button"
+                    data-testid="document-actions-button"
                   >
                     <MoreIcon decorative />
                   </KButton>
@@ -123,8 +124,7 @@
                 </KDropdownItem>
                 <KDropdownItem
                   v-if="userCanEdit"
-                  class="document-edit-button"
-                  data-testid="document-edit-button"
+                  data-testid="document-settings-button"
                   @click="emit('edit')"
                 >
                   {{ i18n.t('documentation.documentation_display.edit_info_button') }}
