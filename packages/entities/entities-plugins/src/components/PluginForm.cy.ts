@@ -3,15 +3,16 @@ import type { Router } from 'vue-router'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { type KongManagerPluginFormConfig, type KonnectPluginFormConfig } from '../types'
 import {
-  schema,
   credentialSchema,
   plugin1,
   aclCredential1,
-  schema2,
   scopedService,
   scopedConsumer,
   customPluginSchema,
 } from '../../fixtures/mockData'
+import schemaAiProxy from '../../fixtures/schemas/ai-proxy'
+import schemaCors from '../../fixtures/schemas/cors'
+import schemaMocking from '../../fixtures/schemas/mocking'
 import PluginForm from './PluginForm.vue'
 import { VueFormGenerator } from '../../src'
 
@@ -52,7 +53,7 @@ describe('<PluginForm />', () => {
         },
         {
           statusCode: 200,
-          body: params?.mockData ?? schema,
+          body: params?.mockData ?? schemaCors,
         },
       ).as(params?.alias ?? 'getPluginSchema')
     }
@@ -222,7 +223,7 @@ describe('<PluginForm />', () => {
     })
 
     it('should show general, hoisted, and advanced fields when groupFields is true', () => {
-      interceptKMSchema({ mockData: schema2 })
+      interceptKMSchema({ mockData: schemaMocking })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -246,8 +247,13 @@ describe('<PluginForm />', () => {
       cy.getTestId('form-back').should('be.enabled')
       cy.getTestId('form-cancel').should('be.visible')
 
-      // scope fields
+      // pinned fields (but they should not be under a KCollapse)
+      cy.get('#enabled').should('exist')
+        .parent('.k-collapse').should('not.exist')
+
+      // scope fields (this is also pinned, but they should not be under a KCollapse)
       cy.get('.field-selectionGroup').should('be.visible')
+        .parent('.k-collapse').should('not.exist')
       cy.get('.Global-check').should('be.visible')
       cy.get('.Scoped-check').should('be.visible')
       cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('not.be.visible')
@@ -255,12 +261,6 @@ describe('<PluginForm />', () => {
       cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('be.visible')
       cy.get('#service-id').should('be.visible')
       cy.get('#route-id').should('be.visible')
-
-      cy.getTestId('k-collapse-title')
-        .contains('General Configuration')
-        .parents('.k-collapse')
-        .first()
-        .as('generalFields')
 
       cy.getTestId('k-collapse-title')
         .contains('Plugin Configuration')
@@ -271,40 +271,84 @@ describe('<PluginForm />', () => {
       cy.get('.k-collapse.nested-collapse [data-testid="k-collapse-trigger-label"]')
         .contains('Advanced Parameters')
         .parents('.k-collapse.nested-collapse')
+        .first()
         .as('advancedFields')
 
-      // general fields
-      cy.get('@generalFields').find('#enabled').should('exist')
-      cy.get('@generalFields').find('#instance_name').should('exist')
-      cy.get('@generalFields').find('#tags').should('exist')
-      cy.get('@generalFields').find('.plugin-protocols-select').should('be.visible')
-
+      // non-advanced plugin fields (but they should not be under the nested KCollapse)
       // field rule alerts
       cy.get('@pluginFields').find('.plugin-field-rule-alerts').contains('At least one of').should('be.visible')
-
-      // hoisted fields
+        .parent('.k-collapse.nested-collapse').should('not.exist')
+      // protocol selector
+      cy.get('@pluginFields').find('.plugin-protocols-select').should('be.visible')
+        .parent('.k-collapse.nested-collapse').should('not.exist')
+      // other required fields
       cy.get('@pluginFields').find('#config-required_non_checkbox_field').should('be.visible')
-        .parents('.k-collapse.nested-collapse').should('not.exist')
+        .parent('.k-collapse.nested-collapse').should('not.exist')
       cy.get('@pluginFields').find('#config-api_specification').should('be.visible')
-        .parents('.k-collapse.nested-collapse').should('not.exist')
+        .parent('.k-collapse.nested-collapse').should('not.exist')
       cy.get('@pluginFields').find('#config-api_specification_filename').should('be.visible')
-        .parents('.k-collapse.nested-collapse').should('not.exist')
+        .parent('.k-collapse.nested-collapse').should('not.exist')
       cy.get('@pluginFields').find('#config-include_base_path').should('be.visible')
-        .parents('.k-collapse.nested-collapse').should('not.exist')
+        .parent('.k-collapse.nested-collapse').should('not.exist')
       cy.get('@pluginFields').find('#config-random_status_code').should('be.visible')
-        .parents('.k-collapse.nested-collapse').should('not.exist')
+        .parent('.k-collapse.nested-collapse').should('not.exist')
 
+      // advanced plugin fields (they should be under the nested KCollapse)
+      // instance name and tags
+      cy.get('@advancedFields').find('#instance_name').should('exist').parent('.k-collapse').should('not.exist')
+      cy.get('@advancedFields').find('#tags').should('exist').parent('.k-collapse').should('not.exist')
       // advanced fields should be hidden by default
       cy.get('@advancedFields').findTestId('k-collapse-hidden-content').should('be.hidden')
-
       // reveal them
       cy.get('@advancedFields').findTestId('k-collapse-trigger-content').click()
       cy.get('@advancedFields').findTestId('k-collapse-hidden-content').should('be.visible')
-
       // advanced fields
       cy.get('@advancedFields').find('#config-included_status_codes').should('be.visible')
       cy.get('@advancedFields').find('#config-max_delay_time').should('be.visible')
       cy.get('@advancedFields').find('#config-min_delay_time').should('be.visible')
+    })
+
+    it('should use legacy form when groupFields is true but useLegacyForm in the plugin metadata is true', () => {
+      interceptKMSchema({ mockData: schemaAiProxy })
+
+      cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
+        props: {
+          config: {
+            ...baseConfigKM,
+            groupFields: true,
+          },
+          pluginType: 'ai-proxy',
+        },
+        router,
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      // button state
+      cy.getTestId('form-submit').should('be.visible')
+      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('form-back').should('be.visible')
+      cy.getTestId('form-back').should('be.enabled')
+      cy.getTestId('form-cancel').should('be.visible')
+
+      // scope fields
+      cy.get('.field-selectionGroup').should('be.visible')
+      cy.get('.Global-check').should('be.visible')
+      cy.get('.Scoped-check').should('be.visible')
+      cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('not.be.visible')
+      cy.get('.Scoped-check input').click()
+      cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('be.visible')
+      cy.get('#service-id').should('not.exist') // ai-proxy only supports route scoping
+      cy.get('#route-id').should('be.visible')
+
+      // legacy form should not contain any KCollapse elements
+      cy.get('.k-collapse').should('not.exist')
+
+      // some of the fields
+      cy.get('#config-model-name').should('be.visible')
+      cy.get('#config-model-provider').should('be.visible')
     })
 
     it('should show correct form components for custom plugin with arrays of objects', () => {
@@ -712,7 +756,7 @@ describe('<PluginForm />', () => {
     })
 
     it('should handle error state - validation error', () => {
-      interceptKMSchema({ mockData: schema2 })
+      interceptKMSchema({ mockData: schemaMocking })
       cy.intercept(
         {
           method: 'POST',
@@ -805,7 +849,7 @@ describe('<PluginForm />', () => {
         },
         {
           statusCode: 200,
-          body: params?.mockData ?? schema,
+          body: params?.mockData ?? schemaCors,
         },
       ).as(params?.alias ?? 'getPluginSchema')
     }
@@ -976,7 +1020,7 @@ describe('<PluginForm />', () => {
     })
 
     it('should show general, hoisted, and advanced fields when groupFields is true', () => {
-      interceptKonnectSchema({ mockData: schema2 })
+      interceptKonnectSchema({ mockData: schemaMocking })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -1001,8 +1045,13 @@ describe('<PluginForm />', () => {
       cy.getTestId('form-back').should('be.enabled')
       cy.getTestId('form-cancel').should('be.visible')
 
-      // scope fields
+      // pinned fields (but they should not be under a KCollapse)
+      cy.get('#enabled').should('exist')
+        .parent('.k-collapse').should('not.exist')
+
+      // scope fields (this is also pinned, but they should not be under a KCollapse)
       cy.get('.field-selectionGroup').should('be.visible')
+        .parent('.k-collapse').should('not.exist')
       cy.get('.Global-check').should('be.visible')
       cy.get('.Scoped-check').should('be.visible')
       cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('not.be.visible')
@@ -1010,12 +1059,6 @@ describe('<PluginForm />', () => {
       cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('be.visible')
       cy.get('#service-id').should('be.visible')
       cy.get('#route-id').should('be.visible')
-
-      cy.getTestId('k-collapse-title')
-        .contains('General Configuration')
-        .parents('.k-collapse')
-        .first()
-        .as('generalFields')
 
       cy.getTestId('k-collapse-title')
         .contains('Plugin Configuration')
@@ -1026,40 +1069,85 @@ describe('<PluginForm />', () => {
       cy.get('.k-collapse.nested-collapse [data-testid="k-collapse-trigger-label"]')
         .contains('Advanced Parameters')
         .parents('.k-collapse.nested-collapse')
+        .first()
         .as('advancedFields')
 
-      // general fields
-      cy.get('@generalFields').find('#enabled').should('exist')
-      cy.get('@generalFields').find('#instance_name').should('exist')
-      cy.get('@generalFields').find('#tags').should('exist')
-      cy.get('@generalFields').find('.plugin-protocols-select').should('be.visible')
-
+      // non-advanced plugin fields (but they should not be under the nested KCollapse)
       // field rule alerts
       cy.get('@pluginFields').find('.plugin-field-rule-alerts').contains('At least one of').should('be.visible')
-
-      // hoisted fields
+        .parent('.k-collapse.nested-collapse').should('not.exist')
+      // protocol selector
+      cy.get('@pluginFields').find('.plugin-protocols-select').should('be.visible')
+        .parent('.k-collapse.nested-collapse').should('not.exist')
+      // other required fields
       cy.get('@pluginFields').find('#config-required_non_checkbox_field').should('be.visible')
-        .parents('.k-collapse.nested-collapse').should('not.exist')
+        .parent('.k-collapse.nested-collapse').should('not.exist')
       cy.get('@pluginFields').find('#config-api_specification').should('be.visible')
-        .parents('.k-collapse.nested-collapse').should('not.exist')
+        .parent('.k-collapse.nested-collapse').should('not.exist')
       cy.get('@pluginFields').find('#config-api_specification_filename').should('be.visible')
-        .parents('.k-collapse.nested-collapse').should('not.exist')
+        .parent('.k-collapse.nested-collapse').should('not.exist')
       cy.get('@pluginFields').find('#config-include_base_path').should('be.visible')
-        .parents('.k-collapse.nested-collapse').should('not.exist')
+        .parent('.k-collapse.nested-collapse').should('not.exist')
       cy.get('@pluginFields').find('#config-random_status_code').should('be.visible')
-        .parents('.k-collapse.nested-collapse').should('not.exist')
+        .parent('.k-collapse.nested-collapse').should('not.exist')
 
+      // advanced plugin fields (they should be under the nested KCollapse)
+      // instance name and tags
+      cy.get('@advancedFields').find('#instance_name').should('exist').parent('.k-collapse').should('not.exist')
+      cy.get('@advancedFields').find('#tags').should('exist').parent('.k-collapse').should('not.exist')
       // advanced fields should be hidden by default
       cy.get('@advancedFields').findTestId('k-collapse-hidden-content').should('be.hidden')
-
       // reveal them
       cy.get('@advancedFields').findTestId('k-collapse-trigger-content').click()
       cy.get('@advancedFields').findTestId('k-collapse-hidden-content').should('be.visible')
-
       // advanced fields
       cy.get('@advancedFields').find('#config-included_status_codes').should('be.visible')
       cy.get('@advancedFields').find('#config-max_delay_time').should('be.visible')
       cy.get('@advancedFields').find('#config-min_delay_time').should('be.visible')
+    })
+
+    it('should use legacy form when groupFields is true but useLegacyForm in the plugin metadata is true', () => {
+      interceptKonnectSchema({ mockData: schemaAiProxy })
+
+      cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
+        props: {
+          config: {
+            ...baseConfigKonnect,
+            groupFields: true,
+          },
+          pluginType: 'ai-proxy',
+          useCustomNamesForPlugin: true,
+        },
+        router,
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      // button state
+      cy.getTestId('form-submit').should('be.visible')
+      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('form-back').should('be.visible')
+      cy.getTestId('form-back').should('be.enabled')
+      cy.getTestId('form-cancel').should('be.visible')
+
+      // scope fields
+      cy.get('.field-selectionGroup').should('be.visible')
+      cy.get('.Global-check').should('be.visible')
+      cy.get('.Scoped-check').should('be.visible')
+      cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('not.be.visible')
+      cy.get('.Scoped-check input').click()
+      cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('be.visible')
+      cy.get('#service-id').should('not.exist') // ai-proxy only supports route scoping
+      cy.get('#route-id').should('be.visible')
+
+      // legacy form should not contain any KCollapse elements
+      cy.get('.k-collapse').should('not.exist')
+
+      // some of the fields
+      cy.get('#config-model-name').should('be.visible')
+      cy.get('#config-model-provider').should('be.visible')
     })
 
     it('should show correct form components for custom plugin with arrays of objects', () => {
@@ -1491,7 +1579,7 @@ describe('<PluginForm />', () => {
     })
 
     it('should handle error state - validation error', () => {
-      interceptKonnectSchema({ mockData: schema2 })
+      interceptKonnectSchema({ mockData: schemaMocking })
       cy.intercept(
         {
           method: 'POST',
