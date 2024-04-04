@@ -2,60 +2,60 @@
   <h4>Global props, Large cards</h4>
   <div>
     <SandboxBridgeInjector :query-bridge="globalBridge">
-      <MetricsProviderInternal v-bind="globalProviderProps">
+      <MetricsProvider v-bind="globalProviderProps">
         <MetricsConsumer
           :card-size="MetricCardSize.Large"
         />
-      </MetricsProviderInternal>
+      </MetricsProvider>
     </SandboxBridgeInjector>
   </div>
 
   <h4>Global props, Small cards</h4>
   <div>
     <SandboxBridgeInjector :query-bridge="globalBridge">
-      <MetricsProviderInternal v-bind="globalProviderProps">
+      <MetricsProvider v-bind="globalProviderProps">
         <MetricsConsumer
           :card-size="MetricCardSize.Small"
         />
-      </MetricsProviderInternal>
+      </MetricsProvider>
     </SandboxBridgeInjector>
   </div>
 
   <h4>Filtered props, LargeCompact cards</h4>
   <div v-if="!USE_REAL_DATA">
     <SandboxBridgeInjector :query-bridge="globalBridge">
-      <MetricsProviderInternal v-bind="filteredProviderProps">
+      <MetricsProvider v-bind="filteredProviderProps">
         <MetricsConsumer
           :card-size="MetricCardSize.LargeCompact"
         />
-      </MetricsProviderInternal>
+      </MetricsProvider>
     </SandboxBridgeInjector>
   </div>
   <div>
     <SandboxBridgeInjector :query-bridge="singleProviderBridge">
-      <MetricsProviderInternal v-bind="singleProviderProps">
+      <MetricsProvider v-bind="singleProviderProps">
         <MetricsConsumer :card-size="MetricCardSize.LargeCompact" />
-      </MetricsProviderInternal>
+      </MetricsProvider>
     </SandboxBridgeInjector>
   </div>
 
   <h4>Multiple Entities, Large cards</h4>
   <div>
     <SandboxBridgeInjector :query-bridge="multiProviderBridge">
-      <MetricsProviderInternal v-bind="multiProviderProps">
+      <MetricsProvider v-bind="multiProviderProps">
         <div id="route-blah">
           <MetricsConsumer lookup-key="blah😀😀" />
         </div>
         <div id="route-arrgh">
           <MetricsConsumer lookup-key="arrgh" />
         </div>
-      </MetricsProviderInternal>
+      </MetricsProvider>
     </SandboxBridgeInjector>
   </div>
 </template>
 <script setup lang="ts">
 import MetricsConsumer from '../src/components/MetricsConsumer.vue'
-import MetricsProviderInternal from '../src/components/MetricsProviderInternal.vue'
+import MetricsProvider from '../src/components/MetricsProvider.vue'
 import type { MockOptions } from '../src/mockExploreResponse'
 import { mockExploreResponse } from '../src/mockExploreResponse'
 import axios from 'axios'

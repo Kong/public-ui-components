@@ -34,7 +34,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 The following components are updated:
 
 - AnalyticsConfigCheck, and the associated store
-- MetricsProviderInternal
+- MetricsProvider
 - AnalyticsBridge (updates type that implementations must adhere to)
 - DashboardRenderer (sandbox and tests)
 
