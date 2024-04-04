@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.4.3...@kong-ui-public/documentation@0.4.4) (2024-04-04)
+
+
+### Bug Fixes
+
+* **documentation:** bump markdown package ([18393c4](https://github.com/Kong/public-ui-components/commit/18393c476d7034e9e3bde6203791766b71c7370f))
+
+
+
+
+
 ## [0.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.4.2...@kong-ui-public/documentation@0.4.3) (2024-04-04)
 
 **Note:** Version bump only for package @kong-ui-public/documentation
