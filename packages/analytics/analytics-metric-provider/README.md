@@ -23,14 +23,6 @@ Query data for metric cards and render default "golden signal" metrics cards usi
 
 ## Usage
 
-First, create a wrapper around `<MetricsProvider />` in the host app.  This wrapper is in charge of feeding environment-specific properties to the metrics provider, most notably:
-
-- `dataFetcher`, a function that calls the correct API to retrieve data for the provided query.
-- `hasTrendAccess`, a boolean ref that describes whether the current user is expected to be able to run trend queries.
-- `refreshInterval`, a number in milliseconds describing how often the cards should refresh.  (This value is eventually fed to the `refreshInterval` property of `useSWRV`.)
-
-For consistency, name your wrapper `<MetricsProvider>`.  Then, use it as follows:
-
 ### Global
 
 To query across all data for an organization, no properties are needed.  The provider's determination of whether the user has trend access is available as a slot property for translation purposes.
