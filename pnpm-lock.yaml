@@ -174,7 +174,7 @@ importers:
         specifier: ^9.0.1
         version: 9.0.1
       vite:
-        specifier: ^5.1.6
+        specifier: ^5.1.7
         version: 5.2.6(@types/node@18.19.28)(sass@1.71.1)
       vite-plugin-externals:
         specifier: ^0.6.2
@@ -571,8 +571,8 @@ importers:
   packages/core/i18n:
     dependencies:
       '@formatjs/intl':
-        specifier: ^2.10.0
-        version: 2.10.0(typescript@5.3.3)
+        specifier: ^2.10.1
+        version: 2.10.1(typescript@5.3.3)
       flat:
         specifier: ^6.0.1
         version: 6.0.1
@@ -2182,8 +2182,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@formatjs/intl@2.10.0(typescript@5.3.3):
-    resolution: {integrity: sha512-X3xT9guVkKDS86EKV80lS0KxoazUglkJTGZO66sKY7otgl0VeStPA8B3u8UkKT47PexVV98fUzjpkchYmbe9nw==}
+  /@formatjs/intl@2.10.1(typescript@5.3.3):
+    resolution: {integrity: sha512-dsLG15U7xDi8yzKf4hcAWSsCaez3XrjTO2oaRHPyHtXLm1aEzYbDw6bClo/HMHu+iwS5GbDqT3DV+hYP2ylScg==}
     peerDependencies:
       typescript: ^4.7 || 5
     peerDependenciesMeta:
@@ -5068,6 +5068,9 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependenciesMeta:
+      ajv:
+        optional: true
     dependencies:
       ajv: 8.12.0
     dev: true
