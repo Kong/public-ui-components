@@ -23,7 +23,7 @@ Query data for metric cards and render default "golden signal" metrics cards usi
 
 ## Usage
 
-First, create a wrapper around `<MetricsProviderInternal />` in the host app.  This wrapper is in charge of feeding environment-specific properties to the metrics provider, most notably:
+First, create a wrapper around `<MetricsProvider />` in the host app.  This wrapper is in charge of feeding environment-specific properties to the metrics provider, most notably:
 
 - `dataFetcher`, a function that calls the correct API to retrieve data for the provided query.
 - `hasTrendAccess`, a boolean ref that describes whether the current user is expected to be able to run trend queries.

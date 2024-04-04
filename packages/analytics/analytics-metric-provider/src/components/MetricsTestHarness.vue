@@ -3,23 +3,23 @@
     v-if="props.render === 'global'"
     id="global"
   >
-    <MetricsProviderInternal v-bind="globalProviderProps">
+    <MetricsProvider v-bind="globalProviderProps">
       <MetricsConsumer />
-    </MetricsProviderInternal>
+    </MetricsProvider>
   </div>
   <div
     v-else-if="props.render === 'single'"
     id="single"
   >
-    <MetricsProviderInternal v-bind="singleProviderProps">
+    <MetricsProvider v-bind="singleProviderProps">
       <MetricsConsumer />
-    </MetricsProviderInternal>
+    </MetricsProvider>
   </div>
   <div
     v-else-if="props.render === 'multi'"
     id="multi"
   >
-    <MetricsProviderInternal v-bind="multiProviderProps">
+    <MetricsProvider v-bind="multiProviderProps">
       <div id="route-blah">
         <MetricsConsumer
           :card-size="MetricCardSize.Small"
@@ -32,20 +32,20 @@
           lookup-key="arrgh"
         />
       </div>
-    </MetricsProviderInternal>
+    </MetricsProvider>
   </div>
   <div
     v-else-if="props.render === 'latencyCard'"
     id="latencyCard"
   >
-    <MetricsProviderInternal v-bind="singleProviderProps">
+    <MetricsProvider v-bind="singleProviderProps">
       <MetricsConsumer :card-to-display="'LATENCY'" />
-    </MetricsProviderInternal>
+    </MetricsProvider>
   </div>
 </template>
 <script setup lang="ts">
 import MetricsConsumer from './MetricsConsumer.vue'
-import MetricsProviderInternal from './MetricsProviderInternal.vue'
+import MetricsProvider from './MetricsProvider.vue'
 import { MetricCardSize } from '@kong-ui-public/metric-cards'
 import type { ExploreFilter, QueryableExploreDimensions } from '@kong-ui-public/analytics-utilities'
 import { computed } from 'vue'

@@ -15,7 +15,7 @@ import {
 } from '@kong-ui-public/analytics-utilities'
 import { TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
 import { METRICS_PROVIDER_KEY, defaultFetcherDefs } from './metricsProviderUtil'
-import { INJECT_QUERY_PROVIDER } from '../constants'
+import { INJECT_QUERY_PROVIDER, DEFAULT_REFRESH_INTERVAL } from '../constants'
 import { useAnalyticsConfigStore, SEVEN_DAYS_MS } from '@kong-ui-public/analytics-config-store'
 
 const props = withDefaults(defineProps<{
@@ -39,6 +39,7 @@ const props = withDefaults(defineProps<{
   filterValue: undefined,
   additionalFilter: undefined,
   queryReady: true,
+  refreshInterval: DEFAULT_REFRESH_INTERVAL,
   longCardTitles: false,
   containerTitle: undefined,
   description: undefined,

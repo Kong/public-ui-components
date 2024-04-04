@@ -1,20 +1,20 @@
 <template>
   <div class="metric-card-tile-wrapper">
-    <MetricsProviderInternal v-bind="options">
+    <MetricsProvider v-bind="options">
       <MetricsConsumer />
-    </MetricsProviderInternal>
+    </MetricsProvider>
   </div>
 </template>
 <script setup lang="ts">
 import type { MetricCardOptions, RendererProps } from '../types'
-import { MetricsProviderInternal, MetricsConsumer } from '@kong-ui-public/analytics-metric-provider'
+import { MetricsProvider, MetricsConsumer } from '@kong-ui-public/analytics-metric-provider'
 import { computed, type Ref } from 'vue'
 import { GranularityKeys, Timeframe, TimePeriods } from '@kong-ui-public/analytics-utilities'
 import { DEFAULT_TILE_REFRESH_INTERVAL_MS } from '../constants'
 
 // Unlike AnalyticsChart, the metric card package doesn't currently expose its options
 // in a convenient interface.
-type ProviderProps = InstanceType<typeof MetricsProviderInternal>['$props']
+type ProviderProps = InstanceType<typeof MetricsProvider>['$props']
 
 const props = defineProps<RendererProps<MetricCardOptions>>()
 

@@ -1,9 +1,9 @@
-import MetricsProviderInternal from './components/MetricsProviderInternal.vue'
+import MetricsProvider from './components/MetricsProvider.vue'
 import MetricsConsumer from './components/MetricsConsumer.vue'
 import { mockExploreResponseFromCypress, mockExploreResponse } from './mockExploreResponse'
 
 export {
-  MetricsProviderInternal,
+  MetricsProvider,
   MetricsConsumer,
   mockExploreResponseFromCypress,
   mockExploreResponse,
