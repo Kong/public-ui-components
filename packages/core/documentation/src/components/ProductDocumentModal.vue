@@ -72,6 +72,7 @@
               :label="i18n.t('documentation.form_modal.slug_label')"
               :pattern="slugRegex"
               :placeholder="i18n.t('documentation.form_modal.slug_placeholder')"
+              required
             />
           </div>
         </div>
