@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@3.0.3...@kong-ui-public/entities-plugins@3.0.4) (2024-04-07)
+
+
+### Bug Fixes
+
+* **entities-plugins:** add missing name for credentials ([#1312](https://github.com/Kong/public-ui-components/issues/1312)) ([390ac09](https://github.com/Kong/public-ui-components/commit/390ac096a52c0853c49702acef0d4d16cda902cf))
+
+
+
+
+
 ## [3.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@3.0.2...@kong-ui-public/entities-plugins@3.0.3) (2024-04-06)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
