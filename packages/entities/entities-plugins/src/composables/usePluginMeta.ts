@@ -19,6 +19,7 @@ export const usePluginMetaData = () => {
   for (const [key, value] of Object.entries(CREDENTIAL_METADATA)) {
     credentialMetaData[key] = {
       ...value,
+      name: t(value.nameKey),
       title: t(value.titleKey),
     }
   }
