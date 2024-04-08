@@ -3,6 +3,112 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.4.5...@kong-ui-public/documentation@0.4.6) (2024-04-06)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.4.4...@kong-ui-public/documentation@0.4.5) (2024-04-05)
+
+
+### Bug Fixes
+
+* **documentation:** url slug marked as required ([d249b35](https://github.com/Kong/public-ui-components/commit/d249b351c63260905656879ab1335c7c48230f05))
+
+
+
+
+
+## [0.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.4.3...@kong-ui-public/documentation@0.4.4) (2024-04-04)
+
+
+### Bug Fixes
+
+* **documentation:** bump markdown package ([18393c4](https://github.com/Kong/public-ui-components/commit/18393c476d7034e9e3bde6203791766b71c7370f))
+
+
+
+
+
+## [0.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.4.2...@kong-ui-public/documentation@0.4.3) (2024-04-04)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.4.1...@kong-ui-public/documentation@0.4.2) (2024-04-03)
+
+
+### Bug Fixes
+
+* **documentation:** add test ids ([fa265d6](https://github.com/Kong/public-ui-components/commit/fa265d6c1533ccaee85eaea353bd5242e9473b56))
+
+
+
+
+
+## [0.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.4.0...@kong-ui-public/documentation@0.4.1) (2024-04-03)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.42...@kong-ui-public/documentation@0.4.0) (2024-04-02)
+
+
+### Features
+
+* markdown editor [KHCP-11101] ([#1253](https://github.com/Kong/public-ui-components/issues/1253)) ([a0ced15](https://github.com/Kong/public-ui-components/commit/a0ced159fbde91c0db4d549b55ec2234cf93f569))
+
+
+
+
+
+## [0.3.42](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.41...@kong-ui-public/documentation@0.3.42) (2024-04-02)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.3.41](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.40...@kong-ui-public/documentation@0.3.41) (2024-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.8.15 ([#1304](https://github.com/Kong/public-ui-components/issues/1304)) ([36c16f4](https://github.com/Kong/public-ui-components/commit/36c16f474c85b28208bd7a0a60eea3ceceedc9e7))
+
+
+
+
+
+## [0.3.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.39...@kong-ui-public/documentation@0.3.40) (2024-04-01)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.3.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.38...@kong-ui-public/documentation@0.3.39) (2024-03-28)
+
+
+### Bug Fixes
+
+* **entities-consumers:** group form fields [KHCP-11029] ([#1300](https://github.com/Kong/public-ui-components/issues/1300)) ([c9375c0](https://github.com/Kong/public-ui-components/commit/c9375c07c0b7a6f09fe714f64ed48eac0ea187dd))
+
+
+
+
+
 ## [0.3.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.3.37...@kong-ui-public/documentation@0.3.38) (2024-03-27)
 
 

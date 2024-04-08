@@ -155,7 +155,7 @@ const props = defineProps({
    * Value should NOT contain config.apiBaseUrl, as we auto include this. Typically this will just an entry from
    * the endpoints file.
    *
-   * ex. `/api/runtime_groups/{controlPlaneId}/snis/{id}`
+   * ex. `/v2/control-planes/{controlPlaneId}/core-entities/snis/{id}`
    */
   fetchUrl: {
     type: String,
@@ -203,9 +203,7 @@ const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
 const { convertKeyToTitle } = composables.useStringHelpers()
 
-const { axiosInstance } = composables.useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = composables.useAxios(props.config?.axiosRequestConfig)
 
 const configFormatItems = [
   {

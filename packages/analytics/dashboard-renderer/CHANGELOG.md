@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.18.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.18.7...@kong-ui-public/dashboard-renderer@0.18.8) (2024-04-06)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.18.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.18.6...@kong-ui-public/dashboard-renderer@0.18.7) (2024-04-06)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.18.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.18.5...@kong-ui-public/dashboard-renderer@0.18.6) (2024-04-04)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.18.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.18.4...@kong-ui-public/dashboard-renderer@0.18.5) (2024-04-04)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.18.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.18.3...@kong-ui-public/dashboard-renderer@0.18.4) (2024-04-03)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.18.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.18.2...@kong-ui-public/dashboard-renderer@0.18.3) (2024-04-02)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.18.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.18.1...@kong-ui-public/dashboard-renderer@0.18.2) (2024-04-02)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.18.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.18.0...@kong-ui-public/dashboard-renderer@0.18.1) (2024-04-01)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [0.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.17.4...@kong-ui-public/dashboard-renderer@0.18.0) (2024-03-28)
+
+
+### Features
+
+* **metric-card-container:** add optional title [MA-2726] ([#1298](https://github.com/Kong/public-ui-components/issues/1298)) ([cbee003](https://github.com/Kong/public-ui-components/commit/cbee003c22262268f69da2529829cbe2347a075f))
+
+
+
+
+
+## [0.17.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.17.3...@kong-ui-public/dashboard-renderer@0.17.4) (2024-03-28)
+
+
+### Bug Fixes
+
+* **entities-consumers:** group form fields [KHCP-11029] ([#1300](https://github.com/Kong/public-ui-components/issues/1300)) ([c9375c0](https://github.com/Kong/public-ui-components/commit/c9375c07c0b7a6f09fe714f64ed48eac0ea187dd))
+
+
+
+
+
 ## [0.17.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.17.2...@kong-ui-public/dashboard-renderer@0.17.3) (2024-03-27)
 
 
@@ -191,7 +277,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 The following components are updated:
 
 - AnalyticsConfigCheck, and the associated store
-- MetricsProviderInternal
+- MetricsProvider
 - AnalyticsBridge (updates type that implementations must adhere to)
 - DashboardRenderer (sandbox and tests)
 

@@ -6,7 +6,7 @@ export const selectedDocResponse = {
   title: 'CarolineCEO_API',
   slug: 'CarolineCEO_API',
   status: 'published',
-  str_md_content: '# CarolineCEO_API\r\n\r\n## Description\r\nThis API is used to manage information about and communication to Caroline',
+  str_md_content: '# CarolineCEO_API\r\n\r\n\n## Description\r\n\nThis API is used to manage information about and communication to Caroline',
   ast: [
     {
       children: [

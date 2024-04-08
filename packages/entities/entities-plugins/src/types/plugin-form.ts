@@ -101,7 +101,9 @@ export interface DefaultPluginsFormSchema {
   tags?: PluginTags
   values?: Array<Record<string, string | number | boolean>>
   placeholder?: string
-  required?: boolean,
+  required?: boolean
+  /** Whether the field is pinned before the Plugin Configuration. FE only */
+  pinned?: boolean
   // Will be fixed in KHCP-6469
   getColumnFields?: (schema: unknown) => object
 }

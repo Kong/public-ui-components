@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.0.20...@kong-ui-public/app-layout@4.0.21) (2024-04-06)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [4.0.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.0.19...@kong-ui-public/app-layout@4.0.20) (2024-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.8.15 ([#1304](https://github.com/Kong/public-ui-components/issues/1304)) ([36c16f4](https://github.com/Kong/public-ui-components/commit/36c16f474c85b28208bd7a0a60eea3ceceedc9e7))
+
+
+
+
+
+## [4.0.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.0.18...@kong-ui-public/app-layout@4.0.19) (2024-03-28)
+
+
+### Bug Fixes
+
+* **entities-consumers:** group form fields [KHCP-11029] ([#1300](https://github.com/Kong/public-ui-components/issues/1300)) ([c9375c0](https://github.com/Kong/public-ui-components/commit/c9375c07c0b7a6f09fe714f64ed48eac0ea187dd))
+
+
+
+
+
 ## [4.0.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.0.17...@kong-ui-public/app-layout@4.0.18) (2024-03-27)
 
 

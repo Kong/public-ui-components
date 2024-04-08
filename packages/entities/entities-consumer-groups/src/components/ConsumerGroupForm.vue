@@ -160,9 +160,7 @@ const {
   searchKeys: ['username', 'custom_id', 'id'],
 })
 
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { getMessageFromError } = useErrors()
 const validators = useValidators()
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@2.1.4...@kong-ui-public/i18n@2.1.5) (2024-04-04)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#1306](https://github.com/Kong/public-ui-components/issues/1306)) ([3243b2f](https://github.com/Kong/public-ui-components/commit/3243b2f6f49763b252d498f494e4bfb6e8667033))
+
+
+
+
+
 ## [2.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@2.1.3...@kong-ui-public/i18n@2.1.4) (2024-03-19)
 
 

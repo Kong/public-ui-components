@@ -25,7 +25,20 @@
         :options="formOptions"
         :schema="formSchema"
         @model-updated="onModelUpdated"
-      />
+      >
+        <template #plugin-config-empty-state>
+          <div class="plugin-config-empty-state">
+            {{ t('plugins.form.grouping.plugin_configuration.empty') }}
+          </div>
+        </template>
+
+        <template
+          v-if="PLUGIN_METADATA[formModel.name] && PLUGIN_METADATA[formModel.name].fieldRules"
+          #plugin-config-before-content
+        >
+          <PluginFieldRuleAlerts :rules="PLUGIN_METADATA[formModel.name].fieldRules!" />
+        </template>
+      </VueFormGenerator>
     </div>
   </div>
 </template>
@@ -42,12 +55,15 @@ import '@kong-ui-public/forms/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { computed, defineComponent, onBeforeMount, provide, reactive, ref, watch, type PropType } from 'vue'
 import composables from '../composables'
+import useI18n from '../composables/useI18n'
+import { PLUGIN_METADATA } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
 import {
   type KongManagerPluginFormConfig,
   type KonnectPluginFormConfig,
   type PluginEntityInfo,
 } from '../types'
+import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 
 // Must explicitly specify these as components since they are rendered dynamically
 export default defineComponent({
@@ -116,9 +132,7 @@ const props = defineProps({
   },
 })
 
-const { axiosInstance } = useAxios({
-  headers: props.config.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const { parseSchema } = composables.useSchemas(props.entityMap.focusedEntity?.id || undefined, {
   groupFields: props.config.groupFields,
@@ -126,6 +140,7 @@ const { parseSchema } = composables.useSchemas(props.entityMap.focusedEntity?.id
 const { convertToDotNotation, unFlattenObject, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
 const { objectsAreEqual } = useHelpers()
+const { i18n: { t } } = useI18n()
 
 // define endpoints for use by KFG
 const buildGetOneUrl = (entityType: string, entityId: string): string => {
@@ -617,10 +632,27 @@ onBeforeMount(() => {
     opacity: 0;
   }
 
+  .entity-form {
+    .plugin-config-empty-state {
+      color: $kui-color-text-neutral;
+      font-size: $kui-font-size-30;
+      font-style: italic;
+      margin-bottom: $kui-space-60;
+    }
+  }
+
   :deep(.vue-form-generator) {
-    .k-collapse:not(:last-child) {
-      border-bottom: $kui-border-width-10 solid $kui-color-border;
-      margin-bottom: $kui-space-80;
+    > fieldset {
+      margin-top: $kui-space-40;
+
+      .form-group:last-child {
+        margin-bottom: $kui-space-60;
+      }
+    }
+
+    .k-collapse.root-level-collapse {
+      border-top: $kui-border-width-10 solid $kui-color-border;
+      padding-top: $kui-space-80;
     }
 
     fieldset {

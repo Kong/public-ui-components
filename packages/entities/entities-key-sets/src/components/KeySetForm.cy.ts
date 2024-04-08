@@ -9,7 +9,7 @@ const cancelRoute = { name: 'keys-list' }
 const baseConfigKonnect: KonnectKeySetFormConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-cats',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   cancelRoute,
 }
 
@@ -206,7 +206,7 @@ describe('<KeySetForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/key-sets/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/key-sets/*`,
         },
         {
           statusCode: 200,
@@ -219,7 +219,7 @@ describe('<KeySetForm />', () => {
       cy.intercept(
         {
           method: 'PUT',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/key-sets/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/key-sets/*`,
         },
         {
           statusCode: status,
@@ -324,7 +324,7 @@ describe('<KeySetForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/key-sets/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/key-sets/*`,
         },
         {
           statusCode: 404,

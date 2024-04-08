@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.3.4...@kong-ui-public/analytics-config-store@0.3.5) (2024-04-06)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-config-store
+
+
+
+
+
+## [0.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.3.3...@kong-ui-public/analytics-config-store@0.3.4) (2024-04-06)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-config-store
+
+
+
+
+
+## [0.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.3.2...@kong-ui-public/analytics-config-store@0.3.3) (2024-04-04)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-config-store
+
+
+
+
+
 ## [0.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.3.1...@kong-ui-public/analytics-config-store@0.3.2) (2024-03-21)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-config-store
@@ -34,7 +58,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 The following components are updated:
 
 - AnalyticsConfigCheck, and the associated store
-- MetricsProviderInternal
+- MetricsProvider
 - AnalyticsBridge (updates type that implementations must adhere to)
 - DashboardRenderer (sandbox and tests)
 

@@ -227,9 +227,7 @@ const props = defineProps({
 
 const { i18n: { t } } = composables.useI18n()
 
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const fetcherCacheKey = ref<number>(1)
 
 /**
@@ -460,6 +458,7 @@ const formConfig = computed((): KonnectTargetFormConfig | KongManagerTargetFormC
     app: props.config.app,
     apiBaseUrl: props.config.apiBaseUrl,
     upstreamId: props.config.upstreamId,
+    axiosRequestConfig: props.config.axiosRequestConfig,
     ...{
       // Depending on the app, we need to pass in the control plane ID or workspace
       // see KonnectTargetFormConfig and KongManagerTargetFormConfig types
@@ -468,7 +467,6 @@ const formConfig = computed((): KonnectTargetFormConfig | KongManagerTargetFormC
       }),
       ...(props.config.app === 'kongManager' && {
         workspace: props.config.workspace,
-        requestHeaders: props.config.requestHeaders,
       }),
     },
   } as KonnectTargetFormConfig | KongManagerTargetFormConfig

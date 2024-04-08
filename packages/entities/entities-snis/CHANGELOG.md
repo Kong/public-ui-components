@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.0.2...@kong-ui-public/entities-snis@3.0.3) (2024-04-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [3.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.0.1...@kong-ui-public/entities-snis@3.0.2) (2024-04-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [3.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.0.0...@kong-ui-public/entities-snis@3.0.1) (2024-04-03)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+# [3.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@2.5.11...@kong-ui-public/entities-snis@3.0.0) (2024-04-02)
+
+
+### Code Refactoring
+
+* **entities:** remove config.requestHeaders [KM-43] ([#1302](https://github.com/Kong/public-ui-components/issues/1302)) ([144c9d8](https://github.com/Kong/public-ui-components/commit/144c9d86832ddf313df3c8e865091232792eb020))
+
+
+### BREAKING CHANGES
+
+* **entities:** Now `config.requestHeaders` is removed. Use `config.axiosRequestConfig` instead.
+
+
+
+
+
+## [2.5.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@2.5.10...@kong-ui-public/entities-snis@2.5.11) (2024-04-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [2.5.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@2.5.9...@kong-ui-public/entities-snis@2.5.10) (2024-04-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [2.5.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@2.5.8...@kong-ui-public/entities-snis@2.5.9) (2024-03-28)
+
+
+### Bug Fixes
+
+* **entities-consumers:** group form fields [KHCP-11029] ([#1300](https://github.com/Kong/public-ui-components/issues/1300)) ([c9375c0](https://github.com/Kong/public-ui-components/commit/c9375c07c0b7a6f09fe714f64ed48eac0ea187dd))
+
+
+
+
+
 ## [2.5.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@2.5.7...@kong-ui-public/entities-snis@2.5.8) (2024-03-27)
 
 

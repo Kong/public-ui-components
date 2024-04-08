@@ -217,9 +217,7 @@ const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = useErrors()
 
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const fetchUrl = computed<string>(() => {
   return props.keySetId

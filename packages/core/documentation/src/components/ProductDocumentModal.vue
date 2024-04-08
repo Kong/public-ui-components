@@ -33,6 +33,14 @@
           :message="errorMessage"
         />
 
+        <KAlert
+          v-if="editing"
+          appearance="info"
+          class="bottom-spacing"
+          :message="i18n.t('documentation.form_modal.edit_markdown')"
+          show-icon
+        />
+
         <KFileUpload
           :accept="['.md', '.markdown']"
           :button-text="fileUploadButtonText"
@@ -64,6 +72,7 @@
               :label="i18n.t('documentation.form_modal.slug_label')"
               :pattern="slugRegex"
               :placeholder="i18n.t('documentation.form_modal.slug_placeholder')"
+              required
             />
           </div>
         </div>
@@ -242,9 +251,10 @@ const publishedStatusText = computed((): string => {
 const selectedFile = ref<any>(null)
 const handleFileSelected = (file: any): void => {
   selectedFile.value = file?.[0]
-  formData.pageName = namePlaceholderText.value
-  formData.urlSlug = namePlaceholderText.value
   formData.fileName = namePlaceholderText.value
+  // Only replace the pageName and urlSlug if not already set
+  formData.pageName = formData.pageName ? formData.pageName : namePlaceholderText.value
+  formData.urlSlug = formData.urlSlug ? formData.urlSlug : namePlaceholderText.value
 }
 
 const handleFileRemoved = (): void => {

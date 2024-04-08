@@ -81,9 +81,7 @@ const emit = defineEmits(['closed', 'proceed'])
 const { i18nT, i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = useErrors()
 
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const title = computed((): string => {
   return isPluginSchemaInUse.value

@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.1.12...@kong-ui-public/spec-renderer@2.1.13) (2024-04-08)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.1.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.1.11...@kong-ui-public/spec-renderer@2.1.12) (2024-04-06)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.1.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.1.10...@kong-ui-public/spec-renderer@2.1.11) (2024-04-04)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.1.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.1.9...@kong-ui-public/spec-renderer@2.1.10) (2024-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.8.15 ([#1304](https://github.com/Kong/public-ui-components/issues/1304)) ([36c16f4](https://github.com/Kong/public-ui-components/commit/36c16f474c85b28208bd7a0a60eea3ceceedc9e7))
+
+
+
+
+
+## [2.1.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.1.8...@kong-ui-public/spec-renderer@2.1.9) (2024-04-01)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.1.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.1.7...@kong-ui-public/spec-renderer@2.1.8) (2024-03-28)
+
+
+### Bug Fixes
+
+* **entities-consumers:** group form fields [KHCP-11029] ([#1300](https://github.com/Kong/public-ui-components/issues/1300)) ([c9375c0](https://github.com/Kong/public-ui-components/commit/c9375c07c0b7a6f09fe714f64ed48eac0ea187dd))
+
+
+
+
+
 ## [2.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.1.6...@kong-ui-public/spec-renderer@2.1.7) (2024-03-27)
 
 

@@ -207,9 +207,7 @@ const props = defineProps({
   },
 })
 
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { i18n: { t }, i18nT } = composables.useI18n()
 const internalServiceId = ref('')
 const serviceName = ref('')

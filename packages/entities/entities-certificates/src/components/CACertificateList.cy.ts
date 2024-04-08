@@ -30,7 +30,7 @@ const baseConfigKM: KongManagerCertificateListConfig = {
 const baseConfigKonnect: KonnectCertificateListConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ca-certificate',
-  apiBaseUrl: '/us/kong-api/konnect-api',
+  apiBaseUrl: '/us/kong-api',
   createRoute,
   getViewRoute: () => viewRoute,
   getEditRoute: () => editRoute,
@@ -59,7 +59,7 @@ describe('<CACertificateList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/ca_certificates*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/ca_certificates*`,
         },
         {
           statusCode: 200,
@@ -468,7 +468,7 @@ describe('<CACertificateList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/ca_certificates*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/ca_certificates*`,
         },
         {
           statusCode: 200,
@@ -487,7 +487,7 @@ describe('<CACertificateList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/ca_certificates*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/ca_certificates*`,
         },
         (req) => {
           const size = req.query.size ? Number(req.query.size) : 30
@@ -546,7 +546,7 @@ describe('<CACertificateList />', () => {
         cy.intercept(
           {
             method: 'GET',
-            url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/ca_certificates*`,
+            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/ca_certificates*`,
           },
           {
             statusCode: 500,

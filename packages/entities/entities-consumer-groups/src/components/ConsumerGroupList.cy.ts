@@ -648,7 +648,7 @@ describe('<ConsumerGroupList />', () => {
     const baseConfigKonnect: KonnectConsumerGroupListConfig = {
       app: 'konnect',
       controlPlaneId: '1234-abcd-ilove-cats',
-      apiBaseUrl: '/us/kong-api/konnect-api',
+      apiBaseUrl: '/us/kong-api',
       createRoute: 'create-consumer-group',
       getViewRoute: () => 'view-consumer-group',
       getEditRoute: () => 'edit-consumer-group',
@@ -656,7 +656,7 @@ describe('<ConsumerGroupList />', () => {
     const configConsumerKonnect: KonnectConsumerGroupListConfig = {
       app: 'konnect',
       controlPlaneId: '1234-abcd-ilove-cats',
-      apiBaseUrl: '/us/kong-api/konnect-api',
+      apiBaseUrl: '/us/kong-api',
       createRoute: 'create-consumer-group',
       getViewRoute: () => 'view-consumer-group',
       getEditRoute: () => 'edit-consumer-group',
@@ -671,7 +671,7 @@ describe('<ConsumerGroupList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumer_groups*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumer_groups*`,
         },
         {
           statusCode: 200,
@@ -689,7 +689,7 @@ describe('<ConsumerGroupList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${configConsumerKonnect.apiBaseUrl}/api/runtime_groups/${configConsumerKonnect.controlPlaneId}/consumers/${configConsumerKonnect.consumerId}/consumer_groups*`,
+          url: `${configConsumerKonnect.apiBaseUrl}/v2/control-planes/${configConsumerKonnect.controlPlaneId}/core-entities/consumers/${configConsumerKonnect.consumerId}/consumer_groups*`,
         },
         {
           statusCode: 200,
@@ -706,7 +706,7 @@ describe('<ConsumerGroupList />', () => {
       cy.intercept(
         {
           method: 'DELETE',
-          url: `${configConsumerKonnect.apiBaseUrl}/api/runtime_groups/${configConsumerKonnect.controlPlaneId}/consumers/${configConsumerKonnect.consumerId}/consumer_groups/*`,
+          url: `${configConsumerKonnect.apiBaseUrl}/v2/control-planes/${configConsumerKonnect.controlPlaneId}/core-entities/consumers/${configConsumerKonnect.consumerId}/consumer_groups/*`,
         },
         {
           statusCode: params?.status || 200,
@@ -722,7 +722,7 @@ describe('<ConsumerGroupList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumer_groups*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumer_groups*`,
         },
         (req) => {
           const size = req.query.size ? Number(req.query.size) : 30
@@ -785,7 +785,7 @@ describe('<ConsumerGroupList />', () => {
         cy.intercept(
           {
             method: 'GET',
-            url: `${baseConfigKonnect.apiBaseUrl}/api/runtime_groups/${baseConfigKonnect.controlPlaneId}/consumer_groups*`,
+            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumer_groups*`,
           },
           {
             statusCode: 500,

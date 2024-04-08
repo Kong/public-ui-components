@@ -13,35 +13,35 @@
         @create-documentation="handleAddClick"
       />
     </div>
-    <KCard
+    <div
       v-else
-      class="documentation-card"
+      class="documentation-parent-container"
     >
-      <div class="documentation-parent-container">
-        <KTreeList
-          :key="`tree-list-${cacheKey}`"
-          class="document-tree-list"
-          :items="documentList"
-          :max-depth="2"
-          @change="(data: ChangeEvent) => emit('parent-change', data)"
-          @child-change="(data: ChildChangeEvent) => emit('child-change', data)"
-          @selected="(data: TreeListItem) => emit('document-selection', data)"
-        />
-        <DocumentationDisplay
-          v-if="selectedDocument"
-          :key="key"
-          :can-edit="canEdit"
-          :card="card"
-          class="document-holder"
-          :hide-publish-toggle="hidePublishToggle"
-          :selected-document="selectedDocument"
-          @add="handleAddClick"
-          @download="emit('download')"
-          @edit="handleEditClick"
-          @toggle-published="(data: any) => emit('toggle-published', data)"
-        />
-      </div>
-    </KCard>
+      <KTreeList
+        :key="`tree-list-${cacheKey}`"
+        class="document-tree-list"
+        :items="documentList"
+        :max-depth="2"
+        @change="(data: ChangeEvent) => emit('parent-change', data)"
+        @child-change="(data: ChildChangeEvent) => emit('child-change', data)"
+        @selected="(data: TreeListItem) => emit('document-selection', data)"
+      />
+      <DocumentationDisplay
+        v-if="selectedDocument"
+        :key="key"
+        :can-edit="canEdit"
+        :card="card"
+        class="document-holder"
+        :hide-publish-toggle="hidePublishToggle"
+        :selected-document="selectedDocument"
+        @add="handleAddClick"
+        @download="emit('download')"
+        @edit="handleEditClick"
+        @edit-markdown="handleEditMarkdown"
+        @save-markdown="(content: string) => emit('save-markdown', content)"
+        @toggle-published="(data: any) => emit('toggle-published', data)"
+      />
+    </div>
     <ProductDocumentModal
       v-if="displayModal"
       :action-pending="actionPending"
@@ -75,6 +75,8 @@ const emit = defineEmits<{
   (e: 'modal-closed'): void,
   (e: 'parent-change', data: ChangeEvent): void,
   (e: 'save', formData: FormData, selectedFile: any): void,
+  (e: 'edit-markdown', content: string): void,
+  (e: 'save-markdown', content: string): void,
   (e: 'toggle-published', data: boolean): void,
 }>()
 
@@ -138,7 +140,7 @@ const props = defineProps({
     default: '',
   },
   selectedDocument: {
-    type: Object as PropType<{ document: DocumentTree, ast: Object, status: 'published' | 'unpublished'}>,
+    type: Object as PropType<{ document: DocumentTree, ast: Object, markdown?: string, status: 'published' | 'unpublished'}>,
     default: () => null,
   },
 })
@@ -162,6 +164,13 @@ const handleEditClick = (): void => {
   emit('edit')
 }
 
+const handleEditMarkdown = (editingMarkdown: boolean): void => {
+  editing.value = editingMarkdown
+  if (editing.value === true) {
+    emit('edit')
+  }
+}
+
 const handleModalClosed = (): void => {
   displayModal.value = false
   emit('modal-closed')
@@ -169,9 +178,7 @@ const handleModalClosed = (): void => {
 </script>
 
 <style lang="scss" scoped>
-.documentation-card {
-  padding: $kui-space-80 $kui-space-0;
-
+.documentation {
   .doc-card-title {
     font-size: $kui-font-size-60;
   }
@@ -189,7 +196,7 @@ const handleModalClosed = (): void => {
   }
 
   .document-holder {
-    width: 82.5%; // we need to set this explicitly to override width: 100%; inherited from KCard
+    width: 83%; // we need to set this explicitly to override width: 100%; inherited from KCard
   }
 }
 </style>

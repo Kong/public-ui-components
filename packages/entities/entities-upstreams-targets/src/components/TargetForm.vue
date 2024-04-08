@@ -128,9 +128,7 @@ const props = defineProps({
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = useErrors()
 
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit.replace(/{upstreamId}/gi, props.config?.upstreamId || ''))
 const formType = computed((): EntityBaseFormType => props.targetId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)

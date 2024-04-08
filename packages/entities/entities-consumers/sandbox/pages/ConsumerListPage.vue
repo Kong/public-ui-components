@@ -60,6 +60,7 @@ const konnectConfig = ref<KonnectConsumerListConfig>({
   // Uncomment to test Consumer Groups -> Consumers
   // consumerGroupId,
   // consumerGroupName,
+  paginatedEndpoint: true,
   createRoute: { name: 'create-consumer' },
   getViewRoute: (id: string) => ({ name: 'view-consumer', params: { id } }),
   getEditRoute: (id: string) => ({ name: 'edit-consumer', params: { id } }),

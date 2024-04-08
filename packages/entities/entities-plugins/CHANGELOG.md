@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@3.0.3...@kong-ui-public/entities-plugins@3.0.4) (2024-04-07)
+
+
+### Bug Fixes
+
+* **entities-plugins:** add missing name for credentials ([#1312](https://github.com/Kong/public-ui-components/issues/1312)) ([390ac09](https://github.com/Kong/public-ui-components/commit/390ac096a52c0853c49702acef0d4d16cda902cf))
+
+
+
+
+
+## [3.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@3.0.2...@kong-ui-public/entities-plugins@3.0.3) (2024-04-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [3.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@3.0.1...@kong-ui-public/entities-plugins@3.0.2) (2024-04-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [3.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@3.0.0...@kong-ui-public/entities-plugins@3.0.1) (2024-04-03)
+
+
+### Bug Fixes
+
+* **entities-plugins:** plugin form UX phase 2 [KM-61] ([#1301](https://github.com/Kong/public-ui-components/issues/1301)) ([210a0c2](https://github.com/Kong/public-ui-components/commit/210a0c26dda0f6751676ebb61f6cc0e0c14597b4))
+
+
+
+
+
+# [3.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.17.4...@kong-ui-public/entities-plugins@3.0.0) (2024-04-02)
+
+
+### Code Refactoring
+
+* **entities:** remove config.requestHeaders [KM-43] ([#1302](https://github.com/Kong/public-ui-components/issues/1302)) ([144c9d8](https://github.com/Kong/public-ui-components/commit/144c9d86832ddf313df3c8e865091232792eb020))
+
+
+### BREAKING CHANGES
+
+* **entities:** Now `config.requestHeaders` is removed. Use `config.axiosRequestConfig` instead.
+
+
+
+
+
+## [2.17.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.17.3...@kong-ui-public/entities-plugins@2.17.4) (2024-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.8.15 ([#1304](https://github.com/Kong/public-ui-components/issues/1304)) ([36c16f4](https://github.com/Kong/public-ui-components/commit/36c16f474c85b28208bd7a0a60eea3ceceedc9e7))
+
+
+
+
+
+## [2.17.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.17.2...@kong-ui-public/entities-plugins@2.17.3) (2024-04-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [2.17.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.17.1...@kong-ui-public/entities-plugins@2.17.2) (2024-03-28)
+
+
+### Bug Fixes
+
+* **entities-consumers:** group form fields [KHCP-11029] ([#1300](https://github.com/Kong/public-ui-components/issues/1300)) ([c9375c0](https://github.com/Kong/public-ui-components/commit/c9375c07c0b7a6f09fe714f64ed48eac0ea187dd))
+
+
+
+
+
 ## [2.17.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@2.17.0...@kong-ui-public/entities-plugins@2.17.1) (2024-03-27)
 
 

@@ -29,6 +29,7 @@ export interface ExploreFilter {
 }
 
 export const exploreAggregations = [
+  'active_services',
   'request_count',
   'request_per_minute',
   'response_latency_p99',

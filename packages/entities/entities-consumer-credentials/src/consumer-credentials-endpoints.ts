@@ -1,6 +1,6 @@
 export default {
   list: {
-    konnect: '/api/runtime_groups/{controlPlaneId}/consumers/{consumerId}/{plugin}',
+    konnect: '/v2/control-planes/{controlPlaneId}/core-entities/consumers/{consumerId}/{plugin}',
     kongManager: '/{workspace}/consumers/{consumerId}/{plugin}',
   },
 }

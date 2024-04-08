@@ -54,7 +54,6 @@
         class="metricscard-value"
         :class="cardSize"
         data-testid="metric-value"
-        :style="`font-size:${metricFontSize}`"
       >
         {{ metricValue }}
       </div>
@@ -102,14 +101,11 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import {
   KUI_COLOR_BORDER_DANGER_STRONG,
-  KUI_FONT_SIZE_30, // 14px
-  KUI_FONT_SIZE_100, // 48px
   KUI_ICON_SIZE_30,
   KUI_ICON_SIZE_40,
   KUI_COLOR_TEXT_SUCCESS, // Positive trend
   KUI_COLOR_TEXT_NEUTRAL_STRONG, // Neutral trend
   KUI_COLOR_TEXT_NEUTRAL,
-  KUI_FONT_SIZE_70,
 } from '@kong/design-tokens'
 import { MetricCardType } from '../../enums'
 import { MetricCardSize } from '../../constants'
@@ -184,7 +180,12 @@ const props = defineProps({
   cardSize: {
     type: String as PropType<MetricCardSize>,
     required: false,
-    default: () => 'lg',
+    default: () => MetricCardSize.Large,
+  },
+  hasContainerTitle: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
   titleTag: {
     type: String as PropType<HeaderTag>,
@@ -215,10 +216,6 @@ const textColor = (polarity: number): string => {
 }
 
 const cardDisplayFull = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardSize.LargeCompact].includes(props.cardSize)
-
-const metricFontSize = props.cardSize === MetricCardSize.ExtraLarge
-  ? KUI_FONT_SIZE_100
-  : cardDisplayFull ? KUI_FONT_SIZE_70 : KUI_FONT_SIZE_30
 
 // TODO: remove size variant as part of Dashboards epic - MA-2193
 const isLargeCompact = computed((): boolean => props.cardSize === MetricCardSize.LargeCompact)
@@ -277,8 +274,19 @@ $row-gap-size: 12px;
     line-height: $kui-line-height-20;
     margin: $kui-space-0;
 
+    // The metric card title is always 14px; the "small" variant is the exception
     &.sm {
       font-size: $kui-font-size-20;
+    }
+    &.md {
+      font-size: $kui-font-size-30;
+      font-weight: $kui-font-weight-semibold;
+    }
+    &.lg {
+      font-size: $kui-font-size-30;
+    }
+    &.xl {
+      font-size: $kui-font-size-30;
     }
   }
 
@@ -290,19 +298,24 @@ $row-gap-size: 12px;
   }
 
   &-icon {
-    margin-right: 6px;
+    margin-right: $kui-space-20;
   }
 
   &-value {
     color: var(--kong-ui-metric-card-value, $kui-color-text);
     display: flex;
     flex-direction: row;
+    font-size: $kui-font-size-70;
     font-weight: $kui-font-weight-semibold;
     justify-content: space-between;
     line-height: $kui-line-height-60;
 
     &.sm {
+      font-size: $kui-font-size-30;
       line-height: $kui-line-height-40;
+    }
+    &.xl {
+      font-size: $kui-font-size-100;
     }
   }
 
@@ -331,7 +344,7 @@ $row-gap-size: 12px;
       flex-direction: row;
       font-size: $kui-font-size-20;
       font-weight: $kui-font-weight-semibold;
-      padding: 4px 8px;
+      padding: $kui-space-20 $kui-space-40;
 
       .kui-icon {
         margin-right: 4px;

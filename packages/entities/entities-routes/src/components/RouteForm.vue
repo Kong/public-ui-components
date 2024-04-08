@@ -410,9 +410,7 @@ const emit = defineEmits<{
 const { i18nT, i18n, i18n: { t } } = composables.useI18n()
 const protocolsLabels = i18n.source.form.protocols as Record<string, string>
 const router = useRouter()
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { getMessageFromError } = useErrors()
 
 const showGeneralInfoSection = computed<boolean>(() => !(props.hideNameField && (props.hideServiceField || !!props.serviceId) && props.showTagsFiledUnderAdvanced))

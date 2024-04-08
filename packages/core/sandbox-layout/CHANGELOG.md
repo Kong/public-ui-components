@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.49](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.0.48...@kong-ui-public/sandbox-layout@2.0.49) (2024-04-06)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.0.48](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.0.47...@kong-ui-public/sandbox-layout@2.0.48) (2024-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.8.15 ([#1304](https://github.com/Kong/public-ui-components/issues/1304)) ([36c16f4](https://github.com/Kong/public-ui-components/commit/36c16f474c85b28208bd7a0a60eea3ceceedc9e7))
+
+
+
+
+
+## [2.0.47](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.0.46...@kong-ui-public/sandbox-layout@2.0.47) (2024-03-28)
+
+
+### Bug Fixes
+
+* **entities-consumers:** group form fields [KHCP-11029] ([#1300](https://github.com/Kong/public-ui-components/issues/1300)) ([c9375c0](https://github.com/Kong/public-ui-components/commit/c9375c07c0b7a6f09fe714f64ed48eac0ea187dd))
+
+
+
+
+
 ## [2.0.46](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.0.45...@kong-ui-public/sandbox-layout@2.0.46) (2024-03-27)
 
 

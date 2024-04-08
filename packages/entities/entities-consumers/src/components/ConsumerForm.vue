@@ -21,7 +21,10 @@
           :title="t('consumers.form.info.title')"
         >
           <div>
-            <h3 class="fields-group-title">
+            <h3
+              :id="`fields-group-title-${uuid}`"
+              class="fields-group-title"
+            >
               {{ t('consumers.form.consumer_identification.title') }}*
             </h3>
             <p class="fields-group-text">
@@ -30,53 +33,55 @@
           </div>
 
           <KCard>
-            <KInput
-              v-model.trim="state.fields.username"
-              autocomplete="off"
-              class="username-field"
-              data-testid="consumer-form-username"
-              :label="t('consumers.fields.username.label')"
-              :label-attributes="{
-                tooltipAttributes: { maxWidth: '250' }
-              }"
-              :placeholder="t('consumers.fields.username.placeholder')"
-              :readonly="state.readonly"
-              type="text"
-            >
-              <template #label-tooltip>
-                <i18nT
-                  keypath="consumers.fields.username.tooltip"
-                  scope="global"
-                >
-                  <template #custom_id>
-                    <code>{{ t('consumers.fields.username.custom_id') }}</code>
-                  </template>
-                </i18nT>
-              </template>
-            </KInput>
+            <fieldset :aria-labelledby="`fields-group-title-${uuid}`">
+              <KInput
+                v-model.trim="state.fields.username"
+                autocomplete="off"
+                class="username-field"
+                data-testid="consumer-form-username"
+                :label="t('consumers.fields.username.label')"
+                :label-attributes="{
+                  tooltipAttributes: { maxWidth: '250' }
+                }"
+                :placeholder="t('consumers.fields.username.placeholder')"
+                :readonly="state.readonly"
+                type="text"
+              >
+                <template #label-tooltip>
+                  <i18nT
+                    keypath="consumers.fields.username.tooltip"
+                    scope="global"
+                  >
+                    <template #custom_id>
+                      <code>{{ t('consumers.fields.username.custom_id') }}</code>
+                    </template>
+                  </i18nT>
+                </template>
+              </KInput>
 
-            <KInput
-              v-model.trim="state.fields.customId"
-              autocomplete="off"
-              data-testid="consumer-form-custom-id"
-              :label="t('consumers.fields.custom_id.label')"
-              :label-attributes="{
-                tooltipAttributes: { maxWidth: '250' } }"
-              :placeholder="t('consumers.fields.custom_id.placeholder')"
-              :readonly="state.readonly"
-              type="text"
-            >
-              <template #label-tooltip>
-                <i18nT
-                  keypath="consumers.fields.custom_id.tooltip"
-                  scope="global"
-                >
-                  <template #username>
-                    <code>{{ t('consumers.fields.custom_id.username') }}</code>
-                  </template>
-                </i18nT>
-              </template>
-            </KInput>
+              <KInput
+                v-model.trim="state.fields.customId"
+                autocomplete="off"
+                data-testid="consumer-form-custom-id"
+                :label="t('consumers.fields.custom_id.label')"
+                :label-attributes="{
+                  tooltipAttributes: { maxWidth: '250' } }"
+                :placeholder="t('consumers.fields.custom_id.placeholder')"
+                :readonly="state.readonly"
+                type="text"
+              >
+                <template #label-tooltip>
+                  <i18nT
+                    keypath="consumers.fields.custom_id.tooltip"
+                    scope="global"
+                  >
+                    <template #username>
+                      <code>{{ t('consumers.fields.custom_id.username') }}</code>
+                    </template>
+                  </i18nT>
+                </template>
+              </KInput>
+            </fieldset>
           </KCard>
 
           <KInput
@@ -114,6 +119,7 @@ import type {
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
 import endpoints from '../consumers-endpoints'
+import { v4 as uuidv4 } from 'uuid'
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
@@ -144,10 +150,9 @@ const emit = defineEmits<{
 
 const { i18nT, i18n: { t } } = composables.useI18n()
 const router = useRouter()
-const { axiosInstance } = useAxios({
-  headers: props.config?.requestHeaders,
-})
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { getMessageFromError } = useErrors()
+const uuid = uuidv4()
 
 const state = reactive<ConsumerState>({
   fields: {
@@ -256,7 +261,14 @@ const submitData = async (): Promise<void> => {
       column-gap: $kui-space-130;
     }
   }
+
+  fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
 }
+
 .fields-group {
   &-title {
     color: $kui-color-text-neutral-strongest;

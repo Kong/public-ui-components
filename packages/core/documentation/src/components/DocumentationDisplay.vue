@@ -45,28 +45,9 @@
             @click="handlePublishToggle"
           />
         </PermissionsWrapper>
-        <KButton
-          v-if="!!selectedDocument.markdown"
-          appearance="secondary"
-          class="document-download-button"
-          data-testid="document-download-button"
-          size="small"
-          @click="handleDownloadDocument"
-        >
-          {{ i18n.t('documentation.documentation_display.download_button') }}
-        </KButton>
         <PermissionsWrapper
           :auth-function="() => canEdit()"
         >
-          <KButton
-            appearance="secondary"
-            class="document-edit-button"
-            data-testid="document-edit-button"
-            size="small"
-            @click="emit('edit')"
-          >
-            {{ i18n.t('documentation.documentation_display.edit_button') }}
-          </KButton>
           <KButton
             appearance="primary"
             data-testid="add-new-page-button"
@@ -100,10 +81,66 @@
         class="document-content"
         :class="{ 'content-card-view': card }"
       >
-        <DocumentViewer
-          v-if="defaultDocument"
-          :document="defaultDocument"
-        />
+        <MarkdownUi
+          v-if="markdownContent !== undefined"
+          v-model="markdownContent"
+          downloadable
+          :editable="userCanEdit"
+          :filename="fileName"
+          :max-height="700"
+          mode="read"
+          theme="light"
+          @cancel="restoreOriginalDocument"
+          @mode="(mode: MarkdownMode) => handleMarkdownUiModeChange(mode)"
+          @save="(payload: EmitUpdatePayload) => emit('save-markdown', payload.content)"
+        >
+          <template
+            v-if="userCanEdit || !!selectedDocument.markdown"
+            #content-actions="{ download, edit }"
+          >
+            <KDropdown
+              class="content-actions-dropdown"
+              :kpop-attributes="{ placement: 'bottomEnd' }"
+            >
+              <template #default>
+                <KTooltip :text="i18n.t('documentation.documentation_display.actions_title')">
+                  <KButton
+                    appearance="secondary"
+                    :aria-label="i18n.t('documentation.documentation_display.actions_title')"
+                    class="icon-button"
+                    data-testid="document-actions-button"
+                  >
+                    <MoreIcon decorative />
+                  </KButton>
+                </KTooltip>
+              </template>
+              <template #items>
+                <KDropdownItem
+                  v-if="userCanEdit"
+                  data-testid="document-edit-button"
+                  @click="edit"
+                >
+                  {{ i18n.t('documentation.documentation_display.edit_markdown_button') }}
+                </KDropdownItem>
+                <KDropdownItem
+                  v-if="userCanEdit"
+                  data-testid="document-settings-button"
+                  @click="emit('edit')"
+                >
+                  {{ i18n.t('documentation.documentation_display.edit_info_button') }}
+                </KDropdownItem>
+                <KDropdownItem
+                  v-if="!!selectedDocument.markdown"
+                  data-testid="document-download-button"
+                  :has-divider="userCanEdit"
+                  @click="handleDownloadDocument(download)"
+                >
+                  {{ i18n.t('documentation.documentation_display.download_button') }}
+                </KDropdownItem>
+              </template>
+            </KDropdown>
+          </template>
+        </MarkdownUi>
       </div>
     </div>
   </div>
@@ -112,10 +149,12 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import composables from '../composables'
-import DocumentViewer from '@kong-ui-public/document-viewer'
 import { isObjectEmpty } from '../helpers'
 import { PermissionsWrapper } from '@kong-ui-public/entities-shared'
-import '@kong-ui-public/document-viewer/dist/style.css'
+import { MarkdownUi } from '@kong/markdown'
+import type { EmitUpdatePayload, MarkdownMode } from '@kong/markdown'
+import { MoreIcon } from '@kong/icons'
+import '@kong/markdown/dist/style.css'
 import type { PropType } from 'vue'
 import type { DocumentTree } from '../types'
 
@@ -148,6 +187,8 @@ const emit = defineEmits<{
   (e: 'edit'): void,
   (e: 'download'): void,
   (e: 'toggle-published', newValue: boolean): void,
+  (e: 'edit-markdown', isEditingMarkdown: boolean): void,
+  (e: 'save-markdown', content: string): void,
 }>()
 
 const { i18n } = composables.useI18n()
@@ -156,40 +197,20 @@ const fileName = computed((): string => props.selectedDocument?.document?.title 
 const createdAt = computed((): string => '')
 const publishModel = ref<boolean>(false)
 const publishedStatusText = ref(i18n.t('documentation.common.unpublished'))
+const markdownContent = ref<string>(props.selectedDocument?.markdown || '')
+// Store the previous markdown content in case the user cancels editing
+const originalMarkdownContent = ref<string>(markdownContent.value)
 const defaultDocument = ref<any>(null)
 
-const handleDownloadDocument = (): void => {
-  try {
-    // If the raw markdown is not available, exit early
-    if (!props.selectedDocument.markdown) {
-      return
-    }
-
-    const blob = new Blob([props.selectedDocument.markdown], { type: 'text/markdown;charset=utf-8' })
-    const data = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = data
-    link.download = `${(fileName.value ? fileName.value : 'document').replace(/(\.md)+$/g, '')}.md`
-
-    // link.click() doesn't work in Firefox
-    link.dispatchEvent(
-      new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-      }),
-    )
+const handleDownloadDocument = (downloadFunction: () => void): void => {
+  if (typeof downloadFunction === 'function') {
+    downloadFunction()
     emit('download')
-
-    // For Firefox it is necessary to delay revoking the ObjectURL
-    setTimeout(() => {
-      window.URL.revokeObjectURL(data)
-      link.remove()
-    }, 100)
-  } catch (err) {
-    // For now, log the error
-    console.error(`Could not download document '${fileName.value}'`, err)
   }
+}
+
+const handleMarkdownUiModeChange = (mode: MarkdownMode): void => {
+  emit('edit-markdown', mode === 'edit')
 }
 
 const handlePublishToggle = (): void => {
@@ -200,6 +221,11 @@ const handlePublishToggle = (): void => {
   publishedStatusText.value = newValue
     ? i18n.t('documentation.common.published')
     : i18n.t('documentation.common.unpublished')
+}
+
+const restoreOriginalDocument = (): void => {
+  markdownContent.value = originalMarkdownContent.value
+  originalMarkdownContent.value = markdownContent.value
 }
 
 const setStatus = (status?: string): void => {
@@ -219,8 +245,15 @@ const handleDocument = () => {
     version: 1,
   }
 
+  markdownContent.value = props.selectedDocument?.markdown || ''
+  originalMarkdownContent.value = markdownContent.value
   isLoading.value = false
 }
+
+const userCanEdit = ref(false)
+watch(() => props.canEdit, async () => {
+  userCanEdit.value = await props.canEdit()
+}, { immediate: true })
 
 watch(() => props.selectedDocument, (newVal) => {
   if (!isObjectEmpty(newVal)) {
@@ -228,7 +261,8 @@ watch(() => props.selectedDocument, (newVal) => {
       setStatus(newVal.document?.status)
     }
 
-    if (newVal.ast) {
+    // Ensure we trigger updates for ast and markdown content
+    if (newVal.ast || newVal.markdown) {
       handleDocument()
     }
   }
@@ -238,7 +272,11 @@ watch(() => props.selectedDocument, (newVal) => {
 <style lang="scss" scoped>
 .document-content {
   min-height: 450px; // fixes flaky jump when markdown content loads and renders, changing height of the container
-  padding: $kui-space-80;
+  padding: $kui-space-50 $kui-space-70 $kui-space-50;
+}
+
+.markdown-content-loading {
+  padding: $kui-space-70;
 }
 
 .markdown-content-loading :deep(.skeleton-card-column) {
@@ -265,7 +303,7 @@ watch(() => props.selectedDocument, (newVal) => {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    padding: 10px $kui-space-60;
+    padding: $kui-space-40 $kui-space-70;
     row-gap: $kui-space-40;
 
     .document-meta-start {
@@ -301,16 +339,7 @@ watch(() => props.selectedDocument, (newVal) => {
   }
 
   .document-publish-toggle {
-    margin-right: $kui-space-80;
-  }
-
-  .document-download-button,
-  .document-edit-button {
-    margin-right: $kui-space-40;
-  }
-
-  .markdown-content-loader {
-    margin-bottom: $kui-space-80;
+    margin-right: $kui-space-50;
   }
 }
 </style>
