@@ -305,8 +305,8 @@ describe('<AnalyticsChart />', () => {
 
     cy.get('.analytics-chart-parent').should('be.visible')
 
-    // Move mouse from (x1, y1) to (x2, y2), over 300ms, while clicking
-    mouseMove(200, 50, 300, 50, 300, true)
+    // Move mouse from (x1, y1) to (x2, y2), over 400ms, while clicking
+    mouseMove(200, 50, 250, 50, 400, false)
 
     cy.get('body').should(($body) => {
       const tooltipExists = $body.find('.tooltip-container').length > 0

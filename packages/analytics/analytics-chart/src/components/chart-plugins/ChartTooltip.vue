@@ -33,7 +33,7 @@
       >
         <li v-if="series.length">
           <div
-            class="tooltip-legend"
+            class="square-marker"
             :style="{ background: backgroundColor, 'border-color': borderColor }"
           />
           <span class="display-label">{{ label }}</span>
@@ -278,7 +278,7 @@ ul.tooltip {
     white-space: nowrap;
   }
 
-  .tooltip-legend {
+  .square-marker {
     display: inline-flex;
     flex-direction: row;
     height: 12px;
