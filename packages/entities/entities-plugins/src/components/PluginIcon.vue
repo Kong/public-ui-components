@@ -2,17 +2,15 @@
   <img
     ref="img"
     :alt="alt"
-    :src="iconSrc || defaultIcon"
+    :src="iconSrc"
     :width="size"
     @error="onError"
   >
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { getPluginIconURL } from '../definitions/metadata'
-
-const defaultIcon = new URL('../assets/images/plugin-icons/missing.png', import.meta.url).href
 
 const props = defineProps({
   name: {
@@ -32,9 +30,10 @@ const props = defineProps({
 })
 
 const img = ref<HTMLImageElement>()
-const iconSrc = computed((): string => props.name ? getPluginIconURL(props.name) : '')
+const iconSrc = getPluginIconURL(props.name)
 
 const onError = () => {
+  const defaultIcon = new URL('../assets/images/plugin-icons/missing.png', import.meta.url).href // ? only need to compute it when plugin URL is invalid
   if (img.value) {
     img.value.src = defaultIcon
   }
