@@ -269,7 +269,7 @@ ul.legend-container {
 
   &.bottom {
     height: auto;
-    margin: $kui-space-30 0 0 $kui-space-100;
+    margin: $kui-space-40 0 0 $kui-space-100;
     @include legendAsGrid(v-bind('legendHeight'));
   }
 
