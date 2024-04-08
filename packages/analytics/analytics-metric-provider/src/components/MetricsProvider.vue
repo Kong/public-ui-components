@@ -29,8 +29,10 @@ const props = withDefaults(defineProps<{
   refreshInterval: number,
   longCardTitles?: boolean,
   containerTitle?: string,
+  containerSubtitle?: string,
   description?: string,
   abortController?: AbortController,
+  isAnalyticsEnabled?: boolean,
 }>(), {
   maxTimeframe: TimeframeKeys.THIRTY_DAY,
   overrideTimeframe: undefined,
@@ -42,8 +44,10 @@ const props = withDefaults(defineProps<{
   refreshInterval: DEFAULT_REFRESH_INTERVAL,
   longCardTitles: false,
   containerTitle: undefined,
+  containerSubtitle: undefined,
   description: undefined,
   abortController: undefined,
+  isAnalyticsEnabled: true,
 })
 
 // Fail early if there's a programming error.
@@ -127,8 +131,10 @@ provide(METRICS_PROVIDER_KEY, {
     traffic: trafficData,
     latency: latencyData,
   },
-  description: props.description,
-  containerTitle: props.containerTitle,
+  description: toRef(() => props.description),
+  containerTitle: toRef(() => props.containerTitle),
+  containerSubtitle: toRef(() => props.containerSubtitle),
+  isAnalyticsEnabled: toRef(() => props.isAnalyticsEnabled),
   hasTrendAccess,
   longCardTitles: props.longCardTitles,
 })

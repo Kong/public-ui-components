@@ -7,13 +7,14 @@ import { DEFAULT_KEY } from './useMetricFetcher'
 export interface BuilderOptions {
   cardType: MetricCardType,
   title: Ref<string>,
-  description?: string,
+  description?: Ref<string | undefined>,
   record: Ref<ChronologicalMappedMetrics>,
   hasError: Ref<boolean>,
   lookupKey?: string,
   sumGroupedValues?: string[],
   increaseIsBad?: boolean,
-  formatValueFn?: (rawValue: number) => string,
+  formatChangeFn?: Ref<((change: number) => string) | undefined>,
+  formatValueFn?: Ref<((rawValue: number) => string) | undefined>,
   trendRange?: Ref<string>,
 }
 
@@ -39,6 +40,7 @@ export default function useMetricCardBuilder(opts: BuilderOptions): Ref<MetricCa
     record,
     hasError,
     increaseIsBad,
+    formatChangeFn,
     formatValueFn,
     trendRange,
   } = opts
@@ -66,10 +68,11 @@ export default function useMetricCardBuilder(opts: BuilderOptions): Ref<MetricCa
       currentValue,
       previousValue,
       title: title.value,
-      description,
+      description: description?.value,
       increaseIsBad: !!increaseIsBad, // Coerce undefined to false
-      formatValueFn,
+      formatChangeFn: formatChangeFn?.value,
+      formatValueFn: formatValueFn?.value,
       trendRange: trendRange?.value,
-    }
+    } satisfies MetricCardDef
   })
 }

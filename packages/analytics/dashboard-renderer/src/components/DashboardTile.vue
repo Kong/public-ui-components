@@ -1,5 +1,5 @@
 <template>
-  <div class="tile-boundary">
+  <div :class="tileClass">
     <component
       :is="componentData.component"
       v-if="componentData"
@@ -58,10 +58,19 @@ const componentData = computed(() => {
     },
   }
 })
+
+const tileClass = computed(() => ({
+  'tile-boundary': true,
+  'no-padding': props.definition.noPadding,
+}))
 </script>
 
 <style lang="scss" scoped>
 .tile-boundary {
   height: v-bind('`${height}px`');
+
+  &.no-padding {
+    padding: 0 !important;
+  }
 }
 </style>

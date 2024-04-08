@@ -4,9 +4,14 @@
     title="Dashboard Renderer"
   >
     <div class="sandbox-container">
+      <KInputSwitch
+        v-model="isAnalyticsEnabled"
+        label="Toggle Analytics Enabled Status"
+      />
       <h2>Static Dashboard</h2>
+
       <DashboardRenderer
-        :config="(dashboardConfig as DashboardConfig)"
+        :config="dashboardConfig"
         :context="context"
       >
         <template #slot-1>
@@ -29,13 +34,15 @@
 <script setup lang="ts">
 import type { DashboardConfig, DashboardRendererContext, TileConfig } from '../../src'
 import { ChartTypes, DashboardRenderer } from '../../src'
-import { inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
+
+const isAnalyticsEnabled = ref(true)
 
 const context: DashboardRendererContext = {
   filters: [],
@@ -46,7 +53,7 @@ const context: DashboardRendererContext = {
   refreshInterval: 0,
 }
 
-const dashboardConfig: DashboardConfig = {
+const dashboardConfig = computed<DashboardConfig>(() => ({
   gridSize: {
     cols: 6,
     rows: 5,
@@ -58,7 +65,9 @@ const dashboardConfig: DashboardConfig = {
         chart: {
           type: ChartTypes.GoldenSignals,
           chartTitle: 'Analytics Golden Signals',
+          isAnalyticsEnabled: isAnalyticsEnabled.value,
         },
+        noPadding: true,
         query: {},
       },
       layout: {
@@ -215,6 +224,6 @@ const dashboardConfig: DashboardConfig = {
       },
     } as TileConfig,
   ],
-}
+}))
 
 </script>

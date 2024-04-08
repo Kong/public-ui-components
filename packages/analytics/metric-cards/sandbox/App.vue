@@ -46,6 +46,13 @@
         />
       </div>
 
+      <h3>Analytics Disabled</h3>
+      <div class="generic-card">
+        <MetricCardContainer
+          v-bind="cardsDisabled"
+        />
+      </div>
+
       <h3>Not Available</h3>
       <div class="generic-card">
         <MetricCardContainer
@@ -179,6 +186,22 @@ const cardsLoading: MetricCardContainerOptions = {
   loading: true,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
+}
+
+const cardsDisabled: MetricCardContainerOptions = {
+  cards: cards.map(c => ({
+    ...c,
+    description: '',
+    trendRange: '',
+    formatChangeFn: () => 'N/A',
+    formatValueFn: () => '',
+  })).slice(0, 3),
+  loading: false,
+  hasTrendAccess: false,
+  containerTitle: 'Analytics',
+  containerSubtitle: 'Enable analytics switch for deeper insights.',
+  fallbackDisplayText: 'Not available',
+  cardSize: MetricCardSize.Large,
 }
 
 const cardsNotAvailable: MetricCardContainerOptions = {

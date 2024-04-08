@@ -154,6 +154,9 @@ export const metricCardSchema = {
   type: 'object',
   properties: {
     chartTitle,
+    chartSubtitle: {
+      type: 'string',
+    },
     type: {
       type: 'string',
       enum: [ChartTypes.GoldenSignals],
@@ -163,6 +166,9 @@ export const metricCardSchema = {
     },
     description: {
       type: 'string',
+    },
+    isAnalyticsEnabled: {
+      type: 'boolean',
     },
   },
   required: ['type'],
@@ -367,6 +373,10 @@ export const tileDefinitionSchema = {
     query: exploreV4QuerySchema,
     chart: {
       oneOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema, metricCardSchema, topNTableSchema, slottableSchema],
+    },
+    noPadding: {
+      type: 'boolean',
+      description: 'If true, the tile will not have padding.',
     },
   },
   required: ['query', 'chart'],

@@ -112,6 +112,7 @@ const globalProviderProps = {
   longCardTitles: false,
   description: 'Generic Description',
   containerTitle: 'Analytics',
+  containerSubtitle: 'Subtitle',
 }
 const globalBridge = makeQueryBridge()
 

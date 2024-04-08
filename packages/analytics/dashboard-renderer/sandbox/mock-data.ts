@@ -253,6 +253,7 @@ export const summaryDashboardConfig: DashboardConfig = {
         chart: {
           type: ChartTypes.GoldenSignals,
         },
+        noPadding: true,
       },
       layout: {
         position: {

@@ -53,8 +53,10 @@ const options = computed<ProviderProps>(() => ({
   additionalFilter: props.context.filters,
   longCardTitles: props.chartOptions.longCardTitles,
   containerTitle: props.chartOptions.chartTitle,
+  containerSubtitle: props.chartOptions.chartSubtitle,
   description: props.chartOptions.description,
   hasTrendAccess: true,
+  isAnalyticsEnabled: props.chartOptions.isAnalyticsEnabled ?? true,
   refreshInterval: props.context.refreshInterval ?? DEFAULT_TILE_REFRESH_INTERVAL_MS,
 }))
 </script>

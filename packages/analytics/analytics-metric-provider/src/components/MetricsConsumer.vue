@@ -1,6 +1,7 @@
 <template>
   <slot :card-values="cardValues">
     <MetricCardContainer
+      :class="wrapperClass"
       v-bind="containerOpts"
     />
   </slot>
@@ -38,17 +39,27 @@ const { traffic, latency } = providerData.data
 
 const { i18n } = composables.useI18n()
 
+const wrapperClass = computed(() => ({
+  'metric-card-wrapper': true,
+  'is-disabled': !providerData.isAnalyticsEnabled.value,
+}))
+
+const returnNAStr = () => 'N/A'
+const returnEmptyStr = () => ''
+
 const trafficCard = composables.useMetricCardBuilder({
   cardType: MetricCardType.TRAFFIC,
   title: computed(() => providerData.longCardTitles
     ? i18n.t('metricCard.long.traffic')
     : i18n.t('metricCard.short.traffic')),
-  description: providerData.description,
+  description: computed(() => providerData.isAnalyticsEnabled.value ? providerData.description?.value : ''),
   record: traffic.mapped,
   hasError: traffic.hasError,
   lookupKey: props.lookupKey,
   sumGroupedValues: ALL_STATUS_CODE_GROUPS,
-  trendRange: traffic.trendRange,
+  trendRange: computed(() => providerData.isAnalyticsEnabled.value ? traffic.trendRange.value : ''),
+  formatChangeFn: computed(() => providerData.isAnalyticsEnabled.value ? undefined : returnNAStr),
+  formatValueFn: computed(() => providerData.isAnalyticsEnabled.value ? undefined : returnEmptyStr),
 })
 
 // Error rate (special case, requires operation)
@@ -71,14 +82,15 @@ const errorRateCard = computed<MetricCardDef>(() => {
     hasError: traffic.hasError.value,
     currentValue: errorRateCurrent,
     previousValue: errorRatePrevious,
-    formatValueFn: formatErrorRate,
+    formatChangeFn: providerData.isAnalyticsEnabled.value ? undefined : returnNAStr,
+    formatValueFn: providerData.isAnalyticsEnabled.value ? formatErrorRate : returnEmptyStr,
     title: providerData.longCardTitles
       ? i18n.t('metricCard.long.errorRate')
       : i18n.t('metricCard.short.errorRate'),
-    description: providerData.description,
+    description: providerData.isAnalyticsEnabled.value ? providerData.description?.value : '',
     increaseIsBad: true,
-    trendRange: traffic.trendRange.value,
-  }
+    trendRange: providerData.isAnalyticsEnabled.value ? traffic.trendRange.value : '',
+  } satisfies MetricCardDef
 })
 
 const formatLatency = (val: number) => `${val}ms`
@@ -87,13 +99,14 @@ const latencyCard = composables.useMetricCardBuilder({
   title: computed(() => providerData.longCardTitles
     ? i18n.t('metricCard.long.latency')
     : i18n.t('metricCard.short.latency')),
-  description: providerData.description,
+  description: computed(() => providerData.isAnalyticsEnabled.value ? providerData.description?.value : ''),
   hasError: latency.hasError,
   record: latency.mapped,
   lookupKey: props.lookupKey,
   increaseIsBad: true,
-  formatValueFn: formatLatency,
-  trendRange: latency.trendRange,
+  formatChangeFn: computed(() => providerData.isAnalyticsEnabled.value ? undefined : returnNAStr),
+  formatValueFn: computed(() => providerData.isAnalyticsEnabled.value ? formatLatency : returnEmptyStr),
+  trendRange: computed(() => providerData.isAnalyticsEnabled.value ? latency.trendRange.value : ''),
 })
 
 const cards: Ref<MetricCardDef[]> = computed(() => {
@@ -121,12 +134,13 @@ const isLoading = computed<boolean>(() => {
 // TODO: per-card loading?
 const containerOpts = computed(() => ({
   cards: cards.value,
-  containerTitle: providerData.containerTitle,
+  containerTitle: providerData.containerTitle?.value,
+  containerSubtitle: providerData.containerSubtitle?.value,
   loading: isLoading.value,
-  hasTrendAccess: providerData.hasTrendAccess.value,
+  hasTrendAccess: providerData.isAnalyticsEnabled.value ? providerData.hasTrendAccess.value : false,
   fallbackDisplayText: i18n.t('general.notAvailable'),
   // If the parent container has a title, we enforce a Medium card size; otherwise, pass down provided cardSize
-  cardSize: providerData.containerTitle ? MetricCardSize.Medium : props.cardSize,
+  cardSize: providerData.containerTitle?.value ? MetricCardSize.Medium : props.cardSize,
   hideTitle: true,
 }))
 
@@ -140,3 +154,13 @@ const cardValues = computed(() => ({
 }))
 
 </script>
+
+<style lang="scss" scoped>
+.metric-card-wrapper {
+  padding: $kui-space-70;
+}
+
+.is-disabled {
+  background-color: $kui-color-background-neutral-weakest;
+}
+</style>

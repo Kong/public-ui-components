@@ -100,6 +100,7 @@ describe('<DashboardRenderer />', () => {
               chart: {
                 type: ChartTypes.GoldenSignals,
               },
+              noPadding: true,
               query: {},
             },
             layout: {

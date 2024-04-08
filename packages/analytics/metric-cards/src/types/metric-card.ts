@@ -36,5 +36,6 @@ export interface MetricCardContainerOptions {
   loading: boolean
   cardSize?: MetricCardSize
   containerTitle?: string
+  containerSubtitle?: string
   errorMessage?: string
 }
