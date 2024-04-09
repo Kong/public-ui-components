@@ -98,7 +98,7 @@ const isDeletedEntity = computed(() => {
 })
 
 const entityUuid = computed(() => {
-  return props.entityLinkData.id.toString().includes(':')
+  return props.entityLinkData.id?.toString().includes(':')
     ? props.entityLinkData.id.toString().split(':')[1]
     : props.entityLinkData.id
 })
@@ -107,7 +107,7 @@ const deletedUuidDisplay = computed(() => {
   // Note: in order for components that use EntityLink to look the same as other
   // Analytics components that just directly render the name from the API,
   // this format needs to be in sync with the backend.
-  return `${entityUuid.value.toString().slice(0, 5)} (deleted)`
+  return `${entityUuid.value?.toString().slice(0, 5)} (deleted)`
 })
 
 const onCopyUuid = async (copyToClipboard: (str: string) => Promise<boolean>): Promise<void> => {
