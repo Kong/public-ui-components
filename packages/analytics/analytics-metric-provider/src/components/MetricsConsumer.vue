@@ -84,9 +84,13 @@ const errorRateCard = computed<MetricCardDef>(() => {
 const formatLatency = (val: number) => `${val}ms`
 const latencyCard = composables.useMetricCardBuilder({
   cardType: MetricCardType.LATENCY,
-  title: computed(() => providerData.longCardTitles
-    ? i18n.t('metricCard.long.latency')
-    : i18n.t('metricCard.short.latency')),
+  title: computed(() => {
+    const { longCardTitles, averageLatencies } = providerData
+    const titleKey = averageLatencies.value ? 'averageLatency' : 'p99Latency'
+    return longCardTitles
+      ? i18n.t(`metricCard.long.${titleKey}`)
+      : i18n.t(`metricCard.short.${titleKey}`)
+  }),
   description: providerData.description,
   hasError: latency.hasError,
   record: latency.mapped,

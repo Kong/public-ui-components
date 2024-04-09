@@ -30,6 +30,7 @@ const props = withDefaults(defineProps<{
   longCardTitles?: boolean,
   containerTitle?: string,
   description?: string,
+  percentileLatency?: boolean,
   abortController?: AbortController,
 }>(), {
   maxTimeframe: TimeframeKeys.THIRTY_DAY,
@@ -43,6 +44,7 @@ const props = withDefaults(defineProps<{
   longCardTitles: false,
   containerTitle: undefined,
   description: undefined,
+  percentileLatency: undefined,
   abortController: undefined,
 })
 
@@ -54,14 +56,17 @@ if (props.dimension && queryableExploreDimensions.findIndex(x => x === props.dim
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 
 let queryFn: AnalyticsBridge['queryFn']
+let evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn']
 
 if (!queryBridge) {
   console.warn('Analytics dashboards require a query bridge supplied via provide / inject.')
   console.warn("Please ensure your application has a query bridge provided under the key 'analytics-query-provider', as described in")
   console.warn('https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-metric-provider/README.md#requirements')
   queryFn = () => Promise.reject(new Error('Query bridge required'))
+  evaluateFeatureFlagFn = (_key, defaultValue) => defaultValue
 } else {
   queryFn = queryBridge.queryFn
+  evaluateFeatureFlagFn = queryBridge.evaluateFeatureFlagFn
 }
 
 const analyticsConfigStore = useAnalyticsConfigStore()
@@ -106,6 +111,16 @@ const timeframe = computed(() => {
   return retval
 })
 
+const averageLatencies = computed<boolean>(() => {
+  if (props.percentileLatency) {
+    // This is an override: ignore feature flags and any other considerations.
+    return false
+  }
+
+  // The feature flag client is guaranteed to be initialized by the time the code gets to this place.
+  return evaluateFeatureFlagFn('MA-2527-analytics-sku-config-endpoint', false)
+})
+
 const {
   trafficData,
   latencyData,
@@ -119,6 +134,7 @@ const {
   hasTrendAccess,
   refreshInterval: props.refreshInterval,
   queryFn,
+  averageLatencies,
   abortController: props.abortController,
 })
 
@@ -131,6 +147,7 @@ provide(METRICS_PROVIDER_KEY, {
   containerTitle: props.containerTitle,
   hasTrendAccess,
   longCardTitles: props.longCardTitles,
+  averageLatencies,
 })
 
 </script>

@@ -6,12 +6,14 @@
     "short": {
       "traffic": "Requests",
       "errorRate": "Error Rate",
-      "latency": "P99 Latency"
+      "averageLatency": "Average Latency",
+      "p99Latency": "P99 Latency"
     },
     "long": {
       "traffic": "Number of Requests",
       "errorRate": "Average Error Rate",
-      "latency": "P99 Latency"
+      "averageLatency": "Average Latency",
+      "p99Latency": "P99 Latency"
     }
   },
   "trendRange": {
