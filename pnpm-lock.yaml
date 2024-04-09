@@ -528,11 +528,11 @@ importers:
         specifier: 9.0.0-alpha.146
         version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
       monaco-editor:
-        specifier: 0.47.0
-        version: 0.47.0
+        specifier: 0.21.3
+        version: 0.21.3
       vite-plugin-monaco-editor:
         specifier: ^1.1.0
-        version: 1.1.0(monaco-editor@0.47.0)
+        version: 1.1.0(monaco-editor@0.21.3)
       vite-plugin-top-level-await:
         specifier: ^1.4.1
         version: 1.4.1(vite@5.2.8)
@@ -840,6 +840,12 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
+      '@kong-ui-public/expressions':
+        specifier: workspace:^
+        version: link:../../core/expressions
+      lodash.isequal:
+        specifier: ^4.5.0
+        version: 4.5.0
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -850,9 +856,18 @@ importers:
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
         version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+      '@types/lodash.isequal':
+        specifier: ^4.5.8
+        version: 4.5.8
       axios:
         specifier: ^1.6.8
         version: 1.6.8
+      monaco-editor:
+        specifier: 0.21.3
+        version: 0.21.3
+      vite-plugin-monaco-editor:
+        specifier: ^1.1.0
+        version: 1.1.0(monaco-editor@0.21.3)
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.3.3)
@@ -1044,7 +1059,7 @@ importers:
         version: 17.0.2(react@17.0.2)
       swagger-client:
         specifier: ^3.26.6
-        version: 3.26.8
+        version: 3.26.6
       swagger-ui:
         specifier: ^5.1.3
         version: 5.1.3
@@ -3999,6 +4014,12 @@ packages:
     resolution: {integrity: sha512-19429mWC+FyaAhOLzsS8kZUsI+/GmBAQ0HFiCPsKGU+7pBXOQWhyrY6xNNDwUSX8SMZMJvuFVMF9O5dQOlQK9Q==}
     dependencies:
       '@types/lodash': 4.14.202
+    dev: true
+
+  /@types/lodash.isequal@4.5.8:
+    resolution: {integrity: sha512-uput6pg4E/tj2LGxCZo9+y27JNyB2OZuuI/T5F+ylVDYuqICLG2/ktjxx0v6GvVntAf8TvEzeQLcV0ffRirXuA==}
+    dependencies:
+      '@types/lodash': 4.17.0
     dev: true
 
   /@types/lodash.mapkeys@4.6.9:
@@ -10358,6 +10379,10 @@ packages:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
     dev: false
 
+  /lodash.isequal@4.5.0:
+    resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
+    dev: false
+
   /lodash.isfunction@3.0.9:
     resolution: {integrity: sha512-AirXNj15uRIMMPihnkInB4i3NHeb4iBtNg9WRWuK2o31S+ePwwNmDPaTL3o7dTJ+VXNZim7rFs4rxN4YU1oUJw==}
     dev: true
@@ -11238,8 +11263,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /monaco-editor@0.47.0:
-    resolution: {integrity: sha512-VabVvHvQ9QmMwXu4du008ZDuyLnHs9j7ThVFsiJoXSOQk18+LF89N4ADzPbFenm0W4V2bGHnFBztIRQTgBfxzw==}
+  /monaco-editor@0.21.3:
+    resolution: {integrity: sha512-9N7wATLpi+googstvtm6IKg97vPQ77FDYEpkow5tLriM/VJ0DaTRyUP4UVzcoH7KlPDX+e/rE7/imcOUeGkT6g==}
     dev: true
 
   /mri@1.2.0:
@@ -14305,8 +14330,8 @@ packages:
     resolution: {integrity: sha512-ovssysQTa+luh7A5Weu3Rta6FJlFBBbInjOh722LIt6klpU2/HtdUbszju/G4devcvk8PGt7FCLv5wftu3THUA==}
     dev: true
 
-  /swagger-client@3.26.8:
-    resolution: {integrity: sha512-NzvHWpWLeNVJAFrH+cRyzCzYrKNYG5AuaTDwaL/sqHRDMxjj8SN9Ua84EbfsUqrUnI50sW270dgQphp0TorAcg==}
+  /swagger-client@3.26.6:
+    resolution: {integrity: sha512-PYYca8BsamZaOjlKr5ombOTeDje1ddiYAKGstpmAU3iU+mBKgqHiw5G2J77SC9+chKU5y0aJzmQX4hNu3p2y5A==}
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
       '@swagger-api/apidom-core': 0.99.1
@@ -14362,7 +14387,7 @@ packages:
       reselect: 4.1.8
       serialize-error: 8.1.0
       sha.js: 2.4.11
-      swagger-client: 3.26.8
+      swagger-client: 3.26.6
       url-parse: 1.5.10
       xml: 1.0.1
       xml-but-prettier: 1.0.1
@@ -15272,12 +15297,12 @@ packages:
       - supports-color
     dev: true
 
-  /vite-plugin-monaco-editor@1.1.0(monaco-editor@0.47.0):
+  /vite-plugin-monaco-editor@1.1.0(monaco-editor@0.21.3):
     resolution: {integrity: sha512-IvtUqZotrRoVqwT0PBBDIZPNraya3BxN/bfcNfnxZ5rkJiGcNtO5eAOWWSgT7zullIAEqQwxMU83yL9J5k7gww==}
     peerDependencies:
       monaco-editor: '>=0.33.0'
     dependencies:
-      monaco-editor: 0.47.0
+      monaco-editor: 0.21.3
     dev: true
 
   /vite-plugin-top-level-await@1.4.1(vite@5.2.8):

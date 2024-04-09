@@ -7,23 +7,23 @@
 
 <script setup lang="ts">
 import { useDebounce } from '@kong-ui-public/core'
-import type { ParseResult, Schema } from '@kong/atc-router'
+import type { ParseResult, Schema as AtcSchema } from '@kong/atc-router'
 import { Parser } from '@kong/atc-router'
 import type * as Monaco from 'monaco-editor'
 import * as monaco from 'monaco-editor'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { createSchema, type NamedSchemaDefinition } from '../schema'
+import { createSchema, type Schema } from '../schema'
 import { registerLanguage, registerTheme, theme } from '../monaco'
 
 let editor: Monaco.editor.IStandaloneCodeEditor | undefined
 let editorModel: Monaco.editor.ITextModel
 
-const parse = (expression:string, schema: Schema) => Parser.parse(expression, schema)
+const parse = (expression:string, schema: AtcSchema) => Parser.parse(expression, schema)
 
 const { debounce } = useDebounce()
 
 const props = withDefaults(defineProps<{
-  schema: NamedSchemaDefinition,
+  schema: Schema,
   parseDebounce?: number,
   inactiveUntilFocused?: boolean,
 }>(), {
@@ -45,7 +45,7 @@ const editorClass = computed(() => [
   { invalid: isParsingActive.value && parseResult.value?.status !== 'ok' },
 ])
 
-const registerSchema = (schema: NamedSchemaDefinition) => {
+const registerSchema = (schema: Schema) => {
   const { languageId } = registerLanguage(schema)
   monaco.editor.setModelLanguage(editorModel, languageId)
 }

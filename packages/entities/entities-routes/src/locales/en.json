@@ -85,6 +85,9 @@
       },
       "routingRules": {
         "title": "Routing Rules"
+      },
+      "routingExpression": {
+        "title": "Routing Expression"
       }
     },
     "fields": {
@@ -217,14 +220,30 @@
       "request_buffering": {
         "label": "Request buffering",
         "tooltip": "Whether to enable request body buffering or not. With HTTP 1.1, it may make sense to turn this off on services that receive data with chunked transfer encoding."
+      },
+      "expression": {
+        "label": "Expression",
+        "tooltip": "The route expression."
+      },
+      "priority": {
+        "label": "Priority",
+        "tooltip": "A number used to choose which route resolves a given request when several routes match it using expression simultaneously."
       }
+    },
+    "flavors": {
+      "traditional": "Traditional",
+      "expressions": "Expressions"
     },
     "viewAdvancedFields": "View Advanced Fields",
     "addNewRule": "Add New Rule",
     "warning": {
       "rulesMessage": "For {protocol}, at least one of {routingRules} must be set.",
       "singleRule": "{routingRules}",
-      "multipleRules": "{routingRules} or {lastRoutingRule}"
+      "multipleRules": "{routingRules} or {lastRoutingRule}",
+      "cannotChangeFlavor": {
+        "create": "The format of the route cannot be changed once created.",
+        "edit": "This route was configured in the {format} format. It cannot be changed after creation, please switch to the {format} tab or create a new route instead."
+      }
     }
   }
 }

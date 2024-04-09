@@ -2,7 +2,18 @@ import type { BaseFormConfig, KongManagerBaseFormConfig, KonnectBaseFormConfig }
 import type { RouteLocationRaw } from 'vue-router'
 import type { Methods, Method } from './method-badge'
 
-export interface BaseRouteFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>{
+export enum RouteFlavor {
+  TRADITIONAL = 'traditional', // includes traditional_compatible
+  EXPRESSIONS = 'expressions',
+}
+
+/** An object to mark route flavors supported */
+export interface RouteFlavors {
+  traditional?: boolean
+  expressions?: boolean
+}
+
+export interface BaseRouteFormConfig extends Omit<BaseFormConfig, 'cancelRoute'> {
   /** Route to return to if canceling create/edit a Route form */
   cancelRoute: RouteLocationRaw
 }
@@ -48,55 +59,84 @@ export interface Sources extends SourcesDestinationsFields { }
 
 export interface Destinations extends SourcesDestinationsFields { }
 
-export interface RouteStateFields {
-  service_id: string
+export interface BaseRouteStateFields {
   name: string
-  tags: string
-  regex_priority: number
-  path_handling: PathHandlingVersion
-  preserve_host: boolean
-  https_redirect_status_code: number
   protocols: string
+  https_redirect_status_code: number
+  strip_path: boolean
+  preserve_host: boolean
   request_buffering: boolean
   response_buffering: boolean
-  strip_path: boolean
-  paths?: string[]
-  snis?: string[]
-  hosts?: string[]
-  methods?: MethodsFields
-  headers?: HeaderFields[]
-  sources?: Sources[]
-  destinations?: Destinations[]
+  tags: string
+  service_id: string
 }
 
-export interface RouteState {
-  fields: RouteStateFields
+/** These are traditional-only fields */
+export interface TraditionalRouteStateFields {
+  methods?: MethodsFields
+  hosts?: string[]
+  paths?: string[]
+  headers?: HeaderFields[]
+  regex_priority?: number
+  path_handling: PathHandlingVersion
+  sources?: Sources[]
+  destinations?: Destinations[]
+  snis?: string[]
+}
+
+/** These are expression-only fields */
+export interface ExpressionsRouteStateFields {
+  expression: string; // Not required now, as described in Kong/kong#12667
+  priority: number
+}
+
+export interface RouteState<Fields extends BaseRouteStateFields> {
+  routeFlavors: RouteFlavors // For better type narrowing
+  fields: Fields
   isReadonly: boolean
   errorMessage: string
 }
+
+/** Type narrowing down helper function */
+export const stateHasTraditionalFlavor = (state: RouteState<BaseRouteStateFields>): state is RouteState<BaseRouteStateFields & TraditionalRouteStateFields> =>
+  state.routeFlavors.traditional === true
+
+/** Type narrowing down helper function */
+export const stateHasExpressionsFlavor = (state: RouteState<BaseRouteStateFields>): state is RouteState<BaseRouteStateFields & ExpressionsRouteStateFields> =>
+  state.routeFlavors.expressions === true
 
 export interface Headers {
   [key: string]: string[]
 }
 
-export interface RoutePayload {
+export interface BaseRoutePayload {
   id?: string
-  service: { id: string } | null
   name?: string | null
-  tags: string[]
-  regex_priority: number
-  path_handling: PathHandlingVersion
-  preserve_host: boolean
-  https_redirect_status_code: number
   protocols: Protocol[]
+  https_redirect_status_code: number
+  strip_path?: boolean | null
+  preserve_host: boolean
   request_buffering: boolean
   response_buffering: boolean
-  strip_path?: boolean | null
-  paths?: string[] | null
-  snis?: string[] | null
-  hosts?: string[] | null
+  tags: string[]
+  service: { id: string } | null
+}
+
+/** Extra payload for traditional-flavored routes */
+export interface TraditionalRoutePayload {
   methods?: Array<Method | string> | null
+  hosts?: string[] | null
+  paths?: string[] | null
   headers?: Headers | null
+  regex_priority: number
+  path_handling: PathHandlingVersion
   sources?: Sources[] | null
   destinations?: Destinations[] | null
+  snis?: string[] | null
+}
+
+/** Extra payload for expressions-flavored routes */
+export interface ExpressionsRoutePayload {
+  expression?: string; // Not required now, as described in Kong/kong#12667
+  priority: number
 }

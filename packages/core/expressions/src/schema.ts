@@ -1,16 +1,16 @@
-import { Schema, type AstType } from '@kong/atc-router'
+import { Schema as AtcSchema, type AstType } from '@kong/atc-router'
 
 export type SchemaDefinition = {
   [K in AstType]?: string[];
 };
 
-export interface NamedSchemaDefinition {
+export interface Schema {
   name: string;
   definition: SchemaDefinition;
 }
 
 export const createSchema = (definition: SchemaDefinition) => {
-  const schema = new Schema()
+  const schema = new AtcSchema()
 
   for (const [type, fields] of Object.entries(definition)) {
     for (const field of fields) {
@@ -42,15 +42,16 @@ export const STREAM_SCHEMA_DEFINITION: SchemaDefinition = {
   IpAddr: ['net.src.ip', 'net.dst.ip'],
 }
 
-export const PROTOCOL_TO_SCHEMA_DEFINITION = {
-  http: HTTP_SCHEMA_DEFINITION,
-  https: HTTP_SCHEMA_DEFINITION,
-  grpc: HTTP_SCHEMA_DEFINITION,
-  grpcs: HTTP_SCHEMA_DEFINITION,
+export const PROTOCOL_TO_SCHEMA = (() => {
+  const s: Record<string, Schema> = {}
 
-  tcp: STREAM_SCHEMA_DEFINITION,
-  udp: STREAM_SCHEMA_DEFINITION,
-  tls: STREAM_SCHEMA_DEFINITION,
+  for (const protocol of ['http', 'https', 'grpc', 'grpcs', 'ws', 'wss']) {
+    s[protocol] = { name: protocol, definition: HTTP_SCHEMA_DEFINITION }
+  }
 
-  tls_passthrough: STREAM_SCHEMA_DEFINITION,
-}
+  for (const protocol of ['tcp', 'udp', 'tls', 'tls_passthrough']) {
+    s[protocol] = { name: protocol, definition: STREAM_SCHEMA_DEFINITION }
+  }
+
+  return s
+})()

@@ -1,5 +1,5 @@
 import * as monaco from 'monaco-editor'
-import { type NamedSchemaDefinition, type SchemaDefinition } from './schema'
+import { type Schema, type SchemaDefinition } from './schema'
 
 interface MonarchLanguage extends monaco.languages.IMonarchLanguage {
   keywords: string[];
@@ -54,11 +54,10 @@ export const registerTheme = () => {
   })
 }
 
-export const registerLanguage = (schema: NamedSchemaDefinition) => {
+export const registerLanguage = (schema: Schema) => {
   const languageId = getLanguageId(schema.name)
 
   if (monaco.languages.getEncodedLanguageId(languageId) !== 0) {
-    console.warn(`Language "${languageId}" has already been registered`)
     return { languageId }
   }
 

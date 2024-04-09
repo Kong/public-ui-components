@@ -118,6 +118,23 @@ Show/hide Service Select field. Should be used in case of manual adding `service
 
 Show tags field under _Advanced Fields_ collapse or in it's default place (before protocols field).
 
+#### `routeFlavors`
+
+- type: `RouteFlavors`
+- required: `false`
+- default: `{ traditional: true }`
+- properties:
+  - `traditional`:
+    - type: `boolean`
+    - required: `false`
+    - default: `true`
+    - Whether to show input components for the traditional route.
+  - `expressions`:
+    - type: `boolean`
+    - required: `false`
+    - default: `false`
+    - Whether to show input components for the Expressions route.
+
 ### Slots
 
 #### `form-actions`

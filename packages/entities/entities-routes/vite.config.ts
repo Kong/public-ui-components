@@ -1,6 +1,7 @@
-import sharedViteConfig, { getApiProxies, sanitizePackageName } from '../../../vite.config.shared'
 import { resolve } from 'path'
 import { defineConfig, mergeConfig } from 'vite'
+import sharedViteConfig, { getApiProxies, sanitizePackageName } from '../../../vite.config.shared'
+import monacoEditorPlugin from 'vite-plugin-monaco-editor'
 
 // Package name MUST always match the kebab-case package name inside the component's package.json file and the name of your `/packages/{package-name}` directory
 const packageName = 'entities-routes'
@@ -16,12 +17,21 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       entry: resolve(__dirname, './src/index.ts'),
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
     },
+    rollupOptions: {
+      external: ['monaco-editor'], // Do not bundle monaco-editor with this package. Provide as a peer dependency
+    },
   },
   server: {
     proxy: {
       // Add the API proxies to inject the Authorization header
       ...getApiProxies(),
     },
+  },
+  ...process.env.USE_SANDBOX && {
+    plugins: [
+      // See: https://github.com/vdesjs/vite-plugin-monaco-editor/issues/21
+      ((monacoEditorPlugin as any).default as typeof monacoEditorPlugin)({}),
+    ],
   },
 }))
 

@@ -59,6 +59,7 @@ export const services = [
   },
 ]
 
+// traditional
 export const route = {
   service: {
     id: services[0].id,
@@ -76,4 +77,21 @@ export const route = {
   strip_path: false,
   paths: ['/foo', '/bar'],
   headers: { Header1: ['cropped-jeans', 'expensive-petroleum'] },
+}
+
+// expressions
+export const routeExpressions = {
+  service: {
+    id: services[0].id,
+  },
+  id: '1',
+  name: 'route-1',
+  methods: ['GET', 'CASTOM'],
+  service_id: '',
+  tags: ['dev', 'test'],
+  preserve_host: true,
+  https_redirect_status_code: 426,
+  protocols: ['http', 'https'],
+  strip_path: false,
+  expression: 'http.path == "/kong"',
 }
