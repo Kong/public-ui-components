@@ -74,9 +74,12 @@ describe('<DashboardRenderer />', () => {
       },
     })
 
+    const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = () => true as any
+
     return {
       queryFn: cy.spy(queryFn).as('fetcher'),
       configFn,
+      evaluateFeatureFlagFn,
     }
   }
 

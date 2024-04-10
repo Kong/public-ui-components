@@ -1,6 +1,12 @@
 import MetricsTestHarness from './MetricsTestHarness.vue'
 import { ref } from 'vue'
-import type { AnalyticsBridge, AnalyticsConfigV2, ExploreQuery, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type {
+  AnalyticsBridge,
+  AnalyticsConfigV2,
+  ExploreFilter,
+  ExploreQuery,
+  ExploreResultV4,
+} from '@kong-ui-public/analytics-utilities'
 import type { MockOptions } from '../mockExploreResponse'
 import { mockExploreResponse } from '../mockExploreResponse'
 import { INJECT_QUERY_PROVIDER } from '../constants'
@@ -8,9 +14,15 @@ import { createPinia, setActivePinia } from 'pinia'
 
 interface MakeQueryBridgeOptions extends MockOptions {
   hasTrendAccess?: boolean
+  queryAverages?: boolean
 }
 
 describe('<AnalyticsMetricProvider />', () => {
+
+  // General note when working on these tests: SWRV tends to cache the results of queries between tests.
+  // This is fine, but if you're checking for whether the fetcher was called with certain arguments, it
+  // can result in the order of the tests mattering.  To help avoid this issue, each test that cares about matchers
+  // should set a unique filter; this results in a different cache key.
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -22,7 +34,9 @@ describe('<AnalyticsMetricProvider />', () => {
 
         if (
           (opts.injectErrors === 'traffic' && query.metrics?.includes('request_count')) ||
-          (opts.injectErrors === 'latency' && query.metrics?.includes('response_latency_p99')) ||
+          (opts.injectErrors === 'latency' && (
+            query.metrics?.includes('response_latency_p99') ||
+            query.metrics?.includes('response_latency_average'))) ||
           opts.injectErrors === 'all'
         ) {
           // If injectErrors is latency or traffic, fail that specific query.
@@ -57,9 +71,12 @@ describe('<AnalyticsMetricProvider />', () => {
       },
     })
 
+    const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = () => (opts?.queryAverages ?? true) as any
+
     return {
       queryFn: cy.spy(queryFn).as('fetcher'),
       configFn,
+      evaluateFeatureFlagFn,
     }
   }
 
@@ -67,6 +84,7 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
+        additionalFilter: [{ type: 'in', dimension: 'api_product', values: ['renders an error if no query bridge is provided'] } as ExploreFilter],
       },
     })
 
@@ -82,6 +100,7 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
+        // This test is the only one that shouldn't have filters; it ensures no extraneous filters are added.
       },
       global: {
         provide: {
@@ -102,7 +121,7 @@ describe('<AnalyticsMetricProvider />', () => {
 
     cy.get('.metricscard-title').eq(0).should('have.text', 'Requests')
     cy.get('.metricscard-title').eq(1).should('have.text', 'Error Rate')
-    cy.get('.metricscard-title').eq(2).should('have.text', 'P99 Latency')
+    cy.get('.metricscard-title').eq(2).should('have.text', 'Average Latency')
 
     // 1001 req each for 1xx, 2xx, 3xx, 4xx, 5xx
     // 5005 total; 2002/5005 = .4 (error rate for 4xx and 5xx)
@@ -134,6 +153,61 @@ describe('<AnalyticsMetricProvider />', () => {
     })
 
     cy.get('@fetcher').should('have.been.calledTwice')
+
+    cy.get('.metricscard').should('exist')
+    cy.get('.metricscard-title').eq(0).should('have.text', 'Number of Requests')
+    cy.get('.metricscard-title').eq(1).should('have.text', 'Average Error Rate')
+    cy.get('.metricscard-title').eq(2).should('have.text', 'Average Latency')
+  })
+
+  it('renders percentiles if the feature flag is not set', () => {
+    const queryBridge = makeQueryBridge({ queryAverages: false })
+
+    cy.mount(MetricsTestHarness, {
+      props: {
+        render: 'global',
+        longCardTitles: true,
+        additionalFilter: [{ type: 'in', dimension: 'api_product', values: ['renders percentiles if the feature flag is not set'] } as ExploreFilter],
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: queryBridge,
+        },
+      },
+    })
+
+    cy.get('@fetcher').should('have.been.calledTwice')
+
+    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({ metrics: ['response_latency_p99'] }))
+    cy.get('@fetcher').should('always.have.not.been.calledWithMatch', Cypress.sinon.match({ metrics: ['response_latency_average'] }))
+
+    cy.get('.metricscard').should('exist')
+    cy.get('.metricscard-title').eq(0).should('have.text', 'Number of Requests')
+    cy.get('.metricscard-title').eq(1).should('have.text', 'Average Error Rate')
+    cy.get('.metricscard-title').eq(2).should('have.text', 'P99 Latency')
+  })
+
+  it('renders percentiles if the override is set', () => {
+    const queryBridge = makeQueryBridge()
+
+    cy.mount(MetricsTestHarness, {
+      props: {
+        render: 'global',
+        longCardTitles: true,
+        percentileLatency: true,
+        additionalFilter: [{ type: 'in', dimension: 'api_product', values: ['renders percentiles if the override is set'] } as ExploreFilter],
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: queryBridge,
+        },
+      },
+    })
+
+    cy.get('@fetcher').should('have.been.calledTwice')
+
+    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({ metrics: ['response_latency_p99'] }))
+    cy.get('@fetcher').should('always.have.not.been.calledWithMatch', Cypress.sinon.match({ metrics: ['response_latency_average'] }))
 
     cy.get('.metricscard').should('exist')
     cy.get('.metricscard-title').eq(0).should('have.text', 'Number of Requests')

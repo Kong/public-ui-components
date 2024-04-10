@@ -97,7 +97,7 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
   const { i18n } = composables.useI18n()
 
   const query: Ref<ExploreQuery> = computed(() => ({
-    metrics: opts.metrics,
+    metrics: opts.metrics.value,
     dimensions: [
       ...(opts.dimensions?.length ? [...opts.dimensions] : []),
       ...(opts.withTrend.value ? ['time'] : []),
@@ -108,7 +108,7 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
   } as ExploreQuery))
 
   const cacheKey: Ref<string | null> = computed(() => {
-    if (!opts.queryReady?.value || (opts.featureFlags && !opts.featureFlags.every(e => e))) {
+    if (!opts.queryReady?.value) {
       return null
     }
 
@@ -116,7 +116,7 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
     // need to have some uniqueness in the cache key to avoid collisions.
     // this was happening when there are multiple providers on the same page with the same dimensions and metrics.
     // For example the singleProvider and multiProvider that appear in the test harness.
-    return `metric-fetcher-${opts.timeframe.value.cacheKey()}-${opts.dimensions?.join('-')}-${opts.metrics?.join('-')}-${additionalFilterKey}`
+    return `metric-fetcher-${opts.timeframe.value.cacheKey()}-${opts.dimensions?.join('-')}-${opts.metrics.value?.join('-')}-${additionalFilterKey}`
   })
 
   const { response: raw, error: metricError, isValidating: isMetricDataValidating } = composables.useRequest<ExploreResultV4>(

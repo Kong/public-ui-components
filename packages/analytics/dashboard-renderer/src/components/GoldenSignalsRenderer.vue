@@ -54,7 +54,7 @@ const options = computed<ProviderProps>(() => ({
   longCardTitles: props.chartOptions.longCardTitles,
   containerTitle: props.chartOptions.chartTitle,
   description: props.chartOptions.description,
-  hasTrendAccess: true,
+  percentileLatency: props.chartOptions.percentileLatency,
   refreshInterval: props.context.refreshInterval ?? DEFAULT_TILE_REFRESH_INTERVAL_MS,
 }))
 </script>

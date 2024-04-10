@@ -164,6 +164,9 @@ export const metricCardSchema = {
     description: {
       type: 'string',
     },
+    percentileLatency: {
+      type: 'boolean',
+    },
   },
   required: ['type'],
 } as const satisfies JSONSchema

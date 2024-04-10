@@ -1,12 +1,13 @@
 import type {
   AnalyticsBridge,
+  ExploreAggregations,
   ExploreFilter,
   QueryableExploreDimensions,
   Timeframe,
 } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import type { MetricFetcherOptions } from '../types'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { InjectionKey, Ref } from 'vue'
 
 interface ProviderData {
@@ -17,6 +18,7 @@ interface ProviderData {
   description?: string,
   hasTrendAccess: Ref<boolean>,
   longCardTitles: boolean,
+  averageLatencies: Ref<boolean>,
 }
 
 export const METRICS_PROVIDER_KEY = Symbol('METRICS_PROVIDER_KEY') as InjectionKey<ProviderData>
@@ -31,6 +33,7 @@ interface FetcherOptions {
   hasTrendAccess: Ref<boolean>
   refreshInterval: number
   queryFn: AnalyticsBridge['queryFn']
+  averageLatencies: Ref<boolean>,
   abortController?: AbortController
 }
 
@@ -46,6 +49,7 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
     refreshInterval,
     abortController,
     queryFn,
+    averageLatencies,
   } = opts
 
   if (dimensionFilterValue && !dimension) {
@@ -74,9 +78,9 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
   })
 
   const trafficMetricFetcherOptions: MetricFetcherOptions = {
-    metrics: [
+    metrics: ref([
       'request_count',
-    ],
+    ]),
 
     // Traffic and error rate cards should only try to query for the dimension if it's going to be used.
     // It isn't used for single entity queries.
@@ -99,9 +103,9 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
   }
 
   const latencyMetricFetcherOptions: MetricFetcherOptions = {
-    metrics: [
-      'response_latency_p99',
-    ],
+    metrics: computed<ExploreAggregations[]>(() => [
+      averageLatencies.value ? 'response_latency_average' : 'response_latency_p99',
+    ]),
 
     // To keep single-entity queries consistent, don't bother querying the dimension for latency
     // in the single-entity case, even though it's possible.

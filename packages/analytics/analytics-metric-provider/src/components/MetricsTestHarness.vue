@@ -57,12 +57,14 @@ const props = withDefaults(defineProps<{
   additionalFilter?: ExploreFilter[],
   longCardTitles?: boolean,
   description?: string,
+  percentileLatency?: boolean,
 }>(), {
   refreshInterval: 60 * 1000,
   queryReady: true,
   additionalFilter: undefined,
   longCardTitles: undefined,
   description: undefined,
+  percentileLatency: undefined,
 })
 
 // Query stats for an entire org, no grouping or filtering.
