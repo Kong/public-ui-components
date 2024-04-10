@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/cli",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "private": true,
   "type": "module",
   "main": "./bin/index.js",

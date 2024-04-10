@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.50](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.49...@kong-ui-public/document-viewer@2.0.50) (2024-04-10)
+
+
+### Bug Fixes
+
+* **document-viewer:** ensure document heading slugs are unique ([#1321](https://github.com/Kong/public-ui-components/issues/1321)) ([38152ad](https://github.com/Kong/public-ui-components/commit/38152ad587137ff80eff6ed3a5cebf5fa7c8e9d1)), closes [#1318](https://github.com/Kong/public-ui-components/issues/1318)
+
+
+
+
+
 ## [2.0.49](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.0.48...@kong-ui-public/document-viewer@2.0.49) (2024-04-06)
 
 **Note:** Version bump only for package @kong-ui-public/document-viewer
