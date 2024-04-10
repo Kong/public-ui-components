@@ -42,7 +42,7 @@ importers:
         specifier: ^21.1.6
         version: 21.1.6
       '@types/node':
-        specifier: ^18.19.26
+        specifier: ^18.19.28
         version: 18.19.28
       '@types/uuid':
         specifier: ^9.0.8
@@ -441,8 +441,8 @@ importers:
         specifier: ^7.1.1
         version: 7.1.1
       inquirer:
-        specifier: ^9.2.16
-        version: 9.2.16
+        specifier: ^9.2.17
+        version: 9.2.17
       nanospinner:
         specifier: ^1.1.0
         version: 1.1.0
@@ -9400,8 +9400,8 @@ packages:
       wrap-ansi: 7.0.0
     dev: true
 
-  /inquirer@9.2.16:
-    resolution: {integrity: sha512-qzgbB+yNjgSzk2omeqMDtO9IgJet/UL67luT1MaaggRpGK73DBQct5Q4pipwFQcIKK1GbMODYd4UfsRCkSP1DA==}
+  /inquirer@9.2.17:
+    resolution: {integrity: sha512-Vr3Ia2ud5sGnioURkE69endl4SkeJcMzTF6SosKcX5GALJfId7C+JvO5ZZb6y1LOXnEofCPbwzoQ1q0e8Gaduw==}
     engines: {node: '>=18'}
     dependencies:
       '@ljharb/through': 2.3.13
