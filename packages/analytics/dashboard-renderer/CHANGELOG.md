@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.18.9...@kong-ui-public/dashboard-renderer@0.19.0) (2024-04-10)
+
+
+### Features
+
+* **analytics:** allow checking feature flags in bridge ([#1317](https://github.com/Kong/public-ui-components/issues/1317)) ([73b27c6](https://github.com/Kong/public-ui-components/commit/73b27c624244ced7f2ba84f56b04ec965675d425))
+
+
+
+
+
 ## [0.18.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.18.8...@kong-ui-public/dashboard-renderer@0.18.9) (2024-04-09)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

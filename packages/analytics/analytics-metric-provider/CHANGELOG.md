@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@5.1.5...@kong-ui-public/analytics-metric-provider@5.2.0) (2024-04-10)
+
+
+### Features
+
+* **analytics:** allow checking feature flags in bridge ([#1317](https://github.com/Kong/public-ui-components/issues/1317)) ([73b27c6](https://github.com/Kong/public-ui-components/commit/73b27c624244ced7f2ba84f56b04ec965675d425))
+
+
+
+
+
 ## [5.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@5.1.4...@kong-ui-public/analytics-metric-provider@5.1.5) (2024-04-06)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
