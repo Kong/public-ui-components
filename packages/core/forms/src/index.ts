@@ -1,11 +1,13 @@
 import type { App } from 'vue'
 import VueFormGenerator from './generator/FormGenerator.vue'
 import * as sharedForms from './forms'
+import attributesDirective from './directives'
 
 // Export Vue plugin as the default
 export default {
   install: (app: App): void => {
     app.component('VueFormGenerator', VueFormGenerator)
+    app.directive('attributes', attributesDirective)
   },
 }
 
