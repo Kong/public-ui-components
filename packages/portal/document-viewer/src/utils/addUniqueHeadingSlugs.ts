@@ -26,9 +26,9 @@ export function addSlug(child: HeadingNode, slugMap: Map<string, number>, prefix
   const text = isTextNode(firstChild)
     ? firstChild.text || defaultText
     : defaultText
-  const slugCount = slugMap.get(text)
-  slugMap.set(text, (slugCount || 0) + 1)
-  const duplicateSuffix = slugCount && slugCount > 1 ? `-${slugCount}` : ''
+  const slugCount = (slugMap.get(text) || 0) + 1
+  slugMap.set(text, slugCount)
+  const duplicateSuffix = slugCount > 1 ? `-${slugCount}` : ''
   // add a hyphen if there are multiple headings with the same text
   const slug = prefix + toSlug(text, duplicateSuffix)
 
