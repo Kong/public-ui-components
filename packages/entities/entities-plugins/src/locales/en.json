@@ -85,11 +85,7 @@
           "dynamic": "Dynamic",
           "static": "Static"
         },
-        "status": "Status",
-        "status_label": {
-          "enabled": "Enabled",
-          "disabled": "Disabled"
-        },
+        "enabled": "Enabled",
         "tags": "Tags"
       },
       "empty_state": {

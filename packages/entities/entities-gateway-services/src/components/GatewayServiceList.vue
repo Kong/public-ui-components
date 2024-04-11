@@ -73,7 +73,6 @@
                 v-model="row.enabled"
                 :data-testid="`row-${row.id}-toggle-input`"
                 :disabled="!isAllowed"
-                :label="row.enabled ? t('actions.enable.enabled_label') : t('actions.enable.disabled_label')"
                 @click.prevent="toggleEnableStatus(row)"
               />
             </div>

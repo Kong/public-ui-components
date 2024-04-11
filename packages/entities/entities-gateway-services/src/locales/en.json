@@ -6,10 +6,6 @@
     "edit": "Edit",
     "clear": "Clear",
     "view": "View Details",
-    "enable": {
-      "enabled_label": "Enabled",
-      "disabled_label": "Disabled"
-    },
     "delete": {
       "title": "Delete a Gateway Service",
       "description": "Deleting this Gateway Service will also remove any associated routes and plugins. This action cannot be reversed.",

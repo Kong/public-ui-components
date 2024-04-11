@@ -106,20 +106,9 @@
               <KInputSwitch
                 :disabled="!isAllowed"
                 :disabled-tooltip-text="!isAllowed && config.getToggleDisabledTooltip?.(row) || undefined"
-                label-before
                 :model-value="row.enabled"
                 @click.stop.prevent="isAllowed && toggleEnableStatus(row)"
-              >
-                <template #label>
-                  <div class="toggle-label">
-                    {{
-                      row.enabled
-                        ? t('plugins.list.table_headers.status_label.enabled')
-                        : t('plugins.list.table_headers.status_label.disabled')
-                    }}
-                  </div>
-                </template>
-              </KInputSwitch>
+              />
             </div>
           </template>
         </PermissionsWrapper>
@@ -385,7 +374,7 @@ if (!props.config?.entityId) {
   fields.appliedTo = { label: t('plugins.list.table_headers.applied_to'), sortable: false }
 }
 
-fields.enabled = { label: t('plugins.list.table_headers.status'), searchable: true, sortable: true }
+fields.enabled = { label: t('plugins.list.table_headers.enabled'), searchable: true, sortable: true }
 
 if (isOrderingSupported) {
   fields.ordering = { label: t('plugins.list.table_headers.ordering'), sortable: true }
@@ -812,10 +801,6 @@ onBeforeMount(async () => {
         margin-top: 4px;
       }
     }
-  }
-
-  .toggle-label {
-    font-size: $kui-font-size-30;
   }
 
   .k-badge.disabled {
