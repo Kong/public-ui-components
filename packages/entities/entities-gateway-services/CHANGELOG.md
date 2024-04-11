@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.0.4...@kong-ui-public/entities-gateway-services@3.0.5) (2024-04-11)
+
+
+### Bug Fixes
+
+* **entities:** remove the label next to the enabled switch ([#1320](https://github.com/Kong/public-ui-components/issues/1320)) ([0b9762b](https://github.com/Kong/public-ui-components/commit/0b9762bc0c52aae7478f297c0fabf5703eb1a917))
+
+
+
+
+
 ## [3.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.0.3...@kong-ui-public/entities-gateway-services@3.0.4) (2024-04-09)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services
