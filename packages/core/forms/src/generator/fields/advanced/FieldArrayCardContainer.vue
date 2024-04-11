@@ -44,10 +44,6 @@ defineEmits<{
   align-items: center;
   display: flex;
 
-  :deep(.kong-card) {
-    width: 50%;
-  }
-
   .card {
     margin-bottom: $kui-space-40;
   }
