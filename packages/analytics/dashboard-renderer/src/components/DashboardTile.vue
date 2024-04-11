@@ -8,7 +8,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ChartTypes, type DashboardRendererContext, type TileDefinition } from '../types'
+import { ChartTypes, type DashboardRendererContextInternal, type TileDefinition } from '../types'
 import type {
   Component,
 } from 'vue'
@@ -27,8 +27,9 @@ const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
 const props = withDefaults(defineProps<{
   definition: TileDefinition,
-  context: DashboardRendererContext,
-  height?: number
+  context: DashboardRendererContextInternal,
+  height?: number,
+  queryReady: boolean,
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
 })
@@ -52,7 +53,7 @@ const componentData = computed(() => {
     rendererProps: {
       query: props.definition.query,
       context: props.context,
-      queryReady: true, // TODO: Pipelining
+      queryReady: props.queryReady,
       chartOptions: props.definition.chart,
       height: props.height - PADDING_SIZE * 2,
     },

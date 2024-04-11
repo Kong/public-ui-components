@@ -56,6 +56,7 @@ const props = withDefaults(defineProps<{
   refreshInterval?: number,
   additionalFilter?: ExploreFilter[],
   longCardTitles?: boolean,
+  containerTitle?: string,
   description?: string,
   percentileLatency?: boolean,
 }>(), {
@@ -63,6 +64,7 @@ const props = withDefaults(defineProps<{
   queryReady: true,
   additionalFilter: undefined,
   longCardTitles: undefined,
+  containerTitle: undefined,
   description: undefined,
   percentileLatency: undefined,
 })

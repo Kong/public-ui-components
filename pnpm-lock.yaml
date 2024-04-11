@@ -351,6 +351,9 @@ importers:
       '@kong-ui-public/analytics-chart':
         specifier: workspace:^
         version: link:../analytics-chart
+      '@kong-ui-public/analytics-config-store':
+        specifier: workspace:^
+        version: link:../analytics-config-store
       '@kong-ui-public/analytics-metric-provider':
         specifier: workspace:^
         version: link:../analytics-metric-provider

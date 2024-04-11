@@ -9,13 +9,15 @@ import composables from '../composables'
 import type { MetricFetcherOptions } from '../types'
 import { computed, ref } from 'vue'
 import type { InjectionKey, Ref } from 'vue'
+import type { FetcherResult } from '../composables/useMetricFetcher'
 
 interface ProviderData {
   data: {
-    [key: string]: any // TODO
+    traffic: FetcherResult,
+    latency: FetcherResult,
   },
-  containerTitle?: string,
-  description?: string,
+  containerTitle: Ref<string | undefined>,
+  description: Ref<string | undefined>,
   hasTrendAccess: Ref<boolean>,
   longCardTitles: boolean,
   averageLatencies: Ref<boolean>,

@@ -10,7 +10,6 @@ import type { MetricCardOptions, RendererProps } from '../types'
 import { MetricsProvider, MetricsConsumer } from '@kong-ui-public/analytics-metric-provider'
 import { computed, type Ref } from 'vue'
 import { GranularityKeys, Timeframe, TimePeriods } from '@kong-ui-public/analytics-utilities'
-import { DEFAULT_TILE_REFRESH_INTERVAL_MS } from '../constants'
 
 // Unlike AnalyticsChart, the metric card package doesn't currently expose its options
 // in a convenient interface.
@@ -55,7 +54,8 @@ const options = computed<ProviderProps>(() => ({
   containerTitle: props.chartOptions.chartTitle,
   description: props.chartOptions.description,
   percentileLatency: props.chartOptions.percentileLatency,
-  refreshInterval: props.context.refreshInterval ?? DEFAULT_TILE_REFRESH_INTERVAL_MS,
+  refreshInterval: props.context.refreshInterval,
+  queryReady: props.queryReady,
 }))
 </script>
 

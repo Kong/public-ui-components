@@ -12,6 +12,7 @@ const delayedResponse = <T>(response: T): Promise<T> => {
 }
 
 const queryFn = async (query: ExploreQuery): Promise<ExploreResultV4> => {
+  console.log('Querying data:', query)
   if (query.dimensions && query.dimensions.findIndex(d => d === 'time') > -1) {
     return await delayedResponse(
       generateSingleMetricTimeSeriesData(
@@ -34,19 +35,28 @@ const queryFn = async (query: ExploreQuery): Promise<ExploreResultV4> => {
   return await delayedResponse(nonTsExploreResponse)
 }
 
-const configFn = (): Promise<AnalyticsConfigV2> => Promise.resolve({
-  analytics: {
-    percentiles: true,
-    retention_ms: 2592000000, // 30d
-  },
-  requests: {
-    retention_ms: 86400000,
-  },
-})
+const configFn = (): Promise<AnalyticsConfigV2> => {
+  return new Promise(resolve => {
+    window.setTimeout(() => {
+      console.log('Analytics config resolved')
+      resolve({
+        analytics: {
+          percentiles: true,
+          retention_ms: 2592000000, // 30d
+        },
+        requests: {
+          retention_ms: 86400000,
+        },
+      })
+    }, 1000)
+  })
+}
+
+const evaluateFeatureFlagFn = () => true
 
 const sandboxQueryProvider: Plugin = {
   install(app) {
-    app.provide(INJECT_QUERY_PROVIDER, { queryFn, configFn } as AnalyticsBridge)
+    app.provide(INJECT_QUERY_PROVIDER, { queryFn, configFn, evaluateFeatureFlagFn } as AnalyticsBridge)
   },
 }
 

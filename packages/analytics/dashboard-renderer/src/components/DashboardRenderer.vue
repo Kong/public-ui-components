@@ -25,6 +25,7 @@
           :context="mergedContext"
           :definition="tile.meta"
           :height="tile.layout.size.rows * (config.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
+          :query-ready="queryReady"
         />
       </template>
     </GridLayout>
@@ -32,14 +33,20 @@
 </template>
 
 <script setup lang="ts">
+import type { DashboardConfig, DashboardRendererContext, GridTile, TileConfig, TileDefinition, DashboardRendererContextInternal } from '../types'
 import { ChartTypes } from '../types'
-import type { GridTile, TileConfig, DashboardConfig, DashboardRendererContext, TileDefinition } from '../types'
 import DashboardTile from './DashboardTile.vue'
 import { computed, inject } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
-import type { AnalyticsBridge } from '@kong-ui-public/analytics-utilities'
-import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER } from '../constants'
+import type { AnalyticsBridge, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import {
+  DEFAULT_TILE_HEIGHT,
+  DEFAULT_TILE_REFRESH_INTERVAL_MS,
+  INJECT_QUERY_PROVIDER,
+  TIMEFRAME_TOKEN,
+} from '../constants'
+import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
 const props = defineProps<{
@@ -60,25 +67,85 @@ if (!queryBridge) {
   console.warn('https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/README.md#requirements')
 }
 
+const configStore = useAnalyticsConfigStore()
+
+const timeSpec = computed<TimeRangeV4>(() => {
+  if (props.context.timeSpec) {
+    return props.context.timeSpec
+  }
+
+  return {
+    type: 'relative',
+    time_range: configStore.defaultQueryTimeForOrg,
+  }
+})
+
+const queryReady = computed<boolean>(() => {
+  // In the future, this will need to be determined on a per-tile basis to support pipelining.
+  // For now, it's fine for it to only be global.
+
+  // We're ready to issue queries if we know the time spec.
+  // We know the timespec if we were given the timespec, or if the config store has loaded the org's retention
+  // and we're able to calculate a timespec.
+  return !!props.context.timeSpec || !configStore.loading
+})
+
 const gridTiles = computed(() => {
   return props.config.tiles.map((tile: TileConfig, i: number) => {
+    let tileMeta = tile.definition
+
+    if ('description' in tileMeta.chart) {
+      // Replace tokens in tile descriptions
+      const description = tileMeta.chart.description?.replace(TIMEFRAME_TOKEN, () => {
+        const timeSpecKey = timeSpec.value.type === 'absolute' ? 'custom' : timeSpec.value.time_range
+        const key = `renderer.trendRange.${timeSpecKey}`
+
+        // Right now, we basically only support 2 ranges: 24 hours and 30 days.
+        // In case of a misconfiguration, don't render a translation at all.
+        // @ts-ignore: dynamic i18n key
+        if (i18n.te(key)) {
+          // @ts-ignore: dynamic i18n key
+          return i18n.t(key)
+        }
+
+        return ''
+      })
+
+      tileMeta = {
+        ...tileMeta,
+        chart: {
+          ...tileMeta.chart,
+          description,
+        },
+      }
+    }
+
     return {
       layout: tile.layout,
-      meta: tile.definition,
+      meta: tileMeta,
       // Add a unique key to each tile internally.
       id: i,
     } as GridTile<TileDefinition>
   })
 })
 
-const mergedContext = computed(() => {
-  if (props.context.tz) {
-    return props.context
+const mergedContext = computed<DashboardRendererContextInternal>(() => {
+  let { tz, refreshInterval } = props.context
+
+  if (!tz) {
+    tz = (new Intl.DateTimeFormat()).resolvedOptions().timeZone
+  }
+
+  // Check explicitly against undefined because 0 is a valid refresh interval.
+  if (refreshInterval === undefined) {
+    refreshInterval = DEFAULT_TILE_REFRESH_INTERVAL_MS
   }
 
   return {
     ...props.context,
-    tz: (new Intl.DateTimeFormat()).resolvedOptions().timeZone,
+    tz,
+    timeSpec: timeSpec.value,
+    refreshInterval,
   }
 })
 

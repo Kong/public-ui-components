@@ -35,11 +35,11 @@ import useSWRV from 'swrv'
 import { useSwrvState } from '@kong-ui-public/core'
 import composables from '../composables'
 import type { AnalyticsBridge, ExploreFilter, ExploreQuery } from '@kong-ui-public/analytics-utilities'
-import { DEFAULT_TILE_REFRESH_INTERVAL_MS, INJECT_QUERY_PROVIDER } from '../constants'
-import type { DashboardRendererContext } from '../types'
+import { INJECT_QUERY_PROVIDER } from '../constants'
+import type { DashboardRendererContextInternal } from '../types'
 
 const props = defineProps<{
-  context: DashboardRendererContext
+  context: DashboardRendererContextInternal
   query: ExploreQuery
   queryReady: boolean
 }>()
@@ -96,7 +96,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
     emit('queryComplete')
   }
 }, {
-  refreshInterval: props.context.refreshInterval ?? DEFAULT_TILE_REFRESH_INTERVAL_MS,
+  refreshInterval: props.context.refreshInterval,
   revalidateOnFocus: false,
 })
 

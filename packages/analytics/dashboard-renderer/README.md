@@ -34,6 +34,11 @@ This component only takes two properties:
 
 For context `filters` and `timeSpec` see [here](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore-v4.ts).
 
+If a `timeSpec` is not provided in the `context` object, the renderer will determine a default based on the current organization's analytics retention:
+
+- If the org's retention is less than 30 days, the renderer will query 24 hours of data.
+- If the org's retention is greater than or equal to 30 days, the renderer will query 30 days of data.
+
 ### Example
 
 ```html

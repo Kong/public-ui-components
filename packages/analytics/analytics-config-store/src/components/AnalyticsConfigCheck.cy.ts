@@ -44,6 +44,7 @@ const makeQueryBridge = (level: 'networkFail' | 'none' | 'analytics' | 'percenti
 
       return Promise.resolve(config)
     },
+    evaluateFeatureFlagFn: () => true as any,
   }
 }
 

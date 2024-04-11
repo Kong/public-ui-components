@@ -1,50 +1,53 @@
 import { defineStore } from 'pinia'
-import type { Ref } from 'vue'
-import { inject, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import type { AnalyticsBridge, AnalyticsConfigV2 } from '@kong-ui-public/analytics-utilities'
+import { THIRTY_DAYS_MS } from '../constants'
 
 const INJECT_QUERY_PROVIDER = 'analytics-query-provider'
 
 export type ConfigStoreState = null | AnalyticsConfigV2
 
 export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
-  let fetchedConfig = false
-  const configResult = ref<ConfigStoreState>(null)
+  const analyticsConfig = ref<ConfigStoreState>(null)
 
-  const getConfig = (): Ref<ConfigStoreState> => {
-    const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
+  const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 
-    if (!queryBridge) {
-      console.warn('Analytics components require a query bridge supplied via provide / inject.')
-      console.warn("Please ensure your application has a query bridge provided under the key 'analytics-query-provider', as described in")
-      console.warn('https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/README.md#requirements')
+  if (!queryBridge) {
+    console.warn('Analytics components require a query bridge supplied via provide / inject.')
+    console.warn("Please ensure your application has a query bridge provided under the key 'analytics-query-provider', as described in")
+    console.warn('https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/README.md#requirements')
 
-      // Return a mock instance in order to prevent downstream components from waiting forever on the query.
-      // This allows, e.g., metric cards to show an error rather than just endlessly "loading".
-      configResult.value = {
-        analytics: null,
-        requests: null,
-      }
-
-      return configResult
+    // Return a mock instance in order to prevent downstream components from waiting forever on the query.
+    // This allows, e.g., metric cards to show an error rather than just endlessly "loading".
+    analyticsConfig.value = {
+      analytics: null,
+      requests: null,
     }
-
-    if (!fetchedConfig) {
-      // We haven't tried to fetch the config yet.
-      fetchedConfig = true
-
-      queryBridge.configFn().then(res => {
-        configResult.value = res
-      }).catch(err => {
-        console.warn('Error fetching analytics config')
-        console.warn(err)
-      })
-    }
-
-    return configResult
+  } else {
+    queryBridge.configFn().then(res => {
+      analyticsConfig.value = res
+    }).catch(err => {
+      console.warn('Error fetching analytics config')
+      console.warn(err)
+    })
   }
 
+  const longRetention = computed<boolean>(() => {
+    const retentionMs = analyticsConfig.value?.analytics?.retention_ms
+    return !!retentionMs && retentionMs >= THIRTY_DAYS_MS
+  })
+  const defaultQueryTimeForOrg = computed<'24h' | '30d'>(() => longRetention.value ? '30d' : '24h')
+
+  const loading = computed<boolean>(() => !analyticsConfig.value)
+  const analytics = computed<boolean>(() => !!analyticsConfig.value?.analytics)
+  const percentiles = computed<boolean>(() => !!analyticsConfig.value?.analytics?.percentiles)
+
   return {
-    getConfig,
+    analyticsConfig,
+    longRetention,
+    defaultQueryTimeForOrg,
+    loading,
+    analytics,
+    percentiles,
   }
 })
