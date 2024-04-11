@@ -5,7 +5,6 @@
   >
     <KLabel
       :id="getFieldID(schema)"
-      v-attributes="'label'"
     >{{ labelValue }}</KLabel>
   </span>
 </template>

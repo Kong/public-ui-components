@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-attributes="'wrapper'"
-    class="form-field-wrapper"
-  >
+  <div class="form-field-wrapper">
     <!--
     TODO: all these attributes are needed??
     :accept="schema.accept"
@@ -25,7 +22,6 @@
     <KInput
       v-bind="$attrs"
       :id="getFieldID(schema)"
-      v-attributes="'input'"
       :autocomplete="schema.autocomplete"
       :class="schema.fieldClasses"
       :disabled="disabled || null"
