@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.2.9...@kong-ui-public/forms@2.3.0) (2024-04-11)
+
+
+### Features
+
+* **vfg:** field-array-multi-item refactor [khcp-11348] ([#1325](https://github.com/Kong/public-ui-components/issues/1325)) ([62de58c](https://github.com/Kong/public-ui-components/commit/62de58c94e9578d7c729f87fc237d96d24acd5e6))
+
+
+
+
+
 ## [2.2.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.2.8...@kong-ui-public/forms@2.2.9) (2024-04-06)
 
 **Note:** Version bump only for package @kong-ui-public/forms
