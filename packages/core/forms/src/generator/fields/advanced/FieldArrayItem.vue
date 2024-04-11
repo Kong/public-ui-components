@@ -6,9 +6,7 @@
       class="delete"
       @click="$emit('remove-item')"
     >
-      <template #icon>
-        <TrashIcon />
-      </template>
+      <TrashIcon />
     </KButton>
   </div>
 </template>
