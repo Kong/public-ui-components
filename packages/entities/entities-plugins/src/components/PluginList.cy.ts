@@ -167,8 +167,8 @@ describe('<PluginList />', () => {
         },
       })
 
-      cy.getTestId('basic-auth').find('[data-testid="enabled"]').should('contain.text', 'Disabled')
-      cy.getTestId('acl').find('[data-testid="enabled"]').should('contain.text', 'Enabled')
+      cy.getTestId('basic-auth').find('[data-testid="enabled"] input').should('not.be.checked')
+      cy.getTestId('acl').find('[data-testid="enabled"] input').should('be.checked')
     })
 
     it('should render "Dynamic" / "Static" ordering badge', () => {
