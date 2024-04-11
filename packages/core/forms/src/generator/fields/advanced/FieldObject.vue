@@ -1,5 +1,5 @@
 <template>
-  <div v-attributes="attributes">
+  <div>
     <div v-if="schema.schema">
       <vue-form-generator
         :model="value"
@@ -78,7 +78,6 @@ export default {
 
   data() {
     return {
-      attributes: this.schema ? this.schema.attributes : undefined,
       newKeyType: 'string',
       newKeyName: '',
       keyTypes: {},

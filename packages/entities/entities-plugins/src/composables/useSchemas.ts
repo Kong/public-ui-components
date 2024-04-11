@@ -583,7 +583,7 @@ export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
         break
       case 'number':
         handleFieldNumber(schema)
-        schema.attributes = { step: 'any' }
+        // schema.attributes = { step: 'any' }
         break
       case 'integer':
         handleFieldNumber(schema)

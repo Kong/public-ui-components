@@ -10,8 +10,7 @@ textarea.form-control(
         :readonly="schema.readonly",
         :required="schema.required",
         :rows="schema.rows || 2",
-        :name="schema.inputName",
-        v-attributes="'input'")
+        :name="schema.inputName")
 </template>
 
 <script>

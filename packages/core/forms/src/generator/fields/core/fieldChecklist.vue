@@ -1,9 +1,9 @@
 <template lang="pug">
-.wrapper(v-attributes="'wrapper'")
+.wrapper
   .listbox.form-control(v-if="schema.listBox", :disabled="disabled || null")
     .list-row(v-for="item in items", :class="{'is-checked': isItemChecked(item)}")
       label
-        input(:id="getFieldID(schema, true)", type="checkbox", :checked="isItemChecked(item) || null", :disabled="disabled || null", @change="onChanged($event, item)", :name="getInputName(item)", v-attributes="'input'")
+        input(:id="getFieldID(schema, true)", type="checkbox", :checked="isItemChecked(item) || null", :disabled="disabled || null", @change="onChanged($event, item)", :name="getInputName(item)")
         | {{ getItemName(item) }}
 
   .combobox.form-control(v-if="!schema.listBox", :disabled="disabled || null")
@@ -14,7 +14,7 @@
     .dropList
       .list-row(v-if="comboExpanded", v-for="item in items", :class="{'is-checked': isItemChecked(item)}")
         label
-          input(:id="getFieldID(schema, true)", type="checkbox", :checked="isItemChecked(item) || null", :disabled="disabled || null", @change="onChanged($event, item)", :name="getInputName(item)", v-attributes="'input'")
+          input(:id="getFieldID(schema, true)", type="checkbox", :checked="isItemChecked(item) || null", :disabled="disabled || null", @change="onChanged($event, item)", :name="getInputName(item)")
           | {{ getItemName(item) }}
 </template>
 

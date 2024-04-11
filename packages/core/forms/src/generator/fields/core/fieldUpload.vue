@@ -1,5 +1,5 @@
 <template lang="pug">
-.wrapper(v-attributes="'wrapper'")
+.wrapper
   input.form-control(
     :id="getFieldID(schema)",
     type="file",
@@ -10,8 +10,7 @@
     :placeholder="schema.placeholder",
     :readonly="schema.readonly",
     :required="schema.required",
-    :disabled="disabled || null",
-    v-attributes="'input'")
+    :disabled="disabled || null")
 </template>
 
 <script>
