@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.0.4...@kong-ui-public/entities-shared@3.0.5) (2024-04-12)
+
+
+### Bug Fixes
+
+* **entities-shared:** table toolbar width ([#1327](https://github.com/Kong/public-ui-components/issues/1327)) ([8a0f533](https://github.com/Kong/public-ui-components/commit/8a0f533fb2ec00b01e9b6fb09a43db895984870b))
+
+
+
+
+
 ## [3.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.0.3...@kong-ui-public/entities-shared@3.0.4) (2024-04-09)
 
 
