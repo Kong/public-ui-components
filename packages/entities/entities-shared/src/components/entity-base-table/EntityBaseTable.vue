@@ -371,6 +371,7 @@ const handleUpdateTablePreferences = (tablePreferences: UserTablePreferences): v
 .kong-ui-entity-base-table {
   .toolbar-container {
     align-items: center;
+    width: 100%;
   }
 
   .toolbar-button-container {
