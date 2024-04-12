@@ -14,35 +14,28 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 import { TrashIcon } from '@kong/icons'
-export default {
-  name: 'FieldArrayCardContainer',
 
-  components: { TrashIcon },
-
-  props: {
-    model: {
-      type: Object,
-      default: null,
-    },
-    schema: {
-      type: Object,
-      default: null,
-    },
+defineProps({
+  model: {
+    type: Object,
+    default: () => null,
   },
+  schema: {
+    type: Object,
+    default: () => null,
+  },
+})
 
-  emits: ['remove-item'],
-}
+defineEmits<{
+  (e: 'remove-item'): void,
+}>()
 </script>
 
 <style lang='scss'>
 .array-card-container-wrapper {
   width: 100%;
-
-  .kong-card {
-    width: 50%;
-  }
 }
 </style>
 
@@ -52,11 +45,11 @@ export default {
   display: flex;
 
   .card {
-    margin-bottom: 8px;
+    margin-bottom: $kui-space-40;
   }
 
   .array-card-remove-button {
-    margin-left: 12px;
+    margin-left: $kui-space-50;
   }
 }
 </style>
