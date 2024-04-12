@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.3.0...@kong-ui-public/forms@2.4.0) (2024-04-12)
+
+
+### Features
+
+* **vfg:** field-array-card-container refactor [khcp-11346] ([#1323](https://github.com/Kong/public-ui-components/issues/1323)) ([77ca540](https://github.com/Kong/public-ui-components/commit/77ca54020a42af6b06adc2a2ae616ea54a66b95b))
+* **vfg:** field-array-item refactor [khcp-11347] ([#1324](https://github.com/Kong/public-ui-components/issues/1324)) ([ced9aa7](https://github.com/Kong/public-ui-components/commit/ced9aa7e692f88e1aaa2544d6d9f8ca7203e3f47))
+
+
+
+
+
 # [2.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.2.9...@kong-ui-public/forms@2.3.0) (2024-04-11)
 
 

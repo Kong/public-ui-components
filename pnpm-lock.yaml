@@ -804,7 +804,7 @@ importers:
         specifier: workspace:^
         version: link:../entities-shared
       '@kong-ui-public/forms':
-        specifier: ^2.3.0
+        specifier: ^2.4.0
         version: link:../../core/forms
       '@kong/icons':
         specifier: ^1.8.16
