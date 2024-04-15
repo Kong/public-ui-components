@@ -767,6 +767,12 @@ export const CREDENTIAL_SCHEMAS: Record<string, any> = {
  * @returns URL for the plugin icon
  */
 export const getPluginIconURL = (name: string) => {
-  const imageName = PLUGIN_METADATA[name]?.imageName || name
-  return new URL(`../assets/images/plugin-icons/${imageName}.png`, import.meta.url).href
+  const imageName = PLUGIN_METADATA[name]?.imageName || name || 'missing' // default icon is 'missing'
+  const iconURL = new URL(`../assets/images/plugin-icons/${imageName}.png`, import.meta.url).href
+
+  if (iconURL.includes('undefined')) {
+    // if URL ends with /undefined or /undefined.png, return default icon
+    return new URL('../assets/images/plugin-icons/missing.png', import.meta.url).href
+  }
+  return iconURL
 }
