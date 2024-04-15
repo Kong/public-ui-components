@@ -10,8 +10,8 @@
       <KCodeBlock
         id="json-endpoint-codeblock"
         :code="props.fetcherUrl"
-        is-single-line
         language="json"
+        single-line
         theme="dark"
       />
     </div>

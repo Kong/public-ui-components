@@ -15,8 +15,8 @@
           v-if="getPropValue('rowValue', slotProps)"
           :id="`ca-cert-${config.entityId}-cert-codeblock`"
           :code="getPropValue('rowValue', slotProps)"
-          is-single-line
           language="plaintext"
+          single-line
         />
       </template>
       <template #metadata-label>

@@ -3,9 +3,9 @@
     :id="codeBlockKey"
     class="document-code-block"
     :code="stringifiedCode"
-    :is-processing="isProcessing"
-    :is-single-line="isSingleLine"
     :language="lang"
+    :processing="isProcessing"
+    :single-line="isSingleLine"
     theme="light"
     @code-block-render="highlight"
   />

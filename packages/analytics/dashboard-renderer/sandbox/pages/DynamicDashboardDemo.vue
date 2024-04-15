@@ -9,8 +9,8 @@
       <KCodeBlock
         id="data-codeblock"
         :code="JSON.stringify(definition, null, 2)"
-        is-searchable
         language="json"
+        searchable
       />
     </template>
     <div class="sandbox-container">

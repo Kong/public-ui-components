@@ -25,8 +25,8 @@
           v-if="getPropValue('rowValue', slotProps)"
           :id="`certificate-${config.entityId}-cert-codeblock`"
           :code="getPropValue('rowValue', slotProps)"
-          is-single-line
           language="plaintext"
+          single-line
         />
       </template>
       <template #key-label-tooltip>
@@ -98,8 +98,8 @@
           v-if="getPropValue('rowValue', slotProps)"
           :id="`certificate-${config.entityId}-cert-alt-codeblock`"
           :code="getPropValue('rowValue', slotProps)"
-          is-single-line
           language="plaintext"
+          single-line
         />
       </template>
 
