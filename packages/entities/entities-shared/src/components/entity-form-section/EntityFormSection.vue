@@ -1,7 +1,9 @@
 <template>
-  <fieldset
+  <div
+    :aria-labelledby="legendID"
     class="kong-ui-entity-form-section"
     :class="{ 'has-divider': hasDivider }"
+    role="group"
   >
     <div class="form-section-wrapper">
       <div
@@ -12,6 +14,7 @@
         <component
           :is="titleTag"
           v-if="title"
+          :id="legendID"
           class="form-section-title"
         >
           {{ title }}
@@ -39,13 +42,14 @@
         <slot />
       </div>
     </div>
-  </fieldset>
+  </div>
 </template>
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { useSlots } from 'vue'
 import type { HeaderTag } from '@kong/kongponents'
+import { v4 as uuidv4 } from 'uuid'
 
 defineProps({
   title: {
@@ -75,6 +79,7 @@ defineProps({
 })
 
 const slots = useSlots()
+const legendID = uuidv4()
 </script>
 
 <style lang="scss" scoped>
