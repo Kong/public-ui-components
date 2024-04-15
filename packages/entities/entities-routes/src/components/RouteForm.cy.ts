@@ -260,6 +260,28 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         }
       })
 
+      if (routeFlavors?.traditional && routeFlavors?.expressions) {
+        // only test when both trad & expr tabs present
+        it('should show tooltips', () => {
+          cy.mount(RouteForm, {
+            props: {
+              config: baseConfigKM,
+              routeFlavors,
+              configTabTooltips: {
+                traditional: 'For traditional routes',
+                expressions: 'For expressions routes',
+              },
+            },
+          })
+
+          cy.get('.kong-ui-entities-route-form').should('be.visible')
+          cy.get('.kong-ui-entities-route-form form').should('be.visible')
+
+          cy.get('#traditional-tab .route-form-config-tabs-tooltip').should('contain.text', 'For traditional routes')
+          cy.get('#expressions-tab .route-form-config-tabs-tooltip').should('contain.text', 'For expressions routes')
+        })
+      }
+
       if (!routeFlavors || routeFlavors?.traditional) {
         // only test when there is trad tab
         it(`should correctly handle button state - create traditional, ${configTabs}`, () => {

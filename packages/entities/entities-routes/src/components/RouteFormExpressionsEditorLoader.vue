@@ -20,14 +20,17 @@
  * which depends on @kong-ui-public/expressions, to avoid loading the Expressions language support and the
  * editor until they are used.
  */
+import useI18n from '../composables/useI18n'
 import { defineAsyncComponent, onMounted, ref, type Component, h } from 'vue'
 
+const { i18n: { t } } = useI18n()
+
 const loadingComponent: Component = {
-  render: () => h('div', 'Loading...'),
+  render: () => h('div', t('form.expressions_editor.loading')),
 }
 
 const errorComponent: Component = {
-  render: () => h('div', 'Error occurred while loading the editor. Please view the console for more details.'),
+  render: () => h('div', t('form.expressions_editor.error')),
 }
 
 const RouteFormExpressionsEditor = defineAsyncComponent({

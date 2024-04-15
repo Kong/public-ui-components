@@ -244,6 +244,10 @@
         "create": "The format of the route cannot be changed once created.",
         "edit": "This route was configured in the {format} format. It cannot be changed after creation, please switch to the {format} tab or create a new route instead."
       }
+    },
+    "expressions_editor": {
+      "loading": "Loading the Expressions editor…",
+      "error": "Error occurred while loading the Expressions editor. Please view the console for more details."
     }
   }
 }

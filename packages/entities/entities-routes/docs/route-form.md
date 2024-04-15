@@ -135,6 +135,25 @@ Show tags field under _Advanced Fields_ collapse or in it's default place (befor
     - default: `false`
     - Whether to show input components for the Expressions route.
 
+#### `configTabTooltips`
+
+- type: `Object as PropType<{ traditional?: string; expressions?: string } | undefined>`
+- required: `false`
+- default: `undefined`
+- properties:
+  - `traditional`:
+    - type: `string`
+    - required: `false`
+    - default: `undefined`
+    - Text to show in the tooltip of the traditional config tab.
+
+  - `expressions`:
+    - type: `string`
+    - required: `false`
+    - default: `undefined`
+    - Text to show in the tooltip of the Expressions config tab.
+
+
 ### Slots
 
 #### `form-actions`

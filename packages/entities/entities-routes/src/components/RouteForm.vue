@@ -98,6 +98,7 @@
           v-model="currentConfigTab"
           data-testid="route-form-config-tabs"
           :route-flavors="routeFlavors"
+          :tooltips="configTabTooltips"
         >
           <template
             v-if="routeFlavors.traditional && routeFlavors.expressions && (!recordFlavor || recordFlavor !== currentConfigTab)"
@@ -544,12 +545,22 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  /** Route flavors to be enabled for this form */
   routeFlavors: {
     type: Object as PropType<RouteFlavors>,
     required: false,
     default: () => ({
       traditional: true,
     }),
+  },
+  /** Tooltips to show on config tabs */
+  configTabTooltips: {
+    type: Object as PropType<{
+      [RouteFlavor.TRADITIONAL]?: string,
+      [RouteFlavor.EXPRESSIONS]?: string,
+    } | undefined>,
+    required: false,
+    default: () => undefined,
   },
 })
 

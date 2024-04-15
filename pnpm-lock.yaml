@@ -843,6 +843,9 @@ importers:
       '@kong-ui-public/expressions':
         specifier: workspace:^
         version: link:../../core/expressions
+      '@kong/icons':
+        specifier: ^1.8.16
+        version: 1.8.16(vue@3.4.21)
       lodash.isequal:
         specifier: ^4.5.0
         version: 4.5.0
