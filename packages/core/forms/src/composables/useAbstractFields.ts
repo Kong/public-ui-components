@@ -17,7 +17,16 @@ export default function useAbstractFields(formData: {
   model?: Record<string, any>,
   schema: Record<string, any>,
   formOptions?: Record<string, any>,
-  disabled?: boolean
+  disabled?: boolean,
+  emitModelUpdated?: (data: {
+    value: any
+    model: Record<string, any>
+  }) => void,
+  emitValidated?: (data: {
+    isValid: any
+    errors: any[]
+    field: Record<string, any>
+  }) => void
 }) {
   const errors = ref<string[]>([])
   const debouncedValidateFunc = ref<DebouncedFunc<(calledParent?: any) => any[]> | null>(null)
@@ -94,9 +103,10 @@ export default function useAbstractFields(formData: {
                 errors.value = errors.value.concat(err)
               }
 
-              // TODO: handling emits
-              // const isValid = errors.value.length === 0
-              // $emit('validated', isValid, errors, this)
+              const isValid = errors.value.length === 0
+              if (formData.emitValidated) {
+                formData.emitValidated({ isValid, errors: errors.value, field: formData.schema })
+              }
             })
           } else if (result) {
             results = results.concat(result)
@@ -121,9 +131,10 @@ export default function useAbstractFields(formData: {
       }
 
       if (!calledParent) {
-        // TODO: handling emits
-        // const isValid = fieldErrors.length === 0
-        // $emit('validated', isValid, fieldErrors, this)
+        const isValid = fieldErrors.length === 0
+        if (formData.emitValidated) {
+          formData.emitValidated({ isValid, errors: fieldErrors, field: formData.schema })
+        }
       }
       errors = fieldErrors
 
@@ -160,8 +171,9 @@ export default function useAbstractFields(formData: {
     }
 
     if (changed) {
-      // TODO: handling emits
-      // $emit('modelUpdated', newValue, formData.schema.model)
+      if (formData.emitModelUpdated && formData.model) {
+        formData.emitModelUpdated({ value: newValue, model: formData.model })
+      }
 
       if (isFunction(formData.schema.onChanged)) {
         formData.schema.onChanged(formData.model, newValue, oldValue, formData.schema)
@@ -240,6 +252,7 @@ export default function useAbstractFields(formData: {
 
   return {
     value,
+    clearValidationErrors,
     getFieldID,
     getLabelId,
     getFieldClasses,

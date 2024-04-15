@@ -40,7 +40,6 @@
       :width="schema.width"
       @blur="onBlur"
       @input="onInput"
-      @update:model-value="schema.onChange"
     />
   </div>
 </template>
@@ -86,6 +85,10 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits<{
+  (event: 'modelUpdated', data: { value: any, model: Record<string, any> }): void
+}>()
+
 const DATETIME_FORMATS = {
   date: 'YYYY-MM-DD',
   datetime: 'YYYY-MM-DD HH:mm:ss',
@@ -93,10 +96,17 @@ const DATETIME_FORMATS = {
 }
 const debouncedFormatFunc = ref<DebouncedFunc<(newValue: string, oldValue: string) => void> | null>(null)
 
-const { updateModelValue, getFieldID, value: inputValue } = composables.useAbstractFields({
+const { updateModelValue, getFieldID, clearValidationErrors, value: inputValue } = composables.useAbstractFields({
   model: props.model,
   schema: props.schema,
   formOptions: props.formOptions,
+  emitModelUpdated: (data: { value: any, model: Record<string, any> }): void => {
+    emit('modelUpdated', { value: data.value, model: data.model })
+  },
+})
+
+defineExpose({
+  clearValidationErrors,
 })
 
 const inputType = computed((): string => {
@@ -184,21 +194,23 @@ const formatNumberToModel = (newValue: any, oldValue: any): void => {
   updateModelValue(newValue, oldValue)
 }
 
-const onInput = ($event: any): void => {
-  let value = $event.target?.value
+const onInput = (val: string): void => {
+  let formattedVal: string | number = val
 
   switch (inputType.value) {
     case 'number':
     case 'range':
-      if (isNumber(parseFloat($event.target?.value))) {
-        value = parseFloat($event.target.value)
+      if (isNumber(parseFloat(val))) {
+        formattedVal = parseFloat(val)
       }
       break
   }
 
-  inputValue.value = value
+  inputValue.value = formattedVal
+  updateModelValue(formattedVal, val)
 }
 
+// Clean up debounced calls
 const onBlur = () => {
   if (isFunction(debouncedFormatFunc.value)) {
     debouncedFormatFunc.value?.flush()
