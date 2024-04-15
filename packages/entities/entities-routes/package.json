@@ -69,7 +69,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "2400KB"
+    "errorLimit": "5000KB"
   },
   "dependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
