@@ -102,6 +102,8 @@ const makeQueryBridge = (opts?: MockOptions): AnalyticsBridge => {
         },
       })
     },
+
+    evaluateFeatureFlagFn: () => true as any,
   }
 }
 
