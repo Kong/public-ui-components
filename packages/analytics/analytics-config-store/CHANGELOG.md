@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.3.6...@kong-ui-public/analytics-config-store@0.4.0) (2024-04-15)
+
+
+### Features
+
+* **analytics:** improved dashboard time spec handling [MA-2759] ([#1330](https://github.com/Kong/public-ui-components/issues/1330)) ([123fbc0](https://github.com/Kong/public-ui-components/commit/123fbc077659e0f74589dfda3b3b1efcff13cdf5))
+
+
+### BREAKING CHANGES
+
+* **analytics:** refactor interface for analytics config store
+
+- Change analytics config store to fetch config when first instantiated
+  and expose refs rather than functions.
+- Update dashboard renderer to fill in a default time spec based on the
+  org's retention if one isn't provided.
+- Don't issue queries until a time spec is determined.
+- Fix missing feature flag functions in tests.
+- Fix display of "description" property in metric cards: show in container
+  rather than broadcasting to all cards.
+- Fix title and description reactivity in metrics provider.
+- Replace special timeframe token in tile descriptions.
+- Fill in missing context values in the top-level renderer to save code
+  in the tile renderers.
+
+
+
+
+
 ## [0.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.3.5...@kong-ui-public/analytics-config-store@0.3.6) (2024-04-10)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-config-store
