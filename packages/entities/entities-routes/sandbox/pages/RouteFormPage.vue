@@ -123,12 +123,12 @@ const onUpdate = (payload: Record<string, any>) => {
   :deep(.k-collapse) {
     &.is-collapsed {
       .k-collapse-heading {
-        margin-bottom: 0 !important;
+        margin-bottom: $kui-space-0 !important;
         align-items: center;
       }
 
       .k-collapse-title {
-        margin-bottom: 0 !important;
+        margin-bottom: $kui-space-0 !important;
       }
     }
   }
@@ -138,7 +138,7 @@ const onUpdate = (payload: Record<string, any>) => {
     flex-direction: column;
 
     .route-flavor-toggle {
-      margin-bottom: 10px;
+      margin-bottom: $kui-space-50;
     }
   }
 }

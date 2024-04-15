@@ -1367,7 +1367,7 @@ defineExpose({ saveFormData, getPayload })
   }
 
   .k-select-selected-item-label {
-    margin-left: 30px;
+    margin-left: $kui-space-90;
   }
 
   .k-checkbox {
