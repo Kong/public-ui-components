@@ -1,0 +1,25 @@
+{
+  "modal": {
+    "change_log_level": {
+      "title": "Change Log Level ({summary})"
+    },
+    "select_log_level_title": "Select Log Level",
+    "log_level_explanation": {
+      "debug": "Detailed information, typically of interest only when diagnosing problems.",
+      "info": "Confirmation that things are working as expected.",
+      "notice": "Is used for logging errors that result in a request being dropped. For example, getting an HTTP 500 error. The rate of such logs need to be monitored.",
+      "warn": "Exceptional occurrences that are not errors.",
+      "error": "Runtime errors that do not require immediate action but should typically be logged and monitored.",
+      "critical": "Critical conditions."
+    },
+    "log_level_disk_space_warning": "If left on for extended periods of time, can result in excess disk space consumption."
+  },
+  "log_level": {
+    "debug": "Debug",
+    "info": "Info",
+    "notice": "Notice",
+    "warn": "Warn",
+    "error": "Error",
+    "critical": "Critical"
+  }
+}
