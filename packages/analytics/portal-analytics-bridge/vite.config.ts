@@ -3,7 +3,7 @@ import { resolve } from 'path'
 import { defineConfig, mergeConfig } from 'vite'
 
 // Package name MUST always match the kebab-case package name inside the component's package.json file and the name of your `/packages/{package-name}` directory
-const packageName = 'analytics-config-store'
+const packageName = 'portal-analytics-bridge'
 const sanitizedPackageName = sanitizePackageName(packageName)
 
 // Merge the shared Vite config with the local one defined below
@@ -19,19 +19,19 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     rollupOptions: {
       // Make sure to externalize deps that shouldn't be bundled into your library
       external: [
-        'pinia',
+        '@kong/sdk-portal-js',
       ],
       output: {
         // Provide global variables to use in the UMD build for externalized deps
         globals: {
-          pinia: 'pinia',
+          '@kong/sdk-portal-js': 'kong-sdk-portal-js',
         },
       },
     },
   },
 }))
 
-// If we are trying to preview a build of the local `package/analytics-config-store/sandbox` directory,
+// If we are trying to preview a build of the local `package/portal-analytics-bridge/sandbox` directory,
 // unset the lib, rollupOptions.external and rollupOptions.output.globals properties
 if (process.env.USE_SANDBOX) {
   config.build.lib = undefined
