@@ -16,7 +16,7 @@ import {
 import { TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
 import { METRICS_PROVIDER_KEY, defaultFetcherDefs } from './metricsProviderUtil'
 import { INJECT_QUERY_PROVIDER, DEFAULT_REFRESH_INTERVAL } from '../constants'
-import { useAnalyticsConfigStore, SEVEN_DAYS_MS } from '@kong-ui-public/analytics-config-store'
+import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 
 const props = withDefaults(defineProps<{
   maxTimeframe?: TimeframeKeys,
@@ -70,16 +70,12 @@ if (!queryBridge) {
 }
 
 const analyticsConfigStore = useAnalyticsConfigStore()
-const analyticsConfig = analyticsConfigStore.getConfig()
+
+// Check if the current org has long enough retention to make a sane trend query.
+const hasTrendAccess = toRef(() => analyticsConfigStore.longRetention)
 
 // Don't attempt to issue a query until we know what we can query for.
-const queryReady = computed(() => analyticsConfig.value !== null && props.queryReady)
-
-// `undefined` compared with any number is false, but TS still complains.
-const hasTrendAccess = computed(() => {
-  const retentionMs = analyticsConfig.value?.analytics?.retention_ms
-  return !!retentionMs && retentionMs > SEVEN_DAYS_MS
-})
+const queryReady = computed(() => !analyticsConfigStore.loading && props.queryReady)
 
 const tz = computed(() => {
   if (props.tz) {
@@ -143,8 +139,8 @@ provide(METRICS_PROVIDER_KEY, {
     traffic: trafficData,
     latency: latencyData,
   },
-  description: props.description,
-  containerTitle: props.containerTitle,
+  description: toRef(() => props.description),
+  containerTitle: toRef(() => props.containerTitle),
   hasTrendAccess,
   longCardTitles: props.longCardTitles,
   averageLatencies,

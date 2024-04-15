@@ -1,6 +1,10 @@
 {
   "renderer": {
-    "noQueryBridge": "No query bridge provided.  Unable to render dashboard."
+    "noQueryBridge": "No query bridge provided.  Unable to render dashboard.",
+    "trendRange": {
+      "24h": "Last 24-Hour Summary",
+      "30d": "Last 30-Day Summary"
+    }
   },
   "queryDataProvider": {
     "timeRangeExceeded":  "The time range for this report is outside of your organization's data retention period"

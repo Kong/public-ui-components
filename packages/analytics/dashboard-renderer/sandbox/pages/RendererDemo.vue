@@ -39,10 +39,6 @@ const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const context: DashboardRendererContext = {
   filters: [],
-  timeSpec: {
-    type: 'relative',
-    time_range: '24h',
-  },
   refreshInterval: 0,
 }
 
@@ -58,6 +54,7 @@ const dashboardConfig: DashboardConfig = {
         chart: {
           type: ChartTypes.GoldenSignals,
           chartTitle: 'Analytics Golden Signals',
+          description: '{timeframe}',
         },
         query: {},
       },
@@ -77,7 +74,7 @@ const dashboardConfig: DashboardConfig = {
         chart: {
           type: ChartTypes.TopN,
           chartTitle: 'Top N chart of mock data',
-          description: 'Description',
+          description: '{timeframe}',
         },
         query: { limit: 1 },
       },

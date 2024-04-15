@@ -20,13 +20,18 @@ import DashboardRenderer from './DashboardRenderer.vue'
 import { nonTsExploreResponse, timeSeriesExploreResponse, routeExploreResponse, summaryDashboardConfig } from '../../sandbox/mock-data'
 import { createPinia, setActivePinia } from 'pinia'
 
+interface MockOptions {
+  failToResolveConfig?: boolean
+  shortRetention?: boolean
+}
+
 describe('<DashboardRenderer />', () => {
   beforeEach(() => {
     cy.viewport(1200, 1000)
     setActivePinia(createPinia())
   })
 
-  const mockQueryProvider = (): AnalyticsBridge => {
+  const mockQueryProvider = (opts?: MockOptions): AnalyticsBridge => {
     const queryFn = (query: ExploreQuery): Promise<ExploreResultV4> => {
       // Dimensions to use if query is not provided
       const dimensionMap = { statusCode: ['1XX', '2XX', '3XX', '4XX', '5XX'] }
@@ -64,15 +69,29 @@ describe('<DashboardRenderer />', () => {
       }
     }
 
-    const configFn = (): Promise<AnalyticsConfigV2> => Promise.resolve({
-      analytics: {
-        percentiles: true,
-        retention_ms: 2592000000, // 30d
-      },
-      requests: {
-        retention_ms: 86400000,
-      },
-    })
+    const configFn = (): Promise<AnalyticsConfigV2> => {
+      console.log('Config fn')
+      if (opts?.failToResolveConfig) {
+        console.log('Failing to resolve config')
+        // Return a promise that never resolves.
+        return new Promise(() => {})
+      }
+
+      const config: AnalyticsConfigV2 = {
+        analytics: {
+          percentiles: true,
+          retention_ms: opts?.shortRetention
+            ? 86400000 // 1d
+            : 2592000000, // 30d
+        },
+        requests: {
+          retention_ms: 86400000,
+        },
+      }
+
+      console.log('Resolving config')
+      return Promise.resolve(config)
+    }
 
     const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = () => true as any
 
@@ -370,5 +389,82 @@ describe('<DashboardRenderer />', () => {
 
     // Check value of href attribute
     cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > .column-1 > [data-testid="entity-link-parent"] > a').should('have.attr', 'href').and('eq', 'https://test.com/cp/b486fb30-e058-4b5f-85c2-495ec26ba522/entity/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
+  })
+
+  it("doesn't issue queries if it's still waiting for the timeSpec", () => {
+    const props = {
+      context: {
+        // Use default timeframe for the org: don't provide one here.
+        filters: [],
+      },
+      config: summaryDashboardConfig,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ failToResolveConfig: true }),
+        },
+      },
+    }).then(() => {
+      cy.get('@fetcher').should('not.have.been.called')
+    })
+  })
+
+  it('picks a default timeSpec', () => {
+    const props = {
+      context: {
+        // Use default timeframe for the org: don't provide one here.
+        filters: [],
+      },
+      config: summaryDashboardConfig,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    }).then(() => {
+      // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
+      cy.get('@fetcher').should('have.callCount', 5)
+      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+        time_range: { time_range: '30d' },
+      }))
+
+      // Check that it replaces the description token.
+      cy.get('.container-description').should('have.text', 'Last 30-Day Summary')
+    })
+  })
+
+  it('picks a lower retention timeSpec', () => {
+    const props = {
+      context: {
+        // Use default timeframe for the org: don't provide one here.
+        filters: [],
+      },
+      config: summaryDashboardConfig,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ shortRetention: true }),
+        },
+      },
+    }).then(() => {
+      // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
+      cy.get('@fetcher').should('have.callCount', 5)
+      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+        time_range: { time_range: '24h' },
+      }))
+
+      // Check that it replaces the description token.
+      cy.get('.container-description').should('have.text', 'Last 24-Hour Summary')
+    })
   })
 })

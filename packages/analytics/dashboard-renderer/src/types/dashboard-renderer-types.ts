@@ -5,10 +5,13 @@ import type { ExploreFilter, ExploreQuery, TimeRangeV4 } from '@kong-ui-public/a
 
 export interface DashboardRendererContext {
   filters: ExploreFilter[]
-  timeSpec: TimeRangeV4
+  timeSpec?: TimeRangeV4
   tz?: string,
   refreshInterval?: number
 }
+
+// The DashboardRenderer component fills in optional values before passing them down to the tile renderers.
+export type DashboardRendererContextInternal = Required<DashboardRendererContext>
 
 export enum ChartTypes {
   HorizontalBar = 'horizontal_bar',
@@ -466,7 +469,7 @@ export type DashboardConfig = FromSchema<typeof dashboardConfigSchema>
 
 export interface RendererProps<T> {
   query: ExploreQuery
-  context: DashboardRendererContext
+  context: DashboardRendererContextInternal
   queryReady: boolean
   chartOptions: T
   height: number

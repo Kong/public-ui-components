@@ -8,6 +8,12 @@
       class="container-title"
     >
       {{ props.containerTitle }}
+      <div
+        v-if="props.containerDescription"
+        class="container-description"
+      >
+        {{ props.containerDescription }}
+      </div>
     </div>
     <div
       v-if="allCardsHaveErrors"
@@ -99,6 +105,11 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  containerDescription: {
+    type: String,
+    required: false,
+    default: '',
+  },
 })
 
 const allCardsHaveErrors = computed((): boolean => props.cards.every(val => val?.hasError === true))
@@ -129,9 +140,18 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
   width: 100%;
 
   .container-title {
+    align-items: center;
+    display: flex;
     font-size: $kui-font-size-40;
     font-weight: $kui-font-weight-semibold;
+    justify-content: space-between;
     margin-bottom: $kui-space-50;
+
+    .container-description {
+      color: $kui-color-text-neutral;
+      font-size: $kui-font-size-20;
+      font-weight: $kui-font-weight-regular;
+    }
   }
 
   .cards-wrapper {

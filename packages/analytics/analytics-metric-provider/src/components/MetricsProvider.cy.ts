@@ -215,12 +215,13 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('.metricscard-title').eq(2).should('have.text', 'P99 Latency')
   })
 
-  it('displays a card description if provided', () => {
+  it('displays a container description if provided', () => {
     const queryBridge = makeQueryBridge()
 
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
+        containerTitle: 'Analytics',
         description: 'Lorem ipsum golden signal details',
       },
       global: {
@@ -231,7 +232,7 @@ describe('<AnalyticsMetricProvider />', () => {
     })
 
     cy.get('.metricscard').should('exist')
-    cy.get('.metricscard-description').eq(0).should('contain', 'Lorem ipsum golden signal details')
+    cy.get('.container-description').eq(0).should('contain', 'Lorem ipsum golden signal details')
   })
 
   it('displays "30 days" if trend access allows', () => {

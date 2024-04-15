@@ -152,6 +152,7 @@ const cardsSmall: MetricCardContainerOptions = {
 const cardsRegular: MetricCardContainerOptions = {
   cards: [...cards].slice(0, 3),
   containerTitle: 'Analytics Golden Signals',
+  containerDescription: 'Last 30-Day Summary',
   loading: false,
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',

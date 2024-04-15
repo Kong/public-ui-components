@@ -252,6 +252,8 @@ export const summaryDashboardConfig: DashboardConfig = {
       definition: {
         chart: {
           type: ChartTypes.GoldenSignals,
+          chartTitle: 'Analytics',
+          description: '{timeframe}',
         },
       },
       layout: {
