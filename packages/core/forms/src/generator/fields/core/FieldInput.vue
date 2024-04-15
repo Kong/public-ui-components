@@ -86,7 +86,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (event: 'modelUpdated', data: { value: any, model: Record<string, any> }): void
+  (event: 'modelUpdated', value: any, model: Record<string, any>): void
 }>()
 
 const DATETIME_FORMATS = {
@@ -101,7 +101,7 @@ const { updateModelValue, getFieldID, clearValidationErrors, value: inputValue }
   schema: props.schema,
   formOptions: props.formOptions,
   emitModelUpdated: (data: { value: any, model: Record<string, any> }): void => {
-    emit('modelUpdated', { value: data.value, model: data.model })
+    emit('modelUpdated', data.value, data.model)
   },
 })
 

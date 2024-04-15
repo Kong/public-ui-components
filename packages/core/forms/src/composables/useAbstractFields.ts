@@ -172,7 +172,7 @@ export default function useAbstractFields(formData: {
 
     if (changed) {
       if (formData.emitModelUpdated && formData.model) {
-        formData.emitModelUpdated({ value: newValue, model: formData.model })
+        formData.emitModelUpdated({ value: newValue, model: formData.schema.model })
       }
 
       if (isFunction(formData.schema.onChanged)) {
