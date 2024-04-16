@@ -88,7 +88,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('route-form-tags').should('be.visible')
 
       // advanced fields
-      cy.getTestId('k-collapse-trigger-content').should('be.visible').click()
+      cy.getTestId('collapse-trigger-content').should('be.visible').click()
       cy.getTestId('route-form-path-handling').should('be.visible')
       cy.getTestId('route-form-http-redirect-status-code').should('be.visible')
       cy.getTestId('route-form-regex-priority').should('be.visible')
@@ -296,7 +296,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('route-form-headers-name-input-1').should('have.value', Object.keys(route.headers)[0])
       cy.getTestId('route-form-headers-values-input-1').should('have.value', route.headers.Header1.join(','))
 
-      cy.getTestId('k-collapse-trigger-content').click()
+      cy.getTestId('collapse-trigger-content').click()
       cy.getTestId('route-form-path-handling').should('have.value', route.path_handling)
       cy.getTestId('route-form-regex-priority').should('have.value', route.regex_priority)
       cy.getTestId('route-form-strip-path').should(`${route.strip_path ? '' : 'not.'}be.checked`)
@@ -440,7 +440,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
       // tags field should render under advanced fields
       cy.getTestId('route-form-tags').should('not.be.visible')
-      cy.getTestId('k-collapse-trigger-content').click()
+      cy.getTestId('collapse-trigger-content').click()
       cy.getTestId('route-form-tags').should('be.visible')
 
       // service id field should be hidden when serviceId is provided
@@ -571,7 +571,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('route-form-tags').should('be.visible')
 
       // advanced fields
-      cy.getTestId('k-collapse-trigger-content').should('be.visible').click()
+      cy.getTestId('collapse-trigger-content').should('be.visible').click()
       cy.getTestId('route-form-path-handling').should('be.visible')
       cy.getTestId('route-form-http-redirect-status-code').should('be.visible')
       cy.getTestId('route-form-regex-priority').should('be.visible')
@@ -777,7 +777,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('route-form-headers-name-input-1').should('have.value', Object.keys(route.headers)[0])
       cy.getTestId('route-form-headers-values-input-1').should('have.value', route.headers.Header1.join(','))
 
-      cy.getTestId('k-collapse-trigger-content').click()
+      cy.getTestId('collapse-trigger-content').click()
       cy.getTestId('route-form-path-handling').should('have.value', route.path_handling)
       cy.getTestId('route-form-regex-priority').should('have.value', route.regex_priority)
       cy.getTestId('route-form-strip-path').should(`${route.strip_path ? '' : 'not.'}be.checked`)
@@ -921,7 +921,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
       // tags field should render under advanced fields
       cy.getTestId('route-form-tags').should('not.be.visible')
-      cy.getTestId('k-collapse-trigger-content').click()
+      cy.getTestId('collapse-trigger-content').click()
       cy.getTestId('route-form-tags').should('be.visible')
 
       // service id field should be hidden when serviceId is provided

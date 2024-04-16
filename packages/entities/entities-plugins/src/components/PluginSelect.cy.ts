@@ -98,7 +98,7 @@ describe('<PluginSelect />', () => {
 
       // plugin group collapses show
       PLUGIN_GROUPS_IN_USE.forEach((pluginGroup: string) => {
-        cy.get('[data-testid="k-collapse-title"]').should('contain.text', pluginGroup)
+        cy.get('[data-testid="collapse-title"]').should('contain.text', pluginGroup)
       })
       // renders all plugins
       for (const pluginName in kmAvailablePlugins.plugins.available_on_server) {
@@ -120,7 +120,7 @@ describe('<PluginSelect />', () => {
 
       cy.getTestId('Highlighted Plugins-collapse').as('highlightedPlugins').should('be.visible')
 
-      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content').should('not.exist')
+      cy.get('@highlightedPlugins').findTestId('collapse-trigger-content').should('not.exist')
       cy.get('@highlightedPlugins').findTestId('basic-auth-card').should('be.visible')
 
       // highlighted plugins should be hidden
@@ -144,7 +144,7 @@ describe('<PluginSelect />', () => {
 
       cy.getTestId('Highlighted Plugins-collapse').as('highlightedPlugins').should('be.visible')
 
-      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content')
+      cy.get('@highlightedPlugins').findTestId('collapse-trigger-content')
         .should('be.visible')
         .should('contain.text', 'View less')
 
@@ -152,8 +152,8 @@ describe('<PluginSelect />', () => {
         cy.get('@highlightedPlugins').findTestId(`${pluginId}-card`).should('be.visible')
       }
 
-      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content').click()
-      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content')
+      cy.get('@highlightedPlugins').findTestId('collapse-trigger-content').click()
+      cy.get('@highlightedPlugins').findTestId('collapse-trigger-content')
         .should('be.visible')
         .should('contain.text', 'View 1 more')
 
@@ -179,7 +179,7 @@ describe('<PluginSelect />', () => {
 
       cy.get('.kong-ui-entities-plugin-select-form').should('be.visible')
       cy.get('.kong-ui-entities-plugin-select-form .plugins-results-container').should('be.visible')
-      cy.get('.k-collapse-visible-content .plugin-select-card').should('have.length', expectedCount)
+      cy.get('.collapse-visible-content .plugin-select-card').should('have.length', expectedCount)
     })
 
     it('should correctly render disabled plugins', () => {
@@ -431,7 +431,7 @@ describe('<PluginSelect />', () => {
 
       // plugin group collapses show
       PLUGIN_GROUPS_IN_USE.forEach((pluginGroup: string) => {
-        cy.get('[data-testid="k-collapse-title"]').should('contain.text', pluginGroup)
+        cy.get('[data-testid="collapse-title"]').should('contain.text', pluginGroup)
       })
 
       // custom plugins
@@ -462,7 +462,7 @@ describe('<PluginSelect />', () => {
 
       cy.getTestId('Highlighted Plugins-collapse').as('highlightedPlugins').should('be.visible')
 
-      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content').should('not.exist')
+      cy.get('@highlightedPlugins').findTestId('collapse-trigger-content').should('not.exist')
       cy.get('@highlightedPlugins').findTestId('basic-auth-card').should('be.visible')
 
       // highlighted plugins should be hidden
@@ -486,7 +486,7 @@ describe('<PluginSelect />', () => {
 
       cy.getTestId('Highlighted Plugins-collapse').as('highlightedPlugins').should('be.visible')
 
-      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content')
+      cy.get('@highlightedPlugins').findTestId('collapse-trigger-content')
         .should('be.visible')
         .should('contain.text', 'View less')
 
@@ -494,8 +494,8 @@ describe('<PluginSelect />', () => {
         cy.get('@highlightedPlugins').findTestId(`${pluginId}-card`).should('be.visible')
       }
 
-      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content').click()
-      cy.get('@highlightedPlugins').findTestId('k-collapse-trigger-content')
+      cy.get('@highlightedPlugins').findTestId('collapse-trigger-content').click()
+      cy.get('@highlightedPlugins').findTestId('collapse-trigger-content')
         .should('be.visible')
         .should('contain.text', 'View 1 more')
 
@@ -522,7 +522,7 @@ describe('<PluginSelect />', () => {
 
       cy.get('.kong-ui-entities-plugin-select-form').should('be.visible')
       cy.get('.kong-ui-entities-plugin-select-form .plugins-results-container').should('be.visible')
-      cy.get('.k-collapse-visible-content .plugin-select-card').should('have.length', expectedCount)
+      cy.get('.collapse-visible-content .plugin-select-card').should('have.length', expectedCount)
     })
 
     it('should correctly render disabled plugins', () => {
