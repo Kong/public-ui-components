@@ -352,7 +352,7 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => ({
   type: chartType.value,
   stacked: stackToggle.value,
   fill: fillToggle.value,
-  chartDatasetColors: colorPalette.value,
+  // chartDatasetColors: colorPalette.value,
 }))
 
 const addDataset = () => {

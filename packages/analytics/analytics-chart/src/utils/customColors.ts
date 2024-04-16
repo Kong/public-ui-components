@@ -1,3 +1,5 @@
+import type { AnalyticsChartColors } from 'src/types'
+
 export const lightGrey = '#e0e4ea' // kui-color-background-disabled
 
 // Note: the first color of each palette is reserved for "out of spec" codes.  The remaining colors
@@ -66,4 +68,21 @@ export const lookupStatusCodeCategoryColor = (label: string) => {
   const color = lookupStatusCodeColor(label)
 
   return { solid: color, light: color }
+}
+
+const statusCodes = Array.from({ length: 500 }, (_, index) => 100 + index)
+
+export const defaultStatusCodeColors: AnalyticsChartColors = {
+  ...statusCodes.reduce((acc, statusCode) => {
+    acc[`${statusCode}`] = lookupStatusCodeColor(`${statusCode}`)
+
+    return acc
+
+  }, {} as AnalyticsChartColors),
+  ____OTHER____: '#DAD4C7',
+  '1XX': '#4DA6FF',
+  '2XX': '#6FCC83',
+  '3XX': '#FFD982',
+  '4XX': '#FFBA81',
+  '5XX': '#FF8484',
 }
