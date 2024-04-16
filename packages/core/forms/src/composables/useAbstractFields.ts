@@ -209,38 +209,53 @@ export default function useAbstractFields(formData: {
     errors.value.splice(0)
   }
 
-  const setModelValueByPath = (path: string, value: any) => {
+  /**
+   * Given an object path, set the value of the model to the given value.
+   * @param path A string like 'person.name.first' describing the path to a value in an object
+   * @param value The value to set the entry at the path to
+   *
+   * Example:
+   * setModelValueByPath('person.name.first', 'John') =>
+   * {
+   *   person: {
+   *     name: {
+   *       first: 'John'
+   *     }
+   *   }
+   * }
+   */
+  const setModelValueByPath = (path: string, value: any): void => {
     // convert array indexes to properties
-    let s = path.replace(/\[(\w+)\]/g, '.$1')
+    let pathStr = path.replace(/\[(\w+)\]/g, '.$1')
 
     // strip a leading dot
-    s = s.replace(/^\./, '')
+    pathStr = pathStr.replace(/^\./, '')
 
-    let o = formData.model || {}
-    const a = s.split('.')
-    let i = 0
-    const n = a.length
+    let dataModel = formData.model || {}
+    let index = 0
+    const arr = pathStr.split('.')
+    const arrLength = arr.length
 
-    while (i < n) {
-      const k = a[i]
+    while (index < arrLength) {
+      const key = arr[index]
 
-      if (i < n - 1) {
-        if (o[k] !== undefined) {
+      if (index < arrLength - 1) {
+        if (dataModel[key] !== undefined) {
           // Found parent property. Step in
-          o = o[k]
+          dataModel = dataModel[key]
         } else {
           // Create missing property (new level)
-          o[k] = {}
-          o = o[k]
+          dataModel[key] = {}
+          dataModel = dataModel[key]
         }
       } else {
         // Set final property value
-        o[k] = value
+        dataModel[key] = value
 
         return
       }
 
-      ++i
+      ++index
     }
   }
 
