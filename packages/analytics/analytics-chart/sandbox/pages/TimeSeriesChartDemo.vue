@@ -296,7 +296,7 @@ const metricItems = [{
 
 // Short labels
 const statusCodeLabels = [
-  '200', '300', '400', '500',
+  '200', '300', '400', '500', '5XX',
 ]
 
 const statusCodeDimensionValues = ref(new Set(statusCodeLabels))
@@ -357,7 +357,7 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => {
   return {
     type: chartType.value,
     stacked: stackToggle.value,
-    chartDatasetColors: colorPalette.value,
+    // chartDatasetColors: colorPalette.value,
   }
 })
 

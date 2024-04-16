@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@3.0.9...@kong-ui-public/analytics-chart@3.0.10) (2024-04-16)
+
+
+### Bug Fixes
+
+* default status code colors and sorting logic ([#1335](https://github.com/Kong/public-ui-components/issues/1335)) ([a5fdb4f](https://github.com/Kong/public-ui-components/commit/a5fdb4fe51cf9b1326e7dcdd54522cb71774bcf5))
+
+
+
+
+
 ## [3.0.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@3.0.8...@kong-ui-public/analytics-chart@3.0.9) (2024-04-10)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

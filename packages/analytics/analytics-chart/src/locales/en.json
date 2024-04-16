@@ -103,6 +103,9 @@
     "FAILURE": "Failed requests",
     "5XX": "5xx",
     "4XX": "4xx",
+    "3XX": "3xx",
+    "2XX": "2xx",
+    "1XX": "1xx",
     "REQUEST_COUNT": "Request Count",
     "REQUEST_PER_MINUTE": "Requests per Minute",
     "RESPONSE_LATENCY_P99": "Response Latency",
@@ -114,7 +117,8 @@
     "REQUEST_SIZE_P99": "Request Size (p99)",
     "REQUEST_SIZE_P95": "Request Size (p95)",
     "REQUEST_SIZE_P50": "Request Size (p50)",
-    "CONTROL_PLANE": "Control Plane"
+    "CONTROL_PLANE": "Control Plane",
+    "____OTHER____": "Others"
   },
   "metricAxisTitles": {
     "request_count": "Request Count",

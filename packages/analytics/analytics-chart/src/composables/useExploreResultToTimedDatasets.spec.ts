@@ -3,7 +3,7 @@ import { describe, it, expect, vitest } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
-import { BORDER_WIDTH, NO_BORDER } from '../utils'
+import { BORDER_WIDTH, NO_BORDER, defaultStatusCodeColors } from '../utils'
 import { addHours } from 'date-fns'
 import type { MockInstance } from 'vitest'
 
@@ -608,4 +608,122 @@ describe('useVitalsExploreDatasets', () => {
     )
   })
 
+  it('Correct status code colors', () => {
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            status_code: 100,
+            metric1: 2,
+          },
+        } as GroupByResult,
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            status_code: 200,
+            metric1: 2,
+          },
+        } as GroupByResult,
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            status_code: 300,
+            metric1: 2,
+          },
+        } as GroupByResult,
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            status_code: 400,
+            metric1: 2,
+          },
+        } as GroupByResult,
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            status_code: 500,
+            metric1: 2,
+          },
+        } as GroupByResult,
+        {
+          timestamp: END_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            status_code: 100,
+            metric1: 2,
+          },
+        } as GroupByResult,
+        {
+          timestamp: END_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            status_code: 200,
+            metric1: 2,
+          },
+        } as GroupByResult,
+        {
+          timestamp: END_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            status_code: 300,
+            metric1: 2,
+          },
+        } as GroupByResult,
+        {
+          timestamp: END_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            status_code: 400,
+            metric1: 2,
+          },
+        } as GroupByResult,
+        {
+          timestamp: END_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            status_code: 500,
+            metric1: 2,
+          },
+        } as GroupByResult,
+      ],
+      meta: {
+        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
+        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        granularity_ms: 86400000,
+        metric_names: ['metric1'] as any as ExploreAggregations[],
+        display: {
+          status_code: {
+            100: {
+              name: '100',
+              deleted: false,
+            },
+            200: {
+              name: '200',
+              deleted: false,
+            },
+            300: {
+              name: '300',
+              deleted: false,
+            },
+            400: {
+              name: '400',
+              deleted: false,
+            },
+            500: {
+              name: '500',
+              deleted: false,
+            },
+          },
+        },
+        query_id: '',
+        metric_units: { metric: 'units' } as MetricUnit,
+      },
+    }))
+    const result = useExploreResultToTimeDataset(
+      { fill: false, colorPalette: defaultStatusCodeColors },
+      exploreResult,
+    )
+
+    expect(result.value.datasets[0].backgroundColor).toEqual('#80bfff')
+    expect(result.value.datasets[1].backgroundColor).toEqual('#9edca6')
+    expect(result.value.datasets[2].backgroundColor).toEqual('#ffe9b8')
+    expect(result.value.datasets[3].backgroundColor).toEqual('#ffd5b1')
+    expect(result.value.datasets[4].backgroundColor).toEqual('#ffb6b6')
+  })
 })

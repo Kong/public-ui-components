@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import useExploreResultToDatasets from './useExploreResultToDatasets'
+import { defaultStatusCodeColors } from '../utils'
 
 describe('useVitalsExploreDatasets', () => {
   it('can handle empty records', () => {
@@ -303,4 +304,88 @@ it('handles multiple metrics with dimension', () => {
       ],
     },
   )
+})
+
+it('Correct status code colors', () => {
+  const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+    data: [
+      {
+        timestamp: '2022-01-01T01:01:02Z',
+        event: {
+          status_code: 100,
+          metric1: 2,
+        },
+      } as GroupByResult,
+      {
+        timestamp: '2022-01-01T01:01:02Z',
+        event: {
+          status_code: 200,
+          metric1: 2,
+        },
+      } as GroupByResult,
+      {
+        timestamp: '2022-01-01T01:01:02Z',
+        event: {
+          status_code: 300,
+          metric1: 2,
+        },
+      } as GroupByResult,
+      {
+        timestamp: '2022-01-01T01:01:02Z',
+        event: {
+          status_code: 400,
+          metric1: 2,
+        },
+      } as GroupByResult,
+      {
+        timestamp: '2022-01-01T01:01:02Z',
+        event: {
+          status_code: 500,
+          metric1: 2,
+        },
+      } as GroupByResult,
+    ],
+    meta: {
+      start_ms: 1640998862000,
+      end_ms: 1640998870000,
+      granularity_ms: 86400000,
+      metric_names: ['metric1'] as any as ExploreAggregations[],
+      display: {
+        status_code: {
+          100: {
+            name: '100',
+            deleted: false,
+          },
+          200: {
+            name: '200',
+            deleted: false,
+          },
+          300: {
+            name: '300',
+            deleted: false,
+          },
+          400: {
+            name: '400',
+            deleted: false,
+          },
+          500: {
+            name: '500',
+            deleted: false,
+          },
+        },
+      },
+      query_id: '',
+      metric_units: { metric: 'units' } as MetricUnit,
+    },
+  }))
+  const result = useExploreResultToDatasets(
+    { fill: false, colorPalette: defaultStatusCodeColors },
+    exploreResult,
+  )
+
+  expect(result.value.datasets[0].backgroundColor).toEqual('#80bfff')
+  expect(result.value.datasets[1].backgroundColor).toEqual('#9edca6')
+  expect(result.value.datasets[2].backgroundColor).toEqual('#ffe9b8')
+  expect(result.value.datasets[3].backgroundColor).toEqual('#ffd5b1')
+  expect(result.value.datasets[4].backgroundColor).toEqual('#ffb6b6')
 })
