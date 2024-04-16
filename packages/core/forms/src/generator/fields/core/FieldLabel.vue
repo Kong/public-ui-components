@@ -3,9 +3,7 @@
     class="field-label"
     :class="schema.fieldClasses"
   >
-    <KLabel
-      :id="getFieldID(schema)"
-    >{{ labelValue }}</KLabel>
+    <KLabel :id="getFieldID(schema)">{{ labelValue }}</KLabel>
   </span>
 </template>
 
@@ -46,7 +44,7 @@ const { getFieldID, value: labelValue } = composables.useAbstractFields({
 <style lang="scss" scoped>
 span.field-label {
   display: block;
-  margin-left: 12px;
+  margin-left: $kui-space-50;
   width: 100%;
 }
 </style>

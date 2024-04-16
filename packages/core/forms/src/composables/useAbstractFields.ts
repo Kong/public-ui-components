@@ -32,9 +32,10 @@ export default function useAbstractFields(formData: {
   const debouncedValidateFunc = ref<DebouncedFunc<(calledParent?: any) => any[]> | null>(null)
 
   /**
-   * Internal functions
+   * Get the validator function from the validators object or null if given a string key, otherwise return the original param.
+   * @param validator The validator function key in the validators object
+   * @returns The validator function from the validators object or null if not found
    */
-
   const convertValidator = (validator: any) => {
     if (isString(validator)) {
       if (validators[validator] != null) {
@@ -49,6 +50,10 @@ export default function useAbstractFields(formData: {
     return validator
   }
 
+  /**
+   * The value of the field with getter/setter defined.
+   * Handles formatting to/from the model (used in PUT/POST) and field (actual input element) formatted values
+   */
   const value = computed({
     get() {
       let val
@@ -73,6 +78,10 @@ export default function useAbstractFields(formData: {
     },
   })
 
+  /**
+   * Call validation functions on the field value. Will emit validated event (if defined)
+   * with validity, errors, and the field being validated.
+   */
   const validate = (calledParent?: any) => {
     clearValidationErrors()
 
@@ -104,6 +113,7 @@ export default function useAbstractFields(formData: {
               }
 
               const isValid = errors.value.length === 0
+
               if (formData.emitValidated) {
                 formData.emitValidated({ isValid, errors: errors.value, field: formData.schema })
               }
@@ -115,6 +125,7 @@ export default function useAbstractFields(formData: {
       })
     }
 
+    // Call onValidated and emit validated event
     const handleErrors = (errors: any[]) => {
       let fieldErrors: any[] = []
 
@@ -132,10 +143,12 @@ export default function useAbstractFields(formData: {
 
       if (!calledParent) {
         const isValid = fieldErrors.length === 0
+
         if (formData.emitValidated) {
           formData.emitValidated({ isValid, errors: fieldErrors, field: formData.schema })
         }
       }
+
       errors = fieldErrors
 
       return fieldErrors
@@ -159,6 +172,9 @@ export default function useAbstractFields(formData: {
     }
   }
 
+  /**
+   * This is called every time the value of an input is changed and should handle validation/emitting modelUpdated events.
+   */
   const updateModelValue = (newValue: any, oldValue: any) => {
     let changed = false
 
@@ -242,6 +258,12 @@ export default function useAbstractFields(formData: {
     return objGet(formData.schema, 'fieldClasses', [])
   }
 
+  /**
+   * Placeholder functions to be overridden for specific field types.
+   * We use them in the computed value for the field value, which CAN be exported.
+   * TODO: check that this actually works as expected (ie. fieldSelect, fieldSwitch, etc.)
+   * DO NOT EXPORT THESE FUNCTIONS
+   */
   const formatValueToField = (value: any) => {
     return value
   }
@@ -256,8 +278,6 @@ export default function useAbstractFields(formData: {
     getFieldID,
     getLabelId,
     getFieldClasses,
-    formatValueToField,
-    formatValueToModel,
     updateModelValue,
   }
 }

@@ -1,24 +1,5 @@
 <template>
   <div class="form-field-wrapper">
-    <!--
-    TODO: all these attributes are needed??
-    :accept="schema.accept"
-      :alt="schema.alt"
-      :dirname="schema.dirname"
-      :checked="schema.checked || null"
-        :files="schema.files"
-      :formaction="schema.formaction"
-      :formenctype="schema.formenctype"
-      :formmethod="schema.formmethod"
-      :formnovalidate="schema.formnovalidate"
-      :formtarget="schema.formtarget"
-      :height="schema.height"
-      :list="schema.list"
-      :multiple="schema.multiple"
-      :size="schema && schema.size > 0 ? schema.size : 1"
-      :src="schema.src"
-      :step="schema.step"
-  -->
     <KInput
       v-bind="$attrs"
       :id="getFieldID(schema)"
@@ -89,13 +70,6 @@ const emit = defineEmits<{
   (event: 'modelUpdated', value: any, model: Record<string, any>): void
 }>()
 
-const DATETIME_FORMATS = {
-  date: 'YYYY-MM-DD',
-  datetime: 'YYYY-MM-DD HH:mm:ss',
-  'datetime-local': 'YYYY-MM-DDTHH:mm:ss',
-}
-const debouncedFormatFunc = ref<DebouncedFunc<(newValue: string, oldValue: string) => void> | null>(null)
-
 const { updateModelValue, getFieldID, clearValidationErrors, value: inputValue } = composables.useAbstractFields({
   model: props.model,
   schema: props.schema,
@@ -110,66 +84,20 @@ defineExpose({
 })
 
 const inputType = computed((): string => {
-  if (props.schema?.inputType === 'datetime') {
-    // convert "datetime" to "datetime-local" (datetime deprecated in favor of "datetime-local")
-    // ref: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime
-    return 'datetime-local'
-  }
+  const iType = props.schema?.inputType.toLowerCase()
 
-  return props.schema?.inputType.toLowerCase() || 'text'
+  // 'string' maps to 'text' input type
+  // 'datetime' maps to 'datetime-local'
+  return iType === 'string' ? 'text' : iType === 'datetime' ? 'datetime-local' : iType || 'text'
 })
 
-/*
-// TODO: these functions are defined but aren't used?
-const formatValueToModel = (value: any): any => {
-  if (value != null) {
-    switch (inputType.value) {
-      case 'date':
-      case 'datetime':
-      case 'datetime-local':
-      case 'number':
-      case 'range':
-        // debounce
-        return (newValue, oldValue) => {
-          debouncedFormatFunc(value, oldValue)
-        }
-    }
-  }
-
-  return value
+const DATETIME_FORMATS = {
+  date: 'YYYY-MM-DD',
+  datetime: 'YYYY-MM-DD HH:mm:ss',
+  'datetime-local': 'YYYY-MM-DDTHH:mm:ss',
 }
 
-const formatValueToField = (value): any => {
-  switch (inputType.value) {
-    case 'date':
-    case 'datetime':
-    case 'datetime-local':
-      return formatDatetimeValueToField(value)
-  }
-
-  return value
-}
-
-const formatDatetimeValueToField = (value: any): any => {
-  if (value === null || undefined === value) {
-    return null
-  }
-
-  const defaultFormat = DATETIME_FORMATS[inputType.value]
-  let m = value
-
-  if (!isNumber(value)) {
-    m = fecha.parse(value, defaultFormat)
-  }
-
-  if (m) {
-    return fecha.format(m, defaultFormat)
-  }
-
-  return m
-}
-*/
-
+// manually update model with correctly formatted value when input changes
 const formatDatetimeToModel = (newValue: string, oldValue: string): void => {
   let formatted: string | number = newValue
   const defaultFormat = DATETIME_FORMATS[inputType.value as keyof typeof DATETIME_FORMATS] || ''
@@ -194,6 +122,7 @@ const formatNumberToModel = (newValue: any, oldValue: any): void => {
   updateModelValue(newValue, oldValue)
 }
 
+// parse numeric values, track new input value, and emit model updated event
 const onInput = (val: string): void => {
   let formattedVal: string | number = val
 
@@ -210,20 +139,17 @@ const onInput = (val: string): void => {
   updateModelValue(formattedVal, val)
 }
 
+const debouncedFormatFunc = ref<DebouncedFunc<(newValue: string, oldValue: string) => void> | null>(null)
+
 // Clean up debounced calls
-const onBlur = () => {
+const onBlur = (): void => {
   if (isFunction(debouncedFormatFunc.value)) {
     debouncedFormatFunc.value?.flush()
   }
 }
 
-onBeforeMount(() => {
-  if (inputType.value === 'file') {
-    console.warn("The 'file' type in input field is deprecated. Use 'file' field instead.")
-  }
-})
-
-onMounted(() => {
+onMounted((): void => {
+  // Set up debounced functions for formatting dates and numbers
   switch (inputType.value) {
     case 'number':
     case 'range':
@@ -255,6 +181,17 @@ onMounted(() => {
       break
   }
 })
+
+onBeforeMount((): void => {
+  // Deprecation warnings - these should never be shown. If we see them, it means the logic determining which component to render is broken.
+  if (inputType.value === 'checkbox') {
+    console.warn("The use of 'checkbox' inputType with 'input' type fields is deprecated. Use 'checkbox' type instead.")
+  } else if (inputType.value === 'radio') {
+    console.warn("The use of 'radio' inputType with 'input' type fields is deprecated. Use 'radio' type instead.")
+  } else if (inputType.value === 'file') {
+    console.warn("The 'file' type in input field is deprecated. Use 'file' field instead.")
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -270,7 +207,7 @@ onMounted(() => {
   }
 
   :deep(input[type="range"]) {
-    padding: 0;
+    padding: $kui-space-0;
   }
 }
 </style>
