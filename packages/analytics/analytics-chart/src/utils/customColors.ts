@@ -72,7 +72,7 @@ export const lookupStatusCodeCategoryColor = (label: string) => {
 
 const statusCodes = Array.from({ length: 500 }, (_, index) => 100 + index)
 
-export const defaultStatusCodeColorPallette: AnalyticsChartColors = {
+export const defaultStatusCodeColors: AnalyticsChartColors = {
   ...statusCodes.reduce((acc, statusCode) => {
     acc[`${statusCode}`] = lookupStatusCodeColor(`${statusCode}`)
 

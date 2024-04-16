@@ -3,7 +3,7 @@ import { describe, it, expect, vitest } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
-import { BORDER_WIDTH, NO_BORDER, defaultStatusCodeColorPallette } from '../utils'
+import { BORDER_WIDTH, NO_BORDER, defaultStatusCodeColors } from '../utils'
 import { addHours } from 'date-fns'
 import type { MockInstance } from 'vitest'
 
@@ -716,7 +716,7 @@ describe('useVitalsExploreDatasets', () => {
       },
     }))
     const result = useExploreResultToTimeDataset(
-      { fill: false, colorPalette: defaultStatusCodeColorPallette },
+      { fill: false, colorPalette: defaultStatusCodeColors },
       exploreResult,
     )
 

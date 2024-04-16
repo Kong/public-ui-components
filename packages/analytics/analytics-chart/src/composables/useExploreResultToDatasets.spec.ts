@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import useExploreResultToDatasets from './useExploreResultToDatasets'
-import { defaultStatusCodeColorPallette } from '../utils'
+import { defaultStatusCodeColors } from '../utils'
 
 describe('useVitalsExploreDatasets', () => {
   it('can handle empty records', () => {
@@ -379,7 +379,7 @@ it('Correct status code colors', () => {
     },
   }))
   const result = useExploreResultToDatasets(
-    { fill: false, colorPalette: defaultStatusCodeColorPallette },
+    { fill: false, colorPalette: defaultStatusCodeColors },
     exploreResult,
   )
 

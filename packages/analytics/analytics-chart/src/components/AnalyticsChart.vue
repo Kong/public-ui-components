@@ -92,7 +92,7 @@
       <DoughnutChart
         v-else-if="isDoughnutChart"
         :chart-data="computedChartData"
-        :dataset-colors="chartOptions.chartDatasetColors || defaultStatusCodeColorPallette"
+        :dataset-colors="chartOptions.chartDatasetColors || defaultStatusCodeColors"
         :legend-position="legendPosition"
         :legend-values="legendValues"
         :metric-unit="computedMetricUnit"
@@ -113,7 +113,7 @@ import type { PropType } from 'vue'
 import { computed, provide, toRef } from 'vue'
 import { GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { ExploreAggregations, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import { hasMillisecondTimestamps, defaultStatusCodeColorPallette } from '../utils'
+import { hasMillisecondTimestamps, defaultStatusCodeColors } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
@@ -189,14 +189,14 @@ const computedChartData = computed(() => {
     ? composables.useExploreResultToTimeDataset(
       {
         fill: props.chartOptions.stacked,
-        colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColorPallette,
+        colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColors,
       },
       toRef(props, 'chartData'),
     ).value
     : composables.useExploreResultToDatasets(
       {
         fill: props.chartOptions.stacked,
-        colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColorPallette,
+        colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColors,
       },
       toRef(props, 'chartData'),
     ).value
