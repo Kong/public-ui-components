@@ -342,7 +342,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       // view configuration cta
       cy.getTestId('form-view-configuration').should('be.visible')
       cy.getTestId('form-view-configuration').click()
-      cy.getTestId('k-code-block-highlighted-code-block').should('be.visible')
+      cy.getTestId('highlighted-code-block').should('be.visible')
     })
 
     it('should correctly show zero values', () => {
