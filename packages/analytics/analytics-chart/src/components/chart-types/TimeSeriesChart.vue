@@ -64,7 +64,6 @@ import ChartLegend from '../chart-plugins/ChartLegend.vue'
 import {
   formatTime,
   datavisPalette,
-  darkenColor,
 } from '../../utils'
 import { v4 as uuidv4 } from 'uuid'
 import { Line, Bar } from 'vue-chartjs'
@@ -203,10 +202,10 @@ const mutableData = computed(() => {
     datasets: props.chartData.datasets.map((e, i) => {
       if (Array.isArray(props.datasetColors)) {
         e.backgroundColor = props.datasetColors[i % props.datasetColors.length]
-        e.borderColor = darkenColor(e.backgroundColor, 50)
+        e.borderColor = props.datasetColors[i % props.datasetColors.length]
       } else if (e.rawDimension in props.datasetColors) {
         e.backgroundColor = props.datasetColors[e.rawDimension]
-        e.borderColor = darkenColor(e.backgroundColor, 50)
+        e.borderColor = props.datasetColors[e.rawDimension]
       }
       e.fill = props.fill
       return e

@@ -59,9 +59,9 @@
       <TimeSeriesChart
         v-if="isTimeSeriesChart"
         :chart-data="computedChartData"
-        :chart-legend-sort-fn="chartOptions.chartLegendSortFn"
-        :chart-tooltip-sort-fn="chartOptions.chartTooltipSortFn"
-        :dataset-colors="chartOptions.chartDatasetColors"
+        :chart-legend-sort-fn="chartLegendSortFn"
+        :chart-tooltip-sort-fn="chartTooltipSortFn"
+        :dataset-colors="chartOptions.chartDatasetColors || defaultStatusCodeColorPallette"
         :dimension-axes-title="timestampAxisTitle"
         :fill="chartOptions.stacked"
         :granularity="timeSeriesGranularity"
@@ -78,8 +78,8 @@
         v-else-if="isBarChart"
         :annotations="showAnnotations"
         :chart-data="computedChartData"
-        :chart-legend-sort-fn="chartOptions.chartLegendSortFn"
-        :chart-tooltip-sort-fn="chartOptions.chartTooltipSortFn"
+        :chart-legend-sort-fn="chartLegendSortFn"
+        :chart-tooltip-sort-fn="chartTooltipSortFn"
         data-testid="bar-chart-container"
         :dimension-axes-title="dimensionAxesTitle"
         :legend-values="legendValues"
@@ -93,7 +93,7 @@
       <DoughnutChart
         v-else-if="isDoughnutChart"
         :chart-data="computedChartData"
-        :dataset-colors="chartOptions.chartDatasetColors"
+        :dataset-colors="chartOptions.chartDatasetColors || defaultStatusCodeColorPallette"
         :legend-position="legendPosition"
         :legend-values="legendValues"
         :metric-unit="computedMetricUnit"
@@ -106,7 +106,7 @@
 
 <script setup lang="ts">
 import composables from '../composables'
-import type { AnalyticsChartOptions } from '../types'
+import type { AnalyticsChartOptions, EnhancedLegendItem, TooltipEntry } from '../types'
 import { ChartTypes, ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
@@ -114,7 +114,7 @@ import type { PropType } from 'vue'
 import { computed, provide, toRef } from 'vue'
 import { GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { ExploreAggregations, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import { datavisPalette, hasMillisecondTimestamps } from '../utils'
+import { hasMillisecondTimestamps, defaultStatusCodeColorPallette } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
@@ -190,14 +190,14 @@ const computedChartData = computed(() => {
     ? composables.useExploreResultToTimeDataset(
       {
         fill: props.chartOptions.stacked,
-        colorPalette: props.chartOptions.chartDatasetColors || datavisPalette,
+        colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColorPallette,
       },
       toRef(props, 'chartData'),
     ).value
     : composables.useExploreResultToDatasets(
       {
         fill: props.chartOptions.stacked,
-        colorPalette: props.chartOptions.chartDatasetColors || datavisPalette,
+        colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColorPallette,
       },
       toRef(props, 'chartData'),
     ).value
@@ -289,6 +289,54 @@ const timeSeriesGranularity = computed<GranularityKeys>(() => {
   }
 
   return msToGranularity(props.chartData.meta.granularity_ms) || GranularityKeys.HOURLY
+})
+
+const chartLegendSortFn = computed(() => {
+  if (props.chartOptions.chartLegendSortFn) {
+    return props.chartOptions.chartLegendSortFn
+  }
+
+  return (a: EnhancedLegendItem, b: EnhancedLegendItem) => {
+    if (a.text === i18n.t('chartLabels.____OTHER____')) {
+      return 1
+    }
+
+    if (b.text === i18n.t('chartLabels.____OTHER____')) {
+      return -1
+    }
+
+    // Status codes (if label is numeric)
+    if (typeof parseInt(a.text, 10) === 'number' && typeof parseInt(b.text, 10) === 'number') {
+      return a.text < b.text ? -1 : 1
+    }
+
+    // Fallback sort on value (number of Requests)
+    return a.value && b.value ? b.value.raw - a.value.raw : 0
+  }
+})
+
+const chartTooltipSortFn = computed(() => {
+  if (props.chartOptions.chartTooltipSortFn) {
+    return props.chartOptions.chartTooltipSortFn
+  }
+
+  return (a: TooltipEntry, b: TooltipEntry) => {
+    if (a.label === i18n.t('chartLabels.____OTHER____')) {
+      return 1
+    }
+
+    if (b.label === i18n.t('chartLabels.____OTHER____')) {
+      return -1
+    }
+
+    // Status codes (if label is numeric)
+    if (typeof parseInt(a.label, 10) === 'number' && typeof parseInt(b.label, 10) === 'number') {
+      return a.label < b.label ? -1 : 1
+    }
+
+    // Fallback sort on value (number of Requests)
+    return a.value && b.value ? b.rawValue - a.rawValue : 0
+  }
 })
 
 provide('showLegendValues', showLegendValues)
