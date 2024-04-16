@@ -44,6 +44,10 @@
         Next
       </KButton>
     </template>
+
+    <template #after-expressions-editor="editor">
+      This text will appear after the Expressions editor. Editor state: {{ editor.state }}.
+    </template>
   </RouteForm>
 
   <h2>Kong Manager API</h2>
@@ -69,6 +73,10 @@
         Next
       </KButton>
     </template>
+
+    <template #after-expressions-editor="{ state }">
+      This text will appear after the Expressions editor. Editor state: {{ state }}.
+    </template>
   </RouteForm>
 </template>
 
@@ -84,7 +92,7 @@ const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const isRouteFlavorControlCollapsed = ref<boolean>(true)
-const routeFlavors = reactive<RouteFlavors>({ traditional: true, expressions: true })
+const routeFlavors = reactive<Required<RouteFlavors>>({ traditional: true, expressions: true })
 const routeId = computed((): string => route?.params?.id as string || '')
 
 const konnectConfig = ref<KonnectRouteFormConfig>({

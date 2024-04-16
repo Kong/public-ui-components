@@ -35,6 +35,12 @@ export enum RoutingRulesEntities {
   CUSTOM_METHOD = 'custom-method'
 }
 
+export enum ExpressionsEditorState {
+  LOADING = 'loading',
+  ERROR = 'error',
+  READY = 'ready'
+}
+
 export type RoutingRuleEntity = Exclude<`${RoutingRulesEntities}`, 'custom-method'>
 
 export type PathHandlingVersion = 'v0' | 'v1'

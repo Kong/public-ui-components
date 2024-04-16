@@ -565,7 +565,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.mount(RouteForm, {
             props: {
               config: baseConfigKM,
-              routeId: route.id,
+              routeId: routeExpressions.id,
               routeFlavors,
             },
           })
@@ -586,9 +586,9 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           }
 
           // form fields
-          cy.getTestId('route-form-name').should('have.value', route.name)
-          cy.getTestId('route-form-service-id').should('have.value', route.service.id)
-          cy.getTestId('route-form-tags').should('have.value', route.tags.join(', '))
+          cy.getTestId('route-form-name').should('have.value', routeExpressions.name)
+          cy.getTestId('route-form-service-id').should('have.value', routeExpressions.service.id)
+          cy.getTestId('route-form-tags').should('have.value', routeExpressions.tags.join(', '))
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
             cy.getTestId('collapse-trigger-content').click()
@@ -610,7 +610,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.mount(RouteForm, {
             props: {
               config: baseConfigKM,
-              routeId: route.id,
+              routeId: routeExpressions.id,
               routeFlavors,
             },
           })
@@ -629,6 +629,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
             // trad tab should be active by default
             cy.get('#expressions-tab').should('have.class', 'active')
+            cy.getTestId('route-form-expressions-editor-loader-loading').should('not.exist')
           }
 
           // enables save when form has changes
@@ -1346,7 +1347,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.mount(RouteForm, {
             props: {
               config: baseConfigKonnect,
-              routeId: route.id,
+              routeId: routeExpressions.id,
               routeFlavors,
             },
           })
@@ -1367,9 +1368,9 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           }
 
           // form fields
-          cy.getTestId('route-form-name').should('have.value', route.name)
-          cy.getTestId('route-form-service-id').should('have.value', route.service.id)
-          cy.getTestId('route-form-tags').should('have.value', route.tags.join(', '))
+          cy.getTestId('route-form-name').should('have.value', routeExpressions.name)
+          cy.getTestId('route-form-service-id').should('have.value', routeExpressions.service.id)
+          cy.getTestId('route-form-tags').should('have.value', routeExpressions.tags.join(', '))
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
             cy.getTestId('collapse-trigger-content').click()
@@ -1391,7 +1392,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.mount(RouteForm, {
             props: {
               config: baseConfigKonnect,
-              routeId: route.id,
+              routeId: routeExpressions.id,
               routeFlavors,
             },
           })

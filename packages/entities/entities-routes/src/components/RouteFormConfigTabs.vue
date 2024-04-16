@@ -2,8 +2,8 @@
   <KTabs
     v-if="tabs.length > 1"
     v-model="tab"
+    data-testid="route-form-config-tabs"
     :tabs="tabs"
-    @change="(t: string) => tab = t"
   >
     <template
       v-if="routeFlavors.traditional"
@@ -80,13 +80,12 @@
 <script setup lang="ts">
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { InfoIcon } from '@kong/icons'
+import { type Tab } from '@kong/kongponents'
 import { computed } from 'vue'
 import useI18n from '../composables/useI18n'
 import { RouteFlavor, type RouteFlavors } from '../types'
 
-const { i18n: { t } } = useI18n()
-
-const tab = defineModel<string>()
+const tab = defineModel<string>({ required: true })
 
 const props = defineProps<{
   routeFlavors: RouteFlavors,
@@ -96,16 +95,18 @@ const props = defineProps<{
   }
 }>()
 
-const tabs = computed(() => [
+const { i18n: { t } } = useI18n()
+
+const tabs = computed<Tab[]>(() => [
   ...props.routeFlavors.traditional
     ? [{
-      hash: RouteFlavor.TRADITIONAL,
+      hash: `#${RouteFlavor.TRADITIONAL}`,
       title: t('form.flavors.traditional'),
     }]
     : [],
   ...props.routeFlavors.expressions
     ? [{
-      hash: RouteFlavor.EXPRESSIONS,
+      hash: `#${RouteFlavor.EXPRESSIONS}`,
       title: t('form.flavors.expressions'),
     }]
     : [],

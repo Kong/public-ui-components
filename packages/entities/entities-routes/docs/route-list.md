@@ -65,12 +65,6 @@ A table component for routes.
     - default: `undefined`
     - A function that returns the route for editing a route.
 
-  - `useExpression`:
-    - type: `boolean`
-    - required: `false`
-    - default: `undefined`
-    - Whether to use expression flavored routes.
-
   - `serviceId`:
     - type: `string`
     - required: `false`
@@ -163,6 +157,14 @@ The table is rendered inside a `KCard`. `title` text is displayed in the upper l
 #### `titleTag`
 
 HTML element you want title to be rendered as. Defaults to `h2`.
+
+#### `hasExpressionColumn`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+Whether to show the "Expression" column. Defaults to `false`.
 
 ### Events
 

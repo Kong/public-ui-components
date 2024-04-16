@@ -1,16 +1,23 @@
 <template>
   <component
     :is="errorComponent"
-    v-if="expressionInitError"
+    v-if="state === ExpressionsEditorState.ERROR"
+    data-testid="route-form-expressions-editor-loader-error"
   />
   <component
     :is="loadingComponent"
-    v-else-if="!expressionInitialized"
+    v-else-if="state === ExpressionsEditorState.LOADING"
+    data-testid="route-form-expressions-editor-loader-loading"
   />
   <RouteFormExpressionsEditor
     v-else
     v-model="expression"
     :protocol="props.protocol"
+  />
+  <slot
+    :expression="{ value: expression, update: setExpression }"
+    name="after-editor"
+    :state="state"
   />
 </template>
 
@@ -20,8 +27,9 @@
  * which depends on @kong-ui-public/expressions, to avoid loading the Expressions language support and the
  * editor until they are used.
  */
+import { defineAsyncComponent, h, onMounted, ref, type Component } from 'vue'
 import useI18n from '../composables/useI18n'
-import { defineAsyncComponent, onMounted, ref, type Component, h } from 'vue'
+import { ExpressionsEditorState } from '../types'
 
 const { i18n: { t } } = useI18n()
 
@@ -42,16 +50,21 @@ const RouteFormExpressionsEditor = defineAsyncComponent({
 })
 
 const props = defineProps<{ protocol?: string }>()
+const state = ref<ExpressionsEditorState>(ExpressionsEditorState.LOADING)
+
 const expression = defineModel<string>({ required: true })
-const expressionInitialized = ref(false)
-const expressionInitError = ref(false)
+
+// Useful when slot content is trying to update the expression (e.g., router playground)
+const setExpression = (value: string) => {
+  expression.value = value
+}
 
 onMounted(async () => {
   try {
     await (await import('@kong-ui-public/expressions')).asyncInit
-    expressionInitialized.value = true
+    state.value = ExpressionsEditorState.READY
   } catch (e) {
-    expressionInitError.value = true
+    state.value = ExpressionsEditorState.ERROR
     console.error(e)
   }
 })

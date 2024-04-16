@@ -242,7 +242,7 @@
       "multipleRules": "{routingRules} or {lastRoutingRule}",
       "cannotChangeFlavor": {
         "create": "The format of the route cannot be changed once created.",
-        "edit": "This route was configured in the {format} format. It cannot be changed after creation, please switch to the {format} tab or create a new route instead."
+        "edit": "This route was configured in the {format} format, and cannot be changed after creation. You can switch to the {format} tab to edit, or create a new route in a different format instead."
       }
     },
     "expressions_editor": {

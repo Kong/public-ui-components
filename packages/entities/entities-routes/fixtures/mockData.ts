@@ -23,31 +23,6 @@ export const routes: FetcherRawResponse = {
   total: 2,
 }
 
-export const routes100: any[] = Array(100)
-  .fill(null)
-  .map((_, i) => ({
-    id: `${i + 1}`,
-    name: `route-${i + 1}`,
-    methods: ['GET'],
-    hosts: [`${i + 1}.example.com`],
-  }))
-
-export const paginate = (
-  routes: any[],
-  size: number,
-  _offset: number,
-): FetcherRawResponse => {
-  const sliced = routes.slice(_offset, _offset + size)
-  const offset =
-    _offset + size < routes.length ? String(_offset + size) : undefined
-
-  return {
-    data: sliced,
-    total: sliced.length,
-    offset,
-  }
-}
-
 export const services = [
   {
     id: '1',
@@ -65,7 +40,7 @@ export const route = {
     id: services[0].id,
   },
   id: '1',
-  name: 'route-1',
+  name: 'route-trad',
   methods: ['GET', 'CASTOM'],
   service_id: '',
   tags: ['dev', 'test'],
@@ -85,7 +60,7 @@ export const routeExpressions = {
     id: services[0].id,
   },
   id: '1',
-  name: 'route-1',
+  name: 'route-expr',
   methods: ['GET', 'CASTOM'],
   service_id: '',
   tags: ['dev', 'test'],
@@ -94,4 +69,31 @@ export const routeExpressions = {
   protocols: ['http', 'https'],
   strip_path: false,
   expression: 'http.path == "/kong"',
+}
+
+export const routesTraditional100: any[] = Array(100)
+  .fill(null)
+  .map((_, i) => ({
+    id: `${i + 1}`,
+    name: `route-${i + 1}`,
+    methods: ['GET'],
+    hosts: [`${i + 1}.example.com`],
+  }))
+
+export const routesTraditionalExpressionsMixed = [route, routeExpressions]
+
+export const paginate = (
+  routes: any[],
+  size: number,
+  _offset: number,
+): FetcherRawResponse => {
+  const sliced = routes.slice(_offset, _offset + size)
+  const offset =
+    _offset + size < routes.length ? String(_offset + size) : undefined
+
+  return {
+    data: sliced,
+    total: sliced.length,
+    offset,
+  }
 }

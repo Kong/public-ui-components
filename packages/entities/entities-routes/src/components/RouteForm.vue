@@ -95,8 +95,7 @@
         />
 
         <RouteFormConfigTabs
-          v-model="currentConfigTab"
-          data-testid="route-form-config-tabs"
+          v-model="currentConfigHash"
           :route-flavors="routeFlavors"
           :tooltips="configTabTooltips"
         >
@@ -360,7 +359,15 @@
                 <RouteFormExpressionsEditorLoader
                   v-model="state.fields.expression"
                   :protocol="exprEditorProtocol"
-                />
+                >
+                  <template #after-editor="editor">
+                    <slot
+                      :expression="editor.expression"
+                      name="after-expressions-editor"
+                      :state="editor.state"
+                    />
+                  </template>
+                </RouteFormExpressionsEditorLoader>
               </KCard>
 
               <!-- Expressions Route Advanced Fields -->
@@ -470,8 +477,8 @@ import type {
   Method,
   MethodsFields,
   Protocol,
-  RouteState,
   RouteFlavors,
+  RouteState,
   RoutingRuleEntity,
   Sources,
   TraditionalRoutePayload,
@@ -571,11 +578,29 @@ const emit = defineEmits<{
   (e: 'model-updated', val: BaseRoutePayload): void,
 }>()
 
-const currentConfigTab = ref<string>(props.routeFlavors.traditional ? RouteFlavor.TRADITIONAL : props.routeFlavors.expressions ? RouteFlavor.EXPRESSIONS : '')
+const currentConfigHash = ref<string>(
+  props.routeFlavors.traditional
+    ? `#${RouteFlavor.TRADITIONAL}`
+    : props.routeFlavors.expressions
+      ? `#${RouteFlavor.EXPRESSIONS}`
+      : '')
+
+const currentConfigTab = computed<RouteFlavor | undefined>(() => {
+  if (currentConfigHash.value) {
+    return currentConfigHash.value.substring(1) as RouteFlavor
+  }
+
+  return undefined
+})
+
 const recordFlavor = ref<RouteFlavor | undefined>(undefined)
 const isAdvancedFieldsCollapsed = ref<boolean>(true)
 
 const payloadFlavor = computed<RouteFlavor | undefined>(() => {
+  if (recordFlavor.value) {
+    return recordFlavor.value
+  }
+
   if (currentConfigTab.value) {
     return currentConfigTab.value as RouteFlavor
   }
@@ -986,7 +1011,7 @@ const updateFormValues = (data: Record<string, any>): void => {
   if (props.routeId) {
     const flavor = typeof data.expression === 'string' && data.expression.length > 0 ? RouteFlavor.EXPRESSIONS : RouteFlavor.TRADITIONAL
     recordFlavor.value = flavor
-    currentConfigTab.value = flavor
+    currentConfigHash.value = `#${flavor}`
   }
 
   if (data?.service?.id) {

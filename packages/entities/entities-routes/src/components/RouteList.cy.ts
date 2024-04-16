@@ -1,16 +1,18 @@
 // Cypress component test spec file
-import RouteList from './RouteList.vue'
 import type { FetcherResponse } from '@kong-ui-public/entities-shared'
+import { v4 as uuidv4 } from 'uuid'
+import type { Router } from 'vue-router'
+import { createMemoryHistory, createRouter } from 'vue-router'
 import type { FetcherRawResponse } from '../../fixtures/mockData'
 import {
   paginate,
+  route,
   routes,
-  routes100,
+  routesTraditional100,
+  routesTraditionalExpressionsMixed,
 } from '../../fixtures/mockData'
 import type { KongManagerRouteListConfig, KonnectRouteListConfig } from '../types'
-import type { Router } from 'vue-router'
-import { createMemoryHistory, createRouter } from 'vue-router'
-import { v4 as uuidv4 } from 'uuid'
+import RouteList from './RouteList.vue'
 
 const viewRoute = 'view-route'
 const editRoute = 'edit-route'
@@ -162,6 +164,94 @@ describe('<RouteList />', () => {
     }
   })
 
+  describe('the Expression column', () => {
+    beforeEach(() => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/routes*`,
+        },
+        {
+          statusCode: 200,
+          body: routesTraditionalExpressionsMixed,
+        },
+      )
+    })
+
+    it('should not show the expressions column if hasExpressionsColumn is unset', () => {
+      cy.mount(RouteList, {
+        props: {
+          cacheIdentifier: `route-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => {},
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
+        },
+      })
+
+      cy.get('table thead th').contains('Expression').should('not.exist')
+
+      cy.get('tbody tr[data-testid="route-trad"]').should('exist').as('routeTrad')
+      for (const path of route.paths) {
+        cy.get('@routeTrad').findTestId('paths').should('contain.text', path)
+      }
+
+      cy.get('tbody tr[data-testid="route-expr"]').should('exist').as('routeExpr')
+      cy.get('@routeExpr').findTestId('paths').should('have.text', '-')
+    })
+
+    it('should not show the expressions column if hasExpressionsColumn is unset/false', () => {
+      cy.mount(RouteList, {
+        props: {
+          cacheIdentifier: `route-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => {},
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
+          hasExpressionColumn: false,
+        },
+      })
+
+      cy.get('table thead th').contains('Expression').should('not.exist')
+
+      cy.get('tbody tr[data-testid="route-trad"]').should('exist').as('routeTrad')
+      for (const path of route.paths) {
+        cy.get('@routeTrad').findTestId('paths').should('contain.text', path)
+      }
+
+      cy.get('tbody tr[data-testid="route-expr"]').should('exist').as('routeExpr')
+      cy.get('@routeExpr').findTestId('paths').should('have.text', '-')
+    })
+
+    it('should show the expressions column if hasExpressionsColumn is true', () => {
+      cy.mount(RouteList, {
+        props: {
+          cacheIdentifier: `route-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => {},
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
+          hasExpressionColumn: true,
+        },
+      })
+
+      cy.get('table thead th').contains('Expression').should('exist')
+
+      cy.get('tbody tr[data-testid="route-trad"]').should('exist').as('routeTrad')
+      for (const path of route.paths) {
+        cy.get('@routeTrad').findTestId('paths').should('contain.text', path)
+      }
+      cy.get('@routeTrad').findTestId('expression').should('have.text', '-')
+
+      cy.get('tbody tr[data-testid="route-expr"]').should('exist').as('routeExpr')
+      cy.get('@routeExpr').findTestId('paths').should('have.text', '-')
+      cy.get('@routeExpr').findTestId('expression').should('have.text', 'http.path == "/kong"')
+    })
+  })
+
   describe('Kong Manager', () => {
     const interceptKM = (params?: {
       mockData?: FetcherRawResponse;
@@ -306,7 +396,7 @@ describe('<RouteList />', () => {
 
     it('should allow switching between pages', () => {
       interceptKMMultiPage({
-        mockData: routes100,
+        mockData: routesTraditional100,
       })
 
       cy.mount(RouteList, {
@@ -380,7 +470,7 @@ describe('<RouteList />', () => {
 
     it('should allow picking different page sizes and persist the preference', () => {
       interceptKMMultiPage({
-        mockData: routes100,
+        mockData: routesTraditional100,
       })
 
       cy.mount(RouteList, {
@@ -604,7 +694,7 @@ describe('<RouteList />', () => {
 
     it('should allow switching between pages', () => {
       interceptKonnectMultiPage({
-        mockData: routes100,
+        mockData: routesTraditional100,
       })
 
       cy.mount(RouteList, {
@@ -678,7 +768,7 @@ describe('<RouteList />', () => {
 
     it('should allow picking different page sizes and persist the preference', () => {
       interceptKonnectMultiPage({
-        mockData: routes100,
+        mockData: routesTraditional100,
       })
 
       cy.mount(RouteList, {

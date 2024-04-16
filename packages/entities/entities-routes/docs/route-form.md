@@ -171,6 +171,18 @@ Slot props:
   - type: `Function`
   - Cancel handler function.
 
+#### `after-expressions-editor`
+
+Content to be displayed after the Expressions editor.
+
+Slot props:
+- `expression`
+  - type: `[string, (value: string) => void]`
+  - The expression and a function to update the expression. This is useful when slot content is trying to update the expression (e.g., router playground).
+- `state`
+  - type: `ExpressionsEditorState`
+  - The state of the editor.
+
 ### Events
 
 #### error
@@ -210,10 +222,14 @@ import type {
   MethodsFields,
   Sources,
   Destinations,
-  RouteStateFields,
+  BaseRouteStateFields,
+  TraditionalRouteStateFields,
+  ExpressionsRouteStateFields,
   RouteState,
   Headers,
-  RoutePayload,
+  BaseRoutePayload,
+  TraditionalRoutePayload,
+  ExpressionsRoutePayload,
   SelectItem
 } from '@kong-ui-public/entities-routes'
 ```
