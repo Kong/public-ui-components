@@ -61,7 +61,6 @@
         :chart-data="computedChartData"
         :chart-legend-sort-fn="chartLegendSortFn"
         :chart-tooltip-sort-fn="chartTooltipSortFn"
-        :dataset-colors="chartOptions.chartDatasetColors || defaultStatusCodeColorPallette"
         :dimension-axes-title="timestampAxisTitle"
         :fill="chartOptions.stacked"
         :granularity="timeSeriesGranularity"

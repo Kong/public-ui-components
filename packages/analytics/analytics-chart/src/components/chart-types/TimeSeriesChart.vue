@@ -12,7 +12,7 @@
         v-if="type === ChartTypes.TIMESERIES_LINE"
         ref="chartInstance"
         :chart-id="chartID"
-        :data="(mutableData as any)"
+        :data="(chartData as any)"
         data-testid="time-series-line-chart"
         :options="(options as any)"
         :plugins="plugins"
@@ -21,7 +21,7 @@
         v-else-if="type === ChartTypes.TIMESERIES_BAR"
         ref="chartInstance"
         :chart-id="chartID"
-        :data="(mutableData as any)"
+        :data="(chartData as any)"
         data-testid="time-series-bar-chart"
         :options="(options as any)"
         :plugins="plugins"
@@ -39,8 +39,8 @@
       :top="tooltipData.top"
       :unit="metricUnit"
       @dimensions="tooltipDimensions"
-      @left="(left) => tooltipData.left = left"
-      @top="(top) => tooltipData.top = top"
+      @left="(left: string) => tooltipData.left = left"
+      @top="(top: string) => tooltipData.top = top"
     />
     <ChartLegend
       :id="legendID"
@@ -132,11 +132,6 @@ const props = defineProps({
     required: false,
     default: '',
   },
-  datasetColors: {
-    type: Object as PropType<AnalyticsChartColors | string[]>,
-    required: false,
-    default: datavisPalette,
-  },
   chartLegendSortFn: {
     type: Function as PropType<ChartLegendSortFn>,
     required: false,
@@ -194,23 +189,6 @@ const { options } = composables.useLinechartOptions({
   stacked: toRef(props, 'stacked'),
   metricAxesTitle: toRef(props, 'metricAxesTitle'),
   dimensionAxesTitle: toRef(props, 'dimensionAxesTitle'),
-})
-
-const mutableData = computed(() => {
-  return {
-    ...props.chartData,
-    datasets: props.chartData.datasets.map((e, i) => {
-      if (Array.isArray(props.datasetColors)) {
-        e.backgroundColor = props.datasetColors[i % props.datasetColors.length]
-        e.borderColor = props.datasetColors[i % props.datasetColors.length]
-      } else if (e.rawDimension in props.datasetColors) {
-        e.backgroundColor = props.datasetColors[e.rawDimension]
-        e.borderColor = props.datasetColors[e.rawDimension]
-      }
-      e.fill = props.fill
-      return e
-    }),
-  }
 })
 
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))
