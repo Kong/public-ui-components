@@ -1,5 +1,5 @@
 import { computed, ref } from 'vue'
-import type { DebouncedFunc } from 'lodash'
+import type { DebouncedFunc } from 'lodash-es'
 import debounce from 'lodash-es/debounce'
 import forEach from 'lodash-es/forEach'
 import objGet from 'lodash-es/get'

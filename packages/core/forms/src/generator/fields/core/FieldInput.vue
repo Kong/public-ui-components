@@ -27,7 +27,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, onBeforeMount, onMounted, type PropType } from 'vue'
-import type { DebouncedFunc } from 'lodash'
+import type { DebouncedFunc } from 'lodash-es'
 import fecha from 'fecha'
 import debounce from 'lodash-es/debounce'
 import objGet from 'lodash-es/get'
