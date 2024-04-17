@@ -1,6 +1,6 @@
 <template>
   <div
-    :aria-labelledby="legendID"
+    :aria-labelledby="title ? legendId : undefined"
     class="kong-ui-entity-form-section"
     :class="{ 'has-divider': hasDivider }"
     role="group"
@@ -14,7 +14,7 @@
         <component
           :is="titleTag"
           v-if="title"
-          :id="legendID"
+          :id="legendId"
           class="form-section-title"
         >
           {{ title }}
@@ -79,7 +79,7 @@ defineProps({
 })
 
 const slots = useSlots()
-const legendID = uuidv4()
+const legendId = uuidv4()
 </script>
 
 <style lang="scss" scoped>
