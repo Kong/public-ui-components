@@ -1,13 +1,20 @@
 <template>
   <KModal
+    :action-button-disabled="modalEditStage === 'submitting'"
+    :action-button-text="actionButtonText"
+    :hide-cancel-button="true"
+    :hide-close-icon="modalEditStage === 'submitting'"
     max-width="640px"
     :title="title"
     :visible="visible"
     @cancel="closeAndReset"
+    @proceed="onProceed"
   >
     <KSelect
+      v-if="modalEditStage === 'edit'"
       v-model="targetLogLevel"
-      :items="items"
+      class="log-level-select"
+      :items="logLevelCandidates"
       :label="i18n.t('modal.select_log_level_title')"
     />
 
@@ -21,6 +28,45 @@
         {{ explanation.warning }}
       </div>
     </div>
+
+    <div class="revert-after-wrapper">
+      <KLabel>{{ i18n.t('modal.revert_to_default_after.label') }}</KLabel>
+      <div class="time">
+        <KInput
+          v-model="revertAfterString"
+          class="time-input"
+          :disabled="modalEditStage !== 'edit'"
+          :error="revertAfter <= 0 || isNaN(revertAfter)"
+        />
+        <span class="seconds">{{ i18n.t('modal.revert_to_default_after.seconds') }}</span>
+        <span class="formatted-time">{{ friendlyTime }}</span>
+      </div>
+    </div>
+
+    <table class="data-plane-node-list">
+      <thead>
+        <th style="width: 40%">
+          {{ i18n.t('modal.dp_list.header.host') }}
+        </th>
+        <th style="width: 40%">
+          {{ i18n.t('modal.dp_list.header.action') }}
+        </th>
+        <th>{{ i18n.t('modal.dp_list.header.status') }}</th>
+      </thead>
+
+      <tbody>
+        <LogLevelModalNodeItem
+          v-for="node in props.instanceList"
+          :key="node.id"
+          :ref="el => setHostListNodeItemRefs(node.id, el)"
+          :check-log-level="checkDataPlaneLogLevel"
+          :data-plane-id="node.id"
+          :hostname="node.hostname"
+          :log-level-hint="props.instanceLogLevel?.get(node.id)"
+          :target-log-level="targetLogLevel"
+        />
+      </tbody>
+    </table>
   </KModal>
 </template>
 
@@ -28,6 +74,7 @@
 import { computed, ref } from 'vue'
 import composables from '../composables'
 import { LogLevel, type DataPlaneNodeCommon } from '../types'
+import LogLevelModalNodeItem from './LogLevelModalNodeItem.vue'
 
 defineOptions({
   name: 'ChangeLogLevelModal',
@@ -37,13 +84,23 @@ const { i18n } = composables.useI18n()
 
 const props = defineProps<{
   instanceList: Pick<DataPlaneNodeCommon, 'id' | 'hostname'>[]
+  instanceLogLevel: Map<string /* instanceId */, LogLevel>
+  requests: {
+    maxConcurrentRequests?: number | false
+    getDataPlaneLogLevel: (instanceId: string) => Promise<LogLevel>
+    setDataPlaneLogLevel: (instanceId: string, logLevel: LogLevel, revertAfter: number) => Promise<void>
+  }
 }>()
 
 const visible = defineModel<boolean>('visible')
 
-const initialLogLevel = LogLevel.Info
+const initialLogLevel = LogLevel.Notice
+
+const modalEditStage = ref<'edit' | 'submitting' | 'submitted'>('edit')
 
 const targetLogLevel = ref<LogLevel>(initialLogLevel)
+const revertAfterString = ref<string>('60')
+const revertAfter = computed(() => Math.floor(Number(revertAfterString.value)))
 
 const title = computed(() => {
   const summary = props.instanceList.length === 1
@@ -52,27 +109,121 @@ const title = computed(() => {
   return i18n.t('modal.change_log_level.title', { summary })
 })
 
-const items = composables.useLogLevelSelectItems({
+const logLevelCandidates = composables.useLogLevelCandidateSelectItems({
   initialSelected: initialLogLevel,
 })
 
 const explanation = composables.useLogLevelExplanation(targetLogLevel)
+const friendlyTime = composables.useFriendlyRevertTime(revertAfter)
+
+const maxConcurrentRequests = typeof props.requests.maxConcurrentRequests === 'number'
+  ? props.requests.maxConcurrentRequests
+  : 0
+const requestScheduler = composables.useRequestScheduler({ maxConcurrentRequests })
+const { checkDataPlaneLogLevel } = composables.useDataPlaneLogLevelChecker({
+  getDataPlaneLogLevel: props.requests.getDataPlaneLogLevel,
+  setDataPlaneLogLevel: props.requests.setDataPlaneLogLevel,
+  requestExecutor: maxConcurrentRequests > 0 ? requestScheduler.schedule : undefined,
+})
+
+const hostNodeCompRefs = new Map<string, InstanceType<typeof LogLevelModalNodeItem>>()
+const setHostListNodeItemRefs = (dataPlaneId: string, ref: any) => {
+  hostNodeCompRefs.set(dataPlaneId, ref)
+}
+
+const onProceed = async () => {
+  if (modalEditStage.value !== 'edit') {
+    closeAndReset()
+    return
+  }
+
+  modalEditStage.value = 'submitting'
+
+  const promises = Array.from(hostNodeCompRefs.values()).map(comp => {
+    return comp.updateLogLevel(targetLogLevel.value, revertAfter.value)
+  })
+
+  try {
+    await Promise.all(promises)
+  } catch (error) {
+    console.error('Failed to update log level', error)
+  } finally {
+    modalEditStage.value = 'submitted'
+  }
+}
 
 const closeAndReset = () => {
   visible.value = false
+  revertAfterString.value = '60'
+  modalEditStage.value = 'edit'
+  targetLogLevel.value = initialLogLevel
+  hostNodeCompRefs.clear()
 }
+
+const actionButtonText = computed(() => {
+  switch (modalEditStage.value) {
+    case 'submitting':
+      return i18n.t('modal.action_button.submitting')
+    case 'submitted':
+      return i18n.t('modal.action_button.ok')
+    default:
+      return i18n.t('modal.action_button.confirm')
+  }
+})
 </script>
 
 <style lang="scss" scoped>
+.log-level-select,
 .explanation-wrapper {
-  margin-top: $kui-space-70;
+  margin-bottom: $kui-space-70;
+}
 
+.explanation-wrapper {
   :deep(.k-label) {
     margin-bottom: 0 !important;
   }
 
   .warning-message {
     color: $kui-color-text-danger;
+  }
+}
+
+.revert-after-wrapper {
+  margin-bottom: $kui-space-40;
+
+  .time {
+    align-items: center;
+    display: flex;
+
+    .time-input {
+      margin-right: $kui-space-40;
+      width: 80px;
+    }
+
+    .seconds {
+      color: $kui-color-text;
+    }
+
+    .formatted-time {
+      color: $kui-color-text-neutral-strong;
+      font-style: italic;
+      margin-left: $kui-space-130;
+    }
+  }
+}
+
+.data-plane-node-list {
+  th, td {
+    color: $kui-color-text;
+  }
+
+  thead {
+    text-align: left;
+
+    th {
+      font-weight: $kui-font-weight-bold;
+      line-height: $kui-line-height-70;
+    }
   }
 }
 </style>

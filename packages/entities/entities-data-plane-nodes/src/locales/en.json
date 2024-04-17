@@ -1,18 +1,42 @@
 {
   "modal": {
+    "action_button": {
+      "confirm": "Confirm",
+      "submitting": "Submitting...",
+      "ok": "OK"
+    },
     "change_log_level": {
       "title": "Change Log Level ({summary})"
     },
-    "select_log_level_title": "Select Log Level",
-    "log_level_explanation": {
-      "debug": "Detailed information, typically of interest only when diagnosing problems.",
-      "info": "Confirmation that things are working as expected.",
-      "notice": "Is used for logging errors that result in a request being dropped. For example, getting an HTTP 500 error. The rate of such logs need to be monitored.",
-      "warn": "Exceptional occurrences that are not errors.",
-      "error": "Runtime errors that do not require immediate action but should typically be logged and monitored.",
-      "critical": "Critical conditions."
+    "dp_list": {
+      "header": {
+        "host": "Host",
+        "action": "Action",
+        "status": "Status"
+      },
+      "status": {
+        "failed": "Failure",
+        "loading": "Loading",
+        "pending": "Pending",
+        "succeed": "Succeed"
+      }
     },
-    "log_level_disk_space_warning": "If left on for extended periods of time, can result in excess disk space consumption."
+    "log_level_disk_space_warning": "If left on for extended periods of time, can result in excess disk space consumption.",
+    "log_level_explanation": {
+      "debug": "Provides debug information about the plugin’s run loop and each individual plugin or other components.",
+      "info": "Provides messages that provide a record of the normal operation of the system.",
+      "notice": "Provides messages that provide a record of the normal operation of the system, but also alerts conditions that may require monitoring. Kong does not make a large difference between info and notice.",
+      "warn": "Is used to log any abnormal behavior that doesn’t result in dropped transactions but requires further investigation.",
+      "error": "Is used for logging errors that result in a request being dropped.",
+      "critical": "Is used when Kong is working under critical conditions and not working properly, thus affecting several clients."
+    },
+    "revert_to_default_after": {
+      "label": "Revert to default after",
+      "hours": "hour",
+      "minutes": "min",
+      "seconds": "seconds"
+    },
+    "select_log_level_title": "Select Log Level"
   },
   "log_level": {
     "debug": "Debug",

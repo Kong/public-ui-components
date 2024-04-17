@@ -68,6 +68,7 @@
     "errorLimit": "500KB"
   },
   "dependencies": {
+    "@kong/icons": "^1.8.16",
     "@kong-ui-public/entities-shared": "workspace:^"
   }
 }
