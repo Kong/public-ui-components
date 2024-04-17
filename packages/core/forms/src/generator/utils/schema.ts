@@ -1,10 +1,9 @@
-import cloneDeep from 'lodash/cloneDeep'
-import each from 'lodash/each'
-import get from 'lodash/get'
-import isArray from 'lodash/isArray'
-import isFunction from 'lodash/isFunction'
-import isObject from 'lodash/isObject'
-import set from 'lodash/set'
+import cloneDeep from 'lodash-es/cloneDeep'
+import each from 'lodash-es/each'
+import get from 'lodash-es/get'
+import isFunction from 'lodash-es/isFunction'
+import isObject from 'lodash-es/isObject'
+import set from 'lodash-es/set'
 
 // Create a new model by schema default values
 export const createDefaultObject = (schema: any, obj: {} = {}) => {
@@ -12,7 +11,7 @@ export const createDefaultObject = (schema: any, obj: {} = {}) => {
     if (get(obj, field.model) === undefined && field.default !== undefined) {
       if (isFunction(field.default)) {
         set(obj, field.model, field.default(field, schema, obj))
-      } else if (isObject(field.default) || isArray(field.default)) {
+      } else if (isObject(field.default) || Array.isArray(field.default)) {
         set(obj, field.model, cloneDeep(field.default))
       } else set(obj, field.model, field.default)
     }

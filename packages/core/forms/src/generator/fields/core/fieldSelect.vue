@@ -10,9 +10,9 @@ select.form-control(v-model="value", :disabled="disabled || null", :name="schema
 </template>
 
 <script>
-import isObject from 'lodash/isObject'
-import isNil from 'lodash/isNil'
-import find from 'lodash/find'
+import isObject from 'lodash-es/isObject'
+import isNil from 'lodash-es/isNil'
+import find from 'lodash-es/find'
 import abstractField from '../abstractField'
 
 export default {

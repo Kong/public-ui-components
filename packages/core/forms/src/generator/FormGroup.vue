@@ -85,9 +85,9 @@
 </template>
 
 <script>
-import objGet from 'lodash/get'
-import isFunction from 'lodash/isFunction'
-import isNil from 'lodash/isNil'
+import objGet from 'lodash-es/get'
+import isFunction from 'lodash-es/isFunction'
+import isNil from 'lodash-es/isNil'
 import { slugifyFormID } from './utils/schema'
 import formMixin from './FormMixin.vue'
 import * as fieldComponents from './utils/fieldsLoader'

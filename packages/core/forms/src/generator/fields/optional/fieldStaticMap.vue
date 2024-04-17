@@ -4,7 +4,7 @@ img(:src="mapLink")
 
 <script>
 import abstractField from '../abstractField'
-import defaults from 'lodash/defaults'
+import defaults from 'lodash-es/defaults'
 
 export default {
   mixins: [abstractField],

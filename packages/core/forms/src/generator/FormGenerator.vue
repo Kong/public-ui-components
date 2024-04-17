@@ -149,11 +149,10 @@
  */
 
 import { ref } from 'vue'
-import forEach from 'lodash/forEach'
-import objGet from 'lodash/get'
-import isArray from 'lodash/isArray'
-import isFunction from 'lodash/isFunction'
-import isNil from 'lodash/isNil'
+import forEach from 'lodash-es/forEach'
+import objGet from 'lodash-es/get'
+import isFunction from 'lodash-es/isFunction'
+import isNil from 'lodash-es/isNil'
 import formMixin from './FormMixin.vue'
 import formGroup from './FormGroup.vue'
 
@@ -331,7 +330,7 @@ export default {
       const handleErrors = errors => {
         const formErrors = []
         forEach(errors, (err, i) => {
-          if (isArray(err) && err.length > 0) {
+          if (Array.isArray(err) && err.length > 0) {
             forEach(err, error => {
               formErrors.push({
                 field: fields[i].schema,

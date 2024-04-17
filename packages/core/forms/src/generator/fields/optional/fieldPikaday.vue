@@ -4,8 +4,8 @@ input.form-control(type="text", v-model="value", :autocomplete="schema.autocompl
 
 <script>
 import abstractField from '../abstractField'
-import defaults from 'lodash/defaults'
-import objGet from 'lodash/get'
+import defaults from 'lodash-es/defaults'
+import objGet from 'lodash-es/get'
 import dateFieldHelper from '../../utils/dateFieldHelper'
 
 const inputFormat = 'YYYY-MM-DD'

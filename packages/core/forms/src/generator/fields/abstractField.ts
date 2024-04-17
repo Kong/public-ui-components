@@ -1,13 +1,12 @@
 // @ts-nocheck
 
-import debounce from 'lodash/debounce'
-import forEach from 'lodash/forEach'
-import objGet from 'lodash/get'
-import isArray from 'lodash/isArray'
-import isFunction from 'lodash/isFunction'
-import isString from 'lodash/isString'
-import arrayUniq from 'lodash/uniq'
-import uniqueId from 'lodash/uniqueId'
+import debounce from 'lodash-es/debounce'
+import forEach from 'lodash-es/forEach'
+import objGet from 'lodash-es/get'
+import isFunction from 'lodash-es/isFunction'
+import isString from 'lodash-es/isString'
+import arrayUniq from 'lodash-es/uniq'
+import uniqueId from 'lodash-es/uniqueId'
 import validators from '../utils/validators'
 import { slugifyFormID } from '../utils/schema'
 
@@ -86,7 +85,7 @@ export default {
 
       if (this.schema.validator && this.schema.readonly !== true && this.disabled !== true) {
         const validators = []
-        if (!isArray(this.schema.validator)) {
+        if (!Array.isArray(this.schema.validator)) {
           validators.push(convertValidator(this.schema.validator).bind(this))
         } else {
           forEach(this.schema.validator, validator => {
@@ -117,7 +116,7 @@ export default {
       const handleErrors = (errors) => {
         let fieldErrors = []
         forEach(arrayUniq(errors), err => {
-          if (isArray(err) && err.length > 0) {
+          if (Array.isArray(err) && err.length > 0) {
             fieldErrors = fieldErrors.concat(err)
           } else if (isString(err)) {
             fieldErrors.push(err)

@@ -133,7 +133,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { computed, onMounted, ref } from 'vue'
-import cloneDeep from 'lodash/cloneDeep'
+import cloneDeep from 'lodash-es/cloneDeep'
 import type { Schema } from './schemas/ACMECommon'
 import { ACMECommonSchema, ACMELetsEncryptSchema, ACMEZeroSSLSchema } from './schemas/ACMECommon'
 import VueFormGenerator from '../generator/FormGenerator.vue'

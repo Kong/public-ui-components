@@ -29,10 +29,10 @@
 import { computed, ref, onBeforeMount, onMounted, type PropType } from 'vue'
 import type { DebouncedFunc } from 'lodash'
 import fecha from 'fecha'
-import debounce from 'lodash/debounce'
-import objGet from 'lodash/get'
-import isFunction from 'lodash/isFunction'
-import isNumber from 'lodash/isNumber'
+import debounce from 'lodash-es/debounce'
+import objGet from 'lodash-es/get'
+import isFunction from 'lodash-es/isFunction'
+import isNumber from 'lodash-es/isNumber'
 import composables from '../../../composables'
 
 const props = defineProps({

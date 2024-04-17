@@ -52,24 +52,7 @@
   "dependencies": {
     "@kong/icons": "^1.9.0",
     "fecha": "^4.2.3",
-    "lodash.clone": "^4.5.0",
-    "lodash.clonedeep": "^4.5.0",
-    "lodash.debounce": "^4.0.8",
-    "lodash.defaults": "^4.2.0",
-    "lodash.find": "^4.6.0",
-    "lodash.foreach": "^4.5.0",
-    "lodash.get": "^4.4.2",
-    "lodash.isarray": "^4.0.0",
-    "lodash.isfinite": "^3.3.2",
-    "lodash.isfunction": "^3.0.9",
-    "lodash.isinteger": "^4.0.4",
-    "lodash.isnil": "^4.0.0",
-    "lodash.isnumber": "^3.0.3",
-    "lodash.isobject": "^3.0.2",
-    "lodash.isstring": "^4.0.1",
-    "lodash.set": "^4.3.2",
-    "lodash.uniq": "^4.5.0",
-    "lodash.uniqueid": "^4.0.1"
+    "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
@@ -80,7 +63,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.12.11",
     "@kong/kongponents": "9.0.0-alpha.146",
-    "@types/lodash": "^4.14.202",
+    "@types/lodash-es": "^4.17.12",
     "pug": "^3.0.2"
   },
   "distSizeChecker": {

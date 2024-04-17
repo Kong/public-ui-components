@@ -16,7 +16,7 @@
 
 <script>
 import abstractField from '../abstractField'
-import isFunction from 'lodash/isFunction'
+import isFunction from 'lodash-es/isFunction'
 
 export default {
   mixins: [abstractField],
