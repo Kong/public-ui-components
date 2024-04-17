@@ -557,7 +557,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
                   return {
                     model: modelName,
-                    type: 'input',
+                    type: f[modelName].type === 'textArea' ? 'textArea' : 'input',
                     label: capitalize(modelName),
                     placeholder: modelName,
                     inputType: f[modelName].type,
