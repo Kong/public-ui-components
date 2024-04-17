@@ -30,18 +30,3 @@ const yamlContent = computed((): string => {
   return (Object.keys(filteredRecord).length === 0 && filteredRecord.constructor === Object) ? '' : yaml.dump(filteredRecord).trim()
 })
 </script>
-
-<style lang="scss">
-.yaml-config {
-  #yaml-codeblock {
-    .k-highlighted-code-block {
-      code {
-        background-color: $kui-color-background-neutral-strongest;
-      }
-    }
-    .k-code-block-secondary-actions {
-      top: 12px !important;
-    }
-  }
-}
-</style>

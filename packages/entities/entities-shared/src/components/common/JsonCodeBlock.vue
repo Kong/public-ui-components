@@ -74,41 +74,33 @@ const displayedCharLength = computed((): number => {
 </script>
 
 <style lang="scss">
-.json-config {
-  #json-endpoint-codeblock,
-  #json-codeblock {
-    .k-highlighted-code-block {
-      code {
-        background-color: $kui-color-background-neutral-strongest;
-      }
-    }
-    .k-code-block-secondary-actions {
-      top: 12px !important;
-    }
-  }
-}
-
-.json-content {
-  .k-highlighted-code-block {
-    border-top-left-radius: $kui-border-radius-0 !important;
-    border-top-right-radius: $kui-border-radius-0 !important;
-  }
+.json-content.k-code-block {
+  border-top-left-radius: $kui-border-radius-0;
+  border-top-right-radius: $kui-border-radius-0;
 }
 
 .json-endpoint {
   align-items: baseline;
-  background-color: $kui-color-background-neutral-strongest;
-  border-bottom: $kui-border-width-10 solid $kui-navigation-color-border-divider;
+  background-color: $kui-color-background-inverse;
+  border-bottom: $kui-border-width-10 solid $kui-color-border-inverse;
   border-top-left-radius: $kui-border-radius-40;
   border-top-right-radius: $kui-border-radius-40;
   display: flex;
-  padding-left: $kui-space-50;
+  padding: $kui-space-40 $kui-space-0 $kui-space-30 $kui-space-50;
+
   .k-badge {
     height: 24px;
   }
+
   .k-code-block {
     flex: auto;
+    z-index: 2;
+
+    .code-block-content {
+      padding-bottom: $kui-space-0;
+    }
   }
+
   code {
     /* truncate prefix to display relevant partial url but support copying entire url */
     direction: rtl;
