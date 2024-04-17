@@ -8,7 +8,8 @@
 
 <script>
 import abstractField from '../abstractField'
-import { isArray, defaults } from 'lodash'
+import defaults from 'lodash/defaults'
+import isArray from 'lodash/isArray'
 
 export default {
   mixins: [abstractField],

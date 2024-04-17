@@ -4,7 +4,7 @@ input.form-control(type="text", :value="value", :autocomplete="schema.autocomple
 
 <script>
 import abstractField from '../abstractField'
-import { defaults } from 'lodash'
+import defaults from 'lodash/defaults'
 
 export default {
   mixins: [abstractField],

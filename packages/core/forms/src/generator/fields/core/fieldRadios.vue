@@ -7,7 +7,9 @@
 </template>
 
 <script>
-import { isObject, isFunction, get as objGet } from 'lodash'
+import objGet from 'lodash/get'
+import isFunction from 'lodash/isFunction'
+import isObject from 'lodash/isObject'
 import abstractField from '../abstractField'
 
 export default {

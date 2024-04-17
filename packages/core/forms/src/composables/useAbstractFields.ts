@@ -1,15 +1,13 @@
 import { computed, ref } from 'vue'
-import {
-  get as objGet,
-  forEach,
-  isFunction,
-  isString,
-  isArray,
-  debounce,
-  uniqueId,
-  uniq as arrayUniq,
-  type DebouncedFunc,
-} from 'lodash'
+import type { DebouncedFunc } from 'lodash'
+import debounce from 'lodash/debounce'
+import forEach from 'lodash/forEach'
+import objGet from 'lodash/get'
+import isArray from 'lodash/isArray'
+import isFunction from 'lodash/isFunction'
+import isString from 'lodash/isString'
+import arrayUniq from 'lodash/uniq'
+import uniqueId from 'lodash/uniqueId'
 import validators from '../generator/utils/validators'
 import { slugifyFormID } from '../generator/utils/schema'
 

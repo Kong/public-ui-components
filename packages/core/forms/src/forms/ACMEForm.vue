@@ -131,13 +131,12 @@
 </template>
 
 <script setup lang="ts">
-
-import VueFormGenerator from '../generator/FormGenerator.vue'
-import { cloneDeep } from 'lodash'
 import type { PropType } from 'vue'
 import { computed, onMounted, ref } from 'vue'
+import cloneDeep from 'lodash/cloneDeep'
 import type { Schema } from './schemas/ACMECommon'
 import { ACMECommonSchema, ACMELetsEncryptSchema, ACMEZeroSSLSchema } from './schemas/ACMECommon'
+import VueFormGenerator from '../generator/FormGenerator.vue'
 
 const props = defineProps({
   formModel: {

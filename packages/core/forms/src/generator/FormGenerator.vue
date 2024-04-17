@@ -148,10 +148,14 @@
  * @typedef {Record<string, any> & PartialGroup} Group
  */
 
-import { get as objGet, forEach, isFunction, isNil, isArray } from 'lodash'
+import { ref } from 'vue'
+import forEach from 'lodash/forEach'
+import objGet from 'lodash/get'
+import isArray from 'lodash/isArray'
+import isFunction from 'lodash/isFunction'
+import isNil from 'lodash/isNil'
 import formMixin from './FormMixin.vue'
 import formGroup from './FormGroup.vue'
-import { ref } from 'vue'
 
 export default {
   name: 'FormGenerator',

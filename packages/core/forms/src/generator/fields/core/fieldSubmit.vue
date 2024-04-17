@@ -4,7 +4,9 @@ input(:id="getFieldID(schema)", type="submit", :value="schema.buttonText", @clic
 
 <script>
 import abstractField from '../abstractField'
-import { get as objGet, isFunction, isEmpty } from 'lodash'
+import objGet from 'lodash/get'
+import isFunction from 'lodash/isFunction'
+import isEmpty from 'lodash/isEmpty'
 
 export default {
   mixins: [abstractField],

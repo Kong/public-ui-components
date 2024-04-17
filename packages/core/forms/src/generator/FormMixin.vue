@@ -1,5 +1,10 @@
 <script>
-import { get as objGet, forEach, isNil, isArray, isString, isFunction } from 'lodash'
+import forEach from 'lodash/forEach'
+import objGet from 'lodash/get'
+import isArray from 'lodash/isArray'
+import isFunction from 'lodash/isFunction'
+import isString from 'lodash/isString'
+import isNil from 'lodash/isNil'
 
 export default {
   methods: {

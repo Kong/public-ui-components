@@ -6,7 +6,7 @@ select.selectpicker(v-model="value", :disabled="disabled || null", :multiple="sc
 
 <script>
 /* global $ */
-import { isObject } from 'lodash'
+import isObject from 'lodash/isObject'
 import abstractField from '../abstractField'
 
 export default {
