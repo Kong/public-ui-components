@@ -2,6 +2,7 @@
   <div class="kong-ui-entities-routes-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
+      :cell-attributes="getCellAttrs"
       disable-pagination-page-jump
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
@@ -121,7 +122,9 @@
         <span v-else>-</span>
       </template>
       <template #expression="{ rowValue }">
-        <span class="route-list-cell-expression">{{ rowValue || '-' }}</span>
+        <span class="route-list-cell-expression">
+          {{ rowValue || '-' }}
+        </span>
       </template>
 
       <!-- Row actions -->
@@ -305,7 +308,7 @@ const fields: BaseTableHeaders = {
   methods: { label: t('routes.list.table_headers.methods'), searchable: true },
   paths: { label: t('routes.list.table_headers.paths'), searchable: true },
   ...props.hasExpressionColumn && {
-    expression: { label: t('routes.list.table_headers.expression') },
+    expression: { label: t('routes.list.table_headers.expression'), tooltip: true },
   },
   tags: { label: t('routes.list.table_headers.tags'), sortable: false },
 }
@@ -354,6 +357,18 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
 })
 
 const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value)
+
+const getCellAttrs = (params: Record<string, any>) => {
+  if (params.headerKey === 'expression') {
+    return {
+      style: {
+        maxWidth: '250px',
+        overflowX: 'hidden',
+        textOverflow: 'ellipsis',
+      },
+    }
+  }
+}
 
 const clearFilter = (): void => {
   filterQuery.value = ''

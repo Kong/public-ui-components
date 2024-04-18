@@ -4,8 +4,8 @@
     class="content-wrapper"
   >
     <span
-      v-if="isFirst"
-      data-testid="first-col"
+      v-if="wrapTooltip"
+      :data-truncate="wrapTooltip || undefined"
     >
       <KTooltip
         max-width="300"
@@ -33,10 +33,14 @@ const props = defineProps({
     type: [Object, null] as PropType<HTMLElement | null>,
     required: true,
   },
+  tooltip: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const element = computed((): HTMLElement | null => props.rowEl?.querySelector(`[data-testid="${props.keyName}"]`) || null)
-const content = computed((): Element | null => element.value?.querySelector('[data-testid="first-col"]') || null)
+const content = computed((): Element | null => element.value?.querySelector('[data-truncate="true"]') || null)
 
 const isFirst = computed((): boolean => {
   const cells = props.rowEl?.querySelectorAll('td')
@@ -46,6 +50,10 @@ const isFirst = computed((): boolean => {
   } else {
     return false
   }
+})
+
+const wrapTooltip = computed((): boolean => {
+  return isFirst.value || props.tooltip
 })
 
 let observer: ResizeObserver | undefined
@@ -58,8 +66,17 @@ const stopObserve = () => {
 }
 
 const setWidths = (): void => {
+  let elWidth = element.value?.clientWidth || 0
+
+  // Subtract the horizontal paddings from the element's clientWidth
+  // This is not elegant enough though as of now
+  if (element.value && 'getComputedStyle' in window) {
+    const elStyle = window.getComputedStyle(element.value)
+    elWidth -= (parseFloat(elStyle.paddingLeft) || 0) + (parseFloat(elStyle.paddingRight) || 0)
+  }
+
   contentWidth.value = content.value?.getBoundingClientRect().width || 0
-  elementWidth.value = element.value?.clientWidth || 0
+  elementWidth.value = elWidth
   tooltipText.value = contentRef.value?.innerText || ''
 }
 
@@ -73,7 +90,7 @@ const targets = computed(() => [content.value, element.value])
 const stopWatch = watch(
   targets,
   (els) => {
-    if (isFirst.value) {
+    if (wrapTooltip.value) {
       stopObserve()
       if ('ResizeObserver' in window && window) {
         observer = new ResizeObserver(entries => {
@@ -96,7 +113,7 @@ const stopWatch = watch(
 )
 
 const hasTooltip = computed((): boolean => {
-  if (isFirst.value) {
+  if (wrapTooltip.value) {
     return contentWidth.value > elementWidth.value
   } else {
     return false

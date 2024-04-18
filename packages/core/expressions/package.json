@@ -2,7 +2,6 @@
   "name": "@kong-ui-public/expressions",
   "version": "0.1.7",
   "type": "module",
-  "main": "./dist/expressions.umd.js",
   "module": "./dist/expressions.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
@@ -11,7 +10,6 @@
   "exports": {
     ".": {
       "import": "./dist/expressions.es.js",
-      "require": "./dist/expressions.umd.js",
       "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",

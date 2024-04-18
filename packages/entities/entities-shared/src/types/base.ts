@@ -6,4 +6,9 @@ export interface Field {
   searchable?: boolean
   /** Determines if the field is sortable */
   sortable?: boolean
+  /**
+   * Determines if cells of this field should be wrapped inside KTooltips.
+   * Need to use with max-width with EntityBaseTable's cellAttributes prop.
+   */
+  tooltip?: boolean
 }

@@ -48,13 +48,14 @@
         </div>
       </template>
       <template
-        v-for="(_, key) in tableHeaders"
+        v-for="(header, key) in tableHeaders"
         :key="key"
         #[key]="{ row, rowKey, rowValue }"
       >
         <EntityBaseTableCell
           :key-name="String(key)"
           :row-el="getRowEl(row)"
+          :tooltip="header.tooltip"
         >
           <slot
             :name="key"

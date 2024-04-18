@@ -108,7 +108,7 @@ const key = ref(1)
 const permissions = ref<PermissionsActions | null>(null)
 
 const isRouteListControlCollapsed = ref<boolean>(true)
-const routeListHasExpressionColumn = ref<boolean>(false)
+const routeListHasExpressionColumn = ref<boolean>(true)
 
 const handlePermissionsUpdate = (newPermissions: PermissionsActions) => {
   permissions.value = newPermissions
