@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@6.0.3...@kong-ui-public/analytics-metric-provider@7.0.0) (2024-04-18)
+
+
+### Features
+
+* **analytics-utilities:** use new granularity values [MA-2847] ([#1346](https://github.com/Kong/public-ui-components/issues/1346)) ([a15e223](https://github.com/Kong/public-ui-components/commit/a15e2235903231968062122454b2f9c731971946))
+
+
+### BREAKING CHANGES
+
+* **analytics-utilities:** granularity values have changed
+
+
+
+
+
 ## [6.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@6.0.2...@kong-ui-public/analytics-metric-provider@6.0.3) (2024-04-18)
 
 

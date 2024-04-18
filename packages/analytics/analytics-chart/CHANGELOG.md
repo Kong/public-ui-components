@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@3.0.13...@kong-ui-public/analytics-chart@4.0.0) (2024-04-18)
+
+
+### Features
+
+* **analytics-utilities:** use new granularity values [MA-2847] ([#1346](https://github.com/Kong/public-ui-components/issues/1346)) ([a15e223](https://github.com/Kong/public-ui-components/commit/a15e2235903231968062122454b2f9c731971946))
+
+
+### BREAKING CHANGES
+
+* **analytics-utilities:** granularity values have changed
+
+
+
+
+
 ## [3.0.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@3.0.12...@kong-ui-public/analytics-chart@3.0.13) (2024-04-18)
 
 

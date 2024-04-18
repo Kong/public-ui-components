@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.20.5...@kong-ui-public/dashboard-renderer@0.21.0) (2024-04-18)
+
+
+### Features
+
+* **analytics-utilities:** use new granularity values [MA-2847] ([#1346](https://github.com/Kong/public-ui-components/issues/1346)) ([a15e223](https://github.com/Kong/public-ui-components/commit/a15e2235903231968062122454b2f9c731971946))
+
+
+### BREAKING CHANGES
+
+* **analytics-utilities:** granularity values have changed
+
+
+
+
+
 ## [0.20.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.20.4...@kong-ui-public/dashboard-renderer@0.20.5) (2024-04-18)
 
 
