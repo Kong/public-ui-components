@@ -64,8 +64,8 @@
     "errorLimit": "2048KB"
   },
   "peerDependencies": {
-    "@kong/atc-router": "1.6.0-rc.1",
-    "@kong/kongponents": "9.0.0-alpha.105",
+    "@kong/atc-router": "^1.6.0-rc.1",
+    "@kong/kongponents": "^9.0.0-alpha.105",
     "monaco-editor": "0.21.3",
     "vue": "^3.4.21"
   },
