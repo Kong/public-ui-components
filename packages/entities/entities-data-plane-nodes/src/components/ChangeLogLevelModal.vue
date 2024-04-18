@@ -55,10 +55,10 @@
       </thead>
 
       <tbody>
-        <LogLevelModalNodeItem
+        <CLLModalNodeRow
           v-for="node in props.instanceList"
           :key="node.id"
-          :ref="el => setHostListNodeItemRefs(node.id, el)"
+          :ref="el => setHostListNodeItemRefs(node.id, el as any)"
           :check-log-level="checkDataPlaneLogLevel"
           :data-plane-id="node.id"
           :hostname="node.hostname"
@@ -73,8 +73,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import composables from '../composables'
+import CLLModalNodeRow from './CLLModalNodeRow.vue'
 import { LogLevel, type DataPlaneNodeCommon } from '../types'
-import LogLevelModalNodeItem from './LogLevelModalNodeItem.vue'
 
 defineOptions({
   name: 'ChangeLogLevelModal',
@@ -126,8 +126,8 @@ const { checkDataPlaneLogLevel } = composables.useDataPlaneLogLevelChecker({
   requestExecutor: maxConcurrentRequests > 0 ? requestScheduler.schedule : undefined,
 })
 
-const hostNodeCompRefs = new Map<string, InstanceType<typeof LogLevelModalNodeItem>>()
-const setHostListNodeItemRefs = (dataPlaneId: string, ref: any) => {
+const hostNodeCompRefs = new Map<string, InstanceType<typeof CLLModalNodeRow>>()
+const setHostListNodeItemRefs = (dataPlaneId: string, ref: InstanceType<typeof CLLModalNodeRow> | null) => {
   if (ref === null) {
     hostNodeCompRefs.delete(dataPlaneId)
   } else {
