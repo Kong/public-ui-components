@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@3.0.12...@kong-ui-public/entities-plugins@3.0.13) (2024-04-18)
+
+
+### Bug Fixes
+
+* **entities-plugins:** incorrect icons caused by v-for keys ([#1340](https://github.com/Kong/public-ui-components/issues/1340)) ([af84301](https://github.com/Kong/public-ui-components/commit/af843013ca83198e33a8f4379a20628ef1ddd2bf))
+
+
+
+
+
 ## [3.0.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@3.0.11...@kong-ui-public/entities-plugins@3.0.12) (2024-04-18)
 
 
