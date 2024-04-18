@@ -32,10 +32,10 @@
       @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
     />
 
-    <template v-for="(group, idx) in PluginGroupArray">
+    <template v-for="group in PluginGroupArray">
       <div
         v-if="displayedPlugins[group]"
-        :key="idx"
+        :key="group"
       >
         <PluginSelectGroup
           v-model="shouldCollapsed[group]"

@@ -17,8 +17,8 @@
     <template #visible-content>
       <div class="plugin-card-container">
         <PluginSelectCard
-          v-for="(plugin, index) in getPluginCards('visible', props.plugins, props.pluginsPerRow)"
-          :key="`plugin-card-${index}`"
+          v-for="plugin in getPluginCards('visible', props.plugins, props.pluginsPerRow)"
+          :key="`plugin-card-${plugin.id}`"
           :config="config"
           :navigate-on-click="navigateOnClick"
           :plugin="plugin"
@@ -29,8 +29,8 @@
 
     <div class="plugin-card-container">
       <PluginSelectCard
-        v-for="(plugin, index) in getPluginCards('hidden', props.plugins, props.pluginsPerRow)"
-        :key="`plugin-card-${index}`"
+        v-for="plugin in getPluginCards('hidden', props.plugins, props.pluginsPerRow)"
+        :key="`plugin-card-${plugin.id}`"
         :config="config"
         :navigate-on-click="navigateOnClick"
         :plugin="plugin"
