@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.4.0...@kong-ui-public/forms@2.4.1) (2024-04-18)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.9.0 ([#1339](https://github.com/Kong/public-ui-components/issues/1339)) ([aad4ba3](https://github.com/Kong/public-ui-components/commit/aad4ba3bb7c58a3262a533015dea70033b022452))
+
+
+
+
+
 # [2.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@2.3.0...@kong-ui-public/forms@2.4.0) (2024-04-12)
 
 
