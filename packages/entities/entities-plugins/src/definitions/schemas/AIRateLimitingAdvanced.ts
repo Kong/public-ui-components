@@ -2,7 +2,7 @@ import type { AIRateLimitingAdvancedSchema } from '../../types/plugins/ai-rate-l
 import { arrayCardContainerFieldSchema } from './ArrayCardContainerFields'
 
 export const aiRateLimitingAdvancedSchema: AIRateLimitingAdvancedSchema = {
-  'config-models_providers': {
+  'config-llm_providers': {
     ...arrayCardContainerFieldSchema,
     newElementButtonLabel: '+ Add Provider',
     items: {
@@ -17,7 +17,7 @@ export const aiRateLimitingAdvancedSchema: AIRateLimitingAdvancedSchema = {
         }, {
           label: 'Name',
           model: 'name',
-          help: 'The llm model providers.',
+          help: 'The llm providers.',
           type: 'select',
           values: [
             'anthropic',
@@ -31,7 +31,7 @@ export const aiRateLimitingAdvancedSchema: AIRateLimitingAdvancedSchema = {
         }, {
           label: 'Limit',
           model: 'limit',
-          help: 'Limit applied to the model provider.',
+          help: 'Limit applied to the llm provider.',
           type: 'input',
           inputType: 'number',
         }],

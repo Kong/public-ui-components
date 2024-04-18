@@ -14,7 +14,7 @@ type ItemsSchemaForKeyValuePairs = Omit<ItemsSchema, 'schema'> & {
 }
 
 export interface AIRateLimitingAdvancedSchema extends CommonSchemaFields {
-  'config-models_providers': {
+  'config-llm_providers': {
     type: string
     showRemoveButton: boolean
     newElementButtonLabelClasses: string
