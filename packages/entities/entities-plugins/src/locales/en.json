@@ -257,6 +257,10 @@
         "name": "AI Response Transformer",
         "description": "Use an LLM to transform API responses from the upstream service, before returning to the user."
       },
+      "ai-rate-limiting-advanced": {
+        "name": "AI Rate Limiting Advanced",
+        "description": "Provides rate limiting for the providers used by any AI plugins."
+      },
       "aws-lambda": {
         "name": "AWS Lambda",
         "description": "Invoke and manage AWS Lambda functions from Kong"

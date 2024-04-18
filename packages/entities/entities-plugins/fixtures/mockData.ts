@@ -394,6 +394,10 @@ export const kmAvailablePlugins = {
         version: '3.6.0',
         priority: 777,
       },
+      'ai-rate-limiting-advanced': {
+        version: '3.7.0',
+        priority: 905,
+      },
       'ai-prompt-template': {
         version: '3.6.0',
         priority: 773,
@@ -441,6 +445,7 @@ export const kongPluginNames = [
   'ai-proxy',
   'ai-request-transformer',
   'ai-response-transformer',
+  'ai-rate-limiting-advanced',
   'app-dynamics',
   'aws-lambda',
   'azure-functions',

@@ -4,6 +4,7 @@ import { customFields, getSharedFormName } from '@kong-ui-public/forms'
 import { PLUGIN_METADATA } from '../definitions/metadata'
 import { aiPromptDecoratorSchema } from '../definitions/schemas/AIPromptDecorator'
 import { aiPromptTemplateSchema } from '../definitions/schemas/AIPromptTemplate'
+import { aiRateLimitingAdvancedSchema } from '../definitions/schemas/AIRateLimitingAdvanced'
 import { applicationRegistrationSchema } from '../definitions/schemas/ApplicationRegistration'
 import { ArrayStringFieldSchema } from '../definitions/schemas/ArrayStringFieldSchema'
 import { dataDogSchema } from '../definitions/schemas/Datadog'
@@ -131,6 +132,10 @@ export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
 
     'ai-prompt-template': {
       ...aiPromptTemplateSchema,
+    },
+
+    'ai-rate-limiting-advanced': {
+      ...aiRateLimitingAdvancedSchema,
     },
 
     'vault-auth': {
