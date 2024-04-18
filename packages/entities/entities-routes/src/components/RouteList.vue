@@ -358,7 +358,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
 
 const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value)
 
-const getCellAttrs = (params: Record<string, any>) => {
+const getCellAttrs = (params: Record<string, any>): Object => {
   if (params.headerKey === 'expression') {
     return {
       style: {
@@ -368,6 +368,8 @@ const getCellAttrs = (params: Record<string, any>) => {
       },
     }
   }
+
+  return {}
 }
 
 const clearFilter = (): void => {
