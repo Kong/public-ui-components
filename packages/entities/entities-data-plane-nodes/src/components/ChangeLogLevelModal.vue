@@ -128,7 +128,11 @@ const { checkDataPlaneLogLevel } = composables.useDataPlaneLogLevelChecker({
 
 const hostNodeCompRefs = new Map<string, InstanceType<typeof LogLevelModalNodeItem>>()
 const setHostListNodeItemRefs = (dataPlaneId: string, ref: any) => {
-  hostNodeCompRefs.set(dataPlaneId, ref)
+  if (ref === null) {
+    hostNodeCompRefs.delete(dataPlaneId)
+  } else {
+    hostNodeCompRefs.set(dataPlaneId, ref)
+  }
 }
 
 const onProceed = async () => {
@@ -157,7 +161,6 @@ const closeAndReset = () => {
   revertAfterString.value = '60'
   modalEditStage.value = 'edit'
   targetLogLevel.value = initialLogLevel
-  hostNodeCompRefs.clear()
 }
 
 const actionButtonText = computed(() => {
