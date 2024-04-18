@@ -46,7 +46,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "1.12.11",
-    "@kong/kongponents": "9.0.0-alpha.124",
+    "@kong/kongponents": "9.0.0-alpha.146",
     "json-schema-to-ts": "^3.0.1",
     "pinia": ">= 2.1.7 < 3",
     "swrv": "^1.0.4",
@@ -75,7 +75,7 @@
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.124",
+    "@kong/kongponents": "^9.0.0-alpha.146",
     "swrv": "^1.0.4",
     "vue": ">= 3.3.13 < 4"
   },

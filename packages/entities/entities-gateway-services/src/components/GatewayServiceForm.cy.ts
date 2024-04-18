@@ -75,7 +75,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-name-input').should('be.visible')
       cy.getTestId('gateway-service-tags-input').should('be.visible')
       cy.getTestId('gateway-service-url-input').should('be.visible')
-      cy.getTestId('k-collapse-trigger-content').should('be.visible')
+      cy.getTestId('collapse-trigger-content').should('be.visible')
 
       cy.getTestId('form-cancel').should('be.visible')
       cy.getTestId('form-cancel').should('be.enabled')
@@ -241,7 +241,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
 
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
       cy.getTestId('gateway-service-protocol-radio').click()
-      cy.getTestId('k-collapse-trigger-content').click()
+      cy.getTestId('collapse-trigger-content').click()
 
       // hide clineCert, caCert and tlsVerify fields when protocol is http (default)
       cy.getTestId('gateway-service-clientCert-input').should('not.exist')
@@ -342,7 +342,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       // view configuration cta
       cy.getTestId('form-view-configuration').should('be.visible')
       cy.getTestId('form-view-configuration').click()
-      cy.getTestId('k-code-block-highlighted-code-block').should('be.visible')
+      cy.getTestId('highlighted-code-block').should('be.visible')
     })
 
     it('should correctly show zero values', () => {
@@ -457,7 +457,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-name-input').should('be.visible')
       cy.getTestId('gateway-service-tags-input').should('be.visible')
       cy.getTestId('gateway-service-url-input').should('be.visible')
-      cy.getTestId('k-collapse-trigger-content').should('be.visible')
+      cy.getTestId('collapse-trigger-content').should('be.visible')
 
       cy.getTestId('form-cancel').should('be.visible')
       cy.getTestId('form-cancel').should('be.enabled')
@@ -623,7 +623,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
 
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
       cy.getTestId('gateway-service-protocol-radio').click()
-      cy.getTestId('k-collapse-trigger-content').click()
+      cy.getTestId('collapse-trigger-content').click()
 
       // hide clineCert, caCert and tlsVerify fields when protocol is http (default)
       cy.getTestId('gateway-service-clientCert-input').should('not.exist')

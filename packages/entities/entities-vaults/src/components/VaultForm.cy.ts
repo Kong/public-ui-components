@@ -598,7 +598,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('form-submit').should('be.disabled')
 
       // advanced fields form
-      cy.getTestId('k-collapse-trigger-content').click()
+      cy.getTestId('collapse-trigger-content').click()
       cy.getTestId('vault-ttl-input').type('123')
       cy.getTestId('vault-neg-ttl-input').type('456')
       cy.getTestId('vault-resurrect-ttl-input').type('789')

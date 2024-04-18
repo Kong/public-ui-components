@@ -441,7 +441,7 @@ describe('<EntityBaseConfigCard />', () => {
 
       cy.wait('@fetchRecordError')
 
-      cy.getTestId('k-code-block-copy-button').should('not.exist')
+      cy.getTestId('code-block-copy-button').should('not.exist')
       cy.getTestId('config-card-fetch-error').should('be.visible').then(() => {
         // emits @fetch:error
         cy.wrap(Cypress.vueWrapper.emitted('fetch:error')).should('have.length', 1)
@@ -481,14 +481,14 @@ describe('<EntityBaseConfigCard />', () => {
       cy.getTestId('select-config-format').click()
       cy.getTestId('select-item-json').click()
 
-      cy.getTestId('k-code-block-copy-button').should('be.visible')
+      cy.getTestId('code-block-copy-button').should('be.visible')
       // eslint-disable-next-line cypress/unsafe-to-chain-command
-      cy.getTestId('k-code-block-copy-button').eq(0).click().then(() => {
+      cy.getTestId('code-block-copy-button').eq(0).click().then(() => {
         // emits copy event
         cy.wrap(Cypress.vueWrapper.emitted).should('have.length', 1)
       })
       // eslint-disable-next-line cypress/unsafe-to-chain-command
-      cy.getTestId('k-code-block-copy-button').eq(1).click().then(() => {
+      cy.getTestId('code-block-copy-button').eq(1).click().then(() => {
         // emits copy event
         cy.wrap(Cypress.vueWrapper.emitted).should('have.length', 1)
       })

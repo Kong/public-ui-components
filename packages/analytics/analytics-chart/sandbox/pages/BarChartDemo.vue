@@ -196,8 +196,8 @@
         v-if="dataCode"
         id="data-codeblock"
         :code="dataCode"
-        is-searchable
         language="json"
+        searchable
       />
     </div>
     <br>
@@ -208,8 +208,8 @@
         v-if="optionsCode"
         id="options-codeblock"
         :code="optionsCode"
-        is-searchable
         language="json"
+        searchable
       />
     </div>
   </SandboxLayout>

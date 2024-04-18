@@ -262,13 +262,13 @@ describe('<PluginForm />', () => {
       cy.get('#service-id').should('be.visible')
       cy.get('#route-id').should('be.visible')
 
-      cy.getTestId('k-collapse-title')
+      cy.getTestId('collapse-title')
         .contains('Plugin Configuration')
         .parents('.k-collapse')
         .first()
         .as('pluginFields')
 
-      cy.get('.k-collapse.nested-collapse [data-testid="k-collapse-trigger-label"]')
+      cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
         .contains('Advanced Parameters')
         .parents('.k-collapse.nested-collapse')
         .first()
@@ -298,10 +298,10 @@ describe('<PluginForm />', () => {
       cy.get('@advancedFields').find('#instance_name').should('exist').parent('.k-collapse').should('not.exist')
       cy.get('@advancedFields').find('#tags').should('exist').parent('.k-collapse').should('not.exist')
       // advanced fields should be hidden by default
-      cy.get('@advancedFields').findTestId('k-collapse-hidden-content').should('be.hidden')
+      cy.get('@advancedFields').findTestId('collapse-hidden-content').should('be.hidden')
       // reveal them
-      cy.get('@advancedFields').findTestId('k-collapse-trigger-content').click()
-      cy.get('@advancedFields').findTestId('k-collapse-hidden-content').should('be.visible')
+      cy.get('@advancedFields').findTestId('collapse-trigger-content').click()
+      cy.get('@advancedFields').findTestId('collapse-hidden-content').should('be.visible')
       // advanced fields
       cy.get('@advancedFields').find('#config-included_status_codes').should('be.visible')
       cy.get('@advancedFields').find('#config-max_delay_time').should('be.visible')
@@ -1060,13 +1060,13 @@ describe('<PluginForm />', () => {
       cy.get('#service-id').should('be.visible')
       cy.get('#route-id').should('be.visible')
 
-      cy.getTestId('k-collapse-title')
+      cy.getTestId('collapse-title')
         .contains('Plugin Configuration')
         .parents('.k-collapse')
         .first()
         .as('pluginFields')
 
-      cy.get('.k-collapse.nested-collapse [data-testid="k-collapse-trigger-label"]')
+      cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
         .contains('Advanced Parameters')
         .parents('.k-collapse.nested-collapse')
         .first()
@@ -1096,10 +1096,10 @@ describe('<PluginForm />', () => {
       cy.get('@advancedFields').find('#instance_name').should('exist').parent('.k-collapse').should('not.exist')
       cy.get('@advancedFields').find('#tags').should('exist').parent('.k-collapse').should('not.exist')
       // advanced fields should be hidden by default
-      cy.get('@advancedFields').findTestId('k-collapse-hidden-content').should('be.hidden')
+      cy.get('@advancedFields').findTestId('collapse-hidden-content').should('be.hidden')
       // reveal them
-      cy.get('@advancedFields').findTestId('k-collapse-trigger-content').click()
-      cy.get('@advancedFields').findTestId('k-collapse-hidden-content').should('be.visible')
+      cy.get('@advancedFields').findTestId('collapse-trigger-content').click()
+      cy.get('@advancedFields').findTestId('collapse-hidden-content').should('be.visible')
       // advanced fields
       cy.get('@advancedFields').find('#config-included_status_codes').should('be.visible')
       cy.get('@advancedFields').find('#config-max_delay_time').should('be.visible')
