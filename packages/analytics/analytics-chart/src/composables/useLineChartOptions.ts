@@ -12,7 +12,6 @@ import { horizontalTooltipPositioning, tooltipBehavior, verticalTooltipPositioni
 import { millisecondsToHours } from 'date-fns'
 import { isNullOrUndef } from 'chart.js/helpers'
 import type { ExternalTooltipContext, LineChartOptions } from '../types'
-import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
 
 export default function useLinechartOptions(chartOptions: LineChartOptions) {
 
@@ -99,11 +98,11 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
 
   const xAxisGranularityUnit = computed(() => {
     switch (chartOptions.granularity.value) {
-      case GranularityKeys.MINUTELY:
+      case 'minutely':
         return 'minute'
-      case GranularityKeys.HOURLY:
+      case 'hourly':
         return 'hour'
-      case GranularityKeys.DAILY:
+      case 'daily':
         return 'day'
       default:
         return 'day'
@@ -115,7 +114,7 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
   })
 
   const dayDisplayFormat = computed(() => {
-    return [GranularityKeys.DAILY, GranularityKeys.WEEKLY].includes(chartOptions.granularity.value as GranularityKeys) ? 'yyyy-MM-dd' : 'yyyy-MM-dd h:mm'
+    return ['daily', 'weekly'].includes(chartOptions.granularity.value) ? 'yyyy-MM-dd' : 'yyyy-MM-dd h:mm'
   })
 
   const options = computed(() => {

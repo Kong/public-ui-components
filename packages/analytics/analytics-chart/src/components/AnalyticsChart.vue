@@ -111,8 +111,8 @@ import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
 import type { PropType } from 'vue'
 import { computed, provide, toRef } from 'vue'
-import { GranularityKeys, msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type { ExploreAggregations, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import { msToGranularity } from '@kong-ui-public/analytics-utilities'
+import type { ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { hasMillisecondTimestamps, defaultStatusCodeColors } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
@@ -279,15 +279,15 @@ const showChartHeader = computed(() => {
   return (hasValidChartData.value && resultSetTruncated.value && maxEntitiesShown.value) || props.chartTitle || (props.allowCsvExport && hasValidChartData.value)
 })
 
-const timeSeriesGranularity = computed<GranularityKeys>(() => {
+const timeSeriesGranularity = computed<GranularityValues>(() => {
 
   if (!props.chartData.meta.granularity_ms) {
     return msToGranularity(
       new Date(props.chartData.data[1].timestamp).getTime() - new Date(props.chartData.data[0].timestamp).getTime(),
-    ) || GranularityKeys.HOURLY
+    ) || 'hourly'
   }
 
-  return msToGranularity(props.chartData.meta.granularity_ms) || GranularityKeys.HOURLY
+  return msToGranularity(props.chartData.meta.granularity_ms) || 'hourly'
 })
 
 const chartLegendSortFn = computed(() => {

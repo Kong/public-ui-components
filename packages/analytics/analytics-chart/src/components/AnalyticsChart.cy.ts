@@ -2,7 +2,6 @@
 import { ChartTypes } from '../enums/'
 import AnalyticsChart from './AnalyticsChart.vue'
 import ChartTooltip from './chart-plugins/ChartTooltip.vue'
-import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import { exploreResult, emptyExploreResult, multiDimensionExploreResult } from '../../fixtures/mockData'
 
@@ -34,7 +33,7 @@ describe('<AnalyticsChart />', () => {
           type: ChartTypes.TIMESERIES_LINE,
           stacked: true,
           fill: false,
-          granularity: GranularityKeys.HOURLY,
+          granularity: 'hourly',
         },
         chartTitle: 'Time series line chart',
         tooltipTitle: 'Tooltip Title',
@@ -65,7 +64,7 @@ describe('<AnalyticsChart />', () => {
           type: ChartTypes.TIMESERIES_LINE,
           stacked: true,
           fill: false,
-          granularity: GranularityKeys.HOURLY,
+          granularity: 'hourly',
         },
         chartTitle: 'Title',
         tooltipTitle: 'Tooltip Title',
@@ -82,7 +81,7 @@ describe('<AnalyticsChart />', () => {
         chartOptions: {
           type: ChartTypes.TIMESERIES_BAR,
           stacked: false,
-          granularity: GranularityKeys.DAILY,
+          granularity: 'daily',
           noLimit: true,
         },
         chartTitle: 'Time series bar chart',

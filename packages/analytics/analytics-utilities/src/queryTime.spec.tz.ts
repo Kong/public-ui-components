@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, beforeEach, it, vi } from 'vitest'
 import { add, setDate, startOfDay, startOfMonth, startOfWeek, subMilliseconds } from 'date-fns'
 
-import { GranularityKeys, TimeframeKeys } from './types'
+import { TimeframeKeys } from './types'
 import { DeltaQueryTime, TimeseriesQueryTime, UnaryQueryTime } from './queryTime'
 import type { Timeframe } from './timeframes'
 import { datePickerSelectionToTimeframe, TimePeriods } from './timeframes'
@@ -34,7 +34,7 @@ describe('granularity enforcement', () => {
   it('enforces allowed granularity for timeseries queries', () => {
     const tsQuery = new TimeseriesQueryTime(
       getTimePeriod(TimeframeKeys.THIRTY_DAY),
-      GranularityKeys.MINUTELY,
+      'minutely',
     )
 
     expect(tsQuery.granularitySeconds()).toBe(24 * 60 * 60)
@@ -203,7 +203,7 @@ describe('timeframe start/end times', () => {
 
     const queryTime = new TimeseriesQueryTime(timeframe)
 
-    expect(timeframe.dataGranularity).toEqual(GranularityKeys.DAILY)
+    expect(timeframe.dataGranularity).toEqual('daily')
     expect(queryTime.endDate().getHours()).toEqual(0)
     expect(queryTime.endDate().getMinutes()).toEqual(0)
     expect(queryTime.endDate().getSeconds()).toEqual(0)
@@ -313,7 +313,7 @@ describe('queries with mocked dates', () => {
   it('calculates start, end, and granularity for hourly timeseries queries', () => {
     const tsQuery = new TimeseriesQueryTime(
       getTimePeriod(TimeframeKeys.SEVEN_DAY),
-      GranularityKeys.HOURLY,
+      'hourly',
     )
 
     const expectedStart = new Date('2022-07-01T12:00:00Z')
@@ -334,7 +334,7 @@ describe('queries with mocked dates', () => {
   it('calculates start, end, and granularity for daily timeseries queries', () => {
     const tsQuery = new TimeseriesQueryTime(
       getTimePeriod(TimeframeKeys.SEVEN_DAY),
-      GranularityKeys.DAILY,
+      'daily',
     )
 
     // Note this is later than the hourly query start date; relative daily queries round start and end up.

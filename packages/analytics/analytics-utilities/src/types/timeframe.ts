@@ -1,4 +1,4 @@
-import type { GranularityKeys } from '.'
+import type { GranularityValues } from '.'
 
 export interface ITimeframe {
   readonly timeframeText: string;
@@ -6,12 +6,12 @@ export interface ITimeframe {
   readonly display: string;
   readonly timeframeLength: () => number;
   readonly allowedTiers: Array<string>;
-  readonly defaultResponseGranularity: GranularityKeys;
-  readonly dataGranularity: GranularityKeys;
+  readonly defaultResponseGranularity: GranularityValues;
+  readonly dataGranularity: GranularityValues;
   readonly isRelative: boolean;
   rawEnd(_tz?: string): Date;
   rawStart(_tz?: string): Date;
   timeframeLengthMs(): number;
   maximumTimeframeLength(): number;
-  allowedGranularities(): Set<GranularityKeys>;
+  allowedGranularities(): Set<GranularityValues>;
 }
