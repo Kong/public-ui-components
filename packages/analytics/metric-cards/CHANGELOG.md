@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.8.1...@kong-ui-public/metric-cards@0.8.2) (2024-04-18)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 11 [KHCP-11527] ([#1333](https://github.com/Kong/public-ui-components/issues/1333)) ([b8d2901](https://github.com/Kong/public-ui-components/commit/b8d29015bc263a9835158d8b729293afc758fdc2))
+
+
+
+
+
 ## [0.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.8.0...@kong-ui-public/metric-cards@0.8.1) (2024-04-18)
 
 
