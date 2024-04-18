@@ -29,6 +29,8 @@ Component that provides basic layout and styling for descriptive form section. R
 
 Renders the provided `string` as the `h4` tag content.
 
+> If the `title` prop is not provided, you must set `aria-label` attribute on the component in your host app.
+
 #### `description`
 
 - type: `String`

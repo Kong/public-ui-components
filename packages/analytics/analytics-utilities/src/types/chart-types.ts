@@ -6,3 +6,16 @@ export enum ChartTypes {
   TIMESERIES_LINE = 'Line',
   TIMESERIES_BAR = 'TimeSeriesBar'
 }
+
+export const reportChartTypes = [
+  'horizontal_bar',
+  'vertical_bar',
+  'timeseries_line',
+  // TODO: Clean these up later
+  'HorizontalBar',
+  'VerticalBar',
+  'Line',
+
+] as const
+
+export type ReportChartTypes = typeof reportChartTypes[number]

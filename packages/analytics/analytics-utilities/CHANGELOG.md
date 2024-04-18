@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@2.2.0...@kong-ui-public/analytics-utilities@2.2.1) (2024-04-17)
+
+
+### Bug Fixes
+
+* export new chart types ([#1338](https://github.com/Kong/public-ui-components/issues/1338)) ([174fc05](https://github.com/Kong/public-ui-components/commit/174fc051e0c3cfd4030346f91b92a72d75a3a9b4))
+
+
+
+
+
 # [2.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@2.1.1...@kong-ui-public/analytics-utilities@2.2.0) (2024-04-10)
 
 
