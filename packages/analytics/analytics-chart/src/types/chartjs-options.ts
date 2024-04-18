@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 import type { Chart, ChartType, TooltipModel, Color } from 'chart.js'
 import type { ChartTypes } from '../enums'
-import type { GranularityKeys } from '@kong-ui-public/analytics-utilities'
+import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
 
 export interface TooltipEntry {
   backgroundColor: Color
@@ -45,7 +45,7 @@ export interface BarChartOptions extends BaseChartOptions {
 
 export interface LineChartOptions extends BaseChartOptions {
   timeRangeMs: Ref<number | undefined>, // time range in seconds
-  granularity: Ref<`${GranularityKeys}`>,
+  granularity: Ref<GranularityValues>,
 }
 
 export interface DoughnutChartOptions {

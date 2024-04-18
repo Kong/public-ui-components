@@ -6,7 +6,7 @@ import {
   Granularities,
   granularityMsToQuery,
 } from './granularity'
-import type { GranularityKeys, DruidGranularity, QueryTime } from './types'
+import type { DruidGranularity, GranularityValues, QueryTime } from './types'
 import type { Timeframe } from './timeframes'
 
 abstract class BaseQueryTime implements QueryTime {
@@ -29,7 +29,7 @@ abstract class BaseQueryTime implements QueryTime {
 
   abstract granularityMs(): number
 
-  protected calculateStartDate(isRelative: boolean, granularity: GranularityKeys, periods = 1) {
+  protected calculateStartDate(isRelative: boolean, granularity: GranularityValues, periods = 1) {
     // `periods` is greater than 1 if we're doing a delta time query.
     if (isRelative) {
       return new Date(this.endDate().getTime() - this.timeframe.timeframeLengthMs() * periods)
@@ -86,9 +86,9 @@ abstract class BaseQueryTime implements QueryTime {
 
 // We expect to get back a number of values, depending on the selected timeframe and granularity.
 export class TimeseriesQueryTime extends BaseQueryTime {
-  private readonly granularity: GranularityKeys
+  private readonly granularity: GranularityValues
 
-  constructor(timeframe: Timeframe, granularity?: GranularityKeys, tz?: string) {
+  constructor(timeframe: Timeframe, granularity?: GranularityValues, tz?: string) {
     super(timeframe, tz)
 
     if (granularity && timeframe.allowedGranularities().has(granularity)) {

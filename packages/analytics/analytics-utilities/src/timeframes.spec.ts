@@ -1,5 +1,5 @@
 import { expect } from 'vitest'
-import { GranularityKeys, TimeframeKeys } from './types'
+import { TimeframeKeys } from './types'
 import { Timeframe, TimePeriods } from './timeframes'
 
 const freeTierMax = TimePeriods.get(TimeframeKeys.ONE_DAY)?.timeframeLength() || 86400
@@ -29,37 +29,37 @@ describe('timeFramesAllowed', () => {
 describe('allowedGranularities', () => {
   it('meets specs for "standard" timeframes', () => {
     expect(TimePeriods.get(TimeframeKeys.FIFTEEN_MIN)?.allowedGranularities())
-      .toEqual(new Set([GranularityKeys.MINUTELY]))
+      .toEqual(new Set(['minutely']))
 
     expect(TimePeriods.get(TimeframeKeys.ONE_HOUR)?.allowedGranularities())
-      .toEqual(new Set([GranularityKeys.MINUTELY]))
+      .toEqual(new Set(['minutely']))
 
     expect(TimePeriods.get(TimeframeKeys.SIX_HOUR)?.allowedGranularities())
-      .toEqual(new Set([GranularityKeys.MINUTELY, GranularityKeys.HOURLY]))
+      .toEqual(new Set(['minutely', 'hourly']))
 
     expect(TimePeriods.get(TimeframeKeys.TWELVE_HOUR)?.allowedGranularities())
-      .toEqual(new Set([GranularityKeys.HOURLY]))
+      .toEqual(new Set(['hourly']))
 
     expect(TimePeriods.get(TimeframeKeys.ONE_DAY)?.allowedGranularities())
-      .toEqual(new Set([GranularityKeys.HOURLY]))
+      .toEqual(new Set(['hourly']))
 
     expect(TimePeriods.get(TimeframeKeys.SEVEN_DAY)?.allowedGranularities())
-      .toEqual(new Set([GranularityKeys.HOURLY, GranularityKeys.DAILY]))
+      .toEqual(new Set(['hourly', 'daily']))
 
     expect(TimePeriods.get(TimeframeKeys.THIRTY_DAY)?.allowedGranularities())
-      .toEqual(new Set([GranularityKeys.DAILY, GranularityKeys.WEEKLY]))
+      .toEqual(new Set(['daily', 'weekly']))
 
     expect(TimePeriods.get(TimeframeKeys.CURRENT_WEEK)?.allowedGranularities())
-      .toEqual(new Set([GranularityKeys.HOURLY, GranularityKeys.DAILY]))
+      .toEqual(new Set(['hourly', 'daily']))
 
     expect(TimePeriods.get(TimeframeKeys.CURRENT_MONTH)?.allowedGranularities())
-      .toEqual(new Set([GranularityKeys.DAILY, GranularityKeys.WEEKLY]))
+      .toEqual(new Set(['daily', 'weekly']))
 
     expect(TimePeriods.get(TimeframeKeys.PREVIOUS_WEEK)?.allowedGranularities())
-      .toEqual(new Set([GranularityKeys.HOURLY, GranularityKeys.DAILY]))
+      .toEqual(new Set(['hourly', 'daily']))
 
     expect(TimePeriods.get(TimeframeKeys.PREVIOUS_MONTH)?.allowedGranularities())
-      .toEqual(new Set([GranularityKeys.DAILY, GranularityKeys.WEEKLY]))
+      .toEqual(new Set(['daily', 'weekly']))
   })
 })
 
@@ -77,8 +77,8 @@ describe('cacheKey', () => {
       startCustom: new Date('2024-01-01T00:00:00Z'),
       endCustom: new Date('2024-01-02T00:00:00Z'),
       timeframeLength: () => 0,
-      defaultResponseGranularity: GranularityKeys.DAILY,
-      dataGranularity: GranularityKeys.DAILY,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
       isRelative: false,
       allowedTiers: ['free', 'plus', 'enterprise'],
     })).cacheKey()).toBe('2024-01-01T00:00:00.000Z-2024-01-02T00:00:00.000Z')
@@ -101,8 +101,8 @@ describe('v4Query', () => {
       startCustom: new Date('2024-01-01T00:00:00Z'),
       endCustom: new Date('2024-02-01T00:00:00Z'),
       timeframeLength: () => 0,
-      defaultResponseGranularity: GranularityKeys.DAILY,
-      dataGranularity: GranularityKeys.DAILY,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
       isRelative: false,
       allowedTiers: ['free', 'plus', 'enterprise'],
     })

@@ -10,7 +10,6 @@ import {
 } from 'date-fns'
 
 import {
-  GranularityKeys,
   TimeframeKeys,
 } from './types'
 
@@ -19,6 +18,7 @@ import type {
   TimeframeOptions,
   TimePeriod,
   RelativeTimeRangeValuesV4, TimeRangeV4,
+  GranularityValues,
 } from './types'
 import { getTimezoneOffset, utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz'
 import type { ITimeframe } from './types/timeframe'
@@ -41,12 +41,12 @@ export class Timeframe implements ITimeframe {
 
   // defaultResponseGranularity tracks which of the allowed granularities is picked for a given
   // timeframe if the user does not or cannot specify a granularity.
-  readonly defaultResponseGranularity: GranularityKeys
+  readonly defaultResponseGranularity: GranularityValues
 
   // dataGranularity tracks the granularity of the available data on the server for a specific timeframe.
   // As of writing, it's always the same as the default response granularity, but it may not always be.
   // It controls how timeframes are rounded to ensure complete time buckets from the server.
-  readonly dataGranularity: GranularityKeys
+  readonly dataGranularity: GranularityValues
 
   // isRelative impacts whether we take the `floor` or the `ceil` of the start time.
   // If the time range is relative, we want the ceil -- because we take the ceil of the
@@ -96,27 +96,27 @@ export class Timeframe implements ITimeframe {
   }
 
   allowedGranularities() {
-    const allowedValues: Set<GranularityKeys> = new Set()
+    const allowedValues: Set<GranularityValues> = new Set()
     const hours = this.maximumTimeframeLength() / 3600
 
     // Minutely is allowed for under 6 hours.
     if (hours <= 6) {
-      allowedValues.add(GranularityKeys.MINUTELY)
+      allowedValues.add('minutely')
     }
 
     // Hourly is allowed for 1 week and under, as long as it's more than just 1 hour.
     if (hours >= 2 && hours <= 7 * 24) {
-      allowedValues.add(GranularityKeys.HOURLY)
+      allowedValues.add('hourly')
     }
 
     // Daily is allowed for everything over 2 days.
     if (hours >= 2 * 24) {
-      allowedValues.add(GranularityKeys.DAILY)
+      allowedValues.add('daily')
     }
 
     // Weekly is allowed for everything over 2 weeks.
     if (hours >= 2 * 24 * 14) {
-      allowedValues.add(GranularityKeys.WEEKLY)
+      allowedValues.add('weekly')
     }
 
     return allowedValues
@@ -261,8 +261,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       display: 'Last 15 minutes',
       timeframeText: '15 minutes',
       timeframeLength: () => 60 * 15,
-      defaultResponseGranularity: GranularityKeys.MINUTELY,
-      dataGranularity: GranularityKeys.MINUTELY,
+      defaultResponseGranularity: 'minutely',
+      dataGranularity: 'minutely',
       isRelative: true,
       allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
     }),
@@ -274,8 +274,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       display: 'Last hour',
       timeframeText: 'One hour',
       timeframeLength: () => 60 * 60 * 1,
-      defaultResponseGranularity: GranularityKeys.MINUTELY,
-      dataGranularity: GranularityKeys.MINUTELY,
+      defaultResponseGranularity: 'minutely',
+      dataGranularity: 'minutely',
       isRelative: true,
       allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
     }),
@@ -287,8 +287,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       display: 'Last 6 hours',
       timeframeText: '6 hours',
       timeframeLength: () => 60 * 60 * 6,
-      defaultResponseGranularity: GranularityKeys.HOURLY,
-      dataGranularity: GranularityKeys.HOURLY,
+      defaultResponseGranularity: 'hourly',
+      dataGranularity: 'hourly',
       isRelative: true,
       allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
     }),
@@ -300,8 +300,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       display: 'Last 12 hours',
       timeframeText: '12 hours',
       timeframeLength: () => 60 * 60 * 12,
-      defaultResponseGranularity: GranularityKeys.HOURLY,
-      dataGranularity: GranularityKeys.HOURLY,
+      defaultResponseGranularity: 'hourly',
+      dataGranularity: 'hourly',
       isRelative: true,
       allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
     }),
@@ -313,8 +313,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       display: 'Last 24 hours',
       timeframeText: '24 hours',
       timeframeLength: () => 60 * 60 * 24,
-      defaultResponseGranularity: GranularityKeys.HOURLY,
-      dataGranularity: GranularityKeys.HOURLY,
+      defaultResponseGranularity: 'hourly',
+      dataGranularity: 'hourly',
       isRelative: true,
       allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
     }),
@@ -326,8 +326,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       display: 'Last 7 days',
       timeframeText: '7 days',
       timeframeLength: () => 60 * 60 * 24 * 7,
-      defaultResponseGranularity: GranularityKeys.DAILY,
-      dataGranularity: GranularityKeys.DAILY,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
       isRelative: true,
       allowedTiers: ['trial', 'plus', 'enterprise'],
     }),
@@ -339,8 +339,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       display: 'Last 30 days',
       timeframeText: '30 days',
       timeframeLength: () => 60 * 60 * 24 * 30,
-      defaultResponseGranularity: GranularityKeys.DAILY,
-      dataGranularity: GranularityKeys.DAILY,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
       isRelative: true,
       allowedTiers: ['trial', 'plus', 'enterprise'],
     }),
@@ -358,8 +358,8 @@ export const TimePeriods = new Map<string, Timeframe>([
 
         return (end.getTime() - prevMonday.getTime()) / 1000
       },
-      defaultResponseGranularity: GranularityKeys.DAILY,
-      dataGranularity: GranularityKeys.DAILY,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
       isRelative: false,
       allowedTiers: ['plus', 'enterprise'],
     }),
@@ -377,8 +377,8 @@ export const TimePeriods = new Map<string, Timeframe>([
 
         return (end.getTime() - firstOfTheMonth.getTime()) / 1000
       },
-      defaultResponseGranularity: GranularityKeys.DAILY,
-      dataGranularity: GranularityKeys.DAILY,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
       isRelative: false,
       allowedTiers: ['plus', 'enterprise'],
     }),
@@ -390,8 +390,8 @@ export const TimePeriods = new Map<string, Timeframe>([
       display: 'Previous week',
       timeframeText: 'Week',
       timeframeLength: () => 60 * 60 * 24 * 7,
-      defaultResponseGranularity: GranularityKeys.DAILY,
-      dataGranularity: GranularityKeys.DAILY,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
       isRelative: false,
       allowedTiers: ['plus', 'enterprise'],
     }),
@@ -417,8 +417,8 @@ export const TimePeriods = new Map<string, Timeframe>([
           60 * 60 * 24 * getDaysInMonth(new Date().setMonth(new Date().getMonth() - 1)) + hoursToSeconds(offset)
         )
       },
-      defaultResponseGranularity: GranularityKeys.DAILY,
-      dataGranularity: GranularityKeys.DAILY,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
       isRelative: false,
       allowedTiers: ['plus', 'enterprise'],
     }),
@@ -445,8 +445,8 @@ export function datePickerSelectionToTimeframe(datePickerSelection: DatePickerSe
       startCustom: start,
       endCustom: end,
       timeframeLength: () => timeframeLength,
-      defaultResponseGranularity: GranularityKeys.DAILY,
-      dataGranularity: GranularityKeys.DAILY,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
       isRelative: false,
       allowedTiers: ['free', 'plus', 'enterprise'],
     })

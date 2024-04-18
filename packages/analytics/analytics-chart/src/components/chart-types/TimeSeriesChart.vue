@@ -68,7 +68,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
 import type { ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry, TooltipState } from '../../types'
-import { GranularityKeys } from '@kong-ui-public/analytics-utilities'
+import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
 import type { Chart, LegendItem } from 'chart.js'
 import { ChartLegendPosition, ChartTypes } from '../../enums'
 
@@ -103,7 +103,7 @@ const props = defineProps({
     default: undefined,
   },
   granularity: {
-    type: String as PropType<`${GranularityKeys}`>,
+    type: String as PropType<GranularityValues>,
     required: true,
   },
   stacked: {
@@ -193,7 +193,7 @@ const { options } = composables.useLinechartOptions({
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))
 
 const formatTimestamp = (ts: number): string | number => {
-  return formatTime(ts, { short: [GranularityKeys.DAILY, GranularityKeys.WEEKLY].includes(props.granularity as GranularityKeys) })
+  return formatTime(ts, { short: ['daily', 'weekly'].includes(props.granularity) })
 }
 
 /**
