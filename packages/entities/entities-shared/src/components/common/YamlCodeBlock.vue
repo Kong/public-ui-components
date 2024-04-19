@@ -25,7 +25,7 @@ const props = defineProps({
 
 const yamlContent = computed((): string => {
   // filter out null values, empty strings, and empty arrays since decK doesn't accept them [KHCP-10642]
-  const filteredRecord = Object.fromEntries(Object.entries(props.yamlRecord).filter(([, value]) => value && (Array.isArray(value) ? value.length !== 0 : true)))
+  const filteredRecord = Object.fromEntries(Object.entries(props.yamlRecord).filter(([, value]) => value !== null && value !== '' && (Array.isArray(value) ? value.length !== 0 : true)))
   // if empty object, display empty yaml, else convert to yaml and remove any trailing whitespace
   return (Object.keys(filteredRecord).length === 0 && filteredRecord.constructor === Object) ? '' : yaml.dump(filteredRecord).trim()
 })
