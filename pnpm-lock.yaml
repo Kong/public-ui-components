@@ -1061,8 +1061,8 @@ importers:
         specifier: 17.0.2
         version: 17.0.2(react@17.0.2)
       swagger-client:
-        specifier: ^3.26.6
-        version: 3.26.6
+        specifier: ^3.26.7
+        version: 3.26.7
       swagger-ui:
         specifier: ^5.1.3
         version: 5.1.3
@@ -5042,6 +5042,9 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependenciesMeta:
+      ajv:
+        optional: true
     dependencies:
       ajv: 8.12.0
     dev: true
@@ -14333,8 +14336,8 @@ packages:
     resolution: {integrity: sha512-ovssysQTa+luh7A5Weu3Rta6FJlFBBbInjOh722LIt6klpU2/HtdUbszju/G4devcvk8PGt7FCLv5wftu3THUA==}
     dev: true
 
-  /swagger-client@3.26.6:
-    resolution: {integrity: sha512-PYYca8BsamZaOjlKr5ombOTeDje1ddiYAKGstpmAU3iU+mBKgqHiw5G2J77SC9+chKU5y0aJzmQX4hNu3p2y5A==}
+  /swagger-client@3.26.7:
+    resolution: {integrity: sha512-/5bsjyWh8wAAsx7w3lu5tqPB3hruEf/d3VwJS+LTkUvQ3irSfqoeU3Y3TAXKocpjObCnTIjDxaW6k7uDfa51Fg==}
     dependencies:
       '@babel/runtime-corejs3': 7.22.15
       '@swagger-api/apidom-core': 0.99.1
@@ -14390,7 +14393,7 @@ packages:
       reselect: 4.1.8
       serialize-error: 8.1.0
       sha.js: 2.4.11
-      swagger-client: 3.26.6
+      swagger-client: 3.26.7
       url-parse: 1.5.10
       xml: 1.0.1
       xml-but-prettier: 1.0.1
