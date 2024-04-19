@@ -330,6 +330,14 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
     useLegacyForm: true,
   },
+  'ai-rate-limiting-advanced': {
+    descriptionKey: 'plugins.meta.ai-rate-limiting-advanced.description',
+    group: PluginGroup.TRAFFIC_CONTROL,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.ai-rate-limiting-advanced.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+    useLegacyForm: true,
+  },
   'aws-lambda': {
     descriptionKey: 'plugins.meta.aws-lambda.description',
     group: PluginGroup.SERVERLESS,
