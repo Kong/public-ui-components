@@ -4,5 +4,5 @@ export const enum LogLevel {
   Notice = 'notice',
   Warn = 'warn',
   Error = 'error',
-  Critical = 'critical',
+  Critical = 'crit',
 }

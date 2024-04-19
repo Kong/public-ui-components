@@ -28,7 +28,7 @@
       "notice": "Provides messages that provide a record of the normal operation of the system, but also alerts conditions that may require monitoring. Kong does not make a large difference between info and notice.",
       "warn": "Is used to log any abnormal behavior that doesn’t result in dropped transactions but requires further investigation.",
       "error": "Is used for logging errors that result in a request being dropped.",
-      "critical": "Is used when Kong is working under critical conditions and not working properly, thus affecting several clients."
+      "crit": "Is used when Kong is working under critical conditions and not working properly, thus affecting several clients."
     },
     "revert_to_default_after": {
       "label": "Revert to default after",
@@ -44,6 +44,6 @@
     "notice": "Notice",
     "warn": "Warn",
     "error": "Error",
-    "critical": "Critical"
+    "crit": "Critical"
   }
 }
