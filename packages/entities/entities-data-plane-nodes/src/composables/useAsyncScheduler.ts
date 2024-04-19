@@ -72,27 +72,40 @@ export type AsyncSchedulerOptions = {
 }
 
 export class AsyncScheduler {
-  private tokenBucket: TokenBucket
+  private tokenBucket: TokenBucket | null = null
 
   constructor(opt: AsyncSchedulerOptions) {
-    this.tokenBucket = new TokenBucket(opt.maxConcurrentAsyncs)
+    if (opt.maxConcurrentAsyncs > 0) {
+      this.tokenBucket = new TokenBucket(opt.maxConcurrentAsyncs)
+    }
   }
 
   schedule = async <T>(asyncInitiator: () => Promise<T>): Promise<T> => {
-    const returnToken = await this.tokenBucket.borrowToken()
+    let returnToken: ReturnTokenFunction | undefined
+    if (this.tokenBucket) {
+      returnToken = await this.tokenBucket.borrowToken()
+    }
     try {
       const resp = await asyncInitiator()
-      returnToken()
+      returnToken?.()
       return resp
     } catch (e) {
-      returnToken()
+      returnToken?.()
       throw e
     }
   }
 
   cancelAll = (message?: string, options?: ErrorOptions) => {
-    this.tokenBucket.clearWaitingQueue(new AsyncAbortException(message, options))
+    this.tokenBucket?.clearWaitingQueue(new AsyncAbortException(message, options))
   }
 }
 
-export const useAsyncScheduler = (opt: AsyncSchedulerOptions) => new AsyncScheduler(opt)
+export const useAsyncScheduler = (opt: AsyncScheduler | AsyncSchedulerOptions | null) => {
+  if (opt instanceof AsyncScheduler) {
+    return opt
+  } else if (opt === null) {
+    return new AsyncScheduler({ maxConcurrentAsyncs: 0 })
+  } else {
+    return new AsyncScheduler(opt)
+  }
+}

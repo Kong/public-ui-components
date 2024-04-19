@@ -75,18 +75,17 @@ import { computed, ref } from 'vue'
 import composables from '../composables'
 import CLLModalNodeRow from './CLLModalNodeRow.vue'
 import { LogLevel, type DataPlaneNodeCommon } from '../types'
+import type { AsyncScheduler, AsyncSchedulerOptions } from '../composables'
 
 defineOptions({
   name: 'ChangeLogLevelModal',
 })
 
-const { i18n } = composables.useI18n()
-
 const props = defineProps<{
   instanceList: Pick<DataPlaneNodeCommon, 'id' | 'hostname'>[]
   instanceLogLevel: Map<string /* instanceId */, LogLevel>
   requests: {
-    maxConcurrentRequests?: number | false
+    scheduler?: AsyncScheduler | AsyncSchedulerOptions | null // default to { maxConcurrentAsyncs: 10 }
     getDataPlaneLogLevel: (instanceId: string) => Promise<LogLevel>
     setDataPlaneLogLevel: (instanceId: string, logLevel: LogLevel, revertAfter: number) => Promise<void>
   }
@@ -95,6 +94,8 @@ const props = defineProps<{
 const visible = defineModel<boolean>('visible')
 
 const initialLogLevel = LogLevel.Notice
+
+const { i18n } = composables.useI18n()
 
 const modalEditStage = ref<'edit' | 'submitting' | 'submitted'>('edit')
 
@@ -116,16 +117,15 @@ const logLevelCandidates = composables.useLogLevelCandidateSelectItems({
 const explanation = composables.useLogLevelExplanation(targetLogLevel)
 const friendlyTime = composables.useFriendlyRevertTime(revertAfter)
 
-const maxConcurrentRequests = typeof props.requests.maxConcurrentRequests === 'number'
-  ? props.requests.maxConcurrentRequests
-  : 0
-const asyncScheduler = composables.useAsyncScheduler({ maxConcurrentAsyncs: maxConcurrentRequests })
+const asyncScheduler = composables.useAsyncScheduler(props.requests.scheduler ?? { maxConcurrentAsyncs: 10 })
 const { checkDataPlaneLogLevel } = composables.useDataPlaneLogLevelChecker({
   getDataPlaneLogLevel: props.requests.getDataPlaneLogLevel,
   setDataPlaneLogLevel: props.requests.setDataPlaneLogLevel,
-  requestExecutor: maxConcurrentRequests > 0 ? asyncScheduler.schedule : undefined,
+  requestExecutor: asyncScheduler.schedule,
 })
 
+// workaround for https://github.com/vuejs/core/issues/9617
+// use ref directly when the issue get fixed
 const hostNodeCompRefs = new Map<string, InstanceType<typeof CLLModalNodeRow>>()
 const setHostListNodeItemRefs = (dataPlaneId: string, ref: InstanceType<typeof CLLModalNodeRow> | null) => {
   if (ref === null) {
