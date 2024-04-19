@@ -3,10 +3,14 @@ export type RequestSchedulerOptions = {
 }
 
 type ReturnTokenFunction = () => void
+type TokenBorrowQueueItem = [
+  (returnToken: ReturnTokenFunction) => void, // resolve function
+  (reason: unknown) => void, // reject (cancel) function
+]
 
 class TokenBucket {
   private concurrentTokenSet: Set<Symbol> = new Set()
-  private concurrentBorrowTokenQueue: ((returnToken: ReturnTokenFunction) => void)[] = []
+  private concurrentTokenBorrowQueue: TokenBorrowQueueItem[] = []
 
   constructor(capacity: number) {
     for (let i = 0; i < capacity; ++i) {
@@ -34,9 +38,9 @@ class TokenBucket {
       throw new Error('Token already returned')
     }
 
-    const next = this.concurrentBorrowTokenQueue.shift()
+    const next = this.concurrentTokenBorrowQueue.shift()
     if (next) {
-      next(() => this.returnConcurrentToken(token))
+      next[0](() => this.returnConcurrentToken(token))
     } else {
       this.concurrentTokenSet.add(token)
     }
@@ -47,9 +51,23 @@ class TokenBucket {
       return this.borrowConcurrentToken()
     }
 
-    return new Promise<ReturnTokenFunction>(resolve => {
-      this.concurrentBorrowTokenQueue.push(resolve)
+    return new Promise<ReturnTokenFunction>((resolve, reject) => {
+      this.concurrentTokenBorrowQueue.push([resolve, reject])
     })
+  }
+
+  clearWaitingQueue(reason: unknown) {
+    while (this.concurrentTokenBorrowQueue.length > 0) {
+      const [, reject] = this.concurrentTokenBorrowQueue.shift()!
+      reject(reason)
+    }
+  }
+}
+
+export class RequestAbortException extends Error {
+  constructor(message?: string, options?: ErrorOptions) {
+    super(message, options)
+    this.name = 'RequestAbortException'
   }
 }
 
@@ -70,6 +88,10 @@ export class RequestScheduler {
       returnToken()
       throw e
     }
+  }
+
+  cancelAll = (message?: string, options?: ErrorOptions) => {
+    this.tokenBucket.clearWaitingQueue(new RequestAbortException(message, options))
   }
 }
 
