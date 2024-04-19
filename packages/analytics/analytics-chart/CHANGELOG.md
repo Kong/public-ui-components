@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.0.1...@kong-ui-public/analytics-chart@4.0.2) (2024-04-19)
+
+
+### Bug Fixes
+
+* missed updating the translation keys for granularity ([#1350](https://github.com/Kong/public-ui-components/issues/1350)) ([c0a7f11](https://github.com/Kong/public-ui-components/commit/c0a7f11eb51dfa4297e3b5efc054b41fbfd6db48))
+
+
+
+
+
 ## [4.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.0.0...@kong-ui-public/analytics-chart@4.0.1) (2024-04-19)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
