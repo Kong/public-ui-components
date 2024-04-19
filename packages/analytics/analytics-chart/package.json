@@ -83,7 +83,7 @@
     "date-fns-tz": "^2.0.1",
     "pretty-bytes": "^6.1.1",
     "uuid": "^9.0.1",
-    "vue-chartjs": "^5.3.0"
+    "vue-chartjs": "^5.3.1"
   },
   "distSizeChecker": {
     "warningLimit": "1.35MB",

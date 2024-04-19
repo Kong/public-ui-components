@@ -42,7 +42,7 @@ importers:
         specifier: ^21.1.6
         version: 21.1.6
       '@types/node':
-        specifier: ^18.19.30
+        specifier: ^18.19.31
         version: 18.19.31
       '@types/uuid':
         specifier: ^9.0.8
@@ -243,8 +243,8 @@ importers:
         specifier: ^9.0.1
         version: 9.0.1
       vue-chartjs:
-        specifier: ^5.3.0
-        version: 5.3.0(chart.js@4.4.2)(vue@3.4.21)
+        specifier: ^5.3.1
+        version: 5.3.1(chart.js@4.4.2)(vue@3.4.21)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -15481,8 +15481,8 @@ packages:
     resolution: {integrity: sha512-AFbieoL7a5LMqcnOF04ji+rpXadgOXnZsxQr//r83kLPr7biP7am3g9zbaZIaBGwBRWeSvoMD4mgPdX3e4NWBg==}
     dev: true
 
-  /vue-chartjs@5.3.0(chart.js@4.4.2)(vue@3.4.21):
-    resolution: {integrity: sha512-8XqX0JU8vFZ+WA2/knz4z3ThClduni2Nm0BMe2u0mXgTfd9pXrmJ07QBI+WAij5P/aPmPMX54HCE1seWL37ZdQ==}
+  /vue-chartjs@5.3.1(chart.js@4.4.2)(vue@3.4.21):
+    resolution: {integrity: sha512-rZjqcHBxKiHrBl0CIvcOlVEBwRhpWAVf6rDU3vUfa7HuSRmGtCslc0Oc8m16oAVuk0erzc1FCtH1VCriHsrz+A==}
     peerDependencies:
       chart.js: ^4.1.1
       vue: ^3.0.0-0 || ^2.7.0
