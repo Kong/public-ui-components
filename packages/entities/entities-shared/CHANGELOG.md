@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.0.8...@kong-ui-public/entities-shared@3.0.9) (2024-04-19)
+
+
+### Bug Fixes
+
+* **yamlCodeBlock:** disabled fields are missing from yaml configs [KHCP-11409] ([#1347](https://github.com/Kong/public-ui-components/issues/1347)) ([adee099](https://github.com/Kong/public-ui-components/commit/adee099e5671069a1205f2dedb4ca3de437cb167))
+
+
+
+
+
 ## [3.0.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.0.7...@kong-ui-public/entities-shared@3.0.8) (2024-04-18)
 
 
