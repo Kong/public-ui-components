@@ -30,8 +30,9 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       promiseExportName: 'asyncInit',
     }),
     // We don't need this plugin to bundle the library. Only for sandbox previews.
+    // See: https://github.com/vdesjs/vite-plugin-monaco-editor/issues/21
     ...process.env.USE_SANDBOX
-      ? [monacoEditorPlugin.default({})]
+      ? [((monacoEditorPlugin as any).default as typeof monacoEditorPlugin)({})]
       : [],
   ],
 }))

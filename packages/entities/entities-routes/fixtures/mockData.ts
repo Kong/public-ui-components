@@ -23,7 +23,55 @@ export const routes: FetcherRawResponse = {
   total: 2,
 }
 
-export const routes100: any[] = Array(100)
+export const services = [
+  {
+    id: '1',
+    name: 'service-1',
+  },
+  {
+    id: '2',
+    name: 'service-2',
+  },
+]
+
+// traditional
+export const route = {
+  service: {
+    id: services[0].id,
+  },
+  id: '1',
+  name: 'route-trad',
+  methods: ['GET', 'CASTOM'],
+  service_id: '',
+  tags: ['dev', 'test'],
+  regex_priority: 1,
+  path_handling: 'v1',
+  preserve_host: true,
+  https_redirect_status_code: 426,
+  protocols: ['http', 'https'],
+  strip_path: false,
+  paths: ['/foo', '/bar'],
+  headers: { Header1: ['cropped-jeans', 'expensive-petroleum'] },
+}
+
+// expressions
+export const routeExpressions = {
+  service: {
+    id: services[0].id,
+  },
+  id: '1',
+  name: 'route-expr',
+  methods: ['GET', 'CASTOM'],
+  service_id: '',
+  tags: ['dev', 'test'],
+  preserve_host: true,
+  https_redirect_status_code: 426,
+  protocols: ['http', 'https'],
+  strip_path: false,
+  expression: 'http.path == "/kong"',
+}
+
+export const routesTraditional100: any[] = Array(100)
   .fill(null)
   .map((_, i) => ({
     id: `${i + 1}`,
@@ -31,6 +79,8 @@ export const routes100: any[] = Array(100)
     methods: ['GET'],
     hosts: [`${i + 1}.example.com`],
   }))
+
+export const routesTraditionalExpressionsMixed = [route, routeExpressions]
 
 export const paginate = (
   routes: any[],
@@ -46,34 +96,4 @@ export const paginate = (
     total: sliced.length,
     offset,
   }
-}
-
-export const services = [
-  {
-    id: '1',
-    name: 'service-1',
-  },
-  {
-    id: '2',
-    name: 'service-2',
-  },
-]
-
-export const route = {
-  service: {
-    id: services[0].id,
-  },
-  id: '1',
-  name: 'route-1',
-  methods: ['GET', 'CASTOM'],
-  service_id: '',
-  tags: ['dev', 'test'],
-  regex_priority: 1,
-  path_handling: 'v1',
-  preserve_host: true,
-  https_redirect_status_code: 426,
-  protocols: ['http', 'https'],
-  strip_path: false,
-  paths: ['/foo', '/bar'],
-  headers: { Header1: ['cropped-jeans', 'expensive-petroleum'] },
 }

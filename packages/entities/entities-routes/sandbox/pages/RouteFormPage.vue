@@ -1,7 +1,30 @@
 <template>
+  <KCard class="sandbox-route-flavor-control">
+    <KCollapse
+      v-model="isRouteFlavorControlCollapsed"
+      :class="{ 'is-collapsed': isRouteFlavorControlCollapsed }"
+      title="Route flavors"
+    >
+      <div class="wrapper">
+        <KInputSwitch
+          v-model="routeFlavors.traditional"
+          class="route-flavor-toggle"
+          label="Traditional"
+        />
+        <KInputSwitch
+          v-model="routeFlavors.expressions"
+          class="route-flavor-toggle"
+          label="Expressions"
+        />
+      </div>
+      <p><b>Note:</b> Use controls above to enable/disable route flavors.</p>
+    </KCollapse>
+  </KCard>
+
   <h2>Konnect API</h2>
   <RouteForm
     :config="konnectConfig"
+    :route-flavors="routeFlavors"
     :route-id="routeId"
     @error="onError"
     @update="onUpdate"
@@ -20,12 +43,17 @@
       >
         Next
       </KButton>
+    </template>
+
+    <template #after-expressions-editor="editor">
+      This text will appear after the Expressions editor. Editor state: {{ editor.state }}.
     </template>
   </RouteForm>
 
   <h2>Kong Manager API</h2>
   <RouteForm
     :config="kongManagerConfig"
+    :route-flavors="routeFlavors"
     :route-id="routeId"
     @error="onError"
     @update="onUpdate"
@@ -45,20 +73,26 @@
         Next
       </KButton>
     </template>
+
+    <template #after-expressions-editor="{ state }">
+      This text will appear after the Expressions editor. Editor state: {{ state }}.
+    </template>
   </RouteForm>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
-import type { KonnectRouteFormConfig, KongManagerRouteFormConfig } from '../../src'
+import type { KonnectRouteFormConfig, KongManagerRouteFormConfig, RouteFlavors } from '../../src'
 import { RouteForm } from '../../src'
 
 const route = useRoute()
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
+const isRouteFlavorControlCollapsed = ref<boolean>(true)
+const routeFlavors = reactive<Required<RouteFlavors>>({ traditional: true, expressions: true })
 const routeId = computed((): string => route?.params?.id as string || '')
 
 const konnectConfig = ref<KonnectRouteFormConfig>({
@@ -91,3 +125,29 @@ const onUpdate = (payload: Record<string, any>) => {
   router.push({ name: 'route-list' })
 }
 </script>
+
+<style lang="scss" scoped>
+.sandbox-route-flavor-control {
+  :deep(.k-collapse) {
+    &.is-collapsed {
+      .k-collapse-heading {
+        margin-bottom: $kui-space-0 !important;
+        align-items: center;
+      }
+
+      .k-collapse-title {
+        margin-bottom: $kui-space-0 !important;
+      }
+    }
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+
+    .route-flavor-toggle {
+      margin-bottom: $kui-space-50;
+    }
+  }
+}
+</style>

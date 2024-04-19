@@ -2,6 +2,7 @@
   <div class="kong-ui-entities-routes-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
+      :cell-attributes="getCellAttrs"
       disable-pagination-page-jump
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
@@ -119,6 +120,11 @@
           </KBadge>
         </KTruncate>
         <span v-else>-</span>
+      </template>
+      <template #expression="{ rowValue }">
+        <span class="route-list-cell-expression">
+          {{ rowValue || '-' }}
+        </span>
       </template>
 
       <!-- Row actions -->
@@ -279,6 +285,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hasExpressionColumn: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { i18n: { t } } = composables.useI18n()
@@ -294,15 +304,12 @@ const disableSorting = computed((): boolean => props.config.app !== 'kongManager
 const fields: BaseTableHeaders = {
   name: { label: t('routes.list.table_headers.name'), searchable: true, sortable: true },
   protocols: { label: t('routes.list.table_headers.protocols'), searchable: true },
-  ...props.config.useExpression
-    ? {
-      expression: { label: t('routes.list.table_headers.expression') },
-    }
-    : {
-      hosts: { label: t('routes.list.table_headers.hosts'), searchable: true },
-      methods: { label: t('routes.list.table_headers.methods'), searchable: true },
-      paths: { label: t('routes.list.table_headers.paths'), searchable: true },
-    },
+  hosts: { label: t('routes.list.table_headers.hosts'), searchable: true },
+  methods: { label: t('routes.list.table_headers.methods'), searchable: true },
+  paths: { label: t('routes.list.table_headers.paths'), searchable: true },
+  ...props.hasExpressionColumn && {
+    expression: { label: t('routes.list.table_headers.expression'), tooltip: true },
+  },
   tags: { label: t('routes.list.table_headers.tags'), sortable: false },
 }
 const tableHeaders: BaseTableHeaders = fields
@@ -338,9 +345,9 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   }
 
   const { name, protocols, hosts, methods, paths, expression } = fields
-  const filterFields: FilterFields = props.config.useExpression
-    ? { name, protocols, expression }
-    : { name, protocols, hosts, methods, paths }
+  const filterFields: FilterFields = {
+    name, protocols, hosts, methods, paths, ...props.hasExpressionColumn && { expression },
+  }
 
   return {
     isExactMatch,
@@ -350,6 +357,20 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
 })
 
 const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value)
+
+const getCellAttrs = (params: Record<string, any>): Object => {
+  if (params.headerKey === 'expression') {
+    return {
+      style: {
+        maxWidth: '250px',
+        overflowX: 'hidden',
+        textOverflow: 'ellipsis',
+      },
+    }
+  }
+
+  return {}
+}
 
 const clearFilter = (): void => {
   filterQuery.value = ''
@@ -546,6 +567,10 @@ onBeforeMount(async () => {
 
   .kong-ui-entity-filter-input {
     margin-right: $kui-space-50;
+  }
+
+  .route-list-cell-expression {
+    font-family: $kui-font-family-code;
   }
 }
 </style>

@@ -176,7 +176,7 @@ const searchableFields = computed<{ label: string, value: string, expanded: bool
   const fields = (props.config as FuzzyMatchFilterConfig).fields
   return Object
     .keys(fields)
-    .filter((key: string) => fields[key].searchable)
+    .filter((key: string) => fields?.[key]?.searchable)
     .map((key: string) => ({
       label: fields[key].label || key,
       value: key,

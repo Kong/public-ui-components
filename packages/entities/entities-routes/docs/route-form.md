@@ -118,6 +118,42 @@ Show/hide Service Select field. Should be used in case of manual adding `service
 
 Show tags field under _Advanced Fields_ collapse or in it's default place (before protocols field).
 
+#### `routeFlavors`
+
+- type: `RouteFlavors`
+- required: `false`
+- default: `{ traditional: true }`
+- properties:
+  - `traditional`:
+    - type: `boolean`
+    - required: `false`
+    - default: `true`
+    - Whether to show input components for the traditional route.
+  - `expressions`:
+    - type: `boolean`
+    - required: `false`
+    - default: `false`
+    - Whether to show input components for the Expressions route.
+
+#### `configTabTooltips`
+
+- type: `Object as PropType<{ traditional?: string; expressions?: string } | undefined>`
+- required: `false`
+- default: `undefined`
+- properties:
+  - `traditional`:
+    - type: `string`
+    - required: `false`
+    - default: `undefined`
+    - Text to show in the tooltip of the traditional config tab.
+
+  - `expressions`:
+    - type: `string`
+    - required: `false`
+    - default: `undefined`
+    - Text to show in the tooltip of the Expressions config tab.
+
+
 ### Slots
 
 #### `form-actions`
@@ -134,6 +170,18 @@ Slot props:
 - `cancel`
   - type: `Function`
   - Cancel handler function.
+
+#### `after-expressions-editor`
+
+Content to be displayed after the Expressions editor.
+
+Slot props:
+- `expression`
+  - type: `[string, (value: string) => void]`
+  - The expression and a function to update the expression. This is useful when slot content is trying to update the expression (e.g., router playground).
+- `state`
+  - type: `ExpressionsEditorState`
+  - The state of the editor.
 
 ### Events
 
@@ -174,10 +222,14 @@ import type {
   MethodsFields,
   Sources,
   Destinations,
-  RouteStateFields,
+  BaseRouteStateFields,
+  TraditionalRouteStateFields,
+  ExpressionsRouteStateFields,
   RouteState,
   Headers,
-  RoutePayload,
+  BaseRoutePayload,
+  TraditionalRoutePayload,
+  ExpressionsRoutePayload,
   SelectItem
 } from '@kong-ui-public/entities-routes'
 ```
