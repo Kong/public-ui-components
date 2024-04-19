@@ -1,7 +1,8 @@
 import { computed, ref, toValue, watch } from 'vue'
 import { useErrors } from '@kong-ui-public/entities-shared'
-import useI18n from './useI18n'
 import { LogLevel } from '../types'
+import useI18n from './useI18n'
+import { AsyncAbortException } from './useAsyncScheduler'
 
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue'
 import type { SelectItem } from '@kong/kongponents'
@@ -97,6 +98,9 @@ export const useDataPlaneLogLevelChecker = (opt: {
     if (currentLogLevel.value === null) {
       requestExecutor(async () => {
         currentLogLevel.value = await getDataPlaneLogLevel(dataPlaneId)
+      }).catch((err) => {
+        if (err instanceof AsyncAbortException) return
+        console.error('Failed to get data plane log level', err)
       })
     }
 

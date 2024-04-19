@@ -1,7 +1,3 @@
-export type RequestSchedulerOptions = {
-  maxConcurrentRequests: number,
-}
-
 type ReturnTokenFunction = () => void
 type TokenBorrowQueueItem = [
   (returnToken: ReturnTokenFunction) => void, // resolve function
@@ -64,24 +60,28 @@ class TokenBucket {
   }
 }
 
-export class RequestAbortException extends Error {
+export class AsyncAbortException extends Error {
   constructor(message?: string, options?: ErrorOptions) {
     super(message, options)
-    this.name = 'RequestAbortException'
+    this.name = 'AsyncAbortException'
   }
 }
 
-export class RequestScheduler {
+export type AsyncSchedulerOptions = {
+  maxConcurrentAsyncs: number,
+}
+
+export class AsyncScheduler {
   private tokenBucket: TokenBucket
 
-  constructor(opt: RequestSchedulerOptions) {
-    this.tokenBucket = new TokenBucket(opt.maxConcurrentRequests)
+  constructor(opt: AsyncSchedulerOptions) {
+    this.tokenBucket = new TokenBucket(opt.maxConcurrentAsyncs)
   }
 
-  schedule = async <T>(requestInitiator: () => Promise<T>): Promise<T> => {
+  schedule = async <T>(asyncInitiator: () => Promise<T>): Promise<T> => {
     const returnToken = await this.tokenBucket.borrowToken()
     try {
-      const resp = await requestInitiator()
+      const resp = await asyncInitiator()
       returnToken()
       return resp
     } catch (e) {
@@ -91,8 +91,8 @@ export class RequestScheduler {
   }
 
   cancelAll = (message?: string, options?: ErrorOptions) => {
-    this.tokenBucket.clearWaitingQueue(new RequestAbortException(message, options))
+    this.tokenBucket.clearWaitingQueue(new AsyncAbortException(message, options))
   }
 }
 
-export const useRequestScheduler = (opt: RequestSchedulerOptions) => new RequestScheduler(opt)
+export const useAsyncScheduler = (opt: AsyncSchedulerOptions) => new AsyncScheduler(opt)

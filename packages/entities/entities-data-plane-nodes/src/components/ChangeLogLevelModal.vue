@@ -119,11 +119,11 @@ const friendlyTime = composables.useFriendlyRevertTime(revertAfter)
 const maxConcurrentRequests = typeof props.requests.maxConcurrentRequests === 'number'
   ? props.requests.maxConcurrentRequests
   : 0
-const requestScheduler = composables.useRequestScheduler({ maxConcurrentRequests })
+const asyncScheduler = composables.useAsyncScheduler({ maxConcurrentAsyncs: maxConcurrentRequests })
 const { checkDataPlaneLogLevel } = composables.useDataPlaneLogLevelChecker({
   getDataPlaneLogLevel: props.requests.getDataPlaneLogLevel,
   setDataPlaneLogLevel: props.requests.setDataPlaneLogLevel,
-  requestExecutor: maxConcurrentRequests > 0 ? requestScheduler.schedule : undefined,
+  requestExecutor: maxConcurrentRequests > 0 ? asyncScheduler.schedule : undefined,
 })
 
 const hostNodeCompRefs = new Map<string, InstanceType<typeof CLLModalNodeRow>>()
