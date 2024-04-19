@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.1.7...@kong-ui-public/expressions@0.2.0) (2024-04-19)
+
+
+### Features
+
+* expressions routes support [KM-20] ([#1329](https://github.com/Kong/public-ui-components/issues/1329)) ([55d2929](https://github.com/Kong/public-ui-components/commit/55d292956643ebc00145fe30e0d43b9a6d8bd09e))
+
+
+
+
+
 ## [0.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.1.6...@kong-ui-public/expressions@0.1.7) (2024-04-18)
 
 

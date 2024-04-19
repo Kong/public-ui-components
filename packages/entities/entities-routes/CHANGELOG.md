@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.0.9...@kong-ui-public/entities-routes@3.1.0) (2024-04-19)
+
+
+### Features
+
+* expressions routes support [KM-20] ([#1329](https://github.com/Kong/public-ui-components/issues/1329)) ([55d2929](https://github.com/Kong/public-ui-components/commit/55d292956643ebc00145fe30e0d43b9a6d8bd09e))
+
+
+
+
+
 ## [3.0.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.0.8...@kong-ui-public/entities-routes@3.0.9) (2024-04-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
