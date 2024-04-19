@@ -171,10 +171,10 @@
     "RequestSizeP50": "Request Size (p50) in {unit}"
   },
   "granularityAxisTitles": {
-    "Minutely": "@timestamp per minute",
-    "Hourly": "@timestamp per hour",
-    "Daily": "@timestamp per day",
-    "Weekly": "@timestamp per week"
+    "minutely": "@timestamp per minute",
+    "hourly": "@timestamp per hour",
+    "daily": "@timestamp per day",
+    "weekly": "@timestamp per week"
   },
   "topNTable": {
     "nameLabel": "Name",
