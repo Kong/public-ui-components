@@ -74,7 +74,7 @@
   "dependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/expressions": "workspace:^",
-    "@kong/icons": "^1.8.16",
+    "@kong/icons": "^1.9.0",
     "lodash.isequal": "^4.5.0"
   }
 }
