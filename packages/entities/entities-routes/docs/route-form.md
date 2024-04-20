@@ -17,6 +17,7 @@ A form component for Routes.
 - `@kong/kongponents` must be added as a dependency in the host application, globally available via the Vue Plugin installation, and the package's style imports must be added in the app entry file. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents).
 - `@kong-ui-public/i18n` must be available as a `dependency` in the host application.
 - `axios` must be installed as a dependency in the host application
+- `@kong-ui-public/expressions` and `monaco-editor` are required if the host app uses this component with `expressions` route flavor enabled.
 
 ## Usage
 

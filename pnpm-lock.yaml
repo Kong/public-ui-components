@@ -840,9 +840,6 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
-      '@kong-ui-public/expressions':
-        specifier: workspace:^
-        version: link:../../core/expressions
       '@kong/icons':
         specifier: ^1.9.0
         version: 1.9.0(vue@3.4.21)
@@ -850,6 +847,9 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0
     devDependencies:
+      '@kong-ui-public/expressions':
+        specifier: workspace:^
+        version: link:../../core/expressions
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
@@ -4982,9 +4982,6 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependenciesMeta:
-      ajv:
-        optional: true
     dependencies:
       ajv: 8.12.0
     dev: true

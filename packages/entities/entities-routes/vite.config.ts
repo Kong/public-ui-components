@@ -18,7 +18,10 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
     },
     rollupOptions: {
-      external: ['monaco-editor'], // Do not bundle monaco-editor with this package. Provide as a peer dependency
+      external: [
+        '@kong-ui-public/expressions', // This is optional if we do not use Expressions features
+        'monaco-editor', // This is optional if we do not use Expressions features
+      ],
     },
   },
   server: {
