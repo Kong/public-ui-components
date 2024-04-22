@@ -24,7 +24,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       '@rushstack/eslint-patch':
         specifier: ^1.7.2
         version: 1.7.2
@@ -253,7 +253,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       '@types/uuid':
         specifier: ^9.0.8
         version: 9.0.8
@@ -367,7 +367,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       json-schema-to-ts:
         specifier: ^3.0.1
         version: 3.0.1
@@ -395,7 +395,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.3.3)
@@ -420,7 +420,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -522,7 +522,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       monaco-editor:
         specifier: 0.21.3
         version: 0.21.3
@@ -559,10 +559,10 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
-      '@types/lodash':
-        specifier: ^4.14.202
-        version: 4.14.202
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
       pug:
         specifier: ^3.0.2
         version: 3.0.2
@@ -586,7 +586,7 @@ importers:
         version: link:../i18n
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.3.3)
@@ -602,7 +602,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.3.3)
@@ -994,7 +994,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       '@types/prismjs':
         specifier: ^1.26.3
         version: 1.26.3
@@ -1028,7 +1028,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.1.0
         version: 1.1.0(vite@5.2.8)
