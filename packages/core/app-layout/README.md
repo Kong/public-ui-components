@@ -1,6 +1,6 @@
 # @kong-ui-public/app-layout
 
-A Kong UI application layout component that provides a responsive navbar, sidebar, and main content area.
+A set of Kong UI application layout components that provides a responsive navbar, sidebar, and main content area.
 
 - [Features](#features)
 - [Requirements](#requirements)
