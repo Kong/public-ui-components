@@ -48,7 +48,7 @@ import '@kong-ui-public/entities-routes/dist/style.css'
 
 This package installs `@kong-ui-public/expressions` and `monaco-editor` to support [Kong's Expressions language](https://docs.konghq.com/gateway/latest/reference/expressions-language/)-related features. However, this will add several megabytes to your bundle size.
 
-If you don't need Expressions features, but have imported the components (e.g., `<RouteForm.vue />`) with these features in your host app, add the following configuration to your Vite config to avoid bundling them with your build result:
+If you don't need Expressions features, but have imported the components with support for these features (e.g., `routeFlavor` in `<RouteForm.vue />`) in your host app, add the following configuration to your Vite config to avoid bundling them with your build result:
 
 > As of now, only `<RouteForm.vue />` has Expressions features. You should ensure you are not using Expressions features in your host app before adding this configuration.
 
