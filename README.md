@@ -1,5 +1,7 @@
 # public-ui-components
 
+# Do not merge
+
 Monorepo for **open-source** Kong UI components and utilities.
 
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
