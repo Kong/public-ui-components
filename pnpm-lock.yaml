@@ -481,8 +481,8 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0(vue@3.3.13)
       '@kong/markdown':
-        specifier: 1.3.4
-        version: 1.3.4(vue@3.3.13)
+        specifier: 1.3.5
+        version: 1.3.5(vue@3.3.13)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -2353,8 +2353,8 @@ packages:
       vue-router: 4.3.0(vue@3.4.21)
     dev: true
 
-  /@kong/markdown@1.3.4(vue@3.3.13):
-    resolution: {integrity: sha512-xhtYrot/zh33f+BrM25nLdOi6mFoJO6nlXL/5CLSomZeJ6GN4OQy3pHQhzi6hHPw83NLo8DV4Bmfd2AAUWwP0A==}
+  /@kong/markdown@1.3.5(vue@3.3.13):
+    resolution: {integrity: sha512-eI8Wqyv3Slew2yPRamIEfyO5q5m6n+rKTXfwPlkn6DuoSBZg2vqmjm0r3hifknFKy6sqMlJuydhhUwHpGUActA==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: '>= 3.3.13 < 4'
@@ -3911,7 +3911,7 @@ packages:
   /@types/hast@2.3.4:
     resolution: {integrity: sha512-wLEm0QvaoawEDoTRwzTXp4b4jpwiJDvR5KMnFnVodm3scufTlBOWRD6N1OBf9TZMhjlNsSfcO5V+7AF4+Vy+9g==}
     dependencies:
-      '@types/unist': 2.0.6
+      '@types/unist': 2.0.10
     dev: false
 
   /@types/hoist-non-react-statics@3.3.1:
@@ -4142,10 +4142,6 @@ packages:
 
   /@types/unist@2.0.10:
     resolution: {integrity: sha512-IfYcSBWE3hLpBg8+X2SEa8LVkJdJEkT2Ese2aaLs3ptGdVtABxndrMaxuFlQ1qdFf9Q5rDvDpxI3WwgvKFAsQA==}
-    dev: false
-
-  /@types/unist@2.0.6:
-    resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
     dev: false
 
   /@types/use-sync-external-store@0.0.3:
