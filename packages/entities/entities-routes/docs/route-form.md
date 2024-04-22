@@ -13,10 +13,11 @@ A form component for Routes.
 
 ## Requirements
 
-- `vue` and `vue-router` must be initialized in the host application
+- `vue` and `vue-router` must be initialized in the host application.
 - `@kong/kongponents` must be added as a dependency in the host application, globally available via the Vue Plugin installation, and the package's style imports must be added in the app entry file. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents).
 - `@kong-ui-public/i18n` must be available as a `dependency` in the host application.
-- `axios` must be installed as a dependency in the host application
+- `axios` must be installed as a dependency in the host application.
+- If you want to use Expressions features, `@kong-ui-public/expressions` and `monaco-editor` must be installed as dependencies in the host application.
 
 ## Usage
 
@@ -118,7 +119,7 @@ Show/hide Service Select field. Should be used in case of manual adding `service
 
 Show tags field under _Advanced Fields_ collapse or in it's default place (before protocols field).
 
-#### `routeFlavors`
+#### `routeFlavors` (controls Expressions features)
 
 - type: `RouteFlavors`
 - required: `false`
@@ -133,7 +134,7 @@ Show tags field under _Advanced Fields_ collapse or in it's default place (befor
     - type: `boolean`
     - required: `false`
     - default: `false`
-    - Whether to show input components for the Expressions route.
+    - Whether to show input components for the Expressions route. (If true, Expressions features will be enabled for this component.)
 
 #### `configTabTooltips`
 

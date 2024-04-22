@@ -840,15 +840,19 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
-      '@kong-ui-public/expressions':
-        specifier: workspace:^
-        version: link:../../core/expressions
       '@kong/icons':
         specifier: ^1.9.0
         version: 1.9.0(vue@3.4.21)
       lodash.isequal:
         specifier: ^4.5.0
         version: 4.5.0
+    optionalDependencies:
+      '@kong-ui-public/expressions':
+        specifier: workspace:^
+        version: link:../../core/expressions
+      monaco-editor:
+        specifier: 0.21.3
+        version: 0.21.3
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -865,9 +869,6 @@ importers:
       axios:
         specifier: ^1.6.8
         version: 1.6.8
-      monaco-editor:
-        specifier: 0.21.3
-        version: 0.21.3
       vite-plugin-monaco-editor:
         specifier: ^1.1.0
         version: 1.1.0(monaco-editor@0.21.3)
@@ -4982,9 +4983,6 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependenciesMeta:
-      ajv:
-        optional: true
     dependencies:
       ajv: 8.12.0
     dev: true
@@ -11211,7 +11209,6 @@ packages:
 
   /monaco-editor@0.21.3:
     resolution: {integrity: sha512-9N7wATLpi+googstvtm6IKg97vPQ77FDYEpkow5tLriM/VJ0DaTRyUP4UVzcoH7KlPDX+e/rE7/imcOUeGkT6g==}
-    dev: true
 
   /mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
