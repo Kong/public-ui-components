@@ -1,7 +1,10 @@
 # @kong-ui-public/app-layout
 
+## Do not merge this PR
+
 A set of Kong UI application layout components that provides a responsive navbar, sidebar, and main content area.
 
+- [Do not merge this PR](#do-not-merge-this-pr)
 - [Features](#features)
 - [Requirements](#requirements)
 - [Included components](#included-components)
