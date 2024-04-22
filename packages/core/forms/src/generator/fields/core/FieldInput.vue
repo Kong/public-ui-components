@@ -187,7 +187,7 @@ onMounted((): void => {
 })
 
 onBeforeMount((): void => {
-  // Deprecation warnings - these should never be shown. If we see them, it means the logic determining which component to render is broken.
+  // Deprecation warnings - these should not be shown. If we see them, it means the logic determining which component to render is broken.
   if (inputType.value === 'checkbox') {
     console.warn("The use of 'checkbox' inputType with 'input' type fields is deprecated. Use 'checkbox' type instead.")
   } else if (inputType.value === 'radio') {
