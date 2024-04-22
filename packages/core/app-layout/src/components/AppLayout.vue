@@ -130,6 +130,8 @@ import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../types'
 import { useDebounce } from '../composables'
 import { KUI_BORDER_RADIUS_0, KUI_BORDER_RADIUS_20, KUI_COLOR_BACKGROUND, KUI_COLOR_BACKGROUND_INVERSE, KUI_COLOR_TEXT, KUI_COLOR_TEXT_INVERSE } from '@kong/design-tokens'
 
+// Component change
+
 interface AppSidebarProperties {
   topItems?: SidebarPrimaryItem[]
   bottomItems?: SidebarPrimaryItem[]
