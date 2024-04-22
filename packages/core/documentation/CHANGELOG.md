@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.4.13...@kong-ui-public/documentation@0.4.14) (2024-04-22)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/markdown to v1.3.5 ([#1358](https://github.com/Kong/public-ui-components/issues/1358)) ([1ff3e22](https://github.com/Kong/public-ui-components/commit/1ff3e22795a694c547e892399fd53bbbeb1144b6))
+
+
+
+
+
 ## [0.4.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.4.12...@kong-ui-public/documentation@0.4.13) (2024-04-19)
 
 **Note:** Version bump only for package @kong-ui-public/documentation
