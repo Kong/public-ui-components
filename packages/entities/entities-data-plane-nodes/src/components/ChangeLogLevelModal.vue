@@ -117,7 +117,12 @@ const logLevelCandidates = composables.useLogLevelCandidateSelectItems({
 const explanation = composables.useLogLevelExplanation(targetLogLevel)
 const friendlyTime = composables.useFriendlyRevertTime(revertAfter)
 
-const asyncScheduler = composables.useAsyncScheduler(props.requests.scheduler ?? { maxConcurrentAsyncs: 10 })
+const asyncScheduler = composables.useAsyncScheduler(
+  props.requests.scheduler === undefined
+    ? { maxConcurrentAsyncs: 10 }
+    : props.requests.scheduler,
+)
+
 const { checkDataPlaneLogLevel } = composables.useDataPlaneLogLevelChecker({
   getDataPlaneLogLevel: props.requests.getDataPlaneLogLevel,
   setDataPlaneLogLevel: props.requests.setDataPlaneLogLevel,
