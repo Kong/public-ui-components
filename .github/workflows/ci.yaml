@@ -27,17 +27,19 @@ jobs:
       unitTestMatrix: ${{steps.changed_packages.outputs.unitTestMatrix}}
       componentTestFilter: ${{steps.changed_packages.outputs.componentTestFilter}}
       componentTestMatrix: ${{steps.changed_packages.outputs.componentTestMatrix}}
+    env:
+      GH_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
     steps:
       # if previous run did create comment with the reference to PR preview package
       # this comment is removed in this step
       - name: Remove preview consumption comment
-        if: ${{ github.event.pull_request.author_association == 'COLLABORATOR' || github.event.pull_request.author_association == 'OWNER' }}
+        if: ${{ env.GH_TOKEN != '' }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: pr_preview_consumption
           delete: true
-          GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
+          GITHUB_TOKEN: ${{ env.GH_TOKEN }}
 
       - name: Checkout Source Code
         uses: actions/checkout@v4
@@ -52,7 +54,7 @@ jobs:
         if: ${{ github.event_name == 'push' }}
         uses: Kong/public-shared-actions/pr-previews/up-to-date@main
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ env.GH_TOKEN }}
 
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
@@ -222,7 +224,7 @@ jobs:
         uses: Kong/github-action-dist-size-checker@main
 
       - name: Publish Previews
-        if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && (github.event.pull_request.author_association == 'COLLABORATOR' || github.event.pull_request.author_association == 'OWNER') }}
+        if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && env.GH_TOKEN != '' }}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
@@ -266,7 +268,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
 
       - name: Provide preview link info
-        if: ${{ env.npm_instructions != '' && (github.event.pull_request.author_association == 'COLLABORATOR' || github.event.pull_request.author_association == 'OWNER') }}
+        if: ${{ env.npm_instructions != '' && env.GH_TOKEN != '' }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: pr_preview_consumption
@@ -276,7 +278,7 @@ jobs:
              ```
              ${{env.npm_instructions}}
              ```
-          GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
+          GITHUB_TOKEN: ${{ env.GH_TOKEN }}
 
       - name: Run Unit Tests
         if: ${{ steps.changed_packages.outputs.unitTestFilter != '' }}
