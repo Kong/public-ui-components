@@ -11,6 +11,8 @@ on:
       - labeled
     branches:
       - main
+      # TODO: Remove before merge
+      - ci/no-secrets
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
