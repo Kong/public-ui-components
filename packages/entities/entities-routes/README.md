@@ -3,7 +3,6 @@
 Route entity components.
 
 - [Requirements](#requirements)
-  - [Expressions features](#expressions-features)
 - [Included components](#included-components)
 - [Usage](#usage)
   - [Install](#install)
@@ -16,12 +15,7 @@ Route entity components.
 - `@kong/kongponents` must be added as a dependency in the host application, globally available via the Vue Plugin installation, and the package's style imports must be added in the app entry file. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents).
 - `@kong-ui-public/i18n` must be available as a `dependency` in the host application.
 - `axios` must be installed as a dependency in the host application
-
-### Expressions features
-
-Some components (e.g., RouteForm with `expressions` route flavor enabled) in this package use `@kong-ui-public/expressions` and `monaco-editor` to support [Kong's Expressions language](https://docs.konghq.com/gateway/latest/reference/expressions-language/), you will need to install `@kong-ui-public/expressions` and `monaco-editor` in your host app to use Expressions features.
-
-If you don't use Expressions features, you will need to add the following to your Vite config:
+- `@kong-ui-public/expressions` and `monaco-editor` must be installed as **`devDependencies`**. If you don't need to support [Kong's Expressions language](https://docs.konghq.com/gateway/latest/reference/expressions-language/)-related features, you will need to add the following configuration to your Vite config to avoid them to be bundled with your build result:
 
 ```ts
 defineConfig({
