@@ -32,6 +32,7 @@ jobs:
       # if previous run did create comment with the reference to PR preview package
       # this comment is removed in this step
       - name: Remove preview consumption comment
+        if: ${{ github.event.pull_request.author_association == 'COLLABORATOR' || github.event.pull_request.author_association == 'OWNER' }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: pr_preview_consumption
@@ -48,7 +49,7 @@ jobs:
       # see 'run-test' step and variable bellow
       - name: Check if PR Up to Date
         id: 'up-to-date'
-        if: ${{github.event_name == 'push'}}
+        if: ${{ github.event_name == 'push' }}
         uses: Kong/public-shared-actions/pr-previews/up-to-date@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -221,7 +222,7 @@ jobs:
         uses: Kong/github-action-dist-size-checker@main
 
       - name: Publish Previews
-        if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) }}
+        if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && (github.event.pull_request.author_association == 'COLLABORATOR' || github.event.pull_request.author_association == 'OWNER') }}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
@@ -265,7 +266,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
 
       - name: Provide preview link info
-        if: ${{ env.npm_instructions != '' }}
+        if: ${{ env.npm_instructions != '' && (github.event.pull_request.author_association == 'COLLABORATOR' || github.event.pull_request.author_association == 'OWNER') }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: pr_preview_consumption
