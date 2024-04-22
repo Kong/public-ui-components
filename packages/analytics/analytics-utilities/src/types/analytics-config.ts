@@ -26,3 +26,7 @@ export interface AnalyticsConfigV2 {
   analytics: null | ApiAnalyticsV2,
   requests: null | ApiRequestsV2
 }
+
+export interface AnalyticsConfigPrivilegedV2 extends AnalyticsConfigV2 {
+  disabled_control_planes: string[]
+}
