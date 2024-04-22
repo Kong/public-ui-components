@@ -19,19 +19,7 @@ Route entity components.
 
 ### Expressions features
 
-Some components (e.g., RouteForm with `expressions` route flavor enabled) in this package use `@kong-ui-public/expressions` and `monaco-editor` to support [Kong's Expressions language](https://docs.konghq.com/gateway/latest/reference/expressions-language/), you will need to install `@kong-ui-public/expressions` and `monaco-editor` in your host app to use Expressions features.
-
-If you don't use Expressions features but have non-type imports from this package in your host app, you will need to add the following to your Vite config:
-
-```ts
-defineConfig({
-  build: {
-    rollupOptions: {
-      external: ['@kong-ui-public/expressions', 'monaco-editor'],
-    },
-  },
-})
-```
+Some components (e.g., RouteForm with `expressions` route flavor enabled) in this package use `@kong-ui-public/expressions` and `monaco-editor` to support [Kong's Expressions language](https://docs.konghq.com/gateway/latest/reference/expressions-language/). These dependencies are optional, you will need to install `@kong-ui-public/expressions` and `monaco-editor` in your host app as `dependencies` to use Expressions features.
 
 ## Included components
 
