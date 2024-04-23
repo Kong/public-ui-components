@@ -1,5 +1,9 @@
 <script>
-import { get as objGet, forEach, isNil, isArray, isString, isFunction } from 'lodash'
+import forEach from 'lodash-es/forEach'
+import objGet from 'lodash-es/get'
+import isFunction from 'lodash-es/isFunction'
+import isString from 'lodash-es/isString'
+import isNil from 'lodash-es/isNil'
 
 export default {
   methods: {
@@ -15,7 +19,7 @@ export default {
         required: this.fieldRequired(field),
       }
 
-      if (isArray(field.styleClasses)) {
+      if (Array.isArray(field.styleClasses)) {
         forEach(field.styleClasses, c => (baseClasses[c] = true))
       } else if (isString(field.styleClasses)) {
         baseClasses[field.styleClasses] = true

@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -28,7 +24,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       '@rushstack/eslint-patch':
         specifier: ^1.7.2
         version: 1.7.2
@@ -257,7 +253,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       '@types/uuid':
         specifier: ^9.0.8
         version: 9.0.8
@@ -371,7 +367,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       json-schema-to-ts:
         specifier: ^3.0.1
         version: 3.0.1
@@ -399,7 +395,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.3.3)
@@ -424,7 +420,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -526,7 +522,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       monaco-editor:
         specifier: 0.21.3
         version: 0.21.3
@@ -551,7 +547,7 @@ importers:
       fecha:
         specifier: ^4.2.3
         version: 4.2.3
-      lodash:
+      lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
     devDependencies:
@@ -563,10 +559,10 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
-      '@types/lodash':
-        specifier: ^4.14.202
-        version: 4.14.202
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
       pug:
         specifier: ^3.0.2
         version: 3.0.2
@@ -590,7 +586,7 @@ importers:
         version: link:../i18n
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.3.3)
@@ -606,7 +602,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.3.3)
@@ -999,7 +995,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       '@types/prismjs':
         specifier: ^1.26.3
         version: 1.26.3
@@ -1033,7 +1029,7 @@ importers:
         version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
-        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.4.21)
+        version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.0)(vue@3.3.13)
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.1.0
         version: 1.1.0(vite@5.2.8)
@@ -3962,6 +3958,12 @@ packages:
   /@types/linkify-it@3.0.5:
     resolution: {integrity: sha512-yg6E+u0/+Zjva+buc3EIb+29XEg4wltq7cSmd4Uc2EE/1nUVmxyzpX6gUXD0V8jIrG0r7YeOGVIbYRkxeooCtw==}
     dev: false
+
+  /@types/lodash-es@4.17.12:
+    resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
+    dependencies:
+      '@types/lodash': 4.17.0
+    dev: true
 
   /@types/lodash.clonedeep@4.5.9:
     resolution: {integrity: sha512-19429mWC+FyaAhOLzsS8kZUsI+/GmBAQ0HFiCPsKGU+7pBXOQWhyrY6xNNDwUSX8SMZMJvuFVMF9O5dQOlQK9Q==}
@@ -16139,3 +16141,7 @@ packages:
   /zenscroll@4.0.2:
     resolution: {integrity: sha512-jEA1znR7b4C/NnaycInCU6h/d15ZzCd1jmsruqOKnZP6WXQSMH3W2GL+OXbkruslU4h+Tzuos0HdswzRUk/Vgg==}
     dev: false
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false

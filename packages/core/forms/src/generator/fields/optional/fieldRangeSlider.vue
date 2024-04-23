@@ -5,7 +5,7 @@ input(type="text", :autocomplete="schema.autocomplete", :data-disable="disabled"
 <script>
 /* global $ */
 import abstractField from '../abstractField'
-import { defaults, isArray } from 'lodash'
+import defaults from 'lodash-es/defaults'
 
 export default {
   mixins: [abstractField],
@@ -22,7 +22,7 @@ export default {
       handler() {
         if (window.$ && window.$.fn.ionRangeSlider) {
           let valueFrom, valueTo
-          if (isArray(this.value)) {
+          if (Array.isArray(this.value)) {
             [valueFrom, valueTo] = this.value
           } else valueFrom = this.value
 
@@ -41,7 +41,7 @@ export default {
     this.$nextTick(function() {
       if (window.$ && window.$.fn.ionRangeSlider) {
         let valueFrom, valueTo
-        if (isArray(this.value)) {
+        if (Array.isArray(this.value)) {
           [valueFrom, valueTo] = this.value
         } else valueFrom = this.value
 

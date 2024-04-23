@@ -103,7 +103,7 @@ import FieldObjectAdvanced from './FieldObjectAdvanced.vue'
 import FieldAutoSuggest from './FieldAutoSuggest.vue'
 import FieldArrayCardContainer from './FieldArrayCardContainer.vue'
 import FieldRadio from './FieldRadio.vue'
-import FieldInput from '../core/fieldInput.vue'
+import FieldInput from '../core/FieldInput.vue'
 import FieldSelect from '../core/fieldSelect.vue'
 import FieldTextArea from '../core/fieldTextArea.vue'
 

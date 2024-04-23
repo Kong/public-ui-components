@@ -19,7 +19,9 @@
 </template>
 
 <script>
-import { isObject, isNil, clone } from 'lodash'
+import clone from 'lodash-es/clone'
+import isObject from 'lodash-es/isObject'
+import isNil from 'lodash-es/isNil'
 import abstractField from '../abstractField'
 import { slugify } from '../../utils/schema'
 

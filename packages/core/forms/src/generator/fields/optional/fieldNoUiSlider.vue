@@ -8,7 +8,7 @@
 
 <script>
 import abstractField from '../abstractField'
-import { isArray, defaults } from 'lodash'
+import defaults from 'lodash-es/defaults'
 
 export default {
   mixins: [abstractField],
@@ -68,7 +68,7 @@ export default {
 
   methods: {
     onChange(value) {
-      if (isArray(value)) {
+      if (Array.isArray(value)) {
         // Array (range)
         this.value = [parseFloat(value[0]), parseFloat(value[1])]
       } else {

@@ -4,39 +4,26 @@
     class="form-group"
     :class="getFieldRowClasses(field)"
   >
-    <label
+    <KLabel
       v-if="fieldTypeHasLabel(field)"
       :aria-describedby="field.help ? getTooltipId(field) : undefined"
-      class="form-group-label"
       :class="field.labelClasses"
       :for="getFieldID(field)"
+      :info="!options.helpAsHtml && field.help ? field.help : undefined"
+      :tooltip-attributes="field.help ? {
+        maxWidth: '300',
+        placement: 'top',
+        tooltipId: getTooltipId(field)
+      } : undefined"
     >
+      <template
+        v-if="options.helpAsHtml"
+        #tooltip
+      >
+        <div v-html="field.help" />
+      </template>
       <div class="icon-wrapper">
         <span v-html="formattedLabel(field.label)" />
-        <KTooltip
-          v-if="field.help"
-          max-width="300"
-          placement="top"
-          :position-fixed="true"
-          :tooltip-id="getTooltipId(field)"
-        >
-          <div
-            class="help"
-            role="button"
-            tabindex="0"
-          >
-            <i class="icon" />
-          </div>
-          <template #content>
-            <div
-              v-if="options.helpAsHtml"
-              v-html="field.help"
-            />
-            <template v-else>
-              {{ field.help }}
-            </template>
-          </template>
-        </KTooltip>
       </div>
 
       <div
@@ -47,7 +34,7 @@
           <span class="section-header">More info</span>
         </KExternalLink>
       </div>
-    </label>
+    </KLabel>
 
     <div class="field-wrap">
       <component
@@ -56,6 +43,7 @@
         ref="child"
         :disabled="fieldDisabled(field) || null"
         :form-options="options"
+        :hint="field.hint && getFieldType(field) === 'field-input' ? fieldHint(field) : undefined"
         :model="model"
         :schema="field"
         :vfg="vfg"
@@ -78,7 +66,7 @@
     </div>
 
     <div
-      v-if="field.hint"
+      v-if="field.hint && getFieldType(field) !== 'field-input'"
       class="hint"
       v-html="fieldHint(field)"
     />
@@ -97,7 +85,9 @@
 </template>
 
 <script>
-import { get as objGet, isNil, isFunction } from 'lodash'
+import objGet from 'lodash-es/get'
+import isFunction from 'lodash-es/isFunction'
+import isNil from 'lodash-es/isNil'
 import { slugifyFormID } from './utils/schema'
 import formMixin from './FormMixin.vue'
 import * as fieldComponents from './utils/fieldsLoader'
@@ -296,7 +286,7 @@ $errorColor: #f00;
 }
 
 .icon-wrapper {
-  display: flex!important;
+  display: flex !important;
 }
 
 .link-wrapper {

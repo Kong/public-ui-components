@@ -1,4 +1,10 @@
-import { defaults, isNil, isNumber, isInteger, isString, isArray, isFunction, isFinite } from 'lodash'
+import defaults from 'lodash-es/defaults'
+import isFinite from 'lodash-es/isFinite'
+import isFunction from 'lodash-es/isFunction'
+import isInteger from 'lodash-es/isInteger'
+import isString from 'lodash-es/isString'
+import isNil from 'lodash-es/isNil'
+import isNumber from 'lodash-es/isNumber'
 import fecha from 'fecha'
 
 const resources = {
@@ -128,7 +134,7 @@ export const validators: any = {
 
   array(value: any, field: any, model: any, messages = resources) {
     if (field.required) {
-      if (!isArray(value)) {
+      if (!Array.isArray(value)) {
         return [msg(messages.thisNotArray)]
       }
 

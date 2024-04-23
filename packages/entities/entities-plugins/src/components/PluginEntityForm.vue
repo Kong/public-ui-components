@@ -432,7 +432,7 @@ const getModel = (): Record<string, any> => {
 }
 
 // fired whenever the form data is modified
-const onModelUpdated = (model: Record<string, any>, schema: string) => {
+const onModelUpdated = (model: any, schema: string) => {
   const newData = { [schema]: model }
   if (typeof props.schema[schema]?.modelTransformer === 'function') {
     newData[schema] = props.schema[schema].modelTransformer(model)

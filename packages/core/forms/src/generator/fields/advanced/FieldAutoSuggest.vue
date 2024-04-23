@@ -43,7 +43,7 @@
 <script>
 import { FORMS_API_KEY } from '../../../const'
 import abstractField from '../abstractField'
-import { debounce } from 'lodash'
+import debounce from 'lodash-es/debounce'
 import { isValidUuid } from '../../utils/isValidUuid'
 
 const requestResultsLimit = 50
