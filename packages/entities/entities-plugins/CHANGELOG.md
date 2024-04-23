@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@3.0.20...@kong-ui-public/entities-plugins@4.0.0) (2024-04-23)
+
+
+### Features
+
+* **vfg:** kongponents usage [khcp-11333] ([#1322](https://github.com/Kong/public-ui-components/issues/1322)) ([32b29bc](https://github.com/Kong/public-ui-components/commit/32b29bc5ef6440e4a94823072b9a1fd4eb9ecfbb))
+
+
+### BREAKING CHANGES
+
+* **vfg:** Updated to use `lodash-es` instead of `lodash` and use kongponents for input and
+label
+
+
+
+
+
 ## [3.0.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@3.0.19...@kong-ui-public/entities-plugins@3.0.20) (2024-04-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
