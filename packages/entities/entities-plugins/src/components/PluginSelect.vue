@@ -68,7 +68,10 @@
           v-if="disableCustomPlugins"
           #custom-anchor
         >
-          <KTooltip :text="t('plugins.select.tabs.custom.disabled_tooltip')">
+          <KTooltip
+            :max-width="300"
+            :text="t('plugins.select.tabs.custom.disabled_tooltip')"
+          >
             <div>{{ t('plugins.select.tabs.custom.title') }}</div>
           </KTooltip>
         </template>
