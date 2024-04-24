@@ -2,8 +2,11 @@
   <tr>
     <td>{{ hostname }}</td>
     <td>
+      <span v-if="currentLogLevel === 'not_supported'">
+        {{ i18n.t('log_level.not_applicable') }}
+      </span>
       <KSkeleton
-        v-if="!currentLogLevel"
+        v-else-if="!currentLogLevel"
         type="spinner"
       />
       <template v-else>
@@ -44,15 +47,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import composables from '../composables'
 import { CheckCircleIcon, ClearIcon, EqualIcon, ProgressIcon } from '@kong/icons'
 
+import type { Ref } from 'vue'
+import type { DataPlaneLogLevel } from '../composables'
 import type { LogLevel } from '../types'
+
+type NoDLLCapability = 'not_supported'
 
 const props = defineProps<{
   dataPlaneId: string
   hostname: string
+  hasDllCapability: boolean
   targetLogLevel: LogLevel
   checkLogLevel: ReturnType<typeof composables.useDataPlaneLogLevelChecker>['checkDataPlaneLogLevel']
   logLevelHint?: LogLevel | null
@@ -60,14 +68,21 @@ const props = defineProps<{
 
 const { i18n } = composables.useI18n()
 
-const {
-  currentLogLevel,
-  updateStatus,
-  updateErrorMessage,
-  updateLogLevel,
-} = props.checkLogLevel(props.dataPlaneId, {
-  currentLogLevelHint: () => props.logLevelHint ?? null,
-})
+let currentLogLevel = ref<LogLevel | NoDLLCapability | null>('not_supported')
+let updateStatus: DataPlaneLogLevel['updateStatus'] | Ref<NoDLLCapability> = ref('not_supported')
+let updateErrorMessage = ref<string | null>(null)
+let updateLogLevel: DataPlaneLogLevel['updateLogLevel'] = async () => {}
+
+if (props.hasDllCapability) {
+  ({
+    currentLogLevel,
+    updateStatus,
+    updateErrorMessage,
+    updateLogLevel,
+  } = props.checkLogLevel(props.dataPlaneId, {
+    currentLogLevelHint: () => props.logLevelHint ?? null,
+  }))
+}
 
 defineExpose({
   updateLogLevel,
@@ -80,8 +95,9 @@ const statusAppearance = computed(() => {
     case 'error':
       return 'danger'
     case 'loading':
+    case 'pending':
       return 'warning'
-    default: /* 'pending' */
+    default: /* 'not_supported' */
       return 'neutral'
   }
 })
@@ -94,8 +110,10 @@ const statusText = computed(() => {
       return i18n.t('modal.dp_list.status.failed')
     case 'pending':
       return i18n.t('modal.dp_list.status.pending')
-    default: /* 'loading' */
+    case 'loading':
       return i18n.t('modal.dp_list.status.loading')
+    default: /* 'not_supported' */
+      return i18n.t('modal.dp_list.status.not_supported')
   }
 })
 
@@ -104,6 +122,7 @@ const statusIcon = computed(() => {
     case 'success':
       return CheckCircleIcon
     case 'error':
+    case 'not_supported':
       return ClearIcon
     case 'loading':
       return ProgressIcon

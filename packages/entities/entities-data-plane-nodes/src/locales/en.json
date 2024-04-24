@@ -6,7 +6,9 @@
       "ok": "OK"
     },
     "change_log_level": {
-      "title": "Change Log Level ({summary})"
+      "title": "Change Log Level ({summary})",
+      "summary_with_name": "Node {name}",
+      "summary_with_number": "{number} Nodes"
     },
     "dp_list": {
       "header": {
@@ -18,7 +20,8 @@
         "failed": "Failure",
         "loading": "Loading",
         "pending": "Pending",
-        "succeed": "Succeed"
+        "succeed": "Succeed",
+        "not_supported": "Not Supported"
       }
     },
     "log_level_disk_space_warning": "If left on for extended periods of time, can result in excess disk space consumption.",
@@ -44,6 +47,7 @@
     "notice": "Notice",
     "warn": "Warn",
     "error": "Error",
-    "crit": "Critical"
+    "crit": "Critical",
+    "not_applicable": "N/A"
   }
 }

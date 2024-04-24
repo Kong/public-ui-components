@@ -1,6 +1,6 @@
 <template>
   <KModal
-    :action-button-disabled="modalEditStage === 'submitting'"
+    :action-button-disabled="actionButtonDisabled"
     :action-button-text="actionButtonText"
     :hide-cancel-button="true"
     :hide-close-icon="modalEditStage === 'submitting'"
@@ -61,6 +61,7 @@
           :ref="el => setHostListNodeItemRefs(node.id, el as any)"
           :check-log-level="checkDataPlaneLogLevel"
           :data-plane-id="node.id"
+          :has-dll-capability="node.hasDLLCapability ?? true"
           :hostname="node.hostname"
           :log-level-hint="props.instanceLogLevel?.get(node.id)"
           :target-log-level="targetLogLevel"
@@ -82,7 +83,7 @@ defineOptions({
 })
 
 const props = defineProps<{
-  instanceList: Pick<DataPlaneNodeCommon, 'id' | 'hostname'>[]
+  instanceList: (Pick<DataPlaneNodeCommon, 'id' | 'hostname'> & { hasDLLCapability?: boolean })[]
   instanceLogLevel: Map<string /* instanceId */, LogLevel>
   requests: {
     scheduler?: AsyncScheduler | AsyncSchedulerOptions | null // default to { maxConcurrentAsyncs: 10 }
@@ -102,12 +103,19 @@ const modalEditStage = ref<'edit' | 'submitting' | 'submitted'>('edit')
 const targetLogLevel = ref<LogLevel>(initialLogLevel)
 const revertAfterString = ref<string>('60')
 const revertAfter = computed(() => Math.floor(Number(revertAfterString.value)))
+const capableInstanceList = computed(() => props.instanceList.filter(node => node.hasDLLCapability !== false))
 
 const title = computed(() => {
-  const summary = props.instanceList.length === 1
-    ? `Node ${props.instanceList[0].hostname}`
-    : `${props.instanceList.length} Nodes`
+  const summary = capableInstanceList.value.length === 1
+    ? i18n.t('modal.change_log_level.summary_with_name', { name: capableInstanceList.value[0].hostname })
+    : i18n.t('modal.change_log_level.summary_with_number', { number: `${capableInstanceList.value.length}` })
   return i18n.t('modal.change_log_level.title', { summary })
+})
+
+const actionButtonDisabled = computed(() => {
+  return modalEditStage.value === 'submitting' ||
+    isNaN(revertAfter.value) || revertAfter.value <= 0 ||
+    capableInstanceList.value.length === 0
 })
 
 const logLevelCandidates = composables.useLogLevelCandidateSelectItems({

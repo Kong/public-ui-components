@@ -56,6 +56,10 @@ export const useFriendlyRevertTime = (revertTime: MaybeRefOrGetter<number>): Com
   return computed(() => {
     const time = toValue(revertTime)
 
+    if (isNaN(time) || time <= 0) {
+      return ''
+    }
+
     let timeString = ''
     const secs = time % 60
     if (secs !== 0) {
