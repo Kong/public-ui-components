@@ -98,6 +98,14 @@ The base konnect or kongManger config.
 - required: `false`
 - default: `false`
 
+Show the custom plugins tab, but disable it.
+
+#### `hideCustomPlugins`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
 Hide UIs for custom plugin create/selelect/delete.
 
 #### `canCreateCustomPlugin`

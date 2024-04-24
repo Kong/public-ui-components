@@ -251,6 +251,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /** user is onboarding, use onboarding text */
+  isServerless: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { i18n: { t } } = composables.useI18n()
@@ -337,9 +342,9 @@ const errorMessage = ref<TableErrorMessage>(null)
 const emptyStateOptions = computed((): EmptyStateOptions => {
   return {
     ctaPath: props.config.createRoute,
-    ctaText: userCanCreate.value ? t('actions.create') : undefined,
+    ctaText: userCanCreate.value ? props.isServerless ? t('actions.serverless_create') : t('actions.create') : undefined,
     message: `${t('gateway_services.list.empty_state.description')}${props.config.additionMessageForEmptyState ? ` ${props.config.additionMessageForEmptyState}` : ''}`,
-    title: userCanCreate.value ? t('gateway_services.list.empty_state.title') : t('gateway_services.title'),
+    title: userCanCreate.value ? props.isServerless ? t('gateway_services.list.empty_state.serverless_title') : t('gateway_services.list.empty_state.title') : t('gateway_services.title'),
   }
 })
 
