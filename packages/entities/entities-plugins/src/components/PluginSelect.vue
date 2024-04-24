@@ -69,7 +69,7 @@
           #custom-anchor
         >
           <KTooltip
-            :max-width="300"
+            max-width="300"
             :text="t('plugins.select.tabs.custom.disabled_tooltip')"
           >
             <div>{{ t('plugins.select.tabs.custom.title') }}</div>
