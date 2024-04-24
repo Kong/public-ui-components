@@ -37,6 +37,8 @@
           class="time-input"
           :disabled="modalEditStage !== 'edit'"
           :error="revertAfter <= 0 || isNaN(revertAfter)"
+          min="1"
+          type="number"
         />
         <span class="seconds">{{ i18n.t('modal.revert_to_default_after.seconds') }}</span>
         <span class="formatted-time">{{ friendlyTime }}</span>
