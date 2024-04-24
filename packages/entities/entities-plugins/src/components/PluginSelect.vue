@@ -552,8 +552,6 @@ onMounted(async () => {
   }
 
   .plugins-results-container {
-    margin-top: $kui-space-60;
-
     .tab-description {
       margin-bottom: $kui-space-80;
       margin-top: $kui-space-80;
