@@ -7,7 +7,7 @@
     <KLabel
       v-if="fieldTypeHasLabel(field)"
       :aria-describedby="field.help ? getTooltipId(field) : undefined"
-      :class="field.labelClasses"
+      :class="[field.labelClasses, 'form-group-label']"
       :for="getFieldID(field)"
       :info="!options.helpAsHtml && field.help ? field.help : undefined"
       :tooltip-attributes="field.help ? {
@@ -17,7 +17,7 @@
       } : undefined"
     >
       <template
-        v-if="options.helpAsHtml"
+        v-if="options.helpAsHtml && field.help"
         #tooltip
       >
         <div v-html="field.help" />

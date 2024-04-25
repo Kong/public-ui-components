@@ -338,6 +338,14 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     useLegacyForm: true,
   },
+  'ai-azure-content-safety': {
+    descriptionKey: 'plugins.meta.ai-azure-content-safety.description',
+    group: PluginGroup.TRAFFIC_CONTROL,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.ai-azure-content-safety.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    useLegacyForm: true,
+  },
   'aws-lambda': {
     descriptionKey: 'plugins.meta.aws-lambda.description',
     group: PluginGroup.SERVERLESS,
