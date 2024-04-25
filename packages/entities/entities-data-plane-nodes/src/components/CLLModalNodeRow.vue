@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td>{{ hostname }}</td>
-    <td>
+    <td data-testid="log-change-action">
       <span v-if="currentLogLevel === 'not_supported'">
         {{ i18n.t('log_level.not_applicable') }}
       </span>
@@ -10,13 +10,14 @@
         type="spinner"
       />
       <template v-else>
-        <span>{{ i18n.t(`log_level.${currentLogLevel!}`) }}</span>
+        <span data-testid="log-change-action-current-level">{{ i18n.t(`log_level.${currentLogLevel!}`) }}</span>
         <span v-if="currentLogLevel !== targetLogLevel">
-          → {{ i18n.t(`log_level.${targetLogLevel}`) }}
+          →
+          <span data-testid="log-change-action-target-level">{{ i18n.t(`log_level.${targetLogLevel}`) }}</span>
         </span>
       </template>
     </td>
-    <td>
+    <td data-testid="log-change-status">
       <KTooltip
         v-if="updateErrorMessage"
         :text="updateErrorMessage"

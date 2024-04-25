@@ -2,6 +2,7 @@
   <KModal
     :action-button-disabled="actionButtonDisabled"
     :action-button-text="actionButtonText"
+    data-testid="change-log-level-modal"
     :hide-cancel-button="true"
     :hide-close-icon="modalEditStage === 'submitting'"
     max-width="640px"
@@ -14,6 +15,7 @@
       v-if="modalEditStage === 'edit'"
       v-model="targetLogLevel"
       class="log-level-select"
+      data-testid="log-level-select"
       :items="logLevelCandidates"
       :label="i18n.t('modal.select_log_level_title')"
     />
@@ -24,6 +26,7 @@
       <div
         v-if="explanation.warning"
         class="warning-message"
+        data-testid="log-level-warning-message"
       >
         {{ explanation.warning }}
       </div>
@@ -35,17 +38,24 @@
         <KInput
           v-model="revertAfterString"
           class="time-input"
+          data-testid="log-level-timeout"
           :disabled="modalEditStage !== 'edit'"
           :error="revertAfter <= 0 || isNaN(revertAfter)"
           min="1"
           type="number"
         />
         <span class="seconds">{{ i18n.t('modal.revert_to_default_after.seconds') }}</span>
-        <span class="formatted-time">{{ friendlyTime }}</span>
+        <span
+          class="formatted-time"
+          data-testid="log-level-timeout-formatted"
+        >{{ friendlyTime }}</span>
       </div>
     </div>
 
-    <table class="data-plane-node-list">
+    <table
+      class="data-plane-node-list"
+      data-testid="data-plane-node-list"
+    >
       <thead>
         <th style="width: 40%">
           {{ i18n.t('modal.dp_list.header.host') }}
@@ -63,6 +73,7 @@
           :ref="el => setHostListNodeItemRefs(node.id, el as any)"
           :check-log-level="checkDataPlaneLogLevel"
           :data-plane-id="node.id"
+          :data-testid="`data-plane-node-list-row-${node.id}`"
           :has-dll-capability="node.hasDLLCapability ?? true"
           :hostname="node.hostname"
           :log-level-hint="props.instanceLogLevel?.get(node.id)"
