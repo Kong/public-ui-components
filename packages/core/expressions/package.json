@@ -39,7 +39,7 @@
   "devDependencies": {
     "@kong/atc-router": "1.6.0-rc.1",
     "@kong/design-tokens": "1.12.11",
-    "@kong/kongponents": "9.0.0-alpha.146",
+    "@kong/kongponents": "9.0.0-pr.2151.f7e32344.0",
     "monaco-editor": "0.21.3",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-top-level-await": "^1.4.1",
