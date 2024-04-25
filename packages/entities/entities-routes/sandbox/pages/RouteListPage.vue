@@ -11,6 +11,11 @@
     >
       <div class="wrapper">
         <KInputSwitch
+          v-model="routeListHideTraditionalColumns"
+          class="route-list-traditional-columns-toggle"
+          label="Hide traditional columns"
+        />
+        <KInputSwitch
           v-model="routeListHasExpressionColumn"
           class="route-list-expressions-column-toggle"
           label="Has &quot;Expression&quot; column"
@@ -30,6 +35,7 @@
     :can-retrieve="permissions.canRetrieve"
     :config="konnectConfig"
     :has-expression-column="routeListHasExpressionColumn"
+    :hide-traditional-columns="routeListHideTraditionalColumns"
     title="Routes"
     @copy:error="onCopyIdError"
     @copy:success="onCopyIdSuccess"
@@ -48,6 +54,7 @@
     :can-retrieve="permissions.canRetrieve"
     :config="kongManagerConfig"
     :has-expression-column="routeListHasExpressionColumn"
+    :hide-traditional-columns="routeListHideTraditionalColumns"
     title="Routes"
     @copy:error="onCopyIdError"
     @copy:success="onCopyIdSuccess"
@@ -108,6 +115,7 @@ const key = ref(1)
 const permissions = ref<PermissionsActions | null>(null)
 
 const isRouteListControlCollapsed = ref<boolean>(true)
+const routeListHideTraditionalColumns = ref<boolean>(false)
 const routeListHasExpressionColumn = ref<boolean>(true)
 
 const handlePermissionsUpdate = (newPermissions: PermissionsActions) => {
@@ -131,7 +139,7 @@ const onError = (error: AxiosError) => {
   console.error(`Error: ${error}`)
 }
 
-watch(routeListHasExpressionColumn, () => {
+watch([routeListHideTraditionalColumns, routeListHasExpressionColumn], () => {
   key.value++
 })
 </script>
@@ -157,7 +165,7 @@ watch(routeListHasExpressionColumn, () => {
     display: flex;
     flex-direction: column;
 
-    .route-list-expressions-column-toggle {
+    .route-list-traditional-columns-toggle, .route-list-expressions-column-toggle {
       margin-bottom: $kui-space-50;
     }
   }
