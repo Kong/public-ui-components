@@ -807,7 +807,7 @@ importers:
         specifier: workspace:^
         version: link:../entities-shared
       '@kong-ui-public/forms':
-        specifier: ^3.0.0
+        specifier: ^3.0.1
         version: link:../../core/forms
       '@kong/icons':
         specifier: ^1.9.1
@@ -5013,9 +5013,6 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependenciesMeta:
-      ajv:
-        optional: true
     dependencies:
       ajv: 8.12.0
     dev: true
