@@ -261,6 +261,10 @@
         "name": "AI Rate Limiting Advanced",
         "description": "Provides rate limiting for the providers used by any AI plugins."
       },
+      "ai-azure-content-safety": {
+        "name": "AI Azure Content Safety",
+        "description": "Allows checking and auditing of AI-Proxy plugin messages, using Azure Cognitive Services, before proxying to upstream large-language model."
+      },
       "aws-lambda": {
         "name": "AWS Lambda",
         "description": "Invoke and manage AWS Lambda functions from Kong"

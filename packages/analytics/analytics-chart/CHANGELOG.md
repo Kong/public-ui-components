@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.0.2...@kong-ui-public/analytics-chart@4.0.3) (2024-04-25)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1367](https://github.com/Kong/public-ui-components/issues/1367)) ([ad482af](https://github.com/Kong/public-ui-components/commit/ad482afe2aab62e8767175638e11ddbb213b2f8a))
+
+
+
+
+
 ## [4.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.0.1...@kong-ui-public/analytics-chart@4.0.2) (2024-04-19)
 
 
