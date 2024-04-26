@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.1.4...@kong-ui-public/entities-routes@3.1.5) (2024-04-26)
+
+
+### Bug Fixes
+
+* **entities-routes:** add prop to hide traditional columns ([#1370](https://github.com/Kong/public-ui-components/issues/1370)) ([4ce49e9](https://github.com/Kong/public-ui-components/commit/4ce49e9ee238d4a734f2b79ab9e626b7c4e2dd1d))
+
+
+
+
+
+## [3.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.1.3...@kong-ui-public/entities-routes@3.1.4) (2024-04-25)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1367](https://github.com/Kong/public-ui-components/issues/1367)) ([ad482af](https://github.com/Kong/public-ui-components/commit/ad482afe2aab62e8767175638e11ddbb213b2f8a))
+
+
+
+
+
 ## [3.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.1.2...@kong-ui-public/entities-routes@3.1.3) (2024-04-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
