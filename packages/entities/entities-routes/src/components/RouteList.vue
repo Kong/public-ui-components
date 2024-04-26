@@ -285,6 +285,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hideTraditionalColumns: {
+    type: Boolean,
+    default: false,
+  },
   hasExpressionColumn: {
     type: Boolean,
     default: false,
@@ -304,9 +308,11 @@ const disableSorting = computed((): boolean => props.config.app !== 'kongManager
 const fields: BaseTableHeaders = {
   name: { label: t('routes.list.table_headers.name'), searchable: true, sortable: true },
   protocols: { label: t('routes.list.table_headers.protocols'), searchable: true },
-  hosts: { label: t('routes.list.table_headers.hosts'), searchable: true },
-  methods: { label: t('routes.list.table_headers.methods'), searchable: true },
-  paths: { label: t('routes.list.table_headers.paths'), searchable: true },
+  ...!props.hideTraditionalColumns && {
+    hosts: { label: t('routes.list.table_headers.hosts'), searchable: true },
+    methods: { label: t('routes.list.table_headers.methods'), searchable: true },
+    paths: { label: t('routes.list.table_headers.paths'), searchable: true },
+  },
   ...props.hasExpressionColumn && {
     expression: { label: t('routes.list.table_headers.expression'), tooltip: true },
   },
