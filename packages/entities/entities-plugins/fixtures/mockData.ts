@@ -398,6 +398,10 @@ export const kmAvailablePlugins = {
         version: '3.7.0',
         priority: 905,
       },
+      'ai-azure-content-safety': {
+        version: '3.7.0',
+        priority: 905,
+      },
       'ai-prompt-template': {
         version: '3.6.0',
         priority: 773,
@@ -446,6 +450,7 @@ export const kongPluginNames = [
   'ai-request-transformer',
   'ai-response-transformer',
   'ai-rate-limiting-advanced',
+  'ai-azure-content-safety',
   'app-dynamics',
   'aws-lambda',
   'azure-functions',

@@ -739,6 +739,7 @@ onBeforeMount(() => {
 
     .form-group.field-array label,
     .form-group.field-input label,
+    .form-group.field-select label,
     .form-group.field-multiselect label {
       display: flex;
       justify-content: flex-start;
