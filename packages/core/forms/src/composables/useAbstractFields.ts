@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { DebouncedFunc } from 'lodash-es'
 import debounce from 'lodash-es/debounce'
 import forEach from 'lodash-es/forEach'
@@ -73,6 +73,19 @@ export default function useAbstractFields(formData: {
         updateModelValue(newValue, oldValue)
       }
     },
+  })
+
+  // watch for programmatic changes to the model
+  watch(() => formData.model, (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      const newValue = formatValueToModel(newVal)
+
+      if (isFunction(newValue)) {
+        newValue(newValue, oldVal)
+      } else {
+        updateModelValue(newValue, oldVal)
+      }
+    }
   })
 
   /**

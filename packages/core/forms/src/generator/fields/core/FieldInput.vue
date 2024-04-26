@@ -20,7 +20,7 @@
       :type="inputType"
       :width="schema.width"
       @blur="onBlur"
-      @input="onInput"
+      @update:model-value="onInput"
     />
   </div>
 </template>
