@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-data-plane-nodes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "main": "./dist/entities-data-plane-nodes.umd.js",
   "module": "./dist/entities-data-plane-nodes.es.js",
@@ -68,7 +68,7 @@
     "errorLimit": "500KB"
   },
   "dependencies": {
-    "@kong/icons": "^1.9.0",
-    "@kong-ui-public/entities-shared": "workspace:^"
+    "@kong-ui-public/entities-shared": "workspace:^",
+    "@kong/icons": "^1.9.0"
   }
 }
