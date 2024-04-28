@@ -448,6 +448,14 @@ const onModelUpdated = (model: any, schema: string) => {
   })
 }
 
+watch(formModel, (model) => {
+  emit('model-updated', {
+    model,
+    originalModel: model,
+    data: getModel(),
+  })
+})
+
 // special handling for problematic fields before we emit
 const updateModel = (data: Record<string, any>, parent?: string) => {
   Object.keys(data).forEach(key => {
