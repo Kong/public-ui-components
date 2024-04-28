@@ -145,11 +145,12 @@ import {
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
 import type { AxiosError, AxiosResponse } from 'axios'
+import { cloneDeep, get, has, unset } from 'lodash-es'
 import { marked, type MarkedOptions } from 'marked'
-import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
 import { computed, onBeforeMount, reactive, ref, watch, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
+import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
 import { ArrayStringFieldSchema } from '../definitions/schemas/ArrayStringFieldSchema'
 import endpoints from '../plugins-endpoints'
 import {
@@ -1004,7 +1005,15 @@ const isCustomPlugin = computed((): boolean => {
 })
 
 const getRequestBody = computed((): Record<string, any> => {
-  const requestBody: Record<string, any> = submitPayload.value
+  const requestBody: Record<string, any> = cloneDeep(submitPayload.value)
+
+  // FIXME !!! KAG-4328: Handle Redis config fields - Omit them if they are empty
+  for (const keyPath of ['config.redis.cluster_addresses', 'config.redis.sentinel_addresses']) {
+    if (has(requestBody, keyPath) && Array.isArray(get(requestBody, keyPath)) && get(requestBody, keyPath).length === 0) {
+      unset(requestBody, keyPath)
+    }
+  }
+
   // credentials incorrectly build the entity id object
   if (treatAsCredential.value) {
     for (const key in PluginScope) {
