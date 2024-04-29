@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.1.0...@kong-ui-public/entities-plugins@4.1.1) (2024-04-29)
+
+
+### Bug Fixes
+
+* **entities-plugins:** omit redis cluster/sentinel addresses if empty ([#1375](https://github.com/Kong/public-ui-components/issues/1375)) ([64283b7](https://github.com/Kong/public-ui-components/commit/64283b7c17a9ad86bb8d43f0057053822040f21a))
+
+
+
+
+
 # [4.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.0.2...@kong-ui-public/entities-plugins@4.1.0) (2024-04-26)
 
 
