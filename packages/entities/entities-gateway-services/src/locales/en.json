@@ -1,6 +1,7 @@
 {
   "actions": {
     "create": "New Gateway Service",
+    "serverless_create": "Add a Service",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
     "edit": "Edit",
@@ -37,7 +38,8 @@
       },
       "empty_state": {
         "title": "Configure a New Gateway Service",
-        "description": "Gateway services are used to proxy traffic."
+        "description": "Gateway services are used to proxy traffic.",
+        "serverless_title": "Configure your first Gateway Service"
       }
     },
     "form": {

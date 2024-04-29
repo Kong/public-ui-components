@@ -58,12 +58,24 @@
     >
       <!-- Konnect -->
       <KTabs
-        v-if="tabs.length && !disableCustomPlugins"
+        v-if="tabs.length && !hideCustomPlugins"
         v-model="activeTab"
         data-testid="plugins-tabs"
         :tabs="tabs"
         @change="onTabsChange"
       >
+        <template
+          v-if="disableCustomPlugins"
+          #custom-anchor
+        >
+          <KTooltip
+            max-width="300"
+            :text="t('plugins.select.tabs.custom.disabled_tooltip')"
+          >
+            <div>{{ t('plugins.select.tabs.custom.title') }}</div>
+          </KTooltip>
+        </template>
+
         <template #kong>
           <div data-testid="kong-tab">
             <p class="tab-description">
@@ -151,8 +163,13 @@ const props = defineProps({
       return true
     },
   },
-  /** If true don't display UIs related to custom plugins */
+  /** If true disable UIs related to custom plugins */
   disableCustomPlugins: {
+    type: Boolean,
+    default: false,
+  },
+  /** If true don't display UIs related to custom plugins */
+  hideCustomPlugins: {
     type: Boolean,
     default: false,
   },
@@ -311,16 +328,15 @@ const noSearchResults = computed((): boolean => {
 })
 
 const tabs = props.config.app === 'konnect'
-  ? [
-    {
-      hash: '#kong',
-      title: t('plugins.select.tabs.kong.title'),
-    },
-    {
-      hash: '#custom',
-      title: t('plugins.select.tabs.custom.title'),
-    },
-  ]
+  ? [{
+    hash: '#kong',
+    title: t('plugins.select.tabs.kong.title'),
+  },
+  {
+    hash: '#custom',
+    title: t('plugins.select.tabs.custom.title'),
+    disabled: props.disableCustomPlugins,
+  }]
   : []
 const activeTab = ref(tabs.length ? route?.hash || tabs[0]?.hash || '' : '')
 
@@ -536,8 +552,6 @@ onMounted(async () => {
   }
 
   .plugins-results-container {
-    margin-top: $kui-space-60;
-
     .tab-description {
       margin-bottom: $kui-space-80;
       margin-top: $kui-space-80;

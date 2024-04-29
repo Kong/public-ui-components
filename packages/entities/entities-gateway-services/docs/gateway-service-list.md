@@ -158,6 +158,14 @@ A synchronous or asynchronous function, that returns a boolean, that evaluates i
 
 A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can retrieve (view details) a given entity.
 
+#### `isServerless`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+Indicates that the user is in the onboarding Serverless control plane and should use explanatory text.
+
 ### Events
 
 #### error
