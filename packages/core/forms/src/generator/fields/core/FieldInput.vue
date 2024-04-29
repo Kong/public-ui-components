@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onBeforeMount, onMounted, type PropType } from 'vue'
+import { computed, ref, toRefs, onBeforeMount, onMounted, type PropType } from 'vue'
 import type { DebouncedFunc } from 'lodash-es'
 import fecha from 'fecha'
 import debounce from 'lodash-es/debounce'
@@ -74,10 +74,12 @@ const emit = defineEmits<{
   (event: 'modelUpdated', value: any, model: Record<string, any>): void
 }>()
 
+const propsRefs = toRefs(props)
+
 const { updateModelValue, getFieldID, clearValidationErrors, value: inputValue } = composables.useAbstractFields({
-  model: props.model,
-  schema: props.schema,
-  formOptions: props.formOptions,
+  model: propsRefs.model,
+  schema: propsRefs.schema,
+  formOptions: propsRefs.formOptions,
   emitModelUpdated: (data: { value: any, model: Record<string, any> }): void => {
     emit('modelUpdated', data.value, data.model)
   },

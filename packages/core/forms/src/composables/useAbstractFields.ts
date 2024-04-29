@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, ref, reactive } from 'vue'
 import type { DebouncedFunc } from 'lodash-es'
 import debounce from 'lodash-es/debounce'
 import forEach from 'lodash-es/forEach'
@@ -10,7 +10,7 @@ import uniqueId from 'lodash-es/uniqueId'
 import validators from '../generator/utils/validators'
 import { slugifyFormID } from '../generator/utils/schema'
 
-export default function useAbstractFields(formData: {
+export default function useAbstractFields(params: {
   model?: Record<string, any>,
   schema: Record<string, any>,
   formOptions?: Record<string, any>,
@@ -25,6 +25,7 @@ export default function useAbstractFields(formData: {
     field: Record<string, any>
   }) => void
 }) {
+  const formData = reactive(params)
   const errors = ref<string[]>([])
   const debouncedValidateFunc = ref<DebouncedFunc<(calledParent?: any) => any[]> | null>(null)
 
