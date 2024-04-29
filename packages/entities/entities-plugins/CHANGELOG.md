@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.1.1...@kong-ui-public/entities-plugins@4.2.0) (2024-04-29)
+
+
+### Features
+
+* **serverless:** m1 updates [khcp-11567] ([#1368](https://github.com/Kong/public-ui-components/issues/1368)) ([31f60f8](https://github.com/Kong/public-ui-components/commit/31f60f8f67cf7aaf1b9d425ce8942b15d152d4eb))
+
+
+
+
+
 ## [4.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.1.0...@kong-ui-public/entities-plugins@4.1.1) (2024-04-29)
 
 
