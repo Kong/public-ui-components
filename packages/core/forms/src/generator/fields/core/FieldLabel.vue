@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { PropType } from 'vue'
+import { toRefs, type PropType } from 'vue'
 import composables from '../../../composables'
 
 const props = defineProps({
@@ -18,11 +18,11 @@ const props = defineProps({
   },
   formOptions: {
     type: Object as PropType<Record<string, any>>,
-    default: () => undefined,
+    default: () => ({}),
   },
   model: {
     type: Object as PropType<Record<string, any>>,
-    default: () => undefined,
+    default: () => ({}),
   },
   schema: {
     type: Object as PropType<Record<string, any>>,
@@ -34,10 +34,12 @@ const props = defineProps({
   },
 })
 
+const propsRefs = toRefs(props)
+
 const { getFieldID, value: labelValue } = composables.useAbstractFields({
-  model: props.model,
-  schema: props.schema,
-  formOptions: props.formOptions,
+  model: propsRefs.model,
+  schema: propsRefs.schema,
+  formOptions: propsRefs.formOptions,
 })
 </script>
 

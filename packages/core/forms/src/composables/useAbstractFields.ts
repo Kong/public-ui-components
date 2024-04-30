@@ -1,4 +1,4 @@
-import { computed, ref, reactive } from 'vue'
+import { computed, ref, reactive, type Ref } from 'vue'
 import type { DebouncedFunc } from 'lodash-es'
 import debounce from 'lodash-es/debounce'
 import forEach from 'lodash-es/forEach'
@@ -11,9 +11,9 @@ import validators from '../generator/utils/validators'
 import { slugifyFormID } from '../generator/utils/schema'
 
 export default function useAbstractFields(params: {
-  model?: Record<string, any>,
-  schema: Record<string, any>,
-  formOptions?: Record<string, any>,
+  model?: Ref<Record<string, any>>,
+  schema: Ref<Record<string, any>>,
+  formOptions?: Ref<Record<string, any>>,
   disabled?: boolean,
   emitModelUpdated?: (data: {
     value: any

@@ -42,11 +42,11 @@ const props = defineProps({
   },
   formOptions: {
     type: Object as PropType<Record<string, any>>,
-    default: () => undefined,
+    default: () => ({}),
   },
   model: {
     type: Object as PropType<Record<string, any>>,
-    default: () => undefined,
+    default: () => ({}),
   },
   schema: {
     type: Object as PropType<Record<string, any>>,
