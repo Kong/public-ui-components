@@ -26,6 +26,7 @@
       :initial-fetcher-params="combinedInitialFetcherParams"
       :is-loading="isLoading"
       :pagination-type="paginationType"
+      resize-columns
       :row-attrs="rowAttrs"
       :search-input="query"
       @ktable-empty-state-cta-clicked="handleEmptyStateCtaClicked"
@@ -286,6 +287,7 @@ const headers = computed<Array<InternalHeader>>(() => {
       label: field.label ?? key,
       key,
       sortable: field.sortable ?? false,
+      hidable: true,
     })
   })
 
