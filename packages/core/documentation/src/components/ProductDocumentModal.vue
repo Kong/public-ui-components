@@ -1,7 +1,5 @@
 <template>
-  <Teleport
-    to="#kong-ui-app-layout-teleport-default-slot"
-  >
+  <Teleport to="#kong-ui-app-layout-teleport-default-slot">
     <KModal
       class="edit-document-modal"
       data-testid="edit-document-modal"
@@ -41,7 +39,33 @@
           show-icon
         />
 
+        <!-- Show radio buttons only for create modal -->
+        <div
+          v-if="!editing"
+          class="document-radio-group"
+        >
+          <div>
+            <KRadio
+              v-model="checkedType"
+              class="empty-document-radio"
+              selected-value="empty"
+            >
+              {{ i18n.t('documentation.form_modal.empty_doc') }}
+            </KRadio>
+          </div>
+          <div>
+            <KRadio
+              v-model="checkedType"
+              class="upload-document-radio"
+              selected-value="upload"
+            >
+              {{ i18n.t('documentation.form_modal.file_label') }}
+            </KRadio>
+          </div>
+        </div>
+
         <KFileUpload
+          v-if="checkedType === 'upload'"
           :accept="['.md', '.markdown']"
           :button-text="fileUploadButtonText"
           class="document-file-upload"
@@ -191,6 +215,8 @@ const publishModel = ref<boolean>(true)
 
 const status = computed(() => publishModel.value ? 'published' : 'unpublished')
 
+const checkedType = ref<'empty' | 'upload'>('empty')
+
 const formData = reactive({
   fileName: '',
   pageName: '',
@@ -228,8 +254,6 @@ const availableParentDocuments = computed((): { label: string, value: string, se
   return docs
 })
 
-const saveDisabled = computed((): boolean => (!props.editing && !selectedFile.value) || !formData.pageName || slugError.value)
-
 const titleText = computed((): string => {
   return props.editing
     ? i18n.t('documentation.form_modal.edit_title')
@@ -256,6 +280,19 @@ const handleFileSelected = (file: any): void => {
   formData.pageName = formData.pageName ? formData.pageName : namePlaceholderText.value
   formData.urlSlug = formData.urlSlug ? formData.urlSlug : namePlaceholderText.value
 }
+
+// const saveDisabled = computed((): boolean => (!props.editing && !selectedFile.value) || !formData.pageName || slugError.value)
+
+const saveDisabled = computed((): boolean => {
+  if (checkedType.value === 'upload') {
+    // If a file is selected, pageName and urlSlug are required
+    return !(selectedFile.value && formData.pageName && formData.urlSlug && !slugError.value)
+  } else if (checkedType.value === 'empty') {
+    // If no file is selected, only pageName and urlSlug are required
+    return !(formData.pageName && formData.urlSlug && !slugError.value)
+  }
+  return true
+})
 
 const handleFileRemoved = (): void => {
   selectedFile.value = null
@@ -298,70 +335,82 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-  .edit-document-modal {
-    .title {
-      display: block;
-    }
+.edit-document-modal {
+  .title {
+    display: block;
+  }
 
-    .subtitle {
-      font-size: $kui-font-size-30;
-      font-weight: $kui-font-weight-regular;
-    }
+  .subtitle {
+    font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-regular;
+  }
 
-    .document-inputs {
-      display: flex;
-      margin-bottom: $kui-space-80;
-      margin-top: $kui-space-80;
-      width: 100%;
-    }
+  .document-radio-group {
+    display: flex;
+    margin-bottom: $kui-space-80;
 
-    .side-by-side {
-      width: 48%;
-    }
-
-    .url-slug {
-      margin-left: $kui-space-auto;
-    }
-
-    .bottom-spacing {
-      margin-bottom: $kui-space-80;
-    }
-
-    .documentation-status {
-      display: block;
-      margin-bottom: $kui-space-80;
-      margin-top: $kui-space-80;
-    }
-
-    .document-parent-select {
-      margin-top: $kui-space-80;
-    }
-
-    .button-spacing {
-      margin-left: $kui-space-auto;
-    }
-
-    .edit-documentation-delete-button {
-      margin-right: $kui-space-auto;
-    }
-    .edit-documentation-cancel-button {
-      margin-right: $kui-space-40;
+    .upload-document-radio {
+      margin-left: $kui-space-80;
     }
   }
+
+  .document-inputs {
+    display: flex;
+    margin-bottom: $kui-space-80;
+    margin-top: $kui-space-80;
+    width: 100%;
+  }
+
+  .side-by-side {
+    width: 48%;
+  }
+
+  .url-slug {
+    margin-left: $kui-space-auto;
+  }
+
+  .bottom-spacing {
+    margin-bottom: $kui-space-80;
+  }
+
+  .documentation-status {
+    display: block;
+    margin-bottom: $kui-space-80;
+    margin-top: $kui-space-80;
+  }
+
+  .document-parent-select {
+    margin-top: $kui-space-80;
+  }
+
+  .button-spacing {
+    margin-left: $kui-space-auto;
+  }
+
+  .edit-documentation-delete-button {
+    margin-right: $kui-space-auto;
+  }
+
+  .edit-documentation-cancel-button {
+    margin-right: $kui-space-40;
+  }
+}
 </style>
 
 <style lang="scss">
-  .edit-document-modal.k-prompt .modal-container {
-    // TODO: fix in kongponents
-    .document-file-upload {
-      margin-bottom: $kui-space-80;
-      .upload-input {
-        height: 44px;
-      }
+.edit-document-modal.k-prompt .modal-container {
 
-      .k-file-upload-btn {
-        top: 38px;
-      }
+  // TODO: fix in kongponents
+  .document-file-upload {
+    margin-bottom: $kui-space-80;
+
+    .upload-input {
+      height: 44px;
+    }
+
+    .k-file-upload-btn {
+      top: 38px;
     }
   }
+}
 </style>

@@ -279,6 +279,10 @@ watch(() => props.selectedDocument, (newVal) => {
   padding: $kui-space-70;
 }
 
+:deep(.kong-ui-public-markdown-ui .markdown-preview .content-actions) {
+  display: none;
+}
+
 .markdown-content-loading :deep(.skeleton-card-column) {
   margin-bottom: $kui-space-0;
 }
