@@ -29,6 +29,7 @@
       resize-columns
       :row-attrs="rowAttrs"
       :search-input="query"
+      :table-preferences="tablePreferences"
       @ktable-empty-state-cta-clicked="handleEmptyStateCtaClicked"
       @row:click="handleRowClick"
       @sort="(params: any) => handleSortChanged(params)"
@@ -352,6 +353,9 @@ const handleSortChanged = (sortParams: TableSortParams): void => {
 }
 
 const { setTablePreferences, getTablePreferences } = useTablePreferences()
+
+const tablePreferences = ref<UserTablePreferences>(getTablePreferences(props.preferencesStorageKey))
+
 const combinedInitialFetcherParams = computed((): Partial<FetcherParams> => {
   // Pass the preferencesStorageKey regardless; if no entry is found, it will return the default
   const userTablePreferences = getTablePreferences(props.preferencesStorageKey)
@@ -363,9 +367,11 @@ const combinedInitialFetcherParams = computed((): Partial<FetcherParams> => {
   }
 })
 
-const handleUpdateTablePreferences = (tablePreferences: UserTablePreferences): void => {
+const handleUpdateTablePreferences = (newTablePreferences: UserTablePreferences): void => {
+  tablePreferences.value = newTablePreferences
+
   if (props.preferencesStorageKey) {
-    setTablePreferences(props.preferencesStorageKey, tablePreferences)
+    setTablePreferences(props.preferencesStorageKey, newTablePreferences)
   }
 }
 </script>
