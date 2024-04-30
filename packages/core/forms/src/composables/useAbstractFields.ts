@@ -1,4 +1,4 @@
-import { computed, ref, watch, type Ref } from 'vue'
+import { computed, ref, type Ref } from 'vue'
 import type { DebouncedFunc } from 'lodash-es'
 import debounce from 'lodash-es/debounce'
 import forEach from 'lodash-es/forEach'
@@ -29,7 +29,6 @@ interface AbstractFieldParams {
 export default function useAbstractFields(formData: AbstractFieldParams) {
   const errors = ref<string[]>([])
   const debouncedValidateFunc = ref<DebouncedFunc<(calledParent?: any) => any[]> | null>(null)
-  const formDataModel = formData.model?.value
 
   /**
    * Get the validator function from the validators object or null if given a string key, otherwise return the original param.
@@ -59,9 +58,9 @@ export default function useAbstractFields(formData: AbstractFieldParams) {
       let val
 
       if (isFunction(objGet(formData.schema, 'get'))) {
-        val = formData.schema.get(formDataModel)
+        val = formData.schema.get(formData.model?.value)
       } else {
-        val = objGet(formDataModel, formData.schema.model)
+        val = objGet(formData.model?.value, formData.schema.model)
       }
 
       return formatValueToField(val)
@@ -77,39 +76,6 @@ export default function useAbstractFields(formData: AbstractFieldParams) {
       }
     },
   })
-
-  // watch for programmatic changes to the model
-  if (formData.model) {
-    watch(formData.model, (newVal, oldVal) => {
-      if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
-        // value.get() logic
-        let newModelVal
-
-        if (isFunction(objGet(formData.schema, 'get'))) {
-          newModelVal = formData.schema.get(newVal)
-        } else {
-          newModelVal = objGet(newVal, formData.schema.model)
-        }
-
-        let oldModelVal
-
-        if (isFunction(objGet(formData.schema, 'get'))) {
-          oldModelVal = formData.schema.get(newVal)
-        } else {
-          oldModelVal = objGet(newVal, formData.schema.model)
-        }
-
-        // value.set() logic
-        const formattedValue = formatValueToModel(newModelVal)
-
-        if (isFunction(formattedValue)) {
-          formattedValue(formattedValue, oldModelVal)
-        } else {
-          updateModelValue(formattedValue, oldModelVal)
-        }
-      }
-    }, { deep: true })
-  }
 
   /**
    * Call validation functions on the field value. Will emit validated event (if defined)
@@ -135,9 +101,9 @@ export default function useAbstractFields(formData: AbstractFieldParams) {
 
       forEach(validators, validator => {
         if (validateAsync) {
-          results.push(validator(value.value, formData.schema, formDataModel))
+          results.push(validator(value.value, formData.schema, formData.model?.value))
         } else {
-          const result = validator(value.value, formData.schema, formDataModel)
+          const result = validator(value.value, formData.schema, formData.model?.value)
 
           if (result && isFunction(result.then)) {
             result.then((err: any) => {
@@ -171,7 +137,7 @@ export default function useAbstractFields(formData: AbstractFieldParams) {
       })
 
       if (isFunction(formData.schema?.onValidated)) {
-        formData.schema.onValidated(formDataModel, fieldErrors, formData.schema)
+        formData.schema.onValidated(formData.model?.value, fieldErrors, formData.schema)
       }
 
       if (!calledParent) {
@@ -212,7 +178,7 @@ export default function useAbstractFields(formData: AbstractFieldParams) {
     let changed = false
 
     if (isFunction(formData.schema.set)) {
-      formData.schema.set(formDataModel, newValue)
+      formData.schema.set(formData.model?.value, newValue)
       changed = true
     } else if (formData.schema.model) {
       setModelValueByPath(formData.schema.model, newValue)
@@ -220,12 +186,12 @@ export default function useAbstractFields(formData: AbstractFieldParams) {
     }
 
     if (changed) {
-      if (formData.emitModelUpdated && formDataModel) {
+      if (formData.emitModelUpdated && formData.model?.value) {
         formData.emitModelUpdated({ value: newValue, model: formData.schema.model })
       }
 
       if (isFunction(formData.schema.onChanged)) {
-        formData.schema.onChanged(formDataModel, newValue, oldValue, formData.schema)
+        formData.schema.onChanged(formData.model?.value, newValue, oldValue, formData.schema)
       }
 
       if (objGet(formData.formOptions, 'validateAfterChanged', false) === true) {
@@ -264,7 +230,7 @@ export default function useAbstractFields(formData: AbstractFieldParams) {
     // strip a leading dot
     pathStr = pathStr.replace(/^\./, '')
 
-    let dataModel = formDataModel || {}
+    let dataModel = formData.model?.value || {}
     let index = 0
     const arr = pathStr.split('.')
     const arrLength = arr.length
