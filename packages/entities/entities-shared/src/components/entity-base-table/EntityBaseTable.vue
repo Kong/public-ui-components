@@ -354,11 +354,14 @@ const handleSortChanged = (sortParams: TableSortParams): void => {
 
 const { setTablePreferences, getTablePreferences } = useTablePreferences()
 
-const tablePreferences = ref<UserTablePreferences>(getTablePreferences(props.preferencesStorageKey))
+// Use unique key for localStorage of user's table preferences across tables, orgs and users
+const tablePreferencesStorageKey = computed((): string => `tablePreferences-${cacheId.value}`)
+
+const tablePreferences = ref<UserTablePreferences>(getTablePreferences(tablePreferencesStorageKey.value))
 
 const combinedInitialFetcherParams = computed((): Partial<FetcherParams> => {
   // Pass the preferencesStorageKey regardless; if no entry is found, it will return the default
-  const userTablePreferences = getTablePreferences(props.preferencesStorageKey)
+  const userTablePreferences = getTablePreferences(tablePreferencesStorageKey.value)
 
   // Return the props.initialFetcherParams, appending any stored user preferences
   return {
@@ -370,8 +373,8 @@ const combinedInitialFetcherParams = computed((): Partial<FetcherParams> => {
 const handleUpdateTablePreferences = (newTablePreferences: UserTablePreferences): void => {
   tablePreferences.value = newTablePreferences
 
-  if (props.preferencesStorageKey) {
-    setTablePreferences(props.preferencesStorageKey, newTablePreferences)
+  if (tablePreferencesStorageKey.value) {
+    setTablePreferences(tablePreferencesStorageKey.value, newTablePreferences)
   }
 }
 </script>
