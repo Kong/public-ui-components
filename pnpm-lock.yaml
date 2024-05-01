@@ -835,7 +835,7 @@ importers:
         specifier: workspace:^
         version: link:../entities-shared
       '@kong-ui-public/forms':
-        specifier: ^3.1.0
+        specifier: ^3.1.1
         version: link:../../core/forms
       '@kong/icons':
         specifier: ^1.9.1
@@ -2321,7 +2321,6 @@ packages:
       vue: '>= 3.3.4 < 4'
     dependencies:
       vue: 3.4.21(typescript@5.3.3)
-    dev: true
 
   /@kong/icons@1.9.1(vue@3.3.13):
     resolution: {integrity: sha512-8V21s7OEXcGAWDfPlcidjLlvAemz1KxgkpNSCWC9BCMGnmYRV/1hF7hzC0Dbjz6Q5uP3jnukI+e2bkKKrxANMQ==}
