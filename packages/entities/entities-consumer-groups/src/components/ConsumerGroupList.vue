@@ -31,9 +31,9 @@
       </template>
       <!-- Create action -->
       <template #toolbar-button>
-        <component
-          :is="useActionOutside ? 'Teleport' : 'div'"
-          :to="useActionOutside ? '#kong-ui-app-page-header-action-button' : undefined"
+        <Teleport
+          :disabled="!useActionOutside || config.app !== 'konnect'"
+          to="#kong-ui-app-page-header-action-button"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
             <!-- Hide Create button if table is empty -->
@@ -49,7 +49,7 @@
               {{ config.consumerId ? t('consumer_groups.actions.add_to_group') : t('consumer_groups.list.toolbar_actions.new_consumer_group') }}
             </KButton>
           </PermissionsWrapper>
-        </component>
+        </Teleport>
       </template>
 
       <!-- Column Formatting -->
