@@ -32,7 +32,7 @@
       <!-- Create action -->
       <template #toolbar-button>
         <component
-          :is="useActionOutside ? 'Teleport' : 'div'"
+          :is="useActionOutside ? 'teleport' : 'div'"
           :to="useActionOutside ? '#kong-ui-app-page-header-action-button' : undefined"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
