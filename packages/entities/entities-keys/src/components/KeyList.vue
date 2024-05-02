@@ -27,6 +27,8 @@
       </template>
       <!-- Create action -->
       <template #toolbar-button>
+        <!-- render this fallback div for Kong Manager instead, as there is no kong-ui-app-page-header-action-button target to go to in KM -->
+        <div id="kong-ui-app-page-header-action-button-default" />
         <Teleport :to="useActionOutside ? '#kong-ui-app-page-header-action-button' : '#kong-ui-app-page-header-action-button-default'">
           <PermissionsWrapper :auth-function="() => canCreate()">
             <!-- Hide Create button if table is empty -->
@@ -42,8 +44,6 @@
             </KButton>
           </PermissionsWrapper>
         </Teleport>
-        <!-- render this fallback div for Kong Manager instead, as there is no kong-ui-app-page-header-action-button target to go to in KM -->
-        <div id="kong-ui-app-page-header-action-button-default" />
       </template>
 
       <!-- Column Formatting -->
