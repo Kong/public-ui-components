@@ -685,7 +685,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         }, {})
     }
 
-    if (treatAsCredential.value && props.config.app === 'kongManager' && credentialSchema) {
+    if (treatAsCredential.value && credentialSchema) {
       for (let i = 0; i < credentialSchema.length; i++) {
         if (credentialSchema[i][field]) {
           initialFormSchema[field] = {
