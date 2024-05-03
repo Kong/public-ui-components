@@ -27,7 +27,7 @@
       </KTooltip>
     </div>
     <div
-      v-if="description && cardDisplayFull && !isLargeCompact"
+      v-if="description && cardDisplayFull"
       class="metricscard-description"
     >
       <span>{{ description }}</span>
@@ -35,7 +35,6 @@
     <!-- TODO: remove outer div once size variant no longer needed - MA-2193  -->
     <div
       class="metricscard-valuetrend"
-      :class="{ 'is-compact': isLargeCompact }"
     >
       <!-- Metric value - error -->
       <div
@@ -86,7 +85,7 @@
         </div>
         <!-- Trend range text -->
         <div
-          v-if="trendRange && cardSize !== MetricCardSize.LargeCompact"
+          v-if="trendRange"
           class="metricscard-trend-range"
         >
           {{ trendRange }}
@@ -98,7 +97,6 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed } from 'vue'
 import {
   KUI_COLOR_BORDER_DANGER_STRONG,
   KUI_ICON_SIZE_30,
@@ -107,8 +105,7 @@ import {
   KUI_COLOR_TEXT_NEUTRAL_STRONG, // Neutral trend
   KUI_COLOR_TEXT_NEUTRAL,
 } from '@kong/design-tokens'
-import { MetricCardType } from '../../enums'
-import { MetricCardSize } from '../../constants'
+import { MetricCardSize, MetricCardType } from '../../enums'
 import { InfoIcon, WarningIcon, IndeterminateSmallIcon, CloudUploadIcon, EqualIcon, ResponseIcon, VitalsIcon, WarningOutlineIcon } from '@kong/icons'
 import type { HeaderTag } from '@kong/kongponents'
 
@@ -215,12 +212,9 @@ const textColor = (polarity: number): string => {
       : 'neutral'
 }
 
-const cardDisplayFull = [MetricCardSize.Medium, MetricCardSize.Large, MetricCardSize.LargeCompact].includes(props.cardSize)
+const cardDisplayFull = [MetricCardSize.Medium, MetricCardSize.Large].includes(props.cardSize)
 
-// TODO: remove size variant as part of Dashboards epic - MA-2193
-const isLargeCompact = computed((): boolean => props.cardSize === MetricCardSize.LargeCompact)
-
-const hideTitleIcon = [MetricCardSize.Small, MetricCardSize.LargeCompact].includes(props.cardSize)
+const hideTitleIcon = [MetricCardSize.Small].includes(props.cardSize)
 </script>
 
 <style lang="scss">

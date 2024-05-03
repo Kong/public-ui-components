@@ -2,8 +2,7 @@
 
 import MetricCardContainer from './MetricCardContainer.vue'
 import { DECIMAL_DISPLAY } from '../utilities'
-import { MetricCardType } from '../enums'
-import { MetricCardSize } from '../constants'
+import { MetricCardSize, MetricCardType } from '../enums'
 
 const TREND_RANGE_TEXT = 'vs previous 7 days'
 

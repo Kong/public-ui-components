@@ -1,5 +1,4 @@
-import type { MetricCardType } from '../enums'
-import type { MetricCardSize } from '../constants'
+import type { MetricCardType, MetricCardSize } from '../enums'
 // Import any one of the `@kong/icons` components to access the interface - they are all the same.
 // Then alias as `GenericIcon` to provide the icon interface to the prop types.
 import type { KongIcon as GenericIcon } from '@kong/icons'

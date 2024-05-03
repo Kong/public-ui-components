@@ -21,12 +21,12 @@
     </SandboxBridgeInjector>
   </div>
 
-  <h4>Filtered props, LargeCompact cards</h4>
+  <h4>Filtered props, Medium cards</h4>
   <div v-if="!USE_REAL_DATA">
     <SandboxBridgeInjector :query-bridge="globalBridge">
       <MetricsProvider v-bind="filteredProviderProps">
         <MetricsConsumer
-          :card-size="MetricCardSize.LargeCompact"
+          :card-size="MetricCardSize.Medium"
         />
       </MetricsProvider>
     </SandboxBridgeInjector>
@@ -34,7 +34,7 @@
   <div>
     <SandboxBridgeInjector :query-bridge="singleProviderBridge">
       <MetricsProvider v-bind="singleProviderProps">
-        <MetricsConsumer :card-size="MetricCardSize.LargeCompact" />
+        <MetricsConsumer :card-size="MetricCardSize.Medium" />
       </MetricsProvider>
     </SandboxBridgeInjector>
   </div>
@@ -52,6 +52,14 @@
       </MetricsProvider>
     </SandboxBridgeInjector>
   </div>
+
+  <h4>Loading State</h4>
+  <!-- <div class="generic-card">
+    <MetricCardContainer
+      v-bind="cardsLoading"
+      hide-title
+    />
+  </div> -->
 </template>
 <script setup lang="ts">
 import MetricsConsumer from '../src/components/MetricsConsumer.vue'
@@ -61,7 +69,7 @@ import { mockExploreResponse } from '../src/mockExploreResponse'
 import axios from 'axios'
 import type { AnalyticsBridge, ExploreFilter, ExploreQuery } from '@kong-ui-public/analytics-utilities'
 import { TimeframeKeys, TimePeriods } from '@kong-ui-public/analytics-utilities'
-import { MetricCardSize } from '@kong-ui-public/metric-cards'
+import { MetricCardSize } from '../src/enums'
 import SandboxBridgeInjector from './SandboxBridgeInjector.vue'
 
 const refreshInterval = 60 * 1000

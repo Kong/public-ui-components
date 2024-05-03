@@ -17,14 +17,6 @@
         />
       </div>
 
-      <h3>Large - compact</h3>
-      <div class="generic-card">
-        <MetricCardContainer
-          v-bind="cardsRegularCompact"
-          hide-title
-        />
-      </div>
-
       <h3>Large - custom CSS theme</h3>
       <div class="generic-card dev-portal">
         <MetricCardContainer v-bind="cardsRegular" />
@@ -157,14 +149,6 @@ const cardsRegular: MetricCardContainerOptions = {
   hasTrendAccess: true,
   fallbackDisplayText: 'Not available',
   cardSize: MetricCardSize.Large,
-}
-
-const cardsRegularCompact: MetricCardContainerOptions = {
-  cards: [...cards].slice(0, 3),
-  loading: false,
-  hasTrendAccess: true,
-  fallbackDisplayText: 'Not available',
-  cardSize: MetricCardSize.LargeCompact,
 }
 
 const cardsXL: MetricCardContainerOptions = {

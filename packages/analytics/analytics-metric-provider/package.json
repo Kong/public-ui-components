@@ -51,7 +51,8 @@
   },
   "dependencies": {
     "@kong-ui-public/core": "1.1.0",
-    "@kong-ui-public/metric-cards": "workspace:^",
+    "@kong/icons": "^1.9.1",
+    "approximate-number": "^2.1.1",
     "axios": "^1.6.8",
     "swrv": "^1.0.4"
   },
@@ -64,6 +65,7 @@
   "devDependencies": {
     "@kong-ui-public/analytics-config-store": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
+    "@kong/design-tokens": "1.12.11",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.0.0-alpha.146",
     "pinia": ">= 2.1.7 < 3"

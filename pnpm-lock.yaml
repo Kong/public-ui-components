@@ -297,9 +297,12 @@ importers:
       '@kong-ui-public/core':
         specifier: 1.1.0
         version: 1.1.0(axios@1.6.8)(swrv@1.0.4)(vue@3.4.24)
-      '@kong-ui-public/metric-cards':
-        specifier: workspace:^
-        version: link:../metric-cards
+      '@kong/icons':
+        specifier: ^1.9.1
+        version: 1.9.1(vue@3.4.24)
+      approximate-number:
+        specifier: ^2.1.1
+        version: 2.1.1
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -316,6 +319,9 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
+      '@kong/design-tokens':
+        specifier: 1.12.11
+        version: 1.12.11
       '@kong/kongponents':
         specifier: 9.0.0-alpha.146
         version: 9.0.0-alpha.146(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.24)
@@ -2312,24 +2318,6 @@ packages:
     resolution: {integrity: sha512-+zgR6Ti4Joj85yD/KJzE3ja6Y0khxh9vapNnkOyGtLAUnCLstkH7WfLLhM22Qi7K5q/J2R1kWuR3X+XMp6U2mQ==}
     dev: true
 
-  /@kong/icons@1.9.0(vue@3.3.13):
-    resolution: {integrity: sha512-fA3gXZrPjhI6gV2ISV10kKG0Y6gsW+ps31ionv/09a7BY+z4K9XqNbRRzUkqZgCoTTCnf3MWYum/CRpzaYcctg==}
-    engines: {node: '>=18.17.0'}
-    peerDependencies:
-      vue: '>= 3.3.4 < 4'
-    dependencies:
-      vue: 3.3.13(typescript@5.3.3)
-    dev: true
-
-  /@kong/icons@1.9.0(vue@3.4.24):
-    resolution: {integrity: sha512-fA3gXZrPjhI6gV2ISV10kKG0Y6gsW+ps31ionv/09a7BY+z4K9XqNbRRzUkqZgCoTTCnf3MWYum/CRpzaYcctg==}
-    engines: {node: '>=18.17.0'}
-    peerDependencies:
-      vue: '>= 3.3.4 < 4'
-    dependencies:
-      vue: 3.4.24(typescript@5.3.3)
-    dev: true
-
   /@kong/icons@1.9.1(vue@3.3.13):
     resolution: {integrity: sha512-8V21s7OEXcGAWDfPlcidjLlvAemz1KxgkpNSCWC9BCMGnmYRV/1hF7hzC0Dbjz6Q5uP3jnukI+e2bkKKrxANMQ==}
     engines: {node: '>=18.17.0'}
@@ -2337,7 +2325,6 @@ packages:
       vue: '>= 3.3.4 < 4'
     dependencies:
       vue: 3.3.13(typescript@5.3.3)
-    dev: false
 
   /@kong/icons@1.9.1(vue@3.4.24):
     resolution: {integrity: sha512-8V21s7OEXcGAWDfPlcidjLlvAemz1KxgkpNSCWC9BCMGnmYRV/1hF7hzC0Dbjz6Q5uP3jnukI+e2bkKKrxANMQ==}
@@ -2377,7 +2364,7 @@ packages:
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.3.0
     dependencies:
-      '@kong/icons': 1.9.0(vue@3.3.13)
+      '@kong/icons': 1.9.1(vue@3.3.13)
       '@popperjs/core': 2.11.8
       axios: 1.6.8
       date-fns: 2.30.0
@@ -2402,7 +2389,7 @@ packages:
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.3.0
     dependencies:
-      '@kong/icons': 1.9.0(vue@3.4.24)
+      '@kong/icons': 1.9.1(vue@3.4.24)
       '@popperjs/core': 2.11.8
       axios: 1.6.8
       date-fns: 2.30.0
@@ -5127,6 +5114,9 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependenciesMeta:
+      ajv:
+        optional: true
     dependencies:
       ajv: 8.12.0
     dev: true
