@@ -44,7 +44,7 @@
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-top-level-await": "^1.4.1",
     "vite-plugin-wasm": "^3.3.0",
-    "vue": "^3.4.21"
+    "vue": "^3.4.24"
   },
   "repository": {
     "type": "git",
@@ -67,7 +67,7 @@
     "@kong/atc-router": "^1.6.0-rc.1",
     "@kong/kongponents": "^9.0.0-alpha.146",
     "monaco-editor": "0.21.3",
-    "vue": "^3.4.21"
+    "vue": "^3.4.24"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^"
