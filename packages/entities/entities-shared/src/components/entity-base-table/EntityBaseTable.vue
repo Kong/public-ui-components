@@ -43,6 +43,12 @@
             v-if="$slots['toolbar-button']"
             class="toolbar-button-container"
           >
+            <!-- render this fallback div for Kong Manager instead, as there is no kong-ui-app-page-header-action-button target to go to in KM -->
+            <!-- rendering order requires us to render the teleport div before the slots attempt to be rendered -->
+            <div
+              v-if="!useActionOutside"
+              id="kong-ui-app-page-header-action-button-default"
+            />
             <slot name="toolbar-button" />
           </div>
         </div>
@@ -237,6 +243,11 @@ const props = defineProps({
   },
   /** default to false, setting to true will suppress the row click event even if "@click:row" is attached */
   disableRowClick: {
+    type: Boolean,
+    default: false,
+  },
+  /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
+  useActionOutside: {
     type: Boolean,
     default: false,
   },

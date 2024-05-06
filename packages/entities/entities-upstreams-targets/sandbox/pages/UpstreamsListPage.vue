@@ -7,6 +7,7 @@
     @update="handlePermissionsUpdate"
   />
   <h2>Konnect API</h2>
+  <div id="kong-ui-app-page-header-action-button" />
   <UpstreamsList
     v-if="permissions"
     :key="key"
@@ -16,6 +17,7 @@
     :can-edit="permissions.canEdit"
     :can-retrieve="permissions.canRetrieve"
     :config="konnectConfig"
+    use-action-outside
     @copy:error="onCopyIdError"
     @copy:success="onCopyIdSuccess"
     @delete:success="onDeleteSuccess"

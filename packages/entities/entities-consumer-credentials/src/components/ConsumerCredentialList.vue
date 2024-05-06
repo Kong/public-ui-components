@@ -18,8 +18,23 @@
     >
       <!-- Create action -->
       <template #toolbar-button>
-        <!-- render this fallback div for Kong Manager instead, as there is no kong-ui-app-page-header-action-button target to go to in KM -->
-        <div id="kong-ui-app-page-header-action-button-default" />
+        <!-- Render in the button slot because we want to wait until the toolbar is rendered (and the default teleport div) before the Teleport attempts to find the div -->
+        <!-- Do not attempt to render/teleport if toolbar is hidden -->
+        <MountedTeleport :to="useActionOutside ? '#kong-ui-app-page-header-action-button' : '#kong-ui-app-page-header-action-button-default'">
+          <PermissionsWrapper :auth-function="() => canCreate()">
+            <!-- Hide Create button if table is empty -->
+            <KButton
+              v-show="hasData"
+              appearance="primary"
+              data-testid="toolbar-add-credential"
+              icon="plus"
+              size="large"
+              :to="config.createRoute"
+            >
+              {{ t(`credentials.list.toolbar_actions.${config.plugin}.new`) }}
+            </KButton>
+          </PermissionsWrapper>
+        </MountedTeleport>
       </template>
 
       <!-- Column Formatting -->
@@ -158,22 +173,6 @@
       </template>
     </EntityBaseTable>
 
-    <Teleport :to="useActionOutside ? '#kong-ui-app-page-header-action-button' : '#kong-ui-app-page-header-action-button-default'">
-      <PermissionsWrapper :auth-function="() => canCreate()">
-        <!-- Hide Create button if table is empty -->
-        <KButton
-          v-show="hasData"
-          appearance="primary"
-          data-testid="toolbar-add-credential"
-          icon="plus"
-          size="large"
-          :to="config.createRoute"
-        >
-          {{ t(`credentials.list.toolbar_actions.${config.plugin}.new`) }}
-        </KButton>
-      </PermissionsWrapper>
-    </Teleport>
-
     <EntityDeleteModal
       :action-pending="isDeletePending"
       :description="t('credentials.delete.description')"
@@ -195,6 +194,7 @@ import composables from '../composables'
 import endpoints from '../consumer-credentials-endpoints'
 import {
   EntityBaseTable,
+  MountedTeleport,
   EntityDeleteModal,
   EntityTypes,
   FetcherStatus,

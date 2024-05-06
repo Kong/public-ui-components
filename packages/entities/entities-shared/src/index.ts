@@ -4,6 +4,7 @@ import ConfigCardDisplay from './components/entity-base-config-card/ConfigCardDi
 import InternalLinkItem from './components/entity-base-config-card/InternalLinkItem.vue'
 import EntityBaseForm from './components/entity-base-form/EntityBaseForm.vue'
 import EntityBaseTable from './components/entity-base-table/EntityBaseTable.vue'
+import MountedTeleport from './components/entity-base-table/MountedTeleport.vue'
 import EntityDeleteModal from './components/entity-delete-modal/EntityDeleteModal.vue'
 import EntityFilter from './components/entity-filter/EntityFilter.vue'
 import EntityToggleModal from './components/entity-toggle-modal/EntityToggleModal.vue'
@@ -18,7 +19,7 @@ import composables from './composables'
 const { useAxios, useDeleteUrlBuilder, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators } = composables
 
 // Components
-export { EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection, EntityLink, JsonCodeBlock, YamlCodeBlock }
+export { EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, MountedTeleport, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection, EntityLink, JsonCodeBlock, YamlCodeBlock }
 
 // Composables
 export { useAxios, useDeleteUrlBuilder, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators }

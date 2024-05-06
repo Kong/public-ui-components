@@ -31,8 +31,24 @@
       </template>
       <!-- Create action -->
       <template #toolbar-button>
-        <!-- render this fallback div for Kong Manager instead, as there is no kong-ui-app-page-header-action-button target to go to in KM -->
-        <div id="kong-ui-app-page-header-action-button-default" />
+        <!-- Render in the button slot because we want to wait until the toolbar is rendered (and the default teleport div) before the Teleport attempts to find the div -->
+        <!-- Do not attempt to render/teleport if toolbar is hidden -->
+        <MountedTeleport :to="useActionOutside ? '#kong-ui-app-page-header-action-button' : '#kong-ui-app-page-header-action-button-default'">
+          <PermissionsWrapper :auth-function="() => canCreate()">
+            <!-- Hide Create button if table is empty -->
+            <KButton
+              v-show="hasData"
+              appearance="primary"
+              data-testid="toolbar-add-consumer"
+              icon="plus"
+              size="large"
+              :to="config.consumerGroupId ? undefined : config.createRoute"
+              @click="() => config.consumerGroupId ? handleAddConsumerClick() : undefined"
+            >
+              {{ config.consumerGroupId ? t('consumers.actions.add_consumer') : t('consumers.list.toolbar_actions.new_consumer') }}
+            </KButton>
+          </PermissionsWrapper>
+        </MountedTeleport>
       </template>
 
       <!-- Column Formatting -->
@@ -98,23 +114,6 @@
         </PermissionsWrapper>
       </template>
     </EntityBaseTable>
-
-    <Teleport :to="useActionOutside ? '#kong-ui-app-page-header-action-button' : '#kong-ui-app-page-header-action-button-default'">
-      <PermissionsWrapper :auth-function="() => canCreate()">
-        <!-- Hide Create button if table is empty -->
-        <KButton
-          v-show="hasData"
-          appearance="primary"
-          data-testid="toolbar-add-consumer"
-          icon="plus"
-          size="large"
-          :to="config.consumerGroupId ? undefined : config.createRoute"
-          @click="() => config.consumerGroupId ? handleAddConsumerClick() : undefined"
-        >
-          {{ config.consumerGroupId ? t('consumers.actions.add_consumer') : t('consumers.list.toolbar_actions.new_consumer') }}
-        </KButton>
-      </PermissionsWrapper>
-    </Teleport>
 
     <EntityDeleteModal
       :action-button-disabled="isDeletePending"
@@ -185,6 +184,7 @@ import composables from '../composables'
 import endpoints from '../consumers-endpoints'
 import {
   EntityBaseTable,
+  MountedTeleport,
   EntityDeleteModal,
   EntityFilter,
   EntityTypes,
