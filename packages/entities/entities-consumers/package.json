@@ -32,7 +32,7 @@
     "@kong/design-tokens": "1.12.11",
     "@kong/kongponents": "9.0.0-alpha.146",
     "axios": "^1.6.8",
-    "vue": "^3.4.24",
+    "vue": "^3.4.25",
     "vue-router": "^4.3.2"
   },
   "scripts": {
