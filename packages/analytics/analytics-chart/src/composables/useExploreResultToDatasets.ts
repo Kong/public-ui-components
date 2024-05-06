@@ -47,10 +47,6 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
       // @ts-ignore - dynamic i18n key
       label: (i18n && i18n.te(`chartLabels.${dimension.name}`) && i18n.t(`chartLabels.${dimension.name}`)) || dimension.name,
       backgroundColor: baseColor,
-      total: rowLabels.reduce((acc, row) => {
-        const value = pivotRecords[`${row.id},${dimension.id}`] || 0
-        return acc + Number(value)
-      }, 0),
       data: rowLabels.map(rowPosition => {
         return pivotRecords[`${rowPosition.id},${dimension.id}`] || null
       }),
