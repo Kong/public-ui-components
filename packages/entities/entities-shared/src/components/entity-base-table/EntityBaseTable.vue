@@ -27,6 +27,7 @@
       :pagination-offset="paginationType === 'offset'"
       :row-attrs="rowAttrs"
       :search-input="query"
+      :sort-handler-function="enableClientSort ? sortHandlerFunction : undefined"
       :sortable="!disableSorting"
       @empty-state-action-click="handleEmptyStateCtaClicked"
       @row:click="handleRowClick"
@@ -175,6 +176,10 @@ const props = defineProps({
   enableClientSort: {
     type: Boolean,
     default: false,
+  },
+  sortHandlerFunction: {
+    type: Function,
+    default: () => ({}),
   },
   // whether to show the actions column
   enableEntityActions: {

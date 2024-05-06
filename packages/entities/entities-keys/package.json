@@ -30,7 +30,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.12.11",
-    "@kong/kongponents": "9.0.0-pr.2151.1327ffe2.0",
+    "@kong/kongponents": "9.0.0-pr.2151.eb4eb08a.0",
     "axios": "^1.6.8",
     "vue": "^3.4.25",
     "vue-router": "^4.3.2"
