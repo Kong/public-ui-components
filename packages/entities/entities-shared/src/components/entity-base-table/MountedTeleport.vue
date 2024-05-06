@@ -21,7 +21,3 @@ onMounted(() => {
   isMounted.value = true
 })
 </script>
-
-<style scoped>
-
-</style>
