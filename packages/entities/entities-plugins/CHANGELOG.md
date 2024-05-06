@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.2.4...@kong-ui-public/entities-plugins@4.2.5) (2024-05-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [4.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.2.3...@kong-ui-public/entities-plugins@4.2.4) (2024-05-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [4.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.2.2...@kong-ui-public/entities-plugins@4.2.3) (2024-05-03)
+
+
+### Bug Fixes
+
+* **plugin-form:** fix rsa public key input field ([#1384](https://github.com/Kong/public-ui-components/issues/1384)) ([54fd561](https://github.com/Kong/public-ui-components/commit/54fd561aadc8ffcae939318f315cd46ea6c4d3fb))
+
+
+
+
+
+## [4.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.2.1...@kong-ui-public/entities-plugins@4.2.2) (2024-05-03)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [4.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.2.0...@kong-ui-public/entities-plugins@4.2.1) (2024-05-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [4.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.1.1...@kong-ui-public/entities-plugins@4.2.0) (2024-04-29)
+
+
+### Features
+
+* **serverless:** m1 updates [khcp-11567] ([#1368](https://github.com/Kong/public-ui-components/issues/1368)) ([31f60f8](https://github.com/Kong/public-ui-components/commit/31f60f8f67cf7aaf1b9d425ce8942b15d152d4eb))
+
+
+
+
+
+## [4.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.1.0...@kong-ui-public/entities-plugins@4.1.1) (2024-04-29)
+
+
+### Bug Fixes
+
+* **entities-plugins:** omit redis cluster/sentinel addresses if empty ([#1375](https://github.com/Kong/public-ui-components/issues/1375)) ([64283b7](https://github.com/Kong/public-ui-components/commit/64283b7c17a9ad86bb8d43f0057053822040f21a))
+
+
+
+
+
 # [4.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.0.2...@kong-ui-public/entities-plugins@4.1.0) (2024-04-26)
 
 

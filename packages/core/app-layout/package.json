@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/app-layout",
-  "version": "4.0.25",
+  "version": "4.1.2",
   "type": "module",
   "main": "./dist/app-layout.umd.js",
   "module": "./dist/app-layout.es.js",
@@ -41,7 +41,7 @@
   "peerDependencies": {
     "@kong/kongponents": "^9.0.0-alpha.146",
     "vue": ">= 3.3.13 < 4",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.2"
   },
   "dependencies": {
     "@kong/icons": "^1.9.1",
@@ -51,10 +51,10 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.12.11",
-    "@kong/kongponents": "9.0.0-pr.2151.f7e32344.0",
+    "@kong/kongponents": "9.0.0-pr.2151.1327ffe2.0",
     "@types/lodash.clonedeep": "^4.5.9",
-    "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue": "^3.4.25",
+    "vue-router": "^4.3.2"
   },
   "repository": {
     "type": "git",

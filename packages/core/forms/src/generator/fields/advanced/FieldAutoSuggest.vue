@@ -104,16 +104,6 @@ export default {
     },
   },
 
-  watch: {
-    idValue: {
-      handler(newVal, oldVal) {
-        if (newVal !== oldVal) {
-          this.updateModel(newVal)
-        }
-      },
-    },
-  },
-
   async created() {
     await this.$nextTick()
     let presetEntity
