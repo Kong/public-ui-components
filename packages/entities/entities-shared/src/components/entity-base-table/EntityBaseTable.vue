@@ -354,16 +354,17 @@ const handleSortChanged = (sortParams: TableSortParams): void => {
 
 const { setTablePreferences, getTablePreferences } = useTablePreferences()
 
-// Use unique key for localStorage of user's table preferences across tables, orgs and users
-const tablePreferencesStorageKey = computed((): string => `tablePreferences-${cacheId.value}`)
+// Use unique key cacheId (passed down from consuming app and derived from controlPlaneId)
+// for localStorage of user's table preferences across tables, orgs and users
 
-const tablePreferences = ref<UserTablePreferences>(getTablePreferences(tablePreferencesStorageKey.value))
+const tablePreferences = ref<UserTablePreferences>(getTablePreferences(cacheId.value))
 
 const combinedInitialFetcherParams = computed((): Partial<FetcherParams> => {
   // Pass the preferencesStorageKey regardless; if no entry is found, it will return the default
-  const userTablePreferences = getTablePreferences(tablePreferencesStorageKey.value)
+  const userTablePreferences = getTablePreferences(cacheId.value)
 
   // Return the props.initialFetcherParams, appending any stored user preferences
+
   return {
     ...props.initialFetcherParams,
     ...userTablePreferences,
@@ -373,8 +374,8 @@ const combinedInitialFetcherParams = computed((): Partial<FetcherParams> => {
 const handleUpdateTablePreferences = (newTablePreferences: UserTablePreferences): void => {
   tablePreferences.value = newTablePreferences
 
-  if (tablePreferencesStorageKey.value) {
-    setTablePreferences(tablePreferencesStorageKey.value, newTablePreferences)
+  if (cacheId.value) {
+    setTablePreferences(cacheId.value, newTablePreferences)
   }
 }
 </script>
