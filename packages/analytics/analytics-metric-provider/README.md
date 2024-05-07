@@ -2,27 +2,18 @@
 
 Query data for metric cards and render default "golden signal" metrics cards using a minimum of boilerplate.
 
-- [@kong-ui-public/analytics-metric-provider](#kong-ui-publicanalytics-metric-provider)
-  - [Requirements](#requirements)
-  - [Usage](#usage)
-    - [Global](#global)
-    - [Single entity](#single-entity)
-    - [Many entities](#many-entities)
-    - [Use in tables](#use-in-tables)
-    - [CSS Variables](#css-variables)
-  - [Props](#props)
-  - [Exports](#exports)
-    - [Types](#types)
-    - [Enums](#enums)
+- [Requirements](#requirements)
+- [Usage](#usage)
+  - [Global](#global)
+  - [Single entity](#single-entity)
+  - [Many entities](#many-entities)
+  - [Use in tables](#use-in-tables)
 
 ## Requirements
 
 - `vue` and `pinia` must be initialized in the host application.
   - The `pinia` requirement comes from the `analytics-config-store` package; see the [README](../analytics-config-store/README.md) for further details.
-- `@kong/kongponents` must be added as a `dependency` in the host application, globally available via the Vue Plugin installation, and the package's style imports must be added in the app entry file. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents). Specifically, the following Kongponents must be available:
-  - `KIcon`
-  - `KSkeletonBox`
-  - `KTooltip`
+- `@kong/kongponents` must be added as a `dependency` in the host application, globally available via the Vue Plugin installation, and the package's style imports must be added in the app entry file. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents).
 - `@kong-ui-public/i18n` must be available as a `dependency` in the host application.
 - `@kong-ui-public/analytics-config-store` must be available as a `dependency` in the host application.
 - A plugin providing an `AnalyticsBridge` must be installed in the root of the application.
@@ -118,37 +109,10 @@ The provider and consumer support use in contexts where metric cards are not app
 </MetricsProvider>
 ```
 
-### CSS Variables
-
-The MetricCard component exposes the following css variables which can be defined in the consuming app's stylesheet.
-
-Variable | Description | Default
----------|----------|---------
-`--kong-ui-metric-card-background` | The background of the `.kong-ui-public-metric-card-container` main container | `transparent`
-`--kong-ui-metric-card-title` | Metric card title font color | `#`
-`--kong-ui-metric-card-value` | Metric value and description font color | `#`
-`--kong-ui-metric-card-trend-negative` | Negative trend font color | `#AD000E`
-`--kong-ui-metric-card-trend-positive` | Positive trend font color | `#07a88d`
-`--kong-ui-metric-card-trend-neutral` | Neutral trend font color | `#52596E`
-`--kong-ui-metric-card-trend-bg-negative` | Negative trend background color | `#FFE5E5`
-`--kong-ui-metric-card-trend-bg-positive` | Positive trend background color | `#ECFFFB`
-`--kong-ui-metric-card-trend-bg-neutral` | Neutral trend background color | `#E0E4EA`
-
-## Props
+### Other properties
 
 - `maxTimeframe`: can be provided by the host app wrapper component in order to determine the maximum timeframe that "privileged" users are allowed to query.  Essentially, if `hasTrendAccess` is `true`, this is the base timeframe that will be requested.
 - `overrideTimeframe`: if the page has a time picker, setting this property overrides any automatic determination of timeframe.
 - `additionalFilter`: commonly used to apply additional filters to the metric query: for example, to retrieve many entities within a given scope.
 - `queryReady`: if this property is set and is `false`, the metric cards will not issue a query -- they will remain in a "loading" state.  When this property becomes `true`, the query will fire.  Useful for when the component renders before the page has all of the necessary information to construct a query.
 - `longCardTitles`: whether to show the long or short translation for the title of the card.
-
-## Exports
-
-### Types
-
-- MetricCardDef
-
-### Enums
-
-- MetricCardSize
-- MetricCardType
