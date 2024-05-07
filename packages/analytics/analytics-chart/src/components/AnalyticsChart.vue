@@ -305,7 +305,7 @@ const chartLegendSortFn = computed(() => {
     }
 
     // Status codes (if label is numeric)
-    if (typeof parseInt(a.text, 10) === 'number' && typeof parseInt(b.text, 10) === 'number') {
+    if (!isNaN(parseInt(a.text, 10)) && !isNaN(parseInt(b.text, 10))) {
       return a.text < b.text ? -1 : 1
     }
 
@@ -329,7 +329,7 @@ const chartTooltipSortFn = computed(() => {
     }
 
     // Status codes (if label is numeric)
-    if (typeof parseInt(a.label, 10) === 'number' && typeof parseInt(b.label, 10) === 'number') {
+    if (!isNaN(parseInt(a.label, 10)) && !isNaN(parseInt(b.label, 10))) {
       return a.label < b.label ? -1 : 1
     }
 

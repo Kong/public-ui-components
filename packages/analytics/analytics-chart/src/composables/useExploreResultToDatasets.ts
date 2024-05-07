@@ -30,7 +30,7 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
     })
   }
 
-  return Array.from(barSegmentLabels).flatMap((dimension, i) => {
+  const datasets = Array.from(barSegmentLabels).flatMap((dimension, i) => {
     if (!dimension) {
       return []
     }
@@ -52,6 +52,8 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
       }),
     } as Dataset
   })
+
+  return datasets
 }
 
 export default function useExploreResultToDatasets(
@@ -60,7 +62,6 @@ export default function useExploreResultToDatasets(
 ): Ref<KChartData> {
 
   const { i18n } = composables.useI18n()
-
   const chartData: Ref<KChartData> = computed(() => {
 
     try {
@@ -98,32 +99,41 @@ export default function useExploreResultToDatasets(
             return [label, value]
           }))
 
+        const sortedDatasetIds = Object.entries(pivotRecords).sort(([, a], [, b]) => Number(b) - Number(a)).map(([key]) => (key.split(',')[0]))
         const primaryDimensionDisplay = display[primaryDimension]
         const secondaryDimensionDisplay = display[secondaryDimension]
         const rowLabels: DatasetLabel[] = (hasDimensions && primaryDimensionDisplay && Object.entries(primaryDimensionDisplay).map(([id, val]) => ({ id, name: val.name }))) || metricNames.map(name => ({ id: name, name }))
-
         const barSegmentLabels: DatasetLabel[] = (hasDimensions && secondaryDimensionDisplay && Object.entries(secondaryDimensionDisplay).map(([id, val]) => ({ id, name: val.name }))) || metricNames.map(name => ({ id: name, name }))
+
+        if (primaryDimension !== 'status_code' && primaryDimension !== 'status_code_grouped') {
+          rowLabels.sort((a, b) => sortedDatasetIds.indexOf(a.id) - sortedDatasetIds.indexOf(b.id))
+          barSegmentLabels.sort((a, b) => sortedDatasetIds.indexOf(a.id) - sortedDatasetIds.indexOf(b.id))
+        }
 
         if (!rowLabels || !barSegmentLabels) {
           return { labels: [], datasets: [] }
         }
 
+        const datasets = generateDatasets({
+          isMultiMetric,
+          hasDimensions,
+          metricNames,
+          dimensionFieldNames,
+          barSegmentLabels,
+          pivotRecords,
+          rowLabels,
+          colorPalette: deps.colorPalette || datavisPalette,
+        })
+
+        const labels = !hasDimensions
+          // @ts-ignore - dynamic i18n key
+          ? metricNames.map(name => (i18n && i18n.te(`chartLabels.${name}`) && i18n.t(`chartLabels.${name}`)) || name)
+          // @ts-ignore - dynamic i18n key
+          : rowLabels.map(label => (i18n && i18n.te(`chartLabels.${label.name}`) && i18n.t(`chartLabels.${label.name}`)) || label.name)
+
         const data: KChartData = {
-          labels: !hasDimensions
-            // @ts-ignore - dynamic i18n key
-            ? metricNames.map(name => (i18n && i18n.te(`chartLabels.${name}`) && i18n.t(`chartLabels.${name}`)) || name)
-            // @ts-ignore - dynamic i18n key
-            : Object.entries(display[primaryDimension]).map(([, val]) => (i18n && i18n.te(`chartLabels.${val.name}`) && i18n.t(`chartLabels.${val.name}`)) || val.name),
-          datasets: generateDatasets({
-            isMultiMetric,
-            hasDimensions,
-            metricNames,
-            dimensionFieldNames,
-            barSegmentLabels,
-            pivotRecords,
-            rowLabels,
-            colorPalette: deps.colorPalette || datavisPalette,
-          }),
+          labels,
+          datasets,
         }
 
         return data

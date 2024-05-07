@@ -167,12 +167,12 @@ describe('useVitalsExploreDatasets', () => {
 
     expect(result.value).toEqual(
       {
-        labels: ['GroupBy1', 'GroupBy2'],
+        labels: ['GroupBy2', 'GroupBy1'],
         datasets: [
-          { label: 'ThenBy1', backgroundColor: '#a86cd5', data: [100, null] },
-          { label: 'ThenBy2', backgroundColor: '#6a86d2', data: [150, null] },
-          { label: 'ThenBy3', backgroundColor: '#00bbf9', data: [null, 200] },
-          { label: 'ThenBy4', backgroundColor: '#00c4b0', data: [null, 250] },
+          { label: 'ThenBy1', backgroundColor: '#a86cd5', data: [null, 100] },
+          { label: 'ThenBy2', backgroundColor: '#6a86d2', data: [null, 150] },
+          { label: 'ThenBy3', backgroundColor: '#00bbf9', data: [200, null] },
+          { label: 'ThenBy4', backgroundColor: '#00c4b0', data: [250, null] },
         ],
       },
     )
@@ -297,10 +297,10 @@ it('handles multiple metrics with dimension', () => {
 
   expect(result.value).toEqual(
     {
-      labels: ['service1', 'service2'],
+      labels: ['service2', 'service1'],
       datasets: [
-        { label: 'metric1', backgroundColor: '#a86cd5', data: [1, 3] },
-        { label: 'metric2', backgroundColor: '#6a86d2', data: [2, 4] },
+        { label: 'metric1', backgroundColor: '#a86cd5', data: [3, 1] },
+        { label: 'metric2', backgroundColor: '#6a86d2', data: [4, 2] },
       ],
     },
   )

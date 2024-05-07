@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.0.13...@kong-ui-public/entities-vaults@3.1.0) (2024-05-07)
+
+
+### Features
+
+* **entities-vaults:** add aws vault fields ([#1389](https://github.com/Kong/public-ui-components/issues/1389)) ([8317de6](https://github.com/Kong/public-ui-components/commit/8317de61354a4d47092cb2cd9ff31e087417c557))
+
+
+
+
+
 ## [3.0.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.0.12...@kong-ui-public/entities-vaults@3.0.13) (2024-05-06)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
