@@ -7,4 +7,6 @@ export const DEFAULT_USER_TABLE_PREFERENCES: UserTablePreferences = {
   pageSize: 30,
   sortColumnKey: undefined,
   sortColumnOrder: undefined,
+  columnWidths: {},
+  columnVisibility: {},
 }
