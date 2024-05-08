@@ -129,18 +129,6 @@
       </template>
 
       <template #footer>
-        <KButton
-          v-if="editing"
-          appearance="danger"
-          class="edit-documentation-delete-button"
-          data-testid="edit-documentation-delete-button"
-          :disabled="actionPending"
-          @click="emit('delete')"
-        >
-          <ProgressIcon v-if="actionPending" />
-          {{ i18n.t('documentation.form_modal.delete_button_text') }}
-        </KButton>
-
         <div class="button-spacing">
           <KButton
             appearance="tertiary"
