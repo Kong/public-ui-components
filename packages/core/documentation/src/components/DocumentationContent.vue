@@ -29,15 +29,13 @@
       <DocumentationDisplay
         v-if="selectedDocument"
         :key="key"
+        ref="documentationDisplay"
         :can-edit="canEdit"
         :card="card"
         class="document-holder"
         :hide-publish-toggle="hidePublishToggle"
         :selected-document="selectedDocument"
         @add="handleAddClick"
-        @download="emit('download')"
-        @edit="handleEditClick"
-        @edit-markdown="handleEditMarkdown"
         @save-markdown="(content: string) => emit('save-markdown', content)"
         @toggle-published="(data: any) => emit('toggle-published', data)"
       />
@@ -69,19 +67,17 @@ import type { ChangeEvent, ChildChangeEvent, TreeListItem } from '@kong/kongpone
 const emit = defineEmits<{
   (e: 'child-change', data: ChildChangeEvent): void,
   (e: 'delete'): void,
-  (e: 'download'): void,
-  (e: 'edit'): void,
   (e: 'document-selection', data: TreeListItem): void,
   (e: 'modal-closed'): void,
   (e: 'parent-change', data: ChangeEvent): void,
   (e: 'save', formData: FormData, selectedFile: any): void,
-  (e: 'edit-markdown', content: string): void,
   (e: 'save-markdown', content: string): void,
   (e: 'toggle-published', data: boolean): void,
 }>()
 
 const displayModal = ref<boolean>(false)
 const editing = ref<boolean>(false)
+const documentationDisplay = ref()
 
 const props = defineProps({
   actionPending: {
@@ -158,23 +154,23 @@ const handleAddClick = (): void => {
   displayModal.value = true
 }
 
-const handleEditClick = (): void => {
-  editing.value = true
-  displayModal.value = true
-  emit('edit')
+const handleDownloadClick = (): void => {
+  // exposed method from DocumentationDisplay
+  documentationDisplay.value.download()
 }
 
-const handleEditMarkdown = (editingMarkdown: boolean): void => {
-  editing.value = editingMarkdown
-  if (editing.value === true) {
-    emit('edit')
-  }
+const handleEditDocClick = (): void => {
+  // exposed method from DocumentationDisplay
+  documentationDisplay.value.edit()
 }
 
 const handleModalClosed = (): void => {
   displayModal.value = false
   emit('modal-closed')
 }
+
+defineExpose({ download: handleDownloadClick, edit: handleEditDocClick })
+
 </script>
 
 <style lang="scss" scoped>

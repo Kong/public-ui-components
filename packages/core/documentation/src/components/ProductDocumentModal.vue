@@ -39,6 +39,7 @@
           show-icon
         />
 
+        <!-- TODO: Uncomment when the New Doc creation is done -->
         <!-- Show radio buttons only for create modal -->
         <div
           v-if="!editing"
