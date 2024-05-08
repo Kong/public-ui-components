@@ -447,13 +447,15 @@ describe('<TargetsList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `targets-list-${uuidv4()}`
+
       interceptKMMultiPage({
         mockData: targets100,
       })
 
       cy.mount(TargetsList, {
         props: {
-          cacheIdentifier: `targets-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -493,7 +495,7 @@ describe('<TargetsList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(TargetsList, {
         props: {
-          cacheIdentifier: `targets-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -745,13 +747,15 @@ describe('<TargetsList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `targets-list-${uuidv4()}`
+
       interceptKonnectMultiPage({
         mockData: targets100,
       })
 
       cy.mount(TargetsList, {
         props: {
-          cacheIdentifier: `targets-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},
@@ -791,7 +795,7 @@ describe('<TargetsList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(TargetsList, {
         props: {
-          cacheIdentifier: `targets-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},

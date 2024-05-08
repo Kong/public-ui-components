@@ -394,13 +394,15 @@ describe('<CertificateList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `certificate-list-${uuidv4()}`
+
       interceptKMMultiPage({
         mockData: certificate100,
       })
 
       cy.mount(CertificateList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -440,7 +442,7 @@ describe('<CertificateList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(CertificateList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -699,13 +701,15 @@ describe('<CertificateList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `certificate-list-${uuidv4()}`
+
       interceptKonnectMultiPage({
         mockData: certificate100,
       })
 
       cy.mount(CertificateList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},
@@ -745,7 +749,7 @@ describe('<CertificateList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(CertificateList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},

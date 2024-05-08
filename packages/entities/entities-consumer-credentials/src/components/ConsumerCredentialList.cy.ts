@@ -450,13 +450,15 @@ describe('<ConsumerCredentialList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `consumer-credential-list-${uuidv4()}`
+
       interceptKMMultiPage({
         mockData: basicAuthCredentials100,
       })
 
       cy.mount(ConsumerCredentialList, {
         props: {
-          cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -496,7 +498,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(ConsumerCredentialList, {
         props: {
-          cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -743,13 +745,15 @@ describe('<ConsumerCredentialList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `consumer-credential-list-${uuidv4()}`
+
       interceptKonnectMultiPage({
         mockData: basicAuthCredentials100,
       })
 
       cy.mount(ConsumerCredentialList, {
         props: {
-          cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},
@@ -788,7 +792,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(ConsumerCredentialList, {
         props: {
-          cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},

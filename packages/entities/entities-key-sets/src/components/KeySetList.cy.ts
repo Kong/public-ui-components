@@ -379,13 +379,15 @@ describe('<KeySetList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `key-set-list-${uuidv4()}`
+
       interceptKMMultiPage({
         mockData: keySets100,
       })
 
       cy.mount(KeySetList, {
         props: {
-          cacheIdentifier: `key-set-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -425,7 +427,7 @@ describe('<KeySetList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(KeySetList, {
         props: {
-          cacheIdentifie: `key-set-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -677,6 +679,8 @@ describe('<KeySetList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `key-set-list-${uuidv4()}`
+
       interceptKonnectMultiPage({
         mockData: keySets100,
       })
@@ -723,7 +727,7 @@ describe('<KeySetList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(KeySetList, {
         props: {
-          cacheIdentifier: `key-set-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},

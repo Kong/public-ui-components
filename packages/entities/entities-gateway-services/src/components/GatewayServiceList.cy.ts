@@ -395,13 +395,15 @@ describe('<GatewayServiceList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `gateway-service-list-${uuidv4()}`
+
       interceptKMMultiPage({
         mockData: gatewayServices100,
       })
 
       cy.mount(GatewayServiceList, {
         props: {
-          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => { },
           canEdit: () => { },
@@ -441,7 +443,7 @@ describe('<GatewayServiceList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(GatewayServiceList, {
         props: {
-          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => { },
           canEdit: () => { },
@@ -693,12 +695,14 @@ describe('<GatewayServiceList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `gateway-service-list-${uuidv4()}`
+
       interceptKonnectMultiPage({
         mockData: gatewayServices100,
       })
       cy.mount(GatewayServiceList, {
         props: {
-          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => { },
           canEdit: () => { },
@@ -738,7 +742,7 @@ describe('<GatewayServiceList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(GatewayServiceList, {
         props: {
-          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => { },
           canEdit: () => { },
