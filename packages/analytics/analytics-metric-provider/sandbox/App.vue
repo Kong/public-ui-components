@@ -52,14 +52,6 @@
       </MetricsProvider>
     </SandboxBridgeInjector>
   </div>
-
-  <h4>Loading State</h4>
-  <!-- <div class="generic-card">
-    <MetricCardContainer
-      v-bind="cardsLoading"
-      hide-title
-    />
-  </div> -->
 </template>
 <script setup lang="ts">
 import MetricsConsumer from '../src/components/MetricsConsumer.vue'
