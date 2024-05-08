@@ -39,9 +39,9 @@
           show-icon
         />
 
-        <!-- TODO: Uncomment when the New Doc creation is done -->
+        <!-- TODO: Uncomment when the New Doc creation work is done -->
         <!-- Show radio buttons only for create modal -->
-        <div
+        <!-- <div
           v-if="!editing"
           class="document-radio-group"
         >
@@ -63,10 +63,9 @@
               {{ i18n.t('documentation.form_modal.file_label') }}
             </KRadio>
           </div>
-        </div>
+        </div> -->
 
         <KFileUpload
-          v-if="checkedType === 'upload'"
           :accept="['.md', '.markdown']"
           :button-text="fileUploadButtonText"
           class="document-file-upload"
