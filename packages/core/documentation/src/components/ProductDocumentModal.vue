@@ -215,7 +215,8 @@ const publishModel = ref<boolean>(true)
 
 const status = computed(() => publishModel.value ? 'published' : 'unpublished')
 
-const checkedType = ref<'empty' | 'upload'>('empty')
+// TODO: added for new doc creation; enable this later
+// const checkedType = ref<'empty' | 'upload'>('empty')
 
 const formData = reactive({
   fileName: '',
@@ -281,18 +282,19 @@ const handleFileSelected = (file: any): void => {
   formData.urlSlug = formData.urlSlug ? formData.urlSlug : namePlaceholderText.value
 }
 
-// const saveDisabled = computed((): boolean => (!props.editing && !selectedFile.value) || !formData.pageName || slugError.value)
+const saveDisabled = computed((): boolean => (!props.editing && !selectedFile.value) || !formData.pageName || slugError.value)
 
-const saveDisabled = computed((): boolean => {
-  if (checkedType.value === 'upload') {
-    // If a file is selected, pageName and urlSlug are required
-    return !(selectedFile.value && formData.pageName && formData.urlSlug && !slugError.value)
-  } else if (checkedType.value === 'empty') {
-    // If no file is selected, only pageName and urlSlug are required
-    return !(formData.pageName && formData.urlSlug && !slugError.value)
-  }
-  return true
-})
+// TODO: added for new doc creation; enable this later
+// const saveDisabled = computed((): boolean => {
+//   if (checkedType.value === 'upload') {
+//     // If a file is selected, pageName and urlSlug are required
+//     return !(selectedFile.value && formData.pageName && formData.urlSlug && !slugError.value)
+//   } else if (checkedType.value === 'empty') {
+//     // If no file is selected, only pageName and urlSlug are required
+//     return !(formData.pageName && formData.urlSlug && !slugError.value)
+//   }
+//   return true
+// })
 
 const handleFileRemoved = (): void => {
   selectedFile.value = null
