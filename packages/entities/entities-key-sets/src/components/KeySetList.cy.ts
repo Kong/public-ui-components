@@ -687,7 +687,7 @@ describe('<KeySetList />', () => {
 
       cy.mount(KeySetList, {
         props: {
-          cacheIdentifier: `key-set-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},
