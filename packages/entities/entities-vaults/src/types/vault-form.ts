@@ -47,6 +47,9 @@ export interface KongVaultConfig {
 
 export interface AWSVaultConfig {
   region: string
+  endpoint_url?: string
+  assume_role_arn?: string
+  role_session_name: string
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
@@ -107,12 +110,19 @@ export interface AzureVaultConfigPayload extends Omit<AzureVaultConfig, 'client_
   tenant_id?: string | null
 }
 
+// allow for nullish values in payload because Kong Admin API treats null as an empty value
+// in case it's an empty string, it will be treated as a value and must have length > 0
+export interface AWSVaultConfigPayload extends Omit<AWSVaultConfig, 'endpoint_url' | 'assume_role_arn'> {
+  endpoint_url?: string | null
+  assume_role_arn?: string | null
+}
+
 export interface VaultPayload {
   name: VaultProviders
   prefix: string
   description: string | null
   tags: string[],
-  config: KongVaultConfig | AWSVaultConfig | GCPVaultConfig | HCVVaultConfigPayload | AzureVaultConfigPayload
+  config: KongVaultConfig | GCPVaultConfig | HCVVaultConfigPayload | AzureVaultConfigPayload | AWSVaultConfigPayload
 }
 
 export interface VaultStateFields {

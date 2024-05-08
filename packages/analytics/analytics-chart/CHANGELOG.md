@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.0.5...@kong-ui-public/analytics-chart@4.0.6) (2024-05-06)
+
+
+### Bug Fixes
+
+* fix sorting for cross sectional datasets (bar charts) ([#1392](https://github.com/Kong/public-ui-components/issues/1392)) ([8a4c9e9](https://github.com/Kong/public-ui-components/commit/8a4c9e909b268fa87c4ea2f6c0d00008d65139ad))
+
+
+
+
+
+## [4.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.0.4...@kong-ui-public/analytics-chart@4.0.5) (2024-05-06)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 ## [4.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.0.3...@kong-ui-public/analytics-chart@4.0.4) (2024-05-03)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

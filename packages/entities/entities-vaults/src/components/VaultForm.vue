@@ -189,6 +189,43 @@
               required
               width="100%"
             />
+            <KInput
+              v-model.trim="configFields[VaultProviders.AWS].endpoint_url"
+              autocomplete="off"
+              data-testid="vault-form-config-aws-endpoint_url"
+              :is-readonly="form.isReadonly"
+              :label="t('form.config.aws.fields.endpoint_url.label')"
+              :label-attributes="{
+                info: t('form.config.aws.fields.endpoint_url.tooltip'),
+                tooltipAttributes: { maxWidth: '400px' },
+              }"
+              type="text"
+            />
+            <KInput
+              v-model.trim="configFields[VaultProviders.AWS].assume_role_arn"
+              autocomplete="off"
+              data-testid="vault-form-config-aws-assume_role_arn"
+              :is-readonly="form.isReadonly"
+              :label="t('form.config.aws.fields.assume_role_arn.label')"
+              :label-attributes="{
+                info: t('form.config.aws.fields.assume_role_arn.tooltip'),
+                tooltipAttributes: { maxWidth: '400px' },
+              }"
+              type="text"
+            />
+            <KInput
+              v-model.trim="configFields[VaultProviders.AWS].role_session_name"
+              autocomplete="off"
+              data-testid="vault-form-config-aws-role_session_name"
+              :is-readonly="form.isReadonly"
+              :label="t('form.config.aws.fields.role_session_name.label')"
+              :label-attributes="{
+                info: t('form.config.aws.fields.role_session_name.tooltip'),
+                tooltipAttributes: { maxWidth: '400px' },
+              }"
+              required
+              type="text"
+            />
           </div>
 
           <!-- GCP fields -->
@@ -293,7 +330,10 @@
               required
               width="100%"
             />
-            <div v-if="configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.TOKEN">
+            <div
+              v-if="configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.TOKEN"
+              class="vault-form-config-auth-method-container"
+            >
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].token"
                 autocomplete="off"
@@ -304,7 +344,10 @@
                 type="text"
               />
             </div>
-            <div v-else-if="configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.K8S">
+            <div
+              v-else-if="configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.K8S"
+              class="vault-form-config-auth-method-container"
+            >
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].kube_role"
                 autocomplete="off"
@@ -332,7 +375,10 @@
                 type="text"
               />
             </div>
-            <div v-else-if="configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.APP_ROLE">
+            <div
+              v-else-if="configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.APP_ROLE"
+              class="vault-form-config-auth-method-container"
+            >
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].approle_auth_path"
                 autocomplete="off"
@@ -587,6 +633,9 @@ const configFields = reactive<ConfigFields>({
   } as KongVaultConfig,
   [VaultProviders.AWS]: {
     region: '',
+    endpoint_url: '',
+    assume_role_arn: '',
+    role_session_name: 'KongVault',
   } as AWSVaultConfig,
   [VaultProviders.GCP]: {
     project_id: '',
@@ -625,6 +674,9 @@ const originalConfigFields = reactive<ConfigFields>({
   } as KongVaultConfig,
   [VaultProviders.AWS]: {
     region: '',
+    endpoint_url: '',
+    assume_role_arn: '',
+    role_session_name: 'KongVault',
   } as AWSVaultConfig,
   [VaultProviders.GCP]: {
     project_id: '',
@@ -794,12 +846,23 @@ const isVaultConfigValid = computed((): boolean => {
     }).length
   }
 
+  // AWS Vault fields logic
+  if (vaultProvider.value === VaultProviders.AWS) {
+    return !Object.keys(configFields[VaultProviders.AWS]).filter(key => {
+      // endpoint_url, assume_role_arn and ttl fields are optional
+      if (['endpoint_url', 'assume_role_arn', 'ttl', 'neg_ttl', 'resurrect_ttl'].includes(key)) {
+        return false
+      }
+      return !(configFields[vaultProvider.value] as AWSVaultConfig)[key as keyof AWSVaultConfig]
+    }).length
+  }
+
   return !Object.keys(configFields[vaultProvider.value]).filter(key => {
     // ttl fields are optional
     if (['ttl', 'neg_ttl', 'resurrect_ttl'].includes(key)) {
       return false
     }
-    return !(configFields[vaultProvider.value] as KongVaultConfig | AWSVaultConfig | GCPVaultConfig)[key as keyof (KongVaultConfig | AWSVaultConfig | GCPVaultConfig)]
+    return !(configFields[vaultProvider.value] as KongVaultConfig | GCPVaultConfig)[key as keyof (KongVaultConfig | GCPVaultConfig)]
   }).length
 })
 const isFormValid = computed((): boolean => !!form.fields.prefix && isVaultConfigValid.value)
@@ -860,11 +923,19 @@ const getPayload = computed((): Record<string, any> => {
     tenant_id: (configFields[vaultProvider.value] as AzureVaultConfig).tenant_id || null,
   }
 
+  const awsConfig = {
+    ...configFields[vaultProvider.value],
+    endpoint_url: (configFields[vaultProvider.value] as AWSVaultConfig).endpoint_url || null,
+    assume_role_arn: (configFields[vaultProvider.value] as AWSVaultConfig).assume_role_arn || null,
+  }
+
   let config: VaultPayload['config'] = configFields[vaultProvider.value]
   if (vaultProvider.value === VaultProviders.HCV) {
     config = hcvConfig
   } else if (vaultProvider.value === VaultProviders.AZURE) {
     config = azureConfig
+  } else if (vaultProvider.value === VaultProviders.AWS) {
+    config = awsConfig
   }
 
   let ttlFields = {}
@@ -981,7 +1052,7 @@ const saveFormData = async (): Promise<void> => {
     }
 
     &-config-fields-container {
-      > *, div > * {
+      > *, .vault-form-config-auth-method-container > * {
         &:not(:first-child) {
           margin-top: $kui-space-80;
         }

@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-routes",
-  "version": "3.1.6",
+  "version": "3.1.7",
   "type": "module",
   "main": "./dist/entities-routes.umd.js",
   "module": "./dist/entities-routes.es.js",
@@ -34,7 +34,7 @@
     "@types/lodash.isequal": "^4.5.8",
     "axios": "^1.6.8",
     "vite-plugin-monaco-editor": "^1.1.0",
-    "vue": "^3.4.24",
+    "vue": "^3.4.25",
     "vue-router": "^4.3.2"
   },
   "scripts": {
