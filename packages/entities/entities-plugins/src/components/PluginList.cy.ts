@@ -89,7 +89,7 @@ describe('<PluginList />', () => {
         },
       })
 
-      cy.getTestId('dropdown-trigger').eq(0).click()
+      cy.getTestId('overflow-actions-button').eq(0).click()
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
@@ -607,13 +607,15 @@ describe('<PluginList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `plugin-list-${uuidv4()}`
+
       interceptKMMultiPage({
         mockData: plugins100,
       })
 
       cy.mount(PluginList, {
         props: {
-          cacheIdentifier: `plugin-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => { },
           canEdit: () => { },
@@ -653,7 +655,7 @@ describe('<PluginList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(PluginList, {
         props: {
-          cacheIdentifier: `plugin-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => { },
           canEdit: () => { },
@@ -934,13 +936,15 @@ describe('<PluginList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `plugin-list-${uuidv4()}`
+
       interceptKonnectMultiPage({
         mockData: plugins100,
       })
 
       cy.mount(PluginList, {
         props: {
-          cacheIdentifier: `plugin-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => { },
           canEdit: () => { },
@@ -980,7 +984,7 @@ describe('<PluginList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(PluginList, {
         props: {
-          cacheIdentifier: `plugin-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => { },
           canEdit: () => { },

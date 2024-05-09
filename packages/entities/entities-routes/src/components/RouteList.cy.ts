@@ -82,7 +82,7 @@ describe('<RouteList />', () => {
         },
       })
 
-      cy.getTestId('dropdown-trigger').eq(0).click()
+      cy.getTestId('overflow-actions-button').eq(0).click()
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
@@ -469,13 +469,15 @@ describe('<RouteList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `route-list-${uuidv4()}`
+
       interceptKMMultiPage({
         mockData: routesTraditional100,
       })
 
       cy.mount(RouteList, {
         props: {
-          cacheIdentifier: `route-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -515,7 +517,7 @@ describe('<RouteList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(RouteList, {
         props: {
-          cacheIdentifier: `route-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -767,13 +769,15 @@ describe('<RouteList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `route-list-${uuidv4()}`
+
       interceptKonnectMultiPage({
         mockData: routesTraditional100,
       })
 
       cy.mount(RouteList, {
         props: {
-          cacheIdentifier: `route-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},
@@ -813,7 +817,7 @@ describe('<RouteList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(RouteList, {
         props: {
-          cacheIdentifier: `route-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},

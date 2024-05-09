@@ -80,7 +80,7 @@ describe('<CACertificateList />', () => {
         },
       })
 
-      cy.getTestId('dropdown-trigger').eq(0).click()
+      cy.getTestId('overflow-actions-button').eq(0).click()
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
@@ -354,13 +354,15 @@ describe('<CACertificateList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `ca-certificate-list-${uuidv4()}`
+
       interceptKMMultiPage({
         mockData: caCertificate100,
       })
 
       cy.mount(CACertificateList, {
         props: {
-          cacheIdentifier: `ca-certificate-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -400,7 +402,7 @@ describe('<CACertificateList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(CACertificateList, {
         props: {
-          cacheIdentifier: `ca-certificate-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -652,13 +654,15 @@ describe('<CACertificateList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `ca-certificate-list-${uuidv4()}`
+
       interceptKonnectMultiPage({
         mockData: caCertificate100,
       })
 
       cy.mount(CACertificateList, {
         props: {
-          cacheIdentifier: `ca-certificate-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},
@@ -698,7 +702,7 @@ describe('<CACertificateList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(CACertificateList, {
         props: {
-          cacheIdentifier: `ca-certificate-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},

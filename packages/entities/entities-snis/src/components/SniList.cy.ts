@@ -66,7 +66,7 @@ describe('<SniList />', () => {
         },
       })
 
-      cy.getTestId('dropdown-trigger').eq(0).click()
+      cy.getTestId('overflow-actions-button').eq(0).click()
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
@@ -335,13 +335,15 @@ describe('<SniList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `sni-list-${uuidv4()}`
+
       interceptKMMultiPage({
         mockData: snis100,
       })
 
       cy.mount(SniList, {
         props: {
-          cacheIdentifier: `sni-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => { },
           canEdit: () => { },
@@ -381,7 +383,7 @@ describe('<SniList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(SniList, {
         props: {
-          cacheIdentifier: `sni-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => { },
           canEdit: () => { },
@@ -629,13 +631,15 @@ describe('<SniList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `sni-list-${uuidv4()}`
+
       interceptKonnectMultiPage({
         mockData: snis100,
       })
 
       cy.mount(SniList, {
         props: {
-          cacheIdentifier: `sni-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => { },
           canEdit: () => { },
@@ -675,7 +679,7 @@ describe('<SniList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(SniList, {
         props: {
-          cacheIdentifier: `sni-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => { },
           canEdit: () => { },

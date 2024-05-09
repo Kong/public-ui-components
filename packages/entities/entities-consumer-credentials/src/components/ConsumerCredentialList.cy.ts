@@ -74,7 +74,7 @@ describe('<ConsumerCredentialList />', () => {
         },
       })
 
-      cy.getTestId('dropdown-trigger').eq(0).click()
+      cy.getTestId('overflow-actions-button').eq(0).click()
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
@@ -91,7 +91,7 @@ describe('<ConsumerCredentialList />', () => {
         },
       })
 
-      cy.getTestId('dropdown-trigger').eq(0).click()
+      cy.getTestId('overflow-actions-button').eq(0).click()
       cy.getTestId('action-entity-copy-credential').should('be.visible')
     })
 
@@ -111,7 +111,7 @@ describe('<ConsumerCredentialList />', () => {
         },
       })
 
-      cy.getTestId('dropdown-trigger').eq(0).click()
+      cy.getTestId('overflow-actions-button').eq(0).click()
       cy.getTestId('action-entity-copy-key').should('be.visible')
     })
 
@@ -131,7 +131,7 @@ describe('<ConsumerCredentialList />', () => {
         },
       })
 
-      cy.getTestId('dropdown-trigger').eq(0).click()
+      cy.getTestId('overflow-actions-button').eq(0).click()
       cy.getTestId('action-entity-copy-key').should('be.visible')
     })
 
@@ -151,7 +151,7 @@ describe('<ConsumerCredentialList />', () => {
         },
       })
 
-      cy.getTestId('dropdown-trigger').eq(0).click()
+      cy.getTestId('overflow-actions-button').eq(0).click()
       cy.getTestId('action-entity-copy-key').should('be.visible')
     })
 
@@ -171,7 +171,7 @@ describe('<ConsumerCredentialList />', () => {
         },
       })
 
-      cy.getTestId('dropdown-trigger').eq(0).click()
+      cy.getTestId('overflow-actions-button').eq(0).click()
       cy.getTestId('action-entity-copy-secret').should('be.visible')
     })
 
@@ -191,7 +191,7 @@ describe('<ConsumerCredentialList />', () => {
         },
       })
 
-      cy.getTestId('dropdown-trigger').eq(0).click()
+      cy.getTestId('overflow-actions-button').eq(0).click()
       cy.getTestId('action-entity-copy-secret').should('be.visible')
     })
 
@@ -210,7 +210,7 @@ describe('<ConsumerCredentialList />', () => {
             },
           })
 
-          cy.getTestId('dropdown-trigger').eq(0).click()
+          cy.getTestId('overflow-actions-button').eq(0).click()
           cy.getTestId('action-entity-edit').should(`${expected ? '' : 'not.'}exist`)
         })
 
@@ -227,7 +227,7 @@ describe('<ConsumerCredentialList />', () => {
             },
           })
 
-          cy.getTestId('dropdown-trigger').eq(0).click()
+          cy.getTestId('overflow-actions-button').eq(0).click()
           cy.getTestId('action-entity-delete').should(`${expected ? '' : 'not.'}exist`)
         })
       })
@@ -450,13 +450,15 @@ describe('<ConsumerCredentialList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `consumer-credential-list-${uuidv4()}`
+
       interceptKMMultiPage({
         mockData: basicAuthCredentials100,
       })
 
       cy.mount(ConsumerCredentialList, {
         props: {
-          cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -496,7 +498,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(ConsumerCredentialList, {
         props: {
-          cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -743,13 +745,15 @@ describe('<ConsumerCredentialList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `consumer-credential-list-${uuidv4()}`
+
       interceptKonnectMultiPage({
         mockData: basicAuthCredentials100,
       })
 
       cy.mount(ConsumerCredentialList, {
         props: {
-          cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},
@@ -788,7 +792,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(ConsumerCredentialList, {
         props: {
-          cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},

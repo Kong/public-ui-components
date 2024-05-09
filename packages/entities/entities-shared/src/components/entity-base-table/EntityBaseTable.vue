@@ -25,11 +25,14 @@
       :initial-fetcher-params="combinedInitialFetcherParams"
       :loading="isLoading"
       :pagination-offset="paginationType === 'offset'"
+      resize-columns
       :row-attrs="rowAttrs"
       :search-input="query"
       :sort-handler-function="enableClientSort ? sortHandlerFunction : undefined"
       :sortable="!disableSorting"
+      :table-preferences="tablePreferences"
       @empty-state-action-click="handleEmptyStateCtaClicked"
+      @ktable-empty-state-cta-clicked="handleEmptyStateCtaClicked"
       @row:click="handleRowClick"
       @sort="(params: any) => handleSortChanged(params)"
       @update:table-preferences="handleUpdateTablePreferences"
@@ -116,8 +119,7 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import composables from '../../composables'
 import { useTablePreferences } from '@kong-ui-public/core'
-import type { UserTablePreferences } from '@kong-ui-public/core'
-import type { SwrvStateData, HeaderTag } from '@kong/kongponents'
+import type { SwrvStateData, HeaderTag, TablePreferences } from '@kong/kongponents'
 import { KUI_COLOR_TEXT_NEUTRAL_STRONGER } from '@kong/design-tokens'
 import EntityBaseTableCell from './EntityBaseTableCell.vue'
 
@@ -291,6 +293,7 @@ const headers = computed<Array<InternalHeader>>(() => {
       label: field.label ?? key,
       key,
       sortable: field.sortable ?? false,
+      hidable: true,
     })
   })
 
@@ -355,20 +358,29 @@ const handleSortChanged = (sortParams: TableSortParams): void => {
 }
 
 const { setTablePreferences, getTablePreferences } = useTablePreferences()
+
+// Use unique key cacheId (passed down from consuming app and derived from controlPlaneId)
+// for localStorage of user's table preferences across tables, orgs and users
+
+const tablePreferences = ref<TablePreferences>(getTablePreferences(cacheId.value))
+
 const combinedInitialFetcherParams = computed((): Partial<FetcherParams> => {
   // Pass the preferencesStorageKey regardless; if no entry is found, it will return the default
-  const userTablePreferences = getTablePreferences(props.preferencesStorageKey)
+  const userTablePreferences = getTablePreferences(cacheId.value)
 
   // Return the props.initialFetcherParams, appending any stored user preferences
+
   return {
     ...props.initialFetcherParams,
     ...userTablePreferences,
   }
 })
 
-const handleUpdateTablePreferences = (tablePreferences: UserTablePreferences): void => {
-  if (props.preferencesStorageKey) {
-    setTablePreferences(props.preferencesStorageKey, tablePreferences)
+const handleUpdateTablePreferences = (newTablePreferences: TablePreferences): void => {
+  tablePreferences.value = newTablePreferences
+
+  if (cacheId.value) {
+    setTablePreferences(cacheId.value, newTablePreferences)
   }
 }
 </script>

@@ -1,5 +1,5 @@
 import { USER_TABLE_PREFERENCES_LOCAL_STORAGE_KEY, DEFAULT_USER_TABLE_PREFERENCES } from '../constants'
-import type { UserTablePreferences } from './types'
+import type { TablePreferences } from '@kong/kongponents'
 
 export default function useTablePreferences() {
   /**
@@ -41,9 +41,9 @@ export default function useTablePreferences() {
   /**
    * Store the preferences for a table, by unique id string, to localStorage for persistence
    * @param {string} tableKey The table identifier
-   * @param {UserTablePreferences} newPreferences The table preferences object to store
+   * @param {TablePreferences} newPreferences The table preferences object to store
    */
-  const setTablePreferences = (tableKey: string, newPreferences: UserTablePreferences): void => {
+  const setTablePreferences = (tableKey: string, newPreferences: TablePreferences): void => {
     // Wrap in a try/catch in case localStorage is full
     try {
       const existingPreferencesMap = getAllTablePreferences()
@@ -60,9 +60,9 @@ export default function useTablePreferences() {
   /**
    * Retrieve the stored table preferences for a table, by unique id string. Fallback to the default table preferences
    * @param {string} tableKey The table identifier
-   * @returns {UserTablePreferences} The stored preferences for the given tableKey
+   * @returns {TablePreferences} The stored preferences for the given tableKey
    */
-  const getTablePreferences = (tableKey: string): UserTablePreferences => {
+  const getTablePreferences = (tableKey: string): TablePreferences => {
     const existingPreferences = getAllTablePreferences()
 
     const tablePreferences = existingPreferences?.get(tableKey) || undefined

@@ -74,7 +74,7 @@ describe('<UpstreamsList />', () => {
     it('should always show the Copy ID action', () => {
       cy.mount(UpstreamsList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier: `upstreams-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},
@@ -83,7 +83,7 @@ describe('<UpstreamsList />', () => {
         },
       })
 
-      cy.getTestId('dropdown-trigger').eq(0).click()
+      cy.getTestId('overflow-actions-button').eq(0).click()
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
@@ -94,7 +94,7 @@ describe('<UpstreamsList />', () => {
 
           cy.mount(UpstreamsList, {
             props: {
-              cacheIdentifier: `certificate-list-${uuidv4()}`,
+              cacheIdentifier: `upstreams-list-${uuidv4()}`,
               config: baseConfigKonnect,
               canCreate: () => {},
               canEdit: () => {},
@@ -117,7 +117,7 @@ describe('<UpstreamsList />', () => {
         it(`should ${expected ? 'show' : 'hide'} the View Details action if canRetrieve evaluates to ${expected}`, () => {
           cy.mount(UpstreamsList, {
             props: {
-              cacheIdentifier: `certificate-list-${uuidv4()}`,
+              cacheIdentifier: `upstreams-list-${uuidv4()}`,
               config: baseConfigKonnect,
               canCreate: () => {},
               canEdit: () => {},
@@ -133,7 +133,7 @@ describe('<UpstreamsList />', () => {
         it(`should ${expected ? '' : 'not'} include the Edit action if canEdit evaluates to ${expected}`, () => {
           cy.mount(UpstreamsList, {
             props: {
-              cacheIdentifier: `certificate-list-${uuidv4()}`,
+              cacheIdentifier: `upstreams-list-${uuidv4()}`,
               config: baseConfigKonnect,
               canCreate: () => {},
               canEdit: () => expected,
@@ -149,7 +149,7 @@ describe('<UpstreamsList />', () => {
         it(`should ${expected ? '' : 'not'} include the Delete action if canDelete evaluates to ${expected}`, () => {
           cy.mount(UpstreamsList, {
             props: {
-              cacheIdentifier: `certificate-list-${uuidv4()}`,
+              cacheIdentifier: `upstreams-list-${uuidv4()}`,
               config: baseConfigKonnect,
               canCreate: () => {},
               canEdit: () => {},
@@ -211,7 +211,7 @@ describe('<UpstreamsList />', () => {
 
       cy.mount(UpstreamsList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier: `upstreams-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => true,
           canEdit: () => {},
@@ -231,7 +231,7 @@ describe('<UpstreamsList />', () => {
 
       cy.mount(UpstreamsList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier: `upstreams-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => false,
           canEdit: () => {},
@@ -261,7 +261,7 @@ describe('<UpstreamsList />', () => {
 
         cy.mount(UpstreamsList, {
           props: {
-            cacheIdentifier: `certificate-list-${uuidv4()}`,
+            cacheIdentifier: `upstreams-list-${uuidv4()}`,
             config: baseConfigKM,
             canCreate: () => {},
             canEdit: () => {},
@@ -289,7 +289,7 @@ describe('<UpstreamsList />', () => {
 
       cy.mount(UpstreamsList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier: `upstreams-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -314,7 +314,7 @@ describe('<UpstreamsList />', () => {
 
       cy.mount(UpstreamsList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier: `upstreams-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -382,13 +382,15 @@ describe('<UpstreamsList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `upstreams-list-${uuidv4()}`
+
       interceptKMMultiPage({
         mockData: upstreams100,
       })
 
       cy.mount(UpstreamsList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -428,7 +430,7 @@ describe('<UpstreamsList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(UpstreamsList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKM,
           canCreate: () => {},
           canEdit: () => {},
@@ -509,7 +511,7 @@ describe('<UpstreamsList />', () => {
 
       cy.mount(UpstreamsList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier: `upstreams-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => true,
           canEdit: () => {},
@@ -529,7 +531,7 @@ describe('<UpstreamsList />', () => {
 
       cy.mount(UpstreamsList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier: `upstreams-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => false,
           canEdit: () => {},
@@ -559,7 +561,7 @@ describe('<UpstreamsList />', () => {
 
         cy.mount(UpstreamsList, {
           props: {
-            cacheIdentifier: `certificate-list-${uuidv4()}`,
+            cacheIdentifier: `upstreams-list-${uuidv4()}`,
             config: baseConfigKonnect,
             canCreate: () => {},
             canEdit: () => {},
@@ -587,7 +589,7 @@ describe('<UpstreamsList />', () => {
 
       cy.mount(UpstreamsList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier: `upstreams-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},
@@ -612,7 +614,7 @@ describe('<UpstreamsList />', () => {
 
       cy.mount(UpstreamsList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier: `upstreams-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},
@@ -680,13 +682,15 @@ describe('<UpstreamsList />', () => {
     })
 
     it('should allow picking different page sizes and persist the preference', () => {
+      const cacheIdentifier = `upstreams-list-${uuidv4()}`
+
       interceptKonnectMultiPage({
         mockData: upstreams100,
       })
 
       cy.mount(UpstreamsList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},
@@ -726,7 +730,7 @@ describe('<UpstreamsList />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
       cy.mount(UpstreamsList, {
         props: {
-          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          cacheIdentifier,
           config: baseConfigKonnect,
           canCreate: () => {},
           canEdit: () => {},
