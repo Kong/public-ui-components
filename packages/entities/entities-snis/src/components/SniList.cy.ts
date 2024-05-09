@@ -179,8 +179,8 @@ describe('<SniList />', () => {
 
       cy.wait('@getSnis')
       cy.get('.kong-ui-entities-snis-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .empty-state-action .k-button').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
+      cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
     })
 
     it('should hide empty state and create sni cta if user can not create', () => {
@@ -199,8 +199,8 @@ describe('<SniList />', () => {
 
       cy.wait('@getSnis')
       cy.get('.kong-ui-entities-snis-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .empty-state-action .k-button').should('not.exist')
+      cy.get('.table-empty-state').should('be.visible')
+      cy.get('.table-empty-state .empty-state-action .k-button').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -229,9 +229,9 @@ describe('<SniList />', () => {
 
         cy.wait('@getSnis')
         cy.get('.kong-ui-entities-snis-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -277,7 +277,7 @@ describe('<SniList />', () => {
       })
 
       const l = '.kong-ui-entities-snis-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getSnisMultiPage')
 
@@ -353,7 +353,7 @@ describe('<SniList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-snis-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getSnisMultiPage')
 
@@ -473,8 +473,8 @@ describe('<SniList />', () => {
 
       cy.wait('@getSnis')
       cy.get('.kong-ui-entities-snis-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .empty-state-action .k-button').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
+      cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
     })
 
     it('should hide empty state and create sni cta if user can not create', () => {
@@ -493,7 +493,7 @@ describe('<SniList />', () => {
 
       cy.wait('@getSnis')
       cy.get('.kong-ui-entities-snis-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="add-route"]').should('not.exist')
     })
 
@@ -523,9 +523,9 @@ describe('<SniList />', () => {
 
         cy.wait('@getSnis')
         cy.get('.kong-ui-entities-snis-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -571,7 +571,7 @@ describe('<SniList />', () => {
       })
 
       const l = '.kong-ui-entities-snis-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getSnisMultiPage')
 
@@ -647,7 +647,7 @@ describe('<SniList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-snis-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getSnisMultiPage')
 

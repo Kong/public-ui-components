@@ -447,7 +447,7 @@ describe('<PluginList />', () => {
 
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-plugins-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-plugin"]').should('be.visible')
     })
 
@@ -467,7 +467,7 @@ describe('<PluginList />', () => {
 
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-plugins-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-plugin"]').should('not.exist')
     })
 
@@ -497,9 +497,9 @@ describe('<PluginList />', () => {
 
         cy.wait('@getRoutes')
         cy.get('.kong-ui-entities-plugins-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -549,7 +549,7 @@ describe('<PluginList />', () => {
       })
 
       const l = '.kong-ui-entities-plugins-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getRoutesMultiPage')
 
@@ -625,7 +625,7 @@ describe('<PluginList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-plugins-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getRoutesMultiPage')
 
@@ -774,7 +774,7 @@ describe('<PluginList />', () => {
 
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-plugins-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-plugin"]').should('be.visible')
     })
 
@@ -794,7 +794,7 @@ describe('<PluginList />', () => {
 
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-plugins-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-plugin"]').should('not.exist')
     })
 
@@ -824,9 +824,9 @@ describe('<PluginList />', () => {
 
         cy.wait('@getRoutes')
         cy.get('.kong-ui-entities-plugins-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -876,7 +876,7 @@ describe('<PluginList />', () => {
       })
 
       const l = '.kong-ui-entities-plugins-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getRoutesMultiPage')
 
@@ -952,7 +952,7 @@ describe('<PluginList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-plugins-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getRoutesMultiPage')
 

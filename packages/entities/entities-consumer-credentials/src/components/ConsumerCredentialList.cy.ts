@@ -290,7 +290,7 @@ describe('<ConsumerCredentialList />', () => {
 
       cy.wait('@getCredentials')
       cy.get('.kong-ui-entities-consumer-credentials-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-basic-auth-credential"]').should('be.visible')
     })
 
@@ -310,7 +310,7 @@ describe('<ConsumerCredentialList />', () => {
 
       cy.wait('@getCredentials')
       cy.get('.kong-ui-entities-consumer-credentials-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-basic-auth-credential"]').should('not.exist')
     })
 
@@ -340,9 +340,9 @@ describe('<ConsumerCredentialList />', () => {
 
         cy.wait('@getCredentials')
         cy.get('.kong-ui-entities-consumer-credentials-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -392,7 +392,7 @@ describe('<ConsumerCredentialList />', () => {
       })
 
       const l = '.kong-ui-entities-consumer-credentials-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getCredentialsMultiPage')
 
@@ -468,7 +468,7 @@ describe('<ConsumerCredentialList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-consumer-credentials-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getCredentialsMultiPage')
 
@@ -587,7 +587,7 @@ describe('<ConsumerCredentialList />', () => {
 
       cy.wait('@getCredentials')
       cy.get('.kong-ui-entities-consumer-credentials-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-basic-auth-credential"]').should('be.visible')
     })
 
@@ -606,7 +606,7 @@ describe('<ConsumerCredentialList />', () => {
 
       cy.wait('@getCredentials')
       cy.get('.kong-ui-entities-consumer-credentials-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-basic-auth-credential"]').should('not.exist')
     })
 
@@ -635,9 +635,9 @@ describe('<ConsumerCredentialList />', () => {
 
         cy.wait('@getCredentials')
         cy.get('.kong-ui-entities-consumer-credentials-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -685,7 +685,7 @@ describe('<ConsumerCredentialList />', () => {
       })
 
       const l = '.kong-ui-entities-consumer-credentials-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getCredentialsMultiPage')
 
@@ -760,7 +760,7 @@ describe('<ConsumerCredentialList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-consumer-credentials-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getCredentialsMultiPage')
 
