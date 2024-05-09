@@ -119,8 +119,7 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import composables from '../../composables'
 import { useTablePreferences } from '@kong-ui-public/core'
-import type { UserTablePreferences } from '@kong-ui-public/core'
-import type { SwrvStateData, HeaderTag } from '@kong/kongponents'
+import type { SwrvStateData, HeaderTag, TablePreferences } from '@kong/kongponents'
 import { KUI_COLOR_TEXT_NEUTRAL_STRONGER } from '@kong/design-tokens'
 import EntityBaseTableCell from './EntityBaseTableCell.vue'
 
@@ -363,7 +362,7 @@ const { setTablePreferences, getTablePreferences } = useTablePreferences()
 // Use unique key cacheId (passed down from consuming app and derived from controlPlaneId)
 // for localStorage of user's table preferences across tables, orgs and users
 
-const tablePreferences = ref<UserTablePreferences>(getTablePreferences(cacheId.value))
+const tablePreferences = ref<TablePreferences>(getTablePreferences(cacheId.value))
 
 const combinedInitialFetcherParams = computed((): Partial<FetcherParams> => {
   // Pass the preferencesStorageKey regardless; if no entry is found, it will return the default
@@ -377,7 +376,7 @@ const combinedInitialFetcherParams = computed((): Partial<FetcherParams> => {
   }
 })
 
-const handleUpdateTablePreferences = (newTablePreferences: UserTablePreferences): void => {
+const handleUpdateTablePreferences = (newTablePreferences: TablePreferences): void => {
   tablePreferences.value = newTablePreferences
 
   if (cacheId.value) {
