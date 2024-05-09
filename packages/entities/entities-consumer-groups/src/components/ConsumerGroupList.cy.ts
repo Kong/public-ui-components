@@ -140,7 +140,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getConsumerGroups')
       cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-consumer-group"]').should('be.visible')
     })
 
@@ -160,7 +160,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getConsumerGroups')
       cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-consumer-group"]').should('not.exist')
     })
 
@@ -190,9 +190,9 @@ describe('<ConsumerGroupList />', () => {
 
         cy.wait('@getConsumerGroups')
         cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -242,7 +242,7 @@ describe('<ConsumerGroupList />', () => {
       })
 
       const l = '.kong-ui-entities-consumer-groups-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getConsumerGroupsMultiPage')
 
@@ -318,7 +318,7 @@ describe('<ConsumerGroupList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-consumer-groups-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getConsumerGroupsMultiPage')
 
@@ -756,7 +756,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getConsumerGroups')
       cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-consumer-group"]').should('be.visible')
     })
 
@@ -776,7 +776,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getConsumerGroups')
       cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-consumer-group"]').should('not.exist')
     })
 
@@ -806,9 +806,9 @@ describe('<ConsumerGroupList />', () => {
 
         cy.wait('@getConsumerGroups')
         cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -858,7 +858,7 @@ describe('<ConsumerGroupList />', () => {
       })
 
       const l = '.kong-ui-entities-consumer-groups-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getConsumerGroupsMultiPage')
 
@@ -934,7 +934,7 @@ describe('<ConsumerGroupList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-consumer-groups-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getConsumerGroupsMultiPage')
 

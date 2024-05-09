@@ -25,11 +25,11 @@
           <KTable
             class="vitals-table"
             disable-pagination
-            disable-sorting
             :fetcher="fetcher"
             :fetcher-cache-key="String(fetcherCacheKey)"
-            :has-hover="false"
             :headers="tableData?.headers || []"
+            :row-hover="false"
+            :sortable="false"
           >
             <template #empty-state>
               <KEmptyState
