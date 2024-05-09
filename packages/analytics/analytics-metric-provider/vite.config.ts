@@ -22,7 +22,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/i18n',
         '@kong-ui-public/analytics-config-store',
         '@kong-ui-public/analytics-utilities',
-        '@kong-ui-public/metric-cards',
+        //        '@kong-ui-public/metric-cards',
         'pinia',
       ],
       output: {
