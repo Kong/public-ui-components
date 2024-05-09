@@ -259,8 +259,8 @@ describe('<CertificateList />', () => {
 
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-certificates-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .empty-state-action .k-button').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
+      cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
     })
 
     it('should hide empty state and create certificate cta if user can not create', () => {
@@ -279,7 +279,7 @@ describe('<CertificateList />', () => {
 
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-certificates-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-certificate"]').should('not.exist')
     })
 
@@ -309,9 +309,9 @@ describe('<CertificateList />', () => {
 
         cy.wait('@getCertificate')
         cy.get('.kong-ui-entities-certificates-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -336,7 +336,7 @@ describe('<CertificateList />', () => {
       })
 
       const l = '.kong-ui-entities-certificates-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getCertificateMultiPage')
 
@@ -414,7 +414,7 @@ describe('<CertificateList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-certificates-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getCertificateMultiPage')
 
@@ -567,8 +567,8 @@ describe('<CertificateList />', () => {
 
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-certificates-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .empty-state-action .k-button').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
+      cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
     })
 
     it('should hide empty state and create certificate cta if user can not create', () => {
@@ -586,7 +586,7 @@ describe('<CertificateList />', () => {
 
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-certificates-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-certificate"]').should('not.exist')
     })
 
@@ -616,9 +616,9 @@ describe('<CertificateList />', () => {
 
         cy.wait('@getCertificate')
         cy.get('.kong-ui-entities-certificates-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -643,7 +643,7 @@ describe('<CertificateList />', () => {
       })
 
       const l = '.kong-ui-entities-certificates-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getCertificateMultiPage')
 
@@ -721,7 +721,7 @@ describe('<CertificateList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-certificates-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getCertificateMultiPage')
 

@@ -215,7 +215,7 @@ describe('<VaultList />', () => {
 
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-vault"]').should('be.visible')
     })
 
@@ -235,7 +235,7 @@ describe('<VaultList />', () => {
 
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-vault"]').should('not.exist')
     })
 
@@ -265,9 +265,9 @@ describe('<VaultList />', () => {
 
         cy.wait('@getRoutes')
         cy.get('.kong-ui-entities-vaults-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -317,7 +317,7 @@ describe('<VaultList />', () => {
       })
 
       const l = '.kong-ui-entities-vaults-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getRoutesMultiPage')
 
@@ -395,7 +395,7 @@ describe('<VaultList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-vaults-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getRoutesMultiPage')
 
@@ -515,7 +515,7 @@ describe('<VaultList />', () => {
 
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-vault"]').should('be.visible')
     })
 
@@ -535,7 +535,7 @@ describe('<VaultList />', () => {
 
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-vault"]').should('not.exist')
     })
 
@@ -565,9 +565,9 @@ describe('<VaultList />', () => {
 
         cy.wait('@getRoutes')
         cy.get('.kong-ui-entities-vaults-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -617,7 +617,7 @@ describe('<VaultList />', () => {
       })
 
       const l = '.kong-ui-entities-vaults-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getRoutesMultiPage')
 
@@ -695,7 +695,7 @@ describe('<VaultList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-vaults-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getRoutesMultiPage')
 

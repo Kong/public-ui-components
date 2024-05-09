@@ -309,8 +309,8 @@ describe('<RouteList />', () => {
 
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-routes-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .empty-state-action .k-button').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
+      cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
     })
 
     it('should hide empty state and create route cta if user can not create', () => {
@@ -329,8 +329,8 @@ describe('<RouteList />', () => {
 
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-routes-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .empty-state-action .k-button').should('not.exist')
+      cy.get('.table-empty-state').should('be.visible')
+      cy.get('.table-empty-state .empty-state-action .k-button').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -359,9 +359,9 @@ describe('<RouteList />', () => {
 
         cy.wait('@getRoutes')
         cy.get('.kong-ui-entities-routes-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -411,7 +411,7 @@ describe('<RouteList />', () => {
       })
 
       const l = '.kong-ui-entities-routes-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getRoutesMultiPage')
 
@@ -489,7 +489,7 @@ describe('<RouteList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-routes-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getRoutesMultiPage')
 
@@ -609,8 +609,8 @@ describe('<RouteList />', () => {
 
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-routes-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .empty-state-action .k-button').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
+      cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
     })
 
     it('should hide empty state and create route cta if user can not create', () => {
@@ -629,8 +629,8 @@ describe('<RouteList />', () => {
 
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-routes-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .empty-state-action .k-button').should('not.exist')
+      cy.get('.table-empty-state').should('be.visible')
+      cy.get('.table-empty-state .empty-state-action .k-button').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -659,9 +659,9 @@ describe('<RouteList />', () => {
 
         cy.wait('@getRoutes')
         cy.get('.kong-ui-entities-routes-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -711,7 +711,7 @@ describe('<RouteList />', () => {
       })
 
       const l = '.kong-ui-entities-routes-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getRoutesMultiPage')
 
@@ -789,7 +789,7 @@ describe('<RouteList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-routes-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getRoutesMultiPage')
 

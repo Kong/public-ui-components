@@ -278,7 +278,6 @@ $errorColor: #f00;
 <style lang="scss" scoped>
 .form-group-label {
   display: flex;
-  justify-content: space-between;
 
   :deep(.k-tooltip p) {
     margin: 0;

@@ -219,7 +219,7 @@ describe('<KeyList />', () => {
 
       cy.wait('@getKeys')
       cy.get('.kong-ui-entities-keys-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-key"]').should('be.visible')
     })
 
@@ -239,7 +239,7 @@ describe('<KeyList />', () => {
 
       cy.wait('@getKeys')
       cy.get('.kong-ui-entities-keys-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-key"]').should('not.exist')
     })
 
@@ -269,9 +269,9 @@ describe('<KeyList />', () => {
 
         cy.wait('@getKeys')
         cy.get('.kong-ui-entities-keys-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -321,7 +321,7 @@ describe('<KeyList />', () => {
       })
 
       const l = '.kong-ui-entities-keys-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getKeysMultiPage')
 
@@ -399,7 +399,7 @@ describe('<KeyList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-keys-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getKeysMultiPage')
 
@@ -519,7 +519,7 @@ describe('<KeyList />', () => {
 
       cy.wait('@getKeys')
       cy.get('.kong-ui-entities-keys-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-key"]').should('be.visible')
     })
 
@@ -539,7 +539,7 @@ describe('<KeyList />', () => {
 
       cy.wait('@getKeys')
       cy.get('.kong-ui-entities-keys-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-key"]').should('not.exist')
     })
 
@@ -569,9 +569,9 @@ describe('<KeyList />', () => {
 
         cy.wait('@getKeys')
         cy.get('.kong-ui-entities-keys-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -621,7 +621,7 @@ describe('<KeyList />', () => {
       })
 
       const l = '.kong-ui-entities-keys-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getKeysMultiPage')
 
@@ -699,7 +699,7 @@ describe('<KeyList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-keys-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getKeysMultiPage')
 

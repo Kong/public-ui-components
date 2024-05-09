@@ -8,28 +8,30 @@
       ref="tableRefs"
       :cache-identifier="cacheId"
       :cell-attrs="cellAttrs"
+      :client-sort="enableClientSort"
       :disable-pagination-page-jump="disablePaginationPageJump"
-      :disable-sorting="disableSorting"
       :empty-state-action-message="query ? t('baseTable.emptyState.noSearchResultsCtaText') : emptyStateOptions.ctaText"
       :empty-state-action-route="query ? undefined : emptyStateOptions.ctaPath"
       :empty-state-icon-variant="query ? 'search' : 'kong'"
       :empty-state-message="query ? t('baseTable.emptyState.noSearchResultsMessage') : emptyStateOptions.message"
       :empty-state-title="query ? t('baseTable.emptyState.noSearchResultsTitle') : emptyStateOptions.title"
-      :enable-client-sort="enableClientSort"
+      :error="tableErrorState.hasError"
       :error-state-message="tableErrorState.message"
       :error-state-title="tableErrorState.title"
       :fetcher="fetcher"
       :fetcher-cache-key="String(fetcherCacheKey)"
-      :has-error="tableErrorState.hasError"
       :headers="headers"
       hide-pagination-when-optional
       :initial-fetcher-params="combinedInitialFetcherParams"
-      :is-loading="isLoading"
-      :pagination-type="paginationType"
+      :loading="isLoading"
+      :pagination-offset="paginationType === 'offset'"
       resize-columns
       :row-attrs="rowAttrs"
       :search-input="query"
+      :sort-handler-function="enableClientSort ? sortHandlerFunction : undefined"
+      :sortable="!disableSorting"
       :table-preferences="tablePreferences"
+      @empty-state-action-click="handleEmptyStateCtaClicked"
       @ktable-empty-state-cta-clicked="handleEmptyStateCtaClicked"
       @row:click="handleRowClick"
       @sort="(params: any) => handleSortChanged(params)"
@@ -177,6 +179,10 @@ const props = defineProps({
   enableClientSort: {
     type: Boolean,
     default: false,
+  },
+  sortHandlerFunction: {
+    type: Function,
+    default: () => ({}),
   },
   // whether to show the actions column
   enableEntityActions: {
@@ -384,6 +390,7 @@ const handleUpdateTablePreferences = (newTablePreferences: UserTablePreferences)
 .kong-ui-entity-base-table {
   .toolbar-container {
     align-items: center;
+    display: flex;
     width: 100%;
   }
 

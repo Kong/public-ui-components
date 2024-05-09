@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.1.0...@kong-ui-public/entities-vaults@3.1.1) (2024-05-09)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 12 [KHCP-11651] ([#1371](https://github.com/Kong/public-ui-components/issues/1371)) ([6241fe5](https://github.com/Kong/public-ui-components/commit/6241fe51d8f08d4fc7d4e58eb6b02a0a0b100d81))
+
+
+
+
+
+# [3.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.0.13...@kong-ui-public/entities-vaults@3.1.0) (2024-05-07)
+
+
+### Features
+
+* **entities-vaults:** add aws vault fields ([#1389](https://github.com/Kong/public-ui-components/issues/1389)) ([8317de6](https://github.com/Kong/public-ui-components/commit/8317de61354a4d47092cb2cd9ff31e087417c557))
+
+
+
+
+
+## [3.0.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.0.12...@kong-ui-public/entities-vaults@3.0.13) (2024-05-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [3.0.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.0.11...@kong-ui-public/entities-vaults@3.0.12) (2024-05-03)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
 ## [3.0.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.0.10...@kong-ui-public/entities-vaults@3.0.11) (2024-04-25)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

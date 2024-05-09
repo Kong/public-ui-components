@@ -103,7 +103,7 @@ describe('<EntityBaseTable />', () => {
         fetcher: () => mockTableData,
       },
     })
-    cy.get('.kong-ui-entity-base-table .k-table-error-state').should('not.exist')
+    cy.get('.kong-ui-entity-base-table .table-error-state').should('not.exist')
 
     cy.mount(EntityBaseTable, {
       props: {
@@ -111,7 +111,7 @@ describe('<EntityBaseTable />', () => {
         fetcher: () => mockTableData,
       },
     })
-    cy.get('.kong-ui-entity-base-table .k-table-error-state').should('not.exist')
+    cy.get('.kong-ui-entity-base-table .table-error-state').should('not.exist')
   })
 
   it('should accept string for table error message', () => {

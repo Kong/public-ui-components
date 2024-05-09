@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.11.9...@kong-ui-public/swagger-ui-web-component@0.12.0) (2024-05-06)
+
+
+### Features
+
+* **deps:** update swagger ui to 5.7.2 ([#1374](https://github.com/Kong/public-ui-components/issues/1374)) ([e158a00](https://github.com/Kong/public-ui-components/commit/e158a0069c25a38e6eefbff5950bcb2a421e3013))
+
+
+
+
+
 ## [0.11.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.11.8...@kong-ui-public/swagger-ui-web-component@0.11.9) (2024-04-22)
 
 **Note:** Version bump only for package @kong-ui-public/swagger-ui-web-component

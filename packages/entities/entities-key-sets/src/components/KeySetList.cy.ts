@@ -219,8 +219,8 @@ describe('<KeySetList />', () => {
 
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-key-sets-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .empty-state-action .k-button').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
+      cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
     })
 
     it('should hide empty state and create key set cta if user can not create', () => {
@@ -239,8 +239,8 @@ describe('<KeySetList />', () => {
 
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-key-sets-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .empty-state-action .k-button').should('not.exist')
+      cy.get('.table-empty-state').should('be.visible')
+      cy.get('.table-empty-state .empty-state-action .k-button').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -269,9 +269,9 @@ describe('<KeySetList />', () => {
 
         cy.wait('@getKeySets')
         cy.get('.kong-ui-entities-key-sets-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -321,7 +321,7 @@ describe('<KeySetList />', () => {
       })
 
       const l = '.kong-ui-entities-key-sets-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getKeySetsMultiPage')
 
@@ -399,7 +399,7 @@ describe('<KeySetList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-key-sets-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getKeySetsMultiPage')
 
@@ -519,8 +519,8 @@ describe('<KeySetList />', () => {
 
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-key-sets-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .empty-state-action .k-button').should('be.visible')
+      cy.get('.table-empty-state').should('be.visible')
+      cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
     })
 
     it('should hide empty state and create key set cta if user can not create', () => {
@@ -539,8 +539,8 @@ describe('<KeySetList />', () => {
 
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-key-sets-list').should('be.visible')
-      cy.get('.k-table-empty-state').should('be.visible')
-      cy.get('.k-table-empty-state .empty-state-action .k-button').should('not.exist')
+      cy.get('.table-empty-state').should('be.visible')
+      cy.get('.table-empty-state .empty-state-action .k-button').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -569,9 +569,9 @@ describe('<KeySetList />', () => {
 
         cy.wait('@getKeySets')
         cy.get('.kong-ui-entities-key-sets-list').should('be.visible')
-        cy.get('.k-table-error-state').should('be.visible')
+        cy.get('.table-error-state').should('be.visible')
         if (message) {
-          cy.get('.k-table-error-state .empty-state-message').should('contain.text', message)
+          cy.get('.table-error-state .empty-state-message').should('contain.text', message)
         }
       }
 
@@ -621,7 +621,7 @@ describe('<KeySetList />', () => {
       })
 
       const l = '.kong-ui-entities-key-sets-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getKeySetsMultiPage')
 
@@ -699,7 +699,7 @@ describe('<KeySetList />', () => {
         .as('vueWrapper')
 
       const l = '.kong-ui-entities-key-sets-list'
-      const p = '[data-testid="k-table-pagination"]'
+      const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getKeySetsMultiPage')
 

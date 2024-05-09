@@ -167,6 +167,18 @@
                 "location": "US West"
               }
             }
+          },
+          "endpoint_url": {
+            "label": "Endpoint URL",
+            "tooltip": "The AWS SecretsManager service endpoint url. If not specified, the value used by vault will be the official AWS SecretsManager service url which is `https://secretsmanager.<region>.amazonaws.com`. You can specify a complete URL(including the \"http/https\" scheme) to override the endpoint that vault will connect to."
+          },
+          "assume_role_arn": {
+            "label": "Assume Role ARN",
+            "tooltip": "The target AWS IAM role ARN that will be assumed. Typically this is used for operating between multiple roles or cross-accounts. If you are not using assume role you should not specify this value."
+          },
+          "role_session_name": {
+            "label": "Role Session Name",
+            "tooltip": "The role session name used for role assuming."
           }
         }
       },
