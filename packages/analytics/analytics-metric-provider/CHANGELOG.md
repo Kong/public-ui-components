@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@7.0.5...@kong-ui-public/analytics-metric-provider@7.1.0) (2024-05-09)
+
+
+### Features
+
+* **analytics-metric-provider:** merge metric cards [MA-2757] ([#1388](https://github.com/Kong/public-ui-components/issues/1388)) ([48b7176](https://github.com/Kong/public-ui-components/commit/48b7176d64468942acee8a1726e94828e4e703e1))
+
+
+
+
+
 ## [7.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@7.0.4...@kong-ui-public/analytics-metric-provider@7.0.5) (2024-05-09)
 
 
