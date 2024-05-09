@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import MetricsConsumer from './MetricsConsumer.vue'
 import MetricsProvider from './MetricsProvider.vue'
-import { MetricCardSize } from '@kong-ui-public/metric-cards'
+import { MetricCardSize } from '../enums'
 import type { ExploreFilter, QueryableExploreDimensions } from '@kong-ui-public/analytics-utilities'
 import { computed } from 'vue'
 
