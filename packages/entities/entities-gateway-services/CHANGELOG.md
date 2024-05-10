@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.2.2...@kong-ui-public/entities-gateway-services@3.2.3) (2024-05-10)
+
+
+### Bug Fixes
+
+* **gateway-services:** fix gateway service tags input ([#1397](https://github.com/Kong/public-ui-components/issues/1397)) ([65f2b6a](https://github.com/Kong/public-ui-components/commit/65f2b6a44f8f99b6a8d68e93b3612f1907dd6df1))
+
+
+
+
+
 ## [3.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.2.1...@kong-ui-public/entities-gateway-services@3.2.2) (2024-05-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services
