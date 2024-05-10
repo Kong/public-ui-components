@@ -40,10 +40,10 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-plugin"
-              icon="plus"
               size="large"
               :to="config.createRoute"
             >
+              <AddIcon />
               {{ t('plugins.list.toolbar_actions.new_plugin') }}
             </KButton>
           </PermissionsWrapper>
@@ -246,6 +246,7 @@ import type {
   FuzzyMatchFilterConfig,
   TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
+import { AddIcon } from '@kong/icons'
 
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'

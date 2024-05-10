@@ -28,10 +28,10 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-new-target"
-              icon="plus"
               :to="props.config.createRoute ? props.config.createRoute : undefined"
               @click="() => !props.config.createRoute ? handleCreateTarget() : undefined"
             >
+              <AddIcon />
               {{ t('targets.list.toolbar_actions.new_target') }}
             </KButton>
           </PermissionsWrapper>
@@ -153,6 +153,7 @@ import {
 import type { PropType } from 'vue'
 import { computed, onBeforeMount, ref, watch } from 'vue'
 import type { AxiosError } from 'axios'
+import { AddIcon } from '@kong/icons'
 import type {
   KongManagerTargetsListConfig,
   KonnectTargetsListConfig,

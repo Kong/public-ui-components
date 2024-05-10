@@ -625,6 +625,9 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
+      '@kong/icons':
+        specifier: ^1.9.1
+        version: 1.9.1(vue@3.4.25)
       '@peculiar/x509':
         specifier: ^1.9.7
         version: 1.9.7
@@ -653,6 +656,9 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
+      '@kong/icons':
+        specifier: ^1.9.1
+        version: 1.9.1(vue@3.4.25)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -678,6 +684,9 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
+      '@kong/icons':
+        specifier: ^1.9.1
+        version: 1.9.1(vue@3.4.25)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -703,6 +712,9 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
+      '@kong/icons':
+        specifier: ^1.9.1
+        version: 1.9.1(vue@3.4.25)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -756,6 +768,9 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
+      '@kong/icons':
+        specifier: ^1.9.1
+        version: 1.9.1(vue@3.4.25)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -781,6 +796,9 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
+      '@kong/icons':
+        specifier: ^1.9.1
+        version: 1.9.1(vue@3.4.25)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -803,6 +821,9 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
+      '@kong/icons':
+        specifier: ^1.9.1
+        version: 1.9.1(vue@3.4.25)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -955,6 +976,9 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
+      '@kong/icons':
+        specifier: ^1.9.1
+        version: 1.9.1(vue@3.4.25)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -980,6 +1004,9 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
+      '@kong/icons':
+        specifier: ^1.9.1
+        version: 1.9.1(vue@3.4.25)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -1005,6 +1032,9 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
+      '@kong/icons':
+        specifier: ^1.9.1
+        version: 1.9.1(vue@3.4.25)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^

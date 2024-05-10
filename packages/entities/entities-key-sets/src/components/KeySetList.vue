@@ -37,10 +37,10 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-key-set"
-              icon="plus"
               size="large"
               :to="config.createRoute"
             >
+              <AddIcon />
               {{ t('keySets.list.toolbar_actions.new_key_set') }}
             </KButton>
           </PermissionsWrapper>
@@ -132,6 +132,7 @@
 import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
+import { AddIcon } from '@kong/icons'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import endpoints from '../key-sets-endpoints'

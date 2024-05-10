@@ -37,10 +37,10 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-vault"
-              icon="plus"
               size="large"
               :to="config.createRoute"
             >
+              <AddIcon />
               {{ t('vaults.list.toolbar_actions.new_vault') }}
             </KButton>
           </PermissionsWrapper>
@@ -137,6 +137,7 @@ import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
+import { AddIcon } from '@kong/icons'
 
 import {
   EntityBaseTable,

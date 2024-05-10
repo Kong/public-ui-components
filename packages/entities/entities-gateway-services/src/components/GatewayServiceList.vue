@@ -37,10 +37,10 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-gateway-service"
-              icon="plus"
               size="large"
               :to="config.createRoute"
             >
+              <AddIcon />
               {{ t('gateway_services.list.toolbar_actions.new_gateway_service') }}
             </KButton>
           </PermissionsWrapper>
@@ -165,6 +165,7 @@
 import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
+import { AddIcon } from '@kong/icons'
 import composables from '../composables'
 import endpoints from '../gateway-services-endpoints'
 import type { AxiosError } from 'axios'
