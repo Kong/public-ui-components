@@ -635,7 +635,7 @@ const canSubmit = computed((): boolean =>
 
 const initForm = (data: Record<string, any>): void => {
   form.fields.name = data?.name || ''
-  form.fields.tags = data?.tags?.join(',') || ''
+  form.fields.tags = data?.tags?.join(', ') || ''
   form.fields.protocol = data?.protocol || 'http'
   form.fields.path = data?.path || ''
   form.fields.read_timeout = (data?.read_timeout || data?.read_timeout === 0) ? data?.read_timeout : 60000
@@ -703,7 +703,7 @@ const saveTlsVerify = (gatewayService: Record<string, any>) => {
 const getPayload = computed((): Record<string, any> => {
   const requestBody: Record<string, any> = {
     name: form.fields.name || null,
-    tags: form.fields.tags ? form.fields.tags?.split(',').filter(tag => tag !== '') : null,
+    tags: form.fields.tags ? form.fields.tags?.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== '') : null,
     protocol: form.fields.protocol,
     path: form.fields.path || null,
     read_timeout: form.fields.read_timeout,
@@ -791,7 +791,7 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
       form.fields.ca_certificates = data?.ca_certificates?.length ? data?.ca_certificates.join(',') : ''
       form.fields.tls_verify_enabled = data?.tls_verify !== '' && data?.tls_verify !== null && data?.tls_verify !== undefined
       form.fields.tls_verify_value = form.fields.tls_verify_enabled && data?.tls_verify
-      form.fields.tags = data?.tags?.length ? data?.tags.join(',') : ''
+      form.fields.tags = data?.tags?.length ? data.tags.join(', ') : ''
       // Set initial state of `formFieldsOriginal` to these values in order to detect changes
       Object.assign(formFieldsOriginal, form.fields)
       // Emit an update event for the host app to respond to
