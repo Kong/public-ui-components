@@ -131,10 +131,6 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .content-wrapper {
-  :deep([role='button']) {
-    display: inline;
-  }
-
   :deep(.k-tooltip) {
     word-break: break-all;
   }
