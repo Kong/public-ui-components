@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.3.0...@kong-ui-public/entities-plugins@4.3.1) (2024-05-10)
+
+
+### Bug Fixes
+
+* **entities:** icon prop warning of kbutton ([#1396](https://github.com/Kong/public-ui-components/issues/1396)) ([bb1756c](https://github.com/Kong/public-ui-components/commit/bb1756c5b90e5ad10efd9fcd4fed6df93f27e464))
+
+
+
+
+
 # [4.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.2.6...@kong-ui-public/entities-plugins@4.3.0) (2024-05-09)
 
 
