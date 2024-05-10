@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.2.0...@kong-ui-public/entities-shared@3.2.1) (2024-05-10)
+
+
+### Bug Fixes
+
+* **entities-shared:** table cell display ([#1395](https://github.com/Kong/public-ui-components/issues/1395)) ([551ba81](https://github.com/Kong/public-ui-components/commit/551ba8105eb0dd45351c8e3ce53a2a8c695b3511))
+
+
+
+
+
 # [3.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.1.4...@kong-ui-public/entities-shared@3.2.0) (2024-05-09)
 
 
