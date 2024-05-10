@@ -38,10 +38,10 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-upstream"
-              icon="plus"
               size="large"
               :to="config.createRoute"
             >
+              <AddIcon />
               {{ t('upstreams.list.toolbar_actions.new_upstream') }}
             </KButton>
           </PermissionsWrapper>
@@ -138,6 +138,7 @@ import type { PropType } from 'vue'
 import { computed, onBeforeMount, ref, watch } from 'vue'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
+import { AddIcon } from '@kong/icons'
 import type {
   KongManagerUpstreamsListConfig,
   KonnectUpstreamsListConfig,

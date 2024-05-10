@@ -37,10 +37,10 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-ca-certificate"
-              icon="plus"
               size="large"
               :to="config.createRoute"
             >
+              <AddIcon />
               {{ t('ca-certificates.list.toolbar_actions.new_ca_certificate') }}
             </KButton>
           </PermissionsWrapper>
@@ -146,6 +146,7 @@ import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
+import { AddIcon } from '@kong/icons'
 import composables from '../composables'
 import endpoints from '../ca-certificates-endpoints'
 

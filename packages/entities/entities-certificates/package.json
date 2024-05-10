@@ -66,6 +66,7 @@
   },
   "dependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
+    "@kong/icons": "^1.9.1",
     "@peculiar/x509": "^1.9.7"
   },
   "distSizeChecker": {

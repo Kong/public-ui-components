@@ -41,11 +41,11 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-consumer"
-              icon="plus"
               size="large"
               :to="config.consumerGroupId ? undefined : config.createRoute"
               @click="() => config.consumerGroupId ? handleAddConsumerClick() : undefined"
             >
+              <AddIcon />
               {{ config.consumerGroupId ? t('consumers.actions.add_consumer') : t('consumers.list.toolbar_actions.new_consumer') }}
             </KButton>
           </PermissionsWrapper>
@@ -181,6 +181,7 @@ import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
+import { AddIcon } from '@kong/icons'
 import composables from '../composables'
 import endpoints from '../consumers-endpoints'
 import {

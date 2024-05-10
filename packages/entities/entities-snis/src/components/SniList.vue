@@ -38,10 +38,10 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-sni"
-              icon="plus"
               size="large"
               :to="config.createRoute"
             >
+              <AddIcon />
               {{ t('snis.list.toolbar_actions.new') }}
             </KButton>
           </PermissionsWrapper>
@@ -159,6 +159,7 @@ import type {
   TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
+import { AddIcon } from '@kong/icons'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,

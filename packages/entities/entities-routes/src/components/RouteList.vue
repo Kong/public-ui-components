@@ -40,10 +40,10 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-route"
-              icon="plus"
               size="large"
               :to="config.createRoute"
             >
+              <AddIcon />
               {{ t('routes.list.toolbar_actions.new_route') }}
             </KButton>
           </PermissionsWrapper>
@@ -193,6 +193,7 @@ import { useRouter } from 'vue-router'
 
 import { BadgeMethodAppearances } from '@kong/kongponents'
 import type { BadgeMethodAppearance, HeaderTag } from '@kong/kongponents'
+import { AddIcon } from '@kong/icons'
 import {
   EntityBaseTable,
   EntityDeleteModal,
