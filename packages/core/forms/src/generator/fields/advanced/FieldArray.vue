@@ -177,7 +177,7 @@ export default {
       this.value = [...value]
     },
     removeElement(index) {
-      this.value.splice(index, 1)
+      this.value = this.value.filter((_, i) => i !== index)
     },
     getFieldType(fieldSchema) {
       return 'field-' + fieldSchema.type
