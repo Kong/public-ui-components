@@ -3,6 +3,7 @@
     :href="href"
     rel="noreferrer noopener nofollow"
     :title="title"
+    class="noZensmooth"
   >
     <slot />
   </a>
