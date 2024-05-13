@@ -862,7 +862,7 @@ importers:
         specifier: workspace:^
         version: link:../entities-shared
       '@kong-ui-public/forms':
-        specifier: ^3.1.5
+        specifier: ^3.1.6
         version: link:../../core/forms
       '@kong/icons':
         specifier: ^1.9.1
