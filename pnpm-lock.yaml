@@ -867,9 +867,6 @@ importers:
       '@kong/icons':
         specifier: ^1.9.1
         version: 1.9.1(vue@3.4.27)
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
       marked:
         specifier: ^12.0.2
         version: 12.0.2
@@ -883,9 +880,6 @@ importers:
       '@kong/kongponents':
         specifier: 9.0.0-alpha.154
         version: 9.0.0-alpha.154(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
-      '@types/lodash-es':
-        specifier: ^4.17.12
-        version: 4.17.12
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -5180,6 +5174,9 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependenciesMeta:
+      ajv:
+        optional: true
     dependencies:
       ajv: 8.12.0
     dev: true
