@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.3.4...@kong-ui-public/entities-plugins@4.3.5) (2024-05-13)
+
+
+### Bug Fixes
+
+* **forms:** remove array item reactivity ([#1398](https://github.com/Kong/public-ui-components/issues/1398)) ([7c878c9](https://github.com/Kong/public-ui-components/commit/7c878c90b75d853288bf777eba9f2c338c2bb6d6))
+
+
+
+
+
 ## [4.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.3.3...@kong-ui-public/entities-plugins@4.3.4) (2024-05-13)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
