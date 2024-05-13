@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@3.0.1...@kong-ui-public/analytics-utilities@3.1.0) (2024-05-13)
+
+
+### Features
+
+* Allow 7 day analytics retention ([#1402](https://github.com/Kong/public-ui-components/issues/1402)) ([86b1b37](https://github.com/Kong/public-ui-components/commit/86b1b3725e401962bb188274b995553fd258aeab))
+
+
+
+
+
 ## [3.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@3.0.0...@kong-ui-public/analytics-utilities@3.0.1) (2024-05-13)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
