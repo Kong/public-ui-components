@@ -1,5 +1,6 @@
 <template>
   <a
+    class="noZensmooth"
     :href="href"
     rel="noreferrer noopener nofollow"
     :title="title"
