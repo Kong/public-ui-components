@@ -67,7 +67,7 @@
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.12.12",
-    "@kong/kongponents": "9.0.0-alpha.154",
+    "@kong/kongponents": "9.0.0-alpha.156",
     "pinia": ">= 2.1.7 < 3"
   }
 }
