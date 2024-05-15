@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.0.10...@kong-ui-public/analytics-chart@4.0.11) (2024-05-15)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 13 [KHCP-11882] ([#1406](https://github.com/Kong/public-ui-components/issues/1406)) ([f438c67](https://github.com/Kong/public-ui-components/commit/f438c67a6c45bfbf0197df68af83782219c615ad))
+
+
+
+
+
 ## [4.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.0.9...@kong-ui-public/analytics-chart@4.0.10) (2024-05-13)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

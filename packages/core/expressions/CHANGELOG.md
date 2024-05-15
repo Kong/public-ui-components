@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.2.7...@kong-ui-public/expressions@0.2.8) (2024-05-15)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 13 [KHCP-11882] ([#1406](https://github.com/Kong/public-ui-components/issues/1406)) ([f438c67](https://github.com/Kong/public-ui-components/commit/f438c67a6c45bfbf0197df68af83782219c615ad))
+
+
+
+
+
 ## [0.2.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.2.6...@kong-ui-public/expressions@0.2.7) (2024-05-13)
 
 **Note:** Version bump only for package @kong-ui-public/expressions

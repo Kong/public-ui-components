@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.2.3...@kong-ui-public/entities-shared@3.2.4) (2024-05-15)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 13 [KHCP-11882] ([#1406](https://github.com/Kong/public-ui-components/issues/1406)) ([f438c67](https://github.com/Kong/public-ui-components/commit/f438c67a6c45bfbf0197df68af83782219c615ad))
+
+
+
+
+
 ## [3.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.2.2...@kong-ui-public/entities-shared@3.2.3) (2024-05-13)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
