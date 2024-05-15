@@ -202,7 +202,7 @@ const markdownContent = ref<string>(props.selectedDocument?.markdown || '')
 const originalMarkdownContent = ref<string>(markdownContent.value)
 const defaultDocument = ref<any>(null)
 
-const handleDownloadDocument = (downloadFunction: () => void): void => {
+const handleDownloadDocument = (downloadFunction?: () => void): void => {
   if (typeof downloadFunction === 'function') {
     downloadFunction()
     emit('download')
