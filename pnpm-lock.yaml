@@ -1118,13 +1118,13 @@ importers:
     dependencies:
       '@kong/swagger-ui-kong-theme-universal':
         specifier: ^4.3.3
-        version: 4.3.3(react-dom@17.0.2)(react@17.0.2)(vue-router@4.3.2)(vue@3.4.27)
+        version: 4.3.3(react-dom@18.3.1)(react@18.3.1)(vue-router@4.3.2)(vue@3.4.27)
       react:
-        specifier: 17.0.2
-        version: 17.0.2
+        specifier: 18.3.1
+        version: 18.3.1
       react-dom:
-        specifier: 17.0.2
-        version: 17.0.2(react@17.0.2)
+        specifier: 18.3.1
+        version: 18.3.1(react@18.3.1)
       swagger-client:
         specifier: ^3.26.8
         version: 3.27.9
@@ -2416,7 +2416,7 @@ packages:
       - supports-color
     dev: false
 
-  /@kong/swagger-ui-kong-theme-universal@4.3.3(react-dom@17.0.2)(react@17.0.2)(vue-router@4.3.2)(vue@3.4.27):
+  /@kong/swagger-ui-kong-theme-universal@4.3.3(react-dom@18.3.1)(react@18.3.1)(vue-router@4.3.2)(vue@3.4.27):
     resolution: {integrity: sha512-g89NLf7Vu19BJ157fVUkLIrjzTmNE74zGfzktK2rxdZgIUegt4VBDsG8K0MAxDwQELQqSK3kPkamgdD9j1eV3Q==}
     peerDependencies:
       react: 17.0.2
@@ -2426,13 +2426,13 @@ packages:
       '@kyleshockey/xml': 1.0.2
       classnames: 2.5.1
       curl-to-har: 1.0.1
-      focus-trap-react: 10.2.3(react-dom@17.0.2)(react@17.0.2)
+      focus-trap-react: 10.2.3(react-dom@18.3.1)(react@18.3.1)
       immutable: 3.8.2
       js-file-download: 0.4.12
       memoizee: 0.4.15
-      react: 17.0.2
+      react: 18.3.1
       react-apiembed: 0.1.9
-      react-debounce-input: 3.3.0(react@17.0.2)
+      react-debounce-input: 3.3.0(react@18.3.1)
       swagger2har: 1.0.6
       tachyons-sass: 4.9.5
       util: 0.12.5
@@ -8316,7 +8316,7 @@ packages:
     resolution: {integrity: sha512-X8cqMLLie7KsNUDSdzeN8FYK9rEt4Dt67OsG/DNGnYTSDBG4uFAJFBnUeiV+zCVAvwFy56IjM9sH51jVaEhNxw==}
     dev: true
 
-  /focus-trap-react@10.2.3(react-dom@17.0.2)(react@17.0.2):
+  /focus-trap-react@10.2.3(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-YXBpFu/hIeSu6NnmV2xlXzOYxuWkoOtar9jzgp3lOmjWLWY59C/b8DtDHEAV4SPU07Nd/t+nS/SBNGkhUBFmEw==}
     peerDependencies:
       prop-types: ^15.8.1
@@ -8324,8 +8324,8 @@ packages:
       react-dom: '>=16.3.0'
     dependencies:
       focus-trap: 7.5.4
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
       tabbable: 6.2.0
     dev: false
 
@@ -12788,24 +12788,24 @@ packages:
       - supports-color
     dev: false
 
-  /react-copy-to-clipboard@5.1.0(react@17.0.2):
+  /react-copy-to-clipboard@5.1.0(react@18.3.1):
     resolution: {integrity: sha512-k61RsNgAayIJNoy9yDsYzDe/yAZAzEbEgcz3DZMhF686LEyukcE1hzurxe85JandPUG+yTfGVFzuEw3xt8WP/A==}
     peerDependencies:
       react: ^15.3.0 || 16 || 17 || 18
     dependencies:
       copy-to-clipboard: 3.3.3
       prop-types: 15.8.1
-      react: 17.0.2
+      react: 18.3.1
     dev: false
 
-  /react-debounce-input@3.3.0(react@17.0.2):
+  /react-debounce-input@3.3.0(react@18.3.1):
     resolution: {integrity: sha512-VEqkvs8JvY/IIZvh71Z0TC+mdbxERvYF33RcebnodlsUZ8RSgyKe2VWaHXv4+/8aoOgXLxWrdsYs2hDhcwbUgA==}
     peerDependencies:
       react: ^15.3.0 || 16 || 17 || 18
     dependencies:
       lodash.debounce: 4.0.8
       prop-types: 15.8.1
-      react: 17.0.2
+      react: 18.3.1
     dev: false
 
   /react-dom@16.14.0(react@16.14.0):
@@ -12820,15 +12820,14 @@ packages:
       scheduler: 0.19.1
     dev: false
 
-  /react-dom@17.0.2(react@17.0.2):
-    resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
+  /react-dom@18.3.1(react@18.3.1):
+    resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
     peerDependencies:
-      react: 17.0.2
+      react: ^18.3.1
     dependencies:
       loose-envify: 1.4.0
-      object-assign: 4.1.1
-      react: 17.0.2
-      scheduler: 0.20.2
+      react: 18.3.1
+      scheduler: 0.23.2
     dev: false
 
   /react-immutable-proptypes@2.2.0(immutable@3.8.2):
@@ -12840,7 +12839,7 @@ packages:
       invariant: 2.2.4
     dev: false
 
-  /react-immutable-pure-component@2.2.2(immutable@3.8.2)(react-dom@17.0.2)(react@17.0.2):
+  /react-immutable-pure-component@2.2.2(immutable@3.8.2)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-vkgoMJUDqHZfXXnjVlG3keCxSO/U6WeDQ5/Sl0GK2cH8TOxEzQ5jXqDXHEL/jqk6fsNxV05oH5kD7VNMUE2k+A==}
     peerDependencies:
       immutable: '>= 2 || >= 4.0.0-rc'
@@ -12848,16 +12847,16 @@ packages:
       react-dom: '>= 16.6'
     dependencies:
       immutable: 3.8.2
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
     dev: false
 
-  /react-inspector@6.0.2(react@17.0.2):
+  /react-inspector@6.0.2(react@18.3.1):
     resolution: {integrity: sha512-x+b7LxhmHXjHoU/VrFAzw5iutsILRoYyDq97EDYdFpPLcvqtEzk4ZSZSQjnFPbr5T57tLXnHcqFYoN1pI6u8uQ==}
     peerDependencies:
       react: ^16.8.4 || ^17.0.0 || ^18.0.0
     dependencies:
-      react: 17.0.2
+      react: 18.3.1
     dev: false
 
   /react-is@16.13.1:
@@ -12868,7 +12867,7 @@ packages:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
     dev: true
 
-  /react-redux@9.1.2(react@17.0.2)(redux@5.0.1):
+  /react-redux@9.1.2(react@18.3.1)(redux@5.0.1):
     resolution: {integrity: sha512-0OA4dhM1W48l3uzmv6B7TXPCGmokUU4p1M44DGN2/D9a1FjVPukVjER1PcPX97jIg6aUeLq1XJo1IpfbgULn0w==}
     peerDependencies:
       '@types/react': ^18.2.25
@@ -12881,12 +12880,12 @@ packages:
         optional: true
     dependencies:
       '@types/use-sync-external-store': 0.0.3
-      react: 17.0.2
+      react: 18.3.1
       redux: 5.0.1
-      use-sync-external-store: 1.2.2(react@17.0.2)
+      use-sync-external-store: 1.2.2(react@18.3.1)
     dev: false
 
-  /react-syntax-highlighter@15.5.0(react@17.0.2):
+  /react-syntax-highlighter@15.5.0(react@18.3.1):
     resolution: {integrity: sha512-+zq2myprEnQmH5yw6Gqc8lD55QHnpKaU8TOcFeC/Lg/MQSs8UknEA0JC4nTZGFAXC2J2Hyj/ijJ7NlabyPi2gg==}
     peerDependencies:
       react: '>= 0.14.0'
@@ -12895,7 +12894,7 @@ packages:
       highlight.js: 10.7.3
       lowlight: 1.20.0
       prismjs: 1.29.0
-      react: 17.0.2
+      react: 18.3.1
       refractor: 3.6.0
     dev: false
 
@@ -12908,12 +12907,11 @@ packages:
       prop-types: 15.8.1
     dev: false
 
-  /react@17.0.2:
-    resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}
+  /react@18.3.1:
+    resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
-      object-assign: 4.1.1
     dev: false
 
   /read-cmd-shim@4.0.0:
@@ -13383,11 +13381,10 @@ packages:
       object-assign: 4.1.1
     dev: false
 
-  /scheduler@0.20.2:
-    resolution: {integrity: sha512-2eWfGgAqqWFGqtdMmcL5zCMK1U8KlXv8SQFGglL3CEtd0aDVDWgeF/YoCmvln55m5zSk3J/20hTaSBeSObsQDQ==}
+  /scheduler@0.23.2:
+    resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
     dependencies:
       loose-envify: 1.4.0
-      object-assign: 4.1.1
     dev: false
 
   /schema-utils@3.3.0:
@@ -14292,15 +14289,15 @@ packages:
       prop-types: 15.8.1
       randexp: 0.5.3
       randombytes: 2.1.0
-      react: 17.0.2
-      react-copy-to-clipboard: 5.1.0(react@17.0.2)
-      react-debounce-input: 3.3.0(react@17.0.2)
-      react-dom: 17.0.2(react@17.0.2)
+      react: 18.3.1
+      react-copy-to-clipboard: 5.1.0(react@18.3.1)
+      react-debounce-input: 3.3.0(react@18.3.1)
+      react-dom: 18.3.1(react@18.3.1)
       react-immutable-proptypes: 2.2.0(immutable@3.8.2)
-      react-immutable-pure-component: 2.2.2(immutable@3.8.2)(react-dom@17.0.2)(react@17.0.2)
-      react-inspector: 6.0.2(react@17.0.2)
-      react-redux: 9.1.2(react@17.0.2)(redux@5.0.1)
-      react-syntax-highlighter: 15.5.0(react@17.0.2)
+      react-immutable-pure-component: 2.2.2(immutable@3.8.2)(react-dom@18.3.1)(react@18.3.1)
+      react-inspector: 6.0.2(react@18.3.1)
+      react-redux: 9.1.2(react@18.3.1)(redux@5.0.1)
+      react-syntax-highlighter: 15.5.0(react@18.3.1)
       redux: 5.0.1
       redux-immutable: 4.0.0(immutable@3.8.2)
       remarkable: 2.0.1
@@ -15007,12 +15004,12 @@ packages:
       querystringify: 2.2.0
       requires-port: 1.0.0
 
-  /use-sync-external-store@1.2.2(react@17.0.2):
+  /use-sync-external-store@1.2.2(react@18.3.1):
     resolution: {integrity: sha512-PElTlVMwpblvbNqQ82d2n6RjStvdSoNe9FG28kNfz3WiXilJm4DdNkEzRhCZuIDwY8U08WVihhGR5iRqAwfDiw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      react: 17.0.2
+      react: 18.3.1
     dev: false
 
   /util-deprecate@1.0.2:
