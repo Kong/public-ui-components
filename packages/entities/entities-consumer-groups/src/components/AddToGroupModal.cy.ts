@@ -107,9 +107,9 @@ describe('<AddToGroupModal/>', () => {
       cy.getTestId('multiselect-trigger').should('be.visible')
       cy.getTestId('multiselect-trigger').click()
 
-      cy.get('.k-popover-content .multiselect-list').should('be.visible')
-      cy.get('.k-popover-content .multiselect-list .multiselect-item').should('be.visible')
-      cy.get('.k-popover-content .multiselect-list .multiselect-item').should('have.length', 5)
+      cy.get('.popover-content .multiselect-list').should('be.visible')
+      cy.get('.popover-content .multiselect-list .multiselect-item').should('be.visible')
+      cy.get('.popover-content .multiselect-list .multiselect-item').should('have.length', 5)
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.getComponent('.k-multiselect')
         .vm.$emit('update:modelValue', [consumerGroups5[0].id]))
@@ -226,9 +226,9 @@ describe('<AddToGroupModal/>', () => {
       cy.getTestId('multiselect-trigger').should('be.visible')
       cy.getTestId('multiselect-trigger').click()
 
-      cy.get('.k-popover-content .multiselect-list').should('be.visible')
-      cy.get('.k-popover-content .multiselect-list .multiselect-item').should('be.visible')
-      cy.get('.k-popover-content .multiselect-list .multiselect-item').should('have.length', 5)
+      cy.get('.popover-content .multiselect-list').should('be.visible')
+      cy.get('.popover-content .multiselect-list .multiselect-item').should('be.visible')
+      cy.get('.popover-content .multiselect-list .multiselect-item').should('have.length', 5)
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.getComponent('.k-multiselect')
         .vm.$emit('update:modelValue', [consumerGroups5[0].id]))
