@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@3.1.0...@kong-ui-public/analytics-utilities@3.2.0) (2024-05-15)
+
+
+### Features
+
+* Include secondly granularity ([#1407](https://github.com/Kong/public-ui-components/issues/1407)) ([29b734c](https://github.com/Kong/public-ui-components/commit/29b734c70b79a0dffa1cf190f924ac9cb2bd8286))
+
+
+
+
+
 # [3.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@3.0.1...@kong-ui-public/analytics-utilities@3.1.0) (2024-05-13)
 
 
