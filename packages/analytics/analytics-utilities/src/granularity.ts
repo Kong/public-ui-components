@@ -4,6 +4,7 @@ import { getTimezoneOffset } from 'date-fns-tz'
 
 // Units are milliseconds, which are what Druid expects.
 export const Granularities = {
+  secondly: 1000,
   minutely: 60 * 1000,
   hourly: 60 * 60 * 1000,
   daily: 60 * 60 * 24 * 1000,
