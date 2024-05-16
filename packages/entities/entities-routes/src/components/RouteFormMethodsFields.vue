@@ -29,7 +29,7 @@
         @click="$emit('remove')"
       >
         <template #icon>
-          <TrashIcon />
+          <TrashIcon :color="KUI_COLOR_TEXT_DANGER" />
         </template>
       </KButton>
     </div>
@@ -75,6 +75,7 @@ import RoutingRulesEntitiesControls from './RoutingRulesEntitiesControls.vue'
 import { BadgeMethodAppearances } from '@kong/kongponents'
 import type { BadgeMethodAppearance } from '@kong/kongponents'
 import { TrashIcon } from '@kong/icons'
+import { KUI_COLOR_TEXT_DANGER } from '@kong/design-tokens'
 
 /** Local types, not exported
  * Same pattern used other fields components

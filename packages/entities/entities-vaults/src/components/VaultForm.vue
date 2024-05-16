@@ -561,6 +561,7 @@ import {
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
 import endpoints from '../vaults-endpoints'
+import { KongIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_80 } from '@kong/design-tokens'
 
 interface ConfigFields {

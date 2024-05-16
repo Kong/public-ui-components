@@ -6,7 +6,9 @@
       :data-testid="`remove-${routingRulesEntity}`"
       @click="$emit('remove')"
     >
-      <TrashIcon />
+      <template #icon>
+        <TrashIcon :color="KUI_COLOR_TEXT_DANGER" />
+      </template>
     </KButton>
     <KButton
       appearance="tertiary"
@@ -14,12 +16,15 @@
       :disabled="isAddDisabled"
       @click="$emit('add')"
     >
-      <AddIcon />
+      <template #icon>
+        <AddIcon />
+      </template>
     </KButton>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KUI_COLOR_TEXT_DANGER } from '@kong/design-tokens'
 import { TrashIcon, AddIcon } from '@kong/icons'
 
 defineProps({
@@ -39,27 +44,6 @@ defineEmits(['remove', 'add'])
 <style lang="scss" scoped>
 .routing-rules-entities-controls-container {
   display: flex;
-
-  :deep(.k-button) {
-    &.remove-button {
-      svg path {
-        fill: $kui_color_border_neutral_weak !important;
-      }
-
-      &:hover {
-        svg path {
-          fill: $kui_color_border_danger_weak !important;
-        }
-      }
-    }
-
-    &[disabled] {
-      pointer-events: none !important;
-
-      .kong-icon {
-        opacity: 0 !important;
-      }
-    }
-  }
+  gap: $kui-space-20;
 }
 </style>

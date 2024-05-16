@@ -81,6 +81,7 @@
             :width="dropdownMenuWidth"
           >
             <KButton
+              appearance="tertiary"
               class="actions-trigger"
               data-testid="overflow-actions-button"
               size="small"
@@ -399,13 +400,6 @@ const handleUpdateTablePreferences = (newTablePreferences: TablePreferences): vo
       margin-bottom: 0;
       margin-top: 0;
     }
-  }
-
-  .actions-trigger {
-    background-color: $kui-color-background-transparent!important;
-    border: none!important;
-    cursor: pointer!important;
-    font-weight: $kui-font-weight-regular!important;
   }
 }
 </style>

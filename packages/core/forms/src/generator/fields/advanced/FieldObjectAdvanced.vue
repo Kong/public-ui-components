@@ -20,7 +20,9 @@
                 type="button"
                 @click="removeElement(index)"
               >
-                <TrashIcon />
+                <template #icon>
+                  <TrashIcon />
+                </template>
               </KButton>
             </div>
           </div>
