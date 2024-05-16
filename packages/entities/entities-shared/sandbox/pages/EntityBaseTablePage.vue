@@ -5,6 +5,7 @@
       :fetcher="fetcher"
       :fetcher-cache-key="fetchCacheKey"
       :is-loading="isLoading"
+      preferences-storage-key="entity-base-table-preferences"
       :query="query"
       :table-headers="headers"
       title="Title"
