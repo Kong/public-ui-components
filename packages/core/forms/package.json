@@ -62,7 +62,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.12.12",
-    "@kong/kongponents": "9.0.0-alpha.156",
+    "@kong/kongponents": "9.0.0-pr.2191.a39e0177.0",
     "@types/lodash-es": "^4.17.12",
     "pug": "^3.0.2"
   },
