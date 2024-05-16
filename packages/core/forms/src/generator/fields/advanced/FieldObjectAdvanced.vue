@@ -20,10 +20,9 @@
                 type="button"
                 @click="removeElement(index)"
               >
-                <KIcon
-                  icon="trash"
-                  size="18"
-                />
+                <template #icon>
+                  <TrashIcon />
+                </template>
               </KButton>
             </div>
           </div>
@@ -87,8 +86,12 @@
 </template>
 
 <script>
+import { TrashIcon } from '@kong/icons'
 import abstractField from '../abstractField'
 export default {
+  components: {
+    TrashIcon,
+  },
   mixins: [abstractField],
   emits: ['model-updated'],
   data() {

@@ -116,12 +116,13 @@
             appearance="tertiary"
             class="btn-remove"
             data-testid="btn-remove-header"
+            :disabled="localHeaders.length === 1"
             @click="removeHeader(i)"
           >
             <template #icon>
-              <KIcon
+              <TrashIcon
                 class="delete-item"
-                icon="trash"
+                :color="localHeaders.length > 1 ? KUI_COLOR_TEXT_DANGER : undefined"
               />
             </template>
           </KButton>
@@ -133,11 +134,7 @@
             @click="addHeader"
           >
             <template #icon>
-              <KIcon
-                color="$kui-color-text-primary-strong"
-                icon="plus"
-                size="22"
-              />
+              <AddIcon />
             </template>
           </KButton>
         </div>
@@ -306,6 +303,8 @@ import {
 import type { MultiselectItem, SelectItem } from '@kong/kongponents'
 import useHelpers from '../composables/useHelpers'
 import links from '../links'
+import { AddIcon, TrashIcon } from '@kong/icons'
+import { KUI_COLOR_TEXT_DANGER } from '@kong/design-tokens'
 
 const { i18n: { t } } = composables.useI18n()
 const { objectsAreEqual } = useHelpers()
