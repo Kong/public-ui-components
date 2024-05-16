@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.3.8...@kong-ui-public/entities-plugins@4.3.9) (2024-05-16)
+
+
+### Bug Fixes
+
+* **entities-plugins:** keep dynamic ordering in edit payload [KM-148] ([#1410](https://github.com/Kong/public-ui-components/issues/1410)) ([c6eedee](https://github.com/Kong/public-ui-components/commit/c6eedeea43bf23f0c7a2f9ac455b73fe071f328a))
+
+
+
+
+
 ## [4.3.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.3.7...@kong-ui-public/entities-plugins@4.3.8) (2024-05-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
