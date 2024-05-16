@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.2.7...@kong-ui-public/entities-routes@3.2.8) (2024-05-16)
+
+
+### Bug Fixes
+
+* replace kicon instances [KHCP-11982] ([#1413](https://github.com/Kong/public-ui-components/issues/1413)) ([6152026](https://github.com/Kong/public-ui-components/commit/61520261d42932377dd8374f138b316736c28b77))
+
+
+
+
+
 ## [3.2.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.2.6...@kong-ui-public/entities-routes@3.2.7) (2024-05-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
