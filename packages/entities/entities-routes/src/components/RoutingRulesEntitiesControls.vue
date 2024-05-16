@@ -6,7 +6,7 @@
       :data-testid="`remove-${routingRulesEntity}`"
       @click="$emit('remove')"
     >
-      <KIcon icon="trash" />
+      <TrashIcon />
     </KButton>
     <KButton
       appearance="tertiary"
@@ -14,17 +14,13 @@
       :disabled="isAddDisabled"
       @click="$emit('add')"
     >
-      <KIcon
-        :color="KUI_COLOR_TEXT_PRIMARY_STRONG"
-        icon="plus"
-        size="22"
-      />
+      <AddIcon />
     </KButton>
   </div>
 </template>
 
 <script setup lang="ts">
-import { KUI_COLOR_TEXT_PRIMARY_STRONG } from '@kong/design-tokens'
+import { TrashIcon, AddIcon } from '@kong/icons'
 
 defineProps({
   routingRulesEntity: {

@@ -8,12 +8,7 @@
         <KongIcon :color="KUI_COLOR_TEXT_DECORATIVE_AQUA" />
       </template>
       <template #title-before>
-        <KIcon
-          class="title-icon"
-          color="#169fcc"
-          icon="graduationHat"
-          size="20"
-        />
+        <TeamIcon class="title-icon" />
       </template>
       <template #title-after>
         <KBadge appearance="neutral">
@@ -29,10 +24,8 @@
             :label="enabled ? 'Enabled' : 'Disabled'"
             label-before
           />
-          <KButton
-            appearance="primary"
-            icon="plus"
-          >
+          <KButton appearance="primary">
+            <AddIcon />
             Do Things
           </KButton>
         </div>
@@ -111,7 +104,7 @@
 import { computed, ref } from 'vue'
 import type { BadgeMethodAppearance } from '@kong/kongponents'
 import { AppAboutSection, AppPageHeader } from '../../src'
-import { EditIcon, KongIcon } from '@kong/icons'
+import { EditIcon, KongIcon, TeamIcon, AddIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_DECORATIVE_AQUA } from '@kong/design-tokens'
 
 const breadcrumbs = computed(() => {

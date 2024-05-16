@@ -86,11 +86,7 @@
               size="small"
             >
               <template #icon>
-                <KIcon
-                  :color="KUI_COLOR_TEXT_NEUTRAL_STRONGER"
-                  icon="more"
-                  size="16"
-                />
+                <MoreIcon />
               </template>
             </KButton>
             <template #items>
@@ -120,7 +116,6 @@ import { computed, ref } from 'vue'
 import composables from '../../composables'
 import { useTablePreferences } from '@kong-ui-public/core'
 import type { SwrvStateData, HeaderTag, TablePreferences } from '@kong/kongponents'
-import { KUI_COLOR_TEXT_NEUTRAL_STRONGER } from '@kong/design-tokens'
 import EntityBaseTableCell from './EntityBaseTableCell.vue'
 
 import type {
@@ -132,7 +127,7 @@ import type {
   TableSortParams,
   TableErrorMessage,
 } from '../../types'
-import { AddIcon } from '@kong/icons'
+import { AddIcon, MoreIcon } from '@kong/icons'
 
 const props = defineProps({
   // table header configuration

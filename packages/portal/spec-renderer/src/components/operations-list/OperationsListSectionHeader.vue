@@ -20,7 +20,6 @@
       <ChevronDownIcon
         v-else
         :color="`var(--kong-ui-spec-renderer-operations-list-section-icon-color-expanded, ${KUI_COLOR_TEXT_NEUTRAL_STRONGER})`"
-        icon="chevronDown"
         :size="KUI_ICON_SIZE_40"
       />
     </div>

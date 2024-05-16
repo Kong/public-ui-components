@@ -29,7 +29,7 @@
         @click="$emit('remove')"
       >
         <template #icon>
-          <KIcon icon="trash" />
+          <TrashIcon />
         </template>
       </KButton>
     </div>
@@ -74,6 +74,7 @@ import composables from '../composables'
 import RoutingRulesEntitiesControls from './RoutingRulesEntitiesControls.vue'
 import { BadgeMethodAppearances } from '@kong/kongponents'
 import type { BadgeMethodAppearance } from '@kong/kongponents'
+import { TrashIcon } from '@kong/icons'
 
 /** Local types, not exported
  * Same pattern used other fields components

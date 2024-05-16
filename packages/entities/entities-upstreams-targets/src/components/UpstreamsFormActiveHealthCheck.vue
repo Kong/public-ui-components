@@ -119,9 +119,8 @@
             @click="removeHeader(i)"
           >
             <template #icon>
-              <KIcon
+              <TrashIcon
                 class="delete-item"
-                icon="trash"
               />
             </template>
           </KButton>
@@ -133,10 +132,8 @@
             @click="addHeader"
           >
             <template #icon>
-              <KIcon
+              <AddIcon
                 color="$kui-color-text-primary-strong"
-                icon="plus"
-                size="22"
               />
             </template>
           </KButton>
@@ -306,6 +303,7 @@ import {
 import type { MultiselectItem, SelectItem } from '@kong/kongponents'
 import useHelpers from '../composables/useHelpers'
 import links from '../links'
+import { AddIcon, TrashIcon } from '@kong/icons'
 
 const { i18n: { t } } = composables.useI18n()
 const { objectsAreEqual } = useHelpers()

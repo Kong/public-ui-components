@@ -64,9 +64,8 @@
             :label="t('form.config.kong.label')"
             :selected-value="VaultProviders.KONG"
           >
-            <KIcon
-              icon="kong"
-              size="46"
+            <KongIcon
+              :size="KUI_ICON_SIZE_80"
             />
           </KRadio>
           <KTooltip
@@ -562,6 +561,7 @@ import {
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
 import endpoints from '../vaults-endpoints'
+import { KUI_ICON_SIZE_80 } from '@kong/design-tokens'
 
 interface ConfigFields {
   [VaultProviders.KONG]: KongVaultConfig
