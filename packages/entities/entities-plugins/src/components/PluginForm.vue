@@ -162,6 +162,7 @@ import {
   type PluginEntityInfo,
   type PluginFormFields,
   type PluginFormState,
+  type PluginOrdering,
 } from '../types'
 import PluginEntityForm from './PluginEntityForm.vue'
 
@@ -885,10 +886,12 @@ const changesExist = computed(() => {
 const canSubmit = computed((): boolean => !schemaLoading.value && !formLoading.value && (formType.value === EntityBaseFormType.Create || changesExist.value))
 
 const initialized = ref(false)
+const dynamicOrdering = ref<PluginOrdering>()
 // The whole purpose of this function is to wait for the existing record to be loaded if editing
 // We need to wait for this before we start attempting to build the schema
 const initForm = (data: Record<string, any>): void => {
   form.fields.id = data?.id || undefined
+  dynamicOrdering.value = data?.ordering
 
   // Set initial state of `formFieldsOriginal` to these values in order to detect changes
   Object.assign(formFieldsOriginal, form.fields)
@@ -1043,9 +1046,10 @@ const saveFormData = async (): Promise<void> => {
       response = await axiosInstance.post(submitUrl.value, getRequestBody.value)
     } else if (formType.value === 'edit') {
       response = props.config.app === 'konnect'
-        // Note: Konnect currently uses PUT because PATCH is not fully supported in Koko
-        //       If this changes, the `edit` form methods should be re-evaluated/updated accordingly
-        ? await axiosInstance.put(submitUrl.value, getRequestBody.value)
+        // Note 1: Konnect currently uses PUT because PATCH is not fully supported in Koko
+        //         If this changes, the `edit` form methods should be re-evaluated/updated accordingly
+        // Note 2: Because Konnect uses PUT, we need to include dynamic ordering in the request body
+        ? await axiosInstance.put(submitUrl.value, Object.assign({ ordering: dynamicOrdering.value }, getRequestBody.value))
         : await axiosInstance.patch(submitUrl.value, getRequestBody.value)
     }
 

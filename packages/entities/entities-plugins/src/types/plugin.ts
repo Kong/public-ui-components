@@ -155,3 +155,12 @@ export type PluginCardList = {
 export type TriggerLabels = {
   [key in PluginGroup]?: string // [plugin.group]: label
 }
+
+export type PluginOrdering = {
+  before: {
+    access: string[]
+  }
+  after: {
+    access: string[]
+  }
+}
