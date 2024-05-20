@@ -1,42 +1,91 @@
 <template>
   <div class="selection-group">
-    <div
-      v-for="(option, i) in schema.fields"
-      :key="i"
-      class="option-group"
-    >
+    <template v-if="schema.horizontalRadios">
       <!-- Radio button -->
-      <div class="form-group">
-        <label
-          class="k-label"
-          :class="`${option.label}-check`"
-        >
-          <input
-            v-model="checkedGroup"
-            class="k-input"
-            type="radio"
-            :value="i"
+      <div class="form-group horizontal-radios">
+        <div class="radio-group">
+          <div
+            v-for="(option, i) in schema.fields"
+            :key="i"
+            class="option-group"
           >
-          {{ option.label }}
-          <div class="control-help">{{ option.description }}</div>
-        </label>
-      </div>
-
-      <!-- Selected Field -->
-      <div
-        v-show="option.fields && checkedGroup === i"
-        class="option-field"
-      >
-        <div class="option-field-container">
-          <vue-form-generator
-            :model="model"
-            :options="{ helpAsHtml: true }"
-            :schema="{ fields: option.fields }"
-            @model-updated="updateModel"
-          />
+            <label
+              class="k-label"
+              :class="`${option.label}-check`"
+            >
+              <input
+                v-model="checkedGroup"
+                class="k-input"
+                type="radio"
+                :value="i"
+              >
+              {{ option.label }}
+              <div class="control-help">{{ option.description }}</div>
+            </label>
+          </div>
         </div>
       </div>
-    </div>
+
+      <div
+        v-for="(option, i) in schema.fields"
+        :key="i"
+        class="option-group"
+      >
+        <!-- Selected Field -->
+        <div
+          v-show="option.fields && checkedGroup === i"
+          class="option-field"
+        >
+          <div class="option-field-container">
+            <vue-form-generator
+              :model="model"
+              :options="{ helpAsHtml: true }"
+              :schema="{ fields: option.fields }"
+              @model-updated="updateModel"
+            />
+          </div>
+        </div>
+      </div>
+    </template>
+    <template v-else>
+      <div
+        v-for="(option, i) in schema.fields"
+        :key="i"
+        class="option-group"
+      >
+        <!-- Radio button -->
+        <div class="form-group">
+          <label
+            class="k-label"
+            :class="`${option.label}-check`"
+          >
+            <input
+              v-model="checkedGroup"
+              class="k-input"
+              type="radio"
+              :value="i"
+            >
+            {{ option.label }}
+            <div class="control-help">{{ option.description }}</div>
+          </label>
+        </div>
+
+        <!-- Selected Field -->
+        <div
+          v-show="option.fields && checkedGroup === i"
+          class="option-field"
+        >
+          <div class="option-field-container">
+            <vue-form-generator
+              :model="model"
+              :options="{ helpAsHtml: true }"
+              :schema="{ fields: option.fields }"
+              @model-updated="updateModel"
+            />
+          </div>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -103,21 +152,25 @@ export default {
 
 <style lang="scss">
 .field-selectionGroup {
-  > label {
+  >label {
     display: none;
   }
+
   .control-help {
-    color: rgba(0,0,0,.45);
+    color: rgba(0, 0, 0, .45);
     font-weight: normal;
     margin-left: 32px;
     width: 100%;
   }
+
   .form-check-input {
     margin-bottom: 8px;
     margin-right: 8px;
   }
+
   .option-field {
     margin-top: 16px;
+
     .form-group {
       margin-bottom: 16px;
     }
@@ -136,6 +189,15 @@ export default {
   .form-group,
   .option-field-container {
     margin-bottom: 0;
+  }
+
+  .form-group.horizontal-radios {
+    .radio-group {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      gap: $kui-space-80
+    }
   }
 }
 </style>

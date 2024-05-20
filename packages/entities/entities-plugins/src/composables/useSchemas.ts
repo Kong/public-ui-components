@@ -48,6 +48,7 @@ export interface Schema {
 export interface UseSchemasOptions {
   app?: 'konnect' | 'kongManager'
   groupFields?: boolean
+  useRLARedesignedForm?: boolean
 }
 
 /** Sorts non-config fields and place them at the top */
@@ -242,7 +243,8 @@ export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
     // No field grouping for:
     // - Plugins with custom layouts
     // - Plugins explicitly marked to use legacy form
-    if (!getSharedFormName(pluginName) && options?.groupFields && !metadata?.useLegacyForm) {
+    // - Redesigned RLA form
+    if (!getSharedFormName(pluginName, { useRLARedesignedForm: options?.useRLARedesignedForm }) && options?.groupFields && !metadata?.useLegacyForm) {
       const pinnedFields = []
       const defaultVisibleFields = []
       const advancedFields = []

@@ -12,14 +12,18 @@ export default {
 export { customFields } from './generator/fields/advanced/exports'
 export { VueFormGenerator, sharedForms }
 
-export const getSharedFormName = (modelName: string, enabledAcmeCustomTemplate = false): string => {
+export interface GetSharedFormNameOptions {
+  useRLARedesignedForm?: boolean
+}
+
+export const getSharedFormName = (modelName: string, options?: GetSharedFormNameOptions): string => {
   const mapping:Record<string, string> = {
-    ...(enabledAcmeCustomTemplate && { acme: 'ACMEForm' }),
     'openid-connect': 'OIDCForm',
     'post-function': 'PostFunction',
     // Pre and Post function plugins are using same component
     'pre-function': 'PostFunction',
     'exit-transformer': 'ExitTransformer',
+    ...(options?.useRLARedesignedForm && { 'rate-limiting-advanced': 'RLAForm' }),
   }
 
   return mapping[modelName]

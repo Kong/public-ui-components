@@ -97,6 +97,12 @@ A form component for Plugins.
     - default: `false`
     - Whether to enable grouping for required and advanced (optional) fields.
 
+  - `useRLARedesignedForm`:
+    - type: `boolean`
+    - required: `false`
+    - default: `false`
+    - Whether to use the redesigned form for the RLA plugin.
+
 The base konnect or kongManger config.
 
 #### `pluginType`
