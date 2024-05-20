@@ -206,7 +206,7 @@ export type BasicTimeRangeV4 = AbsoluteTimeRangeV4 | BasicRelativeTimeRangeV4
 export interface BasicExploreQuery {
   metrics?: BasicExploreAggregations[]
   dimensions?: QueryableBasicExploreDimensions[]
-  filters?: ExploreFilter[]
+  filters?: BasicExploreFilter[]
   granularity?: GranularityValues
   time_range?: BasicTimeRangeV4
   limit?: number
