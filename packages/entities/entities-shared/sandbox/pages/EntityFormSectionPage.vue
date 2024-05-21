@@ -21,7 +21,7 @@
       <template #footer>
         <div class="footer">
           <span class="footer-title">Footer slot</span>
-          <KIcon icon="kong" />
+          <KongIcon />
         </div>
       </template>
     </EntityFormSection>
@@ -30,6 +30,7 @@
 
 <script setup lang="ts">
 import { EntityFormSection } from '../../src'
+import { KongIcon } from '@kong/icons'
 </script>
 
 <style lang="scss" scoped>

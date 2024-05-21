@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.1.29...@kong-ui-public/spec-renderer@2.1.30) (2024-05-16)
+
+
+### Bug Fixes
+
+* replace kicon instances [KHCP-11982] ([#1413](https://github.com/Kong/public-ui-components/issues/1413)) ([6152026](https://github.com/Kong/public-ui-components/commit/61520261d42932377dd8374f138b316736c28b77))
+
+
+
+
+
 ## [2.1.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.1.28...@kong-ui-public/spec-renderer@2.1.29) (2024-05-16)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer

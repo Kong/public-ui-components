@@ -26,7 +26,21 @@ The config store uses the host app's Pinia instance, and must only be used after
 
 **Note:** Pinia and this package _must_ be externalized (i.e., added to `vite.config.ts`'s `build.rollupOptions.external` array).  See notes in [[1]](https://github.com/vuejs/pinia/discussions/1073#discussioncomment-2196098) and [[2]](https://github.com/vuejs/pinia/discussions/1073#discussioncomment-6286516).  This ensures that the store uses the same instance of Pinia as the host app, rather than incorporating and using its own instance that never properly gets inited.
 
-## `AnalyticsConfigCheck`
+### Direct use of the store
+
+When the store is first instantiated, it makes a call to retrieve the org's analytics config (using the `configFn` from `AnalyticsBridge`).  Because the `AnalyticsBridge` is injected using Vue's `provide` / `inject` mechanism, the store must be instantiated either from a component's `setup` block or by using [`app.runWithContext`](https://vuejs.org/api/application.html#app-runwithcontext).  Until the call to retrieve analytics config resolves, the store will return `null` for `analyticsConfig` and default values for the various computed properties.
+
+The store exposes several computed properties that attempt to standardize common questions asked of an org's analytics config:
+
+- `loading` -- whether the call to retrieve config has resolved
+- `longRetention` -- whether the org has a long enough retention period to support features like trend queries.
+- `defaultQueryTimeForOrg` -- related to `longRetention`, this defines the length of time the app should query for contextual metrics.
+- `analytics` -- a boolean value for whether the org has analytics data.
+- `percentiles` -- a boolean value for whether the org's analytics data includes percentile metrics.
+
+Note: to avoid unnecessary API calls, no queries should be issued until `loading` is `false`.  Most analytics components support a `queryReady` property; it's a good idea to pass `queryReady: !loading`.
+
+### Using `AnalyticsConfigCheck`
 
 To conditionally show or hide UI elements based on analytics config, use the included component:
 

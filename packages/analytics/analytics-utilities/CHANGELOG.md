@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@3.3.0...@kong-ui-public/analytics-utilities@3.4.0) (2024-05-21)
+
+
+### Features
+
+* Add types for basic explore ([#1414](https://github.com/Kong/public-ui-components/issues/1414)) ([71dd276](https://github.com/Kong/public-ui-components/commit/71dd2764bfd115d3a0673b0d3890319d94b82469))
+
+
+
+
+
+# [3.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@3.2.0...@kong-ui-public/analytics-utilities@3.3.0) (2024-05-16)
+
+
+### Features
+
+* allow 425 days of retention ([#1411](https://github.com/Kong/public-ui-components/issues/1411)) ([0a1b953](https://github.com/Kong/public-ui-components/commit/0a1b953d3122dc94e9eddb61cd9f6830b3cc2ba3))
+
+
+
+
+
 # [3.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@3.1.0...@kong-ui-public/analytics-utilities@3.2.0) (2024-05-15)
 
 

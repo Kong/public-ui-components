@@ -5,11 +5,9 @@ export const exploreFilterTypesV2 = ['in', 'not_in', 'selector'] as const
 
 export type ExploreFilterTypesV2 = typeof exploreFilterTypesV2[number]
 
-export const queryableExploreDimensions = [
+export const queryableBasicExploreDimensions = [
   'api_product',
   'api_product_version',
-  'application',
-  'consumer',
   'control_plane',
   'control_plane_group',
   'data_plane_node',
@@ -20,6 +18,12 @@ export const queryableExploreDimensions = [
   'time',
 ] as const
 
+export const queryableExploreDimensions = [
+  ...queryableBasicExploreDimensions,
+  'application',
+  'consumer',
+] as const
+
 export type QueryableExploreDimensions = typeof queryableExploreDimensions[number]
 
 export interface ExploreFilter {
@@ -28,14 +32,18 @@ export interface ExploreFilter {
   values: (string | number | null)[]
 }
 
-export const exploreAggregations = [
+export const basicExploreAggregations = [
   'active_services',
   'request_count',
   'request_per_minute',
+  'response_latency_average',
+] as const
+
+export const exploreAggregations = [
+  ...basicExploreAggregations,
   'response_latency_p99',
   'response_latency_p95',
   'response_latency_p50',
-  'response_latency_average',
   'upstream_latency_p99',
   'upstream_latency_p95',
   'upstream_latency_p50',
@@ -67,17 +75,21 @@ export interface AbsoluteTimeRangeV4 {
   end: Date
 }
 
-export const relativeTimeRangeValuesV4 = [
+export const basicRelativeTimeRangeValuesV4 = [
   '15m',
   '1h',
   '6h',
   '12h',
   '24h',
   '7d',
-  '30d',
   'current_week',
-  'current_month',
   'previous_week',
+] as const
+
+export const relativeTimeRangeValuesV4 = [
+  ...basicRelativeTimeRangeValuesV4,
+  '30d',
+  'current_month',
   'previous_month',
 ] as const
 

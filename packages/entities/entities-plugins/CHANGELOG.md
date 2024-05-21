@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.3.10...@kong-ui-public/entities-plugins@4.4.0) (2024-05-20)
+
+
+### Features
+
+* **plugins:** expose PluginSelectCard for reuse in serverless quickstart [KHCP-11766] ([#1415](https://github.com/Kong/public-ui-components/issues/1415)) ([08580d2](https://github.com/Kong/public-ui-components/commit/08580d26d9730ea1936b8573e8c7c52bba0b0ff5))
+
+
+
+
+
+## [4.3.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.3.9...@kong-ui-public/entities-plugins@4.3.10) (2024-05-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [4.3.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.3.8...@kong-ui-public/entities-plugins@4.3.9) (2024-05-16)
 
 

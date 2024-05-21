@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.5.0...@kong-ui-public/analytics-config-store@0.5.1) (2024-05-21)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-config-store
+
+
+
+
+
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.4.6...@kong-ui-public/analytics-config-store@0.5.0) (2024-05-20)
+
+
+### Features
+
+* **analytics:** analytics bridge for Portal [MA-2737] ([#1344](https://github.com/Kong/public-ui-components/issues/1344)) ([be18d27](https://github.com/Kong/public-ui-components/commit/be18d2790de2c803f15b3865557ff71693b1f195))
+
+
+
+
+
+## [0.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.4.5...@kong-ui-public/analytics-config-store@0.4.6) (2024-05-16)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-config-store
+
+
+
+
+
 ## [0.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.4.4...@kong-ui-public/analytics-config-store@0.4.5) (2024-05-15)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-config-store
