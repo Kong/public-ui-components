@@ -22,7 +22,7 @@
       :fetcher-cache-key="String(fetcherCacheKey)"
       :headers="headers"
       hide-pagination-when-optional
-      :initial-fetcher-params="initialFetcherParams"
+      :initial-fetcher-params="combinedInitialFetcherParams"
       :loading="isLoading"
       :pagination-offset="paginationType === 'offset'"
       resize-columns
@@ -358,6 +358,16 @@ const { setTablePreferences, getTablePreferences } = useTablePreferences()
 // for localStorage of user's table preferences across tables, orgs and users
 
 const tablePreferences = ref<TablePreferences>(getTablePreferences(cacheId.value))
+
+const combinedInitialFetcherParams = computed((): Partial<FetcherParams> => {
+  // Pass the preferencesStorageKey regardless; if no entry is found, it will return the default
+  const userTablePreferences = getTablePreferences(cacheId.value)
+  // Return the props.initialFetcherParams, appending any stored user preferences
+  return {
+    ...props.initialFetcherParams,
+    ...userTablePreferences,
+  }
+})
 
 const handleUpdateTablePreferences = (newTablePreferences: TablePreferences): void => {
   tablePreferences.value = newTablePreferences
