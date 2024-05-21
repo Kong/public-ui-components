@@ -75,17 +75,21 @@ export interface AbsoluteTimeRangeV4 {
   end: Date
 }
 
-export const relativeTimeRangeValuesV4 = [
+export const basicRelativeTimeRangeValuesV4 = [
   '15m',
   '1h',
   '6h',
   '12h',
   '24h',
   '7d',
-  '30d',
   'current_week',
-  'current_month',
   'previous_week',
+] as const
+
+export const relativeTimeRangeValuesV4 = [
+  ...basicRelativeTimeRangeValuesV4,
+  '30d',
+  'current_month',
   'previous_month',
 ] as const
 
