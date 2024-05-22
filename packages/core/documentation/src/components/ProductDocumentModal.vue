@@ -298,10 +298,10 @@ const handleClickSave = (): void => {
     const newFileContent = new File([], formData.pageName + '.md')
     newEmptyFile.value = newFileContent
 
-    // emit the save and edit event
+    // If creating Empty Document then emit the save event with new empty file
     emit('save', Object.assign(formData, { fileName: formData.pageName }, { status: status.value }), newEmptyFile)
-    emit('edit', Object.assign(formData, { fileName: formData.pageName }, { status: status.value }), newEmptyFile)
   } else {
+    // Else emit the save event with uploaded file
     emit('save', Object.assign(formData, { status: status.value }), selectedFile)
   }
 }
