@@ -50,6 +50,7 @@
       :record="editing && selectedDocument ? selectedDocument : undefined"
       @cancel="handleModalClosed"
       @delete="emit('delete')"
+      @edit="handleEditDocClick"
       @save="(formData: FormData, selectedFile: any) => emit('save', formData, selectedFile)"
     />
   </div>
@@ -67,6 +68,7 @@ import type { ChangeEvent, ChildChangeEvent, TreeListItem } from '@kong/kongpone
 const emit = defineEmits<{
   (e: 'child-change', data: ChildChangeEvent): void,
   (e: 'delete'): void,
+  (e: 'edit', formData: FormData, selectedFile: any): void,
   (e: 'document-selection', data: TreeListItem): void,
   (e: 'modal-closed'): void,
   (e: 'parent-change', data: ChangeEvent): void,
@@ -159,9 +161,10 @@ const handleDownloadClick = (): void => {
   documentationDisplay.value.download()
 }
 
-const handleEditDocClick = (): void => {
+const handleEditDocClick = (formData: FormData, selectedFile: any): void => {
   // exposed method from DocumentationDisplay
   documentationDisplay.value.edit()
+  emit('edit', formData, selectedFile)
 }
 
 const handleModalClosed = (): void => {

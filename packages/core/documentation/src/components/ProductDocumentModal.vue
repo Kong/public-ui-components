@@ -39,9 +39,8 @@
           show-icon
         />
 
-        <!-- TODO: Uncomment when the New Doc creation work is done -->
         <!-- Show radio buttons only for create modal -->
-        <!-- <div
+        <div
           v-if="!editing"
           class="document-radio-group"
         >
@@ -63,9 +62,10 @@
               {{ i18n.t('documentation.form_modal.file_label') }}
             </KRadio>
           </div>
-        </div> -->
+        </div>
 
         <KFileUpload
+          v-if="checkedType === 'upload'"
           :accept="['.md', '.markdown']"
           :button-text="fileUploadButtonText"
           class="document-file-upload"
@@ -154,13 +154,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, reactive } from 'vue'
+import { computed, onMounted, ref, reactive, watch } from 'vue'
 import composables from '../composables'
 import { cloneDeep } from '../helpers'
 import externalLinks from '../external-links'
 import { ProgressIcon } from '@kong/icons'
-
-import type { PropType } from 'vue'
+import type { PropType, Ref } from 'vue'
 import type { DocumentListItem, FormData } from 'src/types'
 
 const props = defineProps({
@@ -191,6 +190,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
+  (e: 'edit', formData: FormData, selectedFile: any): void,
   (e: 'cancel'): void,
   (e: 'save', formData: FormData, selectedFile: any): void,
   (e: 'delete'): void,
@@ -203,8 +203,7 @@ const publishModel = ref<boolean>(true)
 
 const status = computed(() => publishModel.value ? 'published' : 'unpublished')
 
-// TODO: added for new doc creation; enable this later
-// const checkedType = ref<'empty' | 'upload'>('empty')
+const checkedType = ref<'empty' | 'upload'>('empty')
 
 const formData = reactive({
   fileName: '',
@@ -262,6 +261,7 @@ const publishedStatusText = computed((): string => {
 })
 
 const selectedFile = ref<any>(null)
+
 const handleFileSelected = (file: any): void => {
   selectedFile.value = file?.[0]
   formData.fileName = namePlaceholderText.value
@@ -270,19 +270,16 @@ const handleFileSelected = (file: any): void => {
   formData.urlSlug = formData.urlSlug ? formData.urlSlug : namePlaceholderText.value
 }
 
-const saveDisabled = computed((): boolean => (!props.editing && !selectedFile.value) || !formData.pageName || slugError.value)
-
-// TODO: added for new doc creation; enable this later
-// const saveDisabled = computed((): boolean => {
-//   if (checkedType.value === 'upload') {
-//     // If a file is selected, pageName and urlSlug are required
-//     return !(selectedFile.value && formData.pageName && formData.urlSlug && !slugError.value)
-//   } else if (checkedType.value === 'empty') {
-//     // If no file is selected, only pageName and urlSlug are required
-//     return !(formData.pageName && formData.urlSlug && !slugError.value)
-//   }
-//   return true
-// })
+const saveDisabled = computed((): boolean => {
+  if (checkedType.value === 'upload') {
+    // If a file is selected, pageName and urlSlug are required
+    return !(selectedFile.value && formData.pageName && formData.urlSlug && !slugError.value)
+  } else if (checkedType.value === 'empty') {
+    // If no file is selected, only pageName and urlSlug are required
+    return !(formData.pageName && formData.urlSlug && !slugError.value)
+  }
+  return true
+})
 
 const handleFileRemoved = (): void => {
   selectedFile.value = null
@@ -294,6 +291,17 @@ const handleClickCancel = (): void => {
 }
 
 const handleClickSave = (): void => {
+  const newEmptyFile: Ref<File | null> = ref(null)
+  // create the empty file when Empty Documnet is selected
+  if (checkedType.value === 'empty') {
+    // Create an empty File with .md extension file name
+    const newFileContent = new File([], formData.pageName + '.md')
+    newEmptyFile.value = newFileContent
+
+    // emit the save and edit event
+    emit('save', Object.assign(formData, { fileName: formData.pageName }, { status: status.value }), newEmptyFile)
+    emit('edit', Object.assign(formData, { fileName: formData.pageName }, { status: status.value }), newEmptyFile)
+  }
   emit('save', Object.assign(formData, { status: status.value }), selectedFile)
 }
 
@@ -318,6 +326,10 @@ const setForm = (): void => {
     formData.status = ''
   }
 }
+
+watch(() => checkedType, () => {
+  setForm()
+}, { deep: true, immediate: true })
 
 onMounted(() => {
   setForm()
