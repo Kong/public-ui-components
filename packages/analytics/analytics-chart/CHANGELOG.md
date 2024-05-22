@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.0.16...@kong-ui-public/analytics-chart@4.0.17) (2024-05-22)
+
+
+### Bug Fixes
+
+* **entitybasetable:** ktable props and events [KHCP-11890] ([#1412](https://github.com/Kong/public-ui-components/issues/1412)) ([de27221](https://github.com/Kong/public-ui-components/commit/de27221f806967bec3e04f7f87cd5b6ea9b44593))
+
+
+
+
+
 ## [4.0.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.0.15...@kong-ui-public/analytics-chart@4.0.16) (2024-05-21)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

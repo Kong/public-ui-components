@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.1.8...@kong-ui-public/app-layout@4.1.9) (2024-05-22)
+
+
+### Bug Fixes
+
+* **entitybasetable:** ktable props and events [KHCP-11890] ([#1412](https://github.com/Kong/public-ui-components/issues/1412)) ([de27221](https://github.com/Kong/public-ui-components/commit/de27221f806967bec3e04f7f87cd5b6ea9b44593))
+
+
+
+
+
 ## [4.1.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.1.7...@kong-ui-public/app-layout@4.1.8) (2024-05-16)
 
 

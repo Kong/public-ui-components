@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.8.10...@kong-ui-public/metric-cards@0.8.11) (2024-05-22)
+
+
+### Bug Fixes
+
+* **entitybasetable:** ktable props and events [KHCP-11890] ([#1412](https://github.com/Kong/public-ui-components/issues/1412)) ([de27221](https://github.com/Kong/public-ui-components/commit/de27221f806967bec3e04f7f87cd5b6ea9b44593))
+
+
+
+
+
 ## [0.8.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.8.9...@kong-ui-public/metric-cards@0.8.10) (2024-05-16)
 
 **Note:** Version bump only for package @kong-ui-public/metric-cards
