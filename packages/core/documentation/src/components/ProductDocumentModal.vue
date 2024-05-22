@@ -301,8 +301,9 @@ const handleClickSave = (): void => {
     // emit the save and edit event
     emit('save', Object.assign(formData, { fileName: formData.pageName }, { status: status.value }), newEmptyFile)
     emit('edit', Object.assign(formData, { fileName: formData.pageName }, { status: status.value }), newEmptyFile)
+  } else {
+    emit('save', Object.assign(formData, { status: status.value }), selectedFile)
   }
-  emit('save', Object.assign(formData, { status: status.value }), selectedFile)
 }
 
 const setForm = (): void => {
