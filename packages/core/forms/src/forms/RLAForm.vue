@@ -79,6 +79,18 @@
           </div>
         </div>
       </div>
+
+      <div class="rla-form-request-limits-examples">
+        <div>Examples:</div>
+        <ol>
+          <li
+            v-for="(example, i) in EXAMPLES"
+            :key="`rla-example-${i}`"
+          >
+            {{ example.description }}<br>Request number: <code>{{ example.config.limit }}</code>, Time interval: <code>{{ example.config.window_size }}</code>, Window type: <code>{{ example.config.window_type }}</code>
+          </li>
+        </ol>
+      </div>
     </KCard>
 
     <KSelect
@@ -156,6 +168,58 @@ import type { SelectItem } from '@kong/kongponents'
 import cloneDeep from 'lodash-es/cloneDeep'
 import { computed, ref } from 'vue'
 import english from '../locales/en.json'
+
+const EXAMPLES = [
+  {
+    description: 'A fixed limit of 500 requests per hour resetting sharply on the hour, ensuring no user can exceed this limit.',
+    config: {
+      limit: 500,
+      window_size: 3600,
+      window_type: 'fixed',
+    },
+  },
+  {
+    description: 'Users are allowed 200 requests per 30 minutes, resetting exactly on the 30 minute mark with no carryover of unused limits.',
+    config: {
+      limit: 200,
+      window_size: 1800,
+      window_type: 'fixed',
+    },
+  },
+  {
+    description: 'A strict limit of 5000 requests per day resetting promptly at midnight, preventing any burst traffic or inconsistent user experiences.',
+    config: {
+      limit: 500,
+      window_size: 86400,
+      window_type: 'fixed',
+    },
+  },
+  {
+    description: 'Maximum of 100 requests every rolling hour, continuously adjusting the count over the course of the hour. No hard limit or known reset.',
+    config: {
+      limit: 100,
+      window_size: 3600,
+      window_type: 'sliding',
+    },
+  },
+  {
+    description: 'Each user can make up to 300 requests in any rolling 30 minute period, with older requests dropping off as new requests are made.',
+    config: {
+      limit: 300,
+      window_size: 1800,
+      window_type: 'sliding',
+    },
+  },
+  {
+    description: 'Each user is allowed 500 requests per hour. \nIf the limit is exceeded and the user receives a 429 error, each additional request within the sliding window (hour) \nwill extend the wait time by about 12 minutes, continuously adjusting as new requests are made.',
+    config: {
+      limit: 500,
+      window_size: 3600,
+      window_type: 'sliding',
+      disable_penalty: false,
+    },
+  },
+]
 
 interface RequestLimit {
   limit?: number
@@ -252,6 +316,12 @@ const updateRequestLimitWindowSize = (index: number, windowSize?: number) => {
 const addRequestLimit = (index: number) => {
   const limits = cloneDeep(props.formModel?.['config-limit'] ?? [])
   const windowSizes = cloneDeep(props.formModel?.['config-window_size'] ?? [])
+  if (limits.length === 0) {
+    limits.push(undefined)
+  }
+  if (windowSizes.length === 0) {
+    windowSizes.push(undefined)
+  }
   limits.splice(index + 1, 0, undefined)
   windowSizes.splice(index + 1, 0, undefined)
   props.onModelUpdated(limits, 'config-limit')
@@ -262,6 +332,12 @@ const removeRequestLimit = (index: number) => {
   if (requestLimits.value.length > 1) {
     const limits = cloneDeep(props.formModel?.['config-limit'] ?? [])
     const windowSizes = cloneDeep(props.formModel?.['config-window_size'] ?? [])
+    if (limits.length === 0) {
+      limits.push(undefined)
+    }
+    if (windowSizes.length === 0) {
+      windowSizes.push(undefined)
+    }
     limits.splice(index, 1)
     windowSizes.splice(index, 1)
     props.onModelUpdated(limits, 'config-limit')
@@ -292,7 +368,7 @@ const removeRequestLimit = (index: number) => {
     &-items {
       display: flex;
       flex-direction: column;
-      gap: $kui-space-40;
+      gap: $kui-space-50;
     }
 
     &-row,
@@ -301,7 +377,7 @@ const removeRequestLimit = (index: number) => {
       align-items: center;
       display: flex;
       flex-direction: row;
-      gap: $kui-space-40;
+      gap: $kui-space-50;
       justify-content: space-between;
     }
 
@@ -316,6 +392,17 @@ const removeRequestLimit = (index: number) => {
     :deep(.form-group) {
       margin-bottom: 0 !important;
     }
+
+    &-examples {
+      color: $kui-color-text-neutral;
+      margin-bottom: $kui-space-50;
+      margin-top: $kui-space-50;
+
+      ol {
+        margin-bottom: 0;
+        margin-top: 0;
+      }
+    }
   }
 
   .rla-form-identifiers {
@@ -328,7 +415,7 @@ const removeRequestLimit = (index: number) => {
     align-items: center;
     display: flex;
     flex-direction: row;
-    gap: $kui-space-40;
+    gap: $kui-space-50;
     justify-content: space-between;
 
     .input-error-code {

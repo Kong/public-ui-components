@@ -66,13 +66,13 @@
     "view_advanced_fields": "View Advanced Fields",
     "request_limits": {
       "title": "Request Limits",
-      "subtitle": "Maximum number of requests sent through your gateway at specific time intervals",
+      "subtitle": "Advanced control on request rate with customizable limits and window sizes.",
       "label": "Limit {index}",
-      "help": "Set one or more requests-per-window limit and window sizes to apply a limit to (defined in seconds). There must be a matching number of window limits and sizes specified.",
+      "help": "Set one or more requests-per-window limits and window sizes to apply a limit to (defined in seconds). There must be a matching number of window limits and sizes specified.",
       "request_number": "Request number",
       "time_interval": "Time interval",
       "interval_determiner": "Every",
-      "seconds": "seconds"
+      "seconds": "Seconds"
     },
     "error_message": {
       "label": "Error Message",
