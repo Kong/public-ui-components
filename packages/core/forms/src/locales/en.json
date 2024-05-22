@@ -91,6 +91,7 @@
         "path": "Path",
         "consumer-group": "Consumer Group"
       }
-    }
+    },
+    "redis_address_example": "e.g. localhost:6379"
   }
 }

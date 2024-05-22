@@ -101,7 +101,6 @@
         tooltipAttributes: {
           maxWidth: '300',
           placement: 'top',
-          tooltipId: 'rla-form-request-limits-tooltip',
         },
       }"
       required
@@ -121,7 +120,6 @@
         :tooltip-attributes="{
           maxWidth: '300',
           placement: 'top',
-          tooltipId: 'rla-form-error-tooltip'
         }"
       >
         {{ t('rla.error_message.label') }}
@@ -258,7 +256,13 @@ const advancedSchema = computed(() => {
 
   return {
     fields: props.formSchema?.fields
-      ?.filter((field: any) => typeof field.model === 'string' && !omittedFields.has(field.model)),
+      ?.filter((field: any) => typeof field.model === 'string' && !omittedFields.has(field.model))
+      ?.map((field: any) => {
+        if (field.model === 'config-redis-cluster_addresses' || field.model === 'config-redis-sentinel_addresses') {
+          field.hint = t('rla.redis_address_example')
+        }
+        return field
+      }),
   }
 })
 
