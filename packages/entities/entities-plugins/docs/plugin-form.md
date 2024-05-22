@@ -103,6 +103,12 @@ A form component for Plugins.
     - default: `false`
     - Whether to use the redesigned form for the RLA plugin.
 
+  - `useHorizontalRadiosForPluginScoping`:
+    - type: `boolean`
+    - required: `false`
+    - default: `false`
+    - Whether to use the horizontal radios in the plugin scoping section.
+
 The base konnect or kongManger config.
 
 #### `pluginType`
