@@ -45,18 +45,6 @@
             @click="handlePublishToggle"
           />
         </PermissionsWrapper>
-        <PermissionsWrapper
-          :auth-function="() => canEdit()"
-        >
-          <KButton
-            appearance="primary"
-            data-testid="add-new-page-button"
-            size="small"
-            @click="emit('add')"
-          >
-            {{ i18n.t('documentation.documentation_display.add_new') }}
-          </KButton>
-        </PermissionsWrapper>
       </div>
     </div>
 
