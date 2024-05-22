@@ -50,7 +50,7 @@
       :record="editing && selectedDocument ? selectedDocument : undefined"
       @cancel="handleModalClosed"
       @delete="emit('delete')"
-      @edit="handleEditDocClick"
+      @edit="handleEmptyDocClick"
       @save="(formData: FormData, selectedFile: any) => emit('save', formData, selectedFile)"
     />
   </div>
@@ -161,10 +161,14 @@ const handleDownloadClick = (): void => {
   documentationDisplay.value.download()
 }
 
-const handleEditDocClick = (formData: FormData, selectedFile: any): void => {
+const handleEmptyDocClick = (formData: FormData, selectedFile: any): void => {
+  handleEditDocClick()
+  emit('edit', formData, selectedFile)
+}
+
+const handleEditDocClick = (): void => {
   // exposed method from DocumentationDisplay
   documentationDisplay.value.edit()
-  emit('edit', formData, selectedFile)
 }
 
 const handleModalClosed = (): void => {
