@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.4.26...@kong-ui-public/documentation@0.5.0) (2024-05-22)
+
+
+### Features
+
+* **documentation:** changes for integrated markdown editor milestone 2 ([#1381](https://github.com/Kong/public-ui-components/issues/1381)) ([87eed3f](https://github.com/Kong/public-ui-components/commit/87eed3f15166780d8340f70b1b08476c43e552a6))
+
+
+
+
+
 ## [0.4.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.4.25...@kong-ui-public/documentation@0.4.26) (2024-05-16)
 
 **Note:** Version bump only for package @kong-ui-public/documentation
