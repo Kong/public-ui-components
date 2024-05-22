@@ -6,14 +6,14 @@ import { EntityBaseForm } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'gateway-services-list' }
 
-const baseConfigKonnect:KonnectGatewayServiceFormConfig = {
+const baseConfigKonnect: KonnectGatewayServiceFormConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-dogs',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
 }
 
-const baseConfigKM:KongManagerGatewayServiceFormConfig = {
+const baseConfigKM: KongManagerGatewayServiceFormConfig = {
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
@@ -46,7 +46,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
         },
         {
           statusCode: status,
-          body: { },
+          body: {},
         },
       ).as('validateService')
 
@@ -94,21 +94,21 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.get('.kong-ui-entities-gateway-service-form form').should('be.visible')
 
       cy.getTestId('gateway-service-name-input').should('be.visible')
-      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+      cy.getTestId('gateway-service-name-input').parents('.k-input.input-error')
         .should('not.exist')
 
       cy.getTestId('gateway-service-name-input').type('service')
-      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+      cy.getTestId('gateway-service-name-input').parents('.k-input.input-error')
         .should('not.exist')
 
       cy.getTestId('gateway-service-name-input').clear()
       cy.getTestId('gateway-service-name-input').type('service abc') // with a space
-      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+      cy.getTestId('gateway-service-name-input').parents('.k-input.input-error')
         .first().find('.help-text').should('be.visible')
 
       cy.getTestId('gateway-service-name-input').clear()
       cy.getTestId('gateway-service-name-input').type('Hello-ÆBČÐẼF-你好-妳好-こんにちは-안녕하세요-𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯') // UTF-8
-      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+      cy.getTestId('gateway-service-name-input').parents('.k-input.input-error')
         .should('not.exist')
     })
 
@@ -428,7 +428,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
         },
         {
           statusCode: status,
-          body: { },
+          body: {},
         },
       ).as('validateService')
 
@@ -476,21 +476,21 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.get('.kong-ui-entities-gateway-service-form form').should('be.visible')
 
       cy.getTestId('gateway-service-name-input').should('be.visible')
-      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+      cy.getTestId('gateway-service-name-input').parents('.k-input.input-error')
         .should('not.exist')
 
       cy.getTestId('gateway-service-name-input').type('service')
-      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+      cy.getTestId('gateway-service-name-input').parents('.k-input.input-error')
         .should('not.exist')
 
       cy.getTestId('gateway-service-name-input').clear()
       cy.getTestId('gateway-service-name-input').type('service abc') // with a space
-      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+      cy.getTestId('gateway-service-name-input').parents('.k-input.input-error')
         .first().find('.help-text').should('be.visible')
 
       cy.getTestId('gateway-service-name-input').clear()
       cy.getTestId('gateway-service-name-input').type('Hello-ÆBČÐẼF-你好-妳好-こんにちは-안녕하세요-𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯') // UTF-8
-      cy.getTestId('gateway-service-name-input').parents('.k-input-wrapper.input-error')
+      cy.getTestId('gateway-service-name-input').parents('.k-input.input-error')
         .should('not.exist')
     })
 

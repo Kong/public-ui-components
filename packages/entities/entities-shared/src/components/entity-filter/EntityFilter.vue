@@ -344,16 +344,16 @@ const applyFields = (hideMenu = false) => {
   justify-content: space-between;
   margin-top: $kui-space-60;
 
-  :deep(.k-input) {
+  :deep(.input) {
     padding-bottom: 4px!important;
     padding-top: 4px!important;
   }
 
-  :deep(.k-input-wrapper) {
+  :deep(.k-input) {
     width: 100%;
   }
 
-  :deep(.k-select-input .k-input) {
+  :deep(.k-select-input .input) {
     font-size: 12px;
 
     &::placeholder {

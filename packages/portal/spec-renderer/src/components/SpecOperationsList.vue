@@ -323,7 +323,7 @@ const { getSizeFromString, hasRequiredProps } = composables.useUtilities()
   .filter-input {
     width: 100%;
 
-    &:deep(.k-input) {
+    &:deep(.input) {
       padding-left: $kui-space-90;
     }
   }
