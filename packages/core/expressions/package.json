@@ -65,7 +65,7 @@
   },
   "peerDependencies": {
     "@kong/atc-router": "^1.6.0-rc.1",
-    "@kong/kongponents": "^9.0.0-alpha.158",
+    "@kong/kongponents": "^9.0.0-alpha.159",
     "monaco-editor": "0.21.3",
     "vue": "^3.4.26"
   },
