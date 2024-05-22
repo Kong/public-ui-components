@@ -24,6 +24,7 @@
       "delete_button_text": "Delete",
       "documentation_link_text": "View Documentation",
       "edit_title": "Edit Document Settings",
+      "empty_doc": "Empty Document",
       "file_label": "Upload File",
       "file_tooltip": "Select a .md file to upload",
       "filename_button_text": "Select file",
@@ -41,6 +42,14 @@
       "title_placeholder": "Enter a page name"
     },
     "show": {
+      "actions": "Actions",
+      "actions_menu": {
+        "delete_document": "Delete Document",
+        "document_settings": "Document Settings",
+        "download_document": "Download Document",
+        "edit_document": "Edit Document",
+        "new_document": "New Document"
+      },
       "empty_state": {
         "title": "Add New Documentation Page",
         "message": "Pages will allow you to provide guides examples and other useful information about your service to developers.",
