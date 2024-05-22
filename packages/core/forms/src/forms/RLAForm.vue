@@ -19,7 +19,6 @@
           :tooltip-attributes="{
             maxWidth: '300',
             placement: 'top',
-            tooltipId: 'rla-form-request-limits-tooltip'
           }"
         >
           {{ t('rla.request_limits.title') }}
@@ -259,16 +258,7 @@ const advancedSchema = computed(() => {
 
   return {
     fields: props.formSchema?.fields
-      ?.filter((field: any) => typeof field.model === 'string' && !omittedFields.has(field.model))
-      ?.map((field: any) => {
-        if (field.model === 'config-redis-cluster_addresses') {
-          return {
-            ...field,
-            hint: 'e.g. localhost:6379',
-          }
-        }
-        return field
-      }),
+      ?.filter((field: any) => typeof field.model === 'string' && !omittedFields.has(field.model)),
   }
 })
 

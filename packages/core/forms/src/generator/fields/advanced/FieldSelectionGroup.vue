@@ -196,7 +196,7 @@ export default {
       align-items: center;
       display: flex;
       flex-direction: row;
-      gap: $kui-space-80
+      gap: $kui-space-80;
     }
   }
 }
