@@ -83,6 +83,7 @@
       >
         <MarkdownUi
           v-if="markdownContent !== undefined"
+          ref="markdownComponent"
           v-model="markdownContent"
           downloadable
           :editable="userCanEdit"
@@ -93,54 +94,7 @@
           @cancel="restoreOriginalDocument"
           @mode="(mode: MarkdownMode) => handleMarkdownUiModeChange(mode)"
           @save="(payload: EmitUpdatePayload) => emit('save-markdown', payload.content)"
-        >
-          <template
-            v-if="userCanEdit || !!selectedDocument.markdown"
-            #content-actions="{ download, edit }"
-          >
-            <KDropdown
-              class="content-actions-dropdown"
-              :kpop-attributes="{ placement: 'bottomEnd' }"
-            >
-              <template #default>
-                <KTooltip :text="i18n.t('documentation.documentation_display.actions_title')">
-                  <KButton
-                    appearance="secondary"
-                    :aria-label="i18n.t('documentation.documentation_display.actions_title')"
-                    class="icon-button"
-                    data-testid="document-actions-button"
-                  >
-                    <MoreIcon decorative />
-                  </KButton>
-                </KTooltip>
-              </template>
-              <template #items>
-                <KDropdownItem
-                  v-if="userCanEdit"
-                  data-testid="document-edit-button"
-                  @click="edit"
-                >
-                  {{ i18n.t('documentation.documentation_display.edit_markdown_button') }}
-                </KDropdownItem>
-                <KDropdownItem
-                  v-if="userCanEdit"
-                  data-testid="document-settings-button"
-                  @click="emit('edit')"
-                >
-                  {{ i18n.t('documentation.documentation_display.edit_info_button') }}
-                </KDropdownItem>
-                <KDropdownItem
-                  v-if="!!selectedDocument.markdown"
-                  data-testid="document-download-button"
-                  :has-divider="userCanEdit"
-                  @click="handleDownloadDocument(download)"
-                >
-                  {{ i18n.t('documentation.documentation_display.download_button') }}
-                </KDropdownItem>
-              </template>
-            </KDropdown>
-          </template>
-        </MarkdownUi>
+        />
       </div>
     </div>
   </div>
@@ -153,7 +107,6 @@ import { isObjectEmpty } from '../helpers'
 import { PermissionsWrapper } from '@kong-ui-public/entities-shared'
 import { MarkdownUi } from '@kong/markdown'
 import type { EmitUpdatePayload, MarkdownMode } from '@kong/markdown'
-import { MoreIcon } from '@kong/icons'
 import '@kong/markdown/dist/style.css'
 import type { PropType } from 'vue'
 import type { DocumentTree } from '../types'
@@ -184,13 +137,12 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'add'): void,
-  (e: 'edit'): void,
-  (e: 'download'): void,
   (e: 'toggle-published', newValue: boolean): void,
   (e: 'edit-markdown', isEditingMarkdown: boolean): void,
   (e: 'save-markdown', content: string): void,
 }>()
 
+const markdownComponent = ref()
 const { i18n } = composables.useI18n()
 const isLoading = ref(true)
 const fileName = computed((): string => props.selectedDocument?.document?.title || props.selectedDocument?.document?.revision?.title || '')
@@ -202,11 +154,14 @@ const markdownContent = ref<string>(props.selectedDocument?.markdown || '')
 const originalMarkdownContent = ref<string>(markdownContent.value)
 const defaultDocument = ref<any>(null)
 
-const handleDownloadDocument = (downloadFunction: () => void): void => {
-  if (typeof downloadFunction === 'function') {
-    downloadFunction()
-    emit('download')
-  }
+// Handle the download of the markdown content
+const handleDownload = (): void => {
+  markdownComponent.value.download()
+}
+
+// Handle the edit of the markdown content
+const handleEdit = (): void => {
+  markdownComponent.value.edit()
 }
 
 const handleMarkdownUiModeChange = (mode: MarkdownMode): void => {
@@ -267,6 +222,10 @@ watch(() => props.selectedDocument, (newVal) => {
     }
   }
 }, { deep: true, immediate: true })
+
+// Expose the download and edit methods from Markdown component
+defineExpose({ download: handleDownload, edit: handleEdit })
+
 </script>
 
 <style lang="scss" scoped>
