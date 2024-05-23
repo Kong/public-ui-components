@@ -269,7 +269,7 @@ const treatAsCredential = computed((): boolean => !!(props.credential && props.c
 const record = ref<Record<string, any> | null>(null)
 const configResponse = ref<Record<string, any>>({})
 const formLoading = ref(false)
-const actionsDivRef = ref<HTMLDivElement>()
+const actionsDivRef = ref<HTMLDivElement | null>(null)
 const formFieldsOriginal = reactive<PluginFormFields>({
   enabled: true,
   protocols: [],
