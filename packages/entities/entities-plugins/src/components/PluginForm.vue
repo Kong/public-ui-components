@@ -51,52 +51,55 @@
       />
 
       <template #form-actions>
-        <!--
-          Force the render of this slot
-             - if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included)
-        -->
-        <div v-if="isWizardStep" />
         <div
-          v-else
-          class="plugin-form-actions"
+          :id="`plugin-form-default-actions-container-${(config as KongManagerPluginFormConfig).workspace || (config as KonnectPluginFormConfig).controlPlaneId}`"
+          ref="actionsDivRef"
+        />
+
+        <!-- if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included) -->
+        <Teleport
+          v-if="!isWizardStep && mounted"
+          :to="actionsTeleportTarget ? actionsTeleportTarget : `#plugin-form-default-actions-container-${(config as KongManagerPluginFormConfig).workspace || (config as KonnectPluginFormConfig).controlPlaneId}`"
         >
-          <KButton
-            appearance="tertiary"
-            data-testid="form-view-configuration"
-            @click="toggle()"
-          >
-            {{ t('actions.view_configuration') }}
-          </KButton>
-          <KButton
-            appearance="secondary"
-            class="form-action-button"
-            data-testid="form-cancel"
-            :disabled="form.isReadonly"
-            type="reset"
-            @click="handleClickCancel"
-          >
-            {{ t('actions.cancel') }}
-          </KButton>
-          <KButton
-            v-if="formType === EntityBaseFormType.Create && config.backRoute"
-            appearance="secondary"
-            class="form-action-button"
-            data-testid="form-back"
-            :disabled="form.isReadonly"
-            @click="handleClickBack"
-          >
-            {{ t('actions.back') }}
-          </KButton>
-          <KButton
-            appearance="primary"
-            data-testid="form-submit"
-            :disabled="!canSubmit || form.isReadonly"
-            type="submit"
-            @click="saveFormData"
-          >
-            {{ t('actions.save') }}
-          </KButton>
-        </div>
+          <div class="plugin-form-actions">
+            <KButton
+              appearance="tertiary"
+              data-testid="form-view-configuration"
+              @click="toggle()"
+            >
+              {{ t('actions.view_configuration') }}
+            </KButton>
+            <KButton
+              appearance="secondary"
+              class="form-action-button"
+              data-testid="form-cancel"
+              :disabled="form.isReadonly"
+              type="reset"
+              @click="handleClickCancel"
+            >
+              {{ t('actions.cancel') }}
+            </KButton>
+            <KButton
+              v-if="formType === EntityBaseFormType.Create && config.backRoute"
+              appearance="secondary"
+              class="form-action-button"
+              data-testid="form-back"
+              :disabled="form.isReadonly"
+              @click="handleClickBack"
+            >
+              {{ t('actions.back') }}
+            </KButton>
+            <KButton
+              appearance="primary"
+              data-testid="form-submit"
+              :disabled="!canSubmit || form.isReadonly"
+              type="submit"
+              @click="saveFormData"
+            >
+              {{ t('actions.save') }}
+            </KButton>
+          </div>
+        </Teleport>
       </template>
     </EntityBaseForm>
     <KSlideout
@@ -167,6 +170,7 @@ import {
 import PluginEntityForm from './PluginEntityForm.vue'
 
 const emit = defineEmits<{
+  (e: 'cancel'): void,
   (e: 'error:fetch-schema', error: AxiosError): void,
   (e: 'error', error: AxiosError): void,
   (e: 'loading', isLoading: boolean): void,
@@ -190,7 +194,6 @@ const props = defineProps({
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
       if (config.app === 'konnect' && !config.controlPlaneId) return false
       if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
-      if (!config.cancelRoute) return false
       return true
     },
   },
@@ -239,6 +242,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+
+  /**
+   * Allow teleporting the action buttons to the specified div.
+   */
+  actionsTeleportTarget: {
+    type: String,
+    default: '',
+  },
 })
 
 const router = useRouter()
@@ -258,6 +269,7 @@ const treatAsCredential = computed((): boolean => !!(props.credential && props.c
 const record = ref<Record<string, any> | null>(null)
 const configResponse = ref<Record<string, any>>({})
 const formLoading = ref(false)
+const actionsDivRef = ref<HTMLDivElement | null>(null)
 const formFieldsOriginal = reactive<PluginFormFields>({
   enabled: true,
   protocols: [],
@@ -940,6 +952,8 @@ watch([entityMap, initialized], (newData, oldData) => {
 const handleClickCancel = (): void => {
   if (props.config.cancelRoute) {
     router.push(props.config.cancelRoute)
+  } else {
+    emit('cancel')
   }
 }
 
@@ -1084,6 +1098,14 @@ const schemaUrl = computed((): string => {
   url = url.replace(/{plugin}/gi, pluginType)
 
   return url
+})
+
+// track when the actions div is mounted for Teleport
+const mounted = ref(false)
+watch(actionsDivRef, (newVal) => {
+  if (newVal) {
+    mounted.value = true
+  }
 })
 
 const schemaLoading = ref(false)

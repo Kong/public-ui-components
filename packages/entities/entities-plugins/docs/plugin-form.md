@@ -155,7 +155,19 @@ Will hide the form buttons if you only want to render the form and want to contr
 
 Support instance names for plugins. This can be removed when KHCP-5872-custom-names-for-plugins is removed. Enabled by default for KM.
 
+#### `actionsTeleportTarget`
+
+- type: `String`
+- required: `false`
+- default: `''`
+
+Allow teleporting the action buttons to the specified target element.
+
 ### Events
+
+#### cancel
+
+A `@cancel` event is emitted when the Cancel button is clicked and no `config.cancelRoute` has been provided.
 
 #### error
 
