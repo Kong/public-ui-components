@@ -18,51 +18,6 @@
       </template>
     </KEmptyState>
 
-    <!-- if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included) -->
-    <Teleport
-      v-if="!isWizardStep"
-      :to="actionsTeleportTarget ? actionsTeleportTarget : '#plugin-form-default-actions-container'"
-    >
-      <div class="plugin-form-actions">
-        <KButton
-          appearance="tertiary"
-          data-testid="form-view-configuration"
-          @click="toggle()"
-        >
-          {{ t('actions.view_configuration') }}
-        </KButton>
-        <KButton
-          appearance="secondary"
-          class="form-action-button"
-          data-testid="form-cancel"
-          :disabled="form.isReadonly"
-          type="reset"
-          @click="handleClickCancel"
-        >
-          {{ t('actions.cancel') }}
-        </KButton>
-        <KButton
-          v-if="formType === EntityBaseFormType.Create && config.backRoute"
-          appearance="secondary"
-          class="form-action-button"
-          data-testid="form-back"
-          :disabled="form.isReadonly"
-          @click="handleClickBack"
-        >
-          {{ t('actions.back') }}
-        </KButton>
-        <KButton
-          appearance="primary"
-          data-testid="form-submit"
-          :disabled="!canSubmit || form.isReadonly"
-          type="submit"
-          @click="saveFormData"
-        >
-          {{ t('actions.save') }}
-        </KButton>
-      </div>
-    </Teleport>
-
     <EntityBaseForm
       v-else
       :can-submit="canSubmit"
@@ -128,6 +83,51 @@
         </template>
       </KTabs>
     </KSlideout>
+
+    <!-- if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included) -->
+    <Teleport
+      v-if="!isWizardStep"
+      :to="actionsTeleportTarget ? actionsTeleportTarget : '#plugin-form-default-actions-container'"
+    >
+      <div class="plugin-form-actions">
+        <KButton
+          appearance="tertiary"
+          data-testid="form-view-configuration"
+          @click="toggle()"
+        >
+          {{ t('actions.view_configuration') }}
+        </KButton>
+        <KButton
+          appearance="secondary"
+          class="form-action-button"
+          data-testid="form-cancel"
+          :disabled="form.isReadonly"
+          type="reset"
+          @click="handleClickCancel"
+        >
+          {{ t('actions.cancel') }}
+        </KButton>
+        <KButton
+          v-if="formType === EntityBaseFormType.Create && config.backRoute"
+          appearance="secondary"
+          class="form-action-button"
+          data-testid="form-back"
+          :disabled="form.isReadonly"
+          @click="handleClickBack"
+        >
+          {{ t('actions.back') }}
+        </KButton>
+        <KButton
+          appearance="primary"
+          data-testid="form-submit"
+          :disabled="!canSubmit || form.isReadonly"
+          type="submit"
+          @click="saveFormData"
+        >
+          {{ t('actions.save') }}
+        </KButton>
+      </div>
+    </Teleport>
   </div>
 </template>
 
