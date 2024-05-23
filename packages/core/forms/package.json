@@ -60,6 +60,7 @@
     "vue": "^3.4.26"
   },
   "devDependencies": {
+    "@formatjs/intl": "^2.10.2",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.12.12",
     "@kong/kongponents": "9.0.0-alpha.159",
