@@ -1100,10 +1100,10 @@ const schemaUrl = computed((): string => {
   return url
 })
 
+// track when the actions div is mounted for Teleport
 const mounted = ref(false)
 watch(actionsDivRef, (newVal) => {
   if (newVal) {
-    debugger
     mounted.value = true
   }
 })
