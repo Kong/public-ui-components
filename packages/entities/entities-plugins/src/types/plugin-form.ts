@@ -38,6 +38,10 @@ export interface BasePluginFormConfig {
   disableConsumerGroupScope?: boolean
   /** Whether to enable grouping for required and advanced (optional) fields. Default: false */
   groupFields?: boolean
+  /** Whether to use the redesigned form for the RLA plugin. Default: false */
+  useRLARedesignedForm?: boolean
+  /** Whether to use the horizontal radios in the plugin scoping section. Default: false */
+  useHorizontalRadiosForPluginScoping?: boolean
 }
 
 export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig {}

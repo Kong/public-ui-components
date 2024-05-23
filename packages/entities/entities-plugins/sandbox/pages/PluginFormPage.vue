@@ -51,6 +51,7 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   backRoute: { name: 'select-plugin' },
   cancelRoute: { name: 'home' },
   groupFields: true,
+  useRLARedesignedForm: true,
 })
 
 const kongManagerConfig = ref<KongManagerPluginFormConfig>({
@@ -63,6 +64,7 @@ const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   backRoute: { name: 'select-plugin' },
   cancelRoute: { name: 'home' },
   groupFields: true,
+  useRLARedesignedForm: true,
 })
 
 const onUpdate = (payload: Record<string, any>) => {

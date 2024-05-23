@@ -136,6 +136,7 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const { parseSchema } = composables.useSchemas(props.entityMap.focusedEntity?.id || undefined, {
   groupFields: props.config.groupFields,
+  useRLARedesignedForm: props.config.useRLARedesignedForm,
 })
 const { convertToDotNotation, unFlattenObject, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
@@ -604,7 +605,7 @@ watch(() => props.schema, (newSchema, oldSchema) => {
 
   formSchema.value = { fields: formSchema.value?.fields?.map((r: Record<string, any>) => { return { ...r, disabled: r.disabled || false } }) }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
-  sharedFormName.value = getSharedFormName(form.model.name)
+  sharedFormName.value = getSharedFormName(form.model.name, { useRLARedesignedForm: props.config.useRLARedesignedForm })
 
   initFormModel()
 }, { immediate: true, deep: true })

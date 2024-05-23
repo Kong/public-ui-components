@@ -61,5 +61,48 @@
     "config-functions": {
       "newElementButtonLabel": "+ Add"
     }
+  },
+  "rla": {
+    "view_advanced_fields": "View Advanced Fields",
+    "window_type": {
+      "label": "Rate Limit Window Type",
+      "help": "Sets the time window type to either <code>sliding</code> (default) or <code>fixed</code>.<br><ul><li>Sliding windows apply the rate limiting logic while taking into account previous hit rates (from the window that immediately precedes the current) using a dynamic weight.</li><li>Fixed windows consist of buckets that are statically assigned to a definitive time range, each request is mapped to only one fixed window based on its timestamp and will affect only that window&#39;s counters.</li></ul>",
+      "options": {
+        "fixed": "Fixed",
+        "sliding": "Sliding"
+      }
+    },
+    "request_limits": {
+      "title": "Request Limits",
+      "subtitle": "Advanced control on request rate with customizable limits and window sizes.",
+      "label": "Limit",
+      "label_index": "Limit {index}",
+      "help": "Set one or more requests-per-window limits and window sizes to apply a limit to (defined in seconds). There must be a matching number of window limits and sizes specified.",
+      "request_number": "Request number",
+      "time_interval": "Time interval",
+      "interval_determiner": "Every",
+      "seconds": "Seconds"
+    },
+    "try_a_use_case": "Start with a prebuilt use case",
+    "use_case_index": "Use case {index}",
+    "error_message": {
+      "label": "Error Message",
+      "code_placeholder": "Code Message",
+      "message_placeholder": "Error Message",
+      "help": "Set a custom error code and message to be returned when the rate limit is exceeded."
+    },
+    "identifiers": {
+      "label": "Identifiers",
+      "options": {
+        "ip": "IP",
+        "credential": "Credential",
+        "consumer": "Consumer",
+        "service": "Service",
+        "header": "Header",
+        "path": "Path",
+        "consumer-group": "Consumer Group"
+      }
+    },
+    "redis_address_example": "e.g. localhost:6379"
   }
 }
