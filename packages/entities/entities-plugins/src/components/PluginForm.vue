@@ -86,7 +86,7 @@
 
     <!-- if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included) -->
     <Teleport
-      v-if="!isWizardStep"
+      v-if="!isWizardStep && mounted"
       :to="actionsTeleportTarget ? actionsTeleportTarget : '#plugin-form-default-actions-container'"
     >
       <div class="plugin-form-actions">
@@ -146,7 +146,7 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
 import type { AxiosError, AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
-import { computed, onBeforeMount, reactive, ref, watch, type PropType } from 'vue'
+import { computed, onBeforeMount, onMounted, reactive, ref, nextTick, watch, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
@@ -1094,6 +1094,14 @@ const schemaUrl = computed((): string => {
   url = url.replace(/{plugin}/gi, pluginType)
 
   return url
+})
+
+const mounted = ref(false)
+onMounted(async () => {
+  await nextTick()
+
+  // ensure target div is rendered before attempting to teleport to it
+  mounted.value = true
 })
 
 const schemaLoading = ref(false)
