@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.4.2...@kong-ui-public/entities-plugins@4.5.0) (2024-05-23)
+
+
+### Features
+
+* **serverless:** hybrid flow modals [khcp-11822] ([#1421](https://github.com/Kong/public-ui-components/issues/1421)) ([a5d6f33](https://github.com/Kong/public-ui-components/commit/a5d6f33a2c8a61b50ea84dcb0ef56aae6d492232))
+
+
+
+
+
 ## [4.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.4.1...@kong-ui-public/entities-plugins@4.4.2) (2024-05-22)
 
 
