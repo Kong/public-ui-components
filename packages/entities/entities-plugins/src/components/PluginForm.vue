@@ -51,7 +51,55 @@
       />
 
       <template #form-actions>
-        <div id="plugin-form-default-actions-container" />
+        <div
+          :id="`plugin-form-default-actions-container-${(config as KongManagerPluginFormConfig).workspace || (config as KonnectPluginFormConfig).controlPlaneId}`"
+          ref="actionsDivRef"
+        />
+
+        <!-- if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included) -->
+        <Teleport
+          v-if="!isWizardStep && mounted"
+          :to="actionsTeleportTarget ? actionsTeleportTarget : `#plugin-form-default-actions-container-${(config as KongManagerPluginFormConfig).workspace || (config as KonnectPluginFormConfig).controlPlaneId}`"
+        >
+          <div class="plugin-form-actions">
+            <KButton
+              appearance="tertiary"
+              data-testid="form-view-configuration"
+              @click="toggle()"
+            >
+              {{ t('actions.view_configuration') }}
+            </KButton>
+            <KButton
+              appearance="secondary"
+              class="form-action-button"
+              data-testid="form-cancel"
+              :disabled="form.isReadonly"
+              type="reset"
+              @click="handleClickCancel"
+            >
+              {{ t('actions.cancel') }}
+            </KButton>
+            <KButton
+              v-if="formType === EntityBaseFormType.Create && config.backRoute"
+              appearance="secondary"
+              class="form-action-button"
+              data-testid="form-back"
+              :disabled="form.isReadonly"
+              @click="handleClickBack"
+            >
+              {{ t('actions.back') }}
+            </KButton>
+            <KButton
+              appearance="primary"
+              data-testid="form-submit"
+              :disabled="!canSubmit || form.isReadonly"
+              type="submit"
+              @click="saveFormData"
+            >
+              {{ t('actions.save') }}
+            </KButton>
+          </div>
+        </Teleport>
       </template>
     </EntityBaseForm>
     <KSlideout
@@ -83,51 +131,6 @@
         </template>
       </KTabs>
     </KSlideout>
-
-    <!-- if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included) -->
-    <Teleport
-      v-if="!isWizardStep && mounted"
-      :to="actionsTeleportTarget ? actionsTeleportTarget : '#plugin-form-default-actions-container'"
-    >
-      <div class="plugin-form-actions">
-        <KButton
-          appearance="tertiary"
-          data-testid="form-view-configuration"
-          @click="toggle()"
-        >
-          {{ t('actions.view_configuration') }}
-        </KButton>
-        <KButton
-          appearance="secondary"
-          class="form-action-button"
-          data-testid="form-cancel"
-          :disabled="form.isReadonly"
-          type="reset"
-          @click="handleClickCancel"
-        >
-          {{ t('actions.cancel') }}
-        </KButton>
-        <KButton
-          v-if="formType === EntityBaseFormType.Create && config.backRoute"
-          appearance="secondary"
-          class="form-action-button"
-          data-testid="form-back"
-          :disabled="form.isReadonly"
-          @click="handleClickBack"
-        >
-          {{ t('actions.back') }}
-        </KButton>
-        <KButton
-          appearance="primary"
-          data-testid="form-submit"
-          :disabled="!canSubmit || form.isReadonly"
-          type="submit"
-          @click="saveFormData"
-        >
-          {{ t('actions.save') }}
-        </KButton>
-      </div>
-    </Teleport>
   </div>
 </template>
 
@@ -146,7 +149,7 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
 import type { AxiosError, AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
-import { computed, onBeforeMount, onMounted, reactive, ref, nextTick, watch, type PropType } from 'vue'
+import { computed, onBeforeMount, reactive, ref, watch, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
@@ -266,6 +269,7 @@ const treatAsCredential = computed((): boolean => !!(props.credential && props.c
 const record = ref<Record<string, any> | null>(null)
 const configResponse = ref<Record<string, any>>({})
 const formLoading = ref(false)
+const actionsDivRef = ref<HTMLDivElement>()
 const formFieldsOriginal = reactive<PluginFormFields>({
   enabled: true,
   protocols: [],
@@ -1097,11 +1101,11 @@ const schemaUrl = computed((): string => {
 })
 
 const mounted = ref(false)
-onMounted(async () => {
-  await nextTick()
-
-  // ensure target div is rendered before attempting to teleport to it
-  mounted.value = true
+watch(actionsDivRef, (newVal) => {
+  if (newVal) {
+    debugger
+    mounted.value = true
+  }
 })
 
 const schemaLoading = ref(false)
