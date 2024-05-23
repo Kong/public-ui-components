@@ -89,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import composables from '../composables'
 import { isObjectEmpty } from '../helpers'
 import { PermissionsWrapper } from '@kong-ui-public/entities-shared'
@@ -210,6 +210,10 @@ watch(() => props.selectedDocument, (newVal) => {
     }
   }
 }, { deep: true, immediate: true })
+
+onMounted(() => {
+  handleDocument()
+})
 
 // Expose the download and edit methods from Markdown component
 defineExpose({ download: handleDownload, edit: handleEdit })
