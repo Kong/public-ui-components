@@ -8,6 +8,10 @@
 .opblock-body .right-side-wrapper .code-snippet {
   display: none !important;
 }
+/* ensure there are 4 columns to match the number of elements in the current version of swagger */
+.swagger-ui .opblock-tag-section .opblock .opblock-summary {
+  grid-template-columns: 80px auto 30px auto;
+}
 /* fix copy button width */
 .swagger-ui .opblock .opblock-summary:hover .view-line-link.copy-to-clipboard {
   width: 24px;
