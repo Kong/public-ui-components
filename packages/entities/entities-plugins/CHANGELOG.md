@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.5.0...@kong-ui-public/entities-plugins@4.6.0) (2024-05-23)
+
+
+### Features
+
+* **plugins:** redesigned RLA form [KM-136] ([#1416](https://github.com/Kong/public-ui-components/issues/1416)) ([3a31000](https://github.com/Kong/public-ui-components/commit/3a31000c312796272825e58baa13e64a03cd0403))
+
+
+
+
+
 # [4.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.4.2...@kong-ui-public/entities-plugins@4.5.0) (2024-05-23)
 
 
