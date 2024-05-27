@@ -17,12 +17,11 @@
               <KButton
                 appearance="tertiary"
                 class="delete"
+                icon
                 type="button"
                 @click="removeElement(index)"
               >
-                <template #icon>
-                  <TrashIcon />
-                </template>
+                <TrashIcon />
               </KButton>
             </div>
           </div>

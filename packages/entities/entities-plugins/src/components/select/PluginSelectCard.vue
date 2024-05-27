@@ -31,11 +31,10 @@
                 appearance="tertiary"
                 class="actions-trigger"
                 data-testid="overflow-actions-button"
+                icon
                 size="small"
               >
-                <template #icon>
-                  <MoreIcon :size="KUI_ICON_SIZE_30" />
-                </template>
+                <MoreIcon :size="KUI_ICON_SIZE_30" />
               </KButton>
             </template>
 

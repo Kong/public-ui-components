@@ -4,21 +4,19 @@
       appearance="tertiary"
       class="remove-button"
       :data-testid="`remove-${routingRulesEntity}`"
+      icon
       @click="$emit('remove')"
     >
-      <template #icon>
-        <TrashIcon :color="KUI_COLOR_TEXT_DANGER" />
-      </template>
+      <TrashIcon :color="KUI_COLOR_TEXT_DANGER" />
     </KButton>
     <KButton
       appearance="tertiary"
       :data-testid="`add-${routingRulesEntity}`"
       :disabled="isAddDisabled"
+      icon
       @click="$emit('add')"
     >
-      <template #icon>
-        <AddIcon />
-      </template>
+      <AddIcon />
     </KButton>
   </div>
 </template>
