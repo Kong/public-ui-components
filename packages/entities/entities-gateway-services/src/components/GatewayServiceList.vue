@@ -27,9 +27,9 @@
       </template>
       <!-- Create action -->
       <template #toolbar-button>
-        <component
-          :is="useActionOutside ? 'Teleport' : 'div'"
-          :to="useActionOutside ? '#kong-ui-app-page-header-action-button' : undefined"
+        <Teleport
+          :disabled="!useActionOutside"
+          to="#kong-ui-app-page-header-action-button"
         >
           <PermissionsWrapper :auth-function="() => canCreate()">
             <!-- Hide Create button if table is empty -->
@@ -44,7 +44,7 @@
               {{ t('gateway_services.list.toolbar_actions.new_gateway_service') }}
             </KButton>
           </PermissionsWrapper>
-        </component>
+        </Teleport>
       </template>
 
       <!-- Column Formatting -->
