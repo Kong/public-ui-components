@@ -134,8 +134,9 @@ const props = defineProps({
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
-const { parseSchema } = composables.useSchemas(props.entityMap.focusedEntity?.id || undefined, {
-  groupFields: props.config.groupFields,
+const { parseSchema } = composables.useSchemas({
+  entityId: props.entityMap.focusedEntity?.id || undefined,
+  credential: props.credential,
   useRLARedesignedForm: props.config.useRLARedesignedForm,
 })
 const { convertToDotNotation, unFlattenObject, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
