@@ -85,9 +85,7 @@
         </div>
         <div>
           <KButton appearance="tertiary">
-            <template #icon>
-              🍔
-            </template>
+            🍔
             I can haz cheezeburger
           </KButton>
         </div>

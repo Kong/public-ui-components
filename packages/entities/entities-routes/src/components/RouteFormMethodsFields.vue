@@ -26,11 +26,10 @@
         appearance="tertiary"
         class="remove-button"
         data-testid="remove-methods"
+        icon
         @click="$emit('remove')"
       >
-        <template #icon>
-          <TrashIcon :color="KUI_COLOR_TEXT_DANGER" />
-        </template>
+        <TrashIcon :color="KUI_COLOR_TEXT_DANGER" />
       </KButton>
     </div>
 

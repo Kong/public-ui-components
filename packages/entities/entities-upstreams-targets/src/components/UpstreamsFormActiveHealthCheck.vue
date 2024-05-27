@@ -117,25 +117,23 @@
             class="btn-remove"
             data-testid="btn-remove-header"
             :disabled="localHeaders.length === 1"
+            icon
             @click="removeHeader(i)"
           >
-            <template #icon>
-              <TrashIcon
-                class="delete-item"
-                :color="localHeaders.length > 1 ? KUI_COLOR_TEXT_DANGER : undefined"
-              />
-            </template>
+            <TrashIcon
+              class="delete-item"
+              :color="localHeaders.length > 1 ? KUI_COLOR_TEXT_DANGER : undefined"
+            />
           </KButton>
           <KButton
             v-if="localHeaders && i === localHeaders.length - 1"
             appearance="tertiary"
             class="btn-add-header"
             data-testid="btn-add-header"
+            icon
             @click="addHeader"
           >
-            <template #icon>
-              <AddIcon />
-            </template>
+            <AddIcon />
           </KButton>
         </div>
       </div>
