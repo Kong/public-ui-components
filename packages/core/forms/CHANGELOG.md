@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.2.1...@kong-ui-public/forms@3.3.0) (2024-05-28)
+
+
+### Features
+
+* **forms:** dedicated redis configuration for RLA ([#1426](https://github.com/Kong/public-ui-components/issues/1426)) ([a26f4a8](https://github.com/Kong/public-ui-components/commit/a26f4a8a2a81ad495700da1e3b4294781cc1ebde))
+
+
+
+
+
 ## [3.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.2.0...@kong-ui-public/forms@3.2.1) (2024-05-27)
 
 **Note:** Version bump only for package @kong-ui-public/forms
