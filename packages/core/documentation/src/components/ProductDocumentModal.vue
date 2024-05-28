@@ -47,19 +47,21 @@
           <div>
             <KRadio
               v-model="checkedType"
-              class="empty-document-radio"
-              selected-value="empty"
+              class="upload-document-radio"
+              data-testid="upload-document-radio"
+              selected-value="upload"
             >
-              {{ i18n.t('documentation.form_modal.empty_doc') }}
+              {{ i18n.t('documentation.form_modal.file_label') }}
             </KRadio>
           </div>
           <div>
             <KRadio
               v-model="checkedType"
-              class="upload-document-radio"
-              selected-value="upload"
+              class="empty-document-radio"
+              data-testid="empty-document-radio"
+              selected-value="empty"
             >
-              {{ i18n.t('documentation.form_modal.file_label') }}
+              {{ i18n.t('documentation.form_modal.empty_doc') }}
             </KRadio>
           </div>
         </div>
@@ -203,7 +205,7 @@ const publishModel = ref<boolean>(true)
 
 const status = computed(() => publishModel.value ? 'published' : 'unpublished')
 
-const checkedType = ref<'empty' | 'upload'>('empty')
+const checkedType = ref<'empty' | 'upload'>('upload')
 
 const formData = reactive({
   fileName: '',
@@ -352,7 +354,7 @@ onMounted(() => {
     display: flex;
     margin-bottom: $kui-space-80;
 
-    .upload-document-radio {
+    .empty-document-radio {
       margin-left: $kui-space-80;
     }
   }
