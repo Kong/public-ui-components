@@ -197,7 +197,27 @@
     <VueFormGenerator
       :model="formModel"
       :options="formOptions"
-      :schema="advancedSchema"
+      :schema="advancedSchema.endsWithStrategy"
+      @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
+    />
+
+    <KCard
+      v-if="formModel['config-strategy'] === 'redis'"
+      class="rla-form-redis-card"
+      :title="t('rla.redis.title')"
+    >
+      <VueFormGenerator
+        :model="formModel"
+        :options="formOptions"
+        :schema="advancedSchema.redis"
+        @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
+      />
+    </KCard>
+
+    <VueFormGenerator
+      :model="formModel"
+      :options="formOptions"
+      :schema="advancedSchema.afterStrategy"
       @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
     />
   </KCollapse>
@@ -272,6 +292,23 @@ const USE_CASES = [
   },
 ]
 
+/**
+ * These are fields that we will take care of out of the VFG
+ */
+const OMITTED_MODEL_KEYS_FULL_MATCH = new Set([
+  'selectionGroup',
+  ...['identifier', 'limit', 'window_size', 'error_code', 'error_message']
+    .map((field) => `config-${field}`),
+])
+
+const shouldOmit = (modelKey?: string) => {
+  if (modelKey === undefined) {
+    return false
+  }
+
+  return OMITTED_MODEL_KEYS_FULL_MATCH.has(modelKey)
+}
+
 interface RequestLimit {
   limit?: number
   windowSize?: number
@@ -302,21 +339,42 @@ const scopingSchema = computed(() => {
 })
 
 const advancedSchema = computed(() => {
-  const omittedFields = new Set([
-    'selectionGroup',
-    ...['identifier', 'limit', 'window_size', 'error_code', 'error_message']
-      .map((field) => `config-${field}`),
-  ])
+  const withoutOmittedFields = props.formSchema?.fields?.filter((field: any) => !shouldOmit(field.model)) ?? []
+  const endsWithStrategy: any[] = []
+  const redis: any[] = []
+  const afterStrategy: any[] = []
+
+  let strategyVisited = false
+
+  for (const field of withoutOmittedFields) {
+    const model = field.model
+    if (model === undefined) {
+      continue
+    }
+
+    if (model.startsWith('config-redis-')) {
+      if (field.model === 'config-redis-cluster_addresses' || field.model === 'config-redis-sentinel_addresses') {
+        field.hint = t('rla.redis.address_example')
+      }
+      redis.push(field)
+      continue
+    }
+
+    if (!strategyVisited) {
+      endsWithStrategy.push(field)
+    } else {
+      afterStrategy.push(field)
+    }
+
+    if (field.model === 'config-strategy') {
+      strategyVisited = true
+    }
+  }
 
   return {
-    fields: props.formSchema?.fields
-      ?.filter((field: any) => typeof field.model === 'string' && !omittedFields.has(field.model))
-      ?.map((field: any) => {
-        if (field.model === 'config-redis-cluster_addresses' || field.model === 'config-redis-sentinel_addresses') {
-          field.hint = t('rla.redis_address_example')
-        }
-        return field
-      }),
+    endsWithStrategy: { fields: endsWithStrategy },
+    redis: { fields: redis },
+    afterStrategy: { fields: afterStrategy },
   }
 })
 
@@ -563,5 +621,9 @@ const removeRequestLimit = (index: number) => {
       width: 20%;
     }
   }
+}
+
+.rla-form-redis-card {
+  margin: $kui-space-50 0;
 }
 </style>

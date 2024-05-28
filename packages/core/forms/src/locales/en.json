@@ -103,6 +103,9 @@
         "consumer-group": "Consumer Group"
       }
     },
-    "redis_address_example": "e.g. localhost:6379"
+    "redis": {
+      "title": "Configure your Redis",
+      "address_example": "e.g. localhost:6379"
+    }
   }
 }
