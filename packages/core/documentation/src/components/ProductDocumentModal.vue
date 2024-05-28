@@ -297,7 +297,9 @@ const handleClickSave = (): void => {
   // create the empty file when Empty Documnet is selected
   if (checkedType.value === 'empty') {
     // Create an empty File with .md extension file name
-    const newFileContent = new File([], formData.pageName + '.md')
+    const newFileContent = new File([], formData.pageName + '.md', {
+      type: 'text/markdown',
+    })
     newEmptyFile.value = newFileContent
 
     // If creating Empty Document then emit the save event with new empty file
