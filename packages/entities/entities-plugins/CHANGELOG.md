@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.6.2...@kong-ui-public/entities-plugins@4.6.3) (2024-05-28)
+
+
+### Bug Fixes
+
+* **entities:** dynamic teleport ([#1425](https://github.com/Kong/public-ui-components/issues/1425)) ([2725315](https://github.com/Kong/public-ui-components/commit/272531504d315a3e6b02d982e0221b90f7b4fbea))
+
+
+
+
+
 ## [4.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.6.1...@kong-ui-public/entities-plugins@4.6.2) (2024-05-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
