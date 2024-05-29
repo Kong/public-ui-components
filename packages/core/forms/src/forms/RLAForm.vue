@@ -354,8 +354,9 @@ const advancedSchema = computed(() => {
 
     if (model.startsWith('config-redis-')) {
       if (field.model === 'config-redis-cluster_addresses' || field.model === 'config-redis-sentinel_addresses') {
-        field.hint = t('rla.redis.address_example')
+        field.inputAttributes.help = t('rla.redis.address_example')
       }
+
       redis.push(field)
       continue
     }

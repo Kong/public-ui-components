@@ -42,13 +42,21 @@
         @remove-item="removeElement(index)"
       >
         <FieldTextArea
-          v-if=" schema.inputAttributes?.type === 'textarea'"
+          v-if="schema.inputAttributes && schema.inputAttributes.type === 'textarea'"
           :aria-labelledby="getLabelId(schema)"
           class="k-input"
           :form-options="formOptions"
           :model="item"
           :schema="generateSchema(value, schema.items, index)"
           @model-updated="modelUpdated"
+        />
+
+        <KInput
+          v-else-if="!schema.inputAttributes || !schema.inputAttributes.type || schema.inputAttributes.type === 'text'"
+          v-model="value[index]"
+          :aria-labelledby="getLabelId(schema)"
+          v-bind="schema.inputAttributes"
+          :type="schema.inputAttributes && schema.inputAttributes.type || 'text'"
         />
 
         <input
@@ -58,6 +66,7 @@
           v-bind="schema.inputAttributes"
           :type="schema.inputAttributes?.type || 'text'"
         >
+
         <input
           v-if="schema.showRemoveButton"
           v-bind="schema.removeElementButtonAttributes"
