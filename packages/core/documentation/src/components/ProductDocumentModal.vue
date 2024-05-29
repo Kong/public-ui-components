@@ -273,14 +273,17 @@ const handleFileSelected = (file: any): void => {
 }
 
 const saveDisabled = computed((): boolean => {
-  if (checkedType.value === 'upload') {
+  // If editing, save button is always enabled
+  if (!props.editing) {
+    if (checkedType.value === 'upload') {
     // If a file is selected, pageName and urlSlug are required
-    return !(selectedFile.value && formData.pageName && formData.urlSlug && !slugError.value)
-  } else if (checkedType.value === 'empty') {
+      return !(selectedFile.value && formData.pageName && formData.urlSlug && !slugError.value)
+    } else if (checkedType.value === 'empty') {
     // If no file is selected, only pageName and urlSlug are required
-    return !(formData.pageName && formData.urlSlug && !slugError.value)
+      return !(formData.pageName && formData.urlSlug && !slugError.value)
+    }
   }
-  return true
+  return false
 })
 
 const handleFileRemoved = (): void => {
