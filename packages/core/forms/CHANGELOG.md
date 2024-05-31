@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.3.0...@kong-ui-public/forms@3.3.1) (2024-05-31)
+
+
+### Bug Fixes
+
+* **forms:** partially use KInput in FieldArray ([#1427](https://github.com/Kong/public-ui-components/issues/1427)) ([a3bfd36](https://github.com/Kong/public-ui-components/commit/a3bfd36ec285a74e25ee949f7d5cb1b1e4d8fa5f))
+
+
+
+
+
 # [3.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.2.1...@kong-ui-public/forms@3.3.0) (2024-05-28)
 
 
