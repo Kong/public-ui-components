@@ -401,7 +401,7 @@ export default {
     width: 100%;
   }
 
-  .form-control {
+  :not(.k-input).form-control {
     background-color: #fff;
     background-image: none;
     border: none;
