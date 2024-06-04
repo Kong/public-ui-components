@@ -254,7 +254,7 @@ const props = defineProps({
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
-const { customSchemas, typedefs } = composables.useSchemas(undefined, { app: props.config.app })
+const { customSchemas, typedefs } = composables.useSchemas({ app: props.config.app, credential: props.credential })
 const { formatPluginFieldLabel } = composables.usePluginHelpers()
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
