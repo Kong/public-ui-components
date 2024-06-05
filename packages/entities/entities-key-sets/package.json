@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.0.0-alpha.162",
+    "@kong/kongponents": "9.0.0-pr.2204.2d703023.0",
     "axios": "^1.6.8",
     "vue": "^3.4.26",
     "vue-router": "^4.3.2"
