@@ -1,7 +1,7 @@
 <template>
   <KDropdown
     class="account-dropdown"
-    :kpop-attributes="{ placement: 'bottomStart' }"
+    :kpop-attributes="{ placement: 'bottom-start' }"
     :trigger-text="userInitials"
     :width="width"
   >
