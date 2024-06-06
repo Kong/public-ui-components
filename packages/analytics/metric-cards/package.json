@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/metric-cards",
-  "version": "0.8.13",
+  "version": "0.9.0",
   "type": "module",
   "main": "./dist/metric-cards.umd.js",
   "module": "./dist/metric-cards.es.js",
@@ -28,8 +28,8 @@
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
     "preview": "cross-env USE_SANDBOX=true vite preview",
-    "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
-    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore' --fix",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
     "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
     "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",

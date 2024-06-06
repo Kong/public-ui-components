@@ -75,7 +75,9 @@ export default {
         }
 
         // Call event in schema
-        if (isFunction(this.schema.onPlaceChanged)) { this.schema.onPlaceChanged(this.value, data, place, this.model, this.schema) }
+        if (isFunction(this.schema.onPlaceChanged)) {
+          this.schema.onPlaceChanged(this.value, data, place, this.model, this.schema)
+        }
       }
     },
 

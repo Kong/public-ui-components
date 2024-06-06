@@ -59,7 +59,7 @@ export const i18nTComponent = <MessageSource extends Record<string, any>>(i18n: 
         if (stripped === '0' && slots.default) {
           hArray[i] = slots.default()
         } else if (keys.includes(stripped) && slots[stripped]) {
-          // @ts-ignore
+          // @ts-ignore: string is valid key
           hArray[i] = slots[stripped]()
         }
       })

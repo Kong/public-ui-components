@@ -36,7 +36,7 @@ describe('<AppSidebar />', () => {
     Object.keys(viewports).forEach((viewportName: string) => {
       describe(`${viewportName} viewport`, {
         // Enforce the viewport size
-        // @ts-ignore
+        // @ts-ignore: string keys are valid
         viewportHeight: viewports[viewportName].height, viewportWidth: viewports[viewportName].width,
       }, () => {
         it('renders a sidebar with top and bottom nav', () => {

@@ -9,7 +9,7 @@ export enum Methods {
   HEAD = 'HEAD',
   CONNECT = 'CONNECT',
   TRACE = 'TRACE',
-  CUSTOM = 'CUSTOM'
+  CUSTOM = 'CUSTOM',
 }
 
 export type Method = keyof typeof Methods

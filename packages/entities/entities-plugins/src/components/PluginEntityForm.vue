@@ -604,7 +604,9 @@ watch(() => props.schema, (newSchema, oldSchema) => {
 
   Object.assign(formModel, form.model)
 
-  formSchema.value = { fields: formSchema.value?.fields?.map((r: Record<string, any>) => { return { ...r, disabled: r.disabled || false } }) }
+  formSchema.value = { fields: formSchema.value?.fields?.map((r: Record<string, any>) => {
+    return { ...r, disabled: r.disabled || false }
+  }) }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
   sharedFormName.value = getSharedFormName(form.model.name, { useRLARedesignedForm: props.config.useRLARedesignedForm })
 

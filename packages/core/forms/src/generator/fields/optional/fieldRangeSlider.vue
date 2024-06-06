@@ -45,6 +45,7 @@ export default {
           [valueFrom, valueTo] = this.value
         } else valueFrom = this.value
 
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         const self = this
         $(this.$el).ionRangeSlider(
           defaults(this.schema.rangeSliderOptions || {}, {
