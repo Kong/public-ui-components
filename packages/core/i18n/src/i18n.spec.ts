@@ -92,7 +92,7 @@ describe('i18n', () => {
 
     it('should recognize non-exiting key', () => {
       const { te } = useI18n<typeof english>()
-      // @ts-expect-error
+      // @ts-expect-error: allow invalid key
       expect(te('global.not.ok')).toBeFalsy()
     })
   })
@@ -112,7 +112,7 @@ describe('i18n', () => {
 
     it('should return empty array for non-existing key', () => {
       const { tm } = useI18n<typeof english>()
-      // @ts-expect-error
+      // @ts-expect-error: allow invalid key
       expect(tm('global.not.ok')).toEqual([])
     })
   })
@@ -209,7 +209,7 @@ describe('i18n', () => {
           },
           isGlobal: true,
         })
-      // @ts-ignore
+      // @ts-ignore: allow invalid key
       t('unknown-key')
       expect(counter).toEqual(1)
     })

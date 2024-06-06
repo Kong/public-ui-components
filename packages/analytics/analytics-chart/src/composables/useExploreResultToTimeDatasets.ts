@@ -97,9 +97,9 @@ export default function useExploreResultToTimeDataset(
 
         const timedEvents = !records?.length
           ? {}
-          : records.reduce((acc: {[label: string]: any}, druidRow) => {
+          : records.reduce((acc: { [label: string]: any }, druidRow) => {
             const timestamp: number = new Date(druidRow.timestamp).valueOf()
-            const event = druidRow.event as {[label: string]: string | number}
+            const event = druidRow.event as { [label: string]: string | number }
 
             for (const metric of metricNames) {
               dimensionPositions.add(metric)
@@ -137,7 +137,7 @@ export default function useExploreResultToTimeDataset(
           })
           : datasetLabels.map(label => [label.name, label.name])
 
-        const colorMap: {[label: string]: string} = {}
+        const colorMap: { [label: string]: string } = {}
 
         const datasets: Dataset[] = [...dimensionsCrossMetrics].map(([metric, dimension], i) => {
           const filled = zeroFilledTimeSeries.map(ts => {
@@ -148,6 +148,7 @@ export default function useExploreResultToTimeDataset(
             return { x: ts, y: 0 }
           })
 
+          // eslint-disable-next-line prefer-const
           let { colorPalette, fill } = deps
 
           if (isNullOrUndef(colorPalette)) {

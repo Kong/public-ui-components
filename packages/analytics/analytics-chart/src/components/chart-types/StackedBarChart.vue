@@ -425,7 +425,7 @@ const chartInstance = composables.useChartJSCommon(
 
 const maxOverflow = computed(() => {
   // Need this reactive dependency to re-compute the max overflow when the chart updates.
-  // eslint-disable-next-line no-unused-expressions
+
   dependsOnChartUpdate.value
 
   // ChartJS says that labels are optional, but we always provide them.
@@ -522,7 +522,7 @@ const onScrolling = (event: Event) => {
   axesTooltip.value.offset = target.scrollLeft
 }
 
-const tooltipDimensions = ({ width, height }: { width: number, height: number}) => {
+const tooltipDimensions = ({ width, height }: { width: number, height: number }) => {
   tooltipData.width = width
   tooltipData.height = height
 }

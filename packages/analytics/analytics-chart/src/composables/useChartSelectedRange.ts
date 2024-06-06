@@ -5,7 +5,9 @@ import { formatTime } from '../utils'
 
 export default function useChartSelectedRange(chartData: Ref<ExploreResultV4>): Ref<string> {
   const formattedTimeRange = computed(() => {
-    if (!chartData.value?.meta) { return '' }
+    if (!chartData.value?.meta) {
+      return ''
+    }
 
     const start = chartData.value.meta.start_ms
     const end = chartData.value.meta.end_ms

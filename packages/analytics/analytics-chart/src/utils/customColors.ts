@@ -8,7 +8,7 @@ export const lightGrey = '#e0e4ea' // kui-color-background-disabled
 // The algorithm assigns status codes consistent colors, regardless of which codes are present in a given
 // chart.  This is a tradeoff: in rare cases, it can lead to (for example) two codes with the same color
 // ending up next to each other.
-const statusCodePalette: {[label: string]: string[]} = {
+const statusCodePalette: { [label: string]: string[] } = {
   100: ['#c8e2fd', '#80bfff', '#4da6ff', '#1a8cff', '#0072e5', '#0059b2'],
   200: ['#ceedd2', '#9edca6', '#89d595', '#6fcc83', '#44c26b', '#0bb652', '#0ca84a', '#169643', '#196e33', '#1b572a'],
   300: ['#fff4db', '#ffe9b8', '#ffe2a1', '#ffd982', '#ffd062', '#fdc53b', '#f4bb1e', '#e8b00b', '#d9a30f', '#c89407'],

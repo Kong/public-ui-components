@@ -7,7 +7,7 @@ interface KeyAuthSFieldSchema {
         submitWhenNull?: boolean
         hint: string
       }
-    }
+    },
   ]
 }
 

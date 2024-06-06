@@ -9,8 +9,8 @@
     "build:cli": "rimraf ./bin && tsc --project './tsconfig.json' && chmod u+x ./bin/index.js",
     "prepare": "pnpm run build:cli",
     "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
-    "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore'",
-    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '../../../.eslintignore' --fix"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "devDependencies": {
     "@types/inquirer": "^9.0.7",

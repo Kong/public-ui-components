@@ -11,7 +11,7 @@ export type Consumer = (
 ) & {
   id: string;
   tags?: string[];
-};
+}
 
 export interface FetcherRawResponse<T = any> {
   data: T[];

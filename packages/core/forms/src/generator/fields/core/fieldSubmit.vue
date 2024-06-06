@@ -30,6 +30,7 @@ export default {
         }
 
         if (errors && isFunction(errors.then)) {
+          // eslint-disable-next-line promise/catch-or-return
           errors.then(handleErrors)
         } else {
           handleErrors(errors)

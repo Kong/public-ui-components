@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck - Do not typecheck file
 
 import debounce from 'lodash-es/debounce'
 import forEach from 'lodash-es/forEach'
@@ -99,6 +99,7 @@ export default {
           } else {
             const result = validator(this.value, this.schema, this.model)
             if (result && isFunction(result.then)) {
+              // eslint-disable-next-line promise/catch-or-return
               result.then((err) => {
                 if (err) {
                   this.errors = this.errors.concat(err)

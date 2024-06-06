@@ -43,7 +43,7 @@ import { selectedDocResponse, documentListResponse } from './sample_data'
 type SelectedDocument = {
   document: DocumentTree
   status: 'published' | 'unpublished'
-  ast: Object
+  ast: Record<string, any>
   markdown?: string // The raw markdown
 }
 

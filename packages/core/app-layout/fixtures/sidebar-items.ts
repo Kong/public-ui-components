@@ -1,5 +1,3 @@
-import { OverviewIcon, RuntimesIcon, PeopleIcon, CogIcon } from '@kong/icons'
-
 export const topItems = [
   {
     name: 'Overview',

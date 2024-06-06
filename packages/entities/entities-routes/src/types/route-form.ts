@@ -32,13 +32,13 @@ export enum RoutingRulesEntities {
   HEADERS = 'headers',
   SOURCES = 'sources',
   DESTINATIONS = 'destinations',
-  CUSTOM_METHOD = 'custom-method'
+  CUSTOM_METHOD = 'custom-method',
 }
 
 export enum ExpressionsEditorState {
   LOADING = 'loading',
   ERROR = 'error',
-  READY = 'ready'
+  READY = 'ready',
 }
 
 export type RoutingRuleEntity = Exclude<`${RoutingRulesEntities}`, 'custom-method'>

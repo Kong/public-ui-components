@@ -130,6 +130,7 @@ export const verticalTooltipPositioning = (position: Point, tooltipHeight: numbe
   return y
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function debounce(fn: Function, delay: number) {
   let timeoutId: number
   return (...args: any) => {
