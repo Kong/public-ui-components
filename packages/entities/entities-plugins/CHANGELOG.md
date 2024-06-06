@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.0.1...@kong-ui-public/entities-plugins@5.0.2) (2024-06-06)
+
+
+### Bug Fixes
+
+* **entities-plugins:** nested array for custom schema ([#1434](https://github.com/Kong/public-ui-components/issues/1434)) ([4410fbd](https://github.com/Kong/public-ui-components/commit/4410fbda9486359177b0e471fa65447f2abfa474))
+
+
+
+
+
+## [5.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.0.0...@kong-ui-public/entities-plugins@5.0.1) (2024-06-06)
+
+
+### Bug Fixes
+
+* **entities-plugins:** hide ordering for consumer group plugins ([#1433](https://github.com/Kong/public-ui-components/issues/1433)) ([3f0d003](https://github.com/Kong/public-ui-components/commit/3f0d0031936e35a477e8ae2b5683621ab80d67a4))
+
+
+
+
+
 # [5.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.6.5...@kong-ui-public/entities-plugins@5.0.0) (2024-06-04)
 
 
