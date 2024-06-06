@@ -121,6 +121,14 @@ If form submission fails, this is the error message to display.
 
 A record to indicate the form fields present in a form. Used to populate the Configuration JSON/YAML code blocks.
 
+#### `wrapperComponent`
+
+- type: `String`
+- required: `false`
+- default: `'KCard'`
+
+Wrapper component to use at component's root level.
+
 ### Events
 
 #### loading

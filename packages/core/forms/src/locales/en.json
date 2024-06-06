@@ -74,16 +74,15 @@
     },
     "request_limits": {
       "title": "Request Limits",
-      "subtitle": "Advanced control on request rate with customizable limits and window sizes.",
+      "subtitle": "Set one or more limits on the number of API requests allowed within a defined timeframe.",
       "label": "Limit",
       "label_index": "Limit {index}",
-      "help": "Set one or more requests-per-window limits and window sizes to apply a limit to (defined in seconds). There must be a matching number of window limits and sizes specified.",
       "request_number": "Request number",
       "time_interval": "Time interval",
       "interval_determiner": "Every",
       "seconds": "Seconds"
     },
-    "try_a_use_case": "Start with a prebuilt use case",
+    "start_with_a_use_case": "Start with a use case:",
     "use_case_index": "Use case {index}",
     "error_message": {
       "label": "Error Message",
