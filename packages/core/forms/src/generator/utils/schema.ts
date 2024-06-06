@@ -6,7 +6,7 @@ import isObject from 'lodash-es/isObject'
 import set from 'lodash-es/set'
 
 // Create a new model by schema default values
-export const createDefaultObject = (schema: any, obj: {} = {}) => {
+export const createDefaultObject = (schema: any, obj: Record<string, any> = {}) => {
   each(schema.fields, (field: any) => {
     if (get(obj, field.model) === undefined && field.default !== undefined) {
       if (isFunction(field.default)) {

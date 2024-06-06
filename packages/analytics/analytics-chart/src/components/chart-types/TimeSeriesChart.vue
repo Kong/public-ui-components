@@ -144,7 +144,7 @@ const props = defineProps({
 })
 
 const { translateUnit } = composables.useTranslatedUnits()
-const chartInstance = ref<{chart: Chart}>()
+const chartInstance = ref<{ chart: Chart }>()
 const legendID = ref(uuidv4())
 const chartID = ref(uuidv4())
 const legendItems = ref<LegendItem[]>([])
@@ -208,7 +208,7 @@ const chartFlexClass = (position: `${ChartLegendPosition}`) => {
   }[position]
 }
 
-// @ts-ignore
+// @ts-ignore: allow untyped param
 const tooltipDimensions = ({ width, height }) => {
   tooltipData.width = width
   tooltipData.height = height

@@ -23,7 +23,7 @@ const computedName = computed((): string => {
     throw new Error('computed error')
   }
 
-  // eslint-disable-next-line no-unreachable
+
   return 'Buggy Component'
 })
 </script>

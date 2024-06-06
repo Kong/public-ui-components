@@ -13,7 +13,7 @@ interface HmacAuthFieldSchema {
         submitWhenNull?: boolean
         hint: string
       }
-    }
+    },
   ]
 }
 

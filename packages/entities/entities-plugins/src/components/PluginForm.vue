@@ -254,7 +254,7 @@ const props = defineProps({
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
-const { customSchemas, typedefs } = composables.useSchemas(undefined, { app: props.config.app })
+const { customSchemas, typedefs } = composables.useSchemas({ app: props.config.app, credential: props.credential })
 const { formatPluginFieldLabel } = composables.usePluginHelpers()
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
@@ -606,9 +606,9 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     if (scheme.elements && scheme.type === 'array') {
       const elements = scheme.elements
       if (elements.type === 'string' && !elements.one_of) {
-        const { help, label, hint } = initialFormSchema[field]
+        const { id, help, label, hint } = initialFormSchema[field]
         const { help: helpOverride, ...overrides } = JSON.parse(JSON.stringify(ArrayStringFieldSchema))
-        initialFormSchema[field] = { help, label, hint, ...overrides }
+        initialFormSchema[field] = { id, help, label, hint, ...overrides }
         // Only replace the help text when it is not defined because ArrayStringFieldSchema is more generic
         if (initialFormSchema[field].help === undefined && typeof helpOverride === 'string') {
           initialFormSchema[field].help = marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions)

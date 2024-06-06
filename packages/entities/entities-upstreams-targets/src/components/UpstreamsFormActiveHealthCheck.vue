@@ -297,7 +297,7 @@ import {
   ConcurrencyMaxNumber,
   ConcurrencyMinNumber,
 } from '../constants'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 import type { MultiselectItem, SelectItem } from '@kong/kongponents'
 import useHelpers from '../composables/useHelpers'
 import links from '../links'

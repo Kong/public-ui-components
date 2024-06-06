@@ -1,7 +1,7 @@
 import type { RouteLocationRaw } from 'vue-router'
 import type { BaseFormConfig, KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 
-export interface BaseConsumerGroupFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>{
+export interface BaseConsumerGroupFormConfig extends Omit<BaseFormConfig, 'cancelRoute'> {
   /** Route to return to if canceling create/edit a Consumer form */
   cancelRoute: RouteLocationRaw
 }

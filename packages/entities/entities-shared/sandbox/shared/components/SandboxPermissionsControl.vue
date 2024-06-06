@@ -42,7 +42,6 @@ export interface PermissionsActions {
 </script>
 
 <script setup lang="ts">
-// eslint-disable-next-line import/first
 import { ref, watch, onBeforeMount } from 'vue'
 
 const emit = defineEmits(['update'])
@@ -76,8 +75,8 @@ onBeforeMount(async () => {
   :deep(.k-collapse) {
     &.is-collapsed {
       .k-collapse-heading {
-        margin-bottom: 0 !important;
         align-items: center;
+        margin-bottom: 0 !important;
       }
 
       .k-collapse-title {

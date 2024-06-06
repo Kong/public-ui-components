@@ -9,7 +9,7 @@ interface BasicAuthFieldSchema {
       password: {
         inputType: string
       }
-    }
+    },
   ]
 }
 

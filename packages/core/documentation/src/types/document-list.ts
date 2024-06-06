@@ -3,7 +3,7 @@ export interface DocumentTree {
   parent_document_id?: string | null
   title: string
   slug: string
-  metadata: object
+  metadata: Record<string, any>
   status?: 'published' | 'unpublished'
   children: Array<DocumentTree>
   revision?: {
@@ -13,7 +13,7 @@ export interface DocumentTree {
       modified_at: string
     },
     id: string
-    metadata: Object,
+    metadata: Record<string, any>,
     raw_md_content: string,
     title: string
   }

@@ -7,7 +7,7 @@ interface ACLFieldSchema {
       group: {
         hint: string,
       }
-    }
+    },
   ]
 }
 

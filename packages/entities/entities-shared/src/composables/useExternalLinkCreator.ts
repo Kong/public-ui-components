@@ -11,7 +11,7 @@ export default function useExternalLinkCreator(routeParams: string[]): string {
     /* eslint-disable-next-line no-useless-escape */
     const validUrlRegex = /^(https:\/\/(www\.)?([a-zA-Z0-9-]+\.){1,}[a-zA-Z]{2,}(:[0-9]+)?(\/[^\/]+)*)$|^(https|http):\/\/localhost(:[0-9]+)?(\/[^\/]+)*$/
 
-    /* eslint-disable no-new */
+
     if (validUrlRegex.test(fullUrl) && !hasEmptyParams && new URL(fullUrl)) {
       return `${baseUrl}${path}`
     } else {

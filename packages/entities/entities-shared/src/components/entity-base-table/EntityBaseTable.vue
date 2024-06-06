@@ -208,12 +208,12 @@ const props = defineProps({
   },
   // A function for applying attributes to cells
   cellAttributes: {
-    type: Function as PropType<(params: Record<string, any>) => Object>,
+    type: Function as PropType<(params: Record<string, any>) => Record<string, any>>,
     default: () => ({}),
   },
   // A function for applying attributes to rows
   rowAttributes: {
-    type: Function as PropType<(row: Record<string, any>) => Object>,
+    type: Function as PropType<(row: Record<string, any>) => Record<string, any>>,
     default: () => ({}),
   },
   /** tableKey to use for user table preferences. If empty, will fallback to default preferences */
