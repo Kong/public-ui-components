@@ -10,6 +10,7 @@ export interface StatsDSchema extends CommonSchemaFields {
 
     items: {
       type: string,
+      // eslint-disable-next-line @typescript-eslint/ban-types
       default: Function,
       schema: {
         fields: Field[]

@@ -35,12 +35,12 @@ export const enabled = {
   type: 'boolean',
 }
 
-// eslint-disable-next-line camelcase
+
 export const created_at = {
   label: 'Created',
 }
 
-// eslint-disable-next-line camelcase
+
 export const updated_at = {
   label: 'Last updated',
 }
@@ -73,9 +73,9 @@ export default {
   tags,
   id,
   enabled,
-  // eslint-disable-next-line camelcase
+
   created_at,
-  // eslint-disable-next-line camelcase
+
   updated_at,
   fields,
 }

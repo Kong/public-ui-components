@@ -5,7 +5,7 @@ type TokenBorrowQueueItem = [
 ]
 
 class TokenBucket {
-  private concurrentTokenSet: Set<Symbol> = new Set()
+  private concurrentTokenSet: Set<symbol> = new Set()
   private concurrentTokenBorrowQueue: TokenBorrowQueueItem[] = []
 
   constructor(capacity: number) {
@@ -29,7 +29,7 @@ class TokenBucket {
     throw new Error('BUG: No available token to borrow')
   }
 
-  private returnConcurrentToken(token: Symbol) {
+  private returnConcurrentToken(token: symbol) {
     if (this.concurrentTokenSet.has(token)) {
       throw new Error('Token already returned')
     }

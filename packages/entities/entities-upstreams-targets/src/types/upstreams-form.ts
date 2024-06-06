@@ -16,7 +16,9 @@ export type UpstreamHash = 'none' | 'consumer' | 'ip' | 'header' | 'cookie' | 'p
 
 export type HealthCheckType = 'http' | 'https' | 'tcp' | 'grpc' | 'grpcs'
 
-export interface ActiveHealthCheckHeader { key: string; values: string }
+export interface ActiveHealthCheckHeader {
+  key: string; values: string
+}
 
 export interface ActiveHealthCheck {
   type: HealthCheckType

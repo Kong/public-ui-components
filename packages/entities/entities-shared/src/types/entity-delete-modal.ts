@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+
 export enum EntityTypes {
   GatewayService = 'service',
   Route = 'route',

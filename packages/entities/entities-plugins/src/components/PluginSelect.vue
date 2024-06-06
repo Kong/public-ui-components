@@ -212,7 +212,7 @@ const props = defineProps({
    * Plugins that should not be displayed
    */
   ignoredPlugins: {
-    type: Array as PropType<String[]>,
+    type: Array as PropType<string[]>,
     default: () => [],
   },
   /**

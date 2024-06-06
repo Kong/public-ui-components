@@ -128,7 +128,7 @@ const itemClick = (item: SidebarPrimaryItem | SidebarSecondaryItem): void => {
   emit('click', item)
 }
 
-const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem, routerNavigate?: Function): void => {
+const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem, routerNavigate?: () => void): void => {
   itemClick(item)
   if (typeof routerNavigate === 'function') {
     event.preventDefault()

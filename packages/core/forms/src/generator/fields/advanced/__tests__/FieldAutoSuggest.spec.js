@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import sinon from 'sinon'
 import { shallowMount } from '@vue/test-utils'
 import FieldAutoSuggest from '@/plugins/vfg/FieldAutoSuggest'
@@ -66,11 +67,11 @@ describe('FieldAutoSuggest', function() {
         schema,
       },
     }))
-    // eslint-disable-next-line no-undef
+
     const fetchSuggestionsSpy = vi.spyOn(wrapper.vm, 'fetchSuggestions')
-    // eslint-disable-next-line no-undef
+
     const fetchUntilLimitSpy = vi.spyOn(wrapper.vm, 'fetchUntilLimit')
-    // eslint-disable-next-line no-undef
+
     const fetchExactSpy = vi.spyOn(wrapper.vm, 'fetchExact')
 
     await sleep(100)

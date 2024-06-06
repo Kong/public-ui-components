@@ -35,11 +35,11 @@ export default function usePackage({ script, styles, onReady }: ImportParams): {
     const globalLibVariable = libName.startsWith('kong-ui-') ? libName : `kong-ui-${libName}`
 
     // If the package global is already bound to the window, return the existing object
-    // @ts-ignore
+    // @ts-ignore: string is valid key
     if (window[globalLibVariable]) return window[globalLibVariable]
 
     // Scripts is a umd file, so inject into the document.head
-    // @ts-ignore
+    // @ts-ignore: string is valid key
     window[globalLibVariable] = await new Promise((resolve, reject) => {
       const script = document.createElement('script')
       script.async = true
@@ -52,7 +52,7 @@ export default function usePackage({ script, styles, onReady }: ImportParams): {
         // Set loadingPackage ref to false after calling the optional onReady() callback
         loadingPackage.value = false
 
-        // @ts-ignore
+        // @ts-ignore: string is valid key
         resolve(window[globalLibVariable])
       })
       script.addEventListener('error', () => {
@@ -62,7 +62,7 @@ export default function usePackage({ script, styles, onReady }: ImportParams): {
       document.head.appendChild(script)
     })
 
-    // @ts-ignore
+    // @ts-ignore: string is valid key
     return window[globalLibVariable]
   }
 

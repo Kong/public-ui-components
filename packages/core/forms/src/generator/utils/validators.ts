@@ -74,12 +74,10 @@ export const validators: any = {
     const err = []
     if (isFinite(value)) {
       if (!isNil(field.min) && value < field.min) {
-        // @ts-ignore
         err.push(msg(messages.numberTooSmall, field.min))
       }
 
       if (!isNil(field.max) && value > field.max) {
-        // @ts-ignore
         err.push(msg(messages.numberTooBig, field.max))
       }
     } else {
@@ -117,12 +115,10 @@ export const validators: any = {
     const err = []
     if (isString(value)) {
       if (!isNil(field.min) && value.length < field.min) {
-        // @ts-ignore
         err.push(msg(messages.textTooSmall, value.length, field.min))
       }
 
       if (!isNil(field.max) && value.length > field.max) {
-        // @ts-ignore
         err.push(msg(messages.textTooBig, value.length, field.max))
       }
     } else {
@@ -145,12 +141,10 @@ export const validators: any = {
 
     if (!isNil(value)) {
       if (!isNil(field.min) && value.length < field.min) {
-        // @ts-ignore
         return [msg(messages.selectMinItems, field.min)]
       }
 
       if (!isNil(field.max) && value.length > field.max) {
-        // @ts-ignore
         return [msg(messages.selectMaxItems, field.max)]
       }
     }
@@ -170,7 +164,6 @@ export const validators: any = {
     if (!isNil(field.min)) {
       const min = new Date(field.min)
       if (m.valueOf() < min.valueOf()) {
-        // @ts-ignore
         err.push(msg(messages.dateIsEarly, fecha.format(m), fecha.format(min)))
       }
     }
@@ -178,7 +171,6 @@ export const validators: any = {
     if (!isNil(field.max)) {
       const max = new Date(field.max)
       if (m.valueOf() > max.valueOf()) {
-        // @ts-ignore
         err.push(msg(messages.dateIsLate, fecha.format(m), fecha.format(max)))
       }
     }
@@ -279,7 +271,7 @@ export const validators: any = {
 Object.keys(validators).forEach(name => {
   const fn = validators[name]
   if (isFunction(fn)) {
-    // @ts-ignore
+    // @ts-ignore: allow custom
     fn.locale = customMessages => (value, field, model) => fn(value, field, model, defaults(customMessages, resources))
   }
 })

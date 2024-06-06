@@ -240,7 +240,9 @@ const componentAttrsData = computed((): ComponentAttrsData => {
         attrs: {
           'data-testid': `${props.item.key}-internal-link`,
           item: props.item,
-          onNavigationClick: (record: RecordItem) => { emit('navigation-click', record) },
+          onNavigationClick: (record: RecordItem) => {
+            emit('navigation-click', record)
+          },
         },
       }
 
@@ -291,7 +293,6 @@ const { isTruncated } = composables.useTruncationDetector(textContent as Ref<HTM
 </script>
 
 <script lang="ts">
-// eslint-disable-next-line import/first
 import { KUI_BORDER_WIDTH_10, KUI_COLOR_BORDER } from '@kong/design-tokens'
 // Must explicitly define components so <component :is="type"> works
 export default {

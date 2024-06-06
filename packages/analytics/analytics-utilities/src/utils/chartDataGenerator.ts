@@ -99,7 +99,7 @@ export const generateMultipleMetricTimeSeriesData = (metrics: Metric[]) => {
   const start = Date.now() - 6 * 60 * 60 * 1000 // 6 hours ago
   const end = Date.now()
   const data = []
-  const metricValues: {[metric: string]: number} = {}
+  const metricValues: { [metric: string]: number } = {}
 
   metrics.forEach(metric => {
     metricValues[metric.name] = 0

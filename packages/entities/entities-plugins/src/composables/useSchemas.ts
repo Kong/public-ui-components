@@ -27,7 +27,7 @@ import { type CustomSchemas } from '../types'
 import useI18n from './useI18n'
 import usePluginHelpers from './usePluginHelpers'
 
-export interface Field extends Record<string, any>{
+export interface Field extends Record<string, any> {
   model: string
   required?: boolean
   styleClasses?: string

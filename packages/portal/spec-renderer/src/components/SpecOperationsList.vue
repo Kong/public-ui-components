@@ -239,7 +239,9 @@ const untaggedItems = computed((): OperationListItem[] => {
 })
 
 const getSectionDescription = (section: string): string => {
-  if (!props.tags || !Array.isArray(props.tags)) { return '' }
+  if (!props.tags || !Array.isArray(props.tags)) {
+    return ''
+  }
   const tagData = props.tags.find((item) => item.name === section)
   return tagData?.description || ''
 }

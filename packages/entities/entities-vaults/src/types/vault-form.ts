@@ -1,7 +1,7 @@
 import type { BaseFormConfig, KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { RouteLocationRaw } from 'vue-router'
 
-export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>{
+export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'> {
   /** Route to return to if canceling create/edit a Vault form */
   cancelRoute: RouteLocationRaw
   /**
@@ -32,13 +32,13 @@ export enum VaultProviders {
   GCP = 'gcp',
   HCV = 'hcv',
   KONG = 'env',
-  AZURE = 'azure'
+  AZURE = 'azure',
 }
 
 export enum VaultAuthMethods {
   TOKEN = 'token',
   K8S = 'kubernetes',
-  APP_ROLE = 'approle'
+  APP_ROLE = 'approle',
 }
 
 export interface KongVaultConfig {

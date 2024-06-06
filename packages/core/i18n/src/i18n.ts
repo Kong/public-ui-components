@@ -92,7 +92,7 @@ export const createI18n = <MessageSource extends Record<string, any>>
   }
 
   const tm = (translationKey: PathToDotNotation<MessageSource, string>): Array<string> => {
-    // @ts-ignore
+    // @ts-ignore: string is valid key
     return intl.messages[translationKey] || []
   }
 

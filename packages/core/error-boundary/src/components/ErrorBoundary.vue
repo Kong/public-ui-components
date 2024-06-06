@@ -67,7 +67,7 @@ const allTags = computed((): string[] => {
 // Provide the reactive ref (not the ref.value)
 provide(KONG_UI_ERROR_BOUNDARY_TAGS_INJECTION_KEY, allTags)
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 onErrorCaptured((error: unknown, instance: ComponentPublicInstance | null, info: string) => {
   // Store the error and context to the ref
   capturedErrorContext.value = {
