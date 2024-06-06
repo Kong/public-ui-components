@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.6.1...@kong-ui-public/documentation@0.7.0) (2024-06-06)
+
+
+### Features
+
+* **eslint:** eslint v9 and shared configs [KHCP-11627] ([#1435](https://github.com/Kong/public-ui-components/issues/1435)) ([d0a973f](https://github.com/Kong/public-ui-components/commit/d0a973ff61b5302ee2b1cd3d73b0deb0c5864fa5))
+
+
+
+
+
 ## [0.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.6.0...@kong-ui-public/documentation@0.6.1) (2024-06-03)
 
 **Note:** Version bump only for package @kong-ui-public/documentation
