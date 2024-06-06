@@ -398,7 +398,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('consumer-group-form-name').type(expectedOutput.name)
 
       cy.getTestId('multiselect-trigger').click()
-      cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[1].id}"] .select-item-label`).click()
+      cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[1].id}"] .select-item-label`).click({ force: true })
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
@@ -803,7 +803,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('consumer-group-form-name').type(expectedOutput.name)
 
       cy.getTestId('multiselect-trigger').click()
-      cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[1].id}"] .select-item-label`).click()
+      cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[1].id}"] .select-item-label`).click({ force: true })
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))

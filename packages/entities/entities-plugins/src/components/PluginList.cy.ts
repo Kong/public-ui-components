@@ -89,7 +89,10 @@ describe('<PluginList />', () => {
         },
       })
 
+      // add padding on right to the container to make the overflow actions button visible
+      cy.get('.kong-ui-entities-plugins-list').invoke('css', 'padding-right', '300px')
       cy.getTestId('overflow-actions-button').eq(0).click()
+      cy.scrollTo('100%', 0) // scroll all the way to the right
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
@@ -212,6 +215,7 @@ describe('<PluginList />', () => {
         .find('[data-testid="enabled"]')
         .find('.switch-control')
         .trigger('mouseenter')
+        .parent()
         .parent()
         .find('.k-tooltip')
         .should('be.visible')
