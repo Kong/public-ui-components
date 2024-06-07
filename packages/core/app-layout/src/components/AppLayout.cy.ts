@@ -74,7 +74,7 @@ describe('<AppLayout />', () => {
       Object.keys(viewports).forEach((viewportName: string) => {
         describe(`${viewportName} viewport`, {
           // Enforce the viewport size
-          // @ts-ignore
+          // @ts-ignore: string keys are valid
           viewportHeight: viewports[viewportName].height, viewportWidth: viewports[viewportName].width,
         }, () => {
           it('should render content passed in through notification slot', () => {

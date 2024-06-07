@@ -91,12 +91,6 @@ A form component for Plugins.
     - default: `false`
     - *Specific to Kong Manager*. Whether or not to hide the consumer group scope field.
 
-  - `groupFields`:
-    - type: `boolean`
-    - required: `false`
-    - default: `false`
-    - Whether to enable grouping for required and advanced (optional) fields.
-
   - `useRLARedesignedForm`:
     - type: `boolean`
     - required: `false`
@@ -174,6 +168,22 @@ Support instance names for plugins. This can be removed when KHCP-5872-custom-na
 - default: `''`
 
 Allow teleporting the action buttons to the specified target element.
+
+#### `noCardWrapper`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Control if the form is wrapped in KCard or not.
+
+#### `hideViewConfigAction`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Control if the View Configuration action button is hidden.
 
 ### Events
 

@@ -27,7 +27,7 @@ import { type CustomSchemas } from '../types'
 import useI18n from './useI18n'
 import usePluginHelpers from './usePluginHelpers'
 
-export interface Field extends Record<string, any>{
+export interface Field extends Record<string, any> {
   model: string
   required?: boolean
   styleClasses?: string
@@ -47,7 +47,23 @@ export interface Schema {
 
 export interface UseSchemasOptions {
   app?: 'konnect' | 'kongManager'
-  groupFields?: boolean
+
+  /**
+   * The id of the entity associated with the plugin.
+   * @defaultValue undefined
+   */
+  entityId?: string
+
+  /**
+   * If the schema is for a plugin credential.
+   * @defaultValue false
+   */
+  credential?: boolean
+
+  /**
+   * Whether to enable the redesigned form for the RLA plugin (KM-136).
+   * @defaultValue false
+   */
   useRLARedesignedForm?: boolean
 }
 
@@ -72,11 +88,7 @@ const sortFieldByOrder = (a: Field, b: Field) => (a.order ?? 0) - (b.order ?? 0)
 const sortNonPinnedFields = (a: Field, b: Field) =>
   sortFieldByNonConfigTakePrecedence(a, b) || sortFieldByOrder(a, b) || a.model.localeCompare(b.model)
 
-/**
- * @param entityId (optional) The id of the entity associated with the plugin
- * @returns
- */
-export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
+export const useSchemas = (options?: UseSchemasOptions) => {
   const { capitalize } = useStringHelpers()
   const { convertToDotNotation } = usePluginHelpers()
   const { i18n: { t } } = useI18n()
@@ -239,12 +251,24 @@ export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
     const pluginName = formModel.name
     const metadata = PLUGIN_METADATA[pluginName]
 
-    // KM-18 KM-21 guarded branch
-    // No field grouping for:
-    // - Plugins with custom layouts
-    // - Plugins explicitly marked to use legacy form
-    // - Redesigned RLA form
-    if (!getSharedFormName(pluginName, { useRLARedesignedForm: options?.useRLARedesignedForm }) && options?.groupFields && !metadata?.useLegacyForm) {
+    if (getSharedFormName(pluginName, { useRLARedesignedForm: options?.useRLARedesignedForm }) || metadata?.useLegacyForm || options?.credential) {
+      /**
+       * Do not generate grouped schema when:
+       * - The plugin has a custom layout
+       * - The plugin is explicitly marked to use legacy form
+       * - Rendering a form for a plugin credential
+       */
+
+      // Assume the fields are sorted, unless they have an `order` property
+      formSchema.fields!.sort((a: Record<string, any>, b: Record<string, any>) => {
+        a.order = a.order || 0
+        b.order = b.order || 0
+
+        return a.order - b.order
+      })
+    } else {
+      // Grouped schema generation
+
       const pinnedFields = []
       const defaultVisibleFields = []
       const advancedFields = []
@@ -336,14 +360,6 @@ export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
       formSchema = {
         groups: fieldGroups,
       }
-    } else {
-      // Assume the fields are sorted, unless they have an `order` property
-      formSchema.fields!.sort((a: Record<string, any>, b: Record<string, any>) => {
-        a.order = a.order || 0
-        b.order = b.order || 0
-
-        return a.order - b.order
-      })
     }
 
     return {
@@ -438,7 +454,7 @@ export const useSchemas = (entityId?: string, options?: UseSchemasOptions) => {
     schema.type = 'input'
     schema.inputType = 'hidden'
     schema.styleClasses = 'kong-form-hidden-field-wrapper'
-    const foreignKeyId = entityId
+    const foreignKeyId = options?.entityId
 
     formModel[schema.model] = foreignKeyId ? { id: foreignKeyId } : null
   }

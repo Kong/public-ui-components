@@ -31,7 +31,7 @@ const props = defineProps({
     default: () => {},
   },
   onModelUpdated: {
-    type: Function as PropType<() => {}>,
+    type: Function as PropType<() => void>,
     required: true,
   },
   isEditing: {
@@ -44,7 +44,7 @@ const displayForm = computed((): boolean => {
   return (props.formModel.id && props.isEditing) || !props.isEditing
 })
 
-const finalSchema = computed((): Object => {
+const finalSchema = computed((): Record<string, any> => {
   const final = props.formSchema
 
   final.fields.map((f:any) => {

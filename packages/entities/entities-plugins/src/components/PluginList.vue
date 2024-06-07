@@ -168,9 +168,9 @@
             :item="getEditDropdownItem(row)"
           />
         </PermissionsWrapper>
-        <!-- Dynamic Plugin Ordering not supported for consumer plugins -->
+        <!-- Dynamic Plugin Ordering not supported for consumer/consumer-group plugins -->
         <PermissionsWrapper
-          v-if="!isConsumerPage && isOrderingSupported"
+          v-if="!isConsumerPage && !isConsumerGroupPage && isOrderingSupported"
           :auth-function="() => canConfigureDynamicOrdering(row)"
         >
           <KDropdownItem
@@ -354,6 +354,7 @@ const router = useRouter()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const isConsumerPage = computed((): boolean => props.config?.entityType === 'consumers')
+const isConsumerGroupPage = computed((): boolean => props.config?.entityType === 'consumer_groups')
 
 const isOrderingSupported = props.config.app === 'konnect' || useGatewayFeatureSupported({
   gatewayInfo: props.config.gatewayInfo,

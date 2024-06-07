@@ -152,7 +152,7 @@ const props = defineProps({
     default: () => {},
   },
   onModelUpdated: {
-    type: Function as PropType<() => {}>,
+    type: Function as PropType<() => void>,
     required: true,
   },
   isEditing: {

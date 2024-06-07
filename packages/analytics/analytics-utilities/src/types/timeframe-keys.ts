@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+
 export enum TimeframeKeys {
   FIFTEEN_MIN = '15m',
   ONE_HOUR = '1h',
@@ -12,5 +12,5 @@ export enum TimeframeKeys {
   CURRENT_QUARTER = 'current_quarter',
   PREVIOUS_WEEK = 'previous_week',
   PREVIOUS_MONTH = 'previous_month',
-  PREVIOUS_QUARTER = 'previous_quarter'
+  PREVIOUS_QUARTER = 'previous_quarter',
 }

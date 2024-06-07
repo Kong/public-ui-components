@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck - do not typecheck file
 import fecha from 'fecha'
 
 export default {

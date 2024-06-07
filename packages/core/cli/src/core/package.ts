@@ -65,7 +65,7 @@ const createPackageFiles = async (workspace: string, packageName: string): Promi
   spinner.start({ text: 'Creating package files...' })
 
   // Create new files in packages/${workspace}/{packageName}
-  // eslint-disable-next-line array-callback-return
+
   for (const filename of packageFilesToCreate) {
     const stats = fs.statSync(filename)
     const filenamePath = filename.split('__template__/')

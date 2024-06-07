@@ -1,5 +1,7 @@
 export function cloneDeep(a: any) {
-  if (a === undefined) { return }
+  if (a === undefined) {
+    return
+  }
 
   return JSON.parse(JSON.stringify(a))
 }

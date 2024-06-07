@@ -14,7 +14,7 @@ describe('useWindow', () => {
     const windowSpy = vi.spyOn(global, 'window', 'get')
     windowSpy.mockImplementation(() => ({
       // Ignore missing properties
-      // @ts-ignore
+      // @ts-ignore: ignore missing properties
       location: locationMock,
     }))
   })

@@ -27,7 +27,7 @@ describe('<AppNavbar />', () => {
     Object.keys(viewports).forEach((viewportName: string) => {
       describe(`${viewportName} viewport`, {
         // Enforce the viewport size
-        // @ts-ignore
+        // @ts-ignore: string keys are valid
         viewportHeight: viewports[viewportName].height, viewportWidth: viewports[viewportName].width,
       }, () => {
         const isDesktopViewport = viewportName === 'desktop'

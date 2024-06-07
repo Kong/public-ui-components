@@ -2,7 +2,7 @@ import { Schema as AtcSchema, type AstType } from '@kong/atc-router'
 
 export type SchemaDefinition = {
   [K in AstType]?: string[];
-};
+}
 
 export interface Schema {
   name: string;

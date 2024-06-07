@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.9.0...@kong-ui-public/metric-cards@0.9.1) (2024-06-07)
+
+**Note:** Version bump only for package @kong-ui-public/metric-cards
+
+
+
+
+
+# [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.8.13...@kong-ui-public/metric-cards@0.9.0) (2024-06-06)
+
+
+### Features
+
+* **eslint:** eslint v9 and shared configs [KHCP-11627] ([#1435](https://github.com/Kong/public-ui-components/issues/1435)) ([d0a973f](https://github.com/Kong/public-ui-components/commit/d0a973ff61b5302ee2b1cd3d73b0deb0c5864fa5))
+
+
+
+
+
 ## [0.8.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.8.12...@kong-ui-public/metric-cards@0.8.13) (2024-06-03)
 
 **Note:** Version bump only for package @kong-ui-public/metric-cards

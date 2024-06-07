@@ -55,7 +55,7 @@ describe('<EntityToggleModal />', () => {
         cy.getTestId('modal-action-button').click().then(() => {
           // proceed should not be emitted immediately
           cy.wrap(Cypress.vueWrapper.emitted('proceed')).should('be.undefined')
-          // eslint-disable-next-line cypress/no-unnecessary-waiting
+
           cy.wait(kConfirmDelay + 10).then(() => {
             cy.wrap(Cypress.vueWrapper.emitted('proceed')).should('have.length', 1)
           })
@@ -67,7 +67,7 @@ describe('<EntityToggleModal />', () => {
         // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.getTestId('modal-action-button').click().then(() => {
           cy.getTestId('modal-action-button').should('be.disabled')
-          // eslint-disable-next-line cypress/no-unnecessary-waiting
+
           cy.wait(kConfirmDelay + 10).then(() => {
             cy.getTestId('modal-action-button').should('not.be.disabled')
           })

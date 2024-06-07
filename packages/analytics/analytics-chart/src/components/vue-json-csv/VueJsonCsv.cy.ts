@@ -25,7 +25,7 @@ describe('<VueJsonCsv />', () => {
 
     // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.getTestId('export-csv').click().then(() => {
-      // eslint-disable-next-line cypress/unsafe-to-chain-command
+
       cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'export-started').then((evt) => {
         const incomingData = evt[0][0]
         const firstRow = incomingData[0]
@@ -36,7 +36,7 @@ describe('<VueJsonCsv />', () => {
         cy.wrap(incomingData).should('have.length', CSV_DATA.length)
       })
 
-      // eslint-disable-next-line cypress/unsafe-to-chain-command
+
       cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'export-finished').then((evt) => {
         const exportedFilename = evt[0][0]
 
@@ -59,7 +59,7 @@ describe('<VueJsonCsv />', () => {
 
     // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.getTestId('export-csv').click().then(() => {
-      // eslint-disable-next-line cypress/unsafe-to-chain-command
+
       cy.wrap(Cypress.vueWrapper.emitted()).should('have.property', 'export-finished').then((evt) => {
         const exportedFilename = evt[0][0]
 

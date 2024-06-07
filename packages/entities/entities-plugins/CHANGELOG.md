@@ -3,6 +3,74 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.1.1...@kong-ui-public/entities-plugins@5.1.2) (2024-06-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [5.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.1.0...@kong-ui-public/entities-plugins@5.1.1) (2024-06-07)
+
+
+### Bug Fixes
+
+* apply suggestions on RLA form ([#1432](https://github.com/Kong/public-ui-components/issues/1432)) ([fc682e8](https://github.com/Kong/public-ui-components/commit/fc682e85042d7ed234efa7066a1f532c61b11528))
+
+
+
+
+
+# [5.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.0.2...@kong-ui-public/entities-plugins@5.1.0) (2024-06-06)
+
+
+### Features
+
+* **eslint:** eslint v9 and shared configs [KHCP-11627] ([#1435](https://github.com/Kong/public-ui-components/issues/1435)) ([d0a973f](https://github.com/Kong/public-ui-components/commit/d0a973ff61b5302ee2b1cd3d73b0deb0c5864fa5))
+
+
+
+
+
+## [5.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.0.1...@kong-ui-public/entities-plugins@5.0.2) (2024-06-06)
+
+
+### Bug Fixes
+
+* **entities-plugins:** nested array for custom schema ([#1434](https://github.com/Kong/public-ui-components/issues/1434)) ([4410fbd](https://github.com/Kong/public-ui-components/commit/4410fbda9486359177b0e471fa65447f2abfa474))
+
+
+
+
+
+## [5.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.0.0...@kong-ui-public/entities-plugins@5.0.1) (2024-06-06)
+
+
+### Bug Fixes
+
+* **entities-plugins:** hide ordering for consumer group plugins ([#1433](https://github.com/Kong/public-ui-components/issues/1433)) ([3f0d003](https://github.com/Kong/public-ui-components/commit/3f0d0031936e35a477e8ae2b5683621ab80d67a4))
+
+
+
+
+
+# [5.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.6.5...@kong-ui-public/entities-plugins@5.0.0) (2024-06-04)
+
+
+### Code Refactoring
+
+* **entities-plugins:** rollout plugin UX improvements ([#1424](https://github.com/Kong/public-ui-components/issues/1424)) ([34af8c4](https://github.com/Kong/public-ui-components/commit/34af8c46a39d49bbe9dbb1501fc0e7dba8ea97cd))
+
+
+### BREAKING CHANGES
+
+* **entities-plugins:** `groupFields` has been removed from the config of PluginForm
+
+
+
+
+
 ## [4.6.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@4.6.4...@kong-ui-public/entities-plugins@4.6.5) (2024-06-03)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+
 export interface BaseNode<Type extends string = string> {
   type: Type
   children?: Array<BaseNode>
@@ -13,13 +13,13 @@ export interface Document extends BaseNode<'document'> {
 export enum TableRowSection {
   header = 'header',
   body = 'body',
-  footer = 'footer'
+  footer = 'footer',
 }
 
 export enum TableCellAlign {
   left = 'left',
   center = 'center',
-  right = 'right'
+  right = 'right',
 }
 
 export interface TableCellNode extends BaseNode<'table_cell'> {

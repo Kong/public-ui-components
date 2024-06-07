@@ -143,7 +143,7 @@ import {
   TimeoutsMinNumber,
 } from '../constants'
 import useMultiselectCreation from '../composables/useMultiselectCreation'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 import type { MultiselectItem, SelectItem } from '@kong/kongponents'
 import links from '../links'
 

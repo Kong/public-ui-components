@@ -106,6 +106,7 @@ export default function useAbstractFields(formData: AbstractFieldParams) {
           const result = validator(value.value, formData.schema, formData.model?.value)
 
           if (result && isFunction(result.then)) {
+            // eslint-disable-next-line promise/catch-or-return
             result.then((err: any) => {
               if (err) {
                 errors.value = errors.value.concat(err)

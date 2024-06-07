@@ -203,7 +203,9 @@ const computedChartData = computed(() => {
 })
 
 const timeRangeMs = computed<number | undefined>(() => {
-  if (!props.chartData?.meta) { return 0 }
+  if (!props.chartData?.meta) {
+    return 0
+  }
 
   return ('start_ms' in props.chartData.meta)
     ? props.chartData.meta.end_ms - props.chartData.meta.start_ms
@@ -251,7 +253,7 @@ const metricAxesTitle = computed<string | undefined>(() => {
 })
 
 const dimensionAxesTitle = computed<string | undefined>(() => {
-  const dimension = isTimeSeriesChart.value ? 'Time' : Object.keys(props.chartData.meta.display || props.chartData.meta.metric_names as Object)[0]
+  const dimension = isTimeSeriesChart.value ? 'Time' : Object.keys(props.chartData.meta.display || props.chartData.meta.metric_names as Record<string, any>)[0]
   // @ts-ignore - dynamic i18n key
   return props.chartOptions.dimensionAxesTitle || (i18n.te(`chartLabels.${dimension}`) &&
     // @ts-ignore - dynamic i18n key

@@ -134,8 +134,9 @@ const props = defineProps({
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
-const { parseSchema } = composables.useSchemas(props.entityMap.focusedEntity?.id || undefined, {
-  groupFields: props.config.groupFields,
+const { parseSchema } = composables.useSchemas({
+  entityId: props.entityMap.focusedEntity?.id || undefined,
+  credential: props.credential,
   useRLARedesignedForm: props.config.useRLARedesignedForm,
 })
 const { convertToDotNotation, unFlattenObject, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
@@ -603,7 +604,9 @@ watch(() => props.schema, (newSchema, oldSchema) => {
 
   Object.assign(formModel, form.model)
 
-  formSchema.value = { fields: formSchema.value?.fields?.map((r: Record<string, any>) => { return { ...r, disabled: r.disabled || false } }) }
+  formSchema.value = { fields: formSchema.value?.fields?.map((r: Record<string, any>) => {
+    return { ...r, disabled: r.disabled || false }
+  }) }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
   sharedFormName.value = getSharedFormName(form.model.name, { useRLARedesignedForm: props.config.useRLARedesignedForm })
 
@@ -644,15 +647,14 @@ onBeforeMount(() => {
 
   :deep(.vue-form-generator) {
     > fieldset {
-      margin-top: $kui-space-40;
-
       .form-group:last-child {
-        margin-bottom: $kui-space-60;
+        margin-bottom: 0;
       }
     }
 
     .k-collapse.root-level-collapse {
       border-top: $kui-border-width-10 solid $kui-color-border;
+      margin-top: $kui-space-80;
       padding-top: $kui-space-80;
     }
 

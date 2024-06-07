@@ -94,7 +94,7 @@ const props = defineProps({
     validator: (val: string) => ['structured', 'yaml', 'json'].includes(val),
   },
   propListTypes: {
-    type: Array as PropType<String[]>,
+    type: Array as PropType<string[]>,
     required: false,
     default: () => ([]),
   },

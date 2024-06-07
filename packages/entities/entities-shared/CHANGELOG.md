@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.3.1...@kong-ui-public/entities-shared@3.3.2) (2024-06-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.3.0...@kong-ui-public/entities-shared@3.3.1) (2024-06-07)
+
+
+### Bug Fixes
+
+* apply suggestions on RLA form ([#1432](https://github.com/Kong/public-ui-components/issues/1432)) ([fc682e8](https://github.com/Kong/public-ui-components/commit/fc682e85042d7ed234efa7066a1f532c61b11528))
+
+
+
+
+
+# [3.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.2.11...@kong-ui-public/entities-shared@3.3.0) (2024-06-06)
+
+
+### Features
+
+* **eslint:** eslint v9 and shared configs [KHCP-11627] ([#1435](https://github.com/Kong/public-ui-components/issues/1435)) ([d0a973f](https://github.com/Kong/public-ui-components/commit/d0a973ff61b5302ee2b1cd3d73b0deb0c5864fa5))
+
+
+
+
+
 ## [3.2.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.2.10...@kong-ui-public/entities-shared@3.2.11) (2024-06-03)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

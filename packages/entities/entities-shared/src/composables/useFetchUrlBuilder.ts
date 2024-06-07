@@ -25,8 +25,6 @@ export default function useFetchUrlBuilder(
   )
 
   return (fetcherParams: FetcherParams) => {
-    // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { page, pageSize, offset, sortColumnKey, sortColumnOrder, query } = fetcherParams
 
     // This is done within a try/catch block in case there is an error in constructing the URL; the fallback value will still fetch but without the params

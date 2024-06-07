@@ -6,7 +6,7 @@ export type ConsumerGroup = {
   consumers_count?: number;
   id: string;
   tags?: string[];
-};
+}
 
 export interface FetcherRawResponse<T = any> {
   data: T[];

@@ -136,7 +136,7 @@ const props = defineProps({
     default: '',
   },
   selectedDocument: {
-    type: Object as PropType<{ document: DocumentTree, ast: Object, markdown?: string, status: 'published' | 'unpublished'}>,
+    type: Object as PropType<{ document: DocumentTree, ast: Record<string, any>, markdown?: string, status: 'published' | 'unpublished' }>,
     default: () => null,
   },
 })
