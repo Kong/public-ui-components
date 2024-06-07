@@ -65,11 +65,12 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "564KB"
+    "errorLimit": "600KB"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
     "@kong/icons": "^1.9.1",
-    "compare-versions": "^6.1.0"
+    "compare-versions": "^6.1.0",
+    "swrv": "^1.0.4"
   }
 }
