@@ -31,7 +31,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.0.0-alpha.162",
     "axios": "^1.6.8",
-    "vue": "^3.4.26",
+    "vue": "^3.4.27",
     "vue-router": "^4.3.2"
   },
   "scripts": {
