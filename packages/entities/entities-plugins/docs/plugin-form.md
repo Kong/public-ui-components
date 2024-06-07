@@ -169,6 +169,22 @@ Support instance names for plugins. This can be removed when KHCP-5872-custom-na
 
 Allow teleporting the action buttons to the specified target element.
 
+#### `noCardWrapper`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Control if the form is wrapped in KCard or not.
+
+#### `hideViewConfigAction`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Control if the View Configuration action button is hidden.
+
 ### Events
 
 #### cancel
