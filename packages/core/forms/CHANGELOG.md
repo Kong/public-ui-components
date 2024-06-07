@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.4.0...@kong-ui-public/forms@3.4.1) (2024-06-07)
+
+
+### Bug Fixes
+
+* apply suggestions on RLA form ([#1432](https://github.com/Kong/public-ui-components/issues/1432)) ([fc682e8](https://github.com/Kong/public-ui-components/commit/fc682e85042d7ed234efa7066a1f532c61b11528))
+
+
+
+
+
 # [3.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.3.2...@kong-ui-public/forms@3.4.0) (2024-06-06)
 
 
