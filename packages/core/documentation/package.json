@@ -40,8 +40,8 @@
   },
   "dependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@kong/icons": "^1.9.1",
-    "@kong/markdown": "1.4.0"
+    "@kong/icons": "^1.9.2",
+    "@kong/markdown": "1.4.1"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
