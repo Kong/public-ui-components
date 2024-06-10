@@ -48,7 +48,7 @@
     "vue": "^3.4.27"
   },
   "dependencies": {
-    "@kong/icons": "^1.9.1",
+    "@kong/icons": "^1.9.2",
     "approximate-number": "^2.1.1"
   },
   "repository": {
