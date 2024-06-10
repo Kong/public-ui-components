@@ -40,8 +40,8 @@
   },
   "dependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@kong/icons": "^1.9.2",
-    "@kong/markdown": "1.4.1"
+    "@kong/icons": "^1.13.0",
+    "@kong/markdown": "1.6.1"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.12.12",
+    "@kong/design-tokens": "1.13.2",
     "@kong/kongponents": "9.0.0-alpha.162",
     "axios": "^1.6.8",
     "vue": ">= 3.3.13 < 4"
