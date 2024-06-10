@@ -1,7 +1,7 @@
 <template>
   <KDropdown
     class="account-dropdown"
-    :kpop-attributes="{ placement: 'bottom-start' }"
+    :kpop-attributes="{ placement: 'bottom-end' }"
     :trigger-text="userInitials"
     :width="width"
   >
@@ -76,11 +76,6 @@ defineProps({
       outline: 1px solid #bee2ff !important;
       outline-offset: 2px;
     }
-  }
-
-  // Align the dropdown to the bottom of the navbar
-  :deep(.k-dropdown-popover) {
-    top: 11px !important;
   }
 }
 </style>
