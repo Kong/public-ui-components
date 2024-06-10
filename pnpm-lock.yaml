@@ -30,8 +30,8 @@ importers:
         specifier: ^1.0.3
         version: 1.0.3(eslint@9.4.0)(typescript@5.3.3)
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       '@types/flat':
         specifier: ^5.0.5
         version: 5.0.5
@@ -229,8 +229,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       '@types/uuid':
         specifier: ^9.0.8
         version: 9.0.8
@@ -296,8 +296,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       pinia:
         specifier: '>= 2.1.7 < 3'
         version: 2.1.7(typescript@5.3.3)(vue@3.4.27)
@@ -349,8 +349,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       json-schema-to-ts:
         specifier: ^3.0.1
         version: 3.0.1
@@ -377,8 +377,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       vue:
         specifier: ^3.4.27
         version: 3.4.27(typescript@5.3.3)
@@ -417,8 +417,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -485,8 +485,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.3.13)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.3.13)
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -519,8 +519,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       monaco-editor:
         specifier: 0.21.3
         version: 0.21.3
@@ -556,8 +556,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
@@ -583,8 +583,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       vue:
         specifier: ^3.4.27
         version: 3.4.27(typescript@5.3.3)
@@ -599,8 +599,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       vue:
         specifier: ^3.4.27
         version: 3.4.27(typescript@5.3.3)
@@ -627,8 +627,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -655,8 +655,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -683,8 +683,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -711,8 +711,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -739,8 +739,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -767,8 +767,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -792,8 +792,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -820,8 +820,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -866,8 +866,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -904,8 +904,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       '@types/lodash.isequal':
         specifier: ^4.5.8
         version: 4.5.8
@@ -941,8 +941,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -969,8 +969,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -997,8 +997,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -1025,8 +1025,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -1050,8 +1050,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       '@types/prismjs':
         specifier: ^1.26.4
         version: 1.26.4
@@ -1084,8 +1084,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.0-alpha.162
-        version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+        specifier: 9.0.0-alpha.166
+        version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.1.0
         version: 1.1.0(vite@5.2.12)
@@ -2198,6 +2198,45 @@ packages:
     requiresBuild: true
     dev: true
 
+  /@floating-ui/core@1.6.2:
+    resolution: {integrity: sha512-+2XpQV9LLZeanU4ZevzRnGFg2neDeKHgFLjP6YLW+tly0IvrhqT4u8enLGjLH3qeh85g19xY5rsAusfwTdn5lg==}
+    dependencies:
+      '@floating-ui/utils': 0.2.2
+    dev: true
+
+  /@floating-ui/dom@1.6.5:
+    resolution: {integrity: sha512-Nsdud2X65Dz+1RHjAIP0t8z5e2ff/IRbei6BqFrl1urT8sDVzM1HMQ+R0XcU5ceRfyO3I6ayeqIfh+6Wb8LGTw==}
+    dependencies:
+      '@floating-ui/core': 1.6.2
+      '@floating-ui/utils': 0.2.2
+    dev: true
+
+  /@floating-ui/utils@0.2.2:
+    resolution: {integrity: sha512-J4yDIIthosAsRZ5CPYP/jQvUAQtlZTTD/4suA08/FEnlxqW3sKS9iAhgsa9VYLZ6vDHn/ixJgIqRQPotoBjxIw==}
+    dev: true
+
+  /@floating-ui/vue@1.0.6(vue@3.3.13):
+    resolution: {integrity: sha512-EdrOljjkpkkqZnrpqUcPoz9NvHxuTjUtSInh6GMv3+Mcy+giY2cE2pHh9rpacRcZ2eMSCxel9jWkWXTjLmY55w==}
+    dependencies:
+      '@floating-ui/dom': 1.6.5
+      '@floating-ui/utils': 0.2.2
+      vue-demi: 0.14.8(vue@3.3.13)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+    dev: true
+
+  /@floating-ui/vue@1.0.6(vue@3.4.27):
+    resolution: {integrity: sha512-EdrOljjkpkkqZnrpqUcPoz9NvHxuTjUtSInh6GMv3+Mcy+giY2cE2pHh9rpacRcZ2eMSCxel9jWkWXTjLmY55w==}
+    dependencies:
+      '@floating-ui/dom': 1.6.5
+      '@floating-ui/utils': 0.2.2
+      vue-demi: 0.14.8(vue@3.4.27)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+    dev: true
+
   /@formatjs/ecma402-abstract@2.0.0:
     resolution: {integrity: sha512-rRqXOqdFmk7RYvj4khklyqzcfQl9vEL/usogncBHRZfZBDOwMGuSRNFl02fu5KGHXdbinju+YXyuR+Nk8xlr/g==}
     dependencies:
@@ -2406,7 +2445,6 @@ packages:
       vue: '>= 3.3.4 < 4'
     dependencies:
       vue: 3.3.13(typescript@5.3.3)
-    dev: false
 
   /@kong/icons@1.13.0(vue@3.4.27):
     resolution: {integrity: sha512-obKpD/dg3Ma4fbr2W1oXyvD18LMI+EMYPGeSksj69azMDRV+oVZVMlQ62t+C26TkrjQxPuI4WWOjVvbGc50IYg==}
@@ -2415,24 +2453,6 @@ packages:
       vue: '>= 3.3.4 < 4'
     dependencies:
       vue: 3.4.27(typescript@5.3.3)
-
-  /@kong/icons@1.9.2(vue@3.3.13):
-    resolution: {integrity: sha512-XMLnCyaBE0xrrnY7DOLXVy2Q1F76AEsfi4mxEdVKfSGOkgV0dqVIHL34aqxo8OoSKUllcCKn/WW25X+YI65nCw==}
-    engines: {node: '>=18.17.0'}
-    peerDependencies:
-      vue: '>= 3.3.4 < 4'
-    dependencies:
-      vue: 3.3.13(typescript@5.3.3)
-    dev: true
-
-  /@kong/icons@1.9.2(vue@3.4.27):
-    resolution: {integrity: sha512-XMLnCyaBE0xrrnY7DOLXVy2Q1F76AEsfi4mxEdVKfSGOkgV0dqVIHL34aqxo8OoSKUllcCKn/WW25X+YI65nCw==}
-    engines: {node: '>=18.17.0'}
-    peerDependencies:
-      vue: '>= 3.3.4 < 4'
-    dependencies:
-      vue: 3.4.27(typescript@5.3.3)
-    dev: true
 
   /@kong/kongponents@8.127.0(vue-router@4.3.2)(vue@3.4.27):
     resolution: {integrity: sha512-C/MFT+OZtyul62ElgHEggqMYPbLjXiRJg5GE3il8MZpaep2D5QV+F5UQ7frbA98TkZCCVBD4LpR0OmiwXKs+tg==}
@@ -2456,22 +2476,22 @@ packages:
       vue-router: 4.3.2(vue@3.4.27)
     dev: false
 
-  /@kong/kongponents@9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.3.13):
-    resolution: {integrity: sha512-/smP8hg5JvBN96Ol/84LJsGjQZ4INIeyxT7sHQYf2FI4mtbn5x0+6BsYRxgRHKQo0le7g1JOaDJMFhcY3RVtJg==}
+  /@kong/kongponents@9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.3.13):
+    resolution: {integrity: sha512-cXlUFC/IAR2hWi0tZYevZHjIoqSb7m+Dg+1KCoLtDDMIgiIwLK4fqLHsG63Shl0/6Hg9t2oI4ixBVbw1ioaeGw==}
     engines: {node: '>=v16.20.2'}
     peerDependencies:
       axios: ^1.6.8
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.3.2
     dependencies:
-      '@kong/icons': 1.9.2(vue@3.3.13)
+      '@floating-ui/vue': 1.0.6(vue@3.3.13)
+      '@kong/icons': 1.13.0(vue@3.3.13)
       '@popperjs/core': 2.11.8
       axios: 1.6.8
       date-fns: 2.30.0
       date-fns-tz: 2.0.1(date-fns@2.30.0)
       focus-trap: 7.5.4
       focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.3.13)
-      popper.js: 1.16.1
       sortablejs: 1.15.2
       swrv: 1.0.4(vue@3.3.13)
       uuid: 9.0.1
@@ -2479,24 +2499,26 @@ packages:
       vue: 3.3.13(typescript@5.3.3)
       vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.3.13)
       vue-router: 4.3.2(vue@3.4.27)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
     dev: true
 
-  /@kong/kongponents@9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27):
-    resolution: {integrity: sha512-/smP8hg5JvBN96Ol/84LJsGjQZ4INIeyxT7sHQYf2FI4mtbn5x0+6BsYRxgRHKQo0le7g1JOaDJMFhcY3RVtJg==}
+  /@kong/kongponents@9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27):
+    resolution: {integrity: sha512-cXlUFC/IAR2hWi0tZYevZHjIoqSb7m+Dg+1KCoLtDDMIgiIwLK4fqLHsG63Shl0/6Hg9t2oI4ixBVbw1ioaeGw==}
     engines: {node: '>=v16.20.2'}
     peerDependencies:
       axios: ^1.6.8
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.3.2
     dependencies:
-      '@kong/icons': 1.9.2(vue@3.4.27)
+      '@floating-ui/vue': 1.0.6(vue@3.4.27)
+      '@kong/icons': 1.13.0(vue@3.4.27)
       '@popperjs/core': 2.11.8
       axios: 1.6.8
       date-fns: 2.30.0
       date-fns-tz: 2.0.1(date-fns@2.30.0)
       focus-trap: 7.5.4
       focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.4.27)
-      popper.js: 1.16.1
       sortablejs: 1.15.2
       swrv: 1.0.4(vue@3.4.27)
       uuid: 9.0.1
@@ -2504,6 +2526,8 @@ packages:
       vue: 3.4.27(typescript@5.3.3)
       vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.27)
       vue-router: 4.3.2(vue@3.4.27)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
     dev: true
 
   /@kong/markdown@1.6.1(vue@3.3.13):
@@ -3586,7 +3610,7 @@ packages:
     resolution: {integrity: sha512-ayKGsd65a6p/k4s5L2el+vMoMi8kc/bLXVszWszFDET1eZNvhKwEMLylGzKMfnwAFgpj+kJOKn4MZsD6PK6U/A==}
     requiresBuild: true
     dependencies:
-      '@babel/runtime-corejs3': 7.22.15
+      '@babel/runtime-corejs3': 7.24.4
       '@swagger-api/apidom-core': 0.99.2
       '@swagger-api/apidom-error': 0.99.0
       '@swagger-api/apidom-ns-json-schema-draft-4': 0.99.2
@@ -4309,6 +4333,11 @@ packages:
 
   /@types/lodash@4.17.4:
     resolution: {integrity: sha512-wYCP26ZLxaT3R39kiN2+HcJ4kTd3U1waI/cY7ivWYqFP6pW3ZNpvi6Wd6PHZx7T/t8z0vlkXMg3QYLa7DZ/IJQ==}
+    dev: false
+
+  /@types/lodash@4.17.5:
+    resolution: {integrity: sha512-MBIOHVZqVqgfro1euRDWX7OO0fBVUUMrN6Pwm8LQsz8cWhEpihlvR70ENj3f40j58TNxZaWv2ndSkInykNBBJw==}
+    dev: true
 
   /@types/markdown-it@13.0.7:
     resolution: {integrity: sha512-U/CBi2YUUcTHBt5tjO2r5QV/x0Po6nsYwQU4Y04fBS6vfoImaiZ6f8bi3CjTCxBPQSO1LMyUqkByzi8AidyxfA==}
@@ -5348,9 +5377,6 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependenciesMeta:
-      ajv:
-        optional: true
     dependencies:
       ajv: 8.12.0
     dev: true
@@ -6088,7 +6114,6 @@ packages:
   /chalk@5.3.0:
     resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
-    requiresBuild: true
     dev: true
 
   /char-regex@1.0.2:
@@ -8955,7 +8980,7 @@ packages:
       source-map: 0.6.1
       wordwrap: 1.0.0
     optionalDependencies:
-      uglify-js: 3.17.4
+      uglify-js: 3.18.0
     dev: true
 
   /har-schema@2.0.0:
@@ -12289,6 +12314,7 @@ packages:
   /popper.js@1.16.1:
     resolution: {integrity: sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==}
     deprecated: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
+    dev: false
 
   /postcss-custom-properties@13.3.10(postcss@8.4.38):
     resolution: {integrity: sha512-ejaalIpl7p0k0L5ngIZ86AZGmp3m1KdeOCbSQTK4gQcB1ncaoPTHorw206+tsZRIhIDYvh5ZButEje6740YDXw==}
@@ -14895,8 +14921,8 @@ packages:
     resolution: {integrity: sha512-o+ORpgGwaYQXgqGDwd+hkS4PuZ3QnmqMMxRuajK/a38L6fTpcE5GPIfrf+L/KemFzfUpeUQc1rRS1iDBozvnFA==}
     dev: true
 
-  /uglify-js@3.17.4:
-    resolution: {integrity: sha512-T9q82TJI9e/C1TAxYvfb16xO120tMVFZrGA3f9/P4424DNu6ypK103y0GPFVa17yotwSyZW5iYXgjYHkGrJW/g==}
+  /uglify-js@3.18.0:
+    resolution: {integrity: sha512-SyVVbcNBCk0dzr9XL/R/ySrmYf0s372K6/hFklzgcp2lBFyXtw4I7BOdDjlLhE1aVqaI/SHWXWmYdlZxuyF38A==}
     engines: {node: '>=0.8.0'}
     hasBin: true
     requiresBuild: true
@@ -15062,7 +15088,7 @@ packages:
       vue: ^3.2.0
     dependencies:
       '@popperjs/core': 2.11.8
-      '@types/lodash': 4.17.4
+      '@types/lodash': 4.17.5
       '@types/resize-observer-browser': 0.1.11
       date-fns: 2.30.0
       date-fns-tz: 2.0.1(date-fns@2.30.0)
@@ -15078,7 +15104,7 @@ packages:
       vue: ^3.2.0
     dependencies:
       '@popperjs/core': 2.11.8
-      '@types/lodash': 4.17.4
+      '@types/lodash': 4.17.5
       '@types/resize-observer-browser': 0.1.11
       date-fns: 2.30.0
       date-fns-tz: 2.0.1(date-fns@2.30.0)
@@ -15425,6 +15451,36 @@ packages:
 
   /vue-demi@0.14.7(vue@3.4.27):
     resolution: {integrity: sha512-EOG8KXDQNwkJILkx/gPcoL/7vH+hORoBaKgGe+6W7VFMvCYJfmF2dGbvgDroVnI8LU7/kTu8mbjRZGBU1z9NTA==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 3.4.27(typescript@5.3.3)
+    dev: true
+
+  /vue-demi@0.14.8(vue@3.3.13):
+    resolution: {integrity: sha512-Uuqnk9YE9SsWeReYqK2alDI5YzciATE0r2SkA6iMAtuXvNTMNACJLJEXNXaEy94ECuBe4Sk6RzRU80kjdbIo1Q==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 3.3.13(typescript@5.3.3)
+    dev: true
+
+  /vue-demi@0.14.8(vue@3.4.27):
+    resolution: {integrity: sha512-Uuqnk9YE9SsWeReYqK2alDI5YzciATE0r2SkA6iMAtuXvNTMNACJLJEXNXaEy94ECuBe4Sk6RzRU80kjdbIo1Q==}
     engines: {node: '>=12'}
     hasBin: true
     requiresBuild: true

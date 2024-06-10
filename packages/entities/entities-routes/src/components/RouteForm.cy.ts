@@ -206,7 +206,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-form-headers-values-input-2').should('not.exist')
 
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get("[data-testid='select-item-tcp,tls,udp']").click()
+          cy.get("[data-testid='select-item-tcp,tls,udp']").click({ force: true })
           cy.getTestId('routing-rule-paths').should('not.exist')
           cy.getTestId('routing-rule-hosts').should('not.exist')
           cy.getTestId('routing-rule-methods').should('not.exist')
@@ -298,8 +298,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get('.kong-ui-entities-route-form').should('be.visible')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-          // trad + expr 2 tabs
-          // switch to trad tab
+            // trad + expr 2 tabs
+            // switch to trad tab
             cy.get('#traditional-tab').click()
           } // else: we will be on the trad tab by default
 
@@ -371,7 +371,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('form-submit').should('be.disabled')
 
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get("[data-testid='select-item-tcp,tls,udp']").click()
+          cy.get("[data-testid='select-item-tcp,tls,udp']").click({ force: true })
 
           // sources
           cy.getTestId('routing-rule-sources').click()
@@ -411,8 +411,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get('.kong-ui-entities-route-form').should('be.visible')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-          // trad + expr 2 tabs
-          // switch to expr tab
+            // trad + expr 2 tabs
+            // switch to expr tab
             cy.get('#expressions-tab').click()
           } // else: we will be on expr tab by default
 
@@ -1010,7 +1010,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-form-headers-values-input-2').should('not.exist')
 
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get("[data-testid='select-item-tcp,tls,udp']").click()
+          cy.get("[data-testid='select-item-tcp,tls,udp']").click({ force: true })
           cy.getTestId('routing-rule-paths').should('not.exist')
           cy.getTestId('routing-rule-hosts').should('not.exist')
           cy.getTestId('routing-rule-methods').should('not.exist')
@@ -1080,8 +1080,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get('.kong-ui-entities-route-form').should('be.visible')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-          // trad + expr 2 tabs
-          // switch to trad tab
+            // trad + expr 2 tabs
+            // switch to trad tab
             cy.get('#traditional-tab').click()
           } // else: we will be on the trad tab by default
 
@@ -1153,7 +1153,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('form-submit').should('be.disabled')
 
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get("[data-testid='select-item-tcp,tls,udp']").click()
+          cy.get("[data-testid='select-item-tcp,tls,udp']").click({ force: true })
 
           // sources
           cy.getTestId('routing-rule-sources').click()
@@ -1193,8 +1193,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get('.kong-ui-entities-route-form').should('be.visible')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-          // trad + expr 2 tabs
-          // switch to expr tab
+            // trad + expr 2 tabs
+            // switch to expr tab
             cy.get('#expressions-tab').click()
           } // else: we will be on expr tab by default
 

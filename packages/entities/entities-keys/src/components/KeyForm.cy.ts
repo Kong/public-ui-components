@@ -6,14 +6,14 @@ import { EntityBaseForm } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'keys-list' }
 
-const baseConfigKonnect:KonnectKeyFormConfig = {
+const baseConfigKonnect: KonnectKeyFormConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-cats',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
 }
 
-const baseConfigKM:KongManagerKeyFormConfig = {
+const baseConfigKM: KongManagerKeyFormConfig = {
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
@@ -107,14 +107,15 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').should('be.visible')
       // key sets load in select
       cy.getTestId('key-form-key-set').click()
-      cy.getTestId('key-form-key-set').parent().parent().parent().find('.select-item').should('have.length', keySets.data.length)
+      cy.getTestId('key-form-key-set').closest('.k-select').find('.select-item').should('have.length', keySets.data.length)
       cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.get('.kong-ui-entities-keys-form [data-testid="clear-selection-icon"]').should('exist')
       // key formats load correctly - jwk
       cy.getTestId('key-form-jwk').should('be.visible')
       cy.getTestId('key-form-private-key').should('not.exist')
       cy.getTestId('key-form-public-key').should('not.exist')
-      cy.get('[data-testid="key-format-container"] .k-select [role="button"]').click()
+      cy.get('[data-testid="key-format-container"] .k-select').click()
+      cy.getTestId('select-item-jwk').scrollIntoView()
       cy.getTestId('select-item-jwk').should('be.visible')
       cy.getTestId('select-item-pem').should('be.visible')
       // key formats load correctly - pem
@@ -627,14 +628,15 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').should('be.visible')
       // key sets load in select
       cy.getTestId('key-form-key-set').click()
-      cy.getTestId('key-form-key-set').parent().parent().parent().find('.select-item').should('have.length', keySets.data.length)
+      cy.getTestId('key-form-key-set').closest('.k-select').find('.select-item').should('have.length', keySets.data.length)
       cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.get('.kong-ui-entities-keys-form [data-testid="clear-selection-icon"]').should('exist')
       // key formats load correctly - jwk
       cy.getTestId('key-form-jwk').should('be.visible')
       cy.getTestId('key-form-private-key').should('not.exist')
       cy.getTestId('key-form-public-key').should('not.exist')
-      cy.get('[data-testid="key-format-container"] .k-select [role="button"]').click()
+      cy.get('[data-testid="key-format-container"] .k-select').click()
+      cy.getTestId('select-item-jwk').scrollIntoView()
       cy.getTestId('select-item-jwk').should('be.visible')
       cy.getTestId('select-item-pem').should('be.visible')
       // key formats load correctly - pem

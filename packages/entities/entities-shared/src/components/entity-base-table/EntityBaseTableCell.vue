@@ -9,7 +9,7 @@
     >
       <KTooltip
         max-width="300"
-        placement="bottomStart"
+        placement="bottom-start"
         :text="hasTooltip ? tooltipText : ''"
       >
         <slot />
