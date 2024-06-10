@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.1.3...@kong-ui-public/entities-plugins@5.1.4) (2024-06-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [5.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.1.2...@kong-ui-public/entities-plugins@5.1.3) (2024-06-10)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1440](https://github.com/Kong/public-ui-components/issues/1440)) ([d8da825](https://github.com/Kong/public-ui-components/commit/d8da8253f77b94cb015120667ce5606abd21050e))
+
+
+
+
+
+## [5.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.1.1...@kong-ui-public/entities-plugins@5.1.2) (2024-06-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [5.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.1.0...@kong-ui-public/entities-plugins@5.1.1) (2024-06-07)
+
+
+### Bug Fixes
+
+* apply suggestions on RLA form ([#1432](https://github.com/Kong/public-ui-components/issues/1432)) ([fc682e8](https://github.com/Kong/public-ui-components/commit/fc682e85042d7ed234efa7066a1f532c61b11528))
+
+
+
+
+
 # [5.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.0.2...@kong-ui-public/entities-plugins@5.1.0) (2024-06-06)
 
 
