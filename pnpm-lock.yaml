@@ -32,9 +32,6 @@ importers:
       '@kong/kongponents':
         specifier: 9.0.0-alpha.166
         version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
-      '@rushstack/eslint-patch':
-        specifier: ^1.7.2
-        version: 1.7.2
       '@types/flat':
         specifier: ^5.0.5
         version: 5.0.5
@@ -3340,10 +3337,6 @@ packages:
     dev: true
     optional: true
 
-  /@rushstack/eslint-patch@1.7.2:
-    resolution: {integrity: sha512-RbhOOTCNoCrbfkRyoXODZp75MlpiHMgbE5MEBZAnnnLyQNgrigEj4p0lzsMDyc1zVsJDLrivB58tgg3emX0eEA==}
-    dev: true
-
   /@sigstore/bundle@2.1.0:
     resolution: {integrity: sha512-89uOo6yh/oxaU8AeOUnVrTdVMcGk9Q1hJa7Hkvalc6G3Z3CupWk4Xe9djSgJm9fMkH69s0P0cVHUoKSOemLdng==}
     engines: {node: ^16.14.0 || >=18.0.0}
@@ -3948,7 +3941,7 @@ packages:
       '@swagger-api/apidom-ns-asyncapi-2': 0.99.2
       '@swagger-api/apidom-ns-openapi-2': 0.99.2
       '@swagger-api/apidom-ns-openapi-3-0': 0.99.2
-      '@swagger-api/apidom-ns-openapi-3-1': 0.99.1
+      '@swagger-api/apidom-ns-openapi-3-1': 0.99.2
       '@swagger-api/apidom-ns-workflows-1': 0.99.2
       '@swagger-api/apidom-parser-adapter-api-design-systems-json': 0.99.2
       '@swagger-api/apidom-parser-adapter-api-design-systems-yaml': 0.99.2

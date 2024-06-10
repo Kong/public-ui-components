@@ -132,9 +132,9 @@ describe('<ConsumerGroupList />', () => {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
 
@@ -152,9 +152,9 @@ describe('<ConsumerGroupList />', () => {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => false,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
 
@@ -181,10 +181,10 @@ describe('<ConsumerGroupList />', () => {
           props: {
             cacheIdentifier: `consumer-group-list-${uuidv4()}`,
             config: baseConfigKM,
-            canCreate: () => { },
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canCreate: () => {},
+            canEdit: () => {},
+            canDelete: () => {},
+            canRetrieve: () => {},
           },
         })
 
@@ -209,10 +209,10 @@ describe('<ConsumerGroupList />', () => {
         props: {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => {},
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
 
@@ -234,10 +234,10 @@ describe('<ConsumerGroupList />', () => {
         props: {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => {},
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
 
@@ -310,10 +310,10 @@ describe('<ConsumerGroupList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => {},
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -350,10 +350,10 @@ describe('<ConsumerGroupList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => {},
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
 
@@ -390,9 +390,9 @@ describe('<ConsumerGroupList />', () => {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: configConsumerKM,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
 
@@ -410,9 +410,9 @@ describe('<ConsumerGroupList />', () => {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: configConsumerKM,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
 
@@ -430,9 +430,9 @@ describe('<ConsumerGroupList />', () => {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: configConsumerKM,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
@@ -456,9 +456,9 @@ describe('<ConsumerGroupList />', () => {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: configConsumerKM,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
           'onAdd:success': cy.spy().as('addSuccess'),
         },
       }).then(({ wrapper }) => wrapper)
@@ -485,9 +485,9 @@ describe('<ConsumerGroupList />', () => {
             cacheIdentifier: `consumer-group-list-${uuidv4()}`,
             config: configConsumerKM,
             canCreate: () => true,
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canEdit: () => {},
+            canDelete: () => {},
+            canRetrieve: () => {},
             'onAdd:success': cy.spy().as('addSuccess'),
           },
         }).then(({ wrapper }) => wrapper)
@@ -516,9 +516,9 @@ describe('<ConsumerGroupList />', () => {
             cacheIdentifier: `consumer-group-list-${uuidv4()}`,
             config: configConsumerKM,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => {},
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => {},
           },
         }).then(({ wrapper }) => wrapper)
           .as('vueWrapper')
@@ -545,9 +545,9 @@ describe('<ConsumerGroupList />', () => {
             cacheIdentifier: `consumer-group-list-${uuidv4()}`,
             config: configConsumerKM,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => {},
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => {},
           },
         }).then(({ wrapper }) => wrapper)
           .as('vueWrapper')
@@ -579,9 +579,9 @@ describe('<ConsumerGroupList />', () => {
             cacheIdentifier: `consumer-group-list-${uuidv4()}`,
             config: configConsumerKM,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => {},
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => {},
             'onRemove:success': cy.spy().as('removeSuccess'),
           },
         }).then(({ wrapper }) => wrapper)
@@ -618,9 +618,9 @@ describe('<ConsumerGroupList />', () => {
             cacheIdentifier: `consumer-group-list-${uuidv4()}`,
             config: configConsumerKM,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => {},
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => {},
             onError: cy.spy().as('errorSpy'),
           },
         }).then(({ wrapper }) => wrapper)
@@ -750,9 +750,9 @@ describe('<ConsumerGroupList />', () => {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
 
@@ -770,9 +770,9 @@ describe('<ConsumerGroupList />', () => {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => false,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
 
@@ -799,10 +799,10 @@ describe('<ConsumerGroupList />', () => {
           props: {
             cacheIdentifier: `consumer-group-list-${uuidv4()}`,
             config: baseConfigKonnect,
-            canCreate: () => { },
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canCreate: () => {},
+            canEdit: () => {},
+            canDelete: () => {},
+            canRetrieve: () => {},
           },
         })
 
@@ -827,10 +827,10 @@ describe('<ConsumerGroupList />', () => {
         props: {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => {},
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
 
@@ -852,10 +852,10 @@ describe('<ConsumerGroupList />', () => {
         props: {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => {},
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
 
@@ -928,10 +928,10 @@ describe('<ConsumerGroupList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => {},
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -968,10 +968,10 @@ describe('<ConsumerGroupList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => {},
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
 
@@ -1008,9 +1008,9 @@ describe('<ConsumerGroupList />', () => {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: configConsumerKonnect,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
 
@@ -1028,9 +1028,9 @@ describe('<ConsumerGroupList />', () => {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: configConsumerKonnect,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       })
 
@@ -1048,9 +1048,9 @@ describe('<ConsumerGroupList />', () => {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: configConsumerKonnect,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
         },
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
@@ -1074,9 +1074,9 @@ describe('<ConsumerGroupList />', () => {
           cacheIdentifier: `consumer-group-list-${uuidv4()}`,
           config: configConsumerKonnect,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => {},
+          canDelete: () => {},
+          canRetrieve: () => {},
           'onAdd:success': cy.spy().as('addSuccess'),
         },
       }).then(({ wrapper }) => wrapper)
@@ -1103,9 +1103,9 @@ describe('<ConsumerGroupList />', () => {
             cacheIdentifier: `consumer-group-list-${uuidv4()}`,
             config: configConsumerKonnect,
             canCreate: () => true,
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canEdit: () => {},
+            canDelete: () => {},
+            canRetrieve: () => {},
             'onAdd:success': cy.spy().as('addSuccess'),
           },
         }).then(({ wrapper }) => wrapper)
@@ -1134,9 +1134,9 @@ describe('<ConsumerGroupList />', () => {
             cacheIdentifier: `consumer-group-list-${uuidv4()}`,
             config: configConsumerKonnect,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => {},
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => {},
           },
         }).then(({ wrapper }) => wrapper)
           .as('vueWrapper')
@@ -1163,9 +1163,9 @@ describe('<ConsumerGroupList />', () => {
             cacheIdentifier: `consumer-group-list-${uuidv4()}`,
             config: configConsumerKonnect,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => {},
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => {},
           },
         }).then(({ wrapper }) => wrapper)
           .as('vueWrapper')
@@ -1197,9 +1197,9 @@ describe('<ConsumerGroupList />', () => {
             cacheIdentifier: `consumer-group-list-${uuidv4()}`,
             config: configConsumerKonnect,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => {},
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => {},
             'onRemove:success': cy.spy().as('removeSuccess'),
           },
         }).then(({ wrapper }) => wrapper)
@@ -1236,9 +1236,9 @@ describe('<ConsumerGroupList />', () => {
             cacheIdentifier: `consumer-group-list-${uuidv4()}`,
             config: configConsumerKonnect,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => {},
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => {},
             onError: cy.spy().as('errorSpy'),
           },
         }).then(({ wrapper }) => wrapper)
