@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.3...@kong-ui-public/spec-renderer@2.2.4) (2024-06-10)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 15 [KHCP-12191] ([#1431](https://github.com/Kong/public-ui-components/issues/1431)) ([473e8b0](https://github.com/Kong/public-ui-components/commit/473e8b097f854feb37871432f5fd3c1bccffde16))
+
+
+
+
+
 ## [2.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.2...@kong-ui-public/spec-renderer@2.2.3) (2024-06-10)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer
