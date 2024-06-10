@@ -56,7 +56,7 @@
     "errorLimit": "200KB"
   },
   "peerDependencies": {
-    "@kong/sdk-portal-js": "^2.11.1",
+    "@kong/sdk-portal-js": "^2.12.1",
     "axios": "^1.6.8",
     "vue": "^3.4.27"
   },
