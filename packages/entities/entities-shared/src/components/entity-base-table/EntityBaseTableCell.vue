@@ -48,7 +48,7 @@ const isFirst = computed((): boolean => {
   if (cells) {
     return cells[0]?.getAttribute('data-testid') === props.keyName
   } else {
-    return false
+    return true
   }
 })
 
