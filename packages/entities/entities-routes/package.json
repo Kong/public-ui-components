@@ -76,6 +76,6 @@
   },
   "optionalDependencies": {
     "@kong-ui-public/expressions": "workspace:^",
-    "monaco-editor": "0.21.3"
+    "monaco-editor": "0.49.0"
   }
 }

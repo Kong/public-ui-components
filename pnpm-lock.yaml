@@ -522,11 +522,11 @@ importers:
         specifier: 9.0.0-alpha.166
         version: 9.0.0-alpha.166(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
       monaco-editor:
-        specifier: 0.21.3
-        version: 0.21.3
+        specifier: 0.49.0
+        version: 0.49.0
       vite-plugin-monaco-editor:
         specifier: ^1.1.0
-        version: 1.1.0(monaco-editor@0.21.3)
+        version: 1.1.0(monaco-editor@0.49.0)
       vite-plugin-top-level-await:
         specifier: ^1.4.1
         version: 1.4.1(vite@5.2.12)
@@ -894,8 +894,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/expressions
       monaco-editor:
-        specifier: 0.21.3
-        version: 0.21.3
+        specifier: 0.49.0
+        version: 0.49.0
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -914,7 +914,7 @@ importers:
         version: 1.6.8
       vite-plugin-monaco-editor:
         specifier: ^1.1.0
-        version: 1.1.0(monaco-editor@0.21.3)
+        version: 1.1.0(monaco-editor@0.49.0)
       vue:
         specifier: ^3.4.27
         version: 3.4.27(typescript@5.3.3)
@@ -11286,8 +11286,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /monaco-editor@0.21.3:
-    resolution: {integrity: sha512-9N7wATLpi+googstvtm6IKg97vPQ77FDYEpkow5tLriM/VJ0DaTRyUP4UVzcoH7KlPDX+e/rE7/imcOUeGkT6g==}
+  /monaco-editor@0.49.0:
+    resolution: {integrity: sha512-2I8/T3X/hLxB2oPHgqcNYUVdA/ZEFShT7IAujifIPMfKkNbLOqY8XCoyHCXrsdjb36dW9MwoTwBCFpXKMwNwaQ==}
 
   /mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
@@ -15230,12 +15230,12 @@ packages:
       - supports-color
     dev: true
 
-  /vite-plugin-monaco-editor@1.1.0(monaco-editor@0.21.3):
+  /vite-plugin-monaco-editor@1.1.0(monaco-editor@0.49.0):
     resolution: {integrity: sha512-IvtUqZotrRoVqwT0PBBDIZPNraya3BxN/bfcNfnxZ5rkJiGcNtO5eAOWWSgT7zullIAEqQwxMU83yL9J5k7gww==}
     peerDependencies:
       monaco-editor: '>=0.33.0'
     dependencies:
-      monaco-editor: 0.21.3
+      monaco-editor: 0.49.0
     dev: true
 
   /vite-plugin-top-level-await@1.4.1(vite@5.2.12):
