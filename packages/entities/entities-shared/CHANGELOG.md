@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.3.5...@kong-ui-public/entities-shared@3.3.6) (2024-06-11)
+
+
+### Bug Fixes
+
+* **entities-shared:** MutationObserver error in base table ([#1446](https://github.com/Kong/public-ui-components/issues/1446)) ([df90f24](https://github.com/Kong/public-ui-components/commit/df90f24a10d482aa21ac9832271b8dd05c450f38))
+
+
+
+
+
 ## [3.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.3.4...@kong-ui-public/entities-shared@3.3.5) (2024-06-10)
 
 
