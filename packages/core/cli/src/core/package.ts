@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { execSync } from 'child_process'
-import { sleep, packagePath, pascalCase, packageTemplatePath, getTemplateFileList, devDependencies, peerDependencies } from './index.js'
+import { sleep, packagePath, pascalCase, packageTemplatePath, getTemplateFileList, devDependencies, peerDependencies } from '.'
 import type { Spinner } from 'nanospinner'
 import { createSpinner } from 'nanospinner'
 import pc from 'picocolors'
@@ -9,7 +9,7 @@ import boxen from 'boxen'
 import * as emoji from 'node-emoji'
 import type { Answers } from 'inquirer'
 import inquirer from 'inquirer'
-import questions from '../questions.js'
+import questions from '../questions'
 
 const { workspaceName, packageName, confirmPackageName } = questions
 

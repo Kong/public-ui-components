@@ -1,4 +1,4 @@
-import { kebabCase, packagePath } from './core/index.js'
+import { kebabCase, packagePath } from './core'
 import inquirer from 'inquirer'
 import pc from 'picocolors'
 import fs from 'fs'

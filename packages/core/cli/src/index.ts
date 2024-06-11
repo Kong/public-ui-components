@@ -1,4 +1,4 @@
 #!/usr/bin/env node
-import { createPackage } from './core/index.js'
+import { createPackage } from './core'
 
 createPackage()
