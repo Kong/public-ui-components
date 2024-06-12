@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.22.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.22.6...@kong-ui-public/dashboard-renderer@0.22.7) (2024-06-12)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.22.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.22.5...@kong-ui-public/dashboard-renderer@0.22.6) (2024-06-11)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.22.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.22.4...@kong-ui-public/dashboard-renderer@0.22.5) (2024-06-10)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 15 [KHCP-12191] ([#1431](https://github.com/Kong/public-ui-components/issues/1431)) ([473e8b0](https://github.com/Kong/public-ui-components/commit/473e8b097f854feb37871432f5fd3c1bccffde16))
+
+
+
+
+
+## [0.22.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.22.3...@kong-ui-public/dashboard-renderer@0.22.4) (2024-06-10)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.22.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.22.2...@kong-ui-public/dashboard-renderer@0.22.3) (2024-06-10)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.22.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.22.1...@kong-ui-public/dashboard-renderer@0.22.2) (2024-06-07)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
 ## [0.22.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.22.0...@kong-ui-public/dashboard-renderer@0.22.1) (2024-06-07)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

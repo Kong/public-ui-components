@@ -76,7 +76,7 @@
           :data-testid="row.name"
         >
           <KDropdown
-            :kpop-attributes="{ placement: 'bottomEnd' }"
+            :kpop-attributes="{ placement: 'bottom-end' }"
             :width="dropdownMenuWidth"
           >
             <KButton

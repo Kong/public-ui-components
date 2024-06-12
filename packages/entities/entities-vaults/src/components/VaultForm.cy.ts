@@ -123,7 +123,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-auth_method').should('be.visible')
       cy.getTestId('vault-form-config-hcv-token').should('be.visible')
       cy.getTestId('vault-form-config-hcv-auth_method').click({ force: true })
-      cy.get('[data-testid="select-item-kubernetes"] button').click()
+      cy.get('[data-testid="select-item-kubernetes"] button').click({ force: true })
       cy.getTestId('vault-form-config-hcv-token').should('not.exist')
       cy.getTestId('vault-form-config-hcv-kube_role').should('be.visible')
       cy.getTestId('vault-form-config-hcv-kube_api_token_file').should('be.visible')
@@ -181,7 +181,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-auth_method').should('be.visible')
       cy.getTestId('vault-form-config-hcv-token').should('be.visible')
       cy.getTestId('vault-form-config-hcv-auth_method').click({ force: true })
-      cy.get('[data-testid="select-item-kubernetes"] button').click()
+      cy.get('[data-testid="select-item-kubernetes"] button').click({ force: true })
       cy.getTestId('vault-form-config-hcv-token').should('not.exist')
       cy.getTestId('vault-form-config-hcv-kube_role').should('be.visible')
       cy.getTestId('vault-form-config-hcv-kube_api_token_file').should('be.visible')
@@ -216,7 +216,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('form-submit').should('be.disabled')
       cy.getTestId('vault-form-config-aws-region').click({ force: true })
-      cy.get('.select-item:eq(0) button').click()
+      cy.get('.select-item:eq(0) button').click({ force: true })
       cy.getTestId('form-submit').should('be.enabled')
 
       // form fields - gcp
@@ -231,7 +231,7 @@ describe('<VaultForm />', () => {
       // form fields - hcv
       cy.getTestId('vault-form-provider-hcv').click({ force: true })
       cy.getTestId('vault-form-config-hcv-protocol').click({ force: true })
-      cy.get('[data-testid="select-item-http"] button').click()
+      cy.get('[data-testid="select-item-http"] button').click({ force: true })
       cy.getTestId('vault-form-config-hcv-host').type('localhost')
       cy.getTestId('vault-form-config-hcv-mount').type('mount')
       cy.getTestId('vault-form-config-hcv-kv').click({ force: true })
@@ -503,7 +503,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-auth_method').should('be.visible')
       cy.getTestId('vault-form-config-hcv-token').should('be.visible')
       cy.getTestId('vault-form-config-hcv-auth_method').click({ force: true })
-      cy.get('[data-testid="select-item-kubernetes"] button').click()
+      cy.get('[data-testid="select-item-kubernetes"] button').click({ force: true })
       cy.getTestId('vault-form-config-hcv-token').should('not.exist')
       cy.getTestId('vault-form-config-hcv-kube_role').should('be.visible')
       cy.getTestId('vault-form-config-hcv-kube_api_token_file').should('be.visible')
@@ -562,7 +562,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-auth_method').should('be.visible')
       cy.getTestId('vault-form-config-hcv-token').should('be.visible')
       cy.getTestId('vault-form-config-hcv-auth_method').click({ force: true })
-      cy.get('[data-testid="select-item-kubernetes"] button').click()
+      cy.get('[data-testid="select-item-kubernetes"] button').click({ force: true })
       cy.getTestId('vault-form-config-hcv-token').should('not.exist')
       cy.getTestId('vault-form-config-hcv-kube_role').should('be.visible')
       cy.getTestId('vault-form-config-hcv-kube_api_token_file').should('be.visible')
@@ -604,7 +604,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-resurrect-ttl-input').type('789')
 
       cy.getTestId('vault-form-config-aws-region').click({ force: true })
-      cy.get('.select-item:eq(0) button').click()
+      cy.get('.select-item:eq(0) button').click({ force: true })
 
       cy.getTestId('form-submit').should('be.enabled')
 
@@ -632,7 +632,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-resurrect-ttl-input').type('789')
 
       cy.getTestId('vault-form-config-hcv-protocol').click({ force: true })
-      cy.get('[data-testid="select-item-http"] button').click()
+      cy.get('[data-testid="select-item-http"] button').click({ force: true })
       cy.getTestId('vault-form-config-hcv-host').type('localhost')
       cy.getTestId('vault-form-config-hcv-mount').type('mount')
       cy.getTestId('vault-form-config-hcv-kv').click({ force: true })

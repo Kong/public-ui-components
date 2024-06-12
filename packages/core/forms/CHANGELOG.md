@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.4.5...@kong-ui-public/forms@3.4.6) (2024-06-12)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [3.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.4.4...@kong-ui-public/forms@3.4.5) (2024-06-10)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 15 [KHCP-12191] ([#1431](https://github.com/Kong/public-ui-components/issues/1431)) ([473e8b0](https://github.com/Kong/public-ui-components/commit/473e8b097f854feb37871432f5fd3c1bccffde16))
+
+
+
+
+
+## [3.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.4.3...@kong-ui-public/forms@3.4.4) (2024-06-10)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [3.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.4.2...@kong-ui-public/forms@3.4.3) (2024-06-10)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1440](https://github.com/Kong/public-ui-components/issues/1440)) ([d8da825](https://github.com/Kong/public-ui-components/commit/d8da8253f77b94cb015120667ce5606abd21050e))
+
+
+
+
+
+## [3.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.4.1...@kong-ui-public/forms@3.4.2) (2024-06-07)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [3.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.4.0...@kong-ui-public/forms@3.4.1) (2024-06-07)
 
 
