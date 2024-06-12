@@ -121,7 +121,12 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
 
   const { response: raw, error: metricError, isValidating: isMetricDataValidating } = composables.useRequest<ExploreResultV4>(
     () => cacheKey.value,
-    () => opts.queryFn(query.value, opts.abortController ?? new AbortController()),
+    () => opts.queryFn({
+      // TODO: Use a type guard to validate that if the datasource is basic,
+      // the query is a valid basic explore query.
+      datasource: opts.datasource.value as 'advanced',
+      query: query.value,
+    }, opts.abortController ?? new AbortController()),
     {
       refreshInterval: opts.refreshInterval,
       revalidateOnFocus: false,

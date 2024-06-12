@@ -47,6 +47,7 @@ const overrideTimeframe: Ref<Timeframe> = computed(() => {
 })
 
 const options = computed<ProviderProps>(() => ({
+  datasource: props.query?.datasource,
   overrideTimeframe: overrideTimeframe.value,
   tz: props.context.tz,
   additionalFilter: props.context.filters,
