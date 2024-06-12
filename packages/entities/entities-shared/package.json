@@ -70,6 +70,7 @@
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
     "@kong/icons": "^1.13.0",
-    "compare-versions": "^6.1.0"
+    "compare-versions": "^6.1.0",
+    "swrv": "^1.0.4"
   }
 }
