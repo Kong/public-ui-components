@@ -108,9 +108,10 @@ const goToCountry = (countryCode: string) => {
 onMounted(() => {
   map.value = new Map({
     container: 'mapContainer',
-    style: 'https://demotiles.maplibre.org/style.json',
+    // style: 'https://demotiles.maplibre.org/style.json',
     // style: 'https://api.maptiler.com/maps/streets/style.json?key=cBeCDKkznq5O0aZc1ykX',
     // style: 'https://raw.githubusercontent.com/go2garret/maps/main/src/assets/json/openStreetMap.json',
+    style: { version: 8, sources: {}, layers: [] },
     center: mapOptions.value.center as LngLatLike,
     zoom: mapOptions.value.zoom,
   })
