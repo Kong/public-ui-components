@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.3.7...@kong-ui-public/entities-gateway-services@3.4.0) (2024-06-13)
+
+
+### Features
+
+* **gateway-service-form:** expose initForm ([#1451](https://github.com/Kong/public-ui-components/issues/1451)) ([7f91a94](https://github.com/Kong/public-ui-components/commit/7f91a94afb9acc8b38924e4d43e9ee60d342cf50))
+
+
+
+
+
 ## [3.3.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.3.6...@kong-ui-public/entities-gateway-services@3.3.7) (2024-06-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services
