@@ -1,12 +1,12 @@
 import type { FromSchema, JSONSchema } from 'json-schema-to-ts'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
-import type { ExploreFilter, ExploreQuery, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type { ExploreFilter, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 
 export interface DashboardRendererContext {
   filters: ExploreFilter[]
   timeSpec?: TimeRangeV4
-  tz?: string,
+  tz?: string
   refreshInterval?: number
 }
 
@@ -286,6 +286,15 @@ export const exploreV4QuerySchema = {
   type: 'object',
   description: 'A query to launch at the API',
   properties: {
+    datasource: {
+      type: 'string',
+      enum: [
+        'advanced',
+
+        // TODO: remove once basic is its own schema.
+        'basic',
+      ],
+    },
     metrics: {
       type: 'array',
       description: 'List of aggregated metrics to collect across the requested time span.',
@@ -361,16 +370,29 @@ export const exploreV4QuerySchema = {
         time_range: '1h',
       },
     },
+    limit: {
+      type: 'number',
+    },
     meta: {
       type: 'object',
     },
   },
+  required: ['datasource'],
+  additionalProperties: false,
 } as const satisfies JSONSchema
 
+export const validDashboardQuery = {
+  // TODO: Build out basic as its own schema.
+  oneOf: [exploreV4QuerySchema],
+} as const satisfies JSONSchema
+
+export type ValidDashboardQuery = FromSchema<typeof validDashboardQuery>
+
+// Note: `datasource` may need to end up somewhere else for sane type definitions?
 export const tileDefinitionSchema = {
   type: 'object',
   properties: {
-    query: exploreV4QuerySchema,
+    query: validDashboardQuery,
     chart: {
       oneOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema, metricCardSchema, topNTableSchema, slottableSchema],
     },
@@ -468,7 +490,7 @@ export const dashboardConfigSchema = {
 export type DashboardConfig = FromSchema<typeof dashboardConfigSchema>
 
 export interface RendererProps<T> {
-  query: ExploreQuery
+  query: ValidDashboardQuery
   context: DashboardRendererContextInternal
   queryReady: boolean
   chartOptions: T

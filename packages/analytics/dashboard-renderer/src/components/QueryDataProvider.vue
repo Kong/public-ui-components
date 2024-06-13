@@ -34,13 +34,18 @@ import { computed, inject, onUnmounted, ref } from 'vue'
 import useSWRV from 'swrv'
 import { useSwrvState } from '@kong-ui-public/core'
 import composables from '../composables'
-import type { AnalyticsBridge, ExploreFilter, ExploreQuery } from '@kong-ui-public/analytics-utilities'
+import type {
+  AnalyticsBridge,
+  DatasourceAwareQuery,
+  ExploreFilter,
+  ExploreQuery,
+} from '@kong-ui-public/analytics-utilities'
 import { INJECT_QUERY_PROVIDER } from '../constants'
-import type { DashboardRendererContextInternal } from '../types'
+import type { DashboardRendererContextInternal, ValidDashboardQuery } from '../types'
 
 const props = defineProps<{
   context: DashboardRendererContextInternal
-  query: ExploreQuery
+  query: ValidDashboardQuery
   queryReady: boolean
 }>()
 
@@ -76,13 +81,31 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
 
     mergedFilters.push(...props.context.filters)
 
-    const mergedQuery: ExploreQuery = {
-      ...props.query,
-      time_range: {
-        ...props.context.timeSpec,
-        tz: props.context.tz,
+    let {
+      datasource,
+      ...rest
+    } = props.query
+
+    if (!datasource && queryBridge) {
+      // TODO(MA-2987): Remove this.
+      const analyticsSKU = queryBridge.evaluateFeatureFlagFn('MA-2527-analytics-sku-config-endpoint', false)
+
+      datasource = analyticsSKU ? 'basic' : 'advanced'
+    }
+
+    // TODO: similar to other places, consider adding a type guard to ensure the query
+    // matches the datasource.  Currently, this block effectively pretends all queries
+    // are advanced in order to make the types work out.
+    const mergedQuery: DatasourceAwareQuery = {
+      datasource: datasource as 'advanced',
+      query: {
+        ...rest as ExploreQuery,
+        time_range: {
+          ...props.context.timeSpec,
+          tz: props.context.tz,
+        },
+        filters: mergedFilters,
       },
-      filters: mergedFilters,
     }
 
     // Note that queryBridge is guaranteed to be set here because SWRV won't execute the query if the key is null.

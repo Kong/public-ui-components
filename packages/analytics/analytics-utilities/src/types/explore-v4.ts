@@ -1,6 +1,10 @@
 // Query types
 import type { MetricUnit, RecordEvent } from './analytics-data'
 
+export const queryDatasources = ['basic', 'advanced'] as const
+
+export type QueryDatasource = typeof queryDatasources[number]
+
 export const exploreFilterTypesV2 = ['in', 'not_in', 'selector'] as const
 
 export type ExploreFilterTypesV2 = typeof exploreFilterTypesV2[number]
@@ -18,6 +22,8 @@ export const queryableBasicExploreDimensions = [
   'time',
 ] as const
 
+export type QueryableBasicExploreDimensions = typeof queryableBasicExploreDimensions[number]
+
 export const queryableExploreDimensions = [
   ...queryableBasicExploreDimensions,
   'application',
@@ -26,10 +32,14 @@ export const queryableExploreDimensions = [
 
 export type QueryableExploreDimensions = typeof queryableExploreDimensions[number]
 
-export interface ExploreFilter {
+export interface BasicExploreFilter {
   type: ExploreFilterTypesV2
   dimension: QueryableExploreDimensions
   values: (string | number | null)[]
+}
+
+export interface ExploreFilter extends Omit<BasicExploreFilter, 'dimension'> {
+  dimension: QueryableExploreDimensions
 }
 
 export const basicExploreAggregations = [
@@ -38,6 +48,8 @@ export const basicExploreAggregations = [
   'request_per_minute',
   'response_latency_average',
 ] as const
+
+export type BasicExploreAggregations = typeof basicExploreAggregations[number]
 
 export const exploreAggregations = [
   ...basicExploreAggregations,
@@ -114,10 +126,10 @@ export const granularityValues = [
 
 export type GranularityValues = typeof granularityValues[number]
 
-export interface ExploreQuery {
-  metrics?: ExploreAggregations[]
-  dimensions?: QueryableExploreDimensions[]
-  filters?: ExploreFilter[]
+export interface BasicExploreQuery {
+  metrics?: BasicExploreAggregations[]
+  dimensions?: QueryableBasicExploreDimensions[]
+  filters?: BasicExploreFilter[]
   granularity?: GranularityValues
   time_range?: TimeRangeV4
   limit?: number
@@ -125,6 +137,12 @@ export interface ExploreQuery {
   meta?: {
     query_id: string
   }
+}
+
+export interface ExploreQuery extends Omit<BasicExploreQuery, 'metrics' | 'dimensions' | 'filters'> {
+  metrics?: ExploreAggregations[]
+  dimensions?: QueryableExploreDimensions[]
+  filters?: ExploreFilter[]
 }
 
 // Result types
