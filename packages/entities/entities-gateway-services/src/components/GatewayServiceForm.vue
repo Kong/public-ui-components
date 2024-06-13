@@ -827,6 +827,7 @@ defineExpose({
   getPayload,
   saveFormData,
   canSubmit,
+  initForm,
 })
 </script>
 
