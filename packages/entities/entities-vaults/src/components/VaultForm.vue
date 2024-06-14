@@ -412,7 +412,7 @@
                 type="text"
               />
               <KCheckbox
-                v-model="configFields[VaultProviders.HCV].approle_response_wrapping"
+                v-model="configFields[VaultProviders.HCV].approle_response_wrapping as boolean"
                 data-testid="vault-form-config-hcv-approle_response_wrapping"
                 :label="t('form.config.hcv.fields.approle_response_wrapping.label')"
               />
