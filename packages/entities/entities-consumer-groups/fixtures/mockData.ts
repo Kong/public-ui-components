@@ -74,7 +74,7 @@ export const konnectGroup: Record<string, Record<string, any>> = {
     updated_at: 1682691637,
   },
 }
-export const CreateConsumerGroupKMResponse: Record<string, number| string> = {
+export const CreateConsumerGroupKMResponse: Record<string, number | string> = {
   created_at: 1682620687,
   id: 'c0b7eac5-6b6d-48ad-bd0d-3253036cfebb',
   name: 'Test_999',

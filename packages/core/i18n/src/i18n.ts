@@ -26,7 +26,7 @@ const datetimeFormat: Intl.DateTimeFormatOptions = {
  *
 */
 export const createI18n = <MessageSource extends Record<string, any>>
-(locale: SupportedLocales, messages: MessageSource, config: boolean|IntlConfigCore = false): IntlShapeEx<MessageSource> => {
+(locale: SupportedLocales, messages: MessageSource, config: boolean | IntlConfigCore = false): IntlShapeEx<MessageSource> => {
 
   const booleanConfig = typeof (config) === 'boolean'
   const intlOriginal = createIntl(

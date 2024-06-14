@@ -17,7 +17,7 @@ import { ChangeLogLevelModal, LogLevel, type DataPlaneNodeCommon } from '../../s
 
 const visible = ref<boolean>(false)
 
-const instanceList = ref<(Pick<DataPlaneNodeCommon, 'id' | 'hostname'>& { hasDLLCapability?: boolean })[]>([
+const instanceList = ref<(Pick<DataPlaneNodeCommon, 'id' | 'hostname'> & { hasDLLCapability?: boolean })[]>([
   { id: '1', hostname: 'localhost-1' },
   { id: '2', hostname: 'localhost-2' },
   { id: '3', hostname: 'localhost-3' },
