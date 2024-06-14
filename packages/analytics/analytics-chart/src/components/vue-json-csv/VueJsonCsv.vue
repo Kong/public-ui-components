@@ -82,7 +82,7 @@ const props = defineProps({
 // unique identifier
 const idName = computed(() => `export_${new Date().getTime()}`)
 
-const exportableData: ComputedRef<CsvData|null> = computed(() => {
+const exportableData: ComputedRef<CsvData | null> = computed(() => {
   const filteredData: CsvData = cleaningData()
 
   return filteredData.length ? filteredData : null
