@@ -71,4 +71,10 @@ export const routes: Array<RouteRecordRaw & { label?: string }> = [
     label: 'SandboxPermissionsControl',
     component: () => import('./pages/SandboxPermissionsControlPage.vue'),
   },
+  {
+    path: '/entity-tooltip',
+    name: 'entity-tooltip',
+    label: 'EntityToolip',
+    component: () => import('./pages/EntityTooltipPage.vue'),
+  },
 ]

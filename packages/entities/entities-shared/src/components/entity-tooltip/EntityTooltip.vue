@@ -12,13 +12,15 @@
       v-if="tooltipData?.items"
       #content
     >
-      <ConfigCardItem
-        v-for="item in tooltipData.items"
-        :key="item.key"
-        :item="item"
-        slim
-        truncated
-      />
+      <div class="tooltip-content">
+        <ConfigCardItem
+          v-for="item in tooltipData.items"
+          :key="item.key"
+          :item="item"
+          slim
+          truncated
+        />
+      </div>
     </template>
     <template #footer>
       <div class="footer-container">
@@ -123,6 +125,10 @@ const { data: tooltipData } = useSWRV<TooltipData>(
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
   }
+}
+
+.tooltip-content {
+  margin: $kui-space-40;
 }
 
 .footer-container {
