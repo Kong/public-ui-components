@@ -169,6 +169,10 @@ onMounted(() => {
       popup.remove()
     })
 
+    if (props.fitToCountry) {
+      goToCountry(props.fitToCountry)
+    }
+
   })
 })
 
@@ -183,10 +187,6 @@ watch(() => props.countryMetrics, () => {
       source: 'countries',
       paint: layerPaint.value,
     })
-
-    if (props.fitToCountry) {
-      goToCountry(props.fitToCountry)
-    }
   }
 })
 

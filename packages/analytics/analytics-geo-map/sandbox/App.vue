@@ -24,7 +24,7 @@ import { AnalyticsGeoMap } from '../src'
 import countryGeoJson from './countries.geo.json'
 import type { FeatureCollection } from 'geojson'
 
-const fitToCountry = ref('')
+const fitToCountry = ref()
 const selectedCountries = ref<string[]>([])
 
 const items = ref([
