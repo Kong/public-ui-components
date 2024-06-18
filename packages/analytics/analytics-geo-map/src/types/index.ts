@@ -1,6 +1,5 @@
-// Export all types and interfaces from this index.ts
-// The actual types and interfaces should be contained in separate files within this folder.
+import type { FeatureCollection } from 'geojson'
 
-// Example:
-// export * from './component-types'
 export * from './map-options'
+
+export type MapFeatureCollection = FeatureCollection

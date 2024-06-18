@@ -11,7 +11,7 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { Map, Popup } from 'maplibre-gl'
 import type { PropType } from 'vue'
 import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatLike } from 'maplibre-gl'
-import type { LongLat } from '../types'
+import type { LongLat, MapFeatureCollection } from '../types'
 import type { FeatureCollection, Feature, MultiPolygon } from 'geojson'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
@@ -21,7 +21,7 @@ const props = defineProps({
     required: true,
   },
   geoJsonData: {
-    type: Object as PropType<FeatureCollection>,
+    type: Object as PropType<MapFeatureCollection>,
     required: true,
   },
   center: {
@@ -103,8 +103,8 @@ const goToCountry = (countryCode: string) => {
 
   const found = (props.geoJsonData as FeatureCollection).features.find((f: Feature) => f.properties?.ISO_A2 === countryCode)
   if (found) {
-    const coordinates = (found.geometry as MultiPolygon).coordinates
-
+    const coordinates = (found.geometry as MultiPolygon)?.coordinates
+    if (!coordinates) return
     // Flatten the coordinates
     const allCoords = flattenPositions(coordinates)
 
@@ -137,7 +137,7 @@ onMounted(() => {
   map.value.on('load', () => {
     map.value?.addSource('countries', {
       type: 'geojson',
-      data: props.geoJsonData as FeatureCollection,
+      data: props.geoJsonData,
     })
 
     map.value?.addLayer({
