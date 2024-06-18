@@ -3,6 +3,7 @@
     "noQueryBridge": "No query bridge provided.  Unable to render dashboard.",
     "trendRange": {
       "24h": "Last 24-Hour Summary",
+      "7d": "Last 7-Day Summary",
       "30d": "Last 30-Day Summary"
     }
   },

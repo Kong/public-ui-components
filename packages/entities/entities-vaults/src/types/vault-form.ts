@@ -22,7 +22,7 @@ export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>
 }
 
 /** Konnect Vault form config */
-export interface KonnectVaultFormConfig extends Omit<KonnectBaseFormConfig, 'cancelRoute'>, BaseVaultFormConfig {}
+export interface KonnectVaultFormConfig extends Omit<KonnectBaseFormConfig, 'cancelRoute'>, BaseVaultFormConfig { }
 
 /** Kong Manager Vault form config */
 export interface KongManagerVaultFormConfig extends Omit<KongManagerBaseFormConfig, 'cancelRoute'>, BaseVaultFormConfig { }

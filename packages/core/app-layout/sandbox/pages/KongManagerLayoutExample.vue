@@ -347,7 +347,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
   }
 
   // Align the dropdown to the bottom of the navbar
-  :deep(.k-dropdown-popover) {
+  :deep(.dropdown-popover) {
     position: relative;
     top: 16px !important;
   }

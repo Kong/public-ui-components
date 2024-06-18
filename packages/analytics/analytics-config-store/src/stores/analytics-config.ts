@@ -9,6 +9,7 @@ export type ConfigStoreState = null | AnalyticsConfigV2
 
 export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
   const analyticsConfig = ref<ConfigStoreState>(null)
+  const skuFeatureFlag = ref<boolean>(false)
 
   const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 
@@ -30,13 +31,22 @@ export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
       console.warn('Error fetching analytics config')
       console.warn(err)
     })
+
+    skuFeatureFlag.value = queryBridge.evaluateFeatureFlagFn('MA-2527-analytics-sku-config-endpoint', false)
   }
 
   const longRetention = computed<boolean>(() => {
     const retentionMs = analyticsConfig.value?.analytics?.retention_ms
     return !!retentionMs && retentionMs >= THIRTY_DAYS_MS
   })
-  const defaultQueryTimeForOrg = computed<'24h' | '30d'>(() => longRetention.value ? '30d' : '24h')
+
+  const defaultQueryTimeForOrg = computed<'24h' | '7d' | '30d'>(() => {
+    if (skuFeatureFlag.value) {
+      return '7d'
+    }
+
+    return longRetention.value ? '30d' : '24h'
+  })
 
   const loading = computed<boolean>(() => !analyticsConfig.value)
   const analytics = computed<boolean>(() => !!analyticsConfig.value?.analytics)

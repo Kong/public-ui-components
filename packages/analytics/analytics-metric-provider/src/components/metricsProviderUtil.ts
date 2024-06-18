@@ -2,7 +2,7 @@ import type {
   AnalyticsBridge,
   ExploreAggregations,
   ExploreFilter,
-  QueryableExploreDimensions,
+  QueryableExploreDimensions, QueryDatasource,
   Timeframe,
 } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
@@ -26,6 +26,7 @@ interface ProviderData {
 export const METRICS_PROVIDER_KEY = Symbol('METRICS_PROVIDER_KEY') as InjectionKey<ProviderData>
 
 interface FetcherOptions {
+  datasource: Ref<QueryDatasource>
   dimension?: QueryableExploreDimensions
   dimensionFilterValue?: string
   additionalFilter: Ref<ExploreFilter[] | undefined>
@@ -41,6 +42,7 @@ interface FetcherOptions {
 
 export const defaultFetcherDefs = (opts: FetcherOptions) => {
   const {
+    datasource,
     dimension,
     dimensionFilterValue,
     additionalFilter,
@@ -80,6 +82,8 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
   })
 
   const trafficMetricFetcherOptions: MetricFetcherOptions = {
+    datasource,
+
     metrics: ref([
       'request_count',
     ]),
@@ -105,6 +109,8 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
   }
 
   const latencyMetricFetcherOptions: MetricFetcherOptions = {
+    datasource,
+
     metrics: computed<ExploreAggregations[]>(() => [
       averageLatencies.value ? 'response_latency_average' : 'response_latency_p99',
     ]),

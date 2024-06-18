@@ -10,7 +10,7 @@ import {
   type AnalyticsBridge,
   type ExploreFilter,
   queryableExploreDimensions,
-  type QueryableExploreDimensions,
+  type QueryableExploreDimensions, type QueryDatasource,
   type Timeframe,
 } from '@kong-ui-public/analytics-utilities'
 import { TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
@@ -19,6 +19,7 @@ import { INJECT_QUERY_PROVIDER, DEFAULT_REFRESH_INTERVAL } from '../constants'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 
 const props = withDefaults(defineProps<{
+  datasource?: QueryDatasource
   maxTimeframe?: TimeframeKeys,
   overrideTimeframe?: Timeframe,
   tz?: string,
@@ -26,13 +27,14 @@ const props = withDefaults(defineProps<{
   filterValue?: string,
   additionalFilter?: ExploreFilter[],
   queryReady?: boolean,
-  refreshInterval: number,
+  refreshInterval?: number,
   longCardTitles?: boolean,
   containerTitle?: string,
   description?: string,
   percentileLatency?: boolean,
   abortController?: AbortController,
 }>(), {
+  datasource: undefined,
   maxTimeframe: TimeframeKeys.THIRTY_DAY,
   overrideTimeframe: undefined,
   tz: undefined,
@@ -72,7 +74,8 @@ if (!queryBridge) {
 const analyticsConfigStore = useAnalyticsConfigStore()
 
 // Check if the current org has long enough retention to make a sane trend query.
-const hasTrendAccess = toRef(() => analyticsConfigStore.longRetention)
+// If the feature flag is set, trend access is always true.
+const hasTrendAccess = computed<boolean>(() => skuFeatureFlag.value || analyticsConfigStore.longRetention)
 
 // Don't attempt to issue a query until we know what we can query for.
 const queryReady = computed(() => !analyticsConfigStore.loading && props.queryReady)
@@ -85,15 +88,32 @@ const tz = computed(() => {
   return (new Intl.DateTimeFormat()).resolvedOptions().timeZone
 })
 
+const skuFeatureFlag = computed<boolean>(() => {
+  // The feature flag client is guaranteed to be initialized by the time the code gets to this place.
+  return evaluateFeatureFlagFn('MA-2527-analytics-sku-config-endpoint', false)
+})
+
+const resolvedDatasource = computed<QueryDatasource>(() => {
+  if (props.datasource) {
+    return props.datasource
+  }
+
+  return skuFeatureFlag.value ? 'basic' : 'advanced'
+})
+
 // Note: the component implicitly assumes the values it feeds to the composables aren't going to change.
 // If they do need to change, then the `useMetricCardGoldenSignals` composable, and dependencies,
 // needs to be reactive as well.  Ideally, this would be the case; we don't have any guarantee that the
 // tier data has finished loading by the time the component mounts, for example.
 
-const timeframe = computed(() => {
+const timeframe = computed<Timeframe>(() => {
   if (props.overrideTimeframe) {
     // Trust that the host component calculated the timeframe for us.
     return props.overrideTimeframe
+  }
+
+  if (skuFeatureFlag.value) {
+    return TimePeriods.get(TimeframeKeys.SEVEN_DAY)!
   }
 
   const retval = hasTrendAccess.value
@@ -113,14 +133,14 @@ const averageLatencies = computed<boolean>(() => {
     return false
   }
 
-  // The feature flag client is guaranteed to be initialized by the time the code gets to this place.
-  return evaluateFeatureFlagFn('MA-2527-analytics-sku-config-endpoint', false)
+  return skuFeatureFlag.value
 })
 
 const {
   trafficData,
   latencyData,
 } = defaultFetcherDefs({
+  datasource: resolvedDatasource,
   dimension: props.dimension,
   dimensionFilterValue: props.filterValue,
   additionalFilter: toRef(props, 'additionalFilter'),

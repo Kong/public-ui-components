@@ -2,10 +2,11 @@ import { ChartTypes } from '../types'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import { INJECT_QUERY_PROVIDER, CP_ID_TOKEN, ENTITY_ID_TOKEN } from '../constants'
 import type {
+  AdvancedDatasourceQuery,
   AnalyticsBridge,
   AnalyticsConfigV2,
+  DatasourceAwareQuery,
   ExploreFilter,
-  ExploreQuery,
   ExploreResultV4,
   Timeframe,
 } from '@kong-ui-public/analytics-utilities'
@@ -23,6 +24,7 @@ import { createPinia, setActivePinia } from 'pinia'
 interface MockOptions {
   failToResolveConfig?: boolean
   shortRetention?: boolean
+  skuFeatureFlag?: boolean
 }
 
 describe('<DashboardRenderer />', () => {
@@ -32,7 +34,9 @@ describe('<DashboardRenderer />', () => {
   })
 
   const mockQueryProvider = (opts?: MockOptions): AnalyticsBridge => {
-    const queryFn = (query: ExploreQuery): Promise<ExploreResultV4> => {
+    const queryFn = (dsAwareQuery: DatasourceAwareQuery): Promise<ExploreResultV4> => {
+      const { query } = dsAwareQuery as AdvancedDatasourceQuery
+
       // Dimensions to use if query is not provided
       const dimensionMap = { statusCode: ['1XX', '2XX', '3XX', '4XX', '5XX'] }
 
@@ -93,7 +97,14 @@ describe('<DashboardRenderer />', () => {
       return Promise.resolve(config)
     }
 
-    const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = () => true as any
+    // @ts-ignore: TS doesn't infer things correctly.  NoInfer may help.
+    const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = (key) => {
+      if (key === 'MA-2527-analytics-sku-config-endpoint') {
+        return opts?.skuFeatureFlag ?? true
+      }
+
+      return true
+    }
 
     return {
       queryFn: cy.spy(queryFn).as('fetcher'),
@@ -122,7 +133,9 @@ describe('<DashboardRenderer />', () => {
               chart: {
                 type: ChartTypes.GoldenSignals,
               },
-              query: {},
+              query: {
+                datasource: 'basic',
+              },
             },
             layout: {
               position: {
@@ -143,7 +156,9 @@ describe('<DashboardRenderer />', () => {
                 reverseDataset: true,
                 numerator: 0,
               },
-              query: { },
+              query: {
+                datasource: 'basic',
+              },
             },
             layout: {
               size: {
@@ -202,10 +217,10 @@ describe('<DashboardRenderer />', () => {
 
       cy.get('.metricscard-trend-range').eq(0).should('contain.text', 'previous 24 hours')
 
-      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match.hasNested('time_range'))
-      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match.hasNested('query.time_range'))
+      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({ query: {
         time_range: { time_range: '24h' },
-      })).then(() => {
+      } })).then(() => {
         cy.get('@fetcher').then((m) => m.resetHistory()).then(() => {
 
           const sevenDayTimeframe: Timeframe = TimePeriods.get(TimeframeKeys.SEVEN_DAY)!
@@ -224,10 +239,10 @@ describe('<DashboardRenderer />', () => {
 
             cy.get('.metricscard-trend-range').eq(0).should('contain.text', 'previous 7 days')
 
-            cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match.hasNested('time_range'))
-            cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+            cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match.hasNested('query.time_range'))
+            cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({ query: {
               time_range: { time_range: '7d' },
-            }))
+            } }))
           })
         })
       })
@@ -258,17 +273,17 @@ describe('<DashboardRenderer />', () => {
       },
     })
 
-    cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+    cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({ query: {
       time_range: { type: 'absolute' },
-    }))
+    } }))
 
-    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({
+    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({ query: {
       filters: [{
         dimension: 'control_plane',
         type: 'in',
         values: ['default_uuid'],
       }],
-    }))
+    } }))
   })
 
   it('has reactive contextual filters', () => {
@@ -309,12 +324,12 @@ describe('<DashboardRenderer />', () => {
       cy.get('.tile-boundary').should('have.length', 4)
 
       cy.get('@fetcher')
-        .should('always.have.been.calledWithMatch', Cypress.sinon.match({
+        .should('always.have.been.calledWithMatch', Cypress.sinon.match({ query:{
           filters: Cypress.sinon.match.some(Cypress.sinon.match(filter1)),
-        }))
-        .should('have.been.calledWithMatch', Cypress.sinon.match({
+        } }))
+        .should('have.been.calledWithMatch', Cypress.sinon.match({ query: {
           filters: Cypress.sinon.match.some(Cypress.sinon.match({ values: ['default_uuid'] })),
-        }))
+        } }))
         .then(() => {
           cy.get('@fetcher').then((m) => m.resetHistory()).then(() => {
             wrapper.setProps({
@@ -329,11 +344,11 @@ describe('<DashboardRenderer />', () => {
               cy.get('.kong-ui-public-dashboard-renderer').should('be.visible')
               cy.get('.tile-boundary').should('have.length', 4)
 
-              cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+              cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({ query: {
                 filters: Cypress.sinon.match.some(Cypress.sinon.match(filter2)),
-              })).should('have.been.calledWithMatch', Cypress.sinon.match({
+              } })).should('have.been.calledWithMatch', Cypress.sinon.match({ query:{
                 filters: Cypress.sinon.match.some(Cypress.sinon.match({ values: ['default_uuid'] })),
-              }))
+              } }))
             })
           })
         })
@@ -361,7 +376,10 @@ describe('<DashboardRenderer />', () => {
                 type: ChartTypes.TopN,
                 entityLink: `https://test.com/cp/${CP_ID_TOKEN}/entity/${ENTITY_ID_TOKEN}`,
               },
-              query: { dimensions: ['route'] },
+              query: {
+                datasource: 'basic',
+                dimensions: ['route'],
+              },
             },
             layout: {
               position: {
@@ -425,14 +443,17 @@ describe('<DashboardRenderer />', () => {
       props,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ skuFeatureFlag: false }),
         },
       },
     }).then(() => {
       // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
       cy.get('@fetcher').should('have.callCount', 5)
       cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-        time_range: { time_range: '30d' },
+        datasource: 'advanced',
+        query: {
+          time_range: { time_range: '30d' },
+        },
       }))
 
       // Check that it replaces the description token.
@@ -453,18 +474,135 @@ describe('<DashboardRenderer />', () => {
       props,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ shortRetention: true }),
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ shortRetention: true, skuFeatureFlag: false }),
+        },
+      },
+    }).then(() => {
+      // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
+      cy.get('@fetcher').should('have.callCount', 5)
+      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({ query:{
+        time_range: { time_range: '24h' },
+      } }))
+
+      // Check that it replaces the description token.
+      cy.get('.container-description').should('have.text', 'Last 24-Hour Summary')
+    })
+  })
+
+  it('picks 7 days and basic datasource if FF is enabled', () => {
+    const props = {
+      context: {
+        // Use default timeframe for the org: don't provide one here.
+        filters: [],
+      },
+      config: summaryDashboardConfig,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ skuFeatureFlag: true }),
         },
       },
     }).then(() => {
       // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
       cy.get('@fetcher').should('have.callCount', 5)
       cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-        time_range: { time_range: '24h' },
+        datasource: 'basic',
+        query: {
+          time_range: { time_range: '7d' },
+        },
       }))
 
       // Check that it replaces the description token.
-      cy.get('.container-description').should('have.text', 'Last 24-Hour Summary')
+      cy.get('.container-description').should('have.text', 'Last 7-Day Summary')
+    })
+  })
+
+  it('allows overriding the datasource in tiles', () => {
+    const props = {
+      context: {
+        // Use default timeframe for the org: don't provide one here.
+        filters: [
+          // Specify a filter to avoid caching.
+          {
+            dimension: 'api_product',
+            type: 'in',
+            values: ['overriding datasource'],
+          },
+        ],
+      },
+      config: {
+        gridSize: {
+          cols: 6,
+          rows: 2,
+        },
+        tileHeight: 167,
+        tiles: [
+          // 3 x Metric cards
+          {
+            definition: {
+              chart: {
+                type: ChartTypes.GoldenSignals,
+                chartTitle: 'Analytics',
+                description: '{timeframe}',
+              },
+              query: {
+                datasource: 'advanced',
+              },
+            },
+            layout: {
+              position: {
+                col: 0,
+                row: 0,
+              },
+              size: {
+                cols: 6,
+                rows: 1,
+              },
+            },
+          },
+
+          {
+            definition: {
+              chart: {
+                type: ChartTypes.TimeseriesLine,
+              },
+              query: {
+                datasource: 'advanced',
+              },
+            },
+            layout: {
+              position: {
+                col: 0,
+                row: 1,
+              },
+              size: {
+                cols: 6,
+                rows: 1,
+              },
+            },
+          },
+        ],
+      },
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ skuFeatureFlag: true }),
+        },
+      },
+    }).then(() => {
+      cy.get('@fetcher').should('have.callCount', 3)
+      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+        datasource: 'advanced',
+        query: {
+          time_range: { time_range: '7d' },
+        },
+      }))
     })
   })
 })

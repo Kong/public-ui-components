@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.0.0...@kong-ui-public/analytics-utilities@4.1.0) (2024-06-14)
+
+
+### Features
+
+* allow all relative time values for basic ([#1453](https://github.com/Kong/public-ui-components/issues/1453)) ([f245059](https://github.com/Kong/public-ui-components/commit/f245059a3bafcd5754d54ad5b5d405b5d57e5c51))
+
+
+
+
+
+# [4.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@3.5.1...@kong-ui-public/analytics-utilities@4.0.0) (2024-06-13)
+
+
+### Features
+
+* **analytics:** add support for basic datasource [MA-2931, MA-2923] ([#1450](https://github.com/Kong/public-ui-components/issues/1450)) ([6b5e367](https://github.com/Kong/public-ui-components/commit/6b5e367d0bf7f2f4c12117e30280ffcf819bfd68))
+
+
+### BREAKING CHANGES
+
+* **analytics:** change signature of `queryFn` in query bridge
+
+- Change signature of `queryFn`.
+- Update default queried time range to 7 days for everyone behind a feature flag.
+- Stop relying on trend access determination in metric cards.
+- Add `datasource` parameter to MetricsProvider.
+- Add `datasource` property to dashboard query definitions.
+- Determine a default `datasource` based on feature flag.
+
+
+
+
+
 ## [3.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@3.5.0...@kong-ui-public/analytics-utilities@3.5.1) (2024-06-10)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
