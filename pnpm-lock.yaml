@@ -475,8 +475,8 @@ importers:
         specifier: ^1.13.0
         version: 1.13.0(vue@3.3.13)
       '@kong/markdown':
-        specifier: 1.6.1
-        version: 1.6.1(vue@3.3.13)
+        specifier: 1.7.0
+        version: 1.7.0(vue@3.3.13)
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -2532,8 +2532,8 @@ packages:
       - '@vue/composition-api'
     dev: true
 
-  /@kong/markdown@1.6.1(vue@3.3.13):
-    resolution: {integrity: sha512-wA93grDlDWK0imjl3Jrdu66w2a419v5nUovwJjVkyMuEnGVUNtaIeu4tst8DIiB1GPIU9haiBBJufKtH0G3BKw==}
+  /@kong/markdown@1.7.0(vue@3.3.13):
+    resolution: {integrity: sha512-h60A+jHMm619J8oasEd3N1tBmDsJivX2W3D89yBW8QXgKkYjFtIz0b4Pb//QzoQmH91uQZCMGt3ZHrRbrt7OhA==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: '>= 3.3.13 < 4'
@@ -3943,7 +3943,7 @@ packages:
       '@swagger-api/apidom-ns-asyncapi-2': 0.99.2
       '@swagger-api/apidom-ns-openapi-2': 0.99.2
       '@swagger-api/apidom-ns-openapi-3-0': 0.99.2
-      '@swagger-api/apidom-ns-openapi-3-1': 0.99.1
+      '@swagger-api/apidom-ns-openapi-3-1': 0.99.2
       '@swagger-api/apidom-ns-workflows-1': 0.99.2
       '@swagger-api/apidom-parser-adapter-api-design-systems-json': 0.99.2
       '@swagger-api/apidom-parser-adapter-api-design-systems-yaml': 0.99.2
@@ -5068,7 +5068,7 @@ packages:
       '@types/web-bluetooth': 0.0.20
       '@vueuse/metadata': 10.9.0
       '@vueuse/shared': 10.9.0(vue@3.3.13)
-      vue-demi: 0.14.7(vue@3.3.13)
+      vue-demi: 0.14.8(vue@3.3.13)
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -5081,7 +5081,7 @@ packages:
   /@vueuse/shared@10.9.0(vue@3.3.13):
     resolution: {integrity: sha512-Uud2IWncmAfJvRaFYzv5OHDli+FbOzxiVEQdLCKQKLyhz94PIyFC3CHcH7EDMwIn8NPtD06+PNbC/PiO0LGLtw==}
     dependencies:
-      vue-demi: 0.14.7(vue@3.3.13)
+      vue-demi: 0.14.8(vue@3.3.13)
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -7291,6 +7291,7 @@ packages:
     dependencies:
       ms: 2.1.2
       supports-color: 8.1.1
+    dev: true
 
   /debug@4.3.5:
     resolution: {integrity: sha512-pt0bNEmneDIvdL1Xsd9oDQ/wrQRkXDT4AUWlNZNPKvW5x/jyO9VFXkJUP07vQ2upmw5PlaITaPKc31jK13V+jg==}
@@ -7302,7 +7303,6 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
-    dev: true
 
   /decamelize-keys@1.1.1:
     resolution: {integrity: sha512-WiPxgEirIV0/eIOMcnFBA3/IJZAZqKnwAwWyvvdi4lsr1WCN22nhdf/3db3DoZcUjTV2SqfzIwNyp6y2xs3nmg==}
@@ -11034,7 +11034,7 @@ packages:
     resolution: {integrity: sha512-uD66tJj54JLYq0De10AhWycZWGQNUvDI55xPgk2sQM5kn1JYlhbCMTtEeT27+vAhW2FBQxLlOmS3pmA7/2z4aA==}
     dependencies:
       '@types/debug': 4.1.12
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.5
       decode-named-character-reference: 1.0.2
       micromark-core-commonmark: 1.1.0
       micromark-factory-space: 1.1.0
@@ -14312,6 +14312,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       has-flag: 4.0.0
+    dev: true
 
   /supports-hyperlinks@3.0.0:
     resolution: {integrity: sha512-QBDPHyPQDRTy9ku4URNGY5Lah8PAaXs6tAAwp55sL5WCsSW7GIfdf6W5ixfziW+t7wh3GVvHyHHyQ1ESsoRvaA==}
@@ -15477,21 +15478,6 @@ packages:
     resolution: {integrity: sha512-7e12Evdll7JcTIocojgnCgwocX4WzIYStGClBQ+QuWPinZo/vQolv2EMq4a3lg16TKfwWafLimG77bxb56UauA==}
     dev: true
 
-  /vue-demi@0.14.7(vue@3.3.13):
-    resolution: {integrity: sha512-EOG8KXDQNwkJILkx/gPcoL/7vH+hORoBaKgGe+6W7VFMvCYJfmF2dGbvgDroVnI8LU7/kTu8mbjRZGBU1z9NTA==}
-    engines: {node: '>=12'}
-    hasBin: true
-    requiresBuild: true
-    peerDependencies:
-      '@vue/composition-api': ^1.0.0-rc.1
-      vue: ^3.0.0-0 || ^2.6.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
-    dependencies:
-      vue: 3.3.13(typescript@5.3.3)
-    dev: false
-
   /vue-demi@0.14.7(vue@3.4.21):
     resolution: {integrity: sha512-EOG8KXDQNwkJILkx/gPcoL/7vH+hORoBaKgGe+6W7VFMvCYJfmF2dGbvgDroVnI8LU7/kTu8mbjRZGBU1z9NTA==}
     engines: {node: '>=12'}
@@ -15535,7 +15521,6 @@ packages:
         optional: true
     dependencies:
       vue: 3.3.13(typescript@5.3.3)
-    dev: true
 
   /vue-demi@0.14.8(vue@3.4.27):
     resolution: {integrity: sha512-Uuqnk9YE9SsWeReYqK2alDI5YzciATE0r2SkA6iMAtuXvNTMNACJLJEXNXaEy94ECuBe4Sk6RzRU80kjdbIo1Q==}
