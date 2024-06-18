@@ -59,12 +59,6 @@ export interface UseSchemasOptions {
    * @defaultValue false
    */
   credential?: boolean
-
-  /**
-   * Whether to enable the redesigned form for the RLA plugin (KM-136).
-   * @defaultValue false
-   */
-  useRLARedesignedForm?: boolean
 }
 
 /** Sorts non-config fields and place them at the top */
@@ -251,7 +245,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     const pluginName = formModel.name
     const metadata = PLUGIN_METADATA[pluginName]
 
-    if (getSharedFormName(pluginName, { useRLARedesignedForm: options?.useRLARedesignedForm }) || metadata?.useLegacyForm || options?.credential) {
+    if (getSharedFormName(pluginName) || metadata?.useLegacyForm || options?.credential) {
       /**
        * Do not generate grouped schema when:
        * - The plugin has a custom layout
