@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.13.2",
-    "@kong/kongponents": "9.0.0-alpha.175",
+    "@kong/kongponents": "9.0.0-pr.2157.099ef649.0",
     "@modyfi/vite-plugin-yaml": "^1.1.0",
     "@types/lodash.clonedeep": "^4.5.9",
     "@types/uuid": "^9.0.8",
