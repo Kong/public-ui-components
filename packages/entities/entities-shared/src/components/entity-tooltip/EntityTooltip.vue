@@ -128,6 +128,7 @@ const { data: tooltipData } = useSWRV<TooltipData>(
 .footer-container {
   display: flex;
   justify-content: space-between;
+  margin: 0 $kui-space-40 0 $kui-space-40;
   width: 100%;
 }
 </style>
