@@ -99,6 +99,15 @@
             </i18nT>
           </template>
         </KTextArea>
+
+        <CertificateFormSniField
+          v-if="showSnisField && config.sniListRoute"
+          v-model="form.fields.snis"
+          :is-editing="formType === EntityBaseFormType.Edit"
+          :sni-list-route="config.sniListRoute"
+          @add="handleAddSni"
+          @remove="(index: number) => handleRemoveSni(index)"
+        />
       </EntityFormSection>
 
       <EntityFormSection
@@ -134,6 +143,7 @@ import type {
 } from '../types'
 import endpoints from '../certificates-endpoints'
 import composables from '../composables'
+import CertificateFormSniField from './CertificateFormSniField.vue'
 import { useAxios, useErrors, EntityFormSection, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -163,6 +173,12 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  /** If true, the SNI field will be shown */
+  showSnisField: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 
 const router = useRouter()
@@ -180,6 +196,7 @@ const form = reactive<CertificateFormState>({
     key: '',
     certAlt: '',
     keyAlt: '',
+    snis: [''],
     tags: '',
   },
   isReadonly: false,
@@ -191,6 +208,7 @@ const formFieldsOriginal = reactive<CertificateFormFields>({
   key: '',
   certAlt: '',
   keyAlt: '',
+  snis: [''],
   tags: '',
 })
 
@@ -205,6 +223,7 @@ const initForm = (data: Record<string, any>): void => {
   form.fields.key = data?.key || ''
   form.fields.certAlt = data?.cert_alt || ''
   form.fields.keyAlt = data?.key_alt || ''
+  form.fields.snis = data?.snis?.length ? data.snis : ['']
   form.fields.tags = data?.tags?.join(', ') || ''
 
   // Set initial state of `formFieldsOriginal` to these values in order to detect changes
@@ -213,6 +232,14 @@ const initForm = (data: Record<string, any>): void => {
 
 const handleClickCancel = (): void => {
   router.push(props.config.cancelRoute)
+}
+
+const handleAddSni = (): void => {
+  form.fields.snis.push('')
+}
+
+const handleRemoveSni = (index: number): void => {
+  form.fields.snis.splice(index, 1)
 }
 
 /* ---------------
@@ -259,6 +286,7 @@ const requestBody = computed((): Record<string, any> => {
     key: form.fields.key,
     cert_alt: form.fields.certAlt || null,
     key_alt: form.fields.keyAlt || null,
+    snis: form.fields.snis.filter(Boolean),
     tags: form.fields.tags.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
   }
 })
@@ -285,6 +313,7 @@ const saveFormData = async (): Promise<void> => {
     form.fields.key = response?.data?.key || ''
     form.fields.certAlt = response?.data?.cert_alt || ''
     form.fields.keyAlt = response?.data?.key_alt || ''
+    form.fields.snis = response?.data?.snis?.length ? response.data.snis : ['']
     form.fields.tags = response?.data?.tags?.join(', ') || ''
 
     // Set initial state of `formFieldsOriginal` to these values in order to detect changes
