@@ -12,11 +12,7 @@
         <KLabel
           class="rla-form-request-limits-title"
           for="rla-form-request-limits-legend"
-          :info="t('rla.request_limits.help')"
-          :tooltip-attributes="{
-            maxWidth: '300',
-            placement: 'top',
-          }"
+          required
         >
           {{ t('rla.request_limits.title') }}
         </KLabel>
@@ -110,7 +106,7 @@
           v-if="filteredUseCases.length > 0"
           class="rla-form-request-limits-examples"
         >
-          <div>{{ t('rla.try_a_use_case') }}:</div>
+          <div>{{ t('rla.start_with_a_use_case') }}</div>
           <div class="rla-form-request-limits-examples-badges">
             <KTooltip
               v-for="(useCase, i) in filteredUseCases"
@@ -122,7 +118,7 @@
                 class="rla-form-request-limits-examples-badge"
                 @click="() => toggleUseCase(useCase, `${windowType}-${i}`)"
               >
-                {{ t('rla.use_case_index', { index: i + 1 }) }}
+                {{ useCase.label }}
               </KBadge>
 
               <template #content>
@@ -148,6 +144,7 @@
           placement: 'top',
         },
       }"
+      required
       @selected="(item: any) => props.onModelUpdated(item.value, 'config-identifier')"
     >
       <template #label-tooltip>
@@ -232,65 +229,69 @@ import { computed, nextTick, ref } from 'vue'
 import english from '../locales/en.json'
 
 interface UseCase {
+  label: string
   description: string
   config: {
     limit: number
     window_size:number
-    window_type: string
   }
 }
 
-const USE_CASES = [
-  {
-    description: 'A fixed limit of 500 requests per hour resetting sharply on the hour, ensuring no user can exceed this limit.',
-    config: {
-      limit: 500,
-      window_size: 3600,
-      window_type: 'fixed',
+const USE_CASES: Record<string, UseCase[]> = {
+  fixed: [
+    {
+      label: '500 requests every hour',
+      description: 'A fixed limit of 500 requests per hour resetting sharply on the hour, ensuring no user can exceed this limit.',
+      config: {
+        limit: 500,
+        window_size: 3600,
+      },
     },
-  },
-  {
-    description: 'Users are allowed 200 requests per 30 minutes, resetting exactly on the 30 minute mark with no carryover of unused limits.',
-    config: {
-      limit: 200,
-      window_size: 1800,
-      window_type: 'fixed',
+    {
+      label: '200 requests every 30 minutes',
+      description: 'Users are allowed 200 requests per 30 minutes, resetting exactly on the 30 minute mark with no carryover of unused limits.',
+      config: {
+        limit: 200,
+        window_size: 1800,
+      },
     },
-  },
-  {
-    description: 'A strict limit of 5000 requests per day resetting promptly at midnight, preventing any burst traffic or inconsistent user experiences.',
-    config: {
-      limit: 500,
-      window_size: 86400,
-      window_type: 'fixed',
+    {
+      label: '500 requests every day',
+      description: 'A strict limit of 5000 requests per day resetting promptly at midnight, preventing any burst traffic or inconsistent user experiences.',
+      config: {
+        limit: 500,
+        window_size: 86400,
+      },
     },
-  },
-  {
-    description: 'Maximum of 100 requests every rolling hour, continuously adjusting the count over the course of the hour. No hard limit or known reset.',
-    config: {
-      limit: 100,
-      window_size: 3600,
-      window_type: 'sliding',
+  ],
+  sliding: [
+    {
+      label: '100 requests every hour',
+      description: 'Maximum of 100 requests every rolling hour, continuously adjusting the count over the course of the hour. No hard limit or known reset.',
+      config: {
+        limit: 100,
+        window_size: 3600,
+      },
     },
-  },
-  {
-    description: 'Each user can make up to 300 requests in any rolling 30 minute period, with older requests dropping off as new requests are made.',
-    config: {
-      limit: 300,
-      window_size: 1800,
-      window_type: 'sliding',
+    {
+      label: '300 requests every 30 minutes',
+      description: 'Each user can make up to 300 requests in any rolling 30 minute period, with older requests dropping off as new requests are made.',
+      config: {
+        limit: 300,
+        window_size: 1800,
+      },
     },
-  },
-  {
-    description: 'Each user is allowed 500 requests per hour. \nIf the limit is exceeded and the user receives a 429 error, each additional request within the sliding window (hour) \nwill extend the wait time by about 12 minutes, continuously adjusting as new requests are made.',
-    config: {
-      limit: 500,
-      window_size: 3600,
-      window_type: 'sliding',
-      disable_penalty: false,
+    {
+      label: '500 requests every hour',
+      description: 'Each user is allowed 500 requests per hour. \nIf the limit is exceeded and the user receives a 429 error, each additional request within the sliding window (hour) \nwill extend the wait time by about 12 minutes, continuously adjusting as new requests are made.',
+      config: {
+        limit: 500,
+        window_size: 3600,
+        // disable_penalty: false, // not used yet
+      },
     },
-  },
-]
+  ],
+}
 
 /**
  * These are fields that we will take care of out of the VFG
@@ -325,7 +326,7 @@ const props = defineProps<{
 }>()
 
 const scopingSchema = computed(() => {
-  const selectionGroup = props.formSchema?.fields?.find((field: any) => field.model === 'selectionGroup')
+  const selectionGroup = props.formSchema?.fields?.find((field: any) => field.type === 'selectionGroup' && field.model === 'selectionGroup')
   if (!selectionGroup) {
     return undefined
   }
@@ -379,9 +380,14 @@ const advancedSchema = computed(() => {
   }
 })
 
-const filteredUseCases = computed(() =>
-  USE_CASES.filter((example) => props.formModel['config-window_type'] === example.config.window_type),
-)
+const filteredUseCases = computed<UseCase[]>(() => {
+  const windowType = props.formModel['config-window_type']
+  if (Object.prototype.hasOwnProperty.call(USE_CASES, windowType)) {
+    return USE_CASES[windowType]
+  }
+
+  return []
+})
 
 const identifierField = computed(() => props.formSchema?.fields?.find((field: any) => field.model === 'config-identifier'))
 
@@ -454,11 +460,11 @@ const toggleUseCase = (useCase: UseCase, useCaseKey: string) => {
   })
 }
 
-const updateWindowType = (newType: string) => {
+const updateWindowType = (newType: string | number | boolean | object) => {
   if (selectedUseCase.value !== undefined) {
     selectedUseCase.value = undefined
   }
-  props.onModelUpdated(newType, 'config-window_type')
+  props.onModelUpdated(newType.toString(), 'config-window_type')
 }
 
 const updateRequestLimitLimit = (index: number, limit?: number) => {

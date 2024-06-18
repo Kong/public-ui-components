@@ -23,7 +23,7 @@
         >
           <KDropdownMenu
             data-testid="custom-plugin-actions"
-            :kpop-attributes="{ placement: 'bottomEnd' }"
+            :kpop-attributes="{ placement: 'bottom-end' }"
             width="150"
           >
             <template #default>

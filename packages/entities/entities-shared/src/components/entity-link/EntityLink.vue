@@ -35,7 +35,7 @@
       :key="copyUuidTooltipText"
       class="copy-uuid-tooltip"
       max-width="160"
-      placement="bottomEnd"
+      placement="bottom-end"
       :text="copyUuidTooltipText"
     >
       <KClipboardProvider v-slot="{ copyToClipboard }">

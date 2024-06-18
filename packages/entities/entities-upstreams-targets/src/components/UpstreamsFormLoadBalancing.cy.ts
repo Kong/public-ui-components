@@ -235,7 +235,7 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
     })
 
     cy.get('.hash-fallback-select').click()
-    cy.get('.hash-fallback-select .select-items-container [data-testid="select-item-header"]').click()
+    cy.get('.hash-fallback-select .select-items-container [data-testid="select-item-header"]').click({ force: true })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', 'header')
   })

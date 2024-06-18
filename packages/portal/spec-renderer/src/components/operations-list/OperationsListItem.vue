@@ -44,6 +44,7 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import type { OperationListItem } from '../../types'
 import composables from '../../composables'
+import type { BadgeAppearance } from '@kong/kongponents'
 
 const props = defineProps({
   item: {
@@ -72,7 +73,7 @@ const { i18n } = composables.useI18n()
 
 const testId = computed((): string => `spec-operations-list-item-${props.item.method?.toLowerCase()}${props.item.path?.replaceAll('/', '-')}-${props.item.tag || '-'}`)
 
-const methodName = computed((): string => {
+const methodName = computed((): BadgeAppearance => {
   return props.item.method || ''
 })
 </script>

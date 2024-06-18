@@ -1,5 +1,8 @@
 <template>
-  <KCard class="kong-ui-entity-base-form">
+  <component
+    :is="wrapperComponent"
+    class="kong-ui-entity-base-form"
+  >
     <!-- Loading -->
     <KSkeleton
       v-if="isLoading"
@@ -98,7 +101,7 @@
         </template>
       </KTabs>
     </KSlideout>
-  </KCard>
+  </component>
 </template>
 
 <script setup lang="ts">
@@ -181,6 +184,13 @@ const props = defineProps({
   noValidate: {
     type: Boolean,
     default: false,
+  },
+  /**
+   * Wrapper component to use at component's root level.
+   */
+  wrapperComponent: {
+    type: String,
+    default: 'KCard',
   },
 })
 

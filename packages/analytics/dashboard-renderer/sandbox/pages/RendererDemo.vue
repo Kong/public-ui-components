@@ -56,7 +56,9 @@ const dashboardConfig: DashboardConfig = {
           chartTitle: 'Analytics Golden Signals',
           description: '{timeframe}',
         },
-        query: {},
+        query: {
+          datasource: 'basic',
+        },
       },
       layout: {
         position: {
@@ -76,7 +78,10 @@ const dashboardConfig: DashboardConfig = {
           chartTitle: 'Top N chart of mock data',
           description: '{timeframe}',
         },
-        query: { limit: 1 },
+        query: {
+          datasource: 'basic',
+          limit: 1,
+        },
       },
       layout: {
         position: {
@@ -97,7 +102,10 @@ const dashboardConfig: DashboardConfig = {
           chartTitle: 'Top N chart of mock data',
           description: 'Description',
         },
-        query: { limit: 3 },
+        query: {
+          datasource: 'basic',
+          limit: 3,
+        },
       },
       layout: {
         position: {
@@ -118,7 +126,10 @@ const dashboardConfig: DashboardConfig = {
           chartTitle: 'Horizontal bar chart of mock data',
           allowCsvExport: true,
         },
-        query: { dimensions: ['route'] },
+        query: {
+          datasource: 'basic',
+          dimensions: ['route'],
+        },
       },
       layout: {
         position: {
@@ -138,6 +149,7 @@ const dashboardConfig: DashboardConfig = {
           type: ChartTypes.TimeseriesLine,
         },
         query: {
+          datasource: 'basic',
           dimensions: ['time'],
         },
       },
@@ -160,7 +172,9 @@ const dashboardConfig: DashboardConfig = {
           reverseDataset: true,
           numerator: 0,
         },
-        query: {},
+        query: {
+          datasource: 'basic',
+        },
       },
       layout: {
         position: {

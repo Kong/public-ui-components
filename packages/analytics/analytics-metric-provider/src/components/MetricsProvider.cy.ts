@@ -1,10 +1,11 @@
 import MetricsTestHarness from './MetricsTestHarness.vue'
 import { ref } from 'vue'
 import type {
+  AdvancedDatasourceQuery,
   AnalyticsBridge,
   AnalyticsConfigV2,
+  DatasourceAwareQuery,
   ExploreFilter,
-  ExploreQuery,
   ExploreResultV4,
 } from '@kong-ui-public/analytics-utilities'
 import type { MockOptions } from '../mockExploreResponse'
@@ -14,7 +15,7 @@ import { createPinia, setActivePinia } from 'pinia'
 
 interface MakeQueryBridgeOptions extends MockOptions {
   hasTrendAccess?: boolean
-  queryAverages?: boolean
+  skuFeatureFlag?: boolean
 }
 
 describe('<AnalyticsMetricProvider />', () => {
@@ -29,7 +30,9 @@ describe('<AnalyticsMetricProvider />', () => {
   })
 
   const makeQueryBridge = (opts?: MakeQueryBridgeOptions): AnalyticsBridge => {
-    const queryFn = (query: ExploreQuery): Promise<ExploreResultV4> => {
+    const queryFn = (dsAwareQuery: DatasourceAwareQuery): Promise<ExploreResultV4> => {
+      const { query } = dsAwareQuery as AdvancedDatasourceQuery
+
       if (opts?.injectErrors) {
 
         if (
@@ -71,7 +74,7 @@ describe('<AnalyticsMetricProvider />', () => {
       },
     })
 
-    const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = () => (opts?.queryAverages ?? true) as any
+    const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = () => (opts?.skuFeatureFlag ?? true) as any
 
     return {
       queryFn: cy.spy(queryFn).as('fetcher'),
@@ -112,10 +115,15 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('@fetcher').should('have.been.calledTwice')
 
     // Ensure the filter is undefined.
-    cy.get('@fetcher').should('always.have.not.been.calledWithMatch', Cypress.sinon.match.has('filters'))
+    cy.get('@fetcher').should('always.have.not.been.calledWithMatch', Cypress.sinon.match.hasNested('query.filters'))
 
     // Ensure timezone is included.
-    cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match.hasNested('time_range.tz'))
+    cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match.hasNested('query.time_range.tz'))
+
+    // Datasource should be basic.
+    cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+      datasource: 'basic',
+    }))
 
     cy.get('.metricscard').should('exist')
 
@@ -161,7 +169,7 @@ describe('<AnalyticsMetricProvider />', () => {
   })
 
   it('renders percentiles if the feature flag is not set', () => {
-    const queryBridge = makeQueryBridge({ queryAverages: false })
+    const queryBridge = makeQueryBridge({ skuFeatureFlag: false })
 
     cy.mount(MetricsTestHarness, {
       props: {
@@ -178,8 +186,11 @@ describe('<AnalyticsMetricProvider />', () => {
 
     cy.get('@fetcher').should('have.been.calledTwice')
 
-    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({ metrics: ['response_latency_p99'] }))
-    cy.get('@fetcher').should('always.have.not.been.calledWithMatch', Cypress.sinon.match({ metrics: ['response_latency_average'] }))
+    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({
+      datasource: 'advanced',
+      query: { metrics: ['response_latency_p99'] },
+    }))
+    cy.get('@fetcher').should('always.have.not.been.calledWithMatch', Cypress.sinon.match({ query: { metrics: ['response_latency_average'] } }))
 
     cy.get('.metricscard').should('exist')
     cy.get('.metricscard-title').eq(0).should('have.text', 'Number of Requests')
@@ -206,8 +217,8 @@ describe('<AnalyticsMetricProvider />', () => {
 
     cy.get('@fetcher').should('have.been.calledTwice')
 
-    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({ metrics: ['response_latency_p99'] }))
-    cy.get('@fetcher').should('always.have.not.been.calledWithMatch', Cypress.sinon.match({ metrics: ['response_latency_average'] }))
+    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({ query: { metrics: ['response_latency_p99'] } }))
+    cy.get('@fetcher').should('always.have.not.been.calledWithMatch', Cypress.sinon.match({ query: { metrics: ['response_latency_average'] } }))
 
     cy.get('.metricscard').should('exist')
     cy.get('.metricscard-title').eq(0).should('have.text', 'Number of Requests')
@@ -236,7 +247,7 @@ describe('<AnalyticsMetricProvider />', () => {
   })
 
   it('displays "30 days" if trend access allows', () => {
-    const queryBridge = makeQueryBridge()
+    const queryBridge = makeQueryBridge({ skuFeatureFlag: false })
 
     cy.mount(MetricsTestHarness, {
       props: {
@@ -255,7 +266,7 @@ describe('<AnalyticsMetricProvider />', () => {
   })
 
   it('displays "24 hours" if trend access allows', () => {
-    const queryBridge = makeQueryBridge({ hasTrendAccess: false })
+    const queryBridge = makeQueryBridge({ hasTrendAccess: false, skuFeatureFlag: false })
 
     cy.mount(MetricsTestHarness, {
       props: {
@@ -273,8 +284,27 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('.metricscard').eq(0).find('.metricscard-trend-range').should('contain', 'vs previous 24 hours')
   })
 
+  it('displays "7 days" if the feature flag is set', () => {
+    const queryBridge = makeQueryBridge({ hasTrendAccess: false, skuFeatureFlag: true })
+
+    cy.mount(MetricsTestHarness, {
+      props: {
+        render: 'global',
+        description: 'Lorem ipsum golden signal details',
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: queryBridge,
+        },
+      },
+    })
+
+    cy.get('.metricscard').should('exist')
+    cy.get('.metricscard').eq(0).find('.metricscard-trend-range').should('contain', 'vs previous 7 days')
+  })
+
   it('handles no trend', () => {
-    const queryBridge = makeQueryBridge({ hasTrendAccess: false })
+    const queryBridge = makeQueryBridge({ hasTrendAccess: false, skuFeatureFlag: false })
 
     cy.mount(MetricsTestHarness, {
       props: {
@@ -351,11 +381,13 @@ describe('<AnalyticsMetricProvider />', () => {
 
     cy.get('@fetcher').should('have.been.calledTwice')
     cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-      filters: [{
-        dimension: 'application',
-        type: 'in',
-        values: ['app1'],
-      }],
+      query: {
+        filters: [{
+          dimension: 'application',
+          type: 'in',
+          values: ['app1'],
+        }],
+      },
     }))
 
     cy.get('.metricscard').should('exist')
@@ -374,12 +406,13 @@ describe('<AnalyticsMetricProvider />', () => {
       }]
 
       cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({
-        filters: [{
-          dimension: 'api_product',
-          type: 'in',
-          values: ['product1'],
-        }],
-      }))
+        query: {
+          filters: [{
+            dimension: 'api_product',
+            type: 'in',
+            values: ['product1'],
+          }],
+        } }))
     })
   })
 
@@ -398,13 +431,14 @@ describe('<AnalyticsMetricProvider />', () => {
     })
 
     cy.get('@fetcher').should('have.been.calledTwice')
-    cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-      filters: [{
-        dimension: 'route',
-        type: 'in',
-        values: ['blah'],
-      }],
-    }))
+    cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({ query:
+        {
+          filters: [{
+            dimension: 'route',
+            type: 'in',
+            values: ['blah'],
+          }],
+        } }))
 
     cy.get('.metricscard').should('exist')
 
@@ -420,7 +454,11 @@ describe('<AnalyticsMetricProvider />', () => {
   })
 
   it('displays single-entity metrics with no trend', () => {
-    const queryBridge = makeQueryBridge({ dimensionNames: ['blah'], hasTrendAccess: false })
+    const queryBridge = makeQueryBridge({
+      dimensionNames: ['blah'],
+      hasTrendAccess: false,
+      skuFeatureFlag: false,
+    })
 
     cy.mount(MetricsTestHarness, {
       props: {

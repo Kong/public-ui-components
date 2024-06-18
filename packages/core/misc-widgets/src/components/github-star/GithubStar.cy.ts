@@ -31,7 +31,7 @@ describe('<GithubStar />', () => {
       },
     })
     cy.get('.github-button').trigger('mouseenter')
-    cy.get('.k-popover').should('be.visible')
-    cy.get('.k-popover').contains('Star this repository on Github')
+    cy.get('.popover').should('be.visible')
+    cy.get('.popover').contains('Star this repository on Github')
   })
 })

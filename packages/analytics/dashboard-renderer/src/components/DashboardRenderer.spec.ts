@@ -18,7 +18,9 @@ describe('Dashboard schemas', () => {
             chart: {
               type: 'horizontal_bar',
             },
-            query: {},
+            query: {
+              datasource: 'basic',
+            },
           },
           layout: {
             position: {
@@ -52,7 +54,9 @@ describe('Dashboard schemas', () => {
               reverseDataset: true,
               numerator: 0,
             },
-            query: {},
+            query: {
+              datasource: 'basic',
+            },
           },
           layout: {
             position: {

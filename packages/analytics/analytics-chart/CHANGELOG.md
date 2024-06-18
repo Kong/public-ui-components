@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.1.7...@kong-ui-public/analytics-chart@4.1.8) (2024-06-14)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [4.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.1.6...@kong-ui-public/analytics-chart@4.1.7) (2024-06-14)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [4.1.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.1.5...@kong-ui-public/analytics-chart@4.1.6) (2024-06-13)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [4.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.1.4...@kong-ui-public/analytics-chart@4.1.5) (2024-06-12)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [4.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.1.3...@kong-ui-public/analytics-chart@4.1.4) (2024-06-10)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 15 [KHCP-12191] ([#1431](https://github.com/Kong/public-ui-components/issues/1431)) ([473e8b0](https://github.com/Kong/public-ui-components/commit/473e8b097f854feb37871432f5fd3c1bccffde16))
+
+
+
+
+
+## [4.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.1.2...@kong-ui-public/analytics-chart@4.1.3) (2024-06-10)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [4.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.1.1...@kong-ui-public/analytics-chart@4.1.2) (2024-06-10)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1440](https://github.com/Kong/public-ui-components/issues/1440)) ([d8da825](https://github.com/Kong/public-ui-components/commit/d8da8253f77b94cb015120667ce5606abd21050e))
+
+
+
+
+
+## [4.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.1.0...@kong-ui-public/analytics-chart@4.1.1) (2024-06-07)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 # [4.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.0.19...@kong-ui-public/analytics-chart@4.1.0) (2024-06-06)
 
 

@@ -9,7 +9,7 @@
     >
       <KTooltip
         max-width="300"
-        placement="bottomStart"
+        placement="bottom-start"
         :text="hasTooltip ? tooltipText : ''"
       >
         <slot />
@@ -48,7 +48,7 @@ const isFirst = computed((): boolean => {
   if (cells) {
     return cells[0]?.getAttribute('data-testid') === props.keyName
   } else {
-    return false
+    return true
   }
 })
 

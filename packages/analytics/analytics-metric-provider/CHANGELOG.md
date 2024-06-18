@@ -3,6 +3,91 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.0.1...@kong-ui-public/analytics-metric-provider@8.0.2) (2024-06-14)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [8.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.0.0...@kong-ui-public/analytics-metric-provider@8.0.1) (2024-06-14)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+# [8.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@7.2.5...@kong-ui-public/analytics-metric-provider@8.0.0) (2024-06-13)
+
+
+### Features
+
+* **analytics:** add support for basic datasource [MA-2931, MA-2923] ([#1450](https://github.com/Kong/public-ui-components/issues/1450)) ([6b5e367](https://github.com/Kong/public-ui-components/commit/6b5e367d0bf7f2f4c12117e30280ffcf819bfd68))
+
+
+### BREAKING CHANGES
+
+* **analytics:** change signature of `queryFn` in query bridge
+
+- Change signature of `queryFn`.
+- Update default queried time range to 7 days for everyone behind a feature flag.
+- Stop relying on trend access determination in metric cards.
+- Add `datasource` parameter to MetricsProvider.
+- Add `datasource` property to dashboard query definitions.
+- Determine a default `datasource` based on feature flag.
+
+
+
+
+
+## [7.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@7.2.4...@kong-ui-public/analytics-metric-provider@7.2.5) (2024-06-12)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [7.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@7.2.3...@kong-ui-public/analytics-metric-provider@7.2.4) (2024-06-10)
+
+
+### Bug Fixes
+
+* kongponents alpha phase 15 [KHCP-12191] ([#1431](https://github.com/Kong/public-ui-components/issues/1431)) ([473e8b0](https://github.com/Kong/public-ui-components/commit/473e8b097f854feb37871432f5fd3c1bccffde16))
+
+
+
+
+
+## [7.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@7.2.2...@kong-ui-public/analytics-metric-provider@7.2.3) (2024-06-10)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [7.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@7.2.1...@kong-ui-public/analytics-metric-provider@7.2.2) (2024-06-10)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1440](https://github.com/Kong/public-ui-components/issues/1440)) ([d8da825](https://github.com/Kong/public-ui-components/commit/d8da8253f77b94cb015120667ce5606abd21050e))
+
+
+
+
+
+## [7.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@7.2.0...@kong-ui-public/analytics-metric-provider@7.2.1) (2024-06-07)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
 # [7.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@7.1.12...@kong-ui-public/analytics-metric-provider@7.2.0) (2024-06-06)
 
 

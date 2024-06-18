@@ -28,6 +28,7 @@
       :form-fields="getRequestBody"
       :is-readonly="form.isReadonly"
       no-validate
+      :wrapper-component="noCardWrapper ? 'div' : undefined"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
       @fetch:success="initForm"
@@ -63,6 +64,7 @@
         >
           <div class="plugin-form-actions">
             <KButton
+              v-if="!hideViewConfigAction"
               appearance="tertiary"
               data-testid="form-view-configuration"
               @click="toggle()"
@@ -249,6 +251,22 @@ const props = defineProps({
   actionsTeleportTarget: {
     type: String,
     default: '',
+  },
+
+  /**
+   * Control if the form is wrapped in KCard or not.
+   */
+  noCardWrapper: {
+    type: Boolean,
+    default: false,
+  },
+
+  /**
+   * Control if the View Configuration action button is hidden.
+   */
+  hideViewConfigAction: {
+    type: Boolean,
+    default: false,
   },
 })
 

@@ -6,14 +6,14 @@ import { EntityBaseForm } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'snis-list' }
 
-const baseConfigKonnect:KonnectSniFormConfig = {
+const baseConfigKonnect: KonnectSniFormConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-cats',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
 }
 
-const baseConfigKM:KongManagerSniFormConfig = {
+const baseConfigKM: KongManagerSniFormConfig = {
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
@@ -62,7 +62,7 @@ describe('<SniForm />', () => {
         },
         {
           statusCode: status,
-          body: { },
+          body: {},
         },
       ).as('validateSni')
 
@@ -101,7 +101,7 @@ describe('<SniForm />', () => {
       cy.getTestId('sni-form-certificate-id').should('be.visible')
       // certs load in select
       cy.getTestId('sni-form-certificate-id').click()
-      cy.getTestId('sni-form-certificate-id').parent().parent().parent().find('.select-item').should('have.length', certificates.data.length)
+      cy.getTestId('sni-form-certificate-id').closest('.k-select').find('.select-item').should('have.length', certificates.data.length)
     })
 
     it('should correctly handle button state - create', () => {
@@ -388,7 +388,7 @@ describe('<SniForm />', () => {
         },
         {
           statusCode: status,
-          body: { },
+          body: {},
         },
       ).as('validateSni')
 
@@ -427,7 +427,7 @@ describe('<SniForm />', () => {
       cy.getTestId('sni-form-certificate-id').should('be.visible')
       // certs load in select
       cy.getTestId('sni-form-certificate-id').click()
-      cy.getTestId('sni-form-certificate-id').parent().parent().parent().find('.select-item').should('have.length', certificates.data.length)
+      cy.getTestId('sni-form-certificate-id').closest('.k-select').find('.select-item').should('have.length', certificates.data.length)
     })
 
     it('should correctly handle button state - create', () => {
