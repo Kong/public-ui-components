@@ -1,5 +1,6 @@
 <template>
   <KPop
+    hide-close-icon
     placement="bottom"
     trigger="hover"
     width="300"
@@ -24,19 +25,16 @@
     </template>
     <template #footer>
       <div class="footer-container">
-        <EntityLink
-          allow-copy
-          :entity-link-data="{
-            id: entityConfig.id,
-            label: 'View',
-            deleted: entityDeleted
-          }"
-          :external-link="externalLink"
+        <KExternalLink
+          :href="externalLink"
           new-window
-        />
+        >
+          View
+        </KExternalLink>
         <KExternalLink
           v-if="exploreLink"
           :href="exploreLink"
+          new-window
         >
           Explore
         </KExternalLink>
@@ -47,10 +45,8 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { ref } from 'vue'
 import ConfigCardItem from '../entity-base-config-card/ConfigCardItem.vue'
 import useSWRV from 'swrv'
-import EntityLink from '../entity-link/EntityLink.vue'
 import { ConnectionsIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import type { EntityTooltipConfig, TooltipData } from '../../types'
@@ -70,8 +66,6 @@ const props = defineProps({
     default: null,
   },
 })
-
-const entityDeleted = ref(false)
 
 const { data: tooltipData } = useSWRV<TooltipData>(
   () => `entity-tooltip-${props.entityConfig.id}`,

@@ -21,7 +21,6 @@ export interface TooltipData {
 }
 
 export interface EntityTooltipConfig {
-  title: string
   deleted: boolean
   id: string,
   data: () => Promise<TooltipData>
