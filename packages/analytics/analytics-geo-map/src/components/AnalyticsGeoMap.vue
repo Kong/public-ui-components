@@ -8,17 +8,20 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from 'vue'
-import type { PropType } from 'vue'
 import { Map, Popup } from 'maplibre-gl'
+import type { PropType } from 'vue'
 import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatLike } from 'maplibre-gl'
-import countriesGeoJson from '../countries.geo.json'
-import 'maplibre-gl/dist/maplibre-gl.css'
 import type { LongLat } from '../types'
 import type { FeatureCollection, Feature, MultiPolygon } from 'geojson'
+import 'maplibre-gl/dist/maplibre-gl.css'
 
 const props = defineProps({
   countryMetrics: {
     type: Object as PropType<Record<string, number>>,
+    required: true,
+  },
+  geoJsonData: {
+    type: Object as PropType<FeatureCollection>,
     required: true,
   },
   center: {
@@ -63,41 +66,57 @@ const layerPaint = computed(() => ({
 }))
 
 const getColor = (metric: number) => {
-  if (metric > 80) return '#800026'
-  if (metric > 60) return '#BD0026'
-  if (metric > 40) return '#E31A1C'
-  if (metric > 20) return '#FC4E2A'
-  return '#FD8D3C'
+  if (metric > 80) return '#296378'
+  if (metric > 60) return '#0D8093'
+  if (metric > 40) return '#009FA9'
+  if (metric > 20) return '#00BDB7'
+  return '#0CDCBD'
+}
+
+// Simplified coords may be 2 or 3 layers
+const flattenPositions = (position: any): number[][] => {
+  const flat: (number | number[])[] = position.flat(1)
+
+  if (Array.isArray(flat[0]) && Array.isArray(flat[0][0])) {
+    return flattenPositions(flat)
+  }
+
+  return flat as number[][]
 }
 
 const goToCountry = (countryCode: string) => {
 
   // Overrides for large spanning countries
   if (countryCode === 'RU') {
-    map.value?.flyTo({ center: [93, 62], zoom: 2.5 })
+    map.value?.flyTo({ center: [93, 62], zoom: 2 })
     return
   } else if (countryCode === 'US') {
-    map.value?.flyTo({ center: [-100, 52], zoom: 2.9 })
+    map.value?.flyTo({ center: [-100, 42], zoom: 2.9 })
     return
   } else if (countryCode === 'FR') {
     map.value?.flyTo({ center: [2, 47], zoom: 5 })
     return
   } else if (countryCode === 'NO') {
-    map.value?.flyTo({ center: [10, 65], zoom: 4.5 })
+    map.value?.flyTo({ center: [10, 65], zoom: 3.5 })
     return
   }
 
-  const found = (countriesGeoJson as FeatureCollection).features.find((f: Feature) => f.properties?.ISO_A2 === countryCode)
+  const found = (props.geoJsonData as FeatureCollection).features.find((f: Feature) => f.properties?.ISO_A2 === countryCode)
   if (found) {
     const coordinates = (found.geometry as MultiPolygon).coordinates
-    const allCoords = coordinates?.flat(2)
 
-    const minLat = Math.min(...allCoords.map((c: number[]) => c[1]))
-    const minLong = Math.min(...allCoords.map((c: number[]) => c[0]))
+    // Flatten the coordinates
+    const allCoords = flattenPositions(coordinates)
 
-    const maxLat = Math.max(...allCoords.map((c: number[]) => c[1]))
-    const maxLong = Math.max(...allCoords.map((c: number[]) => c[0]))
+    // Extract lats and longs
+    const lats = allCoords.map((c: number[]) => c[1])
+    const longs = allCoords.map((c: number[]) => c[0])
 
+    // Compute the bounding box
+    const minLat = Math.min(...lats)
+    const maxLat = Math.max(...lats)
+    const minLong = Math.min(...longs)
+    const maxLong = Math.max(...longs)
     map.value?.fitBounds([
       [minLong, minLat],
       [maxLong, maxLat],
@@ -118,7 +137,7 @@ onMounted(() => {
   map.value.on('load', () => {
     map.value?.addSource('countries', {
       type: 'geojson',
-      data: countriesGeoJson as FeatureCollection,
+      data: props.geoJsonData as FeatureCollection,
     })
 
     map.value?.addLayer({

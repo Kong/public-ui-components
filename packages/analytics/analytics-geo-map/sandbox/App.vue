@@ -1,25 +1,28 @@
 <template>
   <div class="sandbox-container">
     <KLabel> Fit to country: </KLabel>
-    <KInput
-      v-model="fitToCountry"
-    />
+    <KInput v-model="fitToCountry" />
     <KMultiselect
       v-model="selectedCountries"
       :items="items"
       label="Pick Something"
     />
-    <AnalyticsGeoMap
-      :country-metrics="countryMetrics"
-      :fit-to-country="fitToCountry"
-      :initial-zoom="1.6"
-    />
+    <div class="map-container">
+      <AnalyticsGeoMap
+        :country-metrics="countryMetrics"
+        :fit-to-country="fitToCountry"
+        :geo-json-data="(countryGeoJson as FeatureCollection)"
+        :initial-zoom="1.6"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { AnalyticsGeoMap } from '../src'
+import countryGeoJson from './countries.geo.json'
+import type { FeatureCollection } from 'geojson'
 
 const fitToCountry = ref('')
 const selectedCountries = ref<string[]>([])
@@ -36,18 +39,6 @@ const items = ref([
   { label: 'FR', value: 'FR' },
 ])
 
-// const countryMetrics = ref<Record<string, number>>({
-//   US: 4,
-//   BR: 20,
-//   RU: 40,
-//   CN: 99,
-//   IN: 69,
-//   ZA: 63,
-//   RO: 50,
-//   DE: 30,
-//   FR: 10,
-// })
-
 const countryMetrics = computed(() => {
   const metrics: Record<string, number> = {}
   selectedCountries.value.forEach((country) => {
@@ -62,5 +53,10 @@ const countryMetrics = computed(() => {
 <style lang="scss" scoped>
   .sandbox-container {
     height: 900px;
+
+    .map-container {
+      height: 500px;
+      width: 700px;
+    }
   }
 </style>
