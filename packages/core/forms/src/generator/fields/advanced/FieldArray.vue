@@ -41,14 +41,20 @@
         :schema="generateSchema(value, schema.items, index)"
         @remove-item="removeElement(index)"
       >
-        <FieldTextArea
+        <KTextArea
           v-if="schema.inputAttributes && schema.inputAttributes.type === 'textarea'"
+          v-bind="schema.inputAttributes"
+          :id="getFieldID(schema)"
+          v-model="value[index]"
           :aria-labelledby="getLabelId(schema)"
-          class="k-input"
-          :form-options="formOptions"
-          :model="item"
-          :schema="generateSchema(value, schema.items, index)"
-          @model-updated="modelUpdated"
+          :class="schema.fieldClasses"
+          :maxlength="schema.max"
+          :minlength="schema.min"
+          :name="schema.inputName"
+          :placeholder="schema.placeholder"
+          :readonly="schema.readonly"
+          :required="schema.required"
+          :rows="schema.rows || 2"
         />
 
         <KInput
@@ -90,6 +96,7 @@
         @click="removeElement(index)"
       >
     </div>
+
     <KButton
       appearance="tertiary"
       :class="schema.newElementButtonLabelClasses"
@@ -104,17 +111,16 @@
 
 <script>
 import abstractField from '../abstractField'
+import FieldInput from '../core/FieldInput.vue'
+import FieldSelect from '../core/fieldSelect.vue'
+import FieldArrayCardContainer from './FieldArrayCardContainer.vue'
 import FieldArrayItem from './FieldArrayItem.vue'
 import FieldArrayMultiItem from './FieldArrayMultiItem.vue'
+import FieldAutoSuggest from './FieldAutoSuggest.vue'
 import FieldMetric from './FieldMetric.vue'
 import FieldObject from './FieldObject.vue'
 import FieldObjectAdvanced from './FieldObjectAdvanced.vue'
-import FieldAutoSuggest from './FieldAutoSuggest.vue'
-import FieldArrayCardContainer from './FieldArrayCardContainer.vue'
 import FieldRadio from './FieldRadio.vue'
-import FieldInput from '../core/FieldInput.vue'
-import FieldSelect from '../core/fieldSelect.vue'
-import FieldTextArea from '../core/fieldTextArea.vue'
 
 export default {
   name: 'FieldArray',
@@ -128,7 +134,6 @@ export default {
     FieldAutoSuggest,
     FieldRadio,
     FieldArrayCardContainer,
-    FieldTextArea,
     FieldInput,
   },
   mixins: [abstractField],
