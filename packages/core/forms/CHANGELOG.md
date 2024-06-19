@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.4.7...@kong-ui-public/forms@4.0.0) (2024-06-19)
+
+
+### Features
+
+* **plugins:** rollout redesigned RLA form ([#1455](https://github.com/Kong/public-ui-components/issues/1455)) ([d5b8f1f](https://github.com/Kong/public-ui-components/commit/d5b8f1f7e3b1f0b6f6fd3a3026e646cccfacac62))
+
+
+### BREAKING CHANGES
+
+* **plugins:** `useRLARedesignedForm` and `useHorizontalRadiosForPluginScoping` are no longer used and the redesigned RLA form will be available for all
+
+
+
+
+
 ## [3.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.4.6...@kong-ui-public/forms@3.4.7) (2024-06-14)
 
 **Note:** Version bump only for package @kong-ui-public/forms
