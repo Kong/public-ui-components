@@ -440,7 +440,6 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
       },
     ],
     pinned: true,
-    horizontalRadios: props.config.useHorizontalRadiosForPluginScoping, // KM-136-RLA-Redesign: While enabled, this new horizontal radio design will be applied for ALL plugins
   },
   protocols: {
     id: 'protocols',

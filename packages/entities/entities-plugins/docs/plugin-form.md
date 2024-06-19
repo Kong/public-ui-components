@@ -91,18 +91,6 @@ A form component for Plugins.
     - default: `false`
     - *Specific to Kong Manager*. Whether or not to hide the consumer group scope field.
 
-  - `useRLARedesignedForm`:
-    - type: `boolean`
-    - required: `false`
-    - default: `false`
-    - Whether to use the redesigned form for the RLA plugin.
-
-  - `useHorizontalRadiosForPluginScoping`:
-    - type: `boolean`
-    - required: `false`
-    - default: `false`
-    - Whether to use the horizontal radios in the plugin scoping section.
-
 The base konnect or kongManger config.
 
 #### `pluginType`
