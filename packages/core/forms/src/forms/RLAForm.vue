@@ -331,12 +331,7 @@ const scopingSchema = computed(() => {
     return undefined
   }
 
-  return {
-    fields: [{
-      ...selectionGroup,
-      horizontalRadios: true,
-    }],
-  }
+  return { fields: [selectionGroup] }
 })
 
 const advancedSchema = computed(() => {

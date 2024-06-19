@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.1.9...@kong-ui-public/entities-plugins@6.0.0) (2024-06-19)
+
+
+### Features
+
+* **plugins:** rollout redesigned RLA form ([#1455](https://github.com/Kong/public-ui-components/issues/1455)) ([d5b8f1f](https://github.com/Kong/public-ui-components/commit/d5b8f1f7e3b1f0b6f6fd3a3026e646cccfacac62))
+
+
+### BREAKING CHANGES
+
+* **plugins:** `useRLARedesignedForm` and `useHorizontalRadiosForPluginScoping` are no longer used and the redesigned RLA form will be available for all
+
+
+
+
+
 ## [5.1.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.1.8...@kong-ui-public/entities-plugins@5.1.9) (2024-06-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
