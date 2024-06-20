@@ -27,7 +27,7 @@ const props = defineProps({
   center: {
     type: Object as PropType<LongLat>,
     required: false,
-    default: () => ({ lng: 0, lat: 35 }),
+    default: null,
   },
   fitToCountry: {
     type: String,
@@ -37,7 +37,7 @@ const props = defineProps({
   initialZoom: {
     type: Number,
     required: false,
-    default: 0,
+    default: null,
     validator: (value: number) => value >= 0 && value <= 24,
   },
 })
@@ -45,7 +45,7 @@ const props = defineProps({
 const mapContainer = ref<HTMLDivElement | null>(null)
 const map = ref<Map>()
 
-const mapOptions = computed(() => ({
+const mapOptions = computed(() => (props.center && props.initialZoom && {
   center: [props.center.lng, props.center.lat],
   zoom: props.initialZoom,
 }))
@@ -88,16 +88,28 @@ const goToCountry = (countryCode: string) => {
 
   // Overrides for large spanning countries
   if (countryCode === 'RU') {
-    map.value?.flyTo({ center: [93, 62], zoom: 2 })
+    map.value?.fitBounds([
+      [20, 40],
+      [180, 80],
+    ])
     return
   } else if (countryCode === 'US') {
-    map.value?.flyTo({ center: [-100, 42], zoom: 2.9 })
+    map.value?.fitBounds([
+      [-130, 20],
+      [-60, 50],
+    ])
     return
   } else if (countryCode === 'FR') {
-    map.value?.flyTo({ center: [2, 47], zoom: 5 })
+    map.value?.fitBounds([
+      [-5, 42],
+      [9, 51],
+    ])
     return
   } else if (countryCode === 'NO') {
-    map.value?.flyTo({ center: [10, 65], zoom: 3.5 })
+    map.value?.fitBounds([
+      [4, 57],
+      [32, 71],
+    ])
     return
   }
 
@@ -105,14 +117,11 @@ const goToCountry = (countryCode: string) => {
   if (found) {
     const coordinates = (found.geometry as MultiPolygon)?.coordinates
     if (!coordinates) return
-    // Flatten the coordinates
     const allCoords = flattenPositions(coordinates)
 
-    // Extract lats and longs
     const lats = allCoords.map((c: number[]) => c[1])
     const longs = allCoords.map((c: number[]) => c[0])
 
-    // Compute the bounding box
     const minLat = Math.min(...lats)
     const maxLat = Math.max(...lats)
     const minLong = Math.min(...longs)
@@ -131,8 +140,12 @@ onMounted(() => {
     // style: 'https://api.maptiler.com/maps/streets/style.json?key=cBeCDKkznq5O0aZc1ykX',
     // style: 'https://raw.githubusercontent.com/go2garret/maps/main/src/assets/json/openStreetMap.json',
     style: { version: 8, sources: {}, layers: [] },
-    center: mapOptions.value.center as LngLatLike,
-    zoom: mapOptions.value.zoom,
+    ... ( mapOptions.value && { center: mapOptions.value.center as LngLatLike }),
+    ... ( mapOptions.value && { zoom: mapOptions.value.zoom }),
+    bounds: [
+      [-180, -90],
+      [180, 90],
+    ],
   })
   map.value.on('load', () => {
     map.value?.addSource('countries', {
@@ -193,6 +206,11 @@ watch(() => props.countryMetrics, () => {
 watch(() => props.fitToCountry, (newVal) => {
   if (map.value && newVal) {
     goToCountry(newVal)
+  } else {
+    map.value?.fitBounds([
+      [-180, -90],
+      [180, 90],
+    ])
   }
 })
 
