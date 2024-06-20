@@ -401,7 +401,7 @@ export default {
     width: 100%;
   }
 
-  :not(.k-input).form-control {
+  :not(.k-input):not(.k-textarea).form-control {
     background-color: #fff;
     background-image: none;
     border: none;
