@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.0...@kong-ui-public/forms@4.0.1) (2024-06-20)
+
+
+### Bug Fixes
+
+* **forms:** use KTextArea in array fields ([#1459](https://github.com/Kong/public-ui-components/issues/1459)) ([0c3d23b](https://github.com/Kong/public-ui-components/commit/0c3d23b2b39b796d0c9c175d63e28534c5b73bd4))
+
+
+
+
+
 # [4.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.4.7...@kong-ui-public/forms@4.0.0) (2024-06-19)
 
 
