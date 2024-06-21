@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import { toRefs, type PropType } from 'vue'
-import composables from '../../../composables'
+import composables from '../../composables'
 
 const props = defineProps({
   disabled: {

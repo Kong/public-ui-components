@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import sinon from 'sinon'
 import { shallowMount } from '@vue/test-utils'
-import FieldAutoSuggest from '@/plugins/vfg/FieldAutoSuggest'
+import FieldAutoSuggest from '../FieldAutoSuggest.vue'
 import { $api, setupVue, sleep } from '../vtu-helpers'
 
 const schema = {
