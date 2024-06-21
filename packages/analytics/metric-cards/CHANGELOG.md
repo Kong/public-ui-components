@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.9.7...@kong-ui-public/metric-cards@0.9.8) (2024-06-21)
+
+
+### Bug Fixes
+
+* stylelint ([#1460](https://github.com/Kong/public-ui-components/issues/1460)) ([e5204a6](https://github.com/Kong/public-ui-components/commit/e5204a6cab57c0f746919fa14b38c4e5f161acd3))
+
+
+
+
+
 ## [0.9.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.9.6...@kong-ui-public/metric-cards@0.9.7) (2024-06-20)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.0.3...@kong-ui-public/analytics-metric-provider@8.0.4) (2024-06-21)
+
+
+### Bug Fixes
+
+* stylelint ([#1460](https://github.com/Kong/public-ui-components/issues/1460)) ([e5204a6](https://github.com/Kong/public-ui-components/commit/e5204a6cab57c0f746919fa14b38c4e5f161acd3))
+
+
+
+
+
 ## [8.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.0.2...@kong-ui-public/analytics-metric-provider@8.0.3) (2024-06-20)
 
 
