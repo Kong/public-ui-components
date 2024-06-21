@@ -32,6 +32,9 @@ importers:
       '@kong/kongponents':
         specifier: 9.0.0-alpha.180
         version: 9.0.0-alpha.180(axios@1.6.8)(vue-router@4.3.2)(vue@3.4.27)
+      '@stylistic/stylelint-plugin':
+        specifier: ^2.1.2
+        version: 2.1.2(stylelint@16.2.1)
       '@types/flat':
         specifier: ^5.0.5
         version: 5.0.5
@@ -1833,6 +1836,17 @@ packages:
     engines: {node: ^14 || ^16 || >=18}
     dev: true
 
+  /@csstools/media-query-list-parser@2.1.11(@csstools/css-parser-algorithms@2.6.3)(@csstools/css-tokenizer@2.3.1):
+    resolution: {integrity: sha512-uox5MVhvNHqitPP+SynrB1o8oPxPMt2JLgp5ghJOWf54WGQ5OKu47efne49r1SWqs3wRP8xSWjnO9MBKxhB1dA==}
+    engines: {node: ^14 || ^16 || >=18}
+    peerDependencies:
+      '@csstools/css-parser-algorithms': ^2.6.3
+      '@csstools/css-tokenizer': ^2.3.1
+    dependencies:
+      '@csstools/css-parser-algorithms': 2.6.3(@csstools/css-tokenizer@2.3.1)
+      '@csstools/css-tokenizer': 2.3.1
+    dev: true
+
   /@csstools/media-query-list-parser@2.1.7(@csstools/css-parser-algorithms@2.5.0)(@csstools/css-tokenizer@2.2.3):
     resolution: {integrity: sha512-lHPKJDkPUECsyAvD60joYfDmp8UERYxHGkFfyLJFTVK/ERJe0sVlIFLXU5XFxdjNDTerp5L4KeaKG+Z5S94qxQ==}
     engines: {node: ^14 || ^16 || >=18}
@@ -3483,6 +3497,22 @@ packages:
       - typescript
     dev: true
 
+  /@stylistic/stylelint-plugin@2.1.2(stylelint@16.2.1):
+    resolution: {integrity: sha512-JsSqu0Y3vsX+PBl+DwULxC0cIv9C1yIcq1MXkx7pBOGtTqU26a75I8MPYMiEYvrsXgsKLi65xVgy1iLVSZquJA==}
+    engines: {node: ^18.12 || >=20.9}
+    peerDependencies:
+      stylelint: ^16.0.2
+    dependencies:
+      '@csstools/css-parser-algorithms': 2.6.3(@csstools/css-tokenizer@2.3.1)
+      '@csstools/css-tokenizer': 2.3.1
+      '@csstools/media-query-list-parser': 2.1.11(@csstools/css-parser-algorithms@2.6.3)(@csstools/css-tokenizer@2.3.1)
+      is-plain-object: 5.0.0
+      postcss-selector-parser: 6.1.0
+      postcss-value-parser: 4.2.0
+      style-search: 0.1.0
+      stylelint: 16.2.1(typescript@5.3.3)
+    dev: true
+
   /@swagger-api/apidom-ast@0.99.1:
     resolution: {integrity: sha512-evkKm2JaqNfg3dB2Yk3FWL/Qy2r4csZLMZ9bHMG+xNpti8ulENHMjuCh3Ry4koV1gD7IA54CU2ZjcaTvqJa22Q==}
     dependencies:
@@ -3943,7 +3973,7 @@ packages:
       '@swagger-api/apidom-ns-asyncapi-2': 0.99.2
       '@swagger-api/apidom-ns-openapi-2': 0.99.2
       '@swagger-api/apidom-ns-openapi-3-0': 0.99.2
-      '@swagger-api/apidom-ns-openapi-3-1': 0.99.1
+      '@swagger-api/apidom-ns-openapi-3-1': 0.99.2
       '@swagger-api/apidom-ns-workflows-1': 0.99.2
       '@swagger-api/apidom-parser-adapter-api-design-systems-json': 0.99.2
       '@swagger-api/apidom-parser-adapter-api-design-systems-yaml': 0.99.2
@@ -14152,6 +14182,10 @@ packages:
       webpack: ^5.0.0
     dependencies:
       webpack: 5.90.3(webpack-cli@5.1.4)
+    dev: true
+
+  /style-search@0.1.0:
+    resolution: {integrity: sha512-Dj1Okke1C3uKKwQcetra4jSuk0DqbzbYtXipzFlFMZtowbF1x7BKJwB9AayVMyFARvU8EDrZdcax4At/452cAg==}
     dev: true
 
   /stylelint-config-html@1.1.0(postcss-html@1.6.0)(stylelint@16.2.1):

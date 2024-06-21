@@ -212,59 +212,59 @@ const handleClose = (revalidate?: boolean): void => {
 </script>
 
 <style lang="scss" scoped>
-  :deep(.empty-state-wrapper) {
-    .custom-plugins-empty-state {
-      padding-bottom: $kui-space-0;
+:deep(.empty-state-wrapper) {
+  .custom-plugins-empty-state {
+    padding-bottom: $kui-space-0;
 
-      .empty-state-title {
-        font-size: $kui-font-size-40;
-        font-weight: $kui-font-weight-semibold;
-      }
+    .empty-state-title {
+      font-size: $kui-font-size-40;
+      font-weight: $kui-font-weight-semibold;
+    }
 
-      .empty-state-description {
-        font-size: $kui-font-size-30;
-        margin-left: $kui-space-60;
-        margin-right: $kui-space-60;
-      }
+    .empty-state-description {
+      font-size: $kui-font-size-30;
+      margin-left: $kui-space-60;
+      margin-right: $kui-space-60;
     }
   }
+}
 
-  .plugins-collapse {
-    margin-bottom: $kui-space-90;
+.plugins-collapse {
+  margin-bottom: $kui-space-90;
+}
+
+.plugin-card-container {
+  column-gap: 50px;
+  display: grid;
+  grid-auto-rows: 1fr;
+  margin-top: $kui-space-90;
+  row-gap: $kui-space-90;
+
+  :deep(.kong-card) {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    margin: $kui-space-0;
+    padding: $kui-space-0;
+    text-align: center;
   }
 
-  .plugin-card-container {
-    column-gap: 50px;
-    display: grid;
-    grid-auto-rows: 1fr;
-    margin-top: $kui-space-90;
-    row-gap: $kui-space-90;
-
-    :deep(.kong-card) {
-      display: flex;
-      flex: 1 0 0;
-      flex-direction: column;
-      margin: $kui-space-0;
-      padding: $kui-space-0;
-      text-align: center;
-    }
-
-    :deep(.k-card-body) {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-    }
-
-    @media (min-width: $kui-breakpoint-phablet) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (min-width: $kui-breakpoint-tablet) {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    @media (min-width: $kui-breakpoint-laptop) {
-      grid-template-columns: repeat(4, 1fr);
-    }
+  :deep(.k-card-body) {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
   }
+
+  @media (min-width: $kui-breakpoint-phablet) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: $kui-breakpoint-tablet) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: $kui-breakpoint-laptop) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
 </style>
