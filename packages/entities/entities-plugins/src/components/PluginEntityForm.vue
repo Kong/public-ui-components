@@ -779,7 +779,7 @@ onBeforeMount(() => {
     }
 
     .k-checkbox {
-       label {
+      label {
         margin: $kui-space-0;
         order: 1
       }

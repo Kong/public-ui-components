@@ -360,7 +360,7 @@ $row-gap-size: 12px;
     &-range {
       color: $kui-color-text;
       font-size: $kui-font-size-20;
-     }
+    }
   }
 
   &-tooltip {

@@ -27,6 +27,7 @@
     "@kong/design-tokens": "1.13.2",
     "@kong/eslint-config-kong-ui": "^1.1.0",
     "@kong/kongponents": "9.0.0-alpha.180",
+    "@stylistic/stylelint-plugin": "^2.1.2",
     "@types/flat": "^5.0.5",
     "@types/js-yaml": "^4.0.9",
     "@types/jsdom": "^21.1.7",
@@ -97,5 +98,6 @@
   "volta": {
     "node": "18.19.1",
     "pnpm": "8.15.8"
-  }
+  },
+  "packageManager": "pnpm@9.3.0+sha512.ee7b93e0c2bd11409c6424f92b866f31d3ea1bef5fbe47d3c7500cdc3c9668833d2e55681ad66df5b640c61fa9dc25d546efa54d76d7f8bf54b13614ac293631"
 }
