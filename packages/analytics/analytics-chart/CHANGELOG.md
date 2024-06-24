@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.1.10...@kong-ui-public/analytics-chart@4.2.0) (2024-06-24)
+
+
+### Features
+
+* **analytics-chart:** square marker for legend and tooltip [MA-3016] ([#1462](https://github.com/Kong/public-ui-components/issues/1462)) ([8b17d04](https://github.com/Kong/public-ui-components/commit/8b17d04c4f70325a02ce5d3f8678bade8193bdf7))
+
+
+
+
+
 ## [4.1.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.1.9...@kong-ui-public/analytics-chart@4.1.10) (2024-06-24)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
