@@ -13,7 +13,7 @@
       @click="handleLegendItemClick(datasetIndex, index)"
     >
       <div
-        class="legend"
+        class="square-marker"
         :style="{ background: fillStyle, 'border-color': strokeStyle }"
       />
       <div
@@ -313,10 +313,12 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     line-height: 1;
 
     // Color bar preceding label
-    .legend {
-      flex: 0 0 14px;
-      height: 3px;
-      margin-right: $kui-space-30;
+    .square-marker {
+      // flex: 0 0 14px;
+      height: 8px;
+      width: 8px;
+      // margin-right: $kui-space-30;
+      margin: 0 $kui-space-30 0 0;
     }
 
     .label {
