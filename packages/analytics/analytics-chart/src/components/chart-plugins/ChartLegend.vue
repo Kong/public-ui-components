@@ -314,11 +314,9 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 
     // Color bar preceding label
     .square-marker {
-      // flex: 0 0 14px;
       height: 8px;
-      width: 8px;
-      // margin-right: $kui-space-30;
       margin: 0 $kui-space-30 0 0;
+      width: 8px;
     }
 
     .label {
