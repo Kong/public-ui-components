@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@6.0.4...@kong-ui-public/entities-plugins@6.0.5) (2024-06-25)
+
+
+### Bug Fixes
+
+* **entities-plugins:** add timeout to plugin update calls ([#1464](https://github.com/Kong/public-ui-components/issues/1464)) ([1f6c337](https://github.com/Kong/public-ui-components/commit/1f6c3379e506d65d5a4b7f7d89cf97e5935db5fd))
+
+
+
+
+
 ## [6.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@6.0.3...@kong-ui-public/entities-plugins@6.0.4) (2024-06-24)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
