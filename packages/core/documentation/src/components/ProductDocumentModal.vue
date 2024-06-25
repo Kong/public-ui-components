@@ -75,9 +75,9 @@
           :label="i18n.t('documentation.form_modal.file_label')"
           :label-attributes="{ info: i18n.t('documentation.form_modal.file_tooltip') }"
           :placeholder="editing ? filePlaceholderText : undefined"
+          required
           @file-added="handleFileSelected"
           @file-removed="handleFileRemoved"
-          required
         />
 
         <div class="document-inputs">
