@@ -77,6 +77,7 @@
           :placeholder="editing ? filePlaceholderText : undefined"
           @file-added="handleFileSelected"
           @file-removed="handleFileRemoved"
+          required
         />
 
         <div class="document-inputs">
