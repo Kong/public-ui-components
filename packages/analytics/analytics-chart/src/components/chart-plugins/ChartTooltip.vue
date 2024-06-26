@@ -227,10 +227,10 @@ function handleMouseUp() {
     .title {
       font-size: $kui-font-size-30;
       font-weight: $kui-font-weight-semibold;
+      margin-bottom: $kui-space-20;
     }
     .subtitle {
       font-size: $kui-font-size-20;
-      margin-top: $kui-space-40;
     }
 
     .drag-icon {
