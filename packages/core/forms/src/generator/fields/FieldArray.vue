@@ -110,9 +110,9 @@
 </template>
 
 <script>
-import abstractField from '../abstractField'
-import FieldInput from '../core/FieldInput.vue'
-import FieldSelect from '../core/fieldSelect.vue'
+import abstractField from './abstractField'
+import FieldInput from './FieldInput.vue'
+import FieldSelect from './FieldSelect.vue'
 import FieldArrayCardContainer from './FieldArrayCardContainer.vue'
 import FieldArrayItem from './FieldArrayItem.vue'
 import FieldArrayMultiItem from './FieldArrayMultiItem.vue'

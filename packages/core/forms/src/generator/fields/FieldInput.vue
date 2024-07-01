@@ -33,7 +33,7 @@ import debounce from 'lodash-es/debounce'
 import objGet from 'lodash-es/get'
 import isFunction from 'lodash-es/isFunction'
 import isNumber from 'lodash-es/isNumber'
-import composables from '../../../composables'
+import composables from '../../composables'
 
 const props = defineProps({
   disabled: {

@@ -9,7 +9,7 @@ export default {
   },
 }
 
-export { customFields } from './generator/fields/advanced/exports'
+export { customFields } from './generator/fields/exports'
 export { VueFormGenerator, sharedForms }
 
 export const getSharedFormName = (modelName: string): string => {

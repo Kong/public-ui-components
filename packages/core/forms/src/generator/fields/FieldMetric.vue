@@ -30,7 +30,7 @@
 
 <script>
 import { AddIcon, TrashIcon } from '@kong/icons'
-import abstractField from '../abstractField'
+import abstractField from './abstractField'
 
 export default {
   name: 'FieldMetric',

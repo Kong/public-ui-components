@@ -22,8 +22,8 @@
 import clone from 'lodash-es/clone'
 import isObject from 'lodash-es/isObject'
 import isNil from 'lodash-es/isNil'
-import abstractField from '../abstractField'
-import { slugify } from '../../utils/schema'
+import abstractField from './abstractField'
+import { slugify } from '../utils/schema'
 
 export default {
   mixins: [abstractField],
