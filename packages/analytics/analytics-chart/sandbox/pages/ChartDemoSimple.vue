@@ -273,7 +273,7 @@ const selectedMetric = ref<MetricSelection>({
 
 // Short labels
 const statusCodeLabels = [
-  KUI_STATUS_COLOR_2XX, KUI_STATUS_COLOR_3XX,
+  '200', '300',
 ]
 
 const statusCodeDimensionValues = ref(new Set(statusCodeLabels))
@@ -451,8 +451,8 @@ const topNTableData = computed<ExploreResultV4>(() => {
 const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {}))
 
 const twoColorPalette = ref<AnalyticsChartColors>({
-  200: '#008871',
-  300: '#9edca6',
+  200: KUI_STATUS_COLOR_2XX,
+  300: KUI_STATUS_COLOR_3XX,
 })
 
 const updateSelectedColor = (event: Event, label: string) => {
