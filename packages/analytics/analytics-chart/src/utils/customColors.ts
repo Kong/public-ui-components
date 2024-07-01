@@ -1,4 +1,16 @@
 import type { AnalyticsChartColors } from 'src/types'
+import {
+  KUI_STATUS_COLOR_1XX,
+  KUI_STATUS_COLOR_2XX,
+  KUI_STATUS_COLOR_3XX,
+  KUI_STATUS_COLOR_4XX,
+  KUI_STATUS_COLOR_5XX,
+  KUI_STATUS_COLOR_100, KUI_STATUS_COLOR_101, KUI_STATUS_COLOR_102, KUI_STATUS_COLOR_103,
+  KUI_STATUS_COLOR_200, KUI_STATUS_COLOR_201, KUI_STATUS_COLOR_202, KUI_STATUS_COLOR_203, KUI_STATUS_COLOR_204, KUI_STATUS_COLOR_205, KUI_STATUS_COLOR_206,KUI_STATUS_COLOR_207,KUI_STATUS_COLOR_208,
+  KUI_STATUS_COLOR_300,
+  KUI_STATUS_COLOR_400,
+  KUI_STATUS_COLOR_500,
+} from '@kong/design-tokens'
 
 export const lightGrey = '#e0e4ea' // kui-color-background-disabled
 
@@ -9,11 +21,11 @@ export const lightGrey = '#e0e4ea' // kui-color-background-disabled
 // chart.  This is a tradeoff: in rare cases, it can lead to (for example) two codes with the same color
 // ending up next to each other.
 const statusCodePalette: { [label: string]: string[] } = {
-  100: ['#c8e2fd', '#80bfff', '#4da6ff', '#1a8cff', '#0072e5', '#0059b2'],
-  200: ['#ceedd2', '#9edca6', '#89d595', '#6fcc83', '#44c26b', '#0bb652', '#0ca84a', '#169643', '#196e33', '#1b572a'],
-  300: ['#fff4db', '#ffe9b8', '#ffe2a1', '#ffd982', '#ffd062', '#fdc53b', '#f4bb1e', '#e8b00b', '#d9a30f', '#c89407'],
-  400: ['#ffead8', '#ffd5b1', '#ffc899', '#ffba81', '#ffae6b', '#fe9439', '#f6871d', '#eb7c0c', '#da700c', '#cc6100'],
-  500: ['#ffd5d5', '#ffb6b6', '#ff9d9d', '#ff8484', '#ff6a6a', '#ff4545', '#fb1f1f', '#e90b0b', '#d40202', '#be0202'],
+  100: [KUI_STATUS_COLOR_100, KUI_STATUS_COLOR_101, KUI_STATUS_COLOR_102, KUI_STATUS_COLOR_103, '#0072e5', '#0059b2'],
+  200: [KUI_STATUS_COLOR_200, KUI_STATUS_COLOR_201, KUI_STATUS_COLOR_202, KUI_STATUS_COLOR_203, KUI_STATUS_COLOR_204, KUI_STATUS_COLOR_205, KUI_STATUS_COLOR_206, KUI_STATUS_COLOR_207, KUI_STATUS_COLOR_208, KUI_STATUS_COLOR_208],
+  300: [KUI_STATUS_COLOR_300, '#ffe9b8', '#ffe2a1', '#ffd982', '#ffd062', '#fdc53b', '#f4bb1e', '#e8b00b', '#d9a30f', '#c89407'],
+  400: [KUI_STATUS_COLOR_400, '#ffd5b1', '#ffc899', '#ffba81', '#ffae6b', '#fe9439', '#f6871d', '#eb7c0c', '#da700c', '#cc6100'],
+  500: [KUI_STATUS_COLOR_500, '#ffb6b6', '#ff9d9d', '#ff8484', '#ff6a6a', '#ff4545', '#fb1f1f', '#e90b0b', '#d40202', '#be0202'],
 }
 
 const colorsForCodes = (codeClass: string, codes: number[]) => {
@@ -80,9 +92,9 @@ export const defaultStatusCodeColors: AnalyticsChartColors = {
 
   }, {} as AnalyticsChartColors),
   ____OTHER____: '#DAD4C7',
-  '1XX': '#4DA6FF',
-  '2XX': '#6FCC83',
-  '3XX': '#FFD982',
-  '4XX': '#FFBA81',
-  '5XX': '#FF8484',
+  '1XX': KUI_STATUS_COLOR_1XX,
+  '2XX': KUI_STATUS_COLOR_2XX,
+  '3XX': KUI_STATUS_COLOR_3XX,
+  '4XX': KUI_STATUS_COLOR_4XX,
+  '5XX': KUI_STATUS_COLOR_5XX,
 }

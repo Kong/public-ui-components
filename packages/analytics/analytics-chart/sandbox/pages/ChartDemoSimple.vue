@@ -236,6 +236,10 @@ import { rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
+import {
+  KUI_STATUS_COLOR_2XX,
+  KUI_STATUS_COLOR_3XX,
+} from '@kong/design-tokens'
 
 enum Metrics {
   TotalRequests = 'TotalRequests',
@@ -269,7 +273,7 @@ const selectedMetric = ref<MetricSelection>({
 
 // Short labels
 const statusCodeLabels = [
-  '200', '300',
+  KUI_STATUS_COLOR_2XX, KUI_STATUS_COLOR_3XX,
 ]
 
 const statusCodeDimensionValues = ref(new Set(statusCodeLabels))

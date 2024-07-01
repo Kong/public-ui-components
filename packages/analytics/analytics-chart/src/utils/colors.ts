@@ -1,5 +1,11 @@
 import type { AnalyticsChartColors } from '../../src/types'
-
+import {
+  KUI_STATUS_COLOR_1XX,
+  KUI_STATUS_COLOR_2XX,
+  KUI_STATUS_COLOR_3XX,
+  KUI_STATUS_COLOR_4XX,
+  KUI_STATUS_COLOR_5XX,
+} from '@kong/design-tokens'
 interface StatusCodeColor {
   background: string;
   text: string;
@@ -27,11 +33,11 @@ const kongManangerColorPalette = {
 }
 
 export const datavisPalette = [
-  '#a86cd5',
-  '#6a86d2',
-  '#00bbf9',
-  '#00c4b0',
-  '#ffdf15',
+  KUI_STATUS_COLOR_1XX,
+  KUI_STATUS_COLOR_2XX,
+  KUI_STATUS_COLOR_3XX,
+  KUI_STATUS_COLOR_4XX,
+  KUI_STATUS_COLOR_5XX,
 ]
 
 // Wrap around if we run out of colors.
