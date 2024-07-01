@@ -30,11 +30,11 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/eslint-config-kong-ui':
-        specifier: ^1.1.0
-        version: 1.1.0(eslint@9.4.0)(typescript@5.3.3)
+        specifier: ^1.1.1
+        version: 1.1.1(eslint@9.4.0)(typescript@5.3.3)
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       '@stylistic/stylelint-plugin':
         specifier: ^2.1.2
         version: 2.1.2(stylelint@16.2.1(typescript@5.3.3))
@@ -235,8 +235,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       '@types/uuid':
         specifier: ^9.0.8
         version: 9.0.8
@@ -302,8 +302,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       pinia:
         specifier: '>= 2.1.7 < 3'
         version: 2.1.7(typescript@5.3.3)(vue@3.4.27(typescript@5.3.3))
@@ -355,8 +355,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       json-schema-to-ts:
         specifier: ^3.0.1
         version: 3.0.1
@@ -383,8 +383,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       vue:
         specifier: ^3.4.27
         version: 3.4.27(typescript@5.3.3)
@@ -423,8 +423,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -481,8 +481,8 @@ importers:
         specifier: ^1.13.0
         version: 1.13.0(vue@3.3.13(typescript@5.3.3))
       '@kong/markdown':
-        specifier: 1.7.0
-        version: 1.7.0(@types/markdown-it@13.0.7)(vue@3.3.13(typescript@5.3.3))
+        specifier: 1.7.5
+        version: 1.7.5(@types/markdown-it@13.0.7)(vue@3.3.13(typescript@5.3.3))
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -491,8 +491,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.3.13(typescript@5.3.3)))(vue@3.3.13(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.3.13(typescript@5.3.3)))(vue@3.3.13(typescript@5.3.3))
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -525,8 +525,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       monaco-editor:
         specifier: 0.21.3
         version: 0.21.3
@@ -562,8 +562,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
@@ -589,8 +589,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       vue:
         specifier: ^3.4.27
         version: 3.4.27(typescript@5.3.3)
@@ -605,8 +605,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       vue:
         specifier: ^3.4.27
         version: 3.4.27(typescript@5.3.3)
@@ -633,8 +633,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -661,8 +661,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -689,8 +689,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -717,8 +717,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -745,8 +745,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -773,8 +773,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -798,8 +798,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -826,8 +826,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -872,8 +872,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -910,8 +910,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       '@types/lodash.isequal':
         specifier: ^4.5.8
         version: 4.5.8
@@ -947,8 +947,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -975,8 +975,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -1003,8 +1003,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -1031,8 +1031,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -1056,8 +1056,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       '@types/prismjs':
         specifier: ^1.26.4
         version: 1.26.4
@@ -1090,8 +1090,8 @@ importers:
         specifier: 1.13.2
         version: 1.13.2
       '@kong/kongponents':
-        specifier: 9.0.2
-        version: 9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
+        specifier: 9.0.4
+        version: 9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.1.0
         version: 1.1.0(rollup@4.13.0)(vite@5.2.12(@types/node@18.19.34)(sass@1.71.1)(terser@5.26.0))
@@ -1701,6 +1701,7 @@ packages:
 
   '@evilmartians/lefthook@1.6.14':
     resolution: {integrity: sha512-7b+VqUXDIRzUwI6cAqRh5J8CGe004iVciBgqdib1357TCq5ykbYjASKfXZsHzk/dHLgIUu3GYqLEuJsc+anJog==}
+    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -1810,8 +1811,8 @@ packages:
   '@kong/design-tokens@1.13.2':
     resolution: {integrity: sha512-BXI7Nv+wucuG9mw0faXhBgb3ryN9pnMkHntI9HKf0h9BnBvuR8F+iLoCm/Fwo6TZ0tlO5bZTMVk1xc85lnlhBA==}
 
-  '@kong/eslint-config-kong-ui@1.1.0':
-    resolution: {integrity: sha512-PSZaL7IhVLmbojwpBPaKIfxLIBBLnYFIjjrr5Nbz0Ia4cSYFqdwkdFB3t5PnjLHWwQr0IpLgN5e2vGe1n9Hpig==}
+  '@kong/eslint-config-kong-ui@1.1.1':
+    resolution: {integrity: sha512-L66Nqif4KcWlaSX9xb9WToMh9JbcxGrRb6tF1hz36GsZZaBsk6cHdVKVXUjPA7jgtkE1aUHpzQO1IM/UMLQCQg==}
     engines: {node: '>=18.0.0 || >=20.13.1'}
     peerDependencies:
       eslint: '>= 9.4.0'
@@ -1822,8 +1823,8 @@ packages:
     peerDependencies:
       vue: '>= 3.3.4 < 4'
 
-  '@kong/icons@1.14.0':
-    resolution: {integrity: sha512-eNhWJ9sms1mLMe8emyVh7LxUbekNHJk8aNpqrsuZ7WL1TWErF8pkMECyvIjM8VXr+lsU6itHcZ7KyP+dPgMuPw==}
+  '@kong/icons@1.14.1':
+    resolution: {integrity: sha512-2FbzPWQnHa5URm5jSw/JnRiJUDwVi5oSNLPg22LxckJoQ4wD0Q6i71CCG9I2HJ/Cd95a43eGfm2M9BCAHKPlwg==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: '>= 3.3.4 < 4'
@@ -1836,16 +1837,16 @@ packages:
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.2.4
 
-  '@kong/kongponents@9.0.2':
-    resolution: {integrity: sha512-9vppwdGoZkR2K8z7bjfXoa3pmABs+CXqiXoRGnA4NjxoKnz3ntimfooe3V8M69ku5l4Zmam6YEoGGRqq4cYQEg==}
+  '@kong/kongponents@9.0.4':
+    resolution: {integrity: sha512-taj02megpZp8cRQ9Se9F4oH2gK3YjuUsdO2aqezD00dyISNsgIHBuF1q09ZstAvuxLpVva0K8749NDtMdi0t2w==}
     engines: {node: '>=v16.20.2 || >=18.12.1 || >=20.14.0'}
     peerDependencies:
       axios: ^1.7.2
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.3.3
 
-  '@kong/markdown@1.7.0':
-    resolution: {integrity: sha512-h60A+jHMm619J8oasEd3N1tBmDsJivX2W3D89yBW8QXgKkYjFtIz0b4Pb//QzoQmH91uQZCMGt3ZHrRbrt7OhA==}
+  '@kong/markdown@1.7.5':
+    resolution: {integrity: sha512-c/pVIGsRdHoHbTyjOUZeneFVeeERaY0ggcCPg+wWsnzBQ9IMMz2g4wlGcJVmbqk297kxINPMZwK4axk8pSCIDw==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: '>= 3.3.13 < 4'
@@ -2575,9 +2576,6 @@ packages:
 
   '@types/lodash@4.17.0':
     resolution: {integrity: sha512-t7dhREVv6dbNj0q17X12j7yDG4bD/DHYX7o5/DbDxobP0HnGPgpRz2Ej77aL7TZT3DSw13fqUTj8J4mMnqa7WA==}
-
-  '@types/lodash@4.17.4':
-    resolution: {integrity: sha512-wYCP26ZLxaT3R39kiN2+HcJ4kTd3U1waI/cY7ivWYqFP6pW3ZNpvi6Wd6PHZx7T/t8z0vlkXMg3QYLa7DZ/IJQ==}
 
   '@types/lodash@4.17.5':
     resolution: {integrity: sha512-MBIOHVZqVqgfro1euRDWX7OO0fBVUUMrN6Pwm8LQsz8cWhEpihlvR70ENj3f40j58TNxZaWv2ndSkInykNBBJw==}
@@ -4935,6 +4933,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
+    deprecated: Glob versions prior to v9 are no longer supported
 
   glob@8.1.0:
     resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
@@ -5130,8 +5129,8 @@ packages:
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
 
-  html-format@1.1.6:
-    resolution: {integrity: sha512-Wcp82GgejyxNme62ozXnJ3BnlRlACVthFppGPDvdd7NK4Bn/NXsWndeVVfxA627m18L3KFc84wEvtzczTHT14Q==}
+  html-format@1.1.7:
+    resolution: {integrity: sha512-ba6woq8dni6HkfRFpsu27PrCM/sxEz9KrVW22xVyMbXsZHbSpJE6Z1gAl7OeqEfU92MKYb9Pn7MnIyqV5tJHKA==}
 
   html-tags@3.3.1:
     resolution: {integrity: sha512-ztqyC3kLto0e9WbNp0aeP+M3kTt+nbaIveGmUxAtZa+8iFgKLUOD4YKM5j+f3QD89bra7UeumolZHKuOXnTmeQ==}
@@ -5939,8 +5938,8 @@ packages:
   markdown-it-abbr@2.0.0:
     resolution: {integrity: sha512-of7C8pXSjXjDojW4neNP+jD7inUYH/DO0Ca+K/4FUEccg0oHAEX/nfscw0jfz66PJbYWOAT9U8mjO21X5p6aAw==}
 
-  markdown-it-anchor@8.6.7:
-    resolution: {integrity: sha512-FlCHFwNnutLgVTflOYHPW2pPcl2AACqVzExlkGQNsi4CJgqOHN7YTgDd4LuhgN1BFO3TS0vLAruV1Td6dwWPJA==}
+  markdown-it-anchor@9.0.1:
+    resolution: {integrity: sha512-cBt7aAzmkfX8X7FqAe8EBryiKmToXgMQEEMqkXzWCm0toDtfDYIGboKeTKd8cpNJArJtutrf+977wFJTsvNGmQ==}
     peerDependencies:
       '@types/markdown-it': '*'
       markdown-it: '*'
@@ -7267,6 +7266,7 @@ packages:
 
   reflect-metadata@0.2.1:
     resolution: {integrity: sha512-i5lLI6iw9AU3Uu4szRNPPEkomnkjRTaVt9hy/bn5g/oSzekBSMeLZblcjP74AW0vBabqERLLIrz+gR8QYR54Tw==}
+    deprecated: This version has a critical bug in fallback handling. Please upgrade to reflect-metadata@0.2.2 or newer.
 
   refractor@3.6.0:
     resolution: {integrity: sha512-MY9W41IOWxxk31o+YvFCNyNzdkc9M20NoZK5vq6jkv4I/uh2zkWcfudj0Q1fovjUQJrNewS9NMzeTtqPf+n5EA==}
@@ -7362,6 +7362,7 @@ packages:
   right-pad@1.0.1:
     resolution: {integrity: sha512-bYBjgxmkvTAfgIYy328fmkwhp39v8lwVgWhhrzxPV3yHtcSqyYKe9/XOhvW48UFjATg3VuJbpsp5822ACNvkmw==}
     engines: {node: '>= 0.10'}
+    deprecated: Please use String.prototype.padEnd() over this package.
 
   rimraf@2.7.1:
     resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
@@ -8328,6 +8329,10 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
 
+  uuid@10.0.0:
+    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    hasBin: true
+
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
@@ -9095,7 +9100,7 @@ snapshots:
       '@babel/helper-split-export-declaration': 7.22.6
       '@babel/parser': 7.24.5
       '@babel/types': 7.24.6
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.5
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -9608,7 +9613,7 @@ snapshots:
 
   '@kong/design-tokens@1.13.2': {}
 
-  '@kong/eslint-config-kong-ui@1.1.0(eslint@9.4.0)(typescript@5.3.3)':
+  '@kong/eslint-config-kong-ui@1.1.1(eslint@9.4.0)(typescript@5.3.3)':
     dependencies:
       '@eslint/compat': 1.1.0
       '@eslint/eslintrc': 3.1.0
@@ -9636,11 +9641,11 @@ snapshots:
     dependencies:
       vue: 3.4.27(typescript@5.3.3)
 
-  '@kong/icons@1.14.0(vue@3.3.13(typescript@5.3.3))':
+  '@kong/icons@1.14.1(vue@3.3.13(typescript@5.3.3))':
     dependencies:
       vue: 3.3.13(typescript@5.3.3)
 
-  '@kong/icons@1.14.0(vue@3.4.27(typescript@5.3.3))':
+  '@kong/icons@1.14.1(vue@3.4.27(typescript@5.3.3))':
     dependencies:
       vue: 3.4.27(typescript@5.3.3)
 
@@ -9660,10 +9665,10 @@ snapshots:
       vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.27(typescript@5.3.3))
       vue-router: 4.3.2(vue@3.4.27(typescript@5.3.3))
 
-  '@kong/kongponents@9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.3.13(typescript@5.3.3)))(vue@3.3.13(typescript@5.3.3))':
+  '@kong/kongponents@9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.3.13(typescript@5.3.3)))(vue@3.3.13(typescript@5.3.3))':
     dependencies:
       '@floating-ui/vue': 1.0.6(vue@3.3.13(typescript@5.3.3))
-      '@kong/icons': 1.14.0(vue@3.3.13(typescript@5.3.3))
+      '@kong/icons': 1.14.1(vue@3.3.13(typescript@5.3.3))
       '@popperjs/core': 2.11.8
       axios: 1.6.8
       date-fns: 2.30.0
@@ -9681,10 +9686,10 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
 
-  '@kong/kongponents@9.0.2(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))':
+  '@kong/kongponents@9.0.4(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))':
     dependencies:
       '@floating-ui/vue': 1.0.6(vue@3.4.27(typescript@5.3.3))
-      '@kong/icons': 1.14.0(vue@3.4.27(typescript@5.3.3))
+      '@kong/icons': 1.14.1(vue@3.4.27(typescript@5.3.3))
       '@popperjs/core': 2.11.8
       axios: 1.6.8
       date-fns: 2.30.0
@@ -9702,17 +9707,17 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
 
-  '@kong/markdown@1.7.0(@types/markdown-it@13.0.7)(vue@3.3.13(typescript@5.3.3))':
+  '@kong/markdown@1.7.5(@types/markdown-it@13.0.7)(vue@3.3.13(typescript@5.3.3))':
     dependencies:
-      '@kong/icons': 1.13.0(vue@3.3.13(typescript@5.3.3))
+      '@kong/icons': 1.14.1(vue@3.3.13(typescript@5.3.3))
       '@mdit-vue/plugin-frontmatter': 2.0.0
       '@sindresorhus/slugify': 2.2.1
       '@vueuse/core': 10.9.0(vue@3.3.13(typescript@5.3.3))
       buffer: 6.0.3
-      html-format: 1.1.6
+      html-format: 1.1.7
       markdown-it: 14.1.0
       markdown-it-abbr: 2.0.0
-      markdown-it-anchor: 8.6.7(@types/markdown-it@13.0.7)(markdown-it@14.1.0)
+      markdown-it-anchor: 9.0.1(@types/markdown-it@13.0.7)(markdown-it@14.1.0)
       markdown-it-attrs: 4.1.6(markdown-it@14.1.0)
       markdown-it-deflist: 3.0.0
       markdown-it-emoji: 3.0.0
@@ -9724,7 +9729,7 @@ snapshots:
       markdown-it-task-lists: 2.1.1
       markdown-it-textual-uml: 0.17.1
       mermaid: 10.9.0
-      uuid: 9.0.1
+      uuid: 10.0.0
       vue: 3.3.13(typescript@5.3.3)
     transitivePeerDependencies:
       - '@types/markdown-it'
@@ -9894,7 +9899,7 @@ snapshots:
 
   '@npmcli/fs@3.1.0':
     dependencies:
-      semver: 7.6.0
+      semver: 7.6.2
 
   '@npmcli/git@5.0.4':
     dependencies:
@@ -9904,7 +9909,7 @@ snapshots:
       proc-log: 3.0.0
       promise-inflight: 1.0.1
       promise-retry: 2.0.1
-      semver: 7.6.0
+      semver: 7.6.2
       which: 4.0.0
     transitivePeerDependencies:
       - bluebird
@@ -10920,8 +10925,6 @@ snapshots:
 
   '@types/lodash@4.17.0': {}
 
-  '@types/lodash@4.17.4': {}
-
   '@types/lodash@4.17.5': {}
 
   '@types/markdown-it@13.0.7':
@@ -11608,7 +11611,7 @@ snapshots:
 
   agent-base@7.1.0:
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.5
     transitivePeerDependencies:
       - supports-color
 
@@ -11972,7 +11975,7 @@ snapshots:
 
   builtins@5.0.1:
     dependencies:
-      semver: 7.6.0
+      semver: 7.6.2
 
   bundle-name@4.1.0:
     dependencies:
@@ -12355,7 +12358,7 @@ snapshots:
       handlebars: 4.7.7
       json-stringify-safe: 5.0.1
       meow: 8.1.2
-      semver: 7.6.0
+      semver: 7.6.2
       split: 1.0.1
 
   conventional-commit-types@3.0.0: {}
@@ -12943,7 +12946,7 @@ snapshots:
       '@one-ini/wasm': 0.1.1
       commander: 10.0.1
       minimatch: 9.0.1
-      semver: 7.6.0
+      semver: 7.6.2
 
   ee-first@1.1.1: {}
 
@@ -13674,7 +13677,7 @@ snapshots:
   git-semver-tags@5.0.1:
     dependencies:
       meow: 8.1.2
-      semver: 7.6.0
+      semver: 7.6.2
 
   git-up@7.0.0:
     dependencies:
@@ -13927,7 +13930,7 @@ snapshots:
 
   html-escaper@2.0.2: {}
 
-  html-format@1.1.6: {}
+  html-format@1.1.7: {}
 
   html-tags@3.3.1: {}
 
@@ -14843,7 +14846,7 @@ snapshots:
 
   markdown-it-abbr@2.0.0: {}
 
-  markdown-it-anchor@8.6.7(@types/markdown-it@13.0.7)(markdown-it@14.1.0):
+  markdown-it-anchor@9.0.1(@types/markdown-it@13.0.7)(markdown-it@14.1.0):
     dependencies:
       '@types/markdown-it': 13.0.7
       markdown-it: 14.1.0
@@ -15250,7 +15253,7 @@ snapshots:
 
   mlly@1.4.2:
     dependencies:
-      acorn: 8.11.3
+      acorn: 8.12.0
       pathe: 1.1.2
       pkg-types: 1.0.3
       ufo: 1.3.2
@@ -15356,7 +15359,7 @@ snapshots:
       make-fetch-happen: 13.0.0
       nopt: 7.1.0
       proc-log: 3.0.0
-      semver: 7.6.0
+      semver: 7.6.2
       tar: 6.2.1
       which: 4.0.0
     transitivePeerDependencies:
@@ -15387,21 +15390,21 @@ snapshots:
     dependencies:
       hosted-git-info: 4.1.0
       is-core-module: 2.13.1
-      semver: 7.6.0
+      semver: 7.6.2
       validate-npm-package-license: 3.0.4
 
   normalize-package-data@5.0.0:
     dependencies:
       hosted-git-info: 6.1.1
       is-core-module: 2.13.1
-      semver: 7.6.0
+      semver: 7.6.2
       validate-npm-package-license: 3.0.4
 
   normalize-package-data@6.0.0:
     dependencies:
       hosted-git-info: 7.0.1
       is-core-module: 2.13.1
-      semver: 7.6.0
+      semver: 7.6.2
       validate-npm-package-license: 3.0.4
 
   normalize-path@3.0.0: {}
@@ -15416,7 +15419,7 @@ snapshots:
 
   npm-install-checks@6.1.1:
     dependencies:
-      semver: 7.6.0
+      semver: 7.6.2
 
   npm-normalize-package-bin@1.0.1: {}
 
@@ -15426,14 +15429,14 @@ snapshots:
     dependencies:
       hosted-git-info: 6.1.1
       proc-log: 3.0.0
-      semver: 7.6.0
+      semver: 7.6.2
       validate-npm-package-name: 5.0.0
 
   npm-package-arg@11.0.1:
     dependencies:
       hosted-git-info: 7.0.1
       proc-log: 3.0.0
-      semver: 7.6.0
+      semver: 7.6.2
       validate-npm-package-name: 5.0.0
 
   npm-package-arg@8.1.1:
@@ -15458,7 +15461,7 @@ snapshots:
       npm-install-checks: 6.1.1
       npm-normalize-package-bin: 3.0.1
       npm-package-arg: 11.0.1
-      semver: 7.6.0
+      semver: 7.6.2
 
   npm-registry-fetch@14.0.5:
     dependencies:
@@ -16817,7 +16820,7 @@ snapshots:
 
   spdy-transport@3.0.0:
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.5
       detect-node: 2.1.0
       hpack.js: 2.1.6
       obuf: 1.1.2
@@ -17534,6 +17537,8 @@ snapshots:
 
   utils-merge@1.0.1: {}
 
+  uuid@10.0.0: {}
+
   uuid@8.3.2: {}
 
   uuid@9.0.1: {}
@@ -17548,7 +17553,7 @@ snapshots:
   v-calendar@3.0.0-alpha.8(vue@3.4.27(typescript@5.3.3)):
     dependencies:
       '@popperjs/core': 2.4.0
-      '@types/lodash': 4.17.4
+      '@types/lodash': 4.17.5
       date-fns: 2.30.0
       date-fns-tz: 1.3.8(date-fns@2.30.0)
       lodash: 4.17.21
