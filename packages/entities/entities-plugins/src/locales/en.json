@@ -1,6 +1,5 @@
 {
   "actions": {
-    "back": "Back",
     "cancel": "Cancel",
     "view_configuration": "View Configuration",
     "create": "New Plugin",

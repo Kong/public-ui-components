@@ -55,12 +55,6 @@ A form component for Plugins.
     - default: `undefined`
     - Route to return to when canceling creation/edit of a plugin.
 
-  - `backRoute`:
-    - type: `RouteLocationRaw`
-    - required: `false`
-    - default: `undefined`
-    - Route to return to the plugin selection page if clicking back when creating a plugin.
-
   - `workspace`:
     - type: `string`
     - required: `true`
