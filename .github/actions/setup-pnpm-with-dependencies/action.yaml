@@ -30,7 +30,7 @@ runs:
         fi
         voltaPnpmVersion=$(cat package.json|jq -r ".volta.pnpm")
         if [[ $voltaPnpmVersion == null ]]; then
-          voltaPnpmVersion="8.5.1"
+          voltaPnpmVersion="9.4.0"
         fi
 
         echo "node-version=${voltaNodeVersion}">> $GITHUB_OUTPUT

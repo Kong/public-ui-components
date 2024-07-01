@@ -5,9 +5,6 @@
   "ignorePaths": [
     "packages/core/cli/src/__template__/package.json"
   ],
-  "constraints": {
-    "pnpm": "8.6.11"
-  },
   "packageRules": [
     {
       "description": "Pin monaco-editor for @kong-ui-public/expressions and @kong-ui-public/entities-routes",
