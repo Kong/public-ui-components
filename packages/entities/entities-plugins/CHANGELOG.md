@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@6.0.7...@kong-ui-public/entities-plugins@7.0.0) (2024-07-02)
+
+
+### Features
+
+* **entities-plugins:** remove back button in the form ([#1469](https://github.com/Kong/public-ui-components/issues/1469)) ([e3c93aa](https://github.com/Kong/public-ui-components/commit/e3c93aa10b03d1a499770bba4e8c1caac0b6d9df))
+
+
+### BREAKING CHANGES
+
+* **entities-plugins:** The Back button on the form has been removed, and`backRoute`
+no longer exists in the form configuration
+
+
+
+
+
 ## [6.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@6.0.6...@kong-ui-public/entities-plugins@6.0.7) (2024-07-02)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
