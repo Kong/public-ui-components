@@ -262,6 +262,13 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-ca-certs-input').should('be.visible')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
 
+      // show caCert and tlsVerify fields when protocol is grpcs
+      cy.getTestId('k-select-input').click()
+      cy.getTestId('k-select-item-grpcs').click()
+      cy.getTestId('gateway-service-clientCert-input').should('not.exist')
+      cy.getTestId('gateway-service-ca-certs-input').should('be.visible')
+      cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
+
       // show clineCert and tlsVerify fields when protocol is wss
       cy.getTestId('gateway-service-protocol-select').click()
       cy.getTestId('select-item-wss').click()
@@ -641,6 +648,13 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-protocol-select').click()
       cy.getTestId('select-item-tls').click()
       cy.getTestId('gateway-service-clientCert-input').should('be.visible')
+      cy.getTestId('gateway-service-ca-certs-input').should('be.visible')
+      cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
+
+      // show clineCert, caCert and tlsVerify fields when protocol is grpcs
+      cy.getTestId('k-select-input').click()
+      cy.getTestId('k-select-item-grpcs').click()
+      cy.getTestId('gateway-service-clientCert-input').should('not.exist')
       cy.getTestId('gateway-service-ca-certs-input').should('be.visible')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
 
