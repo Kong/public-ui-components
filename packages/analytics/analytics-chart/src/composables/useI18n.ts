@@ -1,5 +1,5 @@
 import { createI18n, i18nTComponent } from '@kong-ui-public/i18n'
-import english from '../locales/en.json'
+import english from '../locales/ja.json'
 
 export default function useI18n() {
   const i18n = createI18n<typeof english>('en-us', english)
