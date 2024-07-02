@@ -29,8 +29,6 @@ export interface BasePluginSelectConfig {
 }
 
 export interface BasePluginFormConfig {
-  /** Route to return to if canceling create a Plugin (go back to plugin selection page) */
-  backRoute?: RouteLocationRaw
   /** Current entity type and id for plugins for specific entity */
   entityType?: EntityType
   entityId?: string

@@ -20,7 +20,6 @@ const baseConfigKonnect: KonnectPluginFormConfig = {
   app: 'konnect',
   apiBaseUrl: '/us/kong-api',
   controlPlaneId: 'abc-123-i-love-cats',
-  backRoute: { name: 'select-plugin' },
   cancelRoute: { name: 'home' },
 }
 
@@ -28,7 +27,6 @@ const baseConfigKM:KongManagerPluginFormConfig = {
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
-  backRoute: { name: 'select-plugin' },
   cancelRoute: { name: 'home' },
 }
 
@@ -191,8 +189,6 @@ describe('<PluginForm />', () => {
       // button state
       cy.getTestId('form-submit').should('be.visible')
       cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-back').should('be.visible')
-      cy.getTestId('form-back').should('be.enabled')
       cy.getTestId('form-cancel').should('be.visible')
 
       // pinned fields (but they should not be under a KCollapse)
@@ -264,8 +260,6 @@ describe('<PluginForm />', () => {
       // button state
       cy.getTestId('form-submit').should('be.visible')
       cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-back').should('be.visible')
-      cy.getTestId('form-back').should('be.enabled')
       cy.getTestId('form-cancel').should('be.visible')
 
       // pinned fields (but they should not be under a KCollapse)
@@ -347,8 +341,6 @@ describe('<PluginForm />', () => {
       // button state
       cy.getTestId('form-submit').should('be.visible')
       cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-back').should('be.visible')
-      cy.getTestId('form-back').should('be.enabled')
       cy.getTestId('form-cancel').should('be.visible')
 
       // scope fields
@@ -435,7 +427,6 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       cy.getTestId('form-submit').should('not.exist')
-      cy.getTestId('form-back').should('not.exist')
       cy.getTestId('form-cancel').should('not.exist')
     })
 
@@ -461,7 +452,6 @@ describe('<PluginForm />', () => {
       // button state
       cy.getTestId('form-submit').should('be.visible')
       cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-back').should('be.visible')
       cy.getTestId('form-cancel').should('be.visible')
 
       // scope & global fields
@@ -587,7 +577,6 @@ describe('<PluginForm />', () => {
         // button state
         cy.getTestId('form-submit').should('be.visible')
         cy.getTestId('form-submit').should('be.disabled')
-        cy.getTestId('form-back').should('not.exist')
         cy.getTestId('form-cancel').should('be.visible')
 
         // reveal advanced fields
@@ -1054,8 +1043,6 @@ describe('<PluginForm />', () => {
       // button state
       cy.getTestId('form-submit').should('be.visible')
       cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-back').should('be.visible')
-      cy.getTestId('form-back').should('be.enabled')
       cy.getTestId('form-cancel').should('be.visible')
 
       // pinned fields (but they should not be under a KCollapse)
@@ -1128,8 +1115,6 @@ describe('<PluginForm />', () => {
       // button state
       cy.getTestId('form-submit').should('be.visible')
       cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-back').should('be.visible')
-      cy.getTestId('form-back').should('be.enabled')
       cy.getTestId('form-cancel').should('be.visible')
 
       // pinned fields (but they should not be under a KCollapse)
@@ -1212,8 +1197,6 @@ describe('<PluginForm />', () => {
       // button state
       cy.getTestId('form-submit').should('be.visible')
       cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-back').should('be.visible')
-      cy.getTestId('form-back').should('be.enabled')
       cy.getTestId('form-cancel').should('be.visible')
 
       // scope fields
@@ -1303,7 +1286,6 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       cy.getTestId('form-submit').should('not.exist')
-      cy.getTestId('form-back').should('not.exist')
       cy.getTestId('form-cancel').should('not.exist')
     })
 
@@ -1346,7 +1328,6 @@ describe('<PluginForm />', () => {
       // button state
       cy.getTestId('form-submit').should('be.visible')
       cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-back').should('be.visible')
       cy.getTestId('form-cancel').should('be.visible')
 
       // scope & global fields
@@ -1473,7 +1454,6 @@ describe('<PluginForm />', () => {
         // button state
         cy.getTestId('form-submit').should('be.visible')
         cy.getTestId('form-submit').should('be.disabled')
-        cy.getTestId('form-back').should('not.exist')
         cy.getTestId('form-cancel').should('be.visible')
 
         // reveal advanced fields

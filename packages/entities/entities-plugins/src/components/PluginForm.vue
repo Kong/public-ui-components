@@ -82,16 +82,6 @@
               {{ t('actions.cancel') }}
             </KButton>
             <KButton
-              v-if="formType === EntityBaseFormType.Create && config.backRoute"
-              appearance="secondary"
-              class="form-action-button"
-              data-testid="form-back"
-              :disabled="form.isReadonly"
-              @click="handleClickBack"
-            >
-              {{ t('actions.back') }}
-            </KButton>
-            <KButton
               appearance="primary"
               data-testid="form-submit"
               :disabled="!canSubmit || form.isReadonly"
@@ -972,12 +962,6 @@ const handleClickCancel = (): void => {
     router.push(props.config.cancelRoute)
   } else {
     emit('cancel')
-  }
-}
-
-const handleClickBack = (): void => {
-  if (props.config.backRoute) {
-    router.push(props.config.backRoute)
   }
 }
 
