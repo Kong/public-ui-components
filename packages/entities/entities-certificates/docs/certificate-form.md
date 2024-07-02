@@ -55,6 +55,12 @@ A form component for Certificates.
     - default: `undefined`
     - Route to return to when canceling creation of an Certificate.
 
+  - `sniListRoute`:
+    - type: `RouteLocationRaw`
+    - required: `false`
+    - default: `undefined`
+    - Route of listing SNIs.
+
   - `workspace`:
     - type: `string`
     - required: `true`
@@ -76,6 +82,14 @@ The base konnect or kongManger config.
 - default: `''`
 
 If showing the `Edit` type form, the ID of the Certificate.
+
+#### `showSnisField`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+Whether to show the SNIs field in the form.
 
 ### Events
 

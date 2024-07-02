@@ -24,6 +24,11 @@ const init = async () => {
         component: () => import('./pages/FallbackPage.vue'),
       },
       {
+        path: '/snis',
+        name: 'sni-list',
+        component: () => import('./pages/FallbackPage.vue'),
+      },
+      {
         path: '/certificate-list',
         name: 'certificate-list',
         component: () => import('./pages/CertificateListPage.vue'),
