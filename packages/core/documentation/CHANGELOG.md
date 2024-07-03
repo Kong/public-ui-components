@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.12...@kong-ui-public/documentation@0.7.13) (2024-07-02)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.7.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.11...@kong-ui-public/documentation@0.7.12) (2024-06-25)
+
+
+### Bug Fixes
+
+* **product-doc-modal:** add asterisk to upload file field [tdx-4292] ([#1465](https://github.com/Kong/public-ui-components/issues/1465)) ([1c6e499](https://github.com/Kong/public-ui-components/commit/1c6e4997ad4e0b1ed6f81931ef022b85680388c1))
+
+
+
+
+
+## [0.7.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.10...@kong-ui-public/documentation@0.7.11) (2024-06-24)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.7.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.9...@kong-ui-public/documentation@0.7.10) (2024-06-20)
+
+
+### Bug Fixes
+
+* pre-release @kong/kongponents adoption ([#1456](https://github.com/Kong/public-ui-components/issues/1456)) ([47a18aa](https://github.com/Kong/public-ui-components/commit/47a18aa2cc817e2a7379cbbe18a166e22a2c802f))
+
+
+
+
+
+## [0.7.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.8...@kong-ui-public/documentation@0.7.9) (2024-06-18)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
 ## [0.7.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.7...@kong-ui-public/documentation@0.7.8) (2024-06-14)
 
 **Note:** Version bump only for package @kong-ui-public/documentation

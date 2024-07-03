@@ -3,6 +3,104 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@6.0.7...@kong-ui-public/entities-plugins@7.0.0) (2024-07-02)
+
+
+### Features
+
+* **entities-plugins:** remove back button in the form ([#1469](https://github.com/Kong/public-ui-components/issues/1469)) ([e3c93aa](https://github.com/Kong/public-ui-components/commit/e3c93aa10b03d1a499770bba4e8c1caac0b6d9df))
+
+
+### BREAKING CHANGES
+
+* **entities-plugins:** The Back button on the form has been removed, and`backRoute`
+no longer exists in the form configuration
+
+
+
+
+
+## [6.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@6.0.6...@kong-ui-public/entities-plugins@6.0.7) (2024-07-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [6.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@6.0.5...@kong-ui-public/entities-plugins@6.0.6) (2024-07-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [6.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@6.0.4...@kong-ui-public/entities-plugins@6.0.5) (2024-06-25)
+
+
+### Bug Fixes
+
+* **entities-plugins:** add timeout to plugin update calls ([#1464](https://github.com/Kong/public-ui-components/issues/1464)) ([1f6c337](https://github.com/Kong/public-ui-components/commit/1f6c3379e506d65d5a4b7f7d89cf97e5935db5fd))
+
+
+
+
+
+## [6.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@6.0.3...@kong-ui-public/entities-plugins@6.0.4) (2024-06-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [6.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@6.0.2...@kong-ui-public/entities-plugins@6.0.3) (2024-06-21)
+
+
+### Bug Fixes
+
+* stylelint ([#1460](https://github.com/Kong/public-ui-components/issues/1460)) ([e5204a6](https://github.com/Kong/public-ui-components/commit/e5204a6cab57c0f746919fa14b38c4e5f161acd3))
+
+
+
+
+
+## [6.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@6.0.1...@kong-ui-public/entities-plugins@6.0.2) (2024-06-20)
+
+
+### Bug Fixes
+
+* pre-release @kong/kongponents adoption ([#1456](https://github.com/Kong/public-ui-components/issues/1456)) ([47a18aa](https://github.com/Kong/public-ui-components/commit/47a18aa2cc817e2a7379cbbe18a166e22a2c802f))
+
+
+
+
+
+## [6.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@6.0.0...@kong-ui-public/entities-plugins@6.0.1) (2024-06-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [6.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.1.9...@kong-ui-public/entities-plugins@6.0.0) (2024-06-19)
+
+
+### Features
+
+* **plugins:** rollout redesigned RLA form ([#1455](https://github.com/Kong/public-ui-components/issues/1455)) ([d5b8f1f](https://github.com/Kong/public-ui-components/commit/d5b8f1f7e3b1f0b6f6fd3a3026e646cccfacac62))
+
+
+### BREAKING CHANGES
+
+* **plugins:** `useRLARedesignedForm` and `useHorizontalRadiosForPluginScoping` are no longer used and the redesigned RLA form will be available for all
+
+
+
+
+
 ## [5.1.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@5.1.8...@kong-ui-public/entities-plugins@5.1.9) (2024-06-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

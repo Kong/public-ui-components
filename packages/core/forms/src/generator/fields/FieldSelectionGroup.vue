@@ -1,60 +1,13 @@
 <template>
   <div class="selection-group">
-    <template v-if="schema.horizontalRadios">
-      <!-- Radio button -->
-      <div class="form-group horizontal-radios">
-        <div class="radio-group">
-          <div
-            v-for="(option, i) in schema.fields"
-            :key="i"
-            class="option-group"
-          >
-            <label
-              class="k-label"
-              :class="`${option.label}-check`"
-            >
-              <input
-                v-model="checkedGroup"
-                class="k-input"
-                type="radio"
-                :value="i"
-              >
-              {{ option.label }}
-              <div class="control-help">{{ option.description }}</div>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div
-        v-for="(option, i) in schema.fields"
-        :key="i"
-        class="option-group"
-      >
-        <!-- Selected Field -->
+    <!-- Radio button -->
+    <div class="form-group horizontal-radios">
+      <div class="radio-group">
         <div
-          v-show="option.fields && checkedGroup === i"
-          class="option-field"
+          v-for="(option, i) in schema.fields"
+          :key="i"
+          class="option-group"
         >
-          <div class="option-field-container">
-            <vue-form-generator
-              :model="model"
-              :options="{ helpAsHtml: true }"
-              :schema="{ fields: option.fields }"
-              @model-updated="updateModel"
-            />
-          </div>
-        </div>
-      </div>
-    </template>
-    <template v-else>
-      <div
-        v-for="(option, i) in schema.fields"
-        :key="i"
-        class="option-group"
-      >
-        <!-- Radio button -->
-        <div class="form-group">
           <label
             class="k-label"
             :class="`${option.label}-check`"
@@ -69,28 +22,34 @@
             <div class="control-help">{{ option.description }}</div>
           </label>
         </div>
+      </div>
+    </div>
 
-        <!-- Selected Field -->
-        <div
-          v-show="option.fields && checkedGroup === i"
-          class="option-field"
-        >
-          <div class="option-field-container">
-            <vue-form-generator
-              :model="model"
-              :options="{ helpAsHtml: true }"
-              :schema="{ fields: option.fields }"
-              @model-updated="updateModel"
-            />
-          </div>
+    <div
+      v-for="(option, i) in schema.fields"
+      :key="i"
+      class="option-group"
+    >
+      <!-- Selected Field -->
+      <div
+        v-show="option.fields && checkedGroup === i"
+        class="option-field"
+      >
+        <div class="option-field-container">
+          <vue-form-generator
+            :model="model"
+            :options="{ helpAsHtml: true }"
+            :schema="{ fields: option.fields }"
+            @model-updated="updateModel"
+          />
         </div>
       </div>
-    </template>
+    </div>
   </div>
 </template>
 
 <script>
-import abstractField from '../abstractField'
+import abstractField from './abstractField'
 
 export default {
   mixins: [abstractField],

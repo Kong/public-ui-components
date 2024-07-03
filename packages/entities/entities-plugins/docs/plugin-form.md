@@ -55,12 +55,6 @@ A form component for Plugins.
     - default: `undefined`
     - Route to return to when canceling creation/edit of a plugin.
 
-  - `backRoute`:
-    - type: `RouteLocationRaw`
-    - required: `false`
-    - default: `undefined`
-    - Route to return to the plugin selection page if clicking back when creating a plugin.
-
   - `workspace`:
     - type: `string`
     - required: `true`
@@ -90,18 +84,6 @@ A form component for Plugins.
     - required: `false`
     - default: `false`
     - *Specific to Kong Manager*. Whether or not to hide the consumer group scope field.
-
-  - `useRLARedesignedForm`:
-    - type: `boolean`
-    - required: `false`
-    - default: `false`
-    - Whether to use the redesigned form for the RLA plugin.
-
-  - `useHorizontalRadiosForPluginScoping`:
-    - type: `boolean`
-    - required: `false`
-    - default: `false`
-    - Whether to use the horizontal radios in the plugin scoping section.
 
 The base konnect or kongManger config.
 

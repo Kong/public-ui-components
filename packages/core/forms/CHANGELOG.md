@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.4...@kong-ui-public/forms@4.0.5) (2024-07-02)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.3...@kong-ui-public/forms@4.0.4) (2024-07-01)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.2...@kong-ui-public/forms@4.0.3) (2024-06-24)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.1...@kong-ui-public/forms@4.0.2) (2024-06-20)
+
+
+### Bug Fixes
+
+* pre-release @kong/kongponents adoption ([#1456](https://github.com/Kong/public-ui-components/issues/1456)) ([47a18aa](https://github.com/Kong/public-ui-components/commit/47a18aa2cc817e2a7379cbbe18a166e22a2c802f))
+
+
+
+
+
+## [4.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.0...@kong-ui-public/forms@4.0.1) (2024-06-20)
+
+
+### Bug Fixes
+
+* **forms:** use KTextArea in array fields ([#1459](https://github.com/Kong/public-ui-components/issues/1459)) ([0c3d23b](https://github.com/Kong/public-ui-components/commit/0c3d23b2b39b796d0c9c175d63e28534c5b73bd4))
+
+
+
+
+
+# [4.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.4.7...@kong-ui-public/forms@4.0.0) (2024-06-19)
+
+
+### Features
+
+* **plugins:** rollout redesigned RLA form ([#1455](https://github.com/Kong/public-ui-components/issues/1455)) ([d5b8f1f](https://github.com/Kong/public-ui-components/commit/d5b8f1f7e3b1f0b6f6fd3a3026e646cccfacac62))
+
+
+### BREAKING CHANGES
+
+* **plugins:** `useRLARedesignedForm` and `useHorizontalRadiosForPluginScoping` are no longer used and the redesigned RLA form will be available for all
+
+
+
+
+
 ## [3.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@3.4.6...@kong-ui-public/forms@3.4.7) (2024-06-14)
 
 **Note:** Version bump only for package @kong-ui-public/forms

@@ -48,9 +48,7 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   // force the scope
   // entityType: 'services',
   // entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
-  backRoute: { name: 'select-plugin' },
   cancelRoute: { name: 'home' },
-  useRLARedesignedForm: true,
 })
 
 const kongManagerConfig = ref<KongManagerPluginFormConfig>({
@@ -60,9 +58,7 @@ const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   // force the scope
   // entityType: 'consumers',
   // entityId: '123-abc-i-lover-cats',
-  backRoute: { name: 'select-plugin' },
   cancelRoute: { name: 'home' },
-  useRLARedesignedForm: true,
 })
 
 const onUpdate = (payload: Record<string, any>) => {

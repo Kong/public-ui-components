@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import abstractField from '../abstractField'
+import abstractField from './abstractField'
 import { TrashIcon } from '@kong/icons'
 
 export default {

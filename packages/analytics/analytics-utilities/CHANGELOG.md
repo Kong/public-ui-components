@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.1.0...@kong-ui-public/analytics-utilities@4.1.1) (2024-06-26)
+
+
+### Bug Fixes
+
+* add iso_code to queryable dimensions ([#1467](https://github.com/Kong/public-ui-components/issues/1467)) ([655c020](https://github.com/Kong/public-ui-components/commit/655c0201a9d05beadb3017531be81c9b36364db3))
+
+
+
+
+
 # [4.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.0.0...@kong-ui-public/analytics-utilities@4.1.0) (2024-06-14)
 
 

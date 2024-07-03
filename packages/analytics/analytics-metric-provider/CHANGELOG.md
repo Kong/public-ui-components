@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.0.6...@kong-ui-public/analytics-metric-provider@8.0.7) (2024-07-02)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [8.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.0.5...@kong-ui-public/analytics-metric-provider@8.0.6) (2024-06-26)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [8.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.0.4...@kong-ui-public/analytics-metric-provider@8.0.5) (2024-06-24)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [8.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.0.3...@kong-ui-public/analytics-metric-provider@8.0.4) (2024-06-21)
+
+
+### Bug Fixes
+
+* stylelint ([#1460](https://github.com/Kong/public-ui-components/issues/1460)) ([e5204a6](https://github.com/Kong/public-ui-components/commit/e5204a6cab57c0f746919fa14b38c4e5f161acd3))
+
+
+
+
+
+## [8.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.0.2...@kong-ui-public/analytics-metric-provider@8.0.3) (2024-06-20)
+
+
+### Bug Fixes
+
+* pre-release @kong/kongponents adoption ([#1456](https://github.com/Kong/public-ui-components/issues/1456)) ([47a18aa](https://github.com/Kong/public-ui-components/commit/47a18aa2cc817e2a7379cbbe18a166e22a2c802f))
+
+
+
+
+
 ## [8.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.0.1...@kong-ui-public/analytics-metric-provider@8.0.2) (2024-06-14)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider

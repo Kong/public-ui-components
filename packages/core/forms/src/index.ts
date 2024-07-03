@@ -9,21 +9,17 @@ export default {
   },
 }
 
-export { customFields } from './generator/fields/advanced/exports'
+export { customFields } from './generator/fields/exports'
 export { VueFormGenerator, sharedForms }
 
-export interface GetSharedFormNameOptions {
-  useRLARedesignedForm?: boolean
-}
-
-export const getSharedFormName = (modelName: string, options?: GetSharedFormNameOptions): string => {
+export const getSharedFormName = (modelName: string): string => {
   const mapping:Record<string, string> = {
     'openid-connect': 'OIDCForm',
     'post-function': 'PostFunction',
     // Pre and Post function plugins are using same component
     'pre-function': 'PostFunction',
     'exit-transformer': 'ExitTransformer',
-    ...(options?.useRLARedesignedForm && { 'rate-limiting-advanced': 'RLAForm' }),
+    'rate-limiting-advanced': 'RLAForm',
   }
 
   return mapping[modelName]

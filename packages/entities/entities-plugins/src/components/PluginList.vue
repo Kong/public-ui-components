@@ -566,8 +566,10 @@ const confirmSwitchEnablement = async () => {
 
   try {
     const { data } = props.config?.app === 'konnect'
-      ? await axiosInstance.put(url, { ...switchEnablementTarget.value, enabled })
-      : await axiosInstance.patch(url, { ...switchEnablementTarget.value, enabled })
+      // TODO: add timeout because when the plugin configuration is too big, the request can take very long.
+      // Remove timeout when the request is optimized. KM-267
+      ? await axiosInstance.put(url, { ...switchEnablementTarget.value, enabled }, { timeout: 120000 })
+      : await axiosInstance.patch(url, { ...switchEnablementTarget.value, enabled }, { timeout: 120000 })
     // Emit the success event for the host app
     emit('toggle-enabled', enabled, data)
   } catch (e: any) {

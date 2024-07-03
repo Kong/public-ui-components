@@ -29,17 +29,11 @@ export interface BasePluginSelectConfig {
 }
 
 export interface BasePluginFormConfig {
-  /** Route to return to if canceling create a Plugin (go back to plugin selection page) */
-  backRoute?: RouteLocationRaw
   /** Current entity type and id for plugins for specific entity */
   entityType?: EntityType
   entityId?: string
   /** Whether to hide the consumer group scope field. For Kong Manager OSS, this is true */
   disableConsumerGroupScope?: boolean
-  /** Whether to use the redesigned form for the RLA plugin. Default: false */
-  useRLARedesignedForm?: boolean
-  /** Whether to use the horizontal radios in the plugin scoping section. Default: false */
-  useHorizontalRadiosForPluginScoping?: boolean
 }
 
 export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig {}

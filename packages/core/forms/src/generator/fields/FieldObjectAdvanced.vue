@@ -86,7 +86,7 @@
 
 <script>
 import { TrashIcon } from '@kong/icons'
-import abstractField from '../abstractField'
+import abstractField from './abstractField'
 export default {
   components: {
     TrashIcon,

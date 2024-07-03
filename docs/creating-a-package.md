@@ -266,12 +266,6 @@ Here's an example of providing customization via a CSS custom property and provi
 }
 ```
 
-#### Do not utilize Kongponents styles
-
-You **must not** utilize the "helper" classes or CSS custom properties (including colors) provided by the Kongponents component library (e.g. `d-flex`, `w-100`, `mr-2`, `--blue-500`, `--white`, etc.).
-
-Components in this repository should truly be standalone, meaning they should not depend on classes and utility functions being globally available in the host app (other than actual Kongponents components themselves). This requires writing in-component styles rather than depending on globally available styles.
-
 #### Styles must be scoped
 
 In order to prevent component styles from leaking out into the consuming application, **all** component styles **MUST** adhere to one of the following rules:

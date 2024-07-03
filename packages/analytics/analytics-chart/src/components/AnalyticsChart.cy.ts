@@ -118,7 +118,7 @@ describe('<AnalyticsChart />', () => {
     cy.get('.analytics-chart-parent').should('be.visible')
     cy.get('[data-testid="bar-chart-container"]').should('be.visible')
     cy.get('.chart-header').should('contain.text', 'Horizontal bar chart')
-    cy.get('.legend').should('have.length', 5)
+    cy.get('.square-marker').should('have.length', 5)
     cy.get('.label').eq(0).should('have.text', '200')
     cy.get('.sub-label').should('not.exist')
   })

@@ -7,8 +7,8 @@ import isFunction from 'lodash-es/isFunction'
 import isString from 'lodash-es/isString'
 import arrayUniq from 'lodash-es/uniq'
 import uniqueId from 'lodash-es/uniqueId'
-import validators from '../utils/validators'
 import { slugifyFormID } from '../utils/schema'
+import validators from '../utils/validators'
 
 function convertValidator(validator) {
   if (isString(validator)) {
@@ -31,6 +31,7 @@ function attributesDirective(el, binding, vnode) {
     el.setAttribute(key, val)
   })
 }
+
 export default {
   name: 'abstractField',
   props: ['vfg', 'model', 'schema', 'formOptions', 'disabled'],

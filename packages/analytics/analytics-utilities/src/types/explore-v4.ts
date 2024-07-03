@@ -28,6 +28,7 @@ export const queryableExploreDimensions = [
   ...queryableBasicExploreDimensions,
   'application',
   'consumer',
+  'iso_code',
 ] as const
 
 export type QueryableExploreDimensions = typeof queryableExploreDimensions[number]
