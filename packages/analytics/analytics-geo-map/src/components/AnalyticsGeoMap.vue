@@ -1,7 +1,6 @@
 <template>
   <div
     id="mapContainer"
-    ref="mapContainer"
     class="kong-ui-public-analytics-geo-map"
   />
 </template>
@@ -11,8 +10,9 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { Map, Popup } from 'maplibre-gl'
 import type { PropType } from 'vue'
 import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatLike, MapOptions } from 'maplibre-gl'
-import type { LongLat, MapFeatureCollection } from '../types'
-import type { FeatureCollection, Feature, MultiPolygon } from 'geojson'
+import type { CountryISOA2, LongLat, MapFeatureCollection } from '../types'
+import type { Feature, MultiPolygon, Geometry, GeoJsonProperties } from 'geojson'
+import composables from '../composables'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
 const props = defineProps({
@@ -30,9 +30,9 @@ const props = defineProps({
     default: null,
   },
   fitToCountry: {
-    type: String,
+    type: Object as PropType<CountryISOA2 | null>,
     required: false,
-    default: '',
+    default: null,
   },
   initialZoom: {
     type: Number,
@@ -46,14 +46,14 @@ const props = defineProps({
     default: '',
   },
 })
-
-const mapContainer = ref<HTMLDivElement | null>(null)
 const map = ref<Map>()
+
+const { i18n } = composables.useI18n()
 
 const layerPaint = computed(() => ({
   'fill-color': [
     'match',
-    ['get', 'ISO_A2'] as ExpressionSpecification,
+    ['get', 'iso_a2'] as ExpressionSpecification,
     ...(Object.keys(props.countryMetrics).length
       ? Object.entries(props.countryMetrics).flatMap(([code, metric]) => [
         code,
@@ -84,7 +84,7 @@ const flattenPositions = (position: any): number[][] => {
   return flat as number[][]
 }
 
-const goToCountry = (countryCode: string) => {
+const goToCountry = (countryCode: CountryISOA2) => {
 
   // Overrides for large spanning countries
   if (countryCode === 'RU') {
@@ -113,7 +113,7 @@ const goToCountry = (countryCode: string) => {
     return
   }
 
-  const found = (props.geoJsonData as FeatureCollection).features.find((f: Feature) => f.properties?.ISO_A2 === countryCode)
+  const found: Feature<Geometry, GeoJsonProperties> | undefined = (props.geoJsonData).features.find((f: Feature) => f.properties?.iso_a2 === countryCode)
   if (found) {
     const coordinates = (found.geometry as MultiPolygon)?.coordinates
     if (!coordinates) return
@@ -179,10 +179,11 @@ onMounted(() => {
     map.value?.on('mousemove', 'countries-layer', (e) => {
       const feature = e.features?.[0]
       if (feature) {
-        const { ISO_A2, ADMIN } = feature.properties
-        const metric = props.countryMetrics[ISO_A2]
+        const { iso_a2, admin } = feature.properties
+        const metric = props.countryMetrics[iso_a2]
         if (metric !== undefined) {
-          popup.setLngLat(e.lngLat).setHTML(`<strong>${ADMIN}</strong>: ${metric} ${props.metricUnit}`).addTo(map.value as Map)
+          // @ts-ignore - dynamic i18n key
+          popup.setLngLat(e.lngLat).setHTML(`<strong>${admin}</strong>: ${metric} ${i18n.t(props.metricUnit)}`).addTo(map.value as Map)
         } else {
           popup.remove()
         }
@@ -225,10 +226,10 @@ watch(() => props.fitToCountry, (newVal) => {
       ])
     } else {
       if (mapOptions.value.zoom) {
-        map.value?.setZoom(props.initialZoom)
+        map.value?.setZoom(mapOptions.value.zoom)
       }
       if (mapOptions.value.center) {
-        map.value?.flyTo({ center: props.center as LngLatLike })
+        map.value?.flyTo({ center: mapOptions.value.center })
       }
     }
   }

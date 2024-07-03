@@ -39,8 +39,10 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "devDependencies": {
+    "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.12.12",
     "@kong/kongponents": "9.0.0-alpha.162",
+    "@types/geojson": "^7946.0.14",
     "maplibre-gl": "^4.3.2",
     "vue": "^3.4.27"
   },
@@ -62,12 +64,12 @@
     "errorLimit": "200KB"
   },
   "peerDependencies": {
+    "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.0.0-alpha.162",
     "maplibre-gl": "^4.3.2",
     "vue": "^3.4.27"
   },
   "dependencies": {
-    "@kong-ui-public/analytics-utilities": "workspace:^",
-    "@types/geojson": "^7946.0.14"
+    "@kong-ui-public/analytics-utilities": "workspace:^"
   }
 }

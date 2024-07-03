@@ -18,7 +18,13 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     },
     rollupOptions: {
       // Make sure to externalize deps that shouldn't be bundled into your library
-      external: ['maplibre-gl'],
+      external: ['maplibre-gl', '@kong-ui-public/i18n'],
+      output: {
+        // Provide global variables to use in the UMD build for externalized deps
+        globals: {
+          '@kong-ui-public/i18n': 'kong-ui-public-i18n',
+        },
+      },
     },
   },
 }))
