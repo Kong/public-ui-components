@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { AnalyticsGeoMap } from '../src'
-import countryGeoJson from './countries.geo.json'
+import countryGeoJson from './countries-simple-geo.json'
 import type { FeatureCollection } from 'geojson'
 
 const fitToCountry = ref()
