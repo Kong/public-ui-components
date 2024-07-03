@@ -48,8 +48,15 @@ const gridContainer = ref(null)
 const containerWidth = ref(0)
 
 const resizeObserver = new ResizeObserver(entries => {
-  // Only observing one element
-  containerWidth.value = entries[0].contentRect.width
+  // Wrapper 'window.requestAnimationFrame' is needed for disabling "ResizeObserver loop limit exceeded" error in DD
+  window.requestAnimationFrame(() => {
+    if (!Array.isArray(entries) || !entries.length) {
+      return
+    }
+
+    // Only observing one element
+    containerWidth.value = entries[0].contentRect.width
+  })
 })
 
 onMounted(() => {
