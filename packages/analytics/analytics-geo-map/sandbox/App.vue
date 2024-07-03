@@ -9,10 +9,12 @@
     />
     <div class="map-container">
       <AnalyticsGeoMap
+        :center="{ lng: 0, lat: 0 }"
         :country-metrics="countryMetrics"
         :fit-to-country="fitToCountry"
         :geo-json-data="(countryGeoJson as FeatureCollection)"
-        :initial-zoom="1.6"
+        :initial-zoom="1"
+        :metric-unit="'requests'"
       />
     </div>
   </div>

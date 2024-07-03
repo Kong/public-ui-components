@@ -1,31 +1,105 @@
 # @kong-ui-public/analytics-geo-map
 
-{A description of this package}
+This Vue component provides a geographical map visualization based on `maplibre-gl` and displays country metrics using color-coded layers. It supports dynamic updates to country metrics and allows focusing on specific countries.
+Renders provided GeoJSON data into a choropleth style map.
 
 - [Features](#features)
 - [Requirements](#requirements)
 - [Usage](#usage)
   - [Install](#install)
   - [Props](#props)
+  - [Example](#example)
 
 ## Features
 
-- List of package features
+- Interactive geographical map visualization using `maplibre-gl`.
+- Color-coded countries based on provided metrics.
+- Tooltips showing country names and their corresponding metrics.
+- Ability to focus on specific countries with customizable bounds.
+- Dynamic updates to country metrics and map features.
 
 ## Requirements
 
-- List of package requirements (e.g. "`vue` and must be initialized in the host application")
+- `vue` must be initialized in the host application.
+- `maplibre-gl` must be added as a `dependency` in the host application. [See here](https://www.npmjs.com/package/maplibre-gl)
 
 ## Usage
 
 ### Install
 
-{Installation instructions}
+First, ensure you have `maplibre-gl` installed:
+
+```bash
+npm install maplibre-gl
+npm install @kong-ui-public/analytics-geo-map
+```
 
 ### Props
 
-#### `example`
+#### `countryMetrics`
 
-- type: `Boolean`
-- required: `false`
-- default: `false`
+- **type:** `Object`
+- **required:** `true`
+- **description:** An object mapping country codes to metric values. These metrics determine the color of each country on the map.
+
+#### `geoJsonData`
+
+- **type:** `Object`
+- **required:** `true`
+- **description:** GeoJSON data for the map, defining the shapes and positions of countries.
+
+#### `center`
+
+- **type:** `Object`
+- **required:** `false`
+- **default:** `null`
+- **description:** Initial center of the map. Expects an object with `lat` and `lng` properties.
+
+#### `fitToCountry`
+
+- **type:** `String`
+- **required:** `false`
+- **default:** `''`
+- **description:** Country code to fit the map bounds to. Overrides initial center and zoom.
+
+#### `initialZoom`
+
+- **type:** `Number`
+- **required:** `false`
+- **default:** `null`
+- **validator:** `value => value >= 0 && value <= 24`
+- **description:** Initial zoom level of the map.
+
+#### `metricUnit`
+
+- **type:** `String`
+- **required:** `false`
+- **default:** `''`
+- **description:** Unit of measurement for the metrics displayed in the tooltips.
+
+### Example
+
+```vue
+<template>
+  <AnalyticsGeoMap
+    :countryMetrics="countryMetrics"
+    :geoJsonData="geoJsonData"
+    :center="{ lat: 0, lng: 0 }"
+    :fitToCountry="'US'"
+    :initialZoom="2"
+    metricUnit="%"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import AnalyticsGeoMap from '@kong-ui-public/analytics-geo-map'
+import geoJsonData from './path-to-geojson-data.json'
+
+const countryMetrics = ref({
+  US: 75,
+  CA: 50,
+  MX: 25,
+  // Other countries
+})
+</script>

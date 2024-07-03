@@ -10,7 +10,7 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { Map, Popup } from 'maplibre-gl'
 import type { PropType } from 'vue'
-import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatLike } from 'maplibre-gl'
+import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatLike, MapOptions } from 'maplibre-gl'
 import type { LongLat, MapFeatureCollection } from '../types'
 import type { FeatureCollection, Feature, MultiPolygon } from 'geojson'
 import 'maplibre-gl/dist/maplibre-gl.css'
@@ -40,15 +40,15 @@ const props = defineProps({
     default: null,
     validator: (value: number) => value >= 0 && value <= 24,
   },
+  metricUnit: {
+    type: String,
+    required: false,
+    default: '',
+  },
 })
 
 const mapContainer = ref<HTMLDivElement | null>(null)
 const map = ref<Map>()
-
-const mapOptions = computed(() => (props.center && props.initialZoom && {
-  center: [props.center.lng, props.center.lat],
-  zoom: props.initialZoom,
-}))
 
 const layerPaint = computed(() => ({
   'fill-color': [
@@ -133,20 +133,31 @@ const goToCountry = (countryCode: string) => {
   }
 }
 
-onMounted(() => {
-  map.value = new Map({
+const mapOptions = computed(() => {
+  const options: MapOptions = {
     container: 'mapContainer',
-    // style: 'https://demotiles.maplibre.org/style.json',
-    // style: 'https://api.maptiler.com/maps/streets/style.json?key=cBeCDKkznq5O0aZc1ykX',
-    // style: 'https://raw.githubusercontent.com/go2garret/maps/main/src/assets/json/openStreetMap.json',
     style: { version: 8, sources: {}, layers: [] },
-    ... ( mapOptions.value && { center: mapOptions.value.center as LngLatLike }),
-    ... ( mapOptions.value && { zoom: mapOptions.value.zoom }),
-    bounds: [
+  }
+  if (!props.center && !props.initialZoom) {
+    options.bounds = [
       [-180, -90],
       [180, 90],
-    ],
-  })
+    ]
+  } else {
+    if (props.center) {
+      options.center = props.center as LngLatLike
+    }
+    if (props.initialZoom) {
+      options.zoom = props.initialZoom
+    }
+  }
+
+  return options
+})
+
+onMounted(() => {
+
+  map.value = new Map(mapOptions.value)
   map.value.on('load', () => {
     map.value?.addSource('countries', {
       type: 'geojson',
@@ -171,7 +182,7 @@ onMounted(() => {
         const { ISO_A2, ADMIN } = feature.properties
         const metric = props.countryMetrics[ISO_A2]
         if (metric !== undefined) {
-          popup.setLngLat(e.lngLat).setHTML(`<strong>${ADMIN}</strong>: ${metric}`).addTo(map.value as Map)
+          popup.setLngLat(e.lngLat).setHTML(`<strong>${ADMIN}</strong>: ${metric} ${props.metricUnit}`).addTo(map.value as Map)
         } else {
           popup.remove()
         }
@@ -207,10 +218,19 @@ watch(() => props.fitToCountry, (newVal) => {
   if (map.value && newVal) {
     goToCountry(newVal)
   } else {
-    map.value?.fitBounds([
-      [-180, -90],
-      [180, 90],
-    ])
+    if (!mapOptions.value.center && !mapOptions.value.zoom) {
+      map.value?.fitBounds([
+        [-180, -90],
+        [180, 90],
+      ])
+    } else {
+      if (mapOptions.value.zoom) {
+        map.value?.setZoom(props.initialZoom)
+      }
+      if (mapOptions.value.center) {
+        map.value?.flyTo({ center: props.center as LngLatLike })
+      }
+    }
   }
 })
 
