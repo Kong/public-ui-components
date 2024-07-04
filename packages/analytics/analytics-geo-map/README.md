@@ -67,6 +67,13 @@ npm install @kong-ui-public/analytics-geo-map
 - **default:** `true`
 - **description:** Whether to display a legend on the map.
 
+#### `showTooltipValue`
+
+- **type:** `Boolean`
+- **required:** `false`
+- **default:** `true`
+- **description:** Display value in the tooltip.
+
 #### `center`
 
 - **type:** `Object` (`LongLat`)

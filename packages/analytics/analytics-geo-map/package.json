@@ -70,6 +70,7 @@
     "vue": "^3.4.27"
   },
   "dependencies": {
-    "@kong-ui-public/analytics-utilities": "workspace:^"
+    "@kong-ui-public/analytics-utilities": "workspace:^",
+    "approximate-number": "^2.1.1"
   }
 }

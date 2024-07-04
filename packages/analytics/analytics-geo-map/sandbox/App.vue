@@ -45,7 +45,7 @@ const items = ref([
 const countryMetrics = computed(() => {
   const metrics: Record<string, number> = {}
   selectedCountries.value.forEach((country) => {
-    metrics[country] = Math.floor(Math.random() * 100)
+    metrics[country] = Math.floor(Math.random() * 50000)
   })
   return metrics
 

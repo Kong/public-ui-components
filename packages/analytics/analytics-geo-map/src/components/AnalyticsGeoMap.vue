@@ -40,6 +40,8 @@ import type { Feature, MultiPolygon, Geometry, GeoJsonProperties } from 'geojson
 import composables from '../composables'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
+// @ts-ignore - approximate-number no exported module
+import approxNum from 'approximate-number'
 
 const props = defineProps({
   countryMetrics: {
@@ -51,14 +53,19 @@ const props = defineProps({
     required: true,
   },
   metricUnit: {
-    type: Object as PropType<MetricUnits>,
+    type: String as PropType<MetricUnits>,
     required: true,
   },
   metric: {
-    type: Object as PropType<ExploreAggregations>,
+    type: String as PropType<ExploreAggregations>,
     required: true,
   },
   withLegend: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
+  showTooltipValue: {
     type: Boolean,
     required: false,
     default: true,
@@ -69,7 +76,7 @@ const props = defineProps({
     default: null,
   },
   fitToCountry: {
-    type: Object as PropType<CountryISOA2 | null>,
+    type: String as PropType<CountryISOA2 | null>,
     required: false,
     default: null,
   },
@@ -140,11 +147,11 @@ const legendData = computed(() => {
     const nextLogBoundary = index === 0 ? logMaxMetric.value : intervals[index - 1]
     let rangeText = ''
     if (index === 0) {
-      rangeText = `> ${Math.trunc(Math.exp(logBoundary))}`
+      rangeText = `> ${approxNum(Math.trunc(Math.exp(logBoundary)), { capital: true })}`
     } else if (index === intervals.length - 1) {
-      rangeText = `< ${Math.trunc(Math.exp(nextLogBoundary))}`
+      rangeText = `< ${approxNum(Math.trunc(Math.exp(nextLogBoundary)), { capital: true })}`
     } else {
-      rangeText = `${Math.trunc(Math.exp(logBoundary))} - ${Math.trunc(Math.exp(nextLogBoundary))}`
+      rangeText = `${approxNum(Math.trunc(Math.exp(logBoundary)), { capital: true })} - ${approxNum(Math.trunc(Math.exp(nextLogBoundary)), { capital: true })}`
     }
     return {
       color: getColor(Math.exp(logBoundary)),
@@ -263,7 +270,8 @@ onMounted(() => {
         const metric = props.countryMetrics[iso_a2]
         if (metric !== undefined) {
           // @ts-ignore - dynamic i18n key
-          popup.setLngLat(e.lngLat).setHTML(`<strong>${admin}</strong>: ${metric} ${i18n.t(`metricUnits.${props.metricUnit}`, { plural: metric.length > 1 ? 's' : '' })}`).addTo(map.value as Map)
+          const popupHtml = props.showTooltipValue ? `<strong>${admin}</strong>: ${approxNum(metric, { capital: true })} ${i18n.t(`metricUnits.${props.metricUnit}`, { plural: metric.length > 1 ? 's' : '' })}` : `<strong>${admin}</strong>`
+          popup.setLngLat(e.lngLat).setHTML(popupHtml).addTo(map.value as Map)
         } else {
           popup.remove()
         }
