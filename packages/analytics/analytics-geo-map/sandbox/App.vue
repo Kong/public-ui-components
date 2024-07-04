@@ -14,6 +14,7 @@
         :fit-to-country="fitToCountry"
         :geo-json-data="(countryGeoJson as FeatureCollection)"
         :initial-zoom="1"
+        :metric="'request_count'"
         :metric-unit="'requests'"
       />
     </div>

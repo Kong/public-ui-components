@@ -38,44 +38,56 @@ npm install @kong-ui-public/analytics-geo-map
 
 #### `countryMetrics`
 
-- **type:** `Object`
+- **type:** `Object` (`Record<string, number>`)
 - **required:** `true`
 - **description:** An object mapping country codes to metric values. These metrics determine the color of each country on the map.
 
 #### `geoJsonData`
 
-- **type:** `Object`
+- **type:** `Object` (`MapFeatureCollection`)
 - **required:** `true`
 - **description:** GeoJSON data for the map, defining the shapes and positions of countries.
 
+#### `metricUnit`
+
+- **type:** `Object` (`MetricUnits`)
+- **required:** `true`
+- **description:** Unit of measurement for the metrics displayed in the tooltips.
+
+#### `metric`
+
+- **type:** `Object` (`ExploreAggregations`)
+- **required:** `true`
+- **description:** Metric aggregations for the data displayed on the map.
+
+#### `withLegend`
+
+- **type:** `Boolean`
+- **required:** `false`
+- **default:** `true`
+- **description:** Whether to display a legend on the map.
+
 #### `center`
 
-- **type:** `Object`
+- **type:** `Object` (`LongLat`)
 - **required:** `false`
 - **default:** `null`
 - **description:** Initial center of the map. Expects an object with `lat` and `lng` properties.
 
 #### `fitToCountry`
 
-- **type:** `String`
+- **type:** `Object` (`CountryISOA2 | null`)
 - **required:** `false`
-- **default:** `''`
+- **default:** `null`
 - **description:** Country code to fit the map bounds to. Overrides initial center and zoom.
 
 #### `initialZoom`
 
-- **type:** `Number`
+- **type:** `Number | null`
 - **required:** `false`
 - **default:** `null`
 - **validator:** `value => value >= 0 && value <= 24`
 - **description:** Initial zoom level of the map.
-
-#### `metricUnit`
-
-- **type:** `String`
-- **required:** `false`
-- **default:** `''`
-- **description:** Unit of measurement for the metrics displayed in the tooltips.
 
 ### Example
 

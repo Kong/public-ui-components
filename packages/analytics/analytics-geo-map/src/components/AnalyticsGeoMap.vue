@@ -1,8 +1,33 @@
 <template>
-  <div
-    id="mapContainer"
-    class="kong-ui-public-analytics-geo-map"
-  />
+  <div class="kong-ui-public-analytics-geo-map">
+    <div
+      id="mapContainer"
+      class="analytics-geo-map-container"
+    />
+    <!-- Legend -->
+    <div
+      v-if="showLegend"
+      class="legend"
+    >
+      <div
+        v-if="metric"
+        class="legend-title"
+      >
+        {{ legendTitle }}
+      </div>
+      <div
+        v-for="(color, index) in legendData"
+        :key="index"
+        class="legend-item"
+      >
+        <span
+          class="legend-color"
+          :style="{ backgroundColor: color.color }"
+        />
+        <span class="legend-text">{{ color.range }}</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -10,10 +35,11 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { Map, Popup } from 'maplibre-gl'
 import type { PropType } from 'vue'
 import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatLike, MapOptions } from 'maplibre-gl'
-import type { CountryISOA2, LongLat, MapFeatureCollection } from '../types'
+import type { CountryISOA2, LongLat, MapFeatureCollection, MetricUnits } from '../types'
 import type { Feature, MultiPolygon, Geometry, GeoJsonProperties } from 'geojson'
 import composables from '../composables'
 import 'maplibre-gl/dist/maplibre-gl.css'
+import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 
 const props = defineProps({
   countryMetrics: {
@@ -23,6 +49,19 @@ const props = defineProps({
   geoJsonData: {
     type: Object as PropType<MapFeatureCollection>,
     required: true,
+  },
+  metricUnit: {
+    type: Object as PropType<MetricUnits>,
+    required: true,
+  },
+  metric: {
+    type: Object as PropType<ExploreAggregations>,
+    required: true,
+  },
+  withLegend: {
+    type: Boolean,
+    required: false,
+    default: true,
   },
   center: {
     type: Object as PropType<LongLat>,
@@ -35,15 +74,10 @@ const props = defineProps({
     default: null,
   },
   initialZoom: {
-    type: Number,
+    type: [Number, null] as PropType<number | null>,
     required: false,
     default: null,
     validator: (value: number) => value >= 0 && value <= 24,
-  },
-  metricUnit: {
-    type: String,
-    required: false,
-    default: '',
   },
 })
 const map = ref<Map>()
@@ -65,13 +99,59 @@ const layerPaint = computed(() => ({
   'fill-opacity': 0.7,
 }))
 
+const showLegend = computed(() => {
+  return props.withLegend && Object.keys(props.countryMetrics).length > 0
+})
+
+const logMinMetric = computed(() => Math.log(Math.min(...Object.values(props.countryMetrics))))
+const logMaxMetric = computed(() => Math.log(Math.max(...Object.values(props.countryMetrics))))
+
+
 const getColor = (metric: number) => {
-  if (metric > 80) return '#296378'
-  if (metric > 60) return '#0D8093'
-  if (metric > 40) return '#009FA9'
-  if (metric > 20) return '#00BDB7'
+  const logMetric = Math.log(metric)
+  const range = logMaxMetric.value - logMinMetric.value
+  const step = range / 5
+
+  if (logMetric >= logMinMetric.value + 4 * step) return '#296378'
+  if (logMetric >= logMinMetric.value + 3 * step) return '#0D8093'
+  if (logMetric >= logMinMetric.value + 2 * step) return '#009FA9'
+  if (logMetric >= logMinMetric.value + 1 * step) return '#00BDB7'
   return '#0CDCBD'
 }
+
+const legendTitle = computed(() => {
+  // @ts-ignore - dynamic i18n key
+  return props.metric && i18n.t(`metrics.${props.metric}`) || ''
+})
+
+const legendData = computed(() => {
+  const range = logMaxMetric.value - logMinMetric.value
+  const step = range / 5
+
+  const intervals = [
+    logMinMetric.value + 4 * step,
+    logMinMetric.value + 3 * step,
+    logMinMetric.value + 2 * step,
+    logMinMetric.value + 1 * step,
+    logMinMetric.value,
+  ]
+
+  return intervals.map((logBoundary, index) => {
+    const nextLogBoundary = index === 0 ? logMaxMetric.value : intervals[index - 1]
+    let rangeText = ''
+    if (index === 0) {
+      rangeText = `> ${Math.trunc(Math.exp(logBoundary))}`
+    } else if (index === intervals.length - 1) {
+      rangeText = `< ${Math.trunc(Math.exp(nextLogBoundary))}`
+    } else {
+      rangeText = `${Math.trunc(Math.exp(logBoundary))} - ${Math.trunc(Math.exp(nextLogBoundary))}`
+    }
+    return {
+      color: getColor(Math.exp(logBoundary)),
+      range: rangeText,
+    }
+  })
+})
 
 // Simplified coords may be 2 or 3 layers
 const flattenPositions = (position: any): number[][] => {
@@ -183,7 +263,7 @@ onMounted(() => {
         const metric = props.countryMetrics[iso_a2]
         if (metric !== undefined) {
           // @ts-ignore - dynamic i18n key
-          popup.setLngLat(e.lngLat).setHTML(`<strong>${admin}</strong>: ${metric} ${i18n.t(props.metricUnit)}`).addTo(map.value as Map)
+          popup.setLngLat(e.lngLat).setHTML(`<strong>${admin}</strong>: ${metric} ${i18n.t(`metricUnits.${props.metricUnit}`, { plural: metric.length > 1 ? 's' : '' })}`).addTo(map.value as Map)
         } else {
           popup.remove()
         }
@@ -240,6 +320,50 @@ watch(() => props.fitToCountry, (newVal) => {
 <style lang="scss" scoped>
 .kong-ui-public-analytics-geo-map {
   height: 100%;
+  position: relative;
   width: 100%;
+
+  .analytics-geo-map-container {
+    height: 100%;
+    width: 100%;
+  }
+
+  .legend {
+    background: white;
+    border-radius: $kui-border-radius-20;
+    box-shadow: $kui-shadow;
+    display: flex;
+    flex-direction: column;
+    left: 8px;
+    opacity: 0.9;
+    padding: $kui-space-30;
+    position: absolute;
+    top: 8px;
+  }
+
+  .legend-title {
+    font-size: $kui-font-size-20;
+    margin-bottom: $kui-space-40;
+  }
+
+  .legend-item {
+    align-items: center;
+    display: flex;
+  }
+
+  .legend-item:not(:last-child) {
+    margin-bottom: $kui-space-30;
+  }
+
+  .legend-color {
+    border-radius: $kui-border-radius-10;
+    height: 20px;
+    margin-right: $kui-space-40;
+    width: 20px;
+  }
+
+  .legend-text {
+    font-size: $kui-font-size-20;
+  }
 }
 </style>
