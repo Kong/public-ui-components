@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.4.4...@kong-ui-public/entities-gateway-services@3.5.0) (2024-07-04)
+
+
+### Features
+
+* **entities:** preserve one column in entity lists ([#1475](https://github.com/Kong/public-ui-components/issues/1475)) ([773d0ba](https://github.com/Kong/public-ui-components/commit/773d0ba11f0790a3873f441fee3f74790783a6b4))
+
+
+
+
+
 ## [3.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.4.3...@kong-ui-public/entities-gateway-services@3.4.4) (2024-07-02)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services
