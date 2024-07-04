@@ -287,7 +287,7 @@ const headers = computed<Array<InternalHeader>>(() => {
       label: field.label ?? key,
       key,
       sortable: field.sortable ?? false,
-      hidable: true,
+      hidable: field.hidable ?? true,
     })
   })
 
@@ -370,6 +370,16 @@ const combinedInitialFetcherParams = computed((): Partial<FetcherParams> => {
 
 const handleUpdateTablePreferences = (newTablePreferences: TablePreferences): void => {
   tablePreferences.value = newTablePreferences
+  // Iterate over each header and check if it's non-hidable
+  headers.value.forEach((header: InternalHeader) => {
+    if (!('hidable' in header) || !tablePreferences.value.columnVisibility) {
+      return
+    }
+    // If the header is non-hidable, always make it visible
+    if (header.hidable === false) {
+      tablePreferences.value.columnVisibility[header.key] = true
+    }
+  })
 
   if (cacheId.value) {
     setTablePreferences(cacheId.value, newTablePreferences)

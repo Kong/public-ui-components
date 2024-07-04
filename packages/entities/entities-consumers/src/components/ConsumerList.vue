@@ -284,7 +284,8 @@ const preferencesStorageKey = computed<string>(
  */
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
-  username: { label: t('consumers.list.table_headers.username'), searchable: true, sortable: true },
+  // the Username column is non-hidable
+  username: { label: t('consumers.list.table_headers.username'), searchable: true, sortable: true, hidable: false },
   custom_id: { label: t('consumers.list.table_headers.custom_id'), searchable: true, sortable: true },
   tags: { label: t('consumers.list.table_headers.tags'), sortable: false },
 }
