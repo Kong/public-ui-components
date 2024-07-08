@@ -224,6 +224,7 @@ const mapOptions = computed(() => {
   const options: MapOptions = {
     container: 'mapContainer',
     style: { version: 8, sources: {}, layers: [] },
+    attributionControl: false,
   }
   if (!props.center && !props.initialZoom) {
     options.bounds = [
