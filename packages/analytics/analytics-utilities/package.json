@@ -61,6 +61,6 @@
     "date-fns-tz": "^2.0.1"
   },
   "devDependencies": {
-    "@kong/design-tokens": "1.13.2"
+    "@kong/design-tokens": "1.15.1"
   }
 }
