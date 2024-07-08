@@ -284,8 +284,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.12.12
-        version: 1.12.12
+        specifier: 1.15.1
+        version: 1.15.1
       '@kong/kongponents':
         specifier: 9.0.0-alpha.162
         version: 9.0.0-alpha.162(axios@1.6.8)(vue-router@4.3.2(vue@3.4.27(typescript@5.3.3)))(vue@3.4.27(typescript@5.3.3))
@@ -1729,6 +1729,7 @@ packages:
 
   '@evilmartians/lefthook@1.6.14':
     resolution: {integrity: sha512-7b+VqUXDIRzUwI6cAqRh5J8CGe004iVciBgqdib1357TCq5ykbYjASKfXZsHzk/dHLgIUu3GYqLEuJsc+anJog==}
+    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -1834,9 +1835,6 @@ packages:
 
   '@kong/atc-router@1.6.0-rc.1':
     resolution: {integrity: sha512-nFR01kKK4vAsXGZ0g8YPzJSOrTEPzgtVm3iWv4JPNx1kFFRKDTJrmDFSWZmEPC2VtsSdglewGB3Sqzpi/DfiIg==}
-
-  '@kong/design-tokens@1.12.12':
-    resolution: {integrity: sha512-2efq8GaNUBweF5tp2hd4iQG22TfbGdDBfRgTzWvYCixdtEI0MjacLsBTl/iiQEdsekxb5dmC3Dq4qy/bWpCrnQ==}
 
   '@kong/design-tokens@1.15.1':
     resolution: {integrity: sha512-dDgAZIF3nFENKcMHHFDZg62W/Tkrt6YRS+BF61nWOImTV/zuhpupUF4FBvrcWc/QdilI/nSMwNDYEqpOO/gMyA==}
@@ -9794,8 +9792,6 @@ snapshots:
       vue: 3.4.27(typescript@5.3.3)
 
   '@kong/atc-router@1.6.0-rc.1': {}
-
-  '@kong/design-tokens@1.12.12': {}
 
   '@kong/design-tokens@1.15.1': {}
 
