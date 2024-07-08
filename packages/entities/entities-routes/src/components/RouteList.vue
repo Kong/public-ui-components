@@ -307,7 +307,8 @@ const fetcherCacheKey = ref<number>(1)
  */
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
-  name: { label: t('routes.list.table_headers.name'), searchable: true, sortable: true },
+  // the Name column is non-hidable
+  name: { label: t('routes.list.table_headers.name'), searchable: true, sortable: true, hidable: false },
   protocols: { label: t('routes.list.table_headers.protocols'), searchable: true },
   ...!props.hideTraditionalColumns && {
     hosts: { label: t('routes.list.table_headers.hosts'), searchable: true },

@@ -62,6 +62,7 @@ interface InternalHeaderForFields {
   key: string
   label: string
   sortable: boolean
+  hidable: boolean
 }
 
 interface InternalHeaderForActions {

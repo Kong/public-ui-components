@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-vaults",
-  "version": "3.3.11",
+  "version": "3.4.1",
   "type": "module",
   "main": "./dist/entities-vaults.umd.js",
   "module": "./dist/entities-vaults.es.js",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.13.2",
+    "@kong/design-tokens": "1.15.1",
     "@kong/kongponents": "9.0.4",
     "axios": "^1.6.8",
     "vue": "^3.4.27",
@@ -69,6 +69,6 @@
   },
   "dependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@kong/icons": "^1.13.0"
+    "@kong/icons": "^1.14.1"
   }
 }

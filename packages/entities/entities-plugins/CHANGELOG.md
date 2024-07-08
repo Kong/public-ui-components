@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@7.1.1...@kong-ui-public/entities-plugins@7.1.2) (2024-07-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [7.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@7.1.0...@kong-ui-public/entities-plugins@7.1.1) (2024-07-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [7.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@7.0.0...@kong-ui-public/entities-plugins@7.1.0) (2024-07-04)
+
+
+### Features
+
+* **entities:** preserve one column in entity lists ([#1475](https://github.com/Kong/public-ui-components/issues/1475)) ([773d0ba](https://github.com/Kong/public-ui-components/commit/773d0ba11f0790a3873f441fee3f74790783a6b4))
+
+
+
+
+
 # [7.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@6.0.7...@kong-ui-public/entities-plugins@7.0.0) (2024-07-02)
 
 
