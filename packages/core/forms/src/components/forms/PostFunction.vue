@@ -9,11 +9,11 @@
 </template>
 
 <script setup lang="ts">
+import { createI18n } from '@kong-ui-public/i18n'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
-import { createI18n } from '@kong-ui-public/i18n'
-import english from '../locales/en.json'
-import VueFormGenerator from '../generator/FormGenerator.vue'
+import english from '../../locales/en.json'
+import VueFormGenerator from '../FormGenerator.vue'
 
 const { t, te } = createI18n<typeof english>('en-us', english)
 

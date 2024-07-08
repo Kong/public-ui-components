@@ -226,7 +226,7 @@ import { AddIcon, RemoveIcon } from '@kong/icons'
 import type { SelectItem } from '@kong/kongponents'
 import cloneDeep from 'lodash-es/cloneDeep'
 import { computed, nextTick, ref } from 'vue'
-import english from '../locales/en.json'
+import english from '../../locales/en.json'
 
 interface UseCase {
   label: string
