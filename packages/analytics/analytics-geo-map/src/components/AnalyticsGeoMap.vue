@@ -271,7 +271,7 @@ onMounted(() => {
         const metric = props.countryMetrics[iso_a2]
         if (metric !== undefined) {
           // @ts-ignore - dynamic i18n key
-          const popupHtml = props.showTooltipValue ? `<strong>${admin}</strong>: ${approxNum(metric, { capital: true })} ${i18n.t(`metricUnits.${props.metricUnit}`, { plural: metric.length > 1 ? 's' : '' })}` : `<strong>${admin}</strong>`
+          const popupHtml = props.showTooltipValue ? `<strong>${admin}</strong>: ${approxNum(metric, { capital: true })} ${i18n.t(`metricUnits.${props.metricUnit}`, { plural: metric > 1 ? 's' : '' })}` : `<strong>${admin}</strong>`
           popup.setLngLat(e.lngLat).setHTML(popupHtml).addTo(map.value as Map)
         } else {
           popup.remove()
