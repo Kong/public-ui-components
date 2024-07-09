@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.7...@kong-ui-public/forms@4.0.8) (2024-07-09)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1478](https://github.com/Kong/public-ui-components/issues/1478)) ([47cd468](https://github.com/Kong/public-ui-components/commit/47cd4680b8ed1fb686270df19853288de19c3106))
+
+
+
+
+
 ## [4.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.6...@kong-ui-public/forms@4.0.7) (2024-07-08)
 
 **Note:** Version bump only for package @kong-ui-public/forms
