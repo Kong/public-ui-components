@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.1.3...@kong-ui-public/analytics-geo-map@0.1.4) (2024-07-09)
+
+
+### Bug Fixes
+
+* set the max bounds to prevent zooming out too far ([#1485](https://github.com/Kong/public-ui-components/issues/1485)) ([1cf38da](https://github.com/Kong/public-ui-components/commit/1cf38da9e94b19e35098f7a980811333f2cda83a))
+
+
+
+
+
 ## [0.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.1.2...@kong-ui-public/analytics-geo-map@0.1.3) (2024-07-09)
 
 
