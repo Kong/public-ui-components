@@ -34,6 +34,8 @@ export interface BasePluginFormConfig {
   entityId?: string
   /** Whether to hide the consumer group scope field. For Kong Manager OSS, this is true */
   disableConsumerGroupScope?: boolean
+  /** Whether to use the new OpenTelemetry schema introduced in https://github.com/Kong/kong-ee/pull/9399/files#diff-8d295aaa72ee8a0a18dcb8010b0a73ac36a92e1e825b3202b1d1736d07d7e514 */
+  isNewOtelSchema?: boolean
 }
 
 export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig {}
