@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@7.1.4...@kong-ui-public/entities-plugins@7.2.0) (2024-07-09)
+
+
+### Features
+
+* **entities-plugins:** add isNewOtelSchema prop ([#1483](https://github.com/Kong/public-ui-components/issues/1483)) ([40175c7](https://github.com/Kong/public-ui-components/commit/40175c7cac30735c763f935b83234e85bcd81e56))
+
+
+
+
+
 ## [7.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@7.1.3...@kong-ui-public/entities-plugins@7.1.4) (2024-07-09)
 
 
