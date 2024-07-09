@@ -616,6 +616,9 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     isEnterprise: false,
     nameKey: 'plugins.meta.opentelemetry.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+    fieldRules: {
+      atLeastOneOf: [['config.traces_endpoint', 'config.logs_endpoint']],
+    },
   },
   'websocket-validator': {
     descriptionKey: 'plugins.meta.websocket-validator.description',

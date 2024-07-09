@@ -32,8 +32,9 @@
           </div>
         </template>
 
+        <!-- For the opentelemetry plugin, we only need to show rule alerts with its new schema -->
         <template
-          v-if="PLUGIN_METADATA[formModel.name] && PLUGIN_METADATA[formModel.name].fieldRules"
+          v-if="PLUGIN_METADATA[formModel.name]?.fieldRules && (props.config.isNewOtelSchema || formModel.name !== 'opentelemetry')"
           #plugin-config-before-content
         >
           <PluginFieldRuleAlerts :rules="PLUGIN_METADATA[formModel.name].fieldRules!" />
