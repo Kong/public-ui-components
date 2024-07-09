@@ -34,8 +34,8 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { Map, Popup } from 'maplibre-gl'
 import type { PropType } from 'vue'
-import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatLike, MapOptions } from 'maplibre-gl'
-import type { CountryISOA2, LongLat, MapFeatureCollection, MetricUnits } from '../types'
+import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatBoundsLike, MapOptions } from 'maplibre-gl'
+import type { CountryISOA2, MapFeatureCollection, MetricUnits } from '../types'
 import type { Feature, MultiPolygon, Geometry, GeoJsonProperties } from 'geojson'
 import composables from '../composables'
 import 'maplibre-gl/dist/maplibre-gl.css'
@@ -70,21 +70,15 @@ const props = defineProps({
     required: false,
     default: true,
   },
-  center: {
-    type: Object as PropType<LongLat>,
-    required: false,
-    default: null,
-  },
   fitToCountry: {
     type: String as PropType<CountryISOA2 | null>,
     required: false,
     default: null,
   },
-  initialZoom: {
-    type: [Number, null] as PropType<number | null>,
+  bounds: {
+    type: Object as PropType<LngLatBoundsLike>,
     required: false,
-    default: null,
-    validator: (value: number) => value >= 0 && value <= 24,
+    default: () => null,
   },
 })
 const map = ref<Map>()
@@ -225,19 +219,15 @@ const mapOptions = computed(() => {
     container: 'mapContainer',
     style: { version: 8, sources: {}, layers: [] },
     attributionControl: false,
+    // fit bounds for whole world minus antarctica
+    maxBounds: [
+      [-179, -83], // -83 south tip of south america
+      [179, 90],
+    ],
   }
-  if (!props.center && !props.initialZoom) {
-    options.bounds = [
-      [-180, -90],
-      [180, 90],
-    ]
-  } else {
-    if (props.center) {
-      options.center = props.center as LngLatLike
-    }
-    if (props.initialZoom) {
-      options.zoom = props.initialZoom
-    }
+
+  if (props.bounds) {
+    options.bounds = props.bounds
   }
 
   return options

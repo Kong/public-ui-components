@@ -9,11 +9,13 @@
     />
     <div class="map-container">
       <AnalyticsGeoMap
-        :center="{ lng: 0, lat: 0 }"
+        :bounds="[
+          [-10, 35],
+          [65, 72]
+        ]"
         :country-metrics="countryMetrics"
         :fit-to-country="fitToCountry"
         :geo-json-data="(countryGeoJson as FeatureCollection)"
-        :initial-zoom="1"
         :metric="'request_count'"
         :metric-unit="'requests'"
       />
@@ -58,8 +60,8 @@ const countryMetrics = computed(() => {
     height: 900px;
 
     .map-container {
-      height: 500px;
-      width: 700px;
+      height: 700px;
+      width: 900px;
     }
   }
 </style>

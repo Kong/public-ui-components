@@ -74,27 +74,19 @@ npm install @kong-ui-public/analytics-geo-map
 - **default:** `true`
 - **description:** Display value in the tooltip.
 
-#### `center`
-
-- **type:** `Object` (`LongLat`)
-- **required:** `false`
-- **default:** `null`
-- **description:** Initial center of the map. Expects an object with `lat` and `lng` properties.
-
 #### `fitToCountry`
 
 - **type:** `Object` (`CountryISOA2 | null`)
 - **required:** `false`
 - **default:** `null`
-- **description:** Country code to fit the map bounds to. Overrides initial center and zoom.
+- **description:** Country code to zoom in on.
 
-#### `initialZoom`
+#### `bounds`
 
-- **type:** `Number | null`
+- **type:** `Object` (`LngLatBoundsLike`)
 - **required:** `false`
 - **default:** `null`
-- **validator:** `value => value >= 0 && value <= 24`
-- **description:** Initial zoom level of the map.
+- **description:** Longitudinal/Latitudinal bounds to initially fit the map to.
 
 ### Example
 
@@ -103,9 +95,18 @@ npm install @kong-ui-public/analytics-geo-map
   <AnalyticsGeoMap
     :countryMetrics="countryMetrics"
     :geoJsonData="geoJsonData"
-    :center="{ lat: 0, lng: 0 }"
     :fitToCountry="'US'"
-    :initialZoom="2"
+    metricUnit="%"
+  />
+
+  <!-- bounds to europe -->
+  <AnalyticsGeoMap
+    :countryMetrics="countryMetrics"
+    :geoJsonData="geoJsonData"
+    :bounds="[
+      [-10, 35],
+      [65, 72]
+    ]"
     metricUnit="%"
   />
 </template>
