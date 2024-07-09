@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.1.2...@kong-ui-public/analytics-geo-map@0.1.3) (2024-07-09)
+
+
+### Bug Fixes
+
+* disable map rotation by default ([#1484](https://github.com/Kong/public-ui-components/issues/1484)) ([1346fa8](https://github.com/Kong/public-ui-components/commit/1346fa88f31b5ad1c674c0c9f44f096cfb39f0ca))
+
+
+
+
+
 ## [0.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.1.1...@kong-ui-public/analytics-geo-map@0.1.2) (2024-07-09)
 
 
