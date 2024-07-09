@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@7.1.3...@kong-ui-public/entities-plugins@7.1.4) (2024-07-09)
+
+
+### Bug Fixes
+
+* **entities-plugins:** `config` section display in plugin forms ([#1482](https://github.com/Kong/public-ui-components/issues/1482)) ([e8f730c](https://github.com/Kong/public-ui-components/commit/e8f730c46e730bed223645b32ad4e7b068f3cbf5))
+
+
+
+
+
 ## [7.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@7.1.2...@kong-ui-public/entities-plugins@7.1.3) (2024-07-09)
 
 
