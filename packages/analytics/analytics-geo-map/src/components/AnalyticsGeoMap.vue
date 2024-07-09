@@ -288,6 +288,14 @@ onMounted(() => {
     }
 
   })
+  // disable map rotation using right click + drag
+  map.value?.dragRotate.disable()
+
+  // disable map rotation using keyboard
+  map.value?.keyboard.disable()
+
+  // disable map rotation using touch rotation gesture
+  map.value?.touchZoomRotate.disableRotation()
 })
 
 watch(() => props.countryMetrics, () => {
