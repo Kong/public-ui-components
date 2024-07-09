@@ -39,7 +39,7 @@
   "devDependencies": {
     "@kong/atc-router": "1.6.0-rc.1",
     "@kong/design-tokens": "1.15.1",
-    "@kong/kongponents": "9.0.4",
+    "@kong/kongponents": "9.0.8",
     "monaco-editor": "0.21.3",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-top-level-await": "^1.4.1",
@@ -65,7 +65,7 @@
   },
   "peerDependencies": {
     "@kong/atc-router": "^1.6.0-rc.1",
-    "@kong/kongponents": "^9.0.4",
+    "@kong/kongponents": "^9.0.8",
     "monaco-editor": "0.21.3",
     "vue": "^3.4.27"
   },
