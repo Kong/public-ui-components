@@ -153,7 +153,7 @@ importers:
         specifier: ^9.0.1
         version: 9.0.1
       vite:
-        specifier: ^5.2.13
+        specifier: ^5.3.2
         version: 5.3.3(@types/node@18.19.39)(sass@1.71.1)(terser@5.26.0)
       vite-plugin-externals:
         specifier: ^0.6.2
@@ -168,7 +168,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
       vue-tsc:
         specifier: ^1.8.27
@@ -460,7 +460,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/core/cli:
@@ -639,7 +639,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/entities/entities-certificates:
@@ -670,7 +670,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/entities/entities-consumer-credentials:
@@ -698,7 +698,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/entities/entities-consumer-groups:
@@ -726,7 +726,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/entities/entities-consumers:
@@ -754,7 +754,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/entities/entities-data-plane-nodes:
@@ -782,7 +782,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/entities/entities-gateway-services:
@@ -810,7 +810,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/entities/entities-key-sets:
@@ -835,7 +835,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/entities/entities-keys:
@@ -863,7 +863,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/entities/entities-plugins:
@@ -909,7 +909,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/entities/entities-routes:
@@ -953,7 +953,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/entities/entities-shared:
@@ -984,7 +984,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/entities/entities-snis:
@@ -1012,7 +1012,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/entities/entities-upstreams-targets:
@@ -1040,7 +1040,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/entities/entities-vaults:
@@ -1068,7 +1068,7 @@ importers:
         specifier: ^3.4.31
         version: 3.4.31(typescript@5.3.3)
       vue-router:
-        specifier: ^4.3.3
+        specifier: ^4.4.0
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/portal/document-viewer:
