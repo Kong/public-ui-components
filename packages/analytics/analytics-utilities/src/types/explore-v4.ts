@@ -1,7 +1,7 @@
 // Query types
 import type { MetricUnit, RecordEvent } from './analytics-data'
 
-export const queryDatasources = ['basic', 'advanced'] as const
+export const queryDatasources = ['basic', 'advanced', 'ai'] as const
 
 export type QueryDatasource = typeof queryDatasources[number]
 
@@ -24,6 +24,22 @@ export const queryableBasicExploreDimensions = [
 
 export type QueryableBasicExploreDimensions = typeof queryableBasicExploreDimensions[number]
 
+export const queryableAiExploreDimensions = [
+  'control_plane',
+  'control_plane_group',
+  'gateway_service',
+  'route',
+  'consumer',
+  'application',
+  'route',
+  'ai_provider',
+  'ai_response_model',
+  'ai_request_model',
+  'time',
+] as const
+
+export type QueryableAiExploreDimensions = typeof queryableAiExploreDimensions[number]
+
 export const queryableExploreDimensions = [
   ...queryableBasicExploreDimensions,
   'application',
@@ -43,6 +59,10 @@ export interface ExploreFilter extends Omit<BasicExploreFilter, 'dimension'> {
   dimension: QueryableExploreDimensions
 }
 
+export interface AiExploreFilter extends Omit<BasicExploreFilter, 'dimension'> {
+  dimension: QueryableAiExploreDimensions
+}
+
 export const basicExploreAggregations = [
   'active_services',
   'request_count',
@@ -51,6 +71,15 @@ export const basicExploreAggregations = [
 ] as const
 
 export type BasicExploreAggregations = typeof basicExploreAggregations[number]
+
+export const aiExploreAggregations = [
+  'total_tokens',
+  'request_tokens',
+  'response_tokens',
+  'ai_request_count',
+] as const
+
+export type AiExploreAggregations = typeof aiExploreAggregations[number]
 
 export const exploreAggregations = [
   ...basicExploreAggregations,
@@ -80,6 +109,8 @@ export type ExploreAggregations = typeof exploreAggregations[number]
 export const timeRangeTypeV2 = ['absolute', 'relative'] as const
 
 export type TimeRangeTypeV2 = typeof timeRangeTypeV2[number]
+
+export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations
 
 export interface AbsoluteTimeRangeV4 {
   type: 'absolute'
@@ -136,6 +167,12 @@ export interface BasicExploreQuery {
   }
 }
 
+export interface AiExploreQuery extends Omit<BasicExploreQuery, 'metrics' | 'dimensions' | 'filters'> {
+  metrics?: AiExploreAggregations[]
+  dimensions?: QueryableAiExploreDimensions[]
+  filters?: AiExploreFilter[]
+}
+
 export interface ExploreQuery extends Omit<BasicExploreQuery, 'metrics' | 'dimensions' | 'filters'> {
   metrics?: ExploreAggregations[]
   dimensions?: QueryableExploreDimensions[]
@@ -159,7 +196,7 @@ export interface QueryResponseMeta {
   start_ms: number
   end_ms: number
   display: DisplayBlob
-  metric_names?: ExploreAggregations[]
+  metric_names?: AllAggregations[]
   metric_units?: MetricUnit
   granularity_ms: number
   truncated?: boolean

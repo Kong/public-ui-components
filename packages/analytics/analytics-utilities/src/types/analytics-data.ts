@@ -1,4 +1,4 @@
-import type { ExploreAggregations } from './explore-v4'
+import type { ExploreAggregations, AllAggregations } from './explore-v4'
 
 export interface RecordEvent {
   [field: string]: string | number | null
@@ -15,7 +15,7 @@ export interface DimensionMap {
 }
 
 export type MetricUnit = {
-  [metricName in ExploreAggregations]?: string
+  [metricName in AllAggregations]?: string
 }
 
 /**
