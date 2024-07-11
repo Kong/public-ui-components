@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@7.2.2...@kong-ui-public/entities-plugins@7.3.0) (2024-07-11)
+
+
+### Features
+
+* **plugins:** add ai category ([#1491](https://github.com/Kong/public-ui-components/issues/1491)) ([54d37df](https://github.com/Kong/public-ui-components/commit/54d37dfea6c842e90cbe3b7f96aea782e049b61c))
+
+
+
+
+
 ## [7.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@7.2.1...@kong-ui-public/entities-plugins@7.2.2) (2024-07-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
