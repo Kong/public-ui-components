@@ -284,7 +284,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   },
   'ai-proxy': {
     descriptionKey: 'plugins.meta.ai-proxy.description',
-    group: PluginGroup.SERVERLESS,
+    group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-proxy.name',
     scope: [PluginScope.ROUTE],
@@ -292,7 +292,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   },
   'ai-prompt-decorator': {
     descriptionKey: 'plugins.meta.ai-prompt-decorator.description',
-    group: PluginGroup.TRANSFORMATIONS,
+    group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-prompt-decorator.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
@@ -300,7 +300,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   },
   'ai-prompt-template': {
     descriptionKey: 'plugins.meta.ai-prompt-template.description',
-    group: PluginGroup.TRANSFORMATIONS,
+    group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-prompt-template.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
@@ -308,7 +308,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   },
   'ai-prompt-guard': {
     descriptionKey: 'plugins.meta.ai-prompt-guard.description',
-    group: PluginGroup.TRAFFIC_CONTROL,
+    group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-prompt-guard.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
@@ -316,7 +316,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   },
   'ai-request-transformer': {
     descriptionKey: 'plugins.meta.ai-request-transformer.description',
-    group: PluginGroup.TRANSFORMATIONS,
+    group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-request-transformer.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
@@ -324,7 +324,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   },
   'ai-response-transformer': {
     descriptionKey: 'plugins.meta.ai-response-transformer.description',
-    group: PluginGroup.TRANSFORMATIONS,
+    group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-response-transformer.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
@@ -332,7 +332,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   },
   'ai-rate-limiting-advanced': {
     descriptionKey: 'plugins.meta.ai-rate-limiting-advanced.description',
-    group: PluginGroup.TRAFFIC_CONTROL,
+    group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-rate-limiting-advanced.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
@@ -340,7 +340,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   },
   'ai-azure-content-safety': {
     descriptionKey: 'plugins.meta.ai-azure-content-safety.description',
-    group: PluginGroup.TRAFFIC_CONTROL,
+    group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-azure-content-safety.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],

@@ -10,6 +10,7 @@ export enum PluginGroup {
   LOGGING = 'Logging',
   DEPLOYMENT = 'Deployment',
   WEBSOCKET = 'WebSocket Plugins',
+  AI = 'AI Plugins',
   CUSTOM_PLUGINS = 'Custom Plugins',
 }
 
@@ -23,6 +24,7 @@ export const PluginGroupArray = [
   PluginGroup.LOGGING,
   PluginGroup.DEPLOYMENT,
   PluginGroup.WEBSOCKET,
+  PluginGroup.AI,
   PluginGroup.CUSTOM_PLUGINS,
 ]
 
@@ -35,6 +37,7 @@ export const PLUGIN_GROUPS_COLLAPSE_STATUS = {
   [PluginGroup.TRANSFORMATIONS]: false,
   [PluginGroup.LOGGING]: false,
   [PluginGroup.DEPLOYMENT]: false,
+  [PluginGroup.AI]: false,
   [PluginGroup.CUSTOM_PLUGINS]: false,
 }
 
