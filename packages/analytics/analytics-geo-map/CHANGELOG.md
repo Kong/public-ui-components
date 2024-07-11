@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.1.7...@kong-ui-public/analytics-geo-map@0.1.8) (2024-07-11)
+
+
+### Bug Fixes
+
+* add lakes layer ([#1493](https://github.com/Kong/public-ui-components/issues/1493)) ([b2f5e3e](https://github.com/Kong/public-ui-components/commit/b2f5e3ed4246d3d36000b70e9f0715aa3e0eca23))
+
+
+
+
+
 ## [0.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.1.6...@kong-ui-public/analytics-geo-map@0.1.7) (2024-07-11)
 
 
