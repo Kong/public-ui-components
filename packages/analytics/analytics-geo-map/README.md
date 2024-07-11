@@ -22,6 +22,7 @@ Renders provided GeoJSON data into a choropleth style map.
 
 - `vue` must be initialized in the host application.
 - `maplibre-gl` must be added as a `dependency` in the host application. [See here](https://www.npmjs.com/package/maplibre-gl)
+- GeoJSON Data provided <strong>must</strong> include property "iso_a2" for each country Feature in order for this component to function properly. [See here](https://geojson-maps.kyd.au/) for a useful tool for generating GeoJSON country vector maps.
 
 ## Usage
 
@@ -44,19 +45,20 @@ npm install @kong-ui-public/analytics-geo-map
 
 #### `geoJsonData`
 
-- **type:** `Object` (`MapFeatureCollection`)
+- **type:** `Object` ([`MapFeatureCollection`](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-geo-map/src/types/index.ts))
 - **required:** `true`
 - **description:** GeoJSON data for the map, defining the shapes and positions of countries.
+- [See here](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/geojson)
 
 #### `metricUnit`
 
-- **type:** `Object` (`MetricUnits`)
+- **type:** `String` ([`MetricUnits`](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-geo-map/src/types/metric-units.ts))
 - **required:** `true`
 - **description:** Unit of measurement for the metrics displayed in the tooltips.
 
 #### `metric`
 
-- **type:** `Object` (`ExploreAggregations`)
+- **type:** `String` ([`ExploreAggregations`](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore-v4.ts))
 - **required:** `true`
 - **description:** Metric aggregations for the data displayed on the map.
 
@@ -76,14 +78,14 @@ npm install @kong-ui-public/analytics-geo-map
 
 #### `fitToCountry`
 
-- **type:** `Object` (`CountryISOA2 | null`)
+- **type:** `String` ([`CountryISOA2`](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-geo-map/src/types/country-codes.ts))
 - **required:** `false`
 - **default:** `null`
 - **description:** Country code to zoom in on.
 
 #### `bounds`
 
-- **type:** `Object` (`LngLatBoundsLike`)
+- **type:** `Object` ([`LngLatBoundsLike`](https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/LngLatBoundsLike/))
 - **required:** `false`
 - **default:** `null`
 - **description:** Longitudinal/Latitudinal bounds to initially fit the map to.
