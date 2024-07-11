@@ -36,12 +36,13 @@ import { Map, Popup } from 'maplibre-gl'
 import type { PropType } from 'vue'
 import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatBoundsLike, MapOptions } from 'maplibre-gl'
 import type { CountryISOA2, MapFeatureCollection, MetricUnits } from '../types'
-import type { Feature, MultiPolygon, Geometry, GeoJsonProperties } from 'geojson'
+import type { Feature, MultiPolygon, Geometry, GeoJsonProperties, FeatureCollection } from 'geojson'
 import composables from '../composables'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
+import lakes from '../ne_110m_lakes.json'
 
 const props = defineProps({
   countryMetrics: {
@@ -249,6 +250,20 @@ onMounted(() => {
       paint: layerPaint.value,
     })
 
+    map.value?.addSource('lakes', {
+      type: 'geojson',
+      data: lakes as FeatureCollection,
+    })
+
+    map.value?.addLayer({
+      id: 'lakes-layer',
+      type: 'fill',
+      source: 'lakes',
+      paint: {
+        'fill-color': '#FFFFFF',
+      },
+    })
+
     const popup = new Popup({
       closeButton: false,
       closeOnClick: false,
@@ -298,6 +313,15 @@ watch(() => props.countryMetrics, () => {
       type: 'fill',
       source: 'countries',
       paint: layerPaint.value,
+    })
+    map.value.removeLayer('lakes-layer')
+    map.value?.addLayer({
+      id: 'lakes-layer',
+      type: 'fill',
+      source: 'lakes',
+      paint: {
+        'fill-color': '#FFFFFF',
+      },
     })
   }
 })
