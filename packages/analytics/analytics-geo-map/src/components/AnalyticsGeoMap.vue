@@ -221,7 +221,7 @@ const mapOptions = computed(() => {
     attributionControl: false,
     // fit bounds for whole world minus antarctica
     maxBounds: [
-      [-179, -83], // -83 south tip of south america
+      [-179, -75], // -75 south tip of south america
       [179, 90],
     ],
   }

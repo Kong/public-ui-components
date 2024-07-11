@@ -9,10 +9,6 @@
     />
     <div class="map-container">
       <AnalyticsGeoMap
-        :bounds="[
-          [-10, 35],
-          [65, 72]
-        ]"
         :country-metrics="countryMetrics"
         :fit-to-country="fitToCountry"
         :geo-json-data="(countryGeoJson as FeatureCollection)"
@@ -42,6 +38,9 @@ const items = ref([
   { label: 'RO', value: 'RO' },
   { label: 'DE', value: 'DE' },
   { label: 'FR', value: 'FR' },
+  { label: 'CA', value: 'CA' },
+  { label: 'ES', value: 'ES' },
+  { label: 'JP', value: 'JP' },
 ])
 
 const countryMetrics = computed(() => {
