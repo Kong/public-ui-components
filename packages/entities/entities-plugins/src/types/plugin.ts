@@ -2,6 +2,7 @@ import type { PathToDotNotation } from '@kong-ui-public/i18n/dist/types/types'
 
 export enum PluginGroup {
   AUTHENTICATION = 'Authentication',
+  AI = 'AI',
   SECURITY = 'Security',
   TRAFFIC_CONTROL = 'Traffic Control',
   SERVERLESS = 'Serverless',
@@ -10,12 +11,12 @@ export enum PluginGroup {
   LOGGING = 'Logging',
   DEPLOYMENT = 'Deployment',
   WEBSOCKET = 'WebSocket Plugins',
-  AI = 'AI Plugins',
   CUSTOM_PLUGINS = 'Custom Plugins',
 }
 
 export const PluginGroupArray = [
   PluginGroup.AUTHENTICATION,
+  PluginGroup.AI,
   PluginGroup.SECURITY,
   PluginGroup.TRAFFIC_CONTROL,
   PluginGroup.SERVERLESS,
@@ -24,12 +25,12 @@ export const PluginGroupArray = [
   PluginGroup.LOGGING,
   PluginGroup.DEPLOYMENT,
   PluginGroup.WEBSOCKET,
-  PluginGroup.AI,
   PluginGroup.CUSTOM_PLUGINS,
 ]
 
 export const PLUGIN_GROUPS_COLLAPSE_STATUS = {
   [PluginGroup.AUTHENTICATION]: false,
+  [PluginGroup.AI]: false,
   [PluginGroup.SECURITY]: false,
   [PluginGroup.TRAFFIC_CONTROL]: false,
   [PluginGroup.SERVERLESS]: false,
@@ -37,7 +38,6 @@ export const PLUGIN_GROUPS_COLLAPSE_STATUS = {
   [PluginGroup.TRANSFORMATIONS]: false,
   [PluginGroup.LOGGING]: false,
   [PluginGroup.DEPLOYMENT]: false,
-  [PluginGroup.AI]: false,
   [PluginGroup.CUSTOM_PLUGINS]: false,
 }
 
