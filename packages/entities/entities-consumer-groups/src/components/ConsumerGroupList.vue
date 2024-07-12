@@ -284,7 +284,8 @@ const preferencesStorageKey = computed<string>(
  */
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
-  name: { label: t('consumer_groups.list.table_headers.name'), searchable: true, sortable: true },
+  // the Name column is non-hidable
+  name: { label: t('consumer_groups.list.table_headers.name'), searchable: true, sortable: true, hidable: false },
 }
 // TODO: when koko supports `?count=true` this conditional can be removed
 if (props.config.app === 'kongManager') {

@@ -7,8 +7,8 @@ import isFunction from 'lodash-es/isFunction'
 import isString from 'lodash-es/isString'
 import arrayUniq from 'lodash-es/uniq'
 import uniqueId from 'lodash-es/uniqueId'
-import validators from '../generator/utils/validators'
-import { slugifyFormID } from '../generator/utils/schema'
+import validators from '../utils/validators'
+import { slugifyFormID } from '../utils/schema'
 
 interface AbstractFieldParams {
   model?: Ref<Record<string, any> | undefined>,

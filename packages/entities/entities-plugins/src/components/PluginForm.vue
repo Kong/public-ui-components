@@ -114,12 +114,12 @@
           <JsonCodeBlock
             :config="config"
             :fetcher-url="submitUrl"
-            :json-record="form.fields"
+            :json-record="getRequestBody"
             :request-method="props.pluginId ? 'put' : 'post'"
           />
         </template>
         <template #yaml>
-          <YamlCodeBlock :yaml-record="form.fields" />
+          <YamlCodeBlock :yaml-record="getRequestBody" />
         </template>
       </KTabs>
     </KSlideout>

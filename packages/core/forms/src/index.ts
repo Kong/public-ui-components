@@ -1,6 +1,6 @@
 import type { App } from 'vue'
-import VueFormGenerator from './generator/FormGenerator.vue'
-import * as sharedForms from './forms'
+import VueFormGenerator from './components/FormGenerator.vue'
+import * as sharedForms from './components/forms'
 
 // Export Vue plugin as the default
 export default {
@@ -9,7 +9,7 @@ export default {
   },
 }
 
-export { customFields } from './generator/fields/exports'
+export { customFields } from './components/fields/exports'
 export { VueFormGenerator, sharedForms }
 
 export const getSharedFormName = (modelName: string): string => {
@@ -27,4 +27,4 @@ export const getSharedFormName = (modelName: string): string => {
 
 export * from './const'
 export * from './types'
-export * as abstractField from './generator/fields/abstractField'
+export * as abstractField from './components/fields/abstractField'

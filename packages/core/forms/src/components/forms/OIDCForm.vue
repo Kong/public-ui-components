@@ -93,10 +93,10 @@
 </template>
 
 <script>
-import OIDCCommonSchema from './schemas/OIDCCommon'
-import OIDCAuthSchema from './schemas/OIDCAuth'
+import VueFormGenerator from '../FormGenerator.vue'
 import OIDCAdvancedSchema from './schemas/OIDCAdvanced.js'
-import VueFormGenerator from '../generator/FormGenerator.vue'
+import OIDCAuthSchema from './schemas/OIDCAuth'
+import OIDCCommonSchema from './schemas/OIDCCommon'
 
 export default {
   name: 'OIDCForm',

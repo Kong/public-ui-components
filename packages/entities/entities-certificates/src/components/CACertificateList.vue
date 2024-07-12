@@ -243,7 +243,8 @@ const fetcherCacheKey = ref<number>(1)
  */
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
-  issuer: { label: t('ca-certificates.list.table_headers.issuer') },
+  // the Issuer column is non-hidable
+  issuer: { label: t('ca-certificates.list.table_headers.issuer'), hidable: false },
   expiry: { label: t('ca-certificates.list.table_headers.expiry') },
   tags: { label: t('ca-certificates.list.table_headers.tags'), sortable: true },
 }

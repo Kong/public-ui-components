@@ -85,6 +85,12 @@ A form component for Plugins.
     - default: `false`
     - *Specific to Kong Manager*. Whether or not to hide the consumer group scope field.
 
+  - `isNewOtelSchema`:
+    - type: `boolean`
+    - required: `false`
+    - default: `false`
+    - Whether to use the new OpenTelemetry schema.
+
 The base konnect or kongManger config.
 
 #### `pluginType`

@@ -88,16 +88,16 @@ const displayedCharLength = computed((): number => {
   display: flex;
   padding: $kui-space-40 $kui-space-0 $kui-space-30 $kui-space-50;
 
-  .k-badge {
-    height: 24px;
-  }
-
   .k-code-block {
     flex: auto;
     z-index: 2;
 
     .code-block-content {
       padding-bottom: $kui-space-0;
+    }
+
+    .code-block-secondary-actions {
+      margin-top: 0 !important;
     }
   }
 

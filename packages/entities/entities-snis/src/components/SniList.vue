@@ -227,7 +227,8 @@ const fetchCacheKey = ref<number>(1)
  */
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
-  name: { label: t('snis.list.table_headers.name'), searchable: true, sortable: true },
+  // the Name column is non-hidable
+  name: { label: t('snis.list.table_headers.name'), searchable: true, sortable: true, hidable: false },
   certificate: { label: t('snis.list.table_headers.certificate_id'), sortable: false },
   tags: { label: t('snis.list.table_headers.tags'), sortable: false },
 }

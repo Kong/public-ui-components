@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/sandbox-layout",
-  "version": "2.1.9",
+  "version": "2.1.13",
   "type": "module",
   "main": "./dist/sandbox-layout.umd.js",
   "module": "./dist/sandbox-layout.es.js",
@@ -39,10 +39,10 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "devDependencies": {
-    "@kong/design-tokens": "1.13.2",
-    "@kong/kongponents": "9.0.4",
-    "vue": "^3.4.27",
-    "vue-router": "^4.3.2"
+    "@kong/design-tokens": "1.15.1",
+    "@kong/kongponents": "9.0.8",
+    "vue": "^3.4.31",
+    "vue-router": "^4.4.0"
   },
   "repository": {
     "type": "git",
@@ -62,10 +62,10 @@
     "errorLimit": "200KB"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^9.0.4",
+    "@kong/kongponents": "^9.0.8",
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
-    "@kong/icons": "^1.13.0"
+    "@kong/icons": "^1.14.2"
   }
 }

@@ -236,7 +236,8 @@ const fetcherCacheKey = ref<number>(1)
  */
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
-  target: { label: t('targets.list.table_headers.target_address'), sortable: true },
+  // the Target Address column is non-hidable
+  target: { label: t('targets.list.table_headers.target_address'), sortable: true, hidable: false },
   weight: { label: t('targets.list.table_headers.weight'), sortable: true },
   tags: { label: t('targets.list.table_headers.tags'), sortable: false },
 }
