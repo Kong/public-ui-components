@@ -185,8 +185,8 @@ const controlsWidth = computed((): string => `${props.controlsMinWidth}px`)
 
   .sandbox-container {
     min-height: 50vh;
-    width: 100%;
     overflow-x: hidden;
+    width: 100%;
 
     @media (min-width: $kui-breakpoint-laptop) {
       border: $kui-border-width-10 solid $kui-color-border;
