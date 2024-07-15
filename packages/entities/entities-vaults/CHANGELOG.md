@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.4.5...@kong-ui-public/entities-vaults@3.5.0) (2024-07-15)
+
+
+### Features
+
+* **entities-vaults:** vault provider select ([#1489](https://github.com/Kong/public-ui-components/issues/1489)) ([88c47ed](https://github.com/Kong/public-ui-components/commit/88c47ed5e9085a414fa69af6fe10069f6d2eee11))
+
+
+
+
+
 ## [3.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.4.4...@kong-ui-public/entities-vaults@3.4.5) (2024-07-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
