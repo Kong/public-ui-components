@@ -78,6 +78,7 @@
     "config": {
       "kong": {
         "label": "Environment Variables",
+        "description": "Access secrets stored via variables to be made available in Kong Gateway at runtime.",
         "fields": {
           "prefix": {
             "label": "Environment Variable Prefix",
@@ -88,6 +89,7 @@
       },
       "aws": {
         "label": "AWS Secrets Manager",
+        "description": "Access secrets stored in AWS Secrets Manager for Kong Gateway configuration.",
         "fields": {
           "region": {
             "label": "Region",
@@ -183,7 +185,8 @@
         }
       },
       "gcp": {
-        "label": "Google Secrets Manager (GCP)",
+        "label": "Google Secret Manager",
+        "description": "Access secrets stored in Google Secret Manager for Kong Gateway configuration.",
         "fields": {
           "project_id": {
             "label": "Project ID",
@@ -197,6 +200,7 @@
       },
       "hcv": {
         "label": "HashiCorp Vault",
+        "description": "Access secrets stored in HashiCorp Vault for Kong Gateway configuration.",
         "fields": {
           "protocol": {
             "label": "Protocol"
@@ -249,7 +253,8 @@
         }
       },
       "azure": {
-        "label": "Azure",
+        "label": "Azure Vault",
+        "description": "Access secrets stored in Azure Key Vault for Kong Gateway configuration.",
         "fields": {
           "location": {
             "label": "Location"

@@ -92,8 +92,8 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-description').should('be.visible')
       cy.getTestId('vault-form-tags').should('be.visible')
 
-      // vault provider radio buttons
-      cy.getTestId('vault-form-provider-kong').should('exist').should('not.be.visible')
+      // vault provider selector
+      cy.getTestId('vault-form-provider-env').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-aws').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-gcp').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-hcv').should('exist').should('not.be.visible')
@@ -103,16 +103,19 @@ describe('<VaultForm />', () => {
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('vault-form-config-aws-region').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('be.visible')
 
       // form fields - gcp
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-gcp').click({ force: true })
       cy.getTestId('vault-form-config-gcp-project-id').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('be.visible')
 
       // form fields - hcv
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-hcv').click({ force: true })
       cy.getTestId('vault-form-config-hcv-protocol').should('be.visible')
       cy.getTestId('vault-form-config-hcv-host').should('be.visible')
@@ -150,8 +153,8 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-description').should('be.visible')
       cy.getTestId('vault-form-tags').should('be.visible')
 
-      // vault provider radio buttons
-      cy.getTestId('vault-form-provider-kong').should('exist').should('not.be.visible')
+      // vault provider selector
+      cy.getTestId('vault-form-provider-env').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-aws').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-gcp').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-hcv').should('exist').should('not.be.visible')
@@ -161,16 +164,19 @@ describe('<VaultForm />', () => {
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('vault-form-config-aws-region').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - gcp
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-gcp').click({ force: true })
       cy.getTestId('vault-form-config-gcp-project-id').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - hcv
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-hcv').click({ force: true })
       cy.getTestId('vault-form-config-hcv-protocol').should('be.visible')
       cy.getTestId('vault-form-config-hcv-host').should('be.visible')
@@ -213,13 +219,15 @@ describe('<VaultForm />', () => {
       cy.getTestId('form-submit').should('be.disabled')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('form-submit').should('be.disabled')
       cy.getTestId('vault-form-config-aws-region').click({ force: true })
-      cy.get('.select-item:eq(0) button').click({ force: true })
+      cy.get('.vault-form-config-fields-container .select-item:eq(0) button').click({ force: true })
       cy.getTestId('form-submit').should('be.enabled')
 
       // form fields - gcp
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-gcp').click({ force: true })
       cy.getTestId('form-submit').should('be.disabled')
       cy.getTestId('vault-form-config-gcp-project-id').type('test123')
@@ -229,6 +237,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('form-submit').should('be.disabled')
 
       // form fields - hcv
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-hcv').click({ force: true })
       cy.getTestId('vault-form-config-hcv-protocol').click({ force: true })
       cy.get('[data-testid="select-item-http"] button').click({ force: true })
@@ -300,6 +309,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('advanced-fields-collapse').should('not.exist')
     })
@@ -341,10 +351,7 @@ describe('<VaultForm />', () => {
 
       cy.wait('@getVault')
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
-      cy.getTestId('vault-form-provider-kong').should('be.disabled')
-      cy.getTestId('vault-form-provider-aws').should('be.disabled')
-      cy.getTestId('vault-form-provider-gcp').should('be.disabled')
-      cy.getTestId('vault-form-provider-hcv').should('be.disabled')
+      cy.getTestId('provider-select').should('be.disabled')
     })
 
     it('should handle error state - failed to load vault', () => {
@@ -415,10 +422,10 @@ describe('<VaultForm />', () => {
       })
 
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
-      cy.getTestId('vault-form-provider-kong').should('be.enabled')
-      cy.getTestId('vault-form-provider-aws').should('be.disabled')
-      cy.getTestId('vault-form-provider-gcp').should('be.disabled')
-      cy.getTestId('vault-form-provider-hcv').should('be.disabled')
+      cy.getTestId('vault-form-provider-env').parents('button').first().should('be.enabled')
+      cy.getTestId('vault-form-provider-aws').parents('button').first().should('be.disabled')
+      cy.getTestId('vault-form-provider-gcp').parents('button').first().should('be.disabled')
+      cy.getTestId('vault-form-provider-hcv').parents('button').first().should('be.disabled')
     })
   })
 
@@ -472,8 +479,8 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-description').should('be.visible')
       cy.getTestId('vault-form-tags').should('be.visible')
 
-      // vault provider radio buttons
-      cy.getTestId('vault-form-provider-kong').should('exist').should('not.be.visible')
+      // vault provider selector
+      cy.getTestId('vault-form-provider-env').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-aws').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-gcp').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-hcv').should('exist').should('not.be.visible')
@@ -483,16 +490,19 @@ describe('<VaultForm />', () => {
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('vault-form-config-aws-region').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('be.visible')
 
       // form fields - gcp
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-gcp').click({ force: true })
       cy.getTestId('vault-form-config-gcp-project-id').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('be.visible')
 
       // form fields - hcv
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-hcv').click({ force: true })
       cy.getTestId('vault-form-config-hcv-protocol').should('be.visible')
       cy.getTestId('vault-form-config-hcv-host').should('be.visible')
@@ -531,8 +541,8 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-description').should('be.visible')
       cy.getTestId('vault-form-tags').should('be.visible')
 
-      // vault provider radio buttons
-      cy.getTestId('vault-form-provider-kong').should('exist').should('not.be.visible')
+      // vault provider selector
+      cy.getTestId('vault-form-provider-env').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-aws').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-gcp').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-hcv').should('exist').should('not.be.visible')
@@ -542,16 +552,19 @@ describe('<VaultForm />', () => {
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('vault-form-config-aws-region').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - gcp
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-gcp').click({ force: true })
       cy.getTestId('vault-form-config-gcp-project-id').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - hcv
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-hcv').click({ force: true })
       cy.getTestId('vault-form-config-hcv-protocol').should('be.visible')
       cy.getTestId('vault-form-config-hcv-host').should('be.visible')
@@ -594,6 +607,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('form-submit').should('be.disabled')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('form-submit').should('be.disabled')
 
@@ -604,11 +618,12 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-resurrect-ttl-input').type('789')
 
       cy.getTestId('vault-form-config-aws-region').click({ force: true })
-      cy.get('.select-item:eq(0) button').click({ force: true })
+      cy.get('.vault-form-config-fields-container .select-item:eq(0) button').click({ force: true })
 
       cy.getTestId('form-submit').should('be.enabled')
 
       // form fields - gcp
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-gcp').click({ force: true })
       cy.getTestId('form-submit').should('be.disabled')
 
@@ -624,6 +639,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('form-submit').should('be.disabled')
 
       // form fields - hcv
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-hcv').click({ force: true })
 
       // advanced fields form
@@ -675,6 +691,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('advanced-fields-collapse').should('be.visible')
     })
@@ -703,6 +720,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('advanced-fields-collapse').should('not.exist')
     })

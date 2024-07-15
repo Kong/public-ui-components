@@ -56,99 +56,55 @@
         :title="t('form.sections.config.title')"
       >
         <div class="vault-form-provider-cards-container">
-          <KRadio
+          <KSelect
             v-model="vaultProvider"
-            card
-            data-testid="vault-form-provider-kong"
+            data-testid="provider-select"
             :disabled="vaultProviderDisabled"
-            :label="t('form.config.kong.label')"
-            :selected-value="VaultProviders.KONG"
+            dropdown-max-height="500"
+            :items="providers"
           >
-            <KongIcon
-              :size="KUI_ICON_SIZE_80"
-            />
-          </KRadio>
-          <KTooltip
-            :disabled="isOtherProvidersSupported"
-            placement="top"
-            :text="t('form.unavailable')"
-          >
-            <KRadio
-              v-model="vaultProvider"
-              card
-              data-testid="vault-form-provider-aws"
-              :disabled="vaultProviderDisabled || !isOtherProvidersSupported"
-              :label="t('form.config.aws.label')"
-              :selected-value="VaultProviders.AWS"
-            >
+            <template #selected-item-template="{ item }">
+              <!-- TODO: use @kong/icons for HashiCorp Vault -->
+              <component
+                :is="getProviderIcon(item!.value as VaultProviders)"
+                v-if="item!.value !== VaultProviders.HCV"
+              />
               <img
-                alt="Amazon Web Services"
-                height="46"
-                :src="getProviderIconURL(VaultProviders.AWS)"
-              >
-            </KRadio>
-          </KTooltip>
-          <KTooltip
-            :disabled="isOtherProvidersSupported"
-            placement="top"
-            :text="t('form.unavailable')"
-          >
-            <KRadio
-              v-model="vaultProvider"
-              card
-              data-testid="vault-form-provider-gcp"
-              :disabled="vaultProviderDisabled || !isOtherProvidersSupported"
-              :label="t('form.config.gcp.label')"
-              :selected-value="VaultProviders.GCP"
-            >
-              <img
-                alt="Google Cloud"
-                height="46"
-                :src="getProviderIconURL(VaultProviders.GCP)"
-              >
-            </KRadio>
-          </KTooltip>
-          <KTooltip
-            :disabled="isOtherProvidersSupported"
-            placement="top"
-            :text="t('form.unavailable')"
-          >
-            <KRadio
-              v-model="vaultProvider"
-              card
-              data-testid="vault-form-provider-hcv"
-              :disabled="vaultProviderDisabled || !isOtherProvidersSupported"
-              :label="t('form.config.hcv.label')"
-              :selected-value="VaultProviders.HCV"
-            >
-              <img
+                v-else
                 alt="HashiCorp Vault"
-                height="46"
+                height="16"
                 :src="getProviderIconURL(VaultProviders.HCV)"
               >
-            </KRadio>
-          </KTooltip>
-          <KTooltip
-            v-if="config.azureVaultProviderAvailable"
-            :disabled="isOtherProvidersSupported"
-            placement="top"
-            :text="t('form.unavailable')"
-          >
-            <KRadio
-              v-model="vaultProvider"
-              card
-              data-testid="vault-form-provider-azure"
-              :disabled="vaultProviderDisabled || !isOtherProvidersSupported"
-              :label="t('form.config.azure.label')"
-              :selected-value="VaultProviders.AZURE"
-            >
-              <img
-                alt="Azure"
-                height="46"
-                :src="getProviderIconURL(VaultProviders.AZURE)"
+              {{ item?.label }}
+            </template>
+            <template #item-template="{ item }">
+              <KTooltip
+                placement="top"
+                :text="item.disabled ? t('form.unavailable') : ''"
               >
-            </KRadio>
-          </KTooltip>
+                <div
+                  class="provider-item"
+                  :data-testid="`vault-form-provider-${item.value}`"
+                >
+                  <!-- TODO: use @kong/icons for HashiCorp Vault -->
+                  <component
+                    :is="getProviderIcon(item.value as VaultProviders)"
+                    v-if="item.value !== VaultProviders.HCV"
+                  />
+                  <img
+                    v-else
+                    alt="HashiCorp Vault"
+                    height="16"
+                    :src="getProviderIconURL(VaultProviders.HCV)"
+                  >
+                  <div class="provider-item-title-container">
+                    <span class="provider-item-title">{{ item?.label }}</span>
+                    <span class="provider-item-description">{{ getProviderDescription(item.value as VaultProviders) }}</span>
+                  </div>
+                </div>
+              </KTooltip>
+            </template>
+          </KSelect>
         </div>
 
         <TransitionGroup name="appear">
@@ -561,8 +517,12 @@ import {
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
 import endpoints from '../vaults-endpoints'
-import { KongIcon } from '@kong/icons'
-import { KUI_ICON_SIZE_80 } from '@kong/design-tokens'
+import {
+  CodeIcon,
+  AwsIcon,
+  GoogleCloudIcon,
+  AzureIcon,
+} from '@kong/icons'
 
 interface ConfigFields {
   [VaultProviders.KONG]: KongVaultConfig
@@ -626,6 +586,39 @@ const originalVaultProvider = ref<VaultProviders | null>(null)
 
 const isAvailableTTLConfig = computed(() => {
   return [VaultProviders.AWS, VaultProviders.GCP, VaultProviders.HCV, VaultProviders.AZURE].includes(vaultProvider.value)
+})
+
+const providers = computed<Array<{ label: string, value: VaultProviders }>>(() => {
+  return [
+    {
+      label: t('form.config.kong.label'),
+      value: VaultProviders.KONG,
+    },
+    {
+      label: t('form.config.aws.label'),
+      value: VaultProviders.AWS,
+      disabled: !isOtherProvidersSupported.value,
+    },
+    {
+      label: t('form.config.gcp.label'),
+      value: VaultProviders.GCP,
+      disabled: !isOtherProvidersSupported.value,
+    },
+    {
+      label: t('form.config.hcv.label'),
+      value: VaultProviders.HCV,
+      disabled: !isOtherProvidersSupported.value,
+    },
+    ...(
+      props.config.azureVaultProviderAvailable
+        ? [{
+          label: t('form.config.azure.label'),
+          value: VaultProviders.AZURE,
+          disabled: !isOtherProvidersSupported.value,
+        }]
+        : []
+    ),
+  ]
 })
 
 const configFields = reactive<ConfigFields>({
@@ -750,13 +743,13 @@ const formType = computed((): EntityBaseFormType => props.vaultId
 const fetchUrl = computed<string>(() => endpoints.form[props.config?.app]?.edit)
 
 const vaultProviderDisabled = computed<boolean>(() => formType.value === EntityBaseFormType.Edit && props.config.app === 'kongManager')
-const isOtherProvidersSupported = props.config.app === 'konnect' || useGatewayFeatureSupported({
+const isOtherProvidersSupported = computed<boolean>(() => props.config.app === 'konnect' || useGatewayFeatureSupported({
   gatewayInfo: props.config.gatewayInfo,
   // vault name can only be `env` in Gateway Community Edition
   supportedRange: {
     enterprise: [],
   },
-})
+}))
 
 const cancelHandler = (): void => {
   router.push(props.config?.cancelRoute || { name: 'vault-list' })
@@ -772,6 +765,36 @@ const fetchErrorHandler = (err: AxiosError): void => {
 
 const getProviderIconURL = (providerName: string) => {
   return new URL(`../assets/images/provider-icons/${providerName}.svg`, import.meta.url).href
+}
+
+const getProviderIcon = (providerName: VaultProviders) => {
+  switch (providerName) {
+    case VaultProviders.KONG:
+      return CodeIcon
+    case VaultProviders.AWS:
+      return AwsIcon
+    case VaultProviders.GCP:
+      return GoogleCloudIcon
+    // TODO: add hcv icon
+    case VaultProviders.HCV:
+    case VaultProviders.AZURE:
+      return AzureIcon
+  }
+}
+
+const getProviderDescription = (providerName: VaultProviders) => {
+  switch (providerName) {
+    case VaultProviders.KONG:
+      return t('form.config.kong.description')
+    case VaultProviders.AWS:
+      return t('form.config.aws.description')
+    case VaultProviders.GCP:
+      return t('form.config.gcp.description')
+    case VaultProviders.HCV:
+      return t('form.config.hcv.description')
+    case VaultProviders.AZURE:
+      return t('form.config.azure.description')
+  }
 }
 
 const updateFormValues = (data: Record<string, any>): void => {
@@ -1032,23 +1055,38 @@ const saveFormData = async (): Promise<void> => {
     }
 
     &-provider-cards-container {
-      column-gap: $kui-space-50;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      row-gap: $kui-space-50;
+      .provider-item {
+        display: flex;
+        flex-direction: row;
+        gap: $kui-space-60;
 
-      .k-radio-label {
-        margin-top: $kui-space-50;
+        &-title-container {
+          flex: 1;
+        }
+
+        &-title {
+          display: block;
+          font-weight: $kui-font-weight-bold;
+        }
+
+        &-description {
+          display: block;
+          font-size: $kui-font-size-20;
+        }
       }
 
-      :deep(.k-radio label) {
-        box-sizing: border-box;
+      button:not(:disabled) .provider-item {
+        &-title {
+          color: $kui-color-text-neutral-stronger;
+        }
+
+        &-description {
+          color: $kui-color-text-neutral;
+        }
       }
 
-      :deep(.k-radio) {
-        box-sizing: border-box;
-        height: 100%;
-        width: 100%;
+      :deep(.k-tooltip .popover-container) {
+        padding: $kui-space-30 !important;
       }
     }
 
