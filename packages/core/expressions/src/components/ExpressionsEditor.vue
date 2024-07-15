@@ -2,6 +2,7 @@
   <div
     ref="root"
     :class="editorClass"
+    :data-testid="testId"
   />
 </template>
 
@@ -26,8 +27,10 @@ const props = withDefaults(defineProps<{
   schema: Schema,
   parseDebounce?: number,
   inactiveUntilFocused?: boolean,
+  testId?: string,
 }>(), {
   parseDebounce: 500,
+  testId: 'expressions-editor',
 })
 
 const expression = defineModel<string>({ required: true })

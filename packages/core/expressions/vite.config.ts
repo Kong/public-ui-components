@@ -21,7 +21,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
     },
     rollupOptions: {
-      external: ['monaco-editor'],
+      external: ['monaco-editor', '@kong-ui-public/forms', '@kong-ui-public/forms/dist/style.css'],
     },
   },
   plugins: [
@@ -29,9 +29,9 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     topLevelAwait({
       promiseExportName: 'asyncInit',
     }),
-    // We don't need this plugin to bundle the library. Only for sandbox previews.
+    // We don't need this plugin to bundle the library. Only for sandbox previews and test.
     // See: https://github.com/vdesjs/vite-plugin-monaco-editor/issues/21
-    ...process.env.USE_SANDBOX
+    ...process.env.NODE_ENV === 'development'
       ? [((monacoEditorPlugin as any).default as typeof monacoEditorPlugin)({})]
       : [],
   ],

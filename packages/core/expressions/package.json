@@ -31,12 +31,13 @@
     "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
     "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
     "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
-    "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
-    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
+    "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project './'",
+    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project './'",
     "test:unit": "cross-env FORCE_COLOR=1 vitest run",
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "devDependencies": {
+    "@kong-ui-public/forms": "workspace:^",
     "@kong/atc-router": "1.6.0-rc.1",
     "@kong/design-tokens": "1.15.2",
     "@kong/kongponents": "9.0.17",
@@ -64,12 +65,16 @@
     "errorLimit": "2048KB"
   },
   "peerDependencies": {
+    "@kong-ui-public/forms": "workspace:^",
     "@kong/atc-router": "^1.6.0-rc.1",
     "@kong/kongponents": "^9.0.17",
     "monaco-editor": "0.21.3",
     "vue": "^3.4.31"
   },
   "dependencies": {
-    "@kong-ui-public/core": "workspace:^"
+    "@kong-ui-public/core": "workspace:^",
+    "@kong-ui-public/i18n": "workspace:^",
+    "@kong/icons": "^1.14.2",
+    "uuid": "^9.0.1"
   }
 }
