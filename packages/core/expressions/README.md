@@ -18,6 +18,7 @@ Reusable components to support [Kong's expressions language](https://docs.konghq
 - `vue` must be initialized in the host application
 - [`monaco-editor`](https://www.npmjs.com/package/monaco-editor) is required as a dependency in the host application
 - [`vite-plugin-monaco-editor`](https://www.npmjs.com/package/vite-plugin-monaco-editor) is a required Vite plugin to bundle the Monaco Editor and its web workers
+- [`@kong-ui-public/forms`](https://www.npmjs.com/package/@kong-ui-public/forms) is an optional dependency required for the `RouterPlaygroundModal` component
 
 ## Usage
 
@@ -27,6 +28,7 @@ Install required `dependencies` in your host application:
 
 ```sh
 yarn add monaco-editor
+yarn add @kong-ui-public/forms # optional: required for `RouterPlaygroundModal` component
 ```
 
 Install required `devDependencies` in your host application:
@@ -58,9 +60,10 @@ Import the component(s) in your host application as well as the package styles:
 ```ts
 import { asyncInit, ExpressionsEditor } from '@kong-ui-public/expressions'
 import '@kong-ui-public/expressions/dist/style.css'
+import '@kong-ui-public/forms/dist/style.css' // optional: required for `RouterPlaygroundModal` component
 ```
 
-This package utilizes [vite-plugin-top-level-await](https://github.com/Menci/vite-plugin-top-level-await) to transform code in order to use top-level await on older browsers. To load the WASM correctly, you must use `await` or `Promise.then` to wait the imported `asyncInit` before using any other imported values. 
+This package utilizes [vite-plugin-top-level-await](https://github.com/Menci/vite-plugin-top-level-await) to transform code in order to use top-level await on older browsers. To load the WASM correctly, you must use `await` or `Promise.then` to wait the imported `asyncInit` before using any other imported values.
 
 For example:
 
@@ -77,4 +80,5 @@ You can also make use of Vue's experimental [Suspense](https://vuejs.org/guide/b
 
 ## Individual component documentation
 
-- [`<ExpressionsEditor.vue />`](docs/expressions-editor.md)
+- [`<ExpressionsEditor />`](docs/expressions-editor.md)
+- [`<RouterPlaygroundModal />`](docs/router-playground-modal.md)

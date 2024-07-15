@@ -1,4 +1,4 @@
-# ExpressionsEditor.vue
+# ExpressionsEditor
 
 A Monaco-based editor with autocomplete and syntax highlighting support for the expressions language.
 

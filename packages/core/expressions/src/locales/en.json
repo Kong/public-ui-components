@@ -1,0 +1,48 @@
+{
+  "comma": ", ",
+  "requestImport": {
+    "warning": "Warning: All saved requests {boldText} with the imported ones.",
+    "warningBoldText": "will be removed and replaced",
+    "title": "Import requests from JSON",
+    "jsonError": "Expecting a JSON array"
+  },
+  "requestModal": {
+    "title": "Add a request",
+    "help": "Supported protocols: {protocols}",
+    "noneSelectedText": "Nothing Selected...",
+    "methodInputPlaceholder": "Enter a Method",
+    "headersInputPlaceholder": "Enter header name",
+    "headerButtonLabel": "Header Values",
+    "headerHint": "e.g. my-header",
+    "headerValueInputPlaceholder": "Comma separated list of header values",
+    "headerValueHint": "e.g. value1, value2, value 3",
+    "sniPlaceholder": "Enter an SNI",
+    "invalidRequest": "Invalid request: {err}",
+    "unsupportedProtocal": "Unsupported protocol. (Supported protocols: {protocols})"
+  },
+  "routerPlayground": {
+    "help": "A playground where you can test out the Kong router Expressions. {link}",
+    "learnMore": "Learn more",
+    "expressions": "Expression",
+    "addToRoute": "Add to Route",
+    "inspiration": "Inspiration for Quickstart",
+    "importTooltip": "Import requests in JSON format",
+    "import": "Import",
+    "exportTooltip": "Export all requests as JSON to clipboard",
+    "export": "Export",
+    "add": "Add",
+    "addRequest": "Add a request",
+    "noRequests": "No requests",
+    "noRequestsDescription": "Add requests to test out route expressions.",
+    "clearRequests": "Requests appear here are saved locally within the browser. {link} to clear all saved requests",
+    "click": "Click here",
+    "clearRequestsPrompt": "All saved requests will be removed from the browser. This operation is permanent and cannot be undone. Would you like to proceed?",
+    "notifyCopy": "Successfully copied to clipboard",
+    "notifyClear": "Successfully cleared all requests",
+    "notifyImport": "Successfully imported requests from JSON"
+  },
+  "routerPlaygroundModal": {
+    "actionButton": "Add to Route",
+    "title": "Router Playground"
+  }
+}
