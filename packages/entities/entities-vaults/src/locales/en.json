@@ -9,6 +9,7 @@
   },
   "delete": {
     "title": "Delete a Vault",
+    "title_for_secret": "Delete a Secret",
     "description": "This action cannot be reversed."
   },
   "errors": {
@@ -38,6 +39,42 @@
         "title": "Configure a New Vault",
         "description": "Improve the security of your Kong Gateway deployment with centralized secrets."
       }
+    }
+  },
+  "secrets": {
+    "title": "Secrets",
+    "list": {
+      "toolbar_actions": {
+        "new_secret": "Store New Secret"
+      },
+      "table_headers": {
+        "key": "Secret Key",
+        "name": "Vault Type",
+        "description": "Description",
+        "tags": "Tags",
+        "id": "ID"
+      },
+      "empty_state": {
+        "title": "No Secrets Stored",
+        "description": "Improve the security of your Kong Gateway deployment with centralized secrets."
+      }
+    },
+    "form": {
+      "info": {
+        "title": "Secret",
+        "description": "Enter the secret key and secret value to be stored in Konnect vault"
+      },
+      "fields": {
+        "key": {
+          "label": "Key",
+          "placeholder": "Enter key"
+        },
+        "value": {
+          "label": "Value",
+          "placeholder": "Enter value here, can be simple values or multi-line"
+        }
+      },
+      "hint": "Once saved, the secret value will not be visible"
     }
   },
   "copy": {
@@ -76,7 +113,11 @@
       }
     },
     "config": {
-      "kong": {
+      "konnect": {
+        "label": "Konnect",
+        "description": "Access secrets stored directly in Konnect's unified platform to easily reference in Kong Gateway configuration."
+      },
+      "env": {
         "label": "Environment Variables",
         "description": "Access secrets stored via variables to be made available in Kong Gateway at runtime.",
         "fields": {
