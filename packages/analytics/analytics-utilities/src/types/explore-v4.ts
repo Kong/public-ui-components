@@ -162,6 +162,7 @@ export interface BasicExploreQuery {
   time_range?: TimeRangeV4
   limit?: number
   descending?: boolean
+  short_name?: boolean
   meta?: {
     query_id: string
   }
