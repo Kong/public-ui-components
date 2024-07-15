@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.2.0...@kong-ui-public/analytics-utilities@4.2.1) (2024-07-15)
+
+
+### Bug Fixes
+
+* add short_name to explore query ([#1498](https://github.com/Kong/public-ui-components/issues/1498)) ([acdd742](https://github.com/Kong/public-ui-components/commit/acdd742c008839f7ce8ad4fb230b60e2e79ebd10))
+
+
+
+
+
 # [4.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.1.2...@kong-ui-public/analytics-utilities@4.2.0) (2024-07-11)
 
 
