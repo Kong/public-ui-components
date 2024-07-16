@@ -212,7 +212,6 @@ const handleCustomClick = (): void => {
   display: flex;
 
   .plugin-select-card {
-    width: 100%;
     border: $kui-border-width-10 solid $kui-color-border;
     border-radius: $kui-border-radius-30;
     box-sizing: border-box;
@@ -223,6 +222,7 @@ const handleCustomClick = (): void => {
     gap: $kui-space-70;
     overflow: hidden;
     padding: $kui-space-70 $kui-space-70 0;
+    width: 100%;
 
     &:hover {
       box-shadow: 0 0 5px rgba(33,33,33,.2);

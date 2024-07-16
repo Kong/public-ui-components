@@ -263,10 +263,10 @@ onMounted(async () => {
 
 .plugin-card-container {
   display: grid;
-  justify-content: center;
-  grid-template-columns: repeat(auto-fit, minmax(0, 350px)); // display as many cards as possible in a row, with a max width of 350px
-  margin-top: $kui-space-90;
   gap: $kui-space-90;
+  grid-template-columns: repeat(auto-fit, minmax(0, 350px)); // display as many cards as possible in a row, with a max width of 350px
+  justify-content: center;
+  margin-top: $kui-space-90;
 
   @media (min-width: $kui-breakpoint-laptop) {
     justify-content: flex-start;
