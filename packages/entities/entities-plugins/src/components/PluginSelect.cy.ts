@@ -61,7 +61,10 @@ const PLUGIN_GROUPS_IN_USE = PluginGroupArray.filter((group: string) => {
   return true
 })
 
-describe('<PluginSelect />', () => {
+describe('<PluginSelect />', {
+  viewportWidth: 1024,
+  viewportHeight: 576,
+}, () => {
   describe('Kong Manager', () => {
     const interceptKM = (params?: {
       mockData?: object
@@ -155,7 +158,7 @@ describe('<PluginSelect />', () => {
       cy.get('@highlightedPlugins').findTestId('collapse-trigger-content').click()
       cy.get('@highlightedPlugins').findTestId('collapse-trigger-content')
         .should('be.visible')
-        .should('contain.text', 'View 1 more')
+        .should('contain.text', 'View more')
 
       // highlighted plugins should be hidden
       cy.getTestId('plugins-filter').type('gnok')
@@ -477,7 +480,7 @@ describe('<PluginSelect />', () => {
       cy.get('@highlightedPlugins').findTestId('collapse-trigger-content').click()
       cy.get('@highlightedPlugins').findTestId('collapse-trigger-content')
         .should('be.visible')
-        .should('contain.text', 'View 1 more')
+        .should('contain.text', 'View more')
 
       // highlighted plugins should be hidden
       cy.getTestId('plugins-filter').type('gnok')
