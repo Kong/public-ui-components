@@ -1,6 +1,5 @@
 import type { ConfigurationSchema } from '@kong-ui-public/entities-shared'
 import { ConfigurationSchemaType, useStringHelpers } from '@kong-ui-public/entities-shared'
-import type { PluginType } from '../types'
 
 export default function useHelpers() {
   const { capitalize } = useStringHelpers()
