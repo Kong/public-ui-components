@@ -36,7 +36,7 @@ const baseConfigKonnect: KonnectPluginSelectConfig = {
   }),
 }
 
-const baseConfigKM:KongManagerPluginSelectConfig = {
+const baseConfigKM: KongManagerPluginSelectConfig = {
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
@@ -54,7 +54,7 @@ const baseConfigKM:KongManagerPluginSelectConfig = {
 // and displayed separately in Konnect.
 const PLUGIN_GROUPS_IN_USE = PluginGroupArray.filter((group: string) => {
   if (group === PluginGroup.CUSTOM_PLUGINS || group === PluginGroup.DEPLOYMENT ||
-      group === PluginGroup.WEBSOCKET) {
+    group === PluginGroup.WEBSOCKET) {
     return false
   }
 
@@ -160,26 +160,6 @@ describe('<PluginSelect />', () => {
       // highlighted plugins should be hidden
       cy.getTestId('plugins-filter').type('gnok')
       cy.get('@highlightedPlugins').should('not.exist')
-    })
-
-    it('should allow customizing the pluginsPerRow', () => {
-      const pluginsPerRow = 3
-      const expectedCount = pluginsPerRow * PLUGIN_GROUPS_IN_USE.length
-
-      interceptKM()
-
-      cy.mount(PluginSelect, {
-        props: {
-          config: baseConfigKM,
-          pluginsPerRow,
-        },
-      })
-
-      cy.wait('@getAvailablePlugins')
-
-      cy.get('.kong-ui-entities-plugin-select-form').should('be.visible')
-      cy.get('.kong-ui-entities-plugin-select-form .plugins-results-container').should('be.visible')
-      cy.get('.collapse-visible-content .plugin-select-card').should('have.length', expectedCount)
     })
 
     it('should correctly render disabled plugins', () => {
@@ -502,27 +482,6 @@ describe('<PluginSelect />', () => {
       // highlighted plugins should be hidden
       cy.getTestId('plugins-filter').type('gnok')
       cy.get('@highlightedPlugins').should('not.exist')
-    })
-
-    it('should allow customizing the pluginsPerRow', () => {
-      const pluginsPerRow = 3
-      const expectedCount = pluginsPerRow * PLUGIN_GROUPS_IN_USE.length
-
-      interceptKonnect()
-
-      cy.mount(PluginSelect, {
-        props: {
-          config: baseConfigKonnect,
-          pluginsPerRow,
-        },
-        router,
-      })
-
-      cy.wait('@getAvailablePlugins')
-
-      cy.get('.kong-ui-entities-plugin-select-form').should('be.visible')
-      cy.get('.kong-ui-entities-plugin-select-form .plugins-results-container').should('be.visible')
-      cy.get('.collapse-visible-content .plugin-select-card').should('have.length', expectedCount)
     })
 
     it('should correctly render disabled plugins', () => {

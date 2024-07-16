@@ -4,21 +4,29 @@
     class="plugins-collapse"
     :data-testid="`${props.name}-collapse`"
     :title="props.name"
-    :trigger-label="isCollapsed ? triggerLabel : t('plugins.select.view_less')"
+    :trigger-label="isCollapsed ? t('plugins.select.view_more') : t('plugins.select.view_less')"
+    @toggle="setToggleVisibility"
   >
     <!-- don't display a trigger if all plugins will already be visible -->
     <template
-      v-if="props.plugins.length <= pluginsPerRow"
+      v-if="!showCollapseTrigger"
       #trigger
     >
       &nbsp;
     </template>
 
+    <!-- not actually using KCollapse to hide/show content here, just using it for the trigger, title and container -->
+    <!-- hiding/showing excess plugins is handled by the collapsedGroupStyles computed property -->
     <template #visible-content>
-      <div class="plugin-card-container">
+      <div
+        ref="pluginCardContainerRef"
+        class="plugin-card-container"
+        :style="collapsedGroupStyles"
+      >
         <PluginSelectCard
-          v-for="plugin in getPluginCards('visible', props.plugins, props.pluginsPerRow)"
+          v-for="plugin in props.plugins"
           :key="`plugin-card-${plugin.id}`"
+          ref="pluginCardRef"
           :config="config"
           :navigate-on-click="navigateOnClick"
           :plugin="plugin"
@@ -26,25 +34,17 @@
         />
       </div>
     </template>
-
-    <div class="plugin-card-container">
-      <PluginSelectCard
-        v-for="plugin in getPluginCards('hidden', props.plugins, props.pluginsPerRow)"
-        :key="`plugin-card-${plugin.id}`"
-        :config="config"
-        :navigate-on-click="navigateOnClick"
-        :plugin="plugin"
-        @plugin-clicked="emit('plugin-clicked', plugin)"
-      />
-    </div>
   </KCollapse>
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'
+import type { PropType } from 'vue'
+import { nextTick, ref } from 'vue'
 import composables from '../../composables'
 import PluginSelectCard from './PluginSelectCard.vue'
 import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType } from '../../types'
+import { onMounted } from 'vue'
+import { computed } from 'vue'
 
 const isCollapsed = defineModel<boolean>({ required: true })
 
@@ -81,13 +81,6 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  /**
-   * Number of plugins to always have visible (never will be collapsed)
-   */
-  pluginsPerRow: {
-    type: Number,
-    default: 4,
-  },
 })
 
 const emit = defineEmits<{
@@ -95,12 +88,57 @@ const emit = defineEmits<{
 }>()
 
 const { i18n: { t } } = composables.useI18n()
-const { getPluginCards } = composables.usePluginHelpers()
 
-const triggerLabel = computed(() => {
-  const totalCount = getPluginCards('all', props.plugins, props.pluginsPerRow)?.length || 0
-  const hiddenCount = getPluginCards('hidden', props.plugins || [], props.pluginsPerRow)?.length || 0
-  return totalCount > props.pluginsPerRow ? t('plugins.select.view_more', { count: hiddenCount }) : undefined
+const tallestPluginCardHeight = ref<number>(310)
+const pluginCardContainerRef = ref<HTMLElement | null>(null)
+const pluginCardRef = ref<Array<InstanceType<typeof PluginSelectCard>> | null>(null)
+
+const collapsedGroupStyles = computed((): Record<string, string> => {
+  if (isCollapsed.value) {
+    return {
+      overflowY: 'hidden',
+      maxHeight: `${tallestPluginCardHeight.value}px`,
+    }
+  }
+
+  return {}
+})
+const showCollapseTrigger = ref<boolean>(false)
+/**
+ * Set the visibility of the collapse trigger
+ * If the number of cards is greater than the number of columns displayed, show the trigger
+ */
+const setToggleVisibility = (): void => {
+  if (pluginCardContainerRef.value && pluginCardRef.value?.length) {
+    const displayedColumns = window?.getComputedStyle(pluginCardContainerRef.value)?.getPropertyValue('grid-template-columns')?.split(' ').length
+
+    showCollapseTrigger.value = pluginCardRef.value?.length > displayedColumns
+  }
+}
+
+
+/**
+ * Set the height of the collapsed group to the height of the tallest card
+ */
+const setCollapsedGroupHeight = () => {
+  if (pluginCardRef.value?.length) {
+    let tallestCardHeight = 0
+    for (let i = 0; i < pluginCardRef.value?.length; i++) {
+      const card = pluginCardRef.value[i].$el
+      // find height of tallest card
+      tallestCardHeight = card.offsetHeight > tallestCardHeight ? card.offsetHeight : tallestCardHeight
+    }
+
+    if (tallestCardHeight > tallestPluginCardHeight.value) {
+      tallestPluginCardHeight.value = tallestCardHeight
+    }
+  }
+}
+
+onMounted(async () => {
+  await nextTick()
+  setCollapsedGroupHeight()
+  setToggleVisibility()
 })
 </script>
 
@@ -110,41 +148,18 @@ const triggerLabel = computed(() => {
 }
 
 .plugin-card-container {
-  column-gap: 50px;
   display: grid;
-  grid-auto-rows: 1fr;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(0, 350px)); // display as many cards as possible in a row, with a max width of 350px
   margin-top: $kui-space-90;
-  row-gap: $kui-space-90;
+  gap: $kui-space-90;
+
+  @media (min-width: $kui-breakpoint-laptop) {
+    justify-content: flex-start;
+  }
 
   .plugin-card-cursor-pointer {
     cursor: pointer;
-  }
-
-  :deep(.kong-card) {
-    display: flex;
-    flex: 1 0 0;
-    flex-direction: column;
-    margin: $kui-space-0;
-    padding: $kui-space-0;
-    text-align: center;
-  }
-
-  :deep(.k-card-body) {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-  }
-
-  @media (min-width: $kui-breakpoint-phablet) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (min-width: $kui-breakpoint-tablet) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media (min-width: $kui-breakpoint-laptop) {
-    grid-template-columns: repeat(4, 1fr);
   }
 }
 </style>

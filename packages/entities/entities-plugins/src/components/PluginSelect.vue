@@ -89,7 +89,6 @@
               :highlighted-plugins-title="props.highlightedPluginsTitle"
               :navigate-on-click="navigateOnClick"
               :plugin-list="filteredPlugins"
-              :plugins-per-row="pluginsPerRow"
               @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
             />
           </div>
@@ -108,7 +107,6 @@
               :config="config"
               :navigate-on-click="navigateOnClick"
               :plugin-list="filteredPlugins"
-              :plugins-per-row="pluginsPerRow"
               @delete:success="(name: string) => $emit('delete-custom:success', name)"
               @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
               @revalidate="() => pluginsList = buildPluginList()"
@@ -126,7 +124,6 @@
         :highlighted-plugins-title="props.highlightedPluginsTitle"
         :navigate-on-click="navigateOnClick"
         :plugin-list="filteredPlugins"
-        :plugins-per-row="pluginsPerRow"
         @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
       />
     </section>
@@ -224,13 +221,6 @@ const props = defineProps({
   disabledPlugins: {
     type: Object as PropType<DisabledPlugin>,
     default: () => ({}),
-  },
-  /**
-   * Number of plugins to always have visible (never will be collapsed)
-   */
-  pluginsPerRow: {
-    type: Number,
-    default: 4,
   },
   /**
    * Ids of plugins to show in the highlighted plugins group

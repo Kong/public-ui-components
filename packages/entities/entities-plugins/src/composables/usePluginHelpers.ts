@@ -91,16 +91,6 @@ export default function useHelpers() {
     }
   }
 
-  const getPluginCards = (type: 'all' | 'visible' | 'hidden', plugins: PluginType[], pluginsPerRow: number) => {
-    if (type === 'all') {
-      return plugins
-    } else if (type === 'visible') {
-      return plugins.slice(0, pluginsPerRow)
-    }
-
-    return plugins.slice(pluginsPerRow)
-  }
-
   const convertToDotNotation = (key: string) => {
     return key.replace(/-/g, '.')
   }
@@ -121,12 +111,12 @@ export default function useHelpers() {
 
       keys.reduce((acc: Record<string, any>, cur: string, curIdx: number) => {
         return acc[cur] ||
-        // If current key in acc is the next
-        // item in the split array (dot notation)
-        // set its value
-        (acc[cur] = isNaN(keys[curIdx + 1] as any)
-          ? (keys.length - 1 === curIdx ? obj[key] : {})
-          : [])
+          // If current key in acc is the next
+          // item in the split array (dot notation)
+          // set its value
+          (acc[cur] = isNaN(keys[curIdx + 1] as any)
+            ? (keys.length - 1 === curIdx ? obj[key] : {})
+            : [])
       }, result)
     }
 
@@ -163,7 +153,6 @@ export default function useHelpers() {
 
   return {
     setFieldType,
-    getPluginCards,
     convertToDotNotation,
     unFlattenObject,
     isObjectEmpty,

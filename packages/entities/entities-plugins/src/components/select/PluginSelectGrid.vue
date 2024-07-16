@@ -28,7 +28,6 @@
       :name="props.highlightedPluginsTitle || t('plugins.select.highlighted_plugins.title')"
       :navigate-on-click="navigateOnClick"
       :plugins="props.highlightedPlugins"
-      :plugins-per-row="pluginsPerRow"
       @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
     />
 
@@ -43,7 +42,6 @@
           :name="group"
           :navigate-on-click="navigateOnClick"
           :plugins="displayedPlugins[group as keyof PluginCardList] || []"
-          :plugins-per-row="pluginsPerRow"
           @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
         />
       </div>
@@ -90,13 +88,6 @@ const props = defineProps({
   navigateOnClick: {
     type: Boolean,
     default: true,
-  },
-  /**
-   * Number of plugins to always have visible (never will be collapsed)
-   */
-  pluginsPerRow: {
-    type: Number,
-    default: 4,
   },
   /**
    * List of plugins to show in the highlighted plugins group
