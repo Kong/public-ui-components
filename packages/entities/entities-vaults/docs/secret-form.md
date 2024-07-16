@@ -1,6 +1,6 @@
-# VaultForm.vue
+# SecretForm.vue
 
-A form component for Vaults.
+A form component for Konnect config store secrets. *This component should only be used in Konnect*. 
 
 - [Requirements](#requirements)
 - [Usage](#usage)
@@ -27,12 +27,12 @@ A form component for Vaults.
 
 #### `config`
 
-- type: `Object as PropType<KonnectVaultFormConfig | KongManagerVaultFormConfig>`
+- type: `Object as PropType<KonnectSecretFormConfig>`
 - required: `true`
 - default: `undefined`
 - properties:
   - `app`:
-    - type: `'konnect' | 'kongManager'`
+    - type: `'konnect'`
     - required: `true`
     - default: `undefined`
     - App name.
@@ -53,54 +53,28 @@ A form component for Vaults.
     - type: `RouteLocationRaw`
     - required: `true`
     - default: `undefined`
-    - Route to return to when canceling creation of an Vault.
-
-  - `workspace`:
-    - type: `string`
-    - required: `true`
-    - default: `undefined`
-    - *Specific to Kong Manager*. Name of the current workspace.
+    - Route to return to when canceling creation of a secret.
 
   - `controlPlaneId`:
     - type: `string`
     - required: `true`
     - default: `undefined`
-    - *Specific to Konnect*. Name of the current control plane.
-
-  - `azureVaultProviderAvailable`
-    - type: `boolean`
-    - required: `true`
-    - default: `undefined`
-    - *Specific to Konnect*. Show/hide Azure option.
-    - **Note:** This is experimental and not supported by the backend right now
-
-  - `konnectConfigStoreAvailable`
-    - type: `boolean`
-    - required: `false`
-    - default: `undefined`
-    - *Specific to Konnect*. Show/hide Konnect Config Store option.
-
-  - `ttl`
-    - type: `boolean`
-    - required: `true`
-    - default: `undefined`
-    - Show/hide SupportTTL option.
-
-  - `hcvAppRoleMethodAvailable`
-    - type: `boolean`
-    - required: `false`
-    - default: `undefined`
-    - Show/hide approle option and corresponding fields.
-
-The base konnect or kongManger config.
+    - Name of the current control plane.
 
 #### `vaultId`
+
+- type: `String`
+- required: `true`
+
+Current vault ID.
+
+#### `secretId`
 
 - type: `String`
 - required: `false`
 - default: `''`
 
-If showing the `Edit` type form, the ID of the Vault.
+If a valid `secretId` is provided, it will put the form in Edit mode instead of Create.
 
 ### Events
 
@@ -114,30 +88,20 @@ A `@loading` event is emitted when loading state changes. The event payload is a
 
 #### update
 
-A `@update` event is emitted when the form is saved. The event payload is the Vault object.
+A `@update` event is emitted when the form is saved. The event payload is the secret object.
 
 ### Usage example
 
-Please refer to the [sandbox](../sandbox/pages/VaultListPage.vue). The form is accessible by clicking the `+ New Vault` button or `Edit` action of an existing Vault.
+Please refer to the [sandbox](../sandbox/pages/VaultConfigCardPage.vue). The form is accessible by clicking the `+ Store New Secret` button or `Edit` action of an existing secret.
 
 ## TypeScript interfaces
 
-TypeScript interfaces [are available here](../src/types/vault-form.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+TypeScript interfaces [are available here](../src/types/secret-form.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
 import type {
-  BaseVaultFormConfig,
-  KonnectVaultFormConfig,
-  KongManagerVaultFormConfig,
-  VaultProviders,
-  VaultAuthMethods,
-  KongVaultConfig,
-  AWSVaultConfig,
-  GCPVaultConfig,
-  HCVVaultConfig,
-  HCVVaultConfigPayload,
-  VaultPayload,
-  VaultStateFields,
-  VaultState
+  BaseSecretFormConfig,
+  KonnectSecretFormConfig,
+  SecretStateFields,
+  SecretState
 } from '@kong-ui-public/entities-vaults'
-```

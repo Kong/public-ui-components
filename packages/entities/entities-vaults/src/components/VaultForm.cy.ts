@@ -11,6 +11,7 @@ const baseConfigKonnect: KonnectVaultFormConfig = {
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  konnectConfigStoreAvailable: true,
   ttl: true,
 }
 
@@ -20,6 +21,7 @@ const baseConfigKonnectTurnOffTTL: KonnectVaultFormConfig = {
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  konnectConfigStoreAvailable: true,
   ttl: false,
 }
 
@@ -480,12 +482,19 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-tags').should('be.visible')
 
       // vault provider selector
+      cy.getTestId('vault-form-provider-konnect').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-env').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-aws').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-gcp').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-hcv').should('exist').should('not.be.visible')
 
-      // form fields - kong
+      // form fields - konnect
+      cy.getTestId('vault-form-config-kong-prefix').should('not.exist')
+      cy.getTestId('advanced-fields-collapse').should('not.exist')
+
+      // form fields - env
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-env').click({ force: true })
       cy.getTestId('vault-form-config-kong-prefix').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
@@ -542,12 +551,19 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-tags').should('be.visible')
 
       // vault provider selector
+      cy.getTestId('vault-form-provider-konnect').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-env').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-aws').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-gcp').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-hcv').should('exist').should('not.be.visible')
 
-      // form fields - kong
+      // form fields - konnect
+      cy.getTestId('vault-form-config-kong-prefix').should('not.exist')
+      cy.getTestId('advanced-fields-collapse').should('not.exist')
+
+      // form fields - env
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-env').click({ force: true })
       cy.getTestId('vault-form-config-kong-prefix').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
@@ -599,7 +615,12 @@ describe('<VaultForm />', () => {
       // form fields - general
       cy.getTestId('vault-form-prefix').type(vault.prefix)
 
-      // form fields - kong
+      // form fields - konnect
+      cy.getTestId('form-submit').should('be.enabled')
+
+      // form fields - env
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-env').click({ force: true })
       cy.getTestId('vault-form-config-kong-prefix').type(vault.config.prefix)
       cy.getTestId('form-submit').should('be.enabled')
       // disables save when required field is cleared

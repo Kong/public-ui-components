@@ -132,15 +132,12 @@ import endpoints from '../secrets-endpoints'
 import type {
   KonnectSecretListConfig,
   SecretEntityRow,
-  CopyEventPayload,
 } from '../types'
 
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
-  (e: 'copy:success', payload: CopyEventPayload): void,
-  (e: 'copy:error', payload: CopyEventPayload): void,
   (e: 'delete:success', route: SecretEntityRow): void,
 }>()
 
