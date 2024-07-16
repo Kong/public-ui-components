@@ -151,11 +151,11 @@ onMounted(async () => {
   display: grid;
   gap: $kui-space-90;
   grid-template-columns: repeat(auto-fit, minmax(0, 350px)); // display as many cards as possible in a row, with a max width of 350px
-  justify-content: center;
+  justify-content: space-around;
   margin-top: $kui-space-90;
 
   @media (min-width: $kui-breakpoint-laptop) {
-    justify-content: flex-start;
+    justify-content: space-between;
   }
 
   .plugin-card-cursor-pointer {
