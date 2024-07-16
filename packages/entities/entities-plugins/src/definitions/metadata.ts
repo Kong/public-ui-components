@@ -688,6 +688,13 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.app-dynamics.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
   },
+  'json-threat-protection': {
+    descriptionKey: 'plugins.meta.json-threat-protection.description',
+    group: PluginGroup.SECURITY,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.json-threat-protection.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+  },
 }
 
 /**

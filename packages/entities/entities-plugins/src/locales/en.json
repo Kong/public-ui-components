@@ -447,6 +447,10 @@
       "app-dynamics": {
         "name": "AppDynamics",
         "description": "This plugin integrates Kong with the AppDynamics APM platform so that proxy requests handled by Kong can be identified and analyzed in AppDynamics."
+      },
+      "json-threat-protection": {
+        "name": "JSON Threat Protection",
+        "description": "Apply size checks on JSON payload and minimize risk of content-level attacks"
       }
     },
     "fields": {
