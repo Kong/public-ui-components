@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@7.3.0...@kong-ui-public/entities-plugins@7.4.0) (2024-07-16)
+
+
+### Features
+
+* **entities-plugins:** support json threat protection ([#1495](https://github.com/Kong/public-ui-components/issues/1495)) ([42a1302](https://github.com/Kong/public-ui-components/commit/42a1302ce2df2c7945c6ac3cf8917b50e3e266a9))
+
+
+
+
+
 # [7.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@7.2.2...@kong-ui-public/entities-plugins@7.3.0) (2024-07-11)
 
 
