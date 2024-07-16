@@ -11,20 +11,13 @@
     </div>
 
     <section v-if="isLoading">
+      <KSkeletonBox
+        class="plugins-skeleton-title"
+        width="10"
+      />
       <KSkeleton
-        :table-rows="1"
-        type="table"
-      >
-        <KSkeletonBox
-          width="6"
-        />
-        <KSkeletonBox
-          class="title-loading-skeleton"
-          width="6"
-        />
-      </KSkeleton>
-      <PluginCardSkeleton
         :card-count="8"
+        class="plugins-skeleton-cards"
         type="card"
       />
     </section>
@@ -145,7 +138,6 @@ import {
 import { useAxios, useHelpers, useErrors } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
-import PluginCardSkeleton from './select/PluginCardSkeleton.vue'
 import PluginCustomGrid from './custom-plugins/PluginCustomGrid.vue'
 import PluginSelectGrid from './select/PluginSelectGrid.vue'
 
@@ -529,8 +521,21 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .kong-ui-entities-plugin-select-form {
-  .title-loading-skeleton {
-    margin-left: $kui-space-40;
+  .plugins-skeleton {
+    &-title {
+      margin-bottom: $kui-space-50;
+    }
+
+    &-cards {
+      :deep(.skeleton-card-wrapper) {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(0, 350px));
+
+        .skeleton-card {
+          max-width: none;
+        }
+      }
+    }
   }
 
   .plugins-filter-input-container {
