@@ -27,17 +27,9 @@
             :items="providers"
           >
             <template #selected-item-template="{ item }">
-              <!-- TODO: use @kong/icons for HashiCorp Vault -->
               <component
                 :is="getProviderIcon(item!.value as VaultProviders)"
-                v-if="item!.value !== VaultProviders.HCV"
               />
-              <img
-                v-else
-                alt="HashiCorp Vault"
-                height="16"
-                :src="getProviderIconURL(VaultProviders.HCV)"
-              >
               {{ item?.label }}
             </template>
             <template #item-template="{ item }">
@@ -49,17 +41,9 @@
                   class="provider-item"
                   :data-testid="`vault-form-provider-${item.value}`"
                 >
-                  <!-- TODO: use @kong/icons for HashiCorp Vault -->
                   <component
                     :is="getProviderIcon(item.value as VaultProviders)"
-                    v-if="item.value !== VaultProviders.HCV"
                   />
-                  <img
-                    v-else
-                    alt="HashiCorp Vault"
-                    height="16"
-                    :src="getProviderIconURL(VaultProviders.HCV)"
-                  >
                   <div class="provider-item-title-container">
                     <span class="provider-item-title">{{ item?.label }}</span>
                     <span class="provider-item-description">{{ getProviderDescription(item.value as VaultProviders) }}</span>
@@ -522,6 +506,7 @@ import {
   KongIcon,
   CodeIcon,
   AwsIcon,
+  HashicorpIcon,
   GoogleCloudIcon,
   AzureIcon,
 } from '@kong/icons'
@@ -776,10 +761,6 @@ const fetchErrorHandler = (err: AxiosError): void => {
   emit('error', err)
 }
 
-const getProviderIconURL = (providerName: string) => {
-  return new URL(`../assets/images/provider-icons/${providerName}.svg`, import.meta.url).href
-}
-
 const getProviderIcon = (providerName: VaultProviders) => {
   switch (providerName) {
     case VaultProviders.KONNECT:
@@ -790,8 +771,8 @@ const getProviderIcon = (providerName: VaultProviders) => {
       return AwsIcon
     case VaultProviders.GCP:
       return GoogleCloudIcon
-    // TODO: add hcv icon
     case VaultProviders.HCV:
+      return HashicorpIcon
     case VaultProviders.AZURE:
       return AzureIcon
   }

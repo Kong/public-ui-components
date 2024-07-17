@@ -45,25 +45,8 @@
           <b>{{ rowValue ?? '-' }}</b>
         </div>
       </template>
-      <template #name="{ rowValue }">
-        <b>{{ rowValue ?? '-' }}</b>
-      </template>
-      <template #description="{ rowValue }">
-        <div class="table-content-overflow-wrapper">
-          {{ rowValue ?? '-' }}
-        </div>
-      </template>
-      <template #tags="{ rowValue }">
-        <KTruncate v-if="rowValue?.length > 0">
-          <KBadge
-            v-for="tag in rowValue"
-            :key="tag"
-            @click.stop
-          >
-            {{ tag }}
-          </KBadge>
-        </KTruncate>
-        <span v-else>-</span>
+      <template #updated_at="{ rowValue }">
+        <span>{{ rowValue ? formatUnixTimeStamp(rowValue) : '-' }}</span>
       </template>
 
       <!-- Row actions -->
@@ -183,7 +166,7 @@ const props = defineProps({
   },
 })
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
@@ -193,7 +176,7 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const fields: BaseTableHeaders = {
   // the Secret Key column is non-hidable
   key: { label: t('secrets.list.table_headers.key'), sortable: false, hidable: false },
-  // name: { label: t('secrets.list.table_headers.name'), sortable: false },
+  updated_at: { label: t('secrets.list.table_headers.updated_at'), sortable: false },
 }
 const tableHeaders: BaseTableHeaders = fields
 

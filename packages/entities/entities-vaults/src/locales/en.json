@@ -49,10 +49,7 @@
       },
       "table_headers": {
         "key": "Secret Key",
-        "name": "Vault Type",
-        "description": "Description",
-        "tags": "Tags",
-        "id": "ID"
+        "updated_at": "Updated At"
       },
       "empty_state": {
         "title": "No Secrets Stored",
