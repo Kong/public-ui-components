@@ -103,6 +103,11 @@ const collapsedGroupStyles = computed((): Record<string, string> => {
 })
 const showCollapseTrigger = ref<boolean>(false)
 
+const handleResize = (): void => {
+  tallestPluginCardHeight.value = getTallestPluginCardHeight(pluginCardRef.value!)
+  setToggleVisibility()
+}
+
 // set the visibility of the collapse trigger
 const setToggleVisibility = (): void => {
   if (pluginCardRef.value?.length) {
@@ -115,11 +120,11 @@ onMounted(async () => {
 
   tallestPluginCardHeight.value = getTallestPluginCardHeight(pluginCardRef.value!)
   setToggleVisibility()
-  window?.addEventListener('resize', setToggleVisibility)
+  window?.addEventListener('resize', handleResize)
 })
 
 onUnmounted(() => {
-  window?.removeEventListener('resize', setToggleVisibility)
+  window?.removeEventListener('resize', handleResize)
 })
 </script>
 
