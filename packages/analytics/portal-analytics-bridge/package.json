@@ -56,13 +56,13 @@
     "errorLimit": "200KB"
   },
   "peerDependencies": {
-    "@kong/sdk-portal-js": "^2.13.0",
+    "@kong/sdk-portal-js": "^2.14.0",
     "axios": "^1.6.8",
     "vue": "^3.4.31"
   },
   "devDependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^",
-    "@kong/sdk-portal-js": "^2.13.0",
+    "@kong/sdk-portal-js": "^2.14.0",
     "axios": "^1.6.8",
     "vue": "^3.4.31"
   }
