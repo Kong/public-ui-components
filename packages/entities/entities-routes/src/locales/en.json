@@ -248,6 +248,9 @@
     "expressions_editor": {
       "loading": "Loading the Expressions editor…",
       "error": "Error occurred while loading the Expressions editor. Please view the console for more details."
+    },
+    "expressionPlayground": {
+      "testLink": "Test with Router Playground"
     }
   }
 }

@@ -12,7 +12,9 @@
   <RouteFormExpressionsEditor
     v-else
     v-model="expression"
+    :playground-trigger-text="t('form.expressionPlayground.testLink')"
     :protocol="props.protocol"
+    @notify="handleNotify"
   />
   <slot
     :expression="{ value: expression, update: setExpression }"
@@ -28,10 +30,11 @@
  * editor until they are used.
  */
 import { defineAsyncComponent, h, onMounted, ref, type Component } from 'vue'
-import useI18n from '../composables/useI18n'
+import composables from '../composables'
 import { ExpressionsEditorState } from '../types'
 
-const { i18n: { t } } = useI18n()
+const { i18n: { t } } = composables.useI18n()
+const { toaster } = composables.useToaster()
 
 const loadingComponent: Component = {
   render: () => h('div', t('form.expressions_editor.loading')),
@@ -57,6 +60,16 @@ const expression = defineModel<string>({ required: true })
 // Useful when slot content is trying to update the expression (e.g., router playground)
 const setExpression = (value: string) => {
   expression.value = value
+}
+
+const handleNotify = ({ message, type }: {
+  message: string;
+  type: string;
+}) => {
+  toaster.open({
+    appearance: type,
+    message,
+  })
 }
 
 onMounted(async () => {
