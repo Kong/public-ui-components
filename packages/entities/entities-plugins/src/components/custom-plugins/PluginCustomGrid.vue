@@ -259,7 +259,7 @@ onUnmounted(() => {
   margin-top: $kui-space-90;
 
   @media (min-width: $kui-breakpoint-laptop) {
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 }
 </style>
