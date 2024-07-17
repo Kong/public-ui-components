@@ -148,7 +148,13 @@ jobs:
             findRes=$(find "${pkgFolder}" -name "*.cy.ts" || true)
             if [[ -n "${findRes}" ]]; then
                 componentTestFilter="${componentTestFilter}${pkgFolder},"
-                componentTestMatrix="${componentTestMatrix}\"${pkgFolder}\","
+
+                findCyConfig=$(find "${pkgFolder}" -name "cypress.config.ts" || true)
+                if [[ -n "${findCyConfig}" ]]; then
+                    componentTestMatrix="${componentTestMatrix}\"--project ${pkgFolder}\","
+                else
+                    componentTestMatrix="${componentTestMatrix}\"--spec ${pkgFolder}\","
+                fi
             fi
 
             # we will keep the list of packages that do require unit tests based on the fact that we
@@ -190,7 +196,6 @@ jobs:
             componentTestMatrix=""
           fi
           echo "componentTestMatrix=${componentTestMatrix}"
-
 
           # this is to pass to `pnpm --filter` to run pnpm command on all changed packages
           echo "filter=${filter}" >> $GITHUB_OUTPUT
@@ -323,7 +328,7 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           install: false
-          command: pnpm run test:component:ci --spec ${{ matrix.container }}
+          command: pnpm run test:component:ci ${{ matrix.container }}
 
       - name: Normalize test results artifact name
         continue-on-error: true
@@ -331,7 +336,7 @@ jobs:
         id: normalize-name
         shell: bash
         run: |
-          packageName=$(echo ${{ matrix.container }} | sed 's/\//-/g')
+          packageName=$(echo ${{ matrix.container }} | cut -d ' ' -f 2 | sed 's/\//-/g')
           echo "artifactName=component-test-failures-${packageName}" >> $GITHUB_OUTPUT
 
       - name: Upload Component Test Results

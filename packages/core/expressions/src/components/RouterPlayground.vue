@@ -45,7 +45,7 @@
         data-testid="expressions-inspirations"
       >
         <div class="title">
-          <RocketIcon />
+          <RocketIcon size="16px" />
           <span>{{ i18n.t('routerPlayground.inspiration') }}</span>
         </div>
         <div class="buttons">

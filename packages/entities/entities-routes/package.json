@@ -67,15 +67,15 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "700KB"
+    "errorLimit": "800KB"
   },
   "dependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
+    "@kong-ui-public/expressions": "workspace:^",
     "@kong/icons": "^1.15.0",
     "lodash.isequal": "^4.5.0"
   },
   "optionalDependencies": {
-    "@kong-ui-public/expressions": "workspace:^",
     "monaco-editor": "0.21.3"
   }
 }

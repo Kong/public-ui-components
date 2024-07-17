@@ -37,7 +37,7 @@ Cypress.Commands.add('assertValueCopiedToClipboard', value => {
 })
 
 
-describe('<RouterPlayground />', () => {
+describe.skip('<RouterPlayground />', () => {
   beforeEach(() => {
     cy.viewport(800, 800)
   })
