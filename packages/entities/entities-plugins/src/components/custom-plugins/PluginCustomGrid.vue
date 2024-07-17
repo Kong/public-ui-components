@@ -22,13 +22,12 @@
 
     <KCollapse
       v-else
-      v-model="shouldCollapsedCustomPlugins"
+      v-model="customPluginsCollapsed"
       class="custom-plugins-collapse"
       :data-testid="`${PluginGroup.CUSTOM_PLUGINS}-collapse`"
       :title="PluginGroup.CUSTOM_PLUGINS"
-      :trigger-label="shouldCollapsedCustomPlugins ? t('plugins.select.view_more') : t('plugins.select.view_less')"
+      :trigger-label="customPluginsCollapsed ? t('plugins.select.view_more') : t('plugins.select.view_less')"
     >
-      <!-- don't display a trigger if all plugins will already be visible -->
       <template
         v-if="!showCollapseTrigger"
         #trigger
@@ -36,8 +35,6 @@
         &nbsp;
       </template>
 
-      <!-- not actually using KCollapse to hide/show content here, just using it for the trigger, title and container -->
-      <!-- hiding/showing excess plugins is handled by the collapsedGroupStyles computed property -->
       <template #visible-content>
         <div
           ref="pluginCardContainerRef"
@@ -142,7 +139,7 @@ const emit = defineEmits<{
 const { i18n: { t } } = composables.useI18n()
 const { getTallestPluginCardHeight, getToggleVisibility } = composables.usePluginHelpers()
 
-const shouldCollapsedCustomPlugins = ref(true)
+const customPluginsCollapsed = ref(true)
 
 const emitPluginData = (plugin: PluginType) => {
   emit('plugin-clicked', plugin)
@@ -193,7 +190,9 @@ const pluginCardContainerRef = ref<HTMLElement | null>(null)
 const pluginCardRef = ref<Array<InstanceType<typeof PluginSelectCard>> | null>(null)
 
 const collapsedGroupStyles = computed((): Record<string, string> => {
-  if (shouldCollapsedCustomPlugins.value) {
+  // not actually using KCollapse to hide/show content here, just using it for the trigger, title and container
+  // hiding/showing excess plugins is handled by these styles
+  if (customPluginsCollapsed.value) {
     return {
       overflowY: 'hidden',
       maxHeight: `${tallestPluginCardHeight.value}px`,
@@ -202,7 +201,7 @@ const collapsedGroupStyles = computed((): Record<string, string> => {
 
   return {}
 })
-const showCollapseTrigger = ref<boolean>(false)
+const showCollapseTrigger = ref<boolean>(false) // don't display a trigger if all plugins will already be visible
 
 const handleResize = (): void => {
   tallestPluginCardHeight.value = getTallestPluginCardHeight(pluginCardRef.value!)

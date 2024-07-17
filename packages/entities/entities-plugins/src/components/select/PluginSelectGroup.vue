@@ -6,7 +6,6 @@
     :title="props.name"
     :trigger-label="isCollapsed ? t('plugins.select.view_more') : t('plugins.select.view_less')"
   >
-    <!-- don't display a trigger if all plugins will already be visible -->
     <template
       v-if="!showCollapseTrigger"
       #trigger
@@ -14,8 +13,6 @@
       &nbsp;
     </template>
 
-    <!-- not actually using KCollapse to hide/show content here, just using it for the trigger, title and container -->
-    <!-- hiding/showing excess plugins is handled by the collapsedGroupStyles computed property -->
     <template #visible-content>
       <div
         ref="pluginCardContainerRef"
@@ -92,6 +89,8 @@ const pluginCardContainerRef = ref<HTMLElement | null>(null)
 const pluginCardRef = ref<Array<InstanceType<typeof PluginSelectCard>> | null>(null)
 
 const collapsedGroupStyles = computed((): Record<string, string> => {
+  // not actually using KCollapse to hide/show content here, just using it for the trigger, title and container
+  // hiding/showing excess plugins is handled by these styles
   if (isCollapsed.value) {
     return {
       overflowY: 'hidden',
@@ -101,7 +100,7 @@ const collapsedGroupStyles = computed((): Record<string, string> => {
 
   return {}
 })
-const showCollapseTrigger = ref<boolean>(false)
+const showCollapseTrigger = ref<boolean>(false) // don't display a trigger if all plugins will already be visible
 
 const handleResize = (): void => {
   tallestPluginCardHeight.value = getTallestPluginCardHeight(pluginCardRef.value!)
