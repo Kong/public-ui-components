@@ -1,5 +1,6 @@
 import type { ConfigurationSchema } from '@kong-ui-public/entities-shared'
 import { ConfigurationSchemaType, useStringHelpers } from '@kong-ui-public/entities-shared'
+import type PluginSelectCard from './../components/select/PluginSelectCard.vue'
 
 export default function useHelpers() {
   const { capitalize } = useStringHelpers()
@@ -150,6 +151,37 @@ export default function useHelpers() {
     return capitalize(label.replace(/_/g, ' '))
   }
 
+  /**
+   * Get the height of the tallest card
+   */
+  const getTallestPluginCardHeight = (elements: Array<InstanceType<typeof PluginSelectCard>>): number => {
+    let tallestCardHeight = 0
+
+    if (elements.length) {
+      for (let i = 0; i < elements.length; i++) {
+        const card = elements[i].$el
+        // find height of tallest card
+        tallestCardHeight = card.offsetHeight > tallestCardHeight ? card.offsetHeight : tallestCardHeight
+      }
+    }
+
+    return tallestCardHeight
+  }
+
+  /**
+   * Determines the visibility of the collapse trigger
+   * If the number of cards is greater than the number of columns displayed, show the trigger
+   */
+  const getToggleVisibility = (container: HTMLElement, childrenCount: number): boolean => {
+    if (container && childrenCount) {
+      const displayedColumns = window?.getComputedStyle(container)?.getPropertyValue('grid-template-columns')?.split(' ').length
+
+      return childrenCount > displayedColumns
+    }
+
+    return true
+  }
+
   return {
     setFieldType,
     convertToDotNotation,
@@ -157,5 +189,7 @@ export default function useHelpers() {
     isObjectEmpty,
     unsetNullForeignKey,
     formatPluginFieldLabel,
+    getTallestPluginCardHeight,
+    getToggleVisibility,
   }
 }

@@ -85,8 +85,9 @@ const emit = defineEmits<{
 }>()
 
 const { i18n: { t } } = composables.useI18n()
+const { getTallestPluginCardHeight, getToggleVisibility } = composables.usePluginHelpers()
 
-const tallestPluginCardHeight = ref<number>(310)
+const tallestPluginCardHeight = ref<number>(310) // begin with default height
 const pluginCardContainerRef = ref<HTMLElement | null>(null)
 const pluginCardRef = ref<Array<InstanceType<typeof PluginSelectCard>> | null>(null)
 
@@ -101,40 +102,18 @@ const collapsedGroupStyles = computed((): Record<string, string> => {
   return {}
 })
 const showCollapseTrigger = ref<boolean>(false)
-/**
- * Set the visibility of the collapse trigger
- * If the number of cards is greater than the number of columns displayed, show the trigger
- */
+
+// set the visibility of the collapse trigger
 const setToggleVisibility = (): void => {
-  if (pluginCardContainerRef.value && pluginCardRef.value?.length) {
-    const displayedColumns = window?.getComputedStyle(pluginCardContainerRef.value)?.getPropertyValue('grid-template-columns')?.split(' ').length
-
-    showCollapseTrigger.value = pluginCardRef.value?.length > displayedColumns
-  }
-}
-
-
-/**
- * Set the height of the collapsed group to the height of the tallest card
- */
-const setCollapsedGroupHeight = () => {
   if (pluginCardRef.value?.length) {
-    let tallestCardHeight = 0
-    for (let i = 0; i < pluginCardRef.value?.length; i++) {
-      const card = pluginCardRef.value[i].$el
-      // find height of tallest card
-      tallestCardHeight = card.offsetHeight > tallestCardHeight ? card.offsetHeight : tallestCardHeight
-    }
-
-    if (tallestCardHeight > tallestPluginCardHeight.value) {
-      tallestPluginCardHeight.value = tallestCardHeight
-    }
+    showCollapseTrigger.value = getToggleVisibility(pluginCardContainerRef.value!, pluginCardRef.value?.length)
   }
 }
 
 onMounted(async () => {
   await nextTick()
-  setCollapsedGroupHeight()
+
+  tallestPluginCardHeight.value = getTallestPluginCardHeight(pluginCardRef.value!)
   setToggleVisibility()
   window?.addEventListener('resize', setToggleVisibility)
 })
