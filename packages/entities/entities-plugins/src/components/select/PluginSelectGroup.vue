@@ -5,7 +5,6 @@
     :data-testid="`${props.name}-collapse`"
     :title="props.name"
     :trigger-label="isCollapsed ? t('plugins.select.view_more') : t('plugins.select.view_less')"
-    @toggle="setToggleVisibility"
   >
     <!-- don't display a trigger if all plugins will already be visible -->
     <template
@@ -39,12 +38,10 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { nextTick, ref } from 'vue'
+import { nextTick, ref, computed, onMounted, onUnmounted } from 'vue'
 import composables from '../../composables'
 import PluginSelectCard from './PluginSelectCard.vue'
 import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType } from '../../types'
-import { onMounted } from 'vue'
-import { computed } from 'vue'
 
 const isCollapsed = defineModel<boolean>({ required: true })
 
@@ -139,6 +136,11 @@ onMounted(async () => {
   await nextTick()
   setCollapsedGroupHeight()
   setToggleVisibility()
+  window?.addEventListener('resize', setToggleVisibility)
+})
+
+onUnmounted(() => {
+  window?.removeEventListener('resize', setToggleVisibility)
 })
 </script>
 

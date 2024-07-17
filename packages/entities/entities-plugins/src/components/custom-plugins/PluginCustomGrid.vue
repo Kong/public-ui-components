@@ -27,7 +27,6 @@
       :data-testid="`${PluginGroup.CUSTOM_PLUGINS}-collapse`"
       :title="PluginGroup.CUSTOM_PLUGINS"
       :trigger-label="shouldCollapsedCustomPlugins ? t('plugins.select.view_more') : t('plugins.select.view_less')"
-      @toggle="setToggleVisibility"
     >
       <!-- don't display a trigger if all plugins will already be visible -->
       <template
@@ -72,7 +71,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, type PropType } from 'vue'
+import { computed, nextTick, onMounted, ref, onUnmounted } from 'vue'
+import type { PropType } from 'vue'
 import {
   PluginGroup,
   type KongManagerPluginSelectConfig,
@@ -236,6 +236,11 @@ onMounted(async () => {
   await nextTick()
   setCollapsedGroupHeight()
   setToggleVisibility()
+  window?.addEventListener('resize', setToggleVisibility)
+})
+
+onUnmounted(() => {
+  window?.removeEventListener('resize', setToggleVisibility)
 })
 </script>
 
