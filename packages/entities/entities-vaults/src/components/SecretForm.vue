@@ -151,7 +151,7 @@ const submitUrl = computed<string>(() => {
     .replace(/{secretId}/gi, props.secretId)
 })
 
-const isFormValid = computed((): boolean => !!state.fields.key || !!state.fields.value)
+const isFormValid = computed((): boolean => !!state.fields.key && !!state.fields.value)
 const changesExist = computed((): boolean => JSON.stringify(state.fields) !== JSON.stringify(originalFields))
 
 const payload = computed((): SecretStateFields => {

@@ -12,6 +12,7 @@
       pagination-type="offset"
       preferences-storage-key="kong-ui-entities-secrets-list"
       :query="filterQuery"
+      :row-attributes="rowAttrs"
       :table-headers="tableHeaders"
       @clear-search-input="clearFilter"
     >
@@ -179,6 +180,10 @@ const fields: BaseTableHeaders = {
   updated_at: { label: t('secrets.list.table_headers.updated_at'), sortable: false },
 }
 const tableHeaders: BaseTableHeaders = fields
+
+const rowAttrs = (row: Record<string, any>) => ({
+  'data-testid': row.key,
+})
 
 /**
  * Fetcher & Filtering
