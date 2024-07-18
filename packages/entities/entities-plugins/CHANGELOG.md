@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@7.4.2...@kong-ui-public/entities-plugins@8.0.0) (2024-07-18)
+
+
+### Bug Fixes
+
+* **plugins:** responsiveness improvements [KHCP-12616] ([#1499](https://github.com/Kong/public-ui-components/issues/1499)) ([abec71e](https://github.com/Kong/public-ui-components/commit/abec71e60ecbf7a35c511446ce36f1b94dbf855a))
+
+
+### BREAKING CHANGES
+
+* **plugins:** pluginsPerRow prop removed
+
+* chore(deps): bump @kong/kongponents
+
+* fix(plugins): misc fix [KHCP-12616]
+
+* fix: address pr feedback
+
+* fix: address pr feedback
+
+* fix(plugins): plugin card width [KHCP-12616]
+
+
+
+
+
 ## [7.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@7.4.1...@kong-ui-public/entities-plugins@7.4.2) (2024-07-18)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
