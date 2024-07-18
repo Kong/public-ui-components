@@ -529,7 +529,7 @@ onMounted(async () => {
     &-cards {
       :deep(.skeleton-card-wrapper) {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(0, 350px));
+        grid-template-columns: repeat(auto-fit, minmax(0, 335px));
 
         .skeleton-card {
           max-width: none;

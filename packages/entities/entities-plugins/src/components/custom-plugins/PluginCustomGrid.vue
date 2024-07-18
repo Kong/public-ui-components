@@ -253,7 +253,7 @@ onUnmounted(() => {
 .plugin-card-container {
   display: grid;
   gap: $kui-space-90;
-  grid-template-columns: repeat(auto-fit, minmax(0, 350px)); // display as many cards as possible in a row, with a max width of 350px
+  grid-template-columns: repeat(auto-fit, minmax(0, 335px)); // display as many cards as possible in a row, with a max width of 335px
   justify-content: space-around;
   margin-top: $kui-space-90;
 
