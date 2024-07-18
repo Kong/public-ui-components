@@ -23,7 +23,7 @@
           <KInput
             v-model.trim="state.fields.key"
             autocomplete="off"
-            class="username-field"
+            class="key-field"
             data-testid="secret-form-key"
             :label="t('secrets.form.fields.key.label')"
             :placeholder="t('secrets.form.fields.key.placeholder')"
@@ -198,33 +198,5 @@ const submitData = async (): Promise<void> => {
       column-gap: $kui-space-130;
     }
   }
-
-  fieldset {
-    border: none;
-    margin: 0;
-    padding: 0;
-  }
-}
-
-.fields-group {
-  &-title {
-    color: $kui-color-text-neutral-strongest;
-    font-size: $kui-font-size-40;
-    font-weight: 600;
-    line-height: 20px;
-    margin-bottom: 4px;
-    margin-top: 0;
-  }
-  &-text {
-    color: rgba(0, 0, 0, 0.45);
-    font-size: $kui-font-size-30;
-    line-height: 20px;
-    margin-bottom: 0;
-    margin-top: 0;
-  }
-}
-
-.username-field {
-  margin-bottom: 16px;
 }
 </style>
