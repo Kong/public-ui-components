@@ -1,6 +1,6 @@
 import type { ConfigurationSchema } from '@kong-ui-public/entities-shared'
 import { ConfigurationSchemaType, useStringHelpers } from '@kong-ui-public/entities-shared'
-import type { PluginType } from '../types'
+import type PluginSelectCard from './../components/select/PluginSelectCard.vue'
 
 export default function useHelpers() {
   const { capitalize } = useStringHelpers()
@@ -91,16 +91,6 @@ export default function useHelpers() {
     }
   }
 
-  const getPluginCards = (type: 'all' | 'visible' | 'hidden', plugins: PluginType[], pluginsPerRow: number) => {
-    if (type === 'all') {
-      return plugins
-    } else if (type === 'visible') {
-      return plugins.slice(0, pluginsPerRow)
-    }
-
-    return plugins.slice(pluginsPerRow)
-  }
-
   const convertToDotNotation = (key: string) => {
     return key.replace(/-/g, '.')
   }
@@ -121,12 +111,12 @@ export default function useHelpers() {
 
       keys.reduce((acc: Record<string, any>, cur: string, curIdx: number) => {
         return acc[cur] ||
-        // If current key in acc is the next
-        // item in the split array (dot notation)
-        // set its value
-        (acc[cur] = isNaN(keys[curIdx + 1] as any)
-          ? (keys.length - 1 === curIdx ? obj[key] : {})
-          : [])
+          // If current key in acc is the next
+          // item in the split array (dot notation)
+          // set its value
+          (acc[cur] = isNaN(keys[curIdx + 1] as any)
+            ? (keys.length - 1 === curIdx ? obj[key] : {})
+            : [])
       }, result)
     }
 
@@ -161,13 +151,45 @@ export default function useHelpers() {
     return capitalize(label.replace(/_/g, ' '))
   }
 
+  /**
+   * Get the height of the tallest card
+   */
+  const getTallestPluginCardHeight = (elements: Array<InstanceType<typeof PluginSelectCard>>): number => {
+    let tallestCardHeight = 0
+
+    if (elements.length) {
+      for (let i = 0; i < elements.length; i++) {
+        const card = elements[i].$el
+        // find height of tallest card
+        tallestCardHeight = card.offsetHeight > tallestCardHeight ? card.offsetHeight : tallestCardHeight
+      }
+    }
+
+    return tallestCardHeight
+  }
+
+  /**
+   * Determines the visibility of the collapse trigger
+   * If the number of cards is greater than the number of columns displayed, show the trigger
+   */
+  const getToggleVisibility = (container: HTMLElement, childrenCount: number): boolean => {
+    if (container && childrenCount) {
+      const displayedColumns = window?.getComputedStyle(container)?.getPropertyValue('grid-template-columns')?.split(' ').length
+
+      return childrenCount > displayedColumns
+    }
+
+    return true
+  }
+
   return {
     setFieldType,
-    getPluginCards,
     convertToDotNotation,
     unFlattenObject,
     isObjectEmpty,
     unsetNullForeignKey,
     formatPluginFieldLabel,
+    getTallestPluginCardHeight,
+    getToggleVisibility,
   }
 }

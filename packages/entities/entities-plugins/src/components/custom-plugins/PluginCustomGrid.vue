@@ -22,24 +22,29 @@
 
     <KCollapse
       v-else
-      v-model="shouldCollapsedCustomPlugins"
+      v-model="customPluginsCollapsed"
       class="custom-plugins-collapse"
       :data-testid="`${PluginGroup.CUSTOM_PLUGINS}-collapse`"
       :title="PluginGroup.CUSTOM_PLUGINS"
-      :trigger-label="triggerLabel"
+      :trigger-label="customPluginsCollapsed ? t('plugins.select.view_more') : t('plugins.select.view_less')"
     >
-      <!-- don't display a trigger if all plugins will already be visible -->
       <template
-        v-if="modifiedCustomPlugins.length <= pluginsPerRow"
+        v-if="!showCollapseTrigger"
         #trigger
       >
         &nbsp;
       </template>
+
       <template #visible-content>
-        <div class="plugin-card-container">
+        <div
+          ref="pluginCardContainerRef"
+          class="plugin-card-container"
+          :style="collapsedGroupStyles"
+        >
           <PluginSelectCard
-            v-for="(plugin, index) in getPluginCards('visible', modifiedCustomPlugins, pluginsPerRow)"
+            v-for="(plugin, index) in modifiedCustomPlugins"
             :key="`plugin-card-${index}`"
+            ref="pluginCardRef"
             :can-delete-custom-plugin="canDeleteCustomPlugin"
             :can-edit-custom-plugin="canEditCustomPlugin"
             :config="config"
@@ -50,19 +55,6 @@
           />
         </div>
       </template>
-
-      <div class="plugin-card-container">
-        <PluginSelectCard
-          v-for="(plugin, index) in getPluginCards('hidden', modifiedCustomPlugins, pluginsPerRow)"
-          :key="`plugin-card-${index}`"
-          :can-delete-custom-plugin="canDeleteCustomPlugin"
-          :can-edit-custom-plugin="canEditCustomPlugin"
-          :config="config"
-          :navigate-on-click="navigateOnClick"
-          :plugin="plugin"
-          @plugin-clicked="emitPluginData"
-        />
-      </div>
     </KCollapse>
 
     <DeleteCustomPluginSchemaModal
@@ -76,7 +68,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, type PropType } from 'vue'
+import { computed, nextTick, onMounted, ref, onUnmounted } from 'vue'
+import type { PropType } from 'vue'
 import {
   PluginGroup,
   type KongManagerPluginSelectConfig,
@@ -135,13 +128,6 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  /**
-   * Number of plugins to always have visible (never will be collapsed)
-   */
-  pluginsPerRow: {
-    type: Number,
-    default: 4,
-  },
 })
 
 const emit = defineEmits<{
@@ -151,8 +137,9 @@ const emit = defineEmits<{
 }>()
 
 const { i18n: { t } } = composables.useI18n()
-const { getPluginCards } = composables.usePluginHelpers()
-const shouldCollapsedCustomPlugins = ref(true)
+const { getTallestPluginCardHeight, getToggleVisibility } = composables.usePluginHelpers()
+
+const customPluginsCollapsed = ref(true)
 
 const emitPluginData = (plugin: PluginType) => {
   emit('plugin-clicked', plugin)
@@ -177,18 +164,6 @@ const modifiedCustomPlugins = computed((): PluginType[] => {
     : customPlugins
 })
 
-// text for plugin group "view x more" label
-const triggerLabel = computed((): string => {
-  const totalCount = getPluginCards('all', modifiedCustomPlugins.value, props.pluginsPerRow)?.length
-  const hiddenCount = getPluginCards('hidden', modifiedCustomPlugins.value, props.pluginsPerRow)?.length
-
-  if (totalCount > props.pluginsPerRow) {
-    return t('plugins.select.view_more', { count: hiddenCount })
-  }
-
-  return t('plugins.select.view_less')
-})
-
 const openDeleteModal = ref(false)
 const selectedPlugin = ref<{ name: string, id: string } | null>(null)
 
@@ -209,6 +184,48 @@ const handleClose = (revalidate?: boolean): void => {
   openDeleteModal.value = false
   selectedPlugin.value = null
 }
+
+const tallestPluginCardHeight = ref<number>(310) // begin with default height
+const pluginCardContainerRef = ref<HTMLElement | null>(null)
+const pluginCardRef = ref<Array<InstanceType<typeof PluginSelectCard>> | null>(null)
+
+const collapsedGroupStyles = computed((): Record<string, string> => {
+  // not actually using KCollapse to hide/show content here, just using it for the trigger, title and container
+  // hiding/showing excess plugins is handled by these styles
+  if (customPluginsCollapsed.value) {
+    return {
+      overflowY: 'hidden',
+      maxHeight: `${tallestPluginCardHeight.value}px`,
+    }
+  }
+
+  return {}
+})
+const showCollapseTrigger = ref<boolean>(false) // don't display a trigger if all plugins will already be visible
+
+const handleResize = (): void => {
+  tallestPluginCardHeight.value = getTallestPluginCardHeight(pluginCardRef.value!)
+  setToggleVisibility()
+}
+
+// set the visibility of the collapse trigger
+const setToggleVisibility = (): void => {
+  if (pluginCardRef.value?.length) {
+    showCollapseTrigger.value = getToggleVisibility(pluginCardContainerRef.value!, pluginCardRef.value?.length)
+  }
+}
+
+onMounted(async () => {
+  await nextTick()
+
+  tallestPluginCardHeight.value = getTallestPluginCardHeight(pluginCardRef.value!)
+  setToggleVisibility()
+  window?.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window?.removeEventListener('resize', handleResize)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -234,37 +251,14 @@ const handleClose = (revalidate?: boolean): void => {
 }
 
 .plugin-card-container {
-  column-gap: 50px;
   display: grid;
-  grid-auto-rows: 1fr;
+  gap: $kui-space-90;
+  grid-template-columns: repeat(auto-fit, minmax(0, 335px)); // display as many cards as possible in a row, with a max width of 335px
+  justify-content: space-around;
   margin-top: $kui-space-90;
-  row-gap: $kui-space-90;
-
-  :deep(.kong-card) {
-    display: flex;
-    flex: 1 0 0;
-    flex-direction: column;
-    margin: $kui-space-0;
-    padding: $kui-space-0;
-    text-align: center;
-  }
-
-  :deep(.k-card-body) {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-  }
-
-  @media (min-width: $kui-breakpoint-phablet) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (min-width: $kui-breakpoint-tablet) {
-    grid-template-columns: repeat(3, 1fr);
-  }
 
   @media (min-width: $kui-breakpoint-laptop) {
-    grid-template-columns: repeat(4, 1fr);
+    justify-content: flex-start;
   }
 }
 </style>

@@ -464,7 +464,7 @@
       "unavailable_tooltip": "This plugin is not available",
       "already_exists": "This plugin is already applied to this resource",
       "misc_plugins": "Other Plugins",
-      "view_more": "View {count} more",
+      "view_more": "View more",
       "view_less": "View less",
       "tabs": {
         "kong": {

@@ -171,14 +171,6 @@ Example:
 }
 ```
 
-#### `pluginsPerRow`
-
-- type: `number`
-- required: `false`
-- default: `4`
-
-Number of plugins to always have visible (never will be collapsed).
-
 #### `highlightedPluginIds`
 
 - type: `string[]`
