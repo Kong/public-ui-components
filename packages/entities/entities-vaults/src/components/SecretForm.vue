@@ -39,6 +39,7 @@
             :placeholder="t('secrets.form.fields.value.placeholder')"
             :readonly="state.readonly"
             required
+            resizable
             type="text"
           />
           <KAlert
