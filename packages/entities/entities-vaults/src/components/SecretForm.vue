@@ -165,17 +165,16 @@ const submitData = async (): Promise<void> => {
     state.readonly = true
 
     let response: AxiosResponse | undefined
+    const requestBody = {
+      ...payload.value,
+      // Indicate that the secret is sensitive
+      is_sensitive: true,
+    }
 
     if (formType.value === 'create') {
-      response = await axiosInstance.post(submitUrl.value, {
-        ...payload.value,
-        // Indicate that the secret is sensitive
-        is_sensitive: true,
-      })
+      response = await axiosInstance.post(submitUrl.value, requestBody)
     } else if (formType.value === 'edit') {
-      response = props.config?.app === 'konnect'
-        ? await axiosInstance.put(submitUrl.value, payload.value)
-        : await axiosInstance.patch(submitUrl.value, payload.value)
+      response = await axiosInstance.put(submitUrl.value, requestBody)
     }
 
     updateFormValues(response?.data)
