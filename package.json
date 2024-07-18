@@ -24,7 +24,7 @@
     "@commitlint/config-conventional": "^18.6.3",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
     "@evilmartians/lefthook": "^1.6.18",
-    "@kong/design-tokens": "1.15.1",
+    "@kong/design-tokens": "1.15.2",
     "@kong/eslint-config-kong-ui": "^1.1.1",
     "@kong/kongponents": "9.0.17",
     "@stylistic/stylelint-plugin": "^2.1.2",

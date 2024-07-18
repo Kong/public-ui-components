@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.2.18...@kong-ui-public/entities-consumer-credentials@3.2.19) (2024-07-18)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [3.2.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.2.17...@kong-ui-public/entities-consumer-credentials@3.2.18) (2024-07-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1502](https://github.com/Kong/public-ui-components/issues/1502)) ([5bc424e](https://github.com/Kong/public-ui-components/commit/5bc424ed7333870527dc417fcf98b7d37062fb78))
+
+
+
+
+
 ## [3.2.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.2.16...@kong-ui-public/entities-consumer-credentials@3.2.17) (2024-07-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
