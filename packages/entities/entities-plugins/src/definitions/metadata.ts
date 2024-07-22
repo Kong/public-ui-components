@@ -695,6 +695,13 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.json-threat-protection.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
   },
+  'standard-webhooks': {
+    descriptionKey: 'plugins.meta.standard-webhooks.description',
+    group: PluginGroup.TRAFFIC_CONTROL,
+    isEnterprise: false,
+    nameKey: 'plugins.meta.standard-webhooks.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+  },
 }
 
 /**
