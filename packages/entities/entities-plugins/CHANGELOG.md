@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.0.0...@kong-ui-public/entities-plugins@8.1.0) (2024-07-22)
+
+
+### Features
+
+* **entities-plugins:** standard webhooks plugin ([#1504](https://github.com/Kong/public-ui-components/issues/1504)) ([417478e](https://github.com/Kong/public-ui-components/commit/417478efe1c2bfb8807728476a4eadd874576e92))
+
+
+
+
+
 # [8.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@7.4.2...@kong-ui-public/entities-plugins@8.0.0) (2024-07-18)
 
 
