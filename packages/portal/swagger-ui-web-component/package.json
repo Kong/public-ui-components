@@ -1,0 +1,49 @@
+{
+  "name": "@kong-ui-public/swagger-ui-web-component",
+  "version": "0.12.0",
+  "main": "dist/main.js",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "start": "webpack serve",
+    "build": "webpack --mode production"
+  },
+  "dependencies": {
+    "@kong/swagger-ui-kong-theme-universal": "^4.3.3",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "swagger-client": "^3.26.8",
+    "swagger-ui": "^5.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kong/public-ui-components.git",
+    "directory": "packages/portal/swagger-ui-web-component"
+  },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/portal/swagger-ui-web-component",
+  "bugs": {
+    "url": "https://github.com/Kong/public-ui-components/issues"
+  },
+  "author": "Kong, Inc.",
+  "license": "Apache-2.0",
+  "volta": {
+    "extends": "../../../package.json"
+  },
+  "distSizeChecker": {
+    "errorLimit": "3.5MB"
+  },
+  "devDependencies": {
+    "css-loader": "^6.10.0",
+    "raw-loader": "^4.0.2",
+    "style-loader": "^3.3.4",
+    "terser-webpack-plugin": "^5.3.10",
+    "webpack": "^5.90.3",
+    "webpack-bundle-analyzer": "^4.10.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.2"
+  }
+}

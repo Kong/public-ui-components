@@ -1,0 +1,108 @@
+{
+  "global": {
+    "actions": {
+      "copyId": "Copy ID",
+      "copied_id": "Copied \"{id}\" to the clipboard",
+      "copyToClipboard": "Copied successfully!",
+      "copyToClipboardFailed": "Failed to copy to the clipboard"
+    }
+  },
+  "deleteModal": {
+    "message": "Are you sure you want to delete this {entityType}?",
+    "messageWithName": "Are you sure you want to delete this {entityType} {entityName}?"
+  },
+  "baseForm": {
+    "actions": {
+      "viewConfiguration": "View Configuration",
+      "save": "Save",
+      "cancel": "Cancel",
+      "back": "Back"
+    },
+    "configuration": {
+      "title": "Configuration",
+      "message": "Export configurations for core Kong Gateway objects, like services, routes, and plugins, to either YAML or JSON. This allows for straightforward importing into APIOps tools like decK with YAML, or Insomnia and cURL with JSON.",
+      "yaml": "YAML",
+      "json": "JSON"
+    },
+    "errors": {
+      "edit": "The entity could not be edited at this time."
+    }
+  },
+  "baseTable": {
+    "emptyState": {
+      "noSearchResultsTitle": "No results found",
+      "noSearchResultsMessage": "Please adjust the criteria and try again.",
+      "noSearchResultsCtaText": "Clear"
+    }
+  },
+  "baseConfigCard": {
+    "title": "Configuration",
+    "actions": {
+      "copy": "Copy JSON"
+    },
+    "sections": {
+      "advanced": "Advanced",
+      "plugin": "Plugin Specific Configuration"
+    },
+    "commonFields": {
+      "id_label": "ID",
+      "name_label": "Name",
+      "enabled_label": "Enabled",
+      "enabled_tooltip": "Enabled is FTW",
+      "updated_at_label": "Last Updated",
+      "created_at_label": "Created",
+      "tags_label": "Tags",
+      "link": "Link"
+    },
+    "statusBadge": {
+      "enabledLabel": "Enabled",
+      "disabledLabel": "Disabled"
+    },
+    "copy": {
+      "tooltip": "Copy {label}",
+      "success": "Copied!"
+    },
+    "errors": {
+      "load": "The entity configuration data could not be loaded at this time.",
+      "copy": "Failed to copy to clipboard"
+    },
+    "general": {
+      "entryTitle": "Entry {index}",
+      "structuredFormat": "Structured"
+    }
+  },
+  "filter": {
+    "filterButtonText": "Filter",
+    "fieldLabel": "Filter by:",
+    "inputPlaceholder": "Enter a value",
+    "selectPlaceholder": "Select an item",
+    "applyButtonText": "Apply",
+    "clearButtonText": "Clear",
+    "clearAllButtonText": "Clear all filters"
+  },
+  "debouncedFilter": {
+    "errors": {
+      "fetch": "Could not fetch available items",
+      "invalid": "Please select a valid value"
+    }
+  },
+  "errors": {
+    "unexpected": "An unexpected error has occurred",
+    "dataKeyUndefined": "The data key \"{dataKey}\" does not exist in the response."
+  },
+  "validationErrors": {
+    "utf8Name": "The name can be any string containing characters, letters, numbers, or the following characters: ., -, _, or ~. Do not use spaces."
+  },
+  "toggleModal": {
+    "enable": {
+      "title": "Enable {entityType}",
+      "message": "Are you sure you want to enable the {entityType} {entityName}?",
+      "confirmText": "Yes, enable"
+    },
+    "disable": {
+      "title": "Disable {entityType}",
+      "message": "Are you sure you want to disable the {entityType} {entityName}?",
+      "confirmText": "Yes, disable"
+    }
+  }
+}

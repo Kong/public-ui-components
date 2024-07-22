@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "."{%%SANDBOX_TSCONFIG_PATHS%%}
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.vue",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

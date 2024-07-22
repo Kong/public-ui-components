@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "es5",
+    "outDir": "./dist/endpoints",
+    "declaration": true,
+    "declarationDir": "./dist/endpoints",
+    "sourceMap": false,
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
+    "types": [
+      "node",
+    ]
+  },
+  "include": [
+    "src/plugins-endpoints.ts"
+  ],
+  "files": [
+    "src/plugins-endpoints.ts"
+  ]
+}

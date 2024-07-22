@@ -1,0 +1,35 @@
+{
+  "general": {
+    "notAvailable": "N/A"
+  },
+  "metricCard": {
+    "short": {
+      "traffic": "Requests",
+      "errorRate": "Error Rate",
+      "averageLatency": "Average Latency",
+      "p99Latency": "P99 Latency"
+    },
+    "long": {
+      "traffic": "Number of Requests",
+      "errorRate": "Average Error Rate",
+      "averageLatency": "Average Latency",
+      "p99Latency": "P99 Latency"
+    }
+  },
+  "trendRange": {
+    "custom": "vs previous {numDays, plural, =1 {day} other {# days}}",
+    "15m": "vs previous 15 minutes",
+    "1h": "vs previous hour",
+    "6h": "vs previous 6 hours",
+    "12h": "vs previous 12 hours",
+    "24h": "vs previous 24 hours",
+    "7d": "vs previous 7 days",
+    "30d": "vs previous 30 days",
+    "current_week": "vs previous week",
+    "current_month": "vs previous month",
+    "current_quarter": "vs previous quarter",
+    "previous_week": "vs previous time period",
+    "previous_month": "vs previous time period",
+    "previous_quarter": "vs previous quarter"
+  }
+}

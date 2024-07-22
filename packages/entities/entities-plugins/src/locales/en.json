@@ -1,0 +1,563 @@
+{
+  "actions": {
+    "cancel": "Cancel",
+    "view_configuration": "View Configuration",
+    "create": "New Plugin",
+    "create_custom": "Create",
+    "copy_id": "Copy ID",
+    "copy_json": "Copy JSON",
+    "edit": "Edit",
+    "enable": "Enable",
+    "enabled": "Enabled",
+    "delete": "Delete",
+    "confirm_delete": "Yes, delete",
+    "view": "View Details",
+    "configure_dynamic_ordering": "Configure Dynamic Ordering",
+    "go_to_plugins": "Go to Plugins",
+    "save": "Save"
+  },
+  "view_configuration": {
+    "title": "Configuration",
+    "message": "Export configurations for core Kong Gateway objects, like services, routes, and plugins, to either YAML or JSON. This allows for straightforward importing into APIOps tools like decK with YAML, or Insomnia and cURL with JSON.",
+    "yaml": "YAML",
+    "json": "JSON"
+  },
+  "delete": {
+    "title": "Delete a Plugin",
+    "custom_title": "Delete {name}",
+    "custom_plugin": "Custom Plugin",
+    "description": "This action cannot be reversed.",
+    "description_custom": "Please ensure this plugin is not in use. This action cannot be reversed.",
+    "plugin_schema_in_use_title": "Unable to Delete Custom Plugin",
+    "plugin_schema_in_use_message": "The custom plugin schema {name} is being used in this control plane, please delete any existing instances before you delete this schema.",
+    "confirmModalText1": "Are you sure you want to delete",
+    "confirmModalText2": "Please ensure this plugin is not in use. This delete action cannot be reversed.",
+    "confirm_text": "Type {name} to confirm your action",
+    "success_message": "Successfully deleted custom plugin {name}"
+  },
+  "copy": {
+    "success": "Copied {val} to clipboard",
+    "success_brief": "Successfully copied to clipboard",
+    "tooltip": "Copy {label}",
+    "success_tooltip": "Copied!"
+  },
+  "errors": {
+    "general": "Plugins could not be retrieved",
+    "delete": "The plugin could not be deleted at this time.",
+    "copy": "Failed to copy to clipboard",
+    "load_results": "Error loading available plugins",
+    "load_schema": "Error loading plugin schema"
+  },
+  "search": {
+    "placeholder": {
+      "konnect": "Filter by name",
+      "kongManager": "Filter by exact instance name or ID",
+      "select": "Filter plugins"
+    },
+    "filter": {
+      "field": {
+        "enabled": "Enabled"
+      }
+    },
+    "no_results": "No results found for \"{filter}\""
+  },
+  "plugins": {
+    "title": "Plugins",
+    "list": {
+      "toolbar_actions": {
+        "new_plugin": "New Plugin"
+      },
+      "table_headers": {
+        "applied_to": "Applied To",
+        "applied_to_badges": {
+          "consumer": "Consumer",
+          "global": "Global",
+          "route": "Route",
+          "service": "Service",
+          "consumer_group": "Consumer Group"
+        },
+        "id": "ID",
+        "name": "Name",
+        "instance_name": "Instance Name",
+        "ordering": "Ordering",
+        "ordering_badge": {
+          "dynamic": "Dynamic",
+          "static": "Static"
+        },
+        "enabled": "Enabled",
+        "tags": "Tags"
+      },
+      "empty_state": {
+        "title": "Configure a New Plugin",
+        "description": "Plugins are used to extend Kong functionality."
+      }
+    },
+    "meta": {
+      "basic-auth": {
+        "name": "Basic Authentication",
+        "credential_name": "Basic Auth Credential",
+        "description": "Add Basic Authentication to your Services"
+      },
+      "hmac-auth": {
+        "name": "HMAC Authentication",
+        "credential_name": "HMAC Credential",
+        "description": "Add HMAC Authentication to your Services"
+      },
+      "jwt-signer": {
+        "name": "JWT Signer",
+        "description": "Verify and (re-)sign one or two tokens in a request"
+      },
+      "jwt": {
+        "name": "JWT",
+        "credential_name": "JWT Credential",
+        "description": "Verify and authenticate JSON Web Tokens"
+      },
+      "key-auth": {
+        "name": "Key Authentication",
+        "credential_name": "Key Auth Credential",
+        "description": "Add key authentication to your Services"
+      },
+      "key-auth-enc": {
+        "name": "Key Authentication Encrypted",
+        "credential_name": "Key Auth Encrypted",
+        "description": "Add key authentication to your Services with an encrypted token"
+      },
+      "ldap-auth-advanced": {
+        "name": "LDAP Authentication Advanced",
+        "description": "Integrate Kong with a LDAP server"
+      },
+      "ldap-auth": {
+        "name": "LDAP Authentication",
+        "description": "Integrate Kong with a LDAP server"
+      },
+      "oauth2-introspection": {
+        "name": "OAuth 2.0 Introspection",
+        "description": "Integrate Kong with a third-party OAuth 2.0 Authorization Server"
+      },
+      "oauth2": {
+        "name": "OAuth 2.0 Authentication",
+        "credential_name": "OAuth 2.0 Application",
+        "description": "Add OAuth 2.0 authentication to your Services"
+      },
+      "openid-connect": {
+        "name": "OpenID Connect",
+        "description": "Integrate Kong with a third-party OpenID Connect 1.0 Provider"
+      },
+      "mtls-auth": {
+        "name": "Mutual TLS Authentication",
+        "description": "Secure routes and services with client certificate and mutual TLS authentication"
+      },
+      "vault-auth": {
+        "name": "Vault Authentication",
+        "description": "Secure routes and services with an access token and secret token, stored securely via Vault"
+      },
+      "bot-detection": {
+        "name": "Bot Detection",
+        "description": "Detect and clock bots or custom clients"
+      },
+      "cors": {
+        "name": "CORS",
+        "description": "Allow developers to make requests from the browser"
+      },
+      "ip-restriction": {
+        "name": "IP Restriction",
+        "description": "Whitelist or blacklist IPs that can make requests"
+      },
+      "opa": {
+        "name": "OPA",
+        "description": "Authorize requests against Open Policy Agent"
+      },
+      "kubernetes-sidecar-injector": {
+        "name": "Kubernetes Sidecar Injector",
+        "description": "This plugin will inject Kong dataplane nodes and form a service mesh on top of Kubernetes"
+      },
+      "request-validator": {
+        "name": "Request Validator",
+        "description": "Validate requests before they reach their upstream Service. "
+      },
+      "acl": {
+        "name": "ACL",
+        "credential_name": "Access Control Group",
+        "description": "Control which consumers can access Services"
+      },
+      "canary": {
+        "name": "Canary Release",
+        "description": "Methodically roll out software changes to a subset of users"
+      },
+      "forward-proxy": {
+        "name": "Forward Proxy",
+        "description": "Allow Kong to connect to intermediary transparent HTTP proxies"
+      },
+      "proxy-cache": {
+        "name": "Proxy Caching",
+        "description": "Cache and serve commonly requested responses in Kong"
+      },
+      "proxy-cache-advanced": {
+        "name": "Proxy Caching Advanced",
+        "description": "Cache and serve commonly requested responses in Kong"
+      },
+      "graphql-proxy-cache-advanced": {
+        "name": "GraphQL Proxy Caching Advanced",
+        "description": "Cache and serve commonly requested responses in Kong"
+      },
+      "rate-limiting-advanced": {
+        "name": "Rate Limiting Advanced",
+        "description": "Rate-limit how many HTTP requests a developer can make"
+      },
+      "rate-limiting": {
+        "name": "Rate Limiting",
+        "description": "Rate-limit how many HTTP requests a developer can make"
+      },
+      "graphql-rate-limiting-advanced": {
+        "name": "GraphQL Rate Limiting Advanced",
+        "description": "Rate-limit how many HTTP requests a developer can make"
+      },
+      "mocking": {
+        "name": "Mocking",
+        "description": "Provide mock endpoints to test your APIs in development against your services"
+      },
+      "request-size-limiting": {
+        "name": "Request Size Limiting",
+        "description": "Block requests with bodies greater than a specific size"
+      },
+      "request-termination": {
+        "name": "Request Termination",
+        "description": "Terminate all requests with a specific response"
+      },
+      "response-ratelimiting": {
+        "name": "Response Rate Limiting",
+        "description": "Rate-Limiting based on a custom response header value"
+      },
+      "route-by-header": {
+        "name": "Route by Header",
+        "description": "Route requests based on request headers"
+      },
+      "ai-proxy": {
+        "name": "AI Proxy",
+        "description": "Directly call a configured LLM, with mediated security and tuning parameters, and using standardised Kong request and response formats."
+      },
+      "ai-prompt-decorator": {
+        "name": "AI Prompt Decorator",
+        "description": "Prepend and append chat prompts to AI Proxy plugin LLM requests."
+      },
+      "ai-prompt-template": {
+        "name": "AI Prompt Template",
+        "description": "Define a set of templates, containing string variable placeholders, that can be consumed by users when used with the AI Proxy plugin."
+      },
+      "ai-prompt-guard": {
+        "name": "AI Prompt Guard",
+        "description": "Define a set of valid, and a set of invalid, regular expression patterns when calling LLM models with the AI Proxy plugin."
+      },
+      "ai-request-transformer": {
+        "name": "AI Request Transformer",
+        "description": "Use an LLM to transform API request from a user, before sending to the upstream service."
+      },
+      "ai-response-transformer": {
+        "name": "AI Response Transformer",
+        "description": "Use an LLM to transform API responses from the upstream service, before returning to the user."
+      },
+      "ai-rate-limiting-advanced": {
+        "name": "AI Rate Limiting Advanced",
+        "description": "Provides rate limiting for the providers used by any AI plugins."
+      },
+      "ai-azure-content-safety": {
+        "name": "AI Azure Content Safety",
+        "description": "Allows checking and auditing of AI-Proxy plugin messages, using Azure Cognitive Services, before proxying to upstream large-language model."
+      },
+      "aws-lambda": {
+        "name": "AWS Lambda",
+        "description": "Invoke and manage AWS Lambda functions from Kong"
+      },
+      "azure-functions": {
+        "name": "Azure Functions",
+        "description": "Invoke Azure functions"
+      },
+      "openwhisk": {
+        "name": "OpenWhisk",
+        "description": "Invoke and manage OpenWhisk actions from Kong"
+      },
+      "pre-function": {
+        "name": "Kong Functions (Pre-Plugins)",
+        "description": "Add and manage custom lua functions to run before other plugins"
+      },
+      "post-function": {
+        "name": "Kong Functions (Post-Plugins)",
+        "description": "Add and manage custom lua functions to run after other plugins"
+      },
+      "datadog": {
+        "name": "Datadog",
+        "description": "Visualize metrics on Datadog"
+      },
+      "prometheus": {
+        "name": "Prometheus",
+        "description": "Export performance metrics to Prometheus"
+      },
+      "zipkin": {
+        "name": "Zipkin",
+        "description": "Propagate zipkin spans and report spans to a zipkin server"
+      },
+      "collector": {
+        "name": "Collector",
+        "description": "Automate spec-driven development & anomaly detection (Early Access)"
+      },
+      "response-transformer-advanced": {
+        "name": "Response Transformer Advanced",
+        "description": "Transform the response sent by the upstream server on the fly on Kong, before returning the response to the client."
+      },
+      "correlation-id": {
+        "name": "Correlation ID",
+        "description": "Correlate requests and responses using a unique ID"
+      },
+      "request-transformer-advanced": {
+        "name": "Request Transformer Advanced",
+        "description": "Use powerful regular expressions, variables and templates to transform API requests"
+      },
+      "request-transformer": {
+        "name": "Request Transformer",
+        "description": "Modify the request before hitting the upstream server"
+      },
+      "response-transformer": {
+        "name": "Response Transformer",
+        "description": "Modify the upstream response before returning it to the client"
+      },
+      "route-transformer-advanced": {
+        "name": "Route Transformer Advanced",
+        "description": "Transforms the routing on the fly in Kong, changing the upstream server/port/path to hit"
+      },
+      "kafka-upstream": {
+        "name": "Kafka Upstream",
+        "description": "Transform requests into Kafka messages in a topic"
+      },
+      "degraphql": {
+        "name": "DeGraphQL",
+        "description": "Transform a GraphQL upstream into a REST API"
+      },
+      "exit-transformer": {
+        "name": "Exit Transformer",
+        "description": "Customize Kong exit responses sent downstream"
+      },
+      "jq": {
+        "name": "jq",
+        "description": "Transform JSON objects included in API requests or responses using jq programs"
+      },
+      "file-log": {
+        "name": "File Log",
+        "description": "Append request and response data to a log file on disk"
+      },
+      "http-log": {
+        "name": "HTTP Log",
+        "description": "Send request and response logs to an HTTP server"
+      },
+      "loggly": {
+        "name": "Loggly",
+        "description": "Send request and response logs to Loggly"
+      },
+      "statsd-advanced": {
+        "name": "StatsD Advanced",
+        "description": "Send traffic and Kong performance metrics to StatsD"
+      },
+      "statsd": {
+        "name": "StatsD",
+        "description": "Send request and response logs to StatsD"
+      },
+      "syslog": {
+        "name": "Syslog",
+        "description": "Send request and response logs to Syslog"
+      },
+      "tcp-log": {
+        "name": "TCP Log",
+        "description": "Send request and response logs to a TCP server"
+      },
+      "udp-log": {
+        "name": "UDP Log",
+        "description": "Send request and response logs to a UDP server"
+      },
+      "kafka-log": {
+        "name": "Kafka Log",
+        "description": "Publish request and response logs to a Kafka topic"
+      },
+      "session": {
+        "name": "Session",
+        "description": "Sessions for Kong authentication"
+      },
+      "upstream-tls": {
+        "name": "Upstream TLS",
+        "description": "Enable TLS on upstream traffic by providing Kong with a list of trusted certificates."
+      },
+      "application-registration": {
+        "name": "Portal Application Registration",
+        "description": "Allow portal developers to register applications against services"
+      },
+      "konnect-application-auth": {
+        "name": "Konnect Application Auth",
+        "description": "Allow Konnect portal developers to register applications against services"
+      },
+      "acme": {
+        "name": "ACME",
+        "description": "Let's Encrypt and ACMEv2 integration with Kong"
+      },
+      "grpc-gateway": {
+        "name": "gRPC Gateway",
+        "description": "Access gRPC services through HTTP REST"
+      },
+      "grpc-web": {
+        "name": "gRPC Web",
+        "description": "Allow browser clients to call gRPC services"
+      },
+      "upstream-timeout": {
+        "name": "Upstream Timeout",
+        "description": "Configure read, send and connect timeouts to an upstream"
+      },
+      "opentelemetry": {
+        "name": "OpenTelemetry",
+        "description": "Propagate distributed tracing spans and report low-level spans to a OTLP-compatible server"
+      },
+      "websocket-validator": {
+        "name": "WebSocket Validator",
+        "description": "Validate individual WebSocket messages against to a user-specified schema before proxying them"
+      },
+      "websocket-size-limit": {
+        "name": "WebSocket Size Limit",
+        "description": "Allows operators to specify a maximum size for incoming WebSocket messages"
+      },
+      "tls-metadata-headers": {
+        "name": "TLS Metadata Headers",
+        "description": "Detects client certificates in requests, retrieves the TLS metadata, and proxies this metadata via HTTP headers"
+      },
+      "tls-handshake-modifier": {
+        "name": "TLS Handshake Modifier",
+        "description": "Requests the client certificate and if it exists, makes it available to other plugins acting on the request"
+      },
+      "oas-validation": {
+        "name": "OAS Validation",
+        "description": "Validate HTTP requests and responses based on an API Specification."
+      },
+      "jwe-decrypt": {
+        "name": "Kong JWE Decrypt",
+        "description": "The Kong JWE Decrypt plugin makes it possible to decrypt an inbound token(JWE) in a request."
+      },
+      "xml-threat-protection": {
+        "name": "XML Threat Protection",
+        "description": "Reduce the risk of XML attacks by checking the structure of XML payloads."
+      },
+      "saml": {
+        "name": "SAML",
+        "description": "Security Assertion Markup Language (SAML) is an open standard for exchanging authentication and authorization data between an identity provider and a service provider."
+      },
+      "app-dynamics": {
+        "name": "AppDynamics",
+        "description": "This plugin integrates Kong with the AppDynamics APM platform so that proxy requests handled by Kong can be identified and analyzed in AppDynamics."
+      },
+      "json-threat-protection": {
+        "name": "JSON Threat Protection",
+        "description": "Apply size checks on JSON payload and minimize risk of content-level attacks"
+      }
+    },
+    "fields": {
+      "service": "Service ID",
+      "route": "Route ID",
+      "consumer": "Consumer ID",
+      "consumer_group": "Consumer Group ID"
+    },
+    "select": {
+      "custom_badge_text": "This plugin is data plane node specific",
+      "unavailable_tooltip": "This plugin is not available",
+      "already_exists": "This plugin is already applied to this resource",
+      "misc_plugins": "Other Plugins",
+      "view_more": "View {count} more",
+      "view_less": "View less",
+      "tabs": {
+        "kong": {
+          "title": "Kong Plugins",
+          "description": "Kong plugins are bundled by default with Kong Gateway and are available across all control planes.",
+          "empty_title": "No Plugins",
+          "empty_description": "No plugins are available."
+        },
+        "custom": {
+          "title": "Custom Plugins",
+          "description": "Custom plugins will be available in this control plane only.",
+          "disabled_tooltip": "Custom Plugins are not available with Serverless Gateways. Create a Hybrid Gateway to leverage Custom Plugins",
+          "empty_title": "No Custom Plugins",
+          "empty_description": "No custom plugins have been added to this Control Plane.",
+          "create": {
+            "name": "Custom Plugin",
+            "description": "Upload schema file to create custom plugin"
+          }
+        }
+      },
+      "highlighted_plugins": {
+        "title": "Highlighted Plugins"
+      }
+    },
+    "form": {
+      "no_selection": "No selection...",
+      "fields": {
+        "enabled": {
+          "label": "Enabled",
+          "on_text": "This plugin is Enabled",
+          "off_text": "This plugin is Disabled"
+        },
+        "instance_name": {
+          "label": "Instance Name",
+          "help": "A custom name for this plugin instance to help identifying from the list view."
+        },
+        "protocols": {
+          "label": "Protocols",
+          "placeholder": "Select valid protocols for the plugin",
+          "help": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type."
+        }
+      },
+      "scoping": {
+        "label": "Scoped",
+        "global": {
+          "label": "Global",
+          "help": "All services, routes, and consumers"
+        },
+        "gateway_service": {
+          "label": "Gateway Service",
+          "help": "The Gateway Service to which this plugin configuration will apply",
+          "placeholder": "Select a Gateway Service",
+          "plural": "Gateway Services"
+        },
+        "route": {
+          "label": "Route",
+          "help": "The Route that this Plugin configuration will target",
+          "placeholder": "Select a Route",
+          "plural": "Routes"
+        },
+        "consumer": {
+          "label": "Consumer",
+          "help": "The Consumer that this plugin configuration will target",
+          "placeholder": "Select a Consumer",
+          "plural": "Consumers"
+        },
+        "consumer_group": {
+          "label": "Consumer Group",
+          "help": "The Consumer Group that this plugin configuration will target",
+          "placeholder": "Select a Consumer Group",
+          "plural": "Consumer Groups"
+        }
+      },
+      "grouping": {
+        "plugin_configuration": {
+          "title": "Plugin Configuration",
+          "description": "Configuration parameters for this plugin. View advanced parameters for extended configuration.",
+          "empty": "This plugin does not have required parameters."
+        },
+        "advanced_parameters": {
+          "view": "View Advanced Parameters",
+          "hide": "Hide Advanced Parameters"
+        }
+      },
+      "field_rules": {
+        "at_least_one_of": "At least one of these parameters is required: {parameters}",
+        "only_one_of": "Exactly one of these parameters is required: {parameters}",
+        "mutually_required": "All of these parameters are required: {parameters}",
+        "only_one_of_mutually_required": "Exactly one of the following parameter combinations is required (all parameters within a chosen combination are required):"
+      }
+    }
+  },
+  "glossary": {
+    "plugin": "plugin"
+  }
+}

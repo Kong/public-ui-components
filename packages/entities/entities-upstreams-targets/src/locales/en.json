@@ -1,0 +1,358 @@
+{
+  "upstreams": {
+    "list": {
+      "table_headers": {
+        "id": "ID",
+        "name": "Name",
+        "slots": "Slots",
+        "tags": "Tags"
+      },
+      "empty_state": {
+        "title": "Configure a New Upstream",
+        "description": "Upstreams are used to load balance incoming requests."
+      },
+      "toolbar_actions": {
+        "new_upstream": "New Upstream"
+      }
+    },
+    "title": "Upstreams",
+    "search": {
+      "placeholder": "Filter by exact name or ID"
+    },
+    "actions": {
+      "create": "New Upstream",
+      "copy_id": "Copy ID",
+      "copy_json": "Copy JSON",
+      "edit": "Edit",
+      "delete": "Delete",
+      "view": "View Details"
+    },
+    "delete": {
+      "title": "Delete an Upstream",
+      "description": "This action cannot be reversed so make sure to check upstream usage before deleting."
+    },
+    "errors": {
+      "general": "Upstreams could not be retrieved",
+      "delete": "The upstream could not be deleted at this time.",
+      "copy": "Failed to copy to clipboard"
+    },
+    "copy": {
+      "success": "Copied {val} to clipboard",
+      "success_brief": "Successfully copied to clipboard"
+    },
+    "form": {
+      "errors": {
+        "name_required": "Name is required",
+        "should_be_integer": "Field should contain an integer",
+        "in_range": "Accepts an integer in the range of 10 - 65536"
+      },
+      "general_info": {
+        "title": "General Information",
+        "help": "General information will help identify and manage this Upstream."
+      },
+      "load_balancing": {
+        "title": "Load Balancing",
+        "help": "Active health checks actively probe targets for their health. Currently only support HTTP/HTTPS targets."
+      },
+      "health_check": {
+        "title": "Health Checks & Circuit Breakers",
+        "help": "Active health checks actively probe targets for their health. Currently only support HTTP/HTTPS targets."
+      },
+      "active_health_check": {
+        "title": "Active Health Checks",
+        "help": "Active health checks actively probe targets for their health. Currently only support HTTP/HTTPS targets."
+      },
+      "passive_health_check": {
+        "title": "Passive Health Checks",
+        "help": "Passive health checks, also known as circuit breakers, are checks performed based on the requests being proxied by Kong (HTTP/HTTPS/TCP), with no additional traffic being generated."
+      },
+      "buttons": {
+        "view_documentation": "View documentation"
+      },
+      "algorithms": {
+        "round_robin_label": "Round Robin",
+        "least_connections_label": "Least Connections",
+        "consistent_hashing_label": "Consistent Hashing",
+        "latency_label": "Latency"
+      },
+      "hash_labels": {
+        "none": "None",
+        "consumer": "Consumer",
+        "ip": "IP",
+        "header": "Header",
+        "cookie": "Cookie",
+        "path": "Path",
+        "query_argument": "Query Argument",
+        "uri_capture": "URI Capture"
+      },
+      "hash_tooltips": {
+        "hash_on_header": {
+          "text": "The header name to take the value from as hash input. Only required when {hash_on} is set to {header}",
+          "hash_on": "hash_on",
+          "header": "header"
+        },
+        "hash_on_uri_capture": {
+          "text": "The name of the route URI capture to take the value from as hash input. Only required when {hash_on} is set to {uri_capture}",
+          "hash_on": "hash_on",
+          "uri_capture": "uri_capture"
+        },
+        "hash_on_query_arg": {
+          "text": "The name of the query string argument to take the value from as hash input. Only required when {hash_on} is set to {query_arg}",
+          "hash_on": "hash_on",
+          "query_arg": "query_arg"
+        },
+        "hash_on_cookie": {
+          "text": "The cookie name to take the value from as hash input. Only required when {hash_on} or {hash_fallback} is set to {cookie}. If the specified cookie is not in the request, Kong will generate a value and set the cookie in the response.",
+          "hash_on": "hash_on",
+          "hash_fallback": "hash_fallback",
+          "cookie": "cookie"
+        },
+        "hash_on_cookie_path": {
+          "text": "The cookie path to set in the response headers. Only required when {hash_on} or {hash_fallback} is set to {cookie}.",
+          "hash_on": "hash_on",
+          "hash_fallback": "hash_fallback",
+          "cookie": "cookie"
+        },
+        "slots": {
+          "text": "The number of slots in the load balancer algorithm. If {algorithm} is set to {round_robin}, this setting determines the maximum number of slots. If {algorithm} is set to {consistent_hashing}, this setting determines the actual number of slots in the algorithm. Accepts an integer in the range {min}-{max}",
+          "algorithm": "algorithm",
+          "round_robin": "round-robin",
+          "consistent_hashing": "consistent-hashing"
+        },
+        "tags": "An optional set of strings associated with the Upstream for grouping and filtering.",
+        "hash_fallback": {
+          "text": "What to use as hashing input if the primary {hash_on} does not return a hash (eg. header is missing, or no Consumer identified). Not available if {hash_on} is set to {cookie}",
+          "hash_on": "hash_on",
+          "cookie": "cookie"
+        },
+        "hash_fallback_header": {
+          "text": "The header name to take the value from as hash input. Only required when {hash_fallback} is set to {header}",
+          "hash_fallback": "hash_fallback",
+          "header": "header"
+        },
+        "hash_fallback_query_arg": {
+          "text": "The name of the query string argument to take the value from as hash input. Only required when {hash_fallback} is set to {query_arg}",
+          "hash_fallback": "hash_fallback",
+          "query_arg": "query_arg"
+        },
+        "hash_fallback_uri_capture": {
+          "text": "The name of the route URI capture to take the value from as hash input. Only required when {hash_fallback} is set to {uri_capture}",
+          "hash_fallback": "hash_fallback",
+          "uri_capture": "uri_capture"
+        },
+        "host_header": {
+          "text": "The hostname to be used as {host} header when proxying requests through Kong.",
+          "host": "Host"
+        },
+        "client_certificate": "If set, the certificate to be used as client certificate while TLS handshaking to the upstream server."
+      },
+      "healthcheck_type_labels": {
+        "http": "HTTP",
+        "https": "HTTPS",
+        "tcp": "TCP",
+        "grsp": "gRPC",
+        "grsps": "gRPCs"
+      },
+      "healthy": {
+        "label": "Healthy",
+        "help": "The counter thresholds to determine whether targets are healthy."
+      },
+      "unhealthy": {
+        "label": "Unhealthy",
+        "help": "The counter thresholds to determine whether targets are unhealthy."
+      },
+      "passive_healthy": {
+        "label": "Healthy",
+        "help": "The counter thresholds to determine whether targets are healthy."
+      },
+      "passive_unhealthy": {
+        "label": "Unhealthy",
+        "help": "The counter thresholds to determine whether targets are unhealthy."
+      },
+      "fields": {
+        "name": {
+          "label": "Name",
+          "placeholder": "Enter or select a host",
+          "tooltip": "This is a hostname, which must be equal to the {host} of a Service.",
+          "host": "host"
+        },
+        "host_header": {
+          "label": "Host Header"
+        },
+        "client_certificate": {
+          "label": "Client Certificate",
+          "placeholder": "Select or enter a Certificate ID",
+          "tooltip": "If set, the certificate to be used as client certificate while TLS handshaking to the upstream server."
+        },
+        "tags": {
+          "label": "Tags",
+          "placeholder": "Enter a list of tags separated by comma",
+          "help": "e.g. tag1, tag2, tag3",
+          "tooltip": "An optional set of strings associated with the Upstream for grouping and filtering."
+        },
+        "algorithm": {
+          "label": "Algorithm",
+          "tooltip": "Which load balancing algorithm to use."
+        },
+        "slots": {
+          "label": "Slots",
+          "help": "Accepts an integer in the range of 10 - 65536"
+        },
+        "hash_on": {
+          "label": "Hash on",
+          "help": "What to use as hashing input.",
+          "tooltip": "What to use as hashing input. Using {result} results in a weighted-round-robin scheme with no hashing."
+        },
+        "hash_fallback": {
+          "label": "Hash Fallback",
+          "help": "What to use as hashing input if the primary hash_on does not return a hash",
+          "tooltip": "What to use as hashing input if the primary {hash_on} does not return a hash (eg. header is missing, or no Consumer identified). Not available if {hash_on} is set to {cookie}.",
+          "hash_on": "hash_on",
+          "cookie": "cookie"
+        },
+        "active_health_checks": {
+          "label": "Active Health Checks",
+          "help": "Actively probe the targets for their health."
+        },
+        "passive_health_checks": {
+          "label": "Passive Health Checks / Circuit Breakers",
+          "help": "Checks performed based on the requests being proxied by Kong (HTTP/HTTPS/TCP), with no additional traffic being generated."
+        },
+        "healthchecks_threshold": {
+          "label": "Healthchecks Threshold"
+        },
+        "header": {
+          "label": "Header"
+        },
+        "headers": {
+          "label": "Headers",
+          "tooltip_active": "Header values can be separated by commas (value1, value2, value3)."
+        },
+        "cookie": {
+          "label": "Cookie"
+        },
+        "cookie_path": {
+          "label": "Cookie Path"
+        },
+        "query_argument": {
+          "label": "Query Argument"
+        },
+        "uri_capture": {
+          "label": "URI Capture"
+        },
+        "active_healthcheck_type": {
+          "label": "Active Health Check Type"
+        },
+        "http_path": {
+          "label": "HTTP Path"
+        },
+        "timeout": {
+          "label": "Timeout"
+        },
+        "concurrency": {
+          "label": "Concurrency"
+        },
+        "https_sni": {
+          "label": "HTTPS SNI"
+        },
+        "verify_ssl": {
+          "label": "Verify the SSL certificate when performing active health checks using HTTPS"
+        },
+        "interval": {
+          "label": "Interval",
+          "help": "A value of zero indicates that active probes for healthy targets are disabled."
+        },
+        "successes": {
+          "label": "Successes"
+        },
+        "http_statuses": {
+          "label": "HTTP Statuses"
+        },
+        "http_failures": {
+          "label": "HTTP Failures"
+        },
+        "tcp_failures": {
+          "label": "TCP Failures"
+        },
+        "timeouts": {
+          "label": "Timeouts"
+        },
+        "passive_health_check_type": {
+          "label": "Passive Health Check Type"
+        }
+      }
+    },
+    "labels": {
+      "created_at": "Created at"
+    }
+  },
+  "targets": {
+    "list": {
+      "table_headers": {
+        "id": "ID",
+        "target_address": "Target Address",
+        "weight": "Weight",
+        "tags": "Tags"
+      },
+      "empty_state": {
+        "title": "Configure a New Target",
+        "description": "A target is an IP address/hostname with a port that identifies an instance of a backend service."
+      },
+      "toolbar_actions": {
+        "new_target": "New Target"
+      }
+    },
+    "title": "Targets",
+    "actions": {
+      "create": "New Target",
+      "copy_id": "Copy ID",
+      "copy_json": "Copy JSON",
+      "edit": "Edit",
+      "delete": "Delete",
+      "mark_healthy": "Mark Healthy",
+      "mark_unhealthy": "Mark Unhealthy"
+    },
+    "delete": {
+      "title": "Delete a Target",
+      "description": "This action cannot be reversed so make sure to check target usage before deleting."
+    },
+    "errors": {
+      "general": "Targets could not be retrieved",
+      "delete": "The target could not be deleted at this time.",
+      "copy": "Failed to copy to clipboard",
+      "weight": "Value must be in range 0 to 65535"
+    },
+    "copy": {
+      "success": "Copied {val} to clipboard",
+      "success_brief": "Successfully copied to clipboard"
+    },
+    "form": {
+      "create": {
+        "title": "New Target"
+      },
+      "edit": {
+        "title": "Edit Target"
+      },
+      "buttons": {
+        "save": "Save",
+        "cancel": "Cancel"
+      },
+      "fields": {
+        "target": {
+          "label": "Target Address",
+          "placeholder": "Enter IP/hostname and port",
+          "tooltip": "The target address (IP or hostname) and port. If omitted the port defaults to 8000."
+        },
+        "weight": {
+          "label": "Weight",
+          "tooltip": "The weight of this target in relation to other targets in the upstream. Value must be in range 0 to 65535, defaults to 100."
+        },
+        "tags": {
+          "label": "Tags",
+          "placeholder": "Enter a list of tags separated by comma",
+          "help": "e.g. tag1, tag2, tag3"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "keys": {
+    "title": "Keys",
+    "list": {
+      "toolbar_actions": {
+        "new_key": "New Key"
+      },
+      "table_headers": {
+        "name": "Name",
+        "key_id": "Key ID",
+        "id": "ID",
+        "tags": "Tags"
+      },
+      "empty_state": {
+        "title": "Configure a New Key",
+        "description": "A Key object holds a representation of asymmetric keys in various formats."
+      }
+    },
+    "actions": {
+      "create": "New Key",
+      "copy_id": "Copy ID",
+      "copy_json": "Copy JSON",
+      "edit": "Edit",
+      "delete": "Delete",
+      "clear": "Clear",
+      "view": "View Details",
+      "loading": "Loading..."
+    },
+    "search": {
+      "placeholder": "Filter by exact name or ID",
+      "no_results": "No results found"
+    },
+    "delete": {
+      "title": "Delete a Key",
+      "description": "This action cannot be reversed so make sure to check the key usage before deleting."
+    },
+    "errors": {
+      "general": "Keys could not be retrieved",
+      "delete": "The key could not be deleted at this time.",
+      "copy": "Failed to copy to clipboard",
+      "key_sets": {
+        "fetch": "Could not fetch available key sets",
+        "invalid": "Please select a valid key set ID"
+      }
+    },
+    "copy": {
+      "success": "Copied {val} to clipboard",
+      "success_brief": "Successfully copied to clipboard"
+    },
+    "form": {
+      "sections": {
+        "general": {
+          "title": "General Information",
+          "description": "General information will help identify and manage this key."
+        },
+        "keys": {
+          "title": "Asymmetric Keys",
+          "description": "Choose the preferred format for this asymmetric key. Currently only support PEM and JWK format."
+        }
+      },
+      "fields": {
+        "id": {
+          "label": "Key ID",
+          "placeholder": "Enter a key ID",
+          "tooltip": "An identifier for a key",
+          "help": "If using JWK, need to match with the jwk.kid field"
+        },
+        "name": {
+          "label": "Name",
+          "placeholder": "Enter a unique name for this key",
+          "tooltip": "The name to associate with the given key"
+        },
+        "tags": {
+          "label": "Tags",
+          "placeholder": "Enter a list of tags separated by comma",
+          "help": "e.g. tag1, tag2, tag3",
+          "tooltip": "An optional set of strings for grouping and filtering, separated by commas."
+        },
+        "key_set": {
+          "label": "Key Set",
+          "placeholder": "Select a key set to add into",
+          "footer": "Search by exact ID to find key sets not included in the list"
+        },
+        "key_format": {
+          "label": "Key Format",
+          "options": {
+            "jwk": "JWK",
+            "pem": "PEM"
+          }
+        },
+        "jwk": {
+          "label": "JWK",
+          "placeholder": "Enter a JWK",
+          "tooltip": "A JSON Web key represented as a string"
+        },
+        "kid": {
+          "label": "Key ID",
+          "tooltip": "A unique identifier for a key."
+        },
+        "set": {
+          "label": "Key Set",
+          "tooltip": "The id (an UUID) of the key-set with which to associate the key."
+        },
+        "private_key": {
+          "label": "Private Key",
+          "placeholder": "Enter a private key"
+        },
+        "public_key": {
+          "label": "Public Key",
+          "placeholder": "Enter a public key"
+        }
+      }
+    }
+  }
+}

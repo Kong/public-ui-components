@@ -1,0 +1,175 @@
+{
+  "certificates": {
+    "title": "Certificates",
+    "list": {
+      "toolbar_actions": {
+        "new_certificate": "New Certificate"
+      },
+      "table_headers": {
+        "subject": "Subject",
+        "expiry": "Expiry",
+        "san": "SAN",
+        "cert": "Cert",
+        "tags": "Tags",
+        "issuer": "Issuer",
+        "snis": "SNIs"
+      },
+      "empty_state": {
+        "title": "Configure a New Certificate",
+        "description": "Certificates handle SSL/TLS termination for encrypted requests."
+      }
+    },
+    "form": {
+      "sections": {
+        "ssl": {
+          "title": "SSL Key Pair",
+          "description": "The PEM-encoded public certificate chain and private key of the SSL key pair and the alternate."
+        },
+        "general": {
+          "title": "General Information",
+          "description": "General information will help identify and manage this key."
+        }
+      },
+      "fields": {
+        "cert": {
+          "label": "Cert",
+          "tooltip": "PEM-encoded public certificate chain of the SSL key pair. This field is {emphasis}, which means it can be securely stored as a secret in a vault. References must follow a specific format.",
+          "emphasis": "referenceable"
+        },
+        "key": {
+          "label": "Key",
+          "tooltip": "PEM-encoded private key of the SSL key pair. This field is {emphasis}, which means it can be securely stored as a secret in a vault. References must follow a specific format.",
+          "emphasis": "referenceable"
+        },
+        "cert_alt": {
+          "label": "Cert Alt",
+          "tooltip": "PEM-encoded public certificate chain of the alternate SSL key pair. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is {emphasis}, which means it can be securely stored as a secret in a vault. References must follow a specific format.",
+          "emphasis": "referenceable"
+        },
+        "key_alt": {
+          "label": "Key Alt",
+          "tooltip": "PEM-encoded private key of the alternate SSL key pair. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is {emphasis}, which means it can be securely stored as a secret in a vault. References must follow a specific format.",
+          "emphasis": "referenceable"
+        },
+        "tags": {
+          "label": "Tags",
+          "placeholder": "Enter a list of tags separated by comma",
+          "help": "e.g. tag1, tag2, tag3",
+          "tooltip": "An optional set of strings for grouping and filtering, separated by commas."
+        }
+      }
+    },
+    "actions": {
+      "create": "New Certificate",
+      "copy_id": "Copy ID",
+      "copy_json": "Copy JSON",
+      "edit": "Edit",
+      "addSni": "Add to New SNI",
+      "delete": "Delete",
+      "clear": "Clear",
+      "view": "View Details"
+    },
+    "search": {
+      "placeholder": "Filter by exact ID"
+    },
+    "delete": {
+      "title": "Delete a Certificate",
+      "description": "Your organization's original certificate {bolded-text}.",
+      "boldedText": "will not be affected",
+      "description2": "This action cannot be reversed so make sure to check the certificate usage before deleting."
+    },
+    "errors": {
+      "general": "Certificates could not be retrieved",
+      "delete": "The certificate could not be deleted at this time",
+      "copy": "Failed to copy to clipboard"
+    },
+    "copy": {
+      "success": "Copied {val} to clipboard",
+      "success_brief": "Successfully copied to clipboard"
+    }
+  },
+  "ca-certificates": {
+    "title": "CA Certificates",
+    "list": {
+      "toolbar_actions": {
+        "new_ca_certificate": "New CA Certificate"
+      },
+      "table_headers": {
+        "issuer": "Issuer",
+        "expiry": "Expiry",
+        "tags": "Tags"
+      },
+      "empty_state": {
+        "title": "Configure a New CA Certificate",
+        "description": "CA certificates validate client or server certificates."
+      }
+    },
+    "form": {
+      "sections": {
+        "cert": {
+          "title": "Public Certificate",
+          "description": "The PEM-encoded public certificate of the CA and it’s SHA256 hex digest."
+        },
+        "general": {
+          "title": "General Information",
+          "description": "General information will help identify and manage this key."
+        }
+      },
+      "fields": {
+        "cert": {
+          "label": "Cert",
+          "tooltip": "PEM-encoded public certificate of the CA."
+        },
+        "cert_digest": {
+          "label": "Cert Digest",
+          "tooltip": "SHA256 hex digest of the public certificate"
+        },
+        "tags": {
+          "label": "Tags",
+          "placeholder": "Enter a list of tags separated by comma",
+          "help": "e.g. tag1, tag2, tag3",
+          "tooltip": "An optional set of strings for grouping and filtering, separated by commas."
+        }
+      }
+    },
+    "actions": {
+      "create": "New CA Certificate",
+      "copy_id": "Copy ID",
+      "copy_json": "Copy JSON",
+      "edit": "Edit",
+      "delete": "Delete",
+      "clear": "Clear",
+      "view": "View Details"
+    },
+    "search": {
+      "placeholder": "Filter by exact ID"
+    },
+    "delete": {
+      "title": "Delete a CA Certificate",
+      "description": "Your organization's original certificate {bolded-text}.",
+      "boldedText": "will not be affected",
+      "description2": "This action cannot be reversed so make sure to check the certificate usage before deleting."
+    },
+    "errors": {
+      "general": "CA Certificates could not be retrieved",
+      "delete": "The CA Certificate could not be deleted at this time",
+      "copy": "Failed to copy to clipboard"
+    },
+    "copy": {
+      "success": "Copied {val} to clipboard",
+      "success_brief": "Successfully copied to clipboard"
+    }
+  },
+  "general": {
+    "key-usages": {
+      "KEY_USAGE_TYPE_KEY_CERT_SIGN": "keyCertSign",
+      "KEY_USAGE_TYPE_CRL_SIGN": "cRLSign",
+      "KEY_USAGE_TYPE_ENCIPHER_ONLY": "encipherOnly",
+      "KEY_USAGE_TYPE_DIGITAL_SIGNATURE": "digitalSignature",
+      "KEY_USAGE_TYPE_KEY_ENCIPHERMENT": "keyEncipherment",
+      "KEY_USAGE_TYPE_DATA_ENCIPHERMENT": "dataEncipherment",
+      "KEY_USAGE_TYPE_KEY_AGREEMENT": "keyAgreement",
+      "KEY_USAGE_TYPE_CONTENT_COMMITMENT": "nonRepudiation"
+    }
+  }
+}

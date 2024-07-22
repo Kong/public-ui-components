@@ -1,0 +1,17 @@
+@mixin scrollbarBase($size: $kui-space-40) {
+  -ms-overflow-style: thin;
+  scrollbar-color: $kui-color-background-disabled transparent;
+  scrollbar-width: auto;
+  ::-webkit-scrollbar {
+    width: $size;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: $kui-color-background-disabled;
+    border-radius: 10px;
+  }
+}
