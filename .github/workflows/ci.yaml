@@ -27,6 +27,7 @@ jobs:
       unitTestMatrix: ${{steps.changed_packages.outputs.unitTestMatrix}}
       componentTestFilter: ${{steps.changed_packages.outputs.componentTestFilter}}
       componentTestMatrix: ${{steps.changed_packages.outputs.componentTestMatrix}}
+      runInPackageTestMatrix: ${{steps.changed_packages.outputs.runInPackageTestMatrix}}
     env:
       GH_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
@@ -134,6 +135,7 @@ jobs:
           unitTestMatrix=""
           componentTestFilter=""
           componentTestMatrix=""
+          runInPackageTestMatrix=""
 
           # get the list of changed packages, grab the location
           for pkgFolder in $(pnpm --silent lerna ${lernaCommand} --l --json|jq -r '.[].location')
@@ -149,11 +151,15 @@ jobs:
             if [[ -n "${findRes}" ]]; then
                 componentTestFilter="${componentTestFilter}${pkgFolder},"
 
+                # if there is cypress.config in the package, that means it should run tests independently.
+                # we use `pnpm run test:component:ci --project <pkgFolder>` instead.
+                # so we will not add it to the componentTestMatrix, rather we will add it to a matrix.include
+                # that we can detect it later
                 findCyConfig=$(find "${pkgFolder}" -name "cypress.config.ts" || true)
-                if [[ -n "${findCyConfig}" ]]; then
-                    componentTestMatrix="${componentTestMatrix}\"--project ${pkgFolder}\","
+                if [[ -z "${findCyConfig}" ]]; then
+                    componentTestMatrix="${componentTestMatrix}\"${pkgFolder}\","
                 else
-                    componentTestMatrix="${componentTestMatrix}\"--spec ${pkgFolder}\","
+                    runInPackageTestMatrix="${runInPackageTestMatrix}{ \"container\": \"${pkgFolder}\", \"runInPackage\": true },"
                 fi
             fi
 
@@ -197,6 +203,14 @@ jobs:
           fi
           echo "componentTestMatrix=${componentTestMatrix}"
 
+          # remove trailing ',' from runInPackageTestMatrix
+          runInPackageTestMatrix="[$(echo "${runInPackageTestMatrix}" | sed 's/,$//')]"
+          if [[ "${{steps.run-tests.outputs.run-tests}}" != "true" || "${componentTestFilter}" == "" ]]; then
+            runInPackageTestMatrix=""
+          fi
+          echo "runInPackageTestMatrix=${runInPackageTestMatrix}"
+
+
           # this is to pass to `pnpm --filter` to run pnpm command on all changed packages
           echo "filter=${filter}" >> $GITHUB_OUTPUT
 
@@ -211,6 +225,9 @@ jobs:
 
           # this is component tests in the format json.parse understands
           echo "componentTestMatrix=${componentTestMatrix}" >> $GITHUB_OUTPUT
+
+          # this is component tests in the format json.parse understands
+          echo "runInPackageTestMatrix=${runInPackageTestMatrix}" >> $GITHUB_OUTPUT
 
       - name: Stylelint Packages
         if: ${{ steps.changed_packages.outputs.filter != '' }}
@@ -307,6 +324,7 @@ jobs:
       fail-fast: false
       matrix:
         container: ${{ fromJSON(needs.build.outputs.componentTestMatrix) }}
+        include: ${{ fromJSON(needs.build.outputs.runInPackageTestMatrix) }}
 
     steps:
       - name: Checkout Source Code
@@ -328,7 +346,8 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           install: false
-          command: pnpm run test:component:ci ${{ matrix.container }}
+          # if martrix.runInPackage is true, we will run tests in the package, else we will run tests in the cypress folder
+          command: ${{ matrix.runInPackage && `pnpm run test:component:ci --spec ${matrix.container}` || `pnpm run test:component:ci --project ${matrix.container}` }}
 
       - name: Normalize test results artifact name
         continue-on-error: true
