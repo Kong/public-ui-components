@@ -451,6 +451,10 @@
       "json-threat-protection": {
         "name": "JSON Threat Protection",
         "description": "Apply size checks on JSON payload and minimize risk of content-level attacks"
+      },
+      "standard-webhooks": {
+        "name": "Standard Webhooks",
+        "description": "Validate incoming webhooks adhere to the Standard Webhooks specification, to which Kong is a contributor"
       }
     },
     "fields": {
