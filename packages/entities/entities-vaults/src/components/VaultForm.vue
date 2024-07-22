@@ -15,43 +15,6 @@
       @submit="saveFormData"
     >
       <EntityFormSection
-        :description="t('form.sections.general.description')"
-        :title="t('form.sections.general.title')"
-      >
-        <KInput
-          v-model.trim="form.fields.prefix"
-          autocomplete="off"
-          data-testid="vault-form-prefix"
-          :help="t('form.fields.prefix.help')"
-          :is-readonly="form.isReadonly"
-          :label="t('form.fields.prefix.label')"
-          :label-attributes="{ info: t('form.fields.prefix.tooltip') }"
-          :placeholder="t('form.fields.prefix.placeholder')"
-          required
-          type="text"
-        />
-        <KTextArea
-          v-model.trim="form.fields.description"
-          :character-limit="1000"
-          class="vault-form-textarea"
-          data-testid="vault-form-description"
-          :label="t('form.fields.description.label')"
-          :placeholder="t('form.fields.description.placeholder')"
-          :readonly="form.isReadonly"
-        />
-        <KInput
-          v-model.trim="form.fields.tags"
-          autocomplete="off"
-          data-testid="vault-form-tags"
-          :help="t('form.fields.tags.help')"
-          :is-readonly="form.isReadonly"
-          :label="t('form.fields.tags.label')"
-          :placeholder="t('form.fields.tags.placeholder')"
-          type="text"
-        />
-      </EntityFormSection>
-
-      <EntityFormSection
         :description="t('form.sections.config.description')"
         :title="t('form.sections.config.title')"
       >
@@ -64,17 +27,9 @@
             :items="providers"
           >
             <template #selected-item-template="{ item }">
-              <!-- TODO: use @kong/icons for HashiCorp Vault -->
               <component
                 :is="getProviderIcon(item!.value as VaultProviders)"
-                v-if="item!.value !== VaultProviders.HCV"
               />
-              <img
-                v-else
-                alt="HashiCorp Vault"
-                height="16"
-                :src="getProviderIconURL(VaultProviders.HCV)"
-              >
               {{ item?.label }}
             </template>
             <template #item-template="{ item }">
@@ -86,17 +41,9 @@
                   class="provider-item"
                   :data-testid="`vault-form-provider-${item.value}`"
                 >
-                  <!-- TODO: use @kong/icons for HashiCorp Vault -->
                   <component
                     :is="getProviderIcon(item.value as VaultProviders)"
-                    v-if="item.value !== VaultProviders.HCV"
                   />
-                  <img
-                    v-else
-                    alt="HashiCorp Vault"
-                    height="16"
-                    :src="getProviderIconURL(VaultProviders.HCV)"
-                  >
                   <div class="provider-item-title-container">
                     <span class="provider-item-title">{{ item?.label }}</span>
                     <span class="provider-item-description">{{ getProviderDescription(item.value as VaultProviders) }}</span>
@@ -110,18 +57,18 @@
         <TransitionGroup name="appear">
           <!-- Kong Vault fields -->
           <div
-            v-if="vaultProvider === VaultProviders.KONG"
+            v-if="vaultProvider === VaultProviders.ENV"
             key="kong-vault-config-fields"
             class="vault-form-config-fields-container"
           >
             <KInput
-              v-model.trim="configFields[VaultProviders.KONG].prefix"
+              v-model.trim="configFields[VaultProviders.ENV].prefix"
               autocomplete="off"
               data-testid="vault-form-config-kong-prefix"
               :is-readonly="form.isReadonly"
-              :label="t('form.config.kong.fields.prefix.label')"
-              :label-attributes="{ info: t('form.config.kong.fields.prefix.tooltip') }"
-              :placeholder="t('form.config.kong.fields.prefix.placeholder')"
+              :label="t('form.config.env.fields.prefix.label')"
+              :label-attributes="{ info: t('form.config.env.fields.prefix.tooltip') }"
+              :placeholder="t('form.config.env.fields.prefix.placeholder')"
               required
               type="text"
             />
@@ -481,6 +428,43 @@
           </div>
         </TransitionGroup>
       </EntityFormSection>
+
+      <EntityFormSection
+        :description="t('form.sections.general.description')"
+        :title="t('form.sections.general.title')"
+      >
+        <KInput
+          v-model.trim="form.fields.prefix"
+          autocomplete="off"
+          data-testid="vault-form-prefix"
+          :help="t('form.fields.prefix.help')"
+          :is-readonly="form.isReadonly"
+          :label="t('form.fields.prefix.label')"
+          :label-attributes="{ info: t('form.fields.prefix.tooltip') }"
+          :placeholder="t('form.fields.prefix.placeholder')"
+          required
+          type="text"
+        />
+        <KTextArea
+          v-model.trim="form.fields.description"
+          :character-limit="1000"
+          class="vault-form-textarea"
+          data-testid="vault-form-description"
+          :label="t('form.fields.description.label')"
+          :placeholder="t('form.fields.description.placeholder')"
+          :readonly="form.isReadonly"
+        />
+        <KInput
+          v-model.trim="form.fields.tags"
+          autocomplete="off"
+          data-testid="vault-form-tags"
+          :help="t('form.fields.tags.help')"
+          :is-readonly="form.isReadonly"
+          :label="t('form.fields.tags.label')"
+          :placeholder="t('form.fields.tags.placeholder')"
+          type="text"
+        />
+      </EntityFormSection>
     </EntityBaseForm>
   </div>
 </template>
@@ -499,6 +483,7 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 import type { PropType } from 'vue'
 import { computed, reactive, ref } from 'vue'
 import type {
+  ConfigStoreConfig,
   KongVaultConfig,
   AWSVaultConfig,
   GCPVaultConfig,
@@ -518,18 +503,21 @@ import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
 import endpoints from '../vaults-endpoints'
 import {
+  KongIcon,
   CodeIcon,
   AwsIcon,
+  HashicorpIcon,
   GoogleCloudIcon,
   AzureIcon,
 } from '@kong/icons'
 
 interface ConfigFields {
-  [VaultProviders.KONG]: KongVaultConfig
+  [VaultProviders.ENV]: KongVaultConfig
   [VaultProviders.AWS]: AWSVaultConfig
   [VaultProviders.GCP]: GCPVaultConfig
   [VaultProviders.HCV]: HCVVaultConfig
   [VaultProviders.AZURE]: AzureVaultConfig
+  [VaultProviders.KONNECT]: ConfigStoreConfig
 }
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -581,7 +569,7 @@ const originalFields = reactive<VaultStateFields>({
   tags: '',
 })
 
-const vaultProvider = ref<VaultProviders>(VaultProviders.KONG)
+const vaultProvider = ref<VaultProviders>(props.config.konnectConfigStoreAvailable ? VaultProviders.KONNECT : VaultProviders.ENV)
 const originalVaultProvider = ref<VaultProviders | null>(null)
 
 const isAvailableTTLConfig = computed(() => {
@@ -590,9 +578,17 @@ const isAvailableTTLConfig = computed(() => {
 
 const providers = computed<Array<{ label: string, value: VaultProviders }>>(() => {
   return [
+    ...(
+      props.config.konnectConfigStoreAvailable
+        ? [{
+          label: t('form.config.konnect.label'),
+          value: VaultProviders.KONNECT,
+        }]
+        : []
+    ),
     {
-      label: t('form.config.kong.label'),
-      value: VaultProviders.KONG,
+      label: t('form.config.env.label'),
+      value: VaultProviders.ENV,
     },
     {
       label: t('form.config.aws.label'),
@@ -622,7 +618,8 @@ const providers = computed<Array<{ label: string, value: VaultProviders }>>(() =
 })
 
 const configFields = reactive<ConfigFields>({
-  [VaultProviders.KONG]: {
+  [VaultProviders.KONNECT]: {},
+  [VaultProviders.ENV]: {
     prefix: '',
   } as KongVaultConfig,
   [VaultProviders.AWS]: {
@@ -663,7 +660,8 @@ const configFields = reactive<ConfigFields>({
 })
 
 const originalConfigFields = reactive<ConfigFields>({
-  [VaultProviders.KONG]: {
+  [VaultProviders.KONNECT]: {},
+  [VaultProviders.ENV]: {
     prefix: '',
   } as KongVaultConfig,
   [VaultProviders.AWS]: {
@@ -763,20 +761,18 @@ const fetchErrorHandler = (err: AxiosError): void => {
   emit('error', err)
 }
 
-const getProviderIconURL = (providerName: string) => {
-  return new URL(`../assets/images/provider-icons/${providerName}.svg`, import.meta.url).href
-}
-
 const getProviderIcon = (providerName: VaultProviders) => {
   switch (providerName) {
-    case VaultProviders.KONG:
+    case VaultProviders.KONNECT:
+      return KongIcon
+    case VaultProviders.ENV:
       return CodeIcon
     case VaultProviders.AWS:
       return AwsIcon
     case VaultProviders.GCP:
       return GoogleCloudIcon
-    // TODO: add hcv icon
     case VaultProviders.HCV:
+      return HashicorpIcon
     case VaultProviders.AZURE:
       return AzureIcon
   }
@@ -784,8 +780,10 @@ const getProviderIcon = (providerName: VaultProviders) => {
 
 const getProviderDescription = (providerName: VaultProviders) => {
   switch (providerName) {
-    case VaultProviders.KONG:
-      return t('form.config.kong.description')
+    case VaultProviders.KONNECT:
+      return t('form.config.konnect.description')
+    case VaultProviders.ENV:
+      return t('form.config.env.description')
     case VaultProviders.AWS:
       return t('form.config.aws.description')
     case VaultProviders.GCP:
@@ -807,7 +805,7 @@ const updateFormValues = (data: Record<string, any>): void => {
   Object.assign(originalFields, form.fields)
 
   const config = data?.item?.config || data?.config || null
-  if (config && Object.keys(config).length) {
+  if (config && (Object.keys(config).length || data?.name === VaultProviders.KONNECT)) {
     vaultProvider.value = data?.item?.name || data?.name || ''
     originalVaultProvider.value = vaultProvider.value
     Object.assign(configFields[vaultProvider.value], config)
@@ -963,7 +961,7 @@ const getPayload = computed((): Record<string, any> => {
   }
 
   let ttlFields = {}
-  if (vaultProvider.value !== VaultProviders.KONG) {
+  if (![VaultProviders.KONNECT, VaultProviders.ENV].includes(vaultProvider.value)) {
     const fields = configFields[vaultProvider.value as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS | VaultProviders.AZURE]
     const ttl = fields.ttl
     const negTtl = fields.neg_ttl

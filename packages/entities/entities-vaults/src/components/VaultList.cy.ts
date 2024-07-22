@@ -175,7 +175,7 @@ describe('<VaultList />', () => {
             total: 0,
           },
         },
-      ).as(params?.alias ?? 'getRoutes')
+      ).as(params?.alias ?? 'getVaults')
     }
 
     const interceptKMMultiPage = (params?: {
@@ -196,7 +196,7 @@ describe('<VaultList />', () => {
             body: paginate(params?.mockData ?? [], size, offset),
           })
         },
-      ).as(params?.alias ?? 'getRoutesMultiPage')
+      ).as(params?.alias ?? 'getVaultsMultiPage')
     }
 
     it('should show empty state and create vault cta', () => {
@@ -213,7 +213,7 @@ describe('<VaultList />', () => {
         },
       })
 
-      cy.wait('@getRoutes')
+      cy.wait('@getVaults')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-vault"]').should('be.visible')
@@ -233,7 +233,7 @@ describe('<VaultList />', () => {
         },
       })
 
-      cy.wait('@getRoutes')
+      cy.wait('@getVaults')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-vault"]').should('not.exist')
@@ -250,7 +250,7 @@ describe('<VaultList />', () => {
             statusCode: 500,
             body: message ? { message } : {},
           },
-        ).as('getRoutes')
+        ).as('getVaults')
 
         cy.mount(VaultList, {
           props: {
@@ -263,7 +263,7 @@ describe('<VaultList />', () => {
           },
         })
 
-        cy.wait('@getRoutes')
+        cy.wait('@getVaults')
         cy.get('.kong-ui-entities-vaults-list').should('be.visible')
         cy.get('.table-error-state').should('be.visible')
         if (message) {
@@ -291,7 +291,7 @@ describe('<VaultList />', () => {
         },
       })
 
-      cy.wait('@getRoutes')
+      cy.wait('@getVaults')
       cy.get('.kong-ui-entities-vaults-list tr[data-testid="vault-1"]').should(
         'exist',
       )
@@ -319,7 +319,7 @@ describe('<VaultList />', () => {
       const l = '.kong-ui-entities-vaults-list'
       const p = '[data-testid="table-pagination"]'
 
-      cy.wait('@getRoutesMultiPage')
+      cy.wait('@getVaultsMultiPage')
 
       // Page #1
       cy.get(`${l} tbody tr`).should('have.length', 30)
@@ -336,7 +336,7 @@ describe('<VaultList />', () => {
       cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
-      cy.wait('@getRoutesMultiPage')
+      cy.wait('@getVaultsMultiPage')
 
       // Page #2
       cy.get(`${l} tbody tr`).should('have.length', 30)
@@ -352,7 +352,7 @@ describe('<VaultList />', () => {
       cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
-      cy.wait('@getRoutesMultiPage')
+      cy.wait('@getVaultsMultiPage')
 
       cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
@@ -397,7 +397,7 @@ describe('<VaultList />', () => {
       const l = '.kong-ui-entities-vaults-list'
       const p = '[data-testid="table-pagination"]'
 
-      cy.wait('@getRoutesMultiPage')
+      cy.wait('@getVaultsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 30)
       cy.get(`${l} tbody tr[data-testid="vault-1"]`).should('exist')
@@ -411,7 +411,7 @@ describe('<VaultList />', () => {
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
       ).last().click()
 
-      cy.wait('@getRoutesMultiPage')
+      cy.wait('@getVaultsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="vault-1"]`).should('exist')
@@ -432,7 +432,7 @@ describe('<VaultList />', () => {
         },
       })
 
-      cy.wait('@getRoutesMultiPage')
+      cy.wait('@getVaultsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="vault-1"]`).should('exist')
@@ -446,7 +446,7 @@ describe('<VaultList />', () => {
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
       ).last().click()
 
-      cy.wait('@getRoutesMultiPage')
+      cy.wait('@getVaultsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 50)
       cy.get(`${l} tbody tr[data-testid="vault-1"]`).should('exist')
@@ -475,7 +475,7 @@ describe('<VaultList />', () => {
             total: 0,
           },
         },
-      ).as(params?.alias ?? 'getRoutes')
+      ).as(params?.alias ?? 'getVaults')
     }
 
     const interceptKonnectMultiPage = (params?: {
@@ -496,7 +496,7 @@ describe('<VaultList />', () => {
             body: paginate(params?.mockData ?? [], size, offset),
           })
         },
-      ).as(params?.alias ?? 'getRoutesMultiPage')
+      ).as(params?.alias ?? 'getVaultsMultiPage')
     }
 
     it('should show empty state and create vault cta', () => {
@@ -513,7 +513,7 @@ describe('<VaultList />', () => {
         },
       })
 
-      cy.wait('@getRoutes')
+      cy.wait('@getVaults')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-vault"]').should('be.visible')
@@ -533,7 +533,7 @@ describe('<VaultList />', () => {
         },
       })
 
-      cy.wait('@getRoutes')
+      cy.wait('@getVaults')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
       cy.get('[data-testid="new-vault"]').should('not.exist')
@@ -550,7 +550,7 @@ describe('<VaultList />', () => {
             statusCode: 500,
             body: message ? { message } : {},
           },
-        ).as('getRoutes')
+        ).as('getVaults')
 
         cy.mount(VaultList, {
           props: {
@@ -563,7 +563,7 @@ describe('<VaultList />', () => {
           },
         })
 
-        cy.wait('@getRoutes')
+        cy.wait('@getVaults')
         cy.get('.kong-ui-entities-vaults-list').should('be.visible')
         cy.get('.table-error-state').should('be.visible')
         if (message) {
@@ -591,7 +591,7 @@ describe('<VaultList />', () => {
         },
       })
 
-      cy.wait('@getRoutes')
+      cy.wait('@getVaults')
       cy.get('.kong-ui-entities-vaults-list tr[data-testid="vault-1"]').should(
         'exist',
       )
@@ -619,7 +619,7 @@ describe('<VaultList />', () => {
       const l = '.kong-ui-entities-vaults-list'
       const p = '[data-testid="table-pagination"]'
 
-      cy.wait('@getRoutesMultiPage')
+      cy.wait('@getVaultsMultiPage')
 
       // Page #1
       cy.get(`${l} tbody tr`).should('have.length', 30)
@@ -636,7 +636,7 @@ describe('<VaultList />', () => {
       cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
-      cy.wait('@getRoutesMultiPage')
+      cy.wait('@getVaultsMultiPage')
 
       // Page #2
       cy.get(`${l} tbody tr`).should('have.length', 30)
@@ -652,7 +652,7 @@ describe('<VaultList />', () => {
       cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
 
-      cy.wait('@getRoutesMultiPage')
+      cy.wait('@getVaultsMultiPage')
 
       cy.get(`${l} ${p} [data-testid="next-button"]`)
         .click() // next page
@@ -697,7 +697,7 @@ describe('<VaultList />', () => {
       const l = '.kong-ui-entities-vaults-list'
       const p = '[data-testid="table-pagination"]'
 
-      cy.wait('@getRoutesMultiPage')
+      cy.wait('@getVaultsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 30)
       cy.get(`${l} tbody tr[data-testid="vault-1"]`).should('exist')
@@ -711,7 +711,7 @@ describe('<VaultList />', () => {
         `${l} ${p} [data-testid="page-size-dropdown"] [value="15"]`,
       ).last().click()
 
-      cy.wait('@getRoutesMultiPage')
+      cy.wait('@getVaultsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="vault-1"]`).should('exist')
@@ -732,7 +732,7 @@ describe('<VaultList />', () => {
         },
       })
 
-      cy.wait('@getRoutesMultiPage')
+      cy.wait('@getVaultsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="vault-1"]`).should('exist')
@@ -746,7 +746,7 @@ describe('<VaultList />', () => {
         `${l} ${p} [data-testid="page-size-dropdown"] [value="50"]`,
       ).last().click()
 
-      cy.wait('@getRoutesMultiPage')
+      cy.wait('@getVaultsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 50)
       cy.get(`${l} tbody tr[data-testid="vault-1"]`).should('exist')

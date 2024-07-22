@@ -70,3 +70,25 @@ export const konnectCardConfig: KonnectVaultEntityConfig = {
   apiBaseUrl: '/us/kong-api',
   entityId: '1234',
 }
+
+export const secrets: FetcherRawResponse = {
+  data: [
+    {
+      key: 'secret-1',
+    },
+    {
+      key: 'secret-2',
+    },
+  ],
+  total: 2,
+}
+
+export const secrets100: any[] = Array(100)
+  .fill(null)
+  .map((_, i) => ({
+    key: `secret-${i + 1}`,
+  }))
+
+export const secret = {
+  key: 'secret-1',
+}
