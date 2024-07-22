@@ -1,15 +1,17 @@
 <template>
-  <slot
-    v-if="!loading && passThrough"
-    :has-analytics="analytics"
-    :has-percentiles="percentiles"
-  />
-  <slot
-    v-else-if="!loading"
-    :has-analytics="analytics"
-    :has-percentiles="percentiles"
-    name="fallback"
-  />
+  <div>
+    <slot
+      v-if="!loading && passThrough"
+      :has-analytics="analytics"
+      :has-percentiles="percentiles"
+    />
+    <slot
+      v-else-if="!loading"
+      :has-analytics="analytics"
+      :has-percentiles="percentiles"
+      name="fallback"
+    />
+  </div>
 </template>
 <script setup lang="ts">
 import { useAnalyticsConfigStore } from '../stores'
