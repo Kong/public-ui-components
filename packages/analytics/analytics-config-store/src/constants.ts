@@ -1,1 +1,0 @@
-export const THIRTY_DAYS_MS = 2592000000
