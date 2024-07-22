@@ -324,7 +324,7 @@ jobs:
       fail-fast: false
       matrix:
         container: ${{ fromJSON(needs.build.outputs.componentTestMatrix) }}
-        include: ${{ fromJSON(needs.build.outputs.runInPackageTestMatrix) }}
+        # include: ${{ fromJSON(needs.build.outputs.runInPackageTestMatrix) }}
 
     steps:
       - name: Checkout Source Code
@@ -347,7 +347,8 @@ jobs:
         with:
           install: false
           # if martrix.runInPackage is true, we will run tests in the package, else we will run tests in the cypress folder
-          command: ${{ matrix.runInPackage && `pnpm run test:component:ci --spec ${matrix.container}` || `pnpm run test:component:ci --project ${matrix.container}` }}
+          # command: ${{ matrix.runInPackage && `pnpm run test:component:ci --spec ${matrix.container}` || `pnpm run test:component:ci --project ${matrix.container}` }}
+          command: pnpm run test:component:ci --spec ${matrix.container}
 
       - name: Normalize test results artifact name
         continue-on-error: true
