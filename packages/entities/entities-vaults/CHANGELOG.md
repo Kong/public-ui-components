@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.5.2...@kong-ui-public/entities-vaults@3.6.0) (2024-07-22)
+
+
+### Features
+
+* **entities-vaults:** konnect config store ([#1496](https://github.com/Kong/public-ui-components/issues/1496)) ([9123fbd](https://github.com/Kong/public-ui-components/commit/9123fbd8c37e287c7a08e922c801e6244cd337d1))
+
+
+
+
+
 ## [3.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.5.1...@kong-ui-public/entities-vaults@3.5.2) (2024-07-18)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

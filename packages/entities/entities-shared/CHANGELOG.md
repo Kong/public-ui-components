@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.4.7...@kong-ui-public/entities-shared@3.5.0) (2024-07-22)
+
+
+### Features
+
+* **entities-vaults:** konnect config store ([#1496](https://github.com/Kong/public-ui-components/issues/1496)) ([9123fbd](https://github.com/Kong/public-ui-components/commit/9123fbd8c37e287c7a08e922c801e6244cd337d1))
+
+
+
+
+
 ## [3.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.4.6...@kong-ui-public/entities-shared@3.4.7) (2024-07-18)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
