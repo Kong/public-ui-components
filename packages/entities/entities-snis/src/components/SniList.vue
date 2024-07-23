@@ -418,7 +418,7 @@ const confirmDelete = async (): Promise<void> => {
   }
 }
 
-const hasData = ref(true)
+const hasData = ref(false)
 
 /**
  * Watchers
