@@ -94,6 +94,7 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('form-cancel').should('be.enabled')
       cy.getTestId('form-submit').should('be.disabled')
       // form fields
+      cy.getTestId('secret-form-key').should('be.disabled')
       cy.getTestId('secret-form-key').should('have.value', secret.key)
       cy.getTestId('secret-form-value').should('have.value', '')
     })
@@ -117,13 +118,10 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('form-cancel').should('be.enabled')
       cy.getTestId('form-submit').should('be.disabled')
       // enables save when form has changes
-      cy.getTestId('secret-form-key').type('ubiquitous')
       cy.getTestId('secret-form-value').type('ubiquitous')
       cy.getTestId('form-submit').should('be.enabled')
       // disables save when form changes are undone
-      cy.getTestId('secret-form-key').clear()
       cy.getTestId('secret-form-value').clear()
-      cy.getTestId('secret-form-key').type(secret.key)
       cy.getTestId('form-submit').should('be.disabled')
     })
 
