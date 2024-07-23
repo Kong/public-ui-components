@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.6.0...@kong-ui-public/entities-vaults@3.7.0) (2024-07-23)
+
+
+### Features
+
+* **entities-vaults:** disable secret key input when editing ([#1508](https://github.com/Kong/public-ui-components/issues/1508)) ([1c30fd1](https://github.com/Kong/public-ui-components/commit/1c30fd175e55b5baea33a9910003db37af531c85))
+
+
+
+
+
 # [3.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.5.2...@kong-ui-public/entities-vaults@3.6.0) (2024-07-22)
 
 
