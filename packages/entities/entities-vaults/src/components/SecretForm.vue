@@ -25,6 +25,7 @@
             autocomplete="off"
             class="key-field"
             data-testid="secret-form-key"
+            :disabled="formType === EntityBaseFormType.Edit"
             :label="t('secrets.form.fields.key.label')"
             :placeholder="t('secrets.form.fields.key.placeholder')"
             :readonly="state.readonly"
