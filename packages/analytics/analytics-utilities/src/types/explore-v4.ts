@@ -74,9 +74,10 @@ export type BasicExploreAggregations = typeof basicExploreAggregations[number]
 
 export const aiExploreAggregations = [
   'total_tokens',
-  'request_tokens',
-  'response_tokens',
+  'prompt_tokens',
+  'completion_tokens',
   'ai_request_count',
+  'cost',
 ] as const
 
 export type AiExploreAggregations = typeof aiExploreAggregations[number]
