@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.2.3...@kong-ui-public/analytics-utilities@4.2.4) (2024-07-24)
+
+
+### Bug Fixes
+
+* route added twice in ai dimensions ([#1512](https://github.com/Kong/public-ui-components/issues/1512)) ([367132d](https://github.com/Kong/public-ui-components/commit/367132dc033a11866d83bf6bdc8cf4af15e40350))
+
+
+
+
+
 ## [4.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.2.2...@kong-ui-public/analytics-utilities@4.2.3) (2024-07-24)
 
 
