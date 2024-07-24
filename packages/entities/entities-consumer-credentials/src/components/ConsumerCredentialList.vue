@@ -450,7 +450,7 @@ const confirmDelete = async (): Promise<void> => {
 }
 
 // Remount the table when hasData changes
-const hasData = ref(true)
+const hasData = ref(false)
 
 /**
  * Watchers
