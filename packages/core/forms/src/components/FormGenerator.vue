@@ -148,18 +148,37 @@
  * @typedef {Record<string, any> & PartialGroup} Group
  */
 
-import { ref } from 'vue'
 import forEach from 'lodash-es/forEach'
 import objGet from 'lodash-es/get'
 import isFunction from 'lodash-es/isFunction'
 import isNil from 'lodash-es/isNil'
-import formMixin from './FormMixin.vue'
+import { ref } from 'vue'
+import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../const'
 import formGroup from './FormGroup.vue'
+import formMixin from './FormMixin.vue'
 
 export default {
   name: 'FormGenerator',
   components: { formGroup },
   mixins: [formMixin],
+
+  inject: {
+    // Inject AUTOFILL_SLOT for provide()
+    autofillSlot: {
+      from: AUTOFILL_SLOT,
+      default: undefined,
+    },
+  },
+
+  provide() {
+    return {
+      // Provide AUTOFILL_SLOT only if it is not already provided
+      ...!this.autofillSlot && {
+        [AUTOFILL_SLOT]: this.$slots?.[AUTOFILL_SLOT_NAME],
+      },
+    }
+  },
+
   props: {
     schema: {
       type: Object,

@@ -44,6 +44,7 @@
         :config="config"
         :credential="treatAsCredential"
         :editing="formType === EntityBaseFormType.Edit"
+        :enable-vault-secret-picker="props.enableVaultSecretPicker"
         :entity-map="entityMap"
         :record="record || undefined"
         :schema="schema || {}"
@@ -94,6 +95,7 @@
         </Teleport>
       </template>
     </EntityBaseForm>
+
     <KSlideout
       :close-on-blur="false"
       data-testid="form-view-configuration-slideout"
@@ -255,6 +257,14 @@ const props = defineProps({
    * Control if the View Configuration action button is hidden.
    */
   hideViewConfigAction: {
+    type: Boolean,
+    default: false,
+  },
+
+  /**
+   * Control if the vault secret picker is enabled for applicable fields. (referenceable = true)
+   */
+  enableVaultSecretPicker: {
     type: Boolean,
     default: false,
   },
@@ -482,7 +492,7 @@ const resourceEndpoint = computed((): string => {
 })
 
 const getArrayType = (list: unknown[]): string => {
-  const uniqueTypes = [...(new Set(list.map(item => typeof item)))]
+  const uniqueTypes = Array.from(new Set(list.map(item => typeof item)))
 
   return uniqueTypes.length > 1 ? 'string' : uniqueTypes[0]
 }
@@ -545,6 +555,8 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     initialFormSchema[field] = { id: field, model: key } // each field's key will be set as the id
     initialFormSchema[field].type = scheme.type === 'boolean' ? 'checkbox' : 'input'
     initialFormSchema[field].required = scheme.required
+    initialFormSchema[field].values = scheme.values
+    initialFormSchema[field].referenceable = scheme.referenceable
 
     if (field.startsWith('config-')) {
       if (!arrayNested && scheme.type === 'array') {
@@ -666,10 +678,14 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
     if (scheme.elements && scheme.type === 'array') {
       const elements = scheme.elements
+
+      // pass the referenceable flag from elements to the parent
+      initialFormSchema[field].referenceable = elements.referenceable
+
       if (elements.type === 'string' && !elements.one_of) {
-        const { id, help, label, hint } = initialFormSchema[field]
+        const { id, help, label, hint, values, referenceable } = initialFormSchema[field]
         const { help: helpOverride, ...overrides } = JSON.parse(JSON.stringify(ArrayStringFieldSchema))
-        initialFormSchema[field] = { id, help, label, hint, ...overrides }
+        initialFormSchema[field] = { id, help, label, hint, values, referenceable, ...overrides }
         // Only replace the help text when it is not defined because ArrayStringFieldSchema is more generic
         if (initialFormSchema[field].help === undefined && typeof helpOverride === 'string') {
           initialFormSchema[field].help = marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions)
@@ -687,9 +703,9 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         // Check if current plugin matches any of custom schema keys
         if (plugin === field) {
           // Use custom defined schema instead of building from default && set field label
-          const { help, label, hint } = initialFormSchema[field]
+          const { help, label, hint, values, referenceable } = initialFormSchema[field]
           const { help: helpOverride, ...overrides } = pluginSchema[plugin as keyof typeof pluginSchema] as Record<string, any>
-          initialFormSchema[field] = { help, label, hint, ...overrides }
+          initialFormSchema[field] = { help, label, hint, values, referenceable, ...overrides }
           // Eagerly replace the help text because we are overriding
           if (typeof helpOverride === 'string') {
             initialFormSchema[field].help = marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions)

@@ -225,8 +225,10 @@ import { createI18n } from '@kong-ui-public/i18n'
 import { AddIcon, RemoveIcon } from '@kong/icons'
 import type { SelectItem } from '@kong/kongponents'
 import cloneDeep from 'lodash-es/cloneDeep'
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, provide, ref, useSlots } from 'vue'
+import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
 import english from '../../locales/en.json'
+import type { AutofillSlot } from '../../types'
 
 interface UseCase {
   label: string
@@ -236,6 +238,9 @@ interface UseCase {
     window_size:number
   }
 }
+
+// Provide AUTOFILL_SLOT
+provide<AutofillSlot | undefined>(AUTOFILL_SLOT, useSlots()?.[AUTOFILL_SLOT_NAME])
 
 const USE_CASES: Record<string, UseCase[]> = {
   fixed: [

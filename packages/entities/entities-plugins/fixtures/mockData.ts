@@ -1,3 +1,4 @@
+import type { SecretEntityRow, EntityRow as VaultEntityRow } from '@kong-ui-public/entities-vaults'
 import type { EntityRow } from '../src/types/plugin-list'
 
 // FetcherRawResponse is the raw format of the endpoint's response
@@ -747,4 +748,82 @@ export const scopedConsumer = {
       'tag1',
     ],
   },
+}
+
+export interface VaultsFetcherRawResponse {
+  data: VaultEntityRow[];
+  total: number;
+  offset?: string;
+}
+
+export interface SecretsFetcherRawResponse {
+  data: SecretEntityRow[];
+  total: number;
+  offset?: string;
+}
+
+const vaults: VaultEntityRow[] = [
+  {
+    id: '1',
+    name: 'hcv',
+    prefix: 'hcv-1',
+    description: 'HashiCorp Vault',
+  },
+  {
+    id: '2',
+    name: 'aws',
+    prefix: 'aws-1',
+    description: 'AWS Secrets Manager',
+  },
+  {
+    id: '3',
+    name: 'konnect',
+    prefix: 'kv-1',
+    description: 'Konnect Config Store',
+  },
+  {
+    id: '4',
+    name: 'env',
+    prefix: 'env-1',
+    description: 'Environment Variables',
+  },
+]
+
+// ... without Konnect vaults
+const kongManagerVaults = vaults.filter((v) => v.name !== 'konnect')
+
+export const vaultsResponse: VaultsFetcherRawResponse = {
+  data: vaults,
+  total: vaults.length,
+}
+
+// ... without Konnect vaults
+export const kongManagerVaultsResponse: VaultsFetcherRawResponse = {
+  data: kongManagerVaults,
+  total: kongManagerVaults.length,
+}
+
+export const konnectVaultId = '3'
+
+const secrets: SecretEntityRow[] = [
+  {
+    id: '1',
+    key: 'password',
+    value: '<redacted>',
+  },
+  {
+    id: '2',
+    key: 'username',
+    value: '<redacted>',
+  },
+  {
+    id: '3',
+    key: 'tokens',
+    value: '{ "refresh_token": "<redacted>" }',
+  },
+]
+
+export const secretsResponse: SecretsFetcherRawResponse = {
+  data: secrets,
+  total: secrets.length,
 }
