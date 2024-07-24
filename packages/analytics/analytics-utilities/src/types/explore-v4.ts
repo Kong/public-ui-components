@@ -28,7 +28,6 @@ export const queryableAiExploreDimensions = [
   'control_plane',
   'control_plane_group',
   'gateway_service',
-  'route',
   'consumer',
   'application',
   'route',
