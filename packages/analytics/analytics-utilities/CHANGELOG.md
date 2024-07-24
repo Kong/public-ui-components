@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.2.2...@kong-ui-public/analytics-utilities@4.2.3) (2024-07-24)
+
+
+### Bug Fixes
+
+* **ai-explore:** Metric naming ([#1511](https://github.com/Kong/public-ui-components/issues/1511)) ([b1990fb](https://github.com/Kong/public-ui-components/commit/b1990fba11d30bf78cc33914bcc5d448cc8218c2))
+
+
+
+
+
 ## [4.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.2.1...@kong-ui-public/analytics-utilities@4.2.2) (2024-07-18)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
