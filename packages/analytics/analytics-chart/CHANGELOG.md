@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.2.11...@kong-ui-public/analytics-chart@4.2.12) (2024-07-24)
+
+
+### Bug Fixes
+
+* add translations for new ai metrics ([#1510](https://github.com/Kong/public-ui-components/issues/1510)) ([84037b4](https://github.com/Kong/public-ui-components/commit/84037b41ac91251ba2bf0a1f67df33b613309a67))
+
+
+
+
+
 ## [4.2.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.2.10...@kong-ui-public/analytics-chart@4.2.11) (2024-07-18)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
