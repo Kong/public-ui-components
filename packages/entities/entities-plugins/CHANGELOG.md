@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.1.1...@kong-ui-public/entities-plugins@8.1.2) (2024-07-24)
+
+
+### Bug Fixes
+
+* **entities:** create button visibility ([#1509](https://github.com/Kong/public-ui-components/issues/1509)) ([d6ff0e4](https://github.com/Kong/public-ui-components/commit/d6ff0e44f8b33762402fcc52c1e289956f0be04c))
+
+
+
+
+
 ## [8.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.1.0...@kong-ui-public/entities-plugins@8.1.1) (2024-07-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

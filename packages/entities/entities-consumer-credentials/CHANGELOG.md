@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.2.20...@kong-ui-public/entities-consumer-credentials@3.2.21) (2024-07-24)
+
+
+### Bug Fixes
+
+* **entities:** create button visibility ([#1509](https://github.com/Kong/public-ui-components/issues/1509)) ([d6ff0e4](https://github.com/Kong/public-ui-components/commit/d6ff0e44f8b33762402fcc52c1e289956f0be04c))
+
+
+
+
+
 ## [3.2.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.2.19...@kong-ui-public/entities-consumer-credentials@3.2.20) (2024-07-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
