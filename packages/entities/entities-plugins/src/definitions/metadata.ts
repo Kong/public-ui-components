@@ -167,7 +167,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     group: PluginGroup.TRAFFIC_CONTROL,
     isEnterprise: false,
     nameKey: 'plugins.meta.acl.name',
-    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     fieldRules: {
       onlyOneOf: [['config.allow', 'config.deny']],
     },
