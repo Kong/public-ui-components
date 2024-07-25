@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.7.1...@kong-ui-public/entities-vaults@3.8.0) (2024-07-25)
+
+
+### Features
+
+* **vault-form:** add STS endpoint url in AWS vault form [KM-297] ([#1515](https://github.com/Kong/public-ui-components/issues/1515)) ([1a8c69b](https://github.com/Kong/public-ui-components/commit/1a8c69b5bfea000cd140834fd1c3b81e4b6c6331))
+
+
+
+
+
 ## [3.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.7.0...@kong-ui-public/entities-vaults@3.7.1) (2024-07-24)
 
 
