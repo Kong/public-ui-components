@@ -482,7 +482,7 @@ const getArrayType = (list: unknown[]): string => {
   return uniqueTypes.length > 1 ? 'string' : uniqueTypes[0]
 }
 
-const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>) => {
+const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>, arrayNested?: boolean) => {
   let schema = (response && response.fields) || []
   const pluginSchema = customSchemas[props.pluginType as keyof typeof customSchemas]
   const credentialSchema = CREDENTIAL_METADATA[props.pluginType]?.schema?.fields
@@ -524,10 +524,20 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     }
 
     if (scheme.fields) {
+      if (arrayNested && scheme.type === 'record') {
+        initialFormSchema[field] = {
+          type: 'object',
+          model: key,
+          schema: {
+            fields: Object.values(buildFormSchema(field, scheme, {})),
+          },
+        }
+        return initialFormSchema
+      }
       return buildFormSchema(field, scheme, initialFormSchema)
     }
 
-    initialFormSchema[field] = { id: field } // each field's key will be set as the id
+    initialFormSchema[field] = { id: field, model: key } // each field's key will be set as the id
     initialFormSchema[field].type = scheme.type === 'boolean' ? 'checkbox' : 'input'
     initialFormSchema[field].required = scheme.required
 
@@ -669,40 +679,74 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       // If itemFields is not defined, it means no custom schema for this field is defined
       // This usually happens for a custom plugin, so we need to build the schema
       if (!itemFields) {
+        initialFormSchema[field].type = 'array'
+        initialFormSchema[field].newElementButtonLabelClasses = 'kong-form-new-element-button-label'
         initialFormSchema[field].fieldClasses = 'array-card-container-wrapper'
         initialFormSchema[field].itemContainerComponent = 'FieldArrayCardContainer'
+
         initialFormSchema[field].items = {
           type: 'object',
           schema: {
-            fields: Object.values(buildFormSchema(field, scheme.elements, {})),
+            fields: Object.values(buildFormSchema(field, scheme.elements, {}, true)),
           },
         }
-        initialFormSchema[field].type = 'array'
-        initialFormSchema[field].newElementButtonLabelClasses = 'kong-form-new-element-button-label'
-        // Set the model to the field name, and the label to the formatted field name
-        initialFormSchema[field].items.schema.fields.forEach(
-          (field: { id?: string, model?: string, label?: string }) => {
-            for (const f of scheme.elements.fields) {
-              const modelName = Object.keys(f)[0]
-              const idParts = field.id?.split?.('-') ?? []
-              if (idParts[idParts.length - 1] === modelName) {
-                field.model = modelName
-                field.label = formatPluginFieldLabel(modelName)
-                break
+
+        if (scheme.elements.type !== 'record') {
+          // Set the model to the field name, and the label to the formatted field name
+          initialFormSchema[field].items.schema.fields.forEach(
+            (field: { id?: string, model?: string, label?: string }) => {
+              for (const f of scheme.elements.fields) {
+                const modelName = Object.keys(f)[0]
+                const idParts = field.id?.split?.('-') ?? []
+                if (idParts[idParts.length - 1] === modelName) {
+                  field.model = modelName
+                  field.label = formatPluginFieldLabel(modelName)
+                  break
+                }
               }
-            }
-          },
-        )
+            },
+          )
+        } else {
+          /**
+           * FIXME Special treatment for nested fields in AI plugins
+           * Tell PluginEntityForm that this field is nested (not flatten), and eliminate the null
+           * fields from the payload
+           */
+          initialFormSchema[field].nestedFields = true
+        }
       }
 
+      if (scheme.elements.type !== 'record') {
       // If the field is an array of objects, set the default value to an object
       // with the default values of the nested fields
-      initialFormSchema[field].items.default = () =>
-        scheme.elements.fields.reduce((acc: Record<string, any>, current: Record<string, { default?: string }>) => {
-          const key = Object.keys(current)[0]
-          acc[key] = current[key].default
-          return acc
-        }, {})
+        initialFormSchema[field].items.default = () =>
+          scheme.elements.fields.reduce((acc: Record<string, any>, current: Record<string, { default?: string }>) => {
+            const key = Object.keys(current)[0]
+            acc[key] = current[key].default
+            return acc
+          }, {})
+      }
+
+      // FIXME: Special treatment for building default values for nested fields in AI plugins
+      if (initialFormSchema[field].nestedFields) {
+        const visit = (currField: any, defaultValue: Record<string, any>) => {
+          if (currField.type === 'object') {
+            if (currField.model) {
+              defaultValue[currField.model] = {}
+            }
+            for (const childField of currField.schema.fields) {
+              visit(childField, currField.model ? defaultValue[currField.model] : defaultValue)
+            }
+          } else if (currField.model) {
+            defaultValue[currField.model] = currField.default
+          }
+        }
+        initialFormSchema[field].items.default = () => {
+          const defaultValue: Record<string, any> = {}
+          visit(initialFormSchema[field].items, defaultValue)
+          return defaultValue
+        }
+      }
     }
 
     if (treatAsCredential.value && credentialSchema) {

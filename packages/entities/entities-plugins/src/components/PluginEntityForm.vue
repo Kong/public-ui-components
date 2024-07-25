@@ -348,7 +348,7 @@ const getModel = (): Record<string, any> => {
 
             break
 
-            // Handle values that aren't strings but should be.
+          // Handle values that aren't strings but should be.
           case 'string':
             fieldValue = (fieldValue == null) ? '' : String(fieldValue)
             break
@@ -357,6 +357,21 @@ const getModel = (): Record<string, any> => {
         if ((!fieldValue || !fieldValue.length)) {
           fieldValue = fieldSchema.submitWhenNull ? null : []
         }
+      }
+
+      // FIXME: Special treatment for AI plugins with complexly nested array fields
+      if (fieldSchema.type === 'array' && fieldSchema.nestedFields) {
+        const deepOmitNil = (o: Record<string, any>) => {
+          Object.keys(o).forEach(key => {
+            if (o[key] && typeof o[key] === 'object' && o[key] !== null) {
+              deepOmitNil(o[key])
+            } else if (o[key] === undefined || o[key] === null || (typeof o[key] === 'number' && isNaN(o[key]))
+              || (typeof o[key] === 'string' && o[key].trim().length === 0)) {
+              delete o[key]
+            }
+          })
+        }
+        deepOmitNil(fieldValue)
       }
 
       // Format Advanced Object for submission
@@ -544,7 +559,7 @@ const initFormModel = (): void => {
     } else if (props.record.config) { // typical plugins
       // scope fields
       if ((props.record.consumer_id || props.record.consumer) || (props.record.service_id || props.record.service) ||
-          (props.record.route_id || props.record.route) || (props.record.consumer_group_id || props.record.consumer_group)) {
+        (props.record.route_id || props.record.route) || (props.record.consumer_group_id || props.record.consumer_group)) {
         updateModel({
           service_id: props.record.service_id || props.record.service,
           route_id: props.record.route_id || props.record.route,
@@ -595,6 +610,12 @@ watch(loading, (newLoading) => {
   emit('loading', newLoading)
 })
 
+// TODO: DELETE ME
+watch(formModel, (newModel) => {
+  console.log('MODEL>', JSON.stringify(newModel, null, 2))
+  console.log('PAYLOAD>', JSON.stringify(getModel(), null, 2))
+}, { deep: true, immediate: true })
+
 // if the schema changed we've got to start over and completely rebuild the form model
 watch(() => props.schema, (newSchema, oldSchema) => {
   if (objectsAreEqual(newSchema || {}, oldSchema || {})) {
@@ -604,9 +625,11 @@ watch(() => props.schema, (newSchema, oldSchema) => {
 
   Object.assign(formModel, form.model)
 
-  formSchema.value = { fields: formSchema.value?.fields?.map((r: Record<string, any>) => {
-    return { ...r, disabled: r.disabled || false }
-  }) }
+  formSchema.value = {
+    fields: formSchema.value?.fields?.map((r: Record<string, any>) => {
+      return { ...r, disabled: r.disabled || false }
+    }),
+  }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
   sharedFormName.value = getSharedFormName(form.model.name)
 
@@ -632,7 +655,8 @@ onBeforeMount(() => {
     transition: opacity 0.5s;
   }
 
-  .fade-enter-from, .fade-leave-to {
+  .fade-enter-from,
+  .fade-leave-to {
     opacity: 0;
   }
 
@@ -646,7 +670,7 @@ onBeforeMount(() => {
   }
 
   :deep(.vue-form-generator) {
-    > fieldset {
+    >fieldset {
       .form-group:last-child {
         margin-bottom: 0;
       }
@@ -666,7 +690,7 @@ onBeforeMount(() => {
     .field-switch {
       #enabled {
         &:not(:checked) {
-          & + .label {
+          &+.label {
             background-color: $kui-color-background-neutral-weak;
           }
         }
