@@ -23,6 +23,10 @@ export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>
    * Show/hide Konnect Config Store option
    */
   konnectConfigStoreAvailable?: boolean
+  /**
+ * Show/hide AWS StsEndpointUrl field
+ */
+  awsStsEndpointUrlAvailable?: boolean
 }
 
 /** Konnect Vault form config */
@@ -60,6 +64,7 @@ export interface AWSVaultConfig {
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
+  sts_endpoint_url?: string
 }
 
 export interface GCPVaultConfig {

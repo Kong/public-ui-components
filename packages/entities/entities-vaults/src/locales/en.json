@@ -219,6 +219,10 @@
           "role_session_name": {
             "label": "Role Session Name",
             "tooltip": "The role session name used for role assuming."
+          },
+          "sts_endpoint_url": {
+            "label": "STS Endpoint URL",
+            "tooltip": "The custom STS endpoint URL used for role assuming in AWS Vault. Note that this value will override the default STS endpoint URL(which should be `https: //sts.amazonaws.com`, or `https: //sts.<region>.amazonaws.com` if you have `AWS_STS_REGIONAL_ENDPOINTS` set to `regional`). If you are not using private VPC endpoint for STS service, you should not specify this value."
           }
         }
       },
