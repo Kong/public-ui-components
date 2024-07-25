@@ -91,6 +91,12 @@ A form component for Vaults.
     - required: `false`
     - default: `undefined`
     - Show/hide approle option and corresponding fields.
+  
+  - `awsStsEndpointUrlAvailable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Show/hide STS endpoint url field in AWS Vault Config.
 
 The base konnect or kongManger config.
 
