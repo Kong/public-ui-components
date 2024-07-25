@@ -8,6 +8,9 @@ export default function useTranslatedUnits() {
 
     const translationKey = `chartUnits.${unit}`
 
+    if (unit === 'usd') {
+      return ''
+    }
     // @ts-ignore - dynamic i18n key
     if (i18n.te(translationKey)) {
       // @ts-ignore - dynamic i18n key

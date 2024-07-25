@@ -36,7 +36,8 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
         value = !isNaN(rawValue) ? prettyBytes(rawValue) : rawValue
       } else {
         const translatedUnits = tooltipData.translateUnit(tooltipData.units, rawValue)
-        value = `${rawValue % 1 === 0 ? numberFormatter.format(rawValue) : numberFormatter.format(Number(rawValue.toFixed(DECIMAL_DISPLAY)))} ${translatedUnits}`
+        const prefix = tooltipData.units === 'usd' ? '$' : ''
+        value = `${prefix}${rawValue % 1 === 0 ? numberFormatter.format(rawValue) : numberFormatter.format(Number(rawValue.toFixed(DECIMAL_DISPLAY)))} ${translatedUnits}`
       }
 
       const tooltipLabel = isBarChart && p.dataset.label !== p.label
