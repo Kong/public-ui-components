@@ -683,6 +683,7 @@ const originalConfigFields = reactive<ConfigFields>({
     endpoint_url: '',
     assume_role_arn: '',
     role_session_name: 'KongVault',
+    sts_endpoint_url: '',
   } as AWSVaultConfig,
   [VaultProviders.GCP]: {
     project_id: '',
@@ -886,7 +887,7 @@ const isVaultConfigValid = computed((): boolean => {
   if (vaultProvider.value === VaultProviders.AWS) {
     return !Object.keys(configFields[VaultProviders.AWS]).filter(key => {
       // sts_endpoint_url, endpoint_url, assume_role_arn and ttl fields are optional
-      if (['endpoint_url', 'assume_role_arn', 'ttl', 'neg_ttl', 'resurrect_ttl','sts_endpoint_url'].includes(key)) {
+      if (['endpoint_url', 'assume_role_arn', 'ttl', 'neg_ttl', 'resurrect_ttl', 'sts_endpoint_url'].includes(key)) {
         return false
       }
       return !(configFields[vaultProvider.value] as AWSVaultConfig)[key as keyof AWSVaultConfig]
