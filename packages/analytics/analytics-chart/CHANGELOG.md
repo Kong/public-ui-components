@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.2.14...@kong-ui-public/analytics-chart@4.2.15) (2024-07-25)
+
+
+### Bug Fixes
+
+* support new metrics dimensions and units for ai analytics ([#1516](https://github.com/Kong/public-ui-components/issues/1516)) ([94d584c](https://github.com/Kong/public-ui-components/commit/94d584c98d74d0ad242cd55991784ac2f286ef23))
+
+
+
+
+
 ## [4.2.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.2.13...@kong-ui-public/analytics-chart@4.2.14) (2024-07-24)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
