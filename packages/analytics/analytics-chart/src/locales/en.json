@@ -122,8 +122,9 @@
     "____OTHER____": "Others",
     "ai_request_count": "Request Count",
     "total_tokens": "Token Count",
-    "request_tokens": "Request Token Count",
-    "response_tokens": "Response Token Count"
+    "prompt_tokens": "Prompt Token Count",
+    "completion_tokens": "Completion Token Count",
+    "cost": "LLM Costs"
   },
   "metricAxisTitles": {
     "request_count": "Request Count",
