@@ -54,6 +54,7 @@ const kongManagerConfig = ref<KongManagerVaultFormConfig>({
   azureVaultProviderAvailable: false,
   ttl: true,
   hcvAppRoleMethodAvailable: true,
+  awsStsEndpointUrlAvailable: true,
 })
 
 const onError = (error: AxiosError) => {

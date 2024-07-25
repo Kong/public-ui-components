@@ -128,6 +128,19 @@
               required
               type="text"
             />
+            <KInput
+              v-if="config.awsStsEndpointUrlAvailable"
+              v-model.trim="configFields[VaultProviders.AWS].sts_endpoint_url"
+              autocomplete="off"
+              data-testid="vault-form-config-aws-sts_endpoint_url"
+              :is-readonly="form.isReadonly"
+              :label="t('form.config.aws.fields.sts_endpoint_url.label')"
+              :label-attributes="{
+                info: t('form.config.aws.fields.sts_endpoint_url.tooltip'),
+                tooltipAttributes: { maxWidth: '400px' },
+              }"
+              type="text"
+            />
           </div>
 
           <!-- GCP fields -->
@@ -627,6 +640,7 @@ const configFields = reactive<ConfigFields>({
     endpoint_url: '',
     assume_role_arn: '',
     role_session_name: 'KongVault',
+    sts_endpoint_url: '',
   } as AWSVaultConfig,
   [VaultProviders.GCP]: {
     project_id: '',
@@ -669,6 +683,7 @@ const originalConfigFields = reactive<ConfigFields>({
     endpoint_url: '',
     assume_role_arn: '',
     role_session_name: 'KongVault',
+    sts_endpoint_url: '',
   } as AWSVaultConfig,
   [VaultProviders.GCP]: {
     project_id: '',
@@ -871,8 +886,8 @@ const isVaultConfigValid = computed((): boolean => {
   // AWS Vault fields logic
   if (vaultProvider.value === VaultProviders.AWS) {
     return !Object.keys(configFields[VaultProviders.AWS]).filter(key => {
-      // endpoint_url, assume_role_arn and ttl fields are optional
-      if (['endpoint_url', 'assume_role_arn', 'ttl', 'neg_ttl', 'resurrect_ttl'].includes(key)) {
+      // sts_endpoint_url, endpoint_url, assume_role_arn and ttl fields are optional
+      if (['endpoint_url', 'assume_role_arn', 'ttl', 'neg_ttl', 'resurrect_ttl', 'sts_endpoint_url'].includes(key)) {
         return false
       }
       return !(configFields[vaultProvider.value] as AWSVaultConfig)[key as keyof AWSVaultConfig]
@@ -949,6 +964,7 @@ const getPayload = computed((): Record<string, any> => {
     ...configFields[vaultProvider.value],
     endpoint_url: (configFields[vaultProvider.value] as AWSVaultConfig).endpoint_url || null,
     assume_role_arn: (configFields[vaultProvider.value] as AWSVaultConfig).assume_role_arn || null,
+    sts_endpoint_url: (configFields[vaultProvider.value] as AWSVaultConfig).sts_endpoint_url || null,
   }
 
   let config: VaultPayload['config'] = configFields[vaultProvider.value]

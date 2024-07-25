@@ -32,6 +32,7 @@ const baseConfigKM: KongManagerVaultFormConfig = {
   cancelRoute,
   azureVaultProviderAvailable: false,
   ttl: true,
+  awsStsEndpointUrlAvailable: true,
 }
 
 const baseConfigKMTurnOffTTL: KongManagerVaultFormConfig = {
@@ -108,6 +109,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('vault-form-config-aws-region').should('be.visible')
+      cy.getTestId('vault-form-config-aws-sts_endpoint_url').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('be.visible')
 
       // form fields - gcp
@@ -169,6 +171,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('vault-form-config-aws-region').should('be.visible')
+      cy.getTestId('vault-form-config-aws-sts_endpoint_url').should('not.exist')
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - gcp
