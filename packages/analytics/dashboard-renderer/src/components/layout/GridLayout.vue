@@ -77,9 +77,7 @@ onMounted(() => {
   const swapy = createSwapy(gridContainer.value, {
     animation: 'dynamic', // or spring or none
   })
-  if (props.dragAndDrop) {
-    swapy.enable(true)
-  }
+  swapy.enable(props.dragAndDrop)
 })
 
 onUnmounted(() => {

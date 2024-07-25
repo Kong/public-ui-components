@@ -8,6 +8,7 @@
     </KAlert>
     <GridLayout
       v-else
+      :drag-and-drop="dragAndDrop"
       :grid-size="config.gridSize"
       :tile-height="config.tileHeight"
       :tiles="gridTiles"
@@ -49,10 +50,13 @@ import {
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   context: DashboardRendererContext,
   config: DashboardConfig,
-}>()
+  dragAndDrop: boolean,
+}>(), {
+  dragAndDrop: false,
+})
 
 const { i18n } = composables.useI18n()
 
