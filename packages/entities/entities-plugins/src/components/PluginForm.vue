@@ -529,7 +529,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
           type: 'object',
           model: key,
           schema: {
-            fields: Object.values(buildFormSchema(field, scheme, {})),
+            fields: Object.values(buildFormSchema(field, scheme, {}, true)),
           },
         }
         return initialFormSchema
