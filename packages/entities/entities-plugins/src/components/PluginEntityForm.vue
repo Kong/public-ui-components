@@ -371,7 +371,9 @@ const getModel = (): Record<string, any> => {
             }
           })
         }
-        deepOmitNil(fieldValue)
+        if (fieldValue && typeof fieldValue === 'object') {
+          deepOmitNil(fieldValue)
+        }
       }
 
       // Format Advanced Object for submission
