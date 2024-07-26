@@ -307,6 +307,7 @@ export default {
     },
 
     onModelUpdated(newVal, schema) {
+      console.log('FormGenerator emitting modelUpdated event')
       this.$emit('modelUpdated', newVal, schema)
     },
 

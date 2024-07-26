@@ -445,11 +445,13 @@ const getModel = (): Record<string, any> => {
     unsetNullForeignKey(fieldNameDotNotation, outputModel)
   })
 
+  console.log(outputModel)
   return unFlattenObject(outputModel)
 }
 
 // fired whenever the form data is modified
 const onModelUpdated = (model: any, schema: string) => {
+  console.log('!!!')
   const newData = { [schema]: model }
   if (typeof props.schema[schema]?.modelTransformer === 'function') {
     newData[schema] = props.schema[schema].modelTransformer(model)
