@@ -716,7 +716,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         }
       }
 
-      if (scheme.elements.type !== 'record') {
+      if (!initialFormSchema[field].nestedFields) {
       // If the field is an array of objects, set the default value to an object
       // with the default values of the nested fields
         initialFormSchema[field].items.default = () =>
