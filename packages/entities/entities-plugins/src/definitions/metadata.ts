@@ -725,11 +725,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.ai-semantic-prompt-guard.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     useLegacyForm: true,
-    // fieldRules: {
-    //   atLeastOneOf: [
-    //     ['config.rules.allow_prompts', 'config.rules.deny_prompts'],
-    //   ],
-    // },
   },
 }
 

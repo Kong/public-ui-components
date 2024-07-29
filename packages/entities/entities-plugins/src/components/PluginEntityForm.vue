@@ -447,13 +447,11 @@ const getModel = (): Record<string, any> => {
     unsetNullForeignKey(fieldNameDotNotation, outputModel)
   })
 
-  console.log(outputModel)
   return unFlattenObject(outputModel)
 }
 
 // fired whenever the form data is modified
 const onModelUpdated = (model: any, schema: string) => {
-  console.log('!!!')
   const newData = { [schema]: model }
   if (typeof props.schema[schema]?.modelTransformer === 'function') {
     newData[schema] = props.schema[schema].modelTransformer(model)
@@ -614,12 +612,6 @@ watch(loading, (newLoading) => {
   emit('loading', newLoading)
 })
 
-// TODO: DELETE ME
-watch(formModel, (newModel) => {
-  console.log('MODEL>', JSON.stringify(newModel, null, 2))
-  console.log('PAYLOAD>', JSON.stringify(getModel(), null, 2))
-}, { deep: true, immediate: true })
-
 // if the schema changed we've got to start over and completely rebuild the form model
 watch(() => props.schema, (newSchema, oldSchema) => {
   if (objectsAreEqual(newSchema || {}, oldSchema || {})) {
@@ -659,8 +651,7 @@ onBeforeMount(() => {
     transition: opacity 0.5s;
   }
 
-  .fade-enter-from,
-  .fade-leave-to {
+  .fade-enter-from, .fade-leave-to {
     opacity: 0;
   }
 
@@ -674,7 +665,7 @@ onBeforeMount(() => {
   }
 
   :deep(.vue-form-generator) {
-    >fieldset {
+    > fieldset {
       .form-group:last-child {
         margin-bottom: 0;
       }
@@ -694,7 +685,7 @@ onBeforeMount(() => {
     .field-switch {
       #enabled {
         &:not(:checked) {
-          &+.label {
+          & + .label {
             background-color: $kui-color-background-neutral-weak;
           }
         }
