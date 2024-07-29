@@ -98,7 +98,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import {
-  KUI_COLOR_BORDER_DANGER_STRONG,
+  KUI_COLOR_TEXT_DANGER_STRONG,
   KUI_ICON_SIZE_30,
   KUI_ICON_SIZE_40,
   KUI_COLOR_TEXT_SUCCESS, // Positive trend
@@ -192,9 +192,9 @@ const props = defineProps({
 
 const colorAttribute = (polarity: number): string => {
   const trendColor = {
-    red: `var(--kong-ui-metric-card-trend-negative, ${KUI_COLOR_BORDER_DANGER_STRONG})`,
-    green: `var(--kong-ui-metric-card-trend-positive, ${KUI_COLOR_TEXT_SUCCESS})`,
-    grey: `var(--kong-ui-metric-card-trend-neutral, ${KUI_COLOR_TEXT_NEUTRAL_STRONG})`,
+    red: `var(--kui-color-text-danger-strong, ${KUI_COLOR_TEXT_DANGER_STRONG})`,
+    green: `var(--kui-color-text-success, ${KUI_COLOR_TEXT_SUCCESS})`,
+    grey: `var(--kui-color-text-neutral-strong, ${KUI_COLOR_TEXT_NEUTRAL_STRONG})`,
   }
 
   return polarity > 0
@@ -260,7 +260,7 @@ $row-gap-size: 12px;
 
   &-title {
     align-items: center;
-    color: var(--kong-ui-metric-card-title, $kui-color-text);
+    color: var(--kui-color-text, $kui-color-text);
     display: flex;
     flex-direction: row;
     font-size: $kui-font-size-30;
@@ -285,7 +285,7 @@ $row-gap-size: 12px;
   }
 
   &-description {
-    color: var(--kong-ui-metric-card-value, $kui-color-text-disabled);
+    color: var(--kui-color-text-disabled, $kui-color-text-disabled);
     font-size: $kui-font-size-20;
     line-height: $kui-line-height-20;
     margin-top: 10px;
@@ -296,7 +296,7 @@ $row-gap-size: 12px;
   }
 
   &-value {
-    color: var(--kong-ui-metric-card-value, $kui-color-text);
+    color: var(--kui-color-text, $kui-color-text);
     display: flex;
     flex-direction: row;
     font-size: $kui-font-size-70;
@@ -344,16 +344,16 @@ $row-gap-size: 12px;
         margin-right: 4px;
       }
       &.positive {
-        background-color: var(--kong-ui-metric-card-trend-bg-positive, $kui-color-background-success-weakest);
-        color: var(--kong-ui-metric-card-trend-positive, $kui-color-text-success);
+        background-color: var(--kui-color-background-success-weakest, $kui-color-background-success-weakest);
+        color: var(--kui-color-text-success, $kui-color-text-success);
       }
       &.negative {
-        background-color: var(--kong-ui-metric-card-trend-bg-negative, $kui-color-background-danger-weakest);
-        color: var(--kong-ui-metric-card-trend-negative, $kui-color-text-danger-strong);
+        background-color: var(--kui-color-background-danger-weakest $kui-color-background-danger-weakest);
+        color: var(--kui-color-text-danger-strong, $kui-color-text-danger-strong);
       }
       &.neutral {
-        background-color: var(--kong-ui-metric-card-trend-bg-neutral, $kui-color-background-neutral-weaker);
-        color: var(--kong-ui-metric-card-trend-neutral, $kui-color-text-neutral-strong);
+        background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
+        color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
       }
     }
 
