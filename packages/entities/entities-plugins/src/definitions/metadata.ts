@@ -287,7 +287,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-proxy.name',
-    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+    scope: [PluginScope.ROUTE],
     useLegacyForm: true,
   },
   'ai-prompt-decorator': {
@@ -303,7 +303,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-prompt-template.name',
-    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
     useLegacyForm: true,
   },
   'ai-prompt-guard': {
@@ -327,7 +327,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-response-transformer.name',
-    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
     useLegacyForm: true,
   },
   'ai-rate-limiting-advanced': {

@@ -350,7 +350,7 @@ describe('<PluginForm />', () => {
       cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('not.be.visible')
       cy.get('.Scoped-check input').click()
       cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('be.visible')
-      cy.get('#service-id').should('be.visible')
+      cy.get('#service-id').should('not.exist') // ai-proxy only supports route scoping
       cy.get('#route-id').should('be.visible')
 
       // legacy form should not contain any KCollapse elements
@@ -1206,7 +1206,7 @@ describe('<PluginForm />', () => {
       cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('not.be.visible')
       cy.get('.Scoped-check input').click()
       cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('be.visible')
-      cy.get('#service-id').should('be.visible')
+      cy.get('#service-id').should('not.exist') // ai-proxy only supports route scoping
       cy.get('#route-id').should('be.visible')
 
       // legacy form should not contain any KCollapse elements
