@@ -691,22 +691,22 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
           },
         }
 
-        if (scheme.elements.type !== 'record') {
-          // Set the model to the field name, and the label to the formatted field name
-          initialFormSchema[field].items.schema.fields.forEach(
-            (field: { id?: string, model?: string, label?: string }) => {
-              for (const f of scheme.elements.fields) {
-                const modelName = Object.keys(f)[0]
-                const idParts = field.id?.split?.('-') ?? []
-                if (idParts[idParts.length - 1] === modelName) {
-                  field.model = modelName
-                  field.label = formatPluginFieldLabel(modelName)
-                  break
-                }
+        // Set the model to the field name, and the label to the formatted field name
+        initialFormSchema[field].items.schema.fields.forEach(
+          (field: { id?: string, model?: string, label?: string }) => {
+            for (const f of scheme.elements.fields) {
+              const modelName = Object.keys(f)[0]
+              const idParts = field.id?.split?.('-') ?? []
+              if (idParts[idParts.length - 1] === modelName) {
+                field.model = modelName
+                field.label = formatPluginFieldLabel(modelName)
+                break
               }
-            },
-          )
-        } else {
+            }
+          },
+        )
+
+        if (scheme.elements.type === 'record') {
           /**
            * FIXME Special treatment for nested fields in AI plugins
            * Tell PluginEntityForm that this field is nested (not flatten), and eliminate the null
