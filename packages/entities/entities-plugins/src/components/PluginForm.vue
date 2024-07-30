@@ -725,10 +725,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
             acc[key] = current[key].default
             return acc
           }, {})
-      }
-
-      // FIXME: Special treatment for building default values for nested fields in AI plugins
-      if (initialFormSchema[field].nestedFields) {
+      } else { // FIXME: Special treatment for building default values for nested fields in AI plugins
         const visit = (currField: any, defaultValue: Record<string, any>) => {
           if (currField.type === 'object') {
             if (currField.model) {
