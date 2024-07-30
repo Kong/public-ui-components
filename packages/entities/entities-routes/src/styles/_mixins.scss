@@ -35,6 +35,8 @@
         gap: $kui-space-50;
       }
 
+      // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+      // stylelint-disable-next-line no-duplicate-selectors
       & {
         display: flex;
         flex-wrap: wrap;

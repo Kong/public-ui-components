@@ -23,6 +23,8 @@ $scrollbar-background-color: $kui-color-background-transparent;
     background: $kui-color-background-transparent; // Hide the scrollbar until hovered
   }
 
+  // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+  // stylelint-disable-next-line no-duplicate-selectors
   & {
     // Standard version (Firefox only for now) - always include
     scrollbar-color: $kui-color-background-transparent $kui-color-background-transparent;
@@ -42,6 +44,8 @@ $scrollbar-background-color: $kui-color-background-transparent;
     background: $background-color; // update the color to be visible
   }
 
+  // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+  // stylelint-disable-next-line no-duplicate-selectors
   & {
     // Standard version (Firefox only for now) - always include
     scrollbar-color: $foreground-color $background-color;
