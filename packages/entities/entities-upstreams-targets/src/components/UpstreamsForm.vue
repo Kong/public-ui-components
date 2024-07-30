@@ -362,7 +362,7 @@ const getPayload = computed((): UpstreamFormPayload => {
       result.healthchecks.active.unhealthy.http_failures = Number(state.fields.activeHealthCheck.httpFailures)
     }
 
-    if (state.fields.activeHealthCheck.type === 'tcp' && state.fields.activeHealthCheck.tcpFailures) {
+    if (state.fields.activeHealthCheck.tcpFailures) {
       result.healthchecks.active.unhealthy.tcp_failures = Number(state.fields.activeHealthCheck.tcpFailures)
     }
   } else {
@@ -407,7 +407,7 @@ const getPayload = computed((): UpstreamFormPayload => {
       result.healthchecks.passive.unhealthy.http_failures = Number(state.fields.passiveHealthCheck.httpFailures)
     }
 
-    if (state.fields.passiveHealthCheck.type === 'tcp' && state.fields.passiveHealthCheck.tcpFailures) {
+    if (state.fields.passiveHealthCheck.tcpFailures) {
       result.healthchecks.passive.unhealthy.tcp_failures = Number(state.fields.passiveHealthCheck.tcpFailures)
     }
   } else {

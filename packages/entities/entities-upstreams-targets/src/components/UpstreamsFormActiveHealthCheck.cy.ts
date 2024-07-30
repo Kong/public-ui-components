@@ -2,6 +2,8 @@ import UpstreamsFormActiveHealthCheck from './UpstreamsFormActiveHealthCheck.vue
 import { KMConfig, konnectConfig } from '../../fixtures/mockData'
 import { ActiveHealthyHttpStatuses, ActiveUnhealthyHttpStatuses } from '../constants'
 
+const PORTOCOLS = ['http', 'https', 'tcp', 'grpc', 'grpcs']
+
 describe('<UpstreamsFormActiveHealthCheck/>', { viewportHeight: 700, viewportWidth: 700 }, () => {
   it('Component should be rendered correctly', () => {
     cy.mount(UpstreamsFormActiveHealthCheck, {
@@ -248,7 +250,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', { viewportHeight: 700, viewportWid
     cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
   })
 
-  it('httpPath, httpStatuses and unhealthyHttpStatuses should be hidden and  if type === "tcp"', () => {
+  it('httpPath, httpStatuses and unhealthyHttpStatuses should be hidden and if type === "tcp"', () => {
     cy.mount(UpstreamsFormActiveHealthCheck, {
       props: {
         type: 'tcp',
@@ -261,19 +263,21 @@ describe('<UpstreamsFormActiveHealthCheck/>', { viewportHeight: 700, viewportWid
     cy.getTestId('active-healthcheck-unhealthy-http-statuses').should('not.exist')
   })
 
-  it('Should bind tcpFailures data correctly', () => {
-    cy.mount(UpstreamsFormActiveHealthCheck, {
-      props: {
-        type: 'tcp',
-        headers: [{ key: '', values: '' }],
-        'onUpdate:tcp-failures': cy.spy().as('onUpdateSpy'),
-      },
+  PORTOCOLS.forEach((protocol) => {
+    it(`Should bind tcpFailures data correctly if type === "${protocol}"`, () => {
+      cy.mount(UpstreamsFormActiveHealthCheck, {
+        props: {
+          type: protocol,
+          headers: [{ key: '', values: '' }],
+          'onUpdate:tcp-failures': cy.spy().as('onUpdateSpy'),
+        },
+      })
+
+      cy.getTestId('active-healthcheck-tcp-failures').should('be.visible')
+      cy.getTestId('active-healthcheck-tcp-failures').type('4', { waitForAnimations: false })
+
+      cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
     })
-
-    cy.getTestId('active-healthcheck-tcp-failures').should('be.visible')
-    cy.getTestId('active-healthcheck-tcp-failures').type('4', { waitForAnimations: false })
-
-    cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
   })
 
   // TODO: remove when api will support `headers` property
