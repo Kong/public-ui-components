@@ -47,23 +47,6 @@
       :deep(label.k-switch) {
         margin: 0 !important;
       }
-
-      // stylelint-disable-next-line selector-pseudo-class-no-unknown
-      :deep(.k-button) {
-        margin-left: $kui-space-50 !important;
-
-        &.remove-button {
-          svg path {
-            fill: $kui-color-border-neutral-weak !important;
-          }
-
-          &:hover {
-            svg path {
-              fill: $kui-color-border-danger-weak !important;
-            }
-          }
-        }
-      }
     }
   }
 }
@@ -111,7 +94,7 @@
       transition: box-shadow 0.2s ease;
 
       &.is-selected {
-        color: $kui-color-border-primary-weaker;
+        color: $kui-color-text-primary-weak;
         pointer-events: none;
         text-decoration: line-through;
       }
