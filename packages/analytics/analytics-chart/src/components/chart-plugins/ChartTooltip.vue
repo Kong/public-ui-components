@@ -251,7 +251,9 @@ ul.tooltip {
   overflow-y: auto;
   padding-left: 0px;
 
-  @include scrollbarBase;
+  & {
+    @include scrollbarBase;
+  }
 
   li {
     display: flex;

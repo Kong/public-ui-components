@@ -242,7 +242,9 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
   overflow-y: auto;
   padding-left: 0;
 
-  @include scrollbarBase;
+  & {
+    @include scrollbarBase;
+  }
 
   &.vertical {
     flex-direction: column;

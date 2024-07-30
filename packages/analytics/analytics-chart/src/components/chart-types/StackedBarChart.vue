@@ -568,7 +568,9 @@ const handleChartClick = () => {
 .chart-container {
   overflow: auto;
 
-  @include scrollbarBase;
+  & {
+    @include scrollbarBase;
+  }
 
   .chart-body {
     height: 100%;

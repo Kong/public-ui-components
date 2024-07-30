@@ -23,10 +23,12 @@ $scrollbar-background-color: $kui-color-background-transparent;
     background: $kui-color-background-transparent; // Hide the scrollbar until hovered
   }
 
-  // Standard version (Firefox only for now) - always include
-  scrollbar-color: $kui-color-background-transparent $kui-color-background-transparent;
-  scrollbar-gutter: stable;
-  scrollbar-width: thin;
+  & {
+    // Standard version (Firefox only for now) - always include
+    scrollbar-color: $kui-color-background-transparent $kui-color-background-transparent;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+  }
 }
 
 @mixin scrollbarVisible(
@@ -40,8 +42,10 @@ $scrollbar-background-color: $kui-color-background-transparent;
     background: $background-color; // update the color to be visible
   }
 
-  // Standard version (Firefox only for now) - always include
-  scrollbar-color: $foreground-color $background-color;
-  scrollbar-gutter: stable;
-  scrollbar-width: thin;
+  & {
+    // Standard version (Firefox only for now) - always include
+    scrollbar-color: $foreground-color $background-color;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+  }
 }

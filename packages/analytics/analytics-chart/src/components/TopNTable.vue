@@ -251,7 +251,9 @@ const getValue = (record: AnalyticsExploreRecord): string => {
   :deep(.card-content) {
     overflow-y: auto;
 
-    @include scrollbarBase;
+    & {
+      @include scrollbarBase;
+    }
   }
 
   .top-n-table {

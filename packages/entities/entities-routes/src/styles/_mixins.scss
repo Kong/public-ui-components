@@ -1,13 +1,13 @@
 @mixin hr() {
   border: 0;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
-  margin-bottom: $kui_space_60;
+  margin-bottom: $kui-space-60;
 }
 
 @mixin routing-rule() {
   &-container {
     &:not(:first-of-type) {
-      margin-top: $kui_space_80;
+      margin-top: $kui-space-80;
     }
 
     hr {
@@ -17,7 +17,7 @@
 
   &-input {
     align-items: center;
-    column-gap: $kui_space_100;
+    column-gap: $kui-space-100;
     display: flex;
 
     .k-input {
@@ -25,19 +25,21 @@
     }
 
     &:not(:first-of-type) {
-      margin-top: $kui_space_60;
+      margin-top: $kui-space-60;
     }
 
     .methods-input {
       &-container {
         display: flex;
         flex-wrap: wrap;
-        gap: $kui_space_50;
+        gap: $kui-space-50;
       }
 
-      display: flex;
-      flex-wrap: wrap;
-      gap: $kui_space_20;
+      & {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $kui-space-20;
+      }
 
       // stylelint-disable-next-line selector-pseudo-class-no-unknown
       :deep(label.k-switch) {
@@ -46,16 +48,16 @@
 
       // stylelint-disable-next-line selector-pseudo-class-no-unknown
       :deep(.k-button) {
-        margin-left: $kui_space_50 !important;
+        margin-left: $kui-space-50 !important;
 
         &.remove-button {
           svg path {
-            fill: $kui_color_border_neutral_weak !important;
+            fill: $kui-color-border-neutral-weak !important;
           }
 
           &:hover {
             svg path {
-              fill: $kui_color_border_danger_weak !important;
+              fill: $kui-color-border-danger-weak !important;
             }
           }
         }
@@ -66,7 +68,7 @@
 
 @mixin routing-rules-selector() {
   &-container {
-    margin-top: $kui_space_80;
+    margin-top: $kui-space-80;
 
     hr {
       @include hr;
@@ -75,8 +77,8 @@
 
   &-options {
     align-items: center;
-    background-color: $kui_color_background_primary_weakest;
-    border: 1px solid $kui_color_border_primary_weak;
+    background-color: $kui-color-background-primary-weakest;
+    border: 1px solid $kui-color-border-primary-weak;
     border-radius: 30px;
     display: flex;
     padding: 0 6px;
@@ -97,17 +99,17 @@
       border: 1px solid transparent;
       border-radius: 19px;
       box-shadow: none;
-      color: $kui_color_text_primary_strong;
+      color: $kui-color-text-primary-strong;
       cursor: pointer;
-      font-size: $kui_font_size_40;
+      font-size: $kui-font-size-40;
       font-weight: 600;
       margin: 0;
-      margin-right: $kui_space_20;
-      padding: $kui_space_20 10px;
+      margin-right: $kui-space-20;
+      padding: $kui-space-20 10px;
       transition: box-shadow 0.2s ease;
 
       &.is-selected {
-        color: $kui_color_border_primary_weaker;
+        color: $kui-color-border-primary-weaker;
         pointer-events: none;
         text-decoration: line-through;
       }
