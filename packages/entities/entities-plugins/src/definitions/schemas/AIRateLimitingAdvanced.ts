@@ -13,12 +13,14 @@ export const aiRateLimitingAdvancedSchema: AIRateLimitingAdvancedSchema = {
           model: 'window_size',
           help: 'Window size to apply a limit to (defined in seconds)',
           type: 'input',
+          required: true,
           inputType: 'number',
         }, {
           label: 'Name',
           model: 'name',
           help: 'The llm providers.',
           type: 'select',
+          required: true,
           values: [
             'anthropic',
             'azure',
@@ -33,6 +35,7 @@ export const aiRateLimitingAdvancedSchema: AIRateLimitingAdvancedSchema = {
           model: 'limit',
           help: 'Limit applied to the llm provider.',
           type: 'input',
+          required: true,
           inputType: 'number',
         }],
       },
