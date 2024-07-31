@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.3.11...@kong-ui-public/entities-upstreams-targets@3.3.12) (2024-07-31)
+
+
+### Bug Fixes
+
+* **entities-upstreams-targets:** expose tcp_failures [FTI-6057] ([#1521](https://github.com/Kong/public-ui-components/issues/1521)) ([00f5f0b](https://github.com/Kong/public-ui-components/commit/00f5f0b907b4399806b8e4150498604470cb7590))
+
+
+
+
+
 ## [3.3.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.3.10...@kong-ui-public/entities-upstreams-targets@3.3.11) (2024-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
