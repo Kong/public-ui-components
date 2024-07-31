@@ -348,7 +348,7 @@ const getModel = (): Record<string, any> => {
 
             break
 
-            // Handle values that aren't strings but should be.
+          // Handle values that aren't strings but should be.
           case 'string':
             fieldValue = (fieldValue == null) ? '' : String(fieldValue)
             break
@@ -356,6 +356,23 @@ const getModel = (): Record<string, any> => {
       } else if (fieldSchemaValueType === 'array') {
         if ((!fieldValue || !fieldValue.length)) {
           fieldValue = fieldSchema.submitWhenNull ? null : []
+        }
+      }
+
+      // FIXME: Special treatment for AI plugins with complexly nested array fields
+      if (fieldSchema.type === 'array' && fieldSchema.nestedFields) {
+        const deepOmitNil = (o: Record<string, any>) => {
+          Object.keys(o).forEach(key => {
+            if (o[key] && typeof o[key] === 'object' && o[key] !== null) {
+              deepOmitNil(o[key])
+            } else if (o[key] === undefined || o[key] === null || (typeof o[key] === 'number' && isNaN(o[key]))
+              || (typeof o[key] === 'string' && o[key].trim().length === 0)) {
+              delete o[key]
+            }
+          })
+        }
+        if (fieldValue && typeof fieldValue === 'object') {
+          deepOmitNil(fieldValue)
         }
       }
 
@@ -544,7 +561,7 @@ const initFormModel = (): void => {
     } else if (props.record.config) { // typical plugins
       // scope fields
       if ((props.record.consumer_id || props.record.consumer) || (props.record.service_id || props.record.service) ||
-          (props.record.route_id || props.record.route) || (props.record.consumer_group_id || props.record.consumer_group)) {
+        (props.record.route_id || props.record.route) || (props.record.consumer_group_id || props.record.consumer_group)) {
         updateModel({
           service_id: props.record.service_id || props.record.service,
           route_id: props.record.route_id || props.record.route,
@@ -604,9 +621,11 @@ watch(() => props.schema, (newSchema, oldSchema) => {
 
   Object.assign(formModel, form.model)
 
-  formSchema.value = { fields: formSchema.value?.fields?.map((r: Record<string, any>) => {
-    return { ...r, disabled: r.disabled || false }
-  }) }
+  formSchema.value = {
+    fields: formSchema.value?.fields?.map((r: Record<string, any>) => {
+      return { ...r, disabled: r.disabled || false }
+    }),
+  }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
   sharedFormName.value = getSharedFormName(form.model.name)
 

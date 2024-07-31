@@ -295,7 +295,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-prompt-decorator.name',
-    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     useLegacyForm: true,
   },
   'ai-prompt-template': {
@@ -311,7 +311,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-prompt-guard.name',
-    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     useLegacyForm: true,
   },
   'ai-request-transformer': {
@@ -701,6 +701,30 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     isEnterprise: false,
     nameKey: 'plugins.meta.standard-webhooks.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+  },
+  'ai-proxy-advanced': {
+    descriptionKey: 'plugins.meta.ai-proxy-advanced.description',
+    group: PluginGroup.AI,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.ai-proxy-advanced.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+    useLegacyForm: true,
+  },
+  'ai-semantic-caching': {
+    descriptionKey: 'plugins.meta.ai-semantic-caching.description',
+    group: PluginGroup.AI,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.ai-semantic-caching.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+    useLegacyForm: true,
+  },
+  'ai-semantic-prompt-guard': {
+    descriptionKey: 'plugins.meta.ai-semantic-prompt-guard.description',
+    group: PluginGroup.AI,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.ai-semantic-prompt-guard.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+    useLegacyForm: true,
   },
 }
 

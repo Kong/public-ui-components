@@ -455,6 +455,18 @@
       "standard-webhooks": {
         "name": "Standard Webhooks",
         "description": "Validate incoming webhooks adhere to the Standard Webhooks specification, to which Kong is a contributor"
+      },
+      "ai-proxy-advanced": {
+        "name": "AI Proxy Advanced",
+        "description": "Route across different LLMs and models using advanced load balancing algorithms, including semantic routing."
+      },
+      "ai-semantic-caching": {
+        "name": "AI Semantic Cache",
+        "description": "Semantically cache AI requests to any LLM to reduce latency, improve end-user experiences and optimize GenAI costs."
+      },
+      "ai-semantic-prompt-guard": {
+        "name": "AI Semantic Prompt Guard",
+        "description": "Semantically and intelligently create allow and deny lists of topics that can be requested across every LLM."
       }
     },
     "fields": {
