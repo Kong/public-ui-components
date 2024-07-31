@@ -34,6 +34,9 @@ export const queryableAiExploreDimensions = [
   'ai_provider',
   'ai_response_model',
   'ai_request_model',
+  'llm_cache_status',
+  'llm_embeddings_provider',
+  'llm_embeddings_model',
   'time',
 ] as const
 
@@ -77,6 +80,9 @@ export const aiExploreAggregations = [
   'completion_tokens',
   'ai_request_count',
   'cost',
+  'llm_cache_embeddings_latency_average',
+  'llm_cache_fetch_latency_average',
+  'llm_latency_average',
 ] as const
 
 export type AiExploreAggregations = typeof aiExploreAggregations[number]
