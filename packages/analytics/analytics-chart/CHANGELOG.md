@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.2.16...@kong-ui-public/analytics-chart@4.2.17) (2024-07-31)
+
+
+### Bug Fixes
+
+* sass mixed decls deprecation [KHCP-12715] ([#1522](https://github.com/Kong/public-ui-components/issues/1522)) ([77da980](https://github.com/Kong/public-ui-components/commit/77da980af7daa39c5c66fb2c56ee6854fce39949))
+
+
+
+
+
 ## [4.2.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.2.15...@kong-ui-public/analytics-chart@4.2.16) (2024-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

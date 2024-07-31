@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.4.11...@kong-ui-public/entities-routes@3.4.12) (2024-07-31)
+
+
+### Bug Fixes
+
+* sass mixed decls deprecation [KHCP-12715] ([#1522](https://github.com/Kong/public-ui-components/issues/1522)) ([77da980](https://github.com/Kong/public-ui-components/commit/77da980af7daa39c5c66fb2c56ee6854fce39949))
+
+
+
+
+
 ## [3.4.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.4.10...@kong-ui-public/entities-routes@3.4.11) (2024-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
