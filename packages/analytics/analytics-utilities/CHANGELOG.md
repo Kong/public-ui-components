@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.2.5...@kong-ui-public/analytics-utilities@4.3.0) (2024-07-31)
+
+
+### Features
+
+* **ai-analytics:** AI Analytics new metrics/dimensions ([#1524](https://github.com/Kong/public-ui-components/issues/1524)) ([54d185f](https://github.com/Kong/public-ui-components/commit/54d185fadea6347da5b95db4531752079c16f824))
+
+
+
+
+
 ## [4.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.2.4...@kong-ui-public/analytics-utilities@4.2.5) (2024-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
