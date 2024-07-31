@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.1.4...@kong-ui-public/entities-plugins@8.2.0) (2024-07-31)
+
+
+### Features
+
+* **entities-plugins:** support new ai plugins ([#1517](https://github.com/Kong/public-ui-components/issues/1517)) ([b9ffef7](https://github.com/Kong/public-ui-components/commit/b9ffef714e7c1c1c4328f0ff8ce00c0600950baa))
+
+
+
+
+
 ## [8.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.1.3...@kong-ui-public/entities-plugins@8.1.4) (2024-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
