@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.2.17...@kong-ui-public/app-layout@4.2.18) (2024-07-31)
+
+
+### Bug Fixes
+
+* badge appearance ([1ec4bf5](https://github.com/Kong/public-ui-components/commit/1ec4bf59db6e59eed204f4bdaa65f85b95cc18f9))
+
+
+
+
+
 ## [4.2.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.2.16...@kong-ui-public/app-layout@4.2.17) (2024-07-31)
 
 
