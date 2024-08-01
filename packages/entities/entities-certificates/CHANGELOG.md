@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.3.11...@kong-ui-public/entities-certificates@3.4.0) (2024-08-01)
+
+
+### Features
+
+* **entities-certificates:** support sni field in form [KM-199] ([#1458](https://github.com/Kong/public-ui-components/issues/1458)) ([90d4ba0](https://github.com/Kong/public-ui-components/commit/90d4ba0d89a06edf9327014f5efc19d2448bcebb))
+
+
+
+
+
 ## [3.3.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.3.10...@kong-ui-public/entities-certificates@3.3.11) (2024-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-certificates
