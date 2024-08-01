@@ -476,7 +476,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     isEnterprise: true,
     nameKey: 'plugins.meta.exit-transformer.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
-    imageName: 'exit-transformer',
   },
   jq: {
     descriptionKey: 'plugins.meta.jq.description',
@@ -484,7 +483,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     isEnterprise: true,
     nameKey: 'plugins.meta.jq.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
-    imageName: 'jq',
     fieldRules: {
       atLeastOneOf: [['config.request_jq_program', 'config.response_jq_program']],
     },
@@ -725,6 +723,22 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.ai-semantic-prompt-guard.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     useLegacyForm: true,
+  },
+  'header-cert-auth': {
+    descriptionKey: 'plugins.meta.header-cert-auth.description',
+    group: PluginGroup.AUTHENTICATION,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.header-cert-auth.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    imageName: 'tls-metadata-headers',
+    fieldRules: {
+      onlyOneOfMutuallyRequired: [
+        [
+          ['config.http_proxy_host', 'config.http_proxy_port'],
+          ['config.https_proxy_host', 'config.https_proxy_port'],
+        ],
+      ],
+    },
   },
 }
 

@@ -11,10 +11,10 @@ describe('metadata', () => {
 
     it('generates icon URL using PLUGIN_METADATA', () => {
       // when icon name provided is a key of PLUGIN_METADATA, and also has `imageName` field defined
-      const pluginMetadataKey = 'exit-transformer'
-      const exitTransformerImageName = PLUGIN_METADATA[pluginMetadataKey].imageName
+      const pluginMetadataKey = 'proxy-cache-advanced'
+      const pluginImageName = PLUGIN_METADATA[pluginMetadataKey].imageName
 
-      expect(getPluginIconURL(pluginMetadataKey)).toContain(`${exitTransformerImageName}.png`)
+      expect(getPluginIconURL(pluginMetadataKey)).toContain(`${pluginImageName}.png`)
     })
 
     it('generates icon URL with the provided icon name', () => {
