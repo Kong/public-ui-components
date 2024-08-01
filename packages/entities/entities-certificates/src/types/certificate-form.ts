@@ -5,12 +5,16 @@ import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-
 export interface KonnectCertificateFormConfig extends KonnectBaseFormConfig {
   /** Route to return to if canceling create/edit a certificate */
   cancelRoute: RouteLocationRaw
+  /** Route of listing SNIs */
+  sniListRoute?: RouteLocationRaw
 }
 
 /** Kong Manager certificate form config */
 export interface KongManagerCertificateFormConfig extends KongManagerBaseFormConfig {
   /** Route to return to if canceling create/edit a certificate */
   cancelRoute: RouteLocationRaw
+  /** Route of listing SNIs */
+  sniListRoute?: RouteLocationRaw
 }
 
 export interface CertificateFormFields {
@@ -18,6 +22,7 @@ export interface CertificateFormFields {
   key: string
   certAlt: string
   keyAlt: string
+  snis: Array<string>
   tags: string
 }
 

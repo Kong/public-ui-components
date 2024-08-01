@@ -51,6 +51,14 @@
           "tooltip": "PEM-encoded private key of the alternate SSL key pair. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is {emphasis}, which means it can be securely stored as a secret in a vault. References must follow a specific format.",
           "emphasis": "referenceable"
         },
+        "snis": {
+          "label": "SNIs",
+          "placeholder": "Enter an SNI",
+          "add": "Add an SNI",
+          "tooltip": "Zero or more hostnames to associate with this certificate as SNIs",
+          "editingTip": "To manage SNIs for this certificate, click {link}.",
+          "editingTipLink": "here"
+        },
         "tags": {
           "label": "Tags",
           "placeholder": "Enter a list of tags separated by comma",
