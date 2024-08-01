@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.2.1...@kong-ui-public/entities-plugins@8.3.0) (2024-08-01)
+
+
+### Features
+
+* **entities-plugins:** support header-cert-auth ([#1500](https://github.com/Kong/public-ui-components/issues/1500)) ([dd9fe18](https://github.com/Kong/public-ui-components/commit/dd9fe180e16a379fb7de558c7b2e70d57e2da4d7))
+
+
+
+
+
 ## [8.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.2.0...@kong-ui-public/entities-plugins@8.2.1) (2024-07-31)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
