@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.8.2...@kong-ui-public/entities-vaults@3.8.3) (2024-08-01)
+
+
+### Bug Fixes
+
+* **vaultform:** fix compatibility of STS endpoint url in Konnect ([#1525](https://github.com/Kong/public-ui-components/issues/1525)) ([43ede4a](https://github.com/Kong/public-ui-components/commit/43ede4adc17b2e55d3c6168713fed52dc92185f6))
+
+
+
+
+
 ## [3.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.8.1...@kong-ui-public/entities-vaults@3.8.2) (2024-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
