@@ -758,12 +758,15 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       }
     }
 
-    // required fields, if it's boolean (a checkbox) it will be marked as required even though it isn't
     if (scheme.required && scheme.type !== 'boolean') {
       initialFormSchema[field].required = true
       initialFormSchema[field].selectOptions = {
         hideNoneSelectedText: true,
       }
+    }
+
+    if (scheme.required && scheme.type === 'boolean') {
+      initialFormSchema[field].default = scheme.default ?? false
     }
 
     // Default is set and is not an object or string 'function'
