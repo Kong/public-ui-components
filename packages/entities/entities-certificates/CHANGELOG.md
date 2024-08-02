@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.4.1...@kong-ui-public/entities-certificates@3.4.2) (2024-08-02)
+
+
+### Bug Fixes
+
+* **entities-certificates:** remove snis if field not displayed ([#1528](https://github.com/Kong/public-ui-components/issues/1528)) ([e934a33](https://github.com/Kong/public-ui-components/commit/e934a33907c7a2c07d35da6069d9ad00002f432b))
+
+
+
+
+
 ## [3.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.4.0...@kong-ui-public/entities-certificates@3.4.1) (2024-08-02)
 
 **Note:** Version bump only for package @kong-ui-public/entities-certificates
