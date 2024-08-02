@@ -305,6 +305,11 @@ const tabs = ref<Tab[]>([
   },
 ])
 
+// For array-typed fields, if their elements are deeply nested objects,
+// we need this variable to record the key of the array field.
+// See its usage in `buildFormSchema`.
+const arrayRootKey = ref<string>('')
+
 const fetchUrl = computed((): string => {
   if (treatAsCredential.value) { // credential
     let submitEndpoint = endpoints.form[props.config.app].credential[formType.value]
@@ -542,7 +547,46 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     initialFormSchema[field].required = scheme.required
 
     if (field.startsWith('config-')) {
-      initialFormSchema[field].label = formatPluginFieldLabel(field)
+      if (!arrayNested && scheme.type === 'array') {
+        // Assign `field` to `arrayRootKey`. `arrayRootKey` only have effect on deeply nested array elements.
+        // Take the following schema for example:
+        // "config": {
+        //   "type": "record",
+        //   "fields": [
+        //     "targets": {
+        //       "type": "array",
+        //       "elements": {
+        //         "type": "record",
+        //         "fields": [
+        //           {
+        //             "auth": {
+        //               "type": "record",
+        //               "fields": [
+        //                 { "header_name": { "type": "string" } },
+        //                 { "header_value": { "type": "string" } },
+        //               ]
+        //             }
+        //           },
+        //         ],
+        //       }
+        //     }
+        //   ]
+        // }
+        // In this case, `field` is "config-targets", and so is `arrayRootKey`.
+        arrayRootKey.value = field
+      }
+      if (arrayNested && arrayRootKey.value && field.startsWith(arrayRootKey.value)) {
+        // Generate label for deeply nested array elements.
+        // In the above example, `field` is "config-targets-auth-header_name",
+        // and `nestedKey` is "auth-header_name"
+        const nestedKey = field.slice(arrayRootKey.value.length + 1)
+        // Split `nestedKey` to ["auth", "header_name"], format each part and join them with "."
+        // The result is "Auth.Header Name"
+        initialFormSchema[field].label = nestedKey.split('-').map(formatPluginFieldLabel).join('.')
+      } else {
+        // Otherwise, just format the field
+        initialFormSchema[field].label = formatPluginFieldLabel(field)
+      }
     }
 
     // Apply descriptions from BE schema

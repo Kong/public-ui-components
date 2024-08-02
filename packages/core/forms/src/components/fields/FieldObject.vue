@@ -1,12 +1,14 @@
 <template>
-  <div v-attributes="attributes">
-    <div v-if="schema.schema">
-      <vue-form-generator
-        :model="value"
-        :options="formOptions"
-        :schema="schema.schema"
-      />
-    </div>
+  <div
+    v-attributes="attributes"
+    class="field-object-container"
+  >
+    <vue-form-generator
+      v-if="schema.schema"
+      :model="value"
+      :options="formOptions"
+      :schema="schema.schema"
+    />
     <div v-else>
       <table
         :id="getFieldID(schema)"
@@ -125,3 +127,9 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.field-object-container {
+  width: 100%;
+}
+</style>
