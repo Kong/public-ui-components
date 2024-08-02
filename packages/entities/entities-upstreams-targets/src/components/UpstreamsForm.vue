@@ -164,11 +164,14 @@ const resetOnActiveSwitch = (val: boolean): void => {
   state.fields.activeHealthCheck.successes = val ? '5' : '0'
   state.fields.activeHealthCheck.httpFailures = val ? '5' : '0'
   state.fields.activeHealthCheck.unhealthyInterval = val ? '5' : '0'
+  state.fields.activeHealthCheck.tcpFailures = val ? '5' : '0'
 }
 
 const resetOnPassiveSwitch = (val: boolean): void => {
   state.fields.passiveHealthCheck.timeouts = val ? '5' : '0'
   state.fields.passiveHealthCheck.successes = val ? '80' : '0'
+  state.fields.passiveHealthCheck.tcpFailures = val ? '5' : '0'
+  state.fields.passiveHealthCheck.httpFailures = val ? '5' : '0'
 }
 
 const isSlotsValid = computed((): boolean => state.fields.slots
@@ -372,9 +375,12 @@ const getPayload = computed((): UpstreamFormPayload => {
         headers: {},
         healthy: {
           interval: 0,
+          successes: 0,
         },
         unhealthy: {
           interval: 0,
+          http_failures: 0,
+          tcp_failures: 0,
         },
       }
     }
