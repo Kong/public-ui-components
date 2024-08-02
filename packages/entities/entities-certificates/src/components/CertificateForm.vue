@@ -286,7 +286,7 @@ const requestBody = computed((): Record<string, any> => {
     key: form.fields.key,
     cert_alt: form.fields.certAlt || null,
     key_alt: form.fields.keyAlt || null,
-    snis: form.fields.snis.filter(Boolean),
+    ...(props.showSnisField ? { snis: form.fields.snis.filter(Boolean) } : {}),
     tags: form.fields.tags.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
   }
 })
