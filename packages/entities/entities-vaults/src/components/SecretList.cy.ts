@@ -57,10 +57,10 @@ describe('<SecretList />', () => {
               cacheIdentifier: `secret-list-${uuidv4()}`,
               config: baseConfigKonnect,
               vaultId,
-              canCreate: () => { },
+              canCreate: () => false,
               canEdit: () => expected,
-              canDelete: () => { },
-              canRetrieve: () => { },
+              canDelete: () => false,
+              canRetrieve: () => false,
             },
           })
 
@@ -74,10 +74,10 @@ describe('<SecretList />', () => {
               cacheIdentifier: `secret-list-${uuidv4()}`,
               config: baseConfigKonnect,
               vaultId,
-              canCreate: () => { },
-              canEdit: () => { },
+              canCreate: () => false,
+              canEdit: () => false,
               canDelete: () => expected,
-              canRetrieve: () => { },
+              canRetrieve: () => false,
             },
           })
 
@@ -138,9 +138,9 @@ describe('<SecretList />', () => {
           config: baseConfigKonnect,
           vaultId,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -159,9 +159,9 @@ describe('<SecretList />', () => {
           config: baseConfigKonnect,
           vaultId,
           canCreate: () => false,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -189,10 +189,10 @@ describe('<SecretList />', () => {
             cacheIdentifier: `secret-list-${uuidv4()}`,
             config: baseConfigKonnect,
             vaultId,
-            canCreate: () => { },
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -218,10 +218,10 @@ describe('<SecretList />', () => {
           cacheIdentifier: `secret-list-${uuidv4()}`,
           config: baseConfigKonnect,
           vaultId,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -244,10 +244,10 @@ describe('<SecretList />', () => {
           cacheIdentifier: `secret-list-${uuidv4()}`,
           config: baseConfigKonnect,
           vaultId,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -321,10 +321,10 @@ describe('<SecretList />', () => {
           cacheIdentifier,
           config: baseConfigKonnect,
           vaultId,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -356,16 +356,16 @@ describe('<SecretList />', () => {
       cy.get(`${l} tbody tr[data-testid="secret-15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(SecretList, {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
           vaultId,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 

@@ -194,7 +194,7 @@ describe('<CACertificateForm />', () => {
       cy.getTestId('ca-certificate-form-tags').clear()
       cy.getTestId('ca-certificate-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate')
@@ -377,7 +377,7 @@ describe('<CACertificateForm />', () => {
       cy.getTestId('ca-certificate-form-tags').clear()
       cy.getTestId('ca-certificate-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate')

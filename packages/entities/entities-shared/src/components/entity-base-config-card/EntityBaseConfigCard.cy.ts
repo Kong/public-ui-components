@@ -461,7 +461,7 @@ describe('<EntityBaseConfigCard />', () => {
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseConfigCard)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseConfigCard)
         .vm.$emit('loading', true))
 
       cy.get('@onLoadingSpy').should('have.been.calledWith', true)

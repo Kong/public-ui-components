@@ -205,7 +205,7 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
     }).then(({ wrapper }) => wrapper)
       .as('vueWrapper')
 
-    cy.get('@vueWrapper').then(async (wrapper: any) => {
+    cy.get('@vueWrapper').then(async wrapper => {
       await wrapper.setProps({ hashOn: 'header' })
       await wrapper.setProps({ hashOn: 'cookie' })
       cy.get('@onUpdateHeaderSpy').should('have.been.calledWith', '')
@@ -251,7 +251,7 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
     }).then(({ wrapper }) => wrapper)
       .as('vueWrapper')
 
-    cy.get('@vueWrapper').then(async (wrapper: any) => {
+    cy.get('@vueWrapper').then(async wrapper => {
       await wrapper.setProps({ hashFallback: 'header' })
       await wrapper.setProps({ hashFallback: 'query_arg' })
       cy.get('@onUpdateHashFallbackHeaderSpy').should('have.been.calledWith', '')

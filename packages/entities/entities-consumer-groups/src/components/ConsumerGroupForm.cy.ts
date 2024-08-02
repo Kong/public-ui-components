@@ -170,7 +170,7 @@ describe('<ConsumerGroupForm />', () => {
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('loading', true))
 
       cy.get('@onLoadingSpy').should('have.been.calledWith', true)
@@ -196,7 +196,7 @@ describe('<ConsumerGroupForm />', () => {
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('fetch:error', expectedError))
 
       cy.get('@onErrorSpy').should('have.been.calledWith', expectedError)
@@ -223,7 +223,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.get('.multiselect-popover .multiselect-item').should('have.length', 5)
       cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[0].id}"] .select-item-label`).click()
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@createGroup')
@@ -248,7 +248,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('consumer-group-form-name').type('test_name')
       cy.getTestId('consumer-group-form-tags').type('test_tag')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@createGroup')
@@ -270,7 +270,7 @@ describe('<ConsumerGroupForm />', () => {
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@createGroup')
@@ -300,7 +300,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.get('.multiselect-popover .multiselect-item').should('have.length', 5)
       cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[0].id}"] .select-item-label`).click()
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@createGroup')
@@ -323,7 +323,7 @@ describe('<ConsumerGroupForm />', () => {
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('fetch:success', konnectGroup))
 
       cy.wait('@getConsumers')
@@ -361,7 +361,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('consumer-group-form-name').clear()
       cy.getTestId('consumer-group-form-name').type(expectedOutput.name)
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@updateGroup')
@@ -400,7 +400,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('multiselect-trigger').click()
       cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[1].id}"] .select-item-label`).click({ force: true })
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@updateGroup')
@@ -440,7 +440,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('multiselect-trigger').click()
       cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[1].id}"] .select-item-label`).click({ force: true })
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@updateGroup')
@@ -582,7 +582,7 @@ describe('<ConsumerGroupForm />', () => {
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('loading', true))
 
       cy.get('@onLoadingSpy').should('have.been.calledWith', true)
@@ -608,7 +608,7 @@ describe('<ConsumerGroupForm />', () => {
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('fetch:error', expectedError))
 
       cy.get('@onErrorSpy').should('have.been.calledWith', expectedError)
@@ -635,7 +635,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.get('.multiselect-popover .multiselect-item').should('have.length', 5)
       cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[0].id}"] .select-item-label`).click()
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@createGroup')
@@ -660,7 +660,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('consumer-group-form-name').type('test_name')
       cy.getTestId('consumer-group-form-tags').type('test_tag')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@createGroup')
@@ -682,7 +682,7 @@ describe('<ConsumerGroupForm />', () => {
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@createGroup')
@@ -712,7 +712,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.get('.multiselect-popover .multiselect-item').should('have.length', 5)
       cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[0].id}"] .select-item-label`).click()
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@createGroup')
@@ -734,7 +734,7 @@ describe('<ConsumerGroupForm />', () => {
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('fetch:success', KMGroup))
 
       cy.wait('@fetchGroupData')
@@ -769,7 +769,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('consumer-group-form-name').clear()
       cy.getTestId('consumer-group-form-name').type(expectedOutput.name)
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@updateGroup')
@@ -805,7 +805,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('multiselect-trigger').click()
       cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[1].id}"] .select-item-label`).click({ force: true })
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@updateGroup')
@@ -842,7 +842,7 @@ describe('<ConsumerGroupForm />', () => {
       cy.getTestId('multiselect-trigger').click()
       cy.get(`.multiselect-popover [data-testid="multiselect-item-${consumersList5[1].id}"] .select-item-label`).click({ force: true })
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@updateGroup')

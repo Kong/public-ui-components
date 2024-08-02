@@ -405,7 +405,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-tags').clear()
       cy.getTestId('vault-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@updateVault')
@@ -820,7 +820,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-tags').clear()
       cy.getTestId('vault-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@updateVault')

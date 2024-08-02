@@ -31,7 +31,7 @@ describe('<UpstreamsConfigCard/>', () => {
 
       cy.wait('@getUpstream')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseConfigCard)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseConfigCard)
         .vm.$emit('loading', true))
 
       cy.get('@onLoadingSpy').should('have.been.calledWith', true)
@@ -50,7 +50,7 @@ describe('<UpstreamsConfigCard/>', () => {
 
       cy.wait('@getUpstream')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseConfigCard)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseConfigCard)
         .vm.$emit('fetch:error', { message: 'text' }))
 
       cy.get('@onError').should('have.been.calledWith', { message: 'text' })
@@ -69,7 +69,7 @@ describe('<UpstreamsConfigCard/>', () => {
 
       cy.wait('@getUpstream')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseConfigCard)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseConfigCard)
         .vm.$emit('fetch:success', { message: 'text' }))
 
       cy.get('@onSuccess').should('have.been.calledWith', { message: 'text' })

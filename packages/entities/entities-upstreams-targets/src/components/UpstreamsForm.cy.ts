@@ -162,7 +162,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
 
       cy.wait(['@fetchServices', '@fetchCertificates'])
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('loading', true))
 
       cy.get('@onLoadingSpy').should('have.been.calledWith', true)
@@ -191,7 +191,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
 
       cy.wait(['@fetchServices', '@fetchCertificates'])
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('fetch:error', expectedError))
 
       cy.get('@onErrorSpy').should('have.been.calledWith', expectedError)
@@ -216,7 +216,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('.name-select').click()
       cy.getTestId('select-item-2').first().click()
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateUpstream')
@@ -244,7 +244,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('.name-select').click()
       cy.getTestId('select-item-2').first().click()
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateUpstream')
@@ -327,7 +327,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
 
       cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'], { timeout: 10000 })
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateUpstream')
@@ -492,7 +492,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
 
       cy.wait(['@fetchServices', '@fetchCertificates'])
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('loading', true))
 
       cy.get('@onLoadingSpy').should('have.been.calledWith', true)
@@ -521,7 +521,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
 
       cy.wait(['@fetchServices', '@fetchCertificates'])
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('fetch:error', expectedError))
 
       cy.get('@onErrorSpy').should('have.been.calledWith', expectedError)
@@ -546,7 +546,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('.name-select').click()
       cy.getTestId('select-item-2').first().click()
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateUpstream')
@@ -574,7 +574,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('.name-select').click()
       cy.getTestId('select-item-2').first().click()
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateUpstream')
@@ -659,7 +659,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
 
       cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'], { timeout: 10000 })
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateUpstream')
@@ -689,7 +689,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.getTestId('active-health-switch').should('be.checked')
       cy.getTestId('active-health-switch').uncheck({ force: true })
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateUpstream')
@@ -719,7 +719,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.getTestId('passive-health-switch').should('be.checked')
       cy.getTestId('passive-health-switch').uncheck({ force: true })
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateUpstream')

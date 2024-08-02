@@ -156,7 +156,7 @@ describe('<KeyForm />', () => {
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
       cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
 
-      cy.get('@vueWrapper').then(async (wrapper: any) => {
+      cy.get('@vueWrapper').then(async wrapper => {
         await wrapper.setProps({ fixedKeySetId: keySets.data[1].id })
         cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', keySets.data[1].name)
       })
@@ -533,7 +533,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-tags').clear()
       cy.getTestId('key-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@updateKey')
@@ -677,7 +677,7 @@ describe('<KeyForm />', () => {
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
       cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', key1.set.name)
 
-      cy.get('@vueWrapper').then(async (wrapper: any) => {
+      cy.get('@vueWrapper').then(async wrapper => {
         await wrapper.setProps({ fixedKeySetId: keySets.data[1].id })
         cy.get('.k-select .custom-selected-item-wrapper').should('contain.text', keySets.data[1].name)
       })
@@ -1053,7 +1053,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-tags').clear()
       cy.getTestId('key-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@updateKey')
