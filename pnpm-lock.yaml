@@ -545,7 +545,19 @@ importers:
       '@kong-ui-public/core':
         specifier: workspace:^
         version: link:../core
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../i18n
+      '@kong/icons':
+        specifier: ^1.14.2
+        version: 1.15.1(vue@3.4.31(typescript@5.3.3))
+      uuid:
+        specifier: ^9.0.1
+        version: 9.0.1
     devDependencies:
+      '@kong-ui-public/forms':
+        specifier: workspace:^
+        version: link:../forms
       '@kong/atc-router':
         specifier: 1.6.0-rc.1
         version: 1.6.0-rc.1
@@ -555,6 +567,9 @@ importers:
       '@kong/kongponents':
         specifier: 9.1.7
         version: 9.1.7(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
+      '@types/uuid':
+        specifier: ^9.0.8
+        version: 9.0.8
       monaco-editor:
         specifier: 0.21.3
         version: 0.21.3
@@ -1736,7 +1751,6 @@ packages:
 
   '@evilmartians/lefthook@1.7.1':
     resolution: {integrity: sha512-Wp8DaTMHZM1tUV4Mow6nG+6zq+giruD5054zHmFIDLXlPQxqYxnZMqJg0aYxe16vYwqFmH6NIClEMRdtGucO0Q==}
-    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 

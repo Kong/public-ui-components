@@ -29,6 +29,25 @@
         @parse-result-update="onParseResultUpdate"
       />
 
+      <a
+        href="#"
+        style="color: #0030cc; font-weight: bold;"
+        @click.prevent="isVisible = true"
+      >Test with Router Playground</a>
+
+      <RouterPlaygroundModal
+        :hide-editor-actions="false"
+        :initial-expression="expression"
+        :is-visible="isVisible"
+        @cancel="isVisible = false"
+        @commit="handleCommit"
+        @notify="console.log"
+      >
+        <template #page-header>
+          <p>A playground where you can test out the Kong router Expressions.</p>
+        </template>
+      </RouterPlaygroundModal>
+
       <div>
         <p>ParseResult:</p>
         <pre>{{ parseResult }}</pre>
@@ -40,7 +59,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import type { SchemaDefinition } from '../src'
-import { ExpressionsEditor, HTTP_SCHEMA_DEFINITION, STREAM_SCHEMA_DEFINITION } from '../src'
+import { ExpressionsEditor, HTTP_SCHEMA_DEFINITION, STREAM_SCHEMA_DEFINITION, RouterPlaygroundModal } from '../src'
 
 type NamedSchemaDefinition = { name: string; definition: SchemaDefinition }
 
@@ -68,21 +87,18 @@ const btoa = (s: string) => window.btoa(s)
 const expression = ref(expressionPresets[0])
 const schemaDefinition = ref<NamedSchemaDefinition>(schemaPresets[0])
 const parseResult = ref('')
+const isVisible = ref(false)
 
 const onParseResultUpdate = (result: any) => {
   parseResult.value = JSON.stringify(result, null, 2)
+}
+
+const handleCommit = (exp: string) => {
+  expression.value = exp
+  isVisible.value = false
 }
 
 watch(schemaDefinition, (newSchemaDefinition) => {
   schemaDefinition.value = newSchemaDefinition
 })
 </script>
-
-<style lang="scss" scoped>
-.presets {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5rem;
-}
-</style>

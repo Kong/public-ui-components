@@ -109,7 +109,7 @@ Show/hide Route name field. If `true`, `name` field is stripped from payload obj
 - required: `false`
 - default: `false`
 
-Show/hide Service Select field. Should be used in case of manual adding `service_id` in payload. 
+Show/hide Service Select field. Should be used in case of manually adding `service_id` in payload.
 
 #### `showTagsFiledUnderAdvanced`
 
@@ -154,6 +154,13 @@ Show tags field under _Advanced Fields_ collapse or in it's default place (befor
     - default: `undefined`
     - Text to show in the tooltip of the Expressions config tab.
 
+#### `showExpressionsModalEntry`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Show/hide the Expressions modal entry button.
 
 ### Slots
 
@@ -201,6 +208,16 @@ A `@update` event is emitted when the form is saved. The event payload is the Ro
 #### model-updated
 
 A `@model-updated` event is emitted when any form value was changed. The event payload is the Route payload object.
+
+#### notify
+
+A `@notify` event is emitted when a Toast is called. The event payload is an object with the following properties:
+- `message`:
+  - type: `string`
+  - The message to display in the Toast.
+- `type`:
+  - type: `'success' | 'error' | 'warning' | 'info'`
+  - The type of Toast to display.
 
 ### Usage example
 

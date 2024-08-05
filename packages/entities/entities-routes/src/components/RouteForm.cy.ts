@@ -3,6 +3,7 @@ import RouteForm from './RouteForm.vue'
 import { route, routeExpressions, services } from '../../fixtures/mockData'
 import { EntityBaseForm } from '@kong-ui-public/entities-shared'
 import type { RouteHandler } from 'cypress/types/net-stubbing'
+import { HTTP_BASED_PROTOCOLS, STREAM_BASED_PROTOCOLS } from '@kong-ui-public/expressions'
 
 const cancelRoute = { name: 'route-list' }
 
@@ -831,6 +832,83 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('select-item-ws').should('not.exist')
       cy.getTestId('select-item-wss').should('not.exist')
     })
+
+    describe('RoutePlayground', () => {
+      beforeEach(() => {
+        cy.on('uncaught:exception', err => !err.message.includes('ResizeObserver loop completed with undelivered notifications.'))
+      })
+
+      it('route playground entry should hide if select stream-based protocols', () => {
+        cy.mount(RouteForm, {
+          props: {
+            config: baseConfigKM,
+            routeFlavors: TRADITIONAL_EXPRESSIONS,
+            showExpressionsModalEntry: true,
+          },
+        })
+
+        cy.get('#expressions-tab').click()
+
+        STREAM_BASED_PROTOCOLS.forEach((protocol) => {
+          cy.getTestId('route-form-protocols').click({ force: true })
+          cy.get(`[data-testid='select-item-${protocol}']`).click()
+          cy.getTestId('open-router-playground').should('have.class', 'disabled')
+          cy.getTestId('open-router-playground').click()
+          cy.get('.router-playground-wrapper').should('not.exist')
+        })
+      })
+
+      it('route playground entry should show if select http-based protocols', () => {
+        cy.mount(RouteForm, {
+          props: {
+            config: baseConfigKM,
+            routeFlavors: TRADITIONAL_EXPRESSIONS,
+            showExpressionsModalEntry: true,
+          },
+        })
+
+        cy.get('#expressions-tab').click()
+
+        HTTP_BASED_PROTOCOLS.forEach((protocol) => {
+          cy.getTestId('route-form-protocols').click({ force: true })
+          cy.get(`[data-testid='select-item-${protocol}']`).click()
+          cy.getTestId('open-router-playground').should('not.have.class', 'disabled')
+        })
+      })
+
+      it('route playground should have initial expression value', () => {
+        cy.mount(RouteForm, {
+          props: {
+            config: baseConfigKM,
+            routeFlavors: TRADITIONAL_EXPRESSIONS,
+            showExpressionsModalEntry: true,
+          },
+        })
+
+        cy.get('#expressions-tab').click()
+        cy.get('.monaco-editor').first().as('monacoEditor').click()
+        cy.get('@monacoEditor').type('http.path == "/kong"')
+        cy.getTestId('open-router-playground').click()
+        cy.get('.router-playground > [data-testid="expressions-editor"]').contains('http.path == "/kong"')
+      })
+
+      it('should expression updated when save in route playground', () => {
+        cy.mount(RouteForm, {
+          props: {
+            config: baseConfigKM,
+            routeFlavors: TRADITIONAL_EXPRESSIONS,
+            showExpressionsModalEntry: true,
+          },
+        })
+        cy.get('#expressions-tab').click()
+        cy.get('.monaco-editor').first().as('monacoEditor').click()
+        cy.get('@monacoEditor').type('http.path == "/kong"')
+        cy.getTestId('open-router-playground').click()
+        cy.get('.router-playground > [data-testid="expressions-editor"]').type(' && http.method == "GET"')
+        cy.getTestId('modal-action-button').click()
+        cy.get('@monacoEditor').contains('http.path == "/kong" && http.method == "GET"')
+      })
+    })
   })
 
   describe('Konnect', { viewportHeight: 700, viewportWidth: 700 }, () => {
@@ -1608,6 +1686,83 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.wait('@updateRoute')
 
         cy.get('@onUpdateSpy').should('have.been.calledOnce')
+      })
+
+      describe('RoutePlayground', () => {
+        beforeEach(() => {
+          cy.on('uncaught:exception', err => !err.message.includes('ResizeObserver loop completed with undelivered notifications.'))
+        })
+
+        it('route playground entry should hide if select stream-based protocols', () => {
+          cy.mount(RouteForm, {
+            props: {
+              config: baseConfigKonnect,
+              routeFlavors: TRADITIONAL_EXPRESSIONS,
+              showExpressionsModalEntry: true,
+            },
+          })
+
+          cy.get('#expressions-tab').click()
+
+          STREAM_BASED_PROTOCOLS.forEach((protocol) => {
+            cy.getTestId('route-form-protocols').click({ force: true })
+            cy.get(`[data-testid='select-item-${protocol}']`).click()
+            cy.getTestId('open-router-playground').should('have.class', 'disabled')
+            cy.getTestId('open-router-playground').click()
+            cy.get('.router-playground-wrapper').should('not.exist')
+          })
+        })
+
+        it('route playground entry should show if select http-based protocols', () => {
+          cy.mount(RouteForm, {
+            props: {
+              config: baseConfigKonnect,
+              routeFlavors: TRADITIONAL_EXPRESSIONS,
+              showExpressionsModalEntry: true,
+            },
+          })
+
+          cy.get('#expressions-tab').click()
+
+          HTTP_BASED_PROTOCOLS.forEach((protocol) => {
+            cy.getTestId('route-form-protocols').click({ force: true })
+            cy.get(`[data-testid='select-item-${protocol}']`).click()
+            cy.getTestId('open-router-playground').should('not.have.class', 'disabled')
+          })
+        })
+
+        it('route playground should have initial expression value', () => {
+          cy.mount(RouteForm, {
+            props: {
+              config: baseConfigKonnect,
+              routeFlavors: TRADITIONAL_EXPRESSIONS,
+              showExpressionsModalEntry: true,
+            },
+          })
+
+          cy.get('#expressions-tab').click()
+          cy.get('.monaco-editor').first().as('monacoEditor').click()
+          cy.get('@monacoEditor').type('http.path == "/kong"')
+          cy.getTestId('open-router-playground').click()
+          cy.get('.router-playground > [data-testid="expressions-editor"]').contains('http.path == "/kong"')
+        })
+
+        it('should expression updated when save in route playground', () => {
+          cy.mount(RouteForm, {
+            props: {
+              config: baseConfigKonnect,
+              routeFlavors: TRADITIONAL_EXPRESSIONS,
+              showExpressionsModalEntry: true,
+            },
+          })
+          cy.get('#expressions-tab').click()
+          cy.get('.monaco-editor').first().as('monacoEditor').click()
+          cy.get('@monacoEditor').type('http.path == "/kong"')
+          cy.getTestId('open-router-playground').click()
+          cy.get('.router-playground > [data-testid="expressions-editor"]').type(' && http.method == "GET"')
+          cy.getTestId('modal-action-button').click()
+          cy.get('@monacoEditor').contains('http.path == "/kong" && http.method == "GET"')
+        })
       })
     } // for RouteFlavors[]
   })
