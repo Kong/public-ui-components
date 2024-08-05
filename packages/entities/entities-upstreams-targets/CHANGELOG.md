@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.3.14...@kong-ui-public/entities-upstreams-targets@3.3.15) (2024-08-05)
+
+
+### Bug Fixes
+
+* **entities-upstreams-targets:** health check default value [KM-379] ([#1530](https://github.com/Kong/public-ui-components/issues/1530)) ([b7a920c](https://github.com/Kong/public-ui-components/commit/b7a920ce1320b035e24f56263aa66104f1c1c34d))
+
+
+
+
+
 ## [3.3.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.3.13...@kong-ui-public/entities-upstreams-targets@3.3.14) (2024-08-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
