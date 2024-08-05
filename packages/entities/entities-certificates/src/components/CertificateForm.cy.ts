@@ -257,7 +257,7 @@ describe('<CertificateForm />', () => {
       cy.getTestId('certificate-form-tags').clear()
       cy.getTestId('certificate-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate')
@@ -293,7 +293,7 @@ describe('<CertificateForm />', () => {
 
       cy.getTestId('form-submit').should('be.enabled')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate').its('response.statusCode').should('eq', 400)
@@ -357,7 +357,7 @@ describe('<CertificateForm />', () => {
 
       cy.getTestId('form-submit').should('be.enabled')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate').its('response.statusCode').should('eq', 200)
@@ -561,7 +561,7 @@ describe('<CertificateForm />', () => {
       cy.getTestId('certificate-form-tags').clear()
       cy.getTestId('certificate-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate')
@@ -597,7 +597,7 @@ describe('<CertificateForm />', () => {
 
       cy.getTestId('form-submit').should('be.enabled')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate').its('response.statusCode').should('eq', 400)
@@ -661,7 +661,7 @@ describe('<CertificateForm />', () => {
 
       cy.getTestId('form-submit').should('be.enabled')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate').its('response.statusCode').should('eq', 200)

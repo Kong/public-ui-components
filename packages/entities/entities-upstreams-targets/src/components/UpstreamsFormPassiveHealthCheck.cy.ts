@@ -147,7 +147,7 @@ describe('<UpstreamsFormPassiveHealthCheck/>', { viewportHeight: 700, viewportWi
     }).then(({ wrapper }) => wrapper)
       .as('vueWrapper')
 
-    cy.get('@vueWrapper').then(async (wrapper: any) => {
+    cy.get('@vueWrapper').then(async wrapper => {
       await wrapper.setProps({ type: 'https' })
       cy.get('@onUpdateTcpFailuresSpy').should('have.been.calledWith', '5')
 

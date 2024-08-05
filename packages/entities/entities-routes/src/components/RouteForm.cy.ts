@@ -799,7 +799,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.getTestId('route-form-tags').clear()
         cy.getTestId('route-form-tags').type('tag1,tag2')
 
-        cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
           .vm.$emit('submit'))
 
         cy.wait('@updateRoute')
@@ -1602,7 +1602,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.getTestId('route-form-tags').clear()
         cy.getTestId('route-form-tags').type('tag1,tag2')
 
-        cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
           .vm.$emit('submit'))
 
         cy.wait('@updateRoute')

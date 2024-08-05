@@ -1,3 +1,5 @@
+import type { ExactMatchFilterConfig, FuzzyMatchFilterConfig } from '../src/types'
+
 export const mockTableData = {
   total: 2,
   data: [
@@ -50,7 +52,7 @@ export const mockTableHeaders = {
 export const mockExactMatchFilterConfig = {
   isExactMatch: true,
   placeholder: 'Filter by exact name or ID',
-}
+} satisfies ExactMatchFilterConfig
 
 export const mockFuzzyMatchFilterConfig = {
   isExactMatch: false,
@@ -90,7 +92,7 @@ export const mockFuzzyMatchFilterConfig = {
       type: 'number',
     },
   },
-}
+} satisfies FuzzyMatchFilterConfig
 
 export const gatewayServiceRecord = {
   ca_certificates: [

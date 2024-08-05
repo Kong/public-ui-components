@@ -337,7 +337,7 @@ describe('<SniForm />', () => {
       cy.getTestId('sni-form-tags').clear()
       cy.getTestId('sni-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateSni')
@@ -662,7 +662,7 @@ describe('<SniForm />', () => {
       cy.getTestId('sni-form-tags').clear()
       cy.getTestId('sni-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateSni')
