@@ -232,15 +232,19 @@ $errorColor: #f00;
     }
   }
 
-  &.required {
-    > label:after {
-      color: red;
-      content: "*";
-      font-size: 14px;
-      font-weight: normal;
-      // position: absolute;
-      padding-left: 3px;
-    }
+  &.required > label:before {
+    background-color: $kui-color-background-danger;
+    border-radius: $kui-border-radius-circle;
+    content: "";
+    height: 6px;
+    margin-right: $kui-space-40;
+    width: 6px;
+  }
+
+  // hide the required indicator for checkboxes
+  // because it may be misleading that the checkbox must be checked
+  &.field-checkbox.required > label:before {
+    display: none;
   }
 
   &.disabled {
