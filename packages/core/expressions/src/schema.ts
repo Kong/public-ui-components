@@ -42,14 +42,17 @@ export const STREAM_SCHEMA_DEFINITION: SchemaDefinition = {
   IpAddr: ['net.src.ip', 'net.dst.ip'],
 }
 
+export const HTTP_BASED_PROTOCOLS = ['http', 'https', 'grpc', 'grpcs', 'ws', 'wss']
+export const STREAM_BASED_PROTOCOLS = ['tcp', 'udp', 'tls', 'tls_passthrough']
+
 export const PROTOCOL_TO_SCHEMA = (() => {
   const s: Record<string, Schema> = {}
 
-  for (const protocol of ['http', 'https', 'grpc', 'grpcs', 'ws', 'wss']) {
+  for (const protocol of HTTP_BASED_PROTOCOLS) {
     s[protocol] = { name: protocol, definition: HTTP_SCHEMA_DEFINITION }
   }
 
-  for (const protocol of ['tcp', 'udp', 'tls', 'tls_passthrough']) {
+  for (const protocol of STREAM_BASED_PROTOCOLS) {
     s[protocol] = { name: protocol, definition: STREAM_SCHEMA_DEFINITION }
   }
 

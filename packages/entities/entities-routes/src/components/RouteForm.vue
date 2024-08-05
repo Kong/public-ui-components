@@ -359,6 +359,8 @@
                 <RouteFormExpressionsEditorLoader
                   v-model="state.fields.expression"
                   :protocol="exprEditorProtocol"
+                  :show-expressions-modal-entry="showExpressionsModalEntry"
+                  @notify="emit('notify', $event)"
                 >
                   <template #after-editor="editor">
                     <slot
@@ -569,6 +571,12 @@ const props = defineProps({
     required: false,
     default: () => undefined,
   },
+  /** Whether to show the expressions modal entry */
+  showExpressionsModalEntry: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -576,6 +584,7 @@ const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
   (e: 'loading', isLoading: boolean): void,
   (e: 'model-updated', val: BaseRoutePayload): void,
+  (e: 'notify', options: { message: string, type: string }): void,
 }>()
 
 const currentConfigHash = ref<string>(

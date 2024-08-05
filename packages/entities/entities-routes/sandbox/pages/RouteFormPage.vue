@@ -26,6 +26,7 @@
     :config="konnectConfig"
     :route-flavors="routeFlavors"
     :route-id="routeId"
+    show-expressions-modal-entry
     @error="onError"
     @update="onUpdate"
   >
@@ -55,6 +56,7 @@
     :config="kongManagerConfig"
     :route-flavors="routeFlavors"
     :route-id="routeId"
+    show-expressions-modal-entry
     @error="onError"
     @update="onUpdate"
   >

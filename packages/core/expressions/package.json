@@ -37,9 +37,11 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "devDependencies": {
+    "@kong-ui-public/forms": "workspace:^",
     "@kong/atc-router": "1.6.0-rc.1",
     "@kong/design-tokens": "1.15.3",
     "@kong/kongponents": "9.1.7",
+    "@types/uuid": "^9.0.8",
     "monaco-editor": "0.21.3",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-top-level-await": "^1.4.1",
@@ -66,10 +68,14 @@
   "peerDependencies": {
     "@kong/atc-router": "^1.6.0-rc.1",
     "@kong/kongponents": "^9.1.7",
+    "@kong-ui-public/forms": "workspace:^",
     "monaco-editor": "0.21.3",
     "vue": "^3.4.31"
   },
   "dependencies": {
-    "@kong-ui-public/core": "workspace:^"
+    "@kong-ui-public/core": "workspace:^",
+    "@kong-ui-public/i18n": "workspace:^",
+    "@kong/icons": "^1.14.2",
+    "uuid": "^9.0.1"
   }
 }
