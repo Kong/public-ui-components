@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.14...@kong-ui-public/forms@4.0.15) (2024-08-05)
+
+
+### Bug Fixes
+
+* **forms:** required indicator style ([#1531](https://github.com/Kong/public-ui-components/issues/1531)) ([2c7ea0e](https://github.com/Kong/public-ui-components/commit/2c7ea0ea7d5bef96095afd6c88051e12e93721aa))
+
+
+
+
+
 ## [4.0.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.13...@kong-ui-public/forms@4.0.14) (2024-08-02)
 
 
