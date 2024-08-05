@@ -335,6 +335,82 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
 
       cy.get('@onUpdateSpy').should('have.been.calledWith', upstreamsResponse)
     })
+
+    it('Should set correct values for health checks when turned on', () => {
+      interceptValidate()
+      interceptCreate()
+
+      cy.mount(UpstreamsForm, {
+        props: {
+          config: konnectConfig,
+        },
+      })
+
+      cy.getTestId('upstreams-form-name').type('host')
+      cy.get('.name-select .select-items-container .select-add-item').should('have.length', 1)
+      cy.get('.name-select .select-items-container .select-add-item').click()
+
+      cy.getTestId('active-health-switch').check({ force: true })
+      cy.getTestId('passive-health-switch').check({ force: true })
+
+      cy.getTestId('active-healthcheck-interval').should('have.value', '5')
+      cy.getTestId('active-healthcheck-successes').should('have.value', '5')
+      cy.getTestId('active-healthcheck-http-failures').should('have.value', '5')
+      cy.getTestId('active-healthcheck-unhealthy-interval').should('have.value', '5')
+      cy.getTestId('active-healthcheck-tcp-failures').should('have.value', '5')
+
+      cy.getTestId('passive-healthcheck-timeouts').should('have.value', '5')
+      cy.getTestId('passive-healthcheck-successes').should('have.value', '80')
+      cy.getTestId('passive-healthcheck-tcp-failures').should('have.value', '5')
+      cy.getTestId('passive-healthcheck-http-failures').should('have.value', '5')
+
+      cy.getTestId('form-submit').click()
+
+      cy.wait('@createUpstream').then((interception) => {
+        const { body: { healthchecks: { active, passive } } } = interception.request
+        expect(active.healthy.interval).to.equal(5)
+        expect(active.healthy.successes).to.equal(5)
+        expect(active.unhealthy.http_failures).to.equal(5)
+        expect(active.unhealthy.interval).to.equal(5)
+        expect(active.unhealthy.tcp_failures).to.equal(5)
+
+        expect(passive.unhealthy.timeouts).to.equal(5)
+        expect(passive.healthy.successes).to.equal(80)
+        expect(passive.unhealthy.tcp_failures).to.equal(5)
+        expect(passive.unhealthy.http_failures).to.equal(5)
+      })
+    })
+
+    it('Should set correct values for health checks when turned off', () => {
+      interceptFetchServices()
+      interceptFetchCertificates()
+      interceptGetUpstream(200, upstreamsResponseFull)
+      interceptValidate()
+      interceptUpdate()
+
+      cy.mount(UpstreamsForm, {
+        props: {
+          config: konnectConfig,
+          upstreamId: 'c372844b-a78a-4317-a81f-0606ba317816',
+        },
+      })
+
+      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'], { timeout: 10000 })
+
+      cy.getTestId('active-health-switch').should('be.checked')
+      cy.getTestId('passive-health-switch').should('be.checked')
+
+      cy.getTestId('active-health-switch').uncheck({ force: true })
+      cy.getTestId('passive-health-switch').uncheck({ force: true })
+
+      cy.getTestId('form-submit').click()
+
+      cy.wait('@updateUpstream').then((interception) => {
+        const { body: { healthchecks } } = interception.request
+        expect(healthchecks).to.deep.equal({ threshold: 2 })
+      })
+    })
+
   })
 
   describe('Kong Manager', () => {
@@ -726,6 +802,81 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.wait('@updateUpstream')
 
       cy.get('@onUpdateSpy').should('have.been.calledWithExactly', upstreamsKMResponsePassiveDisabled)
+    })
+
+    it('Should set correct values for health checks when turned on', () => {
+      interceptValidate()
+      interceptCreate()
+
+      cy.mount(UpstreamsForm, {
+        props: {
+          config: KMConfig,
+        },
+      })
+
+      cy.getTestId('upstreams-form-name').type('host')
+      cy.get('.name-select .select-items-container .select-add-item').should('have.length', 1)
+      cy.get('.name-select .select-items-container .select-add-item').click()
+
+      cy.getTestId('active-health-switch').check({ force: true })
+      cy.getTestId('passive-health-switch').check({ force: true })
+
+      cy.getTestId('active-healthcheck-interval').should('have.value', '5')
+      cy.getTestId('active-healthcheck-successes').should('have.value', '5')
+      cy.getTestId('active-healthcheck-http-failures').should('have.value', '5')
+      cy.getTestId('active-healthcheck-unhealthy-interval').should('have.value', '5')
+      cy.getTestId('active-healthcheck-tcp-failures').should('have.value', '5')
+
+      cy.getTestId('passive-healthcheck-timeouts').should('have.value', '5')
+      cy.getTestId('passive-healthcheck-successes').should('have.value', '80')
+      cy.getTestId('passive-healthcheck-tcp-failures').should('have.value', '5')
+      cy.getTestId('passive-healthcheck-http-failures').should('have.value', '5')
+
+      cy.getTestId('form-submit').click()
+
+      cy.wait('@createUpstream').then((interception) => {
+        const { body: { healthchecks: { active, passive } } } = interception.request
+        expect(active.healthy.interval).to.equal(5)
+        expect(active.healthy.successes).to.equal(5)
+        expect(active.unhealthy.http_failures).to.equal(5)
+        expect(active.unhealthy.interval).to.equal(5)
+        expect(active.unhealthy.tcp_failures).to.equal(5)
+
+        expect(passive.unhealthy.timeouts).to.equal(5)
+        expect(passive.healthy.successes).to.equal(80)
+        expect(passive.unhealthy.tcp_failures).to.equal(5)
+        expect(passive.unhealthy.http_failures).to.equal(5)
+      })
+    })
+
+    it('Should set correct values for health checks when turned off', () => {
+      interceptFetchServices()
+      interceptFetchCertificates()
+      interceptGetUpstream(200, upstreamsKMResponseFull)
+      interceptValidate()
+      interceptUpdate()
+
+      cy.mount(UpstreamsForm, {
+        props: {
+          config: KMConfig,
+          upstreamId: 'c372844b-a78a-4317-a81f-0606ba317816',
+        },
+      })
+
+      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'], { timeout: 10000 })
+
+      cy.getTestId('active-health-switch').should('be.checked')
+      cy.getTestId('passive-health-switch').should('be.checked')
+
+      cy.getTestId('active-health-switch').uncheck({ force: true })
+      cy.getTestId('passive-health-switch').uncheck({ force: true })
+
+      cy.getTestId('form-submit').click()
+
+      cy.wait('@updateUpstream').then((interception) => {
+        const { body: { healthchecks } } = interception.request
+        expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"https","headers":{},"healthy":{"interval":0,"successes":0},"unhealthy":{"interval":0,"http_failures":0,"tcp_failures":0}},"passive":{"type":"http","healthy":{"successes":0},"unhealthy":{"timeouts":0,"tcp_failures":0,"http_failures":0}}}'))
+      })
     })
   })
 })
