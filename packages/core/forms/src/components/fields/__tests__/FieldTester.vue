@@ -3,6 +3,7 @@
     <h3>Field Tester</h3>
 
     <KButton
+      class="tester-update-button"
       data-testid="tester-update-button"
       @click="handleUpdate"
     >
@@ -122,6 +123,10 @@ const handleUpdate = (): void => {
     pre {
       margin: 0;
     }
+  }
+
+  .tester-update-button {
+    margin-bottom: 16px;
   }
 
   .field-tester-form-model {
