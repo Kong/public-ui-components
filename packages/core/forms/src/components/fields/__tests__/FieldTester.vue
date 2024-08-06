@@ -131,6 +131,7 @@ const handleUpdate = (): void => {
     text-align: center;
 
     &-row {
+      align-items: center;
       display: flex;
       gap: 40px;
 
