@@ -7,7 +7,7 @@
       data-testid="tester-update-button"
       @click="handleUpdate"
     >
-      Update Model
+      Programmatically Update Model
     </KButton>
 
     <VueFormGenerator
@@ -20,33 +20,9 @@
 
     <h3>Value Displays</h3>
 
-    <p>
-      <KLabel>
-        Prop - Schema:
-      </KLabel>
-      <br>
-      <code data-testid="field-tester-prop-schema"><pre>{{ JSON.stringify(schema, null, 2) }}</pre></code>
-    </p>
-
-    <p>
-      <KLabel>
-        Prop - Model:
-      </KLabel>
-      <br>
-      <code data-testid="field-tester-prop-model"><pre>{{ JSON.stringify(model, null, 2) }}</pre></code>
-    </p>
-
-    <p>
-      <KLabel>
-        Prop - Modified Model:
-      </KLabel>
-      <br>
-      <code data-testid="field-tester-prop-modified-model"><pre>{{ JSON.stringify(modifiedModel, null, 2) }}</pre></code>
-    </p>
-
     <div>
       <KLabel>
-        Form Model:
+        Form Model (setup ref)
       </KLabel>
       <div class="field-tester-form-model">
         <div class="field-tester-form-model-row">
@@ -72,6 +48,24 @@
         </div>
       </div>
     </div>
+
+    <p>
+      <KCollapse trigger-label="Show/hide schema (prop)">
+        <code data-testid="field-tester-prop-schema"><pre>{{ JSON.stringify(schema, null, 2) }}</pre></code>
+      </KCollapse>
+    </p>
+
+    <p>
+      <KCollapse trigger-label="Show/hide model (prop)">
+        <code data-testid="field-tester-prop-model"><pre>{{ JSON.stringify(model, null, 2) }}</pre></code>
+      </KCollapse>
+    </p>
+
+    <p>
+      <KCollapse trigger-label="Show/hide modifiedModel (prop)">
+        <code data-testid="field-tester-prop-modified-model"><pre>{{ JSON.stringify(modifiedModel, null, 2) }}</pre></code>
+      </KCollapse>
+    </p>
   </div>
 </template>
 
