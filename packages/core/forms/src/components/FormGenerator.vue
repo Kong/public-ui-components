@@ -138,8 +138,8 @@
 
 <script>
 /**
- * @typedef {import('../types').FGCollapsibleOptions} FGCollapsibleOptions
- * @typedef {import('../types').FGSlots} FGSlots
+ * @typedef {import('../types/form-generator').FGCollapsibleOptions} FGCollapsibleOptions
+ * @typedef {import('../types/form-generator').FGSlots} FGSlots
  *
  * @typedef PartialGroup
  * @prop {FGCollapsibleOptions=} collapsible
