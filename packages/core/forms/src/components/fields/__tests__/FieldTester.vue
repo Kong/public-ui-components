@@ -117,7 +117,7 @@ const handleUpdate = (): void => {
     border: 1px solid #ddd;
     border-radius: 4px;
     display: block;
-    padding: 0.5rem;
+    padding: 8px;
 
     pre {
       margin: 0;
@@ -128,7 +128,7 @@ const handleUpdate = (): void => {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 8px;
     text-align: center;
 
     &-row {
@@ -141,7 +141,7 @@ const handleUpdate = (): void => {
 
       .second-col {
         /** code block padding + border */
-        margin-left: calc(1rem + 2px);
+        margin-left: calc(16px + 2px);
       }
     }
   }
