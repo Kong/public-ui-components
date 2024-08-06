@@ -1,59 +1,92 @@
 <template>
-  <div class="sandbox-container">
-    <h3>Controls</h3>
-    <KInput
-      v-model="defaultVal"
-      label="Default"
-      readonly
-    />
-    <KInput
-      v-model="newVal"
-      label="New Value"
+  <div class="field-tester-container">
+    <h3>Field Tester</h3>
+    <VueFormGenerator
+      :model="updatedFormModel"
+      :schema="schema"
+      @model-updated="(model: Record<string, any>, key: string) => handleModelUpdated(model, key)"
     />
 
-    <button @click="setNewVal">
+    <hr>
+
+    <button
+      data-testid="tester-update-button"
+      @click="handleUpdate"
+    >
       Update Model
     </button>
 
-    <h3>My Form</h3>
-    <VueFormGenerator
-      :model="formModel"
-      :schema="formSchema"
-      @model-updated="(model: Record<string, any>, schema: string) => handleModelUpdated(model, schema)"
-    />
+    <h3>Value Displays</h3>
 
-    <code>{{ formModel }}</code>
+    <p>
+      <label>
+        Prop - Schema:
+      </label>
+      <code data-testid="field-tester-prop-schema">{{ schema }}</code>
+    </p>
+
+    <p>
+      <label>
+        Prop - Model:
+      </label>
+      <code data-testid="field-tester-prop-model">{{ model }}</code>
+    </p>
+
+    <p>
+      <label>
+        Prop - Modified Model:
+      </label>
+      <code data-testid="field-tester-prop-modified-model">{{ modifiedModel }}</code>
+    </p>
+
+    <div>
+      <label>
+        Form Model:
+      </label>
+      <div
+        v-for="fieldKey in Object.keys(updatedFormModel)"
+        :key="`${fieldKey}-field`"
+      >
+        <label :data-testid="`field-tester-form-model-${fieldKey}-label`">{{ fieldKey }}</label>
+        <div :data-testid="`field-tester-form-model-${fieldKey}-value`">
+          {{ updatedFormModel[fieldKey] }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, type PropType } from 'vue'
+import type { FormSchema } from '../src/types'
 
-const formSchema = ref({
-  fields: [
-    {
-      type: 'input',
-      model: 'cat_name',
-      inputType: 'text',
-      label: 'Cat Name',
-    },
-  ],
+const props = defineProps({
+  schema: {
+    type: Object as PropType<FormSchema>,
+    default: () => ({
+      fields: [],
+    }),
+  },
+  model: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => ({}),
+  },
+  modifiedModel: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => ({}),
+  },
 })
 
-// test value displays on load
-const defaultVal = ref('TK Meowstersmith')
-const newVal = ref('')
-const formModel = ref<Record<string, any>>({
-  cat_name: defaultVal.value,
-})
+// verify value displays on load
+const updatedFormModel = ref<Record<string, any>>(props.model)
 
-// verify model updated reflects text input events
-const handleModelUpdated = (model: Record<string, any>, schema: string): void => {
-  formModel.value[schema] = model
+// verify model updated reflects input events
+const handleModelUpdated = (model: Record<string, any>, key: string): void => {
+  updatedFormModel.value[key] = model
 }
 
-// test programmatic updates to model
-const setNewVal = (): void => {
-  formModel.value.cat_name = newVal.value
+// verify programmatic updates to model
+const handleUpdate = (): void => {
+  updatedFormModel.value = props.modifiedModel
 }
 </script>

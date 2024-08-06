@@ -1,7 +1,6 @@
 // Import types for custom commands
 /// <reference types="../../../../../cypress/support" />
 
-import { mount } from 'cypress/vue'
 import type { FormSchema } from '../../../types'
 import FieldTester from './FieldTester.vue'
 
@@ -20,7 +19,7 @@ describe('<FieldTester /> - FieldInput', () => {
   }
 
   it('renders default state correctly - without model', () => {
-    mount(FieldTester, {
+    cy.mount(FieldTester, {
       props: {
         schema,
       },
@@ -28,9 +27,12 @@ describe('<FieldTester /> - FieldInput', () => {
 
     cy.get('.field-tester-container').should('exist')
 
+    // check VFG input value
+    cy.get(`#${fieldKey}`).should('be.visible')
+    cy.get(`#${fieldKey}`).should('have.value', '')
+
     // initial model is empty after load
-    cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('be.visible')
-    cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('contain.text', '')
+    cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('not.exist')
 
     // check VFG label is set correctly
     cy.get(`.form-group-label[for="${fieldKey}"]`).should('be.visible')
@@ -38,7 +40,7 @@ describe('<FieldTester /> - FieldInput', () => {
   })
 
   it('renders default state correctly - with model', () => {
-    mount(FieldTester, {
+    cy.mount(FieldTester, {
       props: {
         schema,
         model: {
@@ -60,7 +62,7 @@ describe('<FieldTester /> - FieldInput', () => {
 
   it('handles input changes', () => {
     const editText = ' the Second'
-    mount(FieldTester, {
+    cy.mount(FieldTester, {
       props: {
         schema,
         model: {
@@ -71,13 +73,12 @@ describe('<FieldTester /> - FieldInput', () => {
 
     cy.get('.field-tester-container').should('exist')
 
-    // Check for input element
-    cy.get(`#${fieldKey}`).should('be.visible')
     // edit the input value
+    cy.get(`#${fieldKey}`).should('be.visible')
     cy.get(`#${fieldKey}`).type(editText)
+
     // check VFG input value
     cy.get(`#${fieldKey}`).should('have.value', fieldValue + editText)
-
     // check field test form model
     cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('contain.text', fieldValue + editText)
   })
@@ -85,7 +86,7 @@ describe('<FieldTester /> - FieldInput', () => {
   it('handles programmatic input changes', () => {
     const updatedFieldValue = 'TK Meowstersmith Jr.'
 
-    mount(FieldTester, {
+    cy.mount(FieldTester, {
       props: {
         schema,
         model: {
@@ -104,12 +105,11 @@ describe('<FieldTester /> - FieldInput', () => {
     cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('contain.text', fieldValue)
 
     // programmatic update
-    cy.getTestId('update-button').should('be.visible')
-    cy.getTestId('update-button').click()
+    cy.getTestId('tester-update-button').should('be.visible')
+    cy.getTestId('tester-update-button').click()
 
     // check VFG input value
     cy.get(`#${fieldKey}`).should('have.value', updatedFieldValue)
-
     // check field test form model also matches
     cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('contain.text', updatedFieldValue)
   })
