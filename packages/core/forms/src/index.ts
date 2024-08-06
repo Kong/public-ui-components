@@ -1,5 +1,4 @@
 import type { App } from 'vue'
-import Kongponents from '@kong/kongponents'
 import VueFormGenerator from './components/FormGenerator.vue'
 import * as sharedForms from './components/forms'
 
@@ -7,7 +6,6 @@ import * as sharedForms from './components/forms'
 export default {
   install: (app: App): void => {
     app.component('VueFormGenerator', VueFormGenerator)
-    app.use(Kongponents)
   },
 }
 
