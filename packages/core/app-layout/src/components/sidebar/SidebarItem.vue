@@ -6,13 +6,12 @@
     <component
       :is="!useAnchorTag ? 'router-link' : 'div'"
       v-slot="slotProps"
-      :aria-current="!useAnchorTag ? item.active : undefined"
+      :aria-current="item.active ? 'page' : undefined"
       :custom="!useAnchorTag ? true : undefined"
       :to="!useAnchorTag && !openInNewWindow ? item.to : undefined"
     >
       <a
         :aria-controls="(item as SidebarPrimaryItem).items?.length && (item as SidebarPrimaryItem).expanded ? `subnav-${(item as SidebarPrimaryItem).key}` : undefined"
-        :aria-current="item.active"
         :aria-expanded="(item as SidebarPrimaryItem).items?.length && (item as SidebarPrimaryItem).expanded ? true : undefined"
         class="sidebar-item-link"
         :class="{ 'sidebar-item-external-link': openInNewWindow, 'router-link': !useAnchorTag }"
