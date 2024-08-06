@@ -1,6 +1,14 @@
 <template>
   <div class="field-tester-container">
     <h3>Field Tester</h3>
+
+    <KButton
+      data-testid="tester-update-button"
+      @click="handleUpdate"
+    >
+      Update Model
+    </KButton>
+
     <VueFormGenerator
       :model="updatedFormModel"
       :schema="schema"
@@ -9,47 +17,57 @@
 
     <hr>
 
-    <button
-      data-testid="tester-update-button"
-      @click="handleUpdate"
-    >
-      Update Model
-    </button>
-
     <h3>Value Displays</h3>
 
     <p>
-      <label>
+      <KLabel>
         Prop - Schema:
-      </label>
-      <code data-testid="field-tester-prop-schema">{{ schema }}</code>
+      </KLabel>
+      <br>
+      <code data-testid="field-tester-prop-schema"><pre>{{ JSON.stringify(schema, null, 2) }}</pre></code>
     </p>
 
     <p>
-      <label>
+      <KLabel>
         Prop - Model:
-      </label>
-      <code data-testid="field-tester-prop-model">{{ model }}</code>
+      </KLabel>
+      <br>
+      <code data-testid="field-tester-prop-model"><pre>{{ JSON.stringify(model, null, 2) }}</pre></code>
     </p>
 
     <p>
-      <label>
+      <KLabel>
         Prop - Modified Model:
-      </label>
-      <code data-testid="field-tester-prop-modified-model">{{ modifiedModel }}</code>
+      </KLabel>
+      <br>
+      <code data-testid="field-tester-prop-modified-model"><pre>{{ JSON.stringify(modifiedModel, null, 2) }}</pre></code>
     </p>
 
     <div>
-      <label>
+      <KLabel>
         Form Model:
-      </label>
-      <div
-        v-for="fieldKey in Object.keys(updatedFormModel)"
-        :key="`${fieldKey}-field`"
-      >
-        <label :data-testid="`field-tester-form-model-${fieldKey}-label`">{{ fieldKey }}</label>
-        <div :data-testid="`field-tester-form-model-${fieldKey}-value`">
-          {{ updatedFormModel[fieldKey] }}
+      </KLabel>
+      <div class="field-tester-form-model">
+        <div class="field-tester-form-model-row">
+          <KLabel class="first-col">
+            Field Key
+          </KLabel>
+          <KLabel class="second-col">
+            Field Value
+          </KLabel>
+        </div>
+        <div
+          v-for="fieldKey in Object.keys(updatedFormModel)"
+          :key="`${fieldKey}-field`"
+          class="field-tester-form-model-row"
+        >
+          <code
+            class="first-col"
+            :data-testid="`field-tester-form-model-${fieldKey}-label`"
+          >{{ fieldKey }}</code>
+          <div :data-testid="`field-tester-form-model-${fieldKey}-value`">
+            {{ updatedFormModel[fieldKey] }}
+          </div>
         </div>
       </div>
     </div>
@@ -91,3 +109,41 @@ const handleUpdate = (): void => {
   updatedFormModel.value = props.modifiedModel
 }
 </script>
+
+<style lang="scss" scoped>
+.field-tester-container {
+  code {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: block;
+    padding: 0.5rem;
+
+    pre {
+      margin: 0;
+    }
+  }
+
+  .field-tester-form-model {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 0.5rem;
+    text-align: center;
+
+    &-row {
+      display: flex;
+      gap: 40px;
+
+      .first-col {
+        width: 25%;
+      }
+
+      .second-col {
+        /** code block padding + border */
+        margin-left: calc(1rem + 2px);
+      }
+    }
+  }
+}
+</style>

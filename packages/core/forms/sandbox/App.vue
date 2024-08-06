@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import FieldTester from './FieldTester.vue'
+import { FieldTester } from '../src'
 // dummy data
 import schema from './schema.json'
 import model from './model.json'
@@ -49,3 +49,11 @@ const fieldModelModified = ref({
   cat_name: 'TK Meowstersmith, Esq.',
 })
 </script>
+
+<style lang="scss" scoped>
+.sandbox-container {
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+}
+</style>
