@@ -1,13 +1,13 @@
 <template>
-  <div class="form-field-wrapper">
+  <div class="form-field-wrapper field-checkbox">
     <KCheckbox
       v-bind="$attrs"
       :id="getFieldID(schema)"
+      v-model="inputValue"
       :autocomplete="schema.autocomplete"
       :class="schema.fieldClasses"
-      :disabled="disabled || null"
+      :disabled="disabled || undefined"
       :help="hint ? hint : undefined"
-      :model-value="inputValue"
       :name="schema.inputName"
       :readonly="schema.readonly"
       :required="schema.required"
@@ -75,8 +75,8 @@ defineExpose({
 })
 </script>
 
-<style lang="scss">
-.vue-form-generator .field-checkbox input {
+<style lang="scss" scoped>
+.field-checkbox input {
   margin-left: 12px;
 }
 </style>
