@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { getPluginIconURL } from '../definitions/metadata'
 
 const props = defineProps({
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const img = ref<HTMLImageElement>()
-const iconSrc = getPluginIconURL(props.name)
+const iconSrc = computed(() => getPluginIconURL(props.name))
 
 const onError = () => {
   const defaultIcon = new URL('../assets/images/plugin-icons/missing.png', import.meta.url).href // only need to compute it when icon URL is invalid
