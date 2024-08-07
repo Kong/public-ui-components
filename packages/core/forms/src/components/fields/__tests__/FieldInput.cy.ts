@@ -1,5 +1,5 @@
 import type { FormSchema } from '../../../types'
-import FieldTester from './FieldTester.vue'
+import FieldTester from '../../../../sandbox/FieldTester.vue'
 
 describe('<FieldTester /> - FieldInput', () => {
   const fieldKey = 'cat_name'

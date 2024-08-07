@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { FieldTester } from '../src'
+import FieldTester from './FieldTester.vue'
 // dummy data
 import schema from './schema.json'
 import model from './model.json'

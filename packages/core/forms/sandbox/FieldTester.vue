@@ -71,8 +71,8 @@
 
 <script setup lang="ts">
 import { ref, type PropType } from 'vue'
-import type { FormSchema } from '../../../types'
-import VueFormGenerator from '../../FormGenerator.vue'
+import type { FormSchema } from '../src/types'
+import VueFormGenerator from '../src/components/FormGenerator.vue'
 
 const props = defineProps({
   schema: {

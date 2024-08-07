@@ -1,7 +1,6 @@
 import type { App } from 'vue'
 import VueFormGenerator from './components/FormGenerator.vue'
 import * as sharedForms from './components/forms'
-import FieldTester from './components/fields/__tests__/FieldTester.vue'
 
 // Export Vue plugin as the default
 export default {
@@ -11,7 +10,7 @@ export default {
 }
 
 export { customFields } from './components/fields/exports'
-export { VueFormGenerator, sharedForms, FieldTester }
+export { VueFormGenerator, sharedForms }
 
 export const getSharedFormName = (modelName: string): string => {
   const mapping:Record<string, string> = {
