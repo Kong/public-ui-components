@@ -48,17 +48,28 @@ const fieldSchema = {
       id: 'is_friendly',
       label: 'Is Friendly',
     },
+    // FieldSwitch
+    {
+      type: 'switch',
+      model: 'is_cute',
+      label: 'Is Cute',
+      textOn: 'Cute',
+      textOff: 'Not Cute',
+      styleClasses: 'field-switch hide-label',
+    },
   ],
 }
 
 const fieldModelDefault = ref({
   cat_name: 'TK Meowstersmith',
   is_friendly: true,
+  is_cute: true,
 })
 
 const fieldModelModified = ref({
-  cat_name: 'TK Meowstersmith, Esq.',
+  cat_name: 'BratCat',
   is_friendly: false,
+  is_cute: false,
 })
 </script>
 

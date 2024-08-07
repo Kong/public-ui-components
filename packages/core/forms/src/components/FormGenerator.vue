@@ -516,55 +516,6 @@ export default {
     font-style: italic;
   } // .hint
 
-  /* Toggle Switch
-========================================================================== */
-  .field-switch {
-    .field-wrap {
-      input[type="checkbox"] {
-        position: absolute;
-        &:checked ~ .label {
-          background-color: $kui-color-background-primary;
-          box-shadow: none;
-        }
-        &:checked ~ .handle {
-          left: calc(100% - 22px);
-        }
-      }
-      label {
-        box-shadow: none;
-        height: 24px;
-        margin: 0;
-        width: 44px;
-      }
-    }
-    .label {
-      box-shadow: none;
-      &:before,
-      &:after {
-        color: rgba(0, 0, 0, 0.7);
-        font-size: 14px;
-        font-weight: normal;
-        left: 18px;
-        margin-left: 42px;
-        text-shadow: none;
-        text-transform: none;
-        width: max-content;
-      }
-    }
-    .handle {
-      background: #fff;
-      box-shadow: none;
-      height: 20px;
-      left: 2px;
-      top: 2px;
-      width: 20px;
-      &:before {
-        background: none;
-        box-shadow: none;
-      }
-    }
-  }
-
   .kong-form-new-element-button-label {
     margin-bottom: $kui-space-80!important;
     margin-top: $kui-space-80!important;
