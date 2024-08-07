@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.4.0...@kong-ui-public/entities-plugins@8.4.1) (2024-08-07)
+
+
+### Bug Fixes
+
+* **plugins:** ai-semantic-caching rename ([#1537](https://github.com/Kong/public-ui-components/issues/1537)) ([72b70de](https://github.com/Kong/public-ui-components/commit/72b70de8dd95a1e9160d5c8ebb96643c8cfeeb62))
+
+
+
+
+
 # [8.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.3.5...@kong-ui-public/entities-plugins@8.4.0) (2024-08-07)
 
 
