@@ -48,6 +48,14 @@
             >
               {{ schema.fields[0].schema.hint }}
             </p>
+
+            <!-- autofill -->
+            <component
+              :is="autofillSlot"
+              :schema="(schema.fields && schema.fields[0].schema) || schema.values"
+              :update="(val) => value[index] = val"
+              :value="value[index]"
+            />
           </div>
           <hr class="wide-divider">
         </div>
@@ -86,12 +94,19 @@
 
 <script>
 import { TrashIcon } from '@kong/icons'
+import { AUTOFILL_SLOT } from '../../const'
 import abstractField from './abstractField'
 export default {
   components: {
     TrashIcon,
   },
   mixins: [abstractField],
+  inject: {
+    autofillSlot: {
+      from: AUTOFILL_SLOT,
+      default: undefined,
+    },
+  },
   emits: ['model-updated'],
   data() {
     return {

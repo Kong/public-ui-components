@@ -17,7 +17,18 @@
         :form-schema="formSchema"
         :is-editing="editing"
         :on-model-updated="onModelUpdated"
-      />
+      >
+        <template
+          v-if="enableVaultSecretPicker"
+          #[AUTOFILL_SLOT_NAME]="slotProps: AutofillSlotProps"
+        >
+          <VaultSecretPickerProvider
+            v-if="slotProps.schema.referenceable"
+            v-bind="slotProps"
+            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+          />
+        </template>
+      </component>
 
       <VueFormGenerator
         v-if="!sharedFormName && (formModel.id && editing || !editing)"
@@ -39,18 +50,38 @@
         >
           <PluginFieldRuleAlerts :rules="PLUGIN_METADATA[formModel.name].fieldRules!" />
         </template>
+
+        <template
+          v-if="enableVaultSecretPicker"
+          #[AUTOFILL_SLOT_NAME]="slotProps: AutofillSlotProps"
+        >
+          <VaultSecretPickerProvider
+            v-if="slotProps.schema.referenceable"
+            v-bind="slotProps"
+            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+          />
+        </template>
       </VueFormGenerator>
     </div>
   </div>
+
+  <VaultSecretPicker
+    :config="props.config"
+    :setup="vaultSecretPickerSetup"
+    @cancel="() => vaultSecretPickerSetup = false"
+    @proceed="handleVaultSecretPickerAutofill"
+  />
 </template>
 
 <script lang="ts">
 import { useAxios, useHelpers } from '@kong-ui-public/entities-shared'
 import {
+  AUTOFILL_SLOT_NAME,
   FORMS_API_KEY,
   customFields,
   getSharedFormName,
   sharedForms,
+  type AutofillSlotProps,
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
@@ -65,6 +96,8 @@ import {
   type PluginEntityInfo,
 } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
+import VaultSecretPicker from './VaultSecretPicker.vue'
+import VaultSecretPickerProvider from './VaultSecretPickerProvider.vue'
 
 // Must explicitly specify these as components since they are rendered dynamically
 export default defineComponent({
@@ -128,6 +161,13 @@ const props = defineProps({
    * Plugin credential form
    */
   credential: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Control if the vault secret picker is enabled for applicable fields. (referenceable = true)
+   */
+  enableVaultSecretPicker: {
     type: Boolean,
     default: false,
   },
@@ -235,6 +275,17 @@ const formSchema = ref<Record<string, any>>({})
 const originalModel = reactive<Record<string, any>>({})
 const formModel = reactive<Record<string, any>>({})
 const formOptions = computed(() => form.value?.options)
+
+const vaultSecretPickerSetup = ref<string | false>(false)
+const vaultSecretPickerAutofillAction = ref<(secretRef: string) => void | undefined>()
+const setUpVaultSecretPicker = (setupValue: string, autofillAction: (secretRef: string) => void) => {
+  vaultSecretPickerSetup.value = setupValue ?? ''
+  vaultSecretPickerAutofillAction.value = autofillAction
+}
+const handleVaultSecretPickerAutofill = (secretRef: string) => {
+  vaultSecretPickerAutofillAction.value?.(secretRef)
+  vaultSecretPickerSetup.value = false
+}
 
 // This function transforms the form data into the correct structure to be submitted to the API
 const getModel = (): Record<string, any> => {
@@ -651,7 +702,8 @@ onBeforeMount(() => {
     transition: opacity 0.5s;
   }
 
-  .fade-enter-from, .fade-leave-to {
+  .fade-enter-from,
+  .fade-leave-to {
     opacity: 0;
   }
 
@@ -665,7 +717,7 @@ onBeforeMount(() => {
   }
 
   :deep(.vue-form-generator) {
-    > fieldset {
+    >fieldset {
       .form-group:last-child {
         margin-bottom: 0;
       }
@@ -685,7 +737,7 @@ onBeforeMount(() => {
     .field-switch {
       #enabled {
         &:not(:checked) {
-          & + .label {
+          &+.label {
             background-color: $kui-color-background-neutral-weak;
           }
         }

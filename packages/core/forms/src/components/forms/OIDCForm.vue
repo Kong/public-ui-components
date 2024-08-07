@@ -13,12 +13,15 @@
       <template #common>
         <div class="general-settings">
           <div class="link-wrapper">
-            <KExternalLink href="https://docs.konghq.com/hub/kong-inc/openid-connect/#important-configuration-parameters">
+            <KExternalLink
+              href="https://docs.konghq.com/hub/kong-inc/openid-connect/#important-configuration-parameters"
+            >
               <span class="section-header">Common Configuration Settings</span>
             </KExternalLink>
           </div>
           <div class="description">
-            Parameters for enabling the OpenID Connect plugin. Set these parameters before adding authorization, authentication, or other advanced configuration details.
+            Parameters for enabling the OpenID Connect plugin. Set these parameters before adding authorization,
+            authentication, or other advanced configuration details.
           </div>
           <VueFormGenerator
             v-if="displayForm"
@@ -66,7 +69,14 @@
             :options="formOptions"
             :schema="authFieldsSchema"
             @model-updated="onModelUpdated"
-          />
+          >
+            <template #autofill-provider="slotProps">
+              <slot
+                name="autofill-provider"
+                v-bind="slotProps"
+              />
+            </template>
+          </VueFormGenerator>
         </div>
       </template>
       <template #advanced>
@@ -93,14 +103,36 @@
 </template>
 
 <script>
+import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
 import VueFormGenerator from '../FormGenerator.vue'
-import OIDCAdvancedSchema from './schemas/OIDCAdvanced.js'
-import OIDCAuthSchema from './schemas/OIDCAuth'
-import OIDCCommonSchema from './schemas/OIDCCommon'
+
+const COMMON_FIELD_MODELS = new Set([
+  'config-client_id',
+  'config-client_secret',
+  'config-issuer',
+])
+
+const AUTH_FIELD_MODELS = new Set([
+  'config-scopes_claim',
+  'config-scopes_required',
+  'config-audience_claim',
+  'config-audience_required',
+  'config-roles_claim',
+  'config-roles_required',
+  'config-groups_claim',
+  'config-groups_required',
+  'config-authenticated_groups_claim',
+])
 
 export default {
   name: 'OIDCForm',
   components: { VueFormGenerator },
+  provide() {
+    // Provide AUTOFILL_SLOT
+    return {
+      [AUTOFILL_SLOT]: this.$slots?.[AUTOFILL_SLOT_NAME],
+    }
+  },
   props: {
     formModel: {
       type: Object,
@@ -112,7 +144,7 @@ export default {
     },
     formOptions: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     onModelUpdated: {
       type: Function,
@@ -177,38 +209,76 @@ export default {
           }),
         }
 
-        // init schema for autoconfig tab
+        const fieldMap = this.formSchema.fields.reduce((m, f) => {
+          m[f.model] = f
+          return m
+        }, {})
+
         this.commonFieldsSchema = {
-          ...OIDCCommonSchema,
+          fields: Array.from(COMMON_FIELD_MODELS)
+            .reduce((fields, model) => {
+              const field = fieldMap[model]
+              if (field) {
+                fields.push(fieldMap[model])
+              }
+              return fields
+            }, []),
         }
 
         this.authFieldsSchema = {
-          ...OIDCAuthSchema,
+          fields: Array.from(AUTH_FIELD_MODELS)
+            .reduce((fields, model) => {
+              const field = fieldMap[model]
+              if (field) {
+                fields.push(fieldMap[model])
+              }
+              return fields
+            }, []),
         }
 
-        // strip out all fields not already visible
-        // use this for advanced tab
-        this.advancedFieldsSchema.fields = this.formSchema.fields.filter(r => {
-          return (r.model.startsWith('config') && !this.commonFieldsSchema.fields.filter(field => {
-            return field.model === r.model
-          }).length && !this.authFieldsSchema.fields.filter(field => {
-            return field.model === r.model
-          }).length) || r.model === 'tags'
-        })
+        this.advancedFieldsSchema = {
+          fields: this.formSchema.fields
+            .filter(field =>
+              (field.model.startsWith('config')
+                && field.model !== 'config-auth_methods'
+                && !COMMON_FIELD_MODELS.has(field.model)
+                && !AUTH_FIELD_MODELS.has(field.model))
+              || field.model === 'tags',
+            )
+            .reduce((fields, field) => {
+              switch (field.model) {
+                case 'config-client_jwk': {
+                  if (Array.isArray(field.items?.schema?.fields)) {
+                    for (const itemField of field.items.schema.fields) {
+                      itemField.label = itemField.model
+                    }
+                  }
 
-        this.advancedFieldsSchema.fields = this.advancedFieldsSchema.fields.map(item => {
-          const findElement = OIDCAdvancedSchema.fields.find(i => i.model === item.model)
+                  fields.push({
+                    ...field,
+                    link: 'https://docs.konghq.com/hub/kong-inc/openid-connect/#jwk-record',
+                    newElementButtonLabel: '+ Add Client JWK',
+                    ...Array.isArray(field.items?.schema?.fields)
+                    && field.items.schema.fields.map(itemField => ({ ...itemField, label: itemField.model })),
+                  })
+                  break
+                }
+                case 'config-session_redis_cluster_nodes': {
+                  fields.push({
+                    ...field,
+                    link: 'https://docs.konghq.com/hub/kong-inc/openid-connect/#host-record',
+                    newElementButtonLabel: '+ Add Cluster Node',
+                  })
+                  break
+                }
+                default: {
+                  fields.push(field)
+                }
+              }
 
-          if (findElement) {
-            return findElement
-          }
-
-          return item
-        })
-
-        this.commonFieldsSchema.fields = this.commonFieldsSchema.fields.filter(r => {
-          return r.model !== 'config-auth_methods'
-        })
+              return fields
+            }, []),
+        }
 
         // Use checkboxes for auth methods
         this.sessionManagement = this.isEditing ? this.formModel['config-auth_methods'].includes('session') : false
@@ -255,18 +325,13 @@ export default {
           hint: 'OAuth refresh token grant',
           prop: this.isEditing ? this.formModel['config-auth_methods'].includes('refresh_token') : false,
         }]
-      }
 
-      const fieldMap = {}
-      for (const field of this.formSchema.fields) {
-        fieldMap[field.model] = field
-      }
-
-      for (const s of [this.commonFieldsSchema, this.authFieldsSchema, this.advancedFieldsSchema]) {
-        for (const f of s.fields) {
-          const help = fieldMap[f.model]?.help
-          if (f.help === undefined && typeof help === 'string') {
-            f.help = help
+        for (const s of [this.commonFieldsSchema, this.authFieldsSchema, this.advancedFieldsSchema]) {
+          for (const f of s.fields) {
+            const help = fieldMap[f.model]?.help
+            if (f.help === undefined && typeof help === 'string') {
+              f.help = help
+            }
           }
         }
       }
