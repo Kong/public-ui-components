@@ -6,6 +6,7 @@
     <component
       :is="!useAnchorTag ? 'router-link' : 'div'"
       v-slot="slotProps"
+      :aria-current="item.active ? 'page' : undefined"
       :custom="!useAnchorTag ? true : undefined"
       :to="!useAnchorTag && !openInNewWindow ? item.to : undefined"
     >
