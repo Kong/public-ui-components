@@ -5,7 +5,7 @@
       :id="getFieldID(schema)"
       :autocomplete="schema.autocomplete"
       :class="schema.fieldClasses"
-      :disabled="disabled || null"
+      :disabled="disabled || undefined"
       :help="hint ? hint : inputType === 'color' || inputType === 'range' ? inputValue : undefined"
       :max="schema.max"
       :maxlength="schema.maxlength"
