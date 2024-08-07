@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.15...@kong-ui-public/forms@4.1.0) (2024-08-07)
+
+
+### Features
+
+* vault secret picker [KM-307] ([#1503](https://github.com/Kong/public-ui-components/issues/1503)) ([697f238](https://github.com/Kong/public-ui-components/commit/697f2383b2b79e2c6f0cfabde97aa13f9be28577))
+
+
+
+
+
 ## [4.0.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.14...@kong-ui-public/forms@4.0.15) (2024-08-05)
 
 

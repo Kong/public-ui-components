@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.5.4...@kong-ui-public/entities-shared@3.6.0) (2024-08-07)
+
+
+### Features
+
+* vault secret picker [KM-307] ([#1503](https://github.com/Kong/public-ui-components/issues/1503)) ([697f238](https://github.com/Kong/public-ui-components/commit/697f2383b2b79e2c6f0cfabde97aa13f9be28577))
+
+
+
+
+
 ## [3.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.5.3...@kong-ui-public/entities-shared@3.5.4) (2024-08-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
