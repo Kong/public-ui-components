@@ -555,7 +555,6 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     initialFormSchema[field] = { id: field, model: key } // each field's key will be set as the id
     initialFormSchema[field].type = scheme.type === 'boolean' ? 'checkbox' : 'input'
     initialFormSchema[field].required = scheme.required
-    initialFormSchema[field].values = scheme.values
     initialFormSchema[field].referenceable = scheme.referenceable
 
     if (field.startsWith('config-')) {
@@ -612,6 +611,10 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     // map -> object-advanced
     if (scheme.type === 'map') {
       initialFormSchema[field].type = 'object-advanced'
+
+      // Passing `values` to this field in the generated schema for autofill providers
+      // Note: `values` may contain `referenceable` flag.
+      initialFormSchema[field].values = scheme.values
 
       if (scheme.values.type === 'array') {
         const { type: elementsType } = scheme.values.elements || {}
