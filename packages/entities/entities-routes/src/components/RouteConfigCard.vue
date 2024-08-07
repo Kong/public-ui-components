@@ -276,13 +276,13 @@ const configSchema = ref<RouteConfigurationSchema>({
   paths: {
     section: ConfigurationSchemaSection.Basic,
     tooltip: t('form.fields.paths.tooltip'),
-    type: ConfigurationSchemaType.BadgeTag,
+    type: ConfigurationSchemaType.CopyBadge,
     order: 8,
   },
   hosts: {
     section: ConfigurationSchemaSection.Basic,
     tooltip: t('form.fields.hosts.tooltipConfig'),
-    type: ConfigurationSchemaType.BadgeTag,
+    type: ConfigurationSchemaType.CopyBadge,
     order: 9,
   },
   snis: {
