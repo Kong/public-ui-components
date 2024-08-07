@@ -708,11 +708,11 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     useLegacyForm: true,
   },
-  'ai-semantic-caching': {
-    descriptionKey: 'plugins.meta.ai-semantic-caching.description',
+  'ai-semantic-cache': {
+    descriptionKey: 'plugins.meta.ai-semantic-cache.description',
     group: PluginGroup.AI,
     isEnterprise: true,
-    nameKey: 'plugins.meta.ai-semantic-caching.name',
+    nameKey: 'plugins.meta.ai-semantic-cache.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
     useLegacyForm: true,
   },

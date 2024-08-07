@@ -461,7 +461,7 @@
         "name": "AI Proxy Advanced",
         "description": "Route across different LLMs and models using advanced load balancing algorithms, including semantic routing."
       },
-      "ai-semantic-caching": {
+      "ai-semantic-cache": {
         "name": "AI Semantic Cache",
         "description": "Semantically cache AI requests to any LLM to reduce latency, improve end-user experiences and optimize GenAI costs."
       },
