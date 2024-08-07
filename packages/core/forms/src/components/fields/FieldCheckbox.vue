@@ -77,6 +77,6 @@ defineExpose({
 
 <style lang="scss" scoped>
 .field-checkbox input {
-  margin-left: 12px;
+  margin-left: $kui-space-50;
 }
 </style>

@@ -108,26 +108,26 @@ const handleUpdate = (): void => {
 <style lang="scss" scoped>
 .field-tester-container {
   code {
-    background-color: #f4f4f4;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    background-color: $kui-color-background-neutral-weakest;
+    border: $kui-border-width-10 solid $kui-color-border;
+    border-radius: $kui-border-radius-20;
     display: block;
-    padding: 8px;
+    padding: $kui-space-40;
 
     pre {
-      margin: 0;
+      margin: $kui-space-0;
     }
   }
 
   .tester-update-button {
-    margin-bottom: 16px;
+    margin-bottom: $kui-space-60;
   }
 
   .field-tester-form-model {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    margin-bottom: 8px;
+    gap: $kui-space-60;
+    margin-bottom: $kui-space-40;
     text-align: center;
 
     &-row {

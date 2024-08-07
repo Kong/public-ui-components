@@ -1,6 +1,3 @@
-// Import types for custom commands
-/// <reference types="../../../../../cypress/support" />
-
 import type { FormSchema } from '../../../types'
 import FieldTester from './FieldTester.vue'
 
