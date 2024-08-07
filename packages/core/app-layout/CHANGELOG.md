@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.2.19...@kong-ui-public/app-layout@4.2.20) (2024-08-07)
+
+
+### Bug Fixes
+
+* **app-layout:** add aria-current to sidebar links [KHCP-12832] ([#1534](https://github.com/Kong/public-ui-components/issues/1534)) ([7f691e9](https://github.com/Kong/public-ui-components/commit/7f691e90940275da9eeb5d07031e4ae4cd5518de))
+
+
+
+
+
 ## [4.2.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.2.18...@kong-ui-public/app-layout@4.2.19) (2024-08-02)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
