@@ -45,6 +45,8 @@ declare global {
       get(alias: '@vueWrapper'): Chainable<VueWrapper<ComponentPublicInstance<any>>>
       get<W extends VueWrapper<any>>(alias: '@vueWrapper'): Chainable<W>
       get<Component, Options = any>(alias: '@vueWrapper'): Chainable<MountedVueWrapperOf<Component, Options>>
+
+      assertValueCopiedToClipboard(value: string): Chainable
     }
   }
 }

@@ -10,6 +10,9 @@ import VueDevTools from 'vite-plugin-vue-devtools'
 import dns from 'dns'
 import path from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
+import monacoEditorPlugin from 'vite-plugin-monaco-editor'
+import topLevelAwait from 'vite-plugin-top-level-await'
+import wasm from 'vite-plugin-wasm'
 
 // You can set dns.setDefaultResultOrder('verbatim') to disable the reordering behavior. Vite will then print the address as localhost
 // https://vitejs.dev/config/server-options.html#server-host
@@ -46,6 +49,13 @@ export default defineConfig({
     vue(),
     vueJsx(),
     VueDevTools(),
+    ...(process.env.NODE_ENV === 'production' ? [] : [
+      wasm(),
+      topLevelAwait({
+        promiseExportName: 'asyncInit',
+      }),
+      monacoEditorPlugin({}),
+    ]),
   ],
   resolve: {
     // Use this option to force Vite to always resolve listed dependencies to the same copy (from project root)
