@@ -556,11 +556,11 @@ importers:
         specifier: 9.1.7
         version: 9.1.7(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
       monaco-editor:
-        specifier: 0.21.3
-        version: 0.21.3
+        specifier: 0.50.0
+        version: 0.50.0
       vite-plugin-monaco-editor:
         specifier: ^1.1.0
-        version: 1.1.0(monaco-editor@0.21.3)
+        version: 1.1.0(monaco-editor@0.50.0)
       vite-plugin-top-level-await:
         specifier: ^1.4.1
         version: 1.4.1(rollup@4.13.0)(vite@5.3.3(@types/node@18.19.39)(sass@1.77.8)(terser@5.26.0))
@@ -1739,7 +1739,6 @@ packages:
 
   '@evilmartians/lefthook@1.7.1':
     resolution: {integrity: sha512-Wp8DaTMHZM1tUV4Mow6nG+6zq+giruD5054zHmFIDLXlPQxqYxnZMqJg0aYxe16vYwqFmH6NIClEMRdtGucO0Q==}
-    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -6415,6 +6414,9 @@ packages:
 
   monaco-editor@0.21.3:
     resolution: {integrity: sha512-9N7wATLpi+googstvtm6IKg97vPQ77FDYEpkow5tLriM/VJ0DaTRyUP4UVzcoH7KlPDX+e/rE7/imcOUeGkT6g==}
+
+  monaco-editor@0.50.0:
+    resolution: {integrity: sha512-8CclLCmrRRh+sul7C08BmPBP3P8wVWfBHomsTcndxg5NRCEPfu/mc2AGU8k37ajjDVXcXFc12ORAMUkmk+lkFA==}
 
   mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
@@ -15611,6 +15613,8 @@ snapshots:
 
   monaco-editor@0.21.3: {}
 
+  monaco-editor@0.50.0: {}
+
   mri@1.2.0: {}
 
   mrmime@2.0.0: {}
@@ -18006,6 +18010,10 @@ snapshots:
   vite-plugin-monaco-editor@1.1.0(monaco-editor@0.21.3):
     dependencies:
       monaco-editor: 0.21.3
+
+  vite-plugin-monaco-editor@1.1.0(monaco-editor@0.50.0):
+    dependencies:
+      monaco-editor: 0.50.0
 
   vite-plugin-top-level-await@1.4.1(rollup@4.13.0)(vite@5.3.3(@types/node@18.19.39)(sass@1.77.8)(terser@5.26.0)):
     dependencies:
