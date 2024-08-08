@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.3.14...@kong-ui-public/expressions@0.4.0) (2024-08-08)
+
+
+### Features
+
+* add router playground [KM-299] ([#1497](https://github.com/Kong/public-ui-components/issues/1497)) ([b60b9bb](https://github.com/Kong/public-ui-components/commit/b60b9bbcd256f3666a1d4d2dca7976eaadbbd71e))
+
+
+
+
+
 ## [0.3.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.3.13...@kong-ui-public/expressions@0.3.14) (2024-08-02)
 
 **Note:** Version bump only for package @kong-ui-public/expressions

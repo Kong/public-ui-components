@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/expressions",
-  "version": "0.3.14",
+  "version": "0.4.0",
   "type": "module",
   "module": "./dist/expressions.es.js",
   "types": "dist/types/index.d.ts",
@@ -66,9 +66,9 @@
     "errorLimit": "2048KB"
   },
   "peerDependencies": {
+    "@kong-ui-public/forms": "workspace:^",
     "@kong/atc-router": "^1.6.0-rc.1",
     "@kong/kongponents": "^9.1.7",
-    "@kong-ui-public/forms": "workspace:^",
     "monaco-editor": "0.21.3",
     "vue": "^3.4.31"
   },
