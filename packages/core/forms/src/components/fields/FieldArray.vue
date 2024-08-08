@@ -60,7 +60,7 @@
         />
 
         <KInput
-          v-else-if="!schema.inputAttributes || !schema.inputAttributes.type || schema.inputAttributes.type === 'text'"
+          v-else-if="!schema.inputAttributes || !schema.inputAttributes.type || schema.inputAttributes.type === 'text' || schema.inputAttributes.type === 'number'"
           v-model="value[index]"
           :aria-labelledby="getLabelId(schema)"
           v-bind="schema.inputAttributes"

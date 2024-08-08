@@ -147,7 +147,7 @@ import { computed, onBeforeMount, reactive, ref, watch, type PropType } from 'vu
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
-import { ArrayStringFieldSchema } from '../definitions/schemas/ArrayStringFieldSchema'
+import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
 import endpoints from '../plugins-endpoints'
 import {
   EntityTypeIdField,
@@ -623,11 +623,11 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
           fields: [{
             schema: {
               fields: [{
-                ...ArrayStringFieldSchema,
+                ...ArrayInputFieldSchema,
                 model: field,
                 valueArrayType: elementsType === 'integer' ? 'number' : elementsType || 'string',
                 inputAttributes: {
-                  ...ArrayStringFieldSchema.inputAttributes,
+                  ...ArrayInputFieldSchema.inputAttributes,
                   type: elementsType === 'integer' ? 'number' : 'text',
                   inputMode: elementsType === 'integer' ? 'numeric' : 'text',
                 },
@@ -685,14 +685,11 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       // pass the referenceable flag from elements to the parent
       initialFormSchema[field].referenceable = elements.referenceable
 
-      if (elements.type === 'string' && !elements.one_of) {
+      if ((elements.type === 'string' || elements.type === 'integer') && !elements.one_of) {
         const { id, help, label, hint, values, referenceable } = initialFormSchema[field]
-        const { help: helpOverride, ...overrides } = JSON.parse(JSON.stringify(ArrayStringFieldSchema))
-        initialFormSchema[field] = { id, help, label, hint, values, referenceable, ...overrides }
-        // Only replace the help text when it is not defined because ArrayStringFieldSchema is more generic
-        if (initialFormSchema[field].help === undefined && typeof helpOverride === 'string') {
-          initialFormSchema[field].help = marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions)
-        }
+        const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
+        inputAttributes.type = elements.type === 'integer' ? 'number' : 'text'
+        initialFormSchema[field] = { id, help, label, hint, values, referenceable, inputAttributes, ...overrides }
       }
     }
 

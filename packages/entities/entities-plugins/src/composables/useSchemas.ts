@@ -6,7 +6,7 @@ import { aiPromptDecoratorSchema } from '../definitions/schemas/AIPromptDecorato
 import { aiPromptTemplateSchema } from '../definitions/schemas/AIPromptTemplate'
 import { aiRateLimitingAdvancedSchema } from '../definitions/schemas/AIRateLimitingAdvanced'
 import { applicationRegistrationSchema } from '../definitions/schemas/ApplicationRegistration'
-import { ArrayStringFieldSchema } from '../definitions/schemas/ArrayStringFieldSchema'
+import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
 import { dataDogSchema } from '../definitions/schemas/Datadog'
 import { graphqlRateLimitingAdvancedSchema } from '../definitions/schemas/GraphQLRateLimitingAdvanced'
 import { jwtSchema } from '../definitions/schemas/JWT'
@@ -22,6 +22,7 @@ import { statsDSchema } from '../definitions/schemas/StatsD'
 import { statsDAdvancedSchema } from '../definitions/schemas/StatsDAdvanced'
 import { vaultAuthSchema } from '../definitions/schemas/VaultAuth'
 import ZipkinSchema from '../definitions/schemas/Zipkin'
+import { upstreamOauthSchema } from '../definitions/schemas/UpstreamOauth'
 import typedefs from '../definitions/schemas/typedefs'
 import { type CustomSchemas } from '../types'
 import useI18n from './useI18n'
@@ -198,6 +199,10 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     zipkin: {
       ...ZipkinSchema,
+    },
+
+    'upstream-oauth': {
+      ...upstreamOauthSchema,
     },
 
     saml: {
@@ -499,11 +504,11 @@ export const useSchemas = (options?: UseSchemasOptions) => {
         fields: [{
           schema: {
             fields: [{
-              ...ArrayStringFieldSchema,
+              ...ArrayInputFieldSchema,
               model: schema.model,
               valueArrayType: elementsType === 'integer' ? 'number' : elementsType || 'string',
               inputAttributes: {
-                ...ArrayStringFieldSchema.inputAttributes,
+                ...ArrayInputFieldSchema.inputAttributes,
                 type: elementsType === 'integer' ? 'number' : 'text',
                 inputMode: elementsType === 'integer' ? 'numeric' : 'text',
               },

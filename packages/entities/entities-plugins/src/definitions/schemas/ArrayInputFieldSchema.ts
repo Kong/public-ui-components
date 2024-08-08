@@ -1,4 +1,4 @@
-export const ArrayStringFieldSchema = {
+export const ArrayInputFieldSchema = {
   type: 'array',
   valueType: 'string',
   valueArrayType: 'array',
