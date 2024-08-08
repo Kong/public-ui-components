@@ -740,6 +740,14 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
       ],
     },
   },
+  'upstream-oauth': {
+    descriptionKey: 'plugins.meta.upstream-oauth.description',
+    group: PluginGroup.AUTHENTICATION,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.upstream-oauth.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+    imageName: 'oauth2',
+  },
 }
 
 /**

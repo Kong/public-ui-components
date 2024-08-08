@@ -407,6 +407,8 @@ const getModel = (): Record<string, any> => {
       } else if (fieldSchemaValueType === 'array') {
         if ((!fieldValue || !fieldValue.length)) {
           fieldValue = fieldSchema.submitWhenNull ? null : []
+        } else if (fieldSchema.inputAttributes?.type === 'number') {
+          fieldValue = fieldValue.map((value: string) => Number(value))
         }
       }
 

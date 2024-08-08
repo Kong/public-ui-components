@@ -472,6 +472,10 @@
       "header-cert-auth": {
         "name": "Header Certificate Authentication",
         "description": "Authenticate clients with MTLS certificate passed in header by a WAF or load balancer"
+      },
+      "upstream-oauth": {
+        "name": "Upstream OAuth",
+        "description": "Configure Kong to obtain a OAuth2 token to consume an upstream API"
       }
     },
     "fields": {

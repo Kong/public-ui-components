@@ -60,11 +60,12 @@
         />
 
         <KInput
-          v-else-if="!schema.inputAttributes || !schema.inputAttributes.type || schema.inputAttributes.type === 'text'"
-          v-model="value[index]"
+          v-else-if="!schema.inputAttributes || !schema.inputAttributes.type || schema.inputAttributes.type === 'text' || schema.inputAttributes.type === 'number'"
           :aria-labelledby="getLabelId(schema)"
           v-bind="schema.inputAttributes"
+          :model-value="value[index]"
           :type="schema.inputAttributes && schema.inputAttributes.type || 'text'"
+          @input="(val) => { handleInput(val, index) }"
         />
 
         <input
@@ -211,6 +212,9 @@ export default {
       return 'field-' + fieldSchema.type
     },
     modelUpdated() {},
+    handleInput(val, index) {
+      this.value = this.value.map((item, i) => i === index ? val : item)
+    },
   },
 }
 </script>
