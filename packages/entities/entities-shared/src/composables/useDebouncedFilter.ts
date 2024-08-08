@@ -86,15 +86,17 @@ export default function useDebouncedFilter(
     // using this to skip unnecessary fetch fired on focus
     if (previousQuery.value === query) {
       return
-    } else if (query === '') {
-      // use cached results if query is empty
-      results.value = resultsCache.value
-      return
-    } else {
-      previousQuery.value = query || ''
     }
 
-    // if records are paginated, use the API
+    // use cached results if query is empty
+    if (!query) {
+      results.value = resultsCache.value
+      return
+    }
+
+    previousQuery.value = ''
+
+    // If records are paginated, use the API
     if (allRecords.value === undefined) {
       try {
         // Trigger the element's loading state
@@ -105,9 +107,7 @@ export default function useDebouncedFilter(
         if (config.app === 'konnect') { // KoKo only supports exact match
           // If user has typed info in the query field
           let currUrl = url.value + '' // clone
-          if (query) {
-            currUrl += `/${query}`
-          }
+          currUrl += `/${query}`
 
           const { data }: Record<string, any> = await axiosInstance.get(`${currUrl}?size=${size}`)
 
@@ -118,7 +118,7 @@ export default function useDebouncedFilter(
           } else {
             results.value = []
           }
-        } else if (query) { // Admin API supports filtering on specific fields
+        } else { // Admin API supports filtering on specific fields
           const promises = []
 
           if (isValidUuid(query) && keys.searchKeys.includes('id')) {
@@ -150,8 +150,6 @@ export default function useDebouncedFilter(
               }
             })
           })
-        } else {
-          results.value = resultsCache.value
         }
       } catch (err: any) {
         if (err?.response?.status === 404) {
@@ -169,25 +167,21 @@ export default function useDebouncedFilter(
       loading.value = true
       validationError.value = ''
 
-      // If user has typed info in the query field
-      if (query) {
-        results.value = allRecords.value?.filter((record: Record<string, any>) => {
-          let res = false
-          for (const k of keys.searchKeys) {
-            const value = typeof record[k] === 'string' ? record[k]?.toLowerCase() : record[k]
-            if (value?.includes(query.toLowerCase())) {
-              res = true
-            }
+      // User has typed info in the query field
+      results.value = allRecords.value?.filter((record: Record<string, any>) => {
+        let res = false
+        for (const k of keys.searchKeys) {
+          const value = typeof record[k] === 'string' ? record[k]?.toLowerCase() : record[k]
+          if (value?.includes(query.toLowerCase())) {
+            res = true
           }
-
-          return res
-        })
-
-        if (!results.value || !results.value.length) {
-          validationError.value = t('debouncedFilter.errors.invalid')
         }
-      } else { // reset to all records
-        results.value = allRecords.value
+
+        return res
+      })
+
+      if (!results.value || !results.value.length) {
+        validationError.value = t('debouncedFilter.errors.invalid')
       }
 
       loading.value = false
