@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.6.2...@kong-ui-public/entities-plugins@8.7.0) (2024-08-08)
+
+
+### Features
+
+* **vfg:** field-switch to kongponents [khcp-11326] ([#1539](https://github.com/Kong/public-ui-components/issues/1539)) ([0c55877](https://github.com/Kong/public-ui-components/commit/0c5587783f2f3d9751cd64ac92bb9dd51ca454ab))
+
+
+
+
+
 ## [8.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.6.1...@kong-ui-public/entities-plugins@8.6.2) (2024-08-08)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
