@@ -88,13 +88,13 @@ export default function useDebouncedFilter(
       return
     }
 
+    previousQuery.value = ''
+
     // use cached results if query is empty
     if (!query) {
       results.value = resultsCache.value
       return
     }
-
-    previousQuery.value = ''
 
     // If records are paginated, use the API
     if (allRecords.value === undefined) {
@@ -106,9 +106,7 @@ export default function useDebouncedFilter(
 
         if (config.app === 'konnect') { // KoKo only supports exact match
           // If user has typed info in the query field
-          let currUrl = url.value + '' // clone
-          currUrl += `/${query}`
-
+          const currUrl = `${url.value}/${query}`
           const { data }: Record<string, any> = await axiosInstance.get(`${currUrl}?size=${size}`)
 
           if (keys.fetchedItemsKey in data) {
