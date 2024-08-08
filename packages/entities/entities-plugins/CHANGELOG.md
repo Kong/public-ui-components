@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.4.3...@kong-ui-public/entities-plugins@8.5.0) (2024-08-08)
+
+
+### Features
+
+* **entities-plugins:** add plugin scopes ([#1523](https://github.com/Kong/public-ui-components/issues/1523)) ([6510de0](https://github.com/Kong/public-ui-components/commit/6510de09ed400bf8106dcc14a582a879562072ab))
+
+
+
+
+
 ## [8.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.4.2...@kong-ui-public/entities-plugins@8.4.3) (2024-08-07)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
