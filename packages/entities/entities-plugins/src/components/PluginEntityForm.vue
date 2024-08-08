@@ -736,16 +736,6 @@ onBeforeMount(() => {
       padding: $kui-space-0;
     }
 
-    .field-switch {
-      #enabled {
-        &:not(:checked) {
-          &+.label {
-            background-color: $kui-color-background-neutral-weak;
-          }
-        }
-      }
-    }
-
     .bottom-border {
       border-bottom: $kui-border-width-10 solid $kui-color-border;
       padding-bottom: $kui-space-80;
@@ -770,14 +760,6 @@ onBeforeMount(() => {
       opacity: .6;
     }
 
-    .form-group label {
-      margin-bottom: $kui-space-40;
-    }
-
-    .form-group.field-checkbox .form-group-label {
-      margin-bottom: $kui-space-0;
-    }
-
     .form-group.field-textArea textarea {
       resize: vertical;
     }
@@ -800,11 +782,6 @@ onBeforeMount(() => {
       }
     }
 
-    .field-checkbox {
-      align-items: center;
-      display: flex;
-    }
-
     .field-radios .radio-list label input[type=radio] {
       margin-right: 10px;
     }
@@ -814,7 +791,6 @@ onBeforeMount(() => {
     }
 
     .form-group.field-array label,
-    .form-group.field-input label,
     .form-group.field-select label,
     .form-group.field-multiselect label {
       display: flex;
@@ -850,18 +826,6 @@ onBeforeMount(() => {
 
     .link-wrapper {
       margin-top: $kui-space-60;
-    }
-
-    .k-checkbox {
-      label {
-        margin: $kui-space-0;
-        order: 1
-      }
-
-      input {
-        margin-left: $kui-space-0;
-        margin-right: $kui-space-50;
-      }
     }
   }
 }
