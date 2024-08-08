@@ -217,7 +217,7 @@ describe('<ConfigCardItem />', () => {
     })
 
     it('renders a JSON field correctly', () => {
-      const obj:Record<string, string> = {
+      const obj: Record<string, string> = {
         name: 'TK Meowstersmith',
         species: 'Awesome cat',
         color: 'All black',
@@ -247,7 +247,7 @@ describe('<ConfigCardItem />', () => {
     })
 
     it('renders a JSON Array field correctly', () => {
-      const obj:Record<string, string>[] = [{
+      const obj: Record<string, string>[] = [{
         name: 'TK Meowstersmith',
         species: 'Awesome cat',
         color: 'All black',
@@ -456,6 +456,30 @@ describe('<ConfigCardItem />', () => {
 
         tags.forEach((tag: string, idx: number) => {
           cy.getTestId(`${item.key}-badge-tag-${idx}`).should('contain.text', tag)
+        })
+      })
+
+      it('renders CopyBadge correctly', () => {
+        const tags = ['cats', 'purr', 'meow']
+        const item: RecordItem = {
+          type: ConfigurationSchemaType.CopyBadge,
+          key: 'tags',
+          label: 'Tags',
+          value: tags,
+        }
+
+        cy.mount(ConfigCardItem, {
+          props: {
+            item,
+          },
+        })
+
+        cy.get('.config-card-details-row').should('be.visible')
+        cy.getTestId(`${item.key}-copy-uuid-array`).should('be.visible')
+
+        tags.forEach((id: string, idx: number) => {
+          cy.getTestId(`${item.key}-copy-uuid-${idx}`).should('be.visible')
+          cy.getTestId(`${item.key}-copy-uuid-${idx}`).should('contain.text', id)
         })
       })
 

@@ -6,10 +6,10 @@ export interface BaseEntityConfig {
 }
 
 /** Konnect base form config */
-export interface KonnectBaseEntityConfig extends KonnectConfig, BaseEntityConfig {}
+export interface KonnectBaseEntityConfig extends KonnectConfig, BaseEntityConfig { }
 
 /** Kong Manager base form config */
-export interface KongManagerBaseEntityConfig extends KongManagerConfig, BaseEntityConfig {}
+export interface KongManagerBaseEntityConfig extends KongManagerConfig, BaseEntityConfig { }
 
 export enum ConfigurationSchemaType {
   ID = 'id',
@@ -21,6 +21,7 @@ export enum ConfigurationSchemaType {
   Json = 'json',
   JsonArray = 'json-array',
   BadgeTag = 'badge-tag',
+  CopyBadge = 'copy-badge',
   BadgeStatus = 'badge-status',
   BadgeMethod = 'badge-method',
   LinkInternal = 'link-internal',

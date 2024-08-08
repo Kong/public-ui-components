@@ -125,11 +125,13 @@ The External Link (`ConfigurationSchemaType.ExternalLink`) type is used to rende
 
 #### Badge (Tag, Status, Method)
 
-We support 3 types of badges currently.
+We support 4 types of badges currently.
 
 The Status Badge (`ConfigurationSchemaType.BadgeStatus`) type is used to display `boolean` values. It will display a green `KBadge` with the text `Enabled` for a `true` value and a grey `KBadge` with the text `Disabled` for a `false` value.
 
-The Tag Badge (`ConfigurationSchemaType.BadgeTag`) type is used to display `string[]` values. Each array value will be rendered in a horizontal line as a `default` styled `KBadge`.
+The Tag Badge (`ConfigurationSchemaType.BadgeTag`) type is used to display `string[]` values. Each array value will be rendered in a horizontal line as a `KBadge appearance="info"`.
+
+The Copy Badge (`ConfigurationSchemaType.CopyBadge`) type is used to display `string[]` values with copy button. Each array value will be rendered on a new a horizontal line as `KCopy :badge="true"`. Content in a badge will be truncated only if there is not enough horizontal room to display the entire string.
 
 The Method Badge (`ConfigurationSchemaType.BadgeMethod`) type is used to display a `string[]` of API methods in a horizontal line. An instance of `KMethodBadge` is rendered for each array item.
 
