@@ -12,8 +12,14 @@
   <RouteFormExpressionsEditor
     v-else
     v-model="expression"
+    :hint-text="t('form.expression_playground.supported_protocols_hint')"
     :protocol="props.protocol"
-  />
+    :show-expressions-modal-entry="showExpressionsModalEntry"
+    @notify="emit('notify', $event)"
+  >
+    <RocketIcon :size="KUI_ICON_SIZE_30" />
+    <span>{{ t('form.expression_playground.test_link') }}</span>
+  </RouteFormExpressionsEditor>
   <slot
     :expression="{ value: expression, update: setExpression }"
     name="after-editor"
@@ -28,10 +34,12 @@
  * editor until they are used.
  */
 import { defineAsyncComponent, h, onMounted, ref, type Component } from 'vue'
-import useI18n from '../composables/useI18n'
+import composables from '../composables'
 import { ExpressionsEditorState } from '../types'
+import { RocketIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 
-const { i18n: { t } } = useI18n()
+const { i18n: { t } } = composables.useI18n()
 
 const loadingComponent: Component = {
   render: () => h('div', t('form.expressions_editor.loading')),
@@ -49,7 +57,13 @@ const RouteFormExpressionsEditor = defineAsyncComponent({
   errorComponent,
 })
 
-const props = defineProps<{ protocol?: string }>()
+const props = defineProps<{
+  protocol?: string
+  showExpressionsModalEntry?: boolean
+}>()
+const emit = defineEmits<{
+  (e: 'notify', options: { message: string, type: string }): void
+}>()
 const state = ref<ExpressionsEditorState>(ExpressionsEditorState.LOADING)
 
 const expression = defineModel<string>({ required: true })
@@ -69,3 +83,23 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style lang="scss">
+.route-form-open-in-playground {
+  align-items: center;
+  color: $kui-color-text-primary-strong;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  font-size: $kui-font-size-30;
+  font-weight: bold;
+  gap: $kui-space-40;
+  justify-content: flex-start;
+  margin-top: $kui-space-50;
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+</style>
