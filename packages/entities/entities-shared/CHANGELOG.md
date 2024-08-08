@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.6.0...@kong-ui-public/entities-shared@3.6.1) (2024-08-08)
+
+
+### Bug Fixes
+
+* **entities-routes:** make paths and hosts copy badges [KHCP-12781] ([#1540](https://github.com/Kong/public-ui-components/issues/1540)) ([1cc9b99](https://github.com/Kong/public-ui-components/commit/1cc9b99a4c8c434e009b92909689443da6725ae3))
+
+
+
+
+
 # [3.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.5.4...@kong-ui-public/entities-shared@3.6.0) (2024-08-07)
 
 
