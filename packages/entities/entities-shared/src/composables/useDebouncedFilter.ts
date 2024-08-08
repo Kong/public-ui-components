@@ -88,7 +88,7 @@ export default function useDebouncedFilter(
       return
     }
 
-    previousQuery.value = ''
+    previousQuery.value = query ?? ''
 
     // use cached results if query is empty
     if (!query) {
