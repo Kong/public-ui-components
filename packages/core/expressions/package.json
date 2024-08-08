@@ -73,7 +73,7 @@
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.15.1",
-    "monaco-editor": "0.21.3",
+    "monaco-editor": "0.50.0",
     "uuid": "^9.0.1"
   }
 }
