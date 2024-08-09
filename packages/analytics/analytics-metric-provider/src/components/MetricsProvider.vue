@@ -10,7 +10,8 @@ import {
   type AnalyticsBridge,
   type ExploreFilter,
   queryableExploreDimensions,
-  type QueryableExploreDimensions, type QueryDatasource,
+  type FilterableExploreDimensions,
+  type QueryDatasource,
   type Timeframe,
 } from '@kong-ui-public/analytics-utilities'
 import { TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
@@ -23,7 +24,7 @@ const props = withDefaults(defineProps<{
   maxTimeframe?: TimeframeKeys,
   overrideTimeframe?: Timeframe,
   tz?: string,
-  dimension?: QueryableExploreDimensions,
+  dimension?: FilterableExploreDimensions,
   filterValue?: string,
   additionalFilter?: ExploreFilter[],
   queryReady?: boolean,

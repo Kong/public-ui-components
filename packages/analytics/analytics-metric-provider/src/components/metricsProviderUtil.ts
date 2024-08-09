@@ -1,9 +1,10 @@
-import type {
-  AnalyticsBridge,
-  ExploreAggregations,
-  ExploreFilter,
-  QueryableExploreDimensions, QueryDatasource,
-  Timeframe,
+import {
+  type AnalyticsBridge,
+  type ExploreAggregations,
+  type ExploreFilter,
+  type FilterableExploreDimensions,
+  type QueryDatasource, stripUnknownFilters,
+  type Timeframe,
 } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import type { MetricFetcherOptions } from '../types'
@@ -27,7 +28,7 @@ export const METRICS_PROVIDER_KEY = Symbol('METRICS_PROVIDER_KEY') as InjectionK
 
 interface FetcherOptions {
   datasource: Ref<QueryDatasource>
-  dimension?: QueryableExploreDimensions
+  dimension?: FilterableExploreDimensions
   dimensionFilterValue?: string
   additionalFilter: Ref<ExploreFilter[] | undefined>
   queryReady: Ref<boolean>
@@ -75,7 +76,8 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
     }
 
     if (additionalFilter.value) {
-      retval.push(...additionalFilter.value)
+      // TODO: Decide if it's worth making this generic on datasource.
+      retval.push(...stripUnknownFilters(datasource.value, additionalFilter.value) as ExploreFilter[])
     }
 
     return retval

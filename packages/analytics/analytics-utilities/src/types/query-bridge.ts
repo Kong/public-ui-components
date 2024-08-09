@@ -1,4 +1,4 @@
-import type { BasicExploreQuery, ExploreQuery, AiExploreQuery, ExploreResultV4 } from './explore-v4'
+import type { BasicExploreQuery, ExploreQuery, AiExploreQuery, ExploreResultV4 } from './explore'
 import type { AnalyticsConfigV2 } from './analytics-config'
 
 export interface BasicDatasourceQuery {

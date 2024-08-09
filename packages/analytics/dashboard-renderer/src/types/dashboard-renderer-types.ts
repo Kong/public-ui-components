@@ -1,14 +1,30 @@
 import type { FromSchema, JSONSchema } from 'json-schema-to-ts'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
-import type { ExploreFilter, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type { AllFilters, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import {
+  aiExploreAggregations,
+  basicExploreAggregations,
+  exploreAggregations,
+  exploreFilterTypesV2,
+  filterableAiExploreDimensions,
+  filterableBasicExploreDimensions,
+  filterableExploreDimensions,
+  granularityValues,
+  queryableAiExploreDimensions,
+  queryableBasicExploreDimensions,
+  queryableExploreDimensions,
+  relativeTimeRangeValuesV4,
+} from '@kong-ui-public/analytics-utilities'
 
 export interface DashboardRendererContext {
-  filters: ExploreFilter[]
+  filters: AllFilters[]
   timeSpec?: TimeRangeV4
   tz?: string
   refreshInterval?: number
 }
+
+type FromSchemaWithOptions<T extends JSONSchema> = FromSchema<T, { keepDefaultedPropertiesOptional: true }>
 
 // The DashboardRenderer component fills in optional values before passing them down to the tile renderers.
 export type DashboardRendererContextInternal = Required<DashboardRendererContext>
@@ -61,7 +77,7 @@ export const slottableSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type SlottableOptions = FromSchema<typeof slottableSchema>
+export type SlottableOptions = FromSchemaWithOptions<typeof slottableSchema>
 
 export const barChartSchema = {
   type: 'object',
@@ -82,7 +98,7 @@ export const barChartSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type BarChartOptions = FromSchema<typeof barChartSchema>
+export type BarChartOptions = FromSchemaWithOptions<typeof barChartSchema>
 
 export const timeseriesChartSchema = {
   type: 'object',
@@ -103,7 +119,7 @@ export const timeseriesChartSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type TimeseriesChartOptions = FromSchema<typeof timeseriesChartSchema>
+export type TimeseriesChartOptions = FromSchemaWithOptions<typeof timeseriesChartSchema>
 
 export const gaugeChartSchema = {
   type: 'object',
@@ -129,7 +145,7 @@ export const gaugeChartSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type GaugeChartOptions = FromSchema<typeof gaugeChartSchema>
+export type GaugeChartOptions = FromSchemaWithOptions<typeof gaugeChartSchema>
 
 export const topNTableSchema = {
   type: 'object',
@@ -151,7 +167,7 @@ export const topNTableSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type TopNTableOptions = FromSchema<typeof topNTableSchema>
+export type TopNTableOptions = FromSchemaWithOptions<typeof topNTableSchema>
 
 export const metricCardSchema = {
   type: 'object',
@@ -172,52 +188,10 @@ export const metricCardSchema = {
     },
   },
   required: ['type'],
+  additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type MetricCardOptions = FromSchema<typeof metricCardSchema>
-
-const exploreV4FilterSchema = {
-  type: 'object',
-  description: 'A filter that specifies which data to include in the query',
-  properties: {
-    dimension: {
-      type: 'string',
-      enum: [
-        'api_product',
-        'api_product_version',
-        'application',
-        'consumer',
-        'control_plane',
-        'control_plane_group',
-        'data_plane_node',
-        'gateway_service',
-        'route',
-        'status_code',
-        'status_code_grouped',
-        'time',
-      ],
-    },
-    type: {
-      type: 'string',
-      enum: [
-        'in',
-        'not_in',
-        'selector',
-      ],
-    },
-    values: {
-      type: 'array',
-      items: {
-        type: 'string',
-      },
-    },
-  },
-  required: [
-    'dimension',
-    'type',
-    'values',
-  ],
-} as const satisfies JSONSchema
+export type MetricCardOptions = FromSchemaWithOptions<typeof metricCardSchema>
 
 const exploreV4RelativeTimeSchema = {
   type: 'object',
@@ -234,19 +208,7 @@ const exploreV4RelativeTimeSchema = {
     },
     time_range: {
       type: 'string',
-      enum: [
-        '15m',
-        '1h',
-        '6h',
-        '12h',
-        '24h',
-        '7d',
-        '30d',
-        'current_week',
-        'current_month',
-        'previous_week',
-        'previous_month',
-      ],
+      enum: relativeTimeRangeValuesV4,
       default: '1h',
     },
   },
@@ -254,6 +216,7 @@ const exploreV4RelativeTimeSchema = {
     'type',
     'time_range',
   ],
+  additionalProperties: false,
 } as const satisfies JSONSchema
 
 const exploreV4AbsoluteTimeSchema = {
@@ -262,7 +225,6 @@ const exploreV4AbsoluteTimeSchema = {
   properties: {
     tz: {
       type: 'string',
-      default: 'Etc/UTC',
     },
     type: {
       type: 'string',
@@ -279,114 +241,151 @@ const exploreV4AbsoluteTimeSchema = {
   },
   required: [
     'type',
+    'start',
+    'end',
   ],
+  additionalProperties: false,
 } as const satisfies JSONSchema
+
+const baseQueryProperties = {
+  granularity: {
+    type: 'string',
+    description: 'Force time grouping into buckets of this duration. Only has an effect if "time" is in the "dimensions" list.',
+    enum: granularityValues,
+  },
+  time_range: {
+    type: 'object',
+    description: 'The time range to query.',
+    anyOf: [
+      exploreV4RelativeTimeSchema,
+      exploreV4AbsoluteTimeSchema,
+    ],
+    default: {
+      type: 'relative',
+      time_range: '1h',
+    },
+  },
+  limit: {
+    type: 'number',
+  },
+  meta: {
+    type: 'object',
+  },
+} as const
+
+const metricsFn = <T extends readonly string[]>(aggregations: T) => ({
+  type: 'array',
+  description: 'List of aggregated metrics to collect across the requested time span.',
+  items: {
+    type: 'string',
+    enum: aggregations,
+  },
+} as const satisfies JSONSchema)
+
+const dimensionsFn = <T extends readonly string[]>(dimensions: T) => ({
+  type: 'array',
+  description: 'List of attributes or entity types to group by.',
+  minItems: 0,
+  maxItems: 2,
+  items: {
+    type: 'string',
+    enum: dimensions,
+  },
+} as const satisfies JSONSchema)
+
+const filtersFn = <T extends readonly string[]>(filterableDimensions: T) => ({
+  type: 'array',
+  description: 'A list of filters to apply to the query.',
+  items: {
+    type: 'object',
+    description: 'A filter that specifies which data to include in the query',
+    properties: {
+      dimension: {
+        type: 'string',
+        enum: filterableDimensions,
+      },
+      type: {
+        type: 'string',
+        enum: exploreFilterTypesV2,
+      },
+      values: {
+        type: 'array',
+        items: {
+          type: ['string', 'number', 'null'],
+        },
+      },
+    },
+    required: [
+      'dimension',
+      'type',
+      'values',
+    ],
+    additionalProperties: false,
+  },
+} as const satisfies JSONSchema)
 
 export const exploreV4QuerySchema = {
   type: 'object',
-  description: 'A query to launch at the API',
+  description: 'A query to launch at the advanced explore API',
   properties: {
     datasource: {
       type: 'string',
       enum: [
         'advanced',
+      ],
+    },
+    metrics: metricsFn(exploreAggregations),
+    dimensions: dimensionsFn(queryableExploreDimensions),
+    filters: filtersFn(filterableExploreDimensions),
+    ...baseQueryProperties,
+  },
+  required: ['datasource'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
 
-        // TODO: remove once basic is its own schema.
+export const basicQuerySchema = {
+  type: 'object',
+  description: 'A query to launch at the basic explore API',
+  properties: {
+    datasource: {
+      type: 'string',
+      enum: [
         'basic',
       ],
     },
-    metrics: {
-      type: 'array',
-      description: 'List of aggregated metrics to collect across the requested time span.',
-      items: {
-        type: 'string',
-        enum: [
-          'request_count',
-          'request_per_minute',
-          'response_latency_p99',
-          'response_latency_p95',
-          'response_latency_p50',
-          'response_latency_average',
-          'upstream_latency_p99',
-          'upstream_latency_p95',
-          'upstream_latency_p50',
-          'upstream_latency_average',
-          'kong_latency_p99',
-          'kong_latency_p95',
-          'kong_latency_p50',
-          'kong_latency_average',
-          'response_size_p99',
-          'response_size_p95',
-          'response_size_p50',
-          'request_size_p99',
-          'request_size_p95',
-          'request_size_p50',
-          'request_size_average',
-          'response_size_average',
-        ],
-      },
-    },
-    dimensions: {
-      type: 'array',
-      description: 'List of attributes or entity types to group by.',
-      minItems: 0,
-      maxItems: 2,
-      items: {
-        type: 'string',
-        enum: [
-          'api_product',
-          'api_product_version',
-          'application',
-          'consumer',
-          'control_plane',
-          'control_plane_group',
-          'data_plane_node',
-          'gateway_service',
-          'route',
-          'status_code',
-          'status_code_grouped',
-          'time',
-        ],
-      },
-    },
-    filters: {
-      type: 'array',
-      description: 'A list of filters to apply to the query.',
-      items: exploreV4FilterSchema,
-    },
-    granularity_ms: {
-      type: 'number',
-      description: 'Force time grouping into buckets of this duration in milliseconds. Only has an effect if "time" is in the "dimensions" list.',
-      minimum: 60000,
-    },
-    time_range: {
-      description: 'The time range to query.',
-      oneOf: [
-        exploreV4RelativeTimeSchema,
-        exploreV4AbsoluteTimeSchema,
+    metrics: metricsFn(basicExploreAggregations),
+    dimensions: dimensionsFn(queryableBasicExploreDimensions),
+    filters: filtersFn(filterableBasicExploreDimensions),
+    ...baseQueryProperties,
+  },
+  required: ['datasource'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export const aiQuerySchema = {
+  type: 'object',
+  description: 'A query to launch at the AI explore API',
+  properties: {
+    datasource: {
+      type: 'string',
+      enum: [
+        'ai',
       ],
-      default: {
-        type: 'relative',
-        time_range: '1h',
-      },
     },
-    limit: {
-      type: 'number',
-    },
-    meta: {
-      type: 'object',
-    },
+    metrics: metricsFn(aiExploreAggregations),
+    dimensions: dimensionsFn(queryableAiExploreDimensions),
+    filters: filtersFn(filterableAiExploreDimensions),
+    ...baseQueryProperties,
   },
   required: ['datasource'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
 export const validDashboardQuery = {
-  // TODO: Build out basic as its own schema.
-  oneOf: [exploreV4QuerySchema],
+  anyOf: [exploreV4QuerySchema, basicQuerySchema, aiQuerySchema],
 } as const satisfies JSONSchema
 
-export type ValidDashboardQuery = FromSchema<typeof validDashboardQuery>
+export type ValidDashboardQuery = FromSchemaWithOptions<typeof validDashboardQuery>
 
 // Note: `datasource` may need to end up somewhere else for sane type definitions?
 export const tileDefinitionSchema = {
@@ -394,14 +393,14 @@ export const tileDefinitionSchema = {
   properties: {
     query: validDashboardQuery,
     chart: {
-      oneOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema, metricCardSchema, topNTableSchema, slottableSchema],
+      anyOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema, metricCardSchema, topNTableSchema, slottableSchema],
     },
   },
   required: ['query', 'chart'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type TileDefinition = FromSchema<typeof tileDefinitionSchema>
+export type TileDefinition = FromSchemaWithOptions<typeof tileDefinitionSchema>
 
 export const tileLayoutSchema = {
   type: 'object',
@@ -443,7 +442,7 @@ export const tileLayoutSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type TileLayout = FromSchema<typeof tileLayoutSchema>
+export type TileLayout = FromSchemaWithOptions<typeof tileLayoutSchema>
 
 export const tileConfigSchema = {
   type: 'object',
@@ -455,7 +454,7 @@ export const tileConfigSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type TileConfig = FromSchema<typeof tileConfigSchema>
+export type TileConfig = FromSchemaWithOptions<typeof tileConfigSchema>
 
 export const dashboardConfigSchema = {
   type: 'object',
@@ -487,7 +486,7 @@ export const dashboardConfigSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type DashboardConfig = FromSchema<typeof dashboardConfigSchema>
+export type DashboardConfig = FromSchemaWithOptions<typeof dashboardConfigSchema>
 
 export interface RendererProps<T> {
   query: ValidDashboardQuery

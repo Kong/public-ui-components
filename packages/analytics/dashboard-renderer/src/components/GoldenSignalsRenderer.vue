@@ -9,7 +9,7 @@
 import type { MetricCardOptions, RendererProps } from '../types'
 import { MetricsProvider, MetricsConsumer } from '@kong-ui-public/analytics-metric-provider'
 import { computed, type Ref } from 'vue'
-import { Timeframe, TimePeriods } from '@kong-ui-public/analytics-utilities'
+import { type ExploreFilter, Timeframe, TimePeriods } from '@kong-ui-public/analytics-utilities'
 
 // Unlike AnalyticsChart, the metric card package doesn't currently expose its options
 // in a convenient interface.
@@ -29,7 +29,7 @@ const overrideTimeframe: Ref<Timeframe> = computed(() => {
       display: 'custom',
       startCustom: timeSpec.start,
       endCustom: timeSpec.end,
-      timeframeLength: () => 0,
+      timeframeLength: () => timeSpec.end.getTime() - timeSpec.start.getTime(),
       defaultResponseGranularity: 'daily',
       dataGranularity: 'daily',
       isRelative: false,
@@ -50,7 +50,7 @@ const options = computed<ProviderProps>(() => ({
   datasource: props.query?.datasource,
   overrideTimeframe: overrideTimeframe.value,
   tz: props.context.tz,
-  additionalFilter: props.context.filters,
+  additionalFilter: props.context.filters as ExploreFilter[], // TODO: Decide how to handle metric card filters.
   longCardTitles: props.chartOptions.longCardTitles,
   containerTitle: props.chartOptions.chartTitle,
   description: props.chartOptions.description,

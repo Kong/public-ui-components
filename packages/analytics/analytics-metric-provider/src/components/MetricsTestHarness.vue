@@ -47,11 +47,12 @@
 import MetricsConsumer from './MetricsConsumer.vue'
 import MetricsProvider from './MetricsProvider.vue'
 import { MetricCardSize } from '../enums'
-import type { ExploreFilter, QueryableExploreDimensions } from '@kong-ui-public/analytics-utilities'
+import type { ExploreFilter, FilterableExploreDimensions, QueryDatasource } from '@kong-ui-public/analytics-utilities'
 import { computed } from 'vue'
 
 const props = withDefaults(defineProps<{
   render: 'global' | 'single' | 'multi' | 'latencyCard',
+  datasource?: QueryDatasource,
   queryReady?: boolean,
   refreshInterval?: number,
   additionalFilter?: ExploreFilter[],
@@ -62,6 +63,7 @@ const props = withDefaults(defineProps<{
 }>(), {
   refreshInterval: 60 * 1000,
   queryReady: true,
+  datasource: undefined,
   additionalFilter: undefined,
   longCardTitles: undefined,
   containerTitle: undefined,
@@ -77,14 +79,14 @@ const globalProviderProps = computed(() => ({
 // Query stats for a single entity, no grouping.
 const singleProviderProps = computed(() => ({
   ...props,
-  dimension: 'route' as QueryableExploreDimensions,
+  dimension: 'route' as FilterableExploreDimensions,
   filterValue: 'blah',
 }))
 
 // Query stats for multiple entities.
 const multiProviderProps = computed(() => ({
   ...props,
-  dimension: 'route' as QueryableExploreDimensions,
+  dimension: 'route' as FilterableExploreDimensions,
 }))
 
 </script>

@@ -18,7 +18,13 @@ import {
   TimePeriods,
 } from '@kong-ui-public/analytics-utilities'
 import DashboardRenderer from './DashboardRenderer.vue'
-import { nonTsExploreResponse, timeSeriesExploreResponse, routeExploreResponse, summaryDashboardConfig } from '../../sandbox/mock-data'
+import {
+  nonTsExploreResponse,
+  timeSeriesExploreResponse,
+  routeExploreResponse,
+  summaryDashboardConfig,
+  simpleConfigNoFilters,
+} from '../../sandbox/mock-data'
 import { createPinia, setActivePinia } from 'pinia'
 
 interface MockOptions {
@@ -533,59 +539,7 @@ describe('<DashboardRenderer />', () => {
           },
         ],
       },
-      config: {
-        gridSize: {
-          cols: 6,
-          rows: 2,
-        },
-        tileHeight: 167,
-        tiles: [
-          // 3 x Metric cards
-          {
-            definition: {
-              chart: {
-                type: ChartTypes.GoldenSignals,
-                chartTitle: 'Analytics',
-                description: '{timeframe}',
-              },
-              query: {
-                datasource: 'advanced',
-              },
-            },
-            layout: {
-              position: {
-                col: 0,
-                row: 0,
-              },
-              size: {
-                cols: 6,
-                rows: 1,
-              },
-            },
-          },
-
-          {
-            definition: {
-              chart: {
-                type: ChartTypes.TimeseriesLine,
-              },
-              query: {
-                datasource: 'advanced',
-              },
-            },
-            layout: {
-              position: {
-                col: 0,
-                row: 1,
-              },
-              size: {
-                cols: 6,
-                rows: 1,
-              },
-            },
-          },
-        ],
-      },
+      config: simpleConfigNoFilters,
     }
 
     cy.mount(DashboardRenderer, {
@@ -603,6 +557,55 @@ describe('<DashboardRenderer />', () => {
           time_range: { time_range: '7d' },
         },
       }))
+    })
+  })
+
+  it('prunes invalid filters', () => {
+    const props = {
+      context: {
+        filters: [
+          // Valid filter
+          {
+            dimension: 'api_product',
+            type: 'in',
+            values: ['some product'],
+          },
+          // Invalid filter
+          {
+            dimension: 'ai_provider',
+            type: 'in',
+            values: ['some provider'],
+          },
+        ],
+      },
+      config: simpleConfigNoFilters,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ skuFeatureFlag: true }),
+        },
+      },
+    }).then(() => {
+      // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
+      cy.get('@fetcher').should('have.callCount', 3)
+      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+        datasource: 'advanced',
+        query: {
+          filters: [
+            {
+              dimension: 'api_product',
+              type: 'in',
+              values: ['some product'],
+            },
+          ],
+        },
+      }))
+
+      // Check that it replaces the description token.
+      cy.get('.container-description').should('have.text', 'Last 7-Day Summary')
     })
   })
 })
