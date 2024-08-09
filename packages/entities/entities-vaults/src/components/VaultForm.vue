@@ -4,6 +4,7 @@
       :can-submit="isFormValid && changesExist"
       :config="config"
       :edit-id="vaultId"
+      :entity-type="SupportedEntityType.Vault"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
@@ -490,6 +491,7 @@ import {
   EntityFormSection,
   EntityBaseForm,
   EntityBaseFormType,
+  SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
