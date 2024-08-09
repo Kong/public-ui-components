@@ -4,6 +4,7 @@
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
+      :entity-type="SupportedEntityType.Consumer"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
@@ -40,7 +41,7 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerConsumerEntityConfig, KonnectConsumerEntityConfig, ConsumerConfigurationSchema } from '../types'
-import { EntityBaseConfigCard, ConfigurationSchemaSection } from '@kong-ui-public/entities-shared'
+import { EntityBaseConfigCard, ConfigurationSchemaSection, SupportedEntityType } from '@kong-ui-public/entities-shared'
 import endpoints from '../consumers-endpoints'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
