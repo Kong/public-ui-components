@@ -4,6 +4,7 @@
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
+      :entity-type="SupportedEntityType.Key"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
@@ -72,7 +73,16 @@ import type { PropType } from 'vue'
 import { computed, ref, watch } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerKeyEntityConfig, KonnectKeyEntityConfig, KeyConfigurationSchema } from '../types'
-import { useAxios, EntityBaseConfigCard, ConfigurationSchemaSection, useStringHelpers, ConfigurationSchemaType, InternalLinkItem, ConfigCardItem } from '@kong-ui-public/entities-shared'
+import {
+  useAxios,
+  useStringHelpers,
+  ConfigCardItem,
+  ConfigurationSchemaSection,
+  ConfigurationSchemaType,
+  EntityBaseConfigCard,
+  InternalLinkItem,
+  SupportedEntityType,
+} from '@kong-ui-public/entities-shared'
 import endpoints from '../keys-endpoints'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'

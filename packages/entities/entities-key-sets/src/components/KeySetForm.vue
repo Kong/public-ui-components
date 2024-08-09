@@ -4,6 +4,7 @@
       :can-submit="canSubmit"
       :config="config"
       :edit-id="keySetId"
+      :entity-type="SupportedEntityType.KeySet"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="requestBody"
@@ -51,7 +52,12 @@ import { computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
 import {
-  useAxios, useErrors, EntityFormSection, EntityBaseForm, EntityBaseFormType,
+  useAxios,
+  useErrors,
+  EntityFormSection,
+  EntityBaseForm,
+  EntityBaseFormType,
+  SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
 
 import type {
