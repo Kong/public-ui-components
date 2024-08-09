@@ -23,6 +23,7 @@
       :can-submit="canSubmit"
       :config="config"
       :edit-id="pluginId"
+      :entity-type="SupportedEntityType.Plugin"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getRequestBody"
@@ -115,13 +116,19 @@
         <template #json>
           <JsonCodeBlock
             :config="config"
+            :entity-record="getRequestBody"
             :fetcher-url="submitUrl"
-            :json-record="getRequestBody"
             :request-method="props.pluginId ? 'put' : 'post'"
           />
         </template>
         <template #yaml>
-          <YamlCodeBlock :yaml-record="getRequestBody" />
+          <YamlCodeBlock :entity-record="getRequestBody" />
+        </template>
+        <template #terraform>
+          <TerraformCodeBlock
+            :entity-record="getRequestBody"
+            :entity-type="SupportedEntityType.Plugin"
+          />
         </template>
       </KTabs>
     </KSlideout>
@@ -133,7 +140,9 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   JsonCodeBlock,
+  TerraformCodeBlock,
   YamlCodeBlock,
+  SupportedEntityType,
   useAxios,
   useErrors,
   useHelpers,
@@ -306,12 +315,16 @@ const form = reactive<PluginFormState>({
 
 const tabs = ref<Tab[]>([
   {
-    title: t('view_configuration.yaml'),
-    hash: '#yaml',
-  },
-  {
     title: t('view_configuration.json'),
     hash: '#json',
+  },
+  {
+    title: t('view_configuration.terraform'),
+    hash: '#terraform',
+  },
+  {
+    title: t('view_configuration.yaml'),
+    hash: '#yaml',
   },
 ])
 
