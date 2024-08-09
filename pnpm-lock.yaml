@@ -935,16 +935,15 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
+      '@kong-ui-public/expressions':
+        specifier: workspace:^
+        version: link:../../core/expressions
       '@kong/icons':
         specifier: ^1.15.1
         version: 1.15.1(vue@3.4.31(typescript@5.3.3))
       lodash.isequal:
         specifier: ^4.5.0
         version: 4.5.0
-    optionalDependencies:
-      '@kong-ui-public/expressions':
-        specifier: workspace:^
-        version: link:../../core/expressions
       monaco-editor:
         specifier: 0.21.3
         version: 0.21.3
