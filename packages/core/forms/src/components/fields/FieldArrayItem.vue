@@ -32,6 +32,10 @@ defineEmits<{
 </script>
 
 <style lang="scss" scoped>
+.array-item-wrapper {
+  width: 100%;
+}
+
 .array-item {
   display: flex;
   width: 100%;
