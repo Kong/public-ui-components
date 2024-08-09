@@ -4,6 +4,7 @@
       :can-submit="canSubmit"
       :config="config"
       :edit-id="certificateId"
+      :entity-type="SupportedEntityType.Certificate"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="requestBody"
@@ -144,7 +145,14 @@ import type {
 import endpoints from '../certificates-endpoints'
 import composables from '../composables'
 import CertificateFormSniField from './CertificateFormSniField.vue'
-import { useAxios, useErrors, EntityFormSection, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
+import {
+  useAxios,
+  useErrors,
+  EntityFormSection,
+  EntityBaseForm,
+  EntityBaseFormType,
+  SupportedEntityType,
+} from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
