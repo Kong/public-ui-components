@@ -5,6 +5,7 @@
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
       data-key="consumer_group"
+      :entity-type="SupportedEntityType.ConsumerGroup"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
@@ -19,7 +20,7 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerConsumerGroupEntityConfig, KonnectConsumerGroupEntityConfig, ConsumerGroupConfigurationSchema } from '../types'
-import { EntityBaseConfigCard } from '@kong-ui-public/entities-shared'
+import { EntityBaseConfigCard, SupportedEntityType } from '@kong-ui-public/entities-shared'
 import endpoints from '../consumer-groups-endpoints'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'

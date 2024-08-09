@@ -4,6 +4,7 @@
       :can-submit="isFormValid && changesExist"
       :config="config"
       :edit-id="consumerGroupId"
+      :entity-type="SupportedEntityType.ConsumerGroup"
       :error-message="state.errorMessage || fetchError || preValidateErrorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
@@ -82,8 +83,11 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   EntityFormSection,
+  SupportedEntityType,
   useAxios,
-  useDebouncedFilter, useErrors, useValidators,
+  useDebouncedFilter,
+  useErrors,
+  useValidators,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import composables from '../composables'
