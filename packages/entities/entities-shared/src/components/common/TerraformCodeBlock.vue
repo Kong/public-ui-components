@@ -163,10 +163,10 @@ const generateConfig = (record: Record<string, any>): string => {
 }
 
 const terraformContent = computed((): string => {
-  // filter out null values, empty strings, and empty arrays since decK doesn't accept them [KHCP-10642]
+  // filter out null/undefined values since terraform doesn't accept them
   // this logic isn't recursive, so manually handle nested config object
-  const modifiedConfig = props.entityRecord.config ? Object.fromEntries(Object.entries(props.entityRecord?.config).filter(([, value]) => value !== null)) : undefined
-  const modifiedRecord = Object.fromEntries(Object.entries(props.entityRecord).filter(([, value]) => value !== null))
+  const modifiedRecord = Object.fromEntries(Object.entries(props.entityRecord).filter(([, value]) => value !== null && value !== undefined))
+  const modifiedConfig = props.entityRecord.config ? Object.fromEntries(Object.entries(props.entityRecord?.config).filter(([, value]) => value !== null && value !== undefined)) : undefined
   if (modifiedConfig) {
     modifiedRecord.config = modifiedConfig
   }
