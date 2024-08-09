@@ -1,6 +1,10 @@
 import { h } from 'vue'
-import type { KonnectBaseEntityConfig, ConfigurationSchema, PluginConfigurationSchema } from '../../types'
-import { ConfigurationSchemaSection } from '../../types'
+import type {
+  KonnectBaseEntityConfig,
+  ConfigurationSchema,
+  PluginConfigurationSchema,
+} from '../../types'
+import { ConfigurationSchemaSection, SupportedEntityType } from '../../types'
 import { gatewayServiceRecord, pluginRecord, emptyKey, keyWithValue } from '../../../fixtures/mockData'
 import composables from '../../composables'
 import EntityBaseConfigCard from './EntityBaseConfigCard.vue'
@@ -19,6 +23,7 @@ const config: KonnectBaseEntityConfig = {
 const fetchUrl = `/v2/control-planes/${config.controlPlaneId}/core-entities/services/{id}`
 const pluginsFetchUrl = `/v2/control-planes/${config.controlPlaneId}/core-entities/plugins/{id}`
 const pluginConfigKey = 'config'
+const entityType = SupportedEntityType.Plugin
 
 const customizedKey = 'ca_certificates'
 const customTooltip = 'Custom tooltip'
@@ -122,6 +127,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
           hideTitle: true,
         },
@@ -136,6 +142,7 @@ describe('<EntityBaseConfigCard />', () => {
       cy.mount(EntityBaseConfigCard, {
         props: {
           configSchema,
+          entityType,
           fetchUrl,
         },
       })
@@ -149,6 +156,7 @@ describe('<EntityBaseConfigCard />', () => {
       cy.mount(EntityBaseConfigCard, {
         props: {
           configSchema,
+          entityType,
           fetchUrl,
           configCardDoc: 'www.test.com',
         },
@@ -167,6 +175,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
         },
       })
@@ -198,6 +207,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
         },
       })
@@ -219,6 +229,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
         },
       })
@@ -236,6 +247,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
         },
       })
@@ -262,6 +274,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
           dataKey,
         },
@@ -282,7 +295,8 @@ describe('<EntityBaseConfigCard />', () => {
       cy.mount(EntityBaseConfigCard, {
         props: {
           config,
-          configSchema: { ...configSchema, [undefinedKey]: { forceShow: true } },
+          configSchema: { ...configSchema,
+            entityType, [undefinedKey]: { forceShow: true } },
           fetchUrl,
         },
       })
@@ -300,6 +314,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
         },
       })
@@ -314,6 +329,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
         },
       })
@@ -331,6 +347,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
         },
       })
@@ -349,6 +366,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
         },
       })
@@ -367,6 +385,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl: pluginsFetchUrl,
           pluginConfigSchema,
         },
@@ -383,6 +402,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl: pluginsFetchUrl,
           pluginConfigKey,
           pluginConfigSchema,
@@ -403,6 +423,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl: pluginsFetchUrl,
           pluginConfigKey,
           pluginConfigSchema,
@@ -435,6 +456,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
         },
       })
@@ -455,6 +477,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
           onLoading: cy.spy().as('onLoadingSpy'),
         },
@@ -474,6 +497,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
         },
       })
@@ -501,6 +525,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
           dataKey: 'invalid_key',
         },
@@ -522,6 +547,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
         },
         slots: {
@@ -546,6 +572,7 @@ describe('<EntityBaseConfigCard />', () => {
         props: {
           config,
           configSchema,
+          entityType,
           fetchUrl,
         },
         slots: {
