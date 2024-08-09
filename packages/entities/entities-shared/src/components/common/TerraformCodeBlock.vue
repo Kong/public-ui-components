@@ -108,7 +108,7 @@ const buildArrayStr = (arr: any[], key?: string, additionalIndent = ''): string 
   let content = ''
   if (key) {
     if (arr.length === 0) {
-      content += `${key} = [`
+      content += `${indent}${key} = [`
     } else {
       content += `\n${indent}${key} = [\n`
     }
