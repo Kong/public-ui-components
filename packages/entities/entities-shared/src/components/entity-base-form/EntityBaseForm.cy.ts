@@ -1,6 +1,7 @@
 // Cypress component test spec file
 import { h } from 'vue'
 import type { KonnectBaseFormConfig } from '../../types'
+import { SupportedEntityType } from '../../types'
 import EntityBaseForm from './EntityBaseForm.vue'
 
 describe('<EntityBaseForm />', () => {
@@ -14,11 +15,13 @@ describe('<EntityBaseForm />', () => {
   }
   const editId = '1234-ideclare-athumb-war'
   const fetchUrl = `/v2/control-planes/${config.controlPlaneId}/core-entities/routes/{id}`
+  const entityType = SupportedEntityType.Route
 
   it('disables save button when canSubmit is false', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        entityType,
         canSubmit: false,
       },
     })
@@ -34,6 +37,7 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        entityType,
         canSubmit: true,
         isReadonly: true,
       },
@@ -50,6 +54,7 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        entityType,
         canSubmit: true,
       },
     })
@@ -68,6 +73,7 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        entityType,
         errorMessage: error,
       },
     })
@@ -91,6 +97,7 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        entityType,
         canSubmit: true,
         editId,
         fetchUrl,
@@ -120,6 +127,7 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        entityType,
         canSubmit: true,
         editId,
         fetchUrl,
@@ -138,6 +146,7 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        entityType,
       },
       slots: {
         default: h('span', content),
