@@ -4,6 +4,7 @@
       :can-submit="isFormValid && changesExist"
       :config="config"
       :edit-id="upstreamId"
+      :entity-type="SupportedEntityType.Upstream"
       :error-message="state.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
@@ -88,6 +89,7 @@
 import {
   EntityBaseForm,
   EntityBaseFormType,
+  SupportedEntityType,
   useAxios,
   useErrors,
 } from '@kong-ui-public/entities-shared'
