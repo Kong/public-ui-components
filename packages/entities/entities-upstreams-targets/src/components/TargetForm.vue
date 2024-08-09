@@ -292,7 +292,7 @@ watch(() => props.targetId, () => {
 :deep(.kong-card) {
   padding: 0;
 
- &.border {
+  &.border {
     border: 0 !important;
   }
 
