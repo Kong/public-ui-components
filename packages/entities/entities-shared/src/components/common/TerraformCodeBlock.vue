@@ -167,7 +167,9 @@ const terraformContent = computed((): string => {
   // this logic isn't recursive, so manually handle nested config object
   const modifiedConfig = props.entityRecord.config ? Object.fromEntries(Object.entries(props.entityRecord?.config).filter(([, value]) => value !== null)) : undefined
   const modifiedRecord = Object.fromEntries(Object.entries(props.entityRecord).filter(([, value]) => value !== null))
-  modifiedRecord.config = modifiedConfig
+  if (modifiedConfig) {
+    modifiedRecord.config = modifiedConfig
+  }
 
   // if empty object, display empty terraform, else convert to terraform and remove any trailing whitespace
   if (Object.keys(modifiedRecord).length === 0) {
