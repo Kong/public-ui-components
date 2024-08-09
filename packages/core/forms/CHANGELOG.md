@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.3.1...@kong-ui-public/forms@4.3.2) (2024-08-09)
+
+
+### Bug Fixes
+
+* **forms:** array item field width ([#1546](https://github.com/Kong/public-ui-components/issues/1546)) ([10223c6](https://github.com/Kong/public-ui-components/commit/10223c60f8dec6c74d793f78711e7889ba062d5d))
+
+
+
+
+
 ## [4.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.3.0...@kong-ui-public/forms@4.3.1) (2024-08-08)
 
 **Note:** Version bump only for package @kong-ui-public/forms
