@@ -4,6 +4,7 @@
       :can-submit="canSubmit"
       :config="config"
       :edit-id="gatewayServiceId"
+      :entity-type="SupportedEntityType.GatewayService"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
@@ -358,10 +359,11 @@ import {
   useAxios,
   useErrors,
   useGatewayFeatureSupported,
+  useValidators,
   EntityFormSection,
   EntityBaseForm,
   EntityBaseFormType,
-  useValidators,
+  SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 

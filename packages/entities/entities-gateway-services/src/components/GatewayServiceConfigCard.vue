@@ -4,6 +4,7 @@
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
+      :entity-type="SupportedEntityType.GatewayService"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
@@ -69,7 +70,13 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerGatewayServiceEntityConfig, KonnectGatewayServiceEntityConfig, GatewayServiceConfigurationSchema } from '../types'
-import { EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType, useHelpers } from '@kong-ui-public/entities-shared'
+import {
+  EntityBaseConfigCard,
+  ConfigurationSchemaSection,
+  ConfigurationSchemaType,
+  SupportedEntityType,
+  useHelpers,
+} from '@kong-ui-public/entities-shared'
 import endpoints from '../gateway-services-endpoints'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
