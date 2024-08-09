@@ -91,13 +91,19 @@
         <template #json>
           <JsonCodeBlock
             :config="config"
+            :entity-record="props.formFields"
             :fetcher-url="fetcherUrl"
-            :json-record="props.formFields"
             :request-method="props.editId ? 'put' : 'post'"
           />
         </template>
         <template #yaml>
-          <YamlCodeBlock :yaml-record="props.formFields" />
+          <YamlCodeBlock :entity-record="props.formFields" />
+        </template>
+        <template #terraform>
+          <TerraformCodeBlock
+            :entity-record="props.formFields"
+            :entity-type="entityType"
+          />
         </template>
       </KTabs>
     </KSlideout>
@@ -109,11 +115,13 @@ import type { PropType } from 'vue'
 import { computed, ref, onBeforeMount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
-import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
+import type { KonnectBaseFormConfig, KongManagerBaseFormConfig, SupportedEntityType } from '../../types'
+import { SupportedEntityTypesArray } from '../../types'
 import composables from '../../composables'
 import type { Tab } from '@kong/kongponents'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
 import YamlCodeBlock from '../common/YamlCodeBlock.vue'
+import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void,
@@ -141,6 +149,14 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Entity type, required to generate terraform code
+   */
+  entityType: {
+    type: String as PropType<SupportedEntityType>,
+    required: true,
+    validator: (val: SupportedEntityType) => SupportedEntityTypesArray.includes(val),
   },
   /**
    * Fetch url for the item to edit. We will handle the replacement of {controlPlaneId}, {workspace}, and {id}.
@@ -258,12 +274,16 @@ const handleClickSave = (): void => {
 
 const tabs = ref<Tab[]>([
   {
-    title: t('baseForm.configuration.yaml'),
-    hash: '#yaml',
-  },
-  {
     title: t('baseForm.configuration.json'),
     hash: '#json',
+  },
+  {
+    title: t('baseForm.configuration.terraform'),
+    hash: '#terraform',
+  },
+  {
+    title: t('baseForm.configuration.yaml'),
+    hash: '#yaml',
   },
 ])
 
