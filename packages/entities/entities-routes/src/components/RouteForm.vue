@@ -4,6 +4,7 @@
       :can-submit="isFormValid && changesExist"
       :config="config"
       :edit-id="routeId"
+      :entity-type="SupportedEntityType.Route"
       :error-message="state.errorMessage || fetchServicesErrorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
@@ -453,6 +454,7 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   EntityFormSection,
+  SupportedEntityType,
   useAxios,
   useDebouncedFilter,
   useErrors,
