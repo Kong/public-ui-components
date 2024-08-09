@@ -25,6 +25,7 @@
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
+      :entity-type="SupportedEntityType.Plugin"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
       :plugin-config-key="PLUGIN_CONFIG_KEY"
@@ -140,6 +141,7 @@ import {
   useAxios,
   useErrors,
   useHelpers,
+  SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'

@@ -1,5 +1,23 @@
 import type { KonnectConfig, KongManagerConfig } from './index'
 
+export enum SupportedEntityType {
+  CaCertificate = 'ca_certificate',
+  Certificate = 'certificate',
+  Consumer = 'consumer',
+  ConsumerGroup = 'consumer_group',
+  GatewayService = 'service',
+  Key = 'key',
+  KeySet = 'key_set',
+  Plugin = 'plugin',
+  Route = 'route',
+  SNI = 'sni',
+  Upstream = 'upstream',
+  Target = 'target',
+  Vault = 'vault',
+}
+
+export const SupportedEntityTypesArray = Object.values(SupportedEntityType)
+
 export interface BaseEntityConfig {
   /** the ID of the entity */
   entityId: string
