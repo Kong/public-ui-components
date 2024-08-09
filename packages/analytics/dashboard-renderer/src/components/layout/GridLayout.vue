@@ -10,13 +10,16 @@
       :class="{
         'empty-cell': !cell.tile,
       }"
+      :data-swapy-slot="cell.key"
       :style="cell.style"
     >
-      <slot
-        name="tile"
-        :style="cell.style"
-        :tile="cell.tile"
-      />
+      <div :data-swapy-item="cell.key">
+        <slot
+          name="tile"
+          :style="cell.style"
+          :tile="cell.tile"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -26,6 +29,7 @@ import { computed, type PropType, ref, onMounted, onUnmounted } from 'vue'
 import type { GridSize, Cell, GridTile } from 'src/types'
 import { DEFAULT_TILE_HEIGHT } from '../../constants'
 import { calculateRowDefs } from './grid-utils'
+import { createSwapy } from 'swapy'
 
 const props = defineProps({
   gridSize: {
@@ -41,9 +45,15 @@ const props = defineProps({
     type: Array as PropType<GridTile<T>[]>,
     required: true,
   },
+  dragAndDrop: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 
 const gridContainer = ref(null)
+
 
 const containerWidth = ref(0)
 
@@ -63,6 +73,11 @@ onMounted(() => {
   if (gridContainer.value) {
     resizeObserver.observe(gridContainer.value)
   }
+
+  const swapy = createSwapy(gridContainer.value, {
+    animation: 'dynamic', // or spring or none
+  })
+  swapy.enable(props.dragAndDrop)
 })
 
 onUnmounted(() => {

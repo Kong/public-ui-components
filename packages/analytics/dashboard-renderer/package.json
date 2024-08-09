@@ -82,6 +82,7 @@
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
-    "ajv": "^8.12.0"
+    "ajv": "^8.12.0",
+    "swapy": "^0.0.6"
   }
 }
