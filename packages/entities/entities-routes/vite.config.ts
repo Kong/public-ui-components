@@ -2,6 +2,8 @@ import { resolve } from 'path'
 import { defineConfig, mergeConfig } from 'vite'
 import sharedViteConfig, { getApiProxies, sanitizePackageName } from '../../../vite.config.shared'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor'
+import topLevelAwait from 'vite-plugin-top-level-await'
+import wasm from 'vite-plugin-wasm'
 
 // Package name MUST always match the kebab-case package name inside the component's package.json file and the name of your `/packages/{package-name}` directory
 const packageName = 'entities-routes'
@@ -22,6 +24,9 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/expressions', // This is optional if we do not use Expressions features
         '@kong-ui-public/expressions/dist/style.css', // This is optional if we do not use Expressions features
         'monaco-editor', // This is optional if we do not use Expressions features
+        '@kong-ui-public/entities-shared',
+        '@kong/icons',
+        'lodash.isequal',
       ],
     },
   },
@@ -36,6 +41,12 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     }
     : {}),
   plugins: [
+    ...(process.env.NODE_ENV !== 'production' ? [
+      wasm(),
+      topLevelAwait({
+        promiseExportName: 'asyncInit',
+      }),
+    ] : []),
     // This plugin is only used in the sandbox & testing environment
     // It generates extra files in dist folder whitch are not need in library build
     ...(process.env.USE_SANDBOX

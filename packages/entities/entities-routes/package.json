@@ -34,7 +34,8 @@
     "@types/lodash.isequal": "^4.5.8",
     "axios": "^1.6.8",
     "vite-plugin-monaco-editor": "^1.1.0",
-    "vue": "^3.4.31",
+    "vite-plugin-top-level-await": "^1.4.1",
+    "vite-plugin-wasm": "^3.3.0",
     "vue-router": "^4.4.0"
   },
   "scripts": {
@@ -74,6 +75,7 @@
     "@kong-ui-public/expressions": "workspace:^",
     "@kong/icons": "^1.15.1",
     "lodash.isequal": "^4.5.0",
-    "monaco-editor": "0.21.3"
+    "monaco-editor": "0.21.3",
+    "vue": "^3.4.31"
   }
 }

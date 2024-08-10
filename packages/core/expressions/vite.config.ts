@@ -21,7 +21,16 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
     },
     rollupOptions: {
-      external: ['monaco-editor', '@kong-ui-public/forms', '@kong-ui-public/forms/dist/style.css'],
+      external: [
+        '@kong-ui-public/core',
+        // /^@kong-ui-public\/forms(\/dist\/styles.css)?$/,
+        '@kong-ui-public/forms',
+        '@kong-ui-public/forms/dist/style.css',
+        '@kong/atc-router',
+        '@kong/icons',
+        'monaco-editor',
+        'uuid',
+      ],
     },
   },
   plugins: [
