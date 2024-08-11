@@ -27,6 +27,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/entities-shared',
         '@kong/icons',
         'lodash.isequal',
+        '@kong/design-tokens',
       ],
     },
   },
