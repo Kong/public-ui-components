@@ -558,8 +558,8 @@ importers:
         specifier: ^1.16.0
         version: 1.16.0
       '@kong/icons':
-        specifier: ~1.0.0
-        version: 1.0.2(vue@3.4.31(typescript@5.3.3))
+        specifier: ~1.15.0
+        version: 1.15.1(vue@3.4.31(typescript@5.3.3))
       '@kong/kongponents':
         specifier: ~9.0.0
         version: 9.0.21(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
@@ -945,14 +945,14 @@ importers:
         specifier: ^1.16.0
         version: 1.16.0
       '@kong/icons':
-        specifier: ~1.0.0
-        version: 1.0.2(vue@3.4.31(typescript@5.3.3))
+        specifier: ~1.15.0
+        version: 1.15.1(vue@3.4.31(typescript@5.3.3))
       '@kong/kongponents':
         specifier: ~9.0.0
-        version: 9.0.21(axios@1.0.0)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
+        version: 9.0.21(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
       axios:
-        specifier: ~1.0.0
-        version: 1.0.0
+        specifier: ^1.6.0
+        version: 1.6.8
       lodash.isequal:
         specifier: ~4.0.0
         version: 4.0.0
@@ -1877,12 +1877,6 @@ packages:
     engines: {node: '>=18.0.0 || >=20.13.1'}
     peerDependencies:
       eslint: '>= 9.4.0'
-
-  '@kong/icons@1.0.2':
-    resolution: {integrity: sha512-aqCHN/B22CiIiJ21BmZcWWgW8FdGIPrjZCcSdD7IFScpPNgAi5Azl3veQ8QzGRfYlL1vc2YPv2V5S2JaofnOmg==}
-    engines: {node: '>=v18.16.1'}
-    peerDependencies:
-      vue: ^3.3.4
 
   '@kong/icons@1.15.1':
     resolution: {integrity: sha512-L6uiLGWhcsyn+jLOKY162pTybqTm4wvPQs7JEqRJfjcPX7v4K2CacieKMcFy6RHlDhyiSUwhQYNwvYGGZXKQ7A==}
@@ -3389,9 +3383,6 @@ packages:
 
   aws4@1.12.0:
     resolution: {integrity: sha512-NmWvPnx0F1SfrQbYwOi7OeaNGokp9XhzNioJ/CSBs8Qa4vxug81mhJEAVZwxXuBmYB5KDRfMq/F3RR0BIU7sWg==}
-
-  axios@1.0.0:
-    resolution: {integrity: sha512-SsHsGFN1qNPFT5QhSoSD37SHDfGyLSW5AESmyLk2JeCMHv5g0I9g0Hz/zQHx2KNe0jGXh2q2hAm7OdkXm360CA==}
 
   axios@1.6.0:
     resolution: {integrity: sha512-EZ1DYihju9pwVB+jg67ogm+Tmqc6JmhamRN6I4Zt8DfZu5lbcQGw3ozH9lFejSJgs/ibaef3A9PMXPLeefFGJg==}
@@ -9859,10 +9850,6 @@ snapshots:
       - supports-color
       - typescript
 
-  '@kong/icons@1.0.2(vue@3.4.31(typescript@5.3.3))':
-    dependencies:
-      vue: 3.4.31(typescript@5.3.3)
-
   '@kong/icons@1.15.1(vue@3.3.13(typescript@5.3.3))':
     dependencies:
       vue: 3.3.13(typescript@5.3.3)
@@ -9886,27 +9873,6 @@ snapshots:
       vue: 3.4.31(typescript@5.3.3)
       vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.31(typescript@5.3.3))
       vue-router: 4.4.0(vue@3.4.31(typescript@5.3.3))
-
-  '@kong/kongponents@9.0.21(axios@1.0.0)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))':
-    dependencies:
-      '@floating-ui/vue': 1.1.1(vue@3.4.31(typescript@5.3.3))
-      '@kong/icons': 1.15.1(vue@3.4.31(typescript@5.3.3))
-      '@popperjs/core': 2.11.8
-      axios: 1.0.0
-      date-fns: 2.30.0
-      date-fns-tz: 2.0.1(date-fns@2.30.0)
-      focus-trap: 7.5.4
-      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.4.31(typescript@5.3.3))
-      nanoid: 5.0.7
-      sortablejs: 1.15.2
-      swrv: 1.0.4(vue@3.4.31(typescript@5.3.3))
-      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.4.31(typescript@5.3.3))
-      vue: 3.4.31(typescript@5.3.3)
-      vue-bind-once: 0.2.1(vue@3.4.31(typescript@5.3.3))
-      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.31(typescript@5.3.3))
-      vue-router: 4.4.0(vue@3.4.31(typescript@5.3.3))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
 
   '@kong/kongponents@9.0.21(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))':
     dependencies:
@@ -12130,14 +12096,6 @@ snapshots:
   aws-sign2@0.7.0: {}
 
   aws4@1.12.0: {}
-
-  axios@1.0.0:
-    dependencies:
-      follow-redirects: 1.15.6
-      form-data: 4.0.0
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
 
   axios@1.6.0:
     dependencies:
