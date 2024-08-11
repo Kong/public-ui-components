@@ -558,16 +558,16 @@ importers:
         specifier: ^1.16.0
         version: 1.16.0
       '@kong/icons':
-        specifier: ~1.15.0
+        specifier: ^1.15.0
         version: 1.15.1(vue@3.4.31(typescript@5.3.3))
       '@kong/kongponents':
-        specifier: ~9.0.0
-        version: 9.0.21(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
+        specifier: ^9.0.0
+        version: 9.1.7(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
       monaco-editor:
         specifier: 0.21.3
         version: 0.21.3
       uuid:
-        specifier: ~9.0.0
+        specifier: ^9.0.0
         version: 9.0.1
       vue:
         specifier: ^3.4.0
@@ -945,16 +945,16 @@ importers:
         specifier: ^1.16.0
         version: 1.16.0
       '@kong/icons':
-        specifier: ~1.15.0
+        specifier: ^1.15.0
         version: 1.15.1(vue@3.4.31(typescript@5.3.3))
       '@kong/kongponents':
-        specifier: ~9.0.0
-        version: 9.0.21(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
+        specifier: ^9.0.0
+        version: 9.1.7(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
       axios:
         specifier: ^1.6.0
         version: 1.6.8
       lodash.isequal:
-        specifier: ~4.0.0
+        specifier: ^4.0.0
         version: 4.0.0
       monaco-editor:
         specifier: 0.21.3
@@ -1891,14 +1891,6 @@ packages:
       axios: ^1.6.1
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.2.4
-
-  '@kong/kongponents@9.0.21':
-    resolution: {integrity: sha512-CyccrVMcq4TUAYvD6/6KbZqy0PqZjVXHmUPjWJ2XvmApieTM/T5RBQTlNvTXA1HYdm72LNz6C/zWfk/TkjJDmg==}
-    engines: {node: '>=v16.20.2 || >=18.12.1 || >=20.14.0'}
-    peerDependencies:
-      axios: ^1.7.2
-      vue: '>= 3.3.4 < 4'
-      vue-router: ^4.4.0
 
   '@kong/kongponents@9.1.7':
     resolution: {integrity: sha512-zzgIaS4PIoxKO4Vno+ytkdzo6CsBLM53IU5WOXe/yNEyppJfkMt9H+Kwp+MbIZcTE1HiAaTIFl51pLOc4O0oMA==}
@@ -9873,27 +9865,6 @@ snapshots:
       vue: 3.4.31(typescript@5.3.3)
       vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.31(typescript@5.3.3))
       vue-router: 4.4.0(vue@3.4.31(typescript@5.3.3))
-
-  '@kong/kongponents@9.0.21(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))':
-    dependencies:
-      '@floating-ui/vue': 1.1.1(vue@3.4.31(typescript@5.3.3))
-      '@kong/icons': 1.15.1(vue@3.4.31(typescript@5.3.3))
-      '@popperjs/core': 2.11.8
-      axios: 1.6.8
-      date-fns: 2.30.0
-      date-fns-tz: 2.0.1(date-fns@2.30.0)
-      focus-trap: 7.5.4
-      focus-trap-vue: 4.0.3(focus-trap@7.5.4)(vue@3.4.31(typescript@5.3.3))
-      nanoid: 5.0.7
-      sortablejs: 1.15.2
-      swrv: 1.0.4(vue@3.4.31(typescript@5.3.3))
-      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.4.31(typescript@5.3.3))
-      vue: 3.4.31(typescript@5.3.3)
-      vue-bind-once: 0.2.1(vue@3.4.31(typescript@5.3.3))
-      vue-draggable-next: 2.2.1(sortablejs@1.15.2)(vue@3.4.31(typescript@5.3.3))
-      vue-router: 4.4.0(vue@3.4.31(typescript@5.3.3))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
 
   '@kong/kongponents@9.1.7(axios@1.6.8)(vue-router@4.4.0(vue@3.3.13(typescript@5.3.3)))(vue@3.3.13(typescript@5.3.3))':
     dependencies:
