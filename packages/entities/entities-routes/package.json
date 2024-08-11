@@ -63,12 +63,12 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/expressions": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.16.0",
-    "@kong/icons": "^1.15.1",
-    "@kong/kongponents": "9.1.7",
-    "axios": "^1.6.8",
-    "lodash.isequal": "^4.5.0",
+    "@kong/design-tokens": "^1.16.0",
+    "@kong/icons": "~1.0.0",
+    "@kong/kongponents": "~9.0.0",
+    "axios": "~1.0.0",
+    "lodash.isequal": "~4.0.0",
     "monaco-editor": "0.21.3",
-    "vue": "^3.4.31"
+    "vue": "~3.0.0"
   }
 }
