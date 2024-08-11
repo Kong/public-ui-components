@@ -67,7 +67,7 @@
     "@kong/kongponents": "~9.0.0",
     "monaco-editor": "0.21.3",
     "uuid": "~9.0.0",
-    "vue": "~3.0.0",
+    "vue": "^3.4.0",
     "@kong/icons": "~1.0.0",
     "@kong-ui-public/i18n": "workspace:^"
   }
