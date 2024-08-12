@@ -1,7 +1,7 @@
 import { makeFilterable } from './util'
 import type { BasicExploreFilter, BasicExploreQuery } from './basic'
 import { basicExploreAggregations, queryableBasicExploreDimensions } from './basic'
-import { ExploreFilterTypesV2, ExploreMetricFilterTypesV2 } from './common'
+import type { ExploreFilterTypesV2, ExploreMetricFilterTypesV2 } from './common'
 
 export const queryableExploreDimensions = [
   ...queryableBasicExploreDimensions,
