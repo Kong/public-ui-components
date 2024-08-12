@@ -3,6 +3,7 @@
     <EntityBaseForm
       :can-submit="canSubmit"
       :config="konnectConfig"
+      enable-terraform
       :entity-type="entityType"
       :error-message="form.errorMessage"
       :fetch-url="konnectFetchUrl"

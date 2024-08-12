@@ -4,6 +4,7 @@
     <EntityBaseConfigCard
       :config="konnectConfig"
       :config-schema="configSchema"
+      enable-terraform
       :entity-type="entityType"
       :fetch-url="konnectFetchUrl"
       @fetch:error="handleError"
@@ -43,6 +44,7 @@
     <EntityBaseConfigCard
       :config="kongManagerConfig"
       :config-schema="configSchema"
+      enable-terraform
       :entity-type="entityType"
       :fetch-url="kmFetchUrl"
       @fetch:error="handleError"

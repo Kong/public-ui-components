@@ -277,6 +277,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const router = useRouter()
@@ -319,14 +328,18 @@ const tabs = ref<Tab[]>([
     hash: '#json',
   },
   {
-    title: t('view_configuration.terraform'),
-    hash: '#terraform',
-  },
-  {
     title: t('view_configuration.yaml'),
     hash: '#yaml',
   },
 ])
+
+if (props.enableTerraform) {
+  // insert terraform as the third option
+  tabs.value.splice(1, 0, {
+    title: t('view_configuration.terraform'),
+    hash: '#terraform',
+  })
+}
 
 // For array-typed fields, if their elements are deeply nested objects,
 // we need this variable to record the key of the array field.

@@ -208,6 +208,14 @@ const props = defineProps({
     type: String,
     default: 'KCard',
   },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const router = useRouter()
@@ -278,14 +286,18 @@ const tabs = ref<Tab[]>([
     hash: '#json',
   },
   {
-    title: t('baseForm.configuration.terraform'),
-    hash: '#terraform',
-  },
-  {
     title: t('baseForm.configuration.yaml'),
     hash: '#yaml',
   },
 ])
+
+if (props.enableTerraform) {
+  // insert terraform as the third option
+  tabs.value.splice(1, 0, {
+    title: t('baseForm.configuration.terraform'),
+    hash: '#terraform',
+  })
+}
 
 watch(() => isLoading.value, (val: boolean) => {
   // Emit the loading state for the host app
