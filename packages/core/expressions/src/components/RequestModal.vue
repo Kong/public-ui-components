@@ -23,7 +23,6 @@
       :model="model"
       :options="options"
       :schema="ADD_REQUEST_SCHEMA"
-      @model-updated="handleModelUpdated"
     />
 
     <KAlert
@@ -142,11 +141,6 @@ const model = reactive<Partial<Request>>({})
 
 const urlHasError = ref<boolean>(false)
 const urlErrorMessage = ref<string | undefined>(undefined)
-
-
-const handleModelUpdated = (value: any, key: string) => {
-  (model as any)[key] = value
-}
 
 const handleProceed = () => {
   try {
