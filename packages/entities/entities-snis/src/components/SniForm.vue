@@ -4,6 +4,7 @@
       :can-submit="canSubmit"
       :config="config"
       :edit-id="sniId"
+      :enable-terraform="enableTerraform"
       :entity-type="SupportedEntityType.SNI"
       :error-message="form.errorMessage || fetchCertsErrorMessage"
       :fetch-url="fetchUrl"
@@ -145,6 +146,14 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
   },
 })
 
