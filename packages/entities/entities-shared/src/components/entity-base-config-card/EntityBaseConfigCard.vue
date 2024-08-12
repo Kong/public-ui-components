@@ -237,11 +237,11 @@ const configFormatItems = [
     selected: true,
   },
   {
-    label: 'JSON',
+    label: t('baseForm.configuration.json'),
     value: 'json',
   },
   {
-    label: 'YAML',
+    label: t('baseForm.configuration.yaml'),
     value: 'yaml',
   },
 ]
@@ -249,7 +249,7 @@ const configFormatItems = [
 if (props.enableTerraform) {
   // insert terraform as the third option
   configFormatItems.splice(2, 0, {
-    label: 'Terraform',
+    label: t('baseForm.configuration.terraform'),
     value: 'terraform',
   })
 }
