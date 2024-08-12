@@ -24,13 +24,6 @@ Reusable components to support [Kong's expressions language](https://docs.konghq
 
 ### Install
 
-Install required `dependencies` in your host application:
-
-```sh
-yarn add monaco-editor
-yarn add @kong-ui-public/forms # optional: required for `RouterPlaygroundModal` component
-```
-
 Install required `devDependencies` in your host application:
 
 ```sh
@@ -60,9 +53,6 @@ Import the component(s) in your host application as well as the package styles:
 ```ts
 import { asyncInit, ExpressionsEditor } from '@kong-ui-public/expressions'
 import '@kong-ui-public/expressions/dist/style.css'
-import '@kong-ui-public/forms/dist/style.css' // optional: required for `RouterPlaygroundModal` component
-
-app.component('VueFormGenerator', VueFormGenerator) // optional: required for `RouterPlaygroundModal` component
 ```
 
 This package utilizes [vite-plugin-top-level-await](https://github.com/Menci/vite-plugin-top-level-await) to transform code in order to use top-level await on older browsers. To load the WASM correctly, you must use `await` or `Promise.then` to wait the imported `asyncInit` before using any other imported values.

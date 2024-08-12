@@ -545,19 +545,22 @@ importers:
       '@kong-ui-public/core':
         specifier: workspace:^
         version: link:../core
+      '@kong-ui-public/forms':
+        specifier: workspace:^
+        version: link:../forms
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../i18n
       '@kong/icons':
         specifier: ^1.14.2
         version: 1.15.1(vue@3.4.31(typescript@5.3.3))
+      monaco-editor:
+        specifier: 0.21.3
+        version: 0.21.3
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
     devDependencies:
-      '@kong-ui-public/forms':
-        specifier: workspace:^
-        version: link:../forms
       '@kong/atc-router':
         specifier: 1.6.0-rc.1
         version: 1.6.0-rc.1
@@ -570,9 +573,6 @@ importers:
       '@types/uuid':
         specifier: ^9.0.8
         version: 9.0.8
-      monaco-editor:
-        specifier: 0.21.3
-        version: 0.21.3
       vite-plugin-monaco-editor:
         specifier: ^1.1.0
         version: 1.1.0(monaco-editor@0.21.3)
@@ -935,19 +935,15 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
+      '@kong-ui-public/expressions':
+        specifier: workspace:^
+        version: link:../../core/expressions
       '@kong/icons':
         specifier: ^1.15.1
         version: 1.15.1(vue@3.4.31(typescript@5.3.3))
       lodash.isequal:
         specifier: ^4.5.0
         version: 4.5.0
-    optionalDependencies:
-      '@kong-ui-public/expressions':
-        specifier: workspace:^
-        version: link:../../core/expressions
-      monaco-editor:
-        specifier: 0.21.3
-        version: 0.21.3
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^

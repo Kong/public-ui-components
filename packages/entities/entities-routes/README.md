@@ -36,6 +36,26 @@ Install the component in your host application
 yarn add @kong-ui-public/entities-routes
 ```
 
+If you want to enable [expressions feature](#expressions-features), you also need to install `devDependencies` in your host application:
+
+```sh
+yarn add -D vite-plugin-monaco-editor
+```
+
+Enable the `vite-plugin-monaco-editor` plugin. Your Vite config should look like this:
+
+```ts
+import monacoEditorPlugin from 'vite-plugin-monaco-editor'
+
+export default defineConfig({
+  // ...
+  plugins: [
+    monacoEditorPlugin({}),
+  ],
+  // ...
+}
+```
+
 ### Registration
 
 Import the component(s) in your host application as well as the package styles
