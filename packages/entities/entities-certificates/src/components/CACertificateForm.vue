@@ -4,6 +4,7 @@
       :can-submit="canSubmit"
       :config="config"
       :edit-id="certificateId"
+      :enable-terraform="enableTerraform"
       :entity-type="SupportedEntityType.CaCertificate"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
@@ -108,6 +109,14 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
   },
 })
 
