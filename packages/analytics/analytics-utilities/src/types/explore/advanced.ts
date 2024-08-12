@@ -47,7 +47,7 @@ export interface ExploreFilter extends Omit<BasicExploreFilter, 'type' | 'dimens
   type: ExploreFilterTypesV2 | ExploreMetricFilterTypesV2
   dimension?: FilterableExploreDimensions | FilterableExploreMetrics
   field?: FilterableExploreDimensions | FilterableExploreMetrics
-  value?: number
+  value?: number | null
 }
 
 export const exploreAggregations = [
