@@ -64,7 +64,7 @@ describe('<EntityBaseForm />', () => {
 
     cy.getTestId('form-view-configuration-slideout').should('exist')
     cy.getTestId('form-view-configuration-slideout-tabs').should('exist')
-    cy.get('.yaml-config').should('exist')
+    cy.get('.json-config').should('exist')
   })
 
   it('displays error message when provided', () => {
