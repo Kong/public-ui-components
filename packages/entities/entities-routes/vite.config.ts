@@ -19,9 +19,12 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     },
     rollupOptions: {
       external: [
-        '@kong-ui-public/expressions', // This is optional if we do not use Expressions features
-        '@kong-ui-public/expressions/dist/style.css', // This is optional if we do not use Expressions features
-        'monaco-editor', // This is optional if we do not use Expressions features
+        '@kong-ui-public/entities-shared',
+        '@kong-ui-public/entities-shared/dist/style.css',
+        '@kong-ui-public/expressions',
+        '@kong-ui-public/expressions/dist/style.css',
+        '@kong/icons',
+        'lodash.isequal',
       ],
     },
   },
