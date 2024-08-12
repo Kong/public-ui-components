@@ -4,6 +4,7 @@
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
+      :enable-terraform="enableTerraform"
       :entity-type="SupportedEntityType.KeySet"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
@@ -61,6 +62,14 @@ const props = defineProps({
    * Control visibility of card title content
    */
   hideTitle: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
     type: Boolean,
     default: false,
   },
