@@ -22,8 +22,9 @@ export type FilterableBasicExploreDimensions = typeof filterableBasicExploreDime
 
 export interface BasicExploreFilter {
   type: ExploreFilterTypesV2
-  dimension: FilterableBasicExploreDimensions
-  values: (string | number | null)[]
+  dimension?: FilterableBasicExploreDimensions
+  field?: FilterableBasicExploreDimensions
+  values?: (string | number | null)[]
 }
 
 export const basicExploreAggregations = [

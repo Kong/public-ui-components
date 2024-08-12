@@ -3,6 +3,10 @@ export const exploreFilterTypesV2 = ['in', 'not_in', 'selector'] as const
 
 export type ExploreFilterTypesV2 = typeof exploreFilterTypesV2[number]
 
+export const exploreMetricFilterTypesV2 = ['=', '!=', '<', '>', '<=', '>='] as const
+
+export type ExploreMetricFilterTypesV2 = typeof exploreMetricFilterTypesV2[number]
+
 
 // Note: time types are common to all of the datasources.
 // If a datasource doesn't support a certain time range / time spec, it returns no records
