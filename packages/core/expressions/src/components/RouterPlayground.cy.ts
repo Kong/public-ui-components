@@ -70,7 +70,7 @@
 //   }: {
 //     url: string
 //     method: string
-//     headers?: Record<string, string>[]
+//     headers?: { key: string, value: string | string[] }[]
 //   }) {
 //     cy.getTestId('btn-add-request').click()
 //     cy.getTestId('url-input').should('be.visible')
@@ -82,7 +82,7 @@
 //       headers.forEach((header, index) => {
 //         cy.getTestId('keyname-input').type(header.key)
 //         cy.getTestId('add-key').click()
-//         cy.get(`:nth-child(${index + 3}) > .form-control`).type(header.value)
+//         cy.get(`:nth-child(${index + 3}) > .form-control`).type(Array.isArray(header.value) ? header.value.join(',') : header.value)
 //       })
 //     }
 
@@ -90,6 +90,7 @@
 //   }
 
 //   it('add/remove requests', () => {
+//     cy.clearAllLocalStorage()
 //     cy.mount(RouterPlayground)
 
 //     addRequest({
@@ -107,6 +108,7 @@
 //   })
 
 //   it('matching requests', () => {
+//     cy.clearAllLocalStorage()
 //     cy.mount(RouterPlayground)
 //     const requestIds: string[] = []
 
@@ -130,6 +132,45 @@
 //       cy.get('.view-lines').type('http.host == "localhost"')
 //       cy.getTestId(requestIds[0]).should('have.class', 'active')
 //       cy.getTestId(requestIds[1]).should('not.have.class', 'active')
+//     })
+//   })
+
+//   it('matching multiple values in header', () => {
+//     cy.clearAllLocalStorage()
+//     cy.mount(RouterPlayground)
+//     const requestIds: string[] = []
+//     addRequest({
+//       url: 'http://localhost:8000',
+//       method: 'GET',
+//       headers: [
+//         { key: 'Foo', value: ['a', 'b', 'c'] },
+//       ],
+//     })
+
+//     addRequest({
+//       url: 'http://localhost:8000',
+//       method: 'GET',
+//       headers: [
+//         { key: 'Foo', value: 'a' },
+//       ],
+//     })
+
+//     addRequest({
+//       url: 'http://localhost:8000',
+//       method: 'GET',
+//       headers: [
+//         { key: 'Foo', value: ['b'] },
+//       ],
+//     })
+
+//     // eslint-disable-next-line cypress/unsafe-to-chain-command
+//     cy.get('.request-card').each($card => {
+//       requestIds.push($card.data('testid'))
+//     }).then(() => {
+//       cy.get('.view-lines').type('any(http.headers.foo) == "a"')
+//       cy.getTestId(requestIds[0]).should('have.class', 'active')
+//       cy.getTestId(requestIds[1]).should('have.class', 'active')
+//       cy.getTestId(requestIds[2]).should('not.have.class', 'active')
 //     })
 //   })
 

@@ -59,4 +59,14 @@ export const transformCheckRequest = (request: Partial<Request>): string | undef
       return i18n.t('errors.methodShouldCapitalized')
     }
   }
+
+  if (request.headers) {
+    Object.keys(request.headers).forEach(key => {
+      const values = request.headers![key]
+      // transform header values to array
+      if (typeof values === 'string' && values.indexOf(',') !== -1) {
+        request.headers![key] = values.split(',').map(value => value.trim())
+      }
+    })
+  }
 }
