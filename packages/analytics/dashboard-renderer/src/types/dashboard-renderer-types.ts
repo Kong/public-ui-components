@@ -6,10 +6,10 @@ import {
   aiExploreAggregations,
   basicExploreAggregations,
   exploreAggregations,
+  exploreFilterTypesV2,
   filterableAiExploreDimensions,
   filterableBasicExploreDimensions,
   filterableExploreDimensions,
-  filterTypesV2,
   granularityValues,
   queryableAiExploreDimensions,
   queryableBasicExploreDimensions,
@@ -306,7 +306,7 @@ const filtersFn = <T extends readonly string[]>(filterableDimensions: T) => ({
       },
       type: {
         type: 'string',
-        enum: filterTypesV2,
+        enum: exploreFilterTypesV2,
       },
       values: {
         type: 'array',

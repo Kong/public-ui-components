@@ -1,5 +1,5 @@
 import { makeFilterable } from './util'
-import type { FilterTypesV2, GranularityValues, TimeRangeV4 } from './common'
+import type { ExploreFilterTypesV2, GranularityValues, TimeRangeV4 } from './common'
 
 export const queryableBasicExploreDimensions = [
   'api_product',
@@ -21,7 +21,7 @@ export const filterableBasicExploreDimensions = makeFilterable(queryableBasicExp
 export type FilterableBasicExploreDimensions = typeof filterableBasicExploreDimensions[number]
 
 export interface BasicExploreFilter {
-  type: FilterTypesV2
+  type: ExploreFilterTypesV2
   dimension: FilterableBasicExploreDimensions
   values: (string | number | null)[]
 }

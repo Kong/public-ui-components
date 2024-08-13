@@ -1,5 +1,5 @@
 import { makeFilterable } from './util'
-import type { FilterTypesV2, MetricFilterTypesV2, TimeRangeV4 } from './common'
+import type { ExploreFilterTypesV2, MetricFilterTypesV2, TimeRangeV4 } from './common'
 import { queryableExploreDimensions } from './advanced'
 
 export const queryableRequestDimensions = [
@@ -41,7 +41,7 @@ export const filterableRequestMetrics = makeFilterable(queryableRequestMetrics)
 export type FilterableRequestMetrics = typeof filterableRequestMetrics[number]
 
 export interface RequestFilter {
-  type: FilterTypesV2 | MetricFilterTypesV2
+  type: ExploreFilterTypesV2 | MetricFilterTypesV2
   dimension?: FilterableRequestDimensions | FilterableRequestMetrics
   field?: FilterableRequestDimensions | FilterableRequestMetrics
   value?: number | null
