@@ -14,7 +14,8 @@
   },
   "include": [
     "src/**/*",
-    "sandbox/**/*"
+    "sandbox/**/*",
+    "cypress/**/*"
   ],
   "exclude": [
     "node_modules",

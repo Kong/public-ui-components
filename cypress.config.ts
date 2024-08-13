@@ -1,14 +1,14 @@
 import { defineConfig } from 'cypress'
-import sharedViteConfig from './vite.config.shared'
+// import sharedViteConfig from './vite.config.shared'
 
 export default defineConfig({
   component: {
     devServer: {
       framework: 'vue',
       bundler: 'vite',
-      viteConfig: {
-        ...sharedViteConfig,
-      },
+      // viteConfig: {
+      //   ...sharedViteConfig,
+      // },
     },
     supportFile: 'cypress/support/index.ts',
     specPattern: '**/src/**/*.cy.ts',
@@ -19,7 +19,7 @@ export default defineConfig({
   screenshotsFolder: 'cypress/screenshots',
   video: true,
   videosFolder: 'cypress/videos',
-  videoUploadOnPasses: false,
+  // videoUploadOnPasses: false,
   retries: {
     runMode: 1,
   },

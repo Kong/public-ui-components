@@ -16,9 +16,9 @@ coverage
 _public
 bundle-analyzer
 
-cypress/videos/
-cypress/screenshots/
-cypress/downloads/
+**/cypress/videos/
+**/cypress/screenshots/
+**/cypress/downloads/
 
 # Editor directories and files
 .vscode/*

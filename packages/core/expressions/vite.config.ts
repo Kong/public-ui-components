@@ -38,8 +38,8 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     }),
     // This plugin is only used in the sandbox & testing environment
     // It generates extra files in dist folder which are not need in library build
-    ...(process.env.USE_SANDBOX
-      ? [((monacoEditorPlugin as any).default as typeof monacoEditorPlugin)({})]
+    ...(process.env.NODE_ENV !== 'production'
+      ? [monacoEditorPlugin({})]
       : []),
   ],
 }))

@@ -7,6 +7,7 @@
     "src/**/*.cy.ts",
     "src/**/*.spec.ts",
     "sandbox",
+    "cypress",
     "dist"
   ]
 }
