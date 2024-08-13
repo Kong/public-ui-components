@@ -1,5 +1,5 @@
 import { makeFilterable } from './util'
-import type { AbsoluteTimeRangeV4, MetricFilterTypesV2, TimeRangeV4 } from './common'
+import type { AbsoluteTimeRangeV4, MetricFilterTypesV2 } from './common'
 import { queryableExploreDimensions, type ExploreFilter } from './advanced'
 
 export const queryableRequestDimensions = [
