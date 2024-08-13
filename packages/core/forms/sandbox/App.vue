@@ -57,6 +57,18 @@ const fieldSchema = {
       textOff: 'Not Cute',
       styleClasses: 'field-switch hide-label',
     },
+    // FieldRadio
+    {
+      type: 'radio',
+      model: 'gender',
+      id: 'gender',
+      name: 'gender',
+      label: 'Gender',
+      values: [
+        { name: 'Male', value: 'male' },
+        { name: 'Female', value: 'female' },
+      ],
+    },
   ],
 }
 
@@ -64,12 +76,14 @@ const fieldModelDefault = ref({
   cat_name: 'TK Meowstersmith',
   is_friendly: true,
   is_cute: true,
+  gender: null,
 })
 
 const fieldModelModified = ref({
   cat_name: 'BratCat',
   is_friendly: false,
   is_cute: false,
+  gender: 'male',
 })
 </script>
 

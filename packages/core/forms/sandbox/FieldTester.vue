@@ -101,7 +101,7 @@ const handleModelUpdated = (model: Record<string, any>, key: string): void => {
 
 // verify programmatic updates to model
 const handleUpdate = (): void => {
-  updatedFormModel.value = props.modifiedModel
+  updatedFormModel.value = JSON.parse(JSON.stringify(props.modifiedModel))
 }
 </script>
 
