@@ -39,7 +39,7 @@ export const queryableExploreMetrics = [
 
 export type QueryableExploreMetrics = typeof queryableExploreMetrics[number]
 
-export const filterableExploreMetrics = makeFilterable(queryableExploreDimensions)
+export const filterableExploreMetrics = makeFilterable(queryableExploreMetrics)
 
 export type FilterableExploreMetrics = typeof filterableExploreMetrics[number]
 
