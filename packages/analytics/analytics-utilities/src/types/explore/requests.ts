@@ -1,5 +1,5 @@
 import { makeFilterable } from './util'
-import type { MetricFilterTypesV2, TimeRangeV4 } from './common'
+import type { AbsoluteTimeRangeV4, MetricFilterTypesV2, TimeRangeV4 } from './common'
 import { queryableExploreDimensions, type ExploreFilter } from './advanced'
 
 export const queryableRequestDimensions = [
@@ -53,9 +53,27 @@ export interface RequestMetricFilter {
 
 export type RequestFilter = RequestDimensionFilter | RequestMetricFilter
 
+export enum relativeTimeRangeValuesRequestV2 {
+  '15M',
+  '1H',
+  '6H',
+  '12H',
+  '24H',
+  '7D',
+}
+
+export type RelativeTimeRangeValuesRequestV2 = typeof relativeTimeRangeValuesRequestV2[number]
+
+export interface RelativeTimeRangeRequestV2 {
+  type: 'relative'
+  tz?: string
+  time_range: RelativeTimeRangeValuesRequestV2
+}
+
+export type TimeRangeRequestV2 = AbsoluteTimeRangeV4 | RelativeTimeRangeRequestV2
 export interface RequestQuery {
   filters?: RequestFilter[]
-  time_range?: TimeRangeV4
+  time_range?: TimeRangeRequestV2
   order?: string
   offset?: number
   size?: number
