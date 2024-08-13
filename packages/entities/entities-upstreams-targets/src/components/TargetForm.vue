@@ -290,7 +290,7 @@ watch(() => props.targetId, () => {
 
 <style lang="scss" scoped>
 :deep(.kong-card) {
-  padding: 0;
+  padding: $kui-space-0;
 
   &.border {
     border: 0 !important;
@@ -318,7 +318,7 @@ watch(() => props.targetId, () => {
       margin-bottom: $kui-space-90;
 
       &:last-of-type {
-        margin-bottom: 0px;
+        margin-bottom: $kui-space-0;
       }
     }
   }
@@ -334,7 +334,7 @@ watch(() => props.targetId, () => {
 
   :deep(.k-card.kong-ui-entity-base-form) {
     border: none;
-    padding: 0;
+    padding: $kui-space-0;
   }
 }
 </style>
