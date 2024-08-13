@@ -1,11 +1,11 @@
 
-export const exploreFilterTypesV2 = ['in', 'not_in', 'selector'] as const
+export const filterTypesV2 = ['in', 'not_in', 'selector'] as const
 
-export type ExploreFilterTypesV2 = typeof exploreFilterTypesV2[number]
+export type FilterTypesV2 = typeof filterTypesV2[number]
 
-export const exploreMetricFilterTypesV2 = ['=', '!=', '<', '>', '<=', '>='] as const
+export const metricFilterTypesV2 = ['=', '!=', '<', '>', '<=', '>='] as const
 
-export type ExploreMetricFilterTypesV2 = typeof exploreMetricFilterTypesV2[number]
+export type MetricFilterTypesV2 = typeof metricFilterTypesV2[number]
 
 
 // Note: time types are common to all of the datasources.
