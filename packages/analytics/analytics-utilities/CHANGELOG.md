@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.3.2...@kong-ui-public/analytics-utilities@4.4.0) (2024-08-14)
+
+
+### Features
+
+* add new filter fields ([#1552](https://github.com/Kong/public-ui-components/issues/1552)) ([259a62e](https://github.com/Kong/public-ui-components/commit/259a62eb664d2256d4704f90ba18d86eeb91b8a2))
+
+
+
+
+
 ## [4.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.3.1...@kong-ui-public/analytics-utilities@4.3.2) (2024-08-12)
 
 
