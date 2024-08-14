@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.4.0...@kong-ui-public/analytics-utilities@4.4.1) (2024-08-14)
+
+
+### Bug Fixes
+
+* type for api-request time_ranges ([#1557](https://github.com/Kong/public-ui-components/issues/1557)) ([a93bf0e](https://github.com/Kong/public-ui-components/commit/a93bf0e0a410daefb07779bca59157b84a2958a6))
+
+
+
+
+
 # [4.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.3.2...@kong-ui-public/analytics-utilities@4.4.0) (2024-08-14)
 
 
