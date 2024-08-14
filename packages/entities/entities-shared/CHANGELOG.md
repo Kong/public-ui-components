@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.6.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.6.3...@kong-ui-public/entities-shared@3.6.4) (2024-08-14)
+
+
+### Bug Fixes
+
+* **entitites-consumer-groups:** filter response transform [KM-410] ([#1555](https://github.com/Kong/public-ui-components/issues/1555)) ([c6a96cd](https://github.com/Kong/public-ui-components/commit/c6a96cdbfe4e17fe2a59296c1b40dbc853ac6074))
+
+
+
+
+
 ## [3.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.6.2...@kong-ui-public/entities-shared@3.6.3) (2024-08-09)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
