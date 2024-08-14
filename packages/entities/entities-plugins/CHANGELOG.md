@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.7.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.7.3...@kong-ui-public/entities-plugins@8.7.4) (2024-08-14)
+
+
+### Bug Fixes
+
+* **entities-plugins:** i18n string for vault secret picker CTA ([#1554](https://github.com/Kong/public-ui-components/issues/1554)) ([54f1bb5](https://github.com/Kong/public-ui-components/commit/54f1bb52d784d4e694cf6ca421b1017359d0c851))
+
+
+
+
+
 ## [8.7.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.7.2...@kong-ui-public/entities-plugins@8.7.3) (2024-08-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
