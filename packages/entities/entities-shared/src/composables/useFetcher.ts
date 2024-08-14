@@ -58,11 +58,7 @@ export default function useFetcher(
 
 
       if (data[dataKey]) {
-        if (Array.isArray(data[dataKey])) {
-          tableData = data[dataKey]
-        } else {
-          tableData = [data[dataKey]]
-        }
+        tableData = Array.isArray(data[dataKey]) ? data[dataKey] : [data[dataKey]]
       } else if (Array.isArray(data)) {
         // An array of object is returned
         tableData = data
