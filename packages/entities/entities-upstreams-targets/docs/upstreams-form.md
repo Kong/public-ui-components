@@ -100,6 +100,7 @@ Please refer to the [sandbox](../sandbox/pages/UpstreamFormPage.vue). The form i
 ## TypeScript interfaces
 
 TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/entities/entities-upstreams-targets/src/types/upstreams-form.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+
 ```ts
 import type {
  BaseUpstreamsFormConfig,
