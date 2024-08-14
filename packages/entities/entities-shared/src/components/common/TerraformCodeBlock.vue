@@ -34,9 +34,9 @@ const buildBasicValString = (value: string | number | boolean, key: string): str
   let content = ''
 
   if (typeof value === 'string') {
-    content += `\n${indent}${key} = "${value}"\n`
+    content += `\n${indent}${key} = "${value}"`
   } else { // boolean or number
-    content += `\n${indent}${key} = ${String(value !== undefined && value !== null ? value : '')}\n`
+    content += `\n${indent}${key} = ${String(value !== undefined && value !== null ? value : '')}`
   }
 
   return content
@@ -57,9 +57,9 @@ const buildObjectStr = (value: Record<string, any>, key?: string, additionalInde
 
   if (value === null) {
     if (key) {
-      content += `${indent}}\n`
+      content += `${indent}}`
     } else {
-      content = '{}\n'
+      content = '{}'
     }
 
     return content
@@ -76,19 +76,17 @@ const buildObjectStr = (value: Record<string, any>, key?: string, additionalInde
       } else {
         valueContent = '[\n'
         valueContent += buildArrayStr(v, undefined, indent)
-        valueContent += `${indent}${SINGLE_INDENT}]\n`
+        valueContent += `${indent}${SINGLE_INDENT}]`
       }
     } else if (v && typeof v === 'object') {
       valueContent = '{\n'
       valueContent += buildObjectStr(v, undefined, indent)
-      valueContent += `${indent}${SINGLE_INDENT}}\n`
+      valueContent += `${indent}${SINGLE_INDENT}}`
     } else { // string, number, boolean, or null/undefined -> string
       valueContent = String(v !== undefined && v !== null ? v : '')
     }
 
-    if (Array.isArray(v) || typeof v === 'object') {
-      content += '\n'
-    } else if (typeof v === 'string') {
+    if (typeof v === 'string') {
       // double quote strings
       valueContent = `"${valueContent}"`
     }
@@ -96,7 +94,7 @@ const buildObjectStr = (value: Record<string, any>, key?: string, additionalInde
     content += `${indent}${SINGLE_INDENT}${k} = ${valueContent}\n`
   }
 
-  return key ? content += `${indent}}\n` : content
+  return key ? content += `${indent}}` : content
 }
 
 const buildArrayStr = (arr: any[], key?: string, additionalIndent = ''): string => {
@@ -139,7 +137,7 @@ const buildArrayStr = (arr: any[], key?: string, additionalIndent = ''): string 
     if (arr.length === 0) {
       content += ']'
     } else {
-      content += `${indent}]\n`
+      content += `${indent}]`
     }
   }
 
@@ -216,9 +214,9 @@ const terraformContent = computed((): string => {
     const pluginType = (modifiedRecord.name + '').replace(/-/g, '_')
     delete modifiedRecord.name
 
-    content += `resource "konnect_gateway_plugin_${pluginType}" "my_${pluginType}" {\n`
+    content += `resource "konnect_gateway_plugin_${pluginType}" "my_${pluginType}" {`
   } else { // generic entity
-    content += `resource "konnect_gateway_${props.entityType}" "my_${props.entityType}" {\n`
+    content += `resource "konnect_gateway_${props.entityType}" "my_${props.entityType}" {`
   }
 
   // main config
