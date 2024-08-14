@@ -53,14 +53,14 @@ export interface RequestMetricFilter {
 
 export type RequestFilter = RequestDimensionFilter | RequestMetricFilter
 
-export enum relativeTimeRangeValuesRequestV2 {
+export const relativeTimeRangeValuesRequestV2 = [
   '15M',
   '1H',
   '6H',
   '12H',
   '24H',
   '7D',
-}
+]
 
 export type RelativeTimeRangeValuesRequestV2 = typeof relativeTimeRangeValuesRequestV2[number]
 
@@ -71,6 +71,7 @@ export interface RelativeTimeRangeRequestV2 {
 }
 
 export type TimeRangeRequestV2 = AbsoluteTimeRangeV4 | RelativeTimeRangeRequestV2
+
 export interface RequestQuery {
   filters?: RequestFilter[]
   time_range?: TimeRangeRequestV2
