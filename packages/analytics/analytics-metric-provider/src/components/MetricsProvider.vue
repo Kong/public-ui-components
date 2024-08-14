@@ -76,7 +76,7 @@ const analyticsConfigStore = useAnalyticsConfigStore()
 
 // Check if the current org has long enough retention to make a sane trend query.
 // If the feature flag is set, trend access is always true.
-const hasTrendAccess = computed<boolean>(() => skuFeatureFlag.value || analyticsConfigStore.longRetention)
+const hasTrendAccess = computed<boolean>(() => analyticsConfigStore.longRetention)
 
 // Don't attempt to issue a query until we know what we can query for.
 const queryReady = computed(() => !analyticsConfigStore.loading && props.queryReady)
@@ -89,9 +89,11 @@ const tz = computed(() => {
   return (new Intl.DateTimeFormat()).resolvedOptions().timeZone
 })
 
-const skuFeatureFlag = computed<boolean>(() => {
+const genericFeatureFlag = computed<boolean>(() => {
   // The feature flag client is guaranteed to be initialized by the time the code gets to this place.
-  return evaluateFeatureFlagFn('MA-2527-analytics-sku-config-endpoint', false)
+  // Example: evaluateFeatureFlagFn('ma-3000-analytics-feature-flag', false)
+
+  return evaluateFeatureFlagFn('stub', true)
 })
 
 const resolvedDatasource = computed<QueryDatasource>(() => {
@@ -99,7 +101,7 @@ const resolvedDatasource = computed<QueryDatasource>(() => {
     return props.datasource
   }
 
-  return skuFeatureFlag.value ? 'basic' : 'advanced'
+  return 'basic'
 })
 
 // Note: the component implicitly assumes the values it feeds to the composables aren't going to change.
@@ -113,9 +115,10 @@ const timeframe = computed<Timeframe>(() => {
     return props.overrideTimeframe
   }
 
-  if (skuFeatureFlag.value) {
-    return TimePeriods.get(TimeframeKeys.SEVEN_DAY)!
-  }
+  // TODO - I assume we don't want to short-circut and default to 7 days here (?)
+  // if (skuFeatureFlag.value) {
+  // return TimePeriods.get(TimeframeKeys.SEVEN_DAY)!
+  // }
 
   const retval = hasTrendAccess.value
     ? TimePeriods.get(props.maxTimeframe)
@@ -134,7 +137,7 @@ const averageLatencies = computed<boolean>(() => {
     return false
   }
 
-  return skuFeatureFlag.value
+  return true
 })
 
 const {
