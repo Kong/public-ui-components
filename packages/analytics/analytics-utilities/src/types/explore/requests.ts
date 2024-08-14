@@ -60,7 +60,7 @@ export const relativeTimeRangeValuesRequestV2 = [
   '12H',
   '24H',
   '7D',
-]
+] as const
 
 export type RelativeTimeRangeValuesRequestV2 = typeof relativeTimeRangeValuesRequestV2[number]
 
