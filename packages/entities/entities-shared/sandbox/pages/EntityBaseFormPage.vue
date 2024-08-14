@@ -3,6 +3,8 @@
     <EntityBaseForm
       :can-submit="canSubmit"
       :config="konnectConfig"
+      enable-terraform
+      :entity-type="entityType"
       :error-message="form.errorMessage"
       :fetch-url="konnectFetchUrl"
       :form-fields="form.fields"
@@ -45,10 +47,11 @@
 <script setup lang="ts">
 import { computed, ref, reactive } from 'vue'
 import type { KonnectBaseFormConfig } from '../../src'
-import { EntityBaseForm, EntityFormSection } from '../../src'
+import { EntityBaseForm, EntityFormSection, SupportedEntityType } from '../../src'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const konnectFetchUrl = ref(`/v2/control-planes/${controlPlaneId}/core-entities/services`)
+const entityType = SupportedEntityType.GatewayService
 
 const konnectConfig = ref<KonnectBaseFormConfig>({
   app: 'konnect',

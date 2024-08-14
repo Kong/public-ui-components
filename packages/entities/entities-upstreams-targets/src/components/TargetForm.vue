@@ -13,6 +13,7 @@
         <EntityBaseForm
           :config="config"
           :edit-id="targetId"
+          :entity-type="SupportedEntityType.Target"
           :error-message="form.errorMessage"
           :fetch-url="fetchUrl"
           :form-fields="requestBody"
@@ -87,7 +88,7 @@ import type {
 } from '../types'
 import endpoints from '../targets-endpoints'
 import composables from '../composables'
-import { useAxios, useErrors, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
+import { useAxios, useErrors, EntityBaseForm, EntityBaseFormType, SupportedEntityType } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
@@ -289,6 +290,8 @@ watch(() => props.targetId, () => {
 
 <style lang="scss" scoped>
 :deep(.kong-card) {
+  padding: $kui-space-0;
+
   &.border {
     border: 0 !important;
   }
@@ -296,8 +299,6 @@ watch(() => props.targetId, () => {
   &.borderTop {
     border-top: 0 !important;
   }
-
-  padding: 0;
 }
 
 .kong-ui-entities-target-form {
@@ -317,7 +318,7 @@ watch(() => props.targetId, () => {
       margin-bottom: $kui-space-90;
 
       &:last-of-type {
-        margin-bottom: 0px;
+        margin-bottom: $kui-space-0;
       }
     }
   }
@@ -333,7 +334,7 @@ watch(() => props.targetId, () => {
 
   :deep(.k-card.kong-ui-entity-base-form) {
     border: none;
-    padding: 0;
+    padding: $kui-space-0;
   }
 }
 </style>

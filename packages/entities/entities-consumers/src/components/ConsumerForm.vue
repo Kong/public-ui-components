@@ -4,6 +4,8 @@
       :can-submit="isFormValid && changesExist"
       :config="config"
       :edit-id="consumerId"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.Consumer"
       :error-message="state.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="payload"
@@ -104,7 +106,14 @@
 </template>
 
 <script lang="ts" setup>
-import { useAxios, useErrors, EntityFormSection, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
+import {
+  useAxios,
+  useErrors,
+  EntityFormSection,
+  EntityBaseForm,
+  EntityBaseFormType,
+  SupportedEntityType,
+} from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { PropType } from 'vue'
@@ -139,6 +148,14 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
   },
 })
 

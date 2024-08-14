@@ -1,6 +1,6 @@
 # SecretForm.vue
 
-A form component for Konnect config store secrets. *This component should only be used in Konnect*. 
+A form component for Konnect config store secrets. *This component should only be used in Konnect*.
 
 - [Requirements](#requirements)
 - [Usage](#usage)
@@ -75,6 +75,14 @@ Current vault ID.
 - default: `''`
 
 If a valid `secretId` is provided, it will put the form in Edit mode instead of Create.
+
+#### `enableTerraform`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
 
 ### Events
 

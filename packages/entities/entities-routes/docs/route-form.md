@@ -116,7 +116,7 @@ Show/hide Service Select field. Should be used in case of manually adding `servi
 - required: `false`
 - default: `false`
 
-Show tags field under _Advanced Fields_ collapse or in it's default place (before protocols field).
+Show tags field under *Advanced Fields* collapse or in it's default place (before protocols field).
 
 #### `routeFlavors` (controls Expressions features)
 
@@ -161,6 +161,14 @@ Show tags field under _Advanced Fields_ collapse or in it's default place (befor
 
 Show/hide the Expressions modal entry button.
 
+#### `enableTerraform`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
+
 ### Slots
 
 #### `form-actions`
@@ -168,6 +176,7 @@ Show/hide the Expressions modal entry button.
 Content to be displayed instead of the default `Cancel` and `Save` buttons, at the bottom of the form.
 
 Slot props:
+
 - `canSubmit`
   - type: `Boolean`
   - Should the submit button be enabled or disabled.
@@ -183,6 +192,7 @@ Slot props:
 Content to be displayed after the Expressions editor.
 
 Slot props:
+
 - `expression`
   - type: `[string, (value: string) => void]`
   - The expression and a function to update the expression. This is useful when slot content is trying to update the expression (e.g., router playground).
@@ -211,6 +221,7 @@ A `@model-updated` event is emitted when any form value was changed. The event p
 #### notify
 
 A `@notify` event is emitted when a Toast is called. The event payload is an object with the following properties:
+
 - `message`:
   - type: `string`
   - The message to display in the Toast.

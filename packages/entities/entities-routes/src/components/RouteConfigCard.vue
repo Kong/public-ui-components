@@ -4,6 +4,8 @@
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.Route"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
@@ -152,9 +154,13 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import {
-  useAxios, EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType, InternalLinkItem,
+  useAxios,
+  ConfigurationSchemaSection,
+  ConfigurationSchemaType,
+  EntityBaseConfigCard,
+  InternalLinkItem,
+  SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
-
 import endpoints from '../routes-endpoints'
 import composables from '../composables'
 import type {
@@ -204,6 +210,14 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
   },
 })
 

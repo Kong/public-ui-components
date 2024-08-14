@@ -4,6 +4,8 @@
       :can-submit="isFormValid && changesExist"
       :config="config"
       :edit-id="upstreamId"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.Upstream"
       :error-message="state.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
@@ -88,6 +90,7 @@
 import {
   EntityBaseForm,
   EntityBaseFormType,
+  SupportedEntityType,
   useAxios,
   useErrors,
 } from '@kong-ui-public/entities-shared'
@@ -132,6 +135,14 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
   },
 })
 

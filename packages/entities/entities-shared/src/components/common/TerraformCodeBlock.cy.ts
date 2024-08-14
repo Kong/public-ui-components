@@ -1,4 +1,5 @@
-import YamlCodeBlock from './YamlCodeBlock.vue'
+import TerraformCodeBlock from './TerraformCodeBlock.vue'
+import { SupportedEntityType } from '../../types'
 
 const record = {
   destinations: [{ ip: '255.255.255.255', port: 123 }],
@@ -17,16 +18,17 @@ const record = {
   tags: ['dev', 'prod'],
 }
 
-describe('<YamlCodeBlock />', () => {
-  describe('YamlCodeBlock', () => {
-    it('renders the Yaml content correctly', () => {
-      cy.mount(YamlCodeBlock, {
+describe('<TerraformCodeBlock />', () => {
+  describe('TerraformCodeBlock', () => {
+    it('renders the Terraform content correctly', () => {
+      cy.mount(TerraformCodeBlock, {
         props: {
           entityRecord: record,
+          entityType: SupportedEntityType.Route,
         },
       })
 
-      cy.get('.yaml-config').should('be.visible')
+      cy.get('.terraform-config').should('be.visible')
     })
   })
 })

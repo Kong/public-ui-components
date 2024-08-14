@@ -4,6 +4,8 @@
     <EntityBaseConfigCard
       :config="konnectConfig"
       :config-schema="configSchema"
+      enable-terraform
+      :entity-type="entityType"
       :fetch-url="konnectFetchUrl"
       @fetch:error="handleError"
       @fetch:success="handleSuccess"
@@ -42,6 +44,8 @@
     <EntityBaseConfigCard
       :config="kongManagerConfig"
       :config-schema="configSchema"
+      enable-terraform
+      :entity-type="entityType"
       :fetch-url="kmFetchUrl"
       @fetch:error="handleError"
       @fetch:success="handleSuccess"
@@ -53,7 +57,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { ConfigurationSchema, KonnectBaseEntityConfig, KongManagerBaseEntityConfig } from '../../src'
-import { EntityBaseConfigCard, ConfigurationSchemaType, ConfigCardItem } from '../../src'
+import {
+  EntityBaseConfigCard,
+  ConfigurationSchemaType,
+  ConfigCardItem,
+  SupportedEntityType,
+} from '../../src'
 import composables from '../../src/composables'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
@@ -61,7 +70,8 @@ const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const konnectFetchUrl = ref('/v2/control-planes/{controlPlaneId}/core-entities/upstreams/{id}')
 const kmFetchUrl = ref('/{workspace}/upstreams/{id}')
 // replace with you own ID
-const entityId = 'ce83dd74-6455-40a9-b944-0f393c7ee22c'
+const entityType = SupportedEntityType.Upstream
+const entityId = '1b8099a8-743a-4b1a-bed5-15689af430fd'
 // const entityId = 'a8859647-45fd-4604-bb72-fea7eeae3618'
 
 const { convertKeyToTitle } = composables.useStringHelpers()

@@ -4,6 +4,8 @@
       :can-submit="isFormValid && changesExist"
       :config="config"
       :edit-id="vaultId"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.Vault"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
@@ -490,6 +492,7 @@ import {
   EntityFormSection,
   EntityBaseForm,
   EntityBaseFormType,
+  SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -552,6 +555,14 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
   },
 })
 

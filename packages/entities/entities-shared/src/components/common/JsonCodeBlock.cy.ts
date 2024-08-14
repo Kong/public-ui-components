@@ -22,7 +22,7 @@ describe('<JsonCodeBlock />', () => {
     it('renders the Json content correctly', () => {
       cy.mount(JsonCodeBlock, {
         props: {
-          jsonRecord: record,
+          entityRecord: record,
         },
       })
 
@@ -35,7 +35,7 @@ describe('<JsonCodeBlock />', () => {
       cy.mount(JsonCodeBlock, {
         props: {
           fetcherUrl,
-          jsonRecord: record,
+          entityRecord: record,
           requestMethod: 'get',
         },
       })

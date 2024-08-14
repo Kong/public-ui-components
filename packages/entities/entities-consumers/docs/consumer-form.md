@@ -26,51 +26,61 @@ A form component to create/edit Consumer.
 ### Props
 
 #### `config`
+
 - type: `Object as PropType<KonnectConsumerFormConfig | KongManagerConsumerFormConfig>`
 - required: `true`
 - default: `undefined`
 - properties:
-    - `app`:
-        - type: `'konnect' | 'kongManager'`
-        - required: `true`
-        - default: `undefined`
-        - App name.
-    - `apiBaseUrl`:
-        - type: `string`
-        - required: `true`
-        - default: `undefined`
-        - Base URL for API requests.
-    - `axiosRequestConfig`:
-        - type: `AxiosRequestConfig`
-        - required: `false`
-        - default: `undefined`
-        - An optional configuration object for the underlying Axios request.
-    - `cancelRoute`:
-      - type: `RouteLocationRaw`
-      - required: `true`
-      - default: `undefined`
-      - Route to return to when canceling creation of a Consumer.
+  - `app`:
+    - type: `'konnect' | 'kongManager'`
+    - required: `true`
+    - default: `undefined`
+    - App name.
+  - `apiBaseUrl`:
+    - type: `string`
+    - required: `true`
+    - default: `undefined`
+    - Base URL for API requests.
+  - `axiosRequestConfig`:
+    - type: `AxiosRequestConfig`
+    - required: `false`
+    - default: `undefined`
+    - An optional configuration object for the underlying Axios request.
+  - `cancelRoute`:
+    - type: `RouteLocationRaw`
+    - required: `true`
+    - default: `undefined`
+    - Route to return to when canceling creation of a Consumer.
 
-    - `workspace`:
-        - type: `string`
-        - required: `true`
-        - default: `undefined`
-        - *Specific to Kong Manager*. Name of the current workspace.
+  - `workspace`:
+    - type: `string`
+    - required: `true`
+    - default: `undefined`
+    - *Specific to Kong Manager*. Name of the current workspace.
 
-    - `controlPlaneId`:
-        - type: `string`
-        - required: `true`
-        - default: `undefined`
-        - *Specific to Konnect*. Name of the current control plane.
+  - `controlPlaneId`:
+    - type: `string`
+    - required: `true`
+    - default: `undefined`
+    - *Specific to Konnect*. Name of the current control plane.
 
 #### `consumerId`
+
 - type: `string`
 - required: `false`
 - default: `''`
 - If a valid consumerId is provided, it will put the form in Edit mode instead of Create.
 
+#### `enableTerraform`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
 
 ### Events
+
 #### update
 
 A `@update` event is emitted when the form is saved. The event payload is the Consumer object.

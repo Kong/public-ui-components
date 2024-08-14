@@ -30,7 +30,7 @@
     @error="onError"
     @update="onUpdate"
   >
-    <template #form-actions="{ canSubmit, submit, cancel }">
+    <!-- <template #form-actions="{ canSubmit, submit, cancel }">
       <KButton
         appearance="secondary"
         @click="cancel"
@@ -48,7 +48,7 @@
 
     <template #after-expressions-editor="editor">
       This text will appear after the Expressions editor. Editor state: {{ editor.state }}.
-    </template>
+    </template> -->
   </RouteForm>
 
   <h2>Kong Manager API</h2>

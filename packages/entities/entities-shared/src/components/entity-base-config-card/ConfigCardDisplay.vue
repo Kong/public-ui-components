@@ -48,25 +48,32 @@
   </div>
 
   <JsonCodeBlock
-    v-if="format === 'json' && props.record"
+    v-if="format === 'json' && entityRecord"
     :config="props.config"
+    :entity-record="entityRecord"
     :fetcher-url="props.fetcherUrl"
-    :json-record="jsonOrYamlRecord"
     request-method="get"
   />
   <YamlCodeBlock
-    v-if="format === 'yaml' && props.record"
-    :yaml-record="jsonOrYamlRecord"
+    v-if="format === 'yaml' && entityRecord"
+    :entity-record="entityRecord"
+  />
+  <TerraformCodeBlock
+    v-if="format === 'terraform' && entityRecord"
+    :entity-record="entityRecord"
+    :entity-type="props.entityType"
   />
 </template>
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { computed, useSlots } from 'vue'
-import type { RecordItem, KonnectBaseEntityConfig, KongManagerBaseEntityConfig } from '../../types'
+import type { RecordItem, KonnectBaseEntityConfig, KongManagerBaseEntityConfig, SupportedEntityType } from '../../types'
+import { SupportedEntityTypesArray } from '../../types'
 import ConfigCardItem from './ConfigCardItem.vue'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
 import YamlCodeBlock from '../common/YamlCodeBlock.vue'
+import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
 import composables from '../../composables'
 
 export interface PropList {
@@ -82,6 +89,11 @@ const props = defineProps({
     required: false,
     default: () => ({}),
   },
+  entityType: {
+    type: String as PropType<SupportedEntityType>,
+    required: true,
+    validator: (val: SupportedEntityType) => SupportedEntityTypesArray.includes(val),
+  },
   propertyCollections: {
     type: Object as PropType<PropList>,
     required: false,
@@ -91,7 +103,7 @@ const props = defineProps({
     type: String,
     required: false,
     default: 'structured',
-    validator: (val: string) => ['structured', 'yaml', 'json'].includes(val),
+    validator: (val: string) => ['structured', 'yaml', 'json', 'terraform'].includes(val),
   },
   propListTypes: {
     type: Array as PropType<string[]>,
@@ -116,7 +128,7 @@ const slots = useSlots()
 const { i18n: { t } } = composables.useI18n()
 
 const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
-const jsonOrYamlRecord = computed((): PropType<Record<string, any>> => {
+const entityRecord = computed((): PropType<Record<string, any>> => {
   if (!props.record) {
     return props.record
   }

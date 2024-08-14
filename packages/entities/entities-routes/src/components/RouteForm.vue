@@ -4,6 +4,8 @@
       :can-submit="isFormValid && changesExist"
       :config="config"
       :edit-id="routeId"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.Route"
       :error-message="state.errorMessage || fetchServicesErrorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
@@ -453,6 +455,7 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   EntityFormSection,
+  SupportedEntityType,
   useAxios,
   useDebouncedFilter,
   useErrors,
@@ -575,6 +578,14 @@ const props = defineProps({
   showExpressionsModalEntry: {
     type: Boolean,
     required: false,
+    default: false,
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
     default: false,
   },
 })
