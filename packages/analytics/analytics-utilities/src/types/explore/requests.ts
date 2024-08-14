@@ -73,12 +73,12 @@ export interface RelativeTimeRangeRequestV2 {
 export type TimeRangeRequestV2 = AbsoluteTimeRangeV4 | RelativeTimeRangeRequestV2
 
 export interface RequestQuery {
-  filters?: RequestFilter[]
-  time_range?: TimeRangeRequestV2
+  filters: RequestFilter[]
+  time_range: TimeRangeRequestV2
   order?: string
   offset?: number
   size?: number
   query_id?: string
   limit?: number
-  clasified?: boolean
+  classified?: boolean
 }
