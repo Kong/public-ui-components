@@ -2,6 +2,7 @@
   <h2>Konnect API</h2>
   <PluginConfigCard
     :config="konnectConfig"
+    enable-terraform
     @fetch:error="onError"
     @fetch:success="onSuccess"
   />

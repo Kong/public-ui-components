@@ -93,6 +93,14 @@ Set this value to `true` to hide the card title.
 
 Specify the KeySet ID once you want to fetch the key within a KeySet URL scope.
 
+#### `enableTerraform`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
+
 ### Events
 
 #### fetch:error
