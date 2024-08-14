@@ -342,8 +342,14 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   } as FuzzyMatchFilterConfig
 })
 
-const dataKeyName = computed((): string | undefined => isConsumerPage.value && !props.config.paginatedEndpoint ? 'consumer_groups' : undefined)
-const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value, dataKeyName.value)
+const dataKeyName = computed((): string | undefined => {
+  if (props.config.app === 'konnect' && filterQuery.value) {
+    return 'consumer_group'
+  }
+  return isConsumerPage.value && !props.config.paginatedEndpoint ? 'consumer_groups' : undefined
+})
+
+const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value, dataKeyName)
 
 const clearFilter = (): void => {
   filterQuery.value = ''

@@ -61,6 +61,7 @@ const konnectConfig = ref<KonnectConsumerGroupListConfig>({
   createRoute: { name: 'create-consumer-group' },
   getViewRoute: (id: string) => ({ name: 'view-consumer-group', params: { id } }),
   getEditRoute: (id: string) => ({ name: 'edit-consumer-group', params: { id } }),
+  isExactMatch: true,
 })
 
 const kongManagerConfig = ref<KongManagerConsumerGroupListConfig>({
