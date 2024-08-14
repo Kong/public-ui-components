@@ -21,7 +21,7 @@ export default function useFetcher(
    * instead of the standard the majority of the endpoints have
    * { data: [{ ... }] }
    */
-  dataKeyNameRef: MaybeRefOrGetter<string | undefined>,
+  dataKeyNameRef?: MaybeRefOrGetter<string | undefined>,
 ) {
   const _baseUrl = unref(baseUrl)
 
