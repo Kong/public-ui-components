@@ -586,7 +586,7 @@
     "plugin": "plugin"
   },
   "vault_secret_picker": {
-    "title": "Look up Key on Vault",
+    "title": "Look up Key in Vault",
     "vault": {
       "label": "Vault",
       "placeholder": "Select a vault"
@@ -612,7 +612,7 @@
     },
     "provider": {
       "complete_action": "Look up {cta}",
-      "cta": "Key on Vault"
+      "cta": "Key in Vault"
     }
   }
 }
