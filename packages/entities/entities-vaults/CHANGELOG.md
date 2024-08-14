@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.9.4...@kong-ui-public/entities-vaults@3.10.0) (2024-08-14)
+
+
+### Features
+
+* **entities:** support terraform in config card [khcp-12445] ([#1549](https://github.com/Kong/public-ui-components/issues/1549)) ([794b4a4](https://github.com/Kong/public-ui-components/commit/794b4a421660a6dd66f44c4b072149dfdeaa2689))
+
+
+
+
+
 ## [3.9.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.9.3...@kong-ui-public/entities-vaults@3.9.4) (2024-08-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
