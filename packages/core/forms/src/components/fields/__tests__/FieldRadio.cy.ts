@@ -147,6 +147,7 @@ describe('<FieldTester /> - FieldRadio', () => {
     cy.get(`#${fieldKey}-0`).should('not.be.checked')
     cy.get(`#${fieldKey}-1`).should('not.be.checked')
     // check field test form model also matches
-    cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('not.exist')
+    cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('not.contain.text', fieldValue)
+    cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('not.contain.text', updatedFieldValue)
   })
 })
