@@ -296,7 +296,11 @@ const routeMatches = computed<{ [id: string]: boolean }>(() => requests.value.re
 
   if (route.headers) {
     Object.entries(route.headers).forEach(([key, values]) => {
-      context.addValue(`http.headers.${key.toLowerCase().replace(/-/g, '_')}`, { String: values.toString() })
+      const headerKey = `http.headers.${key.toLowerCase().replace(/-/g, '_')}`
+      const valueSet: string[] = Array.isArray(values) ? values : [values]
+      valueSet.forEach((value) => {
+        context.addValue(headerKey, { String: `${value}` })
+      })
     })
   }
 
