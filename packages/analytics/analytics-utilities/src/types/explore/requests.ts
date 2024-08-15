@@ -13,12 +13,15 @@ export const queryableRequestDimensions = [
   'http_method',
   'request_id',
   'response_header_content_type',
+  'response_source',
   'request_uri',
   'service_port',
   'service_protocol',
+  'sse',
   'upstream_status_code',
   'upstream_status_code_grouped',
   'upstream_uri',
+  'websocket',
 ] as const
 
 export type QueryableRequestDimensions = typeof queryableRequestDimensions[number]
