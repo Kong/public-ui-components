@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.4.2...@kong-ui-public/analytics-utilities@4.4.3) (2024-08-15)
+
+
+### Bug Fixes
+
+* add missing response_header_content_type ([#1561](https://github.com/Kong/public-ui-components/issues/1561)) ([bf0ab2c](https://github.com/Kong/public-ui-components/commit/bf0ab2c975c51f0d5a70ca440de5f6be0cfab395))
+
+
+
+
+
 ## [4.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.4.1...@kong-ui-public/analytics-utilities@4.4.2) (2024-08-14)
 
 
