@@ -460,11 +460,13 @@ const toggleUseCase = (useCase: UseCase, useCaseKey: string) => {
   })
 }
 
-const updateWindowType = (newType: string | number | boolean | object) => {
+const updateWindowType = (newType: string | number | boolean | object | null) => {
   if (selectedUseCase.value !== undefined) {
     selectedUseCase.value = undefined
   }
-  props.onModelUpdated(newType.toString(), 'config-window_type')
+  if (newType !== null) {
+    props.onModelUpdated(newType.toString(), 'config-window_type')
+  }
 }
 
 const updateRequestLimitLimit = (index: number, limit?: number) => {
