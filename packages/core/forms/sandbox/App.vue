@@ -76,14 +76,14 @@ const fieldModelDefault = ref({
   cat_name: 'TK Meowstersmith',
   is_friendly: true,
   is_cute: true,
-  gender: null,
+  gender: 'male',
 })
 
 const fieldModelModified = ref({
   cat_name: 'BratCat',
   is_friendly: false,
   is_cute: false,
-  gender: 'male',
+  gender: null,
 })
 </script>
 

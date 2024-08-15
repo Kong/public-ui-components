@@ -117,4 +117,36 @@ describe('<FieldTester /> - FieldRadio', () => {
     // check field test form model also matches
     cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('contain.text', updatedFieldValue)
   })
+
+  it('allows unsetting the model (set to null)', () => {
+    const nullValue = null
+    cy.mount(FieldTester, {
+      props: {
+        schema,
+        model: {
+          [fieldKey]: fieldValue,
+        },
+        modifiedModel: {
+          [fieldKey]: nullValue,
+        },
+      },
+    })
+
+    cy.get('.field-tester-container').should('exist')
+
+    // initial value loaded
+    cy.get(`#${fieldKey}-0`).should('be.checked')
+    cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('be.visible')
+    cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('contain.text', fieldValue)
+
+    // programmatic update
+    cy.getTestId('tester-update-button').should('be.visible')
+    cy.getTestId('tester-update-button').click()
+
+    // check VFG input value
+    cy.get(`#${fieldKey}-0`).should('not.be.checked')
+    cy.get(`#${fieldKey}-1`).should('not.be.checked')
+    // check field test form model also matches
+    cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('not.exist')
+  })
 })

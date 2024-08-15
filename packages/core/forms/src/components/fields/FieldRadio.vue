@@ -71,7 +71,7 @@ defineExpose({
   clearValidationErrors,
 })
 
-const onChange = (val: string | number | boolean | object) => {
+const onChange = (val: string | number | boolean | object | null) => {
   let updatedValue = val
   if (typeof val === 'string') {
     updatedValue = val.split(',')
