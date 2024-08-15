@@ -11,6 +11,7 @@ export const queryableRequestDimensions = [
   'header_host',
   'header_user_agent',
   'http_method',
+  'response_header_content_type',
   'request_id',
   'request_uri',
   'service_port',
