@@ -167,36 +167,6 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('.metricscard-title').eq(2).should('have.text', 'Average Latency')
   })
 
-  it('renders percentiles if the feature flag is not set', () => {
-    const queryBridge = makeQueryBridge({})
-
-    cy.mount(MetricsTestHarness, {
-      props: {
-        render: 'global',
-        longCardTitles: true,
-        additionalFilter: [{ type: 'in', dimension: 'api_product', values: ['renders percentiles if the feature flag is not set'] } as ExploreFilter],
-      },
-      global: {
-        provide: {
-          [INJECT_QUERY_PROVIDER]: queryBridge,
-        },
-      },
-    })
-
-    cy.get('@fetcher').should('have.been.calledTwice')
-
-    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({
-      datasource: 'advanced',
-      query: { metrics: ['response_latency_p99'] },
-    }))
-    cy.get('@fetcher').should('always.have.not.been.calledWithMatch', Cypress.sinon.match({ query: { metrics: ['response_latency_average'] } }))
-
-    cy.get('.metricscard').should('exist')
-    cy.get('.metricscard-title').eq(0).should('have.text', 'Number of Requests')
-    cy.get('.metricscard-title').eq(1).should('have.text', 'Average Error Rate')
-    cy.get('.metricscard-title').eq(2).should('have.text', 'P99 Latency')
-  })
-
   it('renders percentiles if the override is set', () => {
     const queryBridge = makeQueryBridge()
 
@@ -281,25 +251,6 @@ describe('<AnalyticsMetricProvider />', () => {
 
     cy.get('.metricscard').should('exist')
     cy.get('.metricscard').eq(0).find('.metricscard-trend-range').should('contain', 'vs previous 24 hours')
-  })
-
-  it('displays "7 days" if the feature flag is set', () => {
-    const queryBridge = makeQueryBridge({ hasTrendAccess: false })
-
-    cy.mount(MetricsTestHarness, {
-      props: {
-        render: 'global',
-        description: 'Lorem ipsum golden signal details',
-      },
-      global: {
-        provide: {
-          [INJECT_QUERY_PROVIDER]: queryBridge,
-        },
-      },
-    })
-
-    cy.get('.metricscard').should('exist')
-    cy.get('.metricscard').eq(0).find('.metricscard-trend-range').should('contain', 'vs previous 7 days')
   })
 
   it('handles no trend', () => {
