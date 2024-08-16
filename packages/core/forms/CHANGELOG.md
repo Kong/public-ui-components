@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.3.4...@kong-ui-public/forms@4.4.0) (2024-08-16)
+
+
+### Features
+
+* **vfg:** convert field-radio [khcp-11342] ([#1556](https://github.com/Kong/public-ui-components/issues/1556)) ([06e4c9d](https://github.com/Kong/public-ui-components/commit/06e4c9d871feb99292d7e9a2f3a51f02e8b65371))
+
+
+
+
+
 ## [4.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.3.3...@kong-ui-public/forms@4.3.4) (2024-08-15)
 
 **Note:** Version bump only for package @kong-ui-public/forms
