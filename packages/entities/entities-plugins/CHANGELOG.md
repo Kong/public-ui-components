@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.8.4...@kong-ui-public/entities-plugins@8.9.0) (2024-08-16)
+
+
+### Features
+
+* **entities-plugins:** add confluent plugin ([#1560](https://github.com/Kong/public-ui-components/issues/1560)) ([31562fc](https://github.com/Kong/public-ui-components/commit/31562fc50731f8f66fdbbfc61a812feb8fa216dc))
+
+
+
+
+
 ## [8.8.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.8.3...@kong-ui-public/entities-plugins@8.8.4) (2024-08-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
