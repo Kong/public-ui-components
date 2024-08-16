@@ -1,72 +1,97 @@
 <template>
-  <div class="selection-group">
-    <div
+  <div class="radio-selection-group">
+    <KRadio
       v-for="(option, i) in schema.values"
-      :key="i"
-      class="option-group"
-    >
-      <div class="form-group">
-        <label
-          class="k-label"
-          :class="option.name"
-        >
-          <input
-            :id="schema.name+'-'+i"
-            :checked="checkOption(option)"
-            class="k-input"
-            :name="schema.name"
-            type="radio"
-            :value="option.value"
-            @change="onChange"
-          >
-          {{ option.name }}
-        </label>
-      </div>
-    </div>
+      :id="schema.name+'-'+i"
+      :key="option.value"
+      v-model="inputValue"
+      :label="option.name"
+      :name="schema.name"
+      :selected-value="option.value"
+      @change="onChange"
+    />
   </div>
 </template>
 
-<script>
-import abstractField from './abstractField'
+<script lang="ts" setup>
+import { toRefs, type PropType } from 'vue'
+import composables from '../../composables'
 
-export default {
-  mixins: [abstractField],
-
-  emits: ['model-updated'],
-
-  methods: {
-    updateModel(options) {
-      // Emit value of field to EntityForm
-      this.$emit('model-updated', options, this.schema.model)
-    },
-
-    checkOption(option) {
-      if (this.model[this.schema.model]) {
-        return option.value.toString() === this.model[this.schema.model].toString()
-      }
-
-      return option.checked
-    },
-
-    onChange(e) {
-      let updatedValue = e.target.value.split(',')
-      if (!this.schema.array) {
-        updatedValue = updatedValue.toString()
-      }
-
-      this.updateModel(updatedValue)
-    },
+const props = defineProps({
+  disabled: {
+    type: Boolean,
+    default: false,
   },
+  formOptions: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => undefined,
+  },
+  model: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => undefined,
+  },
+  schema: {
+    type: Object as PropType<Record<string, any>>,
+    required: true,
+  },
+  vfg: {
+    type: Object,
+    required: true,
+  },
+  /**
+   * TODO: stronger type
+   * TODO: pass this down to KInput error and errorMessage
+   */
+  errors: {
+    type: Array,
+    default: () => [],
+  },
+  hint: {
+    type: String,
+    default: '',
+  },
+})
+
+const emit = defineEmits<{
+  (event: 'modelUpdated', value: any, model: Record<string, any>): void
+}>()
+
+const propsRefs = toRefs(props)
+
+const { updateModelValue, value: inputValue, clearValidationErrors } = composables.useAbstractFields({
+  model: propsRefs.model,
+  schema: props.schema,
+  formOptions: props.formOptions,
+  emitModelUpdated: (data: { value: any, model: Record<string, any> }): void => {
+    emit('modelUpdated', data.value, data.model)
+  },
+})
+
+defineExpose({
+  clearValidationErrors,
+})
+
+const onChange = (val: string | number | boolean | object | null) => {
+  let updatedValue = val
+  if (typeof val === 'string') {
+    updatedValue = val.split(',')
+    if (!props.schema.array) {
+      updatedValue = updatedValue.toString()
+    }
+  }
+
+  updateModelValue(updatedValue, val)
 }
 </script>
 
 <style lang="scss" scoped>
-.selection-group {
-  margin-bottom: 8px;
-  width: 100%;
+.radio-selection-group {
+  align-items: center;
+  display: flex;
+  gap: $kui-space-60;
 
-  .form-group {
-    margin-bottom: 0;
+  :deep(.k-radio) {
+    align-items: baseline;
   }
 }
 </style>
