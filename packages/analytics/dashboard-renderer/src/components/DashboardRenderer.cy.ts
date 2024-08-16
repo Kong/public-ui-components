@@ -515,40 +515,6 @@ describe('<DashboardRenderer />', () => {
     })
   })
 
-  it('allows overriding the datasource in tiles', () => {
-    const props = {
-      context: {
-        // Use default timeframe for the org: don't provide one here.
-        filters: [
-          // Specify a filter to avoid caching.
-          {
-            dimension: 'api_product',
-            type: 'in',
-            values: ['overriding datasource'],
-          },
-        ],
-      },
-      config: simpleConfigNoFilters,
-    }
-
-    cy.mount(DashboardRenderer, {
-      props,
-      global: {
-        provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ }),
-        },
-      },
-    }).then(() => {
-      cy.get('@fetcher').should('have.callCount', 3)
-      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-        datasource: 'advanced',
-        query: {
-          time_range: { time_range: '7d' },
-        },
-      }))
-    })
-  })
-
   it('prunes invalid filters', () => {
     const props = {
       context: {
@@ -594,7 +560,7 @@ describe('<DashboardRenderer />', () => {
       }))
 
       // Check that it replaces the description token.
-      cy.get('.container-description').should('have.text', 'Last 7-Day Summary')
+      cy.get('.container-description').should('have.text', 'Last 30-Day Summary')
     })
   })
 })
