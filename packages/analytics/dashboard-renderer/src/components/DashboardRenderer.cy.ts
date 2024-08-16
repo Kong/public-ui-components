@@ -30,7 +30,6 @@ import { createPinia, setActivePinia } from 'pinia'
 interface MockOptions {
   failToResolveConfig?: boolean
   shortRetention?: boolean
-  skuFeatureFlag?: boolean
 }
 
 describe('<DashboardRenderer />', () => {
@@ -103,19 +102,9 @@ describe('<DashboardRenderer />', () => {
       return Promise.resolve(config)
     }
 
-    // @ts-ignore: TS doesn't infer things correctly.  NoInfer may help.
-    const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = (key) => {
-      if (key === 'MA-2527-analytics-sku-config-endpoint') {
-        return opts?.skuFeatureFlag ?? true
-      }
-
-      return true
-    }
-
     return {
       queryFn: cy.spy(queryFn).as('fetcher'),
       configFn,
-      evaluateFeatureFlagFn,
     }
   }
 
@@ -449,7 +438,7 @@ describe('<DashboardRenderer />', () => {
       props,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ skuFeatureFlag: false }),
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({}),
         },
       },
     }).then(() => {
@@ -480,7 +469,7 @@ describe('<DashboardRenderer />', () => {
       props,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ shortRetention: true, skuFeatureFlag: false }),
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ shortRetention: true }),
         },
       },
     }).then(() => {
@@ -508,7 +497,7 @@ describe('<DashboardRenderer />', () => {
       props,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ skuFeatureFlag: true }),
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ }),
         },
       },
     }).then(() => {
@@ -546,7 +535,7 @@ describe('<DashboardRenderer />', () => {
       props,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ skuFeatureFlag: true }),
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ }),
         },
       },
     }).then(() => {
@@ -585,7 +574,7 @@ describe('<DashboardRenderer />', () => {
       props,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ skuFeatureFlag: true }),
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ }),
         },
       },
     }).then(() => {

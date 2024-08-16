@@ -15,7 +15,6 @@ import { createPinia, setActivePinia } from 'pinia'
 
 interface MakeQueryBridgeOptions extends MockOptions {
   hasTrendAccess?: boolean
-  skuFeatureFlag?: boolean
 }
 
 describe('<AnalyticsMetricProvider />', () => {
@@ -74,7 +73,7 @@ describe('<AnalyticsMetricProvider />', () => {
       },
     })
 
-    const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = () => (opts?.skuFeatureFlag ?? true) as any
+    const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = () => (true) as any
 
     return {
       queryFn: cy.spy(queryFn).as('fetcher'),
@@ -169,7 +168,7 @@ describe('<AnalyticsMetricProvider />', () => {
   })
 
   it('renders percentiles if the feature flag is not set', () => {
-    const queryBridge = makeQueryBridge({ skuFeatureFlag: false })
+    const queryBridge = makeQueryBridge({})
 
     cy.mount(MetricsTestHarness, {
       props: {
@@ -247,7 +246,7 @@ describe('<AnalyticsMetricProvider />', () => {
   })
 
   it('displays "30 days" if trend access allows', () => {
-    const queryBridge = makeQueryBridge({ skuFeatureFlag: false })
+    const queryBridge = makeQueryBridge()
 
     cy.mount(MetricsTestHarness, {
       props: {
@@ -266,7 +265,7 @@ describe('<AnalyticsMetricProvider />', () => {
   })
 
   it('displays "24 hours" if trend access allows', () => {
-    const queryBridge = makeQueryBridge({ hasTrendAccess: false, skuFeatureFlag: false })
+    const queryBridge = makeQueryBridge({ hasTrendAccess: false })
 
     cy.mount(MetricsTestHarness, {
       props: {
@@ -285,7 +284,7 @@ describe('<AnalyticsMetricProvider />', () => {
   })
 
   it('displays "7 days" if the feature flag is set', () => {
-    const queryBridge = makeQueryBridge({ hasTrendAccess: false, skuFeatureFlag: true })
+    const queryBridge = makeQueryBridge({ hasTrendAccess: false })
 
     cy.mount(MetricsTestHarness, {
       props: {
@@ -304,7 +303,7 @@ describe('<AnalyticsMetricProvider />', () => {
   })
 
   it('handles no trend', () => {
-    const queryBridge = makeQueryBridge({ hasTrendAccess: false, skuFeatureFlag: false })
+    const queryBridge = makeQueryBridge({ hasTrendAccess: false })
 
     cy.mount(MetricsTestHarness, {
       props: {
@@ -458,7 +457,6 @@ describe('<AnalyticsMetricProvider />', () => {
     const queryBridge = makeQueryBridge({
       dimensionNames: ['blah'],
       hasTrendAccess: false,
-      skuFeatureFlag: false,
     })
 
     cy.mount(MetricsTestHarness, {
