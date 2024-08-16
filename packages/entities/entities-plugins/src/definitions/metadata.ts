@@ -748,6 +748,13 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     imageName: 'oauth2',
   },
+  'confluent': {
+    descriptionKey: 'plugins.meta.confluent.description',
+    group: PluginGroup.TRANSFORMATIONS,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.confluent.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+  },
 }
 
 /**
