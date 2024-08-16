@@ -94,10 +94,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
     } = props.query
 
     if (!datasource && queryBridge) {
-      // TODO(MA-2987): Remove this.
-      const analyticsSKU = queryBridge.evaluateFeatureFlagFn('MA-2527-analytics-sku-config-endpoint', false)
-
-      datasource = analyticsSKU ? 'basic' : 'advanced'
+      datasource = 'basic'
     }
 
     const mergedFilters = deriveFilters(datasource, props.query.filters, props.context.filters)
