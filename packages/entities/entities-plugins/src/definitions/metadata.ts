@@ -754,7 +754,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     isEnterprise: true,
     nameKey: 'plugins.meta.confluent.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
-    imageName: 'confluent',
   },
 }
 

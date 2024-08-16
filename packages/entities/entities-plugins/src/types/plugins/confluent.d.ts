@@ -1,4 +1,4 @@
-import type { ItemsSchema, CommonSchemaFields } from '../../types/plugins/shared'
+import type { ItemsSchema, CommonSchemaFields } from './shared'
 
 export interface ConfluentSchema extends CommonSchemaFields {
   'config-bootstrap_servers': {
