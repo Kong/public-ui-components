@@ -3,6 +3,7 @@ import { h } from 'vue'
 import type { KonnectBaseFormConfig } from '../../types'
 import { SupportedEntityType } from '../../types'
 import EntityBaseForm from './EntityBaseForm.vue'
+import { route } from '../../../fixtures/mockData'
 
 describe('<EntityBaseForm />', () => {
   const controlPlaneId = '123abc-ilove-cats'
@@ -21,6 +22,7 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        formFields: route,
         entityType,
         canSubmit: false,
       },
@@ -37,6 +39,7 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        formFields: route,
         entityType,
         canSubmit: true,
         isReadonly: true,
@@ -54,6 +57,7 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        formFields: route,
         entityType,
         canSubmit: true,
       },
@@ -73,6 +77,7 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        formFields: route,
         entityType,
         errorMessage: error,
       },
@@ -97,6 +102,7 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        formFields: route,
         entityType,
         canSubmit: true,
         editId,
@@ -127,6 +133,7 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        formFields: route,
         entityType,
         canSubmit: true,
         editId,
@@ -146,6 +153,7 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        formFields: route,
         entityType,
       },
       slots: {

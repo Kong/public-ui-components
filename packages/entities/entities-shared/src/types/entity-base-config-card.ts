@@ -1,5 +1,10 @@
 import type { KonnectConfig, KongManagerConfig } from './index'
 
+/**
+ * These entity strings are used for generating terraform scripts.
+ * Only add entity types that are supported by terraform. Use '_' instead of '-'.
+ * DO NOT MODIFY THE VALUES OF THESE STRINGS.
+ */
 export enum SupportedEntityType {
   CaCertificate = 'ca_certificate',
   Certificate = 'certificate',

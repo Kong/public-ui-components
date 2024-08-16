@@ -586,6 +586,7 @@ const props = defineProps({
    */
   enableTerraform: {
     type: Boolean,
+    required: false,
     default: false,
   },
 })

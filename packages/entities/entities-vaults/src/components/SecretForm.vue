@@ -5,7 +5,7 @@
       :config="config"
       :edit-id="secretId"
       :enable-terraform="enableTerraform"
-      :entity-type="SupportedEntityType.Vault"
+      :entity-type="SupportedEntityType.Plugin"
       :error-message="state.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="payload"
