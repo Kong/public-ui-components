@@ -48,14 +48,14 @@
         <slot name="form-actions">
           <KButton
             appearance="tertiary"
-            data-testid="form-view-configuration"
+            :data-testid="`${entityType}-form-view-configuration`"
             @click="toggle()"
           >
             {{ t('baseForm.actions.viewConfiguration') }}
           </KButton>
           <KButton
             appearance="secondary"
-            data-testid="form-cancel"
+            :data-testid="`${entityType}-form-cancel`"
             :disabled="isReadonly"
             type="reset"
           >
@@ -63,7 +63,7 @@
           </KButton>
           <KButton
             appearance="primary"
-            data-testid="form-submit"
+            :data-testid="`${entityType}-form-submit`"
             :disabled="disableSave"
             type="submit"
           >

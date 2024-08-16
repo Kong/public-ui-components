@@ -26,11 +26,11 @@ describe('<EntityBaseForm />', () => {
       },
     })
 
-    cy.getTestId('form-cancel').should('be.visible')
-    cy.getTestId('form-submit').should('be.visible')
+    cy.getTestId(`${entityType}-form-cancel`).should('be.visible')
+    cy.getTestId(`${entityType}-form-submit`).should('be.visible')
 
-    cy.getTestId('form-cancel').should('be.enabled')
-    cy.getTestId('form-submit').should('be.disabled')
+    cy.getTestId(`${entityType}-form-cancel`).should('be.enabled')
+    cy.getTestId(`${entityType}-form-submit`).should('be.disabled')
   })
 
   it('disables save and cancel when isReadonly is true', () => {
@@ -43,11 +43,11 @@ describe('<EntityBaseForm />', () => {
       },
     })
 
-    cy.getTestId('form-cancel').should('be.visible')
-    cy.getTestId('form-submit').should('be.visible')
+    cy.getTestId(`${entityType}-form-cancel`).should('be.visible')
+    cy.getTestId(`${entityType}-form-submit`).should('be.visible')
 
-    cy.getTestId('form-cancel').should('be.disabled')
-    cy.getTestId('form-submit').should('be.disabled')
+    cy.getTestId(`${entityType}-form-cancel`).should('be.disabled')
+    cy.getTestId(`${entityType}-form-submit`).should('be.disabled')
   })
 
   it('displays View Configuration and Slideout when FF is enabled', () => {
@@ -59,8 +59,8 @@ describe('<EntityBaseForm />', () => {
       },
     })
 
-    cy.getTestId('form-view-configuration').should('be.visible')
-    cy.getTestId('form-view-configuration').click()
+    cy.getTestId(`${entityType}-form-view-configuration`).should('be.visible')
+    cy.getTestId(`${entityType}-form-view-configuration`).click()
 
     cy.getTestId('form-view-configuration-slideout').should('exist')
     cy.getTestId('form-view-configuration-slideout-tabs').should('exist')
@@ -105,11 +105,11 @@ describe('<EntityBaseForm />', () => {
     })
 
     cy.getTestId('form-fetch-error').should('not.exist')
-    cy.getTestId('form-cancel').should('be.visible')
-    cy.getTestId('form-submit').should('be.visible')
+    cy.getTestId(`${entityType}-form-cancel`).should('be.visible')
+    cy.getTestId(`${entityType}-form-submit`).should('be.visible')
 
-    cy.getTestId('form-cancel').should('be.enabled')
-    cy.getTestId('form-submit').should('be.enabled')
+    cy.getTestId(`${entityType}-form-cancel`).should('be.enabled')
+    cy.getTestId(`${entityType}-form-submit`).should('be.enabled')
   })
 
   it('handles edit flow when load is unsuccessful', () => {
@@ -135,8 +135,8 @@ describe('<EntityBaseForm />', () => {
     })
 
     cy.getTestId('form-fetch-error').should('be.visible')
-    cy.getTestId('form-cancel').should('not.exist')
-    cy.getTestId('form-submit').should('not.exist')
+    cy.getTestId(`${entityType}-form-cancel`).should('not.exist')
+    cy.getTestId(`${entityType}-form-submit`).should('not.exist')
   })
 
   it('should show slot content', () => {
