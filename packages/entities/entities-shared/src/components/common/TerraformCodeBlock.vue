@@ -205,10 +205,10 @@ const terraformContent = computed((): string => {
     // snis can be a child of certificate
     parentEntityType = 'certificate'
     delete modifiedRecord.certificate
-  } else if (modifiedRecord.key_set?.id) {
+  } else if (modifiedRecord.set?.id) {
     // keys can be a child of key_set
     parentEntityType = 'set'
-    delete modifiedRecord.key_set
+    delete modifiedRecord.set
   }
 
   // special handling for plugins
