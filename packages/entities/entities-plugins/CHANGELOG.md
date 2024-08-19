@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.9.1...@kong-ui-public/entities-plugins@8.10.0) (2024-08-19)
+
+
+### Features
+
+* **ai-rate-limiting-advanced:** add new providers to plugin config menu choice ([#1567](https://github.com/Kong/public-ui-components/issues/1567)) ([e8d8d75](https://github.com/Kong/public-ui-components/commit/e8d8d756c2f27795ac103cfec2e71d18b411420d))
+
+
+
+
+
 ## [8.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.9.0...@kong-ui-public/entities-plugins@8.9.1) (2024-08-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
