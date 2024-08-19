@@ -340,8 +340,8 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.wait('@getGatewayService')
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
       // view configuration cta
-      cy.getTestId('form-view-configuration').should('be.visible')
-      cy.getTestId('form-view-configuration').click()
+      cy.getTestId('service-form-view-configuration').should('be.visible')
+      cy.getTestId('service-form-view-configuration').click()
       cy.getTestId('highlighted-code-block').should('be.visible')
     })
 
