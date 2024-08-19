@@ -68,7 +68,7 @@
             <KButton
               v-if="!hideViewConfigAction"
               appearance="tertiary"
-              data-testid="form-view-configuration"
+              data-testid="plugin-form-view-configuration"
               @click="toggle()"
             >
               {{ t('actions.view_configuration') }}
@@ -76,7 +76,7 @@
             <KButton
               appearance="secondary"
               class="form-action-button"
-              data-testid="form-cancel"
+              data-testid="plugin-form-cancel"
               :disabled="form.isReadonly"
               type="reset"
               @click="handleClickCancel"
@@ -85,7 +85,7 @@
             </KButton>
             <KButton
               appearance="primary"
-              data-testid="form-submit"
+              data-testid="plugin-form-submit"
               :disabled="!canSubmit || form.isReadonly"
               type="submit"
               @click="saveFormData"
