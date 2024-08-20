@@ -72,7 +72,6 @@ if (!queryBridge) {
 const analyticsConfigStore = useAnalyticsConfigStore()
 
 // Check if the current org has long enough retention to make a sane trend query.
-// If the feature flag is set, trend access is always true.
 const hasTrendAccess = computed<boolean>(() => true)
 
 // Don't attempt to issue a query until we know what we can query for.
