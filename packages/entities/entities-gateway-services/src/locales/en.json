@@ -9,7 +9,7 @@
     "view": "View Details",
     "delete": {
       "title": "Delete a Gateway Service",
-      "description": "Deleting this Gateway Service will also remove any associated routes and plugins. This action cannot be reversed.",
+      "description": "Deleting this Gateway Service will also remove any associated plugins. This action cannot be reversed.",
       "menu_label": "Delete"
     }
   },
