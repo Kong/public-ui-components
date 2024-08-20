@@ -37,8 +37,8 @@ export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
     return !!retentionMs && retentionMs >= THIRTY_DAYS_MS
   })
 
-  const defaultQueryTimeForOrg = computed<'24h' | '30d'>(() => {
-    return longRetention.value ? '30d' : '24h'
+  const defaultQueryTimeForOrg = computed<'7d'>(() => {
+    return '7d'
   })
 
   const loading = computed<boolean>(() => !analyticsConfig.value)
