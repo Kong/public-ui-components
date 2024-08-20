@@ -5,8 +5,17 @@ import { basicExploreAggregations, queryableBasicExploreDimensions } from './bas
 export const queryableExploreDimensions = [
   ...queryableBasicExploreDimensions,
   'application',
+  'auth_type',
+  'client_ip',
   'consumer',
+  'header_host',
+  'header_user_agent',
+  'http_method',
   'iso_code',
+  'response_header_content_type',
+  'request_id',
+  'service_port',
+  'service_protocol',
 ] as const
 
 export type QueryableExploreDimensions = typeof queryableExploreDimensions[number]
