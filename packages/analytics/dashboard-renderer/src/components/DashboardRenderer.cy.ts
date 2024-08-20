@@ -445,7 +445,7 @@ describe('<DashboardRenderer />', () => {
       // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
       cy.get('@fetcher').should('have.callCount', 5)
       cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-        datasource: 'advanced',
+        datasource: 'basic',
         query: {
           time_range: { time_range: '30d' },
         },
@@ -481,37 +481,6 @@ describe('<DashboardRenderer />', () => {
 
       // Check that it replaces the description token.
       cy.get('.container-description').should('have.text', 'Last 24-Hour Summary')
-    })
-  })
-
-  it('picks 7 days and basic datasource if FF is enabled', () => {
-    const props = {
-      context: {
-        // Use default timeframe for the org: don't provide one here.
-        filters: [],
-      },
-      config: summaryDashboardConfig,
-    }
-
-    cy.mount(DashboardRenderer, {
-      props,
-      global: {
-        provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ }),
-        },
-      },
-    }).then(() => {
-      // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
-      cy.get('@fetcher').should('have.callCount', 5)
-      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-        datasource: 'basic',
-        query: {
-          time_range: { time_range: '7d' },
-        },
-      }))
-
-      // Check that it replaces the description token.
-      cy.get('.container-description').should('have.text', 'Last 7-Day Summary')
     })
   })
 
