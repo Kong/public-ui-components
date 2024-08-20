@@ -126,6 +126,7 @@
         </template>
         <template #terraform>
           <TerraformCodeBlock
+            :credential-type="credentialType"
             :entity-record="getRequestBody"
             :entity-type="SupportedEntityType.Plugin"
           />
@@ -1240,6 +1241,7 @@ watch(actionsDivRef, (newVal) => {
   }
 })
 
+const credentialType = ref('')
 const schemaLoading = ref(false)
 const fetchSchemaError = ref('')
 onBeforeMount(async () => {
@@ -1251,6 +1253,7 @@ onBeforeMount(async () => {
       // credential schema endpoints don't exist for Konnect, so we use hard-coded schemas
       const pluginType = CREDENTIAL_METADATA[props.pluginType]?.schemaEndpoint
       const data = CREDENTIAL_SCHEMAS[pluginType]
+      credentialType.value = pluginType
 
       schema.value = buildFormSchema('', data, {})
       schemaLoading.value = false

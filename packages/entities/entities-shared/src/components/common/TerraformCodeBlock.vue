@@ -27,6 +27,10 @@ const props = defineProps({
     required: true,
     validator: (val: SupportedEntityType) => SupportedEntityTypesArray.includes(val),
   },
+  credentialType: {
+    type: String,
+    default: '',
+  },
 })
 
 const buildBasicValString = (value: string | number | boolean, key: string): string => {
@@ -34,9 +38,9 @@ const buildBasicValString = (value: string | number | boolean, key: string): str
   let content = ''
 
   if (typeof value === 'string') {
-    content += `\n${indent}${key} = "${value}"`
+    content += `${indent}${key} = "${value}"\n`
   } else { // boolean or number
-    content += `\n${indent}${key} = ${String(value !== undefined && value !== null ? value : '')}`
+    content += `${indent}${key} = ${String(value !== undefined && value !== null ? value : '')}\n`
   }
 
   return content
@@ -52,7 +56,7 @@ const buildObjectStr = (value: Record<string, any>, key?: string, additionalInde
   let content = ''
 
   if (key) {
-    content += `\n${indent}${key} = {\n`
+    content += `${indent}${key} = {\n`
   }
 
   if (value === null) {
@@ -94,7 +98,7 @@ const buildObjectStr = (value: Record<string, any>, key?: string, additionalInde
     content += `${indent}${SINGLE_INDENT}${k} = ${valueContent}\n`
   }
 
-  return key ? content += `${indent}}` : content
+  return key ? content += `${indent}}\n` : content
 }
 
 const buildArrayStr = (arr: any[], key?: string, additionalIndent = ''): string => {
@@ -108,7 +112,7 @@ const buildArrayStr = (arr: any[], key?: string, additionalIndent = ''): string 
     if (arr.length === 0) {
       content += `${indent}${key} = [`
     } else {
-      content += `\n${indent}${key} = [\n`
+      content += `${indent}${key} = [\n`
     }
   }
 
@@ -135,9 +139,9 @@ const buildArrayStr = (arr: any[], key?: string, additionalIndent = ''): string 
 
   if (key) {
     if (arr.length === 0) {
-      content += ']'
+      content += ']\n'
     } else {
-      content += `${indent}]`
+      content += `${indent}]\n`
     }
   }
 
@@ -201,33 +205,33 @@ const terraformContent = computed((): string => {
     // snis can be a child of certificate
     parentEntityType = 'certificate'
     delete modifiedRecord.certificate
-  } else if (modifiedRecord.key_set?.id) {
+  } else if (modifiedRecord.set?.id) {
     // keys can be a child of key_set
-    parentEntityType = 'key_set'
-    delete modifiedRecord.key_set
+    parentEntityType = 'set'
+    delete modifiedRecord.set
   }
 
   // special handling for plugins
   if (props.entityType === 'plugin') {
     // plugin type is specified separately
     //clone and convert '-' to '_' since terraform doesn't allow '-'
-    const pluginType = (modifiedRecord.name + '').replace(/-/g, '_')
+    const pluginType = props.credentialType.replace(/-/g, '_') || (modifiedRecord.name + '').replace(/-/g, '_')
     delete modifiedRecord.name
 
-    content += `resource "konnect_gateway_plugin_${pluginType}" "my_${pluginType}" {`
+    content += `resource "konnect_gateway_plugin_${pluginType}" "my_${pluginType}" {\n`
   } else { // generic entity
-    content += `resource "konnect_gateway_${props.entityType}" "my_${props.entityType}" {`
+    content += `resource "konnect_gateway_${props.entityType}" "my_${props.entityType}" {\n`
   }
 
   // main config
   content += generateConfig(modifiedRecord)
 
   // control plane id
-  content += `\n${SINGLE_INDENT}control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id\n`
+  content += `${SINGLE_INDENT}control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id\n`
 
   // parent entity information if scoped
   if (parentEntityType) {
-    content += `\n${SINGLE_INDENT}${parentEntityType} = {\n`
+    content += `${SINGLE_INDENT}${parentEntityType} = {\n`
     content += `${SINGLE_INDENT}${SINGLE_INDENT}id = konnect_gateway_${parentEntityType}.my_${parentEntityType}.id\n`
     content += `${SINGLE_INDENT}}\n`
   }

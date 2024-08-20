@@ -24,7 +24,9 @@ export const aiRateLimitingAdvancedSchema: AIRateLimitingAdvancedSchema = {
           values: [
             'anthropic',
             'azure',
+            'bedrock',
             'cohere',
+            'gemini',
             'llama2',
             'mistral',
             'openai',
