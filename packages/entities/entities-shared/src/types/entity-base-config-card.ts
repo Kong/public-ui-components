@@ -12,13 +12,17 @@ export enum SupportedEntityType {
   ConsumerGroup = 'consumer_group',
   GatewayService = 'service',
   Key = 'key',
-  KeySet = 'key_set',
+  KeySet = 'set',
   Plugin = 'plugin',
   Route = 'route',
   SNI = 'sni',
   Upstream = 'upstream',
   Target = 'target',
   Vault = 'vault',
+  // Use this for any entity type that is not supported by terraform
+  // If entityType is 'other' terraform scripts will not be available
+  // Note: This is currently only supported by EntityBaseForm not EntityBaseConfigCard!!
+  Other = 'other',
 }
 
 export const SupportedEntityTypesArray = Object.values(SupportedEntityType)
