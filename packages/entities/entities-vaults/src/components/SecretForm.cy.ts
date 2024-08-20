@@ -42,10 +42,10 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.get('.kong-ui-entities-secret-form').should('be.visible')
       cy.get('.kong-ui-entities-secret-form form').should('be.visible')
       // button state
-      cy.getTestId('plugin-form-cancel').should('be.visible')
-      cy.getTestId('plugin-form-submit').should('be.visible')
-      cy.getTestId('plugin-form-cancel').should('be.enabled')
-      cy.getTestId('plugin-form-submit').should('be.disabled')
+      cy.getTestId('other-form-cancel').should('be.visible')
+      cy.getTestId('other-form-submit').should('be.visible')
+      cy.getTestId('other-form-cancel').should('be.enabled')
+      cy.getTestId('other-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('secret-form-key').should('be.visible')
       cy.getTestId('secret-form-value').should('be.visible')
@@ -61,18 +61,18 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
       cy.get('.kong-ui-entities-secret-form').should('be.visible')
       // default button state
-      cy.getTestId('plugin-form-cancel').should('be.visible')
-      cy.getTestId('plugin-form-submit').should('be.visible')
-      cy.getTestId('plugin-form-cancel').should('be.enabled')
-      cy.getTestId('plugin-form-submit').should('be.disabled')
+      cy.getTestId('other-form-cancel').should('be.visible')
+      cy.getTestId('other-form-submit').should('be.visible')
+      cy.getTestId('other-form-cancel').should('be.enabled')
+      cy.getTestId('other-form-submit').should('be.disabled')
       // enables save when required fields have values
       cy.getTestId('secret-form-key').type('bicycle-kick')
       cy.getTestId('secret-form-value').clear()
       cy.getTestId('secret-form-value').type('101')
-      cy.getTestId('plugin-form-submit').should('be.enabled')
+      cy.getTestId('other-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('secret-form-key').clear()
-      cy.getTestId('plugin-form-submit').should('be.disabled')
+      cy.getTestId('other-form-submit').should('be.disabled')
     })
 
     it('should show edit form', () => {
@@ -89,10 +89,10 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.wait('@getSecret')
       cy.get('.kong-ui-entities-secret-form').should('be.visible')
       // default button state
-      cy.getTestId('plugin-form-cancel').should('be.visible')
-      cy.getTestId('plugin-form-submit').should('be.visible')
-      cy.getTestId('plugin-form-cancel').should('be.enabled')
-      cy.getTestId('plugin-form-submit').should('be.disabled')
+      cy.getTestId('other-form-cancel').should('be.visible')
+      cy.getTestId('other-form-submit').should('be.visible')
+      cy.getTestId('other-form-cancel').should('be.enabled')
+      cy.getTestId('other-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('secret-form-key').should('be.disabled')
       cy.getTestId('secret-form-key').should('have.value', secret.key)
@@ -113,16 +113,16 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.wait('@getSecret')
       cy.get('.kong-ui-entities-secret-form').should('be.visible')
       // default button state
-      cy.getTestId('plugin-form-cancel').should('be.visible')
-      cy.getTestId('plugin-form-submit').should('be.visible')
-      cy.getTestId('plugin-form-cancel').should('be.enabled')
-      cy.getTestId('plugin-form-submit').should('be.disabled')
+      cy.getTestId('other-form-cancel').should('be.visible')
+      cy.getTestId('other-form-submit').should('be.visible')
+      cy.getTestId('other-form-cancel').should('be.enabled')
+      cy.getTestId('other-form-submit').should('be.disabled')
       // enables save when form has changes
       cy.getTestId('secret-form-value').type('ubiquitous')
-      cy.getTestId('plugin-form-submit').should('be.enabled')
+      cy.getTestId('other-form-submit').should('be.enabled')
       // disables save when form changes are undone
       cy.getTestId('secret-form-value').clear()
-      cy.getTestId('plugin-form-submit').should('be.disabled')
+      cy.getTestId('other-form-submit').should('be.disabled')
     })
 
     it('should handle error state - failed to load secret', () => {
