@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.10.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.10.1...@kong-ui-public/entities-plugins@8.10.2) (2024-08-20)
+
+
+### Bug Fixes
+
+* **terraform:** misc cleanup [khcp-12445] ([#1569](https://github.com/Kong/public-ui-components/issues/1569)) ([5ea6d6f](https://github.com/Kong/public-ui-components/commit/5ea6d6ff0316890cf6a2dd2fa9167cbf31eb8baf))
+
+
+
+
+
 ## [8.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.10.0...@kong-ui-public/entities-plugins@8.10.1) (2024-08-20)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
