@@ -115,8 +115,8 @@ import type { PropType } from 'vue'
 import { computed, ref, onBeforeMount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
-import type { KonnectBaseFormConfig, KongManagerBaseFormConfig, SupportedEntityType } from '../../types'
-import { SupportedEntityTypesArray } from '../../types'
+import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
+import { SupportedEntityTypesArray, SupportedEntityType } from '../../types'
 import composables from '../../composables'
 import type { Tab } from '@kong/kongponents'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
@@ -291,7 +291,7 @@ const tabs = ref<Tab[]>([
   },
 ])
 
-if (props.enableTerraform) {
+if (props.enableTerraform && props.entityType !== SupportedEntityType.Other) {
   // insert terraform as the third option
   tabs.value.splice(1, 0, {
     title: t('baseForm.configuration.terraform'),
