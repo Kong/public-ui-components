@@ -73,7 +73,7 @@ const analyticsConfigStore = useAnalyticsConfigStore()
 
 // Check if the current org has long enough retention to make a sane trend query.
 // If the feature flag is set, trend access is always true.
-const hasTrendAccess = computed<boolean>(() => analyticsConfigStore.longRetention)
+const hasTrendAccess = computed<boolean>(() => true)
 
 // Don't attempt to issue a query until we know what we can query for.
 const queryReady = computed(() => !analyticsConfigStore.loading && props.queryReady)
@@ -99,22 +99,8 @@ const resolvedDatasource = computed<QueryDatasource>(() => {
 // If they do need to change, then the `useMetricCardGoldenSignals` composable, and dependencies,
 // needs to be reactive as well.  Ideally, this would be the case; we don't have any guarantee that the
 // tier data has finished loading by the time the component mounts, for example.
-
 const timeframe = computed<Timeframe>(() => {
-  if (props.overrideTimeframe) {
-    // Trust that the host component calculated the timeframe for us.
-    return props.overrideTimeframe
-  }
-
-  const retval = hasTrendAccess.value
-    ? TimePeriods.get(props.maxTimeframe)
-    : TimePeriods.get(TimeframeKeys.ONE_DAY)
-
-  if (!retval) {
-    throw new Error('Metrics provider failed to resolve fallback timeframe.')
-  }
-
-  return retval
+  return props.overrideTimeframe || TimePeriods.get(TimeframeKeys.SEVEN_DAY)!
 })
 
 const averageLatencies = computed<boolean>(() => {
