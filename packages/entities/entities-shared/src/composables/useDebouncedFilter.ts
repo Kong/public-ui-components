@@ -26,7 +26,11 @@ export default function useDebouncedFilter(
     size = '1000'
   }
 
-  const { axiosInstance } = useAxios(config.axiosRequestConfig)
+  const { axiosInstance } = useAxios({
+    // 404 errors are allowed in this components
+    validateStatus: (status: number) => status === 404 || (status >= 200 && status < 300),
+    ...config.axiosRequestConfig,
+  })
 
   const { i18n: { t } } = useI18n()
   const { debounce } = useDebounce()
