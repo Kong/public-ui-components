@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.7.3...@kong-ui-public/entities-shared@3.7.4) (2024-08-21)
+
+
+### Bug Fixes
+
+* **entities:** form data-testid changes [khcp-13000] ([#1565](https://github.com/Kong/public-ui-components/issues/1565)) ([8959349](https://github.com/Kong/public-ui-components/commit/8959349e2f941290e4176e8b997470af51e08360))
+
+
+
+
+
 ## [3.7.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.7.2...@kong-ui-public/entities-shared@3.7.3) (2024-08-20)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.4.0...@kong-ui-public/forms@4.5.0) (2024-08-21)
+
+
+### Features
+
+* **vfg:** convert field-text-area [khcp-11338] ([#1570](https://github.com/Kong/public-ui-components/issues/1570)) ([5271f1b](https://github.com/Kong/public-ui-components/commit/5271f1b39a0e42ab9929df3cccacf33254b4f19d))
+
+
+
+
+
 # [4.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.3.4...@kong-ui-public/forms@4.4.0) (2024-08-16)
 
 
