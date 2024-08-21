@@ -63,8 +63,8 @@ describe('<EntityBaseForm />', () => {
       },
     })
 
-    cy.getTestId(`${entityType}-form-view-configuration`).should('be.visible')
-    cy.getTestId(`${entityType}-form-view-configuration`).click()
+    cy.getTestId(`${entityType}-create-form-view-configuration`).should('be.visible')
+    cy.getTestId(`${entityType}-create-form-view-configuration`).click()
 
     cy.getTestId('form-view-configuration-slideout').should('exist')
     cy.getTestId('form-view-configuration-slideout-tabs').should('exist')

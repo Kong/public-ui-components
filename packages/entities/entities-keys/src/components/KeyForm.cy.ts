@@ -242,7 +242,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').click()
       cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
-      cy.getTestId('key-edit-form-submit').click()
+      cy.getTestId('key-create-form-submit').click()
       cy.wait('@createKey')
     })
 
@@ -763,7 +763,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').click()
       cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
-      cy.getTestId('key-edit-form-submit').click()
+      cy.getTestId('key-create-form-submit').click()
       cy.wait('@createKey')
     })
 

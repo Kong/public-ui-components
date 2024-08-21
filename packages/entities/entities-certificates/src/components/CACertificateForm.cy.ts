@@ -260,8 +260,8 @@ describe('<CACertificateForm />', () => {
       cy.getTestId('ca_certificate-create-form-cancel').should('be.enabled')
       cy.getTestId('ca_certificate-create-form-submit').should('be.disabled')
       // form fields
-      cy.getTestId('ca-certificate-create-form-cert').should('be.visible')
-      cy.getTestId('ca-certificate-create-form-cert-digest').should('be.visible')
+      cy.getTestId('ca-certificate-form-cert').should('be.visible')
+      cy.getTestId('ca-certificate-form-cert-digest').should('be.visible')
       cy.getTestId('ca-certificate-form-tags').should('be.visible')
     })
 

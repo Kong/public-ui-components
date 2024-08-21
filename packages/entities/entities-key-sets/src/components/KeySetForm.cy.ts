@@ -281,9 +281,9 @@ describe('<KeySetForm />', () => {
       cy.wait('@getKeySet')
       cy.get('.kong-ui-entities-key-sets-form').should('be.visible')
       // button state
+      cy.getTestId('set-edit-form-cancel').should('be.visible')
       cy.getTestId('set-edit-form-submit').should('be.visible')
-      cy.getTestId('set-edit-form-submit').should('be.visible')
-      cy.getTestId('set-edit-form-submit').should('be.enabled')
+      cy.getTestId('set-edit-form-cancel').should('be.enabled')
       cy.getTestId('set-edit-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('key-set-form-name').should('have.value', keySet1.name)
@@ -307,9 +307,9 @@ describe('<KeySetForm />', () => {
       cy.wait('@getKeySet')
       cy.get('.kong-ui-entities-key-sets-form').should('be.visible')
       // default button state
+      cy.getTestId('set-edit-form-cancel').should('be.visible')
       cy.getTestId('set-edit-form-submit').should('be.visible')
-      cy.getTestId('set-edit-form-submit').should('be.visible')
-      cy.getTestId('set-edit-form-submit').should('be.enabled')
+      cy.getTestId('set-edit-form-cancel').should('be.enabled')
       cy.getTestId('set-edit-form-submit').should('be.disabled')
       // enables save when form has changes
       cy.getTestId('key-set-form-name').type('-edited')
@@ -344,7 +344,7 @@ describe('<KeySetForm />', () => {
       // error state is displayed
       cy.getTestId('form-fetch-error').should('be.visible')
       // buttons and form hidden
-      cy.getTestId('set-edit-form-submit').should('not.exist')
+      cy.getTestId('set-edit-form-cancel').should('not.exist')
       cy.getTestId('set-edit-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-key-sets-form form').should('not.exist')
     })
