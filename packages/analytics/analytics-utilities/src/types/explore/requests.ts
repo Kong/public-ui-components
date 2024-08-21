@@ -51,7 +51,7 @@ export interface RequestDimensionFilter extends Omit<ExploreFilter, 'dimension'>
 
 export interface RequestMetricFilter {
   type: MetricFilterTypesV2
-  field: FilterableRequestDimensions
+  field: FilterableRequestMetrics
   value: number | null
 }
 
