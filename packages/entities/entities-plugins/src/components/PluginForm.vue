@@ -68,7 +68,7 @@
             <KButton
               v-if="!hideViewConfigAction"
               appearance="tertiary"
-              data-testid="plugin-form-view-configuration"
+              :data-testid="`plugin-${isEditing ? 'edit' : 'create'}-form-view-configuration`"
               @click="toggle()"
             >
               {{ t('actions.view_configuration') }}
@@ -76,7 +76,7 @@
             <KButton
               appearance="secondary"
               class="form-action-button"
-              data-testid="plugin-form-cancel"
+              :data-testid="`plugin-${isEditing ? 'edit' : 'create'}-form-cancel`"
               :disabled="form.isReadonly"
               type="reset"
               @click="handleClickCancel"
@@ -85,7 +85,7 @@
             </KButton>
             <KButton
               appearance="primary"
-              data-testid="plugin-form-submit"
+              :data-testid="`plugin-${isEditing ? 'edit' : 'create'}-form-submit`"
               :disabled="!canSubmit || form.isReadonly"
               type="submit"
               @click="saveFormData"
@@ -300,6 +300,7 @@ const { objectsAreEqual } = useHelpers()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const isToggled = ref(false)
+const isEditing = computed(() => !!props.pluginId)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
 const schema = ref<Record<string, any> | null>(null)
 const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
