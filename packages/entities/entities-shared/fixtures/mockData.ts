@@ -191,3 +191,20 @@ export const pluginRecord = {
   ],
   updated_at: 1679088529,
 }
+
+export const route = {
+  service: {
+    id: gatewayServiceRecord.id,
+  },
+  id: '1123-ilove-cats-woot',
+  name: 'route-trad',
+  methods: [],
+  tags: [],
+  regex_priority: 1,
+  path_handling: 'v1',
+  preserve_host: true,
+  https_redirect_status_code: 426,
+  protocols: ['http', 'https'],
+  strip_path: false,
+  paths: [],
+}

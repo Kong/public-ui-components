@@ -39,10 +39,10 @@ describe('<ConsumerForm/>', () => {
       cy.getTestId('consumer-form-custom-id').should('be.visible')
       cy.getTestId('consumer-form-tags').should('be.visible')
 
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('consumer-form-cancel').should('be.visible')
+      cy.getTestId('consumer-form-cancel').should('be.enabled')
+      cy.getTestId('consumer-form-submit').should('be.visible')
+      cy.getTestId('consumer-form-submit').should('be.disabled')
     })
 
     it('Submit button should be enabled if only username field is filled in', () => {
@@ -52,12 +52,12 @@ describe('<ConsumerForm/>', () => {
         },
       })
 
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('consumer-form-submit').should('be.visible')
+      cy.getTestId('consumer-form-submit').should('be.disabled')
 
       cy.getTestId('consumer-form-username').type('Test name')
 
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('consumer-form-submit').should('be.enabled')
     })
 
     it('Submit button should be enabled if only customId field is filled in', () => {
@@ -67,12 +67,12 @@ describe('<ConsumerForm/>', () => {
         },
       })
 
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('consumer-form-submit').should('be.visible')
+      cy.getTestId('consumer-form-submit').should('be.disabled')
 
       cy.getTestId('consumer-form-custom-id').type('test_id')
 
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('consumer-form-submit').should('be.enabled')
     })
 
     it('loading event should be emitted when EntityBaseForm emits loading event', () => {
