@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.4.4...@kong-ui-public/analytics-utilities@4.4.5) (2024-08-21)
+
+
+### Bug Fixes
+
+* metric filter values ([#1575](https://github.com/Kong/public-ui-components/issues/1575)) ([fc329bc](https://github.com/Kong/public-ui-components/commit/fc329bccd3753600155408b6c40a08bd12ae011b))
+
+
+
+
+
 ## [4.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.4.3...@kong-ui-public/analytics-utilities@4.4.4) (2024-08-15)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
