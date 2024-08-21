@@ -64,7 +64,6 @@
     "errorLimit": "2048KB"
   },
   "peerDependencies": {
-    "@kong-ui-public/forms": "workspace:^",
     "@kong/kongponents": "^9.3.0",
     "vue": "^3.4.31"
   },
