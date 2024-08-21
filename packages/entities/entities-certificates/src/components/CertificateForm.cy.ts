@@ -236,7 +236,7 @@ describe('<CertificateForm />', () => {
       cy.getTestId('form-fetch-error').should('be.visible')
       // buttons and form hidden
       cy.getTestId('certificate-edit-form-cancel').should('not.exist')
-      cy.getTestId('certificate-create-form-submit').should('not.exist')
+      cy.getTestId('certificate-edit-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-certificates-form form').should('not.exist')
     })
 
