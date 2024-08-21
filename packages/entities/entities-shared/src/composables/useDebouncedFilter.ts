@@ -23,7 +23,7 @@ export default function useDebouncedFilter(
   // size defaulted to 100 in hopes of retrieving all available
   // entries until better server-side filtering is offered
   if (!size) {
-    size = '1000'
+    size = '10'
   }
 
   const { axiosInstance } = useAxios(config.axiosRequestConfig)
