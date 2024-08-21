@@ -1,12 +1,12 @@
 <template>
   <div class="field-textarea">
-    <textarea
+    <KTextArea
+      v-bind="$attrs"
       :id="getFieldID(schema)"
-      v-model="value"
-      v-attributes="'input'"
-      class="form-control"
+      v-model="inputValue"
       :class="schema.fieldClasses"
-      :disabled="disabled || null"
+      :disabled="disabled || undefined"
+      :help="hint || undefined"
       :maxlength="schema.max"
       :minlength="schema.min"
       :name="schema.inputName"
@@ -20,24 +20,77 @@
     <component
       :is="autofillSlot"
       :schema="schema"
-      :update="(val) => value = val"
-      :value="value"
+      :update="handleAutofill"
+      :value="inputValue"
     />
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
+import { inject, toRefs, type PropType } from 'vue'
+import type { AutofillSlot } from '../../types'
 import { AUTOFILL_SLOT } from '../../const'
-import abstractField from './abstractField'
+import composables from '../../composables'
 
-export default {
-  mixins: [abstractField],
-  inject: {
-    autofillSlot: {
-      from: AUTOFILL_SLOT,
-      default: undefined,
-    },
+const props = defineProps({
+  disabled: {
+    type: Boolean,
+    default: false,
   },
+  formOptions: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => undefined,
+  },
+  model: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => undefined,
+  },
+  schema: {
+    type: Object as PropType<Record<string, any>>,
+    required: true,
+  },
+  vfg: {
+    type: Object,
+    required: true,
+  },
+  /**
+   * TODO: stronger type
+   * TODO: pass this down to KInput error and errorMessage
+   */
+  errors: {
+    type: Array,
+    default: () => [],
+  },
+  hint: {
+    type: String,
+    default: '',
+  },
+})
+
+const emit = defineEmits<{
+  (event: 'modelUpdated', value: any, model: Record<string, any>): void
+}>()
+
+const propsRefs = toRefs(props)
+
+const autofillSlot = inject<AutofillSlot | undefined>(AUTOFILL_SLOT, undefined)
+
+const { updateModelValue, getFieldID, clearValidationErrors, value: inputValue } = composables.useAbstractFields({
+  model: propsRefs.model,
+  schema: props.schema,
+  formOptions: props.formOptions,
+  emitModelUpdated: (data: { value: any, model: Record<string, any> }): void => {
+    emit('modelUpdated', data.value, data.model)
+  },
+})
+
+defineExpose({
+  clearValidationErrors,
+})
+
+const handleAutofill = (value: string) => {
+  inputValue.value = value
+  updateModelValue(value, value)
 }
 </script>
 

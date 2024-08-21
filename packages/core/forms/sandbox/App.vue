@@ -33,14 +33,6 @@ const mutableModel = ref(model)
 
 const fieldSchema = {
   fields: [
-    // FieldInput
-    {
-      type: 'input',
-      model: 'cat_name',
-      id: 'cat_name',
-      inputType: 'text',
-      label: 'Cat Name',
-    },
     // FieldCheckbox
     {
       type: 'checkbox',
@@ -48,14 +40,13 @@ const fieldSchema = {
       id: 'is_friendly',
       label: 'Is Friendly',
     },
-    // FieldSwitch
+    // FieldInput
     {
-      type: 'switch',
-      model: 'is_cute',
-      label: 'Is Cute',
-      textOn: 'Cute',
-      textOff: 'Not Cute',
-      styleClasses: 'field-switch hide-label',
+      type: 'input',
+      model: 'cat_name',
+      id: 'cat_name',
+      inputType: 'text',
+      label: 'Cat Name',
     },
     // FieldRadio
     {
@@ -68,6 +59,23 @@ const fieldSchema = {
         { name: 'Male', value: 'male' },
         { name: 'Female', value: 'female' },
       ],
+    },
+    // FieldSwitch
+    {
+      type: 'switch',
+      model: 'is_cute',
+      label: 'Is Cute',
+      textOn: 'Cute',
+      textOff: 'Not Cute',
+    },
+    // FieldTextArea
+    {
+      type: 'text-area',
+      model: 'personality',
+      id: 'personality',
+      label: 'Personality',
+      placeholder: 'Describe your cat\'s personality',
+      rows: 4,
     },
   ],
 }
@@ -84,6 +92,7 @@ const fieldModelModified = ref({
   is_friendly: false,
   is_cute: false,
   gender: null,
+  personality: 'A little bit of a brat',
 })
 </script>
 
