@@ -63,7 +63,9 @@ export default function useFetcher(
       const dataKey = (dataKeyName && dataKeyName.replace(/[^\w-_]/gi, ''))
       let tableData
 
-      pageOffsets.value[fetcherParams.page + 1] = data.offset
+      if (data.offset) {
+        pageOffsets.value[fetcherParams.page + 1] = data.offset
+      }
 
       if (data[dataKey]) {
         tableData = Array.isArray(data[dataKey]) ? data[dataKey] : [data[dataKey]]
