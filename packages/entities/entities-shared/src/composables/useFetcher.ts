@@ -12,6 +12,8 @@ import { FetcherStatus } from '../types'
 import useAxios from './useAxios'
 import useFetchUrlBuilder from './useFetchUrlBuilder'
 
+const pageOffsets = ref<Record<string, number>>({})
+
 export default function useFetcher(
   config: KonnectBaseTableConfig | KongManagerBaseTableConfig,
   baseUrl: MaybeRef<string>,
@@ -37,7 +39,12 @@ export default function useFetcher(
     try {
       state.value = { status: FetcherStatus.Loading }
 
-      let requestUrl = buildFetchUrl(fetcherParams)
+      const offset = pageOffsets.value[fetcherParams.page] ?? null
+
+      let requestUrl = buildFetchUrl({
+        ...fetcherParams,
+        offset,
+      })
 
       // support for new filtering
       if (requestUrl.includes('filter[name]')) {
@@ -56,6 +63,7 @@ export default function useFetcher(
       const dataKey = (dataKeyName && dataKeyName.replace(/[^\w-_]/gi, ''))
       let tableData
 
+      pageOffsets.value[fetcherParams.page + 1] = data.offset
 
       if (data[dataKey]) {
         tableData = Array.isArray(data[dataKey]) ? data[dataKey] : [data[dataKey]]
