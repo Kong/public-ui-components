@@ -16,6 +16,18 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       entry: resolve(__dirname, './src/index.ts'),
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
     },
+    rollupOptions: {
+      external: [
+        '@kong/icons',
+        '@kong-ui-public/entities-shared',
+      ],
+      output: {
+        globals: {
+          '@kong/icons': 'KongIcons',
+          '@kong-ui-public/entities-shared': 'kong-ui-public-entities-shared',
+        },
+      },
+    },
   },
   server: {
     proxy: {
