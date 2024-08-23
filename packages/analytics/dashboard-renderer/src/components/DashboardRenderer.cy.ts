@@ -111,6 +111,7 @@ describe('<DashboardRenderer />', () => {
     return {
       queryFn: cy.spy(queryFn).as('fetcher'),
       configFn,
+      evaluateFeatureFlagFn,
     }
   }
 
@@ -491,7 +492,7 @@ describe('<DashboardRenderer />', () => {
     })
   })
 
-  it.skip('picks 7 days and basic datasource', () => {
+  it('picks 7 days and basic datasource', () => {
     const props = {
       context: {
         // Use default timeframe for the org: don't provide one here.

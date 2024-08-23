@@ -61,7 +61,7 @@ describe('<AnalyticsMetricProvider />', () => {
       return Promise.resolve(result)
     }
 
-    const hasTrendAccess = opts?.hasTrendAccess ?? true
+    const hasTrendAccess = true
 
     const configFn = (): Promise<AnalyticsConfigV2> => Promise.resolve({
       analytics: {
@@ -358,36 +358,6 @@ describe('<AnalyticsMetricProvider />', () => {
 
     // Latency trend: 1001/2001−1 = −0.499750125
     cy.get('.metricscard-trend-change > div').eq(2).should('have.text', '49.98%')
-  })
-
-  it.skip('displays single-entity metrics with no trend', () => {
-    const queryBridge = makeQueryBridge({
-      dimensionNames: ['blah'],
-      hasTrendAccess: false,
-    })
-
-    cy.mount(MetricsTestHarness, {
-      props: {
-        render: 'single',
-      },
-      global: {
-        provide: {
-          [INJECT_QUERY_PROVIDER]: queryBridge,
-        },
-      },
-    })
-
-    cy.get('@fetcher').should('have.been.calledTwice')
-
-    cy.get('.metricscard').should('exist')
-
-    cy.getTestId('metric-value').eq(0).should('have.text', '5K')
-    cy.getTestId('metric-value').eq(1).should('have.text', '40.00%')
-    cy.getTestId('metric-value').eq(2).should('have.text', '1001ms')
-
-    cy.get('.metricscard-trend-change > div').eq(0).should('have.text', 'N/A')
-    cy.get('.metricscard-trend-change > div').eq(1).should('have.text', 'N/A')
-    cy.get('.metricscard-trend-change > div').eq(2).should('have.text', 'N/A')
   })
 
   it('displays multi-entity metrics', () => {
