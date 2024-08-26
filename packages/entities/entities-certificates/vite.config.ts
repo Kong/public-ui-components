@@ -19,7 +19,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     rollupOptions: {
       external: [
         '@kong/icons',
-        '@kong-ui-public/entities-shared',
+        /^@kong-ui-public\/entities-shared(.*)?$/,
       ],
       output: {
         globals: {
