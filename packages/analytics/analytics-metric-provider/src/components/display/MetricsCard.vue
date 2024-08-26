@@ -234,7 +234,6 @@ const hideTitleIcon = [MetricCardSize.Small].includes(props.cardSize)
 
 <style lang="scss" scoped>
 @import "../../styles/base";
-$row-gap-size: var(--kui-space-50, $kui-space-50);
 
 .metricscard {
   display: flex;
@@ -314,7 +313,11 @@ $row-gap-size: var(--kui-space-50, $kui-space-50);
   &-valuetrend {
     display: flex;
     flex-direction: column;
-    row-gap: $row-gap-size;
+    row-gap: var(--kui-space-50, $kui-space-50);
+
+    @media (max-width: ($kui-breakpoint-phablet - 1px)) {
+      row-gap: var(--kui-space-30, $kui-space-30);
+    }
 
     &.is-compact {
       align-items: center;
@@ -347,7 +350,7 @@ $row-gap-size: var(--kui-space-50, $kui-space-50);
         color: var(--kui-color-text-success, $kui-color-text-success);
       }
       &.negative {
-        background-color: var(--kui-color-background-danger-weakest $kui-color-background-danger-weakest);
+        background-color: var(--kui-color-background-danger-weakest, $kui-color-background-danger-weakest);
         color: var(--kui-color-text-danger-strong, $kui-color-text-danger-strong);
       }
       &.neutral {
