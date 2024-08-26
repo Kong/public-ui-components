@@ -17,7 +17,18 @@
         :form-schema="formSchema"
         :is-editing="editing"
         :on-model-updated="onModelUpdated"
-      />
+      >
+        <template
+          v-if="enableVaultSecretPicker"
+          #[AUTOFILL_SLOT_NAME]="slotProps: AutofillSlotProps"
+        >
+          <VaultSecretPickerProvider
+            v-if="slotProps.schema.referenceable"
+            v-bind="slotProps"
+            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+          />
+        </template>
+      </component>
 
       <VueFormGenerator
         v-if="!sharedFormName && (formModel.id && editing || !editing)"
@@ -39,18 +50,38 @@
         >
           <PluginFieldRuleAlerts :rules="PLUGIN_METADATA[formModel.name].fieldRules!" />
         </template>
+
+        <template
+          v-if="enableVaultSecretPicker"
+          #[AUTOFILL_SLOT_NAME]="slotProps: AutofillSlotProps"
+        >
+          <VaultSecretPickerProvider
+            v-if="slotProps.schema.referenceable"
+            v-bind="slotProps"
+            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+          />
+        </template>
       </VueFormGenerator>
     </div>
   </div>
+
+  <VaultSecretPicker
+    :config="props.config"
+    :setup="vaultSecretPickerSetup"
+    @cancel="() => vaultSecretPickerSetup = false"
+    @proceed="handleVaultSecretPickerAutofill"
+  />
 </template>
 
 <script lang="ts">
 import { useAxios, useHelpers } from '@kong-ui-public/entities-shared'
 import {
+  AUTOFILL_SLOT_NAME,
   FORMS_API_KEY,
   customFields,
   getSharedFormName,
   sharedForms,
+  type AutofillSlotProps,
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
@@ -65,6 +96,8 @@ import {
   type PluginEntityInfo,
 } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
+import VaultSecretPicker from './VaultSecretPicker.vue'
+import VaultSecretPickerProvider from './VaultSecretPickerProvider.vue'
 
 // Must explicitly specify these as components since they are rendered dynamically
 export default defineComponent({
@@ -128,6 +161,13 @@ const props = defineProps({
    * Plugin credential form
    */
   credential: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Control if the vault secret picker is enabled for applicable fields. (referenceable = true)
+   */
+  enableVaultSecretPicker: {
     type: Boolean,
     default: false,
   },
@@ -235,6 +275,17 @@ const formSchema = ref<Record<string, any>>({})
 const originalModel = reactive<Record<string, any>>({})
 const formModel = reactive<Record<string, any>>({})
 const formOptions = computed(() => form.value?.options)
+
+const vaultSecretPickerSetup = ref<string | false>(false)
+const vaultSecretPickerAutofillAction = ref<(secretRef: string) => void | undefined>()
+const setUpVaultSecretPicker = (setupValue: string, autofillAction: (secretRef: string) => void) => {
+  vaultSecretPickerSetup.value = setupValue ?? ''
+  vaultSecretPickerAutofillAction.value = autofillAction
+}
+const handleVaultSecretPickerAutofill = (secretRef: string) => {
+  vaultSecretPickerAutofillAction.value?.(secretRef)
+  vaultSecretPickerSetup.value = false
+}
 
 // This function transforms the form data into the correct structure to be submitted to the API
 const getModel = (): Record<string, any> => {
@@ -348,7 +399,7 @@ const getModel = (): Record<string, any> => {
 
             break
 
-            // Handle values that aren't strings but should be.
+          // Handle values that aren't strings but should be.
           case 'string':
             fieldValue = (fieldValue == null) ? '' : String(fieldValue)
             break
@@ -356,6 +407,25 @@ const getModel = (): Record<string, any> => {
       } else if (fieldSchemaValueType === 'array') {
         if ((!fieldValue || !fieldValue.length)) {
           fieldValue = fieldSchema.submitWhenNull ? null : []
+        } else if (fieldSchema.inputAttributes?.type === 'number') {
+          fieldValue = fieldValue.map((value: string) => Number(value))
+        }
+      }
+
+      // FIXME: Special treatment for AI plugins with complexly nested array fields
+      if (fieldSchema.type === 'array' && fieldSchema.nestedFields) {
+        const deepOmitNil = (o: Record<string, any>) => {
+          Object.keys(o).forEach(key => {
+            if (o[key] && typeof o[key] === 'object' && o[key] !== null) {
+              deepOmitNil(o[key])
+            } else if (o[key] === undefined || o[key] === null || (typeof o[key] === 'number' && isNaN(o[key]))
+              || (typeof o[key] === 'string' && o[key].trim().length === 0)) {
+              delete o[key]
+            }
+          })
+        }
+        if (fieldValue && typeof fieldValue === 'object') {
+          deepOmitNil(fieldValue)
         }
       }
 
@@ -544,7 +614,7 @@ const initFormModel = (): void => {
     } else if (props.record.config) { // typical plugins
       // scope fields
       if ((props.record.consumer_id || props.record.consumer) || (props.record.service_id || props.record.service) ||
-          (props.record.route_id || props.record.route) || (props.record.consumer_group_id || props.record.consumer_group)) {
+        (props.record.route_id || props.record.route) || (props.record.consumer_group_id || props.record.consumer_group)) {
         updateModel({
           service_id: props.record.service_id || props.record.service,
           route_id: props.record.route_id || props.record.route,
@@ -604,9 +674,11 @@ watch(() => props.schema, (newSchema, oldSchema) => {
 
   Object.assign(formModel, form.model)
 
-  formSchema.value = { fields: formSchema.value?.fields?.map((r: Record<string, any>) => {
-    return { ...r, disabled: r.disabled || false }
-  }) }
+  formSchema.value = {
+    fields: formSchema.value?.fields?.map((r: Record<string, any>) => {
+      return { ...r, disabled: r.disabled || false }
+    }),
+  }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
   sharedFormName.value = getSharedFormName(form.model.name)
 
@@ -632,7 +704,8 @@ onBeforeMount(() => {
     transition: opacity 0.5s;
   }
 
-  .fade-enter-from, .fade-leave-to {
+  .fade-enter-from,
+  .fade-leave-to {
     opacity: 0;
   }
 
@@ -646,7 +719,7 @@ onBeforeMount(() => {
   }
 
   :deep(.vue-form-generator) {
-    > fieldset {
+    >fieldset {
       .form-group:last-child {
         margin-bottom: 0;
       }
@@ -661,16 +734,6 @@ onBeforeMount(() => {
     fieldset {
       border: none;
       padding: $kui-space-0;
-    }
-
-    .field-switch {
-      #enabled {
-        &:not(:checked) {
-          & + .label {
-            background-color: $kui-color-background-neutral-weak;
-          }
-        }
-      }
     }
 
     .bottom-border {
@@ -697,14 +760,6 @@ onBeforeMount(() => {
       opacity: .6;
     }
 
-    .form-group label {
-      margin-bottom: $kui-space-40;
-    }
-
-    .form-group.field-checkbox .form-group-label {
-      margin-bottom: $kui-space-0;
-    }
-
     .form-group.field-textArea textarea {
       resize: vertical;
     }
@@ -727,11 +782,6 @@ onBeforeMount(() => {
       }
     }
 
-    .field-checkbox {
-      align-items: center;
-      display: flex;
-    }
-
     .field-radios .radio-list label input[type=radio] {
       margin-right: 10px;
     }
@@ -741,7 +791,6 @@ onBeforeMount(() => {
     }
 
     .form-group.field-array label,
-    .form-group.field-input label,
     .form-group.field-select label,
     .form-group.field-multiselect label {
       display: flex;
@@ -777,18 +826,6 @@ onBeforeMount(() => {
 
     .link-wrapper {
       margin-top: $kui-space-60;
-    }
-
-    .k-checkbox {
-      label {
-        margin: $kui-space-0;
-        order: 1
-      }
-
-      input {
-        margin-left: $kui-space-0;
-        margin-right: $kui-space-50;
-      }
     }
   }
 }

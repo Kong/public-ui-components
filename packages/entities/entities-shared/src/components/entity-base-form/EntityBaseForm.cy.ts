@@ -1,7 +1,9 @@
 // Cypress component test spec file
 import { h } from 'vue'
 import type { KonnectBaseFormConfig } from '../../types'
+import { SupportedEntityType } from '../../types'
 import EntityBaseForm from './EntityBaseForm.vue'
+import { route } from '../../../fixtures/mockData'
 
 describe('<EntityBaseForm />', () => {
   const controlPlaneId = '123abc-ilove-cats'
@@ -14,52 +16,59 @@ describe('<EntityBaseForm />', () => {
   }
   const editId = '1234-ideclare-athumb-war'
   const fetchUrl = `/v2/control-planes/${config.controlPlaneId}/core-entities/routes/{id}`
+  const entityType = SupportedEntityType.Route
 
   it('disables save button when canSubmit is false', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        formFields: route,
+        entityType,
         canSubmit: false,
       },
     })
 
-    cy.getTestId('form-cancel').should('be.visible')
-    cy.getTestId('form-submit').should('be.visible')
+    cy.getTestId(`${entityType}-form-cancel`).should('be.visible')
+    cy.getTestId(`${entityType}-form-submit`).should('be.visible')
 
-    cy.getTestId('form-cancel').should('be.enabled')
-    cy.getTestId('form-submit').should('be.disabled')
+    cy.getTestId(`${entityType}-form-cancel`).should('be.enabled')
+    cy.getTestId(`${entityType}-form-submit`).should('be.disabled')
   })
 
   it('disables save and cancel when isReadonly is true', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        formFields: route,
+        entityType,
         canSubmit: true,
         isReadonly: true,
       },
     })
 
-    cy.getTestId('form-cancel').should('be.visible')
-    cy.getTestId('form-submit').should('be.visible')
+    cy.getTestId(`${entityType}-form-cancel`).should('be.visible')
+    cy.getTestId(`${entityType}-form-submit`).should('be.visible')
 
-    cy.getTestId('form-cancel').should('be.disabled')
-    cy.getTestId('form-submit').should('be.disabled')
+    cy.getTestId(`${entityType}-form-cancel`).should('be.disabled')
+    cy.getTestId(`${entityType}-form-submit`).should('be.disabled')
   })
 
   it('displays View Configuration and Slideout when FF is enabled', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        formFields: route,
+        entityType,
         canSubmit: true,
       },
     })
 
-    cy.getTestId('form-view-configuration').should('be.visible')
-    cy.getTestId('form-view-configuration').click()
+    cy.getTestId(`${entityType}-form-view-configuration`).should('be.visible')
+    cy.getTestId(`${entityType}-form-view-configuration`).click()
 
     cy.getTestId('form-view-configuration-slideout').should('exist')
     cy.getTestId('form-view-configuration-slideout-tabs').should('exist')
-    cy.get('.yaml-config').should('exist')
+    cy.get('.json-config').should('exist')
   })
 
   it('displays error message when provided', () => {
@@ -68,6 +77,8 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        formFields: route,
+        entityType,
         errorMessage: error,
       },
     })
@@ -91,6 +102,8 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        formFields: route,
+        entityType,
         canSubmit: true,
         editId,
         fetchUrl,
@@ -98,11 +111,11 @@ describe('<EntityBaseForm />', () => {
     })
 
     cy.getTestId('form-fetch-error').should('not.exist')
-    cy.getTestId('form-cancel').should('be.visible')
-    cy.getTestId('form-submit').should('be.visible')
+    cy.getTestId(`${entityType}-form-cancel`).should('be.visible')
+    cy.getTestId(`${entityType}-form-submit`).should('be.visible')
 
-    cy.getTestId('form-cancel').should('be.enabled')
-    cy.getTestId('form-submit').should('be.enabled')
+    cy.getTestId(`${entityType}-form-cancel`).should('be.enabled')
+    cy.getTestId(`${entityType}-form-submit`).should('be.enabled')
   })
 
   it('handles edit flow when load is unsuccessful', () => {
@@ -120,6 +133,8 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        formFields: route,
+        entityType,
         canSubmit: true,
         editId,
         fetchUrl,
@@ -127,8 +142,8 @@ describe('<EntityBaseForm />', () => {
     })
 
     cy.getTestId('form-fetch-error').should('be.visible')
-    cy.getTestId('form-cancel').should('not.exist')
-    cy.getTestId('form-submit').should('not.exist')
+    cy.getTestId(`${entityType}-form-cancel`).should('not.exist')
+    cy.getTestId(`${entityType}-form-submit`).should('not.exist')
   })
 
   it('should show slot content', () => {
@@ -138,6 +153,8 @@ describe('<EntityBaseForm />', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
+        formFields: route,
+        entityType,
       },
       slots: {
         default: h('span', content),

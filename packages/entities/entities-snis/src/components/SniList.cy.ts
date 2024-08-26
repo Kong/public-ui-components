@@ -59,10 +59,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -75,10 +75,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -92,10 +92,10 @@ describe('<SniList />', () => {
             props: {
               cacheIdentifier: `sni-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => { },
+              canCreate: () => false,
               canEdit: () => expected,
-              canDelete: () => { },
-              canRetrieve: () => { },
+              canDelete: () => false,
+              canRetrieve: () => false,
             },
           })
 
@@ -108,10 +108,10 @@ describe('<SniList />', () => {
             props: {
               cacheIdentifier: `sni-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => { },
-              canEdit: () => { },
+              canCreate: () => false,
+              canEdit: () => false,
               canDelete: () => expected,
-              canRetrieve: () => { },
+              canRetrieve: () => false,
             },
           })
 
@@ -171,9 +171,9 @@ describe('<SniList />', () => {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -191,9 +191,9 @@ describe('<SniList />', () => {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => false,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -220,10 +220,10 @@ describe('<SniList />', () => {
           props: {
             cacheIdentifier: `sni-list-${uuidv4()}`,
             config: baseConfigKM,
-            canCreate: () => { },
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -248,10 +248,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -269,10 +269,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -345,10 +345,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -380,15 +380,15 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(SniList, {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -467,9 +467,9 @@ describe('<SniList />', () => {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -487,9 +487,9 @@ describe('<SniList />', () => {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => false,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -516,10 +516,10 @@ describe('<SniList />', () => {
           props: {
             cacheIdentifier: `sni-list-${uuidv4()}`,
             config: baseConfigKonnect,
-            canCreate: () => { },
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -544,10 +544,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -565,10 +565,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -641,10 +641,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -676,15 +676,15 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(SniList, {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 

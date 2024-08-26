@@ -138,8 +138,8 @@
 
 <script>
 /**
- * @typedef {import('../types').FGCollapsibleOptions} FGCollapsibleOptions
- * @typedef {import('../types').FGSlots} FGSlots
+ * @typedef {import('../types/form-generator').FGCollapsibleOptions} FGCollapsibleOptions
+ * @typedef {import('../types/form-generator').FGSlots} FGSlots
  *
  * @typedef PartialGroup
  * @prop {FGCollapsibleOptions=} collapsible
@@ -148,18 +148,37 @@
  * @typedef {Record<string, any> & PartialGroup} Group
  */
 
-import { ref } from 'vue'
 import forEach from 'lodash-es/forEach'
 import objGet from 'lodash-es/get'
 import isFunction from 'lodash-es/isFunction'
 import isNil from 'lodash-es/isNil'
-import formMixin from './FormMixin.vue'
+import { ref } from 'vue'
+import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../const'
 import formGroup from './FormGroup.vue'
+import formMixin from './FormMixin.vue'
 
 export default {
   name: 'FormGenerator',
   components: { formGroup },
   mixins: [formMixin],
+
+  inject: {
+    // Inject AUTOFILL_SLOT for provide()
+    autofillSlot: {
+      from: AUTOFILL_SLOT,
+      default: undefined,
+    },
+  },
+
+  provide() {
+    return {
+      // Provide AUTOFILL_SLOT only if it is not already provided
+      ...!this.autofillSlot && {
+        [AUTOFILL_SLOT]: this.$slots?.[AUTOFILL_SLOT_NAME],
+      },
+    }
+  },
+
   props: {
     schema: {
       type: Object,
@@ -496,55 +515,6 @@ export default {
     font-size: 12px;
     font-style: italic;
   } // .hint
-
-  /* Toggle Switch
-========================================================================== */
-  .field-switch {
-    .field-wrap {
-      input[type="checkbox"] {
-        position: absolute;
-        &:checked ~ .label {
-          background-color: $kui-color-background-primary;
-          box-shadow: none;
-        }
-        &:checked ~ .handle {
-          left: calc(100% - 22px);
-        }
-      }
-      label {
-        box-shadow: none;
-        height: 24px;
-        margin: 0;
-        width: 44px;
-      }
-    }
-    .label {
-      box-shadow: none;
-      &:before,
-      &:after {
-        color: rgba(0, 0, 0, 0.7);
-        font-size: 14px;
-        font-weight: normal;
-        left: 18px;
-        margin-left: 42px;
-        text-shadow: none;
-        text-transform: none;
-        width: max-content;
-      }
-    }
-    .handle {
-      background: #fff;
-      box-shadow: none;
-      height: 20px;
-      left: 2px;
-      top: 2px;
-      width: 20px;
-      &:before {
-        background: none;
-        box-shadow: none;
-      }
-    }
-  }
 
   .kong-form-new-element-button-label {
     margin-bottom: $kui-space-80!important;

@@ -24,6 +24,7 @@
           @model-updated="modelUpdated"
         />
       </component>
+
       <span v-else-if="schema.items">
         <component
           :is="getFieldType(schema.items)"
@@ -33,6 +34,7 @@
           @model-updated="modelUpdated"
         />
       </span>
+
       <component
         :is="schema.itemContainerComponent"
         v-else-if="schema.itemContainerComponent"
@@ -58,11 +60,12 @@
         />
 
         <KInput
-          v-else-if="!schema.inputAttributes || !schema.inputAttributes.type || schema.inputAttributes.type === 'text'"
-          v-model="value[index]"
+          v-else-if="!schema.inputAttributes || !schema.inputAttributes.type || schema.inputAttributes.type === 'text' || schema.inputAttributes.type === 'number'"
           :aria-labelledby="getLabelId(schema)"
           v-bind="schema.inputAttributes"
+          :model-value="value[index]"
           :type="schema.inputAttributes && schema.inputAttributes.type || 'text'"
+          @input="(val) => { handleInput(val, index) }"
         />
 
         <input
@@ -73,28 +76,33 @@
           :type="schema.inputAttributes?.type || 'text'"
         >
 
-        <input
-          v-if="schema.showRemoveButton"
-          v-bind="schema.removeElementButtonAttributes"
-          type="button"
-          :value="schema.removeElementButtonLabel || removeElementButtonLabel"
-          @click="removeElement(index)"
-        >
+        <template #after>
+          <!-- autofill -->
+          <component
+            :is="autofillSlot"
+            :schema="schema"
+            :update="(val) => value[index] = val"
+            :value="value[index]"
+          />
+        </template>
       </component>
-      <input
-        v-else
-        v-bind="schema.inputAttributes"
-        v-model="value[index]"
-        :aria-labelledby="getLabelId(schema)"
-        type="text"
-      >
-      <input
-        v-if="schema.showRemoveButton"
-        v-bind="schema.removeElementButtonAttributes"
-        type="button"
-        :value="schema.removeElementButtonLabel || removeElementButtonLabel"
-        @click="removeElement(index)"
-      >
+
+      <template v-else>
+        <input
+          v-bind="schema.inputAttributes"
+          v-model="value[index]"
+          :aria-labelledby="getLabelId(schema)"
+          type="text"
+        >
+
+        <!-- autofill -->
+        <component
+          :is="autofillSlot"
+          :schema="schema"
+          :update="(val) => value[index] = val"
+          :value="value[index]"
+        />
+      </template>
     </div>
 
     <KButton
@@ -110,17 +118,18 @@
 </template>
 
 <script>
-import abstractField from './abstractField'
-import FieldInput from './FieldInput.vue'
-import FieldSelect from './FieldSelect.vue'
+import { AUTOFILL_SLOT } from '../../const'
 import FieldArrayCardContainer from './FieldArrayCardContainer.vue'
 import FieldArrayItem from './FieldArrayItem.vue'
 import FieldArrayMultiItem from './FieldArrayMultiItem.vue'
 import FieldAutoSuggest from './FieldAutoSuggest.vue'
+import FieldInput from './FieldInput.vue'
 import FieldMetric from './FieldMetric.vue'
 import FieldObject from './FieldObject.vue'
 import FieldObjectAdvanced from './FieldObjectAdvanced.vue'
 import FieldRadio from './FieldRadio.vue'
+import FieldSelect from './FieldSelect.vue'
+import abstractField from './abstractField'
 
 export default {
   name: 'FieldArray',
@@ -137,6 +146,12 @@ export default {
     FieldInput,
   },
   mixins: [abstractField],
+  inject: {
+    autofillSlot: {
+      from: AUTOFILL_SLOT,
+      default: undefined,
+    },
+  },
   props: {
     newElementButtonLabel: {
       type: String,
@@ -197,6 +212,9 @@ export default {
       return 'field-' + fieldSchema.type
     },
     modelUpdated() {},
+    handleInput(val, index) {
+      this.value = this.value.map((item, i) => i === index ? val : item)
+    },
   },
 }
 </script>

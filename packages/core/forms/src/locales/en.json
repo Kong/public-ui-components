@@ -106,5 +106,11 @@
       "title": "Configure your Redis",
       "address_example": "e.g. localhost:6379"
     }
+  },
+  "vfg": {
+    "labels": {
+      "on": "On",
+      "off": "Off"
+    }
   }
 }

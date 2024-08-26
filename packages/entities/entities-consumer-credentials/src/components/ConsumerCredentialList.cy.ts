@@ -68,9 +68,9 @@ describe('<ConsumerCredentialList />', () => {
         props: {
           cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
         },
       })
 
@@ -85,9 +85,9 @@ describe('<ConsumerCredentialList />', () => {
         cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
         props: {
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
         },
       })
 
@@ -105,9 +105,9 @@ describe('<ConsumerCredentialList />', () => {
             ...baseConfigKonnect,
             plugin: 'key-auth',
           },
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
         },
       })
 
@@ -125,9 +125,9 @@ describe('<ConsumerCredentialList />', () => {
             ...baseConfigKonnect,
             plugin: 'key-auth-enc',
           },
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
         },
       })
 
@@ -145,9 +145,9 @@ describe('<ConsumerCredentialList />', () => {
             ...baseConfigKonnect,
             plugin: 'key-auth-enc',
           },
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
         },
       })
 
@@ -165,9 +165,9 @@ describe('<ConsumerCredentialList />', () => {
             ...baseConfigKonnect,
             plugin: 'hmac-auth',
           },
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
         },
       })
 
@@ -185,9 +185,9 @@ describe('<ConsumerCredentialList />', () => {
             ...baseConfigKonnect,
             plugin: 'hmac-auth',
           },
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
         },
       })
 
@@ -204,9 +204,9 @@ describe('<ConsumerCredentialList />', () => {
             cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
             props: {
               config: baseConfigKonnect,
-              canCreate: () => {},
+              canCreate: () => false,
               canEdit: () => expected,
-              canDelete: () => {},
+              canDelete: () => false,
             },
           })
 
@@ -221,8 +221,8 @@ describe('<ConsumerCredentialList />', () => {
             props: {
               cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => {},
-              canEdit: () => {},
+              canCreate: () => false,
+              canEdit: () => false,
               canDelete: () => expected,
             },
           })
@@ -302,9 +302,9 @@ describe('<ConsumerCredentialList />', () => {
           cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => false,
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -331,10 +331,10 @@ describe('<ConsumerCredentialList />', () => {
           props: {
             cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
             config: baseConfigKM,
-            canCreate: () => {},
-            canEdit: () => {},
-            canDelete: () => {},
-            canRetrieve: () => {},
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -359,10 +359,10 @@ describe('<ConsumerCredentialList />', () => {
         props: {
           cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -384,10 +384,10 @@ describe('<ConsumerCredentialList />', () => {
         props: {
           cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -460,10 +460,10 @@ describe('<ConsumerCredentialList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -495,15 +495,15 @@ describe('<ConsumerCredentialList />', () => {
       cy.get(`${l} tbody tr[data-rowid="15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(ConsumerCredentialList, {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -582,8 +582,8 @@ describe('<ConsumerCredentialList />', () => {
           cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => true,
-          canEdit: () => {},
-          canDelete: () => {},
+          canEdit: () => false,
+          canDelete: () => false,
         },
       })
 
@@ -601,8 +601,8 @@ describe('<ConsumerCredentialList />', () => {
           cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => false,
-          canEdit: () => {},
-          canDelete: () => {},
+          canEdit: () => false,
+          canDelete: () => false,
         },
       })
 
@@ -629,9 +629,9 @@ describe('<ConsumerCredentialList />', () => {
           props: {
             cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
             config: baseConfigKonnect,
-            canCreate: () => {},
-            canEdit: () => {},
-            canDelete: () => {},
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
           },
         })
 
@@ -656,9 +656,9 @@ describe('<ConsumerCredentialList />', () => {
         props: {
           cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
         },
       })
 
@@ -680,9 +680,9 @@ describe('<ConsumerCredentialList />', () => {
         props: {
           cacheIdentifier: `consumer-credential-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
         },
       })
 
@@ -755,9 +755,9 @@ describe('<ConsumerCredentialList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -789,14 +789,14 @@ describe('<ConsumerCredentialList />', () => {
       cy.get(`${l} tbody tr[data-rowid="15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(ConsumerCredentialList, {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
         },
       })
 

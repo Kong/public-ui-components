@@ -6,19 +6,22 @@ import type { KongManagerCertificateFormConfig, KonnectCertificateFormConfig } f
 import CertificateForm from './CertificateForm.vue'
 
 const cancelRoute = { name: 'certificates-list' }
+const sniListRoute = { name: 'snis-list' }
 
-const baseConfigKonnect:KonnectCertificateFormConfig = {
+const baseConfigKonnect: KonnectCertificateFormConfig = {
   app: 'konnect',
   controlPlaneId: '1234-abcd-ilove-cats',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
+  sniListRoute,
 }
 
-const baseConfigKM:KongManagerCertificateFormConfig = {
+const baseConfigKM: KongManagerCertificateFormConfig = {
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cancelRoute,
+  sniListRoute,
 }
 
 /**
@@ -120,20 +123,22 @@ describe('<CertificateForm />', () => {
       cy.mount(CertificateForm, {
         props: {
           config: baseConfigKM,
+          showSnisField: true,
         },
       })
       cy.get('.kong-ui-entities-certificates-form').should('be.visible')
       cy.get('.kong-ui-entities-certificates-form form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-cancel').should('be.visible')
+      cy.getTestId('certificate-form-submit').should('be.visible')
+      cy.getTestId('certificate-form-cancel').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('certificate-form-cert').should('be.visible')
       cy.getTestId('certificate-form-key').should('be.visible')
       cy.getTestId('certificate-form-cert-alt').should('be.visible')
       cy.getTestId('certificate-form-key-alt').should('be.visible')
+      cy.getTestId('sni-field-input-1').should('be.visible')
       cy.getTestId('certificate-form-tags').should('be.visible')
     })
 
@@ -146,17 +151,17 @@ describe('<CertificateForm />', () => {
 
       cy.get('.kong-ui-entities-certificates-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-cancel').should('be.visible')
+      cy.getTestId('certificate-form-submit').should('be.visible')
+      cy.getTestId('certificate-form-cancel').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
       // enables save when required fields have values
-      cy.getTestId('certificate-form-cert').type(certificate1.cert)
-      cy.getTestId('certificate-form-key').type(certificate1.key)
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('certificate-form-cert').type(certificate1.cert, { delay: 0 })
+      cy.getTestId('certificate-form-key').type(certificate1.key, { delay: 0 })
+      cy.getTestId('certificate-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('certificate-form-cert').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
     })
 
     it('should show edit form', () => {
@@ -172,10 +177,10 @@ describe('<CertificateForm />', () => {
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-certificates-form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-cancel').should('be.visible')
+      cy.getTestId('certificate-form-submit').should('be.visible')
+      cy.getTestId('certificate-form-cancel').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('certificate-form-cert').should('have.value', certificate1.cert)
       cy.getTestId('certificate-form-key').should('have.value', certificate1.key)
@@ -194,16 +199,16 @@ describe('<CertificateForm />', () => {
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-certificates-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-cancel').should('be.visible')
+      cy.getTestId('certificate-form-submit').should('be.visible')
+      cy.getTestId('certificate-form-cancel').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
       // enables save when form has changes
       cy.getTestId('certificate-form-cert-alt').type('edited')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.enabled')
       // disables save when form changes are undone
       cy.getTestId('certificate-form-cert-alt').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
     })
 
     it('should handle error state - failed to load Certificate', () => {
@@ -230,8 +235,8 @@ describe('<CertificateForm />', () => {
       // error state is displayed
       cy.getTestId('form-fetch-error').should('be.visible')
       // buttons and form hidden
-      cy.getTestId('form-cancel').should('not.exist')
-      cy.getTestId('form-submit').should('not.exist')
+      cy.getTestId('certificate-form-cancel').should('not.exist')
+      cy.getTestId('certificate-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-certificates-form form').should('not.exist')
     })
 
@@ -252,7 +257,7 @@ describe('<CertificateForm />', () => {
       cy.getTestId('certificate-form-tags').clear()
       cy.getTestId('certificate-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate')
@@ -274,21 +279,21 @@ describe('<CertificateForm />', () => {
 
       cy.get('.kong-ui-entities-certificates-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-cancel').should('be.visible')
+      cy.getTestId('certificate-form-submit').should('be.visible')
+      cy.getTestId('certificate-form-cancel').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
       // enables save when required fields have values
-      cy.getTestId('certificate-form-cert').type(certificate1.cert)
-      cy.getTestId('certificate-form-key').type(certificate1.key)
+      cy.getTestId('certificate-form-cert').type(certificate1.cert, { delay: 0 })
+      cy.getTestId('certificate-form-key').type(certificate1.key, { delay: 0 })
 
       // replaces all the newlines with spaces; this should fail the validation
-      cy.getTestId('certificate-form-cert-alt').type(secp384r1CertKeyPair.cert.replaceAll('\n', ' '))
-      cy.getTestId('certificate-form-key-alt').type(secp384r1CertKeyPair.key.replaceAll('\n', ' '))
+      cy.getTestId('certificate-form-cert-alt').type(secp384r1CertKeyPair.cert.replaceAll('\n', ' '), { delay: 0 })
+      cy.getTestId('certificate-form-key-alt').type(secp384r1CertKeyPair.key.replaceAll('\n', ' '), { delay: 0 })
 
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.enabled')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate').its('response.statusCode').should('eq', 400)
@@ -307,21 +312,52 @@ describe('<CertificateForm />', () => {
 
       cy.get('.kong-ui-entities-certificates-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-cancel').should('be.visible')
+      cy.getTestId('certificate-form-submit').should('be.visible')
+      cy.getTestId('certificate-form-cancel').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
       // enables save when required fields have values
-      cy.getTestId('certificate-form-cert').type(certificate1.cert)
-      cy.getTestId('certificate-form-key').type(certificate1.key)
+      cy.getTestId('certificate-form-cert').type(certificate1.cert, { delay: 0 })
+      cy.getTestId('certificate-form-key').type(certificate1.key, { delay: 0 })
 
       // replaces all the newlines with spaces; this should fail the validation
-      cy.getTestId('certificate-form-cert-alt').type(secp384r1CertKeyPair.cert)
-      cy.getTestId('certificate-form-key-alt').type(secp384r1CertKeyPair.key)
+      cy.getTestId('certificate-form-cert-alt').type(secp384r1CertKeyPair.cert, { delay: 0 })
+      cy.getTestId('certificate-form-key-alt').type(secp384r1CertKeyPair.key, { delay: 0 })
 
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.enabled')
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+        .vm.$emit('submit'))
+
+      cy.wait('@validateCertificate').its('response.statusCode').should('eq', 200)
+      cy.wait('@createCertificate').its('response.statusCode').should('eq', 200)
+    })
+
+    it('should not fail when SNI is provided', () => {
+      interceptKM()
+      interceptUpdate()
+
+      cy.mount(CertificateForm, {
+        props: {
+          config: baseConfigKM,
+          showSnisField: true,
+        },
+      }).then(({ wrapper }) => wrapper)
+        .as('vueWrapper')
+
+      cy.get('.kong-ui-entities-certificates-form').should('be.visible')
+      // default button state
+      cy.getTestId('certificate-form-cancel').should('be.visible')
+      cy.getTestId('certificate-form-submit').should('be.visible')
+      cy.getTestId('certificate-form-cancel').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-cert').type(certificate1.cert, { delay: 0 })
+      cy.getTestId('certificate-form-key').type(certificate1.key, { delay: 0 })
+      cy.getTestId('sni-field-input-1').type('foo')
+
+      cy.getTestId('certificate-form-submit').should('be.enabled')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate').its('response.statusCode').should('eq', 200)
@@ -391,21 +427,23 @@ describe('<CertificateForm />', () => {
       cy.mount(CertificateForm, {
         props: {
           config: baseConfigKonnect,
+          showSnisField: true,
         },
       })
 
       cy.get('.kong-ui-entities-certificates-form').should('be.visible')
       cy.get('.kong-ui-entities-certificates-form form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-cancel').should('be.visible')
+      cy.getTestId('certificate-form-submit').should('be.visible')
+      cy.getTestId('certificate-form-cancel').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('certificate-form-cert').should('be.visible')
       cy.getTestId('certificate-form-key').should('be.visible')
       cy.getTestId('certificate-form-cert-alt').should('be.visible')
       cy.getTestId('certificate-form-key-alt').should('be.visible')
+      cy.getTestId('sni-field-input-1').should('be.visible')
       cy.getTestId('certificate-form-tags').should('be.visible')
     })
 
@@ -417,17 +455,17 @@ describe('<CertificateForm />', () => {
       })
       cy.get('.kong-ui-entities-certificates-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-cancel').should('be.visible')
+      cy.getTestId('certificate-form-submit').should('be.visible')
+      cy.getTestId('certificate-form-cancel').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
       // enables save when required fields have values
-      cy.getTestId('certificate-form-cert').type(certificate1.cert)
-      cy.getTestId('certificate-form-key').type(certificate1.key)
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('certificate-form-cert').type(certificate1.cert, { delay: 0 })
+      cy.getTestId('certificate-form-key').type(certificate1.key, { delay: 0 })
+      cy.getTestId('certificate-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('certificate-form-cert').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
     })
 
     it('should show edit form', () => {
@@ -443,10 +481,10 @@ describe('<CertificateForm />', () => {
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-certificates-form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-cancel').should('be.visible')
+      cy.getTestId('certificate-form-submit').should('be.visible')
+      cy.getTestId('certificate-form-cancel').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('certificate-form-cert').should('have.value', certificate1.cert)
       cy.getTestId('certificate-form-key').should('have.value', certificate1.key)
@@ -465,16 +503,16 @@ describe('<CertificateForm />', () => {
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-certificates-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-cancel').should('be.visible')
+      cy.getTestId('certificate-form-submit').should('be.visible')
+      cy.getTestId('certificate-form-cancel').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
       // enables save when form has changes
       cy.getTestId('certificate-form-cert-alt').type('edited')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.enabled')
       // disables save when form changes are undone
       cy.getTestId('certificate-form-cert-alt').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
     })
 
     it('should handle error state - failed to load Certificate', () => {
@@ -501,8 +539,8 @@ describe('<CertificateForm />', () => {
       // error state is displayed
       cy.getTestId('form-fetch-error').should('be.visible')
       // buttons and form hidden
-      cy.getTestId('form-cancel').should('not.exist')
-      cy.getTestId('form-submit').should('not.exist')
+      cy.getTestId('certificate-form-cancel').should('not.exist')
+      cy.getTestId('certificate-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-certificates-form form').should('not.exist')
     })
 
@@ -523,7 +561,7 @@ describe('<CertificateForm />', () => {
       cy.getTestId('certificate-form-tags').clear()
       cy.getTestId('certificate-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate')
@@ -545,21 +583,21 @@ describe('<CertificateForm />', () => {
 
       cy.get('.kong-ui-entities-certificates-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-cancel').should('be.visible')
+      cy.getTestId('certificate-form-submit').should('be.visible')
+      cy.getTestId('certificate-form-cancel').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
       // enables save when required fields have values
-      cy.getTestId('certificate-form-cert').type(certificate1.cert)
-      cy.getTestId('certificate-form-key').type(certificate1.key)
+      cy.getTestId('certificate-form-cert').type(certificate1.cert, { delay: 0 })
+      cy.getTestId('certificate-form-key').type(certificate1.key, { delay: 0 })
 
       // replaces all the newlines with spaces; this should fail the validation
-      cy.getTestId('certificate-form-cert-alt').type(secp384r1CertKeyPair.cert.replaceAll('\n', ' '))
-      cy.getTestId('certificate-form-key-alt').type(secp384r1CertKeyPair.key.replaceAll('\n', ' '))
+      cy.getTestId('certificate-form-cert-alt').type(secp384r1CertKeyPair.cert.replaceAll('\n', ' '), { delay: 0 })
+      cy.getTestId('certificate-form-key-alt').type(secp384r1CertKeyPair.key.replaceAll('\n', ' '), { delay: 0 })
 
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.enabled')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate').its('response.statusCode').should('eq', 400)
@@ -578,21 +616,52 @@ describe('<CertificateForm />', () => {
 
       cy.get('.kong-ui-entities-certificates-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-cancel').should('be.visible')
+      cy.getTestId('certificate-form-submit').should('be.visible')
+      cy.getTestId('certificate-form-cancel').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
       // enables save when required fields have values
-      cy.getTestId('certificate-form-cert').type(certificate1.cert)
-      cy.getTestId('certificate-form-key').type(certificate1.key)
+      cy.getTestId('certificate-form-cert').type(certificate1.cert, { delay: 0 })
+      cy.getTestId('certificate-form-key').type(certificate1.key, { delay: 0 })
 
       // replaces all the newlines with spaces; this should fail the validation
-      cy.getTestId('certificate-form-cert-alt').type(secp384r1CertKeyPair.cert)
-      cy.getTestId('certificate-form-key-alt').type(secp384r1CertKeyPair.key)
+      cy.getTestId('certificate-form-cert-alt').type(secp384r1CertKeyPair.cert, { delay: 0 })
+      cy.getTestId('certificate-form-key-alt').type(secp384r1CertKeyPair.key, { delay: 0 })
 
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.enabled')
 
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+        .vm.$emit('submit'))
+
+      cy.wait('@validateCertificate').its('response.statusCode').should('eq', 200)
+      cy.wait('@createCertificate').its('response.statusCode').should('eq', 200)
+    })
+
+    it('should not fail when SNI is provided', () => {
+      interceptKonnect()
+      interceptUpdate()
+
+      cy.mount(CertificateForm, {
+        props: {
+          config: baseConfigKonnect,
+          showSnisField: true,
+        },
+      }).then(({ wrapper }) => wrapper)
+        .as('vueWrapper')
+
+      cy.get('.kong-ui-entities-certificates-form').should('be.visible')
+      // default button state
+      cy.getTestId('certificate-form-cancel').should('be.visible')
+      cy.getTestId('certificate-form-submit').should('be.visible')
+      cy.getTestId('certificate-form-cancel').should('be.enabled')
+      cy.getTestId('certificate-form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-cert').type(certificate1.cert, { delay: 0 })
+      cy.getTestId('certificate-form-key').type(certificate1.key, { delay: 0 })
+      cy.getTestId('sni-field-input-1').type('foo')
+
+      cy.getTestId('certificate-form-submit').should('be.enabled')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate').its('response.statusCode').should('eq', 200)

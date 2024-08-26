@@ -5,7 +5,7 @@
       :id="getFieldID(schema)"
       :autocomplete="schema.autocomplete"
       :class="schema.fieldClasses"
-      :disabled="disabled || null"
+      :disabled="disabled || undefined"
       :help="hint ? hint : inputType === 'color' || inputType === 'range' ? inputValue : undefined"
       :max="schema.max"
       :maxlength="schema.maxlength"
@@ -22,13 +22,23 @@
       @blur="onBlur"
       @update:model-value="onInput"
     />
+
+    <!-- autofill -->
+    <component
+      :is="autofillSlot"
+      :schema="schema"
+      :update="handleAutofill"
+      :value="inputValue"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onBeforeMount, onMounted, toRefs, type PropType } from 'vue'
-import type { DebouncedFunc } from 'lodash-es'
+import { computed, inject, onBeforeMount, onMounted, ref, toRefs, type PropType } from 'vue'
 import fecha from 'fecha'
+import type { DebouncedFunc } from 'lodash-es'
+import type { AutofillSlot } from '../../types'
+import { AUTOFILL_SLOT } from '../../const'
 import debounce from 'lodash-es/debounce'
 import objGet from 'lodash-es/get'
 import isFunction from 'lodash-es/isFunction'
@@ -75,6 +85,8 @@ const emit = defineEmits<{
 }>()
 
 const propsRefs = toRefs(props)
+
+const autofillSlot = inject<AutofillSlot | undefined>(AUTOFILL_SLOT, undefined)
 
 const { updateModelValue, getFieldID, clearValidationErrors, value: inputValue } = composables.useAbstractFields({
   model: propsRefs.model,
@@ -143,6 +155,11 @@ const onInput = (val: string): void => {
 
   inputValue.value = formattedVal
   updateModelValue(formattedVal, val)
+}
+
+const handleAutofill = (value: string) => {
+  inputValue.value = value
+  updateModelValue(value, value)
 }
 
 const debouncedFormatFunc = ref<DebouncedFunc<(newValue: string, oldValue: string) => void> | null>(null)

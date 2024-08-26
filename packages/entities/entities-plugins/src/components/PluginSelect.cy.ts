@@ -348,7 +348,7 @@ describe('<PluginSelect />', {
       cy.getTestId(`${firstShownPlugin}-card`).should('be.visible')
       cy.getTestId(`${firstShownPlugin}-card`).click()
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(PluginSelect)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(PluginSelect)
         .vm.$emit('plugin-clicked', {}))
 
       cy.get('@onPluginClickedSpy').should('have.been.called')
@@ -648,7 +648,7 @@ describe('<PluginSelect />', {
       cy.getTestId(`${firstShownPlugin}-card`).should('be.visible')
       cy.getTestId(`${firstShownPlugin}-card`).click()
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(PluginSelect)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(PluginSelect)
         .vm.$emit('plugin-clicked', {}))
 
       cy.get('@onPluginClickedSpy').should('have.been.called')

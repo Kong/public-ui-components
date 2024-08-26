@@ -187,9 +187,9 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       // button state
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-cancel').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.enabled')
+      cy.getTestId('plugin-form-cancel').should('be.visible')
 
       // pinned fields (but they should not be under a KCollapse)
       cy.get('#enabled').should('exist')
@@ -258,9 +258,9 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       // button state
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-cancel').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.enabled')
+      cy.getTestId('plugin-form-cancel').should('be.visible')
 
       // pinned fields (but they should not be under a KCollapse)
       cy.get('#enabled').should('exist')
@@ -339,9 +339,9 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       // button state
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-cancel').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.enabled')
+      cy.getTestId('plugin-form-cancel').should('be.visible')
 
       // scope fields
       cy.get('.field-selectionGroup').should('be.visible')
@@ -350,7 +350,7 @@ describe('<PluginForm />', () => {
       cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('not.be.visible')
       cy.get('.Scoped-check input').click()
       cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('be.visible')
-      cy.get('#service-id').should('not.exist') // ai-proxy only supports route scoping
+      cy.get('#service-id').should('be.visible')
       cy.get('#route-id').should('be.visible')
 
       // legacy form should not contain any KCollapse elements
@@ -426,12 +426,12 @@ describe('<PluginForm />', () => {
       cy.wait('@getPluginSchema')
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.getTestId('form-submit').should('not.exist')
-      cy.getTestId('form-cancel').should('not.exist')
+      cy.getTestId('plugin-form-submit').should('not.exist')
+      cy.getTestId('plugin-form-cancel').should('not.exist')
     })
 
     it('should show create form - acl credential', () => {
-      const config = { ...baseConfigKM, entityId: scopedConsumer.item.id, entityType: 'consumers' }
+      const config: KongManagerPluginFormConfig = { ...baseConfigKM, entityId: scopedConsumer.item.id, entityType: 'consumers' }
       interceptKMSchema({ credential: true, mockData: credentialSchema })
 
       cy.mount(PluginForm, {
@@ -450,9 +450,9 @@ describe('<PluginForm />', () => {
       cy.wait('@getPluginSchema')
 
       // button state
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-cancel').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.enabled')
+      cy.getTestId('plugin-form-cancel').should('be.visible')
 
       // scope & global fields
       cy.get('.field-selectionGroup').should('not.exist')
@@ -466,9 +466,9 @@ describe('<PluginForm />', () => {
     })
 
     it('should change entity id in scope selection when props.config.entityId specified', () => {
-      const config = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
+      const config: KongManagerPluginFormConfig = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
       interceptKMSchema()
-      interceptKMScopedEntity({ entityType: config.entityType })
+      interceptKMScopedEntity({ entityType: config.entityType! })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -518,12 +518,12 @@ describe('<PluginForm />', () => {
       cy.get('#instance_name').type('kai_cors_plugin')
       cy.get('#tags').type('tag1,tag2')
 
-      cy.getTestId('form-submit').click()
+      cy.getTestId('plugin-form-submit').click()
       cy.wait(['@validatePlugin', '@createPlugin'])
     })
 
     it('should pick correct url while creating plugin credential', () => {
-      const config = { ...baseConfigKM, entityId: scopedConsumer.item.id, entityType: 'consumers' }
+      const config: KongManagerPluginFormConfig = { ...baseConfigKM, entityId: scopedConsumer.item.id, entityType: 'consumers' }
       interceptKMSchema({ credential: true, mockData: credentialSchema })
       interceptKMCreatePlugin({ credential: true, entityId: scopedConsumer.item.id })
 
@@ -545,12 +545,12 @@ describe('<PluginForm />', () => {
       cy.get('#group').type('kai_group')
       cy.get('#tags').type('tag1,tag2')
 
-      cy.getTestId('form-submit').click()
+      cy.getTestId('plugin-form-submit').click()
       cy.wait('@createPlugin')
     })
 
     it('should show edit form', () => {
-      const config = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
+      const config: KongManagerPluginFormConfig = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
       interceptKMSchema()
       interceptKMOperatePlugin({
         method: 'GET',
@@ -559,7 +559,7 @@ describe('<PluginForm />', () => {
         entityId: scopedService.id,
         entityType: 'services',
       })
-      interceptKMScopedEntity({ entityType: config.entityType })
+      interceptKMScopedEntity({ entityType: config.entityType! })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -575,9 +575,9 @@ describe('<PluginForm />', () => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
         // button state
-        cy.getTestId('form-submit').should('be.visible')
-        cy.getTestId('form-submit').should('be.disabled')
-        cy.getTestId('form-cancel').should('be.visible')
+        cy.getTestId('plugin-form-submit').should('be.visible')
+        cy.getTestId('plugin-form-submit').should('be.disabled')
+        cy.getTestId('plugin-form-cancel').should('be.visible')
 
         // reveal advanced fields
         cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
@@ -605,9 +605,9 @@ describe('<PluginForm />', () => {
     })
 
     it('should pick correct submit url while editing plugin', () => {
-      const config = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
+      const config: KongManagerPluginFormConfig = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
       interceptKMSchema()
-      interceptKMScopedEntity({ entityType: config.entityType })
+      interceptKMScopedEntity({ entityType: config.entityType! })
       interceptKMOperatePlugin({
         method: 'GET',
         alias: 'getPlugin',
@@ -647,14 +647,14 @@ describe('<PluginForm />', () => {
 
         cy.get('#tags').clear()
 
-        cy.getTestId('form-submit').click()
+        cy.getTestId('plugin-form-submit').click()
 
         cy.wait(['@validatePlugin', '@updatePlugin'])
       })
     })
 
     it('should pick correct submit url while editing plugin credential', () => {
-      const config = { ...baseConfigKM, entityId: scopedConsumer.item.id, entityType: 'consumers' }
+      const config: KongManagerPluginFormConfig = { ...baseConfigKM, entityId: scopedConsumer.item.id, entityType: 'consumers' }
       interceptKMSchema({ credential: true, mockData: credentialSchema })
       interceptKMOperatePlugin({ method: 'GET', alias: 'getPlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
       interceptKMOperatePlugin({ method: 'PATCH', alias: 'updatePlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
@@ -676,15 +676,15 @@ describe('<PluginForm />', () => {
 
         cy.get('#group').type('-edited')
 
-        cy.getTestId('form-submit').click()
+        cy.getTestId('plugin-form-submit').click()
         cy.wait('@updatePlugin')
       })
     })
 
     it('should correctly handle button state - edit', () => {
-      const config = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
+      const config: KongManagerPluginFormConfig = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
       interceptKMSchema()
-      interceptKMScopedEntity({ entityType: config.entityType })
+      interceptKMScopedEntity({ entityType: config.entityType! })
       interceptKMOperatePlugin({
         method: 'GET',
         alias: 'getPlugin',
@@ -707,10 +707,10 @@ describe('<PluginForm />', () => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
         // default button state
-        cy.getTestId('form-cancel').should('be.visible')
-        cy.getTestId('form-submit').should('be.visible')
-        cy.getTestId('form-cancel').should('be.enabled')
-        cy.getTestId('form-submit').should('be.disabled')
+        cy.getTestId('plugin-form-cancel').should('be.visible')
+        cy.getTestId('plugin-form-submit').should('be.visible')
+        cy.getTestId('plugin-form-cancel').should('be.enabled')
+        cy.getTestId('plugin-form-submit').should('be.disabled')
 
         // reveal advanced fields
         cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
@@ -722,11 +722,11 @@ describe('<PluginForm />', () => {
 
         // enables save when form has changes
         cy.get('#instance_name').type('-edited')
-        cy.getTestId('form-submit').should('be.enabled')
+        cy.getTestId('plugin-form-submit').should('be.enabled')
         // disables save when form changes are undone
         cy.get('#instance_name').clear()
         cy.get('#instance_name').type(plugin1.instance_name)
-        cy.getTestId('form-submit').should('be.disabled')
+        cy.getTestId('plugin-form-submit').should('be.disabled')
       })
     })
 
@@ -761,8 +761,8 @@ describe('<PluginForm />', () => {
       cy.getTestId('plugin-form-schema-error').should('be.visible')
 
       // buttons and form hidden
-      cy.getTestId('form-cancel').should('not.exist')
-      cy.getTestId('form-submit').should('not.exist')
+      cy.getTestId('plugin-form-cancel').should('not.exist')
+      cy.getTestId('plugin-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-plugin-form-container form').should('not.exist')
     })
 
@@ -796,8 +796,8 @@ describe('<PluginForm />', () => {
         cy.getTestId('form-fetch-error').should('be.visible')
 
         // buttons and form hidden
-        cy.getTestId('form-cancel').should('not.exist')
-        cy.getTestId('form-submit').should('not.exist')
+        cy.getTestId('plugin-form-cancel').should('not.exist')
+        cy.getTestId('plugin-form-submit').should('not.exist')
         cy.get('.kong-ui-entities-plugin-form-container form').should('not.exist')
       })
     })
@@ -839,7 +839,7 @@ describe('<PluginForm />', () => {
       cy.wait('@getPluginSchema')
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.getTestId('form-submit').click()
+      cy.getTestId('plugin-form-submit').click()
       cy.wait('@validate')
 
       cy.getTestId('form-error').should('be.visible')
@@ -879,7 +879,7 @@ describe('<PluginForm />', () => {
         cy.get('#tags').clear()
         cy.get('#tags').type('tag1,tag2')
 
-        cy.getTestId('form-submit').click()
+        cy.getTestId('plugin-form-submit').click()
 
         cy.wait(['@validatePlugin', '@updatePlugin'])
 
@@ -1041,9 +1041,9 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       // button state
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-cancel').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.enabled')
+      cy.getTestId('plugin-form-cancel').should('be.visible')
 
       // pinned fields (but they should not be under a KCollapse)
       cy.get('#enabled').should('exist')
@@ -1113,9 +1113,9 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       // button state
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-cancel').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.enabled')
+      cy.getTestId('plugin-form-cancel').should('be.visible')
 
       // pinned fields (but they should not be under a KCollapse)
       cy.get('#enabled').should('exist')
@@ -1195,9 +1195,9 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       // button state
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-cancel').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.enabled')
+      cy.getTestId('plugin-form-cancel').should('be.visible')
 
       // scope fields
       cy.get('.field-selectionGroup').should('be.visible')
@@ -1206,7 +1206,7 @@ describe('<PluginForm />', () => {
       cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('not.be.visible')
       cy.get('.Scoped-check input').click()
       cy.get('.field-selectionGroup').find('.field-AutoSuggest').should('be.visible')
-      cy.get('#service-id').should('not.exist') // ai-proxy only supports route scoping
+      cy.get('#service-id').should('be.visible')
       cy.get('#route-id').should('be.visible')
 
       // legacy form should not contain any KCollapse elements
@@ -1285,8 +1285,8 @@ describe('<PluginForm />', () => {
       cy.wait('@getPluginSchema')
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.getTestId('form-submit').should('not.exist')
-      cy.getTestId('form-cancel').should('not.exist')
+      cy.getTestId('plugin-form-submit').should('not.exist')
+      cy.getTestId('plugin-form-cancel').should('not.exist')
     })
 
     it('should hide instance name field if useCustomNamesForPlugin is false', () => {
@@ -1309,7 +1309,7 @@ describe('<PluginForm />', () => {
     })
 
     it('should show create form - acl credential', () => {
-      const config = { ...baseConfigKonnect, entityId: scopedConsumer.item.id, entityType: 'consumers' }
+      const config: KonnectPluginFormConfig = { ...baseConfigKonnect, entityId: scopedConsumer.item.id, entityType: 'consumers' }
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -1326,9 +1326,9 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       // button state
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.enabled')
-      cy.getTestId('form-cancel').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.visible')
+      cy.getTestId('plugin-form-submit').should('be.enabled')
+      cy.getTestId('plugin-form-cancel').should('be.visible')
 
       // scope & global fields
       cy.get('.field-selectionGroup').should('not.exist')
@@ -1342,9 +1342,9 @@ describe('<PluginForm />', () => {
     })
 
     it('should change entity id in scope selection when props.config.entityId specified', () => {
-      const config = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
+      const config: KonnectPluginFormConfig = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
       interceptKonnectSchema()
-      interceptKonnectScopedEntity({ entityType: config.entityType })
+      interceptKonnectScopedEntity({ entityType: config.entityType! })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -1396,12 +1396,12 @@ describe('<PluginForm />', () => {
       cy.get('#instance_name').type('kai_cors_plugin')
       cy.get('#tags').type('tag1,tag2')
 
-      cy.getTestId('form-submit').click()
+      cy.getTestId('plugin-form-submit').click()
       cy.wait(['@validatePlugin', '@createPlugin'])
     })
 
     it('should pick correct url while creating plugin credential', () => {
-      const config = { ...baseConfigKonnect, entityId: scopedConsumer.item.id, entityType: 'consumers' }
+      const config: KonnectPluginFormConfig = { ...baseConfigKonnect, entityId: scopedConsumer.item.id, entityType: 'consumers' }
       interceptKonnectCreatePlugin({ credential: true, entityId: scopedConsumer.item.id })
 
       cy.mount(PluginForm, {
@@ -1421,12 +1421,12 @@ describe('<PluginForm />', () => {
       cy.get('#group').type('kai_group')
       cy.get('#tags').type('tag1,tag2')
 
-      cy.getTestId('form-submit').click()
+      cy.getTestId('plugin-form-submit').click()
       cy.wait('@createPlugin')
     })
 
     it('should show edit form', () => {
-      const config = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
+      const config: KonnectPluginFormConfig = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
       interceptKonnectSchema()
       interceptKonnectOperatePlugin({
         method: 'GET',
@@ -1435,7 +1435,7 @@ describe('<PluginForm />', () => {
         entityId: scopedService.id,
         entityType: 'services',
       })
-      interceptKonnectScopedEntity({ entityType: config.entityType })
+      interceptKonnectScopedEntity({ entityType: config.entityType! })
 
       cy.mount(PluginForm, {
         global: { components: { VueFormGenerator } },
@@ -1452,9 +1452,9 @@ describe('<PluginForm />', () => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
         // button state
-        cy.getTestId('form-submit').should('be.visible')
-        cy.getTestId('form-submit').should('be.disabled')
-        cy.getTestId('form-cancel').should('be.visible')
+        cy.getTestId('plugin-form-submit').should('be.visible')
+        cy.getTestId('plugin-form-submit').should('be.disabled')
+        cy.getTestId('plugin-form-cancel').should('be.visible')
 
         // reveal advanced fields
         cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
@@ -1482,9 +1482,9 @@ describe('<PluginForm />', () => {
     })
 
     it('should pick correct submit url while editing plugin', () => {
-      const config = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
+      const config: KonnectPluginFormConfig = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
       interceptKonnectSchema()
-      interceptKonnectScopedEntity({ entityType: config.entityType })
+      interceptKonnectScopedEntity({ entityType: config.entityType! })
       interceptKonnectOperatePlugin({
         method: 'GET',
         alias: 'getPlugin',
@@ -1525,13 +1525,13 @@ describe('<PluginForm />', () => {
 
         cy.get('#tags').clear()
 
-        cy.getTestId('form-submit').click()
+        cy.getTestId('plugin-form-submit').click()
         cy.wait(['@validatePlugin', '@updatePlugin'])
       })
     })
 
     it('should pick correct submit url while editing plugin credential', () => {
-      const config = { ...baseConfigKonnect, entityId: scopedConsumer.item.id, entityType: 'consumers' }
+      const config: KonnectPluginFormConfig = { ...baseConfigKonnect, entityId: scopedConsumer.item.id, entityType: 'consumers' }
       interceptKonnectScopedEntityFallback()
       interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
       interceptKonnectOperatePlugin({ method: 'PUT', alias: 'updatePlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
@@ -1554,14 +1554,14 @@ describe('<PluginForm />', () => {
 
       cy.get('#group').type('-edited')
 
-      cy.getTestId('form-submit').click()
+      cy.getTestId('plugin-form-submit').click()
       cy.wait('@updatePlugin')
     })
 
     it('should correctly handle button state - edit', () => {
-      const config = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
+      const config: KonnectPluginFormConfig = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
       interceptKonnectSchema()
-      interceptKonnectScopedEntity({ entityType: config.entityType })
+      interceptKonnectScopedEntity({ entityType: config.entityType! })
       interceptKonnectOperatePlugin({
         method: 'GET',
         alias: 'getPlugin',
@@ -1585,10 +1585,10 @@ describe('<PluginForm />', () => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
         // default button state
-        cy.getTestId('form-cancel').should('be.visible')
-        cy.getTestId('form-submit').should('be.visible')
-        cy.getTestId('form-cancel').should('be.enabled')
-        cy.getTestId('form-submit').should('be.disabled')
+        cy.getTestId('plugin-form-cancel').should('be.visible')
+        cy.getTestId('plugin-form-submit').should('be.visible')
+        cy.getTestId('plugin-form-cancel').should('be.enabled')
+        cy.getTestId('plugin-form-submit').should('be.disabled')
 
         // reveal advanced fields
         cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
@@ -1600,11 +1600,11 @@ describe('<PluginForm />', () => {
 
         // enables save when form has changes
         cy.get('#instance_name').type('-edited')
-        cy.getTestId('form-submit').should('be.enabled')
+        cy.getTestId('plugin-form-submit').should('be.enabled')
         // disables save when form changes are undone
         cy.get('#instance_name').clear()
         cy.get('#instance_name').type(plugin1.instance_name)
-        cy.getTestId('form-submit').should('be.disabled')
+        cy.getTestId('plugin-form-submit').should('be.disabled')
       })
     })
 
@@ -1640,8 +1640,8 @@ describe('<PluginForm />', () => {
       cy.getTestId('plugin-form-schema-error').should('be.visible')
 
       // buttons and form hidden
-      cy.getTestId('form-cancel').should('not.exist')
-      cy.getTestId('form-submit').should('not.exist')
+      cy.getTestId('plugin-form-cancel').should('not.exist')
+      cy.getTestId('plugin-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-plugin-form-container form').should('not.exist')
     })
 
@@ -1676,8 +1676,8 @@ describe('<PluginForm />', () => {
         cy.getTestId('form-fetch-error').should('be.visible')
 
         // buttons and form hidden
-        cy.getTestId('form-cancel').should('not.exist')
-        cy.getTestId('form-submit').should('not.exist')
+        cy.getTestId('plugin-form-cancel').should('not.exist')
+        cy.getTestId('plugin-form-submit').should('not.exist')
         cy.get('.kong-ui-entities-plugin-form-container form').should('not.exist')
       })
     })
@@ -1720,7 +1720,7 @@ describe('<PluginForm />', () => {
       cy.wait('@getPluginSchema')
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.getTestId('form-submit').click()
+      cy.getTestId('plugin-form-submit').click()
       cy.wait('@validate')
 
       cy.getTestId('form-error').should('be.visible')
@@ -1761,7 +1761,7 @@ describe('<PluginForm />', () => {
         cy.get('#tags').clear()
         cy.get('#tags').type('tag1,tag2')
 
-        cy.getTestId('form-submit').click()
+        cy.getTestId('plugin-form-submit').click()
 
         cy.wait(['@validatePlugin', '@updatePlugin']).then(() => {
           cy.get('@onUpdateSpy').should('have.been.calledOnce')

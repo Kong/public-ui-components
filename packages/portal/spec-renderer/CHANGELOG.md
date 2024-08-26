@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.19...@kong-ui-public/spec-renderer@2.2.20) (2024-08-22)
+
+
+### Bug Fixes
+
+* **spec-renderer:** fix typeError xe.tag.toLowerCase is not a function [KHCP-12420] ([#1578](https://github.com/Kong/public-ui-components/issues/1578)) ([a379288](https://github.com/Kong/public-ui-components/commit/a379288c7bb0f0d98f43117a178aefbabdaa5dd5))
+
+
+
+
+
+## [2.2.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.18...@kong-ui-public/spec-renderer@2.2.19) (2024-08-15)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.2.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.17...@kong-ui-public/spec-renderer@2.2.18) (2024-08-15)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1562](https://github.com/Kong/public-ui-components/issues/1562)) ([112f1bd](https://github.com/Kong/public-ui-components/commit/112f1bd3e3fce583649729d520cbffeb321a4572))
+
+
+
+
+
+## [2.2.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.16...@kong-ui-public/spec-renderer@2.2.17) (2024-08-08)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.2.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.15...@kong-ui-public/spec-renderer@2.2.16) (2024-08-02)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
 ## [2.2.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.14...@kong-ui-public/spec-renderer@2.2.15) (2024-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer

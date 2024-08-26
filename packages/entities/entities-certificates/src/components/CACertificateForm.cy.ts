@@ -71,10 +71,10 @@ describe('<CACertificateForm />', () => {
       cy.get('.kong-ui-entities-ca-certificates-form').should('be.visible')
       cy.get('.kong-ui-entities-ca-certificates-form form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('ca_certificate-form-cancel').should('be.visible')
+      cy.getTestId('ca_certificate-form-submit').should('be.visible')
+      cy.getTestId('ca_certificate-form-cancel').should('be.enabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('ca-certificate-form-cert').should('be.visible')
       cy.getTestId('ca-certificate-form-cert-digest').should('be.visible')
@@ -90,16 +90,16 @@ describe('<CACertificateForm />', () => {
 
       cy.get('.kong-ui-entities-ca-certificates-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('ca_certificate-form-cancel').should('be.visible')
+      cy.getTestId('ca_certificate-form-submit').should('be.visible')
+      cy.getTestId('ca_certificate-form-cancel').should('be.enabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.disabled')
       // enables save when required fields have values
       cy.getTestId('ca-certificate-form-cert').type(caCertificate1.cert)
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('ca-certificate-form-cert').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.disabled')
     })
 
     it('should show edit form', () => {
@@ -115,10 +115,10 @@ describe('<CACertificateForm />', () => {
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-ca-certificates-form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('ca_certificate-form-cancel').should('be.visible')
+      cy.getTestId('ca_certificate-form-submit').should('be.visible')
+      cy.getTestId('ca_certificate-form-cancel').should('be.enabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('ca-certificate-form-cert').should('have.value', caCertificate1.cert)
     })
@@ -136,16 +136,16 @@ describe('<CACertificateForm />', () => {
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-ca-certificates-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('ca_certificate-form-cancel').should('be.visible')
+      cy.getTestId('ca_certificate-form-submit').should('be.visible')
+      cy.getTestId('ca_certificate-form-cancel').should('be.enabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.disabled')
       // enables save when form has changes
       cy.getTestId('ca-certificate-form-cert-digest').type('edited')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.enabled')
       // disables save when form changes are undone
       cy.getTestId('ca-certificate-form-cert-digest').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.disabled')
     })
 
     it('should handle error state - failed to load CA Certificate', () => {
@@ -172,8 +172,8 @@ describe('<CACertificateForm />', () => {
       // error state is displayed
       cy.getTestId('form-fetch-error').should('be.visible')
       // buttons and form hidden
-      cy.getTestId('form-cancel').should('not.exist')
-      cy.getTestId('form-submit').should('not.exist')
+      cy.getTestId('ca_certificate-form-cancel').should('not.exist')
+      cy.getTestId('ca_certificate-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-ca-certificates-form form').should('not.exist')
     })
 
@@ -194,7 +194,7 @@ describe('<CACertificateForm />', () => {
       cy.getTestId('ca-certificate-form-tags').clear()
       cy.getTestId('ca-certificate-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate')
@@ -255,10 +255,10 @@ describe('<CACertificateForm />', () => {
       cy.get('.kong-ui-entities-ca-certificates-form').should('be.visible')
       cy.get('.kong-ui-entities-ca-certificates-form form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('ca_certificate-form-cancel').should('be.visible')
+      cy.getTestId('ca_certificate-form-submit').should('be.visible')
+      cy.getTestId('ca_certificate-form-cancel').should('be.enabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('ca-certificate-form-cert').should('be.visible')
       cy.getTestId('ca-certificate-form-cert-digest').should('be.visible')
@@ -273,16 +273,16 @@ describe('<CACertificateForm />', () => {
       })
       cy.get('.kong-ui-entities-ca-certificates-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('ca_certificate-form-cancel').should('be.visible')
+      cy.getTestId('ca_certificate-form-submit').should('be.visible')
+      cy.getTestId('ca_certificate-form-cancel').should('be.enabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.disabled')
       // enables save when required fields have values
       cy.getTestId('ca-certificate-form-cert').type(caCertificate1.cert)
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('ca-certificate-form-cert').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.disabled')
     })
 
     it('should show edit form', () => {
@@ -298,10 +298,10 @@ describe('<CACertificateForm />', () => {
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-ca-certificates-form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('ca_certificate-form-cancel').should('be.visible')
+      cy.getTestId('ca_certificate-form-submit').should('be.visible')
+      cy.getTestId('ca_certificate-form-cancel').should('be.enabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('ca-certificate-form-cert').should('have.value', caCertificate1.cert)
     })
@@ -319,16 +319,16 @@ describe('<CACertificateForm />', () => {
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-ca-certificates-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('ca_certificate-form-cancel').should('be.visible')
+      cy.getTestId('ca_certificate-form-submit').should('be.visible')
+      cy.getTestId('ca_certificate-form-cancel').should('be.enabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.disabled')
       // enables save when form has changes
       cy.getTestId('ca-certificate-form-cert-digest').type('edited')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.enabled')
       // disables save when form changes are undone
       cy.getTestId('ca-certificate-form-cert-digest').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('ca_certificate-form-submit').should('be.disabled')
     })
 
     it('should handle error state - failed to load CA Certificate', () => {
@@ -355,8 +355,8 @@ describe('<CACertificateForm />', () => {
       // error state is displayed
       cy.getTestId('form-fetch-error').should('be.visible')
       // buttons and form hidden
-      cy.getTestId('form-cancel').should('not.exist')
-      cy.getTestId('form-submit').should('not.exist')
+      cy.getTestId('ca_certificate-form-cancel').should('not.exist')
+      cy.getTestId('ca_certificate-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-ca-certificates-form form').should('not.exist')
     })
 
@@ -377,7 +377,7 @@ describe('<CACertificateForm />', () => {
       cy.getTestId('ca-certificate-form-tags').clear()
       cy.getTestId('ca-certificate-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateCertificate')

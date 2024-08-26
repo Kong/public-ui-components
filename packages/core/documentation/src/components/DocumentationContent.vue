@@ -22,8 +22,8 @@
         class="document-tree-list"
         :items="documentList"
         :max-depth="2"
-        @change="(data: ChangeEvent) => emit('parent-change', data)"
-        @child-change="(data: ChildChangeEvent) => emit('child-change', data)"
+        @change="(data: TreeListChangeEvent) => emit('parent-change', data)"
+        @child-change="(data: TreeListChildChangeEvent) => emit('child-change', data)"
         @selected="(data: TreeListItem) => emit('document-selection', data)"
       />
       <DocumentationDisplay
@@ -62,14 +62,14 @@ import DocumentationPageEmptyState from './DocumentationPageEmptyState.vue'
 import ProductDocumentModal from './ProductDocumentModal.vue'
 import type { PropType } from 'vue'
 import type { DocumentListItem, DocumentTree, FormData } from '../types'
-import type { ChangeEvent, ChildChangeEvent, TreeListItem } from '@kong/kongponents'
+import type { TreeListItem, TreeListChangeEvent, TreeListChildChangeEvent } from '@kong/kongponents'
 
 const emit = defineEmits<{
-  (e: 'child-change', data: ChildChangeEvent): void,
+  (e: 'child-change', data: TreeListChildChangeEvent): void,
   (e: 'delete'): void,
   (e: 'document-selection', data: TreeListItem): void,
   (e: 'modal-closed'): void,
-  (e: 'parent-change', data: ChangeEvent): void,
+  (e: 'parent-change', data: TreeListChangeEvent): void,
   (e: 'save', formData: FormData, selectedFile: any): void,
   (e: 'save-markdown', content: string): void,
   (e: 'toggle-published', data: boolean): void,

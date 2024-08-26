@@ -228,6 +228,18 @@ const componentAttrsData = computed((): ComponentAttrsData => {
         additionalComponent: 'KBadge',
       }
 
+    case ConfigurationSchemaType.CopyBadge:
+      return {
+        tag: 'div',
+        additionalComponent: 'KCopy',
+        childAttrs: {
+          badge: true,
+          truncate: true,
+          truncationLimit: 'auto',
+          text: props.item.value,
+        },
+      }
+
     case ConfigurationSchemaType.BadgeMethod:
       return {
         tag: 'div',

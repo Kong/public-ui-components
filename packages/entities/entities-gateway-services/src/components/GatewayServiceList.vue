@@ -511,6 +511,7 @@ const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 const confirmDelete = (row: EntityRow): void => {
   gatewayServiceToBeDeleted.value = row
   isDeleteModalVisible.value = true
+  deleteModalError.value = ''
 }
 
 const hideDeleteModal = (): void => {

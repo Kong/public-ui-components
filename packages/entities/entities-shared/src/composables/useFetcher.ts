@@ -1,4 +1,5 @@
-import { ref, unref } from 'vue'
+import { ref, toValue, unref } from 'vue'
+import type { MaybeRefOrGetter } from 'vue'
 import type {
   FetcherParams,
   FetcherResponse,
@@ -20,7 +21,7 @@ export default function useFetcher(
    * instead of the standard the majority of the endpoints have
    * { data: [{ ... }] }
    */
-  dataKeyName = 'data',
+  dataKeyNameRef?: MaybeRefOrGetter<string | undefined>,
 ) {
   const _baseUrl = unref(baseUrl)
 
@@ -32,6 +33,7 @@ export default function useFetcher(
   })
 
   const fetcher = async (fetcherParams: FetcherParams): Promise<FetcherResponse> => {
+    const dataKeyName = toValue(dataKeyNameRef) || 'data'
     try {
       state.value = { status: FetcherStatus.Loading }
 
@@ -54,8 +56,9 @@ export default function useFetcher(
       const dataKey = (dataKeyName && dataKeyName.replace(/[^\w-_]/gi, ''))
       let tableData
 
-      if (data[dataKey] && Array.isArray(data[dataKey])) {
-        tableData = data[dataKey]
+
+      if (data[dataKey]) {
+        tableData = Array.isArray(data[dataKey]) ? data[dataKey] : [data[dataKey]]
       } else if (Array.isArray(data)) {
         // An array of object is returned
         tableData = data

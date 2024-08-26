@@ -4,6 +4,8 @@
       :can-submit="isFormValid && changesExist"
       :config="config"
       :edit-id="upstreamId"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.Upstream"
       :error-message="state.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
@@ -88,6 +90,7 @@
 import {
   EntityBaseForm,
   EntityBaseFormType,
+  SupportedEntityType,
   useAxios,
   useErrors,
 } from '@kong-ui-public/entities-shared'
@@ -133,6 +136,14 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -164,11 +175,14 @@ const resetOnActiveSwitch = (val: boolean): void => {
   state.fields.activeHealthCheck.successes = val ? '5' : '0'
   state.fields.activeHealthCheck.httpFailures = val ? '5' : '0'
   state.fields.activeHealthCheck.unhealthyInterval = val ? '5' : '0'
+  state.fields.activeHealthCheck.tcpFailures = val ? '5' : '0'
 }
 
 const resetOnPassiveSwitch = (val: boolean): void => {
   state.fields.passiveHealthCheck.timeouts = val ? '5' : '0'
   state.fields.passiveHealthCheck.successes = val ? '80' : '0'
+  state.fields.passiveHealthCheck.tcpFailures = val ? '5' : '0'
+  state.fields.passiveHealthCheck.httpFailures = val ? '5' : '0'
 }
 
 const isSlotsValid = computed((): boolean => state.fields.slots
@@ -362,7 +376,7 @@ const getPayload = computed((): UpstreamFormPayload => {
       result.healthchecks.active.unhealthy.http_failures = Number(state.fields.activeHealthCheck.httpFailures)
     }
 
-    if (state.fields.activeHealthCheck.type === 'tcp' && state.fields.activeHealthCheck.tcpFailures) {
+    if (state.fields.activeHealthCheck.tcpFailures) {
       result.healthchecks.active.unhealthy.tcp_failures = Number(state.fields.activeHealthCheck.tcpFailures)
     }
   } else {
@@ -372,9 +386,12 @@ const getPayload = computed((): UpstreamFormPayload => {
         headers: {},
         healthy: {
           interval: 0,
+          successes: 0,
         },
         unhealthy: {
           interval: 0,
+          http_failures: 0,
+          tcp_failures: 0,
         },
       }
     }
@@ -407,7 +424,7 @@ const getPayload = computed((): UpstreamFormPayload => {
       result.healthchecks.passive.unhealthy.http_failures = Number(state.fields.passiveHealthCheck.httpFailures)
     }
 
-    if (state.fields.passiveHealthCheck.type === 'tcp' && state.fields.passiveHealthCheck.tcpFailures) {
+    if (state.fields.passiveHealthCheck.tcpFailures) {
       result.healthchecks.passive.unhealthy.tcp_failures = Number(state.fields.passiveHealthCheck.tcpFailures)
     }
   } else {

@@ -251,7 +251,11 @@ const getValue = (record: AnalyticsExploreRecord): string => {
   :deep(.card-content) {
     overflow-y: auto;
 
-    @include scrollbarBase;
+    // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+    // stylelint-disable-next-line no-duplicate-selectors
+    & {
+      @include scrollbarBase;
+    }
   }
 
   .top-n-table {

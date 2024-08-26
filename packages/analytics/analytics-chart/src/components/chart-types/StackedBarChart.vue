@@ -568,7 +568,11 @@ const handleChartClick = () => {
 .chart-container {
   overflow: auto;
 
-  @include scrollbarBase;
+  // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+  // stylelint-disable-next-line no-duplicate-selectors
+  & {
+    @include scrollbarBase;
+  }
 
   .chart-body {
     height: 100%;

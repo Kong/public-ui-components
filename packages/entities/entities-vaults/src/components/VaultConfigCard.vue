@@ -4,6 +4,8 @@
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.Vault"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
@@ -14,7 +16,12 @@
 </template>
 
 <script setup lang="ts">
-import { EntityBaseConfigCard, ConfigurationSchemaSection, ConfigurationSchemaType } from '@kong-ui-public/entities-shared'
+import {
+  EntityBaseConfigCard,
+  ConfigurationSchemaSection,
+  ConfigurationSchemaType,
+  SupportedEntityType,
+} from '@kong-ui-public/entities-shared'
 import type { AxiosError } from 'axios'
 import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
@@ -55,6 +62,14 @@ const props = defineProps({
    * Control visibility of card title content
    */
   hideTitle: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
     type: Boolean,
     default: false,
   },

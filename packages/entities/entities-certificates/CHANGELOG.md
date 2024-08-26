@@ -3,6 +3,133 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.5.3...@kong-ui-public/entities-certificates@3.5.4) (2024-08-21)
+
+
+### Bug Fixes
+
+* **entities:** form data-testid changes [khcp-13000] ([#1565](https://github.com/Kong/public-ui-components/issues/1565)) ([8959349](https://github.com/Kong/public-ui-components/commit/8959349e2f941290e4176e8b997470af51e08360))
+
+
+
+
+
+## [3.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.5.2...@kong-ui-public/entities-certificates@3.5.3) (2024-08-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.5.1...@kong-ui-public/entities-certificates@3.5.2) (2024-08-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.5.0...@kong-ui-public/entities-certificates@3.5.1) (2024-08-15)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1562](https://github.com/Kong/public-ui-components/issues/1562)) ([112f1bd](https://github.com/Kong/public-ui-components/commit/112f1bd3e3fce583649729d520cbffeb321a4572))
+
+
+
+
+
+# [3.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.4.8...@kong-ui-public/entities-certificates@3.5.0) (2024-08-14)
+
+
+### Features
+
+* **entities:** support terraform in config card [khcp-12445] ([#1549](https://github.com/Kong/public-ui-components/issues/1549)) ([794b4a4](https://github.com/Kong/public-ui-components/commit/794b4a421660a6dd66f44c4b072149dfdeaa2689))
+
+
+
+
+
+## [3.4.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.4.7...@kong-ui-public/entities-certificates@3.4.8) (2024-08-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.4.6...@kong-ui-public/entities-certificates@3.4.7) (2024-08-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.4.5...@kong-ui-public/entities-certificates@3.4.6) (2024-08-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.4.4...@kong-ui-public/entities-certificates@3.4.5) (2024-08-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.4.3...@kong-ui-public/entities-certificates@3.4.4) (2024-08-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.4.2...@kong-ui-public/entities-certificates@3.4.3) (2024-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.4.1...@kong-ui-public/entities-certificates@3.4.2) (2024-08-02)
+
+
+### Bug Fixes
+
+* **entities-certificates:** remove snis if field not displayed ([#1528](https://github.com/Kong/public-ui-components/issues/1528)) ([e934a33](https://github.com/Kong/public-ui-components/commit/e934a33907c7a2c07d35da6069d9ad00002f432b))
+
+
+
+
+
+## [3.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.4.0...@kong-ui-public/entities-certificates@3.4.1) (2024-08-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+# [3.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.3.11...@kong-ui-public/entities-certificates@3.4.0) (2024-08-01)
+
+
+### Features
+
+* **entities-certificates:** support sni field in form [KM-199] ([#1458](https://github.com/Kong/public-ui-components/issues/1458)) ([90d4ba0](https://github.com/Kong/public-ui-components/commit/90d4ba0d89a06edf9327014f5efc19d2448bcebb))
+
+
+
+
+
 ## [3.3.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.3.10...@kong-ui-public/entities-certificates@3.3.11) (2024-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-certificates

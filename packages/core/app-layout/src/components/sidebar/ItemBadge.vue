@@ -39,8 +39,10 @@ const alertCount = computed((): string => {
   font-weight: $kui-font-weight-medium;
   line-height: $kui-line-height-20;
   max-width: 36px;
+  min-width: 20px;
   overflow: hidden;
   padding: $kui-space-10 $kui-space-30;
+  text-align: center;
   text-overflow: ellipsis;
   -webkit-user-select: none;
   user-select: none;

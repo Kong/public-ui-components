@@ -19,6 +19,8 @@ import type { VaultAuthSchema } from './plugins/vault-auth'
 import type { GraphQLRateLimitingAdvancedSchema } from './plugins/graphql-rate-limiting-advanced'
 import type { SAMLSchema } from './plugins/saml'
 import type { OasValidationSchema } from './plugins/oas-validation'
+import type { UpstreamOauthSchema } from './plugins/upstream-oauth'
+import type { ConfluentSchema } from './plugins/confluent'
 
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
@@ -215,4 +217,6 @@ export interface CustomSchemas {
   zipkin: CommonSchemaFields & Record<string, any>
   saml: SAMLSchema
   'oas-validation': OasValidationSchema
+  'upstream-oauth': UpstreamOauthSchema
+  'confluent': ConfluentSchema
 }

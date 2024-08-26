@@ -132,9 +132,9 @@ describe('<ConsumerList />', () => {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -152,9 +152,9 @@ describe('<ConsumerList />', () => {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => false,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -181,10 +181,10 @@ describe('<ConsumerList />', () => {
           props: {
             cacheIdentifier: `consumer-list-${uuidv4()}`,
             config: baseConfigKM,
-            canCreate: () => { },
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -209,10 +209,10 @@ describe('<ConsumerList />', () => {
         props: {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -234,10 +234,10 @@ describe('<ConsumerList />', () => {
         props: {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -310,10 +310,10 @@ describe('<ConsumerList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -345,15 +345,15 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(ConsumerList, {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -390,9 +390,9 @@ describe('<ConsumerList />', () => {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: configGroupKM,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -410,9 +410,9 @@ describe('<ConsumerList />', () => {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: configGroupKM,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -430,9 +430,9 @@ describe('<ConsumerList />', () => {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: configGroupKM,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
@@ -442,7 +442,7 @@ describe('<ConsumerList />', () => {
       cy.getTestId('add-consumer').click()
       cy.getTestId('add-consumer-modal').should('exist')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddConsumerModal).vm.$emit('cancel'))
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddConsumerModal).vm.$emit('cancel'))
 
       cy.getTestId('add-consumer-modal').should('not.exist')
     })
@@ -456,9 +456,9 @@ describe('<ConsumerList />', () => {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: configGroupKM,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
           'onAdd:success': cy.spy().as('addSuccess'),
         },
       }).then(({ wrapper }) => wrapper)
@@ -469,7 +469,7 @@ describe('<ConsumerList />', () => {
       cy.getTestId('add-consumer').click()
       cy.getTestId('add-consumer-modal').should('exist')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddConsumerModal).vm.$emit('add:success', expectedData))
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddConsumerModal).vm.$emit('add:success', expectedData))
 
       cy.get('@addSuccess').should('have.been.calledOnceWith', expectedData)
       cy.getTestId('add-consumer-modal').should('not.exist')
@@ -485,9 +485,9 @@ describe('<ConsumerList />', () => {
             cacheIdentifier: `consumer-list-${uuidv4()}`,
             config: configGroupKM,
             canCreate: () => true,
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
             'onAdd:success': cy.spy().as('addSuccess'),
           },
         }).then(({ wrapper }) => wrapper)
@@ -498,7 +498,7 @@ describe('<ConsumerList />', () => {
         cy.getTestId('add-consumer').click()
         cy.getTestId('add-consumer-modal').should('exist')
 
-        cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddConsumerModal)
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddConsumerModal)
           .vm.$emit('add:partial-success', expectedData))
 
         cy.get('@addSuccess').should('have.been.calledOnceWith', expectedData)
@@ -516,9 +516,9 @@ describe('<ConsumerList />', () => {
             cacheIdentifier: `consumer-list-${uuidv4()}`,
             config: configGroupKM,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => false,
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => false,
           },
         }).then(({ wrapper }) => wrapper)
           .as('vueWrapper')
@@ -545,9 +545,9 @@ describe('<ConsumerList />', () => {
             cacheIdentifier: `consumer-list-${uuidv4()}`,
             config: configGroupKM,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => false,
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => false,
           },
         }).then(({ wrapper }) => wrapper)
           .as('vueWrapper')
@@ -561,7 +561,7 @@ describe('<ConsumerList />', () => {
 
         cy.getTestId(modalQuery).should('exist')
 
-        cy.get('@vueWrapper').then((wrapper: any) => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
+        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
           .vm.$emit('cancel'))
 
         cy.getTestId(modalQuery).should('not.exist')
@@ -579,9 +579,9 @@ describe('<ConsumerList />', () => {
             cacheIdentifier: `consumer-list-${uuidv4()}`,
             config: configGroupKM,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => false,
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => false,
             'onRemove:success': cy.spy().as('removeSuccess'),
           },
         }).then(({ wrapper }) => wrapper)
@@ -596,7 +596,7 @@ describe('<ConsumerList />', () => {
 
         cy.getTestId(modalQuery).should('exist')
 
-        cy.get('@vueWrapper').then((wrapper: any) => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
+        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
           .vm.$emit('proceed'))
 
         cy.wait('@removeGroupConsumer')
@@ -618,9 +618,9 @@ describe('<ConsumerList />', () => {
             cacheIdentifier: `consumer-list-${uuidv4()}`,
             config: configGroupKM,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => false,
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => false,
             onError: cy.spy().as('errorSpy'),
           },
         }).then(({ wrapper }) => wrapper)
@@ -635,7 +635,7 @@ describe('<ConsumerList />', () => {
 
         cy.getTestId(modalQuery).should('exist')
 
-        cy.get('@vueWrapper').then((wrapper: any) => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
+        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
           .vm.$emit('proceed'))
 
         cy.wait('@removeGroupConsumer')
@@ -750,9 +750,9 @@ describe('<ConsumerList />', () => {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -770,9 +770,9 @@ describe('<ConsumerList />', () => {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => false,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -799,10 +799,10 @@ describe('<ConsumerList />', () => {
           props: {
             cacheIdentifier: `consumer-list-${uuidv4()}`,
             config: baseConfigKonnect,
-            canCreate: () => { },
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -827,10 +827,10 @@ describe('<ConsumerList />', () => {
         props: {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -852,10 +852,10 @@ describe('<ConsumerList />', () => {
         props: {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -928,10 +928,10 @@ describe('<ConsumerList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -963,15 +963,15 @@ describe('<ConsumerList />', () => {
       cy.get(`${l} tbody tr[data-testid="consumer.15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(ConsumerList, {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -1008,9 +1008,9 @@ describe('<ConsumerList />', () => {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: configGroupKonnect,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -1028,9 +1028,9 @@ describe('<ConsumerList />', () => {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: configGroupKonnect,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -1048,9 +1048,9 @@ describe('<ConsumerList />', () => {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: configGroupKonnect,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
@@ -1060,7 +1060,7 @@ describe('<ConsumerList />', () => {
       cy.getTestId('add-consumer').click()
       cy.getTestId('add-consumer-modal').should('exist')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddConsumerModal).vm.$emit('cancel'))
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddConsumerModal).vm.$emit('cancel'))
 
       cy.getTestId('add-consumer-modal').should('not.exist')
     })
@@ -1074,9 +1074,9 @@ describe('<ConsumerList />', () => {
           cacheIdentifier: `consumer-list-${uuidv4()}`,
           config: configGroupKonnect,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
           'onAdd:success': cy.spy().as('addSuccess'),
         },
       }).then(({ wrapper }) => wrapper)
@@ -1087,7 +1087,7 @@ describe('<ConsumerList />', () => {
       cy.getTestId('add-consumer').click()
       cy.getTestId('add-consumer-modal').should('exist')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddConsumerModal).vm.$emit('add:success', expectedData))
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddConsumerModal).vm.$emit('add:success', expectedData))
 
       cy.get('@addSuccess').should('have.been.calledOnceWith', expectedData)
       cy.getTestId('add-consumer-modal').should('not.exist')
@@ -1103,9 +1103,9 @@ describe('<ConsumerList />', () => {
             cacheIdentifier: `consumer-list-${uuidv4()}`,
             config: configGroupKonnect,
             canCreate: () => true,
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
             'onAdd:success': cy.spy().as('addSuccess'),
           },
         }).then(({ wrapper }) => wrapper)
@@ -1116,7 +1116,7 @@ describe('<ConsumerList />', () => {
         cy.getTestId('add-consumer').click()
         cy.getTestId('add-consumer-modal').should('exist')
 
-        cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(AddConsumerModal)
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddConsumerModal)
           .vm.$emit('add:partial-success', expectedData))
 
         cy.get('@addSuccess').should('have.been.calledOnceWith', expectedData)
@@ -1134,9 +1134,9 @@ describe('<ConsumerList />', () => {
             cacheIdentifier: `consumer-list-${uuidv4()}`,
             config: configGroupKonnect,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => false,
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => false,
           },
         }).then(({ wrapper }) => wrapper)
           .as('vueWrapper')
@@ -1163,9 +1163,9 @@ describe('<ConsumerList />', () => {
             cacheIdentifier: `consumer-list-${uuidv4()}`,
             config: configGroupKonnect,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => false,
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => false,
           },
         }).then(({ wrapper }) => wrapper)
           .as('vueWrapper')
@@ -1179,7 +1179,7 @@ describe('<ConsumerList />', () => {
 
         cy.getTestId(modalQuery).should('exist')
 
-        cy.get('@vueWrapper').then((wrapper: any) => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
+        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
           .vm.$emit('cancel'))
 
         cy.getTestId(modalQuery).should('not.exist')
@@ -1197,9 +1197,9 @@ describe('<ConsumerList />', () => {
             cacheIdentifier: `consumer-list-${uuidv4()}`,
             config: configGroupKonnect,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => false,
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => false,
             'onRemove:success': cy.spy().as('removeSuccess'),
           },
         }).then(({ wrapper }) => wrapper)
@@ -1214,7 +1214,7 @@ describe('<ConsumerList />', () => {
 
         cy.getTestId(modalQuery).should('exist')
 
-        cy.get('@vueWrapper').then((wrapper: any) => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
+        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
           .vm.$emit('proceed'))
 
         cy.wait('@removeGroupConsumer')
@@ -1236,9 +1236,9 @@ describe('<ConsumerList />', () => {
             cacheIdentifier: `consumer-list-${uuidv4()}`,
             config: configGroupKonnect,
             canCreate: () => true,
-            canEdit: () => { },
+            canEdit: () => false,
             canDelete: () => true,
-            canRetrieve: () => { },
+            canRetrieve: () => false,
             onError: cy.spy().as('errorSpy'),
           },
         }).then(({ wrapper }) => wrapper)
@@ -1253,7 +1253,7 @@ describe('<ConsumerList />', () => {
 
         cy.getTestId(modalQuery).should('exist')
 
-        cy.get('@vueWrapper').then((wrapper: any) => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
+        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
           .vm.$emit('proceed'))
 
         cy.wait('@removeGroupConsumer')

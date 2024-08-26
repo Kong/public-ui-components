@@ -14,6 +14,16 @@ const init = async () => {
       {
         path: '/',
         name: 'home',
+        component: () => import('./pages/HomePage.vue'),
+      },
+      {
+        path: '/vault-secret-picker',
+        name: 'vault-secret-picker',
+        component: () => import('./pages/VaultSecretPickerPage.vue'),
+      },
+      {
+        path: '/plugin',
+        name: 'list-plugin',
         component: () => import('./pages/PluginListPage.vue'),
       },
       {

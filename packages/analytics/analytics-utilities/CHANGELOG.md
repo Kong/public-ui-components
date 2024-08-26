@@ -3,6 +3,99 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.4.4...@kong-ui-public/analytics-utilities@4.4.5) (2024-08-21)
+
+
+### Bug Fixes
+
+* metric filter values ([#1575](https://github.com/Kong/public-ui-components/issues/1575)) ([fc329bc](https://github.com/Kong/public-ui-components/commit/fc329bccd3753600155408b6c40a08bd12ae011b))
+
+
+
+
+
+## [4.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.4.3...@kong-ui-public/analytics-utilities@4.4.4) (2024-08-15)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [4.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.4.2...@kong-ui-public/analytics-utilities@4.4.3) (2024-08-15)
+
+
+### Bug Fixes
+
+* add missing response_header_content_type ([#1561](https://github.com/Kong/public-ui-components/issues/1561)) ([bf0ab2c](https://github.com/Kong/public-ui-components/commit/bf0ab2c975c51f0d5a70ca440de5f6be0cfab395))
+
+
+
+
+
+## [4.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.4.1...@kong-ui-public/analytics-utilities@4.4.2) (2024-08-14)
+
+
+### Bug Fixes
+
+* api-request datasource fixes ([#1558](https://github.com/Kong/public-ui-components/issues/1558)) ([6c5ff43](https://github.com/Kong/public-ui-components/commit/6c5ff439a594ab42efe9f2d98f1310a02c206983))
+
+
+
+
+
+## [4.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.4.0...@kong-ui-public/analytics-utilities@4.4.1) (2024-08-14)
+
+
+### Bug Fixes
+
+* type for api-request time_ranges ([#1557](https://github.com/Kong/public-ui-components/issues/1557)) ([a93bf0e](https://github.com/Kong/public-ui-components/commit/a93bf0e0a410daefb07779bca59157b84a2958a6))
+
+
+
+
+
+# [4.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.3.2...@kong-ui-public/analytics-utilities@4.4.0) (2024-08-14)
+
+
+### Features
+
+* add new filter fields ([#1552](https://github.com/Kong/public-ui-components/issues/1552)) ([259a62e](https://github.com/Kong/public-ui-components/commit/259a62eb664d2256d4704f90ba18d86eeb91b8a2))
+
+
+
+
+
+## [4.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.3.1...@kong-ui-public/analytics-utilities@4.3.2) (2024-08-12)
+
+
+### Bug Fixes
+
+* **analytics:** improve dashboard renderer types [MA-2708] ([#1547](https://github.com/Kong/public-ui-components/issues/1547)) ([190cf39](https://github.com/Kong/public-ui-components/commit/190cf3975a69b840b2bfd3c33773d996e6a4adee))
+
+
+
+
+
+## [4.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.3.0...@kong-ui-public/analytics-utilities@4.3.1) (2024-08-08)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+# [4.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.2.5...@kong-ui-public/analytics-utilities@4.3.0) (2024-07-31)
+
+
+### Features
+
+* **ai-analytics:** AI Analytics new metrics/dimensions ([#1524](https://github.com/Kong/public-ui-components/issues/1524)) ([54d185f](https://github.com/Kong/public-ui-components/commit/54d185fadea6347da5b95db4531752079c16f824))
+
+
+
+
+
 ## [4.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.2.4...@kong-ui-public/analytics-utilities@4.2.5) (2024-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities

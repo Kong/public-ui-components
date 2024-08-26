@@ -175,7 +175,7 @@ const props = defineProps({
     default: (({ items, query }) => {
       query = query.toLowerCase()
 
-      return items.filter((item) => item.tag && item.tag.toLowerCase().includes(query))
+      return items.filter((item) => item.tag && String(item.tag).toLowerCase().includes(query))
     }) as OperationListFilterFunction,
     validator: (maybeFunc) => !!maybeFunc && typeof maybeFunc === 'function',
   },

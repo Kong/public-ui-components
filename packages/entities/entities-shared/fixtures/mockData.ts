@@ -1,3 +1,5 @@
+import type { ExactMatchFilterConfig, FuzzyMatchFilterConfig } from '../src/types'
+
 export const mockTableData = {
   total: 2,
   data: [
@@ -50,7 +52,7 @@ export const mockTableHeaders = {
 export const mockExactMatchFilterConfig = {
   isExactMatch: true,
   placeholder: 'Filter by exact name or ID',
-}
+} satisfies ExactMatchFilterConfig
 
 export const mockFuzzyMatchFilterConfig = {
   isExactMatch: false,
@@ -90,7 +92,7 @@ export const mockFuzzyMatchFilterConfig = {
       type: 'number',
     },
   },
-}
+} satisfies FuzzyMatchFilterConfig
 
 export const gatewayServiceRecord = {
   ca_certificates: [
@@ -188,4 +190,21 @@ export const pluginRecord = {
     'https',
   ],
   updated_at: 1679088529,
+}
+
+export const route = {
+  service: {
+    id: gatewayServiceRecord.id,
+  },
+  id: '1123-ilove-cats-woot',
+  name: 'route-trad',
+  methods: [],
+  tags: [],
+  regex_priority: 1,
+  path_handling: 'v1',
+  preserve_host: true,
+  https_redirect_status_code: 426,
+  protocols: ['http', 'https'],
+  strip_path: false,
+  paths: [],
 }

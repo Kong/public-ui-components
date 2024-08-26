@@ -91,7 +91,7 @@ A form component for Vaults.
     - required: `false`
     - default: `undefined`
     - Show/hide approle option and corresponding fields.
-  
+
   - `awsStsEndpointUrlAvailable`
     - type: `boolean`
     - required: `false`
@@ -107,6 +107,14 @@ The base konnect or kongManger config.
 - default: `''`
 
 If showing the `Edit` type form, the ID of the Vault.
+
+#### `enableTerraform`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
 
 ### Events
 

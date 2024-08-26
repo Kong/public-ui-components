@@ -1,5 +1,6 @@
 import { mount } from 'cypress/vue'
 import type { ComponentPublicInstance, App } from 'vue'
+import type { OptionsParam } from '../types'
 import defaultRouter from '../fixtures/routes'
 import RouterLink from '../fixtures/RouterLink.vue'
 import Kongponents from '@kong/kongponents'
@@ -27,11 +28,15 @@ Cypress.Commands.add('onVueError', (vueError: VueError) => {
   assert.fail(vueError.err.stack)
 })
 
-Cypress.Commands.add('mount', (component, options = {}) => {
+Cypress.Commands.add('mount', (component, opt = {}) => {
+  const options: OptionsParam = opt
+
   // Setup options object
   options.global = options.global || {}
   options.global.stubs = options.global.stubs || {}
-  options.global.stubs.transition = false
+  if (!Array.isArray(options.global.stubs)) {
+    options.global.stubs.transition = false
+  }
   options.global.components = options.global.components || {}
   options.global.plugins = options.global.plugins || []
 
@@ -55,7 +60,7 @@ Cypress.Commands.add('mount', (component, options = {}) => {
         app.use(options.router)
       } else {
         options.router = defaultRouter
-        options.global.components.RouterLink = RouterLink
+        options.global!.components!.RouterLink = RouterLink
       }
 
       // Kongponents

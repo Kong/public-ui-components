@@ -5,22 +5,44 @@
       :key="index"
       class="pair-item"
     >
-      <input
-        class="form-control"
-        :data-testid="`${getFieldID(schema)}-pair-key-${index}`"
-        :placeholder="schema.keyInputPlaceholder ?? 'Key'"
-        type="text"
-        :value="pair.key"
-        @input="(e) => { onInput(e, index, 'key') }"
-      >
-      <input
-        class="form-control"
-        :data-testid="`${getFieldID(schema)}-pair-value-${index}`"
-        :placeholder="schema.valueInputPlaceholder ?? 'Value'"
-        type="text"
-        :value="pair.value"
-        @input="(e) => { onInput(e, index, 'value') }"
-      >
+      <div class="pair-item-cell">
+        <input
+          class="form-control"
+          :data-testid="`${getFieldID(schema)}-pair-key-${index}`"
+          :placeholder="schema.keyInputPlaceholder ?? 'Key'"
+          type="text"
+          :value="pair.key"
+          @input="(e) => { onInput(e, index, 'key') }"
+        >
+
+        <!-- autofill -->
+        <component
+          :is="autofillSlot"
+          :schema="schema"
+          :update="(value) => onInput({ target: { value }}, index, 'key')"
+          :value="pair.key"
+        />
+      </div>
+
+      <div class="pair-item-cell">
+        <input
+          class="form-control"
+          :data-testid="`${getFieldID(schema)}-pair-value-${index}`"
+          :placeholder="schema.valueInputPlaceholder ?? 'Value'"
+          type="text"
+          :value="pair.value"
+          @input="(e) => { onInput(e, index, 'value') }"
+        >
+
+        <!-- autofill -->
+        <component
+          :is="autofillSlot"
+          :schema="schema"
+          :update="(value) => onInput({ target: { value }}, index, 'value')"
+          :value="pair.value"
+        />
+      </div>
+
       <KButton
         appearance="tertiary"
         :data-testid="`${getFieldID(schema)}-remove-pair-${index}`"
@@ -42,8 +64,9 @@
 </template>
 
 <script>
-import abstractField from './abstractField'
 import { TrashIcon } from '@kong/icons'
+import { AUTOFILL_SLOT } from '../../const'
+import abstractField from './abstractField'
 
 export default {
   name: 'FieldKeyValuePairs',
@@ -51,6 +74,13 @@ export default {
   components: { TrashIcon },
 
   mixins: [abstractField],
+
+  inject: {
+    autofillSlot: {
+      from: AUTOFILL_SLOT,
+      default: undefined,
+    },
+  },
 
   data() {
     return {
@@ -114,13 +144,15 @@ export default {
 
   .pair-item {
     display: flex;
+    gap: $kui-space-50;
+    justify-content: space-between;
 
     &:not(:first-child) {
-      margin-top: 12px;
+      margin-top: $kui-space-50;
     }
 
-    input {
-      margin-right: 12px;
+    .pair-item-cell {
+      flex-grow: 1;
     }
   }
 }

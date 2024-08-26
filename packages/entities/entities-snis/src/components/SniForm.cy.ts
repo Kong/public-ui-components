@@ -91,10 +91,10 @@ describe('<SniForm />', () => {
       cy.get('.kong-ui-entities-snis-form').should('be.visible')
       cy.get('.kong-ui-entities-snis-form form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('sni-form-cancel').should('be.visible')
+      cy.getTestId('sni-form-submit').should('be.visible')
+      cy.getTestId('sni-form-cancel').should('be.enabled')
+      cy.getTestId('sni-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('sni-form-name').should('be.visible')
       cy.getTestId('sni-form-tags').should('be.visible')
@@ -116,18 +116,18 @@ describe('<SniForm />', () => {
       cy.wait('@getCertificates')
       cy.get('.kong-ui-entities-snis-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('sni-form-cancel').should('be.visible')
+      cy.getTestId('sni-form-submit').should('be.visible')
+      cy.getTestId('sni-form-cancel').should('be.enabled')
+      cy.getTestId('sni-form-submit').should('be.disabled')
       // enables save when required fields have values
       cy.getTestId('sni-form-name').type('tk-meowstersmith')
       cy.getTestId('sni-form-certificate-id').click()
       cy.get(`[data-testid="select-item-${certificates.data[0].id}"] button`).click()
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('sni-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('sni-form-name').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('sni-form-submit').should('be.disabled')
     })
 
     it('should allow exact match filtering of certs', () => {
@@ -205,10 +205,10 @@ describe('<SniForm />', () => {
       cy.wait('@getSni')
       cy.get('.kong-ui-entities-snis-form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('sni-form-cancel').should('be.visible')
+      cy.getTestId('sni-form-submit').should('be.visible')
+      cy.getTestId('sni-form-cancel').should('be.enabled')
+      cy.getTestId('sni-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('sni-form-name').should('have.value', sni1.name)
       sni1.tags.forEach((tag: string) => {
@@ -234,17 +234,17 @@ describe('<SniForm />', () => {
       cy.wait('@getCertificates')
       cy.get('.kong-ui-entities-snis-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('sni-form-cancel').should('be.visible')
+      cy.getTestId('sni-form-submit').should('be.visible')
+      cy.getTestId('sni-form-cancel').should('be.enabled')
+      cy.getTestId('sni-form-submit').should('be.disabled')
       // enables save when form has changes
       cy.getTestId('sni-form-name').type('-edited')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('sni-form-submit').should('be.enabled')
       // disables save when form changes are undone
       cy.getTestId('sni-form-name').clear()
       cy.getTestId('sni-form-name').type(sni1.name)
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('sni-form-submit').should('be.disabled')
     })
 
     it('should handle error state - failed to load SNI', () => {
@@ -274,8 +274,8 @@ describe('<SniForm />', () => {
       // error state is displayed
       cy.getTestId('form-fetch-error').should('be.visible')
       // buttons and form hidden
-      cy.getTestId('form-cancel').should('not.exist')
-      cy.getTestId('form-submit').should('not.exist')
+      cy.getTestId('sni-form-cancel').should('not.exist')
+      cy.getTestId('sni-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-snis-form form').should('not.exist')
     })
 
@@ -337,7 +337,7 @@ describe('<SniForm />', () => {
       cy.getTestId('sni-form-tags').clear()
       cy.getTestId('sni-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateSni')
@@ -417,10 +417,10 @@ describe('<SniForm />', () => {
       cy.get('.kong-ui-entities-snis-form').should('be.visible')
       cy.get('.kong-ui-entities-snis-form form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('sni-form-cancel').should('be.visible')
+      cy.getTestId('sni-form-submit').should('be.visible')
+      cy.getTestId('sni-form-cancel').should('be.enabled')
+      cy.getTestId('sni-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('sni-form-name').should('be.visible')
       cy.getTestId('sni-form-tags').should('be.visible')
@@ -442,18 +442,18 @@ describe('<SniForm />', () => {
       cy.wait('@getCertificates')
       cy.get('.kong-ui-entities-snis-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('sni-form-cancel').should('be.visible')
+      cy.getTestId('sni-form-submit').should('be.visible')
+      cy.getTestId('sni-form-cancel').should('be.enabled')
+      cy.getTestId('sni-form-submit').should('be.disabled')
       // enables save when required fields have values
       cy.getTestId('sni-form-name').type('tk-meowstersmith')
       cy.getTestId('sni-form-certificate-id').click()
       cy.get(`[data-testid="select-item-${certificates.data[0].id}"] button`).click()
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('sni-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('sni-form-name').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('sni-form-submit').should('be.disabled')
     })
 
     it('should allow exact match filtering of certs', () => {
@@ -530,10 +530,10 @@ describe('<SniForm />', () => {
       cy.wait('@getSni')
       cy.get('.kong-ui-entities-snis-form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('sni-form-cancel').should('be.visible')
+      cy.getTestId('sni-form-submit').should('be.visible')
+      cy.getTestId('sni-form-cancel').should('be.enabled')
+      cy.getTestId('sni-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('sni-form-name').should('have.value', sni1.name)
       sni1.tags.forEach((tag: string) => {
@@ -559,17 +559,17 @@ describe('<SniForm />', () => {
       cy.wait('@getCertificates')
       cy.get('.kong-ui-entities-snis-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('sni-form-cancel').should('be.visible')
+      cy.getTestId('sni-form-submit').should('be.visible')
+      cy.getTestId('sni-form-cancel').should('be.enabled')
+      cy.getTestId('sni-form-submit').should('be.disabled')
       // enables save when form has changes
       cy.getTestId('sni-form-name').type('-edited')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('sni-form-submit').should('be.enabled')
       // disables save when form changes are undone
       cy.getTestId('sni-form-name').clear()
       cy.getTestId('sni-form-name').type(sni1.name)
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('sni-form-submit').should('be.disabled')
     })
 
     it('should handle error state - failed to load SNI', () => {
@@ -599,8 +599,8 @@ describe('<SniForm />', () => {
       // error state is displayed
       cy.getTestId('form-fetch-error').should('be.visible')
       // buttons and form hidden
-      cy.getTestId('form-cancel').should('not.exist')
-      cy.getTestId('form-submit').should('not.exist')
+      cy.getTestId('sni-form-cancel').should('not.exist')
+      cy.getTestId('sni-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-snis-form form').should('not.exist')
     })
 
@@ -662,7 +662,7 @@ describe('<SniForm />', () => {
       cy.getTestId('sni-form-tags').clear()
       cy.getTestId('sni-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@validateSni')

@@ -133,10 +133,15 @@
 <script setup lang="ts">
 import cloneDeep from 'lodash-es/cloneDeep'
 import type { PropType } from 'vue'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, provide, ref, useSlots } from 'vue'
+import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
+import type { AutofillSlot } from '../../types'
 import VueFormGenerator from '../FormGenerator.vue'
 import type { Schema } from './schemas/ACMECommon'
 import { ACMECommonSchema, ACMELetsEncryptSchema, ACMEZeroSSLSchema } from './schemas/ACMECommon'
+
+// Provide AUTOFILL_SLOT
+provide<AutofillSlot | undefined>(AUTOFILL_SLOT, useSlots()?.[AUTOFILL_SLOT_NAME])
 
 const props = defineProps({
   formModel: {

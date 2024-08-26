@@ -287,7 +287,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-proxy.name',
-    scope: [PluginScope.ROUTE],
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     useLegacyForm: true,
   },
   'ai-prompt-decorator': {
@@ -295,7 +295,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-prompt-decorator.name',
-    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     useLegacyForm: true,
   },
   'ai-prompt-template': {
@@ -303,7 +303,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-prompt-template.name',
-    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     useLegacyForm: true,
   },
   'ai-prompt-guard': {
@@ -311,7 +311,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-prompt-guard.name',
-    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     useLegacyForm: true,
   },
   'ai-request-transformer': {
@@ -327,7 +327,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-response-transformer.name',
-    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     useLegacyForm: true,
   },
   'ai-rate-limiting-advanced': {
@@ -476,7 +476,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     isEnterprise: true,
     nameKey: 'plugins.meta.exit-transformer.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
-    imageName: 'exit-transformer',
   },
   jq: {
     descriptionKey: 'plugins.meta.jq.description',
@@ -484,7 +483,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     isEnterprise: true,
     nameKey: 'plugins.meta.jq.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
-    imageName: 'jq',
     fieldRules: {
       atLeastOneOf: [['config.request_jq_program', 'config.response_jq_program']],
     },
@@ -701,6 +699,61 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     isEnterprise: false,
     nameKey: 'plugins.meta.standard-webhooks.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+  },
+  'ai-proxy-advanced': {
+    descriptionKey: 'plugins.meta.ai-proxy-advanced.description',
+    group: PluginGroup.AI,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.ai-proxy-advanced.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+    useLegacyForm: true,
+  },
+  'ai-semantic-cache': {
+    descriptionKey: 'plugins.meta.ai-semantic-cache.description',
+    group: PluginGroup.AI,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.ai-semantic-cache.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+    useLegacyForm: true,
+  },
+  'ai-semantic-prompt-guard': {
+    descriptionKey: 'plugins.meta.ai-semantic-prompt-guard.description',
+    group: PluginGroup.AI,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.ai-semantic-prompt-guard.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+    useLegacyForm: true,
+  },
+  'header-cert-auth': {
+    descriptionKey: 'plugins.meta.header-cert-auth.description',
+    group: PluginGroup.AUTHENTICATION,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.header-cert-auth.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    imageName: 'tls-metadata-headers',
+    fieldRules: {
+      onlyOneOfMutuallyRequired: [
+        [
+          ['config.http_proxy_host', 'config.http_proxy_port'],
+          ['config.https_proxy_host', 'config.https_proxy_port'],
+        ],
+      ],
+    },
+  },
+  'upstream-oauth': {
+    descriptionKey: 'plugins.meta.upstream-oauth.description',
+    group: PluginGroup.AUTHENTICATION,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.upstream-oauth.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+    imageName: 'oauth2',
+  },
+  'confluent': {
+    descriptionKey: 'plugins.meta.confluent.description',
+    group: PluginGroup.TRANSFORMATIONS,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.confluent.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
   },
 }
 

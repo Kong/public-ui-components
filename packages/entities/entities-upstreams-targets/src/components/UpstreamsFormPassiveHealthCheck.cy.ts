@@ -1,6 +1,8 @@
 import UpstreamsFormPassiveHealthCheck from './UpstreamsFormPassiveHealthCheck.vue'
 import { PassiveHealthyHttpStatuses, PassiveUnhealthyHttpStatuses } from '../constants'
 
+const PORTOCOLS = ['http', 'https', 'tcp', 'grpc', 'grpcs']
+
 describe('<UpstreamsFormPassiveHealthCheck/>', { viewportHeight: 700, viewportWidth: 700 }, () => {
   it('Component should be rendered correctly', () => {
     cy.mount(UpstreamsFormPassiveHealthCheck, {
@@ -117,19 +119,22 @@ describe('<UpstreamsFormPassiveHealthCheck/>', { viewportHeight: 700, viewportWi
     cy.get('.passive-healthcheck-unhealthy-http-statuses').should('not.exist')
   })
 
-  it('Should bind tcpFailures data correctly if type === "tcp"', () => {
-    cy.mount(UpstreamsFormPassiveHealthCheck, {
-      props: {
-        type: 'tcp',
-        'onUpdate:tcp-failures': cy.spy().as('onUpdateSpy'),
-      },
+  PORTOCOLS.forEach((protocol) => {
+    it(`Should bind tcpFailures data correctly if type === "${protocol}"`, () => {
+      cy.mount(UpstreamsFormPassiveHealthCheck, {
+        props: {
+          type: protocol,
+          'onUpdate:tcp-failures': cy.spy().as('onUpdateSpy'),
+        },
+      })
+
+      cy.getTestId('passive-healthcheck-tcp-failures').should('be.visible')
+      cy.getTestId('passive-healthcheck-tcp-failures').type('10', { waitForAnimations: false })
+
+      cy.get('@onUpdateSpy').should('have.been.calledWith', '10')
     })
-
-    cy.getTestId('passive-healthcheck-tcp-failures').should('be.visible')
-    cy.getTestId('passive-healthcheck-tcp-failures').type('10', { waitForAnimations: false })
-
-    cy.get('@onUpdateSpy').should('have.been.calledWith', '10')
   })
+
 
   it('Should clear data on type updates', () => {
     cy.mount(UpstreamsFormPassiveHealthCheck, {
@@ -142,7 +147,7 @@ describe('<UpstreamsFormPassiveHealthCheck/>', { viewportHeight: 700, viewportWi
     }).then(({ wrapper }) => wrapper)
       .as('vueWrapper')
 
-    cy.get('@vueWrapper').then(async (wrapper: any) => {
+    cy.get('@vueWrapper').then(async wrapper => {
       await wrapper.setProps({ type: 'https' })
       cy.get('@onUpdateTcpFailuresSpy').should('have.been.calledWith', '5')
 

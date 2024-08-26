@@ -1,13 +1,18 @@
 <template>
-  <div class="array-item">
-    <slot />
-    <KButton
-      appearance="tertiary"
-      class="delete"
-      @click="$emit('remove-item')"
-    >
-      <TrashIcon />
-    </KButton>
+  <div class="array-item-wrapper">
+    <div class="array-item">
+      <slot />
+      <KButton
+        appearance="tertiary"
+        class="delete"
+        @click="$emit('remove-item')"
+      >
+        <TrashIcon />
+      </KButton>
+    </div>
+    <div class="array-item-after">
+      <slot name="after" />
+    </div>
   </div>
 </template>
 
@@ -27,6 +32,10 @@ defineEmits<{
 </script>
 
 <style lang="scss" scoped>
+.array-item-wrapper {
+  width: 100%;
+}
+
 .array-item {
   display: flex;
   width: 100%;

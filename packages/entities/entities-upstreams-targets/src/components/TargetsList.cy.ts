@@ -59,10 +59,10 @@ describe('<TargetsList />', () => {
         props: {
           cacheIdentifier: `targets-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -77,10 +77,10 @@ describe('<TargetsList />', () => {
             props: {
               cacheIdentifier: `targets-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => {},
-              canEdit: () => {},
+              canCreate: () => false,
+              canEdit: () => false,
               canDelete: () => expected,
-              canRetrieve: () => {},
+              canRetrieve: () => false,
             },
           })
 
@@ -94,10 +94,10 @@ describe('<TargetsList />', () => {
           props: {
             cacheIdentifier: `targets-list-${uuidv4()}`,
             config: baseConfigKonnect,
-            canCreate: () => {},
+            canCreate: () => false,
             canEdit: () => expected,
-            canDelete: () => {},
-            canRetrieve: () => {},
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -140,9 +140,9 @@ describe('<TargetsList />', () => {
           cacheIdentifier: `targets-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => true,
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
         router,
       })
@@ -160,9 +160,9 @@ describe('<TargetsList />', () => {
           cacheIdentifier: `targets-list-${uuidv4()}`,
           config: { ...baseConfigKonnect, createRoute: { name: createRoute } },
           canCreate: () => true,
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
         router,
       })
@@ -198,10 +198,10 @@ describe('<TargetsList />', () => {
             props: {
               cacheIdentifier: `targets-list-${uuidv4()}`,
               config: { ...baseConfigKM, canMarkHealthy: () => expected },
-              canCreate: () => {},
-              canEdit: () => {},
-              canDelete: () => { },
-              canRetrieve: () => {},
+              canCreate: () => false,
+              canEdit: () => false,
+              canDelete: () => false,
+              canRetrieve: () => false,
             },
           })
 
@@ -215,10 +215,10 @@ describe('<TargetsList />', () => {
             props: {
               cacheIdentifier: `targets-list-${uuidv4()}`,
               config: { ...baseConfigKM, canMarkUnhealthy: () => expected },
-              canCreate: () => {},
-              canEdit: () => {},
-              canDelete: () => { },
-              canRetrieve: () => {},
+              canCreate: () => false,
+              canEdit: () => false,
+              canDelete: () => false,
+              canRetrieve: () => false,
             },
           })
 
@@ -279,9 +279,9 @@ describe('<TargetsList />', () => {
           cacheIdentifier: `targets-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => true,
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -299,9 +299,9 @@ describe('<TargetsList />', () => {
           cacheIdentifier: `targets-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => false,
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -328,10 +328,10 @@ describe('<TargetsList />', () => {
           props: {
             cacheIdentifier: `targets-list-${uuidv4()}`,
             config: baseConfigKM,
-            canCreate: () => {},
-            canEdit: () => {},
-            canDelete: () => {},
-            canRetrieve: () => {},
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -356,10 +356,10 @@ describe('<TargetsList />', () => {
         props: {
           cacheIdentifier: `targets-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -381,10 +381,10 @@ describe('<TargetsList />', () => {
         props: {
           cacheIdentifier: `targets-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -457,10 +457,10 @@ describe('<TargetsList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -492,15 +492,15 @@ describe('<TargetsList />', () => {
       cy.get(`${l} tbody tr[data-rowid="15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(TargetsList, {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -579,9 +579,9 @@ describe('<TargetsList />', () => {
           cacheIdentifier: `targets-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => true,
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -599,9 +599,9 @@ describe('<TargetsList />', () => {
           cacheIdentifier: `targets-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => false,
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -628,10 +628,10 @@ describe('<TargetsList />', () => {
           props: {
             cacheIdentifier: `targets-list-${uuidv4()}`,
             config: baseConfigKonnect,
-            canCreate: () => {},
-            canEdit: () => {},
-            canDelete: () => {},
-            canRetrieve: () => {},
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -656,10 +656,10 @@ describe('<TargetsList />', () => {
         props: {
           cacheIdentifier: `targets-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -681,10 +681,10 @@ describe('<TargetsList />', () => {
         props: {
           cacheIdentifier: `targets-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -757,10 +757,10 @@ describe('<TargetsList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -792,15 +792,15 @@ describe('<TargetsList />', () => {
       cy.get(`${l} tbody tr[data-rowid="15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(TargetsList, {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 

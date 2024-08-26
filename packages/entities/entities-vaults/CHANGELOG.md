@@ -3,6 +3,128 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.10.3...@kong-ui-public/entities-vaults@3.10.4) (2024-08-21)
+
+
+### Bug Fixes
+
+* **entities:** form data-testid changes [khcp-13000] ([#1565](https://github.com/Kong/public-ui-components/issues/1565)) ([8959349](https://github.com/Kong/public-ui-components/commit/8959349e2f941290e4176e8b997470af51e08360))
+
+
+
+
+
+## [3.10.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.10.2...@kong-ui-public/entities-vaults@3.10.3) (2024-08-20)
+
+
+### Bug Fixes
+
+* **terraform:** misc cleanup [khcp-12445] ([#1569](https://github.com/Kong/public-ui-components/issues/1569)) ([5ea6d6f](https://github.com/Kong/public-ui-components/commit/5ea6d6ff0316890cf6a2dd2fa9167cbf31eb8baf))
+
+
+
+
+
+## [3.10.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.10.1...@kong-ui-public/entities-vaults@3.10.2) (2024-08-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [3.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.10.0...@kong-ui-public/entities-vaults@3.10.1) (2024-08-15)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1562](https://github.com/Kong/public-ui-components/issues/1562)) ([112f1bd](https://github.com/Kong/public-ui-components/commit/112f1bd3e3fce583649729d520cbffeb321a4572))
+
+
+
+
+
+# [3.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.9.4...@kong-ui-public/entities-vaults@3.10.0) (2024-08-14)
+
+
+### Features
+
+* **entities:** support terraform in config card [khcp-12445] ([#1549](https://github.com/Kong/public-ui-components/issues/1549)) ([794b4a4](https://github.com/Kong/public-ui-components/commit/794b4a421660a6dd66f44c4b072149dfdeaa2689))
+
+
+
+
+
+## [3.9.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.9.3...@kong-ui-public/entities-vaults@3.9.4) (2024-08-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [3.9.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.9.2...@kong-ui-public/entities-vaults@3.9.3) (2024-08-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [3.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.9.1...@kong-ui-public/entities-vaults@3.9.2) (2024-08-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [3.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.9.0...@kong-ui-public/entities-vaults@3.9.1) (2024-08-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+# [3.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.8.5...@kong-ui-public/entities-vaults@3.9.0) (2024-08-07)
+
+
+### Features
+
+* vault secret picker [KM-307] ([#1503](https://github.com/Kong/public-ui-components/issues/1503)) ([697f238](https://github.com/Kong/public-ui-components/commit/697f2383b2b79e2c6f0cfabde97aa13f9be28577))
+
+
+
+
+
+## [3.8.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.8.4...@kong-ui-public/entities-vaults@3.8.5) (2024-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [3.8.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.8.3...@kong-ui-public/entities-vaults@3.8.4) (2024-08-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [3.8.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.8.2...@kong-ui-public/entities-vaults@3.8.3) (2024-08-01)
+
+
+### Bug Fixes
+
+* **vaultform:** fix compatibility of STS endpoint url in Konnect ([#1525](https://github.com/Kong/public-ui-components/issues/1525)) ([43ede4a](https://github.com/Kong/public-ui-components/commit/43ede4adc17b2e55d3c6168713fed52dc92185f6))
+
+
+
+
+
 ## [3.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.8.1...@kong-ui-public/entities-vaults@3.8.2) (2024-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

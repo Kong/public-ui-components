@@ -4,6 +4,8 @@
       :can-submit="canSubmit"
       :config="config"
       :edit-id="sniId"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.SNI"
       :error-message="form.errorMessage || fetchCertsErrorMessage"
       :fetch-url="fetchUrl"
       :form-fields="requestBody"
@@ -108,7 +110,15 @@ import type {
 } from '../types'
 import endpoints from '../snis-endpoints'
 import composables from '../composables'
-import { useAxios, useErrors, useDebouncedFilter, EntityFormSection, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
+import {
+  useAxios,
+  useErrors,
+  useDebouncedFilter,
+  EntityFormSection,
+  EntityBaseForm,
+  EntityBaseFormType,
+  SupportedEntityType,
+} from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
@@ -136,6 +146,14 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
   },
 })
 

@@ -4,6 +4,8 @@
       :can-submit="isFormValid && changesExist"
       :config="config"
       :edit-id="vaultId"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.Vault"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
@@ -490,6 +492,7 @@ import {
   EntityFormSection,
   EntityBaseForm,
   EntityBaseFormType,
+  SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -552,6 +555,14 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -640,7 +651,6 @@ const configFields = reactive<ConfigFields>({
     endpoint_url: '',
     assume_role_arn: '',
     role_session_name: 'KongVault',
-    sts_endpoint_url: '',
   } as AWSVaultConfig,
   [VaultProviders.GCP]: {
     project_id: '',
@@ -683,7 +693,6 @@ const originalConfigFields = reactive<ConfigFields>({
     endpoint_url: '',
     assume_role_arn: '',
     role_session_name: 'KongVault',
-    sts_endpoint_url: '',
   } as AWSVaultConfig,
   [VaultProviders.GCP]: {
     project_id: '',
@@ -964,7 +973,7 @@ const getPayload = computed((): Record<string, any> => {
     ...configFields[vaultProvider.value],
     endpoint_url: (configFields[vaultProvider.value] as AWSVaultConfig).endpoint_url || null,
     assume_role_arn: (configFields[vaultProvider.value] as AWSVaultConfig).assume_role_arn || null,
-    sts_endpoint_url: (configFields[vaultProvider.value] as AWSVaultConfig).sts_endpoint_url || null,
+    ...(props.config.awsStsEndpointUrlAvailable ? { sts_endpoint_url: (configFields[vaultProvider.value] as AWSVaultConfig).sts_endpoint_url || null } : {}),
   }
 
   let config: VaultPayload['config'] = configFields[vaultProvider.value]

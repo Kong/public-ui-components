@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-shared",
-  "version": "3.5.2",
+  "version": "3.7.4",
   "type": "module",
   "main": "./dist/entities-shared.umd.js",
   "module": "./dist/entities-shared.es.js",
@@ -22,15 +22,15 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.0.21",
+    "@kong/kongponents": "^9.3.0",
     "axios": "^1.6.8",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.3.3"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.15.3",
-    "@kong/kongponents": "9.0.21",
+    "@kong/design-tokens": "1.17.2",
+    "@kong/kongponents": "9.3.0",
     "axios": "^1.6.8",
     "vue": "^3.4.31",
     "vue-router": "^4.4.0"
@@ -65,7 +65,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "564KB"
+    "errorLimit": "612KB"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",

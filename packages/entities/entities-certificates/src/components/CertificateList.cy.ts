@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from 'uuid'
 const viewRoute = 'view-certificate'
 const editRoute = 'edit-certificate'
 const createRoute = 'create-certificate'
+const createSniRoute = 'create-sni'
 
 const baseConfigKM: KongManagerCertificateListConfig = {
   app: 'kongManager',
@@ -73,10 +74,10 @@ describe('<CertificateList />', () => {
         props: {
           cacheIdentifier: `certificate-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -93,9 +94,9 @@ describe('<CertificateList />', () => {
             props: {
               cacheIdentifier: `certificate-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => {},
-              canEdit: () => {},
-              canDelete: () => {},
+              canCreate: () => false,
+              canEdit: () => false,
+              canDelete: () => false,
               canRetrieve: () => expected,
             },
             router,
@@ -116,9 +117,9 @@ describe('<CertificateList />', () => {
             props: {
               cacheIdentifier: `certificate-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => {},
-              canEdit: () => {},
-              canDelete: () => {},
+              canCreate: () => false,
+              canEdit: () => false,
+              canDelete: () => false,
               canRetrieve: () => expected,
             },
           })
@@ -132,10 +133,10 @@ describe('<CertificateList />', () => {
             props: {
               cacheIdentifier: `certificate-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => {},
+              canCreate: () => false,
               canEdit: () => expected,
-              canDelete: () => {},
-              canRetrieve: () => {},
+              canDelete: () => false,
+              canRetrieve: () => false,
             },
           })
 
@@ -149,13 +150,13 @@ describe('<CertificateList />', () => {
               cacheIdentifier: `certificate-list-${uuidv4()}`,
               config: {
                 ...baseConfigKonnect,
-                getCreateSniRoute: () => {},
+                getCreateSniRoute: () => createSniRoute,
               },
-              canCreate: () => {},
-              canEdit: () => {},
+              canCreate: () => false,
+              canEdit: () => false,
               canCreateSni: () => expected,
-              canDelete: () => {},
-              canRetrieve: () => {},
+              canDelete: () => false,
+              canRetrieve: () => false,
             },
           })
 
@@ -168,10 +169,10 @@ describe('<CertificateList />', () => {
             props: {
               cacheIdentifier: `certificate-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => {},
-              canEdit: () => {},
+              canCreate: () => false,
+              canEdit: () => false,
               canDelete: () => expected,
-              canRetrieve: () => {},
+              canRetrieve: () => false,
             },
           })
 
@@ -189,11 +190,11 @@ describe('<CertificateList />', () => {
             ...baseConfigKonnect,
             getCreateSniRoute: undefined,
           },
-          canCreate: () => {},
-          canEdit: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
           canCreateSni: () => true,
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -251,9 +252,9 @@ describe('<CertificateList />', () => {
           cacheIdentifier: `certificate-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => true,
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -271,9 +272,9 @@ describe('<CertificateList />', () => {
           cacheIdentifier: `certificate-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => false,
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -300,10 +301,10 @@ describe('<CertificateList />', () => {
           props: {
             cacheIdentifier: `certificate-list-${uuidv4()}`,
             config: baseConfigKM,
-            canCreate: () => {},
-            canEdit: () => {},
-            canDelete: () => {},
-            canRetrieve: () => {},
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -328,10 +329,10 @@ describe('<CertificateList />', () => {
         props: {
           cacheIdentifier: `certificate-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -404,10 +405,10 @@ describe('<CertificateList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -439,15 +440,15 @@ describe('<CertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="certificate-15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(CertificateList, {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -485,10 +486,10 @@ describe('<CertificateList />', () => {
         props: {
           cacheIdentifier: `certificate-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -559,9 +560,9 @@ describe('<CertificateList />', () => {
           cacheIdentifier: `certificate-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => true,
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -578,9 +579,9 @@ describe('<CertificateList />', () => {
         props: {
           config: baseConfigKonnect,
           canCreate: () => false,
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -607,10 +608,10 @@ describe('<CertificateList />', () => {
           props: {
             cacheIdentifier: `certificate-list-${uuidv4()}`,
             config: baseConfigKonnect,
-            canCreate: () => {},
-            canEdit: () => {},
-            canDelete: () => {},
-            canRetrieve: () => {},
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -635,10 +636,10 @@ describe('<CertificateList />', () => {
         props: {
           cacheIdentifier: `certificate-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -711,10 +712,10 @@ describe('<CertificateList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -746,15 +747,15 @@ describe('<CertificateList />', () => {
       cy.get(`${l} tbody tr[data-testid="certificate-15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(CertificateList, {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -792,10 +793,10 @@ describe('<CertificateList />', () => {
         props: {
           cacheIdentifier: `certificate-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => {},
-          canEdit: () => {},
-          canDelete: () => {},
-          canRetrieve: () => {},
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 

@@ -4,10 +4,10 @@ A form component to create/edit Upstreams.
 
 - [Requirements](#requirements)
 - [Usage](#usage)
-    - [Install](#install)
-    - [Props](#props)
-    - [Events](#events)
-    - [Usage example](#usage-example)
+  - [Install](#install)
+  - [Props](#props)
+  - [Events](#events)
+  - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
 
 ## Requirements
@@ -26,48 +26,58 @@ A form component to create/edit Upstreams.
 ### Props
 
 #### `config`
+
 - type: `Object as PropType<KonnectUpstreamsFormConfig | KongManagerUpstreamsFormConfig>`
 - required: `true`
 - default: `undefined`
 - properties:
-    - `app`:
-        - type: `'konnect' | 'kongManager'`
-        - required: `true`
-        - default: `undefined`
-        - App name.
-    - `apiBaseUrl`:
-        - type: `string`
-        - required: `true`
-        - default: `undefined`
-        - Base URL for API requests.
-    - `axiosRequestConfig`:
-        - type: `AxiosRequestConfig`
-        - required: `false`
-        - default: `undefined`
-        - An optional configuration object for the underlying Axios request.
-    - `cancelRoute`:
-        - type: `RouteLocationRaw`
-        - required: `true`
-        - default: `undefined`
-        - Route to return to when canceling creation of a Consumer.
+  - `app`:
+    - type: `'konnect' | 'kongManager'`
+    - required: `true`
+    - default: `undefined`
+    - App name.
+  - `apiBaseUrl`:
+    - type: `string`
+    - required: `true`
+    - default: `undefined`
+    - Base URL for API requests.
+  - `axiosRequestConfig`:
+    - type: `AxiosRequestConfig`
+    - required: `false`
+    - default: `undefined`
+    - An optional configuration object for the underlying Axios request.
+  - `cancelRoute`:
+    - type: `RouteLocationRaw`
+    - required: `true`
+    - default: `undefined`
+    - Route to return to when canceling creation of a Consumer.
 
-    - `workspace`:
-        - type: `string`
-        - required: `true`
-        - default: `undefined`
-        - *Specific to Kong Manager*. Name of the current workspace.
+  - `workspace`:
+    - type: `string`
+    - required: `true`
+    - default: `undefined`
+    - *Specific to Kong Manager*. Name of the current workspace.
 
-    - `controlPlaneId`:
-        - type: `string`
-        - required: `true`
-        - default: `undefined`
-        - *Specific to Konnect*. Name of the current control plane.
+  - `controlPlaneId`:
+    - type: `string`
+    - required: `true`
+    - default: `undefined`
+    - *Specific to Konnect*. Name of the current control plane.
 
 #### `upstreamId`
+
 - type: `string`
 - required: `false`
 - default: `''`
 - If a valid upstreamId is provided, it will put the form in Edit mode instead of Create.
+
+#### `enableTerraform`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
 
 ### Events
 
@@ -90,6 +100,7 @@ Please refer to the [sandbox](../sandbox/pages/UpstreamFormPage.vue). The form i
 ## TypeScript interfaces
 
 TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/entities/entities-upstreams-targets/src/types/upstreams-form.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+
 ```ts
 import type {
  BaseUpstreamsFormConfig,

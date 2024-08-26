@@ -14,12 +14,14 @@
     "view": "View Details",
     "configure_dynamic_ordering": "Configure Dynamic Ordering",
     "go_to_plugins": "Go to Plugins",
-    "save": "Save"
+    "save": "Save",
+    "loading": "Loading..."
   },
   "view_configuration": {
     "title": "Configuration",
-    "message": "Export configurations for core Kong Gateway objects, like services, routes, and plugins, to either YAML or JSON. This allows for straightforward importing into APIOps tools like decK with YAML, or Insomnia and cURL with JSON.",
+    "message": "Export configurations for core Kong Gateway objects, like services, routes, and plugins, to either YAML, JSON, or Terraform. This allows for straightforward importing into APIOps tools like decK with YAML, Insomnia and cURL with JSON, or Terraform products with Terraform.",
     "yaml": "YAML",
+    "terraform": "Terraform",
     "json": "JSON"
   },
   "delete": {
@@ -455,6 +457,30 @@
       "standard-webhooks": {
         "name": "Standard Webhooks",
         "description": "Validate incoming webhooks adhere to the Standard Webhooks specification, to which Kong is a contributor"
+      },
+      "ai-proxy-advanced": {
+        "name": "AI Proxy Advanced",
+        "description": "Route across different LLMs and models using advanced load balancing algorithms, including semantic routing."
+      },
+      "ai-semantic-cache": {
+        "name": "AI Semantic Cache",
+        "description": "Semantically cache AI requests to any LLM to reduce latency, improve end-user experiences and optimize GenAI costs."
+      },
+      "ai-semantic-prompt-guard": {
+        "name": "AI Semantic Prompt Guard",
+        "description": "Semantically and intelligently create allow and deny lists of topics that can be requested across every LLM."
+      },
+      "header-cert-auth": {
+        "name": "Header Certificate Authentication",
+        "description": "Authenticate clients with MTLS certificate passed in header by a WAF or load balancer"
+      },
+      "upstream-oauth": {
+        "name": "Upstream OAuth",
+        "description": "Configure Kong to obtain a OAuth2 token to consume an upstream API"
+      },
+      "confluent": {
+        "name": "Confluent",
+        "description": "Streamlines integration with Confluent Cloud and transforms requests into messages published to a Confluent topic."
       }
     },
     "fields": {
@@ -563,5 +589,35 @@
   },
   "glossary": {
     "plugin": "plugin"
+  },
+  "vault_secret_picker": {
+    "title": "Look up Key in Vault",
+    "vault": {
+      "label": "Vault",
+      "placeholder": "Select a vault"
+    },
+    "secret_id": {
+      "label": "Secret ID",
+      "input_placeholder": "Enter a secret ID",
+      "select_placeholder": "Select or enter a complete secret ID"
+    },
+    "optional_secret_key": {
+      "label": "Secret Key",
+      "placeholder": "Enter the key or key path to access a nested secret value",
+      "help": "Optional. e.g. tokens, tokens/refresh_token"
+    },
+    "fetch_error": {
+      "vaults": "Could not fetch available vaults",
+      "secrets": "Could not fetch available secrets",
+      "vaults_and_secrets": "Could not fetch available vaults and secrets"
+    },
+    "no_results": "No results found",
+    "actions": {
+      "use_key": "Use Key"
+    },
+    "provider": {
+      "complete_action": "Look up {cta}",
+      "cta": "Key in Vault"
+    }
   }
 }

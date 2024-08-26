@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-utilities",
-  "version": "4.2.5",
+  "version": "4.4.5",
   "type": "module",
   "main": "./dist/vitals-utilities.umd.js",
   "module": "./dist/vitals-utilities.es.js",
@@ -61,6 +61,6 @@
     "date-fns-tz": "^2.0.1"
   },
   "devDependencies": {
-    "@kong/design-tokens": "1.15.3"
+    "@kong/design-tokens": "1.17.2"
   }
 }

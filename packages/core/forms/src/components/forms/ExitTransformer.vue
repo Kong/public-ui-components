@@ -9,11 +9,16 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue'
-import { computed } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
+import type { PropType } from 'vue'
+import { computed, provide, useSlots } from 'vue'
+import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
 import english from '../../locales/en.json'
+import type { AutofillSlot } from '../../types'
 import VueFormGenerator from '../FormGenerator.vue'
+
+// Provide AUTOFILL_SLOT
+provide<AutofillSlot | undefined>(AUTOFILL_SLOT, useSlots()?.[AUTOFILL_SLOT_NAME])
 
 const { t, te } = createI18n<typeof english>('en-us', english)
 

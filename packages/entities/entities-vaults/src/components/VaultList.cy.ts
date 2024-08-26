@@ -69,10 +69,10 @@ describe('<VaultList />', () => {
         props: {
           cacheIdentifier: `vault-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -89,9 +89,9 @@ describe('<VaultList />', () => {
             props: {
               cacheIdentifier: `vault-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => { },
-              canEdit: () => { },
-              canDelete: () => { },
+              canCreate: () => false,
+              canEdit: () => false,
+              canDelete: () => false,
               canRetrieve: () => expected,
             },
             router,
@@ -112,9 +112,9 @@ describe('<VaultList />', () => {
             props: {
               cacheIdentifier: `vault-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => { },
-              canEdit: () => { },
-              canDelete: () => { },
+              canCreate: () => false,
+              canEdit: () => false,
+              canDelete: () => false,
               canRetrieve: () => expected,
             },
           })
@@ -128,10 +128,10 @@ describe('<VaultList />', () => {
             props: {
               cacheIdentifier: `vault-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => { },
+              canCreate: () => false,
               canEdit: () => expected,
-              canDelete: () => { },
-              canRetrieve: () => { },
+              canDelete: () => false,
+              canRetrieve: () => false,
             },
           })
 
@@ -144,10 +144,10 @@ describe('<VaultList />', () => {
             props: {
               cacheIdentifier: `vault-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => { },
-              canEdit: () => { },
+              canCreate: () => false,
+              canEdit: () => false,
               canDelete: () => expected,
-              canRetrieve: () => { },
+              canRetrieve: () => false,
             },
           })
 
@@ -207,9 +207,9 @@ describe('<VaultList />', () => {
           cacheIdentifier: `vault-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -227,9 +227,9 @@ describe('<VaultList />', () => {
           cacheIdentifier: `vault-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => false,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -256,10 +256,10 @@ describe('<VaultList />', () => {
           props: {
             cacheIdentifier: `vault-list-${uuidv4()}`,
             config: baseConfigKM,
-            canCreate: () => { },
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -284,10 +284,10 @@ describe('<VaultList />', () => {
         props: {
           cacheIdentifier: `vault-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -309,10 +309,10 @@ describe('<VaultList />', () => {
         props: {
           cacheIdentifier: `vault-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -385,10 +385,10 @@ describe('<VaultList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -420,15 +420,15 @@ describe('<VaultList />', () => {
       cy.get(`${l} tbody tr[data-testid="vault-15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(VaultList, {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -507,9 +507,9 @@ describe('<VaultList />', () => {
           cacheIdentifier: `vault-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -527,9 +527,9 @@ describe('<VaultList />', () => {
           cacheIdentifier: `vault-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => false,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -556,10 +556,10 @@ describe('<VaultList />', () => {
           props: {
             cacheIdentifier: `vault-list-${uuidv4()}`,
             config: baseConfigKonnect,
-            canCreate: () => { },
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -584,10 +584,10 @@ describe('<VaultList />', () => {
         props: {
           cacheIdentifier: `vault-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -609,10 +609,10 @@ describe('<VaultList />', () => {
         props: {
           cacheIdentifier: `vault-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -685,10 +685,10 @@ describe('<VaultList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -720,15 +720,15 @@ describe('<VaultList />', () => {
       cy.get(`${l} tbody tr[data-testid="vault-15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(VaultList, {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 

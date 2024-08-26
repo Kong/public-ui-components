@@ -76,6 +76,7 @@
     >
       <ConfigCardDisplay
         :config="config"
+        :entity-type="entityType"
         :fetcher-url="fetcherUrl"
         :format="configFormat"
         :prop-list-types="propListTypes"
@@ -103,8 +104,16 @@
 import type { PropType } from 'vue'
 import { computed, ref, onBeforeMount, watch } from 'vue'
 import type { AxiosError } from 'axios'
-import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, ConfigurationSchema, PluginConfigurationSchema, RecordItem, DefaultCommonFieldsConfigurationSchema } from '../../types'
-import { ConfigurationSchemaType, ConfigurationSchemaSection } from '../../types'
+import type {
+  KonnectBaseEntityConfig,
+  KongManagerBaseEntityConfig,
+  ConfigurationSchema,
+  PluginConfigurationSchema,
+  RecordItem,
+  DefaultCommonFieldsConfigurationSchema,
+  SupportedEntityType,
+} from '../../types'
+import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray } from '../../types'
 import composables from '../../composables'
 import ConfigCardDisplay from './ConfigCardDisplay.vue'
 import { BookIcon } from '@kong/icons'
@@ -136,6 +145,14 @@ const props = defineProps({
     type: Object as PropType<ConfigurationSchema>,
     required: false,
     default: () => ({}),
+  },
+  /**
+   * Entity type, required to generate terraform code
+   */
+  entityType: {
+    type: String as PropType<SupportedEntityType>,
+    required: true,
+    validator: (val: SupportedEntityType) => SupportedEntityTypesArray.includes(val),
   },
   /** Record key that contains the plugin configuration */
   pluginConfigKey: {
@@ -197,6 +214,14 @@ const props = defineProps({
     type: String as PropType<HeaderTag>,
     default: 'h2',
   },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { i18n: { t } } = composables.useI18n()
@@ -212,14 +237,22 @@ const configFormatItems = [
     selected: true,
   },
   {
-    label: 'JSON',
+    label: t('baseForm.configuration.json'),
     value: 'json',
   },
   {
-    label: 'YAML',
+    label: t('baseForm.configuration.yaml'),
     value: 'yaml',
   },
 ]
+
+if (props.enableTerraform) {
+  // insert terraform as the third option
+  configFormatItems.splice(2, 0, {
+    label: t('baseForm.configuration.terraform'),
+    value: 'terraform',
+  })
+}
 
 const configFormat = ref('structured')
 

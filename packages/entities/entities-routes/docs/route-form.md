@@ -17,7 +17,6 @@ A form component for Routes.
 - `@kong/kongponents` must be added as a dependency in the host application, globally available via the Vue Plugin installation, and the package's style imports must be added in the app entry file. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents).
 - `@kong-ui-public/i18n` must be available as a `dependency` in the host application.
 - `axios` must be installed as a dependency in the host application.
-- If you want to use Expressions features, `@kong-ui-public/expressions` and `monaco-editor` must be installed as dependencies in the host application.
 
 ## Usage
 
@@ -109,7 +108,7 @@ Show/hide Route name field. If `true`, `name` field is stripped from payload obj
 - required: `false`
 - default: `false`
 
-Show/hide Service Select field. Should be used in case of manual adding `service_id` in payload. 
+Show/hide Service Select field. Should be used in case of manually adding `service_id` in payload.
 
 #### `showTagsFiledUnderAdvanced`
 
@@ -117,7 +116,7 @@ Show/hide Service Select field. Should be used in case of manual adding `service
 - required: `false`
 - default: `false`
 
-Show tags field under _Advanced Fields_ collapse or in it's default place (before protocols field).
+Show tags field under *Advanced Fields* collapse or in it's default place (before protocols field).
 
 #### `routeFlavors` (controls Expressions features)
 
@@ -154,6 +153,21 @@ Show tags field under _Advanced Fields_ collapse or in it's default place (befor
     - default: `undefined`
     - Text to show in the tooltip of the Expressions config tab.
 
+#### `showExpressionsModalEntry`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Show/hide the Expressions modal entry button.
+
+#### `enableTerraform`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
 
 ### Slots
 
@@ -162,6 +176,7 @@ Show tags field under _Advanced Fields_ collapse or in it's default place (befor
 Content to be displayed instead of the default `Cancel` and `Save` buttons, at the bottom of the form.
 
 Slot props:
+
 - `canSubmit`
   - type: `Boolean`
   - Should the submit button be enabled or disabled.
@@ -177,6 +192,7 @@ Slot props:
 Content to be displayed after the Expressions editor.
 
 Slot props:
+
 - `expression`
   - type: `[string, (value: string) => void]`
   - The expression and a function to update the expression. This is useful when slot content is trying to update the expression (e.g., router playground).
@@ -201,6 +217,17 @@ A `@update` event is emitted when the form is saved. The event payload is the Ro
 #### model-updated
 
 A `@model-updated` event is emitted when any form value was changed. The event payload is the Route payload object.
+
+#### notify
+
+A `@notify` event is emitted when a Toast is called. The event payload is an object with the following properties:
+
+- `message`:
+  - type: `string`
+  - The message to display in the Toast.
+- `type`:
+  - type: `'success' | 'error' | 'warning' | 'info'`
+  - The type of Toast to display.
 
 ### Usage example
 

@@ -93,6 +93,14 @@ Set this value to `true` to hide the card title.
 
 The id of the service with which the route is associated.
 
+#### `enableTerraform`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
+
 ### Events
 
 #### fetch:error

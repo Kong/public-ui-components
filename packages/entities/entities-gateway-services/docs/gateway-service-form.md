@@ -86,6 +86,14 @@ If showing the `Edit` type form, the ID of the Gateway Service.
 
 Show/hide `EntityFormSection` component info column.
 
+#### `enableTerraform`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
+
 ### Slots
 
 #### `form-actions`
@@ -93,6 +101,7 @@ Show/hide `EntityFormSection` component info column.
 Content to be displayed instead of the default `Cancel` and `Save` buttons, at the bottom of the form.
 
 Slot props:
+
 - `canSubmit`
   - type: `Boolean`
   - Should the submit button be enabled or disabled.

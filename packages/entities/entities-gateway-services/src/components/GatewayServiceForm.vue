@@ -4,6 +4,8 @@
       :can-submit="canSubmit"
       :config="config"
       :edit-id="gatewayServiceId"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.GatewayService"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
@@ -358,10 +360,11 @@ import {
   useAxios,
   useErrors,
   useGatewayFeatureSupported,
+  useValidators,
   EntityFormSection,
   EntityBaseForm,
   EntityBaseFormType,
-  useValidators,
+  SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -398,6 +401,14 @@ const props = defineProps({
   hideSectionsInfo: {
     type: Boolean,
     required: false,
+    default: false,
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
     default: false,
   },
 })
