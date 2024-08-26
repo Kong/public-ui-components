@@ -267,7 +267,7 @@ const hideTitleIcon = [MetricCardSize.Small].includes(props.cardSize)
 
     // The metric card title is always 14px; the "small" variant is the exception
     &.sm {
-      font-size: $kui-font-size-20;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
     }
     &.md {
       font-size: var(--kui-font-size-30, $kui-font-size-30);
@@ -289,17 +289,17 @@ const hideTitleIcon = [MetricCardSize.Small].includes(props.cardSize)
   }
 
   &-icon {
-    margin-right: $kui-space-20;
+    margin-right: var(--kui-space-20, $kui-space-20);
   }
 
   &-value {
     color: var(--kui-color-text, $kui-color-text);
     display: flex;
     flex-direction: row;
-    font-size: $kui-font-size-70;
-    font-weight: $kui-font-weight-semibold;
+    font-size: var(--kui-font-size-70, $kui-font-size-70);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     justify-content: space-between;
-    line-height: $kui-line-height-60;
+    line-height: var(--kui-line-height-60, $kui-line-height-60);
 
     &.sm {
       font-size: var(--kui-font-size-30, $kui-font-size-30);
