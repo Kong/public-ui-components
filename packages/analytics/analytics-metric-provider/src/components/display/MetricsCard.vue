@@ -33,9 +33,7 @@
       <span>{{ description }}</span>
     </div>
     <!-- TODO: remove outer div once size variant no longer needed - MA-2193  -->
-    <div
-      class="metricscard-valuetrend"
-    >
+    <div class="metricscard-valuetrend">
       <!-- Metric value - error -->
       <div
         v-if="hasError"
@@ -236,7 +234,7 @@ const hideTitleIcon = [MetricCardSize.Small].includes(props.cardSize)
 
 <style lang="scss" scoped>
 @import "../../styles/base";
-$row-gap-size: 12px;
+$row-gap-size: var(--kui-space-50, $kui-space-50);
 
 .metricscard {
   display: flex;
@@ -263,32 +261,32 @@ $row-gap-size: 12px;
     color: var(--kui-color-text, $kui-color-text);
     display: flex;
     flex-direction: row;
-    font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-medium;
-    line-height: $kui-line-height-20;
-    margin: $kui-space-0;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
+    margin: var(--kui-space-0, $kui-space-0);
 
     // The metric card title is always 14px; the "small" variant is the exception
     &.sm {
       font-size: $kui-font-size-20;
     }
     &.md {
-      font-size: $kui-font-size-30;
-      font-weight: $kui-font-weight-semibold;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     }
     &.lg {
-      font-size: $kui-font-size-30;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
     }
     &.xl {
-      font-size: $kui-font-size-30;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
     }
   }
 
   &-description {
     color: var(--kui-color-text-disabled, $kui-color-text-disabled);
-    font-size: $kui-font-size-20;
-    line-height: $kui-line-height-20;
-    margin-top: 10px;
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 
   &-icon {
@@ -305,11 +303,11 @@ $row-gap-size: 12px;
     line-height: $kui-line-height-60;
 
     &.sm {
-      font-size: $kui-font-size-30;
-      line-height: $kui-line-height-40;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      line-height: var(--kui-line-height-40, $kui-line-height-40);
     }
     &.xl {
-      font-size: $kui-font-size-100;
+      font-size: var(--kui-font-size-100, $kui-font-size-100);
     }
   }
 
@@ -322,26 +320,27 @@ $row-gap-size: 12px;
       align-items: center;
       flex-direction: row !important;
       justify-content: space-between;
-      margin-top: 0;
+      margin-top: var(--kui-space-0, $kui-space-0);
     }
   }
 
   &-trend {
     align-items: center;
-    column-gap: 8px;
+    column-gap: var(--kui-space-40, $kui-space-40);
     display: flex;
 
     &-change {
       align-items: center;
-      border-radius: 4px;
+      border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
       display: flex;
       flex-direction: row;
-      font-size: $kui-font-size-20;
-      font-weight: $kui-font-weight-semibold;
-      padding: $kui-space-20 $kui-space-40;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+      padding: var(--kui-space-20, $kui-space-20)
+        var(--kui-space-40, $kui-space-40);
 
       .kui-icon {
-        margin-right: 4px;
+        margin-right: var(--kui-space-20, $kui-space-20);
       }
       &.positive {
         background-color: var(--kui-color-background-success-weakest, $kui-color-background-success-weakest);
@@ -358,27 +357,30 @@ $row-gap-size: 12px;
     }
 
     &-range {
-      color: $kui-color-text;
-      font-size: $kui-font-size-20;
+      color: var(--kui-color-text, $kui-color-text);
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
     }
   }
 
   &-tooltip {
     display: inline-flex;
-    margin: $kui-space-auto $kui-space-0 $kui-space-auto $kui-space-20;
+    margin: var(--kui-space-auto, $kui-space-auto)
+      var(--kui-space-0, $kui-space-0)
+      var(--kui-space-auto, $kui-space-auto)
+      var(--kui-space-20, $kui-space-20);
     vertical-align: middle;
   }
 
   &-error {
     align-items: center;
-    color: $kui-color-text-neutral-stronger;
+    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
     display: flex;
     flex-direction: row;
-    font-size: $kui-font-size-20;
-    margin-top: $kui-space-40;
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    margin-top: var(--kui-space-40, $kui-space-40);
 
     .kong-icon-warning {
-      margin-right: $kui-space-50;
+      margin-right: var(--kui-space-50, $kui-space-50);
     }
   }
 
