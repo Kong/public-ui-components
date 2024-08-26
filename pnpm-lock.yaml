@@ -673,8 +673,8 @@ importers:
         version: 1.9.7
     devDependencies:
       '@kong-ui-public/entities-shared':
-        specifier: ^3.7.4
-        version: 3.7.4(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.3.0(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3)))(axios@1.6.8)(swrv@1.0.4(vue@3.4.31(typescript@5.3.3)))(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
+        specifier: ^3.7.5
+        version: 3.7.5(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.3.0(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3)))(axios@1.6.8)(swrv@1.0.4(vue@3.4.31(typescript@5.3.3)))(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
@@ -1862,8 +1862,8 @@ packages:
       swrv: ^1.0.4
       vue: ^3.4.31
 
-  '@kong-ui-public/entities-shared@3.7.4':
-    resolution: {integrity: sha512-Ezxo5P7VAFXMux0aLamSxuhs2nMqBpT765dxr5dxAxzhclfFkrUjHLX9znjFZDukqJHkF9phSWYjqA+1wlA0sg==}
+  '@kong-ui-public/entities-shared@3.7.5':
+    resolution: {integrity: sha512-0uekW6pt0J69yo4uUUZvDuAeZOv/XPjeK7JjeI9jecovJwu2yTYFFALFJzLIbH1KSy5Cmp81CVns9t80hH2/qA==}
     peerDependencies:
       '@kong-ui-public/i18n': ^2.2.2
       '@kong/kongponents': ^9.3.0
@@ -9833,7 +9833,7 @@ snapshots:
       swrv: 1.0.4(vue@3.4.31(typescript@5.3.3))
       vue: 3.4.31(typescript@5.3.3)
 
-  '@kong-ui-public/entities-shared@3.7.4(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.3.0(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3)))(axios@1.6.8)(swrv@1.0.4(vue@3.4.31(typescript@5.3.3)))(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))':
+  '@kong-ui-public/entities-shared@3.7.5(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.3.0(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3)))(axios@1.6.8)(swrv@1.0.4(vue@3.4.31(typescript@5.3.3)))(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))':
     dependencies:
       '@kong-ui-public/core': 1.7.8(axios@1.6.8)(swrv@1.0.4(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
       '@kong-ui-public/i18n': link:packages/core/i18n
