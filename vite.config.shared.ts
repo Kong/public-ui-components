@@ -74,7 +74,9 @@ export default defineConfig({
         'vue',
         'vue-router',
         /^@kong\/kongponents(.*)?$/,
+        '@kong/icons',
         '@kong-ui-public/i18n',
+        /^@kong-ui-public\/entities-shared(.*)?$/,
         'axios',
       ],
       output: {
@@ -84,6 +86,8 @@ export default defineConfig({
           'vue-router': 'VueRouter',
           '@kong-ui-public/i18n': 'kong-ui-public-i18n',
           '@kong/kongponents': 'Kongponents',
+          '@kong/icons': 'KongIcons',
+          '@kong-ui-public/entities-shared': 'kong-ui-public-entities-shared',
           axios: 'axios',
         },
         exports: 'named',
