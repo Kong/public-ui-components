@@ -46,7 +46,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "1.17.2",
-    "@kong/kongponents": "9.3.0",
+    "@kong/kongponents": "9.4.1-pr.2355.72b088d3.0",
     "json-schema-to-ts": "^3.0.1",
     "pinia": ">= 2.1.7 < 3",
     "swrv": "^1.0.4",
