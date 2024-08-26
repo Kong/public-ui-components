@@ -70,7 +70,13 @@ export default defineConfig({
     rollupOptions: {
       // Make sure to externalize deps that shouldn't be bundled into your library
       // If config.build.rollupOptions.external is also set at the package level, the arrays will be merged
-      external: ['vue', 'vue-router', '@kong/kongponents', '@kong-ui-public/i18n', 'axios'],
+      external: [
+        'vue',
+        'vue-router',
+        /^@kong\/kongponents(.*)?$/,
+        '@kong-ui-public/i18n',
+        'axios',
+      ],
       output: {
         // Provide global variables to use in the UMD build for externalized deps
         globals: {
