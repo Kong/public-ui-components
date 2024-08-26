@@ -187,9 +187,9 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       // button state
-      cy.getTestId('plugin-form-submit').should('be.visible')
-      cy.getTestId('plugin-form-submit').should('be.enabled')
-      cy.getTestId('plugin-form-cancel').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.enabled')
+      cy.getTestId('plugin-create-form-cancel').should('be.visible')
 
       // pinned fields (but they should not be under a KCollapse)
       cy.get('#enabled').should('exist')
@@ -258,9 +258,9 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       // button state
-      cy.getTestId('plugin-form-submit').should('be.visible')
-      cy.getTestId('plugin-form-submit').should('be.enabled')
-      cy.getTestId('plugin-form-cancel').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.enabled')
+      cy.getTestId('plugin-create-form-cancel').should('be.visible')
 
       // pinned fields (but they should not be under a KCollapse)
       cy.get('#enabled').should('exist')
@@ -339,9 +339,9 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       // button state
-      cy.getTestId('plugin-form-submit').should('be.visible')
-      cy.getTestId('plugin-form-submit').should('be.enabled')
-      cy.getTestId('plugin-form-cancel').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.enabled')
+      cy.getTestId('plugin-create-form-cancel').should('be.visible')
 
       // scope fields
       cy.get('.field-selectionGroup').should('be.visible')
@@ -426,8 +426,8 @@ describe('<PluginForm />', () => {
       cy.wait('@getPluginSchema')
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.getTestId('plugin-form-submit').should('not.exist')
-      cy.getTestId('plugin-form-cancel').should('not.exist')
+      cy.getTestId('plugin-create-form-submit').should('not.exist')
+      cy.getTestId('plugin-create-form-cancel').should('not.exist')
     })
 
     it('should show create form - acl credential', () => {
@@ -450,9 +450,9 @@ describe('<PluginForm />', () => {
       cy.wait('@getPluginSchema')
 
       // button state
-      cy.getTestId('plugin-form-submit').should('be.visible')
-      cy.getTestId('plugin-form-submit').should('be.enabled')
-      cy.getTestId('plugin-form-cancel').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.enabled')
+      cy.getTestId('plugin-create-form-cancel').should('be.visible')
 
       // scope & global fields
       cy.get('.field-selectionGroup').should('not.exist')
@@ -518,7 +518,7 @@ describe('<PluginForm />', () => {
       cy.get('#instance_name').type('kai_cors_plugin')
       cy.get('#tags').type('tag1,tag2')
 
-      cy.getTestId('plugin-form-submit').click()
+      cy.getTestId('plugin-create-form-submit').click()
       cy.wait(['@validatePlugin', '@createPlugin'])
     })
 
@@ -545,7 +545,7 @@ describe('<PluginForm />', () => {
       cy.get('#group').type('kai_group')
       cy.get('#tags').type('tag1,tag2')
 
-      cy.getTestId('plugin-form-submit').click()
+      cy.getTestId('plugin-create-form-submit').click()
       cy.wait('@createPlugin')
     })
 
@@ -575,9 +575,9 @@ describe('<PluginForm />', () => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
         // button state
-        cy.getTestId('plugin-form-submit').should('be.visible')
-        cy.getTestId('plugin-form-submit').should('be.disabled')
-        cy.getTestId('plugin-form-cancel').should('be.visible')
+        cy.getTestId('plugin-edit-form-submit').should('be.visible')
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
+        cy.getTestId('plugin-edit-form-cancel').should('be.visible')
 
         // reveal advanced fields
         cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
@@ -647,7 +647,7 @@ describe('<PluginForm />', () => {
 
         cy.get('#tags').clear()
 
-        cy.getTestId('plugin-form-submit').click()
+        cy.getTestId('plugin-edit-form-submit').click()
 
         cy.wait(['@validatePlugin', '@updatePlugin'])
       })
@@ -676,7 +676,7 @@ describe('<PluginForm />', () => {
 
         cy.get('#group').type('-edited')
 
-        cy.getTestId('plugin-form-submit').click()
+        cy.getTestId('plugin-edit-form-submit').click()
         cy.wait('@updatePlugin')
       })
     })
@@ -707,10 +707,10 @@ describe('<PluginForm />', () => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
         // default button state
-        cy.getTestId('plugin-form-cancel').should('be.visible')
-        cy.getTestId('plugin-form-submit').should('be.visible')
-        cy.getTestId('plugin-form-cancel').should('be.enabled')
-        cy.getTestId('plugin-form-submit').should('be.disabled')
+        cy.getTestId('plugin-edit-form-cancel').should('be.visible')
+        cy.getTestId('plugin-edit-form-submit').should('be.visible')
+        cy.getTestId('plugin-edit-form-cancel').should('be.enabled')
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
 
         // reveal advanced fields
         cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
@@ -722,11 +722,11 @@ describe('<PluginForm />', () => {
 
         // enables save when form has changes
         cy.get('#instance_name').type('-edited')
-        cy.getTestId('plugin-form-submit').should('be.enabled')
+        cy.getTestId('plugin-edit-form-submit').should('be.enabled')
         // disables save when form changes are undone
         cy.get('#instance_name').clear()
         cy.get('#instance_name').type(plugin1.instance_name)
-        cy.getTestId('plugin-form-submit').should('be.disabled')
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
       })
     })
 
@@ -761,8 +761,8 @@ describe('<PluginForm />', () => {
       cy.getTestId('plugin-form-schema-error').should('be.visible')
 
       // buttons and form hidden
-      cy.getTestId('plugin-form-cancel').should('not.exist')
-      cy.getTestId('plugin-form-submit').should('not.exist')
+      cy.getTestId('plugin-create-form-cancel').should('not.exist')
+      cy.getTestId('plugin-create-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-plugin-form-container form').should('not.exist')
     })
 
@@ -796,8 +796,8 @@ describe('<PluginForm />', () => {
         cy.getTestId('form-fetch-error').should('be.visible')
 
         // buttons and form hidden
-        cy.getTestId('plugin-form-cancel').should('not.exist')
-        cy.getTestId('plugin-form-submit').should('not.exist')
+        cy.getTestId('plugin-edit-form-cancel').should('not.exist')
+        cy.getTestId('plugin-edit-form-submit').should('not.exist')
         cy.get('.kong-ui-entities-plugin-form-container form').should('not.exist')
       })
     })
@@ -839,7 +839,7 @@ describe('<PluginForm />', () => {
       cy.wait('@getPluginSchema')
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.getTestId('plugin-form-submit').click()
+      cy.getTestId('plugin-create-form-submit').click()
       cy.wait('@validate')
 
       cy.getTestId('form-error').should('be.visible')
@@ -879,7 +879,7 @@ describe('<PluginForm />', () => {
         cy.get('#tags').clear()
         cy.get('#tags').type('tag1,tag2')
 
-        cy.getTestId('plugin-form-submit').click()
+        cy.getTestId('plugin-edit-form-submit').click()
 
         cy.wait(['@validatePlugin', '@updatePlugin'])
 
@@ -1041,9 +1041,9 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       // button state
-      cy.getTestId('plugin-form-submit').should('be.visible')
-      cy.getTestId('plugin-form-submit').should('be.enabled')
-      cy.getTestId('plugin-form-cancel').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.enabled')
+      cy.getTestId('plugin-create-form-cancel').should('be.visible')
 
       // pinned fields (but they should not be under a KCollapse)
       cy.get('#enabled').should('exist')
@@ -1113,9 +1113,9 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       // button state
-      cy.getTestId('plugin-form-submit').should('be.visible')
-      cy.getTestId('plugin-form-submit').should('be.enabled')
-      cy.getTestId('plugin-form-cancel').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.enabled')
+      cy.getTestId('plugin-create-form-cancel').should('be.visible')
 
       // pinned fields (but they should not be under a KCollapse)
       cy.get('#enabled').should('exist')
@@ -1195,9 +1195,9 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       // button state
-      cy.getTestId('plugin-form-submit').should('be.visible')
-      cy.getTestId('plugin-form-submit').should('be.enabled')
-      cy.getTestId('plugin-form-cancel').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.enabled')
+      cy.getTestId('plugin-create-form-cancel').should('be.visible')
 
       // scope fields
       cy.get('.field-selectionGroup').should('be.visible')
@@ -1285,8 +1285,8 @@ describe('<PluginForm />', () => {
       cy.wait('@getPluginSchema')
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.getTestId('plugin-form-submit').should('not.exist')
-      cy.getTestId('plugin-form-cancel').should('not.exist')
+      cy.getTestId('plugin-create-form-submit').should('not.exist')
+      cy.getTestId('plugin-create-form-cancel').should('not.exist')
     })
 
     it('should hide instance name field if useCustomNamesForPlugin is false', () => {
@@ -1326,9 +1326,9 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       // button state
-      cy.getTestId('plugin-form-submit').should('be.visible')
-      cy.getTestId('plugin-form-submit').should('be.enabled')
-      cy.getTestId('plugin-form-cancel').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.visible')
+      cy.getTestId('plugin-create-form-submit').should('be.enabled')
+      cy.getTestId('plugin-create-form-cancel').should('be.visible')
 
       // scope & global fields
       cy.get('.field-selectionGroup').should('not.exist')
@@ -1396,7 +1396,7 @@ describe('<PluginForm />', () => {
       cy.get('#instance_name').type('kai_cors_plugin')
       cy.get('#tags').type('tag1,tag2')
 
-      cy.getTestId('plugin-form-submit').click()
+      cy.getTestId('plugin-create-form-submit').click()
       cy.wait(['@validatePlugin', '@createPlugin'])
     })
 
@@ -1421,7 +1421,7 @@ describe('<PluginForm />', () => {
       cy.get('#group').type('kai_group')
       cy.get('#tags').type('tag1,tag2')
 
-      cy.getTestId('plugin-form-submit').click()
+      cy.getTestId('plugin-create-form-submit').click()
       cy.wait('@createPlugin')
     })
 
@@ -1452,9 +1452,9 @@ describe('<PluginForm />', () => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
         // button state
-        cy.getTestId('plugin-form-submit').should('be.visible')
-        cy.getTestId('plugin-form-submit').should('be.disabled')
-        cy.getTestId('plugin-form-cancel').should('be.visible')
+        cy.getTestId('plugin-edit-form-submit').should('be.visible')
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
+        cy.getTestId('plugin-edit-form-cancel').should('be.visible')
 
         // reveal advanced fields
         cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
@@ -1525,7 +1525,7 @@ describe('<PluginForm />', () => {
 
         cy.get('#tags').clear()
 
-        cy.getTestId('plugin-form-submit').click()
+        cy.getTestId('plugin-edit-form-submit').click()
         cy.wait(['@validatePlugin', '@updatePlugin'])
       })
     })
@@ -1554,7 +1554,7 @@ describe('<PluginForm />', () => {
 
       cy.get('#group').type('-edited')
 
-      cy.getTestId('plugin-form-submit').click()
+      cy.getTestId('plugin-edit-form-submit').click()
       cy.wait('@updatePlugin')
     })
 
@@ -1585,10 +1585,10 @@ describe('<PluginForm />', () => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
         // default button state
-        cy.getTestId('plugin-form-cancel').should('be.visible')
-        cy.getTestId('plugin-form-submit').should('be.visible')
-        cy.getTestId('plugin-form-cancel').should('be.enabled')
-        cy.getTestId('plugin-form-submit').should('be.disabled')
+        cy.getTestId('plugin-edit-form-cancel').should('be.visible')
+        cy.getTestId('plugin-edit-form-submit').should('be.visible')
+        cy.getTestId('plugin-edit-form-cancel').should('be.enabled')
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
 
         // reveal advanced fields
         cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
@@ -1600,11 +1600,11 @@ describe('<PluginForm />', () => {
 
         // enables save when form has changes
         cy.get('#instance_name').type('-edited')
-        cy.getTestId('plugin-form-submit').should('be.enabled')
+        cy.getTestId('plugin-edit-form-submit').should('be.enabled')
         // disables save when form changes are undone
         cy.get('#instance_name').clear()
         cy.get('#instance_name').type(plugin1.instance_name)
-        cy.getTestId('plugin-form-submit').should('be.disabled')
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
       })
     })
 
@@ -1640,8 +1640,8 @@ describe('<PluginForm />', () => {
       cy.getTestId('plugin-form-schema-error').should('be.visible')
 
       // buttons and form hidden
-      cy.getTestId('plugin-form-cancel').should('not.exist')
-      cy.getTestId('plugin-form-submit').should('not.exist')
+      cy.getTestId('plugin-create-form-cancel').should('not.exist')
+      cy.getTestId('plugin-create-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-plugin-form-container form').should('not.exist')
     })
 
@@ -1676,8 +1676,8 @@ describe('<PluginForm />', () => {
         cy.getTestId('form-fetch-error').should('be.visible')
 
         // buttons and form hidden
-        cy.getTestId('plugin-form-cancel').should('not.exist')
-        cy.getTestId('plugin-form-submit').should('not.exist')
+        cy.getTestId('plugin-edit-form-cancel').should('not.exist')
+        cy.getTestId('plugin-edit-form-submit').should('not.exist')
         cy.get('.kong-ui-entities-plugin-form-container form').should('not.exist')
       })
     })
@@ -1720,7 +1720,7 @@ describe('<PluginForm />', () => {
       cy.wait('@getPluginSchema')
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.getTestId('plugin-form-submit').click()
+      cy.getTestId('plugin-create-form-submit').click()
       cy.wait('@validate')
 
       cy.getTestId('form-error').should('be.visible')
@@ -1761,7 +1761,7 @@ describe('<PluginForm />', () => {
         cy.get('#tags').clear()
         cy.get('#tags').type('tag1,tag2')
 
-        cy.getTestId('plugin-form-submit').click()
+        cy.getTestId('plugin-edit-form-submit').click()
 
         cy.wait(['@validatePlugin', '@updatePlugin']).then(() => {
           cy.get('@onUpdateSpy').should('have.been.calledOnce')

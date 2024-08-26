@@ -77,10 +77,10 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-url-input').should('be.visible')
       cy.getTestId('collapse-trigger-content').should('be.visible')
 
-      cy.getTestId('service-form-cancel').should('be.visible')
-      cy.getTestId('service-form-cancel').should('be.enabled')
-      cy.getTestId('service-form-submit').should('be.visible')
-      cy.getTestId('service-form-submit').should('be.disabled')
+      cy.getTestId('service-create-form-cancel').should('be.visible')
+      cy.getTestId('service-create-form-cancel').should('be.enabled')
+      cy.getTestId('service-create-form-submit').should('be.visible')
+      cy.getTestId('service-create-form-submit').should('be.disabled')
     })
 
     it("should check for name's validity", () => {
@@ -119,12 +119,12 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
         },
       })
 
-      cy.getTestId('service-form-submit').should('be.visible')
-      cy.getTestId('service-form-submit').should('be.disabled')
+      cy.getTestId('service-create-form-submit').should('be.visible')
+      cy.getTestId('service-create-form-submit').should('be.disabled')
 
       cy.getTestId('gateway-service-url-input').type(gatewayService1.url)
 
-      cy.getTestId('service-form-submit').should('be.enabled')
+      cy.getTestId('service-create-form-submit').should('be.enabled')
     })
 
     it('should handle error state - Upstream URL field validation fails', () => {
@@ -136,7 +136,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
 
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
       cy.getTestId('gateway-service-url-input').type('abcd')
-      cy.getTestId('service-form-submit').should('be.enabled').click()
+      cy.getTestId('service-create-form-submit').should('be.enabled').click()
       cy.getTestId('form-error').should('be.visible')
     })
 
@@ -148,12 +148,12 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       })
 
       cy.getTestId('gateway-service-protocol-radio').click()
-      cy.getTestId('service-form-submit').should('be.visible')
-      cy.getTestId('service-form-submit').should('be.disabled')
+      cy.getTestId('service-create-form-submit').should('be.visible')
+      cy.getTestId('service-create-form-submit').should('be.disabled')
 
       cy.getTestId('gateway-service-host-input').type('google')
 
-      cy.getTestId('service-form-submit').should('be.enabled')
+      cy.getTestId('service-create-form-submit').should('be.enabled')
     })
 
     it('should update correct Port value based on selected Protocol', () => {
@@ -294,8 +294,8 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       // error state is displayed
       cy.getTestId('form-fetch-error').should('be.visible')
       // buttons and form hidden
-      cy.getTestId('service-form-cancel').should('not.exist')
-      cy.getTestId('service-form-submit').should('not.exist')
+      cy.getTestId('service-edit-form-cancel').should('not.exist')
+      cy.getTestId('service-edit-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-gateway-service-form form').should('not.exist')
     })
 
@@ -313,8 +313,8 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.wait('@getGatewayService')
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
       // button state
-      cy.getTestId('service-form-cancel').should('be.visible')
-      cy.getTestId('service-form-submit').should('be.visible')
+      cy.getTestId('service-edit-form-cancel').should('be.visible')
+      cy.getTestId('service-edit-form-submit').should('be.visible')
 
       // form fields
       cy.getTestId('gateway-service-name-input').should('have.value', gatewayService1.name)
@@ -340,8 +340,8 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.wait('@getGatewayService')
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
       // view configuration cta
-      cy.getTestId('service-form-view-configuration').should('be.visible')
-      cy.getTestId('service-form-view-configuration').click()
+      cy.getTestId('service-edit-form-view-configuration').should('be.visible')
+      cy.getTestId('service-edit-form-view-configuration').click()
       cy.getTestId('highlighted-code-block').should('be.visible')
     })
 
@@ -459,10 +459,10 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-url-input').should('be.visible')
       cy.getTestId('collapse-trigger-content').should('be.visible')
 
-      cy.getTestId('service-form-cancel').should('be.visible')
-      cy.getTestId('service-form-cancel').should('be.enabled')
-      cy.getTestId('service-form-submit').should('be.visible')
-      cy.getTestId('service-form-submit').should('be.disabled')
+      cy.getTestId('service-create-form-cancel').should('be.visible')
+      cy.getTestId('service-create-form-cancel').should('be.enabled')
+      cy.getTestId('service-create-form-submit').should('be.visible')
+      cy.getTestId('service-create-form-submit').should('be.disabled')
     })
 
     it("should check for name's validity", () => {
@@ -501,12 +501,12 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
         },
       })
 
-      cy.getTestId('service-form-submit').should('be.visible')
-      cy.getTestId('service-form-submit').should('be.disabled')
+      cy.getTestId('service-create-form-submit').should('be.visible')
+      cy.getTestId('service-create-form-submit').should('be.disabled')
 
       cy.getTestId('gateway-service-url-input').type(gatewayService1.url)
 
-      cy.getTestId('service-form-submit').should('be.enabled')
+      cy.getTestId('service-create-form-submit').should('be.enabled')
     })
 
     it('should handle error state - Upstream URL field validation fails', () => {
@@ -518,7 +518,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
 
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
       cy.getTestId('gateway-service-url-input').type('abcd')
-      cy.getTestId('service-form-submit').should('be.enabled').click()
+      cy.getTestId('service-create-form-submit').should('be.enabled').click()
       cy.getTestId('form-error').should('be.visible')
     })
 
@@ -530,12 +530,12 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       })
 
       cy.getTestId('gateway-service-protocol-radio').click()
-      cy.getTestId('service-form-submit').should('be.visible')
-      cy.getTestId('service-form-submit').should('be.disabled')
+      cy.getTestId('service-create-form-submit').should('be.visible')
+      cy.getTestId('service-create-form-submit').should('be.disabled')
 
       cy.getTestId('gateway-service-host-input').type('google')
 
-      cy.getTestId('service-form-submit').should('be.enabled')
+      cy.getTestId('service-create-form-submit').should('be.enabled')
     })
 
     it('should update correct Port value based on selected Protocol', () => {
@@ -676,8 +676,8 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       // error state is displayed
       cy.getTestId('form-fetch-error').should('be.visible')
       // buttons and form hidden
-      cy.getTestId('service-form-cancel').should('not.exist')
-      cy.getTestId('service-form-submit').should('not.exist')
+      cy.getTestId('service-edit-form-cancel').should('not.exist')
+      cy.getTestId('service-edit-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-gateway-service-form form').should('not.exist')
     })
 
@@ -695,8 +695,8 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.wait('@getGatewayService')
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
       // button state
-      cy.getTestId('service-form-cancel').should('be.visible')
-      cy.getTestId('service-form-submit').should('be.visible')
+      cy.getTestId('service-edit-form-cancel').should('be.visible')
+      cy.getTestId('service-edit-form-submit').should('be.visible')
 
       // form fields
       cy.getTestId('gateway-service-name-input').should('have.value', gatewayService1.name)

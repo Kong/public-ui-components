@@ -102,10 +102,10 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('.kong-ui-entities-upstreams-active-healthcheck').should('not.exist')
       cy.get('.kong-ui-entities-upstreams-passive-healthcheck').should('not.exist')
 
-      cy.getTestId('upstream-form-cancel').should('be.visible')
-      cy.getTestId('upstream-form-cancel').should('be.enabled')
-      cy.getTestId('upstream-form-submit').should('be.visible')
-      cy.getTestId('upstream-form-submit').should('be.disabled')
+      cy.getTestId('upstream-create-form-cancel').should('be.visible')
+      cy.getTestId('upstream-create-form-cancel').should('be.enabled')
+      cy.getTestId('upstream-create-form-submit').should('be.visible')
+      cy.getTestId('upstream-create-form-submit').should('be.disabled')
     })
 
     it('Should show Active and Passive healthchecks when switchers are turned on', () => {
@@ -139,13 +139,13 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
 
       cy.wait(['@fetchServices', '@fetchCertificates'])
 
-      cy.getTestId('upstream-form-submit').should('be.visible')
-      cy.getTestId('upstream-form-submit').should('be.disabled')
+      cy.getTestId('upstream-create-form-submit').should('be.visible')
+      cy.getTestId('upstream-create-form-submit').should('be.disabled')
 
       cy.get('.name-select').click()
       cy.getTestId('select-item-2').first().click()
 
-      cy.getTestId('upstream-form-submit').should('be.enabled')
+      cy.getTestId('upstream-create-form-submit').should('be.enabled')
     })
 
     it('loading event should be emitted when EntityBaseForm emits loading event', () => {
@@ -364,7 +364,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.getTestId('passive-healthcheck-tcp-failures').should('have.value', '5')
       cy.getTestId('passive-healthcheck-http-failures').should('have.value', '5')
 
-      cy.getTestId('upstream-form-submit').click()
+      cy.getTestId('upstream-create-form-submit').click()
 
       cy.wait('@createUpstream').then((interception) => {
         const { body: { healthchecks: { active, passive } } } = interception.request
@@ -403,7 +403,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.getTestId('active-health-switch').uncheck({ force: true })
       cy.getTestId('passive-health-switch').uncheck({ force: true })
 
-      cy.getTestId('upstream-form-submit').click()
+      cy.getTestId('upstream-edit-form-submit').click()
 
       cy.wait('@updateUpstream').then((interception) => {
         const { body: { healthchecks } } = interception.request
@@ -505,10 +505,10 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('.kong-ui-entities-upstreams-active-healthcheck').should('not.exist')
       cy.get('.kong-ui-entities-upstreams-passive-healthcheck').should('not.exist')
 
-      cy.getTestId('upstream-form-cancel').should('be.visible')
-      cy.getTestId('upstream-form-cancel').should('be.enabled')
-      cy.getTestId('upstream-form-submit').should('be.visible')
-      cy.getTestId('upstream-form-submit').should('be.disabled')
+      cy.getTestId('upstream-create-form-cancel').should('be.visible')
+      cy.getTestId('upstream-create-form-cancel').should('be.enabled')
+      cy.getTestId('upstream-create-form-submit').should('be.visible')
+      cy.getTestId('upstream-create-form-submit').should('be.disabled')
     })
 
     it('Should show Active and Passive healthchecks when switchers are turned on', () => {
@@ -545,13 +545,13 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
 
       cy.wait(['@fetchServices', '@fetchCertificates'])
 
-      cy.getTestId('upstream-form-submit').should('be.visible')
-      cy.getTestId('upstream-form-submit').should('be.disabled')
+      cy.getTestId('upstream-create-form-submit').should('be.visible')
+      cy.getTestId('upstream-create-form-submit').should('be.disabled')
 
       cy.get('.name-select').click()
       cy.getTestId('select-item-2').first().click()
 
-      cy.getTestId('upstream-form-submit').should('be.enabled')
+      cy.getTestId('upstream-create-form-submit').should('be.enabled')
     })
 
     it('loading event should be emitted when EntityBaseForm emits loading event', () => {
@@ -832,7 +832,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.getTestId('passive-healthcheck-tcp-failures').should('have.value', '5')
       cy.getTestId('passive-healthcheck-http-failures').should('have.value', '5')
 
-      cy.getTestId('upstream-form-submit').click()
+      cy.getTestId('upstream-create-form-submit').click()
 
       cy.wait('@createUpstream').then((interception) => {
         const { body: { healthchecks: { active, passive } } } = interception.request
@@ -871,7 +871,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.getTestId('active-health-switch').uncheck({ force: true })
       cy.getTestId('passive-health-switch').uncheck({ force: true })
 
-      cy.getTestId('upstream-form-submit').click()
+      cy.getTestId('upstream-edit-form-submit').click()
 
       cy.wait('@updateUpstream').then((interception) => {
         const { body: { healthchecks } } = interception.request
