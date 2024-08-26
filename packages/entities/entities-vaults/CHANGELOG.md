@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.10.4...@kong-ui-public/entities-vaults@3.10.5) (2024-08-26)
+
+
+### Bug Fixes
+
+* **entities:** form state data-testids [khcp-13000] ([#1576](https://github.com/Kong/public-ui-components/issues/1576)) ([5395669](https://github.com/Kong/public-ui-components/commit/53956698e0d13c5c5cc216034b46dad1f054d536))
+
+
+
+
+
 ## [3.10.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.10.3...@kong-ui-public/entities-vaults@3.10.4) (2024-08-21)
 
 
