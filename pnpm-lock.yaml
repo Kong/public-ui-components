@@ -673,8 +673,8 @@ importers:
         version: 1.9.7
     devDependencies:
       '@kong-ui-public/entities-shared':
-        specifier: ^3.7.5
-        version: 3.7.5(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.3.0(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3)))(axios@1.6.8)(swrv@1.0.4(vue@3.4.31(typescript@5.3.3)))(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
+        specifier: workspace:^
+        version: link:../entities-shared
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
@@ -1854,22 +1854,6 @@ packages:
       axios: ^1.4.0
       swrv: ^1.0.4
       vue: ^3.2.47
-
-  '@kong-ui-public/core@1.7.8':
-    resolution: {integrity: sha512-YLxJSDD8rVCNQnOj4FSqL/Tu3MvHTLZfGUeM1WJtl5/YbVBvm2XtRoGeUXvJQFI1tiEpdb2yCWY55pkxDwN6Wg==}
-    peerDependencies:
-      axios: ^1.6.8
-      swrv: ^1.0.4
-      vue: ^3.4.31
-
-  '@kong-ui-public/entities-shared@3.7.5':
-    resolution: {integrity: sha512-0uekW6pt0J69yo4uUUZvDuAeZOv/XPjeK7JjeI9jecovJwu2yTYFFALFJzLIbH1KSy5Cmp81CVns9t80hH2/qA==}
-    peerDependencies:
-      '@kong-ui-public/i18n': ^2.2.2
-      '@kong/kongponents': ^9.3.0
-      axios: ^1.6.8
-      vue: '>= 3.3.13 < 4'
-      vue-router: ^4.3.3
 
   '@kong/atc-router@1.6.0-rc.1':
     resolution: {integrity: sha512-nFR01kKK4vAsXGZ0g8YPzJSOrTEPzgtVm3iWv4JPNx1kFFRKDTJrmDFSWZmEPC2VtsSdglewGB3Sqzpi/DfiIg==}
@@ -9825,26 +9809,6 @@ snapshots:
       date-fns: 2.30.0
       swrv: 1.0.4(vue@3.4.31(typescript@5.3.3))
       vue: 3.4.31(typescript@5.3.3)
-
-  '@kong-ui-public/core@1.7.8(axios@1.6.8)(swrv@1.0.4(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))':
-    dependencies:
-      axios: 1.6.8
-      date-fns: 2.30.0
-      swrv: 1.0.4(vue@3.4.31(typescript@5.3.3))
-      vue: 3.4.31(typescript@5.3.3)
-
-  '@kong-ui-public/entities-shared@3.7.5(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.3.0(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3)))(axios@1.6.8)(swrv@1.0.4(vue@3.4.31(typescript@5.3.3)))(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))':
-    dependencies:
-      '@kong-ui-public/core': 1.7.8(axios@1.6.8)(swrv@1.0.4(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
-      '@kong-ui-public/i18n': link:packages/core/i18n
-      '@kong/icons': 1.15.1(vue@3.4.31(typescript@5.3.3))
-      '@kong/kongponents': 9.3.0(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
-      axios: 1.6.8
-      compare-versions: 6.1.0
-      vue: 3.4.31(typescript@5.3.3)
-      vue-router: 4.4.0(vue@3.4.31(typescript@5.3.3))
-    transitivePeerDependencies:
-      - swrv
 
   '@kong/atc-router@1.6.0-rc.1': {}
 
