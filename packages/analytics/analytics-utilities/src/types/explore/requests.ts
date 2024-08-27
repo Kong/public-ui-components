@@ -36,6 +36,7 @@ export const queryableRequestMetrics = [
   'latencies_kong_gateway_ms',
   'response_body_size',
   'request_body_size',
+  'ai_count',
 ] as const
 
 export type QueryableRequestMetrics = typeof queryableRequestMetrics[number]
