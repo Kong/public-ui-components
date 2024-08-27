@@ -93,12 +93,12 @@ describe('<FieldTester /> - FieldRadio', () => {
     cy.get('.field-tester-container').should('exist')
 
     // edit the input value, by clicking second radio button
-    cy.get(`#${fieldKey}-1`).should('be.visible')
-    cy.get(`#${fieldKey}-1`).click()
+    cy.get(`#${fieldKey}-2`).should('be.visible')
+    cy.get(`#${fieldKey}-2`).click()
 
     // check VFG input value
     cy.get(`#${fieldKey}-0`).should('not.be.checked')
-    cy.get(`#${fieldKey}-1`).should('be.checked')
+    cy.get(`#${fieldKey}-2`).should('be.checked')
     // check field test form model
     cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('contain.text', updatedFieldValue)
   })
@@ -129,7 +129,7 @@ describe('<FieldTester /> - FieldRadio', () => {
 
     // check VFG input value
     cy.get(`#${fieldKey}-0`).should('not.be.checked')
-    cy.get(`#${fieldKey}-1`).should('be.checked')
+    cy.get(`#${fieldKey}-2`).should('be.checked')
     // check field test form model also matches
     cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('contain.text', updatedFieldValue)
   })
@@ -161,7 +161,7 @@ describe('<FieldTester /> - FieldRadio', () => {
 
     // check VFG input value
     cy.get(`#${fieldKey}-0`).should('not.be.checked')
-    cy.get(`#${fieldKey}-1`).should('not.be.checked')
+    cy.get(`#${fieldKey}-2`).should('not.be.checked')
     // check field test form model also matches
     cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('not.contain.text', fieldValue)
     cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('not.contain.text', updatedFieldValue)
