@@ -8,7 +8,7 @@
         :is="iconMap.get(cardType)"
         v-if="!hideTitleIcon"
         class="metricscard-icon"
-        :color="KUI_COLOR_TEXT_NEUTRAL"
+        :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
         :size="KUI_ICON_SIZE_30"
       />
       <component :is="titleTag">
@@ -21,7 +21,7 @@
         :text="tooltip"
       >
         <InfoIcon
-          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
           :size="KUI_ICON_SIZE_30"
         />
       </KTooltip>
@@ -40,7 +40,7 @@
         class="metricscard-error"
       >
         <WarningIcon
-          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
           :size="KUI_ICON_SIZE_40"
         />
         <div>&nbsp;{{ errorMessage }}</div>
@@ -74,7 +74,7 @@
           <!-- No change icon -->
           <EqualIcon
             v-else
-            :color="KUI_COLOR_TEXT_NEUTRAL_STRONG"
+            :color="`var(--kui-color-text-neutral-strong, ${KUI_COLOR_TEXT_NEUTRAL_STRONG})`"
             :size="KUI_ICON_SIZE_30"
           />
           <div data-testid="metric-trend-change">
