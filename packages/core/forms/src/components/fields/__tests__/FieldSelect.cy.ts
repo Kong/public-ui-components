@@ -187,7 +187,7 @@ describe('<FieldTester /> - FieldSwitch', () => {
       items.forEach((item: Record<string, any> | string | number) => {
         if (typeof item === 'object') {
           if (item.group) {
-            cy.get('.select-group-title').should('contain.text', item.group)
+            cy.get('.select-group-title').should('contain.text', String(item.group || '').toUpperCase())
             cy.get('.select-group').findTestId(`select-item-${item.name.replace(/ /g, '')}`).should('exist')
           } else {
             cy.getTestId(`select-item-${item.name}`).should('exist')
