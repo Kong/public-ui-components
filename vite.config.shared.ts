@@ -73,10 +73,10 @@ export default defineConfig({
       external: [
         'vue',
         'vue-router',
-        /^@kong\/kongponents(.*)?$/,
+        /^@kong\/kongponents(\/.*)?$/,
         '@kong/icons',
         '@kong-ui-public/i18n',
-        /^@kong-ui-public\/entities-shared(.*)?$/,
+        /^@kong-ui-public\/entities-shared(\/.*)?$/,
         'axios',
       ],
       output: {
