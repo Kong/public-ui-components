@@ -1058,6 +1058,10 @@ importers:
         version: 4.4.0(vue@3.4.31(typescript@5.3.3))
 
   packages/entities/entities-vaults:
+    dependencies:
+      '@kong/icons':
+        specifier: ^1.15.1
+        version: 1.15.1(vue@3.4.31(typescript@5.3.3))
     devDependencies:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
@@ -1068,9 +1072,6 @@ importers:
       '@kong/design-tokens':
         specifier: 1.17.2
         version: 1.17.2
-      '@kong/icons':
-        specifier: ^1.15.1
-        version: 1.15.1(vue@3.4.31(typescript@5.3.3))
       '@kong/kongponents':
         specifier: 9.4.1
         version: 9.4.1(axios@1.6.8)(vue-router@4.4.0(vue@3.4.31(typescript@5.3.3)))(vue@3.4.31(typescript@5.3.3))
