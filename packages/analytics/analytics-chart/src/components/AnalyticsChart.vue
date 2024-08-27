@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="analytics-chart-shell"
-  >
+  <div class="analytics-chart-shell">
     <div
       v-if="showChartHeader"
       class="chart-header"
@@ -20,7 +18,7 @@
           placement="right"
         >
           <WarningIcon
-            :color="KUI_COLOR_TEXT_WARNING"
+            :color="`var(--kui-color-text-warning, ${KUI_COLOR_TEXT_WARNING})`"
             decorative
             :size="KUI_ICON_SIZE_40"
           />
@@ -359,13 +357,16 @@ provide('legendPosition', toRef(props, 'legendPosition'))
   }
 
   .chart-empty-state {
-    padding: $kui-space-70 $kui-space-0 $kui-space-60 $kui-space-0;
+    padding: var(--kui-space-70, $kui-space-70)
+      var(--kui-space-0, $kui-space-0)
+      var(--kui-space-60, $kui-space-60)
+      var(--kui-space-0, $kui-space-0);
   }
   .chart-header {
     align-items: center;
     display: flex;
     justify-content: flex-start;
-    padding-bottom: $kui-space-60;
+    padding-bottom: var(--kui-space-60, $kui-space-60);
 
     .chart-header-icons-wrapper {
       display: flex;
@@ -380,14 +381,14 @@ provide('legendPosition', toRef(props, 'legendPosition'))
   }
 
   .chart-title {
-    font-size: $kui-font-size-40;
-    font-weight: $kui-font-weight-semibold;
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
   }
 
   .tooltip {
     display: flex;
-    margin-left: $kui-space-50;
-    margin-top: $kui-space-10;
+    margin-left: var(--kui-space-50, $kui-space-50);
+    margin-top: var(--kui-space-10, $kui-space-10);
   }
 }
 
