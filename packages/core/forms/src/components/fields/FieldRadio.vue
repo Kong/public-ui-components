@@ -6,7 +6,9 @@
       :key="option.value"
       v-model="inputValue"
       :label="option.name"
+      :label-attributes="{ info: schema.help }"
       :name="schema.name"
+      :required="schema.required || undefined"
       :selected-value="option.value"
       @change="onChange"
     />

@@ -1,10 +1,7 @@
 {
   "service-id": null,
   "name": null,
-  "protocols": [
-    "http",
-    "https"
-  ],
+  "protocols": "http,https",
   "snis": null,
   "hosts": null,
   "sources": null,
