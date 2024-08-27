@@ -207,7 +207,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-form-headers-values-input-2').should('not.exist')
 
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get("[data-testid='select-item-tcp,tls,udp']").click({ force: true })
+          cy.get("[data-testid='select-item-tcp,tls,udp'] button").click({ force: true })
           cy.getTestId('routing-rule-paths').should('not.exist')
           cy.getTestId('routing-rule-hosts').should('not.exist')
           cy.getTestId('routing-rule-methods').should('not.exist')
@@ -372,7 +372,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-create-form-submit').should('be.disabled')
 
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get("[data-testid='select-item-tcp,tls,udp']").click({ force: true })
+          cy.get("[data-testid='select-item-tcp,tls,udp'] button").click({ force: true })
 
           // sources
           cy.getTestId('routing-rule-sources').click()
@@ -851,7 +851,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
         STREAM_BASED_PROTOCOLS.forEach((protocol) => {
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get(`[data-testid='select-item-${protocol}']`).click()
+          cy.get(`[data-testid='select-item-${protocol}'] button`).click()
           cy.getTestId('open-router-playground').should('have.class', 'disabled')
           cy.getTestId('open-router-playground').click()
           cy.get('.router-playground-wrapper').should('not.exist')
@@ -871,7 +871,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
         HTTP_BASED_PROTOCOLS.forEach((protocol) => {
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get(`[data-testid='select-item-${protocol}']`).click()
+          cy.get(`[data-testid='select-item-${protocol}'] button`).click()
           cy.getTestId('open-router-playground').should('not.have.class', 'disabled')
         })
       })
@@ -1088,7 +1088,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-form-headers-values-input-2').should('not.exist')
 
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get("[data-testid='select-item-tcp,tls,udp']").click({ force: true })
+          cy.get("[data-testid='select-item-tcp,tls,udp'] button").click({ force: true })
           cy.getTestId('routing-rule-paths').should('not.exist')
           cy.getTestId('routing-rule-hosts').should('not.exist')
           cy.getTestId('routing-rule-methods').should('not.exist')
@@ -1231,7 +1231,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-create-form-submit').should('be.disabled')
 
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get("[data-testid='select-item-tcp,tls,udp']").click({ force: true })
+          cy.get("[data-testid='select-item-tcp,tls,udp'] button").click({ force: true })
 
           // sources
           cy.getTestId('routing-rule-sources').click()
@@ -1706,7 +1706,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
           STREAM_BASED_PROTOCOLS.forEach((protocol) => {
             cy.getTestId('route-form-protocols').click({ force: true })
-            cy.get(`[data-testid='select-item-${protocol}']`).click()
+            cy.get(`[data-testid='select-item-${protocol}'] button`).click()
             cy.getTestId('open-router-playground').should('have.class', 'disabled')
             cy.getTestId('open-router-playground').click()
             cy.get('.router-playground-wrapper').should('not.exist')
@@ -1726,7 +1726,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
           HTTP_BASED_PROTOCOLS.forEach((protocol) => {
             cy.getTestId('route-form-protocols').click({ force: true })
-            cy.get(`[data-testid='select-item-${protocol}']`).click()
+            cy.get(`[data-testid='select-item-${protocol}'] button`).click()
             cy.getTestId('open-router-playground').should('not.have.class', 'disabled')
           })
         })
