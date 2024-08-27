@@ -5,7 +5,7 @@ describe('<FieldTester /> - FieldRadio', () => {
   const fieldKey = 'gender'
   const fieldLabel = 'Gender'
   const fieldValue = 'male'
-  const updatedFieldValue = 'female'
+  const updatedFieldValue = 'not_specified'
   const schema: FormSchema = {
     fields: [{
       type: 'radio',
@@ -13,9 +13,12 @@ describe('<FieldTester /> - FieldRadio', () => {
       id: fieldKey,
       name: fieldKey,
       label: fieldLabel,
+      required: true,
+      help: 'Specify a gender if it is known',
       values: [
         { name: 'Male', value: fieldValue },
-        { name: 'Female', value: updatedFieldValue },
+        { name: 'Female', value: 'female' },
+        { name: 'Not specified', value: updatedFieldValue },
       ],
     }],
   }
@@ -41,6 +44,19 @@ describe('<FieldTester /> - FieldRadio', () => {
     // check VFG label is set correctly
     cy.get(`.form-group-label[for="${fieldKey}"]`).should('be.visible')
     cy.get(`.form-group-label[for="${fieldKey}"]`).should('contain.text', fieldLabel)
+
+    // check required state
+    if (schema.fields[0].required) {
+      cy.get(`.field-select.required label[for="${fieldKey}"]`).should('exist')
+    } else {
+      cy.get(`.field-select.required label[for="${fieldKey}"]`).should('not.exist')
+    }
+
+    // check help text
+    if (schema.fields[0].help) {
+      cy.get(`label[for="${fieldKey}"] .info-icon`).should('be.visible')
+      cy.get(`label[for="${fieldKey}"]`).should('contain.text', schema.fields[0].help)
+    }
   })
 
   it('renders default state correctly - with model', () => {
