@@ -103,7 +103,7 @@ const getItemsFromValues = (values: Record<string, any>[] | string[] | number[])
       label: getItemName(item),
       value: getItemValue(item),
       disabled: typeof item === 'object' ? item.disabled || undefined : undefined,
-      group: typeof item === 'object' ? item.group || undefined : undefined,
+      group: typeof item === 'object' ? String(item.group || '').toUpperCase() || undefined : undefined,
     })
   })
 
