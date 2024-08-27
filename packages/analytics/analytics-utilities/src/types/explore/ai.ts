@@ -36,6 +36,8 @@ export const aiExploreAggregations = [
   'llm_cache_embeddings_latency_average',
   'llm_cache_fetch_latency_average',
   'llm_latency_average',
+  'llm_embeddings_tokens',
+  'llm_embeddings_cost',
 ] as const
 
 export type AiExploreAggregations = typeof aiExploreAggregations[number]

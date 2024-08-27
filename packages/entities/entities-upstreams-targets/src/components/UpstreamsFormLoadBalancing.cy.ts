@@ -183,7 +183,7 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
     })
 
     cy.get('.hash-on-select').click()
-    cy.get('.hash-on-select .select-items-container [data-testid="select-item-header"]').click()
+    cy.get('.hash-on-select .select-items-container [data-testid="select-item-header"] button').click()
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', 'header')
   })
@@ -235,7 +235,7 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
     })
 
     cy.get('.hash-fallback-select').click()
-    cy.get('.hash-fallback-select .select-items-container [data-testid="select-item-header"]').click({ force: true })
+    cy.get('.hash-fallback-select .select-items-container [data-testid="select-item-header"] button').click({ force: true })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', 'header')
   })
