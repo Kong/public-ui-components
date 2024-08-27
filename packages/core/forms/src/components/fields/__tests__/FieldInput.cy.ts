@@ -39,9 +39,9 @@ describe('<FieldTester /> - FieldInput', () => {
 
     // check required state
     if (schema.fields[0].required) {
-      cy.get(`.field-select.required label[for="${fieldKey}"]`).should('exist')
+      cy.get(`.form-group-label.required[for="${fieldKey}"]`).should('exist')
     } else {
-      cy.get(`.field-select.required label[for="${fieldKey}"]`).should('not.exist')
+      cy.get(`.form-group-label.required[for="${fieldKey}"]`).should('not.exist')
     }
 
     // check help text
