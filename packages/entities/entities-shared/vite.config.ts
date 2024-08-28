@@ -37,5 +37,4 @@ if (idx !== -1) {
   config.build.rollupOptions.external.splice(idx, 1)
 }
 delete config.build.rollupOptions.output.globals['@kong-ui-public/entities-shared']
-console.log('config:', config.build.rollupOptions.output.globals)
 export default config
