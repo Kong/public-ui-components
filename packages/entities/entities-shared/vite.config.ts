@@ -32,5 +32,10 @@ if (process.env.USE_SANDBOX) {
   config.build.rollupOptions.external = undefined
   config.build.rollupOptions.output.global = undefined
 }
-
+const idx = config.build.rollupOptions.external.findIndex((i:any) => (i.toString().includes('entities-shared')))
+if (idx !== -1) {
+  config.build.rollupOptions.external.splice(idx, 1)
+}
+delete config.build.rollupOptions.output.globals['@kong-ui-public/entities-shared']
+console.log('config:', config.build.rollupOptions.output.globals)
 export default config
