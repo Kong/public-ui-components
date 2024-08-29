@@ -48,14 +48,14 @@
         <slot name="form-actions">
           <KButton
             appearance="tertiary"
-            data-testid="form-view-configuration"
+            :data-testid="`${entityType}-${isEditing ? 'edit' : 'create'}-form-view-configuration`"
             @click="toggle()"
           >
             {{ t('baseForm.actions.viewConfiguration') }}
           </KButton>
           <KButton
             appearance="secondary"
-            data-testid="form-cancel"
+            :data-testid="`${entityType}-${isEditing ? 'edit' : 'create'}-form-cancel`"
             :disabled="isReadonly"
             type="reset"
           >
@@ -63,7 +63,7 @@
           </KButton>
           <KButton
             appearance="primary"
-            data-testid="form-submit"
+            :data-testid="`${entityType}-${isEditing ? 'edit' : 'create'}-form-submit`"
             :disabled="disableSave"
             type="submit"
           >
@@ -225,6 +225,7 @@ const { getMessageFromError } = composables.useErrors()
 const { axiosInstance } = composables.useAxios(props.config?.axiosRequestConfig)
 
 const isLoading = ref(false)
+const isEditing = computed(() => !!props.editId)
 const fetchDetailsError = ref(false)
 const fetchErrorMessage = ref('')
 const disableSave = computed((): boolean => props.canSubmit === false || props.isReadonly)

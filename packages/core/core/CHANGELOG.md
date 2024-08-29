@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.7.8...@kong-ui-public/core@1.8.0) (2024-08-27)
+
+
+### Features
+
+* **new-portal-support:** tokenize CSS variables [MA-2962] ([#1520](https://github.com/Kong/public-ui-components/issues/1520)) ([68ebf33](https://github.com/Kong/public-ui-components/commit/68ebf33042833d40f32cac8e3e24d17349b86091))
+
+
+
+
+
 ## [1.7.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.7.7...@kong-ui-public/core@1.7.8) (2024-08-15)
 
 **Note:** Version bump only for package @kong-ui-public/core

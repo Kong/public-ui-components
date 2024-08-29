@@ -134,10 +134,10 @@ describe('<ConsumerGroupForm />', () => {
       cy.get('.multiselect-popover').should('be.visible')
       cy.get('.multiselect-popover .multiselect-item').should('have.length', 5)
 
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('consumer_group-create-form-cancel').should('be.visible')
+      cy.getTestId('consumer_group-create-form-cancel').should('be.enabled')
+      cy.getTestId('consumer_group-create-form-submit').should('be.visible')
+      cy.getTestId('consumer_group-create-form-submit').should('be.disabled')
     })
 
     it('Submit button should be enabled if name field is filled in correctly', () => {
@@ -151,12 +151,12 @@ describe('<ConsumerGroupForm />', () => {
 
       cy.wait('@fetchList')
 
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('consumer_group-create-form-submit').should('be.visible')
+      cy.getTestId('consumer_group-create-form-submit').should('be.disabled')
 
       cy.getTestId('consumer-group-form-name').type('test_name')
 
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('consumer_group-create-form-submit').should('be.enabled')
     })
 
     it('loading event should be emitted when EntityBaseForm emits loading event', () => {
@@ -546,10 +546,10 @@ describe('<ConsumerGroupForm />', () => {
       cy.get('.multiselect-popover').should('be.visible')
       cy.get('.multiselect-popover .multiselect-item').should('have.length', 5)
 
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('consumer_group-create-form-cancel').should('be.visible')
+      cy.getTestId('consumer_group-create-form-cancel').should('be.enabled')
+      cy.getTestId('consumer_group-create-form-submit').should('be.visible')
+      cy.getTestId('consumer_group-create-form-submit').should('be.disabled')
     })
 
     it('Submit button should be enabled if name field is filled in correctly', () => {
@@ -563,12 +563,12 @@ describe('<ConsumerGroupForm />', () => {
 
       cy.wait('@fetchList')
 
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('consumer_group-create-form-submit').should('be.visible')
+      cy.getTestId('consumer_group-create-form-submit').should('be.disabled')
 
       cy.getTestId('consumer-group-form-name').type('test_name')
 
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('consumer_group-create-form-submit').should('be.enabled')
     })
 
     it('loading event should be emitted when EntityBaseForm emits loading event', () => {

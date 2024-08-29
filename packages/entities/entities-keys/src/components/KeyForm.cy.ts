@@ -96,10 +96,10 @@ describe('<KeyForm />', () => {
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
       cy.get('.kong-ui-entities-keys-form form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('key-create-form-cancel').should('be.visible')
+      cy.getTestId('key-create-form-submit').should('be.visible')
+      cy.getTestId('key-create-form-cancel').should('be.enabled')
+      cy.getTestId('key-create-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('key-form-id').should('be.visible')
       cy.getTestId('key-form-name').should('be.visible')
@@ -188,20 +188,20 @@ describe('<KeyForm />', () => {
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('key-create-form-cancel').should('be.visible')
+      cy.getTestId('key-create-form-submit').should('be.visible')
+      cy.getTestId('key-create-form-cancel').should('be.enabled')
+      cy.getTestId('key-create-form-submit').should('be.disabled')
       // enables save when required fields have values
       cy.getTestId('key-form-id').type(kid)
       cy.getTestId('key-form-name').type('tk-meowstersmith')
       cy.getTestId('key-form-key-set').click()
       cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('key-create-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('key-form-id').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('key-create-form-submit').should('be.disabled')
     })
 
     it('should pick correct url while creating global key', () => {
@@ -220,7 +220,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').click()
       cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
-      cy.getTestId('form-submit').click()
+      cy.getTestId('key-create-form-submit').click()
       cy.wait('@createKey')
     })
 
@@ -242,7 +242,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').click()
       cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
-      cy.getTestId('form-submit').click()
+      cy.getTestId('key-create-form-submit').click()
       cy.wait('@createKey')
     })
 
@@ -341,10 +341,10 @@ describe('<KeyForm />', () => {
       cy.wait('@getKey')
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('key-edit-form-cancel').should('be.visible')
+      cy.getTestId('key-edit-form-submit').should('be.visible')
+      cy.getTestId('key-edit-form-cancel').should('be.enabled')
+      cy.getTestId('key-edit-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('key-form-name').should('have.value', key1.name)
       key1.tags.forEach((tag: string) => {
@@ -389,7 +389,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-tags').clear()
       cy.getTestId('key-form-tags').type('tag1,tag2')
       cy.getTestId('key-form-name').type('-edited')
-      cy.getTestId('form-submit').click()
+      cy.getTestId('key-edit-form-submit').click()
       cy.wait('@updateKey')
     })
 
@@ -411,7 +411,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-tags').clear()
       cy.getTestId('key-form-tags').type('tag1,tag2')
       cy.getTestId('key-form-name').type('-edited')
-      cy.getTestId('form-submit').click()
+      cy.getTestId('key-edit-form-submit').click()
       cy.wait('@updateKeysetKey')
     })
 
@@ -430,17 +430,17 @@ describe('<KeyForm />', () => {
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('key-edit-form-cancel').should('be.visible')
+      cy.getTestId('key-edit-form-submit').should('be.visible')
+      cy.getTestId('key-edit-form-cancel').should('be.enabled')
+      cy.getTestId('key-edit-form-submit').should('be.disabled')
       // enables save when form has changes
       cy.getTestId('key-form-name').type('-edited')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('key-edit-form-submit').should('be.enabled')
       // disables save when form changes are undone
       cy.getTestId('key-form-name').clear()
       cy.getTestId('key-form-name').type(key1.name)
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('key-edit-form-submit').should('be.disabled')
     })
 
     it('should handle error state - failed to load Key', () => {
@@ -470,8 +470,8 @@ describe('<KeyForm />', () => {
       // error state is displayed
       cy.getTestId('form-fetch-error').should('be.visible')
       // buttons and form hidden
-      cy.getTestId('form-cancel').should('not.exist')
-      cy.getTestId('form-submit').should('not.exist')
+      cy.getTestId('key-edit-form-cancel').should('not.exist')
+      cy.getTestId('key-edit-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-keys-form form').should('not.exist')
     })
 
@@ -617,10 +617,10 @@ describe('<KeyForm />', () => {
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
       cy.get('.kong-ui-entities-keys-form form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('key-create-form-cancel').should('be.visible')
+      cy.getTestId('key-create-form-submit').should('be.visible')
+      cy.getTestId('key-create-form-cancel').should('be.enabled')
+      cy.getTestId('key-create-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('key-form-id').should('be.visible')
       cy.getTestId('key-form-name').should('be.visible')
@@ -709,20 +709,20 @@ describe('<KeyForm />', () => {
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('key-create-form-cancel').should('be.visible')
+      cy.getTestId('key-create-form-submit').should('be.visible')
+      cy.getTestId('key-create-form-cancel').should('be.enabled')
+      cy.getTestId('key-create-form-submit').should('be.disabled')
       // enables save when required fields have values
       cy.getTestId('key-form-id').type(kid)
       cy.getTestId('key-form-name').type('tk-meowstersmith')
       cy.getTestId('key-form-key-set').click()
       cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('key-create-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('key-form-id').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('key-create-form-submit').should('be.disabled')
     })
 
     it('should pick correct url while creating global key', () => {
@@ -741,7 +741,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').click()
       cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
-      cy.getTestId('form-submit').click()
+      cy.getTestId('key-create-form-submit').click()
       cy.wait('@createKey')
     })
 
@@ -763,7 +763,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-key-set').click()
       cy.get(`[data-testid="select-item-${keySets.data[0].id}"] button`).click()
       cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
-      cy.getTestId('form-submit').click()
+      cy.getTestId('key-create-form-submit').click()
       cy.wait('@createKey')
     })
 
@@ -862,10 +862,10 @@ describe('<KeyForm />', () => {
       cy.wait('@getKey')
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('key-edit-form-cancel').should('be.visible')
+      cy.getTestId('key-edit-form-submit').should('be.visible')
+      cy.getTestId('key-edit-form-cancel').should('be.enabled')
+      cy.getTestId('key-edit-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('key-form-name').should('have.value', key1.name)
       key1.tags.forEach((tag: string) => {
@@ -910,7 +910,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-tags').clear()
       cy.getTestId('key-form-tags').type('tag1,tag2')
       cy.getTestId('key-form-name').type('-edited')
-      cy.getTestId('form-submit').click()
+      cy.getTestId('key-edit-form-submit').click()
       cy.wait('@updateKey')
     })
 
@@ -932,7 +932,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-tags').clear()
       cy.getTestId('key-form-tags').type('tag1,tag2')
       cy.getTestId('key-form-name').type('-edited')
-      cy.getTestId('form-submit').click()
+      cy.getTestId('key-edit-form-submit').click()
       cy.wait('@updateKeysetKey')
     })
 
@@ -951,17 +951,17 @@ describe('<KeyForm />', () => {
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-keys-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('key-edit-form-cancel').should('be.visible')
+      cy.getTestId('key-edit-form-submit').should('be.visible')
+      cy.getTestId('key-edit-form-cancel').should('be.enabled')
+      cy.getTestId('key-edit-form-submit').should('be.disabled')
       // enables save when form has changes
       cy.getTestId('key-form-name').type('-edited')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('key-edit-form-submit').should('be.enabled')
       // disables save when form changes are undone
       cy.getTestId('key-form-name').clear()
       cy.getTestId('key-form-name').type(key1.name)
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('key-edit-form-submit').should('be.disabled')
     })
 
     it('should handle error state - failed to load Key', () => {
@@ -990,8 +990,8 @@ describe('<KeyForm />', () => {
       // error state is displayed
       cy.getTestId('form-fetch-error').should('be.visible')
       // buttons and form hidden
-      cy.getTestId('form-cancel').should('not.exist')
-      cy.getTestId('form-submit').should('not.exist')
+      cy.getTestId('key-edit-form-cancel').should('not.exist')
+      cy.getTestId('key-edit-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-keys-form form').should('not.exist')
     })
 

@@ -118,10 +118,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.get('.kong-ui-entities-route-form form').should('be.visible')
 
         // button state
-        cy.getTestId('form-cancel').should('be.visible')
-        cy.getTestId('form-submit').should('be.visible')
-        cy.getTestId('form-cancel').should('be.enabled')
-        cy.getTestId('form-submit').should('be.disabled')
+        cy.getTestId('route-create-form-cancel').should('be.visible')
+        cy.getTestId('route-create-form-submit').should('be.visible')
+        cy.getTestId('route-create-form-cancel').should('be.enabled')
+        cy.getTestId('route-create-form-submit').should('be.disabled')
 
         // config tabs is hidden when there is only one tab
         cy.getTestId('route-form-config-tabs')
@@ -207,7 +207,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-form-headers-values-input-2').should('not.exist')
 
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get("[data-testid='select-item-tcp,tls,udp']").click({ force: true })
+          cy.get("[data-testid='select-item-tcp,tls,udp'] button").click({ force: true })
           cy.getTestId('routing-rule-paths').should('not.exist')
           cy.getTestId('routing-rule-hosts').should('not.exist')
           cy.getTestId('routing-rule-methods').should('not.exist')
@@ -305,10 +305,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           } // else: we will be on the trad tab by default
 
           // default button state
-          cy.getTestId('form-cancel').should('be.visible')
-          cy.getTestId('form-submit').should('be.visible')
-          cy.getTestId('form-cancel').should('be.enabled')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-cancel').should('be.visible')
+          cy.getTestId('route-create-form-submit').should('be.visible')
+          cy.getTestId('route-create-form-cancel').should('be.enabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // config tabs is hidden when there is only one tab
           cy.getTestId('route-form-config-tabs')
@@ -320,79 +320,79 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
           // paths
           cy.getTestId('route-form-paths-input-1').type(route.paths[0])
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('route-form-paths-input-1').clear()
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // snis
           cy.getTestId('routing-rule-snis').click()
           cy.getTestId('route-form-snis-input-1').type('sni')
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('route-form-snis-input-1').clear()
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // hosts
           cy.getTestId('routing-rule-hosts').click()
           cy.getTestId('route-form-hosts-input-1').type('host')
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('route-form-hosts-input-1').clear()
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // methods and custom methods
           cy.getTestId('routing-rule-methods').click()
           cy.getTestId('get-method-toggle').check({ force: true })
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('get-method-toggle').uncheck({ force: true })
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
           cy.getTestId('custom-method-toggle').check({ force: true })
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
           cy.getTestId('route-form-custom-method-input-1').type('castom')
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('route-form-custom-method-input-1').clear()
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // headers
           cy.getTestId('routing-rule-headers').click()
           cy.getTestId('route-form-headers-name-input-1').type(Object.keys(route.headers)[0])
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('route-form-headers-name-input-1').clear()
           cy.getTestId('route-form-headers-values-input-1').type(route.headers.Header1[0])
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get("[data-testid='select-item-tcp,tls,udp']").click({ force: true })
+          cy.get("[data-testid='select-item-tcp,tls,udp'] button").click({ force: true })
 
           // sources
           cy.getTestId('routing-rule-sources').click()
           cy.getTestId('route-form-sources-ip-input-1').type('127.0.0.1')
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('route-form-sources-ip-input-1').clear()
           cy.getTestId('route-form-sources-port-input-1').type('8080')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // destinations
           cy.getTestId('routing-rule-destinations').click()
           cy.getTestId('route-form-destinations-ip-input-1').type('127.0.0.2')
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('route-form-destinations-ip-input-1').clear()
           cy.getTestId('route-form-destinations-port-input-1').type('8000')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
         })
       } // if !routeFlavors || routeFlavors?.traditional
 
@@ -418,15 +418,15 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           } // else: we will be on expr tab by default
 
           // default button state
-          cy.getTestId('form-cancel').should('be.visible')
-          cy.getTestId('form-submit').should('be.visible')
-          cy.getTestId('form-cancel').should('be.enabled')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-cancel').should('be.visible')
+          cy.getTestId('route-create-form-submit').should('be.visible')
+          cy.getTestId('route-create-form-cancel').should('be.enabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // enables save when required fields have values
           // form fields - general
           cy.getTestId('route-form-name').should('be.visible')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // the editor shows invalid because it is empty
           cy.get('.expression-editor').should('have.class', 'invalid')
@@ -438,7 +438,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           // it should be no longer invalid
           cy.get('.expression-editor').should('not.have.class', 'invalid')
           // and the submit button is enabled
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'expr')
 
           // delete the last character
@@ -447,7 +447,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           // invalid again
           cy.get('.expression-editor').should('have.class', 'invalid')
           // but the submit button is still enabled because we let the server handle uncaught errors
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'expr')
         })
       } // if routeFlavors?.expressions
@@ -472,10 +472,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get('.kong-ui-entities-route-form').should('be.visible')
 
           // button state
-          cy.getTestId('form-cancel').should('be.visible')
-          cy.getTestId('form-submit').should('be.visible')
-          cy.getTestId('form-cancel').should('be.enabled')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-edit-form-cancel').should('be.visible')
+          cy.getTestId('route-edit-form-submit').should('be.visible')
+          cy.getTestId('route-edit-form-cancel').should('be.enabled')
+          cy.getTestId('route-edit-form-submit').should('be.disabled')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
             // trad tab should be active by default
@@ -529,10 +529,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get('.kong-ui-entities-route-form').should('be.visible')
 
           // default button state
-          cy.getTestId('form-cancel').should('be.visible')
-          cy.getTestId('form-submit').should('be.visible')
-          cy.getTestId('form-cancel').should('be.enabled')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-edit-form-cancel').should('be.visible')
+          cy.getTestId('route-edit-form-submit').should('be.visible')
+          cy.getTestId('route-edit-form-cancel').should('be.enabled')
+          cy.getTestId('route-edit-form-submit').should('be.disabled')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
             // trad tab should be active by default
@@ -544,7 +544,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           // enables save when form has changes
           cy.getTestId('route-form-service-id').click({ force: true })
           cy.get("[data-testid='select-item-2']").click()
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-edit-form-submit').should('be.enabled').click()
           cy.wait('@editRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('remove-methods').click()
@@ -552,7 +552,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('remove-paths').click()
           cy.getTestId('remove-headers').click()
           cy.getTestId('routing-rules-warning').should('be.visible')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-edit-form-submit').should('be.disabled')
         })
       } // if !routeFlavors || routeFlavors?.traditional
 
@@ -576,10 +576,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get('.kong-ui-entities-route-form').should('be.visible')
 
           // button state
-          cy.getTestId('form-cancel').should('be.visible')
-          cy.getTestId('form-submit').should('be.visible')
-          cy.getTestId('form-cancel').should('be.enabled')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-edit-form-cancel').should('be.visible')
+          cy.getTestId('route-edit-form-submit').should('be.visible')
+          cy.getTestId('route-edit-form-cancel').should('be.enabled')
+          cy.getTestId('route-edit-form-submit').should('be.disabled')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
             // expr tab should be active by default
@@ -622,10 +622,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get('.kong-ui-entities-route-form').should('be.visible')
 
           // default button state
-          cy.getTestId('form-cancel').should('be.visible')
-          cy.getTestId('form-submit').should('be.visible')
-          cy.getTestId('form-cancel').should('be.enabled')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-edit-form-cancel').should('be.visible')
+          cy.getTestId('route-edit-form-submit').should('be.visible')
+          cy.getTestId('route-edit-form-cancel').should('be.enabled')
+          cy.getTestId('route-edit-form-submit').should('be.disabled')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
             // trad tab should be active by default
@@ -636,7 +636,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           // enables save when form has changes
           cy.getTestId('route-form-service-id').click({ force: true })
           cy.get("[data-testid='select-item-2']").click()
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-edit-form-submit').should('be.enabled').click()
           cy.wait('@editRoute').then((res) => res.response?.body?.kind).should('eq', 'expr')
 
           // type a valid expression
@@ -647,7 +647,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           // the editor should become invalid
           cy.get('.expression-editor').should('have.class', 'invalid')
           // but the submit button is still enabled because we let the server handle uncaught errors
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-edit-form-submit').should('be.enabled').click()
           cy.wait('@editRoute').then((res) => res.response?.body?.kind).should('eq', 'expr')
         })
       } // if routeFlavors?.expressions
@@ -683,8 +683,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.getTestId('form-fetch-error').should('be.visible')
 
         // buttons and form hidden
-        cy.getTestId('form-cancel').should('not.exist')
-        cy.getTestId('form-submit').should('not.exist')
+        cy.getTestId('route-edit-form-cancel').should('not.exist')
+        cy.getTestId('route-edit-form-submit').should('not.exist')
         cy.get('.kong-ui-entities-route-form form').should('not.exist')
       })
 
@@ -776,8 +776,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.get('.form-section-info sticky').should('not.exist')
 
         // default buttons should be replaced with slotted content
-        cy.getTestId('form-cancel').should('not.exist')
-        cy.getTestId('form-submit').should('not.exist')
+        cy.getTestId('route-create-form-cancel').should('not.exist')
+        cy.getTestId('route-create-form-submit').should('not.exist')
         cy.getTestId('slotted-cancel-button').should('be.visible')
         cy.getTestId('slotted-submit-button').should('be.visible')
       })
@@ -851,7 +851,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
         STREAM_BASED_PROTOCOLS.forEach((protocol) => {
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get(`[data-testid='select-item-${protocol}']`).click()
+          cy.get(`[data-testid='select-item-${protocol}'] button`).click()
           cy.getTestId('open-router-playground').should('have.class', 'disabled')
           cy.getTestId('open-router-playground').click()
           cy.get('.router-playground-wrapper').should('not.exist')
@@ -871,7 +871,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
         HTTP_BASED_PROTOCOLS.forEach((protocol) => {
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get(`[data-testid='select-item-${protocol}']`).click()
+          cy.get(`[data-testid='select-item-${protocol}'] button`).click()
           cy.getTestId('open-router-playground').should('not.have.class', 'disabled')
         })
       })
@@ -999,10 +999,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.get('.kong-ui-entities-route-form form').should('be.visible')
 
         // button state
-        cy.getTestId('form-cancel').should('be.visible')
-        cy.getTestId('form-submit').should('be.visible')
-        cy.getTestId('form-cancel').should('be.enabled')
-        cy.getTestId('form-submit').should('be.disabled')
+        cy.getTestId('route-create-form-cancel').should('be.visible')
+        cy.getTestId('route-create-form-submit').should('be.visible')
+        cy.getTestId('route-create-form-cancel').should('be.enabled')
+        cy.getTestId('route-create-form-submit').should('be.disabled')
 
         // config tabs is hidden when there is only one tab
         cy.getTestId('route-form-config-tabs')
@@ -1088,7 +1088,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-form-headers-values-input-2').should('not.exist')
 
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get("[data-testid='select-item-tcp,tls,udp']").click({ force: true })
+          cy.get("[data-testid='select-item-tcp,tls,udp'] button").click({ force: true })
           cy.getTestId('routing-rule-paths').should('not.exist')
           cy.getTestId('routing-rule-hosts').should('not.exist')
           cy.getTestId('routing-rule-methods').should('not.exist')
@@ -1164,10 +1164,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           } // else: we will be on the trad tab by default
 
           // default button state
-          cy.getTestId('form-cancel').should('be.visible')
-          cy.getTestId('form-submit').should('be.visible')
-          cy.getTestId('form-cancel').should('be.enabled')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-cancel').should('be.visible')
+          cy.getTestId('route-create-form-submit').should('be.visible')
+          cy.getTestId('route-create-form-cancel').should('be.enabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // config tabs is hidden when there is only one tab
           cy.getTestId('route-form-config-tabs')
@@ -1179,79 +1179,79 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
           // paths
           cy.getTestId('route-form-paths-input-1').type(route.paths[0])
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('route-form-paths-input-1').clear()
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // snis
           cy.getTestId('routing-rule-snis').click()
           cy.getTestId('route-form-snis-input-1').type('sni')
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('route-form-snis-input-1').clear()
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // hosts
           cy.getTestId('routing-rule-hosts').click()
           cy.getTestId('route-form-hosts-input-1').type('host')
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('route-form-hosts-input-1').clear()
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // methods and custom methods
           cy.getTestId('routing-rule-methods').click()
           cy.getTestId('get-method-toggle').check({ force: true })
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('get-method-toggle').uncheck({ force: true })
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
           cy.getTestId('custom-method-toggle').check({ force: true })
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
           cy.getTestId('route-form-custom-method-input-1').type('castom')
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('route-form-custom-method-input-1').clear()
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // headers
           cy.getTestId('routing-rule-headers').click()
           cy.getTestId('route-form-headers-name-input-1').type(Object.keys(route.headers)[0])
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('route-form-headers-name-input-1').clear()
           cy.getTestId('route-form-headers-values-input-1').type(route.headers.Header1[0])
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           cy.getTestId('route-form-protocols').click({ force: true })
-          cy.get("[data-testid='select-item-tcp,tls,udp']").click({ force: true })
+          cy.get("[data-testid='select-item-tcp,tls,udp'] button").click({ force: true })
 
           // sources
           cy.getTestId('routing-rule-sources').click()
           cy.getTestId('route-form-sources-ip-input-1').type('127.0.0.1')
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('route-form-sources-ip-input-1').clear()
           cy.getTestId('route-form-sources-port-input-1').type('8080')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // destinations
           cy.getTestId('routing-rule-destinations').click()
           cy.getTestId('route-form-destinations-ip-input-1').type('127.0.0.2')
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('route-form-destinations-ip-input-1').clear()
           cy.getTestId('route-form-destinations-port-input-1').type('8000')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
         })
       } // if !routeFlavors || routeFlavors?.traditional
 
@@ -1277,15 +1277,15 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           } // else: we will be on expr tab by default
 
           // default button state
-          cy.getTestId('form-cancel').should('be.visible')
-          cy.getTestId('form-submit').should('be.visible')
-          cy.getTestId('form-cancel').should('be.enabled')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-cancel').should('be.visible')
+          cy.getTestId('route-create-form-submit').should('be.visible')
+          cy.getTestId('route-create-form-cancel').should('be.enabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // enables save when required fields have values
           // form fields - general
           cy.getTestId('route-form-name').should('be.visible')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // the editor shows invalid because it is empty
           cy.get('.expression-editor').should('have.class', 'invalid')
@@ -1297,7 +1297,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           // it should be no longer invalid
           cy.get('.expression-editor').should('not.have.class', 'invalid')
           // and the submit button is enabled
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'expr')
 
           // delete the last character
@@ -1306,7 +1306,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           // invalid again
           cy.get('.expression-editor').should('have.class', 'invalid')
           // but the submit button is still enabled because we let the server handle uncaught errors
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'expr')
         })
       } // if routeFlavors?.expressions
@@ -1331,10 +1331,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get('.kong-ui-entities-route-form').should('be.visible')
 
           // button state
-          cy.getTestId('form-cancel').should('be.visible')
-          cy.getTestId('form-submit').should('be.visible')
-          cy.getTestId('form-cancel').should('be.enabled')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-edit-form-cancel').should('be.visible')
+          cy.getTestId('route-edit-form-submit').should('be.visible')
+          cy.getTestId('route-edit-form-cancel').should('be.enabled')
+          cy.getTestId('route-edit-form-submit').should('be.disabled')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
             // trad tab should be active by default
@@ -1388,10 +1388,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get('.kong-ui-entities-route-form').should('be.visible')
 
           // default button state
-          cy.getTestId('form-cancel').should('be.visible')
-          cy.getTestId('form-submit').should('be.visible')
-          cy.getTestId('form-cancel').should('be.enabled')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-edit-form-cancel').should('be.visible')
+          cy.getTestId('route-edit-form-submit').should('be.visible')
+          cy.getTestId('route-edit-form-cancel').should('be.enabled')
+          cy.getTestId('route-edit-form-submit').should('be.disabled')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
             // trad tab should be active by default
@@ -1403,7 +1403,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           // enables save when form has changes
           cy.getTestId('route-form-service-id').click({ force: true })
           cy.get("[data-testid='select-item-2']").click()
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-edit-form-submit').should('be.enabled').click()
           cy.wait('@editRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           cy.getTestId('remove-methods').click()
@@ -1411,7 +1411,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('remove-paths').click()
           cy.getTestId('remove-headers').click()
           cy.getTestId('routing-rules-warning').should('be.visible')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-edit-form-submit').should('be.disabled')
         })
       } // if !routeFlavors || routeFlavors?.traditional
 
@@ -1435,10 +1435,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get('.kong-ui-entities-route-form').should('be.visible')
 
           // button state
-          cy.getTestId('form-cancel').should('be.visible')
-          cy.getTestId('form-submit').should('be.visible')
-          cy.getTestId('form-cancel').should('be.enabled')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-edit-form-cancel').should('be.visible')
+          cy.getTestId('route-edit-form-submit').should('be.visible')
+          cy.getTestId('route-edit-form-cancel').should('be.enabled')
+          cy.getTestId('route-edit-form-submit').should('be.disabled')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
             // expr tab should be active by default
@@ -1481,10 +1481,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get('.kong-ui-entities-route-form').should('be.visible')
 
           // default button state
-          cy.getTestId('form-cancel').should('be.visible')
-          cy.getTestId('form-submit').should('be.visible')
-          cy.getTestId('form-cancel').should('be.enabled')
-          cy.getTestId('form-submit').should('be.disabled')
+          cy.getTestId('route-edit-form-cancel').should('be.visible')
+          cy.getTestId('route-edit-form-submit').should('be.visible')
+          cy.getTestId('route-edit-form-cancel').should('be.enabled')
+          cy.getTestId('route-edit-form-submit').should('be.disabled')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
             // trad tab should be active by default
@@ -1494,7 +1494,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           // enables save when form has changes
           cy.getTestId('route-form-service-id').click({ force: true })
           cy.get("[data-testid='select-item-2']").click()
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-edit-form-submit').should('be.enabled').click()
           cy.wait('@editRoute').then((res) => res.response?.body?.kind).should('eq', 'expr')
 
           // type a valid expression
@@ -1505,7 +1505,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           // the editor should become invalid
           cy.get('.expression-editor').should('have.class', 'invalid')
           // but the submit button is still enabled because we let the server handle uncaught errors
-          cy.getTestId('form-submit').should('be.enabled').click()
+          cy.getTestId('route-edit-form-submit').should('be.enabled').click()
           cy.wait('@editRoute').then((res) => res.response?.body?.kind).should('eq', 'expr')
         })
       } // if routeFlavors?.expressions
@@ -1527,22 +1527,22 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.get('.kong-ui-entities-route-form').should('be.visible')
 
         // default button state
-        cy.getTestId('form-cancel').should('be.visible')
-        cy.getTestId('form-submit').should('be.visible')
-        cy.getTestId('form-cancel').should('be.enabled')
-        cy.getTestId('form-submit').should('be.disabled')
+        cy.getTestId('route-edit-form-cancel').should('be.visible')
+        cy.getTestId('route-edit-form-submit').should('be.visible')
+        cy.getTestId('route-edit-form-cancel').should('be.enabled')
+        cy.getTestId('route-edit-form-submit').should('be.disabled')
         cy.getTestId('routing-rules-warning').should('not.exist')
 
         // enables save when form has changes
         cy.getTestId('route-form-service-id').click({ force: true })
         cy.get("[data-testid='select-item-2']").click()
-        cy.getTestId('form-submit').should('be.enabled')
+        cy.getTestId('route-edit-form-submit').should('be.enabled')
         cy.getTestId('remove-methods').click()
         cy.getTestId('remove-paths').first().click()
         cy.getTestId('remove-paths').click()
         cy.getTestId('remove-headers').click()
         cy.getTestId('routing-rules-warning').should('be.visible')
-        cy.getTestId('form-submit').should('be.disabled')
+        cy.getTestId('route-edit-form-submit').should('be.disabled')
       })
 
       it('should handle error state - failed to load route', () => {
@@ -1575,8 +1575,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.getTestId('form-fetch-error').should('be.visible')
 
         // buttons and form hidden
-        cy.getTestId('form-cancel').should('not.exist')
-        cy.getTestId('form-submit').should('not.exist')
+        cy.getTestId('route-edit-form-cancel').should('not.exist')
+        cy.getTestId('route-edit-form-submit').should('not.exist')
         cy.get('.kong-ui-entities-route-form form').should('not.exist')
       })
 
@@ -1657,8 +1657,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.get('.form-section-info sticky').should('not.exist')
 
         // default buttons should be replaced with slotted content
-        cy.getTestId('form-cancel').should('not.exist')
-        cy.getTestId('form-submit').should('not.exist')
+        cy.getTestId('route-create-form-cancel').should('not.exist')
+        cy.getTestId('route-create-form-submit').should('not.exist')
         cy.getTestId('slotted-cancel-button').should('be.visible')
         cy.getTestId('slotted-submit-button').should('be.visible')
       })
@@ -1706,7 +1706,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
           STREAM_BASED_PROTOCOLS.forEach((protocol) => {
             cy.getTestId('route-form-protocols').click({ force: true })
-            cy.get(`[data-testid='select-item-${protocol}']`).click()
+            cy.get(`[data-testid='select-item-${protocol}'] button`).click()
             cy.getTestId('open-router-playground').should('have.class', 'disabled')
             cy.getTestId('open-router-playground').click()
             cy.get('.router-playground-wrapper').should('not.exist')
@@ -1726,7 +1726,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
           HTTP_BASED_PROTOCOLS.forEach((protocol) => {
             cy.getTestId('route-form-protocols').click({ force: true })
-            cy.get(`[data-testid='select-item-${protocol}']`).click()
+            cy.get(`[data-testid='select-item-${protocol}'] button`).click()
             cy.getTestId('open-router-playground').should('not.have.class', 'disabled')
           })
         })

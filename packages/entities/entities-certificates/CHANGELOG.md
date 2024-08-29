@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.5.7...@kong-ui-public/entities-certificates@3.5.8) (2024-08-27)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.5.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.5.6...@kong-ui-public/entities-certificates@3.5.7) (2024-08-27)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1582](https://github.com/Kong/public-ui-components/issues/1582)) ([d4bc4a5](https://github.com/Kong/public-ui-components/commit/d4bc4a55a9acadc7db33e89ce9e3f2bc8c339fe8))
+
+
+
+
+
+## [3.5.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.5.5...@kong-ui-public/entities-certificates@3.5.6) (2024-08-27)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.5.4...@kong-ui-public/entities-certificates@3.5.5) (2024-08-26)
+
+
+### Bug Fixes
+
+* **entities:** form state data-testids [khcp-13000] ([#1576](https://github.com/Kong/public-ui-components/issues/1576)) ([5395669](https://github.com/Kong/public-ui-components/commit/53956698e0d13c5c5cc216034b46dad1f054d536))
+
+
+
+
+
+## [3.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.5.3...@kong-ui-public/entities-certificates@3.5.4) (2024-08-21)
+
+
+### Bug Fixes
+
+* **entities:** form data-testid changes [khcp-13000] ([#1565](https://github.com/Kong/public-ui-components/issues/1565)) ([8959349](https://github.com/Kong/public-ui-components/commit/8959349e2f941290e4176e8b997470af51e08360))
+
+
+
+
+
 ## [3.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.5.2...@kong-ui-public/entities-certificates@3.5.3) (2024-08-20)
 
 **Note:** Version bump only for package @kong-ui-public/entities-certificates
