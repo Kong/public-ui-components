@@ -22,7 +22,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       output: {
         // Provide global variables to use in the UMD build for externalized deps
         globals: {
-          'maplibre-gl': 'maplibre-gl',
+          'maplibre-gl': 'maplibregl',
         },
       },
     },
