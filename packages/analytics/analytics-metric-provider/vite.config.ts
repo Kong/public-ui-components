@@ -29,7 +29,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         globals: {
           '@kong-ui-public/analytics-config-store': 'kong-ui-public-analytics-config-store',
           '@kong-ui-public/analytics-utilities': 'kong-ui-public-analytics-utilities',
-          '@kong-ui-public/metric-cards': '@kong-ui-public/metric-cards',
+          '@kong-ui-public/metric-cards': 'kong-ui-public-metric-cards',
           pinia: 'pinia',
         },
       },
