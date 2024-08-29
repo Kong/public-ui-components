@@ -27,7 +27,6 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         // Provide global variables to use in the UMD build for externalized deps
         globals: {
           '@kong-ui-public/expressions': 'kong-ui-public-expressions',
-          'lodash.isequal': 'lodash.isequal',
         },
       },
     },
