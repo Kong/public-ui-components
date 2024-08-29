@@ -93,7 +93,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
       ...rest
     } = props.query
 
-    if (!datasource && queryBridge) {
+    if (!datasource) {
       datasource = 'basic'
     }
 

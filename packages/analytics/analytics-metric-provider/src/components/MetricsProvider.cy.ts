@@ -13,10 +13,6 @@ import { mockExploreResponse } from '../mockExploreResponse'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { createPinia, setActivePinia } from 'pinia'
 
-interface MakeQueryBridgeOptions extends MockOptions {
-  hasTrendAccess?: boolean
-}
-
 describe('<AnalyticsMetricProvider />', () => {
 
   // General note when working on these tests: SWRV tends to cache the results of queries between tests.
@@ -28,7 +24,7 @@ describe('<AnalyticsMetricProvider />', () => {
     setActivePinia(createPinia())
   })
 
-  const makeQueryBridge = (opts?: MakeQueryBridgeOptions): AnalyticsBridge => {
+  const makeQueryBridge = (opts?: MockOptions): AnalyticsBridge => {
     const queryFn = (dsAwareQuery: DatasourceAwareQuery): Promise<ExploreResultV4> => {
       const { query } = dsAwareQuery as AdvancedDatasourceQuery
 
@@ -61,12 +57,10 @@ describe('<AnalyticsMetricProvider />', () => {
       return Promise.resolve(result)
     }
 
-    const hasTrendAccess = true
-
     const configFn = (): Promise<AnalyticsConfigV2> => Promise.resolve({
       analytics: {
         percentiles: true,
-        retention_ms: hasTrendAccess ? 2592000000 : 86400000, // 30d | 1d
+        retention_ms: 2592000000, // 30d
       },
       requests: {
         retention_ms: 86400000,

@@ -432,42 +432,17 @@ describe('<DashboardRenderer />', () => {
     })
   })
 
-  it('picks a default timeSpec', () => {
+  it('picks a lower retention timeSpec if provided', () => {
     const props = {
       context: {
         // Use default timeframe for the org: don't provide one here.
-        filters: [],
-      },
-      config: summaryDashboardConfig,
-    }
-
-    cy.mount(DashboardRenderer, {
-      props,
-      global: {
-        provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({}),
-        },
-      },
-    }).then(() => {
-      // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
-      cy.get('@fetcher').should('have.callCount', 5)
-      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-        datasource: 'basic',
-        query: {
-          time_range: { time_range: '7d' },
-        },
-      }))
-
-      // Check that it replaces the description token.
-      cy.get('.container-description').should('have.text', 'Last 7-Day Summary')
-    })
-  })
-
-  it('picks a lower retention timeSpec', () => {
-    const props = {
-      context: {
-        // Use default timeframe for the org: don't provide one here.
-        filters: [],
+        filters: [
+          {
+            dimension: 'api_product',
+            type: 'in',
+            values: ['lower retention'],
+          },
+        ],
         timeSpec: ((TimePeriods.get(TimeframeKeys.ONE_DAY)) as Timeframe).v4Query(),
       },
       config: summaryDashboardConfig,
@@ -482,7 +457,7 @@ describe('<DashboardRenderer />', () => {
       },
     }).then(() => {
       // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
-      cy.get('@fetcher').should('have.callCount', 2)
+      cy.get('@fetcher').should('have.callCount', 5)
       cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({ query:{
         time_range: { time_range: '24h' },
       } }))
@@ -492,11 +467,17 @@ describe('<DashboardRenderer />', () => {
     })
   })
 
-  it('picks 7 days and basic datasource', () => {
+  it('picks 7 days and basic datasource by default', () => {
     const props = {
       context: {
         // Use default timeframe for the org: don't provide one here.
-        filters: [],
+        filters: [
+          {
+            dimension: 'api_product',
+            type: 'in',
+            values: ['basic'],
+          },
+        ],
       },
       config: summaryDashboardConfig,
     }
@@ -505,7 +486,7 @@ describe('<DashboardRenderer />', () => {
       props,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ }),
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
       },
     }).then(() => {
@@ -543,7 +524,7 @@ describe('<DashboardRenderer />', () => {
       props,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ }),
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
       },
     }).then(() => {
@@ -582,7 +563,7 @@ describe('<DashboardRenderer />', () => {
       props,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ }),
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
       },
     }).then(() => {
