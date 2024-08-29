@@ -244,7 +244,7 @@ function handleMouseUp() {
 
 ul.tooltip {
   list-style: none;
-  margin: 0;
+  margin: var(--kui-space-0, $kui-space-0);
   max-height: 300px;
   min-width: 250px;
   overflow-y: var(--kui-space-auto, $kui-space-auto);
