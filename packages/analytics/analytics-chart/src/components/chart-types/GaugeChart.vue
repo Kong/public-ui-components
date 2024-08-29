@@ -163,7 +163,7 @@ const showMetricSmall = computed(() => props.metricDisplay === ChartMetricDispla
   height: auto;
   margin: var(--kui-space-0, $kui-space-0);
   padding: var(--kui-space-0, $kui-space-0);
-  width: var(--kui-space-auto, $kui-space-auto);
+  width: auto;
 
   .chart-container {
     margin: var(--kui-space-0, $kui-space-0);

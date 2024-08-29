@@ -236,15 +236,15 @@ function handleMouseUp() {
     .drag-icon {
       margin-top: var(--kui-space-30, $kui-space-30);
       position: absolute;
-      right: var(--kui-space-0, $kui-space-0);
-      top: var(--kui-space-0, $kui-space-0);
+      right: 0;
+      top: 0;
     }
   }
 }
 
 ul.tooltip {
   list-style: none;
-  margin: var(--kui-space-0, $kui-space-0);
+  margin: 0;
   max-height: 300px;
   min-width: 250px;
   overflow-y: var(--kui-space-auto, $kui-space-auto);

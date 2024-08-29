@@ -592,10 +592,10 @@ const handleChartClick = () => {
 }
 
 .axis {
-  left: var(--kui-space-0, $kui-space-0);
+  left: 0;
   pointer-events: none;
   position: absolute;
-  top: var(--kui-space-0, $kui-space-0);
+  top: 0;
   z-index: 99;
 }
 
@@ -610,9 +610,9 @@ const handleChartClick = () => {
 
 .tooltip-boundary {
   height: 100%;
-  left: var(--kui-space-0, $kui-space-0);
+  left: 0;
   position: relative;
-  top: var(--kui-space-0, $kui-space-0);
+  top: 0;
   width: 100%;
 }
 </style>
