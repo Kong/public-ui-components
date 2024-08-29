@@ -110,7 +110,7 @@ const {
   results,
 } = useDebouncedFilter(
   props.config,
-  endpoints.list[props.config.app].all,
+  endpoints.list[props.config.app].forModal,
   '',
   {
     fetchedItemsKey: 'data',

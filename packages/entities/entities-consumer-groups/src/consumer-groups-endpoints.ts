@@ -5,11 +5,13 @@ export default {
   list: {
     konnect: {
       all: `${konnectBaseApiUrl}/consumer_groups`,
+      forModal: `${konnectBaseApiUrl}/consumer_groups`,
       forConsumer: `${konnectBaseApiUrl}/consumers/{consumerId}/consumer_groups`,
       oneForConsumer: `${konnectBaseApiUrl}/consumers/{consumerId}/consumer_groups/{consumerGroupId}`,
     },
     kongManager: {
-      all: `${KMBaseApiUrl}/consumer_groups?counter=true`,
+      all: `${KMBaseApiUrl}/consumer_groups?counter=true`, // we need counter=true to get consumers_count in consumer group list
+      forModal: `${KMBaseApiUrl}/consumer_groups`,
       forConsumer: `${KMBaseApiUrl}/consumers/{consumerId}/consumer_groups`,
       oneForConsumer: `${KMBaseApiUrl}/consumers/{consumerId}/consumer_groups/{consumerGroupId}`,
     },
