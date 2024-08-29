@@ -579,30 +579,30 @@ const handleChartClick = () => {
   }
 
   &::-webkit-scrollbar-track {
-    background-color: $kui-color-background;
-    border-radius: 10px;
+    background-color: var(--kui-color-background, $kui-color-background);
+    border-radius: var(--kui-border-radius-50, $kui-border-radius-50);
   }
   &::-webkit-scrollbar {
     width: 10px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: $kui-color-background-disabled;
-    border-radius: 10px;
+    background-color: var(--kui-color-background-disabled, $kui-color-background-disabled);
+    border-radius: var(--kui-border-radius-50, $kui-border-radius-50);
   }
 }
 
 .axis {
-  left: 0;
+  left: var(--kui-space-0, $kui-space-0);
   pointer-events: none;
   position: absolute;
-  top: 0;
+  top: var(--kui-space-0, $kui-space-0);
   z-index: 99;
 }
 
 .axis-tooltip {
   background-color: $kui-color-background-neutral-stronger;
-  color: $kui-color-text-inverse;
-  padding: $kui-space-20 $kui-space-40;
+  color: var(--kui-color-text-inverse, $kui-color-text-inverse);
+  padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
   position: absolute;
   width: max-content;
   z-index: 100;
@@ -610,9 +610,9 @@ const handleChartClick = () => {
 
 .tooltip-boundary {
   height: 100%;
-  left: 0;
+  left: var(--kui-space-0, $kui-space-0);
   position: relative;
-  top: 0;
+  top: var(--kui-space-0, $kui-space-0);
   width: 100%;
 }
 </style>

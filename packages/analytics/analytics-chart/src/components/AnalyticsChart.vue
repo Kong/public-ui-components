@@ -375,8 +375,8 @@ provide('legendPosition', toRef(props, 'legendPosition'))
 
     .chart-export-button {
       display: flex;
-      margin-left: auto;
-      margin-right: 0;
+      margin-left: var(--kui-space-auto, $kui-space-auto);
+      margin-right: var(--kui-space-0, $kui-space-0);
     }
   }
 
