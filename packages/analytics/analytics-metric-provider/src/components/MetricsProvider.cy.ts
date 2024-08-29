@@ -13,11 +13,6 @@ import { mockExploreResponse } from '../mockExploreResponse'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { createPinia, setActivePinia } from 'pinia'
 
-interface MakeQueryBridgeOptions extends MockOptions {
-  hasTrendAccess?: boolean
-  skuFeatureFlag?: boolean
-}
-
 describe('<AnalyticsMetricProvider />', () => {
 
   // General note when working on these tests: SWRV tends to cache the results of queries between tests.
@@ -29,7 +24,7 @@ describe('<AnalyticsMetricProvider />', () => {
     setActivePinia(createPinia())
   })
 
-  const makeQueryBridge = (opts?: MakeQueryBridgeOptions): AnalyticsBridge => {
+  const makeQueryBridge = (opts?: MockOptions): AnalyticsBridge => {
     const queryFn = (dsAwareQuery: DatasourceAwareQuery): Promise<ExploreResultV4> => {
       const { query } = dsAwareQuery as AdvancedDatasourceQuery
 
@@ -62,19 +57,17 @@ describe('<AnalyticsMetricProvider />', () => {
       return Promise.resolve(result)
     }
 
-    const hasTrendAccess = opts?.hasTrendAccess ?? true
-
     const configFn = (): Promise<AnalyticsConfigV2> => Promise.resolve({
       analytics: {
         percentiles: true,
-        retention_ms: hasTrendAccess ? 2592000000 : 86400000, // 30d | 1d
+        retention_ms: 2592000000, // 30d
       },
       requests: {
         retention_ms: 86400000,
       },
     })
 
-    const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = () => (opts?.skuFeatureFlag ?? true) as any
+    const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = () => (true) as any
 
     return {
       queryFn: cy.spy(queryFn).as('fetcher'),
@@ -168,36 +161,6 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('.metricscard-title').eq(2).should('have.text', 'Average Latency')
   })
 
-  it('renders percentiles if the feature flag is not set', () => {
-    const queryBridge = makeQueryBridge({ skuFeatureFlag: false })
-
-    cy.mount(MetricsTestHarness, {
-      props: {
-        render: 'global',
-        longCardTitles: true,
-        additionalFilter: [{ type: 'in', dimension: 'api_product', values: ['renders percentiles if the feature flag is not set'] } as ExploreFilter],
-      },
-      global: {
-        provide: {
-          [INJECT_QUERY_PROVIDER]: queryBridge,
-        },
-      },
-    })
-
-    cy.get('@fetcher').should('have.been.calledTwice')
-
-    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({
-      datasource: 'advanced',
-      query: { metrics: ['response_latency_p99'] },
-    }))
-    cy.get('@fetcher').should('always.have.not.been.calledWithMatch', Cypress.sinon.match({ query: { metrics: ['response_latency_average'] } }))
-
-    cy.get('.metricscard').should('exist')
-    cy.get('.metricscard-title').eq(0).should('have.text', 'Number of Requests')
-    cy.get('.metricscard-title').eq(1).should('have.text', 'Average Error Rate')
-    cy.get('.metricscard-title').eq(2).should('have.text', 'P99 Latency')
-  })
-
   it('renders percentiles if the override is set', () => {
     const queryBridge = makeQueryBridge()
 
@@ -246,46 +209,8 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('.container-description').eq(0).should('contain', 'Lorem ipsum golden signal details')
   })
 
-  it('displays "30 days" if trend access allows', () => {
-    const queryBridge = makeQueryBridge({ skuFeatureFlag: false })
-
-    cy.mount(MetricsTestHarness, {
-      props: {
-        render: 'global',
-        description: 'Lorem ipsum golden signal details',
-      },
-      global: {
-        provide: {
-          [INJECT_QUERY_PROVIDER]: queryBridge,
-        },
-      },
-    })
-
-    cy.get('.metricscard').should('exist')
-    cy.get('.metricscard').eq(0).find('.metricscard-trend-range').should('contain', 'vs previous 30 days')
-  })
-
-  it('displays "24 hours" if trend access allows', () => {
-    const queryBridge = makeQueryBridge({ hasTrendAccess: false, skuFeatureFlag: false })
-
-    cy.mount(MetricsTestHarness, {
-      props: {
-        render: 'global',
-        description: 'Lorem ipsum golden signal details',
-      },
-      global: {
-        provide: {
-          [INJECT_QUERY_PROVIDER]: queryBridge,
-        },
-      },
-    })
-
-    cy.get('.metricscard').should('exist')
-    cy.get('.metricscard').eq(0).find('.metricscard-trend-range').should('contain', 'vs previous 24 hours')
-  })
-
-  it('displays "7 days" if the feature flag is set', () => {
-    const queryBridge = makeQueryBridge({ hasTrendAccess: false, skuFeatureFlag: true })
+  it('displays "7 days" by default', () => {
+    const queryBridge = makeQueryBridge()
 
     cy.mount(MetricsTestHarness, {
       props: {
@@ -301,31 +226,6 @@ describe('<AnalyticsMetricProvider />', () => {
 
     cy.get('.metricscard').should('exist')
     cy.get('.metricscard').eq(0).find('.metricscard-trend-range').should('contain', 'vs previous 7 days')
-  })
-
-  it('handles no trend', () => {
-    const queryBridge = makeQueryBridge({ hasTrendAccess: false, skuFeatureFlag: false })
-
-    cy.mount(MetricsTestHarness, {
-      props: {
-        render: 'global',
-      },
-      global: {
-        provide: {
-          [INJECT_QUERY_PROVIDER]: queryBridge,
-        },
-      },
-    })
-
-    cy.get('.metricscard').should('exist')
-
-    cy.getTestId('metric-value').eq(0).should('have.text', '5K')
-    cy.getTestId('metric-value').eq(1).should('have.text', '40.00%')
-    cy.getTestId('metric-value').eq(2).should('have.text', '1001ms')
-
-    cy.get('.metricscard-trend-change > div').eq(0).should('have.text', 'N/A')
-    cy.get('.metricscard-trend-change > div').eq(1).should('have.text', 'N/A')
-    cy.get('.metricscard-trend-change > div').eq(2).should('have.text', 'N/A')
   })
 
   it('handles queryReady', () => {
@@ -452,37 +352,6 @@ describe('<AnalyticsMetricProvider />', () => {
 
     // Latency trend: 1001/2001−1 = −0.499750125
     cy.get('.metricscard-trend-change > div').eq(2).should('have.text', '49.98%')
-  })
-
-  it('displays single-entity metrics with no trend', () => {
-    const queryBridge = makeQueryBridge({
-      dimensionNames: ['blah'],
-      hasTrendAccess: false,
-      skuFeatureFlag: false,
-    })
-
-    cy.mount(MetricsTestHarness, {
-      props: {
-        render: 'single',
-      },
-      global: {
-        provide: {
-          [INJECT_QUERY_PROVIDER]: queryBridge,
-        },
-      },
-    })
-
-    cy.get('@fetcher').should('have.been.calledTwice')
-
-    cy.get('.metricscard').should('exist')
-
-    cy.getTestId('metric-value').eq(0).should('have.text', '5K')
-    cy.getTestId('metric-value').eq(1).should('have.text', '40.00%')
-    cy.getTestId('metric-value').eq(2).should('have.text', '1001ms')
-
-    cy.get('.metricscard-trend-change > div').eq(0).should('have.text', 'N/A')
-    cy.get('.metricscard-trend-change > div').eq(1).should('have.text', 'N/A')
-    cy.get('.metricscard-trend-change > div').eq(2).should('have.text', 'N/A')
   })
 
   it('displays multi-entity metrics', () => {
