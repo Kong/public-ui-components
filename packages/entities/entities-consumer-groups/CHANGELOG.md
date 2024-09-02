@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@3.4.8...@kong-ui-public/entities-consumer-groups@3.4.9) (2024-09-02)
+
+
+### Bug Fixes
+
+* **entities-consumer-groups:** url for AddToGroupModal ([#1588](https://github.com/Kong/public-ui-components/issues/1588)) ([7b68ed5](https://github.com/Kong/public-ui-components/commit/7b68ed571ebbbaa469fe1506478e77d332edf091))
+
+
+
+
+
 ## [3.4.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@3.4.7...@kong-ui-public/entities-consumer-groups@3.4.8) (2024-08-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
