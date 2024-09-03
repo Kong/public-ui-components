@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.2.31...@kong-ui-public/analytics-chart@4.3.0) (2024-09-03)
+
+
+### Features
+
+* analytics chart tokens [MA-2961] ([#1586](https://github.com/Kong/public-ui-components/issues/1586)) ([f6ade38](https://github.com/Kong/public-ui-components/commit/f6ade380232699f49c1f4dc2a595adba2a702acb))
+
+
+
+
+
 ## [4.2.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.2.30...@kong-ui-public/analytics-chart@4.2.31) (2024-08-27)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

@@ -133,7 +133,7 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
 @import "../styles/base";
 
 .kong-ui-public-metric-card-container {
-  background-color: var(--kong-ui-metric-card-background, transparent);
+  background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -142,15 +142,15 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
   .container-title {
     align-items: center;
     display: flex;
-    font-size: $kui-font-size-40;
-    font-weight: $kui-font-weight-semibold;
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     justify-content: space-between;
-    margin-bottom: $kui-space-50;
+    margin-bottom: var(--kui-space-50, $kui-space-50);
 
     .container-description {
-      color: $kui-color-text-neutral;
-      font-size: $kui-font-size-20;
-      font-weight: $kui-font-weight-regular;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+      font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
     }
   }
 
@@ -175,16 +175,16 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
     align-items: center;
     display: flex;
     justify-content: center;
-    margin: $kui-space-auto;
+    margin: var(--kui-space-auto, $kui-space-auto);
 
     &-icon {
       display: flex;
     }
 
     &-message {
-      color: $kui-color-text-neutral;
-      font-size: $kui-font-size-30;
-      margin-left: $kui-space-50;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      margin-left: var(--kui-space-50, $kui-space-50);
     }
   }
 }

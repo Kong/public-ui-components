@@ -19,7 +19,7 @@
     <script src="https://unpkg.com/vue@3.2.40/dist/vue.global.js"></script>
   ````
 
-- **TODO:** Grab the version of Vue from the installed npm package and inject into `/index.html` script import at build time.
+- **TODO:** Grab the version of Vue from the installed npm package and inject into `/index.html` script import at build time
 - Host app must install Vite plugin import `vite-plugin-externals`
 - Host app must `define` `process.env.*` variables as shown below
 

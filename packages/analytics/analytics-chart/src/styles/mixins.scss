@@ -1,6 +1,6 @@
-@mixin scrollbarBase($size: $kui-space-40) {
+@mixin scrollbarBase($size: var(--kui-space, 40, $kui-space-40)) {
   -ms-overflow-style: thin;
-  scrollbar-color: $kui-color-background-disabled transparent;
+  scrollbar-color: var(--kui-color-background-disabled, $kui-color-background-disabled) var(--kui-color-background-transparent, $kui-color-background-transparent);
   scrollbar-width: auto;
   ::-webkit-scrollbar {
     width: $size;
@@ -11,7 +11,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: $kui-color-background-disabled;
-    border-radius: 10px;
+    background-color: var(--kui-color-background-disabled, $kui-color-background-disabled);
+    border-radius: var(--kui-border-radius-50, $kui-border-radius-50);
   }
 }

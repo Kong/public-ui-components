@@ -161,15 +161,15 @@ const showMetricSmall = computed(() => props.metricDisplay === ChartMetricDispla
 
 .chart-parent {
   height: auto;
-  margin: $kui-space-0;
-  padding: $kui-space-0;
+  margin: var(--kui-space-0, $kui-space-0);
+  padding: var(--kui-space-0, $kui-space-0);
   width: auto;
 
   .chart-container {
-    margin: $kui-space-0;
+    margin: var(--kui-space-0, $kui-space-0);
     max-height: 100px;
     max-width: 100px;
-    padding: $kui-space-0;
+    padding: var(--kui-space-0, $kui-space-0);
   }
 
   .chart-totals-flex {
@@ -178,21 +178,23 @@ const showMetricSmall = computed(() => props.metricDisplay === ChartMetricDispla
     flex-direction: column;
     height: 100px;
     justify-content: center;
-    padding: $kui-space-80 $kui-space-0 $kui-space-0;
+    padding: var(--kui-space-80, $kui-space-80)
+      var(--kui-space-0, $kui-space-0)
+      var(--kui-space-0, $kui-space-0);
     position: absolute;
     width: 100px;
     z-index: 2;
 
     .metric-large {
-      font-size: $kui-font-size-60;
-      font-weight: $kui-font-weight-medium;
-      line-height: $kui-line-height-50;
+      font-size: var(--kui-font-size-60, $kui-font-size-60);
+      font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+      line-height: var(--kui-line-height-50, $kui-line-height-50);
     }
     .metric-small {
-      color: $kui-color-text-neutral;
-      font-size: $kui-font-size-10;
-      font-weight: $kui-font-weight-regular;
-      line-height: $kui-line-height-10;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      font-size: var(--kui-font-size-10, $kui-font-size-10);
+      font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+      line-height: var(--kui-line-height-10, $kui-line-height-10);
     }
   }
 }

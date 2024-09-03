@@ -579,15 +579,15 @@ const handleChartClick = () => {
   }
 
   &::-webkit-scrollbar-track {
-    background-color: $kui-color-background;
-    border-radius: 10px;
+    background-color: var(--kui-color-background, $kui-color-background);
+    border-radius: var(--kui-border-radius-50, $kui-border-radius-50);
   }
   &::-webkit-scrollbar {
     width: 10px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: $kui-color-background-disabled;
-    border-radius: 10px;
+    background-color: var(--kui-color-background-disabled, $kui-color-background-disabled);
+    border-radius: var(--kui-border-radius-50, $kui-border-radius-50);
   }
 }
 
@@ -601,8 +601,8 @@ const handleChartClick = () => {
 
 .axis-tooltip {
   background-color: $kui-color-background-neutral-stronger;
-  color: $kui-color-text-inverse;
-  padding: $kui-space-20 $kui-space-40;
+  color: var(--kui-color-text-inverse, $kui-color-text-inverse);
+  padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
   position: absolute;
   width: max-content;
   z-index: 100;
