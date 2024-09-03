@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.7.19...@kong-ui-public/analytics-config-store@0.8.0) (2024-08-29)
+
+
+### Features
+
+* **analytics-sku:** remove feature flag mentions [MA-3136] ([#1566](https://github.com/Kong/public-ui-components/issues/1566)) ([4370394](https://github.com/Kong/public-ui-components/commit/4370394648358719266560cbd08f8124e385d611))
+
+
+
+
+
 ## [0.7.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.7.18...@kong-ui-public/analytics-config-store@0.7.19) (2024-08-27)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-config-store

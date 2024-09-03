@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.24.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.23.52...@kong-ui-public/dashboard-renderer@0.24.0) (2024-08-29)
+
+
+### Features
+
+* **analytics-sku:** remove feature flag mentions [MA-3136] ([#1566](https://github.com/Kong/public-ui-components/issues/1566)) ([4370394](https://github.com/Kong/public-ui-components/commit/4370394648358719266560cbd08f8124e385d611))
+
+
+
+
+
+## [0.23.52](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.23.51...@kong-ui-public/dashboard-renderer@0.23.52) (2024-08-27)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
 ## [0.23.51](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.23.50...@kong-ui-public/dashboard-renderer@0.23.51) (2024-08-27)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
