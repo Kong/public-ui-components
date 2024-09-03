@@ -22,6 +22,12 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/expressions',
         'lodash.isequal',
       ],
+      output: {
+        // Provide global variables to use in the UMD build for externalized deps
+        globals: {
+          '@kong-ui-public/expressions': 'kong-ui-public-expressions',
+        },
+      },
     },
   },
   ...(process.env.USE_SANDBOX
