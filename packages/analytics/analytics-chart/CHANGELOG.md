@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.3.0...@kong-ui-public/analytics-chart@4.4.0) (2024-09-04)
+
+
+### Features
+
+* **entities-*:** externalize deps ([#1579](https://github.com/Kong/public-ui-components/issues/1579)) ([49a30f0](https://github.com/Kong/public-ui-components/commit/49a30f0026f18ccd2bdac80b59b281b01837b87b)), closes [#1589](https://github.com/Kong/public-ui-components/issues/1589)
+
+
+
+
+
 # [4.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.2.31...@kong-ui-public/analytics-chart@4.3.0) (2024-09-03)
 
 

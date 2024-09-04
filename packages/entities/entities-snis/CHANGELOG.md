@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.4.9...@kong-ui-public/entities-snis@3.5.0) (2024-09-04)
+
+
+### Features
+
+* **entities-*:** externalize deps ([#1579](https://github.com/Kong/public-ui-components/issues/1579)) ([49a30f0](https://github.com/Kong/public-ui-components/commit/49a30f0026f18ccd2bdac80b59b281b01837b87b)), closes [#1589](https://github.com/Kong/public-ui-components/issues/1589)
+
+
+
+
+
 ## [3.4.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.4.8...@kong-ui-public/entities-snis@3.4.9) (2024-08-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-snis
