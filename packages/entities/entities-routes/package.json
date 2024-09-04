@@ -21,15 +21,19 @@
     "access": "public"
   },
   "peerDependencies": {
+    "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
+    "@kong/icons": "^1.15.1",
     "@kong/kongponents": "^9.4.1",
     "axios": "^1.6.8",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.3.3"
   },
   "devDependencies": {
+    "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.17.2",
+    "@kong/icons": "^1.15.1",
     "@kong/kongponents": "9.4.1",
     "@types/lodash.isequal": "^4.5.8",
     "axios": "^1.6.8",
@@ -70,9 +74,7 @@
     "errorLimit": "800KB"
   },
   "dependencies": {
-    "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/expressions": "workspace:^",
-    "@kong/icons": "^1.15.1",
     "lodash.isequal": "^4.5.0"
   }
 }

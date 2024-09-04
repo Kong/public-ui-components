@@ -22,6 +22,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
+    "@kong/icons": "^1.15.1",
     "@kong/kongponents": "^9.4.1",
     "axios": "^1.6.8",
     "vue": ">= 3.3.13 < 4",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.17.2",
+    "@kong/icons": "^1.15.1",
     "@kong/kongponents": "9.4.1",
     "axios": "^1.6.8",
     "vue": "^3.4.31",
@@ -69,7 +71,6 @@
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
-    "@kong/icons": "^1.15.1",
     "compare-versions": "^6.1.0"
   }
 }

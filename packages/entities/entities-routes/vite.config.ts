@@ -19,13 +19,15 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     },
     rollupOptions: {
       external: [
-        '@kong-ui-public/entities-shared',
-        '@kong-ui-public/entities-shared/dist/style.css',
         '@kong-ui-public/expressions',
-        '@kong-ui-public/expressions/dist/style.css',
-        '@kong/icons',
         'lodash.isequal',
       ],
+      output: {
+        // Provide global variables to use in the UMD build for externalized deps
+        globals: {
+          '@kong-ui-public/expressions': 'kong-ui-public-expressions',
+        },
+      },
     },
   },
   ...(process.env.USE_SANDBOX
