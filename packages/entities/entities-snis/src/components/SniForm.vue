@@ -37,7 +37,10 @@
           data-testid="sni-form-tags"
           :help="t('form.fields.tags.help')"
           :label="t('form.fields.tags.label')"
-          :label-attributes="{ info: t('form.fields.tags.tooltip') }"
+          :label-attributes="{
+            info: t('form.fields.tags.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :placeholder="t('form.fields.tags.placeholder')"
           :readonly="form.isReadonly"
           type="text"

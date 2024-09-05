@@ -37,7 +37,10 @@
           data-testid="key-set-form-tags"
           :help="t('keySets.form.fields.tags.help')"
           :label="t('keySets.form.fields.tags.label')"
-          :label-attributes="{ info: t('keySets.form.fields.tags.tooltip') }"
+          :label-attributes="{
+            info: t('keySets.form.fields.tags.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :placeholder="t('keySets.form.fields.tags.placeholder')"
           :readonly="form.isReadonly"
           type="text"

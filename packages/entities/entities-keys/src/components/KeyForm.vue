@@ -26,7 +26,10 @@
           data-testid="key-form-id"
           :help="t('keys.form.fields.id.help')"
           :label="t('keys.form.fields.id.label')"
-          :label-attributes="{ info: t('keys.form.fields.id.tooltip') }"
+          :label-attributes="{
+            info: t('keys.form.fields.id.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :placeholder="t('keys.form.fields.id.placeholder')"
           :readonly="form.isReadonly"
           required
@@ -96,7 +99,10 @@
           data-testid="key-form-tags"
           :help="t('keys.form.fields.tags.help')"
           :label="t('keys.form.fields.tags.label')"
-          :label-attributes="{ info: t('keys.form.fields.tags.tooltip') }"
+          :label-attributes="{
+            info: t('keys.form.fields.tags.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :placeholder="t('keys.form.fields.tags.placeholder')"
           :readonly="form.isReadonly"
           type="text"
@@ -126,7 +132,10 @@
           class="key-form-textarea"
           data-testid="key-form-jwk"
           :label="t('keys.form.fields.jwk.label')"
-          :label-attributes="{ info: t('keys.form.fields.jwk.tooltip') }"
+          :label-attributes="{
+            info: t('keys.form.fields.jwk.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :placeholder="t('keys.form.fields.jwk.placeholder')"
           :readonly="form.isReadonly"
           required

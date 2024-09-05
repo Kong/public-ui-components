@@ -26,7 +26,10 @@
           class="certificate-form-textarea"
           data-testid="ca-certificate-form-cert"
           :label="t('ca-certificates.form.fields.cert.label')"
-          :label-attributes="{ info: t('ca-certificates.form.fields.cert.tooltip') }"
+          :label-attributes="{
+            info: t('ca-certificates.form.fields.cert.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :readonly="form.isReadonly"
           required
         />
@@ -51,7 +54,10 @@
           data-testid="ca-certificate-form-tags"
           :help="t('ca-certificates.form.fields.tags.help')"
           :label="t('ca-certificates.form.fields.tags.label')"
-          :label-attributes="{ info: t('ca-certificates.form.fields.tags.tooltip') }"
+          :label-attributes="{
+            info: t('ca-certificates.form.fields.tags.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :placeholder="t('ca-certificates.form.fields.tags.placeholder')"
           :readonly="form.isReadonly"
           type="text"

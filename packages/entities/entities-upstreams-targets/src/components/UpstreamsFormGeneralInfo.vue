@@ -19,7 +19,7 @@
         :filter-function="() => true"
         :items="displayedHosts"
         :label="t('upstreams.form.fields.name.label')"
-        :label-attributes="{ tooltipAttributes: { 'max-width': '250px' } }"
+        :label-attributes="{ tooltipAttributes: { 'max-width': '400' } }"
         :loading="hostLoading"
         :model-value="localNameId"
         :placeholder="t('upstreams.form.fields.name.placeholder')"
@@ -60,7 +60,10 @@
         :filter-function="() => true"
         :items="displayedCertificates"
         :label="t('upstreams.form.fields.client_certificate.label')"
-        :label-attributes="{ info: t('upstreams.form.fields.client_certificate.tooltip'), tooltipAttributes: { maxWidth: '250px' } }"
+        :label-attributes="{
+          info: t('upstreams.form.fields.client_certificate.tooltip'),
+          tooltipAttributes: { maxWidth: '400' },
+        }"
         :loading="certificateLoading"
         :model-value="clientCertificate"
         :placeholder="t('upstreams.form.fields.client_certificate.placeholder')"
@@ -74,7 +77,10 @@
         data-testid="upstreams-form-tags"
         :help="t('upstreams.form.fields.tags.help')"
         :label="t('upstreams.form.fields.tags.label')"
-        :label-attributes="{ info: t('upstreams.form.fields.tags.tooltip'), tooltipAttributes: { maxWidth: '250px' } }"
+        :label-attributes="{
+          info: t('upstreams.form.fields.tags.tooltip'),
+          tooltipAttributes: { maxWidth: '400' },
+        }"
         :model-value="tags"
         :placeholder="t('upstreams.form.fields.tags.placeholder')"
         :readonly="readonly"

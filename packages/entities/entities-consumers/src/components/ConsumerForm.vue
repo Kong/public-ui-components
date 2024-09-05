@@ -42,9 +42,7 @@
                 class="username-field"
                 data-testid="consumer-form-username"
                 :label="t('consumers.fields.username.label')"
-                :label-attributes="{
-                  tooltipAttributes: { maxWidth: '250' }
-                }"
+                :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
                 :placeholder="t('consumers.fields.username.placeholder')"
                 :readonly="state.readonly"
                 type="text"
@@ -66,8 +64,7 @@
                 autocomplete="off"
                 data-testid="consumer-form-custom-id"
                 :label="t('consumers.fields.custom_id.label')"
-                :label-attributes="{
-                  tooltipAttributes: { maxWidth: '250' } }"
+                :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
                 :placeholder="t('consumers.fields.custom_id.placeholder')"
                 :readonly="state.readonly"
                 type="text"
@@ -94,7 +91,8 @@
             :label="t('consumers.fields.tags.label')"
             :label-attributes="{
               info: t('consumers.fields.tags.tooltip'),
-              tooltipAttributes: { maxWidth: '250' } }"
+              tooltipAttributes: { maxWidth: '400' },
+            }"
             :placeholder="t('consumers.fields.tags.placeholder')"
             :readonly="state.readonly"
             type="text"
