@@ -38,7 +38,7 @@
           :label="t('consumer_groups.form.fields.tags.label')"
           :label-attributes="{
             info: t('consumer_groups.form.fields.tags.tooltip'),
-            tooltipAttributes: { maxWidth: '300' } }"
+            tooltipAttributes: { maxWidth: '400' } }"
           :placeholder="t('consumer_groups.form.fields.tags.placeholder')"
           type="text"
         />

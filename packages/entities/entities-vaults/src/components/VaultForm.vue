@@ -69,7 +69,10 @@
               data-testid="vault-form-config-kong-prefix"
               :is-readonly="form.isReadonly"
               :label="t('form.config.env.fields.prefix.label')"
-              :label-attributes="{ info: t('form.config.env.fields.prefix.tooltip') }"
+              :label-attributes="{
+                info: t('form.config.env.fields.prefix.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
               :placeholder="t('form.config.env.fields.prefix.placeholder')"
               required
               type="text"
@@ -101,7 +104,7 @@
               :label="t('form.config.aws.fields.endpoint_url.label')"
               :label-attributes="{
                 info: t('form.config.aws.fields.endpoint_url.tooltip'),
-                tooltipAttributes: { maxWidth: '400px' },
+                tooltipAttributes: { maxWidth: '400' },
               }"
               type="text"
             />
@@ -113,7 +116,7 @@
               :label="t('form.config.aws.fields.assume_role_arn.label')"
               :label-attributes="{
                 info: t('form.config.aws.fields.assume_role_arn.tooltip'),
-                tooltipAttributes: { maxWidth: '400px' },
+                tooltipAttributes: { maxWidth: '400' },
               }"
               type="text"
             />
@@ -125,7 +128,7 @@
               :label="t('form.config.aws.fields.role_session_name.label')"
               :label-attributes="{
                 info: t('form.config.aws.fields.role_session_name.tooltip'),
-                tooltipAttributes: { maxWidth: '400px' },
+                tooltipAttributes: { maxWidth: '400' },
               }"
               required
               type="text"
@@ -139,7 +142,7 @@
               :label="t('form.config.aws.fields.sts_endpoint_url.label')"
               :label-attributes="{
                 info: t('form.config.aws.fields.sts_endpoint_url.tooltip'),
-                tooltipAttributes: { maxWidth: '400px' },
+                tooltipAttributes: { maxWidth: '400' },
               }"
               type="text"
             />
@@ -412,7 +415,10 @@
                     v-model="configFields[vaultProvider as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS].ttl"
                     data-testid="vault-ttl-input"
                     :label="t('form.config.advancedFields.ttl')"
-                    :label-attributes="{ info: t('form.config.advancedFields.ttlTooltip') }"
+                    :label-attributes="{
+                      info: t('form.config.advancedFields.ttlTooltip'),
+                      tooltipAttributes: { maxWidth: '400' },
+                    }"
                     type="number"
                   />
                 </div>
@@ -422,7 +428,10 @@
                     v-model="configFields[vaultProvider as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS].neg_ttl"
                     data-testid="vault-neg-ttl-input"
                     :label="t('form.config.advancedFields.negTtl')"
-                    :label-attributes="{ info: t('form.config.advancedFields.negTtlTooltip') }"
+                    :label-attributes="{
+                      info: t('form.config.advancedFields.negTtlTooltip'),
+                      tooltipAttributes: { maxWidth: '400' },
+                    }"
                     type="number"
                   />
                 </div>
@@ -434,7 +443,10 @@
                     v-model="configFields[vaultProvider as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS].resurrect_ttl"
                     data-testid="vault-resurrect-ttl-input"
                     :label="t('form.config.advancedFields.resurrectTtl')"
-                    :label-attributes="{ info: t('form.config.advancedFields.resurrectTtlTooltip') }"
+                    :label-attributes="{
+                      info: t('form.config.advancedFields.resurrectTtlTooltip'),
+                      tooltipAttributes: { maxWidth: '400' },
+                    }"
                     type="number"
                   />
                 </div>
@@ -455,7 +467,10 @@
           :help="t('form.fields.prefix.help')"
           :is-readonly="form.isReadonly"
           :label="t('form.fields.prefix.label')"
-          :label-attributes="{ info: t('form.fields.prefix.tooltip') }"
+          :label-attributes="{
+            info: t('form.fields.prefix.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :placeholder="t('form.fields.prefix.placeholder')"
           required
           type="text"

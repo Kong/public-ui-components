@@ -90,7 +90,10 @@
           data-testid="route-form-protocols"
           :items="protocols"
           :label="t('form.fields.protocols.label')"
-          :label-attributes="{ info: t('form.fields.protocols.tooltip') }"
+          :label-attributes="{
+            info: t('form.fields.protocols.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :readonly="state.isReadonly"
           required
           width="100%"
@@ -280,7 +283,10 @@
                     data-testid="route-form-path-handling"
                     :items="pathHandlingOptions"
                     :label="t('form.fields.path_handling.label')"
-                    :label-attributes="{ info: t('form.fields.path_handling.tooltip') }"
+                    :label-attributes="{
+                      info: t('form.fields.path_handling.tooltip'),
+                      tooltipAttributes: { maxWidth: '400' },
+                    }"
                     :readonly="state.isReadonly"
                     width="100%"
                   />
@@ -395,7 +401,10 @@
                     autocomplete="off"
                     data-testid="route-form-priority"
                     :label="t('form.fields.priority.label')"
-                    :label-attributes="{ info: t('form.fields.priority.tooltip') }"
+                    :label-attributes="{
+                      info: t('form.fields.priority.tooltip'),
+                      tooltipAttributes: { maxWidth: '400' },
+                    }"
                     :readonly="state.isReadonly"
                     type="number"
                   />

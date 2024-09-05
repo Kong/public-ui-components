@@ -36,7 +36,10 @@
               class="target-form-input"
               data-testid="target-form-target"
               :label="t('targets.form.fields.target.label')"
-              :label-attributes="{ info: t('targets.form.fields.target.tooltip') }"
+              :label-attributes="{
+                info: t('targets.form.fields.target.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
               :placeholder="t('targets.form.fields.target.placeholder')"
               :readonly="form.isReadonly"
               required
@@ -50,7 +53,10 @@
               :error="isWeightOutOfRange"
               :error-message="t('targets.errors.weight')"
               :label="t('targets.form.fields.weight.label')"
-              :label-attributes="{ info: t('targets.form.fields.weight.tooltip') }"
+              :label-attributes="{
+                info: t('targets.form.fields.weight.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
               max="65535"
               min="0"
               :readonly="form.isReadonly"

@@ -136,7 +136,7 @@
         :disabled="disableFallbackSelect"
         :items="(hashItems as SelectItem[])"
         :label="t('upstreams.form.fields.hash_fallback.label')"
-        :label-attributes="{ tooltipAttributes: { 'max-width': '250px' } }"
+        :label-attributes="{ tooltipAttributes: { 'max-width': '400' } }"
         :model-value="hashFallback"
         :readonly="readonly"
         width="100%"
