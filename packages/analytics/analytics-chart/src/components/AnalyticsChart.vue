@@ -241,8 +241,20 @@ const metricAxesTitle = computed<string | undefined>(() => {
     return undefined
   }
 
+
   const metricName = props.chartData.meta.metric_names[0]
   const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations]
+
+  if (props.chartData.meta.metric_names.length > 1) {
+    if (metricName.includes('latency')) {
+      // @ts-ignore - dynamic i18n key
+      return i18n.t('metricAxisTitles.latency_in', { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
+    }
+    if (metricName.includes('size')) {
+      // @ts-ignore - dynamic i18n key
+      return i18n.t('metricAxisTitles.size_in', { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
+    }
+  }
   // @ts-ignore - dynamic i18n key
   return props.chartOptions?.metricAxesTitle || (i18n.te(`metricAxisTitles.${metricName}`) && i18n.te(`chartUnits.${metricUnit}`) &&
     // @ts-ignore - dynamic i18n key

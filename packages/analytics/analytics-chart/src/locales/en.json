@@ -129,6 +129,8 @@
   "metricAxisTitles": {
     "request_count": "Request Count",
     "requests_per_minute": "Requests per Minute",
+    "latency_in": "Latency in {unit}",
+    "size_in": "Request Size in {unit}",
     "response_latency_p99": "Response Latency (p99) in {unit}",
     "response_latency_p95": "Response Latency (p95) in {unit}",
     "response_latency_p50": "Response Latency (p50) in {unit}",
