@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.4.0...@kong-ui-public/analytics-chart@4.4.1) (2024-09-05)
+
+
+### Bug Fixes
+
+* rename ai metrics ([#1593](https://github.com/Kong/public-ui-components/issues/1593)) ([1590939](https://github.com/Kong/public-ui-components/commit/159093998c537eaf2e5d5d9555e9774f090bbc39))
+
+
+
+
+
 # [4.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.3.0...@kong-ui-public/analytics-chart@4.4.0) (2024-09-04)
 
 
