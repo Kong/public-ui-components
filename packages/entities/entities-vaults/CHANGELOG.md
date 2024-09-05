@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.11.0...@kong-ui-public/entities-vaults@3.11.1) (2024-09-05)
+
+
+### Bug Fixes
+
+* **entities:** max width of tooltips in entity forms ([#1591](https://github.com/Kong/public-ui-components/issues/1591)) ([c34791c](https://github.com/Kong/public-ui-components/commit/c34791c627d3e62d2d69816ba7e62b7bda979a6e))
+
+
+
+
+
 # [3.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.10.8...@kong-ui-public/entities-vaults@3.11.0) (2024-09-04)
 
 
