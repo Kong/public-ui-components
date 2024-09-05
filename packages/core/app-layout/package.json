@@ -41,7 +41,7 @@
   "peerDependencies": {
     "@kong/kongponents": "^9.4.1",
     "vue": ">= 3.3.13 < 4",
-    "vue-router": "^4.3.3"
+    "vue-router": "^4.4.3"
   },
   "dependencies": {
     "@kong/icons": "^1.15.1",

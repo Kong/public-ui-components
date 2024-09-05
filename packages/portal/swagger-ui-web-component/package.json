@@ -16,8 +16,8 @@
     "@kong/swagger-ui-kong-theme-universal": "^4.3.3",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "swagger-client": "^3.26.8",
-    "swagger-ui": "^5.7.2"
+    "swagger-client": "^3.29.2",
+    "swagger-ui": "^5.17.14"
   },
   "repository": {
     "type": "git",
@@ -37,11 +37,11 @@
     "errorLimit": "3.5MB"
   },
   "devDependencies": {
-    "css-loader": "^6.10.0",
+    "css-loader": "^6.11.0",
     "raw-loader": "^4.0.2",
     "style-loader": "^3.3.4",
     "terser-webpack-plugin": "^5.3.10",
-    "webpack": "^5.90.3",
+    "webpack": "^5.94.0",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.2"
