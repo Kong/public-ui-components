@@ -121,10 +121,13 @@
     "CONTROL_PLANE": "Control Plane",
     "____OTHER____": "Others",
     "ai_request_count": "Request Count",
-    "total_tokens": "Token Count",
+    "total_tokens": "Total Token Count",
     "prompt_tokens": "Prompt Token Count",
     "completion_tokens": "Completion Token Count",
-    "cost": "LLM Costs"
+    "cost": "Costs",
+    "llm_cache_embeddings_latency_average": "Embeddings Latency (avg)",
+    "llm_cache_fetch_latency_average": "Fetch Latency (avg)",
+    "llm_latency_average": "LLM Latency (avg)"
   },
   "metricAxisTitles": {
     "request_count": "Request Count",
@@ -174,7 +177,15 @@
     "ResponseSizeP50": "Response Size (p50) in {unit}",
     "RequestSizeP99": "Request Size (p99) in {unit}",
     "RequestSizeP95": "Request Size (p95) in {unit}",
-    "RequestSizeP50": "Request Size (p50) in {unit}"
+    "RequestSizeP50": "Request Size (p50) in {unit}",
+    "ai_request_count": "Request Count",
+    "total_tokens": "Total Token Count",
+    "prompt_tokens": "Prompt Token Count",
+    "completion_tokens": "Completion Token Count",
+    "cost": "Costs",
+    "llm_cache_embeddings_latency_average": "Embeddings Latency (avg)",
+    "llm_cache_fetch_latency_average": "Fetch Latency (avg)",
+    "llm_latency_average": "LLM Latency (avg)"
   },
   "granularityAxisTitles": {
     "minutely": "@timestamp per minute",
