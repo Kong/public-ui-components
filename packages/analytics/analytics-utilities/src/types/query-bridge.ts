@@ -1,4 +1,4 @@
-import type { BasicExploreQuery, ExploreQuery, ExploreResultV4 } from './explore-v4'
+import type { BasicExploreQuery, ExploreQuery, AiExploreQuery, ExploreResultV4 } from './explore'
 import type { AnalyticsConfigV2 } from './analytics-config'
 
 export interface BasicDatasourceQuery {
@@ -11,7 +11,12 @@ export interface AdvancedDatasourceQuery {
   query: ExploreQuery
 }
 
-export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery
+export interface AiDatasourceQuery {
+  datasource: 'ai'
+  query: AiExploreQuery
+}
+
+export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery
 
 export interface AnalyticsBridge {
   // Issue queries to the KAnalytics API

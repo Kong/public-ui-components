@@ -7,14 +7,16 @@ import isFunction from 'lodash-es/isFunction'
 import isString from 'lodash-es/isString'
 import arrayUniq from 'lodash-es/uniq'
 import uniqueId from 'lodash-es/uniqueId'
-import validators from '../generator/utils/validators'
-import { slugifyFormID } from '../generator/utils/schema'
+import validators from '../utils/validators'
+import { slugifyFormID } from '../utils/schema'
 
 interface AbstractFieldParams {
   model?: Ref<Record<string, any> | undefined>,
   schema: Record<string, any>,
   formOptions?: Record<string, any>,
   disabled?: boolean,
+  formatValueToField?: (value: any) => any,
+  formatValueToModel?: (value: any) => any,
   emitModelUpdated?: (data: {
     value: any
     model: Record<string, any>
@@ -274,17 +276,20 @@ export default function useAbstractFields(formData: AbstractFieldParams) {
   }
 
   /**
-   * Placeholder functions to be overridden for specific field types.
+   * Wrapper functions for custom field/model value conversion.
    * We use them in the computed value for the field value, which CAN be exported.
-   * TODO: check that this actually works as expected (ie. fieldSelect, fieldSwitch, etc.)
    * DO NOT EXPORT THESE FUNCTIONS
    */
-  const formatValueToField = (value: any) => {
-    return value
+  const formatValueToField = (value: any): any => {
+    return formData.formatValueToField && typeof formData.formatValueToField === 'function' ?
+      formData.formatValueToField(value) :
+      value
   }
 
-  const formatValueToModel = (value: any) => {
-    return value
+  const formatValueToModel = (value: any): any => {
+    return formData.formatValueToModel && typeof formData.formatValueToModel === 'function' ?
+      formData.formatValueToModel(value) :
+      value
   }
 
   return {

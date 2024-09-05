@@ -4,6 +4,8 @@
       :can-submit="isFormValid && changesExist"
       :config="config"
       :edit-id="consumerGroupId"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.ConsumerGroup"
       :error-message="state.errorMessage || fetchError || preValidateErrorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
@@ -36,7 +38,7 @@
           :label="t('consumer_groups.form.fields.tags.label')"
           :label-attributes="{
             info: t('consumer_groups.form.fields.tags.tooltip'),
-            tooltipAttributes: { maxWidth: '300' } }"
+            tooltipAttributes: { maxWidth: '400' } }"
           :placeholder="t('consumer_groups.form.fields.tags.placeholder')"
           type="text"
         />
@@ -82,8 +84,11 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   EntityFormSection,
+  SupportedEntityType,
   useAxios,
-  useDebouncedFilter, useErrors, useValidators,
+  useDebouncedFilter,
+  useErrors,
+  useValidators,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import composables from '../composables'
@@ -121,6 +126,14 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
   },
 })
 

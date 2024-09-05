@@ -129,6 +129,14 @@ A record to indicate the form fields present in a form. Used to populate the Con
 
 Wrapper component to use at component's root level.
 
+#### `enableTerraform`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
+
 ### Events
 
 #### loading

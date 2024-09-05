@@ -273,7 +273,8 @@ const fetcherCacheKey = ref<number>(1)
  */
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
-  subject: { label: t('certificates.list.table_headers.subject') },
+  // the Subject column is non-hidable
+  subject: { label: t('certificates.list.table_headers.subject'), hidable: false },
   expiry: { label: t('certificates.list.table_headers.expiry') },
   san: { label: t('certificates.list.table_headers.san') },
   cert: { label: t('certificates.list.table_headers.cert') },
@@ -475,7 +476,7 @@ const confirmDelete = async (): Promise<void> => {
   }
 }
 
-const hasData = ref(true)
+const hasData = ref(false)
 
 /**
  * Watchers

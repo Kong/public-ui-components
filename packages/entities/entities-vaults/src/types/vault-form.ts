@@ -19,6 +19,14 @@ export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>
    * TODO: remove when support for approle option is added
    */
   hcvAppRoleMethodAvailable?: boolean
+  /**
+   * Show/hide Konnect Config Store option
+   */
+  konnectConfigStoreAvailable?: boolean
+  /**
+ * Show/hide AWS StsEndpointUrl field
+ */
+  awsStsEndpointUrlAvailable?: boolean
 }
 
 /** Konnect Vault form config */
@@ -31,8 +39,9 @@ export enum VaultProviders {
   AWS = 'aws',
   GCP = 'gcp',
   HCV = 'hcv',
-  KONG = 'env',
+  ENV = 'env',
   AZURE = 'azure',
+  KONNECT = 'konnect',
 }
 
 export enum VaultAuthMethods {
@@ -40,6 +49,8 @@ export enum VaultAuthMethods {
   K8S = 'kubernetes',
   APP_ROLE = 'approle',
 }
+
+export interface ConfigStoreConfig {}
 
 export interface KongVaultConfig {
   prefix: string
@@ -53,6 +64,7 @@ export interface AWSVaultConfig {
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
+  sts_endpoint_url?: string
 }
 
 export interface GCPVaultConfig {
@@ -122,7 +134,7 @@ export interface VaultPayload {
   prefix: string
   description: string | null
   tags: string[],
-  config: KongVaultConfig | GCPVaultConfig | HCVVaultConfigPayload | AzureVaultConfigPayload | AWSVaultConfigPayload
+  config: ConfigStoreConfig | KongVaultConfig | GCPVaultConfig | HCVVaultConfigPayload | AzureVaultConfigPayload | AWSVaultConfigPayload
 }
 
 export interface VaultStateFields {

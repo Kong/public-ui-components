@@ -270,7 +270,8 @@ const fetchCacheKey = ref<number>(1)
  */
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
-  name: { label: t('gateway_services.list.table_headers.name'), searchable: true, sortable: true },
+  // the Name column is non-hidable
+  name: { label: t('gateway_services.list.table_headers.name'), searchable: true, sortable: true, hidable: false },
   ...(props.config.showControlPlaneColumn ? { control_plane: { label: t('gateway_services.list.table_headers.control_plane') } } : {}),
   protocol: { label: t('gateway_services.list.table_headers.protocol'), searchable: true, sortable: true },
   host: { label: t('gateway_services.list.table_headers.host'), searchable: true, sortable: true },
@@ -510,6 +511,7 @@ const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 const confirmDelete = (row: EntityRow): void => {
   gatewayServiceToBeDeleted.value = row
   isDeleteModalVisible.value = true
+  deleteModalError.value = ''
 }
 
 const hideDeleteModal = (): void => {
@@ -544,7 +546,7 @@ const deleteRow = async (): Promise<void> => {
   }
 }
 
-const hasData = ref(true)
+const hasData = ref(false)
 
 /**
  * Watchers

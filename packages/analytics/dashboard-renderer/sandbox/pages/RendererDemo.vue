@@ -70,7 +70,7 @@ const dashboardConfig: DashboardConfig = {
           rows: 1,
         },
       },
-    } as TileConfig,
+    } satisfies TileConfig,
     {
       definition: {
         chart: {
@@ -94,7 +94,7 @@ const dashboardConfig: DashboardConfig = {
           fitToContent: true,
         },
       },
-    } as TileConfig,
+    } satisfies TileConfig,
     {
       definition: {
         chart: {
@@ -118,7 +118,7 @@ const dashboardConfig: DashboardConfig = {
           fitToContent: true,
         },
       },
-    } as TileConfig,
+    } satisfies TileConfig,
     {
       definition: {
         chart: {
@@ -141,7 +141,7 @@ const dashboardConfig: DashboardConfig = {
           rows: 2,
         },
       },
-    } as TileConfig,
+    } satisfies TileConfig,
     {
       definition: {
         chart: {
@@ -163,7 +163,7 @@ const dashboardConfig: DashboardConfig = {
           rows: 2,
         },
       },
-    } as TileConfig,
+    } satisfies TileConfig,
     {
       definition: {
         chart: {
@@ -186,14 +186,16 @@ const dashboardConfig: DashboardConfig = {
           rows: 1,
         },
       },
-    } as TileConfig,
+    } satisfies TileConfig,
     {
       definition: {
         chart: {
           type: ChartTypes.Slottable,
           id: 'slot-1',
         },
-        query: {},
+        query: {
+          datasource: 'basic',
+        },
       },
       layout: {
         position: {
@@ -205,14 +207,16 @@ const dashboardConfig: DashboardConfig = {
           rows: 1,
         },
       },
-    } as TileConfig,
+    } satisfies TileConfig,
     {
       definition: {
         chart: {
           type: ChartTypes.Slottable,
           id: 'slot-2',
         },
-        query: {},
+        query: {
+          datasource: 'basic',
+        },
       },
       layout: {
         position: {
@@ -224,7 +228,7 @@ const dashboardConfig: DashboardConfig = {
           rows: 1,
         },
       },
-    } as TileConfig,
+    } satisfies TileConfig,
   ],
 }
 

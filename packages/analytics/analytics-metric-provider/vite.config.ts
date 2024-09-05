@@ -19,7 +19,6 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     rollupOptions: {
       // Make sure to externalize deps that shouldn't be bundled into your library
       external: [
-        '@kong-ui-public/i18n',
         '@kong-ui-public/analytics-config-store',
         '@kong-ui-public/analytics-utilities',
         '@kong-ui-public/metric-cards',
@@ -28,9 +27,9 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       output: {
         // Provide global variables to use in the UMD build for externalized deps
         globals: {
-          '@kong-ui-public/i18n': 'kong-ui-public-i18n',
           '@kong-ui-public/analytics-config-store': 'kong-ui-public-analytics-config-store',
           '@kong-ui-public/analytics-utilities': 'kong-ui-public-analytics-utilities',
+          '@kong-ui-public/metric-cards': 'kong-ui-public-metric-cards',
           pinia: 'pinia',
         },
       },

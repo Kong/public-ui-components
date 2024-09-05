@@ -1,4 +1,4 @@
-import { ref, unref } from 'vue'
+import { computed, ref, unref } from 'vue'
 import { useDebounce } from '@kong-ui-public/core'
 import type {
   KongManagerBaseTableConfig,
@@ -41,14 +41,17 @@ export default function useDebouncedFilter(
   const resultsCache = ref<Record<string, any>[]>([])
   const allRecords = ref<Record<string, any>[] | undefined>(undefined)
 
-  const _baseUrl = unref(baseUrl)
-  let url = `${config.apiBaseUrl}${_baseUrl}`
+  const url = computed(() => {
+    const url = `${config.apiBaseUrl}${unref(baseUrl)}`
 
-  if (config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, config?.controlPlaneId || '')
-  } else if (config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, config?.workspace ? `/${config.workspace}` : '')
-  }
+    if (config.app === 'konnect') {
+      return url.replace(/{controlPlaneId}/gi, config?.controlPlaneId || '')
+    } else if (config.app === 'kongManager') {
+      return url.replace(/\/{workspace}/gi, config?.workspace ? `/${config.workspace}` : '')
+    }
+
+    return url
+  })
 
   const { isValidUuid } = useHelpers()
 
@@ -58,7 +61,7 @@ export default function useDebouncedFilter(
       // Trigger the loading state
       loading.value = true
 
-      const { data }: Record<string, any> = await axiosInstance.get(`${url}?size=${size}`)
+      const { data }: Record<string, any> = await axiosInstance.get(`${url.value}?size=${size}`)
 
       // determine if we've got all of the available records or not
       // to determine how we handle filtering
@@ -83,11 +86,17 @@ export default function useDebouncedFilter(
     // using this to skip unnecessary fetch fired on focus
     if (previousQuery.value === query) {
       return
-    } else {
-      previousQuery.value = query || ''
     }
 
-    // if records are paginated, use the API
+    previousQuery.value = query ?? ''
+
+    // use cached results if query is empty
+    if (!query) {
+      results.value = resultsCache.value
+      return
+    }
+
+    // If records are paginated, use the API
     if (allRecords.value === undefined) {
       try {
         // Trigger the element's loading state
@@ -97,27 +106,23 @@ export default function useDebouncedFilter(
 
         if (config.app === 'konnect') { // KoKo only supports exact match
           // If user has typed info in the query field
-          let currUrl = url + '' // clone
-          if (query) {
-            currUrl += `/${query}`
-          }
-
+          const currUrl = `${url.value}/${query}`
           const { data }: Record<string, any> = await axiosInstance.get(`${currUrl}?size=${size}`)
 
           if (keys.fetchedItemsKey in data) {
             results.value = data[keys.fetchedItemsKey]
-          } else if (data?.id) { // exact match
+          } else if (data?.[keys.exactMatchKey ?? 'id']) { // exact match
             results.value = [data]
           } else {
             results.value = []
           }
-        } else if (query) { // Admin API supports filtering on specific fields
+        } else { // Admin API supports filtering on specific fields
           const promises = []
 
           if (isValidUuid(query) && keys.searchKeys.includes('id')) {
             // If query is a valid UUID, do the exact search
             promises.push((async () => {
-              const { data } = await axiosInstance.get(`${url}/${query}`)
+              const { data } = await axiosInstance.get(`${url.value}/${query}`)
               return [data[keys.fetchedItemsKey] ?? data]
             })())
           } else {
@@ -126,7 +131,7 @@ export default function useDebouncedFilter(
               ...keys.searchKeys
                 .filter(key => key !== 'id')
                 .map(async key => {
-                  const { data } = await axiosInstance.get(`${url}?${key}=${query}`)
+                  const { data } = await axiosInstance.get(`${url.value}?${key}=${query}`)
                   return data[keys.fetchedItemsKey]
                 }),
             )
@@ -143,8 +148,6 @@ export default function useDebouncedFilter(
               }
             })
           })
-        } else {
-          results.value = resultsCache.value
         }
       } catch (err: any) {
         if (err?.response?.status === 404) {
@@ -162,25 +165,21 @@ export default function useDebouncedFilter(
       loading.value = true
       validationError.value = ''
 
-      // If user has typed info in the query field
-      if (query) {
-        results.value = allRecords.value?.filter((record: Record<string, any>) => {
-          let res = false
-          for (const k of keys.searchKeys) {
-            const value = typeof record[k] === 'string' ? record[k]?.toLowerCase() : record[k]
-            if (value?.includes(query.toLowerCase())) {
-              res = true
-            }
+      // User has typed info in the query field
+      results.value = allRecords.value?.filter((record: Record<string, any>) => {
+        let res = false
+        for (const k of keys.searchKeys) {
+          const value = typeof record[k] === 'string' ? record[k]?.toLowerCase() : record[k]
+          if (value?.includes(query.toLowerCase())) {
+            res = true
           }
-
-          return res
-        })
-
-        if (!results.value || !results.value.length) {
-          validationError.value = t('debouncedFilter.errors.invalid')
         }
-      } else { // reset to all records
-        results.value = allRecords.value
+
+        return res
+      })
+
+      if (!results.value || !results.value.length) {
+        validationError.value = t('debouncedFilter.errors.invalid')
       }
 
       loading.value = false

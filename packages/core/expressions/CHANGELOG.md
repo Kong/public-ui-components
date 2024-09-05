@@ -3,6 +3,173 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.11...@kong-ui-public/expressions@0.4.12) (2024-08-27)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.4.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.10...@kong-ui-public/expressions@0.4.11) (2024-08-27)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1582](https://github.com/Kong/public-ui-components/issues/1582)) ([d4bc4a5](https://github.com/Kong/public-ui-components/commit/d4bc4a55a9acadc7db33e89ce9e3f2bc8c339fe8))
+
+
+
+
+
+## [0.4.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.9...@kong-ui-public/expressions@0.4.10) (2024-08-27)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.4.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.8...@kong-ui-public/expressions@0.4.9) (2024-08-21)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.4.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.7...@kong-ui-public/expressions@0.4.8) (2024-08-16)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.6...@kong-ui-public/expressions@0.4.7) (2024-08-15)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.5...@kong-ui-public/expressions@0.4.6) (2024-08-15)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1562](https://github.com/Kong/public-ui-components/issues/1562)) ([112f1bd](https://github.com/Kong/public-ui-components/commit/112f1bd3e3fce583649729d520cbffeb321a4572))
+
+
+
+
+
+## [0.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.4...@kong-ui-public/expressions@0.4.5) (2024-08-15)
+
+
+### Bug Fixes
+
+* **expressions:** router playground known issues [KM-391] ([#1551](https://github.com/Kong/public-ui-components/issues/1551)) ([523a3d2](https://github.com/Kong/public-ui-components/commit/523a3d2940d2a7e15dfd83bf6cd9ad8a5d24374d))
+
+
+
+
+
+## [0.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.3...@kong-ui-public/expressions@0.4.4) (2024-08-12)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.2...@kong-ui-public/expressions@0.4.3) (2024-08-09)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.1...@kong-ui-public/expressions@0.4.2) (2024-08-08)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.0...@kong-ui-public/expressions@0.4.1) (2024-08-08)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.3.14...@kong-ui-public/expressions@0.4.0) (2024-08-08)
+
+
+### Features
+
+* add router playground [KM-299] ([#1497](https://github.com/Kong/public-ui-components/issues/1497)) ([b60b9bb](https://github.com/Kong/public-ui-components/commit/b60b9bbcd256f3666a1d4d2dca7976eaadbbd71e))
+
+
+
+
+
+## [0.3.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.3.13...@kong-ui-public/expressions@0.3.14) (2024-08-02)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.3.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.3.12...@kong-ui-public/expressions@0.3.13) (2024-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.3.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.3.11...@kong-ui-public/expressions@0.3.12) (2024-07-18)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.3.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.3.10...@kong-ui-public/expressions@0.3.11) (2024-07-10)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.3.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.3.9...@kong-ui-public/expressions@0.3.10) (2024-07-09)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1478](https://github.com/Kong/public-ui-components/issues/1478)) ([47cd468](https://github.com/Kong/public-ui-components/commit/47cd4680b8ed1fb686270df19853288de19c3106))
+
+
+
+
+
+## [0.3.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.3.8...@kong-ui-public/expressions@0.3.9) (2024-07-08)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
 ## [0.3.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.3.7...@kong-ui-public/expressions@0.3.8) (2024-07-02)
 
 **Note:** Version bump only for package @kong-ui-public/expressions

@@ -74,6 +74,12 @@ A form component for Vaults.
     - *Specific to Konnect*. Show/hide Azure option.
     - **Note:** This is experimental and not supported by the backend right now
 
+  - `konnectConfigStoreAvailable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - *Specific to Konnect*. Show/hide Konnect Config Store option.
+
   - `ttl`
     - type: `boolean`
     - required: `true`
@@ -86,6 +92,12 @@ A form component for Vaults.
     - default: `undefined`
     - Show/hide approle option and corresponding fields.
 
+  - `awsStsEndpointUrlAvailable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Show/hide STS endpoint url field in AWS Vault Config.
+
 The base konnect or kongManger config.
 
 #### `vaultId`
@@ -95,6 +107,14 @@ The base konnect or kongManger config.
 - default: `''`
 
 If showing the `Edit` type form, the ID of the Vault.
+
+#### `enableTerraform`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
 
 ### Events
 

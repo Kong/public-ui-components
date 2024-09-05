@@ -224,7 +224,8 @@ const fetcherCacheKey = ref<number>(1)
  */
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
-  name: { label: t('upstreams.list.table_headers.name'), searchable: true, sortable: true },
+  // the Name column is non-hidable
+  name: { label: t('upstreams.list.table_headers.name'), searchable: true, sortable: true, hidable: false },
   slots: { label: t('upstreams.list.table_headers.slots'), searchable: true, sortable: true },
   tags: { label: t('upstreams.list.table_headers.tags'), sortable: false },
 }
@@ -411,7 +412,7 @@ const confirmDelete = async (): Promise<void> => {
   }
 }
 
-const hasData = ref(true)
+const hasData = ref(false)
 
 /**
  * Watchers

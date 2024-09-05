@@ -18,13 +18,18 @@ import {
   TimePeriods,
 } from '@kong-ui-public/analytics-utilities'
 import DashboardRenderer from './DashboardRenderer.vue'
-import { nonTsExploreResponse, timeSeriesExploreResponse, routeExploreResponse, summaryDashboardConfig } from '../../sandbox/mock-data'
+import {
+  nonTsExploreResponse,
+  timeSeriesExploreResponse,
+  routeExploreResponse,
+  summaryDashboardConfig,
+  simpleConfigNoFilters,
+} from '../../sandbox/mock-data'
 import { createPinia, setActivePinia } from 'pinia'
 
 interface MockOptions {
   failToResolveConfig?: boolean
   shortRetention?: boolean
-  skuFeatureFlag?: boolean
 }
 
 describe('<DashboardRenderer />', () => {
@@ -93,16 +98,13 @@ describe('<DashboardRenderer />', () => {
         },
       }
 
-      console.log('Resolving config')
+      console.log('> Resolving config: ', config)
+
       return Promise.resolve(config)
     }
 
     // @ts-ignore: TS doesn't infer things correctly.  NoInfer may help.
     const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = (key) => {
-      if (key === 'MA-2527-analytics-sku-config-endpoint') {
-        return opts?.skuFeatureFlag ?? true
-      }
-
       return true
     }
 
@@ -430,11 +432,18 @@ describe('<DashboardRenderer />', () => {
     })
   })
 
-  it('picks a default timeSpec', () => {
+  it('picks a lower retention timeSpec if provided', () => {
     const props = {
       context: {
         // Use default timeframe for the org: don't provide one here.
-        filters: [],
+        filters: [
+          {
+            dimension: 'api_product',
+            type: 'in',
+            values: ['lower retention'],
+          },
+        ],
+        timeSpec: ((TimePeriods.get(TimeframeKeys.ONE_DAY)) as Timeframe).v4Query(),
       },
       config: summaryDashboardConfig,
     }
@@ -443,38 +452,7 @@ describe('<DashboardRenderer />', () => {
       props,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ skuFeatureFlag: false }),
-        },
-      },
-    }).then(() => {
-      // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
-      cy.get('@fetcher').should('have.callCount', 5)
-      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-        datasource: 'advanced',
-        query: {
-          time_range: { time_range: '30d' },
-        },
-      }))
-
-      // Check that it replaces the description token.
-      cy.get('.container-description').should('have.text', 'Last 30-Day Summary')
-    })
-  })
-
-  it('picks a lower retention timeSpec', () => {
-    const props = {
-      context: {
-        // Use default timeframe for the org: don't provide one here.
-        filters: [],
-      },
-      config: summaryDashboardConfig,
-    }
-
-    cy.mount(DashboardRenderer, {
-      props,
-      global: {
-        provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ shortRetention: true, skuFeatureFlag: false }),
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ shortRetention: true }),
         },
       },
     }).then(() => {
@@ -489,11 +467,17 @@ describe('<DashboardRenderer />', () => {
     })
   })
 
-  it('picks 7 days and basic datasource if FF is enabled', () => {
+  it('picks 7 days and basic datasource by default', () => {
     const props = {
       context: {
         // Use default timeframe for the org: don't provide one here.
-        filters: [],
+        filters: [
+          {
+            dimension: 'api_product',
+            type: 'in',
+            values: ['basic'],
+          },
+        ],
       },
       config: summaryDashboardConfig,
     }
@@ -502,7 +486,7 @@ describe('<DashboardRenderer />', () => {
       props,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ skuFeatureFlag: true }),
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
       },
     }).then(() => {
@@ -533,66 +517,14 @@ describe('<DashboardRenderer />', () => {
           },
         ],
       },
-      config: {
-        gridSize: {
-          cols: 6,
-          rows: 2,
-        },
-        tileHeight: 167,
-        tiles: [
-          // 3 x Metric cards
-          {
-            definition: {
-              chart: {
-                type: ChartTypes.GoldenSignals,
-                chartTitle: 'Analytics',
-                description: '{timeframe}',
-              },
-              query: {
-                datasource: 'advanced',
-              },
-            },
-            layout: {
-              position: {
-                col: 0,
-                row: 0,
-              },
-              size: {
-                cols: 6,
-                rows: 1,
-              },
-            },
-          },
-
-          {
-            definition: {
-              chart: {
-                type: ChartTypes.TimeseriesLine,
-              },
-              query: {
-                datasource: 'advanced',
-              },
-            },
-            layout: {
-              position: {
-                col: 0,
-                row: 1,
-              },
-              size: {
-                cols: 6,
-                rows: 1,
-              },
-            },
-          },
-        ],
-      },
+      config: simpleConfigNoFilters,
     }
 
     cy.mount(DashboardRenderer, {
       props,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ skuFeatureFlag: true }),
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
       },
     }).then(() => {
@@ -603,6 +535,55 @@ describe('<DashboardRenderer />', () => {
           time_range: { time_range: '7d' },
         },
       }))
+    })
+  })
+
+  it('prunes invalid filters', () => {
+    const props = {
+      context: {
+        filters: [
+          // Valid filter
+          {
+            dimension: 'api_product',
+            type: 'in',
+            values: ['some product'],
+          },
+          // Invalid filter
+          {
+            dimension: 'ai_provider',
+            type: 'in',
+            values: ['some provider'],
+          },
+        ],
+      },
+      config: simpleConfigNoFilters,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    }).then(() => {
+      // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
+      cy.get('@fetcher').should('have.callCount', 3)
+      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+        datasource: 'advanced',
+        query: {
+          filters: [
+            {
+              dimension: 'api_product',
+              type: 'in',
+              values: ['some product'],
+            },
+          ],
+        },
+      }))
+
+      // Check that it replaces the description token.
+      cy.get('.container-description').should('have.text', 'Last 7-Day Summary')
     })
   })
 })

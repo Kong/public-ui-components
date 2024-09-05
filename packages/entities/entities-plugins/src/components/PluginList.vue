@@ -369,7 +369,8 @@ const isOrderingSupported = props.config.app === 'konnect' || useGatewayFeatureS
  */
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
-  name: { label: t('plugins.list.table_headers.name'), searchable: true, sortable: true },
+  // the Name column is non-hidable
+  name: { label: t('plugins.list.table_headers.name'), searchable: true, sortable: true, hidable: false },
 }
 // conditional display of Applied To column - hide if on an entity's details page (ie. plugins card on route details view)
 if (!props.config?.entityId) {
@@ -717,7 +718,7 @@ const confirmDelete = async (): Promise<void> => {
   }
 }
 
-const hasData = ref(true)
+const hasData = ref(false)
 
 /**
  * Watchers

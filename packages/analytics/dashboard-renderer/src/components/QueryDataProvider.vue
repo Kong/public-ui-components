@@ -34,11 +34,11 @@ import { computed, inject, onUnmounted, ref } from 'vue'
 import useSWRV from 'swrv'
 import { useSwrvState } from '@kong-ui-public/core'
 import composables from '../composables'
-import type {
-  AnalyticsBridge,
-  DatasourceAwareQuery,
-  ExploreFilter,
-  ExploreQuery,
+import {
+  type AllFilters,
+  type AnalyticsBridge,
+  type DatasourceAwareQuery, type ExploreFilter,
+  type ExploreQuery, type FilterTypeMap, type QueryDatasource, stripUnknownFilters,
 } from '@kong-ui-public/analytics-utilities'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal, ValidDashboardQuery } from '../types'
@@ -71,27 +71,33 @@ onUnmounted(() => {
   abortController.abort()
 })
 
+const deriveFilters = <D extends QueryDatasource>(datasource: D, queryFilters: FilterTypeMap[D][] | undefined, contextFilters: AllFilters[]): FilterTypeMap[D][] => {
+  const mergedFilters: FilterTypeMap[D][] = []
+
+  if (queryFilters) {
+    // The filters from the query should be safe -- as in, validated to be compatible
+    // with the chosen endpoint.
+    mergedFilters.push(...queryFilters)
+  }
+
+  // The contextual filters may not be compatible and need to be pruned.
+  mergedFilters.push(...stripUnknownFilters(datasource, contextFilters))
+
+  return mergedFilters
+}
+
 const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
   try {
-    const mergedFilters: ExploreFilter[] = []
-
-    if (props.query.filters) {
-      mergedFilters.push(...props.query.filters)
-    }
-
-    mergedFilters.push(...props.context.filters)
-
     let {
       datasource,
       ...rest
     } = props.query
 
-    if (!datasource && queryBridge) {
-      // TODO(MA-2987): Remove this.
-      const analyticsSKU = queryBridge.evaluateFeatureFlagFn('MA-2527-analytics-sku-config-endpoint', false)
-
-      datasource = analyticsSKU ? 'basic' : 'advanced'
+    if (!datasource) {
+      datasource = 'basic'
     }
+
+    const mergedFilters = deriveFilters(datasource, props.query.filters, props.context.filters)
 
     // TODO: similar to other places, consider adding a type guard to ensure the query
     // matches the datasource.  Currently, this block effectively pretends all queries
@@ -104,7 +110,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
           ...props.context.timeSpec,
           tz: props.context.tz,
         },
-        filters: mergedFilters,
+        filters: mergedFilters as ExploreFilter[],
       },
     }
 

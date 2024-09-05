@@ -3,7 +3,6 @@
 
 // Example:
 // export * from './component-types'
-export * from './analytics-data'
 export * from './datepicker-selection'
 export * from './druid-granularity'
 export * from './query-time'
@@ -12,6 +11,6 @@ export * from './timeframe-keys'
 export * from './timeframe-options'
 export * from './chart-types'
 export * from './timeframe'
-export * from './explore-v4'
+export * from './explore'
 export * from './query-bridge'
 export * from './analytics-config'

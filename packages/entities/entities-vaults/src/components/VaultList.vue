@@ -238,7 +238,8 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
  */
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
-  prefix: { label: t('vaults.list.table_headers.prefix'), searchable: true, sortable: true },
+  // the Prefix column is non-hidable
+  prefix: { label: t('vaults.list.table_headers.prefix'), searchable: true, sortable: true, hidable: false },
   // it's "Vault Type" on display, but we still use "name" to fit API schema
   name: { label: t('vaults.list.table_headers.name'), searchable: true, sortable: true },
   description: { label: t('vaults.list.table_headers.description'), sortable: false },
@@ -429,7 +430,7 @@ const confirmDelete = async (): Promise<void> => {
   }
 }
 
-const hasData = ref(true)
+const hasData = ref(false)
 
 /**
  * Watchers

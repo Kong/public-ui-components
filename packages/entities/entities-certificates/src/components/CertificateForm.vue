@@ -4,6 +4,8 @@
       :can-submit="canSubmit"
       :config="config"
       :edit-id="certificateId"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.Certificate"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="requestBody"
@@ -24,6 +26,7 @@
           class="certificate-form-textarea"
           data-testid="certificate-form-cert"
           :label="t('certificates.form.fields.cert.label')"
+          :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
           :readonly="form.isReadonly"
           required
         >
@@ -45,6 +48,7 @@
           class="certificate-form-textarea"
           data-testid="certificate-form-key"
           :label="t('certificates.form.fields.key.label')"
+          :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
           :readonly="form.isReadonly"
           required
         >
@@ -66,6 +70,7 @@
           class="certificate-form-textarea"
           data-testid="certificate-form-cert-alt"
           :label="t('certificates.form.fields.cert_alt.label')"
+          :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
           :readonly="form.isReadonly"
         >
           <template #label-tooltip>
@@ -86,6 +91,7 @@
           class="certificate-form-textarea"
           data-testid="certificate-form-key-alt"
           :label="t('certificates.form.fields.key_alt.label')"
+          :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
           :readonly="form.isReadonly"
         >
           <template #label-tooltip>
@@ -99,6 +105,15 @@
             </i18nT>
           </template>
         </KTextArea>
+
+        <CertificateFormSniField
+          v-if="showSnisField && config.sniListRoute"
+          v-model="form.fields.snis"
+          :is-editing="formType === EntityBaseFormType.Edit"
+          :sni-list-route="config.sniListRoute"
+          @add="handleAddSni"
+          @remove="(index: number) => handleRemoveSni(index)"
+        />
       </EntityFormSection>
 
       <EntityFormSection
@@ -111,7 +126,10 @@
           data-testid="certificate-form-tags"
           :help="t('certificates.form.fields.tags.help')"
           :label="t('certificates.form.fields.tags.label')"
-          :label-attributes="{ info: t('certificates.form.fields.tags.tooltip') }"
+          :label-attributes="{
+            info: t('certificates.form.fields.tags.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :placeholder="t('certificates.form.fields.tags.placeholder')"
           :readonly="form.isReadonly"
           type="text"
@@ -134,7 +152,15 @@ import type {
 } from '../types'
 import endpoints from '../certificates-endpoints'
 import composables from '../composables'
-import { useAxios, useErrors, EntityFormSection, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
+import CertificateFormSniField from './CertificateFormSniField.vue'
+import {
+  useAxios,
+  useErrors,
+  EntityFormSection,
+  EntityBaseForm,
+  EntityBaseFormType,
+  SupportedEntityType,
+} from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
@@ -163,6 +189,20 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  /** If true, the SNI field will be shown */
+  showSnisField: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const router = useRouter()
@@ -180,6 +220,7 @@ const form = reactive<CertificateFormState>({
     key: '',
     certAlt: '',
     keyAlt: '',
+    snis: [''],
     tags: '',
   },
   isReadonly: false,
@@ -191,6 +232,7 @@ const formFieldsOriginal = reactive<CertificateFormFields>({
   key: '',
   certAlt: '',
   keyAlt: '',
+  snis: [''],
   tags: '',
 })
 
@@ -205,6 +247,7 @@ const initForm = (data: Record<string, any>): void => {
   form.fields.key = data?.key || ''
   form.fields.certAlt = data?.cert_alt || ''
   form.fields.keyAlt = data?.key_alt || ''
+  form.fields.snis = data?.snis?.length ? data.snis : ['']
   form.fields.tags = data?.tags?.join(', ') || ''
 
   // Set initial state of `formFieldsOriginal` to these values in order to detect changes
@@ -213,6 +256,14 @@ const initForm = (data: Record<string, any>): void => {
 
 const handleClickCancel = (): void => {
   router.push(props.config.cancelRoute)
+}
+
+const handleAddSni = (): void => {
+  form.fields.snis.push('')
+}
+
+const handleRemoveSni = (index: number): void => {
+  form.fields.snis.splice(index, 1)
 }
 
 /* ---------------
@@ -259,6 +310,7 @@ const requestBody = computed((): Record<string, any> => {
     key: form.fields.key,
     cert_alt: form.fields.certAlt || null,
     key_alt: form.fields.keyAlt || null,
+    ...(props.showSnisField ? { snis: form.fields.snis.filter(Boolean) } : {}),
     tags: form.fields.tags.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
   }
 })
@@ -285,6 +337,7 @@ const saveFormData = async (): Promise<void> => {
     form.fields.key = response?.data?.key || ''
     form.fields.certAlt = response?.data?.cert_alt || ''
     form.fields.keyAlt = response?.data?.key_alt || ''
+    form.fields.snis = response?.data?.snis?.length ? response.data.snis : ['']
     form.fields.tags = response?.data?.tags?.join(', ') || ''
 
     // Set initial state of `formFieldsOriginal` to these values in order to detect changes

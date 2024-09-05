@@ -13,6 +13,7 @@ export const aiPromptDecoratorSchema: AIPromptDecoratorSchema = {
           model: 'role',
           help: 'LLM message role',
           type: 'select',
+          required: true,
           values: [
             'system',
             'assistant',
@@ -22,6 +23,7 @@ export const aiPromptDecoratorSchema: AIPromptDecoratorSchema = {
           label: 'Content',
           model: 'content',
           type: 'input',
+          required: true,
           help: 'LLM message content',
           inputType: 'text',
         }],
@@ -40,6 +42,7 @@ export const aiPromptDecoratorSchema: AIPromptDecoratorSchema = {
           model: 'role',
           help: 'LLM message role',
           type: 'select',
+          required: true,
           values: [
             'system',
             'assistant',
@@ -49,6 +52,7 @@ export const aiPromptDecoratorSchema: AIPromptDecoratorSchema = {
           label: 'Content',
           model: 'content',
           type: 'input',
+          required: true,
           help: 'LLM message content',
           inputType: 'text',
         }],

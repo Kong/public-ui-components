@@ -114,8 +114,8 @@ const hasValidChartData = computed(() => {
 @import '../styles/chart-shell';
 
 .simple-chart-shell {
-  margin: $kui-space-0;
-  padding: $kui-space-0;
+  margin: var(--kui-space-0, $kui-space-0);
+  padding: var(--kui-space-0, $kui-space-0);
 
   .chart-empty-state {
     display: flex;
@@ -125,9 +125,9 @@ const hasValidChartData = computed(() => {
     width: 100px;
 
     &:deep(.empty-state-title) {
-      font-size: $kui-font-size-20;
-      line-height: $kui-line-height-20;
-      margin: $kui-space-0;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+      line-height: var(--kui-line-height-20, $kui-line-height-20);
+      margin: var(--kui-space-0, $kui-space-0);
     }
   }
 }

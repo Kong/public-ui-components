@@ -3,6 +3,218 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.5.1...@kong-ui-public/forms@4.5.2) (2024-08-27)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1582](https://github.com/Kong/public-ui-components/issues/1582)) ([d4bc4a5](https://github.com/Kong/public-ui-components/commit/d4bc4a55a9acadc7db33e89ce9e3f2bc8c339fe8))
+
+
+
+
+
+## [4.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.5.0...@kong-ui-public/forms@4.5.1) (2024-08-27)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+# [4.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.4.0...@kong-ui-public/forms@4.5.0) (2024-08-21)
+
+
+### Features
+
+* **vfg:** convert field-text-area [khcp-11338] ([#1570](https://github.com/Kong/public-ui-components/issues/1570)) ([5271f1b](https://github.com/Kong/public-ui-components/commit/5271f1b39a0e42ab9929df3cccacf33254b4f19d))
+
+
+
+
+
+# [4.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.3.4...@kong-ui-public/forms@4.4.0) (2024-08-16)
+
+
+### Features
+
+* **vfg:** convert field-radio [khcp-11342] ([#1556](https://github.com/Kong/public-ui-components/issues/1556)) ([06e4c9d](https://github.com/Kong/public-ui-components/commit/06e4c9d871feb99292d7e9a2f3a51f02e8b65371))
+
+
+
+
+
+## [4.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.3.3...@kong-ui-public/forms@4.3.4) (2024-08-15)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.3.2...@kong-ui-public/forms@4.3.3) (2024-08-15)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1562](https://github.com/Kong/public-ui-components/issues/1562)) ([112f1bd](https://github.com/Kong/public-ui-components/commit/112f1bd3e3fce583649729d520cbffeb321a4572))
+
+
+
+
+
+## [4.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.3.1...@kong-ui-public/forms@4.3.2) (2024-08-09)
+
+
+### Bug Fixes
+
+* **forms:** array item field width ([#1546](https://github.com/Kong/public-ui-components/issues/1546)) ([10223c6](https://github.com/Kong/public-ui-components/commit/10223c60f8dec6c74d793f78711e7889ba062d5d))
+
+
+
+
+
+## [4.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.3.0...@kong-ui-public/forms@4.3.1) (2024-08-08)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+# [4.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.2.0...@kong-ui-public/forms@4.3.0) (2024-08-08)
+
+
+### Features
+
+* **vfg:** field-switch to kongponents [khcp-11326] ([#1539](https://github.com/Kong/public-ui-components/issues/1539)) ([0c55877](https://github.com/Kong/public-ui-components/commit/0c5587783f2f3d9751cd64ac92bb9dd51ca454ab))
+
+
+
+
+
+# [4.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.1.1...@kong-ui-public/forms@4.2.0) (2024-08-08)
+
+
+### Features
+
+* **entities-plugins:** support upstream-oauth ([#1543](https://github.com/Kong/public-ui-components/issues/1543)) ([3aec318](https://github.com/Kong/public-ui-components/commit/3aec318266f1ef604703f5acdf016c444b5211fd))
+
+
+
+
+
+## [4.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.1.0...@kong-ui-public/forms@4.1.1) (2024-08-07)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+# [4.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.15...@kong-ui-public/forms@4.1.0) (2024-08-07)
+
+
+### Features
+
+* vault secret picker [KM-307] ([#1503](https://github.com/Kong/public-ui-components/issues/1503)) ([697f238](https://github.com/Kong/public-ui-components/commit/697f2383b2b79e2c6f0cfabde97aa13f9be28577))
+
+
+
+
+
+## [4.0.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.14...@kong-ui-public/forms@4.0.15) (2024-08-05)
+
+
+### Bug Fixes
+
+* **forms:** required indicator style ([#1531](https://github.com/Kong/public-ui-components/issues/1531)) ([2c7ea0e](https://github.com/Kong/public-ui-components/commit/2c7ea0ea7d5bef96095afd6c88051e12e93721aa))
+
+
+
+
+
+## [4.0.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.13...@kong-ui-public/forms@4.0.14) (2024-08-02)
+
+
+### Bug Fixes
+
+* **entities-plugins:** nested array object labels ([#1529](https://github.com/Kong/public-ui-components/issues/1529)) ([2bdd280](https://github.com/Kong/public-ui-components/commit/2bdd2802d2525a26f35014fa6850708c1243aa45))
+
+
+
+
+
+## [4.0.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.12...@kong-ui-public/forms@4.0.13) (2024-08-02)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.0.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.11...@kong-ui-public/forms@4.0.12) (2024-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.0.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.10...@kong-ui-public/forms@4.0.11) (2024-07-18)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.9...@kong-ui-public/forms@4.0.10) (2024-07-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1502](https://github.com/Kong/public-ui-components/issues/1502)) ([5bc424e](https://github.com/Kong/public-ui-components/commit/5bc424ed7333870527dc417fcf98b7d37062fb78))
+
+
+
+
+
+## [4.0.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.8...@kong-ui-public/forms@4.0.9) (2024-07-10)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.0.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.7...@kong-ui-public/forms@4.0.8) (2024-07-09)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1478](https://github.com/Kong/public-ui-components/issues/1478)) ([47cd468](https://github.com/Kong/public-ui-components/commit/47cd4680b8ed1fb686270df19853288de19c3106))
+
+
+
+
+
+## [4.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.6...@kong-ui-public/forms@4.0.7) (2024-07-08)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.5...@kong-ui-public/forms@4.0.6) (2024-07-08)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [4.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.0.4...@kong-ui-public/forms@4.0.5) (2024-07-02)
 
 **Note:** Version bump only for package @kong-ui-public/forms

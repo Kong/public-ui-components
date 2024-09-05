@@ -22,7 +22,7 @@ describe('<YamlCodeBlock />', () => {
     it('renders the Yaml content correctly', () => {
       cy.mount(YamlCodeBlock, {
         props: {
-          yamlRecord: record,
+          entityRecord: record,
         },
       })
 

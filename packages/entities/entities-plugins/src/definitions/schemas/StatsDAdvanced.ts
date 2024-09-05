@@ -2,14 +2,6 @@ import { metricFieldsSchema } from './MetricFields'
 import type { StatsDAdvancedSchema } from '../../types/plugins/stats-d-advanced'
 
 export const statsDAdvancedSchema: StatsDAdvancedSchema = {
-  'config-allow_status_codes': {
-    type: 'input',
-    inputType: 'text',
-    valueArrayType: 'string',
-    valueType: 'array',
-    label: 'config.allow_status_codes',
-    help: 'A list of status code ranges, separated by commas. e.g. 200-204, 500-505',
-  },
   'config-metrics': {
     ...metricFieldsSchema,
     items: {

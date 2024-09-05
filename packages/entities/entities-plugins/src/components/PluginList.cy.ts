@@ -81,11 +81,11 @@ describe('<PluginList />', () => {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
-          canToggle: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canToggle: () => false,
         },
       })
 
@@ -101,11 +101,11 @@ describe('<PluginList />', () => {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
-          canToggle: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canToggle: () => false,
         },
       })
 
@@ -137,11 +137,11 @@ describe('<PluginList />', () => {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
-          canToggle: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canToggle: () => false,
         },
       })
 
@@ -162,11 +162,11 @@ describe('<PluginList />', () => {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
-          canToggle: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canToggle: () => false,
         },
       })
 
@@ -179,11 +179,11 @@ describe('<PluginList />', () => {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
-          canToggle: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canToggle: () => false,
         },
       })
 
@@ -202,10 +202,10 @@ describe('<PluginList />', () => {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
           config: { ...baseConfigKonnect, getToggleDisabledTooltip: () => kTooltipText },
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
           canToggle: () => false,
         },
       })
@@ -231,9 +231,9 @@ describe('<PluginList />', () => {
             props: {
               cacheIdentifier: `plugin-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => { },
-              canEdit: () => { },
-              canDelete: () => { },
+              canCreate: () => false,
+              canEdit: () => false,
+              canDelete: () => false,
               canRetrieve: () => expected,
             },
             router,
@@ -255,9 +255,9 @@ describe('<PluginList />', () => {
             props: {
               cacheIdentifier: `plugin-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => { },
-              canEdit: () => { },
-              canDelete: () => { },
+              canCreate: () => false,
+              canEdit: () => false,
+              canDelete: () => false,
               canRetrieve: () => expected,
             },
           })
@@ -271,10 +271,10 @@ describe('<PluginList />', () => {
             props: {
               cacheIdentifier: `plugin-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => { },
+              canCreate: () => false,
               canEdit: () => expected,
-              canDelete: () => { },
-              canRetrieve: () => { },
+              canDelete: () => false,
+              canRetrieve: () => false,
             },
           })
 
@@ -287,10 +287,10 @@ describe('<PluginList />', () => {
             props: {
               cacheIdentifier: `plugin-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => { },
-              canEdit: () => { },
+              canCreate: () => false,
+              canEdit: () => false,
               canDelete: () => expected,
-              canRetrieve: () => { },
+              canRetrieve: () => false,
             },
           })
 
@@ -303,9 +303,9 @@ describe('<PluginList />', () => {
             props: {
               cacheIdentifier: `plugin-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => { },
+              canCreate: () => false,
               canEdit: () => expected,
-              canDelete: () => { },
+              canDelete: () => false,
               canRetrieve: () => expected,
               canConfigureDynamicOrdering: () => expected,
             },
@@ -322,12 +322,12 @@ describe('<PluginList />', () => {
             props: {
               cacheIdentifier: `plugin-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => { },
+              canCreate: () => false,
               canEdit: () => expected,
-              canDelete: () => { },
+              canDelete: () => false,
               canRetrieve: () => expected,
               canRetrieveScopedEntity: () => expected,
-              canConfigureDynamicOrdering: () => { },
+              canConfigureDynamicOrdering: () => false,
             },
             router,
           })
@@ -347,12 +347,12 @@ describe('<PluginList />', () => {
             props: {
               cacheIdentifier: `plugin-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => { },
+              canCreate: () => false,
               canEdit: () => expected,
-              canDelete: () => { },
-              canRetrieve: () => { },
-              canRetrieveScopedEntity: () => { },
-              canConfigureDynamicOrdering: () => { },
+              canDelete: () => false,
+              canRetrieve: () => false,
+              canRetrieveScopedEntity: () => false,
+              canConfigureDynamicOrdering: () => false,
               canToggle: () => expected,
             },
           })
@@ -443,9 +443,9 @@ describe('<PluginList />', () => {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -463,9 +463,9 @@ describe('<PluginList />', () => {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => false,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -492,10 +492,10 @@ describe('<PluginList />', () => {
           props: {
             cacheIdentifier: `plugin-list-${uuidv4()}`,
             config: baseConfigKM,
-            canCreate: () => { },
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -520,10 +520,10 @@ describe('<PluginList />', () => {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -545,10 +545,10 @@ describe('<PluginList />', () => {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -621,10 +621,10 @@ describe('<PluginList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -656,15 +656,15 @@ describe('<PluginList />', () => {
       cy.get(`${l} tbody tr[data-testid="plugin-15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(PluginList, {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -709,9 +709,9 @@ describe('<PluginList />', () => {
             },
           },
           canCreate: () => false,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -772,9 +772,9 @@ describe('<PluginList />', () => {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -792,9 +792,9 @@ describe('<PluginList />', () => {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => false,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -821,10 +821,10 @@ describe('<PluginList />', () => {
           props: {
             cacheIdentifier: `plugin-list-${uuidv4()}`,
             config: baseConfigKonnect,
-            canCreate: () => { },
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -849,10 +849,10 @@ describe('<PluginList />', () => {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -874,10 +874,10 @@ describe('<PluginList />', () => {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -950,10 +950,10 @@ describe('<PluginList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -985,15 +985,15 @@ describe('<PluginList />', () => {
       cy.get(`${l} tbody tr[data-testid="plugin-15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(PluginList, {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 

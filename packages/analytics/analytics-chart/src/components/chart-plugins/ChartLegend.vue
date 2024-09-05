@@ -242,7 +242,11 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
   overflow-y: auto;
   padding-left: 0;
 
-  @include scrollbarBase;
+  // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+  // stylelint-disable-next-line no-duplicate-selectors
+  & {
+    @include scrollbarBase;
+  }
 
   &.vertical {
     flex-direction: column;

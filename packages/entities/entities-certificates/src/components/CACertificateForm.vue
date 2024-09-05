@@ -4,6 +4,8 @@
       :can-submit="canSubmit"
       :config="config"
       :edit-id="certificateId"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.CaCertificate"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="requestBody"
@@ -24,7 +26,10 @@
           class="certificate-form-textarea"
           data-testid="ca-certificate-form-cert"
           :label="t('ca-certificates.form.fields.cert.label')"
-          :label-attributes="{ info: t('ca-certificates.form.fields.cert.tooltip') }"
+          :label-attributes="{
+            info: t('ca-certificates.form.fields.cert.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :readonly="form.isReadonly"
           required
         />
@@ -49,7 +54,10 @@
           data-testid="ca-certificate-form-tags"
           :help="t('ca-certificates.form.fields.tags.help')"
           :label="t('ca-certificates.form.fields.tags.label')"
-          :label-attributes="{ info: t('ca-certificates.form.fields.tags.tooltip') }"
+          :label-attributes="{
+            info: t('ca-certificates.form.fields.tags.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :placeholder="t('ca-certificates.form.fields.tags.placeholder')"
           :readonly="form.isReadonly"
           type="text"
@@ -72,7 +80,14 @@ import type {
 } from '../types'
 import endpoints from '../ca-certificates-endpoints'
 import composables from '../composables'
-import { useAxios, useErrors, EntityFormSection, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
+import {
+  useAxios,
+  useErrors,
+  EntityFormSection,
+  EntityBaseForm,
+  EntityBaseFormType,
+  SupportedEntityType,
+} from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
@@ -100,6 +115,14 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
   },
 })
 

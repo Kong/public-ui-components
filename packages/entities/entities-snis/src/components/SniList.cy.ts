@@ -59,10 +59,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -75,10 +75,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -92,10 +92,10 @@ describe('<SniList />', () => {
             props: {
               cacheIdentifier: `sni-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => { },
+              canCreate: () => false,
               canEdit: () => expected,
-              canDelete: () => { },
-              canRetrieve: () => { },
+              canDelete: () => false,
+              canRetrieve: () => false,
             },
           })
 
@@ -108,10 +108,10 @@ describe('<SniList />', () => {
             props: {
               cacheIdentifier: `sni-list-${uuidv4()}`,
               config: baseConfigKonnect,
-              canCreate: () => { },
-              canEdit: () => { },
+              canCreate: () => false,
+              canEdit: () => false,
               canDelete: () => expected,
-              canRetrieve: () => { },
+              canRetrieve: () => false,
             },
           })
 
@@ -171,9 +171,9 @@ describe('<SniList />', () => {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -191,9 +191,9 @@ describe('<SniList />', () => {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKM,
           canCreate: () => false,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -220,10 +220,10 @@ describe('<SniList />', () => {
           props: {
             cacheIdentifier: `sni-list-${uuidv4()}`,
             config: baseConfigKM,
-            canCreate: () => { },
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -248,10 +248,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -269,10 +269,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -345,10 +345,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -380,15 +380,15 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(SniList, {
         props: {
           cacheIdentifier,
           config: baseConfigKM,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -467,9 +467,9 @@ describe('<SniList />', () => {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => true,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -487,9 +487,9 @@ describe('<SniList />', () => {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKonnect,
           canCreate: () => false,
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -516,10 +516,10 @@ describe('<SniList />', () => {
           props: {
             cacheIdentifier: `sni-list-${uuidv4()}`,
             config: baseConfigKonnect,
-            canCreate: () => { },
-            canEdit: () => { },
-            canDelete: () => { },
-            canRetrieve: () => { },
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
           },
         })
 
@@ -544,10 +544,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -565,10 +565,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier: `sni-list-${uuidv4()}`,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -641,10 +641,10 @@ describe('<SniList />', () => {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -676,15 +676,15 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-15"]`).should('exist')
 
       // Unmount and mount
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.unmount())
+      cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
       cy.mount(SniList, {
         props: {
           cacheIdentifier,
           config: baseConfigKonnect,
-          canCreate: () => { },
-          canEdit: () => { },
-          canDelete: () => { },
-          canRetrieve: () => { },
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
         },
       })
 
@@ -711,6 +711,108 @@ describe('<SniList />', () => {
       cy.get(`${l} tbody tr[data-testid="sni-50"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
+    })
+
+    it('should refetch after deleting an SNI', () => {
+      const interceptKonnectRefetch = (params: {
+        expectedOffset: number
+      }) => {
+        cy.intercept(
+          {
+            method: 'GET',
+            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/snis*`,
+          },
+          (req) => {
+            const size = req.query.size ? Number(req.query.size) : 30
+            const offset = req.query.offset ? Number(req.query.offset) : 0
+
+            expect(offset).to.equal(params.expectedOffset)
+
+            req.reply({
+              statusCode: 200,
+              body: paginate(snis100, size, offset),
+            })
+          },
+        ).as('getSnisRefetch')
+      }
+
+      const interceptKonnectDelete = () => {
+        cy.intercept(
+          {
+            method: 'DELETE',
+            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/snis/*`,
+          },
+          {
+            statusCode: 200,
+            body: {},
+          },
+        ).as('deleteSni')
+      }
+
+      interceptKonnectDelete()
+      interceptKonnectRefetch({
+        expectedOffset: 0, // initial offset should be 0
+      })
+
+      cy.mount(SniList, {
+        props: {
+          cacheIdentifier: `sni-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => true,
+          canRetrieve: () => false,
+        },
+      })
+
+      const l = '.kong-ui-entities-snis-list'
+      const p = '[data-testid="table-pagination"]'
+
+      cy.wait('@getSnisRefetch')
+      cy.get(`${l} tbody tr[data-testid="sni-20"] td[data-testid="actions"] button.actions-trigger`).click()
+      cy.get(`${l} tbody tr[data-testid="sni-20"] [data-testid="action-entity-delete"]`).click()
+      interceptKonnectRefetch({
+        expectedOffset: 0, // after deletion, refetch should be triggered with offset 0
+      })
+      cy.get('.kong-ui-entity-delete-modal [data-testid="modal-action-button"]').click()
+      cy.wait('@deleteSni')
+      cy.wait('@getSnisRefetch')
+
+      interceptKonnectRefetch({
+        expectedOffset: 30, // on the 2nd page, refetch should be triggered with offset 30
+      })
+      cy.get(`${l} ${p} [data-testid="next-button"]`).click() // next page
+      cy.wait('@getSnisRefetch')
+
+      cy.get(`${l} tbody tr[data-testid="sni-50"] td[data-testid="actions"] button.actions-trigger`).click()
+      cy.get(`${l} tbody tr[data-testid="sni-50"] [data-testid="action-entity-delete"]`).click()
+      interceptKonnectRefetch({
+        expectedOffset: 30, // after deletion, refetch should be triggered with offset 30
+      })
+      cy.get('.kong-ui-entity-delete-modal [data-testid="modal-action-button"]').click()
+      cy.wait('@deleteSni')
+      cy.wait('@getSnisRefetch')
+
+      interceptKonnectRefetch({
+        expectedOffset: 60, // on the 3rd page, refetch should be triggered with offset 60
+      })
+      cy.get(`${l} ${p} [data-testid="next-button"]`).click() // next page
+      cy.wait('@getSnisRefetch')
+
+      interceptKonnectRefetch({
+        expectedOffset: 90, // on the last page, refetch should be triggered with offset 90
+      })
+      cy.get(`${l} ${p} [data-testid="next-button"]`).click() // next page
+      cy.wait('@getSnisRefetch')
+
+      cy.get(`${l} tbody tr[data-testid="sni-99"] td[data-testid="actions"] button.actions-trigger`).click()
+      cy.get(`${l} tbody tr[data-testid="sni-99"] [data-testid="action-entity-delete"]`).click()
+      interceptKonnectRefetch({
+        expectedOffset: 90, // after deletion, refetch should be triggered with offset 90
+      })
+      cy.get('.kong-ui-entity-delete-modal [data-testid="modal-action-button"]').click()
+      cy.wait('@deleteSni')
+      cy.wait('@getSnisRefetch')
     })
   })
 })

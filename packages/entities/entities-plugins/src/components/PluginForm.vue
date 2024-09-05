@@ -23,6 +23,7 @@
       :can-submit="canSubmit"
       :config="config"
       :edit-id="pluginId"
+      :entity-type="SupportedEntityType.Plugin"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getRequestBody"
@@ -44,6 +45,7 @@
         :config="config"
         :credential="treatAsCredential"
         :editing="formType === EntityBaseFormType.Edit"
+        :enable-vault-secret-picker="props.enableVaultSecretPicker"
         :entity-map="entityMap"
         :record="record || undefined"
         :schema="schema || {}"
@@ -66,7 +68,7 @@
             <KButton
               v-if="!hideViewConfigAction"
               appearance="tertiary"
-              data-testid="form-view-configuration"
+              :data-testid="`plugin-${isEditing ? 'edit' : 'create'}-form-view-configuration`"
               @click="toggle()"
             >
               {{ t('actions.view_configuration') }}
@@ -74,7 +76,7 @@
             <KButton
               appearance="secondary"
               class="form-action-button"
-              data-testid="form-cancel"
+              :data-testid="`plugin-${isEditing ? 'edit' : 'create'}-form-cancel`"
               :disabled="form.isReadonly"
               type="reset"
               @click="handleClickCancel"
@@ -83,7 +85,7 @@
             </KButton>
             <KButton
               appearance="primary"
-              data-testid="form-submit"
+              :data-testid="`plugin-${isEditing ? 'edit' : 'create'}-form-submit`"
               :disabled="!canSubmit || form.isReadonly"
               type="submit"
               @click="saveFormData"
@@ -94,6 +96,7 @@
         </Teleport>
       </template>
     </EntityBaseForm>
+
     <KSlideout
       :close-on-blur="false"
       data-testid="form-view-configuration-slideout"
@@ -113,13 +116,20 @@
         <template #json>
           <JsonCodeBlock
             :config="config"
+            :entity-record="getRequestBody"
             :fetcher-url="submitUrl"
-            :json-record="form.fields"
             :request-method="props.pluginId ? 'put' : 'post'"
           />
         </template>
         <template #yaml>
-          <YamlCodeBlock :yaml-record="form.fields" />
+          <YamlCodeBlock :entity-record="getRequestBody" />
+        </template>
+        <template #terraform>
+          <TerraformCodeBlock
+            :credential-type="credentialType"
+            :entity-record="getRequestBody"
+            :entity-type="SupportedEntityType.Plugin"
+          />
         </template>
       </KTabs>
     </KSlideout>
@@ -131,7 +141,9 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   JsonCodeBlock,
+  TerraformCodeBlock,
   YamlCodeBlock,
+  SupportedEntityType,
   useAxios,
   useErrors,
   useHelpers,
@@ -145,7 +157,7 @@ import { computed, onBeforeMount, reactive, ref, watch, type PropType } from 'vu
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
-import { ArrayStringFieldSchema } from '../definitions/schemas/ArrayStringFieldSchema'
+import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
 import endpoints from '../plugins-endpoints'
 import {
   EntityTypeIdField,
@@ -258,6 +270,23 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+
+  /**
+   * Control if the vault secret picker is enabled for applicable fields. (referenceable = true)
+   */
+  enableVaultSecretPicker: {
+    type: Boolean,
+    default: false,
+  },
+
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const router = useRouter()
@@ -271,6 +300,7 @@ const { objectsAreEqual } = useHelpers()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const isToggled = ref(false)
+const isEditing = computed(() => !!props.pluginId)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
 const schema = ref<Record<string, any> | null>(null)
 const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
@@ -296,14 +326,27 @@ const form = reactive<PluginFormState>({
 
 const tabs = ref<Tab[]>([
   {
-    title: t('view_configuration.yaml'),
-    hash: '#yaml',
-  },
-  {
     title: t('view_configuration.json'),
     hash: '#json',
   },
+  {
+    title: t('view_configuration.yaml'),
+    hash: '#yaml',
+  },
 ])
+
+if (props.enableTerraform) {
+  // insert terraform as the third option
+  tabs.value.splice(1, 0, {
+    title: t('view_configuration.terraform'),
+    hash: '#terraform',
+  })
+}
+
+// For array-typed fields, if their elements are deeply nested objects,
+// we need this variable to record the key of the array field.
+// See its usage in `buildFormSchema`.
+const arrayRootKey = ref<string>('')
 
 const fetchUrl = computed((): string => {
   if (treatAsCredential.value) { // credential
@@ -477,12 +520,12 @@ const resourceEndpoint = computed((): string => {
 })
 
 const getArrayType = (list: unknown[]): string => {
-  const uniqueTypes = [...(new Set(list.map(item => typeof item)))]
+  const uniqueTypes = Array.from(new Set(list.map(item => typeof item)))
 
   return uniqueTypes.length > 1 ? 'string' : uniqueTypes[0]
 }
 
-const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>) => {
+const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>, arrayNested?: boolean) => {
   let schema = (response && response.fields) || []
   const pluginSchema = customSchemas[props.pluginType as keyof typeof customSchemas]
   const credentialSchema = CREDENTIAL_METADATA[props.pluginType]?.schema?.fields
@@ -524,15 +567,65 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     }
 
     if (scheme.fields) {
+      if (arrayNested && scheme.type === 'record') {
+        initialFormSchema[field] = {
+          type: 'object',
+          model: key,
+          schema: {
+            fields: Object.values(buildFormSchema(field, scheme, {}, true)),
+          },
+        }
+        return initialFormSchema
+      }
       return buildFormSchema(field, scheme, initialFormSchema)
     }
 
-    initialFormSchema[field] = { id: field } // each field's key will be set as the id
+    initialFormSchema[field] = { id: field, model: key } // each field's key will be set as the id
     initialFormSchema[field].type = scheme.type === 'boolean' ? 'checkbox' : 'input'
     initialFormSchema[field].required = scheme.required
+    initialFormSchema[field].referenceable = scheme.referenceable
 
     if (field.startsWith('config-')) {
-      initialFormSchema[field].label = formatPluginFieldLabel(field)
+      if (!arrayNested && scheme.type === 'array') {
+        // Assign `field` to `arrayRootKey`. `arrayRootKey` only have effect on deeply nested array elements.
+        // Take the following schema for example:
+        // "config": {
+        //   "type": "record",
+        //   "fields": [
+        //     "targets": {
+        //       "type": "array",
+        //       "elements": {
+        //         "type": "record",
+        //         "fields": [
+        //           {
+        //             "auth": {
+        //               "type": "record",
+        //               "fields": [
+        //                 { "header_name": { "type": "string" } },
+        //                 { "header_value": { "type": "string" } },
+        //               ]
+        //             }
+        //           },
+        //         ],
+        //       }
+        //     }
+        //   ]
+        // }
+        // In this case, `field` is "config-targets", and so is `arrayRootKey`.
+        arrayRootKey.value = field
+      }
+      if (arrayNested && arrayRootKey.value && field.startsWith(arrayRootKey.value)) {
+        // Generate label for deeply nested array elements.
+        // In the above example, `field` is "config-targets-auth-header_name",
+        // and `nestedKey` is "auth-header_name"
+        const nestedKey = field.slice(arrayRootKey.value.length + 1)
+        // Split `nestedKey` to ["auth", "header_name"], format each part and join them with "."
+        // The result is "Auth.Header Name"
+        initialFormSchema[field].label = nestedKey.split('-').map(formatPluginFieldLabel).join('.')
+      } else {
+        // Otherwise, just format the field
+        initialFormSchema[field].label = formatPluginFieldLabel(field)
+      }
     }
 
     // Apply descriptions from BE schema
@@ -547,6 +640,10 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     if (scheme.type === 'map') {
       initialFormSchema[field].type = 'object-advanced'
 
+      // Passing `values` to this field in the generated schema for autofill providers
+      // Note: `values` may contain `referenceable` flag.
+      initialFormSchema[field].values = scheme.values
+
       if (scheme.values.type === 'array') {
         const { type: elementsType } = scheme.values.elements || {}
 
@@ -554,11 +651,11 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
           fields: [{
             schema: {
               fields: [{
-                ...ArrayStringFieldSchema,
+                ...ArrayInputFieldSchema,
                 model: field,
                 valueArrayType: elementsType === 'integer' ? 'number' : elementsType || 'string',
                 inputAttributes: {
-                  ...ArrayStringFieldSchema.inputAttributes,
+                  ...ArrayInputFieldSchema.inputAttributes,
                   type: elementsType === 'integer' ? 'number' : 'text',
                   inputMode: elementsType === 'integer' ? 'numeric' : 'text',
                 },
@@ -612,14 +709,15 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
     if (scheme.elements && scheme.type === 'array') {
       const elements = scheme.elements
-      if (elements.type === 'string' && !elements.one_of) {
-        const { id, help, label, hint } = initialFormSchema[field]
-        const { help: helpOverride, ...overrides } = JSON.parse(JSON.stringify(ArrayStringFieldSchema))
-        initialFormSchema[field] = { id, help, label, hint, ...overrides }
-        // Only replace the help text when it is not defined because ArrayStringFieldSchema is more generic
-        if (initialFormSchema[field].help === undefined && typeof helpOverride === 'string') {
-          initialFormSchema[field].help = marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions)
-        }
+
+      // pass the referenceable flag from elements to the parent
+      initialFormSchema[field].referenceable = elements.referenceable
+
+      if ((elements.type === 'string' || elements.type === 'integer') && !elements.one_of) {
+        const { id, help, label, hint, values, referenceable } = initialFormSchema[field]
+        const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
+        inputAttributes.type = elements.type === 'integer' ? 'number' : 'text'
+        initialFormSchema[field] = { id, help, label, hint, values, referenceable, inputAttributes, ...overrides }
       }
     }
 
@@ -633,9 +731,9 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         // Check if current plugin matches any of custom schema keys
         if (plugin === field) {
           // Use custom defined schema instead of building from default && set field label
-          const { help, label, hint } = initialFormSchema[field]
+          const { help, label, hint, values, referenceable } = initialFormSchema[field]
           const { help: helpOverride, ...overrides } = pluginSchema[plugin as keyof typeof pluginSchema] as Record<string, any>
-          initialFormSchema[field] = { help, label, hint, ...overrides }
+          initialFormSchema[field] = { help, label, hint, values, referenceable, ...overrides }
           // Eagerly replace the help text because we are overriding
           if (typeof helpOverride === 'string') {
             initialFormSchema[field].help = marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions)
@@ -669,16 +767,18 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       // If itemFields is not defined, it means no custom schema for this field is defined
       // This usually happens for a custom plugin, so we need to build the schema
       if (!itemFields) {
+        initialFormSchema[field].type = 'array'
+        initialFormSchema[field].newElementButtonLabelClasses = 'kong-form-new-element-button-label'
         initialFormSchema[field].fieldClasses = 'array-card-container-wrapper'
         initialFormSchema[field].itemContainerComponent = 'FieldArrayCardContainer'
+
         initialFormSchema[field].items = {
           type: 'object',
           schema: {
-            fields: Object.values(buildFormSchema(field, scheme.elements, {})),
+            fields: Object.values(buildFormSchema(field, scheme.elements, {}, true)),
           },
         }
-        initialFormSchema[field].type = 'array'
-        initialFormSchema[field].newElementButtonLabelClasses = 'kong-form-new-element-button-label'
+
         // Set the model to the field name, and the label to the formatted field name
         initialFormSchema[field].items.schema.fields.forEach(
           (field: { id?: string, model?: string, label?: string }) => {
@@ -693,16 +793,45 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
             }
           },
         )
+
+        if (scheme.elements.type === 'record') {
+          /**
+           * FIXME Special treatment for nested fields in AI plugins
+           * Tell PluginEntityForm that this field is nested (not flatten), and eliminate the null
+           * fields from the payload
+           */
+          initialFormSchema[field].nestedFields = true
+        }
       }
 
+      if (!initialFormSchema[field].nestedFields) {
       // If the field is an array of objects, set the default value to an object
       // with the default values of the nested fields
-      initialFormSchema[field].items.default = () =>
-        scheme.elements.fields.reduce((acc: Record<string, any>, current: Record<string, { default?: string }>) => {
-          const key = Object.keys(current)[0]
-          acc[key] = current[key].default
-          return acc
-        }, {})
+        initialFormSchema[field].items.default = () =>
+          scheme.elements.fields.reduce((acc: Record<string, any>, current: Record<string, { default?: string }>) => {
+            const key = Object.keys(current)[0]
+            acc[key] = current[key].default
+            return acc
+          }, {})
+      } else { // FIXME: Special treatment for building default values for nested fields in AI plugins
+        const visit = (currField: any, defaultValue: Record<string, any>) => {
+          if (currField.type === 'object') {
+            if (currField.model) {
+              defaultValue[currField.model] = {}
+            }
+            for (const childField of currField.schema.fields) {
+              visit(childField, currField.model ? defaultValue[currField.model] : defaultValue)
+            }
+          } else if (currField.model) {
+            defaultValue[currField.model] = currField.default
+          }
+        }
+        initialFormSchema[field].items.default = () => {
+          const defaultValue: Record<string, any> = {}
+          visit(initialFormSchema[field].items, defaultValue)
+          return defaultValue
+        }
+      }
     }
 
     if (treatAsCredential.value && credentialSchema) {
@@ -717,12 +846,15 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       }
     }
 
-    // required fields, if it's boolean (a checkbox) it will be marked as required even though it isn't
     if (scheme.required && scheme.type !== 'boolean') {
       initialFormSchema[field].required = true
       initialFormSchema[field].selectOptions = {
         hideNoneSelectedText: true,
       }
+    }
+
+    if (scheme.required && scheme.type === 'boolean') {
+      initialFormSchema[field].default = scheme.default ?? false
     }
 
     // Default is set and is not an object or string 'function'
@@ -1110,6 +1242,7 @@ watch(actionsDivRef, (newVal) => {
   }
 })
 
+const credentialType = ref('')
 const schemaLoading = ref(false)
 const fetchSchemaError = ref('')
 onBeforeMount(async () => {
@@ -1121,6 +1254,7 @@ onBeforeMount(async () => {
       // credential schema endpoints don't exist for Konnect, so we use hard-coded schemas
       const pluginType = CREDENTIAL_METADATA[props.pluginType]?.schemaEndpoint
       const data = CREDENTIAL_SCHEMAS[pluginType]
+      credentialType.value = pluginType
 
       schema.value = buildFormSchema('', data, {})
       schemaLoading.value = false

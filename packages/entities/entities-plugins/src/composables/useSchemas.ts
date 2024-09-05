@@ -6,7 +6,8 @@ import { aiPromptDecoratorSchema } from '../definitions/schemas/AIPromptDecorato
 import { aiPromptTemplateSchema } from '../definitions/schemas/AIPromptTemplate'
 import { aiRateLimitingAdvancedSchema } from '../definitions/schemas/AIRateLimitingAdvanced'
 import { applicationRegistrationSchema } from '../definitions/schemas/ApplicationRegistration'
-import { ArrayStringFieldSchema } from '../definitions/schemas/ArrayStringFieldSchema'
+import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
+import { confluentSchema } from '../definitions/schemas/Confluent'
 import { dataDogSchema } from '../definitions/schemas/Datadog'
 import { graphqlRateLimitingAdvancedSchema } from '../definitions/schemas/GraphQLRateLimitingAdvanced'
 import { jwtSchema } from '../definitions/schemas/JWT'
@@ -20,6 +21,7 @@ import { routeByHeaderSchema } from '../definitions/schemas/RouteByHeader'
 import { samlSchema } from '../definitions/schemas/SAML'
 import { statsDSchema } from '../definitions/schemas/StatsD'
 import { statsDAdvancedSchema } from '../definitions/schemas/StatsDAdvanced'
+import { upstreamOauthSchema } from '../definitions/schemas/UpstreamOauth'
 import { vaultAuthSchema } from '../definitions/schemas/VaultAuth'
 import ZipkinSchema from '../definitions/schemas/Zipkin'
 import typedefs from '../definitions/schemas/typedefs'
@@ -200,8 +202,16 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       ...ZipkinSchema,
     },
 
+    'upstream-oauth': {
+      ...upstreamOauthSchema,
+    },
+
     saml: {
       ...samlSchema,
+    },
+
+    confluent: {
+      ...confluentSchema,
     },
   }
 
@@ -499,11 +509,11 @@ export const useSchemas = (options?: UseSchemasOptions) => {
         fields: [{
           schema: {
             fields: [{
-              ...ArrayStringFieldSchema,
+              ...ArrayInputFieldSchema,
               model: schema.model,
               valueArrayType: elementsType === 'integer' ? 'number' : elementsType || 'string',
               inputAttributes: {
-                ...ArrayStringFieldSchema.inputAttributes,
+                ...ArrayInputFieldSchema.inputAttributes,
                 type: elementsType === 'integer' ? 'number' : 'text',
                 inputMode: elementsType === 'integer' ? 'numeric' : 'text',
               },

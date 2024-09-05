@@ -25,6 +25,8 @@
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.Plugin"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
       :plugin-config-key="PLUGIN_CONFIG_KEY"
@@ -140,6 +142,7 @@ import {
   useAxios,
   useErrors,
   useHelpers,
+  SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
@@ -200,6 +203,14 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
   },
 })
 

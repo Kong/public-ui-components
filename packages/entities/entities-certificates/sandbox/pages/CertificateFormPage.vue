@@ -11,6 +11,7 @@
   <CertificateForm
     :certificate-id="id"
     :config="kongManagerConfig"
+    show-snis-field
     @error="onError"
     @update="onUpdate"
   />
@@ -48,6 +49,7 @@ const kongManagerConfig = ref<KongManagerCertificateFormConfig>({
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   cancelRoute: { name: 'certificate-list' },
+  sniListRoute: { name: 'sni-list' },
 })
 
 const onError = (error: AxiosError) => {

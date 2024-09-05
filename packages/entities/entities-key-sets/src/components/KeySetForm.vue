@@ -4,6 +4,8 @@
       :can-submit="canSubmit"
       :config="config"
       :edit-id="keySetId"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.KeySet"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="requestBody"
@@ -35,7 +37,10 @@
           data-testid="key-set-form-tags"
           :help="t('keySets.form.fields.tags.help')"
           :label="t('keySets.form.fields.tags.label')"
-          :label-attributes="{ info: t('keySets.form.fields.tags.tooltip') }"
+          :label-attributes="{
+            info: t('keySets.form.fields.tags.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :placeholder="t('keySets.form.fields.tags.placeholder')"
           :readonly="form.isReadonly"
           type="text"
@@ -51,7 +56,12 @@ import { computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
 import {
-  useAxios, useErrors, EntityFormSection, EntityBaseForm, EntityBaseFormType,
+  useAxios,
+  useErrors,
+  EntityFormSection,
+  EntityBaseForm,
+  EntityBaseFormType,
+  SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
 
 import type {
@@ -90,6 +100,14 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
   },
 })
 

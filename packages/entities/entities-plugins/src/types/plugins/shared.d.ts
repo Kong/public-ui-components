@@ -5,6 +5,7 @@ interface Field {
   values?: string[]
   id?: string
   default?: string,
+  required?: boolean,
   placeholder?: string,
   hint?: string,
   help?: string,

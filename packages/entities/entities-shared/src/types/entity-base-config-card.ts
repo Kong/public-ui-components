@@ -1,15 +1,42 @@
 import type { KonnectConfig, KongManagerConfig } from './index'
 
+/**
+ * These entity strings are used for generating terraform scripts.
+ * Only add entity types that are supported by terraform. Use '_' instead of '-'.
+ * DO NOT MODIFY THE VALUES OF THESE STRINGS.
+ */
+export enum SupportedEntityType {
+  CaCertificate = 'ca_certificate',
+  Certificate = 'certificate',
+  Consumer = 'consumer',
+  ConsumerGroup = 'consumer_group',
+  GatewayService = 'service',
+  Key = 'key',
+  KeySet = 'set',
+  Plugin = 'plugin',
+  Route = 'route',
+  SNI = 'sni',
+  Upstream = 'upstream',
+  Target = 'target',
+  Vault = 'vault',
+  // Use this for any entity type that is not supported by terraform
+  // If entityType is 'other' terraform scripts will not be available
+  // Note: This is currently only supported by EntityBaseForm not EntityBaseConfigCard!!
+  Other = 'other',
+}
+
+export const SupportedEntityTypesArray = Object.values(SupportedEntityType)
+
 export interface BaseEntityConfig {
   /** the ID of the entity */
   entityId: string
 }
 
 /** Konnect base form config */
-export interface KonnectBaseEntityConfig extends KonnectConfig, BaseEntityConfig {}
+export interface KonnectBaseEntityConfig extends KonnectConfig, BaseEntityConfig { }
 
 /** Kong Manager base form config */
-export interface KongManagerBaseEntityConfig extends KongManagerConfig, BaseEntityConfig {}
+export interface KongManagerBaseEntityConfig extends KongManagerConfig, BaseEntityConfig { }
 
 export enum ConfigurationSchemaType {
   ID = 'id',
@@ -21,6 +48,7 @@ export enum ConfigurationSchemaType {
   Json = 'json',
   JsonArray = 'json-array',
   BadgeTag = 'badge-tag',
+  CopyBadge = 'copy-badge',
   BadgeStatus = 'badge-status',
   BadgeMethod = 'badge-method',
   LinkInternal = 'link-internal',

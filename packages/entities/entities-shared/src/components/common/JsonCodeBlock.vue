@@ -16,7 +16,7 @@
       />
     </div>
     <KCodeBlock
-      v-if="props.jsonRecord"
+      v-if="props.entityRecord"
       id="json-codeblock"
       :class="{ 'json-content': props.fetcherUrl }"
       :code="JSON.stringify(jsonContent, null, 2)"
@@ -45,7 +45,7 @@ const props = defineProps({
     default: '',
   },
   /** A record to indicate the entity's configuration, used to populate the JSON code block */
-  jsonRecord: {
+  entityRecord: {
     type: Object as PropType<Record<string, any>>,
     required: true,
   },
@@ -57,7 +57,7 @@ const props = defineProps({
   },
 })
 
-const jsonContent = computed((): Record<string, any> => props.jsonRecord)
+const jsonContent = computed((): Record<string, any> => props.entityRecord)
 
 const displayedCharLength = computed((): number => {
   if (!props.fetcherUrl) {
@@ -86,11 +86,7 @@ const displayedCharLength = computed((): number => {
   border-top-left-radius: $kui-border-radius-40;
   border-top-right-radius: $kui-border-radius-40;
   display: flex;
-  padding: $kui-space-40 $kui-space-0 $kui-space-30 $kui-space-50;
-
-  .k-badge {
-    height: 24px;
-  }
+  padding: $kui-space-40 $kui-space-0 $kui-space-40 $kui-space-50;
 
   .k-code-block {
     flex: auto;
@@ -98,6 +94,11 @@ const displayedCharLength = computed((): number => {
 
     .code-block-content {
       padding-bottom: $kui-space-0;
+      padding-top: $kui-space-0;
+    }
+
+    .code-block-secondary-actions {
+      margin-top: 0 !important;
     }
   }
 

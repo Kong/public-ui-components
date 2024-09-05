@@ -10,7 +10,8 @@ import {
   type AnalyticsBridge,
   type ExploreFilter,
   queryableExploreDimensions,
-  type QueryableExploreDimensions, type QueryDatasource,
+  type FilterableExploreDimensions,
+  type QueryDatasource,
   type Timeframe,
 } from '@kong-ui-public/analytics-utilities'
 import { TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
@@ -23,7 +24,7 @@ const props = withDefaults(defineProps<{
   maxTimeframe?: TimeframeKeys,
   overrideTimeframe?: Timeframe,
   tz?: string,
-  dimension?: QueryableExploreDimensions,
+  dimension?: FilterableExploreDimensions,
   filterValue?: string,
   additionalFilter?: ExploreFilter[],
   queryReady?: boolean,
@@ -58,24 +59,20 @@ if (props.dimension && queryableExploreDimensions.findIndex(x => x === props.dim
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 
 let queryFn: AnalyticsBridge['queryFn']
-let evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn']
 
 if (!queryBridge) {
   console.warn('Analytics dashboards require a query bridge supplied via provide / inject.')
   console.warn("Please ensure your application has a query bridge provided under the key 'analytics-query-provider', as described in")
   console.warn('https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-metric-provider/README.md#requirements')
   queryFn = () => Promise.reject(new Error('Query bridge required'))
-  evaluateFeatureFlagFn = (_key, defaultValue) => defaultValue
 } else {
   queryFn = queryBridge.queryFn
-  evaluateFeatureFlagFn = queryBridge.evaluateFeatureFlagFn
 }
 
 const analyticsConfigStore = useAnalyticsConfigStore()
 
 // Check if the current org has long enough retention to make a sane trend query.
-// If the feature flag is set, trend access is always true.
-const hasTrendAccess = computed<boolean>(() => skuFeatureFlag.value || analyticsConfigStore.longRetention)
+const hasTrendAccess = computed<boolean>(() => true)
 
 // Don't attempt to issue a query until we know what we can query for.
 const queryReady = computed(() => !analyticsConfigStore.loading && props.queryReady)
@@ -88,43 +85,21 @@ const tz = computed(() => {
   return (new Intl.DateTimeFormat()).resolvedOptions().timeZone
 })
 
-const skuFeatureFlag = computed<boolean>(() => {
-  // The feature flag client is guaranteed to be initialized by the time the code gets to this place.
-  return evaluateFeatureFlagFn('MA-2527-analytics-sku-config-endpoint', false)
-})
 
 const resolvedDatasource = computed<QueryDatasource>(() => {
   if (props.datasource) {
     return props.datasource
   }
 
-  return skuFeatureFlag.value ? 'basic' : 'advanced'
+  return 'basic'
 })
 
 // Note: the component implicitly assumes the values it feeds to the composables aren't going to change.
 // If they do need to change, then the `useMetricCardGoldenSignals` composable, and dependencies,
 // needs to be reactive as well.  Ideally, this would be the case; we don't have any guarantee that the
 // tier data has finished loading by the time the component mounts, for example.
-
 const timeframe = computed<Timeframe>(() => {
-  if (props.overrideTimeframe) {
-    // Trust that the host component calculated the timeframe for us.
-    return props.overrideTimeframe
-  }
-
-  if (skuFeatureFlag.value) {
-    return TimePeriods.get(TimeframeKeys.SEVEN_DAY)!
-  }
-
-  const retval = hasTrendAccess.value
-    ? TimePeriods.get(props.maxTimeframe)
-    : TimePeriods.get(TimeframeKeys.ONE_DAY)
-
-  if (!retval) {
-    throw new Error('Metrics provider failed to resolve fallback timeframe.')
-  }
-
-  return retval
+  return props.overrideTimeframe || TimePeriods.get(TimeframeKeys.SEVEN_DAY)!
 })
 
 const averageLatencies = computed<boolean>(() => {
@@ -133,7 +108,7 @@ const averageLatencies = computed<boolean>(() => {
     return false
   }
 
-  return skuFeatureFlag.value
+  return true
 })
 
 const {

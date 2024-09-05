@@ -19,6 +19,8 @@ import type { VaultAuthSchema } from './plugins/vault-auth'
 import type { GraphQLRateLimitingAdvancedSchema } from './plugins/graphql-rate-limiting-advanced'
 import type { SAMLSchema } from './plugins/saml'
 import type { OasValidationSchema } from './plugins/oas-validation'
+import type { UpstreamOauthSchema } from './plugins/upstream-oauth'
+import type { ConfluentSchema } from './plugins/confluent'
 
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
@@ -34,6 +36,8 @@ export interface BasePluginFormConfig {
   entityId?: string
   /** Whether to hide the consumer group scope field. For Kong Manager OSS, this is true */
   disableConsumerGroupScope?: boolean
+  /** Whether to use the new OpenTelemetry schema introduced in https://github.com/Kong/kong-ee/pull/9399/files#diff-8d295aaa72ee8a0a18dcb8010b0a73ac36a92e1e825b3202b1d1736d07d7e514 */
+  isNewOtelSchema?: boolean
 }
 
 export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig {}
@@ -213,4 +217,6 @@ export interface CustomSchemas {
   zipkin: CommonSchemaFields & Record<string, any>
   saml: SAMLSchema
   'oas-validation': OasValidationSchema
+  'upstream-oauth': UpstreamOauthSchema
+  'confluent': ConfluentSchema
 }

@@ -284,7 +284,8 @@ const preferencesStorageKey = computed<string>(
  */
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
-  name: { label: t('consumer_groups.list.table_headers.name'), searchable: true, sortable: true },
+  // the Name column is non-hidable
+  name: { label: t('consumer_groups.list.table_headers.name'), searchable: true, sortable: true, hidable: false },
 }
 // TODO: when koko supports `?count=true` this conditional can be removed
 if (props.config.app === 'kongManager') {
@@ -341,8 +342,14 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   } as FuzzyMatchFilterConfig
 })
 
-const dataKeyName = computed((): string | undefined => isConsumerPage.value && !props.config.paginatedEndpoint ? 'consumer_groups' : undefined)
-const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value, dataKeyName.value)
+const dataKeyName = computed((): string | undefined => {
+  if (props.config.app === 'konnect' && filterQuery.value) {
+    return 'consumer_group'
+  }
+  return isConsumerPage.value && !props.config.paginatedEndpoint ? 'consumer_groups' : undefined
+})
+
+const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value, dataKeyName)
 
 const clearFilter = (): void => {
   filterQuery.value = ''
@@ -559,7 +566,7 @@ const exitGroups = async (): Promise<void> => {
   }
 }
 
-const hasData = ref(true)
+const hasData = ref(false)
 
 /**
  * Watchers

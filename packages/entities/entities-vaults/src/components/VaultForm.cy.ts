@@ -11,6 +11,7 @@ const baseConfigKonnect: KonnectVaultFormConfig = {
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  konnectConfigStoreAvailable: true,
   ttl: true,
 }
 
@@ -20,6 +21,7 @@ const baseConfigKonnectTurnOffTTL: KonnectVaultFormConfig = {
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  konnectConfigStoreAvailable: true,
   ttl: false,
 }
 
@@ -30,6 +32,7 @@ const baseConfigKM: KongManagerVaultFormConfig = {
   cancelRoute,
   azureVaultProviderAvailable: false,
   ttl: true,
+  awsStsEndpointUrlAvailable: true,
 }
 
 const baseConfigKMTurnOffTTL: KongManagerVaultFormConfig = {
@@ -82,18 +85,18 @@ describe('<VaultForm />', () => {
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
       cy.get('.kong-ui-entities-vault-form form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-cancel').should('be.visible')
+      cy.getTestId('vault-create-form-submit').should('be.visible')
+      cy.getTestId('vault-create-form-cancel').should('be.enabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
 
       // form fields - general
       cy.getTestId('vault-form-prefix').should('be.visible')
       cy.getTestId('vault-form-description').should('be.visible')
       cy.getTestId('vault-form-tags').should('be.visible')
 
-      // vault provider radio buttons
-      cy.getTestId('vault-form-provider-kong').should('exist').should('not.be.visible')
+      // vault provider selector
+      cy.getTestId('vault-form-provider-env').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-aws').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-gcp').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-hcv').should('exist').should('not.be.visible')
@@ -103,16 +106,20 @@ describe('<VaultForm />', () => {
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('vault-form-config-aws-region').should('be.visible')
+      cy.getTestId('vault-form-config-aws-sts_endpoint_url').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('be.visible')
 
       // form fields - gcp
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-gcp').click({ force: true })
       cy.getTestId('vault-form-config-gcp-project-id').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('be.visible')
 
       // form fields - hcv
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-hcv').click({ force: true })
       cy.getTestId('vault-form-config-hcv-protocol').should('be.visible')
       cy.getTestId('vault-form-config-hcv-host').should('be.visible')
@@ -140,18 +147,18 @@ describe('<VaultForm />', () => {
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
       cy.get('.kong-ui-entities-vault-form form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-cancel').should('be.visible')
+      cy.getTestId('vault-create-form-submit').should('be.visible')
+      cy.getTestId('vault-create-form-cancel').should('be.enabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
 
       // form fields - general
       cy.getTestId('vault-form-prefix').should('be.visible')
       cy.getTestId('vault-form-description').should('be.visible')
       cy.getTestId('vault-form-tags').should('be.visible')
 
-      // vault provider radio buttons
-      cy.getTestId('vault-form-provider-kong').should('exist').should('not.be.visible')
+      // vault provider selector
+      cy.getTestId('vault-form-provider-env').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-aws').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-gcp').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-hcv').should('exist').should('not.be.visible')
@@ -161,16 +168,20 @@ describe('<VaultForm />', () => {
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('vault-form-config-aws-region').should('be.visible')
+      cy.getTestId('vault-form-config-aws-sts_endpoint_url').should('not.exist')
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - gcp
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-gcp').click({ force: true })
       cy.getTestId('vault-form-config-gcp-project-id').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - hcv
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-hcv').click({ force: true })
       cy.getTestId('vault-form-config-hcv-protocol').should('be.visible')
       cy.getTestId('vault-form-config-hcv-host').should('be.visible')
@@ -197,38 +208,41 @@ describe('<VaultForm />', () => {
 
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-cancel').should('be.visible')
+      cy.getTestId('vault-create-form-submit').should('be.visible')
+      cy.getTestId('vault-create-form-cancel').should('be.enabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
       // enables save when required fields have values
       // form fields - general
       cy.getTestId('vault-form-prefix').type(vault.prefix)
 
       // form fields - kong
       cy.getTestId('vault-form-config-kong-prefix').type(vault.config.prefix)
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('vault-form-config-kong-prefix').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
       cy.getTestId('vault-form-config-aws-region').click({ force: true })
-      cy.get('.select-item:eq(0) button').click({ force: true })
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.get('.vault-form-config-fields-container .select-item:eq(0) button').click({ force: true })
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
 
       // form fields - gcp
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-gcp').click({ force: true })
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
       cy.getTestId('vault-form-config-gcp-project-id').type('test123')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('vault-form-config-gcp-project-id').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
 
       // form fields - hcv
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-hcv').click({ force: true })
       cy.getTestId('vault-form-config-hcv-protocol').click({ force: true })
       cy.get('[data-testid="select-item-http"] button').click({ force: true })
@@ -237,17 +251,17 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-kv').click({ force: true })
       cy.get('[data-testid="select-item-v1"] button').click()
       cy.getTestId('vault-form-config-hcv-token').type('token')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
       cy.getTestId('vault-form-config-hcv-auth_method').click({ force: true })
       cy.get('[data-testid="select-item-kubernetes"] button').click()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
       cy.getTestId('vault-form-config-hcv-kube_role').type('role')
       cy.getTestId('vault-form-config-hcv-kube_api_token_file').type('file.txt')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
 
       // disables save when required field is cleared - general
       cy.getTestId('vault-form-prefix').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
     })
 
     it('should show edit form', () => {
@@ -263,10 +277,10 @@ describe('<VaultForm />', () => {
       cy.wait('@getVault')
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-edit-form-cancel').should('be.visible')
+      cy.getTestId('vault-edit-form-submit').should('be.visible')
+      cy.getTestId('vault-edit-form-cancel').should('be.enabled')
+      cy.getTestId('vault-edit-form-submit').should('be.disabled')
 
       // form fields
       cy.getTestId('vault-form-prefix').should('have.value', vault.prefix)
@@ -288,10 +302,10 @@ describe('<VaultForm />', () => {
       cy.wait('@getVault')
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-edit-form-cancel').should('be.visible')
+      cy.getTestId('vault-edit-form-submit').should('be.visible')
+      cy.getTestId('vault-edit-form-cancel').should('be.enabled')
+      cy.getTestId('vault-edit-form-submit').should('be.disabled')
 
       // form fields
       cy.getTestId('vault-form-prefix').should('have.value', vault.prefix)
@@ -300,6 +314,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('advanced-fields-collapse').should('not.exist')
     })
@@ -317,16 +332,16 @@ describe('<VaultForm />', () => {
       cy.wait('@getVault')
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-edit-form-cancel').should('be.visible')
+      cy.getTestId('vault-edit-form-submit').should('be.visible')
+      cy.getTestId('vault-edit-form-cancel').should('be.enabled')
+      cy.getTestId('vault-edit-form-submit').should('be.disabled')
       // enables save when form has changes
       cy.getTestId('vault-form-config-kong-prefix').type('edited')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('vault-edit-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('vault-form-prefix').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-edit-form-submit').should('be.disabled')
     })
 
     it('should disable vault provider field - edit', () => {
@@ -341,10 +356,7 @@ describe('<VaultForm />', () => {
 
       cy.wait('@getVault')
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
-      cy.getTestId('vault-form-provider-kong').should('be.disabled')
-      cy.getTestId('vault-form-provider-aws').should('be.disabled')
-      cy.getTestId('vault-form-provider-gcp').should('be.disabled')
-      cy.getTestId('vault-form-provider-hcv').should('be.disabled')
+      cy.getTestId('provider-select').should('be.disabled')
     })
 
     it('should handle error state - failed to load vault', () => {
@@ -371,8 +383,8 @@ describe('<VaultForm />', () => {
       // error state is displayed
       cy.getTestId('form-fetch-error').should('be.visible')
       // buttons and form hidden
-      cy.getTestId('form-cancel').should('not.exist')
-      cy.getTestId('form-submit').should('not.exist')
+      cy.getTestId('vault-edit-form-cancel').should('not.exist')
+      cy.getTestId('vault-edit-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-vault-form form').should('not.exist')
     })
 
@@ -393,7 +405,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-tags').clear()
       cy.getTestId('vault-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@updateVault')
@@ -415,10 +427,10 @@ describe('<VaultForm />', () => {
       })
 
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
-      cy.getTestId('vault-form-provider-kong').should('be.enabled')
-      cy.getTestId('vault-form-provider-aws').should('be.disabled')
-      cy.getTestId('vault-form-provider-gcp').should('be.disabled')
-      cy.getTestId('vault-form-provider-hcv').should('be.disabled')
+      cy.getTestId('vault-form-provider-env').parents('button').first().should('be.enabled')
+      cy.getTestId('vault-form-provider-aws').parents('button').first().should('be.disabled')
+      cy.getTestId('vault-form-provider-gcp').parents('button').first().should('be.disabled')
+      cy.getTestId('vault-form-provider-hcv').parents('button').first().should('be.disabled')
     })
   })
 
@@ -462,37 +474,47 @@ describe('<VaultForm />', () => {
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
       cy.get('.kong-ui-entities-vault-form form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-cancel').should('be.visible')
+      cy.getTestId('vault-create-form-submit').should('be.visible')
+      cy.getTestId('vault-create-form-cancel').should('be.enabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
 
       // form fields - general
       cy.getTestId('vault-form-prefix').should('be.visible')
       cy.getTestId('vault-form-description').should('be.visible')
       cy.getTestId('vault-form-tags').should('be.visible')
 
-      // vault provider radio buttons
-      cy.getTestId('vault-form-provider-kong').should('exist').should('not.be.visible')
+      // vault provider selector
+      cy.getTestId('vault-form-provider-konnect').should('exist').should('not.be.visible')
+      cy.getTestId('vault-form-provider-env').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-aws').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-gcp').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-hcv').should('exist').should('not.be.visible')
 
-      // form fields - kong
+      // form fields - konnect
+      cy.getTestId('vault-form-config-kong-prefix').should('not.exist')
+      cy.getTestId('advanced-fields-collapse').should('not.exist')
+
+      // form fields - env
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-env').click({ force: true })
       cy.getTestId('vault-form-config-kong-prefix').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('vault-form-config-aws-region').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('be.visible')
 
       // form fields - gcp
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-gcp').click({ force: true })
       cy.getTestId('vault-form-config-gcp-project-id').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('be.visible')
 
       // form fields - hcv
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-hcv').click({ force: true })
       cy.getTestId('vault-form-config-hcv-protocol').should('be.visible')
       cy.getTestId('vault-form-config-hcv-host').should('be.visible')
@@ -521,37 +543,47 @@ describe('<VaultForm />', () => {
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
       cy.get('.kong-ui-entities-vault-form form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-cancel').should('be.visible')
+      cy.getTestId('vault-create-form-submit').should('be.visible')
+      cy.getTestId('vault-create-form-cancel').should('be.enabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
 
       // form fields - general
       cy.getTestId('vault-form-prefix').should('be.visible')
       cy.getTestId('vault-form-description').should('be.visible')
       cy.getTestId('vault-form-tags').should('be.visible')
 
-      // vault provider radio buttons
-      cy.getTestId('vault-form-provider-kong').should('exist').should('not.be.visible')
+      // vault provider selector
+      cy.getTestId('vault-form-provider-konnect').should('exist').should('not.be.visible')
+      cy.getTestId('vault-form-provider-env').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-aws').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-gcp').should('exist').should('not.be.visible')
       cy.getTestId('vault-form-provider-hcv').should('exist').should('not.be.visible')
 
-      // form fields - kong
+      // form fields - konnect
+      cy.getTestId('vault-form-config-kong-prefix').should('not.exist')
+      cy.getTestId('advanced-fields-collapse').should('not.exist')
+
+      // form fields - env
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-env').click({ force: true })
       cy.getTestId('vault-form-config-kong-prefix').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('vault-form-config-aws-region').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - gcp
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-gcp').click({ force: true })
       cy.getTestId('vault-form-config-gcp-project-id').should('be.visible')
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - hcv
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-hcv').click({ force: true })
       cy.getTestId('vault-form-config-hcv-protocol').should('be.visible')
       cy.getTestId('vault-form-config-hcv-host').should('be.visible')
@@ -578,24 +610,30 @@ describe('<VaultForm />', () => {
 
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-cancel').should('be.visible')
+      cy.getTestId('vault-create-form-submit').should('be.visible')
+      cy.getTestId('vault-create-form-cancel').should('be.enabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
       // enables save when required fields have values
       // form fields - general
       cy.getTestId('vault-form-prefix').type(vault.prefix)
 
-      // form fields - kong
+      // form fields - konnect
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      // form fields - env
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-env').click({ force: true })
       cy.getTestId('vault-form-config-kong-prefix').type(vault.config.prefix)
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('vault-form-config-kong-prefix').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
 
       // advanced fields form
       cy.getTestId('collapse-trigger-content').click()
@@ -604,13 +642,14 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-resurrect-ttl-input').type('789')
 
       cy.getTestId('vault-form-config-aws-region').click({ force: true })
-      cy.get('.select-item:eq(0) button').click({ force: true })
+      cy.get('.vault-form-config-fields-container .select-item:eq(0) button').click({ force: true })
 
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
 
       // form fields - gcp
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-gcp').click({ force: true })
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
 
       // advanced fields form
       cy.getTestId('vault-ttl-input').type('123')
@@ -618,12 +657,13 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-resurrect-ttl-input').type('789')
 
       cy.getTestId('vault-form-config-gcp-project-id').type('test123')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('vault-form-config-gcp-project-id').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
 
       // form fields - hcv
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-hcv').click({ force: true })
 
       // advanced fields form
@@ -638,17 +678,17 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-kv').click({ force: true })
       cy.get('[data-testid="select-item-v1"] button').click()
       cy.getTestId('vault-form-config-hcv-token').type('token')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
       cy.getTestId('vault-form-config-hcv-auth_method').click({ force: true })
       cy.get('[data-testid="select-item-kubernetes"] button').click()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
       cy.getTestId('vault-form-config-hcv-kube_role').type('role')
       cy.getTestId('vault-form-config-hcv-kube_api_token_file').type('file.txt')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
 
       // disables save when required field is cleared - general
       cy.getTestId('vault-form-prefix').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
     })
 
     it('should show edit form', () => {
@@ -664,10 +704,10 @@ describe('<VaultForm />', () => {
       cy.wait('@getVault')
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-edit-form-cancel').should('be.visible')
+      cy.getTestId('vault-edit-form-submit').should('be.visible')
+      cy.getTestId('vault-edit-form-cancel').should('be.enabled')
+      cy.getTestId('vault-edit-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('vault-form-prefix').should('have.value', vault.prefix)
       cy.getTestId('vault-form-description').should('have.value', vault.description)
@@ -675,6 +715,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('advanced-fields-collapse').should('be.visible')
     })
@@ -692,10 +733,10 @@ describe('<VaultForm />', () => {
       cy.wait('@getVault')
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
       // button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-edit-form-cancel').should('be.visible')
+      cy.getTestId('vault-edit-form-submit').should('be.visible')
+      cy.getTestId('vault-edit-form-cancel').should('be.enabled')
+      cy.getTestId('vault-edit-form-submit').should('be.disabled')
       // form fields
       cy.getTestId('vault-form-prefix').should('have.value', vault.prefix)
       cy.getTestId('vault-form-description').should('have.value', vault.description)
@@ -703,6 +744,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('advanced-fields-collapse').should('not.exist')
 
       // form fields - aws
+      cy.getTestId('provider-select').click({ force: true })
       cy.getTestId('vault-form-provider-aws').click({ force: true })
       cy.getTestId('advanced-fields-collapse').should('not.exist')
     })
@@ -720,16 +762,16 @@ describe('<VaultForm />', () => {
       cy.wait('@getVault')
       cy.get('.kong-ui-entities-vault-form').should('be.visible')
       // default button state
-      cy.getTestId('form-cancel').should('be.visible')
-      cy.getTestId('form-submit').should('be.visible')
-      cy.getTestId('form-cancel').should('be.enabled')
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-edit-form-cancel').should('be.visible')
+      cy.getTestId('vault-edit-form-submit').should('be.visible')
+      cy.getTestId('vault-edit-form-cancel').should('be.enabled')
+      cy.getTestId('vault-edit-form-submit').should('be.disabled')
       // enables save when form has changes
       cy.getTestId('vault-form-config-kong-prefix').type('edited')
-      cy.getTestId('form-submit').should('be.enabled')
+      cy.getTestId('vault-edit-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('vault-form-prefix').clear()
-      cy.getTestId('form-submit').should('be.disabled')
+      cy.getTestId('vault-edit-form-submit').should('be.disabled')
     })
 
     it('should handle error state - failed to load vault', () => {
@@ -756,8 +798,8 @@ describe('<VaultForm />', () => {
       // error state is displayed
       cy.getTestId('form-fetch-error').should('be.visible')
       // buttons and form hidden
-      cy.getTestId('form-cancel').should('not.exist')
-      cy.getTestId('form-submit').should('not.exist')
+      cy.getTestId('vault-edit-form-cancel').should('not.exist')
+      cy.getTestId('vault-edit-form-submit').should('not.exist')
       cy.get('.kong-ui-entities-vault-form form').should('not.exist')
     })
 
@@ -778,7 +820,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-tags').clear()
       cy.getTestId('vault-form-tags').type('tag1,tag2')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
       cy.wait('@updateVault')

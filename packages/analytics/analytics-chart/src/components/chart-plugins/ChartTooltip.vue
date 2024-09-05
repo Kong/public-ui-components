@@ -208,7 +208,7 @@ function handleMouseUp() {
 }
 .tooltip-container {
   background-color: $kui-color-background;
-  border-radius: 3px;
+  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.24);
   max-width: 425px;
   min-width: 250px;
@@ -217,51 +217,54 @@ function handleMouseUp() {
   z-index: 999;
 
   .tooltip-title {
-    border-bottom: $kui-border-width-10 solid $color-black-10;
+    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     display: flex;
     flex-direction: column;
-    margin: $kui-space-40;
+    margin: var(--kui-space-40, $kui-space-40);
     min-height: 24px;
-    padding-bottom: $kui-space-40;
+    padding-bottom: var(--kui-space-40, $kui-space-40);
 
     .title {
-      font-size: $kui-font-size-30;
-      font-weight: $kui-font-weight-semibold;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     }
     .subtitle {
-      font-size: $kui-font-size-20;
-      margin-top: $kui-space-40;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+      margin-top: var(--kui-space-40, $kui-space-40);
     }
 
     .drag-icon {
-      margin-top: $kui-space-30;
+      margin-top: var(--kui-space-30, $kui-space-30);
       position: absolute;
       right: 0;
       top: 0;
     }
   }
-
 }
 
 ul.tooltip {
   list-style: none;
-  margin: 0px;
+  margin: var(--kui-space-0, $kui-space-0);
   max-height: 300px;
   min-width: 250px;
-  overflow-y: auto;
-  padding-left: 0px;
+  overflow-y: var(--kui-space-auto, $kui-space-auto);
+  padding-left: var(--kui-space-0, $kui-space-0);
 
-  @include scrollbarBase;
+  // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+  // stylelint-disable-next-line no-duplicate-selectors
+  & {
+    @include scrollbarBase;
+  }
 
   li {
     display: flex;
-    font-size: $kui-font-size-30;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
     line-height: 1;
-    margin: $kui-space-40;
+    margin: var(--kui-space-40, $kui-space-40);
   }
 
   li:last-child {
-    padding-bottom: $kui-space-40;
+    padding-bottom: var(--kui-space-40, $kui-space-40);
   }
 
   .display-label {
@@ -272,8 +275,8 @@ ul.tooltip {
   }
 
   .display-value {
-    margin-left: $kui-space-auto;
-    padding-left: $kui-space-40;
+    margin-left: var(--kui-space-auto, $kui-space-auto);
+    padding-left: var(--kui-space-40, $kui-space-40);
     white-space: nowrap;
   }
 
@@ -281,7 +284,7 @@ ul.tooltip {
     display: inline-flex;
     flex-direction: row;
     height: 12px;
-    margin-right: $kui-space-30;
+    margin-right: var(--kui-space-30, $kui-space-30);
     width: 12px;
   }
 }

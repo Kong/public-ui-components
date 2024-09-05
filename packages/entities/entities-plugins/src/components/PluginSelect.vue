@@ -11,20 +11,13 @@
     </div>
 
     <section v-if="isLoading">
+      <KSkeletonBox
+        class="plugins-skeleton-title"
+        width="10"
+      />
       <KSkeleton
-        :table-rows="1"
-        type="table"
-      >
-        <KSkeletonBox
-          width="6"
-        />
-        <KSkeletonBox
-          class="title-loading-skeleton"
-          width="6"
-        />
-      </KSkeleton>
-      <PluginCardSkeleton
         :card-count="8"
+        class="plugins-skeleton-cards"
         type="card"
       />
     </section>
@@ -89,7 +82,6 @@
               :highlighted-plugins-title="props.highlightedPluginsTitle"
               :navigate-on-click="navigateOnClick"
               :plugin-list="filteredPlugins"
-              :plugins-per-row="pluginsPerRow"
               @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
             />
           </div>
@@ -108,7 +100,6 @@
               :config="config"
               :navigate-on-click="navigateOnClick"
               :plugin-list="filteredPlugins"
-              :plugins-per-row="pluginsPerRow"
               @delete:success="(name: string) => $emit('delete-custom:success', name)"
               @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
               @revalidate="() => pluginsList = buildPluginList()"
@@ -126,7 +117,6 @@
         :highlighted-plugins-title="props.highlightedPluginsTitle"
         :navigate-on-click="navigateOnClick"
         :plugin-list="filteredPlugins"
-        :plugins-per-row="pluginsPerRow"
         @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
       />
     </section>
@@ -148,7 +138,6 @@ import {
 import { useAxios, useHelpers, useErrors } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
-import PluginCardSkeleton from './select/PluginCardSkeleton.vue'
 import PluginCustomGrid from './custom-plugins/PluginCustomGrid.vue'
 import PluginSelectGrid from './select/PluginSelectGrid.vue'
 
@@ -224,13 +213,6 @@ const props = defineProps({
   disabledPlugins: {
     type: Object as PropType<DisabledPlugin>,
     default: () => ({}),
-  },
-  /**
-   * Number of plugins to always have visible (never will be collapsed)
-   */
-  pluginsPerRow: {
-    type: Number,
-    default: 4,
   },
   /**
    * Ids of plugins to show in the highlighted plugins group
@@ -539,8 +521,21 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .kong-ui-entities-plugin-select-form {
-  .title-loading-skeleton {
-    margin-left: $kui-space-40;
+  .plugins-skeleton {
+    &-title {
+      margin-bottom: $kui-space-50;
+    }
+
+    &-cards {
+      :deep(.skeleton-card-wrapper) {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(0, 335px));
+
+        .skeleton-card {
+          max-width: none;
+        }
+      }
+    }
   }
 
   .plugins-filter-input-container {

@@ -4,6 +4,8 @@
       :can-submit="canSubmit"
       :config="config"
       :edit-id="keyId"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.Key"
       :error-message="form.errorMessage || fetchKeySetsErrorMessage"
       :fetch-url="fetchUrl"
       :form-fields="requestBody"
@@ -24,7 +26,10 @@
           data-testid="key-form-id"
           :help="t('keys.form.fields.id.help')"
           :label="t('keys.form.fields.id.label')"
-          :label-attributes="{ info: t('keys.form.fields.id.tooltip') }"
+          :label-attributes="{
+            info: t('keys.form.fields.id.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :placeholder="t('keys.form.fields.id.placeholder')"
           :readonly="form.isReadonly"
           required
@@ -94,7 +99,10 @@
           data-testid="key-form-tags"
           :help="t('keys.form.fields.tags.help')"
           :label="t('keys.form.fields.tags.label')"
-          :label-attributes="{ info: t('keys.form.fields.tags.tooltip') }"
+          :label-attributes="{
+            info: t('keys.form.fields.tags.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :placeholder="t('keys.form.fields.tags.placeholder')"
           :readonly="form.isReadonly"
           type="text"
@@ -124,7 +132,10 @@
           class="key-form-textarea"
           data-testid="key-form-jwk"
           :label="t('keys.form.fields.jwk.label')"
-          :label-attributes="{ info: t('keys.form.fields.jwk.tooltip') }"
+          :label-attributes="{
+            info: t('keys.form.fields.jwk.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :placeholder="t('keys.form.fields.jwk.placeholder')"
           :readonly="form.isReadonly"
           required
@@ -170,7 +181,15 @@ import type {
 } from '../types'
 import endpoints from '../keys-endpoints'
 import composables from '../composables'
-import { useAxios, useErrors, useDebouncedFilter, EntityFormSection, EntityBaseForm, EntityBaseFormType } from '@kong-ui-public/entities-shared'
+import {
+  useAxios,
+  useErrors,
+  useDebouncedFilter,
+  EntityFormSection,
+  EntityBaseForm,
+  EntityBaseFormType,
+  SupportedEntityType,
+} from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
@@ -210,6 +229,14 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
   },
 })
 

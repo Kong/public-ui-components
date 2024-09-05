@@ -3,6 +3,133 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.22...@kong-ui-public/sandbox-layout@2.1.23) (2024-08-27)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1582](https://github.com/Kong/public-ui-components/issues/1582)) ([d4bc4a5](https://github.com/Kong/public-ui-components/commit/d4bc4a55a9acadc7db33e89ce9e3f2bc8c339fe8))
+
+
+
+
+
+## [2.1.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.21...@kong-ui-public/sandbox-layout@2.1.22) (2024-08-27)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.1.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.20...@kong-ui-public/sandbox-layout@2.1.21) (2024-08-15)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.1.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.19...@kong-ui-public/sandbox-layout@2.1.20) (2024-08-15)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1562](https://github.com/Kong/public-ui-components/issues/1562)) ([112f1bd](https://github.com/Kong/public-ui-components/commit/112f1bd3e3fce583649729d520cbffeb321a4572))
+
+
+
+
+
+## [2.1.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.18...@kong-ui-public/sandbox-layout@2.1.19) (2024-08-08)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.1.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.17...@kong-ui-public/sandbox-layout@2.1.18) (2024-08-02)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.1.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.16...@kong-ui-public/sandbox-layout@2.1.17) (2024-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.1.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.15...@kong-ui-public/sandbox-layout@2.1.16) (2024-07-18)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.1.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.14...@kong-ui-public/sandbox-layout@2.1.15) (2024-07-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1502](https://github.com/Kong/public-ui-components/issues/1502)) ([5bc424e](https://github.com/Kong/public-ui-components/commit/5bc424ed7333870527dc417fcf98b7d37062fb78))
+
+
+
+
+
+## [2.1.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.13...@kong-ui-public/sandbox-layout@2.1.14) (2024-07-12)
+
+
+### Bug Fixes
+
+* **sandbox-layout:** container overflow ([#1494](https://github.com/Kong/public-ui-components/issues/1494)) ([bcd72c9](https://github.com/Kong/public-ui-components/commit/bcd72c96b1a057df8acfd76934db7c3375691fe1))
+
+
+
+
+
+## [2.1.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.12...@kong-ui-public/sandbox-layout@2.1.13) (2024-07-10)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.1.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.11...@kong-ui-public/sandbox-layout@2.1.12) (2024-07-10)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.1.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.10...@kong-ui-public/sandbox-layout@2.1.11) (2024-07-09)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1478](https://github.com/Kong/public-ui-components/issues/1478)) ([47cd468](https://github.com/Kong/public-ui-components/commit/47cd4680b8ed1fb686270df19853288de19c3106))
+
+
+
+
+
+## [2.1.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.9...@kong-ui-public/sandbox-layout@2.1.10) (2024-07-08)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
 ## [2.1.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.8...@kong-ui-public/sandbox-layout@2.1.9) (2024-07-02)
 
 **Note:** Version bump only for package @kong-ui-public/sandbox-layout

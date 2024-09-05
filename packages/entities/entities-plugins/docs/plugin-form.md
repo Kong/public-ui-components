@@ -85,6 +85,12 @@ A form component for Plugins.
     - default: `false`
     - *Specific to Kong Manager*. Whether or not to hide the consumer group scope field.
 
+  - `isNewOtelSchema`:
+    - type: `boolean`
+    - required: `false`
+    - default: `false`
+    - Whether to use the new OpenTelemetry schema.
+
 The base konnect or kongManger config.
 
 #### `pluginType`
@@ -166,6 +172,22 @@ Control if the form is wrapped in KCard or not.
 - default: `false`
 
 Control if the View Configuration action button is hidden.
+
+#### `enableVaultSecretPicker`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Control if the vault secret picker is enabled for applicable fields.
+
+#### `enableTerraform`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
 
 ### Events
 

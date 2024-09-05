@@ -3,6 +3,7 @@
     <h2>Konnect API</h2>
     <PluginForm
       :config="konnectConfig"
+      enable-vault-secret-picker
       :plugin-id="id"
       :plugin-type="plugin"
       use-custom-names-for-plugin
@@ -12,6 +13,7 @@
     <h2>Kong Manager API</h2>
     <PluginForm
       :config="kongManagerConfig"
+      enable-vault-secret-picker
       :plugin-id="id"
       :plugin-type="plugin"
       @update="onUpdate"
@@ -48,7 +50,7 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   // force the scope
   // entityType: 'services',
   // entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
-  cancelRoute: { name: 'home' },
+  cancelRoute: { name: 'list-plugin' },
 })
 
 const kongManagerConfig = ref<KongManagerPluginFormConfig>({
@@ -58,13 +60,13 @@ const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   // force the scope
   // entityType: 'consumers',
   // entityId: '123-abc-i-lover-cats',
-  cancelRoute: { name: 'home' },
+  cancelRoute: { name: 'list-plugin' },
 })
 
 const onUpdate = (payload: Record<string, any>) => {
   console.log('update', payload)
 
-  router.push({ name: 'home' })
+  router.push({ name: 'list-plugin' })
 }
 </script>
 

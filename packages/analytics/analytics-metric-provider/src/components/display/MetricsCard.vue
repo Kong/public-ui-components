@@ -8,7 +8,7 @@
         :is="iconMap.get(cardType)"
         v-if="!hideTitleIcon"
         class="metricscard-icon"
-        :color="KUI_COLOR_TEXT_NEUTRAL"
+        :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
         :size="KUI_ICON_SIZE_30"
       />
       <component :is="titleTag">
@@ -21,7 +21,7 @@
         :text="tooltip"
       >
         <InfoIcon
-          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
           :size="KUI_ICON_SIZE_30"
         />
       </KTooltip>
@@ -33,16 +33,14 @@
       <span>{{ description }}</span>
     </div>
     <!-- TODO: remove outer div once size variant no longer needed - MA-2193  -->
-    <div
-      class="metricscard-valuetrend"
-    >
+    <div class="metricscard-valuetrend">
       <!-- Metric value - error -->
       <div
         v-if="hasError"
         class="metricscard-error"
       >
         <WarningIcon
-          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
           :size="KUI_ICON_SIZE_40"
         />
         <div>&nbsp;{{ errorMessage }}</div>
@@ -76,7 +74,7 @@
           <!-- No change icon -->
           <EqualIcon
             v-else
-            :color="KUI_COLOR_TEXT_NEUTRAL_STRONG"
+            :color="`var(--kui-color-text-neutral-strong, ${KUI_COLOR_TEXT_NEUTRAL_STRONG})`"
             :size="KUI_ICON_SIZE_30"
           />
           <div data-testid="metric-trend-change">
@@ -98,7 +96,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import {
-  KUI_COLOR_BORDER_DANGER_STRONG,
+  KUI_COLOR_TEXT_DANGER_STRONG,
   KUI_ICON_SIZE_30,
   KUI_ICON_SIZE_40,
   KUI_COLOR_TEXT_SUCCESS, // Positive trend
@@ -192,9 +190,9 @@ const props = defineProps({
 
 const colorAttribute = (polarity: number): string => {
   const trendColor = {
-    red: `var(--kong-ui-metric-card-trend-negative, ${KUI_COLOR_BORDER_DANGER_STRONG})`,
-    green: `var(--kong-ui-metric-card-trend-positive, ${KUI_COLOR_TEXT_SUCCESS})`,
-    grey: `var(--kong-ui-metric-card-trend-neutral, ${KUI_COLOR_TEXT_NEUTRAL_STRONG})`,
+    red: `var(--kui-color-text-danger-strong, ${KUI_COLOR_TEXT_DANGER_STRONG})`,
+    green: `var(--kui-color-text-success, ${KUI_COLOR_TEXT_SUCCESS})`,
+    grey: `var(--kui-color-text-neutral-strong, ${KUI_COLOR_TEXT_NEUTRAL_STRONG})`,
   }
 
   return polarity > 0
@@ -236,7 +234,6 @@ const hideTitleIcon = [MetricCardSize.Small].includes(props.cardSize)
 
 <style lang="scss" scoped>
 @import "../../styles/base";
-$row-gap-size: 12px;
 
 .metricscard {
   display: flex;
@@ -260,125 +257,133 @@ $row-gap-size: 12px;
 
   &-title {
     align-items: center;
-    color: var(--kong-ui-metric-card-title, $kui-color-text);
+    color: var(--kui-color-text, $kui-color-text);
     display: flex;
     flex-direction: row;
-    font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-medium;
-    line-height: $kui-line-height-20;
-    margin: $kui-space-0;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
+    margin: var(--kui-space-0, $kui-space-0);
 
     // The metric card title is always 14px; the "small" variant is the exception
     &.sm {
-      font-size: $kui-font-size-20;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
     }
     &.md {
-      font-size: $kui-font-size-30;
-      font-weight: $kui-font-weight-semibold;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     }
     &.lg {
-      font-size: $kui-font-size-30;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
     }
     &.xl {
-      font-size: $kui-font-size-30;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
     }
   }
 
   &-description {
-    color: var(--kong-ui-metric-card-value, $kui-color-text-disabled);
-    font-size: $kui-font-size-20;
-    line-height: $kui-line-height-20;
-    margin-top: 10px;
+    color: var(--kui-color-text-disabled, $kui-color-text-disabled);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 
   &-icon {
-    margin-right: $kui-space-20;
+    margin-right: var(--kui-space-20, $kui-space-20);
   }
 
   &-value {
-    color: var(--kong-ui-metric-card-value, $kui-color-text);
+    color: var(--kui-color-text, $kui-color-text);
     display: flex;
     flex-direction: row;
-    font-size: $kui-font-size-70;
-    font-weight: $kui-font-weight-semibold;
+    font-size: var(--kui-font-size-70, $kui-font-size-70);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     justify-content: space-between;
-    line-height: $kui-line-height-60;
+    line-height: var(--kui-line-height-60, $kui-line-height-60);
 
     &.sm {
-      font-size: $kui-font-size-30;
-      line-height: $kui-line-height-40;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      line-height: var(--kui-line-height-40, $kui-line-height-40);
     }
     &.xl {
-      font-size: $kui-font-size-100;
+      font-size: var(--kui-font-size-100, $kui-font-size-100);
     }
   }
 
   &-valuetrend {
     display: flex;
     flex-direction: column;
-    row-gap: $row-gap-size;
+    row-gap: var(--kui-space-50, $kui-space-50);
+
+    @media (max-width: ($kui-breakpoint-phablet - 1px)) {
+      row-gap: var(--kui-space-30, $kui-space-30);
+    }
 
     &.is-compact {
       align-items: center;
       flex-direction: row !important;
       justify-content: space-between;
-      margin-top: 0;
+      margin-top: var(--kui-space-0, $kui-space-0);
     }
   }
 
   &-trend {
     align-items: center;
-    column-gap: 8px;
+    column-gap: var(--kui-space-40, $kui-space-40);
     display: flex;
 
     &-change {
       align-items: center;
-      border-radius: 4px;
+      border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
       display: flex;
       flex-direction: row;
-      font-size: $kui-font-size-20;
-      font-weight: $kui-font-weight-semibold;
-      padding: $kui-space-20 $kui-space-40;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+      padding: var(--kui-space-20, $kui-space-20)
+        var(--kui-space-40, $kui-space-40);
 
       .kui-icon {
-        margin-right: 4px;
+        margin-right: var(--kui-space-20, $kui-space-20);
       }
       &.positive {
-        background-color: var(--kong-ui-metric-card-trend-bg-positive, $kui-color-background-success-weakest);
-        color: var(--kong-ui-metric-card-trend-positive, $kui-color-text-success);
+        background-color: var(--kui-color-background-success-weakest, $kui-color-background-success-weakest);
+        color: var(--kui-color-text-success, $kui-color-text-success);
       }
       &.negative {
-        background-color: var(--kong-ui-metric-card-trend-bg-negative, $kui-color-background-danger-weakest);
-        color: var(--kong-ui-metric-card-trend-negative, $kui-color-text-danger-strong);
+        background-color: var(--kui-color-background-danger-weakest, $kui-color-background-danger-weakest);
+        color: var(--kui-color-text-danger-strong, $kui-color-text-danger-strong);
       }
       &.neutral {
-        background-color: var(--kong-ui-metric-card-trend-bg-neutral, $kui-color-background-neutral-weaker);
-        color: var(--kong-ui-metric-card-trend-neutral, $kui-color-text-neutral-strong);
+        background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
+        color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
       }
     }
 
     &-range {
-      color: $kui-color-text;
-      font-size: $kui-font-size-20;
+      color: var(--kui-color-text, $kui-color-text);
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
     }
   }
 
   &-tooltip {
     display: inline-flex;
-    margin: $kui-space-auto $kui-space-0 $kui-space-auto $kui-space-20;
+    margin: var(--kui-space-auto, $kui-space-auto)
+      var(--kui-space-0, $kui-space-0)
+      var(--kui-space-auto, $kui-space-auto)
+      var(--kui-space-20, $kui-space-20);
     vertical-align: middle;
   }
 
   &-error {
     align-items: center;
-    color: $kui-color-text-neutral-stronger;
+    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
     display: flex;
     flex-direction: row;
-    font-size: $kui-font-size-20;
-    margin-top: $kui-space-40;
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    margin-top: var(--kui-space-40, $kui-space-40);
 
     .kong-icon-warning {
-      margin-right: $kui-space-50;
+      margin-right: var(--kui-space-50, $kui-space-50);
     }
   }
 

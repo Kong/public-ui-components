@@ -80,7 +80,7 @@ describe('<AddConsumerModal/>', () => {
 
       cy.wait('@interceptFilters')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(KPrompt)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(KPrompt)
         .vm.$emit('cancel'))
 
       cy.get('@cancelSpy').should('have.been.called')
@@ -110,9 +110,9 @@ describe('<AddConsumerModal/>', () => {
       cy.get('.popover-content .multiselect-list .multiselect-item').should('be.visible')
       cy.get('.popover-content .multiselect-list .multiselect-item').should('have.length', 5)
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.getComponent('.k-multiselect')
+      cy.get('@vueWrapper').then(wrapper => wrapper.getComponent('.k-multiselect')
         .vm.$emit('update:modelValue', [consumers5[0].id]))
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(KPrompt)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(KPrompt)
         .vm.$emit('proceed'))
 
       cy.wait('@interceptSubmission')
@@ -199,7 +199,7 @@ describe('<AddConsumerModal/>', () => {
 
       cy.wait('@interceptFilters')
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(KPrompt)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(KPrompt)
         .vm.$emit('cancel'))
 
       cy.get('@cancelSpy').should('have.been.called')
@@ -229,9 +229,9 @@ describe('<AddConsumerModal/>', () => {
       cy.get('.popover-content .multiselect-list .multiselect-item').should('be.visible')
       cy.get('.popover-content .multiselect-list .multiselect-item').should('have.length', 5)
 
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.getComponent('.k-multiselect')
+      cy.get('@vueWrapper').then(wrapper => wrapper.getComponent('.k-multiselect')
         .vm.$emit('update:modelValue', [consumers5[0].id]))
-      cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(KPrompt)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(KPrompt)
         .vm.$emit('proceed'))
 
       cy.wait('@interceptSubmission')

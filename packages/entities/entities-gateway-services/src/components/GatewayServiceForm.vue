@@ -4,6 +4,8 @@
       :can-submit="canSubmit"
       :config="config"
       :edit-id="gatewayServiceId"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.GatewayService"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
@@ -26,7 +28,10 @@
           :error="hasPreValidateError"
           :error-message="preValidateErrorMessage"
           :label="t('gateway_services.form.fields.name.label')"
-          :label-attributes="{ info: t('gateway_services.form.fields.name.tooltip') }"
+          :label-attributes="{
+            info: t('gateway_services.form.fields.name.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           name="name"
           :placeholder="t('gateway_services.form.fields.name.placeholder')"
           :readonly="form.isReadonly"
@@ -40,7 +45,10 @@
           data-testid="gateway-service-tags-input"
           :help="t('gateway_services.form.fields.tags.help')"
           :label="t('gateway_services.form.fields.tags.label')"
-          :label-attributes="{ info: t('gateway_services.form.fields.tags.tooltip') }"
+          :label-attributes="{
+            info: t('gateway_services.form.fields.tags.tooltip'),
+            tooltipAttributes: { maxWidth: '400' }
+          }"
           name="tags"
           :placeholder="t('gateway_services.form.fields.tags.placeholder')"
           :readonly="form.isReadonly"
@@ -83,7 +91,8 @@
               :label-attributes="{
                 info: config.app === 'konnect'
                   ? t('gateway_services.form.fields.upstream_url.tooltip_for_konnect')
-                  : t('gateway_services.form.fields.upstream_url.tooltip_for_km')
+                  : t('gateway_services.form.fields.upstream_url.tooltip_for_km'),
+                tooltipAttributes: { maxWidth: '400' },
               }"
               name="url"
               :placeholder="t('gateway_services.form.fields.upstream_url.placeholder')"
@@ -112,7 +121,8 @@
             :items="gatewayServiceProtocolItems"
             :label="t('gateway_services.form.fields.protocol.label')"
             :label-attributes="{
-              info: t('gateway_services.form.fields.protocol.tooltip')
+              info: t('gateway_services.form.fields.protocol.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
             }"
             :readonly="form.isReadonly"
             required
@@ -126,7 +136,8 @@
             data-testid="gateway-service-host-input"
             :label="t('gateway_services.form.fields.host.label')"
             :label-attributes="{
-              info: t('gateway_services.form.fields.host.tooltip')
+              info: t('gateway_services.form.fields.host.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
             }"
             name="host"
             :placeholder="t('gateway_services.form.fields.host.placeholder')"
@@ -140,7 +151,8 @@
               data-testid="gateway-service-path-input"
               :label="t('gateway_services.form.fields.path.label')"
               :label-attributes="{
-                info: t('gateway_services.form.fields.path.tooltip')
+                info: t('gateway_services.form.fields.path.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
               }"
               name="path"
               :placeholder="t('gateway_services.form.fields.path.placeholder')"
@@ -153,7 +165,8 @@
             data-testid="gateway-service-port-input"
             :label="t('gateway_services.form.fields.port.label')"
             :label-attributes="{
-              info: t('gateway_services.form.fields.port.tooltip')
+              info: t('gateway_services.form.fields.port.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
             }"
             name="port"
             type="number"
@@ -177,7 +190,10 @@
                 autocomplete="off"
                 data-testid="gateway-service-retries-input"
                 :label="t('gateway_services.form.fields.retries.label')"
-                :label-attributes="{ info: t('gateway_services.form.fields.retries.tooltip') }"
+                :label-attributes="{
+                  info: t('gateway_services.form.fields.retries.tooltip'),
+                  tooltipAttributes: { maxWidth: '400' },
+                }"
                 name="retries"
                 :readonly="form.isReadonly"
                 type="number"
@@ -193,7 +209,10 @@
                 autocomplete="off"
                 data-testid="gateway-service-connTimeout-input"
                 :label="t('gateway_services.form.fields.connect_timeout.label')"
-                :label-attributes="{ info: t('gateway_services.form.fields.connect_timeout.tooltip') }"
+                :label-attributes="{
+                  info: t('gateway_services.form.fields.connect_timeout.tooltip'),
+                  tooltipAttributes: { maxWidth: '400' },
+                }"
                 name="connTimeout"
                 :readonly="form.isReadonly"
                 type="number"
@@ -209,7 +228,10 @@
                 autocomplete="off"
                 data-testid="gateway-service-writeTimeout-input"
                 :label="t('gateway_services.form.fields.write_timeout.label')"
-                :label-attributes="{ info: t('gateway_services.form.fields.write_timeout.tooltip') }"
+                :label-attributes="{
+                  info: t('gateway_services.form.fields.write_timeout.tooltip'),
+                  tooltipAttributes: { maxWidth: '400' },
+                }"
                 name="writeTimeout"
                 :readonly="form.isReadonly"
                 type="number"
@@ -225,7 +247,10 @@
                 autocomplete="off"
                 data-testid="gateway-service-readTimeout-input"
                 :label="t('gateway_services.form.fields.read_timeout.label')"
-                :label-attributes="{ info: t('gateway_services.form.fields.read_timeout.tooltip') }"
+                :label-attributes="{
+                  info: t('gateway_services.form.fields.read_timeout.tooltip'),
+                  tooltipAttributes: { maxWidth: '400' },
+                }"
                 name="readTimeout"
                 :readonly="form.isReadonly"
                 type="number"
@@ -244,7 +269,10 @@
                 autocomplete="off"
                 data-testid="gateway-service-clientCert-input"
                 :label="t('gateway_services.form.fields.client_certificate.label')"
-                :label-attributes="{ info: t('gateway_services.form.fields.client_certificate.tooltip') }"
+                :label-attributes="{
+                  info: t('gateway_services.form.fields.client_certificate.tooltip'),
+                  tooltipAttributes: { maxWidth: '400' },
+                }"
                 name="clientCert"
                 :placeholder="t('gateway_services.form.fields.client_certificate.placeholder')"
                 :readonly="form.isReadonly"
@@ -261,6 +289,7 @@
                 autocomplete="off"
                 data-testid="gateway-service-ca-certs-input"
                 :label="t('gateway_services.form.fields.ca_certificates.label')"
+                :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
                 :placeholder="t('gateway_services.form.fields.ca_certificates.placeholder')"
                 :readonly="form.isReadonly"
                 type="text"
@@ -290,6 +319,7 @@
                 data-testid="gateway-service-tls-verify-checkbox"
                 :description="t('gateway_services.form.fields.tls_verify_enabled.help')"
                 :label="t('gateway_services.form.fields.tls_verify_enabled.label')"
+                :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
               >
                 <template #tooltip>
                   <i18nT
@@ -358,10 +388,11 @@ import {
   useAxios,
   useErrors,
   useGatewayFeatureSupported,
+  useValidators,
   EntityFormSection,
   EntityBaseForm,
   EntityBaseFormType,
-  useValidators,
+  SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -398,6 +429,14 @@ const props = defineProps({
   hideSectionsInfo: {
     type: Boolean,
     required: false,
+    default: false,
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
     default: false,
   },
 })

@@ -183,7 +183,7 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
     })
 
     cy.get('.hash-on-select').click()
-    cy.get('.hash-on-select .select-items-container [data-testid="select-item-header"]').click()
+    cy.get('.hash-on-select .select-items-container [data-testid="select-item-header"] button').click()
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', 'header')
   })
@@ -205,7 +205,7 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
     }).then(({ wrapper }) => wrapper)
       .as('vueWrapper')
 
-    cy.get('@vueWrapper').then(async (wrapper: any) => {
+    cy.get('@vueWrapper').then(async wrapper => {
       await wrapper.setProps({ hashOn: 'header' })
       await wrapper.setProps({ hashOn: 'cookie' })
       cy.get('@onUpdateHeaderSpy').should('have.been.calledWith', '')
@@ -235,7 +235,7 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
     })
 
     cy.get('.hash-fallback-select').click()
-    cy.get('.hash-fallback-select .select-items-container [data-testid="select-item-header"]').click({ force: true })
+    cy.get('.hash-fallback-select .select-items-container [data-testid="select-item-header"] button').click({ force: true })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', 'header')
   })
@@ -251,7 +251,7 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
     }).then(({ wrapper }) => wrapper)
       .as('vueWrapper')
 
-    cy.get('@vueWrapper').then(async (wrapper: any) => {
+    cy.get('@vueWrapper').then(async wrapper => {
       await wrapper.setProps({ hashFallback: 'header' })
       await wrapper.setProps({ hashFallback: 'query_arg' })
       cy.get('@onUpdateHashFallbackHeaderSpy').should('have.been.calledWith', '')

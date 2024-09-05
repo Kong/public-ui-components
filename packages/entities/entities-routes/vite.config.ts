@@ -19,23 +19,34 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     },
     rollupOptions: {
       external: [
-        '@kong-ui-public/expressions', // This is optional if we do not use Expressions features
-        'monaco-editor', // This is optional if we do not use Expressions features
+        '@kong-ui-public/expressions',
+        'lodash.isequal',
       ],
+      output: {
+        // Provide global variables to use in the UMD build for externalized deps
+        globals: {
+          '@kong-ui-public/expressions': 'kong-ui-public-expressions',
+        },
+      },
     },
   },
-  server: {
-    proxy: {
-      // Add the API proxies to inject the Authorization header
-      ...getApiProxies(),
-    },
-  },
-  ...process.env.USE_SANDBOX && {
-    plugins: [
-      // See: https://github.com/vdesjs/vite-plugin-monaco-editor/issues/21
-      ((monacoEditorPlugin as any).default as typeof monacoEditorPlugin)({}),
-    ],
-  },
+  ...(process.env.USE_SANDBOX
+    ? {
+      server: {
+        proxy: {
+          // Add the API proxies to inject the Authorization header
+          ...getApiProxies(),
+        },
+      },
+    }
+    : {}),
+  plugins: [
+    // This plugin is only used in the sandbox & testing environment
+    // It generates extra files in dist folder whitch are not need in library build
+    ...(process.env.USE_SANDBOX
+      ? [((monacoEditorPlugin as any).default as typeof monacoEditorPlugin)({})]
+      : []),
+  ],
 }))
 
 // If we are trying to preview a build of the local `package/entities-routes/sandbox` directory,

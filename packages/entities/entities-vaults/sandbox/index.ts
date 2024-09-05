@@ -38,6 +38,16 @@ const init = async () => {
         name: 'edit-vault',
         component: () => import('./pages/VaultFormPage.vue'),
       },
+      {
+        path: '/vault/:vaultId/secret/create',
+        name: 'create-secret',
+        component: () => import('./pages/SecretFormPage.vue'),
+      },
+      {
+        path: '/vault/:vaultId/secret/:secretId/edit',
+        name: 'edit-secret',
+        component: () => import('./pages/SecretFormPage.vue'),
+      },
     ],
   })
 

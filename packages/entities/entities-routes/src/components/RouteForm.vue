@@ -4,6 +4,8 @@
       :can-submit="isFormValid && changesExist"
       :config="config"
       :edit-id="routeId"
+      :enable-terraform="enableTerraform"
+      :entity-type="SupportedEntityType.Route"
       :error-message="state.errorMessage || fetchServicesErrorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
@@ -88,7 +90,10 @@
           data-testid="route-form-protocols"
           :items="protocols"
           :label="t('form.fields.protocols.label')"
-          :label-attributes="{ info: t('form.fields.protocols.tooltip') }"
+          :label-attributes="{
+            info: t('form.fields.protocols.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :readonly="state.isReadonly"
           required
           width="100%"
@@ -278,7 +283,10 @@
                     data-testid="route-form-path-handling"
                     :items="pathHandlingOptions"
                     :label="t('form.fields.path_handling.label')"
-                    :label-attributes="{ info: t('form.fields.path_handling.tooltip') }"
+                    :label-attributes="{
+                      info: t('form.fields.path_handling.tooltip'),
+                      tooltipAttributes: { maxWidth: '400' },
+                    }"
                     :readonly="state.isReadonly"
                     width="100%"
                   />
@@ -359,6 +367,8 @@
                 <RouteFormExpressionsEditorLoader
                   v-model="state.fields.expression"
                   :protocol="exprEditorProtocol"
+                  :show-expressions-modal-entry="showExpressionsModalEntry"
+                  @notify="emit('notify', $event)"
                 >
                   <template #after-editor="editor">
                     <slot
@@ -391,7 +401,10 @@
                     autocomplete="off"
                     data-testid="route-form-priority"
                     :label="t('form.fields.priority.label')"
-                    :label-attributes="{ info: t('form.fields.priority.tooltip') }"
+                    :label-attributes="{
+                      info: t('form.fields.priority.tooltip'),
+                      tooltipAttributes: { maxWidth: '400' },
+                    }"
                     :readonly="state.isReadonly"
                     type="number"
                   />
@@ -451,6 +464,7 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   EntityFormSection,
+  SupportedEntityType,
   useAxios,
   useDebouncedFilter,
   useErrors,
@@ -569,6 +583,21 @@ const props = defineProps({
     required: false,
     default: () => undefined,
   },
+  /** Whether to show the expressions modal entry */
+  showExpressionsModalEntry: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -576,6 +605,7 @@ const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
   (e: 'loading', isLoading: boolean): void,
   (e: 'model-updated', val: BaseRoutePayload): void,
+  (e: 'notify', options: { message: string, type: string }): void,
 }>()
 
 const currentConfigHash = ref<string>(

@@ -1,4 +1,4 @@
-import type { GranularityValues, RelativeTimeRangeValuesV4 } from './explore-v4'
+import type { GranularityValues, RelativeTimeRangeValuesV4 } from './explore'
 
 export interface TimeframeOptions {
   key: RelativeTimeRangeValuesV4 | 'custom'

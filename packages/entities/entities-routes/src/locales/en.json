@@ -248,6 +248,10 @@
     "expressions_editor": {
       "loading": "Loading the Expressions editor…",
       "error": "Error occurred while loading the Expressions editor. Please view the console for more details."
+    },
+    "expression_playground": {
+      "test_link": "Test with Router Playground",
+      "supported_protocols_hint": "Currently only supports the following protocols: {protocols}"
     }
   }
 }

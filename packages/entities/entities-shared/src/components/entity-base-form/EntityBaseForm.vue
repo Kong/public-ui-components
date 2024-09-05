@@ -48,14 +48,14 @@
         <slot name="form-actions">
           <KButton
             appearance="tertiary"
-            data-testid="form-view-configuration"
+            :data-testid="`${entityType}-${isEditing ? 'edit' : 'create'}-form-view-configuration`"
             @click="toggle()"
           >
             {{ t('baseForm.actions.viewConfiguration') }}
           </KButton>
           <KButton
             appearance="secondary"
-            data-testid="form-cancel"
+            :data-testid="`${entityType}-${isEditing ? 'edit' : 'create'}-form-cancel`"
             :disabled="isReadonly"
             type="reset"
           >
@@ -63,7 +63,7 @@
           </KButton>
           <KButton
             appearance="primary"
-            data-testid="form-submit"
+            :data-testid="`${entityType}-${isEditing ? 'edit' : 'create'}-form-submit`"
             :disabled="disableSave"
             type="submit"
           >
@@ -91,13 +91,19 @@
         <template #json>
           <JsonCodeBlock
             :config="config"
+            :entity-record="props.formFields"
             :fetcher-url="fetcherUrl"
-            :json-record="props.formFields"
             :request-method="props.editId ? 'put' : 'post'"
           />
         </template>
         <template #yaml>
-          <YamlCodeBlock :yaml-record="props.formFields" />
+          <YamlCodeBlock :entity-record="props.formFields" />
+        </template>
+        <template #terraform>
+          <TerraformCodeBlock
+            :entity-record="props.formFields"
+            :entity-type="entityType"
+          />
         </template>
       </KTabs>
     </KSlideout>
@@ -110,10 +116,12 @@ import { computed, ref, onBeforeMount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
+import { SupportedEntityTypesArray, SupportedEntityType } from '../../types'
 import composables from '../../composables'
 import type { Tab } from '@kong/kongponents'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
 import YamlCodeBlock from '../common/YamlCodeBlock.vue'
+import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void,
@@ -141,6 +149,14 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Entity type, required to generate terraform code
+   */
+  entityType: {
+    type: String as PropType<SupportedEntityType>,
+    required: true,
+    validator: (val: SupportedEntityType) => SupportedEntityTypesArray.includes(val),
   },
   /**
    * Fetch url for the item to edit. We will handle the replacement of {controlPlaneId}, {workspace}, and {id}.
@@ -192,6 +208,14 @@ const props = defineProps({
     type: String,
     default: 'KCard',
   },
+  /**
+   * Enable display of Terraform code
+   * Guarded by FF: khcp-12445-terraform-config-details
+   */
+  enableTerraform: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const router = useRouter()
@@ -201,6 +225,7 @@ const { getMessageFromError } = composables.useErrors()
 const { axiosInstance } = composables.useAxios(props.config?.axiosRequestConfig)
 
 const isLoading = ref(false)
+const isEditing = computed(() => !!props.editId)
 const fetchDetailsError = ref(false)
 const fetchErrorMessage = ref('')
 const disableSave = computed((): boolean => props.canSubmit === false || props.isReadonly)
@@ -258,14 +283,22 @@ const handleClickSave = (): void => {
 
 const tabs = ref<Tab[]>([
   {
-    title: t('baseForm.configuration.yaml'),
-    hash: '#yaml',
-  },
-  {
     title: t('baseForm.configuration.json'),
     hash: '#json',
   },
+  {
+    title: t('baseForm.configuration.yaml'),
+    hash: '#yaml',
+  },
 ])
+
+if (props.enableTerraform && props.entityType !== SupportedEntityType.Other) {
+  // insert terraform as the third option
+  tabs.value.splice(1, 0, {
+    title: t('baseForm.configuration.terraform'),
+    hash: '#terraform',
+  })
+}
 
 watch(() => isLoading.value, (val: boolean) => {
   // Emit the loading state for the host app

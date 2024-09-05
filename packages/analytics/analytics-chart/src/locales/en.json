@@ -10,7 +10,8 @@
     "bytes": "Byte{plural}",
     "count": "request{plural}",
     "count/minute": "rpm",
-    "requests": "request{plural}"
+    "requests": "request{plural}",
+    "token count": "token{plural}"
   },
   "csvExport" :{
     "noDataRange": "No data in selected range",
@@ -118,7 +119,12 @@
     "REQUEST_SIZE_P95": "Request Size (p95)",
     "REQUEST_SIZE_P50": "Request Size (p50)",
     "CONTROL_PLANE": "Control Plane",
-    "____OTHER____": "Others"
+    "____OTHER____": "Others",
+    "ai_request_count": "Request Count",
+    "total_tokens": "Token Count",
+    "prompt_tokens": "Prompt Token Count",
+    "completion_tokens": "Completion Token Count",
+    "cost": "LLM Costs"
   },
   "metricAxisTitles": {
     "request_count": "Request Count",
