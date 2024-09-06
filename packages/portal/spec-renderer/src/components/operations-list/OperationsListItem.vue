@@ -109,7 +109,7 @@ const methodName = computed((): BadgeAppearance => {
 }
 
 .item--selected {
-  background: var(--kong-ui-spec-renderer-operations-list-item-background-selected, $kui-color-background-inverse);
+  background: var(--kong-ui-spec-renderer-operations-list-item-background-selected, $kui-color-background-primary-weakest);
 
   &::before {
     background: var(--kong-ui-spec-renderer-operations-list-item-selected-bar-background, $kui-color-background-primary);
