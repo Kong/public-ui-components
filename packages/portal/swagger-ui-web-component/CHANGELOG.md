@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.12.0...@kong-ui-public/swagger-ui-web-component@0.12.1) (2024-09-06)
+
+
+### Bug Fixes
+
+* **spec-renderer:** style issues [khcp-13104] ([#1598](https://github.com/Kong/public-ui-components/issues/1598)) ([06b6606](https://github.com/Kong/public-ui-components/commit/06b66064d57d49bc3f8971578f2c15013769eefc))
+
+
+
+
+
 # [0.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.11.9...@kong-ui-public/swagger-ui-web-component@0.12.0) (2024-05-06)
 
 
