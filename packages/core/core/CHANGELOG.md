@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.8.0...@kong-ui-public/core@1.9.0) (2024-09-06)
+
+
+### Features
+
+* **date-fns:** update to v3 [MA-2651] ([#1592](https://github.com/Kong/public-ui-components/issues/1592)) ([89ff83a](https://github.com/Kong/public-ui-components/commit/89ff83a9e03e7ac24fff99386c5e5af09ef2e0f9))
+
+
+
+
+
 # [1.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.7.8...@kong-ui-public/core@1.8.0) (2024-08-27)
 
 
