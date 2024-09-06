@@ -20,7 +20,7 @@ import type {
   RelativeTimeRangeValuesV4, TimeRangeV4,
   GranularityValues,
 } from './types'
-import { getTimezoneOffset, utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz'
+import { getTimezoneOffset, toZonedTime, fromZonedTime } from 'date-fns-tz'
 import type { ITimeframe } from './types/timeframe'
 
 const adjustForTz = (d: Date, tz: string) => {
@@ -156,8 +156,8 @@ export class Timeframe implements ITimeframe {
 
     // Take `new Date()` and adjust it so that it's within the given TZ
     // instead of the current environment's TZ.
-    const tzNeutral = zonedTimeToUtc(new Date(), (new Intl.DateTimeFormat()).resolvedOptions().timeZone)
-    return utcToZonedTime(tzNeutral, tz)
+    const tzNeutral = fromZonedTime(new Date(), (new Intl.DateTimeFormat()).resolvedOptions().timeZone)
+    return toZonedTime(tzNeutral, tz)
   }
 }
 
