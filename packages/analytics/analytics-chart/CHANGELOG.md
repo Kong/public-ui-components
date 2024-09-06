@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.4.2...@kong-ui-public/analytics-chart@4.4.3) (2024-09-06)
+
+
+### Bug Fixes
+
+* typo in metric axis title ([#1595](https://github.com/Kong/public-ui-components/issues/1595)) ([1e373c8](https://github.com/Kong/public-ui-components/commit/1e373c829415ac1e4906f6e48163f9729a135a04))
+
+
+
+
+
 ## [4.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.4.1...@kong-ui-public/analytics-chart@4.4.2) (2024-09-05)
 
 
