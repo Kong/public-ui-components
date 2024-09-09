@@ -186,16 +186,11 @@ const submitData = async (): Promise<void> => {
     state.readonly = true
 
     let response: AxiosResponse | undefined
-    const requestBody = {
-      ...payload.value,
-      // Indicate that the secret is sensitive
-      // is_sensitive: true,
-    }
 
     if (formType.value === 'create') {
-      response = await axiosInstance.post(submitUrl.value, requestBody)
+      response = await axiosInstance.post(submitUrl.value, payload.value)
     } else if (formType.value === 'edit') {
-      response = await axiosInstance.put(submitUrl.value, requestBody)
+      response = await axiosInstance.put(submitUrl.value, payload.value)
     }
 
     updateFormValues(response?.data)
