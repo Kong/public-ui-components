@@ -1031,6 +1031,16 @@ const getPayload = computed((): Record<string, any> => {
   return payload
 })
 
+const payloadWithConfigStoreId = computed<Record<string, any>>(() => (
+  {
+    ...getPayload.value,
+    config: {
+      ...getPayload.value.config,
+      config_store_id: configStoreId.value,
+    },
+  }
+))
+
 const createConfigStore = async (): Promise<string | undefined> => {
   try {
     form.isReadonly = true
@@ -1058,35 +1068,17 @@ const saveFormData = async (): Promise<void> => {
     if (formType.value === 'create') {
       if (vaultProvider.value === VaultProviders.KONNECT) {
         configStoreId.value = await createConfigStore()
-        response = await axiosInstance.post(submitUrl.value, {
-          ...getPayload.value,
-          config: {
-            ...getPayload.value.config,
-            config_store_id: configStoreId.value,
-          },
-        })
+        response = await axiosInstance.post(submitUrl.value, payloadWithConfigStoreId.value)
       } else {
         response = await axiosInstance.post(submitUrl.value, getPayload.value)
       }
     } else if (formType.value === 'edit') {
       if (vaultProvider.value === VaultProviders.KONNECT && !configStoreId.value) {
         configStoreId.value = await createConfigStore()
-        response = await axiosInstance.put(submitUrl.value, {
-          ...getPayload.value,
-          config: {
-            ...getPayload.value.config,
-            config_store_id: configStoreId.value,
-          },
-        })
+        response = await axiosInstance.put(submitUrl.value, payloadWithConfigStoreId.value)
       } else {
         response = props.config?.app === 'konnect'
-          ? await axiosInstance.put(submitUrl.value, {
-            ...getPayload.value,
-            config: {
-              ...getPayload.value.config,
-              config_store_id: configStoreId.value,
-            },
-          })
+          ? await axiosInstance.put(submitUrl.value, payloadWithConfigStoreId.value)
           : await axiosInstance.patch(submitUrl.value, getPayload.value)
       }
     }
