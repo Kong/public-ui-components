@@ -19,9 +19,9 @@ export function formatTime(ts: number, options: TimeFormatOptions = {}) {
   const tz = options.tz || Intl.DateTimeFormat().resolvedOptions().timeZone
 
   try {
-    let timeFormat = 'MMM dd, YYY hh:mm a'
+    let timeFormat = 'MMM dd, yyy hh:mm a'
     if (options.short) {
-      timeFormat = 'MMM dd, YYY'
+      timeFormat = 'MMM dd, yyy'
     }
 
     if (options.includeTZ) {
