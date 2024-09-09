@@ -4,7 +4,8 @@ import SecretForm from './SecretForm.vue'
 import { secret } from '../../fixtures/mockData'
 
 const cancelRoute = { name: 'view-route' }
-const vaultId = '12345-qwerty'
+const vaultId = 'vault-id'
+const configStoreId = '12345-qwerty'
 
 const baseConfigKonnect: KonnectSecretFormConfig = {
   app: 'konnect',
@@ -22,7 +23,17 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/${vaultId}/secrets/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/${vaultId}`,
+        },
+        {
+          statusCode: 200,
+          body: { config: { config_store_id: configStoreId } },
+        },
+      )
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores/${configStoreId}/secrets/*`,
         },
         {
           statusCode: 200,
@@ -32,6 +43,8 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
     }
 
     it('should show create form', () => {
+      interceptKonnect()
+
       cy.mount(SecretForm, {
         props: {
           config: baseConfigKonnect,
@@ -52,6 +65,8 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
     })
 
     it('should correctly handle button state - create', () => {
+      interceptKonnect()
+
       cy.mount(SecretForm, {
         props: {
           config: baseConfigKonnect,
@@ -129,7 +144,17 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/${vaultId}/secrets/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/${vaultId}`,
+        },
+        {
+          statusCode: 200,
+          body: { config: { config_store_id: configStoreId } },
+        },
+      )
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores/${configStoreId}/secrets/*`,
         },
         {
           statusCode: 404,

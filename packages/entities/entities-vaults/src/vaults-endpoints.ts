@@ -1,4 +1,5 @@
 const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
+const konnectConfigStoreApiUrl = '/v2/control-planes/{controlPlaneId}/config-stores'
 const KMBaseApiUrl = '/{workspace}'
 
 export default {
@@ -9,6 +10,7 @@ export default {
   form: {
     konnect: {
       create: `${konnectBaseApiUrl}/vaults`,
+      createConfigStore: konnectConfigStoreApiUrl,
       edit: `${konnectBaseApiUrl}/vaults/{id}`,
     },
     kongManager: {

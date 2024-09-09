@@ -762,6 +762,8 @@ export interface SecretsFetcherRawResponse {
   offset?: string;
 }
 
+export const konnectConfigStoreId = '123-qwerty-french-dj'
+
 const vaults: VaultEntityRow[] = [
   {
     id: '1',
@@ -780,6 +782,9 @@ const vaults: VaultEntityRow[] = [
     name: 'konnect',
     prefix: 'kv-1',
     description: 'Konnect Config Store',
+    config: {
+      config_store_id: konnectConfigStoreId,
+    },
   },
   {
     id: '4',
@@ -802,8 +807,6 @@ export const kongManagerVaultsResponse: VaultsFetcherRawResponse = {
   data: kongManagerVaults,
   total: kongManagerVaults.length,
 }
-
-export const konnectVaultId = '3'
 
 const secrets: SecretEntityRow[] = [
   {

@@ -529,6 +529,7 @@ import type {
 import {
   VaultProviders,
   VaultAuthMethods,
+  type KonnectConfigStore,
 } from '../types'
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
@@ -610,6 +611,7 @@ const originalFields = reactive<VaultStateFields>({
 
 const vaultProvider = ref<VaultProviders>(props.config.konnectConfigStoreAvailable ? VaultProviders.KONNECT : VaultProviders.ENV)
 const originalVaultProvider = ref<VaultProviders | null>(null)
+const configStoreId = ref<string>()
 
 const isAvailableTTLConfig = computed(() => {
   return [VaultProviders.AWS, VaultProviders.GCP, VaultProviders.HCV, VaultProviders.AZURE].includes(vaultProvider.value)
@@ -847,6 +849,7 @@ const updateFormValues = (data: Record<string, any>): void => {
   if (config && (Object.keys(config).length || data?.name === VaultProviders.KONNECT)) {
     vaultProvider.value = data?.item?.name || data?.name || ''
     originalVaultProvider.value = vaultProvider.value
+    configStoreId.value = data?.config_store_id || undefined
     Object.assign(configFields[vaultProvider.value], config)
 
     Object.assign(originalConfigFields[vaultProvider.value], config)
@@ -1028,6 +1031,24 @@ const getPayload = computed((): Record<string, any> => {
   return payload
 })
 
+const createConfigStore = async (): Promise<string | undefined> => {
+  try {
+    form.isReadonly = true
+
+    const requestUrl = `${props.config.apiBaseUrl}${endpoints.form.konnect.createConfigStore}`
+      .replace(/{controlPlaneId}/gi, (props.config as KonnectVaultFormConfig)?.controlPlaneId || '')
+
+    const response = await axiosInstance.post<KonnectConfigStore>(requestUrl)
+
+    return response?.data.id
+  } catch (error: any) {
+    form.errorMessage = getMessageFromError(error)
+    emit('error', error as AxiosError)
+  } finally {
+    form.isReadonly = false
+  }
+}
+
 const saveFormData = async (): Promise<void> => {
   try {
     form.isReadonly = true
@@ -1035,11 +1056,33 @@ const saveFormData = async (): Promise<void> => {
     let response: AxiosResponse | undefined
 
     if (formType.value === 'create') {
-      response = await axiosInstance.post(submitUrl.value, getPayload.value)
+      if (vaultProvider.value === VaultProviders.KONNECT) {
+        configStoreId.value = await createConfigStore()
+        response = await axiosInstance.post(submitUrl.value, {
+          ...getPayload.value,
+          config: {
+            ...getPayload.value.config,
+            config_store_id: configStoreId.value,
+          },
+        })
+      } else {
+        response = await axiosInstance.post(submitUrl.value, getPayload.value)
+      }
     } else if (formType.value === 'edit') {
-      response = props.config?.app === 'konnect'
-        ? await axiosInstance.put(submitUrl.value, getPayload.value)
-        : await axiosInstance.patch(submitUrl.value, getPayload.value)
+      if (vaultProvider.value === VaultProviders.KONNECT && !configStoreId.value) {
+        configStoreId.value = await createConfigStore()
+        response = await axiosInstance.put(submitUrl.value, {
+          ...getPayload.value,
+          config: {
+            ...getPayload.value.config,
+            config_store_id: configStoreId.value,
+          },
+        })
+      } else {
+        response = props.config?.app === 'konnect'
+          ? await axiosInstance.put(submitUrl.value, { ...getPayload.value, config_store_id: configStoreId.value })
+          : await axiosInstance.patch(submitUrl.value, getPayload.value)
+      }
     }
 
     updateFormValues(response?.data)

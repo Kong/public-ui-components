@@ -18,8 +18,11 @@
     "copy": "Failed to copy to clipboard"
   },
   "search": {
-    "placeholder": {
-      "konnect": "Filter by exact name or ID"
+    "placeholder_for_vaults": {
+      "konnect": "Filter by exact prefix or ID"
+    },
+    "placeholder_for_secrets": {
+      "konnect": "Filter by exact key"
     }
   },
   "vaults": {

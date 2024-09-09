@@ -172,7 +172,7 @@ const selectedVault = ref<VaultEntity | undefined>()
 // We don't care about other typed vaults
 const secretsEndpoint = computed(() => {
   if (props.config.app === 'konnect') {
-    return secretsEndpoints.list[props.config.app].replace(/{id}/gi, selectedVault.value?.id ?? '')
+    return secretsEndpoints.list[props.config.app].replace(/{id}/gi, selectedVault.value?.config?.config_store_id ?? '')
   }
 
   return '<not_applicable>'
@@ -281,7 +281,7 @@ const buildVaultFetchUrl = (vaultPrefix: string) => {
   return url.replace(/{id}/gi, vaultPrefix)
 }
 
-const buildSecretFetchUrl = (secretId: string, vaultId: string) => {
+const buildSecretFetchUrl = (secretId: string, configStoreId: string) => {
   if (props.config.app !== 'konnect') {
     // We should never use this URL
     return '<not_applicable>'
@@ -289,7 +289,7 @@ const buildSecretFetchUrl = (secretId: string, vaultId: string) => {
 
   return `${props.config.apiBaseUrl}${secretsEndpoints.form[props.config.app].edit}`
     .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-    .replace(/{id}/gi, vaultId)
+    .replace(/{id}/gi, configStoreId)
     .replace(/{secretId}/gi, secretId)
 }
 
@@ -331,7 +331,7 @@ watch(() => props.setup, async (secretRef) => {
         if (verifiedVault.name === 'konnect') {
           if (parsed.secretId) {
             // Check if the secret exists in the Konnect vault
-            const { data: secret } = await axiosInstance.get<SecretEntity>(buildSecretFetchUrl(parsed.secretId, vault.id))
+            const { data: secret } = await axiosInstance.get<SecretEntity>(buildSecretFetchUrl(parsed.secretId, vault.config.config_store_id))
 
             // Ensure the secret exists
             // Secret key is secret ID in the secret reference

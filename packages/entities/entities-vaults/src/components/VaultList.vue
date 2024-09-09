@@ -271,7 +271,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   if (isExactMatch) {
     return {
       isExactMatch: true,
-      placeholder: t('search.placeholder.konnect'),
+      placeholder: t('search.placeholder_for_vaults.konnect'),
     } as ExactMatchFilterConfig
   }
 

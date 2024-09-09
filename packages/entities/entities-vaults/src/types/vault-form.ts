@@ -148,3 +148,7 @@ export interface VaultState {
   isReadonly: boolean
   errorMessage: string
 }
+
+export interface KonnectConfigStore {
+  id: string
+}
