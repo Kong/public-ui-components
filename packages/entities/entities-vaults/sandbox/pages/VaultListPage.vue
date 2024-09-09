@@ -14,7 +14,7 @@
     :config="konnectConfig"
     @copy:error="onCopyIdError"
     @copy:success="onCopyIdSuccess"
-    @delete-vault:success="onDeleteVaultSuccess"
+    @delete:success="onDeleteVaultSuccess"
     @error="onError"
   />
 
@@ -30,7 +30,7 @@
     :config="kongManagerConfig"
     @copy:error="onCopyIdError"
     @copy:success="onCopyIdSuccess"
-    @delete-vault:success="onDeleteVaultSuccess"
+    @delete:success="onDeleteVaultSuccess"
     @error="onError"
   />
 </template>

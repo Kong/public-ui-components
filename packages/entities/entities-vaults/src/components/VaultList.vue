@@ -251,7 +251,7 @@ const tableHeaders: BaseTableHeaders = fields
  * Fetcher & Filtering
  */
 const fetcherBaseUrl = computed<string>(() => {
-  let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app]}`
+  let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app].getAll}`
 
   if (props.config.app === 'konnect') {
     url = url
@@ -402,6 +402,19 @@ const hideDeleteModal = (): void => {
   isDeleteModalVisible.value = false
 }
 
+const deleteAssociatedConfigStore = async (configStoreId: string): Promise<void> => {
+  const { apiBaseUrl, app, controlPlaneId } = (props.config as KonnectVaultListConfig)
+  const url = `${apiBaseUrl}${endpoints.list[app].deleteConfigStore}`
+    .replace(/{controlPlaneId}/gi, controlPlaneId || '')
+    .replace(/{id}/gi, configStoreId)
+  try {
+    await axiosInstance.delete(url)
+  } catch (error: any) {
+    // There is a rare case where more than 1 vaults are linked to the config store (i.e. created via API).
+    // In this case, the deletion will fail but the UI can safely ignore the error.
+  }
+}
+
 const confirmDelete = async (): Promise<void> => {
   if (!vaultToBeDeleted.value?.id) {
     return
@@ -411,6 +424,10 @@ const confirmDelete = async (): Promise<void> => {
 
   try {
     await axiosInstance.delete(buildDeleteUrl(vaultToBeDeleted.value.id))
+
+    if (props.config.app === 'konnect' && vaultToBeDeleted.value.config?.config_store_id) {
+      deleteAssociatedConfigStore(vaultToBeDeleted.value.config.config_store_id)
+    }
 
     isDeletePending.value = false
     isDeleteModalVisible.value = false

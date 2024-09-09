@@ -4,8 +4,13 @@ const KMBaseApiUrl = '/{workspace}'
 
 export default {
   list: {
-    konnect: `${konnectBaseApiUrl}/vaults`,
-    kongManager: `${KMBaseApiUrl}/vaults`,
+    konnect: {
+      getAll: `${konnectBaseApiUrl}/vaults`,
+      deleteConfigStore: `${konnectConfigStoreApiUrl}/{id}`,
+    },
+    kongManager: {
+      getAll: `${KMBaseApiUrl}/vaults`,
+    },
   },
   form: {
     konnect: {
