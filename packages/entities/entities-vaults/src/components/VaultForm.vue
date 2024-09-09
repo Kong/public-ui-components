@@ -849,7 +849,7 @@ const updateFormValues = (data: Record<string, any>): void => {
   if (config && (Object.keys(config).length || data?.name === VaultProviders.KONNECT)) {
     vaultProvider.value = data?.item?.name || data?.name || ''
     originalVaultProvider.value = vaultProvider.value
-    configStoreId.value = data?.config_store_id || undefined
+    configStoreId.value = data?.config?.config_store_id || undefined
     Object.assign(configFields[vaultProvider.value], config)
 
     Object.assign(originalConfigFields[vaultProvider.value], config)
@@ -1080,7 +1080,13 @@ const saveFormData = async (): Promise<void> => {
         })
       } else {
         response = props.config?.app === 'konnect'
-          ? await axiosInstance.put(submitUrl.value, { ...getPayload.value, config_store_id: configStoreId.value })
+          ? await axiosInstance.put(submitUrl.value, {
+            ...getPayload.value,
+            config: {
+              ...getPayload.value.config,
+              config_store_id: configStoreId.value,
+            },
+          })
           : await axiosInstance.patch(submitUrl.value, getPayload.value)
       }
     }
