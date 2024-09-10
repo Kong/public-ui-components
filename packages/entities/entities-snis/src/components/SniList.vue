@@ -15,7 +15,6 @@
       preferences-storage-key="kong-ui-entities-snis-list"
       :query="filterQuery"
       :table-headers="tableHeaders"
-      :use-action-outside="useActionOutside"
       @clear-search-input="clearFilter"
       @sort="resetPagination"
     >
@@ -38,7 +37,7 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-sni"
-              size="large"
+              :size="useActionOutside ? 'medium' : 'large'"
               :to="config.createRoute"
             >
               <AddIcon />

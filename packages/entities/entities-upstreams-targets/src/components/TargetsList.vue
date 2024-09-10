@@ -12,7 +12,6 @@
       pagination-type="offset"
       preferences-storage-key="kong-ui-entities-targets-list"
       :table-headers="tableHeaders"
-      :use-action-outside="useActionOutside"
       @empty-state-cta-clicked="() => !props.config.createRoute ? handleCreateTarget() : undefined"
       @sort="resetPagination"
     >
@@ -28,6 +27,7 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-new-target"
+              :size="useActionOutside ? 'medium' : 'large'"
               :to="props.config.createRoute ? props.config.createRoute : undefined"
               @click="() => !props.config.createRoute ? handleCreateTarget() : undefined"
             >

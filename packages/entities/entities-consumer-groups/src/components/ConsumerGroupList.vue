@@ -15,7 +15,6 @@
       :query="filterQuery"
       :row-attributes="rowAttributes"
       :table-headers="tableHeaders"
-      :use-action-outside="useActionOutside"
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @empty-state-cta-clicked="handleEmptyStateCtaClicked"
@@ -41,7 +40,7 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-consumer-group"
-              size="large"
+              :size="useActionOutside ? 'medium' : 'large'"
               :to="config.consumerId ? undefined : config.createRoute"
               @click="() => config.consumerId ? handleAddToGroupClick() : undefined"
             >

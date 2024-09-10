@@ -13,7 +13,6 @@
       pagination-type="offset"
       preferences-storage-key="kong-ui-entities-consumer-credentials-list"
       :table-headers="tableHeaders"
-      :use-action-outside="useActionOutside"
       @sort="resetPagination"
     >
       <!-- Create action -->
@@ -28,7 +27,7 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-credential"
-              size="large"
+              :size="useActionOutside ? 'medium' : 'large'"
               :to="config.createRoute"
             >
               <AddIcon />
