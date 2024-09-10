@@ -16,7 +16,6 @@
       :table-headers="tableHeaders"
       :title="title"
       :title-tag="titleTag"
-      :use-action-outside="useActionOutside"
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @sort="resetPagination"
@@ -40,7 +39,7 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-route"
-              size="large"
+              :size="useActionOutside ? 'medium' : 'large'"
               :to="config.createRoute"
             >
               <AddIcon />

@@ -13,7 +13,6 @@
       preferences-storage-key="kong-ui-entities-certificates-list"
       :query="filterQuery"
       :table-headers="tableHeaders"
-      :use-action-outside="useActionOutside"
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @sort="resetPagination"
@@ -37,7 +36,7 @@
               v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-certificate"
-              size="large"
+              :size="useActionOutside ? 'medium' : 'large'"
               :to="config.createRoute"
             >
               <AddIcon />
