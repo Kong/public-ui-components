@@ -14,7 +14,8 @@ import { v4 as uuidv4 } from 'uuid'
 const viewRoute = 'view-route'
 const editRoute = 'edit-route'
 const createRoute = 'create-route'
-const vaultId = '123-qwerty-french-dj'
+const vaultId = 'vault-id'
+const configStoreId = '123-qwerty-french-dj'
 
 const baseConfigKonnect: KonnectSecretListConfig = {
   app: 'konnect',
@@ -40,7 +41,17 @@ describe('<SecretList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/${vaultId}/secrets*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/${vaultId}`,
+        },
+        {
+          statusCode: 200,
+          body: { config: { config_store_id: configStoreId } },
+        },
+      )
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores/${configStoreId}/secrets*`,
         },
         {
           statusCode: 200,
@@ -60,7 +71,6 @@ describe('<SecretList />', () => {
               canCreate: () => false,
               canEdit: () => expected,
               canDelete: () => false,
-              canRetrieve: () => false,
             },
           })
 
@@ -77,7 +87,6 @@ describe('<SecretList />', () => {
               canCreate: () => false,
               canEdit: () => false,
               canDelete: () => expected,
-              canRetrieve: () => false,
             },
           })
 
@@ -96,7 +105,17 @@ describe('<SecretList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/${vaultId}/secrets*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/*`,
+        },
+        {
+          statusCode: 200,
+          body: { config: { config_store_id: configStoreId } },
+        },
+      )
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores/${configStoreId}/secrets*`,
         },
         {
           statusCode: 200,
@@ -115,7 +134,17 @@ describe('<SecretList />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/${vaultId}/secrets*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/*`,
+        },
+        {
+          statusCode: 200,
+          body: { config: { config_store_id: configStoreId } },
+        },
+      )
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores/${configStoreId}/secrets*`,
         },
         (req) => {
           const size = req.query.size ? Number(req.query.size) : 30
@@ -140,7 +169,6 @@ describe('<SecretList />', () => {
           canCreate: () => true,
           canEdit: () => false,
           canDelete: () => false,
-          canRetrieve: () => false,
         },
       })
 
@@ -161,7 +189,6 @@ describe('<SecretList />', () => {
           canCreate: () => false,
           canEdit: () => false,
           canDelete: () => false,
-          canRetrieve: () => false,
         },
       })
 
@@ -176,7 +203,17 @@ describe('<SecretList />', () => {
         cy.intercept(
           {
             method: 'GET',
-            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/${vaultId}/secrets*`,
+            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/*`,
+          },
+          {
+            statusCode: 200,
+            body: { config: { config_store_id: configStoreId } },
+          },
+        )
+        cy.intercept(
+          {
+            method: 'GET',
+            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores/${configStoreId}/secrets*`,
           },
           {
             statusCode: 500,
@@ -192,7 +229,6 @@ describe('<SecretList />', () => {
             canCreate: () => false,
             canEdit: () => false,
             canDelete: () => false,
-            canRetrieve: () => false,
           },
         })
 
@@ -221,7 +257,6 @@ describe('<SecretList />', () => {
           canCreate: () => false,
           canEdit: () => false,
           canDelete: () => false,
-          canRetrieve: () => false,
         },
       })
 
@@ -247,7 +282,6 @@ describe('<SecretList />', () => {
           canCreate: () => false,
           canEdit: () => false,
           canDelete: () => false,
-          canRetrieve: () => false,
         },
       })
 
@@ -324,7 +358,6 @@ describe('<SecretList />', () => {
           canCreate: () => false,
           canEdit: () => false,
           canDelete: () => false,
-          canRetrieve: () => false,
         },
       })
         .then(({ wrapper }) => wrapper)
@@ -365,7 +398,6 @@ describe('<SecretList />', () => {
           canCreate: () => false,
           canEdit: () => false,
           canDelete: () => false,
-          canRetrieve: () => false,
         },
       })
 

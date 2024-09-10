@@ -2,7 +2,7 @@
 import type { KongManagerConfig, KonnectConfig } from '@kong-ui-public/entities-shared'
 import {
   kongManagerVaultsResponse,
-  konnectVaultId,
+  konnectConfigStoreId,
   secretsResponse,
   vaultsResponse,
 } from '../../fixtures/mockData'
@@ -197,10 +197,10 @@ describe('<VaultSecretPicker />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/*/secrets*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores/*/secrets*`,
         },
         cy.spy((req) => {
-          if (!req.url.includes(`/vaults/${konnectVaultId}/secrets`)) {
+          if (!req.url.includes(`/config-stores/${konnectConfigStoreId}/secrets`)) {
             req.reply({
               statusCode: 400,
               body: { message: 'Not a Konnect vault!' },

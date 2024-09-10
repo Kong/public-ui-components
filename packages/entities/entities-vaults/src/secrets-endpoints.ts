@@ -1,14 +1,17 @@
-const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
+const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}'
 
 // secrets are only available in Konnect config store
 export default {
+  getVault: {
+    konnect: `${konnectBaseApiUrl}/core-entities/vaults/{id}`,
+  },
   list: {
-    konnect: `${konnectBaseApiUrl}/vaults/{id}/secrets`,
+    konnect: `${konnectBaseApiUrl}/config-stores/{id}/secrets`,
   },
   form: {
     konnect: {
-      create: `${konnectBaseApiUrl}/vaults/{id}/secrets`,
-      edit: `${konnectBaseApiUrl}/vaults/{id}/secrets/{secretId}`,
+      create: `${konnectBaseApiUrl}/config-stores/{id}/secrets`,
+      edit: `${konnectBaseApiUrl}/config-stores/{id}/secrets/{secretId}`,
     },
   },
 }
