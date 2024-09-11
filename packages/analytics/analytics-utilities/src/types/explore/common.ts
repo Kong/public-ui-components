@@ -15,7 +15,7 @@ export const requestFilterTypeEmptyV2 = ['empty', 'not_empty'] as const
 
 export type RequestFilterTypeEmptyV2 = typeof requestFilterTypeEmptyV2[number]
 
-export const requestFilterTypeWildcardV2 = ['empty', 'not_empty'] as const
+export const requestFilterTypeWildcardV2 = ['starts_with', 'ends_with'] as const
 
 export type RequestFilterTypeWildcardV2 = typeof requestFilterTypeWildcardV2[number]
 
