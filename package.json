@@ -48,7 +48,7 @@
     "jsdom": "^24.0.0",
     "lerna": "^8.1.5",
     "npm-run-all2": "^6.1.2",
-    "postcss": "^8.4.39",
+    "postcss": "^8.4.42",
     "postcss-custom-properties": "^14.0.1",
     "postcss-html": "^1.6.0",
     "rimraf": "^5.0.7",
