@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.5.2...@kong-ui-public/analytics-chart@4.6.0) (2024-09-11)
+
+
+### Features
+
+* **analytics-utilities:** date-fns warning fix ([#1604](https://github.com/Kong/public-ui-components/issues/1604)) ([a195e2c](https://github.com/Kong/public-ui-components/commit/a195e2cb8294e71e3c11fd8469f66a7a3b91d260))
+
+
+
+
+
 ## [4.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.5.1...@kong-ui-public/analytics-chart@4.5.2) (2024-09-11)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.7.0...@kong-ui-public/analytics-utilities@4.8.0) (2024-09-11)
+
+
+### Features
+
+* **analytics-utilities:** date-fns warning fix ([#1604](https://github.com/Kong/public-ui-components/issues/1604)) ([a195e2c](https://github.com/Kong/public-ui-components/commit/a195e2cb8294e71e3c11fd8469f66a7a3b91d260))
+
+
+
+
+
 # [4.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.6.0...@kong-ui-public/analytics-utilities@4.7.0) (2024-09-11)
 
 
