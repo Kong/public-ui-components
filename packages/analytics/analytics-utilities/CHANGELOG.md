@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.6.0...@kong-ui-public/analytics-utilities@4.7.0) (2024-09-11)
+
+
+### Features
+
+* update to new filter schema ([#1606](https://github.com/Kong/public-ui-components/issues/1606)) ([3d18ff2](https://github.com/Kong/public-ui-components/commit/3d18ff241929adbaf9383826c2bd1a6c61c156ad))
+
+
+
+
+
 # [4.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.5.0...@kong-ui-public/analytics-utilities@4.6.0) (2024-09-06)
 
 
