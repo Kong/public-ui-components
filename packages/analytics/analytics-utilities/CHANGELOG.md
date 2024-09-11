@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.8.0...@kong-ui-public/analytics-utilities@4.8.1) (2024-09-11)
+
+
+### Bug Fixes
+
+* clean up request filter types ([#1610](https://github.com/Kong/public-ui-components/issues/1610)) ([c6c14df](https://github.com/Kong/public-ui-components/commit/c6c14df61aa20faf8ee4f8507cde353413cb7566))
+
+
+
+
+
+# [4.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.7.0...@kong-ui-public/analytics-utilities@4.8.0) (2024-09-11)
+
+
+### Features
+
+* **analytics-utilities:** date-fns warning fix ([#1604](https://github.com/Kong/public-ui-components/issues/1604)) ([a195e2c](https://github.com/Kong/public-ui-components/commit/a195e2cb8294e71e3c11fd8469f66a7a3b91d260))
+
+
+
+
+
+# [4.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.6.0...@kong-ui-public/analytics-utilities@4.7.0) (2024-09-11)
+
+
+### Features
+
+* update to new filter schema ([#1606](https://github.com/Kong/public-ui-components/issues/1606)) ([3d18ff2](https://github.com/Kong/public-ui-components/commit/3d18ff241929adbaf9383826c2bd1a6c61c156ad))
+
+
+
+
+
 # [4.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.5.0...@kong-ui-public/analytics-utilities@4.6.0) (2024-09-06)
 
 
