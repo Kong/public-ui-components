@@ -1,22 +1,34 @@
 import { makeFilterable } from './util'
 import type { AbsoluteTimeRangeV4, ExploreFilterTypesV2, RequestFilterTypeEqualsV2, RequestFilterTypeMetricV2, RequestFilterTypeWildcardV2 } from './common'
-import { queryableExploreDimensions, type ExploreFilter } from './advanced'
+import { type ExploreFilter } from './advanced'
 
+// status_code and upstream_status_code are treated as metric filters
 export const queryableRequestDimensions = [
-  ...queryableExploreDimensions.filter(d => (d !== 'status_code' && d !== 'status_code_grouped')),
+  'api_product',
+  'api_product_version',
+  'application',
   'auth_type',
   'client_ip',
+  'consumer',
   'consumer_group',
+  'control_plane',
+  'control_plane_group',
+  'data_plane_node',
+  'gateway_service',
   'header_host',
   'header_user_agent',
   'http_method',
+  'iso_code',
   'request_id',
+  'request_uri',
   'response_header_content_type',
   'response_source',
-  'request_uri',
+  'route',
   'service_port',
   'service_protocol',
   'sse',
+  'status_code_grouped',
+  'time',
   'upstream_uri',
   'websocket',
 ] as const
@@ -34,7 +46,7 @@ export const queryableRequestWildcardDimensions = [
 
 export type QueryableRequestWildcardDimensions = typeof queryableRequestWildcardDimensions[number]
 
-export const filterableRequestWildcardDimensions = makeFilterable(queryableRequestWildcardDimensions)
+export const filterableRequestWildcardDimensions = queryableRequestWildcardDimensions
 
 export type FilterableRequestWildcardDimensions = typeof filterableRequestWildcardDimensions[number]
 
