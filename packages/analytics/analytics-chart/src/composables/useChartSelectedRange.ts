@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import { formatTime } from '../utils'
+import { formatTime } from '@kong-ui-public/analytics-utilities'
 
 export default function useChartSelectedRange(chartData: Ref<ExploreResultV4>): Ref<string> {
   const formattedTimeRange = computed(() => {
