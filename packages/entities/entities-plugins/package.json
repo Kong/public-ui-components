@@ -42,7 +42,7 @@
     "@kong/kongponents": "9.5.5",
     "axios": "^1.6.8",
     "vue": "^3.4.31",
-    "vue-router": "^4.4.0"
+    "vue-router": "^4.4.3"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
