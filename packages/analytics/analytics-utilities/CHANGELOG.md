@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.8.0...@kong-ui-public/analytics-utilities@4.8.1) (2024-09-11)
+
+
+### Bug Fixes
+
+* clean up request filter types ([#1610](https://github.com/Kong/public-ui-components/issues/1610)) ([c6c14df](https://github.com/Kong/public-ui-components/commit/c6c14df61aa20faf8ee4f8507cde353413cb7566))
+
+
+
+
+
 # [4.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.7.0...@kong-ui-public/analytics-utilities@4.8.0) (2024-09-11)
 
 
