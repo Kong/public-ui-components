@@ -63,7 +63,7 @@
     "tsc-alias": "^1.8.10",
     "tslib": "^2.6.3",
     "typedoc": "^0.26.6",
-    "typedoc-plugin-markdown": "^3.17.1",
+    "typedoc-plugin-markdown": "^4.2.6",
     "typescript": "~5.3.3",
     "uuid": "^9.0.1",
     "vite": "^5.3.2",
