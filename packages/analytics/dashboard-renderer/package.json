@@ -50,7 +50,7 @@
     "json-schema-to-ts": "^3.0.1",
     "pinia": ">= 2.1.7 < 3",
     "swrv": "^1.0.4",
-    "vue": "^3.4.38"
+    "vue": "^3.4.31"
   },
   "repository": {
     "type": "git",
