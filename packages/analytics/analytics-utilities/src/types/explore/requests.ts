@@ -13,6 +13,7 @@ export const queryableRequestDimensions = [
   'consumer_group',
   'control_plane',
   'control_plane_group',
+  'country_code',
   'data_plane_node',
   'gateway_service',
   'header_host',
@@ -58,9 +59,7 @@ export const queryableRequestMetrics = [
   'response_body_size',
   'request_body_size',
   'status_code',
-  'status_code_grouped',
   'upstream_status_code',
-  'upstream_status_code_grouped',
 ] as const
 
 export type QueryableRequestMetrics = typeof queryableRequestMetrics[number]
