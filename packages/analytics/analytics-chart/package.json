@@ -36,7 +36,7 @@
     "lodash.pick": "^4.4.0",
     "lodash.pickby": "^4.6.0",
     "papaparse": "^5.4.1",
-    "vue": "^3.4.31"
+    "vue": "^3.4.38"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
@@ -76,7 +76,7 @@
     "@types/lodash.pickby": "^4.6.9",
     "@types/papaparse": "^5.3.14",
     "approximate-number": "^2.1.1",
-    "chart.js": "^4.4.3",
+    "chart.js": "^4.4.4",
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-plugin-annotation": "^3.0.1",
     "date-fns": "^3.6.0",
