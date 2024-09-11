@@ -31,6 +31,7 @@ export const queryableRequestDimensions = [
   'status_code_grouped',
   'time',
   'upstream_uri',
+  'upstream_status_code_grouped',
   'websocket',
 ] as const
 
