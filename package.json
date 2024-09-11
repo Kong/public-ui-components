@@ -27,7 +27,7 @@
     "@kong/design-tokens": "1.17.2",
     "@kong/eslint-config-kong-ui": "^1.1.1",
     "@kong/kongponents": "9.5.5",
-    "@stylistic/stylelint-plugin": "^2.1.2",
+    "@stylistic/stylelint-plugin": "^3.0.1",
     "@types/flat": "^5.0.5",
     "@types/js-yaml": "^4.0.9",
     "@types/jsdom": "^21.1.7",
