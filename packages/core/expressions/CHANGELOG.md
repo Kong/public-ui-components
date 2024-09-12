@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.15...@kong-ui-public/expressions@0.4.16) (2024-09-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency monaco-editor to v0.51.0 ([#1615](https://github.com/Kong/public-ui-components/issues/1615)) ([5903bc9](https://github.com/Kong/public-ui-components/commit/5903bc9b642936df443bc4abb8ec51c2051fd061))
+
+
+
+
+
 ## [0.4.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.14...@kong-ui-public/expressions@0.4.15) (2024-09-10)
 
 **Note:** Version bump only for package @kong-ui-public/expressions

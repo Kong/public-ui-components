@@ -1,5 +1,5 @@
 import { makeFilterable } from './util'
-import type { AbsoluteTimeRangeV4, ExploreFilterTypesV2, RequestFilterTypeEqualsV2, RequestFilterTypeMetricV2, RequestFilterTypeWildcardV2 } from './common'
+import type { AbsoluteTimeRangeV4, ExploreFilterTypesV2, RequestFilterTypeEmptyV2, RequestFilterTypeEqualsV2, RequestFilterTypeMetricV2, RequestFilterTypeWildcardV2 } from './common'
 import { type ExploreFilter } from './advanced'
 
 // status_code and upstream_status_code are treated as metric filters
@@ -31,6 +31,7 @@ export const queryableRequestDimensions = [
   'status_code_grouped',
   'time',
   'upstream_uri',
+  'upstream_status_code_grouped',
   'websocket',
 ] as const
 
@@ -84,7 +85,7 @@ export interface RequestMetricFilter {
   value: number
 }
 export interface RequestEmptyFilter {
-  type: RequestFilterTypeEqualsV2
+  type: RequestFilterTypeEmptyV2
   field: FilterableRequestDimensions | FilterableRequestWildcardDimensions | FilterableRequestMetrics
 }
 export interface RequestWildcardFilter {
