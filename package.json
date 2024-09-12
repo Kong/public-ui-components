@@ -41,7 +41,7 @@
     "c8": "^10.1.2",
     "commitizen": "^4.3.0",
     "cross-env": "^7.0.3",
-    "cypress": "^13.13.3",
+    "cypress": "^13.14.1",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.4.0",
     "js-yaml": "^4.1.0",

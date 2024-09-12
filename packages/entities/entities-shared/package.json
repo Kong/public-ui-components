@@ -71,6 +71,6 @@
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
-    "compare-versions": "^6.1.0"
+    "compare-versions": "^6.1.1"
   }
 }
