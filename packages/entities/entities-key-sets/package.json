@@ -35,7 +35,7 @@
     "@kong/icons": "^1.15.1",
     "@kong/kongponents": "9.5.5",
     "axios": "^1.6.8",
-    "vue": "^3.4.31",
+    "vue": "^3.4.38",
     "vue-router": "^4.4.3"
   },
   "scripts": {
