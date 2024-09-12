@@ -45,7 +45,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.4.0",
     "js-yaml": "^4.1.0",
-    "jsdom": "^24.0.0",
+    "jsdom": "^25.0.0",
     "lerna": "^8.1.5",
     "npm-run-all2": "^6.1.2",
     "postcss": "^8.4.42",
