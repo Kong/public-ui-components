@@ -52,7 +52,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.17.2",
     "@kong/kongponents": "9.5.5",
-    "axios": "^1.6.8",
+    "axios": "^1.7.7",
     "vue": ">= 3.3.13 < 4"
   },
   "repository": {
