@@ -94,6 +94,12 @@ export interface RequestWildcardFilter {
   value: string
 }
 
+export interface RequestFilterAll {
+  type: ExploreFilterTypesV2 | RequestFilterTypeEqualsV2 | RequestFilterTypeMetricV2 | RequestFilterTypeEmptyV2 | RequestFilterTypeWildcardV2
+  field: FilterableRequestDimensions | FilterableRequestWildcardDimensions | FilterableRequestMetrics
+  value?: (string | number | null)[] | string | number | null
+}
+
 export type RequestFilter = ExploreFilter |
   RequestInFilter |
   RequestEqualsFilter |
