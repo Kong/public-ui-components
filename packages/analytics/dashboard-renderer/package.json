@@ -47,7 +47,7 @@
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "1.17.2",
     "@kong/kongponents": "9.5.5",
-    "json-schema-to-ts": "^3.0.1",
+    "json-schema-to-ts": "^3.1.1",
     "pinia": ">= 2.1.7 < 3",
     "swrv": "^1.0.4",
     "vue": "^3.4.31"
@@ -82,6 +82,6 @@
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
-    "ajv": "^8.12.0"
+    "ajv": "^8.17.1"
   }
 }
