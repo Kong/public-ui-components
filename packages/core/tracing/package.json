@@ -1,0 +1,74 @@
+{
+  "name": "@kong-ui-public/tracing",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/tracing.umd.js",
+  "module": "./dist/tracing.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/tracing.es.js",
+      "require": "./dist/tracing.umd.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "cross-env USE_SANDBOX=true vite",
+    "build": "run-s typecheck build:package build:types",
+    "build:package": "vite build -m production",
+    "build:analyzer": "BUILD_VISUALIZER='core/tracing' vite build -m production",
+    "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
+    "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
+    "preview": "cross-env USE_SANDBOX=true vite preview",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
+    "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
+    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
+    "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
+    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
+    "test:unit": "cross-env FORCE_COLOR=1 vitest run",
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+  },
+  "devDependencies": {
+    "@kong/design-tokens": "1.17.2",
+    "@kong/kongponents": "9.5.5",
+    "@kong/splitpanes": "3.1.6-patch.2",
+    "@opentelemetry/otlp-transformer": "^0.54.2",
+    "@types/splitpanes": "^2.2.6",
+    "vue": "^3.5.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kong/public-ui-components.git",
+    "directory": "packages/core/tracing"
+  },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/core/tracing",
+  "bugs": {
+    "url": "https://github.com/Kong/public-ui-components/issues"
+  },
+  "author": "Kong, Inc.",
+  "license": "Apache-2.0",
+  "volta": {
+    "extends": "../../../package.json"
+  },
+  "distSizeChecker": {
+    "errorLimit": "300KB"
+  },
+  "peerDependencies": {
+    "@kong/kongponents": "9.5.5",
+    "vue": "^3.5.4"
+  },
+  "dependencies": {
+    "@kong-ui-public/entities-shared": "workspace:^",
+    "@kong/icons": "^1.18.1"
+  }
+}

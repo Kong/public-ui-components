@@ -1,0 +1,38 @@
+{
+  "header": {
+    "content": "Content of the header",
+    "title": "Title of the header"
+  },
+  "trace_viewer": {
+    "empty_state": {
+      "nothing_to_display": "There's nothing to display for the selected span",
+      "unselected": "Selected span will be shown here"
+    },
+    "span_attributes": {
+      "title": "Span Attributes"
+    },
+    "span_events": {
+      "exception_message": {
+        "title": "Exception message"
+      },
+      "title": "Span Events"
+    },
+    "url": "URL"
+  },
+  "waterfall": {
+    "action": {
+      "collapse_all": "Collapse all",
+      "expand_all": "Expand all"
+    },
+    "legend": {
+      "latency": "Latency",
+      "labels": {
+        "root": "Root",
+        "kong": "Kong (internal)",
+        "upstream": "Upstream",
+        "third_party": "Third party",
+        "client": "Client"
+      }
+    }
+  }
+}
