@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.27...@kong-ui-public/spec-renderer@2.2.28) (2024-09-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency uuid to v10 ([#1626](https://github.com/Kong/public-ui-components/issues/1626)) ([49c7fab](https://github.com/Kong/public-ui-components/commit/49c7fab13a7dc5c3e9df3ab3a10de2065489bbc2))
+
+
+
+
+
 ## [2.2.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.26...@kong-ui-public/spec-renderer@2.2.27) (2024-09-13)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer
