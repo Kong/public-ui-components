@@ -30,7 +30,7 @@
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "1.17.2",
     "@kong/kongponents": "9.5.5",
-    "@types/uuid": "^9.0.8",
+    "@types/uuid": "^10.0.0",
     "file-saver": "^2.0.5",
     "lodash.mapkeys": "^4.6.0",
     "lodash.pick": "^4.4.0",
@@ -82,7 +82,7 @@
     "date-fns": "^3.6.0",
     "date-fns-tz": "^3.1.3",
     "pretty-bytes": "^6.1.1",
-    "uuid": "^9.0.1",
+    "uuid": "^10.0.0",
     "vue-chartjs": "^5.3.1"
   },
   "distSizeChecker": {
