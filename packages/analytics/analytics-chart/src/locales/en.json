@@ -32,7 +32,11 @@
     "datapointValueDisplay": "{value} {unit}"
   },
   "chartLabels": {
+    "ai_provider": "Provider",
+    "ai_request_model": "Request Model",
+    "ai_response_model": "Response Model",
     "request_count": "Request Count",
+    "request_per_minute": "Requests per Minute",
     "requests_per_minute": "Requests per Minute",
     "response_latency_p99": "Response Latency (p99)",
     "response_latency_p95": "Response Latency (p95)",
@@ -40,6 +44,9 @@
     "kong_latency_p99": "Kong Latency (p99)",
     "kong_latency_p95": "Kong Latency (p95)",
     "kong_latency_p50": "Kong Latency (p50)",
+    "llm_cache_status": "Cache Status",
+    "llm_embeddings_model": "Embeddings Model",
+    "llm_embeddings_provider": "Embeddings Provider",
     "upstream_latency_p99": "Upstream Latency (p99)",
     "upstream_latency_p95": "Upstream Latency (p95)",
     "upstream_latency_p50": "Upstream Latency (p50)",
