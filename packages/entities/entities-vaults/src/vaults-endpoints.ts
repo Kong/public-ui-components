@@ -6,7 +6,7 @@ export default {
   list: {
     konnect: {
       getAll: `${konnectBaseApiUrl}/vaults`,
-      deleteConfigStore: `${konnectConfigStoreApiUrl}/{id}`,
+      deleteConfigStore: `${konnectConfigStoreApiUrl}/{id}?force=true`,
     },
     kongManager: {
       getAll: `${KMBaseApiUrl}/vaults`,
