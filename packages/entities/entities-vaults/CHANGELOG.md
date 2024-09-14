@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.12.4...@kong-ui-public/entities-vaults@3.13.0) (2024-09-14)
+
+
+### Features
+
+* **entities-vaults:** force delete secrets ([#1627](https://github.com/Kong/public-ui-components/issues/1627)) ([95afaf7](https://github.com/Kong/public-ui-components/commit/95afaf7511e2c7d3894b7c853f1466bd7b105900))
+
+
+
+
+
 ## [3.12.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.12.3...@kong-ui-public/entities-vaults@3.12.4) (2024-09-13)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
