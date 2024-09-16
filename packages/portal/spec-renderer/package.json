@@ -39,12 +39,12 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^9.5.5",
+    "@kong/kongponents": "^9.6.7",
     "vue": ">= 3.3.13 < 4"
   },
   "devDependencies": {
     "@kong/design-tokens": "1.17.2",
-    "@kong/kongponents": "9.5.5",
+    "@kong/kongponents": "9.6.7",
     "@modyfi/vite-plugin-yaml": "^1.1.0",
     "@types/lodash.clonedeep": "^4.5.9",
     "@types/uuid": "^10.0.0",
