@@ -67,7 +67,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.5.5",
     "maplibre-gl": "workspace:^",
-    "vue": "^3.4.31"
+    "vue": "^3.4.38"
   },
   "dependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^",
