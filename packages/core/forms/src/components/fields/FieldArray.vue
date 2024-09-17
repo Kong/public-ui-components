@@ -162,6 +162,14 @@ export default {
       default: 'x',
     },
   },
+  watch: {
+    value: {
+      handler(newValue, oldValue) {
+        this.updateModelValue(newValue, oldValue)
+      },
+      deep: true,
+    },
+  },
   methods: {
     generateSchema(rootValue, schema, index) {
       // Instead of using schema directly, we make a copy to avoid schema object mutation side effects
