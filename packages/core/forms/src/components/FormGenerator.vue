@@ -20,6 +20,7 @@
           :options="options"
           :vfg="vfg"
           @model-updated="onModelUpdated"
+          @refresh-model="onRefreshModel"
           @validated="onFieldValidated"
         />
       </template>
@@ -70,6 +71,7 @@
               :options="options"
               :vfg="vfg"
               @model-updated="onModelUpdated"
+              @refresh-model="onRefreshModel"
               @validated="onFieldValidated"
             />
           </template>
@@ -100,6 +102,7 @@
                 :options="options"
                 :vfg="vfg"
                 @model-updated="onModelUpdated"
+                @refresh-model="onRefreshModel"
                 @validated="onFieldValidated"
               />
             </template>
@@ -128,6 +131,7 @@
             :options="options"
             :vfg="vfg"
             @model-updated="onModelUpdated"
+            @refresh-model="onRefreshModel"
             @validated="onFieldValidated"
           />
         </template>
@@ -224,7 +228,7 @@ export default {
       },
     },
   },
-  emits: ['validated', 'modelUpdated'],
+  emits: ['validated', 'modelUpdated', 'refreshModel'],
 
   data() {
     return {
@@ -323,6 +327,12 @@ export default {
 
       const isValid = this.errors.length === 0
       this.$emit('validated', isValid, this.errors, this)
+    },
+
+    onRefreshModel() {
+      // This is for updating a deeply nested array element
+      // See `modelUpdated` in `FieldArray.vue`
+      this.$emit('refreshModel')
     },
 
     onModelUpdated(newVal, schema) {
