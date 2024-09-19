@@ -12,6 +12,7 @@
       <component
         :is="schema.itemContainerComponent"
         v-if="schema.items && schema.itemContainerComponent"
+        :index="index"
         :model="item"
         :schema="generateSchema(value, schema.items, index)"
         @remove-item="removeElement(index)"
