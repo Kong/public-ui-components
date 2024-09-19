@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.12.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.14...@kong-ui-public/entities-plugins@8.12.15) (2024-09-19)
+
+
+### Bug Fixes
+
+* **forms:** emit event for nested objects ([#1634](https://github.com/Kong/public-ui-components/issues/1634)) ([35265c9](https://github.com/Kong/public-ui-components/commit/35265c9aaf161449da4163a7566795ffcd11660e))
+
+
+
+
+
 ## [8.12.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.13...@kong-ui-public/entities-plugins@8.12.14) (2024-09-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
