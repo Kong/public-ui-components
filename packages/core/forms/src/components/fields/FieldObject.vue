@@ -8,6 +8,7 @@
       :model="value"
       :options="formOptions"
       :schema="schema.schema"
+      @model-updated="updateModel"
     />
     <div v-else>
       <table
@@ -78,6 +79,8 @@ import abstractField from './abstractField'
 export default {
   mixins: [abstractField],
 
+  emits: ['modelUpdated'],
+
   data() {
     return {
       attributes: this.schema ? this.schema.attributes : undefined,
@@ -123,6 +126,10 @@ export default {
       this.keyTypes[this.newKeyName] = this.newKeyType
       this.keyTypes = { ...this.keyTypes }
       this.newKeyName = ''
+    },
+
+    updateModel(model, schema) {
+      this.$emit('modelUpdated', model, schema)
     },
   },
 }

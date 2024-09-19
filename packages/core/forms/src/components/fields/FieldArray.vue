@@ -163,6 +163,7 @@ export default {
       default: 'x',
     },
   },
+  emits: ['refreshModel'],
   methods: {
     generateSchema(rootValue, schema, index) {
       // Instead of using schema directly, we make a copy to avoid schema object mutation side effects
@@ -212,7 +213,18 @@ export default {
     getFieldType(fieldSchema) {
       return 'field-' + fieldSchema.type
     },
-    modelUpdated() {},
+    modelUpdated() {
+      // Ideally the event handler should be:
+      // `modelUpdated(model, schema) { this.$emit('modelUpdated', model, schema) }`
+      // but currently `schema` is the plain key of the field:
+      // when the field is nested, `schema` does not contain any info about its parent field,
+      // so in the consuming components, we cannot know which field is being updated.
+      // For example, if each element of the array is an object with a `name` field,
+      // then if the user updates the `name` field, the `schema` will be `name` here,
+      // so the consuming component will think the root `name` field is updated,
+      // which is the name of the plugin and should not be updated.
+      this.$emit('refreshModel')
+    },
     handleInput(val, index) {
       this.value = this.value.map((item, i) => i === index ? val : item)
     },

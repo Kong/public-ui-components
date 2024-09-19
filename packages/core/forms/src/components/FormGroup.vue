@@ -48,6 +48,7 @@
         :schema="schema"
         :vfg="vfg"
         @model-updated="onModelUpdated"
+        @refresh-model="onRefreshModel"
         @validated="onFieldValidated"
       />
       <div
@@ -126,7 +127,7 @@ export default {
       },
     },
   },
-  emits: ['validated', 'modelUpdated'],
+  emits: ['validated', 'modelUpdated', 'refreshModel'],
   data() {
     return {
       child: ref(),
@@ -210,6 +211,11 @@ export default {
     },
     fieldErrors(field) {
       return this.errors.filter((e) => e.field.fieldName === field.fieldName).map((item) => item.error)
+    },
+    onRefreshModel() {
+      // This is for updating a deeply nested array element
+      // See `modelUpdated` in `FieldArray.vue`
+      this.$emit('refreshModel')
     },
     onModelUpdated(newVal, schema) {
       this.$emit('modelUpdated', newVal, schema)
