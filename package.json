@@ -77,6 +77,9 @@
   "pnpm": {
     "overrides": {
       "string-width": "4.2.3"
+    },
+    "patchedDependencies": {
+      "monaco-editor@0.51.0": "patches/monaco-editor@0.51.0.patch"
     }
   },
   "workspaces": [

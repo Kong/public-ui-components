@@ -9,6 +9,11 @@
       v-else
       class="entity-form"
     >
+      <h2>Config Editor <sup>Demo</sup></h2>
+      <KCard style="margin-bottom: 48px;">
+        <PluginConfigEditor :schema="rawConfigSchema" />
+      </KCard>
+
       <component
         :is="sharedFormName"
         v-if="sharedFormName && (formModel.id && editing || !editing)"
@@ -95,6 +100,7 @@ import {
   type KonnectPluginFormConfig,
   type PluginEntityInfo,
 } from '../types'
+import PluginConfigEditor from './PluginConfigEditor.vue'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import VaultSecretPicker from './VaultSecretPicker.vue'
 import VaultSecretPickerProvider from './VaultSecretPickerProvider.vue'
@@ -170,6 +176,10 @@ const props = defineProps({
   enableVaultSecretPicker: {
     type: Boolean,
     default: false,
+  },
+  rawConfigSchema: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => ({}),
   },
 })
 

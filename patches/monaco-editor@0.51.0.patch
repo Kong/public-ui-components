@@ -1,0 +1,69 @@
+diff --git a/esm/vs/language/json/json.worker.js b/esm/vs/language/json/json.worker.js
+index ba85f3aae53311257627d2b753162429a66922cb..43b5db90071488367cd8ecce81479aa026807bcc 100644
+--- a/esm/vs/language/json/json.worker.js
++++ b/esm/vs/language/json/json.worker.js
+@@ -4060,6 +4060,7 @@ var JSONCompletion = class {
+     const proposed = /* @__PURE__ */ new Map();
+     const collector = {
+       add: (suggestion) => {
++        console.log(suggestion);
+         let label = suggestion.label;
+         const existing = proposed.get(label);
+         if (!existing) {
+@@ -4131,6 +4132,7 @@ var JSONCompletion = class {
+         if (addValue) {
+           separatorAfter = this.evaluateSeparatorAfter(document, document.offsetAt(overwriteRange.end));
+         }
++        console.log('getSchemaForResource', schema)
+         if (schema) {
+           this.getPropertyCompletions(schema, doc, node, addValue, separatorAfter, collector);
+         } else {
+@@ -4177,6 +4179,7 @@ var JSONCompletion = class {
+     });
+   }
+   getPropertyCompletions(schema, doc, node, addValue, separatorAfter, collector) {
++    console.log('getPropertyCompletions', schema);
+     const matchingSchemas = doc.getMatchingSchemas(schema.schema, node.offset);
+     matchingSchemas.forEach((s) => {
+       if (s.node === node && !s.inverted) {
+@@ -4191,7 +4194,8 @@ var JSONCompletion = class {
+                 insertText: this.getInsertTextForProperty(key, propertySchema, addValue, separatorAfter),
+                 insertTextFormat: InsertTextFormat.Snippet,
+                 filterText: this.getFilterTextForValue(key),
+-                documentation: this.fromMarkup(propertySchema.markdownDescription) || propertySchema.description || ""
++                documentation: this.fromMarkup(propertySchema.markdownDescription) || propertySchema.description || "",
++                detail: propertySchema.detail
+               };
+               if (propertySchema.suggestSortText !== void 0) {
+                 proposal.sortText = propertySchema.suggestSortText;
+@@ -4215,7 +4219,8 @@ var JSONCompletion = class {
+               insertText: this.getInsertTextForProperty(name, void 0, addValue, separatorAfter),
+               insertTextFormat: InsertTextFormat.Snippet,
+               filterText: this.getFilterTextForValue(name),
+-              documentation: enumDescription || this.fromMarkup(schemaPropertyNames.markdownDescription) || schemaPropertyNames.description || ""
++              documentation: enumDescription || this.fromMarkup(schemaPropertyNames.markdownDescription) || schemaPropertyNames.description || "",
++              detail: schemaPropertyNames.detail
+             };
+             if (schemaPropertyNames.suggestSortText !== void 0) {
+               proposal.sortText = schemaPropertyNames.suggestSortText;
+@@ -4396,7 +4401,7 @@ var JSONCompletion = class {
+                 ...collector,
+                 add(suggestion) {
+                   if (!existingValues.has(suggestion.label)) {
+-                    collector.add(suggestion);
++                    collector.add({ ...suggestion });
+                   }
+                 }
+               };
+@@ -4507,9 +4512,9 @@ var JSONCompletion = class {
+         insertTextFormat: InsertTextFormat.Snippet
+       };
+       if (this.doesSupportsLabelDetails()) {
+-        completionItem.labelDetails = { description: t("Default value") };
++        completionItem.labelDetails = { description: schema.detail || t("Default value") };
+       } else {
+-        completionItem.detail = t("Default value");
++        completionItem.detail = schema.detail || t("Default value");
+       }
+       collector.add(completionItem);
+       hasProposals = true;

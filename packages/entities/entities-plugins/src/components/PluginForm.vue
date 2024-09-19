@@ -47,6 +47,7 @@
         :editing="formType === EntityBaseFormType.Edit"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
         :entity-map="entityMap"
+        :raw-config-schema="configResponse"
         :record="record || undefined"
         :schema="schema || {}"
         @loading="(val: boolean) => formLoading = val"

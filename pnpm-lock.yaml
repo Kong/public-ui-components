@@ -7,6 +7,11 @@ settings:
 overrides:
   string-width: 4.2.3
 
+patchedDependencies:
+  monaco-editor@0.51.0:
+    hash: d3kw5das5kqdyfrizsxnq4fqqa
+    path: patches/monaco-editor@0.51.0.patch
+
 importers:
 
   .:
@@ -559,7 +564,7 @@ importers:
         version: 1.15.1(vue@3.4.38(typescript@5.3.3))
       monaco-editor:
         specifier: 0.51.0
-        version: 0.51.0
+        version: 0.51.0(patch_hash=d3kw5das5kqdyfrizsxnq4fqqa)
       uuid:
         specifier: ^10.0.0
         version: 10.0.0
@@ -578,7 +583,7 @@ importers:
         version: 10.0.0
       vite-plugin-monaco-editor:
         specifier: ^1.1.0
-        version: 1.1.0(monaco-editor@0.51.0)
+        version: 1.1.0(monaco-editor@0.51.0(patch_hash=d3kw5das5kqdyfrizsxnq4fqqa))
       vite-plugin-top-level-await:
         specifier: ^1.4.4
         version: 1.4.4(rollup@4.21.3)(vite@5.3.5(@types/node@22.5.4)(sass@1.77.8)(terser@5.26.0))
@@ -922,15 +927,33 @@ importers:
       '@kong/kongponents':
         specifier: 9.7.0
         version: 9.7.0(axios@1.6.8)(vue-router@4.4.3(vue@3.4.38(typescript@5.3.3)))(vue@3.4.38(typescript@5.3.3))
+      '@kong/monaco-yaml':
+        specifier: 5.2.2-patch.3
+        version: 5.2.2-patch.3(monaco-editor@0.51.0(patch_hash=d3kw5das5kqdyfrizsxnq4fqqa))
       axios:
         specifier: ^1.6.8
         version: 1.6.8
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
+      monaco-editor:
+        specifier: 0.51.0
+        version: 0.51.0(patch_hash=d3kw5das5kqdyfrizsxnq4fqqa)
+      vite-plugin-monaco-editor:
+        specifier: ^1.1.0
+        version: 1.1.0(monaco-editor@0.51.0(patch_hash=d3kw5das5kqdyfrizsxnq4fqqa))
+      vscode-json-languageservice:
+        specifier: ^5.4.1
+        version: 5.4.1
       vue:
         specifier: ^3.4.38
         version: 3.4.38(typescript@5.3.3)
       vue-router:
         specifier: ^4.4.3
         version: 4.4.3(vue@3.4.38(typescript@5.3.3))
+      yaml:
+        specifier: ^2.5.1
+        version: 2.5.1
 
   packages/entities/entities-routes:
     dependencies:
@@ -964,7 +987,7 @@ importers:
         version: 1.6.8
       vite-plugin-monaco-editor:
         specifier: ^1.1.0
-        version: 1.1.0(monaco-editor@0.51.0)
+        version: 1.1.0(monaco-editor@0.51.0(patch_hash=d3kw5das5kqdyfrizsxnq4fqqa))
       vue:
         specifier: ^3.4.38
         version: 3.4.38(typescript@5.3.3)
@@ -1848,7 +1871,6 @@ packages:
 
   '@evilmartians/lefthook@1.6.22':
     resolution: {integrity: sha512-R3q+SKhN6QcW+5NF38zfaF6dFRhYgCMU1EL1A+TFI1w4JrTB9uNCBrAtS+6PCkRubVk6KRKd9e2rRc0DpN2WJQ==}
-    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -2027,6 +2049,11 @@ packages:
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: '>= 3.3.13 < 4'
+
+  '@kong/monaco-yaml@5.2.2-patch.3':
+    resolution: {integrity: sha512-B2iij4gWeDOzJ0CaPEmh9aTVC0A3OryWyqGhi31DI30R7d22fwWagnSI8zqqhYj50T7vFk6CZdXbBzZ4gjQUnQ==}
+    peerDependencies:
+      monaco-editor: '>=0.36'
 
   '@kong/sdk-portal-js@2.14.0':
     resolution: {integrity: sha512-3ZJckN0Ei1ul3k+U5wuzmlA/K2ZRw2uQmYtO0UUPfD9G5A5eiOAWvJWrHCIBYk407DOVUjto2TdCAyFnjpjpWg==}
@@ -2802,9 +2829,6 @@ packages:
   '@types/jsdom@21.1.7':
     resolution: {integrity: sha512-yOriVnggzrnQ3a9OKOCxaVuSug3w3/SbOj5i7VwXWZEyUNl3bLF9V3MfxGbZKuwqJOQyRfqXyROBB1CoZLFWzA==}
 
-  '@types/json-schema@7.0.12':
-    resolution: {integrity: sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==}
-
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
@@ -3067,6 +3091,9 @@ packages:
 
   '@volar/typescript@1.11.1':
     resolution: {integrity: sha512-iU+t2mas/4lYierSnoFOeRFQUhAEMgsFuQxoxvwn5EdQopw43j+J27a4lt9LMInx1gLJBC6qL14WYGlgymaSMQ==}
+
+  '@vscode/l10n@0.0.18':
+    resolution: {integrity: sha512-KYSIHVmslkaCDyw013pphY+d7x1qV8IZupYfeIfzNA+nsaWHbn5uPuQRvdRFsa9zFzGeudPuoGoZ1Op4jrJXIQ==}
 
   '@vue/babel-helper-vue-transform-on@1.1.5':
     resolution: {integrity: sha512-SgUymFpMoAyWeYWLAY+MkCK3QEROsiUnfaw5zxOVD/M64KQs8D/4oK6Q5omVA2hnvEOE0SCkH2TZxs/jnnUj7w==}
@@ -6052,6 +6079,9 @@ packages:
   jsonc-parser@3.2.0:
     resolution: {integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==}
 
+  jsonc-parser@3.3.1:
+    resolution: {integrity: sha512-HUgH65KyejrUFPvHFPbqOY0rsFip3Bo5wb4ngvdi1EpCYWUQDC5V+Y7mZws+DLkr4M//zQJoanu1SP+87Dv1oQ==}
+
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
@@ -6655,6 +6685,20 @@ packages:
 
   monaco-editor@0.51.0:
     resolution: {integrity: sha512-xaGwVV1fq343cM7aOYB6lVE4Ugf0UyimdD/x5PWcWBMKENwectaEu77FAN7c5sFiyumqeJdX1RPTh1ocioyDjw==}
+
+  monaco-languageserver-types@0.4.0:
+    resolution: {integrity: sha512-QQ3BZiU5LYkJElGncSNb5AKoJ/LCs6YBMCJMAz9EA7v+JaOdn3kx2cXpPTcZfKA5AEsR0vc97sAw+5mdNhVBmw==}
+
+  monaco-marker-data-provider@1.2.3:
+    resolution: {integrity: sha512-BOiQs9UNEwVrF1rwYI32HUP8D7JTuHlJRlykx83e4+jfh1ceBWIBfB5ENDVSFUz651d95kxjKj36vV2JO3zr9w==}
+
+  monaco-types@0.1.0:
+    resolution: {integrity: sha512-aWK7SN9hAqNYi0WosPoMjenMeXJjwCxDibOqWffyQ/qXdzB/86xshGQobRferfmNz7BSNQ8GB0MD0oby9/5fTQ==}
+
+  monaco-worker-manager@2.0.1:
+    resolution: {integrity: sha512-kdPL0yvg5qjhKPNVjJoym331PY/5JC11aPJXtCZNwWRvBr6jhkIamvYAyiY5P1AWFmNOy0aRDRoMdZfa71h8kg==}
+    peerDependencies:
+      monaco-editor: '>=0.30.0'
 
   mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
@@ -7300,6 +7344,11 @@ packages:
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
+
+  prettier@2.8.8:
+    resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
 
   pretty-bytes@5.6.0:
     resolution: {integrity: sha512-FFw039TmrBqFK8ma/7OL3sDz/VytdtJr044/QUJtH0wK9lb9jLq9tJyIxUwtQJHwar2BqtiA4iCWSwo9JLkzFg==}
@@ -8956,6 +9005,25 @@ packages:
     resolution: {integrity: sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==}
     engines: {node: '>=0.10.0'}
 
+  vscode-json-languageservice@5.4.1:
+    resolution: {integrity: sha512-5czFGNyVPxz3ZJYl8R3a3SuIj5gjhmGF4Wv05MRPvD4DEnHK6b8km4VbNMJNHBlTCh7A0aHzUbPVzo+0C18mCA==}
+
+  vscode-jsonrpc@8.2.0:
+    resolution: {integrity: sha512-C+r0eKJUIfiDIfwJhria30+TYWPtuHJXHtI7J0YlOmKAo7ogxP20T0zxB7HZQIFhIyvoBPwWskjxrvAtfjyZfA==}
+    engines: {node: '>=14.0.0'}
+
+  vscode-languageserver-protocol@3.17.5:
+    resolution: {integrity: sha512-mb1bvRJN8SVznADSGWM9u/b07H7Ecg0I3OgXDuLdn307rl/J3A9YD6/eYOssqhecL27hK1IPZAsaqh00i/Jljg==}
+
+  vscode-languageserver-textdocument@1.0.12:
+    resolution: {integrity: sha512-cxWNPesCnQCcMPeenjKKsOCKQZ/L6Tv19DTRIGuLWe32lyzWhihGVJ/rcckZXJxfdKCFvRLS3fpBIsV/ZGX4zA==}
+
+  vscode-languageserver-types@3.17.5:
+    resolution: {integrity: sha512-Ld1VelNuX9pdF39h2Hgaeb5hEZM2Z3jUrrMgWQAu82jMtZp7p3vJT3BzToKtZI7NgQssZje5o0zryOrhQvzQAg==}
+
+  vscode-uri@3.0.8:
+    resolution: {integrity: sha512-AyFQ0EVmsOZOlAnxoFOGOq1SQDWAB7C6aqMGS23svWAllfOaxbuFvcT8D1i8z3Gyn8fraVeZNNmN6e9bxxXkKw==}
+
   vt-pbf@3.1.3:
     resolution: {integrity: sha512-2LzDFzt0mZKZ9IpVF2r69G9bXaP2Q2sArJCmcCgvfTdCCZzSyz4aCLoQyUilu37Ll56tCblIZrXFIjNUpGIlmA==}
 
@@ -9312,6 +9380,11 @@ packages:
 
   yaml@2.4.5:
     resolution: {integrity: sha512-aBx2bnqDzVOyNKfsysjA2ms5ZlnjSAW2eG3/L5G/CSujfjLJTJsEw1bGw8kCf04KodQWk1pxlGnZ56CRxiawmg==}
+    engines: {node: '>= 14'}
+    hasBin: true
+
+  yaml@2.5.1:
+    resolution: {integrity: sha512-bLQOjaX/ADgQ20isPJRvF0iRUHIxVhYvr53Of7wGcWlO2jvtUlH5m87DsmulFVxRpNLOnI4tB6p/oh8D7kpn9Q==}
     engines: {node: '>= 14'}
     hasBin: true
 
@@ -10390,6 +10463,21 @@ snapshots:
       - '@types/markdown-it'
       - '@vue/composition-api'
       - supports-color
+
+  '@kong/monaco-yaml@5.2.2-patch.3(monaco-editor@0.51.0(patch_hash=d3kw5das5kqdyfrizsxnq4fqqa))':
+    dependencies:
+      jsonc-parser: 3.3.1
+      monaco-editor: 0.51.0(patch_hash=d3kw5das5kqdyfrizsxnq4fqqa)
+      monaco-languageserver-types: 0.4.0
+      monaco-marker-data-provider: 1.2.3
+      monaco-types: 0.1.0
+      monaco-worker-manager: 2.0.1(monaco-editor@0.51.0(patch_hash=d3kw5das5kqdyfrizsxnq4fqqa))
+      path-browserify: 1.0.1
+      prettier: 2.8.8
+      vscode-languageserver-textdocument: 1.0.12
+      vscode-languageserver-types: 3.17.5
+      vscode-uri: 3.0.8
+      yaml: 2.5.1
 
   '@kong/sdk-portal-js@2.14.0':
     dependencies:
@@ -11627,7 +11715,7 @@ snapshots:
   '@types/eslint@8.40.2':
     dependencies:
       '@types/estree': 1.0.5
-      '@types/json-schema': 7.0.12
+      '@types/json-schema': 7.0.15
 
   '@types/eslint@8.56.10':
     dependencies:
@@ -11693,8 +11781,6 @@ snapshots:
       '@types/node': 18.19.50
       '@types/tough-cookie': 4.0.2
       parse5: 7.1.2
-
-  '@types/json-schema@7.0.12': {}
 
   '@types/json-schema@7.0.15': {}
 
@@ -12018,6 +12104,8 @@ snapshots:
     dependencies:
       '@volar/language-core': 1.11.1
       path-browserify: 1.0.1
+
+  '@vscode/l10n@0.0.18': {}
 
   '@vue/babel-helper-vue-transform-on@1.1.5': {}
 
@@ -15334,6 +15422,8 @@ snapshots:
 
   jsonc-parser@3.2.0: {}
 
+  jsonc-parser@3.3.1: {}
+
   jsonfile@6.1.0:
     dependencies:
       universalify: 2.0.0
@@ -16141,7 +16231,23 @@ snapshots:
 
   modify-values@1.0.1: {}
 
-  monaco-editor@0.51.0: {}
+  monaco-editor@0.51.0(patch_hash=d3kw5das5kqdyfrizsxnq4fqqa): {}
+
+  monaco-languageserver-types@0.4.0:
+    dependencies:
+      monaco-types: 0.1.0
+      vscode-languageserver-protocol: 3.17.5
+      vscode-uri: 3.0.8
+
+  monaco-marker-data-provider@1.2.3:
+    dependencies:
+      monaco-types: 0.1.0
+
+  monaco-types@0.1.0: {}
+
+  monaco-worker-manager@2.0.1(monaco-editor@0.51.0(patch_hash=d3kw5das5kqdyfrizsxnq4fqqa)):
+    dependencies:
+      monaco-editor: 0.51.0(patch_hash=d3kw5das5kqdyfrizsxnq4fqqa)
 
   mri@1.2.0: {}
 
@@ -16839,6 +16945,8 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
+  prettier@2.8.8: {}
+
   pretty-bytes@5.6.0: {}
 
   pretty-bytes@6.1.1: {}
@@ -17440,7 +17548,7 @@ snapshots:
 
   schema-utils@3.3.0:
     dependencies:
-      '@types/json-schema': 7.0.12
+      '@types/json-schema': 7.0.15
       ajv: 6.12.6
       ajv-keywords: 3.5.2(ajv@6.12.6)
 
@@ -18555,9 +18663,9 @@ snapshots:
       - rollup
       - supports-color
 
-  vite-plugin-monaco-editor@1.1.0(monaco-editor@0.51.0):
+  vite-plugin-monaco-editor@1.1.0(monaco-editor@0.51.0(patch_hash=d3kw5das5kqdyfrizsxnq4fqqa)):
     dependencies:
-      monaco-editor: 0.51.0
+      monaco-editor: 0.51.0(patch_hash=d3kw5das5kqdyfrizsxnq4fqqa)
 
   vite-plugin-top-level-await@1.4.4(rollup@4.21.3)(vite@5.3.5(@types/node@22.5.4)(sass@1.77.8)(terser@5.26.0)):
     dependencies:
@@ -18662,6 +18770,27 @@ snapshots:
       - terser
 
   void-elements@3.1.0: {}
+
+  vscode-json-languageservice@5.4.1:
+    dependencies:
+      '@vscode/l10n': 0.0.18
+      jsonc-parser: 3.3.1
+      vscode-languageserver-textdocument: 1.0.12
+      vscode-languageserver-types: 3.17.5
+      vscode-uri: 3.0.8
+
+  vscode-jsonrpc@8.2.0: {}
+
+  vscode-languageserver-protocol@3.17.5:
+    dependencies:
+      vscode-jsonrpc: 8.2.0
+      vscode-languageserver-types: 3.17.5
+
+  vscode-languageserver-textdocument@1.0.12: {}
+
+  vscode-languageserver-types@3.17.5: {}
+
+  vscode-uri@3.0.8: {}
 
   vt-pbf@3.1.3:
     dependencies:
@@ -19061,6 +19190,8 @@ snapshots:
   yallist@4.0.0: {}
 
   yaml@2.4.5: {}
+
+  yaml@2.5.1: {}
 
   yargs-parser@20.2.9: {}
 
