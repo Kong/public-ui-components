@@ -222,6 +222,12 @@ const props = defineProps({
     default: '',
     required: true,
   },
+  /** default table preferences to use if no user preferences are found */
+  defaultTablePreferences: {
+    type: Object as PropType<TablePreferences>,
+    default: null,
+    required: false,
+  },
   /** dropdown menu width, default to 200px, defined in kPop */
   dropdownMenuWidth: {
     type: String,
@@ -356,7 +362,7 @@ const { setTablePreferences, getTablePreferences } = useTablePreferences()
 // Use unique key cacheId (passed down from consuming app and derived from controlPlaneId)
 // for localStorage of user's table preferences across tables, orgs and users
 
-const tablePreferences = ref<TablePreferences>(getTablePreferences(cacheId.value))
+const tablePreferences = ref<TablePreferences>(getTablePreferences(cacheId.value, props.defaultTablePreferences))
 
 const combinedInitialFetcherParams = computed((): Partial<FetcherParams> => {
   // Pass the preferencesStorageKey regardless; if no entry is found, it will return the default

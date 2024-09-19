@@ -30,7 +30,9 @@
         "paths": "Paths",
         "expression": "Expression",
         "id": "ID",
-        "tags": "Tags"
+        "tags": "Tags",
+        "created_at": "Created At",
+        "updated_at": "Last Modified"
       },
       "empty_state": {
         "title": "Configure a New Route",

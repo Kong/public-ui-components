@@ -53,7 +53,7 @@ export default defineConfig({
     monacoEditorPlugin({}),
   ],
   // ...
-}
+})
 ```
 
 ### Registration
