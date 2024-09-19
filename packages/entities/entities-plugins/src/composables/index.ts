@@ -1,4 +1,5 @@
 import useI18n from './useI18n'
+import usePluginConfigEditor from './usePluginConfigEditor'
 import usePluginHelpers from './usePluginHelpers'
 import { usePluginMetaData } from './usePluginMeta'
 import { useSchemas } from './useSchemas'
@@ -9,4 +10,5 @@ export default {
   usePluginMetaData,
   usePluginHelpers,
   useSchemas,
+  usePluginConfigEditor,
 }

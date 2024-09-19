@@ -86,7 +86,7 @@ import {
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, defineComponent, onBeforeMount, provide, reactive, ref, watch, type PropType } from 'vue'
+import { computed, defineComponent, inject, onBeforeMount, provide, reactive, ref, watch, type PropType } from 'vue'
 import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { PLUGIN_METADATA } from '../definitions/metadata'
@@ -172,9 +172,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  rawConfigSchema: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => ({}),
+  },
 })
-
-const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const { parseSchema } = composables.useSchemas({
   entityId: props.entityMap.focusedEntity?.id || undefined,
@@ -184,91 +186,6 @@ const { convertToDotNotation, unFlattenObject, isObjectEmpty, unsetNullForeignKe
 
 const { objectsAreEqual } = useHelpers()
 const { i18n: { t } } = useI18n()
-
-// define endpoints for use by KFG
-const buildGetOneUrl = (entityType: string, entityId: string): string => {
-  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetOne}`
-
-  if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
-  }
-
-  // replace the entity type and id
-  url = url.replace(/{entity}/gi, entityType)
-  url = url.replace(/{id}/gi, entityId)
-
-  return url
-}
-// define endpoints for use by KFG
-const buildGetAllUrl = (entityType: string): string => {
-  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetAll}`
-
-  if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
-  }
-
-  // replace the entity type
-  url = url.replace(/{entity}/gi, entityType)
-
-  return url
-}
-
-/**
- * @param {entityType} string - the entity query path WITHOUT leading/trailing slash (ex. 'routes')
- * @param {entityId} string - the id of the entity to look up
- * @returns {Promise<import('axios').AxiosResponse<T>>}
- */
-const getOne = (entityType: string, entityId: string): Promise<AxiosResponse> => {
-  const url = buildGetOneUrl(entityType, entityId)
-
-  return axiosInstance.get(url)
-}
-
-/**
- * @param {entityType} string - the entity query path WITHOUT leading/trailing slash (ex. 'routes')
- * @returns {Promise<import('axios').AxiosResponse<T>>}
- */
-const getAll = (entityType: string, params: AxiosRequestConfig['params']): Promise<AxiosResponse> => {
-  const url = buildGetAllUrl(entityType)
-
-  // Currently hardcoded to fetch 1000 records, and filter
-  // client side. If more than 1000 records, this won't work
-  if (props.config.app === 'konnect') {
-    return axiosInstance.get(url).then(res => {
-      const { data: { data } } = res
-
-      delete params.size
-      delete params.offset
-
-      if (data.length && Object.keys(params).length === 1) {
-        const queryKey = Object.keys(params)[0]
-        const filteredData = data.filter((instance: Record<string, any>) => {
-          if (instance[queryKey]) {
-            return !!instance[queryKey].toLowerCase().includes(params[queryKey].toLowerCase())
-          }
-
-          return false
-        })
-
-        res.data.data = filteredData
-      }
-
-      return res
-    })
-  }
-
-  return axiosInstance.get(url, { params })
-}
-
-// provide to KFG
-provide(FORMS_API_KEY, {
-  getOne,
-  getAll,
-})
 
 const sharedFormName = ref('')
 const form = ref<Record<string, any> | null>(null)

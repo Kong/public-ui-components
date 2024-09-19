@@ -2,7 +2,7 @@
   <SandboxPermissionsControl
     @update="handlePermissionsUpdate"
   />
-  <h2>Konnect API</h2>
+  <!-- <h2>Konnect API</h2>
   <PluginList
     v-if="permissions"
     :key="key"
@@ -19,7 +19,7 @@
     @copy:success="onCopyIdSuccess"
     @delete-plugin:success="onDeletePluginSuccess"
     @error="onError"
-  />
+  /> -->
 
   <h2>Kong Manager API</h2>
   <PluginList
