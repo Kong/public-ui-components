@@ -6,7 +6,7 @@
   <h2>Konnect Actions Outside</h2>
   <div id="kong-ui-app-page-header-action-button" />
 
-  <h2>Konnect API</h2>
+  <!-- <h2>Konnect API</h2>
   <PluginList
     v-if="permissions"
     :key="key"
@@ -24,7 +24,7 @@
     @copy:success="onCopyIdSuccess"
     @delete-plugin:success="onDeletePluginSuccess"
     @error="onError"
-  />
+  /> -->
 
   <h2>Kong Manager API</h2>
   <PluginList

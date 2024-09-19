@@ -125,7 +125,7 @@ import {
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, onBeforeMount, provide, reactive, ref, shallowRef, watch, type PropType } from 'vue'
+import { computed, inject, onBeforeMount, provide, reactive, ref, shallowRef, watch, type PropType } from 'vue'
 import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { PLUGIN_METADATA } from '../definitions/metadata'
@@ -240,9 +240,12 @@ const props = defineProps({
     type: String as PropType<'vfg' | 'freeform'>,
     required: false,
   },
-})
 
-const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+  rawConfigSchema: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => ({}),
+  },
+})
 
 const { parseSchema } = composables.useSchemas({
   entityId: props.entityMap.focusedEntity?.id || undefined,

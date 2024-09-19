@@ -1,6 +1,6 @@
 <template>
   <div class="plugin-form-sandbox">
-    <h2>Konnect API</h2>
+    <!-- <h2>Konnect API</h2>
     <PluginForm
       :config="konnectConfig"
       enable-redis-partial
@@ -12,7 +12,7 @@
       @update="onUpdate"
     />
 
-    <h2>Kong Manager API</h2>
+    <h2>Kong Manager API</h2> -->
     <PluginForm
       :config="kongManagerConfig"
       enable-redis-partial

@@ -41,23 +41,38 @@
         @submit="saveFormData"
       />
 
-      <PluginEntityForm
-        :config="config"
-        :credential="treatAsCredential"
-        :editing="formType === EntityBaseFormType.Edit"
-        :enable-redis-partial="enableRedisPartial"
+      <KTabs
+        model-value="#code-editor"
+        :tabs="editorsTab"
+      >
+        <template #visual-editor>
+          <PluginEntityForm
+            :config="config"
+            :credential="treatAsCredential"
+            :editing="formType === EntityBaseFormType.Edit"
+            :enable-redis-partial="enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
-        :engine="engine"
+            :engine="engine"
         :entity-map="entityMap"
-        :raw-schema="loadedSchema"
+            :raw-config-schema="configResponse"
+            :raw-schema="loadedSchema"
         :record="record"
-        :schema="finalSchema"
+            :schema="finalSchema"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
-        @loading="(val: boolean) => formLoading = val"
-        @model-updated="handleUpdate"
-        @show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
+            @loading="(val: boolean) => formLoading = val"
+            @model-updated="handleUpdate"
+            @show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
         @validity-change="handleValidityChange"
       />
+        </template>
+        <template #code-editor>
+          <PluginConfigEditorLoader
+            :metadata="PLUGIN_METADATA[props.pluginType]"
+            :name="props.pluginType"
+            :raw-gateway-schema="(configResponse as RecordFieldSchema)"
+          />
+        </template>
+      </KTabs>
 
       <template #form-actions>
         <!-- if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included) -->
@@ -142,17 +157,18 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   JsonCodeBlock,
-  TerraformCodeBlock,
-  YamlCodeBlock,
   SupportedEntityType,
+  TerraformCodeBlock,
   useAxios,
   useErrors,
   useHelpers,
   useStringHelpers,
+  YamlCodeBlock,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
+import { FORMS_API_KEY } from '@kong-ui-public/forms'
 import type { Tab } from '@kong/kongponents'
-import type { AxiosError, AxiosResponse } from 'axios'
+import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
 import { computed, onBeforeMount, provide, reactive, ref, watch, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
@@ -166,6 +182,7 @@ import {
   PluginPartialType,
   type DefaultPluginsFormSchema,
   type DefaultPluginsSchemaRecord,
+  type FormsApi,
   type KongManagerPluginFormConfig,
   type KonnectPluginFormConfig,
   type PluginEntityInfo,
@@ -173,8 +190,10 @@ import {
   type PluginFormState,
   type PluginOrdering,
   type CustomSchemas,
+  type RecordFieldSchema,
   type PluginValidityChangeEvent,
 } from '../types'
+import PluginConfigEditorLoader from './PluginConfigEditorLoader.vue'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
@@ -333,6 +352,92 @@ const { objectsAreEqual } = useHelpers()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
+// define endpoints for use by KFG
+const buildGetOneUrl = (entityType: string, entityId: string): string => {
+  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetOne}`
+
+  if (props.config.app === 'konnect') {
+    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+  } else if (props.config.app === 'kongManager') {
+    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+  }
+
+  // replace the entity type and id
+  url = url.replace(/{entity}/gi, entityType)
+  url = url.replace(/{id}/gi, entityId)
+
+  return url
+}
+
+// define endpoints for use by KFG
+const buildGetAllUrl = (entityType: string): string => {
+  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetAll}`
+
+  if (props.config.app === 'konnect') {
+    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+  } else if (props.config.app === 'kongManager') {
+    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+  }
+
+  // replace the entity type
+  url = url.replace(/{entity}/gi, entityType)
+
+  return url
+}
+
+/**
+ * @param {entityType} string - the entity query path WITHOUT leading/trailing slash (ex. 'routes')
+ * @param {entityId} string - the id of the entity to look up
+ * @returns {Promise<import('axios').AxiosResponse<T>>}
+ */
+const getOne = (entityType: string, entityId: string): Promise<AxiosResponse> => {
+  const url = buildGetOneUrl(entityType, entityId)
+
+  return axiosInstance.get(url)
+}
+
+/**
+ * @param {entityType} string - the entity query path WITHOUT leading/trailing slash (ex. 'routes')
+ * @returns {Promise<import('axios').AxiosResponse<T>>}
+ */
+const getAll = (entityType: string, params: AxiosRequestConfig['params']): Promise<AxiosResponse> => {
+  const url = buildGetAllUrl(entityType)
+
+  // Currently hardcoded to fetch 1000 records, and filter
+  // client side. If more than 1000 records, this won't work
+  if (props.config.app === 'konnect') {
+    return axiosInstance.get(url).then(res => {
+      const { data: { data } } = res
+
+      delete params.size
+      delete params.offset
+
+      if (data.length && Object.keys(params).length === 1) {
+        const queryKey = Object.keys(params)[0]
+        const filteredData = data.filter((instance: Record<string, any>) => {
+          if (instance[queryKey]) {
+            return !!instance[queryKey].toLowerCase().includes(params[queryKey].toLowerCase())
+          }
+
+          return false
+        })
+
+        res.data.data = filteredData
+      }
+
+      return res
+    })
+  }
+
+  return axiosInstance.get(url, { params })
+}
+
+// provide to KFG
+provide<FormsApi>(FORMS_API_KEY, {
+  getOne,
+  getAll,
+})
+
 const isToggled = ref(false)
 const isEditing = computed(() => !!props.pluginId)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
@@ -365,6 +470,17 @@ const form = reactive<PluginFormState>({
   clientErrorMessage: '',
   serverErrorMessage: '',
 })
+
+const editorsTab = ref<Tab[]>([
+  {
+    title: 'Visual Editor',
+    hash: '#visual-editor',
+  },
+  {
+    title: 'Code Editor',
+    hash: '#code-editor',
+  },
+])
 
 const tabs = ref<Tab[]>([
   {
@@ -1426,6 +1542,7 @@ const schemaUrl = computed((): string => {
 const credentialType = ref('')
 const schemaLoading = ref(false)
 const fetchSchemaError = ref('')
+
 onBeforeMount(async () => {
   schemaLoading.value = true
 

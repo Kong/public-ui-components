@@ -22,6 +22,7 @@ import type { SAMLSchema } from './plugins/saml'
 import type { OasValidationSchema } from './plugins/oas-validation'
 import type { UpstreamOauthSchema } from './plugins/upstream-oauth'
 import type { InjectionProtectionSchema } from './plugins/injection-protection'
+import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import type { KafkaUpstreamSchema } from './plugins/kafka-upstream'
 import type { genKeyAuthSchema } from '../definitions/schemas/KeyAuth'
 import type { genKeyAuthEncSchema } from '../definitions/schemas/KeyAuthEnc'
@@ -250,4 +251,14 @@ export interface PluginValidityChangeEvent {
   model: string
   valid: boolean
   error?: Error | string
+}
+
+export interface FormsApi {
+  getOne: (entityType: string, entityId: string) => Promise<AxiosResponse>
+  getAll: (entityType: string, params: AxiosRequestConfig) => Promise<AxiosResponse>
+}
+
+export interface FormsApi {
+  getOne: (entityType: string, entityId: string) => Promise<AxiosResponse>
+  getAll: (entityType: string, params: AxiosRequestConfig) => Promise<AxiosResponse>
 }
