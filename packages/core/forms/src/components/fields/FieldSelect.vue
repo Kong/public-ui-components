@@ -5,6 +5,7 @@
     :class="schema.fieldClasses"
     :disabled="disabled || undefined"
     :items="items"
+    :kpop-attributes="{ 'data-testid': `${getFieldID(schema)}-items` }"
     :label-attributes="{ info: schema.help }"
     :name="schema.inputName"
     :placeholder="!selectOptions.hideNoneSelectedText ? selectOptions.noneSelectedText || 'Nothing Selected' : undefined"
