@@ -45,7 +45,7 @@
         :form-options="options"
         :hint="field.hint && getFieldType(field) === 'field-input' ? fieldHint(field) : undefined"
         :model="model"
-        :schema="field"
+        :schema="schema"
         :vfg="vfg"
         @model-updated="onModelUpdated"
         @validated="onFieldValidated"
@@ -97,6 +97,11 @@ export default {
   name: 'FormGroup',
   components: fieldComponents,
   mixins: [formMixin],
+  inject: {
+    'vfg-array-item-index': {
+      default: undefined,
+    },
+  },
   props: {
     vfg: {
       type: Object,
@@ -126,6 +131,30 @@ export default {
     return {
       child: ref(),
     }
+  },
+  computed: {
+    schema() {
+      if (!this.field?.schema || !Array.isArray(this.field.schema.fields)) {
+        return this.field
+      }
+
+      const index = this['vfg-array-item-index']
+
+      if (typeof index !== 'number' || Number.isNaN(index)) {
+        return this.field
+      }
+
+      return {
+        ...this.field,
+        schema: {
+          ...this.field.schema,
+          fields: this.field.schema.fields.map(field => ({
+            ...field,
+            ...(field.id ? { id: `${field.id}-${index}` } : undefined),
+          })),
+        },
+      }
+    },
   },
   methods: {
     // Should field type have a label?

@@ -15,9 +15,10 @@
 </template>
 
 <script lang="ts" setup>
+import { provide } from 'vue'
 import { TrashIcon } from '@kong/icons'
 
-defineProps({
+const props = defineProps({
   model: {
     type: Object,
     default: () => null,
@@ -26,11 +27,17 @@ defineProps({
     type: Object,
     default: () => null,
   },
+  index: {
+    type: Number,
+    default: undefined,
+  },
 })
 
 defineEmits<{
   (e: 'remove-item'): void,
 }>()
+
+provide('vfg-array-item-index', props.index)
 </script>
 
 <style lang='scss'>
