@@ -3,9 +3,9 @@ export const exploreFilterTypesV2 = ['in', 'not_in', 'selector'] as const
 
 export type ExploreFilterTypesV2 = typeof exploreFilterTypesV2[number]
 
-export const requestFilterTypeEqualsV2 = ['=', '!='] as const
+export const requestFilterTypeStringV2 = ['=', '!=', 'starts_with', 'ends_with'] as const
 
-export type RequestFilterTypeEqualsV2 = typeof requestFilterTypeEqualsV2[number]
+export type RequestFilterTypeStringV2 = typeof requestFilterTypeStringV2[number]
 
 export const requestFilterTypeMetricV2 = ['=', '!=', '<', '>', '<=', '>='] as const
 
@@ -14,10 +14,6 @@ export type RequestFilterTypeMetricV2 = typeof requestFilterTypeMetricV2[number]
 export const requestFilterTypeEmptyV2 = ['empty', 'not_empty'] as const
 
 export type RequestFilterTypeEmptyV2 = typeof requestFilterTypeEmptyV2[number]
-
-export const requestFilterTypeWildcardV2 = ['starts_with', 'ends_with'] as const
-
-export type RequestFilterTypeWildcardV2 = typeof requestFilterTypeWildcardV2[number]
 
 
 // Note: time types are common to all of the datasources.

@@ -1,5 +1,5 @@
 import { makeFilterable } from './util'
-import type { AbsoluteTimeRangeV4, ExploreFilterTypesV2, RequestFilterTypeEmptyV2, RequestFilterTypeEqualsV2, RequestFilterTypeMetricV2, RequestFilterTypeWildcardV2 } from './common'
+import type { AbsoluteTimeRangeV4, ExploreFilterTypesV2, RequestFilterTypeEmptyV2, RequestFilterTypeMetricV2, RequestFilterTypeStringV2 } from './common'
 import { type ExploreFilter } from './advanced'
 
 // status_code and upstream_status_code are treated as metric filters
@@ -41,17 +41,6 @@ export const filterableRequestDimensions = makeFilterable(queryableRequestDimens
 
 export type FilterableRequestDimensions = typeof filterableRequestDimensions[number]
 
-export const queryableRequestWildcardDimensions = [
-  'request_uri',
-  'upstream_uri',
-] as const
-
-export type QueryableRequestWildcardDimensions = typeof queryableRequestWildcardDimensions[number]
-
-export const filterableRequestWildcardDimensions = queryableRequestWildcardDimensions
-
-export type FilterableRequestWildcardDimensions = typeof filterableRequestWildcardDimensions[number]
-
 export const queryableRequestMetrics = [
   'ai_count',
   'latencies_response_ms',
@@ -71,12 +60,12 @@ export type FilterableRequestMetrics = typeof filterableRequestMetrics[number]
 
 export interface RequestInFilter {
   operator: ExploreFilterTypesV2
-  field: FilterableRequestDimensions | FilterableRequestWildcardDimensions | FilterableRequestMetrics
+  field: FilterableRequestDimensions | FilterableRequestMetrics
   value: (string | number)[]
 }
-export interface RequestEqualsFilter {
-  operator: RequestFilterTypeEqualsV2
-  field: FilterableRequestDimensions | FilterableRequestWildcardDimensions
+export interface RequestStringFilter {
+  operator: RequestFilterTypeStringV2
+  field: FilterableRequestDimensions
   value: string
 }
 export interface RequestMetricFilter {
@@ -86,20 +75,14 @@ export interface RequestMetricFilter {
 }
 export interface RequestEmptyFilter {
   operator: RequestFilterTypeEmptyV2
-  field: FilterableRequestDimensions | FilterableRequestWildcardDimensions | FilterableRequestMetrics
-}
-export interface RequestWildcardFilter {
-  operator: RequestFilterTypeWildcardV2
-  field: FilterableRequestWildcardDimensions
-  value: string
+  field: FilterableRequestDimensions | FilterableRequestMetrics
 }
 
 export type RequestFilter = ExploreFilter |
   RequestInFilter |
-  RequestEqualsFilter |
+  RequestStringFilter |
   RequestMetricFilter |
-  RequestEmptyFilter |
-  RequestWildcardFilter
+  RequestEmptyFilter
 
 export const relativeTimeRangeValuesRequestV2 = [
   '15M',
