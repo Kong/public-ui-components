@@ -156,7 +156,7 @@
       "paths": {
         "label": "Paths",
         "placeholder": "Enter a path",
-        "tooltip": "AA list of paths that match this Route."
+        "tooltip": "A list of paths that match this Route."
       },
       "snis": {
         "label": "SNIs",
