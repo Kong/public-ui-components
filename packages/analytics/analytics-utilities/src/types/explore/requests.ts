@@ -70,26 +70,26 @@ export const filterableRequestMetrics = makeFilterable(queryableRequestMetrics)
 export type FilterableRequestMetrics = typeof filterableRequestMetrics[number]
 
 export interface RequestInFilter {
-  type: ExploreFilterTypesV2
+  operator: ExploreFilterTypesV2
   field: FilterableRequestDimensions | FilterableRequestWildcardDimensions | FilterableRequestMetrics
   value: (string | number)[]
 }
 export interface RequestEqualsFilter {
-  type: RequestFilterTypeEqualsV2
+  operator: RequestFilterTypeEqualsV2
   field: FilterableRequestDimensions | FilterableRequestWildcardDimensions
   value: string
 }
 export interface RequestMetricFilter {
-  type: RequestFilterTypeMetricV2
+  operator: RequestFilterTypeMetricV2
   field: FilterableRequestMetrics
   value: number
 }
 export interface RequestEmptyFilter {
-  type: RequestFilterTypeEmptyV2
+  operator: RequestFilterTypeEmptyV2
   field: FilterableRequestDimensions | FilterableRequestWildcardDimensions | FilterableRequestMetrics
 }
 export interface RequestWildcardFilter {
-  type: RequestFilterTypeWildcardV2
+  operator: RequestFilterTypeWildcardV2
   field: FilterableRequestWildcardDimensions
   value: string
 }
