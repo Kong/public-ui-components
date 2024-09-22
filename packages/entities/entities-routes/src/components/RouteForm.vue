@@ -57,7 +57,7 @@
               </div>
             </template>
             <template #selected-item-template="{ item }">
-              <span class="k-select-selected-item-label">{{ getSelectedService(item) }}</span>
+              {{ getSelectedService(item) }}
             </template>
             <template #item-template="{ item }">
               <div class="route-form-service-dropdown-item">
@@ -1419,10 +1419,6 @@ defineExpose({ saveFormData, getPayload })
         }
       }
     }
-  }
-
-  .k-select-selected-item-label {
-    margin-left: $kui-space-90;
   }
 
   .k-checkbox {
