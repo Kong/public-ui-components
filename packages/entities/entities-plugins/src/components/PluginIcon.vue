@@ -34,7 +34,7 @@ const iconSrc = computed(() => getPluginIconURL(props.name))
 
 const onError = () => {
   const defaultIcon = new URL('../assets/images/plugin-icons/missing.png', import.meta.url).href // only need to compute it when icon URL is invalid
-  if (img.value) {
+  if (img.value && img.value.src !== defaultIcon) {
     img.value.src = defaultIcon
   }
 }
