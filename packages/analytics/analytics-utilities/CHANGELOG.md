@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.8.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.8.3...@kong-ui-public/analytics-utilities@4.8.4) (2024-09-20)
+
+
+### Bug Fixes
+
+* update to use operator in new style filters ([#1640](https://github.com/Kong/public-ui-components/issues/1640)) ([0be6f26](https://github.com/Kong/public-ui-components/commit/0be6f262c1b90422ebe560793c5bc48b6743ab2b))
+
+
+
+
+
 ## [4.8.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.8.2...@kong-ui-public/analytics-utilities@4.8.3) (2024-09-11)
 
 

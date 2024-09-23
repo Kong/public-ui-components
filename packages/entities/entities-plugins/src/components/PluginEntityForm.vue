@@ -36,6 +36,7 @@
         :options="formOptions"
         :schema="formSchema"
         @model-updated="onModelUpdated"
+        @refresh-model="getModel"
       >
         <template #plugin-config-empty-state>
           <div class="plugin-config-empty-state">

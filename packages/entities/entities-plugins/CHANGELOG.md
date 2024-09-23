@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.12.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.20...@kong-ui-public/entities-plugins@8.12.21) (2024-09-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.12.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.19...@kong-ui-public/entities-plugins@8.12.20) (2024-09-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.12.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.18...@kong-ui-public/entities-plugins@8.12.19) (2024-09-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.12.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.17...@kong-ui-public/entities-plugins@8.12.18) (2024-09-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.12.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.16...@kong-ui-public/entities-plugins@8.12.17) (2024-09-23)
+
+
+### Bug Fixes
+
+* **entities-plugins:** prevent infinite updates for dev ([#1644](https://github.com/Kong/public-ui-components/issues/1644)) ([013e2a1](https://github.com/Kong/public-ui-components/commit/013e2a1a9fb0e2fe4beb63ae942d13f6bb1f5510))
+
+
+
+
+
+## [8.12.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.15...@kong-ui-public/entities-plugins@8.12.16) (2024-09-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.12.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.14...@kong-ui-public/entities-plugins@8.12.15) (2024-09-19)
+
+
+### Bug Fixes
+
+* **forms:** emit event for nested objects ([#1634](https://github.com/Kong/public-ui-components/issues/1634)) ([35265c9](https://github.com/Kong/public-ui-components/commit/35265c9aaf161449da4163a7566795ffcd11660e))
+
+
+
+
+
+## [8.12.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.13...@kong-ui-public/entities-plugins@8.12.14) (2024-09-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.12.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.12...@kong-ui-public/entities-plugins@8.12.13) (2024-09-19)
+
+
+### Bug Fixes
+
+* **deps:** update dependency marked to ^14.1.2 ([#1636](https://github.com/Kong/public-ui-components/issues/1636)) ([5fab4bd](https://github.com/Kong/public-ui-components/commit/5fab4bd479bb3eb38a49b2b23cbbf7c159c0e9fe))
+
+
+
+
+
 ## [8.12.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.11...@kong-ui-public/entities-plugins@8.12.12) (2024-09-17)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

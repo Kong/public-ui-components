@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.5.9...@kong-ui-public/forms@4.5.10) (2024-09-23)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.5.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.5.8...@kong-ui-public/forms@4.5.9) (2024-09-23)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.5.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.5.7...@kong-ui-public/forms@4.5.8) (2024-09-19)
+
+
+### Bug Fixes
+
+* **forms:** emit event for nested objects ([#1634](https://github.com/Kong/public-ui-components/issues/1634)) ([35265c9](https://github.com/Kong/public-ui-components/commit/35265c9aaf161449da4163a7566795ffcd11660e))
+
+
+
+
+
+## [4.5.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.5.6...@kong-ui-public/forms@4.5.7) (2024-09-19)
+
+
+### Bug Fixes
+
+* **forms:** add index to deeply nested input id ([#1638](https://github.com/Kong/public-ui-components/issues/1638)) ([0bb5e3b](https://github.com/Kong/public-ui-components/commit/0bb5e3b42d72c9f95c8af9fc41319d5c0b3c266f))
+
+
+
+
+
 ## [4.5.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.5.5...@kong-ui-public/forms@4.5.6) (2024-09-17)
 
 **Note:** Version bump only for package @kong-ui-public/forms
