@@ -1,7 +1,7 @@
 import type { FormSchema } from '../../../types'
 import FieldTester from '../../../../sandbox/FieldTester.vue'
 
-describe('<FieldTester /> - FieldSwitch', () => {
+describe('<FieldTester /> - FieldSelect', () => {
   const fieldKeys = ['https_redirect_status_code', 'protocols']
   const fieldLabels = ['HTTPS Redirect Status Code', 'Protocols']
   const fieldValues = [307, 'http, https']

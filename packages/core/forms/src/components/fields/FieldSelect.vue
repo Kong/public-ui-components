@@ -3,6 +3,7 @@
     :id="getFieldID(schema)"
     v-model="inputValue"
     :class="schema.fieldClasses"
+    :clearable="!schema.required"
     :disabled="disabled || undefined"
     :items="items"
     :kpop-attributes="{ 'data-testid': `${getFieldID(schema)}-items` }"
