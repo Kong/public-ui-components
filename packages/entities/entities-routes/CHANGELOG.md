@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.7.16...@kong-ui-public/entities-routes@3.7.17) (2024-09-23)
+
+
+### Bug Fixes
+
+* **entities-routes:** fix unexpected indent for service select ([#1643](https://github.com/Kong/public-ui-components/issues/1643)) ([87abafd](https://github.com/Kong/public-ui-components/commit/87abafd9c1136fca57fca793374803a3555761ec))
+
+
+
+
+
 ## [3.7.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.7.15...@kong-ui-public/entities-routes@3.7.16) (2024-09-20)
 
 
