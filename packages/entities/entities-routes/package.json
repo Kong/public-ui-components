@@ -39,7 +39,7 @@
     "axios": "^1.6.8",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vue": "^3.4.38",
-    "vue-router": "^4.4.3"
+    "vue-router": "^4.4.5"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
