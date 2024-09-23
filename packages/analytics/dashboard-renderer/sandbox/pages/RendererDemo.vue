@@ -5,7 +5,12 @@
   >
     <div class="sandbox-container">
       <h2>Static Dashboard</h2>
+      <KInputSwitch
+        v-model="isToggled"
+        :label="isToggled ? 'Custom styling' : 'Normal styling'"
+      />
       <DashboardRenderer
+        :class="{ 'custom-styling': isToggled}"
         :config="(dashboardConfig as DashboardConfig)"
         :context="context"
       >
@@ -29,7 +34,7 @@
 <script setup lang="ts">
 import type { DashboardConfig, DashboardRendererContext, TileConfig } from '../../src'
 import { ChartTypes, DashboardRenderer } from '../../src'
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
@@ -232,4 +237,27 @@ const dashboardConfig: DashboardConfig = {
   ],
 }
 
+const isToggled = ref(false)
+
 </script>
+
+<style lang="scss" scoped>
+.k-input-switch {
+  margin-bottom: 20px;
+}
+
+// Custom theme via CSS property overrides
+.kong-ui-public-dashboard-renderer.custom-styling {
+  --kui-border-width-10: 2px;
+  --kui-font-size-30: 10px;
+  --kui-font-size-40: 12px;
+  --kui-font-size-50: 14px;
+  --kui-font-size-60: 15px;
+  --kui-color-border: rgba(90,120,240,0.40);
+  --kui-space-70: 20px;
+
+  // Overrides for Dashboard Tile and Top-N Table
+  --kui-color-background-transparent: linear-gradient(#fafafa, #cdeffb), rgba(0,0,0,0.2);;
+  --kui-color-background: linear-gradient(#fafafa, #cdeffb), rgba(0,0,0,0.2);;
+}
+</style>
