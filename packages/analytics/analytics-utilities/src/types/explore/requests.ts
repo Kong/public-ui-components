@@ -42,8 +42,20 @@ export const filterableRequestDimensions = makeFilterable(queryableRequestDimens
 export type FilterableRequestDimensions = typeof filterableRequestDimensions[number]
 
 export const queryableRequestWildcardDimensions = [
+  'auth_type',
+  'client_ip',
+  'header_host',
+  'header_user_agent',
+  'http_method',
+  'request_id',
   'request_uri',
+  'response_header_content_type',
+  'response_source',
+  'service_port',
+  'service_protocol',
+  'status_code_grouped',
   'upstream_uri',
+  'upstream_status_code_grouped',
 ] as const
 
 export type QueryableRequestWildcardDimensions = typeof queryableRequestWildcardDimensions[number]
