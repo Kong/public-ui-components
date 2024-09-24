@@ -1,5 +1,6 @@
 import type { RouteLocationRaw } from 'vue-router'
 import type { Field, KongManagerConfig, KonnectConfig } from './index'
+import type { TableDataFetcherParams } from '@kong/kongponents'
 
 export interface KonnectBaseTableConfig extends KonnectConfig {
   /** Additional message to show when there are no records */
@@ -27,10 +28,10 @@ export interface EmptyStateOptions {
   showCta?: boolean
 }
 
-export interface FetcherParams {
+export interface FetcherParams extends TableDataFetcherParams {
   page: number
   pageSize: number
-  offset: number
+  offset: string
   sortColumnKey: string
   sortColumnOrder: 'asc' | 'desc'
   query: string

@@ -72,12 +72,10 @@
         </EntityBaseTableCell>
       </template>
 
-      <template #action-items="{ row, rowKey, rowValue }">
+      <template #action-items="{ row }">
         <slot
           name="actions"
           :row="row"
-          :row-key="rowKey"
-          :row-value="rowValue"
         />
       </template>
 
@@ -96,7 +94,7 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import composables from '../../composables'
 import { useTablePreferences } from '@kong-ui-public/core'
-import type { SwrvStateData, HeaderTag, TablePreferences } from '@kong/kongponents'
+import type { SwrvStateData, HeaderTag, TablePreferences, SortHandlerFunctionParam, TableDataFetcherParams } from '@kong/kongponents'
 import EntityBaseTableCell from './EntityBaseTableCell.vue'
 
 import type {
@@ -119,7 +117,7 @@ const props = defineProps({
   },
   // fetcher function
   fetcher: {
-    type: Function as PropType<(params: FetcherParams) => Promise<FetcherResponse>>,
+    type: Function as PropType<(param: TableDataFetcherParams) => Promise<FetcherResponse>>,
     required: true,
     default: async () => ({
       data: [],
@@ -156,8 +154,8 @@ const props = defineProps({
     default: false,
   },
   sortHandlerFunction: {
-    type: Function,
-    default: () => ({}),
+    type: Function as PropType<(param: SortHandlerFunctionParam) => Record<string, any>[]>,
+    default: null,
   },
   // whether to show the actions column
   enableEntityActions: {
