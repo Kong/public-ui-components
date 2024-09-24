@@ -53,9 +53,7 @@ export const queryableRequestWildcardDimensions = [
   'response_source',
   'service_port',
   'service_protocol',
-  'status_code_grouped',
   'upstream_uri',
-  'upstream_status_code_grouped',
 ] as const
 
 export type QueryableRequestWildcardDimensions = typeof queryableRequestWildcardDimensions[number]
