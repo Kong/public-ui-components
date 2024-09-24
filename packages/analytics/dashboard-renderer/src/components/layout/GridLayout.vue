@@ -97,7 +97,7 @@ const gridCells = computed<Cell<T>[]>(() => {
 <style lang="scss" scoped>
 .kong-ui-public-grid-layout {
   display: grid;
-  gap: $kui-space-70;
+  gap: var(--kui-space-70, $kui-space-70);
   grid-template-columns: repeat(v-bind('gridSize.cols'), 1fr);
   grid-template-rows: v-bind('rowDefinition');
   width: 100%;
@@ -117,7 +117,7 @@ const gridCells = computed<Cell<T>[]>(() => {
       width: auto !important;
 
       &:not(:first-child) {
-        margin-top: $kui-space-70;
+        margin-top: var(--kui-space-70, $kui-space-70);
       }
     }
 

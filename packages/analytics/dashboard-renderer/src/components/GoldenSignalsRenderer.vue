@@ -74,7 +74,7 @@ const options = computed<ProviderProps>(() => ({
     .metricscard {
       @media (min-width: ($kui-breakpoint-phablet - 1px)) {
         &:not(:last-of-type) {
-          border-right: $kui-border-width-10 solid $kui-color-border;
+          border-right: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
         }
       }
     }

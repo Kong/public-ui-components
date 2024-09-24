@@ -157,10 +157,11 @@ const mergedContext = computed<DashboardRendererContextInternal>(() => {
 <style lang="scss" scoped>
 .kong-ui-public-dashboard-renderer {
   .tile-container {
-    border: 1px solid $kui-color-border;
-    border-radius: $kui-border-radius-20;
+    background: var(--kui-color-background-transparent, $kui-color-background-transparent);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     height: 100%;
-    padding: $kui-space-70;
+    padding: var(--kui-space-70, $kui-space-70);
   }
 }
 </style>
