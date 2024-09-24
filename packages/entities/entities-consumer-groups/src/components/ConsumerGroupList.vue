@@ -3,7 +3,6 @@
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
       :disable-pagination="isConsumerPage && !config.paginatedEndpoint"
-      disable-pagination-page-jump
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions

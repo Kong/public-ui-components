@@ -4,12 +4,11 @@
     :title="title"
     :title-tag="titleTag"
   >
-    <KTable
+    <KTableData
       ref="tableRefs"
       :cache-identifier="cacheId"
       :cell-attrs="cellAttrs"
       :client-sort="enableClientSort"
-      :disable-pagination-page-jump="disablePaginationPageJump"
       :empty-state-action-message="query ? t('baseTable.emptyState.noSearchResultsCtaText') : emptyStateOptions.ctaText"
       :empty-state-action-route="query ? undefined : emptyStateOptions.ctaPath"
       :empty-state-icon-variant="query ? 'search' : 'kong'"
@@ -21,10 +20,11 @@
       :fetcher="fetcher"
       :fetcher-cache-key="String(fetcherCacheKey)"
       :headers="headers"
+      :hide-pagination="hidePagination"
       hide-pagination-when-optional
       :initial-fetcher-params="combinedInitialFetcherParams"
       :loading="isLoading"
-      :pagination-offset="paginationType === 'offset'"
+      :pagination-attributes="{ disablePageJump: disablePaginationPageJump, offset: paginationType === 'offset' }"
       resize-columns
       :row-attrs="rowAttrs"
       :search-input="query"
@@ -50,6 +50,7 @@
           </div>
         </div>
       </template>
+
       <template
         v-for="(header, key) in tableHeaders"
         :key="key"
@@ -70,42 +71,23 @@
           </slot>
         </EntityBaseTableCell>
       </template>
-      <template #actions="{ row, rowKey, rowValue }">
-        <div
-          class="actions-container"
-          :data-testid="row.name"
-        >
-          <KDropdown
-            :kpop-attributes="{ placement: 'bottom-end' }"
-            :width="dropdownMenuWidth"
-          >
-            <KButton
-              appearance="tertiary"
-              class="actions-trigger"
-              data-testid="overflow-actions-button"
-              icon
-              size="small"
-            >
-              <MoreIcon />
-            </KButton>
-            <template #items>
-              <slot
-                name="actions"
-                :row="row"
-                :row-key="rowKey"
-                :row-value="rowValue"
-              />
-            </template>
-          </KDropdown>
-        </div>
+
+      <template #action-items="{ row, rowKey, rowValue }">
+        <slot
+          name="actions"
+          :row="row"
+          :row-key="rowKey"
+          :row-value="rowValue"
+        />
       </template>
+
       <template
         v-if="!query"
         #empty-state-action-icon
       >
         <AddIcon />
       </template>
-    </KTable>
+    </KTableData>
   </KCard>
 </template>
 
@@ -126,7 +108,7 @@ import type {
   TableSortParams,
   TableErrorMessage,
 } from '../../types'
-import { AddIcon, MoreIcon } from '@kong/icons'
+import { AddIcon } from '@kong/icons'
 
 const props = defineProps({
   // table header configuration
@@ -228,12 +210,6 @@ const props = defineProps({
     default: null,
     required: false,
   },
-  /** dropdown menu width, default to 200px, defined in kPop */
-  dropdownMenuWidth: {
-    type: String,
-    default: '',
-    required: false,
-  },
   title: {
     type: String,
     default: '',
@@ -244,6 +220,10 @@ const props = defineProps({
   },
   /** default to false, setting to true will suppress the row click event even if "@click:row" is attached */
   disableRowClick: {
+    type: Boolean,
+    default: false,
+  },
+  hidePagination: {
     type: Boolean,
     default: false,
   },

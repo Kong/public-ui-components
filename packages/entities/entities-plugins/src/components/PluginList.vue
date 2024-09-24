@@ -2,9 +2,7 @@
   <div class="kong-ui-entities-plugins-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
-      disable-pagination-page-jump
       :disable-sorting="disableSorting"
-      dropdown-menu-width="270"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
       :error-message="errorMessage"

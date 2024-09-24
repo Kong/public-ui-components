@@ -2,7 +2,6 @@
   <div class="kong-ui-entities-consumer-credentials-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
-      disable-pagination-page-jump
       disable-row-click
       disable-sorting
       :empty-state-options="emptyStateOptions"

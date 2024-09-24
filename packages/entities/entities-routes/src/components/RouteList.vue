@@ -4,7 +4,6 @@
       :cache-identifier="cacheIdentifier"
       :cell-attributes="getCellAttrs"
       :default-table-preferences="defaultTablePreferences"
-      disable-pagination-page-jump
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
