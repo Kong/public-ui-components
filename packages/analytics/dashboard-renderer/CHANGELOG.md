@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.25.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.24.27...@kong-ui-public/dashboard-renderer@0.25.0) (2024-09-24)
+
+
+### Features
+
+* tokenize dashboard renderer and associated components [MA-2963] ([#1635](https://github.com/Kong/public-ui-components/issues/1635)) ([2b65ffd](https://github.com/Kong/public-ui-components/commit/2b65ffda6eac3d7531b8d7efcf29a9a03d979f4b))
+
+
+
+
+
 ## [0.24.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.24.26...@kong-ui-public/dashboard-renderer@0.24.27) (2024-09-24)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
