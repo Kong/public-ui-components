@@ -39,7 +39,7 @@
   "devDependencies": {
     "@kong/atc-router": "1.6.0-rc.1",
     "@kong/design-tokens": "1.17.2",
-    "@kong/kongponents": "9.8.0",
+    "@kong/kongponents": "9.8.1",
     "@types/uuid": "^10.0.0",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-top-level-await": "^1.4.4",
@@ -65,14 +65,14 @@
   },
   "peerDependencies": {
     "@kong-ui-public/forms": "workspace:^",
-    "@kong/kongponents": "^9.8.0",
+    "@kong/kongponents": "^9.8.1",
     "vue": "^3.4.38"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.15.1",
+    "@kong/icons": "^1.15.2",
     "monaco-editor": "0.51.0",
     "uuid": "^10.0.0"
   }
