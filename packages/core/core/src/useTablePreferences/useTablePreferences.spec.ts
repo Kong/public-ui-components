@@ -2,6 +2,14 @@ import { describe, it, expect, afterEach } from 'vitest'
 import useTablePreferences from './index'
 import { USER_TABLE_PREFERENCES_LOCAL_STORAGE_KEY, DEFAULT_USER_TABLE_PREFERENCES } from '../constants'
 
+const fallbackPreferences = {
+  pageSize: 60,
+  sortColumnKey: undefined,
+  sortColumnOrder: undefined,
+  columnWidths: { },
+  columnVisibility: { },
+}
+
 describe('useTablePreferences', () => {
 
   afterEach(() => {
@@ -106,7 +114,15 @@ describe('useTablePreferences', () => {
     expect(tablePrefs1.sortColumnOrder).not.toEqual(tablePrefs2.sortColumnOrder)
   })
 
-  it('falls back to the default preferences if the tableKey does not exist', () => {
+  it('falls back to the given preferences if the tableKey does not exist', () => {
+    const { getTablePreferences } = useTablePreferences()
+
+    const tablePreferences = getTablePreferences('my-fake-table-key', fallbackPreferences)
+
+    expect(tablePreferences).toEqual(fallbackPreferences)
+  })
+
+  it('falls back to the default preferences if the tableKey does not exist and no preferences is given', () => {
     const { getTablePreferences } = useTablePreferences()
 
     const tablePreferences = getTablePreferences('my-fake-table-key')

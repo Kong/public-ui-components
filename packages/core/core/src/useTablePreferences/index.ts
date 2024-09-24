@@ -62,13 +62,13 @@ export default function useTablePreferences() {
    * @param {string} tableKey The table identifier
    * @returns {TablePreferences} The stored preferences for the given tableKey
    */
-  const getTablePreferences = (tableKey: string): TablePreferences => {
+  const getTablePreferences = (tableKey: string, fallbackPreferences?: TablePreferences): TablePreferences => {
     const existingPreferences = getAllTablePreferences()
 
     const tablePreferences = existingPreferences?.get(tableKey) || undefined
 
-    // return the stored preferences, or fallback to DEFAULT_USER_TABLE_PREFERENCES if the tableKey does not exist
-    return tablePreferences || DEFAULT_USER_TABLE_PREFERENCES
+    // return the stored preferences or given preferences, or fallback to DEFAULT_USER_TABLE_PREFERENCES if the tableKey does not exist and no fallbackPreferences are provided
+    return tablePreferences || fallbackPreferences || DEFAULT_USER_TABLE_PREFERENCES
   }
 
   /**

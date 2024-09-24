@@ -2,6 +2,7 @@
   <div class="kong-ui-entities-gateway-services-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
+      :default-table-preferences="defaultTablePreferences"
       disable-pagination-page-jump
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
@@ -89,6 +90,12 @@
           </KBadge>
         </KTruncate>
         <span v-else>-</span>
+      </template>
+      <template #created_at="{ rowValue }">
+        {{ formatUnixTimeStamp(rowValue) }}
+      </template>
+      <template #updated_at="{ rowValue }">
+        {{ formatUnixTimeStamp(rowValue) }}
       </template>
 
       <!-- Row actions -->
@@ -258,7 +265,7 @@ const props = defineProps({
   },
 })
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
@@ -278,6 +285,14 @@ const fields: BaseTableHeaders = {
   path: { label: t('gateway_services.list.table_headers.path'), searchable: true, sortable: true },
   enabled: { label: t('gateway_services.list.table_headers.enabled'), searchable: true, sortable: true },
   tags: { label: t('gateway_services.list.table_headers.tags'), sortable: false },
+  updated_at: { label: t('gateway_services.list.table_headers.updated_at'), sortable: true },
+  created_at: { label: t('gateway_services.list.table_headers.created_at'), sortable: true },
+}
+
+const defaultTablePreferences = {
+  columnVisibility: {
+    created_at: false,
+  },
 }
 const tableHeaders: BaseTableHeaders = fields
 

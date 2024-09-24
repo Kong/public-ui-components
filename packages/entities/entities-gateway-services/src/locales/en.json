@@ -34,7 +34,9 @@
         "path": "Path",
         "enabled": "Enabled",
         "tags": "Tags",
-        "id": "ID"
+        "id": "ID",
+        "created_at": "Created At",
+        "updated_at": "Last Modified"
       },
       "empty_state": {
         "title": "Configure a New Gateway Service",
