@@ -15,6 +15,7 @@ export interface FormFieldSchema extends Record<string, any> {
   help?: string
   hint?: string
   submitWhenNull?: boolean
+  selectOptions?: Record<string, any>
 }
 
 export interface FormSchema {

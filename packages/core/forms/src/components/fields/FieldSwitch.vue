@@ -7,7 +7,9 @@
       :class="schema.fieldClasses"
       :disabled="disabled || undefined"
       :label="inputValue ? schema.textOn || t('vfg.labels.on') : schema.textOff || t('vfg.labels.off')"
+      :label-attributes="{ info: schema.help }"
       :name="schema.inputName"
+      :required="schema.required || undefined"
     />
   </div>
 </template>

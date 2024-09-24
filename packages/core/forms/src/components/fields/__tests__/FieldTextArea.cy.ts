@@ -11,6 +11,8 @@ describe('<FieldTester /> - FieldTextArea', () => {
       model: fieldKey,
       id: fieldKey,
       label: fieldLabel,
+      help: 'Describe the personality of the cat.',
+      required: true,
     }],
   }
 
@@ -33,6 +35,19 @@ describe('<FieldTester /> - FieldTextArea', () => {
     // check VFG label is set correctly
     cy.get(`.form-group-label[for="${fieldKey}"]`).should('be.visible')
     cy.get(`.form-group-label[for="${fieldKey}"]`).should('contain.text', fieldLabel)
+
+    // check required state
+    if (schema.fields[0].required) {
+      cy.get('.required').find(`.form-group-label[for="${fieldKey}"]`).should('exist')
+    } else {
+      cy.get('.required').find(`.form-group-label[for="${fieldKey}"]`).should('not.exist')
+    }
+
+    // check help text
+    if (schema.fields[0].help) {
+      cy.get(`label[for="${fieldKey}"] .info-icon`).should('be.visible')
+      cy.get(`label[for="${fieldKey}"]`).should('contain.text', schema.fields[0].help)
+    }
   })
 
   it('renders default state correctly - with model', () => {
