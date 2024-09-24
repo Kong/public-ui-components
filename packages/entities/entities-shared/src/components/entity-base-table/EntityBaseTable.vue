@@ -100,7 +100,6 @@ import EntityBaseTableCell from './EntityBaseTableCell.vue'
 import type {
   BaseTableHeaders,
   EmptyStateOptions,
-  FetcherParams,
   FetcherResponse,
   InternalHeader,
   TableSortParams,
@@ -125,7 +124,7 @@ const props = defineProps({
     }),
   },
   initialFetcherParams: {
-    type: Object as PropType<Partial<Omit<FetcherParams, 'query'>>>,
+    type: Object as PropType<Partial<Omit<TableDataFetcherParams, 'query'>>>,
     default: null,
   },
   // used to identify the cache entry
@@ -342,7 +341,7 @@ const { setTablePreferences, getTablePreferences } = useTablePreferences()
 
 const tablePreferences = ref<TablePreferences>(getTablePreferences(cacheId.value, props.defaultTablePreferences))
 
-const combinedInitialFetcherParams = computed((): Partial<FetcherParams> => {
+const combinedInitialFetcherParams = computed((): Partial<TableDataFetcherParams> => {
   // Pass the preferencesStorageKey regardless; if no entry is found, it will return the default
   const userTablePreferences = getTablePreferences(cacheId.value)
   // Return the props.initialFetcherParams, appending any stored user preferences
