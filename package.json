@@ -70,7 +70,7 @@
     "vite-plugin-externals": "^0.6.2",
     "vite-plugin-vue-devtools": "^7.0.27",
     "vitest": "^2.1.0",
-    "vue": "^3.4.38",
+    "vue": "^3.5.8",
     "vue-router": "^4.4.5",
     "vue-tsc": "^1.8.27"
   },
