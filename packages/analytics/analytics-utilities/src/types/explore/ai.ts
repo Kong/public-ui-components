@@ -17,14 +17,37 @@ export const queryableAiExploreDimensions = [
   'time',
 ] as const
 
+export const fetchableAiExploreDimensions = [
+  'control_plane',
+  'control_plane_group',
+  'consumer',
+  'application',
+  'route',
+] as const satisfies QueryableAiExploreDimensions[]
+
+export const searchableLocalRequestDimensions = [
+  'ai_provider',
+  'ai_response_model',
+  'ai_request_model',
+  'llm_cache_status',
+  'llm_embeddings_provider',
+  'llm_embeddings_model',
+] as const satisfies QueryableAiExploreDimensions[]
+
+export type FetchableAiExploreDimensions = typeof fetchableAiExploreDimensions[number]
+
+export const filterableFetchableAiExploreDimensions = makeFilterable(fetchableAiExploreDimensions)
+
+export type FilterableFetchableAiExploreDimensions = typeof filterableFetchableAiExploreDimensions[number]
+
+export const filterableSearchableLocalRequestDimensions = makeFilterable(searchableLocalRequestDimensions)
+
+export type FilterableSearchableLocalRequestDimensions = typeof filterableSearchableLocalRequestDimensions[number]
+
 export type QueryableAiExploreDimensions = typeof queryableAiExploreDimensions[number]
 
-export const filterableAiExploreDimensions = makeFilterable(queryableAiExploreDimensions)
-
-export type FilterableAiExploreDimensions = typeof queryableAiExploreDimensions[number]
-
 export interface AiExploreFilter extends Omit<BasicExploreFilter, 'dimension'> {
-  dimension: FilterableAiExploreDimensions
+  dimension: FilterableFetchableAiExploreDimensions | FilterableSearchableLocalRequestDimensions
 }
 
 export const aiExploreAggregations = [

@@ -28,18 +28,78 @@ export const queryableRequestDimensions = [
   'service_port',
   'service_protocol',
   'sse',
+  'status_code',
   'status_code_grouped',
   'time',
   'upstream_uri',
+  'upstream_status_code',
   'upstream_status_code_grouped',
   'websocket',
 ] as const
 
 export type QueryableRequestDimensions = typeof queryableRequestDimensions[number]
 
-export const filterableRequestDimensions = makeFilterable(queryableRequestDimensions)
+// These are dimensions that can be fetched/searched via KSearch/KAnalytics/KHCP
+export const fetchableRequestDimensions = [
+  'api_product',
+  'api_product_version',
+  'application',
+  'consumer',
+  'consumer_group',
+  'control_plane',
+  'control_plane_group',
+  'data_plane_node',
+  'gateway_service',
+  'route',
+] as const satisfies QueryableRequestDimensions[]
 
-export type FilterableRequestDimensions = typeof filterableRequestDimensions[number]
+export type FetchableRequestDimensions = typeof fetchableRequestDimensions[number]
+
+// These are dimensions that can be searched locally (i.e. in-memory) in the frontend
+// Will have a pre-populated list that can be searched from defined in the host app
+export const searchableLocalRequestDimensions = [
+  'auth_type',
+  'country_code',
+  'iso_code',
+  'status_code',
+  'upstream_status_code',
+  'status_code_grouped',
+  'upstream_status_code_grouped',
+  'http_method',
+  'service_protocol',
+] as const satisfies QueryableRequestDimensions[]
+
+export type SearchableLocalRequestDimensions = typeof searchableLocalRequestDimensions[number]
+
+export const textBasedRequestDimensions = [
+  'client_ip',
+  'header_host',
+  'header_user_agent',
+  'request_id',
+  'request_uri',
+  'response_header_content_type',
+  'response_source',
+  'service_port',
+  'service_protocol',
+  'sse',
+  'time',
+  'upstream_uri',
+  'websocket',
+] as const satisfies QueryableRequestDimensions[]
+
+export type TextBasedRequestDimensions = typeof textBasedRequestDimensions[number]
+
+export const filterableFetchableRequestDimensions = makeFilterable(fetchableRequestDimensions)
+
+export type FilterableFetchableRequestDimensions = typeof filterableFetchableRequestDimensions[number]
+
+export const filterableSearchableLocalRequestDimensions = makeFilterable(searchableLocalRequestDimensions)
+
+export type FilterableSearchableLocalRequestDimensions = typeof filterableSearchableLocalRequestDimensions[number]
+
+export const filterableTextBasedRequestDimensions = makeFilterable(textBasedRequestDimensions)
+
+export type FilterableTextBasedRequestDimensions = typeof filterableTextBasedRequestDimensions[number]
 
 export const queryableRequestWildcardDimensions = [
   'request_uri',
@@ -71,12 +131,12 @@ export type FilterableRequestMetrics = typeof filterableRequestMetrics[number]
 
 export interface RequestInFilter {
   operator: ExploreFilterTypesV2
-  field: FilterableRequestDimensions | FilterableRequestWildcardDimensions | FilterableRequestMetrics
+  field: FilterableFetchableRequestDimensions | FilterableSearchableLocalRequestDimensions | FilterableTextBasedRequestDimensions | FilterableRequestWildcardDimensions | FilterableRequestMetrics
   value: (string | number)[]
 }
 export interface RequestEqualsFilter {
   operator: RequestFilterTypeEqualsV2
-  field: FilterableRequestDimensions | FilterableRequestWildcardDimensions
+  field: FilterableFetchableRequestDimensions | FilterableSearchableLocalRequestDimensions | FilterableTextBasedRequestDimensions | FilterableRequestWildcardDimensions
   value: string
 }
 export interface RequestMetricFilter {
@@ -86,7 +146,7 @@ export interface RequestMetricFilter {
 }
 export interface RequestEmptyFilter {
   operator: RequestFilterTypeEmptyV2
-  field: FilterableRequestDimensions | FilterableRequestWildcardDimensions | FilterableRequestMetrics
+  field: FilterableFetchableRequestDimensions | FilterableSearchableLocalRequestDimensions | FilterableTextBasedRequestDimensions | FilterableRequestWildcardDimensions | FilterableRequestMetrics
 }
 export interface RequestWildcardFilter {
   operator: RequestFilterTypeWildcardV2

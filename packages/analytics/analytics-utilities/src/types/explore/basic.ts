@@ -16,13 +16,36 @@ export const queryableBasicExploreDimensions = [
 
 export type QueryableBasicExploreDimensions = typeof queryableBasicExploreDimensions[number]
 
-export const filterableBasicExploreDimensions = makeFilterable(queryableBasicExploreDimensions)
+export const fetchableBasicExploreDimensions = [
+  'api_product',
+  'api_product_version',
+  'control_plane',
+  'control_plane_group',
+  'data_plane_node',
+  'gateway_service',
+  'route',
+] as const satisfies QueryableBasicExploreDimensions[]
 
-export type FilterableBasicExploreDimensions = typeof filterableBasicExploreDimensions[number]
+export type FetchableBasicExploreDimensions = typeof fetchableBasicExploreDimensions[number]
+
+export const filterableFetchableBasicExploreDimensions = makeFilterable(fetchableBasicExploreDimensions)
+
+export type FilterableFetchableBasicExploreDimensions = typeof filterableFetchableBasicExploreDimensions[number]
+
+export const searchableLocalBasicExploreDimensions = [
+  'status_code',
+  'status_code_grouped',
+] as const satisfies QueryableBasicExploreDimensions[]
+
+export type SearchableLocalBasicExploreDimensions = typeof searchableLocalBasicExploreDimensions[number]
+
+export const filterableSearchableLocalBasicExploreDimensions = makeFilterable(searchableLocalBasicExploreDimensions)
+
+export type FilterableSearchableLocalBasicExploreDimensions = typeof filterableSearchableLocalBasicExploreDimensions[number]
 
 export interface BasicExploreFilter {
   type: ExploreFilterTypesV2
-  dimension: FilterableBasicExploreDimensions
+  dimension: FilterableFetchableBasicExploreDimensions | FilterableSearchableLocalBasicExploreDimensions
   values: (string | number | null)[]
 }
 

@@ -9,14 +9,33 @@ export const queryableExploreDimensions = [
   'iso_code',
 ] as const
 
+
 export type QueryableExploreDimensions = typeof queryableExploreDimensions[number]
 
-export const filterableExploreDimensions = makeFilterable(queryableExploreDimensions)
+export const fetchableExploreDimensions = queryableExploreDimensions.filter(
+  (dimension) => !(searchableLocalExploreDimensions as SearchableLocalExploreDimensions[]).includes(dimension as SearchableLocalExploreDimensions),
+)
 
-export type FilterableExploreDimensions = typeof filterableExploreDimensions[number]
+export type FetchableExploreDimension = Exclude<QueryableExploreDimensions, 'status_code' | 'status_code_grouped' | 'iso_code' | 'time'>
+
+export const filterableFetchableExploreDimensions = makeFilterable(fetchableExploreDimensions)
+
+export type FilterableFetchableExploreDimensions = typeof filterableFetchableExploreDimensions[number]
+
+export const searchableLocalExploreDimensions = [
+  'iso_code',
+  'status_code',
+  'status_code_grouped',
+] as const satisfies QueryableExploreDimensions[]
+
+export type SearchableLocalExploreDimensions = typeof searchableLocalExploreDimensions[number]
+
+export const filterableSearchableLocalExploreDimensions = makeFilterable(searchableLocalExploreDimensions)
+
+export type FilterableSearchableLocalExploreDimensions = typeof filterableSearchableLocalExploreDimensions[number]
 
 export interface ExploreFilter extends Omit<BasicExploreFilter, 'dimension'> {
-  dimension: FilterableExploreDimensions
+  dimension: FilterableFetchableExploreDimensions | FilterableSearchableLocalExploreDimensions
 }
 
 export const exploreAggregations = [
