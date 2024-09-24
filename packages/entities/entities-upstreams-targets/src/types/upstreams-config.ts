@@ -1,14 +1,15 @@
 import type {
   ConfigurationSchemaItem,
   KongManagerBaseEntityConfig,
+  ConfigurationSchema,
   KonnectBaseEntityConfig,
 } from '@kong-ui-public/entities-shared'
 
-export interface KonnectUpstreamsEntityConfig extends KonnectBaseEntityConfig {}
+export interface KonnectUpstreamsEntityConfig extends KonnectBaseEntityConfig { }
 
-export interface KongManagerUpstreamsEntityConfig extends KongManagerBaseEntityConfig {}
+export interface KongManagerUpstreamsEntityConfig extends KongManagerBaseEntityConfig { }
 
-export interface UpstreamsConfigurationSchema {
+export interface UpstreamsConfigurationSchema extends ConfigurationSchema {
   algorithm: ConfigurationSchemaItem
   created_at: ConfigurationSchemaItem
   hash_fallback: ConfigurationSchemaItem

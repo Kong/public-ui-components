@@ -1,12 +1,12 @@
-import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, ConfigurationSchemaItem } from '@kong-ui-public/entities-shared'
+import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, ConfigurationSchema, ConfigurationSchemaItem } from '@kong-ui-public/entities-shared'
 
 /** Konnect Route entity config */
-export interface KonnectRouteEntityConfig extends KonnectBaseEntityConfig {}
+export interface KonnectRouteEntityConfig extends KonnectBaseEntityConfig { }
 
 /** Kong Manager Route entity config */
-export interface KongManagerRouteEntityConfig extends KongManagerBaseEntityConfig {}
+export interface KongManagerRouteEntityConfig extends KongManagerBaseEntityConfig { }
 
-export interface RouteConfigurationSchema {
+export interface RouteConfigurationSchema extends ConfigurationSchema {
   // basic fields
   id: ConfigurationSchemaItem,
   name: ConfigurationSchemaItem,

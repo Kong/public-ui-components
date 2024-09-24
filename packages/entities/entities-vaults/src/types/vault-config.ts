@@ -1,10 +1,10 @@
-import type { ConfigurationSchemaItem, KongManagerBaseEntityConfig, KonnectBaseEntityConfig } from '@kong-ui-public/entities-shared'
+import type { ConfigurationSchemaItem, KongManagerBaseEntityConfig, ConfigurationSchema, KonnectBaseEntityConfig } from '@kong-ui-public/entities-shared'
 
-export interface KonnectVaultEntityConfig extends KonnectBaseEntityConfig {}
+export interface KonnectVaultEntityConfig extends KonnectBaseEntityConfig { }
 
-export interface KongManagerVaultEntityConfig extends KongManagerBaseEntityConfig {}
+export interface KongManagerVaultEntityConfig extends KongManagerBaseEntityConfig { }
 
-export interface VaultConfigurationSchema {
+export interface VaultConfigurationSchema extends ConfigurationSchema {
   id: ConfigurationSchemaItem
   name: ConfigurationSchemaItem
   created_at: ConfigurationSchemaItem

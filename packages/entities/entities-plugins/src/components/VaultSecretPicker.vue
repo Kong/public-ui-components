@@ -201,7 +201,7 @@ const {
   error: vaultsFetchError,
   loadItems: loadVaults,
   results: vaultsResults,
-} = useDebouncedFilter(props.config, vaultsEndpoints.list[props.config.app].getAll, undefined, {
+} = useDebouncedFilter(props.config, (vaultsEndpoints.list[props.config.app] as any).getAll, undefined, {
   fetchedItemsKey: 'data',
   searchKeys: ['prefix'],
 })

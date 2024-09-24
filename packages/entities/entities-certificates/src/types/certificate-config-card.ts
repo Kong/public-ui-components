@@ -1,12 +1,12 @@
-import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, ConfigurationSchemaItem } from '@kong-ui-public/entities-shared'
+import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, ConfigurationSchema, ConfigurationSchemaItem } from '@kong-ui-public/entities-shared'
 
 /** Konnect Certificate entity config */
-export interface KonnectCertificateEntityConfig extends KonnectBaseEntityConfig {}
+export interface KonnectCertificateEntityConfig extends KonnectBaseEntityConfig { }
 
 /** Kong Manager Certificate entity config */
-export interface KongManagerCertificateEntityConfig extends KongManagerBaseEntityConfig {}
+export interface KongManagerCertificateEntityConfig extends KongManagerBaseEntityConfig { }
 
-export interface CACertificateConfigurationSchema {
+export interface CACertificateConfigurationSchema extends ConfigurationSchema {
   // basic fields
   id: ConfigurationSchemaItem
   updated_at: ConfigurationSchemaItem
