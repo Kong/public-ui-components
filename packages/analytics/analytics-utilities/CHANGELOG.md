@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.8.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.8.5...@kong-ui-public/analytics-utilities@4.8.6) (2024-09-24)
+
+
+### Bug Fixes
+
+* wildcard operator clean up ([#1653](https://github.com/Kong/public-ui-components/issues/1653)) ([aeb003c](https://github.com/Kong/public-ui-components/commit/aeb003c9cd835a85c2079d239d8dd6a413976473))
+
+
+
+
+
 ## [4.8.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.8.4...@kong-ui-public/analytics-utilities@4.8.5) (2024-09-24)
 
 
