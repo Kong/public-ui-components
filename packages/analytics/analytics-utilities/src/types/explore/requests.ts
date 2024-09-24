@@ -28,11 +28,9 @@ export const queryableRequestDimensions = [
   'service_port',
   'service_protocol',
   'sse',
-  'status_code',
   'status_code_grouped',
   'time',
   'upstream_uri',
-  'upstream_status_code',
   'upstream_status_code_grouped',
   'websocket',
 ] as const
@@ -60,12 +58,11 @@ export type FetchableRequestDimensions = typeof fetchableRequestDimensions[numbe
 export const searchableLocalRequestDimensions = [
   'auth_type',
   'country_code',
+  'http_method',
   'iso_code',
-  'status_code',
-  'upstream_status_code',
   'status_code_grouped',
   'upstream_status_code_grouped',
-  'http_method',
+  'response_source',
   'service_protocol',
 ] as const satisfies QueryableRequestDimensions[]
 
@@ -123,15 +120,33 @@ export const queryableRequestMetrics = [
   'upstream_status_code',
 ] as const
 
+export const searchableLocalRequestMetrics = [
+  'status_code',
+  'upstream_status_code',
+] as const satisfies QueryableRequestMetrics[]
+
+export const requestMetrics = [
+  'ai_count',
+  'latencies_response_ms',
+  'latencies_upstream_ms',
+  'latencies_kong_gateway_ms',
+  'response_body_size',
+  'request_body_size',
+] as const satisfies QueryableRequestMetrics[]
+
 export type QueryableRequestMetrics = typeof queryableRequestMetrics[number]
 
-export const filterableRequestMetrics = makeFilterable(queryableRequestMetrics)
+export const filterableSearchableLocalRequestMetrics = makeFilterable(searchableLocalRequestMetrics)
+
+export type FilterableSearchableLocalRequestMetrics = typeof filterableSearchableLocalRequestMetrics[number]
+
+export const filterableRequestMetrics = makeFilterable(requestMetrics)
 
 export type FilterableRequestMetrics = typeof filterableRequestMetrics[number]
 
 export interface RequestInFilter {
   operator: ExploreFilterTypesV2
-  field: FilterableFetchableRequestDimensions | FilterableSearchableLocalRequestDimensions | FilterableTextBasedRequestDimensions | FilterableRequestWildcardDimensions | FilterableRequestMetrics
+  field: FilterableFetchableRequestDimensions | FilterableSearchableLocalRequestDimensions | FilterableTextBasedRequestDimensions | FilterableRequestWildcardDimensions | FilterableSearchableLocalRequestMetrics | FilterableRequestMetrics
   value: (string | number)[]
 }
 export interface RequestEqualsFilter {
@@ -141,7 +156,7 @@ export interface RequestEqualsFilter {
 }
 export interface RequestMetricFilter {
   operator: RequestFilterTypeMetricV2
-  field: FilterableRequestMetrics
+  field: FilterableSearchableLocalRequestMetrics | FilterableRequestMetrics
   value: number
 }
 export interface RequestEmptyFilter {

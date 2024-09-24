@@ -1,5 +1,5 @@
 import { type BasicExploreAggregations, type BasicExploreFilter, filterableFetchableBasicExploreDimensions, filterableSearchableLocalBasicExploreDimensions } from './basic'
-import { type AiExploreAggregations, type AiExploreFilter, filterableFetchableAiExploreDimensions, filterableSearchableLocalRequestDimensions } from './ai'
+import { type AiExploreAggregations, type AiExploreFilter, filterableFetchableAiExploreDimensions, filterableSearchableLocalAiExploreDimensions } from './ai'
 import { type ExploreAggregations, type ExploreFilter, filterableFetchableExploreDimensions, filterableSearchableLocalExploreDimensions } from './advanced'
 
 export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations
@@ -18,7 +18,7 @@ export interface FilterTypeMap extends Record<QueryDatasource, AllFilters> {
 export const datasourceToFilterableDimensions: Record<QueryDatasource, Set<string>> = {
   basic: new Set([...filterableFetchableBasicExploreDimensions, ...filterableSearchableLocalBasicExploreDimensions]),
   advanced: new Set([...filterableFetchableExploreDimensions, ...filterableSearchableLocalExploreDimensions]),
-  ai: new Set([...filterableFetchableAiExploreDimensions, ...filterableSearchableLocalRequestDimensions]),
+  ai: new Set([...filterableFetchableAiExploreDimensions, ...filterableSearchableLocalAiExploreDimensions]),
 } as const
 
 // Utility for stripping unknown filters
