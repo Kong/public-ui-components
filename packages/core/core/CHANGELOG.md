@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.9.1...@kong-ui-public/core@1.10.0) (2024-09-24)
+
+
+### Features
+
+* **gateway-manager:** add columns for routes and services [KM-517] ([#1637](https://github.com/Kong/public-ui-components/issues/1637)) ([0567198](https://github.com/Kong/public-ui-components/commit/0567198e3178f0c17519abc3344624d58709cc31))
+
+
+
+
+
 ## [1.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.9.0...@kong-ui-public/core@1.9.1) (2024-09-16)
 
 **Note:** Version bump only for package @kong-ui-public/core
