@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.5.11...@kong-ui-public/forms@4.6.0) (2024-09-24)
+
+
+### Features
+
+* **vfg:** convert field-select + more tests [khcp-11336] ([#1584](https://github.com/Kong/public-ui-components/issues/1584)) ([c57df8e](https://github.com/Kong/public-ui-components/commit/c57df8e6e17783c952e1cce7a4615def5ed80695))
+
+
+
+
+
 ## [4.5.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.5.10...@kong-ui-public/forms@4.5.11) (2024-09-24)
 
 
