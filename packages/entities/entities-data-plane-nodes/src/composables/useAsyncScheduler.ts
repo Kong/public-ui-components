@@ -21,9 +21,11 @@ class TokenBucket {
   private borrowConcurrentToken() {
     if (this.concurrentTokenSet.size > 0) {
       const token = this.concurrentTokenSet.values().next().value
-      this.concurrentTokenSet.delete(token)
-      return () => {
-        this.returnConcurrentToken(token)
+      if (token) {
+        this.concurrentTokenSet.delete(token)
+        return () => {
+          this.returnConcurrentToken(token)
+        }
       }
     }
     throw new Error('BUG: No available token to borrow')
