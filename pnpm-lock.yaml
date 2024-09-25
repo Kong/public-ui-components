@@ -1154,13 +1154,13 @@ importers:
     dependencies:
       '@kong/swagger-ui-kong-theme-universal':
         specifier: ^4.3.3
-        version: 4.3.3(@babel/core@7.25.2)(axios@1.7.7)(mkdirp@1.0.4)(prop-types@15.8.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)(rollup@4.21.3)(vue-router@4.4.5(vue@3.4.38(typescript@5.3.3)))(vue@3.4.38(typescript@5.3.3))
+        version: 4.3.3(@babel/core@7.25.2)(axios@1.7.7)(mkdirp@1.0.4)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.21.3)(vue-router@4.4.5(vue@3.4.38(typescript@5.3.3)))(vue@3.4.38(typescript@5.3.3))
       react:
         specifier: 18.3.1
         version: 18.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.3.1)
+        specifier: 18.3.1
+        version: 18.3.1(react@18.3.1)
       swagger-client:
         specifier: ^3.29.2
         version: 3.29.2(ramda@0.30.1)
@@ -7639,10 +7639,10 @@ packages:
     peerDependencies:
       react: ^16.14.0
 
-  react-dom@18.2.0:
-    resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
+  react-dom@18.3.1:
+    resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
     peerDependencies:
-      react: ^18.2.0
+      react: ^18.3.1
 
   react-immutable-proptypes@2.2.0:
     resolution: {integrity: sha512-Vf4gBsePlwdGvSZoLSBfd4HAP93HDauMY4fDjXhreg/vg6F3Fj/MXDNyTbltPC/xZKmZc+cjLu3598DdYK6sgQ==}
@@ -10514,14 +10514,14 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@kong/swagger-ui-kong-theme-universal@4.3.3(@babel/core@7.25.2)(axios@1.7.7)(mkdirp@1.0.4)(prop-types@15.8.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)(rollup@4.21.3)(vue-router@4.4.5(vue@3.4.38(typescript@5.3.3)))(vue@3.4.38(typescript@5.3.3))':
+  '@kong/swagger-ui-kong-theme-universal@4.3.3(@babel/core@7.25.2)(axios@1.7.7)(mkdirp@1.0.4)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.21.3)(vue-router@4.4.5(vue@3.4.38(typescript@5.3.3)))(vue@3.4.38(typescript@5.3.3))':
     dependencies:
       '@braintree/sanitize-url': 6.0.2
       '@kong/kongponents': 8.127.0(axios@1.7.7)(vue-router@4.4.5(vue@3.4.38(typescript@5.3.3)))(vue@3.4.38(typescript@5.3.3))
       '@kyleshockey/xml': 1.0.2
       classnames: 2.3.2
       curl-to-har: 1.0.1
-      focus-trap-react: 10.1.4(prop-types@15.8.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
+      focus-trap-react: 10.1.4(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       immutable: 3.8.2
       js-file-download: 0.4.12
       memoizee: 0.4.15
@@ -14482,12 +14482,12 @@ snapshots:
 
   flatted@3.3.1: {}
 
-  focus-trap-react@10.1.4(prop-types@15.8.1)(react-dom@18.2.0(react@18.3.1))(react@18.3.1):
+  focus-trap-react@10.1.4(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       focus-trap: 7.6.0
       prop-types: 15.8.1
       react: 18.3.1
-      react-dom: 18.2.0(react@18.3.1)
+      react-dom: 18.3.1(react@18.3.1)
       tabbable: 6.2.0
 
   focus-trap-vue@4.0.3(focus-trap@7.6.0)(vue@3.4.38(typescript@5.3.3)):
@@ -17300,7 +17300,7 @@ snapshots:
       react: 16.14.0
       scheduler: 0.19.1
 
-  react-dom@18.2.0(react@18.3.1):
+  react-dom@18.3.1(react@18.3.1):
     dependencies:
       loose-envify: 1.4.0
       react: 18.3.1
@@ -17311,11 +17311,11 @@ snapshots:
       immutable: 3.8.2
       invariant: 2.2.4
 
-  react-immutable-pure-component@2.2.2(immutable@3.8.2)(react-dom@18.2.0(react@18.3.1))(react@18.3.1):
+  react-immutable-pure-component@2.2.2(immutable@3.8.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       immutable: 3.8.2
       react: 18.3.1
-      react-dom: 18.2.0(react@18.3.1)
+      react-dom: 18.3.1(react@18.3.1)
 
   react-inspector@6.0.2(react@18.3.1):
     dependencies:
@@ -18194,9 +18194,9 @@ snapshots:
       react: 18.3.1
       react-copy-to-clipboard: 5.1.0(react@18.3.1)
       react-debounce-input: 3.3.0(react@18.3.1)
-      react-dom: 18.2.0(react@18.3.1)
+      react-dom: 18.3.1(react@18.3.1)
       react-immutable-proptypes: 2.2.0(immutable@3.8.2)
-      react-immutable-pure-component: 2.2.2(immutable@3.8.2)(react-dom@18.2.0(react@18.3.1))(react@18.3.1)
+      react-immutable-pure-component: 2.2.2(immutable@3.8.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-inspector: 6.0.2(react@18.3.1)
       react-redux: 9.1.2(@types/react@18.3.1)(react@18.3.1)(redux@5.0.1)
       react-syntax-highlighter: 15.5.0(react@18.3.1)

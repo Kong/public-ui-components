@@ -15,7 +15,7 @@
   "dependencies": {
     "@kong/swagger-ui-kong-theme-universal": "^4.3.3",
     "react": "18.3.1",
-    "react-dom": "18.2.0",
+    "react-dom": "18.3.1",
     "swagger-client": "^3.29.2",
     "swagger-ui": "^5.17.14"
   },
