@@ -1,4 +1,4 @@
-import { createI18n, Translation } from '@kong-ui-public/i18n'
+import { createI18n, i18nTComponent } from '@kong-ui-public/i18n'
 import english from '../locales/en.json'
 
 interface UseI18nReturn {
@@ -11,6 +11,6 @@ export default function useI18n(): UseI18nReturn {
 
   return {
     i18n,
-    i18nT: Translation, // Translation component <i18n-t>
+    i18nT: i18nTComponent<typeof english>(i18n), // Translation component <i18n-t>
   }
 }
