@@ -1087,13 +1087,13 @@ importers:
 
   packages/portal/document-viewer:
     dependencies:
-      '@kong-ui-public/i18n':
-        specifier: workspace:^
-        version: link:../../core/i18n
       prismjs:
         specifier: ^1.29.0
         version: 1.29.0
     devDependencies:
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 1.17.2
         version: 1.17.2

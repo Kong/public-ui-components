@@ -37,10 +37,12 @@
     "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'"
   },
   "peerDependencies": {
+    "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^9.8.1",
     "vue": ">= 3.3.13 < 4"
   },
   "devDependencies": {
+    "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.17.2",
     "@kong/kongponents": "9.8.1",
     "@types/prismjs": "^1.26.4",
@@ -48,7 +50,6 @@
     "vue": "^3.4.38"
   },
   "dependencies": {
-    "@kong-ui-public/i18n": "workspace:^",
     "prismjs": "^1.29.0"
   },
   "repository": {
