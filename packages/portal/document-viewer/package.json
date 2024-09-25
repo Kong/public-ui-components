@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.17.2",
-    "@kong/kongponents": "9.8.3-pr.2405.5c4f7eaf4.0",
+    "@kong/kongponents": "9.8.3-pr.2405.b01715a40.0",
     "@types/prismjs": "^1.26.4",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
     "vue": "^3.4.38"
