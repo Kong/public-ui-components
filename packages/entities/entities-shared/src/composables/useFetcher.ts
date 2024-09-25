@@ -23,6 +23,7 @@ export default function useFetcher(
    */
   dataKeyNameRef?: MaybeRefOrGetter<string | undefined>,
 ) {
+  const initialLoad = ref<boolean>(true)
   const _baseUrl = unref(baseUrl)
 
   const { axiosInstance } = useAxios(config.axiosRequestConfig)
@@ -35,7 +36,8 @@ export default function useFetcher(
   const fetcher = async (fetcherParams: TableDataFetcherParams): Promise<FetcherResponse> => {
     const dataKeyName = toValue(dataKeyNameRef) || 'data'
     try {
-      state.value = { status: FetcherStatus.Loading }
+      state.value = initialLoad.value ? { status: FetcherStatus.InitialLoad } : { status: FetcherStatus.Loading }
+      initialLoad.value = false
 
       let requestUrl = buildFetchUrl(fetcherParams)
 
@@ -79,9 +81,16 @@ export default function useFetcher(
           : null),
       }
 
-      state.value = {
-        status: FetcherStatus.Idle,
-        response,
+      if (response.data.length === 0 && !fetcherParams.query) {
+        state.value = {
+          status: FetcherStatus.NoRecords,
+          response,
+        }
+      } else {
+        state.value = {
+          status: FetcherStatus.Idle,
+          response,
+        }
       }
 
       return response

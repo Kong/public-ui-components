@@ -22,6 +22,7 @@
       :headers="headers"
       :hide-pagination="hidePagination"
       hide-pagination-when-optional
+      :hide-toolbar="hideToolbar"
       :initial-fetcher-params="combinedInitialFetcherParams"
       :loading="isLoading"
       :pagination-attributes="{ disablePageJump: disablePaginationPageJump, offset: paginationType === 'offset' }"
@@ -221,6 +222,10 @@ const props = defineProps({
     default: false,
   },
   hidePagination: {
+    type: Boolean,
+    default: false,
+  },
+  hideToolbar: {
     type: Boolean,
     default: false,
   },

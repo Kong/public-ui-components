@@ -37,9 +37,11 @@ export interface FetcherResponse {
 }
 
 export enum FetcherStatus {
+  InitialLoad,
   Loading,
   Idle,
   NoResults,
+  NoRecords,
   Error,
 }
 
