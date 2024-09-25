@@ -582,7 +582,6 @@ watch(fetcherState, (state) => {
     hasData.value = state.response!.data.length > 0
   }
 
-  console.log(state.status)
   if (state.status === FetcherStatus.InitialLoad || state.status === FetcherStatus.NoRecords) {
     hideTableToolbar.value = true
   } else {
