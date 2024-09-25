@@ -54,7 +54,7 @@ A function for applying attributes to rows.
 - required: `true`
 - default: `async () => ({ data: [] })`
 
-The fetcher function passed to `<KTable>`.
+The fetcher function passed to `<KTableData>`.
 
 #### `cacheIdentifier`
 
@@ -71,7 +71,7 @@ If not provided, will default to the `preferencesStorageKey`.
 - required: `false`
 - default: `1`
 
-Cache key for the fetcher. Passed to `<KTable>`.
+Cache key for the fetcher. Passed to `<KTableData>`.
 
 #### `isLoading`
 
