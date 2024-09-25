@@ -82,7 +82,7 @@ describe('<RouteList />', () => {
         },
       })
 
-      cy.getTestId('overflow-actions-button').eq(0).click()
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
