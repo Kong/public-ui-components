@@ -6,6 +6,8 @@ A base table component for entity list views.
 - [Usage](#usage)
   - [Install](#install)
   - [Props](#props)
+  - [`hideToolbar`](#hidetoolbar)
+  - [`hidePagination`](#hidepagination)
   - [Slots](#slots)
   - [Events](#events)
   - [Usage example](#usage-example)
@@ -132,6 +134,14 @@ HTML element you want title to be rendered as. Defaults to `h2`.
 #### `disableRowClick`
 
 Controls whether the table rows are clickable or not. Defaults to `false`. Setting to `true` will suppress the `click:row` event even if a `@click:row` handler is provided.
+
+### `hideToolbar`
+
+Boolean to hide table toolbar. Defaults to `false`.
+
+### `hidePagination`
+
+Boolean to hide table pagination. Defaults to `false`.
 
 ### Slots
 
