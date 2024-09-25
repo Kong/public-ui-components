@@ -212,7 +212,9 @@ watch(entityKeySetId, async () => {
   try {
     isKeySetNameLoading.value = true
     // make the call to get keySetName
-    const { data } = await axiosInstance.get(url)
+    const { data } = await axiosInstance.get(url, {
+      validateStatus: (status: number) => status === 404 || (status >= 200 && status < 300), // in case KeySet is deleted
+    })
     keySetName.value = data?.name || data?.id
   } catch (err: any) {
     // emit this error for the host app
