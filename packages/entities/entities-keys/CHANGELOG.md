@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.5.15...@kong-ui-public/entities-keys@3.5.16) (2024-09-25)
+
+
+### Bug Fixes
+
+* **key:** fix keySet query expected 404 [KM-545] ([#1656](https://github.com/Kong/public-ui-components/issues/1656)) ([fc8943d](https://github.com/Kong/public-ui-components/commit/fc8943d42156d833cea7586c48e8dab580148742))
+
+
+
+
+
 ## [3.5.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.5.14...@kong-ui-public/entities-keys@3.5.15) (2024-09-24)
 
 
