@@ -1116,7 +1116,7 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong-ui-public/swagger-ui-web-component':
-        specifier: workspace:^0.12.4
+        specifier: workspace:^0.12.5
         version: link:../swagger-ui-web-component
       '@kong/icons':
         specifier: ^1.15.2
@@ -1758,6 +1758,7 @@ packages:
 
   '@evilmartians/lefthook@1.7.15':
     resolution: {integrity: sha512-YgKTw9noH/SG0aOaPgrZNRgY7iJ0FuIVfvdB/aGsNulYLqiFnJyID2sfCaQ7PsGaFng2wdFBhmK/wbnb8+qPcA==}
+    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 

@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "8.12.24",
+  "version": "8.12.25",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
