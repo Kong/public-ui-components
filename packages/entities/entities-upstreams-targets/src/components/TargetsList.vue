@@ -2,7 +2,6 @@
   <div class="kong-ui-entities-targets-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
-      disable-pagination-page-jump
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions

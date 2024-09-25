@@ -1,7 +1,6 @@
 import { ref, toValue, unref } from 'vue'
 import type { MaybeRefOrGetter } from 'vue'
 import type {
-  FetcherParams,
   FetcherResponse,
   FetcherState,
   KongManagerBaseTableConfig,
@@ -11,6 +10,7 @@ import type {
 import { FetcherStatus } from '../types'
 import useAxios from './useAxios'
 import useFetchUrlBuilder from './useFetchUrlBuilder'
+import type { TableDataFetcherParams } from '@kong/kongponents'
 
 export default function useFetcher(
   config: KonnectBaseTableConfig | KongManagerBaseTableConfig,
@@ -32,7 +32,7 @@ export default function useFetcher(
     status: FetcherStatus.Idle,
   })
 
-  const fetcher = async (fetcherParams: FetcherParams): Promise<FetcherResponse> => {
+  const fetcher = async (fetcherParams: TableDataFetcherParams): Promise<FetcherResponse> => {
     const dataKeyName = toValue(dataKeyNameRef) || 'data'
     try {
       state.value = { status: FetcherStatus.Loading }

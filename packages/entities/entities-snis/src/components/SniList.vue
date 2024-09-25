@@ -3,7 +3,6 @@
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
       :cell-attributes="cellAttrsFn"
-      disable-pagination-page-jump
       :disable-row-click="true"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"

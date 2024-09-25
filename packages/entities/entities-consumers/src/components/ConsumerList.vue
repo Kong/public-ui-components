@@ -2,14 +2,13 @@
   <div class="kong-ui-entities-consumers-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
-      :disable-pagination="isConsumerGroupPage && !config.paginatedEndpoint"
-      disable-pagination-page-jump
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
       :error-message="errorMessage"
       :fetcher="fetcher"
       :fetcher-cache-key="fetcherCacheKey"
+      :hide-pagination="isConsumerGroupPage && !config.paginatedEndpoint"
       pagination-type="offset"
       :preferences-storage-key="preferencesStorageKey"
       :query="filterQuery"

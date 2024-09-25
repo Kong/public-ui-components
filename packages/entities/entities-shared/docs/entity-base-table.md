@@ -50,7 +50,7 @@ A function for applying attributes to rows.
 
 #### `fetcher`
 
-- type: `Function as PropType<(params: FetcherParams) => Promise<FetcherResponse>>`
+- type: `Function as PropType<(params: TableDataFetcherParams) => Promise<FetcherResponse>>`
 - required: `true`
 - default: `async () => ({ data: [] })`
 
@@ -175,7 +175,6 @@ TypeScript interfaces [are available here](https://github.com/Kong/public-ui-com
 import type {
   BaseTableHeaders,
   EmptyStateOptions,
-  FetcherParams,
   FetcherResponse,
   InternalHeader,
   TableErrorMessage,
