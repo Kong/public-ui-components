@@ -43,7 +43,7 @@
     "@kong/design-tokens": "1.17.2",
     "@kong/kongponents": "9.8.1",
     "@types/geojson": "^7946.0.14",
-    "maplibre-gl": "^4.5.2",
+    "maplibre-gl": "^4.7.0",
     "vue": "^3.4.38"
   },
   "repository": {
