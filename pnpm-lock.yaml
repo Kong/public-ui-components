@@ -1112,9 +1112,6 @@ importers:
 
   packages/portal/spec-renderer:
     dependencies:
-      '@kong-ui-public/i18n':
-        specifier: workspace:^
-        version: link:../../core/i18n
       '@kong-ui-public/swagger-ui-web-component':
         specifier: workspace:^0.12.5
         version: link:../swagger-ui-web-component
@@ -1128,6 +1125,9 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0
     devDependencies:
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 1.17.2
         version: 1.17.2
