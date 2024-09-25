@@ -1,7 +1,12 @@
 import { createI18n, Translation } from '@kong-ui-public/i18n'
 import english from '../locales/en.json'
 
-export default function usei18n() {
+interface UseI18nReturn {
+  i18n: ReturnType<typeof createI18n<typeof english>>
+  i18nT: ReturnType<typeof i18nTComponent<typeof english>>
+}
+
+export default function useI18n(): UseI18nReturn {
   const i18n = createI18n<typeof english>('en-us', english)
 
   return {
