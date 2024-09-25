@@ -33,7 +33,7 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.17.2",
-    "@kong/kongponents": "9.8.2-pr.2405.7d7489bc8.0",
+    "@kong/kongponents": "9.8.3-pr.2405.8b2c0eb4d.0",
     "axios": "^1.6.8",
     "vue": "^3.5.8",
     "vue-router": "^4.4.5"
