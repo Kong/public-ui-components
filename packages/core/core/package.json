@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.17.2",
-    "axios": "^1.6.8",
+    "axios": "^1.7.7",
     "swrv": "^1.0.4"
   }
 }
