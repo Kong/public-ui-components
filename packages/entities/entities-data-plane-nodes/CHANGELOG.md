@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.15...@kong-ui-public/entities-data-plane-nodes@0.3.16) (2024-09-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.17.0 ([#1665](https://github.com/Kong/public-ui-components/issues/1665)) ([2a5e100](https://github.com/Kong/public-ui-components/commit/2a5e100e96f32ed298a16f2ca89a4bea2011d3c5))
+
+
+
+
+
 ## [0.3.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.14...@kong-ui-public/entities-data-plane-nodes@0.3.15) (2024-09-25)
 
 **Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
