@@ -33,5 +33,8 @@ export default {
         },
       } as Item),
     },
+    {
+      tags: typedefs.tags,
+    },
   ],
 }

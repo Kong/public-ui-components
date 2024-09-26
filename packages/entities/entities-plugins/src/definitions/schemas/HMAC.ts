@@ -1,4 +1,5 @@
 import type { HmacAuthFieldSchema } from '../../types/plugins/hmac-auth'
+import { tags } from './typedefs'
 
 export const hmacAuthSchema: HmacAuthFieldSchema = {
   fields: [
@@ -15,6 +16,9 @@ export const hmacAuthSchema: HmacAuthFieldSchema = {
         if this parameter isn’t provided, Kong will generate a value for you and
         send it as part of the response body.`,
       },
+    },
+    {
+      tags,
     },
   ],
 }

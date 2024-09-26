@@ -1,4 +1,5 @@
 import type { JwtSecretFieldSchema } from '../../types/plugins/jwt'
+import { tags } from './typedefs'
 
 export const jwtSecretSchema: JwtSecretFieldSchema = {
   fields: [
@@ -34,6 +35,9 @@ export const jwtSecretSchema: JwtSecretFieldSchema = {
         hint: `If algorithm is HMAC, the secret used to sign JWTs for
                this credential. If left out, will be auto-generated.`,
       },
+    },
+    {
+      tags,
     },
   ],
 }
