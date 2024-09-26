@@ -17,11 +17,27 @@
       :placeholder="schema.placeholder"
       :readonly="schema.readonly"
       :required="schema.required"
-      :type="inputType"
+      :type="displayInputType"
       :width="schema.width"
       @blur="onBlur"
       @update:model-value="onInput"
-    />
+    >
+      <template
+        v-if="schema.inputType === 'password'"
+        #after
+      >
+        <VisibilityOffIcon
+          v-if="eyeOpen"
+          role="button"
+          @click="() => { eyeOpen = !eyeOpen }"
+        />
+        <VisibilityIcon
+          v-else
+          role="button"
+          @click="() => { eyeOpen = !eyeOpen }"
+        />
+      </template>
+    </KInput>
 
     <!-- autofill -->
     <component
@@ -44,6 +60,7 @@ import objGet from 'lodash-es/get'
 import isFunction from 'lodash-es/isFunction'
 import isNumber from 'lodash-es/isNumber'
 import composables from '../../composables'
+import { VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
 
 const props = defineProps({
   disabled: {
@@ -85,6 +102,14 @@ const emit = defineEmits<{
 }>()
 
 const propsRefs = toRefs(props)
+const eyeOpen = ref(false)
+
+const displayInputType = computed(() => {
+  if (inputType.value === 'password') {
+    return eyeOpen.value ? 'text' : 'password'
+  }
+  return inputType.value
+})
 
 const autofillSlot = inject<AutofillSlot | undefined>(AUTOFILL_SLOT, undefined)
 

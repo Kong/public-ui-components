@@ -16,6 +16,17 @@ describe('<FieldTester /> - FieldInput', () => {
       required: true,
     }],
   }
+  const passwordSchema: FormSchema = {
+    fields: [{
+      type: 'input',
+      model: fieldKey,
+      id: fieldKey,
+      inputType: 'password',
+      label: fieldLabel,
+      help: 'The name of the cat.',
+      required: true,
+    }],
+  }
 
   it('renders default state correctly - without model', () => {
     cy.mount(FieldTester, {
@@ -124,5 +135,37 @@ describe('<FieldTester /> - FieldInput', () => {
     cy.get(`#${fieldKey}`).should('have.value', updatedFieldValue)
     // check field test form model also matches
     cy.getTestId(`field-tester-form-model-${fieldKey}-value`).should('contain.text', updatedFieldValue)
+  })
+
+  it('handles password field visibility toggle', () => {
+    const editText = ' the Second'
+    cy.mount(FieldTester, {
+      props: {
+        schema: passwordSchema,
+        model: {
+          [fieldKey]: fieldValue,
+        },
+      },
+    })
+
+    cy.get('.field-tester-container').should('exist')
+
+    // check VFG input value and type
+    cy.get(`#${fieldKey}`).should('be.visible')
+    cy.get(`#${fieldKey}`).should('have.value', fieldValue).and('have.attr', 'type', 'password')
+    cy.getTestId('kui-icon-wrapper-visibility-icon').should('be.visible')
+
+    // toggle visibility
+    cy.getTestId('kui-icon-wrapper-visibility-icon').click()
+    cy.get(`#${fieldKey}`).should('have.value', fieldValue).and('have.attr', 'type', 'text')
+    cy.getTestId('kui-icon-wrapper-visibility-off-icon').should('be.visible')
+
+    cy.get(`#${fieldKey}`).type(editText)
+    cy.get(`#${fieldKey}`).should('have.value', fieldValue + editText)
+
+    // check VFG input value and type after toggling back
+    cy.getTestId('kui-icon-wrapper-visibility-off-icon').click()
+    cy.get(`#${fieldKey}`).should('have.value', fieldValue + editText).and('have.attr', 'type', 'password')
+    cy.getTestId('kui-icon-wrapper-visibility-icon').should('be.visible')
   })
 })
