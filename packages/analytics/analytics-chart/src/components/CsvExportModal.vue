@@ -24,10 +24,10 @@
           </div>
           <KTableData
             class="vitals-table"
-            disable-pagination
             :fetcher="fetcher"
             :fetcher-cache-key="String(fetcherCacheKey)"
             :headers="tableData?.headers || []"
+            hide-pagination
             :row-hover="false"
             :sortable="false"
           >
