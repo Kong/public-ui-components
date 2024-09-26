@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.8.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.8.6...@kong-ui-public/analytics-utilities@4.8.7) (2024-09-26)
+
+
+### Bug Fixes
+
+* include trace_id as string dimension ([#1669](https://github.com/Kong/public-ui-components/issues/1669)) ([6216de9](https://github.com/Kong/public-ui-components/commit/6216de91d404c989897ed5c89adff575cdc7fcbe))
+
+
+
+
+
 ## [4.8.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.8.5...@kong-ui-public/analytics-utilities@4.8.6) (2024-09-24)
 
 
