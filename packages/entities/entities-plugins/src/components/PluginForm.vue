@@ -54,15 +54,11 @@
       />
 
       <template #form-actions>
-        <div
-          :id="`plugin-form-default-actions-container-${(config as KongManagerPluginFormConfig).workspace || (config as KonnectPluginFormConfig).controlPlaneId}`"
-          ref="actionsDivRef"
-        />
-
         <!-- if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included) -->
-        <Teleport
-          v-if="!isWizardStep && mounted"
-          :to="actionsTeleportTarget ? actionsTeleportTarget : `#plugin-form-default-actions-container-${(config as KongManagerPluginFormConfig).workspace || (config as KonnectPluginFormConfig).controlPlaneId}`"
+        <div v-if="isWizardStep" />
+        <PluginFormActionsWrapper
+          v-else
+          :teleport-target="actionsTeleportTarget"
         >
           <div class="plugin-form-actions">
             <KButton
@@ -93,7 +89,7 @@
               {{ t('actions.save') }}
             </KButton>
           </div>
-        </Teleport>
+        </PluginFormActionsWrapper>
       </template>
     </EntityBaseForm>
 
@@ -172,6 +168,7 @@ import {
   type PluginOrdering,
 } from '../types'
 import PluginEntityForm from './PluginEntityForm.vue'
+import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 
 const emit = defineEmits<{
   (e: 'cancel'): void,
@@ -307,7 +304,6 @@ const treatAsCredential = computed((): boolean => !!(props.credential && props.c
 const record = ref<Record<string, any> | null>(null)
 const configResponse = ref<Record<string, any>>({})
 const formLoading = ref(false)
-const actionsDivRef = ref<HTMLDivElement | null>(null)
 const formFieldsOriginal = reactive<PluginFormFields>({
   enabled: true,
   protocols: [],
@@ -1235,14 +1231,6 @@ const schemaUrl = computed((): string => {
   url = url.replace(/{plugin}/gi, pluginType)
 
   return url
-})
-
-// track when the actions div is mounted for Teleport
-const mounted = ref(false)
-watch(actionsDivRef, (newVal) => {
-  if (newVal) {
-    mounted.value = true
-  }
 })
 
 const credentialType = ref('')
