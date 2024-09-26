@@ -386,15 +386,6 @@ const handleUpdateTablePreferences = (newTablePreferences: TablePreferences): vo
   .toolbar-button-container {
     margin-left: auto;
   }
-
-  .actions-container {
-    float: right;
-
-    :deep(.k-dropdown-item-trigger) {
-      margin-bottom: 0;
-      margin-top: 0;
-    }
-  }
 }
 </style>
 
