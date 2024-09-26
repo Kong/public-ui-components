@@ -17,7 +17,7 @@
       :placeholder="schema.placeholder"
       :readonly="schema.readonly"
       :required="schema.required"
-      :type="displayInputType"
+      :type="inputType"
       :width="schema.width"
       @blur="onBlur"
       @update:model-value="onInput"
@@ -26,15 +26,15 @@
         v-if="schema.inputType === 'password'"
         #after
       >
-        <VisibilityOffIcon
-          v-if="eyeOpen"
-          role="button"
-          @click="() => { eyeOpen = !eyeOpen }"
-        />
         <VisibilityIcon
+          v-if="masked"
+          role="button"
+          @click="toggleMasked"
+        />
+        <VisibilityOffIcon
           v-else
           role="button"
-          @click="() => { eyeOpen = !eyeOpen }"
+          @click="toggleMasked"
         />
       </template>
     </KInput>
@@ -102,14 +102,7 @@ const emit = defineEmits<{
 }>()
 
 const propsRefs = toRefs(props)
-const eyeOpen = ref(false)
-
-const displayInputType = computed(() => {
-  if (inputType.value === 'password') {
-    return eyeOpen.value ? 'text' : 'password'
-  }
-  return inputType.value
-})
+const masked = ref(true)
 
 const autofillSlot = inject<AutofillSlot | undefined>(AUTOFILL_SLOT, undefined)
 
@@ -129,9 +122,22 @@ defineExpose({
 const inputType = computed((): string => {
   const iType = props.schema?.inputType.toLowerCase()
 
-  // 'string' maps to 'text' input type
-  // 'datetime' maps to 'datetime-local'
-  return iType === 'string' ? 'text' : iType === 'datetime' ? 'datetime-local' : iType || 'text'
+  switch (iType) {
+    // 'string' maps to 'text' input type
+    case 'string':
+      return 'text'
+
+    // 'datetime' maps to 'datetime-local'
+    case 'datetime':
+      return 'datetime-local'
+
+    // 'password' fields are masked by default, but can be toggled by the user
+    case 'password':
+      return masked.value ? 'password' : 'text'
+
+    default:
+      return iType || 'text'
+  }
 })
 
 const DATETIME_FORMATS = {
@@ -194,6 +200,10 @@ const onBlur = (): void => {
   if (isFunction(debouncedFormatFunc.value)) {
     debouncedFormatFunc.value?.flush()
   }
+}
+
+const toggleMasked = () => {
+  masked.value = !masked.value
 }
 
 onMounted((): void => {

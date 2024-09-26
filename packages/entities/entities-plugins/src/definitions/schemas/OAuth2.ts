@@ -18,7 +18,7 @@ export default {
         submitWhenNull: false,
         hint: `You can optionally set your own unique client_secret. If missing,
                it will be generated for you.`,
-        inputType: 'text',
+        inputType: 'password',
         encrypted: true,
       },
     },
