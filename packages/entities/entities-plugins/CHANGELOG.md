@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.12.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.26...@kong-ui-public/entities-plugins@8.12.27) (2024-09-26)
+
+
+### Bug Fixes
+
+* **entities-plugins:** missing of action buttons [KM-547] ([#1664](https://github.com/Kong/public-ui-components/issues/1664)) ([62d3b46](https://github.com/Kong/public-ui-components/commit/62d3b46f4f40d49a34ee1a349bdbca667b27846d))
+
+
+
+
+
 ## [8.12.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.25...@kong-ui-public/entities-plugins@8.12.26) (2024-09-25)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
