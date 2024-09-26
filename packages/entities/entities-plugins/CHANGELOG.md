@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.28...@kong-ui-public/entities-plugins@8.13.0) (2024-09-26)
+
+
+### Features
+
+* **forms:** visibility toggle for password inputs [KM-502] ([#1667](https://github.com/Kong/public-ui-components/issues/1667)) ([7d8a6ab](https://github.com/Kong/public-ui-components/commit/7d8a6abf7427eddd5af055ec999758a5558962b2))
+
+
+
+
+
 ## [8.12.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.12.27...@kong-ui-public/entities-plugins@8.12.28) (2024-09-26)
 
 
