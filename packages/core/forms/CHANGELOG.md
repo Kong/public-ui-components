@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.0...@kong-ui-public/forms@4.7.1) (2024-09-26)
+
+
+### Bug Fixes
+
+* **entities-plugins:** encrypted fields in credential forms ([#1668](https://github.com/Kong/public-ui-components/issues/1668)) ([3c41aa1](https://github.com/Kong/public-ui-components/commit/3c41aa10ee3f383991acf525117a71eaccc385a3))
+
+
+
+
+
 # [4.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.6.1...@kong-ui-public/forms@4.7.0) (2024-09-26)
 
 
