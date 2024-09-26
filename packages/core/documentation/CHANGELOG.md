@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.57](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.56...@kong-ui-public/documentation@0.7.57) (2024-09-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.17.0 ([#1665](https://github.com/Kong/public-ui-components/issues/1665)) ([2a5e100](https://github.com/Kong/public-ui-components/commit/2a5e100e96f32ed298a16f2ca89a4bea2011d3c5))
+
+
+
+
+
+## [0.7.56](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.55...@kong-ui-public/documentation@0.7.56) (2024-09-25)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.7.55](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.54...@kong-ui-public/documentation@0.7.55) (2024-09-25)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
 ## [0.7.54](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.53...@kong-ui-public/documentation@0.7.54) (2024-09-24)
 
 

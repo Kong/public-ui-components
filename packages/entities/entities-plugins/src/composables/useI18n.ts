@@ -3,7 +3,12 @@ import english from '../locales/en.json'
 
 export type MessageSource = typeof english
 
-export default function useI18n() {
+interface UseI18nReturn {
+  i18n: ReturnType<typeof createI18n<typeof english>>
+  i18nT: ReturnType<typeof i18nTComponent<typeof english>>
+}
+
+export default function useI18n(): UseI18nReturn {
   const i18n = createI18n<MessageSource>('en-us', english)
 
   return {

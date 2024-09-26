@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.0...@kong-ui-public/forms@4.7.1) (2024-09-26)
+
+
+### Bug Fixes
+
+* **entities-plugins:** encrypted fields in credential forms ([#1668](https://github.com/Kong/public-ui-components/issues/1668)) ([3c41aa1](https://github.com/Kong/public-ui-components/commit/3c41aa10ee3f383991acf525117a71eaccc385a3))
+
+
+
+
+
+# [4.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.6.1...@kong-ui-public/forms@4.7.0) (2024-09-26)
+
+
+### Features
+
+* **forms:** visibility toggle for password inputs [KM-502] ([#1667](https://github.com/Kong/public-ui-components/issues/1667)) ([7d8a6ab](https://github.com/Kong/public-ui-components/commit/7d8a6abf7427eddd5af055ec999758a5558962b2))
+
+
+
+
+
+## [4.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.6.0...@kong-ui-public/forms@4.6.1) (2024-09-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.17.0 ([#1665](https://github.com/Kong/public-ui-components/issues/1665)) ([2a5e100](https://github.com/Kong/public-ui-components/commit/2a5e100e96f32ed298a16f2ca89a4bea2011d3c5))
+
+
+
+
+
 # [4.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.5.11...@kong-ui-public/forms@4.6.0) (2024-09-24)
 
 

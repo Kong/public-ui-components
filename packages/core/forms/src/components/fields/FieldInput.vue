@@ -21,7 +21,23 @@
       :width="schema.width"
       @blur="onBlur"
       @update:model-value="onInput"
-    />
+    >
+      <template
+        v-if="schema.inputType === 'password'"
+        #after
+      >
+        <VisibilityIcon
+          v-if="masked"
+          role="button"
+          @click="toggleMasked"
+        />
+        <VisibilityOffIcon
+          v-else
+          role="button"
+          @click="toggleMasked"
+        />
+      </template>
+    </KInput>
 
     <!-- autofill -->
     <component
@@ -44,6 +60,7 @@ import objGet from 'lodash-es/get'
 import isFunction from 'lodash-es/isFunction'
 import isNumber from 'lodash-es/isNumber'
 import composables from '../../composables'
+import { VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
 
 const props = defineProps({
   disabled: {
@@ -85,6 +102,7 @@ const emit = defineEmits<{
 }>()
 
 const propsRefs = toRefs(props)
+const masked = ref(true)
 
 const autofillSlot = inject<AutofillSlot | undefined>(AUTOFILL_SLOT, undefined)
 
@@ -104,9 +122,22 @@ defineExpose({
 const inputType = computed((): string => {
   const iType = props.schema?.inputType.toLowerCase()
 
-  // 'string' maps to 'text' input type
-  // 'datetime' maps to 'datetime-local'
-  return iType === 'string' ? 'text' : iType === 'datetime' ? 'datetime-local' : iType || 'text'
+  switch (iType) {
+    // 'string' maps to 'text' input type
+    case 'string':
+      return 'text'
+
+    // 'datetime' maps to 'datetime-local'
+    case 'datetime':
+      return 'datetime-local'
+
+    // 'password' fields are masked by default, but can be toggled by the user
+    case 'password':
+      return masked.value ? 'password' : 'text'
+
+    default:
+      return iType || 'text'
+  }
 })
 
 const DATETIME_FORMATS = {
@@ -169,6 +200,10 @@ const onBlur = (): void => {
   if (isFunction(debouncedFormatFunc.value)) {
     debouncedFormatFunc.value?.flush()
   }
+}
+
+const toggleMasked = () => {
+  masked.value = !masked.value
 }
 
 onMounted((): void => {
