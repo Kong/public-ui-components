@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.9.30...@kong-ui-public/metric-cards@0.9.31) (2024-09-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.18.0 ([#1675](https://github.com/Kong/public-ui-components/issues/1675)) ([a00864f](https://github.com/Kong/public-ui-components/commit/a00864f7c341a71e059cf6be16363f892a45cd17))
+
+
+
+
+
 ## [0.9.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/metric-cards@0.9.29...@kong-ui-public/metric-cards@0.9.30) (2024-09-26)
 
 
