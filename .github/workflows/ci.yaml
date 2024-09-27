@@ -419,15 +419,8 @@ jobs:
       - name: Get aggregate Workflow status
         uses: technote-space/workflow-conclusion-action@v3
 
-      - name: Send notification
-        uses: the-actions-org/simple-slack-notify@v1.3.2
-        env:
-          SLACK_WEBHOOK_URL: ${{ env.WORKFLOW_CONCLUSION == 'failure' && secrets.SLACK_WEBHOOK_URL_ALERT || secrets.SLACK_WEBHOOK_URL_NOTIFY }}
+      - name: Post Slack notification
+        uses: Kong/public-shared-actions/slack-actions/workflow-notification@v2
         with:
-          status: ${{ env.WORKFLOW_CONCLUSION }}
-          success_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow completed successfully :mario_luigi_dance:'
-          failure_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow failed :sad-panda:'
-          fields: |
-            [{ "title": "Repository", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}|${env.GITHUB_REPOSITORY}>", "short": true },
-             { "title": "Branch", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/tree/${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}|${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}>", "short": true },
-             { "title": "Revision", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/commit/${env.GITHUB_SHA}|${env.GITHUB_SHA.substring(0,7)}>", "short": true }]
+          slack-webhook-url: ${{ env.WORKFLOW_CONCLUSION == 'failure' && secrets.SLACK_WEBHOOK_URL_ALERT || secrets.SLACK_WEBHOOK_URL_NOTIFY }}
+          status: ${{ env.WORKFLOW_CONCLUSION == 'failure' && 'failure' || 'success' }}
