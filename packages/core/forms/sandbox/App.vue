@@ -23,11 +23,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import FieldTester from './FieldTester.vue'
+import { FORMS_API_KEY, VueFormGenerator } from '../src'
+
 // dummy data
 import schema from './schema.json'
 import model from './model.json'
+
+provide(FORMS_API_KEY, {
+  getOne: async () => ({}),
+  getAll: async () => [{}],
+})
 
 const mutableModel = ref(model)
 
