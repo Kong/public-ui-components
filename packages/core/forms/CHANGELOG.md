@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.1...@kong-ui-public/forms@4.7.2) (2024-09-27)
+
+
+### Bug Fixes
+
+* **core:** fix form sandbox ([#1670](https://github.com/Kong/public-ui-components/issues/1670)) ([df88a43](https://github.com/Kong/public-ui-components/commit/df88a43bbf85966de1577b7d4ee4aa04a1a65cc2))
+
+
+
+
+
 ## [4.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.0...@kong-ui-public/forms@4.7.1) (2024-09-26)
 
 
