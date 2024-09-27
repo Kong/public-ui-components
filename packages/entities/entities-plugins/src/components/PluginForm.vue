@@ -861,7 +861,9 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     // Field type is an input, determine input type, such as 'text', or 'number'
     if (initialFormSchema[field].type === 'input') {
       if (['string', 'number'].includes(typeof initialFormSchema[field].default)) {
-        initialFormSchema[field].placeholder = `Default: ${initialFormSchema[field].default}`
+        initialFormSchema[field].placeholder = `Default: ${
+          initialFormSchema[field].default === '' ? '<empty string>' : initialFormSchema[field].default
+        }`
       }
       const { type: elementsType } = scheme.elements || {}
 

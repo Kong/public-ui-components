@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.7.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.4...@kong-ui-public/forms@4.7.5) (2024-09-27)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.7.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.3...@kong-ui-public/forms@4.7.4) (2024-09-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.18.0 ([#1675](https://github.com/Kong/public-ui-components/issues/1675)) ([a00864f](https://github.com/Kong/public-ui-components/commit/a00864f7c341a71e059cf6be16363f892a45cd17))
+
+
+
+
+
+## [4.7.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.2...@kong-ui-public/forms@4.7.3) (2024-09-27)
+
+
+### Bug Fixes
+
+* **forms:** hide edge built-in password handler [KM-502] ([#1672](https://github.com/Kong/public-ui-components/issues/1672)) ([d0fd6a8](https://github.com/Kong/public-ui-components/commit/d0fd6a869eef9ceb68e9ff10857006c4ee6546c4))
+
+
+
+
+
+## [4.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.1...@kong-ui-public/forms@4.7.2) (2024-09-27)
+
+
+### Bug Fixes
+
+* **core:** fix form sandbox ([#1670](https://github.com/Kong/public-ui-components/issues/1670)) ([df88a43](https://github.com/Kong/public-ui-components/commit/df88a43bbf85966de1577b7d4ee4aa04a1a65cc2))
+
+
+
+
+
 ## [4.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.0...@kong-ui-public/forms@4.7.1) (2024-09-26)
 
 
