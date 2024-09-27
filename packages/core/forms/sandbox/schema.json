@@ -177,6 +177,20 @@
       "disabled": false
     },
     {
+      "label": "Secrets",
+      "type": "input",
+      "submitWhenNull": true,
+      "inputType": "password",
+      "valueType": "array",
+      "valueArrayType": "string",
+      "placeholder": "Enter a secret",
+      "help": "Secrets saved in this route",
+      "id": "secrets",
+      "model": "secrets",
+      "order": 0,
+      "disabled": false
+    },
+    {
       "type": "array",
       "showRemoveButton": false,
       "newElementButtonLabelClasses": "k-button tertiary mt-2 p-2",
