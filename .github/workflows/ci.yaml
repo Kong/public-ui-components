@@ -420,7 +420,7 @@ jobs:
         uses: technote-space/workflow-conclusion-action@v3
 
       - name: Send notification
-        uses: the-actions-org/simple-slack-notify@v1.3.2
+        uses: the-actions-org/simple-slack-notify@v1
         env:
           SLACK_WEBHOOK_URL: ${{ env.WORKFLOW_CONCLUSION == 'failure' && secrets.SLACK_WEBHOOK_URL_ALERT || secrets.SLACK_WEBHOOK_URL_NOTIFY }}
         with:
