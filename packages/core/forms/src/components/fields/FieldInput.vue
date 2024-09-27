@@ -267,5 +267,9 @@ onBeforeMount((): void => {
   :deep(input[type="range"]) {
     padding: $kui-space-0;
   }
+
+  :deep(input[type="password"]::-ms-reveal) {
+    display: none;
+  }
 }
 </style>
