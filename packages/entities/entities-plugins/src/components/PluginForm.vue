@@ -551,6 +551,10 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
   // alphabetically sort the schema keys and handle specific configuration for each field type
   Object.keys(schema).sort().forEach(key => {
     const scheme = schema[key]
+    // If the field type is 'set', convert it to 'array'
+    if (scheme.type === 'set') {
+      scheme.type = 'array'
+    }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
 
     // Required, omit keys with overwrite and hidden attributes for Kong Cloud
@@ -886,7 +890,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     } else if (scheme.type === 'number' || scheme.type === 'integer') {
       valueType = 'number'
       initialFormSchema[field].inputType = 'number'
-    } else if (scheme.type === 'array' || scheme.type === 'set') {
+    } else if (scheme.type === 'array') {
       valueType = 'array'
       initialFormSchema[field].default = scheme.default
       // If an array/set field requires to be non-empty,

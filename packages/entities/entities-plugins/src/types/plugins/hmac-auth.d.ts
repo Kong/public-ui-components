@@ -1,4 +1,5 @@
 import type { CommonSchemaFields, PluginBasicSchema } from '../../types/plugins/shared'
+import type { tags } from '../../definitions/schemas/typedefs'
 
 interface HmacAuthFieldSchema {
   fields: [
@@ -13,6 +14,9 @@ interface HmacAuthFieldSchema {
         submitWhenNull?: boolean
         hint: string
       }
+    },
+    {
+      tags: typeof tags,
     },
   ]
 }
