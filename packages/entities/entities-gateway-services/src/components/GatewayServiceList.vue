@@ -392,6 +392,7 @@ const modalContent = computed(() => {
 const toggleEnableStatus = (row: EntityRow) => {
   enablementModalVisible.value = true
   switchEnablementTarget.value = row
+  delete switchEnablementTarget.value.bulkActionsSelected
 }
 
 const closeEnablementModal = () => {
