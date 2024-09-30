@@ -115,6 +115,19 @@
       </template>
     </EntityBaseTable>
 
+    <KCatalog
+      class="consumers-catalog"
+      :fetcher="fetcher"
+      :fetcher-cache-key="String(fetcherCacheKey)"
+      pagination-offset
+      :search-input="filterQuery"
+      title="Consumers Catalog (testing purposes only)"
+    >
+      <template #card-title="{ item }">
+        {{ item.username || item.custom_id || item.id }}
+      </template>
+    </KCatalog>
+
     <EntityDeleteModal
       :action-button-disabled="isDeletePending"
       data-testid="delete-consumer-modal"
@@ -627,6 +640,10 @@ onBeforeMount(async () => {
 
   .kong-ui-entity-filter-input {
     margin-right: $kui-space-50;
+  }
+
+  .consumers-catalog {
+    margin-top: $kui-space-100;
   }
 }
 </style>
