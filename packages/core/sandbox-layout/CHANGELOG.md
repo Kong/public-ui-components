@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.35...@kong-ui-public/sandbox-layout@2.1.36) (2024-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
 ## [2.1.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.34...@kong-ui-public/sandbox-layout@2.1.35) (2024-09-27)
 
 **Note:** Version bump only for package @kong-ui-public/sandbox-layout
