@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.1.27...@kong-ui-public/misc-widgets@2.1.28) (2024-10-01)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1682](https://github.com/Kong/public-ui-components/issues/1682)) ([c63cf89](https://github.com/Kong/public-ui-components/commit/c63cf8958237b0cf3c0bf2451154f6fb0b491b28))
+
+
+
+
+
 ## [2.1.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.1.26...@kong-ui-public/misc-widgets@2.1.27) (2024-09-30)
 
 **Note:** Version bump only for package @kong-ui-public/misc-widgets
