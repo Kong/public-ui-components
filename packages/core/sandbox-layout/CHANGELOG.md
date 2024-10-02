@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.38...@kong-ui-public/sandbox-layout@2.1.39) (2024-10-02)
+
+
+### Bug Fixes
+
+* **sandbox-layout:** fix overflow ([#1686](https://github.com/Kong/public-ui-components/issues/1686)) ([6694581](https://github.com/Kong/public-ui-components/commit/6694581cdbe34b2110cd4faa866df116ff2d0c39))
+
+
+
+
+
 ## [2.1.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.37...@kong-ui-public/sandbox-layout@2.1.38) (2024-10-01)
 
 
