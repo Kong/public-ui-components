@@ -1,54 +1,34 @@
-[@kong-ui-public/analytics-utilities](../analytics-utils.md) / DeltaQueryTime
+[**@kong-ui-public/analytics-utilities**](../README.md) • **Docs**
+
+***
+
+[@kong-ui-public/analytics-utilities](../README.md) / DeltaQueryTime
 
 # Class: DeltaQueryTime
 
-## Hierarchy
+## Extends
 
 - [`UnaryQueryTime`](UnaryQueryTime.md)
 
-  ↳ **`DeltaQueryTime`**
-
-## Table of contents
-
-### Constructors
-
-- [constructor](DeltaQueryTime.md#constructor)
-
-### Properties
-
-- [timeframe](DeltaQueryTime.md#timeframe)
-- [tz](DeltaQueryTime.md#tz)
-
-### Methods
-
-- [calculateStartDate](DeltaQueryTime.md#calculatestartdate)
-- [endDate](DeltaQueryTime.md#enddate)
-- [endMs](DeltaQueryTime.md#endms)
-- [endSeconds](DeltaQueryTime.md#endseconds)
-- [granularityDruid](DeltaQueryTime.md#granularitydruid)
-- [granularityMs](DeltaQueryTime.md#granularityms)
-- [granularitySeconds](DeltaQueryTime.md#granularityseconds)
-- [startDate](DeltaQueryTime.md#startdate)
-- [startMs](DeltaQueryTime.md#startms)
-- [startSeconds](DeltaQueryTime.md#startseconds)
-- [withinFreeTier](DeltaQueryTime.md#withinfreetier)
-
 ## Constructors
 
-### constructor
+### new DeltaQueryTime()
 
-• **new DeltaQueryTime**(`timeframe`, `tz?`)
+> **new DeltaQueryTime**(`timeframe`, `tz`?): [`DeltaQueryTime`](DeltaQueryTime.md)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `timeframe` | [`Timeframe`](Timeframe.md) |
-| `tz?` | `string` |
+• **timeframe**: [`Timeframe`](Timeframe.md)
+
+• **tz?**: `string`
+
+#### Returns
+
+[`DeltaQueryTime`](DeltaQueryTime.md)
 
 #### Inherited from
 
-[UnaryQueryTime](UnaryQueryTime.md).[constructor](UnaryQueryTime.md#constructor)
+[`UnaryQueryTime`](UnaryQueryTime.md).[`constructor`](UnaryQueryTime.md#constructors)
 
 #### Defined in
 
@@ -58,25 +38,25 @@
 
 ### timeframe
 
-• `Protected` `Readonly` **timeframe**: [`Timeframe`](Timeframe.md)
+> `protected` `readonly` **timeframe**: [`Timeframe`](Timeframe.md)
 
 #### Inherited from
 
-[UnaryQueryTime](UnaryQueryTime.md).[timeframe](UnaryQueryTime.md#timeframe)
+[`UnaryQueryTime`](UnaryQueryTime.md).[`timeframe`](UnaryQueryTime.md#timeframe)
 
 #### Defined in
 
 [queryTime.ts:13](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L13)
 
-___
+***
 
-### tz
+### tz?
 
-• `Protected` `Optional` `Readonly` **tz**: `string`
+> `protected` `readonly` `optional` **tz**: `string`
 
 #### Inherited from
 
-[UnaryQueryTime](UnaryQueryTime.md).[tz](UnaryQueryTime.md#tz)
+[`UnaryQueryTime`](UnaryQueryTime.md).[`tz`](UnaryQueryTime.md#tz)
 
 #### Defined in
 
@@ -84,17 +64,17 @@ ___
 
 ## Methods
 
-### calculateStartDate
+### calculateStartDate()
 
-▸ `Protected` **calculateStartDate**(`isRelative`, `granularity`, `periods?`): `Date`
+> `protected` **calculateStartDate**(`isRelative`, `granularity`, `periods`): `Date`
 
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `isRelative` | `boolean` | `undefined` |
-| `granularity` | [`GranularityKeys`](../enums/GranularityKeys.md) | `undefined` |
-| `periods` | `number` | `1` |
+• **isRelative**: `boolean`
+
+• **granularity**: `"secondly"` \| `"minutely"` \| `"hourly"` \| `"daily"` \| `"weekly"` \| `"trend"`
+
+• **periods**: `number` = `1`
 
 #### Returns
 
@@ -102,17 +82,17 @@ ___
 
 #### Inherited from
 
-[UnaryQueryTime](UnaryQueryTime.md).[calculateStartDate](UnaryQueryTime.md#calculatestartdate)
+[`UnaryQueryTime`](UnaryQueryTime.md).[`calculateStartDate`](UnaryQueryTime.md#calculatestartdate)
 
 #### Defined in
 
 [queryTime.ts:32](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L32)
 
-___
+***
 
-### endDate
+### endDate()
 
-▸ **endDate**(): `Date`
+> **endDate**(): `Date`
 
 #### Returns
 
@@ -120,17 +100,17 @@ ___
 
 #### Inherited from
 
-[UnaryQueryTime](UnaryQueryTime.md).[endDate](UnaryQueryTime.md#enddate)
+[`UnaryQueryTime`](UnaryQueryTime.md).[`endDate`](UnaryQueryTime.md#enddate)
 
 #### Defined in
 
 [queryTime.ts:120](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L120)
 
-___
+***
 
-### endMs
+### endMs()
 
-▸ **endMs**(): `number`
+> **endMs**(): `number`
 
 #### Returns
 
@@ -138,17 +118,17 @@ ___
 
 #### Inherited from
 
-[UnaryQueryTime](UnaryQueryTime.md).[endMs](UnaryQueryTime.md#endms)
+[`UnaryQueryTime`](UnaryQueryTime.md).[`endMs`](UnaryQueryTime.md#endms)
 
 #### Defined in
 
 [queryTime.ts:77](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L77)
 
-___
+***
 
-### endSeconds
+### endSeconds()
 
-▸ **endSeconds**(): `number`
+> **endSeconds**(): `number`
 
 #### Returns
 
@@ -156,35 +136,35 @@ ___
 
 #### Inherited from
 
-[UnaryQueryTime](UnaryQueryTime.md).[endSeconds](UnaryQueryTime.md#endseconds)
+[`UnaryQueryTime`](UnaryQueryTime.md).[`endSeconds`](UnaryQueryTime.md#endseconds)
 
 #### Defined in
 
 [queryTime.ts:67](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L67)
 
-___
+***
 
-### granularityDruid
+### granularityDruid()
 
-▸ **granularityDruid**(): ``null`` \| [`DruidGranularity`](../interfaces/DruidGranularity.md)
+> **granularityDruid**(): `null` \| [`DruidGranularity`](../interfaces/DruidGranularity.md)
 
 #### Returns
 
-``null`` \| [`DruidGranularity`](../interfaces/DruidGranularity.md)
+`null` \| [`DruidGranularity`](../interfaces/DruidGranularity.md)
 
 #### Inherited from
 
-[UnaryQueryTime](UnaryQueryTime.md).[granularityDruid](UnaryQueryTime.md#granularitydruid)
+[`UnaryQueryTime`](UnaryQueryTime.md).[`granularityDruid`](UnaryQueryTime.md#granularitydruid)
 
 #### Defined in
 
 [queryTime.ts:57](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L57)
 
-___
+***
 
-### granularityMs
+### granularityMs()
 
-▸ **granularityMs**(): `number`
+> **granularityMs**(): `number`
 
 #### Returns
 
@@ -192,17 +172,17 @@ ___
 
 #### Overrides
 
-[UnaryQueryTime](UnaryQueryTime.md).[granularityMs](UnaryQueryTime.md#granularityms)
+[`UnaryQueryTime`](UnaryQueryTime.md).[`granularityMs`](UnaryQueryTime.md#granularityms)
 
 #### Defined in
 
 [queryTime.ts:137](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L137)
 
-___
+***
 
-### granularitySeconds
+### granularitySeconds()
 
-▸ **granularitySeconds**(): `number`
+> **granularitySeconds**(): `number`
 
 #### Returns
 
@@ -210,17 +190,17 @@ ___
 
 #### Inherited from
 
-[UnaryQueryTime](UnaryQueryTime.md).[granularitySeconds](UnaryQueryTime.md#granularityseconds)
+[`UnaryQueryTime`](UnaryQueryTime.md).[`granularitySeconds`](UnaryQueryTime.md#granularityseconds)
 
 #### Defined in
 
 [queryTime.ts:53](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L53)
 
-___
+***
 
-### startDate
+### startDate()
 
-▸ **startDate**(): `Date`
+> **startDate**(): `Date`
 
 #### Returns
 
@@ -228,17 +208,17 @@ ___
 
 #### Overrides
 
-[UnaryQueryTime](UnaryQueryTime.md).[startDate](UnaryQueryTime.md#startdate)
+[`UnaryQueryTime`](UnaryQueryTime.md).[`startDate`](UnaryQueryTime.md#startdate)
 
 #### Defined in
 
 [queryTime.ts:133](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L133)
 
-___
+***
 
-### startMs
+### startMs()
 
-▸ **startMs**(): `number`
+> **startMs**(): `number`
 
 #### Returns
 
@@ -246,17 +226,17 @@ ___
 
 #### Inherited from
 
-[UnaryQueryTime](UnaryQueryTime.md).[startMs](UnaryQueryTime.md#startms)
+[`UnaryQueryTime`](UnaryQueryTime.md).[`startMs`](UnaryQueryTime.md#startms)
 
 #### Defined in
 
 [queryTime.ts:72](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L72)
 
-___
+***
 
-### startSeconds
+### startSeconds()
 
-▸ **startSeconds**(): `number`
+> **startSeconds**(): `number`
 
 #### Returns
 
@@ -264,17 +244,17 @@ ___
 
 #### Inherited from
 
-[UnaryQueryTime](UnaryQueryTime.md).[startSeconds](UnaryQueryTime.md#startseconds)
+[`UnaryQueryTime`](UnaryQueryTime.md).[`startSeconds`](UnaryQueryTime.md#startseconds)
 
 #### Defined in
 
 [queryTime.ts:62](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L62)
 
-___
+***
 
-### withinFreeTier
+### withinFreeTier()
 
-▸ **withinFreeTier**(): `boolean`
+> **withinFreeTier**(): `boolean`
 
 #### Returns
 
@@ -282,7 +262,7 @@ ___
 
 #### Inherited from
 
-[UnaryQueryTime](UnaryQueryTime.md).[withinFreeTier](UnaryQueryTime.md#withinfreetier)
+[`UnaryQueryTime`](UnaryQueryTime.md).[`withinFreeTier`](UnaryQueryTime.md#withinfreetier)
 
 #### Defined in
 

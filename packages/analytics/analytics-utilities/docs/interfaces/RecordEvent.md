@@ -1,7 +1,11 @@
-[@kong-ui-public/analytics-utilities](../analytics-utils.md) / RecordEvent
+[**@kong-ui-public/analytics-utilities**](../README.md) • **Docs**
+
+***
+
+[@kong-ui-public/analytics-utilities](../README.md) / RecordEvent
 
 # Interface: RecordEvent
 
 ## Indexable
 
-▪ [field: `string`]: `string` \| `number`
+ \[`field`: `string`\]: `string` \| `number` \| `null`

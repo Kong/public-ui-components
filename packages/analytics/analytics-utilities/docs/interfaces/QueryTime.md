@@ -1,26 +1,16 @@
-[@kong-ui-public/analytics-utilities](../analytics-utils.md) / QueryTime
+[**@kong-ui-public/analytics-utilities**](../README.md) • **Docs**
+
+***
+
+[@kong-ui-public/analytics-utilities](../README.md) / QueryTime
 
 # Interface: QueryTime
 
-## Table of contents
-
-### Methods
-
-- [endDate](QueryTime.md#enddate)
-- [endMs](QueryTime.md#endms)
-- [endSeconds](QueryTime.md#endseconds)
-- [granularityDruid](QueryTime.md#granularitydruid)
-- [granularityMs](QueryTime.md#granularityms)
-- [granularitySeconds](QueryTime.md#granularityseconds)
-- [startDate](QueryTime.md#startdate)
-- [startMs](QueryTime.md#startms)
-- [startSeconds](QueryTime.md#startseconds)
-
 ## Methods
 
-### endDate
+### endDate()
 
-▸ **endDate**(): `Date`
+> **endDate**(): `Date`
 
 #### Returns
 
@@ -30,11 +20,11 @@
 
 [types/query-time.ts:11](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/query-time.ts#L11)
 
-___
+***
 
-### endMs
+### endMs()
 
-▸ **endMs**(): `number`
+> **endMs**(): `number`
 
 #### Returns
 
@@ -44,11 +34,11 @@ ___
 
 [types/query-time.ts:9](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/query-time.ts#L9)
 
-___
+***
 
-### endSeconds
+### endSeconds()
 
-▸ **endSeconds**(): `number`
+> **endSeconds**(): `number`
 
 #### Returns
 
@@ -58,25 +48,25 @@ ___
 
 [types/query-time.ts:7](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/query-time.ts#L7)
 
-___
+***
 
-### granularityDruid
+### granularityDruid()
 
-▸ **granularityDruid**(): ``null`` \| [`DruidGranularity`](DruidGranularity.md)
+> **granularityDruid**(): `null` \| [`DruidGranularity`](DruidGranularity.md)
 
 #### Returns
 
-``null`` \| [`DruidGranularity`](DruidGranularity.md)
+`null` \| [`DruidGranularity`](DruidGranularity.md)
 
 #### Defined in
 
 [types/query-time.ts:5](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/query-time.ts#L5)
 
-___
+***
 
-### granularityMs
+### granularityMs()
 
-▸ **granularityMs**(): `number`
+> **granularityMs**(): `number`
 
 #### Returns
 
@@ -86,11 +76,11 @@ ___
 
 [types/query-time.ts:12](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/query-time.ts#L12)
 
-___
+***
 
-### granularitySeconds
+### granularitySeconds()
 
-▸ **granularitySeconds**(): `number`
+> **granularitySeconds**(): `number`
 
 #### Returns
 
@@ -100,11 +90,11 @@ ___
 
 [types/query-time.ts:4](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/query-time.ts#L4)
 
-___
+***
 
-### startDate
+### startDate()
 
-▸ **startDate**(): `Date`
+> **startDate**(): `Date`
 
 #### Returns
 
@@ -114,11 +104,11 @@ ___
 
 [types/query-time.ts:10](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/query-time.ts#L10)
 
-___
+***
 
-### startMs
+### startMs()
 
-▸ **startMs**(): `number`
+> **startMs**(): `number`
 
 #### Returns
 
@@ -128,11 +118,11 @@ ___
 
 [types/query-time.ts:8](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/query-time.ts#L8)
 
-___
+***
 
-### startSeconds
+### startSeconds()
 
-▸ **startSeconds**(): `number`
+> **startSeconds**(): `number`
 
 #### Returns
 

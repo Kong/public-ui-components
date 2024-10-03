@@ -1,56 +1,38 @@
-[@kong-ui-public/analytics-utilities](../analytics-utils.md) / UnaryQueryTime
+[**@kong-ui-public/analytics-utilities**](../README.md) • **Docs**
+
+***
+
+[@kong-ui-public/analytics-utilities](../README.md) / UnaryQueryTime
 
 # Class: UnaryQueryTime
 
-## Hierarchy
+## Extends
 
 - `BaseQueryTime`
 
-  ↳ **`UnaryQueryTime`**
+## Extended by
 
-  ↳↳ [`DeltaQueryTime`](DeltaQueryTime.md)
-
-## Table of contents
-
-### Constructors
-
-- [constructor](UnaryQueryTime.md#constructor)
-
-### Properties
-
-- [timeframe](UnaryQueryTime.md#timeframe)
-- [tz](UnaryQueryTime.md#tz)
-
-### Methods
-
-- [calculateStartDate](UnaryQueryTime.md#calculatestartdate)
-- [endDate](UnaryQueryTime.md#enddate)
-- [endMs](UnaryQueryTime.md#endms)
-- [endSeconds](UnaryQueryTime.md#endseconds)
-- [granularityDruid](UnaryQueryTime.md#granularitydruid)
-- [granularityMs](UnaryQueryTime.md#granularityms)
-- [granularitySeconds](UnaryQueryTime.md#granularityseconds)
-- [startDate](UnaryQueryTime.md#startdate)
-- [startMs](UnaryQueryTime.md#startms)
-- [startSeconds](UnaryQueryTime.md#startseconds)
-- [withinFreeTier](UnaryQueryTime.md#withinfreetier)
+- [`DeltaQueryTime`](DeltaQueryTime.md)
 
 ## Constructors
 
-### constructor
+### new UnaryQueryTime()
 
-• **new UnaryQueryTime**(`timeframe`, `tz?`)
+> **new UnaryQueryTime**(`timeframe`, `tz`?): [`UnaryQueryTime`](UnaryQueryTime.md)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `timeframe` | [`Timeframe`](Timeframe.md) |
-| `tz?` | `string` |
+• **timeframe**: [`Timeframe`](Timeframe.md)
+
+• **tz?**: `string`
+
+#### Returns
+
+[`UnaryQueryTime`](UnaryQueryTime.md)
 
 #### Inherited from
 
-BaseQueryTime.constructor
+`BaseQueryTime.constructor`
 
 #### Defined in
 
@@ -60,25 +42,25 @@ BaseQueryTime.constructor
 
 ### timeframe
 
-• `Protected` `Readonly` **timeframe**: [`Timeframe`](Timeframe.md)
+> `protected` `readonly` **timeframe**: [`Timeframe`](Timeframe.md)
 
 #### Inherited from
 
-BaseQueryTime.timeframe
+`BaseQueryTime.timeframe`
 
 #### Defined in
 
 [queryTime.ts:13](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L13)
 
-___
+***
 
-### tz
+### tz?
 
-• `Protected` `Optional` `Readonly` **tz**: `string`
+> `protected` `readonly` `optional` **tz**: `string`
 
 #### Inherited from
 
-BaseQueryTime.tz
+`BaseQueryTime.tz`
 
 #### Defined in
 
@@ -86,17 +68,17 @@ BaseQueryTime.tz
 
 ## Methods
 
-### calculateStartDate
+### calculateStartDate()
 
-▸ `Protected` **calculateStartDate**(`isRelative`, `granularity`, `periods?`): `Date`
+> `protected` **calculateStartDate**(`isRelative`, `granularity`, `periods`): `Date`
 
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `isRelative` | `boolean` | `undefined` |
-| `granularity` | [`GranularityKeys`](../enums/GranularityKeys.md) | `undefined` |
-| `periods` | `number` | `1` |
+• **isRelative**: `boolean`
+
+• **granularity**: `"secondly"` \| `"minutely"` \| `"hourly"` \| `"daily"` \| `"weekly"` \| `"trend"`
+
+• **periods**: `number` = `1`
 
 #### Returns
 
@@ -104,17 +86,17 @@ BaseQueryTime.tz
 
 #### Inherited from
 
-BaseQueryTime.calculateStartDate
+`BaseQueryTime.calculateStartDate`
 
 #### Defined in
 
 [queryTime.ts:32](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L32)
 
-___
+***
 
-### endDate
+### endDate()
 
-▸ **endDate**(): `Date`
+> **endDate**(): `Date`
 
 #### Returns
 
@@ -122,17 +104,17 @@ ___
 
 #### Overrides
 
-BaseQueryTime.endDate
+`BaseQueryTime.endDate`
 
 #### Defined in
 
 [queryTime.ts:120](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L120)
 
-___
+***
 
-### endMs
+### endMs()
 
-▸ **endMs**(): `number`
+> **endMs**(): `number`
 
 #### Returns
 
@@ -140,17 +122,17 @@ ___
 
 #### Inherited from
 
-BaseQueryTime.endMs
+`BaseQueryTime.endMs`
 
 #### Defined in
 
 [queryTime.ts:77](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L77)
 
-___
+***
 
-### endSeconds
+### endSeconds()
 
-▸ **endSeconds**(): `number`
+> **endSeconds**(): `number`
 
 #### Returns
 
@@ -158,35 +140,35 @@ ___
 
 #### Inherited from
 
-BaseQueryTime.endSeconds
+`BaseQueryTime.endSeconds`
 
 #### Defined in
 
 [queryTime.ts:67](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L67)
 
-___
+***
 
-### granularityDruid
+### granularityDruid()
 
-▸ **granularityDruid**(): ``null`` \| [`DruidGranularity`](../interfaces/DruidGranularity.md)
+> **granularityDruid**(): `null` \| [`DruidGranularity`](../interfaces/DruidGranularity.md)
 
 #### Returns
 
-``null`` \| [`DruidGranularity`](../interfaces/DruidGranularity.md)
+`null` \| [`DruidGranularity`](../interfaces/DruidGranularity.md)
 
 #### Inherited from
 
-BaseQueryTime.granularityDruid
+`BaseQueryTime.granularityDruid`
 
 #### Defined in
 
 [queryTime.ts:57](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L57)
 
-___
+***
 
-### granularityMs
+### granularityMs()
 
-▸ **granularityMs**(): `number`
+> **granularityMs**(): `number`
 
 #### Returns
 
@@ -194,17 +176,17 @@ ___
 
 #### Overrides
 
-BaseQueryTime.granularityMs
+`BaseQueryTime.granularityMs`
 
 #### Defined in
 
 [queryTime.ts:124](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L124)
 
-___
+***
 
-### granularitySeconds
+### granularitySeconds()
 
-▸ **granularitySeconds**(): `number`
+> **granularitySeconds**(): `number`
 
 #### Returns
 
@@ -212,17 +194,17 @@ ___
 
 #### Inherited from
 
-BaseQueryTime.granularitySeconds
+`BaseQueryTime.granularitySeconds`
 
 #### Defined in
 
 [queryTime.ts:53](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L53)
 
-___
+***
 
-### startDate
+### startDate()
 
-▸ **startDate**(): `Date`
+> **startDate**(): `Date`
 
 #### Returns
 
@@ -230,17 +212,17 @@ ___
 
 #### Overrides
 
-BaseQueryTime.startDate
+`BaseQueryTime.startDate`
 
 #### Defined in
 
 [queryTime.ts:116](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L116)
 
-___
+***
 
-### startMs
+### startMs()
 
-▸ **startMs**(): `number`
+> **startMs**(): `number`
 
 #### Returns
 
@@ -248,17 +230,17 @@ ___
 
 #### Inherited from
 
-BaseQueryTime.startMs
+`BaseQueryTime.startMs`
 
 #### Defined in
 
 [queryTime.ts:72](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L72)
 
-___
+***
 
-### startSeconds
+### startSeconds()
 
-▸ **startSeconds**(): `number`
+> **startSeconds**(): `number`
 
 #### Returns
 
@@ -266,17 +248,17 @@ ___
 
 #### Inherited from
 
-BaseQueryTime.startSeconds
+`BaseQueryTime.startSeconds`
 
 #### Defined in
 
 [queryTime.ts:62](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/queryTime.ts#L62)
 
-___
+***
 
-### withinFreeTier
+### withinFreeTier()
 
-▸ **withinFreeTier**(): `boolean`
+> **withinFreeTier**(): `boolean`
 
 #### Returns
 
@@ -284,7 +266,7 @@ ___
 
 #### Inherited from
 
-BaseQueryTime.withinFreeTier
+`BaseQueryTime.withinFreeTier`
 
 #### Defined in
 

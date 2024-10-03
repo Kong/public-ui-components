@@ -1,7 +1,11 @@
-[@kong-ui-public/analytics-utilities](../analytics-utils.md) / DimensionMap
+[**@kong-ui-public/analytics-utilities**](../README.md) • **Docs**
+
+***
+
+[@kong-ui-public/analytics-utilities](../README.md) / DimensionMap
 
 # Interface: DimensionMap
 
 ## Indexable
 
-▪ [dimension: `string`]: `string`[]
+ \[`dimension`: `string`\]: `string`[]
