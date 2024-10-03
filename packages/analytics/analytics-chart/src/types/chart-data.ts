@@ -1,6 +1,7 @@
 import type { ChartData, ChartDataset, LegendItem } from 'chart.js'
-import type { ChartTypes, ChartMetricDisplay, ChartTypesSimple } from '../enums'
+import type { ChartMetricDisplay } from '../enums'
 import type { ChartTooltipSortFn } from './chartjs-options'
+import type { ChartType, SimpleChartType } from './chart-types'
 
 // Chart.js extendend interfaces
 export type Dataset = ChartDataset & { rawDimension: string, rawMetric?: string, total?: number, lineTension?: number, fill?: boolean }
@@ -52,7 +53,7 @@ export interface AnalyticsChartOptions {
   /**
    * Chart type
    */
-  type: ChartTypes
+  type: ChartType
   /**
    * Are the datasets stacked or not.
    * If stacked, the datasets are stacked on top of each other.
@@ -90,7 +91,7 @@ export interface SimpleChartOptions {
   /**
    * Chart type
    */
-  type: ChartTypesSimple
+  type: SimpleChartType
   /**
    * Chart dataset color palette
    */

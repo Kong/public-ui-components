@@ -6,7 +6,6 @@
 
 ### Enumerations
 
-- [ChartTypes](enums/ChartTypes.md)
 - [GranularityKeys](enums/GranularityKeys.md)
 - [TimeframeKeys](enums/TimeframeKeys.md)
 

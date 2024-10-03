@@ -3,7 +3,6 @@ import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry } f
 import { DECIMAL_DISPLAY, numberFormatter } from '../utils'
 import { isValid } from 'date-fns'
 import type { Point, ScatterDataPoint } from 'chart.js'
-import { ChartTypes, ChartTypesSimple } from '../enums'
 
 // TODO: we should implement a separate tooltip behavior for each broad chart type
 // as the "tooltip behaviors" are beggining to diverge more across chart types.
@@ -21,8 +20,8 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
     const colors = tooltip.labelColors
     const valueAxis = context.chart.config?.options?.indexAxis === 'y' ? 'x' : 'y'
 
-    const isBarChart = [ChartTypes.HORIZONTAL_BAR, ChartTypes.VERTICAL_BAR].includes(tooltipData.chartType)
-    const isDoughnutChart = [ChartTypesSimple.GAUGE, ChartTypes.DOUGHNUT].includes(tooltipData.chartType)
+    const isBarChart = ['horizontal_bar', 'vertical_bar'].includes(tooltipData.chartType)
+    const isDoughnutChart = ['gauge', 'doughnut'].includes(tooltipData.chartType)
 
     tooltipData.tooltipContext = isBarChart
       ? tooltip.dataPoints.length > 1 ? tooltip.dataPoints[0].label : ''

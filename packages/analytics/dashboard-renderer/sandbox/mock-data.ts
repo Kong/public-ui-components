@@ -1,6 +1,5 @@
-import type { ExploreResultV4, ExploreQuery } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { DashboardConfig, TileConfig } from '../src/types'
-import { ChartTypes } from '../src/types'
 
 export const nonTsExploreResponse: ExploreResultV4 = {
   data: [{
@@ -251,7 +250,7 @@ export const summaryDashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.GoldenSignals,
+          type: 'golden_signals',
           chartTitle: 'Analytics',
           description: '{timeframe}',
         },
@@ -272,7 +271,7 @@ export const summaryDashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.TimeseriesLine,
+          type: 'timeseries_line',
           chartDatasetColors: {
             request_count: '#169FCC',
           },
@@ -290,7 +289,7 @@ export const summaryDashboardConfig: DashboardConfig = {
             type: 'in',
             values: ['default_uuid'],
           }],
-        } as ExploreQuery,
+        },
       },
       layout: {
         position: {
@@ -302,11 +301,11 @@ export const summaryDashboardConfig: DashboardConfig = {
           rows: 2,
         },
       },
-    } as unknown as TileConfig,
+    } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
     {
       definition: {
         chart: {
-          type: ChartTypes.TimeseriesLine,
+          type: 'timeseries_line',
           chartDatasetColors: {
             response_latency_p99: '#169FCC',
             response_latency_p95: '#1155CB',
@@ -323,7 +322,7 @@ export const summaryDashboardConfig: DashboardConfig = {
           dimensions: [
             'time',
           ],
-        } as unknown as ExploreQuery,
+        },
       },
       layout: {
         position: {
@@ -335,13 +334,13 @@ export const summaryDashboardConfig: DashboardConfig = {
           rows: 2,
         },
       },
-    } as unknown as TileConfig,
+    } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
 
     // 1 x Timeseries
     {
       definition: {
         chart: {
-          type: ChartTypes.TimeseriesLine,
+          type: 'timeseries_line',
           chartDatasetColors: {
             upstream_latency_p99: '#169FCC',
             kong_latency_p99: '#1155CB',
@@ -356,7 +355,7 @@ export const summaryDashboardConfig: DashboardConfig = {
           dimensions: [
             'time',
           ],
-        } as ExploreQuery,
+        },
       },
       layout: {
         position: {
@@ -368,7 +367,7 @@ export const summaryDashboardConfig: DashboardConfig = {
           rows: 2,
         },
       },
-    } as unknown as TileConfig,
+    } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
   ],
 }
 
@@ -383,7 +382,7 @@ export const simpleConfigNoFilters: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.GoldenSignals,
+          type: 'golden_signals',
           chartTitle: 'Analytics',
           description: '{timeframe}',
         },
@@ -405,7 +404,7 @@ export const simpleConfigNoFilters: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.TimeseriesLine,
+          type: 'timeseries_line',
         },
         query: {
           datasource: 'advanced',

@@ -13,7 +13,7 @@
               <KRadio
                 v-model="chartType"
                 name="chartType"
-                :selected-value="ChartTypes.TIMESERIES_LINE"
+                :selected-value="'timeseries_line'"
               >
                 Timeseries Line
               </KRadio>
@@ -22,7 +22,7 @@
               <KRadio
                 v-model="chartType"
                 name="chartType"
-                :selected-value="ChartTypes.TIMESERIES_BAR"
+                :selected-value="'timeseries_bar'"
               >
                 Timeseries Bar
               </KRadio>
@@ -237,12 +237,11 @@ import { computed, ref, watch, inject } from 'vue'
 import {
   AnalyticsChart,
   ChartLegendPosition,
-  ChartTypes,
   CsvExportModal,
   CsvExportButton,
 } from '../../src'
 import type { AnalyticsExploreRecord, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
-import type { AnalyticsChartColors, AnalyticsChartOptions } from '../../src/types'
+import type { AnalyticsChartColors, AnalyticsChartOptions, ChartType } from '../../src/types'
 import { isValidJson, rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'
@@ -271,7 +270,7 @@ const multiDimensionToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const emptyState = ref(false)
-const chartType = ref<ChartTypes>(ChartTypes.TIMESERIES_LINE)
+const chartType = ref<ChartType>('timeseries_line')
 const legendPosition = ref(ChartLegendPosition.Bottom)
 const secondaryMetrics = ref([{ name: 'secondaryMetric', unit: 'count' }])
 const selectedMetric = ref<MetricSelection>({
@@ -313,7 +312,7 @@ const exportCsv = () => {
   setModalVisibility(true)
 }
 
-const exploreResultText = ref()
+const exploreResultText = ref('')
 const hasError = computed(() => !isValidJson(exploreResultText.value))
 const isValid = computed(() => exploreResultText.value !== undefined &&
   exploreResultText.value !== '' &&

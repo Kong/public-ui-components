@@ -24,18 +24,12 @@ import type { BarChartOptions, RendererProps } from '../types'
 import QueryDataProvider from './QueryDataProvider.vue'
 import { computed } from 'vue'
 import type { AnalyticsChartOptions } from '@kong-ui-public/analytics-chart'
-import { AnalyticsChart, ChartTypes as AnalyticsChartTypes } from '@kong-ui-public/analytics-chart'
-import { ChartTypes } from '../types'
+import { AnalyticsChart } from '@kong-ui-public/analytics-chart'
 
 const props = defineProps<RendererProps<BarChartOptions>>()
 
-const chartTypeLookup = {
-  [ChartTypes.HorizontalBar]: AnalyticsChartTypes.HORIZONTAL_BAR,
-  [ChartTypes.VerticalBar]: AnalyticsChartTypes.VERTICAL_BAR,
-}
-
-const options = computed<AnalyticsChartOptions>(() => ({
-  type: chartTypeLookup[props.chartOptions.type],
+const options = computed((): AnalyticsChartOptions => ({
+  type: props.chartOptions.type,
   stacked: props.chartOptions.stacked,
   chartDatasetColors: props.chartOptions.chartDatasetColors,
 }))

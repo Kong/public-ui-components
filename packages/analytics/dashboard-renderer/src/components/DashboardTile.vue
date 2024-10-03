@@ -8,7 +8,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ChartTypes, type DashboardRendererContextInternal, type TileDefinition } from '../types'
+import type { DashboardRendererContextInternal, DashboardTileType, TileDefinition } from '../types'
 import type {
   Component,
 } from 'vue'
@@ -34,14 +34,14 @@ const props = withDefaults(defineProps<{
   height: DEFAULT_TILE_HEIGHT,
 })
 
-const rendererLookup: Record<ChartTypes, Component | undefined> = {
-  [ChartTypes.TimeseriesLine]: TimeseriesChartRenderer,
-  [ChartTypes.HorizontalBar]: BarChartRenderer,
-  [ChartTypes.VerticalBar]: BarChartRenderer,
-  [ChartTypes.Gauge]: SimpleChartRenderer,
-  [ChartTypes.GoldenSignals]: GoldenSignalsRenderer,
-  [ChartTypes.TopN]: TopNTableRenderer,
-  [ChartTypes.Slottable]: undefined,
+const rendererLookup: Record<DashboardTileType, Component | undefined> = {
+  'timeseries_line': TimeseriesChartRenderer,
+  'horizontal_bar': BarChartRenderer,
+  'vertical_bar': BarChartRenderer,
+  'gauge': SimpleChartRenderer,
+  'golden_signals': GoldenSignalsRenderer,
+  'top_n': TopNTableRenderer,
+  'slottable': undefined,
 }
 
 const componentData = computed(() => {

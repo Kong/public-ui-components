@@ -13,7 +13,7 @@
               <KRadio
                 v-model="chartType"
                 name="chartType"
-                :selected-value="ChartTypesSimple.GAUGE"
+                :selected-value="'gauge'"
               >
                 Gauge
               </KRadio>
@@ -22,7 +22,7 @@
               <KRadio
                 v-model="chartType"
                 name="chartType"
-                :selected-value="ChartTypesSimple.TOPN"
+                :selected-value="'top_n'"
               >
                 Top N Table
               </KRadio>
@@ -225,8 +225,8 @@
 import { computed, ref, watch, inject } from 'vue'
 import {
   ChartMetricDisplay,
-  ChartTypesSimple,
   SimpleChart,
+  type SimpleChartType,
   TopNTable,
 } from '../../src'
 import { SeededRandom } from '@kong-ui-public/analytics-utilities'
@@ -258,7 +258,7 @@ const limitToggle = ref(false)
 const multiDimensionToggle = ref(false)
 const showLoadingState = ref(false)
 const emptyState = ref(false)
-const chartType = ref<ChartTypesSimple>(ChartTypesSimple.GAUGE)
+const chartType = ref<SimpleChartType>('gauge')
 const metricDisplay = ref(ChartMetricDisplay.Full)
 const reverseDataset = ref(true)
 const gaugeNumerator = ref(0)
@@ -480,23 +480,12 @@ const dataCode = computed(() => JSON.stringify(exploreResult.value, null, 2))
 const optionsCode = computed(() => JSON.stringify(simpleChartOptions.value, null, 2))
 
 const isGaugeChart = computed<boolean>(() => {
-  return (ChartTypesSimple.GAUGE === chartType.value)
+  return ('gauge' === chartType.value)
 })
 
 const isTopNTable = computed<boolean>(() => {
-  return (ChartTypesSimple.TOPN === chartType.value)
+  return ('top_n' === chartType.value)
 })
-
-// const onMetricSelected = (item: any) => {
-//   if (!item) {
-//     return
-//   }
-
-//   selectedMetric.value = {
-//     name: item.value,
-//     unit: item.unit,
-//   }
-// }
 
 watch(multiDimensionToggle, () => {
   serviceDimensionValues.value = new Set(Array(5).fill(0).map(() => `Service${rand(1, 100)}`))
