@@ -9,7 +9,7 @@
       @click="handleChartClick()"
     >
       <Line
-        v-if="type === ChartTypes.TIMESERIES_LINE"
+        v-if="type === 'timeseries_line'"
         ref="chartInstance"
         :chart-id="chartID"
         :data="(chartData as any)"
@@ -18,7 +18,7 @@
         :plugins="plugins"
       />
       <Bar
-        v-else-if="type === ChartTypes.TIMESERIES_BAR"
+        v-else-if="type === 'timeseries_bar'"
         ref="chartInstance"
         :chart-id="chartID"
         :data="(chartData as any)"
@@ -29,7 +29,7 @@
     </div>
     <ToolTip
       ref="tooltipElement"
-      :context="formatTimestamp(tooltipData.tooltipContext as number)"
+      :context="formatTimestamp(tooltipData.tooltipContext)"
       data-testid="tooltip"
       :left="tooltipData.left"
       :locked="tooltipData.locked"
@@ -64,11 +64,11 @@ import ChartLegend from '../chart-plugins/ChartLegend.vue'
 import { v4 as uuidv4 } from 'uuid'
 import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
-import type { ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry, TooltipState } from '../../types'
+import type { ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry } from '../../types'
 import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { formatTime } from '@kong-ui-public/analytics-utilities'
 import type { Chart, LegendItem } from 'chart.js'
-import { ChartLegendPosition, ChartTypes } from '../../enums'
+import { ChartLegendPosition } from '../../enums'
 
 const props = defineProps({
   chartData: {
@@ -77,9 +77,9 @@ const props = defineProps({
     default: null,
   },
   type: {
-    type: String as PropType<ChartTypes.TIMESERIES_BAR | ChartTypes.TIMESERIES_LINE>,
+    type: String as PropType<'timeseries_bar' | 'timeseries_line'>,
     required: false,
-    default: ChartTypes.TIMESERIES_LINE,
+    default: 'timeseries_line',
   },
   fill: {
     type: Boolean,
@@ -149,9 +149,9 @@ const legendItems = ref<LegendItem[]>([])
 const tooltipElement = ref()
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
 
-const tooltipData: TooltipState = reactive({
+const tooltipData = reactive({
   showTooltip: false,
-  tooltipContext: '',
+  tooltipContext: 0,
   tooltipSeries: [],
   left: '',
   top: '',
@@ -176,7 +176,7 @@ const htmlLegendPlugin = {
   },
 }
 
-const plugins = computed(() => [htmlLegendPlugin, highlightPlugin, ...(props.type === ChartTypes.TIMESERIES_LINE ? [verticalLinePlugin] : [])])
+const plugins = computed(() => [htmlLegendPlugin, highlightPlugin, ...(props.type === 'timeseries_line' ? [verticalLinePlugin] : [])])
 
 const { options } = composables.useLinechartOptions({
   tooltipState: tooltipData,

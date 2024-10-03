@@ -23,24 +23,18 @@ import type { RendererProps, TimeseriesChartOptions } from '../types'
 import QueryDataProvider from './QueryDataProvider.vue'
 import { computed } from 'vue'
 import type { AnalyticsChartOptions } from '@kong-ui-public/analytics-chart'
-import { AnalyticsChart, ChartTypes as AnalyticsChartTypes } from '@kong-ui-public/analytics-chart'
-import { ChartTypes } from '../types'
+import { AnalyticsChart } from '@kong-ui-public/analytics-chart'
 
 const props = defineProps<RendererProps<TimeseriesChartOptions>>()
 
-const chartTypeLookup = {
-  [ChartTypes.TimeseriesLine]: AnalyticsChartTypes.TIMESERIES_LINE,
-  // TODO: Timeseries bar
-}
-
-const options = computed<AnalyticsChartOptions>(() => {
+const options = computed((): AnalyticsChartOptions => {
   // Default `stacked` to false.
   const stacked = props.chartOptions.stacked ?? false
 
   // Note that `fill` and `stacked` are linked; it's not possible to have a non-filled stacked chart.
   // This matches our intuitions about how these charts work.
   return {
-    type: chartTypeLookup[props.chartOptions.type],
+    type: props.chartOptions.type,
     stacked,
     chartDatasetColors: props.chartOptions.chartDatasetColors,
   }

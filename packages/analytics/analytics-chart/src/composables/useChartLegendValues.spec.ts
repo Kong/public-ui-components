@@ -1,5 +1,4 @@
 import type { KChartData } from '../types'
-import { ChartTypes } from '../enums'
 import { computed } from 'vue'
 import useChartLegendValues from './useChartLegendValues'
 import { describe, it, expect } from 'vitest'
@@ -134,7 +133,7 @@ const barChartData = computed<KChartData>(() => {
 describe('useChartLegendValues', () => {
 
   it('correctly computes legend values for a line chart by adding up individual datapoints', () => {
-    const { legendValues } = useChartLegendValues(lineChartData, ChartTypes.TIMESERIES_LINE, computed(() => 'apples'))
+    const { legendValues } = useChartLegendValues(lineChartData, 'timeseries_line', computed(() => 'apples'))
 
     expect(legendValues.value).toEqual({
       test1: { raw: 70, formatted: '70 apples' },
@@ -143,7 +142,7 @@ describe('useChartLegendValues', () => {
   })
 
   it('correctly computes legend values for a line chart using total property available on the dataset', () => {
-    const { legendValues } = useChartLegendValues(lineChartDataWithTotal, ChartTypes.TIMESERIES_LINE, computed(() => 'apples'))
+    const { legendValues } = useChartLegendValues(lineChartDataWithTotal, 'timeseries_line', computed(() => 'apples'))
 
     expect(legendValues.value).toEqual({
       test1: { raw: 100, formatted: '100 apples' },
@@ -152,7 +151,7 @@ describe('useChartLegendValues', () => {
   })
 
   it('correctly computes legend values for a bar chart', () => {
-    const { legendValues } = useChartLegendValues(barChartData, ChartTypes.VERTICAL_BAR, computed(() => 'apples'))
+    const { legendValues } = useChartLegendValues(barChartData, 'vertical_bar', computed(() => 'apples'))
 
     expect(legendValues.value).toEqual({
       test1: { raw: 10, formatted: '10 apples' },

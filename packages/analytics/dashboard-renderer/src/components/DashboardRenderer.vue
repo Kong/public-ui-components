@@ -14,7 +14,7 @@
     >
       <template #tile="{ tile }">
         <div
-          v-if="tile.meta.chart.type === ChartTypes.Slottable"
+          v-if="tile.meta.chart.type === 'slottable'"
           class="tile-container"
         >
           <slot :name="tile.meta.chart.id" />
@@ -34,7 +34,6 @@
 
 <script setup lang="ts">
 import type { DashboardConfig, DashboardRendererContext, GridTile, TileConfig, TileDefinition, DashboardRendererContextInternal } from '../types'
-import { ChartTypes } from '../types'
 import DashboardTile from './DashboardTile.vue'
 import { computed, inject } from 'vue'
 import composables from '../composables'

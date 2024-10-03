@@ -178,7 +178,7 @@ export default defineComponent({
     })
 
     const chartOptions = ref<AnalyticsChartOptions>({
-      type: 'TimeSeriesLine',
+      type: 'timeseries_line',
       stacked: true,
       fill: false
     })
@@ -293,7 +293,7 @@ export default defineComponent({
     })
 
     const chartOptions = ref<SimpleChartOptions>({
-      type: ChartTypes.GAUGE,
+      type: 'gauge',
       metricDisplay: ChartMetricDisplay.Full
     })
 

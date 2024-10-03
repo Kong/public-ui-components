@@ -70,7 +70,7 @@ const config: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.HorizontalBar,
+          type: 'horizontal_bar',
         },
         // Request count by route
         query: {
@@ -94,7 +94,7 @@ const config: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.TopN,
+          type: 'top_n',
           chartTitle: 'Top N Table',
           description: 'Table description',
         },
@@ -162,7 +162,7 @@ const config: DashboardConfig = {
       // Line chart
       definition: {
         chart: {
-          type: ChartTypes.TimeSeriesLine,
+          type: 'timeseries_line',
         },
         // requests by status code over time
         query: {
@@ -187,7 +187,7 @@ const config: DashboardConfig = {
       // Slottable tile
       definition: {
         chart: {
-          type: ChartTypes.Slottable,
+          type: 'slottable',
           id: 'slot-1' // slot name
         },
         query: {},
@@ -237,7 +237,7 @@ const config: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.TopN,
+          type: 'top_n',
           chartTitle: 'Top N chart of mock data',
           description: 'Description'
         },
@@ -258,7 +258,7 @@ const config: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.TopN,
+          type: 'top_n',
           chartTitle: 'Top N chart of mock data',
           description: 'Description',
         },

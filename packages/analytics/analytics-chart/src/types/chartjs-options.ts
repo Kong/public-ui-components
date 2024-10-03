@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
-import type { Chart, ChartType, TooltipModel, Color } from 'chart.js'
-import type { ChartTypes } from '../enums'
+import type { Chart, ChartType as ChartJsChartType, TooltipModel, Color } from 'chart.js'
+import type { ChartType } from './chart-types'
 import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
 
 export interface TooltipEntry {
@@ -25,7 +25,7 @@ export interface TooltipState {
   offsetY: number,
   width: number,
   height: number
-  chartType: ChartTypes,
+  chartType: ChartType,
   locked?: boolean,
   chartTooltipSortFn?: ChartTooltipSortFn
 }
@@ -63,5 +63,5 @@ export interface AxesTooltipState {
 
 export interface ExternalTooltipContext {
   chart: Chart,
-  tooltip: TooltipModel<ChartType>,
+  tooltip: TooltipModel<ChartJsChartType>,
 }

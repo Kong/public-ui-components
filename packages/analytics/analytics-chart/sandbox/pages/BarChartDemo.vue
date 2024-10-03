@@ -13,7 +13,7 @@
               <KRadio
                 v-model="chartType"
                 name="chartType"
-                :selected-value="ChartTypes.HORIZONTAL_BAR"
+                :selected-value="'horizontal_bar'"
               >
                 Horizontal Bar
               </KRadio>
@@ -22,7 +22,7 @@
               <KRadio
                 v-model="chartType"
                 name="chartType"
-                :selected-value="ChartTypes.VERTICAL_BAR"
+                :selected-value="'vertical_bar'"
               >
                 VerticalBar
               </KRadio>
@@ -219,8 +219,8 @@
 import { computed, ref, watch, inject } from 'vue'
 import {
   AnalyticsChart,
+  type ChartType,
   ChartLegendPosition,
-  ChartTypes,
 } from '../../src'
 import type { AnalyticsExploreRecord, DimensionMap, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions } from '../../src/types'
@@ -254,7 +254,7 @@ const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const emptyState = ref(false)
 const dimensionSelection = ref(['status_code'])
-const chartType = ref<ChartTypes>(ChartTypes.HORIZONTAL_BAR)
+const chartType = ref<ChartType>('horizontal_bar')
 const legendPosition = ref(ChartLegendPosition.Right)
 const selectedMetric = ref<MetricSelection>({
   name: Metrics.TotalRequests,
