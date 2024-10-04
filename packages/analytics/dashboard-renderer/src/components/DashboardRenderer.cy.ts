@@ -1,4 +1,3 @@
-import { ChartTypes } from '../types'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import { INJECT_QUERY_PROVIDER, CP_ID_TOKEN, ENTITY_ID_TOKEN } from '../constants'
 import type {
@@ -133,7 +132,7 @@ describe('<DashboardRenderer />', () => {
           {
             definition: {
               chart: {
-                type: ChartTypes.GoldenSignals,
+                type: 'golden_signals',
               },
               query: {
                 datasource: 'basic',
@@ -153,7 +152,7 @@ describe('<DashboardRenderer />', () => {
           {
             definition: {
               chart: {
-                type: ChartTypes.Gauge,
+                type: 'gauge',
                 metricDisplay: ChartMetricDisplay.Full,
                 reverseDataset: true,
                 numerator: 0,
@@ -375,7 +374,7 @@ describe('<DashboardRenderer />', () => {
           {
             definition: {
               chart: {
-                type: ChartTypes.TopN,
+                type: 'top_n',
                 entityLink: `https://test.com/cp/${CP_ID_TOKEN}/entity/${ENTITY_ID_TOKEN}`,
               },
               query: {

@@ -156,8 +156,8 @@
 import { computed, ref, inject } from 'vue'
 import {
   AnalyticsChart,
+  type ChartType,
   ChartLegendPosition,
-  ChartTypes,
 } from '../../src'
 import type { AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions } from '../../src/types'
@@ -186,7 +186,7 @@ const limitToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const emptyState = ref(false)
-const chartType = ref<ChartTypes>(ChartTypes.DOUGHNUT)
+const chartType = ref<ChartType>('doughnut')
 const legendPosition = ref(ChartLegendPosition.Right)
 const selectedMetric = ref<MetricSelection>({
   name: Metrics.TotalRequests,

@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.6.26...@kong-ui-public/analytics-chart@5.0.0) (2024-10-03)
+
+
+### Features
+
+* **analytics:** remove `ChartTypes` enum [MA-2708] ([#1688](https://github.com/Kong/public-ui-components/issues/1688)) ([41934de](https://github.com/Kong/public-ui-components/commit/41934deb022449fd173cc7886e4cd299b82a4606))
+
+
+### BREAKING CHANGES
+
+* **analytics:** Remove `ChartTypes` enum
+
+- Unify chart types between `AnalyticsChart` and `DashboardRenderer`.
+- Standardize naming of timeseries line chart.
+- Add union types for available chart types.
+
+
+
+
+
 ## [4.6.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@4.6.25...@kong-ui-public/analytics-chart@4.6.26) (2024-10-02)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

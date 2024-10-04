@@ -77,7 +77,9 @@ const definitionText = ref(
           "chart": {
             "type": "horizontal_bar"
           },
-          "query": {}
+          "query": {
+            "datasource": "advanced"
+          }
         },
         "layout": {
           "position": {
@@ -95,7 +97,9 @@ const definitionText = ref(
           "chart": {
             "type": "horizontal_bar"
           },
-          "query": {}
+          "query": {
+            "datasource": "advanced"
+          }
         },
         "layout": {
           "position": {
@@ -113,7 +117,9 @@ const definitionText = ref(
           "chart": {
             "type": "vertical_bar"
           },
-          "query": {}
+          "query": {
+            "datasource": "advanced"
+          }
         },
         "layout": {
           "position": {

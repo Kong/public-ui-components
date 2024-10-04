@@ -29,15 +29,18 @@ type FromSchemaWithOptions<T extends JSONSchema> = FromSchema<T, { keepDefaulted
 // The DashboardRenderer component fills in optional values before passing them down to the tile renderers.
 export type DashboardRendererContextInternal = Required<DashboardRendererContext>
 
-export enum ChartTypes {
-  HorizontalBar = 'horizontal_bar',
-  VerticalBar = 'vertical_bar',
-  Gauge = 'gauge',
-  TimeseriesLine = 'timeseries_line',
-  GoldenSignals = 'golden_signals',
-  TopN = 'top_n',
-  Slottable = 'slottable',
-}
+// TODO: Once we support all chart types, this could potentially be replaced with a direct reference to `chartTypes`.
+// This is partially overlapping with analytics chart types, but not strictly so.
+export const dashboardTileTypes = [
+  'horizontal_bar',
+  'vertical_bar',
+  'gauge',
+  'timeseries_line',
+  'golden_signals',
+  'top_n',
+  'slottable',
+] as const
+export type DashboardTileType = typeof dashboardTileTypes[number]
 
 // Common definition for many ChartJS tiles.
 const syntheticsDataKey = {
@@ -67,7 +70,7 @@ export const slottableSchema = {
   properties: {
     type: {
       type: 'string',
-      enum: [ChartTypes.Slottable],
+      enum: ['slottable'],
     },
     id: {
       type: 'string',
@@ -84,7 +87,7 @@ export const barChartSchema = {
   properties: {
     type: {
       type: 'string',
-      enum: [ChartTypes.HorizontalBar, ChartTypes.VerticalBar],
+      enum: ['horizontal_bar', 'vertical_bar'],
     },
     stacked: {
       type: 'boolean',
@@ -105,7 +108,7 @@ export const timeseriesChartSchema = {
   properties: {
     type: {
       type: 'string',
-      enum: [ChartTypes.TimeseriesLine],
+      enum: ['timeseries_line'],
     },
     stacked: {
       type: 'boolean',
@@ -126,7 +129,7 @@ export const gaugeChartSchema = {
   properties: {
     type: {
       type: 'string',
-      enum: [ChartTypes.Gauge],
+      enum: ['gauge'],
     },
     metricDisplay: {
       type: 'string',
@@ -154,7 +157,7 @@ export const topNTableSchema = {
     syntheticsDataKey,
     type: {
       type: 'string',
-      enum: [ChartTypes.TopN],
+      enum: ['top_n'],
     },
     description: {
       type: 'string',
@@ -175,7 +178,7 @@ export const metricCardSchema = {
     chartTitle,
     type: {
       type: 'string',
-      enum: [ChartTypes.GoldenSignals],
+      enum: ['golden_signals'],
     },
     longCardTitles: {
       type: 'boolean',

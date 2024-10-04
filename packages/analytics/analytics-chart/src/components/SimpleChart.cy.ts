@@ -1,5 +1,5 @@
 // Cypress component test spec file
-import { ChartMetricDisplay, ChartLegendPosition, ChartTypesSimple } from '../enums/'
+import { ChartMetricDisplay, ChartLegendPosition } from '../enums/'
 import SimpleChart from './SimpleChart.vue'
 import { emptyExploreResult } from '../../fixtures/mockData'
 
@@ -43,7 +43,7 @@ describe('<SimpleChart />', () => {
       props: {
         chartData: emptyExploreResult,
         chartOptions: {
-          type: ChartTypesSimple.GAUGE,
+          type: 'gauge',
           stacked: true,
           fill: false,
         },
@@ -58,7 +58,7 @@ describe('<SimpleChart />', () => {
       props: {
         chartData: exploreResultTruncated,
         chartOptions: {
-          type: ChartTypesSimple.GAUGE,
+          type: 'gauge',
           metricDisplay: ChartMetricDisplay.Full,
         },
         legendPosition: ChartLegendPosition.Hidden,
@@ -74,7 +74,7 @@ describe('<SimpleChart />', () => {
       props: {
         chartData: exploreResultTruncated,
         chartOptions: {
-          type: ChartTypesSimple.GAUGE,
+          type: 'gauge',
           metricDisplay: ChartMetricDisplay.SingleMetric,
         },
         legendPosition: ChartLegendPosition.Hidden,
@@ -90,7 +90,7 @@ describe('<SimpleChart />', () => {
       props: {
         chartData: exploreResultTruncated,
         chartOptions: {
-          type: ChartTypesSimple.GAUGE,
+          type: 'gauge',
           metricDisplay: ChartMetricDisplay.Hidden,
         },
         legendPosition: ChartLegendPosition.Hidden,

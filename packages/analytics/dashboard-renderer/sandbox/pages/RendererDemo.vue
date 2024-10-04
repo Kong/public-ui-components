@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import type { DashboardConfig, DashboardRendererContext, TileConfig } from '../../src'
-import { ChartTypes, DashboardRenderer } from '../../src'
+import { DashboardRenderer } from '../../src'
 import { inject, ref } from 'vue'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
@@ -57,7 +57,7 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.GoldenSignals,
+          type: 'golden_signals',
           chartTitle: 'Analytics Golden Signals',
           description: '{timeframe}',
         },
@@ -79,7 +79,7 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.TopN,
+          type: 'top_n',
           chartTitle: 'Top N chart of mock data',
           description: '{timeframe}',
         },
@@ -103,7 +103,7 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.TopN,
+          type: 'top_n',
           chartTitle: 'Top N chart of mock data',
           description: 'Description',
         },
@@ -127,7 +127,7 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.HorizontalBar,
+          type: 'horizontal_bar',
           chartTitle: 'Horizontal bar chart of mock data',
           allowCsvExport: true,
         },
@@ -151,7 +151,7 @@ const dashboardConfig: DashboardConfig = {
       definition: {
         chart: {
           chartTitle: 'Timeseries line chart of mock data',
-          type: ChartTypes.TimeseriesLine,
+          type: 'timeseries_line',
         },
         query: {
           datasource: 'basic',
@@ -172,7 +172,7 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.Gauge,
+          type: 'gauge',
           metricDisplay: ChartMetricDisplay.Full,
           reverseDataset: true,
           numerator: 0,
@@ -195,7 +195,7 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.Slottable,
+          type: 'slottable',
           id: 'slot-1',
         },
         query: {
@@ -216,7 +216,7 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
-          type: ChartTypes.Slottable,
+          type: 'slottable',
           id: 'slot-2',
         },
         query: {

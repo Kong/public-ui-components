@@ -60,7 +60,7 @@ import type { BarChartData } from '../../utils'
 import { accessibleGrey, MAX_LABEL_LENGTH, formatNumber, getTextHeight, getTextWidth, drawPercentage, dataTotal, conditionalDataTotal, debounce } from '../../utils'
 import composables from '../../composables'
 import { v4 as uuidv4 } from 'uuid'
-import { ChartLegendPosition, ChartTypes } from '../../enums'
+import { ChartLegendPosition } from '../../enums'
 import type { AxesTooltipState, ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry, TooltipState } from '../../types'
 import { highlightPlugin } from '../chart-plugins/HighlightPlugin'
 
@@ -231,7 +231,7 @@ const tooltipData: TooltipState = reactive({
   width: 0,
   height: 0,
   locked: false,
-  chartType: isHorizontal.value ? ChartTypes.HORIZONTAL_BAR : ChartTypes.VERTICAL_BAR,
+  chartType: isHorizontal.value ? 'horizontal_bar' : 'vertical_bar',
   chartTooltipSortFn: props.chartTooltipSortFn,
 })
 const dependsOnChartUpdate = ref(0)
