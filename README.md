@@ -15,10 +15,11 @@ Monorepo for **open-source** Kong UI components and utilities.
   - [ESLint](#eslint)
   - [Type Checking](#type-checking)
   - [Testing](#testing)
+    - [File naming convensions](#file-naming-convensions)
   - [Preview sandbox build](#preview-sandbox-build)
   - [Build for production](#build-for-production)
   - [Committing Changes](#committing-changes)
-  - [Generating type interface documentation](#generating-type-interface-documentation)
+    - [Enforcing Commit Format](#enforcing-commit-format)
   - [Preview components](#preview-components)
   - [Running consuming application with local copy of the package](#running-consuming-application-with-local-copy-of-the-package)
 - [Moving packages to the public/private repo](#moving-packages-to-the-publicprivate-repo)
@@ -175,21 +176,6 @@ For more information on different components that compose our commit messages, p
 - A `pre-push` hook is used that runs `stylelint` and `eslint` before allowing you to push your changes to the repository
 
 Additionally, CI will use `commitlint` to validate the commits associated with a PR in the `Lint and Validate` job.
-
-### Generating type interface documentation
-
-**This only applies to TypeScript-only packages**
-
-If your package generates **types**, then add a `build:docs` script to your `package.json` file similar to the one in [@kong-ui-public/analytics-utilities](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilties/package.json#L12)
-
-```json
-"scripts": {
-  ... other scripts
-  "build:docs": "{your command for generating docs}"
-}
-```
-
-Please run the `build:docs` command manually to generate the docs and then commit them to your PR.
 
 ### Preview components
 
