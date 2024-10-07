@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.0.0...@kong-ui-public/analytics-utilities@5.0.1) (2024-10-07)
+
+
+### Bug Fixes
+
+* add response_header_content_length as numeric field ([#1697](https://github.com/Kong/public-ui-components/issues/1697)) ([3e06ed3](https://github.com/Kong/public-ui-components/commit/3e06ed35902cdb06202c768c8f7cdc3b4215d346))
+
+
+
+
+
 # [5.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.8.7...@kong-ui-public/analytics-utilities@5.0.0) (2024-10-03)
 
 
