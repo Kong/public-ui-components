@@ -39,7 +39,7 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^9.9.1",
+    "@kong/kongponents": "^9.10.3",
     "vue": ">= 3.3.13 < 4"
   },
   "devDependencies": {
