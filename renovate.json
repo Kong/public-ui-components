@@ -2,6 +2,10 @@
   "extends": [
     "github>Kong/public-shared-renovate:kong-frontend-config"
   ],
+  "ignoreDeps": [
+    "swagger-client",
+    "swagger-ui"
+  ],
   "ignorePaths": [
     "packages/core/cli/src/__template__/package.json"
   ]
