@@ -69,9 +69,9 @@ export const queryableRequestMetrics = [
   'latencies_response_ms',
   'latencies_upstream_ms',
   'latencies_kong_gateway_ms',
+  'request_body_size',
   'response_body_size',
   'response_header_content_length',
-  'request_body_size',
   'status_code',
   'upstream_status_code',
 ] as const
