@@ -65,7 +65,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/forms": "workspace:^",
-    "@kong/kongponents": "^9.9.1",
+    "@kong/kongponents": "^9.10.3",
     "vue": "^3.4.38"
   },
   "dependencies": {
