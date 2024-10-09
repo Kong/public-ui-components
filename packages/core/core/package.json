@@ -56,7 +56,7 @@
     "vue": "^3.4.38"
   },
   "dependencies": {
-    "date-fns": "^3.6.0"
+    "date-fns": "^4.1.0"
   },
   "devDependencies": {
     "@kong/design-tokens": "1.17.2",
