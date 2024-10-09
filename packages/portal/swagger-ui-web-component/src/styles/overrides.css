@@ -11,6 +11,16 @@
   background: none !important;
 }
 
+.swagger-ui .opblock-summary-path {
+  display: var(--kui-operation-summary-path-display, grid) !important;
+  /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+  max-width: var(--kui-operation-summary-path-max-width, 100%) !important;
+  overflow: var(--kui-operation-summary-path-overflow, visible) !important;
+  text-overflow: var(--kui-operation-summary-path-text-overflow, visible) !important;
+  white-space: var(--kui-operation-summary-path-white-space, wrap) !important;
+  word-wrap: var(--kui-operation-summary-path-word-wrap, break-all) !important;
+}
+
 .swagger-ui .opblock-control-arrow {
   grid-column-start: 4;
   grid-row-start: 1;

@@ -123,3 +123,22 @@ watch(() => props.activeOperation, () => {
   font-size: var(--kong-ui-portal-spec-details-font-size, $kui-font-size-40);
 }
 </style>
+
+<style lang="scss">
+main {
+  --kui-operation-summary-path-display: block;
+  --kui-operation-summary-path-overflow: hidden;
+  --kui-operation-summary-path-text-overflow: ellipsis;
+  --kui-operation-summary-path-white-space: nowrap;
+  --kui-operation-summary-path-word-wrap: normal;
+  --kui-operation-summary-path-max-width: 30ch;
+
+  @media screen and (min-width: $kui-breakpoint-phablet) {
+    --kui-operation-summary-path-max-width: 40ch;
+  }
+
+  @media screen and (min-width: $kui-breakpoint-desktop) {
+    --kui-operation-summary-path-max-width: 100ch;
+  }
+}
+</style>
