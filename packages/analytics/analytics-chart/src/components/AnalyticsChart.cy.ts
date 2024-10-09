@@ -175,8 +175,8 @@ describe('<AnalyticsChart />', () => {
     cy.get('[data-testid="doughnut-chart-parent"]').should('be.visible')
     cy.get('.chart-header').should('contain.text', 'Doughnut chart')
     cy.get('[data-testid="legend"]').children().should('have.length', 6)
-    cy.get('.label').eq(0).should('include.text', 'dp-mock-us-dev')
-    cy.get('.label').eq(1).should('include.text', 'GetMeAKongDefault')
+    cy.get('.label').eq(0).should('include.text', 'GetMeAKongDefault')
+    cy.get('.label').eq(1).should('include.text', 'GetMeASongRoute')
   })
 
   it('renders a doughnut chart with sigle dimension data', () => {
