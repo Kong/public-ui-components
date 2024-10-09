@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.12.7...@kong-ui-public/swagger-ui-web-component@0.12.8) (2024-10-09)
+
+
+### Bug Fixes
+
+* set custom max-widths for path names ([#1702](https://github.com/Kong/public-ui-components/issues/1702)) ([badcd07](https://github.com/Kong/public-ui-components/commit/badcd071bebc2ad3e99b2721510cea658ef653dc))
+
+
+
+
+
 ## [0.12.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.12.6...@kong-ui-public/swagger-ui-web-component@0.12.7) (2024-10-07)
 
 **Note:** Version bump only for package @kong-ui-public/swagger-ui-web-component
