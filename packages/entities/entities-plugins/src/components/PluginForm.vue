@@ -1047,6 +1047,13 @@ const dynamicOrdering = ref<PluginOrdering>()
 // The whole purpose of this function is to wait for the existing record to be loaded if editing
 // We need to wait for this before we start attempting to build the schema
 const initForm = (data: Record<string, any>): void => {
+  // FIXME: This is a workaround for the issue FTI-6248, it should be replaced with a better solution
+  // When editing a credential, ff the user saves the password without changing it, the password will be changed to the hashed password returned by the backend
+  // The modification here is to force users to reset the password
+  if (props.credential && data.password) {
+    data.password = ''
+  }
+
   form.fields.id = data?.id || undefined
   dynamicOrdering.value = data?.ordering
 
