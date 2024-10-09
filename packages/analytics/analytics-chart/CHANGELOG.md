@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.0.5...@kong-ui-public/analytics-chart@5.0.6) (2024-10-09)
+
+
+### Bug Fixes
+
+* **deps:** update dependency date-fns to v4 ([#1681](https://github.com/Kong/public-ui-components/issues/1681)) ([16bd61e](https://github.com/Kong/public-ui-components/commit/16bd61ed9079f60151cdc49c81d2c60616083138))
+
+
+
+
+
 ## [5.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.0.4...@kong-ui-public/analytics-chart@5.0.5) (2024-10-08)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
