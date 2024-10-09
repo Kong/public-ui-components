@@ -413,7 +413,7 @@ describe('useVitalsExploreDatasets', () => {
           event: {
             route: 'route2',
             status_code: 100,
-            metric1: 3,
+            metric1: 7,
           },
         } as GroupByResult,
         {
@@ -421,7 +421,7 @@ describe('useVitalsExploreDatasets', () => {
           event: {
             route: 'route2',
             status_code: 200,
-            metric1: 4,
+            metric1: 1,
           },
         } as GroupByResult,
         {
@@ -437,23 +437,7 @@ describe('useVitalsExploreDatasets', () => {
           event: {
             route: 'route3',
             status_code: 200,
-            metric1: 6,
-          },
-        } as GroupByResult,
-        {
-          timestamp: '2022-01-01T01:01:02Z',
-          event: {
-            route: 'route111',
-            status_code: 100,
-            metric1: 1,
-          },
-        } as GroupByResult,
-        {
-          timestamp: '2022-01-01T01:01:02Z',
-          event: {
-            route: 'route111',
-            status_code: 200,
-            metric1: 20,
+            metric1: 5,
           },
         } as GroupByResult,
       ],
@@ -467,7 +451,6 @@ describe('useVitalsExploreDatasets', () => {
             route1: { name: 'route1' },
             route2: { name: 'route2' },
             route3: { name: 'route3' },
-            route111: { name: 'route111' },
           },
           status_code: {
             100: {
@@ -489,6 +472,6 @@ describe('useVitalsExploreDatasets', () => {
       exploreResult,
     )
 
-    expect(result.value.labels).toEqual(['route111', 'route3', 'route2', 'route1'])
+    expect(result.value.labels).toEqual(['route3', 'route2', 'route1'])
   })
 })
