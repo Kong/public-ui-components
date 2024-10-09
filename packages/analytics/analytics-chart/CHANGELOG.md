@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.0.6...@kong-ui-public/analytics-chart@5.0.7) (2024-10-09)
+
+
+### Bug Fixes
+
+* chart dataset sorting issue ([#1705](https://github.com/Kong/public-ui-components/issues/1705)) ([7ec5193](https://github.com/Kong/public-ui-components/commit/7ec51939e23d76ee2aedb9f6cebbf1c712523fc1))
+
+
+
+
+
 ## [5.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.0.5...@kong-ui-public/analytics-chart@5.0.6) (2024-10-09)
 
 
