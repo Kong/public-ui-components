@@ -358,9 +358,9 @@ const requestBody = computed((): Record<string, any> => {
     kid: form.fields.key_id,
     name: form.fields.name || null,
     tags: form.fields.tags?.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== '') || [],
-    set: form.fields.key_set ? { id: form.fields.key_set } : null,
-    jwk: form.fields.key_format === 'jwk' ? form.fields.jwk : null,
-    pem: form.fields.key_format === 'pem' ? { private_key: form.fields.private_key, public_key: form.fields.public_key } : null,
+    set: form.fields.key_set ? { id: form.fields.key_set } : undefined,
+    jwk: form.fields.key_format === 'jwk' ? form.fields.jwk : undefined,
+    pem: form.fields.key_format === 'pem' ? { private_key: form.fields.private_key, public_key: form.fields.public_key } : undefined,
   }
 })
 
