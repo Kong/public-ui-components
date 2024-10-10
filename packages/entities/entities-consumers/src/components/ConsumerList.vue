@@ -2,14 +2,14 @@
   <div class="kong-ui-entities-consumers-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
-      :disable-pagination="isConsumerGroupPage && !config.paginatedEndpoint"
-      disable-pagination-page-jump
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
       :error-message="errorMessage"
       :fetcher="fetcher"
       :fetcher-cache-key="fetcherCacheKey"
+      :hide-pagination="isConsumerGroupPage && !config.paginatedEndpoint"
+      :hide-toolbar="hideTableToolbar"
       pagination-type="offset"
       :preferences-storage-key="preferencesStorageKey"
       :query="filterQuery"
@@ -353,6 +353,8 @@ const getRowValue = (val: any) => {
  * loading, Error, Empty state
  */
 const errorMessage = ref<TableErrorMessage>(null)
+// hide table toolbar in initial loading state or when no records are found
+const hideTableToolbar = ref<boolean>(false)
 
 /**
  * Copy ID action
@@ -578,6 +580,12 @@ watch(fetcherState, (state) => {
   // reset `hasData` to show/hide the teleported Create button
   if (Array.isArray(state?.response?.data)) {
     hasData.value = state.response!.data.length > 0
+  }
+
+  if (state.status === FetcherStatus.NoRecords) {
+    hideTableToolbar.value = true
+  } else {
+    hideTableToolbar.value = false
   }
 
   if (state.status === FetcherStatus.Error) {

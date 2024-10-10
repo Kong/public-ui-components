@@ -1,7 +1,6 @@
 <template>
   <EntityBaseTable
     :cache-identifier="cacheIdentifier"
-    disable-pagination-page-jump
     disable-sorting
     :empty-state-options="emptyStateOptions"
     enable-entity-actions

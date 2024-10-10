@@ -76,7 +76,7 @@ describe('<VaultList />', () => {
         },
       })
 
-      cy.getTestId('overflow-actions-button').eq(0).click()
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
@@ -216,7 +216,7 @@ describe('<VaultList />', () => {
       cy.wait('@getVaults')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-vault"]').should('be.visible')
+      cy.getTestId('empty-state-action').should('be.visible')
     })
 
     it('should hide empty state and create vault cta if user can not create', () => {
@@ -236,7 +236,7 @@ describe('<VaultList />', () => {
       cy.wait('@getVaults')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-vault"]').should('not.exist')
+      cy.getTestId('empty-state-action').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -516,7 +516,7 @@ describe('<VaultList />', () => {
       cy.wait('@getVaults')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-vault"]').should('be.visible')
+      cy.getTestId('empty-state-action').should('be.visible')
     })
 
     it('should hide empty state and create vault cta if user can not create', () => {
@@ -536,7 +536,7 @@ describe('<VaultList />', () => {
       cy.wait('@getVaults')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-vault"]').should('not.exist')
+      cy.getTestId('empty-state-action').should('not.exist')
     })
 
     it('should handle error state', () => {

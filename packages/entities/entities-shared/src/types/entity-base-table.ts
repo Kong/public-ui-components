@@ -27,15 +27,6 @@ export interface EmptyStateOptions {
   showCta?: boolean
 }
 
-export interface FetcherParams {
-  page: number
-  pageSize: number
-  offset: number
-  sortColumnKey: string
-  sortColumnOrder: 'asc' | 'desc'
-  query: string
-}
-
 export interface FetcherResponse {
   data: any[]
   total?: number
@@ -46,9 +37,11 @@ export interface FetcherResponse {
 }
 
 export enum FetcherStatus {
+  InitialLoad,
   Loading,
   Idle,
   NoResults,
+  NoRecords,
   Error,
 }
 

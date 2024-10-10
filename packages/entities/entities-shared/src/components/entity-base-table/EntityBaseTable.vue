@@ -4,12 +4,11 @@
     :title="title"
     :title-tag="titleTag"
   >
-    <KTable
+    <KTableData
       ref="tableRefs"
       :cache-identifier="cacheId"
       :cell-attrs="cellAttrs"
       :client-sort="enableClientSort"
-      :disable-pagination-page-jump="disablePaginationPageJump"
       :empty-state-action-message="query ? t('baseTable.emptyState.noSearchResultsCtaText') : emptyStateOptions.ctaText"
       :empty-state-action-route="query ? undefined : emptyStateOptions.ctaPath"
       :empty-state-icon-variant="query ? 'search' : 'kong'"
@@ -21,10 +20,12 @@
       :fetcher="fetcher"
       :fetcher-cache-key="String(fetcherCacheKey)"
       :headers="headers"
+      :hide-pagination="hidePagination"
       hide-pagination-when-optional
+      :hide-toolbar="hideToolbar"
       :initial-fetcher-params="combinedInitialFetcherParams"
       :loading="isLoading"
-      :pagination-offset="paginationType === 'offset'"
+      :pagination-attributes="{ disablePageJump: disablePaginationPageJump, offset: paginationType === 'offset' }"
       resize-columns
       :row-attrs="rowAttrs"
       :search-input="query"
@@ -50,6 +51,7 @@
           </div>
         </div>
       </template>
+
       <template
         v-for="(header, key) in tableHeaders"
         :key="key"
@@ -70,42 +72,21 @@
           </slot>
         </EntityBaseTableCell>
       </template>
-      <template #actions="{ row, rowKey, rowValue }">
-        <div
-          class="actions-container"
-          :data-testid="row.name"
-        >
-          <KDropdown
-            :kpop-attributes="{ placement: 'bottom-end' }"
-            :width="dropdownMenuWidth"
-          >
-            <KButton
-              appearance="tertiary"
-              class="actions-trigger"
-              data-testid="overflow-actions-button"
-              icon
-              size="small"
-            >
-              <MoreIcon />
-            </KButton>
-            <template #items>
-              <slot
-                name="actions"
-                :row="row"
-                :row-key="rowKey"
-                :row-value="rowValue"
-              />
-            </template>
-          </KDropdown>
-        </div>
+
+      <template #action-items="{ row }">
+        <slot
+          name="actions"
+          :row="row"
+        />
       </template>
+
       <template
         v-if="!query"
         #empty-state-action-icon
       >
         <AddIcon />
       </template>
-    </KTable>
+    </KTableData>
   </KCard>
 </template>
 
@@ -114,19 +95,18 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import composables from '../../composables'
 import { useTablePreferences } from '@kong-ui-public/core'
-import type { SwrvStateData, HeaderTag, TablePreferences } from '@kong/kongponents'
+import type { SwrvStateData, HeaderTag, TablePreferences, SortHandlerFunctionParam, TableDataFetcherParams } from '@kong/kongponents'
 import EntityBaseTableCell from './EntityBaseTableCell.vue'
 
 import type {
   BaseTableHeaders,
   EmptyStateOptions,
-  FetcherParams,
   FetcherResponse,
   InternalHeader,
   TableSortParams,
   TableErrorMessage,
 } from '../../types'
-import { AddIcon, MoreIcon } from '@kong/icons'
+import { AddIcon } from '@kong/icons'
 
 const props = defineProps({
   // table header configuration
@@ -137,7 +117,7 @@ const props = defineProps({
   },
   // fetcher function
   fetcher: {
-    type: Function as PropType<(params: FetcherParams) => Promise<FetcherResponse>>,
+    type: Function as PropType<(param: TableDataFetcherParams) => Promise<FetcherResponse>>,
     required: true,
     default: async () => ({
       data: [],
@@ -145,7 +125,7 @@ const props = defineProps({
     }),
   },
   initialFetcherParams: {
-    type: Object as PropType<Partial<Omit<FetcherParams, 'query'>>>,
+    type: Object as PropType<Partial<Omit<TableDataFetcherParams, 'query'>>>,
     default: null,
   },
   // used to identify the cache entry
@@ -174,8 +154,8 @@ const props = defineProps({
     default: false,
   },
   sortHandlerFunction: {
-    type: Function,
-    default: () => ({}),
+    type: Function as PropType<(param: SortHandlerFunctionParam) => Record<string, any>[]>,
+    default: null,
   },
   // whether to show the actions column
   enableEntityActions: {
@@ -228,12 +208,6 @@ const props = defineProps({
     default: null,
     required: false,
   },
-  /** dropdown menu width, default to 200px, defined in kPop */
-  dropdownMenuWidth: {
-    type: String,
-    default: '',
-    required: false,
-  },
   title: {
     type: String,
     default: '',
@@ -244,6 +218,14 @@ const props = defineProps({
   },
   /** default to false, setting to true will suppress the row click event even if "@click:row" is attached */
   disableRowClick: {
+    type: Boolean,
+    default: false,
+  },
+  hidePagination: {
+    type: Boolean,
+    default: false,
+  },
+  hideToolbar: {
     type: Boolean,
     default: false,
   },
@@ -364,7 +346,7 @@ const { setTablePreferences, getTablePreferences } = useTablePreferences()
 
 const tablePreferences = ref<TablePreferences>(getTablePreferences(cacheId.value, props.defaultTablePreferences))
 
-const combinedInitialFetcherParams = computed((): Partial<FetcherParams> => {
+const combinedInitialFetcherParams = computed((): Partial<TableDataFetcherParams> => {
   // Pass the preferencesStorageKey regardless; if no entry is found, it will return the default
   const userTablePreferences = getTablePreferences(cacheId.value)
   // Return the props.initialFetcherParams, appending any stored user preferences
@@ -403,15 +385,6 @@ const handleUpdateTablePreferences = (newTablePreferences: TablePreferences): vo
 
   .toolbar-button-container {
     margin-left: auto;
-  }
-
-  .actions-container {
-    float: right;
-
-    :deep(.k-dropdown-item-trigger) {
-      margin-bottom: 0;
-      margin-top: 0;
-    }
   }
 }
 </style>

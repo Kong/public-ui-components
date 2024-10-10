@@ -30,9 +30,9 @@ yarn add @kong-ui-public/core
 
 ```html
 <template>
-  <!-- Only showing a partial KTable implementation -->
+  <!-- Only showing a partial KTableData implementation -->
   <!-- https://kongponents.konghq.com/components/table.html -->
-  <KTable
+  <KTableData
     :data-testid="tableKey"
     :fetcher="fetcher"
     :initial-fetcher-params="userTablePreferences"

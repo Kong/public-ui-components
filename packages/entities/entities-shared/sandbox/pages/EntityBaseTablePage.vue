@@ -71,8 +71,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { EntityBaseTable } from '../../src'
-import type { FetcherParams, FetcherResponse } from '../../src'
+import type { FetcherResponse } from '../../src'
 import { mockTableHeaders, mockTableData } from '../../fixtures/mockData'
+import type { TableDataFetcherParams } from '@kong/kongponents'
 
 const headers = mockTableHeaders
 
@@ -88,7 +89,7 @@ const hasData = ref(false)
 const query = ref('')
 const fetchCacheKey = ref(1)
 
-const fetcher = (params: FetcherParams): Promise<FetcherResponse> => {
+const fetcher = (params: TableDataFetcherParams): Promise<FetcherResponse> => {
   isLoading.value = true
 
   return new Promise(resolve => {

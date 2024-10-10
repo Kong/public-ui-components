@@ -74,7 +74,7 @@ describe('<ConsumerCredentialList />', () => {
         },
       })
 
-      cy.getTestId('overflow-actions-button').eq(0).click()
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
@@ -91,7 +91,7 @@ describe('<ConsumerCredentialList />', () => {
         },
       })
 
-      cy.getTestId('overflow-actions-button').eq(0).click()
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-copy-credential').should('be.visible')
     })
 
@@ -111,7 +111,7 @@ describe('<ConsumerCredentialList />', () => {
         },
       })
 
-      cy.getTestId('overflow-actions-button').eq(0).click()
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-copy-key').should('be.visible')
     })
 
@@ -131,7 +131,7 @@ describe('<ConsumerCredentialList />', () => {
         },
       })
 
-      cy.getTestId('overflow-actions-button').eq(0).click()
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-copy-key').should('be.visible')
     })
 
@@ -151,7 +151,7 @@ describe('<ConsumerCredentialList />', () => {
         },
       })
 
-      cy.getTestId('overflow-actions-button').eq(0).click()
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-copy-key').should('be.visible')
     })
 
@@ -171,7 +171,7 @@ describe('<ConsumerCredentialList />', () => {
         },
       })
 
-      cy.getTestId('overflow-actions-button').eq(0).click()
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-copy-secret').should('be.visible')
     })
 
@@ -191,7 +191,7 @@ describe('<ConsumerCredentialList />', () => {
         },
       })
 
-      cy.getTestId('overflow-actions-button').eq(0).click()
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-copy-secret').should('be.visible')
     })
 
@@ -210,7 +210,7 @@ describe('<ConsumerCredentialList />', () => {
             },
           })
 
-          cy.getTestId('overflow-actions-button').eq(0).click()
+          cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
           cy.getTestId('action-entity-edit').should(`${expected ? '' : 'not.'}exist`)
         })
 
@@ -227,7 +227,7 @@ describe('<ConsumerCredentialList />', () => {
             },
           })
 
-          cy.getTestId('overflow-actions-button').eq(0).click()
+          cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
           cy.getTestId('action-entity-delete').should(`${expected ? '' : 'not.'}exist`)
         })
       })
@@ -291,7 +291,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.wait('@getCredentials')
       cy.get('.kong-ui-entities-consumer-credentials-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-basic-auth-credential"]').should('be.visible')
+      cy.getTestId('empty-state-action').should('be.visible')
     })
 
     it('should hide empty state and create credential cta if user can not create', () => {
@@ -311,7 +311,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.wait('@getCredentials')
       cy.get('.kong-ui-entities-consumer-credentials-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-basic-auth-credential"]').should('not.exist')
+      cy.getTestId('empty-state-action').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -590,7 +590,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.wait('@getCredentials')
       cy.get('.kong-ui-entities-consumer-credentials-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-basic-auth-credential"]').should('be.visible')
+      cy.getTestId('empty-state-action').should('be.visible')
     })
 
     it('should hide empty state and create credential cta if user can not create', () => {
@@ -609,7 +609,7 @@ describe('<ConsumerCredentialList />', () => {
       cy.wait('@getCredentials')
       cy.get('.kong-ui-entities-consumer-credentials-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-basic-auth-credential"]').should('not.exist')
+      cy.getTestId('empty-state-action').should('not.exist')
     })
 
     it('should handle error state', () => {

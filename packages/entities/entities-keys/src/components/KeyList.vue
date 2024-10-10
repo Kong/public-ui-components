@@ -2,13 +2,13 @@
   <div class="kong-ui-entities-keys-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
-      disable-pagination-page-jump
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
       :error-message="errorMessage"
       :fetcher="fetcher"
       :fetcher-cache-key="fetcherCacheKey"
+      :hide-toolbar="hideTableToolbar"
       pagination-type="offset"
       preferences-storage-key="kong-ui-entities-keys-list"
       :query="filterQuery"
@@ -295,6 +295,8 @@ const resetPagination = (): void => {
  * loading, Error, Empty state
  */
 const errorMessage = ref<TableErrorMessage>(null)
+// hide table toolbar in initial loading state or when no records are found
+const hideTableToolbar = ref<boolean>(false)
 
 /**
  * Copy action
@@ -436,6 +438,12 @@ watch(fetcherState, (state) => {
   // reset `hasData` to show/hide the teleported Create button
   if (Array.isArray(state?.response?.data)) {
     hasData.value = state.response!.data.length > 0
+  }
+
+  if (state.status === FetcherStatus.NoRecords) {
+    hideTableToolbar.value = true
+  } else {
+    hideTableToolbar.value = false
   }
 
   if (state.status === FetcherStatus.Error) {
