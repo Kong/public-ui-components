@@ -7,8 +7,6 @@ import type { StatsDSchema } from './plugins/stats-d'
 import type { MockingSchema } from './plugins/mocking'
 import type { DatadogSchema } from './plugins/datadog-schema'
 import type { StatsDAdvancedSchema } from './plugins/stats-d-advanced'
-import type { JWTPluginSchema } from './plugins/jwt'
-import type { KafkaSchema } from './plugins/kafka-schema'
 import type { UpstreamTlsSchema } from './plugins/upstream-tls'
 import type { RateLimitingSchema } from './plugins/rate-limiting'
 import type { RouteByHeaderSchema } from './plugins/route-by-header'
@@ -20,7 +18,6 @@ import type { GraphQLRateLimitingAdvancedSchema } from './plugins/graphql-rate-l
 import type { SAMLSchema } from './plugins/saml'
 import type { OasValidationSchema } from './plugins/oas-validation'
 import type { UpstreamOauthSchema } from './plugins/upstream-oauth'
-import type { ConfluentSchema } from './plugins/confluent'
 
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
@@ -195,9 +192,6 @@ export interface CustomSchemas {
   'application-registration': ApplicationRegistrationSchema
   datadog: DatadogSchema
   'upstream-tls': UpstreamTlsSchema
-  jwt: JWTPluginSchema
-  'kafka-upstream': KafkaSchema
-  'kafka-log': KafkaSchema
   statsd: StatsDSchema
   'statsd-advanced': StatsDAdvancedSchema
   mocking: MockingSchema
@@ -218,5 +212,4 @@ export interface CustomSchemas {
   saml: SAMLSchema
   'oas-validation': OasValidationSchema
   'upstream-oauth': UpstreamOauthSchema
-  'confluent': ConfluentSchema
 }

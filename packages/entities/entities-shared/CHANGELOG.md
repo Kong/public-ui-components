@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.9.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.13...@kong-ui-public/entities-shared@3.9.14) (2024-10-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.9.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.12...@kong-ui-public/entities-shared@3.9.13) (2024-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.9.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.11...@kong-ui-public/entities-shared@3.9.12) (2024-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.9.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.10...@kong-ui-public/entities-shared@3.9.11) (2024-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.9.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.9...@kong-ui-public/entities-shared@3.9.10) (2024-10-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.9.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.8...@kong-ui-public/entities-shared@3.9.9) (2024-10-01)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1682](https://github.com/Kong/public-ui-components/issues/1682)) ([c63cf89](https://github.com/Kong/public-ui-components/commit/c63cf8958237b0cf3c0bf2451154f6fb0b491b28))
+
+
+
+
+
+## [3.9.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.7...@kong-ui-public/entities-shared@3.9.8) (2024-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.9.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.6...@kong-ui-public/entities-shared@3.9.7) (2024-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
 ## [3.9.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.5...@kong-ui-public/entities-shared@3.9.6) (2024-09-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

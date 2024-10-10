@@ -1,4 +1,5 @@
 import type { BasicAuthFieldSchema } from '../../types/plugins/basic-auth'
+import { tags } from './typedefs'
 
 export const basicAuthSchema: BasicAuthFieldSchema = {
   fields: [
@@ -10,6 +11,9 @@ export const basicAuthSchema: BasicAuthFieldSchema = {
       password: {
         inputType: 'password',
       },
+    },
+    {
+      tags,
     },
   ],
 }

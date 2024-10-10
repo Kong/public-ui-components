@@ -32,7 +32,6 @@
 <script setup lang="ts">
 import composables from '../composables'
 import type { SimpleChartOptions } from '../types'
-import { ChartTypesSimple } from '../enums'
 import GaugeChart from './chart-types/GaugeChart.vue'
 import type { PropType } from 'vue'
 import { computed, toRef } from 'vue'
@@ -101,7 +100,7 @@ const computedMetricUnit = computed<string>(() => {
   return Object.values(props.chartData.meta.metric_units)[0]
 })
 
-const isGaugeChart = computed<boolean>(() => props.chartOptions.type === ChartTypesSimple.GAUGE)
+const isGaugeChart = computed<boolean>(() => props.chartOptions.type === 'gauge')
 
 const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAvailableTitle'))
 const hasValidChartData = computed(() => {

@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.1.31...@kong-ui-public/misc-widgets@2.1.32) (2024-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/misc-widgets
+
+
+
+
+
+## [2.1.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.1.30...@kong-ui-public/misc-widgets@2.1.31) (2024-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/misc-widgets
+
+
+
+
+
+## [2.1.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.1.29...@kong-ui-public/misc-widgets@2.1.30) (2024-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/misc-widgets
+
+
+
+
+
+## [2.1.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.1.28...@kong-ui-public/misc-widgets@2.1.29) (2024-10-04)
+
+**Note:** Version bump only for package @kong-ui-public/misc-widgets
+
+
+
+
+
+## [2.1.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.1.27...@kong-ui-public/misc-widgets@2.1.28) (2024-10-01)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1682](https://github.com/Kong/public-ui-components/issues/1682)) ([c63cf89](https://github.com/Kong/public-ui-components/commit/c63cf8958237b0cf3c0bf2451154f6fb0b491b28))
+
+
+
+
+
+## [2.1.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.1.26...@kong-ui-public/misc-widgets@2.1.27) (2024-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/misc-widgets
+
+
+
+
+
+## [2.1.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.1.25...@kong-ui-public/misc-widgets@2.1.26) (2024-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/misc-widgets
+
+
+
+
+
 ## [2.1.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.1.24...@kong-ui-public/misc-widgets@2.1.25) (2024-09-27)
 
 **Note:** Version bump only for package @kong-ui-public/misc-widgets

@@ -103,8 +103,8 @@ describe('<AddConsumerModal/>', () => {
 
       cy.wait('@interceptFilters')
 
-      cy.getTestId('multiselect-trigger').should('be.visible')
-      cy.getTestId('multiselect-trigger').click()
+      cy.getTestId('add-consumers-multiselect').should('be.visible')
+      cy.getTestId('add-consumers-multiselect').click()
 
       cy.get('.popover-content .multiselect-list').should('be.visible')
       cy.get('.popover-content .multiselect-list .multiselect-item').should('be.visible')
@@ -222,8 +222,8 @@ describe('<AddConsumerModal/>', () => {
 
       cy.wait('@interceptFilters')
 
-      cy.getTestId('multiselect-trigger').should('be.visible')
-      cy.getTestId('multiselect-trigger').click()
+      cy.getTestId('add-consumers-multiselect').should('be.visible')
+      cy.getTestId('add-consumers-multiselect').click()
 
       cy.get('.popover-content .multiselect-list').should('be.visible')
       cy.get('.popover-content .multiselect-list .multiselect-item').should('be.visible')

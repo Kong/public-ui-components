@@ -1,5 +1,4 @@
 // Cypress component test spec file
-import { ChartTypes } from '../enums/'
 import AnalyticsChart from './AnalyticsChart.vue'
 import ChartTooltip from './chart-plugins/ChartTooltip.vue'
 import composables from '../composables'
@@ -30,7 +29,7 @@ describe('<AnalyticsChart />', () => {
       props: {
         chartData: exploreResult,
         chartOptions: {
-          type: ChartTypes.TIMESERIES_LINE,
+          type: 'timeseries_line',
           stacked: true,
           fill: false,
           granularity: 'hourly',
@@ -61,7 +60,7 @@ describe('<AnalyticsChart />', () => {
       props: {
         chartData: emptyExploreResult,
         chartOptions: {
-          type: ChartTypes.TIMESERIES_LINE,
+          type: 'timeseries_line',
           stacked: true,
           fill: false,
           granularity: 'hourly',
@@ -79,7 +78,7 @@ describe('<AnalyticsChart />', () => {
       props: {
         chartData: exploreResult,
         chartOptions: {
-          type: ChartTypes.TIMESERIES_BAR,
+          type: 'timeseries_bar',
           stacked: false,
           granularity: 'daily',
           noLimit: true,
@@ -106,7 +105,7 @@ describe('<AnalyticsChart />', () => {
       props: {
         chartData: exploreResult,
         chartOptions: {
-          type: ChartTypes.HORIZONTAL_BAR,
+          type: 'horizontal_bar',
         },
         chartTitle: 'Horizontal bar chart',
         tooltipTitle: 'Tooltip Title',
@@ -139,7 +138,7 @@ describe('<AnalyticsChart />', () => {
       props: {
         chartData: multiDimensionExploreResult,
         chartOptions: {
-          type: ChartTypes.VERTICAL_BAR,
+          type: 'vertical_bar',
         },
         chartTitle: 'Vertical bar chart',
         tooltipTitle: 'Tooltip Title',
@@ -165,7 +164,7 @@ describe('<AnalyticsChart />', () => {
       props: {
         chartData: multiDimensionExploreResult,
         chartOptions: {
-          type: ChartTypes.DOUGHNUT,
+          type: 'doughnut',
         },
         chartTitle: 'Doughnut chart',
         tooltipTitle: 'Tooltip Title',
@@ -176,8 +175,8 @@ describe('<AnalyticsChart />', () => {
     cy.get('[data-testid="doughnut-chart-parent"]').should('be.visible')
     cy.get('.chart-header').should('contain.text', 'Doughnut chart')
     cy.get('[data-testid="legend"]').children().should('have.length', 6)
-    cy.get('.label').eq(0).should('include.text', 'dp-mock-us-dev')
-    cy.get('.label').eq(1).should('include.text', 'GetMeAKongDefault')
+    cy.get('.label').eq(0).should('include.text', 'GetMeAKongDefault')
+    cy.get('.label').eq(1).should('include.text', 'GetMeASongRoute')
   })
 
   it('renders a doughnut chart with sigle dimension data', () => {
@@ -185,7 +184,7 @@ describe('<AnalyticsChart />', () => {
       props: {
         chartData: exploreResult,
         chartOptions: {
-          type: ChartTypes.DOUGHNUT,
+          type: 'doughnut',
         },
         chartTitle: 'Doughnut chart',
         tooltipTitle: 'Tooltip Title',
@@ -213,7 +212,7 @@ describe('<AnalyticsChart />', () => {
       props: {
         chartData: emptyExploreResult,
         chartOptions: {
-          type: ChartTypes.DOUGHNUT,
+          type: 'doughnut',
         },
       },
     })
@@ -230,7 +229,7 @@ describe('<AnalyticsChart />', () => {
       props: {
         chartData: emptyExploreResult,
         chartOptions: {
-          type: ChartTypes.DOUGHNUT,
+          type: 'doughnut',
         },
         emptyStateTitle,
         emptyStateDescription,
@@ -247,7 +246,7 @@ describe('<AnalyticsChart />', () => {
         allowCsvExport: true,
         chartData: emptyExploreResult,
         chartOptions: {
-          type: ChartTypes.TIMESERIES_LINE,
+          type: 'timeseries_line',
         },
         chartTitle: 'Requests',
       },
@@ -261,7 +260,7 @@ describe('<AnalyticsChart />', () => {
         allowCsvExport: false,
         chartData: exploreResult,
         chartOptions: {
-          type: ChartTypes.TIMESERIES_LINE,
+          type: 'timeseries_line',
         },
         chartTitle: 'Requests',
       },
@@ -275,7 +274,7 @@ describe('<AnalyticsChart />', () => {
         allowCsvExport: true,
         chartData: exploreResult,
         chartOptions: {
-          type: ChartTypes.TIMESERIES_LINE,
+          type: 'timeseries_line',
         },
         chartTitle: 'Requests',
       },
@@ -295,7 +294,7 @@ describe('<AnalyticsChart />', () => {
       props: {
         chartData: multiDimensionExploreResult,
         chartOptions: {
-          type: ChartTypes.HORIZONTAL_BAR,
+          type: 'horizontal_bar',
         },
         chartTitle: 'Vertical bar chart',
         tooltipTitle: 'Tooltip Title',
@@ -323,7 +322,7 @@ describe('<AnalyticsChart />', () => {
       props: {
         chartData: exploreResult,
         chartOptions: {
-          type: ChartTypes.HORIZONTAL_BAR,
+          type: 'horizontal_bar',
         },
         chartTitle: 'Vertical bar chart',
         tooltipTitle: 'Tooltip Title',

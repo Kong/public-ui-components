@@ -104,8 +104,8 @@ describe('<AddToGroupModal/>', () => {
 
       cy.wait('@interceptFilters')
 
-      cy.getTestId('multiselect-trigger').should('be.visible')
-      cy.getTestId('multiselect-trigger').click()
+      cy.getTestId('add-to-groups-multiselect').should('be.visible')
+      cy.getTestId('add-to-groups-multiselect').click()
 
       cy.get('.popover-content .multiselect-list').should('be.visible')
       cy.get('.popover-content .multiselect-list .multiselect-item').should('be.visible')
@@ -223,8 +223,8 @@ describe('<AddToGroupModal/>', () => {
 
       cy.wait('@interceptFilters')
 
-      cy.getTestId('multiselect-trigger').should('be.visible')
-      cy.getTestId('multiselect-trigger').click()
+      cy.getTestId('add-to-groups-multiselect').should('be.visible')
+      cy.getTestId('add-to-groups-multiselect').click()
 
       cy.get('.popover-content .multiselect-list').should('be.visible')
       cy.get('.popover-content .multiselect-list .multiselect-item').should('be.visible')

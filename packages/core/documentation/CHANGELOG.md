@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.67](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.66...@kong-ui-public/documentation@0.7.67) (2024-10-09)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.7.66](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.65...@kong-ui-public/documentation@0.7.66) (2024-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.7.65](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.64...@kong-ui-public/documentation@0.7.65) (2024-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.7.64](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.63...@kong-ui-public/documentation@0.7.64) (2024-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.7.63](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.62...@kong-ui-public/documentation@0.7.63) (2024-10-04)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.7.62](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.61...@kong-ui-public/documentation@0.7.62) (2024-10-01)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1682](https://github.com/Kong/public-ui-components/issues/1682)) ([c63cf89](https://github.com/Kong/public-ui-components/commit/c63cf8958237b0cf3c0bf2451154f6fb0b491b28))
+
+
+
+
+
+## [0.7.61](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.60...@kong-ui-public/documentation@0.7.61) (2024-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.7.60](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.59...@kong-ui-public/documentation@0.7.60) (2024-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
 ## [0.7.59](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.58...@kong-ui-public/documentation@0.7.59) (2024-09-27)
 
 **Note:** Version bump only for package @kong-ui-public/documentation

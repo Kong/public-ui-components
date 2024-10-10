@@ -7,11 +7,8 @@ import { aiPromptTemplateSchema } from '../definitions/schemas/AIPromptTemplate'
 import { aiRateLimitingAdvancedSchema } from '../definitions/schemas/AIRateLimitingAdvanced'
 import { applicationRegistrationSchema } from '../definitions/schemas/ApplicationRegistration'
 import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
-import { confluentSchema } from '../definitions/schemas/Confluent'
 import { dataDogSchema } from '../definitions/schemas/Datadog'
 import { graphqlRateLimitingAdvancedSchema } from '../definitions/schemas/GraphQLRateLimitingAdvanced'
-import { jwtSchema } from '../definitions/schemas/JWT'
-import { kafkaSchema } from '../definitions/schemas/Kafka'
 import { mockingSchema } from '../definitions/schemas/Mocking'
 import { preFunctionSchema } from '../definitions/schemas/PreFunction'
 import { rateLimitingSchema } from '../definitions/schemas/RateLimiting'
@@ -110,19 +107,6 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       },
     },
 
-    // KAG-3347: BE descriptions missing. Should remove when BE descriptions are available
-    jwt: {
-      ...jwtSchema,
-    },
-
-    'kafka-upstream': {
-      ...kafkaSchema,
-    },
-
-    'kafka-log': {
-      ...kafkaSchema,
-    },
-
     statsd: {
       ...statsDSchema,
     },
@@ -208,10 +192,6 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     saml: {
       ...samlSchema,
-    },
-
-    confluent: {
-      ...confluentSchema,
     },
   }
 
@@ -486,13 +466,6 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     }
   }
 
-  const handleFieldSet = (schema: Record<string, any>) => {
-    schema.type = 'input'
-    schema.inputType = 'text'
-    schema.valueType = 'array'
-    schema.valueArrayType = 'string'
-  }
-
   const handleFieldBoolean = (schema: Record<string, any>) => {
     schema.type = 'checkbox'
     schema.default = true
@@ -617,9 +590,6 @@ export const useSchemas = (options?: UseSchemasOptions) => {
         break
       case 'string':
         handleFieldString(schema)
-        break
-      case 'set':
-        handleFieldSet(schema)
         break
       case 'boolean':
         handleFieldBoolean(schema)

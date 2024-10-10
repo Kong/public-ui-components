@@ -1,6 +1,6 @@
 # Summary
 
-<!-- 
+<!--
   Be sure your Pull Request includes:
 
   - JIRA ticket number in the title, and link in the summary
@@ -10,7 +10,3 @@
   - Link to Figma, if applicable
   - Conventional Commits
 -->
-
-#### Resources
-
-- [Creating a package docs](https://github.com/Kong/public-ui-components/blob/main/docs/creating-a-package.md)

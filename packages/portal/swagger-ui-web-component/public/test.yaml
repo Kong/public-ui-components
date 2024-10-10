@@ -37,6 +37,23 @@ tags:
   - name: user
     description: Operations about user
 paths:
+  /super-long-omg-omg-omg-omg-omg-omg-omg-omg-omg-omg:
+    get:
+      tags: 
+        - pet
+      summary: Get super long path
+      description: Get super long path
+      operationId: getSuperLongPath
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Pet'
   /pet:
     put:
       tags:

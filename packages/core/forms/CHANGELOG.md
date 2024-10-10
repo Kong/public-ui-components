@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.7.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.11...@kong-ui-public/forms@4.7.12) (2024-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.7.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.10...@kong-ui-public/forms@4.7.11) (2024-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.7.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.9...@kong-ui-public/forms@4.7.10) (2024-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.7.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.8...@kong-ui-public/forms@4.7.9) (2024-10-04)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.7.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.7...@kong-ui-public/forms@4.7.8) (2024-10-01)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1682](https://github.com/Kong/public-ui-components/issues/1682)) ([c63cf89](https://github.com/Kong/public-ui-components/commit/c63cf8958237b0cf3c0bf2451154f6fb0b491b28))
+
+
+
+
+
+## [4.7.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.6...@kong-ui-public/forms@4.7.7) (2024-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.7.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.5...@kong-ui-public/forms@4.7.6) (2024-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [4.7.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.4...@kong-ui-public/forms@4.7.5) (2024-09-27)
 
 **Note:** Version bump only for package @kong-ui-public/forms

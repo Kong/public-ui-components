@@ -1,18 +1,5 @@
-import type { JwtSecretFieldSchema, JWTPluginSchema } from '../../types/plugins/jwt'
-
-// KAG-3347: BE descriptions missing. Should remove when BE descriptions are available
-export const jwtSchema: JWTPluginSchema = {
-  'config-cookie_names': {
-    label: 'config.cookie_names',
-    type: 'set',
-    help: 'A comma-separated list of cookie names that Kong will inspect to retrieve JWTs.',
-  },
-  'config-uri_param_names': {
-    label: 'config.uri_param_names',
-    type: 'set',
-    help: 'A comma-separated list of querystring parameters that Kong will inspect to retrieve JWTs.',
-  },
-}
+import type { JwtSecretFieldSchema } from '../../types/plugins/jwt'
+import { tags } from './typedefs'
 
 export const jwtSecretSchema: JwtSecretFieldSchema = {
   fields: [
@@ -48,6 +35,9 @@ export const jwtSecretSchema: JwtSecretFieldSchema = {
         hint: `If algorithm is HMAC, the secret used to sign JWTs for
                this credential. If left out, will be auto-generated.`,
       },
+    },
+    {
+      tags,
     },
   ],
 }

@@ -14,6 +14,17 @@
 <body>
   <kong-swagger-ui url="http://localhost:5173/test.yaml"></kong-swagger-ui>
   <script src="/main.js"></script>
+  <style>
+    body {
+      --kui-operation-summary-path-overflow: hidden;
+      --kui-operation-summary-path-display: block;
+      --kui-operation-summary-path-max-width: 34ch;
+      --kui-operation-summary-path-overflow: hidden;
+      --kui-operation-summary-path-text-overflow: ellipsis;
+      --kui-operation-summary-path-white-space: nowrap;
+      --kui-operation-summary-path-word-wrap: normal;
+    }
+  </style>
 </body>
 
 </html>

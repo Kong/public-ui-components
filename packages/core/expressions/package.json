@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/expressions",
-  "version": "0.4.37",
+  "version": "0.4.46",
   "type": "module",
   "module": "./dist/expressions.es.js",
   "types": "dist/types/index.d.ts",
@@ -39,7 +39,7 @@
   "devDependencies": {
     "@kong/atc-router": "1.6.0-rc.1",
     "@kong/design-tokens": "1.17.2",
-    "@kong/kongponents": "9.8.4-pr.2405.4a083b8ac.0",
+    "@kong/kongponents": "9.11.1-pr.2405.46276fddd.0",
     "@types/uuid": "^10.0.0",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-top-level-await": "^1.4.4",
@@ -65,15 +65,15 @@
   },
   "peerDependencies": {
     "@kong-ui-public/forms": "workspace:^",
-    "@kong/kongponents": "^9.8.2",
+    "@kong/kongponents": "^9.10.3",
     "vue": "^3.4.38"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.18.0",
-    "monaco-editor": "0.51.0",
+    "@kong/icons": "^1.18.1",
+    "monaco-editor": "0.52.0",
     "uuid": "^10.0.0"
   }
 }

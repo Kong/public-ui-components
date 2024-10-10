@@ -1,3 +1,5 @@
+import { tags } from './typedefs'
+
 export default {
   fields: [
     {
@@ -8,6 +10,9 @@ export default {
         inputType: 'password',
         encrypted: true,
       },
+    },
+    {
+      tags,
     },
   ],
 }

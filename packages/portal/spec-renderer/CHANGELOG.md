@@ -3,6 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.49](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.48...@kong-ui-public/spec-renderer@2.2.49) (2024-10-09)
+
+
+### Bug Fixes
+
+* set custom max-widths for path names ([#1702](https://github.com/Kong/public-ui-components/issues/1702)) ([badcd07](https://github.com/Kong/public-ui-components/commit/badcd071bebc2ad3e99b2721510cea658ef653dc))
+
+
+
+
+
+## [2.2.48](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.47...@kong-ui-public/spec-renderer@2.2.48) (2024-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.2.47](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.46...@kong-ui-public/spec-renderer@2.2.47) (2024-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.2.46](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.45...@kong-ui-public/spec-renderer@2.2.46) (2024-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.2.45](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.44...@kong-ui-public/spec-renderer@2.2.45) (2024-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.2.44](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.43...@kong-ui-public/spec-renderer@2.2.44) (2024-10-04)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.2.43](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.42...@kong-ui-public/spec-renderer@2.2.43) (2024-10-01)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1682](https://github.com/Kong/public-ui-components/issues/1682)) ([c63cf89](https://github.com/Kong/public-ui-components/commit/c63cf8958237b0cf3c0bf2451154f6fb0b491b28))
+
+
+
+
+
+## [2.2.42](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.41...@kong-ui-public/spec-renderer@2.2.42) (2024-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.2.41](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.40...@kong-ui-public/spec-renderer@2.2.41) (2024-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
 ## [2.2.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.39...@kong-ui-public/spec-renderer@2.2.40) (2024-09-27)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer

@@ -3,6 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.46](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.45...@kong-ui-public/expressions@0.4.46) (2024-10-09)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.4.45](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.44...@kong-ui-public/expressions@0.4.45) (2024-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.4.44](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.43...@kong-ui-public/expressions@0.4.44) (2024-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.4.43](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.42...@kong-ui-public/expressions@0.4.43) (2024-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.4.42](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.41...@kong-ui-public/expressions@0.4.42) (2024-10-04)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.4.41](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.40...@kong-ui-public/expressions@0.4.41) (2024-10-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency monaco-editor to v0.52.0 ([#1691](https://github.com/Kong/public-ui-components/issues/1691)) ([2f9202b](https://github.com/Kong/public-ui-components/commit/2f9202b35d979995bdf9f80fb6ff89f4b53c319b))
+
+
+
+
+
+## [0.4.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.39...@kong-ui-public/expressions@0.4.40) (2024-10-01)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1682](https://github.com/Kong/public-ui-components/issues/1682)) ([c63cf89](https://github.com/Kong/public-ui-components/commit/c63cf8958237b0cf3c0bf2451154f6fb0b491b28))
+
+
+
+
+
+## [0.4.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.38...@kong-ui-public/expressions@0.4.39) (2024-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.4.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.37...@kong-ui-public/expressions@0.4.38) (2024-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
 ## [0.4.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.4.36...@kong-ui-public/expressions@0.4.37) (2024-09-27)
 
 **Note:** Version bump only for package @kong-ui-public/expressions

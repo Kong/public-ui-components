@@ -99,7 +99,18 @@ export default function useExploreResultToDatasets(
             return [label, value]
           }))
 
-        const sortedDatasetIds = Object.entries(pivotRecords).sort(([, a], [, b]) => Number(b) - Number(a)).map(([key]) => (key.split(',')[0]))
+        const aggregatedPivotRecords = Object.keys(pivotRecords).reduce((acc, key) => {
+          const [row] = key.split(',')
+          const pivotEntry = pivotRecords[key] as number
+
+          if (acc[row]) {
+            acc[row] += pivotEntry
+          } else {
+            acc[row] = pivotEntry
+          }
+          return acc
+        }, {} as Record<string, number>)
+        const sortedDatasetIds = Object.entries(aggregatedPivotRecords).sort(([, a], [, b]) => Number(b) - Number(a)).map(([key]) => key)
         const primaryDimensionDisplay = display[primaryDimension]
         const secondaryDimensionDisplay = display[secondaryDimension]
         const rowLabels: DatasetLabel[] = (hasDimensions && primaryDimensionDisplay && Object.entries(primaryDimensionDisplay).map(([id, val]) => ({ id, name: val.name }))) || metricNames.map(name => ({ id: name, name }))

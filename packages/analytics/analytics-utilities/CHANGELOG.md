@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.0.1...@kong-ui-public/analytics-utilities@5.0.2) (2024-10-09)
+
+
+### Bug Fixes
+
+* **deps:** update dependency date-fns to v4 ([#1681](https://github.com/Kong/public-ui-components/issues/1681)) ([16bd61e](https://github.com/Kong/public-ui-components/commit/16bd61ed9079f60151cdc49c81d2c60616083138))
+
+
+
+
+
+## [5.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.0.0...@kong-ui-public/analytics-utilities@5.0.1) (2024-10-07)
+
+
+### Bug Fixes
+
+* add response_header_content_length as numeric field ([#1697](https://github.com/Kong/public-ui-components/issues/1697)) ([3e06ed3](https://github.com/Kong/public-ui-components/commit/3e06ed35902cdb06202c768c8f7cdc3b4215d346))
+
+
+
+
+
+# [5.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.8.7...@kong-ui-public/analytics-utilities@5.0.0) (2024-10-03)
+
+
+### Features
+
+* **analytics:** remove `ChartTypes` enum [MA-2708] ([#1688](https://github.com/Kong/public-ui-components/issues/1688)) ([41934de](https://github.com/Kong/public-ui-components/commit/41934deb022449fd173cc7886e4cd299b82a4606))
+
+
+### BREAKING CHANGES
+
+* **analytics:** Remove `ChartTypes` enum
+
+- Unify chart types between `AnalyticsChart` and `DashboardRenderer`.
+- Standardize naming of timeseries line chart.
+- Add union types for available chart types.
+
+
+
+
+
 ## [4.8.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@4.8.6...@kong-ui-public/analytics-utilities@4.8.7) (2024-09-26)
 
 

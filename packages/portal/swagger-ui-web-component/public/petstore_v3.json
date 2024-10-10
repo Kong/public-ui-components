@@ -45,6 +45,31 @@
     }
   ],
   "paths": {
+    "/super-long-omg-omg-omg-omg-omg-omg-omg-omg-omg-omg-omg-omg-omg": {
+      "get": {
+        "tags": ["pet"],
+        "summary": "Super long path",
+        "description": "Super long path",
+        "operationId": "superLongPath",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/pet": {
       "put": {
         "tags": [

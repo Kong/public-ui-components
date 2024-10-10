@@ -69,7 +69,7 @@
         :synthetics-data-key="syntheticsDataKey"
         :time-range-ms="timeRangeMs"
         :tooltip-title="tooltipTitle"
-        :type="(chartOptions.type as (ChartTypes.TIMESERIES_LINE | ChartTypes.TIMESERIES_BAR))"
+        :type="(chartOptions.type as ('timeseries_line' | 'timeseries_bar'))"
       />
       <StackedBarChart
         v-else-if="isBarChart"
@@ -104,7 +104,7 @@
 <script setup lang="ts">
 import composables from '../composables'
 import type { AnalyticsChartOptions, EnhancedLegendItem, TooltipEntry } from '../types'
-import { ChartTypes, ChartLegendPosition } from '../enums'
+import { ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
 import type { PropType } from 'vue'
@@ -226,15 +226,15 @@ const maxEntitiesShown = computed(() => props.chartData?.meta?.limit?.toString()
 const resultSetTruncated = computed(() => props.chartData?.meta?.truncated || false)
 const notAllDataShownTooltipContent = i18n.t('limitedResultsShown', { maxReturned: maxEntitiesShown.value })
 const isBarChart = computed<boolean>(() => [
-  ChartTypes.VERTICAL_BAR.toString(),
-  ChartTypes.HORIZONTAL_BAR.toString(),
+  'vertical_bar',
+  'horizontal_bar',
 ].includes(props.chartOptions.type))
 const isTimeSeriesChart = computed<boolean>(() => {
-  return [ChartTypes.TIMESERIES_BAR, ChartTypes.TIMESERIES_LINE].some(e => e === props.chartOptions.type)
+  return ['timeseries_bar', 'timeseries_line'].some(e => e === props.chartOptions.type)
 })
-const isDoughnutChart = computed<boolean>(() => props.chartOptions.type === ChartTypes.DOUGHNUT)
+const isDoughnutChart = computed<boolean>(() => props.chartOptions.type === 'doughnut')
 
-const barChartOrientation = computed<'horizontal' | 'vertical'>(() => props.chartOptions.type.includes('Vertical') ? 'vertical' : 'horizontal')
+const barChartOrientation = computed<'horizontal' | 'vertical'>(() => props.chartOptions.type.includes('vertical') ? 'vertical' : 'horizontal')
 
 const metricAxesTitle = computed<string | undefined>(() => {
   if (!props.chartData?.meta.metric_names || !props.chartData?.meta.metric_units) {

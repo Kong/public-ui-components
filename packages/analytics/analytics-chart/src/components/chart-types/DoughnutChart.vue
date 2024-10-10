@@ -49,7 +49,7 @@ import { Doughnut } from 'vue-chartjs'
 import composables from '../../composables'
 import type { AnalyticsChartColors, KChartData, TooltipState } from '../../types'
 import type { Chart, ChartDataset, Plugin } from 'chart.js'
-import { ChartLegendPosition, ChartTypes } from '../../enums'
+import { ChartLegendPosition } from '../../enums'
 import type { DoughnutChartData } from '../../types/chart-data'
 
 const props = defineProps({
@@ -101,13 +101,13 @@ const tooltipData: TooltipState = reactive({
   tooltipSeries: [],
   left: '',
   top: '',
-  units: props.metricUnit,
+  units: toRef(props, 'metricUnit'),
   translateUnit,
   offsetX: 0,
   offsetY: 0,
   width: 0,
   height: 0,
-  chartType: ChartTypes.DOUGHNUT,
+  chartType: 'doughnut',
 })
 
 const htmlLegendPlugin: Plugin = {

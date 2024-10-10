@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.13.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.15...@kong-ui-public/entities-plugins@8.13.16) (2024-10-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.13.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.14...@kong-ui-public/entities-plugins@8.13.15) (2024-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.13.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.13...@kong-ui-public/entities-plugins@8.13.14) (2024-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.13.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.12...@kong-ui-public/entities-plugins@8.13.13) (2024-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.13.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.11...@kong-ui-public/entities-plugins@8.13.12) (2024-10-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.13.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.10...@kong-ui-public/entities-plugins@8.13.11) (2024-10-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.13.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.9...@kong-ui-public/entities-plugins@8.13.10) (2024-10-01)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#1682](https://github.com/Kong/public-ui-components/issues/1682)) ([c63cf89](https://github.com/Kong/public-ui-components/commit/c63cf8958237b0cf3c0bf2451154f6fb0b491b28))
+
+
+
+
+
+## [8.13.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.8...@kong-ui-public/entities-plugins@8.13.9) (2024-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.13.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.7...@kong-ui-public/entities-plugins@8.13.8) (2024-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.13.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.6...@kong-ui-public/entities-plugins@8.13.7) (2024-09-29)
+
+
+### Bug Fixes
+
+* **entities-plugins:** set-typed fields ([#1657](https://github.com/Kong/public-ui-components/issues/1657)) ([5788516](https://github.com/Kong/public-ui-components/commit/578851644b70e6cc9667ad96505c34eee39033b2))
+
+
+
+
+
 ## [8.13.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.5...@kong-ui-public/entities-plugins@8.13.6) (2024-09-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
