@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.13.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.16...@kong-ui-public/entities-plugins@8.13.17) (2024-10-11)
+
+
+### Bug Fixes
+
+* **plugin-form:** force reset password when edit credential [FTI-6248] ([#1704](https://github.com/Kong/public-ui-components/issues/1704)) ([b544a11](https://github.com/Kong/public-ui-components/commit/b544a11456fb66da971b60475bc90980571bdc2c))
+
+
+
+
+
 ## [8.13.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.15...@kong-ui-public/entities-plugins@8.13.16) (2024-10-09)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
