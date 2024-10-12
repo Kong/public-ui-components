@@ -113,7 +113,7 @@ importers:
       rollup-plugin-visualizer:
         specifier: ^5.12.0
         version: 5.12.0(rollup@4.22.4)
-      sass-embedded:
+      sass:
         specifier: ^1.79.5
         version: 1.79.5
       stylelint:
@@ -10067,7 +10067,8 @@ snapshots:
 
   '@braintree/sanitize-url@7.1.0': {}
 
-  '@bufbuild/protobuf@2.2.0': {}
+  '@bufbuild/protobuf@2.2.0':
+    optional: true
 
   '@chevrotain/cst-dts-gen@11.0.3':
     dependencies:
@@ -11232,7 +11233,6 @@ snapshots:
       '@parcel/watcher-win32-arm64': 2.4.1
       '@parcel/watcher-win32-ia32': 2.4.1
       '@parcel/watcher-win32-x64': 2.4.1
-    optional: true
 
   '@peculiar/asn1-cms@2.3.13':
     dependencies:
@@ -13202,7 +13202,8 @@ snapshots:
       node-releases: 2.0.18
       update-browserslist-db: 1.1.0(browserslist@4.24.0)
 
-  buffer-builder@0.2.0: {}
+  buffer-builder@0.2.0:
+    optional: true
 
   buffer-crc32@0.2.13: {}
 
@@ -13414,7 +13415,6 @@ snapshots:
   chokidar@4.0.1:
     dependencies:
       readdirp: 4.0.2
-    optional: true
 
   chownr@1.1.4:
     optional: true
@@ -13500,7 +13500,8 @@ snapshots:
 
   colorette@2.0.20: {}
 
-  colorjs.io@0.5.2: {}
+  colorjs.io@0.5.2:
+    optional: true
 
   columnify@1.6.0:
     dependencies:
@@ -14181,8 +14182,7 @@ snapshots:
 
   detect-indent@6.1.0: {}
 
-  detect-libc@1.0.3:
-    optional: true
+  detect-libc@1.0.3: {}
 
   detect-libc@2.0.3:
     optional: true
@@ -16931,8 +16931,7 @@ snapshots:
 
   node-abort-controller@3.1.1: {}
 
-  node-addon-api@7.1.1:
-    optional: true
+  node-addon-api@7.1.1: {}
 
   node-domexception@1.0.0: {}
 
@@ -17957,8 +17956,7 @@ snapshots:
     dependencies:
       picomatch: 2.3.1
 
-  readdirp@4.0.2:
-    optional: true
+  readdirp@4.0.2: {}
 
   rechoir@0.8.0:
     dependencies:
@@ -18258,6 +18256,7 @@ snapshots:
       sass-embedded-win32-arm64: 1.79.5
       sass-embedded-win32-ia32: 1.79.5
       sass-embedded-win32-x64: 1.79.5
+    optional: true
 
   sass@1.79.5:
     dependencies:
@@ -18265,7 +18264,6 @@ snapshots:
       chokidar: 4.0.1
       immutable: 4.3.7
       source-map-js: 1.2.1
-    optional: true
 
   saxes@6.0.0:
     dependencies:
@@ -19475,7 +19473,8 @@ snapshots:
 
   validate-npm-package-name@5.0.1: {}
 
-  varint@6.0.0: {}
+  varint@6.0.0:
+    optional: true
 
   vary@1.1.2: {}
 
