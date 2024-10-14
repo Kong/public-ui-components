@@ -69,7 +69,7 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@peculiar/x509": "^1.12.2"
+    "@peculiar/x509": "^1.12.3"
   },
   "distSizeChecker": {
     "errorLimit": "1.5MB"
