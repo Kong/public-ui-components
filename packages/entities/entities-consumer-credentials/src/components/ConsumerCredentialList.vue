@@ -281,7 +281,6 @@ const fields: Record<CredentialPlugins, BaseTableHeaders> = {
     tags: { label: t('credentials.list.table_headers.acls.tags') },
   },
   'basic-auth': {
-    password: { label: t('credentials.list.table_headers.basic-auth.password') },
     username: { label: t('credentials.list.table_headers.basic-auth.username') },
     created_at: { label: t('credentials.list.table_headers.basic-auth.created_at') },
     tags: { label: t('credentials.list.table_headers.basic-auth.tags') },
