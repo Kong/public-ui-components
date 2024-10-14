@@ -141,14 +141,6 @@ A boolean indicating whether the form is being used to create a plugin or an aut
 
 Will hide the form buttons if you only want to render the form and want to control form submission from the consuming app.
 
-#### `useCustomNamesForPlugin`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-Support instance names for plugins. This can be removed when KHCP-5872-custom-names-for-plugins is removed. Enabled by default for KM.
-
 #### `actionsTeleportTarget`
 
 - type: `String`
