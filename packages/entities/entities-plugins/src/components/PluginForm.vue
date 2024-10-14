@@ -236,15 +236,6 @@ const props = defineProps({
   },
 
   /**
-   * Support instance names for plugins. This can be removed when KHCP-5872-custom-names-for-plugins is removed.
-   * Enabled by default for KM.
-   */
-  useCustomNamesForPlugin: {
-    type: Boolean,
-    default: false,
-  },
-
-  /**
    * Allow teleporting the action buttons to the specified div.
    */
   actionsTeleportTarget: {
@@ -492,16 +483,13 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
       { label: 'wss', value: 'wss' },
     ],
   },
-  // Support is feature flagged in Konnect
-  ...((props.config.app === 'kongManager' || props.useCustomNamesForPlugin) && {
-    instance_name: {
-      default: '',
-      type: 'input',
-      label: t('plugins.form.fields.instance_name.label'),
-      inputType: 'text',
-      help: t('plugins.form.fields.instance_name.help'),
-    },
-  }),
+  instance_name: {
+    default: '',
+    type: 'input',
+    label: t('plugins.form.fields.instance_name.label'),
+    inputType: 'text',
+    help: t('plugins.form.fields.instance_name.help'),
+  },
   tags: typedefs.tags as DefaultPluginsFormSchema,
 })
 
