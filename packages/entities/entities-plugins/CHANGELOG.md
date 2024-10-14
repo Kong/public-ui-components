@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.20...@kong-ui-public/entities-plugins@9.0.0) (2024-10-14)
+
+
+### Bug Fixes
+
+* **plugins:** ff removal [khcp-13673] ([#1715](https://github.com/Kong/public-ui-components/issues/1715)) ([a61fd70](https://github.com/Kong/public-ui-components/commit/a61fd70b0b25ac1c44726a578d3390078a8f70b2))
+
+
+### BREAKING CHANGES
+
+* **plugins:** useCustomNamesForPlugin prop removed
+
+
+
+
+
 ## [8.13.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.19...@kong-ui-public/entities-plugins@8.13.20) (2024-10-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
