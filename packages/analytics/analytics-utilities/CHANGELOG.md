@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.0.2...@kong-ui-public/analytics-utilities@5.0.3) (2024-10-14)
+
+
+### Bug Fixes
+
+* **analytics:** fix delta queries for absolute timeframes [MA-3273] ([#1707](https://github.com/Kong/public-ui-components/issues/1707)) ([0bfe0c7](https://github.com/Kong/public-ui-components/commit/0bfe0c723cc8485a55fca9c739541f01d5436bdf))
+
+
+
+
+
 ## [5.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.0.1...@kong-ui-public/analytics-utilities@5.0.2) (2024-10-09)
 
 
