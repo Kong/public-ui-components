@@ -214,14 +214,6 @@ const props = defineProps({
     type: String as PropType<HeaderTag>,
     default: 'h2',
   },
-  /**
-   * Enable display of Terraform code
-   * Guarded by FF: khcp-12445-terraform-config-details
-   */
-  enableTerraform: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const { i18n: { t } } = composables.useI18n()
@@ -241,18 +233,14 @@ const configFormatItems = [
     value: 'json',
   },
   {
+    label: t('baseForm.configuration.terraform'),
+    value: 'terraform',
+  },
+  {
     label: t('baseForm.configuration.yaml'),
     value: 'yaml',
   },
 ]
-
-if (props.enableTerraform) {
-  // insert terraform as the third option
-  configFormatItems.splice(2, 0, {
-    label: t('baseForm.configuration.terraform'),
-    value: 'terraform',
-  })
-}
 
 const configFormat = ref('structured')
 

@@ -208,14 +208,6 @@ const props = defineProps({
     type: String,
     default: 'KCard',
   },
-  /**
-   * Enable display of Terraform code
-   * Guarded by FF: khcp-12445-terraform-config-details
-   */
-  enableTerraform: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const router = useRouter()
@@ -292,7 +284,7 @@ const tabs = ref<Tab[]>([
   },
 ])
 
-if (props.enableTerraform && props.entityType !== SupportedEntityType.Other) {
+if (props.entityType !== SupportedEntityType.Other) {
   // insert terraform as the third option
   tabs.value.splice(1, 0, {
     title: t('baseForm.configuration.terraform'),
