@@ -14,7 +14,7 @@ A form component for Plugins.
 
 - `vue` and `vue-router` must be initialized in the host application
 - `@kong/kongponents` must be added as a dependency in the host application, globally available via the Vue Plugin installation, and the package's style imports must be added in the app entry file. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents).
-- `@kong-ui-public/i18n` must be available as a `dependency` in the host application.
+- `@kong-ui-public/i18n` must be available as a `dependency` in the host application
 - `axios` must be installed as a dependency in the host application
 
 ## Usage
@@ -140,14 +140,6 @@ A boolean indicating whether the form is being used to create a plugin or an aut
 - default: `false`
 
 Will hide the form buttons if you only want to render the form and want to control form submission from the consuming app.
-
-#### `useCustomNamesForPlugin`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-Support instance names for plugins. This can be removed when KHCP-5872-custom-names-for-plugins is removed. Enabled by default for KM.
 
 #### `actionsTeleportTarget`
 

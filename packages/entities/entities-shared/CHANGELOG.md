@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.9.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.16...@kong-ui-public/entities-shared@3.9.17) (2024-10-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.9.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.15...@kong-ui-public/entities-shared@3.9.16) (2024-10-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.9.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.14...@kong-ui-public/entities-shared@3.9.15) (2024-10-14)
+
+
+### Bug Fixes
+
+* **entities:** fix clear icon button in input ([#1710](https://github.com/Kong/public-ui-components/issues/1710)) ([0b65d0f](https://github.com/Kong/public-ui-components/commit/0b65d0fba445385e4966d44f190874f1bc080123))
+
+
+
+
+
 ## [3.9.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.13...@kong-ui-public/entities-shared@3.9.14) (2024-10-09)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

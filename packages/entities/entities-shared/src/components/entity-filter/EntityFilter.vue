@@ -15,6 +15,8 @@
         <CloseIcon
           v-show="modelValue !== ''"
           class="kong-ui-entity-filter-clear"
+          role="button"
+          tabindex="0"
           @click="handleQueryClear"
         />
       </template>

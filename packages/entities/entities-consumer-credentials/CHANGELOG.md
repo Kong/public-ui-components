@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.4.2...@kong-ui-public/entities-consumer-credentials@3.4.3) (2024-10-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [3.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.4.1...@kong-ui-public/entities-consumer-credentials@3.4.2) (2024-10-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [3.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.4.0...@kong-ui-public/entities-consumer-credentials@3.4.1) (2024-10-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+# [3.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.3.27...@kong-ui-public/entities-consumer-credentials@3.4.0) (2024-10-14)
+
+
+### Features
+
+* **consumer-credentials:** remove credential column ([#1711](https://github.com/Kong/public-ui-components/issues/1711)) ([fc2590c](https://github.com/Kong/public-ui-components/commit/fc2590cd2cd4384ba7f03609b2dbda765363d639))
+
+
+
+
+
 ## [3.3.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.3.26...@kong-ui-public/entities-consumer-credentials@3.3.27) (2024-10-09)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
