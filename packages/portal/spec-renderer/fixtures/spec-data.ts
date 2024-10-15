@@ -74,6 +74,46 @@ export const operationsList = [
   specOp,
 ] as Operation[]
 
+export const operationsAllTaggedList = [
+  {
+    path: '/pet',
+    method: 'get',
+    operationId: 'getPets',
+    tags: ['pet'],
+    summary: 'Get all pets',
+    deprecated: false,
+  },
+  // non-unique path
+  {
+    path: '/pet',
+    method: 'post',
+    operationId: 'addPet',
+    tags: ['pet'],
+    summary: 'Add a new pet to the store',
+    deprecated: false,
+  },
+  // different tag
+  {
+    path: '/pet/{petId}',
+    method: 'get',
+    operationId: 'getPetById',
+    tags: ['dog-go'],
+    summary: 'Find pet by ID',
+    deprecated: false,
+  },
+  // untagged
+  {
+    path: '/pet/{petId}',
+    method: 'post',
+    operationId: 'updatePet',
+    tags: ['pet'],
+    summary: 'Update an existing pet',
+    deprecated: false,
+  },
+  // multiple tags
+  specOp,
+] as Operation[]
+
 export const jsonSpec = {
   openapi: '3.0.3',
   info: {
