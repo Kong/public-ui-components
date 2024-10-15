@@ -65,7 +65,7 @@ describe('<SpecOperationsList />', () => {
     cy.getTestId('spec-operations-list-section-pet-collapse-trigger').click()
     cy.get('[data-testid="spec-operations-list-section-pet"] .spec-operations-list-item').should('have.length', 4)
 
-    // renders untagged items
+    // doesn't render untagged section
     cy.getTestId('spec-operations-list-untagged-items').should('not.exist')
   })
 
