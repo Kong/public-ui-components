@@ -75,7 +75,7 @@
 
         <!-- Items without any tags -->
         <div
-          v-if="!isFilterable || !filterQuery"
+          v-if="(!isFilterable || !filterQuery) && untaggedItems.length"
           class="section"
           data-testid="spec-operations-list-untagged-items"
         >
