@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.7.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.14...@kong-ui-public/forms@4.7.15) (2024-10-15)
+
+
+### Bug Fixes
+
+* **forms:** adopt native mask support ([#1716](https://github.com/Kong/public-ui-components/issues/1716)) ([31fb12a](https://github.com/Kong/public-ui-components/commit/31fb12a163f0ca0fe11b550de06707b40d320d30))
+
+
+
+
+
 ## [4.7.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.13...@kong-ui-public/forms@4.7.14) (2024-10-14)
 
 **Note:** Version bump only for package @kong-ui-public/forms
