@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.51...@kong-ui-public/spec-renderer@2.3.0) (2024-10-15)
+
+
+### Features
+
+* **portal:** hide default tag when all tagged [TDX-4666] ([#1719](https://github.com/Kong/public-ui-components/issues/1719)) ([5d37392](https://github.com/Kong/public-ui-components/commit/5d37392da0fb4897fb498413034d591be3cc20b0))
+
+
+
+
+
 ## [2.2.51](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.2.50...@kong-ui-public/spec-renderer@2.2.51) (2024-10-14)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer
