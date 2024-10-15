@@ -83,14 +83,6 @@ The base konnect or kongManger config.
 
 If showing the `Edit` type form, the ID of the SNI.
 
-#### `enableTerraform`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
-
 ### Events
 
 #### error

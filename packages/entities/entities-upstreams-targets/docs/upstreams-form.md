@@ -71,14 +71,6 @@ A form component to create/edit Upstreams.
 - default: `''`
 - If a valid upstreamId is provided, it will put the form in Edit mode instead of Create.
 
-#### `enableTerraform`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
-
 ### Events
 
 #### update

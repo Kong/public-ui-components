@@ -76,14 +76,6 @@ Current vault ID.
 
 If a valid `secretId` is provided, it will put the form in Edit mode instead of Create.
 
-#### `enableTerraform`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
-
 ### Events
 
 #### error

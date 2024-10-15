@@ -46,14 +46,6 @@ const props = defineProps({
     required: false,
     default: '',
   },
-  /**
-   * Enable display of Terraform code
-   * Guarded by FF: khcp-12445-terraform-config-details
-   */
-  enableTerraform: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const emit = defineEmits<{

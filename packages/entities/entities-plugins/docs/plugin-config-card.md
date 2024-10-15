@@ -107,14 +107,6 @@ The type of the entity with which the plugin is associated. Can be one of `'serv
 
 The id of the entity with which the plugin is associated.
 
-#### `enableTerraform`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
-
 ### Events
 
 #### fetch:error

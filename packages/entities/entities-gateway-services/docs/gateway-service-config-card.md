@@ -85,14 +85,6 @@ Set this value to display the documentation button.
 
 Set this value to `true` to hide the card title.
 
-#### `enableTerraform`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
-
 ### Events
 
 #### fetch:error
