@@ -233,14 +233,19 @@ const configFormatItems = [
     value: 'json',
   },
   {
-    label: t('baseForm.configuration.terraform'),
-    value: 'terraform',
-  },
-  {
     label: t('baseForm.configuration.yaml'),
     value: 'yaml',
   },
 ]
+
+// terraform only supported in konnect
+if (props.config.app === 'konnect') {
+  // insert terraform as the third option
+  configFormatItems.splice(2, 0, {
+    label: t('baseForm.configuration.terraform'),
+    value: 'terraform',
+  })
+}
 
 const configFormat = ref('structured')
 

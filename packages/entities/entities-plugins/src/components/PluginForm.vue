@@ -308,14 +308,19 @@ const tabs = ref<Tab[]>([
     hash: '#json',
   },
   {
-    title: t('view_configuration.terraform'),
-    hash: '#terraform',
-  },
-  {
     title: t('view_configuration.yaml'),
     hash: '#yaml',
   },
 ])
+
+// terraform only supported in konnect
+if (props.config.app === 'konnect') {
+  // insert terraform as the third option
+  tabs.value.splice(1, 0, {
+    title: t('view_configuration.terraform'),
+    hash: '#terraform',
+  })
+}
 
 // For array-typed fields, if their elements are deeply nested objects,
 // we need this variable to record the key of the array field.
