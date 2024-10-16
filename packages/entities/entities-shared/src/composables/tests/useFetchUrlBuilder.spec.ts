@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import useFetchUrlBuilder from '../useFetchUrlBuilder'
 
-import type { FetcherParams, KongManagerConfig, KonnectConfig } from 'src/types'
+import type { KongManagerConfig, KonnectConfig } from 'src/types'
+import type { TableDataFetcherParams } from '@kong/kongponents'
 
 describe('useFetchUrlBuilder()', () => {
   it('should apply correct query schema for kongManager when isExactMatch is not activated', () => {
@@ -14,10 +15,10 @@ describe('useFetchUrlBuilder()', () => {
 
     const builder = useFetchUrlBuilder(config, 'http://foo.bar/entity')
 
-    const query: FetcherParams = {
+    const query: TableDataFetcherParams = {
       page: 1,
       pageSize: 10,
-      offset: 0,
+      offset: '0',
       sortColumnKey: 'name',
       sortColumnOrder: 'asc',
       query: 'name=baz',
@@ -36,10 +37,10 @@ describe('useFetchUrlBuilder()', () => {
 
     const builder = useFetchUrlBuilder(config, 'http://foo.bar/entity')
 
-    const query: FetcherParams = {
+    const query: TableDataFetcherParams = {
       page: 1,
       pageSize: 10,
-      offset: 0,
+      offset: '0',
       sortColumnKey: 'name',
       sortColumnOrder: 'asc',
       query: 'testQuery',
@@ -57,10 +58,10 @@ describe('useFetchUrlBuilder()', () => {
 
     const builder = useFetchUrlBuilder(config, 'http://foo.bar/entity')
 
-    const query: FetcherParams = {
+    const query: TableDataFetcherParams = {
       page: 1,
       pageSize: 10,
-      offset: 0,
+      offset: '0',
       sortColumnKey: 'name',
       sortColumnOrder: 'asc',
       query: 'testQuery',
@@ -79,10 +80,10 @@ describe('useFetchUrlBuilder()', () => {
 
     const builder = useFetchUrlBuilder(config, 'http://foo.bar/entity')
 
-    const query: FetcherParams = {
+    const query: TableDataFetcherParams = {
       page: 1,
       pageSize: 10,
-      offset: 0,
+      offset: '0',
       sortColumnKey: 'name',
       sortColumnOrder: 'asc',
       query: 'testQuery',

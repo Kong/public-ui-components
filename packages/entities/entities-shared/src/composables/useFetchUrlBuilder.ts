@@ -1,10 +1,10 @@
 import { computed, ref, unref } from 'vue'
 import type {
-  FetcherParams,
   KongManagerBaseTableConfig,
   KonnectBaseTableConfig,
 } from '../types'
 import type { MaybeRef } from '../types/utils'
+import type { TableDataFetcherParams } from '@kong/kongponents'
 
 export default function useFetchUrlBuilder(
   config: MaybeRef<KonnectBaseTableConfig | KongManagerBaseTableConfig>,
@@ -24,7 +24,7 @@ export default function useFetchUrlBuilder(
       : new URL(_baseUrl.value),
   )
 
-  return (fetcherParams: FetcherParams) => {
+  return (fetcherParams: TableDataFetcherParams) => {
     const { page, pageSize, offset, sortColumnKey, sortColumnOrder, query } = fetcherParams
 
     // This is done within a try/catch block in case there is an error in constructing the URL; the fallback value will still fetch but without the params

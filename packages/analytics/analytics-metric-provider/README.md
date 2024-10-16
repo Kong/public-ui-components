@@ -2,18 +2,16 @@
 
 Query data for metric cards and render default "golden signal" metrics cards using a minimum of boilerplate.
 
-- [@kong-ui-public/analytics-metric-provider](#kong-ui-publicanalytics-metric-provider)
-  - [Requirements](#requirements)
-  - [Usage](#usage)
-    - [Global](#global)
-    - [Single entity](#single-entity)
-    - [Many entities](#many-entities)
-    - [Use in tables](#use-in-tables)
-    - [CSS Variables](#css-variables)
-  - [Props](#props)
-  - [Exports](#exports)
-    - [Types](#types)
-    - [Enums](#enums)
+- [Requirements](#requirements)
+- [Usage](#usage)
+  - [Global](#global)
+  - [Single entity](#single-entity)
+  - [Many entities](#many-entities)
+  - [Use in tables](#use-in-tables)
+- [Props](#props)
+- [Exports](#exports)
+  - [Types](#types)
+  - [Enums](#enums)
 
 ## Requirements
 
@@ -89,7 +87,7 @@ The provider and consumer support use in contexts where metric cards are not app
 
 ```vue
 <MetricsProvider :dimension="EXPLORE_V2_DIMENSIONS.ROUTE">
-  <KTable>
+  <KTableData>
     <template #requests="{ row }">
       <MetricsConsumer
         v-slot="{ cardValues }"

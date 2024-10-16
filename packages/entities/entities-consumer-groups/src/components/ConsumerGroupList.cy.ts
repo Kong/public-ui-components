@@ -141,7 +141,7 @@ describe('<ConsumerGroupList />', () => {
       cy.wait('@getConsumerGroups')
       cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-consumer-group"]').should('be.visible')
+      cy.getTestId('empty-state-action').should('be.visible')
     })
 
     it('should hide empty state and create consumer group cta if user can not create', () => {
@@ -161,7 +161,7 @@ describe('<ConsumerGroupList />', () => {
       cy.wait('@getConsumerGroups')
       cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-consumer-group"]').should('not.exist')
+      cy.getTestId('empty-state-action').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -218,10 +218,10 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getConsumerGroups')
       cy.get(
-        '.kong-ui-entities-consumer-groups-list tr [data-testid="consumerGroup.1"]',
+        '.kong-ui-entities-consumer-groups-list tr[data-testid="1"]',
       ).should('exist')
       cy.get(
-        '.kong-ui-entities-consumer-groups-list tr [data-testid="consumerGroup.2"]',
+        '.kong-ui-entities-consumer-groups-list tr[data-testid="2"]',
       ).should('exist')
     })
 
@@ -248,10 +248,10 @@ describe('<ConsumerGroupList />', () => {
 
       // Page #1
       cy.get(`${l} tbody tr`).should('have.length', 30)
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.1"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.2"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.29"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.30"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="1"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="2"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="29"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
@@ -265,10 +265,10 @@ describe('<ConsumerGroupList />', () => {
 
       // Page #2
       cy.get(`${l} tbody tr`).should('have.length', 30)
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.31"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.32"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.59"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.60"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="31"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="32"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="59"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="60"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.attr',
@@ -284,10 +284,10 @@ describe('<ConsumerGroupList />', () => {
 
       // Page #4
       cy.get(`${l} tbody tr`).should('have.length', 10)
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.91"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.92"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.99"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.100"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="91"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="92"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="99"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="100"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.attr',
@@ -325,10 +325,10 @@ describe('<ConsumerGroupList />', () => {
       cy.wait('@getConsumerGroupsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 30)
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.1"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.2"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.29"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.30"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="1"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="2"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="29"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="30"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
@@ -339,10 +339,10 @@ describe('<ConsumerGroupList />', () => {
       cy.wait('@getConsumerGroupsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.1"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.2"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.14"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.15"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="1"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="2"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="14"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="15"]`).should('exist')
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
@@ -360,10 +360,10 @@ describe('<ConsumerGroupList />', () => {
       cy.wait('@getConsumerGroupsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.1"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.2"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.14"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.15"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="1"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="2"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="14"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="15"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
@@ -374,10 +374,10 @@ describe('<ConsumerGroupList />', () => {
       cy.wait('@getConsumerGroupsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 50)
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.1"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.2"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.49"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.50"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="1"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="2"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="49"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="50"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
@@ -398,8 +398,8 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('add-to-consumer-group').should('exist')
-      cy.getTestId('add-to-consumer-group').should('contain.text', 'Add to Consumer Group')
+      cy.getTestId('empty-state-action').should('exist')
+      cy.getTestId('empty-state-action').should('contain.text', 'Add to Consumer Group')
     })
 
     it('should render AddToGroupModal onclick Add to Group button when consumerId is provided', () => {
@@ -418,7 +418,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('add-to-consumer-group').click()
+      cy.getTestId('empty-state-action').click()
       cy.getTestId('add-to-group-modal').should('exist')
     })
 
@@ -439,7 +439,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('add-to-consumer-group').click()
+      cy.getTestId('empty-state-action').click()
       cy.getTestId('add-to-group-modal').should('exist')
 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddToGroupModal).vm.$emit('cancel'))
@@ -466,7 +466,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('add-to-consumer-group').click()
+      cy.getTestId('empty-state-action').click()
       cy.getTestId('add-to-group-modal').should('exist')
 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddToGroupModal).vm.$emit('add:success', expectedData))
@@ -495,7 +495,7 @@ describe('<ConsumerGroupList />', () => {
 
         cy.wait('@getGroups')
 
-        cy.getTestId('add-to-consumer-group').click()
+        cy.getTestId('empty-state-action').click()
         cy.getTestId('add-to-group-modal').should('exist')
 
         cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddToGroupModal)
@@ -759,7 +759,7 @@ describe('<ConsumerGroupList />', () => {
       cy.wait('@getConsumerGroups')
       cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-consumer-group"]').should('be.visible')
+      cy.getTestId('empty-state-action').should('be.visible')
     })
 
     it('should hide empty state and create consumer group cta if user can not create', () => {
@@ -779,7 +779,7 @@ describe('<ConsumerGroupList />', () => {
       cy.wait('@getConsumerGroups')
       cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-consumer-group"]').should('not.exist')
+      cy.getTestId('empty-state-action').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -836,10 +836,10 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getConsumerGroups')
       cy.get(
-        '.kong-ui-entities-consumer-groups-list tr [data-testid="consumerGroup.1"]',
+        '.kong-ui-entities-consumer-groups-list tr[data-testid="1"]',
       ).should('exist')
       cy.get(
-        '.kong-ui-entities-consumer-groups-list tr [data-testid="consumerGroup.2"]',
+        '.kong-ui-entities-consumer-groups-list tr[data-testid="2"]',
       ).should('exist')
     })
 
@@ -866,10 +866,10 @@ describe('<ConsumerGroupList />', () => {
 
       // Page #1
       cy.get(`${l} tbody tr`).should('have.length', 30)
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.1"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.2"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.29"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.30"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="1"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="2"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="29"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="30"]`).should('exist')
 
       cy.get(`${l} ${p}`).should('exist')
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
@@ -883,10 +883,10 @@ describe('<ConsumerGroupList />', () => {
 
       // Page #2
       cy.get(`${l} tbody tr`).should('have.length', 30)
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.31"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.32"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.59"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.60"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="31"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="32"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="59"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="60"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.attr',
@@ -902,10 +902,10 @@ describe('<ConsumerGroupList />', () => {
 
       // Page #4
       cy.get(`${l} tbody tr`).should('have.length', 10)
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.91"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.92"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.99"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.100"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="91"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="92"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="99"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="100"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="previous-button"]`).should(
         'not.have.attr',
@@ -943,10 +943,10 @@ describe('<ConsumerGroupList />', () => {
       cy.wait('@getConsumerGroupsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 30)
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.1"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.2"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.29"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.30"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="1"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="2"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="29"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="30"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('30 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
@@ -957,10 +957,10 @@ describe('<ConsumerGroupList />', () => {
       cy.wait('@getConsumerGroupsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.1"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.2"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.14"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.15"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="1"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="2"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="14"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="15"]`).should('exist')
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
@@ -978,10 +978,10 @@ describe('<ConsumerGroupList />', () => {
       cy.wait('@getConsumerGroupsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.1"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.2"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.14"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.15"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="1"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="2"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="14"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="15"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('15 items per page')
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).click()
@@ -992,10 +992,10 @@ describe('<ConsumerGroupList />', () => {
       cy.wait('@getConsumerGroupsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 50)
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.1"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.2"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.49"]`).should('exist')
-      cy.get(`${l} tbody tr [data-testid="consumerGroup.50"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="1"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="2"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="49"]`).should('exist')
+      cy.get(`${l} tbody tr[data-testid="50"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
@@ -1016,8 +1016,8 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('add-to-consumer-group').should('exist')
-      cy.getTestId('add-to-consumer-group').should('contain.text', 'Add to Consumer Group')
+      cy.getTestId('empty-state-action').should('exist')
+      cy.getTestId('empty-state-action').should('contain.text', 'Add to Consumer Group')
     })
 
     it('should render AddToGroupModal onclick Add to Group button when consumerId is provided', () => {
@@ -1036,7 +1036,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('add-to-consumer-group').click()
+      cy.getTestId('empty-state-action').click()
       cy.getTestId('add-to-group-modal').should('exist')
     })
 
@@ -1057,7 +1057,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('add-to-consumer-group').click()
+      cy.getTestId('empty-state-action').click()
       cy.getTestId('add-to-group-modal').should('exist')
 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddToGroupModal).vm.$emit('cancel'))
@@ -1084,7 +1084,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('add-to-consumer-group').click()
+      cy.getTestId('empty-state-action').click()
       cy.getTestId('add-to-group-modal').should('exist')
 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddToGroupModal).vm.$emit('add:success', expectedData))
@@ -1113,7 +1113,7 @@ describe('<ConsumerGroupList />', () => {
 
         cy.wait('@getGroups')
 
-        cy.getTestId('add-to-consumer-group').click()
+        cy.getTestId('empty-state-action').click()
         cy.getTestId('add-to-group-modal').should('exist')
 
         cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddToGroupModal)

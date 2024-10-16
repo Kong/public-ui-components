@@ -81,7 +81,7 @@ describe('<CertificateList />', () => {
         },
       })
 
-      cy.getTestId('overflow-actions-button').eq(0).click()
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
@@ -281,7 +281,7 @@ describe('<CertificateList />', () => {
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-certificates-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-certificate"]').should('not.exist')
+      cy.getTestId('empty-state-action').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -588,7 +588,7 @@ describe('<CertificateList />', () => {
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-certificates-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-certificate"]').should('not.exist')
+      cy.getTestId('empty-state-action').should('not.exist')
     })
 
     it('should handle error state', () => {

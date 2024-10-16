@@ -38,15 +38,15 @@ describe('<CsvExportModal />', () => {
     cy.getTestId('csv-download-button').should('not.be.disabled')
 
     // Timestamp should be naive localtime
-    cy.getTestId('csv-export-modal').find('.k-table .table tbody td').eq(0).invoke('text').should('match', /\d{4}-\d\d-\d\d \d\d:\d\d:\d\d/)
+    cy.getTestId('csv-export-modal').find('.k-table-data .table tbody td').eq(0).invoke('text').should('match', /\d{4}-\d\d-\d\d \d\d:\d\d:\d\d/)
 
     // Table should contain the max number of rows allowed + 1 Header row
     const numTableRows = MAX_ROWS + 1
 
-    cy.getTestId('csv-export-modal').find('.k-table .table tr').should('have.length', numTableRows)
+    cy.getTestId('csv-export-modal').find('.k-table-data .table tr').should('have.length', numTableRows)
 
     // Column headers should be as expected.
-    cy.getTestId('csv-export-modal').find('.k-table .table thead th').should(th => {
+    cy.getTestId('csv-export-modal').find('.k-table-data .table thead th').should(th => {
       const elements = Array.from(th, e => e.innerText)
 
       expect(JSON.stringify(elements)).to.equal('["Timestamp","UTC Offset","Status Code","Request Count"]')

@@ -66,7 +66,7 @@ describe('<SniList />', () => {
         },
       })
 
-      cy.getTestId('overflow-actions-button').eq(0).click()
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
@@ -769,7 +769,7 @@ describe('<SniList />', () => {
       const p = '[data-testid="table-pagination"]'
 
       cy.wait('@getSnisRefetch')
-      cy.get(`${l} tbody tr[data-testid="sni-20"] td[data-testid="actions"] button.actions-trigger`).click()
+      cy.get(`${l} tbody tr[data-testid="sni-20"] td[data-testid="actions"] button[data-testid="row-actions-dropdown-trigger"]`).click()
       cy.get(`${l} tbody tr[data-testid="sni-20"] [data-testid="action-entity-delete"]`).click()
       interceptKonnectRefetch({
         expectedOffset: 0, // after deletion, refetch should be triggered with offset 0
@@ -784,7 +784,7 @@ describe('<SniList />', () => {
       cy.get(`${l} ${p} [data-testid="next-button"]`).click() // next page
       cy.wait('@getSnisRefetch')
 
-      cy.get(`${l} tbody tr[data-testid="sni-50"] td[data-testid="actions"] button.actions-trigger`).click()
+      cy.get(`${l} tbody tr[data-testid="sni-50"] td[data-testid="actions"] button[data-testid="row-actions-dropdown-trigger"]`).click()
       cy.get(`${l} tbody tr[data-testid="sni-50"] [data-testid="action-entity-delete"]`).click()
       interceptKonnectRefetch({
         expectedOffset: 30, // after deletion, refetch should be triggered with offset 30
@@ -805,7 +805,7 @@ describe('<SniList />', () => {
       cy.get(`${l} ${p} [data-testid="next-button"]`).click() // next page
       cy.wait('@getSnisRefetch')
 
-      cy.get(`${l} tbody tr[data-testid="sni-99"] td[data-testid="actions"] button.actions-trigger`).click()
+      cy.get(`${l} tbody tr[data-testid="sni-99"] td[data-testid="actions"] button[data-testid="row-actions-dropdown-trigger"]`).click()
       cy.get(`${l} tbody tr[data-testid="sni-99"] [data-testid="action-entity-delete"]`).click()
       interceptKonnectRefetch({
         expectedOffset: 90, // after deletion, refetch should be triggered with offset 90

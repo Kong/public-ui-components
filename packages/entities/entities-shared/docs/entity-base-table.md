@@ -6,6 +6,8 @@ A base table component for entity list views.
 - [Usage](#usage)
   - [Install](#install)
   - [Props](#props)
+  - [`hideToolbar`](#hidetoolbar)
+  - [`hidePagination`](#hidepagination)
   - [Slots](#slots)
   - [Events](#events)
   - [Usage example](#usage-example)
@@ -50,11 +52,11 @@ A function for applying attributes to rows.
 
 #### `fetcher`
 
-- type: `Function as PropType<(params: FetcherParams) => Promise<FetcherResponse>>`
+- type: `Function as PropType<(params: TableDataFetcherParams) => Promise<FetcherResponse>>`
 - required: `true`
 - default: `async () => ({ data: [] })`
 
-The fetcher function passed to `<KTable>`.
+The fetcher function passed to `<KTableData>`.
 
 #### `cacheIdentifier`
 
@@ -71,7 +73,7 @@ If not provided, will default to the `preferencesStorageKey`.
 - required: `false`
 - default: `1`
 
-Cache key for the fetcher. Passed to `<KTable>`.
+Cache key for the fetcher. Passed to `<KTableData>`.
 
 #### `isLoading`
 
@@ -133,6 +135,14 @@ HTML element you want title to be rendered as. Defaults to `h2`.
 
 Controls whether the table rows are clickable or not. Defaults to `false`. Setting to `true` will suppress the `click:row` event even if a `@click:row` handler is provided.
 
+### `hideToolbar`
+
+Boolean to hide table toolbar. Defaults to `false`.
+
+### `hidePagination`
+
+Boolean to hide table pagination. Defaults to `false`.
+
 ### Slots
 
 #### `toolbar-filter`
@@ -175,7 +185,6 @@ TypeScript interfaces [are available here](https://github.com/Kong/public-ui-com
 import type {
   BaseTableHeaders,
   EmptyStateOptions,
-  FetcherParams,
   FetcherResponse,
   InternalHeader,
   TableErrorMessage,

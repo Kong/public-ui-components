@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.17.2",
-    "@kong/kongponents": "9.11.2",
+    "@kong/kongponents": "9.12.0",
     "vue": "^3.4.38"
   },
   "dependencies": {

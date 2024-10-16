@@ -91,7 +91,7 @@ describe('<PluginList />', () => {
 
       // add padding on right to the container to make the overflow actions button visible
       cy.get('.kong-ui-entities-plugins-list').invoke('css', 'padding-right', '300px')
-      cy.getTestId('overflow-actions-button').eq(0).click()
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
       cy.scrollTo('100%', 0) // scroll all the way to the right
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
@@ -452,7 +452,7 @@ describe('<PluginList />', () => {
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-plugins-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-plugin"]').should('be.visible')
+      cy.getTestId('empty-state-action').should('be.visible')
     })
 
     it('should hide empty state and create plugin cta if user can not create', () => {
@@ -472,7 +472,7 @@ describe('<PluginList />', () => {
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-plugins-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-plugin"]').should('not.exist')
+      cy.getTestId('empty-state-action').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -781,7 +781,7 @@ describe('<PluginList />', () => {
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-plugins-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-plugin"]').should('be.visible')
+      cy.getTestId('empty-state-action').should('be.visible')
     })
 
     it('should hide empty state and create plugin cta if user can not create', () => {
@@ -801,7 +801,7 @@ describe('<PluginList />', () => {
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-plugins-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-plugin"]').should('not.exist')
+      cy.getTestId('empty-state-action').should('not.exist')
     })
 
     it('should handle error state', () => {
