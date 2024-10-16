@@ -466,7 +466,6 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
     default: [],
     help: t('plugins.form.fields.protocols.help'),
     label: t('plugins.form.fields.protocols.label'),
-    placeholder: t('plugins.form.fields.protocols.placeholder'),
     required: true,
     styleClasses: 'plugin-protocols-select',
     type: 'multiselect',
@@ -852,7 +851,8 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
     // Field type is an input, determine input type, such as 'text', or 'number'
     if (initialFormSchema[field].type === 'input') {
-      if (['string', 'number'].includes(typeof initialFormSchema[field].default)) {
+      if (['string', 'number'].includes(typeof initialFormSchema[field].default) && props.config.app === 'konnect') {
+        // Konnect API respects default values if the field is not set, so display them in the placeholder
         initialFormSchema[field].placeholder = `Default: ${
           initialFormSchema[field].default === '' ? '<empty string>' : initialFormSchema[field].default
         }`
@@ -1273,6 +1273,13 @@ onBeforeMount(async () => {
             const { default: defaultValues = [], elements = {} } = protocolsField
 
             defaultFormSchema.protocols.default = defaultValues
+
+            // Konnect API respects default values if the field is not set, so display them in the placeholder
+            defaultFormSchema.protocols.placeholder = props.config.app === 'konnect'
+              ? t('plugins.form.fields.protocols.placeholderWithDefaultValues', {
+                protocols: defaultValues.join(', '),
+              })
+              : t('plugins.form.fields.protocols.placeholder')
 
             if (elements.one_of?.length) {
               defaultFormSchema.protocols.values = elements.one_of.map((value: string) => ({ label: value, value }))
