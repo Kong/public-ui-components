@@ -74,7 +74,7 @@ const { i18n } = composables.useI18n()
 const testId = computed((): string => `spec-operations-list-item-${props.item.method?.toLowerCase()}${props.item.path?.replaceAll('/', '-')}-${props.item.tag || '-'}`)
 
 const methodName = computed((): BadgeAppearance => {
-  return props.item.method || ''
+  return props.item.method || 'info'
 })
 </script>
 
