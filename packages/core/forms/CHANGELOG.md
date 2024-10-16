@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.7.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.15...@kong-ui-public/forms@4.7.16) (2024-10-16)
+
+
+### Bug Fixes
+
+* ktabledata adoption [KHCP-13280] ([#1660](https://github.com/Kong/public-ui-components/issues/1660)) ([31ca10e](https://github.com/Kong/public-ui-components/commit/31ca10eb93f51bf75bbe4419f2ddda0fdf47279e))
+
+
+
+
+
 ## [4.7.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.14...@kong-ui-public/forms@4.7.15) (2024-10-15)
 
 
