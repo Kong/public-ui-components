@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.0.1...@kong-ui-public/entities-plugins@9.0.2) (2024-10-16)
+
+
+### Bug Fixes
+
+* **entities-plugins:** plugin list display incorrect scopes [KM-590] ([#1721](https://github.com/Kong/public-ui-components/issues/1721)) ([2653d97](https://github.com/Kong/public-ui-components/commit/2653d97d08248237d7ba3f0d737f128cee043b61))
+
+
+
+
+
 ## [9.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.0.0...@kong-ui-public/entities-plugins@9.0.1) (2024-10-15)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
