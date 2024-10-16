@@ -1,6 +1,4 @@
 import { h } from 'vue'
-import type { Router } from 'vue-router'
-import { createMemoryHistory, createRouter } from 'vue-router'
 import type {
   KonnectBaseEntityConfig,
   ConfigurationSchema,
@@ -122,18 +120,6 @@ describe('<EntityBaseConfigCard />', () => {
   }
 
   describe('General', () => {
-    let router: Router
-
-    beforeEach(() => {
-      // Initialize a new router before each test
-      router = createRouter({
-        routes: [
-          { path: '/', name: 'list-plugin', component: { template: '<div>ListPage</div>' } },
-        ],
-        history: createMemoryHistory(),
-      })
-    })
-
     it('hides title content when `hideTitle` prop is set', () => {
       interceptFetch()
 
@@ -159,7 +145,6 @@ describe('<EntityBaseConfigCard />', () => {
           entityType,
           fetchUrl,
         },
-        router,
       })
 
       cy.getTestId('select-config-format').should('exist')
@@ -175,7 +160,6 @@ describe('<EntityBaseConfigCard />', () => {
           fetchUrl,
           configCardDoc: 'www.test.com',
         },
-        router,
       })
 
       cy.getTestId('book-icon').should('exist')
