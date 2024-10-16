@@ -315,7 +315,7 @@ const tabs = ref<Tab[]>([
 
 // terraform only supported in konnect
 if (props.config.app === 'konnect') {
-  // insert terraform as the third option
+  // insert terraform as the second option
   tabs.value.splice(1, 0, {
     title: t('view_configuration.terraform'),
     hash: '#terraform',
