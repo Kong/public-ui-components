@@ -1,7 +1,7 @@
 // Cypress component test spec file
 
 import { h } from 'vue'
-import { operationsList, tags, specOp } from '../../fixtures/spec-data'
+import { operationsList, operationsAllTaggedList, tags, specOp } from '../../fixtures/spec-data'
 import SpecOperationsList from './SpecOperationsList.vue'
 
 describe('<SpecOperationsList />', () => {
@@ -37,6 +37,36 @@ describe('<SpecOperationsList />', () => {
     cy.get('[data-testid="spec-operations-list-untagged-items"] .spec-operations-list-item').should('not.be.visible')
     cy.getTestId('spec-operations-list-section-untagged-collapse-trigger').click()
     cy.get('[data-testid="spec-operations-list-untagged-items"] .spec-operations-list-item').should('have.length', 1)
+  })
+
+  it('doesnt render default tags section when empty', () => {
+    cy.mount(SpecOperationsList, {
+      props: {
+        isFilterable: true,
+        operations: operationsAllTaggedList,
+        tags,
+      },
+    })
+
+    // renders filter input
+    cy.getTestId('spec-operations-list-filter').should('be.visible')
+
+    // renders collapsible sections of operations with correct count of operations
+    cy.getTestId('spec-operations-list-section-pet').should('be.visible')
+    cy.get('[data-testid="spec-operations-list-section-pet"] .spec-operations-list-item').should('have.length', 4)
+    cy.getTestId('spec-operations-list-section-dog-go').should('be.visible')
+    cy.get('[data-testid="spec-operations-list-section-dog-go"] .spec-operations-list-item').should('have.length', 2)
+    cy.getTestId('spec-operations-list-section-other').should('be.visible')
+    cy.get('[data-testid="spec-operations-list-section-other"] .spec-operations-list-item').should('have.length', 1)
+
+    // reacts correctly to collapse toggle
+    cy.getTestId('spec-operations-list-section-pet-collapse-trigger').click()
+    cy.get('[data-testid="spec-operations-list-section-pet"] .spec-operations-list-item').should('not.be.visible')
+    cy.getTestId('spec-operations-list-section-pet-collapse-trigger').click()
+    cy.get('[data-testid="spec-operations-list-section-pet"] .spec-operations-list-item').should('have.length', 4)
+
+    // doesn't render untagged section
+    cy.getTestId('spec-operations-list-untagged-items').should('not.exist')
   })
 
   it('renders with correct px width', () => {

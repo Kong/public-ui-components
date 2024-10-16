@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.0.2...@kong-ui-public/entities-plugins@9.1.0) (2024-10-16)
+
+
+### Features
+
+* **entities-plugins:** add default values in protocols placeholder ([#1722](https://github.com/Kong/public-ui-components/issues/1722)) ([81a12d5](https://github.com/Kong/public-ui-components/commit/81a12d5f27c800c60a8ed5f597e30101c293adec))
+
+
+
+
+
+## [9.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.0.1...@kong-ui-public/entities-plugins@9.0.2) (2024-10-16)
+
+
+### Bug Fixes
+
+* **entities-plugins:** plugin list display incorrect scopes [KM-590] ([#1721](https://github.com/Kong/public-ui-components/issues/1721)) ([2653d97](https://github.com/Kong/public-ui-components/commit/2653d97d08248237d7ba3f0d737f128cee043b61))
+
+
+
+
+
+## [9.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.0.0...@kong-ui-public/entities-plugins@9.0.1) (2024-10-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.20...@kong-ui-public/entities-plugins@9.0.0) (2024-10-14)
+
+
+### Bug Fixes
+
+* **plugins:** ff removal [khcp-13673] ([#1715](https://github.com/Kong/public-ui-components/issues/1715)) ([a61fd70](https://github.com/Kong/public-ui-components/commit/a61fd70b0b25ac1c44726a578d3390078a8f70b2))
+
+
+### BREAKING CHANGES
+
+* **plugins:** useCustomNamesForPlugin prop removed
+
+
+
+
+
+## [8.13.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.19...@kong-ui-public/entities-plugins@8.13.20) (2024-10-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.13.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.18...@kong-ui-public/entities-plugins@8.13.19) (2024-10-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.13.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.17...@kong-ui-public/entities-plugins@8.13.18) (2024-10-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [8.13.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.16...@kong-ui-public/entities-plugins@8.13.17) (2024-10-11)
+
+
+### Bug Fixes
+
+* **plugin-form:** force reset password when edit credential [FTI-6248] ([#1704](https://github.com/Kong/public-ui-components/issues/1704)) ([b544a11](https://github.com/Kong/public-ui-components/commit/b544a11456fb66da971b60475bc90980571bdc2c))
+
+
+
+
+
 ## [8.13.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@8.13.15...@kong-ui-public/entities-plugins@8.13.16) (2024-10-09)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

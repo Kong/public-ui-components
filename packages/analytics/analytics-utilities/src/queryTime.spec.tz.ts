@@ -3,7 +3,7 @@ import { add, setDate, startOfDay, startOfMonth, startOfWeek, subMilliseconds } 
 
 import { TimeframeKeys } from './types'
 import { DeltaQueryTime, TimeseriesQueryTime, UnaryQueryTime } from './queryTime'
-import type { Timeframe } from './timeframes'
+import { Timeframe } from './timeframes'
 import { datePickerSelectionToTimeframe, TimePeriods } from './timeframes'
 import { formatInTimeZone } from 'date-fns-tz'
 import { runUtcTest } from './specUtils'
@@ -469,6 +469,43 @@ runDstTest('daylight savings time: spring', () => {
 
     expect(deltaQuery.granularitySeconds()).toBe(unaryQuery.granularitySeconds())
   })
+
+  it('determines a correct trend query across multiple transitions', () => {
+    const start = new Date(1702832400000) // 2023-12-17, noon Eastern time
+    const end = new Date(1727798400000) // 2024-10-01, noon Eastern time
+    const timeframeLength = (end.getTime() - start.getTime()) / 1000
+
+    const timePeriod = new Timeframe({
+      key: 'custom',
+      timeframeText: 'custom',
+      display: 'custom',
+      startCustom: start,
+      endCustom: end,
+      timeframeLength: () => timeframeLength,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
+      isRelative: false,
+      allowedTiers: ['free', 'plus', 'enterprise'],
+    })
+
+    const unaryQuery = new UnaryQueryTime(timePeriod, 'US/Eastern')
+
+    expect(unaryQuery.startMs()).toEqual(1702789200000) // 2023-12-17, midnight Eastern time
+    expect(unaryQuery.endMs()).toEqual(1727841600000) // 2024-10-02, midnight Eastern time
+
+    // The length of the above timespan.  Due to DST, it's 1 hour shy of 290 days.
+    const expectedGranularity = 1727841600000 - 1702789200000
+
+    expect(unaryQuery.granularityMs()).toEqual(expectedGranularity)
+
+    const deltaQuery = new DeltaQueryTime(timePeriod, 'US/Eastern')
+
+    expect(deltaQuery.startMs()).toEqual(1677736800000) // 2023-03-02, 1 AM Eastern time
+    expect(deltaQuery.endMs()).toEqual(1727841600000) // 2024-10-02, midnight Eastern time
+
+    // Exactly half of the full delta timespan.
+    expect(deltaQuery.granularityMs()).toEqual(expectedGranularity)
+  })
 })
 
 runDstTest('daylight savings time: fall', () => {
@@ -533,6 +570,7 @@ runUtcTest('UTC: timezone handling', () => {
     const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK), 'US/Eastern')
 
     // Unary and delta end times should be rounded up to the nearest day.
+    // (Total length: 3 full days)
     expect(unaryQuery.endDate()).toEqual(new Date('2023-11-09T05:00:00.000Z'))
     expect(deltaQuery.endDate()).toEqual(new Date('2023-11-09T05:00:00.000Z'))
 
@@ -541,8 +579,9 @@ runUtcTest('UTC: timezone handling', () => {
 
     // Delta start times are tricky; the existing behavior is to just match the length of the timeframe rather than
     // actually comparing to the full previous week.
-    // Because we're dealing with absolute timeframes, this rounds to the nearest day and therefore tracks DST.
-    expect(deltaQuery.startDate()).toEqual(new Date('2023-11-03T04:00:00.000Z'))
+    // This timeperiod isn't guaranteed cover integer numbers of days, because days might be different lengths
+    // around DST boundaries.
+    expect(deltaQuery.startDate()).toEqual(new Date('2023-11-03T05:00:00.000Z'))
     expect(deltaQuery.granularitySeconds()).toBe(unaryQuery.granularitySeconds())
   })
 
@@ -559,9 +598,8 @@ runUtcTest('UTC: timezone handling', () => {
 
     // Delta start times are tricky; the existing behavior is to just match the length of the timeframe rather than
     // actually comparing to the full previous week.
-    // DST introduces an odd edge case where the timeframe length is N days + 1 hour.  We basically round the timeframe
-    // up to the nearest day, so we end up with N+1 days.
-    expect(deltaQuery.startDate()).toEqual(new Date('2023-10-22T04:00:00.000Z'))
+    // The timeframe is 7 days and 1 hour due to the DST transition.
+    expect(deltaQuery.startDate()).toEqual(new Date('2023-10-23T03:00:00.000Z'))
     expect(deltaQuery.granularitySeconds()).toBe(unaryQuery.granularitySeconds())
   })
 
@@ -579,8 +617,8 @@ runUtcTest('UTC: timezone handling', () => {
 
     // Delta start times are tricky; the existing behavior is to just match the length of the timeframe rather than
     // actually comparing to the full previous month.
-    // The timeframe gets rounded up to the nearest day, so this tracks the DST change.
-    expect(deltaQuery.startDate()).toEqual(new Date('2023-10-23T04:00:00.000Z'))
+    // The timeframe is 7 days and 1 hour due to the DST transition.
+    expect(deltaQuery.startDate()).toEqual(new Date('2023-10-24T03:00:00.000Z'))
     expect(deltaQuery.granularitySeconds()).toBe(unaryQuery.granularitySeconds())
   })
 
@@ -647,8 +685,7 @@ runUtcTest('UTC: timezone handling', () => {
 
     // Delta start times are tricky; the existing behavior is to just match the length of the timeframe rather than
     // actually comparing to the full previous week.
-    // This is extended to the nearest day, which in this case results in a different hour offset due to DST.
-    expect(deltaQuery.startDate()).toEqual(new Date('2023-10-22T21:00:00.000Z'))
+    expect(deltaQuery.startDate()).toEqual(new Date('2023-10-22T22:00:00.000Z'))
     expect(deltaQuery.granularitySeconds()).toBe(unaryQuery.granularitySeconds())
   })
 
@@ -665,8 +702,7 @@ runUtcTest('UTC: timezone handling', () => {
 
     // Delta start times are tricky; the existing behavior is to just match the length of the timeframe rather than
     // actually comparing to the full previous month.
-    // This is extended to the nearest day, which in this case results in a different hour offset due to DST.
-    expect(deltaQuery.startDate()).toEqual(new Date('2023-10-22T21:00:00.000Z'))
+    expect(deltaQuery.startDate()).toEqual(new Date('2023-10-22T22:00:00.000Z'))
     expect(deltaQuery.granularitySeconds()).toBe(unaryQuery.granularitySeconds())
   })
 
@@ -684,9 +720,8 @@ runUtcTest('UTC: timezone handling', () => {
 
     // Delta start times are tricky; the existing behavior is to just match the length of the timeframe rather than
     // actually comparing to the full previous month.
-    // DST introduces an odd edge case where the timeframe length is N days + 1 hour.  We basically round the timeframe
-    // up to the nearest day, so we end up with N+1 days.
-    expect(deltaQuery.startDate()).toEqual(new Date('2023-08-29T21:00:00.000Z'))
+    // Bulgaria's DST change happens in this window, so the actual timeframe length is 31 days and 1 hour.
+    expect(deltaQuery.startDate()).toEqual(new Date('2023-08-30T20:00:00.000Z'))
 
     expect(deltaQuery.granularitySeconds()).toBe(unaryQuery.granularitySeconds())
   })

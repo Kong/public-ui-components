@@ -1032,7 +1032,6 @@ describe('<PluginForm />', () => {
         props: {
           config: baseConfigKonnect,
           pluginType: 'cors',
-          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -1104,7 +1103,6 @@ describe('<PluginForm />', () => {
         props: {
           config: baseConfigKonnect,
           pluginType: 'mocking',
-          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -1186,7 +1184,6 @@ describe('<PluginForm />', () => {
         props: {
           config: baseConfigKonnect,
           pluginType: 'ai-proxy',
-          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -1225,7 +1222,6 @@ describe('<PluginForm />', () => {
         props: {
           config: baseConfigKonnect,
           pluginType: 'custom',
-          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -1256,7 +1252,6 @@ describe('<PluginForm />', () => {
         props: {
           config: baseConfigKonnect,
           pluginType: 'cors',
-          useCustomNamesForPlugin: true,
           hideScopeSelection: true,
         },
         router,
@@ -1276,7 +1271,6 @@ describe('<PluginForm />', () => {
         props: {
           config: baseConfigKonnect,
           pluginType: 'cors',
-          useCustomNamesForPlugin: true,
           isWizardStep: true,
         },
         router,
@@ -1289,25 +1283,6 @@ describe('<PluginForm />', () => {
       cy.getTestId('plugin-create-form-cancel').should('not.exist')
     })
 
-    it('should hide instance name field if useCustomNamesForPlugin is false', () => {
-      interceptKonnectSchema()
-
-      cy.mount(PluginForm, {
-        global: { components: { VueFormGenerator } },
-        props: {
-          config: baseConfigKonnect,
-          pluginType: 'cors',
-          useCustomNamesForPlugin: false,
-        },
-        router,
-      })
-
-      cy.wait('@getPluginSchema')
-      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
-
-      cy.get('#instance_name').should('not.exist')
-    })
-
     it('should show create form - acl credential', () => {
       const config: KonnectPluginFormConfig = { ...baseConfigKonnect, entityId: scopedConsumer.item.id, entityType: 'consumers' }
 
@@ -1318,7 +1293,6 @@ describe('<PluginForm />', () => {
           pluginType: 'acl',
           credential: true,
           hideScopeSelection: true,
-          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -1351,7 +1325,6 @@ describe('<PluginForm />', () => {
         props: {
           config,
           pluginType: 'cors',
-          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -1377,7 +1350,6 @@ describe('<PluginForm />', () => {
         props: {
           config: baseConfigKonnect,
           pluginType: 'cors',
-          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -1411,7 +1383,6 @@ describe('<PluginForm />', () => {
           credential: true,
           pluginType: 'acl',
           hideScopeSelection: true,
-          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -1443,7 +1414,6 @@ describe('<PluginForm />', () => {
           config,
           pluginType: 'cors',
           pluginId: plugin1.id,
-          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -1507,7 +1477,6 @@ describe('<PluginForm />', () => {
           config,
           pluginType: 'cors',
           pluginId: plugin1.id,
-          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -1544,7 +1513,6 @@ describe('<PluginForm />', () => {
           pluginType: 'acl',
           pluginId: aclCredential1.id,
           hideScopeSelection: true,
-          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -1576,7 +1544,6 @@ describe('<PluginForm />', () => {
           config,
           pluginType: 'cors',
           pluginId: plugin1.id,
-          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -1628,7 +1595,6 @@ describe('<PluginForm />', () => {
         props: {
           config: baseConfigKonnect,
           pluginType: 'cors',
-          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -1664,7 +1630,6 @@ describe('<PluginForm />', () => {
           config: baseConfigKonnect,
           pluginId: 'i-dont-exist',
           pluginType: 'cors',
-          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -1712,7 +1677,6 @@ describe('<PluginForm />', () => {
         props: {
           config: baseConfigKonnect,
           pluginType: 'mocking',
-          useCustomNamesForPlugin: true,
         },
         router,
       })
@@ -1740,7 +1704,6 @@ describe('<PluginForm />', () => {
           config: baseConfigKonnect,
           pluginType: 'cors',
           pluginId: plugin1.id,
-          useCustomNamesForPlugin: true,
           onUpdate: cy.spy().as('onUpdateSpy'),
         },
         router,

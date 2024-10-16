@@ -1,4 +1,4 @@
-import { getTime, getUnixTime, sub } from 'date-fns'
+import { getTime, getUnixTime } from 'date-fns'
 
 import {
   ceilToNearestTimeGrain,
@@ -42,11 +42,7 @@ abstract class BaseQueryTime implements QueryTime {
       const timeframeLengthMs = ceilEnd.getTime() - floorStart.getTime()
       const periodOffset = timeframeLengthMs * (periods - 1)
 
-      return floorToNearestTimeGrain(
-        new Date(rawStart.getTime() - periodOffset),
-        granularity,
-        this.tz,
-      )
+      return new Date(floorStart.getTime() - periodOffset)
     }
   }
 
@@ -76,11 +72,6 @@ abstract class BaseQueryTime implements QueryTime {
   // Return epoch time in milliseconds, suitable for use in the `endMs` query param.
   endMs(): number {
     return getTime(this.endDate())
-  }
-
-  // Return whether the timeframe's bounds are within the allotment for a free tier user.
-  withinFreeTier(): boolean {
-    return this.startDate() >= sub(new Date(), { days: 1 })
   }
 }
 
@@ -137,6 +128,8 @@ export class DeltaQueryTime extends UnaryQueryTime {
   granularityMs(): number {
     // Note the `super` call -- the granularity for a DeltaQueryTime is the same as for an
     // equivalent UnaryQueryTime, despite the fact that the start time for a Delta query is earlier.
+    // This property must hold in order for the current period's numbers to not change between unary
+    // and delta query times.
     return this.endDate().getTime() - super.startDate().getTime()
   }
 }

@@ -236,15 +236,6 @@ const props = defineProps({
   },
 
   /**
-   * Support instance names for plugins. This can be removed when KHCP-5872-custom-names-for-plugins is removed.
-   * Enabled by default for KM.
-   */
-  useCustomNamesForPlugin: {
-    type: Boolean,
-    default: false,
-  },
-
-  /**
    * Allow teleporting the action buttons to the specified div.
    */
   actionsTeleportTarget: {
@@ -475,7 +466,6 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
     default: [],
     help: t('plugins.form.fields.protocols.help'),
     label: t('plugins.form.fields.protocols.label'),
-    placeholder: t('plugins.form.fields.protocols.placeholder'),
     required: true,
     styleClasses: 'plugin-protocols-select',
     type: 'multiselect',
@@ -492,16 +482,13 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
       { label: 'wss', value: 'wss' },
     ],
   },
-  // Support is feature flagged in Konnect
-  ...((props.config.app === 'kongManager' || props.useCustomNamesForPlugin) && {
-    instance_name: {
-      default: '',
-      type: 'input',
-      label: t('plugins.form.fields.instance_name.label'),
-      inputType: 'text',
-      help: t('plugins.form.fields.instance_name.help'),
-    },
-  }),
+  instance_name: {
+    default: '',
+    type: 'input',
+    label: t('plugins.form.fields.instance_name.label'),
+    inputType: 'text',
+    help: t('plugins.form.fields.instance_name.help'),
+  },
   tags: typedefs.tags as DefaultPluginsFormSchema,
 })
 
@@ -864,7 +851,8 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
     // Field type is an input, determine input type, such as 'text', or 'number'
     if (initialFormSchema[field].type === 'input') {
-      if (['string', 'number'].includes(typeof initialFormSchema[field].default)) {
+      if (['string', 'number'].includes(typeof initialFormSchema[field].default) && props.config.app === 'konnect') {
+        // Konnect API respects default values if the field is not set, so display them in the placeholder
         initialFormSchema[field].placeholder = `Default: ${
           initialFormSchema[field].default === '' ? '<empty string>' : initialFormSchema[field].default
         }`
@@ -1047,6 +1035,13 @@ const dynamicOrdering = ref<PluginOrdering>()
 // The whole purpose of this function is to wait for the existing record to be loaded if editing
 // We need to wait for this before we start attempting to build the schema
 const initForm = (data: Record<string, any>): void => {
+  // FIXME: This is a workaround for the issue FTI-6248, it should be replaced with a better solution
+  // When editing a credential, ff the user saves the password without changing it, the password will be changed to the hashed password returned by the backend
+  // The modification here is to force users to reset the password
+  if (props.credential && data.password) {
+    data.password = ''
+  }
+
   form.fields.id = data?.id || undefined
   dynamicOrdering.value = data?.ordering
 
@@ -1278,6 +1273,13 @@ onBeforeMount(async () => {
             const { default: defaultValues = [], elements = {} } = protocolsField
 
             defaultFormSchema.protocols.default = defaultValues
+
+            // Konnect API respects default values if the field is not set, so display them in the placeholder
+            defaultFormSchema.protocols.placeholder = props.config.app === 'konnect'
+              ? t('plugins.form.fields.protocols.placeholderWithDefaultValues', {
+                protocols: defaultValues.join(', '),
+              })
+              : t('plugins.form.fields.protocols.placeholder')
 
             if (elements.one_of?.length) {
               defaultFormSchema.protocols.values = elements.one_of.map((value: string) => ({ label: value, value }))

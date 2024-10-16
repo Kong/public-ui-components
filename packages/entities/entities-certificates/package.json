@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-certificates",
-  "version": "3.6.29",
+  "version": "3.6.32",
   "type": "module",
   "main": "./dist/entities-certificates.umd.js",
   "module": "./dist/entities-certificates.es.js",
@@ -24,7 +24,7 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.18.1",
-    "@kong/kongponents": "^9.10.3",
+    "@kong/kongponents": "^9.11.2",
     "axios": "^1.6.8",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.3.3"
@@ -69,7 +69,7 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@peculiar/x509": "^1.12.2"
+    "@peculiar/x509": "^1.12.3"
   },
   "distSizeChecker": {
     "errorLimit": "1.5MB"

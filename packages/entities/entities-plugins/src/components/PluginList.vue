@@ -458,16 +458,17 @@ const hideTableToolbar = ref<boolean>(false)
 // transform the entity row to "Applied To" badges
 const aggregateAppliedTo = (row: EntityRow): ({ type: ViewRouteType | null, badgeText: string })[] => {
   const badges = [] as ({ type: ViewRouteType | null, badgeText: string })[]
-  if (row.route?.id) {
+  // compatible with different data structures in the List and Filter APIs, see KM-590 and KM-100
+  if (row.route?.id || row.route_id) {
     badges.push({ type: 'route', badgeText: t('plugins.list.table_headers.applied_to_badges.route') })
   }
-  if (row.service?.id) {
+  if (row.service?.id || row.service_id) {
     badges.push({ type: 'service', badgeText: t('plugins.list.table_headers.applied_to_badges.service') })
   }
-  if (row.consumer?.id) {
+  if (row.consumer?.id || row.consumer_id) {
     badges.push({ type: 'consumer', badgeText: t('plugins.list.table_headers.applied_to_badges.consumer') })
   }
-  if (row.consumer_group?.id) {
+  if (row.consumer_group?.id || row.consumer_group_id) {
     badges.push({ type: 'consumer_group', badgeText: t('plugins.list.table_headers.applied_to_badges.consumer_group') })
   }
   if (badges.length) {

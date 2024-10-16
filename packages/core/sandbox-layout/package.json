@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/sandbox-layout",
-  "version": "2.1.42",
+  "version": "2.1.44",
   "type": "module",
   "main": "./dist/sandbox-layout.umd.js",
   "module": "./dist/sandbox-layout.es.js",
@@ -62,7 +62,7 @@
     "errorLimit": "200KB"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^9.10.3",
+    "@kong/kongponents": "^9.11.2",
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
