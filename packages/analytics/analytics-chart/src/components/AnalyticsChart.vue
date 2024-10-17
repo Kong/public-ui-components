@@ -70,6 +70,8 @@
         :time-range-ms="timeRangeMs"
         :tooltip-title="tooltipTitle"
         :type="(chartOptions.type as ('timeseries_line' | 'timeseries_bar'))"
+        :zoom="timeseriesZoom"
+        @zoom-time-range="(newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange)"
       />
       <StackedBarChart
         v-else-if="isBarChart"
@@ -110,7 +112,7 @@ import DoughnutChart from './chart-types/DoughnutChart.vue'
 import type { PropType } from 'vue'
 import { computed, provide, toRef } from 'vue'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type { ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { hasMillisecondTimestamps, defaultStatusCodeColors } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
@@ -176,7 +178,16 @@ const props = defineProps({
     required: false,
     default: true,
   },
+  timeseriesZoom: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
+
+const emit = defineEmits<{
+  (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void,
+}>()
 
 const { i18n } = composables.useI18n()
 
