@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.4.5...@kong-ui-public/entities-consumer-credentials@3.4.6) (2024-10-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [3.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.4.4...@kong-ui-public/entities-consumer-credentials@3.4.5) (2024-10-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
+
+
+
+
+
+## [3.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.4.3...@kong-ui-public/entities-consumer-credentials@3.4.4) (2024-10-16)
+
+
+### Bug Fixes
+
+* ktabledata adoption [KHCP-13280] ([#1660](https://github.com/Kong/public-ui-components/issues/1660)) ([31ca10e](https://github.com/Kong/public-ui-components/commit/31ca10eb93f51bf75bbe4419f2ddda0fdf47279e))
+
+
+
+
+
 ## [3.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.4.2...@kong-ui-public/entities-consumer-credentials@3.4.3) (2024-10-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials

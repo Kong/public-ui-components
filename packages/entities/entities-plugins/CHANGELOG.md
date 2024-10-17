@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.1.2...@kong-ui-public/entities-plugins@9.1.3) (2024-10-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.1.1...@kong-ui-public/entities-plugins@9.1.2) (2024-10-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.1.0...@kong-ui-public/entities-plugins@9.1.1) (2024-10-16)
+
+
+### Bug Fixes
+
+* ktabledata adoption [KHCP-13280] ([#1660](https://github.com/Kong/public-ui-components/issues/1660)) ([31ca10e](https://github.com/Kong/public-ui-components/commit/31ca10eb93f51bf75bbe4419f2ddda0fdf47279e))
+
+
+
+
+
+# [9.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.0.2...@kong-ui-public/entities-plugins@9.1.0) (2024-10-16)
+
+
+### Features
+
+* **entities-plugins:** add default values in protocols placeholder ([#1722](https://github.com/Kong/public-ui-components/issues/1722)) ([81a12d5](https://github.com/Kong/public-ui-components/commit/81a12d5f27c800c60a8ed5f597e30101c293adec))
+
+
+
+
+
 ## [9.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.0.1...@kong-ui-public/entities-plugins@9.0.2) (2024-10-16)
 
 

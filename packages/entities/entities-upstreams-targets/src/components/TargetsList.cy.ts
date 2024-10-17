@@ -66,7 +66,7 @@ describe('<TargetsList />', () => {
         },
       })
 
-      cy.getTestId('overflow-actions-button').eq(0).click()
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
       cy.getTestId('action-entity-copy-id').should('be.visible')
     })
 
@@ -288,7 +288,7 @@ describe('<TargetsList />', () => {
       cy.wait('@getTargets')
       cy.get('.kong-ui-entities-targets-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-target"]').should('be.visible')
+      cy.getTestId('empty-state-action').should('be.visible')
     })
 
     it('should hide empty state and create target cta if user can not create', () => {
@@ -308,7 +308,7 @@ describe('<TargetsList />', () => {
       cy.wait('@getTargets')
       cy.get('.kong-ui-entities-targets-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-target"]').should('not.exist')
+      cy.getTestId('empty-state-action').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -588,7 +588,7 @@ describe('<TargetsList />', () => {
       cy.wait('@getTargets')
       cy.get('.kong-ui-entities-targets-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-target"]').should('be.visible')
+      cy.getTestId('empty-state-action').should('be.visible')
     })
 
     it('should hide empty state and create target cta if user can not create', () => {
@@ -608,7 +608,7 @@ describe('<TargetsList />', () => {
       cy.wait('@getTargets')
       cy.get('.kong-ui-entities-targets-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="new-target"]').should('not.exist')
+      cy.getTestId('empty-state-action').should('not.exist')
     })
 
     it('should handle error state', () => {

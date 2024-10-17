@@ -22,12 +22,12 @@
               {{ i18n.t('csvExport.exportTimeRange') }}: {{ selectedRange }}
             </p>
           </div>
-          <KTable
+          <KTableData
             class="vitals-table"
-            disable-pagination
             :fetcher="fetcher"
             :fetcher-cache-key="String(fetcherCacheKey)"
             :headers="tableData?.headers || []"
+            hide-pagination
             :row-hover="false"
             :sortable="false"
           >
@@ -43,7 +43,7 @@
                 </template>
               </KEmptyState>
             </template>
-          </KTable>
+          </KTableData>
           <div
             v-if="!isLoading && hasData"
             class="text-muted"

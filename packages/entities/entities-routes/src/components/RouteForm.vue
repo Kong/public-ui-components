@@ -4,7 +4,6 @@
       :can-submit="isFormValid && changesExist"
       :config="config"
       :edit-id="routeId"
-      :enable-terraform="enableTerraform"
       :entity-type="SupportedEntityType.Route"
       :error-message="state.errorMessage || fetchServicesErrorMessage"
       :fetch-url="fetchUrl"
@@ -585,15 +584,6 @@ const props = defineProps({
   },
   /** Whether to show the expressions modal entry */
   showExpressionsModalEntry: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-  /**
-   * Enable display of Terraform code
-   * Guarded by FF: khcp-12445-terraform-config-details
-   */
-  enableTerraform: {
     type: Boolean,
     required: false,
     default: false,

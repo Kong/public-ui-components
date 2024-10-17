@@ -173,14 +173,6 @@ Control if the View Configuration action button is hidden.
 
 Control if the vault secret picker is enabled for applicable fields.
 
-#### `enableTerraform`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
-
 ### Events
 
 #### cancel

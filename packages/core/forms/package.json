@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/forms",
-  "version": "4.7.15",
+  "version": "4.7.17",
   "type": "module",
   "main": "./dist/forms.umd.js",
   "module": "./dist/forms.es.js",
@@ -62,7 +62,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.17.2",
-    "@kong/kongponents": "9.11.2",
+    "@kong/kongponents": "9.12.1",
     "@types/lodash-es": "^4.17.12",
     "pug": "^3.0.3"
   },

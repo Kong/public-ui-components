@@ -175,7 +175,7 @@ describe('<SecretList />', () => {
       cy.wait('@getSecrets')
       cy.get('.kong-ui-entities-secrets-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('[data-testid="store-new-secret"]').should('be.visible')
+      cy.getTestId('empty-state-action').should('be.visible')
     })
 
     it('should hide empty state and create secret cta if user can not create', () => {

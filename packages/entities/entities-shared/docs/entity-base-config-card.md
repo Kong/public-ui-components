@@ -181,14 +181,6 @@ External link for documentation. Controls the visibility of the documentation bu
 
 HTML element you want title to be rendered as. Defaults to `h2`.
 
-#### `enableTerraform`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
-
 ### Sections
 
 There are 3 sections that properties can be displayed in: `basic`, `advanced`, and `plugin`.

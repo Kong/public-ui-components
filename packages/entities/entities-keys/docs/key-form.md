@@ -94,14 +94,6 @@ Specify the KeySet ID once you want to create/fetch/edit a key within a KeySet U
 Pre-selected ID of the KeySet, only available in the `Create` type form.
 The KeySet field will be read-only once this prop is set.
 
-#### `enableTerraform`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
-
 ### Events
 
 #### error
