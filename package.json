@@ -27,7 +27,7 @@
     "@kong/design-tokens": "1.17.2",
     "@kong/eslint-config-kong-ui": "^1.1.1",
     "@kong/kongponents": "9.12.1",
-    "@stylistic/stylelint-plugin": "^3.0.1",
+    "@stylistic/stylelint-plugin": "^3.1.0",
     "@types/flat": "^5.0.5",
     "@types/js-yaml": "^4.0.9",
     "@types/jsdom": "^21.1.7",
@@ -41,13 +41,13 @@
     "c8": "^10.1.2",
     "commitizen": "^4.3.1",
     "cross-env": "^7.0.3",
-    "cypress": "^13.14.2",
+    "cypress": "^13.15.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.12.0",
     "js-yaml": "^4.1.0",
     "jsdom": "^25.0.1",
     "lerna": "^8.1.8",
-    "npm-run-all2": "^6.1.2",
+    "npm-run-all2": "^6.2.3",
     "postcss": "^8.4.47",
     "postcss-custom-properties": "^14.0.1",
     "postcss-html": "^1.7.0",
@@ -70,7 +70,7 @@
     "vite-plugin-externals": "^0.6.2",
     "vite-plugin-vue-devtools": "^7.4.6",
     "vitest": "^2.1.2",
-    "vue": "^3.4.38",
+    "vue": "^3.5.11",
     "vue-router": "^4.4.5",
     "vue-tsc": "^2.1.6"
   },
@@ -98,11 +98,11 @@
     }
   },
   "engines": {
-    "node": ">=18.19.1"
+    "node": ">=18.20.4"
   },
   "volta": {
-    "node": "18.19.1",
-    "pnpm": "9.4.0"
+    "node": "18.20.4",
+    "pnpm": "9.12.0"
   },
-  "packageManager": "pnpm@9.4.0"
+  "packageManager": "pnpm@9.12.0"
 }

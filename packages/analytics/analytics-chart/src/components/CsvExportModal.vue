@@ -201,7 +201,7 @@ const tableData = computed(() => {
   }
 })
 
-const fetcher = () => {
+const fetcher = async (): Promise<any> => {
   const { rows } = tableData.value
 
   isLoading.value = false
