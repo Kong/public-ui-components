@@ -115,6 +115,16 @@ yarn add @kong-ui-public/analytics-chart
 - default: `true`
 - Show the sum of each dataset in the legend
 
+#### `timeseriesZoom`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+- Enable zooming on timeseries charts
+
+### Events
+`@zoom-time-range` - event emitted representing a new time range on zoom selection see [AbsoluteTimeRangeV4](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore/common.ts#L33)
+
 ## Usage Example AnalyticsChart
 
 ```html

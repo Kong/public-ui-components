@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.0.12...@kong-ui-public/analytics-chart@5.1.0) (2024-10-17)
+
+
+### Features
+
+* add chart zoom custom plugin ([#1725](https://github.com/Kong/public-ui-components/issues/1725)) ([ccca729](https://github.com/Kong/public-ui-components/commit/ccca72960d058835715aaaca5b2a29527fe5121c))
+
+
+
+
+
 ## [5.0.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.0.11...@kong-ui-public/analytics-chart@5.0.12) (2024-10-17)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
