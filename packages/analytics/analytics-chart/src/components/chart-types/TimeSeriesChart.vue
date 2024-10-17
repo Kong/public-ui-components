@@ -197,8 +197,8 @@ const plugins = computed(() => [
   ...(props.type === 'timeseries_line' ? [verticalLinePlugin] : []),
 ])
 
-const remountLineKey = computed(() => plugins.value.map(p => p.id).join('-'))
-const remountBarKey = computed(() => plugins.value.map(p => p.id).join('-'))
+const remountLineKey = computed(() => `line-${plugins.value.map(p => p.id).join('-')}`)
+const remountBarKey = computed(() => `bar-${plugins.value.map(p => p.id).join('-')}`)
 
 const { options } = composables.useLinechartOptions({
   tooltipState: tooltipData,
