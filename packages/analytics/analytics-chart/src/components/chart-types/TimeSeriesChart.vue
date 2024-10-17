@@ -55,7 +55,7 @@
 <script setup lang="ts">
 
 import type { PropType } from 'vue'
-import { reactive, ref, computed, toRef, inject, watch, nextTick } from 'vue'
+import { reactive, ref, computed, toRef, inject, watch, onUnmounted } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import { verticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
@@ -71,6 +71,7 @@ import type { GranularityValues, AbsoluteTimeRangeV4 } from '@kong-ui-public/ana
 import { formatTime } from '@kong-ui-public/analytics-utilities'
 import type { Chart, LegendItem } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
+import { watchOnce } from '@vueuse/core'
 
 const props = defineProps({
   chartData: {
@@ -160,7 +161,6 @@ const legendItems = ref<LegendItem[]>([])
 const tooltipElement = ref()
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
 const isDoingSelection = ref(false)
-const tz = (new Intl.DateTimeFormat()).resolvedOptions().timeZone
 
 const tooltipData = reactive({
   showTooltip: false,
@@ -246,23 +246,32 @@ watch(() => props.type, () => {
   delete verticalLinePlugin.clickedSegment
 })
 
+const handleDragSelect = (event: Event) => {
+  const { xStart, xEnd } = (event as CustomEvent<DragSelectEventDetail>).detail
+  if (xStart && xEnd) {
+    emit('zoom-time-range', { start: new Date(xStart), end: new Date(xEnd), type: 'absolute' })
+  }
+  isDoingSelection.value = false
+  handleChartClick()
+  verticalLinePlugin.pause = false
+}
 
-nextTick(() => {
+const handleDragMove = () => {
+  isDoingSelection.value = true
+  verticalLinePlugin.pause = true
+}
+
+watchOnce(() => chartInstance.value?.chart, () => {
   if (chartInstance.value?.chart) {
-    chartInstance.value.chart.canvas.addEventListener('dragSelect', (event) => {
-      const { xStart, xEnd } = (event as CustomEvent<DragSelectEventDetail>).detail
-      if (xStart && xEnd) {
-        emit('zoom-time-range', { start: new Date(xStart), end: new Date(xEnd), type: 'absolute', tz })
-      }
-      isDoingSelection.value = false
-      handleChartClick()
-      verticalLinePlugin.pause = false
-    })
+    chartInstance.value.chart.canvas.addEventListener('dragSelect', handleDragSelect)
+    chartInstance.value.chart.canvas.addEventListener('dragSelectMove', handleDragMove)
+  }
+})
 
-    chartInstance.value.chart.canvas.addEventListener('dragSelectMove', () => {
-      isDoingSelection.value = true
-      verticalLinePlugin.pause = true
-    })
+onUnmounted(() => {
+  if (chartInstance.value?.chart) {
+    chartInstance.value.chart.canvas.removeEventListener('dragSelect', handleDragSelect)
+    chartInstance.value.chart.canvas.removeEventListener('dragSelectMove', handleDragMove)
   }
 })
 
