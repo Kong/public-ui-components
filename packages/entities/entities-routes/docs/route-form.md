@@ -161,14 +161,6 @@ Show tags field under *Advanced Fields* collapse or in it's default place (befor
 
 Show/hide the Expressions modal entry button.
 
-#### `enableTerraform`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-Enable display of Terraform code. Guarded by FF: `khcp-12445-terraform-config-details`.
-
 ### Slots
 
 #### `form-actions`

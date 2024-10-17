@@ -214,14 +214,6 @@ const props = defineProps({
     type: String as PropType<HeaderTag>,
     default: 'h2',
   },
-  /**
-   * Enable display of Terraform code
-   * Guarded by FF: khcp-12445-terraform-config-details
-   */
-  enableTerraform: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const { i18n: { t } } = composables.useI18n()
@@ -246,7 +238,8 @@ const configFormatItems = [
   },
 ]
 
-if (props.enableTerraform) {
+// terraform only supported in konnect
+if (props.config.app === 'konnect') {
   // insert terraform as the third option
   configFormatItems.splice(2, 0, {
     label: t('baseForm.configuration.terraform'),

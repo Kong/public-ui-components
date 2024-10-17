@@ -266,15 +266,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-
-  /**
-   * Enable display of Terraform code
-   * Guarded by FF: khcp-12445-terraform-config-details
-   */
-  enableTerraform: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const router = useRouter()
@@ -322,8 +313,9 @@ const tabs = ref<Tab[]>([
   },
 ])
 
-if (props.enableTerraform) {
-  // insert terraform as the third option
+// terraform only supported in konnect
+if (props.config.app === 'konnect') {
+  // insert terraform as the second option
   tabs.value.splice(1, 0, {
     title: t('view_configuration.terraform'),
     hash: '#terraform',

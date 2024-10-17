@@ -141,6 +141,7 @@ describe('<EntityBaseConfigCard />', () => {
 
       cy.mount(EntityBaseConfigCard, {
         props: {
+          config,
           configSchema,
           entityType,
           fetchUrl,
@@ -155,6 +156,7 @@ describe('<EntityBaseConfigCard />', () => {
 
       cy.mount(EntityBaseConfigCard, {
         props: {
+          config,
           configSchema,
           entityType,
           fetchUrl,
@@ -295,8 +297,11 @@ describe('<EntityBaseConfigCard />', () => {
       cy.mount(EntityBaseConfigCard, {
         props: {
           config,
-          configSchema: { ...configSchema,
-            entityType, [undefinedKey]: { forceShow: true } },
+          configSchema: {
+            ...configSchema,
+            [undefinedKey]: { forceShow: true },
+          },
+          entityType,
           fetchUrl,
         },
       })
