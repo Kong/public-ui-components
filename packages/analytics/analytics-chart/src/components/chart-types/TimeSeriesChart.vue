@@ -10,6 +10,7 @@
     >
       <Line
         v-if="type === 'timeseries_line'"
+        :key="remountLineKey"
         ref="chartInstance"
         :chart-id="chartID"
         :data="(chartData as any)"
@@ -19,6 +20,7 @@
       />
       <Bar
         v-else-if="type === 'timeseries_bar'"
+        :key="remountBarKey"
         ref="chartInstance"
         :chart-id="chartID"
         :data="(chartData as any)"
@@ -71,7 +73,6 @@ import type { GranularityValues, AbsoluteTimeRangeV4 } from '@kong-ui-public/ana
 import { formatTime } from '@kong-ui-public/analytics-utilities'
 import type { Chart, LegendItem } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
-import { watchOnce } from '@vueuse/core'
 
 const props = defineProps({
   chartData: {
@@ -196,6 +197,9 @@ const plugins = computed(() => [
   ...(props.type === 'timeseries_line' ? [verticalLinePlugin] : []),
 ])
 
+const remountLineKey = computed(() => plugins.value.map(p => p.id).join('-'))
+const remountBarKey = computed(() => plugins.value.map(p => p.id).join('-'))
+
 const { options } = composables.useLinechartOptions({
   tooltipState: tooltipData,
   timeRangeMs: toRef(props, 'timeRangeMs'),
@@ -261,8 +265,10 @@ const handleDragMove = () => {
   verticalLinePlugin.pause = true
 }
 
-watchOnce(() => chartInstance.value?.chart, () => {
+watch(() => chartInstance.value?.chart, () => {
   if (chartInstance.value?.chart) {
+    chartInstance.value.chart.canvas.removeEventListener('dragSelect', handleDragSelect)
+    chartInstance.value.chart.canvas.removeEventListener('dragSelectMove', handleDragMove)
     chartInstance.value.chart.canvas.addEventListener('dragSelect', handleDragSelect)
     chartInstance.value.chart.canvas.addEventListener('dragSelectMove', handleDragMove)
   }

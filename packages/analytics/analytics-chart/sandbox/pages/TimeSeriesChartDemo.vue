@@ -119,6 +119,12 @@
             :label="emptyState ? 'Empty State' : 'Chart Has Data'"
           />
         </div>
+        <div>
+          <KInputSwitch
+            v-model="timeSeriesZoomToggle"
+            :label="timeSeriesZoomToggle ? 'Zoom enabled' : 'Zoom disabled'"
+          />
+        </div>
         <br>
 
         <div class="config-container">
@@ -201,7 +207,7 @@
         :legend-position="legendPosition"
         :show-annotations="showAnnotationsToggle"
         :show-legend-values="showLegendValuesToggle"
-        timeseries-zoom
+        :timeseries-zoom="timeSeriesZoomToggle"
         tooltip-title="tooltip title"
         @zoom-time-range="eventLog += 'Zoomed to ' + JSON.stringify($event) + '\n'"
       />
@@ -274,6 +280,7 @@ interface MetricSelection {
 // Inject the app-links from the entry file
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
+const timeSeriesZoomToggle = ref(true)
 const multiMetricToggle = ref(false)
 const stackToggle = ref(true)
 const limitToggle = ref(false)
