@@ -120,10 +120,6 @@ export default function useHelpers() {
       payload.healthchecks.active?.healthy?.interval !== undefined)
       ? payload.healthchecks.active?.healthy?.interval?.toString()
       : '0'
-    result.activeHealthCheck.interval = (payload.healthchecks.active?.healthy?.interval !== null &&
-      payload.healthchecks.active?.healthy?.interval !== undefined)
-      ? payload.healthchecks.active?.healthy?.interval?.toString()
-      : '0'
     result.activeHealthCheck.successes = (payload.healthchecks.active?.healthy?.successes !== null &&
       payload.healthchecks.active?.healthy?.successes !== undefined)
       ? payload.healthchecks.active?.healthy?.successes?.toString()
@@ -138,6 +134,10 @@ export default function useHelpers() {
     result.activeHealthCheck.httpFailures = (payload.healthchecks.active?.unhealthy?.http_failures !== null &&
       payload.healthchecks.active?.unhealthy?.http_failures !== undefined)
       ? payload.healthchecks.active?.unhealthy?.http_failures?.toString()
+      : '0'
+    result.activeHealthCheck.tcpFailures = (payload.healthchecks.active?.unhealthy?.tcp_failures !== null &&
+      payload.healthchecks.active?.unhealthy?.tcp_failures !== undefined)
+      ? payload.healthchecks.active?.unhealthy?.tcp_failures?.toString()
       : '0'
     result.activeHealthCheck.unhealthyTimeouts = (payload.healthchecks.active?.unhealthy?.timeouts !== null &&
       payload.healthchecks.active?.unhealthy?.timeouts !== undefined)
@@ -162,10 +162,14 @@ export default function useHelpers() {
       payload.healthchecks.passive?.unhealthy?.timeouts !== undefined)
       ? payload.healthchecks.passive?.unhealthy?.timeouts?.toString()
       : '0'
+    result.passiveHealthCheck.httpFailures = (payload.healthchecks.passive?.unhealthy?.http_failures !== null &&
+      payload.healthchecks.passive?.unhealthy?.http_failures !== undefined)
+      ? payload.healthchecks.passive?.unhealthy?.http_failures?.toString()
+      : '0'
     result.passiveHealthCheck.tcpFailures = (payload.healthchecks.passive?.unhealthy?.tcp_failures !== null &&
       payload.healthchecks.passive?.unhealthy?.tcp_failures !== undefined)
       ? payload.healthchecks.passive?.unhealthy?.tcp_failures?.toString()
-      : ''
+      : '0'
     result.passiveHealthCheck.unhealthyHttpStatuses = payload.healthchecks.passive?.unhealthy?.http_statuses
       ? numberToStringArray(payload.healthchecks.passive?.unhealthy?.http_statuses || [])
       : PassiveUnhealthyHttpStatuses
