@@ -201,9 +201,20 @@
         :legend-position="legendPosition"
         :show-annotations="showAnnotationsToggle"
         :show-legend-values="showLegendValuesToggle"
+        timeseries-zoom
         tooltip-title="tooltip title"
+        @zoom-time-range="eventLog += 'Zoomed to ' + JSON.stringify($event) + '\n'"
       />
     </div>
+
+
+    <label>Event Log</label>
+    <KCodeBlock
+      id="event-log-codeblock"
+      :code="eventLog"
+      language="json"
+      searchable
+    />
 
     <br>
 
@@ -378,6 +389,8 @@ const addDataset = () => {
 const dataCode = computed(() => JSON.stringify(exploreResult.value, null, 2))
 const optionsCode = computed(() => JSON.stringify(analyticsChartOptions.value, null, 2))
 
+const eventLog = ref('')
+
 const onMetricSelected = (item: any) => {
   if (!item) {
     return
@@ -398,6 +411,5 @@ watch(multiDimensionToggle, () => {
 </script>
 
 <style lang="scss" scoped>
-@import '../src/styles/base';
 @import '../styles/charts-sandbox';
 </style>

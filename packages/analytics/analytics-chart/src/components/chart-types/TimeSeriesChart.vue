@@ -28,6 +28,7 @@
       />
     </div>
     <ToolTip
+      v-if="!isDoingSelection"
       ref="tooltipElement"
       :context="formatTimestamp(tooltipData.tooltipContext)"
       data-testid="tooltip"
@@ -54,18 +55,19 @@
 <script setup lang="ts">
 
 import type { PropType } from 'vue'
-import { reactive, ref, computed, toRef, inject, watch } from 'vue'
+import { reactive, ref, computed, toRef, inject, watch, nextTick } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import { verticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
 import { highlightPlugin } from '../chart-plugins/HighlightPlugin'
+import { dragSelectPlugin, type DragSelectEventDetail } from '../chart-plugins/DragSelectPlugin'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
 import { v4 as uuidv4 } from 'uuid'
 import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
 import type { ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry } from '../../types'
-import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { GranularityValues, AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { formatTime } from '@kong-ui-public/analytics-utilities'
 import type { Chart, LegendItem } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
@@ -139,7 +141,16 @@ const props = defineProps({
     required: false,
     default: (a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue,
   },
+  zoom: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
+
+const emit = defineEmits<{
+  (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void,
+}>()
 
 const { translateUnit } = composables.useTranslatedUnits()
 const chartInstance = ref<{ chart: Chart }>()
@@ -148,6 +159,8 @@ const chartID = ref(uuidv4())
 const legendItems = ref<LegendItem[]>([])
 const tooltipElement = ref()
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
+const isDoingSelection = ref(false)
+const tz = (new Intl.DateTimeFormat()).resolvedOptions().timeZone
 
 const tooltipData = reactive({
   showTooltip: false,
@@ -176,7 +189,12 @@ const htmlLegendPlugin = {
   },
 }
 
-const plugins = computed(() => [htmlLegendPlugin, highlightPlugin, ...(props.type === 'timeseries_line' ? [verticalLinePlugin] : [])])
+const plugins = computed(() => [
+  htmlLegendPlugin,
+  highlightPlugin,
+  ...(props.zoom ? [dragSelectPlugin] : []),
+  ...(props.type === 'timeseries_line' ? [verticalLinePlugin] : []),
+])
 
 const { options } = composables.useLinechartOptions({
   tooltipState: tooltipData,
@@ -226,6 +244,26 @@ watch(() => props.type, () => {
   tooltipData.locked = false
   tooltipData.showTooltip = false
   delete verticalLinePlugin.clickedSegment
+})
+
+
+nextTick(() => {
+  if (chartInstance.value?.chart) {
+    chartInstance.value.chart.canvas.addEventListener('dragSelect', (event) => {
+      const { xStart, xEnd } = (event as CustomEvent<DragSelectEventDetail>).detail
+      if (xStart && xEnd) {
+        emit('zoom-time-range', { start: new Date(xStart), end: new Date(xEnd), type: 'absolute', tz })
+      }
+      isDoingSelection.value = false
+      handleChartClick()
+      verticalLinePlugin.pause = false
+    })
+
+    chartInstance.value.chart.canvas.addEventListener('dragSelectMove', () => {
+      isDoingSelection.value = true
+      verticalLinePlugin.pause = true
+    })
+  }
 })
 
 </script>
