@@ -179,9 +179,6 @@ importers:
       '@kong-ui-public/analytics-utilities':
         specifier: workspace:^
         version: link:../analytics-utilities
-      '@kong-ui-public/entities-shared':
-        specifier: workspace:^
-        version: link:../../entities/entities-shared
       '@kong/icons':
         specifier: ^1.18.1
         version: 1.18.1(vue@3.5.12(typescript@5.6.2))

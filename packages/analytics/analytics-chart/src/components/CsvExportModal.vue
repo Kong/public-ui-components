@@ -88,7 +88,6 @@ import composables from '../composables'
 import type { ExploreResultV4, RecordEvent } from '@kong-ui-public/analytics-utilities'
 import { format } from 'date-fns-tz'
 import type { CsvData, Header, TimeseriesColumn } from '../types'
-import type { FetcherResponse } from '@kong-ui-public/entities-shared'
 
 const { i18n } = composables.useI18n()
 
@@ -202,7 +201,7 @@ const tableData = computed(() => {
   }
 })
 
-const fetcher = async (): Promise<FetcherResponse> => {
+const fetcher = async (): Promise<any> => {
   const { rows } = tableData.value
 
   isLoading.value = false
