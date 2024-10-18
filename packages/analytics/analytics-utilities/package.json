@@ -23,7 +23,6 @@
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
     "build": "run-s typecheck build:package build:types",
-    "build:docs": "typedoc --plugin typedoc-plugin-markdown --out docs src/index.ts --entryDocument analytics-utils.md --gitRevision main --githubPages false --readme none --tsconfig ./tsconfig.build.json",
     "build:package": "BUILD_VISUALIZER='analytics/analytics-utilities' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
