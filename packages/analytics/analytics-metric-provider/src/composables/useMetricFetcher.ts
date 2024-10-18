@@ -9,7 +9,6 @@ import type { MetricFetcherOptions } from '../types'
 import { MAX_ANALYTICS_REQUEST_RETRIES } from '../constants'
 import composables from '.'
 import { useSwrvState } from '@kong-ui-public/core'
-import { TimeframeKeys, TimePeriods } from '@kong-ui-public/analytics-utilities'
 
 export const DEFAULT_KEY = Symbol('default')
 export type MappedMetrics = Record<string | typeof DEFAULT_KEY, Record<string | typeof DEFAULT_KEY, number>>
@@ -168,8 +167,8 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
       return opts.withTrend.value
         // @ts-ignore - dynamic i18n key
         ? i18n.t(`trendRange.${opts.timeframe.value.key}`)
-        // @ts-ignore - dynamic i18n key
-        : i18n.t(`trendRange.${TimePeriods.get(TimeframeKeys.ONE_DAY)?.key}`)
+        // If we're unable to query with a trend, we can't render a meaningful trend range description.
+        : ''
     }
   })
 

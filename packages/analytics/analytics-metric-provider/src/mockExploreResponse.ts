@@ -15,6 +15,7 @@ const fromUnixTimeMs = (t: number) => new Date(t)
 export interface MockOptions {
   dimensionNames?: string[]
   injectErrors?: 'latency' | 'traffic' | 'all'
+  deterministic?: boolean
 }
 
 export const mockExploreResponseFromCypress = (
@@ -67,7 +68,11 @@ export const mockExploreResponse = (
       if (body.dimensions?.includes('status_code_grouped')) {
         ALL_STATUS_CODE_GROUPS.forEach(code => {
           const event = metrics.reduce((accum, agg) => {
-            accum[agg] = (numRecords - i) * 1000 + 100 * j + 1
+            if (opts?.deterministic ?? true) {
+              accum[agg] = (numRecords - i) * 1000 + 100 * j + 1
+            } else {
+              accum[agg] = Math.round(Math.random() * 1000)
+            }
             return accum
           }, { ...eventValue, status_code_grouped: code })
 
@@ -88,7 +93,11 @@ export const mockExploreResponse = (
               ? fromUnixTimeMs(start).toISOString()
               : fromUnixTimeMs(start + granularity).toISOString(),
           event: metrics.reduce((accum, agg) => {
-            accum[agg] = (numRecords - i) * 1000 + (100 * j) + 1
+            if (opts?.deterministic ?? true) {
+              accum[agg] = (numRecords - i) * 1000 + (100 * j) + 1
+            } else {
+              accum[agg] = Math.round(Math.random() * 1000)
+            }
             return accum
           }, { ...eventValue }),
         })
