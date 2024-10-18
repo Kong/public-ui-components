@@ -232,13 +232,13 @@ export const upstreamsResponseFull: UpstreamResponse = {
       timeout: 4,
       type: 'https',
       unhealthy: {
-        http_failures: 5,
+        http_failures: 3,
         http_statuses: [
           429,
           404,
         ],
         interval: 5,
-        tcp_failures: 5,
+        tcp_failures: 3,
         timeouts: 0,
       },
     },
@@ -252,13 +252,13 @@ export const upstreamsResponseFull: UpstreamResponse = {
       },
       type: 'http',
       unhealthy: {
-        http_failures: 5,
+        http_failures: 2,
         http_statuses: [
           429,
           500,
           503,
         ],
-        tcp_failures: 5,
+        tcp_failures: 2,
         timeouts: 10,
       },
     },
@@ -300,13 +300,13 @@ export const upstreamsKMResponseFull: UpstreamResponse = {
       timeout: 4,
       type: 'https',
       unhealthy: {
-        http_failures: 5,
+        http_failures: 3,
         http_statuses: [
           429,
           404,
         ],
         interval: 5,
-        tcp_failures: 5,
+        tcp_failures: 3,
         timeouts: 0,
       },
     },
@@ -320,13 +320,13 @@ export const upstreamsKMResponseFull: UpstreamResponse = {
       },
       type: 'http',
       unhealthy: {
-        http_failures: 5,
+        http_failures: 2,
         http_statuses: [
           429,
           500,
           503,
         ],
-        tcp_failures: 5,
+        tcp_failures: 2,
         timeouts: 10,
       },
     },
