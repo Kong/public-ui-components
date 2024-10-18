@@ -15,6 +15,7 @@ export const queryableRequestDimensions = [
   'control_plane_group',
   'country_code',
   'data_plane_node',
+  'data_plane_node_version',
   'gateway_service',
   'header_host',
   'header_user_agent',
@@ -45,6 +46,7 @@ export type FilterableRequestDimensions = typeof filterableRequestDimensions[num
 export const queryableRequestWildcardDimensions = [
   'auth_type',
   'client_ip',
+  'data_plane_node_version',
   'header_host',
   'header_user_agent',
   'http_method',
