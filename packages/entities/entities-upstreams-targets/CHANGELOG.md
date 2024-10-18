@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.5.35...@kong-ui-public/entities-upstreams-targets@3.5.36) (2024-10-18)
+
+
+### Bug Fixes
+
+* **entities-upstreams-targets:** field value in upstream edit form ([#1726](https://github.com/Kong/public-ui-components/issues/1726)) ([e51bb4d](https://github.com/Kong/public-ui-components/commit/e51bb4deddf3773e82aaceae54358a8ebd563e2f))
+
+
+
+
+
 ## [3.5.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.5.34...@kong-ui-public/entities-upstreams-targets@3.5.35) (2024-10-17)
 
 **Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
