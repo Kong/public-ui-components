@@ -1,4 +1,20 @@
 <template>
+  <div>
+    <select v-model="timeframeSelection">
+      <option value="">
+        None
+      </option>
+      <option value="15m">
+        15 minutes
+      </option>
+      <option value="6h">
+        6 hours
+      </option>
+      <option value="24h">
+        1 day
+      </option>
+    </select>
+  </div>
   <h4>Global props, Large cards</h4>
   <div>
     <SandboxBridgeInjector :query-bridge="globalBridge">
@@ -52,15 +68,76 @@
       </MetricsProvider>
     </SandboxBridgeInjector>
   </div>
+
+  <h4>Table View</h4>
+  <div>
+    <SandboxBridgeInjector :query-bridge="timeframeProviderBridge">
+      <MetricsProvider
+        v-slot="{ timeframe }"
+        v-bind="timeframeProviderProps"
+      >
+        <div>
+          <button
+            type="button"
+            @click="randomizeData"
+          >
+            Randomize Data
+          </button>
+        </div>
+        <div>Provider timeframe text: {{ timeframe.display }}</div>
+        <table style="width: 50%">
+          <tr>
+            <th>Name</th>
+            <th>Traffic</th>
+            <th>Errors</th>
+            <th>Latency</th>
+          </tr>
+          <tr>
+            <td>Blah</td>
+            <td>
+              <MetricsConsumer
+                v-slot="{ cardValues }"
+                lookup-key="blah😀😀"
+              >
+                {{ cardValues.trafficCard.currentValue }}
+              </MetricsConsumer>
+            </td>
+            <td>
+              <MetricsConsumer
+                v-slot="{ cardValues }"
+                lookup-key="blah😀😀"
+              >
+                {{ cardValues.errorRateFormatted }}
+              </MetricsConsumer>
+            </td>
+            <td>
+              <MetricsConsumer
+                v-slot="{ cardValues }"
+                lookup-key="blah😀😀"
+              >
+                {{ cardValues.latencyCard.currentValue }}
+              </MetricsConsumer>
+            </td>
+          </tr>
+        </table>
+      </MetricsProvider>
+    </SandboxBridgeInjector>
+  </div>
 </template>
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import MetricsConsumer from '../src/components/MetricsConsumer.vue'
 import MetricsProvider from '../src/components/MetricsProvider.vue'
 import type { MockOptions } from '../src/mockExploreResponse'
 import { mockExploreResponse } from '../src/mockExploreResponse'
 import axios from 'axios'
-import type { AnalyticsBridge, ExploreFilter, ExploreQuery } from '@kong-ui-public/analytics-utilities'
-import { TimeframeKeys, TimePeriods } from '@kong-ui-public/analytics-utilities'
+import type {
+  AnalyticsBridge,
+  DatasourceAwareQuery,
+  ExploreFilter,
+  ExploreQuery,
+} from '@kong-ui-public/analytics-utilities'
+import { TimePeriods } from '@kong-ui-public/analytics-utilities'
 import { MetricCardSize } from '../src/enums'
 import SandboxBridgeInjector from './SandboxBridgeInjector.vue'
 
@@ -68,6 +145,8 @@ const refreshInterval = 60 * 1000
 
 // Need to have a local proxy running forwarding traffic to konnect api to hit real data.
 const USE_REAL_DATA = false
+
+const timeframeSelection = ref('15m')
 
 const makeQueryBridge = (opts?: MockOptions): AnalyticsBridge => {
 
@@ -81,13 +160,13 @@ const makeQueryBridge = (opts?: MockOptions): AnalyticsBridge => {
   }
 
   return {
-    queryFn: (query: ExploreQuery) => {
+    queryFn: (query: DatasourceAwareQuery) => {
 
       if (USE_REAL_DATA) {
         options.data = query
         return axios.request(options).then(res => res.data)
       } else {
-        return Promise.resolve(mockExploreResponse(query, opts))
+        return Promise.resolve(mockExploreResponse(query.query as ExploreQuery, opts))
       }
     },
 
@@ -107,43 +186,68 @@ const makeQueryBridge = (opts?: MockOptions): AnalyticsBridge => {
   }
 }
 
+const overrideTimeframe = computed(() => {
+  if (timeframeSelection.value) {
+    return TimePeriods.get(timeframeSelection.value)
+  }
+
+  return undefined
+})
+
 // Query stats for an entire org, no grouping or filtering.
-const globalProviderProps = {
+const globalProviderProps = computed(() => ({
   refreshInterval,
-  overrideTimeframe: TimePeriods.get(TimeframeKeys.SIX_HOUR),
+  overrideTimeframe: overrideTimeframe.value,
   longCardTitles: false,
   description: 'Generic Description',
   containerTitle: 'Analytics',
-}
+}))
+
 const globalBridge = makeQueryBridge()
 
 // Query stats for an entire org, but also apply a filter.
-const filteredProviderProps = {
+const filteredProviderProps = computed(() => ({
   refreshInterval,
-  overrideTimeframe: TimePeriods.get(TimeframeKeys.SIX_HOUR),
+  overrideTimeframe: overrideTimeframe.value,
   additionalFilter: [{
     dimension: 'application',
     type: 'in',
     values: ['app1'],
   } as ExploreFilter],
-}
+}))
 
 // Query stats for a single entity, no grouping.
-const singleProviderProps = {
+const singleProviderProps = computed(() => ({
   refreshInterval,
+  overrideTimeframe: overrideTimeframe.value,
   dimension: 'route',
   filterValue: 'blah',
-}
+}))
 const singleProviderBridge = makeQueryBridge({ dimensionNames: ['blah'] })
 
 // Query stats for multiple entities.
-const multiProviderProps = {
+const multiProviderProps = computed(() => ({
   refreshInterval,
   dimension: 'route',
-  overrideTimeframe: TimePeriods.get(TimeframeKeys.CURRENT_MONTH),
-}
+  overrideTimeframe: overrideTimeframe.value,
+}))
 const multiProviderBridge = makeQueryBridge({ dimensionNames: ['blah😀😀', 'arrgh'] })
 
+// Query stats with adjustable timeframe
+const filterCounter = ref(0)
+
+const randomizeData = () => {
+  filterCounter.value += 1
+}
+
+const timeframeProviderProps = computed(() => ({
+  refreshInterval,
+  dimension: 'route',
+  overrideTimeframe: overrideTimeframe.value,
+  additionalFilter: [{ dimension: 'control_plane', operator: '=', value:  '' + filterCounter.value }],
+}))
+
+const timeframeProviderBridge = makeQueryBridge({ dimensionNames: ['blah😀😀', 'arrgh'], deterministic: false })
 </script>
 <style lang="scss">
 body {
