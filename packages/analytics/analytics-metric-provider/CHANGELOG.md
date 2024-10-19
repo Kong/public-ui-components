@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.4.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.4.38...@kong-ui-public/analytics-metric-provider@8.4.39) (2024-10-19)
+
+
+### Bug Fixes
+
+* **analytics:** trend range text in multi-entity queries [MA-3250] ([#1730](https://github.com/Kong/public-ui-components/issues/1730)) ([246e130](https://github.com/Kong/public-ui-components/commit/246e1304b0e4d655296f6b00fb954958904c4472))
+
+
+
+
+
 ## [8.4.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.4.37...@kong-ui-public/analytics-metric-provider@8.4.38) (2024-10-17)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
