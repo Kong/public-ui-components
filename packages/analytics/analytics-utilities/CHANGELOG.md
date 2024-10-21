@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.0.4...@kong-ui-public/analytics-utilities@5.1.0) (2024-10-21)
+
+
+### Features
+
+* add DP version ([#1729](https://github.com/Kong/public-ui-components/issues/1729)) ([e352d81](https://github.com/Kong/public-ui-components/commit/e352d81cb42ef82568814683c4f6dede67351ad8))
+
+
+
+
+
 ## [5.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.0.3...@kong-ui-public/analytics-utilities@5.0.4) (2024-10-17)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
