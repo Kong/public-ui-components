@@ -156,8 +156,8 @@ const showMetricSmall = computed(() => props.metricDisplay === ChartMetricDispla
 </script>
 
 <style lang="scss" scoped>
-@import '../../styles/base';
-@import '../../styles/chart';
+@use '../../styles/base' as *;
+@use '../../styles/chart';
 
 .chart-parent {
   height: auto;

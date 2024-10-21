@@ -38,7 +38,7 @@ watch(() => props.active, (active) => {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/variables";
+@use "../../styles/variables" as *;
 
 .sidebar-menu-toggle {
   border-radius: $kui-border-radius-20;

@@ -367,8 +367,8 @@ provide('legendPosition', toRef(props, 'legendPosition'))
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/base';
-@import '../styles/chart-shell';
+@use "../styles/base" as *;
+@use "../styles/chart-shell";
 
 .analytics-chart-shell {
   height: 100%;

@@ -10,7 +10,8 @@
 </template>
 
 <style lang="scss" scoped>
-@import "../../styles/base";
+@use "../../styles/base" as *;
+
 .loading-tabs {
   display: flex;
   flex-direction: column;

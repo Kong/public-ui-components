@@ -284,6 +284,6 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '../../styles/base';
-@import '../../styles/chart';
+@use '../../styles/base' as *;
+@use '../../styles/chart';
 </style>

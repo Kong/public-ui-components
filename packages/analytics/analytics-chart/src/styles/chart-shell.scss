@@ -1,3 +1,5 @@
+@use "./base.scss" as *;
+
 // Styles common to both AnalticsChart and SimpleChart
 .analytics-chart-shell,
 .simple-chart-shell {

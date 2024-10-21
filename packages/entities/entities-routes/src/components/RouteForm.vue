@@ -1344,7 +1344,7 @@ defineExpose({ saveFormData, getPayload })
 </style>
 
 <style lang="scss" scoped>
-@import '../styles/mixins';
+@use "../styles/mixins" as *;
 
 .kong-ui-entities-route-form {
   width: 100%;

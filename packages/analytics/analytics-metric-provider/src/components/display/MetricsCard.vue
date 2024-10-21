@@ -216,7 +216,7 @@ const hideTitleIcon = [MetricCardSize.Small].includes(props.cardSize)
 </script>
 
 <style lang="scss">
-@import "../../styles/base";
+@use "../../styles/base" as *;
 
 .metricscard-tooltip {
   @include pointer-events-all;
@@ -233,7 +233,7 @@ const hideTitleIcon = [MetricCardSize.Small].includes(props.cardSize)
 </style>
 
 <style lang="scss" scoped>
-@import "../../styles/base";
+@use "../../styles/base" as *;
 
 .metricscard {
   display: flex;

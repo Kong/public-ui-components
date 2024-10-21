@@ -1,2 +1,3 @@
-@import "./variables/app-navbar";
-@import "./variables/app-sidebar";
+@forward "@kong/design-tokens/tokens/scss/variables";
+@forward "./variables/app-navbar";
+@forward "./variables/app-sidebar";

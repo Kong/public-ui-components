@@ -503,5 +503,5 @@ watch(isGaugeChart, () => {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/charts-sandbox';
+@use "../styles/charts-sandbox";
 </style>
