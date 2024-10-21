@@ -65,7 +65,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.11.2",
+    "@kong/kongponents": "9.11.5",
     "maplibre-gl": "workspace:^",
     "vue": "^3.5.11"
   },
