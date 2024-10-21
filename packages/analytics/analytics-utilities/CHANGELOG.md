@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.1.0...@kong-ui-public/analytics-utilities@5.2.0) (2024-10-21)
+
+
+### Features
+
+* add map chart type ([#1735](https://github.com/Kong/public-ui-components/issues/1735)) ([712f2e0](https://github.com/Kong/public-ui-components/commit/712f2e009991d54d7b2602dd39269de43238621c))
+
+
+
+
+
 # [5.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.0.4...@kong-ui-public/analytics-utilities@5.1.0) (2024-10-21)
 
 
