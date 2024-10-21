@@ -24,7 +24,7 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.18.1",
-    "@kong/kongponents": "9.11.5",
+    "@kong/kongponents": "9.12.1",
     "axios": "^1.7.7",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.4.5"
