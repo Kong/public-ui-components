@@ -416,12 +416,11 @@ const confirmSwitchEnablement = async () => {
       : await axiosInstance.patch(url, { ...switchEnablementTarget.value, enabled })
     // Emit the success event for the host app
     emit('toggle:success', data)
+    // Update switchEnablementTarget
+    switchEnablementTarget.value.enabled = enabled
   } catch (e: any) {
     emit('error', e)
   }
-
-  // Update switchEnablementTarget
-  switchEnablementTarget.value.enabled = enabled
 }
 
 /**
