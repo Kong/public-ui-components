@@ -27,7 +27,7 @@ Render Analytics charts on a page from a JSON definition.
 
 ### Props
 
-This component only takes two properties:
+This component only takes 2 properties:
 
 - [context](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/src/types/dashboard-renderer-types.ts) : The time range that the dashboard should query and any additional filters that should be applied.
 - [config](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/src/types/dashboard-renderer-types.ts) : The dashboard config and layout.

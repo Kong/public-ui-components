@@ -17,7 +17,7 @@ Dynamic chart component for kong analytics.
 
 ## Features
 
-- Display kong analytics in a graph.
+- Display Kong analytics in a graph.
 
 ## Requirements
 
