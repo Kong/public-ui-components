@@ -60,9 +60,10 @@
           />
         </template>
         <template #code-editor>
-          <PluginConfigEditor
-            :kong-schema="(configResponse as RecordFieldSchema)"
-            :name="pluginType"
+          <PluginConfigEditorLoader
+            :metadata="PLUGIN_METADATA[props.pluginType]"
+            :name="props.pluginType"
+            :raw-gateway-schema="(configResponse as RecordFieldSchema)"
           />
         </template>
       </KTabs>
@@ -184,7 +185,7 @@ import {
   type PluginOrdering,
   type RecordFieldSchema,
 } from '../types'
-import PluginConfigEditor from './PluginConfigEditor.vue'
+import PluginConfigEditorLoader from './PluginConfigEditorLoader.vue'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 

@@ -16,13 +16,15 @@ import oauthCredentialSchema from './schemas/credentials/mockedOAuthSchema.json'
 import KeyAuthEncSchema from './schemas/KeyAuthEnc'
 import keyEncCredentialSchema from './schemas/credentials/mockedKeyEncAuthSchema.json'
 
+export type StaticPluginMetaData = Omit<PluginMetaData<I18nMessageSource>, 'name' | 'description'>
+
 /**
  * The *static* metadata of all plugins for faster access with less memory footprint.
  *
  * Please be noted that the `name` and `description` fields are not populated here, as they depends
  * on i18n resources. You may use the `usePluginMetaData` composable instead to get the localized metadata.
  */
-export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSource>, 'name' | 'description'>> = {
+export const PLUGIN_METADATA: Record<string, StaticPluginMetaData> = {
   'basic-auth': {
     descriptionKey: 'plugins.meta.basic-auth.description',
     group: PluginGroup.AUTHENTICATION,

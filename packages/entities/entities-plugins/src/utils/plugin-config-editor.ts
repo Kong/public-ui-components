@@ -1,3 +1,4 @@
+import type * as MonacoEditorType from 'monaco-editor'
 import type { JSONSchema } from '@kong/vscode-json-languageservice'
 import {
   isArrayLikeField,
@@ -16,6 +17,24 @@ import {
   type RecordFieldSchema,
   type StringFieldSchema,
 } from '../types'
+
+export const setupMonaco = async () => {
+  const [EditorWorker, JsonWorker] = await Promise.all([
+    import('@kong/monaco-editor/esm/vs/editor/editor.worker?worker').then(module => module.default),
+    import('@kong/monaco-editor/esm/vs/language/json/json.worker?worker').then(module => module.default),
+  ])
+
+  window.MonacoEnvironment = {
+    getWorker(_: any, label: string) {
+      if (label === 'json') {
+        return new JsonWorker()
+      }
+      return new EditorWorker()
+    },
+  }
+
+  return await import('monaco-editor') as typeof MonacoEditorType
+}
 
 const luaPatternToRePattern = (luaPattern: string) => {
   return (

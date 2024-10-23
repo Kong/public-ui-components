@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 import { defineConfig, mergeConfig } from 'vite'
-import monacoEditorPlugin from 'vite-plugin-monaco-editor'
+// import monacoEditorPlugin from 'vite-plugin-monaco-editor'
 import sharedViteConfig, { getApiProxies, sanitizePackageName } from '../../../vite.config.shared'
 
 // Package name MUST always match the kebab-case package name inside the component's package.json file and the name of your `/packages/{package-name}` directory
@@ -32,22 +32,25 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
   plugins: [
     // This plugin is only used in the sandbox & testing environment
     // It generates extra files in dist folder which are not need in library build
-    ...(process.env.USE_SANDBOX
-      ? [((monacoEditorPlugin as any).default as typeof monacoEditorPlugin)({
-        languageWorkers: ['editorWorkerService', 'json'],
-        customWorkers: [
-          {
-            label: 'yaml',
-            entry: '@kong/monaco-yaml/yaml.worker',
-          },
-        ],
-        forceBuildCDN: true,
-      })]
-      : []),
+    // ...(process.env.USE_SANDBOX
+    // ? [((monacoEditorPlugin as any).default as typeof monacoEditorPlugin)({
+    //   languageWorkers: ['editorWorkerService'],
+    //   customWorkers: [
+    //     {
+    //       label: 'json',
+    //       entry: '@kong/monaco-editor/esm/vs/language/json/json.worker',
+    //     },
+    //     {
+    //       label: 'yaml',
+    //       entry: '@kong/monaco-yaml/yaml.worker',
+    //     },
+    //   ],
+    // })]
+    // : []),
   ],
-  optimizeDeps: {
-    exclude: ['monaco-editor'],
-  },
+  // optimizeDeps: {
+  //   exclude: ['monaco-editor', '@kong/monaco-editor'],
+  // },
 }))
 
 // If we are trying to preview a build of the local `package/entities-routes/sandbox` directory,

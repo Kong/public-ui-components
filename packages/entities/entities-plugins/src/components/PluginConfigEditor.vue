@@ -19,39 +19,48 @@
   </div>
 </template>
 
+<script lang="ts">
+export interface PluginConfigEditorProps {
+  name: string;
+  metadata: StaticPluginMetaData;
+  rawGatewaySchema: RecordFieldSchema;
+}
+</script>
+
 <script setup lang="ts">
 import { FORMS_API_KEY } from '@kong-ui-public/forms'
-import * as monaco from 'monaco-editor'
+import type { StaticPluginMetaData } from 'src/definitions/metadata'
+import type * as Monaco from 'monaco-editor'
 import { inject, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue'
 import composables from '../composables'
 import { type EditorLanguage, type FormsApi, type RecordFieldSchema } from '../types'
-import { isValidUuid } from '../utils'
+import { isValidUuid, setupMonaco } from '../utils'
 
 const languageOptions = [
   { label: 'JSON', value: 'json' },
   { label: 'YAML', value: 'yaml' },
 ]
 
-const props = defineProps<{
-  name: string;
-  kongSchema: RecordFieldSchema;
-}>()
+const props = defineProps<PluginConfigEditorProps>()
 
-let editorDisposables: monaco.IDisposable[] = []
-let editor: monaco.editor.IStandaloneCodeEditor
+const monaco = await setupMonaco()
+
+let editorDisposables: Monaco.IDisposable[] = []
+let editor: Monaco.editor.IStandaloneCodeEditor
 let editorDecorations: string[] = []
 
 const editorRef = ref<HTMLElement | null>(null)
-const { name, kongSchema } = toRefs(props)
+const { name, metadata, rawGatewaySchema } = toRefs(props)
 const language = ref<EditorLanguage>('json')
 
-const { model, schema, uri, textDocument, languageSpecificDocument, onDidChangeModelContent } = composables.usePluginConfigEditor(name, kongSchema, language)
+const { model, schema, uri, textDocument, languageSpecificDocument, onDidChangeModelContent } =
+  composables.usePluginConfigEditor(monaco, name, metadata, rawGatewaySchema, language)
 
-const updateModel = (model: monaco.editor.ITextModel) => {
+const updateModel = (model: Monaco.editor.ITextModel) => {
   editor.setModel(model)
 }
 
-const updateSchemaUri = (schema: any, uri: monaco.Uri) => {
+const updateSchemaUri = (schema: any, uri: Monaco.Uri) => {
   monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
     validate: true,
     schemas: [
@@ -155,15 +164,6 @@ const searchForeignRecords = async (entity: string, query: string): Promise<any[
   const fields = ['id', 'name'] // get from schema or something
   const filteredIds = new Set()
 
-  // If query is a valid UUID, do the exact search
-  // if (isValidUuid(query) && fields.includes('id')) {
-  // promises.push((async () => {
-  //   const item = await this.fetchExact(query)
-
-  //   items.push({ ...item, label: this.getSuggestionLabel(item), value: item.id })
-  // })())
-  // } else {
-  // Search on fields with backend filtering support
   promises.push(
     ...fields
       .filter((field) => field !== 'id')
@@ -188,7 +188,7 @@ onBeforeUnmount(() => {
   editorDisposables.forEach((d) => d?.dispose())
 })
 
-onMounted(() => {
+onMounted(async () => {
   editor = monaco.editor.create(editorRef.value as HTMLElement, {
     theme: 'vs',
     automaticLayout: true,
@@ -223,7 +223,7 @@ onMounted(() => {
       const matchingUri = uris.find((u) => u.toString() === uri.value.toString())
 
       if (matchingUri) {
-        const decorations: monaco.editor.IModelDeltaDecoration[] = []
+        const decorations: Monaco.editor.IModelDeltaDecoration[] = []
         const markers = monaco.editor.getModelMarkers({
           resource: uri.value,
         })
@@ -270,7 +270,7 @@ onMounted(() => {
   editorDisposables.push(
     monaco.languages.registerCompletionItemProvider('json', {
       triggerCharacters: [' ', ':', '"'],
-      provideCompletionItems: async (model, position, context) => {
+      provideCompletionItems: async (model, position) => {
         const node = languageSpecificDocument.value.getNodeFromOffset(
           textDocument.value.offsetAt({
             line: position.lineNumber - 1,
@@ -278,33 +278,71 @@ onMounted(() => {
           }),
         )
 
-        if (node?.type === 'string' && node.parent?.type === 'property' && node.parent.keyNode.value === 'service') {
+        if (node?.type === 'property' && node.keyNode.value === 'service') {
+          return {
+            suggestions: [
+              {
+                label: 'Search for a service',
+                kind: monaco.languages.CompletionItemKind.Snippet,
+                insertText: JSON.stringify(''),
+                markdownDescription: [
+                  '1. Search for a service by typing keywords inside the `""` (e.g. `"my-service"`)',
+                  '2. Wait for the search results',
+                  '3. Pick a service from the list',
+                ].join('\n'),
+                sortText: '_1',
+              },
+              {
+                label: 'Provide a service ID',
+                kind: monaco.languages.CompletionItemKind.Snippet,
+                insertText: JSON.stringify({ id: '' }, null, 2).replace(/\n\s*/g, ' '),
+                description: '',
+                sortText: '_2',
+              },
+              {
+                label: 'Provide a service name',
+                kind: monaco.languages.CompletionItemKind.Snippet,
+                insertText: JSON.stringify({ name: '' }, null, 2).replace(/\n\s*/g, ' '),
+                description: '',
+                sortText: '_3',
+              },
+            ],
+          }
+        } else if (node?.type === 'string' && node.parent?.type === 'property' && node.parent.keyNode.value === 'service') {
           const nodePosition = textDocument.value.positionAt(node.offset)
+          const completionItemRange = {
+            startLineNumber: nodePosition.line + 1,
+            startColumn: nodePosition.character + 2,
+            endLineNumber: nodePosition.line + 1,
+            endColumn: nodePosition.character + node.length,
+          }
           const replaceRange = {
             startLineNumber: nodePosition.line + 1,
             startColumn: nodePosition.character + 1, // including the opening quote
             endLineNumber: nodePosition.line + 1,
             endColumn: nodePosition.character + node.length + 1, // including the closing quote
           }
-          console.log(`>${textDocument.value.getText({
-            start: { line: replaceRange.startLineNumber - 1, character: replaceRange.startColumn - 1 },
-            end: { line: replaceRange.endLineNumber - 1, character: replaceRange.endColumn - 1 },
-          })}<`)
 
           const records = await searchForeignRecords('services', node.value)
+          console.log('records:', records)
+
           return {
             suggestions: records.map((service: any) => {
               const reference = JSON.stringify({ id: service.id }, null, 2).replace(/\n\s*/g, ' ')
 
               return {
-                label: service.name,
+                label: service.name ? `${service.name} (${service.id})` : service.id,
                 kind: monaco.languages.CompletionItemKind.Reference,
-                additionalTextEdits: [{
-                  range: replaceRange,
-                  text: `${reference}${'$'.repeat(node.value.length)}`, // The paddings here are ESSENTIAL
-                }],
+                additionalTextEdits: [
+                  {
+                    range: replaceRange,
+                    text: `${reference}${'$'.repeat(node.value.length)}`, // The paddings here are ESSENTIAL
+                  },
+                ],
                 insertText: '', // Not used but have to be present
+                range: completionItemRange, // To suppress TS warnings and ensure it works
                 detail: JSON.stringify(service, null, 2),
+                filterText: node.value,
               }
             }),
             incomplete: true, // Disable filtering
