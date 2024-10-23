@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.1.6...@kong-ui-public/entities-plugins@9.1.7) (2024-10-23)
+
+
+### Bug Fixes
+
+* **entities-gateway-services:** switch enable status fix ([#1740](https://github.com/Kong/public-ui-components/issues/1740)) ([69ef079](https://github.com/Kong/public-ui-components/commit/69ef07989245d60301dd3aacc8eebd4fd3ba429d))
+
+
+
+
+
 ## [9.1.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.1.5...@kong-ui-public/entities-plugins@9.1.6) (2024-10-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
