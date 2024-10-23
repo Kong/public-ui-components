@@ -292,11 +292,11 @@ onBeforeUnmount(() => {
 // Leave unscoped
 // Importing all styles just for this entry component.
 // Any other component in this package should only import the `_variables.scss` file.
-@import "../styles/app-layout";
+@use "../styles/app-layout";
 </style>
 
 <style lang="scss" scoped>
-@import "../styles/variables";
+@use "../styles/variables" as *;
 
 .kong-ui-app-layout {
   background: $kui-color-background-inverse;

@@ -232,7 +232,8 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 </script>
 
 <style lang="scss" scoped>
-@import '../../styles/base';
+@use "../../styles/globals" as *;
+
 .legend-container {
   display: flex;
   margin: $kui-space-30 0 0 0;

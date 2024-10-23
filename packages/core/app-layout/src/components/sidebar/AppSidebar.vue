@@ -364,7 +364,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/variables";
+@use "../../styles/variables" as *;
 
 .kong-ui-app-sidebar {
   background: $kui-color-background-inverse;
@@ -574,7 +574,7 @@ onBeforeUnmount(() => {
 </style>
 
 <style lang="scss">
-@import "../../styles/variables";
+@use "../../styles/variables" as *;
 
 // Scope with wrapper class intead of using `scoped` so these styles will apply to child components
 .kong-ui-app-sidebar {

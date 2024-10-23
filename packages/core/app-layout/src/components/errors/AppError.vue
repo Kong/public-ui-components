@@ -18,7 +18,7 @@ import BananaSplit from '../icons/BananaSplit.vue'
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/variables";
+@use "../../styles/variables" as *;
 
 .kong-ui-app-error {
   align-items: center;

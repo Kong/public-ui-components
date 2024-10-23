@@ -392,7 +392,7 @@ watch(multiDimensionToggle, () => {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/charts-sandbox';
+@use "../styles/charts-sandbox";
 
 .chart-container {
   height: 500px;

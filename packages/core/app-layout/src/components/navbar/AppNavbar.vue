@@ -70,7 +70,7 @@ const headerStyles = computed(() => ({
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/variables";
+@use "../../styles/variables" as *;
 
 .kong-ui-app-navbar {
   background: var(--kong-ui-app-navbar-background, $kui-color-background-inverse);

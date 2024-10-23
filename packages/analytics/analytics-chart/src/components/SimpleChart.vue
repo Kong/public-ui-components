@@ -109,8 +109,8 @@ const hasValidChartData = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/base';
-@import '../styles/chart-shell';
+@use "../styles/globals" as *;
+@use "../styles/chart-shell";
 
 .simple-chart-shell {
   margin: var(--kui-space-0, $kui-space-0);

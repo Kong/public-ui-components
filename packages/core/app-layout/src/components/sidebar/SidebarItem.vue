@@ -139,7 +139,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 </script>
 
 <style lang="scss">
-@import "../../styles/variables";
+@use "../../styles/variables" as *;
 
 // Scope with wrapper class intead of using `scoped` so these styles will apply to child components
 .kong-ui-app-sidebar {
@@ -241,7 +241,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 </style>
 
 <style lang="scss" scoped>
-@import "../../styles/variables";
+@use "../../styles/variables" as *;
 
 // Primary-level nav item
 .sidebar-item-primary {

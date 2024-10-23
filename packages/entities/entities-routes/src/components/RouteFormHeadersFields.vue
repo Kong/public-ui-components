@@ -71,7 +71,7 @@ watch(fieldsValue, (value) => {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/mixins';
+@use "../styles/mixins" as *;
 
 .routing-rule {
   @include routing-rule;

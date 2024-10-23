@@ -171,6 +171,6 @@ const tooltipDimensions = ({ width, height }: { width: number, height: number })
 </script>
 
 <style lang="scss" scoped>
-@import '../../styles/base';
-@import '../../styles/chart';
+@use "../../styles/globals" as *;
+@use "../../styles/chart";
 </style>

@@ -408,7 +408,6 @@ const deleteModalError = ref<string>('')
 const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 
 const deleteModelEntityType = computed<EntityTypes>(() => {
-  // @ts-ignore
   return EntityTypes[props.config.plugin]
 })
 
