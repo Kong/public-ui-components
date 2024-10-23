@@ -201,7 +201,7 @@ function handleMouseUp() {
 </script>
 
 <style lang="scss" scoped>
-@use '../../styles/base' as *;
+@use "../../styles/globals" as *;
 
 .locked {
   cursor: move;

@@ -10,7 +10,7 @@
 </template>
 
 <style lang="scss" scoped>
-@use "../../styles/base" as *;
+@use "../../styles/globals" as *;
 
 .loading-tabs {
   display: flex;

@@ -109,7 +109,7 @@ const hasValidChartData = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@use "../styles/base" as *;
+@use "../styles/globals" as *;
 @use "../styles/chart-shell";
 
 .simple-chart-shell {

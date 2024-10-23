@@ -224,7 +224,7 @@ const hideTitleIcon = [MetricCardSize.Small, MetricCardSize.LargeCompact].includ
 </script>
 
 <style lang="scss">
-@use "../../styles/base" as *;
+@use "../../styles/globals" as *;
 
 .metricscard-tooltip {
   @include pointer-events-all;
@@ -241,7 +241,7 @@ const hideTitleIcon = [MetricCardSize.Small, MetricCardSize.LargeCompact].includ
 </style>
 
 <style lang="scss" scoped>
-@use "../../styles/base" as *;
+@use "../../styles/globals" as *;
 
 $row-gap-size: 12px;
 

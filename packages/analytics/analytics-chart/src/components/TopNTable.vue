@@ -230,7 +230,7 @@ const getValue = (record: AnalyticsExploreRecord): string => {
 </script>
 
 <style lang="scss" scoped>
-@use "../styles/base" as *;
+@use "../styles/globals" as *;
 
 .kong-ui-public-top-n-table {
   border: none !important;

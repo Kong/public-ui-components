@@ -562,8 +562,8 @@ const handleChartClick = () => {
 </script>
 
 <style lang="scss" scoped>
-@use '../../styles/base' as *;
-@use '../../styles/chart';
+@use "../../styles/globals" as *;
+@use "../../styles/chart";
 
 .chart-container {
   overflow: auto;

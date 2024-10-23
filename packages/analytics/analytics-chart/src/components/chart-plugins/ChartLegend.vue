@@ -232,7 +232,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 </script>
 
 <style lang="scss" scoped>
-@use '../../styles/base' as *;
+@use "../../styles/globals" as *;
 
 .legend-container {
   display: flex;

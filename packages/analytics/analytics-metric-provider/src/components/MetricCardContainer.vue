@@ -130,7 +130,7 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
 </script>
 
 <style lang="scss" scoped>
-@use "../styles/base" as *;
+@use "../styles/globals" as *;
 
 .kong-ui-public-metric-card-container {
   background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
