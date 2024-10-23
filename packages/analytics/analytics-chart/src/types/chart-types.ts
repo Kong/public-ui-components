@@ -4,6 +4,7 @@ export const chartTypes = [
   'vertical_bar',
   'timeseries_line',
   'timeseries_bar',
+  'choropleth_map',
 ] as const
 
 export type ChartType = typeof chartTypes[number]
