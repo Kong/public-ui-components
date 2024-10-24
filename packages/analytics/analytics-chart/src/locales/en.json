@@ -5,6 +5,7 @@
   "entityNoName": "no-name",
   "debug": "debug",
   "total": "Total",
+  "jumpToExplore": "Jump to Explore",
   "chartUnits": {
     "ms": "ms",
     "bytes": "Byte{plural}",
