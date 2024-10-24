@@ -165,7 +165,7 @@ importers:
         specifier: ^2.1.2
         version: 2.1.3(@types/node@18.19.57)(@vitest/ui@2.1.3)(jsdom@25.0.1)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0)
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -256,7 +256,7 @@ importers:
         specifier: ^5.4.1
         version: 5.4.1
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
 
   packages/analytics/analytics-config-store:
@@ -268,7 +268,7 @@ importers:
         specifier: '>= 2.1.7 < 3'
         version: 2.1.7(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3))
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
 
   packages/analytics/analytics-geo-map:
@@ -296,7 +296,7 @@ importers:
         specifier: ^4.7.1
         version: 4.7.1
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
 
   packages/analytics/analytics-metric-provider:
@@ -395,7 +395,7 @@ importers:
         specifier: ^1.0.4
         version: 1.0.4(vue@3.5.12(typescript@5.6.3))
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
 
   packages/analytics/metric-cards:
@@ -414,7 +414,7 @@ importers:
         specifier: 9.12.1
         version: 9.12.1(axios@1.7.7)(vue-router@4.4.5(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3))
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
 
   packages/analytics/portal-analytics-bridge:
@@ -429,7 +429,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
 
   packages/core/app-layout:
@@ -457,7 +457,7 @@ importers:
         specifier: ^4.5.9
         version: 4.5.9
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -490,7 +490,7 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
     devDependencies:
       '@kong/design-tokens':
@@ -528,7 +528,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
 
   packages/core/error-boundary:
@@ -540,7 +540,7 @@ importers:
         specifier: ^1.18.1
         version: 1.18.1(vue@3.5.12(typescript@5.6.3))
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
 
   packages/core/expressions:
@@ -586,7 +586,7 @@ importers:
         specifier: ^3.3.0
         version: 3.3.0(vite@5.4.8(@types/node@22.7.0)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0))
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
 
   packages/core/forms:
@@ -601,7 +601,7 @@ importers:
         specifier: ^4.17.21
         version: 4.17.21
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
     devDependencies:
       '@kong-ui-public/i18n':
@@ -623,7 +623,7 @@ importers:
   packages/core/i18n:
     dependencies:
       '@formatjs/intl':
-        specifier: ^2.10.7
+        specifier: ^2.10.8
         version: 2.10.8(typescript@5.6.3)
       flat:
         specifier: ^6.0.1
@@ -644,7 +644,7 @@ importers:
         specifier: 9.12.1
         version: 9.12.1(axios@1.7.7)(vue-router@4.4.5(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3))
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
 
   packages/core/sandbox-layout:
@@ -660,7 +660,7 @@ importers:
         specifier: 9.12.1
         version: 9.12.1(axios@1.7.7)(vue-router@4.4.5(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3))
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -691,7 +691,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -718,7 +718,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -745,7 +745,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -772,7 +772,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -799,7 +799,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -826,7 +826,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -850,7 +850,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -877,7 +877,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -926,7 +926,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -966,7 +966,7 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0(monaco-editor@0.52.0)
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -997,7 +997,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -1024,7 +1024,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -1051,7 +1051,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -1079,7 +1079,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
       vue-router:
         specifier: ^4.4.5
@@ -1107,7 +1107,7 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1(vite@5.4.8(@types/node@22.7.0)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0))(vue@3.5.12(typescript@5.6.3))
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
 
   packages/portal/spec-renderer:
@@ -1147,7 +1147,7 @@ importers:
         specifier: ^12.1.3
         version: 12.1.3
       vue:
-        specifier: ^3.5.11
+        specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
 
   packages/portal/swagger-ui-web-component:
@@ -3134,17 +3134,11 @@ packages:
   '@vue/compiler-sfc@3.5.12':
     resolution: {integrity: sha512-2k973OGo2JuAa5+ZlekuQJtitI5CgLMOwgl94BzMCsKZCX/xiqzJYzapl4opFogKHqwJk34vfsaKpfEhd1k5nw==}
 
-  '@vue/compiler-sfc@3.5.8':
-    resolution: {integrity: sha512-taYpngQtSysrvO9GULaOSwcG5q821zCoIQBtQQSx7Uf7DxpR6CIHR90toPr9QfDD2mqHQPCSgoWBvJu0yV9zjg==}
-
   '@vue/compiler-ssr@3.4.31':
     resolution: {integrity: sha512-RtefmITAje3fJ8FSg1gwgDhdKhZVntIVbwupdyZDSifZTRMiWxWehAOTCc8/KZDnBOcYQ4/9VWxsTbd3wT0hAA==}
 
   '@vue/compiler-ssr@3.5.12':
     resolution: {integrity: sha512-eLwc7v6bfGBSM7wZOGPmRavSWzNFF6+PdRhE+VFJhNCgHiF8AM7ccoqcv5kBXA2eWUfigD7byekvf/JsOfKvPA==}
-
-  '@vue/compiler-ssr@3.5.8':
-    resolution: {integrity: sha512-W96PtryNsNG9u0ZnN5Q5j27Z/feGrFV6zy9q5tzJVyJaLiwYxvC0ek4IXClZygyhjm+XKM7WD9pdKi/wIRVC/Q==}
 
   '@vue/compiler-vue2@2.7.16':
     resolution: {integrity: sha512-qYC3Psj9S/mfu9uVi5WvNZIzq+xnXMhOwbTFKKDD7b1lhpnn71jXSFdTQ+WsIEk0ONCd7VV2IMm7ONl6tbQ86A==}
@@ -12404,7 +12398,7 @@ snapshots:
       '@babel/helper-module-imports': 7.22.15
       '@babel/helper-plugin-utils': 7.22.5
       '@babel/parser': 7.24.7
-      '@vue/compiler-sfc': 3.5.8
+      '@vue/compiler-sfc': 3.5.12
 
   '@vue/babel-plugin-resolve-type@1.2.5(@babel/core@7.25.2)':
     dependencies:
@@ -12413,7 +12407,7 @@ snapshots:
       '@babel/helper-module-imports': 7.24.7
       '@babel/helper-plugin-utils': 7.24.8
       '@babel/parser': 7.25.6
-      '@vue/compiler-sfc': 3.5.8
+      '@vue/compiler-sfc': 3.5.12
     transitivePeerDependencies:
       - supports-color
 
@@ -12480,18 +12474,6 @@ snapshots:
       postcss: 8.4.47
       source-map-js: 1.2.1
 
-  '@vue/compiler-sfc@3.5.8':
-    dependencies:
-      '@babel/parser': 7.25.6
-      '@vue/compiler-core': 3.5.8
-      '@vue/compiler-dom': 3.5.8
-      '@vue/compiler-ssr': 3.5.8
-      '@vue/shared': 3.5.8
-      estree-walker: 2.0.2
-      magic-string: 0.30.11
-      postcss: 8.4.47
-      source-map-js: 1.2.1
-
   '@vue/compiler-ssr@3.4.31':
     dependencies:
       '@vue/compiler-dom': 3.4.31
@@ -12501,11 +12483,6 @@ snapshots:
     dependencies:
       '@vue/compiler-dom': 3.5.12
       '@vue/shared': 3.5.12
-
-  '@vue/compiler-ssr@3.5.8':
-    dependencies:
-      '@vue/compiler-dom': 3.5.8
-      '@vue/shared': 3.5.8
 
   '@vue/compiler-vue2@2.7.16':
     dependencies:
