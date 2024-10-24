@@ -204,6 +204,7 @@
         :chart-data="(exploreResult)"
         :chart-options="analyticsChartOptions"
         chart-title="Request count by Status Code"
+        :go-to-explore="(exploreLink)"
         :legend-position="legendPosition"
         :show-annotations="showAnnotationsToggle"
         :show-legend-values="showLegendValuesToggle"
@@ -329,6 +330,8 @@ const setModalVisibility = (val: boolean) => {
 const exportCsv = () => {
   setModalVisibility(true)
 }
+
+const exploreLink: string = 'https://cloud.konghq.tech/us/analytics/explorer'
 
 const exploreResultText = ref('')
 const hasError = computed(() => !isValidJson(exploreResultText.value))
