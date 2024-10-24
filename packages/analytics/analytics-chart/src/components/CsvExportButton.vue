@@ -1,12 +1,11 @@
 <template>
-  <KButton
-    :appearance="buttonAppearance"
+  <span
     class="chart-export-button-display"
     data-testid="csv-export-button"
     @click.prevent="exportCsv"
   >
     {{ text || i18n.t('csvExport.exportButton') }}
-  </KButton>
+  </span>
   <CsvExportModal
     v-if="exportModalVisible"
     :chart-data="data"
@@ -21,7 +20,6 @@ import type { PropType } from 'vue'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import CsvExportModal from './CsvExportModal.vue'
 import composables from '../composables'
-import type { ButtonAppearance } from '@kong/kongponents/dist/types'
 
 const props = defineProps({
   data: {
@@ -32,11 +30,6 @@ const props = defineProps({
     type: String,
     required: false,
     default: undefined,
-  },
-  buttonAppearance: {
-    type: String as PropType<ButtonAppearance>,
-    required: false,
-    default: () => 'tertiary',
   },
   filenamePrefix: {
     type: String,

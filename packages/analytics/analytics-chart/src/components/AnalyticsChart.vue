@@ -27,15 +27,37 @@
           </template>
         </KTooltip>
       </div>
-      <div
-        v-if="allowCsvExport && hasValidChartData"
-        class="chart-export-button"
+      <!-- More actions menu -->
+      <KDropdown
+        v-if="hasMenuOptions"
+        class="dropdown"
+        data-testid="chart-action-menu"
       >
-        <CsvExportButton
-          :data="rawChartData"
-          :filename-prefix="filenamePrefix"
+        <MoreIcon
+          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :size="KUI_ICON_SIZE_40"
         />
-      </div>
+        <template #items>
+          <KDropdownItem
+            v-if="!!goToExplore"
+            data-testid="chart-jump-to-explore"
+          >
+            <a :href="goToExplore">
+              {{ i18n.t('jumpToExplore') }}
+            </a>
+          </KDropdownItem>
+          <KDropdownItem
+            v-if="allowCsvExport && hasValidChartData"
+            class="chart-export-button"
+            data-testid="chart-csv-export"
+          >
+            <CsvExportButton
+              :data="rawChartData"
+              :filename-prefix="filenamePrefix"
+            />
+          </KDropdownItem>
+        </template>
+      </KDropdown>
     </div>
     <KEmptyState
       v-if="!hasValidChartData"
@@ -115,8 +137,8 @@ import { msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { hasMillisecondTimestamps, defaultStatusCodeColors } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
-import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
-import { WarningIcon } from '@kong/icons'
+import { KUI_COLOR_TEXT_NEUTRAL, KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
+import { MoreIcon, WarningIcon } from '@kong/icons'
 import CsvExportButton from './CsvExportButton.vue'
 
 const props = defineProps({
@@ -124,6 +146,11 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+  goToExplore: {
+    type: String,
+    required: false,
+    default: '',
   },
   chartData: {
     type: Object as PropType<ExploreResultV4>,
@@ -302,6 +329,8 @@ const showChartHeader = computed(() => {
   return (hasValidChartData.value && resultSetTruncated.value && maxEntitiesShown.value) || props.chartTitle || (props.allowCsvExport && hasValidChartData.value)
 })
 
+const hasMenuOptions = computed(() => (props.allowCsvExport && hasValidChartData) || !!props.goToExplore)
+
 const timeSeriesGranularity = computed<GranularityValues>(() => {
 
   if (!props.chartData.meta.granularity_ms) {
@@ -395,12 +424,6 @@ provide('legendPosition', toRef(props, 'legendPosition'))
       display: flex;
       justify-content: end;
     }
-
-    .chart-export-button {
-      display: flex;
-      margin-left: var(--kui-space-auto, $kui-space-auto);
-      margin-right: var(--kui-space-0, $kui-space-0);
-    }
   }
 
   .chart-title {
@@ -412,6 +435,33 @@ provide('legendPosition', toRef(props, 'legendPosition'))
     display: flex;
     margin-left: var(--kui-space-50, $kui-space-50);
     margin-top: var(--kui-space-10, $kui-space-10);
+  }
+
+  // Action menu
+  .dropdown {
+    display: flex;
+    margin-left: var(--kui-space-auto, $kui-space-auto);
+    margin-right: var(--kui-space-0, $kui-space-0);
+
+    // :deep(.popover-trigger-wrapper) {
+    //   opacity: 0;
+    //   transform: fade(0, -10px);
+    //   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    //   visibility: hidden;
+    // }
+
+    a {
+      color: $kui-color-text;
+
+      &:hover {
+        color: $kui-color-text;
+        text-decoration: none;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 
