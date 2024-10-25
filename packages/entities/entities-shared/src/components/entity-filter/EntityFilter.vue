@@ -1,6 +1,7 @@
 <template>
   <template v-if="config.isExactMatch">
     <KInput
+      v-if="!config.queryItems"
       autocomplete="off"
       class="kong-ui-entity-filter-input"
       data-testid="search-input"
@@ -21,6 +22,17 @@
         />
       </template>
     </KInput>
+    <KSelect
+      v-else
+      class="kong-ui-entity-filter-input"
+      clearable
+      data-testid="search-input"
+      enable-filtering
+      :items="config.queryItems"
+      :model-value="modelValue"
+      :placeholder="config.placeholder"
+      @update:model-value="handleQueryUpdate"
+    />
   </template>
   <template v-else>
     <div class="kong-ui-entity-filter">
@@ -201,8 +213,8 @@ const toggleExpanded = (field: string) => {
   expandedFields.value.has(field) ? expandedFields.value.delete(field) : expandedFields.value.add(field)
 }
 
-const handleQueryUpdate = (query: string) => {
-  emit('update:modelValue', query)
+const handleQueryUpdate = (query: string | number | null) => {
+  emit('update:modelValue', String(query ?? ''))
 }
 
 const handleQueryClear = () => {

@@ -404,6 +404,15 @@ const fetcherBaseUrl = computed<string>(() => {
     .replace(/{entityId}/gi, props.config?.entityId || '')
 })
 
+// pluginMeta.pluginMeta is like:
+// { '<pluginSlug>': { id: '<pluginId>', name: '<pluginName>', ... } }
+// convert it to
+// [{ label: '<pluginName>', value: '<pluginId>' }]
+const plugins = Object.entries(pluginMetaData.pluginMetaData).map(([name, plugin]) => ({
+  label: plugin.name,
+  value: name,
+}))
+
 const filterQuery = ref<string>('')
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
   const isExactMatch = (props.config.app === 'konnect' || props.config.isExactMatch)
@@ -415,6 +424,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
         name: fields.name,
         id: { label: t('plugins.list.table_headers.id'), sortable: true },
       },
+      queryItems: plugins,
       placeholder: t(`search.placeholder.${props.config.app}`),
     } as ExactMatchFilterConfig
   }

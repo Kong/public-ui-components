@@ -1,9 +1,14 @@
+import type { SelectItem } from '@kong/kongponents/dist/types'
 import type { Field } from './index'
 
 /** Base filter configuration */
 interface BaseFilterConfig {
   /** If true, the filter will be an exact match filter, otherwise it will be a fuzzy match filter */
   isExactMatch: boolean
+}
+
+interface QueryItem extends SelectItem {
+  value: string
 }
 
 /**
@@ -13,6 +18,7 @@ interface BaseFilterConfig {
  */
 export interface ExactMatchFilterConfig extends BaseFilterConfig {
   isExactMatch: true
+  queryItems?: QueryItem[]
   /** Placeholder for the exact match filter input */
   placeholder: string
 }
