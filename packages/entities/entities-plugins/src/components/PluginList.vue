@@ -786,7 +786,7 @@ onBeforeMount(async () => {
 .kong-ui-entities-plugins-list {
   width: 100%;
 
-  .kong-ui-entity-filter-input {
+  :deep(.kong-ui-entity-filter-input) {
     margin-right: $kui-space-50;
   }
 
