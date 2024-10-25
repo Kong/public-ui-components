@@ -11,6 +11,7 @@ import useI18n from './useI18n'
 import useGatewayFeatureSupported from './useGatewayFeatureSupported'
 import useTruncationDetector from './useTruncationDetector'
 import useValidators from './useValidators'
+import { useSchemaProvider, useSubSchema } from './useSchema'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -27,4 +28,6 @@ export default {
   useGatewayFeatureSupported,
   useTruncationDetector,
   useValidators,
+  useSchemaProvider,
+  useSubSchema,
 }

@@ -162,8 +162,18 @@ const hasTooltip = computed((): boolean => !!(props.item.tooltip || slots['label
 const isJson = computed((): boolean => props.item.type === ConfigurationSchemaType.Json || props.item.type === ConfigurationSchemaType.JsonArray)
 const isJsonArray = computed((): boolean => props.item.type === ConfigurationSchemaType.JsonArray)
 
+const schema = composables.useSubSchema(props.item.key)
+
+const itemType = computed(() => {
+  return props.item.type
+    ? props.item.type
+    : schema?.value?.encrypted
+      ? ConfigurationSchemaType.Redacted
+      : undefined
+})
+
 const componentAttrsData = computed((): ComponentAttrsData => {
-  switch (props.item.type) {
+  switch (itemType.value) {
     case ConfigurationSchemaType.ID:
       return {
         tag: 'KCopy',
