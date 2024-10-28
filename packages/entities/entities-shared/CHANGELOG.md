@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.9.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.25...@kong-ui-public/entities-shared@3.9.26) (2024-10-28)
+
+
+### Bug Fixes
+
+* **entities-shared:** exact match should strip trailing slash ([#1744](https://github.com/Kong/public-ui-components/issues/1744)) ([459d9c4](https://github.com/Kong/public-ui-components/commit/459d9c4b940099cbc9449dec78c69755ca3f39eb))
+
+
+
+
+
 ## [3.9.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.24...@kong-ui-public/entities-shared@3.9.25) (2024-10-24)
 
 
