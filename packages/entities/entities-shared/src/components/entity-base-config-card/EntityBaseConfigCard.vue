@@ -220,6 +220,8 @@ const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
 const { convertKeyToTitle } = composables.useStringHelpers()
 
+composables.useSubSchema(props.pluginConfigKey) // reduce the schema to only the plugin config
+
 const { axiosInstance } = composables.useAxios(props.config?.axiosRequestConfig)
 
 const configFormatItems = [

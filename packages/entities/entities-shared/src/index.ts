@@ -16,13 +16,13 @@ import YamlCodeBlock from './components/common/YamlCodeBlock.vue'
 import composables from './composables'
 
 // Extract specific composables to export
-const { useAxios, useDeleteUrlBuilder, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators } = composables
+const { useAxios, useDeleteUrlBuilder, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchemaProvider } = composables
 
 // Components
 export { EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection, EntityLink, JsonCodeBlock, TerraformCodeBlock, YamlCodeBlock }
 
 // Composables
-export { useAxios, useDeleteUrlBuilder, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators }
+export { useAxios, useDeleteUrlBuilder, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchemaProvider }
 
 // Types
 export * from './types'

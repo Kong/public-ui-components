@@ -144,6 +144,7 @@ import {
   SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
+import { useSchemaProvider } from '@kong-ui-public/entities-shared'
 import endpoints from '../plugins-endpoints'
 import PluginIcon from './PluginIcon.vue'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -321,6 +322,7 @@ const schemaUrl = computed<string>(() => {
 })
 
 const schema = ref<Record<string, any>>({})
+useSchemaProvider(schema)
 const schemaLoading = ref(false)
 const fetchSchemaError = ref('')
 onBeforeMount(async () => {
