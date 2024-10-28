@@ -36,7 +36,7 @@ export default function useFetchUrlBuilder(
         // 2) kongManager usage with _config.value.isExactMatch === true
         urlWithParams.search = '' // trim any query params
         urlWithParams = _config.value.isExactMatch
-          ? new URL(`${urlWithParams.href}/${query}/`)
+          ? new URL(`${urlWithParams.href}/${query}`)
           : new URL(`${urlWithParams.href}?filter[name][contains]=${query}`)
       } else {
         // handle kongManager usage with _config.value.isExactMatch === false

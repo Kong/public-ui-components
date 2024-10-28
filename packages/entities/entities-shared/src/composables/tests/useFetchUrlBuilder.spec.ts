@@ -46,7 +46,7 @@ describe('useFetchUrlBuilder()', () => {
       query: 'testQuery',
     }
 
-    expect(builder(query)).toBe('http://foo.bar/entity/testQuery/')
+    expect(builder(query)).toBe('http://foo.bar/entity/testQuery')
   })
 
   it('should apply correct query schema for konnect when isExactMatch is not activated', () => {
@@ -89,6 +89,6 @@ describe('useFetchUrlBuilder()', () => {
       query: 'testQuery',
     }
 
-    expect(builder(query)).toBe('http://foo.bar/entity/testQuery/')
+    expect(builder(query)).toBe('http://foo.bar/entity/testQuery')
   })
 })
