@@ -6,19 +6,23 @@ interface BaseFilterConfig {
   isExactMatch: boolean
 }
 
-/** Exact match filter configuration */
+/**
+ * Exact match filter configuration
+ * FIXME: "Exact match" here is no longer accurate, in reality it works as an indicator
+ * to use a single input field for filtering.
+ */
 export interface ExactMatchFilterConfig extends BaseFilterConfig {
   isExactMatch: true
   /** Placeholder for the exact match filter input */
   placeholder: string
 }
 
-/** Exact match filter fields */
+/** Fuzzy match filter fields */
 export interface FilterFields {
   [key: string]: Field
 }
 
-/** Exact match filter schema */
+/** Fuzzy match filter schema */
 export interface FilterSchema {
   [key: string]: {
     /** Used in the filter dropdown to determine the type of input */
@@ -28,7 +32,11 @@ export interface FilterSchema {
   }
 }
 
-/** Fuzzy match filter configuration */
+/**
+ * Fuzzy match filter configuration
+ * FIXME: "Fuzzy match" here is no longer accurate, in reality it works as an indicator
+ * to use a relatively complex form for filtering.
+ */
 export interface FuzzyMatchFilterConfig extends BaseFilterConfig {
   isExactMatch: false
   /** Fuzzy match filter fields */
