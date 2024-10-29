@@ -331,7 +331,7 @@ const exportCsv = () => {
   setModalVisibility(true)
 }
 
-const exploreLink: string = ''
+const exploreLink: string = 'https://cloud.konghq.tech/us/analytics/explorer'
 
 const exploreResultText = ref('')
 const hasError = computed(() => !isValidJson(exploreResultText.value))
