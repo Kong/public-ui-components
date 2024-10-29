@@ -329,7 +329,7 @@ const showChartHeader = computed(() => {
   return (hasValidChartData.value && resultSetTruncated.value && maxEntitiesShown.value) || props.chartTitle || (props.allowCsvExport && hasValidChartData.value)
 })
 
-const hasMenuOptions = computed(() => (props.allowCsvExport && hasValidChartData) || !!props.goToExplore)
+const hasMenuOptions = computed(() => (props.allowCsvExport && hasValidChartData.value) || !!props.goToExplore)
 
 const timeSeriesGranularity = computed<GranularityValues>(() => {
 
