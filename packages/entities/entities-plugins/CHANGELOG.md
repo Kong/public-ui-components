@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.1.12...@kong-ui-public/entities-plugins@9.2.0) (2024-10-29)
+
+
+### Features
+
+* add support for masking credentials fields at L2 [KM-629] ([#1743](https://github.com/Kong/public-ui-components/issues/1743)) ([755813a](https://github.com/Kong/public-ui-components/commit/755813ae646cd6b9675affd55fd5108ae85e0c39))
+
+
+
+
+
 ## [9.1.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.1.11...@kong-ui-public/entities-plugins@9.1.12) (2024-10-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

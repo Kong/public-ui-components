@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.26...@kong-ui-public/entities-shared@3.10.0) (2024-10-29)
+
+
+### Features
+
+* add support for masking credentials fields at L2 [KM-629] ([#1743](https://github.com/Kong/public-ui-components/issues/1743)) ([755813a](https://github.com/Kong/public-ui-components/commit/755813ae646cd6b9675affd55fd5108ae85e0c39))
+
+
+
+
+
 ## [3.9.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.9.25...@kong-ui-public/entities-shared@3.9.26) (2024-10-28)
 
 
