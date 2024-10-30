@@ -404,14 +404,24 @@ const fetcherBaseUrl = computed<string>(() => {
     .replace(/{entityId}/gi, props.config?.entityId || '')
 })
 
-// pluginMeta.pluginMeta is like:
-// { '<pluginSlug>': { id: '<pluginId>', name: '<pluginName>', ... } }
-// convert it to
-// [{ label: '<pluginName>', value: '<pluginId>' }]
-const plugins = Object.entries(pluginMetaData.pluginMetaData).map(([name, plugin]) => ({
-  label: plugin.name,
-  value: name,
-}))
+const { flattenPluginMap, filterPlugin } = composables.usePluginSelect({
+  config: {
+    apiBaseUrl: props.config.apiBaseUrl,
+    axiosRequestConfig: props.config.axiosRequestConfig,
+    entityId: props.config.entityId,
+    entityType: props.config.entityType,
+    ...props.config.app === 'konnect' ? {
+      app: 'konnect',
+      controlPlaneId: props.config.controlPlaneId,
+    } : {
+      app: 'kongManager',
+      workspace: props.config.workspace,
+    },
+  },
+  availableOnServer: true,
+  disabledPlugins: {},
+  ignoredPlugins: [],
+})
 
 const filterQuery = ref<string>('')
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
@@ -424,7 +434,12 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
         name: fields.name,
         id: { label: t('plugins.list.table_headers.id'), sortable: true },
       },
-      queryItems: plugins,
+      selectItems: Object.entries(flattenPluginMap.value).map(([name, plugin]) => {
+        return { value: name, label: plugin.name, plugin }
+      }),
+      selectFilterFunction: ({ query, items }) => {
+        return items.filter(({ plugin }) => filterPlugin(query, plugin))
+      },
       placeholder: t(`search.placeholder.${props.config.app}`),
     } as ExactMatchFilterConfig
   }

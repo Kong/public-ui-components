@@ -18,6 +18,8 @@ export interface KonnectConfig extends BaseAppConfig {
   controlPlaneId: string
   /** Should use exact match */
   isExactMatch?: boolean
+  /** Should use ?filter[name][eq]={query} when exact match */
+  isEqMatch?: boolean
 }
 
 /** Base config properties for Kong Manager. All entity configs should extend this interface for the app. */

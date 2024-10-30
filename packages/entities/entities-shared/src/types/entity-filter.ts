@@ -1,14 +1,10 @@
-import type { SelectItem } from '@kong/kongponents/dist/types'
+import type { SelectItem, SelectFilterFunctionParams } from '@kong/kongponents/dist/types'
 import type { Field } from './index'
 
 /** Base filter configuration */
 interface BaseFilterConfig {
   /** If true, the filter will be an exact match filter, otherwise it will be a fuzzy match filter */
   isExactMatch: boolean
-}
-
-interface QueryItem extends SelectItem {
-  value: string
 }
 
 /**
@@ -18,7 +14,10 @@ interface QueryItem extends SelectItem {
  */
 export interface ExactMatchFilterConfig extends BaseFilterConfig {
   isExactMatch: true
-  queryItems?: QueryItem[]
+  /** If provided, the filter will be a select input and the query will be the value of the selected item */
+  selectItems?: SelectItem[]
+  /** If selectItems is provided, we can customize the filter function */
+  selectFilterFunction?: (params: SelectFilterFunctionParams) => SelectItem[] | boolean
   /** Placeholder for the exact match filter input */
   placeholder: string
 }

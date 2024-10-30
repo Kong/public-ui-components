@@ -102,7 +102,6 @@
               :plugin-list="filteredPlugins"
               @delete:success="(name: string) => $emit('delete-custom:success', name)"
               @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
-              @revalidate="() => pluginsList = buildPluginList()"
             />
           </div>
         </template>
@@ -124,22 +123,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onBeforeMount, onMounted, type PropType } from 'vue'
+import { computed, ref, watch, onBeforeMount, type PropType, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
-  PluginGroup,
-  PluginScope,
   type KongManagerPluginSelectConfig,
   type KonnectPluginSelectConfig,
   type PluginType,
   type DisabledPlugin,
-  type PluginCardList,
+  PluginGroup,
 } from '../types'
-import { useAxios, useHelpers, useErrors } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
-import endpoints from '../plugins-endpoints'
 import PluginCustomGrid from './custom-plugins/PluginCustomGrid.vue'
 import PluginSelectGrid from './select/PluginSelectGrid.vue'
+import { usePluginSelect } from '../composables/usePluginSelect'
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
@@ -239,74 +235,36 @@ const emit = defineEmits<{
 const route = useRoute()
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
-const { pluginMetaData } = composables.usePluginMetaData()
-const { getMessageFromError } = useErrors()
-const { sortAlpha, objectsAreEqual } = useHelpers()
 
 const filter = ref('')
-const isLoading = ref(true)
-const hasError = ref(false)
-const fetchErrorMessage = ref('')
-const availablePlugins = ref<string[]>([])
-const pluginsList = ref<PluginCardList>({})
-const existingEntityPlugins = ref<string[]>([])
 
-const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+const { availableOnServer, ignoredPlugins, disabledPlugins } = toRefs(props)
 
-const flattenPluginMap = computed(() => {
-  if (!pluginsList.value) {
-    return {}
-  }
-
-  return Object.entries(pluginsList.value)
-    .filter(([group]) => group !== PluginGroup.CUSTOM_PLUGINS)
-    .reduce((m, [, plugins]) => {
-      for (const plugin of plugins) {
-        m[plugin.id] = plugin
-      }
-      return m
-    }, {} as Record<string, PluginType>)
-})
-
-const filteredPlugins = computed((): PluginCardList => {
-  if (!pluginsList.value) {
-    return {}
-  }
-
-  const query = filter.value.toLowerCase()
-  const results = JSON.parse(JSON.stringify(pluginsList.value))
-
-  for (const type in pluginsList.value) {
-    const matches = pluginsList.value[type as keyof PluginCardList]?.filter((plugin: PluginType) => plugin.name.toLowerCase().includes(query) || plugin.id.toLowerCase().includes(query) || plugin.group.toLowerCase().includes(query)) || []
-
-    if (!matches.length) {
-      delete results[type]
-    } else {
-      results[type] = matches
-    }
-  }
-
-  return results
+const {
+  isLoading,
+  hasError,
+  fetchErrorMessage,
+  flattenPluginMap,
+  filteredPlugins,
+  noSearchResults,
+} = usePluginSelect({
+  config: props.config,
+  availableOnServer,
+  ignoredPlugins,
+  disabledPlugins,
+  filter,
 })
 
 const highlightedPlugins = computed(() => {
   return props.highlightedPluginIds.reduce((plugins, id) => {
     const plugin = flattenPluginMap.value[id]
 
-    if (plugin) {
+    if (plugin && plugin.group !== PluginGroup.CUSTOM_PLUGINS) {
       plugins.push(plugin)
     }
 
     return plugins
   }, [] as PluginType[])
-})
-
-const hasFilteredResults = computed((): boolean => {
-  return Object.keys(filteredPlugins.value).length > 0
-})
-
-const noSearchResults = computed((): boolean => {
-  return (Object.keys(pluginsList.value).length > 0 && !hasFilteredResults.value)
 })
 
 const tabs = props.config.app === 'konnect'
@@ -322,140 +280,9 @@ const tabs = props.config.app === 'konnect'
   : []
 const activeTab = ref(tabs.length ? route?.hash || tabs[0]?.hash || '' : '')
 
-const buildPluginList = (): PluginCardList => {
-  // If availableOnServer is false, we included unavailable plugins from pluginMeta in addition to available plugins
-  // returning an array of unique plugin ids
-  // either grab all plugins from metadata file or use list of available plugins provided by API
-  return [...new Set(
-    [
-      ...Object.keys({ ...(!props.availableOnServer ? pluginMetaData : {}) }),
-      ...availablePlugins.value,
-    ],
-  )]
-    // Filter out ignored plugins
-    .filter((plugin: string) => !props.ignoredPlugins.includes(plugin))
-    // Filter plugins by entity type if adding scoped plugin
-    .filter((plugin: string) => {
-      // For Global Plugins
-      if (!props.config.entityType) {
-        return plugin
-      }
-
-      if (props.config.entityType === 'services') {
-        const isNotServicePlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.SERVICE))
-        if (isNotServicePlugin) {
-          return false
-        }
-      }
-
-      if (props.config.entityType === 'routes') {
-        const isNotRoutePlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.ROUTE))
-        if (isNotRoutePlugin) {
-          return false
-        }
-      }
-
-      if (props.config.entityType === 'consumer_groups') {
-        const isNotConsumerGroupPlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.CONSUMER_GROUP))
-        if (isNotConsumerGroupPlugin) {
-          return false
-        }
-      }
-
-      if (props.config.entityType === 'consumers') {
-        const isNotConsumerPlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.CONSUMER))
-        if (isNotConsumerPlugin) {
-          return false
-        }
-      }
-
-      return plugin
-    })
-    // build the actual card list
-    .reduce((list: PluginCardList, pluginId: string) => {
-      const pluginName = (pluginMetaData[pluginId] && pluginMetaData[pluginId].name) || pluginId
-      const plugin = {
-        ...pluginMetaData[pluginId],
-        id: pluginId,
-        name: pluginName,
-        available: availablePlugins.value.includes(pluginId),
-        disabledMessage: '',
-        group: pluginMetaData[pluginId]?.group || PluginGroup.CUSTOM_PLUGINS,
-      } as PluginType
-
-      if (props.disabledPlugins) {
-        plugin.disabledMessage = props.disabledPlugins[pluginId]
-      }
-
-      const groupName = plugin.group || t('plugins.select.misc_plugins')
-      let plugins = list[groupName]
-
-      if (!plugins) {
-        plugins = []
-      }
-
-      plugins.push(plugin)
-      plugins.sort(sortAlpha('name'))
-
-      list[groupName] = plugins
-
-      return list
-    }, {})
-}
-
-const availablePluginsUrl = computed((): string => {
-  let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePlugins}`
-
-  if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = props.config.gatewayInfo?.edition === 'community'
-      ? `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePluginsForOss}`
-      : url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
-  }
-
-  return url
-})
-
-const fetchEntityPluginsUrl = computed((): string => {
-  if (props.config.entityType && props.config.entityId) {
-    let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app].forEntity}`
-
-    if (props.config.app === 'konnect') {
-      url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-    } else if (props.config.app === 'kongManager') {
-      url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
-    }
-
-    return url
-      .replace(/{entityType}/gi, props.config.entityType || '')
-      .replace(/{entityId}/gi, props.config.entityId || '')
-  }
-
-  return ''
-})
-
 const onTabsChange = (hash: string) => {
   router.replace({ hash, query: route.query })
 }
-
-// race condition between fetch of available plugins and setting
-// disabled/ignored plugins
-// if disabled/ignored plugins changes before availablePlugins fetch
-// wait for fetch to finish and don't attempt to build plugin list yet
-// if disabled/ignored plugins changes AFTER availablePlugins fetch
-// rebuild the list
-watch(() => props.disabledPlugins, (val, oldVal) => {
-  if (!objectsAreEqual(val, oldVal) && !isLoading.value) {
-    pluginsList.value = buildPluginList()
-  }
-})
-
-watch(() => props.ignoredPlugins, (val, oldVal) => {
-  if (!objectsAreEqual(val, oldVal) && !isLoading.value) {
-    pluginsList.value = buildPluginList()
-  }
-})
 
 watch((isLoading), (loading: boolean) => {
   emit('loading', loading)
@@ -470,52 +297,6 @@ onBeforeMount(async () => {
   usercanCreateCustomPlugin.value = await props.canCreateCustomPlugin()
   usercanEditCustomPlugin.value = await props.canEditCustomPlugin()
   usercanDeleteCustomPlugin.value = await props.canDeleteCustomPlugin()
-})
-
-onMounted(async () => {
-  try {
-    const { data } = await axiosInstance.get(availablePluginsUrl.value)
-
-    // TODO: endpoints temporarily return different formats
-    if (props.config.app === 'konnect') {
-      const { names: available } = data
-      availablePlugins.value = available || []
-    } else if (props.config.app === 'kongManager') {
-      const { plugins: { available_on_server: aPlugins } } = data
-      availablePlugins.value = aPlugins ? Object.keys(aPlugins) : []
-    }
-  } catch (error: any) {
-    hasError.value = true
-    fetchErrorMessage.value = getMessageFromError(error)
-  }
-
-  // fetch scoped entity to check for pre-existing plugins
-  if (fetchEntityPluginsUrl.value) {
-    try {
-      const { data: { data } } = await axiosInstance.get(fetchEntityPluginsUrl.value)
-
-      if (data?.length) {
-        const eplugins = data.reduce((plugins: string[], plugin: Record<string, any>) => {
-          if (plugin.name) {
-            plugins.push(plugin.name)
-          }
-
-          return plugins
-        }, [])
-
-        existingEntityPlugins.value = existingEntityPlugins.value.concat(eplugins)
-      }
-    } catch (error: any) {
-      // no op if it fails, backend will catch if they try to create
-      // duplicate plugins
-    }
-  }
-
-  if (!hasError.value) {
-    pluginsList.value = buildPluginList()
-  }
-
-  isLoading.value = false
 })
 </script>
 

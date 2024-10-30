@@ -1,7 +1,7 @@
 <template>
   <template v-if="config.isExactMatch">
     <KInput
-      v-if="!config.queryItems"
+      v-if="!config.selectItems"
       autocomplete="off"
       class="kong-ui-entity-filter-input"
       data-testid="search-input"
@@ -28,11 +28,16 @@
       clearable
       data-testid="search-input"
       enable-filtering
-      :items="config.queryItems"
+      :filter-function="config.selectFilterFunction"
+      :items="config.selectItems"
       :model-value="modelValue"
       :placeholder="config.placeholder"
       @update:model-value="handleQueryUpdate"
-    />
+    >
+      <template #before>
+        <IconFilter />
+      </template>
+    </KSelect>
   </template>
   <template v-else>
     <div class="kong-ui-entity-filter">
