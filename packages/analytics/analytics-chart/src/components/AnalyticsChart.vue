@@ -51,13 +51,23 @@
             class="chart-export-button"
             data-testid="chart-csv-export"
           >
-            <CsvExportButton
-              :data="rawChartData"
-              :filename-prefix="filenamePrefix"
-            />
+            <span
+              class="chart-export-trigger"
+              data-testid="csv-export-button"
+              @click="exportCsv()"
+            >
+              {{ i18n.t('csvExport.exportButton') }}
+            </span>
           </KDropdownItem>
         </template>
       </KDropdown>
+      <!-- Keep outside of dropdown, so we can independently affect its visibility -->
+      <CsvExportModal
+        v-if="exportModalVisible"
+        :chart-data="rawChartData"
+        :filename="csvFilename"
+        @toggle-modal="setExportModalVisibility"
+      />
     </div>
     <KEmptyState
       v-if="!hasValidChartData"
@@ -132,14 +142,14 @@ import { ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
 import type { PropType } from 'vue'
-import { computed, provide, toRef } from 'vue'
+import { computed, provide, toRef, ref } from 'vue'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { hasMillisecondTimestamps, defaultStatusCodeColors } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon, WarningIcon } from '@kong/icons'
-import CsvExportButton from './CsvExportButton.vue'
+import CsvExportModal from './CsvExportModal.vue'
 
 const props = defineProps({
   allowCsvExport: {
@@ -237,6 +247,15 @@ const computedChartData = computed(() => {
       toRef(props, 'chartData'),
     ).value
 })
+
+const exportModalVisible = ref(false)
+const setExportModalVisibility = (val: boolean) => {
+  exportModalVisible.value = val
+}
+const csvFilename = computed<string>(() => props.filenamePrefix || i18n.t('csvExport.defaultFilename'))
+const exportCsv = () => {
+  setExportModalVisibility(true)
+}
 
 const timeRangeMs = computed<number | undefined>(() => {
   if (!props.chartData?.meta) {
@@ -443,13 +462,11 @@ provide('legendPosition', toRef(props, 'legendPosition'))
     margin-left: var(--kui-space-auto, $kui-space-auto);
     margin-right: var(--kui-space-0, $kui-space-0);
 
-    // :deep(.popover-trigger-wrapper) {
-    //   opacity: 0;
-    //   transform: fade(0, -10px);
-    //   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-    //   visibility: hidden;
-    // }
-
+    li.k-dropdown-item {
+      a {
+        text-decoration: none;
+      }
+    }
     a {
       color: $kui-color-text;
 
