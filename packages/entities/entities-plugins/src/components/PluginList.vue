@@ -426,6 +426,7 @@ const { flattenPluginMap, filterPlugin } = composables.usePluginSelect({
 const filterQuery = ref<string>('')
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
   const isExactMatch = (props.config.app === 'konnect' || props.config.isExactMatch)
+  const isEqMatch = (props.config.app === 'kongManager' || props.config.isEqMatch)
 
   if (isExactMatch) {
     return {
@@ -434,13 +435,15 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
         name: fields.name,
         id: { label: t('plugins.list.table_headers.id'), sortable: true },
       },
-      selectItems: Object.entries(flattenPluginMap.value).map(([name, plugin]) => {
-        return { value: name, label: plugin.name, plugin }
-      }),
-      selectFilterFunction: ({ query, items }) => {
-        return items.filter(({ plugin }) => filterPlugin(query, plugin))
-      },
       placeholder: t(`search.placeholder.${props.config.app}`),
+      ...isEqMatch ? {
+        selectItems: Object.entries(flattenPluginMap.value).map(([name, plugin]) => {
+          return { value: name, label: plugin.name, plugin }
+        }),
+        selectFilterFunction: ({ query, items }) => {
+          return items.filter(({ plugin }) => filterPlugin(query, plugin))
+        },
+      } : {},
     } as ExactMatchFilterConfig
   }
 
