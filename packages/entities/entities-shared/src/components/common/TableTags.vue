@@ -3,7 +3,7 @@
     <KBadge
       v-for="tag in tags"
       :key="tag"
-      :tag-max-width="tagMaxWidth"
+      :max-width="tagMaxWidth"
       @click.stop
     >
       {{ tag }}
@@ -13,13 +13,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'
+import { computed } from 'vue'
 import { KTruncate, KBadge } from '@kong/kongponents'
 
 const props = defineProps({
   /** The tags to display in the table */
   tags: {
-    type: [Array, String] as PropType<string[] | string>,
+    type: [Array, String],
     required: true,
   },
   tagMaxWidth: {
