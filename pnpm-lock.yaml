@@ -138,8 +138,8 @@ importers:
         specifier: ^1.8.10
         version: 1.8.10
       tslib:
-        specifier: ^2.7.0
-        version: 2.7.0
+        specifier: ^2.8.0
+        version: 2.8.0
       typedoc:
         specifier: ^0.26.10
         version: 0.26.10(typescript@5.6.3)
@@ -159,8 +159,8 @@ importers:
         specifier: ^0.6.2
         version: 0.6.2(vite@5.4.10(@types/node@18.19.57)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0))
       vite-plugin-vue-devtools:
-        specifier: ^7.4.6
-        version: 7.4.6(rollup@4.22.4)(vite@5.4.10(@types/node@18.19.57)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0))(vue@3.5.12(typescript@5.6.3))
+        specifier: ^7.5.2
+        version: 7.6.1(rollup@4.22.4)(vite@5.4.10(@types/node@18.19.57)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0))(vue@3.5.12(typescript@5.6.3))
       vitest:
         specifier: ^2.1.3
         version: 2.1.3(@types/node@18.19.57)(@vitest/ui@2.1.3)(jsdom@25.0.1)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0)
@@ -207,8 +207,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(chart.js@4.4.5)(date-fns@4.1.0)
       chartjs-plugin-annotation:
-        specifier: ^3.0.1
-        version: 3.0.1(chart.js@4.4.5)
+        specifier: ^3.1.0
+        version: 3.1.0(chart.js@4.4.5)
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -3153,16 +3153,16 @@ packages:
   '@vue/devtools-api@6.6.4':
     resolution: {integrity: sha512-sGhTPMuXqZ1rVOk32RylztWkfXTRhuS7vgAKv0zjqk8gbsHkJ7xfFf+jbySxt7tWObEJwyKaHMikV/WGDiQm8g==}
 
-  '@vue/devtools-core@7.4.6':
-    resolution: {integrity: sha512-7ATNPEbVqThOOAp2bg/YUIm9MqqgimbSk24D05hdXUp89JlXX12aTzdrWd9xZRwS78hDR+wCToHl1C/8sopBrg==}
+  '@vue/devtools-core@7.6.1':
+    resolution: {integrity: sha512-wnxvfcz5uGPjG7wIQkIlapmO0TYr+8p2MNFsPfhQFPdpu0miEmQXVxyNetAFrK7GfTrC0suOuq0J1Otez9gz1A==}
     peerDependencies:
       vue: ^3.0.0
 
-  '@vue/devtools-kit@7.4.6':
-    resolution: {integrity: sha512-NbYBwPWgEic1AOd9bWExz9weBzFdjiIfov0yRn4DrRfR+EQJCI9dn4I0XS7IxYGdkmUJi8mFW42LLk18WsGqew==}
+  '@vue/devtools-kit@7.6.1':
+    resolution: {integrity: sha512-cCcdskZDLqKwJUHq1+kH9zAfYM+y9OFq8J2NT0xcAUYpu8K5IJd03ydZkvr7ydOd9UKBxrGyZpYe9PpJ0ChrVw==}
 
-  '@vue/devtools-shared@7.4.6':
-    resolution: {integrity: sha512-rPeSBzElnHYMB05Cc056BQiJpgocQjY8XVulgni+O9a9Gr9tNXgPteSzFFD+fT/iWMxNuUgGKs9CuW5DZewfIg==}
+  '@vue/devtools-shared@7.6.1':
+    resolution: {integrity: sha512-SdIif2YoOWo8/s8c1+NU67jcx8qoSjM9caetQnjl3++Kufo0qa5JRZe95iV6vvupQzVGGo3ACY0LTyAsMfGeCg==}
 
   '@vue/language-core@2.1.6':
     resolution: {integrity: sha512-MW569cSky9R/ooKMh6xa2g1D0AtRKbL56k83dzus/bx//RDJk24RHWkMzbAlXjMdDNyxAaagKPRquBIxkxlCkg==}
@@ -3637,8 +3637,8 @@ packages:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
 
-  birpc@0.2.17:
-    resolution: {integrity: sha512-+hkTxhot+dWsLpp3gia5AkVHIsKlZybNT5gIYiDlNzJrmYPcTM9k5/w2uaj3IPpd7LlEYpmCj4Jj1nC41VhDFg==}
+  birpc@0.2.19:
+    resolution: {integrity: sha512-5WeXXAvTmitV1RqJFppT5QtUiz2p1mRSYU000Jkft5ZUCLJIk4uQriYNO50HknxKwM6jd8utNc66K1qGIwwWBQ==}
 
   bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
@@ -3852,8 +3852,8 @@ packages:
       chart.js: '>=2.8.0'
       date-fns: '>=2.0.0'
 
-  chartjs-plugin-annotation@3.0.1:
-    resolution: {integrity: sha512-hlIrXXKqSDgb+ZjVYHefmlZUXK8KbkCPiynSVrTb/HjTMkT62cOInaT1NTQCKtxKKOm9oHp958DY3RTAFKtkHg==}
+  chartjs-plugin-annotation@3.1.0:
+    resolution: {integrity: sha512-EkAed6/ycXD/7n0ShrlT1T2Hm3acnbFhgkIEJLa0X+M6S16x0zwj1Fv4suv/2bwayCT3jGPdAtI9uLcAMToaQQ==}
     peerDependencies:
       chart.js: '>=4.0.0'
 
@@ -8360,6 +8360,10 @@ packages:
     resolution: {integrity: sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==}
     engines: {node: '>= 10'}
 
+  sirv@3.0.0:
+    resolution: {integrity: sha512-BPwJGUeDaDCHihkORDchNyyTvWFhcusy1XMmhEVTQTwGeybFbp8YEmB+njbPnth1FibULBSBVwCQni25XlCUDg==}
+    engines: {node: '>=18'}
+
   skin-tone@2.0.0:
     resolution: {integrity: sha512-kUMbT1oBJCpgrnKoSr0o6wPtvRWT9W9UKvGLwfJYO2WuahZRHOpEyL1ckyMGgMWh0UdpmaoFqKKD29WTomNEGA==}
     engines: {node: '>=8'}
@@ -8963,8 +8967,8 @@ packages:
   tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
 
-  tslib@2.7.0:
-    resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
+  tslib@2.8.0:
+    resolution: {integrity: sha512-jWVzBLplnCmoaTr13V9dYbiQ99wvZRd0vNWaDRg+aVYRcjDF3nDksxFDE/+fkXnKhpnUUkmx5pK/v8mCtLVqZA==}
 
   tsyringe@4.8.0:
     resolution: {integrity: sha512-YB1FG+axdxADa3ncEtRnQCFq/M0lALGLxSZeVNbTU8NqhOVc51nnv2CISTcvc1kyv6EGPtXVr0v6lWeDxiijOA==}
@@ -9298,8 +9302,8 @@ packages:
     peerDependencies:
       vite: '>=2.8'
 
-  vite-plugin-vue-devtools@7.4.6:
-    resolution: {integrity: sha512-lOKur3qovCB3BQStL0qfHEoIusqya1ngfxfWuqn9DTa6h9rlw6+S3PV4geOP5YBGYQ4NW1hRX70OD8I+sYr1dA==}
+  vite-plugin-vue-devtools@7.6.1:
+    resolution: {integrity: sha512-nMzlrEd60HG9KSmN4xsEponDoFFh+1LNFIuuJplo5irS8QEg4aG+vBsE3EWo5S1e5OSi1mqPX++hL/jVjncBUA==}
     engines: {node: '>=v14.21.3'}
     peerDependencies:
       vite: ^3.1.0 || ^4.0.0-0 || ^5.0.0-0
@@ -10304,15 +10308,15 @@ snapshots:
   '@emnapi/core@1.2.0':
     dependencies:
       '@emnapi/wasi-threads': 1.0.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@emnapi/runtime@1.2.0':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@emnapi/wasi-threads@1.0.1':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@esbuild/aix-ppc64@0.21.5':
     optional: true
@@ -10452,38 +10456,38 @@ snapshots:
     dependencies:
       '@formatjs/fast-memoize': 2.2.1
       '@formatjs/intl-localematcher': 0.5.5
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@formatjs/fast-memoize@2.2.1':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@formatjs/icu-messageformat-parser@2.7.10':
     dependencies:
       '@formatjs/ecma402-abstract': 2.2.0
       '@formatjs/icu-skeleton-parser': 1.8.4
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@formatjs/icu-skeleton-parser@1.8.4':
     dependencies:
       '@formatjs/ecma402-abstract': 2.2.0
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@formatjs/intl-displaynames@6.6.10':
     dependencies:
       '@formatjs/ecma402-abstract': 2.2.0
       '@formatjs/intl-localematcher': 0.5.5
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@formatjs/intl-listformat@7.5.9':
     dependencies:
       '@formatjs/ecma402-abstract': 2.2.0
       '@formatjs/intl-localematcher': 0.5.5
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@formatjs/intl-localematcher@0.5.5':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@formatjs/intl@2.10.8(typescript@5.6.3)':
     dependencies:
@@ -10493,7 +10497,7 @@ snapshots:
       '@formatjs/intl-displaynames': 6.6.10
       '@formatjs/intl-listformat': 7.5.9
       intl-messageformat: 10.7.0
-      tslib: 2.7.0
+      tslib: 2.8.0
     optionalDependencies:
       typescript: 5.6.3
 
@@ -10585,21 +10589,21 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  '@jsonjoy.com/base64@1.1.2(tslib@2.7.0)':
+  '@jsonjoy.com/base64@1.1.2(tslib@2.8.0)':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
-  '@jsonjoy.com/json-pack@1.1.0(tslib@2.7.0)':
+  '@jsonjoy.com/json-pack@1.1.0(tslib@2.8.0)':
     dependencies:
-      '@jsonjoy.com/base64': 1.1.2(tslib@2.7.0)
-      '@jsonjoy.com/util': 1.3.0(tslib@2.7.0)
+      '@jsonjoy.com/base64': 1.1.2(tslib@2.8.0)
+      '@jsonjoy.com/util': 1.3.0(tslib@2.8.0)
       hyperdyperid: 1.2.0
-      thingies: 1.21.0(tslib@2.7.0)
-      tslib: 2.7.0
+      thingies: 1.21.0(tslib@2.8.0)
+      tslib: 2.8.0
 
-  '@jsonjoy.com/util@1.3.0(tslib@2.7.0)':
+  '@jsonjoy.com/util@1.3.0(tslib@2.8.0)':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@kong-ui-public/core@1.1.0(axios@1.7.7)(swrv@1.0.4(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3))':
     dependencies:
@@ -11040,7 +11044,7 @@ snapshots:
   '@nrwl/tao@19.7.2(@swc/core@1.7.26)':
     dependencies:
       nx: 19.7.2(@swc/core@1.7.26)
-      tslib: 2.7.0
+      tslib: 2.8.0
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
@@ -11056,7 +11060,7 @@ snapshots:
       nx: 19.7.2(@swc/core@1.7.26)
       semver: 7.6.3
       tmp: 0.2.3
-      tslib: 2.7.0
+      tslib: 2.8.0
       yargs-parser: 21.1.1
 
   '@nx/nx-darwin-arm64@19.7.2':
@@ -11236,21 +11240,21 @@ snapshots:
       '@peculiar/asn1-x509': 2.3.13
       '@peculiar/asn1-x509-attr': 2.3.13
       asn1js: 3.0.5
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@peculiar/asn1-csr@2.3.13':
     dependencies:
       '@peculiar/asn1-schema': 2.3.13
       '@peculiar/asn1-x509': 2.3.13
       asn1js: 3.0.5
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@peculiar/asn1-ecc@2.3.14':
     dependencies:
       '@peculiar/asn1-schema': 2.3.13
       '@peculiar/asn1-x509': 2.3.13
       asn1js: 3.0.5
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@peculiar/asn1-pfx@2.3.13':
     dependencies:
@@ -11259,14 +11263,14 @@ snapshots:
       '@peculiar/asn1-rsa': 2.3.13
       '@peculiar/asn1-schema': 2.3.13
       asn1js: 3.0.5
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@peculiar/asn1-pkcs8@2.3.13':
     dependencies:
       '@peculiar/asn1-schema': 2.3.13
       '@peculiar/asn1-x509': 2.3.13
       asn1js: 3.0.5
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@peculiar/asn1-pkcs9@2.3.13':
     dependencies:
@@ -11277,27 +11281,27 @@ snapshots:
       '@peculiar/asn1-x509': 2.3.13
       '@peculiar/asn1-x509-attr': 2.3.13
       asn1js: 3.0.5
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@peculiar/asn1-rsa@2.3.13':
     dependencies:
       '@peculiar/asn1-schema': 2.3.13
       '@peculiar/asn1-x509': 2.3.13
       asn1js: 3.0.5
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@peculiar/asn1-schema@2.3.13':
     dependencies:
       asn1js: 3.0.5
       pvtsutils: 1.3.5
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@peculiar/asn1-x509-attr@2.3.13':
     dependencies:
       '@peculiar/asn1-schema': 2.3.13
       '@peculiar/asn1-x509': 2.3.13
       asn1js: 3.0.5
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@peculiar/asn1-x509@2.3.13':
     dependencies:
@@ -11305,7 +11309,7 @@ snapshots:
       asn1js: 3.0.5
       ipaddr.js: 2.2.0
       pvtsutils: 1.3.5
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@peculiar/x509@1.12.3':
     dependencies:
@@ -11318,7 +11322,7 @@ snapshots:
       '@peculiar/asn1-x509': 2.3.13
       pvtsutils: 1.3.5
       reflect-metadata: 0.2.2
-      tslib: 2.7.0
+      tslib: 2.8.0
       tsyringe: 4.8.0
 
   '@pkgjs/parseargs@0.11.0':
@@ -11929,7 +11933,7 @@ snapshots:
 
   '@tybys/wasm-util@0.9.0':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@types/body-parser@1.19.5':
     dependencies:
@@ -12503,10 +12507,10 @@ snapshots:
 
   '@vue/devtools-api@6.6.4': {}
 
-  '@vue/devtools-core@7.4.6(vite@5.4.10(@types/node@18.19.57)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0))(vue@3.5.12(typescript@5.6.3))':
+  '@vue/devtools-core@7.6.1(vite@5.4.10(@types/node@18.19.57)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0))(vue@3.5.12(typescript@5.6.3))':
     dependencies:
-      '@vue/devtools-kit': 7.4.6
-      '@vue/devtools-shared': 7.4.6
+      '@vue/devtools-kit': 7.6.1
+      '@vue/devtools-shared': 7.6.1
       mitt: 3.0.1
       nanoid: 3.3.7
       pathe: 1.1.2
@@ -12515,17 +12519,17 @@ snapshots:
     transitivePeerDependencies:
       - vite
 
-  '@vue/devtools-kit@7.4.6':
+  '@vue/devtools-kit@7.6.1':
     dependencies:
-      '@vue/devtools-shared': 7.4.6
-      birpc: 0.2.17
+      '@vue/devtools-shared': 7.6.1
+      birpc: 0.2.19
       hookable: 5.5.3
       mitt: 3.0.1
       perfect-debounce: 1.0.0
       speakingurl: 14.0.1
       superjson: 2.2.1
 
-  '@vue/devtools-shared@7.4.6':
+  '@vue/devtools-shared@7.6.1':
     dependencies:
       rfdc: 1.4.1
 
@@ -12720,7 +12724,7 @@ snapshots:
   '@yarnpkg/parsers@3.0.0-rc.46':
     dependencies:
       js-yaml: 3.14.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@zkochan/js-yaml@0.0.7':
     dependencies:
@@ -12891,7 +12895,7 @@ snapshots:
     dependencies:
       pvtsutils: 1.3.5
       pvutils: 1.1.3
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   assert-never@1.2.1: {}
 
@@ -12911,7 +12915,7 @@ snapshots:
 
   autolinker@3.16.2:
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   available-typed-arrays@1.0.5: {}
 
@@ -13046,7 +13050,7 @@ snapshots:
 
   binary-extensions@2.3.0: {}
 
-  birpc@0.2.17: {}
+  birpc@0.2.19: {}
 
   bl@4.1.0:
     dependencies:
@@ -13299,7 +13303,7 @@ snapshots:
       chart.js: 4.4.5
       date-fns: 4.1.0
 
-  chartjs-plugin-annotation@3.0.1(chart.js@4.4.5):
+  chartjs-plugin-annotation@3.1.0(chart.js@4.4.5):
     dependencies:
       chart.js: 4.4.5
 
@@ -15534,7 +15538,7 @@ snapshots:
       '@formatjs/ecma402-abstract': 2.2.0
       '@formatjs/fast-memoize': 2.2.1
       '@formatjs/icu-messageformat-parser': 2.7.10
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   invariant@2.2.4:
     dependencies:
@@ -16408,10 +16412,10 @@ snapshots:
 
   memfs@4.12.0:
     dependencies:
-      '@jsonjoy.com/json-pack': 1.1.0(tslib@2.7.0)
-      '@jsonjoy.com/util': 1.3.0(tslib@2.7.0)
-      tree-dump: 1.0.2(tslib@2.7.0)
-      tslib: 2.7.0
+      '@jsonjoy.com/json-pack': 1.1.0(tslib@2.8.0)
+      '@jsonjoy.com/util': 1.3.0(tslib@2.8.0)
+      tree-dump: 1.0.2(tslib@2.8.0)
+      tslib: 2.8.0
 
   memoizee@0.4.15:
     dependencies:
@@ -17027,7 +17031,7 @@ snapshots:
       tar-stream: 2.2.0
       tmp: 0.2.3
       tsconfig-paths: 4.2.0
-      tslib: 2.7.0
+      tslib: 2.8.0
       yargs: 17.7.2
       yargs-parser: 21.1.1
     optionalDependencies:
@@ -17653,7 +17657,7 @@ snapshots:
 
   pvtsutils@1.3.5:
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   pvutils@1.1.3: {}
 
@@ -18060,7 +18064,7 @@ snapshots:
 
   rxjs@7.8.1:
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   sade@1.8.1:
     dependencies:
@@ -18380,6 +18384,12 @@ snapshots:
     optional: true
 
   sirv@2.0.4:
+    dependencies:
+      '@polka/url': 1.0.0-next.24
+      mrmime: 2.0.0
+      totalist: 3.0.1
+
+  sirv@3.0.0:
     dependencies:
       '@polka/url': 1.0.0-next.24
       mrmime: 2.0.0
@@ -18848,7 +18858,7 @@ snapshots:
 
   synckit@0.6.2:
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   tabbable@6.2.0: {}
 
@@ -18925,9 +18935,9 @@ snapshots:
 
   text-table@0.2.0: {}
 
-  thingies@1.21.0(tslib@2.7.0):
+  thingies@1.21.0(tslib@2.8.0):
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   throttleit@1.0.1: {}
 
@@ -19015,9 +19025,9 @@ snapshots:
       typedarray.prototype.slice: 1.0.3
       which-typed-array: 1.1.15
 
-  tree-dump@1.0.2(tslib@2.7.0):
+  tree-dump@1.0.2(tslib@2.8.0):
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   tree-sitter-json@0.20.2:
     dependencies:
@@ -19090,7 +19100,7 @@ snapshots:
 
   tslib@1.14.1: {}
 
-  tslib@2.7.0: {}
+  tslib@2.8.0: {}
 
   tsyringe@4.8.0:
     dependencies:
@@ -19469,13 +19479,13 @@ snapshots:
       - '@swc/helpers'
       - rollup
 
-  vite-plugin-vue-devtools@7.4.6(rollup@4.22.4)(vite@5.4.10(@types/node@18.19.57)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0))(vue@3.5.12(typescript@5.6.3)):
+  vite-plugin-vue-devtools@7.6.1(rollup@4.22.4)(vite@5.4.10(@types/node@18.19.57)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0))(vue@3.5.12(typescript@5.6.3)):
     dependencies:
-      '@vue/devtools-core': 7.4.6(vite@5.4.10(@types/node@18.19.57)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0))(vue@3.5.12(typescript@5.6.3))
-      '@vue/devtools-kit': 7.4.6
-      '@vue/devtools-shared': 7.4.6
+      '@vue/devtools-core': 7.6.1(vite@5.4.10(@types/node@18.19.57)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0))(vue@3.5.12(typescript@5.6.3))
+      '@vue/devtools-kit': 7.6.1
+      '@vue/devtools-shared': 7.6.1
       execa: 8.0.1
-      sirv: 2.0.4
+      sirv: 3.0.0
       vite: 5.4.10(@types/node@18.19.57)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0)
       vite-plugin-inspect: 0.8.7(rollup@4.22.4)(vite@5.4.10(@types/node@18.19.57)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0))
       vite-plugin-vue-inspector: 5.2.0(vite@5.4.10(@types/node@18.19.57)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0))
@@ -19493,7 +19503,7 @@ snapshots:
       '@babel/plugin-syntax-import-meta': 7.10.4(@babel/core@7.25.2)
       '@babel/plugin-transform-typescript': 7.25.2(@babel/core@7.25.2)
       '@vue/babel-plugin-jsx': 1.2.5(@babel/core@7.25.2)
-      '@vue/compiler-dom': 3.5.8
+      '@vue/compiler-dom': 3.5.12
       kolorist: 1.8.0
       magic-string: 0.30.11
       vite: 5.4.10(@types/node@18.19.57)(sass-embedded@1.80.3)(sass@1.80.3)(terser@5.26.0)
