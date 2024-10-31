@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.2.0...@kong-ui-public/entities-plugins@9.2.1) (2024-10-31)
+
+
+### Bug Fixes
+
+* **entities-plugins:** wrong custom plugin tab active state [KM-647] ([#1754](https://github.com/Kong/public-ui-components/issues/1754)) ([a101a32](https://github.com/Kong/public-ui-components/commit/a101a32b815a3ec50b896b703fb95872c73bcb07))
+
+
+
+
+
 # [9.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.1.12...@kong-ui-public/entities-plugins@9.2.0) (2024-10-29)
 
 
