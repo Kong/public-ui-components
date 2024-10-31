@@ -27,9 +27,18 @@
           </template>
         </KTooltip>
       </div>
+      <div
+        v-if="allowCsvExport && hasValidChartData && !hasKebabMenuAccess"
+        class="chart-export-button"
+      >
+        <CsvExportButton
+          :data="rawChartData"
+          :filename-prefix="filenamePrefix"
+        />
+      </div>
       <!-- More actions menu -->
       <KDropdown
-        v-if="hasMenuOptions"
+        v-if="hasKebabMenuAccess && hasMenuOptions"
         class="dropdown"
         data-testid="chart-action-menu"
       >
@@ -150,6 +159,7 @@ import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon, WarningIcon } from '@kong/icons'
 import CsvExportModal from './CsvExportModal.vue'
+import CsvExportButton from './CsvExportButton.vue'
 
 const props = defineProps({
   allowCsvExport: {
@@ -227,6 +237,9 @@ const emit = defineEmits<{
 }>()
 
 const { i18n } = composables.useI18n()
+const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
+
+const hasKebabMenuAccess = computed(() => evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false))
 
 const rawChartData = toRef(props, 'chartData')
 
@@ -442,6 +455,12 @@ provide('legendPosition', toRef(props, 'legendPosition'))
     .chart-header-icons-wrapper {
       display: flex;
       justify-content: end;
+    }
+
+    .chart-export-button {
+      display: flex;
+      margin-left: var(--kui-space-auto, $kui-space-auto);
+      margin-right: var(--kui-space-0, $kui-space-0);
     }
   }
 
