@@ -83,10 +83,10 @@ export default function useHelpers() {
   }
 
   /**
- * Check if a string is a valid uuid
- * @param {String} str - the string to check
- * @returns {boolean}
- */
+   * Check if a string is a valid uuid
+   * @param {String} str - the string to check
+   * @returns {boolean}
+   */
   const isValidUuid = (str: string) => {
     if (!str) return false
 

@@ -50,6 +50,7 @@ const konnectConfig = ref<KonnectCertificateListConfig>({
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   createRoute: { name: 'create-certificate' },
+  isExactMatch: true,
   getViewRoute: (id: string) => ({ name: 'view-certificate', params: { id } }),
   getEditRoute: (id: string) => ({ name: 'edit-certificate', params: { id } }),
   getCreateSniRoute: (id: string) => ({ name: 'add-sni', params: { id } }),

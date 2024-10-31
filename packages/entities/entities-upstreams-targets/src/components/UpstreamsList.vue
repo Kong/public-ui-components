@@ -52,15 +52,10 @@
         <span class="upstream-name">{{ rowValue }}</span>
       </template>
       <template #tags="{ rowValue }">
-        <KTruncate>
-          <KBadge
-            v-for="tag in rowValue"
-            :key="tag"
-            max-width="auto"
-          >
-            {{ tag }}
-          </KBadge>
-        </KTruncate>
+        <TableTags
+          tag-max-width="auto"
+          :tags="rowValue"
+        />
       </template>
 
       <!-- Row actions -->
@@ -132,6 +127,7 @@ import {
   EntityDeleteModal,
   useAxios,
   EntityTypes,
+  TableTags,
 } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
 import { computed, onBeforeMount, ref, watch } from 'vue'

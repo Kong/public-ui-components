@@ -13,13 +13,14 @@ import EntityLink from './components/entity-link/EntityLink.vue'
 import JsonCodeBlock from './components/common/JsonCodeBlock.vue'
 import TerraformCodeBlock from './components/common/TerraformCodeBlock.vue'
 import YamlCodeBlock from './components/common/YamlCodeBlock.vue'
+import TableTags from './components/common/TableTags.vue'
 import composables from './composables'
 
 // Extract specific composables to export
 const { useAxios, useDeleteUrlBuilder, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchemaProvider } = composables
 
 // Components
-export { EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection, EntityLink, JsonCodeBlock, TerraformCodeBlock, YamlCodeBlock }
+export { EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection, EntityLink, JsonCodeBlock, TerraformCodeBlock, YamlCodeBlock, TableTags }
 
 // Composables
 export { useAxios, useDeleteUrlBuilder, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchemaProvider }
