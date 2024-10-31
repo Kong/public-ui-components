@@ -309,18 +309,27 @@ const noSearchResults = computed((): boolean => {
   return (Object.keys(pluginsList.value).length > 0 && !hasFilteredResults.value)
 })
 
-const tabs = props.config.app === 'konnect'
-  ? [{
-    hash: '#kong',
-    title: t('plugins.select.tabs.kong.title'),
-  },
-  {
-    hash: '#custom',
-    title: t('plugins.select.tabs.custom.title'),
-    disabled: props.disableCustomPlugins,
-  }]
-  : []
-const activeTab = ref(tabs.length ? route?.hash || tabs[0]?.hash || '' : '')
+const tabs = computed(() => {
+  return props.config.app === 'konnect'
+    ? [{
+      hash: '#kong',
+      title: t('plugins.select.tabs.kong.title'),
+    },
+    {
+      hash: '#custom',
+      title: t('plugins.select.tabs.custom.title'),
+      disabled: props.disableCustomPlugins,
+    }]
+    : []
+})
+const activeTab = computed(() => {
+  let hash = tabs.value.length ? route?.hash || tabs.value[0]?.hash || '' : ''
+  // If custom plugins are disabled, default to kong tab
+  if (hash === '#custom' && props.disableCustomPlugins) {
+    hash = '#kong'
+  }
+  return hash
+})
 
 const buildPluginList = (): PluginCardList => {
   // If availableOnServer is false, we included unavailable plugins from pluginMeta in addition to available plugins
