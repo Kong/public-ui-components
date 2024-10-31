@@ -22,6 +22,9 @@ function mouseMove(x1: number, y1: number, x2: number, y2: number, duration: num
 describe('<AnalyticsChart />', () => {
   beforeEach(() => {
     cy.viewport(1280, 800)
+    cy.stub(composables, 'useEvaluateFeatureFlag').returns({
+      evaluateFeatureFlag: () => true,
+    })
   })
 
   it('Renders a line chart for total requests count with status code dimension', () => {
