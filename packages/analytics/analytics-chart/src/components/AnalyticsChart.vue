@@ -239,7 +239,7 @@ const emit = defineEmits<{
 const { i18n } = composables.useI18n()
 const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
 
-const hasKebabMenuAccess = computed(() => evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false))
+const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
 
 const rawChartData = toRef(props, 'chartData')
 
