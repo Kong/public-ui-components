@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.1.12...@kong-ui-public/analytics-chart@5.2.0) (2024-10-31)
+
+
+### Features
+
+* **analytics-chart:** move actions into kebab menu [MA-3301] ([#1741](https://github.com/Kong/public-ui-components/issues/1741)) ([ed6a72e](https://github.com/Kong/public-ui-components/commit/ed6a72ef33f4189d2402b2ab2468040585ccb107))
+
+
+
+
+
 ## [5.1.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.1.11...@kong-ui-public/analytics-chart@5.1.12) (2024-10-31)
 
 
