@@ -22,6 +22,9 @@ function mouseMove(x1: number, y1: number, x2: number, y2: number, duration: num
 describe('<AnalyticsChart />', () => {
   beforeEach(() => {
     cy.viewport(1280, 800)
+    cy.stub(composables, 'useEvaluateFeatureFlag').returns({
+      evaluateFeatureFlag: () => true,
+    })
   })
 
   it('Renders a line chart for total requests count with status code dimension', () => {
@@ -251,13 +254,37 @@ describe('<AnalyticsChart />', () => {
         chartTitle: 'Requests',
       },
     })
-    cy.getTestId('csv-export-button').should('not.exist')
+
+    cy.getTestId('chart-action-menu').should('not.exist')
   })
 
-  it('does not render an "Export" button if chart data is present but prop is set to `false`', () => {
+  it('renders the kebab menu with only the "Jump to Explore" link if no data is provided', () => {
+    cy.mount(AnalyticsChart, {
+      props: {
+        allowCsvExport: true,
+        goToExplore: 'https://cloud.konghq.tech/us/analytics/explorer',
+        chartData: emptyExploreResult,
+        chartOptions: {
+          type: 'timeseries_line',
+        },
+        chartTitle: 'Requests',
+      },
+    })
+
+    cy.getTestId('chart-action-menu').should('exist')
+
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
+    cy.getTestId('chart-action-menu').click().then(() => {
+      cy.getTestId('chart-jump-to-explore').should('exist')
+      cy.getTestId('csv-export-button').should('not.exist')
+    })
+  })
+
+  it('does not render an "Export" link in the kebab actions if chart data is present but prop is set to `false`', () => {
     cy.mount(AnalyticsChart, {
       props: {
         allowCsvExport: false,
+        goToExplore: 'https://cloud.konghq.tech/us/analytics/explorer',
         chartData: exploreResult,
         chartOptions: {
           type: 'timeseries_line',
@@ -265,7 +292,14 @@ describe('<AnalyticsChart />', () => {
         chartTitle: 'Requests',
       },
     })
-    cy.getTestId('csv-export-button').should('not.exist')
+
+    cy.getTestId('chart-action-menu').should('exist')
+
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
+    cy.getTestId('chart-action-menu').click().then(() => {
+      cy.getTestId('chart-jump-to-explore').should('exist')
+      cy.getTestId('csv-export-modal').should('not.exist')
+    })
   })
 
   it('Renders an "Export" button, and tabulated data in the modal preview', () => {
@@ -280,10 +314,13 @@ describe('<AnalyticsChart />', () => {
       },
     })
 
-    cy.getTestId('csv-export-button').should('exist')
+    cy.getTestId('chart-action-menu').should('exist')
 
     // eslint-disable-next-line cypress/unsafe-to-chain-command
-    cy.getTestId('csv-export-button').click().then(() => {
+    cy.getTestId('chart-action-menu').click().then(() => {
+      cy.getTestId('chart-jump-to-explore').should('not.exist')
+
+      cy.getTestId('csv-export-button').click()
       cy.getTestId('csv-export-modal').should('exist')
       cy.get('.modal-content .vitals-table').should('exist')
     })

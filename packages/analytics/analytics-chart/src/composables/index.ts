@@ -9,6 +9,7 @@ import useExploreResultToDatasets from './useExploreResultToDatasets'
 import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
 import useReportChartDataForSynthetics from './useReportChartDataForSynthetics'
 import useTranslatedUnits from './useTranslatedUnits'
+import useEvaluateFeatureFlag from './useEvauluateFeatureFlag'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -23,4 +24,5 @@ export default {
   useI18n,
   useReportChartDataForSynthetics,
   useTranslatedUnits,
+  useEvaluateFeatureFlag,
 }
