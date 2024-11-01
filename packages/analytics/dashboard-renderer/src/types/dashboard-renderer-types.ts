@@ -55,6 +55,14 @@ const allowCsvExport = {
   type: 'boolean',
 } as const
 
+const goToExplore = {
+  type: 'string',
+} as const
+
+const editable = {
+  type: 'boolean',
+} as const
+
 const chartDatasetColorsSchema = {
   type: ['object', 'array'],
   items: {
@@ -96,6 +104,7 @@ export const barChartSchema = {
     syntheticsDataKey,
     chartTitle,
     allowCsvExport,
+    goToExplore,
   },
   required: ['type'],
   additionalProperties: false,
@@ -117,6 +126,7 @@ export const timeseriesChartSchema = {
     syntheticsDataKey,
     chartTitle,
     allowCsvExport,
+    goToExplore,
   },
   required: ['type'],
   additionalProperties: false,
@@ -398,6 +408,7 @@ export const tileDefinitionSchema = {
     chart: {
       anyOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema, metricCardSchema, topNTableSchema, slottableSchema],
     },
+    editable,
   },
   required: ['query', 'chart'],
   additionalProperties: false,
@@ -497,4 +508,5 @@ export interface RendererProps<T> {
   queryReady: boolean
   chartOptions: T
   height: number
+  editable?: boolean
 }

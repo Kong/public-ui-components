@@ -26,6 +26,7 @@
           :definition="tile.meta"
           :height="tile.layout.size.rows * (config.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
           :query-ready="queryReady"
+          @edit-tile="onEditTile(tile)"
         />
       </template>
     </GridLayout>
@@ -51,6 +52,10 @@ import { KUI_SPACE_70 } from '@kong/design-tokens'
 const props = defineProps<{
   context: DashboardRendererContext,
   config: DashboardConfig,
+}>()
+
+const emit = defineEmits<{
+  (e: 'edit-tile', tile: GridTile<TileDefinition>): void
 }>()
 
 const { i18n } = composables.useI18n()
@@ -150,6 +155,10 @@ const mergedContext = computed<DashboardRendererContextInternal>(() => {
 
 // Right now, tiles don't have unique keys.  Perhaps in the future they will,
 // and we can use that instead of `index` as the fragment key.
+
+const onEditTile = (tile: GridTile<TileDefinition>) => {
+  emit('edit-tile', tile)
+}
 
 </script>
 
