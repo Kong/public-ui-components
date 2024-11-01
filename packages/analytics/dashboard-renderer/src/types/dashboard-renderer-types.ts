@@ -56,10 +56,6 @@ const allowCsvExport = {
   type: 'boolean',
 } as const
 
-const goToExplore = {
-  type: 'string',
-} as const
-
 const chartDatasetColorsSchema = {
   type: ['object', 'array'],
   items: {
@@ -101,7 +97,6 @@ export const barChartSchema = {
     syntheticsDataKey,
     chartTitle,
     allowCsvExport,
-    goToExplore,
   },
   required: ['type'],
   additionalProperties: false,
@@ -123,7 +118,6 @@ export const timeseriesChartSchema = {
     syntheticsDataKey,
     chartTitle,
     allowCsvExport,
-    goToExplore,
   },
   required: ['type'],
   additionalProperties: false,

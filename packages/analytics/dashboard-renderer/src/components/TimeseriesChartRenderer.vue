@@ -3,7 +3,6 @@
   <BaseAnalyticsChartRenderer
     :chart-options="chartOptions"
     :context="context"
-    :editable="context.editable"
     :height="height"
     :query="query"
     :query-ready="queryReady"
