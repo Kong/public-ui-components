@@ -61,7 +61,7 @@ const componentData = computed(() => {
       queryReady: props.queryReady,
       chartOptions: props.definition.chart,
       height: props.height - PADDING_SIZE * 2,
-      editable: props.definition.editable,
+      editable: props.context.editable,
     },
   }
 })

@@ -12,13 +12,13 @@
         :chart-options="options"
         :chart-title="chartOptions.chartTitle"
         legend-position="bottom"
-        :show-menu="editable"
+        :show-menu="context.editable"
         :synthetics-data-key="chartOptions.syntheticsDataKey"
         tooltip-title=""
         v-bind="extraProps"
       >
         <template
-          v-if="editable"
+          v-if="context.editable"
           #menu-items
         >
           <KDropdownItem @click="editTile">

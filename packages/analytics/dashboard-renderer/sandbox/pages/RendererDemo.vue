@@ -46,6 +46,7 @@ const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 const context: DashboardRendererContext = {
   filters: [],
   refreshInterval: 0,
+  editable: true,
 }
 
 const dashboardConfig: DashboardConfig = {
@@ -136,7 +137,6 @@ const dashboardConfig: DashboardConfig = {
           datasource: 'basic',
           dimensions: ['route'],
         },
-        editable: true,
       },
       layout: {
         position: {
@@ -159,7 +159,6 @@ const dashboardConfig: DashboardConfig = {
           datasource: 'basic',
           dimensions: ['time'],
         },
-        editable: true,
       },
       layout: {
         position: {

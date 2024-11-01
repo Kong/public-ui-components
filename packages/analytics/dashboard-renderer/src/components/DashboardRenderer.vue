@@ -134,7 +134,7 @@ const gridTiles = computed(() => {
 })
 
 const mergedContext = computed<DashboardRendererContextInternal>(() => {
-  let { tz, refreshInterval } = props.context
+  let { tz, refreshInterval, editable } = props.context
 
   if (!tz) {
     tz = (new Intl.DateTimeFormat()).resolvedOptions().timeZone
@@ -145,11 +145,16 @@ const mergedContext = computed<DashboardRendererContextInternal>(() => {
     refreshInterval = DEFAULT_TILE_REFRESH_INTERVAL_MS
   }
 
+  if (editable === undefined) {
+    editable = false
+  }
+
   return {
     ...props.context,
     tz,
     timeSpec: timeSpec.value,
     refreshInterval,
+    editable,
   }
 })
 
