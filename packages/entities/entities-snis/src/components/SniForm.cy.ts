@@ -20,7 +20,11 @@ const baseConfigKM: KongManagerSniFormConfig = {
   cancelRoute,
 }
 
-describe('<SniForm />', () => {
+describe('<SniForm />', {
+  // workaround the `ResizeObserver loop completed with undelivered notifications` error
+  viewportWidth: 1024,
+  viewportHeight: 768,
+}, () => {
   describe('Kong Manager', () => {
     const interceptKMCerts = (params?: {
       mockData?: object

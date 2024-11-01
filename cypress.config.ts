@@ -23,6 +23,4 @@ export default defineConfig({
     runMode: 1,
   },
   trashAssetsBeforeRuns: false,
-  viewportWidth: 1024,
-  viewportHeight: 768,
 })
