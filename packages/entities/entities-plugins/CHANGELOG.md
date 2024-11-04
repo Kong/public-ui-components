@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.2.1...@kong-ui-public/entities-plugins@9.2.2) (2024-11-04)
+
+
+### Bug Fixes
+
+* **pluginlist:** adapt empty ordering object for filtered plugin ([#1759](https://github.com/Kong/public-ui-components/issues/1759)) ([0e03cd7](https://github.com/Kong/public-ui-components/commit/0e03cd750969e0a49a98d08d856f7f7457ba772d))
+
+
+
+
+
 ## [9.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.2.0...@kong-ui-public/entities-plugins@9.2.1) (2024-10-31)
 
 
