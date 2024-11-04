@@ -19,7 +19,6 @@ export default defineConfig({
   screenshotsFolder: 'cypress/screenshots',
   video: true,
   videosFolder: 'cypress/videos',
-  videoUploadOnPasses: false,
   retries: {
     runMode: 1,
   },

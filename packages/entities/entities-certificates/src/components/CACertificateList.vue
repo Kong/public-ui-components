@@ -59,16 +59,7 @@
         </span>
       </template>
       <template #tags="{ row }">
-        <KTruncate v-if="row?.tags?.length > 0">
-          <KBadge
-            v-for="tag in row?.tags"
-            :key="tag"
-            @click.stop
-          >
-            {{ tag }}
-          </KBadge>
-        </KTruncate>
-        <span v-else>-</span>
+        <TableTags :tags="row?.tags" />
       </template>
 
       <!-- Row actions -->
@@ -158,6 +149,7 @@ import {
   useAxios,
   useFetcher,
   useDeleteUrlBuilder,
+  TableTags,
 } from '@kong-ui-public/entities-shared'
 import type {
   KongManagerCertificateListConfig,

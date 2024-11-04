@@ -80,16 +80,7 @@
         </PermissionsWrapper>
       </template>
       <template #tags="{ rowValue }">
-        <KTruncate v-if="rowValue?.length > 0">
-          <KBadge
-            v-for="tag in rowValue"
-            :key="tag"
-            @click.stop
-          >
-            {{ tag }}
-          </KBadge>
-        </KTruncate>
-        <span v-else>-</span>
+        <TableTags :tags="rowValue" />
       </template>
       <template #created_at="{ rowValue }">
         {{ formatUnixTimeStamp(rowValue) }}
@@ -200,6 +191,7 @@ import {
   useAxios,
   useFetcher,
   useDeleteUrlBuilder,
+  TableTags,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
