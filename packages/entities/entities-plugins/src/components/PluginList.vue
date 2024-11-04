@@ -113,11 +113,13 @@
       </template>
 
       <template #ordering="{ rowValue }">
-        <KBadge :appearance="rowValue ? 'warning' : 'info'">
+        <KBadge
+          :appearance="isEmpty(rowValue) ? 'info' : 'warning'"
+        >
           {{
-            rowValue
-              ? t('plugins.list.table_headers.ordering_badge.dynamic')
-              : t('plugins.list.table_headers.ordering_badge.static')
+            isEmpty(rowValue)
+              ? t('plugins.list.table_headers.ordering_badge.static')
+              : t('plugins.list.table_headers.ordering_badge.dynamic')
           }}
         </KBadge>
       </template>
@@ -260,6 +262,8 @@ import type {
 import PluginIcon from './PluginIcon.vue'
 
 import type { HeaderTag } from '@kong/kongponents'
+
+import isEmpty from 'lodash-es/isEmpty'
 
 const pluginMetaData = composables.usePluginMetaData()
 
