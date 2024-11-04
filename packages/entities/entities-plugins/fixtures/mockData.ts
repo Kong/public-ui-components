@@ -17,7 +17,7 @@ export const plugins: FetcherRawResponse = {
       name: 'basic-auth',
       protocols: ['http', 'https'],
       tags: ['tag1'],
-      ordering: {},
+      ordering: { 'before': { 'access': ['acl'] } },
       instance_name: 'instance-1',
       created_at: 1610617600,
       consumer_group: { id: 'consumer-group-1' },
