@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.8.36...@kong-ui-public/entities-routes@3.8.37) (2024-11-04)
+
+
+### Bug Fixes
+
+* **entities-*:** unify table tags and add compat support for filter apis ([#1756](https://github.com/Kong/public-ui-components/issues/1756)) ([ee0e55a](https://github.com/Kong/public-ui-components/commit/ee0e55ad95926acbb81ec8837d15fd98d8e2a8a0))
+
+
+
+
+
 ## [3.8.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.8.35...@kong-ui-public/entities-routes@3.8.36) (2024-11-04)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
