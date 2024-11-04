@@ -46,18 +46,24 @@ const overrideTimeframe: Ref<Timeframe> = computed(() => {
   return relativePeriod
 })
 
-const options = computed<ProviderProps>(() => ({
-  datasource: props.query?.datasource,
-  overrideTimeframe: overrideTimeframe.value,
-  tz: props.context.tz,
-  additionalFilter: props.context.filters as ExploreFilter[], // TODO: Decide how to handle metric card filters.
-  longCardTitles: props.chartOptions.longCardTitles,
-  containerTitle: props.chartOptions.chartTitle,
-  description: props.chartOptions.description,
-  percentileLatency: props.chartOptions.percentileLatency,
-  refreshInterval: props.context.refreshInterval,
-  queryReady: props.queryReady,
-}))
+const options = computed<ProviderProps>(() => {
+  const datasource = props.query?.datasource
+  if (datasource && datasource !== 'advanced' && datasource !== 'basic') {
+    throw new Error(`Invalid datasource value: ${datasource}`)
+  }
+  return {
+    datasource: props.query?.datasource,
+    overrideTimeframe: overrideTimeframe.value,
+    tz: props.context.tz,
+    additionalFilter: props.context.filters as ExploreFilter[], // TODO: Decide how to handle metric card filters.
+    longCardTitles: props.chartOptions.longCardTitles,
+    containerTitle: props.chartOptions.chartTitle,
+    description: props.chartOptions.description,
+    percentileLatency: props.chartOptions.percentileLatency,
+    refreshInterval: props.context.refreshInterval,
+    queryReady: props.queryReady,
+  }
+})
 </script>
 
 <style scoped lang="scss">

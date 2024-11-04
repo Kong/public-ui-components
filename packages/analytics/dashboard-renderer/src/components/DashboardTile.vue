@@ -4,6 +4,7 @@
       :is="componentData.component"
       v-if="componentData"
       v-bind="componentData.rendererProps"
+      @edit-tile="onEditTile"
     />
   </div>
 </template>
@@ -34,6 +35,10 @@ const props = withDefaults(defineProps<{
   height: DEFAULT_TILE_HEIGHT,
 })
 
+const emit = defineEmits<{
+  (e: 'edit-tile', tile: TileDefinition): void
+}>()
+
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
   'horizontal_bar': BarChartRenderer,
@@ -59,6 +64,10 @@ const componentData = computed(() => {
     },
   }
 })
+
+const onEditTile = () => {
+  emit('edit-tile', props.definition)
+}
 </script>
 
 <style lang="scss" scoped>

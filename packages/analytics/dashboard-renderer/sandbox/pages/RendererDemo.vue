@@ -13,6 +13,7 @@
         :class="{ 'custom-styling': isToggled}"
         :config="(dashboardConfig as DashboardConfig)"
         :context="context"
+        @edit-tile="onEditTile"
       >
         <template #slot-1>
           <div class="slot-container">
@@ -32,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardConfig, DashboardRendererContext, TileConfig } from '../../src'
+import type { DashboardConfig, DashboardRendererContext, TileConfig, TileDefinition, GridTile } from '../../src'
 import { DashboardRenderer } from '../../src'
 import { inject, ref } from 'vue'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
@@ -45,6 +46,7 @@ const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 const context: DashboardRendererContext = {
   filters: [],
   refreshInterval: 0,
+  editable: true,
 }
 
 const dashboardConfig: DashboardConfig = {
@@ -238,6 +240,10 @@ const dashboardConfig: DashboardConfig = {
 }
 
 const isToggled = ref(false)
+
+const onEditTile = (tile: GridTile<TileDefinition>) => {
+  console.log('@edit-tile', tile)
+}
 
 </script>
 

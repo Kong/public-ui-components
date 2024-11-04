@@ -5,7 +5,8 @@
       "24h": "Last 24-Hour Summary",
       "7d": "Last 7-Day Summary",
       "30d": "Last 30-Day Summary"
-    }
+    },
+    "edit": "Edit"
   },
   "queryDataProvider": {
     "timeRangeExceeded":  "The time range for this report is outside of your organization's data retention period"

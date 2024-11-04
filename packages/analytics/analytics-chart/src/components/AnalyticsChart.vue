@@ -68,6 +68,7 @@
               {{ i18n.t('csvExport.exportButton') }}
             </span>
           </KDropdownItem>
+          <slot name="menu-items" />
         </template>
       </KDropdown>
       <!-- Keep outside of dropdown, so we can independently affect its visibility -->
@@ -230,6 +231,11 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  showMenu: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -361,7 +367,7 @@ const showChartHeader = computed(() => {
   return (hasValidChartData.value && resultSetTruncated.value && maxEntitiesShown.value) || props.chartTitle || (props.allowCsvExport && hasValidChartData.value)
 })
 
-const hasMenuOptions = computed(() => (props.allowCsvExport && hasValidChartData.value) || !!props.goToExplore)
+const hasMenuOptions = computed(() => (props.allowCsvExport && hasValidChartData.value) || !!props.goToExplore || props.showMenu)
 
 const timeSeriesGranularity = computed<GranularityValues>(() => {
 

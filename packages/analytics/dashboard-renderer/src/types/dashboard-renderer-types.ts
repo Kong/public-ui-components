@@ -22,6 +22,7 @@ export interface DashboardRendererContext {
   timeSpec?: TimeRangeV4
   tz?: string
   refreshInterval?: number
+  editable?: boolean
 }
 
 type FromSchemaWithOptions<T extends JSONSchema> = FromSchema<T, { keepDefaultedPropertiesOptional: true }>
