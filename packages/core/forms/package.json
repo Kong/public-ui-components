@@ -50,19 +50,19 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong/icons": "^1.18.1",
+    "@kong/icons": "^1.18.2",
     "fecha": "^4.2.3",
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.14.0",
+    "@kong/kongponents": "^9.14.8",
     "vue": "^3.5.12"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.17.2",
-    "@kong/kongponents": "9.14.0",
+    "@kong/kongponents": "9.14.8",
     "@types/lodash-es": "^4.17.12",
     "pug": "^3.0.3"
   },
