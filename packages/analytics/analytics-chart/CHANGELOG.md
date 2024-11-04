@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.2.2...@kong-ui-public/analytics-chart@5.3.0) (2024-11-04)
+
+
+### Features
+
+* **dashboards and charts:** editable tiles | slottable menu items ([#1758](https://github.com/Kong/public-ui-components/issues/1758)) ([2b0a8fd](https://github.com/Kong/public-ui-components/commit/2b0a8fd1aa29b513d03c38d546d2c4be5a1a3c81))
+
+
+
+
+
 ## [5.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.2.1...@kong-ui-public/analytics-chart@5.2.2) (2024-11-04)
 
 
