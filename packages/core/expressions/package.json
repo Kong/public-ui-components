@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/expressions",
-  "version": "0.4.57",
+  "version": "0.4.58",
   "type": "module",
   "module": "./dist/expressions.es.js",
   "types": "dist/types/index.d.ts",
