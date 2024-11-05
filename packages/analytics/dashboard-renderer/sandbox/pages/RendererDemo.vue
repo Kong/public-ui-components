@@ -134,8 +134,9 @@ const dashboardConfig: DashboardConfig = {
           allowCsvExport: true,
         },
         query: {
-          datasource: 'basic',
+          datasource: 'advanced',
           dimensions: ['route'],
+          metrics: ['request_count'],
         },
       },
       layout: {
