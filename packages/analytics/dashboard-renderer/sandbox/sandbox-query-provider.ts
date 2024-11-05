@@ -54,7 +54,7 @@ const configFn = (): Promise<AnalyticsConfigV2> => {
 
 const evaluateFeatureFlagFn = () => true
 
-const exploreBaseUrl = 'https://cloud.konghq.tech/us/analytics/explorer'
+const exploreBaseUrl = () => 'https://cloud.konghq.tech/us/analytics/explorer'
 
 const sandboxQueryProvider: Plugin = {
   install(app) {
