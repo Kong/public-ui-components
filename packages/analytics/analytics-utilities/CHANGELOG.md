@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.2.0...@kong-ui-public/analytics-utilities@5.3.0) (2024-11-05)
+
+
+### Features
+
+* add explore base url to query bridge for analytics jump to explore ([#1765](https://github.com/Kong/public-ui-components/issues/1765)) ([0b0c743](https://github.com/Kong/public-ui-components/commit/0b0c743d0d959c5076b5283c0b57739518206d74))
+
+
+
+
+
 # [5.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.1.0...@kong-ui-public/analytics-utilities@5.2.0) (2024-10-21)
 
 
