@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.2.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.2.6...@kong-ui-public/entities-plugins@9.2.7) (2024-11-05)
+
+
+### Bug Fixes
+
+* **entities-plugins:** custom plugins disappeared after page reload [KM-658] ([#1757](https://github.com/Kong/public-ui-components/issues/1757)) ([68df8c3](https://github.com/Kong/public-ui-components/commit/68df8c3aa9110f73ea67ff3635b3f879b77fedb4))
+
+
+
+
+
 ## [9.2.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.2.5...@kong-ui-public/entities-plugins@9.2.6) (2024-11-05)
 
 
