@@ -30,4 +30,5 @@ export interface AnalyticsBridge {
   //  https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-4.html#the-noinfer-utility-type
   //  See note in DashboardRenderer tests.
   evaluateFeatureFlagFn: <T = boolean>(key: string, defaultValue: T) => T,
+  exploreBaseUrl?: string,
 }
