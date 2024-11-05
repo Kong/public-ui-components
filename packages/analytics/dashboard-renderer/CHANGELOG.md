@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.28.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.28.0...@kong-ui-public/dashboard-renderer@0.28.1) (2024-11-05)
+
+
+### Bug Fixes
+
+* go to explore - tile and context filters need to be merged ([#1766](https://github.com/Kong/public-ui-components/issues/1766)) ([4cd0f38](https://github.com/Kong/public-ui-components/commit/4cd0f38660a3796cb549c0f7759bd8b7b1299134))
+
+
+
+
+
 # [0.28.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.27.0...@kong-ui-public/dashboard-renderer@0.28.0) (2024-11-05)
 
 
