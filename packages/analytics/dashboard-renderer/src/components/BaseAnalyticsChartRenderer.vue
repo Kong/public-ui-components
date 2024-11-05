@@ -57,12 +57,7 @@ const options = computed((): AnalyticsChartOptions => ({
 const exploreLink = computed(() => {
   if (queryBridge && queryBridge.exploreBaseUrl) {
     const exploreQuery: ExploreQuery | AiExploreQuery = {
-      filters: props.query.filters?.map((filter) => {
-        return {
-          ...filter,
-          type: filter.type,
-        } as ExploreFilter
-      }) ?? [],
+      filters: props.query.filters ?? [],
       metrics: props.query.metrics as ExploreAggregations[] | AiExploreAggregations[] ?? [],
       dimensions: props.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? [],
       time_range: props.query.time_range as TimeRangeV4 || props.context.timeSpec,
