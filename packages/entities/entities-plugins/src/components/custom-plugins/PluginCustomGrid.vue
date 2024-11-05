@@ -185,7 +185,8 @@ const handleClose = (revalidate?: boolean): void => {
   selectedPlugin.value = null
 }
 
-const tallestPluginCardHeight = ref<number>(310) // begin with default height
+const minHeight = 310
+const tallestPluginCardHeight = ref<number>(minHeight) // begin with default height
 const pluginCardContainerRef = ref<HTMLElement | null>(null)
 const pluginCardRef = ref<Array<InstanceType<typeof PluginSelectCard>> | null>(null)
 
@@ -204,7 +205,7 @@ const collapsedGroupStyles = computed((): Record<string, string> => {
 const showCollapseTrigger = ref<boolean>(false) // don't display a trigger if all plugins will already be visible
 
 const handleResize = (): void => {
-  tallestPluginCardHeight.value = getTallestPluginCardHeight(pluginCardRef.value!)
+  tallestPluginCardHeight.value = Math.max(getTallestPluginCardHeight(pluginCardRef.value!), minHeight)
   setToggleVisibility()
 }
 
@@ -218,7 +219,7 @@ const setToggleVisibility = (): void => {
 onMounted(async () => {
   await nextTick()
 
-  tallestPluginCardHeight.value = getTallestPluginCardHeight(pluginCardRef.value!)
+  tallestPluginCardHeight.value = Math.max(getTallestPluginCardHeight(pluginCardRef.value!), minHeight)
   setToggleVisibility()
   window?.addEventListener('resize', handleResize)
 })

@@ -2,6 +2,7 @@
   <img
     ref="img"
     :alt="alt"
+    :height="size"
     :src="iconSrc"
     :width="size"
     @error="onError"
