@@ -113,9 +113,7 @@
       </template>
 
       <template #ordering="{ rowValue }">
-        <KBadge
-          :appearance="isEmpty(rowValue) ? 'info' : 'warning'"
-        >
+        <KBadge :appearance="isEmpty(rowValue) ? 'info' : 'warning'">
           {{
             isEmpty(rowValue)
               ? t('plugins.list.table_headers.ordering_badge.static')
@@ -411,7 +409,8 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
         name: fields.name,
         id: { label: t('plugins.list.table_headers.id'), sortable: true },
       },
-      placeholder: t(`search.placeholder.${props.config.app}`),
+      // force exact placeholder if `props.config.isExactMatch` is true
+      placeholder: t(`search.placeholder.${props.config.isExactMatch ? 'exact' : props.config.app}`),
     } as ExactMatchFilterConfig
   }
 
@@ -545,10 +544,9 @@ const confirmSwitchEnablement = async () => {
     return
   }
 
-  let url = `${props.config.apiBaseUrl}${
-    endpoints.item[props.config.app]?.[props.config?.entityType ? 'forEntity' : 'all']
-      .replace(/{entityType}/gi, props.config?.entityType || '')
-      .replace(/{entityId}/gi, props.config?.entityId || '')
+  let url = `${props.config.apiBaseUrl}${endpoints.item[props.config.app]?.[props.config?.entityType ? 'forEntity' : 'all']
+    .replace(/{entityType}/gi, props.config?.entityType || '')
+    .replace(/{entityId}/gi, props.config?.entityId || '')
   }`
     .replace(/{id}/gi, switchEnablementTarget.value.id || '')
 
