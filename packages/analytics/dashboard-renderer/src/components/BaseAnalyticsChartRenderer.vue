@@ -68,7 +68,7 @@ const exploreLink = computed(() => {
       time_range: props.query.time_range as TimeRangeV4 || props.context.timeSpec,
 
     } as ExploreQuery | AiExploreQuery
-    return `${queryBridge.exploreBaseUrl}?q=${JSON.stringify(exploreQuery)}&d=${props.query.datasource}&c=${props.chartOptions.type}`
+    return `${queryBridge.exploreBaseUrl()}?q=${JSON.stringify(exploreQuery)}&d=${props.query.datasource}&c=${props.chartOptions.type}`
   }
 
   return ''
