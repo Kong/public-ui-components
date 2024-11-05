@@ -39,7 +39,7 @@ import type { AnalyticsChartOptions } from '@kong-ui-public/analytics-chart'
 import { AnalyticsChart } from '@kong-ui-public/analytics-chart'
 import composables from '../composables'
 import { INJECT_QUERY_PROVIDER } from '../constants'
-import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreFilter, ExploreQuery, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 
 const props = defineProps<RendererProps<any> & { extraProps?: Record<string, any> }>()
 const emit = defineEmits<{
@@ -63,7 +63,9 @@ const exploreLink = computed(() => {
       time_range: props.query.time_range as TimeRangeV4 || props.context.timeSpec,
 
     } as ExploreQuery | AiExploreQuery
-    return `${queryBridge.exploreBaseUrl()}?q=${JSON.stringify(exploreQuery)}&d=${props.query.datasource}&c=${props.chartOptions.type}`
+    // Explore only supports advanced or ai
+    const datasource = ['advanced', 'ai'].includes(props.query.datasource) ? props.query.datasource : 'advanced'
+    return `${queryBridge.exploreBaseUrl()}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${props.chartOptions.type}`
   }
 
   return ''
