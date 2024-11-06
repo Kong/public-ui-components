@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.8.38...@kong-ui-public/entities-routes@3.8.39) (2024-11-06)
+
+
+### Bug Fixes
+
+* **entities-routes:** placeholder should reflect actual behavior ([#1768](https://github.com/Kong/public-ui-components/issues/1768)) ([d94bb28](https://github.com/Kong/public-ui-components/commit/d94bb2869ffc10632a09990112f9d9472c09c3ce))
+
+
+
+
+
 ## [3.8.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.8.37...@kong-ui-public/entities-routes@3.8.38) (2024-11-04)
 
 
