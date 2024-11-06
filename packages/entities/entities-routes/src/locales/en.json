@@ -12,6 +12,7 @@
   "search": {
     "placeholder": {
       "konnect": "Filter by name",
+      "exact": "Filter by exact name or ID",
       "kongManager": "Filter by exact name or ID"
     },
     "no_results": "No results found"
