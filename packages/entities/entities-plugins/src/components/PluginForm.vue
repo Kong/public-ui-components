@@ -166,6 +166,7 @@ import {
   type PluginFormFields,
   type PluginFormState,
   type PluginOrdering,
+  type CustomSchemas,
 } from '../types'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
@@ -502,7 +503,7 @@ const getArrayType = (list: unknown[]): string => {
 
 const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>, arrayNested?: boolean) => {
   let schema = (response && response.fields) || []
-  const pluginSchema = customSchemas[props.pluginType as keyof typeof customSchemas]
+  const pluginSchema = customSchemas[props.pluginType as keyof CustomSchemas]
   const credentialSchema = CREDENTIAL_METADATA[props.pluginType]?.schema?.fields
 
   // schema can either be an object or an array of objects. If it's an array, convert it to an object
@@ -1005,9 +1006,9 @@ const initScopeFields = (): void => {
   }
 
   // apply custom front-end schema if overwriteDefault is true
-  if (customSchemas[props.pluginType as keyof typeof customSchemas] && customSchemas[props.pluginType as keyof typeof customSchemas].overwriteDefault) {
-    if (Object.hasOwnProperty.call(customSchemas[props.pluginType as keyof typeof customSchemas], 'formSchema')) {
-      Object.assign(defaultFormSchema, customSchemas[props.pluginType as keyof typeof customSchemas].formSchema)
+  if (customSchemas[props.pluginType as keyof CustomSchemas] && customSchemas[props.pluginType as keyof CustomSchemas].overwriteDefault) {
+    if (Object.hasOwnProperty.call(customSchemas[props.pluginType as keyof CustomSchemas], 'formSchema')) {
+      Object.assign(defaultFormSchema, customSchemas[props.pluginType as keyof CustomSchemas].formSchema)
     }
   }
 }
@@ -1176,21 +1177,31 @@ const saveFormData = async (): Promise<void> => {
 
     let response: AxiosResponse | undefined
 
+    const payload = JSON.parse(JSON.stringify(getRequestBody.value))
+    const customSchema = customSchemas[props.pluginType as keyof CustomSchemas]
+    if (typeof customSchema?.shamefullyTransformPayload === 'function') {
+      customSchema.shamefullyTransformPayload({
+        originalModel: formFieldsOriginal,
+        model: form.fields,
+        payload,
+      })
+    }
+
     // TODO: determine validate URL for credentials
     // don't validate custom plugins
     if (!treatAsCredential.value && !isCustomPlugin.value) {
-      await axiosInstance.post(validateSubmitUrl.value, getRequestBody.value)
+      await axiosInstance.post(validateSubmitUrl.value, payload)
     }
 
     if (formType.value === 'create') {
-      response = await axiosInstance.post(submitUrl.value, getRequestBody.value)
+      response = await axiosInstance.post(submitUrl.value, payload)
     } else if (formType.value === 'edit') {
       response = props.config.app === 'konnect'
         // Note 1: Konnect currently uses PUT because PATCH is not fully supported in Koko
         //         If this changes, the `edit` form methods should be re-evaluated/updated accordingly
         // Note 2: Because Konnect uses PUT, we need to include dynamic ordering in the request body
-        ? await axiosInstance.put(submitUrl.value, Object.assign({ ordering: dynamicOrdering.value }, getRequestBody.value))
-        : await axiosInstance.patch(submitUrl.value, getRequestBody.value)
+        ? await axiosInstance.put(submitUrl.value, Object.assign({ ordering: dynamicOrdering.value }, payload))
+        : await axiosInstance.patch(submitUrl.value, payload)
     }
 
     // Set initial state of `formFieldsOriginal` to these values in order to detect changes
