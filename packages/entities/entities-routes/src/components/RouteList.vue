@@ -353,7 +353,8 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   if (isExactMatch) {
     return {
       isExactMatch,
-      placeholder: t(`search.placeholder.${props.config.app}`),
+      // force exact placeholder if `props.config.isExactMatch` is true
+      placeholder: t(`search.placeholder.${props.config.isExactMatch ? 'exact' : props.config.app}`),
     } as ExactMatchFilterConfig
   }
 
