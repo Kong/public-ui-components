@@ -5,7 +5,7 @@
   "entityNoName": "no-name",
   "debug": "debug",
   "total": "Total",
-  "jumpToExplore": "Go to Explorer",
+  "jumpToExplore": "Open in Explorer",
   "chartUnits": {
     "ms": "ms",
     "bytes": "Byte{plural}",
@@ -21,6 +21,7 @@
     "defaultFilename": "Chart Export",
     "exportPreview": "Export Preview",
     "exportButton": "Export",
+    "exportAsCsv": "Export as CSV",
     "exportTimeRange": "Time range",
     "exportDescription": "Exports a CSV of the data represented in the chart.",
     "previewRows": "Previewing {rowsMax} of {rowsTotal} row{plural}",
