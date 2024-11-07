@@ -7,6 +7,7 @@
       <div
         v-if="chartTitle"
         class="chart-title"
+        :title="chartTitle"
       >
         {{ chartTitle }}
       </div>
@@ -471,8 +472,13 @@ provide('legendPosition', toRef(props, 'legendPosition'))
   }
 
   .chart-title {
+    cursor: default;
     font-size: var(--kui-font-size-40, $kui-font-size-40);
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    max-width: 32ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .tooltip {
