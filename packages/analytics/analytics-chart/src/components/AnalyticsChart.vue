@@ -59,13 +59,13 @@
             v-if="allowCsvExport && hasValidChartData"
             class="chart-export-button"
             data-testid="chart-csv-export"
+            @click="exportCsv()"
           >
             <span
               class="chart-export-trigger"
               data-testid="csv-export-button"
-              @click="exportCsv()"
             >
-              {{ i18n.t('csvExport.exportButton') }}
+              {{ i18n.t('csvExport.exportAsCsv') }}
             </span>
           </KDropdownItem>
           <slot name="menu-items" />
