@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.4.2...@kong-ui-public/analytics-chart@5.4.3) (2024-11-07)
+
+
+### Bug Fixes
+
+* chart title should not wrap ([#1772](https://github.com/Kong/public-ui-components/issues/1772)) ([b9e6eb2](https://github.com/Kong/public-ui-components/commit/b9e6eb24f05383468a6cb71dd974d63349c256b1))
+
+
+
+
+
 ## [5.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.4.1...@kong-ui-public/analytics-chart@5.4.2) (2024-11-07)
 
 
