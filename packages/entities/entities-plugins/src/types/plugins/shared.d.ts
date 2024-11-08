@@ -44,4 +44,5 @@ export interface CommonSchemaFields {
   id?: string
   overwriteDefault?: boolean
   formSchema?: Record<string, any>
+  shamefullyTransformPayload?: (params: { payload: Record<string, any> } & Record<string, any>) => void
 }

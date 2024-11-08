@@ -200,6 +200,7 @@ export interface CustomSchemas {
   'route-by-header': RouteByHeaderSchema
   'ai-prompt-decorator': AIPromptDecoratorSchema
   'ai-prompt-template': AIPromptTemplateSchema
+  'ai-proxy-advanced': CommonSchemaFields
   'ai-rate-limiting-advanced': AIRateLimitingAdvancedSchema
   'vault-auth': VaultAuthSchema
   'graphql-rate-limiting-advanced': GraphQLRateLimitingAdvancedSchema
