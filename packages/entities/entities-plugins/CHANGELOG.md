@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.2.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.2.10...@kong-ui-public/entities-plugins@9.2.11) (2024-11-08)
+
+
+### Bug Fixes
+
+* **entities-plugins:** ai-proxy-advanced form ([#1769](https://github.com/Kong/public-ui-components/issues/1769)) ([0485ca2](https://github.com/Kong/public-ui-components/commit/0485ca270fc1af7b939f29ed1793a7496f84e5f9))
+
+
+
+
+
 ## [9.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.2.9...@kong-ui-public/entities-plugins@9.2.10) (2024-11-08)
 
 
