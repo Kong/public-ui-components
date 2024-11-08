@@ -54,7 +54,7 @@
           <PluginIcon
             class="plugin-icon"
             :name="row.name"
-            :width="24"
+            :size="24"
           />
           <div class="info-wrapper">
             <span

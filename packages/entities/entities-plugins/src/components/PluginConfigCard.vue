@@ -39,7 +39,7 @@
           <PluginIcon
             class="plugin-icon"
             :name="getPropValue('rowValue', slotProps)"
-            :width="24"
+            :size="24"
           />
           <span class="info-name">
             {{ pluginMetaData.getDisplayName(getPropValue('rowValue', slotProps)) }}
