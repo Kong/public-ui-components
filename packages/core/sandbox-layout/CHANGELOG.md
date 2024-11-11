@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.53](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.52...@kong-ui-public/sandbox-layout@2.1.53) (2024-11-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.19.1 ([#1777](https://github.com/Kong/public-ui-components/issues/1777)) ([8d72d6d](https://github.com/Kong/public-ui-components/commit/8d72d6df082bbf2c205f5d03344ccd23da38866c))
+
+
+
+
+
 ## [2.1.52](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.1.51...@kong-ui-public/sandbox-layout@2.1.52) (2024-11-04)
 
 
