@@ -139,7 +139,7 @@ describe('i18n', () => {
       expect(october.substring(0, 7)).toBe('Oct 3, ')
       expect(november.substring(0, 7)).toBe('Nov 14,')
       expect(decimalTimestamp).toEqual(integerTimestamp)
-      expect(timestampInMs).toBe('Nov 13, 2018, 0:08 AM')
+      expect(timestampInMs).toBe('Nov 13, 2018, 2:13 PM')
     })
   })
 
