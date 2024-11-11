@@ -131,6 +131,7 @@ describe('i18n', () => {
       const november = formatUnixTimeStamp(1573772400)
       const decimalTimestamp = formatUnixTimeStamp(1570111995.652561)
       const integerTimestamp = formatUnixTimeStamp(1570111995)
+      const timestampInMs = formatUnixTimeStamp(1570111995652)
 
       expect(formattedDateAM).toBe('May 16, 2019, 11:42 AM')
       expect(formattedDatePM).toBe('May 17, 2019, 1:39 AM')
@@ -138,6 +139,7 @@ describe('i18n', () => {
       expect(october.substring(0, 7)).toBe('Oct 3, ')
       expect(november.substring(0, 7)).toBe('Nov 14,')
       expect(decimalTimestamp).toEqual(integerTimestamp)
+      expect(timestampInMs).toBe('Nov 13, 2018, 0:08 AM')
     })
   })
 
