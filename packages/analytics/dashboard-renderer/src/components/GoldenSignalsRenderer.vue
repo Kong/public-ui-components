@@ -62,6 +62,7 @@ const options = computed<ProviderProps>(() => {
     percentileLatency: props.chartOptions.percentileLatency,
     refreshInterval: props.context.refreshInterval,
     queryReady: props.queryReady,
+    refreshCounter: props.refreshCounter,
   }
 })
 </script>

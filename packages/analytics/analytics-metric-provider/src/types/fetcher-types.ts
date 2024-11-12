@@ -16,4 +16,5 @@ export interface MetricFetcherOptions {
   queryReady: Ref<boolean>
   queryFn: AnalyticsBridge['queryFn']
   abortController?: AbortController
+  refreshCounter?: Ref<number>
 }

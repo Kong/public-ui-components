@@ -26,6 +26,7 @@
           :definition="tile.meta"
           :height="tile.layout.size.rows * (config.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
           :query-ready="queryReady"
+          :refresh-counter="refreshCounter"
           @edit-tile="onEditTile(tile)"
         />
       </template>
@@ -36,7 +37,7 @@
 <script setup lang="ts">
 import type { DashboardConfig, DashboardRendererContext, GridTile, TileConfig, TileDefinition, DashboardRendererContextInternal } from '../types'
 import DashboardTile from './DashboardTile.vue'
-import { computed, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
 import type { AnalyticsBridge, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
@@ -59,6 +60,7 @@ const emit = defineEmits<{
 }>()
 
 const { i18n } = composables.useI18n()
+const refreshCounter = ref(0)
 
 // Note: queryBridge is not directly used by the DashboardRenderer component.  It is required by many of the
 // subcomponents that get rendered in the dashboard, however.  Check for its existence here in order to catch
@@ -164,6 +166,12 @@ const mergedContext = computed<DashboardRendererContextInternal>(() => {
 const onEditTile = (tile: GridTile<TileDefinition>) => {
   emit('edit-tile', tile)
 }
+
+const refreshTiles = () => {
+  refreshCounter.value++
+}
+
+defineExpose({ refresh: refreshTiles })
 
 </script>
 

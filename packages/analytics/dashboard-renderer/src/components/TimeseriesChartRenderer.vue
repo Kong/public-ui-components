@@ -6,6 +6,7 @@
     :height="height"
     :query="query"
     :query-ready="queryReady"
+    :refresh-counter="refreshCounter"
   />
 </template>
 

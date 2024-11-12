@@ -4,6 +4,7 @@
     :context="context"
     :query="query"
     :query-ready="queryReady"
+    :refresh-counter="refreshCounter"
   >
     <div class="analytics-chart">
       <SimpleChart

@@ -9,7 +9,16 @@
         v-model="isToggled"
         :label="isToggled ? 'Custom styling' : 'Normal styling'"
       />
+      <br>
+      <KButton
+        appearance="primary"
+        size="small"
+        @click="refresh"
+      >
+        refresh
+      </KButton>
       <DashboardRenderer
+        ref="dashboardRendererRef"
         :class="{ 'custom-styling': isToggled}"
         :config="(dashboardConfig as DashboardConfig)"
         :context="context"
@@ -246,6 +255,12 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
   console.log('@edit-tile', tile)
 }
 
+const dashboardRendererRef = ref<InstanceType<typeof DashboardRenderer> | null>(null)
+
+
+const refresh = () => {
+  dashboardRendererRef.value?.refresh()
+}
 </script>
 
 <style lang="scss" scoped>

@@ -498,4 +498,5 @@ export interface RendererProps<T> {
   queryReady: boolean
   chartOptions: T
   height: number
+  refreshCounter: number
 }

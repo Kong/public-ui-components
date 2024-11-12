@@ -31,8 +31,10 @@ const props = withDefaults(defineProps<{
   context: DashboardRendererContextInternal,
   height?: number,
   queryReady: boolean,
+  refreshCounter?: number,
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
+  refreshCounter: 0,
 })
 
 const emit = defineEmits<{
@@ -61,6 +63,7 @@ const componentData = computed(() => {
       queryReady: props.queryReady,
       chartOptions: props.definition.chart,
       height: props.height - PADDING_SIZE * 2,
+      refreshCounter: props.refreshCounter,
     },
   }
 })
