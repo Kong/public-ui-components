@@ -32,9 +32,11 @@
       :sort-handler-function="enableClientSort ? sortHandlerFunction : undefined"
       :sortable="!disableSorting"
       :table-preferences="tablePreferences"
+      @data="(data) => emit('data', data)"
       @empty-state-action-click="handleEmptyStateCtaClicked"
       @row:click="handleRowClick"
       @sort="(params: any) => handleSortChanged(params)"
+      @state="(state) => emit('state', state)"
       @update:table-preferences="handleUpdateTablePreferences"
     >
       <template #toolbar="{ state }">
@@ -95,7 +97,7 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import composables from '../../composables'
 import { useTablePreferences } from '@kong-ui-public/core'
-import type { SwrvStateData, HeaderTag, TablePreferences, SortHandlerFunctionParam, TableDataFetcherParams } from '@kong/kongponents'
+import type { SwrvStateData, HeaderTag, TablePreferences, SortHandlerFunctionParam, TableDataFetcherParams, TableStatePayload } from '@kong/kongponents'
 import EntityBaseTableCell from './EntityBaseTableCell.vue'
 
 import type {
@@ -236,6 +238,8 @@ const emit = defineEmits<{
   (e: 'sort', sortParams: TableSortParams) : void,
   (e: 'clear-search-input'): void,
   (e: 'empty-state-cta-clicked'): void,
+  (e: 'state', state: TableStatePayload): void
+  (e: 'data', data: any): void
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -296,6 +300,11 @@ const rowAttrs = (row: Record<string, any>) => ({
 })
 
 const tableRefs = ref<Record<string, any>>({})
+
+// expose revalidate function of KTable to parent component
+defineExpose({
+  revalidate: tableRefs.value.revalidate,
+})
 
 const getRowEl = (row: Record<string, any>): HTMLElement => {
   return tableRefs.value?.$el.querySelector(`[data-rowid="${row.id}"]`)
