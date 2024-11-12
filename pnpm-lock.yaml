@@ -991,8 +991,8 @@ importers:
         specifier: ^1.19.1
         version: 1.19.1(vue@3.5.12(typescript@5.6.3))
       '@kong/kongponents':
-        specifier: 9.14.8
-        version: 9.14.8(axios@1.7.7)(vue-router@4.4.5(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3))
+        specifier: 9.14.9-pr.2510.bf410c2b9.0
+        version: 9.14.9-pr.2510.bf410c2b9.0(axios@1.7.7)(vue-router@4.4.5(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3))
       axios:
         specifier: ^1.7.7
         version: 1.7.7
@@ -1958,6 +1958,14 @@ packages:
 
   '@kong/kongponents@9.14.8':
     resolution: {integrity: sha512-rKOwzVG9kQJxLGk6cyedWyL5N0hgO5wDvHm/ir82Z+YGuEer8iF3wyGEh9EbcB6YukCNzBBcRASkR1PiyPS6Ag==}
+    engines: {node: '>=v16.20.2 || >=18.12.1 || >=20.14.0'}
+    peerDependencies:
+      axios: ^1.7.7
+      vue: '>= 3.3.4 < 4'
+      vue-router: ^4.4.5
+
+  '@kong/kongponents@9.14.9-pr.2510.bf410c2b9.0':
+    resolution: {integrity: sha512-JKtHozjy167eH2umlnTR5P0JZoFV9FmH7lnXchB82r5523vo6iBvc3z9v+aUZXUOkhHplJ5FaMHynsVC8EQxXA==}
     engines: {node: '>=v16.20.2 || >=18.12.1 || >=20.14.0'}
     peerDependencies:
       axios: ^1.7.7
@@ -10767,6 +10775,27 @@ snapshots:
     dependencies:
       '@floating-ui/vue': 1.1.5(vue@3.5.12(typescript@5.6.3))
       '@kong/icons': 1.18.2(vue@3.5.12(typescript@5.6.3))
+      '@popperjs/core': 2.11.8
+      axios: 1.7.7
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.1(date-fns@2.30.0)
+      focus-trap: 7.6.0
+      focus-trap-vue: 4.0.3(focus-trap@7.6.0)(vue@3.5.12(typescript@5.6.3))
+      nanoid: 5.0.7
+      sortablejs: 1.15.3
+      swrv: 1.0.4(vue@3.5.12(typescript@5.6.3))
+      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.5.12(typescript@5.6.3))
+      vue: 3.5.12(typescript@5.6.3)
+      vue-bind-once: 0.2.1(vue@3.5.12(typescript@5.6.3))
+      vue-draggable-next: 2.2.1(sortablejs@1.15.3)(vue@3.5.12(typescript@5.6.3))
+      vue-router: 4.4.5(vue@3.5.12(typescript@5.6.3))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+
+  '@kong/kongponents@9.14.9-pr.2510.bf410c2b9.0(axios@1.7.7)(vue-router@4.4.5(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3))':
+    dependencies:
+      '@floating-ui/vue': 1.1.5(vue@3.5.12(typescript@5.6.3))
+      '@kong/icons': 1.19.1(vue@3.5.12(typescript@5.6.3))
       '@popperjs/core': 2.11.8
       axios: 1.7.7
       date-fns: 2.30.0
