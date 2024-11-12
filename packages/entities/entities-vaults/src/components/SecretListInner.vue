@@ -44,8 +44,8 @@
         <b>{{ rowValue ?? '-' }}</b>
       </div>
     </template>
-    <template #updated_at="{ row, rowValue }">
-      {{ formatUnixTimeStamp(rowValue ?? row.created_at) }}
+    <template #updated_at="{ rowValue }">
+      <span>{{ rowValue ? formatUnixTimeStamp(new Date(rowValue).getTime() / 1000) : '-' }}</span>
     </template>
 
     <!-- Row actions -->
