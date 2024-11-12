@@ -991,8 +991,8 @@ importers:
         specifier: ^1.19.1
         version: 1.19.1(vue@3.5.12(typescript@5.6.3))
       '@kong/kongponents':
-        specifier: 9.14.9-pr.2510.bf410c2b9.0
-        version: 9.14.9-pr.2510.bf410c2b9.0(axios@1.7.7)(vue-router@4.4.5(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3))
+        specifier: 9.14.9-pr.2510.9016cf3b1.0
+        version: 9.14.9-pr.2510.9016cf3b1.0(axios@1.7.7)(vue-router@4.4.5(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3))
       axios:
         specifier: ^1.7.7
         version: 1.7.7
@@ -1964,8 +1964,8 @@ packages:
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.4.5
 
-  '@kong/kongponents@9.14.9-pr.2510.bf410c2b9.0':
-    resolution: {integrity: sha512-JKtHozjy167eH2umlnTR5P0JZoFV9FmH7lnXchB82r5523vo6iBvc3z9v+aUZXUOkhHplJ5FaMHynsVC8EQxXA==}
+  '@kong/kongponents@9.14.9-pr.2510.9016cf3b1.0':
+    resolution: {integrity: sha512-YZzQG55e6+GO3pd1VYl5FTSoxKaRRlNds9xS8AcZVrO1p6n8rjlPzN9v+6Km13N08WX28wXehffhVmOqh3oABg==}
     engines: {node: '>=v16.20.2 || >=18.12.1 || >=20.14.0'}
     peerDependencies:
       axios: ^1.7.7
@@ -10792,7 +10792,7 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
 
-  '@kong/kongponents@9.14.9-pr.2510.bf410c2b9.0(axios@1.7.7)(vue-router@4.4.5(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3))':
+  '@kong/kongponents@9.14.9-pr.2510.9016cf3b1.0(axios@1.7.7)(vue-router@4.4.5(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3))':
     dependencies:
       '@floating-ui/vue': 1.1.5(vue@3.5.12(typescript@5.6.3))
       '@kong/icons': 1.19.1(vue@3.5.12(typescript@5.6.3))
