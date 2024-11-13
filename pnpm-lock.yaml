@@ -1012,6 +1012,21 @@ importers:
         specifier: ^4.4.5
         version: 4.4.5(vue@3.5.12(typescript@5.6.3))
 
+  packages/entities/entities-redis-configurations:
+    devDependencies:
+      '@kong/design-tokens':
+        specifier: 1.17.2
+        version: 1.17.2
+      '@kong/kongponents':
+        specifier: 9.14.8
+        version: 9.14.8(axios@1.7.7)(vue-router@4.4.5(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3))
+      vue:
+        specifier: ^3.5.12
+        version: 3.5.12(typescript@5.6.3)
+      vue-router:
+        specifier: ^4.4.5
+        version: 4.4.5(vue@3.5.12(typescript@5.6.3))
+
   packages/entities/entities-routes:
     dependencies:
       '@kong-ui-public/expressions':
