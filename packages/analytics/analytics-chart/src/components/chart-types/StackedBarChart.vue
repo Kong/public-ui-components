@@ -19,6 +19,7 @@
       >
         <canvas
           ref="canvas"
+          class="chart-canvas"
         />
       </div>
     </div>

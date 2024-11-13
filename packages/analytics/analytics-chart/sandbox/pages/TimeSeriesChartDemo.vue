@@ -203,7 +203,6 @@
         :allow-csv-export="true"
         :chart-data="(exploreResult)"
         :chart-options="analyticsChartOptions"
-        chart-title="Request count by Status Code"
         :go-to-explore="(exploreLink)"
         :legend-position="legendPosition"
         :show-annotations="showAnnotationsToggle"
@@ -251,7 +250,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, inject } from 'vue'
+import { computed, ref, watch, inject, provide } from 'vue'
 import {
   AnalyticsChart,
   ChartLegendPosition,
@@ -266,6 +265,8 @@ import { lookupStatusCodeColor } from '../../src/utils/customColors'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { generateMultipleMetricTimeSeriesData, generateSingleMetricTimeSeriesData } from '@kong-ui-public/analytics-utilities'
 import CodeText from '../CodeText.vue'
+import { INJECT_QUERY_PROVIDER } from '../../src/constants'
+import useEvaluateFeatureFlag from '../../src/composables/useEvauluateFeatureFlag'
 
 enum Metrics {
   TotalRequests = 'TotalRequests',
@@ -332,6 +333,7 @@ const exportCsv = () => {
 }
 
 const exploreLink: string = 'https://cloud.konghq.tech/us/analytics/explorer'
+provide(INJECT_QUERY_PROVIDER, { evaluateFeatureFlagFn: () => true })
 
 const exploreResultText = ref('')
 const hasError = computed(() => !isValidJson(exploreResultText.value))
