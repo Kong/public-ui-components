@@ -1,5 +1,5 @@
 import { makeFilterable } from './util'
-import type { BasicExploreFilter, BasicExploreQuery } from './basic'
+import type { BasicExploreFilter, BasicExploreInFilterV2, BasicExploreQuery } from './basic'
 
 export const queryableAiExploreDimensions = [
   'control_plane',
@@ -27,6 +27,10 @@ export interface AiExploreFilter extends Omit<BasicExploreFilter, 'dimension'> {
   dimension: FilterableAiExploreDimensions
 }
 
+export interface AiExploreInFilterV2 extends Omit<BasicExploreInFilterV2, 'field'> {
+  field: FilterableAiExploreDimensions
+}
+
 export const aiExploreAggregations = [
   'total_tokens',
   'prompt_tokens',
@@ -42,9 +46,11 @@ export const aiExploreAggregations = [
 
 export type AiExploreAggregations = typeof aiExploreAggregations[number]
 
+export type AiExploreFilterAll = AiExploreFilter | AiExploreInFilterV2
+
 export interface AiExploreQuery extends Omit<BasicExploreQuery, 'metrics' | 'dimensions' | 'filters'> {
   metrics?: AiExploreAggregations[]
   dimensions?: QueryableAiExploreDimensions[]
-  filters?: AiExploreFilter[]
+  filters?: AiExploreFilterAll[]
 }
 

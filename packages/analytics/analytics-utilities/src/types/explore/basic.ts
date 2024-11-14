@@ -26,6 +26,12 @@ export interface BasicExploreFilter {
   values: (string | number | null)[]
 }
 
+export interface BasicExploreInFilterV2 {
+  operator: ExploreFilterTypesV2
+  field: FilterableBasicExploreDimensions
+  value: (string | number | null)[]
+}
+
 export const basicExploreAggregations = [
   'active_services',
   'request_count',
@@ -35,10 +41,12 @@ export const basicExploreAggregations = [
 
 export type BasicExploreAggregations = typeof basicExploreAggregations[number]
 
+export type BasicExploreFilterAll = BasicExploreFilter | BasicExploreInFilterV2
+
 export interface BasicExploreQuery {
   metrics?: BasicExploreAggregations[]
   dimensions?: QueryableBasicExploreDimensions[]
-  filters?: BasicExploreFilter[]
+  filters?: BasicExploreFilterAll[]
   granularity?: GranularityValues
   time_range?: TimeRangeV4
   limit?: number
