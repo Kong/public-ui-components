@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.3.0...@kong-ui-public/analytics-utilities@5.4.0) (2024-11-14)
+
+
+### Features
+
+* v2 filters in explore ([#1783](https://github.com/Kong/public-ui-components/issues/1783)) ([cdab23e](https://github.com/Kong/public-ui-components/commit/cdab23e01b3c233ea00d2c34eb55154a258801ea))
+
+
+
+
+
 # [5.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.2.0...@kong-ui-public/analytics-utilities@5.3.0) (2024-11-05)
 
 
