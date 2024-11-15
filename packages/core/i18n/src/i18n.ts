@@ -70,10 +70,10 @@ export const createI18n = <MessageSource extends Record<string, any>>
    * @param {Number} timestamp a unix timestamp in seconds
    * @returns a date string formatted like 'Apr 6, 2022 10:50'
    */
-  const formatUnixTimeStamp = (timestamp?: number | null): string => {
+  const formatUnixTimeStamp = (timestamp: number): string => {
     const invalidDate = 'Invalid Date'
     if (!timestamp) {
-      return '-'
+      return invalidDate
     }
 
     try {
