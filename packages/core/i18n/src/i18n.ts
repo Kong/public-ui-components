@@ -96,27 +96,15 @@ export const createI18n = <MessageSource extends Record<string, any>>
     return formatUnixTimeStamp(date)
   }
 
-  const t = (
-    translationKey: PathToDotNotation<MessageSource, string>,
-    values?: Record<string, MessageFormatPrimitiveValue> | undefined,
-    opts?: IntlMessageFormatOptions,
-  ): string => {
-    return intl.formatMessage(
-      <MessageDescriptor>{ id: translationKey },
-      values,
-      opts,
-    )
+  const t = (translationKey: PathToDotNotation<MessageSource, string>, values?: Record<string, MessageFormatPrimitiveValue> | undefined, opts?: IntlMessageFormatOptions): string => {
+    return intl.formatMessage(<MessageDescriptor>{ id: translationKey }, values, opts)
   }
 
-  const te = (
-    translationKey: PathToDotNotation<MessageSource, string>,
-  ): boolean => {
+  const te = (translationKey: PathToDotNotation<MessageSource, string>): boolean => {
     return !!intl.messages[translationKey]
   }
 
-  const tm = (
-    translationKey: PathToDotNotation<MessageSource, string>,
-  ): Array<string> => {
+  const tm = (translationKey: PathToDotNotation<MessageSource, string>): Array<string> => {
     // @ts-ignore: string is valid key
     return intl.messages[translationKey] || []
   }
@@ -131,10 +119,7 @@ export const createI18n = <MessageSource extends Record<string, any>>
     source: messages,
   }
 
-  if (
-    (typeof config === 'boolean' && config === true) ||
-    (typeof config !== 'boolean' && config.isGlobal === true)
-  ) {
+  if ((typeof (config) === 'boolean' && config === true) || (typeof (config) !== 'boolean' && config.isGlobal === true)) {
     globIntl = localIntl
   }
 
