@@ -53,6 +53,19 @@ export const createI18n = <MessageSource extends Record<string, any>>
   const intl = otherProps
 
   /**
+   * Shamefully normalize a timestamp to be in seconds as some APIs are returning timestamps in milliseconds
+   * TODO: Remove this function once all timestamps are normalized from the backend
+   * @param {number} timestamp a unix timestamp in seconds *or milliseconds*
+   * @returns {number} a unix timestamp in seconds
+   */
+  const shamefullyNormalizeTimeStamp = (timestamp: number): number => {
+    if (timestamp.toString().length === 13) {
+      return Math.floor(timestamp / 1000)
+    }
+    return timestamp
+  }
+
+  /**
    * Formats a unix timestamp into a formatted date string
    * @param {Number} timestamp a unix timestamp in seconds
    * @returns a date string formatted like 'Apr 6, 2022 10:50'
@@ -64,7 +77,7 @@ export const createI18n = <MessageSource extends Record<string, any>>
     }
 
     try {
-      const date = new Date(timestamp * 1000)
+      const date = new Date(shamefullyNormalizeTimeStamp(timestamp) * 1000)
 
       return intl.formatDate(date, datetimeFormat)
     } catch (err) {
