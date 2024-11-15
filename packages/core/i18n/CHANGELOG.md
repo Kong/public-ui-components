@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@2.2.8...@kong-ui-public/i18n@2.2.9) (2024-11-15)
+
+
+### Bug Fixes
+
+* **i18n:** compatible with timestamp in milliseconds or null values ([#1775](https://github.com/Kong/public-ui-components/issues/1775)) ([e9280c2](https://github.com/Kong/public-ui-components/commit/e9280c2ae8784e6e91cb203d255f910bf3a3ce06))
+
+
+
+
+
 ## [2.2.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@2.2.7...@kong-ui-public/i18n@2.2.8) (2024-11-06)
 
 
