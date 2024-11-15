@@ -120,8 +120,8 @@
       <template #created_at="{ rowValue }">
         {{ formatUnixTimeStamp(rowValue) }}
       </template>
-      <template #updated_at="{ rowValue }">
-        {{ formatUnixTimeStamp(rowValue) }}
+      <template #updated_at="{ row, rowValue }">
+        {{ formatUnixTimeStamp(rowValue ?? row.created_at) }}
       </template>
 
       <!-- Row actions -->
