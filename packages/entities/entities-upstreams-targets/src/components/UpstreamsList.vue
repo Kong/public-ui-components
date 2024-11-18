@@ -420,7 +420,7 @@ watch(fetcherState, (state) => {
     hasData.value = state.response!.data.length > 0
   }
 
-  if (state.status === FetcherStatus.NoRecords) {
+  if (state.status === FetcherStatus.InitialLoad || state.status === FetcherStatus.NoRecords) {
     hideTableToolbar.value = true
   } else {
     hideTableToolbar.value = false
