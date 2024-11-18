@@ -20,10 +20,15 @@
         :title="t('form.sections.type.title')"
       >
         <KSelect
-          :items="[]"
+          v-model="form.fields.type"
+          :items="typeOptions"
           :label="t('form.fields.type.label')"
           required
-        />
+        >
+          <template #selected-item-template="{ item }">
+            {{ getSelectedText(item) }}
+          </template>
+        </KSelect>
       </EntityFormSection>
 
       <EntityFormSection
@@ -31,9 +36,198 @@
         :title="t('form.sections.general.title')"
       >
         <KInput
+          v-model.trim="form.fields.name"
           :label="t('form.fields.name.label')"
           :placeholder="t('form.fields.name.placeholder')"
           required
+        />
+      </EntityFormSection>
+
+      <EntityFormSection
+        v-if="form.fields.type === RedisType.SENTINEL"
+        :description="t('form.sections.sentinel_configuration.description')"
+        :title="t('form.sections.sentinel_configuration.title')"
+      >
+        <KInput
+          :label="t('form.fields.sentinel_master.label')"
+          :label-attributes="{
+            info: t('form.fields.sentinel_master.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+          required
+        />
+        <KInput
+          :label="t('form.fields.sentinel_role.label')"
+          :label-attributes="{
+            info: t('form.fields.sentinel_role.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+          required
+        />
+        <ClusterNodes />
+        <KInput
+          :label="t('form.fields.sentinel_username.label')"
+          :label-attributes="{
+            info: t('form.fields.sentinel_username.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+        />
+        <KInput
+          :label="t('form.fields.sentinel_password.label')"
+          :label-attributes="{
+            info: t('form.fields.sentinel_password.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+          type="password"
+        />
+      </EntityFormSection>
+
+      <EntityFormSection
+        v-if="form.fields.type === RedisType.CLUSTER"
+        :description="t('form.sections.cluster.description')"
+        :title="t('form.sections.cluster.title')"
+      >
+        <ClusterNodes />
+        <KInput
+          :label="t('form.fields.cluster_max_redirections.label')"
+          :label-attributes="{
+            info: t('form.fields.cluster_max_redirections.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+          type="number"
+        />
+      </EntityFormSection>
+
+      <EntityFormSection
+        :description="t('form.sections.connection.description')"
+        :title="t('form.sections.connection.title')"
+      >
+        <KInput
+          v-if="form.fields.type === RedisType.HOST_PORT_OPEN_SOURCE || form.fields.type === RedisType.HOST_PORT_ENTERPRISE"
+          :label="t('form.fields.host.label')"
+          :label-attributes="{
+            info: t('form.fields.host.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+          required
+        />
+        <KInput
+          v-if="form.fields.type === RedisType.HOST_PORT_OPEN_SOURCE || form.fields.type === RedisType.HOST_PORT_ENTERPRISE"
+          :label="t('form.fields.port.label')"
+          :label-attributes="{
+            info: t('form.fields.port.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+          type="number"
+        />
+
+        <KInput
+          v-if="form.fields.type === RedisType.HOST_PORT_ENTERPRISE"
+          :label="t('form.fields.connection_is_proxied.label')"
+          :label-attributes="{
+            info: t('form.fields.connection_is_proxied.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+          type="number"
+        />
+
+        <KInput
+          v-if="form.fields.type === RedisType.HOST_PORT_ENTERPRISE"
+          :label="t('form.fields.timeout.label')"
+          :label-attributes="{
+            info: t('form.fields.timeout.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+          type="number"
+        />
+
+        <KInput
+          :label="t('form.fields.database.label')"
+          :label-attributes="{
+            info: t('form.fields.database.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+          type="number"
+        />
+        <KInput
+          :label="t('form.fields.username.label')"
+          :label-attributes="{
+            info: t('form.fields.username.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+        />
+        <KInput
+          :label="t('form.fields.password.label')"
+          :label-attributes="{
+            info: t('form.fields.password.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+          type="password"
+        />
+      </EntityFormSection>
+
+      <EntityFormSection
+        :description="t('form.sections.tls.description')"
+        :title="t('form.sections.tls.title')"
+      >
+        <KCheckbox
+          :description="t('form.fields.ssl.description')"
+          :label="t('form.fields.ssl.label')"
+          :model-value="false"
+        />
+        <KCheckbox
+          :description="t('form.fields.ssl_verify.description')"
+          :label="t('form.fields.ssl_verify.label')"
+          :model-value="false"
+        />
+        <KInput
+          :label="t('form.fields.server_name.label')"
+          :label-attributes="{
+            info: t('form.fields.server_name.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+        />
+      </EntityFormSection>
+
+      <EntityFormSection
+        v-if="form.fields.type !== RedisType.HOST_PORT_OPEN_SOURCE"
+        :description="t('form.sections.keepalive.description')"
+        :title="t('form.sections.keepalive.title')"
+      >
+        <KInput
+          :label="t('form.fields.keepalive_backlog.label')"
+          :label-attributes="{
+            info: t('form.fields.keepalive_backlog.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+          type="number"
+        />
+        <KInput
+          :label="t('form.fields.keepalive_pool_size.label')"
+          :label-attributes="{
+            info: t('form.fields.keepalive_pool_size.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+          type="number"
+        />
+      </EntityFormSection>
+
+      <EntityFormSection
+        v-if="form.fields.type !== RedisType.HOST_PORT_OPEN_SOURCE"
+        :description="t('form.sections.read_write_configuration.description')"
+        :title="t('form.sections.read_write_configuration.title')"
+      >
+        <KInput
+          :label="t('form.fields.read_timeout.label')"
+          type="number"
+        />
+        <KInput
+          :label="t('form.fields.send_timeout.label')"
+          type="number"
+        />
+        <KInput
+          :label="t('form.fields.connect_timeout.label')"
+          type="number"
         />
       </EntityFormSection>
     </EntityBaseForm>
@@ -46,11 +240,17 @@ import {
   EntityFormSection,
   SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
-import type { KonnectRedisConfigurationFormConfig } from 'src/types'
-import type { PropType } from 'vue'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 import composables from '../composables'
+import ClusterNodes from '../components/ClusterNodes.vue'
+import { useRedisConfigurationForm } from '../composables/useRedisConfigurationForm'
+
+import type { PropType } from 'vue'
+import {
+  RedisType,
+  type KonnectRedisConfigurationFormConfig,
+} from '../types'
 
 const props = defineProps({
   config: {
@@ -67,9 +267,25 @@ const props = defineProps({
   },
 })
 
-const { i18nT, i18n: { t } } = composables.useI18n()
+const { i18n: { t } } = composables.useI18n()
+
+const typeOptions = [
+  { label: t('form.options.type.host_port'), group: ` ${t('form.options.type.open_source')}`, value: RedisType.HOST_PORT_OPEN_SOURCE }, // the space before the group name is intentional, it makes the group to be the first one
+  { label: t('form.options.type.host_port'), group: t('form.options.type.enterprise'), value: RedisType.HOST_PORT_ENTERPRISE },
+  { label: t('form.options.type.cluster'), group: t('form.options.type.enterprise'), value: RedisType.CLUSTER },
+  { label: t('form.options.type.sentinel'), group: t('form.options.type.enterprise'), value: RedisType.SENTINEL },
+]
 
 const noop = () => {}
+
+const getSelectedText = (item: any) => {
+  const suffix = item.value === RedisType.HOST_PORT_OPEN_SOURCE
+    ? t('form.options.type.suffix_open_source')
+    : t('form.options.type.suffix_enterprise')
+  return `${item.label}${suffix}`
+}
+
+const { form } = useRedisConfigurationForm()
 </script>
 
 <style lang="scss" scoped>
