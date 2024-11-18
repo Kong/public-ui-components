@@ -302,7 +302,7 @@ describe('<AnalyticsChart />', () => {
     })
   })
 
-  it('Renders an "Export" button, and tabulated data in the modal preview', () => {
+  it.only('Renders an "Export" button, and tabulated data in the modal preview', () => {
     cy.mount(AnalyticsChart, {
       props: {
         allowCsvExport: true,
@@ -316,8 +316,11 @@ describe('<AnalyticsChart />', () => {
 
     cy.getTestId('chart-action-menu').should('exist')
 
+    cy.get('.chart-header').trigger('mouseenter')
+    cy.getTestId('kebab-action-menu').should('be.visible')
+
     // eslint-disable-next-line cypress/unsafe-to-chain-command
-    cy.getTestId('chart-action-menu').click().then(() => {
+    cy.getTestId('kebab-action-menu').click().then(() => {
       cy.getTestId('chart-jump-to-explore').should('not.exist')
 
       cy.getTestId('csv-export-button').click()
