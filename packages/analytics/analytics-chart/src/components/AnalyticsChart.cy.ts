@@ -302,7 +302,7 @@ describe('<AnalyticsChart />', () => {
     })
   })
 
-  it.only('Renders an "Export" button, and tabulated data in the modal preview', () => {
+  it('Renders an "Export" button, and tabulated data in the modal preview', () => {
     cy.mount(AnalyticsChart, {
       props: {
         allowCsvExport: true,
