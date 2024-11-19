@@ -1,7 +1,11 @@
 <template>
-  <div class="analytics-chart-shell">
+  <div
+    class="analytics-chart-shell"
+    :class="{ 'is-hovering': isHovering }"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
+  >
     <div
-      v-if="showChartHeader"
       class="chart-header"
     >
       <div
@@ -43,10 +47,17 @@
         class="dropdown"
         data-testid="chart-action-menu"
       >
-        <MoreIcon
-          :color="KUI_COLOR_TEXT_NEUTRAL"
-          :size="KUI_ICON_SIZE_40"
-        />
+        <button
+          appearance="none"
+          :aria-label="i18n.t('more_actions')"
+          class="kebab-action-menu"
+          data-testid="kebab-action-menu"
+        >
+          <MoreIcon
+            :color="KUI_COLOR_TEXT_NEUTRAL"
+            :size="KUI_ICON_SIZE_40"
+          />
+        </button>
         <template #items>
           <KDropdownItem
             v-if="!!goToExplore"
@@ -158,7 +169,7 @@ import { msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { hasMillisecondTimestamps, defaultStatusCodeColors } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
-import { KUI_COLOR_TEXT_NEUTRAL, KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
+import { KUI_COLOR_TEXT_NEUTRAL, KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40, KUI_SPACE_70 } from '@kong/design-tokens'
 import { MoreIcon, WarningIcon } from '@kong/icons'
 import CsvExportModal from './CsvExportModal.vue'
 import CsvExportButton from './CsvExportButton.vue'
@@ -249,6 +260,8 @@ const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
 const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
 
 const rawChartData = toRef(props, 'chartData')
+const isHovering = ref(false)
+
 
 const computedChartData = computed(() => {
   return isTimeSeriesChart.value
@@ -364,10 +377,6 @@ const hasValidChartData = computed(() => {
   return props.chartData && props.chartData.meta && props.chartData.data.length
 })
 
-const showChartHeader = computed(() => {
-  return (hasValidChartData.value && resultSetTruncated.value && maxEntitiesShown.value) || props.chartTitle || (props.allowCsvExport && hasValidChartData.value)
-})
-
 const hasMenuOptions = computed(() => (props.allowCsvExport && hasValidChartData.value) || !!props.goToExplore || props.showMenu)
 
 const timeSeriesGranularity = computed<GranularityValues>(() => {
@@ -429,6 +438,22 @@ const chartTooltipSortFn = computed(() => {
   }
 })
 
+const chartHeaderPosition = computed(() => {
+  return props.chartTitle || !hasKebabMenuAccess || (resultSetTruncated.value && maxEntitiesShown.value) ? 'relative' : 'absolute'
+})
+
+const chartHeaderWidth = computed(() => {
+  return chartHeaderPosition.value === 'relative' ? '100%' : KUI_SPACE_70
+})
+
+const handleMouseEnter = () => {
+  isHovering.value = true
+}
+
+const handleMouseLeave = () => {
+  isHovering.value = false
+}
+
 provide('showLegendValues', showLegendValues)
 provide('legendPosition', toRef(props, 'legendPosition'))
 
@@ -440,7 +465,15 @@ provide('legendPosition', toRef(props, 'legendPosition'))
 
 .analytics-chart-shell {
   height: 100%;
+  position: relative;
   width: 100%;
+
+  &.is-hovering {
+    .chart-header :deep(.popover-trigger-wrapper) {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
 
   .analytics-chart-parent {
     height: inherit;
@@ -458,6 +491,15 @@ provide('legendPosition', toRef(props, 'legendPosition'))
     display: flex;
     justify-content: flex-start;
     padding-bottom: var(--kui-space-60, $kui-space-60);
+    position: v-bind('chartHeaderPosition');
+    right: 0;
+    width: v-bind('chartHeaderWidth');
+    z-index: 999;
+
+    &:hover :deep(.popover-trigger-wrapper) {
+      opacity: 1;
+      visibility: visible;
+    }
 
     .chart-header-icons-wrapper {
       display: flex;
@@ -493,6 +535,21 @@ provide('legendPosition', toRef(props, 'legendPosition'))
     margin-left: var(--kui-space-auto, $kui-space-auto);
     margin-right: var(--kui-space-0, $kui-space-0);
 
+    :deep(.popover-trigger-wrapper) {
+      opacity: 0;
+      transform: fade(0, -10px);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+      visibility: hidden;
+    }
+
+    .kebab-action-menu {
+      background: $kui-color-background-transparent;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      height: 100%;
+    }
+
     li.k-dropdown-item {
       a {
         text-decoration: none;
@@ -512,5 +569,4 @@ provide('legendPosition', toRef(props, 'legendPosition'))
     }
   }
 }
-
 </style>
