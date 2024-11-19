@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.2.19...@kong-ui-public/entities-plugins@9.3.0) (2024-11-19)
+
+
+### Features
+
+* **entities-plugins:** support service-protection plugin ([#1796](https://github.com/Kong/public-ui-components/issues/1796)) ([05cc7f6](https://github.com/Kong/public-ui-components/commit/05cc7f6c4467602d4e26da09007c9f0d15a8701e))
+
+
+
+
+
 ## [9.2.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.2.18...@kong-ui-public/entities-plugins@9.2.19) (2024-11-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
