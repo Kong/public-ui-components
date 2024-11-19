@@ -338,7 +338,7 @@ const handleSortChanged = (sortParams: TableSortParams): void => {
 }
 
 const hasRecords = ref(false)
-const tableState = ref<EntityBaseTableStateParams | null>(null)
+const tableState = ref<TableStateParams | null>(null)
 const hideTableToolbar = computed(() => {
   if (hasRecords.value) {
     return false
@@ -348,7 +348,7 @@ const hideTableToolbar = computed(() => {
   if (!tableState.value) {
     return true
   }
-  return !tableState.value.hasData && !tableState.value.query
+  return !tableState.value.hasData && !props.query
 })
 
 const handleStateChange = (stateParams: TableStateParams): void => {
@@ -356,12 +356,12 @@ const handleStateChange = (stateParams: TableStateParams): void => {
   // it indicates that there is at least a corresponding entity record in the backend.
   if (stateParams.hasData) {
     hasRecords.value = true
+  } else if (stateParams.state === 'success' && !stateParams.hasData && !props.query) {
+    // If the table is in a success state but has no data and no query, it means there are no records
+    hasRecords.value = false
   }
 
-  tableState.value = {
-    ...stateParams,
-    query: props.query,
-  }
+  tableState.value = { ...stateParams }
 }
 
 const { setTablePreferences, getTablePreferences } = useTablePreferences()
