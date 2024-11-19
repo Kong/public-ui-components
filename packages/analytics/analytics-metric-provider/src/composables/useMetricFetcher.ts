@@ -173,7 +173,7 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
   })
 
   return {
-    isLoading: computed(() => metricRequestState.value === STATE.PENDING),
+    isLoading: computed(() => metricRequestState.value === STATE.PENDING || [STATE.PENDING, STATE.VALIDATING, STATE.VALIDATING_HAS_DATA].includes(metricRequestState.value)),
     hasError: computed(() => STATE.ERROR === metricRequestState.value),
     raw,
     mapped,
