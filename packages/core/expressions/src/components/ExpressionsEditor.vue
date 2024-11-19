@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { useDebounce } from '@kong-ui-public/core'
-import type { ParseResult, Schema as AtcSchema } from '@kong/atc-router'
+import type { ParseResult, ParseResultOk, Schema as AtcSchema } from '@kong/atc-router'
 import { Parser } from '@kong/atc-router'
 import type * as Monaco from 'monaco-editor'
 import * as monaco from 'monaco-editor'
@@ -18,17 +18,26 @@ import { registerLanguage, registerTheme, theme } from '../monaco'
 let editor: Monaco.editor.IStandaloneCodeEditor | undefined
 let editorModel: Monaco.editor.ITextModel
 
-const parse = (expression:string, schema: AtcSchema) => Parser.parse(expression, schema)
-
 const { debounce } = useDebounce()
 
 const props = withDefaults(defineProps<{
   schema: Schema,
   parseDebounce?: number,
   inactiveUntilFocused?: boolean,
+  allowEmptyInput?: boolean,
+  editorOptions?: Monaco.editor.IEditorOptions
 }>(), {
   parseDebounce: 500,
+  editorOptions: undefined,
 })
+
+const parse = (expression: string, schema: AtcSchema) => {
+  if (props.allowEmptyInput && expression === '') {
+    return { status: 'ok', expression } satisfies ParseResultOk
+  }
+
+  return Parser.parse(expression, schema)
+}
 
 const expression = defineModel<string>({ required: true })
 
@@ -68,6 +77,7 @@ onMounted(() => {
     scrollBeyondLastLine: false,
     theme,
     value: expression.value,
+    ...props.editorOptions,
   })
 
   editor.onDidChangeModelContent(() => {

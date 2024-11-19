@@ -52,6 +52,22 @@ The debounce time in milliseconds for parsing the expression and updating the pa
 
 To control whether the editor should be inactive until its initial focus.
 
+#### `allowEmptyInput`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+To control whether the editor should pass validation with an empty input.
+
+#### `editorOptions`
+
+- type: `Monaco.editor.IEditorOptions`
+- required: `false`
+- default: `undefined`
+
+Options to pass when creating the Monaco editor.
+
 ### Events
 
 #### update:modelValue
