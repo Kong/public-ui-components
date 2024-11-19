@@ -336,6 +336,7 @@ const handleSortChanged = (sortParams: TableSortParams): void => {
   emit('sort', sortParams)
 }
 
+let previousQuery = ''
 const hasRecords = ref(false)
 const tableState = ref<TableStateParams | null>(null)
 const hideTableToolbar = computed(() => {
@@ -351,22 +352,23 @@ const hideTableToolbar = computed(() => {
 })
 
 const handleStateChange = (stateParams: TableStateParams): void => {
-  // In our scenario, as long as the table contains any data at any time,
-  // it indicates that there is at least a corresponding entity record in the backend.
   if (stateParams.hasData) {
+    // In our scenario, as long as the table contains any data at any time,
+    // it indicates that there is at least a corresponding entity record in the backend.
     hasRecords.value = true
+  } else if (stateParams.state === 'success' && !stateParams.hasData && !previousQuery) {
+    // If the table is in a success state but has no data and no query, it means there are no records
+    // Why do we record the previous query:
+    // When we clear the query, the table `state` event will be emitted in the following order:
+    // - Immediately: { state: 'success', hasData: <from-cache> }, query: ''
+    // - After revalidation: { state: 'success', hasData: <from-backend> }, query: '' <- This is the one we want to capture
+    // So we'll have to record the previous query to reset `hasRecords` correctly after revalidation
+    // - Immediately: { state: 'success', hasData: <from-cache> }, previousQuery: 'foo', query: '' <- just check previous query
+    // - After revalidation: { state: 'success', hasData: <from-backend> }, previousQuery: '', query: ''query: ''
+    hasRecords.value = false
   }
-  // We should have reset the value to false if there are no records
-  // But currently we have no good way to determine that as before the criteria below is met,
-  // we'll receive `{ state: 'success', hasData: false }` and that will cause layout shift.
-  // Skipping this for now as the only issue of not resetting the value is when data is cleared from remote
-  // and we are re-requesting it when the query is cleared. And it's not a big issue to leave the toolbar
-  // visible in that case.
-  // else if (stateParams.state === 'success' && !stateParams.hasData && !props.query) {
-  //   // If the table is in a success state but has no data and no query, it means there are no records
-  //   hasRecords.value = false
-  // }
 
+  previousQuery = props.query
   tableState.value = { ...stateParams }
 }
 
