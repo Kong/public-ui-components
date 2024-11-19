@@ -34,6 +34,7 @@ const props = withDefaults(defineProps<{
   description?: string,
   percentileLatency?: boolean,
   abortController?: AbortController,
+  refreshCounter?: number,
 }>(), {
   datasource: undefined,
   maxTimeframe: TimeframeKeys.THIRTY_DAY,
@@ -49,6 +50,7 @@ const props = withDefaults(defineProps<{
   description: undefined,
   percentileLatency: undefined,
   abortController: undefined,
+  refreshCounter: 0,
 })
 
 // Fail early if there's a programming error.
@@ -127,6 +129,7 @@ const {
   queryFn,
   averageLatencies,
   abortController: props.abortController,
+  refreshCounter: toRef(props, 'refreshCounter'),
 })
 
 provide(METRICS_PROVIDER_KEY, {

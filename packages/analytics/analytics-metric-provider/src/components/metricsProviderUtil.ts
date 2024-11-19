@@ -39,6 +39,7 @@ interface FetcherOptions {
   queryFn: AnalyticsBridge['queryFn']
   averageLatencies: Ref<boolean>,
   abortController?: AbortController
+  refreshCounter: Ref<number>
 }
 
 export const defaultFetcherDefs = (opts: FetcherOptions) => {
@@ -108,6 +109,7 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
     refreshInterval,
     queryFn,
     abortController,
+    refreshCounter: opts.refreshCounter,
   }
 
   const latencyMetricFetcherOptions: MetricFetcherOptions = {
@@ -132,6 +134,7 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
     refreshInterval,
     queryFn,
     abortController,
+    refreshCounter: opts.refreshCounter,
   }
 
   const trafficData = composables.useMetricFetcher(trafficMetricFetcherOptions)

@@ -47,6 +47,7 @@ const props = defineProps<{
   context: DashboardRendererContextInternal
   query: ValidDashboardQuery
   queryReady: boolean
+  refreshCounter: number
 }>()
 
 const emit = defineEmits(['queryComplete'])
@@ -58,7 +59,7 @@ const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const queryKey = () => {
   // SWRV can't accept `false` as a key, so use a more complicated conditional to match its `IKey` interface.
   if (props.queryReady && queryBridge) {
-    return JSON.stringify([props.query, props.context])
+    return JSON.stringify([props.query, props.context, props.refreshCounter])
   }
 
   return null
@@ -133,6 +134,6 @@ const { state, swrvState: STATE } = useSwrvState(v4Data, error, isValidating)
 
 const errorMessage = ref<string | null>(null)
 const hasError = computed(() => state.value === STATE.ERROR || !!errorMessage.value)
-const isLoading = computed(() => !props.queryReady || state.value === STATE.PENDING)
+const isLoading = computed(() => !props.queryReady || [STATE.PENDING, STATE.VALIDATING, STATE.VALIDATING_HAS_DATA].includes(state.value))
 
 </script>
