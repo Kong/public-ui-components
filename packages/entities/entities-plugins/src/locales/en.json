@@ -482,6 +482,10 @@
       "confluent": {
         "name": "Confluent",
         "description": "Streamlines integration with Confluent Cloud and transforms requests into messages published to a Confluent topic."
+      },
+      "service-protection": {
+        "name": "Service Protection",
+        "description": "Prevent abuse and protect services with absolute limits on the number of requests reaching the service."
       }
     },
     "fields": {

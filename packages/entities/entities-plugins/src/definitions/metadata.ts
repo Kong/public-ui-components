@@ -755,6 +755,13 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.confluent.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
   },
+  'service-protection': {
+    descriptionKey: 'plugins.meta.service-protection.description',
+    group: PluginGroup.TRAFFIC_CONTROL,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.service-protection.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE],
+  },
 }
 
 /**

@@ -693,10 +693,10 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       // pass the referenceable flag from elements to the parent
       initialFormSchema[field].referenceable = elements.referenceable
 
-      if ((elements.type === 'string' || elements.type === 'integer') && !elements.one_of) {
+      if (['string', 'integer', 'number'].includes(elements.type) && !elements.one_of) {
         const { id, help, label, hint, values, referenceable } = initialFormSchema[field]
         const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
-        inputAttributes.type = elements.type === 'integer' ? 'number' : 'text'
+        inputAttributes.type = elements.type === 'string' ? 'text' : 'number'
         initialFormSchema[field] = { id, help, label, hint, values, referenceable, inputAttributes, ...overrides }
       }
     }
