@@ -1,5 +1,5 @@
 import { makeFilterable } from './util'
-import type { BasicExploreFilter, BasicExploreQuery } from './basic'
+import type { BasicExploreFilter, BasicExploreInFilterV2, BasicExploreQuery } from './basic'
 import { basicExploreAggregations, queryableBasicExploreDimensions } from './basic'
 
 export const queryableExploreDimensions = [
@@ -17,6 +17,10 @@ export type FilterableExploreDimensions = typeof filterableExploreDimensions[num
 
 export interface ExploreFilter extends Omit<BasicExploreFilter, 'dimension'> {
   dimension: FilterableExploreDimensions
+}
+
+export interface ExploreInFilterV2 extends Omit<BasicExploreInFilterV2, 'field'> {
+  field: FilterableExploreDimensions
 }
 
 export const exploreAggregations = [
@@ -44,8 +48,10 @@ export const exploreAggregations = [
 
 export type ExploreAggregations = typeof exploreAggregations[number]
 
+export type ExploreFilterAll = ExploreFilter | ExploreInFilterV2
+
 export interface ExploreQuery extends Omit<BasicExploreQuery, 'metrics' | 'dimensions' | 'filters'> {
   metrics?: ExploreAggregations[]
   dimensions?: QueryableExploreDimensions[]
-  filters?: ExploreFilter[]
+  filters?: ExploreFilterAll[]
 }

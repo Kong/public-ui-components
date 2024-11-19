@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.51](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.50...@kong-ui-public/entities-data-plane-nodes@0.3.51) (2024-11-18)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.20.0 ([#1795](https://github.com/Kong/public-ui-components/issues/1795)) ([1a516f4](https://github.com/Kong/public-ui-components/commit/1a516f4bd1197376b6087d49f9be5f1a0a156441))
+
+
+
+
+
+## [0.3.50](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.49...@kong-ui-public/entities-data-plane-nodes@0.3.50) (2024-11-18)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.3.49](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.48...@kong-ui-public/entities-data-plane-nodes@0.3.49) (2024-11-18)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.3.48](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.47...@kong-ui-public/entities-data-plane-nodes@0.3.48) (2024-11-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.3.47](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.46...@kong-ui-public/entities-data-plane-nodes@0.3.47) (2024-11-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.3.46](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.45...@kong-ui-public/entities-data-plane-nodes@0.3.46) (2024-11-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
 ## [0.3.45](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.44...@kong-ui-public/entities-data-plane-nodes@0.3.45) (2024-11-11)
 
 

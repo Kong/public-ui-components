@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.48](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.8.47...@kong-ui-public/entities-routes@3.8.48) (2024-11-18)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.20.0 ([#1795](https://github.com/Kong/public-ui-components/issues/1795)) ([1a516f4](https://github.com/Kong/public-ui-components/commit/1a516f4bd1197376b6087d49f9be5f1a0a156441))
+
+
+
+
+
+## [3.8.47](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.8.46...@kong-ui-public/entities-routes@3.8.47) (2024-11-18)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.8.46](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.8.45...@kong-ui-public/entities-routes@3.8.46) (2024-11-18)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.8.45](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.8.44...@kong-ui-public/entities-routes@3.8.45) (2024-11-15)
+
+
+### Bug Fixes
+
+* **i18n:** compatible with timestamp in milliseconds or null values ([#1775](https://github.com/Kong/public-ui-components/issues/1775)) ([e9280c2](https://github.com/Kong/public-ui-components/commit/e9280c2ae8784e6e91cb203d255f910bf3a3ce06))
+
+
+
+
+
+## [3.8.44](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.8.43...@kong-ui-public/entities-routes@3.8.44) (2024-11-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.8.43](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.8.42...@kong-ui-public/entities-routes@3.8.43) (2024-11-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
 ## [3.8.42](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.8.41...@kong-ui-public/entities-routes@3.8.42) (2024-11-11)
 
 

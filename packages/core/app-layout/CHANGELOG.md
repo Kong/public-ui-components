@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.62](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.2.61...@kong-ui-public/app-layout@4.2.62) (2024-11-18)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.20.0 ([#1795](https://github.com/Kong/public-ui-components/issues/1795)) ([1a516f4](https://github.com/Kong/public-ui-components/commit/1a516f4bd1197376b6087d49f9be5f1a0a156441))
+
+
+
+
+
+## [4.2.61](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.2.60...@kong-ui-public/app-layout@4.2.61) (2024-11-18)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [4.2.60](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.2.59...@kong-ui-public/app-layout@4.2.60) (2024-11-18)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [4.2.59](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.2.58...@kong-ui-public/app-layout@4.2.59) (2024-11-14)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [4.2.58](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.2.57...@kong-ui-public/app-layout@4.2.58) (2024-11-13)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
 ## [4.2.57](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.2.56...@kong-ui-public/app-layout@4.2.57) (2024-11-11)
 
 

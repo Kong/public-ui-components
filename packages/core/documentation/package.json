@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/documentation",
-  "version": "0.7.88",
+  "version": "0.7.94",
   "type": "module",
   "main": "./dist/documentation.umd.js",
   "module": "./dist/documentation.es.js",
@@ -40,18 +40,18 @@
   },
   "dependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@kong/icons": "^1.19.1",
-    "@kong/markdown": "1.7.16"
+    "@kong/icons": "^1.20.0",
+    "@kong/markdown": "1.7.17"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.14.8",
+    "@kong/kongponents": "^9.14.15",
     "vue": "^3.5.12"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.17.2",
-    "@kong/kongponents": "9.14.8",
+    "@kong/kongponents": "9.14.15",
     "axios": "^1.7.7",
     "vue": "^3.5.12"
   },
