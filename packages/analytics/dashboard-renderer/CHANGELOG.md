@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.29.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.28.15...@kong-ui-public/dashboard-renderer@0.29.0) (2024-11-19)
+
+
+### Features
+
+* make dashboards "refreshable" ([#1784](https://github.com/Kong/public-ui-components/issues/1784)) ([3e74bfd](https://github.com/Kong/public-ui-components/commit/3e74bfde67f71792487e6b839eff859ff8a719f5))
+
+
+
+
+
 ## [0.28.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.28.14...@kong-ui-public/dashboard-renderer@0.28.15) (2024-11-19)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
