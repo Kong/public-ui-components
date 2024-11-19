@@ -31,10 +31,9 @@ const props = withDefaults(defineProps<{
   context: DashboardRendererContextInternal,
   height?: number,
   queryReady: boolean,
-  refreshCounter?: number,
+  refreshCounter: number,
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
-  refreshCounter: 0,
 })
 
 const emit = defineEmits<{

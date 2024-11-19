@@ -39,7 +39,7 @@ interface FetcherOptions {
   queryFn: AnalyticsBridge['queryFn']
   averageLatencies: Ref<boolean>,
   abortController?: AbortController
-  refreshCounter?: Ref<number>
+  refreshCounter: Ref<number>
 }
 
 export const defaultFetcherDefs = (opts: FetcherOptions) => {
