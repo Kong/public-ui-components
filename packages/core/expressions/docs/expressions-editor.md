@@ -66,7 +66,7 @@ To control whether the editor should pass validation with an empty input.
 - required: `false`
 - default: `undefined`
 
-Options to pass when crearing the Monaco editor.
+Options to pass when creating the Monaco editor.
 
 ### Events
 
