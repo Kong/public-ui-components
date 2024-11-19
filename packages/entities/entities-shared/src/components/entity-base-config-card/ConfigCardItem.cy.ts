@@ -54,11 +54,11 @@ describe('<ConfigCardItem />', () => {
       cy.getTestId(`${item.key}-label-tooltip`).should('not.exist')
 
       cy.get('.config-card-details-row').invoke('width').then((rowWidth) => {
-        cy.getTestId(`${item.key}-label`).invoke('width').then((labelWidth) => {
+        cy.getTestId(`${item.key}-label`).invoke('outerWidth').then((labelWidth) => {
           expect(labelWidth).to.be.closeTo(Number(rowWidth) / 2, 1)
         })
-        cy.getTestId(`${item.key}-plain-text`).invoke('width').then((labelWidth) => {
-          expect(labelWidth).to.be.closeTo(Number(rowWidth) / 2, 1)
+        cy.getTestId(`${item.key}-property-value`).invoke('outerWidth').then((valueWidth) => {
+          expect(valueWidth).to.be.closeTo(Number(rowWidth) / 2, 1)
         })
       })
     })

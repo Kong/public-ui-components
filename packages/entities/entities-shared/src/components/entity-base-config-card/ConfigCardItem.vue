@@ -9,7 +9,15 @@
         name="label"
       >
         <KLabel :tooltip-attributes="{ maxWidth: '500px' }">
-          {{ item.label }}
+          <KTooltip :text="isLabelTruncated ? item.label : ''">
+            <span
+              ref="labelContent"
+              class="label-content"
+            >
+              {{ item.label }}
+            </span>
+          </KTooltip>
+
           <template
             v-if="hasTooltip"
             #tooltip
@@ -308,10 +316,11 @@ const componentAttrsData = computed((): ComponentAttrsData => {
   }
 })
 
+const labelContent = ref<HTMLElement>()
 const textContent = ref<HTMLElement>()
 
+const { isTruncated: isLabelTruncated } = composables.useTruncationDetector(labelContent as Ref<HTMLElement>)
 const { isTruncated } = composables.useTruncationDetector(textContent as Ref<HTMLElement>)
-
 </script>
 
 <script lang="ts">
@@ -327,20 +336,38 @@ export default {
 .config-card-details-row {
   align-items: center;
   border-bottom: v-bind('isJsonArray ? "none" : `solid ${KUI_BORDER_WIDTH_10} ${KUI_COLOR_BORDER}`');
+  box-sizing: border-box;
   display: v-bind('isJson && itemHasValue ? "block" : "flex"');
   padding: $kui-space-60;
   padding-left: 0;
   width: 100%;
 
   .config-card-details-label {
+    box-sizing: border-box;
+    padding-right: $kui-space-60;
     width: v-bind('isJson && itemHasValue ? "100%" : props.slim ? "50%" : "25%"');
 
     label {
       color: $kui-color-text-neutral-stronger;
+      display: inline-flex;
+      max-width: 100%;
+
+      .label-content {
+        line-height: initial;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .k-popover {
+        min-width: 0;
+      }
     }
   }
 
   .config-card-details-value {
+    box-sizing: border-box;
     width: v-bind('isJson && itemHasValue ? "100%" : props.slim ? "50%" : "75%"');
 
     .truncated {
