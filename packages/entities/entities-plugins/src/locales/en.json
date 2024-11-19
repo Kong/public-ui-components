@@ -14,8 +14,7 @@
     "view": "View Details",
     "configure_dynamic_ordering": "Configure Dynamic Ordering",
     "go_to_plugins": "Go to Plugins",
-    "save": "Save",
-    "loading": "Loading..."
+    "save": "Save"
   },
   "view_configuration": {
     "title": "Configuration",
@@ -591,35 +590,5 @@
   },
   "glossary": {
     "plugin": "plugin"
-  },
-  "vault_secret_picker": {
-    "title": "Look up Key in Vault",
-    "vault": {
-      "label": "Vault",
-      "placeholder": "Select a vault"
-    },
-    "secret_id": {
-      "label": "Secret ID",
-      "input_placeholder": "Enter a secret ID",
-      "select_placeholder": "Select or enter a complete secret ID"
-    },
-    "optional_secret_key": {
-      "label": "Secret Key",
-      "placeholder": "Enter the key or key path to access a nested secret value",
-      "help": "Optional. e.g. tokens, tokens/refresh_token"
-    },
-    "fetch_error": {
-      "vaults": "Could not fetch available vaults",
-      "secrets": "Could not fetch available secrets",
-      "vaults_and_secrets": "Could not fetch available vaults and secrets"
-    },
-    "no_results": "No results found",
-    "actions": {
-      "use_key": "Use Key"
-    },
-    "provider": {
-      "complete_action": "Look up {cta}",
-      "cta": "Key in Vault"
-    }
   }
 }

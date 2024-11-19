@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="props.schema.referenceable"
-    class="vault-secret-picker-provider"
-  >
+  <div class="vault-secret-picker-provider">
     <i18nT
       keypath="vault_secret_picker.provider.complete_action"
       scope="global"
@@ -20,13 +17,17 @@
 </template>
 
 <script setup lang="tsx">
-import type { AutofillSlotProps } from '@kong-ui-public/forms'
 import composables from '../composables'
 
-const props = defineProps<AutofillSlotProps>()
+type Props = {
+  value: string
+  update: (value: string) => void
+}
+
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
-  open: [AutofillSlotProps['value'], AutofillSlotProps['update']]
+  open: [Props['value'], Props['update']]
 }>()
 
 const { i18n: { t }, i18nT } = composables.useI18n()

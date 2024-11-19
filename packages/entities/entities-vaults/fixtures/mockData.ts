@@ -1,5 +1,5 @@
 // FetcherRawResponse is the raw format of the endpoint's response
-import type { KonnectVaultEntityConfig } from '../src'
+import type { KonnectVaultEntityConfig, EntityRow as VaultEntityRow, SecretEntityRow } from '../src'
 
 export interface FetcherRawResponse {
   data: any[];
@@ -91,4 +91,73 @@ export const secrets100: any[] = Array(100)
 
 export const secret = {
   key: 'secret-1',
+}
+
+export const konnectConfigStoreId = '123-qwerty-french-dj'
+
+const vaults2: VaultEntityRow[] = [
+  {
+    id: '1',
+    name: 'hcv',
+    prefix: 'hcv-1',
+    description: 'HashiCorp Vault',
+  },
+  {
+    id: '2',
+    name: 'aws',
+    prefix: 'aws-1',
+    description: 'AWS Secrets Manager',
+  },
+  {
+    id: '3',
+    name: 'konnect',
+    prefix: 'kv-1',
+    description: 'Konnect Config Store',
+    config: {
+      config_store_id: konnectConfigStoreId,
+    },
+  },
+  {
+    id: '4',
+    name: 'env',
+    prefix: 'env-1',
+    description: 'Environment Variables',
+  },
+]
+
+// ... without Konnect vaults
+const kongManagerVaults = vaults2.filter((v) => v.name !== 'konnect')
+
+export const vaultsResponse: FetcherRawResponse = {
+  data: vaults2,
+  total: vaults2.length,
+}
+
+// ... without Konnect vaults
+export const kongManagerVaultsResponse: FetcherRawResponse = {
+  data: kongManagerVaults,
+  total: kongManagerVaults.length,
+}
+
+const secrets2: SecretEntityRow[] = [
+  {
+    id: '1',
+    key: 'password',
+    value: '<redacted>',
+  },
+  {
+    id: '2',
+    key: 'username',
+    value: '<redacted>',
+  },
+  {
+    id: '3',
+    key: 'tokens',
+    value: '{ "refresh_token": "<redacted>" }',
+  },
+]
+
+export const secretsResponse: FetcherRawResponse = {
+  data: secrets2,
+  total: secrets2.length,
 }

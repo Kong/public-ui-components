@@ -114,14 +114,14 @@
 </template>
 
 <script lang="ts">
-import { useAxios, useDebouncedFilter } from '@kong-ui-public/entities-shared'
-import type { SecretEntityRow as SecretEntity, EntityRow as VaultEntity } from '@kong-ui-public/entities-vaults'
-import { secretsEndpoints, vaultsEndpoints } from '@kong-ui-public/entities-vaults'
+import { useAxios, useDebouncedFilter, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
+import type { SecretEntityRow as SecretEntity, EntityRow as VaultEntity } from '../types'
+import vaultsEndpoints from '../vaults-endpoints'
+import secretsEndpoints from '../secrets-endpoints'
 import type { SelectItem } from '@kong/kongponents'
 import { computed, nextTick, ref, watch, type PropType } from 'vue'
 import composables from '../composables'
-import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../types'
-import { buildSecretRef, parseSecretRef } from '../vaults-utils'
+import { buildSecretRef, parseSecretRef } from '../utils'
 
 export interface SelectVaultItem extends SelectItem {
   vault: VaultEntity
@@ -133,9 +133,9 @@ const { i18n: { t } } = composables.useI18n()
 
 const props = defineProps({
   config: {
-    type: Object as PropType<KonnectPluginFormConfig | KongManagerPluginFormConfig>,
+    type: Object as PropType<KonnectBaseFormConfig | KongManagerBaseFormConfig>,
     required: true,
-    validator: (config: KonnectPluginFormConfig | KongManagerPluginFormConfig): boolean => {
+    validator: (config: KonnectBaseFormConfig | KongManagerBaseFormConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
       if (config.app === 'konnect' && !config.controlPlaneId) return false
       if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false

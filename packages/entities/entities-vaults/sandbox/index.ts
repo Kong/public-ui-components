@@ -15,7 +15,7 @@ const init = async () => {
       {
         path: '/',
         name: 'home',
-        redirect: { name: 'vault-list' },
+        component: () => import('./pages/HomePage.vue'),
       },
       {
         path: '/vault-list',
@@ -47,6 +47,11 @@ const init = async () => {
         path: '/vault/:vaultId/secret/:secretId/edit',
         name: 'edit-secret',
         component: () => import('./pages/SecretFormPage.vue'),
+      },
+      {
+        path: '/vault-secret-picker',
+        name: 'vault-secret-picker',
+        component: () => import('./pages/VaultSecretPickerPage.vue'),
       },
     ],
   })
