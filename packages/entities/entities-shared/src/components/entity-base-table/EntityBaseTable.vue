@@ -106,7 +106,6 @@ import type {
   TableSortParams,
   TableErrorMessage,
   TableStateParams,
-  EntityBaseTableStateParams,
 } from '../../types'
 import { AddIcon } from '@kong/icons'
 
