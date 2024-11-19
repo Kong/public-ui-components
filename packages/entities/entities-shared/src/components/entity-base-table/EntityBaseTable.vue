@@ -355,10 +355,17 @@ const handleStateChange = (stateParams: TableStateParams): void => {
   // it indicates that there is at least a corresponding entity record in the backend.
   if (stateParams.hasData) {
     hasRecords.value = true
-  } else if (stateParams.state === 'success' && !stateParams.hasData && !props.query) {
-    // If the table is in a success state but has no data and no query, it means there are no records
-    hasRecords.value = false
   }
+  // We should have reset the value to false if there are no records
+  // But currently we have no good way to determine that as before the criteria below is met,
+  // we'll receive `{ state: 'success', hasData: false }` and that will cause layout shift.
+  // Skipping this for now as the only issue of not resetting the value is when data is cleared from remote
+  // and we are re-requesting it when the query is cleared. And it's not a big issue to leave the toolbar
+  // visible in that case.
+  // else if (stateParams.state === 'success' && !stateParams.hasData && !props.query) {
+  //   // If the table is in a success state but has no data and no query, it means there are no records
+  //   hasRecords.value = false
+  // }
 
   tableState.value = { ...stateParams }
 }
