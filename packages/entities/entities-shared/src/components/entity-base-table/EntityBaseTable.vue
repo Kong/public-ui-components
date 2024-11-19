@@ -22,7 +22,7 @@
       :headers="headers"
       :hide-pagination="hidePagination"
       hide-pagination-when-optional
-      :hide-toolbar="hideToolbar"
+      :hide-toolbar="hideToolbar ?? hideTableToolbar"
       :initial-fetcher-params="combinedInitialFetcherParams"
       :loading="isLoading"
       :pagination-attributes="{ disablePageJump: disablePaginationPageJump, offset: paginationType === 'offset' }"
@@ -35,11 +35,11 @@
       @empty-state-action-click="handleEmptyStateCtaClicked"
       @row:click="handleRowClick"
       @sort="(params: any) => handleSortChanged(params)"
+      @state="handleStateChange"
       @update:table-preferences="handleUpdateTablePreferences"
     >
-      <template #toolbar="{ state }">
+      <template #toolbar>
         <div
-          v-show="showToolbar(state)"
           class="toolbar-container"
         >
           <slot name="toolbar-filter" />
@@ -95,7 +95,7 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import composables from '../../composables'
 import { useTablePreferences } from '@kong-ui-public/core'
-import type { SwrvStateData, HeaderTag, TablePreferences, SortHandlerFunctionParam, TableDataFetcherParams } from '@kong/kongponents'
+import type { HeaderTag, TablePreferences, SortHandlerFunctionParam, TableDataFetcherParams } from '@kong/kongponents'
 import EntityBaseTableCell from './EntityBaseTableCell.vue'
 
 import type {
@@ -105,6 +105,8 @@ import type {
   InternalHeader,
   TableSortParams,
   TableErrorMessage,
+  TableStateParams,
+  EntityBaseTableStateParams,
 } from '../../types'
 import { AddIcon } from '@kong/icons'
 
@@ -227,7 +229,7 @@ const props = defineProps({
   },
   hideToolbar: {
     type: Boolean,
-    default: false,
+    default: undefined,
   },
 })
 
@@ -260,10 +262,6 @@ const cacheId = computed((): string => {
   // Utilize the cacheIdentifier if provided; otherwise, fallback to the preferencesStorageKey that should always be defined
   return props.cacheIdentifier || props.preferencesStorageKey
 })
-
-const showToolbar = (state: SwrvStateData): boolean => {
-  return state.hasData || !!props.query
-}
 
 const headers = computed<Array<InternalHeader>>(() => {
   const arr = []
@@ -337,6 +335,33 @@ const handleRowClick = computed(() => {
 
 const handleSortChanged = (sortParams: TableSortParams): void => {
   emit('sort', sortParams)
+}
+
+const hasRecords = ref(false)
+const tableState = ref<EntityBaseTableStateParams | null>(null)
+const hideTableToolbar = computed(() => {
+  if (hasRecords.value) {
+    return false
+  }
+
+  // Initial state, hide the toolbar
+  if (!tableState.value) {
+    return true
+  }
+  return !tableState.value.hasData && !tableState.value.query
+})
+
+const handleStateChange = (stateParams: TableStateParams): void => {
+  // In our scenario, as long as the table contains any data at any time,
+  // it indicates that there is at least a corresponding entity record in the backend.
+  if (stateParams.hasData) {
+    hasRecords.value = true
+  }
+
+  tableState.value = {
+    ...stateParams,
+    query: props.query,
+  }
 }
 
 const { setTablePreferences, getTablePreferences } = useTablePreferences()
