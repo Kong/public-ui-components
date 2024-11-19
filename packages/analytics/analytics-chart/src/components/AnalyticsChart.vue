@@ -169,7 +169,7 @@ import { msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { hasMillisecondTimestamps, defaultStatusCodeColors } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
-import { KUI_COLOR_TEXT_NEUTRAL, KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40, KUI_SPACE_70 } from '@kong/design-tokens'
+import { KUI_COLOR_TEXT_NEUTRAL, KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon, WarningIcon } from '@kong/icons'
 import CsvExportModal from './CsvExportModal.vue'
 import CsvExportButton from './CsvExportButton.vue'
@@ -443,7 +443,7 @@ const chartHeaderPosition = computed(() => {
 })
 
 const chartHeaderWidth = computed(() => {
-  return chartHeaderPosition.value === 'relative' ? '100%' : KUI_SPACE_70
+  return chartHeaderPosition.value === 'relative' ? '100%' : '2ch'
 })
 
 const handleMouseEnter = () => {
