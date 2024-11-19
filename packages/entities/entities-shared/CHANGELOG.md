@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.10.12...@kong-ui-public/entities-shared@3.10.13) (2024-11-19)
+
+
+### Bug Fixes
+
+* **entities-shared:** truncate labels in config card items ([#1800](https://github.com/Kong/public-ui-components/issues/1800)) ([3a72e0b](https://github.com/Kong/public-ui-components/commit/3a72e0b67f7176d0e2cdf09978e482f780740a5b))
+
+
+
+
+
 ## [3.10.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.10.11...@kong-ui-public/entities-shared@3.10.12) (2024-11-18)
 
 
