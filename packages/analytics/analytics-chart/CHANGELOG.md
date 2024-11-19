@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.4.11...@kong-ui-public/analytics-chart@5.4.12) (2024-11-19)
+
+
+### Bug Fixes
+
+* analytics chart kebab menu positioning ([#1785](https://github.com/Kong/public-ui-components/issues/1785)) ([54783b3](https://github.com/Kong/public-ui-components/commit/54783b350f120a0486ff22ff023b61f407bc45e5))
+
+
+
+
+
 ## [5.4.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.4.10...@kong-ui-public/analytics-chart@5.4.11) (2024-11-18)
 
 
