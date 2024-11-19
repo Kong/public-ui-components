@@ -191,6 +191,40 @@
       </template>
     </ConfigCardItem>
 
+    <h2>Truncated Labels</h2>
+    <ConfigCardItem
+      :item="{
+        key: 'truncated-label-1',
+        label: 'Super Long Label Will Also Be Truncated With A Tooltip',
+        value: 'I am a really long string but I am not truncated.',
+      }"
+    />
+    <ConfigCardItem
+      :item="{
+        key: 'truncated-label-2',
+        label: 'Double Tooltips! Super Long Label Will Also Be Truncated With A Tooltip',
+        value: 'I am a really long string but I am not truncated.',
+        tooltip: 'I am the tooltip for the supaa long label',
+      }"
+    />
+    <ConfigCardItem
+      :item="{
+        key: 'truncated-label-3',
+        label: 'Super Long Label Will Also Be Truncated With A Tooltip',
+        value: 'I am a really long string and I am truncated.',
+      }"
+      truncated
+    />
+    <ConfigCardItem
+      :item="{
+        key: 'truncated-label-4',
+        label: 'Double Tooltips! Super Long Label Will Also Be Truncated With A Tooltip',
+        value: 'I am a really long string and I am truncated.',
+        tooltip: 'I am the tooltip for the supaa long label',
+      }"
+      truncated
+    />
+
     <h2>Slim card</h2>
     <div style="width: 400px;">
       <ConfigCardItem
@@ -234,6 +268,42 @@
           value: 'I am a really long string but I am not truncated.',
         }"
         slim
+      />
+      <ConfigCardItem
+        :item="{
+          key: 'slim6',
+          label: 'Super Long Label Will Also Be Truncated With A Tooltip',
+          value: 'I am a really long string but I am not truncated.',
+        }"
+        slim
+      />
+      <ConfigCardItem
+        :item="{
+          key: 'slim7',
+          label: 'Double Tooltips! Super Long Label Will Also Be Truncated With A Tooltip',
+          value: 'I am a really long string but I am not truncated.',
+          tooltip: 'I am the tooltip for the supaa long label',
+        }"
+        slim
+      />
+      <ConfigCardItem
+        :item="{
+          key: 'slim8',
+          label: 'Super Long Label Will Also Be Truncated With A Tooltip',
+          value: 'I am a really long string and I am truncated.',
+        }"
+        slim
+        truncated
+      />
+      <ConfigCardItem
+        :item="{
+          key: 'slim9',
+          label: 'Double Tooltips! Super Long Label Will Also Be Truncated With A Tooltip',
+          value: 'I am a really long string and I am truncated.',
+          tooltip: 'I am the tooltip for the supaa long label',
+        }"
+        slim
+        truncated
       />
     </div>
   </div>
