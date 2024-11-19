@@ -49,7 +49,7 @@
     </div>
 
     <div class="bar-wrapper">
-      <div class="bar" />
+      <WaterfallSpanBar :span-node="spanNode" />
     </div>
   </div>
 
@@ -70,8 +70,9 @@ import { KUI_COLOR_TEXT_WARNING, KUI_FONT_SIZE_30 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
 import { computed, inject, ref, watch, type PropType, type Ref } from 'vue'
 import composables from '../../composables'
-import { SPAN_EVENT_ATTRIBUTES, WATERFALL_CONFIG, WATERFALL_LEGENDS, WATERFALL_ROWS_STATE, WATERFALL_SPAN_BAR_FADING_WIDTH, WaterfallLegendItemKind, WaterfallRowsState } from '../../constants'
+import { SPAN_EVENT_ATTRIBUTES, WATERFALL_CONFIG, WATERFALL_ROWS_STATE, WATERFALL_SPAN_BAR_FADING_WIDTH, WaterfallRowsState } from '../../constants'
 import { type SpanNode, type WaterfallConfig } from '../../types'
+import WaterfallSpanBar from './WaterfallSpanBar.vue'
 import WaterfallTreeControl from './WaterfallTreeControl.vue'
 import WaterfallSpacer, { SpacerType } from './WaterfallTreeSpacer.vue'
 
@@ -147,37 +148,6 @@ const hasException = computed(() =>{
   return false
 })
 
-// TODO: This is not final
-const barColor = computed(() => {
-  if (props.spanNode.root) {
-    return WATERFALL_LEGENDS[WaterfallLegendItemKind.ROOT].color
-  }
-
-  if (props.spanNode.span.name.includes('client')) {
-    return WATERFALL_LEGENDS[WaterfallLegendItemKind.CLIENT].color
-  }
-
-  if (props.spanNode.span.name.includes('upstream')) {
-    return WATERFALL_LEGENDS[WaterfallLegendItemKind.UPSTREAM].color
-  }
-
-  if (props.spanNode.span.name === 'kong.dns') {
-    return WATERFALL_LEGENDS[WaterfallLegendItemKind.THIRD_PARTY].color
-  }
-
-  return WATERFALL_LEGENDS[WaterfallLegendItemKind.KONG].color
-})
-
-// RESERVED: Only used when zooming is enabled
-const barFixedLeft = computed(() =>
-  ((props.spanNode.span.startTimeUnixNano - config.startTimeUnixNano) / config.totalDurationNano) * config.zoom,
-)
-const barShiftLeft = computed(() => -config.viewport.left * config.zoom)
-const barShift = computed(() => barFixedLeft.value + barShiftLeft.value)
-const barWidth = computed(() => {
-  return `max(3px, ${props.spanNode.durationNano / config.totalDurationNano * config.zoom * 100}%)`
-})
-
 watch(rowsState, (value) => {
   if (value !== WaterfallRowsState.OVERRIDDEN) {
     expanded.value = value === WaterfallRowsState.EXPANDED
@@ -243,7 +213,6 @@ const handleSelect = () => {
 
     .label-content {
       align-items: center;
-      border-bottom: 1px solid $kui-color-border-neutral-weaker;
       box-sizing: border-box;
       cursor: pointer;
       display: flex;
@@ -252,7 +221,17 @@ const handleSelect = () => {
       justify-content: space-between;
       min-width: 0;
       padding: $kui-space-20 $kui-space-10;
+      position: relative;
       width: 100%;
+
+      &::after {
+        border-bottom: 1px solid $kui-color-border-neutral-weaker;
+        bottom: 0;
+        content: '';
+        left: 0;
+        position: absolute;
+        width: 100%;
+      }
 
       .name {
         overflow: hidden;
@@ -276,7 +255,9 @@ const handleSelect = () => {
 
   &:last-child {
     .label-content {
-      border-bottom: none;
+      &::after {
+        border-bottom: none;
+      }
     }
   }
 
@@ -319,32 +300,6 @@ const handleSelect = () => {
       top: 0;
       width: v-bind(WATERFALL_SPAN_BAR_FADING_WIDTH);
       z-index: 10;
-    }
-
-    .bar {
-      height: 12px;
-      position: relative;
-      width: 100%;
-      z-index: 1;
-
-      &::after {
-        background-color: v-bind(barColor);
-        border-radius: $kui-border-radius-20;
-        content: "";
-        height: 100%;
-        left: v-bind("`${barShift * 100}%`");
-        position: absolute;
-        top: 0;
-        width: v-bind(barWidth);
-      }
-
-      .bar-label {
-        font-size: $kui-font-size-10;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 10;
-      }
     }
   }
 }

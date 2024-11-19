@@ -140,9 +140,13 @@ const handleRowsAreaLeave = () => {
   rowsAreaGuideX.value = undefined
 }
 
+watch(() => props.rootSpan, (span) => {
+  config.selectedSpan = span
+}, { immediate: true })
+
 watch(() => config.selectedSpan, (span) => {
   emit('update:selectedSpan', span)
-})
+}, { immediate: true })
 
 // RESERVED: Only used when zooming is enabled
 // watch(interaction, () => {
@@ -234,7 +238,7 @@ watch(() => config.selectedSpan, (span) => {
 .waterfall {
   box-sizing: border-box;
   height: 100%;
-  overflow: v-bind("interaction === 'zoom' ? 'hidden' : 'scroll'");
+  overflow-y: v-bind("interaction === 'zoom' ? 'hidden' : 'scroll'");
 
   :deep(.waterfall-row) {
     box-sizing: border-box;

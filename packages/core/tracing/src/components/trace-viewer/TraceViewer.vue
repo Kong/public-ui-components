@@ -207,8 +207,7 @@ const spanNothingToDisplay = computed(() => {
 
   .detail-pane {
     box-sizing: border-box;
-    overflow: scroll;
-    padding-bottom: $kui-space-120;
+    overflow-y: scroll;
 
     .empty-state {
       align-items: center;
