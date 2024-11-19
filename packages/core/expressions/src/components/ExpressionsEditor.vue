@@ -28,6 +28,7 @@ const props = withDefaults(defineProps<{
   editorOptions?: Monaco.editor.IEditorOptions
 }>(), {
   parseDebounce: 500,
+  editorOptions: undefined,
 })
 
 const parse = (expression: string, schema: AtcSchema) => {
