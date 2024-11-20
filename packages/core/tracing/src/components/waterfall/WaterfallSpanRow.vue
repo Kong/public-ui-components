@@ -4,16 +4,14 @@
     @click="handleSelect"
   >
     <div class="label">
-      <template v-if="depth > 1">
-        <WaterfallSpacer
-          v-for="(_, spacerIndex) in depth - 1"
-          :key="`spacer-${spacerIndex}`"
-          :type="SpacerType.Ruler"
-        />
-      </template>
+      <WaterfallSpacer
+        v-if="depth > 1"
+        :ruler-indents="depth - 1"
+        :type="SpacerType.Ruler"
+      />
 
       <WaterfallSpacer
-        v-if="(depth || 0) > 0"
+        v-if="depth > 0"
         :type="spacerType"
       />
 
@@ -57,7 +55,7 @@
     <WaterfallSpanRow
       v-for="(child, i) in spanNode.children"
       :key="`${spanNode.span.traceId}-${child.span.spanId}`"
-      :depth="(depth || 0) + 1"
+      :depth="depth + 1"
       :index="i"
       :sibling-count="spanNode.children.length - 1"
       :span-node="child"
@@ -115,21 +113,22 @@ const selected = computed(
     config.selectedSpan?.span.spanId === props.spanNode.span.spanId,
 )
 
-const hasChildren = computed(
-  () =>
-    props.spanNode.children !== undefined && props.spanNode.children.length > 0,
+const hasChildren = computed(() =>
+  props.spanNode.children !== undefined && props.spanNode.children.length > 0,
 )
 
-const spacerType = computed(() => {
-  if (expanded.value && props.index !== props.siblingCount) {
-    return SpacerType.Attach
-  }
+const lastChild = computed(() => props.index === props.siblingCount)
 
-  if (props.index === props.siblingCount) {
+const spacerType = computed(() => {
+  if (hasChildren.value) {
+    if (expanded.value || !lastChild.value) {
+      return SpacerType.Attach
+    }
+
     return SpacerType.CornerAttach
   }
 
-  return SpacerType.Attach
+  return lastChild.value ? SpacerType.CornerAttach : SpacerType.Attach
 })
 
 const hasException = computed(() =>{

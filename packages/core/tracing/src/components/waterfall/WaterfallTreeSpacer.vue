@@ -26,12 +26,21 @@ const props = defineProps({
     default: 20,
     validator: (value: number) => value > 0,
   },
+  rulerIndents: {
+    type: Number,
+    default: 1,
+    validator: (value: number) => value >= 1,
+  },
 })
 
-const spacerStyle = computed(() => ({
-  width: `${props.size}px`,
-  minWidth: `${props.size}px`,
-}))
+const spacerStyle = computed(() => {
+  const width = props.size * (props.type === SpacerType.Ruler ? props.rulerIndents : 1)
+
+  return {
+    width: `${width}px`,
+    minWidth: `${width}px`,
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -40,20 +49,25 @@ const spacerStyle = computed(() => ({
   position: relative;
 
   &.ruler {
-    &::before{
-      border-left: 1px solid $kui-color-border-neutral-weaker;
-      content: '';
-      height: 100%;
-      left: calc(50% - 0.5px);
-      position: absolute;
-      top: 0;
-    }
+    $width: 1px;
+    // Magic XD
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent calc(v-bind("`${props.size / 2}px`") - $width / 2),
+      $kui-color-border-neutral-weaker
+        calc(v-bind("`${props.size / 2}px`") - $width / 2),
+      $kui-color-border-neutral-weaker
+        calc(v-bind("`${props.size / 2}px`") + $width / 2),
+      transparent calc(v-bind("`${props.size / 2}px`") + $width / 2),
+      transparent v-bind("`${props.size}px`")
+    );
   }
 
   &.attach {
-    &::before{
+    &::before {
       border-left: 1px solid $kui-color-border-neutral-weaker;
-      content: '';
+      content: "";
       height: 100%;
       left: calc(50% - 0.5px);
       position: absolute;
@@ -62,7 +76,7 @@ const spacerStyle = computed(() => ({
 
     &::after {
       border-bottom: 1px solid $kui-color-border-neutral-weaker;
-      content: '';
+      content: "";
       left: 50%;
       position: absolute;
       top: calc(50% - 0.5px);
@@ -71,9 +85,9 @@ const spacerStyle = computed(() => ({
   }
 
   &.corner-attach {
-    &::before{
+    &::before {
       border-left: 1px solid $kui-color-border-neutral-weaker;
-      content: '';
+      content: "";
       height: 50%;
       left: calc(50% - 0.5px);
       position: absolute;
@@ -82,7 +96,7 @@ const spacerStyle = computed(() => ({
 
     &::after {
       border-bottom: 1px solid $kui-color-border-neutral-weaker;
-      content: '';
+      content: "";
       left: 50%;
       position: absolute;
       top: calc(50% - 0.5px);
