@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="span.attributes.length > 0"
-    class="span-attribute-table"
-  >
+  <div class="span-attribute-table">
     <div class="title">
       {{ t('trace_viewer.span_attributes.title') }}
     </div>

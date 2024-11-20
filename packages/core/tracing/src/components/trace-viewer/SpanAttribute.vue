@@ -26,7 +26,7 @@
 <script setup lang="tsx">
 import { ConfigCardItem, ConfigurationSchemaType, EntityLink, type EntityLinkData } from '@kong-ui-public/entities-shared'
 import type { IKeyValue } from '@opentelemetry/otlp-transformer'
-import { computed, inject, onWatcherCleanup, ref, watchEffect, type PropType } from 'vue'
+import { computed, inject, onWatcherCleanup, ref, shallowRef, watchEffect, type PropType } from 'vue'
 import { SPAN_ATTRIBUTE_VALUE_UNKNOWN, SPAN_ATTRIBUTES, TRACE_VIEWER_CONFIG } from '../../constants'
 import type { Span, TraceViewerConfig } from '../../types'
 import { getPhaseAndPlugin, unwrapAnyValue } from '../../utils'
@@ -75,7 +75,7 @@ const ENTITY_LINKED_ATTRIBUTE_KEYS = [
 ]
 
 const entityLink = ref<string | undefined>(undefined)
-const entityLinkData = ref<EntityLinkData | undefined>(undefined)
+const entityLinkData = shallowRef<EntityLinkData | undefined>(undefined)
 
 watchEffect(() => {
   let entity: { entity: string; entityId: string } | undefined
@@ -84,47 +84,37 @@ watchEffect(() => {
   if (typeof value === 'string' && value !== SPAN_ATTRIBUTE_VALUE_UNKNOWN) {
     switch (props.keyValue.key) {
       case SPAN_ATTRIBUTES.KONG_SERVICE_ID.name: {
-        if (value) {
-          entity = {
-            entity: 'services',
-            entityId: value,
-          }
+        entity = {
+          entity: 'services',
+          entityId: value,
         }
         break
       }
       case SPAN_ATTRIBUTES.KONG_ROUTE_ID.name: {
-        if (value) {
-          entity = {
-            entity: 'routes',
-            entityId: value,
-          }
+        entity = {
+          entity: 'routes',
+          entityId: value,
         }
         break
       }
       case SPAN_ATTRIBUTES.KONG_CONSUMER_ID.name: {
-        if (props.keyValue.value.stringValue) {
-          entity = {
-            entity: 'consumers',
-            entityId: value,
-          }
+        entity = {
+          entity: 'consumers',
+          entityId: value,
         }
         break
       }
       case SPAN_ATTRIBUTES.KONG_PLUGIN_ID.name: {
-        if (props.keyValue.value.stringValue) {
-          entity = {
-            entity: 'plugins',
-            entityId: value,
-          }
+        entity = {
+          entity: 'plugins',
+          entityId: value,
         }
         break
       }
       case SPAN_ATTRIBUTES.KONG_UPSTREAM_ID.name: {
-        if (props.keyValue.value.stringValue) {
-          entity = {
-            entity: 'upstreams',
-            entityId: value,
-          }
+        entity = {
+          entity: 'upstreams',
+          entityId: value,
         }
         break
       }

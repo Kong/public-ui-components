@@ -49,7 +49,7 @@
     </div>
 
     <div
-      ref="rowsAreaRef"
+      ref="rowsArea"
       class="waterfall-rows"
       @mouseleave="handleRowsAreaLeave"
       @mousemove="handleRowsAreaMove"
@@ -57,7 +57,7 @@
       <div class="waterfall-row">
         <div />
         <div class="span-bar-wrapper">
-          <div ref="spanBarMeasurementRef" />
+          <div ref="spanBarMeasurement" />
         </div>
       </div>
 
@@ -75,7 +75,7 @@
 // RESERVED: Only used when zooming is enabled
 // import { useWheel } from '@vueuse/gesture'
 import { AddIcon, RemoveIcon } from '@kong/icons'
-import { provide, reactive, ref, watch, type PropType, type Ref } from 'vue'
+import { provide, reactive, ref, useTemplateRef, watch, type PropType, type Ref } from 'vue'
 import composables from '../../composables'
 import { WATERFALL_SPAN_BAR_FADING_WIDTH } from '../../constants'
 import { WATERFALL_CONFIG, WATERFALL_ROWS_STATE, WaterfallRowsState } from '../../constants/waterfall'
@@ -101,11 +101,11 @@ const emit = defineEmits<{
   'update:selectedSpan': [span?: SpanNode];
 }>()
 
+const rowsAreaRef = useTemplateRef<HTMLElement>('rowsArea')
+const spanBarMeasurementRef = useTemplateRef<HTMLElement>('spanBarMeasurement')
+
 // Locked to 'scroll' for now
 const interaction = ref<'scroll' | 'zoom'>('scroll')
-
-const rowsAreaRef = ref<HTMLElement | null>(null)
-const spanBarMeasurementRef = ref<HTMLElement | null>(null)
 const rowsAreaGuideX = ref<number | undefined>(undefined)
 
 const config = reactive<WaterfallConfig>({

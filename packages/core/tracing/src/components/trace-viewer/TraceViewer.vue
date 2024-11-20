@@ -60,9 +60,9 @@
   </Splitpanes>
 </template>
 
-<script setup lang="tsx">
+<script setup lang="ts">
 import { Pane, Splitpanes } from '@kong/splitpanes'
-import { computed, provide, reactive, ref, type PropType } from 'vue'
+import { computed, provide, reactive, shallowRef, type PropType } from 'vue'
 import composables from '../../composables'
 import { TRACE_VIEWER_CONFIG } from '../../constants'
 import type { SpanNode, TraceViewerConfig } from '../../types'
@@ -93,7 +93,7 @@ const props = defineProps({
 // Provide the config to all children components
 provide<TraceViewerConfig | undefined>(TRACE_VIEWER_CONFIG, reactive(props.config))
 
-const selectedSpan = ref<SpanNode | undefined>(undefined)
+const selectedSpan = shallowRef<SpanNode | undefined>(undefined)
 
 const handleUpdateSelectedSpan = (span?: SpanNode) => {
   selectedSpan.value = span
