@@ -81,7 +81,7 @@ watchEffect(() => {
   let entity: { entity: string; entityId: string } | undefined
 
   const value = props.keyValue.value.stringValue
-  if (typeof value === 'string' && value !== SPAN_ATTRIBUTE_VALUE_UNKNOWN) {
+  if (typeof value === 'string' && value && value !== SPAN_ATTRIBUTE_VALUE_UNKNOWN) {
     switch (props.keyValue.key) {
       case SPAN_ATTRIBUTES.KONG_SERVICE_ID.name: {
         entity = {
