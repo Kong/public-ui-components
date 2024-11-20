@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.10.13...@kong-ui-public/entities-shared@3.10.14) (2024-11-20)
+
+
+### Bug Fixes
+
+* **entities-*:** revamp hide toolbar logic ([#1790](https://github.com/Kong/public-ui-components/issues/1790)) ([9322956](https://github.com/Kong/public-ui-components/commit/9322956da06d0fd17600b510d8cf4d654e16f5a5))
+
+
+
+
+
 ## [3.10.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.10.12...@kong-ui-public/entities-shared@3.10.13) (2024-11-19)
 
 

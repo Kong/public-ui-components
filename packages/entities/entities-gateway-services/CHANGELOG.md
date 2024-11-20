@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.42](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.8.41...@kong-ui-public/entities-gateway-services@3.8.42) (2024-11-20)
+
+
+### Bug Fixes
+
+* **entities-*:** revamp hide toolbar logic ([#1790](https://github.com/Kong/public-ui-components/issues/1790)) ([9322956](https://github.com/Kong/public-ui-components/commit/9322956da06d0fd17600b510d8cf4d654e16f5a5))
+
+
+
+
+
 ## [3.8.41](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.8.40...@kong-ui-public/entities-gateway-services@3.8.41) (2024-11-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services

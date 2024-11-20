@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.51](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.8.50...@kong-ui-public/entities-routes@3.8.51) (2024-11-20)
+
+
+### Bug Fixes
+
+* **entities-*:** revamp hide toolbar logic ([#1790](https://github.com/Kong/public-ui-components/issues/1790)) ([9322956](https://github.com/Kong/public-ui-components/commit/9322956da06d0fd17600b510d8cf4d654e16f5a5))
+
+
+
+
+
 ## [3.8.50](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.8.49...@kong-ui-public/entities-routes@3.8.50) (2024-11-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
