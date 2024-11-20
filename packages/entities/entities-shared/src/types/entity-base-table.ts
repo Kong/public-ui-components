@@ -1,5 +1,6 @@
 import type { RouteLocationRaw } from 'vue-router'
 import type { Field, KongManagerConfig, KonnectConfig } from './index'
+import type { TableState } from '@kong/kongponents/dist/types'
 
 export interface KonnectBaseTableConfig extends KonnectConfig {
   /** Additional message to show when there are no records */
@@ -72,3 +73,12 @@ export interface TableSortParams {
 }
 
 export type TableErrorMessage = { title?: string; message?: string } | null
+
+export interface TableStateParams {
+  state: TableState,
+  hasData: boolean
+}
+
+export interface EntityBaseTableStateParams extends TableStateParams {
+  query: string
+}

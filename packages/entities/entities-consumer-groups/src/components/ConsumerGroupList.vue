@@ -9,7 +9,6 @@
       :error-message="errorMessage"
       :fetcher="fetcher"
       :fetcher-cache-key="fetcherCacheKey"
-      :hide-toolbar="hideTableToolbar"
       pagination-type="offset"
       :preferences-storage-key="preferencesStorageKey"
       :query="filterQuery"
@@ -37,7 +36,6 @@
           <PermissionsWrapper :auth-function="() => canCreate()">
             <!-- Hide Create button if table is empty -->
             <KButton
-              v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-consumer-group"
               :size="useActionOutside ? 'medium' : 'large'"
@@ -355,8 +353,6 @@ const resetPagination = (): void => {
  * loading, Error, Empty state
  */
 const errorMessage = ref<TableErrorMessage>(null)
-// hide table toolbar in initial loading state or when no records are found
-const hideTableToolbar = ref<boolean>(false)
 
 /**
  * Copy ID action
@@ -559,23 +555,10 @@ const exitGroups = async (): Promise<void> => {
   }
 }
 
-const hasData = ref(false)
-
 /**
  * Watchers
  */
 watch(fetcherState, (state) => {
-  // reset `hasData` to show/hide the teleported Create button
-  if (Array.isArray(state?.response?.data)) {
-    hasData.value = state.response!.data.length > 0
-  }
-
-  if (state.status === FetcherStatus.NoRecords) {
-    hideTableToolbar.value = true
-  } else {
-    hideTableToolbar.value = false
-  }
-
   if (state.status === FetcherStatus.Error) {
     errorMessage.value = {
       title: t('consumer_groups.errors.general'),

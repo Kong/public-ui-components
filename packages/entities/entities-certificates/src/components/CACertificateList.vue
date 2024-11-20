@@ -32,7 +32,6 @@
           <PermissionsWrapper :auth-function="() => canCreate()">
             <!-- Hide Create button if table is empty -->
             <KButton
-              v-show="hasData"
               appearance="primary"
               data-testid="toolbar-add-ca-certificate"
               :size="useActionOutside ? 'medium' : 'large'"
@@ -419,17 +418,10 @@ const confirmDelete = async (): Promise<void> => {
   }
 }
 
-const hasData = ref(false)
-
 /**
  * Watchers
  */
 watch(fetcherState, (state) => {
-  // reset `hasData` to show/hide the teleported Create button
-  if (Array.isArray(state?.response?.data)) {
-    hasData.value = state.response!.data.length > 0
-  }
-
   if (state.status === FetcherStatus.Error) {
     errorMessage.value = {
       title: t('ca-certificates.errors.general'),

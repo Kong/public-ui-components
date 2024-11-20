@@ -20,6 +20,7 @@ const props = defineProps({
   /** The tags to display in the table */
   tags: {
     type: [Array, String],
+    default: () => [],
   },
   tagMaxWidth: {
     type: String,
