@@ -182,7 +182,6 @@ defineExpose({ refresh: refreshTiles })
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     height: 100%;
-    padding: var(--kui-space-70, $kui-space-70);
   }
 }
 </style>

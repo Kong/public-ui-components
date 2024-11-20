@@ -10,7 +10,7 @@
       :data="data"
       :description="chartOptions.description"
       :synthetics-data-key="chartOptions.syntheticsDataKey"
-      :title="chartOptions.chartTitle || ''"
+      :title="!hasKebabMenuAccess && chartOptions.chartTitle || ''"
     >
       <template
         v-if="props.chartOptions.entityLink"
@@ -36,9 +36,12 @@ import { TopNTable } from '@kong-ui-public/analytics-chart'
 import type { TopNTableRecord } from '@kong-ui-public/analytics-chart'
 import QueryDataProvider from './QueryDataProvider.vue'
 import { EntityLink } from '@kong-ui-public/entities-shared'
+import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const props = defineProps<RendererProps<TopNTableOptions>>()
+const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
+const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
 
 const parseLink = (record: TopNTableRecord) => {
   if (props.chartOptions?.entityLink) {

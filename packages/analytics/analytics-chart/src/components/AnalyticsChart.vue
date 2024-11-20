@@ -1,23 +1,22 @@
 <template>
   <div
     class="analytics-chart-shell"
-    :class="{ 'is-hovering': isHovering }"
-    @mouseenter="handleMouseEnter"
-    @mouseleave="handleMouseLeave"
   >
     <div
+      v-if="hasValidChartData && resultSetTruncated && maxEntitiesShown || (!hasKebabMenuAccess &&allowCsvExport) || props.chartTitle"
       class="chart-header"
     >
       <div
-        v-if="chartTitle"
         class="chart-title"
         :title="chartTitle"
       >
         {{ chartTitle }}
       </div>
-      <div class="chart-header-icons-wrapper">
+      <div
+        v-if="resultSetTruncated && maxEntitiesShown"
+        class="chart-header-icons-wrapper"
+      >
         <KTooltip
-          v-if="hasValidChartData && resultSetTruncated && maxEntitiesShown"
           class="tooltip"
           max-width="500"
           placement="right"
@@ -33,7 +32,7 @@
         </KTooltip>
       </div>
       <div
-        v-if="allowCsvExport && hasValidChartData && !hasKebabMenuAccess"
+        v-if="allowCsvExport && hasValidChartData"
         class="chart-export-button"
       >
         <CsvExportButton
@@ -41,55 +40,6 @@
           :filename-prefix="filenamePrefix"
         />
       </div>
-      <!-- More actions menu -->
-      <KDropdown
-        v-if="hasKebabMenuAccess && hasMenuOptions"
-        class="dropdown"
-        data-testid="chart-action-menu"
-      >
-        <button
-          appearance="none"
-          :aria-label="i18n.t('more_actions')"
-          class="kebab-action-menu"
-          data-testid="kebab-action-menu"
-        >
-          <MoreIcon
-            :color="KUI_COLOR_TEXT_NEUTRAL"
-            :size="KUI_ICON_SIZE_40"
-          />
-        </button>
-        <template #items>
-          <KDropdownItem
-            v-if="!!goToExplore"
-            data-testid="chart-jump-to-explore"
-          >
-            <a :href="goToExplore">
-              {{ i18n.t('jumpToExplore') }}
-            </a>
-          </KDropdownItem>
-          <KDropdownItem
-            v-if="allowCsvExport && hasValidChartData"
-            class="chart-export-button"
-            data-testid="chart-csv-export"
-            @click="exportCsv()"
-          >
-            <span
-              class="chart-export-trigger"
-              data-testid="csv-export-button"
-            >
-              {{ i18n.t('csvExport.exportAsCsv') }}
-            </span>
-          </KDropdownItem>
-          <slot name="menu-items" />
-        </template>
-      </KDropdown>
-      <!-- Keep outside of dropdown, so we can independently affect its visibility -->
-      <CsvExportModal
-        v-if="exportModalVisible"
-        :chart-data="rawChartData"
-        :filename="csvFilename"
-        @toggle-modal="setExportModalVisibility"
-      />
     </div>
     <KEmptyState
       v-if="!hasValidChartData"
@@ -164,14 +114,13 @@ import { ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
 import type { PropType } from 'vue'
-import { computed, provide, toRef, ref } from 'vue'
+import { computed, provide, toRef } from 'vue'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { hasMillisecondTimestamps, defaultStatusCodeColors } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
-import { KUI_COLOR_TEXT_NEUTRAL, KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
-import { MoreIcon, WarningIcon } from '@kong/icons'
-import CsvExportModal from './CsvExportModal.vue'
+import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
+import { WarningIcon } from '@kong/icons'
 import CsvExportButton from './CsvExportButton.vue'
 
 const props = defineProps({
@@ -260,8 +209,6 @@ const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
 const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
 
 const rawChartData = toRef(props, 'chartData')
-const isHovering = ref(false)
-
 
 const computedChartData = computed(() => {
   return isTimeSeriesChart.value
@@ -280,15 +227,6 @@ const computedChartData = computed(() => {
       toRef(props, 'chartData'),
     ).value
 })
-
-const exportModalVisible = ref(false)
-const setExportModalVisibility = (val: boolean) => {
-  exportModalVisible.value = val
-}
-const csvFilename = computed<string>(() => props.filenamePrefix || i18n.t('csvExport.defaultFilename'))
-const exportCsv = () => {
-  setExportModalVisibility(true)
-}
 
 const timeRangeMs = computed<number | undefined>(() => {
   if (!props.chartData?.meta) {
@@ -377,8 +315,6 @@ const hasValidChartData = computed(() => {
   return props.chartData && props.chartData.meta && props.chartData.data.length
 })
 
-const hasMenuOptions = computed(() => (props.allowCsvExport && hasValidChartData.value) || !!props.goToExplore || props.showMenu)
-
 const timeSeriesGranularity = computed<GranularityValues>(() => {
 
   if (!props.chartData.meta.granularity_ms) {
@@ -438,22 +374,6 @@ const chartTooltipSortFn = computed(() => {
   }
 })
 
-const chartHeaderPosition = computed(() => {
-  return props.chartTitle || !hasKebabMenuAccess || (resultSetTruncated.value && maxEntitiesShown.value) ? 'relative' : 'absolute'
-})
-
-const chartHeaderWidth = computed(() => {
-  return chartHeaderPosition.value === 'relative' ? '100%' : '2ch'
-})
-
-const handleMouseEnter = () => {
-  isHovering.value = true
-}
-
-const handleMouseLeave = () => {
-  isHovering.value = false
-}
-
 provide('showLegendValues', showLegendValues)
 provide('legendPosition', toRef(props, 'legendPosition'))
 
@@ -490,10 +410,8 @@ provide('legendPosition', toRef(props, 'legendPosition'))
     align-items: center;
     display: flex;
     justify-content: flex-start;
-    padding-bottom: var(--kui-space-60, $kui-space-60);
-    position: v-bind('chartHeaderPosition');
     right: 0;
-    width: v-bind('chartHeaderWidth');
+    width: 100%;
     z-index: 999;
 
     &:hover :deep(.popover-trigger-wrapper) {
@@ -527,46 +445,6 @@ provide('legendPosition', toRef(props, 'legendPosition'))
     display: flex;
     margin-left: var(--kui-space-50, $kui-space-50);
     margin-top: var(--kui-space-10, $kui-space-10);
-  }
-
-  // Action menu
-  .dropdown {
-    display: flex;
-    margin-left: var(--kui-space-auto, $kui-space-auto);
-    margin-right: var(--kui-space-0, $kui-space-0);
-
-    :deep(.popover-trigger-wrapper) {
-      opacity: 0;
-      transform: fade(0, -10px);
-      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-      visibility: hidden;
-    }
-
-    .kebab-action-menu {
-      background: $kui-color-background-transparent;
-      border: none;
-      color: inherit;
-      cursor: pointer;
-      height: 100%;
-    }
-
-    li.k-dropdown-item {
-      a {
-        text-decoration: none;
-      }
-    }
-    a {
-      color: $kui-color-text;
-
-      &:hover {
-        color: $kui-color-text;
-        text-decoration: none;
-      }
-    }
-
-    &:hover {
-      cursor: pointer;
-    }
   }
 }
 </style>

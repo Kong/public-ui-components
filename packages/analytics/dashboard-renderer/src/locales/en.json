@@ -10,5 +10,10 @@
   },
   "queryDataProvider": {
     "timeRangeExceeded":  "The time range for this report is outside of your organization's data retention period"
-  }
+  },
+  "csvExport": {
+    "defaultFilename": "Chart Export",
+    "exportAsCsv": "Export as CSV"
+  },
+  "jumpToExplore": "Open in Explorer"
 }

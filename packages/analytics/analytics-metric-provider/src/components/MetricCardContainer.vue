@@ -4,7 +4,7 @@
     :class="cardSize"
   >
     <div
-      v-if="props.containerTitle"
+      v-if="props.containerTitle || props.containerDescription"
       class="container-title"
     >
       {{ props.containerTitle }}
