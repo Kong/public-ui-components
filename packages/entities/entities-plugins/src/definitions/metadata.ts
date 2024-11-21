@@ -713,7 +713,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     group: PluginGroup.AI,
     isEnterprise: true,
     nameKey: 'plugins.meta.ai-semantic-cache.name',
-    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     useLegacyForm: true,
   },
   'ai-semantic-prompt-guard': {
