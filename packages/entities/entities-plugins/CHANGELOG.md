@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.4.1...@kong-ui-public/entities-plugins@9.5.0) (2024-11-21)
+
+
+### Features
+
+* **entities-plugins:** update scope for ai-semantic-cache ([#1805](https://github.com/Kong/public-ui-components/issues/1805)) ([40e0ea6](https://github.com/Kong/public-ui-components/commit/40e0ea6ea15c1c5a8b081e94eb749f4d5a9a306b))
+
+
+
+
+
 ## [9.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.4.0...@kong-ui-public/entities-plugins@9.4.1) (2024-11-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
