@@ -462,7 +462,7 @@ describe('<DashboardRenderer />', () => {
       } }))
 
       // Check that it replaces the description token.
-      cy.get('.container-description').should('have.text', 'Last 24-Hour Summary')
+      cy.get('.header-description').should('have.text', 'Last 24-Hour Summary')
     })
   })
 
@@ -499,7 +499,7 @@ describe('<DashboardRenderer />', () => {
       }))
 
       // Check that it replaces the description token.
-      cy.get('.container-description').should('have.text', 'Last 7-Day Summary')
+      cy.get('.header-description').should('have.text', 'Last 7-Day Summary')
     })
   })
 
@@ -582,7 +582,7 @@ describe('<DashboardRenderer />', () => {
       }))
 
       // Check that it replaces the description token.
-      cy.get('.container-description').should('have.text', 'Last 7-Day Summary')
+      cy.get('.header-description').should('have.text', 'Last 7-Day Summary')
     })
   })
 })
