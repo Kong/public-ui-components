@@ -38,7 +38,7 @@ const props = defineProps<{
   keyValue: IKeyValue
 }>()
 
-const config = inject<TraceViewerConfig>(TRACE_VIEWER_CONFIG)!
+const config = inject<TraceViewerConfig>(TRACE_VIEWER_CONFIG)
 if (!config) {
   throw new Error('TRACE_VIEWER_CONFIG is not provided')
 }

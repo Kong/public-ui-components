@@ -85,7 +85,7 @@ const props = defineProps<{
 }>()
 
 // Provide the config to all children components
-provide<TraceViewerConfig | undefined>(TRACE_VIEWER_CONFIG, reactive(props.config))
+provide<TraceViewerConfig>(TRACE_VIEWER_CONFIG, reactive(props.config))
 
 const selectedSpan = shallowRef<SpanNode | undefined>(undefined)
 
@@ -122,6 +122,10 @@ const spanNothingToDisplay = computed(() => {
   padding: 0 !important;
   position: relative;
   width: 100%;
+
+  :deep(.splitpanes__pane) {
+    transition: none;
+  }
 
   :deep(.splitpanes__splitter) {
     $resize-handle-height: 4px;

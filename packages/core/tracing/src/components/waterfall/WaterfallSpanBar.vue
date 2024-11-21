@@ -7,7 +7,7 @@ import { computed, inject } from 'vue'
 import { WATERFALL_CONFIG, WATERFALL_LEGENDS, WaterfallLegendItemKind } from '../../constants'
 import type { SpanNode, WaterfallConfig } from '../../types'
 
-const config = inject<WaterfallConfig>(WATERFALL_CONFIG)!
+const config = inject<WaterfallConfig>(WATERFALL_CONFIG)
 if (!config) {
   throw new Error('WATERFALL_CONFIG is not provided')
 }

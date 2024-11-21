@@ -26,7 +26,7 @@ import { getDurationFormatter } from '../../utils'
 
 const fmt = getDurationFormatter()
 
-const config = inject<WaterfallConfig>(WATERFALL_CONFIG)!
+const config = inject<WaterfallConfig>(WATERFALL_CONFIG)
 if (!config) {
   throw new Error('WATERFALL_CONFIG is not provided')
 }

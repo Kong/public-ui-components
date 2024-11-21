@@ -76,8 +76,8 @@ import WaterfallSpacer, { SpacerType } from './WaterfallTreeSpacer.vue'
 
 const fmt = getDurationFormatter()
 
-const config = inject<WaterfallConfig>(WATERFALL_CONFIG)!
-const rowsState = inject<Ref<WaterfallRowsState>>(WATERFALL_ROWS_STATE)!
+const config = inject<WaterfallConfig>(WATERFALL_CONFIG)
+const rowsState = inject<Ref<WaterfallRowsState>>(WATERFALL_ROWS_STATE)
 if (!config) {
   throw new Error('WATERFALL_CONFIG is not provided')
 } else if (!rowsState) {
