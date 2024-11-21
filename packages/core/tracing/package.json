@@ -41,9 +41,8 @@
   "devDependencies": {
     "@kong/design-tokens": "1.17.2",
     "@kong/kongponents": "9.5.5",
-    "@kong/splitpanes": "3.1.6-patch.2",
+    "@kong/splitpanes": "3.1.6-patch.6",
     "@opentelemetry/otlp-transformer": "^0.54.2",
-    "@types/splitpanes": "^2.2.6",
     "vue": "^3.5.4"
   },
   "repository": {
