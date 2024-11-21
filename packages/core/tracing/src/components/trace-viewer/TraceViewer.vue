@@ -129,8 +129,10 @@ const spanNothingToDisplay = computed(() => {
 
   :deep(.splitpanes__splitter) {
     $resize-handle-height: 4px;
+    $splitter-border-width: 1px;
+    $splitter-border-width-hovered: 2px;
     align-items: center;
-    border-top: 1px solid $kui-color-border-neutral-weaker;
+    border-top: $splitter-border-width solid $kui-color-border-neutral-weaker;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -141,9 +143,9 @@ const spanNothingToDisplay = computed(() => {
     &::before {
       background-color: $kui-color-background-neutral-weaker;
       content: '';
-      height: 2px;
+      height: $splitter-border-width-hovered;
       position: absolute;
-      top: -1.5px;
+      top: -($splitter-border-width-hovered + math.div($splitter-border-width-hovered - $splitter-border-width, 2));
       transform: scaleY(0);
       transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
       width: 100%;
