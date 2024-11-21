@@ -74,6 +74,11 @@ const options = computed<ProviderProps>(() => {
 
 <style scoped lang="scss">
 .metric-card-tile-wrapper {
+  align-items: center;
+  display: flex;
+  height: 75%;
+  width: 100%;
+
   @media (min-width: ($kui-breakpoint-phablet - 1px)) {
     align-items: center;
     display: flex;
