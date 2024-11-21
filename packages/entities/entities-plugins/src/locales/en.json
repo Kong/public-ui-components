@@ -485,6 +485,10 @@
       "service-protection": {
         "name": "Service Protection",
         "description": "Prevent abuse and protect services with absolute limits on the number of requests reaching the service."
+      },
+      "injection-protection": {
+        "name": "Injection Protection",
+        "description": "Protect against injection attacks by rejecting requests that match common injections patterns."
       }
     },
     "fields": {
