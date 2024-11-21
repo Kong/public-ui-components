@@ -52,11 +52,11 @@
         v-else
         class="empty-state"
       >
-        <template v-if="!selectedSpan">
-          {{ t('trace_viewer.empty_state.unselected') }}
+        <template v-if="selectedSpan">
+          {{ t('trace_viewer.empty_state.nothing_to_display') }}
         </template>
         <template v-else>
-          {{ t('trace_viewer.empty_state.nothing_to_display') }}
+          {{ t('trace_viewer.empty_state.unselected') }}
         </template>
       </div>
     </Pane>
