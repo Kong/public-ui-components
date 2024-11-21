@@ -212,6 +212,7 @@
     </KCard>
 
     <VueFormGenerator
+      :class="{ 'rla-last-vfg': formModel['config-strategy'] !== 'redis' }"
       :model="formModel"
       :options="formOptions"
       :schema="advancedSchema.afterStrategy"
@@ -634,5 +635,9 @@ const removeRequestLimit = (index: number) => {
 
 .rla-form-redis-card {
   margin: $kui-space-50 0;
+}
+
+.rla-last-vfg {
+  margin-top: $kui-space-80;
 }
 </style>
