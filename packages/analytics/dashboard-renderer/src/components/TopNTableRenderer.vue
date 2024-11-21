@@ -8,7 +8,7 @@
   >
     <TopNTable
       :data="data"
-      :description="chartOptions.description"
+      :description="!hasKebabMenuAccess && chartOptions.description || ''"
       :synthetics-data-key="chartOptions.syntheticsDataKey"
       :title="!hasKebabMenuAccess && chartOptions.chartTitle || ''"
     >

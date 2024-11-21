@@ -63,7 +63,7 @@ const options = computed<ProviderProps>(() => {
     additionalFilter: props.context.filters as ExploreFilter[], // TODO: Decide how to handle metric card filters.
     longCardTitles: props.chartOptions.longCardTitles,
     ... !hasKebabMenuAccess && { containerTitle: props.chartOptions.chartTitle },
-    description: props.chartOptions.description,
+    ... !hasKebabMenuAccess && { description: props.chartOptions.description },
     percentileLatency: props.chartOptions.percentileLatency,
     refreshInterval: props.context.refreshInterval,
     queryReady: props.queryReady,

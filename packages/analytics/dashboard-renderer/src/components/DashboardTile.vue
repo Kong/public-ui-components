@@ -12,6 +12,7 @@
         {{ definition.chart.chartTitle }}
       </div>
       <KDropdown
+        v-if="canShowKebabMenu"
         class="dropdown"
         data-testid="chart-action-menu"
       >
@@ -55,6 +56,12 @@
           </KDropdownItem>
         </template>
       </KDropdown>
+      <div
+        v-else-if="'description' in definition.chart && showDescriptionInHeader"
+        class="header-description"
+      >
+        {{ definition.chart.description }}
+      </div>
       <CsvExportModal
         v-if="exportModalVisible"
         :chart-data="(chartData as ExploreResultV4)"
@@ -134,6 +141,8 @@ const exploreLink = computed(() => {
 })
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
+const canShowKebabMenu = computed(() => hasKebabMenuAccess && !['golden_signals', 'top_n', 'gauge'].includes(props.definition.chart.type))
+const showDescriptionInHeader = computed(() => ['top_n', 'golden_signals'].includes(props.definition.chart.type))
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
@@ -189,11 +198,18 @@ const exportCsv = () => {
     // border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     display: flex;
     justify-content: space-between;
+    margin-bottom: var(--kui-space-30, $kui-space-30);
     right: 0;
     width: 100%;
 
     .title {
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+    }
+
+    .header-description {
+      color: $kui-color-text-neutral;
+      font-size: $kui-font-size-20;
+      text-align: right;
     }
 
     .dropdown {

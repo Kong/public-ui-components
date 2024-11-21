@@ -319,9 +319,6 @@ const getValue = (record: AnalyticsExploreRecord): string => {
 
 <style lang="scss">
 // TODO: clean up these styles after KCard redesign - KHCP-8971
-.k-card.kong-ui-public-top-n-table {
-  gap: $kui-space-20 !important;
-}
 .kong-ui-public-top-n-table.kong-card.border {
   border-radius: $kui-border-radius-20;
   padding: $kui-space-70;
