@@ -75,6 +75,11 @@
 </template>
 
 <script lang="ts">
+import {
+  VaultSecretPicker,
+  VaultSecretPickerProvider,
+} from '@kong-ui-public/entities-vaults'
+import '@kong-ui-public/entities-vaults/dist/style.css'
 import { useAxios, useHelpers } from '@kong-ui-public/entities-shared'
 import {
   AUTOFILL_SLOT_NAME,
@@ -97,8 +102,6 @@ import {
   type PluginEntityInfo,
 } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
-import VaultSecretPicker from './VaultSecretPicker.vue'
-import VaultSecretPickerProvider from './VaultSecretPickerProvider.vue'
 
 // Must explicitly specify these as components since they are rendered dynamically
 export default defineComponent({
