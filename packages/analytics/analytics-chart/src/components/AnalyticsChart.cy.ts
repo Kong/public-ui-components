@@ -23,7 +23,7 @@ describe('<AnalyticsChart />', () => {
   beforeEach(() => {
     cy.viewport(1280, 800)
     cy.stub(composables, 'useEvaluateFeatureFlag').returns({
-      evaluateFeatureFlag: () => true,
+      evaluateFeatureFlag: () => false,
     })
   })
 
