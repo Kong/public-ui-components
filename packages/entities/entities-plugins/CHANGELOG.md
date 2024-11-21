@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.3.3...@kong-ui-public/entities-plugins@9.4.0) (2024-11-21)
+
+
+### Features
+
+* **entities-plugins:** support injection-protection plugin ([#1803](https://github.com/Kong/public-ui-components/issues/1803)) ([08d9e93](https://github.com/Kong/public-ui-components/commit/08d9e938200777f80afb81024e8413b515b24924))
+
+
+
+
+
 ## [9.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.3.2...@kong-ui-public/entities-plugins@9.3.3) (2024-11-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
