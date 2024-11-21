@@ -15,20 +15,15 @@
   </div>
 </template>
 
-<script setup lang="tsx">
-import { type PropType } from 'vue'
+<script setup lang="ts">
 import composables from '../../composables'
+import { WATERFALL_ROW_PADDING_X } from '../../constants'
 import type { Span } from '../../types'
 import SpanAttribute from './SpanAttribute.vue'
 
 const { i18n: { t } } = composables.useI18n()
 
-defineProps({
-  span: {
-    type: Object as PropType<Span>,
-    required: true,
-  },
-})
+defineProps<{ span: Span }>()
 </script>
 
 <style lang="scss" scoped>
@@ -38,28 +33,16 @@ defineProps({
   flex-direction: column;
 
   .title {
-    background-color: $kui-color-background;
-    font-size: $kui-font-size-50;
+    background-color: $kui-color-background-neutral-weakest;
+    border-bottom: 1px solid $kui-color-border-neutral-weaker;
+    font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-semibold;
-    padding: $kui-space-60 0;
-    position: sticky;
-    top: 0;
+    padding: $kui-space-60 v-bind(WATERFALL_ROW_PADDING_X);
     width: 100%;
   }
 
   .attributes {
     width: 100%;
-
-    .empty-state {
-      align-items: center;
-      background-color: $kui-color-background-neutral-weakest;
-      border-radius: $kui-border-radius-20;
-      display: flex;
-      height: 100%;
-      justify-content: center;
-      min-height: 200px;
-      width: 100%;
-    }
   }
 }
 </style>

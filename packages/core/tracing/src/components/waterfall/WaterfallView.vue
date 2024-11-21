@@ -77,7 +77,7 @@
 import { AddIcon, RemoveIcon } from '@kong/icons'
 import { provide, reactive, ref, useTemplateRef, watch, type PropType, type Ref } from 'vue'
 import composables from '../../composables'
-import { WATERFALL_SPAN_BAR_FADING_WIDTH } from '../../constants'
+import { WATERFALL_ROW_COLUMN_GAP, WATERFALL_ROW_LABEL_WIDTH, WATERFALL_ROW_PADDING_X, WATERFALL_SPAN_BAR_FADING_WIDTH } from '../../constants'
 import { WATERFALL_CONFIG, WATERFALL_ROWS_STATE, WaterfallRowsState } from '../../constants/waterfall'
 import { type SpanNode, type WaterfallConfig } from '../../types'
 import WaterfallScale from './WaterfallScale.vue'
@@ -238,17 +238,17 @@ watch(() => config.selectedSpan, (span) => {
 .waterfall {
   box-sizing: border-box;
   height: 100%;
-  overflow-y: v-bind("interaction === 'zoom' ? 'hidden' : 'scroll'");
+  overflow-y: v-bind('interaction === "zoom" ? "hidden" : "scroll"');
 
   :deep(.waterfall-row) {
     box-sizing: border-box;
-    column-gap: $kui-space-40;
+    column-gap: v-bind(WATERFALL_ROW_COLUMN_GAP);
     display: grid;
-    grid-template-columns: 400px auto;
-    padding: 0 $kui-space-40;
+    grid-template-columns: v-bind(WATERFALL_ROW_LABEL_WIDTH) auto;
+    padding: 0 v-bind(WATERFALL_ROW_PADDING_X);
     width: 100%;
 
-    &> :nth-child(2) {
+    & > :nth-child(2) {
       padding: 0 v-bind(WATERFALL_SPAN_BAR_FADING_WIDTH);
     }
   }
@@ -291,12 +291,12 @@ watch(() => config.selectedSpan, (span) => {
 
         &::after {
           background-color: $kui-color-background-neutral;
-          content: "";
+          content: '';
           height: 100%;
-          left: v-bind("`${config.viewport.left * 100}%`"); // RESERVED: Only used when zooming is enabled
+          left: v-bind('`${config.viewport.left * 100}%`'); // RESERVED: Only used when zooming is enabled
           position: absolute;
           top: 0;
-          width: calc(100% - v-bind("`${config.viewport.right * 100}%`") - v-bind("`${config.viewport.left * 100}%`")); // RESERVED: Only used when zooming is enabled
+          width: calc(100% - v-bind('`${config.viewport.right * 100}%`') - v-bind('`${config.viewport.left * 100}%`')); // RESERVED: Only used when zooming is enabled
           z-index: 10;
         }
       }
@@ -304,7 +304,7 @@ watch(() => config.selectedSpan, (span) => {
   }
 
   .waterfall-rows {
-    cursor: v-bind("rowsAreaGuideX !== undefined ? 'crosshair' : 'auto'");
+    cursor: v-bind('rowsAreaGuideX !== undefined ? "crosshair" : "crosshair"');
     font-family: $kui-font-family-code;
     overflow: hidden;
     position: relative;
@@ -316,13 +316,13 @@ watch(() => config.selectedSpan, (span) => {
 
     .guide {
       border-left: 1px dashed $kui-color-border-neutral-weak;
-      display: v-bind("rowsAreaGuideX !== undefined ? 'block' : 'none'");
+      display: v-bind('rowsAreaGuideX !== undefined ? "block" : "none"');
       height: 100%;
       left: -1px;
       pointer-events: none;
       position: absolute;
       top: 0;
-      transform: v-bind("`translateX(${rowsAreaGuideX}px)`");
+      transform: v-bind('`translateX(${rowsAreaGuideX}px)`');
       width: 0;
       z-index: 10;
     }

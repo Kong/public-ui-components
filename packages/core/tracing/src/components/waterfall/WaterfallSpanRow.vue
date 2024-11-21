@@ -40,7 +40,7 @@
           />
 
           <div class="duration">
-            {{ format(spanNode.durationNano) }}
+            {{ fmt(spanNode.durationNano) }}
           </div>
         </div>
       </div>
@@ -67,17 +67,22 @@
 import { KUI_COLOR_TEXT_WARNING, KUI_FONT_SIZE_30 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
 import { computed, inject, ref, watch, type PropType, type Ref } from 'vue'
-import composables from '../../composables'
 import { SPAN_EVENT_ATTRIBUTES, WATERFALL_CONFIG, WATERFALL_ROWS_STATE, WATERFALL_SPAN_BAR_FADING_WIDTH, WaterfallRowsState } from '../../constants'
 import { type SpanNode, type WaterfallConfig } from '../../types'
+import { getDurationFormatter } from '../../utils'
 import WaterfallSpanBar from './WaterfallSpanBar.vue'
 import WaterfallTreeControl from './WaterfallTreeControl.vue'
 import WaterfallSpacer, { SpacerType } from './WaterfallTreeSpacer.vue'
 
-const format = composables.useDurationFormatter()
+const fmt = getDurationFormatter()
 
 const config = inject<WaterfallConfig>(WATERFALL_CONFIG)!
 const rowsState = inject<Ref<WaterfallRowsState>>(WATERFALL_ROWS_STATE)!
+if (!config) {
+  throw new Error('WATERFALL_CONFIG is not provided')
+} else if (!rowsState) {
+  throw new Error('WATERFALL_ROWS_STATE is not provided')
+}
 
 const props = defineProps({
   spanNode: {
@@ -131,7 +136,7 @@ const spacerType = computed(() => {
   return lastChild.value ? SpacerType.CornerAttach : SpacerType.Attach
 })
 
-const hasException = computed(() =>{
+const hasException = computed(() => {
   if (!Array.isArray(props.spanNode.span.events)) {
     return false
   }
@@ -185,17 +190,11 @@ const handleSelect = () => {
 
     .bar-wrapper {
       &::before {
-        background: linear-gradient(to right,
-        $row-background-color 0%,
-        rgba($row-background-color, 0) 50%,
-        rgba($row-background-color, 0) 100%);
+        background: linear-gradient(to right, $row-background-color 0%, rgba($row-background-color, 0) 50%, rgba($row-background-color, 0) 100%);
       }
 
       &::after {
-        background: linear-gradient(to left,
-        $row-background-color 0%,
-        rgba($row-background-color, 0) 50%,
-        rgba($row-background-color, 0) 100%);
+        background: linear-gradient(to left, $row-background-color 0%, rgba($row-background-color, 0) 50%, rgba($row-background-color, 0) 100%);
       }
     }
   }
@@ -272,11 +271,8 @@ const handleSelect = () => {
     position: relative;
 
     &::before {
-      background: linear-gradient(to right,
-      white 0%,
-      rgba(255, 255, 255, 0) 50%,
-      rgba(255, 255, 255, 0) 100%);
-      content: "";
+      background: linear-gradient(to right, white 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0) 100%);
+      content: '';
       display: block;
       height: 100%;
       left: 0;
@@ -287,11 +283,8 @@ const handleSelect = () => {
     }
 
     &::after {
-      background: linear-gradient(to left,
-      white 0%,
-      rgba(255, 255, 255, 0) 50%,
-      rgba(255, 255, 255, 0) 100%);
-      content: "";
+      background: linear-gradient(to left, white 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0) 100%);
+      content: '';
       display: block;
       height: 100%;
       position: absolute;

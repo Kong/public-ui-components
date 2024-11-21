@@ -3,18 +3,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, type PropType } from 'vue'
+import { computed, inject } from 'vue'
 import { WATERFALL_CONFIG, WATERFALL_LEGENDS, WaterfallLegendItemKind } from '../../constants'
 import type { SpanNode, WaterfallConfig } from '../../types'
 
 const config = inject<WaterfallConfig>(WATERFALL_CONFIG)!
+if (!config) {
+  throw new Error('WATERFALL_CONFIG is not provided')
+}
 
-const props = defineProps({
-  spanNode: {
-    type: Object as PropType<SpanNode>,
-    required: true,
-  },
-})
+const props = defineProps<{
+  spanNode: SpanNode
+}>()
 
 // TODO: This is not final
 const barColor = computed(() => {

@@ -54,20 +54,20 @@ const spacerStyle = computed(() => {
     background: repeating-linear-gradient(
       90deg,
       transparent,
-      transparent calc(v-bind("`${props.size / 2}px`") - $width / 2),
+      transparent calc(v-bind('`${props.size / 2}px`') - $width / 2),
       $kui-color-background-neutral-weaker
-      calc(v-bind("`${props.size / 2}px`") - $width / 2),
+      calc(v-bind('`${props.size / 2}px`') - $width / 2),
       $kui-color-background-neutral-weaker
-      calc(v-bind("`${props.size / 2}px`") + $width / 2),
-      transparent calc(v-bind("`${props.size / 2}px`") + $width / 2),
-      transparent v-bind("`${props.size}px`")
+      calc(v-bind('`${props.size / 2}px`') + $width / 2),
+      transparent calc(v-bind('`${props.size / 2}px`') + $width / 2),
+      transparent v-bind('`${props.size}px`')
     );
   }
 
   &.attach {
     &::before {
       border-left: 1px solid $kui-color-border-neutral-weaker;
-      content: "";
+      content: '';
       height: 100%;
       left: calc(50% - 0.5px);
       position: absolute;
@@ -76,7 +76,7 @@ const spacerStyle = computed(() => {
 
     &::after {
       border-bottom: 1px solid $kui-color-border-neutral-weaker;
-      content: "";
+      content: '';
       left: 50%;
       position: absolute;
       top: calc(50% - 0.5px);
@@ -87,7 +87,7 @@ const spacerStyle = computed(() => {
   &.corner-attach {
     &::before {
       border-left: 1px solid $kui-color-border-neutral-weaker;
-      content: "";
+      content: '';
       height: 50%;
       left: calc(50% - 0.5px);
       position: absolute;
@@ -96,7 +96,7 @@ const spacerStyle = computed(() => {
 
     &::after {
       border-bottom: 1px solid $kui-color-border-neutral-weaker;
-      content: "";
+      content: '';
       left: 50%;
       position: absolute;
       top: calc(50% - 0.5px);

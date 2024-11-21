@@ -6,13 +6,13 @@
       class="scale-segment"
     >
       <div class="scale-tick-label">
-        {{ format(durationShift + tick * durationPerTick) }}
+        {{ fmt(durationShift + tick * durationPerTick) }}
       </div>
       <div
         v-if="tick === config.ticks - 2"
         class="scale-tick-label"
       >
-        {{ format(durationShift + (tick + 1) * durationPerTick) }}
+        {{ fmt(durationShift + (tick + 1) * durationPerTick) }}
       </div>
     </div>
   </div>
@@ -20,13 +20,16 @@
 
 <script setup lang="ts">
 import { computed, inject } from 'vue'
-import composables from '../../composables'
 import { WATERFALL_CONFIG } from '../../constants'
 import type { WaterfallConfig } from '../../types'
+import { getDurationFormatter } from '../../utils'
 
-const format = composables.useDurationFormatter()
+const fmt = getDurationFormatter()
 
 const config = inject<WaterfallConfig>(WATERFALL_CONFIG)!
+if (!config) {
+  throw new Error('WATERFALL_CONFIG is not provided')
+}
 
 const durationPerTick = computed(() => config.totalDurationNano * (1 - config.viewport.left - config.viewport.right) / (config.ticks - 1))
 
@@ -37,7 +40,7 @@ const durationShift = computed(() => config.totalDurationNano * config.viewport.
 <style lang="scss" scoped>
 .waterfall-scale {
   display: grid;
-  grid-template-columns: v-bind("`repeat(${(config.ticks - 1)}, 1fr)`");
+  grid-template-columns: v-bind('`repeat(${(config.ticks - 1)}, 1fr)`');
   height: 24px;
   position: relative;
 
@@ -54,7 +57,7 @@ const durationShift = computed(() => config.totalDurationNano * config.viewport.
     &::before {
       border-left: 1px solid black;
       bottom: 0;
-      content: "";
+      content: '';
       height: $tick-height;
       left: 0;
       position: absolute;
@@ -64,7 +67,7 @@ const durationShift = computed(() => config.totalDurationNano * config.viewport.
       &::after {
         border-left: 1px solid black;
         bottom: 0;
-        content: "";
+        content: '';
         height: $tick-height;
         position: absolute;
         right: 0;

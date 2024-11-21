@@ -14,8 +14,7 @@
     "span_events": {
       "exception_message": {
         "title": "Exception message"
-      },
-      "title": "Span Events"
+      }
     },
     "url": "URL"
   },

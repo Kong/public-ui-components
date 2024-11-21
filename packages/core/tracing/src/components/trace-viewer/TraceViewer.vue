@@ -35,7 +35,10 @@
       class="detail-pane"
       size="50"
     >
-      <div v-if="selectedSpan && !spanNothingToDisplay">
+      <div
+        v-if="selectedSpan && !spanNothingToDisplay"
+        class="span-details"
+      >
         <SpanEventList
           v-if="selectedSpan.span.events && selectedSpan.span.events.length > 0"
           :span="selectedSpan.span"
@@ -62,9 +65,9 @@
 
 <script setup lang="ts">
 import { Pane, Splitpanes } from '@kong/splitpanes'
-import { computed, provide, reactive, shallowRef, type PropType } from 'vue'
+import { computed, provide, reactive, shallowRef } from 'vue'
 import composables from '../../composables'
-import { TRACE_VIEWER_CONFIG } from '../../constants'
+import { TRACE_VIEWER_CONFIG, WATERFALL_ROW_COLUMN_GAP, WATERFALL_ROW_LABEL_WIDTH, WATERFALL_ROW_PADDING_X, WATERFALL_SPAN_BAR_FADING_WIDTH } from '../../constants'
 import type { SpanNode, TraceViewerConfig } from '../../types'
 import WaterfallLegend from '../waterfall/WaterfallLegend.vue'
 import WaterfallView from '../waterfall/WaterfallView.vue'
@@ -75,20 +78,11 @@ import '@kong/splitpanes/dist/splitpanes.css'
 
 const { i18n: { t } } = composables.useI18n()
 
-const props = defineProps({
-  config: {
-    type: Object as PropType<TraceViewerConfig>,
-    required: true,
-  },
-  rootSpan: {
-    type: Object as PropType<SpanNode>,
-    required: true,
-  },
-  url: {
-    type: String,
-    required: true,
-  },
-})
+const props = defineProps<{
+  config: TraceViewerConfig
+  rootSpan: SpanNode
+  url: string
+}>()
 
 // Provide the config to all children components
 provide<TraceViewerConfig | undefined>(TRACE_VIEWER_CONFIG, reactive(props.config))
@@ -117,6 +111,8 @@ const spanNothingToDisplay = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:math';
+
 .trace-viewer {
   box-sizing: border-box;
   display: flex;
@@ -151,7 +147,7 @@ const spanNothingToDisplay = computed(() => {
 
     &::after {
       background-color: $kui-color-background-neutral-weaker;
-      border-radius: $resize-handle-height / 2;
+      border-radius: math.div($resize-handle-height, 2);
       content: '';
       height: $resize-handle-height;
       transition: background-color 0.2s ease-in-out;
@@ -159,9 +155,12 @@ const spanNothingToDisplay = computed(() => {
     }
 
     &:hover {
-      &::before, &::after {
+
+      &::before,
+      &::after {
         background-color: $kui-color-background-neutral-weak;
       }
+
       &::before {
         transform: scaleY(1);
       }
@@ -209,12 +208,35 @@ const spanNothingToDisplay = computed(() => {
     box-sizing: border-box;
     overflow-y: scroll;
 
+    .span-details {
+      display: flex;
+      flex-direction: column;
+      gap: $kui-space-60;
+      margin: $kui-space-20 0;
+    }
+
     .empty-state {
       align-items: center;
       display: flex;
       height: 100%;
       justify-content: center;
       width: 100%;
+    }
+
+    :deep(.config-card-details-row) {
+      column-gap: v-bind(WATERFALL_ROW_COLUMN_GAP);
+      display: grid;
+      grid-template-columns: v-bind(WATERFALL_ROW_LABEL_WIDTH) auto;
+      padding: $kui-space-60 v-bind(WATERFALL_ROW_PADDING_X);
+
+      .config-card-details-label {
+        width: 100%;
+      }
+
+      .config-card-details-value {
+        padding: 0 v-bind(WATERFALL_SPAN_BAR_FADING_WIDTH);
+        width: 100%;
+      }
     }
   }
 }
