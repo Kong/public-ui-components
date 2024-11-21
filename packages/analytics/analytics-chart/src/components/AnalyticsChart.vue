@@ -3,7 +3,7 @@
     class="analytics-chart-shell"
   >
     <div
-      v-if="hasValidChartData && resultSetTruncated && maxEntitiesShown || (!hasKebabMenuAccess &&allowCsvExport) || props.chartTitle"
+      v-if="hasValidChartData && resultSetTruncated && maxEntitiesShown || (!hasKebabMenuAccess && (allowCsvExport || props.chartTitle))"
       class="chart-header"
     >
       <div
@@ -32,7 +32,7 @@
         </KTooltip>
       </div>
       <div
-        v-if="allowCsvExport && hasValidChartData"
+        v-if="!hasKebabMenuAccess && allowCsvExport && hasValidChartData"
         class="chart-export-button"
       >
         <CsvExportButton
@@ -129,11 +129,6 @@ const props = defineProps({
     required: false,
     default: false,
   },
-  goToExplore: {
-    type: String,
-    required: false,
-    default: '',
-  },
   chartData: {
     type: Object as PropType<ExploreResultV4>,
     required: true,
@@ -188,11 +183,6 @@ const props = defineProps({
     default: true,
   },
   timeseriesZoom: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-  showMenu: {
     type: Boolean,
     required: false,
     default: false,
@@ -387,13 +377,6 @@ provide('legendPosition', toRef(props, 'legendPosition'))
   height: 100%;
   position: relative;
   width: 100%;
-
-  &.is-hovering {
-    .chart-header :deep(.popover-trigger-wrapper) {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
 
   .analytics-chart-parent {
     height: inherit;

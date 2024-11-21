@@ -93,7 +93,7 @@ import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 import TopNTableRenderer from './TopNTableRenderer.vue'
 import composables from '../composables'
-import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
+import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40, KUI_SPACE_30 } from '@kong/design-tokens'
 import { MoreIcon } from '@kong/icons'
 import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
@@ -191,7 +191,7 @@ const exportCsv = () => {
 <style lang="scss" scoped>
 .tile-boundary {
   height: v-bind('`${height}px`');
-  padding: var(--kui-space-30, $kui-space-30);
+  padding: v-bind('hasKebabMenuAccess ? KUI_SPACE_30 : 0');
 
   .tile-header {
     align-items: center;

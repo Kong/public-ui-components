@@ -12,7 +12,7 @@
         :allow-csv-export="chartOptions.allowCsvExport"
         :chart-data="data"
         :chart-options="options"
-        :chart-title="!hasKebabMenuAccess &&chartOptions.chartTitle"
+        :chart-title="!hasKebabMenuAccess && chartOptions.chartTitle || ''"
         :go-to-explore="exploreLink"
         legend-position="bottom"
         :show-menu="context.editable"
