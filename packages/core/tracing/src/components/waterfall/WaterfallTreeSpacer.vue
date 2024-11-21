@@ -55,10 +55,10 @@ const spacerStyle = computed(() => {
       90deg,
       transparent,
       transparent calc(v-bind("`${props.size / 2}px`") - $width / 2),
-      $kui-color-border-neutral-weaker
-        calc(v-bind("`${props.size / 2}px`") - $width / 2),
-      $kui-color-border-neutral-weaker
-        calc(v-bind("`${props.size / 2}px`") + $width / 2),
+      $kui-color-background-neutral-weaker
+      calc(v-bind("`${props.size / 2}px`") - $width / 2),
+      $kui-color-background-neutral-weaker
+      calc(v-bind("`${props.size / 2}px`") + $width / 2),
       transparent calc(v-bind("`${props.size / 2}px`") + $width / 2),
       transparent v-bind("`${props.size}px`")
     );
