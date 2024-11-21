@@ -762,6 +762,13 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.service-protection.name',
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE],
   },
+  'injection-protection': {
+    descriptionKey: 'plugins.meta.injection-protection.description',
+    group: PluginGroup.SECURITY,
+    isEnterprise: true,
+    nameKey: 'plugins.meta.injection-protection.name',
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+  },
 }
 
 /**
