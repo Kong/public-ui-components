@@ -254,52 +254,6 @@ describe('<AnalyticsChart />', () => {
         chartTitle: 'Requests',
       },
     })
-
-    cy.getTestId('chart-action-menu').should('not.exist')
-  })
-
-  it('renders the kebab menu with only the "Jump to Explore" link if no data is provided', () => {
-    cy.mount(AnalyticsChart, {
-      props: {
-        allowCsvExport: true,
-        goToExplore: 'https://cloud.konghq.tech/us/analytics/explorer',
-        chartData: emptyExploreResult,
-        chartOptions: {
-          type: 'timeseries_line',
-        },
-        chartTitle: 'Requests',
-      },
-    })
-
-    cy.getTestId('chart-action-menu').should('exist')
-
-    // eslint-disable-next-line cypress/unsafe-to-chain-command
-    cy.getTestId('chart-action-menu').click().then(() => {
-      cy.getTestId('chart-jump-to-explore').should('exist')
-      cy.getTestId('csv-export-button').should('not.exist')
-    })
-  })
-
-  it('does not render an "Export" link in the kebab actions if chart data is present but prop is set to `false`', () => {
-    cy.mount(AnalyticsChart, {
-      props: {
-        allowCsvExport: false,
-        goToExplore: 'https://cloud.konghq.tech/us/analytics/explorer',
-        chartData: exploreResult,
-        chartOptions: {
-          type: 'timeseries_line',
-        },
-        chartTitle: 'Requests',
-      },
-    })
-
-    cy.getTestId('chart-action-menu').should('exist')
-
-    // eslint-disable-next-line cypress/unsafe-to-chain-command
-    cy.getTestId('chart-action-menu').click().then(() => {
-      cy.getTestId('chart-jump-to-explore').should('exist')
-      cy.getTestId('csv-export-modal').should('not.exist')
-    })
   })
 
   it('Renders an "Export" button, and tabulated data in the modal preview', () => {
@@ -314,19 +268,10 @@ describe('<AnalyticsChart />', () => {
       },
     })
 
-    cy.getTestId('chart-action-menu').should('exist')
-
     cy.get('.chart-header').trigger('mouseenter')
-    cy.getTestId('kebab-action-menu').should('be.visible')
-
-    // eslint-disable-next-line cypress/unsafe-to-chain-command
-    cy.getTestId('kebab-action-menu').click().then(() => {
-      cy.getTestId('chart-jump-to-explore').should('not.exist')
-
-      cy.getTestId('csv-export-button').click()
-      cy.getTestId('csv-export-modal').should('exist')
-      cy.get('.modal-content .vitals-table').should('exist')
-    })
+    cy.getTestId('csv-export-button').click()
+    cy.getTestId('csv-export-modal').should('exist')
+    cy.get('.modal-content .vitals-table').should('exist')
   })
 
   it('multi dimension bar charts have "tooltipContext"', () => {
