@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.7.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.33...@kong-ui-public/forms@4.7.34) (2024-11-21)
+
+
+### Bug Fixes
+
+* **rla-form:** add space between vfgs in rla form ([#1804](https://github.com/Kong/public-ui-components/issues/1804)) ([36467c7](https://github.com/Kong/public-ui-components/commit/36467c7525bde2c0e19a6f0a6f392a4d29ea2b3b))
+
+
+
+
+
 ## [4.7.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.32...@kong-ui-public/forms@4.7.33) (2024-11-18)
 
 
