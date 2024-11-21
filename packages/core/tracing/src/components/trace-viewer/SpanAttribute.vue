@@ -26,9 +26,9 @@
 <script setup lang="ts">
 import { ConfigCardItem, ConfigurationSchemaType, EntityLink, type EntityLinkData } from '@kong-ui-public/entities-shared'
 import type { IKeyValue } from '@opentelemetry/otlp-transformer'
-import { computed, inject, onWatcherCleanup, ref, shallowRef, watchEffect } from 'vue'
+import { computed, inject, onWatcherCleanup, shallowRef, watchEffect } from 'vue'
 import { SPAN_ATTRIBUTE_VALUE_UNKNOWN, SPAN_ATTRIBUTES, TRACE_VIEWER_CONFIG } from '../../constants'
-import type { Span, TraceViewerConfig } from '../../types'
+import type { EntityRequest, Span, TraceViewerConfig } from '../../types'
 import { getPhaseAndPlugin, unwrapAnyValue } from '../../utils'
 
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -81,44 +81,61 @@ const itemType = computed(() => {
   return ConfigurationSchemaType.Text
 })
 
-const entityLink = ref<string | undefined>(undefined)
-const entityLinkData = shallowRef<EntityLinkData | undefined>(undefined)
-
-watchEffect(() => {
-  let entity: { entity: string; entityId: string } | undefined
-
+// EntityRequest is used to ask for information about an entity from the host app
+const entityRequest = computed(() => {
   const value = props.keyValue.value.stringValue
-  if (value && value !== SPAN_ATTRIBUTE_VALUE_UNKNOWN) {
-    const matchedEntity = ATTRIBUTE_KEY_TO_ENTITY[props.keyValue.key]
-    if (matchedEntity) {
-      entity = {
-        entity: matchedEntity,
-        entityId: value,
-      }
+  if (!value || value === SPAN_ATTRIBUTE_VALUE_UNKNOWN) {
+    return undefined
+  }
+
+  const entity = ATTRIBUTE_KEY_TO_ENTITY[props.keyValue.key]
+  if (!entity) {
+    return undefined
+  }
+
+  const request: EntityRequest = {
+    entity: entity,
+    entityId: value,
+  }
+
+  // Check if this is a plugin ID attribute
+  if (props.keyValue.key === SPAN_ATTRIBUTES.KONG_PLUGIN_ID.name) {
+    // We will need to parse the plugin name from the span name
+    request.plugin = getPhaseAndPlugin(props.span.name)?.[1]
+    if (!request.plugin) {
+      // Missing plugin name
+      console.warn(`Failed to parse plugin name from span name "${props.span.name}"`)
+      return undefined
     }
   }
 
-  if (!entity) {
-    entityLink.value = undefined
-    entityLinkData.value = undefined
+  return request
+})
+
+const entityLink = computed(() => {
+  if (!entityRequest.value) {
+    return undefined
+  }
+
+  // When `buildEntityLink` is not provided, we will show copyable UUID instead
+  return config.buildEntityLink?.(entityRequest.value)
+})
+
+const entityLinkData = shallowRef<EntityLinkData | undefined>(undefined)
+
+watchEffect(async () => {
+  if (!entityRequest.value) {
     return
   }
 
-  let plugin: string | undefined
-  if (props.keyValue.key === SPAN_ATTRIBUTES.KONG_PLUGIN_ID.name) {
-    // We will need to parse the plugin name from the span name
-    plugin = getPhaseAndPlugin(props.span.name)?.[1]
-  }
-
-  // When `buildEntityLink` is not provided, we will fallback to show the UUID instead
-  entityLink.value = config.buildEntityLink?.(entity.entity, entity.entityId, plugin)
+  // Preload with the entity request
   entityLinkData.value = {
-    id: entity.entityId,
-    label: entity.entityId, // Will be populated asynchronously
+    id: entityRequest.value.entityId,
+    label: entityRequest.value.entityId,
   }
 
   const controller = new AbortController()
-  config.getEntityLinkData?.(entity.entity, entity.entityId, controller.signal)
+  config.getEntityLinkData?.(entityRequest.value, controller.signal)
     .then((data) => {
       entityLinkData.value = data
     })

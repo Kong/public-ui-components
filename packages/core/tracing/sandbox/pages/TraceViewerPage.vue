@@ -40,15 +40,15 @@ const spanRoots = computed(() => buildSpanTrees(rawSpans))
 const slideoutVisible = ref(false)
 
 const config: TraceViewerConfig = {
-  buildEntityLink: (entity, entityId, plugin) => {
-    const entityQuery = plugin ? `${plugin}/${entityId}` : entityId
-    return `https://cloud.konghq.tech/us/gateway-manager/${controlPlaneId}/${entity}/${entityQuery}`
+  buildEntityLink: (request) => {
+    const entityQuery = request.plugin ? `${request.plugin}/${request.entityId}` : request.entityId
+    return `https://cloud.konghq.tech/us/gateway-manager/${controlPlaneId}/${request.entity}/${entityQuery}`
   },
-  getEntityLinkData: async (entity, entityId) => {
+  getEntityLinkData: async (request) => {
     await new Promise(resolve => setTimeout(resolve, 1000))
     return {
-      id: entityId,
-      label: `${entity} ${entityId}`,
+      id: request.entityId,
+      label: `${request.entity} ${request.entityId}`,
     }
   },
 }

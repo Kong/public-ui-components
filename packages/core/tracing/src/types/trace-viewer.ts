@@ -1,5 +1,11 @@
 import type { EntityLinkData } from '@kong-ui-public/entities-shared'
 
+export interface EntityRequest {
+  entity: string
+  entityId: string
+  plugin?: string
+}
+
 export interface TraceViewerConfig {
   /**
    * A function that builds the URL to the entity page in the UI.
@@ -9,7 +15,7 @@ export interface TraceViewerConfig {
    * @param plugin plugin name; only available when entity is 'plugins' (e.g. 'basic-auth')
    * @returns the URL to the entity page in the UI
    */
-  buildEntityLink?: (entity: string, entityId: string, plugin?: string) => string
+  buildEntityLink?: (request: EntityRequest) => string
   /**
    * A function that fetches the entity record and return the EntityLinkData for the link display.
    *
@@ -18,5 +24,5 @@ export interface TraceViewerConfig {
    * @param abortSignal an AbortSignal object to abort the request
    * @returns the EntityLinkData object
    */
-  getEntityLinkData?: (entity: string, entityId: string, abortSignal: AbortSignal) => Promise<EntityLinkData>
+  getEntityLinkData?: (entityRequest: EntityRequest, abortSignal: AbortSignal) => Promise<EntityLinkData>
 }
