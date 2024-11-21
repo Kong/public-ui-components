@@ -126,6 +126,24 @@
       "connection_is_proxied": {
         "label": "Connection is proxied",
         "tooltip": "If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address."
+      },
+      "cluster_nodes": {
+        "title": "Cluster nodes",
+        "tooltip": "This is a really long tooltip. Hopefully we won't have anything this long but we might. I wonder how it handles long inputs",
+        "add_button": "New item"
+      },
+      "sentinel_nodes": {
+        "title": "Sentinel nodes",
+        "tooltip": "Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element.",
+        "add_button": "New item"
+      },
+      "sentinel_node_host": {
+        "label": "Host",
+        "tooltip": "A string representing a host name, such as example.com."
+      },
+      "sentinel_node_port": {
+        "label": "Port",
+        "tooltip": "An integer representing a port number between 0 and 65535, inclusive."
       }
     },
     "options": {
@@ -137,12 +155,12 @@
         "enterprise": "Enterprise",
         "suffix_open_source": " (Open Source)",
         "suffix_enterprise": " (Enterprise)"
+      },
+      "sentinel_role": {
+        "master": "master",
+        "slave": "slave",
+        "any": "any"
       }
-    },
-    "cluster_nodes": {
-      "title": "Cluster nodes",
-      "tooltip": "This is a really long tooltip. Hopefully we won't have anything this long but we might. I wonder how it handles long inputs",
-      "add_button": "New item"
     }
   }
 }
