@@ -1,10 +1,10 @@
 <template>
   <div>
     <KLabel
-      :info="t('form.fields.cluster_nodes.tooltip')"
+      :info="t('form.fields.sentinel_nodes.tooltip')"
       :tooltip-attributes="{ maxWidth: '400' }"
     >
-      {{ t('form.fields.cluster_nodes.title') }}
+      {{ t('form.fields.sentinel_nodes.title') }}
     </KLabel>
     <div>
       <FieldArrayCardContainer
@@ -16,17 +16,17 @@
           class="cluster-node-items"
         >
           <KInput
-            :label="t('form.fields.cluster_node_ip.label')"
+            :label="t('form.fields.sentinel_node_host.label')"
             :label-attributes="{
-              info: t('form.fields.cluster_node_ip.tooltip'),
+              info: t('form.fields.sentinel_node_host.tooltip'),
               tooltipAttributes: { maxWidth: '400' },
             }"
             required
           />
           <KInput
-            :label="t('form.fields.cluster_node_port.label')"
+            :label="t('form.fields.sentinel_node_port.label')"
             :label-attributes="{
-              info: t('form.fields.cluster_node_port.tooltip'),
+              info: t('form.fields.sentinel_node_port.tooltip'),
               tooltipAttributes: { maxWidth: '400' },
             }"
             type="number"
@@ -38,7 +38,7 @@
         @click="addItem"
       >
         <AddCircleIcon />
-        <span>{{ t('form.fields.cluster_nodes.add_button') }}</span>
+        <span>{{ t('form.fields.sentinel_nodes.add_button') }}</span>
       </KButton>
     </div>
   </div>

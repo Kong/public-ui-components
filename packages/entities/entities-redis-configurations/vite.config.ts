@@ -1,4 +1,4 @@
-import sharedViteConfig, { sanitizePackageName } from '../../../vite.config.shared'
+import sharedViteConfig, { getApiProxies, sanitizePackageName } from '../../../vite.config.shared'
 import { resolve } from 'path'
 import { defineConfig, mergeConfig } from 'vite'
 
@@ -15,6 +15,12 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       name: `kong-ui-public-${sanitizedPackageName}`,
       entry: resolve(__dirname, './src/index.ts'),
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
+    },
+  },
+  server: {
+    proxy: {
+      // Add the API proxies to inject the Authorization header
+      ...getApiProxies(),
     },
   },
 }))
