@@ -195,7 +195,6 @@ const exportCsv = () => {
 
   .tile-header {
     align-items: center;
-    // border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     display: flex;
     justify-content: space-between;
     margin-bottom: var(--kui-space-30, $kui-space-30);
