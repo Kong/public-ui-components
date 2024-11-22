@@ -1,7 +1,6 @@
 <template>
   <svg
     class="waterfall-tree-control"
-    :style="svgStyle"
     viewBox="0 0 100 100"
     xmlns="http://www.w3.org/2000/svg"
   >
@@ -14,9 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-
-const props = defineProps({
+defineProps({
   expanded: {
     type: Boolean,
     default: false,
@@ -31,21 +28,19 @@ const props = defineProps({
     validator: (value: number) => value > 0,
   },
 })
-
-const svgStyle = computed(() => ({
-  width: `${props.size}px`,
-  height: '100%',
-  minWidth: `${props.size}px`,
-  minHeight: `${props.size}px`,
-  transform: `rotate(${!props.expanded ? -90 : 0}deg)`,
-  transition: 'transform 0.2s ease-in-out',
-}))
 </script>
 
 <style lang="scss" scoped>
 .waterfall-tree-control {
+  cursor: pointer;
   fill: $kui-color-text-neutral-weak;
   flex-shrink: 0;
+  height: 100%;
+  min-height: v-bind('`${size}px`');
+  min-width: v-bind('`${size}px`');
+  transform: v-bind('`rotate(${!expanded ? -90 : 0}deg)`');
+  transition: transform 0.2s ease-in-out;
+  width: v-bind('`${size}px`');
 
   .control {
     cursor: pointer;

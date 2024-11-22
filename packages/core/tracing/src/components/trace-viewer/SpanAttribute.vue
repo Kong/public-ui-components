@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { ConfigCardItem, ConfigurationSchemaType, EntityLink, type EntityLinkData } from '@kong-ui-public/entities-shared'
 import type { IKeyValue } from '@opentelemetry/otlp-transformer'
-import { computed, inject, onWatcherCleanup, shallowRef, watchEffect } from 'vue'
+import { computed, inject, onWatcherCleanup, shallowRef, watch } from 'vue'
 import { SPAN_ATTRIBUTE_VALUE_UNKNOWN, SPAN_ATTRIBUTES, TRACE_VIEWER_CONFIG } from '../../constants'
 import type { EntityRequest, Span, TraceViewerConfig } from '../../types'
 import { getPhaseAndPlugin, unwrapAnyValue } from '../../utils'
@@ -117,32 +117,46 @@ const entityLink = computed(() => {
     return undefined
   }
 
-  // When `buildEntityLink` is not provided, we will show copyable UUID instead
+  // We will show copyable UUID instead when `entityLink` is `undefined`
   return config.buildEntityLink?.(entityRequest.value)
 })
 
 const entityLinkData = shallowRef<EntityLinkData | undefined>(undefined)
 
-watchEffect(async () => {
-  if (!entityRequest.value) {
+// Get the data for the entity link, asynchronously
+watch([() => config.getEntityLinkData, entityRequest], async ([getEntityLinkData, request]) => {
+  if (!request) {
     return
   }
 
-  // Preload with the entity request
+  // Set defaults
   entityLinkData.value = {
-    id: entityRequest.value.entityId,
-    label: entityRequest.value.entityId,
+    id: request.entityId,
+    label: request.entityId,
+  }
+
+  if (!getEntityLinkData) {
+    return
   }
 
   const controller = new AbortController()
-  config.getEntityLinkData?.(entityRequest.value, controller.signal)
-    .then((data) => {
-      entityLinkData.value = data
-    })
 
   onWatcherCleanup(() => {
     // Abort the previous fetch when applicable
     controller.abort()
-  })
+  }, true)
+
+  // The host app MUST handle exceptions inside `getEntityLinkData`.
+  // In case these exceptions are thrown, we will catch them here and log them.
+  try {
+    const data = await getEntityLinkData(request, controller.signal)
+    if (data) {
+      // Only update the link data when it is truthy
+      entityLinkData.value = data
+    }
+    // Do not update the link data when it is falsy
+  } catch (e) {
+    console.warn('The host app MUST handle exceptions in `getEntityLinkData` instead of throwing them here:', e)
+  }
 })
 </script>

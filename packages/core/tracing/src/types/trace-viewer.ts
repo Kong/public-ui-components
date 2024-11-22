@@ -1,8 +1,21 @@
 import type { EntityLinkData } from '@kong-ui-public/entities-shared'
 
+/**
+ * EntityRequest is used to fetch the link and data for an entity in the host app.
+ */
 export interface EntityRequest {
+  /**
+   * The name of the entity type in plural form  (e.g., 'services', 'routes', 'consumers').
+   */
   entity: string
+  /**
+   * The ID of the entity.
+   */
   entityId: string
+  /**
+   * The name of the plugin type (e.g., 'basic-auth').
+   * This field is only available for entities of the 'plugins' type.
+   */
   plugin?: string
 }
 
@@ -10,19 +23,22 @@ export interface TraceViewerConfig {
   /**
    * A function that builds the URL to the entity page in the UI.
    *
-   * @param entity entity type (e.g. 'services')
-   * @param entityId entity ID
-   * @param plugin plugin name; only available when entity is 'plugins' (e.g. 'basic-auth')
-   * @returns the URL to the entity page in the UI
+   * The host app **MUST** handle exceptions during the operation and return `undefined` if some error
+   * occurred. Ideally, the host SHOULD notify the user (e.g., with a toast) about the condition.
+   *
+   * @param entityRequest an EntityRequest object
+   * @returns a URL as a string or `undefined`
    */
-  buildEntityLink?: (request: EntityRequest) => string
+  buildEntityLink?: (request: EntityRequest) => string | undefined
   /**
    * A function that fetches the entity record and return the EntityLinkData for the link display.
    *
-   * @param entity entity type (e.g. 'services')
-   * @param entityId entity ID
+   * The host app **MUST** handle exceptions during the operation and return `undefined` if some error
+   * occurred. Ideally, the host SHOULD notify the user (e.g., with a toast) about the condition.
+   *
+   * @param entityRequest an EntityRequest object
    * @param abortSignal an AbortSignal object to abort the request
-   * @returns the EntityLinkData object
+   * @returns an EntityLinkData object or `undefined`
    */
-  getEntityLinkData?: (entityRequest: EntityRequest, abortSignal: AbortSignal) => Promise<EntityLinkData>
+  getEntityLinkData?: (entityRequest: EntityRequest, abortSignal: AbortSignal) => Promise<EntityLinkData | undefined>
 }
