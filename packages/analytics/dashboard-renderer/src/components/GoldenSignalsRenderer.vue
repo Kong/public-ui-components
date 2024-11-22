@@ -74,19 +74,15 @@ const options = computed<ProviderProps>(() => {
 
 <style scoped lang="scss">
 .metric-card-tile-wrapper {
-  align-items: center;
-  display: flex;
-  height: 75%;
-  width: 100%;
-
   @media (min-width: ($kui-breakpoint-phablet - 1px)) {
     align-items: center;
     display: flex;
-    max-height: 100%;
+    height: v-bind('hasKebabMenuAccess ? "90%" : "100%"');;
   }
 
   :deep(.kong-ui-public-metric-card-container) {
-    height: 100%;
+    height: v-bind('hasKebabMenuAccess ? "auto" : "100%"');
+    max-height: v-bind('hasKebabMenuAccess ? "100%" : "none"');
 
     .metricscard {
       @media (min-width: ($kui-breakpoint-phablet - 1px)) {
