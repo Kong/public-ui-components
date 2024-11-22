@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.4.13...@kong-ui-public/analytics-chart@5.5.0) (2024-11-22)
+
+
+### Features
+
+* new dashboard tile header ([#1802](https://github.com/Kong/public-ui-components/issues/1802)) ([811423a](https://github.com/Kong/public-ui-components/commit/811423a36cc28ea6623ffbf7779bd9fdde780e7a))
+
+
+
+
+
 ## [5.4.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.4.12...@kong-ui-public/analytics-chart@5.4.13) (2024-11-19)
 
 

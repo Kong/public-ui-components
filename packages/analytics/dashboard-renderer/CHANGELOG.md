@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.30.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.29.2...@kong-ui-public/dashboard-renderer@0.30.0) (2024-11-22)
+
+
+### Features
+
+* new dashboard tile header ([#1802](https://github.com/Kong/public-ui-components/issues/1802)) ([811423a](https://github.com/Kong/public-ui-components/commit/811423a36cc28ea6623ffbf7779bd9fdde780e7a))
+
+
+
+
+
 ## [0.29.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.29.1...@kong-ui-public/dashboard-renderer@0.29.2) (2024-11-20)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
