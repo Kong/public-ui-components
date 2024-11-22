@@ -7,6 +7,7 @@
       class="chart-header"
     >
       <div
+        v-if="chartTitle"
         class="chart-title"
         :title="chartTitle"
       >
@@ -396,11 +397,6 @@ provide('legendPosition', toRef(props, 'legendPosition'))
     right: 0;
     width: 100%;
     z-index: 999;
-
-    &:hover :deep(.popover-trigger-wrapper) {
-      opacity: 1;
-      visibility: visible;
-    }
 
     .chart-header-icons-wrapper {
       display: flex;

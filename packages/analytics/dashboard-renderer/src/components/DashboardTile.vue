@@ -57,7 +57,7 @@
         </template>
       </KDropdown>
       <div
-        v-else-if="'description' in definition.chart && showDescriptionInHeader"
+        v-else-if="'description' in definition.chart"
         class="header-description"
       >
         {{ definition.chart.description }}
@@ -93,7 +93,7 @@ import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 import TopNTableRenderer from './TopNTableRenderer.vue'
 import composables from '../composables'
-import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40, KUI_SPACE_30 } from '@kong/design-tokens'
+import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon } from '@kong/icons'
 import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
@@ -142,7 +142,6 @@ const exploreLink = computed(() => {
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 const canShowKebabMenu = computed(() => hasKebabMenuAccess && !['golden_signals', 'top_n', 'gauge'].includes(props.definition.chart.type))
-const showDescriptionInHeader = computed(() => ['top_n', 'golden_signals'].includes(props.definition.chart.type))
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
@@ -191,7 +190,6 @@ const exportCsv = () => {
 <style lang="scss" scoped>
 .tile-boundary {
   height: v-bind('`${height}px`');
-  padding: v-bind('hasKebabMenuAccess ? KUI_SPACE_30 : 0');
 
   .tile-header {
     align-items: center;
