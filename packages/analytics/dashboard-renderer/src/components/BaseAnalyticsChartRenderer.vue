@@ -5,13 +5,14 @@
     :query="query"
     :query-ready="queryReady"
     :refresh-counter="refreshCounter"
+    @chart-data="onChartData"
   >
     <div class="analytics-chart">
       <AnalyticsChart
         :allow-csv-export="chartOptions.allowCsvExport"
         :chart-data="data"
         :chart-options="options"
-        :chart-title="chartOptions.chartTitle"
+        :chart-title="!hasKebabMenuAccess && chartOptions.chartTitle || ''"
         :go-to-explore="exploreLink"
         legend-position="bottom"
         :show-menu="context.editable"
@@ -40,14 +41,18 @@ import type { AnalyticsChartOptions } from '@kong-ui-public/analytics-chart'
 import { AnalyticsChart } from '@kong-ui-public/analytics-chart'
 import composables from '../composables'
 import { INJECT_QUERY_PROVIDER } from '../constants'
-import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 
 const props = defineProps<RendererProps<any> & { extraProps?: Record<string, any> }>()
 const emit = defineEmits<{
   (e: 'edit-tile'): void
+  (e: 'chart-data', chartData: ExploreResultV4): void
 }>()
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const { i18n } = composables.useI18n()
+const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
+
+const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
 
 const options = computed((): AnalyticsChartOptions => ({
   type: props.chartOptions.type,
@@ -74,6 +79,10 @@ const exploreLink = computed(() => {
 
 const editTile = () => {
   emit('edit-tile')
+}
+
+const onChartData = (data: ExploreResultV4) => {
+  emit('chart-data', data)
 }
 </script>
 

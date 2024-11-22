@@ -30,7 +30,7 @@
  * on the third step to ensure that the type is correctly inferred as "not undefined".
  */
 
-import { computed, inject, onUnmounted, ref } from 'vue'
+import { computed, inject, onUnmounted, ref, watch } from 'vue'
 import useSWRV from 'swrv'
 import { useSwrvState } from '@kong-ui-public/core'
 import composables from '../composables'
@@ -38,7 +38,7 @@ import {
   type AllFilters,
   type AnalyticsBridge,
   type DatasourceAwareQuery, type ExploreFilter,
-  type ExploreQuery, type FilterTypeMap, type QueryDatasource, stripUnknownFilters,
+  type ExploreQuery, type ExploreResultV4, type FilterTypeMap, type QueryDatasource, stripUnknownFilters,
 } from '@kong-ui-public/analytics-utilities'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal, ValidDashboardQuery } from '../types'
@@ -50,7 +50,10 @@ const props = defineProps<{
   refreshCounter: number
 }>()
 
-const emit = defineEmits(['queryComplete'])
+const emit = defineEmits<{
+  (e: 'chart-data', chartData: ExploreResultV4): void,
+  (e: 'queryComplete'): void
+}>()
 
 const { i18n } = composables.useI18n()
 
@@ -135,5 +138,11 @@ const { state, swrvState: STATE } = useSwrvState(v4Data, error, isValidating)
 const errorMessage = ref<string | null>(null)
 const hasError = computed(() => state.value === STATE.ERROR || !!errorMessage.value)
 const isLoading = computed(() => !props.queryReady || [STATE.PENDING, STATE.VALIDATING, STATE.VALIDATING_HAS_DATA].includes(state.value))
+
+watch(v4Data, (data) => {
+  if (data) {
+    emit('chart-data', data)
+  }
+})
 
 </script>

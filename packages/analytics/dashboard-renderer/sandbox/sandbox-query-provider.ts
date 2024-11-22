@@ -13,7 +13,7 @@ const delayedResponse = <T>(response: T): Promise<T> => {
 
 const queryFn = async (query: ExploreQuery): Promise<ExploreResultV4> => {
   console.log('Querying data:', query)
-  if (query.dimensions && query.dimensions.findIndex(d => d === 'time') > -1) {
+  if (query.dimensions && query.dimensions.includes('time')) {
     return await delayedResponse(
       generateSingleMetricTimeSeriesData(
         { name: 'requests', unit: 'count' },

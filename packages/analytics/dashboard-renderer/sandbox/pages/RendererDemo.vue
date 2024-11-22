@@ -162,7 +162,6 @@ const dashboardConfig: DashboardConfig = {
     {
       definition: {
         chart: {
-          chartTitle: 'Timeseries line chart of mock data',
           type: 'timeseries_line',
         },
         query: {

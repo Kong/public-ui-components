@@ -234,9 +234,8 @@ const getValue = (record: AnalyticsExploreRecord): string => {
 
 .kong-ui-public-top-n-table {
   border: none !important;
-  height: 100%;
+  max-height: 100%;
   padding: 0 !important;
-
   .top-n-card-description {
     color: $kui-color-text-neutral;
     font-size: $kui-font-size-20;
