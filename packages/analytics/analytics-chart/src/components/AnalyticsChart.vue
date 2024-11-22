@@ -14,7 +14,7 @@
         {{ chartTitle }}
       </div>
       <div
-        v-if="resultSetTruncated && maxEntitiesShown"
+        v-if="hasValidChartData && resultSetTruncated && maxEntitiesShown"
         class="chart-header-icons-wrapper"
       >
         <KTooltip
