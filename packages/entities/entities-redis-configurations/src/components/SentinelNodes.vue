@@ -8,14 +8,13 @@
     </KLabel>
     <div>
       <FieldArrayCardContainer
-        v-for="(item, index) of items"
-        :key="`${index}`"
-        @remove-item="items.splice(index, 1)"
+        v-for="(node, index) of nodes"
+        :key="node.id"
+        @remove-item="removeItem(index)"
       >
-        <div
-          class="cluster-node-items"
-        >
+        <div class="sentinel-node-items">
           <KInput
+            v-model.trim="node.host"
             :label="t('form.fields.sentinel_node_host.label')"
             :label-attributes="{
               info: t('form.fields.sentinel_node_host.tooltip'),
@@ -24,6 +23,7 @@
             required
           />
           <KInput
+            v-model="node.port"
             :label="t('form.fields.sentinel_node_port.label')"
             :label-attributes="{
               info: t('form.fields.sentinel_node_port.tooltip'),
@@ -45,25 +45,28 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import { AddCircleIcon } from '@kong/icons'
 
 import FieldArrayCardContainer from './FieldArrayCardContainer.vue'
 import composables from '../composables'
+import type { Identifiable, SentinelNode } from '../types'
+import { genDefaultSentinelNode } from '../helpers'
+
+const nodes = defineModel<Identifiable<SentinelNode>[]>({ required: true })
 
 const { i18n: { t } } = composables.useI18n()
-type Item = {
-  ip: string
-  port: number
-}
-const items = ref<Item[]>([{ ip: '', port: 0 }])
+
 const addItem = () => {
-  items.value.push({ ip: '', port: 0 })
+  nodes.value.push(genDefaultSentinelNode())
+}
+
+const removeItem = (index: number) => {
+  nodes.value.splice(index, 1)
 }
 </script>
 
 <style lang="scss" scoped>
-.cluster-node-items {
+.sentinel-node-items {
   display: flex;
   flex-direction: column;
   gap: $kui-space-80;

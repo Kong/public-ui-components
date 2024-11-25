@@ -14,6 +14,8 @@ export interface SentinelNode {
   port: number
 }
 
+export type Identifiable<T> = T & { id: string }
+
 export interface ClusterNode {
   ip: string
   port: number
@@ -41,8 +43,8 @@ export interface RedisConfigurationFields {
   keepalive_backlog: number
   sentinel_master: string
   sentinel_role?: 'master' | 'slave' | 'any'
-  sentinel_nodes: SentinelNode[]
-  cluster_nodes: ClusterNode[]
+  sentinel_nodes: Identifiable<SentinelNode>[]
+  cluster_nodes: Identifiable<ClusterNode>[]
   cluster_max_redirections: number
   connection_is_proxied: boolean
 }
