@@ -672,7 +672,7 @@ importers:
         specifier: workspace:^
         version: link:../../entities/entities-shared
       '@kong/icons':
-        specifier: ^1.18.2
+        specifier: ^1.20.0
         version: 1.20.0(vue@3.5.12(typescript@5.6.3))
     devDependencies:
       '@kong/design-tokens':
