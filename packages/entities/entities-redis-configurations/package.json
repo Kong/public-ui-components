@@ -41,6 +41,7 @@
   "devDependencies": {
     "@kong/design-tokens": "1.17.2",
     "@kong/kongponents": "9.14.8",
+    "@types/uuid": "^10.0.0",
     "vue": "^3.5.12",
     "vue-router": "^4.4.5"
   },
@@ -65,5 +66,8 @@
     "@kong/kongponents": "9.14.8",
     "vue": "^3.5.12",
     "vue-router": "^4.4.5"
+  },
+  "dependencies": {
+    "uuid": "^10.0.0"
   }
 }

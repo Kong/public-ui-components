@@ -1,14 +1,14 @@
 <template>
   <div class="kong-ui-entities-redis-configurations-form">
     <EntityBaseForm
-      :can-submit="false"
+      :can-submit="canSubmit"
       :config="config"
       :edit-id="partialId"
       :entity-type="SupportedEntityType.RedisConfiguration"
       :error-message="undefined"
       :fetch-url="undefined"
-      :form-fields="{}"
-      :is-readonly="false"
+      :form-fields="payload"
+      :is-readonly="form.readonly"
       @cancel="noop"
       @fetch:error="noop"
       @fetch:success="noop"
@@ -65,7 +65,7 @@
             tooltipAttributes: { maxWidth: '400' },
           }"
         />
-        <SentinelNodes />
+        <SentinelNodes v-model="form.fields.sentinel_nodes" />
         <KInput
           v-model.trim="form.fields.sentinel_username"
           :label="t('form.fields.sentinel_username.label')"
@@ -102,7 +102,7 @@
         :description="t('form.sections.cluster.description')"
         :title="t('form.sections.cluster.title')"
       >
-        <ClusterNodes />
+        <ClusterNodes v-model="form.fields.cluster_nodes" />
         <KInput
           v-model="form.fields.cluster_max_redirections"
           :label="t('form.fields.cluster_max_redirections.label')"
@@ -353,7 +353,11 @@ const getSelectedText = (item: any) => {
   return `${item.label}${suffix}`
 }
 
-const { form } = useRedisConfigurationForm()
+const {
+  form,
+  canSubmit,
+  payload,
+} = useRedisConfigurationForm()
 </script>
 
 <style lang="scss" scoped>
