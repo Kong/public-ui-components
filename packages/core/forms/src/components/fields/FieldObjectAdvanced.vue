@@ -39,7 +39,7 @@
               v-model="value[index]"
               class="form-control"
               :placeholder="schema.fields && schema.fields[0].schema.placeholder"
-              type="text"
+              :type="valueInputType"
               @input="updateModel(value[index], model[schema.model])"
             >
             <p
@@ -134,6 +134,9 @@ export default {
 
       return this.model[this.schema.model]
     },
+    valueInputType() {
+      return ['number', 'integer'].includes(this.schema.values?.type) ? 'number' : 'text'
+    },
   },
   mounted() {
     if (!this.value) this.value = {}
@@ -216,9 +219,10 @@ export default {
         Array.isArray(this.subSchema.fields) &&
         this.subSchema.fields.length === 1 &&
         this.subSchema.fields[0].type === 'array'
-      const type = this.subSchema ? valueIsArray ? [''] : {} : ''
+      const defaultValue = this.schema.values?.default ?? ''
+      const initialValue = this.subSchema ? valueIsArray ? [''] : {} : defaultValue
 
-      this.value[this.newKeyName] = type
+      this.value[this.newKeyName] = initialValue
       this.newKeyName = ''
     },
 
