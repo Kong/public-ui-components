@@ -29,6 +29,8 @@ const { i18n: { t } } = composables.useI18n()
   align-items: center;
   display: flex;
   flex-direction: row;
+  flex-grow: 1;
+  flex-shrink: 0;
   font-size: $kui-font-size-30;
   gap: $kui-space-40;
   justify-content: flex-start;

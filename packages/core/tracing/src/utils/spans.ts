@@ -1,6 +1,5 @@
-import type { IAnyValue } from '@opentelemetry/otlp-transformer'
 import { SPAN_ZERO_ID } from '../constants'
-import { type Span, type SpanNode } from '../types'
+import { type IAnyValue, type Span, type SpanNode } from '../types'
 
 /**
  * Iterate over the spans and build span trees, where each tree stores a trace.
@@ -15,7 +14,7 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
     nodes.set(span.spanId, {
       span,
       root: !span.parentSpanId || span.parentSpanId === SPAN_ZERO_ID,
-      durationNano: span.endTimeUnixNano - span.startTimeUnixNano,
+      durationNano: Number(BigInt(span.endTimeUnixNano) - BigInt(span.startTimeUnixNano)),
       children: [],
     })
   }
@@ -32,7 +31,7 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
   }
 
   for (const node of nodes.values()) {
-    node.children.sort((a, b) => a.span.startTimeUnixNano - b.span.startTimeUnixNano)
+    node.children.sort((a, b) => Number(BigInt(a.span.startTimeUnixNano) - BigInt(b.span.startTimeUnixNano)))
   }
 
   return roots

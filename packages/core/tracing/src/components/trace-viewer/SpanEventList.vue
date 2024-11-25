@@ -1,7 +1,7 @@
 <template>
   <div class="span-events">
     <SpanEvent
-      v-for="(event, i) in span.events"
+      v-for="(event, i) in events"
       :key="i"
       :event="event"
     />
@@ -9,10 +9,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Span } from '../../types'
+import type { Event } from '../../types'
 import SpanEvent from './SpanEvent.vue'
 
-defineProps<{ span: Span }>()
+defineProps<{ events: Event[] }>()
 </script>
 
 <style lang="scss" scoped>

@@ -6,7 +6,7 @@
 
     <div class="attributes">
       <SpanAttribute
-        v-for="keyValue in span.attributes"
+        v-for="keyValue in attributes"
         :key="keyValue.key"
         :key-value="keyValue"
         :span="span"
@@ -18,12 +18,15 @@
 <script setup lang="ts">
 import composables from '../../composables'
 import { WATERFALL_ROW_PADDING_X } from '../../constants'
-import type { Span } from '../../types'
+import type { IKeyValue, Span } from '../../types'
 import SpanAttribute from './SpanAttribute.vue'
 
 const { i18n: { t } } = composables.useI18n()
 
-defineProps<{ span: Span }>()
+defineProps<{
+  attributes: IKeyValue[]
+  span: Span
+}>()
 </script>
 
 <style lang="scss" scoped>

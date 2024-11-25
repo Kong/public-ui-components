@@ -111,7 +111,7 @@ const rowsAreaGuideX = ref<number | undefined>(undefined)
 const config = reactive<WaterfallConfig>({
   ticks: props.ticks,
   totalDurationNano: props.rootSpan?.durationNano ?? 0,
-  startTimeUnixNano: props.rootSpan?.span.startTimeUnixNano ?? 0,
+  startTimeUnixNano: props.rootSpan ? BigInt(props.rootSpan.span.startTimeUnixNano) : 0n,
   zoom: 1,
   viewportShift: 0,
   viewport: { left: 0, right: 0 },

@@ -38,11 +38,10 @@ const barColor = computed(() => {
 })
 
 // RESERVED: Only used when zooming is enabled
-const barFixedLeft = computed(() =>
-  ((props.spanNode.span.startTimeUnixNano - config.startTimeUnixNano) / config.totalDurationNano) * config.zoom,
-)
+const relativeStartTimeNano = computed(() => Number(BigInt(props.spanNode.span.startTimeUnixNano) - config.startTimeUnixNano))
+const barFixedLeft = computed(() => (relativeStartTimeNano.value / config.totalDurationNano) * config.zoom)
 const barShiftLeft = computed(() => -config.viewport.left * config.zoom)
-const barShift = computed(() => barFixedLeft.value + barShiftLeft.value)
+const barLeft = computed(() => `min(100% - 3px, ${(barFixedLeft.value + barShiftLeft.value) * 100}%)`)
 const barWidth = computed(() => {
   return `max(3px, ${props.spanNode.durationNano / config.totalDurationNano * config.zoom * 100}%)`
 })
@@ -60,7 +59,7 @@ const barWidth = computed(() => {
     border-radius: $kui-border-radius-20;
     content: '';
     height: 100%;
-    left: v-bind('`${barShift * 100}%`');
+    left: v-bind(barLeft);
     position: absolute;
     top: 0;
     width: v-bind(barWidth);

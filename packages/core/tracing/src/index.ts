@@ -2,6 +2,7 @@
 import TraceViewer from './components/trace-viewer/TraceViewer.vue'
 import WaterfallView from './components/waterfall/WaterfallView.vue'
 
+export * from './constants'
 export * from './types'
 export * from './utils'
 

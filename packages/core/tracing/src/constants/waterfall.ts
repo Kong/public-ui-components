@@ -1,9 +1,9 @@
 import {
   KUI_COLOR_BACKGROUND_PRIMARY,
-  KUI_COLOR_BACKGROUND_PRIMARY_WEAK,
-  KUI_COLOR_BACKGROUND_PRIMARY_WEAKER,
+  KUI_METHOD_COLOR_TEXT_TRACE,
   KUI_COLOR_TEXT_DECORATIVE_AQUA,
   KUI_COLOR_TEXT_DECORATIVE_PURPLE,
+  KUI_METHOD_COLOR_TEXT_PATCH,
   KUI_SPACE_40,
   KUI_SPACE_50,
 } from '@kong/design-tokens'
@@ -43,19 +43,19 @@ export enum WaterfallLegendItemKind {
 // They are subject to change in the future.
 export const WATERFALL_LEGENDS = {
   [WaterfallLegendItemKind.ROOT]: {
-    color: KUI_COLOR_BACKGROUND_PRIMARY,
+    color: KUI_COLOR_BACKGROUND_PRIMARY, // blur.60
   },
   [WaterfallLegendItemKind.KONG]: {
-    color: KUI_COLOR_BACKGROUND_PRIMARY_WEAKER,
+    color: KUI_METHOD_COLOR_TEXT_TRACE, // pink.60
   },
   [WaterfallLegendItemKind.UPSTREAM]: {
-    color: KUI_COLOR_BACKGROUND_PRIMARY_WEAK,
+    color: KUI_COLOR_TEXT_DECORATIVE_AQUA, // aqua.50
   },
   [WaterfallLegendItemKind.THIRD_PARTY]: {
-    color: KUI_COLOR_TEXT_DECORATIVE_AQUA,
+    color: KUI_METHOD_COLOR_TEXT_PATCH, // aqua.60
   },
   [WaterfallLegendItemKind.CLIENT]:  {
-    color: KUI_COLOR_TEXT_DECORATIVE_PURPLE,
+    color: KUI_COLOR_TEXT_DECORATIVE_PURPLE, // purple.60
   },
 } satisfies Record<WaterfallLegendItemKind, WaterfallLegendItem>
 
