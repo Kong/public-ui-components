@@ -220,7 +220,9 @@ export default {
         this.subSchema.fields.length === 1 &&
         this.subSchema.fields[0].type === 'array'
       const defaultValue = this.schema.values?.default ?? (this.valueInputType === 'number' ? 0 : '')
-      const initialValue = this.subSchema ? valueIsArray ? [''] : {} : defaultValue
+      const initialValue = this.subSchema
+        ? (valueIsArray ? [''] : {})
+        : defaultValue
 
       this.value[this.newKeyName] = initialValue
       this.newKeyName = ''
