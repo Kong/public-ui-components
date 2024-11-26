@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.36...@kong-ui-public/forms@4.8.0) (2024-11-26)
+
+
+### Features
+
+* **entities-plugins:** updated injection-protection schema ([#1815](https://github.com/Kong/public-ui-components/issues/1815)) ([ac7931c](https://github.com/Kong/public-ui-components/commit/ac7931c2957e4c11f1b1ae1e6933a5d7f44f0a2b))
+
+
+
+
+
 ## [4.7.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.35...@kong-ui-public/forms@4.7.36) (2024-11-26)
 
 
