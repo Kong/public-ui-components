@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.30.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.30.1...@kong-ui-public/dashboard-renderer@0.30.2) (2024-11-26)
+
+
+### Bug Fixes
+
+* revert padding change for kebab menu ff ([#1818](https://github.com/Kong/public-ui-components/issues/1818)) ([a9a3e6e](https://github.com/Kong/public-ui-components/commit/a9a3e6ee1c41bf55da87c15b86d8f3e5afd449f5))
+
+
+
+
+
 ## [0.30.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.30.0...@kong-ui-public/dashboard-renderer@0.30.1) (2024-11-25)
 
 
