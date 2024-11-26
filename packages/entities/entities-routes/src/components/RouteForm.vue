@@ -473,7 +473,7 @@ import type { SelectItem } from '@kong/kongponents'
 import type { AxiosError, AxiosResponse } from 'axios'
 import isEqual from 'lodash.isequal'
 import type { PropType } from 'vue'
-import { computed, nextTick, onBeforeMount, onMounted, reactive, ref, toRef, watch } from 'vue'
+import { computed, nextTick, onBeforeMount, onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import endpoints from '../routes-endpoints'
@@ -648,7 +648,7 @@ const getSelectedService = (item: any) => {
 
 /** Declare as BaseRouteStateFields but use type narrowing helper functions to allow accessing more fields */
 const state = reactive<RouteState<BaseRouteStateFields>>({
-  routeFlavors: toRef(props, 'routeFlavors'),
+  routeFlavors: props.routeFlavors,
   fields: {
     name: '',
     protocols: 'http,https',
@@ -660,7 +660,7 @@ const state = reactive<RouteState<BaseRouteStateFields>>({
     tags: '',
     service_id: '',
     ...{
-      ...(!props.routeId && { paths: [''] }),
+      ...(!props.routeId && { paths: [''] }), // We don't expect this prop to be updated throughout the lifecycle of the component
       regex_priority: 0,
       path_handling: 'v0',
     } as TraditionalRouteStateFields,
@@ -671,6 +671,10 @@ const state = reactive<RouteState<BaseRouteStateFields>>({
   },
   isReadonly: false,
   errorMessage: '',
+})
+
+watch(() => props.routeFlavors, (routeFlavors) => {
+  state.routeFlavors = routeFlavors
 })
 
 const exprEditorProtocol = computed(() => state.fields.protocols.split(',')[0])
