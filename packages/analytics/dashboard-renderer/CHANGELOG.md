@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.30.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.30.2...@kong-ui-public/dashboard-renderer@0.30.3) (2024-11-26)
+
+
+### Bug Fixes
+
+* kebab menu dropdown placement and alignment ([#1819](https://github.com/Kong/public-ui-components/issues/1819)) ([ce4cc9b](https://github.com/Kong/public-ui-components/commit/ce4cc9b4b64709c75ad51380b0531b942a2ec8c7))
+
+
+
+
+
 ## [0.30.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.30.1...@kong-ui-public/dashboard-renderer@0.30.2) (2024-11-26)
 
 
