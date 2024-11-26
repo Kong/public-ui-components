@@ -15,6 +15,7 @@
         v-if="canShowKebabMenu"
         class="dropdown"
         data-testid="chart-action-menu"
+        :kpop-attributes="{ placement: 'bottom-end' }"
       >
         <button
           appearance="none"
