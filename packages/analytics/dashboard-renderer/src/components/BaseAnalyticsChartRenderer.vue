@@ -88,6 +88,6 @@ const onChartData = (data: ExploreResultV4) => {
 
 <style scoped lang="scss">
 .analytics-chart {
-  height: v-bind('`${height}px`');
+  height: 100%;
 }
 </style>
