@@ -1,4 +1,11 @@
 <template>
+  <pre>
+{{ JSON.stringify({
+  state,
+  routeFlavors,
+  recordFlavor,
+}, null, 2) }}
+  </pre>
   <div class="kong-ui-entities-route-form">
     <EntityBaseForm
       :can-submit="isFormValid && changesExist"
