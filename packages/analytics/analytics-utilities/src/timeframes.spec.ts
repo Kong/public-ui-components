@@ -61,6 +61,14 @@ describe('allowedGranularities', () => {
     expect(TimePeriods.get(TimeframeKeys.PREVIOUS_MONTH)?.allowedGranularities())
       .toEqual(new Set(['daily', 'weekly']))
   })
+
+  it('meets new specs for standard timeframes with flag', () => {
+    expect(TimePeriods.get(TimeframeKeys.FIFTEEN_MIN)?.allowedGranularities(true))
+      .toEqual(new Set(['tenSecondly', 'thirtySecondly', 'minutely']))
+
+    expect(TimePeriods.get(TimeframeKeys.ONE_DAY)?.allowedGranularities(true))
+      .toEqual(new Set(['fiveMinutely', 'tenMinutely', 'thirtyMinutely', 'hourly']))
+  })
 })
 
 describe('cacheKey', () => {

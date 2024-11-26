@@ -11,4 +11,5 @@ export interface TimeframeOptions {
   allowedTiers: Array<string>
   startCustom?: Date
   endCustom?: Date
+  allowedGranularitiesOverride?: GranularityValues[]
 }

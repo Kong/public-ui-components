@@ -63,8 +63,15 @@ export type TimeRangeV4 = AbsoluteTimeRangeV4 | RelativeTimeRangeV4
 
 export const granularityValues = [
   'secondly',
+  'tenSecondly',
+  'thirtySecondly',
   'minutely',
+  'fiveMinutely',
+  'tenMinutely',
+  'thirtyMinutely',
   'hourly',
+  'twoHourly',
+  'twelveHourly',
   'daily',
   'weekly',
   'trend',

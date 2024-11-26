@@ -13,5 +13,5 @@ export interface ITimeframe {
   rawStart(_tz?: string): Date;
   timeframeLengthMs(): number;
   maximumTimeframeLength(): number;
-  allowedGranularities(): Set<GranularityValues>;
+  allowedGranularities(fineGrain?: boolean): Set<GranularityValues>;
 }

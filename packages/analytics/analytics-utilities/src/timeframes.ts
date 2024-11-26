@@ -59,6 +59,8 @@ export class Timeframe implements ITimeframe {
 
   private _endCustom?: Date
 
+  private _allowedGranularitiesOverride?: GranularityValues[]
+
   constructor(opts: TimeframeOptions) {
     this.display = opts.display
     this.timeframeText = opts.timeframeText
@@ -70,6 +72,7 @@ export class Timeframe implements ITimeframe {
     this.isRelative = opts.isRelative
     this._startCustom = opts.startCustom
     this._endCustom = opts.endCustom
+    this._allowedGranularitiesOverride = opts.allowedGranularitiesOverride
   }
 
   // rawEnd does not consider granularity and should not be used directly in queries.
@@ -95,7 +98,12 @@ export class Timeframe implements ITimeframe {
     return this.timeframeLength()
   }
 
-  allowedGranularities() {
+  allowedGranularities(fineGrain?: boolean) {
+    if (this._allowedGranularitiesOverride && fineGrain) {
+      // Note: queryTime's granularity determination currently expects this to be sorted from fine to coarse.
+      return new Set(this._allowedGranularitiesOverride)
+    }
+
     const allowedValues: Set<GranularityValues> = new Set()
     const hours = this.maximumTimeframeLength() / 3600
 
@@ -265,6 +273,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       dataGranularity: 'minutely',
       isRelative: true,
       allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
+      allowedGranularitiesOverride: ['tenSecondly', 'thirtySecondly', 'minutely'],
     }),
   ],
   [
@@ -278,6 +287,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       dataGranularity: 'minutely',
       isRelative: true,
       allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
+      allowedGranularitiesOverride: ['tenSecondly', 'thirtySecondly', 'minutely', 'fiveMinutely', 'tenMinutely'],
     }),
   ],
   [
@@ -291,6 +301,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       dataGranularity: 'hourly',
       isRelative: true,
       allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
+      allowedGranularitiesOverride: ['thirtySecondly', 'minutely', 'fiveMinutely', 'tenMinutely', 'thirtyMinutely'],
     }),
   ],
   [
@@ -304,6 +315,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       dataGranularity: 'hourly',
       isRelative: true,
       allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
+      allowedGranularitiesOverride: ['minutely', 'fiveMinutely', 'tenMinutely', 'thirtyMinutely', 'hourly'],
     }),
   ],
   [
@@ -317,6 +329,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       dataGranularity: 'hourly',
       isRelative: true,
       allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
+      allowedGranularitiesOverride: ['fiveMinutely', 'tenMinutely', 'thirtyMinutely', 'hourly'],
     }),
   ],
   [
@@ -330,6 +343,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       dataGranularity: 'daily',
       isRelative: true,
       allowedTiers: ['trial', 'plus', 'enterprise'],
+      allowedGranularitiesOverride: ['thirtyMinutely', 'hourly', 'twoHourly', 'twelveHourly', 'daily'],
     }),
   ],
   [
@@ -343,6 +357,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       dataGranularity: 'daily',
       isRelative: true,
       allowedTiers: ['trial', 'plus', 'enterprise'],
+      allowedGranularitiesOverride: ['hourly', 'twoHourly', 'twelveHourly', 'daily', 'weekly'],
     }),
   ],
   [
