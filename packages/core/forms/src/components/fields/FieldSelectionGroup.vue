@@ -2,7 +2,7 @@
   <div class="selection-group">
     <!-- Radio button -->
     <component
-      :is=" $props.disabled? 'k-tooltip' : 'div' "
+      :is="$props.disabled? 'k-tooltip' : 'div'"
       max-width="300"
       :text="t('general.disable_global_radio', { scope })"
     >
