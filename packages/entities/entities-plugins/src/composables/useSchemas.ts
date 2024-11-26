@@ -10,6 +10,7 @@ import { applicationRegistrationSchema } from '../definitions/schemas/Applicatio
 import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
 import { dataDogSchema } from '../definitions/schemas/Datadog'
 import { graphqlRateLimitingAdvancedSchema } from '../definitions/schemas/GraphQLRateLimitingAdvanced'
+import { injectionProtectionSchema } from '../definitions/schemas/InjectionProtection'
 import { mockingSchema } from '../definitions/schemas/Mocking'
 import { preFunctionSchema } from '../definitions/schemas/PreFunction'
 import { rateLimitingSchema } from '../definitions/schemas/RateLimiting'
@@ -165,6 +166,10 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     'graphql-rate-limiting-advanced': {
       ...graphqlRateLimitingAdvancedSchema,
+    },
+
+    'injection-protection': {
+      ...injectionProtectionSchema,
     },
 
     'response-ratelimiting': {
