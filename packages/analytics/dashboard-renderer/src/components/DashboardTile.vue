@@ -69,12 +69,14 @@
         @toggle-modal="setExportModalVisibility"
       />
     </div>
-    <component
-      :is="componentData.component"
-      v-if="componentData"
-      v-bind="componentData.rendererProps"
-      @chart-data="onChartData"
-    />
+    <div class="tile-content">
+      <component
+        :is="componentData.component"
+        v-if="componentData"
+        v-bind="componentData.rendererProps"
+        @chart-data="onChartData"
+      />
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -189,6 +191,8 @@ const exportCsv = () => {
 
 <style lang="scss" scoped>
 .tile-boundary {
+  display: flex;
+  flex-direction: column;
   height: v-bind('`${height}px`');
 
   .tile-header {
@@ -245,6 +249,10 @@ const exportCsv = () => {
         cursor: pointer;
       }
     }
+  }
+
+  .tile-content {
+    flex-grow: 1;
   }
 }
 </style>

@@ -48,7 +48,7 @@ import {
   TIMEFRAME_TOKEN,
 } from '../constants'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
-import { KUI_SPACE_70, KUI_SPACE_30 } from '@kong/design-tokens'
+import { KUI_SPACE_70 } from '@kong/design-tokens'
 
 const props = defineProps<{
   context: DashboardRendererContext,
@@ -72,9 +72,6 @@ if (!queryBridge) {
   console.warn("Please ensure your application has a query bridge provided under the key 'analytics-query-provider', as described in")
   console.warn('https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/README.md#requirements')
 }
-
-const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
-const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
 
 const configStore = useAnalyticsConfigStore()
 
@@ -185,7 +182,7 @@ defineExpose({ refresh: refreshTiles })
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     height: 100%;
-    padding: v-bind('!hasKebabMenuAccess ? KUI_SPACE_70 : KUI_SPACE_30');
+    padding: var(--kui-space-70, $kui-space-70);
   }
 }
 </style>
