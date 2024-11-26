@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.55](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.8.54...@kong-ui-public/entities-routes@3.8.55) (2024-11-26)
+
+
+### Bug Fixes
+
+* **entities-routes:** invisible expressions editor sometimes ([#1814](https://github.com/Kong/public-ui-components/issues/1814)) ([89e091a](https://github.com/Kong/public-ui-components/commit/89e091a9e514addd807f6b73f1d515fa24a600e9))
+
+
+
+
+
 ## [3.8.54](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.8.53...@kong-ui-public/entities-routes@3.8.54) (2024-11-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
