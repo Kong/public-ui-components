@@ -473,7 +473,7 @@ import type { SelectItem } from '@kong/kongponents'
 import type { AxiosError, AxiosResponse } from 'axios'
 import isEqual from 'lodash.isequal'
 import type { PropType } from 'vue'
-import { computed, nextTick, onBeforeMount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeMount, onMounted, reactive, ref, toRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import endpoints from '../routes-endpoints'
@@ -648,7 +648,7 @@ const getSelectedService = (item: any) => {
 
 /** Declare as BaseRouteStateFields but use type narrowing helper functions to allow accessing more fields */
 const state = reactive<RouteState<BaseRouteStateFields>>({
-  routeFlavors: props.routeFlavors,
+  routeFlavors: toRef(props, 'routeFlavors'),
   fields: {
     name: '',
     protocols: 'http,https',

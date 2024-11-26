@@ -1,6 +1,7 @@
 import type { BaseFormConfig, KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { RouteLocationRaw } from 'vue-router'
 import type { Methods, Method } from './method-badge'
+import { unref, type MaybeRef } from 'vue'
 
 export enum RouteFlavor {
   TRADITIONAL = 'traditional', // includes traditional_compatible
@@ -97,7 +98,7 @@ export interface ExpressionsRouteStateFields {
 }
 
 export interface RouteState<Fields extends BaseRouteStateFields> {
-  routeFlavors: RouteFlavors // For better type narrowing
+  routeFlavors: MaybeRef<RouteFlavors> // For better type narrowing
   fields: Fields
   isReadonly: boolean
   errorMessage: string
@@ -105,11 +106,11 @@ export interface RouteState<Fields extends BaseRouteStateFields> {
 
 /** Type narrowing down helper function */
 export const stateHasTraditionalFlavor = (state: RouteState<BaseRouteStateFields>): state is RouteState<BaseRouteStateFields & TraditionalRouteStateFields> =>
-  state.routeFlavors.traditional === true
+  unref(state.routeFlavors).traditional === true
 
 /** Type narrowing down helper function */
 export const stateHasExpressionsFlavor = (state: RouteState<BaseRouteStateFields>): state is RouteState<BaseRouteStateFields & ExpressionsRouteStateFields> =>
-  state.routeFlavors.expressions === true
+  unref(state.routeFlavors).expressions === true
 
 export interface Headers {
   [key: string]: string[]
