@@ -282,13 +282,6 @@ $errorColor: #f00;
     display: none;
   }
 
-  &.disabled {
-    > label {
-      color: #666;
-      font-style: italic;
-    }
-  }
-
   &.error {
     input:not([type="checkbox"]),
     textarea,

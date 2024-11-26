@@ -1,6 +1,8 @@
 {
   "general": {
-    "packageName": "forms"
+    "packageName": "forms",
+    "disable_global_radio": "Plugin is defaulted to 'Scoped' when configured under {scope}. If you want to configure a global plugin, please navigate to the plugin list page for plugin creation/edition.",
+    "disable_source_scope_change": "Change of {scope} is not available when configuring a plugin under {scope}. If you need to select another {scope}, please navigate to the plugin list page for plugin creation/edition."
   },
   "post-function": {
     "tags": {

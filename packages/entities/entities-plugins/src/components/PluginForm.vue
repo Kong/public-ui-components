@@ -443,7 +443,8 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
   },
   // plugin scoping
   selectionGroup: {
-    type: !props.hideScopeSelection ? 'selectionGroup' : props.hideScopeSelection || (formType.value === EntityBaseFormType.Create && props.config.entityId) ? 'foreign' : 'selectionGroup',
+    type: 'selectionGroup',
+    disabled: !props.hideScopeSelection ? false : props.hideScopeSelection || (formType.value === EntityBaseFormType.Create && props.config.entityId) ? true : false,
     inputType: 'hidden',
     styleClasses: 'hide-label',
     fields: [
@@ -907,6 +908,11 @@ const initScopeFields = (): void => {
   const supportConsumerGroupScope = props.config.disableConsumerGroupScope
     ? false
     : (PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true)
+  // disable the scoped field
+  const consumerScoped = (props.config.entityType === 'consumers' && !!props.config.entityId) || !!record.value?.consumer?.id
+  const consumerGroupScoped = (props.config.entityType === 'consumer_groups' && !!props.config.entityId) || !!record.value?.consumer_group?.id
+  const serviceScoped = (props.config.entityType === 'services' && !!props.config.entityId) || !!record.value?.service?.id
+  const routeScoped = (props.config.entityType === 'routes' && !!props.config.entityId) || !!record.value?.route?.id
 
   const scopeEntityArray = []
 
@@ -923,6 +929,7 @@ const initScopeFields = (): void => {
         fields: ['name', 'id'],
       },
       help: t('plugins.form.scoping.gateway_service.help'),
+      disabled: serviceScoped,
     })
   }
 
@@ -939,6 +946,7 @@ const initScopeFields = (): void => {
         primaryField: 'id',
       },
       help: t('plugins.form.scoping.route.help'),
+      disabled: routeScoped,
     })
   }
 
@@ -954,6 +962,7 @@ const initScopeFields = (): void => {
         primaryField: 'username',
       },
       help: t('plugins.form.scoping.consumer.help'),
+      disabled: consumerScoped,
     })
   }
 
@@ -970,6 +979,7 @@ const initScopeFields = (): void => {
         primaryField: 'name',
       },
       help: t('plugins.form.scoping.consumer_group.help'),
+      disabled: consumerGroupScoped,
     })
   }
 
