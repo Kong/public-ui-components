@@ -1,6 +1,6 @@
 import type { BaseFormConfig, KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { RouteLocationRaw } from 'vue-router'
-import type { Methods, Method } from './method-badge'
+import type { Method, Methods } from './method-badge'
 
 export enum RouteFlavor {
   TRADITIONAL = 'traditional', // includes traditional_compatible

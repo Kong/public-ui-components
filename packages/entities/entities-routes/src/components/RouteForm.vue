@@ -660,7 +660,7 @@ const state = reactive<RouteState<BaseRouteStateFields>>({
     tags: '',
     service_id: '',
     ...{
-      ...(!props.routeId && { paths: [''] }),
+      ...(!props.routeId && { paths: [''] }), // We don't expect this prop to be updated throughout the lifecycle of the component
       regex_priority: 0,
       path_handling: 'v0',
     } as TraditionalRouteStateFields,
@@ -671,6 +671,10 @@ const state = reactive<RouteState<BaseRouteStateFields>>({
   },
   isReadonly: false,
   errorMessage: '',
+})
+
+watch(() => props.routeFlavors, (routeFlavors) => {
+  state.routeFlavors = routeFlavors
 })
 
 const exprEditorProtocol = computed(() => state.fields.protocols.split(',')[0])
