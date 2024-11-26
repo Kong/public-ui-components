@@ -18,6 +18,7 @@ import type { GraphQLRateLimitingAdvancedSchema } from './plugins/graphql-rate-l
 import type { SAMLSchema } from './plugins/saml'
 import type { OasValidationSchema } from './plugins/oas-validation'
 import type { UpstreamOauthSchema } from './plugins/upstream-oauth'
+import type { InjectionProtectionSchema } from './plugins/injection-protection'
 
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
@@ -213,4 +214,5 @@ export interface CustomSchemas {
   saml: SAMLSchema
   'oas-validation': OasValidationSchema
   'upstream-oauth': UpstreamOauthSchema
+  'injection-protection': InjectionProtectionSchema
 }

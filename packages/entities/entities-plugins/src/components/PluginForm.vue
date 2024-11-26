@@ -693,6 +693,8 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       // pass the referenceable flag from elements to the parent
       initialFormSchema[field].referenceable = elements.referenceable
 
+      initialFormSchema[field].elements = elements
+
       if (['string', 'integer', 'number'].includes(elements.type) && !elements.one_of) {
         const { id, help, label, hint, values, referenceable } = initialFormSchema[field]
         const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
@@ -711,9 +713,9 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         // Check if current plugin matches any of custom schema keys
         if (plugin === field) {
           // Use custom defined schema instead of building from default && set field label
-          const { help, label, hint, values, referenceable } = initialFormSchema[field]
+          const { help, label, hint, values, referenceable, elements } = initialFormSchema[field]
           const { help: helpOverride, ...overrides } = pluginSchema[plugin as keyof typeof pluginSchema] as Record<string, any>
-          initialFormSchema[field] = { help, label, hint, values, referenceable, ...overrides }
+          initialFormSchema[field] = { help, label, hint, values, referenceable, elements, ...overrides }
           // Eagerly replace the help text because we are overriding
           if (typeof helpOverride === 'string') {
             initialFormSchema[field].help = marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions)
