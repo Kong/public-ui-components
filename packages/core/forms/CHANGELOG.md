@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.7.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.35...@kong-ui-public/forms@4.7.36) (2024-11-26)
+
+
+### Bug Fixes
+
+* **forms:** number values in map fields ([#1809](https://github.com/Kong/public-ui-components/issues/1809)) ([81f8cc6](https://github.com/Kong/public-ui-components/commit/81f8cc6d390263885e008632bb6b872fab849336))
+
+
+
+
+
 ## [4.7.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.7.34...@kong-ui-public/forms@4.7.35) (2024-11-25)
 
 
