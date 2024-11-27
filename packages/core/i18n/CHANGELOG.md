@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@2.2.9...@kong-ui-public/i18n@2.2.10) (2024-11-27)
+
+
+### Bug Fixes
+
+* **i18n:** formatIsoDate handles trailing 0s ([#1821](https://github.com/Kong/public-ui-components/issues/1821)) ([58af65d](https://github.com/Kong/public-ui-components/commit/58af65d056807c08931a958a2fbe9cca5d2c276c))
+
+
+
+
+
 ## [2.2.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@2.2.8...@kong-ui-public/i18n@2.2.9) (2024-11-15)
 
 
