@@ -1,7 +1,7 @@
 <template>
   <div class="kong-ui-entities-consumer-credentials-list">
     <EntityBaseTable
-      :cache-identifier="cacheIdentifier"
+      :cache-identifier="cacheId"
       disable-row-click
       disable-sorting
       :empty-state-options="emptyStateOptions"
@@ -10,7 +10,7 @@
       :fetcher="fetcher"
       :fetcher-cache-key="fetcherCacheKey"
       pagination-type="offset"
-      preferences-storage-key="kong-ui-entities-consumer-credentials-list"
+      :preferences-storage-key="preferencesStorageKey"
       :table-headers="tableHeaders"
       @sort="resetPagination"
     >
@@ -259,7 +259,6 @@ const props = defineProps({
 const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const fetcherCacheKey = ref<number>(1)
 
 /**
  * Table Headers
@@ -328,7 +327,14 @@ const fetcherBaseUrl = computed((): string => {
   return url
 })
 
-const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl)
+const preferencesStorageKey = 'kong-ui-entities-consumer-credentials-list'
+const cacheId = computed(() => props.cacheIdentifier || preferencesStorageKey)
+
+const {
+  fetcher,
+  fetcherState,
+  fetcherCacheKey,
+} = useFetcher({ ...props.config, cacheIdentifier: cacheId.value }, fetcherBaseUrl.value)
 
 const resetPagination = (): void => {
   // Increment the cache key on sort

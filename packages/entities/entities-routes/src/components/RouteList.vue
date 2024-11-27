@@ -1,7 +1,7 @@
 <template>
   <div class="kong-ui-entities-routes-list">
     <EntityBaseTable
-      :cache-identifier="cacheIdentifier"
+      :cache-identifier="cacheId"
       :cell-attributes="getCellAttrs"
       :default-table-preferences="defaultTablePreferences"
       :disable-sorting="disableSorting"
@@ -11,7 +11,7 @@
       :fetcher="fetcher"
       :fetcher-cache-key="fetcherCacheKey"
       pagination-type="offset"
-      preferences-storage-key="kong-ui-entities-routes-list"
+      :preferences-storage-key="preferencesStorageKey"
       :query="filterQuery"
       :table-headers="tableHeaders"
       :title="title"
@@ -296,7 +296,6 @@ const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const fetcherCacheKey = ref<number>(1)
 
 /**
  * Table Headers
@@ -368,7 +367,14 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   } as FuzzyMatchFilterConfig
 })
 
-const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value)
+const preferencesStorageKey = 'kong-ui-entities-routes-list'
+const cacheId = computed(() => props.cacheIdentifier || preferencesStorageKey)
+
+const {
+  fetcher,
+  fetcherState,
+  fetcherCacheKey,
+} = useFetcher({ ...props.config, cacheIdentifier: cacheId.value }, fetcherBaseUrl.value)
 
 const getCellAttrs = (params: Record<string, any>): Record<string, any> => {
   if (params.headerKey === 'expression') {

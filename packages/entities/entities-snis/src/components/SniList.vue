@@ -1,7 +1,7 @@
 <template>
   <div class="kong-ui-entities-snis-list">
     <EntityBaseTable
-      :cache-identifier="cacheIdentifier"
+      :cache-identifier="cacheId"
       :cell-attributes="cellAttrsFn"
       :disable-row-click="true"
       :disable-sorting="disableSorting"
@@ -9,9 +9,9 @@
       enable-entity-actions
       :error-message="errorMessage"
       :fetcher="fetcher"
-      :fetcher-cache-key="fetchCacheKey"
+      :fetcher-cache-key="fetcherCacheKey"
       pagination-type="offset"
-      preferences-storage-key="kong-ui-entities-snis-list"
+      :preferences-storage-key="preferencesStorageKey"
       :query="filterQuery"
       :table-headers="tableHeaders"
       @clear-search-input="clearFilter"
@@ -209,7 +209,6 @@ const props = defineProps({
 const { i18n: { t } } = composables.useI18n()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const fetchCacheKey = ref<number>(1)
 
 /**
  * Table Headers
@@ -274,7 +273,14 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   } as FuzzyMatchFilterConfig
 })
 
-const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value)
+const preferencesStorageKey = 'kong-ui-entities-snis-list'
+const cacheId = computed(() => props.cacheIdentifier || preferencesStorageKey)
+
+const {
+  fetcher,
+  fetcherState,
+  fetcherCacheKey,
+} = useFetcher({ ...props.config, cacheIdentifier: cacheId.value }, fetcherBaseUrl.value)
 
 const clearFilter = (): void => {
   filterQuery.value = ''
@@ -282,7 +288,7 @@ const clearFilter = (): void => {
 
 const resetPagination = (): void => {
   // Increment the cache key on sort
-  fetchCacheKey.value++
+  fetcherCacheKey.value++
 }
 
 /**
@@ -394,7 +400,7 @@ const confirmDelete = async (): Promise<void> => {
 
     isDeletePending.value = false
     hideDeleteModal()
-    fetchCacheKey.value++
+    fetcherCacheKey.value++
   } catch (error: any) {
     deleteModalError.value = error.response?.data?.message ||
       error.message ||

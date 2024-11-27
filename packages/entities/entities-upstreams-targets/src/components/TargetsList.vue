@@ -1,7 +1,7 @@
 <template>
   <div class="kong-ui-entities-targets-list">
     <EntityBaseTable
-      :cache-identifier="cacheIdentifier"
+      :cache-identifier="cacheId"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
@@ -9,7 +9,7 @@
       :fetcher="fetcher"
       :fetcher-cache-key="fetcherCacheKey"
       pagination-type="offset"
-      preferences-storage-key="kong-ui-entities-targets-list"
+      :preferences-storage-key="preferencesStorageKey"
       :table-headers="tableHeaders"
       @empty-state-cta-clicked="() => !props.config.createRoute ? handleCreateTarget() : undefined"
       @sort="resetPagination"
@@ -223,7 +223,6 @@ const props = defineProps({
 const { i18n: { t } } = composables.useI18n()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const fetcherCacheKey = ref<number>(1)
 
 /**
  * Table Headers
@@ -256,7 +255,14 @@ const fetcherBaseUrl = computed((): string => {
   return url
 })
 
-const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value)
+const preferencesStorageKey = 'kong-ui-entities-targets-list'
+const cacheId = computed(() => props.cacheIdentifier || preferencesStorageKey)
+
+const {
+  fetcher,
+  fetcherState,
+  fetcherCacheKey,
+} = useFetcher({ ...props.config, cacheIdentifier: cacheId.value }, fetcherBaseUrl.value)
 
 const resetPagination = (): void => {
   // Increment the cache key on sort

@@ -1,16 +1,16 @@
 <template>
   <div class="kong-ui-entities-gateway-services-list">
     <EntityBaseTable
-      :cache-identifier="cacheIdentifier"
+      :cache-identifier="cacheId"
       :default-table-preferences="defaultTablePreferences"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
       :error-message="errorMessage"
       :fetcher="fetcher"
-      :fetcher-cache-key="fetchCacheKey"
+      :fetcher-cache-key="fetcherCacheKey"
       pagination-type="offset"
-      preferences-storage-key="kong-ui-entities-gateway-services-list"
+      :preferences-storage-key="preferencesStorageKey"
       :query="filterQuery"
       :table-headers="tableHeaders"
       @clear-search-input="clearFilter"
@@ -259,7 +259,6 @@ const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const fetchCacheKey = ref<number>(1)
 
 /**
  * Table Headers
@@ -329,7 +328,14 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   } as FuzzyMatchFilterConfig
 })
 
-const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value)
+const preferencesStorageKey = 'kong-ui-entities-gateway-services-list'
+const cacheId = computed(() => props.cacheIdentifier || preferencesStorageKey)
+
+const {
+  fetcher,
+  fetcherState,
+  fetcherCacheKey,
+} = useFetcher({ ...props.config, cacheIdentifier: cacheId.value }, fetcherBaseUrl.value)
 
 const clearFilter = (): void => {
   filterQuery.value = ''
@@ -337,7 +343,7 @@ const clearFilter = (): void => {
 
 const resetPagination = (): void => {
   // Increment the cache key on sort
-  fetchCacheKey.value++
+  fetcherCacheKey.value++
 }
 
 /**
@@ -536,7 +542,7 @@ const deleteRow = async (): Promise<void> => {
     emit('delete:success', gatewayServiceToBeDeleted.value)
 
     hideDeleteModal()
-    fetchCacheKey.value++
+    fetcherCacheKey.value++
   } catch (error: any) {
     deleteModalError.value = error.response?.data?.message ||
       error.message ||

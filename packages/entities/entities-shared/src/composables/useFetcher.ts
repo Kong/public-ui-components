@@ -1,4 +1,4 @@
-import { ref, toValue, unref } from 'vue'
+import { ref, toValue, unref, watch } from 'vue'
 import type { MaybeRefOrGetter } from 'vue'
 import type {
   FetcherResponse,
@@ -11,6 +11,9 @@ import { FetcherStatus } from '../types'
 import useAxios from './useAxios'
 import useFetchUrlBuilder from './useFetchUrlBuilder'
 import type { TableDataFetcherParams } from '@kong/kongponents'
+
+// Store cacheIdentifier => fetcherCacheKey globally so that the cache is persisted during the session
+const cacheKeys = new Map<string, number>()
 
 export default function useFetcher(
   config: KonnectBaseTableConfig | KongManagerBaseTableConfig,
@@ -121,5 +124,21 @@ export default function useFetcher(
     }
   }
 
-  return { fetcher, fetcherState: state }
+  const cacheId = config.cacheIdentifier
+  const fetcherCacheKey = ref<number>(1)
+  if (cacheId) {
+    if (cacheKeys.has(cacheId)) {
+      fetcherCacheKey.value = cacheKeys.get(cacheId)!
+    } else {
+      cacheKeys.set(cacheId, fetcherCacheKey.value)
+    }
+  }
+
+  watch(fetcherCacheKey, () => {
+    if (cacheId) {
+      cacheKeys.set(cacheId, fetcherCacheKey.value)
+    }
+  })
+
+  return { fetcher, fetcherState: state, fetcherCacheKey }
 }
