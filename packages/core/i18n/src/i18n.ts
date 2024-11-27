@@ -93,7 +93,9 @@ export const createI18n = <MessageSource extends Record<string, any>>
   const formatIsoDate = (isoDate: string): string => {
     const date = Date.parse(isoDate) / 1000
 
-    return formatUnixTimeStamp(date)
+    // excludes milliseconds with trailing 0s
+    const flooredDate = Math.floor(date)
+    return formatUnixTimeStamp(flooredDate)
   }
 
   const t = (translationKey: PathToDotNotation<MessageSource, string>, values?: Record<string, MessageFormatPrimitiveValue> | undefined, opts?: IntlMessageFormatOptions): string => {
