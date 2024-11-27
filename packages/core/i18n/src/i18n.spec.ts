@@ -158,6 +158,13 @@ describe('i18n', () => {
       const decimalTimestamp = formatIsoDate('2019-10-03T14:13:15.000Z')
       const integerTimestamp = formatIsoDate('2019-10-03T14:13:15.000Z')
 
+      expect(formatIsoDate('2019-10-03T14:13:15.123Z')).toBe('Oct 3, 2019, 2:13 PM')
+      expect(formatIsoDate('2019-10-03T14:13:15.000Z')).toBe('Oct 3, 2019, 2:13 PM')
+      expect(formatIsoDate('2019-10-03T14:13:15Z')).toBe('Oct 3, 2019, 2:13 PM')
+      expect(formatIsoDate('2019-05-16T11:42:59+00:00')).toBe('May 16, 2019, 11:42 AM')
+      expect(formatIsoDate('2019-05-16T11:42:59-04:00')).toBe('May 16, 2019, 3:42 PM')
+      expect(formatIsoDate('2019-05-16T11:42:59+08:00')).toBe('May 16, 2019, 3:42 AM')
+
       expect(formattedDateAM).toBe('May 16, 2019, 11:42 AM')
       expect(formattedDatePM).toBe('May 17, 2019, 1:39 AM')
       expect(january.substring(0, 7)).toBe('Jan 14,')
