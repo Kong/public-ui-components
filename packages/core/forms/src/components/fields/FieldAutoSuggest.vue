@@ -115,7 +115,7 @@ export default {
       return this.schema.entity
     },
     scope() {
-      return this.entity.replace('_',' ').replace(/s$/,'')
+      return this.schema.label.toLowerCase()
     },
     bypassSearch() {
       return this.$route && this.$route.query && this.$route.query.no_search

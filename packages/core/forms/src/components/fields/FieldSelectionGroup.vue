@@ -14,7 +14,7 @@
             v-for="(option, i) in schema.fields"
             :key="i"
             class="option-group"
-            :class="{ 'radio-diabled': $props.disabled }"
+            :class="{ 'radio-disabled': $props.disabled }"
           >
             <label
               class="k-label"
@@ -179,14 +179,8 @@ export default {
       gap: $kui-space-80;
     }
 
-    .radio-diabled {
-      label {
-        cursor: not-allowed;
-      }
-
-      input {
-        cursor: not-allowed;
-      }
+    .radio-disabled {
+      cursor: not-allowed;
     }
   }
 }

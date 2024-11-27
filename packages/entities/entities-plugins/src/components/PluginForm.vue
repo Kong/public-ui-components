@@ -444,7 +444,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
   // plugin scoping
   selectionGroup: {
     type: 'selectionGroup',
-    disabled: !props.hideScopeSelection ? false : props.hideScopeSelection || (formType.value === EntityBaseFormType.Create && props.config.entityId) ? true : false,
+    disabled: props.hideScopeSelection,
     inputType: 'hidden',
     styleClasses: 'hide-label',
     fields: [
