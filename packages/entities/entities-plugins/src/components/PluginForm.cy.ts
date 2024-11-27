@@ -391,7 +391,7 @@ describe('<PluginForm />', () => {
       cy.get('#config-discovery_uris-timeout_ms-0').should('have.attr', 'type', 'number').and('have.value', '5000')
     })
 
-    it('should disable scope selection when hideScopeSelection is true', () => {
+    it('should hide scope selection when hideScopeSelection is true', () => {
       interceptKMSchema()
 
       cy.mount(PluginForm, {
@@ -407,9 +407,35 @@ describe('<PluginForm />', () => {
       cy.wait('@getPluginSchema')
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.get('.field-selectionGroup').should('exist')
-      cy.get('.Global-check input').should('be.disabled')
-      cy.get('.Scoped-check input').should('be.disabled')
+      cy.get('.field-selectionGroup').should('not.exist')
+    })
+
+    it('should disable scope selection when disableScopeSelection is true', () => {
+      // provide serviceId
+      const config: KongManagerPluginFormConfig = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
+      interceptKMSchema()
+      interceptKMScopedEntity({ entityType: config.entityType! })
+
+      cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
+        props: {
+          config,
+          pluginType: 'cors',
+          disableScopeSelection: true,
+        },
+        router,
+      })
+
+      cy.wait(['@getPluginSchema', '@getScopedEntity']).then(() => {
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+        cy.get('.Global-check input').should('be.disabled')
+        cy.get('.Scoped-check input').should('be.visible').and('be.disabled')
+        cy.get('.Scoped-check input').should('have.value', '1')
+        cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
+        cy.get('#service-id').should('be.visible').and('be.disabled')
+        cy.getTestId(`select-item-${scopedService.id}`).find('.selected').should('exist')
+      })
     })
 
     it('should hide form buttons when isWizardStep is true', () => {
@@ -487,7 +513,7 @@ describe('<PluginForm />', () => {
         cy.get('.Scoped-check input').should('be.visible')
         cy.get('.Scoped-check input').should('have.value', '1')
         cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
-        cy.get('#service-id').should('be.visible').should('be.disabled')
+        cy.get('#service-id').should('be.visible')
         cy.getTestId(`select-item-${scopedService.id}`).find('.selected').should('exist')
       })
     })
@@ -1246,7 +1272,7 @@ describe('<PluginForm />', () => {
       cy.get('#config-discovery_uris-timeout_ms-0').should('have.attr', 'type', 'number').and('have.value', '5000')
     })
 
-    it('should disable scope selection when hideScopeSelection is true', () => {
+    it('should hide scope selection when hideScopeSelection is true', () => {
       interceptKonnectSchema()
 
       cy.mount(PluginForm, {
@@ -1262,9 +1288,35 @@ describe('<PluginForm />', () => {
       cy.wait('@getPluginSchema')
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.get('.field-selectionGroup').should('exist')
-      cy.get('.Global-check input').should('be.disabled')
-      cy.get('.Scoped-check input').should('be.disabled')
+      cy.get('.field-selectionGroup').should('not.exist')
+    })
+
+    it('should disable scope selection when disableScopeSelection is true', () => {
+      // provide serviceId
+      const config: KonnectPluginFormConfig = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
+      interceptKonnectSchema()
+      interceptKonnectScopedEntity({ entityType: config.entityType! })
+
+      cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
+        props: {
+          config,
+          pluginType: 'cors',
+          disableScopeSelection: true,
+        },
+        router,
+      })
+
+      cy.wait(['@getPluginSchema', '@getScopedEntity']).then(() => {
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+        cy.get('.Global-check input').should('be.disabled')
+        cy.get('.Scoped-check input').should('be.visible').and('be.disabled')
+        cy.get('.Scoped-check input').should('have.value', '1')
+        cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
+        cy.get('#service-id').should('be.visible').and('be.disabled')
+        cy.getTestId(`select-item-${scopedService.id}`).find('.selected').should('exist')
+      })
     })
 
     it('should hide form buttons when isWizardStep is true', () => {
@@ -1339,7 +1391,7 @@ describe('<PluginForm />', () => {
         cy.get('.Scoped-check input').should('be.visible')
         cy.get('.Scoped-check input').should('have.value', '1')
         cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
-        cy.get('#service-id').should('be.visible').should('be.disabled')
+        cy.get('#service-id').should('be.visible')
         cy.getTestId(`select-item-${scopedService.id}`).find('.selected').should('exist')
       })
     })
