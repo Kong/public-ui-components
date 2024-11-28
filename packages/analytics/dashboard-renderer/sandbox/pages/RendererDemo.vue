@@ -61,7 +61,7 @@ const context: DashboardRendererContext = {
 const dashboardConfig: DashboardConfig = {
   gridSize: {
     cols: 6,
-    rows: 5,
+    rows: 7,
   },
   tileHeight: 167,
   tiles: [
@@ -163,6 +163,7 @@ const dashboardConfig: DashboardConfig = {
       definition: {
         chart: {
           type: 'timeseries_line',
+          chartTitle: 'Timeseries line chart of mock data',
         },
         query: {
           datasource: 'basic',
@@ -242,6 +243,29 @@ const dashboardConfig: DashboardConfig = {
         size: {
           cols: 3,
           rows: 1,
+        },
+      },
+    } satisfies TileConfig,
+    {
+      definition: {
+        chart: {
+          type: 'timeseries_bar',
+          chartTitle: 'Timeseries bar chart of mock data',
+          stacked: true,
+        },
+        query: {
+          datasource: 'basic',
+          dimensions: ['time'],
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 5,
+        },
+        size: {
+          cols: 3,
+          rows: 2,
         },
       },
     } satisfies TileConfig,

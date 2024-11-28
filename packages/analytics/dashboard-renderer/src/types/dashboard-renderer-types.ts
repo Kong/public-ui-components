@@ -37,6 +37,7 @@ export const dashboardTileTypes = [
   'vertical_bar',
   'gauge',
   'timeseries_line',
+  'timeseries_bar',
   'golden_signals',
   'top_n',
   'slottable',
@@ -109,7 +110,7 @@ export const timeseriesChartSchema = {
   properties: {
     type: {
       type: 'string',
-      enum: ['timeseries_line'],
+      enum: ['timeseries_line', 'timeseries_bar'],
     },
     stacked: {
       type: 'boolean',

@@ -1,7 +1,7 @@
 import type { Plugin } from 'vue'
 import { nonTsExploreResponse, routeExploreResponse } from './mock-data'
 import { INJECT_QUERY_PROVIDER } from '../src'
-import { generateSingleMetricTimeSeriesData, type AnalyticsBridge, type AnalyticsConfigV2, type ExploreQuery, type ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import { generateSingleMetricTimeSeriesData, type AnalyticsBridge, type AnalyticsConfigV2, type DatasourceAwareQuery, type ExploreQuery, type ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 
 const delayedResponse = <T>(response: T): Promise<T> => {
   return new Promise((resolve) => {
@@ -11,9 +11,9 @@ const delayedResponse = <T>(response: T): Promise<T> => {
   })
 }
 
-const queryFn = async (query: ExploreQuery): Promise<ExploreResultV4> => {
+const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> => {
   console.log('Querying data:', query)
-  if (query.dimensions && query.dimensions.includes('time')) {
+  if (query.query.dimensions && query.query.dimensions.includes('time')) {
     return await delayedResponse(
       generateSingleMetricTimeSeriesData(
         { name: 'requests', unit: 'count' },
@@ -21,14 +21,14 @@ const queryFn = async (query: ExploreQuery): Promise<ExploreResultV4> => {
       ),
     )
   }
-  if (query.dimensions && query.dimensions.findIndex(d => d === 'route') > -1) {
+  if (query.query.dimensions && query.query.dimensions.findIndex(d => d === 'route') > -1) {
     return await delayedResponse(routeExploreResponse)
   }
 
-  if (query.limit) {
+  if (query.query.limit) {
     return {
       ...nonTsExploreResponse,
-      data: nonTsExploreResponse.data.slice(0, query.limit),
+      data: nonTsExploreResponse.data.slice(0, query.query.limit),
     }
   }
 

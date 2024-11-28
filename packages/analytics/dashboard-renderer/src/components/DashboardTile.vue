@@ -148,6 +148,7 @@ const canShowKebabMenu = computed(() => hasKebabMenuAccess && !['golden_signals'
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
+  'timeseries_bar': TimeseriesChartRenderer,
   'horizontal_bar': BarChartRenderer,
   'vertical_bar': BarChartRenderer,
   'gauge': SimpleChartRenderer,
