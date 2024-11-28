@@ -3,7 +3,7 @@
     <VueFormGenerator
       :model="formModel"
       :options="formOptions"
-      :schema="scopingSchema"
+      :schema="globalFields"
       @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
     />
 
@@ -331,15 +331,12 @@ const props = defineProps<{
   isEditing?: boolean
 }>()
 
-const scopingSchema = computed(() => {
+const globalFields = computed(() => {
   const selectionGroup = props.formSchema?.fields?.find((field: any) => field.type === 'selectionGroup' && field.model === 'selectionGroup')
-  if (!selectionGroup) {
-    return undefined
-  }
 
-  const enableSwitch = props.formSchema?.fields.find((field: any) => field.pinned && field.type === 'switch' && field.model === 'enabled')
+  const enableSwitch = props.formSchema?.fields.find((field: any) => field.model === 'enabled')
 
-  return { fields: [enableSwitch, selectionGroup] }
+  return { fields: [enableSwitch, selectionGroup].filter(Boolean) }
 })
 
 const advancedSchema = computed(() => {
