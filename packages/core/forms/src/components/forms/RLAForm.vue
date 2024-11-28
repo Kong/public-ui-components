@@ -303,7 +303,7 @@ const USE_CASES: Record<string, UseCase[]> = {
  * These are fields that we will take care of out of the VFG
  */
 const OMITTED_MODEL_KEYS_FULL_MATCH = new Set([
-  'selectionGroup',
+  'selectionGroup', 'enabled',
   ...['identifier', 'limit', 'window_size', 'error_code', 'error_message']
     .map((field) => `config-${field}`),
 ])
@@ -337,7 +337,9 @@ const scopingSchema = computed(() => {
     return undefined
   }
 
-  return { fields: [selectionGroup] }
+  const enableSwitch = props.formSchema?.fields.find((field: any) => field.pinned && field.type === 'switch' && field.model === 'enabled')
+
+  return { fields: [enableSwitch, selectionGroup] }
 })
 
 const advancedSchema = computed(() => {
