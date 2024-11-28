@@ -489,6 +489,10 @@
       "injection-protection": {
         "name": "Injection Protection",
         "description": "Protect against injection attacks by rejecting requests that match common injections patterns."
+      },
+      "redirect": {
+        "name": "Redirect",
+        "description": "Redirect incoming requests to a new URL"
       }
     },
     "fields": {
