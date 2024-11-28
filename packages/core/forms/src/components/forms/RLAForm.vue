@@ -3,7 +3,7 @@
     <VueFormGenerator
       :model="formModel"
       :options="formOptions"
-      :schema="scopingSchema"
+      :schema="globalFields"
       @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
     />
 
@@ -303,7 +303,7 @@ const USE_CASES: Record<string, UseCase[]> = {
  * These are fields that we will take care of out of the VFG
  */
 const OMITTED_MODEL_KEYS_FULL_MATCH = new Set([
-  'selectionGroup',
+  'selectionGroup', 'enabled',
   ...['identifier', 'limit', 'window_size', 'error_code', 'error_message']
     .map((field) => `config-${field}`),
 ])
@@ -331,13 +331,12 @@ const props = defineProps<{
   isEditing?: boolean
 }>()
 
-const scopingSchema = computed(() => {
+const globalFields = computed(() => {
   const selectionGroup = props.formSchema?.fields?.find((field: any) => field.type === 'selectionGroup' && field.model === 'selectionGroup')
-  if (!selectionGroup) {
-    return undefined
-  }
 
-  return { fields: [selectionGroup] }
+  const enableSwitch = props.formSchema?.fields.find((field: any) => field.model === 'enabled')
+
+  return { fields: [enableSwitch, selectionGroup].filter(Boolean) }
 })
 
 const advancedSchema = computed(() => {
