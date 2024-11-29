@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.31.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.30.4...@kong-ui-public/dashboard-renderer@0.31.0) (2024-11-29)
+
+
+### Features
+
+* enable support for timeseries_bar chart ([#1822](https://github.com/Kong/public-ui-components/issues/1822)) ([bedd064](https://github.com/Kong/public-ui-components/commit/bedd064967c4a0825ecc9667a8c5cb4826954496))
+
+
+
+
+
 ## [0.30.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.30.3...@kong-ui-public/dashboard-renderer@0.30.4) (2024-11-27)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
