@@ -1,12 +1,15 @@
 <template>
-  <div class="span-attribute-table">
+  <div
+    v-if="span.attributes"
+    class="span-attribute-table"
+  >
     <div class="title">
       {{ t('trace_viewer.span_attributes.title') }}
     </div>
 
     <div class="attributes">
       <SpanAttribute
-        v-for="keyValue in attributes"
+        v-for="keyValue in span.attributes"
         :key="keyValue.key"
         :key-value="keyValue"
         :span="span"
@@ -18,15 +21,12 @@
 <script setup lang="ts">
 import composables from '../../composables'
 import { WATERFALL_ROW_PADDING_X } from '../../constants'
-import type { IKeyValue, Span } from '../../types'
+import type { Span } from '../../types'
 import SpanAttribute from './SpanAttribute.vue'
 
 const { i18n: { t } } = composables.useI18n()
 
-defineProps<{
-  attributes: IKeyValue[]
-  span: Span
-}>()
+defineProps<{ span: Span }>()
 </script>
 
 <style lang="scss" scoped>

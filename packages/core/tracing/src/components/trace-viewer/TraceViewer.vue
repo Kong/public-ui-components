@@ -46,11 +46,10 @@
       >
         <SpanEventList
           v-if="selectedSpan.span.events && selectedSpan.span.events.length > 0"
-          :events="selectedSpan.span.events"
+          :span="selectedSpan.span"
         />
         <SpanAttributeTable
           v-if="selectedSpan.span.attributes && selectedSpan.span.attributes.length > 0"
-          :attributes="selectedSpan.span.attributes"
           :span="selectedSpan.span"
         />
       </div>
