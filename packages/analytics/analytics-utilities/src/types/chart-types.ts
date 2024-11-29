@@ -3,6 +3,7 @@ export const reportChartTypes = [
   'vertical_bar',
   'timeseries_line',
   'choropleth_map',
+  'timeseries_bar',
 ] as const
 
 export type ReportChartTypes = typeof reportChartTypes[number]
