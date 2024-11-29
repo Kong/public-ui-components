@@ -46,6 +46,15 @@ defineProps<{
 
   .attributes {
     width: 100%;
+
+    :deep(.config-card-details-value) {
+      font-family: $kui-font-family-code;
+      font-size: $kui-font-size-30;
+
+      .copy-text {
+        font-size: $kui-font-size-30;
+      }
+    }
   }
 }
 </style>

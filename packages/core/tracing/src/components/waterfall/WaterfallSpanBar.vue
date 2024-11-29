@@ -19,7 +19,7 @@ const props = defineProps<{
 // TODO: This is not final
 const barColor = computed(() => {
   if (props.spanNode.root) {
-    return WATERFALL_LEGENDS[WaterfallLegendItemKind.ROOT].color
+    return WATERFALL_LEGENDS[WaterfallLegendItemKind.TOTAL].color
   }
 
   if (props.spanNode.span.name.includes('client')) {

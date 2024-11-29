@@ -9,7 +9,8 @@
       "unselected": "Selected span will be shown here"
     },
     "span_attributes": {
-      "title": "Span attributes"
+      "title": "Span attributes",
+      "not_applicable": "Not applicable"
     },
     "span_events": {
       "exception_message": {
@@ -26,11 +27,11 @@
     "legend": {
       "latency": "Latency",
       "labels": {
-        "root": "Root",
+        "client": "Client",
         "kong": "Kong (internal)",
-        "upstream": "Upstream",
         "third_party": "Third party",
-        "client": "Client"
+        "total": "Total",
+        "upstream": "Upstream"
       }
     }
   }

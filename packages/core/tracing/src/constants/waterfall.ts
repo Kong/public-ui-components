@@ -32,7 +32,7 @@ export enum WaterfallRowsState {
 
 // TODO: This is INDETERMINATE now
 export enum WaterfallLegendItemKind {
-  ROOT = 'root',
+  TOTAL = 'total',
   KONG = 'kong',
   UPSTREAM = 'upstream',
   THIRD_PARTY = 'third_party',
@@ -42,7 +42,7 @@ export enum WaterfallLegendItemKind {
 // TODO: Reserved for span color-coding.
 // They are subject to change in the future.
 export const WATERFALL_LEGENDS = {
-  [WaterfallLegendItemKind.ROOT]: {
+  [WaterfallLegendItemKind.TOTAL]: {
     color: KUI_COLOR_BACKGROUND_PRIMARY, // blur.60
   },
   [WaterfallLegendItemKind.KONG]: {
