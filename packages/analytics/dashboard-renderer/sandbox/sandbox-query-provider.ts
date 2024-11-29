@@ -1,7 +1,8 @@
 import type { Plugin } from 'vue'
 import { nonTsExploreResponse, routeExploreResponse } from './mock-data'
 import { INJECT_QUERY_PROVIDER } from '../src'
-import { generateSingleMetricTimeSeriesData, type AnalyticsBridge, type AnalyticsConfigV2, type DatasourceAwareQuery, type ExploreQuery, type ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import { generateSingleMetricTimeSeriesData } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsBridge, AnalyticsConfigV2, DatasourceAwareQuery, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 
 const delayedResponse = <T>(response: T): Promise<T> => {
   return new Promise((resolve) => {
