@@ -6,6 +6,7 @@ import type { Dataset, KChartData, ExploreToDatasetDeps, DatasetLabel } from '..
 import { parseISO } from 'date-fns'
 import { isNullOrUndef } from 'chart.js/helpers'
 import composables from '../composables'
+import { KUI_COLOR_BACKGROUND_NEUTRAL } from '@kong/design-tokens'
 
 const range = (start: number, stop: number, step: number = 1): number[] =>
   Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step)
@@ -180,6 +181,21 @@ export default function useExploreResultToTimeDataset(
         // sort by total, descending
         datasets.sort((a, b) => (Number(a.total) < Number(b.total) ? -1 : 1))
 
+        // Draw an optional threshold line
+        if (deps.threshold) {
+          datasets.push({
+            type: 'line',
+            borderColor: KUI_COLOR_BACKGROUND_NEUTRAL,
+            borderWidth: 3,
+            borderDash: [12, 8],
+            fill: false,
+            borderJoinStyle: 'miter',
+            stack: 'custom', // Never stack this dataset
+            data: zeroFilledTimeSeries.map(ts => {
+              return { x: ts, y: deps.threshold }
+            }),
+          } as Dataset)
+        }
         return {
           datasets,
           colorMap,

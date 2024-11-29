@@ -13,4 +13,5 @@ import type { AnalyticsChartColors } from './chart-data'
 export interface ExploreToDatasetDeps {
   colorPalette?: AnalyticsChartColors | string[]
   fill?: boolean
+  threshold?: number
 }

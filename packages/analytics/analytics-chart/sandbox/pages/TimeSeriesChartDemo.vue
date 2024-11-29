@@ -207,6 +207,7 @@
         :legend-position="legendPosition"
         :show-annotations="showAnnotationsToggle"
         :show-legend-values="showLegendValuesToggle"
+        :threshold="1250"
         :timeseries-zoom="timeSeriesZoomToggle"
         tooltip-title="tooltip title"
         @zoom-time-range="eventLog += 'Zoomed to ' + JSON.stringify($event) + '\n'"

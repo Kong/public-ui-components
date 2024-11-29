@@ -726,4 +726,57 @@ describe('useVitalsExploreDatasets', () => {
     expect(result.value.datasets[3].backgroundColor).toEqual('#ffd5b1')
     expect(result.value.datasets[4].backgroundColor).toEqual('#ffb6b6')
   })
+
+  it('displays a static threshold line on timeseries charts', () => {
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            metric1: 2,
+            metric2: 1,
+          },
+        } as GroupByResult,
+        {
+          timestamp: END_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            metric1: 2,
+            metric2: 1,
+          },
+        } as GroupByResult,
+      ],
+      meta: {
+        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
+        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        granularity_ms: 86400000,
+        metric_names: ['metric1', 'metric2'] as any as ExploreAggregations[],
+        display: {},
+        query_id: '',
+        metric_units: { metric1: 'units' } as MetricUnit,
+      },
+    }))
+
+    const staticThreshold = 1.24
+
+    const result = useExploreResultToTimeDataset(
+      {
+        fill: false,
+        threshold: staticThreshold,
+      },
+      exploreResult,
+    )
+
+    expect(result.value.datasets[2].data).toEqual(
+      [
+        {
+          x: START_FOR_DAILY_QUERY.getTime(),
+          y: staticThreshold,
+        },
+        {
+          x: END_FOR_DAILY_QUERY.getTime(),
+          y: staticThreshold,
+        },
+      ],
+    )
+  })
 })
