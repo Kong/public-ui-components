@@ -1,20 +1,20 @@
 import type { SpanNode } from './spans'
 
 export interface WaterfallConfig {
-  ticks: number;
-  totalDurationNano: number;
-  startTimeUnixNano: number;
+  ticks: number
+  totalDurationNano: number
+  startTimeUnixNano: bigint
   /** Zoom level */
-  zoom: number;
+  zoom: number
   /**
    * Horizontal shift of the viewport in pixels (used by zooming)
    * Values & directions: <-- negative -- positive -->
    */
-  viewportShift: number;
-  viewport: { left: number; right: number };
-  selectedSpan?: SpanNode;
+  viewportShift: number
+  viewport: { left: number; right: number }
+  selectedSpan?: SpanNode
 }
 
 export interface WaterfallLegendItem {
-  color: string;
+  color: string
 }

@@ -19,19 +19,24 @@
         :external-link="entityLink"
         new-window
       />
+      <span v-else>
+        {{ t('trace_viewer.span_attributes.not_applicable') }}
+      </span>
     </template>
   </ConfigCardItem>
 </template>
 
 <script setup lang="ts">
 import { ConfigCardItem, ConfigurationSchemaType, EntityLink, type EntityLinkData } from '@kong-ui-public/entities-shared'
-import type { IKeyValue } from '@opentelemetry/otlp-transformer'
 import { computed, inject, onWatcherCleanup, shallowRef, watch } from 'vue'
+import composables from '../../composables'
 import { SPAN_ATTRIBUTE_VALUE_UNKNOWN, SPAN_ATTRIBUTES, TRACE_VIEWER_CONFIG } from '../../constants'
-import type { EntityRequest, Span, TraceViewerConfig } from '../../types'
+import type { EntityRequest, IKeyValue, Span, TraceViewerConfig } from '../../types'
 import { getPhaseAndPlugin, unwrapAnyValue } from '../../utils'
 
 import '@kong-ui-public/entities-shared/dist/style.css'
+
+const { i18n: { t } } = composables.useI18n()
 
 const props = defineProps<{
   span: Span
@@ -158,5 +163,5 @@ watch([() => config.getEntityLinkData, entityRequest], async ([getEntityLinkData
   } catch (e) {
     console.warn('The host app MUST handle exceptions in `getEntityLinkData` instead of throwing them here:', e)
   }
-})
+}, { immediate: true })
 </script>

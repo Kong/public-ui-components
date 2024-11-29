@@ -10,7 +10,10 @@
       <div class="above-waterfall">
         <WaterfallLegend />
 
-        <div class="url">
+        <div
+          v-if="url"
+          class="url"
+        >
           <div class="label">
             {{ t('trace_viewer.url') }}
           </div>
@@ -18,6 +21,8 @@
             <KCopy
               copy-tooltip="Copy"
               :text="url"
+              truncate
+              :truncation-limit="48"
             />
           </div>
         </div>
@@ -44,7 +49,7 @@
           :span="selectedSpan.span"
         />
         <SpanAttributeTable
-          v-if="selectedSpan.span.attributes.length > 0"
+          v-if="selectedSpan.span.attributes && selectedSpan.span.attributes.length > 0"
           :span="selectedSpan.span"
         />
       </div>
@@ -81,7 +86,7 @@ const { i18n: { t } } = composables.useI18n()
 const props = defineProps<{
   config: TraceViewerConfig
   rootSpan: SpanNode
-  url: string
+  url?: string
 }>()
 
 // Provide the config to all children components
@@ -102,7 +107,7 @@ const spanNothingToDisplay = computed(() => {
     return false
   }
 
-  if (selectedSpan.value.span.attributes.length > 0) {
+  if (selectedSpan.value.span.attributes && selectedSpan.value.span.attributes.length > 0) {
     return false
   }
 
@@ -184,6 +189,7 @@ const spanNothingToDisplay = computed(() => {
       align-items: center;
       display: flex;
       flex-direction: row;
+      flex-shrink: 1;
       gap: $kui-space-50;
       justify-content: space-between;
 

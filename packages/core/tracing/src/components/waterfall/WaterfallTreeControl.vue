@@ -39,7 +39,6 @@ defineProps({
   min-height: v-bind('`${size}px`');
   min-width: v-bind('`${size}px`');
   transform: v-bind('`rotate(${!expanded ? -90 : 0}deg)`');
-  transition: transform 0.2s ease-in-out;
   width: v-bind('`${size}px`');
 
   .control {

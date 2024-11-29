@@ -15,10 +15,13 @@
     @close="slideoutVisible = false"
   >
     <template #title>
-      <KBadge appearance="warning">
+      <KBadge appearance="success">
         200
       </KBadge>
-      GET {{ path }}
+
+      <div class="trace-viewer-title-request-line">
+        GET /kong
+      </div>
     </template>
 
     <TraceViewer
@@ -53,7 +56,7 @@ const config: TraceViewerConfig = {
   },
 }
 
-const path = `/${Math.random().toString(36).substring(2)}`
+const path = `/${Array(10).fill(null).map(() => Math.random().toString(36).slice(2)).join('/')}`
 const url = `https://example.com${path}`
 </script>
 
@@ -71,8 +74,20 @@ const url = `https://example.com${path}`
 }
 
 .trace-viewer-slideout {
+  .trace-viewer-title-request-line {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   :deep(.slideout-container) {
     box-sizing: border-box;
+
+    .slideout-title {
+      flex-shrink: 1;
+      min-width: 0;
+    }
+
     .slideout-content {
       flex-grow: 1;
     }

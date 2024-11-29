@@ -1,6 +1,6 @@
-import type { IAnyValue } from '@opentelemetry/otlp-transformer'
 import { SPAN_ZERO_ID } from '../constants'
-import { type Span, type SpanNode } from '../types'
+import { type IAnyValue, type Span, type SpanNode } from '../types'
+import { cloneDeep } from 'lodash-es'
 
 /**
  * Iterate over the spans and build span trees, where each tree stores a trace.
@@ -12,12 +12,34 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
   const nodes = new Map<string, SpanNode>()
 
   for (const span of spans) {
-    nodes.set(span.spanId, {
-      span,
+    // Performance: Only pick the necessary fields
+    const {
+      traceId,
+      spanId,
+      parentSpanId,
+      name,
+      startTimeUnixNano,
+      endTimeUnixNano,
+      attributes,
+      events,
+    } = span
+    const node = {
+      span: {
+        traceId,
+        spanId,
+        parentSpanId,
+        name,
+        startTimeUnixNano,
+        endTimeUnixNano,
+        attributes: cloneDeep(attributes), // Avoid mutating the original attributes
+        events: cloneDeep(events), // Avoid mutating the original events
+      },
       root: !span.parentSpanId || span.parentSpanId === SPAN_ZERO_ID,
-      durationNano: span.endTimeUnixNano - span.startTimeUnixNano,
+      durationNano: Number(BigInt(span.endTimeUnixNano) - BigInt(span.startTimeUnixNano)),
       children: [],
-    })
+    }
+    node.span.attributes?.sort((a, b) => a.key.localeCompare(b.key))
+    nodes.set(span.spanId, node)
   }
 
   const roots: SpanNode[] = []
@@ -32,7 +54,7 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
   }
 
   for (const node of nodes.values()) {
-    node.children.sort((a, b) => a.span.startTimeUnixNano - b.span.startTimeUnixNano)
+    node.children.sort((a, b) => Number(BigInt(a.span.startTimeUnixNano) - BigInt(b.span.startTimeUnixNano)))
   }
 
   return roots

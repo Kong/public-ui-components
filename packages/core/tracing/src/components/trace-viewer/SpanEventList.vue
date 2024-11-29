@@ -1,5 +1,8 @@
 <template>
-  <div class="span-events">
+  <div
+    v-if="span.events"
+    class="span-events"
+  >
     <SpanEvent
       v-for="(event, i) in span.events"
       :key="i"

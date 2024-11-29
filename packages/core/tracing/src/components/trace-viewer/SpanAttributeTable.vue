@@ -1,5 +1,8 @@
 <template>
-  <div class="span-attribute-table">
+  <div
+    v-if="span.attributes"
+    class="span-attribute-table"
+  >
     <div class="title">
       {{ t('trace_viewer.span_attributes.title') }}
     </div>
@@ -43,6 +46,15 @@ defineProps<{ span: Span }>()
 
   .attributes {
     width: 100%;
+
+    :deep(.config-card-details-value) {
+      font-family: $kui-font-family-code;
+      font-size: $kui-font-size-30;
+
+      .copy-text {
+        font-size: $kui-font-size-30;
+      }
+    }
   }
 }
 </style>
