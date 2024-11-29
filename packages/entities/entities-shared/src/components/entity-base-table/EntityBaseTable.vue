@@ -28,6 +28,7 @@
       :pagination-attributes="{ disablePageJump: disablePaginationPageJump, offset: paginationType === 'offset' }"
       resize-columns
       :row-attrs="rowAttrs"
+      :row-key="rowKey"
       :search-input="query"
       :sort-handler-function="enableClientSort ? sortHandlerFunction : undefined"
       :sortable="!disableSorting"
@@ -95,7 +96,7 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import composables from '../../composables'
 import { useTablePreferences } from '@kong-ui-public/core'
-import type { HeaderTag, TablePreferences, SortHandlerFunctionParam, TableDataFetcherParams } from '@kong/kongponents'
+import type { HeaderTag, TablePreferences, SortHandlerFunctionParam, TableDataFetcherParams, TableDataProps } from '@kong/kongponents'
 import EntityBaseTableCell from './EntityBaseTableCell.vue'
 
 import type {
@@ -128,6 +129,10 @@ const props = defineProps({
   initialFetcherParams: {
     type: Object as PropType<Partial<Omit<TableDataFetcherParams, 'query'>>>,
     default: null,
+  },
+  rowKey: {
+    type: [String, Function] as PropType<TableDataProps['rowKey']>,
+    default: 'id',
   },
   // used to identify the cache entry
   cacheIdentifier: {
