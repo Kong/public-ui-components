@@ -189,6 +189,7 @@ export default function useExploreResultToTimeDataset(
             borderWidth: 3,
             borderDash: [12, 8],
             fill: false,
+            order: -1, // Display above all other datasets
             borderJoinStyle: 'miter',
             stack: 'custom', // Never stack this dataset
             data: zeroFilledTimeSeries.map(ts => {
