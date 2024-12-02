@@ -1,4 +1,5 @@
 import type { AnalyticsChartColors } from './chart-data'
+import type { MetricThreshold } from '../types'
 
 /**
  * Interace representing the various options
@@ -13,5 +14,5 @@ import type { AnalyticsChartColors } from './chart-data'
 export interface ExploreToDatasetDeps {
   colorPalette?: AnalyticsChartColors | string[]
   fill?: boolean
-  threshold?: number
+  threshold?: MetricThreshold
 }

@@ -111,7 +111,7 @@
 
 <script setup lang="ts">
 import composables from '../composables'
-import type { AnalyticsChartOptions, EnhancedLegendItem, TooltipEntry } from '../types'
+import type { AnalyticsChartOptions, EnhancedLegendItem, MetricThreshold, TooltipEntry } from '../types'
 import { ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DoughnutChart from './chart-types/DoughnutChart.vue'
@@ -185,7 +185,7 @@ const props = defineProps({
     default: true,
   },
   threshold: {
-    type: Number,
+    type: Object as PropType<MetricThreshold>,
     required: false,
     default: undefined,
   },

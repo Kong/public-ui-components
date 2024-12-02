@@ -137,7 +137,8 @@
     "cost": "Costs",
     "llm_cache_embeddings_latency_average": "Embeddings Latency (avg)",
     "llm_cache_fetch_latency_average": "Fetch Latency (avg)",
-    "llm_latency_average": "LLM Latency (avg)"
+    "llm_latency_average": "LLM Latency (avg)",
+    "threshold": "Alert threshold"
   },
   "metricAxisTitles": {
     "request_count": "Request Count",

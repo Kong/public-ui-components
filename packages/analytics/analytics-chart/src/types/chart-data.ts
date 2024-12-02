@@ -2,6 +2,7 @@ import type { ChartData, ChartDataset, LegendItem } from 'chart.js'
 import type { ChartMetricDisplay } from '../enums'
 import type { ChartTooltipSortFn } from './chartjs-options'
 import type { ChartType, SimpleChartType } from './chart-types'
+import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 
 // Chart.js extendend interfaces
 export type Dataset = ChartDataset & { rawDimension: string, rawMetric?: string, total?: number, lineTension?: number, fill?: boolean }
@@ -32,6 +33,10 @@ export interface AnalyticsChartColors {
 export interface LegendValueEntry {
   raw: number,
   formatted: string
+}
+
+export type MetricThreshold = {
+  [K in keyof ExploreAggregations]: number
 }
 
 /**

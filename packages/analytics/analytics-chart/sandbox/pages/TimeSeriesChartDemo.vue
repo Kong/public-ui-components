@@ -207,7 +207,7 @@
         :legend-position="legendPosition"
         :show-annotations="showAnnotationsToggle"
         :show-legend-values="showLegendValuesToggle"
-        :threshold="1250"
+        :threshold="threshold"
         :timeseries-zoom="timeSeriesZoomToggle"
         tooltip-title="tooltip title"
         @zoom-time-range="eventLog += 'Zoomed to ' + JSON.stringify($event) + '\n'"
@@ -259,7 +259,7 @@ import {
   CsvExportButton,
 } from '../../src'
 import type { AnalyticsExploreRecord, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
-import type { AnalyticsChartColors, AnalyticsChartOptions, ChartType } from '../../src/types'
+import type { AnalyticsChartColors, AnalyticsChartOptions, ChartType, MetricThreshold } from '../../src/types'
 import { isValidJson, rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'
@@ -267,7 +267,6 @@ import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { generateMultipleMetricTimeSeriesData, generateSingleMetricTimeSeriesData } from '@kong-ui-public/analytics-utilities'
 import CodeText from '../CodeText.vue'
 import { INJECT_QUERY_PROVIDER } from '../../src/constants'
-import useEvaluateFeatureFlag from '../../src/composables/useEvauluateFeatureFlag'
 
 enum Metrics {
   TotalRequests = 'TotalRequests',
@@ -324,6 +323,10 @@ const statusCodeDimensionValues = ref(new Set(statusCodeLabels))
 const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',
 ]))
+
+const threshold:MetricThreshold = {
+  'request_count': 1250,
+} as any as MetricThreshold
 
 const exportModalVisible = ref(false)
 const setModalVisibility = (val: boolean) => {

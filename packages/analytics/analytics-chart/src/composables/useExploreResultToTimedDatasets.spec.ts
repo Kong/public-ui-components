@@ -6,6 +6,7 @@ import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
 import { BORDER_WIDTH, NO_BORDER, defaultStatusCodeColors } from '../utils'
 import { addHours } from 'date-fns'
 import type { MockInstance } from 'vitest'
+import type { MetricThreshold } from 'src/types'
 
 const START_FOR_DAILY_QUERY = new Date(1672560000000)
 const END_FOR_DAILY_QUERY = new Date(1672646400000)
@@ -756,25 +757,24 @@ describe('useVitalsExploreDatasets', () => {
       },
     }))
 
-    const staticThreshold = 1.24
-
     const result = useExploreResultToTimeDataset(
       {
         fill: false,
-        threshold: staticThreshold,
+        threshold: { 'request_count': 320 } as any as MetricThreshold,
       },
       exploreResult,
     )
 
+    expect(result.value.datasets[2].label).toEqual('Alert threshold')
     expect(result.value.datasets[2].data).toEqual(
       [
         {
           x: START_FOR_DAILY_QUERY.getTime(),
-          y: staticThreshold,
+          y: 320,
         },
         {
           x: END_FOR_DAILY_QUERY.getTime(),
-          y: staticThreshold,
+          y: 320,
         },
       ],
     )

@@ -1,4 +1,4 @@
-import type { ExploreResultV4, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
+import type { ExploreAggregations, ExploreResultV4, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
 import { defaultLineOptions, lookupDatavisColor, datavisPalette, BORDER_WIDTH, NO_BORDER } from '../utils'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
@@ -181,21 +181,28 @@ export default function useExploreResultToTimeDataset(
         // sort by total, descending
         datasets.sort((a, b) => (Number(a.total) < Number(b.total) ? -1 : 1))
 
-        // Draw an optional threshold line
+        // Draw threshold lines, if any
         if (deps.threshold) {
-          datasets.push({
-            type: 'line',
-            borderColor: KUI_COLOR_BACKGROUND_NEUTRAL,
-            borderWidth: 3,
-            borderDash: [12, 8],
-            fill: false,
-            order: -1, // Display above all other datasets
-            borderJoinStyle: 'miter',
-            stack: 'custom', // Never stack this dataset
-            data: zeroFilledTimeSeries.map(ts => {
-              return { x: ts, y: deps.threshold }
-            }),
-          } as Dataset)
+          for (const key of Object.keys(deps.threshold)) {
+            const thresholdValue = deps.threshold[key as keyof ExploreAggregations]
+
+            if (thresholdValue) {
+              datasets.push({
+                type: 'line',
+                rawMetric: key,
+                label: i18n.t('chartLabels.threshold'),
+                borderColor: KUI_COLOR_BACKGROUND_NEUTRAL,
+                borderWidth: 1.25,
+                borderDash: [12, 8],
+                fill: false,
+                order: -1, // Display above all other datasets
+                stack: 'custom', // Never stack this dataset
+                data: zeroFilledTimeSeries.map(ts => {
+                  return { x: ts, y: thresholdValue }
+                }),
+              } as Dataset)
+            }
+          }
         }
         return {
           datasets,
