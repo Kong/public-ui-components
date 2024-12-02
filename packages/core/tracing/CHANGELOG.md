@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.1.4...@kong-ui-public/tracing@0.2.0) (2024-12-02)
+
+
+### Features
+
+* **tracing:** add types for batches and helpers to merge spans ([#1826](https://github.com/Kong/public-ui-components/issues/1826)) ([0cf7399](https://github.com/Kong/public-ui-components/commit/0cf7399f46985345372a03334d555ac923973b85))
+
+
+
+
+
 ## [0.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.1.3...@kong-ui-public/tracing@0.1.4) (2024-11-29)
 
 
