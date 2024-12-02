@@ -36,10 +36,12 @@
 import { computed, ref } from 'vue'
 import { buildSpanTrees, TraceViewer, type TraceViewerConfig } from '../../src'
 import rawSpans from '../fixtures/spans.json'
+// import traceBatches from '../fixtures/trace-batches.json'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const spanRoots = computed(() => buildSpanTrees(rawSpans))
+// const spanRoots = computed(() => buildSpanTrees(mergeSpansInTraceBatches(traceBatches)))
 const slideoutVisible = ref(false)
 
 const config: TraceViewerConfig = {

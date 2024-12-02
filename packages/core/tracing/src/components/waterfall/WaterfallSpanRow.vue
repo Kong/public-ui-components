@@ -142,6 +142,9 @@ const hasException = computed(() => {
   }
 
   for (const event of props.spanNode.span.events) {
+    if (!event.attributes) {
+      continue
+    }
     for (const keyValue of event.attributes) {
       if (keyValue.key === SPAN_EVENT_ATTRIBUTES.EXCEPTION_MESSAGE.name) {
         return true

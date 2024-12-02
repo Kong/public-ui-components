@@ -21,7 +21,8 @@ const props = defineProps<{ event: Event }>()
 
 // We only have exception-typed events for now
 const exceptionMessage = computed(() =>
-  props.event.attributes
-    .find((keyValue) => keyValue.key === SPAN_EVENT_ATTRIBUTES.EXCEPTION_MESSAGE.name)?.value.stringValue,
+  props.event.attributes?.find(
+    (keyValue) => keyValue.key === SPAN_EVENT_ATTRIBUTES.EXCEPTION_MESSAGE.name,
+  )?.value.stringValue,
 )
 </script>
