@@ -1,4 +1,4 @@
-import type { IEvent, IKeyValue } from './otlp'
+import type { IKeyValue } from './otlp'
 
 export interface Span {
   traceId: string
@@ -15,8 +15,10 @@ export interface Span {
   events?: Event[]
 }
 
-export interface Event extends IEvent {
+export interface Event {
+  name: string
   timeUnixNano: string
+  attributes?: IKeyValue[]
 }
 
 export interface SpanNode {
