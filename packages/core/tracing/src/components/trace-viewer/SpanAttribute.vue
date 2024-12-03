@@ -181,6 +181,10 @@ watch([() => config.getEntityLinkData, entityRequest], async ([getEntityLinkData
     }
     // Do not update the link data when it is falsy
   } catch (e) {
+    if (e instanceof Error && e.name === 'CanceledError') {
+      // Ignore CanceledErrors
+      return
+    }
     console.warn('The host app MUST handle exceptions in `getEntityLinkData` instead of throwing them here:', e)
   }
 }, { immediate: true })
