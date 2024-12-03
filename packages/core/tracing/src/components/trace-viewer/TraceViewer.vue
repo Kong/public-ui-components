@@ -8,29 +8,42 @@
       min-size="20"
     >
       <div class="above-waterfall">
-        <WaterfallLegend />
+        <template v-if="showSkeleton">
+          <KSkeletonBox
+            height="2"
+            width="25"
+          />
+          <KSkeletonBox
+            height="2"
+            width="25"
+          />
+        </template>
+        <template v-else>
+          <WaterfallLegend />
 
-        <div
-          v-if="url"
-          class="url"
-        >
-          <div class="label">
-            {{ t('trace_viewer.url') }}
+          <div
+            v-if="url"
+            class="url"
+          >
+            <div class="label">
+              {{ t('trace_viewer.url') }}
+            </div>
+            <div class="content">
+              <KCopy
+                copy-tooltip="Copy"
+                :text="url"
+                truncate
+                :truncation-limit="48"
+              />
+            </div>
           </div>
-          <div class="content">
-            <KCopy
-              copy-tooltip="Copy"
-              :text="url"
-              truncate
-              :truncation-limit="48"
-            />
-          </div>
-        </div>
+        </template>
       </div>
 
       <div class="waterfall-wrapper">
         <WaterfallView
           :root-span="props.rootSpan"
+          :show-skeleton="props.showSkeleton"
           @update:selected-span="handleUpdateSelectedSpan"
         />
       </div>
@@ -40,8 +53,15 @@
       class="detail-pane"
       size="50"
     >
+      <template v-if="showSkeleton">
+        <KSkeleton
+          :table-columns="2"
+          :table-rows="8"
+          type="table"
+        />
+      </template>
       <div
-        v-if="selectedSpan && !spanNothingToDisplay"
+        v-else-if="selectedSpan && !spanNothingToDisplay"
         class="span-details"
       >
         <SpanEventList
@@ -85,8 +105,9 @@ const { i18n: { t } } = composables.useI18n()
 
 const props = defineProps<{
   config: TraceViewerConfig
-  rootSpan: SpanNode
+  rootSpan?: SpanNode
   url?: string
+  showSkeleton?: boolean
 }>()
 
 // Provide the config to all children components

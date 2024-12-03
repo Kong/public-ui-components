@@ -1,5 +1,17 @@
 <template>
-  <div class="waterfall">
+  <div
+    v-if="showSkeleton"
+    class="waterfall-skeleton"
+  >
+    <KSkeleton
+      v-for="i in 4"
+      :key="i"
+    />
+  </div>
+  <div
+    v-else
+    class="waterfall"
+  >
     <div class="waterfall-sticky-header">
       <!-- RESERVED: ZOOMING
       <div class="waterfall-row">
@@ -75,11 +87,11 @@
 // RESERVED: Only used when zooming is enabled
 // import { useWheel } from '@vueuse/gesture'
 import { AddIcon, RemoveIcon } from '@kong/icons'
-import { provide, reactive, ref, useTemplateRef, watch, type PropType, type Ref } from 'vue'
+import { computed, provide, reactive, ref, toRef, useTemplateRef, watch, type PropType, type Ref } from 'vue'
 import composables from '../../composables'
 import { WATERFALL_ROW_COLUMN_GAP, WATERFALL_ROW_LABEL_WIDTH, WATERFALL_ROW_PADDING_X, WATERFALL_SPAN_BAR_FADING_WIDTH } from '../../constants'
 import { WATERFALL_CONFIG, WATERFALL_ROWS_STATE, WaterfallRowsState } from '../../constants/waterfall'
-import { type SpanNode, type WaterfallConfig } from '../../types'
+import { type MarkReactiveInputRefs, type SpanNode, type WaterfallConfig } from '../../types'
 import WaterfallScale from './WaterfallScale.vue'
 import WaterfallSpanRow from './WaterfallSpanRow.vue'
 
@@ -95,6 +107,10 @@ const props = defineProps({
     type: Object as PropType<SpanNode>,
     default: () => undefined,
   },
+  showSkeleton: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -108,10 +124,10 @@ const spanBarMeasurementRef = useTemplateRef<HTMLElement>('spanBarMeasurement')
 const interaction = ref<'scroll' | 'zoom'>('scroll')
 const rowsAreaGuideX = ref<number | undefined>(undefined)
 
-const config = reactive<WaterfallConfig>({
-  ticks: props.ticks,
-  totalDurationNano: props.rootSpan?.durationNano ?? 0,
-  startTimeUnixNano: props.rootSpan ? BigInt(props.rootSpan.span.startTimeUnixNano) : 0n,
+const config = reactive<MarkReactiveInputRefs<WaterfallConfig, 'ticks' | 'totalDurationNano' | 'startTimeUnixNano'>>({
+  ticks: toRef(props, 'ticks'), // This will be unwrapped
+  totalDurationNano: computed(() => props.rootSpan?.durationNano ?? 0), // This will be unwrapped
+  startTimeUnixNano: computed(() => props.rootSpan ? BigInt(props.rootSpan.span.startTimeUnixNano) : 0n), // This will be unwrapped
   zoom: 1,
   viewportShift: 0,
   viewport: { left: 0, right: 0 },
@@ -140,8 +156,8 @@ const handleRowsAreaLeave = () => {
   rowsAreaGuideX.value = undefined
 }
 
-watch(() => props.rootSpan, (span) => {
-  config.selectedSpan = span
+watch(() => props.rootSpan, (rootSpan) => {
+  config.selectedSpan = rootSpan
 }, { immediate: true })
 
 watch(() => config.selectedSpan, (span) => {
@@ -235,6 +251,10 @@ watch(() => config.selectedSpan, (span) => {
 </script>
 
 <style lang="scss" scoped>
+.waterfall-skeleton {
+  padding: $kui-space-20 $kui-space-40;
+}
+
 .waterfall {
   box-sizing: border-box;
   height: 100%;
