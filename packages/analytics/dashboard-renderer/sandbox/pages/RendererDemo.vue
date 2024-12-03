@@ -46,6 +46,7 @@ import type { DashboardConfig, DashboardRendererContext, TileConfig, TileDefinit
 import { DashboardRenderer } from '../../src'
 import { inject, ref } from 'vue'
 import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
+import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
@@ -164,6 +165,7 @@ const dashboardConfig: DashboardConfig = {
         chart: {
           type: 'timeseries_line',
           chartTitle: 'Timeseries line chart of mock data',
+          threshold: { 'request_count': 3200 } as Record<ExploreAggregations, number>,
         },
         query: {
           datasource: 'basic',

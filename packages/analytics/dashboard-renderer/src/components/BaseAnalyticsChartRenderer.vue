@@ -58,6 +58,7 @@ const options = computed((): AnalyticsChartOptions => ({
   type: props.chartOptions.type,
   stacked: props.chartOptions.stacked ?? false,
   chartDatasetColors: props.chartOptions.chartDatasetColors,
+  threshold: props.chartOptions.threshold,
 }))
 
 const exploreLink = computed(() => {

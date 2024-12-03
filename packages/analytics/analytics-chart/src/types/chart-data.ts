@@ -35,10 +35,6 @@ export interface LegendValueEntry {
   formatted: string
 }
 
-export type MetricThreshold = {
-  [K in keyof ExploreAggregations]: number
-}
-
 /**
  * Legend item with enhanced value
  */
@@ -88,6 +84,10 @@ export interface AnalyticsChartOptions {
    * Sort tooltip entries
    */
   chartTooltipSortFn?: ChartTooltipSortFn,
+  /**
+   * A static or dynamic metric threshold to be displayed on a timeseries chart
+   */
+  threshold?: Record<ExploreAggregations, number>,
 }
 
 /**

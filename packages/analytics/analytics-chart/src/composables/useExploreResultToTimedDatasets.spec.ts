@@ -6,7 +6,6 @@ import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
 import { BORDER_WIDTH, NO_BORDER, defaultStatusCodeColors } from '../utils'
 import { addHours } from 'date-fns'
 import type { MockInstance } from 'vitest'
-import type { MetricThreshold } from 'src/types'
 
 const START_FOR_DAILY_QUERY = new Date(1672560000000)
 const END_FOR_DAILY_QUERY = new Date(1672646400000)
@@ -760,7 +759,7 @@ describe('useVitalsExploreDatasets', () => {
     const result = useExploreResultToTimeDataset(
       {
         fill: false,
-        threshold: { 'request_count': 320 } as any as MetricThreshold,
+        threshold: { 'request_count': 320 } as Record<ExploreAggregations, number>,
       },
       exploreResult,
     )

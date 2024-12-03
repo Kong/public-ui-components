@@ -1,5 +1,5 @@
 import type { AnalyticsChartColors } from './chart-data'
-import type { MetricThreshold } from '../types'
+import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 
 /**
  * Interace representing the various options
@@ -14,5 +14,5 @@ import type { MetricThreshold } from '../types'
 export interface ExploreToDatasetDeps {
   colorPalette?: AnalyticsChartColors | string[]
   fill?: boolean
-  threshold?: MetricThreshold
+  threshold?: Record<ExploreAggregations, number>
 }

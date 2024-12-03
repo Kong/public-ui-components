@@ -8,6 +8,8 @@ import { isNullOrUndef } from 'chart.js/helpers'
 import composables from '../composables'
 import { KUI_COLOR_BACKGROUND_NEUTRAL } from '@kong/design-tokens'
 
+type MetricThreshold = Record<ExploreAggregations, number>
+
 const range = (start: number, stop: number, step: number = 1): number[] =>
   Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step)
 
@@ -184,7 +186,7 @@ export default function useExploreResultToTimeDataset(
         // Draw threshold lines, if any
         if (deps.threshold) {
           for (const key of Object.keys(deps.threshold)) {
-            const thresholdValue = deps.threshold[key as keyof ExploreAggregations]
+            const thresholdValue = deps.threshold[key as keyof MetricThreshold]
 
             if (thresholdValue) {
               datasets.push({

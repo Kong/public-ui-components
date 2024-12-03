@@ -258,8 +258,8 @@ import {
   CsvExportModal,
   CsvExportButton,
 } from '../../src'
-import type { AnalyticsExploreRecord, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
-import type { AnalyticsChartColors, AnalyticsChartOptions, ChartType, MetricThreshold } from '../../src/types'
+import type { AnalyticsExploreRecord, ExploreAggregations, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsChartColors, AnalyticsChartOptions, ChartType } from '../../src/types'
 import { isValidJson, rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'
@@ -324,9 +324,9 @@ const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',
 ]))
 
-const threshold:MetricThreshold = {
+const threshold = {
   'request_count': 1250,
-} as any as MetricThreshold
+} as Record<ExploreAggregations, number>
 
 const exportModalVisible = ref(false)
 const setModalVisibility = (val: boolean) => {
@@ -383,6 +383,7 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => {
   return {
     type: chartType.value,
     stacked: stackToggle.value,
+    threshold,
     // chartDatasetColors: colorPalette.value,
   }
 })
