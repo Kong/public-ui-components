@@ -31,11 +31,8 @@
           <KDropdownItem
             v-if="!!exploreLink"
             data-testid="chart-jump-to-explore"
-          >
-            <a :href="exploreLink">
-              {{ i18n.t('jumpToExplore') }}
-            </a>
-          </KDropdownItem>
+            :item="{ label: i18n.t('jumpToExplore'), to: exploreLink }"
+          />
           <KDropdownItem
             v-if="'allowCsvExport' in definition.chart && definition.chart.allowCsvExport"
             class="chart-export-button"
