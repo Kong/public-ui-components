@@ -134,9 +134,9 @@ export default function useFetcher(
     }
   }
 
-  watch(fetcherCacheKey, () => {
+  watch(fetcherCacheKey, (key) => {
     if (cacheId) {
-      cacheKeys.set(cacheId, fetcherCacheKey.value)
+      cacheKeys.set(cacheId, key)
     }
   })
 
