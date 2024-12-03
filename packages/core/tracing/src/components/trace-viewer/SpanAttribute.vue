@@ -1,12 +1,5 @@
 <template>
-  <ConfigCardItem
-    :item="{
-      type: itemType,
-      key: keyValue.key,
-      label: keyValue.key,
-      value: formattedValue,
-    }"
-  >
+  <ConfigCardItem :item="item">
     <template
       v-for="(_, attrKey) in ATTRIBUTE_KEY_TO_ENTITY"
       :key="attrKey"
@@ -128,6 +121,14 @@ const entityLink = computed(() => {
 
 const entityLinkData = shallowRef<EntityLinkData | undefined>(undefined)
 
+const item = computed(() => ({
+  type: itemType.value,
+  key: props.keyValue.key,
+  label: props.keyValue.key,
+  value: formattedValue.value,
+  // tooltip: 'This is the description of the attribute', // TODO
+}))
+
 // Get the data for the entity link, asynchronously
 watch([() => config.getEntityLinkData, entityRequest], async ([getEntityLinkData, request]) => {
   if (!request) {
@@ -161,6 +162,10 @@ watch([() => config.getEntityLinkData, entityRequest], async ([getEntityLinkData
     }
     // Do not update the link data when it is falsy
   } catch (e) {
+    if (e instanceof Error && e.name === 'CanceledError') {
+      // Ignore CanceledErrors
+      return
+    }
     console.warn('The host app MUST handle exceptions in `getEntityLinkData` instead of throwing them here:', e)
   }
 }, { immediate: true })

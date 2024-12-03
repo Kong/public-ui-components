@@ -22,10 +22,18 @@
       />
 
       <div class="label-content">
-        <KTooltip
-          class="name"
-          :text="spanNode.span.name"
-        >
+        <KTooltip class="name">
+          <template #content>
+            <div>{{ spanNode.span.name }}</div>
+            <div
+              v-if="spanDescription"
+              class="description"
+            >
+              <!-- eslint-disable-next-line vue/no-v-html -->
+              <div v-html="spanDescription" />
+            </div>
+          </template>
+
           <div class="name">
             {{ spanNode.span.name }}
           </div>
@@ -64,6 +72,7 @@
 </template>
 
 <script lang="ts" setup>
+import { marked, type MarkedOptions } from 'marked'
 import { KUI_COLOR_TEXT_WARNING, KUI_FONT_SIZE_30 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
 import { computed, inject, ref, watch, type PropType, type Ref } from 'vue'
@@ -178,6 +187,12 @@ const handleSelect = () => {
     config.selectedSpan = props.spanNode
   }
 }
+
+// TODO
+const spanDescription = computed(() => {
+  return undefined
+  // return marked.parse('This is a _description_ of the **span**', { mangle: false, headerIds: false } as MarkedOptions)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -238,6 +253,12 @@ const handleSelect = () => {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+      }
+
+      :deep(.description) {
+        p {
+          margin: 0;
+        }
       }
 
       .end-decorator {
