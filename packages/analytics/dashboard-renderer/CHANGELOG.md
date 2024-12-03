@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.31.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.31.0...@kong-ui-public/dashboard-renderer@0.31.1) (2024-12-03)
+
+
+### Bug Fixes
+
+* use correct way to do external link from dropdown item ([#1830](https://github.com/Kong/public-ui-components/issues/1830)) ([6e50d66](https://github.com/Kong/public-ui-components/commit/6e50d66daed98e1c6a6f69c806d56cc48ba8cd69))
+
+
+
+
+
 # [0.31.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.30.4...@kong-ui-public/dashboard-renderer@0.31.0) (2024-11-29)
 
 
