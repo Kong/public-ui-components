@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.6.2...@kong-ui-public/entities-plugins@9.7.0) (2024-12-03)
+
+
+### Features
+
+* **entities-plugins:** support `redirect` plugin ([#1823](https://github.com/Kong/public-ui-components/issues/1823)) ([d0d3a2e](https://github.com/Kong/public-ui-components/commit/d0d3a2e58ffb931d8fbb6e166a36375758cf68de))
+
+
+
+
+
 ## [9.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.6.1...@kong-ui-public/entities-plugins@9.6.2) (2024-11-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
