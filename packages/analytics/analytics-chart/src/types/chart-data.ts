@@ -5,7 +5,13 @@ import type { ChartType, SimpleChartType } from './chart-types'
 import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 
 // Chart.js extendend interfaces
-export type Dataset = ChartDataset & { rawDimension: string, rawMetric?: string, total?: number, lineTension?: number, fill?: boolean }
+export type Dataset = ChartDataset & { rawDimension: string,
+  rawMetric?: string,
+  total?: number,
+  lineTension?: number,
+  fill?: boolean,
+  isThreshold?: boolean
+}
 
 export interface KChartData extends ChartData {
   datasets: Dataset[]
@@ -32,7 +38,8 @@ export interface AnalyticsChartColors {
 
 export interface LegendValueEntry {
   raw: number,
-  formatted: string
+  formatted: string,
+  isThreshold?: boolean,
 }
 
 /**

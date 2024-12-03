@@ -165,7 +165,9 @@ const dashboardConfig: DashboardConfig = {
         chart: {
           type: 'timeseries_line',
           chartTitle: 'Timeseries line chart of mock data',
-          threshold: { 'request_count': 3200 } as Record<ExploreAggregations, number>,
+          threshold: {
+            'request_count': 3200,
+          } as Record<ExploreAggregations, number>,
         },
         query: {
           datasource: 'basic',

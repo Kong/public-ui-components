@@ -12,30 +12,28 @@
       ref="legendItemsRef"
       @click="handleLegendItemClick(datasetIndex, index)"
     >
-      <template v-if="text !== i18n.t('chartLabels.threshold')">
+      <div
+        class="square-marker"
+        :style="{ background: fillStyle, 'border-color': strokeStyle }"
+      />
+      <div
+        class="label-container"
+        :class="{ 'strike-through': !isDatasetVisible(datasetIndex, index) }"
+      >
         <div
-          class="square-marker"
-          :style="{ background: fillStyle, 'border-color': strokeStyle }"
-        />
-        <div
-          class="label-container"
-          :class="{ 'strike-through': !isDatasetVisible(datasetIndex, index) }"
+          class="label"
+          :class="{ 'truncate-label' : shouldTruncate }"
+          :title="text"
         >
-          <div
-            class="label"
-            :class="{ 'truncate-label' : shouldTruncate }"
-            :title="text"
-          >
-            {{ text }}
-          </div>
-          <div
-            v-if="value && showValues"
-            class="sub-label"
-          >
-            {{ value.formatted }}
-          </div>
+          {{ text }}
         </div>
-      </template>
+        <div
+          v-if="value && showValues"
+          class="sub-label"
+        >
+          {{ value.formatted }}
+        </div>
+      </div>
     </li>
   </ul>
 </template>
@@ -46,9 +44,6 @@ import { Chart, type LegendItem } from 'chart.js'
 import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType, computed } from 'vue'
 import { KUI_SPACE_100, KUI_SPACE_80, KUI_SPACE_110 } from '@kong/design-tokens'
 import { debounce } from '../../utils'
-import composables from '../../composables'
-
-const { i18n } = composables.useI18n()
 
 const props = defineProps({
   id: {

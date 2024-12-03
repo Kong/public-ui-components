@@ -192,6 +192,7 @@ export default function useExploreResultToTimeDataset(
               datasets.push({
                 type: 'line',
                 rawMetric: key,
+                isThreshold: true,
                 label: i18n.t('chartLabels.threshold'),
                 borderColor: KUI_COLOR_BACKGROUND_NEUTRAL,
                 borderWidth: 1.25,
