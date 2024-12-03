@@ -4,32 +4,55 @@
     @click="slideoutVisible = true"
   >
     <div>
-      Click to show the slideout
+      Click anywhere to show the slideout<br>
+      Slideout overlay is OFF (not a bug)<br>
+      Click the close button to dismiss the slideout (not a bug)<br>
     </div>
   </div>
 
   <KSlideout
     class="trace-viewer-slideout"
+    :close-on-blur="false"
+    :has-overlay="false"
     max-width="min(100%, 1020px)"
     :visible="slideoutVisible"
     @close="slideoutVisible = false"
   >
     <template #title>
-      <KBadge appearance="success">
-        200
-      </KBadge>
+      <template v-if="skeleton">
+        <KSkeletonBox
+          height="2"
+          width="50"
+        />
+      </template>
+      <template v-else>
+        <KBadge appearance="success">
+          200
+        </KBadge>
 
-      <div class="trace-viewer-title-request-line">
-        GET /kong
-      </div>
+        <div class="trace-viewer-title-request-line">
+          GET /kong
+        </div>
+      </template>
     </template>
 
     <TraceViewer
       :config="config"
       :root-span="spanRoots[0]"
+      :skeleton="skeleton"
       :url="url"
     />
   </KSlideout>
+
+  <KCard
+    class="controls"
+    title="Controls"
+  >
+    <KInputSwitch
+      v-model="skeleton"
+      label="Skeleton"
+    />
+  </KCard>
 </template>
 
 <script setup lang="ts">
@@ -42,6 +65,7 @@ const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const spanRoots = computed(() => buildSpanTrees(rawSpans))
 // const spanRoots = computed(() => buildSpanTrees(mergeSpansInTraceBatches(traceBatches)))
+const skeleton = ref(false)
 const slideoutVisible = ref(false)
 
 const config: TraceViewerConfig = {
@@ -69,10 +93,7 @@ const url = `https://example.com${path}`
   left: 0;
   width: 100dvw;
   height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  padding: 16px;
 }
 
 .trace-viewer-slideout {
@@ -88,11 +109,23 @@ const url = `https://example.com${path}`
     .slideout-title {
       flex-shrink: 1;
       min-width: 0;
+      height: $kui-line-height-50;
     }
 
     .slideout-content {
       flex-grow: 1;
     }
   }
+}
+</style>
+
+<style lang="scss" scoped>
+.controls {
+  z-index: 10000;
+  bottom: 16px;
+  left: 16px;
+  margin-bottom: 16px;
+  position: fixed;
+  width: auto;
 }
 </style>

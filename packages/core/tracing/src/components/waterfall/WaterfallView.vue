@@ -1,5 +1,17 @@
 <template>
-  <div class="waterfall">
+  <div
+    v-if="skeleton"
+    class="waterfall-skeleton"
+  >
+    <KSkeleton
+      v-for="i in 4"
+      :key="i"
+    />
+  </div>
+  <div
+    v-else
+    class="waterfall"
+  >
     <div class="waterfall-sticky-header">
       <!-- RESERVED: ZOOMING
       <div class="waterfall-row">
@@ -95,6 +107,10 @@ const props = defineProps({
     type: Object as PropType<SpanNode>,
     default: () => undefined,
   },
+  skeleton: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -140,8 +156,14 @@ const handleRowsAreaLeave = () => {
   rowsAreaGuideX.value = undefined
 }
 
-watch(() => props.rootSpan, (span) => {
-  config.selectedSpan = span
+watch(() => props.ticks, (ticks) => {
+  config.ticks = ticks
+}, { immediate: true })
+
+watch(() => props.rootSpan, (rootSpan) => {
+  config.selectedSpan = rootSpan
+  config.totalDurationNano = rootSpan?.durationNano ?? 0,
+  config.startTimeUnixNano = rootSpan ? BigInt(rootSpan.span.startTimeUnixNano) : 0n
 }, { immediate: true })
 
 watch(() => config.selectedSpan, (span) => {
@@ -235,6 +257,10 @@ watch(() => config.selectedSpan, (span) => {
 </script>
 
 <style lang="scss" scoped>
+.waterfall-skeleton {
+  padding: $kui-space-20 $kui-space-40;
+}
+
 .waterfall {
   box-sizing: border-box;
   height: 100%;
