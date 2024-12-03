@@ -109,7 +109,8 @@ const url = `https://example.com${path}`
     .slideout-title {
       flex-shrink: 1;
       min-width: 0;
-      height: $kui-line-height-50;
+      height: 28px; // $kui-line-height-50
+      line-height: $kui-line-height-50;
     }
 
     .slideout-content {

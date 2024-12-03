@@ -210,9 +210,11 @@ const spanNothingToDisplay = computed(() => {
       align-items: center;
       display: flex;
       flex-direction: row;
-      flex-shrink: 1;
+      flex-shrink: 0;
       gap: $kui-space-50;
+      height: 20px; // $kui-line-height-30
       justify-content: space-between;
+      line-height: $kui-line-height-30;
 
       .url {
         align-items: center;
