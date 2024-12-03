@@ -1,7 +1,7 @@
 <template>
   <div class="kong-ui-entities-consumers-list">
     <EntityBaseTable
-      :cache-identifier="cacheId"
+      :cache-identifier="cacheIdentifier"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
@@ -323,13 +323,12 @@ const isConsumerGroupPage = computed<boolean>(() => !!props.config.consumerGroup
 const preferencesStorageKey = computed<string>(
   () => isConsumerGroupPage.value ? 'kong-ui-entities-consumers-list-in-group-page' : 'kong-ui-entities-consumers-list',
 )
-const cacheId = computed(() => props.cacheIdentifier || preferencesStorageKey.value)
 const dataKeyName = computed((): string | undefined => isConsumerGroupPage.value && !props.config.paginatedEndpoint ? 'consumers' : undefined)
 const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher({ ...props.config, cacheIdentifier: cacheId.value }, fetcherBaseUrl.value, dataKeyName.value)
+} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value, dataKeyName.value)
 
 const clearFilter = (): void => {
   filterQuery.value = ''

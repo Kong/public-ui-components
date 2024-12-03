@@ -1,6 +1,6 @@
 <template>
   <EntityBaseTable
-    :cache-identifier="cacheId"
+    :cache-identifier="cacheIdentifier"
     disable-sorting
     :empty-state-options="emptyStateOptions"
     enable-entity-actions
@@ -8,7 +8,7 @@
     :fetcher="fetcher"
     :fetcher-cache-key="fetcherCacheKey"
     pagination-type="offset"
-    :preferences-storage-key="preferencesStorageKey"
+    preferences-storage-key="kong-ui-entities-secrets-list"
     :query="filterQuery"
     :row-attributes="rowAttrs"
     :table-headers="tableHeaders"
@@ -200,14 +200,11 @@ const filterConfig: ExactMatchFilterConfig = {
   placeholder: t('search.placeholder_for_secrets.konnect'),
 }
 
-const preferencesStorageKey = 'kong-ui-entities-secrets-list'
-const cacheId = computed(() => props.cacheIdentifier || preferencesStorageKey)
-
 const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher({ ...props.config, cacheIdentifier: cacheId.value }, fetcherBaseUrl.value)
+} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value)
 
 const clearFilter = (): void => {
   filterQuery.value = ''

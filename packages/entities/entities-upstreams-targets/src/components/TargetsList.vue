@@ -1,7 +1,7 @@
 <template>
   <div class="kong-ui-entities-targets-list">
     <EntityBaseTable
-      :cache-identifier="cacheId"
+      :cache-identifier="cacheIdentifier"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
@@ -9,7 +9,7 @@
       :fetcher="fetcher"
       :fetcher-cache-key="fetcherCacheKey"
       pagination-type="offset"
-      :preferences-storage-key="preferencesStorageKey"
+      preferences-storage-key="kong-ui-entities-targets-list"
       :table-headers="tableHeaders"
       @empty-state-cta-clicked="() => !props.config.createRoute ? handleCreateTarget() : undefined"
       @sort="resetPagination"
@@ -255,14 +255,11 @@ const fetcherBaseUrl = computed((): string => {
   return url
 })
 
-const preferencesStorageKey = 'kong-ui-entities-targets-list'
-const cacheId = computed(() => props.cacheIdentifier || preferencesStorageKey)
-
 const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher({ ...props.config, cacheIdentifier: cacheId.value }, fetcherBaseUrl.value)
+} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value)
 
 const resetPagination = (): void => {
   // Increment the cache key on sort

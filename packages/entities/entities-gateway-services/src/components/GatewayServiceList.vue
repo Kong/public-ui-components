@@ -1,7 +1,7 @@
 <template>
   <div class="kong-ui-entities-gateway-services-list">
     <EntityBaseTable
-      :cache-identifier="cacheId"
+      :cache-identifier="cacheIdentifier"
       :default-table-preferences="defaultTablePreferences"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
@@ -10,7 +10,7 @@
       :fetcher="fetcher"
       :fetcher-cache-key="fetcherCacheKey"
       pagination-type="offset"
-      :preferences-storage-key="preferencesStorageKey"
+      preferences-storage-key="kong-ui-entities-gateway-services-list"
       :query="filterQuery"
       :table-headers="tableHeaders"
       @clear-search-input="clearFilter"
@@ -328,14 +328,11 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   } as FuzzyMatchFilterConfig
 })
 
-const preferencesStorageKey = 'kong-ui-entities-gateway-services-list'
-const cacheId = computed(() => props.cacheIdentifier || preferencesStorageKey)
-
 const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher({ ...props.config, cacheIdentifier: cacheId.value }, fetcherBaseUrl.value)
+} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value)
 
 const clearFilter = (): void => {
   filterQuery.value = ''
