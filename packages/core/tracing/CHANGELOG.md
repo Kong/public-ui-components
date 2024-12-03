@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.2.0...@kong-ui-public/tracing@0.3.0) (2024-12-03)
+
+
+### Features
+
+* **tracing:** skeleton and reactivity fix ([#1828](https://github.com/Kong/public-ui-components/issues/1828)) ([c9f624a](https://github.com/Kong/public-ui-components/commit/c9f624ad47144f8c0211c4b2cee27219768cb7d3))
+
+
+
+
+
 # [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.1.4...@kong-ui-public/tracing@0.2.0) (2024-12-02)
 
 
