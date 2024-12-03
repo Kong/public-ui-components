@@ -8,7 +8,7 @@
       min-size="20"
     >
       <div class="above-waterfall">
-        <template v-if="skeleton">
+        <template v-if="showSkeleton">
           <KSkeletonBox
             height="2"
             width="25"
@@ -43,7 +43,7 @@
       <div class="waterfall-wrapper">
         <WaterfallView
           :root-span="props.rootSpan"
-          :skeleton="props.skeleton"
+          :show-skeleton="props.showSkeleton"
           @update:selected-span="handleUpdateSelectedSpan"
         />
       </div>
@@ -53,7 +53,7 @@
       class="detail-pane"
       size="50"
     >
-      <template v-if="skeleton">
+      <template v-if="showSkeleton">
         <KSkeleton
           :table-columns="2"
           :table-rows="8"
@@ -107,7 +107,7 @@ const props = defineProps<{
   config: TraceViewerConfig
   rootSpan?: SpanNode
   url?: string
-  skeleton?: boolean
+  showSkeleton?: boolean
 }>()
 
 // Provide the config to all children components

@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="skeleton"
+    v-if="showSkeleton"
     class="waterfall-skeleton"
   >
     <KSkeleton
@@ -87,11 +87,11 @@
 // RESERVED: Only used when zooming is enabled
 // import { useWheel } from '@vueuse/gesture'
 import { AddIcon, RemoveIcon } from '@kong/icons'
-import { provide, reactive, ref, useTemplateRef, watch, type PropType, type Ref } from 'vue'
+import { computed, provide, reactive, ref, toRef, useTemplateRef, watch, type PropType, type Ref } from 'vue'
 import composables from '../../composables'
 import { WATERFALL_ROW_COLUMN_GAP, WATERFALL_ROW_LABEL_WIDTH, WATERFALL_ROW_PADDING_X, WATERFALL_SPAN_BAR_FADING_WIDTH } from '../../constants'
 import { WATERFALL_CONFIG, WATERFALL_ROWS_STATE, WaterfallRowsState } from '../../constants/waterfall'
-import { type SpanNode, type WaterfallConfig } from '../../types'
+import { type MarkReactiveInputRefs, type SpanNode, type WaterfallConfig } from '../../types'
 import WaterfallScale from './WaterfallScale.vue'
 import WaterfallSpanRow from './WaterfallSpanRow.vue'
 
@@ -107,7 +107,7 @@ const props = defineProps({
     type: Object as PropType<SpanNode>,
     default: () => undefined,
   },
-  skeleton: {
+  showSkeleton: {
     type: Boolean,
     default: false,
   },
@@ -124,10 +124,10 @@ const spanBarMeasurementRef = useTemplateRef<HTMLElement>('spanBarMeasurement')
 const interaction = ref<'scroll' | 'zoom'>('scroll')
 const rowsAreaGuideX = ref<number | undefined>(undefined)
 
-const config = reactive<WaterfallConfig>({
-  ticks: props.ticks,
-  totalDurationNano: props.rootSpan?.durationNano ?? 0,
-  startTimeUnixNano: props.rootSpan ? BigInt(props.rootSpan.span.startTimeUnixNano) : 0n,
+const config = reactive<MarkReactiveInputRefs<WaterfallConfig, 'ticks' | 'totalDurationNano' | 'startTimeUnixNano'>>({
+  ticks: toRef(props, 'ticks'), // This will be unwrapped
+  totalDurationNano: computed(() => props.rootSpan?.durationNano ?? 0), // This will be unwrapped
+  startTimeUnixNano: computed(() => props.rootSpan ? BigInt(props.rootSpan.span.startTimeUnixNano) : 0n), // This will be unwrapped
   zoom: 1,
   viewportShift: 0,
   viewport: { left: 0, right: 0 },
@@ -156,14 +156,8 @@ const handleRowsAreaLeave = () => {
   rowsAreaGuideX.value = undefined
 }
 
-watch(() => props.ticks, (ticks) => {
-  config.ticks = ticks
-}, { immediate: true })
-
 watch(() => props.rootSpan, (rootSpan) => {
   config.selectedSpan = rootSpan
-  config.totalDurationNano = rootSpan?.durationNano ?? 0,
-  config.startTimeUnixNano = rootSpan ? BigInt(rootSpan.span.startTimeUnixNano) : 0n
 }, { immediate: true })
 
 watch(() => config.selectedSpan, (span) => {

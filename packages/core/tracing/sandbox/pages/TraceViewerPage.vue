@@ -19,7 +19,7 @@
     @close="slideoutVisible = false"
   >
     <template #title>
-      <template v-if="skeleton">
+      <template v-if="showSkeleton">
         <KSkeletonBox
           height="2"
           width="50"
@@ -39,7 +39,7 @@
     <TraceViewer
       :config="config"
       :root-span="spanRoots[0]"
-      :skeleton="skeleton"
+      :show-skeleton="showSkeleton"
       :url="url"
     />
   </KSlideout>
@@ -49,7 +49,7 @@
     title="Controls"
   >
     <KInputSwitch
-      v-model="skeleton"
+      v-model="showSkeleton"
       label="Skeleton"
     />
   </KCard>
@@ -65,7 +65,7 @@ const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const spanRoots = computed(() => buildSpanTrees(rawSpans))
 // const spanRoots = computed(() => buildSpanTrees(mergeSpansInTraceBatches(traceBatches)))
-const skeleton = ref(false)
+const showSkeleton = ref(false)
 const slideoutVisible = ref(false)
 
 const config: TraceViewerConfig = {
@@ -117,9 +117,7 @@ const url = `https://example.com${path}`
     }
   }
 }
-</style>
 
-<style lang="scss" scoped>
 .controls {
   z-index: 10000;
   bottom: 16px;

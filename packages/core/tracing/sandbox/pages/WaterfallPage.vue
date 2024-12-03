@@ -4,7 +4,7 @@
     title="Controls"
   >
     <KInputSwitch
-      v-model="skeleton"
+      v-model="showSkeleton"
       label="Skeleton"
     />
   </KCard>
@@ -13,7 +13,7 @@
     v-for="(root, i) in spanRoots"
     :key="i"
     :root-span="root"
-    :skeleton="skeleton"
+    :show-skeleton="showSkeleton"
   />
 </template>
 
@@ -22,7 +22,7 @@ import { computed, ref } from 'vue'
 import { buildSpanTrees, WaterfallView } from '../../src'
 import rawSpans from '../fixtures/spans.json'
 
-const skeleton = ref(false)
+const showSkeleton = ref(false)
 const spanRoots = computed(() => buildSpanTrees(rawSpans))
 </script>
 
