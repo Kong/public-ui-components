@@ -200,9 +200,11 @@ const filterConfig: ExactMatchFilterConfig = {
   placeholder: t('search.placeholder_for_secrets.konnect'),
 }
 
-const fetcherCacheKey = ref<number>(1)
-
-const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value)
+const {
+  fetcher,
+  fetcherState,
+  fetcherCacheKey,
+} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value)
 
 const clearFilter = (): void => {
   filterQuery.value = ''

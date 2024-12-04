@@ -151,8 +151,8 @@ watch([routeListHideTraditionalColumns, routeListHasExpressionColumn], () => {
   :deep(.k-collapse) {
     &.is-collapsed {
       .k-collapse-heading {
-        margin-bottom: $kui-space-0 !important;
         align-items: center;
+        margin-bottom: $kui-space-0 !important;
       }
 
       .k-collapse-title {

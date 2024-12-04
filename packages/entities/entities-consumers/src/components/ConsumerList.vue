@@ -262,11 +262,6 @@ const { i18nT, i18n: { t } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const fetcherCacheKey = ref<number>(1)
-const isConsumerGroupPage = computed<boolean>(() => !!props.config.consumerGroupId)
-const preferencesStorageKey = computed<string>(
-  () => isConsumerGroupPage.value ? 'kong-ui-entities-consumers-list-in-group-page' : 'kong-ui-entities-consumers-list',
-)
 
 /**
  * Table Headers
@@ -323,8 +318,17 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
     schema: props.config.filterSchema,
   } as FuzzyMatchFilterConfig
 })
+
+const isConsumerGroupPage = computed<boolean>(() => !!props.config.consumerGroupId)
+const preferencesStorageKey = computed<string>(
+  () => isConsumerGroupPage.value ? 'kong-ui-entities-consumers-list-in-group-page' : 'kong-ui-entities-consumers-list',
+)
 const dataKeyName = computed((): string | undefined => isConsumerGroupPage.value && !props.config.paginatedEndpoint ? 'consumers' : undefined)
-const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value, dataKeyName.value)
+const {
+  fetcher,
+  fetcherState,
+  fetcherCacheKey,
+} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value, dataKeyName.value)
 
 const clearFilter = (): void => {
   filterQuery.value = ''

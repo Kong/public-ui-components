@@ -259,7 +259,6 @@ const props = defineProps({
 const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const fetcherCacheKey = ref<number>(1)
 
 /**
  * Table Headers
@@ -328,7 +327,11 @@ const fetcherBaseUrl = computed((): string => {
   return url
 })
 
-const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl)
+const {
+  fetcher,
+  fetcherState,
+  fetcherCacheKey,
+} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value)
 
 const resetPagination = (): void => {
   // Increment the cache key on sort
