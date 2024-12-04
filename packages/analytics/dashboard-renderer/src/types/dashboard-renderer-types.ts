@@ -117,10 +117,9 @@ export const timeseriesChartSchema = {
     },
     threshold: {
       type: 'object',
-      properties: Object.fromEntries(
-        exploreAggregations.map((key) => [key, { type: 'number' }]),
-      ),
-      additionalProperties: false,
+      additionalProperties: {
+        type: 'number',
+      },
     },
     chartDatasetColors: chartDatasetColorsSchema,
     syntheticsDataKey,
