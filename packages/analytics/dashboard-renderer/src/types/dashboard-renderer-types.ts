@@ -115,6 +115,12 @@ export const timeseriesChartSchema = {
     stacked: {
       type: 'boolean',
     },
+    threshold: {
+      type: 'object',
+      additionalProperties: {
+        type: 'number',
+      },
+    },
     chartDatasetColors: chartDatasetColorsSchema,
     syntheticsDataKey,
     chartTitle,

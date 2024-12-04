@@ -72,6 +72,7 @@
         :metric-unit="computedMetricUnit"
         :stacked="chartOptions.stacked"
         :synthetics-data-key="syntheticsDataKey"
+        :threshold="threshold"
         :time-range-ms="timeRangeMs"
         :tooltip-title="tooltipTitle"
         :type="(chartOptions.type as ('timeseries_line' | 'timeseries_bar'))"
@@ -183,6 +184,11 @@ const props = defineProps({
     required: false,
     default: true,
   },
+  threshold: {
+    type: Object as PropType<Record<ExploreAggregations, number>>,
+    required: false,
+    default: undefined,
+  },
   timeseriesZoom: {
     type: Boolean,
     required: false,
@@ -207,6 +213,7 @@ const computedChartData = computed(() => {
       {
         fill: props.chartOptions.stacked,
         colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColors,
+        threshold: props.chartOptions.threshold || undefined,
       },
       toRef(props, 'chartData'),
     ).value

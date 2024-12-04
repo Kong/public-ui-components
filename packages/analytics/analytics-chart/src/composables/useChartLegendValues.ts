@@ -30,7 +30,14 @@ export default function useChartLegendValues(chartData: Ref<KChartData>, chartTy
         })) || `${approxNum(raw, { capital: true, ...(metricUnit.value === 'usd' && { prefix: '$' }) })} ${metricUnit.value}`
       }
 
-      return { ...a, [v.label as string]: { raw, formatted } }
+      return {
+        ...a,
+        [v.label as string]: {
+          raw,
+          formatted,
+          isThreshold: v.isThreshold,
+        },
+      }
     }, {})
   })
 

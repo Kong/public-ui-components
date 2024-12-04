@@ -1,4 +1,5 @@
 import type { AnalyticsChartColors } from './chart-data'
+import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 
 /**
  * Interace representing the various options
@@ -13,4 +14,5 @@ import type { AnalyticsChartColors } from './chart-data'
 export interface ExploreToDatasetDeps {
   colorPalette?: AnalyticsChartColors | string[]
   fill?: boolean
+  threshold?: Record<ExploreAggregations, number>
 }

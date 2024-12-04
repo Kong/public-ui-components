@@ -42,6 +42,12 @@ export function formatTime(ts: number, options: TimeFormatOptions = {}) {
   }
 }
 
+/**
+ * Formatted display for a start and end time range
+ * @param start Date from
+ * @param end Date to
+ * @returns Human-readable date range string
+ */
 export function formatTimeRange(start: Date, end: Date) {
   return `${formatTime(start.getTime())} - ${formatTime(end.getTime(), { includeTZ: true })}`
 }

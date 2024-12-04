@@ -54,6 +54,8 @@ yarn add @kong-ui-public/analytics-chart
 - `stacked` option applies to timeseries charts as well as vertical/horizontal bar charts.
 - `fill` only applies to time series line chart
 - `chartTypes` defined [here](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/chart-types.ts)
+- `threshold` is optional
+  - A key / value pair of type `Record<ExploreAggregations: number>` will draw a dotted threshold line on a timeseries chart at the provided Y-axis value.
 - `chartDatasetColors` are optional
   - If no colors are provided, the default color palette will be used
   - If custom colors are needed you may provide a custom color palette in the form of:

@@ -1,4 +1,4 @@
-import type { ExploreResultV4, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
+import type { ExploreAggregations, ExploreResultV4, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
 import { defaultLineOptions, lookupDatavisColor, datavisPalette, BORDER_WIDTH, NO_BORDER } from '../utils'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
@@ -6,6 +6,9 @@ import type { Dataset, KChartData, ExploreToDatasetDeps, DatasetLabel } from '..
 import { parseISO } from 'date-fns'
 import { isNullOrUndef } from 'chart.js/helpers'
 import composables from '../composables'
+import { KUI_COLOR_BACKGROUND_NEUTRAL } from '@kong/design-tokens'
+
+type MetricThreshold = Record<ExploreAggregations, number>
 
 const range = (start: number, stop: number, step: number = 1): number[] =>
   Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step)
@@ -180,6 +183,30 @@ export default function useExploreResultToTimeDataset(
         // sort by total, descending
         datasets.sort((a, b) => (Number(a.total) < Number(b.total) ? -1 : 1))
 
+        // Draw threshold lines, if any
+        if (deps.threshold) {
+          for (const key of Object.keys(deps.threshold)) {
+            const thresholdValue = deps.threshold[key as keyof MetricThreshold]
+
+            if (thresholdValue) {
+              datasets.push({
+                type: 'line',
+                rawMetric: key,
+                isThreshold: true,
+                label: i18n.t('chartLabels.threshold'),
+                borderColor: KUI_COLOR_BACKGROUND_NEUTRAL,
+                borderWidth: 1.25,
+                borderDash: [12, 8],
+                fill: false,
+                order: -1, // Display above all other datasets
+                stack: 'custom', // Never stack this dataset
+                data: zeroFilledTimeSeries.map(ts => {
+                  return { x: ts, y: thresholdValue }
+                }),
+              } as Dataset)
+            }
+          }
+        }
         return {
           datasets,
           colorMap,
