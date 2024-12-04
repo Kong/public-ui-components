@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.5.3...@kong-ui-public/analytics-chart@5.6.0) (2024-12-04)
+
+
+### Features
+
+* add threshold line to timeseries charts [MA-3442] ([#1825](https://github.com/Kong/public-ui-components/issues/1825)) ([054b547](https://github.com/Kong/public-ui-components/commit/054b5472f0ad0fa226e73064405ce4b4784833e8))
+
+
+
+
+
 ## [5.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.5.2...@kong-ui-public/analytics-chart@5.5.3) (2024-11-29)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
