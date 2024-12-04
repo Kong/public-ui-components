@@ -227,7 +227,7 @@ const sectionHeadings = computed<string[]>(() => {
 
   filteredItems.value.forEach((item: OperationListItem) => {
     if (item.tag && !headings.includes(item.tag)) {
-      headings.push(item.tag)
+      headings.push(String(item.tag))
     }
   })
 
