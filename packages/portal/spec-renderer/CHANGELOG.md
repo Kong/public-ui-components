@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.20...@kong-ui-public/spec-renderer@2.3.21) (2024-12-04)
+
+
+### Bug Fixes
+
+* **spec-renderer:** tolowercase is not a function [KHCP-14300] ([#1833](https://github.com/Kong/public-ui-components/issues/1833)) ([60894e8](https://github.com/Kong/public-ui-components/commit/60894e85ff3b87f5876f046aeaedb5e9c93cdebe))
+
+
+
+
+
 ## [2.3.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.19...@kong-ui-public/spec-renderer@2.3.20) (2024-11-27)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer
