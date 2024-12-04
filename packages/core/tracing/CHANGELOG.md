@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.3.0...@kong-ui-public/tracing@0.3.1) (2024-12-04)
+
+
+### Bug Fixes
+
+* **tracing:** fix height for skeleton container ([#1829](https://github.com/Kong/public-ui-components/issues/1829)) ([1c30140](https://github.com/Kong/public-ui-components/commit/1c301402bc1d5dffc611754abb407f78a2f4f734))
+
+
+
+
+
 # [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.2.0...@kong-ui-public/tracing@0.3.0) (2024-12-03)
 
 
