@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.59](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.5.58...@kong-ui-public/entities-upstreams-targets@3.5.59) (2024-12-04)
+
+
+### Bug Fixes
+
+* **entities-*:** persist fetcher cache key within session ([#1820](https://github.com/Kong/public-ui-components/issues/1820)) ([d2dff5c](https://github.com/Kong/public-ui-components/commit/d2dff5c7bb9ec62613b0e299df17214bb3f3d183))
+
+
+
+
+
 ## [3.5.58](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.5.57...@kong-ui-public/entities-upstreams-targets@3.5.58) (2024-11-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
