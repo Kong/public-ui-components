@@ -32,7 +32,7 @@
           v-for="section in sectionHeadings"
           :key="section"
           class="section-wrapper"
-          :data-testid="`spec-operations-list-section-${String(section).toLowerCase().replaceAll(' ', '-')}`"
+          :data-testid="`spec-operations-list-section-${section.toLowerCase().replaceAll(' ', '-')}`"
         >
           <KCollapse
             :model-value="false"
@@ -41,7 +41,7 @@
             <template #trigger="{ isCollapsed, toggle }">
               <OperationsListSectionHeader
                 :content-element-id="getSectionContentId(section)"
-                :data-testid="`spec-operations-list-section-${String(section).toLowerCase().replaceAll(' ', '-')}-collapse-trigger`"
+                :data-testid="`spec-operations-list-section-${section.toLowerCase().replaceAll(' ', '-')}-collapse-trigger`"
                 :description="getSectionDescription(section)"
                 :is-collapsed="isCollapsed"
                 :name="section"
@@ -227,7 +227,7 @@ const sectionHeadings = computed<string[]>(() => {
 
   filteredItems.value.forEach((item: OperationListItem) => {
     if (item.tag && !headings.includes(item.tag)) {
-      headings.push(item.tag)
+      headings.push(String(item.tag))
     }
   })
 
@@ -256,7 +256,7 @@ const isSelected = (item: OperationListItem): boolean => {
   return !!s && s.path === item.path && s.method === item.method && s.operationId === item.operationId && s.tag === item.tag
 }
 
-const getSectionContentId = (section: string) => `${uid.value}-section-${String(section).toLowerCase()}`
+const getSectionContentId = (section: string) => `${uid.value}-section-${section.toLowerCase()}`
 
 const handleSelection = (item: OperationListItem) => {
   if (!props.disableSelection) {
