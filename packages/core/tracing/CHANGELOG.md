@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.3.2...@kong-ui-public/tracing@0.3.3) (2024-12-04)
+
+
+### Bug Fixes
+
+* **tracing:** url truncation and tooltip work-break ([#1832](https://github.com/Kong/public-ui-components/issues/1832)) ([cdab35a](https://github.com/Kong/public-ui-components/commit/cdab35a384cf2e8bbf60f09eaff5dbe6a3999ef4))
+
+
+
+
+
 ## [0.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.3.1...@kong-ui-public/tracing@0.3.2) (2024-12-04)
 
 **Note:** Version bump only for package @kong-ui-public/tracing
