@@ -33,7 +33,7 @@
                 copy-tooltip="Copy"
                 :text="url"
                 truncate
-                :truncation-limit="48"
+                truncation-limit="auto"
               />
             </div>
           </div>
@@ -227,6 +227,15 @@ const spanNothingToDisplay = computed(() => {
         .label {
           font-size: $kui-font-size-30;
           font-weight: $kui-font-weight-semibold;
+        }
+
+        .content {
+          flex-shrink: 1;
+          min-width: 0;
+
+          :deep(.popover-content) {
+            word-break: break-all;
+          }
         }
       }
     }
