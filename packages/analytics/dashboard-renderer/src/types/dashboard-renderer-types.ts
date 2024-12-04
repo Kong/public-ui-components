@@ -120,7 +120,6 @@ export const timeseriesChartSchema = {
       properties: Object.fromEntries(
         exploreAggregations.map((key) => [key, { type: 'number' }]),
       ),
-      required: exploreAggregations,
       additionalProperties: false,
     },
     chartDatasetColors: chartDatasetColorsSchema,
