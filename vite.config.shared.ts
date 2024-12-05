@@ -160,7 +160,7 @@ export const getApiProxies = (pathToRoot: string = '../../../.') => {
     : undefined
 
   // Add additional regions as they become available
-  const availableRegions = ['au', 'eu', 'us']
+  const availableRegions = ['au', 'eu', 'us', 'me', 'in']
   const regionalProxies = {}
   // Build the regional API proxies
   for (const region of availableRegions) {
