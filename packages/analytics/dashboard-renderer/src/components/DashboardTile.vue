@@ -50,12 +50,6 @@
                 {{ i18n.t('csvExport.exportAsCsv') }}
               </span>
             </KDropdownItem>
-            <KDropdownItem
-              v-if="context.editable"
-              @click="editTile"
-            >
-              {{ i18n.t('renderer.edit') }}
-            </KDropdownItem>
           </template>
         </KDropdown>
       </div>
