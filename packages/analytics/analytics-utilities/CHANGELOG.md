@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.6.0...@kong-ui-public/analytics-utilities@5.7.0) (2024-12-05)
+
+
+### Features
+
+* **analytics:** add new granularities with support for FF [MA-2149] ([#1827](https://github.com/Kong/public-ui-components/issues/1827)) ([1b5b4f3](https://github.com/Kong/public-ui-components/commit/1b5b4f367ac6c97c550ea820df227ac106078de2))
+
+
+
+
+
 # [5.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.5.0...@kong-ui-public/analytics-utilities@5.6.0) (2024-12-04)
 
 
