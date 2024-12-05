@@ -137,7 +137,7 @@ const { state, swrvState: STATE } = useSwrvState(v4Data, error, isValidating)
 
 const errorMessage = ref<string | null>(null)
 const hasError = computed(() => state.value === STATE.ERROR || !!errorMessage.value)
-const isLoading = computed(() => !props.queryReady || [STATE.PENDING, STATE.VALIDATING, STATE.VALIDATING_HAS_DATA].includes(state.value))
+const isLoading = computed(() => !props.queryReady || state.value === STATE.PENDING)
 
 watch(v4Data, (data) => {
   if (data) {
