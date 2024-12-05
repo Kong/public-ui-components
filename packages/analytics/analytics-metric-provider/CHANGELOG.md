@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.6.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.6.4...@kong-ui-public/analytics-metric-provider@8.6.5) (2024-12-05)
+
+
+### Bug Fixes
+
+* show loading skeleton only when state pending ([#1835](https://github.com/Kong/public-ui-components/issues/1835)) ([77d34aa](https://github.com/Kong/public-ui-components/commit/77d34aad75510d30bd10c6d64f9ee5da457956ce))
+
+
+
+
+
 ## [8.6.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.6.3...@kong-ui-public/analytics-metric-provider@8.6.4) (2024-12-04)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider

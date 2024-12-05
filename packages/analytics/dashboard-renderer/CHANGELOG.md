@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.32.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.32.0...@kong-ui-public/dashboard-renderer@0.32.1) (2024-12-05)
+
+
+### Bug Fixes
+
+* show loading skeleton only when state pending ([#1835](https://github.com/Kong/public-ui-components/issues/1835)) ([77d34aa](https://github.com/Kong/public-ui-components/commit/77d34aad75510d30bd10c6d64f9ee5da457956ce))
+
+
+
+
+
 # [0.32.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.31.2...@kong-ui-public/dashboard-renderer@0.32.0) (2024-12-04)
 
 
