@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.8.2...@kong-ui-public/forms@4.9.0) (2024-12-05)
+
+
+### Features
+
+* **plugin-form:** disable scoped plugin toggle ([#1816](https://github.com/Kong/public-ui-components/issues/1816)) ([def603a](https://github.com/Kong/public-ui-components/commit/def603a1ec0c7beecbc24b713986785a1622f56c))
+
+
+
+
+
 ## [4.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.8.1...@kong-ui-public/forms@4.8.2) (2024-11-28)
 
 
