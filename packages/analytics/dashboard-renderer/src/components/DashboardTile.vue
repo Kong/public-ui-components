@@ -1,8 +1,6 @@
 <template>
   <div
     class="tile-boundary"
-    @mouseenter="showKebabMenu = true"
-    @mouseleave="showKebabMenu = false"
   >
     <div
       v-if="hasKebabMenuAccess && definition.chart.type !== 'slottable'"
@@ -11,49 +9,56 @@
       <div class="title">
         {{ definition.chart.chartTitle }}
       </div>
-      <KDropdown
+      <div
         v-if="canShowKebabMenu"
-        class="dropdown"
-        data-testid="chart-action-menu"
-        :kpop-attributes="{ placement: 'bottom-end' }"
+        class="tile-actions"
       >
-        <button
-          appearance="none"
-          class="kebab-action-menu"
-          data-testid="kebab-action-menu"
+        <EditIcon
+          v-if="context.editable"
+          class="edit-icon"
+          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :size="KUI_ICON_SIZE_40"
+          @click="editTile"
+        />
+        <KDropdown
+          class="dropdown"
+          data-testid="chart-action-menu"
+          :kpop-attributes="{ placement: 'bottom-end' }"
         >
           <MoreIcon
+            class="kebab-action-menu"
             :color="KUI_COLOR_TEXT_NEUTRAL"
+            data-testid="kebab-action-menu"
             :size="KUI_ICON_SIZE_40"
           />
-        </button>
-        <template #items>
-          <KDropdownItem
-            v-if="!!exploreLink"
-            data-testid="chart-jump-to-explore"
-            :item="{ label: i18n.t('jumpToExplore'), to: exploreLink }"
-          />
-          <KDropdownItem
-            v-if="'allowCsvExport' in definition.chart && definition.chart.allowCsvExport"
-            class="chart-export-button"
-            data-testid="chart-csv-export"
-            @click="exportCsv()"
-          >
-            <span
-              class="chart-export-trigger"
-              data-testid="csv-export-button"
+          <template #items>
+            <KDropdownItem
+              v-if="!!exploreLink"
+              data-testid="chart-jump-to-explore"
+              :item="{ label: i18n.t('jumpToExplore'), to: exploreLink }"
+            />
+            <KDropdownItem
+              v-if="'allowCsvExport' in definition.chart && definition.chart.allowCsvExport"
+              class="chart-export-button"
+              data-testid="chart-csv-export"
+              @click="exportCsv()"
             >
-              {{ i18n.t('csvExport.exportAsCsv') }}
-            </span>
-          </KDropdownItem>
-          <KDropdownItem
-            v-if="context.editable"
-            @click="editTile"
-          >
-            {{ i18n.t('renderer.edit') }}
-          </KDropdownItem>
-        </template>
-      </KDropdown>
+              <span
+                class="chart-export-trigger"
+                data-testid="csv-export-button"
+              >
+                {{ i18n.t('csvExport.exportAsCsv') }}
+              </span>
+            </KDropdownItem>
+            <KDropdownItem
+              v-if="context.editable"
+              @click="editTile"
+            >
+              {{ i18n.t('renderer.edit') }}
+            </KDropdownItem>
+          </template>
+        </KDropdown>
+      </div>
       <div
         v-else-if="'description' in definition.chart"
         class="header-description"
@@ -94,7 +99,7 @@ import { KUI_SPACE_70 } from '@kong/design-tokens'
 import TopNTableRenderer from './TopNTableRenderer.vue'
 import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
-import { MoreIcon } from '@kong/icons'
+import { MoreIcon, EditIcon } from '@kong/icons'
 import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 
@@ -121,7 +126,6 @@ const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-me
 
 const chartData = ref<ExploreResultV4>()
 const exportModalVisible = ref<boolean>(false)
-const showKebabMenu = ref(false)
 
 const exploreLink = computed(() => {
   if (queryBridge && queryBridge.exploreBaseUrl) {
@@ -206,6 +210,15 @@ const exportCsv = () => {
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
     }
 
+    .tile-actions {
+      display: flex;
+      gap: var(--kui-space-30, $kui-space-30);
+
+      .edit-icon {
+        cursor: pointer;
+      }
+    }
+
     .header-description {
       color: $kui-color-text-neutral;
       font-size: $kui-font-size-20;
@@ -218,15 +231,7 @@ const exportCsv = () => {
       margin-right: var(--kui-space-0, $kui-space-0);
 
       .kebab-action-menu {
-        background: $kui-color-background-transparent;
-        border: none;
-        color: inherit;
         cursor: pointer;
-        height: 100%;
-        opacity: v-bind('showKebabMenu ? 1 : 0');
-        transform: fade(0, -10px);
-        transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-        visibility: v-bind('showKebabMenu ? "visible" : "hidden"');
       }
 
       li.k-dropdown-item {
