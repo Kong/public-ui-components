@@ -36,12 +36,22 @@
       </template>
     </template>
 
-    <TraceViewer
-      :config="config"
-      :root-span="spanRoots[0]"
-      :show-skeleton="showSkeleton"
-      :url="url"
-    />
+    <KTabs
+      class="tabs"
+      :tabs="tabs"
+    >
+      <template #summary>
+        <LifecycleView />
+      </template>
+      <template #trace>
+        <TraceView
+          :config="config"
+          :root-span="spanRoots[0]"
+          :show-skeleton="showSkeleton"
+          :url="url"
+        />
+      </template>
+    </KTabs>
   </KSlideout>
 
   <KCard
@@ -57,7 +67,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { buildSpanTrees, mergeSpansInTraceBatches, TraceViewer, type TraceViewerConfig } from '../../src'
+import { buildSpanTrees, LifecycleView, mergeSpansInTraceBatches, TraceView, type TraceViewerConfig } from '../../src'
 // import rawSpans from '../fixtures/spans.json'
 import traceBatches from '../fixtures/trace-batches.json'
 
@@ -67,6 +77,10 @@ const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const spanRoots = computed(() => buildSpanTrees(mergeSpansInTraceBatches(traceBatches)))
 const showSkeleton = ref(false)
 const slideoutVisible = ref(false)
+const tabs = [
+  { hash: '#summary', title: 'Summary' },
+  { hash: '#trace', title: 'Trace' },
+]
 
 const config: TraceViewerConfig = {
   buildEntityLink: (request) => {
@@ -115,6 +129,28 @@ const url = `https://example.com${path}`
 
     .slideout-content {
       flex-grow: 1;
+
+      > :last-child {
+        padding-bottom: 0;
+      }
+    }
+  }
+
+  :deep(.tabs.k-tabs) {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-bottom: 0;
+
+    > [role="tablist"] {
+      flex-shrink: 0;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    > [role="tabpanel"] {
+      min-height: 0;
     }
   }
 }

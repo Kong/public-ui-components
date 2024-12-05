@@ -1,6 +1,6 @@
 <template>
   <Splitpanes
-    class="trace-viewer"
+    class="trace-view"
     horizontal
   >
     <Pane
@@ -147,7 +147,7 @@ const handleUpdateSelectedSpan = (span?: SpanNode) => {
 <style lang="scss" scoped>
 @use 'sass:math';
 
-.trace-viewer {
+.trace-view {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;

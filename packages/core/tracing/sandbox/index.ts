@@ -1,8 +1,9 @@
 import Kongponents from '@kong/kongponents'
-import '@kong/kongponents/dist/style.css'
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
+
+import '@kong/kongponents/dist/style.css'
 
 const app = createApp(App)
 
@@ -15,14 +16,19 @@ const router = createRouter({
       component: () => import('./pages/HomePage.vue'),
     },
     {
-      path: '/trace-viewer',
-      name: 'trace-viewer',
-      component: () => import('./pages/TraceViewerPage.vue'),
+      path: '/lifecycle',
+      name: 'lifecycle',
+      component: () => import('./pages/LifecycleViewPage.vue'),
+    },
+    {
+      path: '/trace',
+      name: 'trace',
+      component: () => import('./pages/TraceViewPage.vue'),
     },
     {
       path: '/waterfall',
       name: 'waterfall',
-      component: () => import('./pages/WaterfallPage.vue'),
+      component: () => import('./pages/WaterfallViewPage.vue'),
     },
   ],
 })
