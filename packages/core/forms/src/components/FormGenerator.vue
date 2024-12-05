@@ -599,8 +599,17 @@ export default {
     width: 10px;
   }
 
+  &:disabled {
+    background-color: $kui-color-background-disabled;
+    border-color: $kui-color-border-neutral-weak;
+  }
+
   &:checked:after {
     background-color: currentColor;
+  }
+
+  &:checked:disabled:after {
+    background-color: $kui-color-background-neutral-weak;
   }
 }
 

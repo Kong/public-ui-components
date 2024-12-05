@@ -1,29 +1,39 @@
 <template>
   <div class="selection-group">
     <!-- Radio button -->
-    <div class="form-group horizontal-radios">
-      <div class="radio-group">
-        <div
-          v-for="(option, i) in schema.fields"
-          :key="i"
-          class="option-group"
-        >
-          <label
-            class="k-label"
-            :class="`${option.label}-check`"
+    <component
+      :is="$props.disabled? 'k-tooltip' : 'div'"
+      max-width="300"
+      :text="t('general.disable_global_radio', { scope })"
+    >
+      <div
+        class="form-group horizontal-radios"
+      >
+        <div class="radio-group">
+          <div
+            v-for="(option, i) in schema.fields"
+            :key="i"
+            class="option-group"
+            :class="{ 'radio-disabled': $props.disabled }"
           >
-            <input
-              v-model="checkedGroup"
-              class="k-input"
-              type="radio"
-              :value="i"
+            <label
+              class="k-label"
+              :class="`${option.label}-check`"
             >
-            {{ option.label }}
-            <div class="control-help">{{ option.description }}</div>
-          </label>
+              <input
+                v-model="checkedGroup"
+                class="k-input"
+                :disabled="$props.disabled"
+                type="radio"
+                :value="i"
+              >
+              {{ option.label }}
+              <div class="control-help">{{ option.description }}</div>
+            </label>
+          </div>
         </div>
       </div>
-    </div>
+    </component>
 
     <div
       v-for="(option, i) in schema.fields"
@@ -50,17 +60,27 @@
 
 <script>
 import abstractField from './abstractField'
+import { createI18n } from '@kong-ui-public/i18n'
+import english from '../../locales/en.json'
 
 export default {
   mixins: [abstractField],
 
   emits: ['model-updated'],
 
+  setup() {
+    const { t } = createI18n('en-us', english)
+    return {
+      t,
+    }
+  },
+
   data() {
     return {
       checkedGroup: null,
       fieldModel: { ...this.model }, // keep local copy of original model
       fieldSchema: [],
+      scope: 'scope',
     }
   },
 
@@ -92,6 +112,7 @@ export default {
         if (this.model[subField.model]) {
           this.checkedGroup = i
           this.fieldSchema.push(subField.model)
+          this.scope = subField.label?.toLowerCase()
         }
       })
     })
@@ -156,6 +177,10 @@ export default {
       display: flex;
       flex-direction: row;
       gap: $kui-space-80;
+    }
+
+    .radio-disabled {
+      cursor: not-allowed;
     }
   }
 }
