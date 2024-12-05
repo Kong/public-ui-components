@@ -12,8 +12,9 @@ import type { Timeframe } from './timeframes'
 abstract class BaseQueryTime implements QueryTime {
   protected readonly timeframe: Timeframe
   protected readonly tz?: string
+  protected readonly dataGranularity: GranularityValues
 
-  constructor(timeframe: Timeframe, tz?: string) {
+  constructor(timeframe: Timeframe, tz?: string, dataGranularity?: GranularityValues) {
     // This is an abstract class.
     if (this.constructor === BaseQueryTime) {
       throw new Error('BaseQueryTime is not meant to be used directly.')
@@ -21,6 +22,7 @@ abstract class BaseQueryTime implements QueryTime {
 
     this.timeframe = timeframe
     this.tz = tz
+    this.dataGranularity = dataGranularity ?? timeframe.dataGranularity
   }
 
   abstract startDate(): Date
@@ -50,7 +52,7 @@ abstract class BaseQueryTime implements QueryTime {
     return Math.floor(this.granularityMs() / 1000)
   }
 
-  granularityDruid(): DruidGranularity | null {
+  granularityDruid(): DruidGranularity {
     return granularityMsToQuery(this.granularityMs(), this.startDate().toISOString())
   }
 
@@ -79,11 +81,16 @@ abstract class BaseQueryTime implements QueryTime {
 export class TimeseriesQueryTime extends BaseQueryTime {
   private readonly granularity: GranularityValues
 
-  constructor(timeframe: Timeframe, granularity?: GranularityValues, tz?: string) {
-    super(timeframe, tz)
+  constructor(timeframe: Timeframe, granularity?: GranularityValues, tz?: string, dataGranularity?: GranularityValues, fineGrain?: boolean) {
+    super(timeframe, tz, dataGranularity)
 
-    if (granularity && timeframe.allowedGranularities().has(granularity)) {
+    if (granularity && timeframe.allowedGranularities(fineGrain).has(granularity)) {
       this.granularity = granularity
+    } else if (fineGrain) {
+      // TODO: when removing the feature flag, consider redefining `defaultResponseGranularity`
+      // in the timeframes constructor: it should probably handle this calculation on its own.
+      const finestGranularity = timeframe.allowedGranularities(fineGrain).keys().next().value
+      this.granularity = finestGranularity ?? timeframe.defaultResponseGranularity
     } else {
       this.granularity = timeframe.defaultResponseGranularity
     }
@@ -105,11 +112,11 @@ export class TimeseriesQueryTime extends BaseQueryTime {
 // We expect to get back 1 value, such that we can just show a big number without any trend information.
 export class UnaryQueryTime extends BaseQueryTime {
   startDate(): Date {
-    return this.calculateStartDate(this.timeframe.isRelative, this.timeframe.dataGranularity)
+    return this.calculateStartDate(this.timeframe.isRelative, this.dataGranularity)
   }
 
   endDate(): Date {
-    return ceilToNearestTimeGrain(this.timeframe.rawEnd(this.tz), this.timeframe.dataGranularity, this.tz)
+    return ceilToNearestTimeGrain(this.timeframe.rawEnd(this.tz), this.dataGranularity, this.tz)
   }
 
   granularityMs(): number {
@@ -122,7 +129,7 @@ export class UnaryQueryTime extends BaseQueryTime {
 // timeframe to calculate a trend.
 export class DeltaQueryTime extends UnaryQueryTime {
   startDate(): Date {
-    return this.calculateStartDate(this.timeframe.isRelative, this.timeframe.dataGranularity, 2)
+    return this.calculateStartDate(this.timeframe.isRelative, this.dataGranularity, 2)
   }
 
   granularityMs(): number {

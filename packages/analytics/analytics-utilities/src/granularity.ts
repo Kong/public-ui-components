@@ -5,8 +5,15 @@ import { getTimezoneOffset } from 'date-fns-tz'
 // Units are milliseconds, which are what Druid expects.
 export const Granularities = {
   secondly: 1000,
+  tenSecondly: 10 * 1000,
+  thirtySecondly: 30 * 1000,
   minutely: 60 * 1000,
+  fiveMinutely: 5 * 60 * 1000,
+  tenMinutely: 10 * 60 * 1000,
+  thirtyMinutely: 30 * 60 * 1000,
   hourly: 60 * 60 * 1000,
+  twoHourly: 2 * 60 * 60 * 1000,
+  twelveHourly: 12 * 60 * 60 * 1000,
   daily: 60 * 60 * 24 * 1000,
   weekly: 60 * 60 * 24 * 7 * 1000,
   trend: 0,
@@ -23,18 +30,14 @@ export function granularitiesToOptions(
 }
 
 export function granularityMsToQuery(
-  granularity: number | null,
-  origin?: string,
-): DruidGranularity | null {
-  if (granularity) {
-    return {
-      duration: granularity,
-      type: 'duration',
-      origin,
-    }
+  granularity: number,
+  origin: string,
+): DruidGranularity {
+  return {
+    duration: granularity,
+    type: 'duration',
+    origin,
   }
-
-  return null
 }
 
 export function msToGranularity(ms?: number): GranularityValues | null {

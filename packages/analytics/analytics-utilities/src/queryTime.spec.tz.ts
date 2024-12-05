@@ -1,10 +1,9 @@
-import { afterEach, describe, expect, beforeEach, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { add, setDate, startOfDay, startOfMonth, startOfWeek, subMilliseconds } from 'date-fns'
 
 import { TimeframeKeys } from './types'
 import { DeltaQueryTime, TimeseriesQueryTime, UnaryQueryTime } from './queryTime'
-import { Timeframe } from './timeframes'
-import { datePickerSelectionToTimeframe, TimePeriods } from './timeframes'
+import { datePickerSelectionToTimeframe, Timeframe, TimePeriods } from './timeframes'
 import { formatInTimeZone } from 'date-fns-tz'
 import { runUtcTest } from './specUtils'
 
@@ -39,6 +38,18 @@ describe('granularity enforcement', () => {
 
     expect(tsQuery.granularitySeconds()).toBe(24 * 60 * 60)
   })
+
+  it('handles fine granularity in default responses', () => {
+    // Should permit allowed finer grains if requested.
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_DAY), 'tenMinutely', undefined, undefined, true).granularitySeconds()).toBe(10 * 60)
+
+    // Should not permit finer grains outside the allowed finer grains.
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_DAY), 'tenSecondly', undefined, undefined, true).granularitySeconds()).toBe(5 * 60)
+
+    // Should pick an appropriate default response granularity.
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_DAY), undefined, undefined, undefined, true).granularitySeconds()).toBe(5 * 60)
+  })
+
 })
 
 describe('timeframe start/end times', () => {
@@ -532,6 +543,47 @@ runDstTest('daylight savings time: fall', () => {
     expect(unaryQuery.endSeconds() - unaryQuery.startSeconds()).toBe(60 * 60 * 24 * 7)
     expect(deltaQuery.endSeconds() - deltaQuery.startSeconds()).toBe(60 * 60 * 24 * 7 * 2)
     expect(deltaQuery.granularitySeconds()).toBe(unaryQuery.granularitySeconds())
+  })
+})
+
+runUtcTest('UTC: fine granularity', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+    const fakeNow = new Date('2023-11-09T01:17:32Z')
+    standardizeTimezone(fakeNow)
+    vi.setSystemTime(fakeNow)
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('handles fine granularity in rounding - timeseries, 5 minutely', () => {
+    const tsQuery = new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_DAY), undefined, undefined, undefined,true)
+
+    expect(tsQuery.endDate()).toEqual(new Date('2023-11-09T01:20:00Z'))
+    expect(tsQuery.startDate()).toEqual(new Date('2023-11-08T01:20:00Z'))
+  })
+
+  it('handles fine granularity in rounding - timeseries, hourly', () => {
+    const tsQuery = new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.THIRTY_DAY), undefined, undefined, undefined,true)
+
+    expect(tsQuery.endDate()).toEqual(new Date('2023-11-09T02:00:00Z'))
+    expect(tsQuery.startDate()).toEqual(new Date('2023-10-10T02:00:00Z'))
+  })
+
+  it('handles data granularity overrides - unary, daily', () => {
+    const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY), undefined, 'daily')
+
+    expect(unaryQuery.endDate()).toEqual(new Date('2023-11-10T00:00:00Z'))
+    expect(unaryQuery.startDate()).toEqual(new Date('2023-11-03T00:00:00Z'))
+  })
+
+  it('handles data granularity overrides - delta, daily', () => {
+    const deltaQuery = new DeltaQueryTime(getTimePeriod(TimeframeKeys.SEVEN_DAY), undefined, 'daily')
+
+    expect(deltaQuery.endDate()).toEqual(new Date('2023-11-10T00:00:00Z'))
+    expect(deltaQuery.startDate()).toEqual(new Date('2023-10-27T00:00:00Z'))
   })
 })
 

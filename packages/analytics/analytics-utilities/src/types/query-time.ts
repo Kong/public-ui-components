@@ -2,7 +2,7 @@ import type { DruidGranularity } from '.'
 
 export interface QueryTime {
   granularitySeconds(): number
-  granularityDruid(): DruidGranularity | null
+  granularityDruid(): DruidGranularity
   startSeconds(): number
   endSeconds(): number
   startMs(): number
