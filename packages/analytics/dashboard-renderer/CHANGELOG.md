@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.32.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.32.2...@kong-ui-public/dashboard-renderer@0.32.3) (2024-12-05)
+
+
+### Bug Fixes
+
+* always show tile kebab menu, show edit as EditIcon ([#1837](https://github.com/Kong/public-ui-components/issues/1837)) ([e288eeb](https://github.com/Kong/public-ui-components/commit/e288eeb6fe5e5ee0f3d9c5e66b625e85661d397b))
+
+
+
+
+
 ## [0.32.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.32.1...@kong-ui-public/dashboard-renderer@0.32.2) (2024-12-05)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
