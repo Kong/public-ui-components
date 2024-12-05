@@ -1,10 +1,16 @@
 <template>
-  <div class="field-wrap autosuggest">
+  <component
+    :is="schema.disabled ? 'k-tooltip': 'div'"
+    class="field-wrap autosuggest"
+    max-width="300"
+    :text="t('general.disable_source_scope_change', { scope })"
+  >
     <KSelect
       :id="schema.model"
       ref="suggestion"
       v-model="idValue"
       clearable
+      :disabled="schema.disabled"
       enable-filtering
       :filter-function="() => true"
       :items="items"
@@ -37,7 +43,7 @@
         </div>
       </template>
     </KSelect>
-  </div>
+  </component>
 </template>
 
 <script>
@@ -45,6 +51,8 @@ import { FORMS_API_KEY } from '../../const'
 import abstractField from './abstractField'
 import debounce from 'lodash-es/debounce'
 import { isValidUuid } from '../../utils/isValidUuid'
+import { createI18n } from '@kong-ui-public/i18n'
+import english from '../../locales/en.json'
 
 const requestResultsLimit = 50
 const fieldStates = {
@@ -78,6 +86,13 @@ export default {
   inject: [FORMS_API_KEY],
   emits: ['model-updated'],
 
+  setup() {
+    const { t } = createI18n('en-us', english)
+    return {
+      t,
+    }
+  },
+
   data() {
     return {
       suggestions: [],
@@ -98,6 +113,9 @@ export default {
     },
     entity() {
       return this.schema.entity
+    },
+    scope() {
+      return this.schema.label.toLowerCase()
     },
     bypassSearch() {
       return this.$route && this.$route.query && this.$route.query.no_search

@@ -218,6 +218,12 @@ const props = defineProps({
     default: false,
   },
 
+  /** Disable scope selection due to the plugin is configured under an entity */
+  disableScopeSelection: {
+    type: Boolean,
+    default: false,
+  },
+
   /** Credentials use */
   credential: {
     type: Boolean,
@@ -444,6 +450,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
   // plugin scoping
   selectionGroup: {
     type: !props.hideScopeSelection ? 'selectionGroup' : props.hideScopeSelection || (formType.value === EntityBaseFormType.Create && props.config.entityId) ? 'foreign' : 'selectionGroup',
+    disabled: props.disableScopeSelection,
     inputType: 'hidden',
     styleClasses: 'hide-label',
     fields: [
@@ -907,6 +914,11 @@ const initScopeFields = (): void => {
   const supportConsumerGroupScope = props.config.disableConsumerGroupScope
     ? false
     : (PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true)
+  // check whether the plugin is scoped
+  const consumerScoped = (props.config.entityType === 'consumers' && !!props.config.entityId) || !!record.value?.consumer?.id
+  const consumerGroupScoped = (props.config.entityType === 'consumer_groups' && !!props.config.entityId) || !!record.value?.consumer_group?.id
+  const serviceScoped = (props.config.entityType === 'services' && !!props.config.entityId) || !!record.value?.service?.id
+  const routeScoped = (props.config.entityType === 'routes' && !!props.config.entityId) || !!record.value?.route?.id
 
   const scopeEntityArray = []
 
@@ -923,6 +935,7 @@ const initScopeFields = (): void => {
         fields: ['name', 'id'],
       },
       help: t('plugins.form.scoping.gateway_service.help'),
+      disabled: serviceScoped && props.disableScopeSelection, // disable service selection if the plugin is already scoped under service
     })
   }
 
@@ -939,6 +952,7 @@ const initScopeFields = (): void => {
         primaryField: 'id',
       },
       help: t('plugins.form.scoping.route.help'),
+      disabled: routeScoped && props.disableScopeSelection,
     })
   }
 
@@ -954,6 +968,7 @@ const initScopeFields = (): void => {
         primaryField: 'username',
       },
       help: t('plugins.form.scoping.consumer.help'),
+      disabled: consumerScoped && props.disableScopeSelection,
     })
   }
 
@@ -970,6 +985,7 @@ const initScopeFields = (): void => {
         primaryField: 'name',
       },
       help: t('plugins.form.scoping.consumer_group.help'),
+      disabled: consumerGroupScoped && props.disableScopeSelection,
     })
   }
 

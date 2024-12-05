@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.7.1...@kong-ui-public/entities-plugins@9.8.0) (2024-12-05)
+
+
+### Features
+
+* **plugin-form:** disable scoped plugin toggle ([#1816](https://github.com/Kong/public-ui-components/issues/1816)) ([def603a](https://github.com/Kong/public-ui-components/commit/def603a1ec0c7beecbc24b713986785a1622f56c))
+
+
+
+
+
 ## [9.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.7.0...@kong-ui-public/entities-plugins@9.7.1) (2024-12-04)
 
 

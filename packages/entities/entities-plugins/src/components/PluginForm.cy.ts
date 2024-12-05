@@ -410,6 +410,34 @@ describe('<PluginForm />', () => {
       cy.get('.field-selectionGroup').should('not.exist')
     })
 
+    it('should disable scope selection when disableScopeSelection is true', () => {
+      // provide serviceId
+      const config: KongManagerPluginFormConfig = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
+      interceptKMSchema()
+      interceptKMScopedEntity({ entityType: config.entityType! })
+
+      cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
+        props: {
+          config,
+          pluginType: 'cors',
+          disableScopeSelection: true,
+        },
+        router,
+      })
+
+      cy.wait(['@getPluginSchema', '@getScopedEntity']).then(() => {
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+        cy.get('.Global-check input').should('be.disabled')
+        cy.get('.Scoped-check input').should('be.visible').and('be.disabled')
+        cy.get('.Scoped-check input').should('have.value', '1')
+        cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
+        cy.get('#service-id').should('be.visible').and('be.disabled')
+        cy.getTestId(`select-item-${scopedService.id}`).find('.selected').should('exist')
+      })
+    })
+
     it('should hide form buttons when isWizardStep is true', () => {
       interceptKMSchema()
 
@@ -1261,6 +1289,34 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       cy.get('.field-selectionGroup').should('not.exist')
+    })
+
+    it('should disable scope selection when disableScopeSelection is true', () => {
+      // provide serviceId
+      const config: KonnectPluginFormConfig = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
+      interceptKonnectSchema()
+      interceptKonnectScopedEntity({ entityType: config.entityType! })
+
+      cy.mount(PluginForm, {
+        global: { components: { VueFormGenerator } },
+        props: {
+          config,
+          pluginType: 'cors',
+          disableScopeSelection: true,
+        },
+        router,
+      })
+
+      cy.wait(['@getPluginSchema', '@getScopedEntity']).then(() => {
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+        cy.get('.Global-check input').should('be.disabled')
+        cy.get('.Scoped-check input').should('be.visible').and('be.disabled')
+        cy.get('.Scoped-check input').should('have.value', '1')
+        cy.get('.field-selectionGroup .field-AutoSuggest').should('be.visible')
+        cy.get('#service-id').should('be.visible').and('be.disabled')
+        cy.getTestId(`select-item-${scopedService.id}`).find('.selected').should('exist')
+      })
     })
 
     it('should hide form buttons when isWizardStep is true', () => {
