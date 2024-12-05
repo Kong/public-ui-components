@@ -86,3 +86,15 @@ export interface SpanLatency<Children = never> {
   milliseconds: number
   children?: Children
 }
+
+export interface SpanTrees {
+  /**
+   * Root spans of the span trees.
+   */
+  roots: SpanNode[]
+
+  /**
+   * All spans sorted by start time.
+   */
+  spans: Span<bigint>[]
+}
