@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.7.0...@kong-ui-public/analytics-utilities@5.8.0) (2024-12-06)
+
+
+### Features
+
+* add empty operators to explore ([#1836](https://github.com/Kong/public-ui-components/issues/1836)) ([eb56714](https://github.com/Kong/public-ui-components/commit/eb56714458e99d9fd19be79bb94a1928c36a4855))
+
+
+
+
+
 # [5.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.6.0...@kong-ui-public/analytics-utilities@5.7.0) (2024-12-05)
 
 
