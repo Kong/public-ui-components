@@ -272,7 +272,7 @@ In some cases HMR (hot module reloading) is not working out of the box in this c
 
     ```sh
     pnpm unlink -g @kong-ui-public/forms
-    pnpm install --force --frozen-lockfile
+    pnpm install
     ```
 
 ## Moving packages to the public/private repo
