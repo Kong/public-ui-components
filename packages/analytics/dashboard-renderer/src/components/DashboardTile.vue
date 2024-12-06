@@ -94,7 +94,7 @@ import TopNTableRenderer from './TopNTableRenderer.vue'
 import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon, EditIcon } from '@kong/icons'
-import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import { msToGranularity, type AiExploreAggregations, type AiExploreQuery, type AnalyticsBridge, type ExploreAggregations, type ExploreQuery, type ExploreResultV4, type QueryableAiExploreDimensions, type QueryableExploreDimensions, type TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
@@ -128,6 +128,7 @@ const exploreLink = computed(() => {
       metrics: props.definition.query.metrics as ExploreAggregations[] | AiExploreAggregations[] ?? [],
       dimensions: props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? [],
       time_range: props.definition.query.time_range as TimeRangeV4 || props.context.timeSpec,
+      granularity: props.definition.query.granularity || chartDataGranularity.value,
 
     } as ExploreQuery | AiExploreQuery
     // Explore only supports advanced or ai
@@ -167,6 +168,10 @@ const componentData = computed(() => {
       refreshCounter: props.refreshCounter,
     },
   }
+})
+
+const chartDataGranularity = computed(() => {
+  return chartData.value ? msToGranularity(chartData.value.meta.granularity_ms) : undefined
 })
 
 const editTile = () => {
