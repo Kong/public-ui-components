@@ -1,5 +1,5 @@
 import { makeFilterable } from './util'
-import type { ExploreFilterTypesV2, GranularityValues, TimeRangeV4 } from './common'
+import type { ExploreFilterTypesV2, GranularityValues, RequestFilterTypeEmptyV2, TimeRangeV4 } from './common'
 
 export const queryableBasicExploreDimensions = [
   'api_product',
@@ -32,6 +32,10 @@ export interface BasicExploreInFilterV2 {
   value: (string | number | null)[]
 }
 
+export interface BasicExploreEmptyFilterV2 {
+  operator: RequestFilterTypeEmptyV2
+  field: FilterableBasicExploreDimensions
+}
 export const basicExploreAggregations = [
   'active_services',
   'request_count',
@@ -41,7 +45,7 @@ export const basicExploreAggregations = [
 
 export type BasicExploreAggregations = typeof basicExploreAggregations[number]
 
-export type BasicExploreFilterAll = BasicExploreFilter | BasicExploreInFilterV2
+export type BasicExploreFilterAll = BasicExploreFilter | BasicExploreInFilterV2 | BasicExploreEmptyFilterV2
 
 export interface BasicExploreQuery {
   metrics?: BasicExploreAggregations[]
