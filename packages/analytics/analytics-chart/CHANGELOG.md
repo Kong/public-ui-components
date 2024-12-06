@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.6.2...@kong-ui-public/analytics-chart@5.7.0) (2024-12-06)
+
+
+### Features
+
+* **analytics-chart:** add granularity translations [MA-2148] ([#1840](https://github.com/Kong/public-ui-components/issues/1840)) ([2dcc908](https://github.com/Kong/public-ui-components/commit/2dcc9084c7a92f52fcb36c0e887a65e2178ffc78))
+
+
+
+
+
 ## [5.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.6.1...@kong-ui-public/analytics-chart@5.6.2) (2024-12-06)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
