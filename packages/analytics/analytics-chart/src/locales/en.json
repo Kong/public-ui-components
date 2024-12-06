@@ -201,8 +201,15 @@
     "llm_latency_average": "LLM Latency (avg)"
   },
   "granularityAxisTitles": {
+    "tenSecondly": "@timestamp per ten seconds",
+    "thirtySecondly": "@timestamp per thirty seconds",
     "minutely": "@timestamp per minute",
+    "fiveMinutely": "@timestamp per five minutes",
+    "tenMinutely": "@timestamp per ten minutes",
+    "thirtyMinutely": "@timestamp per thirty minutes",
     "hourly": "@timestamp per hour",
+    "twoHourly": "@timestamp per two hours",
+    "twelveHourly": "@timestamp per twelve hours",
     "daily": "@timestamp per day",
     "weekly": "@timestamp per week"
   },
