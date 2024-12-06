@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.8.0...@kong-ui-public/analytics-utilities@5.8.1) (2024-12-06)
+
+
+### Bug Fixes
+
+* **analytics:** backwards-compatible granularities [MA-2149] ([#1841](https://github.com/Kong/public-ui-components/issues/1841)) ([3d3d198](https://github.com/Kong/public-ui-components/commit/3d3d198471f9a0255a1910701c5fce3543d0f322))
+
+
+
+
+
 # [5.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.7.0...@kong-ui-public/analytics-utilities@5.8.0) (2024-12-06)
 
 
