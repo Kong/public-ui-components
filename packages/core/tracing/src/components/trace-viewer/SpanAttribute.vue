@@ -74,6 +74,7 @@ const ATTRIBUTE_KEY_TO_ENTITY = {
   [SPAN_ATTRIBUTES.KONG_ROUTE_ID.name]: 'routes',
   [SPAN_ATTRIBUTES.KONG_CONSUMER_ID.name]: 'consumers',
   [SPAN_ATTRIBUTES.KONG_PLUGIN_ID.name]: 'plugins',
+  [SPAN_ATTRIBUTES.KONG_TARGET_ID.name]: 'targets',
   [SPAN_ATTRIBUTES.KONG_UPSTREAM_ID.name]: 'upstreams',
 }
 
@@ -103,14 +104,26 @@ const entityRequest = computed(() => {
     entityId: value,
   }
 
-  // Check if this is a plugin ID attribute
-  if (props.keyValue.key === SPAN_ATTRIBUTES.KONG_PLUGIN_ID.name) {
-    // We will need to parse the plugin name from the span name
-    request.plugin = getPhaseAndPlugin(props.span.name)?.[1]
-    if (!request.plugin) {
-      // Missing plugin name
-      console.warn(`Failed to parse plugin name from span name "${props.span.name}"`)
-      return undefined
+  switch (props.keyValue.key) {
+    case SPAN_ATTRIBUTES.KONG_PLUGIN_ID.name: {
+      // We will need to parse the plugin name from the span name
+      request.plugin = getPhaseAndPlugin(props.span.name)?.[1]
+      if (!request.plugin) {
+        // Missing plugin name
+        console.warn(`Failed to parse plugin name from span name "${props.span.name}"`)
+        return undefined
+      }
+      break
+    }
+    case SPAN_ATTRIBUTES.KONG_TARGET_ID.name: {
+      const upstreamIdAttrValue = props.span.attributes?.find((attr) => attr.key === SPAN_ATTRIBUTES.KONG_UPSTREAM_ID.name)?.value
+      const upstreamId = upstreamIdAttrValue && unwrapAnyValue<string>(upstreamIdAttrValue)
+      if (!upstreamId) {
+        console.warn(`Failed to look up the upstream ID for the upstream target in the span "${props.span.name}"`)
+        return undefined
+      }
+      request.upstream = upstreamId
+      break
     }
   }
 
