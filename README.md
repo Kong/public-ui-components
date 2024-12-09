@@ -221,7 +221,7 @@ You are developing shared component (let's say `@kong-ui-public/forms`) and you 
     pnpm link -g
     ```
 
-2. make sure your package is getting build in watch mode, for this in in the folder `public-ui-components/packages/{workspace}/forms` run:
+2. make sure your package is getting build in watch mode, for this in the folder `public-ui-components/packages/{workspace}/forms` run:
 
     ```sh
     pnpm build:package --watch
@@ -265,7 +265,7 @@ In some cases HMR (hot module reloading) is not working out of the box in this c
 1. In the folder `public-ui-components/packages/{workspace}/forms` run
 
     ```sh
-    pnpm remove @kong-ui-public/forms -g
+    pnpm remove -g @kong-ui-public/forms
     ```
 
 1. In the root folder of the host application/package run:
