@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.8.1...@kong-ui-public/analytics-utilities@5.9.0) (2024-12-10)
+
+
+### Features
+
+* add filtering for country code ([#1843](https://github.com/Kong/public-ui-components/issues/1843)) ([68d6b37](https://github.com/Kong/public-ui-components/commit/68d6b379a017f11a69d11a4a43e3288d91e2ab4b))
+
+
+
+
+
 ## [5.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.8.0...@kong-ui-public/analytics-utilities@5.8.1) (2024-12-06)
 
 
