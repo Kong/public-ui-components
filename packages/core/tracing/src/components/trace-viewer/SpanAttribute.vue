@@ -125,6 +125,8 @@ const entityRequest = computed(() => {
       request.upstream = upstreamId
       break
     }
+    default:
+      break
   }
 
   return request
