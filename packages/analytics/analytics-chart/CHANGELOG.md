@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.7.2...@kong-ui-public/analytics-chart@5.7.3) (2024-12-10)
+
+
+### Bug Fixes
+
+* **analytics:** shift numbers to digits instead of words ([#1846](https://github.com/Kong/public-ui-components/issues/1846)) ([2aa7c4a](https://github.com/Kong/public-ui-components/commit/2aa7c4a68a70f190a99972bb853480181c9024da))
+
+
+
+
+
 ## [5.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.7.1...@kong-ui-public/analytics-chart@5.7.2) (2024-12-10)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
