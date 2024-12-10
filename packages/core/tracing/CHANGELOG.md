@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.3.3...@kong-ui-public/tracing@0.4.0) (2024-12-10)
+
+
+### Features
+
+* **tracing:** support linking to upstream targets in span attributes ([#1838](https://github.com/Kong/public-ui-components/issues/1838)) ([0962be7](https://github.com/Kong/public-ui-components/commit/0962be7ded6a638eb87bde81ef9f699e64a36713))
+
+
+
+
+
 ## [0.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.3.2...@kong-ui-public/tracing@0.3.3) (2024-12-04)
 
 
