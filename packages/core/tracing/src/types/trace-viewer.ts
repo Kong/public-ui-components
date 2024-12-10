@@ -17,6 +17,11 @@ export interface EntityRequest {
    * This field is only available for entities of the 'plugins' type.
    */
   plugin?: string
+  /**
+   * The ID of the upstream.
+   * This field is only available for entities of the 'targets' type.
+   */
+  upstream?: string
 }
 
 export interface TraceViewerConfig {
