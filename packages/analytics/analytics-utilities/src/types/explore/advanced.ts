@@ -6,6 +6,7 @@ export const queryableExploreDimensions = [
   ...queryableBasicExploreDimensions,
   'application',
   'consumer',
+  'country_code',
   'iso_code',
 ] as const
 
