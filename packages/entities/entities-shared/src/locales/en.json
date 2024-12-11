@@ -72,6 +72,10 @@
       "structuredFormat": "Structured"
     }
   },
+  "emptyState": {
+    "learnMore": "Learn more",
+    "pricingTitle": "Pricing: "
+  },
   "filter": {
     "filterButtonText": "Filter",
     "fieldLabel": "Filter by:",
