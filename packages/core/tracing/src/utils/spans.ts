@@ -83,7 +83,7 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
  * @returns the parsed phase and plugin or undefined if the span is not a plugin span
  */
 export const getPhaseAndPlugin = (spanName: string): [phase: string, plugin: string] | undefined => {
-  const matches = /^kong\.(rewrite|access|response|header_filter|body_filter)\.plugin\.(.+?)(?:$|\..*)/gi.exec(spanName)
+  const matches = /^kong\.([^.]+)\.plugin\.(.+?)(?:$|\..*)/gi.exec(spanName)
   if (!matches) {
     return undefined
   }
