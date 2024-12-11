@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.10.17...@kong-ui-public/entities-shared@3.10.18) (2024-12-11)
+
+
+### Bug Fixes
+
+* **entities-shared:** persistent cache key should share the same ref, expose useFetcherCacheKey ([#1844](https://github.com/Kong/public-ui-components/issues/1844)) ([117c96c](https://github.com/Kong/public-ui-components/commit/117c96c2a4c31cb3b06ac93992ba14aeeea2c515))
+
+
+
+
+
 ## [3.10.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.10.16...@kong-ui-public/entities-shared@3.10.17) (2024-12-04)
 
 
