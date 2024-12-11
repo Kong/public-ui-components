@@ -12,6 +12,7 @@ import { horizontalTooltipPositioning, tooltipBehavior, verticalTooltipPositioni
 import { isNullOrUndef } from 'chart.js/helpers'
 import type { ExternalTooltipContext, LineChartOptions } from '../types'
 import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
+import { millisecondsToHours } from 'date-fns'
 
 export default function useLinechartOptions(chartOptions: LineChartOptions) {
 
@@ -129,9 +130,10 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
   })
 
   const dayBoundaryCrossed = computed(() => {
+    const timeRange = Number(chartOptions.timeRangeMs.value)
     const now = new Date()
-    const start = new Date(now.getTime() - Number(chartOptions.timeRangeMs.value))
-    return start.getDate() !== now.getDate()
+    const start = new Date(now.getTime() - timeRange)
+    return millisecondsToHours(timeRange) > 24 || start.getDate() !== now.getDate()
   })
 
   const options = computed(() => {
