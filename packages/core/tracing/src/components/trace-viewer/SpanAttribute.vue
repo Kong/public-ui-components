@@ -20,7 +20,7 @@
         new-window
       />
       <span v-else>
-        {{ t('trace_viewer.span_attributes.not_applicable') }}
+        {{ formattedValue || t('trace_viewer.span_attributes.not_applicable') }}
       </span>
     </template>
   </ConfigCardItem>
