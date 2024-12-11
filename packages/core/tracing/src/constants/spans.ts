@@ -54,7 +54,7 @@ export enum SpanAttributeKeys {
  * These definitions are exported from Gateway's codebase.
  * They are subject to change in the future.
  */
-const spanAttributes = {
+const unnamedSpanAttributes = {
   [SpanAttributeKeys.CLIENT_ADDRESS]: {
     type: 'IpAddr',
     sampling: {
@@ -231,9 +231,13 @@ const spanAttributes = {
   },
 } satisfies Record<SpanAttributeKeys, Omit<SpanAttributeSchema, 'name'>>
 
+type NamedSpanAttributes = {
+  [K in keyof typeof unnamedSpanAttributes]: typeof unnamedSpanAttributes[K] & Pick<SpanAttributeSchema, 'name'>
+}
+
 export const SPAN_ATTRIBUTES =
-  Object.fromEntries(Object.entries(spanAttributes)
-    .map(([key, value]) => ([key, { name: key, ...value }])))
+  Object.fromEntries(Object.entries(unnamedSpanAttributes)
+    .map(([key, value]) => ([key, { name: key, ...value }]))) as NamedSpanAttributes
 
 export const SPAN_EVENT_ATTRIBUTES = {
   MESSAGE: {
