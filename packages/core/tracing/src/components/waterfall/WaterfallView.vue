@@ -124,10 +124,14 @@ const spanBarMeasurementRef = useTemplateRef<HTMLElement>('spanBarMeasurement')
 const interaction = ref<'scroll' | 'zoom'>('scroll')
 const rowsAreaGuideX = ref<number | undefined>(undefined)
 
-const config = reactive<MarkReactiveInputRefs<WaterfallConfig, 'ticks' | 'totalDurationNano' | 'startTimeUnixNano'>>({
-  ticks: toRef(props, 'ticks'), // This will be unwrapped
-  totalDurationNano: computed(() => props.rootSpan?.durationNano ?? 0), // This will be unwrapped
-  startTimeUnixNano: computed(() => props.rootSpan ? BigInt(props.rootSpan.span.startTimeUnixNano) : 0n), // This will be unwrapped
+const config = reactive<MarkReactiveInputRefs<WaterfallConfig, 'ticks' | 'root' | 'totalDurationNano'>>({
+  ticks: toRef(props, 'ticks'),
+  root: toRef(props, 'rootSpan'),
+  totalDurationNano: computed(() =>
+    props.rootSpan
+      ? Number(props.rootSpan.subtreeValues.endTimeUnixNano - props.rootSpan.subtreeValues.startTimeUnixNano)
+      : 0,
+  ),
   zoom: 1,
   viewportShift: 0,
   viewport: { left: 0, right: 0 },

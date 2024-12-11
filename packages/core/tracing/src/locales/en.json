@@ -3,6 +3,12 @@
     "content": "Content of the header",
     "title": "Title of the header"
   },
+  "span_attributes": {
+    "labels": {
+      "start_time": "Start time",
+      "end_time": "End time"
+    }
+  },
   "trace_viewer": {
     "empty_state": {
       "nothing_to_display": "There's nothing to display for the selected span",

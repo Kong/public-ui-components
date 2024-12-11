@@ -1,6 +1,6 @@
+import { cloneDeep } from 'lodash-es'
 import { SPAN_ZERO_ID } from '../constants'
 import { type IAnyValue, type Span, type SpanNode } from '../types'
-import { cloneDeep } from 'lodash-es'
 
 /**
  * Iterate over the spans and build span trees, where each tree stores a trace.
@@ -23,7 +23,8 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
       attributes,
       events,
     } = span
-    const node = {
+    const durationNano = Number(BigInt(span.endTimeUnixNano) - BigInt(span.startTimeUnixNano))
+    const node: SpanNode = {
       span: {
         traceId,
         spanId,
@@ -35,8 +36,13 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
         events: cloneDeep(events), // Avoid mutating the original events
       },
       root: !span.parentSpanId || span.parentSpanId === SPAN_ZERO_ID,
-      durationNano: Number(BigInt(span.endTimeUnixNano) - BigInt(span.startTimeUnixNano)),
+      durationNano,
       children: [],
+      subtreeValues: {
+        startTimeUnixNano: BigInt(span.startTimeUnixNano),
+        endTimeUnixNano: BigInt(span.endTimeUnixNano),
+        minDurationNano: durationNano,
+      },
     }
     node.span.attributes?.sort((a, b) => a.key.localeCompare(b.key))
     nodes.set(span.spanId, node)
@@ -48,6 +54,16 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
     if (!node.root) {
       const parent = nodes.get(node.span.parentSpanId!)!
       parent.children.push(node)
+      // Update subtree values when necessary
+      if (node.subtreeValues.minDurationNano < parent.subtreeValues.minDurationNano) {
+        parent.subtreeValues.minDurationNano = node.subtreeValues.minDurationNano
+      }
+      if (node.subtreeValues.startTimeUnixNano < parent.subtreeValues.startTimeUnixNano) {
+        parent.subtreeValues.startTimeUnixNano = node.subtreeValues.startTimeUnixNano
+      }
+      if (node.subtreeValues.endTimeUnixNano > parent.subtreeValues.endTimeUnixNano) {
+        parent.subtreeValues.endTimeUnixNano = node.subtreeValues.endTimeUnixNano
+      }
     } else {
       roots.push(node)
     }

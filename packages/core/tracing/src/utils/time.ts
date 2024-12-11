@@ -30,3 +30,17 @@ export const getDurationFormatter = (locales: Intl.LocalesArgument = 'en') => {
     return `${fmt.format(t / 60)}h`
   }
 }
+
+/**
+ * This function formats a nanosecond duration into a human-readable string.
+ *
+ * Example output: `2024-12-09T13:31:47.476672512Z`
+ *
+ * @param nanoseconds
+ * @returns an ISO 8601 formatted string with nanoseconds precision
+ */
+export const formatNanoDateTimeString = (nanoseconds: bigint) => {
+  const ms = nanoseconds / BigInt(1e6)
+  const nsRemainder = nanoseconds - ms * BigInt(1e6)
+  return new Date(Number(ms)).toISOString().replace(/Z$/g, `${nsRemainder.toString().padStart(6, '0')}Z`)
+}
