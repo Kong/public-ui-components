@@ -9,9 +9,9 @@ import {
   Tooltip,
 } from 'chart.js'
 import { horizontalTooltipPositioning, tooltipBehavior, verticalTooltipPositioning } from '../utils'
-import { millisecondsToHours } from 'date-fns'
 import { isNullOrUndef } from 'chart.js/helpers'
 import type { ExternalTooltipContext, LineChartOptions } from '../types'
+import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
 
 export default function useLinechartOptions(chartOptions: LineChartOptions) {
 
@@ -96,25 +96,42 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
     }
   }
 
+  /**
+   * ChartJS only supports the following "time units" so we must consolidate our granularities into these units.
+   * 'millisecond'
+   * 'second'
+   * 'minute'
+   * 'hour'
+   * 'day'
+   * 'week'
+   * 'month'
+   * 'quarter'
+   * 'year'
+   */
+  const granularityToChartJSTimeUnitMap: Partial<Record<GranularityValues, string>> = {
+    secondly: 'second',
+    tenSecondly: 'second',
+    thirtySecondly: 'second',
+    minutely: 'minute',
+    fiveMinutely: 'minute',
+    tenMinutely: 'minute',
+    thirtyMinutely: 'minute',
+    hourly: 'hour',
+    twoHourly: 'hour',
+    twelveHourly: 'hour',
+    daily: 'day',
+    weekly: 'week',
+  }
+
   const xAxisGranularityUnit = computed(() => {
-    switch (chartOptions.granularity.value) {
-      case 'minutely':
-        return 'minute'
-      case 'hourly':
-        return 'hour'
-      case 'daily':
-        return 'day'
-      default:
-        return 'day'
-    }
+    return chartOptions.granularity.value in granularityToChartJSTimeUnitMap
+      ? granularityToChartJSTimeUnitMap[chartOptions.granularity.value] : 'hour'
   })
 
-  const hourDisplayFormat = computed(() => {
-    return millisecondsToHours(Number(chartOptions.timeRangeMs.value)) >= 24 ? 'yyyy-MM-dd h:mm' : 'h:mm'
-  })
-
-  const dayDisplayFormat = computed(() => {
-    return ['daily', 'weekly'].includes(chartOptions.granularity.value) ? 'yyyy-MM-dd' : 'yyyy-MM-dd h:mm'
+  const dayBoundaryCrossed = computed(() => {
+    const now = new Date()
+    const start = new Date(now.getTime() - Number(chartOptions.timeRangeMs.value))
+    return start.getDate() !== now.getDate()
   })
 
   const options = computed(() => {
@@ -145,9 +162,14 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
             tooltipFormat: 'h:mm:ss a',
             unit: xAxisGranularityUnit.value,
             displayFormats: {
-              minute: 'h:mm:ss a',
-              hour: hourDisplayFormat.value,
-              day: dayDisplayFormat.value,
+              second: dayBoundaryCrossed.value ? 'yyyy-MM-dd h:mm:ss a' : 'h:mm:ss a',
+              minute: dayBoundaryCrossed.value ? 'yyyy-MM-dd h:mm:ss a' : 'h:mm:ss a',
+              hour: dayBoundaryCrossed.value ? 'yyyy-MM-dd h:mm:ss a' : 'h:mm:ss a',
+              day: 'yyyy-MM-dd',
+              week: 'yyyy-MM-dd',
+              month: 'yyyy-MM-dd',
+              quarter: 'yyyy-MM-dd',
+              year: 'yyyy-MM-dd',
             },
           },
         },
