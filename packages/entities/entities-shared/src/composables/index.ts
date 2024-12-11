@@ -3,7 +3,7 @@ import useDebouncedFilter from './useDebouncedFilter'
 import useDeleteUrlBuilder from './useDeleteUrlBuilder'
 import useErrors from './useErrors'
 import useExternalLinkCreator from './useExternalLinkCreator'
-import useFetcher from './useFetcher'
+import useFetcher, { useFetcherCacheKey } from './useFetcher'
 import useFetchUrlBuilder from './useFetchUrlBuilder'
 import useHelpers from './useHelpers'
 import useStringHelpers from './useStringHelpers'
@@ -21,6 +21,7 @@ export default {
   useErrors,
   useExternalLinkCreator,
   useFetcher,
+  useFetcherCacheKey,
   useFetchUrlBuilder,
   useHelpers,
   useStringHelpers,
