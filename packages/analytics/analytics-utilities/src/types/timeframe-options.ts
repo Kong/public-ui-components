@@ -12,4 +12,5 @@ export interface TimeframeOptions {
   startCustom?: Date
   endCustom?: Date
   allowedGranularitiesOverride?: GranularityValues[]
+  fineGrainedDefaultGranularity?: GranularityValues
 }
