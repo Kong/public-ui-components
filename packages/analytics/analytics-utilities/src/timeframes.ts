@@ -377,6 +377,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       dataGranularity: 'daily',
       isRelative: false,
       allowedTiers: ['plus', 'enterprise'],
+      allowedGranularitiesOverride: ['thirtyMinutely', 'hourly', 'twoHourly', 'twelveHourly', 'daily'],
     }),
   ],
   [
@@ -409,6 +410,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       dataGranularity: 'daily',
       isRelative: false,
       allowedTiers: ['plus', 'enterprise'],
+      allowedGranularitiesOverride: ['thirtyMinutely', 'hourly', 'twoHourly', 'twelveHourly', 'daily'],
     }),
   ],
   [
