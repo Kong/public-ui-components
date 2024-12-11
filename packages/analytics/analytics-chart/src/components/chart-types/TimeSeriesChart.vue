@@ -72,9 +72,9 @@ import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
 import type { ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry } from '../../types'
 import type { GranularityValues, AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
-import { formatTime } from '@kong-ui-public/analytics-utilities'
 import type { Chart, LegendItem } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
+import { formatByGranularity } from '../../utils'
 
 const props = defineProps({
   chartData: {
@@ -216,7 +216,7 @@ const { options } = composables.useLinechartOptions({
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))
 
 const formatTimestamp = (ts: number): string | number => {
-  return formatTime(ts, { short: ['daily', 'weekly'].includes(props.granularity) })
+  return formatByGranularity(new Date(ts), props.granularity, false)
 }
 
 /**

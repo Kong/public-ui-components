@@ -8,10 +8,9 @@ import type {
 import {
   Tooltip,
 } from 'chart.js'
-import { horizontalTooltipPositioning, tooltipBehavior, verticalTooltipPositioning } from '../utils'
+import { formatByGranularity, horizontalTooltipPositioning, tooltipBehavior, verticalTooltipPositioning } from '../utils'
 import { isNullOrUndef } from 'chart.js/helpers'
 import type { ExternalTooltipContext, LineChartOptions } from '../types'
-import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { millisecondsToHours } from 'date-fns'
 
 export default function useLinechartOptions(chartOptions: LineChartOptions) {
@@ -30,6 +29,10 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
       autoSkipPadding: 100,
       source: 'auto',
       maxRotation: 0,
+      callback: (value: number) => {
+        const tickValue = new Date(value)
+        return formatByGranularity(tickValue, chartOptions.granularity.value, dayBoundaryCrossed.value)
+      },
     },
     title: {
       display: !isNullOrUndef(chartOptions.dimensionAxesTitle?.value),
@@ -97,37 +100,6 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
     }
   }
 
-  /**
-   * ChartJS only supports the following "time units" so we must consolidate our granularities into these units.
-   * 'millisecond'
-   * 'second'
-   * 'minute'
-   * 'hour'
-   * 'day'
-   * 'week'
-   * 'month'
-   * 'quarter'
-   * 'year'
-   */
-  const granularityToChartJSTimeUnitMap: Partial<Record<GranularityValues, string>> = {
-    secondly: 'second',
-    tenSecondly: 'second',
-    thirtySecondly: 'second',
-    minutely: 'minute',
-    fiveMinutely: 'minute',
-    tenMinutely: 'minute',
-    thirtyMinutely: 'minute',
-    hourly: 'hour',
-    twoHourly: 'hour',
-    twelveHourly: 'hour',
-    daily: 'day',
-    weekly: 'week',
-  }
-
-  const xAxisGranularityUnit = computed(() => {
-    return chartOptions.granularity.value in granularityToChartJSTimeUnitMap
-      ? granularityToChartJSTimeUnitMap[chartOptions.granularity.value] : 'hour'
-  })
 
   const dayBoundaryCrossed = computed(() => {
     const timeRange = Number(chartOptions.timeRangeMs.value)
@@ -160,20 +132,6 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
           },
           ...xAxesOptions.value,
           stacked: chartOptions.stacked.value,
-          time: {
-            tooltipFormat: 'h:mm:ss a',
-            unit: xAxisGranularityUnit.value,
-            displayFormats: {
-              second: dayBoundaryCrossed.value ? 'yyyy-MM-dd h:mm:ss a' : 'h:mm:ss a',
-              minute: dayBoundaryCrossed.value ? 'yyyy-MM-dd h:mm:ss a' : 'h:mm:ss a',
-              hour: dayBoundaryCrossed.value ? 'yyyy-MM-dd h:mm:ss a' : 'h:mm:ss a',
-              day: 'yyyy-MM-dd',
-              week: 'yyyy-MM-dd',
-              month: 'yyyy-MM-dd',
-              quarter: 'yyyy-MM-dd',
-              year: 'yyyy-MM-dd',
-            },
-          },
         },
         y: {
           border: {
