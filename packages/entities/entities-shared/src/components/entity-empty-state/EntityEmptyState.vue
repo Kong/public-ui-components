@@ -199,7 +199,7 @@ const { i18n: { t } } = composables.useI18n()
     grid-template-columns: auto auto !important;
 
     .entity-empty-state-card {
-      background-color:  var(--kui-color-text-neutral-weakest, $kui-color-background-neutral-weakest);
+      background-color:  var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
       border: $kui-border-width-10 solid $kui-color-border;
       border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
       color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak);
