@@ -6,6 +6,8 @@
         action-button-text="Create a gateway"
         description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae. Repellat quam voluptas vitae, maxime consequuntur praesentium suscipit. Numquam aliquid nulla vel esse accusantium reiciendis error?"
         :features="features"
+        learn-more-link="https://konghq.com"
+        pricing="Lorem ipsum dolor sit amet consectetur adipisicing elit."
         title="Gateway Manager"
       >
         <template #icon>

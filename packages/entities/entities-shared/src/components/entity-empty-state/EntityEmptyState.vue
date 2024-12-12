@@ -53,54 +53,55 @@
     >
       <slot name="message" />
     </div>
-  </div>
-  <div
-    v-if="(actionButtonText) || $slots.action"
-    class="entity-empty-state-action"
-  >
-    <KButton
-      appearance="primary"
-      @click="$emit('click-action')"
+    <div
+      v-if="(actionButtonText) || $slots.action"
+      class="entity-empty-state-action"
     >
-      {{ actionButtonText }}
-    </KButton>
-    <KButton
-      v-if="learnMoreLink"
-      appearance="secondary"
-      :to="learnMoreLink"
-    >
-      <BookIcon decorative />
-      {{ t('emptyState.learnMore') }}
-    </KButton>
-  </div>
-  <div class="entity-empty-state-card-container">
-    <template
-      v-for="feature in features"
-      :key="feature"
-    >
-      <KCard
-        class="entity-empty-state-card"
-        :title="feature.title"
+      <KButton
+        appearance="primary"
+        @click="$emit('click-action')"
       >
-        <template #title>
-          <component
-            :is="feature.iconVariant"
-            :color="`var(--kui-color-text-neutral-stronger, ${KUI_COLOR_TEXT_NEUTRAL_STRONGER})`"
-            :size="KUI_ICON_SIZE_30"
-          />
-          <div>{{ feature.title }}</div>
-        </template>
-        <template #default>
-          {{ feature.description }}
-        </template>
-      </KCard>
-    </template>
+        {{ actionButtonText }}
+      </KButton>
+      <KButton
+        v-if="learnMoreLink"
+        appearance="secondary"
+        :to="learnMoreLink"
+      >
+        <BookIcon decorative />
+        {{ t('emptyState.learnMore') }}
+      </KButton>
+    </div>
+    <div class="entity-empty-state-card-container">
+      <template
+        v-for="feature in features"
+        :key="feature"
+      >
+        <KCard
+          class="entity-empty-state-card"
+          :title="feature.title"
+        >
+          <template #title>
+            <component
+              :is="feature.iconVariant"
+              :color="`var(--kui-color-text-neutral-stronger, ${KUI_COLOR_TEXT_NEUTRAL_STRONGER})`"
+              :size="KUI_ICON_SIZE_30"
+            />
+            <div>{{ feature.title }}</div>
+          </template>
+          <template #default>
+            {{ feature.description }}
+          </template>
+        </KCard>
+      </template>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { type PropType } from 'vue'
-import KButton from '@kong/kongponents'
+import { KButton } from '@kong/kongponents'
+import { BookIcon } from '@kong/icons'
 import composables from '../../composables'
 import type { EmptyStateFeature } from 'src/types/entity-empty-state'
 import { KUI_ICON_SIZE_30, KUI_COLOR_TEXT_NEUTRAL_STRONGER } from '@kong/design-tokens'
