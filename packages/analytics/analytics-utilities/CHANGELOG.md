@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.10.0...@kong-ui-public/analytics-utilities@5.11.0) (2024-12-12)
+
+
+### Features
+
+* **analytics:** specific defaults for granularities [MA-3507] ([#1849](https://github.com/Kong/public-ui-components/issues/1849)) ([e724aec](https://github.com/Kong/public-ui-components/commit/e724aec64ac485bb00ef88845da8453f69eaba0e))
+
+
+
+
+
 # [5.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.9.0...@kong-ui-public/analytics-utilities@5.10.0) (2024-12-11)
 
 
