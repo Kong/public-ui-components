@@ -207,6 +207,15 @@ const { i18n: { t } } = composables.useI18n()
       height: 160px;
       padding: var(--kui-space-80, $kui-space-80);
       width: 312px;
+
+      :deep(.card-title) {
+        font-size: var(--kui-font-size-30, $kui-font-size-30);
+        font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+      }
+
+      :deep(.card-content) {
+        color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      }
     }
   }
 }
