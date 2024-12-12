@@ -87,10 +87,7 @@ export class TimeseriesQueryTime extends BaseQueryTime {
     if (granularity && timeframe.allowedGranularities(fineGrain).has(granularity)) {
       this.granularity = granularity
     } else if (fineGrain) {
-      // TODO: when removing the feature flag, consider redefining `defaultResponseGranularity`
-      // in the timeframes constructor: it should probably handle this calculation on its own.
-      const finestGranularity = timeframe.allowedGranularities(fineGrain).keys().next().value
-      this.granularity = finestGranularity ?? timeframe.defaultResponseGranularity
+      this.granularity = timeframe.fineGrainedDefaultGranularity ?? timeframe.defaultResponseGranularity
     } else {
       this.granularity = timeframe.defaultResponseGranularity
     }

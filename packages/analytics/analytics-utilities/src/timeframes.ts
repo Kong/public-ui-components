@@ -55,6 +55,8 @@ export class Timeframe implements ITimeframe {
   // the first time bucket.
   readonly isRelative: boolean
 
+  readonly fineGrainedDefaultGranularity?: GranularityValues
+
   private _startCustom?: Date
 
   private _endCustom?: Date
@@ -73,6 +75,7 @@ export class Timeframe implements ITimeframe {
     this._startCustom = opts.startCustom
     this._endCustom = opts.endCustom
     this._allowedGranularitiesOverride = opts.allowedGranularitiesOverride
+    this.fineGrainedDefaultGranularity = opts.fineGrainedDefaultGranularity
   }
 
   // rawEnd does not consider granularity and should not be used directly in queries.
@@ -272,6 +275,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: 'minutely',
       dataGranularity: 'minutely',
       isRelative: true,
+      fineGrainedDefaultGranularity: 'thirtySecondly',
       allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
       allowedGranularitiesOverride: ['tenSecondly', 'thirtySecondly', 'minutely'],
     }),
@@ -286,6 +290,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: 'minutely',
       dataGranularity: 'minutely',
       isRelative: true,
+      fineGrainedDefaultGranularity: 'minutely',
       allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
       allowedGranularitiesOverride: ['tenSecondly', 'thirtySecondly', 'minutely', 'fiveMinutely', 'tenMinutely'],
     }),
@@ -300,6 +305,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: 'hourly',
       dataGranularity: 'hourly',
       isRelative: true,
+      fineGrainedDefaultGranularity: 'fiveMinutely',
       allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
       allowedGranularitiesOverride: ['thirtySecondly', 'minutely', 'fiveMinutely', 'tenMinutely', 'thirtyMinutely', 'hourly'],
     }),
@@ -314,6 +320,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: 'hourly',
       dataGranularity: 'hourly',
       isRelative: true,
+      fineGrainedDefaultGranularity: 'tenMinutely',
       allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
       allowedGranularitiesOverride: ['minutely', 'fiveMinutely', 'tenMinutely', 'thirtyMinutely', 'hourly'],
     }),
@@ -328,6 +335,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: 'hourly',
       dataGranularity: 'hourly',
       isRelative: true,
+      fineGrainedDefaultGranularity: 'thirtyMinutely',
       allowedTiers: ['free', 'trial', 'plus', 'enterprise'],
       allowedGranularitiesOverride: ['fiveMinutely', 'tenMinutely', 'thirtyMinutely', 'hourly'],
     }),
@@ -342,6 +350,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: 'daily',
       dataGranularity: 'daily',
       isRelative: true,
+      fineGrainedDefaultGranularity: 'twoHourly',
       allowedTiers: ['trial', 'plus', 'enterprise'],
       allowedGranularitiesOverride: ['thirtyMinutely', 'hourly', 'twoHourly', 'twelveHourly', 'daily'],
     }),
@@ -356,6 +365,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: 'daily',
       dataGranularity: 'daily',
       isRelative: true,
+      fineGrainedDefaultGranularity: 'twelveHourly',
       allowedTiers: ['trial', 'plus', 'enterprise'],
       allowedGranularitiesOverride: ['hourly', 'twoHourly', 'twelveHourly', 'daily', 'weekly'],
     }),
@@ -376,6 +386,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: 'daily',
       dataGranularity: 'daily',
       isRelative: false,
+      fineGrainedDefaultGranularity: 'twoHourly',
       allowedTiers: ['plus', 'enterprise'],
       allowedGranularitiesOverride: ['thirtyMinutely', 'hourly', 'twoHourly', 'twelveHourly', 'daily'],
     }),
@@ -409,6 +420,7 @@ export const TimePeriods = new Map<string, Timeframe>([
       defaultResponseGranularity: 'daily',
       dataGranularity: 'daily',
       isRelative: false,
+      fineGrainedDefaultGranularity: 'twoHourly',
       allowedTiers: ['plus', 'enterprise'],
       allowedGranularitiesOverride: ['thirtyMinutely', 'hourly', 'twoHourly', 'twelveHourly', 'daily'],
     }),
