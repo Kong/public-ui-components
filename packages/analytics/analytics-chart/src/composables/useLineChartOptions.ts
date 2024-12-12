@@ -42,6 +42,10 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
         weight: 'bold',
       },
     },
+    border: {
+      display: false,
+    },
+    stacked: chartOptions.stacked.value,
   }))
   const yAxesOptions = computed(() => ({
     title: {
@@ -60,6 +64,10 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
     },
     id: 'main-y-axis',
     beginAtZero: true,
+    border: {
+      display: false,
+    },
+    stacked: chartOptions.stacked.value,
   }))
 
   const tooltipOptions = {
@@ -126,20 +134,8 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
         easing: 'linear',
       },
       scales: {
-        x: {
-          border: {
-            display: false,
-          },
-          ...xAxesOptions.value,
-          stacked: chartOptions.stacked.value,
-        },
-        y: {
-          border: {
-            display: false,
-          },
-          ...yAxesOptions.value,
-          stacked: chartOptions.stacked.value,
-        },
+        x: xAxesOptions.value,
+        y: yAxesOptions.value,
       },
       responsive: true,
       maintainAspectRatio: false,
