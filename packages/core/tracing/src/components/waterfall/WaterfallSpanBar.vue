@@ -7,6 +7,8 @@ import { computed, inject } from 'vue'
 import { WATERFALL_CONFIG, WATERFALL_LEGENDS, WaterfallLegendItemKind } from '../../constants'
 import type { SpanNode, WaterfallConfig } from '../../types'
 
+const MIN_WIDTH = 1
+
 const config = inject<WaterfallConfig>(WATERFALL_CONFIG)
 if (!config) {
   throw new Error('WATERFALL_CONFIG is not provided')
@@ -38,13 +40,33 @@ const barColor = computed(() => {
 })
 
 // RESERVED: Only used when zooming is enabled
-const relativeStartTimeNano = computed(() => Number(BigInt(props.spanNode.span.startTimeUnixNano) - config.startTimeUnixNano))
+const relativeStartTimeNano = computed(() =>
+  Number(BigInt(props.spanNode.span.startTimeUnixNano) - (config.root?.subtreeValues.startTimeUnixNano ?? 0n)),
+)
 const barFixedLeft = computed(() => (relativeStartTimeNano.value / config.totalDurationNano) * config.zoom)
 const barShiftLeft = computed(() => -config.viewport.left * config.zoom)
-const barLeft = computed(() => `min(100% - 3px, ${(barFixedLeft.value + barShiftLeft.value) * 100}%)`)
-const barWidth = computed(() => {
-  return `max(3px, ${props.spanNode.durationNano / config.totalDurationNano * config.zoom * 100}%)`
+const barLeft = computed(() => `min(100% - ${MIN_WIDTH}px, calc((100% - ${MIN_WIDTH}px) * ${(barFixedLeft.value + barShiftLeft.value)})`)
+const barExtraWidthFactor = computed(() => {
+  if (!config.root) {
+    return 0
+  }
+  /**
+   * We will make minDuration as `MIN_WIDTH`. Therefore, we will calculate the "extra" width besides the
+   * `MIN_WIDTH`. We will present this extra width as a factor.
+   *
+   * e.g.
+   * - The total duration should take `MIN_WIDTH + (100% - MIN_WIDTH) * 1` which is `100%` (factor = 1)
+   * - The minimal duration should take `MIN_WIDTH + (100% - MIN_WIDTH) * 0` which is `MIN_WIDTH` (factor = 0)
+   *
+   * Therefore, the formula to calculate the factor for a span is:
+   * (span duration - minimal duration) / (total duration - minimal duration)`
+   */
+  return (props.spanNode.durationNano - config.root.subtreeValues.minDurationNano)
+    / (config.totalDurationNano - config.root.subtreeValues.minDurationNano)
 })
+const barWidth = computed(() =>
+  `calc((${MIN_WIDTH}px + (100% - ${MIN_WIDTH}px) * ${barExtraWidthFactor.value}) * ${config.zoom})`,
+)
 </script>
 
 <style lang="scss" scoped>

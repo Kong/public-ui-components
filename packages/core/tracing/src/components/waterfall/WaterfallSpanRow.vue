@@ -187,7 +187,7 @@ const handleSelect = () => {
   position: relative;
   width: 100%;
 
-  &.selected {
+  &:hover, &.selected {
     $row-background-color: $kui-color-background-primary-weakest;
     background-color: $row-background-color;
 

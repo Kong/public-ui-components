@@ -9,6 +9,14 @@
 
     <div class="attributes">
       <SpanAttribute
+        v-for="attributes in internalAttributes"
+        :key="attributes.key"
+        :key-value="attributes"
+        :label="attributes.label"
+        :span="span"
+      />
+
+      <SpanAttribute
         v-for="keyValue in span.attributes"
         :key="keyValue.key"
         :key-value="keyValue"
@@ -19,14 +27,35 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import composables from '../../composables'
-import { WATERFALL_ROW_PADDING_X } from '../../constants'
-import type { Span } from '../../types'
+import { SpanAttributeKeys, WATERFALL_ROW_PADDING_X } from '../../constants'
+import type { IKeyValue, Span } from '../../types'
+import { formatNanoDateTimeString } from '../../utils'
 import SpanAttribute from './SpanAttribute.vue'
 
 const { i18n: { t } } = composables.useI18n()
 
-defineProps<{ span: Span }>()
+const props = defineProps<{ span: Span }>()
+
+const internalAttributes = computed<(IKeyValue & { label?: string })[]>(() => {
+  return [
+    {
+      key: SpanAttributeKeys._INTERNAL_START_TIME,
+      value: {
+        stringValue: formatNanoDateTimeString(BigInt(props.span.startTimeUnixNano)),
+      },
+      label: t('span_attributes.labels.start_time'),
+    },
+    {
+      key: SpanAttributeKeys._INTERNAL_END_TIME,
+      value: {
+        stringValue: formatNanoDateTimeString(BigInt(props.span.endTimeUnixNano)),
+      },
+      label: t('span_attributes.labels.end_time'),
+    },
+  ]
+})
 </script>
 
 <style lang="scss" scoped>
