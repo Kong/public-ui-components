@@ -81,18 +81,14 @@ export const hasMillisecondTimestamps = (chartData: KChartData) =>
     (ds) => ds.data[0] && (ds.data[0] as ScatterDataPoint).x.toString().length >= 13,
   )
 
+/**
+  * Adjust the tooltip's horizontal position based on its width and cursor location relative to the chart center.
+  * This logic ensures consistent visual placement of a custom tooltip, as ChartJS offers limited direct control.
+  */
 export const horizontalTooltipPositioning = (position: Point, tooltipWidth: number, chartCenterX: number) => {
-  // We are manipulating an initial positioning logic that appears to be quite arbitrary.
-  // ChartJS offers limited documentation on this. The logic that follows has been tested across multiple scenarios
-  // and provides the most consistent visual output.
-  // The goal is to shift the tooltip to either the left or right in proportion to the tooltip's width,
-  // depending on the cursor's location relative to the chart's center.
-  // Additionally, we need to scale by the ratio of the tooltip width to chart width in order to
-  // adjust for any changes in the tooltip width.
-  // The original tooltip position tends to lean towards the center of the tooltip — this is one of the arbitrary aspects we are dealing with.
-  // It appears that the default position.x and position.y values don't consistently align with the tooltip.
-  // It's likely that these initial position.x and position.y values refer to the position of ChartJS' default tooltip,
-  // which is not visible as we're using a custom tooltip.
+  // Scaling factor that prevents the tooltip from shifting too far when it's wide, or too little when
+  // it's narrow. Ensuring that as the tooltip width changes, the horizontal offset is proportionally
+  // adjusted to maintain a visually balanced placement.
   const withRatioScalingBase = 1150 // Found through trial and error.
   const widthRatio = Math.min(tooltipWidth / withRatioScalingBase, 1) // Limit the ratio to a maximum of 1
   // Define a scaling factor for when the tooltip is positioned to the right of the cursor.
