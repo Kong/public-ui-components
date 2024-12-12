@@ -59,6 +59,7 @@
     >
       <KButton
         appearance="primary"
+        size="large"
         @click="$emit('click-action')"
       >
         {{ actionButtonText }}
@@ -66,6 +67,7 @@
       <KButton
         v-if="learnMoreLink"
         appearance="secondary"
+        size="large"
         :to="learnMoreLink"
       >
         <BookIcon decorative />
@@ -146,7 +148,7 @@ const { i18n: { t } } = composables.useI18n()
   display: flex;
   flex-direction: column;
   font-family: var(--kui-font-family-text, $kui-font-family-text);
-  gap: var(--kui-space-60, $kui-space-60);
+  gap: var(--kui-space-100, $kui-space-100);
   padding: var(--kui-space-130, $kui-space-150) var(--kui-space-130, $kui-space-150);
   width: 100%;
 
@@ -197,8 +199,14 @@ const { i18n: { t } } = composables.useI18n()
     grid-template-columns: auto auto !important;
 
     .entity-empty-state-card {
+      background-color:  var(--kui-color-text-neutral-weakest, $kui-color-background-neutral-weakest);
+      border: $kui-border-width-10 solid $kui-color-border;
+      border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
       color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak);
-      margin-bottom: $kui-space-40;
+      gap: var(--kui-space-60, $kui-space-60);
+      height: 160px;
+      padding: var(--kui-space-80, $kui-space-80);
+      width: 312px;
     }
   }
 }
