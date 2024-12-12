@@ -8,10 +8,10 @@ import type {
 import {
   Tooltip,
 } from 'chart.js'
-import { horizontalTooltipPositioning, tooltipBehavior, verticalTooltipPositioning } from '../utils'
-import { millisecondsToHours } from 'date-fns'
+import { formatByGranularity, horizontalTooltipPositioning, tooltipBehavior, verticalTooltipPositioning } from '../utils'
 import { isNullOrUndef } from 'chart.js/helpers'
 import type { ExternalTooltipContext, LineChartOptions } from '../types'
+import { millisecondsToHours } from 'date-fns'
 
 export default function useLinechartOptions(chartOptions: LineChartOptions) {
 
@@ -29,6 +29,10 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
       autoSkipPadding: 100,
       source: 'auto',
       maxRotation: 0,
+      callback: (value: number) => {
+        const tickValue = new Date(value)
+        return formatByGranularity(tickValue, chartOptions.granularity.value, dayBoundaryCrossed.value)
+      },
     },
     title: {
       display: !isNullOrUndef(chartOptions.dimensionAxesTitle?.value),
@@ -38,6 +42,10 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
         weight: 'bold',
       },
     },
+    border: {
+      display: false,
+    },
+    stacked: chartOptions.stacked.value,
   }))
   const yAxesOptions = computed(() => ({
     title: {
@@ -56,6 +64,10 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
     },
     id: 'main-y-axis',
     beginAtZero: true,
+    border: {
+      display: false,
+    },
+    stacked: chartOptions.stacked.value,
   }))
 
   const tooltipOptions = {
@@ -96,25 +108,12 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
     }
   }
 
-  const xAxisGranularityUnit = computed(() => {
-    switch (chartOptions.granularity.value) {
-      case 'minutely':
-        return 'minute'
-      case 'hourly':
-        return 'hour'
-      case 'daily':
-        return 'day'
-      default:
-        return 'day'
-    }
-  })
 
-  const hourDisplayFormat = computed(() => {
-    return millisecondsToHours(Number(chartOptions.timeRangeMs.value)) >= 24 ? 'yyyy-MM-dd h:mm' : 'h:mm'
-  })
-
-  const dayDisplayFormat = computed(() => {
-    return ['daily', 'weekly'].includes(chartOptions.granularity.value) ? 'yyyy-MM-dd' : 'yyyy-MM-dd h:mm'
+  const dayBoundaryCrossed = computed(() => {
+    const timeRange = Number(chartOptions.timeRangeMs.value)
+    const now = new Date()
+    const start = new Date(now.getTime() - timeRange)
+    return millisecondsToHours(timeRange) > 24 || start.getDate() !== now.getDate()
   })
 
   const options = computed(() => {
@@ -135,29 +134,8 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
         easing: 'linear',
       },
       scales: {
-        x: {
-          border: {
-            display: false,
-          },
-          ...xAxesOptions.value,
-          stacked: chartOptions.stacked.value,
-          time: {
-            tooltipFormat: 'h:mm:ss a',
-            unit: xAxisGranularityUnit.value,
-            displayFormats: {
-              minute: 'h:mm:ss a',
-              hour: hourDisplayFormat.value,
-              day: dayDisplayFormat.value,
-            },
-          },
-        },
-        y: {
-          border: {
-            display: false,
-          },
-          ...yAxesOptions.value,
-          stacked: chartOptions.stacked.value,
-        },
+        x: xAxesOptions.value,
+        y: yAxesOptions.value,
       },
       responsive: true,
       maintainAspectRatio: false,
