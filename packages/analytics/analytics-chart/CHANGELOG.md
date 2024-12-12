@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.7.5...@kong-ui-public/analytics-chart@5.8.0) (2024-12-12)
+
+
+### Features
+
+* support new granularities when determining x-axis timestamp format ([#1848](https://github.com/Kong/public-ui-components/issues/1848)) ([a4d46ee](https://github.com/Kong/public-ui-components/commit/a4d46eeb68f9f4e670c799717742929f07138d4d))
+
+
+
+
+
 ## [5.7.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.7.4...@kong-ui-public/analytics-chart@5.7.5) (2024-12-12)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
