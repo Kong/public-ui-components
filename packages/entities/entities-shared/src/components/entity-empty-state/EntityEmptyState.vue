@@ -1,15 +1,6 @@
 <template>
   <div class="kong-ui-public-entity-empty-state">
-    <div
-      v-if="$slots.icon"
-      class="entity-empty-state-icon"
-    >
-      <slot name="icon" />
-    </div>
-    <div
-      v-else
-      class="entity-empty-state-image"
-    >
+    <div v-if="$slots.image">
       <slot name="image" />
     </div>
     <div class="entity-empty-state-content">
@@ -161,13 +152,6 @@ const { i18n: { t } } = composables.useI18n()
   gap: $kui-space-100;
   padding: $kui-space-130 $kui-space-150;
   width: 100%;
-
-  .entity-empty-state-icon {
-    :deep() {
-      height: $kui-icon-size-50 !important;
-      width: $kui-icon-size-50 !important;
-    }
-  }
 
   .entity-empty-state-content {
     align-items: center;
