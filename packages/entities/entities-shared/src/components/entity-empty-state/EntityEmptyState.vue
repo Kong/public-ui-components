@@ -53,14 +53,12 @@
     >
       <slot name="message" />
     </div>
-    <div
-      v-if="(actionButtonText) || $slots.action"
-      class="entity-empty-state-action"
-    >
+    <div class="entity-empty-state-action">
       <KButton
+        v-if="(actionButtonText) || $slots.action"
         appearance="primary"
         size="large"
-        @click="$emit('click-action')"
+        @click="$emit('create-button-clicked')"
       >
         {{ actionButtonText }}
       </KButton>
@@ -68,7 +66,7 @@
         v-if="learnMoreLink"
         appearance="secondary"
         size="large"
-        :to="learnMoreLink"
+        @click="$emit('learning-hub-button-clicked')"
       >
         <BookIcon decorative />
         {{ t('emptyState.learnMore') }}
@@ -83,6 +81,7 @@
           class="entity-empty-state-card"
           :title="feature.title"
         >
+          <template #icon />
           <template #title>
             <component
               :is="feature.iconVariant"
@@ -135,7 +134,7 @@ defineProps({
   },
 })
 
-defineEmits(['click-action'])
+defineEmits(['create-button-clicked', 'learning-hub-button-clicked'])
 
 const { i18n: { t } } = composables.useI18n()
 </script>
@@ -175,7 +174,7 @@ const { i18n: { t } } = composables.useI18n()
     }
   }
 
-  .entity-empty-state-description {
+  .entity-empty-state-description, .entity-empty-state-pricing {
     color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
     font-size: var(--kui-font-size-30, $kui-font-size-30);
     font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);

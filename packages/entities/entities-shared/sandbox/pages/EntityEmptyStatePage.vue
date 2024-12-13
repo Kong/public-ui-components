@@ -9,6 +9,8 @@
         learn-more-link="https://konghq.com"
         pricing="Lorem ipsum dolor sit amet consectetur adipisicing elit."
         title="Gateway Manager"
+        @create-button-clicked="console.log('create button clicked')"
+        @learning-hub-button-clicked="console.log('learning hub button clicked')"
       >
         <template #icon>
           <RuntimesIcon />
