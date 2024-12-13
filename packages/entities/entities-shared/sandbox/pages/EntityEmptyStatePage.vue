@@ -7,13 +7,16 @@
         description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae. Repellat quam voluptas vitae, maxime consequuntur praesentium suscipit. Numquam aliquid nulla vel esse accusantium reiciendis error?"
         :features="features"
         learn-more-link
-        pricing="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+        pricing
         title="Gateway Manager"
         @create-button-clicked="console.log('create button clicked')"
         @learning-hub-button-clicked="console.log('learning hub button clicked')"
       >
         <template #icon>
           <RuntimesIcon />
+        </template>
+        <template #pricing>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit
         </template>
       </EntityEmptyState>
     </main>
