@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.12.0...@kong-ui-public/entities-shared@3.12.1) (2024-12-13)
+
+
+### Bug Fixes
+
+* **entity-empty-state:** update pricing prop type and style fixes [khcp-14355] ([#1852](https://github.com/Kong/public-ui-components/issues/1852)) ([3b7e850](https://github.com/Kong/public-ui-components/commit/3b7e850f6dc2cf7b5e4e3b386d736a34b4b35383))
+
+
+
+
+
 # [3.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.11.0...@kong-ui-public/entities-shared@3.12.0) (2024-12-13)
 
 
