@@ -38,8 +38,8 @@ Description for the empty state.
 
 #### `pricing`
 
-- type: `String`
-- default: ``
+- type: `Boolean`
+- default: false
 
 If provided, will display pricing information for transparency.
 

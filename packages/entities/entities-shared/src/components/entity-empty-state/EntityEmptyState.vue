@@ -75,7 +75,7 @@
               :color="KUI_COLOR_TEXT_NEUTRAL_STRONGER"
               :size="KUI_ICON_SIZE_40"
             />
-            <div class="card-title">
+            <div class="card-header">
               {{ feature.title }}
             </div>
           </template>
@@ -119,8 +119,8 @@ defineProps({
     required: true,
   },
   pricing: {
-    type: String,
-    default: '',
+    type: Boolean,
+    default: false,
   },
   actionButtonText: {
     type: String,
@@ -149,7 +149,7 @@ const { i18n: { t } } = composables.useI18n()
   display: flex;
   flex-direction: column;
   font-family: $kui-font-family-text;
-  gap: $kui-space-100;
+  gap: $kui-space-90;
   padding: $kui-space-130 $kui-space-150;
   width: 100%;
 
@@ -197,7 +197,7 @@ const { i18n: { t } } = composables.useI18n()
       border: $kui-border-width-10 solid $kui-color-border;
       border-radius: $kui-border-radius-30;
       color: $kui-color-text-neutral-weak;
-      gap: $kui-space-60;
+      gap: $kui-space-40;
       height: 160px;
       padding: $kui-space-80;
       width: 312px;
@@ -205,6 +205,10 @@ const { i18n: { t } } = composables.useI18n()
       :deep(.card-title) {
         font-size: $kui-font-size-30;
         font-weight: $kui-font-weight-semibold;
+      }
+
+      :deep(.card-header) {
+        padding-top: $kui-space-40;
       }
 
       :deep(.card-content) {
