@@ -218,10 +218,10 @@ You are developing shared component (let's say `@kong-ui-public/forms`) and you 
 1. in the folder `public-ui-components/packages/{workspace}/forms` run
 
     ```sh
-    yarn link
+    pnpm link -g
     ```
 
-2. make sure your package is getting build in watch mode, for this in in the folder `public-ui-components/packages/{workspace}/forms` run:
+2. make sure your package is getting build in watch mode, for this in the folder `public-ui-components/packages/{workspace}/forms` run:
 
     ```sh
     pnpm build:package --watch
@@ -230,7 +230,7 @@ You are developing shared component (let's say `@kong-ui-public/forms`) and you 
 3. In the root folder of the host application/package run:
 
     ```sh
-    yarn link "@kong-ui-public/forms"
+    pnpm link -g @kong-ui-public/forms
     ```
 
 4. Run your consuming application as usual and enjoy your forms code changes visible in your local env immediately.
@@ -265,14 +265,14 @@ In some cases HMR (hot module reloading) is not working out of the box in this c
 1. In the folder `public-ui-components/packages/{workspace}/forms` run
 
     ```sh
-    yarn unlink
+    pnpm remove -g @kong-ui-public/forms
     ```
 
 1. In the root folder of the host application/package run:
 
     ```sh
-    yarn unlink "@kong-ui-public/forms"
-    yarn install --force --frozen-lockfile
+    pnpm unlink -g @kong-ui-public/forms
+    pnpm install
     ```
 
 ## Moving packages to the public/private repo
