@@ -52,17 +52,17 @@ If provided, a CTA button will show with text and icon typically, for creating a
 
 #### `learnMoreLink`
 
-- type: `String`
-- default: ``
+- type: `Boolean`
+- default: false
 
-If provided, will link to the Learning Hub link for the entity.
+If provided, will show the Learning Hub button for the entity.
 
 #### `features`
 
 - type: `Array`
 - default: `[]`
 
-If provided, will display card for each feature of that entity, along with an icon, a tilte and a short description.
+If provided, will display card for each feature of that entity, along with an icon, a title and a short description.
 
 ### Usage example
 
