@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.11.0...@kong-ui-public/entities-shared@3.12.0) (2024-12-13)
+
+
+### Features
+
+* **entities-shared:** create shared empty state component [KHCP-14355] ([#1850](https://github.com/Kong/public-ui-components/issues/1850)) ([8ac62d5](https://github.com/Kong/public-ui-components/commit/8ac62d573d9b3098e38caadcf58f4760e9b543f5))
+
+
+
+
+
 # [3.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.10.18...@kong-ui-public/entities-shared@3.11.0) (2024-12-13)
 
 
