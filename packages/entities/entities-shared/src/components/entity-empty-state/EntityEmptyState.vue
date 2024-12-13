@@ -20,12 +20,8 @@
         <div :title="title">
           {{ title }}
         </div>
-        <span
-          v-if="$slots['title-after']"
-        >
-          <slot
-            name="title-after"
-          />
+        <span v-if="$slots['title-after']">
+          <slot name="title-after" />
         </span>
       </div>
       <div
@@ -60,6 +56,7 @@
         size="large"
         @click="$emit('create-button-clicked')"
       >
+        <AddIcon />
         {{ actionButtonText }}
       </KButton>
       <KButton
@@ -77,22 +74,18 @@
         v-for="feature in features"
         :key="feature"
       >
-        <KCard
-          class="entity-empty-state-card"
-          :title="feature.title"
-        >
-          <template #icon />
+        <KCard class="entity-empty-state-card">
           <template #title>
             <component
-              :is="feature.iconVariant"
+              :is="getEntityIcon(feature.iconVariant)"
               :color="`var(--kui-color-text-neutral-stronger, ${KUI_COLOR_TEXT_NEUTRAL_STRONGER})`"
-              :size="KUI_ICON_SIZE_30"
+              :size="KUI_ICON_SIZE_40"
             />
-            <div>{{ feature.title }}</div>
+            <div class="card-title">
+              {{ feature.title }}
+            </div>
           </template>
-          <template #default>
-            {{ feature.description }}
-          </template>
+          {{ feature.description }}
         </KCard>
       </template>
     </div>
@@ -102,10 +95,26 @@
 <script lang="ts" setup>
 import { type PropType } from 'vue'
 import { KButton } from '@kong/kongponents'
-import { BookIcon } from '@kong/icons'
+import { BookIcon, AddIcon, DeployIcon, PlugIcon, ChartDataIcon, AnalyticsIcon } from '@kong/icons'
 import composables from '../../composables'
 import type { EmptyStateFeature } from 'src/types/entity-empty-state'
-import { KUI_ICON_SIZE_30, KUI_COLOR_TEXT_NEUTRAL_STRONGER } from '@kong/design-tokens'
+import { KUI_ICON_SIZE_40, KUI_COLOR_TEXT_NEUTRAL_STRONGER } from '@kong/design-tokens'
+
+const getEntityIcon = (iconType: string): object => {
+  console.log(iconType)
+  switch (iconType) {
+    case 'deploy':
+      return DeployIcon
+    case 'plug':
+      return PlugIcon
+    case 'chartData':
+      return ChartDataIcon
+    case 'analytics':
+      return AnalyticsIcon
+    default:
+      return BookIcon
+  }
+}
 
 defineProps({
   title: {
@@ -182,7 +191,7 @@ const { i18n: { t } } = composables.useI18n()
     max-width: 640px; // limit width so the description stays readable if it is too long
 
     p {
-      margin: var(--kui-space-0, $kui-space-0);
+      margin: var(--kui-space-30, $kui-space-30);
     }
   }
 

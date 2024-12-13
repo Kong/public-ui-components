@@ -26,20 +26,20 @@ import { RuntimesIcon } from '@kong/icons'
 
 const features = [
   {
-    icon: RuntimesIcon,
+    iconVariant: 'deploy',
     title: 'First',
     description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae',
   },
   {
-    icon: RuntimesIcon,
+    iconVariant: 'plug',
     title: 'Second',
     description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae',
   }, {
-    icon: RuntimesIcon,
+    iconVariant: 'chartData',
     title: 'Third ',
     description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae',
   }, {
-    icon: RuntimesIcon,
+    iconVariant: 'analytics',
     title: 'Fourth',
     description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae',
   },
