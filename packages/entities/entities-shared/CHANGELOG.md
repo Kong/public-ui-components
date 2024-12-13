@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.10.18...@kong-ui-public/entities-shared@3.11.0) (2024-12-13)
+
+
+### Features
+
+* **entities-shared:** export useFetcherCacheKey ([#1851](https://github.com/Kong/public-ui-components/issues/1851)) ([cc1341a](https://github.com/Kong/public-ui-components/commit/cc1341a446aa129dfce4cd5e0f87ed74a3ce7c64))
+
+
+
+
+
 ## [3.10.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.10.17...@kong-ui-public/entities-shared@3.10.18) (2024-12-11)
 
 
