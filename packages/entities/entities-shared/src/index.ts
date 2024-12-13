@@ -10,6 +10,7 @@ import EntityToggleModal from './components/entity-toggle-modal/EntityToggleModa
 import PermissionsWrapper from './components/permissions-wrapper/PermissionsWrapper.vue'
 import EntityFormSection from './components/entity-form-section/EntityFormSection.vue'
 import EntityLink from './components/entity-link/EntityLink.vue'
+import EntityEmptyState from './components/entity-empty-state/EntityEmptyState.vue'
 import JsonCodeBlock from './components/common/JsonCodeBlock.vue'
 import TerraformCodeBlock from './components/common/TerraformCodeBlock.vue'
 import YamlCodeBlock from './components/common/YamlCodeBlock.vue'
@@ -20,7 +21,7 @@ import composables from './composables'
 const { useAxios, useDeleteUrlBuilder, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useFetcherCacheKey, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchemaProvider } = composables
 
 // Components
-export { EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection, EntityLink, JsonCodeBlock, TerraformCodeBlock, YamlCodeBlock, TableTags }
+export { EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection, EntityLink, EntityEmptyState, JsonCodeBlock, TerraformCodeBlock, YamlCodeBlock, TableTags }
 
 // Composables
 export { useAxios, useDeleteUrlBuilder, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useFetcherCacheKey, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchemaProvider }
