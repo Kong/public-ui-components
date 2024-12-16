@@ -7,6 +7,7 @@
       >
         <slot name="image" />
       </div>
+
       <div
         v-if="title || $slots.title || $slots['title-after']"
         class="entity-empty-state-title"
@@ -19,6 +20,7 @@
           <slot name="title-after" />
         </span>
       </div>
+
       <div
         v-if="description || $slots.default"
         class="entity-empty-state-description"
@@ -29,6 +31,7 @@
           </p>
         </slot>
       </div>
+
       <div
         v-if="pricing"
         class="entity-empty-state-pricing"
@@ -40,12 +43,14 @@
         </p>
       </div>
     </div>
+
     <div
       v-if="$slots.message"
       class="entity-empty-state-message"
     >
       <slot name="message" />
     </div>
+
     <div class="entity-empty-state-action">
       <KButton
         v-if="actionButtonText || $slots.action"
@@ -56,6 +61,7 @@
         <AddIcon />
         {{ actionButtonText }}
       </KButton>
+
       <KButton
         v-if="learnMoreLink"
         appearance="secondary"
@@ -66,6 +72,7 @@
         {{ t('emptyState.learnMore') }}
       </KButton>
     </div>
+
     <div class="entity-empty-state-card-container">
       <template
         v-for="(feature, idx) in features"
@@ -73,19 +80,18 @@
       >
         <KCard class="entity-empty-state-card">
           <template #title>
-            <div class="feature-icon">
-              <slot :name="`feature-${idx}-icon`">
-                <component
-                  :is="getEntityIcon(feature.iconVariant)"
-                  :color="KUI_COLOR_TEXT_NEUTRAL_STRONGER"
-                  :size="KUI_ICON_SIZE_40"
-                />
-              </slot>
+            <div
+              v-if="$slots[`feature-${idx}-icon`]"
+              class="feature-icon"
+            >
+              <slot :name="`feature-${idx}-icon`" />
             </div>
+
             <div class="card-header">
               {{ feature.title }}
             </div>
           </template>
+
           <div :title="feature.description">
             {{ feature.description }}
           </div>
@@ -98,25 +104,9 @@
 <script lang="ts" setup>
 import { type PropType } from 'vue'
 import { KButton } from '@kong/kongponents'
-import { BookIcon, AddIcon, DeployIcon, PlugIcon, ChartDataIcon, AnalyticsIcon } from '@kong/icons'
+import { BookIcon, AddIcon } from '@kong/icons'
 import composables from '../../composables'
 import type { EmptyStateFeature } from 'src/types/entity-empty-state'
-import { KUI_ICON_SIZE_40, KUI_COLOR_TEXT_NEUTRAL_STRONGER } from '@kong/design-tokens'
-
-const getEntityIcon = (iconType: string): object => {
-  switch (iconType) {
-    case 'deploy':
-      return DeployIcon
-    case 'plug':
-      return PlugIcon
-    case 'chartData':
-      return ChartDataIcon
-    case 'analytics':
-      return AnalyticsIcon
-    default:
-      return BookIcon
-  }
-}
 
 defineProps({
   title: {
