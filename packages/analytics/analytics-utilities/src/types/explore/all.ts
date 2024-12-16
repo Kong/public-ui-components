@@ -1,6 +1,6 @@
-import { type BasicExploreAggregations, type BasicExploreFilter, type BasicExploreFilterAll, filterableBasicExploreDimensions } from './basic'
-import { type AiExploreAggregations, type AiExploreFilter, type AiExploreFilterAll, filterableAiExploreDimensions } from './ai'
-import { type ExploreAggregations, type ExploreFilter, type ExploreFilterAll, filterableExploreDimensions } from './advanced'
+import { type BasicExploreAggregations, type BasicExploreFilterAll, filterableBasicExploreDimensions } from './basic'
+import { type AiExploreAggregations, type AiExploreFilterAll, filterableAiExploreDimensions } from './ai'
+import { type ExploreAggregations, type ExploreFilterAll, filterableExploreDimensions } from './advanced'
 
 export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations
 export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll
@@ -10,9 +10,9 @@ export const queryDatasources = ['basic', 'advanced', 'ai'] as const
 export type QueryDatasource = typeof queryDatasources[number]
 
 export interface FilterTypeMap extends Record<QueryDatasource, AllFilters> {
-  basic: BasicExploreFilter,
-  advanced: ExploreFilter,
-  ai: AiExploreFilter,
+  basic: BasicExploreFilterAll,
+  advanced: ExploreFilterAll,
+  ai: AiExploreFilterAll,
 }
 
 export const datasourceToFilterableDimensions: Record<QueryDatasource, Set<string>> = {
