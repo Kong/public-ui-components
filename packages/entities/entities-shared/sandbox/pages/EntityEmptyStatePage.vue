@@ -12,11 +12,14 @@
         @create-button-clicked="console.log('create button clicked')"
         @learning-hub-button-clicked="console.log('learning hub button clicked')"
       >
-        <template #icon>
+        <template #image>
           <RuntimesIcon />
         </template>
         <template #pricing>
           Lorem ipsum dolor sit amet consectetur adipisicing elit
+        </template>
+        <template #feature-1-icon>
+          <PlugIcon />
         </template>
       </EntityEmptyState>
     </main>
@@ -25,7 +28,7 @@
 
 <script setup lang="ts">
 import { EntityEmptyState } from '../../src'
-import { RuntimesIcon } from '@kong/icons'
+import { RuntimesIcon, PlugIcon } from '@kong/icons'
 
 const features = [
   {
@@ -41,10 +44,10 @@ const features = [
     iconVariant: 'chartData',
     title: 'Third ',
     description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae',
-  }, {
-    iconVariant: 'analytics',
-    title: 'Fourth',
-    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae',
+  // }, {
+  //   iconVariant: 'analytics',
+  //   title: 'Fourth',
+  //   description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae',
   },
 ]
 </script>

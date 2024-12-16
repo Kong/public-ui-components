@@ -1,9 +1,12 @@
 <template>
   <div class="kong-ui-public-entity-empty-state">
-    <div v-if="$slots.image">
-      <slot name="image" />
-    </div>
     <div class="entity-empty-state-content">
+      <div
+        v-if="$slots.image"
+        class="empty-state-image"
+      >
+        <slot name="image" />
+      </div>
       <div
         v-if="title || $slots.title || $slots['title-after']"
         class="entity-empty-state-title"
@@ -65,21 +68,27 @@
     </div>
     <div class="entity-empty-state-card-container">
       <template
-        v-for="feature in features"
+        v-for="(feature, idx) in features"
         :key="feature"
       >
         <KCard class="entity-empty-state-card">
           <template #title>
-            <component
-              :is="getEntityIcon(feature.iconVariant)"
-              :color="KUI_COLOR_TEXT_NEUTRAL_STRONGER"
-              :size="KUI_ICON_SIZE_40"
-            />
+            <div class="feature-icon">
+              <slot :name="`feature-${idx}-icon`">
+                <component
+                  :is="getEntityIcon(feature.iconVariant)"
+                  :color="KUI_COLOR_TEXT_NEUTRAL_STRONGER"
+                  :size="KUI_ICON_SIZE_40"
+                />
+              </slot>
+            </div>
             <div class="card-header">
               {{ feature.title }}
             </div>
           </template>
-          {{ feature.description }}
+          <div :title="feature.description">
+            {{ feature.description }}
+          </div>
         </KCard>
       </template>
     </div>
@@ -153,6 +162,10 @@ const { i18n: { t } } = composables.useI18n()
   padding: $kui-space-130 $kui-space-150;
   width: 100%;
 
+  .empty-state-image {
+    margin-bottom: $kui-space-40;
+  }
+
   .entity-empty-state-content {
     align-items: center;
     display: flex;
@@ -188,9 +201,18 @@ const { i18n: { t } } = composables.useI18n()
   }
 
   .entity-empty-state-card-container {
-    display: grid !important;
+    $feature-card-width: 312px;
+    display: flex;
+    flex-wrap: wrap;
     gap: $kui-space-60;
-    grid-template-columns: auto auto !important;
+    justify-content: space-around;
+    /** single column on mobile */
+    width: $feature-card-width;
+
+    @media (min-width: $kui-breakpoint-mobile) {
+      /** 2 columns per row + gap */
+      width: calc(2 * #{$feature-card-width} + #{$kui-space-60});
+    }
 
     .entity-empty-state-card {
       background-color: $kui-color-background-neutral-weakest;
@@ -199,20 +221,32 @@ const { i18n: { t } } = composables.useI18n()
       color: $kui-color-text-neutral-weak;
       gap: $kui-space-40;
       height: 160px;
-      padding: $kui-space-80;
-      width: 312px;
+      padding: $kui-space-70;
+      width: $feature-card-width;
+
+      .feature-icon {
+        color: $kui-color-text-neutral-stronger;
+        display: flex;
+        margin-bottom: $kui-space-50;
+
+        :deep(.kui-icon) {
+          height: $kui-icon-size-40 !important;
+          width: $kui-icon-size-40 !important;
+        }
+      }
 
       :deep(.card-title) {
         font-size: $kui-font-size-30;
         font-weight: $kui-font-weight-semibold;
       }
 
-      :deep(.card-header) {
-        padding-top: $kui-space-40;
-      }
-
       :deep(.card-content) {
         color: $kui-color-text-neutral;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
     }
   }
