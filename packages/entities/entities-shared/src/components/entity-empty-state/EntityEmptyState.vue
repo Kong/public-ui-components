@@ -211,7 +211,7 @@ const { i18n: { t } } = composables.useI18n()
 
     @media (min-width: $kui-breakpoint-mobile) {
       /** 2 columns per row + gap */
-      width: calc(2 * #{$feature-card-width} + #{$kui-space-60});
+      width: calc(2 * #{$feature-card-width} + #{$kui-space-60}); /* stylelint-disable-line */
     }
 
     .entity-empty-state-card {
@@ -241,11 +241,11 @@ const { i18n: { t } } = composables.useI18n()
       }
 
       :deep(.card-content) {
+        -webkit-box-orient: vertical;
         color: $kui-color-text-neutral;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         line-clamp: 3;
-        -webkit-box-orient: vertical;
         overflow: hidden;
       }
     }
