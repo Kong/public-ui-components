@@ -59,10 +59,10 @@ If provided, will show the Learning Hub button for the entity.
 
 #### `features`
 
-- type: `Array`
+- type: `Array<EmptyStateFeature>`
 - default: `[]`
 
-If provided, will display card for each feature of that entity, along with an icon, a title and a short description.
+If provided, will display card for each feature of that entity, along with an icon slot, a title, and a short description.
 
 ### Usage example
 
