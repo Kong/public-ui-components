@@ -59,7 +59,7 @@ If provided, will show the Learning Hub button for the entity.
 
 #### `features`
 
-- type: `Array as PropType<EmptyStateFeature[]>`
+- type: `Array<EmptyStateFeature>`
 - default: `[]`
 
 If provided, will display card for each feature of that entity, along with an icon slot, a title, and a short description.

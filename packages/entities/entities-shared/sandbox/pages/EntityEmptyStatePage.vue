@@ -41,9 +41,6 @@ const features = [
   }, {
     title: 'Third ',
     description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae',
-  // }, {
-  //   title: 'Fourth',
-  //   description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae',
   },
 ]
 </script>
