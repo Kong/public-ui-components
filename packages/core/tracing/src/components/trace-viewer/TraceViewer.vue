@@ -61,15 +61,27 @@
         />
       </template>
       <div
-        v-else-if="selectedSpan && !spanNothingToDisplay"
+        v-else-if="selectedSpan"
         class="span-details"
       >
+        <KAlert
+          v-if="spanMaybeIncomplete(selectedSpan)"
+          appearance="danger"
+          :message="t('trace_viewer.incomplete_span_warning.message')"
+          show-icon
+          :style="{ width: '100%' }"
+          :title="t('trace_viewer.incomplete_span_warning.title')"
+        >
+          <template #icon>
+            <DangerCircleIcon />
+          </template>
+        </KAlert>
+
         <SpanEventList
           v-if="selectedSpan.span.events && selectedSpan.span.events.length > 0"
           :span="selectedSpan.span"
         />
         <SpanAttributeTable
-          v-if="selectedSpan.span.attributes && selectedSpan.span.attributes.length > 0"
           :span="selectedSpan.span"
         />
       </div>
@@ -89,11 +101,13 @@
 </template>
 
 <script setup lang="ts">
+import { DangerCircleIcon } from '@kong/icons'
 import { Pane, Splitpanes } from '@kong/splitpanes'
-import { computed, provide, reactive, shallowRef } from 'vue'
+import { provide, reactive, shallowRef } from 'vue'
 import composables from '../../composables'
 import { TRACE_VIEWER_CONFIG, WATERFALL_ROW_COLUMN_GAP, WATERFALL_ROW_LABEL_WIDTH, WATERFALL_ROW_PADDING_X, WATERFALL_SPAN_BAR_FADING_WIDTH } from '../../constants'
 import type { SpanNode, TraceViewerConfig } from '../../types'
+import { spanMaybeIncomplete } from '../../utils'
 import WaterfallLegend from '../waterfall/WaterfallLegend.vue'
 import WaterfallView from '../waterfall/WaterfallView.vue'
 import SpanAttributeTable from './SpanAttributeTable.vue'
@@ -118,22 +132,6 @@ const selectedSpan = shallowRef<SpanNode | undefined>(undefined)
 const handleUpdateSelectedSpan = (span?: SpanNode) => {
   selectedSpan.value = span
 }
-
-const spanNothingToDisplay = computed(() => {
-  if (!selectedSpan.value) {
-    return true
-  }
-
-  if (selectedSpan.value.span.events && selectedSpan.value.span.events.length > 0) {
-    return false
-  }
-
-  if (selectedSpan.value.span.attributes && selectedSpan.value.span.attributes.length > 0) {
-    return false
-  }
-
-  return true
-})
 </script>
 
 <style lang="scss" scoped>

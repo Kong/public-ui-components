@@ -18,12 +18,33 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
       spanId,
       parentSpanId,
       name,
-      startTimeUnixNano,
-      endTimeUnixNano,
       attributes,
       events,
     } = span
-    const durationNano = Number(BigInt(span.endTimeUnixNano) - BigInt(span.startTimeUnixNano))
+
+    let startTimeUnixNano: bigint | undefined
+    let endTimeUnixNano: bigint | undefined
+
+    try {
+      startTimeUnixNano = BigInt(span.startTimeUnixNano!)
+    } catch (e) {
+      console.warn(`Failed to convert the start time "${span.startTimeUnixNano}" to bigint:`, { error: e, span })
+    }
+
+    try {
+      endTimeUnixNano = BigInt(span.endTimeUnixNano!)
+    } catch (e) {
+      console.warn(`Failed to convert the end time "${span.endTimeUnixNano}" to bigint:`, { error: e, span })
+    }
+
+    const durationNano = startTimeUnixNano !== undefined && endTimeUnixNano !== undefined
+      ? Number(endTimeUnixNano - startTimeUnixNano)
+      : undefined
+
+    if (durationNano !== undefined && durationNano < 0) {
+      console.warn(`Invalid span duration "${durationNano}":`, { span })
+    }
+
     const node: SpanNode = {
       span: {
         traceId,
@@ -36,11 +57,11 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
         events: cloneDeep(events), // Avoid mutating the original events
       },
       root: !span.parentSpanId || span.parentSpanId === SPAN_ZERO_ID,
-      durationNano,
+      durationNano, // undefined indicates either the start or end time is missing or invalid
       children: [],
       subtreeValues: {
-        startTimeUnixNano: BigInt(span.startTimeUnixNano),
-        endTimeUnixNano: BigInt(span.endTimeUnixNano),
+        startTimeUnixNano,
+        endTimeUnixNano,
         minDurationNano: durationNano,
       },
     }
@@ -55,13 +76,19 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
       const parent = nodes.get(node.span.parentSpanId!)!
       parent.children.push(node)
       // Update subtree values when necessary
-      if (node.subtreeValues.minDurationNano < parent.subtreeValues.minDurationNano) {
+      if (node.subtreeValues.minDurationNano !== undefined
+        && (parent.subtreeValues.minDurationNano === undefined
+          || node.subtreeValues.minDurationNano < parent.subtreeValues.minDurationNano)) {
         parent.subtreeValues.minDurationNano = node.subtreeValues.minDurationNano
       }
-      if (node.subtreeValues.startTimeUnixNano < parent.subtreeValues.startTimeUnixNano) {
+      if (node.subtreeValues.startTimeUnixNano !== undefined
+        && (parent.subtreeValues.startTimeUnixNano === undefined
+          || node.subtreeValues.startTimeUnixNano < parent.subtreeValues.startTimeUnixNano)) {
         parent.subtreeValues.startTimeUnixNano = node.subtreeValues.startTimeUnixNano
       }
-      if (node.subtreeValues.endTimeUnixNano > parent.subtreeValues.endTimeUnixNano) {
+      if (node.subtreeValues.endTimeUnixNano !== undefined
+        && (parent.subtreeValues.endTimeUnixNano === undefined
+          || node.subtreeValues.endTimeUnixNano > parent.subtreeValues.endTimeUnixNano)) {
         parent.subtreeValues.endTimeUnixNano = node.subtreeValues.endTimeUnixNano
       }
     } else {
@@ -70,11 +97,26 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
   }
 
   for (const node of nodes.values()) {
-    node.children.sort((a, b) => Number(BigInt(a.span.startTimeUnixNano) - BigInt(b.span.startTimeUnixNano)))
+    node.children.sort((a, b) => {
+      if (a.span.startTimeUnixNano !== undefined && b.span.startTimeUnixNano !== undefined) {
+        return Number(a.span.startTimeUnixNano - b.span.startTimeUnixNano)
+      }
+      // Hoist the spans without start time to the top
+      if (a.span.startTimeUnixNano === undefined && b.span.startTimeUnixNano === undefined) {
+        return 0
+      }
+      return a.span.startTimeUnixNano === undefined ? -1 : 1
+    })
   }
 
   return roots
 }
+
+/**
+ * Detect if a span is incomplete. The result is not guaranteed to be accurate.
+ */
+export const spanMaybeIncomplete = (node: SpanNode): boolean =>
+  node.durationNano === undefined || node.durationNano < 0
 
 /**
  * Parse the plugin name and phase from a span name.

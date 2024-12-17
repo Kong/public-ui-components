@@ -1,6 +1,13 @@
 import type { IKeyValue } from './otlp'
 
-export interface Span {
+/**
+ * The type parameter `Time` is used to specify the type of the timestamps in the span.
+ * The `buildSpanTrees` utility will convert string timestamps to bigint ones.
+ *
+ * We will internally use `Span<bigint>` in `SpanNode` for performance reasons, while we will expose
+ * `Span<string>` by default to avoid breaking changes in the public API.
+ */
+export interface Span<Time extends string | bigint = string> {
   traceId: string
   spanId: string
   /**
@@ -9,8 +16,8 @@ export interface Span {
    */
   parentSpanId?: string
   name: string
-  startTimeUnixNano: string
-  endTimeUnixNano: string
+  startTimeUnixNano?: Time
+  endTimeUnixNano?: Time
   attributes?: IKeyValue[]
   events?: Event[]
 }
@@ -22,9 +29,9 @@ export interface Event {
 }
 
 export interface SpanNode {
-  span: Span
+  span: Span<bigint>
   root?: boolean
-  durationNano: number // Number.MAX_SAFE_INTEGER / 1e9 / 60 / 60 / 24 = 104.24999137431702 days (enough for most cases)
+  durationNano?: number // Number.MAX_SAFE_INTEGER / 1e9 / 60 / 60 / 24 = 104.24999137431702 days (enough for most cases)
   parent?: SpanNode
   children: SpanNode[]
   /**
@@ -35,16 +42,16 @@ export interface SpanNode {
     /**
      * The earliest start time among all nodes in the subtree.
      */
-    startTimeUnixNano: bigint
+    startTimeUnixNano?: bigint
     /**
      * The latest end time among all nodes in the subtree
      */
-    endTimeUnixNano: bigint
+    endTimeUnixNano?: bigint
     /**
      * The minimum duration among all nodes in the subtree.
      * Default to the duration of the span itself.
      */
-    minDurationNano: number
+    minDurationNano?: number
   }
 }
 

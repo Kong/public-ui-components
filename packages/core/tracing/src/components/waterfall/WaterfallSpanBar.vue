@@ -51,13 +51,17 @@ const barColor = computed(() => {
  * Note: The value is calculated without the zoom factor to reduce unnecessary recalculations.
  */
 const barUnscaledLeftBaseRatio = computed(() => {
-  if (!config.root) {
+  const spanStart = props.spanNode.span.startTimeUnixNano
+  const subtreeStart = config.root?.subtreeValues.startTimeUnixNano
+  const subtreeMin = config.root?.subtreeValues.minDurationNano
+
+  if (spanStart === undefined || subtreeStart === undefined || subtreeMin === undefined) {
     return 0
   }
 
-  const relativeStart = Number(BigInt(props.spanNode.span.startTimeUnixNano) - (config.root?.subtreeValues.startTimeUnixNano ?? 0n))
+  const relativeStart = Number(spanStart - subtreeStart)
 
-  return (relativeStart / (config.totalDurationNano - config.root.subtreeValues.minDurationNano))
+  return (relativeStart / (config.totalDurationNano - subtreeMin))
 })
 
 /**
@@ -95,7 +99,10 @@ const barLeft = computed(() =>
 )
 
 const barExtraWidthFactor = computed(() => {
-  if (!config.root) {
+  const spanDuration = props.spanNode.durationNano
+  const subtreeMin = config.root?.subtreeValues.minDurationNano
+
+  if (spanDuration === undefined || subtreeMin === undefined) {
     return 0
   }
 
@@ -110,8 +117,7 @@ const barExtraWidthFactor = computed(() => {
    * Therefore, the formula to calculate the factor for a span is:
    * (span duration - minimal duration) / (total duration - minimal duration)`
    */
-  return (props.spanNode.durationNano - config.root.subtreeValues.minDurationNano)
-    / (config.totalDurationNano - config.root.subtreeValues.minDurationNano)
+  return (spanDuration - subtreeMin) / (config.totalDurationNano - subtreeMin)
 })
 
 /**
