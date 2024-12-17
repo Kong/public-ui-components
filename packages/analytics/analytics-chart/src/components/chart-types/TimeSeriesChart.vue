@@ -216,7 +216,7 @@ const { options } = composables.useLinechartOptions({
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))
 
 const formatTimestamp = (ts: number): string | number => {
-  return formatByGranularity(new Date(ts), props.granularity, false)
+  return formatByGranularity(new Date(ts), props.granularity, true)
 }
 
 /**
