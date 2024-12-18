@@ -27,7 +27,7 @@ An empty state component that displays title, description, and optionally pricin
 #### `title`
 
 - type: `String`
-- required: `true`
+- default: `''`
 
 Title for the empty state.
 

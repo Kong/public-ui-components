@@ -116,11 +116,11 @@ import type { EmptyStateFeature } from 'src/types/entity-empty-state'
 const props = defineProps({
   title: {
     type: String,
-    required: true,
+    default: '',
   },
   description: {
     type: String,
-    required: true,
+    default: '',
   },
   pricing: {
     type: String,
