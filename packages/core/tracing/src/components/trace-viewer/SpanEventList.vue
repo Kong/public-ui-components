@@ -12,10 +12,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Span } from '../../types'
+import type { SpanNode } from '../../types'
 import SpanEvent from './SpanEvent.vue'
 
-defineProps<{ span: Span }>()
+defineProps<{ span: SpanNode['span'] }>()
 </script>
 
 <style lang="scss" scoped>

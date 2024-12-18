@@ -34,19 +34,30 @@
         <div class="end-decorator">
           <WarningIcon
             v-if="hasException"
-            class="exception-mark"
             :color="KUI_COLOR_TEXT_WARNING"
             :size="KUI_FONT_SIZE_30"
           />
 
-          <div class="duration">
+          <DangerCircleIcon
+            v-if="maybeIncomplete"
+            :color="KUI_COLOR_TEXT_DANGER"
+            :size="KUI_FONT_SIZE_30"
+          />
+
+          <div
+            v-else
+            class="duration"
+          >
             {{ fmt(spanNode.durationNano) }}
           </div>
         </div>
       </div>
     </div>
 
-    <div class="bar-wrapper">
+    <div
+      v-if="!maybeIncomplete"
+      class="bar-wrapper"
+    >
       <WaterfallSpanBar :span-node="spanNode" />
     </div>
   </div>
@@ -64,12 +75,12 @@
 </template>
 
 <script lang="ts" setup>
-import { KUI_COLOR_TEXT_WARNING, KUI_FONT_SIZE_30 } from '@kong/design-tokens'
-import { WarningIcon } from '@kong/icons'
+import { KUI_COLOR_TEXT_DANGER, KUI_COLOR_TEXT_WARNING, KUI_FONT_SIZE_30 } from '@kong/design-tokens'
+import { WarningIcon, DangerCircleIcon } from '@kong/icons'
 import { computed, inject, ref, watch, type PropType, type Ref } from 'vue'
 import { SPAN_EVENT_ATTRIBUTES, WATERFALL_CONFIG, WATERFALL_ROWS_STATE, WATERFALL_SPAN_BAR_FADING_WIDTH, WaterfallRowsState } from '../../constants'
 import { type SpanNode, type WaterfallConfig } from '../../types'
-import { getDurationFormatter } from '../../utils'
+import { getDurationFormatter, spanMaybeIncomplete } from '../../utils'
 import WaterfallSpanBar from './WaterfallSpanBar.vue'
 import WaterfallTreeControl from './WaterfallTreeControl.vue'
 import WaterfallSpacer, { SpacerType } from './WaterfallTreeSpacer.vue'
@@ -154,6 +165,8 @@ const hasException = computed(() => {
 
   return false
 })
+
+const maybeIncomplete = computed(() => spanMaybeIncomplete(props.spanNode))
 
 watch(rowsState, (value) => {
   if (value !== WaterfallRowsState.OVERRIDDEN) {
@@ -296,6 +309,10 @@ const handleSelect = () => {
       width: v-bind(WATERFALL_SPAN_BAR_FADING_WIDTH);
       z-index: 10;
     }
+  }
+
+  :deep(.k-tooltip) {
+    max-width: 300px;
   }
 }
 </style>

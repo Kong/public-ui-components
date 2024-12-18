@@ -4,7 +4,11 @@ export const getDurationFormatter = (locales: Intl.LocalesArgument = 'en') => {
     maximumFractionDigits: 2,
   })
 
-  return (nanoseconds: number) => {
+  return (nanoseconds?: number) => {
+    if (nanoseconds === undefined || Number.isNaN(nanoseconds)) {
+      return 'N/A'
+    }
+
     let t = nanoseconds
 
     if (t < 1000) {
@@ -33,14 +37,29 @@ export const getDurationFormatter = (locales: Intl.LocalesArgument = 'en') => {
 
 /**
  * This function formats a nanosecond duration into a human-readable string.
+ * The output string will use the local time zone.
  *
- * Example output: `2024-12-09T13:31:47.476672512Z`
+ * Example output: `2024-12-09 13:31:47.476672512`
  *
- * @param nanoseconds
- * @returns an ISO 8601 formatted string with nanoseconds precision
+ * @param unixNano UNIX timestamp in nanoseconds
+ * @returns an formatted date and time string with nanoseconds precision
  */
-export const formatNanoDateTimeString = (nanoseconds: bigint) => {
-  const ms = nanoseconds / BigInt(1e6)
-  const nsRemainder = nanoseconds - ms * BigInt(1e6)
-  return new Date(Number(ms)).toISOString().replace(/Z$/g, `${nsRemainder.toString().padStart(6, '0')}Z`)
+export const formatNanoDateTimeString = (unixNano?: bigint) => {
+  if (unixNano === undefined) {
+    return 'N/A'
+  }
+
+  const ms = unixNano / BigInt(1e6)
+  const date = new Date(Number(ms))
+
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+  const milliseconds = String(date.getMilliseconds()).padStart(3, '0')
+  const nanoseconds = (unixNano - ms * BigInt(1e6)).toString().padStart(6, '0')
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}${nanoseconds}`
 }

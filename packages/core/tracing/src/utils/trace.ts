@@ -16,16 +16,18 @@ export const mergeSpans = (spans: Span[]): Span[] => {
         dedupedAttributes: new Map(),
       }
       dedupedSpans.set(uniqId, dds)
+    } else if (Array.isArray(span.events)) {
+      if (!Array.isArray(dds.events)) {
+        dds.events = [...span.events]
+      } else {
+        dds.events.push(...span.events!)
+      }
     }
 
     if (Array.isArray(dds.attributes)) {
       for (const attr of dds.attributes) {
         dds.dedupedAttributes?.set(attr.key, attr)
       }
-    }
-
-    if (Array.isArray(dds.events)) {
-      dds.events.push(...span.events!)
     }
   }
 

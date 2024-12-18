@@ -124,11 +124,13 @@ const rowsAreaGuideX = ref<number | undefined>(undefined)
 const config = reactive<MarkReactiveInputRefs<WaterfallConfig, 'ticks' | 'root' | 'totalDurationNano'>>({
   ticks: toRef(props, 'ticks'),
   root: toRef(props, 'rootSpan'),
-  totalDurationNano: computed(() =>
-    props.rootSpan
-      ? Number(props.rootSpan.subtreeValues.endTimeUnixNano - props.rootSpan.subtreeValues.startTimeUnixNano)
-      : 0,
-  ),
+  totalDurationNano: computed(() => {
+    if (props.rootSpan?.subtreeValues.startTimeUnixNano === undefined || props.rootSpan?.subtreeValues.endTimeUnixNano === undefined) {
+      return 0
+    }
+
+    return Number(props.rootSpan.subtreeValues.endTimeUnixNano - props.rootSpan.subtreeValues.startTimeUnixNano)
+  }),
   zoom: 1,
   viewport: { left: 0, right: 0 },
 })

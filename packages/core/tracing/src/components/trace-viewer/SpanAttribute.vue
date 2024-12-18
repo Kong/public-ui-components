@@ -31,7 +31,7 @@ import { ConfigCardItem, ConfigurationSchemaType, EntityLink, type EntityLinkDat
 import { computed, inject, onWatcherCleanup, shallowRef, watch } from 'vue'
 import composables from '../../composables'
 import { SPAN_ATTRIBUTE_VALUE_UNKNOWN, SpanAttributeKeys, TRACE_VIEWER_CONFIG } from '../../constants'
-import type { EntityRequest, IKeyValue, Span, TraceViewerConfig } from '../../types'
+import type { EntityRequest, IKeyValue, SpanNode, TraceViewerConfig } from '../../types'
 import { getPhaseAndPlugin, unwrapAnyValue } from '../../utils'
 
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -39,7 +39,7 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 const { i18n: { t } } = composables.useI18n()
 
 const props = defineProps<{
-  span: Span
+  span: SpanNode['span']
   keyValue: IKeyValue
   /**
    * Label to show for the attribute.

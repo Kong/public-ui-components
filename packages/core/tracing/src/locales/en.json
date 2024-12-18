@@ -23,6 +23,10 @@
         "title": "Exception message"
       }
     },
+    "incomplete_span_warning": {
+      "message": "This span is incomplete, this could be because of a sampling issue. Please exercise caution when interpreting this span.",
+      "title": "Incomplete span"
+    },
     "url": "URL"
   },
   "waterfall": {
