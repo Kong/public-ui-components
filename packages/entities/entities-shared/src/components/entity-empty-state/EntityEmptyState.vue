@@ -179,6 +179,8 @@ const { i18n: { t } } = composables.useI18n()
 
     .entity-empty-state-title {
       color: $kui-color-text;
+      display: flex;
+      gap: $kui-space-40;
       font-size: $kui-font-size-70;
       font-weight: $kui-font-weight-bold;
       line-height: $kui-line-height-60;
