@@ -47,11 +47,6 @@ export interface SpanNode {
      * The latest end time among all nodes in the subtree
      */
     endTimeUnixNano?: bigint
-    /**
-     * The minimum duration among all nodes in the subtree.
-     * Default to the duration of the span itself.
-     */
-    minDurationNano?: number
   }
 }
 

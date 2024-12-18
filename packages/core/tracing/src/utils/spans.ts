@@ -62,7 +62,6 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
       subtreeValues: {
         startTimeUnixNano,
         endTimeUnixNano,
-        minDurationNano: durationNano,
       },
     }
     node.span.attributes?.sort((a, b) => a.key.localeCompare(b.key))
@@ -76,11 +75,6 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
       const parent = nodes.get(node.span.parentSpanId!)!
       parent.children.push(node)
       // Update subtree values when necessary
-      if (node.subtreeValues.minDurationNano !== undefined
-        && (parent.subtreeValues.minDurationNano === undefined
-          || node.subtreeValues.minDurationNano < parent.subtreeValues.minDurationNano)) {
-        parent.subtreeValues.minDurationNano = node.subtreeValues.minDurationNano
-      }
       if (node.subtreeValues.startTimeUnixNano !== undefined
         && (parent.subtreeValues.startTimeUnixNano === undefined
           || node.subtreeValues.startTimeUnixNano < parent.subtreeValues.startTimeUnixNano)) {

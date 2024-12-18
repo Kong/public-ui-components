@@ -7,8 +7,6 @@ import { computed, inject } from 'vue'
 import { WATERFALL_CONFIG, WATERFALL_LEGENDS, WATERFALL_SPAN_BAR_FADING_WIDTH, WaterfallLegendItemKind } from '../../constants'
 import type { SpanNode, WaterfallConfig } from '../../types'
 
-const MIN_WIDTH = 1
-
 const config = inject<WaterfallConfig>(WATERFALL_CONFIG)
 if (!config) {
   throw new Error('WATERFALL_CONFIG is not provided')
@@ -39,105 +37,30 @@ const barColor = computed(() => {
   return WATERFALL_LEGENDS[WaterfallLegendItemKind.KONG].color
 })
 
-/**
- * Left position of the span bar in the whole trace, presented by a ratio where 0 marks the left-most
- * position and 1 marks the right-most position. It is calculated by the following formula:
- *
- * ```
- * (span_start_time - root_start_time) / (total_duration - minimal_duration)
- *                                                         ^ reserve space for spans that are too short
- * ```
- *
- * Note: The value is calculated without the zoom factor to reduce unnecessary recalculations.
- */
-const barUnscaledLeftBaseRatio = computed(() => {
+const barEdges = computed(() => {
   const spanStart = props.spanNode.span.startTimeUnixNano
-  const subtreeStart = config.root?.subtreeValues.startTimeUnixNano
-  const subtreeMin = config.root?.subtreeValues.minDurationNano
+  const spanEnd = props.spanNode.span.endTimeUnixNano
 
-  if (spanStart === undefined || subtreeStart === undefined || subtreeMin === undefined) {
-    return 0
+  const traceStart = config.root?.subtreeValues.startTimeUnixNano
+  const traceEnd = config.root?.subtreeValues.endTimeUnixNano
+
+  if (spanStart === undefined || spanEnd === undefined || traceStart === undefined || traceEnd === undefined) {
+    return { left: 0, right: 0 }
   }
 
-  const relativeStart = Number(spanStart - subtreeStart)
+  const left = (Number(spanStart - traceStart) / (config.totalDurationNano))
+  const right = (Number(traceEnd - spanEnd) / (config.totalDurationNano))
 
-  return (relativeStart / (config.totalDurationNano - subtreeMin))
+  return { left, right }
 })
 
-/**
- * Scaled left position of the span bar with the zoom factor applied.
- */
-const barLeftBaseRatio = computed(() => barUnscaledLeftBaseRatio.value * config.zoom)
-
-/**
- * Scaled viewport left position with the zoom factor applied. It is calculated by the following formula:
- */
-const viewportLeftRatio = computed(() => config.viewport.left * config.zoom)
-
-/**
- * Left position of the span bar in the whole trace. This is the raw left position that may overflow
- * the viewport a lot, which may bring performance issues.
- */
-const barUnclampedLeft = computed(() => {
-  if (!config.root) {
-    return 0
-  }
-
-  return `calc((100% - ${MIN_WIDTH}px) * ${barLeftBaseRatio.value} - 100% * ${viewportLeftRatio.value})`
+const barLeft = computed(() => {
+  const unclampedLeft = `calc((100% * ${config.zoom}) * (${barEdges.value.left} - ${config.viewport.left}))`
+  return `min(calc(100% + ${WATERFALL_SPAN_BAR_FADING_WIDTH} / 2), max(-${WATERFALL_SPAN_BAR_FADING_WIDTH}, ${unclampedLeft}))`
 })
 
-/**
- * Clamped left position of the span bar within the viewport with fading edges on both ends, to ensure
- * the performance. It is clamped in the following range:
- *
- * ```
- * -fading_width <= position <= 100% + fading_width / 2
- * ```
- */
-const barLeft = computed(() =>
-  `min(calc(100% + ${WATERFALL_SPAN_BAR_FADING_WIDTH} / 2), max(-${WATERFALL_SPAN_BAR_FADING_WIDTH}, ${barUnclampedLeft.value}))`,
-)
-
-const barExtraWidthFactor = computed(() => {
-  const spanDuration = props.spanNode.durationNano
-  const subtreeMin = config.root?.subtreeValues.minDurationNano
-
-  if (spanDuration === undefined || subtreeMin === undefined) {
-    return 0
-  }
-
-  /**
-   * We will make minDuration as `MIN_WIDTH`. Therefore, we will calculate the "extra" width besides the
-   * `MIN_WIDTH`. We will present this extra width as a factor.
-   *
-   * e.g.
-   * - The total duration should take `MIN_WIDTH + (100% - MIN_WIDTH) * 1` which is `100%` (factor = 1)
-   * - The minimal duration should take `MIN_WIDTH + (100% - MIN_WIDTH) * 0` which is `MIN_WIDTH` (factor = 0)
-   *
-   * Therefore, the formula to calculate the factor for a span is:
-   * (span duration - minimal duration) / (total duration - minimal duration)`
-   */
-  return (spanDuration - subtreeMin) / (config.totalDurationNano - subtreeMin)
-})
-
-/**
- * Clamped right position of the span bar within the viewport with fading edges on both ends, to ensure
- * the performance. It is clamped in the following range:
- *
- * ```
- * -fading_width <= position <= 100% + fading_width / 2
- * ```
- */
-const barRight = computed(() => {
-  // The unclamped but scaled width of the span bar with zoom factor applied
-  const unclampedWidth = `calc((${MIN_WIDTH}px + (100% - ${MIN_WIDTH}px) * ${barExtraWidthFactor.value}) * ${config.zoom})`
-
-  /**
-   * Right position of the span bar in the whole trace. This is the raw right position that may overflow
-   * the viewport a lot, which may bring performance issues.
-   */
-  const unclampedRight = `calc(100% - ${barUnclampedLeft.value} - ${unclampedWidth})`
-
+const barRight = computed(() =>{
+  const unclampedRight = `calc((100% * ${config.zoom}) * (${barEdges.value.right} - ${config.viewport.right}))`
   return `min(calc(100% + ${WATERFALL_SPAN_BAR_FADING_WIDTH} / 2), max(-${WATERFALL_SPAN_BAR_FADING_WIDTH}, ${unclampedRight}))`
 })
 </script>
@@ -155,6 +78,7 @@ const barRight = computed(() => {
     content: '';
     height: 100%;
     left: v-bind(barLeft);
+    min-width: 1px;
     position: absolute;
     right: v-bind(barRight);
     top: 0;
