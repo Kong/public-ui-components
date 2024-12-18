@@ -187,6 +187,7 @@ onBeforeMount(async () => {
     width: 100%;
 
     .entity-empty-state-title h1 {
+      align-items: center;
       color: $kui-color-text;
       display: flex;
       font-size: $kui-font-size-70;
