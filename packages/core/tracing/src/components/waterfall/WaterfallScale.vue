@@ -32,8 +32,6 @@ if (!config) {
 }
 
 const durationPerTick = computed(() => config.totalDurationNano * (1 - config.viewport.left - config.viewport.right) / (config.ticks - 1))
-
-// RESERVED: Only used when zooming is enabled
 const durationShift = computed(() => config.totalDurationNano * config.viewport.left)
 </script>
 
