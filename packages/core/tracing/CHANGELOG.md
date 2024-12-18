@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.5.0...@kong-ui-public/tracing@0.5.1) (2024-12-18)
+
+
+### Bug Fixes
+
+* **tracing:** handle missing fields in span ([#1856](https://github.com/Kong/public-ui-components/issues/1856)) ([b9e11d9](https://github.com/Kong/public-ui-components/commit/b9e11d903c64bcbddbad40cc4be9d318d08e033f))
+
+
+
+
+
 # [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.4.6...@kong-ui-public/tracing@0.5.0) (2024-12-18)
 
 
