@@ -38,7 +38,7 @@ export default function useTableState(query?: Ref<string> | (() => string)) {
       // - After revalidation: { state: 'success', hasData: <from-backend> }, query: '' <- This is the one we want to capture
       // So we'll have to record the previous query to reset `hasRecords` correctly after revalidation
       // - Immediately: { state: 'success', hasData: <from-cache> }, previousQuery: 'foo', query: '' <- just check previous query
-      // - After revalidation: { state: 'success', hasData: <from-backend> }, previousQuery: '', query: ''query: ''
+      // - After revalidation: { state: 'success', hasData: <from-backend> }, previousQuery: '', query: ''
       hasRecords.value = false
     }
 
