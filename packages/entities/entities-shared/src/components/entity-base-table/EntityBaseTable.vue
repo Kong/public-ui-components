@@ -341,41 +341,7 @@ const handleSortChanged = (sortParams: TableSortParams): void => {
   emit('sort', sortParams)
 }
 
-let previousQuery = ''
-const hasRecords = ref(false)
-const tableState = ref<TableStateParams | null>(null)
-const hideTableToolbar = computed(() => {
-  if (hasRecords.value) {
-    return false
-  }
-
-  // Initial state, hide the toolbar
-  if (!tableState.value) {
-    return true
-  }
-  return !tableState.value.hasData && !props.query
-})
-
-const handleStateChange = (stateParams: TableStateParams): void => {
-  if (stateParams.hasData) {
-    // In our scenario, as long as the table contains any data at any time,
-    // it indicates that there is at least a corresponding entity record in the backend.
-    hasRecords.value = true
-  } else if (stateParams.state === 'success' && !stateParams.hasData && !previousQuery) {
-    // If the table is in a success state but has no data and no query, it means there are no records
-    // Why do we record the previous query:
-    // When we clear the query, the table `state` event will be emitted in the following order:
-    // - Immediately: { state: 'success', hasData: <from-cache> }, query: ''
-    // - After revalidation: { state: 'success', hasData: <from-backend> }, query: '' <- This is the one we want to capture
-    // So we'll have to record the previous query to reset `hasRecords` correctly after revalidation
-    // - Immediately: { state: 'success', hasData: <from-cache> }, previousQuery: 'foo', query: '' <- just check previous query
-    // - After revalidation: { state: 'success', hasData: <from-backend> }, previousQuery: '', query: ''query: ''
-    hasRecords.value = false
-  }
-
-  previousQuery = props.query
-  tableState.value = { ...stateParams }
-}
+const { hideTableToolbar, handleStateChange } = composables.useTableState(() => props.query)
 
 const { setTablePreferences, getTablePreferences } = useTablePreferences()
 
