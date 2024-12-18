@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.13.0...@kong-ui-public/entities-shared@3.14.0) (2024-12-18)
+
+
+### Features
+
+* **entities-shared:** add useTableState ([#1858](https://github.com/Kong/public-ui-components/issues/1858)) ([243160b](https://github.com/Kong/public-ui-components/commit/243160bf8277664e629820e1772ae66f12f57171))
+
+
+
+
+
 # [3.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.12.1...@kong-ui-public/entities-shared@3.13.0) (2024-12-17)
 
 
